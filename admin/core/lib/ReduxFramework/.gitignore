@@ -1,0 +1,26 @@
+# Editors
+project.xml
+project.properties
+/nbproject/private/
+.buildpath
+.project
+.settings*
+sftp-config.json
+codekit-config.json
+.idea
+
+# Grunt
+md5
+/docs/
+/redux/
+/output/
+/node_modules/
+/grunt-phplint/
+/tmp-wp-dev/
+npm-debug.log
+
+# OS X metadata
+.DS_Store
+
+# Windows junk
+Thumbs.db

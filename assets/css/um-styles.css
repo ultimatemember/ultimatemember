@@ -1,0 +1,463 @@
+/*
+	- Layout
+*/
+
+.um {
+	width: 100%;
+	text-align: left;
+	box-sizing: border-box;
+	color: #666;
+	font-size: 15px;
+	overflow: hidden;
+	margin-bottom: 30px !important;
+	-webkit-font-smoothing: antialiased !important;
+	-moz-osx-font-smoothing: grayscale !important;
+}
+
+.um-s1,
+.um-s2 {
+	display: none;
+}
+
+.um *,
+.um *:before,
+.um *:after {
+	box-sizing: content-box;
+}
+
+/* only in admin mode */
+.um.um-in-admin {
+	padding-top: 0;
+	margin-bottom: 10px;
+}
+
+.um input,
+.um select,
+.um textarea{
+	font-size: 15px;
+}
+
+.um * {
+	-webkit-font-smoothing: antialiased !important;
+	-moz-osx-font-smoothing: grayscale !important;
+}
+
+.um-left {float: left}
+
+.um-right {float: right}
+
+.um-clear {clear: both}
+
+.um-center {text-align: center}
+.um-center .um-button {
+	display: inline-block !important;
+	width: auto !important;
+	min-width: 250px !important;
+}
+
+.um-half { width: 48%}
+
+.um-field-half {width: 48%;float: left}
+
+.um-field-half.right {float: right}
+
+.um-field-tri {
+	width: 30%;
+	float: left;
+	margin-right: 3%;
+}
+
+.um img {box-shadow: none !important}
+
+.um-col {padding-bottom: 20px}
+.um-col-alt {margin: 0 0 5px 0}
+.um-col-alt-b {padding-top: 20px}
+
+.um-col-121 {
+	float: left;
+	width: 48%;
+	min-height: 1px;height: auto;
+}
+
+.um-col-122 {
+	float: right;
+	width: 48%;
+	min-height: 1px;height: auto;
+}
+
+.um-col-131 {
+	float: left;
+	width: 30%;
+	min-height: 1px;height: auto;
+}
+
+.um-col-132 {
+	float: left;
+	width: 30%;
+	margin: 0 5%;
+	min-height: 1px;height: auto;
+}
+
+.um-col-133 {
+	float: right;
+	width: 30%;
+	min-height: 1px;height: auto;
+}
+
+/*
+	- Font Icons
+*/
+
+.um-raty i {font-size: 26px}
+.um-field-half .um-raty i {font-size: 21px}
+.um-field-tri .um-raty i {font-size: 21px}
+
+.um-button i {
+	font-size: 22px;
+	position: absolute;
+	left: 20px;
+	top: 14px;
+}
+
+/*
+	- Row general css
+*/
+
+.um-row-heading {
+	padding: 10px 0;
+	font-size: 16px;
+}
+
+.um-row-heading i {
+	margin: 0 8px 0 0;
+	font-size: 24px;
+	line-height: 24px;
+	height: 24px;
+	vertical-align: middle;
+}
+
+/*
+	- Errors
+*/
+
+.um-field-error {
+	width: auto;
+	max-width: 100%;
+	background: #C74A4A;
+	border-radius: 3px;
+	color: #fff;
+	box-sizing: border-box;
+	position: relative;
+	padding: 12px;
+	font-size: 14px;
+	line-height: 20px !important;
+	margin: 12px 0 0 0;
+}
+
+.um-field-error a{color: #fff !important;text-decoration: underline !important}
+
+.um-field-arrow {
+	top: -17px;
+	left: 10px;
+	position: absolute;
+	z-index: 900;
+	color: #C74A4A;
+	font-size: 28px;
+	line-height: 1em !important;
+}
+
+.um-error-block {
+	width: auto;
+	max-width: 100%;
+	background: #C74A4A;
+	border-radius: 3px;
+	color: #fff;
+	box-sizing: border-box;
+	position: relative;
+	padding: 12px;
+	font-size: 14px;
+	line-height: 1em !important;
+	margin: 12px 0 0 0;
+}
+
+/*
+	- Help tooltips
+*/
+
+.um-tip {
+	margin: 0 0 0 8px;
+	cursor: pointer;
+	height: 22px;
+	line-height: 22px;
+	display: inline-block;
+}
+
+.um-tip i {
+	font-size: 20px;
+	height: 22px;
+	line-height: 22px;
+	vertical-align: middle;
+}
+
+/*
+	- Forms & Fields
+*/
+
+.um-form button::-moz-focus-inner,
+.um-form input::-moz-focus-inner {
+	border: 0 !important;
+	padding: 0 !important;
+}
+
+.um-field {
+	position: relative;
+	padding: 15px 0 0 0;
+}
+
+.um-field.um-is-conditional {
+	display: none;
+}
+
+.um-field-label { display: block; margin: 0 0 8px 0 }
+
+.um-field-label .um-field-label-icon { float: left; margin: 0 8px 0 0; vertical-align: middle !important; height: 22px; }
+.um-field-label .um-field-label-icon  i { font-size: 22px; height: 22px; line-height: 22px; vertical-align: middle; }
+
+.um-field-label label { display: inline-block; height: 22px; font-size: 16px; line-height: 22px !important; }
+
+.um-field-area {
+	position: relative;
+}
+
+.um-field-block {
+	color: #999;
+	line-height: 22px;
+}
+
+.um-field-shortcode {
+
+}
+
+.um-field-spacing {
+	width: 100%;
+}
+
+.um-field-divider {
+	width: 100%;
+	margin: 0 0 20px 0;
+	height: 15px;
+}
+
+.um-field-icon {
+	position: absolute;
+	z-index: 888;
+	cursor: default;
+	text-align: center !important;
+	top: 2px;
+	left: 2px;
+	width: 50px;
+	line-height: 34px;
+}
+.um-field-icon i:before { vertical-align: middle !important; margin: 0 auto !important; }
+
+.um-field-icon i {
+	font-size: 20px;
+	display: inline-block;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+}
+
+.um-form input[type=text],
+.um-form input[type=password] {
+	padding: 0 12px;
+	width: 100%;
+	display: block;
+	border-radius: 2px;
+	outline: none !important;
+	cursor: text !important;
+	font-size: 15px !important;
+	height: 40px !important;
+	box-sizing: border-box;
+	box-shadow: none !important;
+	margin: 0;
+}
+
+.um-form input[type=text]:focus ,
+.um-form input[type=password]:focus,
+.um-form textarea:focus {
+	border-color: #ccc;
+	background-color: #fff !important;
+	box-shadow: none !important;
+}
+
+.um-form input[type=text].um-iconed,
+.um-form input[type=password].um-iconed { padding-left: 50px }
+
+.um-form input[type=text].um-error,
+.um-form input[type=password].um-error { border-color: #C74A4A !important }
+
+.um-form textarea {
+	width: 100%;
+	padding: 8px 12px;
+	display: block;
+	font-size: 15px !important;
+	line-height: 22px !important;
+	background: #fff;
+	border-radius: 2px;
+	box-sizing: border-box;
+}
+
+/*
+	- Radio & Checkboxes
+*/
+
+.um-field-checkbox,
+.um-field-radio {
+	display: block;
+	margin: 8px 0;
+	position: relative;
+	cursor: pointer;
+	color: #888;
+}
+
+.um-field-checkbox:hover i,
+.um-field-radio:hover i
+{
+color: #666
+}
+
+.um-field-checkbox input,
+.um-field-radio input{display:none!important}
+
+.um-field-checkbox-state,
+.um-field-radio-state {
+	position: absolute;
+	top: 0;
+	left: 1px;
+	width: 24px;
+	height: 24px;
+}
+
+.um-field-checkbox-state i,
+.um-field-radio-state i {
+	font-size: 24px;
+	line-height: 24px;
+	height: 24px;
+	vertical-align: middle;
+	color: #ccc;
+	transition: all .2s linear;
+}
+
+.um-field-checkbox-option,
+.um-field-radio-option {
+	margin: 0 0 0 36px;
+	line-height: 24px;
+}
+
+/*
+	- Group of Fields
+*/
+
+.um-field-group {
+	margin-top: 30px;
+}
+
+.um-field-group-head {
+	cursor: pointer;
+	color: #fff;
+	font-size: 16px;
+	line-height: 22px;
+	padding: 10px 20px;
+
+	transition: 0.25s;
+	box-sizing: border-box;
+	border-radius: 4px !important;
+	border-top: 1px solid rgba(0,0,0,0.0) !important;
+	border-bottom: 2px solid rgba(0, 0, 0, 0.1) !important;
+	letter-spacing: 0.5px;
+}
+
+.um-field-group-head i {
+	font-size: 18px;
+	line-height: 22px;
+	height: 22px;
+	margin: 0 8px 0 0;
+	vertical-align: middle;
+}
+
+.um-field-group-body {
+	display: none;
+	margin: 15px 0 0 0;
+	padding: 15px 20px 5px 20px;
+	background: #f9f9f9;
+	border-radius: 3px;
+	position: relative;
+	box-sizing: border-box;
+	width: 100%;
+}
+
+.um-field-group-body div.um-field {
+	padding: 0 0 15px 0;
+}
+
+.um-field-group-cancel {
+	font-size: 18px;
+	position: absolute;
+	z-index: 800;
+	right: 8px;
+	top: 8px;
+	color: #ccc !important;
+	text-decoration: none !important;
+}
+.um-field-group-cancel:hover {color: #777 !important}
+
+/*
+	- Buttons
+*/
+
+.um div.disabled,
+.um input[type=submit]:disabled,
+.um input[type=text]:disabled {
+	opacity: 0.6 !important;
+	cursor: default !important;
+}
+
+input[type=submit].um-button,
+input[type=submit].um-button:focus {
+	vertical-align: middle !important;
+	height: auto !important;
+	font-size: 15px;
+	cursor: pointer !important;
+}
+
+.um-button {
+	border: none !important;
+	display: block;
+	width: 100%;
+	line-height: 1em !important;
+	padding: 16px 20px !important;
+	text-decoration: none !important;
+	text-align: center;
+	text-transform: none !important;
+	font-weight: normal !important;
+	overflow: hidden;
+	position: relative;
+
+	transition: 0.25s;
+	box-sizing: border-box;
+	border-radius: 4px !important;
+	border-top: 1px solid rgba(0,0,0,0.0) !important;
+	border-bottom: 2px solid rgba(0, 0, 0, 0.1) !important;
+	letter-spacing: 0.5px;
+}
+
+a.um-link-alt {
+	line-height: 22px;
+	color: #888 !important;
+	display: block !important;
+	text-decoration: none !important;
+	font-weight: normal;
+	text-align: center;
+}
+a.um-link-alt:hover {text-decoration: underline !important;}

@@ -1,0 +1,98 @@
+/*
+	- General metabox styling
+*/
+
+#um-admin-access-control h3 {
+	padding: 10px 20px 10px 60px;
+	color: #fff;
+	background: #3ba1da url(../img/logo-small.png) no-repeat 12px center;
+	font-weight: bold;
+	font-size: 14px !important;
+	-webkit-font-smoothing: antialiased !important;
+	-moz-osx-font-smoothing: grayscale !important;
+}
+
+#um-admin-access-control h4 {margin:10px 0 4px 0!important}
+
+#um-admin-access-control div.handlediv {
+	color: #fff !important;
+	-webkit-font-smoothing: antialiased !important;
+	-moz-osx-font-smoothing: grayscale !important;
+}
+
+#um-admin-access-control * {vertical-align: middle}
+
+#um-admin-access-control p {font-size: 13px}
+
+#um-admin-access-control input[type=text] {font-size: 13px}
+
+/*
+	- Nav Menu
+*/
+
+.um-nav-edit * {
+	-webkit-font-smoothing: antialiased !important;
+	-moz-osx-font-smoothing: grayscale !important;
+}
+
+.um-nav-edit-h2 {
+	padding: 10px 20px 10px 60px;
+	margin: 14px 12px 0 0;
+	border-radius: 3px;
+	color: #fff;
+	background: #3ba1da url(../img/logo-small.png) no-repeat 12px center;
+	font-weight: bold;
+}
+
+.um-nav-mode {margin-top:10px}
+.um-nav-roles {display: none;margin-top:5px}
+
+/*
+	- Admin notice
+*/
+
+.um-admin-notice {
+	font-size: 14px !important;
+	color: #fff;
+	border-radius: 0;
+	margin: 40px 30px 0 0;
+	padding: 20px;
+	background: #3ba1da url(../img/logo-header.png) no-repeat 20px center;
+	border-radius: 5px;
+}
+
+.um-admin-notice div {
+	padding: 0 0 0 80px;
+}
+
+.um-admin-notice a {
+	text-decoration: none;
+	color: #3ba1da;
+	background: #fff;
+	margin: 0 0 0 10px;
+	border-radius: 5px;
+	display: inline-block;
+	padding: 8px 15px;
+}
+.um-admin-notice a:hover {color:#356e8e}
+
+.um-admin-notice a.um-admin-notice-alt {
+	background: #356e8e;
+	color: #8bbbd5;
+}
+.um-admin-notice a.um-admin-notice-alt:hover {color: #fff}
+
+/*
+	- jQuery Tooltips
+*/
+
+.um-admin-tip {
+	margin: 0 0 0 2px;
+	color: #3ba1da !important;
+	vertical-align: middle;
+	position: relative;
+	top: -3px;
+	opacity: 0.8;
+}
+.um-admin-tip.n {margin-left: 5px}
+.um-admin-tip i {cursor: pointer; vertical-align: middle; font-size: 20px; line-height: 20px;color: #3ba1da !important;}

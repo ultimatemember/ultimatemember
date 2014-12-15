@@ -1,0 +1,155 @@
+<?php
+
+class UM_Permalinks {
+
+	function __construct() {
+	
+		global $wp;
+		
+		$this->core = get_option('um_core_pages');
+		
+		add_action('init',  array(&$this, 'check_for_querystrings'), 1);
+		
+		add_action('init',  array(&$this, 'activate_account_via_email_link'), 1);
+		
+		$this->current_url = $this->get_current_url();
+	
+	}
+	
+	/***
+	***	@Get query as array
+	***/
+	function get_query_array() {
+		$parts = parse_url( $this->get_current_url() );
+		parse_str($parts['query'], $query);
+		return $query;
+	}
+
+	/***
+	***	@Get current URL anywhere
+	***/
+	function get_current_url( $no_query_params = false ) {
+		global $post;
+
+		if ( is_front_page() ) :
+			$page_url = home_url();
+		else :
+			$page_url = 'http';
+
+		if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" )
+			$page_url .= "s";
+			$page_url .= "://";
+			if ( isset( $_SERVER["SERVER_PORT"] ) && $_SERVER["SERVER_PORT"] != "80" )
+				$page_url .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+			else
+				$page_url .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+		endif;
+
+		if ( $no_query_params == true ) {
+			$page_url = strtok($page_url, '?');
+		}
+
+		return apply_filters( 'um_get_current_page_url', $page_url );
+	}
+	
+	/***
+	***	@activates an account via email
+	***/
+	function activate_account_via_email_link(){
+		global $ultimatemember;
+		
+		if ( isset($_REQUEST['act']) && $_REQUEST['act'] == 'activate_via_email' && isset($_REQUEST['hash']) && strlen($_REQUEST['hash']) == 30 &&
+			isset($_REQUEST['user_id']) && is_numeric($_REQUEST['user_id']) ) { // valid token
+				
+				um_fetch_user( $_REQUEST['user_id'] );
+				
+				if ( um_user('account_status') != 'awaiting_email_confirmation' ) wp_die('The activation link you used is invalid or has expired.');
+				
+				if ( $_REQUEST['hash'] != um_user('account_secret_hash') ) wp_die('The secret key provided does not match this one for the user.');
+
+				$ultimatemember->user->approve();
+				
+				um_reset_user();
+		}
+		
+	}
+	
+	/***
+	***	@makes an activate link for any user
+	***/
+	function activate_url(){
+		global $ultimatemember;
+		
+		if ( !um_user('account_secret_hash') ) return false;
+		
+		$url = add_query_arg( 'act', 'activate_via_email', home_url() );
+		$url = add_query_arg( 'hash', um_user('account_secret_hash'), $url );
+		$url = add_query_arg( 'user_id', um_user('ID'), $url );
+		
+		return $url;
+	}
+	
+	/***
+	***	@checks for UM query strings
+	***/
+	function check_for_querystrings(){
+		global $ultimatemember;
+		
+		if ( isset($_REQUEST['message']) ) 
+			$ultimatemember->shortcodes->message_mode = true;
+		
+		if ( isset($_REQUEST['message']) && isset($_REQUEST['uid']) )
+			um_fetch_user( $_REQUEST['uid'] );
+			
+	}
+	
+	/***
+	***	@add a query param to url
+	***/
+	function add_query( $key, $value ) {
+		$this->current_url = add_query_arg( $key, $value, $this->current_url );
+		return $this->current_url;
+	}
+	/***
+	***	@remove a query param from url
+	***/
+	function remove_query( $key, $value ) {
+		$this->current_url = remove_query_arg( $key, $this->current_url );
+		return $this->current_url;
+	}
+	
+	/***
+	***	@get profile url for set user
+	***/
+	function profile_url() {
+		global $ultimatemember;
+		$profile_url = $this->core['user'];
+		$profile_url = get_permalink($profile_url);
+		
+		if ( um_get_option('permalink_base') == 'user_login' ) {
+			$user_in_url = $ultimatemember->user->profile['user_login'];
+		}
+		
+		if ( um_get_option('permalink_base') == 'user_id' ) {
+			$user_in_url = um_user('ID');
+		}
+		
+		if ( um_get_option('permalink_base') == 'name' ) {
+			$user_in_url = rawurlencode( strtolower( um_user('full_name') ) );
+		}
+		
+		if ( get_option('permalink_structure') ) {
+		
+			$profile_url = trailingslashit( untrailingslashit( $profile_url ) );
+			$profile_url = $profile_url . $user_in_url . '/';
+		
+		} else {
+			
+			$profile_url = add_query_arg( 'um_user', $user_in_url, $profile_url );
+			
+		}
+		
+		return $profile_url;
+	}
+
+}

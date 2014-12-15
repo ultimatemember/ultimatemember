@@ -1,0 +1,156 @@
+/*
+	- General
+*/
+
+.um-admin-dash-container {
+	box-sizing: border-box;
+	border-radius: 3px;
+	margin: 18px 20px 20px 2px !important;
+	background-color: #F5F5F5;
+	background-repeat: repeat-x;
+	background-image: -moz-linear-gradient(center top , #F2F2F2 0px, #F5F5F5 100%);
+	border: 1px solid #DEDEDE;
+	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.04);
+	overflow: hidden;
+}
+
+.um-admin-dash-container *{
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.um-admin-dash-head {
+	background: #3ba1da;
+	border-radius: 3px 3px 0 0;
+	padding: 0 0 0 20px;
+	border-bottom: 3px solid #3ba1da;
+}
+
+.um-admin-dash-nav {
+	float: left;
+	width: 202px;
+}
+
+.um-admin-dash-nav,
+.um-admin-dash-main
+ {
+    min-height: 300px;
+}
+
+.um-admin-dash-main {
+	background: none repeat scroll 0% 0% #FCFCFC;
+	margin-left: 201px;
+	border-left: 1px solid #D8D8D8;
+	padding: 10px 20px;
+	box-shadow: 0px 1px 0px #FFF inset;
+}
+
+.um-admin-dash-foot {
+	background: none repeat scroll 0% 0% #EEE;
+	height: 60px;
+	border-radius: 0 0 3px 3px;
+	border-top: 1px solid #E7E7E7;
+	z-index: 9999;
+}
+
+/*
+	- Header
+*/
+
+.um-admin-dash-head-logo {
+	float: left;
+	margin: 20px 10px;
+}
+
+.um-admin-dash-head h2 {
+	color: #fff;
+	font-size: 24px !important;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background: url(../img/logo-header.png) no-repeat left 8px;
+	padding: 10px 10px 10px 80px;
+	margin: 0 !important;
+	display: inline-block;
+	font-style: normal;
+	padding-right: 5px;
+	line-height: 29px;
+}
+
+.um-admin-dash-head span {
+	color: #fff !important;
+	font-size: 14px;
+	position: relative;
+	top: -10px;
+	font-weight: 600;
+	padding-left: 4px;
+}
+
+/*
+	- Nav
+*/
+
+.um-admin-dash-nav a {
+	font-family: Open Sans;
+	font-size: 13px;
+	position: relative;
+	display: block;
+	padding: 10px 4px 10px 14px;
+	background: none repeat scroll 0px 0px transparent;
+	border-width: 1px 0px;
+	border-style: solid;
+	border-bottom: 1px solid #E7E7E7;
+	border-top: 0px none;
+	opacity: 0.7;
+	color: #555;
+	font-weight: 700;
+	text-decoration: none;
+	transition: none 0s ease 0s;
+}
+
+.um-admin-dash-nav-title {
+	padding-left: 30px;
+}
+
+.um-admin-dash-nav a:hover {
+	color: #777;
+	opacity: 1;
+	background: none repeat scroll 0px 0px #e5e5e5;
+}
+
+.um-admin-dash-nav a i{
+	vertical-align: middle;
+	font-size: 1.35em;
+	position: absolute;
+	color: #555;
+}
+
+/*
+	- Misc
+*/
+
+.um-admin-dash-count {
+	background: #7ACE5A;
+	color: #fff;
+	padding: 2px 6px;
+	border-radius: 3px;
+	font-family: Open Sans;
+	font-weight: 700;
+	position: absolute;
+	right: 10px;
+	top: 8px;
+	font-size: 11px;
+}
+
+.um-admin-dash-count.red {background:#cb3838}
+
+/*
+	- Main
+*/
+
+.um-admin-dash-main h3{
+	color: #888;
+	font-weight: 500;
+	border-bottom: 1px solid #eee;
+	padding: 0 0 10px 0;
+	margin-bottom: 0 !important;
+}

@@ -1,0 +1,110 @@
+<div class="um-admin-metabox">
+
+	<div class="">
+		
+		<p>
+			<label class="um-admin-half"><?php _e('Enable Search feature','ultimatemember'); ?> <?php $this->tooltip('If turned on, users will be able to search members in this directory'); ?></label>
+			<span class="um-admin-half">
+			
+				<?php $this->ui_on_off('_um_search', 0, true, 1, 'search-options', 'xxx'); ?>
+				
+			</span>
+		</p><div class="um-admin-clear"></div>
+		
+		<p class="search-options">
+			<label class=""><?php _e('Choose field(s) to enable in search','ultimatemember'); ?></label>
+				
+				<?php
+				
+				$meta_test = get_post_meta( get_the_ID(), '_um_search_fields', true );
+				$i = 0;
+				if ( is_array( $meta_test ) ) { 
+					foreach( $meta_test as $val ) { $i++;
+				?>
+				
+				<span class="um-admin-field">
+				
+				<select name="_um_search_fields[]" id="_um_search_fields" class="umaf-selectjs" style="width: 300px" data-placeholder="Choose a field">
+					<?php foreach($ultimatemember->builtin->all_user_fields() as $key => $arr) { ?>
+					<option value="<?php echo $key; ?>" <?php selected($key, $val ); ?>><?php echo isset( $arr['title'] ) ? $arr['title'] : ''; ?></option>
+					<?php } ?>	
+				</select>
+				
+				<?php if ( $i == 1 ) { ?>
+				<a href="#" class="um-admin-clone button um-admin-tipsy-n" title="New Field"><i class="um-icon-plus-add" style="margin-right:0!important"></i></a>
+				<?php } else { ?>
+				<a href="#" class="um-admin-clone-remove button um-admin-tipsy-n" title="Remove Field"><i class="um-icon-remove" style="margin-right:0!important"></i></a>
+				<?php } ?>
+				
+				</span>
+				
+				<?php }
+				
+				} else {
+				?>
+			
+				<span class="um-admin-field">
+				
+				<select name="_um_search_fields[]" id="_um_search_fields" class="umaf-selectjs" style="width: 300px" data-placeholder="Choose a field">
+					<?php foreach($ultimatemember->builtin->all_user_fields() as $key => $arr) { ?>
+					<option value="<?php echo $key; ?>" <?php selected($key, $ultimatemember->query->get_meta_value('_um_search_fields', $key) ); ?>><?php echo isset( $arr['title'] ) ? $arr['title'] : ''; ?></option>
+					<?php } ?>	
+				</select>
+				
+				<a href="#" class="um-admin-clone button um-admin-tipsy-n" title="New Field"><i class="um-icon-plus-add" style="margin-right:0!important"></i></a>
+				
+				</span>
+				
+				<?php } ?>
+
+		</p><div class="um-admin-clear"></div>
+		
+		<p class="search-options">
+			<label class="um-admin-half"><?php _e('User Roles that can use search','ultimatemember'); ?> <?php $this->tooltip('If you want to allow specific user roles to be able to search only'); ?></label>
+			<span class="um-admin-half">
+			
+				<select multiple="multiple" name="_um_roles_can_search[]" id="_um_roles_can_search" class="umaf-selectjs" style="width: 300px">
+					<?php foreach($ultimatemember->query->get_roles() as $key => $value) { ?>
+					<option value="<?php echo $key; ?>" <?php selected($key, $ultimatemember->query->get_meta_value('_um_roles_can_search', $key) ); ?>><?php echo $value; ?></option>
+					<?php } ?>	
+				</select>
+				
+			</span>
+		</p><div class="um-admin-clear"></div>
+		
+		<p class="search-options">
+			<label class="um-admin-half"><?php _e('User Roles that cannot use search','ultimatemember'); ?> <?php $this->tooltip('If you want to prevent specific user roles from being able to search'); ?></label>
+			<span class="um-admin-half">
+			
+				<select multiple="multiple" name="_um_roles_cant_search[]" id="_um_roles_cant_search" class="umaf-selectjs" style="width: 300px">
+					<?php foreach($ultimatemember->query->get_roles() as $key => $value) { ?>
+					<option value="<?php echo $key; ?>" <?php selected($key, $ultimatemember->query->get_meta_value('_um_roles_cant_search', $key) ); ?>><?php echo $value; ?></option>
+					<?php } ?>	
+				</select>
+				
+			</span>
+		</p><div class="um-admin-clear"></div>
+		
+		<p class="search-options">
+			<label class="um-admin-half"><?php _e('Results Text','ultimatemember'); ?> <?php $this->tooltip('Customize the search result text . e.g. Found 3,000 Members. Leave this blank to not show result text'); ?></label>
+			<span class="um-admin-half">
+				
+				<input type="text" name="_um_directory_header" id="_um_directory_header" value="<?php echo $ultimatemember->query->get_meta_value('_um_directory_header', null, um_get_option('directory_header') ); ?>" />
+				
+			</span>
+		</p><div class="um-admin-clear"></div>
+		
+		<p class="search-options">
+			<label class="um-admin-half"><?php _e('Custom text If no users were found','ultimatemember'); ?> <?php $this->tooltip('This is the text that is displayed if no users are found during a search'); ?></label>
+			<span class="um-admin-half">
+				
+				<input type="text" name="_um_directory_no_users" id="_um_directory_no_users" value="<?php echo $ultimatemember->query->get_meta_value('_um_directory_no_users', null, um_get_option('directory_no_users') ); ?>" />
+				
+			</span>
+		</p><div class="um-admin-clear"></div>
+		
+	</div>
+	
+	<div class="um-admin-clear"></div>
+	
+</div>

@@ -1,0 +1,177 @@
+/*
+	- Profile mode .um alias
+*/
+
+.um-profile {
+	box-sizing: border-box;
+}
+
+.um-profile img {display: block;overflow:hidden;border-radius:0!important;margin: 0!important}
+
+.um-profile a,
+.um-profile a:hover {text-decoration:none !important}
+
+.um-profile .um-profile-body {
+	padding: 15px 170px 0 170px;
+}
+
+.um-profile.um-editing {
+	padding-bottom: 30px;
+}
+
+.um-profile.um-viewing .um-field-label {
+	display: block;
+	margin: 0 0 8px 0;
+	color: #999;
+	border-bottom: solid 2px #eee;
+	padding-bottom: 4px;
+}
+
+/*
+	- Profile cover
+*/
+
+.um-cover{
+	background-color: #eee;
+}
+
+.um-cover-e {
+    min-height: 200px;
+	text-align: center;
+	box-sizing: border-box;
+	border: 2px dashed #ddd;
+}
+
+.um-cover-e img {
+	width: 100% !important;
+}
+
+.um-cover-add {
+	color: #aaa;
+	font-size: 36px;
+	width: 100%;
+	display: table;
+}
+
+.um-cover-add span {
+	display: table-cell;
+	vertical-align: middle;
+	height: 200px;
+}
+
+.um-cover-add:hover { color: #3ba1da }
+
+/*
+	- Profile header
+*/
+
+.um-header {
+	position: relative;
+	padding: 0 0 25px 0;
+	border-bottom: solid 2px #eee;
+}
+
+.um-profile-edit {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	font-size: 26px;
+	height: 26px;
+	line-height: 26px;
+	vertical-align: middle;
+}
+
+.um-profile-edit i, .um-profile-edit i:before {
+	height: 26px;
+	vertical-align: bottom !important;
+}
+
+/*
+	- Header without cover enabled
+*/
+
+.um-header.no-cover .um-profile-meta {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	text-align: center !important;
+}
+
+.um-header.no-cover .um-name { 
+	float: none !important;
+	margin-right: 0 !important;
+}
+
+.um-header.no-cover .um-profile-photo {
+	float: none !important;
+	margin: 0 auto !important;
+	text-align: center !important;
+	padding-top: 20px !important;
+}
+
+.um-header.no-cover a.um-profile-photo-img {
+	position: relative !important;
+	top: auto !important;
+	left: auto !important;
+	float: none !important;
+	width: auto !important;
+	height: auto !important;
+	display: inline-block !important;
+	text-align: center !important;
+}
+
+.um-header.no-cover .um-main-meta {padding: 0;}
+
+/*
+	- Profile photo
+*/
+
+.um-profile-photo {
+	float: left;
+	width: 250px;
+	position: relative;
+}
+
+.um-profile-photo a.um-profile-photo-img {
+	float: left;
+	position: absolute;
+	background: #fff;
+	padding: 5px;
+	left: 30px;
+}
+
+.um-profile-photo img {
+	width: 100%;
+	height: 100%;
+}
+
+/*
+	- Profile meta
+*/
+
+.um-profile-meta {
+	padding-right: 30px;
+}
+
+.um-main-meta {
+	font-size: 24px;
+	font-weight: bold;
+	padding: 10px 0 0 0;
+}
+
+.um-name {
+	float: left;
+	margin-right: 30px;
+}
+
+.um-meta {
+	font-size: 15px;
+}
+
+.um-meta span {
+	margin: 0 10px 0 0;
+	font-size: 14px;
+}
+
+.um-meta-text {
+	margin: 12px 0 0 0;
+}

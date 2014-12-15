@@ -1,0 +1,304 @@
+/*
+	- Columns
+*/
+
+body.um-admin-modal-open {
+    overflow: hidden;
+}
+
+.um-admin #major-publishing-actions{background-color: #fff !important;border-top:0}
+
+.um-admin .postbox h3 {
+background: #f9f9f9;
+}
+.um-admin .postbox h3 i {
+	font-size: 1.3em !important;
+	vertical-align: middle !important;
+	margin: 0 10px 0 0;
+	line-height: 16px !important;
+	height: 16px !important;
+	position: relative;
+	top: 1px;
+	color: #3ba1da;
+}
+
+.um-admin-hide {display: none}
+
+.um-admin-field {
+	display: block;
+	width: 100%;
+	margin-top: 10px;
+}
+
+.um-admin-field a.button {
+	position: relative;
+	top: 1px;
+	height: 29px !important;
+}
+
+.um-admin-half {
+	float: left;
+	width: 48%;
+}
+
+.um-admin-tri {
+	float: left;
+	width: 33%;
+}
+
+.um-admin-left{float: left}
+.um-admin-right {float: right}
+.um-admin-clear {clear: both}
+
+.um-admin a.um-admin-activebg,
+.um-admin a.um-admin-activebg:hover{
+	background: #3ba1da;
+	color: #fff;
+}
+
+.um-admin a.button,
+.um-admin input.button {
+	background: #f9f9f9 !important;
+	box-shadow: none !important;
+	color: #777;
+	border-radius: 2px;
+}
+
+.um-admin a.button i,
+.um-admin a.button-primary i {
+	font-size: 15px !important;
+	height: 15px !important;
+	vertical-align: middle !important;
+	margin: 0 5px 0 0 !important;
+}
+
+.um-admin a.button i:before,
+.um-admin a.button-primary i:before {
+	position: relative;
+	top: 1px;
+}
+
+.um-admin a.button-primary,
+.um-admin input.button-primary {
+	background: #3ba1da !important;
+	box-shadow: none !important;
+	border-radius: 2px;
+	color: #fff;
+}
+.um-admin a.button-primary:hover,
+.um-admin input.button-primary:hover {background: #44b0ec !important;}
+
+/*
+	- Form Inputs
+*/
+
+.um-admin-metabox p {margin: 10px 0 0 0}
+
+.um-admin-metabox label{
+	display: block;
+	cursor: default;
+	margin: 0 0 8px 0 !important;
+	padding: 0!important;
+	font-size: 13px;
+	color: #888;
+}
+
+.um-admin-metabox input[type=text]:disabled{
+	opacity: 0.7 !important;
+	color: #aaa !important;
+}
+
+.um-admin-metabox input[type=text],
+.um-admin-metabox textarea{
+	width: 100%;
+	max-width: 100%;
+	display: block;
+	color: #666 !important;
+	background: #fff;
+	border: 1px solid #ddd;
+	border-radius: 2px;
+	outline: none !important;
+	box-sizing: border-box !important;
+	box-shadow: none !important;
+	
+	font-size: 13px !important;
+	height: auto !important;
+	line-height: 1.4em !important;
+	padding: 4px 10px !important;
+}
+
+.um-admin-metabox input[type=text].um-admin-error,
+.um-admin-metabox textarea.um-admin-error
+{border-color: #C74A4A!important}
+
+.um-admin-metabox input[type=text]:focus,
+.um-admin-metabox textarea:focus{
+	border-color: #ccc;
+	background-color: #fff !important;
+}
+
+.um-admin-metabox input[type=text].small {width: 50px}
+
+.um-admin-metabox textarea {min-height: 100px;height: 100px}
+
+.wp-picker-container input.wp-color-picker[type="text"] {
+	width: 68px !important;
+	float: left !important;
+	padding: 2px 4px !important;
+	border-width: 1px !important;
+}
+
+/*
+	- Error blocks
+*/
+
+.um-admin-error-block, .um-admin-success-block{
+	display: none;
+	width: 100%;
+	background: #C74A4A;
+	border-radius: 3px;
+	color: #fff;
+	box-sizing: border-box;
+	position: relative;
+	padding: 12px;
+	font-size: 13px;
+	line-height: 1em !important;
+	margin: 0 0 16px 0;
+}
+
+.um-admin-success-block {
+	background: #7ACE5A;
+}
+
+/*
+	- Yes or NO UI
+*/
+
+p.disabled-on-off .um-admin-yesno {
+	opacity: 0.5!important;
+	cursor: default !important;
+}
+p.disabled-on-off .um-admin-yesno *{
+	cursor: default !important;
+}
+
+.um-admin-yesno {
+	border-radius: 3px;
+	width: 120px;
+	height: 26px;
+	background: #aaa;
+	display: block;
+	color: #fff;
+	position: relative;
+}
+
+.um-admin-yesno span.btn {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 60px;
+	height: 26px;
+	text-align: center;
+	background: #f9f9f9;
+	z-index: 101;
+	border-radius: 1px;
+	cursor: pointer;
+	border: solid 1px #cccccc;
+}
+
+.um-admin-yesno span.btn.pos-1 {left: 60px}
+
+.um-admin-yesno span.btn i {
+	position: relative;
+	top: 4px;
+	font-size: 18px;
+	line-height: 18px !important;
+	color: #B1B1B1;
+}
+
+.um-admin-yesno span.yes, .um-admin-yesno span.no {
+	width: 60px;
+	float: left;
+	line-height: 28px;
+	height: 28px;
+	text-align: right;
+	cursor: default;
+	font-size: 13px;
+	color: #fff;
+	text-align: center;
+}
+
+.um-admin-yesno span.no {float: right}
+.um-admin-yesno .yes {background: #7ACE5A;border-radius: 3px 0 0 3px;}
+.um-admin-yesno .no   {background: #cb3838;border-radius: 0 3px 3px 0}
+
+/*
+	- SelectJS
+*/
+
+body.um-admin .actions,
+body.um-admin .bulkactions {
+	float: left;
+	margin: 0!important;
+	padding:0!important;
+	top: 0!important;
+}
+
+body.um-admin .actions .button {
+	height: 29px !important;
+	margin: 0 12px 0 0 !important;
+	display: inline !important;
+	position: relative;
+}
+
+body.um-admin .select2-container {margin-right: 2px!important;}
+
+body.um-admin .select2-drop,
+body.um-admin .select2-drop.select2-drop-above,
+body.um-admin .select2-drop-active,
+body.um-admin .select2-container-multi .select2-choices
+{border: 1px solid #ddd !important}
+
+body.um-admin .select2-container .select2-choice
+{
+	height: 27px !important;
+	line-height: 27px !important;
+	border: 1px solid #ddd !important;
+	color: #888 !important;
+}
+
+body.um-admin .select2-container .select2-choice {
+	font-size: 13px !important;
+}
+
+body.um-admin .select2-container .select2-choice .select2-arrow:before {
+	font-size: 25px !important;
+}
+
+body.um-admin .select2-search-choice-close:before {
+	font-size: 15px !important;
+	color: #aaa;
+}
+
+body.um-admin .select2-container-multi .select2-search-choice-close:before {
+	font-size: 13px !important;
+}
+
+body.um-admin .select2-search input[type=text] {
+	font-size: 13px !important;
+}
+
+body.um-admin .select2-results li {
+	font-size: 13px !important;
+}
+
+body.um-admin .select2-results .select2-no-results,
+body.um-admin .select2-results .select2-searching,
+body.um-admin .select2-results .select2-selection-limit {
+	font-size: 13px !important;
+}
+
+body.um-admin .select2-container-multi .select2-choices .select2-search-choice {
+    line-height: 13px !important;
+	font-size: 13px !important;
+}

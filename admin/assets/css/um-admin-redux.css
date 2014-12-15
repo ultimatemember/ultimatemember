@@ -1,0 +1,157 @@
+/*
+	- ReduxPanel
+*/
+
+.redux-container {
+	border-radius: 0 !important;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background: none !important;
+	box-shadow: none !important;
+	border: 0 !important;
+}
+
+.redux-sidebar .redux-group-menu li.active a, .redux-sidebar .redux-group-menu li.active a:hover, .redux-sidebar .redux-group-menu li.activeChild a, .redux-sidebar .redux-group-menu li.activeChild a:hover {
+	background: transparent;
+}
+
+.redux-container #info_bar {
+	display: none;
+}
+
+.redux-sidebar .redux-group-menu {
+	font-size: 14px;
+}
+
+.redux-sidebar .redux-group-menu li.active a, .admin-color-fresh .redux-sidebar .redux-group-menu li.activeChild a {
+	color: #3ba1da !important;
+}
+
+.redux-sidebar .redux-group-menu li.activeChild.hasSubSections a {
+	color: #fff !important;
+}
+
+.redux-container .redux_field_th {
+	font-size: 14px;
+	font-weight: 600;
+	color: #222;
+}
+
+.redux-main {
+	background: none !important;
+}
+
+#redux-header {
+    background: #3ba1da !important;
+    border-color: #3ba1da !important;
+	border-radius: 0 !important;
+	padding: 0 0 0 20px !important;
+	border-bottom: 0 !important;
+}
+
+#redux-header .display_header span {
+	color: #fff !important;
+	font-size: 14px;
+	position: relative;
+	top: -10px;
+	font-weight: 600;
+	padding-left: 4px;
+}
+
+#redux-header h2 {
+	color: #fff;
+	font-size: 24px !important;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background: url(../img/logo-header.png) no-repeat left 8px;
+	padding: 10px 10px 10px 80px;
+}
+
+#redux-share {margin-top: 11px !important}
+
+#redux-share a {
+	color: #777 !important;
+	font-size: 22px !important;
+	margin: 0 15px 0 0 !important;
+}
+#redux-share a:hover {color: #3ba1da !important}
+
+.redux-main .form-table tr {
+	border-bottom: 0;
+}
+
+.redux-container #redux-footer {
+	border-radius: 0;
+	background: none !important;
+	padding: 10px 0;
+	border-top: 1px solid #D8D8D8;
+}
+
+.redux-container #redux-footer .redux-action_bar {
+	padding-top: 9px !important;
+}
+
+.redux-container textarea, .redux-container input[type=text], .redux-container ul.data-full li {
+	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
+	font-size: 13px;
+	line-height: 19px;
+	color: #333;
+}
+
+.redux-container ul.data-full{padding:0!important;margin:0!important}
+
+.redux-container .description {
+	color: #666 !important;
+	font-size: 14px !important;
+	font-style: italic !important;
+	margin-top: 10px !important;
+}
+
+.redux-container .redux-group-tab h3  {
+	border-bottom: 0;
+}
+
+.redux-container-switch {font-size: 13px}
+
+.redux-sidebar .redux-group-menu li a {
+	color: #555;
+	opacity: 1 !important;
+	padding: 10px 4px 10px 14px;
+}
+
+.redux-sidebar .redux-group-menu li a:hover {
+	background: #ddd;
+	color: #555;
+}
+
+.redux-sidebar .redux-group-menu li.activeChild.hasSubSections a {
+	background: #3ba1da !important;
+}
+
+.redux-sidebar .redux-group-menu li.activeChild.hasSubSections ul.subsection li.active {
+	border-right: 0;
+}
+
+.redux-sidebar .redux-group-menu li.activeChild.hasSubSections ul.subsection li {
+	border-right: 1px solid #DEDEDE;
+}
+
+.redux-sidebar .redux-group-menu li.activeChild.hasSubSections ul.subsection li a {
+	background: transparent !important;
+	color: #555 !important;
+	border-bottom: 1px solid #E7E7E7;
+	padding: 10px 4px 10px 14px !important;
+}
+
+.redux-sidebar .redux-group-menu li.activeChild.hasSubSections ul.subsection li a:hover {
+	background: #ddd !important;
+}
+
+.redux-sidebar .redux-group-menu li.activeChild.hasSubSections ul.subsection li.active a {
+	background: #555 !important;
+	color: #fff !important;
+}
+
+.redux-sidebar .redux-group-menu li.activeChild.hasSubSections .active a:after {
+	border: none !important;
+}

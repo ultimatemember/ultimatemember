@@ -1,0 +1,64 @@
+.um-admin td, .um-admin th {
+	-webkit-font-smoothing: antialiased !important;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.um-admin.post-type-um_form .manage-column.column-id {width: 40px}
+.um-admin.post-type-um_form .manage-column.column-mode {width: 100px}
+.um-admin.post-type-um_form .manage-column.column-title {width: 200px}
+.um-admin.post-type-um_form .manage-column.column-shortcode {width: 200px}
+.um-admin.post-type-um_form .manage-column.column-impressions {width: 100px}
+.um-admin.post-type-um_form .manage-column.column-conversions {width: 100px}
+
+.um-admin.post-type-um_directory .manage-column.column-id {width: 60px}
+.um-admin.post-type-um_directory .manage-column.column-title {width: 250px}
+
+.um-admin.post-type-um_role .manage-column.column-title {width: 200px}
+.um-admin.post-type-um_role .manage-column.column-count {width: 150px}
+.um-admin.post-type-um_role .manage-column.column-core {width: 150px}
+
+.um-admin.users-php .manage-column.column-username {width: 220px}
+.um-admin.users-php .manage-column.column-role {width: 150px}
+.um-admin.users-php .manage-column.column-name {width: 180px}
+.um-admin.users-php .manage-column.column-um_role {width: 150px}
+.um-admin.users-php .manage-column.column-um_status {width: 200px}
+.um-admin.users-php .manage-column.column-um_info {width: 80px}
+
+.um-admin.users-php .tablenav.top .bulkactions,
+ .um-admin.users-php .tablenav.bottom .bulkactions{display:none}
+
+.um-admin.post-type-um_form td.column-shortcode,
+.um-admin.post-type-um_form td.column-id,
+.um-admin.post-type-um_directory td.column-shortcode,
+.um-admin.post-type-um_directory td.column-id,
+.um-admin.post-type-um_role td.column-count
+{color: #aaa;font-size: 14px;}
+
+.um-admin.users-php  td.column-um_actions {padding-top: 12px}
+
+.um-admin.users-php  td.column-um_actions a.button {
+	height: 29px !important;
+	margin: 0 0 0 2px !important;
+	position: relative;
+}
+
+.um-admin-tag {
+	display: inline-block;
+	border-radius: 2px;
+	width: 100%;
+	box-sizing: border-box;
+	text-align: center;
+	background: #3ba1da;
+	color: #fff;
+	font-size: 14px;
+	height: 34px;
+	line-height: 34px;
+}
+.um-admin-tag.small {font-size: 13px;height:28px;line-height: 28px;display:inline;padding: 4px 10px;background: transparent;color: #666;border-radius:0;}
+.um-admin-tag.ok {border-left: 2px solid #93ba37}
+.um-admin-tag.pending {border-left: 2px solid #b76767}
+
+.um-admin-txtspace {margin: 0 0 0 10px;}
+
+.um-adm-ico {font-size: 20px;margin-top: 5px;display:inline-block;color:#3ba1da}
+.um-adm-ico.pointer {cursor: pointer}

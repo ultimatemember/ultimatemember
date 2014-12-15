@@ -1,0 +1,34 @@
+<?php
+
+require_once("../../../../../../wp-load.php");
+global $ultimatemember;
+
+$id = $_POST['key'];
+$ultimatemember->fields->set_id = $_POST['set_id'];
+$ultimatemember->fields->set_mode = $_POST['set_mode'];
+
+$ret['error'] = null;
+$ret = array();
+
+if(isset($_FILES[$id]['name'])) {
+
+    if(!is_array($_FILES[$id]['name'])) {
+	
+		$temp = $_FILES[$id]["tmp_name"];
+		$file = $_FILES[$id]["name"];
+		
+
+		$error = $ultimatemember->files->check_image_upload( $temp, $id );
+		if ( $error ){
+			$ret['error'] = $error;
+		} else {
+			$ret[] = $ultimatemember->files->new_image_upload_temp( $temp, $file, 35 );
+			
+			
+			
+		}
+
+    }
+	
+}
+echo json_encode($ret);
