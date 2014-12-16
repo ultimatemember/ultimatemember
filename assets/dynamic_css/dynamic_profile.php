@@ -39,7 +39,7 @@ print "
 
 if ( $main_bg ) {
 print ".um-$form_id.um-profile {
-	background: $main_bg !important;
+	background-color: $main_bg !important;
 }";
 }
 

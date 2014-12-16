@@ -304,7 +304,7 @@
 	function um_can_edit_field( $data ) {
 		global $ultimatemember;
 		if ( $ultimatemember->fields->editing == true && $ultimatemember->fields->set_mode == 'profile' ) {
-			if ( is_user_logged_in() && $data['editable'] == 0 ) {
+			if ( is_user_logged_in() && isset( $data['editable'] ) && $data['editable'] == 0 ) {
 				
 				if ( um_is_user_himself() && !um_user('can_edit_everyone') )
 					return false;
@@ -565,6 +565,8 @@
 						$default_avatar_uri = um_url . 'assets/img/default_avatar.png';
 					}
 					
+					$default_avatar_uri = um_url . 'assets/img/Dollarphotoclub_57189843.jpg';
+					
 					return '<img src="' . $default_avatar_uri . '" class="avatar avatar-'.$attrs.' um-avatar" width="'.$attrs.'" height="'.$attrs.'" alt="" />';
 					
 				}
@@ -574,6 +576,7 @@
 				if ( um_profile('cover_photo') ) {
 					return '<a href="#"><img src="'.um_profile('cover_photo').'" alt="" /></a>';
 				}
+				return '<a href="#"><img src="'.um_url . 'assets/img/best-hd-wallpapers-2.jpg" alt="" /></a>';
 				break;
 				
 		}

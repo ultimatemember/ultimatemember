@@ -1000,6 +1000,15 @@ $this->sections[] = array(
         ),
 		
         array(
+				'id'       		=> 'profile_header_bg',
+                'type'     		=> 'color',
+				'default'		=> um_get_metadefault('profile_header_bg'),
+                'title'    		=> __( 'Profile Header Background Color' ),
+                'validate' 		=> 'color',
+				'transparent'	=> false,
+        ),
+		
+        array(
                 'id'      		=> 'profile_photosize',
                 'type'     		=> 'text',
                 'title'    		=> __( 'Profile Photo Size' ),
@@ -1042,15 +1051,6 @@ $this->sections[] = array(
 									'3.2:1' 			=> '3.2:1',
 				),
 				'required'		=> array( 'profile_cover_enabled', '=', 1 ),
-        ),
-		
-        array(
-				'id'       		=> 'profile_header_bg',
-                'type'     		=> 'color',
-				'default'		=> um_get_metadefault('profile_header_bg'),
-                'title'    		=> __( 'Profile Header Background Color' ),
-                'validate' 		=> 'color',
-				'transparent'	=> false,
         ),
 		
         array(

@@ -73,36 +73,15 @@
 .um-col-alt {margin: 0 0 5px 0}
 .um-col-alt-b {padding-top: 20px}
 
-.um-col-121 {
-	float: left;
-	width: 48%;
-	min-height: 1px;height: auto;
-}
+.um-col-121 {float: left;width: 48%;min-height: 1px;height: auto;}
 
-.um-col-122 {
-	float: right;
-	width: 48%;
-	min-height: 1px;height: auto;
-}
+.um-col-122 {float: right;width: 48%;min-height: 1px;height: auto;}
 
-.um-col-131 {
-	float: left;
-	width: 30%;
-	min-height: 1px;height: auto;
-}
+.um-col-131 {float: left;width: 30%;min-height: 1px;height: auto;}
 
-.um-col-132 {
-	float: left;
-	width: 30%;
-	margin: 0 5%;
-	min-height: 1px;height: auto;
-}
+.um-col-132 {float: left;width: 30%;margin: 0 5%;min-height: 1px;height: auto;}
 
-.um-col-133 {
-	float: right;
-	width: 30%;
-	min-height: 1px;height: auto;
-}
+.um-col-133 {float: right;width: 30%;min-height: 1px;height: auto;}
 
 /*
 	- Font Icons
@@ -124,16 +103,19 @@
 */
 
 .um-row-heading {
-	padding: 10px 0;
+	padding: 5px 0;
 	font-size: 16px;
 }
 
 .um-row-heading i {
-	margin: 0 8px 0 0;
 	font-size: 24px;
-	line-height: 24px;
 	height: 24px;
-	vertical-align: middle;
+	line-height: 24px;
+	margin: 0 12px 0 0;
+}
+
+.um-row-heading i:before {
+	vertical-align: middle !important;
 }
 
 /*
@@ -360,7 +342,7 @@ color: #666
 */
 
 .um-field-group {
-	margin-top: 30px;
+	margin-top: 20px;
 }
 
 .um-field-group-head {
@@ -379,11 +361,12 @@ color: #666
 }
 
 .um-field-group-head i {
-	font-size: 18px;
-	line-height: 22px;
-	height: 22px;
+	font-size: 20px;
 	margin: 0 8px 0 0;
-	vertical-align: middle;
+}
+
+.um-field-group-head i:before {
+	vertical-align: middle !important;
 }
 
 .um-field-group-body {

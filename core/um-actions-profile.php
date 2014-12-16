@@ -96,9 +96,9 @@
 					</div>
 					
 					<div class="um-meta">
-						<span>Web designer</span>
+						<span>Chief Executive Officer of Ultimate Member</span>
 						<span class="b">&bull;</span>
-						<span>28 years</span>
+						<span>28 Years Old</span>
 						<span class="b">&bull;</span>
 						<span>United Kingdom</span>
 					</div>

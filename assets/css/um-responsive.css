@@ -3,3 +3,69 @@
 **/
 
 /********************************************/
+
+div.uimob500 .um-profile-body {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+div.uimob500 .um-profile-edit {
+	right: 0;
+}
+
+div.uimob500 .um-profile-photo {
+	width: 100% !important;
+	text-align: center !important;
+	position: absolute;
+	top: -40px;
+	left: 0;
+}
+
+div.uimob500 .um-profile-photo a.um-profile-photo-img {
+	width: 110px !important;
+	height: 110px !important;
+	margin: 0 auto !important;
+	float: none !important;
+	display: inline-block !important;
+	position: relative !important;
+	top: auto !important;
+	left: auto !important;
+}
+
+div.uimob500 .um-header .um-profile-meta {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	text-align: center !important;
+	padding-top: 70px !important;
+}
+
+div.uimob500 .um-header .um-name { 
+	float: none !important;
+	margin-right: 0 !important;
+	font-size: 21px;
+}
+
+div.uimob500 .um-header .um-meta-text {
+	margin: 0;
+	padding: 0 20px;
+}
+
+div.uimob500 .um-header .um-meta {padding: 0 20px}
+div.uimob500 .um-header .um-meta span {display: block}
+div.uimob500 .um-header .um-meta span.b {display: none}
+
+div.uimob500 .um-col-121,
+div.uimob500 .um-col-122,
+div.uimob500 .um-col-131,
+div.uimob500 .um-col-132,
+div.uimob500 .um-col-133 {
+	float: none;
+	width: 100%;
+	margin: 0;
+}
+
+div.uimob500 .um-col-alt .um-half {
+	width: 100%;
+	float: none !important;
+	margin-bottom: 10px;
+}
