@@ -5,7 +5,7 @@ jQuery(document).ready(function() {
 	jQuery('.um-tip-w').tipsy({gravity: 'w', opacity: 1, live: true, offset: 3 });
 	jQuery('.um-tip-e').tipsy({gravity: 'e', opacity: 1, live: true, offset: 3 });
 	jQuery('.um-tip-s').tipsy({gravity: 's', opacity: 1, live: true, offset: 3 });
-
+		
 	/* Custom Radio Buttons */
 	jQuery('.um-field-radio').mouseenter(function(){
 		if (!jQuery(this).hasClass('active')) {

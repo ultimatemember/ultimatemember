@@ -135,6 +135,7 @@ class UM_Setup {
 			'_um_login_secondary_btn_color' => '#eee',
 			'_um_login_secondary_btn_hover' => '#e5e5e5',
 			'_um_login_secondary_btn_text' => '#666',
+			'_um_directory_template' => 'members',
 			'_um_directory_header' => __('{total_users} Members','ultimatemember'),
 			'_um_directory_no_users' => __('We are sorry. We cannot find any users who match your search criteria.','ultimatemember'),
 		);

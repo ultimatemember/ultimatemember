@@ -11,7 +11,7 @@ jQuery(document).ready(function() {
 
 	/* Members wall JS */
 	jQuery('.um-members').each(function(){
-	UM_Member_Grid( jQuery(this) );
+		UM_Member_Grid( jQuery(this) );
 	});
 	
 	/* load member's meta */

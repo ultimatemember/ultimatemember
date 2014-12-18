@@ -65,8 +65,15 @@
 	margin: 0 0 10px 0 !important;
 }
 
-.um-search.um-search-1 .um-search-filter {width: 100%;padding: 0 0 10px 0;}
-.um-search.um-search-2 .um-search-filter {width: 50%}
+.um-search.um-search-1 .um-search-filter {
+	width: 100%;
+	padding: 0 0 10px 0;
+	float: none;
+}
+
+.um-search.um-search-2 .um-search-filter {
+	width: 50%;
+}
 
 .um-search-filter {
 	padding: 0 15px 30px 15px;
@@ -88,6 +95,10 @@
 	- Member box
 */
 
+.um-members {
+
+}
+
 .um-member {
 	float: left;
 	width: 30%;
@@ -101,28 +112,15 @@
 .um-gutter-sizer { width: 5% }
 
 .um-member-cover {
-	background: #eee;
-    display: inline-block;
-    position: relative;
-    width: 100%;
-}
-
-.um-member-cover-d {
-    margin-top: 37.1%;
+	background-color: #eee;
 }
 
 .um-member-cover-e {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: #eee;
+	text-align: center;
+	box-sizing: border-box;
 }
 
-.um-member-cover-e img {
-	width: 100% !important;
-}
+.um-member-cover-e img {width: 100% !important;}
 
 /*
 	- Member photo
@@ -138,17 +136,18 @@
 .um-member-photo img {
 	display: inline !important;
 	border-radius: 999px !important;
-	border: 1px solid #ccc;
+	border: 5px solid #fff;
+	background: #fff;
 	width: 140px;
 	height: 140px;
 }
 
 .um-member.with-cover .um-member-photo {padding-top: 0}
 .um-member.with-cover .um-member-photo img {
-	width: 90px;
-	height: 90px;
+	width: 100px;
+	height: 100px;
 	position: relative;
-	top: -45px;
+	top: -35px;
 	margin-bottom: -45px !important;
 }
 
@@ -316,26 +315,26 @@
 	- Members pagination
 */
 
-.um-members-pagi {
+.um-members-pagi,
+.um-members-pagidrop
+{
 	text-align: center;
-	margin-top: 20px;
-	padding-top: 40px;
-	padding-bottom: 5px;
-	border-top: 1px solid #eee;
+	padding: 5px 0;
+	font-size: 15px;
 }
-
 
 .um-members-pagi span.current,
 .um-members-pagi span.current:hover {
 	background: #3ba1da;
-	border-color: #3ba1da;
 	color: #fff;
 }
 
 .um-members-pagi i:before {font-size: 20px;vertical-align: middle !important;height: 34px;line-height: 34px;top: -2px;position: relative;}
 
 .um-members-pagi span.disabled {opacity: .4;cursor: default}
-.um-members-pagi span.none {border: 0;color: #aaa}
+
+.um-members-pagi span.none {color: #aaa}
+
 .um-members-pagi span {cursor: default}
 .um-members-pagi span,
 .um-members-pagi a {
@@ -343,7 +342,6 @@
 	width: auto;
 	height: 34px;
 	line-height: 34px;
-	font-size: 15px;
 	transition: all .2s linear;
 	padding: 0px 14px;
 	color: #666;
@@ -352,5 +350,4 @@
 .um-members-pagi a:hover {
 	text-decoration: none !important;
 	color: #3ba1da;
-	border-color: #3ba1da;
 }

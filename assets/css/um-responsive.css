@@ -1,3 +1,24 @@
+.uimob500-show,
+.uimob800-show,
+.uimob960-show
+{
+	display: none;
+}
+
+div.uimob500 .uimob500-show,
+div.uimob800 .uimob800-show,
+div.uimob960 .uimob960-show
+{
+	display: block;
+}
+
+div.uimob500 .uimob500-hide,
+div.uimob800 .uimob800-hide,
+div.uimob960 .uimob960-hide
+{
+	display: none;
+}
+
 /**
 	for 500px and below
 **/
@@ -64,8 +85,166 @@ div.uimob500 .um-col-133 {
 	margin: 0;
 }
 
-div.uimob500 .um-col-alt .um-half {
+div.uimob500 .um-field-half {
+	float: none;
 	width: 100%;
-	float: none !important;
-	margin-bottom: 10px;
 }
+
+div.uimob500 .um-search {
+	padding: 20px 0 !important;
+	width: 100% !important;
+	box-sizing: border-box;
+}
+
+div.uimob500 .um-search .um-search-filter {
+	width: 100% !important;
+	float: none !important;
+	padding: 0 0 15px 0 !important;
+}
+
+div.uimob500 .um-search .um-search-submit .um-button {
+	display: block !important;
+	min-width: 100% !important;
+	margin: 0 0 15px 0 !important;
+}
+
+div.uimob500 .um-member {
+	width: 100%;
+}
+
+div.uimob500  .um-gutter-sizer { width: 0px }
+
+div.uimob500 .um-account-main {
+	float: none;
+	width: 100%;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+div.uimob500 .um-account-tab {
+	padding-bottom: 20px;
+	border-bottom: 1px solid #eee;
+}
+
+div.uimob500 .um-account-main div.um-field {padding-top: 15px}
+
+div.uimob500 .um-account-meta {
+	margin-bottom: 0;
+}
+
+/**
+	for 800px and below
+**/
+
+div.uimob800 .um-account-main {
+	width: 90%;
+	max-width: 450px;
+}
+
+div.uimob800 .um-account-side {
+	padding: 0;
+	width: 10%;
+}
+
+div.uimob800 .um-account-side ul {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+}
+
+div.uimob800 .um-account-side li {margin-bottom: 0 !important;background: transparent;}
+
+div.uimob800 .um-account-side li a{
+	display: block;
+	padding: 0 !important;
+	height: 44px;
+	line-height: 44px;
+	color: #666 !important;
+	text-align: center;
+	text-decoration: none !important;
+	background: transparent;
+	transition: all .2s linear;
+}
+div.uimob800 .um-account-side li:first-child a {border-radius: 3px 3px 0 0 }
+div.uimob800 .um-account-side li:last-child a {border-radius: 0 0 3px 3px}
+
+div.uimob800 .um-account-side li a span.um-account-icontip {
+	display: block;
+	float: left;
+	text-align: center;
+	width: 100%;
+	height: 100%;
+	font-size: 22px;
+	line-height: 44px;
+}
+
+div.uimob800 .um-account-side li a span.um-account-icontip i {
+	position: relative;
+	top: 4px;
+	text-align: center;
+	width: 100%;
+}
+
+div.uimob800 .um-account-side li a.current,
+div.uimob800 .um-account-side li a.current:hover {
+	background: #3ba1da !important;
+	color: #fff !important;
+}
+
+div.uimob800 .um-account-meta a {
+	border: 1px solid #ddd;
+}
+
+div.uimob800 .um-account-meta a,
+div.uimob800 .um-account-meta img {
+	display: block;
+	overflow: hidden;
+	border-radius: 3px;
+}
+
+/********************************************/
+
+/**
+	for 960px and below
+**/
+
+/********************************************/
+
+div.uimob960 .um-col-131,
+div.uimob960 .um-col-132,
+div.uimob960 .um-col-133 {
+	float: none;
+	width: 100%;
+	margin: 0;
+}
+
+div.uimob960 .um-search {
+	padding: 20px 0 !important;
+	width: 100% !important;
+	box-sizing: border-box;
+}
+
+div.uimob960 .um-search .um-search-filter {
+	width: 48% !important;
+	float: left !important;
+	padding: 0 0 15px 0 !important;
+}
+
+div.uimob960 .um-search .um-search-filter-2 {
+	margin-left: 4%;
+}
+
+div.uimob960 .um-search .um-search-submit .um-button {
+	display: block !important;
+	width: 48% !important;
+	margin: 0 0 15px 0 !important;
+	box-sizing: border-box;
+	float: left;
+}
+
+div.uimob960 .um-search .um-search-submit .um-button.um-alt {float: right}
+
+div.uimob960 .um-member {
+	width: 48%;
+}
+
+div.uimob960  .um-gutter-sizer { width: 4% }

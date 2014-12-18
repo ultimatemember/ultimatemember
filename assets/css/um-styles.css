@@ -12,6 +12,7 @@
 	margin-bottom: 30px !important;
 	-webkit-font-smoothing: antialiased !important;
 	-moz-osx-font-smoothing: grayscale !important;
+	opacity: 0;
 }
 
 .um-s1,
@@ -169,15 +170,11 @@
 .um-tip {
 	margin: 0 0 0 8px;
 	cursor: pointer;
-	height: 22px;
-	line-height: 22px;
 	display: inline-block;
 }
 
 .um-tip i {
-	font-size: 20px;
-	height: 22px;
-	line-height: 22px;
+	font-size: 18px;
 	vertical-align: middle;
 }
 

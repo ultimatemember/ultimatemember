@@ -1,25 +1,32 @@
 /*
-	- sidebar in account page
+	- Layout
 */
+
+.um-account a:focus {
+    outline: 0 !important; /*removes the dotted border*/
+}
 
 .um-account-side {
 	float: left;
 	width: 35%;
-	padding: 15px;
-	border-right: solid 2px #eee;
+	padding: 0 30px;
 	box-sizing: border-box;
 }
-
-/*
-	- account main
-*/
 
 .um-account-main {
 	float: left;
 	width: 50%;
-	padding: 0 30px !important;
+	padding: 0 30px;
 	box-sizing: border-box;
 }
+
+.um-account-tab {
+	display: none;
+}
+
+/*
+	- Main tab
+*/
 
 .um-account-main div.um-field {
 	padding-top: 25px;
@@ -50,20 +57,12 @@
 }
 
 /*
-	- account tab
-*/
-
-.um-account-tab {
-	display: none;
-}
-
-/*
-	- account page photo
+	- Account photo
 */
 
 .um-account-meta {
 	text-align: center;
-	margin-bottom: 15px;
+	margin-bottom: 20px;
 }
 
 .um-account-meta img {
@@ -74,13 +73,49 @@
 	font-weight: bold;
 	color: #333;
 	text-decoration: none !important;
-	font-size: 16px;
+	font-size: 18px;
 }
 
 .um-account-name a:hover {color: #3ba1da}
 
 /*
-	- tabs
+	- Account nav
+*/
+
+.um-account-nav a {
+	display: block;
+	height: 44px;
+	line-height: 44px;
+	color: #666;
+	text-decoration: none !important;
+	position: relative;
+	padding-left: 40px;
+	border-bottom: 1px solid #eee;
+	transition: all .2s linear;
+	font-size: 14px;
+}
+
+.um-account-nav a.current{
+	color: #3ba1da !important;
+	font-weight: bold;
+}
+
+.um-account-nav span.arr {
+	position: absolute;
+	right: 0;
+	top: 4px;
+	font-size: 23px;
+}
+
+.um-account-nav span.ico {
+	position: absolute;
+	left: 0;
+	top: 3px;
+	font-size: 21px;
+}
+
+/*
+	- Account tabs
 */
 
 .um-account-side ul, .um-account-side li {
@@ -91,17 +126,13 @@
 
 .um-account-side li {margin-bottom: 6px !important;background: #eee;}
 
-.um-account-side li a:focus{
-    outline:0; /*removes the dotted border*/
-}
-
 .um-account-side li a{
 	display: block;
 	padding: 4px 0px;
 	font-size: 14px;
+	height: 30px;
 	line-height: 20px;
 	color: #999;
-	height: 30px;
 	position: relative;
 }
 

@@ -31,9 +31,18 @@
 				
 					<?php
 
-					$i = 0; foreach( $search_filters as $filter ) { $i++;
-						echo '<div class="um-search-filter">'; $ultimatemember->members->show_filter( $filter ); echo '</div>';
-						if ( $i % 3 == 0 ) { echo '<div class="um-clear"></div>'; }
+					$i = 0;
+					foreach( $search_filters as $filter ) {
+					$i++;
+						
+						if ( $i % 2 == 0 ) {
+							$add_class = 'um-search-filter-2';
+						} else {
+							$add_class = '';
+						}
+						
+						echo '<div class="um-search-filter '. $add_class .'">'; $ultimatemember->members->show_filter( $filter ); echo '</div>';
+					
 					}
 					
 					?>
@@ -46,7 +55,7 @@
 						
 						<a href="#" class="um-button um-do-search"><?php _e('Search','ultimatemember'); ?></a><a href="<?php echo $ultimatemember->permalinks->get_current_url( true ); ?>" class="um-button um-alt"><?php _e('Reset','ultimatemember'); ?></a>
 						
-					</div>
+					</div><div class="um-clear"></div>
 				
 				</form>
 			
@@ -100,8 +109,20 @@
 		if ( um_members('total_pages') > 1 ) { // needs pagination
 		
 		?>
-	
-		<div class="um-members-pagi">
+		
+		<div class="um-members-pagidrop uimob500-show">
+			
+			<?php _e('Jump to page:','ultimatemember'); ?>
+			
+			<select onChange="window.location.href=this.value" class="um-s1" style="width: 100px">
+				<?php foreach( um_members('pages_to_show') as $i ) { ?>
+				<option value="<?php echo $ultimatemember->permalinks->add_query( 'members_page', $i ); ?>" <?php selected($i, um_members('page')); ?>><?php printf(__('%s of %d','ultimatemember'), $i, um_members('total_pages') ); ?></option>
+				<?php } ?>
+			</select>
+		
+		</div>
+		
+		<div class="um-members-pagi uimob500-hide">
 		
 			<?php if ( um_members('page') != 1 ) { ?>
 			<a href="<?php echo $ultimatemember->permalinks->add_query( 'members_page', 1 ); ?>" class="pagi pagi-arrow um-tip-n" title="First Page"><i class="um-icon-angle-double-left"></i></a>
@@ -182,7 +203,6 @@
 				
 					<?php if ($cover_photos) { ?>
 					<div class="um-member-cover">
-						<div class="um-member-cover-d"></div>
 						<div class="um-member-cover-e"><?php echo um_user('cover_photo'); ?></div>
 					</div>
 					<?php } ?>

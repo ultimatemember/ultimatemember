@@ -227,7 +227,7 @@ class UM_Fields {
 		
 		$output .= '<label for="'.$key.$ultimatemember->form->form_suffix.'">'.$label.'</label>';
 		
-		if ( isset( $data['help'] ) && $this->viewing == false ) {$output .= '<span class="um-tip um-tip-w" title="'.$data['help'].'"><i class="um-icon-help-circled"></i></span>';}
+		if ( isset( $data['help'] ) && $this->viewing == false ) {$output .= '<span class="um-tip um-tip-s" title="'.$data['help'].'"><i class="um-icon-help-circled"></i></span>';}
 		
 		$output .= '<div class="um-clear"></div></div>';
 		
@@ -1026,8 +1026,10 @@ class UM_Fields {
 						} else {
 							$class = 'um-s1';
 						}
-						
+							
+						if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label($label, $key, $data);
+						}
 
 						$output .= '<div class="um-field-area">';
 						
@@ -1078,7 +1080,9 @@ class UM_Fields {
 							$class = 'um-s1';
 						}
 						
+						if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label($label, $key, $data);
+						}
 
 						$output .= '<div class="um-field-area">';
 						
@@ -1123,7 +1127,9 @@ class UM_Fields {
 			case 'radio':
 				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">';
 						
+						if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label($label, $key, $data);
+						}
 						
 						$output .= '<div class="um-field-area">';
 							

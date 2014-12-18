@@ -125,7 +125,7 @@
 		extract( $info );
 		$fields = $ultimatemember->builtin->get_specific_fields('single_user_password'); ?>
 		
-		<div class="um-account-heading"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
+		<div class="um-account-heading uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
 		
 		<?php echo wpautop( um_get_option('delete_account_text') ); ?>
 		
@@ -149,7 +149,7 @@
 		extract( $info );
 		$fields = $ultimatemember->builtin->get_specific_fields('profile_privacy,show_in_members'); ?>
 		
-		<div class="um-account-heading"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
+		<div class="um-account-heading uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
 		
 		<?php $output = null;
 		foreach( $fields as $key => $data ) {
@@ -171,7 +171,7 @@
 		extract( $info );
 		$fields = $ultimatemember->builtin->get_specific_fields('user_login,first_name,last_name,user_email'); ?>
 		
-		<div class="um-account-heading"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
+		<div class="um-account-heading uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
 		
 		<?php $output = null;
 		foreach( $fields as $key => $data ) {
@@ -193,7 +193,7 @@
 		extract( $info );
 		$fields = $ultimatemember->builtin->get_specific_fields('user_password'); ?>
 		
-		<div class="um-account-heading"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
+		<div class="um-account-heading uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
 		
 		<?php $output = null;
 		foreach( $fields as $key => $data ) {
@@ -206,7 +206,29 @@
 	}
 	
 	/***
-	***	@display account page tabs
+	***	@display account photo and username
+	***/
+	add_action('um_account_user_photo_hook__mobile', 'um_account_user_photo_hook__mobile');
+	function um_account_user_photo_hook__mobile( $args ) {
+		global $ultimatemember;
+		extract( $args );
+		
+		?>
+		
+		<div class="um-account-meta uimob500-show">
+			
+			<div class="um-account-meta-img"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('profile_photo', 120); ?></a></div>
+			
+			<div class="um-account-name"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('display_name'); ?></a></div>
+		
+		</div>
+	
+		<?php
+		
+	}
+	
+	/***
+	***	@display account photo and username
 	***/
 	add_action('um_account_user_photo_hook', 'um_account_user_photo_hook');
 	function um_account_user_photo_hook( $args ) {
@@ -217,9 +239,11 @@
 		
 		<div class="um-account-meta">
 			
-			<div class="um-account-meta-img"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('profile_photo', 80); ?></a></div>
+			<div class="um-account-meta-img uimob800-hide"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('profile_photo', 120); ?></a></div>
 			
-			<div class="um-account-name"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('display_name'); ?></a></div>
+			<div class="um-account-meta-img-b uimob800-show um-tip-w" title="<?php echo um_user('display_name'); ?>"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('profile_photo', 120); ?></a></div>
+			
+			<div class="um-account-name uimob800-hide"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('display_name'); ?></a></div>
 		
 		</div>
 	
@@ -267,9 +291,10 @@
 				
 				<li>
 					<a data-tab="<?php echo $id; ?>" href="<?php echo $ultimatemember->account->tab_link($id); ?>" class="um-account-link <?php if ( $id == $current_tab ) echo 'current'; ?>">
-						<span class="um-account-icon"><i class="<?php echo $icon; ?>"></i></span>
-						<span class="um-account-title"><?php echo $title; ?></span>
-						<span class="um-account-arrow"><i class="um-icon-right-open"></i></span>
+						<span class="um-account-icontip uimob800-show um-tip-w" title="<?php echo $title; ?>"><i class="<?php echo $icon; ?>"></i></span>
+						<span class="um-account-icon uimob800-hide"><i class="<?php echo $icon; ?>"></i></span>
+						<span class="um-account-title uimob800-hide"><?php echo $title; ?></span>
+						<span class="um-account-arrow uimob800-hide"><i class="um-icon-right-open"></i></span>
 					</a>
 				</li>
 				

@@ -6,7 +6,9 @@
 			
 			<?php do_action('um_account_page_hidden_fields', $args ); ?>
 			
-			<div class="um-account-side">
+			<?php do_action('um_account_user_photo_hook__mobile', $args ); ?>
+			
+			<div class="um-account-side uimob500-hide">
 			
 				<?php do_action('um_account_user_photo_hook', $args ); ?>
 				
@@ -22,10 +24,23 @@
 				
 					foreach( $arr as $id => $info ) { extract( $info );
 					
+						$current_tab = $ultimatemember->account->current_tab;
+						
 						if ( um_get_option('account_tab_'.$id ) == 1 || $id == 'general' ) {
 					
+							?>
+							
+							<div class="um-account-nav uimob500-show"><a href="#" data-tab="<?php echo $id; ?>" class="<?php if ( $id == $current_tab ) echo 'current'; ?>"><?php echo $title; ?>
+								<span class="ico"><i class="<?php echo $icon; ?>"></i></span>
+								<span class="arr"><i class="um-icon-chevron-down-3"></i></span>
+							</a></div>
+							
+							<?php
+							
 							echo '<div class="um-account-tab um-account-tab-'.$id.'" data-tab="'.$id.'">';
-							do_action("um_account_tab__{$id}", $info );
+
+								do_action("um_account_tab__{$id}", $info );
+							
 							echo '</div>';
 						
 						}

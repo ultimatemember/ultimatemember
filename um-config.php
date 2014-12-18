@@ -1273,3 +1273,23 @@ $this->sections[] = array(
 	)
 	
 );
+
+$this->sections[] = array(
+	
+    'subsection' => true,
+    'title'      => __( 'Member Directory'),
+    'fields'     => array(
+		
+		array(
+				'id'       		=> 'directory_template',
+                'type'     		=> 'select',
+				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
+                'title'    		=> __( 'Members Default Template' ),
+                'desc' 	   		=> __( 'This will be the default template to output member directory' ),
+                'default'  		=> um_get_metadefault('directory_template'),
+				'options' 		=> $ultimatemember->shortcodes->get_templates( 'members' ),
+        ),
+		
+	)
+	
+);

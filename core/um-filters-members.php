@@ -132,11 +132,6 @@
 		if ( count ($query_args['meta_query']) == 1 ) {
 			unset( $query_args['meta_query'] );
 		}
-		
-		if ( $query_args['orderby'] == 'user_registered' && $query_args['order'] == 'DESC' ) {
-			unset( $query_args['orderby'] );
-			unset( $query_args['order'] );
-		}
 
 		return $query_args;
 		
