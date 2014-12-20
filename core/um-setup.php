@@ -27,6 +27,7 @@ class UM_Setup {
 			'members' => array( 'title' => 'Members' ),
 			'logout' => array( 'title' => 'Logout' ),
 			'account' => array( 'title' => 'Account' ),
+			'recover' => array( 'title' => 'Password Reset'),
 		);
 
 		$this->core_directory_meta['members'] = array(
@@ -323,6 +324,8 @@ class UM_Setup {
 						$content = '';
 					} else if ( $slug == 'account' ) {
 						$content = '[ultimatemember_account]';
+					} else if ( $slug == 'recover' ) {
+						$content = '[ultimatemember_recover]';
 					} else if ( $slug == 'user' ){
 						$content = $this->setup_shortcode['profile'];
 					} else {

@@ -17,7 +17,7 @@ class UM_Taxonomies {
 				'labels' => array(
 					'name' => __( 'Forms' ),
 					'singular_name' => __( 'Form' ),
-					'add_new' => __( 'Add New Form' ),
+					'add_new' => __( 'Add New' ),
 					'add_new_item' => __('Add New Form' ),
 					'edit_item' => __('Edit Form'),
 					'not_found' => __('You did not create any forms yet'),
@@ -33,14 +33,14 @@ class UM_Taxonomies {
 		
 		register_post_type( 'um_role', array(
 				'labels' => array(
-					'name' => __( 'Roles' ),
-					'singular_name' => __( 'Role' ),
-					'add_new' => __( 'Add New Role' ),
-					'add_new_item' => __('Add New Role' ),
-					'edit_item' => __('Edit Role'),
-					'not_found' => __('You did not create any roles yet'),
+					'name' => __( 'Member Levels' ),
+					'singular_name' => __( 'Member Level' ),
+					'add_new' => __( 'Add New' ),
+					'add_new_item' => __('Add New Member Level' ),
+					'edit_item' => __('Edit Member Level'),
+					'not_found' => __('You did not create any member levels yet'),
 					'not_found_in_trash' => __('Nothing found in Trash'),
-					'search_items' => __('Search Roles')
+					'search_items' => __('Search Member Levels')
 				),
 				'show_ui' => true,
 				'show_in_menu' => false,
@@ -51,14 +51,14 @@ class UM_Taxonomies {
 
 		register_post_type( 'um_directory', array(
 				'labels' => array(
-					'name' => __( 'Directories' ),
-					'singular_name' => __( 'Directory' ),
-					'add_new' => __( 'Add New Directory' ),
-					'add_new_item' => __('Add New Directory' ),
-					'edit_item' => __('Edit Directory'),
+					'name' => __( 'Member Directories' ),
+					'singular_name' => __( 'Member Directory' ),
+					'add_new' => __( 'Add New' ),
+					'add_new_item' => __('Add New Member Directory' ),
+					'edit_item' => __('Edit Member Directory'),
 					'not_found' => __('You did not create any member directories yet'),
 					'not_found_in_trash' => __('Nothing found in Trash'),
-					'search_items' => __('Search Directories')
+					'search_items' => __('Search Member Directories')
 				),
 				'show_ui' => true,
 				'show_in_menu' => false,

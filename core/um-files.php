@@ -88,9 +88,9 @@ class UM_Files {
 	
 		$this->upload_dir = wp_upload_dir();
 		
-		$this->upload_basedir = $this->upload_dir['basedir'] . '/ultimate-member/';
+		$this->upload_basedir = $this->upload_dir['basedir'] . '/ultimatemember/';
 		
-		$this->upload_baseurl = $this->upload_dir['baseurl'] . '/ultimate-member/';
+		$this->upload_baseurl = $this->upload_dir['baseurl'] . '/ultimatemember/';
 
 		// create plugin uploads directory
 		if (!file_exists( $this->upload_basedir )) {

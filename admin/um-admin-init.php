@@ -8,6 +8,17 @@ class UM_Admin_API {
 
 		add_action('admin_init',  array(&$this, 'admin_init'), 0);
 
+		if ( !class_exists( 'ReduxFramework' ) && file_exists( um_path . 'admin/core/lib/ReduxFramework/ReduxCore/framework.php' ) ) {
+			require_once( um_path . 'admin/core/lib/ReduxFramework/ReduxCore/framework.php' );
+		}
+		if ( file_exists ( um_path . 'admin/core/um-admin-redux.php' ) ) {
+			require_once( um_path . 'admin/core/um-admin-redux.php' );
+		}
+		
+	
+		$this->about_tabs['about'] = 'About';
+		$this->about_tabs['start'] = 'Getting Started';
+		
 	}
 	
 	/***

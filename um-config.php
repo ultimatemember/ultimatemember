@@ -29,7 +29,7 @@ $this->sections[] = array(
                 'title'    		=> __( 'Default New User Role' ),
                 'desc' 	   		=> __( 'Select the default role that will be assigned to user after registration If you did not specify custom role settings per form.' ),
                 'default'  		=> 'member',
-				'options' 		=> um_get_roles_(),
+				'options' 		=> $ultimatemember->query->get_roles( ),
 				'placeholder' 	=> __('Choose user role...'),
         ),
 
@@ -243,7 +243,7 @@ $this->sections[] = array(
                 'type'     		=> 'text',
                 'title'   		=> __( 'Panic Key' ),
 				'desc' 	   		=> 'Panic Key is a random generated key that allow you to access the WordPress backend always regardless of backend settings.',
-				'default'		=> um_random_string_(),
+				'default'		=> $ultimatemember->validation->randomize(),
 				'desc'			=> trailingslashit( get_bloginfo('url') ).'wp-admin/?um_panic_key=<strong>YOUR_PANIC_KEY_VALUE</strong>'
         ),
 		
@@ -1292,4 +1292,34 @@ $this->sections[] = array(
 		
 	)
 	
+);
+
+/***
+***	@
+***/
+	
+$this->sections[] = array(
+
+    'icon'       => 'um-icon-tools',
+    'title'      => __( 'Advanced'),
+    'fields'     => array(
+
+        array(
+                'id'       		=> 'admin_load_time',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Show load time in admin footer' ),
+				'default' 		=> 0,
+				'desc' 	   		=> __('Display the number of queries and load time in backend','ultimatemember'),
+        ),
+		
+        array(
+                'id'       		=> 'load_time',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Show load time in frontend' ),
+				'default' 		=> 0,
+				'desc' 	   		=> __('Display the number of queries and load time in frontend','ultimatemember'),
+        ),
+
+	)
+
 );

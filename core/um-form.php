@@ -162,15 +162,10 @@ class UM_Form {
 	/***
 	***	@Adds a page view for form
 	***/
-	function add_pageview( $post_id ) {
+	function add_pageview( $form_id, $impressions ) {
 		global $ultimatemember;
-		
-		$impressions = $ultimatemember->query->get_attr('impressions', $post_id);
 		$new_impressions = (int)$impressions+1;
-		
-		$ultimatemember->query->update_attr('impressions', $post_id, $new_impressions);
-		
-		return $new_impressions;
+		$ultimatemember->query->update_attr('impressions', $form_id, $new_impressions);
 	}
 	
 	/***

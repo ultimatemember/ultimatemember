@@ -12,9 +12,24 @@ class UM_Admin_Enqueue {
 		
 		add_filter('admin_body_class', array(&$this, 'admin_body_class'), 9 );
 		
-		add_filter( 'enter_title_here', array(&$this, 'enter_title_here') );
+		add_filter('enter_title_here', array(&$this, 'enter_title_here') );
 		
+		add_filter('admin_footer_text', array(&$this, 'admin_footer_text') );
+
 	}
+	
+	/***
+	***	@Show footer text
+	***/
+    function admin_footer_text() {
+		$copyright = sprintf(__('Thank you for creating with <a href="http://ultimatemember.com">Ultimate Member</a> and <a href="https://wordpress.org">WordPress</a>.','ultimatemember'));
+		
+		if ( um_get_option('admin_load_time') == 1 ) {
+			$copyright .= '<br />' . sprintf(__('%1$s queries made in %2$s seconds','ultimatemember'), get_num_queries(), timer_stop(0) );
+		}
+		
+		return '<span id="footer-thankyou">' . $copyright . '</span>';
+    }
 	
 	/***
 	***	@enter title placeholder
@@ -42,8 +57,8 @@ class UM_Admin_Enqueue {
 
 		if ( strstr($screen_id, 'um_form') ) $highlighted_id = 3;
 		if ( strstr($screen_id, 'um_role') ) $highlighted_id = 4;
-		if ( strstr($screen_id, 'um_directory') ) $highlighted_id = 6;
-		if ( strstr($screen_id, 'user') || strstr($screen_id, 'profile') ) $highlighted_id = 5;
+		if ( strstr($screen_id, 'um_directory') ) $highlighted_id = 5;
+		if ( strstr($screen_id, 'user') || strstr($screen_id, 'profile') ) $highlighted_id = 6;
 
 		if ( isset($highlighted_id) ) { ?>
 		

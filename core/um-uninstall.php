@@ -29,10 +29,10 @@ class UM_Uninstall {
 			
 		}
 		
-		$admin = $ultimatemember->query->find_post_id('um_role','_um_core','admin');
-		$member = $ultimatemember->query->find_post_id('um_role','_um_core','member');
-		wp_delete_post( $admin, 1 );
-		wp_delete_post( $member, 1 );
+		$roles = get_posts( array( 'post_type' => 'um_role', 'number' => 999 ) );
+		foreach( $roles as $role ) {
+			wp_delete_post( $role->ID, 1 );
+		}
 
 		if ( is_plugin_active( um_plugin ) ) {
 			deactivate_plugins( um_plugin );

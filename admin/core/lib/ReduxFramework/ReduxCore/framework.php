@@ -1299,6 +1299,9 @@
              * @return void
              */
 			public function _options_page() {
+			
+				$um_admin = new UM_Admin_API();
+				
                 $this->import_export->in_field();
 
                 if ( $this->args['menu_type'] == 'submenu' ) {
@@ -1307,7 +1310,11 @@
 					
 					add_menu_page( __('Ultimate Member', $this->slug), __('Ultimate Member', $this->slug), 'manage_options', $this->slug, array(&$this, 'admin_page'), 'dashicons-admin-users', '50.78578');
 					
-					add_submenu_page( '_welcome_to_um', __('Welcome to Ultimate Member!', $this->slug), __('Welcome to Ultimate Member!', $this->slug), 'manage_options', $this->slug . '-welcome', array(&$this, 'admin_page') );
+					foreach( $um_admin->about_tabs as $k => $tab ) {
+					
+						add_submenu_page( '_'. $k . '_um', sprintf(__('%s | Ultimate Member', $this->slug), $tab), sprintf(__('%s | Ultimate Member', $this->slug), $tab), 'manage_options', $this->slug . '-' . $k, array(&$this, 'admin_page') );
+					
+					}
 					
 					add_submenu_page( $this->slug, __('Dashboard', $this->slug), __('Dashboard', $this->slug), 'manage_options', $this->slug, array(&$this, 'admin_page') );
 					
@@ -1321,11 +1328,11 @@
 
 					add_submenu_page( $this->slug, __('Forms', $this->slug), __('Forms', $this->slug), 'manage_options', 'edit.php?post_type=um_form', '', '' );
 					
-					add_submenu_page( $this->slug, __('Roles', $this->slug), __('Roles', $this->slug), 'manage_options', 'edit.php?post_type=um_role', '', '' );
+					add_submenu_page( $this->slug, __('Member Levels', $this->slug), __('Member Levels', $this->slug), 'manage_options', 'edit.php?post_type=um_role', '', '' );
+					
+					add_submenu_page( $this->slug, __('Member Directories', $this->slug), __('Member Directories', $this->slug), 'manage_options', 'edit.php?post_type=um_directory', '', '' );
 					
 					add_submenu_page( $this->slug, __('Members', $this->slug), __('Members', $this->slug), 'manage_options', 'users.php', '', '' );
-					
-					add_submenu_page( $this->slug, __('Directories', $this->slug), __('Directories', $this->slug), 'manage_options', 'edit.php?post_type=um_directory', '', '' );
 
                 } else {
                     $this->page = add_menu_page(
@@ -4311,11 +4318,26 @@
 			
 			public function admin_page(){
 			
+				$um_admin = new UM_Admin_API();
+				
 				$page = $_REQUEST['page'];
 				
-				if ( $page == 'ultimatemember')
-				
+				if ( $page == 'ultimatemember' ) {
 					include_once um_path . 'admin/templates/dashboard.php';
+				}
+					
+				if ( strstr( $page, 'ultimatemember-' ) ) {
+					
+					$template = str_replace('ultimatemember-','',$page);
+					$file = um_path . 'admin/templates/'. $template . '.php';
+					
+					if ( file_exists( $file ) ){
+						include_once um_path . 'admin/templates/'. $template . '.php';
+					} else {
+						echo '<h4>' .  __('Please create a team.php template in admin templates.','ultimatemember') . '</h4>';
+					}
+					
+				}
 			
 			}
 			

@@ -46,7 +46,6 @@ class UM_Rewrite {
 				'top'
 			);
 			
-			flush_rewrite_rules();
 		}
 		
 	}

@@ -65,6 +65,9 @@ class UM_Enqueue {
 	***/
 	function load_fileupload() {
 		
+		wp_register_script('um_jquery_form', um_url . 'assets/js/um-jquery-form.js' );
+		wp_enqueue_script('um_jquery_form');
+		
 		wp_register_script('um_fileupload', um_url . 'assets/js/um-fileupload.js' );
 		wp_enqueue_script('um_fileupload');
 		

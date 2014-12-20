@@ -1,5 +1,15 @@
 /*
-	- Columns
+	- Welcome
+*/
+
+.um-badge {
+	color: #fff;
+	background: none !important;
+	background: #3ba1da url(../img/logo_small.png) no-repeat center 0px !important;
+}
+
+/*
+	- General
 */
 
 body.um-admin-modal-open {
@@ -8,9 +18,6 @@ body.um-admin-modal-open {
 
 .um-admin #major-publishing-actions{background-color: #fff !important;border-top:0}
 
-.um-admin .postbox h3 {
-background: #f9f9f9;
-}
 .um-admin .postbox h3 i {
 	font-size: 1.3em !important;
 	vertical-align: middle !important;

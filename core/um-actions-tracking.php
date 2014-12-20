@@ -7,8 +7,10 @@
 	function um_add_page_view($args){
 		global $ultimatemember;
 		extract($args);
-		if ( isset( $form_id ) )
-			$ultimatemember->form->add_pageview( $form_id );
+		if ( isset( $form_id ) ) {
+			if ( !isset( $impressions ) ) $impressions = 0;
+			$ultimatemember->form->add_pageview( $form_id, $impressions );
+		}
 	}
 	
 	/***

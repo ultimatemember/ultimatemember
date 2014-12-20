@@ -43,7 +43,7 @@
 			<?php if ( isset($args['secondary_btn']) && $args['secondary_btn'] != 0 ) { ?>
 			
 			<div class="um-left um-half"><input type="submit" value="<?php echo $args['primary_btn_word']; ?>" class="um-button" /></div>
-			<div class="um-right um-half"><a href="#" class="um-button um-alt"><?php echo $args['secondary_btn_word']; ?></a></div>
+			<div class="um-right um-half"><a href="<?php echo um_get_core_page('register'); ?>" class="um-button um-alt"><?php echo $args['secondary_btn_word']; ?></a></div>
 			
 			<?php } else { ?>
 			
@@ -65,7 +65,7 @@
 	function um_after_login_submit(){ ?>
 		
 		<div class="um-col-alt-b">
-			<a href="#" class="um-link-alt">Forgot your password?</a>
+			<a href="<?php echo um_get_core_page('recover'); ?>" class="um-link-alt"><?php _e('Forgot your password?','ultimatemember'); ?></a>
 		</div>
 		
 		<?php

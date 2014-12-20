@@ -43,7 +43,7 @@ class UM_Query {
 	}
 	
 	/***
-	***	@update data
+	***	@Using wpdb instead of update_post_meta
 	***/
 	function update_attr( $key, $post_id, $new_value ){
 		update_post_meta( $post_id, '_um_' . $key, $new_value );

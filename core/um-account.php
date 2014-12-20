@@ -127,7 +127,7 @@ class UM_Account {
 		$defaults = array(
 			'template' => 'account',
 			'mode' => 'account',
-			'form_id' => 'unique_account',
+			'form_id' => 'um_account_id',
 		);
 		$args = wp_parse_args( $args, $defaults );
 		

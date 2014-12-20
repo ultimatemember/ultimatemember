@@ -5,9 +5,6 @@ class UM_Admin_Notices {
 	function __construct() {
 
 		add_action('admin_notices', array(&$this, 'admin_notices'));
-		
-		add_action('admin_notices', array(&$this, 'um_admin_notices'));
-
 	}
 	
 	/***
@@ -47,21 +44,4 @@ class UM_Admin_Notices {
 		
 	}
 
-	/***
-	***	@For custom-styled notices
-	***/
-	function um_admin_notices() {
-	
-		$notices = get_option('um_admin_notices');
-		if ( $notices ) {
-		
-			foreach($notices as $notice){
-				echo "<div class='um-admin-notice'>
-						<div>$notice</div>
-					</div>";
-			}
-			
-		}
-	}
-	
 }

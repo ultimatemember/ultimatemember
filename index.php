@@ -29,9 +29,11 @@ Author URI: http://ultimatemember.com/
 		
 			update_option('um_version', ULTIMATEMEMBER_VERSION );
 			
-			exit( wp_redirect( admin_url('admin.php?page=ultimatemember-welcome')  ) );
+			exit( wp_redirect( admin_url('admin.php?page=ultimatemember-about')  ) );
 			
 		}
+		
+		flush_rewrite_rules();
 		
 	}
 	add_action( 'activated_plugin', 'ultimatemember_activation_hook' );
@@ -49,13 +51,13 @@ Author URI: http://ultimatemember.com/
 	***/
 	function ultimatemember_plugin_links( $links ) {
 	
-		$more_links[] = '<a href="http://ultimatemember.com/docs/">' . __('Docs') . '</a>';
-		$more_links[] = '<a href="http://ultimatemember.com/support/">' . __('Support') . '</a>';
-		$more_links[] = '<a href="'.admin_url().'admin.php?page=um_options">' . __('Settings') . '</a>';
+		$more_links[] = '<a href="http://ultimatemember.com/docs/">' . __('Docs','ultimatemember') . '</a>';
+		$more_links[] = '<a href="http://ultimatemember.com/support/">' . __('Support','ultimatemember') . '</a>';
+		$more_links[] = '<a href="'.admin_url().'admin.php?page=um_options">' . __('Settings','ultimatemember') . '</a>';
 		
 		$links = $more_links + $links;
 		
-		$links[] = '<a href="'.admin_url().'?um_action=uninstall_ultimatemember" class="delete" title="'.__('Remove this plugin').'">' . __( 'Uninstall' ) . '</a>';
+		$links[] = '<a href="'.admin_url().'?um_action=uninstall_ultimatemember" class="delete" title="'.__('Remove this plugin','ultimatemember').'">' . __( 'Uninstall','ultimatemember' ) . '</a>';
 
 		return $links;
 		

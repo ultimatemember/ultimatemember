@@ -4,7 +4,6 @@ class UM_API {
 
 	function __construct() {
 
-		require_once um_path . 'core/um-global-functions.php';
 		require_once um_path . 'core/um-short-functions.php';
 		
 		if (is_admin()){
@@ -14,13 +13,6 @@ class UM_API {
 		add_action('init',  array(&$this, 'init'), 0);
 		
 		$this->honeypot = 'request';
-		
-		if ( !class_exists( 'ReduxFramework' ) && file_exists( um_path . 'admin/core/lib/ReduxFramework/ReduxCore/framework.php' ) ) {
-			require_once( um_path . 'admin/core/lib/ReduxFramework/ReduxCore/framework.php' );
-		}
-		if ( file_exists ( um_path . 'admin/core/um-admin-redux.php' ) ) {
-			require_once( um_path . 'admin/core/um-admin-redux.php' );
-		}
 	
 	}
 	
@@ -111,6 +103,8 @@ class UM_API {
 		$this->members = new UM_Members();
 		$this->logout = new UM_Logout();
 		$this->modal = new UM_Modal();
+
+		$this->options = get_option('um_options');
 		
 	}
 	

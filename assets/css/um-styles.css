@@ -26,6 +26,10 @@
 	box-sizing: content-box;
 }
 
+.um a:focus {
+	outline: 0 !important;
+}
+
 /* only in admin mode */
 .um.um-in-admin {
 	padding-top: 0;

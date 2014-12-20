@@ -278,7 +278,7 @@ class UM_Fields {
 		global $ultimatemember;
 		
 		// preview in backend
-		if ( $ultimatemember->user->preview ) {
+		if ( isset( $ultimatemember->user->preview ) && $ultimatemember->user->preview ) {
 			$submitted = um_user('submitted');
 			if ( isset( $submitted[$key] ) && !empty( $submitted[$key] ) ) {
 				return $submitted[$key];

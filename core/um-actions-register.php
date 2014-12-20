@@ -209,7 +209,7 @@
 		global $ultimatemember;
 		
 		// DO NOT add when reviewing user's details
-		if ( $ultimatemember->user->preview == true && is_admin() ) return;
+		if ( isset( $ultimatemember->user->preview ) && $ultimatemember->user->preview == true && is_admin() ) return;
 		
 		?>
 		
@@ -218,7 +218,7 @@
 			<?php if ( isset($args['secondary_btn']) && $args['secondary_btn'] != 0 ) { ?>
 			
 			<div class="um-left um-half"><input type="submit" value="<?php echo $args['primary_btn_word']; ?>" class="um-button" /></div>
-			<div class="um-right um-half"><a href="#" class="um-button um-alt"><?php echo $args['secondary_btn_word']; ?></a></div>
+			<div class="um-right um-half"><a href="<?php echo um_get_core_page('login'); ?>" class="um-button um-alt"><?php echo $args['secondary_btn_word']; ?></a></div>
 			
 			<?php } else { ?>
 			

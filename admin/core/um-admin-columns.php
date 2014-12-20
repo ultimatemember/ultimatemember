@@ -22,12 +22,29 @@ class UM_Admin_Columns {
 		$admin = new UM_Admin_Metabox();
 		
 		$new_columns['cb'] = '<input type="checkbox" />';
-		$new_columns['id'] = __('ID');
+		$new_columns['id'] = __('ID') . $admin->_tooltip( 'Unique ID for each form' );
 		$new_columns['title'] = __('Title');
-		$new_columns['mode'] = __('Type');
-		$new_columns['shortcode'] = __('Shortcode') . $admin->_tooltip( 'Copy this shortcode to any post/page to display the relevant form' );
+		$new_columns['mode'] = __('Type') . $admin->_tooltip( 'This is the type of the form' );
+		$new_columns['shortcode'] = __('Shortcode') . $admin->_tooltip( 'Use this shortcode to display the form' );
 		$new_columns['impressions'] = __('Impressions') . $admin->_tooltip( 'The total number of times this form has been viewed' );
 		$new_columns['conversions'] = __('Conversions') . $admin->_tooltip( 'The total number of conversions. e.g. Successful sign-ups' );
+		$new_columns['date'] = __('Date');
+		
+		return $new_columns;
+		
+	}
+	
+	/***
+	***	@Custom columns for Directory
+	***/
+	function manage_edit_um_directory_columns($columns) {
+		
+		$admin = new UM_Admin_Metabox();
+		
+		$new_columns['cb'] = '<input type="checkbox" />';
+		$new_columns['id'] = __('ID') . $admin->_tooltip( 'Unique ID for each form' );
+		$new_columns['title'] = __('Title');
+		$new_columns['shortcode'] = __('Shortcode') . $admin->_tooltip( 'Use this shortcode to display the member directory' );
 		$new_columns['date'] = __('Date');
 		
 		return $new_columns;
@@ -74,18 +91,6 @@ class UM_Admin_Columns {
 				
 		}
 		
-	}
-	
-	/***
-	***	@Custom columns for Directory
-	***/
-	function manage_edit_um_directory_columns($columns) {
-		$new_columns['cb'] = '<input type="checkbox" />';
-		$new_columns['id'] = __('ID');
-		$new_columns['title'] = __('Title');
-		$new_columns['shortcode'] = __('Shortcode');
-		$new_columns['date'] = __('Date');
-		return $new_columns;
 	}
 
 	/***

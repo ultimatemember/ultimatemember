@@ -44,6 +44,18 @@
 	<?php }
 	
 	/***
+	***	@debug: load time and queries
+	***/
+	add_action('wp_footer', 'um_add_load_time_and_queries_num', 1111 );
+	function um_add_load_time_and_queries_num() {
+	
+		if ( um_get_option('load_time') == 1 ) {
+			echo sprintf(__('%1$s queries made in %2$s seconds','ultimatemember'), get_num_queries(), timer_stop(0) );
+		}
+		
+	}
+	
+	/***
 	***	@empty the honeypot value
 	***/
 	add_action('wp_footer', 'um_add_form_honeypot_js');

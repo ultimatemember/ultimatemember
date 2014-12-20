@@ -1,4 +1,14 @@
 <?php
+
+	/***
+	***	@Get core page url
+	***/
+	function um_get_core_page( $slug ) {
+		global $ultimatemember;
+		if ( $ultimatemember->permalinks->core[ $slug ] )
+			return get_permalink( $ultimatemember->permalinks->core[ $slug ] );
+		return '';
+	}
 	
 	/***
 	***	@Check value of queried search in text input
@@ -204,7 +214,7 @@
 	***/
 	function um_get_requested_user() {
 		global $ultimatemember;
-		if ( $ultimatemember->user->target_id )
+		if ( isset( $ultimatemember->user->target_id ) && !empty( $ultimatemember->user->target_id ) )
 			return $ultimatemember->user->target_id;
 		return false;
 	}
@@ -357,7 +367,8 @@
 	***	@Gets an option from DB
 	***/
 	function um_get_option($option_id) {
-		global $um_options;
+		global $ultimatemember;
+		$um_options = $ultimatemember->options;
 		if ( isset($um_options[$option_id]) && !empty( $um_options[$option_id] ) )	{
 			return $um_options[$option_id];
 		}
@@ -382,21 +393,6 @@
 	function um_user_profile_url() {
 		global $ultimatemember;
 		return $ultimatemember->permalinks->profile_url();
-	}
-	
-	/***
-	***	@User has avatar
-	***/
-	function um_has_gravatar($email) {
-		$hash = md5($email);
-		$uri = 'http://www.gravatar.com/avatar/' . $hash . '?d=404';
-		$headers = @get_headers($uri);
-		if (!preg_match("|200|", $headers[0])) {
-			$has_valid_avatar = FALSE;
-		} else {
-			$has_valid_avatar = TRUE;
-		}
-		return $has_valid_avatar;
 	}
 
 	/***
@@ -552,24 +548,18 @@
 				break;
 
 			case 'profile_photo':
-				if ( um_has_gravatar( um_profile('user_email') ) ) {
 				
-					return get_avatar( um_profile('ID'), $attrs);
+				$default_avatar_uri = um_get_option('default_avatar');
+				$default_avatar_uri = $default_avatar_uri['url'];
 					
-				} else {
-					
-					$default_avatar_uri = um_get_option('default_avatar');
-					$default_avatar_uri = $default_avatar_uri['url'];
-					
-					if ( !$default_avatar_uri ) {
-						$default_avatar_uri = um_url . 'assets/img/default_avatar.png';
-					}
-					
-					$default_avatar_uri = um_url . 'assets/img/Dollarphotoclub_57189843.jpg';
-					
-					return '<img src="' . $default_avatar_uri . '" class="avatar avatar-'.$attrs.' um-avatar" width="'.$attrs.'" height="'.$attrs.'" alt="" />';
-					
+				if ( !$default_avatar_uri ) {
+					$default_avatar_uri = um_url . 'assets/img/default_avatar.png';
 				}
+
+				$default_avatar_uri = um_url . 'assets/img/Dollarphotoclub_57189843.jpg';
+
+				return '<img src="' . $default_avatar_uri . '" class="gravatar avatar avatar-'.$attrs.' um-avatar" width="'.$attrs.'" height="'.$attrs.'" alt="" />';
+					
 				break;
 
 			case 'cover_photo':
