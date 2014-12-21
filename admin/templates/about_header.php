@@ -1,3 +1,4 @@
+<div class="wrap about-wrap um-about-wrap">
 
 	<h1>Welcome to Ultimate Member</h1>
 
@@ -7,7 +8,7 @@
 
 	<h2 class="nav-tab-wrapper">
 	
-		<?php foreach( $um_admin->about_tabs as $k => $tab ) {
+		<?php foreach( $this->about_tabs as $k => $tab ) {
 		
 			if ( $k == $template ) {
 				$active = 'nav-tab-active';

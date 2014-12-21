@@ -14,7 +14,7 @@ class UM_Admin_Enqueue {
 		
 		add_filter('enter_title_here', array(&$this, 'enter_title_here') );
 		
-		add_filter('admin_footer_text', array(&$this, 'admin_footer_text') );
+		add_filter('admin_footer_text', array(&$this, 'admin_footer_text'), 1111 );
 
 	}
 	

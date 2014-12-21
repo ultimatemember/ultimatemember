@@ -1,97 +1,85 @@
-<div class="wrap about-wrap">
 
 	<?php include_once um_path . 'admin/templates/about_header.php'; ?>
-
-	<div class="changelog headline-feature">
-		<h2>Introducing Twenty&nbsp;Fifteen</h2>
-		<div class="featured-image">
-
-		</div>
-
-		<div class="feature-section">
-			<div class="col">
-				<h3>Our newest default theme, Twenty Fifteen, is a blog-focused theme designed for clarity.</h3>
-				<p>Twenty Fifteen has flawless language support, with help from <a href="https://www.google.com/get/noto/">Google&#8217;s Noto font family</a>.</p>
-				<p>The straightforward typography is readable on any screen size.</p>
-				 <p>Your content always takes center stage, whether viewed on a phone, tablet, laptop, or desktop computer.</p>
-			</div>
-			<div class="col">
-
-			</div>
-		</div>
-
-		<div class="clear"></div>
-	</div>
-
-	<hr />
-
+	
 	<div class="changelog headline-feature dfw">
-		<h2>Distraction-free writing</h2>
+		<h2>Introducing Ultimate Member</h2>
 		<div class="feature-section">
-			<div class="dfw-container">
-
-			</div>
-			<h3><em>Just write.</em></h3>
-			<p>Sometimes, you just need to concentrate on putting your thoughts into words. Try turning on <strong>distraction-free writing mode</strong>. When you start typing, all the distractions will fade away, letting you focus solely on your writing. All your editing tools instantly return when you need them.</p>
-		</div>
-	</div>
-
-	<hr />
-
-	<div class="changelog feature-list finer-points">
-		<h2>The Finer Points</h2>
-
-		<div class="feature-section col two-col">
-			<div>
-				<h4>Choose a language</h4>
-				<p>Right now, WordPress 4.1 is already translated into <span id="translations-count">40</span> languages, with more always in progress. You can switch to any translation on the <a href="http://localhost/wp-admin/options-general.php">General Settings</a> screen.</p>
-			</div>
-
-			<div class="last-feature">
-				<h4>Vine embeds</h4>
-				<p>Embedding videos from Vine is as simple as pasting a URL onto its own line in a post. See the <a href="http://codex.wordpress.org/Embeds">full list</a> of supported embeds.</p>
-			</div>
-
-			<div>
-				<h4>Log out everywhere</h4>
-				<p>If you&#8217;ve ever worried you forgot to sign out from a shared computer, you can now go to <a href="http://localhost/wp-admin/profile.php">your profile</a> and log out everywhere.</p>
-			</div>
-
-			<div class="last-feature">
-				<h4>Plugin recommendations</h4>
-				<p>The <a href="http://localhost/wp-admin/plugin-install.php?tab=recommended">plugin installer</a> suggests plugins for you to try. Recommendations are based on the plugins you and other users have installed.</p>
-			</div>
+			
+			<h3><em>Create beautiful community websites with WordPress!</em></h3>
+			
+			<p>We'd like to thank you for installing Ultimate Member and we hope you enjoy using the plugin on your site. We created Ultimate Member with the aim of building a lightweight and powerful plugin that makes it extremely easy to make community and membership sites with WordPress.</p>
+				
+			<p>We have <a href="https://trello.com/b/30quaczv/ultimate-member" target="_blank">big plans</a> for Ultimate Member and we hope you will join us on our journey to creating the most popular community/membership plugin. If you’d like to get involved in improving the plugin you can join our <a href="http://ultimatemember.com/community-forum/" target="_blank">community forum</a> and discuss Ultimate Member with other users, provide feedback and make suggestions on how to improve the plugin. We also have an official <a href="https://github.com/ultimatemember/ultimatemember" target="_blank">GitHub repository</a> where you can contribute directly to the plugin.</p>
 			
 		</div>
-		
 	</div>
 
 	<hr />
 
 	<div class="changelog feature-list">
-		<h2>Under the Hood</h3>
-
-		<div class="feature-section col two-col">
+		
+		<h2>Key Features</h2>
+		
+		<div class="feature-section col three-col">
+			
 			<div>
-				<h4>Complex Queries</h4>
-				<p>Metadata, date, and term queries now support advanced conditional logic, like nested clauses and multiple operators &mdash; <code>A&nbsp;AND&nbsp;(&nbsp;B&nbsp;OR&nbsp;C&nbsp;)</code>.</p>
-
-				<h4>Customizer API</h4>
-				<p>Expanded JavaScript APIs in the customizer enable a new media experience as well as dynamic and contextual controls, sections, and panels.</p>
+				<h4>Front-end Registration &amp; Login</h4>
+				<p>Create unlimited, custom frontend registration &amp; login forms easily with our drag-and-drop form builder.</p>
 			</div>
+			
+			<div>
+				<h4>User Profiles</h4>
+				<p>Instant front-end user profiles that look beautiful. Allow users to view/edit profile from frontend, view each other's profile and more.</p>
+			</div>
+			
 			<div class="last-feature">
-				<h4><code>&lt;title&gt;</code> tags in themes</h4>
-				<p><code>add_theme_support( 'title-tag' )</code> tells WordPress to handle the complexities of document titles.</p>
-
-				<h4>Developer Reference</h4>
-				<p>Continued improvements to inline code documentation have made the <a href="https://developer.wordpress.org/reference/">developer reference</a> more complete than ever.</p>
+				<h4>Membership Levels</h4>
+				<p>Create unlimited, custom <a href="<?php echo admin_url('edit.php?post_type=um_role'); ?>">membership levels</a> and set up permissions for each membership level easily.</p>
 			</div>
+			
+			<div>
+				<h4>Profile Fields</h4>
+				<p>Create unlimited profile fields from image and file upload to ratings, checkboxes, and more, plus support for <strong><em>conditional fields</em></strong></p>
+			</div>
+			
+			<div>
+				<h4>Member Directories</h4>
+				<p>Create member directories with our <a href="<?php echo admin_url('edit.php?post_type=um_directory'); ?>">directory creator</a> and make them show the member levels you want.</p>
+			</div>
+			
+			<div class="last-feature">
+				<h4>Content Restriction</h4>
+				<p>Global and individual (per page/post) content restriction settings have been built to give you flexibility on what content should be visible, and who exactly can see it.</p>
+			</div>
+			
+			<div>
+				<h4>Conditional Menus</h4>
+				<p> Show different menu links to logged in users, logged out users, and individual member levels with our conditional menu feature.</p>
+			</div>
+			
+			<div>
+				<h4>Mobile Adaptive</h4>
+				<p>Ultimate Member has been built with a mobile adaptive approach meaning the front-end features have a different layout depending on the device size.</p>
+			</div>
+			
+			<div class="last-feature">
+				<h4>Advanced Form Builder</h4>
+				<p>Use our advanced drag and drop form builder to easily create unique registration, login and profiles with multiple-column support.</p>
+			</div>
+			
 		</div>
 
 		<hr />
 
 		<div class="return-to-dashboard">
 			<a href="<?php echo admin_url('admin.php?page=ultimatemember'); ?>">Go to Plugin Dashboard &rarr;</a>
+			
+			<div class="alignright">
+				
+				<?php global $reduxConfig; foreach ( $reduxConfig->args['share_icons'] as $k => $arr ) { ?><a href="<?php echo $arr['url']; ?>" class="um-about-icon um-admin-tipsy-n" title="<?php echo $arr['title']; ?>"><i class="<?php echo $arr['icon']; ?>"></i></a><?php } ?>
+
+			</div>
+			
 		</div>
 		
 	</div>

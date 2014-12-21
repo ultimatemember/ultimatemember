@@ -15,10 +15,6 @@ class UM_Admin_API {
 			require_once( um_path . 'admin/core/um-admin-redux.php' );
 		}
 		
-	
-		$this->about_tabs['about'] = 'About';
-		$this->about_tabs['start'] = 'Getting Started';
-		
 	}
 	
 	/***

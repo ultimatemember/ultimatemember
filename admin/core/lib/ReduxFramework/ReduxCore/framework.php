@@ -188,6 +188,9 @@
 
 				$this->slug = 'ultimatemember';
 				
+				$this->about_tabs['about'] = 'About';
+				$this->about_tabs['start'] = 'Getting Started';
+				
                 // Disregard WP AJAX 'heartbeat'call.  Why waste resources?
                 if ( isset( $_POST ) && isset( $_POST['action'] ) && $_POST['action'] == 'heartbeat' ) {
 
@@ -1299,9 +1302,7 @@
              * @return void
              */
 			public function _options_page() {
-			
-				$um_admin = new UM_Admin_API();
-				
+
                 $this->import_export->in_field();
 
                 if ( $this->args['menu_type'] == 'submenu' ) {
@@ -1310,7 +1311,7 @@
 					
 					add_menu_page( __('Ultimate Member', $this->slug), __('Ultimate Member', $this->slug), 'manage_options', $this->slug, array(&$this, 'admin_page'), 'dashicons-admin-users', '50.78578');
 					
-					foreach( $um_admin->about_tabs as $k => $tab ) {
+					foreach( $this->about_tabs as $k => $tab ) {
 					
 						add_submenu_page( '_'. $k . '_um', sprintf(__('%s | Ultimate Member', $this->slug), $tab), sprintf(__('%s | Ultimate Member', $this->slug), $tab), 'manage_options', $this->slug . '-' . $k, array(&$this, 'admin_page') );
 					
@@ -4317,9 +4318,7 @@
             }
 			
 			public function admin_page(){
-			
-				$um_admin = new UM_Admin_API();
-				
+
 				$page = $_REQUEST['page'];
 				
 				if ( $page == 'ultimatemember' ) {

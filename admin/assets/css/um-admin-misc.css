@@ -2,6 +2,21 @@
 	- Welcome
 */
 
+.um-about-wrap * {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.um-about-wrap a.um-about-icon {
+	margin: 0 0 0 15px !important;
+	padding: 0 !important;
+	text-decoration: none !important;
+	color: #777 !important;
+	font-size: 22px !important;
+}
+
+.um-about-wrap a.um-about-icon:hover {color: #3ba1da !important}
+
 .um-badge {
 	color: #fff;
 	background: none !important;

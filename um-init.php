@@ -13,7 +13,7 @@ class UM_API {
 		add_action('init',  array(&$this, 'init'), 0);
 		
 		$this->honeypot = 'request';
-	
+		
 	}
 	
 	/***

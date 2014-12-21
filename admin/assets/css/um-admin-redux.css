@@ -70,9 +70,10 @@
 #redux-share {margin-top: 11px !important}
 
 #redux-share a {
+	margin: 0 15px 0 0 !important;
+	text-decoration: none !important;
 	color: #777 !important;
 	font-size: 22px !important;
-	margin: 0 15px 0 0 !important;
 }
 #redux-share a:hover {color: #3ba1da !important}
 

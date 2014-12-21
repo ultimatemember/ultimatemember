@@ -115,22 +115,32 @@
 			
             // SOCIAL ICONS -> Setup custom links in the footer for quick links in your panel footer icons.
             $this->args['share_icons'][] = array(
-                'url'   => 'https://facebook.com/ultimatememberplugin',
+                'url'   => '',
+                'title' => 'GitHub Repository',
+                'icon'  => 'um-icon-github'
+            );
+            $this->args['share_icons'][] = array(
+                'url'   => '',
+                'title' => 'Roadmap',
+                'icon'  => 'um-icon-trello'
+            );
+            $this->args['share_icons'][] = array(
+                'url'   => '',
                 'title' => 'Like us on Facebook',
                 'icon'  => 'um-icon-facebook'
             );
             $this->args['share_icons'][] = array(
-                'url'   => 'https://twitter.com/umplugin',
+                'url'   => '',
                 'title' => 'Follow us on Twitter',
                 'icon'  => 'um-icon-twitter'
             );
             $this->args['share_icons'][] = array(
-                'url'   => 'https://plus.google.com/+UltimateMember/',
+                'url'   => '',
                 'title' => 'Follow us on Google+',
                 'icon'  => 'um-icon-google-plus'
             );
             $this->args['share_icons'][] = array(
-                'url'   => 'https://youtube.com/user/umplugin',
+                'url'   => '',
                 'title' => 'We\'re on YouTube',
                 'icon'  => 'um-icon-youtube-alt'
             );
