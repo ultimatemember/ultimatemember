@@ -239,6 +239,16 @@ $this->sections[] = array(
     'fields'     => array(
 
         array(
+                'id'       		=> 'wpadmin_um_bar',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Show Ultimate Member in admin bar when browsing the frontend?' ),
+				'default' 		=> 1,
+				'desc' 	   		=> 'Control whether to show or hide the Ultimate Member admin bar when you are browsing the frontend.',
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
+        ),
+		
+        array(
                 'id'       		=> 'panic_key',
                 'type'     		=> 'text',
                 'title'   		=> __( 'Panic Key' ),
@@ -253,8 +263,8 @@ $this->sections[] = array(
                 'title'   		=> __( 'Allow Backend Login Screen for Guests' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Control whether guests are able to access the WP-admin login screen or not',
-				'on'			=> 'Yes',
-				'off'			=> 'No',
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
         ),
 		
 		array(
@@ -285,8 +295,8 @@ $this->sections[] = array(
                 'title'   		=> __( 'Allow Backend Register Screen for Guests' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Control whether guests are able to access the WP-admin register screen or not',
-				'on'			=> 'Yes',
-				'off'			=> 'No',
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
         ),
 		
 		array(

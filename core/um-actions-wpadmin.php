@@ -33,6 +33,8 @@
 		global $wp_admin_bar;
 
 		if( !is_super_admin() || !is_admin_bar_showing() || is_admin() ) return;
+		
+		if ( !um_get_option('wpadmin_um_bar') ) return;
 
 		$args = array(
 			'id'    	=> 'um_parent',
