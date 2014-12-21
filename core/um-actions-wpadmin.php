@@ -27,7 +27,7 @@
 	/***
 	***	@show admin bar menu for plugin
 	***/
-	add_action('admin_bar_menu', 'um_plugin_admin_bar', 1000);
+	add_action('admin_bar_menu', 'um_plugin_admin_bar', 99999999 );
 	function um_plugin_admin_bar() {
 	
 		global $wp_admin_bar;
