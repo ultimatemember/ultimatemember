@@ -32,9 +32,7 @@ Author URI: http://ultimatemember.com/
 			exit( wp_redirect( admin_url('admin.php?page=ultimatemember-about')  ) );
 			
 		}
-		
-		flush_rewrite_rules();
-		
+
 	}
 	add_action( 'activated_plugin', 'ultimatemember_activation_hook' );
 	

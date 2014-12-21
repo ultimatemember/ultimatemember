@@ -32,6 +32,7 @@ class UM_Rewrite {
 		if ( isset( $ultimatemember->permalinks->core['user'] ) ) {
 		
 			$user_page_id = $ultimatemember->permalinks->core['user'];
+			
 			$account_page_id = $ultimatemember->permalinks->core['account'];
 			
 			add_rewrite_rule(
@@ -45,6 +46,8 @@ class UM_Rewrite {
 				'index.php?page_id='.$account_page_id.'&um_tab=$matches[1]',
 				'top'
 			);
+			
+			flush_rewrite_rules();
 			
 		}
 		
