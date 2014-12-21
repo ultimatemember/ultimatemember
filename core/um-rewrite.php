@@ -59,14 +59,14 @@ class UM_Rewrite {
 	function locate_user_profile() {
 		global $post, $ultimatemember;
 		
-		if ( um_queried_user() && um_is_user_page_uri() ) {
+		if ( um_queried_user() && um_is_core_page('user') ) {
 		
 			if ( um_get_option('permalink_base') == 'user_login' ) {
 				$user_id = username_exists( um_queried_user() );
 				if ( $user_id ) {
 					um_set_requested_user( $user_id );
 				} else {
-					exit( wp_redirect( um_user_page_uri() ) );
+					exit( wp_redirect( um_get_core_page('user') ) );
 				}
 			}
 			
@@ -75,7 +75,7 @@ class UM_Rewrite {
 				if ( $user_id ) {
 					um_set_requested_user( $user_id );
 				} else {
-					exit( wp_redirect( um_user_page_uri() ) );
+					exit( wp_redirect( um_get_core_page('user') ) );
 				}
 			}
 			
@@ -84,7 +84,7 @@ class UM_Rewrite {
 				if ( $user_id ) {
 					um_set_requested_user( $user_id );
 				} else {
-					exit( wp_redirect( um_user_page_uri() ) );
+					exit( wp_redirect( um_get_core_page('user') ) );
 				}
 			}
 			

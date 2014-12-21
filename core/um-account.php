@@ -46,11 +46,11 @@ class UM_Account {
 	function account(){
 		global $ultimatemember;
 		
-		if ( um_is_account_page() && !is_user_logged_in() ) {
+		if ( um_is_core_page('account') && !is_user_logged_in() ) {
 			exit( wp_redirect( home_url() ) );
 		}
 		
-		if ( um_is_account_page() ) {
+		if ( um_is_core_page('account') ) {
 			
 			$ultimatemember->fields->set_mode = 'account';
 			
@@ -71,12 +71,12 @@ class UM_Account {
 	
 		if ( get_option('permalink_structure') ) {
 		
-			$url = trailingslashit( untrailingslashit( um_account_page_url() ) );
+			$url = trailingslashit( untrailingslashit( um_get_core_page('account') ) );
 			$url = $url . $id . '/';
 		
 		} else {
 			
-			$url = add_query_arg( 'um_tab', $id, um_account_page_url() );
+			$url = add_query_arg( 'um_tab', $id, um_get_core_page('account') );
 			
 		}
 		

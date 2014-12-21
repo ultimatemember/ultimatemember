@@ -33,7 +33,7 @@
 			}
 		}
 		
-		exit( wp_redirect( um_account_page_url() ) );
+		exit( wp_redirect( um_get_core_page('account') ) );
 		
 	}
 	

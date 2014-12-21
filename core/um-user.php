@@ -208,6 +208,17 @@ class UM_User {
 	}
 	
 	/***
+	***	@Set user's hash for password reset
+	***/
+	function password_reset_hash(){
+		global $ultimatemember;
+
+		$this->profile['reset_pass_hash'] = $ultimatemember->validation->generate(30);
+		$this->update_usermeta_info('reset_pass_hash');
+		
+	}
+	
+	/***
 	***	@Set user's hash
 	***/
 	function assign_secretkey(){
@@ -220,6 +231,15 @@ class UM_User {
 
 		do_action('um_after_user_hash_is_changed');
 		
+	}
+	
+	/***
+	***	@password reset email
+	***/
+	function password_reset(){
+		global $ultimatemember;
+		$this->password_reset_hash();
+		$ultimatemember->mail->send( um_user('user_email'), 'resetpw_email' );
 	}
 	
 	/***

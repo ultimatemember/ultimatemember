@@ -3,11 +3,25 @@
 	/***
 	***	@Get core page url
 	***/
-	function um_get_core_page( $slug ) {
+	function um_get_core_page( $slug, $updated = false) {
 		global $ultimatemember;
 		if ( $ultimatemember->permalinks->core[ $slug ] )
-			return get_permalink( $ultimatemember->permalinks->core[ $slug ] );
+			$url = get_permalink( $ultimatemember->permalinks->core[ $slug ] );
+			if ( $updated ) {
+				$url = add_query_arg( 'updated', $updated, $url );
+			}
+			return $url;
 		return '';
+	}
+	
+	/***
+	***	@boolean check if we are on a core page or not
+	***/
+	function um_is_core_page( $page ) {
+		global $post, $ultimatemember;
+		if ( isset($post->ID) && $post->ID == $ultimatemember->permalinks->core[ $page ] )
+			return true;
+		return false;
 	}
 	
 	/***
@@ -68,53 +82,31 @@
 	}
 	
 	/***
+	***	@check if a legitimate password reset request is in action
+	***/
+	function um_requesting_password_reset() {
+		global $post, $ultimatemember;
+		if (  um_is_core_page('password-reset') && isset( $_POST['_um_password_reset'] ) == 1 )
+			return true;
+		return false;
+	}
+	
+	/***
+	***	@check if a legitimate password change request is in action
+	***/
+	function um_requesting_password_change() {
+		global $post, $ultimatemember;
+		if (  um_is_core_page('password-reset') && isset( $_POST['_um_password_change'] ) == 1 )
+			return true;
+		return false;
+	}
+	
+	/***
 	***	@boolean for account page editing
 	***/
 	function um_submitting_account_page() {
-		if ( um_is_account_page() && isset($_POST['_um_account']) == 1 && is_user_logged_in() )
+		if ( um_is_core_page('account') && isset($_POST['_um_account']) == 1 && is_user_logged_in() )
 			return true;
-		return false;
-	}
-	
-	/***
-	***	@if we're on account page
-	***/
-	function um_is_account_page() {
-		global $post, $ultimatemember;
-		if ( isset($post->ID) && $post->ID == $ultimatemember->permalinks->core['account'] )
-			return true;
-		return false;
-	}
-	
-	/***
-	***	@account page URI
-	***/
-	function um_account_page_url(){
-		global $ultimatemember;
-		return get_permalink( $ultimatemember->permalinks->core['account'] );
-	}
-	
-	/***
-	***	@if we're on logout page
-	***/
-	function um_is_logout_page() {
-		global $post, $ultimatemember;
-		if ( isset($post->ID) && $post->ID == $ultimatemember->permalinks->core['logout'] )
-			return true;
-		return false;
-	}
-	
-	/***
-	***	@show logout page url
-	***/
-	function um_logout_page( $redirect_to = false ) {
-		global $ultimatemember;
-		if ( isset( $ultimatemember->permalinks->core['logout'] ) && is_user_logged_in() )
-			$link = get_permalink( $ultimatemember->permalinks->core['logout'] );
-			if ( $redirect_to ) {
-				$link = add_query_arg( 'redirect_to', $redirect_to, $link );
-			}
-			return $link;
 		return false;
 	}
 	
@@ -161,37 +153,8 @@
 	***/
 	function um_is_my_profile() {
 		if ( !is_user_logged_in() ) return false;
-		if ( um_is_user_page_uri() && get_current_user_id() == um_get_requested_user() ) return true;
+		if ( um_is_core_page('user') && get_current_user_id() == um_get_requested_user() ) return true;
 		return false;
-	}
-	
-	/***
-	***	@The UM's profile page URI
-	***/
-	function um_user_page_uri(){
-		global $ultimatemember;
-		return get_permalink( $ultimatemember->permalinks->core['user'] );
-	}
-	
-	/***
-	***	@checks whether we're on UM profile page
-	***/
-	function um_is_user_page_uri() {
-		global $post, $ultimatemember;
-		if ( isset($post->ID) && $post->ID == $ultimatemember->permalinks->core['user'] )
-			return true;
-		return false;
-	}
-	
-	/***
-	***	@user's profile ID
-	***/
-	function um_user_page_id() {
-		global $post, $ultimatemember;
-		if ( isset( $ultimatemember->permalinks->core['user'] ) ) {
-			return $ultimatemember->permalinks->core['user'];
-		}
-		return '';
 	}
 	
 	/***
@@ -543,6 +506,10 @@
 				return $array;	
 				break;
 
+			case 'password_reset_link':
+				return $ultimatemember->password->reset_url();
+				break;
+				
 			case 'account_activation_link':
 				return $ultimatemember->permalinks->activate_url();
 				break;

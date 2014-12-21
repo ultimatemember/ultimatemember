@@ -67,8 +67,7 @@ class UM_Form {
 				$this->post_form['submitted'] = $this->post_form;
 				
 				$this->post_form = array_merge( $this->form_data, $this->post_form );
-				
-				/*
+
 				if ( $_POST[ $ultimatemember->honeypot ] != '' )
 					wp_die('Hello, spam bot!');
 				
@@ -81,10 +80,9 @@ class UM_Form {
 						wp_die( __('Hello, spam bot!') );
 
 					if ( $live_timestamp - $form_timestamp < 5 )
-						wp_die( __('Whoa, slow down! You’re seeing this message because you tried to submit a form too fast and we think you might be a spam bot. If you are a real human being please wait a few seconds before submitting the form. Thanks!') );
+						wp_die( __('Whoa, slow down! You\'re seeing this message because you tried to submit a form too fast and we think you might be a spam bot. If you are a real human being please wait a few seconds before submitting the form. Thanks!') );
 
 				}
-				*/
 				
 				/* Continue based on form mode - pre-validation */
 				

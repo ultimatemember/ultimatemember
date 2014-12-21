@@ -38,6 +38,7 @@ class UM_Mail {
 			'{display_name}',
 			'{site_name}',
 			'{account_activation_link}',
+			'{password_reset_link}',
 			'{admin_email}',
 			'{user_profile_link}',
 		);
@@ -48,6 +49,7 @@ class UM_Mail {
 			um_user('display_name'),
 			um_get_option('site_name'),
 			um_user('account_activation_link'),
+			um_user('password_reset_link'),
 			um_admin_email(),
 			um_user_profile_url(),
 		);

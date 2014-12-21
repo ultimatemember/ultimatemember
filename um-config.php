@@ -54,7 +54,7 @@ $this->sections[] = array(
                 'title'    		=> __( 'Profile Permalink Base' ),
                 'desc' 	   		=> __( 'Here you can control the permalink structure of the user profile URL globally' ),
                 'default'  		=> 'user_login',
-				'desc'			=> 'e.g. ' . trailingslashit( um_user_page_uri() ) .'<strong>username</strong>/',
+				'desc'			=> 'e.g. ' . trailingslashit( um_get_core_page('user') ) .'<strong>username</strong>/',
 				'options' 		=> array(
 									'user_login' 		=> 'Username',
 									'name' 				=> 'First and Last Name',
@@ -581,6 +581,38 @@ $this->sections[] = array(
 										  'If your account has been deleted by accident please contact us at {admin_email}'  . "\r\n\r\n" .
 										  'Thanks,' . "\r\n" .
 										  '{site_name}',
+        ),
+		
+        array(
+                'id'       => 'resetpw_email_on',
+                'type'     => 'switch',
+                'title'    => __( 'Password Reset Email' ),
+				'default'  => 1,
+				'desc' 	   => 'Whether to send the user an email when he request to reset password (Recommended, please keep on)',
+        ),
+		
+        array(
+                'id'       => 'resetpw_email_sub',
+                'type'     => 'text',
+                'title'    => __( 'Password Reset Email' ),
+                'subtitle' => __( 'Subject Line' ),
+                'default'  => 'Reset your password',
+				'required' => array( 'resetpw_email_on', '=', 1 ),
+				'desc' 	   => 'This is the subject line of the e-mail',
+        ),
+
+        array(
+                'id'       => 'resetpw_email',
+                'type'     => 'textarea',
+                'title'    => __( 'Password Reset Email' ),
+                'subtitle' => __( 'Message Body' ),
+				'required' => array( 'resetpw_email_on', '=', 1 ),
+                'default'  => 'Hi {display_name},' . "\r\n\r\n" .
+										'We received a request to reset the password for your account. If you made this request, click the link below to change your password:'  . "\r\n\r\n" .
+										'{password_reset_link}'  . "\r\n\r\n" . 
+										'If you didn\'t make this request, you can ignore this email'  . "\r\n\r\n" .
+										'Thanks,' . "\r\n" .
+										'{site_name}',
         ),
 
 	)

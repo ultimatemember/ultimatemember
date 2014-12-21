@@ -92,7 +92,7 @@
 		
 		$metabox = new UM_Admin_Metabox();
 		
-		if ( !is_user_logged_in() || !current_user_can('manage_options') ) die('Please login as administrator');
+		if ( !is_user_logged_in() || !current_user_can('manage_options') ) die( __('Please login as administrator','ultimatemember') );
 		
 		extract($_POST);
 		
@@ -138,7 +138,7 @@
 				
 				?>
 					
-					<h4><?php _e('Setup New Field'); ?></h4>
+					<h4><?php _e('Setup New Field','ultimatemember'); ?></h4>
 					<div class="um-admin-btns">
 						
 						<?php
@@ -154,23 +154,23 @@
 						
 					</div>
 					
-					<h4><?php _e('Installed Fields'); ?></h4>
+					<h4><?php _e('Predefined Fields','ultimatemember'); ?></h4>
 					<div class="um-admin-btns">
 						
 						<?php
 						if ( $ultimatemember->builtin->predefined_fields ) {
 							foreach ($ultimatemember->builtin->predefined_fields as $field_key => $array) {
 								
-								if ( !isset( $array['account_only'] ) ) {
+								if ( !isset( $array['account_only'] ) && !isset( $array['private_use'] ) ) {
 						?>
 						
 						<a href="#" class="button" data-silent_action="um_admin_add_field_from_predefined" data-arg1="<?php echo $field_key; ?>" data-arg2="<?php echo $arg2; ?>"><?php echo $array['title']; ?></a>
 
-						<?php } } } else { echo '<p>' . __('None') . '</p>'; } ?>
+						<?php } } } else { echo '<p>' . __('None','ultimatemember') . '</p>'; } ?>
 						
 					</div>
 					
-					<h4><?php _e('Custom Fields'); ?></h4>
+					<h4><?php _e('Custom Fields','ultimatemember'); ?></h4>
 					<div class="um-admin-btns">
 						
 						<?php

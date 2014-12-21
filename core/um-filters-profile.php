@@ -9,7 +9,7 @@
 
 		$profile_title = um_get_option('profile_title');
 
-		if ( um_is_user_page_uri() && um_get_requested_user() ) {
+		if ( um_is_core_page('user') && um_get_requested_user() ) {
 			
 			um_fetch_user( um_get_requested_user() );
 			
@@ -35,9 +35,9 @@
 			return $title;
 
 		if (  $id == $ultimatemember->permalinks->core['user'] ) {
-			if ( um_is_user_page_uri() && um_get_requested_user() ) {
+			if ( um_is_core_page('user') && um_get_requested_user() ) {
 				$title = um_get_display_name( um_get_requested_user() );
-			} else if ( um_is_user_page_uri() && is_user_logged_in() ) {
+			} else if ( um_is_core_page('user') && is_user_logged_in() ) {
 				$title = um_get_display_name( get_current_user_id() );
 			}
 		}

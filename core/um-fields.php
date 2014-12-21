@@ -290,7 +290,7 @@ class UM_Fields {
 		// normal state
 		if ( isset($ultimatemember->form->post_form[$key]) ) {
 			
-			if ( strstr( $key, 'user_pass' ) ) return '';
+			if ( strstr( $key, 'user_pass' ) && $this->set_mode != 'password' ) return '';
 			
 			return $ultimatemember->form->post_form[$key];
 		
@@ -735,7 +735,7 @@ class UM_Fields {
 						
 					} else {
 					
-					if ( $this->set_mode == 'account' && um_is_account_page() ) {
+					if ( $this->set_mode == 'account' && um_is_core_page('account') ) {
 
 						$key = 'current_' . $original_key;
 						$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">';
@@ -768,10 +768,14 @@ class UM_Fields {
 						
 						$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">';
 
-						if ( $this->set_mode == 'account' && um_is_account_page() ) {
+						if ( $this->set_mode == 'account' && um_is_core_page('account') || $this->set_mode == 'password' && um_is_core_page('password-reset') ) {
+							
 							$output .= $this->field_label( 'New Password', $key, $data);
+						
 						} else if ( isset( $data['label'] ) ) {
+							
 							$output .= $this->field_label($label, $key, $data);
+						
 						}
 
 						$output .= '<div class="um-field-area">';

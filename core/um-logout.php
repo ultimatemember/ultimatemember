@@ -12,7 +12,8 @@ class UM_Logout {
 	***	@Logout via logout page
 	***/
 	function logout_page() {
-		if ( um_is_logout_page() ) {
+	
+		if ( um_is_core_page('logout') ) {
 			
 			if ( is_user_logged_in() ) {
 				
@@ -32,6 +33,7 @@ class UM_Logout {
 			}
 			
 		}
+		
 	}
 
 }

@@ -138,6 +138,24 @@
 }
 
 /*
+	- Notices
+*/
+
+p.um-notice {
+	width: auto;
+	border-radius: 3px;
+	color: #fff;
+	box-sizing: border-box;
+	font-size: 15px;
+	padding: 12px !important;
+	margin: 12px 0 0 0 !important;
+}
+
+p.um-notice.success {
+	background: #7ACF58;
+}
+
+/*
 	- Errors
 */
 
@@ -227,8 +245,8 @@
 }
 
 .um-field-block {
-	color: #999;
-	line-height: 22px;
+	color: #777;
+	font-size: 17px;
 }
 
 .um-field-shortcode {

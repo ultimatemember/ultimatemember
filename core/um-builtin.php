@@ -336,7 +336,7 @@ class UM_Builtin {
 			),
 			
 			'block' => array(
-				'name' => 'Text Block',
+				'name' => 'Content Block',
 				'col1' => array('_title'),
 				'col2' => array('_public','_roles'),
 				'col_full' => array('_content'),
@@ -699,6 +699,28 @@ class UM_Builtin {
 				'validate' => 'phone_number',
 				'icon' => 'um-icon-device-mobile',
 			),
+			
+			// for use in password reset page
+		
+			'password_reset_text' => array(
+				'title' => 'Password Reset',
+				'type' => 'block',
+				'content' => '<div style="text-align:center">To reset your password, please enter your email address or username below</div>',
+				'private_use' => true,
+			),
+			
+			'username_b' => array(
+				'title' => 'Username or E-mail',
+				'metakey' => 'username_b',
+				'type' => 'text',
+				'placeholder' => __('Enter your username or email','ultimatemember'),
+				'required' => 1,
+				'public' => 1,
+				'editable' => 0,
+				'private_use' => true,
+			),
+			
+			// for use in account page
 			
 			'profile_privacy' => array(
 				'title' => 'Profile Privacy',

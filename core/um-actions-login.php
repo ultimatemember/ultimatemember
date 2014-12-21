@@ -65,7 +65,7 @@
 	function um_after_login_submit(){ ?>
 		
 		<div class="um-col-alt-b">
-			<a href="<?php echo um_get_core_page('recover'); ?>" class="um-link-alt"><?php _e('Forgot your password?','ultimatemember'); ?></a>
+			<a href="<?php echo um_get_core_page('password-reset'); ?>" class="um-link-alt"><?php _e('Forgot your password?','ultimatemember'); ?></a>
 		</div>
 		
 		<?php

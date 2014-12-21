@@ -32,6 +32,7 @@ class UM_API {
 		require_once um_path . 'core/um-enqueue.php';
 		require_once um_path . 'core/um-shortcodes.php';
 		require_once um_path . 'core/um-account.php';
+		require_once um_path . 'core/um-password.php';
 		require_once um_path . 'core/um-fields.php';
 		require_once um_path . 'core/um-form.php';
 		require_once um_path . 'core/um-user.php';
@@ -58,12 +59,14 @@ class UM_API {
 		require_once um_path . 'core/um-actions-register.php';
 		require_once um_path . 'core/um-actions-profile.php';
 		require_once um_path . 'core/um-actions-account.php';
+		require_once um_path . 'core/um-actions-password.php';
 		require_once um_path . 'core/um-actions-members.php';
 		require_once um_path . 'core/um-actions-global.php';
 		require_once um_path . 'core/um-actions-tracking.php';
 		require_once um_path . 'core/um-actions-user.php';
 		require_once um_path . 'core/um-actions-save-profile.php';
 		require_once um_path . 'core/um-actions-modal.php';
+		require_once um_path . 'core/um-actions-notices.php';
 		
 		require_once um_path . 'core/um-filters-login.php';
 		require_once um_path . 'core/um-filters-register.php';
@@ -85,6 +88,7 @@ class UM_API {
 		$this->styles = new UM_Enqueue();
 		$this->shortcodes = new UM_Shortcodes();
 		$this->account = new UM_Account();
+		$this->password = new UM_Password();
 		$this->login = new UM_Login();
 		$this->register = new UM_Register();
 		$this->fields = new UM_Fields();

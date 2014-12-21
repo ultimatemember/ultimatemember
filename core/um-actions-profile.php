@@ -23,7 +23,7 @@
 	
 		global $ultimatemember;
 		
-		if ( um_is_user_page_uri() && um_get_requested_user() ) {
+		if ( um_is_core_page('user') && um_get_requested_user() ) {
 		
 			um_fetch_user( um_get_requested_user() );
 			
