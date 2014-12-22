@@ -1,7 +1,7 @@
 <?php
 
 	/***
-	***	@checks if user is blacklisted
+	***	@Error handling: blocklist
 	***/
 	add_action('um_submit_form_errors_hook__blacklist', 'um_submit_form_errors_hook__blacklist', 10);
 	function um_submit_form_errors_hook__blacklist($args){
@@ -12,6 +12,7 @@
 		$fields = unserialize( $args['custom_fields'] );
 		
 		$words = um_get_option('blocked_words');
+		
 		if ( $words != '' ) {
 		
 			$words = array_map("rtrim", explode("\n", $words));
@@ -34,10 +35,37 @@
 	}
 	
 	/***
-	***	@the main error handler for form submitting
+	***	@Error handling
 	***/
 	add_action('um_submit_form_errors_hook', 'um_submit_form_errors_hook', 10);
-	function um_submit_form_errors_hook($args){
+	function um_submit_form_errors_hook( $args ){
+		global $ultimatemember;
+		
+		$form_id = $args['form_id'];
+		
+		$mode = $args['mode'];
+		
+		$fields = unserialize( $args['custom_fields'] );
+		
+		if ( $mode == 'login' ) {
+		
+			do_action('um_submit_form_errors_hook_login', $args );
+			
+		} else {
+		
+			do_action('um_submit_form_errors_hook_', $args );
+			
+			do_action("um_submit_form_errors_hook__blacklist", $args );
+			
+		}
+		
+	}
+	
+	/***
+	***	@Error processing hook : standard
+	***/
+	add_action('um_submit_form_errors_hook_', 'um_submit_form_errors_hook_', 10);
+	function um_submit_form_errors_hook_( $args ){
 		global $ultimatemember;
 		
 		$form_id = $args['form_id'];

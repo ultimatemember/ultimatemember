@@ -125,35 +125,35 @@
 		do_action("um_post_registration_global_hook", $user_id, $args);
 
 		do_action("um_post_registration_{$status}_hook", $user_id, $args);
-		
-		// tracking and redirect
+
 		if ( !is_admin() ) {
 		
-		if ( $status == 'approved' ) {
+			if ( $status == 'approved' ) {
+				
+				$ultimatemember->user->auto_login($user_id);
+				if ( um_user('auto_approve_act') == 'redirect_url' && um_user('auto_approve_url') !== '' ) exit( wp_redirect( um_user('auto_approve_url') ) );
+				if ( um_user('auto_approve_act') == 'redirect_profile' ) exit( wp_redirect( um_user_profile_url() ) );
 			
-			$ultimatemember->user->auto_login($user_id);
-			if ( um_user('auto_approve_act') == 'redirect_url' && um_user('auto_approve_url') !== '' ) exit( wp_redirect( um_user('auto_approve_url') ) );
-			if ( um_user('auto_approve_act') == 'redirect_profile' ) exit( wp_redirect( um_user_profile_url() ) );
+			}
+
+			if ( $status != 'approved' ) {
+			
+				if ( um_user( $status . '_action' ) == 'redirect_url' && um_user( $status . '_url' ) != '' ) {
+					exit( wp_redirect( um_user( $status . '_url' ) ) );
+				}
+				
+				if ( um_user( $status . '_action' ) == 'show_message' && um_user( $status . '_message' ) != '' ) {
+					$url = $ultimatemember->permalinks->add_query( 'message', $status );
+					$url = $ultimatemember->permalinks->add_query( 'uid', um_user('ID') );
+					exit( wp_redirect( $url ) );
+				}
+				
+			}
+			
+			do_action("track_{$status}_user_registration");
 		
 		}
 
-		if ( $status != 'approved' ) {
-		
-			if ( um_user( $status . '_action' ) == 'redirect_url' && um_user( $status . '_url' ) != '' ) {
-				exit( wp_redirect( um_user( $status . '_url' ) ) );
-			}
-			
-			if ( um_user( $status . '_action' ) == 'show_message' && um_user( $status . '_message' ) != '' ) {
-				$url = $ultimatemember->permalinks->add_query( 'message', $status );
-				$url = $ultimatemember->permalinks->add_query( 'uid', um_user('ID') );
-				exit( wp_redirect( $url ) );
-			}
-			
-		}
-		
-		do_action("track_{$status}_user_registration");
-		
-		}
 	}
 	
 	/***

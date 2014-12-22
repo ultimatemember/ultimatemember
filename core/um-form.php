@@ -86,11 +86,9 @@ class UM_Form {
 				
 				/* Continue based on form mode - pre-validation */
 				
-				do_action("um_submit_form_errors_hook", $this->post_form);
-				
-				do_action("um_submit_form_errors_hook__blacklist", $this->post_form);
-				
-				do_action("um_submit_form_{$this->post_form['mode']}", $this->post_form);
+				do_action("um_submit_form_errors_hook", $this->post_form );
+
+				do_action("um_submit_form_{$this->post_form['mode']}", $this->post_form );
 
 			}
 			

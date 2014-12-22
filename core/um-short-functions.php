@@ -5,12 +5,18 @@
 	***/
 	function um_get_core_page( $slug, $updated = false) {
 		global $ultimatemember;
-		if ( $ultimatemember->permalinks->core[ $slug ] )
+		
+		if ( isset( $ultimatemember->permalinks->core[ $slug ] ) ) {
+			
 			$url = get_permalink( $ultimatemember->permalinks->core[ $slug ] );
-			if ( $updated ) {
+			
+			if ( $updated )
 				$url = add_query_arg( 'updated', $updated, $url );
-			}
+				
 			return $url;
+			
+		}
+		
 		return '';
 	}
 	

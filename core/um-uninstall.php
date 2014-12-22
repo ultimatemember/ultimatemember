@@ -29,7 +29,7 @@ class UM_Uninstall {
 			
 		}
 		
-		$roles = get_posts( array( 'post_type' => 'um_role', 'number' => 999 ) );
+		$roles = get_posts( array( 'post_type' => 'um_role', 'numberposts'   => -1 ) );
 		foreach( $roles as $role ) {
 			wp_delete_post( $role->ID, 1 );
 		}
