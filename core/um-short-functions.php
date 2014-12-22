@@ -206,16 +206,20 @@
 	function um_can_view_field( $data ) {
 		global $ultimatemember;
 
-		if ( !is_user_logged_in() && $data['public'] != '1' ) return false;
+		if ( isset( $data['public'] ) ) {
 		
-		if ( is_user_logged_in() && isset( $data['public'] ) ) {
-		
-			if ( !um_is_user_himself() && $data['public'] == '-1' && !um_user_can('can_edit_everyone') )
-				return false;
-				
-			if ( $data['public'] == '-2' && $data['roles'] )
-				if ( !in_array( $ultimatemember->query->get_role_by_userid( get_current_user_id() ), $data['roles'] ) )
+			if ( !is_user_logged_in() && $data['public'] != '1' ) return false;
+			
+			if ( is_user_logged_in() ) {
+			
+				if ( !um_is_user_himself() && $data['public'] == '-1' && !um_user_can('can_edit_everyone') )
 					return false;
+					
+				if ( $data['public'] == '-2' && $data['roles'] )
+					if ( !in_array( $ultimatemember->query->get_role_by_userid( get_current_user_id() ), $data['roles'] ) )
+						return false;
+			}
+		
 		}
 		
 		return true;

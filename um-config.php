@@ -378,7 +378,7 @@ $this->sections[] = array(
 				'id'       => 'mail_from',
                 'type'     => 'text',
                 'title'    => __( 'Mail appears from' ),
-                'desc' 	   => __( 'e.g. Company Name' ),
+                'desc' 	   => __( 'e.g. Site Name' ),
                 'default'  => get_bloginfo('name'),
         ),
 
