@@ -244,6 +244,8 @@ class UM_Admin_Metabox {
 		add_meta_box('um-admin-form-register_customize', __('<i class="um-icon-cog-1"></i>Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
 		add_meta_box('um-admin-form-profile_customize', __('<i class="um-icon-cog-1"></i>Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
 		add_meta_box('um-admin-form-login_customize', __('<i class="um-icon-cog-1"></i>Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
+		
+		add_meta_box('um-admin-form-login_settings', __('<i class="um-icon-tools"></i>Settings'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
 
 	}
 	

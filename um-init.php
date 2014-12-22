@@ -66,7 +66,7 @@ class UM_API {
 		require_once um_path . 'core/um-actions-user.php';
 		require_once um_path . 'core/um-actions-save-profile.php';
 		require_once um_path . 'core/um-actions-modal.php';
-		require_once um_path . 'core/um-actions-notices.php';
+		require_once um_path . 'core/um-actions-misc.php';
 		
 		require_once um_path . 'core/um-filters-login.php';
 		require_once um_path . 'core/um-filters-register.php';

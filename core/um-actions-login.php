@@ -85,6 +85,10 @@
 	function um_user_login($args){
 		global $ultimatemember;
 		extract( $args );
+		
+		if ( is_user_logged_in() ) {
+			wp_logout();
+		}
 
 		$user_id = $ultimatemember->login->auth_id;
 		
@@ -92,9 +96,19 @@
 		
 		$ultimatemember->user->auto_login( $user_id );
 		
+		// Priority redirect
+		if ( isset( $args['redirect_to'] ) ) {
+			exit( wp_redirect( $args['redirect_to'] ) );
+		}
+		
+		// Role redirect
 		$after = um_user('after_login');
 		switch( $after ) {
 			
+			case 'redirect_admin':
+				exit( wp_redirect( admin_url() ) );
+				break;
+				
 			case 'redirect_profile':
 				exit( wp_redirect( um_user_profile_url() ) );
 				break;

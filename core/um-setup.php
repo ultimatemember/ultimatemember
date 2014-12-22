@@ -182,7 +182,7 @@ class UM_Setup {
 			'default_homepage' => 1,
 			'status' => 'approved',
 			'auto_approve_act' => 'redirect_profile',
-			'after_login' => 'redirect_profile',
+			'after_login' => 'redirect_admin',
 			'after_logout' => 'redirect_home',
 		);
 		
@@ -196,6 +196,7 @@ class UM_Setup {
 			'can_delete_roles' => 0,
 			'can_make_private_profile' => 0,
 			'can_access_private_profile' => 0,
+			'after_login' => 'redirect_profile',
 		);
 		
 	}

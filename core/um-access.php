@@ -57,7 +57,7 @@ class UM_Access {
 		$args = $this->get_meta();
 		extract($args);
 
-		$redirect = null;
+		$redirect_to = null;
 
 		if ( !isset( $accessible ) ) return;
 		
@@ -69,24 +69,24 @@ class UM_Access {
 			case 1:
 			
 				if ( is_user_logged_in() )
-					$redirect = $access_redirect2;
+					$redirect_to = $access_redirect2;
 				break;
 				
 			case 2:
 				
 				if ( !is_user_logged_in() )
-					$redirect = $access_redirect;
+					$redirect_to = $access_redirect;
 					
 				if ( isset( $access_roles ) && !empty( $access_roles ) )
 					if ( !in_array( um_user('role'), unserialize( $access_roles ) ) )
-						$redirect = $access_redirect;
+						$redirect_to = $access_redirect;
 						
 				break;
 				
 		}
 		
-		if ( $redirect ) {
-			wp_redirect( $redirect );
+		if ( $redirect_to ) {
+			wp_redirect( $redirect_to );
 			exit;
 		}
 		
