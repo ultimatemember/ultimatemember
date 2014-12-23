@@ -961,6 +961,20 @@ class UM_Admin_Metabox {
 				
 				break;
 				
+			case '_crop':
+				?>
+				
+					<p><label for="_crop">Crop Feature <?php $this->tooltip('Enable/disable crop feature for this image upload and define ratio'); ?></label>
+						<select name="_crop" id="_crop" class="umaf-selectjs" style="width: 100%">
+							<option value="0" <?php selected( '0', $this->edit_mode_value ); ?>>Turn Off (Default)</option>
+							<option value="1" <?php selected( '1', $this->edit_mode_value ); ?>>Crop and force 1:1 ratio</option>
+							<option value="2" <?php selected( '2', $this->edit_mode_value ); ?>>Crop and force user-defined ratio</option>
+						</select>
+					</p>
+					
+				<?php
+				break;
+				
 			case '_allowed_types':
 			
 				if ( $this->set_field_type == 'image' ) {

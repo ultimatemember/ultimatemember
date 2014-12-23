@@ -8,7 +8,6 @@
 	box-sizing: border-box;
 	color: #666;
 	font-size: 15px;
-	overflow: hidden;
 	margin-bottom: 30px !important;
 	-webkit-font-smoothing: antialiased !important;
 	-moz-osx-font-smoothing: grayscale !important;
@@ -448,6 +447,7 @@ input[type=submit].um-button:focus {
 }
 
 .um-button {
+	font-size: 15px;
 	border: none !important;
 	display: block;
 	width: 100%;
@@ -466,6 +466,15 @@ input[type=submit].um-button:focus {
 	border-top: 1px solid rgba(0,0,0,0.0) !important;
 	border-bottom: 2px solid rgba(0, 0, 0, 0.1) !important;
 	letter-spacing: 0.5px;
+}
+
+
+.um-button.um-btn-auto-width {
+	width: auto;
+	display: inline-block;
+	padding: 14px 20px !important;
+	min-width: 200px;
+	max-width: 450px;
 }
 
 a.um-link-alt {

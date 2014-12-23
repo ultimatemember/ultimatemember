@@ -239,7 +239,7 @@ class UM_Builtin {
 			
 			'image' => array(
 				'name' => 'Image Upload',
-				'col1' => array('_title','_metakey','_help','_allowed_types','_max_size'),
+				'col1' => array('_title','_metakey','_help','_allowed_types','_max_size','_crop'),
 				'col2' => array('_label','_public','_roles','_upload_text','_upload_help_text','_button_text'),
 				'col3' => array('_required','_editable','_icon'),
 				'validate' => array(

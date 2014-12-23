@@ -150,6 +150,19 @@ class UM_Enqueue {
 	}
 	
 	/***
+	***	@Load crop script
+	***/
+	function load_imagecrop(){
+	
+		wp_register_script('um_crop', um_url . 'assets/js/um-crop.js' );
+		wp_enqueue_script('um_crop');
+		
+		wp_register_style('um_crop', um_url . 'assets/css/um-crop.css' );
+		wp_enqueue_style('um_crop');
+		
+	}
+	
+	/***
 	***	@Load masonry
 	***/
 	function load_masonry(){
@@ -218,6 +231,8 @@ class UM_Enqueue {
 		$this->load_datetimepicker();
 		
 		$this->load_raty();
+		
+		$this->load_imagecrop();
 		
 		$this->load_masonry();
 		

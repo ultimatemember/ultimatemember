@@ -66,7 +66,7 @@ jQuery(document).ready(function() {
 		hiddenSuffix: '__true'
 	});
 	
-	/* Rating field */
+	/* rating field */
 	jQuery('.um-rating').raty({
 		half: 		false,
 		starType: 	'i',
@@ -81,6 +81,7 @@ jQuery(document).ready(function() {
 		}
 	});
 	
+	/* rating read-only field */
 	jQuery('.um-rating-readonly').raty({
 		half: 		false,
 		starType: 	'i',
@@ -91,87 +92,15 @@ jQuery(document).ready(function() {
 		readOnly: true
 	});
 	
-	/* Image Upload */
-	jQuery(".um-single-image-upload").each(function(){
-	
-		var trigger = jQuery(this);
-		
-		if (trigger.data('upload_help_text')){
-			upload_help_text = '<span class="help">' + trigger.data('upload_help_text') + '</span>';
-		} else {
-			upload_help_text = '';
-		}
-		
-		if ( trigger.data('icon') ) {
-			icon = '<span class="icon"><i class="'+ trigger.data('icon') + '"></i></span>';
-		} else {
-			icon = '';
-		}
-
-		if ( trigger.data('upload_text') ) {
-			upload_text = '<span class="str">' + trigger.data('upload_text') + '</span>';
-		} else {
-			upload_text = '';
-		}
-		
-		trigger.uploadFile({
-			url: ultimatemember_image_upload_url,
-			method: "POST",
-			multiple: false,
-			formData: {key: trigger.data('key'), set_id: trigger.data('set_id'), set_mode: trigger.data('set_mode') },
-			fileName: trigger.data('key'),
-			allowedTypes: trigger.data('allowed_types'),
-			maxFileSize: trigger.data('max_size'),
-			dragDropStr: icon + upload_text + upload_help_text,
-			sizeErrorStr: trigger.data('max_size_error'),
-			extErrorStr: trigger.data('extension_error'),
-			maxFileCountErrorStr: trigger.data('max_files_error'),
-			maxFileCount: 1,
-			showDelete: false,
-			showAbort: false,
-			showDone: false,
-			showFileCounter: false,
-			showStatusAfterSuccess: false,
-			onSubmit:function(files){
-			
-				trigger.parents('.um-field').find('.um-error-block').remove();
-				
-			},
-			onSuccess:function(files,data,xhr){
-			
-				trigger.selectedFiles = 0;
-				
-				data = jQuery.parseJSON(data);
-				if (data.error && data.error != '') {
-
-					trigger.parents('.um-field').append('<div class="um-error-block">'+data.error+'</div>');
-					
-				} else {
-
-					trigger.parents('.um-field').find('.ajax-upload-dragdrop').fadeOut( function() {
-						trigger.parents('.um-field').find('.um-single-image-preview').fadeIn();
-					});
-
-					jQuery.each( data, function(key, value) {
-						trigger.parents('.um-field').find('.um-single-image-preview img').attr('src', value);
-					});
-				
-				}
-				
-			}
-		});
-		
-	});
-	
-	/* Remove a single image upload */
-	jQuery(document).on('click', '.um-single-image-preview a.cancel', function(e){
+	/* remove uploaded image */
+	jQuery(document).on('click', '.um .um-single-image-preview a.cancel', function(e){
 		e.preventDefault();
 		
-		var trigger = jQuery(this).parents('.um-field').find('.um-single-image-upload');
+		var parent = jQuery(this).parents('.um-field');
 
-		trigger.parents('.um-field').find('.um-single-image-preview').fadeOut(function(){
-			trigger.parents('.um-field').find('.ajax-upload-dragdrop').fadeIn();
-		});
+		parent.find('.um-single-image-preview').hide();
+		
+		parent.find('.um-btn-auto-width').html('Upload');
 		
 		return false;
 	});

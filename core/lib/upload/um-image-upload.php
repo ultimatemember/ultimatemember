@@ -20,11 +20,12 @@ if(isset($_FILES[$id]['name'])) {
 
 		$error = $ultimatemember->files->check_image_upload( $temp, $id );
 		if ( $error ){
+			
 			$ret['error'] = $error;
+		
 		} else {
-			$ret[] = $ultimatemember->files->new_image_upload_temp( $temp, $file, 35 );
 			
-			
+			$ret[] = $ultimatemember->files->new_image_upload_temp( $temp, $file, um_get_option('image_compression') );
 			
 		}
 

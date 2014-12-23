@@ -1,3 +1,4 @@
+.uimob340-show,
 .uimob500-show,
 .uimob800-show,
 .uimob960-show
@@ -5,6 +6,7 @@
 	display: none;
 }
 
+div.uimob340 .uimob340-show,
 div.uimob500 .uimob500-show,
 div.uimob800 .uimob800-show,
 div.uimob960 .uimob960-show
@@ -12,6 +14,7 @@ div.uimob960 .uimob960-show
 	display: block;
 }
 
+div.uimob340 .uimob340-hide,
 div.uimob500 .uimob500-hide,
 div.uimob800 .uimob800-hide,
 div.uimob960 .uimob960-hide
@@ -20,10 +23,52 @@ div.uimob960 .uimob960-hide
 }
 
 /**
+	for 340px and below
+**/
+
+/********************************************/
+
+.uimob340 .um-half {
+	float: none;
+	width: 100%;
+	margin: 0 0 10px 0;
+}
+
+.uimob340  .um-button.um-btn-auto-width {
+	min-width: auto;
+	max-width: auto;
+	width: 100%;
+}
+
+.um-modal.uimob340  {
+	width: 100% !important;
+	margin: 0 !important;
+	left: 0 !important;
+}
+
+.um-modal.uimob340,
+.um-modal.uimob340 .um-modal-body,
+.um-modal.uimob340 .um-modal-header {
+	border-radius: 0;
+}
+
+/**
 	for 500px and below
 **/
 
 /********************************************/
+
+.um-modal.uimob500  {
+	width: 100% !important;
+	margin: 0 !important;
+	left: 0 !important;
+}
+
+.um-modal.uimob500,
+.um-modal.uimob500 .um-modal-body,
+.um-modal.uimob500 .um-modal-header {
+	border-radius: 0;
+}
 
 div.uimob500 .um-profile-body {
 	padding-left: 0;
@@ -248,3 +293,33 @@ div.uimob960 .um-member {
 }
 
 div.uimob960  .um-gutter-sizer { width: 4% }
+
+/************************************************/
+
+@media screen and ( max-height: 900px ){
+	.um-single-image-preview img {max-height: 500px}
+}
+
+@media screen and ( max-height: 800px ){
+	.um-single-image-preview img {max-height: 500px}
+}
+
+@media screen and ( max-height: 700px ){
+	.um-single-image-preview img {max-height: 350px}
+}
+
+@media screen and ( max-height: 600px ){
+	.um-single-image-preview img {max-height: 300px}
+}
+
+@media screen and ( max-height: 500px ){
+	.um-single-image-preview img {max-height: 250px}
+}
+
+@media screen and ( max-height: 400px ){
+	.um-single-image-preview img {max-height: 200px}
+}
+
+@media screen and ( max-height: 300px ){
+	.um-single-image-preview img {max-height: 150px}
+}

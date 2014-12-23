@@ -738,6 +738,29 @@ $this->sections[] = array(
 	
 $this->sections[] = array(
 
+    'icon'       => 'um-icon-files',
+    'title'      => __( 'Image &amp; File Uploads'),
+    'fields'     => array(
+		
+		array(
+				'id'       		=> 'image_compression',
+                'type'     		=> 'text',
+                'title'    		=> __( 'Image Quality' ),
+                'desc' 	   		=> __( 'Quality is used to determine quality of image uploads, and ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file). The default range is 75.' ),
+                'default'  		=> 60,
+				'validate' 		=> 'numeric',
+        ),
+
+	)
+
+);
+
+/***
+***	@
+***/
+	
+$this->sections[] = array(
+
     'icon'       => 'um-icon-search',
     'title'      => __( 'SEO'),
     'fields'     => array(

@@ -593,6 +593,8 @@ class UM_Fields {
 
 			case 'image':
 			
+				if ( !isset( $array['crop'] ) ) $array['crop'] = 0;
+			
 				if (!isset($array['invalid_image'])) $array['invalid_image'] = "Please upload a valid image!";
 				if (!isset($array['allowed_types'])) {
 					$array['allowed_types'] = "gif,jpg,jpeg,png";
@@ -975,19 +977,52 @@ class UM_Fields {
 					$output .= $this->field_label($label, $key, $data);
 					}
 					
-					$output .= '<div class="um-field-area">';
-						
-						$output .= '<div class="um-single-image-preview"><a href="#" class="cancel"><i class="um-icon-remove"></i></a><img src="" alt="" /></div>';
-						
-						$output .= '<div class="um-single-image-upload" data-icon="'.$icon.'" data-set_id="'.$this->set_id.'" data-set_mode="'.$this->set_mode.'" data-type="'.$type.'" data-key="'.$key.'" data-max_size="'.$max_size.'" data-max_size_error="'.$max_size_error.'" data-min_size_error="'.$min_size_error.'" data-extension_error="'.$extension_error.'"  data-allowed_types="'.$allowed_types.'" data-upload_text="'.$upload_text.'" data-max_files_error="'.$max_files_error.'" data-upload_help_text="'.$upload_help_text.'">'.$button_text.'</div>';
-
-						$output .= '</div>';
-							
-						if ( $this->is_error($key) ) {
-							$output .= $this->field_error( $this->show_error($key) );
-						}
+					if ( $crop ) {
+						$crop_class = 'crop';
+					} else {
+						$crop_class = '';
+					}
 					
-						$output .= '</div>';
+					$modal_label = ( isset( $data['label'] ) ) ? $data['label'] : __('Upload Photo','ultimatemember');
+					
+					$output .= '<div class="um-field-area" style="text-align: center">
+					
+						<div class="um-single-image-preview '. $crop_class .'" data-key="'.$key.'"><a href="#" class="cancel"><i class="um-icon-remove"></i></a><img src="" alt="" /></div>
+						
+						<a href="#" data-modal="um_upload_image" data-modal-copy="1" class="um-button um-btn-auto-width">'. $button_text . '</a>
+						
+						</div>';
+
+					/* modal hidden */
+					$output .= '<div class="um-modal-hidden-content">';
+
+					$output .= '<div class="um-modal-header"> ' . $modal_label . '</div>';
+					
+					$output .= '<div class="um-modal-body">';
+					
+					$output .= '<div class="um-single-image-preview '. $crop_class .'"><a href="#" class="cancel"><i class="um-icon-remove"></i></a><img src="" alt="" /></div>';
+					$output .= '<div class="um-single-image-upload" data-icon="'.$icon.'" data-set_id="'.$this->set_id.'" data-set_mode="'.$this->set_mode.'" data-type="'.$type.'" data-key="'.$key.'" data-max_size="'.$max_size.'" data-max_size_error="'.$max_size_error.'" data-min_size_error="'.$min_size_error.'" data-extension_error="'.$extension_error.'"  data-allowed_types="'.$allowed_types.'" data-upload_text="'.$upload_text.'" data-max_files_error="'.$max_files_error.'" data-upload_help_text="'.$upload_help_text.'">'.$button_text.'</div>';
+					
+					$output .= '<div class="um-modal-footer">
+									<div class="um-modal-right">
+										<a href="#" class="um-modal-btn um-finish-upload disabled" data-key="'.$key.'"> ' . __('Apply','ultimatemember') . '</a>
+										<a href="#" class="um-modal-btn alt" data-action="um_remove_modal"> ' . __('Cancel','ultimatemember') . '</a>
+									</div>
+									<div class="um-clear"></div>
+								</div>';
+								
+					$output .= '</div>';
+					
+					$output .= '</div>';
+					
+					/* end */
+					
+					if ( $this->is_error($key) ) {
+						$output .= $this->field_error( $this->show_error($key) );
+					}
+					
+					$output .= '</div>';
+						
 				break;
 				
 			/* Single File Upload */
