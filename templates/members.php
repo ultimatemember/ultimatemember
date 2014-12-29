@@ -2,8 +2,6 @@
 
 	<div class="um-form">
 
-			<?php $args = apply_filters('um_members_directory_arguments', $args ); ?>
-			
 			<?php do_action('um_members_directory_search', $args ); ?>
 			
 			<?php do_action('um_members_directory_head', $args ); ?>

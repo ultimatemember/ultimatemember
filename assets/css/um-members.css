@@ -111,8 +111,14 @@
 
 .um-gutter-sizer { width: 5% }
 
+/*
+	- Member cover
+*/
+
 .um-member-cover {
 	background-color: #eee;
+	box-sizing: border-box;
+	position: relative;
 }
 
 .um-member-cover-e {

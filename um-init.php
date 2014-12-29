@@ -36,6 +36,7 @@ class UM_API {
 		require_once um_path . 'core/um-fields.php';
 		require_once um_path . 'core/um-form.php';
 		require_once um_path . 'core/um-user.php';
+		require_once um_path . 'core/um-profile.php';
 		require_once um_path . 'core/um-query.php';
 		require_once um_path . 'core/um-datetime.php';
 		require_once um_path . 'core/um-chart.php';
@@ -44,12 +45,15 @@ class UM_API {
 		require_once um_path . 'core/um-taxonomies.php';
 		require_once um_path . 'core/um-validation.php';
 		require_once um_path . 'core/um-navmenu.php';
+		require_once um_path . 'core/um-menu.php';
 		require_once um_path . 'core/um-access.php';
 		require_once um_path . 'core/um-permalinks.php';
 		require_once um_path . 'core/um-mail.php';
 		require_once um_path . 'core/um-members.php';
 		require_once um_path . 'core/um-logout.php';
 		require_once um_path . 'core/um-modal.php';
+		
+		require_once um_path . 'core/lib/mobiledetect/Mobile_Detect.php';
 		
 		require_once um_path . 'core/um-actions-form.php';
 		require_once um_path . 'core/um-actions-wpadmin.php';
@@ -93,6 +97,7 @@ class UM_API {
 		$this->register = new UM_Register();
 		$this->fields = new UM_Fields();
 		$this->user = new UM_User();
+		$this->profile = new UM_Profile();
 		$this->datetime = new UM_DateTime();
 		$this->chart = new UM_Chart();
 		$this->builtin = new UM_Builtin();
@@ -101,12 +106,14 @@ class UM_API {
 		$this->taxonomies = new UM_Taxonomies();
 		$this->validation = new UM_Validation();
 		$this->query = new UM_Query();
+		$this->menu = new UM_Menu();
 		$this->access = new UM_Access();
 		$this->permalinks = new UM_Permalinks();
 		$this->mail = new UM_Mail();
 		$this->members = new UM_Members();
 		$this->logout = new UM_Logout();
 		$this->modal = new UM_Modal();
+		$this->mobile = new Mobile_Detect;
 
 		$this->options = get_option('um_options');
 		

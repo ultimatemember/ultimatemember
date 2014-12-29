@@ -89,28 +89,19 @@ class UM_Files {
 		$this->upload_dir = wp_upload_dir();
 		
 		$this->upload_basedir = $this->upload_dir['basedir'] . '/ultimatemember/';
-		
 		$this->upload_baseurl = $this->upload_dir['baseurl'] . '/ultimatemember/';
+		
+		$this->upload_temp = $this->upload_basedir . 'temp/';
+		$this->upload_temp_url = $this->upload_baseurl . 'temp/';
 
-		// create plugin uploads directory
 		if (!file_exists( $this->upload_basedir )) {
 			@mkdir( $this->upload_basedir, 0777, true);
 		}
+
+		if (!file_exists( $this->upload_temp )) {
+			@mkdir( $this->upload_temp , 0777, true);
+		}
 		
-	}
-
-	/***
-	***	@Return upload directory
-	***/	
-	function upload_dir(){
-		return $this->upload_basedir;
-	}
-
-	/***
-	***	@Return upload URL
-	***/
-	function upload_url(){
-		return $this->upload_baseurl;
 	}
 	
 	/***
@@ -119,34 +110,41 @@ class UM_Files {
 	function unique_dir(){
 		global $ultimatemember;
 		$unique_number = $ultimatemember->validation->generate();
-		$array['dir'] = $this->upload_basedir . 'temp/'. $unique_number . '/';
-		$array['url'] = $this->upload_baseurl . 'temp/'. $unique_number . '/';
+		$array['dir'] = $this->upload_temp . $unique_number . '/';
+		$array['url'] = $this->upload_temp_url . $unique_number . '/';
 		return $array;
 	}
 	
 	/***
-	***	@Fix image orientation
+	***	@get path only without file name
 	***/
-	function fix_image_orientation(&$image, $source){
+	function path_only( $file ) {
+		return trailingslashit( dirname( $file ) );
+	}
+	
+	/***
+	***	@fix image orientation
+	***/
+	function fix_image_orientation($rotate, $source){
 		$exif = @exif_read_data($source);
 
 		if (isset($exif['Orientation'])) {
 			switch ($exif['Orientation']) {
 				case 3:
-					$image = imagerotate($image, 180, 0);
+					$rotate = imagerotate($rotate, 180, 0);
 					break;
 
 				case 6:
-					$image = imagerotate($image, -90, 0);
+					$rotate = imagerotate($rotate, -90, 0);
 					break;
 
 				case 8:
-					$image = imagerotate($image, 90, 0);
+					$rotate = imagerotate($rotate, 90, 0);
 					break;
 			}
 		}
 		
-		return $image;
+		return $rotate;
 	}
 	
 	/***
@@ -154,7 +152,7 @@ class UM_Files {
 	***/
 	function create_and_copy_image($source, $destination, $quality = 100) {
 		
-		$info = getimagesize($source);
+		$info = @getimagesize($source);
 		
 		if ($info['mime'] == 'image/jpeg'){
 		
@@ -169,11 +167,26 @@ class UM_Files {
 			$image = imagecreatefrompng($source);
 
 		}
+
+		list($w, $h) = @getimagesize( $source );
+		if ( $w > um_get_option('image_max_width') ) {
 		
-		$this->fix_image_orientation($image, $source);
+			$ratio = round( $w / $h, 2 );
+			$new_w = um_get_option('image_max_width');
+			$new_h = round( $new_w / $ratio, 2 );
+			
+			$image_p = imagecreatetruecolor( $new_w, $new_h );
+			imagecopyresampled( $image_p, $image, 0, 0, 0, 0, $new_w, $new_h, $w, $h );
+			$image_p = $this->fix_image_orientation($image_p, $source);
+			imagejpeg( $image_p, $destination, $quality);
 		
-		imagejpeg($image, $destination, $quality);
-				
+		} else {
+			
+			$image = $this->fix_image_orientation($image, $source);
+			imagejpeg( $image, $destination, $quality);
+			
+		}
+
 	}
 	
 	/***
@@ -292,6 +305,10 @@ class UM_Files {
 			$error = $data['extension_error'];
 		} elseif ( isset($data['min_size']) && ( $fileinfo['size'] < $data['min_size'] ) ) {
 			$error = $data['min_size_error'];
+		} elseif ( isset($data['min_width']) && ( $fileinfo['width'] < $data['min_width'] ) ) {
+			$error = sprintf(__('Your photo is too small. It must be at least %spx wide.'), $data['min_width']);
+		} elseif ( isset($data['min_height']) && ( $fileinfo['height'] < $data['min_height'] ) ) {
+			$error = sprintf(__('Your photo is too small. It must be at least %spx wide.'), $data['min_height']);
 		}
 		
 		return $error;
@@ -323,6 +340,144 @@ class UM_Files {
 		if (in_array($value, explode(',',$array)))
 			return true;
 		return false;
+	}
+	
+	/***
+	***	@delete a main user photo
+	***/
+	function delete_core_user_photo( $user_id, $type ) {
+	
+		delete_user_meta( $user_id, $type );
+		
+		$dir = $this->upload_basedir . $user_id . '/';
+		$prefix = $type;
+		chdir($dir);
+		$matches = glob($prefix.'*',GLOB_MARK);
+		
+		if( is_array($matches) && !empty($matches)) {
+			foreach($matches as $match) {
+				if( is_file($dir.$match) ) unlink($dir.$match);
+			}
+		}
+		
+		if ( count(glob("$dir/*")) === 0) {
+			rmdir( $dir );
+		}
+		
+	}
+
+	/***
+	***	@resize a local image
+	***/
+	function resize_image( $file, $crop ) {
+	
+		$targ_x1 = $crop[0];
+		$targ_y1 = $crop[1];
+		$targ_x2 = $crop[2];
+		$targ_y2 = $crop[3];
+
+		$img_r = imagecreatefromjpeg($file);
+		$dst_r = imagecreatetruecolor( $targ_x2, $targ_y2 );
+
+		imagecopy( $dst_r, $img_r, 0, 0, $targ_x1, $targ_y1, $targ_x2, $targ_y2 );
+		imagejpeg( $dst_r, $this->path_only( $file ) . basename( $file ), 100);
+		
+		$split = explode('/ultimatemember/temp/', $file);
+		return $this->upload_temp_url . $split[1];
+		
+	}
+	
+	/***
+	***	@new user upload
+	***/
+	function new_user_upload( $user_id, $source, $key ) {
+	
+		// if he does not have uploads dir yet
+		if ( !file_exists( $this->upload_basedir . $user_id . '/' ) ) {
+			@mkdir( $this->upload_basedir . $user_id . '/' , 0777, true);
+		}
+		
+		// name and extension stuff
+		$source_name = basename( $source );
+		
+		if ( $key == 'profile_photo' ) {
+			$source_name = 'profile_photo.jpg';
+		}
+		
+		if ( $key == 'cover_photo' ) {
+			$source_name = 'cover_photo.jpg';
+		}
+		
+		$ext = '.' . pathinfo($source_name, PATHINFO_EXTENSION);
+		$name = str_replace( $ext, '', $source_name );
+		$filename = $name . $ext;
+		
+		// copy image
+		copy( $source, $this->upload_basedir . $user_id . '/' . $filename );
+		
+		// thumbs
+		if ( $key == 'profile_photo' ) {
+		
+			list($w, $h) = @getimagesize( $source );
+			
+			$sizes = um_get_option('photo_thumb_sizes');
+			foreach( $sizes as $size ) {
+			
+				if ( file_exists(  $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext ) ) {
+					unlink( $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext );
+				}
+				
+				if ( $size < $w ) {
+
+				$thumb_s = imagecreatefromjpeg( $source );
+				$thumb = imagecreatetruecolor( $size, $size );
+				imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $size, $w, $h );
+				imagejpeg( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext, 100);
+				
+				}
+			
+			}
+		
+		}
+		
+		if ( $key == 'cover_photo' ) {
+		
+			list($w, $h) = @getimagesize( $source );
+			
+			$sizes = um_get_option('cover_thumb_sizes');
+			foreach( $sizes as $size ) {
+			
+				$ratio = round( $w / $h, 2 );
+				$height = round( $size / $ratio, 2 );
+				
+				if ( file_exists(  $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext ) ) {
+					unlink( $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext );
+				}
+				
+				if ( $size < $w ) {
+
+				$thumb_s = imagecreatefromjpeg( $source );
+				$thumb = imagecreatetruecolor( $size, $height );
+				imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $height, $w, $h );
+				imagejpeg( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext, 100);
+				
+				}
+			
+			}
+		
+		}
+		
+		// clean up temp
+		$dir = dirname( $source );
+		unlink( $source );
+		rmdir( $dir );
+		
+		// update user's meta
+		update_user_meta( $user_id, $key, $filename );
+		
+		// the url of upload
+		return $this->upload_baseurl . $user_id . '/' . $filename;
+		
 	}
 	
 }

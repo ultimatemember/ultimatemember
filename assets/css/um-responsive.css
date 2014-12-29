@@ -28,22 +28,31 @@ div.uimob960 .uimob960-hide
 
 /********************************************/
 
-.uimob340 .um-half {
-	float: none;
-	width: 100%;
-	margin: 0 0 10px 0;
+div.uimob340 .um-cover-overlay span.um-cover-overlay-t,
+div.uimob340 .um-profile-photo-overlay span.um-profile-photo-overlay-t
+{
+	display: none !important;
 }
 
-.uimob340  .um-button.um-btn-auto-width {
-	min-width: auto;
-	max-width: auto;
-	width: 100%;
+div.uimob340 .um-cover-overlay,
+div.uimob340 .um-profile-photo-overlay
+{
+	padding: 0;
+}
+
+div.uimob340 .um-cover-overlay i,
+div.uimob340 .um-profile-photo-overlay i
+{
+	margin-bottom: 0;
+	font-size: 30px;
 }
 
 .um-modal.uimob340  {
 	width: 100% !important;
 	margin: 0 !important;
 	left: 0 !important;
+	height: 100%;
+	background: #fff;
 }
 
 .um-modal.uimob340,
@@ -52,16 +61,181 @@ div.uimob960 .uimob960-hide
 	border-radius: 0;
 }
 
+.um-modal.uimob340 .um-modal-header {text-align: center}
+.um-modal.uimob340 .um-modal-footer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 10px;
+	border-top: 1px solid #ddd;
+}
+
+.um-modal.uimob340 .um-modal-right {
+	width: 100%;
+	float: none;
+}
+
+.um-modal.uimob340 .um-modal-footer a.um-modal-btn {
+	width: 48%;
+	margin: 0 1%;
+	float: left;
+	display: block;
+	line-height: 44px !important;
+	height: 44px;
+}
+
+.um-modal.uimob340 .ajax-upload-dragdrop span.icon {
+	font-size: 40px;
+	line-height: 40px;
+}
+
+div.uimob340 .um-profile-body {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+div.uimob340 .um-profile-photo {
+	width: 100% !important;
+	text-align: center !important;
+	position: absolute;
+	top: -20px;
+	left: 0;
+}
+
+div.uimob340 .um-profile-photo a.um-profile-photo-img {
+	width: 100px !important;
+	height: 100px !important;
+	margin: 0 auto !important;
+	float: none !important;
+	display: inline-block !important;
+	position: relative !important;
+	top: auto !important;
+	left: auto !important;
+}
+
+div.uimob340 .um-header .um-profile-meta {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	text-align: center !important;
+	padding-top: 90px !important;
+}
+
+div.uimob340 .um-header .um-name { 
+	float: none !important;
+	margin-right: 0 !important;
+	font-size: 18px;
+}
+
+div.uimob340 .um-header .um-meta-text {
+	padding: 0 20px;
+}
+
+div.uimob340 .um-header .um-meta {padding: 0 20px}
+div.uimob340 .um-header .um-meta span:first-child {display: block}
+div.uimob340 .um-header .um-meta span {display: none}
+
+div.uimob340 .um-col-121,
+div.uimob340 .um-col-122,
+div.uimob340 .um-col-131,
+div.uimob340 .um-col-132,
+div.uimob340 .um-col-133 {
+	float: none;
+	width: 100%;
+	margin: 0;
+}
+
+div.uimob340 .um-field-half {
+	float: none;
+	width: 100%;
+}
+
+div.uimob340 .um-search {
+	padding: 20px 0 !important;
+	width: 100% !important;
+	box-sizing: border-box;
+}
+
+div.uimob340 .um-search .um-search-filter {
+	width: 100% !important;
+	float: none !important;
+	padding: 0 0 15px 0 !important;
+}
+
+div.uimob340 .um-search .um-search-submit .um-button {
+	display: block !important;
+	min-width: 100% !important;
+	margin: 0 0 15px 0 !important;
+}
+
+div.uimob340 .um-member {
+	width: 100%;
+}
+
+div.uimob340  .um-gutter-sizer { width: 0px }
+
+div.uimob340 .um-account-main {
+	float: none;
+	width: 100%;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+div.uimob340 .um-account-tab {
+	padding-bottom: 20px;
+	border-bottom: 1px solid #eee;
+}
+
+div.uimob340 .um-account-main div.um-field {padding-top: 15px}
+
+div.uimob340 .um-account-meta {
+	margin-bottom: 0;
+}
+
+.uimob340 .um-half {
+	float: none;
+	width: 100%;
+	margin: 0 0 10px 0;
+}
+
+.uimob340 .um-button.um-btn-auto-width {
+	min-width: auto;
+	max-width: auto;
+	width: 100%;
+}
+
 /**
 	for 500px and below
 **/
 
 /********************************************/
 
+div.uimob500 .um-cover-overlay span.um-cover-overlay-t,
+div.uimob500 .um-profile-photo-overlay span.um-profile-photo-overlay-t
+{
+	display: none !important;
+}
+
+div.uimob500 .um-cover-overlay,
+div.uimob500 .um-profile-photo-overlay
+{
+	padding: 0;
+}
+
+div.uimob500 .um-cover-overlay i,
+div.uimob500 .um-profile-photo-overlay i
+{
+	margin-bottom: 0;
+	font-size: 30px;
+}
+
 .um-modal.uimob500  {
 	width: 100% !important;
 	margin: 0 !important;
 	left: 0 !important;
+	height: 100%;
+	background: #fff;
 }
 
 .um-modal.uimob500,
@@ -70,13 +244,39 @@ div.uimob960 .uimob960-hide
 	border-radius: 0;
 }
 
+.um-modal.uimob500 .um-modal-header {text-align: center}
+.um-modal.uimob500 .um-modal-footer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 10px;
+	border-top: 1px solid #ddd;
+}
+
+.um-modal.uimob500 .um-modal-right {
+	width: 100%;
+	float: none;
+}
+
+.um-modal.uimob500 .um-modal-footer a.um-modal-btn {
+	width: 48%;
+	margin: 0 1%;
+	float: left;
+	display: block;
+	line-height: 44px !important;
+	height: 44px;
+}
+
+.um-modal.uimob500 .ajax-upload-dragdrop span.icon {
+	font-size: 40px;
+	line-height: 40px;
+}
+
 div.uimob500 .um-profile-body {
 	padding-left: 0;
 	padding-right: 0;
-}
-
-div.uimob500 .um-profile-edit {
-	right: 0;
 }
 
 div.uimob500 .um-profile-photo {
@@ -102,7 +302,7 @@ div.uimob500 .um-header .um-profile-meta {
 	padding-left: 0 !important;
 	padding-right: 0 !important;
 	text-align: center !important;
-	padding-top: 70px !important;
+	padding-top: 80px !important;
 }
 
 div.uimob500 .um-header .um-name { 
@@ -112,13 +312,12 @@ div.uimob500 .um-header .um-name {
 }
 
 div.uimob500 .um-header .um-meta-text {
-	margin: 0;
 	padding: 0 20px;
 }
 
 div.uimob500 .um-header .um-meta {padding: 0 20px}
-div.uimob500 .um-header .um-meta span {display: block}
-div.uimob500 .um-header .um-meta span.b {display: none}
+div.uimob500 .um-header .um-meta span:first-child {display: block}
+div.uimob500 .um-header .um-meta span {display: none}
 
 div.uimob500 .um-col-121,
 div.uimob500 .um-col-122,
@@ -157,7 +356,7 @@ div.uimob500 .um-member {
 	width: 100%;
 }
 
-div.uimob500  .um-gutter-sizer { width: 0px }
+div.uimob500 .um-gutter-sizer { width: 0px }
 
 div.uimob500 .um-account-main {
 	float: none;
@@ -246,6 +445,32 @@ div.uimob800 .um-account-meta img {
 	border-radius: 3px;
 }
 
+div.uimob800 .um-profile-photo {
+	width: 200px !important;
+}
+
+div.uimob800 .um-profile-photo a.um-profile-photo-img {
+	width: 140px !important;
+	height: 140px !important;
+	top: -70px !important;
+}
+
+div.uimob800 .um-header .um-profile-meta {
+	padding-left: 200px;
+}
+
+div.uimob800 .um-cover-overlay span.um-cover-overlay-t,
+div.uimob800 .um-profile-photo-overlay span.um-profile-photo-overlay-t
+{
+	display: none !important;
+}
+
+div.uimob800 .um-cover-overlay,
+div.uimob800 .um-profile-photo-overlay
+{
+	padding: 0;
+}
+
 /********************************************/
 
 /**
@@ -296,30 +521,62 @@ div.uimob960  .um-gutter-sizer { width: 4% }
 
 /************************************************/
 
-@media screen and ( max-height: 900px ){
-	.um-single-image-preview img {max-height: 500px}
+@media screen and (max-height: 400px) {
+
+	.ajax-upload-dragdrop span.icon {
+		display: none;
+	}
+
+	.um-modal  {
+		width: 100% !important;
+		margin: 0 !important;
+		left: 0 !important;
+		height: 100%;
+		background: #fff;
+	}
+
+	.um-modal,
+	.um-modal .um-modal-body,
+	.um-modal .um-modal-header {
+		border-radius: 0;
+	}
+
+	.um-modal .um-modal-header {text-align: center; font-size: 14px}
+	.um-modal .um-modal-footer {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		box-sizing: border-box;
+		padding: 10px;
+		border-top: 1px solid #ddd;
+	}
+
+	.um-modal .um-modal-right {
+		width: 100%;
+		float: none;
+	}
+
+	.um-modal .um-modal-footer a.um-modal-btn {
+		width: 48%;
+		margin: 0 1%;
+		float: left;
+		display: block;
+		line-height: 44px !important;
+		height: 44px;
+	}
+
 }
 
-@media screen and ( max-height: 800px ){
-	.um-single-image-preview img {max-height: 500px}
-}
+@media screen and (max-height: 300px) {
 
-@media screen and ( max-height: 700px ){
-	.um-single-image-preview img {max-height: 350px}
-}
+	.um-modal-header {
+		display: none;
+	}
+	
+	.ajax-upload-dragdrop span.icon,
+	.ajax-upload-dragdrop span.str {
+		display: none;
+	}
 
-@media screen and ( max-height: 600px ){
-	.um-single-image-preview img {max-height: 300px}
-}
-
-@media screen and ( max-height: 500px ){
-	.um-single-image-preview img {max-height: 250px}
-}
-
-@media screen and ( max-height: 400px ){
-	.um-single-image-preview img {max-height: 200px}
-}
-
-@media screen and ( max-height: 300px ){
-	.um-single-image-preview img {max-height: 150px}
 }

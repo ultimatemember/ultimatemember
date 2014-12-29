@@ -520,6 +520,31 @@ class UM_Builtin {
 				'placeholder' => 'Enter a bit about yourself...',
 			),
 			
+			'profile_photo' => array(
+				'title' => 'Profile Photo',
+				'metakey' => 'profile_photo',
+				'type' => 'image',
+				'label' => 'Change your profile photo',
+				'upload_text' => 'Upload your photo here',
+				'icon' => 'um-icon-camera-5',
+				'crop' => 1,
+				'min_width' => str_replace('px','',um_get_option('profile_photosize')),
+				'min_height' => str_replace('px','',um_get_option('profile_photosize')),
+			),
+			
+			'cover_photo' => array(
+				'title' => 'Cover Photo',
+				'metakey' => 'cover_photo',
+				'type' => 'image',
+				'label' => 'Change your cover photo',
+				'upload_text' => 'Upload profile cover here',
+				'icon' => 'um-icon-photo-2',
+				'crop' => 2,
+				'modal_size' => 'large',
+				'ratio' => str_replace(':1','',um_get_option('profile_cover_ratio')),
+				'min_width' => 1000,
+			),
+			
 			'birth_date' => array(
 				'title' => 'Birth Date',
 				'metakey' => 'birth_date',

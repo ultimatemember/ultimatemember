@@ -1,23 +1,4 @@
 <?php
-
-	/***
-	***	@member directory settings/args
-	***/
-	add_filter('um_members_directory_arguments', 'um_members_directory_arguments' );
-	function um_members_directory_arguments( $args ){
-		
-		global $ultimatemember;
-		
-		foreach( $args as $k => $v ) {
-			if ( $ultimatemember->validation->is_serialized( $args[$k] ) ) {
-				if ( !empty( $args[$k] ) ) {
-				$args[$k] = unserialize( $args[$k] );
-				}
-			}
-		}
-
-		return $args;
-	}
 	
 	/***
 	***	@prepare the query args to show members

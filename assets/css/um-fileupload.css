@@ -7,14 +7,24 @@
 	margin-bottom: 20px;
 }
 
+.um .um-single-image-preview > img {
+	max-height: 200px;
+	display: block;
+	overflow: hidden;
+	margin: auto;
+	border-radius: 3px;
+}
+
 .um-single-image-preview,
 .um-single-file-preview {
 	display: none;
-	width: 100%;
-	box-sizing: border-box;
 	text-align: center;
 	position: relative;
-	min-height: 40px;
+}
+
+.um-single-image-preview > img {
+	max-width: 100%;
+	max-height: inherit;
 }
 
 .um-single-image-preview a.cancel,
@@ -27,8 +37,9 @@
 	border-radius: 999px;
 	background: #ddd;
 	cursor: pointer;
-	transition: 0.2s;
 	text-decoration: none !important;
+	z-index: 8888;
+	opacity: 0.75;
 }
 
 .um-single-image-preview a.cancel i,
@@ -39,44 +50,40 @@
 	top: 4px;
 }
 
-.um-single-image-preview img {
-	max-width: 100%;
-	margin: 0 auto !important;
-	padding: 0 !important;
-	display: block !important;
-}
-
 /*
-	- file preview
+	- file info
 */
 
 .um-single-fileinfo {
-	padding: 36px 0 30px 0;
+	padding: 26px 0 20px 0;
 	display: inline-block;
 }
 
 .um-single-fileinfo span.icon {
-	font-size: 38px;
+	font-size: 42px;
 	display: inline-block;
 	width: 100px;
 	height: 70px;
-	line-height: 70px;
-	border-radius: 5px;
+	border-radius: 3px;
 	background-color: #666;
 	color: #fff !important;
 }
-.um-single-fileinfo span.icon i {line-height: 1em !important;vertical-align: middle}
+.um-single-fileinfo span.icon i{vertical-align: middle}
 
 .um-single-fileinfo span.filename {
 	display: block;
-	font-size: 18px;
-	line-height: 24px;
-	color: #666;
+	font-size: 16px;
+	color: #888;
 	padding: 15px 0 0 0;
 }
 
-.um-single-fileinfo a {text-decoration: none !important; opacity: 0.85 }
-.um-single-fileinfo a:hover { opacity: 1 }
+.um-single-fileinfo a {
+	text-decoration: none !important;
+	opacity: 0.9;
+}
+.um-single-fileinfo a:hover {
+	opacity: 1
+}
 
 /*
 	- upload progress
@@ -122,7 +129,7 @@
 
 .ajax-upload-dragdrop span.str {
 	display: block;
-	margin: 0 0 12px 0;
+	margin: 0 0 15px 0;
 }
 
 .ajax-upload-dragdrop span.icon {

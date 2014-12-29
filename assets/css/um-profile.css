@@ -4,6 +4,19 @@
 
 .um-profile {
 	box-sizing: border-box;
+	padding-top: 10px;
+}
+
+.um-profile .um-cover-overlay {
+	display: none;
+}
+
+.um-profile.um-editing .um-cover.has-cover .um-cover-overlay {
+	display: block;
+}
+
+.um-profile.um-viewing .um-profile-photo-overlay {
+	display: none;
 }
 
 .um-profile img {display: block;overflow:hidden;border-radius:0!important;margin: 0!important}
@@ -33,21 +46,11 @@
 	- Profile cover
 */
 
-.um-cover{
+.um-cover {
 	background-color: #eee;
-}
-
-.um-cover-add span {
-	display: table-cell;
-	vertical-align: middle;
-}
-
-.um-cover-e {
-	text-align: center;
 	box-sizing: border-box;
+	position: relative;
 }
-.um-cover-e.empty {border: 2px dashed #ddd}
-.um-cover-e img {width: 100% !important}
 
 .um-cover-add {
 	color: #aaa;
@@ -55,7 +58,60 @@
 	width: 100%;
 	display: table;
 }
+
+.um-cover-add span {
+	display: table-cell;
+	vertical-align: middle;
+}
+
 .um-cover-add:hover { color: #3ba1da }
+
+.um-cover-e {
+	text-align: center;
+	box-sizing: border-box;
+}
+
+.um-cover-e img {width: 100% !important}
+
+.um-cover-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: rgba(0,0,0,.5);
+	text-align: center;
+	box-sizing: border-box;
+	padding: 0 40px;
+	color: #fff;
+	text-shadow: 0 2px #333;
+	cursor: pointer !important;
+	line-height: 21px;
+	font-size: 16px;
+	height: 100%;
+	width: 100%;
+}
+
+.um-cover-overlay:hover {
+	background: rgba(0,0,0,.55);
+}
+
+.um-cover-overlay span.um-cover-overlay-s {
+	display: table;
+	height: 100%;
+	width: 100%;
+}
+
+.um-cover-overlay ins {
+	display: table-cell;
+	vertical-align: middle;
+	height: 100%;
+	text-decoration: none !important;
+}
+
+.um-cover-overlay i {
+	font-size: 46px;
+	display: block;
+	margin-bottom: 6px;
+}
 
 /*
 	- Profile header
@@ -70,7 +126,7 @@
 .um-profile-edit {
 	position: absolute;
 	top: 15px;
-	right: 15px;
+	right: 0;
 	vertical-align: middle;
 	z-index: 99;
 	font-size: 30px;
@@ -124,7 +180,6 @@
 
 .um-profile-photo {
 	float: left;
-	width: 250px;
 	position: relative;
 }
 
@@ -136,9 +191,49 @@
 	left: 30px;
 }
 
-.um-profile-photo img {
+.um-profile-photo a.um-profile-photo-img img {
 	width: 100%;
 	height: 100%;
+}
+
+.um-profile-photo-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,.5);
+	text-align: center;
+	box-sizing: border-box;
+	padding: 0 40px;
+	color: #fff;
+	line-height: 21px;
+	font-size: 16px;
+	text-shadow: 0 1px #333;
+	cursor: pointer !important;
+}
+
+.um-profile-photo-overlay:hover {
+	background: rgba(0,0,0,.55);
+}
+
+.um-profile-photo-overlay span.um-profile-photo-overlay-s {
+	display: table;
+	height: 100%;
+	width: 100%;
+}
+
+.um-profile-photo-overlay ins {
+	display: table-cell;
+	vertical-align: middle;
+	height: 100%;
+	text-decoration: none !important;
+}
+
+.um-profile-photo-overlay i {
+	font-size: 46px;
+	display: block;
+	margin-bottom: 6px;
 }
 
 /*
@@ -164,12 +259,13 @@
 	font-size: 15px;
 }
 
+.um-meta span:first-child {margin: 0 5px 0 0}
 .um-meta span {
 	margin: 0 5px;
 	font-size: 14px;
 }
 
 .um-meta-text {
-	margin: 12px 0 0 0;
+	margin: 6px 0 0 0;
 	color: #666;
 }

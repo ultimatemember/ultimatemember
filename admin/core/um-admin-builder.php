@@ -225,7 +225,7 @@ class UM_Admin_Builder {
 						<div class="um-admin-drag-fld-title um-field-type-<?php echo $type; ?>">
 							<?php if ( $type == 'group' ) { ?>
 								<i class="um-icon-plus-add"></i>
-							<?php } else if ( isset($keyarray['icon']) ) { ?>
+							<?php } else if ( isset($keyarray['icon']) && !empty( $keyarray['icon'] ) ) { ?>
 								<i class="<?php echo $keyarray['icon']; ?>"></i>
 							<?php } ?><?php echo $title; ?></div>
 							

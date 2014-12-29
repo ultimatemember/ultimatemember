@@ -25,7 +25,8 @@
 	box-sizing: content-box;
 }
 
-.um a:focus {
+.um a:focus,
+.um-modal a:focus {
 	outline: 0 !important;
 }
 
@@ -209,8 +210,17 @@ p.um-notice.success {
 }
 
 .um-tip i {
-	font-size: 18px;
+	font-size: 20px;
 	vertical-align: middle;
+	position: relative;
+	top: 2px;
+}
+
+.um-tip-text {
+	display: block;
+	font-size: 13px;
+	line-height: 15px;
+	color: #999;
 }
 
 /*
@@ -264,7 +274,6 @@ p.um-notice.success {
 
 .um-field-icon {
 	position: absolute;
-	z-index: 888;
 	cursor: default;
 	text-align: center !important;
 	top: 2px;
@@ -486,3 +495,59 @@ a.um-link-alt {
 	text-align: center;
 }
 a.um-link-alt:hover {text-decoration: underline !important;}
+
+/*
+	- Dropdown menu
+*/
+
+.um-dropdown {
+	position: absolute;
+	height: auto;
+	background: #fff;
+	border-radius: 5px;
+	z-index: 555;
+	display: none;
+    border: 1px solid #e5e5e5;
+	box-sizing: border-box;
+	-webkit-box-shadow: 0 0 2px rgba(0,0,0,0.1);
+	box-shadow: 0 0 1px rgba(0,0,0,0.1);
+}
+
+.um-dropdown ul,
+.um-dropdown li {
+	list-style-type: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.um-dropdown li  a {
+	display: block;
+	padding: 8px 12px;
+	color: #666;
+	z-index: 4;
+	font-size: 14px;
+	line-height: 18px;
+	position: relative;
+}
+
+.um-dropdown li:last-child a {
+	border-top: 1px solid #e5e5e5;
+	padding: 12px;
+}
+
+.um-dropdown li  a:hover {
+	color: #3ba1da;
+}
+
+.um-dropdown-b {
+	position: relative;
+}
+
+.um-dropdown-arr {
+	position: absolute;
+	color: #fff;
+	font-size: 24px;
+	width: 24px;
+	height: 24px;
+	z-index: 2;
+}

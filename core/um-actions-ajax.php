@@ -17,3 +17,68 @@
 		
 	<?php
 	}
+	
+	/***
+	***	@remove profile photo silently
+	***/
+	add_action('wp_ajax_nopriv_ultimatemember_delete_profile_photo', 'ultimatemember_delete_profile_photo');
+	add_action('wp_ajax_ultimatemember_delete_profile_photo', 'ultimatemember_delete_profile_photo');
+	function ultimatemember_delete_profile_photo(){
+		global $ultimatemember;
+		extract($_REQUEST);
+		
+		if ( !um_can_edit_profile( $user_id ) ) die( __('You can not edit this user') );
+
+		$ultimatemember->files->delete_core_user_photo( $user_id, 'profile_photo' );
+
+	}
+	
+	/***
+	***	@remove cover photo silently
+	***/
+	add_action('wp_ajax_nopriv_ultimatemember_delete_cover_photo', 'ultimatemember_delete_cover_photo');
+	add_action('wp_ajax_ultimatemember_delete_cover_photo', 'ultimatemember_delete_cover_photo');
+	function ultimatemember_delete_cover_photo(){
+		global $ultimatemember;
+		extract($_REQUEST);
+		
+		if ( !um_can_edit_profile( $user_id ) ) die( __('You can not edit this user') );
+
+		$ultimatemember->files->delete_core_user_photo( $user_id, 'cover_photo' );
+
+	}
+		
+	/***
+	***	@resampling/crop images
+	***/
+	add_action('wp_ajax_nopriv_ultimatemember_resize_image', 'ultimatemember_resize_image');
+	add_action('wp_ajax_ultimatemember_resize_image', 'ultimatemember_resize_image');
+	function ultimatemember_resize_image(){
+		global $ultimatemember;
+		$output = 0;
+		
+		extract($_REQUEST);
+		
+		if ( !isset($src) || !isset($coord) ) die( __('Invalid parameters') );
+		
+		$coord_n = substr_count($coord, ",");
+		if ( $coord_n != 3 ) die( __('Invalid coordinates') );
+		
+		$um_is_temp_image = um_is_temp_image( $src );
+		if ( !$um_is_temp_image ) die( __('Invalid Image file') );
+		
+		$crop = explode(',', $coord );
+		$crop = array_map('intval', $crop);
+		
+		$uri = $ultimatemember->files->resize_image( $um_is_temp_image, $crop );
+
+		// If you're updating a user
+		if ( isset( $user_id ) && $user_id > 0 ) {
+			$uri = $ultimatemember->files->new_user_upload( $user_id, $um_is_temp_image, $key );
+		}
+		
+		$output = $uri;
+		
+		if(is_array($output)){ print_r($output); }else{ echo $output; } die;
+
+	}

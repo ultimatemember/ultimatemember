@@ -6,16 +6,34 @@ $photosize_up = ( $photosize / 2 ) + 10;
 $meta_padding = ( $photosize + 60 ) . 'px';
 
 if ( $photocorner == 1 ) {
-print ".um-$form_id.um .um-profile-photo a.um-profile-photo-img, .um-profile-photo img { border-radius: 999px !important }";
+print "
+.um-$form_id.um .um-profile-photo a.um-profile-photo-img,
+.um-$form_id.um .um-profile-photo img,
+.um-$form_id.um .um-profile-photo span.um-profile-photo-overlay
+{ border-radius: 999px !important }";
 }
 
 if ( $photocorner == 2 ) {
-print ".um-$form_id.um .um-profile-photo a.um-profile-photo-img, .um-profile-photo img { border-radius: 4px !important }";
+print "
+.um-$form_id.um .um-profile-photo a.um-profile-photo-img,
+.um-$form_id.um .um-profile-photo img,
+.um-$form_id.um .um-profile-photo span.um-profile-photo-overlay
+{ border-radius: 4px !important }";
 }
 
 if ( $photocorner == 3 ) {
-print ".um-$form_id.um .um-profile-photo a.um-profile-photo-img, .um-profile-photo img { border-radius: 0px !important }";
+print "
+.um-$form_id.um .um-profile-photo a.um-profile-photo-img,
+.um-$form_id.um .um-profile-photo img,
+.um-$form_id.um .um-profile-photo span.um-profile-photo-overlay
+{ border-radius: 0px !important }";
 }
+
+print "
+.um-$form_id.um .um-profile-photo {
+	width: $meta_padding;
+}
+";
 
 print "
 .um-$form_id.um .um-header.no-cover a.um-profile-photo-img img,

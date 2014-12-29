@@ -738,9 +738,29 @@ $this->sections[] = array(
 	
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-files',
+    'icon'       => 'um-icon-photo-2',
     'title'      => __( 'Image &amp; File Uploads'),
     'fields'     => array(
+		
+		array(
+				'id'       		=> 'photo_thumb_sizes',
+                'type'     		=> 'multi_text',
+                'title'    		=> __( 'Profile Photo Thumbnail Sizes' ),
+                'desc' 	   		=> __( 'Here you can define which thumbnail sizes will be created for each profile photo upload.' ),
+                'default'  		=> array( 40, 80, str_replace('px','',um_get_option('profile_photosize') ) ),
+				'validate' 		=> 'numeric',
+				'add_text'		=> __('Add New Size'),
+		),
+		
+		array(
+				'id'       		=> 'cover_thumb_sizes',
+                'type'     		=> 'multi_text',
+                'title'    		=> __( 'Cover Photo Thumbnail Sizes' ),
+                'desc' 	   		=> __( 'Here you can define which thumbnail sizes will be created for each cover photo upload.' ),
+                'default'  		=> array( 300, 600 ),
+				'validate' 		=> 'numeric',
+				'add_text'		=> __('Add New Size'),
+		),
 		
 		array(
 				'id'       		=> 'image_compression',
@@ -748,6 +768,15 @@ $this->sections[] = array(
                 'title'    		=> __( 'Image Quality' ),
                 'desc' 	   		=> __( 'Quality is used to determine quality of image uploads, and ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file). The default range is 75.' ),
                 'default'  		=> 60,
+				'validate' 		=> 'numeric',
+        ),
+		
+		array(
+				'id'       		=> 'image_max_width',
+                'type'     		=> 'text',
+                'title'    		=> __( 'Image Upload Maximum Width' ),
+                'desc' 	   		=> __( 'Any image upload above this width will be resized to this limit automatically.' ),
+                'default'  		=> 1000,
 				'validate' 		=> 'numeric',
         ),
 
@@ -1161,6 +1190,14 @@ $this->sections[] = array(
                 'title'    		=> __( 'Profile Header Icon Link Hover' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
+        ),
+		
+        array(
+                'id'       		=> 'profile_show_bio',
+                'type'     		=> 'switch',
+                'title'    		=> __( 'Show user description in header' ),
+				'default' 		=> um_get_metadefault('profile_show_bio'),
+				'desc' 	   		=> 'Switch on/off the user description on profile header',
         ),
 		
 	)

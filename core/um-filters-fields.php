@@ -11,7 +11,11 @@
 		$form_id = (isset ( $ultimatemember->fields->set_id ) ) ? $ultimatemember->fields->set_id : null;
 		$mode = (isset( $ultimatemember->fields->set_mode ) ) ? $ultimatemember->fields->set_mode : null;
 		
+		if ( $form_id && $mode ) {
 		$array = $ultimatemember->query->get_attr('custom_fields', $form_id );
+		} else {
+			$array = '';
+		}
 		
 		return $array;
 		

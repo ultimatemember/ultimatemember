@@ -1,6 +1,41 @@
 <?php
 
 	/***
+	***	@profile user ID
+	***/
+	function um_profile_id() {
+	
+		if ( um_get_requested_user() ) {
+			return um_get_requested_user();
+		} else if ( is_user_logged_in() && get_current_user_id() ) {
+			return get_current_user_id();
+		}
+		
+		return 0;
+	}
+	
+	/***
+	***	@Check that temp image is valid
+	***/
+	function um_is_temp_image( $url ) {
+		global $ultimatemember;
+		$url = explode('/ultimatemember/temp/', $url);
+		if ( isset( $url[1] ) ) {
+		
+			$src = $ultimatemember->files->upload_temp . $url[1];
+			
+			if ( !file_exists( $src ) )
+				return false;
+				
+			list($width, $height, $type, $attr) = @getimagesize($src);
+			if ( isset( $width ) && isset( $height ) )
+				return $src;
+				
+		}
+		return false;
+	}
+	
+	/***
 	***	@Get core page url
 	***/
 	function um_get_core_page( $slug, $updated = false) {
@@ -397,6 +432,56 @@
 	}
 	
 	/***
+	***	@user uploads uri
+	***/
+	function um_user_uploads_uri() {
+		global $ultimatemember;
+		$uri = $ultimatemember->files->upload_baseurl . um_user('ID') . '/';
+		return $uri;
+	}
+	
+	/***
+	***	@get cover uri
+	***/
+	function um_get_cover_uri( $image, $attrs ) {
+		global $ultimatemember;
+		$uri = false;
+		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/cover_photo.jpg' ) ) {
+			$uri = um_user_uploads_uri() . 'cover_photo.jpg?' . time();
+		}
+		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/cover_photo-' . $attrs. '.jpg' ) ){
+			$uri = um_user_uploads_uri() . 'cover_photo-'.$attrs.'.jpg?' . time();
+		}
+		return $uri;
+	}
+	
+	/***
+	***	@get avatar uri
+	***/
+	function um_get_avatar_uri( $image, $attrs ) {
+		global $ultimatemember;
+		$uri = false;
+		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo.jpg' ) ) {
+			$uri = um_user_uploads_uri() . 'profile_photo.jpg?' . time();
+		}
+		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo-' . $attrs. '.jpg' ) ){
+			$uri = um_user_uploads_uri() . 'profile_photo-'.$attrs.'.jpg?' . time();
+		}
+		return $uri;
+	}
+	
+	/***
+	***	@default avatar
+	***/
+	function um_get_default_avatar_uri() {
+		$uri = um_get_option('default_avatar');
+		$uri = $uri['url'];
+		if ( !$uri )
+			$uri = um_url . 'assets/img/default_avatar.png';
+		return $uri;
+	}
+	
+	/***
 	***	@get user data
 	***/
 	function um_user( $data, $attrs = null ) {
@@ -526,24 +611,21 @@
 
 			case 'profile_photo':
 				
-				$default_avatar_uri = um_get_option('default_avatar');
-				$default_avatar_uri = $default_avatar_uri['url'];
-					
-				if ( !$default_avatar_uri ) {
-					$default_avatar_uri = um_url . 'assets/img/default_avatar.png';
+				if ( um_profile('profile_photo') ) {
+					$avatar_uri = um_get_avatar_uri( um_profile('profile_photo'), $attrs );
+				} else {
+					$avatar_uri = um_get_default_avatar_uri();
 				}
-
-				$default_avatar_uri = um_url . 'assets/img/Dollarphotoclub_57189843.jpg';
-
-				return '<img src="' . $default_avatar_uri . '" class="gravatar avatar avatar-'.$attrs.' um-avatar" width="'.$attrs.'" height="'.$attrs.'" alt="" />';
+				
+				return '<img src="' . $avatar_uri . '" class="gravatar avatar avatar-'.$attrs.' um-avatar" width="'.$attrs.'" height="'.$attrs.'" alt="" />';
 					
 				break;
 
 			case 'cover_photo':
 				if ( um_profile('cover_photo') ) {
-					return '<a href="#"><img src="'.um_profile('cover_photo').'" alt="" /></a>';
+					$cover_uri = um_get_cover_uri( um_profile('cover_photo'), $attrs );
+					return '<a href="#"><img src="'. $cover_uri .'" alt="" /></a>';
 				}
-				return '<a href="#"><img src="'.um_url . 'assets/img/best-hd-wallpapers-2.jpg" alt="" /></a>';
 				break;
 				
 		}

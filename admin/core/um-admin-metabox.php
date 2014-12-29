@@ -245,7 +245,8 @@ class UM_Admin_Metabox {
 		add_meta_box('um-admin-form-profile_customize', __('<i class="um-icon-cog-1"></i>Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
 		add_meta_box('um-admin-form-login_customize', __('<i class="um-icon-cog-1"></i>Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
 		
-		add_meta_box('um-admin-form-login_settings', __('<i class="um-icon-tools"></i>Settings'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
+		add_meta_box('um-admin-form-profile_settings', __('<i class="um-icon-tools"></i>Options'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
+		add_meta_box('um-admin-form-login_settings', __('<i class="um-icon-tools"></i>Options'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
 
 	}
 	
@@ -333,6 +334,7 @@ class UM_Admin_Metabox {
         $wpdb->update( $wpdb->posts, array( 'post_title' => $_POST['post_title'] ), $where );
 		
 		// save
+		delete_post_meta( $post_id, '_um_profile_metafields' );
 		foreach( $_POST as $k => $v ) {
 			if (strstr($k, '_um_')){
 				update_post_meta( $post_id, $k, $v);
@@ -968,7 +970,7 @@ class UM_Admin_Metabox {
 						<select name="_crop" id="_crop" class="umaf-selectjs" style="width: 100%">
 							<option value="0" <?php selected( '0', $this->edit_mode_value ); ?>>Turn Off (Default)</option>
 							<option value="1" <?php selected( '1', $this->edit_mode_value ); ?>>Crop and force 1:1 ratio</option>
-							<option value="2" <?php selected( '2', $this->edit_mode_value ); ?>>Crop and force user-defined ratio</option>
+							<option value="3" <?php selected( '3', $this->edit_mode_value ); ?>>Crop and force user-defined ratio</option>
 						</select>
 					</p>
 					

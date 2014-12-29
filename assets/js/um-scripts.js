@@ -1,12 +1,40 @@
 jQuery(document).ready(function() {
 
-	/* Tooltips */
+	/* dropdown menu links */
+	jQuery(document).on('click', '.um-dropdown a', function(e){
+		e.preventDefault();
+		return false;
+	});
+	
+	/* trigger dropdown on click */
+	jQuery(document).on('click', '.um-trigger-menu-on-click', function(e){
+		e.preventDefault();
+		jQuery('.um-dropdown').hide();
+		menu = jQuery(this).find('.um-dropdown');
+		menu.show();
+		return false;
+	});
+	
+	/* hide dropdown */
+	jQuery(document).on('click', '.um-dropdown-hide', function(e){
+		menu = jQuery(this).parents('.um-dropdown');
+		menu.hide();
+	});
+	
+	/* manual triggers */
+	jQuery(document).on('click', 'a.um-manual-trigger', function(){
+		var child = jQuery(this).attr('data-child');
+		var parent = jQuery(this).attr('data-parent');
+		jQuery(this).parents( parent ).find( child ).trigger('click');
+	});
+	
+	/* tooltips */
 	jQuery('.um-tip-n').tipsy({gravity: 'n', opacity: 1, live: true, offset: 3 });
 	jQuery('.um-tip-w').tipsy({gravity: 'w', opacity: 1, live: true, offset: 3 });
 	jQuery('.um-tip-e').tipsy({gravity: 'e', opacity: 1, live: true, offset: 3 });
 	jQuery('.um-tip-s').tipsy({gravity: 's', opacity: 1, live: true, offset: 3 });
 		
-	/* Custom Radio Buttons */
+	/* custom radio buttons */
 	jQuery('.um-field-radio').mouseenter(function(){
 		if (!jQuery(this).hasClass('active')) {
 		jQuery(this).find('i').removeClass().addClass('um-icon-check-3');
@@ -26,7 +54,7 @@ jQuery(document).ready(function() {
 		this_field.find('i').removeClass('um-icon-blank').addClass('um-icon-check-3');
 	});
 	
-	/* Custom Checkbox Buttons */
+	/* custom checkbox buttons */
 	jQuery('.um-field-checkbox').mouseenter(function(){
 		if (!jQuery(this).hasClass('active')) {
 		jQuery(this).find('i').removeClass().addClass('um-icon-cross');
@@ -51,7 +79,7 @@ jQuery(document).ready(function() {
 
 	});
 	
-	/* Date picker */
+	/* datepicker */
 	jQuery('.um-datepicker').pickadate({
 		min: [1900,1,1],
 		max: true,
@@ -60,7 +88,7 @@ jQuery(document).ready(function() {
 		hiddenSuffix: '__true'
 	});
 
-	/* Time picker */
+	/* timepicker */
 	jQuery('.um-timepicker').pickatime({
 		formatSubmit: 'HH:i',
 		hiddenSuffix: '__true'
@@ -95,108 +123,18 @@ jQuery(document).ready(function() {
 	/* remove uploaded image */
 	jQuery(document).on('click', '.um .um-single-image-preview a.cancel', function(e){
 		e.preventDefault();
-		
 		var parent = jQuery(this).parents('.um-field');
-
 		parent.find('.um-single-image-preview').hide();
-		
 		parent.find('.um-btn-auto-width').html('Upload');
-		
 		return false;
 	});
 	
-	/* File Upload */
-	jQuery(".um-single-file-upload").each(function(){
-	
-		var trigger = jQuery(this);
-		
-		if (trigger.data('upload_help_text')){
-			upload_help_text = '<span class="help">' + trigger.data('upload_help_text') + '</span>';
-		} else {
-			upload_help_text = '';
-		}
-		
-		if ( trigger.data('icon') ) {
-			icon = '<span class="icon"><i class="'+ trigger.data('icon') + '"></i></span>';
-		} else {
-			icon = '';
-		}
-
-		if ( trigger.data('upload_text') ) {
-			upload_text = '<span class="str">' + trigger.data('upload_text') + '</span>';
-		} else {
-			upload_text = '';
-		}
-		
-		trigger.uploadFile({
-			url: ultimatemember_file_upload_url,
-			method: "POST",
-			multiple: false,
-			formData: {key: trigger.data('key'), set_id: trigger.data('set_id'), set_mode: trigger.data('set_mode') },
-			fileName: trigger.data('key'),
-			allowedTypes: trigger.data('allowed_types'),
-			maxFileSize: trigger.data('max_size'),
-			dragDropStr: icon + upload_text + upload_help_text,
-			sizeErrorStr: trigger.data('max_size_error'),
-			extErrorStr: trigger.data('extension_error'),
-			maxFileCountErrorStr: trigger.data('max_files_error'),
-			maxFileCount: 1,
-			showDelete: false,
-			showAbort: false,
-			showDone: false,
-			showFileCounter: false,
-			showStatusAfterSuccess: false,
-			onSubmit:function(files){
-			
-				trigger.parents('.um-field').find('.um-error-block').remove();
-				
-			},
-			onSuccess:function(files,data,xhr){
-			
-				trigger.selectedFiles = 0;
-				
-				data = jQuery.parseJSON(data);
-				if (data.error && data.error != '') {
-
-					trigger.parents('.um-field').append('<div class="um-error-block">'+data.error+'</div>');
-					
-				} else {
-				
-					trigger.parents('.um-field').find('.ajax-upload-dragdrop').fadeOut( function() {
-						trigger.parents('.um-field').find('.um-single-file-preview').fadeIn();
-					});
-
-					jQuery.each( data, function(key, value) {
-						
-						if (key == 'icon') {
-						trigger.parents('.um-field').find('.um-single-fileinfo i').removeClass().addClass(value);
-						} else if ( key == 'icon_bg' ) {
-						trigger.parents('.um-field').find('.um-single-fileinfo span.icon').css({'background-color' : value } );
-						} else if ( key == 'filename' ) {
-						trigger.parents('.um-field').find('.um-single-fileinfo span.filename').html(value);
-						} else {
-						trigger.parents('.um-field').find('.um-single-fileinfo a').attr('href', value);
-						}
-						
-					});
-				
-				}
-				
-			}
-		});
-		
-	});
-	
-	/* Remove a single file upload */
-	jQuery(document).on('click', '.um-single-file-preview a.cancel', function(e){
+	/* remove uploaded file */
+	jQuery(document).on('click', '.um .um-single-file-preview a.cancel', function(e){
 		e.preventDefault();
-		
-		var trigger = jQuery(this).parents('.um-field').find('.um-single-file-upload');
-
-		trigger.parents('.um-field').find('.um-single-file-preview').fadeOut(function(){
-			trigger.parents('.um-field').find('.ajax-upload-dragdrop').fadeIn();
-		});
-
+		var parent = jQuery(this).parents('.um-field');
+		parent.find('.um-single-file-preview').hide();
+		parent.find('.um-btn-auto-width').html('Upload');
 		return false;
 	});
 	

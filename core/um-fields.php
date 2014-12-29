@@ -12,6 +12,27 @@ class UM_Fields {
 	}
 	
 	/***
+	***	@hidden fields inside shortcode
+	***/
+	function add_hidden_field( $field ) {
+		global $ultimatemember;
+		echo '<div style="display: none !important;">';
+			
+			$fields = $ultimatemember->builtin->get_specific_fields( $field );
+			
+			$output = null;
+			
+			foreach( $fields as $key => $data ) {
+				$output .= $ultimatemember->fields->edit_field( $key, $data );
+			}
+			
+			echo $output;
+			
+		echo '</div>';
+						
+	}
+	
+	/***
 	***	@detect if we're editing profile in shortcode
 	***/
 	function init_edit_my_profile() {
@@ -221,13 +242,23 @@ class UM_Fields {
 		$output = null;
 		$output .= '<div class="um-field-label">';
 					
-		if ( isset($data['icon']) && $data['icon'] != '' && ( $this->field_icons == 'label' || $this->viewing == true ) ) {
+		if ( isset($data['icon']) && $data['icon'] != '' && isset( $this->field_icons ) && ( $this->field_icons == 'label' || $this->viewing == true ) ) {
 			$output .= '<div class="um-field-label-icon"><i class="'.$data['icon'].'"></i></div>';
 		}
 		
 		$output .= '<label for="'.$key.$ultimatemember->form->form_suffix.'">'.$label.'</label>';
 		
-		if ( isset( $data['help'] ) && $this->viewing == false ) {$output .= '<span class="um-tip um-tip-s" title="'.$data['help'].'"><i class="um-icon-help-circled"></i></span>';}
+		if ( isset( $data['help'] ) && !empty( $data['help'] ) && $this->viewing == false ) {
+			
+			if ( !$ultimatemember->mobile->isMobile() ) {
+				$output .= '<span class="um-tip um-tip-w" title="'.$data['help'].'"><i class="um-icon-help-circled"></i></span>';
+			}
+			
+			if ( $ultimatemember->mobile->isMobile() ) {
+				$output .= '<span class="um-tip-text">'. $data['help'] . '</span>';
+			}
+			
+		}
 		
 		$output .= '<div class="um-clear"></div></div>';
 		
@@ -260,7 +291,7 @@ class UM_Fields {
 			$classes .= 'um-timepicker ';
 		}
 		
-		if ( isset($data['icon']) && $this->field_icons == 'field' ) {
+		if ( isset($data['icon']) && $data['icon'] && $this->field_icons == 'field' ) {
 			$classes .= 'um-iconed';
 		}
 
@@ -594,7 +625,29 @@ class UM_Fields {
 			case 'image':
 			
 				if ( !isset( $array['crop'] ) ) $array['crop'] = 0;
-			
+				
+				if ( $array['crop'] == 0 ) {
+					$array['crop_data'] = 0;
+				} else if ( $array['crop'] == 1 ) {
+					$array['crop_data'] = 'square';
+				} else if ( $array['crop'] == 2 ) {
+					$array['crop_data'] = 'cover';
+				} else {
+					$array['crop_data'] = 'user';
+				}
+				
+				if ( !isset( $array['modal_size'] ) ) $array['modal_size'] = 'normal';
+				
+				if ( $array['crop'] > 0 ) {
+					$array['crop_class'] = 'crop';
+				} else {
+					$array['crop_class'] = '';
+				}
+				
+				if ( !isset( $array['ratio'] ) ) $array['ratio'] = 1.0;
+				if ( !isset( $array['min_width'] ) ) $array['min_width'] = '';
+				if ( !isset( $array['min_height'] ) ) $array['min_height'] = '';
+				
 				if (!isset($array['invalid_image'])) $array['invalid_image'] = "Please upload a valid image!";
 				if (!isset($array['allowed_types'])) {
 					$array['allowed_types'] = "gif,jpg,jpeg,png";
@@ -615,6 +668,8 @@ class UM_Fields {
 
 			case 'file':
 			
+				if ( !isset( $array['modal_size'] ) ) $array['modal_size'] = 'normal';
+				
 				if (!isset($array['allowed_types'])) {
 					$array['allowed_types'] = "pdf,txt";
 				} else {
@@ -685,7 +740,7 @@ class UM_Fields {
 
 						$output .= '<div class="um-field-area">';
 						
-						if ( isset($icon) && $this->field_icons == 'field' ) {
+						if ( isset($icon) && $icon && $this->field_icons == 'field' ) {
 						
 						$output .= '<div class="um-field-icon"><i class="'.$icon.'"></i></div>';
 						
@@ -719,7 +774,7 @@ class UM_Fields {
 
 							$output .= '<div class="um-field-area">';
 							
-							if ( isset($icon) && $this->field_icons == 'field' ) {
+							if ( isset($icon) && $icon && $this->field_icons == 'field' ) {
 							
 							$output .= '<div class="um-field-icon"><i class="'.$icon.'"></i></div>';
 							
@@ -748,7 +803,7 @@ class UM_Fields {
 								
 								$output .= '<div class="um-field-area">';
 								
-								if ( isset($icon) && $this->field_icons == 'field' ) {
+								if ( isset($icon) && $icon && $this->field_icons == 'field' ) {
 								
 								$output .= '<div class="um-field-icon"><i class="'.$icon.'"></i></div>';
 								
@@ -782,7 +837,7 @@ class UM_Fields {
 
 						$output .= '<div class="um-field-area">';
 						
-						if ( isset($icon) && $this->field_icons == 'field' ) {
+						if ( isset($icon) && $icon && $this->field_icons == 'field' ) {
 						
 						$output .= '<div class="um-field-icon"><i class="'.$icon.'"></i></div>';
 						
@@ -809,7 +864,7 @@ class UM_Fields {
 								
 								$output .= '<div class="um-field-area">';
 								
-								if ( isset($icon) && $this->field_icons == 'field' ) {
+								if ( isset($icon) && $icon && $this->field_icons == 'field' ) {
 								
 								$output .= '<div class="um-field-icon"><i class="'.$icon.'"></i></div>';
 								
@@ -842,7 +897,7 @@ class UM_Fields {
 
 						$output .= '<div class="um-field-area">';
 						
-						if ( isset($icon) && $this->field_icons == 'field' ) {
+						if ( isset($icon) && $icon && $this->field_icons == 'field' ) {
 						
 						$output .= '<div class="um-field-icon"><i class="'.$icon.'"></i></div>';
 						
@@ -870,7 +925,7 @@ class UM_Fields {
 
 						$output .= '<div class="um-field-area">';
 						
-						if ( isset($icon) && $this->field_icons == 'field' ) {
+						if ( isset($icon) && $icon && $this->field_icons == 'field' ) {
 						
 						$output .= '<div class="um-field-icon"><i class="'.$icon.'"></i></div>';
 						
@@ -898,7 +953,7 @@ class UM_Fields {
 
 						$output .= '<div class="um-field-area">';
 						
-						if ( isset($icon) && $this->field_icons == 'field' ) {
+						if ( isset($icon) && $icon && $this->field_icons == 'field' ) {
 						
 						$output .= '<div class="um-field-icon"><i class="'.$icon.'"></i></div>';
 						
@@ -977,19 +1032,13 @@ class UM_Fields {
 					$output .= $this->field_label($label, $key, $data);
 					}
 					
-					if ( $crop ) {
-						$crop_class = 'crop';
-					} else {
-						$crop_class = '';
-					}
-					
 					$modal_label = ( isset( $data['label'] ) ) ? $data['label'] : __('Upload Photo','ultimatemember');
 					
 					$output .= '<div class="um-field-area" style="text-align: center">
 					
-						<div class="um-single-image-preview '. $crop_class .'" data-key="'.$key.'"><a href="#" class="cancel"><i class="um-icon-remove"></i></a><img src="" alt="" /></div>
+						<div class="um-single-image-preview '. $crop_class .'" data-crop="'.$crop_data.'" data-key="'.$key.'"><a href="#" class="cancel"><i class="um-icon-remove"></i></a><img src="" alt="" /></div>
 						
-						<a href="#" data-modal="um_upload_image" data-modal-copy="1" class="um-button um-btn-auto-width">'. $button_text . '</a>
+						<a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. $button_text . '</a>
 						
 						</div>';
 
@@ -1000,12 +1049,20 @@ class UM_Fields {
 					
 					$output .= '<div class="um-modal-body">';
 					
-					$output .= '<div class="um-single-image-preview '. $crop_class .'"><a href="#" class="cancel"><i class="um-icon-remove"></i></a><img src="" alt="" /></div>';
-					$output .= '<div class="um-single-image-upload" data-icon="'.$icon.'" data-set_id="'.$this->set_id.'" data-set_mode="'.$this->set_mode.'" data-type="'.$type.'" data-key="'.$key.'" data-max_size="'.$max_size.'" data-max_size_error="'.$max_size_error.'" data-min_size_error="'.$min_size_error.'" data-extension_error="'.$extension_error.'"  data-allowed_types="'.$allowed_types.'" data-upload_text="'.$upload_text.'" data-max_files_error="'.$max_files_error.'" data-upload_help_text="'.$upload_help_text.'">'.$button_text.'</div>';
+					if ( isset( $this->set_id ) ) {
+						$set_id = $this->set_id;
+						$set_mode = $this->set_mode;
+					} else {
+						$set_id = 0;
+						$set_mode = '';
+					}
+					
+					$output .= '<div class="um-single-image-preview '. $crop_class .'" data-crop="'.$crop_data.'" data-ratio="'.$ratio.'" data-min_width="'.$min_width.'" data-min_height="'.$min_height.'" data-coord=""><a href="#" class="cancel"><i class="um-icon-remove"></i></a><img src="" alt="" /></div>';
+					$output .= '<div class="um-single-image-upload" data-icon="'.$icon.'" data-set_id="'.$set_id.'" data-set_mode="'.$set_mode.'" data-type="'.$type.'" data-key="'.$key.'" data-max_size="'.$max_size.'" data-max_size_error="'.$max_size_error.'" data-min_size_error="'.$min_size_error.'" data-extension_error="'.$extension_error.'"  data-allowed_types="'.$allowed_types.'" data-upload_text="'.$upload_text.'" data-max_files_error="'.$max_files_error.'" data-upload_help_text="'.$upload_help_text.'">'.$button_text.'</div>';
 					
 					$output .= '<div class="um-modal-footer">
 									<div class="um-modal-right">
-										<a href="#" class="um-modal-btn um-finish-upload disabled" data-key="'.$key.'"> ' . __('Apply','ultimatemember') . '</a>
+										<a href="#" class="um-modal-btn um-finish-upload image disabled" data-key="'.$key.'" data-change="'.__('Change photo').'" data-processing="'.__('Processing...','ultimatemember').'"> ' . __('Apply','ultimatemember') . '</a>
 										<a href="#" class="um-modal-btn alt" data-action="um_remove_modal"> ' . __('Cancel','ultimatemember') . '</a>
 									</div>
 									<div class="um-clear"></div>
@@ -1033,9 +1090,34 @@ class UM_Fields {
 					$output .= $this->field_label($label, $key, $data);
 					}
 					
-					$output .= '<div class="um-field-area">';
+					$modal_label = ( isset( $data['label'] ) ) ? $data['label'] : __('Upload Photo','ultimatemember');
+					
+					$output .= '<div class="um-field-area" style="text-align: center">
+					
+									<div class="um-single-file-preview" data-key="'.$key.'">
+
+									</div>
 						
-						$output .= '<div class="um-single-file-preview">
+						<a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. $button_text . '</a>
+						
+						</div>';
+
+					/* modal hidden */
+					$output .= '<div class="um-modal-hidden-content">';
+
+					$output .= '<div class="um-modal-header"> ' . $modal_label . '</div>';
+					
+					$output .= '<div class="um-modal-body">';
+					
+					if ( isset( $this->set_id ) ) {
+						$set_id = $this->set_id;
+						$set_mode = $this->set_mode;
+					} else {
+						$set_id = 0;
+						$set_mode = '';
+					}
+					
+					$output .= '<div class="um-single-file-preview">
 										<a href="#" class="cancel"><i class="um-icon-remove"></i></a>
 										<div class="um-single-fileinfo">
 											<a href="#" target="_blank">
@@ -1043,17 +1125,29 @@ class UM_Fields {
 												<span class="filename"></span>
 											</a>
 										</div>
-									</div>';
-						
-						$output .= '<div class="um-single-file-upload" data-icon="'.$icon.'" data-set_id="'.$this->set_id.'" data-set_mode="'.$this->set_mode.'" data-type="'.$type.'" data-key="'.$key.'" data-max_size="'.$max_size.'" data-max_size_error="'.$max_size_error.'" data-min_size_error="'.$min_size_error.'" data-extension_error="'.$extension_error.'"  data-allowed_types="'.$allowed_types.'" data-upload_text="'.$upload_text.'" data-max_files_error="'.$max_files_error.'" data-upload_help_text="'.$upload_help_text.'">'.$button_text.'</div>';
-
-						$output .= '</div>';
-							
-						if ( $this->is_error($key) ) {
-							$output .= $this->field_error( $this->show_error($key) );
-						}
+								</div>';
+					$output .= '<div class="um-single-file-upload" data-icon="'.$icon.'" data-set_id="'.$set_id.'" data-set_mode="'.$set_mode.'" data-type="'.$type.'" data-key="'.$key.'" data-max_size="'.$max_size.'" data-max_size_error="'.$max_size_error.'" data-min_size_error="'.$min_size_error.'" data-extension_error="'.$extension_error.'"  data-allowed_types="'.$allowed_types.'" data-upload_text="'.$upload_text.'" data-max_files_error="'.$max_files_error.'" data-upload_help_text="'.$upload_help_text.'">'.$button_text.'</div>';
 					
-						$output .= '</div>';
+					$output .= '<div class="um-modal-footer">
+									<div class="um-modal-right">
+										<a href="#" class="um-modal-btn um-finish-upload file disabled" data-key="'.$key.'" data-change="'.__('Change file').'" data-processing="'.__('Processing...','ultimatemember').'"> ' . __('Save','ultimatemember') . '</a>
+										<a href="#" class="um-modal-btn alt" data-action="um_remove_modal"> ' . __('Cancel','ultimatemember') . '</a>
+									</div>
+									<div class="um-clear"></div>
+								</div>';
+								
+					$output .= '</div>';
+					
+					$output .= '</div>';
+					
+					/* end */
+					
+					if ( $this->is_error($key) ) {
+						$output .= $this->field_error( $this->show_error($key) );
+					}
+					
+					$output .= '</div>';
+					
 				break;
 				
 			/* Select dropdown */
@@ -1323,7 +1417,9 @@ class UM_Fields {
 		}
 		
 		// Custom filter for field output
+		if ( isset( $this->set_mode ) ) {
 		$output = apply_filters("um_{$key}_form_edit_field", $output, $this->set_mode);
+		}
 		
 		return $output;
 	}

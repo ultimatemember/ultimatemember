@@ -64,7 +64,7 @@
 	background: #3ba1da;
 	padding: 0 20px;
 	box-sizing: border-box;
-	font-size: 15px;
+	font-size: 17px;
 }
 
 .um-modal-footer {
@@ -93,6 +93,7 @@
 	display: inline-block;
 	border-radius: 3px;
 	padding: 0 20px;
+	text-align: center;
 	color: #fff;
 	background: #3ba1da;
 	vertical-align: middle;

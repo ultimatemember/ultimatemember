@@ -46,21 +46,62 @@
 	add_action('um_profile_header_cover_area', 'um_profile_header_cover_area' );
 	function um_profile_header_cover_area( $args ) {
 		global $ultimatemember;
-		
+
 		if ( $args['cover_enabled'] == 1 ) {
 		
+			$overlay = '<span class="um-cover-overlay">
+				<span class="um-cover-overlay-s">
+					<ins>
+						<i class="um-icon-photo-2"></i>
+						<span class="um-cover-overlay-t">'.__('Change your cover photo').'</span>
+					</ins>
+				</span>
+			</span>';
+			
 		?>
-		
-			<div class="um-cover">
+
+			<div class="um-cover <?php if ( um_profile('cover_photo') ) echo 'has-cover'; ?>" data-user_id="<?php echo um_profile_id(); ?>" data-ratio="<?php echo $args['cover_ratio']; ?>">
+			
+				<?php
+				
+					echo $ultimatemember->menu->new_ui( 'bc', 'div.um-cover', 'click', array(
+								'<a href="#" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">'.__('Change cover photo','ultimatemember').'</a>',
+								'<a href="#" class="um-reset-cover-photo" data-user_id="'.um_profile_id().'">'.__('Remove','ultimatemember').'</a>',
+								'<a href="#" class="um-dropdown-hide">'.__('Cancel','ultimatemember').'</a>',
+					), 'can_edit_user' );
+							
+				?>
+				
+				<?php $ultimatemember->fields->add_hidden_field( 'cover_photo' ); ?>
+				
+				<?php echo $overlay; ?>
+				
 				<div class="um-cover-e">
-					<?php if ( um_user('cover_photo') ) { echo um_user('cover_photo'); } else { ?>
-					<a href="#" class="um-cover-add"><span class="um-cover-add-i"><i class="um-icon-plus-add um-tip-n" title="Upload a cover photo"></i></span></a>
+				
+					<?php if ( um_profile('cover_photo') ) { ?>
+						
+					<?php
+					
+					if( $ultimatemember->mobile->isMobile() ){
+						echo um_user('cover_photo', 300);
+					} else {
+						echo um_user('cover_photo', 1000);
+					}
+					
+					?>
+						
+					<?php } else { ?>
+					
+					<a href="#" class="um-cover-add um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width"><span class="um-cover-add-i"><i class="um-icon-plus-add um-tip-n" title="<?php _e('Upload a cover photo','ultimatemember'); ?>"></i></span></a>
+					
 					<?php } ?>
+					
 				</div>
+				
 			</div>
 			
-		<?php
-		
+			<?php
+
 		}
 		
 	}
@@ -78,14 +119,54 @@
 			$classes .= ' no-cover';
 		}
 		
+		$default_size = str_replace( 'px', '', $args['photosize'] );
+		
+		$overlay = '<span class="um-profile-photo-overlay">
+			<span class="um-profile-photo-overlay-s">
+				<ins>
+					<i class="um-icon-camera-5"></i>
+					<span class="um-profile-photo-overlay-t">'.__('Change your profile photo').'</span>
+				</ins>
+			</span>
+		</span>';
+		
 		?>
 		
 			<div class="um-header<?php echo $classes; ?>">
 			
 				<?php do_action('um_pre_header_editprofile', $args); ?>
 				
-				<div class="um-profile-photo">
-					<a href="<?php echo um_user_profile_url(); ?>" class="um-profile-photo-img"><?php echo um_user('profile_photo'); ?></a>
+				<div class="um-profile-photo" data-user_id="<?php echo um_profile_id(); ?>">
+
+					<a href="<?php echo um_user_profile_url(); ?>" class="um-profile-photo-img"><?php echo $overlay . um_user('profile_photo', $default_size ); ?></a>
+					
+					<?php
+					
+					if ( um_can_edit_profile( um_profile_id() ) ) { 
+					
+						$ultimatemember->fields->add_hidden_field( 'profile_photo' );
+						
+						if ( !um_profile('profile_photo') ) { // has profile photo
+						
+							echo $ultimatemember->menu->new_ui( 'bc', 'div.um-profile-photo', 'click', array(
+								'<a href="#" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">'.__('Upload photo','ultimatemember').'</a>',
+								'<a href="#" class="um-dropdown-hide">'.__('Cancel','ultimatemember').'</a>',
+							), 'can_edit_user' );
+							
+						} else if ( $ultimatemember->fields->editing == true ) {
+						
+							echo $ultimatemember->menu->new_ui( 'bc', 'div.um-profile-photo', 'click', array(
+								'<a href="#" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">'.__('Change photo','ultimatemember').'</a>',
+								'<a href="#" class="um-reset-profile-photo" data-user_id="'.um_profile_id().'" data-default_src="'.um_get_default_avatar_uri().'">'.__('Remove photo','ultimatemember').'</a>',
+								'<a href="#" class="um-dropdown-hide">'.__('Cancel','ultimatemember').'</a>',
+							), 'can_edit_user' );
+							
+						}
+					
+					}
+					
+					?>
+					
 				</div>
 				
 				<div class="um-profile-meta">
@@ -95,15 +176,15 @@
 						<div class="um-clear"></div>
 					</div>
 					
+					<?php if ( isset( $args['metafields'] ) && !empty( $args['metafields'] ) ) { ?>
 					<div class="um-meta">
-						<span>Chief Executive Officer of Ultimate Member</span>
-						<span class="b">&bull;</span>
-						<span>28 Years Old</span>
-						<span class="b">&bull;</span>
-						<span>United Kingdom</span>
+						
+						<?php echo $ultimatemember->profile->show_meta( $args['metafields'] ); ?>
+							
 					</div>
-					
-					<?php if ( um_user('description') ) { ?>
+					<?php } ?>
+
+					<?php if ( um_user('description') && $args['show_bio'] ) { ?>
 					<div class="um-meta-text"><?php echo um_user('description'); ?></div>
 					<?php } ?>
 					
@@ -161,9 +242,9 @@
 		if ( isset( $ultimatemember->user->cannot_edit ) && $ultimatemember->user->cannot_edit == 1 ) return;
 		
 		if ( $ultimatemember->fields->editing == true ) {
-			$output .= '<div class="um-profile-edit um-profile-headericon"><a href="#" title="Save Profile" class="um-profile-save um-tip-n"><i class="um-icon-check"></i></a></div>';
+			$output .= '<div class="um-profile-edit um-profile-headericon"><a href="#" title="Save Profile" class="um-profile-save um-tip-e"><i class="um-icon-check"></i></a></div>';
 		} else {
-			$output .= '<div class="um-profile-edit um-profile-headericon"><a href="'.um_edit_my_profile_uri().'" title="Edit Profile" class="um-tip-n"><i class="um-icon-cog-2"></i></a></div>';
+			$output .= '<div class="um-profile-edit um-profile-headericon"><a href="'.um_edit_my_profile_uri().'" title="Edit Profile" class="um-tip-e"><i class="um-icon-cog-2"></i></a></div>';
 		}
 
 		echo $output;

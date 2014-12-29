@@ -191,6 +191,8 @@
 		
 		if ( um_members('users_per_page') ) {
 		
+			$default_size = str_replace( 'px', '', um_get_option('profile_photosize') );
+			
 		?>
 		
 			<div class="um-members">
@@ -202,13 +204,13 @@
 				<div class="um-member <?php if ($cover_photos) { echo 'with-cover'; } ?>">
 				
 					<?php if ($cover_photos) { ?>
-					<div class="um-member-cover">
-						<div class="um-member-cover-e"><?php echo um_user('cover_photo'); ?></div>
+					<div class="um-member-cover" data-ratio="<?php echo um_get_option('profile_cover_ratio'); ?>">
+						<div class="um-member-cover-e"><?php echo um_user('cover_photo', 300); ?></div>
 					</div>
 					<?php } ?>
 		
 					<?php if ($profile_photo) { ?>
-					<div class="um-member-photo"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('profile_photo', 90); ?></a></div>
+					<div class="um-member-photo"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('profile_photo', $default_size ); ?></a></div>
 					<?php } ?>
 					
 					<div class="um-member-card <?php if (!$profile_photo) { echo 'no-photo'; } ?>">
