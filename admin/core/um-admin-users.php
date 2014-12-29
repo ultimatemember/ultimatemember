@@ -280,6 +280,10 @@ class UM_Admin_Users {
 			
 				return '<span class="um-adm-ico pointer um-admin-tipsy-n" data-modal="UM_preview_registration" data-modal-size="smaller" data-dynamic-content="um_admin_review_registration" data-arg1="'.$user_id.'" data-arg2="edit_registration" title="Review/update registration info"><i class="um-icon-info"></i></span>';
 				
+			} else {
+				
+				return '&mdash;';
+				
 			}
 			
 		}
