@@ -29,8 +29,25 @@ class UM_Builtin {
 	***/
 	function get_specific_fields( $fields ) {
 		$fields = explode(',', $fields);
+		$array=array();
 		foreach ($fields as $field ) {
-			$array[$field] = $this->predefined_fields[$field];
+			if ( isset( $this->predefined_fields[$field] ) ) {
+				$array[$field] = $this->predefined_fields[$field];
+			}
+		}
+		return $array;
+	}
+	
+	/***
+	***	@get specific field
+	***/
+	function get_specific_field( $fields ) {
+		$fields = explode(',', $fields);
+		$array=array();
+		foreach ($fields as $field ) {
+			if ( isset( $this->predefined_fields[$field] ) ) {
+				$array = $this->predefined_fields[$field];
+			}
 		}
 		return $array;
 	}
@@ -594,6 +611,7 @@ class UM_Builtin {
 				'url_rel' => 'nofollow',
 				'icon' => 'um-icon-facebook-alt',
 				'validate' => 'facebook_url',
+				'url_text' => 'Facebook',
 			),
 			
 			'twitter' => array(
@@ -608,6 +626,7 @@ class UM_Builtin {
 				'url_rel' => 'nofollow',
 				'icon' => 'um-icon-twitter',
 				'validate' => 'twitter_url',
+				'url_text' => 'Twitter',
 			),
 			
 			'linkedin' => array(
@@ -622,6 +641,7 @@ class UM_Builtin {
 				'url_rel' => 'nofollow',
 				'icon' => 'um-icon-linkedin-alt-1',
 				'validate' => 'linkedin_url',
+				'url_text' => 'LinkedIn',
 			),
 			
 			'googleplus' => array(
@@ -636,6 +656,7 @@ class UM_Builtin {
 				'url_rel' => 'nofollow',
 				'icon' => 'um-icon-google-plus',
 				'validate' => 'google_url',
+				'url_text' => 'Google+',
 			),
 			
 			'instagram' => array(
@@ -650,6 +671,7 @@ class UM_Builtin {
 				'url_rel' => 'nofollow',
 				'icon' => 'um-icon-instagrem',
 				'validate' => 'instagram_url',
+				'url_text' => 'Instagram',
 			),
 			
 			'skype' => array(
@@ -664,6 +686,7 @@ class UM_Builtin {
 				'url_rel' => 'nofollow',
 				'icon' => 'um-icon-skype',
 				'validate' => 'skype',
+				'url_text' => 'Skype',
 			),
 			
 			'role_select' => array(
@@ -836,7 +859,7 @@ class UM_Builtin {
 	/***
 	***	@predefined + custom fields ( Global, not form wide )
 	***/
-	function all_user_fields() {
+	function all_user_fields( $exclude_types = array() ) {
 	
 		global $ultimatemember;
 		
@@ -852,7 +875,13 @@ class UM_Builtin {
 		}
 		
 		foreach( $all as $k => $arr ) {
-			if ( isset( $arr['account_only'] ) ) {
+			if ( $exclude_types && in_array( $arr['type'], $exclude_types ) ) {
+				unset( $all[$k] );
+			}
+			if ( isset( $arr['account_only'] ) || isset( $arr['private_use'] ) ) {
+				unset( $all[$k] );
+			}
+			if ( isset( $arr['type'] ) && in_array( $arr['type'], array('image','file','password') ) ) {
 				unset( $all[$k] );
 			}
 		}

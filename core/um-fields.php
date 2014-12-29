@@ -334,36 +334,10 @@ class UM_Fields {
 		} else if ( um_user( $key ) && $this->viewing == true ) {
 		
 			$value = um_user( $key );
+			$value = apply_filters("um_profile_field_filter_hook__", $value, $data );
+			$value = apply_filters("um_profile_field_filter_hook__{$key}", $value, $data );
 			
-			if ( isset( $data['validate'] ) && $data['validate'] != '' && strstr( $data['validate'], 'url' ) ) {
-				$alt = ( isset( $data['url_text'] ) ) ? $data['url_text'] : $value;
-				$url_rel = ( isset( $data['url_rel'] ) ) ? 'rel="nofollow"' : '';
-				
-				if ( 	   !strstr( $value, 'http' )
-						&& !strstr( $value, '://' )
-						&& !strstr( $value, 'www.' ) 
-						&& !strstr( $value, '.com' ) 
-						&& !strstr( $value, '.net' )
-						&& !strstr( $value, '.org' )
-					) {
-					
-					if ( $data['validate'] == 'facebook_url' ) $value = 'http://facebook.com/' . $value;
-					if ( $data['validate'] == 'twitter_url' ) $value = 'http://twitter.com/' . $value;
-					if ( $data['validate'] == 'linkedin_url' ) $value = 'http://linkedin.com/' . $value;
-					if ( $data['validate'] == 'skype' ) $value = 'http://skype.com/' . $value;
-					if ( $data['validate'] == 'googleplus_url' ) $value = 'http://plus.google.com/' . $value;
-					if ( $data['validate'] == 'instagram_url' ) $value = 'http://instagram.com/' . $value;
-					
-				}
-				
-				$value = '<a href="'. $value .'" target="'.$data['url_target'].'" ' . $url_rel . '>'.$alt.'</a>';
-			}
-			
-			if ( is_array( $value ) ) {
-				return implode(', ', $value );
-			}
-
-			return apply_filters("um_profile_field_filter_hook__{$key}", $value );
+			return $value;
 			
 		} else if ($default) {
 			return $default;
@@ -1418,7 +1392,7 @@ class UM_Fields {
 		
 		// Custom filter for field output
 		if ( isset( $this->set_mode ) ) {
-		$output = apply_filters("um_{$key}_form_edit_field", $output, $this->set_mode);
+			$output = apply_filters("um_{$key}_form_edit_field", $output, $this->set_mode);
 		}
 		
 		return $output;
@@ -1733,7 +1707,9 @@ class UM_Fields {
 		}
 		
 		// Custom filter for field output
-		$output = apply_filters("um_{$key}_form_show_field", $output, $this->set_mode);
+		if ( isset( $this->set_mode ) ) {
+			$output = apply_filters("um_{$key}_form_show_field", $output, $this->set_mode);
+		}
 		
 		return $output;
 	}

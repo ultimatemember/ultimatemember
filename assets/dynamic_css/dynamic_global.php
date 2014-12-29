@@ -200,7 +200,7 @@ print "
 .um-$form_id.um .um-form input[type=password],
 .um-$form_id.um .um-form textarea
 {
-	color: $form_text_color !important;
+	color: $form_text_color;
 }
 
 .um-$form_id.um .um-form input:-webkit-autofill {

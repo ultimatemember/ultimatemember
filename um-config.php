@@ -747,7 +747,7 @@ $this->sections[] = array(
                 'type'     		=> 'multi_text',
                 'title'    		=> __( 'Profile Photo Thumbnail Sizes' ),
                 'desc' 	   		=> __( 'Here you can define which thumbnail sizes will be created for each profile photo upload.' ),
-                'default'  		=> array( 40, 80, str_replace('px','',um_get_option('profile_photosize') ) ),
+                'default'  		=> array( 40, 80, 190 ),
 				'validate' 		=> 'numeric',
 				'add_text'		=> __('Add New Size'),
 		),
@@ -1190,6 +1190,14 @@ $this->sections[] = array(
                 'title'    		=> __( 'Profile Header Icon Link Hover' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
+        ),
+		
+        array(
+                'id'       		=> 'profile_show_name',
+                'type'     		=> 'switch',
+                'title'    		=> __( 'Show display name in profile header' ),
+				'default' 		=> um_get_metadefault('profile_show_name'),
+				'desc' 	   		=> 'Switch on/off the user name on profile header',
         ),
 		
         array(

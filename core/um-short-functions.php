@@ -440,6 +440,14 @@
 		return $uri;
 	}
 	
+	function um_closest_num($array, $number) {
+		sort($array);
+		foreach ($array as $a) {
+			if ($a >= $number) return $a;
+		}
+		return end($array);
+	}
+
 	/***
 	***	@get cover uri
 	***/
@@ -461,11 +469,20 @@
 	function um_get_avatar_uri( $image, $attrs ) {
 		global $ultimatemember;
 		$uri = false;
-		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo.jpg' ) ) {
-			$uri = um_user_uploads_uri() . 'profile_photo.jpg?' . time();
-		}
-		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo-' . $attrs. '.jpg' ) ){
+
+		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo-' . $attrs. '.jpg' ) ) {
 			$uri = um_user_uploads_uri() . 'profile_photo-'.$attrs.'.jpg?' . time();
+		} else {
+			
+			$sizes = um_get_option('photo_thumb_sizes');
+			$find = um_closest_num( $sizes, $attrs );
+			
+			if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo-' . $find. '.jpg' ) ) {
+				$uri = um_user_uploads_uri() . 'profile_photo-'.$find.'.jpg?' . time();
+			} else if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo.jpg' ) ) {
+				$uri = um_user_uploads_uri() . 'profile_photo.jpg?' . time();
+			}
+			
 		}
 		return $uri;
 	}
@@ -494,10 +511,10 @@
 				$value = um_profile($data);
 				
 				if ( $ultimatemember->validation->is_serialized( $value ) ) {
-					return unserialize( $value );
-				} else {
-					return $value;
+					$value = unserialize( $value );
 				}
+				
+				return $value;
 				
 				break;
 				

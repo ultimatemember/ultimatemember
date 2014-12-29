@@ -172,7 +172,9 @@
 				<div class="um-profile-meta">
 				
 					<div class="um-main-meta">
+						<?php if ( $args['show_name'] ) { ?>
 						<div class="um-name"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('display_name'); ?></a></div>
+						<?php } ?>
 						<div class="um-clear"></div>
 					</div>
 					
@@ -275,6 +277,11 @@
 		do_action('um_user_before_updating_profile', $userinfo );
 		
 		foreach( $fields as $key => $array ) {
+		
+			if ( $fields[$key]['type'] == 'multiselect' ||  $fields[$key]['type'] == 'checkbox' && !isset($args['submitted'][$key]) ) {
+				delete_user_meta( um_user('ID'), $key );
+			}
+			
 			if ( isset( $args['submitted'][ $key ] ) ) {
 			
 				if ( isset( $userinfo[$key]) && $args['submitted'][$key] != $userinfo[$key] ) {
@@ -285,7 +292,7 @@
 
 			}
 		}
-		
+
 		if ( is_array( $to_update ) ) {
 			$ultimatemember->user->update_profile( $to_update );
 		}

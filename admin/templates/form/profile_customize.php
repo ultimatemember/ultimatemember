@@ -11,6 +11,18 @@
 	
 	<div class="profile-customize">
 	
+	<p><label for="_um_profile_role"><?php _e('Make this profile role-specific','ultimatemember'); ?></label>
+		<select name="_um_profile_role" id="_um_profile_role" class="umaf-selectjs" style="width: 100%">
+			
+			<?php foreach($ultimatemember->query->get_roles( $add_default = 'All roles' ) as $key => $value) { ?>
+			
+			<option value="<?php echo $key; ?>" <?php selected($key, $ultimatemember->query->get_meta_value('_um_profile_role', null, um_get_option('profile_role') ) ); ?>><?php echo $value; ?></option>
+			
+			<?php } ?>
+			
+		</select>
+	</p>
+	
 	<p><label for="_um_profile_template"><?php _e('Template','ultimatemember'); ?></label>
 		<select name="_um_profile_template" id="_um_profile_template" class="umaf-selectjs" style="width: 100%">
 
@@ -147,6 +159,24 @@
 	<p><label for="_um_profile_header_icon_hcolor"><?php _e('Header Icon Link Hover','ultimatemember'); ?></label>
 		<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_profile_header_icon_hcolor', null, um_get_option('profile_header_icon_hcolor') ); ?>" class="um-admin-colorpicker" name="_um_profile_header_icon_hcolor" id="_um_profile_header_icon_hcolor" data-default-color="<?php echo um_get_option('profile_header_icon_hcolor'); ?>" />
 	</p>
+	
+	<p>
+		<label><?php _e('Show display name in profile header?','ultimatemember'); ?></label>
+		<span>
+			
+			<?php $this->ui_on_off('_um_profile_show_name', 1 ); ?>
+				
+		</span>
+	</p><div class="um-admin-clear"></div>
+	
+	<p>
+		<label><?php _e('Show user description in profile header?','ultimatemember'); ?></label>
+		<span>
+			
+			<?php $this->ui_on_off('_um_profile_show_bio', 1 ); ?>
+				
+		</span>
+	</p><div class="um-admin-clear"></div>
 	
 	</div>
 	

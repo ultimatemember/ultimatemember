@@ -84,6 +84,7 @@ class UM_Setup {
 			'_um_secondary_btn_color' => '#eee',
 			'_um_secondary_btn_hover' => '#e5e5e5',
 			'_um_secondary_btn_text' => '#666',
+			'_um_profile_show_name' => 1,
 			'_um_profile_show_bio' => 1,
 			'_um_profile_role' => '0',
 			'_um_profile_template' => 'profile',

@@ -80,7 +80,7 @@ class UM_Validation {
 
 		if ( $social ) {
 
-			if (  substr( $url, 0, strlen($social) ) == $social ) { // starts with social requested
+			if ( !filter_var($url, FILTER_VALIDATE_URL) && strstr( $url, $social )  ) { // starts with social requested
 				return true;
 			} else {
 
