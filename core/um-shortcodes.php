@@ -74,7 +74,7 @@ class UM_Shortcodes {
 
 		$args = apply_filters('um_shortcode_args_filter', $args );
 		
-		if ( um_profile_id() && $args['role'] && $args['role'] != $ultimatemember->query->get_role_by_userid( um_profile_id() ) )
+		if ( um_profile_id() && isset( $args['role'] ) && $args['role'] && $args['role'] != $ultimatemember->query->get_role_by_userid( um_profile_id() ) )
 			return;
 
 		extract( $args, EXTR_SKIP );
