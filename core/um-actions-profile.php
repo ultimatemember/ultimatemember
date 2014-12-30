@@ -261,6 +261,7 @@
 		global $ultimatemember;
 		
 		$to_update = null;
+		$files = null;
 		
 		if ( isset( $args['user_id'] ) ) {
 			if ( um_can_edit_profile( $args['user_id'] ) ) {
@@ -289,12 +290,21 @@
 				} else if ( $args['submitted'][$key] ) {
 					$to_update[ $key ] = $args['submitted'][ $key ];
 				}
+				
+				// files
+				if ( isset( $fields[$key]['type'] ) && in_array( $fields[$key]['type'], array('image','file') ) && um_is_temp_upload( $args['submitted'][ $key ] )  ) {
+					$files[ $key ] = $args['submitted'][ $key ];
+				}
 
 			}
 		}
 
 		if ( is_array( $to_update ) ) {
 			$ultimatemember->user->update_profile( $to_update );
+		}
+
+		if ( is_array( $files ) ) {
+			$ultimatemember->user->update_files( $files );
 		}
 		
 		do_action('um_user_after_updating_profile', $to_update );

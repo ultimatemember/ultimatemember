@@ -308,6 +308,8 @@ class UM_Fields {
 	function field_value( $key, $default = false, $data = null ) {
 		global $ultimatemember;
 		
+		$type = (isset($data['type']))?$data['type']:'';
+		
 		// preview in backend
 		if ( isset( $ultimatemember->user->preview ) && $ultimatemember->user->preview ) {
 			$submitted = um_user('submitted');
@@ -336,6 +338,7 @@ class UM_Fields {
 			$value = um_user( $key );
 			$value = apply_filters("um_profile_field_filter_hook__", $value, $data );
 			$value = apply_filters("um_profile_field_filter_hook__{$key}", $value, $data );
+			$value = apply_filters("um_profile_field_filter_hook__{$type}", $value, $data );
 			
 			return $value;
 			
@@ -1002,19 +1005,33 @@ class UM_Fields {
 			case 'image':
 				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">';
 				
+					$output .= '<input type="hidden" name="'.$key.$ultimatemember->form->form_suffix.'" id="'.$key.$ultimatemember->form->form_suffix.'" value="'. $this->field_value( $key, $default, $data ) . '" />';
+					
 					if ( isset( $data['label'] ) ) {
-					$output .= $this->field_label($label, $key, $data);
+						$output .= $this->field_label($label, $key, $data);
 					}
 					
 					$modal_label = ( isset( $data['label'] ) ) ? $data['label'] : __('Upload Photo','ultimatemember');
+
+					$output .= '<div class="um-field-area" style="text-align: center">';
 					
-					$output .= '<div class="um-field-area" style="text-align: center">
+					if ( $this->field_value( $key, $default, $data ) ) {
 					
-						<div class="um-single-image-preview '. $crop_class .'" data-crop="'.$crop_data.'" data-key="'.$key.'"><a href="#" class="cancel"><i class="um-icon-remove"></i></a><img src="" alt="" /></div>
+						$output .= '<div class="um-single-image-preview show '. $crop_class .'" data-crop="'.$crop_data.'" data-key="'.$key.'">
+								<a href="#" class="cancel"><i class="um-icon-remove"></i></a>
+								<img src="' . um_user_uploads_uri() . $this->field_value( $key, $default, $data ) . '" alt="" />
+							</div><a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. __('Change photo') . '</a>';
 						
-						<a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. $button_text . '</a>
+					} else {
+					
+						$output .= '<div class="um-single-image-preview '. $crop_class .'" data-crop="'.$crop_data.'" data-key="'.$key.'">
+								<a href="#" class="cancel"><i class="um-icon-remove"></i></a>
+								<img src="" alt="" />
+							</div><a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. $button_text . '</a>';
 						
-						</div>';
+					}
+						
+					$output .= '</div>';
 
 					/* modal hidden */
 					$output .= '<div class="um-modal-hidden-content">';
@@ -1060,21 +1077,38 @@ class UM_Fields {
 			case 'file':
 				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">';
 				
+					$output .= '<input type="hidden" name="'.$key.$ultimatemember->form->form_suffix.'" id="'.$key.$ultimatemember->form->form_suffix.'" value="'. $this->field_value( $key, $default, $data ) . '" />';
+					
 					if ( isset( $data['label'] ) ) {
 					$output .= $this->field_label($label, $key, $data);
 					}
 					
 					$modal_label = ( isset( $data['label'] ) ) ? $data['label'] : __('Upload Photo','ultimatemember');
 					
-					$output .= '<div class="um-field-area" style="text-align: center">
+					$output .= '<div class="um-field-area" style="text-align: center">';
 					
-									<div class="um-single-file-preview" data-key="'.$key.'">
+					if ( $this->field_value( $key, $default, $data ) ) {
+					
+						$extension = pathinfo( $this->field_value( $key, $default, $data ), PATHINFO_EXTENSION);
+					
+						$output .= '<div class="um-single-file-preview show" data-key="'.$key.'">
+										<a href="#" class="cancel"><i class="um-icon-remove"></i></a>
+										<div class="um-single-fileinfo">
+											<a href="' . um_user_uploads_uri() . $this->field_value( $key, $default, $data )  . '" target="_blank">
+												<span class="icon" style="background:'. $ultimatemember->files->get_fonticon_bg_by_ext( $extension ) . '"><i class="'. $ultimatemember->files->get_fonticon_by_ext( $extension ) .'"></i></span>
+												<span class="filename">' . $this->field_value( $key, $default, $data ) . '</span>
+											</a>
+										</div>
+							</div><a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. __('Change file') . '</a>';
+						
+					} else {
+					
+						$output .= '<div class="um-single-file-preview" data-key="'.$key.'">
+							</div><a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. $button_text . '</a>';
+						
+					}
 
-									</div>
-						
-						<a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. $button_text . '</a>
-						
-						</div>';
+					$output .= '</div>';
 
 					/* modal hidden */
 					$output .= '<div class="um-modal-hidden-content">';
@@ -1094,7 +1128,7 @@ class UM_Fields {
 					$output .= '<div class="um-single-file-preview">
 										<a href="#" class="cancel"><i class="um-icon-remove"></i></a>
 										<div class="um-single-fileinfo">
-											<a href="#" target="_blank">
+											<a href="" target="_blank">
 												<span class="icon"><i></i></span>
 												<span class="filename"></span>
 											</a>

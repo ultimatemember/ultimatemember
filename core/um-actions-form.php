@@ -51,6 +51,8 @@
 		
 			do_action('um_submit_form_errors_hook_login', $args );
 			
+			do_action('um_submit_form_errors_hook_logincheck', $args );
+			
 		} else {
 		
 			do_action('um_submit_form_errors_hook_', $args );

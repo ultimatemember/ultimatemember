@@ -12,7 +12,7 @@ class UM_Form {
 		
 		$this->errors = null;
 		
-		add_action('init', array(&$this, 'form_init'), 1);
+		add_action('init', array(&$this, 'form_init'), 2);
 		
 		add_action('init', array(&$this, 'field_declare'), 10);
 		
@@ -87,6 +87,7 @@ class UM_Form {
 				/* Continue based on form mode - pre-validation */
 				
 				do_action("um_submit_form_errors_hook", $this->post_form );
+
 
 				do_action("um_submit_form_{$this->post_form['mode']}", $this->post_form );
 

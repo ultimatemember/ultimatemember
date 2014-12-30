@@ -126,6 +126,7 @@ jQuery(document).ready(function() {
 		var parent = jQuery(this).parents('.um-field');
 		parent.find('.um-single-image-preview').hide();
 		parent.find('.um-btn-auto-width').html('Upload');
+		parent.find('input[type=hidden]').val('');
 		return false;
 	});
 	
@@ -135,6 +136,7 @@ jQuery(document).ready(function() {
 		var parent = jQuery(this).parents('.um-field');
 		parent.find('.um-single-file-preview').hide();
 		parent.find('.um-btn-auto-width').html('Upload');
+		parent.find('input[type=hidden]').val('');
 		return false;
 	});
 	

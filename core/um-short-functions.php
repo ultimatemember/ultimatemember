@@ -13,6 +13,21 @@
 		
 		return 0;
 	}
+
+	/***
+	***	@Check that temp upload is valid
+	***/
+	function um_is_temp_upload( $url ) {
+		global $ultimatemember;
+		$url = explode('/ultimatemember/temp/', $url);
+		if ( isset( $url[1] ) ) {
+			$src = $ultimatemember->files->upload_temp . $url[1];
+			if ( !file_exists( $src ) )
+				return false;
+			return $src;
+		}
+		return false;
+	}
 	
 	/***
 	***	@Check that temp image is valid
@@ -21,16 +36,12 @@
 		global $ultimatemember;
 		$url = explode('/ultimatemember/temp/', $url);
 		if ( isset( $url[1] ) ) {
-		
 			$src = $ultimatemember->files->upload_temp . $url[1];
-			
 			if ( !file_exists( $src ) )
 				return false;
-				
 			list($width, $height, $type, $attr) = @getimagesize($src);
 			if ( isset( $width ) && isset( $height ) )
 				return $src;
-				
 		}
 		return false;
 	}
@@ -440,6 +451,18 @@
 		return $uri;
 	}
 	
+	/***
+	***	@user uploads directory
+	***/
+	function um_user_uploads_dir() {
+		global $ultimatemember;
+		$uri = $ultimatemember->files->upload_basedir . um_user('ID') . '/';
+		return $uri;
+	}
+	
+	/***
+	***	@find closest number in an array
+	***/
 	function um_closest_num($array, $number) {
 		sort($array);
 		foreach ($array as $a) {

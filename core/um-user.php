@@ -21,7 +21,7 @@ class UM_User {
 	
 		$this->preview = false;
 		
-		// needs to be updated by wp_update_user()
+		// a list of keys that should be done on wp_update_user
 		$this->update_user_keys = array(
 			'user_email',
 			'user_pass',
@@ -404,6 +404,20 @@ class UM_User {
 			return true;
 		}
 		return false;
+	}
+	
+	/***
+	***	@update files
+	***/
+	function update_files( $array ) {
+		
+		global $ultimatemember;
+		
+		foreach( $array as $key => $uri ) {
+			$src = um_is_temp_upload( $uri );
+			$ultimatemember->files->new_user_upload( $this->id, $src, $key );
+		}
+		
 	}
 	
 	/***

@@ -1,6 +1,50 @@
 <?php
 
 	/***
+	***	@Images
+	***/
+	add_filter('um_profile_field_filter_hook__file', 'um_profile_field_filter_hook__file', 99, 2);
+	function um_profile_field_filter_hook__file( $value, $data ) {
+		global $ultimatemember;
+		
+		$uri = um_user_uploads_uri() . $value;
+		$extension = pathinfo( $uri, PATHINFO_EXTENSION);
+
+		if ( !file_exists( um_user_uploads_dir() . $value ) ) {
+			$value = __('This file has been removed.');
+		} else {
+			$value = '<div class="um-single-file-preview show">
+										<div class="um-single-fileinfo">
+											<a href="' . $uri  . '" target="_blank">
+												<span class="icon" style="background:'. $ultimatemember->files->get_fonticon_bg_by_ext( $extension ) . '"><i class="'. $ultimatemember->files->get_fonticon_by_ext( $extension ) .'"></i></span>
+												<span class="filename">' . $value . '</span>
+											</a>
+										</div>
+							</div>';
+		}
+		
+		return $value;
+	}
+	
+	/***
+	***	@Files
+	***/
+	add_filter('um_profile_field_filter_hook__image', 'um_profile_field_filter_hook__image', 99, 2);
+	function um_profile_field_filter_hook__image( $value, $data ) {
+	
+		$uri = um_user_uploads_uri() . $value;
+		$title = ( isset( $data['title'] ) ) ? $data['title'] : __('Untitled photo');
+		
+		if ( !file_exists( um_user_uploads_dir() . $value ) ) {
+			$value = __('Image has been removed.');
+		} else {
+			$value = '<div class="um-photo"><a href="#"><img src="'. $uri .'" alt="'.$title.'" title="'.$title.'" class="" /></a></div>';
+		}
+		
+		return $value;
+	}
+	
+	/***
 	***	@some required changes before value is shown
 	***/
 	add_filter('um_profile_field_filter_hook__', 'um_profile_field_filter_hook__', 99, 2);
@@ -9,7 +53,6 @@
 		if ( isset( $data['validate'] ) && $data['validate'] != '' && strstr( $data['validate'], 'url' ) ) {
 			$alt = ( isset( $data['url_text'] ) ) ? $data['url_text'] : $value;
 			$url_rel = ( isset( $data['url_rel'] ) ) ? 'rel="nofollow"' : '';
-				
 			if( !strstr( $value, 'http' )
 				&& !strstr( $value, '://' )
 				&& !strstr( $value, 'www.' ) 
@@ -17,32 +60,24 @@
 				&& !strstr( $value, '.net' )
 				&& !strstr( $value, '.org' )
 			) {
-					
 				if ( $data['validate'] == 'facebook_url' ) $value = 'http://facebook.com/' . $value;
 				if ( $data['validate'] == 'twitter_url' ) $value = 'http://twitter.com/' . $value;
 				if ( $data['validate'] == 'linkedin_url' ) $value = 'http://linkedin.com/' . $value;
 				if ( $data['validate'] == 'skype' ) $value = 'http://skype.com/' . $value;
 				if ( $data['validate'] == 'googleplus_url' ) $value = 'http://plus.google.com/' . $value;
-				if ( $data['validate'] == 'instagram_url' ) $value = 'http://instagram.com/' . $value;
-					
+				if ( $data['validate'] == 'instagram_url' ) $value = 'http://instagram.com/' . $value;	
 			}
-			
 			if ( strpos($value, 'http://') !== 0 ) {
 				$value = 'http://' . $value;
 			}
-			
 			$value = '<a href="'. $value .'" target="'.$data['url_target'].'" ' . $url_rel . '>'.$alt.'</a>';
 		}
 			
 		if ( !is_array( $value ) ) {
-		
 			if ( is_email( $value ) )
 				$value = '<a href="mailto:'. $value.'">'.$value.'</a>';
-
 		} else {
-		
 			$value = implode(', ', $value);
-	
 		}
 
 		return $value;

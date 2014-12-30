@@ -49,22 +49,37 @@
 	function um_add_update_notice($args){
 		global $ultimatemember;
 		extract($args);
+		$output = '';
+		
 		if ( isset( $_REQUEST['updated'] ) && !empty( $_REQUEST['updated'] ) ) {
-		
 			switch( $_REQUEST['updated'] ) {
-			
 				case 'password_changed':
-					$msg = __('You have successfully changed your password.','ultimatemember');
+					$success = __('You have successfully changed your password.','ultimatemember');
 					break;
-					
 			}
-		
 		}
 		
-		if ( isset( $msg ) ) {
-		
-			echo '<p class="um-notice success">' . $msg . '</p>';
-			
+		if ( isset( $_REQUEST['err'] ) && !empty( $_REQUEST['err'] ) ) {
+			switch( $_REQUEST['err'] ) {
+				case 'inactive':
+					$err = __('Your account has been disabled.','ultimatemember');
+					break;
+				case 'awaiting_admin_review':
+					$err = __('Your account has not been approved yet.','ultimatemember');
+					break;
+				case 'awaiting_email_confirmation':
+					$err = __('Your account is awaiting e-mail verifications.','ultimatemember');
+					break;
+				case 'rejected':
+					$err = __('Your membership request has been rejected.','ultimatemember');
+					break;
+			}
 		}
+		
+		if ( isset( $err ) ) {
+			$output .= '<p class="um-notice err">' . $err . '</p>';
+		}
+		
+		echo $output;
 		
 	}

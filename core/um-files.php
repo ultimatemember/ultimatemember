@@ -411,8 +411,8 @@ class UM_Files {
 		$ext = '.' . pathinfo($source_name, PATHINFO_EXTENSION);
 		$name = str_replace( $ext, '', $source_name );
 		$filename = $name . $ext;
-		
-		// copy image
+
+		// copy file
 		copy( $source, $this->upload_basedir . $user_id . '/' . $filename );
 		
 		// thumbs
@@ -466,15 +466,15 @@ class UM_Files {
 			}
 		
 		}
-		
+
 		// clean up temp
 		$dir = dirname( $source );
 		unlink( $source );
 		rmdir( $dir );
-		
+
 		// update user's meta
 		update_user_meta( $user_id, $key, $filename );
-		
+
 		// the url of upload
 		return $this->upload_baseurl . $user_id . '/' . $filename;
 		

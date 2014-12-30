@@ -62,7 +62,6 @@
 			switch( $err ) {
 				
 				default:
-					
 					break;
 
 				case 'incorrect_password':
@@ -79,22 +78,45 @@
 	}
 	
 	/***
+	***	@login checks
+	***/
+	add_action('um_submit_form_errors_hook_logincheck', 'um_submit_form_errors_hook_logincheck', 9999 );
+	function um_submit_form_errors_hook_logincheck($args){
+		global $ultimatemember;
+		
+		// Logout if logged in
+		if ( is_user_logged_in() ) {
+			wp_logout();
+		}
+
+		$user_id = ( isset( $ultimatemember->login->auth_id ) ) ? $ultimatemember->login->auth_id : '';
+		um_fetch_user( $user_id );
+		
+		$status = um_user('account_status'); // account status
+		switch( $status ) {
+		
+			// If user can't login to site...
+			case 'inactive':
+			case 'awaiting_admin_review':
+			case 'awaiting_email_confirmation':
+			case 'rejected':
+				um_reset_user();
+				exit( wp_redirect( add_query_arg( 'err', $status, $ultimatemember->permalinks->get_current_url() ) ) );
+				break;
+				
+		}
+		
+	}
+	
+	/***
 	***	@login user
 	***/
 	add_action('um_user_login', 'um_user_login', 10);
 	function um_user_login($args){
 		global $ultimatemember;
 		extract( $args );
-		
-		if ( is_user_logged_in() ) {
-			wp_logout();
-		}
 
-		$user_id = $ultimatemember->login->auth_id;
-		
-		um_fetch_user( $user_id );
-		
-		$ultimatemember->user->auto_login( $user_id );
+		$ultimatemember->user->auto_login( um_user('ID') );
 		
 		// Priority redirect
 		if ( isset( $args['redirect_to'] ) ) {

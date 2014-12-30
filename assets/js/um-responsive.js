@@ -146,7 +146,7 @@ jQuery(window).load(function() {
 /* Run only when window is resized */
 jQuery(window).resize(function() {
 
-	jQuery('.um-single-image-preview.crop:visible img').cropper("destroy");
+	jQuery('.um-modal .um-single-image-preview.crop:visible img').cropper("destroy");
 	
 	um_responsive();
 	um_modal_responsive();
