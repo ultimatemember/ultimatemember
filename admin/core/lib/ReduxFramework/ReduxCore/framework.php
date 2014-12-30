@@ -3721,7 +3721,7 @@
                             unset( $link['link'] );
                         }
 
-                        echo '<a href="' . $link['url'] . '" title="' . $link['title'] . '" target="_blank">';
+                        echo '<a href="' . $link['url'] . '" title="' . $link['title'] . '" target="_blank" class="um-admin-tipsy-n">';
 
                         if ( isset( $link['icon'] ) && ! empty( $link['icon'] ) ) {
                             echo '<i class="' . $link['icon'] . '"></i>';

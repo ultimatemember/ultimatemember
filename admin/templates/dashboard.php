@@ -21,12 +21,7 @@ global $ultimatemember;
 	
 		<div class="um-admin-dash-nav">
 		
-			<a href="#"><i class="um-icon-dashboard"></i><span class="um-admin-dash-nav-title">Dashboard Overview</span></a>
-			<a href="#"><i class="um-icon-analytics-chart-graph"></i><span class="um-admin-dash-nav-title">Analytics</span></a>
-			<a href="#"><i class="um-icon-user-6"></i><span class="um-admin-dash-nav-title">New Users</span><span class="um-admin-dash-count">12</span></a>
-			<a href="#"><i class="um-icon-files-2"></i><span class="um-admin-dash-nav-title">User Reports</span><span class="um-admin-dash-count red">4</span></a>
-			<a href="#"><i class="um-icon-denied-block"></i><span class="um-admin-dash-nav-title">Quick Delete/Ban</span></a>
-			<a href="#"><i class="um-icon-download-4"></i><span class="um-admin-dash-nav-title">Updates Available</span><span class="um-admin-dash-count">1</span></a>
+			<a href="#" class="active"><i class="um-icon-home-3"></i><span class="um-admin-dash-nav-title">Dashboard Overview</span></a>
 			
 		</div>
 		
@@ -42,7 +37,11 @@ global $ultimatemember;
 	</div>
 
 	<div class="um-admin-dash-foot">
-
+		<div class="um-admin-dash-share">
+		
+			<?php global $reduxConfig; foreach ( $reduxConfig->args['share_icons'] as $k => $arr ) { ?><a href="<?php echo $arr['url']; ?>" class="um-about-icon um-admin-tipsy-n" title="<?php echo $arr['title']; ?>" target="_blank"><i class="<?php echo $arr['icon']; ?>"></i></a><?php } ?>
+			
+		</div><div class="clear"></div>
 	</div>
 	
 </div>

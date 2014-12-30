@@ -19,9 +19,9 @@ class UM_Chart {
 			'y_label' => null,
 			'vertical_max_lines' => 6,
 			'colors' => '#3ba1da',
-			'backgroundcolor' => '#fcfcfc',
-			'basetextcolor' => '#999',
-			'basebordercolor' => '#eee',
+			'backgroundcolor' => 'transparent',
+			'basetextcolor' => '#666',
+			'basebordercolor' => '#bbb',
 			'days' => 30
 		);
 		
@@ -103,12 +103,12 @@ class UM_Chart {
 					baselineColor: '<?php echo $basebordercolor; ?>',
 					gridlineColor: '<?php echo $basebordercolor; ?>',
 					gridlines: {color: 'transparent', count: vgrid_count},
-					textStyle: {color: '<?php echo $basetextcolor; ?>', fontSize: 11 },
+					textStyle: {color: '<?php echo $basetextcolor; ?>', fontSize: 12 },
 					format: '#',
 					viewWindow: {min: min_data, max: max_data + 10}
 				},
 				hAxis:{
-					textStyle: {color: '<?php echo $basetextcolor; ?>', fontSize: 11, italic: true },
+					textStyle: {color: '<?php echo $basetextcolor; ?>', fontSize: 12, italic: true },
 					showTextEvery: hgrid_count,
 					maxAlternation: 1,
 					maxTextLines: 1
@@ -119,13 +119,13 @@ class UM_Chart {
 					textStyle: {color: '<?php echo $basetextcolor; ?>', fontSize: 13}
 				},
 				tooltip: {
-					textStyle: {color: '<?php echo $basetextcolor; ?>', fontSize: 11}
+					textStyle: {color: '<?php echo $basetextcolor; ?>', fontSize: 12}
 				},
 				chartArea: {
 					top:50,left:30,width: '95%', 'height' : ( vgrid_count * 50 ) - 100,
 					backgroundColor: {
 						stroke: '<?php echo $basebordercolor; ?>',
-						strokeWidth: 2
+						strokeWidth: 1
 					}
 				},
 				width: '100%',

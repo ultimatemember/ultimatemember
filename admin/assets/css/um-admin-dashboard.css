@@ -4,13 +4,8 @@
 
 .um-admin-dash-container {
 	box-sizing: border-box;
-	border-radius: 3px;
 	margin: 18px 20px 20px 2px !important;
-	background-color: #F5F5F5;
-	background-repeat: repeat-x;
-	background-image: -moz-linear-gradient(center top , #F2F2F2 0px, #F5F5F5 100%);
-	border: 1px solid #DEDEDE;
-	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.04);
+	background: none !important;
 	overflow: hidden;
 }
 
@@ -21,9 +16,7 @@
 
 .um-admin-dash-head {
 	background: #3ba1da;
-	border-radius: 3px 3px 0 0;
 	padding: 0 0 0 20px;
-	border-bottom: 3px solid #3ba1da;
 }
 
 .um-admin-dash-nav {
@@ -38,7 +31,6 @@
 }
 
 .um-admin-dash-main {
-	background: none repeat scroll 0% 0% #FCFCFC;
 	margin-left: 201px;
 	border-left: 1px solid #D8D8D8;
 	padding: 10px 20px;
@@ -46,11 +38,10 @@
 }
 
 .um-admin-dash-foot {
-	background: none repeat scroll 0% 0% #EEE;
-	height: 60px;
-	border-radius: 0 0 3px 3px;
-	border-top: 1px solid #E7E7E7;
-	z-index: 9999;
+	border-radius: 0;
+	background: none !important;
+	padding: 10px 0;
+	border-top: 1px solid #D8D8D8;
 }
 
 /*
@@ -91,20 +82,19 @@
 
 .um-admin-dash-nav a {
 	font-family: Open Sans;
-	font-size: 13px;
+	font-size: 14px;
 	position: relative;
 	display: block;
 	padding: 10px 4px 10px 14px;
-	background: none repeat scroll 0px 0px transparent;
 	border-width: 1px 0px;
 	border-style: solid;
 	border-bottom: 1px solid #E7E7E7;
 	border-top: 0px none;
-	opacity: 0.7;
-	color: #555;
 	font-weight: 700;
 	text-decoration: none;
 	transition: none 0s ease 0s;
+	background: transparent !important;
+	color: #555 !important;
 }
 
 .um-admin-dash-nav-title {
@@ -112,16 +102,19 @@
 }
 
 .um-admin-dash-nav a:hover {
-	color: #777;
-	opacity: 1;
-	background: none repeat scroll 0px 0px #e5e5e5;
+	background: #ddd !important;
 }
 
-.um-admin-dash-nav a i{
+.um-admin-dash-nav a.active,
+.um-admin-dash-nav a.active:hover {
+	color: #3ba1da !important;
+	background: transparent !important;
+}
+
+.um-admin-dash-nav a i {
 	vertical-align: middle;
 	font-size: 1.35em;
 	position: absolute;
-	color: #555;
 }
 
 /*
@@ -148,9 +141,22 @@
 */
 
 .um-admin-dash-main h3{
-	color: #888;
 	font-weight: 500;
-	border-bottom: 1px solid #eee;
 	padding: 0 0 10px 0;
 	margin-bottom: 0 !important;
 }
+
+.um-admin-dash-share {
+	margin-top: 11px !important;
+	float: left;
+	line-height: 28px;
+	font-size: 15px;
+}
+
+.um-admin-dash-share a {
+	margin: 0 15px 0 0 !important;
+	text-decoration: none !important;
+	color: #777 !important;
+	font-size: 22px !important;
+}
+.um-admin-dash-share a:hover {color: #3ba1da !important}
