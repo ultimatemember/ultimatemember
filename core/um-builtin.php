@@ -537,31 +537,6 @@ class UM_Builtin {
 				'placeholder' => 'Enter a bit about yourself...',
 			),
 			
-			'profile_photo' => array(
-				'title' => 'Profile Photo',
-				'metakey' => 'profile_photo',
-				'type' => 'image',
-				'label' => 'Change your profile photo',
-				'upload_text' => 'Upload your photo here',
-				'icon' => 'um-icon-camera-5',
-				'crop' => 1,
-				'min_width' => str_replace('px','',um_get_option('profile_photosize')),
-				'min_height' => str_replace('px','',um_get_option('profile_photosize')),
-			),
-			
-			'cover_photo' => array(
-				'title' => 'Cover Photo',
-				'metakey' => 'cover_photo',
-				'type' => 'image',
-				'label' => 'Change your cover photo',
-				'upload_text' => 'Upload profile cover here',
-				'icon' => 'um-icon-photo-2',
-				'crop' => 2,
-				'modal_size' => 'large',
-				'ratio' => str_replace(':1','',um_get_option('profile_cover_ratio')),
-				'min_width' => 1000,
-			),
-			
 			'birth_date' => array(
 				'title' => 'Birth Date',
 				'metakey' => 'birth_date',
@@ -690,7 +665,7 @@ class UM_Builtin {
 			),
 			
 			'role_select' => array(
-				'title' => 'Roles - dropdown',
+				'title' => 'Roles (Dropdown)',
 				'metakey' => 'role_select',
 				'type' => 'select',
 				'label' => 'Account Type',
@@ -702,7 +677,7 @@ class UM_Builtin {
 			),
 			
 			'role_radio' => array(
-				'title' => 'Roles - radio',
+				'title' => 'Roles (Radio)',
 				'metakey' => 'role_radio',
 				'type' => 'radio',
 				'label' => 'Account Type',
@@ -748,8 +723,35 @@ class UM_Builtin {
 				'icon' => 'um-icon-device-mobile',
 			),
 			
-			// for use in password reset page
+			// private use ( not public list )
 		
+			'profile_photo' => array(
+				'title' => 'Profile Photo',
+				'metakey' => 'profile_photo',
+				'type' => 'image',
+				'label' => 'Change your profile photo',
+				'upload_text' => 'Upload your photo here',
+				'icon' => 'um-icon-camera-5',
+				'crop' => 1,
+				'min_width' => str_replace('px','',um_get_option('profile_photosize')),
+				'min_height' => str_replace('px','',um_get_option('profile_photosize')),
+				'private_use' => true,
+			),
+			
+			'cover_photo' => array(
+				'title' => 'Cover Photo',
+				'metakey' => 'cover_photo',
+				'type' => 'image',
+				'label' => 'Change your cover photo',
+				'upload_text' => 'Upload profile cover here',
+				'icon' => 'um-icon-photo-2',
+				'crop' => 2,
+				'modal_size' => 'large',
+				'ratio' => str_replace(':1','',um_get_option('profile_cover_ratio')),
+				'min_width' => um_get_option('cover_min_width'),
+				'private_use' => true,
+			),
+			
 			'password_reset_text' => array(
 				'title' => 'Password Reset',
 				'type' => 'block',
@@ -768,7 +770,7 @@ class UM_Builtin {
 				'private_use' => true,
 			),
 			
-			// for use in account page
+			// account page use ( not public )
 			
 			'profile_privacy' => array(
 				'title' => 'Profile Privacy',

@@ -779,6 +779,15 @@ $this->sections[] = array(
                 'default'  		=> 1000,
 				'validate' 		=> 'numeric',
         ),
+		
+		array(
+				'id'       		=> 'cover_min_width',
+                'type'     		=> 'text',
+                'title'    		=> __( 'Cover Photo Minimum Width' ),
+                'desc' 	   		=> __( 'This will be the minimum width for cover photo uploads' ),
+                'default'  		=> 1000,
+				'validate' 		=> 'numeric',
+        ),
 
 	)
 
