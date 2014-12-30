@@ -1,6 +1,33 @@
 <?php
 
 	/***
+	***	@Customize WP logo in login screen
+	***/
+	function um_custom_wplogo() {
+		$logo_url = um_url . 'admin/assets/img/logo_small.png';
+		print "<style type='text/css'>                                                                   
+				h1 a { background-image:url($logo_url) !important; border-radius: 999px !important }                            
+		</style>";
+	}
+	add_action('login_head', 'um_custom_wplogo', 999 );
+	
+	/***
+	***	@Customize WP logo url in login screen
+	***/
+	function um_custom_wplogo_url() {
+		return home_url();
+	}
+	add_filter('login_headerurl', 'um_custom_wplogo_url', 999 );
+	
+	/***
+	***	@Customize WP logo title in login screen
+	***/
+	function um_custom_wplogo_title() {
+		return get_option('blogname');
+	}
+	add_filter('login_headertitle', 'um_custom_wplogo_title', 999 );
+	
+	/***
 	***	@Error processing hook : login
 	***/
 	add_action('um_submit_form_errors_hook_login', 'um_submit_form_errors_hook_login', 10);
@@ -78,7 +105,7 @@
 	}
 	
 	/***
-	***	@login checks
+	***	@login checks thru the frontend login
 	***/
 	add_action('um_submit_form_errors_hook_logincheck', 'um_submit_form_errors_hook_logincheck', 9999 );
 	function um_submit_form_errors_hook_logincheck($args){
