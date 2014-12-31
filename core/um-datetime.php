@@ -14,6 +14,22 @@ class UM_DateTime {
 	}
 	
 	/***
+	***	@Get age
+	***/
+	function get_age($then) {
+		$then_ts = strtotime($then);
+		$then_year = date('Y', $then_ts);
+		$age = date('Y') - $then_year;
+		if(strtotime('+' . $age . ' years', $then_ts) > time()) $age--;
+		if ( $age == 1 )
+			return sprintf(__('%s year old','ultimatemember'), $age );
+		if ( $age > 1 )
+			return sprintf(__('%s years old','ultimatemember'), $age );
+		if ( $age == 0 )
+			return __('Less than 1 year old','ultimatemember');
+	}
+	
+	/***
 	***	@Reformat dates
 	***/
 	function format($old, $new){

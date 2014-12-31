@@ -492,18 +492,25 @@
 	function um_get_avatar_uri( $image, $attrs ) {
 		global $ultimatemember;
 		$uri = false;
+		$find = false;
 
 		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo-' . $attrs. '.jpg' ) ) {
+			
 			$uri = um_user_uploads_uri() . 'profile_photo-'.$attrs.'.jpg?' . time();
+		
 		} else {
 			
 			$sizes = um_get_option('photo_thumb_sizes');
-			$find = um_closest_num( $sizes, $attrs );
+			if ( is_array( $sizes ) ) $find = um_closest_num( $sizes, $attrs );
 			
 			if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo-' . $find. '.jpg' ) ) {
+				
 				$uri = um_user_uploads_uri() . 'profile_photo-'.$find.'.jpg?' . time();
+			
 			} else if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo.jpg' ) ) {
+				
 				$uri = um_user_uploads_uri() . 'profile_photo.jpg?' . time();
+			
 			}
 			
 		}

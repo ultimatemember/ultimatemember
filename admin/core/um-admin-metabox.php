@@ -826,7 +826,12 @@ class UM_Admin_Metabox {
 				?>
 				
 					<p><label for="_format">Date User-Friendly Format <?php $this->tooltip('The display format of the date which is visible to user.'); ?></label>
-						<input type="text" name="_format" id="_format" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : 'd mmmm, yyyy'; ?>" placeholder="e.g. d mmmm, yyyy" />
+						<select name="_format" id="_format" class="umaf-selectjs" style="width: 100%">
+							<option value="j M Y" <?php selected( 'j M Y', $this->edit_mode_value ); ?>><?php echo $ultimatemember->datetime->get_time('j M Y'); ?></option>
+							<option value="M j Y" <?php selected( 'M j Y', $this->edit_mode_value ); ?>><?php echo $ultimatemember->datetime->get_time('M j Y'); ?></option>
+							<option value="j F Y" <?php selected( 'j F Y', $this->edit_mode_value ); ?>><?php echo $ultimatemember->datetime->get_time('j F Y'); ?></option>
+							<option value="F j Y" <?php selected( 'F j Y', $this->edit_mode_value ); ?>><?php echo $ultimatemember->datetime->get_time('F j Y'); ?></option>
+						</select>
 					</p>
 					
 				<?php } else { ?>

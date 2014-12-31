@@ -245,7 +245,13 @@ class UM_Fields {
 		if ( isset($data['icon']) && $data['icon'] != '' && isset( $this->field_icons ) && ( $this->field_icons == 'label' || $this->viewing == true ) ) {
 			$output .= '<div class="um-field-label-icon"><i class="'.$data['icon'].'"></i></div>';
 		}
-		
+	
+		if ( $this->viewing == true ) {
+			$label = apply_filters("um_view_label_{$key}", $label );
+		} else {
+			$label = apply_filters("um_edit_label_{$key}", $label );
+		}
+			
 		$output .= '<label for="'.$key.$ultimatemember->form->form_suffix.'">'.$label.'</label>';
 		
 		if ( isset( $data['help'] ) && !empty( $data['help'] ) && $this->viewing == false ) {
@@ -544,6 +550,42 @@ class UM_Fields {
 			case 'date':
 			
 				$array['input'] = 'text';
+				
+				if ( !isset( $array['format'] ) ) $array['format'] = 'j M Y';
+				
+				switch( $array['format'] ) {
+					case 'j M Y':
+						$js_format = 'd mmm yyyy';
+						break;
+					case 'j F Y':
+						$js_format = 'd mmmm yyyy';
+						break;
+					case 'M j Y':
+						$js_format = 'mmm d yyyy';
+						break;
+					case 'F j Y':
+						$js_format = 'mmmm d yyyy';
+						break;
+				}
+				
+				$array['js_format'] = $js_format;
+				
+				if ( !isset( $array['range'] ) ) $array['range'] = 'years';
+				if ( !isset( $array['years'] ) ) $array['years'] = 100;
+				if ( !isset( $array['years_x'] ) ) $array['years_x'] = 'past';
+				if ( !isset( $array['disabled_weekdays'] ) ) $array['disabled_weekdays'] = '';
+				
+				if ( !empty( $array['disabled_weekdays'] ) ) {
+					$array['disabled_weekdays'] = '[' . implode(',',$array['disabled_weekdays']) . ']';
+				}
+				
+				if ( $array['range'] == 'date_range' ) {
+					$array['date_min'] = str_replace('/',',',$array['range_start']);
+					$array['date_max'] = str_replace('/',',',$array['range_end']);
+				}
+				
+				if ( !isset( $array['date_min'] ) ) $array['date_min'] = '';
+				if ( !isset( $array['date_max'] ) ) $array['date_max'] = '';
 				
 				if (!isset($array['autocomplete'])) $array['autocomplete'] = 'on';
 
@@ -908,7 +950,7 @@ class UM_Fields {
 						
 						}
 						
-						$output .= '<input class="'.$this->get_class($key, $data).'" type="'.$input.'" name="'.$key.$ultimatemember->form->form_suffix.'" id="'.$key.$ultimatemember->form->form_suffix.'" value="'. $this->field_value( $key, $default, $data ) .'" placeholder="'.$placeholder.'" data-validate="'.$validate.'" data-key="'.$key.'" autocomplete="'.$autocomplete.'" />
+						$output .= '<input class="'.$this->get_class($key, $data).'" type="'.$input.'" name="'.$key.$ultimatemember->form->form_suffix.'" id="'.$key.$ultimatemember->form->form_suffix.'" value="'. $this->field_value( $key, $default, $data ) .'" placeholder="'.$placeholder.'" data-validate="'.$validate.'" data-key="'.$key.'" autocomplete="'.$autocomplete.'" data-range="'.$range.'" data-years="'.$years.'" data-years_x="'.$years_x.'" data-disabled_weekdays="'.$disabled_weekdays.'" data-date_min="'.$date_min.'" data-date_max="'.$date_max.'" data-format="'.$js_format.'" data-value="'. $this->field_value( $key, $default, $data ) .'" />
 							
 						</div>';
 							

@@ -55,7 +55,7 @@ Author URI: http://ultimatemember.com/
 		
 		$links = $more_links + $links;
 		
-		$links[] = '<a href="'.admin_url().'?um_action=uninstall_ultimatemember" class="delete" title="'.__('Remove this plugin','ultimatemember').'">' . __( 'Uninstall','ultimatemember' ) . '</a>';
+		$links[] = '<a href="'.admin_url().'?um_adm_action=uninstall_ultimatemember" class="delete" title="'.__('Remove this plugin','ultimatemember').'">' . __( 'Uninstall','ultimatemember' ) . '</a>';
 
 		return $links;
 		

@@ -152,8 +152,8 @@ class UM_Validation {
 	/***
 	***	@To validate given date input
 	***/
-	function validate_date( $date, $format='YYYY/MM/DD' ) {
-		if ( strlen( $date ) != strlen($format) ) return false;
+	function validate_date( $date, $format='YYYY/MM/D' ) {
+		if ( strlen( $date ) < strlen($format) ) return false;
 		if ( $date[4] != '/' ) return false;
 		if ( $date[7] != '/' ) return false;
 		if ( false === strtotime($date) ) return false;

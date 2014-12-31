@@ -39,6 +39,7 @@ class UM_Admin_API {
 		require_once um_path . 'admin/core/um-admin-actions-modal.php';
 		require_once um_path . 'admin/core/um-admin-actions-fields.php';
 		require_once um_path . 'admin/core/um-admin-actions-ajax.php';
+		require_once um_path . 'admin/core/um-admin-actions.php';
 		
 		require_once um_path . 'admin/core/um-admin-filters-fields.php';
 		
@@ -56,11 +57,12 @@ class UM_Admin_API {
 		
 		if ( 	is_admin() && 
 				current_user_can('manage_options') && 
-				isset($_REQUEST['um_action']) && 
-				$_REQUEST['um_action'] == 'uninstall_ultimatemember' 
-			) 
+				isset($_REQUEST['um_adm_action']) && 
+				$_REQUEST['um_adm_action'] != ''
+			)
 		{
-			$ultimatemember->uninstall->remove_um();
+			do_action("um_admin_do_action__", $_REQUEST['um_adm_action'] );
+			do_action("um_admin_do_action__{$_REQUEST['um_adm_action']}", $_REQUEST['um_adm_action'] );
 		}
 		
 	}

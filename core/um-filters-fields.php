@@ -1,6 +1,31 @@
 <?php
 
 	/***
+	***	@Dates
+	***/
+	add_filter('um_view_label_birth_date', 'um_view_label_birth_date');
+	function um_view_label_birth_date( $label ) {
+		$label = __('Age','ultimatemember');
+		return $label;
+	}
+	
+	/***
+	***	@Dates
+	***/
+	add_filter('um_profile_field_filter_hook__date', 'um_profile_field_filter_hook__date', 99, 2);
+	function um_profile_field_filter_hook__date( $value, $data ) {
+		global $ultimatemember;
+
+		if ( $data['pretty_format'] == 1 ) {
+			$value = $ultimatemember->datetime->get_age( $value );
+		} else {
+			$value = $ultimatemember->datetime->format( $value, $data['format'] );
+		}
+		
+		return $value;
+	}
+	
+	/***
 	***	@Images
 	***/
 	add_filter('um_profile_field_filter_hook__file', 'um_profile_field_filter_hook__file', 99, 2);
@@ -45,7 +70,7 @@
 	}
 	
 	/***
-	***	@some required changes before value is shown
+	***	@Global
 	***/
 	add_filter('um_profile_field_filter_hook__', 'um_profile_field_filter_hook__', 99, 2);
 	function um_profile_field_filter_hook__( $value, $data ) {

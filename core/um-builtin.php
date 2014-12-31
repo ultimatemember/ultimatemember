@@ -548,7 +548,7 @@ class UM_Builtin {
 				'pretty_format' => 1,
 				'years' => 115,
 				'years_x' => 'past',
-				'icon' => 'um-icon-calendar-7'
+				'icon' => 'um-icon-calendar-2'
 			),
 			
 			'gender' => array(

@@ -27,6 +27,7 @@
 		
 			$save = '';
 			$save[ $_metakey ]['roles'] = '';
+			$save[ $_metakey ]['disabled_weekdays'] = '';
 			$save[ $_metakey ]['icon'] = '';
 			foreach( $array['post'] as $key => $val){
 				
