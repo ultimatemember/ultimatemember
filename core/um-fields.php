@@ -466,6 +466,17 @@ class UM_Fields {
 	}
 
 	/***
+	***	@Get Field Icon
+	***/
+	function get_field_icon( $key ) {
+		global $ultimatemember;
+		$fields = $ultimatemember->builtin->all_user_fields;
+		if ( isset( $fields[$key]['icon'] ) )
+			return $fields[$key]['icon'];
+		return 'um-icon-user';
+	}
+	
+	/***
 	***	@Get form fields
 	***/
 	function get_fields() {

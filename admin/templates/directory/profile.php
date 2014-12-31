@@ -104,6 +104,54 @@
 			</span>
 		</p><div class="um-admin-clear"></div>
 		
+		<p class="reveal-options">
+			<label class=""><?php _e('Choose field(s) to display in reveal section','ultimatemember'); ?></label>
+				
+				<?php
+				
+				$meta_test = get_post_meta( get_the_ID(), '_um_reveal_fields', true );
+				$i = 0;
+				if ( is_array( $meta_test ) ) { 
+					foreach( $meta_test as $val ) { $i++;
+				?>
+				
+				<span class="um-admin-field">
+				
+				<select name="_um_reveal_fields[]" id="_um_reveal_fields" class="umaf-selectjs" style="width: 300px" data-placeholder="Choose a field">
+					<?php foreach($ultimatemember->builtin->all_user_fields() as $key => $arr) { ?>
+					<option value="<?php echo $key; ?>" <?php selected($key, $val ); ?>><?php echo isset( $arr['title'] ) ? $arr['title'] : ''; ?></option>
+					<?php } ?>	
+				</select>
+				
+				<?php if ( $i == 1 ) { ?>
+				<a href="#" class="um-admin-clone button um-admin-tipsy-n" title="New Field"><i class="um-icon-plus-add" style="margin-right:0!important"></i></a>
+				<?php } else { ?>
+				<a href="#" class="um-admin-clone-remove button um-admin-tipsy-n" title="Remove Field"><i class="um-icon-remove" style="margin-right:0!important"></i></a>
+				<?php } ?>
+				
+				</span>
+				
+				<?php }
+				
+				} else {
+				?>
+			
+				<span class="um-admin-field">
+				
+				<select name="_um_reveal_fields[]" id="_um_reveal_fields" class="umaf-selectjs" style="width: 300px" data-placeholder="Choose a field">
+					<?php foreach($ultimatemember->builtin->all_user_fields() as $key => $arr) { ?>
+					<option value="<?php echo $key; ?>" <?php selected($key, $ultimatemember->query->get_meta_value('_um_reveal_fields', $key) ); ?>><?php echo isset( $arr['title'] ) ? $arr['title'] : ''; ?></option>
+					<?php } ?>	
+				</select>
+				
+				<a href="#" class="um-admin-clone button um-admin-tipsy-n" title="New Field"><i class="um-icon-plus-add" style="margin-right:0!important"></i></a>
+				
+				</span>
+				
+				<?php } ?>
+
+		</p><div class="um-admin-clear"></div>
+		
 		<p>
 			<label class="um-admin-half"><?php _e('Show social connect icons','ultimatemember'); ?></label>
 			<span class="um-admin-half">

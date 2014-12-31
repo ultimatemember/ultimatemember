@@ -233,7 +233,7 @@
 						}
 						?>
 						
-						<?php if ( $show_userinfo ) { ?>
+						<?php if ( $show_userinfo && is_array($reveal_fields ) ) { ?>
 						
 						<div class="um-member-meta-main">
 						
@@ -242,9 +242,27 @@
 						<?php } ?>
 						
 						<div class="um-member-meta <?php if ( !$userinfo_animate ) { echo 'no-animate'; } ?>">
-							<div class="um-member-metaline"><i class="um-icon-iphone"></i><span>+216 95623780</span></div>
-							<div class="um-member-metaline"><i class="um-icon-mail"></i><span>address@anonymous.com</span></div>
-							<div class="um-member-metaline"><i class="um-icon-link"></i><span>http://yourdomain.com</span></div>
+						
+							<?php foreach( $reveal_fields as $key ) {
+									if ( $key && um_user( $key ) ) {
+									
+										$value = um_user( $key );
+										$data = $ultimatemember->builtin->get_specific_field( $key );
+										$type = (isset($data['type']))?$data['type']:'';
+										
+										$value = apply_filters("um_profile_field_filter_hook__", $value, $data );
+										$value = apply_filters("um_profile_field_filter_hook__{$key}", $value, $data );
+										$value = apply_filters("um_profile_field_filter_hook__{$type}", $value, $data );
+										
+							?>
+							
+							<div class="um-member-metaline"><i class="<?php echo $ultimatemember->fields->get_field_icon( $key ); ?>"></i><span><?php echo $value; ?></span></div>
+							
+							<?php 
+								}
+							} 
+							?>
+							
 						</div>
 						
 						<div class="um-member-less"><a href="#"><i class="um-icon-chevron-up-1"></i></a></div>

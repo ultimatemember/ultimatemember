@@ -10,13 +10,17 @@ class UM_Profile {
 		global $ultimatemember;
 		$output = '';
 		
-		foreach( $array as $k ) {
+		foreach( $array as $key ) {
 			$data = '';
-			if ( $k && um_user( $k ) ) {
+			if ( $key && um_user( $key ) ) {
 				
-				$value =  um_user( $k );
-				$data = $ultimatemember->builtin->get_specific_field( $k );
+				$value =  um_user( $key );
+				$data = $ultimatemember->builtin->get_specific_field( $key );
+				$type = (isset($data['type']))?$data['type']:'';
+				
 				$value = apply_filters("um_profile_field_filter_hook__", $value, $data );
+				$value = apply_filters("um_profile_field_filter_hook__{$key}", $value, $data );
+				$value = apply_filters("um_profile_field_filter_hook__{$type}", $value, $data );
 				
 				$items[] = '<span>' . $value . '</span>';
 				$items[] = '<span class="b">&bull;</span>';
