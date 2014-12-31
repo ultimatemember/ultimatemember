@@ -21,15 +21,24 @@ global $ultimatemember;
 	
 		<div class="um-admin-dash-nav">
 		
-			<a href="#" class="active"><i class="um-icon-home-3"></i><span class="um-admin-dash-nav-title">Dashboard Overview</span></a>
+			<a href="#" class="active" data-rel="overview"><i class="um-icon-home-3"></i><span class="um-admin-dash-nav-title">Dashboard Overview</span></a>
+			<a href="#" data-rel="analytics"><i class="um-icon-analytics-chart-graph"></i><span class="um-admin-dash-nav-title">Analytics</span></a>
 			
 		</div>
 		
 		<div class="um-admin-dash-main">
 			
-			<h3>New Registrations over last 30 days</h3>
-			<?php echo $ultimatemember->chart->create('data=new_users&x_label=Day&y_label=Daily Signups'); ?>
-
+			<div class="um-admin-dash-content" id="overview">
+			
+			</div>
+			
+			<div class="um-admin-dash-content" id="analytics">
+				
+				<h3>New Registrations over last 30 days</h3>
+				<?php echo $ultimatemember->chart->create('data=new_users&x_label=Day&y_label=Daily Signups'); ?>
+			
+			</div>
+			
 		</div>
 		
 		<div class="um-admin-clear"></div>

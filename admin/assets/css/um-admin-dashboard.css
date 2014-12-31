@@ -19,24 +19,6 @@
 	padding: 0 0 0 20px;
 }
 
-.um-admin-dash-nav {
-	float: left;
-	width: 202px;
-}
-
-.um-admin-dash-nav,
-.um-admin-dash-main
- {
-    min-height: 300px;
-}
-
-.um-admin-dash-main {
-	margin-left: 201px;
-	border-left: 1px solid #D8D8D8;
-	padding: 10px 20px;
-	box-shadow: 0px 1px 0px #FFF inset;
-}
-
 .um-admin-dash-foot {
 	border-radius: 0;
 	background: none !important;
@@ -80,6 +62,12 @@
 	- Nav
 */
 
+.um-admin-dash-nav {
+	float: left;
+	width: 202px;
+	min-height: 300px;
+}
+
 .um-admin-dash-nav a {
 	font-family: Open Sans;
 	font-size: 14px;
@@ -117,10 +105,6 @@
 	position: absolute;
 }
 
-/*
-	- Misc
-*/
-
 .um-admin-dash-count {
 	background: #7ACF58;
 	color: #fff;
@@ -140,11 +124,27 @@
 	- Main
 */
 
+.um-admin-dash-content {
+	display: none;
+}
+
+.um-admin-dash-main {
+	margin-left: 201px;
+	border-left: 1px solid #D8D8D8;
+	padding: 10px 20px;
+	box-shadow: 0px 1px 0px #FFF inset;
+	min-height: 300px;
+}
+
 .um-admin-dash-main h3{
 	font-weight: 500;
 	padding: 0 0 10px 0;
 	margin-bottom: 0 !important;
 }
+
+/*
+	- Share icons
+*/
 
 .um-admin-dash-share {
 	margin-top: 11px !important;

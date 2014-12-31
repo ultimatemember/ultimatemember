@@ -47,10 +47,8 @@ class UM_Chart {
 		<script type="text/javascript">
 
 		google.load("visualization", "1", {packages:["corechart"]});
-
-		google.setOnLoadCallback(drawChart);
-
-		function drawChart() {
+		
+		function draw_linechart() {
 			
 			var data = new google.visualization.DataTable();
 			data.addColumn('string', '<?php echo $x_label; ?>');
@@ -131,7 +129,7 @@ class UM_Chart {
 				width: '100%',
 				height: ( vgrid_count * 50 )
 			};
-			
+
 			var chart = new google.visualization.LineChart(document.getElementById('chart_<?php echo $data . $id; ?>'));
 			chart.draw(data, options);
 			

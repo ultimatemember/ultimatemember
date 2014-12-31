@@ -121,6 +121,19 @@ class UM_Admin_Enqueue {
 	}
 	
 	/***
+	***	@Load dashboard
+	***/
+	function load_dashboard(){
+
+		wp_register_style('um_admin_dashboard', um_url . 'admin/assets/css/um-admin-dashboard.css' );
+		wp_enqueue_style('um_admin_dashboard');
+		
+		wp_register_script('um_admin_dashboard', um_url . 'admin/assets/js/um-admin-dashboard.js' );
+		wp_enqueue_script('um_admin_dashboard');
+		
+	}
+	
+	/***
 	***	@Load modal
 	***/
 	function load_modal(){
@@ -195,10 +208,7 @@ class UM_Admin_Enqueue {
 		
 		wp_register_style('um_admin_misc', um_url . 'admin/assets/css/um-admin-misc.css' );
 		wp_enqueue_style('um_admin_misc');
-		
-		wp_register_style('um_admin_dashboard', um_url . 'admin/assets/css/um-admin-dashboard.css' );
-		wp_enqueue_style('um_admin_dashboard');
-		
+
 	}
 	
 	/***
@@ -286,6 +296,8 @@ class UM_Admin_Enqueue {
 		$this->load_form();
 		
 		$this->load_modal();
+		
+		$this->load_dashboard();
 		
 		$this->load_field();
 		
