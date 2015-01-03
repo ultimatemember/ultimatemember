@@ -269,7 +269,10 @@
 	top: 1px;
 }
 
-.um-member-connect a:hover {opacity: 1}
+.um-member-connect a:hover {
+	opacity: 1;
+	color: #fff;
+}
 
 /*
 	- Members pagination
