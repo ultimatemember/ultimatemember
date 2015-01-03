@@ -1434,6 +1434,16 @@ $this->sections[] = array(
     'fields'     => array(
 
         array(
+                'id'       		=> 'allow_tracking',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Allow anonymous tracking' ),
+				'default' 		=> 0,
+				'desc' 	   		=> 'Help us improve Ultimate Member by allowing us to anonymously track plugin and theme usage. This helps us to improve plugin and theme compatibility.  No sensitive data will be tracked.',
+				'on'			=> 'Allow tracking',
+				'off'			=> 'Do not allow',
+        ),
+		
+        array(
                 'id'       		=> 'admin_load_time',
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Show load time in admin footer' ),

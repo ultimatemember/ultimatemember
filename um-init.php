@@ -52,6 +52,7 @@ class UM_API {
 		require_once um_path . 'core/um-members.php';
 		require_once um_path . 'core/um-logout.php';
 		require_once um_path . 'core/um-modal.php';
+		require_once um_path . 'core/um-cron.php';
 		
 		require_once um_path . 'core/lib/mobiledetect/Mobile_Detect.php';
 		
@@ -113,6 +114,8 @@ class UM_API {
 		$this->members = new UM_Members();
 		$this->logout = new UM_Logout();
 		$this->modal = new UM_Modal();
+		$this->cron = new UM_Cron();
+		
 		$this->mobile = new Mobile_Detect;
 
 		$this->options = get_option('um_options');

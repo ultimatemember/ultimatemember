@@ -11,7 +11,7 @@ class UM_Taxonomies {
 	/***
 	***	@Create taxonomies for use for UM
 	***/
-	function create_taxonomies( $user_id = null ) {
+	function create_taxonomies() {
 	
 		register_post_type( 'um_form', array(
 				'labels' => array(

@@ -1,6 +1,41 @@
 <?php
 
 	/***
+	***	@Opt-in tracking
+	***/
+	add_action('um_admin_do_action__opt_into_tracking', 'um_admin_do_action__opt_into_tracking');
+	function um_admin_do_action__opt_into_tracking( $action ){
+		global $ultimatemember;
+		if ( !is_admin() || !current_user_can('manage_options') ) die();
+		
+		global $reduxConfig;
+		$reduxConfig->ReduxFramework->set('allow_tracking', 1);
+		
+		update_option('um_tracking_notice', 1 );
+		
+		$tracking = new UM_Admin_Tracking();
+		$tracking->send_checkin( true );
+		
+		exit( wp_redirect( remove_query_arg('um_adm_action') ) );
+	}
+	
+	/***
+	***	@Opt-out of tracking
+	***/
+	add_action('um_admin_do_action__opt_out_of_tracking', 'um_admin_do_action__opt_out_of_tracking');
+	function um_admin_do_action__opt_out_of_tracking( $action ){
+		global $ultimatemember;
+		if ( !is_admin() || !current_user_can('manage_options') ) die();
+		
+		global $reduxConfig;
+		$reduxConfig->ReduxFramework->set('allow_tracking', 0);
+		
+		update_option('um_tracking_notice', 1 );
+		
+		exit( wp_redirect( remove_query_arg('um_adm_action') ) );
+	}
+	
+	/***
 	***	@Un-install UM completely
 	***/
 	add_action('um_admin_do_action__uninstall_ultimatemember', 'um_admin_do_action__uninstall_ultimatemember');

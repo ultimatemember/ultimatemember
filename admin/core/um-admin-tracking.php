@@ -1,0 +1,151 @@
+<?php
+
+class UM_Admin_Tracking {
+
+	private $data;
+
+	public function __construct() {
+
+		$this->schedule_send();
+
+		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+
+	}
+
+	/***
+	***	@setup info array
+	***/
+	private function setup_data() {
+
+		$data = array();
+
+		// Retrieve current theme info
+		if ( get_bloginfo( 'version' ) < '3.4' ) {
+			$theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
+			$theme      = $theme_data['Name'];
+			$theme_ver  = $theme_data['Version'];
+		} else {
+			$theme_data = wp_get_theme();
+			$theme      = $theme_data->Name;
+			$theme_ver  = $theme_data->Version;
+		}
+
+		$data['name'] = get_bloginfo('name');
+		$data['url'] = home_url();
+		$data['theme'] = $theme;
+		$data['theme_version'] = $theme_ver;
+		$data['wp_version'] = get_bloginfo( 'version' );
+		$data['version'] = ULTIMATEMEMBER_VERSION;
+		$data['email'] = get_bloginfo( 'admin_email' );
+		
+		$result = count_users();
+		$data['users_count'] = $result['total_users'];
+
+		// Retrieve current plugin information
+		if( ! function_exists( 'get_plugins' ) ) {
+			include ABSPATH . '/wp-admin/includes/plugin.php';
+		}
+
+		$plugins        = array_keys( get_plugins() );
+		$active_plugins = get_option( 'active_plugins', array() );
+
+		foreach ( $plugins as $key => $plugin ) {
+			if ( in_array( $plugin, $active_plugins ) ) {
+				// Remove active plugins from list so we can show active and inactive separately
+				unset( $plugins[ $key ] );
+			}
+		}
+
+		$data['active_plugins']   = $active_plugins;
+		$data['inactive_plugins'] = $plugins;
+
+		$this->data = $data;
+
+	}
+
+	/***
+	***	@check if tracking is allowed
+	***/
+	private function tracking_allowed() {
+		if ( !um_get_option('allow_tracking') )
+			return 0;
+			
+			if( stristr( network_site_url( '/' ), 'dev' ) !== false ||
+				stristr( network_site_url( '/' ), 'localhost' ) !== false ||
+				stristr( network_site_url( '/' ), ':8888' ) !== false // This is common with MAMP on OS X
+			) {
+				return 0;
+			}
+			
+		return 1;
+	}
+	
+	/***
+	***	@get last send time
+	***/
+	private function get_last_send() {
+		return get_option( 'um_tracking_last_send' );
+	}
+	
+	/***
+	***	@send a report
+	***/
+	public function send_checkin( $override = false ) {
+		
+		if( ! $this->tracking_allowed() && ! $override )
+			return;
+
+		// Send a maximum of once per week
+		$last_send = $this->get_last_send();
+		if( $last_send && $last_send > strtotime( '-1 week' ) )
+			return;
+		
+		$this->setup_data();
+		
+		$request = wp_remote_post( 'http://ultimatemember.com/?um_action=checkin', array(
+			'method'      => 'POST',
+			'timeout'     => 20,
+			'redirection' => 5,
+			'httpversion' => '1.0',
+			'blocking'    => true,
+			'body'        => $this->data,
+			'user-agent'  => 'UM/' . ULTIMATEMEMBER_VERSION . '; ' . get_bloginfo( 'url' ),
+		) );
+
+		update_option( 'um_tracking_last_send', time() );
+		
+	}
+	
+	/***
+	***	@run a scheduled report
+	***/
+	private function schedule_send() {
+		add_action( 'um_weekly_scheduled_events', array( $this, 'send_checkin' ) );
+	}
+
+	/***
+	***	@show admin notices
+	***/
+	public function admin_notices() {
+
+		if( ! current_user_can( 'manage_options' ) )
+			return;
+			
+		$hide_notice = get_option('um_tracking_notice');
+		
+		if ( $hide_notice )
+			return;
+
+		$optin_url  = add_query_arg( 'um_adm_action', 'opt_into_tracking' );
+		$optout_url = add_query_arg( 'um_adm_action', 'opt_out_of_tracking' );
+
+		echo '<div class="updated"><p style="line-height: 2em">';
+				echo __( 'Help us improve Ultimate Member by allowing us to anonymously track plugin and theme usage. This helps us to improve plugin and theme compatibility.  No sensitive data will be tracked.', 'ultimatemember' );
+				echo '<br />';
+				echo '<a href="' . esc_url( $optin_url ) . '" class="button button-primary">' . __( 'Allow tracking', 'ultimatemember' ) . '</a>';
+				echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow tracking', 'ultimatemember' ) . '</a>';
+		echo '</p></div>';
+		
+	}
+
+}
