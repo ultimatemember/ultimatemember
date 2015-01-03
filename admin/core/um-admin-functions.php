@@ -93,16 +93,7 @@ class UM_Admin_Functions {
 				return $translations->translate( 'Delete' );
 			}
 		}
-		
-		if (isset( $screen->id ) && strstr( $screen->id, 'user' ) ) {
-			$translations = get_translations_for_domain( $domain);
-			if ( $text == 'Search Users') {
-				return $translations->translate( 'Search Members' );
-			}
-			if ( $text == 'Users') {
-				return $translations->translate( 'Members' );
-			}
-		}
+
 		return $translation;
 	}
 	

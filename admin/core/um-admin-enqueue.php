@@ -58,7 +58,6 @@ class UM_Admin_Enqueue {
 		if ( strstr($screen_id, 'um_form') ) $highlighted_id = 3;
 		if ( strstr($screen_id, 'um_role') ) $highlighted_id = 4;
 		if ( strstr($screen_id, 'um_directory') ) $highlighted_id = 5;
-		if ( strstr($screen_id, 'user') || strstr($screen_id, 'profile') ) $highlighted_id = 6;
 
 		if ( isset($highlighted_id) ) { ?>
 		

@@ -1307,9 +1307,7 @@
 
                 if ( $this->args['menu_type'] == 'submenu' ) {
 
-					remove_menu_page( 'users.php' );
-					
-					add_menu_page( __('Ultimate Member', $this->slug), __('Ultimate Member', $this->slug), 'manage_options', $this->slug, array(&$this, 'admin_page'), 'dashicons-admin-users', '50.78578');
+					add_menu_page( __('Ultimate Member', $this->slug), __('Ultimate Member', $this->slug), 'manage_options', $this->slug, array(&$this, 'admin_page'), 'dashicons-admin-users', '66.78578');
 					
 					foreach( $this->about_tabs as $k => $tab ) {
 					
@@ -1332,71 +1330,7 @@
 					add_submenu_page( $this->slug, __('Member Levels', $this->slug), __('Member Levels', $this->slug), 'manage_options', 'edit.php?post_type=um_role', '', '' );
 					
 					add_submenu_page( $this->slug, __('Member Directories', $this->slug), __('Member Directories', $this->slug), 'manage_options', 'edit.php?post_type=um_directory', '', '' );
-					
-					add_submenu_page( $this->slug, __('Members', $this->slug), __('Members', $this->slug), 'manage_options', 'users.php', '', '' );
 
-                } else {
-                    $this->page = add_menu_page(
-                        $this->args['page_title'],
-                        $this->args['menu_title'],
-                        $this->args['page_permissions'],
-                        $this->args['page_slug'],
-                        array( &$this, '_options_page_html' ),
-                        $this->args['menu_icon'],
-                        $this->args['page_priority']
-                    );
-
-                    if ( true === $this->args['allow_sub_menu'] ) {
-                        if ( ! isset( $section['type'] ) || $section['type'] != 'divide' ) {
-                            foreach ( $this->sections as $k => $section ) {
-                                $canBeSubSection = ( $k > 0 && ( ! isset( $this->sections[ ( $k ) ]['type'] ) || $this->sections[ ( $k ) ]['type'] != "divide" ) ) ? true : false;
-
-                                if ( ! isset( $section['title'] ) || ( $canBeSubSection && ( isset( $section['subsection'] ) && $section['subsection'] == true ) ) ) {
-                                    continue;
-                                }
-
-                                if ( isset( $section['submenu'] ) && $section['submenu'] == false ) {
-                                    continue;
-                                }
-
-                                if ( isset( $section['customizer_only'] ) && $section['customizer_only'] == true ) {
-                                    continue;
-                                }
-
-                                add_submenu_page(
-                                    $this->args['page_slug'],
-                                    $section['title'],
-                                    $section['title'],
-                                    $this->args['page_permissions'],
-                                    $this->args['page_slug'] . '&tab=' . $k,
-                                    //create_function( '$a', "return null;" )
-                                    '__return_null'
-                                );
-                            }
-
-                            // Remove parent submenu item instead of adding null item.
-                            remove_submenu_page( $this->args['page_slug'], $this->args['page_slug'] );
-                        }
-
-                        if ( true == $this->args['show_import_export'] && false == $this->import_export->is_field ) {
-                            $this->import_export->add_submenu();
-                        }
-
-                        if ( true == $this->args['dev_mode'] ) {
-                            $this->debug->add_submenu();
-                        }
-
-                        if ( true == $this->args['system_info'] ) {
-                            add_submenu_page(
-                                $this->args['page_slug'],
-                                __( 'System Info', 'redux-framework' ),
-                                __( 'System Info', 'redux-framework' ),
-                                $this->args['page_permissions'],
-                                $this->args['page_slug'] . '&tab=system_info_default',
-                                '__return_null'
-                            );
-                        }
-                    }
                 }
 
                 add_action( "load-{$this->page}", array( &$this, '_load_page' ) );
