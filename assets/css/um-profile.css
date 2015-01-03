@@ -121,6 +121,7 @@
 	position: relative;
 	padding: 0 0 25px 0;
 	border-bottom: solid 2px #eee;
+	min-height: 85px;
 }
 
 .um-profile-edit {
@@ -263,6 +264,7 @@
 .um-meta span {
 	margin: 0 5px;
 	font-size: 14px;
+	display: inline-block;
 }
 
 .um-meta-text {

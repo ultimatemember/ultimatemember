@@ -1,6 +1,57 @@
 <?php
 
 	/***
+	***	@Exit and redirect to home
+	***/
+	function um_redirect_home() {
+		exit( wp_redirect( home_url() ) );
+	}
+	
+	/***
+	***	@Show filtered social link
+	***/
+	function um_filtered_social_link( $key, $match ) {
+		$value = um_profile( $key );
+		$submatch = str_replace( 'https://', '', $match );
+		$submatch = str_replace( 'http://', '', $submatch );
+		if ( strstr( $value, $submatch ) ) {
+			$value = 'https://' . $value;
+		} else if ( strpos($value, 'http') !== 0 ) {
+			$value = $match . $value;
+		}
+		return $value;
+	}
+	
+	/***
+	***	@Get filtered meta value after applying hooks
+	***/
+	function um_filtered_value( $key, $data = false ) {
+		global $ultimatemember;
+		$value = um_user( $key );
+		
+		if ( !$data ){
+		$data = $ultimatemember->builtin->get_specific_field( $key );
+		}
+		
+		$type = (isset($data['type']))?$data['type']:'';
+
+		$value = apply_filters("um_profile_field_filter_hook__", $value, $data );
+		$value = apply_filters("um_profile_field_filter_hook__{$key}", $value, $data );
+		$value = apply_filters("um_profile_field_filter_hook__{$type}", $value, $data );
+		
+		return $value;
+	}
+	
+	/***
+	***	@Get number of pending notifications for a meta
+	***/
+	function um_notify( $rule ) {
+		global $ultimatemember;
+		$results = $ultimatemember->query->get_users_by_meta( $rule, 100 );
+		return count($results);
+	}
+	
+	/***
 	***	@profile user ID
 	***/
 	function um_profile_id() {
@@ -524,7 +575,7 @@
 		$uri = um_get_option('default_avatar');
 		$uri = $uri['url'];
 		if ( !$uri )
-			$uri = um_url . 'assets/img/default_avatar.png';
+			$uri = um_url . 'assets/img/default_avatar.jpg';
 		return $uri;
 	}
 	
@@ -671,7 +722,7 @@
 			case 'cover_photo':
 				if ( um_profile('cover_photo') ) {
 					$cover_uri = um_get_cover_uri( um_profile('cover_photo'), $attrs );
-					return '<a href="#"><img src="'. $cover_uri .'" alt="" /></a>';
+					return '<img src="'. $cover_uri .'" alt="" />';
 				}
 				break;
 				

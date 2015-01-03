@@ -14,13 +14,7 @@ class UM_Profile {
 			$data = '';
 			if ( $key && um_user( $key ) ) {
 				
-				$value =  um_user( $key );
-				$data = $ultimatemember->builtin->get_specific_field( $key );
-				$type = (isset($data['type']))?$data['type']:'';
-				
-				$value = apply_filters("um_profile_field_filter_hook__", $value, $data );
-				$value = apply_filters("um_profile_field_filter_hook__{$key}", $value, $data );
-				$value = apply_filters("um_profile_field_filter_hook__{$type}", $value, $data );
+				$value = um_filtered_value( $key );
 				
 				$items[] = '<span>' . $value . '</span>';
 				$items[] = '<span class="b">&bull;</span>';

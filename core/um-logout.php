@@ -30,7 +30,7 @@ class UM_Logout {
 				exit( wp_redirect( $redirect_to ) );
 				
 			} else {
-				exit( wp_redirect( home_url() ) );
+				um_redirect_home();
 			}
 			
 		}

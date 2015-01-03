@@ -160,16 +160,7 @@
 				
 			</span>
 		</p><div class="um-admin-clear"></div>
-		
-		<p>
-			<label class="um-admin-half"><?php _e('Show stats section in the bottom','ultimatemember'); ?></label>
-			<span class="um-admin-half">
-			
-				<?php $this->ui_on_off('_um_show_stats', 0); ?>
-				
-			</span>
-		</p><div class="um-admin-clear"></div>
-		
+
 	</div>
 	
 	<div class="um-admin-clear"></div>

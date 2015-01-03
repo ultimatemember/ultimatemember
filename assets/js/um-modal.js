@@ -85,40 +85,105 @@ function initCrop_UM() {
 	
 }
 
-function um_new_modal( id, size ){
+function um_new_modal( id, size, isPhoto, source ){
 	
 	var modal = jQuery('body').find('.um-modal-overlay');
 	
+	if ( modal.length == 0 ) { // when new Modal is fired
+
 	jQuery('.tipsy').hide();
 
 	jQuery('.um-dropdown').hide();
 	
-	jQuery('body,html').css("overflow", "hidden");
+	jQuery('body,html,textarea').css("overflow", "hidden");
 	
 	jQuery(document).bind("touchmove", function(e){e.preventDefault();});
 	jQuery('.um-modal').on('touchmove', function(e){e.stopPropagation();});
 	
-	jQuery('body').append('<div class="um-modal-overlay" /><div class="um-modal" />');
-
+	if ( isPhoto ) {
+	jQuery('body').append('<div class="um-modal-overlay" /><div class="um-modal is-photo" />');
+	} else {
+	jQuery('body').append('<div class="um-modal-overlay" /><div class="um-modal no-photo" />');
+	}
+	
 	jQuery('#' + id).prependTo('.um-modal');
-	jQuery('#' + id).show();
-	jQuery('.um-modal').show();
-
-	um_modal_size( size );
 	
-	initImageUpload_UM( jQuery('.um-modal:visible').find('.um-single-image-upload') );
-
-	initFileUpload_UM( jQuery('.um-modal:visible').find('.um-single-file-upload') );
+	if ( isPhoto ) {
 	
-	um_modal_responsive();
+		jQuery('.um-modal').find('.um-modal-photo').html('<img />');
+		
+		var photo_ = jQuery('.um-modal-photo img');
+		var photo_maxw = jQuery(window).width() - 60;
+		var photo_maxh = jQuery(window).height() - ( jQuery(window).height() * 0.25 );
+
+		photo_.attr("src", source);
+		photo_.load(function(){
+		
+			jQuery('#' + id).show();
+			jQuery('.um-modal').show();
+			
+			photo_.css({'opacity': 0});
+			photo_.css({'max-width': photo_maxw });
+			photo_.css({'max-height': photo_maxh });
+			
+			jQuery('.um-modal').css({
+				'width': photo_.width(),
+				'margin-left': '-' + photo_.width() / 2 + 'px',
+			});
+			
+			photo_.animate({'opacity' : 1}, 1000);
+			
+			um_modal_responsive();
+			
+		});
+
+	} else {
+	
+		jQuery('#' + id).show();
+		jQuery('.um-modal').show();
+
+		um_modal_size( size );
+	
+		initImageUpload_UM( jQuery('.um-modal:visible').find('.um-single-image-upload') );
+		initFileUpload_UM( jQuery('.um-modal:visible').find('.um-single-file-upload') );
+	
+		um_modal_responsive();
+	
+	}
+	
+	} // when new Modal is fired
 	
 }
 
 function um_modal_responsive() {
 	
 	var modal = jQuery('.um-modal:visible');
+	var photo_modal = jQuery('.um-modal-body.photo:visible');
+	
+	if ( photo_modal.length ) {
+	
+		modal.removeClass('uimob340');
+		modal.removeClass('uimob500');
+		
+		var photo_ = jQuery('.um-modal-photo img');
+		var photo_maxw = jQuery(window).width() - 60;
+		var photo_maxh = jQuery(window).height() - ( jQuery(window).height() * 0.25 );
+		
+		photo_.css({'opacity': 0});
+		photo_.css({'max-width': photo_maxw });
+		photo_.css({'max-height': photo_maxh });
+			
+		jQuery('.um-modal').css({
+			'width': photo_.width(),
+			'margin-left': '-' + photo_.width() / 2 + 'px',
+		});
+			
+		photo_.animate({'opacity' : 1}, 1000);
 
-	if ( modal.length ) {
+		var half_gap = ( jQuery(window).height() - modal.innerHeight() ) / 2 + 'px';
+		modal.animate({ 'bottom' : half_gap }, 300);
+		
+	} else if ( modal.length ) {
 
 		var element_width = jQuery(window).width();
 		
@@ -164,7 +229,7 @@ function um_remove_modal(){
 
 	jQuery('.um-modal .um-single-image-preview img').cropper("destroy");
 	
-	jQuery('body,html').css("overflow", "auto");
+	jQuery('body,html,textarea').css("overflow", "auto");
 	
 	jQuery(document).unbind('touchmove');
 
@@ -302,8 +367,7 @@ jQuery(document).ready(function() {
 					}
 					
 					if ( key == 'cover_photo') {
-						jQuery('.um-cover-e').empty().html('<a href="#"><img src="' + data + "?"+d.getTime() + '" alt="" /></a>');
-						jQuery('.um-cover-overlay').show();
+						jQuery('.um-cover-e').empty().html('<img src="' + data + "?"+d.getTime() + '" alt="" />');
 					}
 					
 					jQuery('.um-single-image-preview[data-key='+key+']').fadeIn().find('img').attr('src', data + "?"+d.getTime());
@@ -343,6 +407,7 @@ jQuery(document).ready(function() {
 		}
 		
 		if ( jQuery(this).data('modal-copy') ) {
+		
 			jQuery('#' + modal_id).html( jQuery(this).parents('.um-field').find('.um-modal-hidden-content').html() );
 			
 			if ( jQuery(this).parents('.um-profile-photo').attr('data-user_id') ) {
@@ -356,10 +421,12 @@ jQuery(document).ready(function() {
 			if ( jQuery(this).parents('.um-cover').attr('data-user_id') ) {
 				jQuery('#' + modal_id).attr('data-user_id',  jQuery(this).parents('.um-cover').attr('data-user_id')  );
 			}
+			um_new_modal( modal_id, size );
 			
-			um_new_modal( modal_id, size );
 		} else {
+
 			um_new_modal( modal_id, size );
+			
 		}
 		
 	});

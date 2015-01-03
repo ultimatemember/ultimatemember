@@ -34,7 +34,6 @@ class UM_Setup {
 			'_um_template' => 'members',
 			'_um_mode' => 'directory',
 			'_um_has_profile_photo' => 0,
-			'_um_show_stats' => 0,
 			'_um_show_social' => 0,
 			'_um_show_userinfo' => 0,
 			'_um_show_tagline' => 0,

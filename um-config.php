@@ -174,11 +174,20 @@ $this->sections[] = array(
     'fields'     => array(
 	
         array(
+                'id'       		=> 'members_page',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Members page status' ),
+				'default' 		=> 1,
+				'desc' 	   		=> 'Control whether to enable or disable the core Members directory page',
+        ),
+		
+        array(
                 'id'      		=> 'directory_header',
                 'type'     		=> 'text',
                 'title'    		=> __( 'General Results Text' ),
                 'default'  		=> um_get_metadefault('directory_header'),
 				'desc' 	   		=> __('Customize the search result text . e.g. Found 3,000 Members. Leave this blank to not show result text','ultimatemember'),
+				'required'		=> array( 'members_page', '=', '1' ),
         ),
 		
         array(
@@ -187,6 +196,7 @@ $this->sections[] = array(
                 'title'    		=> __( 'Custom text If no users were found' ),
                 'default'  		=> um_get_metadefault('directory_no_users'),
 				'desc' 	   		=> __('This is the text that is displayed if no users are found during a search','ultimatemember'),
+				'required'		=> array( 'members_page', '=', '1' ),
         ),
 		
 	)
@@ -872,7 +882,7 @@ $this->sections[] = array(
 			'title'    	=> __('Default Profile Picture', 'ultimatemember'),
 			'desc'     	=> __('You can change the default profile picture globally here. Please make sure photo is 300x300px.', 'ultimatemember'),
 			'default'  	=> array(
-					'url'		=> um_url . 'assets/img/default_avatar.png',
+					'url'		=> um_url . 'assets/img/default_avatar.jpg',
 			),
 		),
 		

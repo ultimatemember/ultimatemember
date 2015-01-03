@@ -9,14 +9,14 @@
 		
 		foreach ($tabs as $k => $arr ) {
 			foreach( $arr as $id => $info ) {
-				if ( $id == 'delete' ) {
-					if ( !um_user('can_delete_profile') && !um_user('can_delete_everyone') ) {
-						unset( $tabs[$k][$id] );
-					}
+				
+				$output = $ultimatemember->account->get_tab_output( $id );
+				if ( !$output ) {
+					unset( $tabs[$k][$id] );
 				}
 				
-				if ( $id == 'privacy' ) {
-					if ( !um_user('can_make_private_profile') ) {
+				if ( $id == 'delete' ) {
+					if ( !um_user('can_delete_profile') && !um_user('can_delete_everyone') ) {
 						unset( $tabs[$k][$id] );
 					}
 				}

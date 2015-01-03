@@ -20,4 +20,8 @@ jQuery(document).ready(function() {
 		return false;
 	});
 	
+	if ( jQuery('.um-admin-dash-body').length && ( jQuery('.updated').length || jQuery('.error').length ) )  {
+		jQuery('.updated,.error').prependTo('.um-admin-dash-body').show();
+	}
+	
 });

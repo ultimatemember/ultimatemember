@@ -1,8 +1,4 @@
-<?php
-
-global $ultimatemember; 
-
-?>
+<?php global $ultimatemember;  ?>
 
 <div class="um-admin-dash-container">
 
@@ -21,7 +17,7 @@ global $ultimatemember;
 	
 		<div class="um-admin-dash-nav">
 		
-			<a href="#" class="active" data-rel="overview"><i class="um-icon-home-3"></i><span class="um-admin-dash-nav-title">Dashboard Overview</span></a>
+			<a href="#" class="active" data-rel="overview"><i class="um-icon-home-6"></i><span class="um-admin-dash-nav-title">Dashboard Overview</span></a>
 			<a href="#" data-rel="analytics"><i class="um-icon-analytics-chart-graph"></i><span class="um-admin-dash-nav-title">Analytics</span></a>
 			
 		</div>
@@ -30,12 +26,13 @@ global $ultimatemember;
 			
 			<div class="um-admin-dash-content" id="overview">
 			
+				<?php include_once um_path . 'admin/templates/dashboard/overview.php'; ?>
+				
 			</div>
 			
 			<div class="um-admin-dash-content" id="analytics">
 				
-				<h3>New Registrations over last 30 days</h3>
-				<?php echo $ultimatemember->chart->create('data=new_users&x_label=Day&y_label=Daily Signups'); ?>
+				<?php include_once um_path . 'admin/templates/dashboard/analytics.php'; ?>
 			
 			</div>
 			

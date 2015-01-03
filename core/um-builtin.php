@@ -584,9 +584,12 @@ class UM_Builtin {
 				'editable' => 1,
 				'url_target' => '_blank',
 				'url_rel' => 'nofollow',
-				'icon' => 'um-icon-facebook-alt',
+				'icon' => 'um-icon-facebook-2',
 				'validate' => 'facebook_url',
 				'url_text' => 'Facebook',
+				'advanced' => 'social',
+				'color' => '#3B5999',
+				'match' => 'https://facebook.com/',
 			),
 			
 			'twitter' => array(
@@ -602,6 +605,9 @@ class UM_Builtin {
 				'icon' => 'um-icon-twitter',
 				'validate' => 'twitter_url',
 				'url_text' => 'Twitter',
+				'advanced' => 'social',
+				'color' => '#4099FF',
+				'match' => 'https://twitter.com/',
 			),
 			
 			'linkedin' => array(
@@ -617,6 +623,9 @@ class UM_Builtin {
 				'icon' => 'um-icon-linkedin-alt-1',
 				'validate' => 'linkedin_url',
 				'url_text' => 'LinkedIn',
+				'advanced' => 'social',
+				'color' => '#0976b4',
+				'match' => 'https://linkedin.com/in/',
 			),
 			
 			'googleplus' => array(
@@ -632,6 +641,9 @@ class UM_Builtin {
 				'icon' => 'um-icon-google-plus',
 				'validate' => 'google_url',
 				'url_text' => 'Google+',
+				'advanced' => 'social',
+				'color' => '#dd4b39',
+				'match' => 'https://google.com/+',
 			),
 			
 			'instagram' => array(
@@ -647,6 +659,9 @@ class UM_Builtin {
 				'icon' => 'um-icon-instagrem',
 				'validate' => 'instagram_url',
 				'url_text' => 'Instagram',
+				'advanced' => 'social',
+				'color' => '#3f729b',
+				'match' => 'https://instagram.com/',
 			),
 			
 			'skype' => array(
@@ -781,24 +796,26 @@ class UM_Builtin {
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
-				'default' => 'Everyone',
+				'default' => __('Everyone'),
 				'options' => array( __('Everyone'), __('Only me') ),
 				'allowclear' => 0,
 				'account_only' => true,
+				'required_perm' => 'can_make_private_profile',
 			),
 			
 			'show_in_members' => array(
-				'title' => 'Show me in the Directory',
+				'title' => __('Show me in the Directory','ultimatemember'),
 				'metakey' => 'show_in_members',
 				'type' => 'radio',
-				'label' => 'Show me in the Directory',
-				'help' => 'Choose whether you want to appear in public member directories or not',
+				'label' => __('Show me in the Directory','ultimatemember'),
+				'help' => __('Choose whether you want to appear in public member directories or not','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
 				'default' => 'Yes',
 				'options' => array('Yes','No'),
 				'account_only' => true,
+				'required_opt' => array( 'members_page', 1 ),
 			),
 			
 			'delete_account' => array(

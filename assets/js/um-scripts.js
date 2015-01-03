@@ -1,5 +1,5 @@
 jQuery(document).ready(function() {
-
+	
 	/* dropdown menu links */
 	jQuery(document).on('click', '.um-dropdown a', function(e){
 		e.preventDefault();
@@ -145,6 +145,7 @@ jQuery(document).ready(function() {
 	jQuery(document).on('click', '.um .um-single-image-preview a.cancel', function(e){
 		e.preventDefault();
 		var parent = jQuery(this).parents('.um-field');
+		parent.find('.um-single-image-preview img').attr('src','');
 		parent.find('.um-single-image-preview').hide();
 		parent.find('.um-btn-auto-width').html('Upload');
 		parent.find('input[type=hidden]').val('');

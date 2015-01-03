@@ -4,7 +4,7 @@ class UM_Admin_Notices {
 
 	function __construct() {
 
-		add_action('admin_notices', array(&$this, 'admin_notices'));
+		add_action('admin_notices', array(&$this, 'admin_notices'), 10);
 	}
 	
 	/***

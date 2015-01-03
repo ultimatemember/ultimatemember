@@ -7,6 +7,38 @@ class UM_Query {
 	}
 	
 	/***
+	***	@Get last users
+	***/
+	function get_recent_users($number = 5){
+		global $wpdb;
+		
+		$args = array( 'fields' => 'ID', 'number' => $number, 'orderby' => 'user_registered', 'order' => 'desc' );
+		
+		$users = new WP_User_Query( $args );
+		return $users->results;
+	}
+	
+	/***
+	***	@Get users by meta
+	***/
+	function get_users_by_meta($rule, $number = 5){
+		global $wpdb;
+		
+		$args = array( 'fields' => 'ID', 'number' => $number, 'orderby' => 'user_registered', 'order' => 'desc' );
+
+		$args['meta_query'][] = array(
+			array(
+				'key'     => 'account_status',
+				'value'   => $rule,
+				'compare' => '='
+			)
+		);
+		
+		$users = new WP_User_Query( $args );
+		return $users->results;
+	}
+	
+	/***
 	***	@get user's role
 	***/
 	function get_role_by_userid( $user_id ) {

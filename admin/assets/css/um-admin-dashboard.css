@@ -2,6 +2,13 @@
 	- General
 */
 
+.um-admin.toplevel_page_ultimatemember div.error,
+.um-admin.toplevel_page_ultimatemember div.updated
+{
+	display: none;
+	margin: 0 0 1px 0 !important;
+}
+
 .um-admin-dash-container {
 	box-sizing: border-box;
 	margin: 18px 20px 20px 2px !important;
@@ -9,10 +16,26 @@
 	overflow: hidden;
 }
 
-.um-admin-dash-container *{
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+.um-admin-dash-container * {
+	-webkit-font-smoothing: antialiased !important;
+	-moz-osx-font-smoothing: grayscale !important;
 }
+
+.um-admin-dash-container a.ok {color: #7ACF58}
+.um-admin-dash-container a.red {color: #C74A4A}
+
+.um-admin-dash-count {
+	background: #7ACF58;
+	color: #fff;
+	padding: 2px 6px;
+	border-radius: 3px;
+	font-family: Open Sans;
+	font-weight: 700;
+	font-size: 12px;
+	margin-left: 10px;
+}
+.um-admin-dash-count.count-0 {background: #ddd !important}
+.um-admin-dash-count.red {background:#C74A4A}
 
 .um-admin-dash-head {
 	background: #3ba1da;
@@ -103,22 +126,8 @@
 	vertical-align: middle;
 	font-size: 1.35em;
 	position: absolute;
-}
-
-.um-admin-dash-count {
-	background: #7ACF58;
-	color: #fff;
-	padding: 2px 6px;
-	border-radius: 3px;
-	font-family: Open Sans;
-	font-weight: 700;
-	position: absolute;
-	right: 10px;
 	top: 8px;
-	font-size: 11px;
 }
-
-.um-admin-dash-count.red {background:#cb3838}
 
 /*
 	- Main
@@ -131,15 +140,15 @@
 .um-admin-dash-main {
 	margin-left: 201px;
 	border-left: 1px solid #D8D8D8;
-	padding: 10px 20px;
+	padding: 0 30px;
 	box-shadow: 0px 1px 0px #FFF inset;
 	min-height: 300px;
 }
 
 .um-admin-dash-main h3{
 	font-weight: 500;
-	padding: 0 0 10px 0;
-	margin-bottom: 0 !important;
+	padding: 30px 0 10px 0;
+	margin: 0 !important;
 }
 
 /*
@@ -160,3 +169,67 @@
 	font-size: 22px !important;
 }
 .um-admin-dash-share a:hover {color: #3ba1da !important}
+
+/*
+	- Dashboard styles
+*/
+
+.um-admin-dash-two-col .um-admin-dash-col {
+	float: left;
+	width: 42%;
+	margin-right: 4%;
+}
+
+.um-admin-dash-col a:hover {text-decoration: underline}
+
+.um-admin-dash-item {
+	padding: 5px 0;
+	vertical-align: middle;
+	border-top: 1px solid #e5e5e5;
+	display: inline-block;
+	width: 100%;
+	box-sizing: border-box;
+}
+.um-admin-dash-item * {vertical-align: middle}
+
+.um-admin-dash-col a {
+	text-decoration: none;
+}
+
+.um-admin-dash-thumb {
+	display: inline-block;
+	width: 30px;
+	margin-right: 14px;
+}
+
+.um-admin-dash-thumb a,
+.um-admin-dash-thumb img {
+	display: block;
+	overflow: hidden;
+	border-radius: 999px;
+}
+
+.um-admin-dash-info {
+	display: inline-block;
+	width: 130px;
+	margin-right: 10px;
+}
+
+.um-admin-dash-meta {
+	display: inline-block;
+	width: 120px;
+	margin-right: 10px;
+}
+
+.um-admin-dash-more {
+	display: inline-block;
+}
+
+/*
+	- Colorful user status
+*/
+
+.um-status-awaiting_admin_review {color: #C74A4A}
+.um-status-approved {color: #7ACF58}
+.um-status-inactive {color: #888}
+.um-status-rejected {color: #aaa}

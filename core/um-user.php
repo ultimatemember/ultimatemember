@@ -196,14 +196,17 @@ class UM_User {
 	/***
 	***	@Set user's account status
 	***/
-	function set_status( $status, $email_tpl = false ){
+	function set_status( $status ){
 	
-		do_action('um_before_user_status_is_changed');
+		$old_status = ( isset( $this->profile['account_status'] ) ) ? $this->profile['account_status'] : 'null';
+		
+		do_action('um_before_user_status_is_changed', $old_status );
 		
 		$this->profile['account_status'] = $status;
+		
 		$this->update_usermeta_info('account_status');
 		
-		do_action('um_after_user_status_is_changed');
+		do_action('um_after_user_status_is_changed', $status);
 		
 	}
 	

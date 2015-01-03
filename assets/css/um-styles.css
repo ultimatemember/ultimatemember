@@ -330,6 +330,7 @@ p.um-notice.err {
 	background: #fff;
 	border-radius: 2px;
 	box-sizing: border-box;
+	min-height: 80px;
 }
 
 /*
@@ -560,6 +561,8 @@ a.um-link-alt:hover {text-decoration: underline !important;}
 div.um-photo {
 	margin: 20px auto 0 auto;
 	text-align: center;
+	box-sizing: border-box;
+	max-width: 100%;
 }
 
 div.um-photo,
@@ -575,6 +578,7 @@ div.um-photo a {
 	display: inline-block;
 	box-shadow: 0 1px 1px #eee;
 	margin: 0 auto;
+	max-width: 100%;
 }
 
-div.um-photo img {max-height: 300px}
+div.um-photo img {max-height: 300px; max-width: 100%;}

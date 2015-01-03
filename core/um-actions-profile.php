@@ -64,11 +64,13 @@
 			
 				<?php
 				
+					if ( $ultimatemember->fields->editing ) {
 					echo $ultimatemember->menu->new_ui( 'bc', 'div.um-cover', 'click', array(
 								'<a href="#" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">'.__('Change cover photo','ultimatemember').'</a>',
 								'<a href="#" class="um-reset-cover-photo" data-user_id="'.um_profile_id().'">'.__('Remove','ultimatemember').'</a>',
 								'<a href="#" class="um-dropdown-hide">'.__('Cancel','ultimatemember').'</a>',
 					), 'can_edit_user' );
+					}
 							
 				?>
 				
@@ -186,8 +188,16 @@
 					</div>
 					<?php } ?>
 
-					<?php if ( um_user('description') && $args['show_bio'] ) { ?>
+					<?php if ( $ultimatemember->fields->viewing == true && um_user('description') && $args['show_bio'] ) { ?>
+					
 					<div class="um-meta-text"><?php echo um_user('description'); ?></div>
+					
+					<?php } else if ( $ultimatemember->fields->editing == true  && $args['show_bio'] ) { ?>
+					
+					<div class="um-meta-text">
+						<textarea placeholder="<?php _e('Tell us a bit about yourself...','ultimatemember'); ?>" name="<?php echo 'description-' . $args['form_id']; ?>" id="<?php echo 'description-' . $args['form_id']; ?>"><?php if ( um_user('description') ) { echo um_user('description'); } ?></textarea>
+					</div>
+					
 					<?php } ?>
 					
 				</div><div class="um-clear"></div>
@@ -209,11 +219,11 @@
 			$ultimatemember->fields->viewing = 1;
 			
 			if ( um_get_requested_user() ) {
-				if ( !um_can_view_profile( um_get_requested_user() ) ) exit( wp_redirect( home_url() ) );
+				if ( !um_can_view_profile( um_get_requested_user() ) ) um_redirect_home();
 				if ( !um_can_edit_profile( um_get_requested_user() ) ) $ultimatemember->user->cannot_edit = 1;
 				um_fetch_user( um_get_requested_user() );
 			} else {
-				if ( !is_user_logged_in() ) exit( wp_redirect( home_url() ) );
+				if ( !is_user_logged_in() ) um_redirect_home();
 				if ( !um_user('can_edit_profile') ) $ultimatemember->user->cannot_edit = 1;
 			}
 			
@@ -223,7 +233,7 @@
 			$ultimatemember->fields->editing = 1;
 		
 			if ( um_get_requested_user() ) {
-				if ( !um_can_edit_profile( um_get_requested_user() ) ) exit( wp_redirect( home_url() ) );
+				if ( !um_can_edit_profile( um_get_requested_user() ) ) um_redirect_home();
 				um_fetch_user( um_get_requested_user() );
 			}
 			
@@ -277,6 +287,7 @@
 		
 		do_action('um_user_before_updating_profile', $userinfo );
 		
+		// loop through fields
 		foreach( $fields as $key => $array ) {
 		
 			if ( $fields[$key]['type'] == 'multiselect' ||  $fields[$key]['type'] == 'checkbox' && !isset($args['submitted'][$key]) ) {
@@ -297,6 +308,10 @@
 				}
 
 			}
+		}
+		
+		if ( isset( $args['submitted']['description'] ) ) {
+			$to_update['description'] = $args['submitted']['description'];
 		}
 
 		if ( is_array( $to_update ) ) {

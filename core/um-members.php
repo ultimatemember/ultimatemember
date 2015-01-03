@@ -6,6 +6,19 @@ class UM_Members {
 		
 		add_filter('pre_user_query', array(&$this, 'custom_order_query') );
 		
+		add_action('template_redirect', array(&$this, 'access_members'), 555);
+		
+	}
+	
+	/***
+	***	@Members page allowed?
+	***/
+	function access_members() {
+		
+		if ( um_get_option('members_page') == 0 && um_is_core_page('members') ) {
+			um_redirect_home();
+		}
+		
 	}
 	
 	/***

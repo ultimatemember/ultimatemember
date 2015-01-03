@@ -63,7 +63,7 @@
 		if ( !file_exists( um_user_uploads_dir() . $value ) ) {
 			$value = __('Image has been removed.');
 		} else {
-			$value = '<div class="um-photo"><a href="#"><img src="'. $uri .'" alt="'.$title.'" title="'.$title.'" class="" /></a></div>';
+			$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="'.$uri.'"><img src="'. $uri .'" alt="'.$title.'" title="'.$title.'" class="" /></a></div>';
 		}
 		
 		return $value;
@@ -120,7 +120,7 @@
 		$mode = (isset( $ultimatemember->fields->set_mode ) ) ? $ultimatemember->fields->set_mode : null;
 		
 		if ( $form_id && $mode ) {
-		$array = $ultimatemember->query->get_attr('custom_fields', $form_id );
+			$array = $ultimatemember->query->get_attr('custom_fields', $form_id );
 		} else {
 			$array = '';
 		}

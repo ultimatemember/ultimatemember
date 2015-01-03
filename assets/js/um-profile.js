@@ -10,9 +10,15 @@ jQuery(document).ready(function() {
 	});
 	
 	/* No need to allow # */
-	jQuery(document).on('click', '.um-cover a', function(e){
+	jQuery(document).on('click', '.um-cover a, .um-photo a', function(e){
 		e.preventDefault();
 		return false;
+	});
+	
+	/* built-in modal support for images */
+	jQuery(document).on('click', '.um-photo-modal', function(e){
+		var photo_src = jQuery(this).attr('data-src');
+		um_new_modal('um_view_photo', 'fit', true, photo_src );
 	});
 	
 	/* Reset profile photo */

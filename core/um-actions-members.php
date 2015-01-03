@@ -221,11 +221,13 @@
 						
 						<?php
 						if ( $show_tagline && is_array( $tagline_fields ) ) {
-							foreach( $tagline_fields as $tagline_field ) {
-								if ( $tagline_field && um_user( $tagline_field ) ) {
+							foreach( $tagline_fields as $key ) {
+								if ( $key && um_user( $key ) ) {
+									$value = um_filtered_value( $key );
+
 						?>
 						
-						<div class="um-member-tagline"><?php echo um_user( $tagline_field ); ?></div>
+						<div class="um-member-tagline"><?php echo $value; ?></div>
 						
 						<?php
 								}
@@ -237,35 +239,28 @@
 						
 						<div class="um-member-meta-main">
 						
-						<?php if ( $userinfo_animate ) { ?>
-						<div class="um-member-more"><a href="#"><i class="um-icon-chevron-down-1"></i></a></div>
-						<?php } ?>
-						
-						<div class="um-member-meta <?php if ( !$userinfo_animate ) { echo 'no-animate'; } ?>">
-						
-							<?php foreach( $reveal_fields as $key ) {
-									if ( $key && um_user( $key ) ) {
-									
-										$value = um_user( $key );
-										$data = $ultimatemember->builtin->get_specific_field( $key );
-										$type = (isset($data['type']))?$data['type']:'';
-										
-										$value = apply_filters("um_profile_field_filter_hook__", $value, $data );
-										$value = apply_filters("um_profile_field_filter_hook__{$key}", $value, $data );
-										$value = apply_filters("um_profile_field_filter_hook__{$type}", $value, $data );
-										
-							?>
+							<?php if ( $userinfo_animate ) { ?>
+							<div class="um-member-more"><a href="#"><i class="um-icon-chevron-down-1"></i></a></div>
+							<?php } ?>
 							
-							<div class="um-member-metaline"><i class="<?php echo $ultimatemember->fields->get_field_icon( $key ); ?>"></i><span><?php echo $value; ?></span></div>
+							<div class="um-member-meta <?php if ( !$userinfo_animate ) { echo 'no-animate'; } ?>">
 							
-							<?php 
-								}
-							} 
-							?>
+								<?php foreach( $reveal_fields as $key ) {
+										if ( $key && um_user( $key ) ) {
+											$value = um_filtered_value( $key );
+											
+								?>
+								
+								<div class="um-member-metaline"><span><?php echo $value; ?></span></div>
+								
+								<?php 
+									}
+								} 
+								?>
+								
+							</div>
 							
-						</div>
-						
-						<div class="um-member-less"><a href="#"><i class="um-icon-chevron-up-1"></i></a></div>
+							<div class="um-member-less"><a href="#"><i class="um-icon-chevron-up-1"></i></a></div>
 						
 						</div>
 						
@@ -273,22 +268,13 @@
 						
 						<?php if ( $show_social ) { ?>
 						<div class="um-member-connect">
-							<a href="#" style="background: #3B5999;"><i class="um-icon-facebook-2"></i></a>
-							<a href="#" style="background: #4099FF;"><i class="um-icon-twitter"></i></a>
-							<a href="#" style="background: #dd4b39;"><i class="um-icon-google-plus"></i></a>
+						
+							<?php $ultimatemember->fields->show_social_urls(); ?>
+
 						</div>
 						<?php } ?>
 						
 					</div>
-					
-					<?php if ( $show_stats ) { ?>
-					<div class="um-member-stats">
-						<div class="um-member-stat"><a href="#">0<span class="um-member-statname">Views</span></a></div>
-						<div class="um-member-stat"><a href="#"><?php echo (int) um_user('post_count'); ?><span class="um-member-statname">Posts</span></a></div>
-						<div class="um-member-stat" style="border-right:0"><a href="#"><?php echo (int) um_user('comment_count'); ?><span class="um-member-statname">Comments</span></a></div>
-						<div class="um-clear"></div>
-					</div>
-					<?php } ?>
 					
 				</div>
 				

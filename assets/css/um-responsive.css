@@ -520,7 +520,7 @@ div.uimob960  .um-gutter-sizer {width: 4%}
 		display: none;
 	}
 
-	.um-modal  {
+	.um-modal.no-photo  {
 		width: 100% !important;
 		margin: 0 !important;
 		left: 0 !important;
@@ -528,14 +528,14 @@ div.uimob960  .um-gutter-sizer {width: 4%}
 		background: #fff;
 	}
 
-	.um-modal,
-	.um-modal .um-modal-body,
-	.um-modal .um-modal-header {
+	.um-modal.no-photo,
+	.um-modal.no-photo .um-modal-body,
+	.um-modal.no-photo .um-modal-header {
 		border-radius: 0;
 	}
 
-	.um-modal .um-modal-header {text-align: center; font-size: 14px}
-	.um-modal .um-modal-footer {
+	.um-modal.no-photo .um-modal-header {text-align: center; font-size: 14px}
+	.um-modal.no-photo .um-modal-footer {
 		position: absolute;
 		bottom: 0;
 		left: 0;
@@ -545,12 +545,12 @@ div.uimob960  .um-gutter-sizer {width: 4%}
 		border-top: 1px solid #ddd;
 	}
 
-	.um-modal .um-modal-right {
+	.um-modal.no-photo .um-modal-right {
 		width: 100%;
 		float: none;
 	}
 
-	.um-modal .um-modal-footer a.um-modal-btn {
+	.um-modal.no-photo .um-modal-footer a.um-modal-btn {
 		width: 48%;
 		margin: 0 1%;
 		float: left;
@@ -563,7 +563,7 @@ div.uimob960  .um-gutter-sizer {width: 4%}
 
 @media screen and (max-height: 300px) {
 
-	.um-modal-header {
+	.um-modal.no-photo .um-modal-header {
 		display: none;
 	}
 	

@@ -153,5 +153,16 @@ class UM_Permalinks {
 		
 		return $profile_url;
 	}
+	
+	/***
+	***	@get action url for admin use
+	***/
+	function admin_act_url( $action, $subaction ) {
+		$url = $this->get_current_url();
+		$url = add_query_arg( 'um_adm_action', $action, $url );
+		$url = add_query_arg( 'sub', $subaction, $url );
+		$url = add_query_arg( 'user_id', um_user('ID'), $url );
+		return $url;
+	}
 
 }

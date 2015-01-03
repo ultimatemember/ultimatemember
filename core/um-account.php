@@ -47,7 +47,7 @@ class UM_Account {
 		global $ultimatemember;
 		
 		if ( um_is_core_page('account') && !is_user_logged_in() ) {
-			exit( wp_redirect( home_url() ) );
+			um_redirect_home();
 		}
 		
 		if ( um_is_core_page('account') ) {
@@ -106,6 +106,38 @@ class UM_Account {
 		
 		$classes = apply_filters('um_form_official_classes__hook', $classes);
 		return $classes;
+	}
+	
+	/***
+	***	@get tab output
+	***/
+	function get_tab_output( $id ) {
+		global $ultimatemember;
+		
+		switch( $id ) {
+			case 'privacy' :
+				$args = 'profile_privacy,show_in_members';
+				break;
+			case 'delete' :
+				$args = 'single_user_password';
+				break;
+			case 'general' :
+				$args = 'user_login,first_name,last_name,user_email';
+				break;
+			case 'password' :
+				$args = 'user_password';
+				break;
+			default :
+				$args = null;
+				break;
+		}
+		
+		$fields = $ultimatemember->builtin->get_specific_fields( $args );
+		$output = null;
+		foreach( $fields as $key => $data ){
+			$output .= $ultimatemember->fields->edit_field( $key, $data );
+		}
+		return $output;
 	}
 	
 	/***

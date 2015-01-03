@@ -12,6 +12,27 @@ class UM_Fields {
 	}
 	
 	/***
+	***	@show user social links
+	***/
+	function show_social_urls(){
+		global $ultimatemember;
+		$fields = $ultimatemember->builtin->all_user_fields;
+		foreach( $fields as $field => $args ) {
+			if ( isset( $args['advanced'] ) && $args['advanced'] == 'social' ) {
+				$social[$field] = $args;
+			}
+		}
+		foreach( $social as $k => $arr ) {
+			if ( um_profile( $k ) ) { ?>
+				
+				<a href="<?php echo um_filtered_social_link( $k , $arr['match'] ); ?>" style="background: <?php echo $arr['color']; ?>;" target="_blank"><i class="<?php echo $arr['icon']; ?>"></i></a>
+				
+			<?php
+			}
+		}
+	}
+	
+	/***
 	***	@hidden fields inside shortcode
 	***/
 	function add_hidden_field( $field ) {
@@ -341,11 +362,7 @@ class UM_Fields {
 		
 		} else if ( um_user( $key ) && $this->viewing == true ) {
 		
-			$value = um_user( $key );
-			$value = apply_filters("um_profile_field_filter_hook__", $value, $data );
-			$value = apply_filters("um_profile_field_filter_hook__{$key}", $value, $data );
-			$value = apply_filters("um_profile_field_filter_hook__{$type}", $value, $data );
-			
+			$value = um_filtered_value( $key, $data );
 			return $value;
 			
 		} else if ($default) {
@@ -473,7 +490,7 @@ class UM_Fields {
 		$fields = $ultimatemember->builtin->all_user_fields;
 		if ( isset( $fields[$key]['icon'] ) )
 			return $fields[$key]['icon'];
-		return 'um-icon-user';
+		return '';
 	}
 	
 	/***
@@ -756,6 +773,21 @@ class UM_Fields {
 		
 		if ( !um_can_view_field( $data ) ) return;
 		if ( !um_can_edit_field( $data ) ) return;
+		
+		if ( isset( $data['required_opt'] ) ) {
+			$opt = $data['required_opt'];
+			if ( um_get_option( $opt[0] ) != $opt[1] ) {
+				return;
+			}
+		}
+		
+		if ( isset( $data['required_perm'] ) ) {
+			if ( !um_user( $data['required_perm'] ) ) {
+				return;
+			}
+		}
+		
+		/* Begin by field type */
 
 		switch( $type ) {
 

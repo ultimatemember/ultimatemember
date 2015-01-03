@@ -25,7 +25,7 @@
 				if ( !um_user('super_admin') ) {
 					$ultimatemember->user->delete();
 					if ( um_user('after_delete') == 'redirect_home' ) {
-						exit( wp_redirect( home_url() ) );
+						um_redirect_home();
 					} else {
 						exit( wp_redirect( um_user('delete_redirect_url') ) );
 					}
@@ -123,21 +123,22 @@
 	function um_account_tab__delete( $info ) {
 		global $ultimatemember;
 		extract( $info );
-		$fields = $ultimatemember->builtin->get_specific_fields('single_user_password'); ?>
+		
+		$output = $ultimatemember->account->get_tab_output('delete');
+		
+		if ( $output ) { ?>
 		
 		<div class="um-account-heading uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
 		
 		<?php echo wpautop( um_get_option('delete_account_text') ); ?>
 		
-		<?php $output = null;
-		foreach( $fields as $key => $data ) {
-			$output .= $ultimatemember->fields->edit_field( $key, $data );
-		}echo $output; ?>
+		<?php echo $output; ?>
 		
 		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Delete Account'); ?>" class="um-button" /></div><div class="um-clear"></div></div>
 		
 		<?php
 		
+		}
 	}
 
 	/***
@@ -147,19 +148,20 @@
 	function um_account_tab__privacy( $info ) {
 		global $ultimatemember;
 		extract( $info );
-		$fields = $ultimatemember->builtin->get_specific_fields('profile_privacy,show_in_members'); ?>
+		
+		$output = $ultimatemember->account->get_tab_output('privacy');
+
+		if ( $output ) { ?>
 		
 		<div class="um-account-heading uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
 		
-		<?php $output = null;
-		foreach( $fields as $key => $data ) {
-			$output .= $ultimatemember->fields->edit_field( $key, $data );
-		}echo $output; ?>
+		<?php echo $output; ?>
 		
 		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="Update Privacy" class="um-button" /></div><div class="um-clear"></div></div>
 		
 		<?php
 		
+		}
 	}
 
 	/***
@@ -169,19 +171,20 @@
 	function um_account_tab__general( $info ) {
 		global $ultimatemember;
 		extract( $info );
-		$fields = $ultimatemember->builtin->get_specific_fields('user_login,first_name,last_name,user_email'); ?>
+		
+		$output = $ultimatemember->account->get_tab_output('general');
+		
+		if ( $output ) { ?>
 		
 		<div class="um-account-heading uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
 		
-		<?php $output = null;
-		foreach( $fields as $key => $data ) {
-			$output .= $ultimatemember->fields->edit_field( $key, $data );
-		}echo $output; ?>
+		<?php echo $output; ?>
 		
 		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="Update Account" class="um-button" /></div><div class="um-clear"></div></div>
 		
 		<?php
 		
+		}
 	}
 	
 	/***
@@ -191,18 +194,21 @@
 	function um_account_tab__password( $info ) {
 		global $ultimatemember;
 		extract( $info );
-		$fields = $ultimatemember->builtin->get_specific_fields('user_password'); ?>
+		extract( $info );
+		
+		$output = $ultimatemember->account->get_tab_output('password');
+		
+		if ( $output ) { ?>
 		
 		<div class="um-account-heading uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
 		
-		<?php $output = null;
-		foreach( $fields as $key => $data ) {
-			$output .= $ultimatemember->fields->edit_field( $key, $data );
-		}echo $output; ?>
+		<?php echo $output; ?>
 		
 		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="Update Password" class="um-button" /></div><div class="um-clear"></div></div>
 		
 		<?php
+		
+		}
 	}
 	
 	/***

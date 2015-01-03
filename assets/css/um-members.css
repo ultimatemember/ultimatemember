@@ -166,7 +166,7 @@
 }
 
 .um-member-card {
-	padding-bottom: 25px;
+	padding-bottom: 15px;
 }
 
 .um-member-name {
@@ -218,8 +218,8 @@
 
 .um-member-meta {
 	display: none;
-	margin: 30px 30px 0 30px;
-	padding: 20px 0 15px 0;
+	margin: 20px 30px 0 30px;
+	padding: 15px 0 15px 0;
 	text-align: left;
 	border-top: 1px solid #eee;
 }
@@ -229,27 +229,16 @@
 }
 
 .um-member-metaline {
-	font-size: 13px;
+	font-size: 14px;
 	color: #888;
 	padding: 12px 0 0 0;
 	line-height: 16px;
 	vertical-align: middle;
 }
 
-.um-member-metaline i {
-	vertical-align: middle;
-	font-size: 16px;
-	height: 16px;
-	line-height: 16px;
-	width: 16px;
-	margin-right: 20px;
-	color: #666;
-	float: left;
-}
-
 .um-member-metaline span {
-	padding-left: 36px;
 	display: block;
+	text-align: center;
 }
 
 /*
@@ -257,7 +246,7 @@
 */
 
 .um-member-connect {
-	padding: 20px 0 0 0;
+	padding: 10px 0;
 }
 
 .um-member-connect a{
@@ -281,41 +270,6 @@
 }
 
 .um-member-connect a:hover {opacity: 1}
-
-/*
-	- Member stats
-*/
-
-.um-member-stats {
-	border-top: 1px solid #eee;
-	background: #fcfcfc;
-}
-
-.um-member-stat {
-	float: left;
-	text-align: center;
-	width: 33%;
-	padding: 14px 10px;
-	box-sizing: border-box;
-	border-right: 1px solid #eee;
-	text-transform: lowercase;
-	font-size: 16px;
-	line-height: 24px;
-	font-weight: 700;
-	color: #666;
-}
-
-.um-member-stat a{color: #666;}
-.um-member-stat a:hover {color: #3ba1da}
-
-.um-member-statname {
-	display: block;
-	letter-spacing: -1px;
-	font-size: 15px;
-	font-weight: 300;
-	line-height: 18px;
-	color: #888;
-}
 
 /*
 	- Members pagination
