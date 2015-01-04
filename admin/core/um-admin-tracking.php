@@ -8,8 +8,8 @@ class UM_Admin_Tracking {
 
 		$this->schedule_send();
 
-		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
-
+		add_action( 'admin_notices', array( $this, 'admin_notices' ), 10 );
+	
 	}
 
 	/***
@@ -30,12 +30,15 @@ class UM_Admin_Tracking {
 			$theme_ver  = $theme_data->Version;
 		}
 
-		$data['name'] = get_bloginfo('name');
 		$data['url'] = home_url();
+		
 		$data['theme'] = $theme;
 		$data['theme_version'] = $theme_ver;
+		
 		$data['wp_version'] = get_bloginfo( 'version' );
+		
 		$data['version'] = ULTIMATEMEMBER_VERSION;
+		
 		$data['email'] = get_bloginfo( 'admin_email' );
 		
 		$result = count_users();
@@ -59,6 +62,10 @@ class UM_Admin_Tracking {
 		$data['active_plugins']   = $active_plugins;
 		$data['inactive_plugins'] = $plugins;
 
+		$data['language'] = get_bloginfo('language');
+		
+		$data['multisite'] = ( is_multisite() ) ? 1 : 0;
+		
 		$this->data = $data;
 
 	}
@@ -113,7 +120,7 @@ class UM_Admin_Tracking {
 		) );
 
 		update_option( 'um_tracking_last_send', time() );
-		
+
 	}
 	
 	/***
@@ -139,12 +146,14 @@ class UM_Admin_Tracking {
 		$optin_url  = add_query_arg( 'um_adm_action', 'opt_into_tracking' );
 		$optout_url = add_query_arg( 'um_adm_action', 'opt_out_of_tracking' );
 
-		echo '<div class="updated"><p style="line-height: 2em">';
-				echo __( 'Help us improve Ultimate Member by allowing us to anonymously track plugin and theme usage. This helps us to improve plugin and theme compatibility.  No sensitive data will be tracked.', 'ultimatemember' );
-				echo '<br />';
-				echo '<a href="' . esc_url( $optin_url ) . '" class="button button-primary">' . __( 'Allow tracking', 'ultimatemember' ) . '</a>';
-				echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow tracking', 'ultimatemember' ) . '</a>';
-		echo '</p></div>';
+		echo '<div class="updated"><p>';
+		
+		echo __( 'Help us improve Ultimate Member’s compatibility with other plugins and themes by allowing us to track non-sensitive data on your site. Click <a href="http://ultimatemember.com/tracking/">here</a> to see what data we track.', 'ultimatemember' );
+		
+		echo '</p>';
+		
+		echo '<p><a href="' . esc_url( $optin_url ) . '" class="button button-primary">' . __( 'Allow tracking', 'ultimatemember' ) . '</a>';
+		echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow tracking', 'ultimatemember' ) . '</a></p></div>';
 		
 	}
 

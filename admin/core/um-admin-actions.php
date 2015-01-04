@@ -14,7 +14,7 @@
 		update_option('um_tracking_notice', 1 );
 		
 		$tracking = new UM_Admin_Tracking();
-		$tracking->send_checkin( true );
+		$tracking->send_checkin();
 		
 		exit( wp_redirect( remove_query_arg('um_adm_action') ) );
 	}

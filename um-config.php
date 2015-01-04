@@ -1438,7 +1438,7 @@ $this->sections[] = array(
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Allow anonymous tracking' ),
 				'default' 		=> 0,
-				'desc' 	   		=> 'Help us improve Ultimate Member by allowing us to anonymously track plugin and theme usage. This helps us to improve plugin and theme compatibility.  No sensitive data will be tracked.',
+				'desc' 	   		=> 'Help us improve Ultimate Member’s compatibility with other plugins and themes by allowing us to track non-sensitive data on your site. Click <a href="http://ultimatemember.com/tracking/">here</a> to see what data we track.',
 				'on'			=> 'Allow tracking',
 				'off'			=> 'Do not allow',
         ),
