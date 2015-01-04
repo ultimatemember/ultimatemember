@@ -14,6 +14,7 @@
 				break;
 				
 			case 'um_approve_membership':
+			case 'um_reenable':
 				$ultimatemember->user->approve();
 				break;
 				
@@ -27,10 +28,6 @@
 				
 			case 'um_deactivate':
 				$ultimatemember->user->deactivate();
-				break;
-				
-			case 'um_reenable':
-				$ultimatemember->user->approve();
 				break;
 				
 			case 'um_delete':

@@ -93,7 +93,7 @@ function um_new_modal( id, size, isPhoto, source ){
 
 	jQuery('.tipsy').hide();
 
-	jQuery('.um-dropdown').hide();
+	UM_hide_menus();
 	
 	jQuery('body,html,textarea').css("overflow", "hidden");
 	

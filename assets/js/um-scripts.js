@@ -1,14 +1,24 @@
+function UM_hide_menus() {
+
+		menu = jQuery('.um-dropdown');
+		menu.parents('div').find('a').removeClass('active');
+		menu.hide();
+		
+}
+
 jQuery(document).ready(function() {
 	
 	/* dropdown menu links */
 	jQuery(document).on('click', '.um-dropdown a', function(e){
-		e.preventDefault();
 		return false;
+	});
+	
+	jQuery(document).on('click', '.um-dropdown a.real_url', function(e){
+		window.location = jQuery(this).attr('href');
 	});
 	
 	/* trigger dropdown on click */
 	jQuery(document).on('click', '.um-trigger-menu-on-click', function(e){
-		e.preventDefault();
 		jQuery('.um-dropdown').hide();
 		menu = jQuery(this).find('.um-dropdown');
 		menu.show();
@@ -17,8 +27,7 @@ jQuery(document).ready(function() {
 	
 	/* hide dropdown */
 	jQuery(document).on('click', '.um-dropdown-hide', function(e){
-		menu = jQuery(this).parents('.um-dropdown');
-		menu.hide();
+		UM_hide_menus();
 	});
 	
 	/* manual triggers */
@@ -110,9 +119,15 @@ jQuery(document).ready(function() {
 	});
 
 	/* timepicker */
-	jQuery('.um-timepicker').pickatime({
-		formatSubmit: 'HH:i',
-		hiddenSuffix: '__true'
+	jQuery('.um-timepicker').each(function(){
+		elem = jQuery(this);
+		
+		elem.pickatime({
+			format: elem.attr('data-format'),
+			interval: parseInt( elem.attr('data-intervals') ),
+			formatSubmit: 'HH:i',
+			hiddenName: true,
+		});
 	});
 	
 	/* rating field */

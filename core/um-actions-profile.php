@@ -85,7 +85,11 @@
 					<?php
 					
 					if( $ultimatemember->mobile->isMobile() ){
-						echo um_user('cover_photo', 300);
+						if ( $ultimatemember->mobile->isTablet() ) {
+							echo um_user('cover_photo', 1000);
+						} else {
+							echo um_user('cover_photo', 300);
+						}
 					} else {
 						echo um_user('cover_photo', 1000);
 					}
@@ -144,7 +148,7 @@
 					
 					<?php
 					
-					if ( um_can_edit_profile( um_profile_id() ) ) { 
+					if ( !isset( $ultimatemember->user->cannot_edit ) ) { 
 					
 						$ultimatemember->fields->add_hidden_field( 'profile_photo' );
 						
@@ -200,6 +204,10 @@
 					
 					<?php } ?>
 					
+					<div class="um-profile-status <?php echo um_user('account_status'); ?>">
+						<span><?php printf(__('This user account status is %s','ultimatemember'), um_user('account_status_name') ); ?></span>
+					</div>
+					
 				</div><div class="um-clear"></div>
 				
 			</div>
@@ -254,12 +262,53 @@
 		if ( isset( $ultimatemember->user->cannot_edit ) && $ultimatemember->user->cannot_edit == 1 ) return;
 		
 		if ( $ultimatemember->fields->editing == true ) {
-			$output .= '<div class="um-profile-edit um-profile-headericon"><a href="#" title="Save Profile" class="um-profile-save um-tip-e"><i class="um-icon-check"></i></a></div>';
-		} else {
-			$output .= '<div class="um-profile-edit um-profile-headericon"><a href="'.um_edit_my_profile_uri().'" title="Edit Profile" class="um-tip-e"><i class="um-icon-cog-2"></i></a></div>';
+		
+		?>
+			
+		<div class="um-profile-edit um-profile-headericon">
+		
+			<a href="#" class="um-profile-edit-a active um-profile-save"><i class="um-icon-check"></i></a>
+		
+		</div>
+		
+		<?php } else { ?>
+		
+		<div class="um-profile-edit um-profile-headericon">
+		
+			<a href="#" class="um-profile-edit-a"><i class="um-icon-cog-2"></i></a>
+		
+			<?php
+			
+			if ( um_is_myprofile() ) {
+			
+				echo $ultimatemember->menu->new_ui( 'bc', 'div.um-profile-edit', 'click', array(
+					'<a href="'.um_get_core_page('account').'" class="real_url">'.__('My Account','ultimatemember').'</a>',
+					'<a href="'.um_edit_my_profile_uri().'" class="real_url">'.__('Edit Profile','ultimatemember').'</a>',
+					'<a href="#" class="um-dropdown-hide">'.__('Cancel','ultimatemember').'</a>',
+				), 'can_edit_user' );
+			
+			} else {
+				
+				$actions = $ultimatemember->user->get_admin_actions();
+				
+				$menu_items = array(
+					'<a href="'.um_edit_my_profile_uri().'" class="real_url">'.__('Edit Profile','ultimatemember').'</a>',
+					'<a href="#" class="um-dropdown-hide">'.__('Cancel','ultimatemember').'</a>',
+				);
+				
+				$menu_items = array_merge( $actions, $menu_items );
+				
+				echo $ultimatemember->menu->new_ui( 'bc', 'div.um-profile-edit', 'click', $menu_items, 'can_edit_user' );
+			
+			}
+			
+			?>
+		
+		</div>
+		
+		<?php
 		}
-
-		echo $output;
+		
 	}
 	
 	/***

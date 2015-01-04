@@ -14,37 +14,12 @@ class UM_Admin_Users {
 		
 		add_action('admin_init',  array(&$this, 'um_bulk_users_edit'), 9);
 		
-		add_action('admin_init',  array(&$this, 'um_single_user_edit'), 9);
-		
 		add_filter('views_users', array(&$this, 'views_users') );
 		
 		add_filter('pre_user_query', array(&$this, 'um_role_filter') );
 		
 		add_filter('user_row_actions', array(&$this, 'user_row_actions'), 10, 2);
 				
-	}
-	
-	/***
-	***	@Process an action to user via users table
-	***/
-	function um_single_user_edit(){
-		global $ultimatemember;
-		
-		if ( !isset($_REQUEST['um_single_user']) ) return;
-		if ( !isset($_REQUEST['um_single_user_action']) ) return;
-		if ( !current_user_can('edit_users') ) wp_die( __( 'You do not have enough permissions to do that.','ultimatemember') );
-		$user_id = $_REQUEST['um_single_user'];
-		$action = $_REQUEST['um_single_user_action'];
-		
-		$ultimatemember->user->set( $user_id );
-		
-		do_action("um_admin_user_action_hook", $action);
-		
-		do_action("um_admin_user_action_{$action}_hook");
-
-		wp_redirect( add_query_arg( 'update', 'user_updated', admin_url('users.php') ) );
-		exit;
-
 	}
 	
 	/***
@@ -215,9 +190,9 @@ class UM_Admin_Users {
 			
 			<div class="actions">
 			
-				<label class="screen-reader-text" for="um_bulk_action"><?php _e('Bulk Actions','ultimatemember'); ?></label>
+				<label class="screen-reader-text" for="um_bulk_action"><?php _e('Take Action','ultimatemember'); ?></label>
 				<select name="um_bulk_action" id="um_bulk_action" class="umaf-selectjs" style="width: 200px">
-					<option value="0"><?php _e('Bulk Actions','ultimatemember'); ?></option>
+					<option value="0"><?php _e('Take Action','ultimatemember'); ?></option>
 					<?php echo $ultimatemember->user->get_bulk_admin_actions(); ?>
 				</select>
 				
@@ -257,11 +232,7 @@ class UM_Admin_Users {
 		$columns['role'] = __('WordPress Role','ultimatemember') . $admin->_tooltip( __('This is the membership role set by WordPress','ultimatemember') );
 		
 		$columns['um_status'] = __('Status','ultimatemember') . $admin->_tooltip( __('This is current user status in your membership site','ultimatemember') );
-		
-		$columns['um_info'] = __('Details','ultimatemember') . $admin->_tooltip( __('Review the submitted registration details of this member','ultimatemember') );
-		
-		$columns['um_actions'] = __('Actions','ultimatemember');
-		
+
 		return $columns;
 	}
 	
@@ -271,47 +242,7 @@ class UM_Admin_Users {
 	function manage_users_custom_column($value, $column_name, $user_id) {
 	
 		global $ultimatemember;
-		
-		if ( 'um_info' == $column_name ) {
-			
-			um_fetch_user( $user_id );
-			
-			if ( um_user('submitted') ) {
-			
-				return '<span class="um-adm-ico pointer um-admin-tipsy-n" data-modal="UM_preview_registration" data-modal-size="smaller" data-dynamic-content="um_admin_review_registration" data-arg1="'.$user_id.'" data-arg2="edit_registration" title="Review/update registration info"><i class="um-icon-info"></i></span>';
-				
-			} else {
-				
-				return '&mdash;';
-				
-			}
-			
-		}
-		
-		if ( 'um_actions' == $column_name ) {
-			
-			um_fetch_user( $user_id );
-			
-			$actions = $ultimatemember->user->get_admin_actions( $user_id );
-			
-			if ( !empty( $actions ) ) {
-			
-				$edit_url = admin_url('users.php');
-				$edit_url = add_query_arg('um_single_user', $user_id, $edit_url);
-				
-				$output = '<select class="umaf-selectjs um_single_user_action" style="width: 200px">
-							<option value="">'.__('Take action...','ultimatemember').'</option>'.$actions.'</select>';
-				$output .= '<a href="'.$edit_url.'" class="button">'. __('Apply','ultimatemember') .'</a>';
-				return $output;
-				
-			} else {
-			
-				return '<span class="um-adm-ico um-admin-tipsy-n" title="'.__('This user is an administrator. To modify this user, change their role first.','ultimatemember').'"><i class="um-icon-lock-3"></i></span>';
-			
-			}
-			
-		}
-		
+
 		if ( 'um_status' == $column_name ) {
 		
 			um_fetch_user( $user_id );

@@ -129,15 +129,10 @@
 	top: 15px;
 	right: 0;
 	vertical-align: middle;
-	z-index: 99;
 	font-size: 30px;
 	height: 30px;
 	line-height: 30px;
-}
-
-.um-profile-edit i, .um-profile-edit i:before {
-	height: 30px;
-	vertical-align: bottom !important;
+	z-index: 666;
 }
 
 /*
@@ -270,4 +265,16 @@
 .um-meta-text {
 	margin: 6px 0 0 0;
 	color: #666;
+}
+
+.um-profile-status {display:none}
+.um-profile-status.awaiting_admin_review,
+.um-profile-status.inactive,
+.um-profile-status.rejected {
+	display: inline-block;
+	margin: 6px 0 0 0;
+	border-left: 3px solid #C74A4A;
+	padding-left: 10px;
+	font-size: 14px;
+	color: #777;
 }

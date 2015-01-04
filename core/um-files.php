@@ -300,7 +300,7 @@ class UM_Files {
 		$data = $ultimatemember->fields->get_field($field);
 		
 		if ( $fileinfo['invalid_image'] == true ) {
-			$error = $data['invalid_image'];
+			$error = sprintf(__('Your image is invalid or too large!','ultimatemember') );
 		} elseif ( !$this->in_array( $fileinfo['extension'], $data['allowed_types'] ) ) {
 			$error = $data['extension_error'];
 		} elseif ( isset($data['min_size']) && ( $fileinfo['size'] < $data['min_size'] ) ) {

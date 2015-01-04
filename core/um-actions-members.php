@@ -201,8 +201,10 @@
 				
 				<?php $i = 0; foreach( um_members('users_per_page') as $member) { $i++; um_fetch_user( $member ); ?>
 			
-				<div class="um-member <?php if ($cover_photos) { echo 'with-cover'; } ?>">
+				<div class="um-member <?php echo um_user('account_status'); ?> <?php if ($cover_photos) { echo 'with-cover'; } ?>">
 				
+					<span class="um-member-status <?php echo um_user('account_status'); ?>"><?php echo um_user('account_status_name'); ?></span>
+					
 					<?php if ($cover_photos) { ?>
 					<div class="um-member-cover" data-ratio="<?php echo um_get_option('profile_cover_ratio'); ?>">
 						<div class="um-member-cover-e"><?php echo um_user('cover_photo', 300); ?></div>

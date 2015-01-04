@@ -356,46 +356,33 @@ class UM_User {
 	function get_bulk_admin_actions() {
 		$output = '';
 		$actions = array();
-		
 		$actions = apply_filters('um_admin_bulk_user_actions_hook', $actions );
-
 		foreach($actions as $id => $arr ) {
-		
 			if ( isset($arr['disabled'])){
 				$arr['disabled'] = 'disabled';
 			} else {
 				$arr['disabled'] = '';
 			}
-		
+
 			$output .= '<option value="' . $id . '" '. $arr['disabled'] . '>' . $arr['label'] . '</option>';
-			
 		}
 		return $output;
 	}
 	
 	/***
-	***	@Get admin actions as dropdown list
+	***	@Get admin actions for individual user
 	***/
 	function get_admin_actions() {
-		$output = '';
+		$items = '';
 		$actions = array();
-		
 		$actions = apply_filters('um_admin_user_actions_hook', $actions );
-
 		if ( !isset( $actions ) || empty( $actions ) ) return false;
-		
 		foreach($actions as $id => $arr ) {
-		
-			if ( isset($arr['disabled'])){
-				$arr['disabled'] = 'disabled';
-			} else {
-				$arr['disabled'] = '';
-			}
-		
-			$output .= '<option value="' . $id . '" '. $arr['disabled'] . '>' . $arr['label'] . '</option>';
-			
+			$url = add_query_arg('um_action', $id );
+			$url = add_query_arg('uid', um_profile_id(), $url );
+			$items[] = '<a href="' . $url .'" class="real_url">' . $arr['label'] . '</a>';
 		}
-		return $output;
+		return $items;
 	}
 	
 	/***
@@ -404,6 +391,17 @@ class UM_User {
 	function is_private_profile( $user_id ) {
 		$privacy = get_user_meta( $user_id, 'profile_privacy', true );
 		if ( $privacy == __('Only me') ) {
+			return true;
+		}
+		return false;
+	}
+	
+	/***
+	***	@If it is un-approved profile
+	***/
+	function is_approved( $user_id ) {
+		$status = get_user_meta( $user_id, 'account_status', true );
+		if ( $status == 'approved' || $status == '' ) {
 			return true;
 		}
 		return false;

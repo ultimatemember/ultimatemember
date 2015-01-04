@@ -99,7 +99,8 @@ print "
 
 if ( $header_icon_hcolor ) {
 print "
-.um-$form_id.um .um-profile-headericon a:hover {
+.um-$form_id.um .um-profile-headericon a:hover,
+.um-$form_id.um .um-profile-edit-a.active {
 	color: $header_icon_hcolor;
 }
 ";

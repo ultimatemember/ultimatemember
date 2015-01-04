@@ -6,9 +6,7 @@ class UM_Fields {
 	
 		$this->editing = false;
 		$this->viewing = false;
-		
-		add_action('init',  array(&$this, 'init_edit_my_profile'), 10);
-		
+
 	}
 	
 	/***
@@ -51,24 +49,6 @@ class UM_Fields {
 			
 		echo '</div>';
 						
-	}
-	
-	/***
-	***	@detect if we're editing profile in shortcode
-	***/
-	function init_edit_my_profile() {
-	
-		global $ultimatemember;
-		
-		if ( !is_admin() && isset( $_REQUEST['um_action'] ) && $_REQUEST['um_action'] == 'edit' ) {
-			$this->editing = true;
-			
-			if ( !um_can_edit_my_profile() ) {
-				$url = um_edit_my_profile_cancel_uri();
-				exit(  wp_redirect( $url ) ); 
-			}
-		}
-		
 	}
 	
 	/***
@@ -623,6 +603,24 @@ class UM_Fields {
 			
 				$array['input'] = 'text';
 				
+				if ( !isset( $array['format'] ) ) $array['format'] = 'g:i a';
+				
+				switch( $array['format'] ) {
+					case 'g:i a':
+						$js_format = 'h:i a';
+						break;
+					case 'g:i A':
+						$js_format = 'h:i A';
+						break;
+					case 'H:i':
+						$js_format = 'HH:i';
+						break;
+				}
+				
+				$array['js_format'] = $js_format;
+				
+				if ( !isset( $array['intervals'] ) ) $array['intervals'] = 60;
+				
 				if (!isset($array['autocomplete'])) $array['autocomplete'] = 'on';
 
 				break;
@@ -1021,7 +1019,7 @@ class UM_Fields {
 						
 						}
 						
-						$output .= '<input class="'.$this->get_class($key, $data).'" type="'.$input.'" name="'.$key.$ultimatemember->form->form_suffix.'" id="'.$key.$ultimatemember->form->form_suffix.'" value="'. $this->field_value( $key, $default, $data ) .'" placeholder="'.$placeholder.'" data-validate="'.$validate.'" data-key="'.$key.'" autocomplete="'.$autocomplete.'" />
+						$output .= '<input class="'.$this->get_class($key, $data).'" type="'.$input.'" name="'.$key.$ultimatemember->form->form_suffix.'" id="'.$key.$ultimatemember->form->form_suffix.'" value="'. $this->field_value( $key, $default, $data ) .'" placeholder="'.$placeholder.'" data-validate="'.$validate.'" data-key="'.$key.'" autocomplete="'.$autocomplete.'" data-format="'.$js_format.'" data-intervals="'.$intervals.'" data-value="'. $this->field_value( $key, $default, $data ) .'" />
 							
 						</div>';
 							

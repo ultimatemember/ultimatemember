@@ -507,7 +507,7 @@ a.um-link-alt:hover {text-decoration: underline !important;}
 	height: auto;
 	background: #fff;
 	border-radius: 5px;
-	z-index: 555;
+	z-index: 555555;
 	display: none;
     border: 1px solid #e5e5e5;
 	box-sizing: border-box;
@@ -551,8 +551,12 @@ a.um-link-alt:hover {text-decoration: underline !important;}
 	font-size: 24px;
 	width: 24px;
 	height: 24px;
+	overflow: hidden;
 	z-index: 2;
+	color: #eee;
 }
+
+.um-dropdown-arr * { display: block !important; width: 24px !important; height: 24px !important; vertical-align: bottom !important; overflow: hidden !important; line-height: 24px !important; }
 
 /*
 	- Misc.

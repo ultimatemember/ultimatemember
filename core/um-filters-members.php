@@ -1,10 +1,70 @@
 <?php
 	
 	/***
-	***	@prepare the query args to show members
+	***	@Members Filter Hooks
 	***/
 	add_filter('um_prepare_user_query_args', 'um_prepare_user_query_args', 10, 2);
+	add_filter('um_prepare_user_query_args', 'um_add_search_to_query', 50, 2);
+	add_filter('um_prepare_user_query_args', 'um_remove_unwanted_users_from_list', 99, 2);
+	
+	/***
+	***	@Remove users we do not need to show in directory
+	***/
+	function um_remove_unwanted_users_from_list( $query_args, $args ) {
+		global $ultimatemember;
+		extract( $args );
+		
+		if ( !current_user_can('manage_options') )
+		
+			$query_args['meta_query'][] = array(
+				'key' => 'account_status',
+				'value' => 'approved',
+				'compare' => '='
+			);
+		
+		return $query_args;
+	}
+	
+	/***
+	***	@adds search parameters
+	***/
+	function um_add_search_to_query( $query_args, $args ){
+		global $ultimatemember;
+		extract( $args );
+		
+		if ( isset( $_REQUEST['um_search'] ) ) {
+			
+			$query = $ultimatemember->permalinks->get_query_array();
+
+			foreach( $query as $field => $value ) {
+
+				if ( $value && $field != 'um_search' ) {
+				
+					$query_args['meta_query'][] = array(
+						'key' => $field,
+						'value' => $value,
+						'compare' => '='
+					);
+				
+				}
+				
+			}
+
+		}
+		
+		if ( count ($query_args['meta_query']) == 1 ) {
+			unset( $query_args['meta_query'] );
+		}
+
+		return $query_args;
+		
+	}
+	
+	/***
+	***	@adds main parameters
+	***/
 	function um_prepare_user_query_args($query_args, $args){
+		global $ultimatemember;
 		extract( $args );
 		
 		$query_args['fields'] = 'ID';
@@ -68,7 +128,7 @@
 	}
 	
 	/***
-	***	@print out result array
+	***	@hook in the member results array
 	***/
 	add_filter('um_prepare_user_results_array', 'um_prepare_user_results_array', 50, 2);
 	function um_prepare_user_results_array($result){
@@ -80,40 +140,4 @@
 		}
 		
 		return $result;
-	}
-	
-	/***
-	***	@adding search filters
-	***/
-	add_filter('um_prepare_user_query_args', 'um_add_search_to_query', 50, 2);
-	function um_add_search_to_query($query_args, $args){
-		global $ultimatemember;
-		extract( $args );
-		
-		if ( isset( $_REQUEST['um_search'] ) ) {
-			
-			$query = $ultimatemember->permalinks->get_query_array();
-
-			foreach( $query as $field => $value ) {
-
-				if ( $value && $field != 'um_search' ) {
-				
-				$query_args['meta_query'][] = array(
-					'key' => $field,
-					'value' => $value,
-					'compare' => '='
-				);
-				
-				}
-				
-			}
-
-		}
-		
-		if ( count ($query_args['meta_query']) == 1 ) {
-			unset( $query_args['meta_query'] );
-		}
-
-		return $query_args;
-		
 	}

@@ -334,6 +334,10 @@
 	function um_can_view_profile( $user_id ){
 		global $ultimatemember;
 		
+		if ( !current_user_can('manage_options') && !$ultimatemember->user->is_approved( $user_id ) ) {
+			return false;
+		}
+		
 		if ( !is_user_logged_in() ) {
 			if ( $ultimatemember->user->is_private_profile( $user_id ) ) {
 				return false;
@@ -404,9 +408,13 @@
 		global $ultimatemember;
 		
 		if ( !is_user_logged_in() ) return false;
+
 		if ( um_user('can_edit_everyone') ) return true;
+		
 		if ( get_current_user_id() == $user_id && um_user('can_edit_profile') ) return true;
+		
 		if ( get_current_user_id() == $user_id && !um_user('can_edit_profile') ) return false;
+		
 		if ( !um_user('can_edit_everyone') ) return false;
 		
 		return true;
@@ -424,6 +432,19 @@
 		
 		return true;
 		
+	}
+	
+	/***
+	***	@quick test if the user's is on his profile
+	***/
+	function um_is_myprofile(){
+		global $ultimatemember;
+		
+		if ( get_current_user_id() && get_current_user_id() == um_get_requested_user() )return true;
+		
+		if ( !um_get_requested_user() && um_is_core_page('user') && get_current_user_id() ) return true;
+		
+		return false;
 	}
 	
 	/***

@@ -8,6 +8,53 @@ function UM_domenus(){
 		
 		jQuery(element).addClass('um-trigger-menu-on-'+menu.attr('data-trigger'));
 
+		if ( jQuery(window).width() <= 1200 && element == 'div.um-profile-edit' ) {
+			position = 'lc';
+		}
+		
+		if ( position == 'lc' ){
+
+			if ( 200 > jQuery(element).find('img').width() ) {
+				left_p = ( ( jQuery(element).width() - jQuery(element).find('img').width() ) / 2 ) + ( ( jQuery(element).find('img').width() - 200 ) / 2 );
+			} else {
+				left_p = ( ( jQuery(element).width() - jQuery(element).find('img').width() ) / 2 );
+			}
+			
+			top_ = parseInt( jQuery(element).find('a').css('top') );
+			
+			if ( top_ ) {
+				top_p = jQuery(element).find('img').height() + 4 + top_;
+				left_gap = 4;
+			} else {
+				top_p = jQuery(element).find('img').height() + 4;
+				left_gap = 0;
+			}
+			
+			if ( top_p == 4 && element == 'div.um-cover' ) {
+				top_p = jQuery(element).height() / 2 + ( menu.height() / 2 );
+			} else if ( top_p == 4 ) {
+				top_p = jQuery(element).height() + 20;
+			}
+			
+			gap_right = jQuery(element).width() + 17;
+			menu.css({
+				'top' : 0,
+				'width': 200,
+				'left': 'auto',
+				'right' : gap_right + 'px',
+				'text-align' : 'center',
+			});
+			
+			menu.find('.um-dropdown-arr').find('i').removeClass().addClass('um-icon-arrow-sans-right');
+			
+			menu.find('.um-dropdown-arr').css({
+				'top' : '4px',
+				'left' : 'auto',
+				'right' : '-17px',
+			});
+		
+		}
+		
 		if ( position == 'bc' ){
 
 			if ( 200 > jQuery(element).find('img').width() ) {
@@ -28,20 +75,24 @@ function UM_domenus(){
 			
 			if ( top_p == 4 && element == 'div.um-cover' ) {
 				top_p = jQuery(element).height() / 2 + ( menu.height() / 2 );
+			} else if ( top_p == 4 ) {
+				top_p = jQuery(element).height() + 20;
 			}
 
 			menu.css({
 				'top' : top_p,
 				'width': 200,
 				'left': left_p + left_gap,
+				'right' : 'auto',
 				'text-align' : 'center',
 			});
 			
-			menu.find('.um-dropdown-arr').find('i').addClass('um-icon-arrow-sans-up');
+			menu.find('.um-dropdown-arr').find('i').removeClass().addClass('um-icon-arrow-sans-up');
 			
 			menu.find('.um-dropdown-arr').css({
-				'top' : '-18px',
+				'top' : '-17px',
 				'left' : ( menu.width() / 2 ) - 12,
+				'right' : 'auto',
 			});
 		
 		}

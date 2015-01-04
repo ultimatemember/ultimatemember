@@ -370,11 +370,23 @@ class UM_Setup {
 			
 			$users = get_users( array('fields' => 'ID') );
 			foreach( $users as $id ) {
-				if ( !is_super_admin( $id ) ) {
-					update_user_meta( $id, 'role', 'member' );
-				} else {
-					update_user_meta( $id, 'role', 'admin' );
+				
+				if ( !get_user_meta( $id, 'account_status', true ) ) {
+				
+					update_user_meta( $id, 'account_status', 'approved' );
+					
 				}
+				
+				if ( !is_super_admin( $id ) ) {
+				
+					update_user_meta( $id, 'role', 'member' );
+					
+				} else {
+				
+					update_user_meta( $id, 'role', 'admin' );
+					
+				}
+				
 			}
 
 		}

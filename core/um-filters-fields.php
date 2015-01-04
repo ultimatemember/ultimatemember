@@ -10,6 +10,19 @@
 	}
 	
 	/***
+	***	@Time
+	***/
+	add_filter('um_profile_field_filter_hook__time', 'um_profile_field_filter_hook__time', 99, 2);
+	function um_profile_field_filter_hook__time( $value, $data ) {
+		global $ultimatemember;
+		$value = $ultimatemember->datetime->format( $value, $data['format'] );
+
+		$value = str_replace('am', 'a.m.', $value );
+		$value = str_replace('pm', 'p.m.', $value );
+		return $value;
+	}
+	
+	/***
 	***	@Dates
 	***/
 	add_filter('um_profile_field_filter_hook__date', 'um_profile_field_filter_hook__date', 99, 2);
