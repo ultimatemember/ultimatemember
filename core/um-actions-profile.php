@@ -65,11 +65,11 @@
 				<?php
 				
 					if ( $ultimatemember->fields->editing ) {
-					echo $ultimatemember->menu->new_ui( 'bc', 'div.um-cover', 'click', array(
-								'<a href="#" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">'.__('Change cover photo','ultimatemember').'</a>',
-								'<a href="#" class="um-reset-cover-photo" data-user_id="'.um_profile_id().'">'.__('Remove','ultimatemember').'</a>',
-								'<a href="#" class="um-dropdown-hide">'.__('Cancel','ultimatemember').'</a>',
-					), 'can_edit_user' );
+						echo $ultimatemember->menu->new_ui( 'bc', 'div.um-cover', 'click', array(
+									'<a href="#" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">'.__('Change cover photo','ultimatemember').'</a>',
+									'<a href="#" class="um-reset-cover-photo" data-user_id="'.um_profile_id().'">'.__('Remove','ultimatemember').'</a>',
+									'<a href="#" class="um-dropdown-hide">'.__('Cancel','ultimatemember').'</a>',
+						) );
 					}
 							
 				?>
@@ -98,7 +98,9 @@
 						
 					<?php } else { ?>
 					
+					<?php if ( !isset( $ultimatemember->user->cannot_edit ) ) {  ?>
 					<a href="#" class="um-cover-add um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width"><span class="um-cover-add-i"><i class="um-icon-plus-add um-tip-n" title="<?php _e('Upload a cover photo','ultimatemember'); ?>"></i></span></a>
+					<?php } ?>
 					
 					<?php } ?>
 					
@@ -157,7 +159,7 @@
 							echo $ultimatemember->menu->new_ui( 'bc', 'div.um-profile-photo', 'click', array(
 								'<a href="#" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">'.__('Upload photo','ultimatemember').'</a>',
 								'<a href="#" class="um-dropdown-hide">'.__('Cancel','ultimatemember').'</a>',
-							), 'can_edit_user' );
+							) );
 							
 						} else if ( $ultimatemember->fields->editing == true ) {
 						
@@ -165,7 +167,7 @@
 								'<a href="#" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">'.__('Change photo','ultimatemember').'</a>',
 								'<a href="#" class="um-reset-profile-photo" data-user_id="'.um_profile_id().'" data-default_src="'.um_get_default_avatar_uri().'">'.__('Remove photo','ultimatemember').'</a>',
 								'<a href="#" class="um-dropdown-hide">'.__('Cancel','ultimatemember').'</a>',
-							), 'can_edit_user' );
+							) );
 							
 						}
 					
@@ -279,28 +281,19 @@
 		
 			<?php
 			
-			if ( um_is_myprofile() ) {
-			
-				echo $ultimatemember->menu->new_ui( 'bc', 'div.um-profile-edit', 'click', array(
-					'<a href="'.um_get_core_page('account').'" class="real_url">'.__('My Account','ultimatemember').'</a>',
-					'<a href="'.um_edit_my_profile_uri().'" class="real_url">'.__('Edit Profile','ultimatemember').'</a>',
-					'<a href="#" class="um-dropdown-hide">'.__('Cancel','ultimatemember').'</a>',
-				), 'can_edit_user' );
-			
-			} else {
+			$menu_items = array(
+				'myaccount' => '<a href="'.um_get_core_page('account').'" class="real_url">'.__('My Account','ultimatemember').'</a>',
+				'editprofile' => '<a href="'.um_edit_my_profile_uri().'" class="real_url">'.__('Edit Profile','ultimatemember').'</a>',
+				'cancel' => '<a href="#" class="um-dropdown-hide">'.__('Cancel','ultimatemember').'</a>',
+			);
 				
+			if ( !um_is_myprofile() ) {
 				$actions = $ultimatemember->user->get_admin_actions();
-				
-				$menu_items = array(
-					'<a href="'.um_edit_my_profile_uri().'" class="real_url">'.__('Edit Profile','ultimatemember').'</a>',
-					'<a href="#" class="um-dropdown-hide">'.__('Cancel','ultimatemember').'</a>',
-				);
-				
+				unset($menu_items['myaccount']);
 				$menu_items = array_merge( $actions, $menu_items );
-				
-				echo $ultimatemember->menu->new_ui( 'bc', 'div.um-profile-edit', 'click', $menu_items, 'can_edit_user' );
-			
 			}
+			
+			echo $ultimatemember->menu->new_ui( 'bc', 'div.um-profile-edit', 'click', $menu_items );
 			
 			?>
 		

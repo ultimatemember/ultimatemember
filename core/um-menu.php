@@ -9,7 +9,7 @@ class UM_Menu {
 	/***
 	***	@new menu
 	***/
-	function new_ui( $position, $element, $trigger, $items, $permission ) {
+	function new_ui( $position, $element, $trigger, $items ) {
 		
 		?>
 		
