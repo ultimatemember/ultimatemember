@@ -1,10 +1,71 @@
 <?php
 
 	/***
-	***	@Error handling: blocklist
+	***	@Error handling: Registering
 	***/
-	add_action('um_submit_form_errors_hook__blacklist', 'um_submit_form_errors_hook__blacklist', 10);
-	function um_submit_form_errors_hook__blacklist($args){
+	add_action('um_submit_form_errors_hook__registration', 'um_submit_form_errors_hook__registration', 10);
+	function um_submit_form_errors_hook__registration($args){
+		global $ultimatemember;
+		
+		$can_register = get_option('users_can_register');
+		if ( !$can_register ) {
+			exit( wp_redirect( add_query_arg('err', 'registration_disabled') ) );
+		}
+		
+	}
+	
+	/***
+	***	@Error handling: blocked emails
+	***/
+	add_action('um_submit_form_errors_hook__blockedemails', 'um_submit_form_errors_hook__blockedemails', 10);
+	function um_submit_form_errors_hook__blockedemails($args){
+		global $ultimatemember;
+		
+		$emails = um_get_option('blocked_emails');
+		if ( !$emails )
+			return;
+		
+		$emails = array_map("rtrim", explode("\n", $emails));
+		
+		if ( isset( $args['user_email'] ) && is_email( $args['user_email'] ) ) {
+			if ( in_array( $args['user_email'], $emails ) )
+				exit( wp_redirect( add_query_arg('err', 'blocked_email') ) );
+		}
+		
+		if ( isset( $args['username'] ) && is_email( $args['username'] ) ) {
+			if ( in_array( $args['username'], $emails ) )
+				exit( wp_redirect( add_query_arg('err', 'blocked_email') ) );
+		}
+		
+	}
+	
+	/***
+	***	@Error handling: blocked IPs
+	***/
+	add_action('um_submit_form_errors_hook__blockedips', 'um_submit_form_errors_hook__blockedips', 10);
+	function um_submit_form_errors_hook__blockedips($args){
+		global $ultimatemember;
+		
+		$ips = um_get_option('blocked_ips');
+		if ( !$ips )
+			return;
+		
+		$ips = array_map("rtrim", explode("\n", $ips));
+		$user_ip = $_SERVER['REMOTE_ADDR'];
+		
+		foreach($ips as $ip) {
+			$ip = str_replace('*','',$ip);
+			if (strpos($user_ip, $ip) === 0) {
+				exit( wp_redirect( add_query_arg('err', 'blocked_ip') ) );
+			}
+		}
+	}
+		
+	/***
+	***	@Error handling: blocked words during sign up
+	***/
+	add_action('um_submit_form_errors_hook__blockedwords', 'um_submit_form_errors_hook__blockedwords', 10);
+	function um_submit_form_errors_hook__blockedwords($args){
 		global $ultimatemember;
 		
 		$form_id = $args['form_id'];
@@ -12,22 +73,15 @@
 		$fields = unserialize( $args['custom_fields'] );
 		
 		$words = um_get_option('blocked_words');
-		
 		if ( $words != '' ) {
 		
 			$words = array_map("rtrim", explode("\n", $words));
 			foreach( $fields as $key => $array ) {
-			
 				if ( isset($array['validate']) && in_array( $array['validate'], array('unique_username','unique_email','unique_username_or_email') ) ) {
-					
-					if (  in_array( $args[$key], $words ) ) {
-						
+					if ( preg_grep( "/".$args[$key]."/i" , $words ) ) {
 						$ultimatemember->form->add_error( $key,  __('You are not allowed to use this word as your username.') );
-					
 					}
-					
 				}
-				
 			}
 
 		}
@@ -47,17 +101,22 @@
 		
 		$fields = unserialize( $args['custom_fields'] );
 		
-		if ( $mode == 'login' ) {
+		if ( $mode == 'register' ){
+		do_action("um_submit_form_errors_hook__registration", $args );
+		}
 		
-			do_action('um_submit_form_errors_hook_login', $args );
+		do_action("um_submit_form_errors_hook__blockedips", $args );
+		do_action("um_submit_form_errors_hook__blockedemails", $args );
+
+		if ( $mode == 'login' ) {
 			
+			do_action('um_submit_form_errors_hook_login', $args );
 			do_action('um_submit_form_errors_hook_logincheck', $args );
 			
 		} else {
 		
 			do_action('um_submit_form_errors_hook_', $args );
-			
-			do_action("um_submit_form_errors_hook__blacklist", $args );
+			do_action("um_submit_form_errors_hook__blockedwords", $args );
 			
 		}
 		

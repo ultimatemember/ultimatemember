@@ -4,19 +4,38 @@ class UM_Admin_Notices {
 
 	function __construct() {
 
-		add_action('admin_notices', array(&$this, 'admin_notices'), 10);
+		add_action('admin_notices', array(&$this, 'main_notices'), 1);
+		
+		add_action('admin_notices', array(&$this, 'show_update_messages'), 10);
 		
 	}
 	
 	/***
-	***	@For core admin notices
+	***	@show main notices
 	***/
-	function admin_notices(){
+	function main_notices(){
 	
+		$hide_notice = get_option('um_can_register_notice');
+		
+		if ( !get_option('users_can_register') && !$hide_notice ) {
+			
+			echo '<div class="updated" style="border-color: #3ba1da;"><p>';
+		
+			echo sprintf(__( 'Registration is disabled. Please go to the <a href="%s">general settings</a> page in the WordPress admin and select anyone can register. <a href="%s">Hide this notice</a>', 'ultimatemember' ), admin_url('options-general.php'), add_query_arg('um_adm_action', 'um_can_register_notice') );
+		
+			echo '</p></div>';
+		
+		}
+	}
+	
+	/***
+	***	@updating users
+	***/
+	function show_update_messages(){
+
 		if ( !isset($_REQUEST['update']) ) return;
-		
+
 		$update = $_REQUEST['update'];
-		
 		switch($update) {
 		
 			case 'user_updated':
@@ -36,9 +55,9 @@ class UM_Admin_Notices {
 		if ( !empty( $messages ) ) {
 			foreach( $messages as $message ) {
 				if ( isset($message['err_content'])) {
-					echo '<div id="message" class="error"><p>' . $message['err_content'] . '</p></div>';
+					echo '<div class="error"><p>' . $message['err_content'] . '</p></div>';
 				} else {
-					echo '<div id="message" class="updated"><p>' . $message['content'] . '</p></div>';
+					echo '<div class="updated" style="border-color: #3ba1da;"><p>' . $message['content'] . '</p></div>';
 				}
 			}
 		}

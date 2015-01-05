@@ -179,8 +179,8 @@
 
 .um-member.with-cover .um-member-photo {padding-top: 0}
 .um-member.with-cover .um-member-photo img {
-	width: 100px;
-	height: 100px;
+	width: 90px;
+	height: 90px;
 	position: relative;
 	top: -35px;
 	margin-bottom: -45px !important;
@@ -205,7 +205,7 @@
 .um-member-name a {
 	font-size: 16px;
 	line-height: 26px;
-	color: #666;
+	color: #444;
 	font-weight: 700;
 }
 

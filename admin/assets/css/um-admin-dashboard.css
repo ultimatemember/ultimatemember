@@ -32,6 +32,7 @@
 	font-weight: 700;
 	font-size: 12px;
 	margin-left: 10px;
+	display: none;
 }
 .um-admin-dash-count.count-0 {background: #ddd !important}
 .um-admin-dash-count.red {background:#C74A4A}
@@ -139,7 +140,7 @@
 .um-admin-dash-main {
 	margin-left: 201px;
 	border-left: 1px solid #D8D8D8;
-	padding: 0 30px;
+	padding: 0 30px 30px 30px;
 	box-shadow: 0px 1px 0px #FFF inset;
 	min-height: 300px;
 }
@@ -174,9 +175,10 @@
 */
 
 .um-admin-dash-two-col .um-admin-dash-col {
-	float: left;
+	display: inline-block;
 	width: 42%;
 	margin-right: 4%;
+	vertical-align: top;
 }
 
 .um-admin-dash-col a:hover {text-decoration: underline}
@@ -210,25 +212,17 @@
 
 .um-admin-dash-info {
 	display: inline-block;
-	width: 130px;
+	width: 110px;
 	margin-right: 10px;
 }
 
 .um-admin-dash-meta {
 	display: inline-block;
-	width: 120px;
+	width: 100px;
 	margin-right: 10px;
 }
 
 .um-admin-dash-more {
 	display: inline-block;
+	color: #aaa;
 }
-
-/*
-	- Colorful user status
-*/
-
-.um-status-awaiting_admin_review {color: #C74A4A}
-.um-status-approved {color: #7ACF58}
-.um-status-inactive {color: #888}
-.um-status-rejected {color: #aaa}

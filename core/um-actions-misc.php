@@ -50,8 +50,12 @@
 		global $ultimatemember;
 		extract($args);
 		$output = '';
+
+		if ( !get_option('users_can_register') && $mode == 'register' ) {
+			$err = __('Registration is currently disabled','ultimatemember');
+		}
 		
-		if ( isset( $_REQUEST['updated'] ) && !empty( $_REQUEST['updated'] ) ) {
+		if ( isset( $_REQUEST['updated'] ) && !empty( $_REQUEST['updated'] ) && !$ultimatemember->form->errors ) {
 			switch( $_REQUEST['updated'] ) {
 				case 'password_changed':
 					$success = __('You have successfully changed your password.','ultimatemember');
@@ -59,8 +63,17 @@
 			}
 		}
 		
-		if ( isset( $_REQUEST['err'] ) && !empty( $_REQUEST['err'] ) ) {
+		if ( isset( $_REQUEST['err'] ) && !empty( $_REQUEST['err'] ) && !$ultimatemember->form->errors ) {
 			switch( $_REQUEST['err'] ) {
+				case 'registration_disabled':
+					$err = __('Registration is currently disabled','ultimatemember');
+					break;
+				case 'blocked_email':
+					$err = __('This email address has been blocked.','ultimatemember');
+					break;
+				case 'blocked_ip':
+					$err = __('Your IP address has been blocked.','ultimatemember');
+					break;
 				case 'inactive':
 					$err = __('Your account has been disabled.','ultimatemember');
 					break;
@@ -78,6 +91,10 @@
 		
 		if ( isset( $err ) ) {
 			$output .= '<p class="um-notice err">' . $err . '</p>';
+		}
+		
+		if ( isset( $success ) ) {
+			$output .= '<p class="um-notice success">' . $success . '</p>';
 		}
 		
 		echo $output;

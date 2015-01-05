@@ -23,6 +23,16 @@
 	background: #3ba1da url(../img/logo_small.png) no-repeat center 0px !important;
 }
 
+.um-about-wrap a.button-primary {
+	height: 46px;
+	line-height: 46px;
+	padding: 0 20px !important;
+	font-size: 14px;
+	border: none;
+}
+
+.um-about-wrap a {text-decoration: none}
+
 /*
 	- General
 */
@@ -76,14 +86,6 @@ body.um-admin-modal-open {
 .um-admin a.um-admin-activebg:hover{
 	background: #3ba1da;
 	color: #fff;
-}
-
-.um-admin a.button,
-.um-admin input.button {
-	background: #f9f9f9 !important;
-	box-shadow: none !important;
-	color: #777;
-	border-radius: 2px;
 }
 
 .um-admin a.button i,

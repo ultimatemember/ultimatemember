@@ -1,6 +1,45 @@
 <?php
 
 	/***
+	***	@filter to customize errors
+	***/
+	add_filter('login_message', 'um_custom_wp_err_messages');
+	function um_custom_wp_err_messages( $message) {
+
+		if ( isset( $_REQUEST['err'] ) && !empty( $_REQUEST['err'] ) ) {
+			switch( $_REQUEST['err'] ) {
+				case 'blocked_email':
+					$err = __('This email address has been blocked.','ultimatemember');
+					break;
+				case 'blocked_ip':
+					$err = __('Your IP address has been blocked.','ultimatemember');
+					break;
+			}
+		}
+		
+		if ( isset( $err ) ) {
+			$message = '<div class="login" id="login_error">'.$err.'</div>';
+		}
+		
+		return $message;
+	}
+	
+	/***
+	***	@check for blocked ip
+	***/
+	add_filter('authenticate', 'um_wp_form_errors_hook_ip_test', 10, 3);
+	function um_wp_form_errors_hook_ip_test( $user, $username, $password ) {
+		if (!empty($username)) {
+
+			do_action("um_submit_form_errors_hook__blockedips", $args=array() );
+			do_action("um_submit_form_errors_hook__blockedemails", $args=array('username' => $username ) );
+			
+		}
+
+		return $user;
+	}
+	
+	/***
 	***	@login checks thru the wordpress admin login
 	***/
 	add_filter('authenticate', 'um_wp_form_errors_hook_logincheck', 999, 3);

@@ -200,6 +200,8 @@ class UM_User {
 	
 		$old_status = ( isset( $this->profile['account_status'] ) ) ? $this->profile['account_status'] : 'null';
 		
+		if ( $status == $old_status ) return; // to prevent spam
+		
 		do_action('um_before_user_status_is_changed', $old_status );
 		
 		$this->profile['account_status'] = $status;

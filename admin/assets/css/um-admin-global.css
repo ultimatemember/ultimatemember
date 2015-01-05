@@ -48,41 +48,6 @@
 .um-nav-roles {display: none;margin-top:5px}
 
 /*
-	- Admin notice
-*/
-
-.um-admin-notice {
-	font-size: 14px !important;
-	color: #fff;
-	border-radius: 0;
-	margin: 40px 30px 0 0;
-	padding: 20px;
-	background: #3ba1da url(../img/logo-header.png) no-repeat 20px center;
-	border-radius: 5px;
-}
-
-.um-admin-notice div {
-	padding: 0 0 0 80px;
-}
-
-.um-admin-notice a {
-	text-decoration: none;
-	color: #3ba1da;
-	background: #fff;
-	margin: 0 0 0 10px;
-	border-radius: 5px;
-	display: inline-block;
-	padding: 8px 15px;
-}
-.um-admin-notice a:hover {color:#356e8e}
-
-.um-admin-notice a.um-admin-notice-alt {
-	background: #356e8e;
-	color: #8bbbd5;
-}
-.um-admin-notice a.um-admin-notice-alt:hover {color: #fff}
-
-/*
 	- jQuery Tooltips
 */
 

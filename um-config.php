@@ -12,16 +12,6 @@ $this->sections[] = array(
     'title'      => __( 'Registration'),
     'fields'     => array(
 
-        array(
-                'id'       		=> 'registration',
-                'type'     		=> 'switch',
-                'title'   		=> __( 'Registration Status' ),
-				'default' 		=> 1,
-				'desc' 	   		=> 'Enable/disable new user registration globally on your site',
-				'on'			=> 'Enabled',
-				'off'			=> 'Disabled',
-        ),
-		
 		array(
 				'id'       		=> 'default_role',
                 'type'     		=> 'select',
@@ -249,16 +239,6 @@ $this->sections[] = array(
     'fields'     => array(
 
         array(
-                'id'       		=> 'wpadmin_um_bar',
-                'type'     		=> 'switch',
-                'title'   		=> __( 'Show Ultimate Member in admin bar when browsing the frontend?' ),
-				'default' 		=> 1,
-				'desc' 	   		=> 'Control whether to show or hide the Ultimate Member admin bar when you are browsing the frontend.',
-				'on'			=> __('Yes','ultimatemember'),
-				'off'			=> __('No','ultimatemember'),
-        ),
-		
-        array(
                 'id'       		=> 'panic_key',
                 'type'     		=> 'text',
                 'title'   		=> __( 'Panic Key' ),
@@ -350,7 +330,7 @@ $this->sections[] = array(
                 'type'     		=> 'textarea',
                 'title'    		=> __( 'Blocked IP Addresses' ),
                 'desc' 			=> __( 'Enter one IP per line, you can also use wildcards to block a specific range e.g. 41.83.*.*' ),
-				'desc'			=> __('This will block these IPs from accessing the site, you can use full IP numbers or target specific range with a wildcard')
+				'desc'			=> __('This will block the listed IPs from signing up or signing in to the site, you can use full IP numbers or target specific range with a wildcard')
         ),
 		
         array(
@@ -880,7 +860,7 @@ $this->sections[] = array(
 			'width'		=> '150',
 			'height'	=> '150',
 			'title'    	=> __('Default Profile Picture', 'ultimatemember'),
-			'desc'     	=> __('You can change the default profile picture globally here. Please make sure photo is 300x300px.', 'ultimatemember'),
+			'desc'     	=> __('You can change the default profile picture globally here. Please make sure that the photo is 300x300px.', 'ultimatemember'),
 			'default'  	=> array(
 					'url'		=> um_url . 'assets/img/default_avatar.jpg',
 			),

@@ -21,7 +21,7 @@ class UM_Query {
 	/***
 	***	@Get users by meta
 	***/
-	function get_users_by_meta($rule, $number = 5){
+	function get_users_by_status($rule, $number = 5){
 		global $wpdb;
 		
 		$args = array( 'fields' => 'ID', 'number' => $number, 'orderby' => 'user_registered', 'order' => 'desc' );

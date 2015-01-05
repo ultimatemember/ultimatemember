@@ -146,7 +146,7 @@ class UM_Admin_Tracking {
 		$optin_url  = add_query_arg( 'um_adm_action', 'opt_into_tracking' );
 		$optout_url = add_query_arg( 'um_adm_action', 'opt_out_of_tracking' );
 
-		echo '<div class="updated"><p>';
+		echo '<div class="updated" style="border-color: #3ba1da;"><p>';
 		
 		echo __( 'Help us improve Ultimate Member’s compatibility with other plugins and themes by allowing us to track non-sensitive data on your site. Click <a href="http://ultimatemember.com/tracking/">here</a> to see what data we track.', 'ultimatemember' );
 		

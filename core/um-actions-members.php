@@ -190,9 +190,7 @@
 		}
 		
 		if ( um_members('users_per_page') ) {
-		
-			$default_size = str_replace( 'px', '', um_get_option('profile_photosize') );
-			
+
 		?>
 		
 			<div class="um-members">
@@ -205,13 +203,23 @@
 				
 					<span class="um-member-status <?php echo um_user('account_status'); ?>"><?php echo um_user('account_status_name'); ?></span>
 					
-					<?php if ($cover_photos) { ?>
+					<?php if ($cover_photos) { 
+						
+						if ( $ultimatemember->mobile->isTablet() ) {
+							$cover_size = 600;
+						} else {
+							$cover_size = 300;
+						}
+						
+					?>
+					
 					<div class="um-member-cover" data-ratio="<?php echo um_get_option('profile_cover_ratio'); ?>">
-						<div class="um-member-cover-e"><?php echo um_user('cover_photo', 300); ?></div>
+						<div class="um-member-cover-e"><?php echo um_user('cover_photo', $cover_size); ?></div>
 					</div>
+					
 					<?php } ?>
 		
-					<?php if ($profile_photo) { ?>
+					<?php if ($profile_photo) { $default_size = str_replace( 'px', '', um_get_option('profile_photosize') ); ?>
 					<div class="um-member-photo"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('profile_photo', $default_size ); ?></a></div>
 					<?php } ?>
 					

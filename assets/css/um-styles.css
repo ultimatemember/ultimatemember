@@ -88,24 +88,6 @@
 
 .um-col-133 {float: right;width: 30%;min-height: 1px;height: auto;}
 
-#wp-admin-bar-um_parent .ab-icon:before{
-	font-family: "dashicons" !important;
-	content: "\f110" !important;
-	top: 3px !important;
-}
-
-@media screen and (max-width: 782px) {
-	#wpadminbar li#wp-admin-bar-um_parent {
-		display: block;
-	}
-}
-
-@media screen and (max-width: 600px) {
-	#wpadminbar li#wp-admin-bar-um_parent {
-		display: none;
-	}
-}
-
 /*
 	- Font Icons
 */

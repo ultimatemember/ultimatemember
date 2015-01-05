@@ -43,15 +43,6 @@
 	}
 	
 	/***
-	***	@Get number of pending notifications for a meta
-	***/
-	function um_notify( $rule ) {
-		global $ultimatemember;
-		$results = $ultimatemember->query->get_users_by_meta( $rule, 100 );
-		return count($results);
-	}
-	
-	/***
 	***	@profile user ID
 	***/
 	function um_profile_id() {
