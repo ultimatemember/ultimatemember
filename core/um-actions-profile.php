@@ -137,7 +137,6 @@
 			<span class="um-profile-photo-overlay-s">
 				<ins>
 					<i class="um-icon-camera-5"></i>
-					<span class="um-profile-photo-overlay-t">'.__('Change your profile photo').'</span>
 				</ins>
 			</span>
 		</span>';
@@ -277,7 +276,7 @@
 			
 		<div class="um-profile-edit um-profile-headericon">
 		
-			<a href="#" class="um-profile-edit-a active um-profile-save"><i class="um-icon-check"></i></a>
+			<a href="#" class="um-profile-edit-a um-profile-save"><i class="um-icon-check"></i></a>
 		
 		</div>
 		

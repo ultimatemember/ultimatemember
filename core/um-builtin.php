@@ -354,7 +354,7 @@ class UM_Builtin {
 			
 			'block' => array(
 				'name' => 'Content Block',
-				'col1' => array('_title'),
+				'col1' => array('_title','_visibility'),
 				'col2' => array('_public','_roles'),
 				'col_full' => array('_content'),
 				'mce_content' => true,
@@ -372,7 +372,7 @@ class UM_Builtin {
 			
 			'shortcode' => array(
 				'name' => 'Shortcode',
-				'col1' => array('_title'),
+				'col1' => array('_title','_visibility'),
 				'col2' => array('_public','_roles'),
 				'col_full' => array('_content'),
 				'validate' => array(

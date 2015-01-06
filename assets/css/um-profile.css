@@ -199,7 +199,7 @@
 	background: rgba(0,0,0,.5);
 	text-align: center;
 	box-sizing: border-box;
-	padding: 0 40px;
+	padding: 0;
 	color: #fff;
 	text-shadow: 0 1px #666;
 	cursor: pointer !important;
@@ -229,7 +229,6 @@
 .um-profile-photo-overlay i {
 	font-size: 46px;
 	display: block;
-	margin-bottom: 6px;
 }
 
 /*

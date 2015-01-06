@@ -386,6 +386,20 @@ class UM_Admin_Metabox {
 				
 				break;
 				
+			case '_visibility':
+				?>
+				
+					<p><label for="_visibility">Visibility <?php $this->tooltip('Where this field should appear?'); ?></label>
+						<select name="_visibility" id="_visibility" class="umaf-selectjs" style="width: 100%">
+							<option value="all"  <?php selected( 'all', $this->edit_mode_value ); ?>>View everywhere</option>
+							<option value="edit" <?php selected( 'edit', $this->edit_mode_value ); ?>>Edit mode only</option>
+							<option value="view" <?php selected( 'view', $this->edit_mode_value ); ?>>View mode only</option>
+						</select>
+					</p>
+					
+				<?php
+				break;
+				
 			case '_conditional_action':
 			case '_conditional_action1':
 			case '_conditional_action2':

@@ -188,9 +188,13 @@
 	- WP Editor
 */
 
+.um-admin-modal-body.um-admin-metabox  .um-admin-editor-h {
+	margin-top: 12px;
+}
+
 .um-admin-modal-body.um-admin-metabox  .um-admin-editor-h label,
 .um-admin-modal-body.um-admin-metabox  .wp-editor-wrap
-{margin: 0 0 10px 0 !important}
+{margin: 0 0 4px 0 !important}
 
 .um-admin-modal-body.um-admin-metabox  .wp-editor-wrap textarea {
 	border: 0 !important;

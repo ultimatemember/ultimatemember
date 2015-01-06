@@ -28,14 +28,12 @@ div.uimob960 .uimob960-hide
 
 /********************************************/
 
-div.uimob340 .um-cover-overlay span.um-cover-overlay-t,
-div.uimob340 .um-profile-photo-overlay span.um-profile-photo-overlay-t
+div.uimob340 .um-cover-overlay span.um-cover-overlay-t
 {
 	display: none !important;
 }
 
-div.uimob340 .um-cover-overlay,
-div.uimob340 .um-profile-photo-overlay
+div.uimob340 .um-cover-overlay
 {
 	padding: 0;
 }
@@ -208,14 +206,12 @@ div.uimob340 .um-account-meta {
 
 /********************************************/
 
-div.uimob500 .um-cover-overlay span.um-cover-overlay-t,
-div.uimob500 .um-profile-photo-overlay span.um-profile-photo-overlay-t
+div.uimob500 .um-cover-overlay span.um-cover-overlay-t
 {
 	display: none !important;
 }
 
-div.uimob500 .um-cover-overlay,
-div.uimob500 .um-profile-photo-overlay
+div.uimob500 .um-cover-overlay
 {
 	padding: 0;
 }
@@ -453,13 +449,7 @@ div.uimob800 .um-header .um-profile-meta {
 	padding-left: 200px;
 }
 
-div.uimob800 .um-profile-photo-overlay span.um-profile-photo-overlay-t
-{
-	display: none !important;
-}
-
-div.uimob800 .um-cover-overlay,
-div.uimob800 .um-profile-photo-overlay
+div.uimob800 .um-cover-overlay
 {
 	padding: 0;
 }

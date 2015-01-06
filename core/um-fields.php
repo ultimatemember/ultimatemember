@@ -748,6 +748,8 @@ class UM_Fields {
 				
 		}
 		
+		if ( !isset( $array['visibility'] ) ) $array['visibility'] = 'all';
+		
 		return $array;
 	}
 	
@@ -769,6 +771,8 @@ class UM_Fields {
 		
 		if ( isset( $data['in_group'] ) && $data['in_group'] != '' && $rule != 'group' ) return;
 		
+		if ( $visibility == 'view' ) return;
+		
 		if ( !um_can_view_field( $data ) ) return;
 		if ( !um_can_edit_field( $data ) ) return;
 		
@@ -784,7 +788,7 @@ class UM_Fields {
 				return;
 			}
 		}
-		
+
 		/* Begin by field type */
 
 		switch( $type ) {
@@ -1779,7 +1783,13 @@ class UM_Fields {
 		
 		if ( isset( $data['in_group'] ) && $data['in_group'] != '' && $rule != 'group' ) return;
 
-		if ( ! $this->field_value( $key, $default, $data ) ) return;
+		if ( $visibility == 'edit' ) return;
+		
+		if ( in_array( $type, array('block','shortcode','spacing','divider','group') ) ) {
+
+		} else {
+			if ( ! $this->field_value( $key, $default, $data ) ) return;
+		}
 		
 		if ( !um_can_view_field( $data ) ) return;
 		
@@ -1800,6 +1810,30 @@ class UM_Fields {
 						
 						$output .= '</div>';
 						
+				break;
+				
+			/* HTML */
+			case 'block':
+				$output .= '<div class="um-field ' . $classes . '">
+								<div class="um-field-block">'.$content.'</div>
+							</div>';
+				break;
+				
+			/* Shortcode */
+			case 'shortcode':
+				$output .= '<div class="um-field ' . $classes . '">
+								<div class="um-field-shortcode">'.do_shortcode($content).'</div>
+							</div>';
+				break;
+				
+			/* Gap/Space */
+			case 'spacing':
+				$output .= '<div class="um-field-spacing" style="height: '.$spacing.'"></div>';
+				break;
+				
+			/* A line divider */
+			case 'divider':
+				$output .= '<div class="um-field-divider" style="border-bottom: '.$borderwidth.'px '.$borderstyle.' '.$bordercolor.'"></div>';
 				break;
 				
 			/* Rating */
