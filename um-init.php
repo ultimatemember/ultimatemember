@@ -57,6 +57,7 @@ class UM_API {
 		require_once um_path . 'core/lib/mobiledetect/Mobile_Detect.php';
 		
 		require_once um_path . 'core/um-actions-form.php';
+		require_once um_path . 'core/um-actions-access.php';
 		require_once um_path . 'core/um-actions-wpadmin.php';
 		require_once um_path . 'core/um-actions-core.php';
 		require_once um_path . 'core/um-actions-ajax.php';

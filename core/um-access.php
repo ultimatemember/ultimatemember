@@ -4,11 +4,26 @@ class UM_Access {
 
 	function __construct() {
 	
-		// hook into template redirects [home]
-		add_action('template_redirect',  array(&$this, 'custom_homepage_per_role'), 1000);
+		$this->redirect_handler = false;
+		$this->allow_access = false;
 
-		// hook into template redirects
-		add_action('template_redirect',  array(&$this, 'post_page_access_control'), 999);
+		add_action('template_redirect',  array(&$this, 'template_redirect'), 1000 );
+		
+	}
+	
+	/***
+	***	@do actions based on priority
+	***/
+	function template_redirect() {
+	
+		do_action('um_access_homepage_per_role');
+		
+		do_action('um_access_global_settings');
+		
+		do_action('um_access_post_settings');
+		
+		if ( $this->redirect_handler && !$this->allow_access )
+			exit( wp_redirect( $this->redirect_handler ) );
 		
 	}
 	
@@ -29,67 +44,6 @@ class UM_Access {
 			return (array)$array;
 		else
 			return array('');
-	}
-	
-	/***
-	***	@custom homepage per role
-	***/
-	function custom_homepage_per_role(){
-	
-		if ( !is_user_logged_in() ) return;
-		if ( is_admin() ) return;
-		if ( um_user('default_homepage') ) return;
-		if ( !um_user('redirect_homepage') ) return;
-		
-		if( is_home() || is_front_page() )
-			exit( wp_redirect( um_user('redirect_homepage') ) );
-		
-	}
-	
-	/***
-	***	@the main restrict function
-	***/
-	function post_page_access_control(){
-		global $post;
-		
-		if ( !get_post_type() || !isset($post->ID) ) return;
-		
-		$args = $this->get_meta();
-		extract($args);
-
-		$redirect_to = null;
-
-		if ( !isset( $accessible ) ) return;
-		
-		switch( $accessible ) {
-			
-			case 0:
-				break;
-			
-			case 1:
-			
-				if ( is_user_logged_in() )
-					$redirect_to = $access_redirect2;
-				break;
-				
-			case 2:
-				
-				if ( !is_user_logged_in() )
-					$redirect_to = $access_redirect;
-					
-				if ( isset( $access_roles ) && !empty( $access_roles ) )
-					if ( !in_array( um_user('role'), unserialize( $access_roles ) ) )
-						$redirect_to = $access_redirect;
-						
-				break;
-				
-		}
-		
-		if ( $redirect_to ) {
-			wp_redirect( $redirect_to );
-			exit;
-		}
-		
 	}
 
 }

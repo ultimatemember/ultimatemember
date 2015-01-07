@@ -243,7 +243,7 @@
 		
 		?>
 		
-		<div class="um-account-meta">
+		<div class="um-account-meta radius-<?php echo um_get_option('profile_photocorner'); ?>">
 			
 			<div class="um-account-meta-img uimob800-hide"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('profile_photo', 120); ?></a></div>
 			

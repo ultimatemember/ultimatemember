@@ -223,6 +223,16 @@ $this->sections[] = array(
 				'desc' 	   		=> 'A logged out user will be redirected to this url If he is not permitted to access the site',
 				'required'		=> array( 'accessible', '=', 2 ),
         ),
+		
+		array(
+				'id'       		=> 'access_exclude_uris',
+                'type'     		=> 'multi_text',
+				'default'		=> array(),
+                'title'    		=> __( 'Exclude the following URLs' ),
+                'desc' 	   		=> __( 'Here you can exclude URLs beside the redirect URI to be accessible to everyone' ),
+				'add_text'		=> __('Add New URL'),
+				'required'		=> array( 'accessible', '=', 2 ),
+		),
 
 	)
 

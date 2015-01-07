@@ -20,8 +20,6 @@
 	-moz-osx-font-smoothing: grayscale !important;
 }
 
-#um-admin-access-control * {vertical-align: middle}
-
 #um-admin-access-control p {font-size: 13px}
 
 #um-admin-access-control input[type=text] {font-size: 13px}

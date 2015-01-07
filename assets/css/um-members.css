@@ -170,7 +170,6 @@
 
 .um-member-photo img {
 	display: inline !important;
-	border-radius: 999px !important;
 	border: 5px solid #fff;
 	background: #fff;
 	width: 140px;
@@ -185,6 +184,10 @@
 	top: -35px;
 	margin-bottom: -45px !important;
 }
+
+.um-member-photo.radius-1 img { border-radius: 999px !important }
+.um-member-photo.radius-2 img { border-radius: 4px !important }
+.um-member-photo.radius-3 img { border-radius: 0 !important }
 
 /*
 	- Member name

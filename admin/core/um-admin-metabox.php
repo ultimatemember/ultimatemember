@@ -107,8 +107,10 @@ class UM_Admin_Metabox {
 	***/
 	function ui_on_off( $id, $default=0, $is_conditional=false, $cond1='', $cond1_show='', $cond1_hide='' ) {
 
-		if (isset($this->postmeta[$id][0])) {
-			$active = $this->postmeta[$id][0];
+		$meta = get_post_meta( get_the_ID(), $id, true );
+		
+		if (isset($this->postmeta[$id][0]) || $meta ) {
+			$active = ( isset( $this->postmeta[$id][0] ) ) ? $this->postmeta[$id][0] : $meta;
 		} else {
 			$active = $default;
 		}
