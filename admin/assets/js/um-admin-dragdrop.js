@@ -170,8 +170,13 @@ function UM_Rows_Refresh(){
 		
 		sub_rows_count = row.find('.um-admin-drag-rowsub').length;
 		
+		var origin_id = jQuery(this).attr('data-original');
+
 		jQuery('.um_update_order_fields').append('<input type="hidden" name="_um_row_'+c+'" id="_um_row_'+c+'" value="_um_row_'+c+'" />');
+		jQuery('.um_update_order_fields').append('<input type="hidden" name="_um_roworigin_'+c+'_val" id="_um_roworigin_'+c+'_val" value="'+origin_id+'" />');
 		jQuery('.um_update_order_fields').append('<input type="hidden" name="_um_rowsub_'+c+'_rows" id="_um_rowsub_'+c+'_rows" value="'+sub_rows_count+'" />');
+		
+		jQuery(this).attr('data-original', '_um_row_'+c );
 	
 	});
 
@@ -300,6 +305,7 @@ jQuery(document).ready(function() {
 		var dragg = jQuery('.um-admin-drag-ajax');
 		dragg.append( '<div class="um-admin-drag-row">' + jQuery('.um-col-demon-row').html() + '</div>' );
 		dragg.find('.um-admin-drag-row:last').find('.um-admin-drag-row-icons').find('a.um-admin-drag-row-edit').attr('data-arg3', '_um_row_' + ( dragg.find('.um-admin-drag-row').length ) );
+		dragg.find('.um-admin-drag-row:last').attr('data-original', '_um_row_' + ( dragg.find('.um-admin-drag-row').length ) );
 		UM_update_rows();
 		UM_update_subrows();
 		UM_Rows_Refresh();

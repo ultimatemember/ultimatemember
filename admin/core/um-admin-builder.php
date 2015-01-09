@@ -78,6 +78,8 @@ class UM_Admin_Builder {
 	***/
 	function show_builder(){
 		global $ultimatemember;
+
+		//print_r( get_option('um_form_rowdata_' . $this->form_id ) );
 		
 		$fields = $ultimatemember->query->get_attr('custom_fields', $this->form_id );
 
@@ -149,7 +151,7 @@ class UM_Admin_Builder {
 		
 		?>
 		
-		<div class="um-admin-drag-row">
+		<div class="um-admin-drag-row" data-original="<?php echo $row_id; ?>">
 		
 			<!-- Master Row Actions -->
 			<div class="um-admin-drag-row-icons">

@@ -31,7 +31,7 @@
 			$save[ $_metakey ]['icon'] = '';
 			foreach( $array['post'] as $key => $val){
 				
-				if ( substr( $key, 0, 1) === '_' && $val != '' ) { // field attribute
+				if ( substr( $key, 0, 1) === '_' ) { // field attribute
 					$new_key = ltrim ($key,'_');
 					
 					if ( $new_key == 'options' ) {

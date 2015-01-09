@@ -32,13 +32,13 @@ class UM_Admin_DragDrop {
 				unset( $fields[$key] );
 			}
 		}
-		
-		update_option('um_form_rowdata_' . $form_id , $this->row_data );
-		
+
 		foreach( $_POST as $key => $value ) {
 		
 			// adding rows
 			if (0 === strpos($key, '_um_row_')) {
+				
+				$update_args = null;
 				
 				$row_id = str_replace( '_um_row_', '', $key );
 				
@@ -47,14 +47,23 @@ class UM_Admin_DragDrop {
 					'id' => $value,
 					'sub_rows' => $_POST[ '_um_rowsub_'.$row_id .'_rows' ],
 					'cols' => $_POST[ '_um_rowcols_'.$row_id .'_cols' ],
+					'origin' => $_POST[ '_um_roworigin_'.$row_id . '_val' ],
 				);
 				
-				if ( isset( $this->row_data[$key] ) ) {
-					$row_args = array_merge( $this->row_data[$key], $row_array );
-				} else {
-					$row_args = $row_array;
-				}
+				$row_args = $row_array;
 				
+				if ( isset( $this->row_data[ $row_array['origin'] ] ) ) {
+					foreach( $this->row_data[ $row_array['origin'] ] as $k => $v ){
+						if ( $k != 'position' && $k != 'metakey' ) {
+							$update_args[$k] = $v;
+						}
+					}
+					if ( isset( $update_args ) ) {
+					$row_args = array_merge( $update_args, $row_array );
+					}
+					$this->exist_rows[] = $key;
+				}
+
 				$fields[$key] = $row_args;
 				
 			}
@@ -101,6 +110,15 @@ class UM_Admin_DragDrop {
 			
 		}
 		
+		foreach( $this->row_data as $k => $v ) {
+			if ( !in_array( $k, $this->exist_rows ) )
+				unset( $this->row_data[$k] );
+		}
+		
+		update_option('um_existing_rows_' . $form_id, $this->exist_rows );
+		
+		update_option('um_form_rowdata_' . $form_id , $this->row_data );
+
 		$ultimatemember->query->update_attr( 'custom_fields', $form_id, $fields );
 				
 	}
