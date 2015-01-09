@@ -55,29 +55,11 @@ class UM_Chart {
 			data.addColumn('number', '<?php echo $y_label; ?>');
 			
 			<?php
-			
-				if ($data == 'new_users'){
-					$data_y = $ultimatemember->datetime->get_last_days( $days );
-				}
-				
-				if ($data == 'deleted_users'){
-					$data_y = $ultimatemember->query->deleted_users_per_day( $days );
-				}
-			
+
 				if (isset($data_y) && !empty($data_y)){
 				
 					foreach($data_y as $key => $val){
-					
-						if ($data == 'new_users'){
-						$row_value = $ultimatemember->query->count_users_registered_on( $key );
-						?>data.addRow(['<?php echo $val; ?>', <?php echo $row_value; ?>]);<?php
-						}
-						
-						if ($data == 'deleted_users'){
-						$key = $ultimatemember->datetime->format( $key, 'm/d' );
-						?>data.addRow(['<?php echo $key; ?>', <?php echo $val; ?>]);<?php
-						}
-				
+
 					}
 				
 				}

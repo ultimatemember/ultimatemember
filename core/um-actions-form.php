@@ -132,7 +132,7 @@
 		$form_id = $args['form_id'];
 		$mode = $args['mode'];
 		$fields = unserialize( $args['custom_fields'] );
-		
+
 		foreach( $fields as $key => $array ) {
 		
 			if ( isset( $array['required'] ) && $array['required'] == 1 ) {
@@ -284,6 +284,13 @@
 				
 			}
 			
+		}
+		
+		if ( isset( $args['description'] ) ) {
+			$max_chars = um_get_option('profile_bio_maxchars');
+			if ( strlen( utf8_decode( $args['description'] ) ) > $max_chars && $max_chars ) {
+				$ultimatemember->form->add_error('description', sprintf(__('Your user description must contain less than %s characters'), $max_chars ) );
+			}
 		}
 		
 	}

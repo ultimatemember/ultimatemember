@@ -788,6 +788,12 @@ class UM_Fields {
 				return;
 			}
 		}
+		
+		if ( isset( $ultimatemember->user->preview ) && $ultimatemember->user->preview ) {
+			if ( $data['type'] == 'password' ){
+				return;
+			}
+		}
 
 		/* Begin by field type */
 

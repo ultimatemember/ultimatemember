@@ -9,9 +9,7 @@
 	</div>
 	
 	<div class="um-admin-modal-foot">
-		<a href="#" class="button-primary"><?php _e('Update','ultimatemember'); ?></a>
-		<a href="#" class="button-primary"><?php _e('Approve','ultimatemember'); ?></a>
-		<a href="#" class="button"><?php _e('Reject','ultimatemember'); ?></a>
+
 	</div>
 	
 </div>

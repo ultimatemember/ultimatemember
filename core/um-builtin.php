@@ -128,8 +128,8 @@ class UM_Builtin {
 			
 			'textarea' => array(
 				'name' => 'Textarea',
-				'col1' => array('_title','_metakey','_help','_height','_max_chars','_max_words','_html'),
-				'col2' => array('_label','_placeholder','_public','_roles','_default'),
+				'col1' => array('_title','_metakey','_help','_height','_max_chars','_max_words'),
+				'col2' => array('_label','_placeholder','_public','_roles','_default','_html'),
 				'col3' => array('_required','_editable','_icon'),
 				'validate' => array(
 					'_title' => array(
@@ -363,10 +363,6 @@ class UM_Builtin {
 						'mode' => 'required',
 						'error' => 'You must provide a title'
 					),
-					'um_editor' => array(
-						'mode' => 'required',
-						'error' => 'You must add some content first'
-					),
 				)
 			),
 			
@@ -413,7 +409,7 @@ class UM_Builtin {
 				)
 			),
 			
-			'group' => array(
+			/*'group' => array(
 				'name' => 'Field Group',
 				'col1' => array('_title','_max_entries'),
 				'col2' => array('_label','_public','_roles'),
@@ -428,7 +424,7 @@ class UM_Builtin {
 						'error' => 'You must provide a label'
 					),
 				)
-			),
+			),*/
 		
 		);
 		

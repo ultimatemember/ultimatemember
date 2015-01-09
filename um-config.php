@@ -391,29 +391,29 @@ $this->sections[] = array(
         ),
 
         array(
-                'id'       => 'approved_email_on',
+                'id'       => 'welcome_email_on',
                 'type'     => 'switch',
-                'title'    => __( 'Account Approved Email' ),
+                'title'    => __( 'Account Welcome Email' ),
 				'default'  => 1,
-				'desc' 	   => 'Whether to send the user an email when his account is approved',
+				'desc' 	   => 'Whether to send the user an email when his account is automatically approved',
         ),
 		
         array(
-                'id'       => 'approved_email_sub',
+                'id'       => 'welcome_email_sub',
                 'type'     => 'text',
-                'title'    => __( 'Account Approved Email' ),
+                'title'    => __( 'Account Welcome Email' ),
                 'subtitle' => __( 'Subject Line' ),
-                'default'  => 'Your account at {site_name} is now active',
-				'required' => array( 'approved_email_on', '=', 1 ),
+                'default'  => 'Welcome to {site_name}!',
+				'required' => array( 'welcome_email_on', '=', 1 ),
 				'desc' 	   => 'This is the subject line of the e-mail',
         ),
 
         array(
-				'id'       => 'approved_email',
+				'id'       => 'welcome_email',
                 'type'     => 'textarea',
-                'title'    => __( 'Account Approved Email' ),
+                'title'    => __( 'Account Welcome Email' ),
                 'subtitle' => __( 'Message Body' ),
-				'required' => array( 'approved_email_on', '=', 1 ),
+				'required' => array( 'welcome_email_on', '=', 1 ),
                 'default'  => 'Hi {display_name},' . "\r\n\r\n" .
 										  'Thank you for signing up with {site_name}! Your account is now active.' . "\r\n\r\n" .
 										  'To login please visit the following url:'  . "\r\n\r\n" .
@@ -425,7 +425,7 @@ $this->sections[] = array(
 										  'Thanks,' . "\r\n" .
 										  '{site_name}',
         ),
-
+		
         array(
                 'id'       => 'checkmail_email_on',
                 'type'     => 'switch',
@@ -457,7 +457,7 @@ $this->sections[] = array(
 										  'Thanks,' . "\r\n" .
 										  '{site_name}',
         ),
-
+		
         array(
                 'id'       => 'pending_email_on',
                 'type'     => 'switch',
@@ -489,7 +489,43 @@ $this->sections[] = array(
 										  'Thanks,' . "\r\n" .
 										  '{site_name}',
         ),
+		
+        array(
+                'id'       => 'approved_email_on',
+                'type'     => 'switch',
+                'title'    => __( 'Account Approved Email' ),
+				'default'  => 1,
+				'desc' 	   => 'Whether to send the user an email when his account is approved',
+        ),
+		
+        array(
+                'id'       => 'approved_email_sub',
+                'type'     => 'text',
+                'title'    => __( 'Account Approved Email' ),
+                'subtitle' => __( 'Subject Line' ),
+                'default'  => 'Your account at {site_name} is now active',
+				'required' => array( 'approved_email_on', '=', 1 ),
+				'desc' 	   => 'This is the subject line of the e-mail',
+        ),
 
+        array(
+				'id'       => 'approved_email',
+                'type'     => 'textarea',
+                'title'    => __( 'Account Approved Email' ),
+                'subtitle' => __( 'Message Body' ),
+				'required' => array( 'approved_email_on', '=', 1 ),
+                'default'  => 'Hi {display_name},' . "\r\n\r\n" .
+										  'Thank you for signing up with {site_name}! Your account has been approved and is now active.' . "\r\n\r\n" .
+										  'To login please visit the following url:'  . "\r\n\r\n" .
+										  '{login_url}'  . "\r\n\r\n" .
+										  'Your account e-mail: {email}' . "\r\n" .
+										  'Your account username: {username}' . "\r\n" .
+										  'Your account password: {password}' . "\r\n\r\n" .
+										  'If you have any problems, please contact us at {admin_email}'  . "\r\n\r\n" .
+										  'Thanks,' . "\r\n" .
+										  '{site_name}',
+        ),
+		
         array(
                 'id'       => 'rejected_email_on',
                 'type'     => 'switch',
@@ -1215,6 +1251,15 @@ $this->sections[] = array(
                 'title'    		=> __( 'Show user description in header' ),
 				'default' 		=> um_get_metadefault('profile_show_bio'),
 				'desc' 	   		=> 'Switch on/off the user description on profile header',
+        ),
+		
+        array(
+                'id'       		=> 'profile_bio_maxchars',
+                'type'     		=> 'text',
+                'title'    		=> __( 'User description maximum chars' ),
+                'default'  		=> um_get_metadefault('profile_bio_maxchars'),
+				'desc' 	   		=> 'Maximum number of characters to allow in user description field in header.',
+				'required'		=> array( 'profile_show_bio', '=', 1 ),
         ),
 		
 	)

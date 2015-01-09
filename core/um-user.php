@@ -252,9 +252,17 @@ class UM_User {
 	***/
 	function approve(){
 		global $ultimatemember;
+		
+		if ( um_user('account_status') == 'awaiting_admin_review' ) {
+			$email_tpl = 'approved_email';
+		} else {
+			$email_tpl = 'welcome_email';
+		}
+		
 		$this->set_status('approved');
 		$this->delete_meta('account_secret_hash');
-		$ultimatemember->mail->send( um_user('user_email'), 'approved_email' );
+		
+		$ultimatemember->mail->send( um_user('user_email'), $email_tpl );
 	}
 	
 	/***
@@ -282,6 +290,7 @@ class UM_User {
 	function reject(){
 		global $ultimatemember;
 		$this->set_status('rejected');
+		$this->delete( false );
 		$ultimatemember->mail->send( um_user('user_email'), 'rejected_email' );
 	}
 	
@@ -297,10 +306,12 @@ class UM_User {
 	/***
 	***	@delete user
 	***/
-	function delete() {
+	function delete( $send_mail = true ) {
 		global $ultimatemember;
 		
-		$ultimatemember->mail->send( um_user('user_email'), 'deletion_email' );
+		if ( $send_mail ) {
+			$ultimatemember->mail->send( um_user('user_email'), 'deletion_email' );
+		}
 		
 		require_once( ABSPATH . 'wp-admin/includes/user.php' );
 		

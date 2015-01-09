@@ -24,17 +24,15 @@
 		
 		<div class="um-admin-dash-main">
 			
-			<div class="um-admin-dash-content" id="overview">
+			<?php $tabs = array('overview', 'analytics'); ?>
 			
-				<?php include_once um_path . 'admin/templates/dashboard/overview.php'; ?>
+			<?php foreach( $tabs as $tab ) { ?>
+			<div class="um-admin-dash-content" id="<?php echo $tab; ?>">
+			
+				<?php include_once um_path . 'admin/templates/dashboard/'. $tab . '.php'; ?>
 				
 			</div>
-			
-			<div class="um-admin-dash-content" id="analytics">
-				
-				<?php include_once um_path . 'admin/templates/dashboard/analytics.php'; ?>
-			
-			</div>
+			<?php } ?>
 			
 		</div>
 		

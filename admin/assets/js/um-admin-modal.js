@@ -55,22 +55,36 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 			
 			if ( jQuery('.um-admin-editor:visible').length > 0 ) {
 			
-				tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor');
-				jQuery('.um-admin-editor').html( jQuery('.um-hidden-editor-container').contents() );
-				tinyMCE.execCommand('mceAddEditor', true, 'um_editor');
+				if ( act_id == 'um_admin_edit_field_popup' ) {
 				
-				jQuery('.switch-html').trigger('click');
-				jQuery('.switch-html').trigger('click');
-				jQuery('.switch-tmce').trigger('click');
+					tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_edit');
+					jQuery('.um-admin-editor:visible').html( jQuery('.um-hidden-editor-edit').contents() );
+					tinyMCE.execCommand('mceAddEditor', true, 'um_editor_edit');
+					
+					jQuery('.switch-html').trigger('click');
+					jQuery('.switch-html').trigger('click');
+					jQuery('.switch-tmce').trigger('click');
+					
+					jQuery('#um_editor_edit_ifr').height(200);
+
+					var editor = tinyMCE.get('um_editor_edit');
+					var content = editor.getContent();
+					editor.setContent( jQuery('.um-admin-modal:visible .dynamic-mce-content').html() );
+					
+				} else {
 				
-				jQuery('#um_editor_ifr').height(200);
+					tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_new');
+					jQuery('.um-admin-editor:visible').html( jQuery('.um-hidden-editor-new').contents() );
+					tinyMCE.execCommand('mceAddEditor', true, 'um_editor_new');
+					
+					jQuery('.switch-html').trigger('click');
+					jQuery('.switch-html').trigger('click');
+					jQuery('.switch-tmce').trigger('click');
+					
+					jQuery('#um_editor_new_ifr').height(200);
+					
+				}
 				
-			}
-			
-			if ( jQuery('.dynamic-mce-content').length > 0 ) {
-				var editor = tinyMCE.get('um_editor');
-				var content = editor.getContent();
-				editor.setContent( jQuery('.dynamic-mce-content').html() );
 			}
 			
 		},
@@ -90,9 +104,19 @@ function um_admin_remove_modal(){
 
 	if ( jQuery('.um-admin-editor:visible').length > 0 ) {
 	
-		tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor');
-		jQuery('.um-hidden-editor-container').html( jQuery('.um-admin-editor').contents() );
-		tinyMCE.execCommand('mceAddEditor', true, 'um_editor');
+		if ( jQuery('.um-admin-modal:visible').find('form').parent().attr('id') == 'UM_edit_field' ) {
+		
+			tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_edit');
+			jQuery('.um-hidden-editor-edit').html( jQuery('.um-admin-editor:visible').contents() );
+			tinyMCE.execCommand('mceAddEditor', true, 'um_editor_edit');
+		
+		} else {
+		
+			tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_new');
+			jQuery('.um-hidden-editor-new').html( jQuery('.um-admin-editor:visible').contents() );
+			tinyMCE.execCommand('mceAddEditor', true, 'um_editor_new');
+		
+		}
 				
 	}
 			

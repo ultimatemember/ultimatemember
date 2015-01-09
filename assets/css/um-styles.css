@@ -33,8 +33,9 @@
 /* only in admin mode */
 .um.um-in-admin {
 	padding-top: 0;
-	margin-bottom: 10px;
+	margin-bottom: 0 !important;
 }
+.um.um-in-admin .um-tip {display: none !important}
 
 .um input,
 .um select,

@@ -362,8 +362,12 @@ class UM_Admin_Metabox {
 		
 		$settings['textarea_rows'] = 8;
 		
-		echo '<div class="um-hidden-editor-container" style="display:none">';
-		wp_editor( '', 'um_editor', $settings );
+		echo '<div class="um-hidden-editor-edit" style="display: none">';
+		wp_editor( '', 'um_editor_edit', $settings );
+		echo '</div>';
+		
+		echo '<div class="um-hidden-editor-new" style="display: none">';
+		wp_editor( '', 'um_editor_new', $settings );
 		echo '</div>';
 
 	}

@@ -297,41 +297,5 @@ class UM_Query {
 		return $roles;
 		
 	}
-	
-	/***
-	***	@Number of users registered on specific day
-	***/
-	function count_users_registered_on( $date='' ){
-		global $wpdb;
-
-		// defaults to today
-		if( empty($date) )
-			$date = date('Y-m-d');
-
-		$morning = new DateTime($date. ' 00:00:00');
-		$night = new DateTime($date.' 23:59:59'); 
-		$m = $morning->format('Y-m-d H:i:s');
-		$n = $night->format('Y-m-d H:i:s');
-
-		$sql = $wpdb->prepare("SELECT wp_users.* FROM wp_users WHERE 1=1 AND CAST(user_registered AS DATE) BETWEEN %s AND %s ORDER BY user_login ASC",$m,$n);
-
-		$users = $wpdb->get_results($sql);
-
-		return $wpdb->num_rows;
-	}
-	
-	/***
-	***	@Get deleted users count for last x days
-	***/
-	function deleted_users_per_day( $limit = 30 ){
-		$option = get_option('um_deleted_users');
-		if (is_array($option)){
-			$slice = array_slice($option, 0, $limit);
-			$reverse = array_reverse($slice);
-			return $reverse;
-		} else {
-			return null;
-		}
-	}
 
 }

@@ -1,9 +1,12 @@
 jQuery(document).ready(function() {
 
+	/**
+	
 	var active_tab = jQuery('.um-admin-dash-nav a.active').attr('data-rel');
 	jQuery('.um-admin-dash-content').hide();
 	jQuery('.um-admin-dash-content#'+active_tab).show();
 	
+	draw_linechart();
 	chart_ready = 0;
 	
 	jQuery(document).on('click', '.um-admin-dash-nav a', function(e){
@@ -19,5 +22,7 @@ jQuery(document).ready(function() {
 		}
 		return false;
 	});
+	
+	**/
 	
 });

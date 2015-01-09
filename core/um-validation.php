@@ -11,6 +11,13 @@ class UM_Validation {
 	}
 	
 	/***
+	***	@removes html from any string
+	***/
+	function remove_html($string) {
+		return wp_strip_all_tags( $string );
+	}
+	
+	/***
 	***	@normalize a string
 	***/
 	function normalize($string) {

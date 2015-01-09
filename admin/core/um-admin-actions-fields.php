@@ -40,7 +40,7 @@
 					$save[ $_metakey ][$new_key] = $val;
 					}
 					
-				} else if ( $key == 'um_editor' ) {
+				} else if ( strstr( $key, 'um_editor' ) ) {
 					$save[ $_metakey ]['content'] = $val;
 				}
 				
