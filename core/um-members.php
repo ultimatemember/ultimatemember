@@ -118,8 +118,8 @@ class UM_Members {
 
 		$array['users'] = $users->results;
 		
-		$array['total_users'] = $users->total_users;
-		
+		$array['total_users'] = (isset( $max_users ) && $max_users && $max_users <= $users->total_users ) ? $max_users : $users->total_users;
+
 		$array['page'] = get_query_var('members_page') ? get_query_var('members_page') : 1;
 		
 		$array['total_pages'] = ceil( $array['total_users'] / $profiles_per_page );

@@ -12,6 +12,19 @@
 		</p><div class="um-admin-clear"></div>
 		
 		<p class="search-options">
+			<label class="um-admin-half"><?php _e('User Roles that can use search','ultimatemember'); ?> <?php $this->tooltip('If you want to allow specific user roles to be able to search only'); ?></label>
+			<span class="um-admin-half">
+			
+				<select multiple="multiple" name="_um_roles_can_search[]" id="_um_roles_can_search" class="umaf-selectjs" style="width: 300px">
+					<?php foreach($ultimatemember->query->get_roles() as $key => $value) { ?>
+					<option value="<?php echo $key; ?>" <?php selected($key, $ultimatemember->query->get_meta_value('_um_roles_can_search', $key) ); ?>><?php echo $value; ?></option>
+					<?php } ?>	
+				</select>
+				
+			</span>
+		</p><div class="um-admin-clear"></div>
+		
+		<p class="search-options">
 			<label class=""><?php _e('Choose field(s) to enable in search','ultimatemember'); ?></label>
 				
 				<?php
@@ -25,7 +38,7 @@
 				<span class="um-admin-field">
 				
 				<select name="_um_search_fields[]" id="_um_search_fields" class="umaf-selectjs" style="width: 300px" data-placeholder="Choose a field">
-					<?php foreach($ultimatemember->builtin->all_user_fields() as $key => $arr) { ?>
+					<?php foreach($ultimatemember->builtin->all_user_fields('date,time,url') as $key => $arr) { ?>
 					<option value="<?php echo $key; ?>" <?php selected($key, $val ); ?>><?php echo isset( $arr['title'] ) ? $arr['title'] : ''; ?></option>
 					<?php } ?>	
 				</select>
@@ -46,7 +59,7 @@
 				<span class="um-admin-field">
 				
 				<select name="_um_search_fields[]" id="_um_search_fields" class="umaf-selectjs" style="width: 300px" data-placeholder="Choose a field">
-					<?php foreach($ultimatemember->builtin->all_user_fields() as $key => $arr) { ?>
+					<?php foreach($ultimatemember->builtin->all_user_fields('date,time,url') as $key => $arr) { ?>
 					<option value="<?php echo $key; ?>" <?php selected($key, $ultimatemember->query->get_meta_value('_um_search_fields', $key) ); ?>><?php echo isset( $arr['title'] ) ? $arr['title'] : ''; ?></option>
 					<?php } ?>	
 				</select>
@@ -57,32 +70,6 @@
 				
 				<?php } ?>
 
-		</p><div class="um-admin-clear"></div>
-		
-		<p class="search-options">
-			<label class="um-admin-half"><?php _e('User Roles that can use search','ultimatemember'); ?> <?php $this->tooltip('If you want to allow specific user roles to be able to search only'); ?></label>
-			<span class="um-admin-half">
-			
-				<select multiple="multiple" name="_um_roles_can_search[]" id="_um_roles_can_search" class="umaf-selectjs" style="width: 300px">
-					<?php foreach($ultimatemember->query->get_roles() as $key => $value) { ?>
-					<option value="<?php echo $key; ?>" <?php selected($key, $ultimatemember->query->get_meta_value('_um_roles_can_search', $key) ); ?>><?php echo $value; ?></option>
-					<?php } ?>	
-				</select>
-				
-			</span>
-		</p><div class="um-admin-clear"></div>
-		
-		<p class="search-options">
-			<label class="um-admin-half"><?php _e('User Roles that cannot use search','ultimatemember'); ?> <?php $this->tooltip('If you want to prevent specific user roles from being able to search'); ?></label>
-			<span class="um-admin-half">
-			
-				<select multiple="multiple" name="_um_roles_cant_search[]" id="_um_roles_cant_search" class="umaf-selectjs" style="width: 300px">
-					<?php foreach($ultimatemember->query->get_roles() as $key => $value) { ?>
-					<option value="<?php echo $key; ?>" <?php selected($key, $ultimatemember->query->get_meta_value('_um_roles_cant_search', $key) ); ?>><?php echo $value; ?></option>
-					<?php } ?>	
-				</select>
-				
-			</span>
 		</p><div class="um-admin-clear"></div>
 		
 		<p class="search-options">

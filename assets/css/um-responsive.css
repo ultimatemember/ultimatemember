@@ -454,6 +454,32 @@ div.uimob800 .um-cover-overlay
 	padding: 0;
 }
 
+div.uimob800 .um-search {
+	padding: 20px 0 !important;
+	width: 100% !important;
+	box-sizing: border-box;
+}
+
+div.uimob800 .um-search .um-search-filter {
+	width: 48% !important;
+	float: left !important;
+	padding: 0 0 15px 0 !important;
+}
+
+div.uimob800 .um-search .um-search-filter-2 {
+	margin-left: 4%;
+}
+
+div.uimob800 .um-search .um-search-submit .um-button {
+	display: block !important;
+	width: 48% !important;
+	margin: 0 0 15px 0 !important;
+	box-sizing: border-box;
+	float: left;
+}
+
+div.uimob800 .um-search .um-search-submit .um-button.um-alt {float: right}
+
 div.uimob800 .um-member {width: 48%}
 div.uimob800 .um-gutter-sizer {width: 4%}
 

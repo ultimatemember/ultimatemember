@@ -20,7 +20,11 @@
 		$search_filters = apply_filters('um_frontend_member_search_filters',$search_filters);
 			
 		if ( $args['search'] == 1 && is_array( $search_filters ) ) { // search on
-		
+			
+			if ( isset( $args['roles_can_search'] ) && !empty( $args['roles_can_search'] ) && !in_array( um_user('role'), $args['roles_can_search'] ) ){
+				return;
+			}
+			
 			$count = count( $search_filters );
 			
 			?>

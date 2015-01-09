@@ -14,7 +14,7 @@
 				<span class="um-admin-field">
 				
 				<select name="_um_profile_metafields[]" id="_um_profile_metafields" class="umaf-selectjs" style="width: 200px" data-placeholder="Choose a field">
-					<?php foreach($ultimatemember->builtin->all_user_fields( array('textarea') ) as $key => $arr) { ?>
+					<?php foreach($ultimatemember->builtin->all_user_fields() as $key => $arr) { ?>
 					<option value="<?php echo $key; ?>" <?php selected($key, $val ); ?>><?php echo isset( $arr['title'] ) ? $arr['title'] : ''; ?></option>
 					<?php } ?>	
 				</select>
@@ -35,7 +35,7 @@
 				<span class="um-admin-field">
 				
 				<select name="_um_profile_metafields[]" id="_um_profile_metafields" class="umaf-selectjs" style="width: 200px" data-placeholder="Choose a field">
-					<?php foreach($ultimatemember->builtin->all_user_fields( array('textarea') ) as $key => $arr) { ?>
+					<?php foreach($ultimatemember->builtin->all_user_fields() as $key => $arr) { ?>
 					<option value="<?php echo $key; ?>" <?php selected($key, $ultimatemember->query->get_meta_value('_um_profile_metafields', $key) ); ?>><?php echo isset( $arr['title'] ) ? $arr['title'] : ''; ?></option>
 					<?php } ?>	
 				</select>

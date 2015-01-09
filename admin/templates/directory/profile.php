@@ -21,7 +21,7 @@
 		</p><div class="um-admin-clear"></div>
 		
 		<p>
-			<label class="um-admin-half"><?php _e('Show public profile name','ultimatemember'); ?></label>
+			<label class="um-admin-half"><?php _e('Show display name','ultimatemember'); ?></label>
 			<span class="um-admin-half">
 			
 				<?php $this->ui_on_off('_um_show_name', 1, true, 1, 'name-options', 'xxx'); ?>

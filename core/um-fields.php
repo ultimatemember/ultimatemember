@@ -474,6 +474,17 @@ class UM_Fields {
 	}
 	
 	/***
+	***	@Get Field Type
+	***/
+	function get_field_type( $key ) {
+		global $ultimatemember;
+		$fields = $ultimatemember->builtin->all_user_fields;
+		if ( isset( $fields[$key]['type'] ) )
+			return $fields[$key]['type'];
+		return '';
+	}
+	
+	/***
 	***	@Get form fields
 	***/
 	function get_fields() {

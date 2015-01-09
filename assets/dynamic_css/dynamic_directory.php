@@ -33,40 +33,5 @@ print ".um-$form_id .um-member-photo img {
 
 }
 
-if ($css_stats_bg) {
-
-print ".um-$form_id .um-member-stats {
-	background: $css_stats_bg!important;
-}";
-
-}
-
-if ($css_stats_bordercolor) {
-
-print ".um-$form_id .um-member-stats {
-	border-color: $css_stats_bordercolor!important;
-}";
-print ".um-$form_id .um-member-stat {
-	border-color: $css_stats_bordercolor!important;
-}";
-
-}
-
-if ($css_stats_num_color) {
-
-print ".um-$form_id .um-member-stat, .um-$form_id .um-member-stat a {
-	color: $css_stats_num_color!important;
-}";
-
-}
-
-if ($css_stats_lbl_color) {
-
-print ".um-$form_id .um-member-statname {
-	color: $css_stats_lbl_color!important;
-}";
-
-}
-
 ?>
 </style>

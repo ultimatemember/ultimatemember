@@ -874,12 +874,18 @@ class UM_Builtin {
 	/***
 	***	@predefined + custom fields ( Global, not form wide )
 	***/
-	function all_user_fields( $exclude_types = array() ) {
+	function all_user_fields( $exclude_types = null ) {
 	
 		global $ultimatemember;
 		
+		$this->fields_dropdown = array('image','file','password','textarea','rating','block','shortcode','spacing','divider','group');
+		
 		$custom = $this->custom_fields;
 		$predefined = $this->predefined_fields;
+		
+		if ( $exclude_types ) {
+			$exclude_types = explode(',', $exclude_types);
+		}
 		
 		$all = array( '' => '' );
 		
@@ -896,7 +902,7 @@ class UM_Builtin {
 			if ( isset( $arr['account_only'] ) || isset( $arr['private_use'] ) ) {
 				unset( $all[$k] );
 			}
-			if ( isset( $arr['type'] ) && in_array( $arr['type'], array('image','file','password') ) ) {
+			if ( isset( $arr['type'] ) && in_array( $arr['type'], $this->fields_dropdown ) ) {
 				unset( $all[$k] );
 			}
 		}

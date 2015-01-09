@@ -16,20 +16,4 @@
 		<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_css_img_bordercolor', null, 'na'); ?>" class="um-admin-colorpicker" name="_um_css_img_bordercolor" id="_um_css_img_bordercolor" />
 	</p>
 	
-	<p><label for="_um_css_stats_bg"><?php _e('Stats background color','ultimatemember'); ?></label>
-		<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_css_stats_bg', null, 'na'); ?>" class="um-admin-colorpicker" name="_um_css_stats_bg" id="_um_css_stats_bg" />
-	</p>
-	
-	<p><label for="_um_css_stats_bordercolor"><?php _e('Stats border color','ultimatemember'); ?></label>
-		<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_css_stats_bordercolor', null, 'na'); ?>" class="um-admin-colorpicker" name="_um_css_stats_bordercolor" id="_um_css_stats_bordercolor" />
-	</p>
-	
-	<p><label for="_um_css_stats_num_color"><?php _e('Stats numbers color','ultimatemember'); ?></label>
-		<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_css_stats_num_color', null, 'na'); ?>" class="um-admin-colorpicker" name="_um_css_stats_num_color" id="_um_css_stats_num_color" />
-	</p>
-	
-	<p><label for="_um_css_stats_lbl_color"><?php _e('Stats label color','ultimatemember'); ?></label>
-		<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_css_stats_lbl_color', null, 'na'); ?>" class="um-admin-colorpicker" name="_um_css_stats_lbl_color" id="_um_css_stats_lbl_color" />
-	</p>
-	
 </div>

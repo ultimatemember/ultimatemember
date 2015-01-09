@@ -277,6 +277,7 @@ class UM_Admin_Metabox {
 		delete_post_meta( $post_id, '_um_tagline_fields' );
 		delete_post_meta( $post_id, '_um_reveal_fields' );
 		delete_post_meta( $post_id, '_um_search_fields' );
+		delete_post_meta( $post_id, '_um_roles_can_search' );
 		foreach( $_POST as $k => $v ) {
 			if (strstr($k, '_um_')){
 				update_post_meta( $post_id, $k, $v);

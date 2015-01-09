@@ -42,7 +42,6 @@
 			<span class="um-admin-half">
 			
 				<select name="_um_sortby" id="_um_sortby" class="umaf-selectjs um-adm-conditional" style="width: 300px" data-cond1='other' data-cond1-show='custom-field'>
-					<option value="user_registered_desc" <?php selected('user_registered_desc', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>>Default</option>
 					<option value="user_registered_desc" <?php selected('user_registered_desc', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>>New users first</option>
 					<option value="user_registered_asc" <?php selected('user_registered_asc', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>>Old users first</option>
 					<option value="display_name" <?php selected('display_name', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>>Display Name</option>

@@ -2,6 +2,10 @@
 
 	<div class="">
 		
+		<?php
+		
+		/*
+		
 		<p>
 			<label class="um-admin-half"><?php _e('Use Infinite Scroll instead of pagination','ultimatemember'); ?></label>
 			<span class="um-admin-half">
@@ -28,6 +32,10 @@
 			
 			</span>
 		</p><div class="um-admin-clear"></div>
+		
+		*/
+		
+		?>
 		
 		<p class="pagination-settings">
 			<label class="um-admin-half"><?php _e('Number of profiles per page','ultimatemember'); ?> <?php $this->tooltip('Number of member profiles to appear on every page'); ?></label>

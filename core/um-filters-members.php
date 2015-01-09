@@ -21,7 +21,7 @@
 				'value' => 'approved',
 				'compare' => '='
 			);
-		
+
 		return $query_args;
 	}
 	
@@ -38,12 +38,17 @@
 
 			foreach( $query as $field => $value ) {
 
+				$operator = '=';
+				if ( in_array( $ultimatemember->fields->get_field_type( $field ), array('checkbox','multiselect') ) ) {
+					$operator = 'LIKE';
+				}
+				
 				if ( $value && $field != 'um_search' ) {
 				
 					$query_args['meta_query'][] = array(
 						'key' => $field,
 						'value' => $value,
-						'compare' => '='
+						'compare' => $operator,
 					);
 				
 				}
@@ -85,8 +90,6 @@
 		// add roles to appear in directory 
 		if ( !empty( $roles ) ) {
 		
-			$roles = unserialize( $roles );
-			
 			$query_args['meta_query'][] = array(
 				'key' => 'role',
 				'value' => $roles,
