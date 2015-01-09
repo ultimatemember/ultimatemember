@@ -18,7 +18,7 @@ jQuery(document).ready(function() {
 	}
 	
 	/* Creating new form button */
-	jQuery('.um-admin-boxed-links a').click(function(){
+	jQuery('.um-admin-boxed-links:not(.is-core-form) a').click(function(){
 		
 		var tab = jQuery(this);
 			
