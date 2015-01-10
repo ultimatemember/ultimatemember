@@ -36,6 +36,15 @@
 				
 			</span>
 		</p><div class="um-admin-clear"></div>
+
+		<p>
+			<label class="um-admin-half"><?php _e('Only show members who have uploaded a cover photo','ultimatemember'); ?></label>
+			<span class="um-admin-half">
+			
+				<?php $this->ui_on_off('_um_has_cover_photo'); ?>
+				
+			</span>
+		</p><div class="um-admin-clear"></div>
 		
 		<p>
 			<label class="um-admin-half"><?php _e('Sort users by','ultimatemember'); ?> <?php $this->tooltip('Sort users by a specific parameter in the directory'); ?></label>

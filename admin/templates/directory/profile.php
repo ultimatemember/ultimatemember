@@ -152,7 +152,7 @@
 
 		</p><div class="um-admin-clear"></div>
 		
-		<p>
+		<p class="reveal-options">
 			<label class="um-admin-half"><?php _e('Show social connect icons','ultimatemember'); ?></label>
 			<span class="um-admin-half">
 			

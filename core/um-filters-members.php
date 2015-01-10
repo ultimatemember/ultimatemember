@@ -87,6 +87,15 @@
 			);
 		}
 		
+		// must have a cover photo
+		if ( $has_cover_photo == 1 ) {
+			$query_args['meta_query'][] = array(
+				'key' => 'cover_photo',
+				'value' => '',
+				'compare' => '!='
+			);
+		}
+		
 		// add roles to appear in directory 
 		if ( !empty( $roles ) ) {
 		

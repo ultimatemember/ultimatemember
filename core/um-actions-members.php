@@ -275,20 +275,20 @@
 								} 
 								?>
 								
+								<?php if ( $show_social ) { ?>
+								<div class="um-member-connect">
+								
+									<?php $ultimatemember->fields->show_social_urls(); ?>
+
+								</div>
+								<?php } ?>
+								
 							</div>
-							
+
 							<div class="um-member-less"><a href="#"><i class="um-icon-chevron-up-1"></i></a></div>
 						
 						</div>
 						
-						<?php } ?>
-						
-						<?php if ( $show_social ) { ?>
-						<div class="um-member-connect">
-						
-							<?php $ultimatemember->fields->show_social_urls(); ?>
-
-						</div>
 						<?php } ?>
 						
 					</div>

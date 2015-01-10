@@ -19,6 +19,8 @@
 		} else if ( strpos($value, 'http') !== 0 ) {
 			$value = $match . $value;
 		}
+		$value = str_replace('https://https://','https://',$value);
+		$value = str_replace('http://https://','https://',$value);
 		return $value;
 	}
 	

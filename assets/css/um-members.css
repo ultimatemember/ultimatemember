@@ -96,7 +96,9 @@
 */
 
 .um-members {
-
+	-ms-word-break: break-all;
+	word-break: break-word;
+	word-wrap: break-word;
 }
 
 .um-member {
@@ -226,12 +228,7 @@
 	- Member meta
 */
 
-.um-member-meta-main {
-
-}
-
 .um-member-more { margin: 10px 0 0 0 }
-
 .um-member-less { display: none }
 
 .um-member-more a, .um-member-less a {
@@ -245,15 +242,13 @@
 	vertical-align: middle;
 	line-height: 22px;
 }
-
 .um-member-more a:hover, .um-member-less a:hover{color: #3ba1da}
 
 .um-member-meta {
 	display: none;
-	margin: 20px 30px 0 30px;
-	padding: 15px 0 15px 0;
-	text-align: left;
-	border-top: 1px solid #eee;
+	margin: 20px 15px 0 15px;
+	padding: 15px 0;
+	border-top: 1px solid #e5e5e5;
 }
 
 .um-member-meta.no-animate {
@@ -278,7 +273,7 @@
 */
 
 .um-member-connect {
-	padding: 10px 0;
+	padding-top: 20px;
 }
 
 .um-member-connect a{
