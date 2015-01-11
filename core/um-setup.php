@@ -34,7 +34,7 @@ class UM_Setup {
 			'_um_template' => 'members',
 			'_um_mode' => 'directory',
 			'_um_has_profile_photo' => 0,
-			'_um_has_cover_photo' => 1,
+			'_um_has_cover_photo' => 0,
 			'_um_show_social' => 0,
 			'_um_show_userinfo' => 0,
 			'_um_show_tagline' => 0,
@@ -44,6 +44,8 @@ class UM_Setup {
 			'_um_profile_photo' => '1',
 			'_um_cover_photos' => '1',
 			'_um_show_name' => '1',
+			'_um_directory_header' => __('{total_users} Members','ultimatemember'),
+			'_um_directory_no_users' => __('We are sorry. We cannot find any users who match your search criteria.','ultimatemember'),
 			'_um_profiles_per_page' => '12',
 			'_um_core' => 'members',
 		);
