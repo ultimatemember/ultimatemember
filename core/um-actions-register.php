@@ -54,7 +54,7 @@
 		$unique_userID = $ultimatemember->query->count_users() + 1;
 		
 		if( !isset($user_email) ) {
-			$user_email = 'nobody' . $unique_userID . '@' . bloginfo('name');
+			$user_email = 'nobody' . $unique_userID . '@' . get_bloginfo('name');
 		}
 		
 		if ( !isset( $user_login ) ) {
@@ -91,10 +91,27 @@
 		
 		$ultimatemember->user->set_registration_details( $args['submitted'] );
 		
+		do_action('um_post_registration_save', $user_id, $args);
+				
 		do_action('um_post_registration_listener', $user_id, $args);
 		
 		do_action('um_post_registration', $user_id, $args);
 
+	}
+	
+	/***
+	***	@Update user's profile after registration
+	***/
+	add_action('um_post_registration_save', 'um_post_registration_save', 10, 2);
+	function um_post_registration_save($user_id, $args){
+		global $ultimatemember;
+	
+		unset( $args['user_id'] );
+		$args['_user_id'] = $user_id;
+		$args['is_signup'] = 1;
+		
+		do_action('um_user_edit_profile', $args);
+		
 	}
 	
 	/***

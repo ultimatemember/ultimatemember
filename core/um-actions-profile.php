@@ -1,6 +1,76 @@
 <?php
 
 	/***
+	***	@update user's profile
+	***/
+	add_action('um_user_edit_profile', 'um_user_edit_profile', 10);
+	function um_user_edit_profile($args){
+		
+		global $ultimatemember;
+		
+		$to_update = null;
+		$files = null;
+		
+		if ( isset( $args['user_id'] ) ) {
+			if ( um_current_user_can('edit', $args['user_id'] ) ) {
+				$ultimatemember->user->set( $args['user_id'] );
+			} else {
+				wp_die( __('You are not allowed to edit this user.','ultimatemember') );
+			}
+		} else if ( isset( $args['_user_id'] ) ) {
+			$ultimatemember->user->set( $args['_user_id'] );
+		}
+		
+		$userinfo = $ultimatemember->user->profile;
+		
+		$fields = unserialize( $args['custom_fields'] );
+		
+		do_action('um_user_before_updating_profile', $userinfo );
+		
+		// loop through fields
+		foreach( $fields as $key => $array ) {
+		
+			if ( $fields[$key]['type'] == 'multiselect' ||  $fields[$key]['type'] == 'checkbox' && !isset($args['submitted'][$key]) ) {
+				delete_user_meta( um_user('ID'), $key );
+			}
+			
+			if ( isset( $args['submitted'][ $key ] ) ) {
+			
+				if ( isset( $userinfo[$key]) && $args['submitted'][$key] != $userinfo[$key] ) {
+					$to_update[ $key ] = $args['submitted'][ $key ];
+				} else if ( $args['submitted'][$key] ) {
+					$to_update[ $key ] = $args['submitted'][ $key ];
+				}
+				
+				// files
+				if ( isset( $fields[$key]['type'] ) && in_array( $fields[$key]['type'], array('image','file') ) && um_is_temp_upload( $args['submitted'][ $key ] )  ) {
+					$files[ $key ] = $args['submitted'][ $key ];
+				}
+
+			}
+		}
+		
+		if ( isset( $args['submitted']['description'] ) ) {
+			$to_update['description'] = $ultimatemember->validation->remove_html( $args['submitted']['description'] );
+		}
+
+		if ( is_array( $to_update ) ) {
+			$ultimatemember->user->update_profile( $to_update );
+		}
+
+		if ( is_array( $files ) ) {
+			$ultimatemember->user->update_files( $files );
+		}
+		
+		do_action('um_user_after_updating_profile', $to_update );
+		
+		if ( !isset( $args['is_signup'] ) ) {
+			exit( wp_redirect( um_edit_my_profile_cancel_uri() ) );
+		}
+		
+	}
+	
+	/***
 	***	@if editing another user
 	***/
 	add_action('um_after_form_fields', 'um_editing_user_id_input');
@@ -295,6 +365,7 @@
 			$items = array(
 				'editprofile' => '<a href="'.um_edit_my_profile_uri().'" class="real_url">'.__('Edit Profile','ultimatemember').'</a>',
 				'myaccount' => '<a href="'.um_get_core_page('account').'" class="real_url">'.__('My Account','ultimatemember').'</a>',
+				'logout' => '<a href="'.um_get_core_page('logout').'" class="real_url">'.__('Logout','ultimatemember').'</a>',
 				'cancel' => '<a href="#" class="um-dropdown-hide">'.__('Cancel','ultimatemember').'</a>',
 			);
 			
@@ -305,6 +376,7 @@
 				$actions = $ultimatemember->user->get_admin_actions();
 				
 				unset( $items['myaccount'] );
+				unset( $items['logout'] );
 				unset( $items['cancel'] );
 				$items = array_merge( $items, $actions );
 				$items['cancel'] = $cancel;
@@ -325,72 +397,6 @@
 		
 		<?php
 		}
-		
-	}
-	
-	/***
-	***	@update user's profile
-	***/
-	add_action('um_user_edit_profile', 'um_user_edit_profile', 10);
-	function um_user_edit_profile($args){
-		
-		global $ultimatemember;
-		
-		$to_update = null;
-		$files = null;
-		
-		if ( isset( $args['user_id'] ) ) {
-			if ( um_current_user_can('edit', $args['user_id'] ) ) {
-				$ultimatemember->user->set( $args['user_id'] );
-			} else {
-				wp_die( __('You are not allowed to edit this user.','ultimatemember') );
-			}
-		}
-		
-		$userinfo = $ultimatemember->user->profile;
-		
-		$fields = unserialize( $args['custom_fields'] );
-		
-		do_action('um_user_before_updating_profile', $userinfo );
-		
-		// loop through fields
-		foreach( $fields as $key => $array ) {
-		
-			if ( $fields[$key]['type'] == 'multiselect' ||  $fields[$key]['type'] == 'checkbox' && !isset($args['submitted'][$key]) ) {
-				delete_user_meta( um_user('ID'), $key );
-			}
-			
-			if ( isset( $args['submitted'][ $key ] ) ) {
-			
-				if ( isset( $userinfo[$key]) && $args['submitted'][$key] != $userinfo[$key] ) {
-					$to_update[ $key ] = $args['submitted'][ $key ];
-				} else if ( $args['submitted'][$key] ) {
-					$to_update[ $key ] = $args['submitted'][ $key ];
-				}
-				
-				// files
-				if ( isset( $fields[$key]['type'] ) && in_array( $fields[$key]['type'], array('image','file') ) && um_is_temp_upload( $args['submitted'][ $key ] )  ) {
-					$files[ $key ] = $args['submitted'][ $key ];
-				}
-
-			}
-		}
-		
-		if ( isset( $args['submitted']['description'] ) ) {
-			$to_update['description'] = $ultimatemember->validation->remove_html( $args['submitted']['description'] );
-		}
-
-		if ( is_array( $to_update ) ) {
-			$ultimatemember->user->update_profile( $to_update );
-		}
-
-		if ( is_array( $files ) ) {
-			$ultimatemember->user->update_files( $files );
-		}
-		
-		do_action('um_user_after_updating_profile', $to_update );
-		
-		exit( wp_redirect( um_edit_my_profile_cancel_uri() ) );
 		
 	}
 	

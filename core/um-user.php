@@ -198,12 +198,6 @@ class UM_User {
 	***/
 	function set_status( $status ){
 	
-		$old_status = ( isset( $this->profile['account_status'] ) ) ? $this->profile['account_status'] : 'null';
-		
-		if ( $status == $old_status ) return; // to prevent spam
-		
-		do_action('um_before_user_status_is_changed', $old_status );
-		
 		$this->profile['account_status'] = $status;
 		
 		$this->update_usermeta_info('account_status');
@@ -423,11 +417,11 @@ class UM_User {
 	/***
 	***	@update files
 	***/
-	function update_files( $array ) {
+	function update_files( $changes ) {
 		
 		global $ultimatemember;
 		
-		foreach( $array as $key => $uri ) {
+		foreach( $changes as $key => $uri ) {
 			$src = um_is_temp_upload( $uri );
 			$ultimatemember->files->new_user_upload( $this->id, $src, $key );
 		}

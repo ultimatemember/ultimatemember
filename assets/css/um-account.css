@@ -73,7 +73,7 @@
 
 .um-account-name a {
 	font-weight: bold;
-	color: #333;
+	color: #555;
 	text-decoration: none !important;
 	font-size: 18px;
 }
@@ -168,7 +168,7 @@
 	float: left;
 	height: 30px;
 	line-height: 30px;
-	color: #444;
+	color: #555;
 }
 
 .um-account-side li a:hover {color: #444; background: #ddd}
