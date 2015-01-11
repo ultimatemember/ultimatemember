@@ -185,6 +185,8 @@
 	position: relative;
 	top: -35px;
 	margin-bottom: -45px !important;
+	float: none;
+	opacity: 1;
 }
 
 .um-member-photo.radius-1 img { border-radius: 999px !important }
@@ -276,13 +278,13 @@
 	padding-top: 20px;
 }
 
-.um-member-connect a{
+.um-member-connect a {
 	display: inline-block;
 	width: 40px;
 	line-height: 40px;
 	height: 40px;
 	border-radius: 999px;
-	color: #fff;
+	color: #fff !important;
 	opacity: 0.85;
 	margin: 0 1px;
 	font-size: 16px;

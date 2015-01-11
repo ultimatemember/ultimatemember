@@ -6,17 +6,7 @@
 			<label class="um-admin-half"><?php _e('Can edit their profile?','ultimatemember'); ?> <?php $this->tooltip('Can this role edit his own profile?'); ?></label>
 			<span class="um-admin-half"><?php $this->ui_on_off('_um_can_edit_profile', 1); ?></span>
 		</p><div class="um-admin-clear"></div>
-		
-		<p>
-			<label class="um-admin-half"><?php _e('Can upload pictures?','ultimatemember'); ?> <?php $this->tooltip('Can upload pictures, and photos to his profile'); ?></label>
-			<span class="um-admin-half"><?php $this->ui_on_off('_um_can_upload_pics', 1); ?></span>
-		</p><div class="um-admin-clear"></div>
-		
-		<p>
-			<label class="um-admin-half"><?php _e('Can upload files?','ultimatemember'); ?> <?php $this->tooltip('Can this role upload files and documents in his profile'); ?></label>
-			<span class="um-admin-half"><?php $this->ui_on_off('_um_can_upload_files', 1); ?></span>
-		</p><div class="um-admin-clear"></div>
-
+	
 		<p>
 			<label class="um-admin-half"><?php _e('Can delete their account?','ultimatemember'); ?> <?php $this->tooltip('Allow this role to delete their account and end their membership on your site'); ?></label>
 			<span class="um-admin-half"><?php $this->ui_on_off('_um_can_delete_profile', 1); ?></span>

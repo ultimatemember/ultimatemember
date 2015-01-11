@@ -27,7 +27,7 @@
 		global $ultimatemember;
 		extract($_REQUEST);
 		
-		if ( !um_can_edit_profile( $user_id ) ) die( __('You can not edit this user') );
+		if ( !um_current_user_can('edit', $user_id ) ) die( __('You can not edit this user') );
 
 		$ultimatemember->files->delete_core_user_photo( $user_id, 'profile_photo' );
 
@@ -42,7 +42,7 @@
 		global $ultimatemember;
 		extract($_REQUEST);
 		
-		if ( !um_can_edit_profile( $user_id ) ) die( __('You can not edit this user') );
+		if ( !um_current_user_can('edit', $user_id ) ) die( __('You can not edit this user') );
 
 		$ultimatemember->files->delete_core_user_photo( $user_id, 'cover_photo' );
 

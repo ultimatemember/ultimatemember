@@ -5,22 +5,30 @@
 	***/
 	add_filter('um_prepare_user_query_args', 'um_prepare_user_query_args', 10, 2);
 	add_filter('um_prepare_user_query_args', 'um_add_search_to_query', 50, 2);
-	add_filter('um_prepare_user_query_args', 'um_remove_unwanted_users_from_list', 99, 2);
+	add_filter('um_prepare_user_query_args', 'um_remove_special_users_from_list', 99, 2);
 	
 	/***
 	***	@Remove users we do not need to show in directory
 	***/
-	function um_remove_unwanted_users_from_list( $query_args, $args ) {
+	function um_remove_special_users_from_list( $query_args, $args ) {
 		global $ultimatemember;
 		extract( $args );
 		
-		if ( !current_user_can('manage_options') )
+		if ( !current_user_can('manage_options') ) {
 		
 			$query_args['meta_query'][] = array(
 				'key' => 'account_status',
 				'value' => 'approved',
 				'compare' => '='
 			);
+			
+		}
+		
+		$query_args['meta_query'][] = array(
+			'key' => 'hide_in_members',
+			'value' => '',
+			'compare' => 'NOT EXISTS'
+		);
 
 		return $query_args;
 	}

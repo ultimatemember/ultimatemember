@@ -25,6 +25,21 @@
 	box-sizing: content-box;
 }
 
+.um-header a,
+.um-cover a,
+.um-member-photo a,
+.um-member-name a,
+.um-member-more a,
+.um-member-less a,
+.um-members a,
+.um-account-side li a,
+.um-members-pagi span,
+.um-members-pagi a,
+.um-field-value a
+{
+	border-bottom: 0 !important;
+}
+
 .um a:focus,
 .um-modal a:focus {
 	outline: 0 !important;
@@ -238,12 +253,19 @@ p.um-notice.err {
 .um-field-label {
 	display: block;
 	margin: 0 0 8px 0;
-	font-weight: bold;
-	font-weight: 500;
 }
+
 .um-field-label .um-field-label-icon { float: left; margin: 0 8px 0 0; vertical-align: middle !important; height: 22px; }
 .um-field-label .um-field-label-icon  i { font-size: 22px; height: 22px; line-height: 22px; vertical-align: middle; }
-.um-field-label label { display: inline-block; height: 22px; font-size: 16px; line-height: 22px !important; }
+
+.um-field-label label {
+	display: inline-block;
+	height: 22px;
+	font-size: 15px;
+	line-height: 22px !important;
+	font-weight: bold;
+	font-weight: 600;
+}
 
 .um-field-area {
 	position: relative;
@@ -276,6 +298,7 @@ p.um-notice.err {
 	left: 0;
 	width: 44px;
 	font-size: 22px;
+	line-height: 1.7em;
 }
 
 .um-form input[type=text],
@@ -291,6 +314,7 @@ p.um-notice.err {
 	box-sizing: border-box;
 	box-shadow: none !important;
 	margin: 0;
+	position: static;
 }
 
 .um-form input[type=text]:focus ,
@@ -317,6 +341,7 @@ p.um-notice.err {
 	border-radius: 2px;
 	box-sizing: border-box;
 	min-height: 80px;
+	box-shadow: none;
 }
 
 /*
@@ -441,6 +466,9 @@ input[type=submit].um-button:focus {
 	height: auto !important;
 	font-size: 15px;
 	cursor: pointer !important;
+	width: 100%;
+	box-shadow: none;
+	text-shadow: none;
 }
 
 .um-button {
@@ -493,7 +521,7 @@ a.um-link-alt:hover {text-decoration: underline !important;}
 	height: auto;
 	background: #fff;
 	border-radius: 5px;
-	z-index: 555555;
+	z-index: 1;
 	display: none;
     border: 1px solid #e5e5e5;
 	box-sizing: border-box;

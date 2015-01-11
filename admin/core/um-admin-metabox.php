@@ -309,6 +309,7 @@ class UM_Admin_Metabox {
 		// save
 		delete_post_meta( $post_id, '_um_can_view_roles' );
 		delete_post_meta( $post_id, '_um_can_edit_roles' );
+		delete_post_meta( $post_id, '_um_can_delete_roles' );
 		foreach( $_POST as $k => $v ) {
 			if (strstr($k, '_um_')){
 				update_post_meta( $post_id, $k, $v);

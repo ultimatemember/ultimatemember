@@ -26,7 +26,7 @@
 		</p><div class="um-admin-clear"></div>
 		
 		<p>
-			<label class="um-admin-half"><?php _e('Can view/access private profiles?','ultimatemember'); ?> <?php $this->tooltip( __('Can this role edit his own profile?','ultimatemember') ); ?></label>
+			<label class="um-admin-half"><?php _e('Can view/access private profiles?','ultimatemember'); ?> <?php $this->tooltip( __('Can this role view private profiles?','ultimatemember') ); ?></label>
 			<span class="um-admin-half"><?php $this->ui_on_off('_um_can_access_private_profile'); ?></span>
 		</p><div class="um-admin-clear"></div>
 		

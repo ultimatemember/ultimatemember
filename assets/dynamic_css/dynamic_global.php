@@ -118,8 +118,11 @@ print "
 .select2-drop-active,
 .select2-drop.select2-drop-above
 {
-	border: $form_border;
+	border: $form_border !important;
 }
+
+.um-$form_id.um .um-form .select2-container-multi .select2-choices .select2-search-field input[type=text] {border: none !important}
+
 ";
 }
 

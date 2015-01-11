@@ -2,16 +2,17 @@
 
 	global $ultimatemember;
 
+
 /***
 ***	@
 ***/
 	
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-user-add-1',
-    'title'      => __( 'Registration'),
+    'icon'       => 'um-icon-user-1',
+    'title'      => __( 'Users'),
     'fields'     => array(
-
+		
 		array(
 				'id'       		=> 'default_role',
                 'type'     		=> 'select',
@@ -22,20 +23,6 @@ $this->sections[] = array(
 				'options' 		=> $ultimatemember->query->get_roles( ),
 				'placeholder' 	=> __('Choose user role...'),
         ),
-
-	)
-
-);
-
-/***
-***	@
-***/
-	
-$this->sections[] = array(
-
-    'icon'       => 'um-icon-user-1',
-    'title'      => __( 'User Profile'),
-    'fields'     => array(
 		
 		array(
 				'id'       		=> 'permalink_base',
@@ -79,6 +66,16 @@ $this->sections[] = array(
                 'title'   		=> __( 'Display Name Custom Field(s)' ),
 				'desc' 	   		=> 'Specify the custom field meta key or custom fields seperated by comma that you want to use to display users name on the frontend of your site',
 				'required'		=> array( 'display_name', '=', 'field' ),
+        ),
+		
+        array(
+                'id'       		=> 'members_page',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Members Directory' ),
+				'default' 		=> 1,
+				'desc' 	   		=> 'Control whether to enable or disable member directories on this site',
+				'on'			=> __('Enable'),
+				'off'			=> __('Disable'),
         ),
 		
 	)
@@ -156,51 +153,11 @@ $this->sections[] = array(
 /***
 ***	@
 ***/
-	
-$this->sections[] = array(
-
-    'icon'       => 'um-icon-group',
-    'title'      => __( 'Members Directory'),
-    'fields'     => array(
-	
-        array(
-                'id'       		=> 'members_page',
-                'type'     		=> 'switch',
-                'title'   		=> __( 'Members page status' ),
-				'default' 		=> 1,
-				'desc' 	   		=> 'Control whether to enable or disable the core Members directory page',
-        ),
-		
-        array(
-                'id'      		=> 'directory_header',
-                'type'     		=> 'text',
-                'title'    		=> __( 'General Results Text' ),
-                'default'  		=> um_get_metadefault('directory_header'),
-				'desc' 	   		=> __('Customize the search result text . e.g. Found 3,000 Members. Leave this blank to not show result text','ultimatemember'),
-				'required'		=> array( 'members_page', '=', '1' ),
-        ),
-		
-        array(
-                'id'      		=> 'directory_no_users',
-                'type'     		=> 'text',
-                'title'    		=> __( 'Custom text If no users were found' ),
-                'default'  		=> um_get_metadefault('directory_no_users'),
-				'desc' 	   		=> __('This is the text that is displayed if no users are found during a search','ultimatemember'),
-				'required'		=> array( 'members_page', '=', '1' ),
-        ),
-		
-	)
-
-);
-
-/***
-***	@
-***/
 
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-lock-3',
-    'title'      => __( 'Site Access'),
+    'icon'       => 'um-icon-key-3',
+    'title'      => __( 'Access'),
     'fields'     => array(
 
         array(
@@ -233,21 +190,7 @@ $this->sections[] = array(
 				'add_text'		=> __('Add New URL'),
 				'required'		=> array( 'accessible', '=', 2 ),
 		),
-
-	)
-
-);
-
-/***
-***	@
-***/
-
-$this->sections[] = array(
-
-    'icon'       => 'um-icon-wordpress-alt',
-    'title'      => __( 'Backend'),
-    'fields'     => array(
-
+		
         array(
                 'id'       		=> 'panic_key',
                 'type'     		=> 'text',
@@ -320,21 +263,7 @@ $this->sections[] = array(
 				'desc' 	   		=> 'Enter an alternate url here to redirect a user If they try to access the backend register screen',
 				'required'		=> array( 'wpadmin_register_redirect', '=', 'custom_url' ),
         ),
-
-	)
-
-);
-
-/***
-***	@
-***/
-
-$this->sections[] = array(
-
-    'icon'       => 'um-icon-denied-block',
-    'title'      => __( 'Restrictions'),
-    'fields'     => array(
-
+		
         array(
 				'id'       		=> 'blocked_ips',
                 'type'     		=> 'textarea',
@@ -371,7 +300,7 @@ $this->sections[] = array(
 $this->sections[] = array(
 
     'icon'       => 'um-icon-envelope-2',
-    'title'      => __( 'Email Templates'),
+    'title'      => __( 'Emails'),
     'fields'     => array(
 
 		array(
@@ -662,7 +591,7 @@ $this->sections[] = array(
 $this->sections[] = array(
     
 	'icon'    => 'um-icon-bell-1',
-    'title'   => __( 'Admin Notifications' ),
+    'title'   => __( 'Notifications' ),
     'fields'  => array(
 
         array(
@@ -775,7 +704,7 @@ $this->sections[] = array(
 $this->sections[] = array(
 
     'icon'       => 'um-icon-photo-2',
-    'title'      => __( 'Image &amp; File Uploads'),
+    'title'      => __( 'Uploads'),
     'fields'     => array(
 		
 		array(
@@ -867,7 +796,7 @@ $this->sections[] = array(
 $this->sections[] = array(
 
     'icon'       => 'um-icon-brush-1',
-    'title'      => __( 'Styling & Appearance'),
+    'title'      => __( 'Appearance'),
     'fields'     => array(
 		
 	)
@@ -880,6 +809,17 @@ $this->sections[] = array(
     'title'      => __( 'General'),
     'fields'     => array(
 	
+		array(
+				'id'       		=> 'directory_template',
+                'type'     		=> 'select',
+				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
+                'title'    		=> __( 'Members Default Template' ),
+                'desc' 	   		=> __( 'This will be the default template to output member directory' ),
+                'default'  		=> um_get_metadefault('directory_template'),
+				'options' 		=> $ultimatemember->shortcodes->get_templates( 'members' ),
+				'required'		=> array( 'xxxxxxxxxxxxx', '=', 'sssssssssssssssss' ),
+        ),
+		
         array(
 				'id'       		=> 'active_color',
                 'type'     		=> 'color',
@@ -899,18 +839,6 @@ $this->sections[] = array(
 				'desc'			=> __('Secondary color is used for hovers, or active state for some elements of the plugin','ultimatemember'),
 				'transparent'	=> false,
         ),
-		
-		array(
-			'id'      	=> 'default_avatar',
-			'type'     	=> 'media',
-			'width'		=> '150',
-			'height'	=> '150',
-			'title'    	=> __('Default Profile Picture', 'ultimatemember'),
-			'desc'     	=> __('You can change the default profile picture globally here. Please make sure that the photo is 300x300px.', 'ultimatemember'),
-			'default'  	=> array(
-					'url'		=> um_url . 'assets/img/default_avatar.jpg',
-			),
-		),
 		
         array(
 				'id'       		=> 'primary_btn_color',
@@ -1146,6 +1074,18 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
+		
+		array(
+			'id'      			=> 'default_avatar',
+			'type'     			=> 'media',
+			'width'				=> '150',
+			'height'			=> '150',
+			'title'    			=> __('Default Profile Photo', 'ultimatemember'),
+			'desc'     			=> __('You can change the default profile picture globally here. Please make sure that the photo is 300x300px.', 'ultimatemember'),
+			'default'  			=> array(
+					'url'		=> um_url . 'assets/img/default_avatar.jpg',
+			),
+		),
 		
         array(
                 'id'      		=> 'profile_photosize',
@@ -1438,60 +1378,24 @@ $this->sections[] = array(
 	
 );
 
-$this->sections[] = array(
-	
-    'subsection' => true,
-    'title'      => __( 'Member Directory'),
-    'fields'     => array(
-		
-		array(
-				'id'       		=> 'directory_template',
-                'type'     		=> 'select',
-				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Members Default Template' ),
-                'desc' 	   		=> __( 'This will be the default template to output member directory' ),
-                'default'  		=> um_get_metadefault('directory_template'),
-				'options' 		=> $ultimatemember->shortcodes->get_templates( 'members' ),
-        ),
-		
-	)
-	
-);
-
 /***
 ***	@
 ***/
 	
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-tools',
+    'icon'       => 'um-icon-cog-2',
     'title'      => __( 'Advanced'),
     'fields'     => array(
-
+		
         array(
                 'id'       		=> 'allow_tracking',
                 'type'     		=> 'switch',
-                'title'   		=> __( 'Allow anonymous tracking' ),
+                'title'   		=> __( 'Allow Tracking' ),
 				'default' 		=> 0,
 				'desc' 	   		=> 'Help us improve Ultimate Member’s compatibility with other plugins and themes by allowing us to track non-sensitive data on your site. Click <a href="http://ultimatemember.com/tracking/">here</a> to see what data we track.',
 				'on'			=> 'Allow tracking',
 				'off'			=> 'Do not allow',
-        ),
-		
-        array(
-                'id'       		=> 'admin_load_time',
-                'type'     		=> 'switch',
-                'title'   		=> __( 'Show load time in admin footer' ),
-				'default' 		=> 0,
-				'desc' 	   		=> __('Display the number of queries and load time in backend','ultimatemember'),
-        ),
-		
-        array(
-                'id'       		=> 'load_time',
-                'type'     		=> 'switch',
-                'title'   		=> __( 'Show load time in frontend' ),
-				'default' 		=> 0,
-				'desc' 	   		=> __('Display the number of queries and load time in frontend','ultimatemember'),
         ),
 
 	)

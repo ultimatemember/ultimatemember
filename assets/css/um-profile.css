@@ -4,7 +4,6 @@
 
 .um-profile {
 	box-sizing: border-box;
-	padding-top: 10px;
 }
 
 .um-profile .um-cover-overlay {
@@ -104,6 +103,7 @@
 	vertical-align: middle;
 	height: 100%;
 	text-decoration: none !important;
+	background: none;
 }
 
 .um-cover-overlay i {
@@ -131,7 +131,7 @@
 	font-size: 30px;
 	height: 30px;
 	line-height: 30px;
-	z-index: 666;
+	z-index: 66;
 }
 
 /*
@@ -153,7 +153,6 @@
 	float: none !important;
 	margin: 0 auto !important;
 	text-align: center !important;
-	padding-top: 20px !important;
 }
 
 .um-header.no-cover a.um-profile-photo-img {
@@ -161,8 +160,6 @@
 	top: auto !important;
 	left: auto !important;
 	float: none !important;
-	width: auto !important;
-	height: auto !important;
 	display: inline-block !important;
 	text-align: center !important;
 }
@@ -223,6 +220,7 @@
 	vertical-align: middle;
 	height: 100%;
 	text-decoration: none !important;
+	background: none;
 }
 
 .um-profile-photo-overlay i {
@@ -236,6 +234,9 @@
 
 .um-profile-meta {
 	padding-right: 30px;
+	-ms-word-break: break-all;
+	word-break: break-word;
+	word-wrap: break-word;
 }
 
 .um-main-meta {
@@ -247,10 +248,15 @@
 	font-size: 24px;
 	font-weight: bold;
 	margin-right: 30px;
+	line-height: 1.7em;
 }
 
 .um-meta {
 	font-size: 15px;
+}
+
+.um-meta span a {
+font-weight: normal;
 }
 
 .um-meta span:first-child {margin: 0 5px 0 0}

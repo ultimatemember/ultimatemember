@@ -33,14 +33,14 @@ class UM_Taxonomies {
 		
 		register_post_type( 'um_role', array(
 				'labels' => array(
-					'name' => __( 'Member Levels' ),
-					'singular_name' => __( 'Member Level' ),
+					'name' => __( 'User Roles' ),
+					'singular_name' => __( 'User Role' ),
 					'add_new' => __( 'Add New' ),
-					'add_new_item' => __('Add New Member Level' ),
-					'edit_item' => __('Edit Member Level'),
-					'not_found' => __('You did not create any member levels yet'),
+					'add_new_item' => __('Add New User Role' ),
+					'edit_item' => __('Edit User Role'),
+					'not_found' => __('You did not create any user roles yet'),
 					'not_found_in_trash' => __('Nothing found in Trash'),
-					'search_items' => __('Search Member Levels')
+					'search_items' => __('Search User Roles')
 				),
 				'show_ui' => true,
 				'show_in_menu' => false,
@@ -49,6 +49,8 @@ class UM_Taxonomies {
 			)
 		);
 
+		if ( um_get_option('members_page') ){
+		
 		register_post_type( 'um_directory', array(
 				'labels' => array(
 					'name' => __( 'Member Directories' ),
@@ -66,6 +68,8 @@ class UM_Taxonomies {
 				'supports' => array('title')
 			)
 		);
+		
+		}
 		
 	}
 

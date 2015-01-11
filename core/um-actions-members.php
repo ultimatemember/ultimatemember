@@ -114,7 +114,7 @@
 		
 		?>
 		
-		<div class="um-members-pagidrop uimob500-show">
+		<div class="um-members-pagidrop uimob340-show uimob500-show">
 			
 			<?php _e('Jump to page:','ultimatemember'); ?>
 			
@@ -126,7 +126,7 @@
 		
 		</div>
 		
-		<div class="um-members-pagi uimob500-hide">
+		<div class="um-members-pagi uimob340-hide uimob500-hide">
 		
 			<?php if ( um_members('page') != 1 ) { ?>
 			<a href="<?php echo $ultimatemember->permalinks->add_query( 'members_page', 1 ); ?>" class="pagi pagi-arrow um-tip-n" title="First Page"><i class="um-icon-angle-double-left"></i></a>

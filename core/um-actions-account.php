@@ -16,6 +16,11 @@
 				$changes[ $k ] = $v;
 			}
 		}
+		
+		if ( isset( $changes['hide_in_members'] ) && $changes['hide_in_members'] == 'No' ){
+			delete_user_meta( um_user('ID'), 'hide_in_members' );
+			unset( $changes['hide_in_members'] );
+		}
 
 		$ultimatemember->user->update_profile( $changes );
 

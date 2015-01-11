@@ -36,7 +36,6 @@ print "
 ";
 
 print "
-.um-$form_id.um .um-header.no-cover a.um-profile-photo-img img,
 .um-$form_id.um .um-profile-photo a.um-profile-photo-img {
 	width: ".$photosize."px;
 	height: ".$photosize."px;

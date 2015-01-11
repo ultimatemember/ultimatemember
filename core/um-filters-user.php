@@ -54,9 +54,13 @@
 				$actions['um_reenable'] = array( 'label' => __('Reactivate this account') );
 			}
 			
-			$actions['um_delete'] = array( 'label' => __('Delete this user') );
+			if ( um_current_user_can( 'delete', um_profile_id() ) ) {
+				$actions['um_delete'] = array( 'label' => __('Delete this user') );
+			}
 			
 		}
+		
+		um_fetch_user( um_profile_id() );
 		
 		return $actions;
 	}

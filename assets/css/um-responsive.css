@@ -102,6 +102,12 @@ div.uimob340 .um-profile-photo {
 	left: 0;
 }
 
+div.uimob340 .um-header.no-cover .um-profile-photo {
+	position: static;
+	top: auto;
+	left: auto;
+}
+
 div.uimob340 .um-profile-photo a.um-profile-photo-img {
 	width: 100px !important;
 	height: 100px !important;
@@ -113,12 +119,19 @@ div.uimob340 .um-profile-photo a.um-profile-photo-img {
 	left: auto !important;
 }
 
+div.uimob340 .um-header.no-cover .um-profile-photo a.um-profile-photo-img {
+	width: 120px !important;
+	height: 120px !important;
+}
+
 div.uimob340 .um-header .um-profile-meta {
 	padding-left: 0 !important;
 	padding-right: 0 !important;
 	text-align: center !important;
-	padding-top: 70px !important;
+	padding-top: 60px !important;
 }
+
+div.uimob340 .um-header.no-cover .um-profile-meta {padding-top: 0 !important}
 
 div.uimob340 .um-header .um-name { 
 	float: none !important;
@@ -280,6 +293,12 @@ div.uimob500 .um-profile-photo {
 	left: 0;
 }
 
+div.uimob500 .um-header.no-cover .um-profile-photo {
+	position: static;
+	top: auto;
+	left: auto;
+}
+
 div.uimob500 .um-profile-photo a.um-profile-photo-img {
 	width: 100px !important;
 	height: 100px !important;
@@ -291,12 +310,19 @@ div.uimob500 .um-profile-photo a.um-profile-photo-img {
 	left: auto !important;
 }
 
+div.uimob500 .um-header.no-cover .um-profile-photo a.um-profile-photo-img {
+	width: 120px !important;
+	height: 120px !important;
+}
+
 div.uimob500 .um-header .um-profile-meta {
 	padding-left: 0 !important;
 	padding-right: 0 !important;
 	text-align: center !important;
-	padding-top: 70px !important;
+	padding-top: 60px !important;
 }
+
+div.uimob500 .um-header.no-cover .um-profile-meta {padding-top: 0 !important}
 
 div.uimob500 .um-header .um-name { 
 	float: none !important;
@@ -443,6 +469,10 @@ div.uimob800 .um-profile-photo a.um-profile-photo-img {
 	width: 140px !important;
 	height: 140px !important;
 	top: -70px !important;
+}
+
+div.uimob800 .um-header.no-cover .um-profile-photo a.um-profile-photo-img {
+	top: auto !important;
 }
 
 div.uimob800 .um-header .um-profile-meta {

@@ -23,11 +23,6 @@ class UM_Admin_Enqueue {
 	***/
     function admin_footer_text() {
 		$copyright = sprintf(__('Thank you for creating with <a href="http://ultimatemember.com">Ultimate Member</a> and <a href="https://wordpress.org">WordPress</a>.','ultimatemember'));
-		
-		if ( um_get_option('admin_load_time') == 1 ) {
-			$copyright .= '<br />' . sprintf(__('%1$s queries made in %2$s seconds','ultimatemember'), get_num_queries(), timer_stop(0) );
-		}
-		
 		return '<span id="footer-thankyou">' . $copyright . '</span>';
     }
 	

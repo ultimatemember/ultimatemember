@@ -3,7 +3,7 @@
 	<div class="">
 	
 		<p>
-			<label class="um-admin-half"><?php _e('Registration Status','ultimatemember'); ?> <?php $this->tooltip('', 'e'); ?></label>
+			<label class="um-admin-half"><?php _e('Registration Status','ultimatemember'); ?> <?php $this->tooltip( __('Select the status you would like this user role to have after they register on your site','ultimatemember') ); ?></label>
 			<span class="um-admin-half">
 			
 				<select name="_um_status" id="_um_status" class="umaf-selectjs um-adm-conditional" style="width: 300px" 
@@ -22,7 +22,7 @@
 		
 		<div class="approved">
 		<p>
-			<label class="um-admin-half"><?php _e('Action to be taken after registration','ultimatemember'); ?> <?php $this->tooltip('', 'e'); ?></label>
+			<label class="um-admin-half"><?php _e('Action to be taken after registration','ultimatemember'); ?> <?php $this->tooltip( __('Select what action is taken after a person registers on your site. Depending on the status you can redirect them to their profile, a custom url or show a custom message','ultimatemember') ); ?></label>
 			<span class="um-admin-half">
 			
 				<select name="_um_auto_approve_act" id="_um_auto_approve_act" class="umaf-selectjs um-adm-conditional" style="width: 300px" data-cond1="redirect_url" data-cond1-show="_um_auto_approve_act">
@@ -34,7 +34,7 @@
 		</p><div class="um-admin-clear"></div>
 		
 		<p class="_um_auto_approve_act">
-			<label class="um-admin-half" for="_um_auto_approve_url"><?php _e('Set Custom Redirect URL','ultimatemember'); ?> <?php $this->tooltip('', 'e'); ?></label>
+			<label class="um-admin-half" for="_um_auto_approve_url"><?php _e('Set Custom Redirect URL','ultimatemember'); ?></label>
 			<span class="um-admin-half">
 				
 				<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_auto_approve_url', null, 'na'); ?>" name="_um_auto_approve_url" id="_um_auto_approve_url" />
@@ -49,7 +49,7 @@
 		
 		<div class="checkmail">
 		<p>
-			<label class="um-admin-half"><?php _e('Action to be taken after registration','ultimatemember'); ?> <?php $this->tooltip('', 'e'); ?></label>
+			<label class="um-admin-half"><?php _e('Action to be taken after registration','ultimatemember'); ?> <?php $this->tooltip( __('Select what action is taken after a person registers on your site. Depending on the status you can redirect them to their profile, a custom url or show a custom message','ultimatemember') ); ?></label>
 			<span class="um-admin-half">
 			
 				<select name="_um_checkmail_action" id="_um_checkmail_action" class="umaf-selectjs um-adm-conditional" style="width: 300px" 
@@ -63,16 +63,16 @@
 		</p><div class="um-admin-clear"></div>
 		
 		<p class="_um_checkmail_action-1">
-			<label class="um-admin-half"><?php _e('Personalize the custom message','ultimatemember'); ?> <?php $this->tooltip('', 'e'); ?></label>
+			<label class="um-admin-half"><?php _e('Personalize the custom message','ultimatemember'); ?></label>
 			<span class="um-admin-half">
 			
-				<textarea name="_um_checkmail_message" id="_um_checkmail_message"><?php echo $ultimatemember->query->get_meta_value('_um_checkmail_message', null, 'na'); ?></textarea>
+				<textarea name="_um_checkmail_message" id="_um_checkmail_message"><?php echo $ultimatemember->query->get_meta_value('_um_checkmail_message', null, __('Thank you for registering. Before you can login we need you to activate your account by clicking the activation link in the email we just sent you.','ultimatemember') ); ?></textarea>
 				
 			</span>
 		</p><div class="um-admin-clear"></div>
 		
 		<p class="_um_checkmail_action-2">
-			<label class="um-admin-half" for="_um_checkmail_url"><?php _e('Set Custom Redirect URL','ultimatemember'); ?> <?php $this->tooltip('', 'e'); ?></label>
+			<label class="um-admin-half" for="_um_checkmail_url"><?php _e('Set Custom Redirect URL','ultimatemember'); ?></label>
 			<span class="um-admin-half">
 				
 				<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_checkmail_url', null, 'na'); ?>" name="_um_checkmail_url" id="_um_checkmail_url" />
@@ -87,7 +87,7 @@
 		
 		<div class="pending">
 		<p>
-			<label class="um-admin-half"><?php _e('Action to be taken after registration','ultimatemember'); ?> <?php $this->tooltip('', 'e'); ?></label>
+			<label class="um-admin-half"><?php _e('Action to be taken after registration','ultimatemember'); ?> <?php $this->tooltip( __('Select what action is taken after a person registers on your site. Depending on the status you can redirect them to their profile, a custom url or show a custom message','ultimatemember') ); ?></label>
 			<span class="um-admin-half">
 			
 				<select name="_um_pending_action" id="_um_pending_action" class="umaf-selectjs um-adm-conditional" style="width: 300px" 
@@ -101,16 +101,16 @@
 		</p><div class="um-admin-clear"></div>
 		
 		<p class="_um_pending_action-1">
-			<label class="um-admin-half"><?php _e('Personalize the custom message','ultimatemember'); ?> <?php $this->tooltip('', 'e'); ?></label>
+			<label class="um-admin-half"><?php _e('Personalize the custom message','ultimatemember'); ?></label>
 			<span class="um-admin-half">
 			
-				<textarea name="_um_pending_message" id="_um_pending_message"><?php echo $ultimatemember->query->get_meta_value('_um_pending_message', null, 'na'); ?></textarea>
+				<textarea name="_um_pending_message" id="_um_pending_message"><?php echo $ultimatemember->query->get_meta_value('_um_pending_message', null, __('Thank you for applying for membership to our site. We will review your details and send you an email letting you know whether your application has been successful or not.','ultimatemember') ); ?></textarea>
 				
 			</span>
 		</p><div class="um-admin-clear"></div>
 		
 		<p class="_um_pending_action-2">
-			<label class="um-admin-half" for="_um_pending_url"><?php _e('Set Custom Redirect URL','ultimatemember'); ?> <?php $this->tooltip('', 'e'); ?></label>
+			<label class="um-admin-half" for="_um_pending_url"><?php _e('Set Custom Redirect URL','ultimatemember'); ?></label>
 			<span class="um-admin-half">
 				
 				<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_pending_url', null, 'na'); ?>" name="_um_pending_url" id="_um_pending_url" />

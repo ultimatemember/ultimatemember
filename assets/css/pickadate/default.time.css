@@ -76,6 +76,7 @@
   outline: 0 !important;
   background: none !important;
   border-radius: 0 0 2px 2px;
+  color: #fff !important;
 }
 .picker--time .picker__button--clear:hover,
 .picker--time .picker__button--clear:focus {

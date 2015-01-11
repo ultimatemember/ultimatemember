@@ -536,6 +536,7 @@ html[dir="rtl"] .select2-container-multi .select2-choices .select2-search-choice
 	text-decoration: none !important;
 	width: 21px !important;
 	text-align: center !important;
+	border-bottom: 0 !important;
 }
 
 .select2-container-multi .select2-search-choice-close:before {

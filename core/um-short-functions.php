@@ -245,15 +245,6 @@
 	}
 	
 	/***
-	***	@boolean if viewing his own profile
-	***/
-	function um_is_my_profile() {
-		if ( !is_user_logged_in() ) return false;
-		if ( um_is_core_page('user') && get_current_user_id() == um_get_requested_user() ) return true;
-		return false;
-	}
-	
-	/***
 	***	@gets the queried user
 	***/
 	function um_queried_user() {
@@ -354,19 +345,6 @@
 	}
 	
 	/***
-	***	@Tests for current user
-	***/
-	function um_user_can( $permission ) {
-		global $ultimatemember;
-		$user_id = get_current_user_id();
-		$role = get_user_meta( $user_id, 'role', true );
-		$permissions = $ultimatemember->query->role_data( $role );
-		if ( $permissions[ $permission ] == 1 )
-			return true;
-		return false;
-	}
-	
-	/***
 	***	@boolean check for not same user
 	***/
 	function um_is_user_himself() {
@@ -395,23 +373,54 @@
 	}
 	
 	/***
-	***	@checks if user can edit profile
+	***	@User can (role settings )
 	***/
-	function um_can_edit_profile( $user_id ){
+	function um_user_can( $permission ) {
+		global $ultimatemember;
+		$user_id = get_current_user_id();
+		$role = get_user_meta( $user_id, 'role', true );
+		$permissions = $ultimatemember->query->role_data( $role );
+		if ( $permissions[ $permission ] == 1 )
+			return true;
+		return false;
+	}
+	
+	/***
+	***	@Check if user is in his profile
+	***/
+	function um_is_myprofile(){
+		global $ultimatemember;
+		if ( get_current_user_id() && get_current_user_id() == um_get_requested_user() )return true;
+		if ( !um_get_requested_user() && um_is_core_page('user') && get_current_user_id() ) return true;
+		return false;
+	}
+	
+	/***
+	***	@Current user can
+	***/
+	function um_current_user_can( $cap, $user_id ){
 		global $ultimatemember;
 		
 		if ( !is_user_logged_in() ) return false;
+		um_fetch_user( get_current_user_id() );
 
-		if ( um_user('can_edit_everyone') ) return true;
+		switch($cap) {
 		
-		if ( get_current_user_id() == $user_id && um_user('can_edit_profile') ) return true;
-		
-		if ( get_current_user_id() == $user_id && !um_user('can_edit_profile') ) return false;
-		
-		if ( !um_user('can_edit_everyone') ) return false;
-		
+			case 'edit':
+				if ( get_current_user_id() == $user_id && um_user('can_edit_profile') ) return true;
+				if ( !um_user('can_edit_everyone') ) return false;
+				if ( get_current_user_id() == $user_id && !um_user('can_edit_profile') ) return false;
+				if ( um_user('can_edit_roles') && !in_array( $ultimatemember->query->get_role_by_userid( $user_id ), um_user('can_edit_roles') ) ) return false;
+				break;
+				
+			case 'delete':
+				if ( !um_user('can_delete_everyone') ) return false;
+				if ( um_user('can_delete_roles') && !in_array( $ultimatemember->query->get_role_by_userid( $user_id ), um_user('can_delete_roles') ) ) return false;
+				break;
+			
+		}
+
 		return true;
-		
 	}
 	
 	/***
@@ -419,25 +428,9 @@
 	***/
 	function um_can_edit_my_profile(){
 		global $ultimatemember;
-		
 		if ( !is_user_logged_in() ) return false;
 		if ( !um_user('can_edit_profile') ) return false;
-		
 		return true;
-		
-	}
-	
-	/***
-	***	@quick test if the user's is on his profile
-	***/
-	function um_is_myprofile(){
-		global $ultimatemember;
-		
-		if ( get_current_user_id() && get_current_user_id() == um_get_requested_user() )return true;
-		
-		if ( !um_get_requested_user() && um_is_core_page('user') && get_current_user_id() ) return true;
-		
-		return false;
 	}
 	
 	/***

@@ -128,6 +128,8 @@
 
 		if ( !is_admin() ) {
 		
+			do_action("track_{$status}_user_registration");
+			
 			if ( $status == 'approved' ) {
 				
 				$ultimatemember->user->auto_login($user_id);
@@ -149,9 +151,7 @@
 				}
 				
 			}
-			
-			do_action("track_{$status}_user_registration");
-		
+
 		}
 
 	}

@@ -40,8 +40,6 @@ class UM_Setup {
 			'_um_show_tagline' => 0,
 			'_um_search' => 0,
 			'_um_userinfo_animate' => '1',
-			'_um_directory_header' => __('{total_users} Members','ultimatemember'),
-			'_um_directory_no_users' => __('Sorry, we cannot find any users who match your search criteria.','ultimatemember'),
 			'_um_sortby' => 'user_registered_desc',
 			'_um_profile_photo' => '1',
 			'_um_cover_photos' => '1',
@@ -140,8 +138,6 @@ class UM_Setup {
 			'_um_login_secondary_btn_hover' => '#e5e5e5',
 			'_um_login_secondary_btn_text' => '#666',
 			'_um_directory_template' => 'members',
-			'_um_directory_header' => __('{total_users} Members','ultimatemember'),
-			'_um_directory_no_users' => __('We are sorry. We cannot find any users who match your search criteria.','ultimatemember'),
 		);
 		
 		$this->core_form_meta_all = apply_filters('um_core_form_meta_all', $this->core_form_meta_all );
@@ -176,8 +172,6 @@ class UM_Setup {
 			'can_delete_everyone' => 1,
 			'can_delete_roles' => 1,
 			'can_edit_profile' => 1,
-			'can_upload_pics' => 1,
-			'can_upload_files' => 1,
 			'can_delete_profile' => 1,
 			'can_view_all' => 1,
 			'can_make_private_profile' => 1,

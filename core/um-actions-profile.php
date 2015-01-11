@@ -241,7 +241,7 @@
 			
 			if ( um_get_requested_user() ) {
 				if ( !um_can_view_profile( um_get_requested_user() ) ) um_redirect_home();
-				if ( !um_can_edit_profile( um_get_requested_user() ) ) $ultimatemember->user->cannot_edit = 1;
+				if ( !um_current_user_can('edit', um_get_requested_user() ) ) $ultimatemember->user->cannot_edit = 1;
 				um_fetch_user( um_get_requested_user() );
 			} else {
 				if ( !is_user_logged_in() ) um_redirect_home();
@@ -254,7 +254,7 @@
 			$ultimatemember->fields->editing = 1;
 		
 			if ( um_get_requested_user() ) {
-				if ( !um_can_edit_profile( um_get_requested_user() ) ) um_redirect_home();
+				if ( !um_current_user_can('edit', um_get_requested_user() ) ) um_redirect_home();
 				um_fetch_user( um_get_requested_user() );
 			}
 			
@@ -304,6 +304,7 @@
 				
 				$actions = $ultimatemember->user->get_admin_actions();
 				
+				unset( $items['myaccount'] );
 				unset( $items['cancel'] );
 				$items = array_merge( $items, $actions );
 				$items['cancel'] = $cancel;
@@ -339,7 +340,7 @@
 		$files = null;
 		
 		if ( isset( $args['user_id'] ) ) {
-			if ( um_can_edit_profile( $args['user_id'] ) ) {
+			if ( um_current_user_can('edit', $args['user_id'] ) ) {
 				$ultimatemember->user->set( $args['user_id'] );
 			} else {
 				wp_die( __('You are not allowed to edit this user.','ultimatemember') );

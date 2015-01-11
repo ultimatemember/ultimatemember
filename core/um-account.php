@@ -116,7 +116,7 @@ class UM_Account {
 		
 		switch( $id ) {
 			case 'privacy' :
-				$args = 'profile_privacy,show_in_members';
+				$args = 'profile_privacy,hide_in_members';
 				break;
 			case 'delete' :
 				$args = 'single_user_password';

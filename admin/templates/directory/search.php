@@ -76,7 +76,7 @@
 			<label class="um-admin-half"><?php _e('Results Text','ultimatemember'); ?> <?php $this->tooltip('Customize the search result text . e.g. Found 3,000 Members. Leave this blank to not show result text'); ?></label>
 			<span class="um-admin-half">
 				
-				<input type="text" name="_um_directory_header" id="_um_directory_header" value="<?php echo $ultimatemember->query->get_meta_value('_um_directory_header', null, um_get_option('directory_header') ); ?>" />
+				<input type="text" name="_um_directory_header" id="_um_directory_header" value="<?php echo $ultimatemember->query->get_meta_value('_um_directory_header', null,  __('{total_users} Members','ultimatemember') ); ?>" />
 				
 			</span>
 		</p><div class="um-admin-clear"></div>
@@ -85,7 +85,7 @@
 			<label class="um-admin-half"><?php _e('Custom text If no users were found','ultimatemember'); ?> <?php $this->tooltip('This is the text that is displayed if no users are found during a search'); ?></label>
 			<span class="um-admin-half">
 				
-				<input type="text" name="_um_directory_no_users" id="_um_directory_no_users" value="<?php echo $ultimatemember->query->get_meta_value('_um_directory_no_users', null, um_get_option('directory_no_users') ); ?>" />
+				<input type="text" name="_um_directory_no_users" id="_um_directory_no_users" value="<?php echo $ultimatemember->query->get_meta_value('_um_directory_no_users', null, __('We are sorry. We cannot find any users who match your search criteria.','ultimatemember') ); ?>" />
 				
 			</span>
 		</p><div class="um-admin-clear"></div>
