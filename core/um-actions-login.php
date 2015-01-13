@@ -66,7 +66,7 @@
 
 				case 'incorrect_password':
 					if ( username_exists( $user_name ) ) {
-						$ultimatemember->form->add_error( 'user_password',  __('That password is incorrect. Please try again.') );
+						$ultimatemember->form->add_error( 'user_password',  __('Password is incorrect. Please try again.') );
 					}
 					break;
 					

@@ -1202,6 +1202,19 @@ $this->sections[] = array(
 				'required'		=> array( 'profile_show_bio', '=', 1 ),
         ),
 		
+        array(
+                'id'       		=> 'profile_header_menu',
+                'type'     		=> 'select',
+                'title'    		=> __( 'Profile Header Menu Position' ),
+				'default' 		=> um_get_metadefault('profile_header_menu'),
+				'desc' 	   		=> __('For incompatible themes, please make the menu open from left instead of bottom by default.','ultimatemember'),
+				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
+				'options' 		=> array(
+									'bc' 		=> 'Bottom of Icon',
+									'lc' 		=> 'Left of Icon',
+				),
+        ),
+		
 	)
 	
 );

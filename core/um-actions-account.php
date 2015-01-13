@@ -133,7 +133,7 @@
 		
 		if ( $output ) { ?>
 		
-		<div class="um-account-heading uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
+		<div class="um-account-heading uimob300-hide uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
 		
 		<?php echo wpautop( um_get_option('delete_account_text') ); ?>
 		
@@ -158,7 +158,7 @@
 
 		if ( $output ) { ?>
 		
-		<div class="um-account-heading uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
+		<div class="um-account-heading uimob340-hide uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
 		
 		<?php echo $output; ?>
 		
@@ -181,7 +181,7 @@
 		
 		if ( $output ) { ?>
 		
-		<div class="um-account-heading uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
+		<div class="um-account-heading uimob340-hide uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
 		
 		<?php echo $output; ?>
 		
@@ -205,7 +205,7 @@
 		
 		if ( $output ) { ?>
 		
-		<div class="um-account-heading uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
+		<div class="um-account-heading uimob340-hide uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
 		
 		<?php echo $output; ?>
 		
@@ -226,7 +226,7 @@
 		
 		?>
 		
-		<div class="um-account-meta uimob500-show">
+		<div class="um-account-meta radius-<?php echo um_get_option('profile_photocorner'); ?> uimob340-show uimob500-show">
 			
 			<div class="um-account-meta-img"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('profile_photo', 120); ?></a></div>
 			
@@ -252,7 +252,15 @@
 			
 			<div class="um-account-meta-img uimob800-hide"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('profile_photo', 120); ?></a></div>
 			
+			<?php if ( $ultimatemember->mobile->isMobile() ) { ?>
+			
+			<div class="um-account-meta-img-b uimob800-show" title="<?php echo um_user('display_name'); ?>"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('profile_photo', 120); ?></a></div>
+			
+			<?php } else { ?>
+			
 			<div class="um-account-meta-img-b uimob800-show um-tip-w" title="<?php echo um_user('display_name'); ?>"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('profile_photo', 120); ?></a></div>
+			
+			<?php } ?>
 			
 			<div class="um-account-name uimob800-hide"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('display_name'); ?></a></div>
 		
@@ -302,7 +310,13 @@
 				
 				<li>
 					<a data-tab="<?php echo $id; ?>" href="<?php echo $ultimatemember->account->tab_link($id); ?>" class="um-account-link <?php if ( $id == $current_tab ) echo 'current'; ?>">
+						
+						<?php if ( $ultimatemember->mobile->isMobile() ) { ?>
+						<span class="um-account-icontip uimob800-show" title="<?php echo $title; ?>"><i class="<?php echo $icon; ?>"></i></span>
+						<?php } else { ?>
 						<span class="um-account-icontip uimob800-show um-tip-w" title="<?php echo $title; ?>"><i class="<?php echo $icon; ?>"></i></span>
+						<?php } ?>
+						
 						<span class="um-account-icon uimob800-hide"><i class="<?php echo $icon; ?>"></i></span>
 						<span class="um-account-title uimob800-hide"><?php echo $title; ?></span>
 						<span class="um-account-arrow uimob800-hide"><i class="um-icon-right-open"></i></span>
