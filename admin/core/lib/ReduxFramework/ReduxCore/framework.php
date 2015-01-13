@@ -1329,7 +1329,7 @@
 					
 					add_submenu_page( $this->slug, __('User Roles', $this->slug), __('User Roles', $this->slug), 'manage_options', 'edit.php?post_type=um_role', '', '' );
 					
-					if ( um_get_option('members_page' ) ){
+					if ( um_get_option('members_page' ) || !get_option('um_options') ){
 					add_submenu_page( $this->slug, __('Member Directories', $this->slug), __('Member Directories', $this->slug), 'manage_options', 'edit.php?post_type=um_directory', '', '' );
 					}
 
