@@ -43,8 +43,6 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
 	text-align: left !important;
     text-decoration: none !important;
 
-	-moz-border-radius: 2px !important;
-	-webkit-border-radius: 2px !important;
     border-radius: 2px !important;
 
     background-clip: padding-box !important;
@@ -60,8 +58,7 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
 }
 
 .select2-container.select2-drop-above .select2-choice {
-	-moz-border-radius: 0 0 2px 2px !important;
-	-webkit-border-radius: 0 0 2px 2px !important;
+
     border-radius: 0 0 2px 2px !important;
 }
 
@@ -79,7 +76,6 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
     text-overflow: ellipsis !important;
     float: none !important;
     width: auto !important;
-	font-weight: normal;
 }
 
 .select2-container .select2-choice abbr {
@@ -133,8 +129,6 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
     background: #fff;
     color: #666;
 
-	-moz-border-radius: 0 0 2px 2px;
-	-webkit-border-radius: 0 0 2px 2px;
     border-radius: 0 0 2px 2px;
 
 	box-shadow: none;
@@ -144,8 +138,6 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
 .select2-drop.select2-drop-above {
     margin-top: 1px;
 
-	-moz-border-radius: 2px 2px 0 0;
-	-webkit-border-radius: 2px 2px 0 0;
     border-radius: 2px 2px 0 0;
 
     box-shadow: none;
@@ -175,8 +167,6 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
     position: absolute !important;
     right: 0 !important;
     top: 0 !important;
-	-moz-border-radius: 0 2px 2px 0 !important;
-	-webkit-border-radius: 0 2px 2px 0 !important;
     border-radius: 0 2px 2px 0 !important;
     background-clip: padding-box !important;
 	text-align: center !important;
@@ -230,8 +220,6 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
 	outline: 0 !important;
 	border: 1px solid #ddd !important;
 	color: #666 !important;
-	-moz-border-radius: 2px !important;
-	-webkit-border-radius: 2px !important;
 	border-radius: 2px !important;
 	font-size: 15px !important;
 	box-sizing: border-box !important;
@@ -437,10 +425,7 @@ disabled look for disabled choices in the results dropdown
     cursor: text !important;
     overflow: hidden !important;
 
-	-moz-border-radius: 2px !important;
-	-webkit-border-radius: 2px !important;
 	border-radius: 2px !important;
-	
 	box-shadow: none !important;
 }
 
@@ -500,10 +485,7 @@ html[dir="rtl"] .select2-container-multi .select2-choices li
     cursor: default;
     border: 1px solid #dddddd;
 
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
     border-radius: 2px;
-	
 	box-shadow: none !important;
 
     -webkit-touch-callout: none;

@@ -5,9 +5,7 @@
 .um-members img {
 	display: block;
 	overflow:hidden;
-	-moz-border-radius: 0!important;
-	-webkit-border-radius: 0!important;
-	border-radius: 0!important;
+	border-radius:0!important;
 	margin: 0!important;
 	padding: 0!important;
 }
@@ -191,9 +189,9 @@
 	opacity: 1;
 }
 
-.um-member-photo.radius-1 img { -moz-border-radius: 999px !important;-webkit-border-radius: 999px !important;border-radius: 999px !important }
-.um-member-photo.radius-2 img { -moz-border-radius: 4px !important;-webkit-border-radius: 4px !important;border-radius: 4px !important }
-.um-member-photo.radius-3 img { -moz-border-radius: 0 !important;-webkit-border-radius: 0 !important; border-radius: 0 !important }
+.um-member-photo.radius-1 img { border-radius: 999px !important }
+.um-member-photo.radius-2 img { border-radius: 4px !important }
+.um-member-photo.radius-3 img { border-radius: 0 !important }
 
 /*
 	- Member name
@@ -226,7 +224,6 @@
 	font-size: 13px;
 	line-height: 22px;
 	color: #999;
-	padding: 0 15px;
 }
 
 /*
@@ -286,8 +283,6 @@
 	width: 40px;
 	line-height: 40px;
 	height: 40px;
-	-moz-border-radius: 999px;
-	-webkit-border-radius: 999px;
 	border-radius: 999px;
 	color: #fff !important;
 	opacity: 0.85;
@@ -342,7 +337,6 @@
 	transition: all .2s linear;
 	padding: 0px 14px;
 	color: #666;
-	font-weight: normal;
 }
 
 .um-members-pagi a:hover {

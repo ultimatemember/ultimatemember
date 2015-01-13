@@ -87,7 +87,6 @@ class UM_Setup {
 			'_um_profile_show_name' => 1,
 			'_um_profile_show_bio' => 1,
 			'_um_profile_bio_maxchars' => 180,
-			'_um_profile_header_menu' => 'bc',
 			'_um_profile_role' => '0',
 			'_um_profile_template' => 'profile',
 			'_um_profile_max_width' => '1000px',

@@ -103,9 +103,7 @@
 	vertical-align: middle;
 	height: 100%;
 	text-decoration: none !important;
-	background: none !important;
-	color: #fff !important;
-	border-bottom: none !important;
+	background: none;
 }
 
 .um-cover-overlay i {
@@ -123,7 +121,6 @@
 	padding: 0 0 25px 0;
 	border-bottom: solid 2px #eee;
 	min-height: 85px;
-	box-sizing: content-box !important;
 }
 
 .um-profile-edit {
@@ -172,10 +169,6 @@
 /*
 	- Profile photo
 */
-
-.um-profile .gravatar {
-	position: static;
-}
 
 .um-profile-photo {
 	float: left;
@@ -227,9 +220,7 @@
 	vertical-align: middle;
 	height: 100%;
 	text-decoration: none !important;
-	background: none !important;
-	color: #fff !important;
-	border-bottom: none !important;
+	background: none;
 }
 
 .um-profile-photo-overlay i {

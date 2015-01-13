@@ -45,15 +45,6 @@
 	outline: 0 !important;
 }
 
-.um a .image-overlay,
-.um a:hover .image-overlay,
-.um a:hover .image-overlay * {
-	display: none !important;
-	width: 0 !important;
-	height: 0 !important;
-	position: static !important;
-}
-
 /* only in admin mode */
 .um.um-in-admin {
 	padding-top: 0;
@@ -156,14 +147,12 @@
 
 p.um-notice {
 	width: auto;
+	border-radius: 3px;
 	color: #fff;
 	box-sizing: border-box;
 	font-size: 15px;
 	padding: 12px !important;
 	margin: 12px 0 0 0 !important;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
 }
 
 p.um-notice.success {
@@ -182,8 +171,6 @@ p.um-notice.err {
 	width: auto;
 	max-width: 100%;
 	background: #C74A4A;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	color: #fff;
 	box-sizing: border-box;
@@ -210,8 +197,6 @@ p.um-notice.err {
 	width: auto;
 	max-width: 100%;
 	background: #C74A4A;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	color: #fff;
 	box-sizing: border-box;
@@ -274,9 +259,9 @@ p.um-notice.err {
 .um-field-label .um-field-label-icon  i { font-size: 22px; height: 22px; line-height: 22px; vertical-align: middle; }
 
 .um-field-label label {
-	display: inline-block !important;
+	display: inline-block;
 	height: 22px;
-	font-size: 15px !important;
+	font-size: 15px;
 	line-height: 22px !important;
 	font-weight: bold;
 	font-weight: 600;
@@ -318,21 +303,18 @@ p.um-notice.err {
 
 .um-form input[type=text],
 .um-form input[type=password] {
-	padding: 0 12px !important;
-	width: 100% !important;
-	display: block !important;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
+	padding: 0 12px;
+	width: 100%;
+	display: block;
 	border-radius: 2px;
 	outline: none !important;
 	cursor: text !important;
 	font-size: 15px !important;
 	height: 40px !important;
-	box-sizing: border-box !important;
+	box-sizing: border-box;
 	box-shadow: none !important;
-	margin: 0 !important;
+	margin: 0;
 	position: static;
-	outline: none !important;
 }
 
 .um-form input[type=text]:focus ,
@@ -341,7 +323,6 @@ p.um-notice.err {
 	border-color: #ccc;
 	background-color: #fff !important;
 	box-shadow: none !important;
-	outline: none !important;
 }
 
 .um-form input[type=text].um-iconed,
@@ -352,18 +333,15 @@ p.um-notice.err {
 
 .um-form textarea {
 	width: 100%;
-	padding: 8px 12px !important;
+	padding: 8px 12px;
 	display: block;
 	font-size: 15px !important;
 	line-height: 22px !important;
 	background: #fff;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
 	border-radius: 2px;
 	box-sizing: border-box;
-	min-height: 80px !important;
+	min-height: 80px;
 	box-shadow: none;
-	outline: none !important;
 }
 
 /*
@@ -376,9 +354,14 @@ p.um-notice.err {
 	margin: 8px 0;
 	position: relative;
 	cursor: pointer;
+	color: #888;
 }
 
-.um-field-checkbox:hover i, .um-field-radio:hover i {color: #666}
+.um-field-checkbox:hover i,
+.um-field-radio:hover i
+{
+color: #666
+}
 
 .um-field-checkbox input,
 .um-field-radio input{display:none!important}
@@ -406,7 +389,6 @@ p.um-notice.err {
 .um-field-radio-option {
 	margin: 0 0 0 36px;
 	line-height: 24px;
-	color: #888 !important;
 }
 
 /*
@@ -426,11 +408,10 @@ p.um-notice.err {
 
 	transition: 0.25s;
 	box-sizing: border-box;
-	-moz-border-radius: 4px !important;
-	-webkit-border-radius: 4px !important;
 	border-radius: 4px !important;
 	border-top: 1px solid rgba(0,0,0,0.0) !important;
 	border-bottom: 2px solid rgba(0, 0, 0, 0.1) !important;
+	letter-spacing: 0.5px;
 }
 
 .um-field-group-head i {
@@ -447,8 +428,6 @@ p.um-notice.err {
 	margin: 15px 0 0 0;
 	padding: 15px 20px 5px 20px;
 	background: #f9f9f9;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	position: relative;
 	box-sizing: border-box;
@@ -490,14 +469,6 @@ input[type=submit].um-button:focus {
 	width: 100%;
 	box-shadow: none;
 	text-shadow: none;
-	font-family: inherit;
-	outline: none !important;
-	margin: 0;
-	opacity: 1;
-}
-
-input[type=submit].um-button:hover {
-	opacity: 1;
 }
 
 .um-button {
@@ -516,12 +487,10 @@ input[type=submit].um-button:hover {
 
 	transition: 0.25s;
 	box-sizing: border-box;
-	-moz-border-radius: 4px !important;
-	-webkit-border-radius: 4px !important;
 	border-radius: 4px !important;
 	border-top: 1px solid rgba(0,0,0,0.0) !important;
 	border-bottom: 2px solid rgba(0, 0, 0, 0.1) !important;
-	opacity: 1;
+	letter-spacing: 0.5px;
 }
 
 
@@ -551,10 +520,8 @@ a.um-link-alt:hover {text-decoration: underline !important;}
 	position: absolute;
 	height: auto;
 	background: #fff;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
 	border-radius: 5px;
-	z-index: 10;
+	z-index: 1;
 	display: none;
     border: 1px solid #e5e5e5;
 	box-sizing: border-box;
@@ -573,8 +540,10 @@ a.um-link-alt:hover {text-decoration: underline !important;}
 	display: block;
 	padding: 8px 12px;
 	color: #666;
+	z-index: 4;
 	font-size: 14px;
 	line-height: 18px;
+	position: relative;
 }
 
 .um-dropdown li:last-child a {
@@ -597,7 +566,7 @@ a.um-link-alt:hover {text-decoration: underline !important;}
 	width: 24px;
 	height: 24px;
 	overflow: hidden;
-	z-index: 15;
+	z-index: 2;
 	color: #eee;
 }
 
@@ -617,8 +586,6 @@ div.um-photo {
 div.um-photo,
 div.um-photo a,
 div.um-photo img {
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 }
 

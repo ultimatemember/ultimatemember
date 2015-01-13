@@ -56,8 +56,6 @@ div.uimob340 .um-profile-photo-overlay i
 .um-modal.uimob340,
 .um-modal.uimob340 .um-modal-body,
 .um-modal.uimob340 .um-modal-header {
-	-moz-border-radius: 0;
-	-webkit-border-radius: 0;
 	border-radius: 0;
 }
 
@@ -197,6 +195,8 @@ div.uimob340 .um-account-tab {
 	border-bottom: 1px solid #eee;
 }
 
+div.uimob340 .um-account-main div.um-field {padding-top: 15px}
+
 div.uimob340 .um-account-meta {
 	margin-bottom: 0;
 }
@@ -247,8 +247,6 @@ div.uimob500 .um-profile-photo-overlay i
 .um-modal.uimob500,
 .um-modal.uimob500 .um-modal-body,
 .um-modal.uimob500 .um-modal-header {
-	-moz-border-radius: 0;
-	-webkit-border-radius: 0;
 	border-radius: 0;
 }
 
@@ -388,6 +386,8 @@ div.uimob500 .um-account-tab {
 	border-bottom: 1px solid #eee;
 }
 
+div.uimob500 .um-account-main div.um-field {padding-top: 15px}
+
 div.uimob500 .um-account-meta {
 	margin-bottom: 0;
 }
@@ -408,8 +408,6 @@ div.uimob800 .um-account-side {
 
 div.uimob800 .um-account-side ul {
 	border: 1px solid #ddd;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 }
 
@@ -426,8 +424,8 @@ div.uimob800 .um-account-side li a{
 	background: transparent;
 	transition: all .2s linear;
 }
-div.uimob800 .um-account-side li:first-child a {-moz-border-radius: 3px 3px 0 0;-webkit-border-radius: 3px 3px 0 0;border-radius: 3px 3px 0 0 }
-div.uimob800 .um-account-side li:last-child a {-moz-border-radius: 0 0 3px 3px;-webkit-border-radius: 0 0 3px 3px;border-radius: 0 0 3px 3px}
+div.uimob800 .um-account-side li:first-child a {border-radius: 3px 3px 0 0 }
+div.uimob800 .um-account-side li:last-child a {border-radius: 0 0 3px 3px}
 
 div.uimob800 .um-account-side li a span.um-account-icontip {
 	display: block;
@@ -460,8 +458,6 @@ div.uimob800 .um-account-meta a,
 div.uimob800 .um-account-meta img {
 	display: block;
 	overflow: hidden;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
 	border-radius: 3px;
 }
 
@@ -581,8 +577,6 @@ div.uimob960 .um-gutter-sizer {width: 4%}
 	.um-modal.no-photo,
 	.um-modal.no-photo .um-modal-body,
 	.um-modal.no-photo .um-modal-header {
-		-moz-border-radius: 0;
-		-webkit-border-radius: 0;
 		border-radius: 0;
 	}
 

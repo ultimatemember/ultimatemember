@@ -389,7 +389,7 @@
 				
 			}
 			
-			echo $ultimatemember->menu->new_ui( $args['header_menu'], 'div.um-profile-edit', 'click', $items );
+			echo $ultimatemember->menu->new_ui( 'bc', 'div.um-profile-edit', 'click', $items );
 			
 			?>
 		

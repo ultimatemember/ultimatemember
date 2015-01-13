@@ -10,7 +10,7 @@ print "
 .um-$form_id.um .um-profile-photo a.um-profile-photo-img,
 .um-$form_id.um .um-profile-photo img,
 .um-$form_id.um .um-profile-photo span.um-profile-photo-overlay
-{ -moz-border-radius: 999px !important; -webkit-border-radius: 999px !important; border-radius: 999px !important }";
+{ border-radius: 999px !important }";
 }
 
 if ( $photocorner == 2 ) {
@@ -18,7 +18,7 @@ print "
 .um-$form_id.um .um-profile-photo a.um-profile-photo-img,
 .um-$form_id.um .um-profile-photo img,
 .um-$form_id.um .um-profile-photo span.um-profile-photo-overlay
-{ -moz-border-radius: 4px !important; -webkit-border-radius: 4px !important; border-radius: 4px !important }";
+{ border-radius: 4px !important }";
 }
 
 if ( $photocorner == 3 ) {
@@ -26,7 +26,7 @@ print "
 .um-$form_id.um .um-profile-photo a.um-profile-photo-img,
 .um-$form_id.um .um-profile-photo img,
 .um-$form_id.um .um-profile-photo span.um-profile-photo-overlay
-{ -moz-border-radius: 0px !important; -webkit-border-radius: 0px !important; border-radius: 0px !important }";
+{ border-radius: 0px !important }";
 }
 
 print "
