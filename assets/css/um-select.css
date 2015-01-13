@@ -192,7 +192,7 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
 }
 
 .select2-container .select2-choice .select2-arrow:before {
-	content: "\e08d" !important;
+	content: "\e87a" !important;
 	font-size: 27px !important;
 	font-family: "ultimatemember" !important;
 	top: -1px !important;
@@ -241,7 +241,7 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
 }
 
 .select2-search:before {
-	content: "c" !important;
+	content: "\ebe1" !important;
 	font-size: 22px !important;
 	height: 32px !important;
 	line-height: 32px !important;

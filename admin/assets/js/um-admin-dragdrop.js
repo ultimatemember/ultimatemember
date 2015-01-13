@@ -240,7 +240,7 @@ function UM_Rows_Refresh(){
 
 function UM_Add_Icon(){
 
-	var add_icon_html = '<a href="#" class="um-admin-drag-add-field um-admin-tipsy-n" title="Add Field" data-modal="UM_fields" data-modal-size="normal" data-dynamic-content="um_admin_show_fields" data-arg2="'+jQuery('.um-admin-drag-ajax').data('form_id')+'" data-arg1=""><i class="um-icon-fontawesome-webfont-97"></i></a>';
+	var add_icon_html = '<a href="#" class="um-admin-drag-add-field um-admin-tipsy-n" title="Add Field" data-modal="UM_fields" data-modal-size="normal" data-dynamic-content="um_admin_show_fields" data-arg2="'+jQuery('.um-admin-drag-ajax').data('form_id')+'" data-arg1=""><i class="um-icon-plus-add"></i></a>';
 		
 	jQuery('.um-admin-drag-col').each(function(){
 		if ( jQuery(this).find('.um-admin-drag-add-field').length == 0 ) {

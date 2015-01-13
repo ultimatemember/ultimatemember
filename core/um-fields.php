@@ -1512,7 +1512,7 @@ class UM_Fields {
 				if ( !empty( $fields ) ) {
 				
 				$output .= '<div class="um-field-group" data-max_entries="'.$max_entries.'">
-								<div class="um-field-group-head"><i class="um-icon-fontawesome-webfont-97"></i>'.$label.'</div>';
+								<div class="um-field-group-head"><i class="um-icon-plus-add"></i>'.$label.'</div>';
 					$output .= '<div class="um-field-group-body"><a href="#" class="um-field-group-cancel"><i class="um-icon-remove"></i></a>';
 					
 									foreach($fields as $subkey => $subdata) {

@@ -49,7 +49,7 @@ class UM_Taxonomies {
 			)
 		);
 
-		if ( um_get_option('members_page') || !get_option('um_options') ){
+		if ( um_get_option('members_page') ){
 		
 		register_post_type( 'um_directory', array(
 				'labels' => array(

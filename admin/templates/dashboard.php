@@ -24,7 +24,7 @@
 		
 		<div class="um-admin-dash-main">
 			
-			<?php $tabs = array('overview'); ?>
+			<?php $tabs = array('overview', 'analytics'); ?>
 			
 			<?php foreach( $tabs as $tab ) { ?>
 			<div class="um-admin-dash-content" id="<?php echo $tab; ?>">

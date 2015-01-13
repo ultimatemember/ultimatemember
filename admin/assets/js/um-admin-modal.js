@@ -168,7 +168,7 @@ jQuery(document).ready(function() {
 			link.addClass('active');
 		} else {
 			content.hide();
-			link.find('i').removeClass().addClass('um-icon-fontawesome-webfont-97');
+			link.find('i').removeClass().addClass('um-icon-plus-add');
 			link.removeClass('active');
 		}
 		um_admin_modal_responsive();
@@ -275,6 +275,19 @@ jQuery(document).ready(function() {
 		element.find('input[type=hidden]').val('');
 		element.find('.um-admin-icon-value').html('No icon selected.');
 		jQuery(this).hide();
+	});
+	
+	/**
+		search font icons
+	**/
+	jQuery(document).on('keyup blur', '#_icon_search', function(){
+		if ( jQuery(this).val().toLowerCase() != '' ) {
+			jQuery('.um-admin-icons span').hide();
+			jQuery('.um-admin-icons span[data-code*="'+jQuery(this).val().toLowerCase()+'"]').show();
+		} else {
+			jQuery('.um-admin-icons span:hidden').show();
+		}
+		um_admin_modal_responsive();
 	});
 
 });

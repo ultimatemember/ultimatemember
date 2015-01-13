@@ -3,7 +3,7 @@
 class UM_FontIcons {
 
 	function __construct() {
-
+		
 		if ( !get_option('um_cache_fonticons') ) {
 			$file = um_path . 'assets/css/um-fonticons.css';
 			$css = file_get_contents($file);
