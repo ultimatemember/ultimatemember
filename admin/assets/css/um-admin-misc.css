@@ -228,6 +228,8 @@ p.disabled-on-off .um-admin-yesno *{
 	border-radius: 1px;
 	cursor: pointer;
 	border: solid 1px #cccccc;
+	margin: 0;
+	padding: 0 !important;
 }
 
 .um-admin-yesno span.btn.pos-1 {left: 60px}

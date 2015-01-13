@@ -28,10 +28,6 @@
 	- Main tab
 */
 
-.um-account-main div.um-field {
-	padding-top: 25px;
-}
-
 .um-account-main div.um-account-heading {
 	margin: 0 !important;
 	font-size: 18px;
@@ -65,20 +61,26 @@
 	margin-bottom: 20px;
 }
 
-.um-account-meta img {margin: 0 !important}
+.um-account-meta img {
+	margin: 0 !important;
+	position: static !important;
+	float: none !important;
+	display: inline-block;
+}
 
-.um-account-meta.radius-1 img { border-radius: 999px }
-.um-account-meta.radius-2 img { border-radius: 4px }
-.um-account-meta.radius-3 img { border-radius: 0 }
+.um-account-meta.radius-1 img { 	-moz-border-radius: 999px;-webkit-border-radius: 999px;border-radius: 999px }
+.um-account-meta.radius-2 img { 	-moz-border-radius: 4px;-webkit-border-radius: 4px;border-radius: 4px }
+.um-account-meta.radius-3 img { 	-moz-border-radius: 0;-webkit-border-radius: 0;border-radius: 0 }
 
 .um-account-name a {
 	font-weight: bold;
-	color: #555;
+	color: #555 !important;
 	text-decoration: none !important;
 	font-size: 18px;
+	line-height: 2em;
 }
 
-.um-account-name a:hover {color: #3ba1da}
+.um-account-name a:hover {color: #3ba1da !important}
 
 /*
 	- Account nav
@@ -88,7 +90,7 @@
 	display: block;
 	height: 44px;
 	line-height: 44px;
-	color: #666;
+	color: #666 !important;
 	text-decoration: none !important;
 	position: relative;
 	padding-left: 40px;

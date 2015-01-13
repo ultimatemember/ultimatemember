@@ -37,7 +37,7 @@
                     width: this.$element[0].offsetWidth,
                     height: this.$element[0].offsetHeight
                 });
-                
+				
                 var actualWidth = $tip[0].offsetWidth,
                     actualHeight = $tip[0].offsetHeight,
                     gravity = maybeCall(this.options.gravity, this.$element[0]);
@@ -54,7 +54,13 @@
                         tp = {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth - this.options.offset};
                         break;
                     case 'w':
-                        tp = {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width + this.options.offset};
+						extra_gap = 0;
+						if ( $('body').css('position').length > 0 && $('body').css('position') == 'relative' ) {
+							if ( $('#wpadminbar').length ) {
+								extra_gap = $('#wpadminbar').height();
+							}
+						}
+						tp = {top: pos.top + pos.height / 2 - actualHeight / 2 - extra_gap, left: pos.left + pos.width + this.options.offset};
                         break;
                 }
                 
