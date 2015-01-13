@@ -89,7 +89,7 @@ class UM_Admin_Builder {
 		
 			<!-- Master Row Actions -->
 			<div class="um-admin-drag-row-icons">
-					<a href="#" class="um-admin-drag-rowsub-add um-admin-tipsy-n" title="<?php _e('Add Row','ultimatemember'); ?>" data-row_action="add_subrow"><i class="um-icon-plus-add"></i></a>
+					<a href="#" class="um-admin-drag-rowsub-add um-admin-tipsy-n" title="<?php _e('Add Row','ultimatemember'); ?>" data-row_action="add_subrow"><i class="um-icon-fontawesome-webfont-97"></i></a>
 					<a href="#" class="um-admin-drag-row-edit um-admin-tipsy-n" title="<?php _e('Edit Row','ultimatemember'); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo $this->form_id; ?>" data-arg3="_um_row_1"><i class="um-icon-pencil-3"></i></a>
 					<span class="um-admin-drag-row-start"><i class="um-icon-cursor-move"></i></span>
 			</div><div class="um-admin-clear"></div>
@@ -155,7 +155,7 @@ class UM_Admin_Builder {
 		
 			<!-- Master Row Actions -->
 			<div class="um-admin-drag-row-icons">
-					<a href="#" class="um-admin-drag-rowsub-add um-admin-tipsy-n" title="<?php _e('Add Row','ultimatemember'); ?>" data-row_action="add_subrow"><i class="um-icon-plus-add"></i></a>
+					<a href="#" class="um-admin-drag-rowsub-add um-admin-tipsy-n" title="<?php _e('Add Row','ultimatemember'); ?>" data-row_action="add_subrow"><i class="um-icon-fontawesome-webfont-97"></i></a>
 					<a href="#" class="um-admin-drag-row-edit um-admin-tipsy-n" title="<?php _e('Edit Row','ultimatemember'); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo $this->form_id; ?>" data-arg3="<?php echo $row_id; ?>"><i class="um-icon-pencil-3"></i></a>
 					<span class="um-admin-drag-row-start"><i class="um-icon-cursor-move"></i></span>
 					<?php if ( $row_id != '_um_row_1' ) {?>
@@ -226,7 +226,7 @@ class UM_Admin_Builder {
 						
 						<div class="um-admin-drag-fld-title um-field-type-<?php echo $type; ?>">
 							<?php if ( $type == 'group' ) { ?>
-								<i class="um-icon-plus-add"></i>
+								<i class="um-icon-fontawesome-webfont-97"></i>
 							<?php } else if ( isset($keyarray['icon']) && !empty( $keyarray['icon'] ) ) { ?>
 								<i class="<?php echo $keyarray['icon']; ?>"></i>
 							<?php } ?><?php echo $title; ?></div>

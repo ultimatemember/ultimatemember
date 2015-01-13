@@ -25,7 +25,7 @@
 			
 		</div>
 		
-		<div class="um-admin-drag-addrow um-admin-tipsy-n" title="<?php _e('Add Master Row','ultimatemember'); ?>" data-row_action="add_row"><i class="um-icon-plus-add"></i></div>
+		<div class="um-admin-drag-addrow um-admin-tipsy-n" title="<?php _e('Add Master Row','ultimatemember'); ?>" data-row_action="add_row"><i class="um-icon-fontawesome-webfont-97"></i></div>
 	
 	</div>
 

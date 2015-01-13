@@ -121,6 +121,24 @@
 	}
 	
 	/***
+	***	@Is core URL
+	***/
+	function um_is_core_uri() {
+		global $ultimatemember;
+		$array = $ultimatemember->permalinks->core;
+		$current_url = trailingslashit( $ultimatemember->permalinks->get_current_url(true) );
+		
+		if ( !isset( $array ) || !is_array( $array ) ) return false;
+		
+		foreach( $array as $k => $id ) {
+			$page_url = trailingslashit( get_permalink( $id ) );
+			if ( strstr( $current_url, $page_url ) )
+				return true;
+		}
+		return false;
+	}
+	
+	/***
 	***	@Check value of queried search in text input
 	***/
 	function um_queried_search_value( $filter ) {

@@ -173,7 +173,7 @@
 					<?php } else { ?>
 					
 					<?php if ( !isset( $ultimatemember->user->cannot_edit ) ) {  ?>
-					<a href="#" class="um-cover-add um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width"><span class="um-cover-add-i"><i class="um-icon-plus-add um-tip-n" title="<?php _e('Upload a cover photo','ultimatemember'); ?>"></i></span></a>
+					<a href="#" class="um-cover-add um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width"><span class="um-cover-add-i"><i class="um-icon-fontawesome-webfont-97 um-tip-n" title="<?php _e('Upload a cover photo','ultimatemember'); ?>"></i></span></a>
 					<?php } ?>
 					
 					<?php } ?>

@@ -208,24 +208,6 @@
 	padding-bottom: 22px !important;
 }
 
-p._icon_search{
-	position: relative;
-	width: 85% !important;
-	margin: 0 auto !important;
-	padding: 12px 0 0 0 !important;
-}
-
-p._icon_search:before {
-	position: absolute;
-	right: 6px;
-	top: 13px;
-	font-size: 18px;
-	content: "\ebe1";
-	font-family: "ultimatemember";
-	color: #aaa;
-}
-p._icon_search input[type=text]{padding-right: 40px!important}
-
 .um-admin-icons {
 	padding: 0 0 15px 12px;
 	float: left;
@@ -235,7 +217,7 @@ p._icon_search input[type=text]{padding-right: 40px!important}
 	cursor: pointer;
 	float: left;
 	margin: 5px;
-	color: #bbb;
+	color: #777;
 	border: 4px solid #eee;
 	border-radius: 3px;
 }
