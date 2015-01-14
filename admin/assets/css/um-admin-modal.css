@@ -180,7 +180,7 @@
 
 .um-admin-btns a span.remove:before{
 	font-family: "ultimatemember" !important;
-	content: "\e483";
+	content: "?";
 }
 .um-admin-btns a span:hover{color: #cb3838}
 
@@ -218,11 +218,11 @@ p._icon_search{
 p._icon_search:before {
 	position: absolute;
 	right: 6px;
-	top: 13px;
-	font-size: 18px;
-	content: "\ebe1";
+	top: 15px;
+	font-size: 16px;
+	content: "c";
 	font-family: "ultimatemember";
-	color: #aaa;
+	color: #999;
 }
 p._icon_search input[type=text]{padding-right: 40px!important}
 

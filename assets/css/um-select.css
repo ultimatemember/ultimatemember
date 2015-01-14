@@ -192,7 +192,7 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
 }
 
 .select2-container .select2-choice .select2-arrow:before {
-	content: "\e87a" !important;
+	content: "\e08d" !important;
 	font-size: 27px !important;
 	font-family: "ultimatemember" !important;
 	top: -1px !important;
@@ -241,8 +241,8 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
 }
 
 .select2-search:before {
-	content: "\ebe1" !important;
-	font-size: 22px !important;
+	content: "c" !important;
+	font-size: 16px !important;
 	height: 32px !important;
 	line-height: 32px !important;
 	font-family: "ultimatemember" !important;
@@ -540,7 +540,7 @@ html[dir="rtl"] .select2-container-multi .select2-choices .select2-search-choice
 }
 
 .select2-search-choice-close:before {
-	content: "\e481" !important;
+	content: "n" !important;
 	font-size: 17px !important;
 	font-family: "ultimatemember" !important;
 	top: -7px !important;
@@ -561,7 +561,7 @@ html[dir="rtl"] .select2-container-multi .select2-choices .select2-search-choice
 	font-size: 12px !important;
 	top: 4px !important;
 	right: 0 !important;
-	content: "\e482" !important;
+	content: "n" !important;
 }
 
 /* disabled styles */

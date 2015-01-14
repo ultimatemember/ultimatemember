@@ -239,7 +239,7 @@ p.disabled-on-off .um-admin-yesno *{
 	top: 4px;
 	font-size: 18px;
 	line-height: 18px !important;
-	color: #B1B1B1;
+	color: #888;
 }
 
 .um-admin-yesno span.yes, .um-admin-yesno span.no {
