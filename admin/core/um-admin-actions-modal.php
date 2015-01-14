@@ -20,9 +20,9 @@
 		<div class="um-admin-btn-toggle">
 		
 			<?php if ( $in_edit ) { $metabox->in_edit = true;  $metabox->edit_array = $edit_array; ?>
-			<a href="#"><i class="um-icon-plus-add"></i><?php _e('Manage conditional fields support'); ?></a> <?php $metabox->tooltip('Here you can setup conditional logic to show/hide this field based on specific fields value or conditions'); ?>
+			<a href="#"><i class="um-icon-plus"></i><?php _e('Manage conditional fields support'); ?></a> <?php $metabox->tooltip('Here you can setup conditional logic to show/hide this field based on specific fields value or conditions'); ?>
 			<?php } else { ?>
-			<a href="#"><i class="um-icon-plus-add"></i><?php _e('Add conditional fields support'); ?></a> <?php $metabox->tooltip('Here you can setup conditional logic to show/hide this field based on specific fields value or conditions'); ?>
+			<a href="#"><i class="um-icon-plus"></i><?php _e('Add conditional fields support'); ?></a> <?php $metabox->tooltip('Here you can setup conditional logic to show/hide this field based on specific fields value or conditions'); ?>
 			<?php } ?>
 			
 			<div class="um-admin-btn-content">
@@ -44,7 +44,7 @@
 				<?php $metabox->field_input( '_conditional_value' . $k, $form_id ); ?>
 				
 				<?php if ( $k == '' ) { ?>
-				<p><a href="#" class="um-admin-new-condition button um-admin-tipsy-n" title="Add new condition"><i class="um-icon-plus-add" style="margin-right:0!important"></i></a></p>
+				<p><a href="#" class="um-admin-new-condition button um-admin-tipsy-n" title="Add new condition"><i class="um-icon-plus" style="margin-right:0!important"></i></a></p>
 				<?php } else { ?>
 				<p><a href="#" class="um-admin-remove-condition button um-admin-tipsy-n" title="Remove condition"><i class="um-icon-remove" style="margin-right:0!important"></i></a></p>
 				<?php } ?>
@@ -67,7 +67,7 @@
 				<?php $metabox->field_input( '_conditional_operator', $form_id ); ?>
 				<?php $metabox->field_input( '_conditional_value', $form_id ); ?>
 				
-				<p><a href="#" class="um-admin-new-condition button um-admin-tipsy-n" title="Add new condition"><i class="um-icon-plus-add" style="margin-right:0!important"></i></a></p>
+				<p><a href="#" class="um-admin-new-condition button um-admin-tipsy-n" title="Add new condition"><i class="um-icon-plus" style="margin-right:0!important"></i></a></p>
 				
 				<div class="um-admin-clear"></div>
 				</div>

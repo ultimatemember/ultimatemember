@@ -122,7 +122,7 @@
 			$overlay = '<span class="um-cover-overlay">
 				<span class="um-cover-overlay-s">
 					<ins>
-						<i class="um-icon-photo-2"></i>
+						<i class="um-icon-photo"></i>
 						<span class="um-cover-overlay-t">'.__('Change your cover photo').'</span>
 					</ins>
 				</span>
@@ -173,7 +173,7 @@
 					<?php } else { ?>
 					
 					<?php if ( !isset( $ultimatemember->user->cannot_edit ) ) {  ?>
-					<a href="#" class="um-cover-add um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width"><span class="um-cover-add-i"><i class="um-icon-plus-add um-tip-n" title="<?php _e('Upload a cover photo','ultimatemember'); ?>"></i></span></a>
+					<a href="#" class="um-cover-add um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width"><span class="um-cover-add-i"><i class="um-icon-plus um-tip-n" title="<?php _e('Upload a cover photo','ultimatemember'); ?>"></i></span></a>
 					<?php } ?>
 					
 					<?php } ?>
@@ -206,7 +206,7 @@
 		$overlay = '<span class="um-profile-photo-overlay">
 			<span class="um-profile-photo-overlay-s">
 				<ins>
-					<i class="um-icon-camera-5"></i>
+					<i class="um-icon-camera"></i>
 				</ins>
 			</span>
 		</span>';
@@ -358,7 +358,7 @@
 		
 		<div class="um-profile-edit um-profile-headericon">
 		
-			<a href="#" class="um-profile-edit-a"><i class="um-icon-cog-2"></i></a>
+			<a href="#" class="um-profile-edit-a"><i class="um-icon-cog"></i></a>
 		
 			<?php
 			

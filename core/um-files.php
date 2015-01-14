@@ -7,20 +7,20 @@ class UM_Files {
 		add_action('init',  array(&$this, 'setup_paths'), 1);
 		
 		$this->fonticon = array(
-			'pdf' => array('icon' => 'um-icon-file-pdf', 'color' => '#D24D4D' ),
-			'txt' => array('icon' => 'um-icon-file-text' ),
-			'csv' => array('icon' => 'um-icon-file-text' ),
-			'doc' => array('icon' => 'um-icon-file-text', 'color' => '#2C95D5' ),
-			'docx' => array('icon' => 'um-icon-file-text', 'color' => '#2C95D5' ),
-			'odt' => array('icon' => 'um-icon-file-text', 'color' => '#2C95D5' ),
-			'ods' => array('icon' => 'um-icon-file-binary', 'color' => '#51BA6A' ),
-			'xls' => array('icon' => 'um-icon-file-binary', 'color' => '#51BA6A' ),
-			'xlsx' => array('icon' => 'um-icon-file-binary', 'color' => '#51BA6A' ),
-			'zip' => array('icon' => 'um-icon-file-zip' ),
-			'rar' => array('icon' => 'um-icon-file-zip' ),
+			'pdf' => array('icon' => 'um-icon-file-pdf-o', 'color' => '#D24D4D' ),
+			'txt' => array('icon' => 'um-icon-file-text-o' ),
+			'csv' => array('icon' => 'um-icon-file-text-o' ),
+			'doc' => array('icon' => 'um-icon-file-text-o', 'color' => '#2C95D5' ),
+			'docx' => array('icon' => 'um-icon-file-text-o', 'color' => '#2C95D5' ),
+			'odt' => array('icon' => 'um-icon-file-text-o', 'color' => '#2C95D5' ),
+			'ods' => array('icon' => 'um-icon-file-excel-o', 'color' => '#51BA6A' ),
+			'xls' => array('icon' => 'um-icon-file-excel-o', 'color' => '#51BA6A' ),
+			'xlsx' => array('icon' => 'um-icon-file-excel-o', 'color' => '#51BA6A' ),
+			'zip' => array('icon' => 'um-icon-file-zip-o' ),
+			'rar' => array('icon' => 'um-icon-file-zip-o' ),
 		);
 		
-		$this->default_file_fonticon = 'um-icon-doc';
+		$this->default_file_fonticon = 'um-icon-file-o';
 	
 	}
 	

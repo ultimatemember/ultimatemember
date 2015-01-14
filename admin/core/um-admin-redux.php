@@ -142,7 +142,7 @@
             $this->args['share_icons'][] = array(
                 'url'   => 'https://youtube.com/user/umplugin',
                 'title' => 'We\'re on YouTube',
-                'icon'  => 'um-icon-youtube-alt'
+                'icon'  => 'um-icon-youtube-play'
             );
 
         }

@@ -137,10 +137,10 @@ class UM_Admin_DragDrop {
 		<div class="um-col-demon-row" style="display:none;">
 		
 				<div class="um-admin-drag-row-icons">
-						<a href="#" class="um-admin-drag-rowsub-add um-admin-tipsy-n" title="<?php _e('Add Row','ultimatemember'); ?>" data-row_action="add_subrow"><i class="um-icon-plus-add"></i></a>
-						<a href="#" class="um-admin-drag-row-edit um-admin-tipsy-n" title="<?php _e('Edit Row','ultimatemember'); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo get_the_ID(); ?>"><i class="um-icon-pencil-3"></i></a>
-						<span class="um-admin-drag-row-start"><i class="um-icon-cursor-move"></i></span>
-						<a href="#" class="um-admin-tipsy-n" title="<?php _e('Delete Row','ultimatemember'); ?>" data-remove_element="um-admin-drag-row"><i class="um-icon-trash-bin-3"></i></a>
+						<a href="#" class="um-admin-drag-rowsub-add um-admin-tipsy-n" title="<?php _e('Add Row','ultimatemember'); ?>" data-row_action="add_subrow"><i class="um-icon-plus"></i></a>
+						<a href="#" class="um-admin-drag-row-edit um-admin-tipsy-n" title="<?php _e('Edit Row','ultimatemember'); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo get_the_ID(); ?>"><i class="um-icon-pencil"></i></a>
+						<span class="um-admin-drag-row-start"><i class="um-icon-move"></i></span>
+						<a href="#" class="um-admin-tipsy-n" title="<?php _e('Delete Row','ultimatemember'); ?>" data-remove_element="um-admin-drag-row"><i class="um-icon-trash"></i></a>
 				</div><div class="um-admin-clear"></div>
 				
 				<div class="um-admin-drag-rowsubs">
@@ -153,8 +153,8 @@ class UM_Admin_DragDrop {
 					</div>
 
 					<div class="um-admin-drag-rowsub-icons">
-						<span class="um-admin-drag-rowsub-start"><i class="um-icon-cursor-move"></i></span>
-						<a href="#" class="um-admin-tipsy-n" title="<?php _e('Delete Row','ultimatemember'); ?>" data-remove_element="um-admin-drag-rowsub"><i class="um-icon-trash-bin-3"></i></a>
+						<span class="um-admin-drag-rowsub-start"><i class="um-icon-move"></i></span>
+						<a href="#" class="um-admin-tipsy-n" title="<?php _e('Delete Row','ultimatemember'); ?>" data-remove_element="um-admin-drag-rowsub"><i class="um-icon-trash"></i></a>
 					</div><div class="um-admin-clear"></div>
 
 					<div class="um-admin-drag-col">
@@ -178,8 +178,8 @@ class UM_Admin_DragDrop {
 			</div>
 
 			<div class="um-admin-drag-rowsub-icons">
-				<span class="um-admin-drag-rowsub-start"><i class="um-icon-cursor-move"></i></span>
-				<a href="#" class="um-admin-tipsy-n" title="<?php _e('Delete Row','ultimatemember'); ?>" data-remove_element="um-admin-drag-rowsub"><i class="um-icon-trash-bin-3"></i></a>
+				<span class="um-admin-drag-rowsub-start"><i class="um-icon-move"></i></span>
+				<a href="#" class="um-admin-tipsy-n" title="<?php _e('Delete Row','ultimatemember'); ?>" data-remove_element="um-admin-drag-rowsub"><i class="um-icon-trash"></i></a>
 			</div><div class="um-admin-clear"></div>
 
 			<div class="um-admin-drag-col">

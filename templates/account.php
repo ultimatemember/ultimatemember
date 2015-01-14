@@ -32,7 +32,7 @@
 							
 							<div class="um-account-nav uimob340-show uimob500-show"><a href="#" data-tab="<?php echo $id; ?>" class="<?php if ( $id == $current_tab ) echo 'current'; ?>"><?php echo $title; ?>
 								<span class="ico"><i class="<?php echo $icon; ?>"></i></span>
-								<span class="arr"><i class="um-icon-chevron-down-3"></i></span>
+								<span class="arr"><i class="um-icon-angle-down"></i></span>
 							</a></div>
 							
 							<?php

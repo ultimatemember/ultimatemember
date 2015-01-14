@@ -125,13 +125,13 @@ class UM_Form {
 	function display_form_type_icon($mode, $post_id){
 		switch($mode){
 			case 'login':
-				$output = '<i class="um-icon-lock-locker-streamline"></i>';
+				$output = '<i class="um-icon-unlock-alt"></i>';
 				break;
 			case 'profile':
-				$output = '<i class="um-icon-man-people-streamline-user"></i>';
+				$output = '<i class="um-icon-pencil"></i>';
 				break;
 			case 'register':
-				$output = '<i class="um-icon-edit-modify-streamline"></i>';
+				$output = '<i class="um-icon-user"></i>';
 				break;
 		}
 		return $output;

@@ -17,14 +17,13 @@
 	
 		<div class="um-admin-dash-nav">
 		
-			<a href="#" class="active" data-rel="overview"><i class="um-icon-home-6"></i><span class="um-admin-dash-nav-title">Dashboard Overview</span></a>
-			<a href="#" data-rel="analytics"><i class="um-icon-analytics-chart-graph"></i><span class="um-admin-dash-nav-title">Analytics</span></a>
+			<a href="#" class="active" data-rel="overview"><span class="um-admin-dash-nav-title">Dashboard Overview</span></a>
 			
 		</div>
 		
 		<div class="um-admin-dash-main">
 			
-			<?php $tabs = array('overview', 'analytics'); ?>
+			<?php $tabs = array('overview'); ?>
 			
 			<?php foreach( $tabs as $tab ) { ?>
 			<div class="um-admin-dash-content" id="<?php echo $tab; ?>">

@@ -50,7 +50,7 @@
 				<?php
 				
 				if ( um_user('submitted') ) {
-					echo '<a href="#" class="um-admin-dash-review um-admin-tipsy-n" data-modal="UM_preview_registration" data-modal-size="smaller" data-dynamic-content="um_admin_review_registration" data-arg1="'.$user_id.'" data-arg2="edit_registration" title="Review registration info"><i class="um-icon-info"></i></a>';
+					echo '<a href="#" class="um-admin-dash-review um-admin-tipsy-n" data-modal="UM_preview_registration" data-modal-size="smaller" data-dynamic-content="um_admin_review_registration" data-arg1="'.$user_id.'" data-arg2="edit_registration" title="Review registration info"><i class="um-icon-info-circle"></i></a>';
 				
 				}
 				

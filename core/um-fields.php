@@ -215,7 +215,7 @@ class UM_Fields {
 	***	@Print field error
 	***/
 	function field_error($text) {
-		$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="um-icon-caret-up-two"></i></span>'.$text.'</div>';
+		$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="um-icon-caret-up"></i></span>'.$text.'</div>';
 		return $output;
 	}
 	
@@ -258,7 +258,7 @@ class UM_Fields {
 		if ( isset( $data['help'] ) && !empty( $data['help'] ) && $this->viewing == false ) {
 			
 			if ( !$ultimatemember->mobile->isMobile() ) {
-				$output .= '<span class="um-tip um-tip-w" title="'.$data['help'].'"><i class="um-icon-help-circled"></i></span>';
+				$output .= '<span class="um-tip um-tip-w" title="'.$data['help'].'"><i class="um-icon-question-circle"></i></span>';
 			}
 			
 			if ( $ultimatemember->mobile->isMobile() ) {
@@ -1394,10 +1394,10 @@ class UM_Fields {
 						
 							if ( $this->is_radio_checked($key, $v, $data) ) {
 								$active = 'active';
-								$class = "um-icon-check-3";
+								$class = "um-icon-check-circle";
 							} else {
 								$active = '';
-								$class = "um-icon-blank";
+								$class = "um-icon-circle-o";
 							}
 							
 							$output .= '<label class="um-field-radio '.$active.' um-field-half '.$col_class.'">';
@@ -1455,10 +1455,10 @@ class UM_Fields {
 						
 							if ( $this->is_selected($key, $v, $data) ) {
 								$active = 'active';
-								$class = "um-icon-cross";
+								$class = "um-icon-check";
 							} else {
 								$active = '';
-								$class = "um-icon-blank";
+								$class = "um-icon-square-o";
 							}
 							
 							$output .= '<label class="um-field-checkbox '.$active.' um-field-half '.$col_class.'">';
@@ -1512,7 +1512,7 @@ class UM_Fields {
 				if ( !empty( $fields ) ) {
 				
 				$output .= '<div class="um-field-group" data-max_entries="'.$max_entries.'">
-								<div class="um-field-group-head"><i class="um-icon-plus-add"></i>'.$label.'</div>';
+								<div class="um-field-group-head"><i class="um-icon-plus"></i>'.$label.'</div>';
 					$output .= '<div class="um-field-group-body"><a href="#" class="um-field-group-cancel"><i class="um-icon-remove"></i></a>';
 					
 									foreach($fields as $subkey => $subdata) {

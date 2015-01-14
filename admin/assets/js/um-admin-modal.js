@@ -11,7 +11,7 @@ function um_admin_new_modal( id, ajax, size ){
 	jQuery('#' + id).show();
 	jQuery('.um-admin-modal').show();
 	
-	jQuery('.um-admin-modal-head').append('<a href="#" data-action="UM_remove_modal" class="um-admin-modal-close"><i class="um-icon-remove-delete-circle"></i></a>');
+	jQuery('.um-admin-modal-head').append('<a href="#" data-action="UM_remove_modal" class="um-admin-modal-close"><i class="um-icon-remove"></i></a>');
 
 	if ( ajax == true ) {
 		um_admin_modal_size( size );
@@ -168,7 +168,7 @@ jQuery(document).ready(function() {
 			link.addClass('active');
 		} else {
 			content.hide();
-			link.find('i').removeClass().addClass('um-icon-plus-add');
+			link.find('i').removeClass().addClass('um-icon-plus');
 			link.removeClass('active');
 		}
 		um_admin_modal_responsive();

@@ -46,11 +46,11 @@ jQuery(document).ready(function() {
 	/* custom radio buttons */
 	jQuery('.um-field-radio').mouseenter(function(){
 		if (!jQuery(this).hasClass('active')) {
-		jQuery(this).find('i').removeClass().addClass('um-icon-check-3');
+		jQuery(this).find('i').removeClass().addClass('um-icon-check-circle');
 		}
 	}).mouseleave(function(){
 		if (!jQuery(this).hasClass('active')) {
-		jQuery(this).find('i').removeClass().addClass('um-icon-blank');
+		jQuery(this).find('i').removeClass().addClass('um-icon-circle-o');
 		}
 	});
 	
@@ -58,19 +58,19 @@ jQuery(document).ready(function() {
 		var field = jQuery(this).parents('.um-field');
 		var this_field = jQuery(this).parents('label');
 		field.find('.um-field-radio').removeClass('active');
-		field.find('.um-field-radio').find('i').removeClass('um-icon-check-3').addClass('um-icon-blank');
+		field.find('.um-field-radio').find('i').removeClass('um-icon-check-circle').addClass('um-icon-circle-o');
 		this_field.addClass('active');
-		this_field.find('i').removeClass('um-icon-blank').addClass('um-icon-check-3');
+		this_field.find('i').removeClass('um-icon-circle-o').addClass('um-icon-check-circle');
 	});
 	
 	/* custom checkbox buttons */
 	jQuery('.um-field-checkbox').mouseenter(function(){
 		if (!jQuery(this).hasClass('active')) {
-		jQuery(this).find('i').removeClass().addClass('um-icon-cross');
+		jQuery(this).find('i').removeClass().addClass('um-icon-check');
 		}
 	}).mouseleave(function(){
 		if (!jQuery(this).hasClass('active')) {
-		jQuery(this).find('i').removeClass().addClass('um-icon-blank');
+		jQuery(this).find('i').removeClass().addClass('um-icon-square-o');
 		}
 	});
 	
@@ -80,10 +80,10 @@ jQuery(document).ready(function() {
 		var this_field = jQuery(this).parents('label');
 		if ( this_field.hasClass('active') ) {
 		this_field.removeClass('active');
-		this_field.find('i').addClas('um-icon-blank').removeClass('um-icon-cross');
+		this_field.find('i').addClas('um-icon-square-o').removeClass('um-icon-check');
 		} else {
 		this_field.addClass('active');
-		this_field.find('i').removeClass('um-icon-blank').addClass('um-icon-cross');
+		this_field.find('i').removeClass('um-icon-square-o').addClass('um-icon-check');
 		}
 
 	});

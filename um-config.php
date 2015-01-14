@@ -9,7 +9,7 @@
 	
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-user-1',
+    'icon'       => 'um-icon-user',
     'title'      => __( 'Users'),
     'fields'     => array(
 		
@@ -88,7 +88,7 @@ $this->sections[] = array(
 	
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-wrench-1',
+    'icon'       => 'um-icon-cog',
     'title'      => __( 'Account'),
     'fields'     => array(
 
@@ -156,7 +156,7 @@ $this->sections[] = array(
 
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-key-3',
+    'icon'       => 'um-icon-lock',
     'title'      => __( 'Access'),
     'fields'     => array(
 
@@ -299,7 +299,7 @@ $this->sections[] = array(
 	
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-envelope-2',
+    'icon'       => 'um-icon-envelope',
     'title'      => __( 'Emails'),
     'fields'     => array(
 
@@ -590,7 +590,7 @@ $this->sections[] = array(
 
 $this->sections[] = array(
     
-	'icon'    => 'um-icon-bell-1',
+	'icon'    => 'um-icon-bell',
     'title'   => __( 'Notifications' ),
     'fields'  => array(
 
@@ -703,7 +703,7 @@ $this->sections[] = array(
 	
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-photo-2',
+    'icon'       => 'um-icon-photo',
     'title'      => __( 'Uploads'),
     'fields'     => array(
 		
@@ -795,7 +795,7 @@ $this->sections[] = array(
 	
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-brush-1',
+    'icon'       => 'um-icon-paint-brush',
     'title'      => __( 'Appearance'),
     'fields'     => array(
 		
@@ -1397,7 +1397,7 @@ $this->sections[] = array(
 	
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-cog-2',
+    'icon'       => 'um-icon-wrench',
     'title'      => __( 'Advanced'),
     'fields'     => array(
 		

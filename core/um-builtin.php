@@ -105,7 +105,7 @@ class UM_Builtin {
 				'in_fields' => false,
 				'form_only' => true,
 				'conditional_support' => 0,
-				'icon' => 'um-icon-pencil-2',
+				'icon' => 'um-icon-pencil',
 				'col1' => array('_id','_background','_text_color','_padding','_margin','_border','_borderradius','_borderstyle','_bordercolor'),
 				'col2' => array('_heading','_heading_text','_heading_background_color','_heading_text_color','_icon','_icon_color','_css_class'),
 			),
@@ -544,7 +544,7 @@ class UM_Builtin {
 				'pretty_format' => 1,
 				'years' => 115,
 				'years_x' => 'past',
-				'icon' => 'um-icon-calendar-2'
+				'icon' => 'um-icon-calendar'
 			),
 			
 			'gender' => array(
@@ -580,7 +580,7 @@ class UM_Builtin {
 				'editable' => 1,
 				'url_target' => '_blank',
 				'url_rel' => 'nofollow',
-				'icon' => 'um-icon-facebook-2',
+				'icon' => 'um-icon-facebook',
 				'validate' => 'facebook_url',
 				'url_text' => 'Facebook',
 				'advanced' => 'social',
@@ -616,7 +616,7 @@ class UM_Builtin {
 				'editable' => 1,
 				'url_target' => '_blank',
 				'url_rel' => 'nofollow',
-				'icon' => 'um-icon-linkedin-alt-1',
+				'icon' => 'um-icon-linkedin',
 				'validate' => 'linkedin_url',
 				'url_text' => 'LinkedIn',
 				'advanced' => 'social',
@@ -652,7 +652,7 @@ class UM_Builtin {
 				'editable' => 1,
 				'url_target' => '_blank',
 				'url_rel' => 'nofollow',
-				'icon' => 'um-icon-instagrem',
+				'icon' => 'um-icon-instagram',
 				'validate' => 'instagram_url',
 				'url_text' => 'Instagram',
 				'advanced' => 'social',
@@ -731,7 +731,7 @@ class UM_Builtin {
 				'public' => 1,
 				'editable' => 1,
 				'validate' => 'phone_number',
-				'icon' => 'um-icon-device-mobile',
+				'icon' => 'um-icon-mobile',
 			),
 			
 			// private use ( not public list )
@@ -742,7 +742,7 @@ class UM_Builtin {
 				'type' => 'image',
 				'label' => 'Change your profile photo',
 				'upload_text' => 'Upload your photo here',
-				'icon' => 'um-icon-camera-5',
+				'icon' => 'um-icon-camera',
 				'crop' => 1,
 				'min_width' => str_replace('px','',um_get_option('profile_photosize')),
 				'min_height' => str_replace('px','',um_get_option('profile_photosize')),
@@ -755,7 +755,7 @@ class UM_Builtin {
 				'type' => 'image',
 				'label' => 'Change your cover photo',
 				'upload_text' => 'Upload profile cover here',
-				'icon' => 'um-icon-photo-2',
+				'icon' => 'um-icon-photo',
 				'crop' => 2,
 				'modal_size' => 'large',
 				'ratio' => str_replace(':1','',um_get_option('profile_cover_ratio')),

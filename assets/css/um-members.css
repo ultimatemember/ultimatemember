@@ -214,12 +214,12 @@
 .um-member-name a {
 	font-size: 16px;
 	line-height: 26px;
-	color: #444;
+	color: #444 !important;
 	font-weight: 700;
 }
 
 .um-member-name a:hover {
-	color: #3ba1da;
+	color: #3ba1da !important;
 }
 
 .um-member-tagline {
@@ -322,15 +322,15 @@
 
 .um-members-pagi span.current,
 .um-members-pagi span.current:hover {
-	background: #3ba1da;
-	color: #fff;
+	background: #3ba1da !important;
+	color: #fff !important;
 }
 
 .um-members-pagi i:before {font-size: 20px;vertical-align: middle !important;height: 34px;line-height: 34px;top: -2px;position: relative;}
 
 .um-members-pagi span.disabled {opacity: .4;cursor: default}
 
-.um-members-pagi span.none {color: #aaa}
+.um-members-pagi span.none {color: #aaa !important;}
 
 .um-members-pagi span {cursor: default}
 .um-members-pagi span,
@@ -341,11 +341,11 @@
 	line-height: 34px;
 	transition: all .2s linear;
 	padding: 0px 14px;
-	color: #666;
+	color: #666 !important;
 	font-weight: normal;
 }
 
 .um-members-pagi a:hover {
 	text-decoration: none !important;
-	color: #3ba1da;
+	color: #3ba1da !important;
 }

@@ -43,7 +43,7 @@ class UM_Admin_Roles {
 				}
 				$data = $ultimatemember->query->role_data($role);
 				if ( $data['can_access_wpadmin'] ){
-					echo '<span class="um-adm-ico um-admin-tipsy-n" title="'.__('This role can access the WordPress backend','ultimatemember').'"><i class="um-icon-check-mark-5"></i></span>';
+					echo '<span class="um-adm-ico um-admin-tipsy-n" title="'.__('This role can access the WordPress backend','ultimatemember').'"><i class="um-icon-check"></i></span>';
 				} else {
 					echo __('No','ultimatemember');
 				}
@@ -61,7 +61,7 @@ class UM_Admin_Roles {
 			
 			case 'core':
 				if ( $ultimatemember->query->is_core( $id ) ) {
-					echo '<span class="um-adm-ico um-admin-tipsy-n" title="'.__('Core','ultimatemember').'"><i class="um-icon-check-mark-5"></i></span>';
+					echo '<span class="um-adm-ico um-admin-tipsy-n" title="'.__('Core','ultimatemember').'"><i class="um-icon-check"></i></span>';
 				} else {
 					echo '&mdash;';
 				}

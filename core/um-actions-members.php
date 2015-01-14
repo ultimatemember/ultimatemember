@@ -257,7 +257,7 @@
 						<div class="um-member-meta-main">
 						
 							<?php if ( $userinfo_animate ) { ?>
-							<div class="um-member-more"><a href="#"><i class="um-icon-chevron-down-1"></i></a></div>
+							<div class="um-member-more"><a href="#"><i class="um-icon-angle-down"></i></a></div>
 							<?php } ?>
 							
 							<div class="um-member-meta <?php if ( !$userinfo_animate ) { echo 'no-animate'; } ?>">
@@ -285,7 +285,7 @@
 								
 							</div>
 
-							<div class="um-member-less"><a href="#"><i class="um-icon-chevron-up-1"></i></a></div>
+							<div class="um-member-less"><a href="#"><i class="um-icon-angle-up"></i></a></div>
 						
 						</div>
 						
