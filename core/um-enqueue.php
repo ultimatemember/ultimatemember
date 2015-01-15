@@ -9,6 +9,62 @@ class UM_Enqueue {
 	}
 	
 	/***
+	***	@Enqueue scripts and styles
+	***/
+	function wp_enqueue_scripts(){
+	
+		if ( um_get_option('disable_minify') ) {
+			
+			$this->load_original();
+			
+		} else {
+		
+			wp_register_script('um_minified', um_url . 'assets/js/um.min.js', array('jquery') );
+			wp_enqueue_script('um_minified');
+			
+			wp_register_style('um_minified', um_url . 'assets/css/um.min.css' );
+			wp_enqueue_style('um_minified');
+		
+		}
+		
+	}
+	
+	/***
+	***	@This will load original files (not minified)
+	***/
+	function load_original() {
+	
+		$this->load_google_charts();
+	
+		$this->load_fonticons();
+		
+		$this->load_selectjs();
+		
+		$this->load_modal();
+		
+		$this->load_css();
+		
+		$this->load_fileupload();
+		
+		$this->load_datetimepicker();
+		
+		$this->load_raty();
+		
+		$this->load_imagecrop();
+		
+		$this->load_masonry();
+		
+		$this->load_tipsy();
+		
+		$this->load_functions();
+		
+		$this->load_responsive();
+		
+		$this->load_customjs();
+		
+	}
+	
+	/***
 	***	@Include Google charts
 	***/
 	function load_google_charts(){
@@ -55,8 +111,11 @@ class UM_Enqueue {
 	***/
 	function load_fonticons(){
 	
-		wp_register_style('um_fonticons', um_url . 'assets/css/um-fonticons.css' );
-		wp_enqueue_style('um_fonticons');
+		wp_register_style('um_fonticons_ii', um_url . 'assets/css/um-fonticons-ii.css' );
+		wp_enqueue_style('um_fonticons_ii');
+		
+		wp_register_style('um_fonticons_fa', um_url . 'assets/css/um-fonticons-fa.css' );
+		wp_enqueue_style('um_fonticons_fa');
 		
 	}
 	
@@ -209,41 +268,6 @@ class UM_Enqueue {
 		wp_register_style('um_responsive', um_url . 'assets/css/um-responsive.css' );
 		wp_enqueue_style('um_responsive');
 		
-	}
-	
-	/***
-	***	@Enqueue scripts and styles
-	***/
-	function wp_enqueue_scripts(){
-	
-		$this->load_google_charts();
-	
-		$this->load_fonticons();
-		
-		$this->load_selectjs();
-		
-		$this->load_modal();
-		
-		$this->load_css();
-		
-		$this->load_fileupload();
-		
-		$this->load_datetimepicker();
-		
-		$this->load_raty();
-		
-		$this->load_imagecrop();
-		
-		$this->load_masonry();
-		
-		$this->load_tipsy();
-		
-		$this->load_functions();
-		
-		$this->load_responsive();
-		
-		$this->load_customjs();
-
 	}
 	
 }

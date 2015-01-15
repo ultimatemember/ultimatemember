@@ -90,8 +90,8 @@ class UM_Admin_Builder {
 			<!-- Master Row Actions -->
 			<div class="um-admin-drag-row-icons">
 					<a href="#" class="um-admin-drag-rowsub-add um-admin-tipsy-n" title="<?php _e('Add Row','ultimatemember'); ?>" data-row_action="add_subrow"><i class="um-icon-plus"></i></a>
-					<a href="#" class="um-admin-drag-row-edit um-admin-tipsy-n" title="<?php _e('Edit Row','ultimatemember'); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo $this->form_id; ?>" data-arg3="_um_row_1"><i class="um-icon-pencil"></i></a>
-					<span class="um-admin-drag-row-start"><i class="um-icon-move"></i></span>
+					<a href="#" class="um-admin-drag-row-edit um-admin-tipsy-n" title="<?php _e('Edit Row','ultimatemember'); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo $this->form_id; ?>" data-arg3="_um_row_1"><i class="um-faicon-pencil"></i></a>
+					<span class="um-admin-drag-row-start"><i class="um-icon-arrow-move"></i></span>
 			</div><div class="um-admin-clear"></div>
 			
 			<div class="um-admin-drag-rowsubs">
@@ -106,7 +106,7 @@ class UM_Admin_Builder {
 				
 				<!-- Sub Row Actions -->
 				<div class="um-admin-drag-rowsub-icons">
-						<span class="um-admin-drag-rowsub-start"><i class="um-icon-move"></i></span>
+						<span class="um-admin-drag-rowsub-start"><i class="um-icon-arrow-move"></i></span>
 				</div><div class="um-admin-clear"></div>
 				
 				<!-- Columns -->
@@ -156,10 +156,10 @@ class UM_Admin_Builder {
 			<!-- Master Row Actions -->
 			<div class="um-admin-drag-row-icons">
 					<a href="#" class="um-admin-drag-rowsub-add um-admin-tipsy-n" title="<?php _e('Add Row','ultimatemember'); ?>" data-row_action="add_subrow"><i class="um-icon-plus"></i></a>
-					<a href="#" class="um-admin-drag-row-edit um-admin-tipsy-n" title="<?php _e('Edit Row','ultimatemember'); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo $this->form_id; ?>" data-arg3="<?php echo $row_id; ?>"><i class="um-icon-pencil"></i></a>
-					<span class="um-admin-drag-row-start"><i class="um-icon-move"></i></span>
+					<a href="#" class="um-admin-drag-row-edit um-admin-tipsy-n" title="<?php _e('Edit Row','ultimatemember'); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo $this->form_id; ?>" data-arg3="<?php echo $row_id; ?>"><i class="um-faicon-pencil"></i></a>
+					<span class="um-admin-drag-row-start"><i class="um-icon-arrow-move"></i></span>
 					<?php if ( $row_id != '_um_row_1' ) {?>
-					<a href="#" class="um-admin-tipsy-n" title="<?php _e('Delete Row','ultimatemember'); ?>" data-remove_element="um-admin-drag-row"><i class="um-icon-trash-bin-3"></i></a>
+					<a href="#" class="um-admin-tipsy-n" title="<?php _e('Delete Row','ultimatemember'); ?>" data-remove_element="um-admin-drag-row"><i class="um-faicon-trash-o-bin-3"></i></a>
 					<?php } ?>
 			</div><div class="um-admin-clear"></div>
 			
@@ -204,8 +204,8 @@ class UM_Admin_Builder {
 				
 				<!-- Sub Row Actions -->
 				<div class="um-admin-drag-rowsub-icons">
-						<span class="um-admin-drag-rowsub-start"><i class="um-icon-move"></i></span>
-						<?php if ( $c > 0 ) { ?><a href="#" class="um-admin-tipsy-n" title="Delete Row" data-remove_element="um-admin-drag-rowsub"><i class="um-icon-trash"></i></a><?php } ?>
+						<span class="um-admin-drag-rowsub-start"><i class="um-icon-arrow-move"></i></span>
+						<?php if ( $c > 0 ) { ?><a href="#" class="um-admin-tipsy-n" title="Delete Row" data-remove_element="um-admin-drag-rowsub"><i class="um-faicon-trash-o"></i></a><?php } ?>
 				</div><div class="um-admin-clear"></div>
 				
 				<!-- Columns -->
@@ -234,16 +234,16 @@ class UM_Admin_Builder {
 						<div class="um-admin-drag-fld-type um-field-type-<?php echo $type; ?>"><?php echo $ultimatemember->builtin->core_fields[$type]['name']; ?></div>
 						<div class="um-admin-drag-fld-icons um-field-type-<?php echo $type; ?>">
 						
-							<a href="#" class="um-admin-tipsy-n" title="Edit" data-modal="UM_edit_field" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="<?php echo $type; ?>" data-arg2="<?php echo $this->form_id; ?>" data-arg3="<?php echo $key; ?>"><i class="um-icon-pencil"></i></a>
+							<a href="#" class="um-admin-tipsy-n" title="Edit" data-modal="UM_edit_field" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="<?php echo $type; ?>" data-arg2="<?php echo $this->form_id; ?>" data-arg3="<?php echo $key; ?>"><i class="um-faicon-pencil"></i></a>
 							
-							<a href="#" class="um-admin-tipsy-n um_admin_duplicate_field" title="Duplicate" data-silent_action="um_admin_duplicate_field" data-arg1="<?php echo $key; ?>" data-arg2="<?php echo $this->form_id; ?>"><i class="um-icon-files-o"></i></a>
+							<a href="#" class="um-admin-tipsy-n um_admin_duplicate_field" title="Duplicate" data-silent_action="um_admin_duplicate_field" data-arg1="<?php echo $key; ?>" data-arg2="<?php echo $this->form_id; ?>"><i class="um-faicon-files-o"></i></a>
 							
 							<?php if ( $type == 'group' ) { ?>
 						
-							<a href="#" class="um-admin-tipsy-n" title="Delete Group" data-remove_element="um-admin-drag-fld.um-field-type-group" data-silent_action="um_admin_remove_field" data-arg1="<?php echo $key; ?>" data-arg2="<?php echo $this->form_id; ?>"><i class="um-icon-trash"></i></a>
+							<a href="#" class="um-admin-tipsy-n" title="Delete Group" data-remove_element="um-admin-drag-fld.um-field-type-group" data-silent_action="um_admin_remove_field" data-arg1="<?php echo $key; ?>" data-arg2="<?php echo $this->form_id; ?>"><i class="um-faicon-trash-o"></i></a>
 							<?php } else { ?>
 							
-							<a href="#" class="um-admin-tipsy-n" title="Delete" data-silent_action="um_admin_remove_field" data-arg1="<?php echo $key; ?>" data-arg2="<?php echo $this->form_id; ?>"><i class="um-icon-trash"></i></a>
+							<a href="#" class="um-admin-tipsy-n" title="Delete" data-silent_action="um_admin_remove_field" data-arg1="<?php echo $key; ?>" data-arg2="<?php echo $this->form_id; ?>"><i class="um-faicon-trash-o"></i></a>
 							
 							<?php } ?>
 						

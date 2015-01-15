@@ -73,10 +73,10 @@
 		$uri = um_user_uploads_uri() . $value;
 		$title = ( isset( $data['title'] ) ) ? $data['title'] : __('Untitled photo');
 		
-		if ( !file_exists( um_user_uploads_dir() . $value ) ) {
-			$value = __('Image has been removed.');
-		} else {
+		if ( file_exists( um_user_uploads_dir() . $value ) ) {
 			$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="'.$uri.'"><img src="'. $uri .'" alt="'.$title.'" title="'.$title.'" class="" /></a></div>';
+		} else {
+			$value = '';
 		}
 		
 		return $value;

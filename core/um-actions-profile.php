@@ -122,7 +122,7 @@
 			$overlay = '<span class="um-cover-overlay">
 				<span class="um-cover-overlay-s">
 					<ins>
-						<i class="um-icon-photo"></i>
+						<i class="um-faicon-picture-o"></i>
 						<span class="um-cover-overlay-t">'.__('Change your cover photo').'</span>
 					</ins>
 				</span>
@@ -206,7 +206,7 @@
 		$overlay = '<span class="um-profile-photo-overlay">
 			<span class="um-profile-photo-overlay-s">
 				<ins>
-					<i class="um-icon-camera"></i>
+					<i class="um-faicon-camera"></i>
 				</ins>
 			</span>
 		</span>';
@@ -350,7 +350,7 @@
 			
 		<div class="um-profile-edit um-profile-headericon">
 		
-			<a href="#" class="um-profile-edit-a um-profile-save"><i class="um-icon-check"></i></a>
+			<a href="#" class="um-profile-edit-a um-profile-save"><i class="um-faicon-check"></i></a>
 		
 		</div>
 		
@@ -358,7 +358,7 @@
 		
 		<div class="um-profile-edit um-profile-headericon">
 		
-			<a href="#" class="um-profile-edit-a"><i class="um-icon-cog"></i></a>
+			<a href="#" class="um-profile-edit-a"><i class="um-faicon-cog"></i></a>
 		
 			<?php
 			

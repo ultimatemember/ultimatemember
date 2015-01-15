@@ -37,10 +37,10 @@
 }
 
 .um-account-main div.um-account-heading i {
-	margin-right: 8px;
-	font-size: 20px;
+	margin-right: 10px;
+	font-size: 26px;
 	position: relative;
-	top: 4px;
+	top: 2px;
 }
 
 .um-account-main p {
@@ -107,15 +107,17 @@
 .um-account-nav span.arr {
 	position: absolute;
 	right: 0;
-	top: 4px;
-	font-size: 23px;
+	top: 1px;
+	font-size: 28px;
 }
 
 .um-account-nav span.ico {
 	position: absolute;
 	left: 0;
-	top: 3px;
+	top: 0;
 	font-size: 21px;
+	width: 21px;
+	text-align: center;
 }
 
 /*
@@ -142,27 +144,34 @@
 
 .um-account-side li a span.um-account-arrow {
 	position: absolute;
-	right: 0;
+	right: 10px;
 	top: 6px;
 	font-size: 26px;
 }
 
-.um-account-side li a span.um-account-icon {
+.um-account-side li a span.um-account-icon,
+.um-account-side li a.current span.um-account-icon,
+.um-account-side li a.current:hover span.um-account-icon
+{
 	text-align: center;
 	font-size: 20px;
+	width: 20px;
+	height: 30px;
 	border-right: 1px solid #ccc;
 	color: #444;
 	float: left;
-	height: auto;
-	line-height: inherit;
 	padding: 0px 15px;
-	top: 4px;
-	position: relative;
+	font-weight: normal !important;
 }
 
+.um-account-side li a.current span.um-account-icon,
+.um-account-side li a.current:hover span.um-account-icon
+ {color: #3ba1da}
+
 .um-account-side li a span.um-account-icon i {
-	position: relative;
-	top: 1px;
+	display: block;
+	height: 30px;
+	line-height: 30px;
 }
 
 .um-account-side li a span.um-account-title {
@@ -181,7 +190,3 @@
 	font-weight: bold;
 	text-decoration: none !important;
 }
-
-.um-account-side li a.current span.um-account-icon,
-.um-account-side li a.current:hover span.um-account-icon
- {color: #3ba1da}

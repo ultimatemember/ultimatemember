@@ -85,7 +85,7 @@ function UM_update_rows(){
 		c++;
 		row = jQuery(this);
 		if ( c != 1 ) {
-			row.find('.um-admin-drag-row-icons').append( '<a href="#" class="um-admin-tipsy-n" title="Delete Row" data-remove_element="um-admin-drag-row"><i class="um-icon-trash"></i></a>' );
+			row.find('.um-admin-drag-row-icons').append( '<a href="#" class="um-admin-tipsy-n" title="Delete Row" data-remove_element="um-admin-drag-row"><i class="um-faicon-trash-o"></i></a>' );
 		}
 	});
 }
@@ -98,7 +98,7 @@ function UM_update_subrows(){
 		c++;
 		row = jQuery(this);
 		if ( c != 1 ) {
-			row.find('.um-admin-drag-rowsub-icons').append('<a href="#" class="um-admin-tipsy-n" title="Delete Row" data-remove_element="um-admin-drag-rowsub"><i class="um-icon-trash"></i></a>');
+			row.find('.um-admin-drag-rowsub-icons').append('<a href="#" class="um-admin-tipsy-n" title="Delete Row" data-remove_element="um-admin-drag-rowsub"><i class="um-faicon-trash-o"></i></a>');
 		}
 		});
 	});

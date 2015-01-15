@@ -51,7 +51,7 @@
 }
 
 .um-cover-add {
-	color: #aaa;
+	color: #aaa !important;
 	font-size: 36px;
 	width: 100%;
 	display: table;
@@ -62,7 +62,7 @@
 	vertical-align: middle;
 }
 
-.um-cover-add:hover { color: #3ba1da }
+.um-cover-add:hover { color: #3ba1da !important }
 
 .um-cover-e {
 	text-align: center;

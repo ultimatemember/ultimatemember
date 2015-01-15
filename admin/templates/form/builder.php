@@ -11,7 +11,7 @@
 
 	<div class="um-admin-drag-ctrls-demo um-admin-drag-ctrls">
 		
-		<a href="#" class="active" data-modal="UM_preview_form" data-modal-size="normal" data-dynamic-content="um_admin_preview_form" data-arg1="<?php the_ID(); ?>" data-arg2=""><?php _e('Live Preview','ultimatemember'); ?></a>
+		<a href="#" class="active" data-modal="UM_preview_form" data-modal-size="smaller" data-dynamic-content="um_admin_preview_form" data-arg1="<?php the_ID(); ?>" data-arg2=""><?php _e('Live Preview','ultimatemember'); ?></a>
 		
 	</div>
 	

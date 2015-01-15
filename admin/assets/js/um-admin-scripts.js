@@ -22,7 +22,7 @@ jQuery(document).ready(function() {
 		var parent = jQuery(this).parents('p').find('.um-admin-field:last-child');
 		container.find('select').select2('destroy');
 		var cloned = container.clone();
-		cloned.find('.um-admin-clone').replaceWith('<a href="#" class="um-admin-clone-remove button um-admin-tipsy-n" title="Remove Field"><i class="um-icon-remove" style="margin-right:0!important"></i></a>');
+		cloned.find('.um-admin-clone').replaceWith('<a href="#" class="um-admin-clone-remove button um-admin-tipsy-n" title="Remove Field"><i class="um-icon-close" style="margin-right:0!important"></i></a>');
 		cloned.insertAfter( parent );
 		cloned.find('select').val('');
 		jQuery('.um-admin-field select').select2({

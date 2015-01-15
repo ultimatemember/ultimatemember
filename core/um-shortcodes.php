@@ -89,9 +89,7 @@ class UM_Shortcodes {
 		
 		$this->template_load( $template, $args );
 		
-		if ( !is_admin() && !defined( 'DOING_AJAX' ) ) {
-			$this->dynamic_css( $args );
-		}
+		$this->dynamic_css( $args );
 		
 		if ( um_get_requested_user() ) {
 			um_reset_user();

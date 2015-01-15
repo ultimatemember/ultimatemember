@@ -1,6 +1,6 @@
 <div id="um_view_photo" style="display:none">
 
-	<a href="#" data-action="um_remove_modal" class="um-modal-close"><i class="um-icon-remove"></i></a>
+	<a href="#" data-action="um_remove_modal" class="um-modal-close"><i class="um-faicon-times"></i></a>
 	
 	<div class="um-modal-body photo">
 	

@@ -43,17 +43,6 @@ body.um-admin-modal-open {
 
 .um-admin #major-publishing-actions{background-color: #fff !important;border-top:0}
 
-.um-admin .postbox h3 i {
-	font-size: 1.3em !important;
-	vertical-align: middle !important;
-	margin: 0 10px 0 0;
-	line-height: 16px !important;
-	height: 16px !important;
-	position: relative;
-	top: 1px;
-	color: #3ba1da;
-}
-
 .um-admin-hide {display: none}
 
 .um-admin-field {
@@ -65,7 +54,7 @@ body.um-admin-modal-open {
 .um-admin-field a.button {
 	position: relative;
 	top: 1px;
-	height: 29px !important;
+	height: 30px !important;
 }
 
 .um-admin-half {
@@ -92,8 +81,10 @@ body.um-admin-modal-open {
 .um-admin a.button-primary i {
 	font-size: 15px !important;
 	height: 15px !important;
-	vertical-align: middle !important;
+	width: 15px !important;
+	text-align: center !important;
 	margin: 0 5px 0 0 !important;
+	display: inline-block;
 }
 
 .um-admin a.button i:before,
@@ -239,7 +230,7 @@ p.disabled-on-off .um-admin-yesno *{
 	top: 4px;
 	font-size: 18px;
 	line-height: 18px !important;
-	color: #888;
+	color: #aaa;
 }
 
 .um-admin-yesno span.yes, .um-admin-yesno span.no {
@@ -298,16 +289,18 @@ body.um-admin .select2-container .select2-choice {
 }
 
 body.um-admin .select2-container .select2-choice .select2-arrow:before {
-	font-size: 25px !important;
+	font-size: 23px !important;
+	line-height: 27px;
 }
 
 body.um-admin .select2-search-choice-close:before {
-	font-size: 15px !important;
+	font-size: 20px !important;
 	color: #aaa;
+	line-height: 27px;
 }
 
 body.um-admin .select2-container-multi .select2-search-choice-close:before {
-	font-size: 13px !important;
+	font-size: 15px !important;
 }
 
 body.um-admin .select2-search input[type=text] {

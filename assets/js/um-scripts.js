@@ -1,14 +1,5 @@
-function UM_hide_menus() {
-
-		menu = jQuery('.um-dropdown');
-		menu.parents('div').find('a').removeClass('active');
-		menu.hide();
-		
-}
-
 jQuery(document).ready(function() {
-	
-	/* dropdown menu links */
+
 	jQuery(document).on('click', '.um-dropdown a', function(e){
 		return false;
 	});
@@ -16,79 +7,52 @@ jQuery(document).ready(function() {
 	jQuery(document).on('click', '.um-dropdown a.real_url', function(e){
 		window.location = jQuery(this).attr('href');
 	});
-	
-	/* trigger dropdown on click */
+
 	jQuery(document).on('click', '.um-trigger-menu-on-click', function(e){
 		jQuery('.um-dropdown').hide();
 		menu = jQuery(this).find('.um-dropdown');
 		menu.show();
 		return false;
 	});
-	
-	/* hide dropdown */
+
 	jQuery(document).on('click', '.um-dropdown-hide', function(e){
 		UM_hide_menus();
 	});
-	
-	/* manual triggers */
+
 	jQuery(document).on('click', 'a.um-manual-trigger', function(){
 		var child = jQuery(this).attr('data-child');
 		var parent = jQuery(this).attr('data-parent');
 		jQuery(this).parents( parent ).find( child ).trigger('click');
 	});
-	
-	/* tooltips */
+
 	jQuery('.um-tip-n').tipsy({gravity: 'n', opacity: 1, live: true, offset: 3 });
 	jQuery('.um-tip-w').tipsy({gravity: 'w', opacity: 1, live: true, offset: 3 });
 	jQuery('.um-tip-e').tipsy({gravity: 'e', opacity: 1, live: true, offset: 3 });
 	jQuery('.um-tip-s').tipsy({gravity: 's', opacity: 1, live: true, offset: 3 });
-		
-	/* custom radio buttons */
-	jQuery('.um-field-radio').mouseenter(function(){
-		if (!jQuery(this).hasClass('active')) {
-		jQuery(this).find('i').removeClass().addClass('um-icon-check-circle');
-		}
-	}).mouseleave(function(){
-		if (!jQuery(this).hasClass('active')) {
-		jQuery(this).find('i').removeClass().addClass('um-icon-circle-o');
-		}
-	});
-	
+
 	jQuery('.um-field input[type=radio]').change(function(){
 		var field = jQuery(this).parents('.um-field');
 		var this_field = jQuery(this).parents('label');
 		field.find('.um-field-radio').removeClass('active');
-		field.find('.um-field-radio').find('i').removeClass('um-icon-check-circle').addClass('um-icon-circle-o');
+		field.find('.um-field-radio').find('i').removeClass().addClass('um-icon-android-radio-button-off');
 		this_field.addClass('active');
-		this_field.find('i').removeClass('um-icon-circle-o').addClass('um-icon-check-circle');
+		this_field.find('i').removeClass().addClass('um-icon-android-radio-button-on');
 	});
-	
-	/* custom checkbox buttons */
-	jQuery('.um-field-checkbox').mouseenter(function(){
-		if (!jQuery(this).hasClass('active')) {
-		jQuery(this).find('i').removeClass().addClass('um-icon-check');
-		}
-	}).mouseleave(function(){
-		if (!jQuery(this).hasClass('active')) {
-		jQuery(this).find('i').removeClass().addClass('um-icon-square-o');
-		}
-	});
-	
+
 	jQuery('.um-field input[type=checkbox]').change(function(){
 		
 		var field = jQuery(this).parents('.um-field');
 		var this_field = jQuery(this).parents('label');
 		if ( this_field.hasClass('active') ) {
 		this_field.removeClass('active');
-		this_field.find('i').addClas('um-icon-square-o').removeClass('um-icon-check');
+		this_field.find('i').removeClass().addClass('um-icon-android-checkbox-outline-blank');
 		} else {
 		this_field.addClass('active');
-		this_field.find('i').removeClass('um-icon-square-o').addClass('um-icon-check');
+		this_field.find('i').removeClass().addClass('um-icon-android-checkbox-outline');
 		}
 
 	});
-	
-	/* datepicker */
+
 	jQuery('.um-datepicker').each(function(){
 		elem = jQuery(this);
 		
@@ -114,11 +78,10 @@ jQuery(document).ready(function() {
 			disable: disable,
 			format: elem.attr('data-format'),
 			formatSubmit: 'yyyy/mm/dd',
-			hiddenName: true,
+			hiddenName: true
 		});
 	});
 
-	/* timepicker */
 	jQuery('.um-timepicker').each(function(){
 		elem = jQuery(this);
 		
@@ -126,11 +89,10 @@ jQuery(document).ready(function() {
 			format: elem.attr('data-format'),
 			interval: parseInt( elem.attr('data-intervals') ),
 			formatSubmit: 'HH:i',
-			hiddenName: true,
+			hiddenName: true
 		});
 	});
-	
-	/* rating field */
+
 	jQuery('.um-rating').raty({
 		half: 		false,
 		starType: 	'i',
@@ -144,8 +106,7 @@ jQuery(document).ready(function() {
 			um_conditional();
 		}
 	});
-	
-	/* rating read-only field */
+
 	jQuery('.um-rating-readonly').raty({
 		half: 		false,
 		starType: 	'i',
@@ -155,8 +116,7 @@ jQuery(document).ready(function() {
 		hints: 		false,
 		readOnly: true
 	});
-	
-	/* remove uploaded image */
+
 	jQuery(document).on('click', '.um .um-single-image-preview a.cancel', function(e){
 		e.preventDefault();
 		var parent = jQuery(this).parents('.um-field');
@@ -166,8 +126,7 @@ jQuery(document).ready(function() {
 		parent.find('input[type=hidden]').val('');
 		return false;
 	});
-	
-	/* remove uploaded file */
+
 	jQuery(document).on('click', '.um .um-single-file-preview a.cancel', function(e){
 		e.preventDefault();
 		var parent = jQuery(this).parents('.um-field');
@@ -176,8 +135,7 @@ jQuery(document).ready(function() {
 		parent.find('input[type=hidden]').val('');
 		return false;
 	});
-	
-	/* Nice Select Dropdown */
+
 	jQuery(".um-s1").select2({
 		allowClear: true,
 		minimumResultsForSearch: 10
@@ -189,8 +147,7 @@ jQuery(document).ready(function() {
 	});
 	
 	jQuery('.um-s1,.um-s2').css({'display':'block'});
-	
-	/* Open New Group */
+
 	jQuery(document).on('click', '.um-field-group-head:not(.disabled)', function(){
 		var field = jQuery(this).parents('.um-field-group');
 		var limit = field.data('max_entries');
@@ -219,8 +176,7 @@ jQuery(document).ready(function() {
 		}
 		
 	});
-	
-	/* Remove a group */
+
 	jQuery(document).on('click', '.um-field-group-cancel', function(e){
 		e.preventDefault();
 		var field = jQuery(this).parents('.um-field-group');

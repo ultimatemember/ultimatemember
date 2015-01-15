@@ -278,19 +278,19 @@
 		global $ultimatemember;
 		extract( $args );
 		
-		$tabs[100]['general']['icon'] = 'um-icon-cog';
+		$tabs[100]['general']['icon'] = 'um-faicon-user';
 		$tabs[100]['general']['title'] = 'Account';
 		
-		$tabs[200]['password']['icon'] = 'um-icon-asterisk';
+		$tabs[200]['password']['icon'] = 'um-faicon-asterisk';
 		$tabs[200]['password']['title'] = 'Change Password';
 		
-		$tabs[300]['privacy']['icon'] = 'um-icon-lock';
+		$tabs[300]['privacy']['icon'] = 'um-faicon-lock';
 		$tabs[300]['privacy']['title'] = 'Privacy';
 		
-		$tabs[400]['notifications']['icon'] = 'um-icon-bell';
+		$tabs[400]['notifications']['icon'] = 'um-icon-ios-bell';
 		$tabs[400]['notifications']['title'] = 'Notifications';
 		
-		$tabs[500]['delete']['icon'] = 'um-icon-trash';
+		$tabs[500]['delete']['icon'] = 'um-faicon-trash-o';
 		$tabs[500]['delete']['title'] = 'Delete Account';
 		
 		$ultimatemember->account->tabs = apply_filters('um_account_page_default_tabs_hook', $tabs );
@@ -319,7 +319,7 @@
 						
 						<span class="um-account-icon uimob800-hide"><i class="<?php echo $icon; ?>"></i></span>
 						<span class="um-account-title uimob800-hide"><?php echo $title; ?></span>
-						<span class="um-account-arrow uimob800-hide"><i class="um-icon-angle-right"></i></span>
+						<span class="um-account-arrow uimob800-hide"><i class="um-faicon-angle-right"></i></span>
 					</a>
 				</li>
 				

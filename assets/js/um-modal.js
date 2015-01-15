@@ -1,275 +1,14 @@
-function initCrop_UM() {
-
-	// only when a crop image is in view
-	var target_img = jQuery('.um-modal:visible .um-single-image-preview img');
-	var target_img_parent = jQuery('.um-modal:visible .um-single-image-preview');
-	
-	var crop_data = target_img.parent().attr('data-crop');
-	var min_width = target_img.parent().attr('data-min_width');
-	var min_height = target_img.parent().attr('data-min_height');
-	var ratio = target_img.parent().attr('data-ratio');
-	
-	// custom defined ratio maybe
-	if ( jQuery('.um-modal').find('#um_upload_single').attr('data-ratio') ) {
-		var ratio =  jQuery('.um-modal').find('#um_upload_single').attr('data-ratio');
-		var ratio_split = ratio.split(':');
-		var ratio = ratio_split[0];
-	}
-
-	if ( target_img.length ) {
-		
-		if ( target_img.attr('src') != '' ) {
-		
-			var max_height = jQuery(window).height() - ( jQuery('.um-modal-footer a').height() + 20 ) - 50 - ( jQuery('.um-modal-header:visible').height() );
-			target_img.css({'height' : 'auto'});
-			target_img_parent.css({'height' : 'auto'});
-			if ( jQuery(window).height() <= 400 ) {
-				target_img_parent.css({ 'height': max_height +'px', 'max-height' : max_height + 'px' });
-				target_img.css({ 'height' : 'auto' });
-			} else {
-				target_img.css({ 'height': 'auto', 'max-height' : max_height + 'px' });
-				target_img_parent.css({ 'height': target_img.height(), 'max-height' : max_height + 'px' });
-			}
-
-			if ( crop_data == 'square' ) {
-			
-			var opts = {
-				minWidth: min_width,
-				minHeight: min_height,
-				dragCrop: false,
-				aspectRatio: 1.0,
-				zoomable: false,
-				rotatable: false,
-				dashed: false,
-				done: function(data) {
-					target_img.parent().attr('data-coord', Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height) );
-				}
-			};
-			
-			} else if ( crop_data == 'cover' ) {
-
-			var opts = {
-				minWidth: min_width,
-				minHeight: Math.round( min_width / ratio ),
-				dragCrop: false,
-				aspectRatio: ratio,
-				zoomable: false,
-				rotatable: false,
-				dashed: false,
-				done: function(data) {
-					target_img.parent().attr('data-coord', Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height) );
-				}
-			};
-			
-			} else if ( crop_data == 'user' ) {
-			
-			var opts = {
-				dragCrop: true,
-				aspectRatio: "auto",
-				zoomable: false,
-				rotatable: false,
-				dashed: false,
-				done: function(data) {
-					target_img.parent().attr('data-coord', Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height) );
-				}
-			};
-			
-			}
-
-			if ( crop_data != 0 ) {
-				target_img.cropper( opts );
-			}
-			
-		}
-	}
-	
-}
-
-function um_new_modal( id, size, isPhoto, source ){
-	
-	var modal = jQuery('body').find('.um-modal-overlay');
-	
-	if ( modal.length == 0 ) { // when new Modal is fired
-
-	jQuery('.tipsy').hide();
-
-	UM_hide_menus();
-	
-	jQuery('body,html,textarea').css("overflow", "hidden");
-	
-	jQuery(document).bind("touchmove", function(e){e.preventDefault();});
-	jQuery('.um-modal').on('touchmove', function(e){e.stopPropagation();});
-	
-	if ( isPhoto ) {
-	jQuery('body').append('<div class="um-modal-overlay" /><div class="um-modal is-photo" />');
-	} else {
-	jQuery('body').append('<div class="um-modal-overlay" /><div class="um-modal no-photo" />');
-	}
-	
-	jQuery('#' + id).prependTo('.um-modal');
-	
-	if ( isPhoto ) {
-	
-		jQuery('.um-modal').find('.um-modal-photo').html('<img />');
-		
-		var photo_ = jQuery('.um-modal-photo img');
-		var photo_maxw = jQuery(window).width() - 60;
-		var photo_maxh = jQuery(window).height() - ( jQuery(window).height() * 0.25 );
-
-		photo_.attr("src", source);
-		photo_.load(function(){
-		
-			jQuery('#' + id).show();
-			jQuery('.um-modal').show();
-			
-			photo_.css({'opacity': 0});
-			photo_.css({'max-width': photo_maxw });
-			photo_.css({'max-height': photo_maxh });
-			
-			jQuery('.um-modal').css({
-				'width': photo_.width(),
-				'margin-left': '-' + photo_.width() / 2 + 'px',
-			});
-			
-			photo_.animate({'opacity' : 1}, 1000);
-			
-			um_modal_responsive();
-			
-		});
-
-	} else {
-	
-		jQuery('#' + id).show();
-		jQuery('.um-modal').show();
-
-		um_modal_size( size );
-	
-		initImageUpload_UM( jQuery('.um-modal:visible').find('.um-single-image-upload') );
-		initFileUpload_UM( jQuery('.um-modal:visible').find('.um-single-file-upload') );
-	
-		um_modal_responsive();
-	
-	}
-	
-	} // when new Modal is fired
-	
-}
-
-function um_modal_responsive() {
-	
-	var modal = jQuery('.um-modal:visible');
-	var photo_modal = jQuery('.um-modal-body.photo:visible');
-	
-	if ( photo_modal.length ) {
-	
-		modal.removeClass('uimob340');
-		modal.removeClass('uimob500');
-		
-		var photo_ = jQuery('.um-modal-photo img');
-		var photo_maxw = jQuery(window).width() - 60;
-		var photo_maxh = jQuery(window).height() - ( jQuery(window).height() * 0.25 );
-		
-		photo_.css({'opacity': 0});
-		photo_.css({'max-width': photo_maxw });
-		photo_.css({'max-height': photo_maxh });
-			
-		jQuery('.um-modal').css({
-			'width': photo_.width(),
-			'margin-left': '-' + photo_.width() / 2 + 'px',
-		});
-			
-		photo_.animate({'opacity' : 1}, 1000);
-
-		var half_gap = ( jQuery(window).height() - modal.innerHeight() ) / 2 + 'px';
-		modal.animate({ 'bottom' : half_gap }, 300);
-		
-	} else if ( modal.length ) {
-
-		var element_width = jQuery(window).width();
-		
-		modal.removeClass('uimob340');
-		modal.removeClass('uimob500');
-		
-		if ( element_width <= 340 ) {
-			
-			modal.addClass('uimob340');
-			initCrop_UM();
-			modal.animate({ 'bottom' : 0 }, 300);
-			
-		} else if ( element_width <= 500 ) {
-		
-			modal.addClass('uimob500');
-			initCrop_UM();
-			modal.animate({ 'bottom' : 0 }, 300);
-				
-		} else if ( element_width <= 800 ) {
-				
-			initCrop_UM();
-			var half_gap = ( jQuery(window).height() - modal.innerHeight() ) / 2 + 'px';
-			modal.animate({ 'bottom' : half_gap }, 300);
-				
-		} else if ( element_width <= 960 ) {
-		
-			initCrop_UM();
-			var half_gap = ( jQuery(window).height() - modal.innerHeight() ) / 2 + 'px';
-			modal.animate({ 'bottom' : half_gap }, 300);
-				
-		} else if ( element_width > 960 ) {
-			
-			initCrop_UM();
-			var half_gap = ( jQuery(window).height() - modal.innerHeight() ) / 2 + 'px';
-			modal.animate({ 'bottom' : half_gap }, 300);
-			
-		}
-		
-	}
-}
-
-function um_remove_modal(){
-
-	jQuery('.um-modal .um-single-image-preview img').cropper("destroy");
-	
-	jQuery('body,html,textarea').css("overflow", "auto");
-	
-	jQuery(document).unbind('touchmove');
-
-	jQuery('.um-modal div[id^="um_"]').hide().appendTo('body');
-	jQuery('.um-modal,.um-modal-overlay').remove();
-	
-}
-
-function um_modal_size( aclass ) {
-	jQuery('.um-modal:visible').addClass(aclass);
-}
-
-function um_modal_add_attr( id, value ) {
-	jQuery('.um-modal:visible').data( id, value );
-}
-
-/**
-	Custom modal scripting starts
-**/
-
 jQuery(document).ready(function() {
 	
-	/**
-		remove modal via action
-	**/
 	jQuery(document).on('click', '.um-modal-overlay, a[data-action="um_remove_modal"]', function(){
 		um_remove_modal();
 	});
-	
-	/**
-		disable link event
-	**/
+
 	jQuery(document).on('click', 'a[data-modal^="um_"], span[data-modal^="um_"], .um-modal a', function(e){
 		e.preventDefault();
 		return false;
 	});
 	
-	/**
-		remove uploaded file
-	**/
 	jQuery(document).on('click', '.um-modal .um-single-file-preview a.cancel', function(e){
 		e.preventDefault();
 		
@@ -286,9 +25,6 @@ jQuery(document).ready(function() {
 		return false;
 	});
 	
-	/**
-		remove uploaded image
-	**/
 	jQuery(document).on('click', '.um-modal .um-single-image-preview a.cancel', function(e){
 		e.preventDefault();
 		
@@ -309,9 +45,6 @@ jQuery(document).ready(function() {
 		return false;
 	});
 	
-	/**
-		finish file upload
-	**/
 	jQuery(document).on('click', '.um-finish-upload.file', function(){
 		
 		var key = jQuery(this).attr('data-key');
@@ -326,10 +59,7 @@ jQuery(document).ready(function() {
 		jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('input[type=hidden]').val( jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('.um-single-fileinfo a').attr('href') );
 		
 	});
-	
-	/**
-		finish image upload
-	**/
+
 	jQuery(document).on('click', '.um-finish-upload.image', function(){
 		
 		var elem = jQuery(this);
@@ -344,7 +74,7 @@ jQuery(document).ready(function() {
 			var user_id = 0;
 		}
 		
-		if ( coord ) { // crop image first before processing
+		if ( coord ) {
 		
 			jQuery(this).html( jQuery(this).attr('data-processing') ).addClass('disabled');
 
@@ -356,7 +86,7 @@ jQuery(document).ready(function() {
 					src : src,
 					coord : coord,
 					user_id : user_id,
-					key: key,
+					key: key
 				},
 				success: function(data){
 				
@@ -368,6 +98,9 @@ jQuery(document).ready(function() {
 					
 					if ( key == 'cover_photo') {
 						jQuery('.um-cover-e').empty().html('<img src="' + data + "?"+d.getTime() + '" alt="" />');
+						if ( jQuery('.um').hasClass('um-editing') ) {
+							jQuery('.um-cover-overlay').show();
+						}
 					}
 					
 					jQuery('.um-single-image-preview[data-key='+key+']').fadeIn().find('img').attr('src', data + "?"+d.getTime());
@@ -393,9 +126,6 @@ jQuery(document).ready(function() {
 		
 	});
 	
-	/**
-		fire new modal
-	**/
 	jQuery(document).on('click', 'a[data-modal^="um_"], span[data-modal^="um_"]', function(e){
 
 		var modal_id = jQuery(this).attr('data-modal');

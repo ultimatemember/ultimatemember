@@ -99,6 +99,19 @@
 	color: #333;
 }
 
+.redux-sidebar .redux-group-tab-link-a i {
+    vertical-align: middle;
+    font-size: 1.5em;
+    position: absolute;
+	width: 20px;
+	text-align: center;
+	top: 8px;
+}
+
+.redux-sidebar .redux-menu-warning i, .redux-sidebar .redux-menu-error i, .redux-sidebar .hasSubSections .extraIconSubsections i {
+	top: 14px;
+}
+
 .redux-container ul.data-full{padding:0!important;margin:0!important}
 
 .redux-container .description {

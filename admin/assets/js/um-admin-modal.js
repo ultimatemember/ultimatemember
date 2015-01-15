@@ -11,7 +11,7 @@ function um_admin_new_modal( id, ajax, size ){
 	jQuery('#' + id).show();
 	jQuery('.um-admin-modal').show();
 	
-	jQuery('.um-admin-modal-head').append('<a href="#" data-action="UM_remove_modal" class="um-admin-modal-close"><i class="um-icon-remove"></i></a>');
+	jQuery('.um-admin-modal-head').append('<a href="#" data-action="UM_remove_modal" class="um-admin-modal-close"><i class="um-faicon-times"></i></a>');
 
 	if ( ajax == true ) {
 		um_admin_modal_size( size );
@@ -188,7 +188,7 @@ jQuery(document).ready(function() {
 			jQuery(this).attr('name', jQuery(this).attr('name') + length );
 		});
 		cloned.find('input[type=text]').val('');
-		cloned.find('.um-admin-new-condition').replaceWith('<p><a href="#" class="um-admin-remove-condition button um-admin-tipsy-n" title="Remove condition"><i class="um-icon-remove" style="margin-right:0!important"></i></a></p>');
+		cloned.find('.um-admin-new-condition').replaceWith('<p><a href="#" class="um-admin-remove-condition button um-admin-tipsy-n" title="Remove condition"><i class="um-icon-close" style="margin-right:0!important"></i></a></p>');
 		
 		cloned.appendTo( content );
 		cloned.find('select').val('');
@@ -273,7 +273,7 @@ jQuery(document).ready(function() {
 		var element = jQuery(this).parents('p');
 		jQuery('#UM_fonticons a.um-admin-modal-back').attr('data-code', '');
 		element.find('input[type=hidden]').val('');
-		element.find('.um-admin-icon-value').html('No icon selected.');
+		element.find('.um-admin-icon-value').html('No icon');
 		jQuery(this).hide();
 	});
 	

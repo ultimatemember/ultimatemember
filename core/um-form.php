@@ -120,24 +120,6 @@ class UM_Form {
 	}
 	
 	/***
-	***	@Display Form Type as Icon
-	***/
-	function display_form_type_icon($mode, $post_id){
-		switch($mode){
-			case 'login':
-				$output = '<i class="um-icon-unlock-alt"></i>';
-				break;
-			case 'profile':
-				$output = '<i class="um-icon-pencil"></i>';
-				break;
-			case 'register':
-				$output = '<i class="um-icon-user"></i>';
-				break;
-		}
-		return $output;
-	}
-	
-	/***
 	***	@Display Form Type as Text
 	***/
 	function display_form_type($mode, $post_id){

@@ -215,7 +215,7 @@ class UM_Fields {
 	***	@Print field error
 	***/
 	function field_error($text) {
-		$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="um-icon-caret-up"></i></span>'.$text.'</div>';
+		$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>'.$text.'</div>';
 		return $output;
 	}
 	
@@ -258,7 +258,7 @@ class UM_Fields {
 		if ( isset( $data['help'] ) && !empty( $data['help'] ) && $this->viewing == false ) {
 			
 			if ( !$ultimatemember->mobile->isMobile() ) {
-				$output .= '<span class="um-tip um-tip-w" title="'.$data['help'].'"><i class="um-icon-question-circle"></i></span>';
+				$output .= '<span class="um-tip um-tip-w" title="'.$data['help'].'"><i class="um-icon-help-circled"></i></span>';
 			}
 			
 			if ( $ultimatemember->mobile->isMobile() ) {
@@ -386,7 +386,7 @@ class UM_Fields {
 			
 			} else {
 			
-				if ( $value == $ultimatemember->form->post_form[$key] ) {
+				if ( isset( $ultimatemember->form->post_form[$key] ) &&$value == $ultimatemember->form->post_form[$key] ) {
 					return true;
 				}
 			
@@ -1122,14 +1122,14 @@ class UM_Fields {
 					if ( $this->field_value( $key, $default, $data ) ) {
 					
 						$output .= '<div class="um-single-image-preview show '. $crop_class .'" data-crop="'.$crop_data.'" data-key="'.$key.'">
-								<a href="#" class="cancel"><i class="um-icon-remove"></i></a>
+								<a href="#" class="cancel"><i class="um-icon-close"></i></a>
 								<img src="' . um_user_uploads_uri() . $this->field_value( $key, $default, $data ) . '" alt="" />
 							</div><a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. __('Change photo') . '</a>';
 						
 					} else {
 					
 						$output .= '<div class="um-single-image-preview '. $crop_class .'" data-crop="'.$crop_data.'" data-key="'.$key.'">
-								<a href="#" class="cancel"><i class="um-icon-remove"></i></a>
+								<a href="#" class="cancel"><i class="um-icon-close"></i></a>
 								<img src="" alt="" />
 							</div><a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. $button_text . '</a>';
 						
@@ -1152,7 +1152,7 @@ class UM_Fields {
 						$set_mode = '';
 					}
 					
-					$output .= '<div class="um-single-image-preview '. $crop_class .'" data-crop="'.$crop_data.'" data-ratio="'.$ratio.'" data-min_width="'.$min_width.'" data-min_height="'.$min_height.'" data-coord=""><a href="#" class="cancel"><i class="um-icon-remove"></i></a><img src="" alt="" /></div>';
+					$output .= '<div class="um-single-image-preview '. $crop_class .'" data-crop="'.$crop_data.'" data-ratio="'.$ratio.'" data-min_width="'.$min_width.'" data-min_height="'.$min_height.'" data-coord=""><a href="#" class="cancel"><i class="um-icon-close"></i></a><img src="" alt="" /></div>';
 					$output .= '<div class="um-single-image-upload" data-icon="'.$icon.'" data-set_id="'.$set_id.'" data-set_mode="'.$set_mode.'" data-type="'.$type.'" data-key="'.$key.'" data-max_size="'.$max_size.'" data-max_size_error="'.$max_size_error.'" data-min_size_error="'.$min_size_error.'" data-extension_error="'.$extension_error.'"  data-allowed_types="'.$allowed_types.'" data-upload_text="'.$upload_text.'" data-max_files_error="'.$max_files_error.'" data-upload_help_text="'.$upload_help_text.'">'.$button_text.'</div>';
 					
 					$output .= '<div class="um-modal-footer">
@@ -1196,7 +1196,7 @@ class UM_Fields {
 						$extension = pathinfo( $this->field_value( $key, $default, $data ), PATHINFO_EXTENSION);
 					
 						$output .= '<div class="um-single-file-preview show" data-key="'.$key.'">
-										<a href="#" class="cancel"><i class="um-icon-remove"></i></a>
+										<a href="#" class="cancel"><i class="um-icon-close"></i></a>
 										<div class="um-single-fileinfo">
 											<a href="' . um_user_uploads_uri() . $this->field_value( $key, $default, $data )  . '" target="_blank">
 												<span class="icon" style="background:'. $ultimatemember->files->get_fonticon_bg_by_ext( $extension ) . '"><i class="'. $ultimatemember->files->get_fonticon_by_ext( $extension ) .'"></i></span>
@@ -1230,7 +1230,7 @@ class UM_Fields {
 					}
 					
 					$output .= '<div class="um-single-file-preview">
-										<a href="#" class="cancel"><i class="um-icon-remove"></i></a>
+										<a href="#" class="cancel"><i class="um-icon-close"></i></a>
 										<div class="um-single-fileinfo">
 											<a href="" target="_blank">
 												<span class="icon"><i></i></span>
@@ -1394,10 +1394,10 @@ class UM_Fields {
 						
 							if ( $this->is_radio_checked($key, $v, $data) ) {
 								$active = 'active';
-								$class = "um-icon-check-circle";
+								$class = "um-icon-android-radio-button-on";
 							} else {
 								$active = '';
-								$class = "um-icon-circle-o";
+								$class = "um-icon-android-radio-button-off";
 							}
 							
 							$output .= '<label class="um-field-radio '.$active.' um-field-half '.$col_class.'">';
@@ -1455,10 +1455,10 @@ class UM_Fields {
 						
 							if ( $this->is_selected($key, $v, $data) ) {
 								$active = 'active';
-								$class = "um-icon-check";
+								$class = "um-icon-android-checkbox-outline";
 							} else {
 								$active = '';
-								$class = "um-icon-square-o";
+								$class = "um-icon-android-checkbox-outline-blank";
 							}
 							
 							$output .= '<label class="um-field-checkbox '.$active.' um-field-half '.$col_class.'">';
@@ -1513,7 +1513,7 @@ class UM_Fields {
 				
 				$output .= '<div class="um-field-group" data-max_entries="'.$max_entries.'">
 								<div class="um-field-group-head"><i class="um-icon-plus"></i>'.$label.'</div>';
-					$output .= '<div class="um-field-group-body"><a href="#" class="um-field-group-cancel"><i class="um-icon-remove"></i></a>';
+					$output .= '<div class="um-field-group-body"><a href="#" class="um-field-group-cancel"><i class="um-icon-close"></i></a>';
 					
 									foreach($fields as $subkey => $subdata) {
 										$output .= $this->edit_field( $subkey, $subdata, 'group' );

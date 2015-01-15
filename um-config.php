@@ -9,7 +9,7 @@
 	
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-user',
+    'icon'       => 'um-faicon-user',
     'title'      => __( 'Users'),
     'fields'     => array(
 		
@@ -88,7 +88,7 @@ $this->sections[] = array(
 	
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-cog',
+    'icon'       => 'um-faicon-cog',
     'title'      => __( 'Account'),
     'fields'     => array(
 
@@ -156,7 +156,7 @@ $this->sections[] = array(
 
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-lock',
+    'icon'       => 'um-faicon-lock',
     'title'      => __( 'Access'),
     'fields'     => array(
 
@@ -299,7 +299,7 @@ $this->sections[] = array(
 	
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-envelope',
+    'icon'       => 'um-faicon-envelope-o',
     'title'      => __( 'Emails'),
     'fields'     => array(
 
@@ -590,7 +590,7 @@ $this->sections[] = array(
 
 $this->sections[] = array(
     
-	'icon'    => 'um-icon-bell',
+	'icon'    => 'um-faicon-bell-o',
     'title'   => __( 'Notifications' ),
     'fields'  => array(
 
@@ -703,7 +703,7 @@ $this->sections[] = array(
 	
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-photo',
+    'icon'       => 'um-faicon-cloud-upload',
     'title'      => __( 'Uploads'),
     'fields'     => array(
 		
@@ -764,7 +764,7 @@ $this->sections[] = array(
 	
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-search',
+    'icon'       => 'um-faicon-search',
     'title'      => __( 'SEO'),
     'fields'     => array(
 
@@ -795,7 +795,7 @@ $this->sections[] = array(
 	
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-paint-brush',
+    'icon'       => 'um-faicon-paint-brush',
     'title'      => __( 'Appearance'),
     'fields'     => array(
 		
@@ -1397,9 +1397,17 @@ $this->sections[] = array(
 	
 $this->sections[] = array(
 
-    'icon'       => 'um-icon-wrench',
+    'icon'       => 'um-faicon-wrench',
     'title'      => __( 'Advanced'),
     'fields'     => array(
+		
+        array(
+                'id'       		=> 'disable_minify',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Disable JS/CSS Compression' ),
+				'default' 		=> 0,
+				'desc' 	   		=> __('Not recommended. This will load all plugin js and css files separately and may slow down your website. Use this setting for development or debugging purposes only.','ultimatemember'),
+        ),
 		
         array(
                 'id'       		=> 'allow_tracking',
@@ -1407,8 +1415,8 @@ $this->sections[] = array(
                 'title'   		=> __( 'Allow Tracking' ),
 				'default' 		=> 0,
 				'desc' 	   		=> 'Help us improve Ultimate Member’s compatibility with other plugins and themes by allowing us to track non-sensitive data on your site. Click <a href="http://ultimatemember.com/tracking/">here</a> to see what data we track.',
-				'on'			=> 'Allow tracking',
-				'off'			=> 'Do not allow',
+				'on'			=> __('Allow tracking','ultimatemember'),
+				'off'			=> __('Do not allow','ultimatemember'),
         ),
 
 	)

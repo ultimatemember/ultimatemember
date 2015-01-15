@@ -57,7 +57,6 @@
 /* only in admin mode */
 .um.um-in-admin {
 	padding-top: 0;
-	margin-bottom: 0 !important;
 }
 .um.um-in-admin .um-tip {display: none !important}
 
@@ -230,13 +229,16 @@ p.um-notice.err {
 	margin: 0 0 0 8px;
 	cursor: pointer;
 	display: inline-block;
+	vertical-align: middle;
 }
 
 .um-tip i {
-	font-size: 20px;
-	vertical-align: middle;
+	font-size: 22px;
+	height: 22px;
+	line-height: 22px;
+	display: block;
 	position: relative;
-	top: 2px;
+	top: -2px;
 }
 
 .um-tip-text {
@@ -309,7 +311,7 @@ p.um-notice.err {
 	position: absolute;
 	cursor: default;
 	text-align: center !important;
-	top: 5px;
+	top: 2px;
 	left: 0;
 	width: 44px;
 	font-size: 22px;
@@ -345,7 +347,7 @@ p.um-notice.err {
 }
 
 .um-form input[type=text].um-iconed,
-.um-form input[type=password].um-iconed { padding-left: 44px }
+.um-form input[type=password].um-iconed { padding-left: 44px !important }
 
 .um-form input[type=text].um-error,
 .um-form input[type=password].um-error { border-color: #C74A4A !important }
@@ -397,8 +399,7 @@ p.um-notice.err {
 	font-size: 24px;
 	line-height: 24px;
 	height: 24px;
-	vertical-align: middle;
-	color: #ccc;
+	color: #aaa;
 	transition: all .2s linear;
 }
 

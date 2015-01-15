@@ -28,6 +28,11 @@
 	vertical-align: middle !important;
 }
 
+.um-admin .um-admin-modal a.button i:before {
+	display: block;
+	top: 0px;
+}
+
 .um-admin-modal input[type=submit].button-primary {
 	line-height: 24px !important;
 }
@@ -54,7 +59,7 @@
 	position: absolute;
 	color: #fff !important;
 	right: 16px;
-	top: 13px;
+	top: 14px;
 	font-size: 22px;
 	text-decoration: none;
 	opacity: 0.4;
@@ -69,7 +74,7 @@
 }
 
 .um-admin-modal-body {
-	padding: 20px 20px 10px 20px;
+	padding: 10px 20px 10px 20px;
 	max-height: 500px;
 	overflow: auto;
 }
@@ -120,6 +125,10 @@
 	padding: 10px 0;
 }
 
+.um-admin-btn-toggle p {
+	margin: 0 5px 0 0 !important;
+}
+
 .um-admin-btn-toggle a {
 	text-decoration: none;
 	color: #999;
@@ -130,10 +139,11 @@
 }
 
 .um-admin-btn-toggle i {
-	vertical-align: middle !important;
 	margin: 0 5px 0 0 !important;
 	height: 100%;
 	color: #666;
+	position: relative;
+	top: 1px;
 }
 
 .um-admin-btn-content {
@@ -169,7 +179,7 @@
 	padding-right: 25px !important;
 }
 .um-admin-btns a span {
-	color: #bbb;
+	color: #aaa;
 	position: absolute !important;
 	width: 25px;
 	text-align: center;
@@ -179,8 +189,8 @@
 }
 
 .um-admin-btns a span.remove:before{
-	font-family: "ultimatemember" !important;
-	content: "?";
+	font-family: "Ionicons" !important;
+	content: "\f128";
 }
 .um-admin-btns a span:hover{color: #cb3838}
 
@@ -218,10 +228,10 @@ p._icon_search{
 p._icon_search:before {
 	position: absolute;
 	right: 6px;
-	top: 15px;
-	font-size: 16px;
-	content: "c";
-	font-family: "ultimatemember";
+	top: 12px;
+	font-size: 20px;
+	content: "\f4a4";
+	font-family: "Ionicons";
 	color: #999;
 }
 p._icon_search input[type=text]{padding-right: 40px!important}
@@ -243,13 +253,13 @@ p._icon_search input[type=text]{padding-right: 40px!important}
 .um-admin-icons span.highlighted
 {color: #3ba1da;border-color: #3ba1da}
 
-.um-admin-icons i{vertical-align: middle !important;font-size: 24px;padding: 15px 20px;display: inline-block;}
+.um-admin-icons i{vertical-align: middle !important;font-size: 24px;width: 24px;text-align: center;padding: 15px 20px;display: inline-block;}
 
 span.um-admin-icon-value {
 	margin: 0 10px;
 	font-size: 13px;
 }
-span.um-admin-icon-value i {font-size: 28px;vertical-align: middle;}
+span.um-admin-icon-value i {font-size: 28px;vertical-align: middle; color: #3ba1da }
 
 span.um-admin-icon-clear{
 	display: none;

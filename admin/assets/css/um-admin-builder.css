@@ -9,7 +9,8 @@
 
 .um-admin-builder i {
 	font-size: 15px !important;
-	height: 100% !important;line-height: 100% !important;vertical-align: middle !important;
+	height: 100% !important;
+	line-height: 100% !important;
 	margin: 0 5px 0 0 !important;
 }
 
@@ -263,9 +264,9 @@
 .um-admin-drag-row-icons i,
 .um-admin-drag-rowsub-icons i,
 .um-admin-drag-fld-icons i{
-	font-size: 16px !important;
+	font-size: 18px !important;
 	margin: 0 !important;
-	top: 1px;
+	top: 2px;
 	position: relative;
 }
 

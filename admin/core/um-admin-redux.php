@@ -117,32 +117,32 @@
             $this->args['share_icons'][] = array(
                 'url'   => 'https://github.com/ultimatemember/ultimatemember',
                 'title' => 'GitHub Repository',
-                'icon'  => 'um-icon-github'
+                'icon'  => 'um-icon-social-github'
             );
             $this->args['share_icons'][] = array(
                 'url'   => 'https://trello.com/b/30quaczv/ultimate-member',
                 'title' => 'Roadmap',
-                'icon'  => 'um-icon-trello'
+                'icon'  => 'um-faicon-trello'
             );
             $this->args['share_icons'][] = array(
                 'url'   => 'https://facebook.com/pages/Ultimate-Member/1413909622233054',
                 'title' => 'Like us on Facebook',
-                'icon'  => 'um-icon-facebook'
+                'icon'  => 'um-icon-social-facebook'
             );
             $this->args['share_icons'][] = array(
                 'url'   => 'https://twitter.com/umplugin',
                 'title' => 'Follow us on Twitter',
-                'icon'  => 'um-icon-twitter'
+                'icon'  => 'um-icon-social-twitter'
             );
             $this->args['share_icons'][] = array(
                 'url'   => 'https://google.com/+ultimatemember',
                 'title' => 'Follow us on Google+',
-                'icon'  => 'um-icon-google-plus'
+                'icon'  => 'um-icon-social-googleplus'
             );
             $this->args['share_icons'][] = array(
                 'url'   => 'https://youtube.com/user/umplugin',
                 'title' => 'We\'re on YouTube',
-                'icon'  => 'um-icon-youtube-play'
+                'icon'  => 'um-icon-social-youtube'
             );
 
         }

@@ -122,7 +122,7 @@ class UM_Admin_Metabox {
 		?>
 
 		<span class="um-admin-yesno">
-			<span class="btn pos-<?php echo $active; ?>"><i class="um-icon-power-off"></i></span>
+			<span class="btn pos-<?php echo $active; ?>"><i class="um-faicon-circle-thin"></i></span>
 			<span class="yes" data-value="1">Yes</span>
 			<span class="no" data-value="0">No</span>
 			<input type="hidden" name="<?php echo $id; ?>" id="<?php echo $id; ?>" value="<?php echo $active; ?>" <?php echo $is_conditional; ?> />
@@ -196,16 +196,16 @@ class UM_Admin_Metabox {
 	***/
 	function add_metabox_directory() {
 
-		add_meta_box('um-admin-form-general', __('<i class="um-icon-cog"></i>General Options'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
-		add_meta_box('um-admin-form-profile', __('<i class="um-icon-user"></i>Profile Card'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
-		add_meta_box('um-admin-form-search', __('<i class="um-icon-search"></i>Search Options'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
-		add_meta_box('um-admin-form-pagination', __('<i class="um-icon-th-large"></i>Results & Pagination'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
+		add_meta_box('um-admin-form-general', __('General Options'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
+		add_meta_box('um-admin-form-profile', __('Profile Card'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
+		add_meta_box('um-admin-form-search', __('Search Options'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
+		add_meta_box('um-admin-form-pagination', __('Results &amp; Pagination'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
 		
-		add_meta_box('um-admin-form-shortcode', __('<i class="um-icon-code"></i>Shortcode'), array(&$this, 'load_metabox_directory'), 'um_directory', 'side', 'default');
+		add_meta_box('um-admin-form-shortcode', __('Shortcode'), array(&$this, 'load_metabox_directory'), 'um_directory', 'side', 'default');
 		
-		add_meta_box('um-admin-form-appearance', __('<i class="um-icon-paint-brush"></i>Styling: General'), array(&$this, 'load_metabox_directory'), 'um_directory', 'side', 'default');
+		add_meta_box('um-admin-form-appearance', __('Styling: General'), array(&$this, 'load_metabox_directory'), 'um_directory', 'side', 'default');
 		
-		add_meta_box('um-admin-form-profile_card', __('<i class="um-icon-paint-brush"></i>Styling: Profile Card'), array(&$this, 'load_metabox_directory'), 'um_directory', 'side', 'default');
+		add_meta_box('um-admin-form-profile_card', __('Styling: Profile Card'), array(&$this, 'load_metabox_directory'), 'um_directory', 'side', 'default');
 
 	}
 	
@@ -214,21 +214,21 @@ class UM_Admin_Metabox {
 	***/
 	function add_metabox_role() {
 
-		add_meta_box('um-admin-form-admin', __('<i class="um-icon-shield"></i>Administrative Permissions'), array(&$this, 'load_metabox_role'), 'um_role', 'normal', 'default');
+		add_meta_box('um-admin-form-admin', __('Administrative Permissions'), array(&$this, 'load_metabox_role'), 'um_role', 'normal', 'default');
 		
-		add_meta_box('um-admin-form-general', __('<i class="um-icon-key"></i>General Permissions'), array(&$this, 'load_metabox_role'), 'um_role', 'normal', 'default');
+		add_meta_box('um-admin-form-general', __('General Permissions'), array(&$this, 'load_metabox_role'), 'um_role', 'normal', 'default');
 		
-		add_meta_box('um-admin-form-profile', __('<i class="um-icon-pencil"></i>Profile Access'), array(&$this, 'load_metabox_role'), 'um_role', 'normal', 'default');
+		add_meta_box('um-admin-form-profile', __('Profile Access'), array(&$this, 'load_metabox_role'), 'um_role', 'normal', 'default');
 		
-		add_meta_box('um-admin-form-home', __('<i class="um-icon-home"></i>Homepage Options'), array(&$this, 'load_metabox_role'), 'um_role', 'normal', 'default');
+		add_meta_box('um-admin-form-home', __('Homepage Options'), array(&$this, 'load_metabox_role'), 'um_role', 'normal', 'default');
 		
-		add_meta_box('um-admin-form-register', __('<i class="um-icon-user"></i>Registration Options'), array(&$this, 'load_metabox_role'), 'um_role', 'normal', 'default');
+		add_meta_box('um-admin-form-register', __('Registration Options'), array(&$this, 'load_metabox_role'), 'um_role', 'normal', 'default');
 		
-		add_meta_box('um-admin-form-login', __('<i class="um-icon-sign-in"></i>Login Options'), array(&$this, 'load_metabox_role'), 'um_role', 'normal', 'default');
+		add_meta_box('um-admin-form-login', __('Login Options'), array(&$this, 'load_metabox_role'), 'um_role', 'normal', 'default');
 		
-		add_meta_box('um-admin-form-logout', __('<i class="um-icon-sign-out"></i>Logout Options'), array(&$this, 'load_metabox_role'), 'um_role', 'normal', 'default');
+		add_meta_box('um-admin-form-logout', __('Logout Options'), array(&$this, 'load_metabox_role'), 'um_role', 'normal', 'default');
 		
-		add_meta_box('um-admin-form-delete', __('<i class="um-icon-trash"></i>Delete Options'), array(&$this, 'load_metabox_role'), 'um_role', 'normal', 'default');
+		add_meta_box('um-admin-form-delete', __('Delete Options'), array(&$this, 'load_metabox_role'), 'um_role', 'normal', 'default');
 		
 	}
 	
@@ -237,18 +237,18 @@ class UM_Admin_Metabox {
 	***/
 	function add_metabox_form() {
 		
-		add_meta_box('um-admin-form-mode', __('<i class="um-icon-flag-o"></i>Select Form Type'), array(&$this, 'load_metabox_form'), 'um_form', 'normal', 'default');
+		add_meta_box('um-admin-form-mode', __('Select Form Type'), array(&$this, 'load_metabox_form'), 'um_form', 'normal', 'default');
 		
-		add_meta_box('um-admin-form-builder', __('<i class="um-icon-list-alt"></i>Form Builder'), array(&$this, 'load_metabox_form'), 'um_form', 'normal', 'default');
+		add_meta_box('um-admin-form-builder', __('Form Builder'), array(&$this, 'load_metabox_form'), 'um_form', 'normal', 'default');
 		
-		add_meta_box('um-admin-form-shortcode', __('<i class="um-icon-code"></i>Shortcode'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
+		add_meta_box('um-admin-form-shortcode', __('Shortcode'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
 		
-		add_meta_box('um-admin-form-register_customize', __('<i class="um-icon-cog"></i>Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
-		add_meta_box('um-admin-form-profile_customize', __('<i class="um-icon-cog"></i>Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
-		add_meta_box('um-admin-form-login_customize', __('<i class="um-icon-cog"></i>Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
+		add_meta_box('um-admin-form-register_customize', __('Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
+		add_meta_box('um-admin-form-profile_customize', __('Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
+		add_meta_box('um-admin-form-login_customize', __('Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
 		
-		add_meta_box('um-admin-form-profile_settings', __('<i class="um-icon-wrench"></i>Options'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
-		add_meta_box('um-admin-form-login_settings', __('<i class="um-icon-wrench"></i>Options'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
+		add_meta_box('um-admin-form-profile_settings', __('Options'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
+		add_meta_box('um-admin-form-login_settings', __('Options'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
 
 	}
 	
@@ -547,14 +547,14 @@ class UM_Admin_Metabox {
 						
 						<a href="#" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="<?php echo $back; ?>">Choose Icon</a>
 						
-						<span class="um-admin-icon-value"><?php if ( $this->edit_mode_value ) { ?><i class="<?php echo $this->edit_mode_value; ?>"></i><?php } else { ?>No icon selected.<?php } ?></span>
+						<span class="um-admin-icon-value"><?php if ( $this->edit_mode_value ) { ?><i class="<?php echo $this->edit_mode_value; ?>"></i><?php } else { ?>No icon<?php } ?></span>
 						
 						<input type="hidden" name="_icon" id="_icon" value="<?php echo (isset( $this->edit_mode_value ) ) ? $this->edit_mode_value : ''; ?>" />
 						
 						<?php if ( $this->edit_mode_value ) { ?>
-						<span class="um-admin-icon-clear show"><i class="um-icon-remove-circle"></i></span>
+						<span class="um-admin-icon-clear show"><i class="um-icon-android-cancel"></i></span>
 						<?php } else { ?>
-						<span class="um-admin-icon-clear"><i class="um-icon-remove-circle"></i></span>
+						<span class="um-admin-icon-clear"><i class="um-icon-android-cancel"></i></span>
 						<?php } ?>
 						
 					</p>
@@ -575,14 +575,14 @@ class UM_Admin_Metabox {
 						
 						<a href="#" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="<?php echo $back; ?>">Choose Icon</a>
 						
-						<span class="um-admin-icon-value"><?php if ( $this->edit_mode_value ) { ?><i class="<?php echo $this->edit_mode_value; ?>"></i><?php } else { ?>No icon selected.<?php } ?></span>
+						<span class="um-admin-icon-value"><?php if ( $this->edit_mode_value ) { ?><i class="<?php echo $this->edit_mode_value; ?>"></i><?php } else { ?>No icon<?php } ?></span>
 						
 						<input type="hidden" name="_icon" id="_icon" value="<?php echo (isset( $this->edit_mode_value ) ) ? $this->edit_mode_value : ''; ?>" />
 						
 						<?php if ( $this->edit_mode_value ) { ?>
-						<span class="um-admin-icon-clear show"><i class="um-icon-remove-circle"></i></span>
+						<span class="um-admin-icon-clear show"><i class="um-icon-android-cancel"></i></span>
 						<?php } else { ?>
-						<span class="um-admin-icon-clear"><i class="um-icon-remove-circle"></i></span>
+						<span class="um-admin-icon-clear"><i class="um-icon-android-cancel"></i></span>
 						<?php } ?>
 						
 					</p>

@@ -6,7 +6,6 @@ jQuery(document).ready(function() {
 		jQuery('.um-account-tab[data-tab='+current_tab+']').show();
 	}
 
-	/* Switching tab non-mobile */
 	jQuery(document).on('click','.um-account-side li a',function(e){
 		e.preventDefault();
 		var link = jQuery(this);
@@ -27,8 +26,7 @@ jQuery(document).ready(function() {
 		
 		return false;
 	});
-	
-	/* Switching tab mobile */
+
 	jQuery(document).on('click','.um-account-nav a',function(e){
 		e.preventDefault();
 		

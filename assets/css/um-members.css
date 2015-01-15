@@ -233,20 +233,20 @@
 	- Member meta
 */
 
-.um-member-more { margin: 10px 0 0 0 }
 .um-member-less { display: none }
 
 .um-member-more a, .um-member-less a {
-	font-size: 22px;
-	line-height: 22px;
-	vertical-align: middle;
 	color: #666;
+	display: inline-block;
 }
 
 .um-member-more i, .um-member-less i {
-	vertical-align: middle;
-	line-height: 22px;
+	display: block;
+	font-size: 32px;
+	height: 32px;
+	line-height: 32px;
 }
+
 .um-member-more a:hover, .um-member-less a:hover{color: #3ba1da}
 
 .um-member-meta {
@@ -297,10 +297,7 @@
 }
 
 .um-member-connect i {
-	vertical-align: middle;
-	text-align: center;
-	position: relative;
-	top: 1px;
+
 }
 
 .um-member-connect a:hover {
