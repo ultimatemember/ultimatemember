@@ -18,11 +18,10 @@ class UM_Enqueue {
 		$exclude = um_get_option('js_css_exclude');
 		if ( $exclude && is_array( $exclude ) ) {
 			
-			$c_url = untrailingslashit( $ultimatemember->permalinks->get_current_url(true) );
+			$c_url = trailingslashit( $ultimatemember->permalinks->get_current_url(true) );
 			
-			foreach( $exclude as $url ) {
-				$url = untrailingslashit( $url );
-				if ( $url == $c_url )
+			foreach( $exclude as $match ) {
+				if ( strstr( $c_url, $match ) )
 					return;
 			}
 			

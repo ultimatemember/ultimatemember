@@ -1413,9 +1413,9 @@ $this->sections[] = array(
 				'id'       		=> 'js_css_exclude',
                 'type'     		=> 'multi_text',
 				'default'		=> array(),
-                'title'    		=> __( 'Exclude URLs from loading plugin CSS and JS' ),
-                'desc' 	   		=> __( 'Here you can exclude specific URLs from loading the plugin CSS and JS files.' ),
-				'add_text'		=> __('Add New URL'),
+                'title'    		=> __( 'Never load plugin JS and CSS on the following pages' ),
+                'desc' 	   		=> __( 'Enter a url or page slug (e.g /about/) to disable loading the plugin\'s css and js on that page.' ),
+				'add_text'		=> __('Add New Page'),
 		),
 		
         array(
