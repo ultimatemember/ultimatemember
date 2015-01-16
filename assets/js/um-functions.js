@@ -253,8 +253,7 @@ function UM_domenus(){
 }
 
 function um_responsive(){
-	
-	// responsive um shortcode
+
 	jQuery('.um').each(function(){
 	
 		element_width = jQuery(this).width();
@@ -303,18 +302,15 @@ function um_responsive(){
 			jQuery(this).removeClass('uimob960');
 
 		}
-		
-		// account nav
+
 		if (  jQuery('.um-account-nav').length > 0 && jQuery('.um-account-side').is(':visible') && jQuery('.um-account-tab:visible').length == 0 ) {
 			jQuery('.um-account-side li a.current').trigger('click');
 		}
-		
-		// show
+
 		jQuery(this).css('opacity',1);
 	
 	});
-	
-	// responsive cover
+
 	jQuery('.um-cover, .um-member-cover').each(function(){
 	
 		var elem = jQuery(this);
@@ -327,13 +323,11 @@ function um_responsive(){
 		elem.find('.um-cover-add').height( calcHeight );
 		
 	});
-	
-	// members directory
+
 	jQuery('.um-members').each(function(){
 		UM_Member_Grid( jQuery(this) );
 	});
 
-	// menus
 	UM_domenus();
 	
 }
@@ -512,7 +506,6 @@ function initFileUpload_UM( trigger ) {
 
 function initCrop_UM() {
 
-	// only when a crop image is in view
 	var target_img = jQuery('.um-modal:visible .um-single-image-preview img');
 	var target_img_parent = jQuery('.um-modal:visible .um-single-image-preview');
 	
@@ -521,7 +514,6 @@ function initCrop_UM() {
 	var min_height = target_img.parent().attr('data-min_height');
 	var ratio = target_img.parent().attr('data-ratio');
 	
-	// custom defined ratio maybe
 	if ( jQuery('.um-modal').find('#um_upload_single').attr('data-ratio') ) {
 		var ratio =  jQuery('.um-modal').find('#um_upload_single').attr('data-ratio');
 		var ratio_split = ratio.split(':');
@@ -545,46 +537,48 @@ function initCrop_UM() {
 
 			if ( crop_data == 'square' ) {
 			
-			var opts = {
-				minWidth: min_width,
-				minHeight: min_height,
-				dragCrop: false,
-				aspectRatio: 1.0,
-				zoomable: false,
-				rotatable: false,
-				dashed: false,
-				done: function(data) {
-					target_img.parent().attr('data-coord', Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height) );
-				}
-			};
+				var opts = {
+					minWidth: min_width,
+					minHeight: min_height,
+					dragCrop: false,
+					aspectRatio: 1.0,
+					zoomable: false,
+					rotatable: false,
+					dashed: false,
+					done: function(data) {
+						target_img.parent().attr('data-coord', Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height) );
+					}
+				};
 			
 			} else if ( crop_data == 'cover' ) {
 
-			var opts = {
-				minWidth: min_width,
-				minHeight: Math.round( min_width / ratio ),
-				dragCrop: false,
-				aspectRatio: ratio,
-				zoomable: false,
-				rotatable: false,
-				dashed: false,
-				done: function(data) {
-					target_img.parent().attr('data-coord', Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height) );
-				}
-			};
+				var opts = {
+					minWidth: min_width,
+					minHeight: Math.round( min_width / ratio ),
+					dragCrop: false,
+					aspectRatio: ratio,
+					zoomable: false,
+					rotatable: false,
+					dashed: false,
+					done: function(data) {
+						target_img.parent().attr('data-coord', Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height) );
+					}
+				};
 			
 			} else if ( crop_data == 'user' ) {
 			
-			var opts = {
-				dragCrop: true,
-				aspectRatio: "auto",
-				zoomable: false,
-				rotatable: false,
-				dashed: false,
-				done: function(data) {
-					target_img.parent().attr('data-coord', Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height) );
-				}
-			};
+				var opts = {
+					minWidth: min_width,
+					minHeight: min_height,
+					dragCrop: true,
+					aspectRatio: "auto",
+					zoomable: false,
+					rotatable: false,
+					dashed: false,
+					done: function(data) {
+						target_img.parent().attr('data-coord', Math.round(data.x) + ',' + Math.round(data.y) + ',' + Math.round(data.width) + ',' + Math.round(data.height) );
+					}
+				};
 			
 			}
 
@@ -601,7 +595,7 @@ function um_new_modal( id, size, isPhoto, source ){
 	
 	var modal = jQuery('body').find('.um-modal-overlay');
 	
-	if ( modal.length == 0 ) { // when new Modal is fired
+	if ( modal.length == 0 ) {
 
 	jQuery('.tipsy').hide();
 
@@ -663,7 +657,7 @@ function um_new_modal( id, size, isPhoto, source ){
 	
 	}
 	
-	} // when new Modal is fired
+	}
 	
 }
 

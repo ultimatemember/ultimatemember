@@ -701,8 +701,15 @@ class UM_Fields {
 				}
 				
 				if ( !isset( $array['ratio'] ) ) $array['ratio'] = 1.0;
+				
 				if ( !isset( $array['min_width'] ) ) $array['min_width'] = '';
 				if ( !isset( $array['min_height'] ) ) $array['min_height'] = '';
+				
+				if ( $array['min_width'] == '' && $array['crop'] == 1 ) $array['min_width'] = 600;
+				if ( $array['min_height'] == '' && $array['crop'] == 1 ) $array['min_height'] = 600;
+				
+				if ( $array['min_width'] == '' && $array['crop'] == 3 ) $array['min_width'] = 600;
+				if ( $array['min_height'] == '' && $array['crop'] == 3 ) $array['min_height'] = 600;
 				
 				if (!isset($array['invalid_image'])) $array['invalid_image'] = "Please upload a valid image!";
 				if (!isset($array['allowed_types'])) {
