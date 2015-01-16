@@ -12,7 +12,22 @@ class UM_Enqueue {
 	***	@Enqueue scripts and styles
 	***/
 	function wp_enqueue_scripts(){
-	
+		
+		global $ultimatemember;
+		
+		$exclude = um_get_option('js_css_exclude');
+		if ( $exclude && is_array( $exclude ) ) {
+			
+			$c_url = untrailingslashit( $ultimatemember->permalinks->get_current_url(true) );
+			
+			foreach( $exclude as $url ) {
+				$url = untrailingslashit( $url );
+				if ( $url == $c_url )
+					return;
+			}
+			
+		}
+		
 		if ( um_get_option('disable_minify') ) {
 			
 			$this->load_original();

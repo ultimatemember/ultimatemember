@@ -1409,6 +1409,15 @@ $this->sections[] = array(
 				'desc' 	   		=> __('Not recommended. This will load all plugin js and css files separately and may slow down your website. Use this setting for development or debugging purposes only.','ultimatemember'),
         ),
 		
+		array(
+				'id'       		=> 'js_css_exclude',
+                'type'     		=> 'multi_text',
+				'default'		=> array(),
+                'title'    		=> __( 'Exclude URLs from loading plugin CSS and JS' ),
+                'desc' 	   		=> __( 'Here you can exclude specific URLs from loading the plugin CSS and JS files.' ),
+				'add_text'		=> __('Add New URL'),
+		),
+		
         array(
                 'id'       		=> 'allow_tracking',
                 'type'     		=> 'switch',
