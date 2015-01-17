@@ -378,7 +378,11 @@
 				unset( $items['myaccount'] );
 				unset( $items['logout'] );
 				unset( $items['cancel'] );
+				
+				if ( is_array( $actions ) ) {
 				$items = array_merge( $items, $actions );
+				}
+				
 				$items['cancel'] = $cancel;
 				
 				$items = apply_filters('um_profile_edit_menu_items', $items );

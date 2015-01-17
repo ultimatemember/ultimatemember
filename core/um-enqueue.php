@@ -33,7 +33,7 @@ class UM_Enqueue {
 			
 		} else {
 		
-			wp_register_script('um_minified', um_url . 'assets/js/um.min.js', array('jquery') );
+			wp_register_script('um_minified', um_url . 'assets/js/um.min.js', array('jquery'), '', true );
 			wp_enqueue_script('um_minified');
 			
 			wp_register_style('um_minified', um_url . 'assets/css/um.min.css' );
