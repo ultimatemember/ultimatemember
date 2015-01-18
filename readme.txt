@@ -40,7 +40,7 @@ Ultimate Member allows visitors to your site to register and become members. You
 
 **Front-end login**
 
-Allow users to login directly from your site and avoid the ugly WordPress login page. You can decide where users are redirected to after logging in and set custom redirects depending on the user’s role.
+Allow users to login directly from your site and avoid the ugly WordPress login page. You can decide where users are redirected to after logging in and set custom redirects depending on the user's role.
 
 **User profiles**
 
@@ -48,7 +48,7 @@ Ultimate Member gives every user of your site a beautiful user profile where the
 
 **Custom fields**
 
-With our custom fields, Ultimate Member allows you to gather any information you like from user’s when they signup or via their profile. The plugin comes with a full range of field types including: text box, textarea, dropdown, multi-select, radio, checkbox, url, password, image upload, file upload, date picker, time picker and star ratings
+With our custom fields, Ultimate Member allows you to gather any information you like from user's when they signup or via their profile. The plugin comes with a full range of field types including: text box, textarea, dropdown, multi-select, radio, checkbox, url, password, image upload, file upload, date picker, time picker and star ratings
 
 **Drag and drop form builder**
 
