@@ -26,8 +26,6 @@ Features of the plugin include:
 * Drag and drop form builder
 * User account page
 * Custom user roles
-* Review user registrations
-* E-mail activation for new registrations
 * Searchable member directories
 * User privacy settings
 * Custom e-mail templates
@@ -64,7 +62,7 @@ With Ultimate Member you can restrict content on a global on per page/post basis
 
 **User account page**
 
-The plugin provides users with an account page where users can change their account settings. You can alter what shows on the account page depending on the amount of control you want users to have over their accounts.
+The plugin provides users with an account page where users can change their account settings. The account page allows users to control their privacy settings, change their password and delete their own account. Admins can alter what shows on the account page depending on the amount of control you want users to have over their accounts.
 
 **Custom fields**
 
