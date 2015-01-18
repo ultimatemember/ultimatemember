@@ -46,33 +46,49 @@ Allow users to login directly from your site and avoid the ugly WordPress login 
 
 Ultimate Member gives every user of your site a beautiful user profile where they can edit their information. You can create unique profiles for each user role and decide what information to show on the profiles.
 
-**User roles**
+**Custom fields**
 
-With Ultimate Member you can create your own user roles and apply different controls and permissions to each user role. This flexibility is perfect for site’s that have multiple user types.
+With our custom fields, Ultimate Member allows you to gather any information you like from user’s when they signup or via their profile. The plugin comes with a full range of field types including: text box, textarea, dropdown, multi-select, radio, checkbox, url, password, image upload, file upload, date picker, time picker and star ratings
 
-**Member directories**
+**Drag and drop form builder**
 
-The plugin allows you to create multiple member directories to allow people to easily search and find other users. The member directories are very flexible and you can control what user roles show in a directory; the order users appear in the directory; what search filters appear; what user roles can use the search filters and much more.
-
-**Content restriction**
-
-With Ultimate Member you can restrict content on a global on per page/post basis. You can restrict pages/posts so everyone can see the page/post; only logged out users can see the page/post or only logged in users can see the page/post (you can also restrict it to certain user roles). You can also set redirect urls for when people who are not allowed to access the page/post
+Our advanced drag and drop form builder makes it extremely easy to build unique registration, login and profile forms for your site. The form builder allows for up to three columns and multiple rows which enables you to create distinct sections to the forms.
 
 **User account page**
 
 The plugin provides users with an account page where users can change their account settings. The account page allows users to control their privacy settings, change their password and delete their own account. Admins can alter what shows on the account page depending on the amount of control you want users to have over their accounts.
 
-**Custom fields**
+**User roles**
 
-With our custom fields, Ultimate Member allows you to gather any information you like from user’s when they signup or via their profile. The plugin comes with a full range of field types including: text box, textarea, dropdown, multi-select, radio, checkbox, url, password, image upload, file upload, date picker, time picker and star ratings
+With Ultimate Member you can create your own user roles and apply different controls and permissions to each user role. This flexibility is perfect for site's that have multiple user types.
+
+**Member directories**
+
+The plugin allows you to create multiple member directories to allow people to easily search and find other users. The member directories are very flexible and you can control what user roles show in a directory; the order users appear in the directory; what search filters appear; what user roles can use the search filters and much more.
 
 **Email Templates**
 
 The plugin provides a range of customizable text only email templates which are triggered depending on certain events (e.g welcome email, account activation, account deleted etc). Each email type can be turned on/off. The plugin also offers a range of optional admin notification emails so you can find out when a new user registers or if new user needs reviewed.
 
+**Content restriction**
+
+With Ultimate Member you can restrict content on a global on per page/post basis. You can restrict pages/posts so everyone can see the page/post; only logged out users can see the page/post or only logged in users can see the page/post (you can also restrict it to certain user roles). You can also set redirect urls for when people who are not allowed to access the page/post
+
 **Conditional Menus**
 
 The plugin provides a range of customizable text only email templates which are triggered depending on certain events (e.g welcome email, account activation, account deleted etc). Each email type can be turned on/off. The plugin also offers a range of optional admin notification emails so you can find out when a new user registers or if new user needs reviewed.
+
+**Mobile adaptive & responsive**
+
+Ultimate Member has been built with a focus on mobile and is fully mobile adaptive and responsive. The plugin has completely separate designs for mobiles, tablets and larger screens which means the plugin will look and function great on all devices.
+
+**SEO optimized**
+
+The plugin is very SEO friendly and provides customizable dynamic page titles and meta descriptions for every user of your site.
+
+**Developer friendly**
+
+Ultimate Member is developer friendly and includes hundreds of actions and filters for developers to customize the plugin. If you are wanting to integrate with Ultimate Member you can view codex here. 
 
 **[Join the Ultimate Member community](https://ultimatemember.com/register/)**
 
