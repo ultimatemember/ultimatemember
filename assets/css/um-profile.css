@@ -33,6 +33,10 @@
 	padding-bottom: 30px;
 }
 
+.um-profile.um-viewing {
+	padding-bottom: 1px;
+}
+
 .um-profile.um-viewing .um-field-label {
 	display: block;
 	margin: 0 0 8px 0;
@@ -135,6 +139,7 @@
 	height: 30px;
 	line-height: 30px;
 	z-index: 66;
+	padding-right: 10px;
 }
 
 /*
