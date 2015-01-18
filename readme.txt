@@ -92,15 +92,9 @@ Ultimate Member is developer friendly and includes hundreds of actions and filte
 
 **[Join the Ultimate Member community](https://ultimatemember.com/register/)**
 
-**Extensions**
+**Future Plans for Ultimate Member**
 
-At Ultimate Member we are committed to running an open company and letting users know about our future plans for the plugin. So to avoid any potential surprises in the future we wanted to let you know that whilst Ultimate Member core is completely free, we will be releasing paid extensions in the near future. We have decided to do this for a couple of reasons.
-
-First, it allows us to create a powerful and lightweight core plugin that does not include feature bloat. Secondly, having paid extensions means we can work full time on the plugin which allows for faster development and enable us to create the best community/membership plugin ever. Currently there are no extensions available but we're working on hard on creating the first extensions for the plugin. If you'd like to find out when the first extensions will be ready you can follow us on [Twitter](https://twitter.com/umplugin) or like us on [Facebook](https://www.facebook.com/pages/Ultimate-Member/1413909622233054).
-
-**Roadmap**
-
-We have big plans. Follow us on the [Trello board](https://trello.com/b/30quaczv/ultimate-member) to see planned features and what to expect from Ultimate Member.
+We have big plans for Ultimate Member and we will be working extremely hard to create the best community plugin ever. In the near future we will be releasing extensions on our site that will allow you to add extra features and extend the functionality of Ultimate Member.  If you'd like to find out when the first extensions will be ready you can follow us on [Twitter](https://twitter.com/umplugin), like us on [Facebook](https://www.facebook.com/pages/Ultimate-Member/1413909622233054) or view our [Trello roadmap](https://trello.com/b/30quaczv/ultimate-member).
 
 **Development**
 
