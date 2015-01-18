@@ -243,7 +243,7 @@ class UM_Fields {
 		$output = null;
 		$output .= '<div class="um-field-label">';
 					
-		if ( isset($data['icon']) && $data['icon'] != '' && isset( $this->field_icons ) && ( $this->field_icons == 'label' || $this->viewing == true ) ) {
+		if ( isset($data['icon']) && $data['icon'] != '' && isset( $this->field_icons ) && $this->field_icons != 'off' && ( $this->field_icons == 'label' || $this->viewing == true ) ) {
 			$output .= '<div class="um-field-label-icon"><i class="'.$data['icon'].'"></i></div>';
 		}
 	

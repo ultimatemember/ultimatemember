@@ -272,7 +272,13 @@ p.um-notice.err {
 	margin: 0 0 8px 0;
 }
 
-.um-field-label .um-field-label-icon { float: left; margin: 0 8px 0 0; vertical-align: middle !important; height: 22px; }
+.um-field-label .um-field-label-icon {
+	float: left;
+	margin: 0 8px 0 0;
+	height: 22px;
+	line-height: 22px;
+	display: inline-block;
+}
 .um-field-label .um-field-label-icon  i { font-size: 22px; height: 22px; line-height: 22px; vertical-align: middle; }
 
 .um-field-label label {
