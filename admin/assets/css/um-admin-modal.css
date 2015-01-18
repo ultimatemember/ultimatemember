@@ -259,12 +259,7 @@ span.um-admin-icon-value {
 	margin: 0 10px;
 	font-size: 13px;
 }
-span.um-admin-icon-value i {
-	font-size: 28px;
-	color: #3ba1da;
-	position: relative;
-	top: 5px;
-}
+span.um-admin-icon-value i {font-size: 28px;vertical-align: middle; color: #3ba1da }
 
 span.um-admin-icon-clear{
 	display: none;

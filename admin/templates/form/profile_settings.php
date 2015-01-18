@@ -22,7 +22,7 @@
 				<?php if ( $i == 1 ) { ?>
 				<a href="#" class="um-admin-clone button um-admin-tipsy-n" title="New Field"><i class="um-icon-plus" style="margin-right:0!important"></i></a>
 				<?php } else { ?>
-				<a href="#" class="um-admin-clone-remove button um-admin-tipsy-n" title="Remove Field"><i class="um-icon-close" style="margin-right:0!important"></i></a>
+				<a href="#" class="um-admin-clone-remove button um-admin-tipsy-n" title="Remove Field"><i class="um-icon-remove" style="margin-right:0!important"></i></a>
 				<?php } ?>
 				
 				</span>
