@@ -112,7 +112,6 @@ We are currently in beta phase so at the moment the plugin only works on single 
 15. Adding a New Directory
 16. Appearance and Customization Settings
 
-=======
 **Front-end registration**
 
 Ultimate Member allows visitors to your site to register and become members. You can decide whether users can register automatically; require them to active account via email link or you an admin can manually approve/reject user registrations after reviewing details.
