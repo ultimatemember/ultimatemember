@@ -102,7 +102,9 @@
 		$fields = unserialize( $args['custom_fields'] );
 		
 		if ( $mode == 'register' ){
-		do_action("um_submit_form_errors_hook__registration", $args );
+			
+			do_action("um_submit_form_errors_hook__registration", $args );
+		
 		}
 		
 		do_action("um_submit_form_errors_hook__blockedips", $args );
