@@ -27,7 +27,6 @@ Features of the plugin include:
 * User account page
 * Custom user roles
 * Searchable member directories
-* User privacy settings
 * Custom e-mail templates
 * Custom admin notifications
 * Content restriction
