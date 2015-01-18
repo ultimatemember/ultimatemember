@@ -1,114 +1,118 @@
-=== Plugin Name ===
-Contributors: (this should be a list of wordpress.org userid's)
-Donate link: http://example.com/
-Tags: comments, spam
-Requires at least: 3.0.1
-Tested up to: 3.4
-Stable tag: 4.3
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+=== Ultimate Member ===
+Author URI: https://ultimatemember.com/
+Plugin URI: https://ultimatemember.com/
+Contributors: ultimatemember
+Donate link: 
+Tags: members, member, membership, community, communities, profile, profiles, registration, login, front-end registration, front-end login, social network, member directory, users, user, user profiles, user roles, conditional menus, role menus, restrict content, content protection, access control, search filters, conditional fields, conditional logic, custom fields, login page, user fields, form builder, profile builder, file uploads, star ratings, hide wp-admin, toolbar, logged-in users, sign in, sign up, role creation
+Requires at least: 4.1
+Tested up to: 4.1
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+Stable Tag: 1.0.0
+
+License: GNU Version 2 or Any Later Version
+
+The easiest way to create powerful online communities and beautiful user profiles with WordPress
 
 == Description ==
 
-This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
+Ultimate Member is a powerful plugin that allows you to add beautiful user profiles to your site and create advanced online communities. The plugin enables users to sign up and become members of your site all from the front-end. With a focus on flexibility and simplicity creating a community and membership site with WordPress has never been so easy.
 
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
+Features of the plugin include:
 
-A few notes about the sections above:
+* Front-end user registration
+* Front-end user login
+* Front-end user profiles
+* Custom profile fields
+* Drag and drop form builder
+* User account page
+* Custom user roles
+* Review user registrations
+* E-mail activation for new registrations
+* Searchable member directories
+* User privacy settings
+* Custom e-mail templates
+* Custom admin notifications
+* Content restriction
+* Conditional menus
+* Mobile adaptive & responsive
+* SEO optimized
+* Developer friendly with dozens of actions and filters
 
-*   "Contributors" is a comma separated list of wp.org/wp-plugins.org usernames
-*   "Tags" is a comma separated list of tags that apply to the plugin
-*   "Requires at least" is the lowest version that the plugin will work on
-*   "Tested up to" is the highest version that you've *successfully used to test the plugin*. Note that it might work on
-higher versions... this is just the highest one you've verified.
-*   Stable tag should indicate the Subversion "tag" of the latest stable version, or "trunk," if you use `/trunk/` for
-stable.
+**Extensions**
 
-    Note that the `readme.txt` of the stable tag is the one that is considered the defining one for the plugin, so
-if the `/trunk/readme.txt` file says that the stable tag is `4.3`, then it is `/tags/4.3/readme.txt` that'll be used
-for displaying information about the plugin.  In this situation, the only thing considered from the trunk `readme.txt`
-is the stable tag pointer.  Thus, if you develop in trunk, you can update the trunk `readme.txt` to reflect changes in
-your in-development version, without having that information incorrectly disclosed about the current stable version
-that lacks those changes -- as long as the trunk's `readme.txt` points to the correct stable tag.
+At Ultimate Member we are committed to running an open company and letting users know about our future plans for the plugin. So to avoid any potential surprises in the future we wanted to let you know that whilst Ultimate Member core is completely free, we will be releasing paid extensions in the near future. We have decided to do this for a couple of reasons.
 
-    If no stable tag is provided, it is assumed that trunk is stable, but you should specify "trunk" if that's where
-you put the stable version, in order to eliminate any doubt.
+First, it allows us to create a powerful and lightweight core plugin that does not include feature bloat. Secondly, having paid extensions means we can work full time on the plugin which allows for faster development and enable us to create the best community/membership plugin ever. Currently there are no extensions available but we're working on hard on creating the first extensions for the plugin. If you'd like to find out when the first extensions will be ready you can follow us on [Twitter](https://twitter.com/umplugin) or like us on [Facebook](https://www.facebook.com/pages/Ultimate-Member/1413909622233054).
+
+**Roadmap**
+
+We have big plans. Follow us on the [Trello board](https://trello.com/b/30quaczv/ultimate-member) to see planned features and what to expect from Ultimate Member.
+
+**Development**
+
+If you're a developer and like to contribute to the source code of the plugin you can do so via our [GitHub Repository](https://github.com/ultimatemember/ultimatemember).
+
+**Support**
+
+Looking for help with Ultimate Member? Join our [community forum](https://ultimatemember.com/forums/) to ask questions and get help from other users as well as the Ultimate Member team. This is also the place to report bugs and plugin/theme compatibility issues. Please note we can only provide basic support to free users of this plugin and much like WordPress itself we rely on the Ultimate Member community to help each other out. You can read about our official support policy [here](https://ultimatemember.com/support-policy/). 
 
 == Installation ==
 
-This section describes how to install the plugin and get it working.
-
-e.g.
-
-1. Upload `plugin-name.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+1. Activate the plugin
+2. That's it. Go to Ultimate Member > Settings to customize plugin options
+3. For more details, please visit the official [Documentation](https://ultimatemember.com/docs/) page.
 
 == Frequently Asked Questions ==
 
-= A question that someone might have =
+= Do I need to know any coding to use this plugin? =
 
-An answer to that question.
+No, we have built Ultimate Member to be extremely easy to use and does not require you to manually build shortcodes or have any coding knowledge.
 
-= What about foo bar? =
+= Is Ultimate Member mobile responsive? =
 
-Answer to foo bar dilemma.
+Yes. Ultimate Member is designed to adapt nicely to any screen resolution. It includes specific designs for phones, tablets and desktops. 
+
+= Where can I get support? =
+
+If you need help with Ultimate Member the best place to ask for help is via the Ultimate Member community forum where you can get answers from the Ultimate Member team and other members.
+
+= Where can I report bugs? =
+
+If you have found a bug with Ultimate Member you can report it in the community forum or on the Ultimate Member GitHub repository
+
+= Does the plugin work with any WordPress theme? =
+
+Yes. Ultimate Member will work with any properly coded theme. However, some themes may cause conflicts with the plugin. If you find a styling issue with your theme please create a post in the community forum.
+
+= Does the plugin work with caching plugins? =
+
+The plugin works with popular caching plugins by automatically excluding Ultimate Member pages from being cached. This ensures other visitors to a page will not see the private information of another user. However, if you add features of Ultimate Member to other pages you have to exclude those pages from being cached through your cache plugin settings panel. 
+
+= Does the plugin work on WordPress Multisite? =
+
+We are currently in beta phase so at the moment the plugin only works on single site installs. However, we will be working on ensuring multisite compatibility during the beta period.
 
 == Screenshots ==
 
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets 
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png` 
-(or jpg, jpeg, gif).
-2. This is the second screen shot
+1. Front-end User Profile (Edit mode)
+2. Photo / File Upload Modal
+3. Image Crop Feature
+4. Account Page
+5. Photo Modal
+6. User Profile (Cover photo turned off)
+7. Searchable Member Directory
+8. Plugin Dashboard
+9. Plugin Settings Panel
+10. Forms
+11. Custom Field Manager
+12. Adding a New Field
+13. User Roles
+14. Adding a New Role
+15. Adding a New Directory
+16. Appearance and Customization Settings
 
 == Changelog ==
 
-= 1.0 =
-* A change since the previous version.
-* Another change.
+= 1.0.0: January, 2015 =
 
-= 0.5 =
-* List versions from most recent at top to oldest at bottom.
-
-== Upgrade Notice ==
-
-= 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
-
-= 0.5 =
-This version fixes a security related bug.  Upgrade immediately.
-
-== Arbitrary section ==
-
-You may provide arbitrary sections, in the same format as the ones above.  This may be of use for extremely complicated
-plugins where more information needs to be conveyed that doesn't fit into the categories of "description" or
-"installation."  Arbitrary sections will be shown below the built-in sections outlined above.
-
-== A brief Markdown Example ==
-
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
-
-Unordered list:
-
-* something
-* something else
-* third thing
-
-Here's a link to [WordPress](http://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
-Titles are optional, naturally.
-
-[markdown syntax]: http://daringfireball.net/projects/markdown/syntax
-            "Markdown is what the parser uses to process much of the readme file"
-
-Markdown uses email style notation for blockquotes and I've been told:
-> Asterisks for *emphasis*. Double it up  for **strong**.
-
-`<?php code(); // goes in backticks ?>`
+* First official release!
