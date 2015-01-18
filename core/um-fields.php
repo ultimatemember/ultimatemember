@@ -57,9 +57,9 @@ class UM_Fields {
 	function globally_update_field($id, $args){
 		global $ultimatemember;
 		$fields = $ultimatemember->builtin->saved_fields;
-		$fields[$id] = $args;
 		
-		// not global attributes
+		$fields[$id] = $args;
+
 		unset( $fields[ $id ]['in_row'] );
 		unset( $fields[ $id ]['in_sub_row'] );
 		unset( $fields[ $id ]['in_column'] );
@@ -76,16 +76,12 @@ class UM_Fields {
 		global $ultimatemember;
 		$fields = $ultimatemember->query->get_attr( 'custom_fields', $form_id );
 		
-		if ( isset( $fields[$id] ) ) {
-			$old = $fields[$id];
-			$fields[$id] = array_merge( $old, $args );
-		} else {
-			$fields[$id] = $args;
-		}
+		$fields[$id] = $args;
 		
 		if ( $args['type'] == 'group' ){
 			$fields[$id]['in_group'] = '';
 		}
+		
 		$ultimatemember->query->update_attr( 'custom_fields', $form_id, $fields );
 	}
 	
@@ -599,12 +595,24 @@ class UM_Fields {
 				}
 				
 				if ( $array['range'] == 'date_range' ) {
+					
 					$array['date_min'] = str_replace('/',',',$array['range_start']);
 					$array['date_max'] = str_replace('/',',',$array['range_end']);
-				}
 				
-				if ( !isset( $array['date_min'] ) ) $array['date_min'] = '';
-				if ( !isset( $array['date_max'] ) ) $array['date_max'] = '';
+				} else {
+					
+					if ( $array['years_x'] == 'past' ) {
+						$array['date_min'] = date('Y,n,d', mktime(0, 0, 0, date("n") , date("d"), date("Y") - $array['years'] ) );
+						$array['date_max'] = date('Y,n,d');
+					} else if ( $array['years_x'] == 'future' ) {
+						$array['date_min'] = date('Y,n,d');	
+						$array['date_max'] = date('Y,n,d', mktime(0, 0, 0, date("n") , date("d"), date("Y") + $array['years'] ) );
+					} else {
+						$array['date_min'] = date('Y,n,d', mktime(0, 0, 0, date("n") , date("d"), date("Y") - ( $array['years'] / 2 ) ) );
+						$array['date_max'] = date('Y,n,d', mktime(0, 0, 0, date("n") , date("d"), date("Y") + ( $array['years'] / 2 ) ) );
+					}
+
+				}
 				
 				if (!isset($array['autocomplete'])) $array['autocomplete'] = 'on';
 

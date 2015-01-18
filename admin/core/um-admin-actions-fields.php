@@ -26,9 +26,7 @@
 		if ( empty( $output['error'] ) ){
 		
 			$save = '';
-			$save[ $_metakey ]['roles'] = '';
-			$save[ $_metakey ]['disabled_weekdays'] = '';
-			$save[ $_metakey ]['icon'] = '';
+			$save[ $_metakey ] = null;
 			foreach( $array['post'] as $key => $val){
 				
 				if ( substr( $key, 0, 1) === '_' && $val != '' ) { // field attribute

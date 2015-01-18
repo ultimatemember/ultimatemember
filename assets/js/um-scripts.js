@@ -56,23 +56,19 @@ jQuery(document).ready(function() {
 	jQuery('.um-datepicker').each(function(){
 		elem = jQuery(this);
 		
-		if ( elem.attr('data-years_x') == 'past' ) {var max = true;}
-		if ( elem.attr('data-years_x') == 'equal' ) {var max = false;}
-		if ( elem.attr('data-years_x') == 'future' ) {var min = true;var max = '';}
-		
 		if ( elem.attr('data-disabled_weekdays') != '' ) {
 			var disable = JSON.parse( elem.attr('data-disabled_weekdays') );
 		} else {
 			var disable = false;
 		}
 		
-		if ( elem.attr('data-range') == 'date_range' ) {
-			var min = new Date( elem.attr('data-date_min') );
-			var max = new Date( elem.attr('data-date_max') );
-		}
+		var years_n = elem.attr('data-years');
 		
+		var min = new Date( elem.attr('data-date_min') );
+		var max = new Date( elem.attr('data-date_max') );
+
 		elem.pickadate({
-			selectYears: elem.attr('data-years'),
+			selectYears: years_n,
 			min: min,
 			max: max,
 			disable: disable,
