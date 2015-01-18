@@ -28,6 +28,7 @@ Features of the plugin include:
 * Custom user roles
 * Searchable member directories
 * Custom e-mail templates
+* Custom admin notifications
 * Content restriction
 * Conditional menus
 * Mobile adaptive & responsive
