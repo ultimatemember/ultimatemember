@@ -13,18 +13,8 @@ class UM_Admin_Enqueue {
 		add_filter('admin_body_class', array(&$this, 'admin_body_class'), 9 );
 		
 		add_filter('enter_title_here', array(&$this, 'enter_title_here') );
-		
-		add_filter('admin_footer_text', array(&$this, 'admin_footer_text'), 1111 );
 
 	}
-	
-	/***
-	***	@Show footer text
-	***/
-    function admin_footer_text() {
-		$copyright = sprintf(__('Thank you for creating with <a href="http://ultimatemember.com">Ultimate Member</a> and <a href="https://wordpress.org">WordPress</a>.','ultimatemember'));
-		return '<span id="footer-thankyou">' . $copyright . '</span>';
-    }
 	
 	/***
 	***	@enter title placeholder
