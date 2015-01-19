@@ -50,6 +50,9 @@
 		global $ultimatemember;
 		extract($args);
 		$output = '';
+		
+		$err = '';
+		$success = '';
 
 		if ( !get_option('users_can_register') && $mode == 'register' ) {
 			$err = __('Registration is currently disabled','ultimatemember');
@@ -57,43 +60,59 @@
 		
 		if ( isset( $_REQUEST['updated'] ) && !empty( $_REQUEST['updated'] ) && !$ultimatemember->form->errors ) {
 			switch( $_REQUEST['updated'] ) {
+				
 				case 'password_changed':
 					$success = __('You have successfully changed your password.','ultimatemember');
 					break;
+					
 			}
 		}
 		
 		if ( isset( $_REQUEST['err'] ) && !empty( $_REQUEST['err'] ) && !$ultimatemember->form->errors ) {
 			switch( $_REQUEST['err'] ) {
+				
+				default:
+					$err = apply_filters("um_custom_error_message_handler", $err, $_REQUEST['err']);
+					if ( !$err )
+						$err = __('An error has been encountered','ultimatemember');
+					break;
+					
 				case 'registration_disabled':
 					$err = __('Registration is currently disabled','ultimatemember');
 					break;
+					
 				case 'blocked_email':
 					$err = __('This email address has been blocked.','ultimatemember');
 					break;
+					
 				case 'blocked_ip':
 					$err = __('Your IP address has been blocked.','ultimatemember');
 					break;
+					
 				case 'inactive':
 					$err = __('Your account has been disabled.','ultimatemember');
 					break;
+					
 				case 'awaiting_admin_review':
 					$err = __('Your account has not been approved yet.','ultimatemember');
 					break;
+					
 				case 'awaiting_email_confirmation':
 					$err = __('Your account is awaiting e-mail verifications.','ultimatemember');
 					break;
+					
 				case 'rejected':
 					$err = __('Your membership request has been rejected.','ultimatemember');
 					break;
+					
 			}
 		}
 		
-		if ( isset( $err ) ) {
+		if ( isset( $err ) && !empty( $err ) ) {
 			$output .= '<p class="um-notice err">' . $err . '</p>';
 		}
 		
-		if ( isset( $success ) ) {
+		if ( isset( $success ) && !empty( $success ) ) {
 			$output .= '<p class="um-notice success">' . $success . '</p>';
 		}
 		
