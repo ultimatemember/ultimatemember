@@ -87,6 +87,10 @@
 		
 		um_fetch_user( $user_id );
 		
+		if ( !isset( $args['role'] ) ) {
+			$role = um_get_option('default_role');
+		}
+
 		$ultimatemember->user->set_role( $role );
 		
 		$ultimatemember->user->set_registration_details( $args['submitted'] );
@@ -204,6 +208,8 @@
 	function um_add_user_role($args){
 		
 		global $ultimatemember;
+		
+		if ( isset( $args['custom_fields']['role_select'] ) || isset( $args['custom_fields']['role_radio'] ) ) return;
 		
 		if (isset($args['role']) && !empty($args['role'])){
 		

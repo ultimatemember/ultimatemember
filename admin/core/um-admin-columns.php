@@ -26,8 +26,6 @@ class UM_Admin_Columns {
 		$new_columns['title'] = __('Title');
 		$new_columns['mode'] = __('Type') . $admin->_tooltip( 'This is the type of the form' );
 		$new_columns['shortcode'] = __('Shortcode') . $admin->_tooltip( 'Use this shortcode to display the form' );
-		$new_columns['impressions'] = __('Impressions') . $admin->_tooltip( 'The total number of times this form has been viewed' );
-		$new_columns['conversions'] = __('Conversions') . $admin->_tooltip( 'The total number of conversions. e.g. Successful sign-ups' );
 		$new_columns['date'] = __('Date');
 		
 		return $new_columns;
@@ -70,23 +68,6 @@ class UM_Admin_Columns {
 			case 'mode':
 				$mode = $ultimatemember->query->get_attr('mode', $id);
 				echo '<span class="um-admin-tag um-admin-type-'.$mode.'">'. $ultimatemember->form->display_form_type($mode, $id) . '</span>';
-				break;
-				
-			case 'impressions':
-				$impressions = $ultimatemember->query->get_attr('impressions', $id);
-				echo (!empty( $impressions )) ? $impressions : 'N/A';
-				break;
-				
-			case 'conversions':
-				$impressions = $ultimatemember->query->get_attr('impressions', $id);
-				$conversions = $ultimatemember->query->get_attr('conversions', $id);
-				
-				if ($impressions && $conversions){
-					$pct = ($conversions / $impressions) * 100;
-					$pct = round($pct, 2);
-				}
-				
-				echo (!empty( $conversions )) ? $conversions . '<span class="um-admin-txtspace"></span>' . '(' . $pct . '%)' : 'N/A';
 				break;
 				
 		}

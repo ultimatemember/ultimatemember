@@ -1279,6 +1279,9 @@ class UM_Fields {
 				
 			/* Select dropdown */
 			case 'select':
+			
+				$form_key = str_replace('role_select','role',$key);
+				
 				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">';
 
 						if ( isset( $data['allowclear'] ) && $data['allowclear'] == 0 ) {
@@ -1293,7 +1296,7 @@ class UM_Fields {
 
 						$output .= '<div class="um-field-area">';
 						
-						$output .= '<select name="'.$key.'" id="'.$key.'" data-validate="'.$validate.'" data-key="'.$key.'" class="'.$this->get_class($key, $data, $class).'" style="width: 100%" data-placeholder="'.$placeholder.'">';
+						$output .= '<select name="'.$form_key.'" id="'.$form_key.'" data-validate="'.$validate.'" data-key="'.$key.'" class="'.$this->get_class($key, $data, $class).'" style="width: 100%" data-placeholder="'.$placeholder.'">';
 						
 						if ( isset($options) && $options == 'builtin'){
 							$options = $ultimatemember->builtin->get ( $filter );
@@ -1311,8 +1314,14 @@ class UM_Fields {
 						
 							$v = rtrim($v);
 							
-							$output .= '<option value="'.$v.'" ';
-							if ( $this->is_selected($key, $v, $data) ) { 
+							if ( !is_numeric( $k ) ) {
+								$option_value = $k;
+							} else {
+								$option_value = $v;
+							}
+							
+							$output .= '<option value="'.$option_value.'" ';
+							if ( $this->is_selected($key, $option_value, $data) ) { 
 								$output.= 'selected';
 							}
 							$output .= '>'.$v.'</option>';
@@ -1385,6 +1394,9 @@ class UM_Fields {
 				
 			/* Radio */
 			case 'radio':
+			
+				$form_key = str_replace('role_radio','role',$key);
+				
 				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">';
 						
 						if ( isset( $data['label'] ) ) {
@@ -1400,6 +1412,12 @@ class UM_Fields {
 						
 							$v = rtrim($v);
 							
+							if ( !is_numeric( $k ) ) {
+								$option_value = $k;
+							} else {
+								$option_value = $v;
+							}
+							
 							$i++;
 							if ($i % 2 == 0 ) {
 								$col_class = 'right';
@@ -1407,7 +1425,7 @@ class UM_Fields {
 								$col_class = '';
 							}
 						
-							if ( $this->is_radio_checked($key, $v, $data) ) {
+							if ( $this->is_radio_checked($key, $option_value, $data) ) {
 								$active = 'active';
 								$class = "um-icon-android-radio-button-on";
 							} else {
@@ -1416,9 +1434,9 @@ class UM_Fields {
 							}
 							
 							$output .= '<label class="um-field-radio '.$active.' um-field-half '.$col_class.'">';
-							$output .= '<input type="radio" name="'.$key.'" value="'.$v.'" ';
+							$output .= '<input type="radio" name="'.$form_key.'" value="'.$option_value.'" ';
 							
-							if ( $this->is_radio_checked($key, $v, $data) ) {
+							if ( $this->is_radio_checked($key, $option_value, $data) ) {
 								$output.= 'checked';
 							}
 

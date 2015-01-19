@@ -137,27 +137,4 @@ class UM_Form {
 		return $output;
 	}
 	
-	/***
-	***	@Adds a page view for form
-	***/
-	function add_pageview( $form_id, $impressions ) {
-		global $ultimatemember;
-		$new_impressions = (int)$impressions+1;
-		$ultimatemember->query->update_attr('impressions', $form_id, $new_impressions);
-	}
-	
-	/***
-	***	@Adds a page conversion for form
-	***/
-	function add_conversion( $post_id ) {
-		global $ultimatemember;
-		
-		$conversions = $ultimatemember->query->get_attr('conversions', $post_id);
-		$new_conversions = (int)$conversions+1;
-		
-		$ultimatemember->query->update_attr('conversions', $post_id, $new_conversions);
-		
-		return $new_conversions;
-	}
-	
 }
