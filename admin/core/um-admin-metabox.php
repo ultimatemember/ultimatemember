@@ -105,9 +105,12 @@ class UM_Admin_Metabox {
 	/***
 	***	@on/off UI
 	***/
-	function ui_on_off( $id, $default=0, $is_conditional=false, $cond1='', $cond1_show='', $cond1_hide='' ) {
+	function ui_on_off( $id, $default=0, $is_conditional=false, $cond1='', $cond1_show='', $cond1_hide='', $yes='', $no='' ) {
 
 		$meta = get_post_meta( get_the_ID(), $id, true );
+		
+		$yes = ( !empty( $yes ) ) ? $yes : __('Yes');
+		$no = ( !empty( $no ) ) ? $no : __('No');
 		
 		if (isset($this->postmeta[$id][0]) || $meta ) {
 			$active = ( isset( $this->postmeta[$id][0] ) ) ? $this->postmeta[$id][0] : $meta;
@@ -123,8 +126,8 @@ class UM_Admin_Metabox {
 
 		<span class="um-admin-yesno">
 			<span class="btn pos-<?php echo $active; ?>"><i class="um-faicon-circle-thin"></i></span>
-			<span class="yes" data-value="1">Yes</span>
-			<span class="no" data-value="0">No</span>
+			<span class="yes" data-value="1"><?php echo $yes; ?></span>
+			<span class="no" data-value="0"><?php echo $no; ?></span>
 			<input type="hidden" name="<?php echo $id; ?>" id="<?php echo $id; ?>" value="<?php echo $active; ?>" <?php echo $is_conditional; ?> />
 		</span>
 	
@@ -187,7 +190,19 @@ class UM_Admin_Metabox {
 			$UM_Builder->form_id = get_the_ID();
 		}
 		
-		include_once um_path . 'admin/templates/form/'. $box['id'] . '.php';
+		preg_match('#\{.*?\}#s', $box['id'], $matches);
+		
+		if ( isset($matches[0]) ){
+			$path = $matches[0];
+			$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
+		} else {
+			$path = um_path;
+		}
+		
+		$path = str_replace('{','', $path );
+		$path = str_replace('}','', $path );
+		
+		include_once $path . 'admin/templates/form/'. $box['id'] . '.php';
 		wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_form_nonce' );
 	}
 	
@@ -244,8 +259,14 @@ class UM_Admin_Metabox {
 		add_meta_box('um-admin-form-shortcode', __('Shortcode'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
 		
 		add_meta_box('um-admin-form-register_customize', __('Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
+		
+		do_action('um_admin_custom_register_metaboxes');
+
 		add_meta_box('um-admin-form-profile_customize', __('Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
+		
 		add_meta_box('um-admin-form-login_customize', __('Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
+		
+		do_action('um_admin_custom_login_metaboxes');
 		
 		add_meta_box('um-admin-form-profile_settings', __('User Meta'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
 		add_meta_box('um-admin-form-login_settings', __('Options'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
