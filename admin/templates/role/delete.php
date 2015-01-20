@@ -7,8 +7,8 @@
 			<span class="um-admin-half">
 			
 				<select name="_um_after_delete" id="_um_after_delete" class="umaf-selectjs um-adm-conditional" style="width: 300px" data-cond1="redirect_url" data-cond1-show="_um_after_delete">
-					<option value="redirect_home" <?php selected('redirect_home', $ultimatemember->query->get_meta_value('_um_after_delete') ); ?>>Go to Homepage</option>
-					<option value="redirect_url" <?php selected('redirect_url', $ultimatemember->query->get_meta_value('_um_after_delete') ); ?>>Go to Custom URL</option>
+					<option value="redirect_home" <?php selected('redirect_home', $ultimatemember->query->get_meta_value('_um_after_delete') ); ?>><?php _e('Go to Homepage','ultimatemember'); ?></option>
+					<option value="redirect_url" <?php selected('redirect_url', $ultimatemember->query->get_meta_value('_um_after_delete') ); ?>><?php _e('Go to Custom URL','ultimatemember'); ?></option>
 				</select>
 
 			</span>

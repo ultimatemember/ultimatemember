@@ -4,23 +4,23 @@
 		
 		<?php if ( $ultimatemember->query->has_post_meta('_um_core', 'admin' ) ) { ?>
 		<p class="disabled-on-off">
-			<label class="um-admin-half"><?php _e('Can access wp-admin?','ultimatemember'); ?> <?php $this->tooltip('The core admin role must always have access to wp-admin / WordPress backend'); ?></label>
+			<label class="um-admin-half"><?php _e('Can access wp-admin?','ultimatemember'); ?> <?php $this->tooltip( __('The core admin role must always have access to wp-admin / WordPress backend','ultimatemember') ); ?></label>
 			<span class="um-admin-half"><?php $this->ui_on_off('_um_can_access_wpadmin', 1); ?></span>
 		</p><div class="um-admin-clear"></div>
 		<?php } else { ?>
 		<p>
-			<label class="um-admin-half"><?php _e('Can access wp-admin?','ultimatemember'); ?> <?php $this->tooltip('Allow this role to access the admin dashboard. If turned on the WordPress toolbar will appear at top of the page.'); ?></label>
+			<label class="um-admin-half"><?php _e('Can access wp-admin?','ultimatemember'); ?> <?php $this->tooltip( __('Allow this role to access the admin dashboard. If turned on the WordPress toolbar will appear at top of the page.','ultimatemember') ); ?></label>
 			<span class="um-admin-half"><?php $this->ui_on_off('_um_can_access_wpadmin', 0); ?></span>
 		</p><div class="um-admin-clear"></div>
 		<?php } ?>
 		
 		<p>
-			<label class="um-admin-half"><?php _e('Can edit other member accounts?','ultimatemember'); ?> <?php $this->tooltip('Allow this role to edit accounts of other members'); ?></label>
+			<label class="um-admin-half"><?php _e('Can edit other member accounts?','ultimatemember'); ?> <?php $this->tooltip( __('Allow this role to edit accounts of other members','ultimatemember') ); ?></label>
 			<span class="um-admin-half"><?php $this->ui_on_off('_um_can_edit_everyone', 0, true, 1, 'edit-roles', 'xxx'); ?></span>
 		</p><div class="um-admin-clear"></div>
 
 		<p class="edit-roles">
-			<label class="um-admin-half"><?php _e('Can edit these user roles only','ultimatemember'); ?> <?php $this->tooltip('Which roles that role can edit, choose none to allow role to edit all member roles'); ?></label>
+			<label class="um-admin-half"><?php _e('Can edit these user roles only','ultimatemember'); ?> <?php $this->tooltip( __('Which roles that role can edit, choose none to allow role to edit all member roles','ultimatemember') ); ?></label>
 			<span class="um-admin-half">
 		
 				<select multiple="multiple" name="_um_can_edit_roles[]" id="_um_can_edit_roles" class="umaf-selectjs" style="width: 300px">
@@ -33,12 +33,12 @@
 		</p><div class="um-admin-clear"></div>
 
 		<p>
-			<label class="um-admin-half"><?php _e('Can delete other member accounts?','ultimatemember'); ?> <?php $this->tooltip('Allow this role to edit the profile fields of certain roles only'); ?></label>
+			<label class="um-admin-half"><?php _e('Can delete other member accounts?','ultimatemember'); ?> <?php $this->tooltip( __('Allow this role to edit the profile fields of certain roles only','ultimatemember') ); ?></label>
 			<span class="um-admin-half"><?php $this->ui_on_off('_um_can_delete_everyone', 0, true, 1, 'delete-roles', 'xxx'); ?></span>
 		</p><div class="um-admin-clear"></div>
 		
 		<p class="delete-roles">
-			<label class="um-admin-half"><?php _e('Can delete these user roles only','ultimatemember'); ?> <?php $this->tooltip('Which roles that role can delete, choose none to allow role to delete all member roles'); ?></label>
+			<label class="um-admin-half"><?php _e('Can delete these user roles only','ultimatemember'); ?> <?php $this->tooltip( __('Which roles that role can delete, choose none to allow role to delete all member roles','ultimatemember') ); ?></label>
 			<span class="um-admin-half">
 		
 				<select multiple="multiple" name="_um_can_delete_roles[]" id="_um_can_delete_roles" class="umaf-selectjs" style="width: 300px">

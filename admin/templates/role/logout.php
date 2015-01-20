@@ -7,8 +7,8 @@
 			<span class="um-admin-half">
 			
 				<select name="_um_after_logout" id="_um_after_logout" class="umaf-selectjs um-adm-conditional" style="width: 300px" data-cond1="redirect_url" data-cond1-show="_um_after_logout">
-					<option value="redirect_home" <?php selected('redirect_home', $ultimatemember->query->get_meta_value('_um_after_logout') ); ?>>Go to Homepage</option>
-					<option value="redirect_url" <?php selected('redirect_url', $ultimatemember->query->get_meta_value('_um_after_logout') ); ?>>Go to Custom URL</option>
+					<option value="redirect_home" <?php selected('redirect_home', $ultimatemember->query->get_meta_value('_um_after_logout') ); ?>><?php _e('Go to Homepage','ultimatemember'): ?></option>
+					<option value="redirect_url" <?php selected('redirect_url', $ultimatemember->query->get_meta_value('_um_after_logout') ); ?>><?php _e('Go to Custom URL','ultimatemember'): ?></option>
 				</select>
 
 			</span>

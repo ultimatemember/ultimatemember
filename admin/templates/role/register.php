@@ -10,9 +10,9 @@
 				data-cond1="approved" data-cond1-show="approved" 
 				data-cond2="checkmail" data-cond2-show="checkmail"
 				data-cond3="pending" data-cond3-show="pending">
-					<option value="approved" <?php selected('approved', $ultimatemember->query->get_meta_value('_um_status') ); ?>>Auto Approve</option>
-					<option value="checkmail" <?php selected('checkmail', $ultimatemember->query->get_meta_value('_um_status') ); ?>>Require Email Activation</option>
-					<option value="pending" <?php selected('pending', $ultimatemember->query->get_meta_value('_um_status') ); ?>>Require Admin Review</option>
+					<option value="approved" <?php selected('approved', $ultimatemember->query->get_meta_value('_um_status') ); ?>><?php _e('Auto Approve','ultimatemember'); ?></option>
+					<option value="checkmail" <?php selected('checkmail', $ultimatemember->query->get_meta_value('_um_status') ); ?>><?php _e('Require Email Activation','ultimatemember'); ?></option>
+					<option value="pending" <?php selected('pending', $ultimatemember->query->get_meta_value('_um_status') ); ?>><?php _e('Require Admin Review','ultimatemember'); ?></option>
 				</select>
 				
 			</span>
@@ -26,8 +26,8 @@
 			<span class="um-admin-half">
 			
 				<select name="_um_auto_approve_act" id="_um_auto_approve_act" class="umaf-selectjs um-adm-conditional" style="width: 300px" data-cond1="redirect_url" data-cond1-show="_um_auto_approve_act">
-					<option value="redirect_profile" <?php selected('redirect_profile', $ultimatemember->query->get_meta_value('_um_auto_approve_act') ); ?>>Redirect to profile</option>
-					<option value="redirect_url" <?php selected('redirect_url', $ultimatemember->query->get_meta_value('_um_auto_approve_act') ); ?>>Redirect to URL</option>
+					<option value="redirect_profile" <?php selected('redirect_profile', $ultimatemember->query->get_meta_value('_um_auto_approve_act') ); ?>><?php _e('Redirect to profile','ultimatemember'); ?></option>
+					<option value="redirect_url" <?php selected('redirect_url', $ultimatemember->query->get_meta_value('_um_auto_approve_act') ); ?>><?php _e('Redirect to URL','ultimatemember'); ?></option>
 				</select>
 
 			</span>
@@ -55,8 +55,8 @@
 				<select name="_um_checkmail_action" id="_um_checkmail_action" class="umaf-selectjs um-adm-conditional" style="width: 300px" 
 				data-cond1="show_message" data-cond1-show="_um_checkmail_action-1"
 				data-cond2="redirect_url" data-cond2-show="_um_checkmail_action-2">
-					<option value="show_message" <?php selected('show_message', $ultimatemember->query->get_meta_value('_um_checkmail_action') ); ?>>Show custom message</option>
-					<option value="redirect_url" <?php selected('redirect_url', $ultimatemember->query->get_meta_value('_um_checkmail_action') ); ?>>Redirect to URL</option>
+					<option value="show_message" <?php selected('show_message', $ultimatemember->query->get_meta_value('_um_checkmail_action') ); ?>><?php _e('Show custom message','ultimatemember'); ?></option>
+					<option value="redirect_url" <?php selected('redirect_url', $ultimatemember->query->get_meta_value('_um_checkmail_action') ); ?>><?php _e('Redirect to URL','ultimatemember'); ?></option>
 				</select>
 
 			</span>
@@ -93,8 +93,8 @@
 				<select name="_um_pending_action" id="_um_pending_action" class="umaf-selectjs um-adm-conditional" style="width: 300px" 
 				data-cond1="show_message" data-cond1-show="_um_pending_action-1"
 				data-cond2="redirect_url" data-cond2-show="_um_pending_action-2">
-					<option value="show_message" <?php selected('show_message', $ultimatemember->query->get_meta_value('_um_pending_action') ); ?>>Show custom message</option>
-					<option value="redirect_url" <?php selected('redirect_url', $ultimatemember->query->get_meta_value('_um_pending_action') ); ?>>Redirect to URL</option>
+					<option value="show_message" <?php selected('show_message', $ultimatemember->query->get_meta_value('_um_pending_action') ); ?>><?php _e('Show custom message','ultimatemember'); ?></option>
+					<option value="redirect_url" <?php selected('redirect_url', $ultimatemember->query->get_meta_value('_um_pending_action') ); ?>><?php _e('Redirect to URL','ultimatemember'); ?></option>
 				</select>
 
 			</span>

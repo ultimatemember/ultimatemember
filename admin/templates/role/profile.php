@@ -3,12 +3,12 @@
 	<div class="">
 		
 		<p>
-			<label class="um-admin-half"><?php _e('Can view other member profiles?','ultimatemember'); ?> <?php $this->tooltip('Can this role view all member profiles?'); ?></label>
+			<label class="um-admin-half"><?php _e('Can view other member profiles?','ultimatemember'); ?> <?php $this->tooltip( __('Can this role view all member profiles?', 'ultimatemember') ); ?></label>
 			<span class="um-admin-half"><?php $this->ui_on_off('_um_can_view_all', 1, true, 1, 'view-roles', 'xxx'); ?></span>
 		</p><div class="um-admin-clear"></div>
 		
 		<p class="view-roles">
-			<label class="um-admin-half"><?php _e('Can view these user roles only','ultimatemember'); ?> <?php $this->tooltip('Which roles that role can view, choose none to allow role to view all member roles'); ?></label>
+			<label class="um-admin-half"><?php _e('Can view these user roles only','ultimatemember'); ?> <?php $this->tooltip( __('Which roles that role can view, choose none to allow role to view all member roles', 'ultimatemember') ); ?></label>
 			<span class="um-admin-half">
 		
 				<select multiple="multiple" name="_um_can_view_roles[]" id="_um_can_view_roles" class="umaf-selectjs" style="width: 300px">

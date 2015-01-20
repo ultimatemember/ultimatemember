@@ -6,7 +6,7 @@
 	
 		<div class="um-admin-dash-head-logo">
 			<h2>Dashboard</h2>
-			<span><?php echo ULTIMATEMEMBER_VERSION; ?></span>
+			<span><?php echo ultimatemember_version; ?></span>
 		</div>
 		
 		<div class="um-admin-clear"></div>

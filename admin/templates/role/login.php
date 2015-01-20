@@ -7,10 +7,10 @@
 			<span class="um-admin-half">
 			
 				<select name="_um_after_login" id="_um_after_login" class="umaf-selectjs um-adm-conditional" style="width: 300px" data-cond1="redirect_url" data-cond1-show="_um_after_login">
-					<option value="redirect_profile" <?php selected('redirect_profile', $ultimatemember->query->get_meta_value('_um_after_login') ); ?>>Redirect to profile</option>
-					<option value="redirect_url" <?php selected('redirect_url', $ultimatemember->query->get_meta_value('_um_after_login') ); ?>>Redirect to URL</option>
-					<option value="refresh" <?php selected('refresh', $ultimatemember->query->get_meta_value('_um_after_login') ); ?>>Refresh active page</option>
-					<option value="redirect_admin" <?php selected('redirect_admin', $ultimatemember->query->get_meta_value('_um_after_login') ); ?>>Redirect to WordPress Admin</option>
+					<option value="redirect_profile" <?php selected('redirect_profile', $ultimatemember->query->get_meta_value('_um_after_login') ); ?>><?php_e('Redirect to profile','ultimatemember'); ?></option>
+					<option value="redirect_url" <?php selected('redirect_url', $ultimatemember->query->get_meta_value('_um_after_login') ); ?>><?php_e('Redirect to URL','ultimatemember'); ?></option>
+					<option value="refresh" <?php selected('refresh', $ultimatemember->query->get_meta_value('_um_after_login') ); ?>><?php_e('Refresh active page','ultimatemember'); ?></option>
+					<option value="redirect_admin" <?php selected('redirect_admin', $ultimatemember->query->get_meta_value('_um_after_login') ); ?>><?php_e('Redirect to WordPress Admin','ultimatemember'); ?></option>
 				</select>
 
 			</span>
