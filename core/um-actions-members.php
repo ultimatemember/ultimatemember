@@ -252,7 +252,7 @@
 						}
 						?>
 						
-						<?php if ( $show_userinfo && is_array($reveal_fields ) ) { ?>
+						<?php if ( $show_userinfo ) { ?>
 						
 						<div class="um-member-meta-main">
 						

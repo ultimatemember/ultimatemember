@@ -4,14 +4,14 @@ jQuery(document).ready(function() {
 		UM_Member_Grid( jQuery(this) );
 	});
 
-	jQuery('.um-member-meta-main').each(function(){
-		if ( jQuery(this).find('.um-member-metaline').length == 0 ) {
+	jQuery('.um-member-connect').each(function(){
+		if ( jQuery(this).find('a').length == 0 ) {
 			jQuery(this).remove();
 		}
 	});
-
-	jQuery('.um-member-connect').each(function(){
-		if ( jQuery(this).find('a').length == 0 ) {
+	
+	jQuery('.um-member-meta-main').each(function(){
+		if ( jQuery(this).find('.um-member-metaline').length == 0 && jQuery(this).find('.um-member-connect').find('a').length == 0 ) {
 			jQuery(this).remove();
 		}
 	});
