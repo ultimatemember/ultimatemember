@@ -37,7 +37,7 @@ class UM_Admin_Tracking {
 		
 		$data['wp_version'] = get_bloginfo( 'version' );
 		
-		$data['version'] = ULTIMATEMEMBER_VERSION;
+		$data['version'] = ultimatemember_version;
 		
 		$data['email'] = get_bloginfo( 'admin_email' );
 		
@@ -116,7 +116,7 @@ class UM_Admin_Tracking {
 			'httpversion' => '1.0',
 			'blocking'    => true,
 			'body'        => $this->data,
-			'user-agent'  => 'UM/' . ULTIMATEMEMBER_VERSION . '; ' . get_bloginfo( 'url' ),
+			'user-agent'  => 'UM/' . ultimatemember_version . '; ' . get_bloginfo( 'url' ),
 		) );
 
 		update_option( 'um_tracking_last_send', time() );

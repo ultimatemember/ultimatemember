@@ -16,7 +16,7 @@ Author URI: http://ultimatemember.com/
 	define('um_path',plugin_dir_path(__FILE__ ));
 	define('um_plugin', plugin_basename( __FILE__ ) );
 	
-	define('ULTIMATEMEMBER_VERSION', $plugin_data['Version'] );
+	define('ultimatemember_version', $plugin_data['Version'] );
 	
 	$plugin = um_plugin;
 
@@ -30,9 +30,9 @@ Author URI: http://ultimatemember.com/
 	***/
 	function ultimatemember_activation_hook( $plugin ) {
 	
-		if( $plugin == um_plugin && get_option('um_version') != ULTIMATEMEMBER_VERSION ) {
+		if( $plugin == um_plugin && get_option('um_version') != ultimatemember_version ) {
 		
-			update_option('um_version', ULTIMATEMEMBER_VERSION );
+			update_option('um_version', ultimatemember_version );
 			
 			exit( wp_redirect( admin_url('admin.php?page=ultimatemember-about')  ) );
 			
