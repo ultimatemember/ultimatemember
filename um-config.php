@@ -116,11 +116,10 @@ $this->sections[] = array(
                 'id'       		=> 'account_tab_notifications',
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Notifications Account Tab' ),
-				'default' 		=> 0,
+				'default' 		=> 1,
 				'desc' 	   		=> 'Enable/disable the Notifications account tab in account page',
 				'on'			=> 'Enabled',
 				'off'			=> 'Disabled',
-				'required'		=> array( 'xxxxxxxxxxxxx', '=', 'sssssssssssssssss' ),
         ),
 		
 		array(
