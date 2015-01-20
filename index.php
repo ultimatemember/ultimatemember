@@ -45,7 +45,7 @@ Author URI: http://ultimatemember.com/
 	***	@Load plugin textdomain
 	***/
 	function ultimatemember_plugins_loaded() {
-		load_plugin_textdomain( 'ultimatemember', false, dirname( plugin_basename( __FILE__ ) ) . '/i18n/' );
+		load_plugin_textdomain( 'ultimatemember', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
 	add_action( 'plugins_loaded', 'ultimatemember_plugins_loaded', 0 );
 	
