@@ -9,15 +9,20 @@ Author URI: http://ultimatemember.com/
 */
 
 	require_once(ABSPATH.'wp-admin/includes/plugin.php');
+	
 	$plugin_data = get_plugin_data( __FILE__ );
 
 	define('um_url',plugin_dir_url(__FILE__ ));
 	define('um_path',plugin_dir_path(__FILE__ ));
-	define('ULTIMATEMEMBER_VERSION', $plugin_data['Version'] );
 	define('um_plugin', plugin_basename( __FILE__ ) );
+	
+	define('ULTIMATEMEMBER_VERSION', $plugin_data['Version'] );
+	
 	$plugin = um_plugin;
 
-	/* Start the plugin! */
+	/***
+	***	@Init
+	***/
 	require_once um_path . 'um-init.php';
 	
 	/***
