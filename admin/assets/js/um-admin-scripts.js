@@ -64,7 +64,7 @@ jQuery(document).ready(function() {
 		if (!jQuery(this).parents('p').hasClass('disabled-on-off')){
 		if ( jQuery(this).parent().find('input[type=hidden]').val() == 0 ){
 			update_val = 1;
-			jQuery(this).animate({'left': '60px'}, 200);
+			jQuery(this).animate({'left': '48px'}, 200);
 			jQuery(this).parent().find('input[type=hidden]').val( update_val ).trigger('change');
 		} else {
 			update_val = 0;

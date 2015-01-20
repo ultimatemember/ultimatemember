@@ -125,7 +125,7 @@ class UM_Admin_Metabox {
 		?>
 
 		<span class="um-admin-yesno">
-			<span class="btn pos-<?php echo $active; ?>"><i class="um-faicon-circle-thin"></i></span>
+			<span class="btn pos-<?php echo $active; ?>"></span>
 			<span class="yes" data-value="1"><?php echo $yes; ?></span>
 			<span class="no" data-value="0"><?php echo $no; ?></span>
 			<input type="hidden" name="<?php echo $id; ?>" id="<?php echo $id; ?>" value="<?php echo $active; ?>" <?php echo $is_conditional; ?> />

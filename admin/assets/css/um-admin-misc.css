@@ -198,56 +198,58 @@ p.disabled-on-off .um-admin-yesno *{
 }
 
 .um-admin-yesno {
-	border-radius: 3px;
-	width: 120px;
+	width: 100px !important;
 	height: 26px;
-	background: #aaa;
 	display: block;
-	color: #fff;
 	position: relative;
+	color: #fff;
 }
 
 .um-admin-yesno span.btn {
 	position: absolute;
 	left: 0;
-	top: 0;
-	width: 60px;
-	height: 26px;
+	top: -2px;
+	width: 50px;
+	height: 28px;
 	text-align: center;
 	background: #f9f9f9;
 	z-index: 101;
-	border-radius: 1px;
+	border-radius: 3px;
 	cursor: pointer;
-	border: solid 1px #cccccc;
+	border: solid 1px #D0D9DB;
 	margin: 0;
 	padding: 0 !important;
 }
 
-.um-admin-yesno span.btn.pos-1 {left: 60px}
-
-.um-admin-yesno span.btn i {
-	position: relative;
-	top: 4px;
-	font-size: 18px;
-	line-height: 18px !important;
-	color: #aaa;
-}
+.um-admin-yesno span.btn.pos-1 {left: 48px}
 
 .um-admin-yesno span.yes, .um-admin-yesno span.no {
-	width: 60px;
+	width: 50px;
 	float: left;
-	line-height: 28px;
-	height: 28px;
-	text-align: right;
+	line-height: 24px;
+	height: 26px;
 	cursor: default;
-	font-size: 13px;
+	font-size: 14px;
 	color: #fff;
-	text-align: center;
+	padding: 0 0 0 10px;
+	box-sizing: border-box;
 }
 
-.um-admin-yesno span.no {float: right}
-.um-admin-yesno .yes {background: #7ACE5A;border-radius: 3px 0 0 3px;}
-.um-admin-yesno .no   {background: #cb3838;border-radius: 0 3px 3px 0}
+.um-admin-yesno .yes {
+	background: #3ba1da;
+	border-radius: 3px 0 0 3px;
+	border: 1px solid rgba(0,0,0,.2);
+}
+
+.um-admin-yesno .no   {
+	padding: 0 10px 0 0 !important;
+	text-align: right;
+	float: right;
+	background: #fff;
+	color: #222 !important;
+	border-radius: 0 3px 3px 0;
+	border: 1px solid #ddd;
+}
 
 /*
 	- SelectJS
