@@ -58,7 +58,7 @@
 
 			<p>If you want to learn more about Ultimate Member you’ll need to register on our website where you will be able to interact and get help from other Ultimate Member users via our community forum and also be able to access other useful resources including the plugin’s documentation.</p>
 			
-			<p style="text-align:center"><a href="http://ultimatemember.com/community-forum/" target="_blank" class="button button-primary">Join the Ultimate Member Community</a></p>
+			<p style="text-align:center"><a href="http://ultimatemember.com/forums/" target="_blank" class="button button-primary">Join the Ultimate Member Community</a></p>
 			
 		</div>
 	</div>
