@@ -4,7 +4,7 @@
 
 	<div class="about-text">Thank you for installing! Ultimate Member is a powerful community and membership plugin that allows you to create beautiful community and membership sites with WordPress.</div>
 
-	<div class="wp-badge um-badge">Version <?php echo ULTIMATEMEMBER_VERSION; ?></div>
+	<div class="wp-badge um-badge">Version <?php echo ultimatemember_version; ?></div>
 
 	<h2 class="nav-tab-wrapper">
 	
