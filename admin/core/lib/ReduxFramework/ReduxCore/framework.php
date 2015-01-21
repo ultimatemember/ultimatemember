@@ -68,7 +68,7 @@
             // ATTENTION DEVS
             // Please update the build number with each push, no matter how small.
             // This will make for easier support when we ask users what version they are using.
-            public static $_version = '3.3.8.5';
+            public static $_version = '3.3.9.4';
             public static $_dir;
             public static $_url;
             public static $_upload_dir;
@@ -124,11 +124,11 @@
                         self::$_url     = trailingslashit( self::$wp_content_url . $relative_url );
                     }
                 }
-                
-                self::$_url = apply_filters( "redux/_url", self::$_url );
-                self::$_dir = apply_filters( "redux/_dir", self::$_dir );
+
+                self::$_url       = apply_filters( "redux/_url", self::$_url );
+                self::$_dir       = apply_filters( "redux/_dir", self::$_dir );
                 self::$_is_plugin = apply_filters( "redux/_is_plugin", self::$_is_plugin );
-                
+
             }
 
             // ::init()
@@ -186,11 +186,6 @@
              */
             public function __construct( $sections = array(), $args = array(), $extra_tabs = array() ) {
 
-				$this->slug = 'ultimatemember';
-				
-				$this->about_tabs['about'] = 'About';
-				$this->about_tabs['start'] = 'Getting Started';
-				
                 // Disregard WP AJAX 'heartbeat'call.  Why waste resources?
                 if ( isset( $_POST ) && isset( $_POST['action'] ) && $_POST['action'] == 'heartbeat' ) {
 
@@ -215,7 +210,7 @@
                 }
 
                 if ( empty( $this->args['footer_credit'] ) ) {
-                    $this->args['footer_credit'] = '';
+                    $this->args['footer_credit'] = '<span id="footer-thankyou">' . sprintf( __( 'Options panel created using %1$s', 'redux-framework' ), '<a href="' . esc_url( $this->framework_url ) . '" target="_blank">' . __( 'Redux Framework', 'redux-framework' ) . '</a> v' . self::$_version ) . '</span>';
                 }
 
                 if ( empty( $this->args['menu_title'] ) ) {
@@ -390,19 +385,19 @@
 
                     // Output dynamic CSS
                     // Frontend: Maybe enqueue dynamic CSS and Google fonts
-                    if( empty( $this->args['output_location'] ) || in_array( 'frontend', $this->args['output_location'] ) ) {
+                    if ( empty( $this->args['output_location'] ) || in_array( 'frontend', $this->args['output_location'] ) ) {
                         add_action( 'wp_head', array( &$this, '_output_css' ), 150 );
                         add_action( 'wp_enqueue_scripts', array( &$this, '_enqueue_output' ), 150 );
                     }
 
                     // Login page: Maybe enqueue dynamic CSS and Google fonts
-                    if( in_array( 'login', $this->args['output_location'] ) ) {
+                    if ( in_array( 'login', $this->args['output_location'] ) ) {
                         add_action( 'login_head', array( &$this, '_output_css' ), 150 );
                         add_action( 'login_enqueue_scripts', array( &$this, '_enqueue_output' ), 150 );
                     }
 
                     // Admin area: Maybe enqueue dynamic CSS and Google fonts
-                    if( in_array( 'admin', $this->args['output_location'] ) ) {
+                    if ( in_array( 'admin', $this->args['output_location'] ) ) {
                         add_action( 'admin_head', array( &$this, '_output_css' ), 150 );
                         add_action( 'admin_enqueue_scripts', array( &$this, '_enqueue_output' ), 150 );
                     }
@@ -1301,22 +1296,14 @@
              * @access      public
              * @return void
              */
-			public function _options_page() {
-
+            public function _options_page() {
                 $this->import_export->in_field();
 
-                if ( $this->args['menu_type'] == 'submenu' ) {
+                if ( $this->args['menu_type'] == 'hidden' ) {
 
-					add_menu_page( __('Ultimate Member', $this->slug), __('Ultimate Member', $this->slug), 'manage_options', $this->slug, array(&$this, 'admin_page'), 'dashicons-admin-users', '66.78578');
-					
-					foreach( $this->about_tabs as $k => $tab ) {
-					
-						add_submenu_page( '_'. $k . '_um', sprintf(__('%s | Ultimate Member', $this->slug), $tab), sprintf(__('%s | Ultimate Member', $this->slug), $tab), 'manage_options', $this->slug . '-' . $k, array(&$this, 'admin_page') );
-					
-					}
-					
-					add_submenu_page( $this->slug, __('Dashboard', $this->slug), __('Dashboard', $this->slug), 'manage_options', $this->slug, array(&$this, 'admin_page') );
-					
+                    // No menu to add!
+
+                } else if ( $this->args['menu_type'] == 'submenu' ) {
                     $this->add_submenu(
                         $this->args['page_parent'],
                         $this->args['page_title'],
@@ -1325,14 +1312,68 @@
                         $this->args['page_slug']
                     );
 
-					add_submenu_page( $this->slug, __('Forms', $this->slug), __('Forms', $this->slug), 'manage_options', 'edit.php?post_type=um_form', '', '' );
-					
-					add_submenu_page( $this->slug, __('User Roles', $this->slug), __('User Roles', $this->slug), 'manage_options', 'edit.php?post_type=um_role', '', '' );
-					
-					if ( um_get_option('members_page' ) || !get_option('um_options') ){
-					add_submenu_page( $this->slug, __('Member Directories', $this->slug), __('Member Directories', $this->slug), 'manage_options', 'edit.php?post_type=um_directory', '', '' );
-					}
+                } else {
+                    $this->page = add_menu_page(
+                        $this->args['page_title'],
+                        $this->args['menu_title'],
+                        $this->args['page_permissions'],
+                        $this->args['page_slug'],
+                        array( &$this, '_options_page_html' ),
+                        $this->args['menu_icon'],
+                        $this->args['page_priority']
+                    );
 
+                    if ( true === $this->args['allow_sub_menu'] ) {
+                        if ( ! isset( $section['type'] ) || $section['type'] != 'divide' ) {
+                            foreach ( $this->sections as $k => $section ) {
+                                $canBeSubSection = ( $k > 0 && ( ! isset( $this->sections[ ( $k ) ]['type'] ) || $this->sections[ ( $k ) ]['type'] != "divide" ) ) ? true : false;
+
+                                if ( ! isset( $section['title'] ) || ( $canBeSubSection && ( isset( $section['subsection'] ) && $section['subsection'] == true ) ) ) {
+                                    continue;
+                                }
+
+                                if ( isset( $section['submenu'] ) && $section['submenu'] == false ) {
+                                    continue;
+                                }
+
+                                if ( isset( $section['customizer_only'] ) && $section['customizer_only'] == true ) {
+                                    continue;
+                                }
+
+                                add_submenu_page(
+                                    $this->args['page_slug'],
+                                    $section['title'],
+                                    $section['title'],
+                                    $this->args['page_permissions'],
+                                    $this->args['page_slug'] . '&tab=' . $k,
+                                    //create_function( '$a', "return null;" )
+                                    '__return_null'
+                                );
+                            }
+
+                            // Remove parent submenu item instead of adding null item.
+                            remove_submenu_page( $this->args['page_slug'], $this->args['page_slug'] );
+                        }
+
+                        if ( true == $this->args['show_import_export'] && false == $this->import_export->is_field ) {
+                            $this->import_export->add_submenu();
+                        }
+
+                        if ( true == $this->args['dev_mode'] ) {
+                            $this->debug->add_submenu();
+                        }
+
+                        if ( true == $this->args['system_info'] ) {
+                            add_submenu_page(
+                                $this->args['page_slug'],
+                                __( 'System Info', 'redux-framework' ),
+                                __( 'System Info', 'redux-framework' ),
+                                $this->args['page_permissions'],
+                                $this->args['page_slug'] . '&tab=system_info_default',
+                                '__return_null'
+                            );
+                        }
+                    }
                 }
 
                 add_action( "load-{$this->page}", array( &$this, '_load_page' ) );
@@ -1352,7 +1393,7 @@
                 $ct         = wp_get_theme();
                 $theme_data = $ct;
 
-                if ( ! is_super_admin() || ! is_admin_bar_showing() || ! $this->args['admin_bar'] ) {
+                if ( ! is_super_admin() || ! is_admin_bar_showing() || ! $this->args['admin_bar'] || $this->args['menu_type'] == 'hidden' ) {
                     return;
                 }
 
@@ -1422,6 +1463,7 @@
                     $nodeargs = array(
                         'id'    => $this->args["page_slug"],
                         'title' => $title,
+                        // $theme_data->get( 'Name' ) . " " . __( 'Options', 'redux-framework-demo' ),
                         'href'  => admin_url( 'admin.php?page=' . $this->args["page_slug"] ),
                         'meta'  => array()
                     );
@@ -1890,7 +1932,7 @@
 
                 if ( isset( $this->args['dev_mode'] ) && $this->args['dev_mode'] == true ) {
 
-                    $base                        = admin_url('admin-ajax.php') . '?action=redux_p&url=';
+                    $base                        = admin_url( 'admin-ajax.php' ) . '?action=redux_p&url=';
                     $url                         = $base . urlencode( 'http://ads.reduxframework.com/api/index.php?js&g&1&v=2' ) . '&proxy=' . urlencode( $base );
                     $this->localize_data['rAds'] = '<span data-id="1" class="mgv1_1"><script type="text/javascript">(function(){if (mysa_mgv1_1) return; var ma = document.createElement("script"); ma.type = "text/javascript"; ma.async = true; ma.src = "' . $url . '"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ma, s) })();var mysa_mgv1_1=true;</script></span>';
                 }
@@ -2250,15 +2292,13 @@
                             }
 
                             // In case docs are ignored.
-                            $contentParam = isset( $field['hint'] ) ? $field['hint'] : '';
+                            $titleParam   = isset( $field['hint']['title'] ) ? $field['hint']['title'] : '';
+                            $contentParam = isset( $field['hint']['content'] ) ? $field['hint']['content'] : '';
 
                             $hint_color = isset( $this->args['hints']['icon_color'] ) ? $this->args['hints']['icon_color'] : '#d3d3d3';
 
                             // Set hint html with appropriate position css
-							$hint = '<span class="um-admin-tip e" style="float:right">';
-							$hint .= '<span class="um-admin-tipsy-e" title="'.$contentParam.'"><i class="dashicons dashicons-editor-help"></i></span>';
-							$hint .= '</span>';
-							
+                            $hint = '<div class="redux-hint-qtip" style="float:' . $this->args['hints']['icon_position'] . '; font-size: ' . $size . '; color:' . $hint_color . '; cursor: ' . $pointer . ';" qtip-title="' . $titleParam . '" qtip-content="' . $contentParam . '"><i class="el-' . $this->args['hints']['icon'] . '"></i>&nbsp&nbsp</div>';
                         }
                     }
 
@@ -2351,7 +2391,7 @@
                         $section['title'] = "";
                     }
 
-                    $heading = isset( $section['heading'] ) ? $section['heading'] : null;
+                    $heading = isset( $section['heading'] ) ? $section['heading'] : $section['title'];
 
                     if ( isset( $section['permissions'] ) ) {
                         if ( ! current_user_can( $section['permissions'] ) ) {
@@ -2632,7 +2672,8 @@
                 }
 
                 if ( isset( $this->transients['run_compiler'] ) && $this->transients['run_compiler'] ) {
-                    $this->args['output_tag'] = false;
+
+                    $this->no_output = true;
                     $this->_enqueue_output();
 
 
@@ -2653,7 +2694,7 @@
                      * @param string CSS that get sent to the compiler hook
                      */
                     do_action( "redux/options/{$this->args['opt_name']}/compiler", $this->options, $this->compilerCSS, $this->transients['changed_values'] );
-                    
+
                     /**
                      * action 'redux/options/{opt_name}/compiler/advanced'
                      *
@@ -2769,7 +2810,9 @@
                     foreach ( $keys as $key ) {
                         $plugin_options[ $key ] = $this->options[ $key ];
                     }
-                    unset( $plugin_options['redux-no_panel'] );
+                    if ( isset( $plugin_options['redux-no_panel'] ) ) {
+                        unset( $plugin_options['redux-no_panel'] );
+                    }
                 }
 
                 if ( ! empty( $this->hidden_perm_fields ) && is_array( $this->hidden_perm_fields ) ) {
@@ -2859,6 +2902,11 @@
                     $plugin_options = $this->options_defaults;
 
                     $this->transients['changed_values'] = array();
+
+                    if ( empty( $this->options ) ) {
+                        $this->options = $this->options_defaults;
+                    }
+
                     foreach ( $this->options as $key => $value ) {
                         if ( isset( $plugin_options[ $key ] ) && $value != $plugin_options[ $key ] ) {
                             $this->transients['changed_values'][ $key ] = $value;
@@ -3657,7 +3705,7 @@
                             unset( $link['link'] );
                         }
 
-                        echo '<a href="' . $link['url'] . '" title="' . $link['title'] . '" target="_blank" class="um-admin-tipsy-n">';
+                        echo '<a href="' . $link['url'] . '" title="' . $link['title'] . '" target="_blank">';
 
                         if ( isset( $link['icon'] ) && ! empty( $link['icon'] ) ) {
                             echo '<i class="' . $link['icon'] . '"></i>';
@@ -4252,30 +4300,6 @@
 
                 return $data_string;
             }
-			
-			public function admin_page(){
-
-				$page = $_REQUEST['page'];
-				
-				if ( $page == 'ultimatemember' ) {
-					include_once um_path . 'admin/templates/dashboard.php';
-				}
-					
-				if ( strstr( $page, 'ultimatemember-' ) ) {
-					
-					$template = str_replace('ultimatemember-','',$page);
-					$file = um_path . 'admin/templates/'. $template . '.php';
-					
-					if ( file_exists( $file ) ){
-						include_once um_path . 'admin/templates/'. $template . '.php';
-					} else {
-						echo '<h4>' .  __('Please create a team.php template in admin templates.','ultimatemember') . '</h4>';
-					}
-					
-				}
-			
-			}
-			
         } // ReduxFramework
 
         /**

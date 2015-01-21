@@ -1,4 +1,4 @@
-/*global redux_change, wp, redux*/
+/*global redux_change, wp, redux, libFilter */
 
 /**
  * Media Uploader
@@ -64,6 +64,7 @@
 
         var frame;
         var jQueryel = $( this );
+        var libFilter;
 
         // If the media frame already exists, reopen it.
         if ( frame ) {
@@ -73,13 +74,12 @@
 
         // Get library filter data
         var filter = $( selector ).find('.library-filter').data('lib-filter');
-        var libFilter = [];        
         
         // Must exist to do decoding
         if (filter !== undefined) {
             if (filter !== ''){
+                libFilter = [];
                 isFiltered = true;
-
                 filter = decodeURIComponent(filter);
                 filter = JSON.parse(filter);
 
@@ -87,8 +87,8 @@
                     libFilter.push(value);
                 });
             }
-        }        
-        
+        }
+
         // Create the media frame.
         frame = wp.media(
             {

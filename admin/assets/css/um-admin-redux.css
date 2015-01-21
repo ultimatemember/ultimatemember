@@ -81,6 +81,11 @@
 	border-bottom: 0;
 }
 
+.redux-main .redux-option-image {
+	max-width: 200px;
+	max-height: 200px;
+}
+
 .redux-container #redux-footer {
 	border-radius: 0;
 	background: none !important;
@@ -119,10 +124,6 @@
 	font-size: 14px !important;
 	font-style: italic !important;
 	margin-top: 10px !important;
-}
-
-.redux-container .redux-group-tab h3  {
-	border-bottom: 0;
 }
 
 .redux-container-switch {font-size: 13px}

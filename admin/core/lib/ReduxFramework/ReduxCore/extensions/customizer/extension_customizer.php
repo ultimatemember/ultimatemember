@@ -37,6 +37,8 @@
             private $_extension_url;
             private $_extension_dir;
             private $parent;
+            private $orig_options = array();
+            private static $post_values = array();
             public static $version = "2.0";
 
             /**
@@ -54,9 +56,12 @@
             public function __construct( $parent ) {
                 //add_action('wp_head', array( $this, '_enqueue_new' ));
 
-                global $pagenow;
-                if ( ( $pagenow !== "customize.php" && $pagenow !== "admin-ajax.php" && ! isset( $GLOBALS['wp_customize'] ) ) ) {
+                global $pagenow, $wp_customize;
+                if ( ! isset( $wp_customize ) && $pagenow !== "customize.php" && $pagenow !== "admin-ajax.php" ) {
                     return;
+                }
+                if ( ( $pagenow !== "customize.php" && $pagenow !== "admin-ajax.php" && ! isset( $GLOBALS['wp_customize'] ) ) ) {
+                    //return;
                 }
 
                 $this->parent = $parent;
@@ -65,6 +70,9 @@
                     $this->_extension_dir = trailingslashit( str_replace( '\\', '/', dirname( __FILE__ ) ) );
                     $this->_extension_url = site_url( str_replace( trailingslashit( str_replace( '\\', '/', ABSPATH ) ), '', $this->_extension_dir ) );
                 }
+
+                self::get_post_values();
+
 
                 // Create defaults array
                 $defaults = array();
@@ -76,27 +84,29 @@
                   customize_controls_print_footer_scripts
                  */
 
-                if ( ! isset( $_POST['customized'] ) || $pagenow == "admin-ajax.php" ) {
-                    if ( current_user_can( $this->parent->args['page_permissions'] ) ) {
-                        add_action( 'customize_register', array(
+
+                if ( ! ( isset( $_POST['action'] ) || ( isset( $_POST['action'] ) && $_POST['action'] != "customize_save" ) ) ) {
+
+                    add_action( "redux/options/{$this->parent->args['opt_name']}/options", array(
+                        $this,
+                        '_override_values'
+                    ), 100 );
+
+                    if ( ! isset( $_POST['customized'] ) || $pagenow == "admin-ajax.php" ) {
+                        if ( current_user_can( $this->parent->args['page_permissions'] ) ) {
+                            add_action( 'customize_register', array(
                                 $this,
                                 '_register_customizer_controls'
                             ) ); // Create controls
+                        }
                     }
-                }
 
-                if ( isset( $_POST['customized'] ) ) {
-                    if ( $pagenow == "admin-ajax.php" && $_POST['action'] == 'customize_save' ) {
-                        //$this->parent->
-                    }
-                    add_action( "redux/options/{$this->parent->args['opt_name']}/options", array(
-                            $this,
-                            '_override_values'
-                        ), 100 );
-                    add_action( 'customize_save', array( $this, 'customizer_save_before' ) ); // Before save
-                    add_action( 'customize_save_after', array( &$this, 'customizer_save_after' ) ); // After save
                     add_action( 'wp_head', array( $this, 'customize_preview_init' ) );
                 }
+
+
+                //add_action( 'customize_save', array( $this, 'customizer_save_before' ) ); // Before save
+                add_action( 'customize_save_after', array( &$this, 'customizer_save_after' ) ); // After save
 
 
                 //add_action( 'wp_enqueue_scripts', array( &$this, '_enqueue_previewer_css' ) ); // Enqueue previewer css
@@ -109,12 +119,22 @@
                 do_action( 'redux/customizer/live_preview' );
             }
 
+            protected static function get_post_values() {
+                if ( empty( self::$post_values ) && isset( $_POST['customized'] ) && ! empty( $_POST['customized'] ) ) {
+                    self::$post_values = json_decode( stripslashes_deep( $_POST['customized'] ), true );
+                }
+            }
+
             public function _override_values( $data ) {
-                if ( isset( $_POST['customized'] ) ) {
-                    $this->orig_options = $this->parent->options;
-                    $options            = json_decode( stripslashes_deep( $_POST['customized'] ), true );
-                    if ( ! empty( $options ) && is_array( $options ) ) {
-                        foreach ( $options as $key => $value ) {
+                if ( empty( $this->parent->options ) ) {
+                    $this->parent->get_options();
+                }
+                self::get_post_values();
+
+                if ( isset( $_POST['customized'] ) && ! empty( self::$post_values ) ) {
+
+                    if ( is_array( self::$post_values ) ) {
+                        foreach ( self::$post_values as $key => $value ) {
                             if ( strpos( $key, $this->parent->args['opt_name'] ) !== false ) {
                                 $key                                                       = str_replace( $this->parent->args['opt_name'] . '[', '', rtrim( $key, "]" ) );
                                 $data[ $key ]                                              = $value;
@@ -172,6 +192,7 @@
                     'admin-head-callback'    => '',
                     'admin-preview-callback' => ''
                 );
+                $panel    = "";
 
                 foreach ( $this->parent->sections as $key => $section ) {
 
@@ -218,11 +239,28 @@
                         $order['heading'] ++;
                     }
 
-                    $wp_customize->add_section( $section['id'], array(
-                        'title'       => $section['title'],
-                        'priority'    => $section['priority'],
-                        'description' => $section['desc']
-                    ) );
+                    if ( method_exists( $wp_customize, 'add_panel' ) && ( ! isset( $section['subsection'] ) || ( isset( $section['subsection'] ) && $section['subsection'] != true ) ) && isset( $this->parent->sections[ ( $key + 1 ) ]['subsection'] ) && $this->parent->sections[ ( $key + 1 ) ]['subsection'] ) {
+
+                        $wp_customize->add_panel( $section['id'], array(
+                            'priority'       => $section['priority'],
+                            'capability'     => 'customize',
+                            'theme_supports' => '',
+                            'title'          => $section['title'],
+                            'description'    => $section['desc'],
+                        ) );
+                        $panel = $section['id'];
+
+                    } else {
+                        if ( ! isset( $section['subsection'] ) || ( isset( $section['subsection'] ) && $section['subsection'] != true ) ) {
+                            $panel = "";
+                        }
+                        $wp_customize->add_section( $section['id'], array(
+                            'title'       => $section['title'],
+                            'priority'    => $section['priority'],
+                            'description' => $section['desc'],
+                            'panel'       => $panel
+                        ) );
+                    }
 
 
                     foreach ( $section['fields'] as $skey => $option ) {
@@ -266,23 +304,22 @@
                             continue;
                         }
 
-                        $customSetting = array(
-                            'default'           => $option['default'],
-                            'type'              => 'option',
-                            'capabilities'      => 'edit_theme_options',
-                            //'capabilities'   => $this->parent->args['page_permissions'],
-                            'transport'         => 'refresh',
-                            'theme_supports'    => '',
-                            'sanitize_callback' => '__return_false',
-                            //'sanitize_callback' => array( $this, '_field_validation' ),
-                            //'sanitize_js_callback' =>array( &$parent, '_field_input' ),
-                        );
-
-
                         $option['id'] = $this->parent->args['opt_name'] . '[' . $option['id'] . ']';
 
                         if ( $option['type'] != "heading" || ! empty( $option['type'] ) ) {
-                            $wp_customize->add_setting( $option['id'], $customSetting );
+                            $wp_customize->add_setting( $option['id'],
+                                array(
+                                    'default'           => $option['default'],
+                                    'type'              => 'option',
+                                    'capabilities'      => 'edit_theme_options',
+                                    //'capabilities'   => $this->parent->args['page_permissions'],
+                                    'transport'         => 'refresh',
+                                    'theme_supports'    => '',
+                                    //'sanitize_callback' => '__return_false',
+                                    'sanitize_callback' => array( $this, '_field_validation' ),
+                                    //'sanitize_js_callback' =>array( &$parent, '_field_input' ),
+                                )
+                            );
                         }
 
                         if ( ! empty( $option['data'] ) && empty( $option['options'] ) ) {
@@ -320,6 +357,14 @@
                                 if ( isset( $option['data'] ) && $option['data'] ) {
                                     continue;
                                 }
+                                //if ($option['title'] == "Twitter Publisher Username") {
+                                //    print_r($option);
+                                //    $trueID = str_replace(array(']', 'redux_demo['),'',$option['id']);
+                                //    $data = get_option($this->parent->args['opt_name']);
+                                //    print_r($data[$trueID]);
+                                //    print_r($this->parent->options[$trueID]);
+                                //    exit();
+                                //}
                                 $wp_customize->add_control( $option['id'], array(
                                     'label'    => $option['title'],
                                     'section'  => $section['id'],
@@ -331,9 +376,14 @@
 
                             case 'select':
                             case 'button_set':
+                                if ( ! isset( $option['options'] ) ) {
+                                    continue;
+                                }
+
                                 if ( ( isset( $option['sortable'] ) && $option['sortable'] ) ) {
                                     continue;
                                 }
+
                                 $wp_customize->add_control( $option['id'], array(
                                     'label'    => $option['title'],
                                     'section'  => $section['id'],
@@ -423,7 +473,14 @@
             }
 
             public function customizer_save_after( $wp_customize ) {
-                //if( isset( $_POST['customized'] ) ) {
+
+                if ( empty( $this->parent->options ) ) {
+                    $this->parent->get_options();
+                }
+                if ( empty( $this->orig_options ) && ! empty( $this->parent->options ) ) {
+                    $this->orig_options = $this->parent->options;
+                }
+
                 $options  = json_decode( stripslashes_deep( $_POST['customized'] ), true );
                 $compiler = false;
                 $changed  = false;
@@ -449,7 +506,7 @@
                         $this->parent->no_output = true;
                         $this->parent->_enqueue_output();
                         do_action( "redux/options/{$this->parent->args['opt_name']}/compiler", $this->parent->options, $this->parent->compilerCSS );
-                        do_action( "redux/options/{$this->args['opt_name']}/compiler/advanced", $parent );
+                        do_action( "redux/options/{$this->args['opt_name']}/compiler/advanced", $this->parent );
                     }
                 }
 
@@ -568,13 +625,13 @@
              *
              * @return
              */
-            public function _field_validation( $plugin_options, $two ) {
-                echo "dovy";
-                echo $two;
+            public function _field_validation( $value ) {
+                print_r( $value );
+                print_r( $_POST );
 
-                return $plugin_options;
+                return $value;
 
-                return $this->parent->_validate_options( $plugin_options );
+                //return $this->parent->_validate_options( $plugin_options );
             }
 
             /**
@@ -588,4 +645,7 @@
 
             }
         } // class
+        function redux_customizer_custom_validation( $field ) {
+            return $field;
+        }
     } // if

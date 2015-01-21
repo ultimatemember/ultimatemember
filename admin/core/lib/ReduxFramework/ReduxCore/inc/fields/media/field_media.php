@@ -181,20 +181,9 @@
                 }
 
                 echo '<div class="' . $hide . 'screenshot">';
-				
-				if ( isset( $this->field['width'] ) && isset( $this->field['height'] ) ) {
-               
-				echo '<a class="of-uploaded-image" href="' . $this->value['url'] . '" target="_blank">';
-                echo '<img class="redux-option-image" id="image_' . $this->field['id'] . '" src="' . $this->value['thumbnail'] . '" alt="" target="_blank" rel="external" width="' . $this->field['width'] . '" height="'. $this->field['height'] . '" style="width: '.$this->field['width'] . 'px; height: '.$this->field['height'] . 'px;" />';
-                echo '</a>';
-				
-				} else {
-				
                 echo '<a class="of-uploaded-image" href="' . $this->value['url'] . '" target="_blank">';
                 echo '<img class="redux-option-image" id="image_' . $this->field['id'] . '" src="' . $this->value['thumbnail'] . '" alt="" target="_blank" rel="external" />';
                 echo '</a>';
-				
-				}
                 echo '</div>';
 
                 //Upload controls DIV

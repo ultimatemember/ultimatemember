@@ -1,5 +1,33 @@
 # Redux Framework Changelog
 
+## 3.3.9.4
+* Added:    Customizer now supports PANEL! Yay 4.0.
+
+## 3.3.9.3
+* Fixed:    #1789 - Customizer now properly working again with WP 4.0. Odd bug.
+* Modified: README.md updates as per @cmwwebfx suggestions.
+
+## 3.3.9.2
+* Fixed:    #1782 - Fixed some extra themecheck and customizer issues.
+
+## 3.3.9.1
+* Fixed:    #1782 - Media field not showing files after upload?  Hopefully this fixes it.
+
+## 3.3.9
+* Fixed:    #1775 - Call to undefined function is_customize_preview() in pre WP 4.0.
+* Fixed:    Issue where in some cases tracking still occuring after opt-out.
+* Modified: Documentation URL.
+
+## 3.3.8.8
+* Fixed:    #1742 - Sidebar subsections don't always expand.
+
+## 3.3.8.7
+* Fixed:    #1758 - Thanks @echo1consulting!
+* Added:    'hidden' to menu_type argument to allow for hidden menus until available.
+
+## 3.3.8.6
+* Fixed:    #1749 - Remove font-wight and font-style from css output when not in use.
+
 ## 3.3.8.5
 * Modified: Added the "redux/options/{$this->args['opt_name']}/compiler/advanced" hook for more advanced compiling.
 * Added:    Suggestions as per #1709. Thanks @echo1consulting.
