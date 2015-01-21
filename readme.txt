@@ -17,6 +17,10 @@ The easiest way to create powerful online communities and beautiful user profile
 
 Ultimate Member is a powerful plugin that allows you to add beautiful user profiles to your site and create advanced online communities. The plugin enables users to sign up and become members of your site all from the front-end. With a focus on flexibility and simplicity creating a community and membership site with WordPress has never been so easy.
 
+**Beta release**
+
+Please note this is the first release of the plugin and whilst we have done a lot of testing to ensure plugin and theme compatibility it is possible that you may come across a bug or plugin/theme conflict. If you do we kindly ask you to post on our [community forum](https://ultimatemember.com/forums) so we can fix any potential issues you may find.
+
 Features of the plugin include:
 
 * Front-end user registration

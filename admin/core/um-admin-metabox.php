@@ -820,7 +820,7 @@ class UM_Admin_Metabox {
 			case '_force_good_pass':
 				?>
 
-					<p><label for="_force_good_pass">Force strong password? <?php $this->tooltip('Whether to force user to use a strong password or not'); ?></label>
+					<p><label for="_force_good_pass">Force strong password? <?php $this->tooltip( __('Turn on to force users to create a strong password (must include 1 number and 1 uppercase character). If turned on this option is only applied to register forms and not to login forms.','ultimatemember') ); ?></label>
 						<?php if ( isset( $this->edit_mode_value ) ) $this->ui_on_off('_force_good_pass', $this->edit_mode_value ); else  $this->ui_on_off('_force_good_pass', 0 ); ?>
 					</p>
 				
@@ -830,7 +830,7 @@ class UM_Admin_Metabox {
 			case '_force_confirm_pass':
 				?>
 
-					<p><label for="_force_confirm_pass">Automatically add a confirm password field? <?php $this->tooltip('Whether to force user to confirm password or not'); ?></label>
+					<p><label for="_force_confirm_pass">Automatically add a confirm password field? <?php $this->tooltip( __('Turn on to add a confirm password field. If turned on the confirm password field will only show on register forms and not on login forms.','ultimatemember') ); ?></label>
 						<?php if ( isset( $this->edit_mode_value ) ) $this->ui_on_off('_force_confirm_pass', $this->edit_mode_value ); else  $this->ui_on_off('_force_confirm_pass', 1 ); ?>
 					</p>
 				
