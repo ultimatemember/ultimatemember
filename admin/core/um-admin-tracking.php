@@ -148,7 +148,7 @@ class UM_Admin_Tracking {
 
 		echo '<div class="updated" style="border-color: #3ba1da;"><p>';
 		
-		echo __( 'Help us improve Ultimate Member’s compatibility with other plugins and themes by allowing us to track non-sensitive data on your site. Click <a href="http://ultimatemember.com/tracking/">here</a> to see what data we track.', 'ultimatemember' );
+		echo __( 'Help us improve Ultimate Member’s compatibility with other plugins and themes by allowing us to track non-sensitive data on your site. Click <a href="https://ultimatemember.com/tracking/" target="_blank">here</a> to see what data we track.', 'ultimatemember' );
 		
 		echo '</p>';
 		

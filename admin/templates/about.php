@@ -9,7 +9,7 @@
 			
 			<p>We'd like to thank you for installing Ultimate Member and we hope you enjoy using the plugin on your site. We created Ultimate Member with the aim of building a lightweight and powerful plugin that makes it extremely easy to make community and membership sites with WordPress.</p>
 				
-			<p>We have <a href="https://trello.com/b/30quaczv/ultimate-member" target="_blank">big plans</a> for Ultimate Member and we hope you will join us on our journey to creating the most popular community/membership plugin. If you’d like to get involved in improving the plugin you can join our <a href="http://ultimatemember.com/forums/" target="_blank">community forum</a> and discuss Ultimate Member with other users, provide feedback and make suggestions on how to improve the plugin. We also have an official <a href="https://github.com/ultimatemember/ultimatemember" target="_blank">GitHub repository</a> where you can contribute directly to the plugin.</p>
+			<p>We have <a href="https://trello.com/b/30quaczv/ultimate-member" target="_blank">big plans</a> for Ultimate Member and we hope you will join us on our journey to creating the most popular community/membership plugin. If you’d like to get involved in improving the plugin you can join our <a href="https://ultimatemember.com/forums/" target="_blank">community forum</a> and discuss Ultimate Member with other users, provide feedback and make suggestions on how to improve the plugin. We also have an official <a href="https://github.com/ultimatemember/ultimatemember" target="_blank">GitHub repository</a> where you can contribute directly to the plugin.</p>
 			
 		</div>
 	</div>
