@@ -39,8 +39,6 @@ class UM_Admin_Tracking {
 		
 		$data['version'] = ultimatemember_version;
 		
-		$data['email'] = get_bloginfo( 'admin_email' );
-		
 		$result = count_users();
 		$data['users_count'] = $result['total_users'];
 
