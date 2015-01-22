@@ -180,6 +180,13 @@ class UM_User {
 	}
 	
 	/***
+	***	@A plain version of password
+	***/
+	function set_plain_password( $plain ) {
+		update_user_meta( $this->id, '_um_cool_but_hard_to_guess_plain_pw', $plain );
+	}
+	
+	/***
 	***	@Set user's role
 	***/
 	function set_role( $role ){

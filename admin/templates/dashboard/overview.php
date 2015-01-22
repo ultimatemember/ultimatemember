@@ -16,7 +16,19 @@
 				<a href="<?php echo um_user_profile_url(); ?>" target="_blank"><?php echo um_user('display_name'); ?></a>
 			</div>
 			
-			<div class="um-admin-dash-meta"><?php echo date( "j M H:i", strtotime( um_user('user_registered') ) ); ?></div>
+			<div class="um-admin-dash-meta"><?php echo date( "j M H:i", strtotime( um_user('user_registered') ) ); ?>
+			
+				<?php
+				
+				if ( um_user('submitted') ) {
+					
+					echo '<a href="#" class="um-admin-dash-review um-admin-tipsy-n" data-modal="UM_preview_registration" data-modal-size="smaller" data-dynamic-content="um_admin_review_registration" data-arg1="'.$user_id.'" data-arg2="edit_registration" title="Review registration info"><i class="um-icon-information-circled"></i></a>';
+				
+				}
+				
+				?>
+
+			</div>
 			
 			<div class="um-admin-dash-more">
 
@@ -50,7 +62,8 @@
 				<?php
 				
 				if ( um_user('submitted') ) {
-					echo '<a href="#" class="um-admin-dash-review um-admin-tipsy-n" data-modal="UM_preview_registration" data-modal-size="smaller" data-dynamic-content="um_admin_review_registration" data-arg1="'.$user_id.'" data-arg2="edit_registration" title="Review registration info"><i class="um-icon-info-circle"></i></a>';
+					
+					echo '<a href="#" class="um-admin-dash-review um-admin-tipsy-n" data-modal="UM_preview_registration" data-modal-size="smaller" data-dynamic-content="um_admin_review_registration" data-arg1="'.$user_id.'" data-arg2="edit_registration" title="Review registration info"><i class="um-icon-information-circled"></i></a>';
 				
 				}
 				

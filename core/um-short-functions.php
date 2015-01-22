@@ -8,6 +8,30 @@
 	}
 	
 	/***
+	***	@Get submitted user information
+	***/
+	function um_user_submitted_registration() {
+		$output = null;
+		$data = um_user('submitted');
+		if ( isset( $data ) && is_array( $data ) ) {
+			foreach( $data as $k => $v ) {
+				
+				if ( !strstr( $k, 'user_pass' ) ) {
+				
+					if ( is_array($v) ) {
+						$v = implode(',', $v );
+					}
+					
+					$output .= "$k: $v" . "\r\n";
+				
+				}
+				
+			}
+		}
+		return $output;
+	}
+	
+	/***
 	***	@Show filtered social link
 	***/
 	function um_filtered_social_link( $key, $match ) {

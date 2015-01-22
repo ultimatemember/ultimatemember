@@ -7,7 +7,7 @@ Tags: members, member, membership, community, communities, profile, profiles, re
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.0
+Stable Tag: 1.0.10
 
 License: GNU Version 2 or Any Later Version
 
@@ -164,6 +164,11 @@ We are currently in beta phase so at the moment the plugin only works on single 
 16. Appearance and Customization Settings
 
 == Changelog ==
+
+= 1.0.10: January 22, 2015 =
+
+* Fixed: Template tags for welcome e-mail
+* Fixed: {submitted_registration} e-mail template tag
 
 = 1.0.0: January, 2015 =
 
