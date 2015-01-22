@@ -5,7 +5,27 @@
 	***/
 	add_filter('um_prepare_user_query_args', 'um_prepare_user_query_args', 10, 2);
 	add_filter('um_prepare_user_query_args', 'um_add_search_to_query', 50, 2);
+	add_filter('um_prepare_user_query_args', 'um_search_usernames_emails', 51, 2);
 	add_filter('um_prepare_user_query_args', 'um_remove_special_users_from_list', 99, 2);
+	
+	/***
+	***	@WP API user search
+	***/
+	function um_search_usernames_emails( $query_args, $args ) {
+		global $ultimatemember;
+		extract( $args );
+		
+		$query = $ultimatemember->permalinks->get_query_array();
+		
+		foreach( $ultimatemember->members->core_search_fields as $key ) {
+			if ( isset( $query[$key] ) ) {
+				$query_args['search']         = '*' . $query[$key] . '*';
+				$query_args['search_columns'] = array( 'user_login', 'user_email' );
+			}
+		}
+
+		return $query_args;
+	}
 	
 	/***
 	***	@Remove users we do not need to show in directory
@@ -54,11 +74,15 @@
 				
 				if ( $value && $field != 'um_search' ) {
 				
-					$query_args['meta_query'][] = array(
-						'key' => $field,
-						'value' => $value,
-						'compare' => $operator,
-					);
+					if ( !in_array( $field, $ultimatemember->members->core_search_fields ) ) {
+						
+						$query_args['meta_query'][] = array(
+							'key' => $field,
+							'value' => $value,
+							'compare' => $operator,
+						);
+						
+					}
 				
 				}
 				

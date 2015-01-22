@@ -8,6 +8,11 @@ class UM_Members {
 		
 		add_action('template_redirect', array(&$this, 'access_members'), 555);
 		
+		$this->core_search_fields = array(
+			'user_login',
+			'username',
+		);
+		
 	}
 	
 	/***

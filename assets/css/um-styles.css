@@ -547,6 +547,7 @@ a.um-link-alt {
 	text-decoration: none !important;
 	font-weight: normal;
 	text-align: center;
+	border-bottom: none !important;
 }
 a.um-link-alt:hover {text-decoration: underline !important;}
 

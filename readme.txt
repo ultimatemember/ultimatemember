@@ -7,7 +7,7 @@ Tags: members, member, membership, community, communities, profile, profiles, re
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.16
+Stable Tag: 1.0.17
 
 License: GNU Version 2 or Any Later Version
 
@@ -17,9 +17,9 @@ The easiest way to create powerful online communities and beautiful user profile
 
 Ultimate Member is a powerful plugin that allows you to add beautiful user profiles to your site and create advanced online communities. The plugin enables users to sign up and become members of your site all from the front-end. With a focus on flexibility and simplicity creating a community and membership site with WordPress has never been so easy.
 
-**Beta release**
+**Live Demo: Check out all of Ultimate Member's features on our [live demo](http://ultimatememberdemo.com/)!**
 
-Please note this is the first release of the plugin and whilst we have done a lot of testing to ensure plugin and theme compatibility it is possible that you may come across a bug or plugin/theme conflict. If you do we kindly ask you to post on our [community forum](https://ultimatemember.com/forums) so we can fix any potential issues you may find.
+**Get support by posting in our [community forum](https://ultimatemember.com/forums/).**
 
 Features of the plugin include:
 
@@ -92,9 +92,7 @@ The plugin is very SEO friendly and provides customizable dynamic page titles an
 
 **Developer friendly**
 
-Ultimate Member is developer friendly and includes hundreds of actions and filters for developers to customize the plugin. If you are wanting to integrate with Ultimate Member you can view codex here. 
-
-**[Join the Ultimate Member community](https://ultimatemember.com/register/)**
+Ultimate Member is developer friendly and includes hundreds of actions and filters for developers to customize the plugin. If you are wanting to integrate with Ultimate Member you can view codex here.
 
 **Future Plans for Ultimate Member**
 
@@ -142,7 +140,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Does the plugin work on WordPress Multisite? =
 
-We are currently in beta phase so at the moment the plugin only works on single site installs. However, we will be working on ensuring multisite compatibility during the beta period.
+Yes. The plugin works fine with WordPress network / multisite now. In a recent update, we have made it possible to show the user photos network-wide.
 
 == Screenshots ==
 
@@ -164,6 +162,13 @@ We are currently in beta phase so at the moment the plugin only works on single 
 16. Appearance and Customization Settings
 
 == Changelog ==
+
+= 1.0.17: January 22, 2015 =
+
+* New: WordPress Multisite compatibility for user uploads and photos
+* Fixed: Searching members by username or email in directory (partial search supported)
+* Fixed: Anonymous tracking
+* Fixed: Minor css fixes
 
 = 1.0.16: January 22, 2015 =
 

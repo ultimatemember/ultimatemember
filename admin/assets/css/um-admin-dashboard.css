@@ -195,6 +195,7 @@
 }
 
 .um-admin-dash-col a:hover {text-decoration: underline}
+.um-admin-dash-col a {text-decoration: none}
 
 .um-admin-dash-item {
 	padding: 5px 0;
@@ -205,10 +206,6 @@
 	box-sizing: border-box;
 }
 .um-admin-dash-item * {vertical-align: middle}
-
-.um-admin-dash-col a {
-	text-decoration: none;
-}
 
 .um-admin-dash-thumb {
 	display: inline-block;
@@ -225,8 +222,12 @@
 
 .um-admin-dash-info {
 	display: inline-block;
-	width: 120px;
+	width: 130px;
 	margin-right: 6px;
+	-ms-word-break: break-all;
+	word-break: break-word;
+	word-wrap: break-word;
+	line-height: 14px;
 }
 
 .um-admin-dash-meta {
@@ -234,9 +235,11 @@
 	width: 100px;
 	margin-right: 6px;
 	position: relative;
+	line-height: 14px;
 }
 
 .um-admin-dash-more {
 	display: inline-block;
 	color: #aaa;
+	line-height: 14px;
 }
