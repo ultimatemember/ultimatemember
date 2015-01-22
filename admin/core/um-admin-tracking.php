@@ -109,7 +109,7 @@ class UM_Admin_Tracking {
 		
 		$this->setup_data();
 		
-		$request = wp_remote_post( 'http://ultimatemember.com/?um_action=checkin', array(
+		$request = wp_remote_post( 'https://ultimatemember.com/?um_action=checkin', array(
 			'method'      => 'POST',
 			'timeout'     => 20,
 			'redirection' => 5,
