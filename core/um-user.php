@@ -314,18 +314,16 @@ class UM_User {
 			$ultimatemember->mail->send( um_user('user_email'), 'deletion_email' );
 		}
 		
+		$ultimatemember->files->remove_dir( um_user_uploads_dir() );
+		
 		require_once( ABSPATH . 'wp-admin/includes/user.php' );
 		
 		if ( is_multisite() ) {
-		
 			wpmu_delete_user( $this->id );
-			
 		} else {
-		
 			wp_delete_user( $this->id );
-			
 		}
-		
+
 	}
 	
 	/***

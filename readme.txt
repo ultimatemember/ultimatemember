@@ -7,7 +7,7 @@ Tags: members, member, membership, community, communities, profile, profiles, re
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.10
+Stable Tag: 1.0.16
 
 License: GNU Version 2 or Any Later Version
 
@@ -50,9 +50,9 @@ Allow users to login directly from your site and avoid the ugly WordPress login 
 
 Ultimate Member gives every user of your site a beautiful user profile where they can edit their information. You can create unique profiles for each user role and decide what information to show on the profiles.
 
-**Custom fields**
+**Custom profile fields**
 
-With our custom fields, Ultimate Member allows you to gather any information you like from user's when they signup or via their profile. The plugin comes with a full range of field types including: text box, textarea, dropdown, multi-select, radio, checkbox, url, password, image upload, file upload, date picker, time picker and star ratings
+With our custom profile fields, Ultimate Member allows you to gather any information you like from user's when they register or when they fill in their profiles. The plugin comes with a full range of field types including: text box, textarea, dropdown, multi-select, radio, checkbox, url, password, image upload, file upload, date picker, time picker and star ratings.
 
 **Drag and drop form builder**
 
@@ -164,6 +164,19 @@ We are currently in beta phase so at the moment the plugin only works on single 
 16. Appearance and Customization Settings
 
 == Changelog ==
+
+= 1.0.16: January 22, 2015 =
+
+* Fixed: Settings page: tracking popup removed
+
+= 1.0.15: January 22, 2015 =
+
+* New: User profiles now show a cool message if the user profile field area is empty
+* New: Added 'visibility' setting to all field types in backend
+* Tweak: Members search function supports partial search matching
+* Tweak: Deleting photo or file removes file from server
+* Tweak: Deleting a user will delete all his personal uploads from the server
+* Fixed: Duplicate tooltip for password field has been removed
 
 = 1.0.10: January 22, 2015 =
 

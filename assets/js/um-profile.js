@@ -1,5 +1,9 @@
 jQuery(document).ready(function() {
 
+	if ( jQuery('.um-profile.um-viewing .um-profile-body').length && jQuery('.um-profile.um-viewing .um-profile-body').find('.um-field').length == 0 ) {
+		jQuery('.um-profile-note').show();
+	}
+	
 	jQuery(document).on('click', '.um-profile-save', function(e){
 		e.preventDefault();
 		jQuery(this).parents('.um').find('form').submit();

@@ -33,8 +33,8 @@
 			</div>
 			
 			<div class="last-feature">
-				<h4>Membership Levels</h4>
-				<p>Create unlimited, custom <a href="<?php echo admin_url('edit.php?post_type=um_role'); ?>">membership levels</a> and set up permissions for each membership level easily.</p>
+				<h4>User Roles</h4>
+				<p>Create unlimited, custom <a href="<?php echo admin_url('edit.php?post_type=um_role'); ?>">user roles</a> and set up permissions for each user role easily.</p>
 			</div>
 			
 			<div>

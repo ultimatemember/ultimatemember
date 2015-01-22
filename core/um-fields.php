@@ -251,7 +251,7 @@ class UM_Fields {
 			
 		$output .= '<label for="'.$key.$ultimatemember->form->form_suffix.'">'.$label.'</label>';
 		
-		if ( isset( $data['help'] ) && !empty( $data['help'] ) && $this->viewing == false ) {
+		if ( isset( $data['help'] ) && !empty( $data['help'] ) && $this->viewing == false && !strstr($key, 'confirm_user_pass') ) {
 			
 			if ( !$ultimatemember->mobile->isMobile() ) {
 				$output .= '<span class="um-tip um-tip-w" title="'.$data['help'].'"><i class="um-icon-help-circled"></i></span>';
@@ -1883,6 +1883,12 @@ class UM_Fields {
 		// start output here
 		$this->get_fields = $this->get_fields();
 
+		if ( um_is_myprofile() ) {
+			$output .= '<p class="um-profile-note"><i class="um-faicon-frown-o"></i><span>' . sprintf(__('Your profile is looking a little empty. Why not <a href="%s">add</a> some information!','ultimatemember'), add_query_arg('um_action','edit') ) . '</span></p>';
+		} else {
+			$output .= '<p class="um-profile-note"><i class="um-faicon-frown-o"></i><span>' . __('This user has not added any information to their profile yet.','ultimatemember') . '</span></p>';
+		}
+		
 		if ( !empty( $this->get_fields ) ) {
 		
 			// find rows

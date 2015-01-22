@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-20 16:50+0200\n"
-"PO-Revision-Date: 2015-01-20 16:50+0200\n"
+"POT-Creation-Date: 2015-01-22 12:25+0200\n"
+"PO-Revision-Date: 2015-01-22 12:25+0200\n"
 "Last-Translator: Calum Allison <umplugin@gmail.com>\n"
 "Language-Team: Ultimate Member <umplugin@gmail.com>\n"
 "Language: en_US\n"
@@ -17,169 +17,151 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: admin/core/lib/ReduxFramework/ReduxCore/extensions/customizer/extension_customizer.php:473
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1908
+#: admin/core/lib/ReduxFramework/ReduxCore/extensions/customizer/extension_customizer.php:530
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1950
 msgid "You have changes that are not saved. Would you like to save them now?"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/extensions/customizer/extension_customizer.php:474
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1916
+#: admin/core/lib/ReduxFramework/ReduxCore/extensions/customizer/extension_customizer.php:531
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1958
 msgid "Are you sure? Resetting will lose all custom values."
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/extensions/customizer/extension_customizer.php:475
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1932
+#: admin/core/lib/ReduxFramework/ReduxCore/extensions/customizer/extension_customizer.php:532
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1974
 msgid "Your current options will be replaced with the values of this preset. Would you like to proceed?"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/extensions/customizer/extension_customizer.php:508
+#: admin/core/lib/ReduxFramework/ReduxCore/extensions/customizer/extension_customizer.php:565
 msgid "You have changes that are not saved.  Would you like to save them now?"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/extensions/customizer/extension_customizer.php:509
+#: admin/core/lib/ReduxFramework/ReduxCore/extensions/customizer/extension_customizer.php:566
 msgid "Are you sure?  Resetting will lose all custom values."
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/extensions/customizer/extension_customizer.php:510
+#: admin/core/lib/ReduxFramework/ReduxCore/extensions/customizer/extension_customizer.php:567
 msgid "Your current options will be replaced with the values of this preset.  Would you like to proceed?"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:222
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:226 admin/core/um-admin-metabox.php:272
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:213
+#, php-format
+msgid "Options panel created using %1$s"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:213
+msgid "Redux Framework"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:217
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:221 admin/core/um-admin-metabox.php:272
 msgid "Options"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1310
-msgid "Ultimate Member"
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1369
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1370
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3587
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3666
+msgid "System Info"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1314
-#, php-format
-msgid "%s | Ultimate Member"
-msgstr ""
-
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1318
-msgid "Dashboard"
-msgstr ""
-
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1328 core/um-taxonomies.php:18
-msgid "Forms"
-msgstr ""
-
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1330 core/um-taxonomies.php:36
-msgid "User Roles"
-msgstr ""
-
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1333 core/um-taxonomies.php:56
-msgid "Member Directories"
-msgstr ""
-
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1924
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1966
 msgid "Are you sure? Resetting will lose all custom values in this section."
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1939
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1981
 msgid "Please Wait"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2064 um-config.php:77
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2106 um-config.php:77
 msgid "Enable"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2069 um-config.php:78
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2111 um-config.php:78
 msgid "Disable"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2075
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2117
 msgid "moving the mouse over"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2077
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2119
 msgid "clicking"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2081
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2123
 #, php-format
 msgid ""
 "Hints are tooltips that popup when %d the hint icon, offering addition information about the field in which "
 "they appear.  They can be %d d by using the link below."
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2086
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2128
 msgid "Hints"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2211 admin/templates/form/login_settings.php:6
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2253 admin/templates/form/login_settings.php:6
 msgid "Default"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3286
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3334
 msgid "Warning- This options panel will not work properly without javascript!"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3337
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3385
 msgid "Developer Mode Enabled"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3365
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3413
 msgid "Expand"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3367
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3675
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3415
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3723
 msgid "Save Changes"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3371
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3679
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3419
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3727
 msgid "Reset Section"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3373
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3681
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3421
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3729
 msgid "Reset All"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3378
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3686
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3426
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3734
 msgid "Working..."
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3398
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3446
 msgid "Settings Imported!"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3413
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3461
 msgid "All Defaults Restored!"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3427
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3475
 msgid "Section Defaults Restored!"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3441
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3489
 msgid "Settings Saved!"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3459
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3507
 msgid "Settings have changed, you should save them!"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3467
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3515
 msgid "error(s) were found!"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3475
+#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3523
 msgid "warning(s) were found!"
-msgstr ""
-
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3539
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3618
-msgid "System Info"
-msgstr ""
-
-#: admin/core/lib/ReduxFramework/ReduxCore/framework.php:4272
-msgid "Please create a team.php template in admin templates."
 msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/class.redux_filesystem.php:22
@@ -256,7 +238,7 @@ msgid "No media selected"
 msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/background/field_background.php:314
-#: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/media/field_media.php:204
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/media/field_media.php:193
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:126
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:188 core/um-fields.php:729
 #: core/um-fields.php:750
@@ -264,7 +246,7 @@ msgid "Upload"
 msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/background/field_background.php:321
-#: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/media/field_media.php:211
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/media/field_media.php:200
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/multi_text/field_multi_text.php:69
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/multi_text/field_multi_text.php:73
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/multi_text/field_multi_text.php:76
@@ -328,6 +310,7 @@ msgid "Units"
 msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/gallery/field_gallery.php:73
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:313
 msgid "Add/Edit Gallery"
 msgstr ""
 
@@ -514,11 +497,11 @@ msgstr ""
 msgid "Font color"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:841
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:851
 msgid "Standard Fonts"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:942
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:952
 msgid "Google Webfonts"
 msgstr ""
 
@@ -579,7 +562,110 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/import_export.php:140
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/import_export.php:149
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/import_export.php:150
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1533
 msgid "Import / Export"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:129
+msgid "Help improve Our Panel"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:130
+msgid ""
+"Please helps us improve our panel by allowing us to gather anonymous usage stats so we know which "
+"configurations, plugins and themes to test to ensure compatibility."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:135 admin/core/um-admin-tracking.php:155
+#: um-config.php:1426
+msgid "Allow tracking"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:140 admin/core/um-admin-tracking.php:156
+msgid "Do not allow tracking"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:151
+msgid "Welcome to the Redux Demo Panel"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:152
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:139
+msgid "Getting Started"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:152
+#, php-format
+msgid ""
+"This panel demonstrates the many features of Redux.  Before digging in, we suggest you get up to speed by "
+"reviewing %1$s."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:152
+msgid "our documentation"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:153
+msgid "Redux Generator"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:153
+#, php-format
+msgid ""
+"Want to get a head start? Use the %1$s. It will create a customized boilerplate theme or a standalone admin "
+"folder complete with all things Redux (with the help of Underscores and TGM). Save yourself a headache and "
+"try it today."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:154
+msgid "Redux Extensions"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:154
+#, php-format
+msgid ""
+"Did you know we have extensions, which greatly enhance the features of Redux?  Visit our %1$s to learn more!"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:154
+msgid "extensions directory"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:155
+msgid "Like Redux?"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:155
+#, php-format
+msgid "If so, please %1$s and consider making a %2$s to keep development of Redux moving forward."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:155
+msgid "leave us a favorable review on WordPress.org"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:155
+msgid "donation"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:156
+msgid "Newsletter"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:156
+msgid "If you'd like to keep up to with all things Redux, please subscribe to our newsletter"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:157
+msgid "Email address"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:157
+msgid "Subscribe"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:166
+msgid "Close"
 msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/validation/color/validation_color.php:15
@@ -643,10 +729,6 @@ msgstr ""
 msgid "What's New"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:139
-msgid "Getting Started"
-msgstr ""
-
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:143
 msgid "Changelog"
 msgstr ""
@@ -671,6 +753,7 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:300
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:338
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:476
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:210
 #, php-format
 msgid "Version %s"
 msgstr ""
@@ -954,6 +1037,9 @@ msgid "Issues"
 msgstr ""
 
 #: admin/core/lib/ReduxFramework/class.redux-plugin.php:410
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1337
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1567
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1713
 msgid "Documentation"
 msgstr ""
 
@@ -965,35 +1051,961 @@ msgstr ""
 msgid "Activate Demo Mode"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/tests/includes/class-tivwp-dm-controller.php:28
-msgid "Must call in of after the \"plugins_loaded\" action."
+#: admin/core/lib/ReduxFramework/sample/barebones-config.php:55
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:239
+msgid "Home Settings"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/tests/includes/class-tivwp-dm-controller.php:138
+#: admin/core/lib/ReduxFramework/sample/barebones-config.php:56
 #, php-format
-msgid "Unknown action \"%1$s\" specified for %2$s"
+msgid ""
+"Redux Framework was created with the developer in mind. It allows for any theme developer to have an "
+"advanced theme panel with most of the features a developer would need. For more information check out the "
+"Github repo at: %d"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/tests/includes/class-tivwp-dm-controller.php:143
+#: admin/core/lib/ReduxFramework/sample/barebones-config.php:64
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:248
+msgid "Web Fonts"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/barebones-config.php:68
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:252
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:281
+msgid "Basic media uploader with disabled URL input field."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/barebones-config.php:69
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:253
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:282
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:300
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:308
+msgid "Upload any media using the WordPress native uploader"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/barebones-config.php:84
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1578
+msgid "Theme Information 1"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/barebones-config.php:85
+#: admin/core/lib/ReduxFramework/sample/barebones-config.php:91
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1579
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1585
+msgid "<p>This is the tab content, HTML is allowed.</p>"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/barebones-config.php:90
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1584
+msgid "Theme Information 2"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/barebones-config.php:95
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1589
+msgid "<p>This is the sidebar content, HTML is allowed.</p>"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/barebones-config.php:118
+#: admin/core/lib/ReduxFramework/sample/barebones-config.php:119
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1612
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1613
+msgid "Sample Options"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/barebones-config.php:236
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1758
 #, php-format
-msgid "The unknown action has been replaced with \"%s\""
+msgid ""
+"<p>Did you know that Redux sets a global variable for you? To access any of your saved options from within "
+"your code you can use your global variable: <strong>$%1$s</strong></p>"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/tests/includes/class-tivwp-dm-controller.php:158
+#: admin/core/lib/ReduxFramework/sample/barebones-config.php:238
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1760
+msgid ""
+"<p>This text is displayed above the options panel. It isn't required, but more info is always better! The "
+"intro_text field accepts all HTML.</p>"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/barebones-config.php:242
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1764
+msgid ""
+"<p>This text is displayed below the options panel. It isn't required, but more info is always better! The "
+"footer_text field accepts all HTML.</p>"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:108
+msgid "Section via hook"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:109
+msgid ""
+"<p class=\"description\">This is a section created by adding a filter to the sections array. Can be used by "
+"child themes to add/remove sections from the options.</p>"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:189
 #, php-format
-msgid "Automatic action performed: \"%s\""
+msgid "Customize &#8220;%s&#8221;"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/tests/includes/class-tivwp-dm.php:112
-msgid "Activate Development Plugins"
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:209
+#, php-format
+msgid "By %s"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/tests/includes/class-tivwp-dm.php:119
-msgid "Deactivate Development Plugins"
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:211
+msgid "Tags"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/tests/includes/class-tivwp-dm.php:131
-msgid "You do not have sufficient permissions to access this page."
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:216
+#, php-format
+msgid "This <a href=\"%1$s\">child theme</a> requires its parent theme, %2$s."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:216
+msgid "http://codex.wordpress.org/Child_Themes"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:240
+msgid ""
+"Redux Framework was created with the developer in mind. It allows for any theme developer to have an "
+"advanced theme panel with most of the features a developer would need. For more information check out the "
+"Github repo at: <a href=\"https://github.com/ReduxFramework/Redux-Framework\">https://github.com/"
+"ReduxFramework/Redux-Framework</a>"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:262
+msgid "Section Show"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:263
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:270
+msgid "With the \"section\" field you can create indent option sections."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:269
+msgid "Media Options"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:278
+msgid "Media w/ URL"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:298
+msgid "Media w/o URL"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:299
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:307
+msgid ""
+"This represents the minimalistic view. It does not have the preview box or the display URL in an input box. "
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:306
+msgid "Media No Preview"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:314
+msgid "Create a new Gallery by selecting existing or uploading new images using the WordPress native uploader"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:315
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:702
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:713
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:731
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:829
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:843
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:852
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:859
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:872
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:881
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:890
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:912
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:925
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:934
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:949
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:958
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:967
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:977
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:993
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1001
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1020
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1028
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1036
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1050
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1058
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1108
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1121
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1141
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1156
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1189
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1198
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1206
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1215
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1223
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1232
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1240
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1249
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1257
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1266
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1276
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1284
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1293
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1301
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1310
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1360
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1371
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1385
+msgid "This is the description field, again good for additional info."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:320
+msgid "Slider Example 1"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:321
+msgid "This slider displays the value as a label."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:322
+msgid "Slider description. Min: 1, max: 500, step: 1, default value: 250"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:332
+msgid "Slider Example 2 with Steps (5)"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:333
+msgid "This example displays the value in a text box"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:334
+msgid "Slider description. Min: 0, max: 300, step: 5, default value: 75"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:344
+msgid "Slider Example 3 with two sliders"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:345
+msgid "This example displays the values in select boxes"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:346
+msgid "Slider description. Min: 0, max: 500, step: 5, slider 1 default value: 100, slider 2 default value: 300"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:360
+msgid "Slider Example 4 with float values"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:361
+msgid "This example displays float values"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:362
+msgid "Slider description. Min: 0, max: 1, step: .1, default value: .5"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:373
+msgid "JQuery UI Spinner Example 1"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:374
+msgid "JQuery UI spinner description. Min:20, max: 100, step:20, default value: 40"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:383
+msgid "Switch On"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:384
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:391
+msgid "Look, it's on!"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:390
+msgid "Switch Off"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:398
+msgid "Switch - Nested Children, Enable to show"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:399
+msgid "Look, it's on! Also hidden child elements!"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:408
+msgid "Switch - This and the next switch required for patterns to show"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:409
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:418
+msgid "Also called a \"fold\" parent."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:410
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:419
+msgid "Items set with a fold to this ID will hide unless this is set to the appropriate value."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:417
+msgid "Switch2 - Enable the above switch and this one for patterns to show"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:430
+msgid "Images Option (with pattern=>true)"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:431
+msgid "Select a background pattern."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:477
+msgid "Slides Options"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:478
+msgid "Unlimited slides with drag and drop sortings."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:479
+msgid "This field will store all slides values into a multidimensional array to use into a foreach loop."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:481
+msgid "This is a title"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:482
+msgid "Description Here"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:483
+msgid "Give us a link!"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:490
+msgid "Preset"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:491
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:493
+msgid "This allows you to set a json string or array to override multiple preferences in your theme."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:514
+msgid "Typography"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:536
+msgid "Typography option with each property can be called individually."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:555
+msgid "General Settings"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:561
+msgid "Main Layout"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:562
+msgid "Select main content and sidebar alignment. Choose between 1, 2 or 3 column layout."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:595
+msgid "Tracking Code"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:596
+msgid ""
+"Paste your Google Analytics (or other) tracking code here. This will be added into the footer template of "
+"your theme."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:603
+msgid "CSS Code"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:604
+msgid "Paste your CSS code here."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:635
+msgid "Footer Text"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:636
+msgid ""
+"You can use the following shortcodes in your footer text: [wp-url] [site-url] [theme-url] [login-url] "
+"[logout-url] [site-title] [site-tagline] [current-year]"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:651
+msgid "Styling Options"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:657
+msgid "Theme Stylesheet"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:658
+msgid "Select your themes alternative color scheme."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:666
+msgid "Body Background Color"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:667
+msgid "Pick a background color for the theme (default: #fff)."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:675
+msgid "Body Background"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:676
+msgid "Body background with image, color, etc."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:682
+msgid "Footer Background Color"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:683
+msgid "Pick a background color for the footer (default: #dd9933)."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:690
+msgid "Color RGBA - BETA"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:691
+msgid "Gives you the RGBA color. Still quite experimental. Use at your own risk."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:700
+msgid "Header Gradient Color Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:701
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:712
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:728
+msgid "Only color validation can be done on this field type"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:711
+msgid "Links Color Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:727
+msgid "Header Border Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:757
+msgid "Padding/Margin Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:758
+msgid "Allow your users to choose the spacing or margin they want."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:759
+msgid "You can enable or disable any piece of this field. Top, Right, Bottom, Left, or Units."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:772
+msgid "Dimensions (Width/Height) Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:773
+msgid "Allow your users to choose width, height, and/or unit."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:774
+msgid "You can enable or disable any piece of this field. Width, Height, or Units."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:783
+msgid "Body Font"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:784
+msgid "Specify the body font properties."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:796
+msgid "Custom CSS"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:797
+msgid "Quickly add some CSS to your theme by adding it to this block."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:798
+msgid "This field is even CSS validated!"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:804
+msgid "Custom HTML"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:805
+msgid "Just like a text box widget."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:806
+msgid "This field is even HTML validated!"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:820
+msgid "Field Validation"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:821
+msgid "Validate ALL fields within Redux."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:822
+msgid "<p class=\"description\">This is the Description. Again HTML is allowed2</p>"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:827
+msgid "Text Option - Email Validated"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:828
+msgid "This is a little space under the Field Title in the Options table, additional info is good in here."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:841
+msgid "Text Option with Data Attributes"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:842
+msgid "You can also pass an options array if you want. Set the default to whatever you like."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:849
+msgid "Multi Text Option - Color Validated"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:851
+msgid "If you enter an invalid color it will be removed. Try using the text \"blue\" as a color.  ;)"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:857
+msgid "Text Option - URL Validated"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:858
+msgid "This must be a URL."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:870
+msgid "Text Option - Numeric Validated"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:871
+msgid "This must be numeric."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:879
+msgid "Text Option - Comma Numeric Validated"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:880
+msgid "This must be a comma separated string of numerical values."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:888
+msgid "Text Option - No Special Chars Validated"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:889
+msgid "This must be a alpha numeric only."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:897
+msgid "Text Option - Str Replace Validated"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:898
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:911
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:924
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:933
+msgid "You decide."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:899
+msgid "This field's default value was changed by a filter hook!"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:910
+msgid "Text Option - Preg Replace Validated"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:923
+msgid "Text Option - Custom Callback Validated"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:932
+msgid "Text Option - Custom Callback Validated - Class"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:947
+msgid "Textarea Option - No HTML Validated"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:948
+msgid "All HTML will be stripped"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:956
+msgid "Textarea Option - HTML Validated"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:957
+msgid "HTML Allowed (wp_kses)"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:965
+msgid "Textarea Option - HTML Validated Custom"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:966
+msgid "Custom HTML Allowed (wp_kses)"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:975
+msgid "Textarea Option - JS Validated"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:976
+msgid "JS will be escaped"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:985
+msgid "Radio/Checkbox Fields"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:986
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1134
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1353
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1554
+msgid "<p class=\"description\">This is the Description. Again HTML is allowed</p>"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:991
+msgid "Checkbox Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:992
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1000
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1019
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1027
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1035
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1049
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1057
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1072
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1140
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1155
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1188
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1197
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1205
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1214
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1222
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1231
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1239
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1248
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1256
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1265
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1283
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1292
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1300
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1309
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1317
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1359
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1370
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1384
+msgid "No validation can be done on this field type"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:999
+msgid "Multi Checkbox Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1018
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1048
+msgid "Multi Checkbox Option (with menu data)"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1026
+msgid "Multi Checkbox Option (with sidebar data)"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1034
+msgid "Radio Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1056
+msgid "Images Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1071
+msgid "Images Option for Layout"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1073
+msgid "This uses some of the built in images, you can use them for layout options."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1106
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1119
+msgid "Sortable Text Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1107
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1120
+msgid "Define and reorder these however you want."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1133
+msgid "Select Fields"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1139
+msgid "Select Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1154
+msgid "Multi Select Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1169
+msgid "Select Image"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1170
+msgid "A preview of the selected image will appear underneath the select box."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1181
+msgid "You can easily add a variety of data from WordPress."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1187
+msgid "Categories Select Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1196
+msgid "Categories Multi Select Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1204
+msgid "Pages Select Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1213
+msgid "Pages Multi Select Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1221
+msgid "Tags Select Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1230
+msgid "Tags Multi Select Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1238
+msgid "Menus Select Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1247
+msgid "Menus Multi Select Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1255
+msgid "Post Type Select Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1264
+msgid "Post Type Multi Select Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1274
+msgid "Post Type Multi Select Option + Sortable"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1275
+msgid "This field also has sortable enabled!"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1282
+msgid "Posts Select Option2"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1291
+msgid "Posts Multi Select Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1299
+msgid "User Role Select Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1308
+msgid "Capabilities Select Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1316
+msgid "Elusive Icons Select Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1318
+msgid "Here's a list of all the elusive icons by name and icon."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1324
+msgid "<strong>Theme URL:</strong> "
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1325
+msgid "<strong>Author:</strong> "
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1326
+msgid "<strong>Version:</strong> "
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1330
+msgid "<strong>Tags:</strong> "
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1352
+msgid "Additional Fields"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1358
+msgid "Date Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1369
+msgid "Button Set Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1383
+msgid "Button Set, Multi Select"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1398
+msgid "This is the info field, if you want to break sections up."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1404
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1412
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1420
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1434
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1442
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1451
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1460
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1469
+msgid "This is a title."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1405
+msgid "This is an info field with the warning style applied and a header."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1413
+msgid "This is an info field with the success style applied, a header and an icon."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1421
+msgid "This is an info field with the critical style applied, a header and an icon."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1435
+msgid "This is an info notice field with the normal style applied, a header and an icon."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1443
+msgid "This is an info notice field with the info style applied, a header and an icon."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1452
+msgid "This is an info notice field with the warning style applied, a header and an icon."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1461
+msgid "This is an info notice field with the success style applied, a header and an icon."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1470
+msgid "This is an notice field with the critical style applied, a header and an icon."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1475
+msgid "Custom Field Callback"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1476
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1484
+msgid "This is a completely unique field type"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1477
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1485
+msgid ""
+"This is created with a callback function, so anything goes in this field. Make sure to define the function "
+"though."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1483
+msgid "Custom Field Callback - Class"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1493
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1517
+msgid "Customizer Only Option"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1494
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1518
+msgid "The subtitle is NOT visible in customizer"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1495
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1519
+msgid "The field desc is NOT visible in customizer."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1510
+msgid "Customizer Only"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1511
+msgid "<p class=\"description\">This Section should be visible only in Customizer</p>"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1534
+msgid "Import and Export your Redux Framework settings from file, text or URL."
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1553
+msgid "Theme Information"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1719 index.php:58
+msgid "Support"
+msgstr ""
+
+#: admin/core/lib/ReduxFramework/sample/sample-config.php:1725
+msgid "Extensions"
 msgstr ""
 
 #: admin/core/um-admin-access.php:70
@@ -1135,11 +2147,11 @@ msgstr ""
 msgid "Role draft updated."
 msgstr ""
 
-#: admin/core/um-admin-metabox.php:112 um-config.php:209 um-config.php:241
+#: admin/core/um-admin-metabox.php:112 um-config.php:208 um-config.php:240
 msgid "Yes"
 msgstr ""
 
-#: admin/core/um-admin-metabox.php:113 admin/core/um-admin-roles.php:48 um-config.php:210 um-config.php:242
+#: admin/core/um-admin-metabox.php:113 admin/core/um-admin-roles.php:48 um-config.php:209 um-config.php:241
 msgid "No"
 msgstr ""
 
@@ -1223,6 +2235,18 @@ msgstr ""
 msgid "Value"
 msgstr ""
 
+#: admin/core/um-admin-metabox.php:823
+msgid ""
+"Turn on to force users to create a strong password (must include 1 number and 1 uppercase character). If "
+"turned on this option is only applied to register forms and not to login forms."
+msgstr ""
+
+#: admin/core/um-admin-metabox.php:833
+msgid ""
+"Turn on to add a confirm password field. If turned on the confirm password field will only show on register "
+"forms and not on login forms."
+msgstr ""
+
 #: admin/core/um-admin-notices.php:24
 #, php-format
 msgid ""
@@ -1289,16 +2313,8 @@ msgstr ""
 #: admin/core/um-admin-tracking.php:151
 msgid ""
 "Help us improve Ultimate Member’s compatibility with other plugins and themes by allowing us to track non-"
-"sensitive data on your site. Click <a href=\"http://ultimatemember.com/tracking/\">here</a> to see what data "
-"we track."
-msgstr ""
-
-#: admin/core/um-admin-tracking.php:155 um-config.php:1427
-msgid "Allow tracking"
-msgstr ""
-
-#: admin/core/um-admin-tracking.php:156
-msgid "Do not allow tracking"
+"sensitive data on your site. Click <a href=\"https://ultimatemember.com/tracking/\" target=\"_blank\">here</"
+"a> to see what data we track."
 msgstr ""
 
 #: admin/core/um-admin-users.php:34
@@ -1397,15 +2413,15 @@ msgstr ""
 msgid "If you do not select any role, all members wil be able to view this content"
 msgstr ""
 
-#: admin/templates/dashboard/overview.php:70
+#: admin/templates/dashboard/overview.php:83
 msgid "No users are awaiting manual verification so far."
 msgstr ""
 
-#: admin/templates/dashboard/overview.php:107
+#: admin/templates/dashboard/overview.php:120
 msgid "No users are awaiting e-mail validation yet."
 msgstr ""
 
-#: admin/templates/dashboard/overview.php:140
+#: admin/templates/dashboard/overview.php:153
 msgid "No users have been deactivated recently."
 msgstr ""
 
@@ -1609,7 +2625,7 @@ msgstr ""
 msgid "<strong>Note:</strong> Form type cannot be changed for the default forms."
 msgstr ""
 
-#: admin/templates/form/mode.php:9 um-config.php:1225
+#: admin/templates/form/mode.php:9 um-config.php:1224
 msgid "Registration Form"
 msgstr ""
 
@@ -1617,7 +2633,7 @@ msgstr ""
 msgid "Profile Form"
 msgstr ""
 
-#: admin/templates/form/mode.php:13 um-config.php:1316
+#: admin/templates/form/mode.php:13 um-config.php:1315
 msgid "Login Form"
 msgstr ""
 
@@ -1637,23 +2653,23 @@ msgstr ""
 msgid "Cover photo ratio"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:125 um-config.php:1093
+#: admin/templates/form/profile_customize.php:125 um-config.php:1092
 msgid "Profile Photo Size"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:129 um-config.php:1102
+#: admin/templates/form/profile_customize.php:129 um-config.php:1101
 msgid "Profile Photo Style"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:132 um-config.php:1106
+#: admin/templates/form/profile_customize.php:132 um-config.php:1105
 msgid "Circle"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:133 um-config.php:1107
+#: admin/templates/form/profile_customize.php:133 um-config.php:1106
 msgid "Rounded Corners"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:134 um-config.php:1108
+#: admin/templates/form/profile_customize.php:134 um-config.php:1107
 msgid "Square"
 msgstr ""
 
@@ -1705,7 +2721,7 @@ msgstr ""
 msgid "The maximum width of shortcode in pixels or percentage relative to its parent, e.g. 600px or 70%"
 msgstr ""
 
-#: admin/templates/form/register_customize.php:42 um-config.php:1002 um-config.php:1251 um-config.php:1342
+#: admin/templates/form/register_customize.php:42 um-config.php:1001 um-config.php:1250 um-config.php:1341
 msgid "The shortcode is centered by default unless you specify otherwise here"
 msgstr ""
 
@@ -1905,6 +2921,23 @@ msgstr ""
 msgid "Select what happens when a user with this role logins to your site"
 msgstr ""
 
+#: admin/templates/role/login.php:10 admin/templates/role/register.php:29
+msgid "Redirect to profile"
+msgstr ""
+
+#: admin/templates/role/login.php:11 admin/templates/role/register.php:30 admin/templates/role/register.php:59
+#: admin/templates/role/register.php:97
+msgid "Redirect to URL"
+msgstr ""
+
+#: admin/templates/role/login.php:12
+msgid "Refresh active page"
+msgstr ""
+
+#: admin/templates/role/login.php:13
+msgid "Redirect to WordPress Admin"
+msgstr ""
+
 #: admin/templates/role/login.php:20
 msgid "Set a url to redirect this user role to after they login with their account"
 msgstr ""
@@ -1985,15 +3018,6 @@ msgid ""
 "them to their profile, a custom url or show a custom message"
 msgstr ""
 
-#: admin/templates/role/register.php:29
-msgid "Redirect to profile"
-msgstr ""
-
-#: admin/templates/role/register.php:30 admin/templates/role/register.php:59
-#: admin/templates/role/register.php:97
-msgid "Redirect to URL"
-msgstr ""
-
 #: admin/templates/role/register.php:58 admin/templates/role/register.php:96
 msgid "Show custom message"
 msgstr ""
@@ -2012,6 +3036,35 @@ msgstr ""
 msgid ""
 "Thank you for applying for membership to our site. We will review your details and send you an email letting "
 "you know whether your application has been successful or not."
+msgstr ""
+
+#: admin/um-admin-init.php:31
+msgid "Ultimate Member"
+msgstr ""
+
+#: admin/um-admin-init.php:33
+msgid "Dashboard"
+msgstr ""
+
+#: admin/um-admin-init.php:36
+#, php-format
+msgid "%s | Ultimate Member"
+msgstr ""
+
+#: admin/um-admin-init.php:46 core/um-taxonomies.php:18
+msgid "Forms"
+msgstr ""
+
+#: admin/um-admin-init.php:48 core/um-taxonomies.php:36
+msgid "User Roles"
+msgstr ""
+
+#: admin/um-admin-init.php:51 core/um-taxonomies.php:56
+msgid "Member Directories"
+msgstr ""
+
+#: admin/um-admin-init.php:75
+msgid "Please create a team.php template in admin templates."
 msgstr ""
 
 #: core/um-actions-account.php:28 core/um-actions-account.php:97 core/um-actions-account.php:142
@@ -2316,7 +3369,7 @@ msgstr ""
 msgid "Everyone"
 msgstr ""
 
-#: core/um-builtin.php:796 core/um-user.php:400
+#: core/um-builtin.php:796 core/um-user.php:407
 msgid "Only me"
 msgstr ""
 
@@ -2369,6 +3422,15 @@ msgstr ""
 
 #: core/um-fields.php:1260
 msgid "Save"
+msgstr ""
+
+#: core/um-fields.php:1898
+#, php-format
+msgid "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some information!"
+msgstr ""
+
+#: core/um-fields.php:1900
+msgid "This user has not added any information to their profile yet."
 msgstr ""
 
 #: core/um-files.php:303
@@ -2520,10 +3582,6 @@ msgstr ""
 msgid "Docs"
 msgstr ""
 
-#: index.php:58
-msgid "Support"
-msgstr ""
-
 #: index.php:63
 msgid "Remove this plugin"
 msgstr ""
@@ -2596,615 +3654,615 @@ msgstr ""
 msgid "Notifications Account Tab"
 msgstr ""
 
-#: um-config.php:129
+#: um-config.php:128
 msgid "Delete Account Tab"
 msgstr ""
 
-#: um-config.php:139
+#: um-config.php:138
 msgid "Account Deletion Custom Text"
 msgstr ""
 
-#: um-config.php:141
+#: um-config.php:140
 msgid "This is custom text that will be displayed to users before they delete their accounts from your site"
 msgstr ""
 
-#: um-config.php:160
+#: um-config.php:159
 msgid "Access"
 msgstr ""
 
-#: um-config.php:167
+#: um-config.php:166
 msgid "Global Site Access"
 msgstr ""
 
-#: um-config.php:179
+#: um-config.php:178
 msgid "Custom Redirect URL"
 msgstr ""
 
-#: um-config.php:188
+#: um-config.php:187
 msgid "Exclude the following URLs"
 msgstr ""
 
-#: um-config.php:189
+#: um-config.php:188
 msgid "Here you can exclude URLs beside the redirect URI to be accessible to everyone"
 msgstr ""
 
-#: um-config.php:190
+#: um-config.php:189
 msgid "Add New URL"
 msgstr ""
 
-#: um-config.php:197
+#: um-config.php:196
 msgid "Panic Key"
 msgstr ""
 
-#: um-config.php:206
+#: um-config.php:205
 msgid "Allow Backend Login Screen for Guests"
 msgstr ""
 
-#: um-config.php:217
+#: um-config.php:216
 msgid "Redirect to alternative login page"
 msgstr ""
 
-#: um-config.php:218
+#: um-config.php:217
 msgid "If you disable backend access to login screen, specify here where a user will be redirected"
 msgstr ""
 
-#: um-config.php:230 um-config.php:262
+#: um-config.php:229 um-config.php:261
 msgid "Custom URL"
 msgstr ""
 
-#: um-config.php:238
+#: um-config.php:237
 msgid "Allow Backend Register Screen for Guests"
 msgstr ""
 
-#: um-config.php:249
+#: um-config.php:248
 msgid "Redirect to alternative register page"
 msgstr ""
 
-#: um-config.php:250
+#: um-config.php:249
 msgid "If you disable backend access to register screen, specify here where a user will be redirected"
 msgstr ""
 
-#: um-config.php:270
+#: um-config.php:269
 msgid "Blocked IP Addresses"
 msgstr ""
 
-#: um-config.php:271
+#: um-config.php:270
 msgid "Enter one IP per line, you can also use wildcards to block a specific range e.g. 41.83.*.*"
 msgstr ""
 
-#: um-config.php:272
+#: um-config.php:271
 msgid ""
 "This will block the listed IPs from signing up or signing in to the site, you can use full IP numbers or "
 "target specific range with a wildcard"
 msgstr ""
 
-#: um-config.php:278
+#: um-config.php:277
 msgid "Blocked Email Addresses"
 msgstr ""
 
-#: um-config.php:279
+#: um-config.php:278
 msgid ""
 "Enter one email address per line and you can also specify all emails from specific service to be blocked by "
 "using wildcard: *@hotmail.com"
 msgstr ""
 
-#: um-config.php:280
+#: um-config.php:279
 msgid "This will block the specified e-mail addresses from being able to sign up or sign in to your site."
 msgstr ""
 
-#: um-config.php:286
+#: um-config.php:285
 msgid "Blacklist Words"
 msgstr ""
 
-#: um-config.php:287
+#: um-config.php:286
 msgid ""
 "The words specified here can not be used as username during registration, please enter one word per line to "
 "prevent the usage of this word in a username / during registration"
 msgstr ""
 
-#: um-config.php:288
+#: um-config.php:287
 msgid ""
 "This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their "
 "username"
 msgstr ""
 
-#: um-config.php:303
+#: um-config.php:302
 msgid "Emails"
 msgstr ""
 
-#: um-config.php:309
+#: um-config.php:308
 msgid "Mail appears from"
 msgstr ""
 
-#: um-config.php:310
+#: um-config.php:309
 msgid "e.g. Site Name"
 msgstr ""
 
-#: um-config.php:317
+#: um-config.php:316
 msgid "Mail appears from address"
 msgstr ""
 
-#: um-config.php:318 um-config.php:602
+#: um-config.php:317 um-config.php:601
 msgid "e.g. admin@companyname.com"
 msgstr ""
 
-#: um-config.php:325 um-config.php:333 um-config.php:343
+#: um-config.php:324 um-config.php:332 um-config.php:342
 msgid "Account Welcome Email"
 msgstr ""
 
-#: um-config.php:334 um-config.php:370 um-config.php:402 um-config.php:434 um-config.php:470 um-config.php:501
-#: um-config.php:532 um-config.php:563 um-config.php:617 um-config.php:648 um-config.php:680
+#: um-config.php:333 um-config.php:369 um-config.php:401 um-config.php:433 um-config.php:469 um-config.php:500
+#: um-config.php:531 um-config.php:562 um-config.php:616 um-config.php:647 um-config.php:679
 msgid "Subject Line"
 msgstr ""
 
-#: um-config.php:344 um-config.php:380 um-config.php:412 um-config.php:444 um-config.php:480 um-config.php:511
-#: um-config.php:542 um-config.php:573 um-config.php:627 um-config.php:658 um-config.php:690
+#: um-config.php:343 um-config.php:379 um-config.php:411 um-config.php:443 um-config.php:479 um-config.php:510
+#: um-config.php:541 um-config.php:572 um-config.php:626 um-config.php:657 um-config.php:689
 msgid "Message Body"
 msgstr ""
 
-#: um-config.php:361 um-config.php:369 um-config.php:379
+#: um-config.php:360 um-config.php:368 um-config.php:378
 msgid "Account Activation Email"
 msgstr ""
 
-#: um-config.php:393 um-config.php:401 um-config.php:411
+#: um-config.php:392 um-config.php:400 um-config.php:410
 msgid "Pending Review Email"
 msgstr ""
 
-#: um-config.php:425 um-config.php:433 um-config.php:443
+#: um-config.php:424 um-config.php:432 um-config.php:442
 msgid "Account Approved Email"
 msgstr ""
 
-#: um-config.php:461 um-config.php:469 um-config.php:479
+#: um-config.php:460 um-config.php:468 um-config.php:478
 msgid "Account Rejected Email"
 msgstr ""
 
-#: um-config.php:492 um-config.php:500 um-config.php:510
+#: um-config.php:491 um-config.php:499 um-config.php:509
 msgid "Account Deactivated Email"
 msgstr ""
 
-#: um-config.php:523 um-config.php:531 um-config.php:541
+#: um-config.php:522 um-config.php:530 um-config.php:540
 msgid "Account Deleted Email"
 msgstr ""
 
-#: um-config.php:554 um-config.php:562 um-config.php:572
+#: um-config.php:553 um-config.php:561 um-config.php:571
 msgid "Password Reset Email"
 msgstr ""
 
-#: um-config.php:594
+#: um-config.php:593
 msgid "Notifications"
 msgstr ""
 
-#: um-config.php:600
+#: um-config.php:599
 msgid "Admin E-mail Address"
 msgstr ""
 
-#: um-config.php:608 um-config.php:616 um-config.php:626
+#: um-config.php:607 um-config.php:615 um-config.php:625
 msgid "New User Notification"
 msgstr ""
 
-#: um-config.php:639 um-config.php:647 um-config.php:657
+#: um-config.php:638 um-config.php:646 um-config.php:656
 msgid "Account Needs Review Notification"
 msgstr ""
 
-#: um-config.php:671 um-config.php:679 um-config.php:689
+#: um-config.php:670 um-config.php:678 um-config.php:688
 msgid "Account Deletion Notification"
 msgstr ""
 
-#: um-config.php:707
+#: um-config.php:706
 msgid "Uploads"
 msgstr ""
 
-#: um-config.php:713
+#: um-config.php:712
 msgid "Profile Photo Thumbnail Sizes"
 msgstr ""
 
-#: um-config.php:714
+#: um-config.php:713
 msgid "Here you can define which thumbnail sizes will be created for each profile photo upload."
 msgstr ""
 
-#: um-config.php:717 um-config.php:727
+#: um-config.php:716 um-config.php:726
 msgid "Add New Size"
 msgstr ""
 
-#: um-config.php:723
+#: um-config.php:722
 msgid "Cover Photo Thumbnail Sizes"
 msgstr ""
 
-#: um-config.php:724
+#: um-config.php:723
 msgid "Here you can define which thumbnail sizes will be created for each cover photo upload."
 msgstr ""
 
-#: um-config.php:733
+#: um-config.php:732
 msgid "Image Quality"
 msgstr ""
 
-#: um-config.php:734
+#: um-config.php:733
 msgid ""
 "Quality is used to determine quality of image uploads, and ranges from 0 (worst quality, smaller file) to "
 "100 (best quality, biggest file). The default range is 75."
 msgstr ""
 
-#: um-config.php:742
+#: um-config.php:741
 msgid "Image Upload Maximum Width"
 msgstr ""
 
-#: um-config.php:743
+#: um-config.php:742
 msgid "Any image upload above this width will be resized to this limit automatically."
 msgstr ""
 
-#: um-config.php:751
+#: um-config.php:750
 msgid "Cover Photo Minimum Width"
 msgstr ""
 
-#: um-config.php:752
+#: um-config.php:751
 msgid "This will be the minimum width for cover photo uploads"
 msgstr ""
 
-#: um-config.php:768
+#: um-config.php:767
 msgid "SEO"
 msgstr ""
 
-#: um-config.php:774
+#: um-config.php:773
 msgid "User Profile Title"
 msgstr ""
 
-#: um-config.php:783
+#: um-config.php:782
 msgid "User Profile Dynamic Meta Description"
 msgstr ""
 
-#: um-config.php:784
+#: um-config.php:783
 msgid "You can use dynamic tags to display dynamic user profile data in this field."
 msgstr ""
 
-#: um-config.php:785
+#: um-config.php:784
 msgid "This will be used in the meta description that is available for search-engines."
 msgstr ""
 
-#: um-config.php:799
+#: um-config.php:798
 msgid "Appearance"
 msgstr ""
 
-#: um-config.php:809
+#: um-config.php:808
 msgid "General"
 msgstr ""
 
-#: um-config.php:816
+#: um-config.php:815
 msgid "Members Default Template"
 msgstr ""
 
-#: um-config.php:817
+#: um-config.php:816
 msgid "This will be the default template to output member directory"
 msgstr ""
 
-#: um-config.php:827
+#: um-config.php:826
 msgid "General Active Color"
 msgstr ""
 
-#: um-config.php:829
+#: um-config.php:828
 msgid ""
 "Active color is used commonly with many plugin elements as highlighted color or active selection for "
 "example. This color demonstrates the primary active color of the plugin"
 msgstr ""
 
-#: um-config.php:837
+#: um-config.php:836
 msgid "General Secondary Color"
 msgstr ""
 
-#: um-config.php:839
+#: um-config.php:838
 msgid "Secondary color is used for hovers, or active state for some elements of the plugin"
 msgstr ""
 
-#: um-config.php:847
+#: um-config.php:846
 msgid "Default Primary Button Color"
 msgstr ""
 
-#: um-config.php:856
+#: um-config.php:855
 msgid "Default Primary Button Hover Color"
 msgstr ""
 
-#: um-config.php:865
+#: um-config.php:864
 msgid "Default Primary Button Text Color"
 msgstr ""
 
-#: um-config.php:874
+#: um-config.php:873
 msgid "Default Secondary Button Color"
 msgstr ""
 
-#: um-config.php:883
+#: um-config.php:882
 msgid "Default Secondary Button Hover Color"
 msgstr ""
 
-#: um-config.php:892
+#: um-config.php:891
 msgid "Default Secondary Button Text Color"
 msgstr ""
 
-#: um-config.php:901
+#: um-config.php:900
 msgid "Default Help Icon Color"
 msgstr ""
 
-#: um-config.php:913
+#: um-config.php:912
 msgid "Form Inputs"
 msgstr ""
 
-#: um-config.php:920
+#: um-config.php:919
 msgid "Field Label Color"
 msgstr ""
 
-#: um-config.php:928
+#: um-config.php:927
 msgid "Field Border Style"
 msgstr ""
 
-#: um-config.php:937
+#: um-config.php:936
 msgid "Field Background Color"
 msgstr ""
 
-#: um-config.php:946
+#: um-config.php:945
 msgid "Field Text Color"
 msgstr ""
 
-#: um-config.php:955
+#: um-config.php:954
 msgid "Field Placeholder Color"
 msgstr ""
 
-#: um-config.php:964
+#: um-config.php:963
 msgid "Field Font Icon Color"
 msgstr ""
 
-#: um-config.php:976
+#: um-config.php:975
 msgid "Profile"
 msgstr ""
 
-#: um-config.php:983
+#: um-config.php:982
 msgid "Profile Default Template"
 msgstr ""
 
-#: um-config.php:984
+#: um-config.php:983
 msgid "This will be the default template to output profile"
 msgstr ""
 
-#: um-config.php:992
+#: um-config.php:991
 msgid "Profile Maximum Width"
 msgstr ""
 
-#: um-config.php:1001
+#: um-config.php:1000
 msgid "Profile Shortcode Alignment"
 msgstr ""
 
-#: um-config.php:1005 um-config.php:1254 um-config.php:1345
+#: um-config.php:1004 um-config.php:1253 um-config.php:1344
 msgid "Centered"
 msgstr ""
 
-#: um-config.php:1006 um-config.php:1255 um-config.php:1346
+#: um-config.php:1005 um-config.php:1254 um-config.php:1345
 msgid "Left aligned"
 msgstr ""
 
-#: um-config.php:1007 um-config.php:1256 um-config.php:1347
+#: um-config.php:1006 um-config.php:1255 um-config.php:1346
 msgid "Right aligned"
 msgstr ""
 
-#: um-config.php:1015
+#: um-config.php:1014
 msgid "Profile Field Icons"
 msgstr ""
 
-#: um-config.php:1016
+#: um-config.php:1015
 msgid "This is applicable for edit mode only"
 msgstr ""
 
-#: um-config.php:1019 um-config.php:1268 um-config.php:1359
+#: um-config.php:1018 um-config.php:1267 um-config.php:1358
 msgid "Show inside text field"
 msgstr ""
 
-#: um-config.php:1020 um-config.php:1269 um-config.php:1360
+#: um-config.php:1019 um-config.php:1268 um-config.php:1359
 msgid "Show with label"
 msgstr ""
 
-#: um-config.php:1021 um-config.php:1270 um-config.php:1361
+#: um-config.php:1020 um-config.php:1269 um-config.php:1360
 msgid "Turn off"
 msgstr ""
 
-#: um-config.php:1028
+#: um-config.php:1027
 msgid "Profile Primary Button Text"
 msgstr ""
 
-#: um-config.php:1036
+#: um-config.php:1035
 msgid "Profile Secondary Button"
 msgstr ""
 
-#: um-config.php:1044
+#: um-config.php:1043
 msgid "Profile Secondary Button Text"
 msgstr ""
 
-#: um-config.php:1054
+#: um-config.php:1053
 msgid "Profile Associated Role"
 msgstr ""
 
-#: um-config.php:1055
+#: um-config.php:1054
 msgid "Normally, you can leave this to default as this restricts the profile per specified role only"
 msgstr ""
 
-#: um-config.php:1064
+#: um-config.php:1063
 msgid "Profile Base Background Color"
 msgstr ""
 
-#: um-config.php:1073
+#: um-config.php:1072
 msgid "Profile Header Background Color"
 msgstr ""
 
-#: um-config.php:1083
+#: um-config.php:1082
 msgid "Default Profile Photo"
 msgstr ""
 
-#: um-config.php:1084
+#: um-config.php:1083
 msgid "You can change the default profile picture globally here. Please make sure that the photo is 300x300px."
 msgstr ""
 
-#: um-config.php:1103
+#: um-config.php:1102
 msgid "Whether to have rounded profile images, rounded corners, or none for the profile photo"
 msgstr ""
 
-#: um-config.php:1115
+#: um-config.php:1114
 msgid "Profile Cover Photos"
 msgstr ""
 
-#: um-config.php:1124
+#: um-config.php:1123
 msgid "Profile Cover Ratio"
 msgstr ""
 
-#: um-config.php:1125
+#: um-config.php:1124
 msgid "Choose global ratio for cover photos of profiles"
 msgstr ""
 
-#: um-config.php:1139
+#: um-config.php:1138
 msgid "Profile Header Meta Text Color"
 msgstr ""
 
-#: um-config.php:1148
+#: um-config.php:1147
 msgid "Profile Header Link Color"
 msgstr ""
 
-#: um-config.php:1157
+#: um-config.php:1156
 msgid "Profile Header Link Hover"
 msgstr ""
 
-#: um-config.php:1166
+#: um-config.php:1165
 msgid "Profile Header Icon Link Color"
 msgstr ""
 
-#: um-config.php:1175
+#: um-config.php:1174
 msgid "Profile Header Icon Link Hover"
 msgstr ""
 
-#: um-config.php:1183
+#: um-config.php:1182
 msgid "Show display name in profile header"
 msgstr ""
 
-#: um-config.php:1191
+#: um-config.php:1190
 msgid "Show user description in header"
 msgstr ""
 
-#: um-config.php:1199
+#: um-config.php:1198
 msgid "User description maximum chars"
 msgstr ""
 
-#: um-config.php:1208
+#: um-config.php:1207
 msgid "Profile Header Menu Position"
 msgstr ""
 
-#: um-config.php:1210
+#: um-config.php:1209
 msgid "For incompatible themes, please make the menu open from left instead of bottom by default."
 msgstr ""
 
-#: um-config.php:1232
+#: um-config.php:1231
 msgid "Registration Default Template"
 msgstr ""
 
-#: um-config.php:1233
+#: um-config.php:1232
 msgid "This will be the default template to output registration"
 msgstr ""
 
-#: um-config.php:1241
+#: um-config.php:1240
 msgid "Registration Maximum Width"
 msgstr ""
 
-#: um-config.php:1250
+#: um-config.php:1249
 msgid "Registration Shortcode Alignment"
 msgstr ""
 
-#: um-config.php:1264
+#: um-config.php:1263
 msgid "Registration Field Icons"
 msgstr ""
 
-#: um-config.php:1265
+#: um-config.php:1264
 msgid "This controls the display of field icons in the registration form"
 msgstr ""
 
-#: um-config.php:1277
+#: um-config.php:1276
 msgid "Registration Primary Button Text"
 msgstr ""
 
-#: um-config.php:1285
+#: um-config.php:1284
 msgid "Registration Secondary Button"
 msgstr ""
 
-#: um-config.php:1293
+#: um-config.php:1292
 msgid "Registration Secondary Button Text"
 msgstr ""
 
-#: um-config.php:1303
+#: um-config.php:1302
 msgid "Registration Default Role"
 msgstr ""
 
-#: um-config.php:1304
+#: um-config.php:1303
 msgid "This will be the default role assigned to users registering thru registration form"
 msgstr ""
 
-#: um-config.php:1323
+#: um-config.php:1322
 msgid "Login Default Template"
 msgstr ""
 
-#: um-config.php:1324
+#: um-config.php:1323
 msgid "This will be the default template to output login"
 msgstr ""
 
-#: um-config.php:1332
+#: um-config.php:1331
 msgid "Login Maximum Width"
 msgstr ""
 
-#: um-config.php:1341
+#: um-config.php:1340
 msgid "Login Shortcode Alignment"
 msgstr ""
 
-#: um-config.php:1355
+#: um-config.php:1354
 msgid "Login Field Icons"
 msgstr ""
 
-#: um-config.php:1356
+#: um-config.php:1355
 msgid "This controls the display of field icons in the login form"
 msgstr ""
 
-#: um-config.php:1368
+#: um-config.php:1367
 msgid "Login Primary Button Text"
 msgstr ""
 
-#: um-config.php:1376
+#: um-config.php:1375
 msgid "Login Secondary Button"
 msgstr ""
 
-#: um-config.php:1384
+#: um-config.php:1383
 msgid "Login Secondary Button Text"
 msgstr ""
 
-#: um-config.php:1401
+#: um-config.php:1400
 msgid "Advanced"
 msgstr ""
 
-#: um-config.php:1407
+#: um-config.php:1406
 msgid "Disable JS/CSS Compression"
 msgstr ""
 
-#: um-config.php:1409
+#: um-config.php:1408
 msgid ""
 "Not recommended. This will load all plugin js and css files separately and may slow down your website. Use "
 "this setting for development or debugging purposes only."
 msgstr ""
 
-#: um-config.php:1416
+#: um-config.php:1415
 msgid "Never load plugin JS and CSS on the following pages"
 msgstr ""
 
-#: um-config.php:1417
+#: um-config.php:1416
 msgid "Enter a url or page slug (e.g /about/) to disable loading the plugin's css and js on that page."
 msgstr ""
 
-#: um-config.php:1418
+#: um-config.php:1417
 msgid "Add New Page"
 msgstr ""
 
-#: um-config.php:1424
+#: um-config.php:1423
 msgid "Allow Tracking"
 msgstr ""
 
-#: um-config.php:1428
+#: um-config.php:1427
 msgid "Do not allow"
 msgstr ""
 

@@ -116,19 +116,41 @@ jQuery(document).ready(function() {
 	jQuery(document).on('click', '.um .um-single-image-preview a.cancel', function(e){
 		e.preventDefault();
 		var parent = jQuery(this).parents('.um-field');
+		var src = jQuery(this).parents('.um-field').find('.um-single-image-preview img').attr('src');
 		parent.find('.um-single-image-preview img').attr('src','');
 		parent.find('.um-single-image-preview').hide();
 		parent.find('.um-btn-auto-width').html('Upload');
 		parent.find('input[type=hidden]').val('');
+		
+		jQuery.ajax({
+			url: ultimatemember_ajax_url,
+			type: 'post',
+			data: {
+				action: 'ultimatemember_remove_file',
+				src: src
+			}
+		});
+		
 		return false;
 	});
 
 	jQuery(document).on('click', '.um .um-single-file-preview a.cancel', function(e){
 		e.preventDefault();
 		var parent = jQuery(this).parents('.um-field');
+		var src = jQuery(this).parents('.um-field').find('.um-single-fileinfo a').attr('href');
 		parent.find('.um-single-file-preview').hide();
 		parent.find('.um-btn-auto-width').html('Upload');
 		parent.find('input[type=hidden]').val('');
+		
+		jQuery.ajax({
+			url: ultimatemember_ajax_url,
+			type: 'post',
+			data: {
+				action: 'ultimatemember_remove_file',
+				src: src
+			}
+		});
+		
 		return false;
 	});
 

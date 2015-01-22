@@ -19,6 +19,17 @@
 	}
 	
 	/***
+	***	@remove any file silently
+	***/
+	add_action('wp_ajax_nopriv_ultimatemember_remove_file', 'ultimatemember_remove_file');
+	add_action('wp_ajax_ultimatemember_remove_file', 'ultimatemember_remove_file');
+	function ultimatemember_remove_file(){
+		global $ultimatemember;
+		extract($_REQUEST);
+		$ultimatemember->files->delete_file( $src );
+	}
+	
+	/***
 	***	@remove profile photo silently
 	***/
 	add_action('wp_ajax_nopriv_ultimatemember_delete_profile_photo', 'ultimatemember_delete_profile_photo');

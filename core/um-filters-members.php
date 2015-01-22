@@ -46,7 +46,8 @@
 
 			foreach( $query as $field => $value ) {
 
-				$operator = '=';
+				$operator = 'LIKE';
+				
 				if ( in_array( $ultimatemember->fields->get_field_type( $field ), array('checkbox','multiselect') ) ) {
 					$operator = 'LIKE';
 				}

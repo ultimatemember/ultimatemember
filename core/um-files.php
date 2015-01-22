@@ -343,6 +343,23 @@ class UM_Files {
 	}
 	
 	/***
+	***	@This function will delete file upload from server
+	***/
+	function delete_file( $src ) {
+		
+		if ( strstr( $src, '?' ) ){
+			$splitted = explode('?', $src );
+			$src = $splitted[0];
+		}
+		
+		$is_temp = um_is_temp_upload( $src );
+		if ( $is_temp )
+			unlink( $is_temp );
+			rmdir( dirname( $is_temp ) );
+
+	}
+	
+	/***
 	***	@delete a main user photo
 	***/
 	function delete_core_user_photo( $user_id, $type ) {
@@ -473,11 +490,30 @@ class UM_Files {
 		rmdir( $dir );
 
 		// update user's meta
+		$existing = get_user_meta( $user_id, $key, true );
+		if ( $existing ) {
+			$file = basename( $existing );
+			if ( $file != $filename ) {
+				$delete_src = $this->upload_basedir . $user_id . '/' . basename( $existing );
+				unlink( $delete_src );
+			}
+		}
 		update_user_meta( $user_id, $key, $filename );
 
 		// the url of upload
 		return $this->upload_baseurl . $user_id . '/' . $filename;
 		
+	}
+	
+	/***
+	***	@Remove a directory
+	***/
+	function remove_dir($dir) { 
+		if ( file_exists( $dir ) ) {
+			foreach(glob($dir . '/*') as $file) { 
+				if(is_dir($file)) remove_dir($file); else unlink($file); 
+			} rmdir($dir);
+		}
 	}
 	
 }

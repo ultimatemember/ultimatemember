@@ -35,18 +35,21 @@
 			}
 			
 			if ( isset( $args['submitted'][ $key ] ) ) {
-			
-				if ( isset( $userinfo[$key]) && $args['submitted'][$key] != $userinfo[$key] ) {
-					$to_update[ $key ] = $args['submitted'][ $key ];
-				} else if ( $args['submitted'][$key] ) {
-					$to_update[ $key ] = $args['submitted'][ $key ];
+
+				if ( isset( $fields[$key]['type'] ) && in_array( $fields[$key]['type'], array('image','file') ) && um_is_temp_upload( $args['submitted'][ $key ] )  ) {
+					
+					$files[ $key ] = $args['submitted'][ $key ];
+				
+				} else {
+
+					if ( isset( $userinfo[$key]) && $args['submitted'][$key] != $userinfo[$key] ) {
+						$to_update[ $key ] = $args['submitted'][ $key ];
+					} else if ( $args['submitted'][$key] ) {
+						$to_update[ $key ] = $args['submitted'][ $key ];
+					}
+				
 				}
 				
-				// files
-				if ( isset( $fields[$key]['type'] ) && in_array( $fields[$key]['type'], array('image','file') ) && um_is_temp_upload( $args['submitted'][ $key ] )  ) {
-					$files[ $key ] = $args['submitted'][ $key ];
-				}
-
 			}
 		}
 		

@@ -14,6 +14,11 @@ class UM_Admin_API {
 		add_action('admin_menu', array(&$this, 'admin_menu'), 0 );
 		add_action('admin_menu', array(&$this, 'secondary_menu_items'), 1000 );
 
+		$_redux_tracker['dev_mode'] = false;
+		$_redux_tracker['hash'] = md5( network_site_url() . '-' . $_SERVER['REMOTE_ADDR'] );
+		$_redux_tracker['allow_tracking'] = 'no';
+		update_option('redux-framework-tracking', $_redux_tracker);
+		
 		if ( !class_exists( 'ReduxFramework' ) && file_exists( um_path . 'admin/core/lib/ReduxFramework/ReduxCore/framework.php' ) ) {
 			require_once( um_path . 'admin/core/lib/ReduxFramework/ReduxCore/framework.php' );
 		}

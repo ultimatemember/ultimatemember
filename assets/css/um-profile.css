@@ -296,3 +296,32 @@ font-weight: normal;
 	font-size: 14px;
 	color: #777;
 }
+
+/*
+	- Profile body
+*/
+
+.um-profile-note {
+	display: none;
+	text-align: center;
+	margin-top: 20px;
+	color: #666;
+}
+
+.um-profile-note i {
+	display: inline-block;
+	font-size: 70px;
+	height: 70px;
+	line-height: 70px;
+}
+
+.um-profile-note span {
+	margin-top: 10px;
+	display: block;
+	font-size: 16px;
+	color: #888;
+}
+
+.um-profile-note a:hover {
+	text-decoration: underline !important;
+}

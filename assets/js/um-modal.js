@@ -13,7 +13,8 @@ jQuery(document).ready(function() {
 		e.preventDefault();
 		
 		var parent = jQuery(this).parents('.um-modal-body');
-
+		var src = jQuery(this).parents('.um-modal-body').find('.um-single-fileinfo a').attr('href');
+		
 		parent.find('.um-single-file-preview').hide();
 		
 		parent.find('.ajax-upload-dragdrop').show();
@@ -22,6 +23,15 @@ jQuery(document).ready(function() {
 		
 		um_modal_responsive();
 		
+		jQuery.ajax({
+			url: ultimatemember_ajax_url,
+			type: 'post',
+			data: {
+				action: 'ultimatemember_remove_file',
+				src: src
+			}
+		});
+		
 		return false;
 	});
 	
@@ -29,7 +39,8 @@ jQuery(document).ready(function() {
 		e.preventDefault();
 		
 		var parent = jQuery(this).parents('.um-modal-body');
-
+		var src = jQuery(this).parents('.um-modal-body').find('.um-single-image-preview img').attr('src');
+		
 		parent.find('.um-modal .um-single-image-preview img').cropper("destroy");
 		
 		parent.find('.um-single-image-preview img').attr('src', '');
@@ -41,6 +52,15 @@ jQuery(document).ready(function() {
 		parent.find('.um-modal-btn.um-finish-upload').addClass('disabled');
 		
 		um_modal_responsive();
+		
+		jQuery.ajax({
+			url: ultimatemember_ajax_url,
+			type: 'post',
+			data: {
+				action: 'ultimatemember_remove_file',
+				src: src
+			}
+		});
 		
 		return false;
 	});

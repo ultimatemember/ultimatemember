@@ -112,7 +112,7 @@ class UM_Builtin {
 			
 			'text' => array(
 				'name' => 'Text Box',
-				'col1' => array('_title','_metakey','_help','_default','_min_chars'),
+				'col1' => array('_title','_metakey','_help','_default','_min_chars','_visibility'),
 				'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate','_max_chars'),
 				'col3' => array('_required','_editable','_icon'),
 				'validate' => array(
@@ -128,7 +128,7 @@ class UM_Builtin {
 			
 			'textarea' => array(
 				'name' => 'Textarea',
-				'col1' => array('_title','_metakey','_help','_height','_max_chars','_max_words'),
+				'col1' => array('_title','_metakey','_help','_height','_max_chars','_max_words','_visibility'),
 				'col2' => array('_label','_placeholder','_public','_roles','_default','_html'),
 				'col3' => array('_required','_editable','_icon'),
 				'validate' => array(
@@ -144,7 +144,7 @@ class UM_Builtin {
 			
 			'select' => array(
 				'name' => 'Dropdown',
-				'col1' => array('_title','_metakey','_help','_default','_options'),
+				'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
 				'col2' => array('_label','_placeholder','_public','_roles'),
 				'col3' => array('_required','_editable','_icon'),
 				'validate' => array(
@@ -164,7 +164,7 @@ class UM_Builtin {
 			
 			'multiselect' => array(
 				'name' => 'Multi-Select',
-				'col1' => array('_title','_metakey','_help','_default','_options'),
+				'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
 				'col2' => array('_label','_placeholder','_public','_roles','_min_selections','_max_selections'),
 				'col3' => array('_required','_editable','_icon'),
 				'validate' => array(
@@ -184,7 +184,7 @@ class UM_Builtin {
 			
 			'radio' => array(
 				'name' => 'Radio',
-				'col1' => array('_title','_metakey','_help','_default','_options'),
+				'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
 				'col2' => array('_label','_public','_roles'),
 				'col3' => array('_required','_editable','_icon'),
 				'validate' => array(
@@ -204,7 +204,7 @@ class UM_Builtin {
 			
 			'checkbox' => array(
 				'name' => 'Checkbox',
-				'col1' => array('_title','_metakey','_help','_default','_options'),
+				'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
 				'col2' => array('_label','_public','_roles','_max_selections'),
 				'col3' => array('_required','_editable','_icon'),
 				'validate' => array(
@@ -224,7 +224,7 @@ class UM_Builtin {
 			
 			'url' => array(
 				'name' => 'URL',
-				'col1' => array('_title','_metakey','_help','_default','_url_text'),
+				'col1' => array('_title','_metakey','_help','_default','_url_text','_visibility'),
 				'col2' => array('_label','_placeholder','_url_target','_url_rel','_public','_roles','_validate','_custom_validate'),
 				'col3' => array('_required','_editable','_icon'),
 				'validate' => array(
@@ -240,7 +240,7 @@ class UM_Builtin {
 			
 			'password' => array(
 				'name' => 'Password',
-				'col1' => array('_title','_metakey','_help','_min_chars','_max_chars'),
+				'col1' => array('_title','_metakey','_help','_min_chars','_max_chars','_visibility'),
 				'col2' => array('_label','_placeholder','_public','_roles','_force_good_pass','_force_confirm_pass'),
 				'col3' => array('_required','_editable','_icon'),
 				'validate' => array(
@@ -256,7 +256,7 @@ class UM_Builtin {
 			
 			'image' => array(
 				'name' => 'Image Upload',
-				'col1' => array('_title','_metakey','_help','_allowed_types','_max_size','_crop'),
+				'col1' => array('_title','_metakey','_help','_allowed_types','_max_size','_crop','_visibility'),
 				'col2' => array('_label','_public','_roles','_upload_text','_upload_help_text','_button_text'),
 				'col3' => array('_required','_editable','_icon'),
 				'validate' => array(
@@ -276,7 +276,7 @@ class UM_Builtin {
 			
 			'file' => array(
 				'name' => 'File Upload',
-				'col1' => array('_title','_metakey','_help','_allowed_types','_max_size'),
+				'col1' => array('_title','_metakey','_help','_allowed_types','_max_size','_visibility'),
 				'col2' => array('_label','_public','_roles','_upload_text','_upload_help_text','_button_text'),
 				'col3' => array('_required','_editable','_icon'),
 				'validate' => array(
@@ -296,7 +296,7 @@ class UM_Builtin {
 			
 			'date' => array(
 				'name' => 'Date Picker',
-				'col1' => array('_title','_metakey','_help','_range','_years','_years_x','_range_start','_range_end'),
+				'col1' => array('_title','_metakey','_help','_range','_years','_years_x','_range_start','_range_end','_visibility'),
 				'col2' => array('_label','_placeholder','_public','_roles','_format','_pretty_format','_disabled_weekdays'),
 				'col3' => array('_required','_editable','_icon'),
 				'validate' => array(
@@ -322,7 +322,7 @@ class UM_Builtin {
 			
 			'time' => array(
 				'name' => 'Time Picker',
-				'col1' => array('_title','_metakey','_help','_format'),
+				'col1' => array('_title','_metakey','_help','_format','_visibility'),
 				'col2' => array('_label','_placeholder','_public','_roles','_intervals'),
 				'col3' => array('_required','_editable','_icon'),
 				'validate' => array(
@@ -338,7 +338,7 @@ class UM_Builtin {
 			
 			'rating' => array(
 				'name' => 'Rating',
-				'col1' => array('_title','_metakey','_help'),
+				'col1' => array('_title','_metakey','_help','_visibility'),
 				'col2' => array('_label','_public','_roles','_number','_default'),
 				'col3' => array('_required','_editable','_icon'),
 				'validate' => array(
@@ -385,7 +385,7 @@ class UM_Builtin {
 			
 			'spacing' => array(
 				'name' => 'Spacing',
-				'col1' => array('_title'),
+				'col1' => array('_title','_visibility'),
 				'col2' => array('_spacing'),
 				'form_only' => true,
 				'validate' => array(
@@ -398,7 +398,7 @@ class UM_Builtin {
 			
 			'divider' => array(
 				'name' => 'Divider',
-				'col1' => array('_title','_width'),
+				'col1' => array('_title','_width','_visibility'),
 				'col2' => array('_style','_color'),
 				'form_only' => true,
 				'validate' => array(

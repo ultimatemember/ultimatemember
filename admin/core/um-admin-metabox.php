@@ -418,7 +418,7 @@ class UM_Admin_Metabox {
 			case '_visibility':
 				?>
 				
-					<p><label for="_visibility">Visibility <?php $this->tooltip('Where this field should appear?'); ?></label>
+					<p><label for="_visibility">Visibility <?php $this->tooltip( __('Select where this field should appear. This option should only be changed on the profile form and allows you to show a field in one mode only (edit or view) or in both modes.','ultimatemember') ); ?></label>
 						<select name="_visibility" id="_visibility" class="umaf-selectjs" style="width: 100%">
 							<option value="all"  <?php selected( 'all', $this->edit_mode_value ); ?>>View everywhere</option>
 							<option value="edit" <?php selected( 'edit', $this->edit_mode_value ); ?>>Edit mode only</option>
