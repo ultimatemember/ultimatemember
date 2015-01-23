@@ -46,7 +46,7 @@
 				<?php if ( $k == '' ) { ?>
 				<p><a href="#" class="um-admin-new-condition button um-admin-tipsy-n" title="Add new condition"><i class="um-icon-plus" style="margin-right:0!important"></i></a></p>
 				<?php } else { ?>
-				<p><a href="#" class="um-admin-remove-condition button um-admin-tipsy-n" title="Remove condition"><i class="um-icon-remove" style="margin-right:0!important"></i></a></p>
+				<p><a href="#" class="um-admin-remove-condition button um-admin-tipsy-n" title="Remove condition"><i class="um-icon-close" style="margin-right:0!important"></i></a></p>
 				<?php } ?>
 				
 				<div class="um-admin-clear"></div>

@@ -74,6 +74,8 @@ class UM_Validation {
 	***	@is phone number
 	***/
 	function is_phone_number( $string ){
+		if ( !$string )
+			return true;
 		if ( !preg_match( $this->regex_phone_number, $string) )
 			return false;
 		return true;

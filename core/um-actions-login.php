@@ -196,7 +196,12 @@
 	***	@Display a forgot password link
 	***/
 	add_action('um_after_login_fields', 'um_after_login_submit', 1001);
-	function um_after_login_submit(){ ?>
+	function um_after_login_submit( $args ){ 
+		global $ultimatemember;
+
+		if ( $args['forgot_pass_link'] == 0 ) return;
+	
+	?>
 		
 		<div class="um-col-alt-b">
 			<a href="<?php echo um_get_core_page('password-reset'); ?>" class="um-link-alt"><?php _e('Forgot your password?','ultimatemember'); ?></a>

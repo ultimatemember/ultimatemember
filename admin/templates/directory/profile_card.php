@@ -16,4 +16,8 @@
 		<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_css_img_bordercolor', null, 'na'); ?>" class="um-admin-colorpicker" name="_um_css_img_bordercolor" id="_um_css_img_bordercolor" />
 	</p>
 	
+	<p><label for="_um_css_card_thickness"><?php _e('Profile card border thickness','ultimatemember'); ?></label>
+		<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_css_card_thickness', null, '1px'); ?>" name="_um_css_card_thickness" id="_um_css_card_thickness" />
+	</p>
+	
 </div>

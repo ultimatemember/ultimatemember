@@ -78,7 +78,13 @@ class UM_Fields {
 		
 		if ( $args['type'] == 'row' ) {
 			if ( isset( $fields[$id] ) ){
-				$args = array_merge( $fields[$id], $args );
+				$old_args = $fields[$id];
+				foreach( $old_args as $k => $v ) {
+					if (!in_array($k, array('sub_rows','cols')) ) {
+						unset($old_args[$k]);
+					}
+				}
+				$args = array_merge( $old_args, $args );
 			}
 		}
 		
@@ -517,7 +523,7 @@ class UM_Fields {
 		if (!isset($array['validate'])) $array['validate'] = null;
 		if (!isset($array['default'])) $array['default'] = null;
 		
-		if ( isset( $array['conditions'] ) && is_array( $array['conditions'] ) ) {
+		if ( isset( $array['conditions'] ) && is_array( $array['conditions'] ) && !$this->viewing ) {
 			$array['conditional'] = '';
 			foreach( $array['conditions'] as $key => $cond ) {
 				$array['conditional'] .= ' data-cond-'.$key.'-action="'. $cond[0] . '" data-cond-'.$key.'-field="'. $cond[1] . '" data-cond-'.$key.'-operator="'. $cond[2] . '" data-cond-'.$key.'-value="'. $cond[3] . '"';
@@ -1798,6 +1804,8 @@ class UM_Fields {
 		}
 		
 		if ( !um_can_view_field( $data ) ) return;
+		
+		if ( !um_field_conditions_are_met( $data ) ) return;
 		
 		switch( $type ) {
 

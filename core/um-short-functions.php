@@ -1,10 +1,70 @@
 <?php
 
 	/***
+	***	@If conditions are met return true;
+	***/
+	function um_field_conditions_are_met( $data ) {
+		if ( !isset( $data['conditions'] ) ) return true;
+		
+		$state = 1;
+		
+		foreach( $data['conditions'] as $k => $arr ) {
+			if ( $arr[0] == 'show' ) {
+				
+				$state = 1;
+				$val = $arr[3];
+				$op = $arr[2];
+				$field = um_profile($arr[1]);
+				
+				switch( $op ) {
+					case 'equals to': if ( $field != $val ) $state = 0; break;
+					case 'not equals': if ( $field == $val ) $state = 0; break;
+					case 'empty': if ( $field ) $state = 0; break;
+					case 'not empty': if ( !$field ) $state = 0; break;
+					case 'greater than': if ( $field <= $val ) $state = 0; break;
+					case 'less than': if ( $field >= $val ) $state = 0; break;
+					case 'contains': if ( !strstr( $field, $val ) ) $state = 0; break;
+				}
+			}
+			
+			if ( $arr[0] == 'hide' ) {
+				
+				$state = 0;
+				$val = $arr[3];
+				$op = $arr[2];
+				$field = um_profile($arr[1]);
+				
+				switch( $op ) {
+					case 'equals to': if ( $field != $val ) $state = 1; break;
+					case 'not equals': if ( $field == $val ) $state = 1; break;
+					case 'empty': if ( $field ) $state = 1; break;
+					case 'not empty': if ( !$field ) $state = 1; break;
+					case 'greater than': if ( $field <= $val ) $state = 1; break;
+					case 'less than': if ( $field >= $val ) $state = 1; break;
+					case 'contains': if ( !strstr( $field, $val ) ) $state = 1; break;
+				}
+			}
+			
+		}
+		
+		if ( $state )
+			return true;
+		return false;
+	}
+
+	/***
 	***	@Exit and redirect to home
 	***/
 	function um_redirect_home() {
 		exit( wp_redirect( home_url() ) );
+	}
+	
+	/***
+	***	@Capitalize first initial
+	***/
+	function um_cap_initials( $name ) {
+		$name = str_replace('\' ', '\'', ucwords(str_replace('\'', '\' ', strtolower($name))));
+		return $name;
 	}
 	
 	/***

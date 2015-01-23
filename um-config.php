@@ -1386,6 +1386,14 @@ $this->sections[] = array(
 				'required'		=> array( 'login_secondary_btn', '=', 1 ),
         ),
 		
+        array(
+                'id'       		=> 'login_forgot_pass_link',
+                'type'     		=> 'switch',
+                'title'    		=> __( 'Login Forgot Password Link' ),
+				'default' 		=> 1,
+				'desc' 	   		=> 'Switch on/off the forgot password link in login form',
+        ),
+		
 	)
 	
 );

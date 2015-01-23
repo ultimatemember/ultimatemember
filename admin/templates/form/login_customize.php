@@ -88,6 +88,15 @@
 		<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_login_secondary_btn_text', null, um_get_option('secondary_btn_text') ); ?>" class="um-admin-colorpicker" name="_um_login_secondary_btn_text" id="_um_login_secondary_btn_text" data-default-color="<?php echo um_get_option('secondary_btn_text'); ?>" />
 	</p>
 	
+	<p>
+		<label><?php _e('Show Forgot Password Link?','ultimatemember'); ?></label>
+		<span>
+			
+			<?php $this->ui_on_off('_um_login_forgot_pass_link', um_get_option('login_forgot_pass_link') ); ?>
+				
+		</span>
+	</p><div class="um-admin-clear"></div>
+	
 	</div>
 	
 </div>

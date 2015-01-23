@@ -21,8 +21,10 @@ class UM_Permalinks {
 	***/
 	function get_query_array() {
 		$parts = parse_url( $this->get_current_url() );
+		if ( isset( $parts['query'] ) ){
 		parse_str($parts['query'], $query);
 		return $query;
+		}
 	}
 
 	/***

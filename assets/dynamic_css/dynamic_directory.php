@@ -9,6 +9,14 @@ print ".um-$form_id .um-member {
 
 }
 
+if ( isset( $css_card_thickness ) ) {
+
+print ".um-$form_id .um-member {
+	border-width: $css_card_thickness !important;
+}";
+
+}
+
 if ($css_profile_card_text) {
 
 print ".um-$form_id .um-member-card * {

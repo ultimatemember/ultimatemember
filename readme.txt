@@ -7,7 +7,7 @@ Tags: members, member, membership, community, communities, profile, profiles, re
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.18
+Stable Tag: 1.0.19
 
 License: GNU Version 2 or Any Later Version
 
@@ -26,7 +26,8 @@ Features of the plugin include:
 * Front-end user registration
 * Front-end user login
 * Front-end user profiles
-* Custom profile fields
+* Custom form fields
+* Conditional logic for form fields
 * Drag and drop form builder
 * User account page
 * Custom user roles
@@ -50,9 +51,13 @@ Allow users to login directly from your site and avoid the ugly WordPress login 
 
 Ultimate Member gives every user of your site a beautiful user profile where they can edit their information. You can create unique profiles for each user role and decide what information to show on the profiles.
 
-**Custom profile fields**
+**Custom form fields**
 
 With our custom profile fields, Ultimate Member allows you to gather any information you like from user's when they register or when they fill in their profiles. The plugin comes with a full range of field types including: text box, textarea, dropdown, multi-select, radio, checkbox, url, password, image upload, file upload, date picker, time picker and star ratings.
+
+**Conditional logic for form fields**
+
+You can create advanced register, login and profile forms by applying conditional logic to any fields you like. This allows you to show or hide fields depending on a user’s actions when they fill in a form.
 
 **Drag and drop form builder**
 
@@ -78,7 +83,7 @@ The plugin provides a range of customizable text only email templates which are 
 
 With Ultimate Member you can restrict content on a global on per page/post basis. You can restrict pages/posts so everyone can see the page/post; only logged out users can see the page/post or only logged in users can see the page/post (you can also restrict it to certain user roles). You can also set redirect urls for when people who are not allowed to access the page/post
 
-**Conditional Menus**
+**Conditional menus**
 
 The plugin provides a range of customizable text only email templates which are triggered depending on certain events (e.g welcome email, account activation, account deleted etc). Each email type can be turned on/off. The plugin also offers a range of optional admin notification emails so you can find out when a new user registers or if new user needs reviewed.
 
@@ -94,7 +99,7 @@ The plugin is very SEO friendly and provides customizable dynamic page titles an
 
 Ultimate Member is developer friendly and includes hundreds of actions and filters for developers to customize the plugin. If you are wanting to integrate with Ultimate Member you can view codex here.
 
-**Future Plans for Ultimate Member**
+**Future plans for Ultimate Member**
 
 We have big plans for Ultimate Member and we will be working extremely hard to create the best community plugin ever. In the near future we will be releasing extensions on our site that will allow you to add extra features and extend the functionality of Ultimate Member.  If you'd like to find out when the first extensions will be ready you can follow us on [Twitter](https://twitter.com/umplugin), like us on [Facebook](https://www.facebook.com/pages/Ultimate-Member/1413909622233054) or view our [Trello roadmap](https://trello.com/b/30quaczv/ultimate-member).
 
@@ -162,6 +167,17 @@ Yes. The plugin works fine with WordPress network / multisite now. In a recent u
 16. Appearance and Customization Settings
 
 == Changelog ==
+
+= 1.0.19: January 23, 2015 =
+
+* New: Border thickness option for members directory
+* New: Option to show/hide forgot password link on login form
+* Tweak: Capital initials on members directory
+* Fixed: Issue with row styling in form builder
+* Fixed: Conditional logic bug fixes
+* Fixed: Icon for conditional rules in backend
+* Fixed: php warning in debug mode
+* Fixed: Mobile/phone number validation fixed
 
 = 1.0.18: January 23, 2015 =
 
