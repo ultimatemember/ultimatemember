@@ -162,6 +162,7 @@
 	font-size: 80px;
 	line-height: 80px;
 	vertical-align: middle;
+	margin-bottom: 10px;
 }
 
 .ajax-upload-dragdrop span.help {

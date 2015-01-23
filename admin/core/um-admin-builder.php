@@ -159,7 +159,7 @@ class UM_Admin_Builder {
 					<a href="#" class="um-admin-drag-row-edit um-admin-tipsy-n" title="<?php _e('Edit Row','ultimatemember'); ?>" data-modal="UM_edit_row" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="row" data-arg2="<?php echo $this->form_id; ?>" data-arg3="<?php echo $row_id; ?>"><i class="um-faicon-pencil"></i></a>
 					<span class="um-admin-drag-row-start"><i class="um-icon-arrow-move"></i></span>
 					<?php if ( $row_id != '_um_row_1' ) {?>
-					<a href="#" class="um-admin-tipsy-n" title="<?php _e('Delete Row','ultimatemember'); ?>" data-remove_element="um-admin-drag-row"><i class="um-faicon-trash-o-bin-3"></i></a>
+					<a href="#" class="um-admin-tipsy-n" title="<?php _e('Delete Row','ultimatemember'); ?>" data-remove_element="um-admin-drag-row"><i class="um-faicon-trash-o"></i></a>
 					<?php } ?>
 			</div><div class="um-admin-clear"></div>
 			

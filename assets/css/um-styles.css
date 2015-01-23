@@ -143,6 +143,9 @@
 	height: 24px;
 	line-height: 24px;
 	margin: 0 12px 0 0;
+	display: inline-block;
+	width: 30px;
+	text-align: center;
 }
 
 .um-row-heading i:before {

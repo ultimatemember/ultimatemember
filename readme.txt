@@ -7,7 +7,7 @@ Tags: members, member, membership, community, communities, profile, profiles, re
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.17
+Stable Tag: 1.0.18
 
 License: GNU Version 2 or Any Later Version
 
@@ -162,6 +162,12 @@ Yes. The plugin works fine with WordPress network / multisite now. In a recent u
 16. Appearance and Customization Settings
 
 == Changelog ==
+
+= 1.0.18: January 23, 2015 =
+
+* Fixed: Issue with drag and drop form builder
+* Fixed: Form builder trash icon in backend
+* Fixed: Minor css adjustments in frontend
 
 = 1.0.17: January 22, 2015 =
 

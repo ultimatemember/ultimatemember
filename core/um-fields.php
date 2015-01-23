@@ -76,8 +76,15 @@ class UM_Fields {
 		global $ultimatemember;
 		$fields = $ultimatemember->query->get_attr( 'custom_fields', $form_id );
 		
+		if ( $args['type'] == 'row' ) {
+			if ( isset( $fields[$id] ) ){
+				$args = array_merge( $fields[$id], $args );
+			}
+		}
+		
 		$fields[$id] = $args;
 		
+		// for group field only
 		if ( $args['type'] == 'group' ){
 			$fields[$id]['in_group'] = '';
 		}
