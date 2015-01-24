@@ -3,11 +3,11 @@ Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember
 Donate link: 
-Tags: members, member, membership, community, communities, profile, profiles, registration, login, front-end registration, front-end login, social network, member directory, users, user, user profiles, user roles, conditional menus, role menus, restrict content, content protection, access control, search filters, conditional fields, conditional logic, custom fields, login page, user fields, form builder, profile builder, file uploads, star ratings, hide wp-admin, toolbar, logged-in users, sign in, sign up, role creation
+Tags: access control, community, communities, conditional fields, conditional logic, conditional menus, content protection, custom fields, file uploads, form builder, front-end login, front-end registration, hide wp-admin, login, login page, logged-in users, member, members, membership, member directory, profile, profiles, profile builder, registration, restrict content, role creation, role menus, search filters, sign in, sign up, social network, star ratings, toolbar, user, users, user fields, user profiles, user roles
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.19
+Stable Tag: 1.0.21
 
 License: GNU Version 2 or Any Later Version
 
@@ -67,7 +67,7 @@ Our advanced drag and drop form builder makes it extremely easy to build unique 
 
 The plugin provides users with an account page where users can change their account settings. The account page allows users to control their privacy settings, change their password and delete their own account. Admins can alter what shows on the account page depending on the amount of control you want users to have over their accounts.
 
-**User roles**
+**Custom user roles**
 
 With Ultimate Member you can create your own user roles and apply different controls and permissions to each user role. This flexibility is perfect for site's that have multiple user types.
 
@@ -75,13 +75,13 @@ With Ultimate Member you can create your own user roles and apply different cont
 
 The plugin allows you to create multiple member directories to allow people to easily search and find other users. The member directories are very flexible and you can control what user roles show in a directory; the order users appear in the directory; what search filters appear; what user roles can use the search filters and much more.
 
-**Email Templates**
+**Custom e-mail templates**
 
 The plugin provides a range of customizable text only email templates which are triggered depending on certain events (e.g welcome email, account activation, account deleted etc). Each email type can be turned on/off. The plugin also offers a range of optional admin notification emails so you can find out when a new user registers or if new user needs reviewed.
 
 **Content restriction**
 
-With Ultimate Member you can restrict content on a global on per page/post basis. You can restrict pages/posts so everyone can see the page/post; only logged out users can see the page/post or only logged in users can see the page/post (you can also restrict it to certain user roles). You can also set redirect urls for when people who are not allowed to access the page/post
+With Ultimate Member you can restrict content on a global or per page/post basis. You can restrict pages/posts so everyone can see the page/post; only logged out users can see the page/post or only logged in users can see the page/post (you can also restrict it to certain user roles). You can also set redirect urls for when people who are not allowed to access the page/post
 
 **Conditional menus**
 
@@ -167,6 +167,20 @@ Yes. The plugin works fine with WordPress network / multisite now. In a recent u
 16. Appearance and Customization Settings
 
 == Changelog ==
+
+= 1.0.21: January 24, 2015 =
+
+* New: Added ajax action hook for development use
+* New: Extended profile hooks
+* New: you can restrict / apply access control to woocommerce shop page
+* Fixed: content restriction for woocommerce shop page
+
+= 1.0.20: January 24, 2015 =
+
+* New: Custom email is sent to user after resetting/changing password
+* New: Added action/filter hooks to profile
+* Tweak: Improved a few core functions
+* Fixed: Encoding issue with non-english sites fixed
 
 = 1.0.19: January 23, 2015 =
 

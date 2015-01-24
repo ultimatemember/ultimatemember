@@ -30,9 +30,8 @@ class UM_Access {
 	/***
 	***	@get meta
 	***/
-	function get_meta() {
+	function get_meta( $post_id ) {
 		global $post;
-		$post_id = $post->ID;
 		$meta = get_post_custom( $post_id );
 		foreach ($meta as $k => $v){
 			if ( strstr($k, '_um_') ) {

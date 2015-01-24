@@ -7,6 +7,26 @@ class UM_Query {
 	}
 	
 	/***
+	***	@Do custom queries
+	***/
+	function make( $args ) {
+		
+		$defaults = array(
+			'post_type' => 'post'
+		);
+		$args = wp_parse_args( $args, $defaults );
+		
+		if ( isset( $args['post__in'] ) && empty( $args['post__in'] ) )
+			return false;
+		
+		extract( $args );
+
+		$custom_posts = new WP_Query();
+		$custom_posts->query( $args );
+		return $custom_posts;
+	}
+	
+	/***
 	***	@Get last users
 	***/
 	function get_recent_users($number = 5){

@@ -131,7 +131,7 @@ class UM_Permalinks {
 		$profile_url = get_permalink($profile_url);
 		
 		if ( um_get_option('permalink_base') == 'user_login' ) {
-			$user_in_url = $ultimatemember->user->profile['user_login'];
+			$user_in_url = um_user('user_login');
 		}
 		
 		if ( um_get_option('permalink_base') == 'user_id' ) {

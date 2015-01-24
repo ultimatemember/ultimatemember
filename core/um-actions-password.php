@@ -38,8 +38,9 @@
 		wp_set_password( $args['user_password'], $args['user_id'] );
 		
 		delete_user_meta( $args['user_id'], 'reset_pass_hash');
-		
 		delete_user_meta( $args['user_id'], 'reset_pass_hash_token');
+		
+		do_action('um_after_changing_user_password', $args['user_id'] );
 		
 		if ( is_user_logged_in() ) {
 			wp_logout();
@@ -47,6 +48,19 @@
 		
 		exit( wp_redirect( um_get_core_page('login', 'password_changed') ) );
 		
+	}
+	
+	/***
+	***	@This is executed after changing password
+	***/
+	add_action('um_after_changing_user_password','um_after_changing_user_password');
+	function um_after_changing_user_password( $user_id ) {
+		global $ultimatemember;
+		um_fetch_user( $user_id );
+		
+		$ultimatemember->mail->send( um_user('user_email'), 'changedpw_email' );
+		
+		um_reset_user();
 	}
 	
 	/***

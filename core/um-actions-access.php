@@ -56,11 +56,23 @@
 	function um_access_post_settings() {
 		global $post, $ultimatemember;
 		
-		if ( !get_post_type() || !isset($post->ID) ) return;
+		// woo commerce shop ID
+		if( function_exists('is_shop') && is_shop() ) {
+			
+			$post_id = get_option('woocommerce_shop_page_id');
+
+		} else {
+	
+			if ( !get_post_type() || !isset($post->ID) ) return;
+
+		}
 		
-		$args = $ultimatemember->access->get_meta();
+		if ( !isset( $post_id ) )
+			$post_id = $post->ID;
+
+		$args = $ultimatemember->access->get_meta( $post_id );
 		extract($args);
-		
+
 		if ( !isset( $args['custom_access_settings'] ) || $args['custom_access_settings'] == 0 ) return;
 
 		$redirect_to = null;

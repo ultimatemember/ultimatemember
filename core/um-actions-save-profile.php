@@ -11,6 +11,8 @@
 			
 			if ( $changes['first_name'] && $changes['last_name'] ) {
 				
+				wp_update_user( array( 'ID' => $ultimatemember->user->id, 'display_name' => $changes['first_name'] . ' ' . $changes['last_name'] ) );
+
 				$full_name = $changes['first_name'] . '.' . $changes['last_name'];
 			
 			} else {
@@ -21,8 +23,6 @@
 			
 			$full_name = $ultimatemember->validation->safe_name_in_url( $full_name );
 
-			//die( print_r( $full_name ) );
-			
 			/* duplicate or not */
 			if ( $ultimatemember->user->user_has_metadata( 'full_name', $full_name ) ) {
 				

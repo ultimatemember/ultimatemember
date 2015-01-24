@@ -18,6 +18,8 @@ class UM_Rewrite {
 	function query_vars($public_query_vars) {
 		$public_query_vars[] = 'um_user';
 		$public_query_vars[] = 'um_tab';
+		$public_query_vars[] = 'profiletab';
+		$public_query_vars[] = 'subnav';
 		$public_query_vars[] = 'members_page';
 		return $public_query_vars;
 	}

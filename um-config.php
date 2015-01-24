@@ -578,6 +578,37 @@ $this->sections[] = array(
 										'Thanks,' . "\r\n" .
 										'{site_name}',
         ),
+		
+        array(
+                'id'       => 'changedpw_email_on',
+                'type'     => 'switch',
+                'title'    => __( 'Password Changed Email' ),
+				'default'  => 1,
+				'desc' 	   => 'Whether to send the user an email when he request to reset password (Recommended, please keep on)',
+        ),
+		
+        array(
+                'id'       => 'changedpw_email_sub',
+                'type'     => 'text',
+                'title'    => __( 'Password Changed Email' ),
+                'subtitle' => __( 'Subject Line' ),
+                'default'  => 'Your {site_name} password has been changed',
+				'required' => array( 'changedpw_email_on', '=', 1 ),
+				'desc' 	   => 'This is the subject line of the e-mail',
+        ),
+
+        array(
+                'id'       => 'changedpw_email',
+                'type'     => 'textarea',
+                'title'    => __( 'Password Changed Email' ),
+                'subtitle' => __( 'Message Body' ),
+				'required' => array( 'changedpw_email_on', '=', 1 ),
+                'default'  => 'Hi {display_name},' . "\r\n\r\n" .
+										'You recently changed the password associated with your {site_name} account.'  . "\r\n\r\n" .
+										'If you did not make this change and believe your {site_name} account has been compromised, please contact us at the following email address: {admin_email}'  . "\r\n\r\n" . 
+										'Thanks,' . "\r\n" .
+										'{site_name}',
+        ),
 
 	)
 

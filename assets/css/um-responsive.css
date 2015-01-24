@@ -28,6 +28,23 @@ div.uimob960 .uimob960-hide
 
 /********************************************/
 
+div.uimob340 .um-profile-subnav {
+	padding: 8px 15px;
+}
+
+div.uimob340 .um-profile-subnav a {
+	display: block;
+	text-align: left;
+	font-size: 13px;
+	margin: 0;
+	padding: 6px 0;
+}
+
+div.uimob340 .um-profile-subnav span {
+	font-size: 12px;
+	padding: 0px 4px;
+}
+
 div.uimob340 .um-cover-overlay span.um-cover-overlay-t
 {
 	display: none !important;
@@ -219,6 +236,28 @@ div.uimob340 .um-account-meta {
 
 /********************************************/
 
+div.uimob500 .um-profile-nav-item i  {
+	font-size: 25px;
+	width: 25px;
+}
+
+div.uimob500 .um-profile-subnav {
+	padding: 8px 15px;
+}
+
+div.uimob500 .um-profile-subnav a {
+	display: block;
+	text-align: left;
+	font-size: 13px;
+	margin: 0;
+	padding: 6px 0;
+}
+
+div.uimob500 .um-profile-subnav span {
+	font-size: 12px;
+	padding: 1px 6px;
+}
+
 div.uimob500 .um-cover-overlay span.um-cover-overlay-t
 {
 	display: none !important;
@@ -395,6 +434,28 @@ div.uimob500 .um-account-meta {
 /**
 	for 800px and below
 **/
+
+div.uimob800 .um-profile-nav-item i  {
+	font-size: 25px;
+	width: 25px;
+}
+
+div.uimob800 .um-profile-subnav {
+	padding: 8px 15px;
+}
+
+div.uimob800 .um-profile-subnav a {
+	display: block;
+	text-align: left;
+	font-size: 14px;
+	margin: 0;
+	padding: 6px 0;
+}
+
+div.uimob800 .um-profile-subnav span {
+	font-size: 12px;
+	padding: 2px 8px;
+}
 
 div.uimob800 .um-account-main {
 	width: 90%;

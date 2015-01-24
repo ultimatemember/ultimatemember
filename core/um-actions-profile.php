@@ -1,6 +1,28 @@
 <?php
 
 	/***
+	***	@um_profile_content_{main_tab}
+	***/
+	add_action('um_profile_content_main','um_profile_content_main');
+	function um_profile_content_main( $args ) {
+		
+		extract( $args );
+	
+		do_action("um_before_form", $args);
+				
+		do_action("um_before_{$template}_fields", $args);
+				
+		do_action("um_main_{$template}_fields", $args);
+				
+		do_action("um_after_form_fields", $args);
+				
+		do_action("um_after_{$template}_fields", $args);
+				
+		do_action("um_after_form", $args);
+	
+	}
+	
+	/***
 	***	@update user's profile
 	***/
 	add_action('um_user_edit_profile', 'um_user_edit_profile', 10);
@@ -474,4 +496,59 @@
 		</div>
 	
 		<?php
+	}
+	
+	/***
+	***	@display the available profile tabs
+	***/
+	add_action('um_profile_navbar', 'um_profile_navbar');
+	function um_profile_navbar( $args ) {
+		global $ultimatemember;
+		
+		$tabs = $ultimatemember->profile->tabs();
+
+		if ( count( $tabs ) == 1 ) return;
+		
+		$active_tab = $ultimatemember->profile->active_tab;
+		
+		?>
+		
+		<div class="um-profile-nav">
+		
+			<?php foreach( $tabs as $id => $tab ) {
+				
+				$nav_link = $ultimatemember->permalinks->get_current_url(true);
+				$nav_link = add_query_arg('profiletab', $id, $nav_link )
+				?>
+			
+			<div class="um-profile-nav-item <?php if ( $id == $active_tab ) echo 'active'; ?>"><a href="<?php echo $nav_link; ?>" title="<?php echo $tab['name']; ?>"><i class="<?php echo $tab['icon']; ?> uimob500-show uimob340-show uimob800-show"></i><span class="uimob500-hide uimob340-hide uimob800-hide"><?php echo $tab['name']; ?></span></a></div>
+			
+			<?php } ?>
+			
+			<div class="um-clear"></div>
+		</div>
+	
+	<?php
+	
+		foreach( $tabs as $id => $tab ) {
+			
+			if ( isset( $tab['subnav'] ) && $active_tab == $id ) {
+				
+				$active_subnav = (isset($ultimatemember->profile->active_subnav)) ? $ultimatemember->profile->active_subnav : $tab['subnav_default'];
+
+				echo '<div class="um-profile-subnav">';
+				foreach( $tab['subnav'] as $id => $subtab ) {
+				
+				?>
+					
+					<a href="<?php echo add_query_arg('subnav', $id ); ?>" class="<?php if ( $active_subnav == $id ) echo 'active'; ?>"><?php echo $subtab; ?></a>
+					
+					<?php
+					
+				}
+				echo '</div>';
+			}
+			
+		}
+	
 	}

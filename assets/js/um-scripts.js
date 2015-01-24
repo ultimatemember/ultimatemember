@@ -213,5 +213,31 @@ jQuery(document).ready(function() {
 		
 		return false;
 	});
+	
+	jQuery(document).on('click', '.um-ajax-action', function(e){
+		e.preventDefault();
+		var hook = jQuery(this).data('hook');
+		var user_id = jQuery(this).data('user_id');
+		var arguments = jQuery(this).data('arguments');
+	
+		if ( jQuery(this).data('js-remove') ){
+			jQuery(this).parents('.'+jQuery(this).data('js-remove')).fadeOut('fast');
+		}
+		
+		jQuery.ajax({
+			url: ultimatemember_ajax_url,
+			type: 'post',
+			data: {
+				action: 'ultimatemember_muted_action',
+				hook: hook,
+				user_id: user_id,
+				arguments: arguments
+			},
+			success: function(data){
+
+			}
+		});
+		return false;
+	});
 
 });

@@ -1,6 +1,20 @@
 <?php
 
 	/***
+	***	@Main tabs
+	***/
+	add_filter('um_profile_tabs', 'um_profile_tabs', 1 );
+	function um_profile_tabs( $tabs ) {
+		
+		$tabs['main'] = array(
+			'name' => __('About','ultimatemember'),
+			'icon' => 'um-faicon-user'
+		);
+		
+		return $tabs;
+	}
+	
+	/***
 	***	@dynamic profile page title
 	***/
 	add_filter('wp_title', 'um_dynamic_user_profile_pagetitle', 100000, 2 );
@@ -42,5 +56,5 @@
 			}
 		}
 		
-		return utf8_decode( $title );
+		return (strlen($title)!==strlen(utf8_decode($title))) ? $title : utf8_encode($title);
 	}

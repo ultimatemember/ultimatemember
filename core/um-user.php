@@ -457,6 +457,7 @@ class UM_User {
 			
 		}
 		
+		// hook for name changes
 		do_action('um_update_profile_full_name', $changes );
 		
 		// update user

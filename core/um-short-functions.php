@@ -376,7 +376,8 @@
 	***/
 	function um_edit_my_profile_uri() {
 		global $ultimatemember;
-		$url = $ultimatemember->permalinks->add_query( 'um_action', 'edit' );
+		$url = $ultimatemember->permalinks->get_current_url(true);
+		$url = add_query_arg( 'um_action', 'edit', $url );
 		return $url;
 	}
 	
@@ -384,8 +385,7 @@
 	***	@remove edit profile args from url
 	***/
 	function um_edit_my_profile_cancel_uri() {
-		global $ultimatemember;
-		$url = $ultimatemember->permalinks->remove_query( 'um_action', 'edit' );
+		$url = remove_query_arg( 'um_action' );
 		return $url;
 	}
 	
@@ -504,25 +504,30 @@
 		global $ultimatemember;
 		
 		if ( !is_user_logged_in() ) return false;
+		
+		$return = 1;
+		
 		um_fetch_user( get_current_user_id() );
 
 		switch($cap) {
 		
 			case 'edit':
-				if ( get_current_user_id() == $user_id && um_user('can_edit_profile') ) return true;
-				if ( !um_user('can_edit_everyone') ) return false;
-				if ( get_current_user_id() == $user_id && !um_user('can_edit_profile') ) return false;
-				if ( um_user('can_edit_roles') && !in_array( $ultimatemember->query->get_role_by_userid( $user_id ), um_user('can_edit_roles') ) ) return false;
+				if ( get_current_user_id() == $user_id && um_user('can_edit_profile') ) $return = 1;
+				if ( !um_user('can_edit_everyone') ) $return = 0;
+				if ( get_current_user_id() == $user_id && !um_user('can_edit_profile') ) $return = 0;
+				if ( um_user('can_edit_roles') && !in_array( $ultimatemember->query->get_role_by_userid( $user_id ), um_user('can_edit_roles') ) ) $return = 0;
 				break;
 				
 			case 'delete':
-				if ( !um_user('can_delete_everyone') ) return false;
-				if ( um_user('can_delete_roles') && !in_array( $ultimatemember->query->get_role_by_userid( $user_id ), um_user('can_delete_roles') ) ) return false;
+				if ( !um_user('can_delete_everyone') ) $return = 0;
+				if ( um_user('can_delete_roles') && !in_array( $ultimatemember->query->get_role_by_userid( $user_id ), um_user('can_delete_roles') ) ) $return = 0;
 				break;
 			
 		}
 
-		return true;
+		um_fetch_user( $user_id );
+
+		return $return;
 	}
 	
 	/***

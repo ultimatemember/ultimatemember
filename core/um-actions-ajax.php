@@ -93,3 +93,22 @@
 		if(is_array($output)){ print_r($output); }else{ echo $output; } die;
 
 	}
+	
+	/***
+	***	@run an ajax action on the fly
+	***/
+	add_action('wp_ajax_nopriv_ultimatemember_muted_action', 'ultimatemember_muted_action');
+	add_action('wp_ajax_ultimatemember_muted_action', 'ultimatemember_muted_action');
+	function ultimatemember_muted_action(){
+		global $ultimatemember;
+		extract($_REQUEST);
+		
+		if ( !um_current_user_can('edit', $user_id ) ) die( __('You can not edit this user') );
+		
+		switch( $hook ) {
+			default:
+				do_action("um_run_ajax_function__{$hook}", $_REQUEST);
+				break;
+		}
+
+	}

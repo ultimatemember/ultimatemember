@@ -8,25 +8,22 @@
 			
 			<?php do_action('um_profile_header', $args ); ?>
 			
-			<div class="um-profile-body">
+			<?php do_action('um_profile_navbar', $args ); ?>
 			
 			<?php
-
-				do_action("um_before_form", $args);
 				
-				do_action("um_before_{$template}_fields", $args);
+			$nav = $ultimatemember->profile->active_tab;
+			$subnav = ( get_query_var('subnav') ) ? get_query_var('subnav') : 'default';
 				
-				do_action("um_main_{$template}_fields", $args);
+			print "<div class='um-profile-body $nav $nav-$subnav'>";
 				
-				do_action("um_after_form_fields", $args);
+				// Custom hook to display tabbed content
+				do_action("um_profile_content_{$nav}", $args);
+				do_action("um_profile_content_{$nav}_{$subnav}", $args);
 				
-				do_action("um_after_{$template}_fields", $args);
-				
-				do_action("um_after_form", $args);
+			print "</div>";
 				
 			?>
-			
-			</div>
 		
 		</form>
 	
