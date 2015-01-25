@@ -129,6 +129,10 @@
 	margin: 0 5px 0 0 !important;
 }
 
+.um-admin-btn-toggle p.um-admin-reset-conditions {
+	margin: 0 0 5px 0 !important;
+}
+
 .um-admin-btn-toggle a {
 	text-decoration: none;
 	color: #999;

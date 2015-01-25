@@ -214,6 +214,32 @@ jQuery(document).ready(function() {
 		return false;
 	});
 	
+	jQuery(document).on('click', '.um-ajax-paginate', function(e){
+		e.preventDefault();
+		var parent = jQuery(this).parent();
+		parent.addClass('loading');
+		var args = jQuery(this).data('args');
+		var hook = jQuery(this).data('hook');
+		var container = jQuery(this).parents('.um').find('.um-ajax-items');
+		jQuery.ajax({
+			url: ultimatemember_ajax_url,
+			type: 'post',
+			data: {
+				action: 'ultimatemember_ajax_paginate',
+				hook: hook,
+				args: args
+			},
+			complete: function(){
+				parent.removeClass('loading');
+			},
+			success: function(data){
+				parent.remove();
+				container.append( data );
+			}
+		});
+		return false;
+	});
+	
 	jQuery(document).on('click', '.um-ajax-action', function(e){
 		e.preventDefault();
 		var hook = jQuery(this).data('hook');

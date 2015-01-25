@@ -815,6 +815,11 @@ class UM_Fields {
 		if ( !um_can_view_field( $data ) ) return;
 		if ( !um_can_edit_field( $data ) ) return;
 		
+		// disable these fields in profile edit only
+		if ( in_array( $key, array('user_email','username','user_login','user_password') ) && $this->editing == true && $this->set_mode == 'profile' ) {
+			return;
+		}
+		
 		if ( isset( $data['required_opt'] ) ) {
 			$opt = $data['required_opt'];
 			if ( um_get_option( $opt[0] ) != $opt[1] ) {
@@ -1804,6 +1809,11 @@ class UM_Fields {
 		}
 		
 		if ( !um_can_view_field( $data ) ) return;
+		
+		// disable these fields in profile view only
+		if ( in_array( $key, array('user_password') ) && $this->set_mode == 'profile' ) {
+			return;
+		}
 		
 		if ( !um_field_conditions_are_met( $data ) ) return;
 		

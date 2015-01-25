@@ -64,30 +64,39 @@ class UM_Rewrite {
 		if ( um_queried_user() && um_is_core_page('user') ) {
 		
 			if ( um_get_option('permalink_base') == 'user_login' ) {
+				
 				$user_id = username_exists( um_queried_user() );
-				if ( $user_id ) {
-					um_set_requested_user( $user_id );
-				} else {
-					exit( wp_redirect( um_get_core_page('user') ) );
+				
+				// Try nice name
+				if ( !$user_id ) {
+					$the_user = get_user_by( 'slug', um_queried_user() );
+					if ( isset( $the_user->ID ) ){
+						$user_id = $the_user->ID;
+					}
 				}
+				
 			}
 			
 			if ( um_get_option('permalink_base') == 'user_id' ) {
 				$user_id = $ultimatemember->user->user_exists_by_id( um_queried_user() );
-				if ( $user_id ) {
-					um_set_requested_user( $user_id );
-				} else {
-					exit( wp_redirect( um_get_core_page('user') ) );
-				}
+
 			}
 			
 			if ( um_get_option('permalink_base') == 'name' ) {
 				$user_id = $ultimatemember->user->user_exists_by_name( um_queried_user() );
-				if ( $user_id ) {
-					um_set_requested_user( $user_id );
-				} else {
-					exit( wp_redirect( um_get_core_page('user') ) );
-				}
+
+			}
+			
+			/** USER EXISTS SET USER AND CONTINUE **/
+			
+			if ( $user_id ) {
+				
+				um_set_requested_user( $user_id );
+				
+			} else {
+				
+				exit( wp_redirect( um_get_core_page('user') ) );
+				
 			}
 			
 		}

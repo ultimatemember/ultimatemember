@@ -7,7 +7,7 @@ Tags: access control, community, communities, conditional fields, conditional lo
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.21
+Stable Tag: 1.0.23
 
 License: GNU Version 2 or Any Later Version
 
@@ -167,6 +167,20 @@ Yes. The plugin works fine with WordPress network / multisite now. In a recent u
 16. Appearance and Customization Settings
 
 == Changelog ==
+
+= 1.0.23: January 25, 2015 =
+
+* Fixed: important bugfix with profile editing
+
+= 1.0.22: January 25, 2015 =
+
+* New: option to set maximum profile fields area width
+* New: ajax functions for future development use
+* Tweak: improved profile permalinks for e-mail based usernames
+* Tweak: disable user from editing username (If admin put the username field by mistake in profile)
+* Tweak: minor css changes
+* Fixed: ability to clear conditional logic from fields in backend
+* Fixed: corrected spacing issue in a multi-column layout in profile
 
 = 1.0.21: January 24, 2015 =
 

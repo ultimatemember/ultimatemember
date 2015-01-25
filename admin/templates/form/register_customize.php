@@ -35,7 +35,7 @@
 		</select>
 	</p>
 	
-	<p><label for="_um_register_max_width"><?php _e('Max. Width (px or %)','ultimatemember'); ?> <?php $this->tooltip( __('The maximum width of shortcode in pixels or percentage relative to its parent, e.g. 600px or 70%','ultimatemember'), 'e'); ?></label>
+	<p><label for="_um_register_max_width"><?php _e('Max. Width (px)','ultimatemember'); ?> <?php $this->tooltip('The maximum width of shortcode in pixels e.g. 600px', 'e'); ?></label>
 		<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_register_max_width', null, um_get_option('register_max_width') ); ?>" name="_um_register_max_width" id="_um_register_max_width" />
 	</p>
 	

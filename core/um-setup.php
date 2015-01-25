@@ -91,6 +91,7 @@ class UM_Setup {
 			'_um_profile_role' => '0',
 			'_um_profile_template' => 'profile',
 			'_um_profile_max_width' => '1000px',
+			'_um_profile_area_max_width' => '600px',
 			'_um_profile_align' => 'center',
 			'_um_profile_icons' => 'label',
 			'_um_profile_cover_enabled' => 1,

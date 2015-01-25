@@ -27,6 +27,9 @@
 			
 			<div class="um-admin-btn-content">
 			
+				<p class="um-admin-reset-conditions"><a href="#" class="button button-primary"><?php _e('Reset all rules','ultimatemember'); ?></a></p>
+				<div class="um-admin-clear"></div>
+				
 				<?php
 				
 				if ( isset( $edit_array['conditions'] ) ){
@@ -73,7 +76,7 @@
 				</div>
 				
 				<?php } ?>
-				
+
 			</div>
 			
 		</div>

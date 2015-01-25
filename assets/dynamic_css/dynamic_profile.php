@@ -35,6 +35,14 @@ print "
 }
 ";
 
+if ( $area_max_width ) {
+print "
+.um-$form_id.um .um-profile-body {
+	max-width: $area_max_width;
+}
+";
+}
+
 print "
 .um-$form_id.um .um-profile-photo a.um-profile-photo-img {
 	width: ".$photosize."px;

@@ -112,3 +112,23 @@
 		}
 
 	}
+	
+	/***
+	***	@run an ajax pagination on the fly
+	***/
+	add_action('wp_ajax_nopriv_ultimatemember_ajax_paginate', 'ultimatemember_ajax_paginate');
+	add_action('wp_ajax_ultimatemember_ajax_paginate', 'ultimatemember_ajax_paginate');
+	function ultimatemember_ajax_paginate(){
+		global $ultimatemember;
+		extract($_REQUEST);
+		
+		ob_start();
+		
+		do_action("um_ajax_load_posts__{$hook}", $args);
+		
+		$output = ob_get_contents();
+		ob_end_clean();
+		
+		die($output);
+
+	}

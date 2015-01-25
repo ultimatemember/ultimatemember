@@ -132,6 +132,15 @@ class UM_Permalinks {
 		
 		if ( um_get_option('permalink_base') == 'user_login' ) {
 			$user_in_url = um_user('user_login');
+			
+			if ( is_email($user_in_url) ) {
+				$user_in_url = str_replace('@','',$user_in_url);
+				if( ( $pos = strrpos( $user_in_url , '.' ) ) !== false ) {
+					$search_length  = strlen( '.' );
+					$user_in_url    = substr_replace( $user_in_url , '-' , $pos , $search_length );
+				}
+			}
+			
 		}
 		
 		if ( um_get_option('permalink_base') == 'user_id' ) {
@@ -152,7 +161,7 @@ class UM_Permalinks {
 			$profile_url = add_query_arg( 'um_user', $user_in_url, $profile_url );
 			
 		}
-		
+
 		return $profile_url;
 	}
 	

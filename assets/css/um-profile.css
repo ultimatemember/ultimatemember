@@ -25,12 +25,13 @@
 
 .um-profile .um-profile-body {
 	padding-top: 15px;
+	padding-bottom: 15px;
 	max-width: 600px;
 	margin: auto;
 }
 
 .um-profile.um-editing {
-	padding-bottom: 30px;
+	padding-bottom: 15px;
 }
 
 .um-profile.um-viewing {
@@ -331,21 +332,25 @@ font-weight: normal;
 */
 
 .um-profile-nav {
+	padding: 10px;
 	background: #444;
+	text-align: center;
 }
 
 .um-profile-nav-item.active a {
-	background: #eee !important;
-	color: #333 !important;
+	background: #3BA1DA !important;
+	color: #FFF!important;
 }
 
 .um-profile-nav-item a {
-	color: #fff !important;
+	color: #fff!important;
 	font-size: 15px;
 	font-weight: 600;
-	padding: 10px 20px;
+	padding: 7px 20px;
 	display: block;
 	float: left;
+	border-radius: 4px;
+	margin-left: 10px;
 }
 
 .um-profile-nav-item a:hover {
@@ -432,3 +437,19 @@ font-weight: normal;
 
 .um-item-meta a {border-bottom: 1px solid #E0E0E0;color: #3BA1DA}
 .um-item-meta a:hover {border-bottom-color: #bbb}
+
+.um-load-items {
+	text-align: center;
+	margin-top: 12px;
+	padding-top: 30px;
+}
+
+.um-load-items.loading {
+	background: url(../img/loading-dots.gif) no-repeat top center;
+}
+
+.um-load-items a {
+	max-width: 250px;
+	display: inline-block;
+	margin: 0 auto;
+}

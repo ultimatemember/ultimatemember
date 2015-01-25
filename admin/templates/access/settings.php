@@ -35,7 +35,7 @@
 		
 		<div class="um-admin-access-roles">
 		
-			<h4><?php _e('Select the member roles that can see this content?','ultimatemember'); ?> <?php $this->tooltip( __('If you do not select any role, all members wil be able to view this content','ultimatemember'), 'e'); ?></h4>
+			<h4><?php _e('Select the member roles that can see this content?','ultimatemember'); ?> <?php $this->tooltip( __('If you do not select any role, all members will be able to view this content','ultimatemember'), 'e'); ?></h4>
 			
 			<p class="description">
 			

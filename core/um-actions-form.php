@@ -77,9 +77,11 @@
 		
 			$words = array_map("rtrim", explode("\n", $words));
 			foreach( $fields as $key => $array ) {
-				if ( isset($array['validate']) && in_array( $array['validate'], array('unique_username','unique_email','unique_username_or_email') ) ) {
-					if ( preg_grep( "/".$args[$key]."/i" , $words ) ) {
-						$ultimatemember->form->add_error( $key,  __('You are not allowed to use this word as your username.') );
+				if ( isset( $args[$key] ) ) {
+					if ( isset($array['validate']) && in_array( $array['validate'], array('unique_username','unique_email','unique_username_or_email') ) ) {
+						if ( preg_grep( "/".$args[$key]."/i" , $words ) ) {
+							$ultimatemember->form->add_error( $key,  __('You are not allowed to use this word as your username.') );
+						}
 					}
 				}
 			}
@@ -136,7 +138,9 @@
 		$fields = unserialize( $args['custom_fields'] );
 
 		foreach( $fields as $key => $array ) {
-		
+			
+			if ( isset( $args[$key] ) ) {
+
 			if ( isset( $array['required'] ) && $array['required'] == 1 ) {
 				if ( !isset($args[$key]) || $args[$key] == '' ) {
 				$ultimatemember->form->add_error($key, sprintf(__('%s is required'), $array['label']) );
@@ -294,5 +298,7 @@
 				$ultimatemember->form->add_error('description', sprintf(__('Your user description must contain less than %s characters'), $max_chars ) );
 			}
 		}
+		
+		} // end if ( isset in args array )
 		
 	}

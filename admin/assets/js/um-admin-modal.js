@@ -200,6 +200,18 @@ jQuery(document).ready(function() {
 	});
 	
 	/**
+		reset conditions
+	**/
+	jQuery(document).on('click', '.um-admin-reset-conditions a', function(){
+		var content = jQuery(this).parents('.um-admin-btn-content');
+		content.find('.um-admin-cur-condition').slice(1).remove();
+		content.find('input[type=text]').val('');
+		content.find('select').val('');
+		um_admin_live_update_scripts();
+		um_admin_modal_responsive();
+	});
+	
+	/**
 		remove a condition
 	**/
 	jQuery(document).on('click', '.um-admin-remove-condition', function(){
