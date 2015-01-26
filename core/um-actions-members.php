@@ -227,7 +227,7 @@
 						$default_size = str_replace( 'px', '', um_get_option('profile_photosize') );
 						$corner = um_get_option('profile_photocorner');
 						?>
-					<div class="um-member-photo radius-<?php echo $corner; ?>"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('profile_photo', $default_size ); ?></a></div>
+					<div class="um-member-photo radius-<?php echo $corner; ?>"><a href="<?php echo um_user_profile_url(); ?>"><?php echo get_avatar( um_user('ID'), $default_size ); ?></a></div>
 					<?php } ?>
 					
 					<div class="um-member-card <?php if (!$profile_photo) { echo 'no-photo'; } ?>">

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-22 12:25+0200\n"
-"PO-Revision-Date: 2015-01-22 12:25+0200\n"
+"POT-Creation-Date: 2015-01-25 21:57+0200\n"
+"PO-Revision-Date: 2015-01-25 21:57+0200\n"
 "Last-Translator: Calum Allison <umplugin@gmail.com>\n"
 "Language-Team: Ultimate Member <umplugin@gmail.com>\n"
 "Language: en_US\n"
@@ -240,8 +240,8 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/background/field_background.php:314
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/media/field_media.php:193
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:126
-#: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:188 core/um-fields.php:729
-#: core/um-fields.php:750
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:188 core/um-fields.php:742
+#: core/um-fields.php:763
 msgid "Upload"
 msgstr ""
 
@@ -252,7 +252,7 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/multi_text/field_multi_text.php:76
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:133
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:190
-#: core/um-actions-profile.php:141
+#: core/um-actions-profile.php:166
 msgid "Remove"
 msgstr ""
 
@@ -338,11 +338,13 @@ msgstr ""
 msgid "Add More"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/password/field_password.php:62
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/password/field_password.php:62 core/um-builtin.php:469
+#: core/um-builtin.php:472 core/um-builtin.php:832 core/um-builtin.php:835
 msgid "Password"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/password/field_password.php:63
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/password/field_password.php:63 core/um-builtin.php:445
+#: core/um-builtin.php:448
 msgid "Username"
 msgstr ""
 
@@ -576,12 +578,12 @@ msgid ""
 "configurations, plugins and themes to test to ensure compatibility."
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:135 admin/core/um-admin-tracking.php:155
-#: um-config.php:1426
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:135 admin/core/um-admin-tracking.php:153
+#: um-config.php:1473
 msgid "Allow tracking"
 msgstr ""
 
-#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:140 admin/core/um-admin-tracking.php:156
+#: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:140 admin/core/um-admin-tracking.php:154
 msgid "Do not allow tracking"
 msgstr ""
 
@@ -2013,7 +2015,7 @@ msgid "Access Control"
 msgstr ""
 
 #: admin/core/um-admin-actions-ajax.php:11 admin/core/um-admin-actions-fields.php:11
-#: admin/core/um-admin-actions-modal.php:95
+#: admin/core/um-admin-actions-modal.php:98
 msgid "Please login as administrator"
 msgstr ""
 
@@ -2025,31 +2027,35 @@ msgstr ""
 msgid "Add conditional fields support"
 msgstr ""
 
-#: admin/core/um-admin-actions-modal.php:120
+#: admin/core/um-admin-actions-modal.php:30
+msgid "Reset all rules"
+msgstr ""
+
+#: admin/core/um-admin-actions-modal.php:123
 msgid "Search Icons..."
 msgstr ""
 
-#: admin/core/um-admin-actions-modal.php:141
+#: admin/core/um-admin-actions-modal.php:144
 msgid "Setup New Field"
 msgstr ""
 
-#: admin/core/um-admin-actions-modal.php:157
+#: admin/core/um-admin-actions-modal.php:160
 msgid "Predefined Fields"
 msgstr ""
 
-#: admin/core/um-admin-actions-modal.php:169
+#: admin/core/um-admin-actions-modal.php:172
 msgid "None"
 msgstr ""
 
-#: admin/core/um-admin-actions-modal.php:173
+#: admin/core/um-admin-actions-modal.php:176
 msgid "Custom Fields"
 msgstr ""
 
-#: admin/core/um-admin-actions-modal.php:184
+#: admin/core/um-admin-actions-modal.php:187
 msgid "You did not create any custom fields"
 msgstr ""
 
-#: admin/core/um-admin-actions-modal.php:218 admin/core/um-admin-actions-modal.php:288
+#: admin/core/um-admin-actions-modal.php:221 admin/core/um-admin-actions-modal.php:291
 msgid "This field type is not setup correcty."
 msgstr ""
 
@@ -2147,11 +2153,13 @@ msgstr ""
 msgid "Role draft updated."
 msgstr ""
 
-#: admin/core/um-admin-metabox.php:112 um-config.php:208 um-config.php:240
+#: admin/core/um-admin-metabox.php:112 core/um-builtin.php:812 core/um-builtin.php:827 um-config.php:208
+#: um-config.php:240
 msgid "Yes"
 msgstr ""
 
-#: admin/core/um-admin-metabox.php:113 admin/core/um-admin-roles.php:48 um-config.php:209 um-config.php:241
+#: admin/core/um-admin-metabox.php:113 admin/core/um-admin-roles.php:48 core/um-builtin.php:811
+#: core/um-builtin.php:812 core/um-builtin.php:826 core/um-builtin.php:827 um-config.php:209 um-config.php:241
 msgid "No"
 msgstr ""
 
@@ -2225,6 +2233,12 @@ msgstr ""
 
 #: admin/core/um-admin-metabox.php:271
 msgid "User Meta"
+msgstr ""
+
+#: admin/core/um-admin-metabox.php:421
+msgid ""
+"Select where this field should appear. This option should only be changed on the profile form and allows you "
+"to show a field in one mode only (edit or view) or in both modes."
 msgstr ""
 
 #: admin/core/um-admin-metabox.php:455
@@ -2310,7 +2324,7 @@ msgstr ""
 msgid "Core"
 msgstr ""
 
-#: admin/core/um-admin-tracking.php:151
+#: admin/core/um-admin-tracking.php:149
 msgid ""
 "Help us improve Ultimate Member’s compatibility with other plugins and themes by allowing us to track non-"
 "sensitive data on your site. Click <a href=\"https://ultimatemember.com/tracking/\" target=\"_blank\">here</"
@@ -2333,7 +2347,7 @@ msgstr ""
 msgid "Take Action"
 msgstr ""
 
-#: admin/core/um-admin-users.php:199 core/um-fields.php:1175
+#: admin/core/um-admin-users.php:199 core/um-fields.php:1193
 msgid "Apply"
 msgstr ""
 
@@ -2410,7 +2424,7 @@ msgid "Select the member roles that can see this content?"
 msgstr ""
 
 #: admin/templates/access/settings.php:38
-msgid "If you do not select any role, all members wil be able to view this content"
+msgid "If you do not select any role, all members will be able to view this content"
 msgstr ""
 
 #: admin/templates/dashboard/overview.php:83
@@ -2510,6 +2524,10 @@ msgstr ""
 msgid "Profile photo border color"
 msgstr ""
 
+#: admin/templates/directory/profile_card.php:19
+msgid "Profile card border thickness"
+msgstr ""
+
 #: admin/templates/directory/search.php:6
 msgid "Enable Search feature"
 msgstr ""
@@ -2553,7 +2571,7 @@ msgstr ""
 
 #: admin/templates/form/login_customize.php:26 admin/templates/form/profile_customize.php:38
 #: admin/templates/form/register_customize.php:38
-msgid "Max. Width (px or %)"
+msgid "Max. Width (px)"
 msgstr ""
 
 #: admin/templates/form/login_customize.php:30 admin/templates/form/profile_customize.php:42
@@ -2611,6 +2629,10 @@ msgstr ""
 msgid "Secondary Button Text Color"
 msgstr ""
 
+#: admin/templates/form/login_customize.php:92
+msgid "Show Forgot Password Link?"
+msgstr ""
+
 #: admin/templates/form/login_settings.php:3
 msgid "Redirection after Login"
 msgstr ""
@@ -2625,7 +2647,7 @@ msgstr ""
 msgid "<strong>Note:</strong> Form type cannot be changed for the default forms."
 msgstr ""
 
-#: admin/templates/form/mode.php:9 um-config.php:1224
+#: admin/templates/form/mode.php:9 um-config.php:1263
 msgid "Registration Form"
 msgstr ""
 
@@ -2633,7 +2655,7 @@ msgstr ""
 msgid "Profile Form"
 msgstr ""
 
-#: admin/templates/form/mode.php:13 um-config.php:1315
+#: admin/templates/form/mode.php:13 um-config.php:1354
 msgid "Login Form"
 msgstr ""
 
@@ -2653,23 +2675,23 @@ msgstr ""
 msgid "Cover photo ratio"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:125 um-config.php:1092
+#: admin/templates/form/profile_customize.php:125 um-config.php:1131
 msgid "Profile Photo Size"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:129 um-config.php:1101
+#: admin/templates/form/profile_customize.php:129 um-config.php:1140
 msgid "Profile Photo Style"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:132 um-config.php:1105
+#: admin/templates/form/profile_customize.php:132 um-config.php:1144
 msgid "Circle"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:133 um-config.php:1106
+#: admin/templates/form/profile_customize.php:133 um-config.php:1145
 msgid "Rounded Corners"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:134 um-config.php:1107
+#: admin/templates/form/profile_customize.php:134 um-config.php:1146
 msgid "Square"
 msgstr ""
 
@@ -2717,11 +2739,7 @@ msgstr ""
 msgid "Assign role to form"
 msgstr ""
 
-#: admin/templates/form/register_customize.php:38
-msgid "The maximum width of shortcode in pixels or percentage relative to its parent, e.g. 600px or 70%"
-msgstr ""
-
-#: admin/templates/form/register_customize.php:42 um-config.php:1001 um-config.php:1250 um-config.php:1341
+#: admin/templates/form/register_customize.php:42 um-config.php:1040 um-config.php:1289 um-config.php:1380
 msgid "The shortcode is centered by default unless you specify otherwise here"
 msgstr ""
 
@@ -2767,9 +2785,9 @@ msgstr ""
 
 #: admin/templates/modal/dynamic_edit_field.php:15 admin/templates/modal/dynamic_edit_row.php:15
 #: admin/templates/modal/dynamic_new_divider.php:15 admin/templates/modal/dynamic_new_field.php:15
-#: admin/templates/modal/dynamic_new_group.php:15 core/um-actions-profile.php:142
-#: core/um-actions-profile.php:234 core/um-actions-profile.php:244 core/um-actions-profile.php:369
-#: core/um-fields.php:1176 core/um-fields.php:1261
+#: admin/templates/modal/dynamic_new_group.php:15 core/um-actions-profile.php:167
+#: core/um-actions-profile.php:259 core/um-actions-profile.php:269 core/um-actions-profile.php:394
+#: core/um-fields.php:1194 core/um-fields.php:1279
 msgid "Cancel"
 msgstr ""
 
@@ -3038,60 +3056,61 @@ msgid ""
 "you know whether your application has been successful or not."
 msgstr ""
 
-#: admin/um-admin-init.php:31
+#: admin/um-admin-init.php:36
 msgid "Ultimate Member"
 msgstr ""
 
-#: admin/um-admin-init.php:33
+#: admin/um-admin-init.php:38
 msgid "Dashboard"
 msgstr ""
 
-#: admin/um-admin-init.php:36
+#: admin/um-admin-init.php:41
 #, php-format
 msgid "%s | Ultimate Member"
 msgstr ""
 
-#: admin/um-admin-init.php:46 core/um-taxonomies.php:18
+#: admin/um-admin-init.php:51 core/um-taxonomies.php:18
 msgid "Forms"
 msgstr ""
 
-#: admin/um-admin-init.php:48 core/um-taxonomies.php:36
+#: admin/um-admin-init.php:53 core/um-taxonomies.php:36
 msgid "User Roles"
 msgstr ""
 
-#: admin/um-admin-init.php:51 core/um-taxonomies.php:56
+#: admin/um-admin-init.php:56 core/um-taxonomies.php:56
 msgid "Member Directories"
 msgstr ""
 
-#: admin/um-admin-init.php:75
+#: admin/um-admin-init.php:80
 msgid "Please create a team.php template in admin templates."
 msgstr ""
 
 #: core/um-actions-account.php:28 core/um-actions-account.php:97 core/um-actions-account.php:142
+#: core/um-builtin.php:818 core/um-builtin.php:821
 msgid "Delete Account"
 msgstr ""
 
-#: core/um-actions-account.php:82 core/um-actions-password.php:107
+#: core/um-actions-account.php:82 core/um-actions-password.php:121
 msgid "Your password must contain at least 8 characters"
 msgstr ""
 
-#: core/um-actions-account.php:86 core/um-actions-password.php:111
+#: core/um-actions-account.php:86 core/um-actions-password.php:125
 msgid "Your password must contain less than 30 characters"
 msgstr ""
 
-#: core/um-actions-ajax.php:30 core/um-actions-ajax.php:45
+#: core/um-actions-ajax.php:41 core/um-actions-ajax.php:56 core/um-actions-ajax.php:106
 msgid "You can not edit this user"
 msgstr ""
 
-#: core/um-actions-ajax.php:62
+#: core/um-actions-ajax.php:73
 msgid "Invalid parameters"
 msgstr ""
 
-#: core/um-actions-ajax.php:65
+#: core/um-actions-ajax.php:76
 msgid "Invalid coordinates"
 msgstr ""
 
-#: core/um-actions-ajax.php:68
+#: core/um-actions-ajax.php:79
 msgid "Invalid Image file"
 msgstr ""
 
@@ -3099,99 +3118,99 @@ msgstr ""
 msgid "You do not have permission to delete this user."
 msgstr ""
 
-#: core/um-actions-form.php:82
+#: core/um-actions-form.php:83
 msgid "You are not allowed to use this word as your username."
 msgstr ""
 
-#: core/um-actions-form.php:142
+#: core/um-actions-form.php:146
 #, php-format
 msgid "%s is required"
 msgstr ""
 
-#: core/um-actions-form.php:148
+#: core/um-actions-form.php:152
 #, php-format
 msgid "You are only allowed to enter a maximum of %s words"
 msgstr ""
 
-#: core/um-actions-form.php:154
+#: core/um-actions-form.php:158
 #, php-format
 msgid "Your %s must contain at least %s characters"
 msgstr ""
 
-#: core/um-actions-form.php:160
+#: core/um-actions-form.php:164
 #, php-format
 msgid "Your %s must contain less than %s characters"
 msgstr ""
 
-#: core/um-actions-form.php:166
+#: core/um-actions-form.php:170
 msgid "You can not use HTML tags here"
 msgstr ""
 
-#: core/um-actions-form.php:172
+#: core/um-actions-form.php:176
 msgid "Your password must contain at least one capital letter and one number"
 msgstr ""
 
-#: core/um-actions-form.php:178
+#: core/um-actions-form.php:182
 msgid "Please confirm your password"
 msgstr ""
 
-#: core/um-actions-form.php:181
+#: core/um-actions-form.php:185
 msgid "Your passwords do not match"
 msgstr ""
 
-#: core/um-actions-form.php:187
+#: core/um-actions-form.php:191
 #, php-format
 msgid "Please select at least %s choices"
 msgstr ""
 
-#: core/um-actions-form.php:193
+#: core/um-actions-form.php:197
 #, php-format
 msgid "You can only select up to %s choices"
 msgstr ""
 
-#: core/um-actions-form.php:203
+#: core/um-actions-form.php:207
 msgid "Please enter a valid phone number"
 msgstr ""
 
-#: core/um-actions-form.php:209 core/um-actions-form.php:215 core/um-actions-form.php:221
-#: core/um-actions-form.php:227 core/um-actions-form.php:233 core/um-actions-form.php:239
+#: core/um-actions-form.php:213 core/um-actions-form.php:219 core/um-actions-form.php:225
+#: core/um-actions-form.php:231 core/um-actions-form.php:237 core/um-actions-form.php:243
 #, php-format
 msgid "Please enter a valid %s username or profile URL"
 msgstr ""
 
-#: core/um-actions-form.php:246 core/um-actions-form.php:260
+#: core/um-actions-form.php:250 core/um-actions-form.php:264
 msgid "You must provide a username"
 msgstr ""
 
-#: core/um-actions-form.php:248 core/um-actions-form.php:262
+#: core/um-actions-form.php:252 core/um-actions-form.php:266
 msgid "Your username is already taken"
 msgstr ""
 
-#: core/um-actions-form.php:250
+#: core/um-actions-form.php:254
 msgid "Username cannot be an email"
 msgstr ""
 
-#: core/um-actions-form.php:252 core/um-actions-form.php:266
+#: core/um-actions-form.php:256 core/um-actions-form.php:270
 msgid "Your username contains invalid characters"
 msgstr ""
 
-#: core/um-actions-form.php:264 core/um-actions-form.php:276
+#: core/um-actions-form.php:268 core/um-actions-form.php:280
 msgid "This email is already linked to an existing account"
 msgstr ""
 
-#: core/um-actions-form.php:274
+#: core/um-actions-form.php:278
 msgid "You must provide your email"
 msgstr ""
 
-#: core/um-actions-form.php:278
+#: core/um-actions-form.php:282
 msgid "This is not a valid email"
 msgstr ""
 
-#: core/um-actions-form.php:280
+#: core/um-actions-form.php:284
 msgid "Your email contains invalid characters"
 msgstr ""
 
-#: core/um-actions-form.php:294
+#: core/um-actions-form.php:298
 #, php-format
 msgid "Your user description must contain less than %s characters"
 msgstr ""
@@ -3228,7 +3247,7 @@ msgstr ""
 msgid "Password is incorrect. Please try again."
 msgstr ""
 
-#: core/um-actions-login.php:202
+#: core/um-actions-login.php:207
 msgid "Forgot your password?"
 msgstr ""
 
@@ -3285,91 +3304,223 @@ msgstr ""
 msgid "Your membership request has been rejected."
 msgstr ""
 
-#: core/um-actions-password.php:66 core/um-actions-password.php:97 core/um-form.php:80
+#: core/um-actions-password.php:80 core/um-actions-password.php:111 core/um-form.php:80
 msgid "Hello, spam bot!"
 msgstr ""
 
-#: core/um-actions-password.php:69 core/um-actions-password.php:100 core/um-form.php:83
+#: core/um-actions-password.php:83 core/um-actions-password.php:114 core/um-form.php:83
 msgid ""
 "Whoa, slow down! You're seeing this message because you tried to submit a form too fast and we think you "
 "might be a spam bot. If you are a real human being please wait a few seconds before submitting the form. "
 "Thanks!"
 msgstr ""
 
-#: core/um-actions-password.php:72
+#: core/um-actions-password.php:86
 msgid "Please provide your username or email"
 msgstr ""
 
-#: core/um-actions-password.php:78
+#: core/um-actions-password.php:92
 msgid " We can't find an account registered with that address or username "
 msgstr ""
 
-#: core/um-actions-password.php:175
+#: core/um-actions-password.php:189
 msgid "Reset my password"
 msgstr ""
 
-#: core/um-actions-password.php:202
+#: core/um-actions-password.php:216
 msgid "Change my password"
 msgstr ""
 
-#: core/um-actions-profile.php:18
+#: core/um-actions-profile.php:40
 msgid "You are not allowed to edit this user."
 msgstr ""
 
-#: core/um-actions-profile.php:126
+#: core/um-actions-profile.php:151 core/um-builtin.php:756
 msgid "Change your cover photo"
 msgstr ""
 
-#: core/um-actions-profile.php:140
+#: core/um-actions-profile.php:165
 msgid "Change cover photo"
 msgstr ""
 
-#: core/um-actions-profile.php:176
+#: core/um-actions-profile.php:201
 msgid "Upload a cover photo"
 msgstr ""
 
-#: core/um-actions-profile.php:233
+#: core/um-actions-profile.php:258
 msgid "Upload photo"
 msgstr ""
 
-#: core/um-actions-profile.php:242 core/um-fields.php:1142 core/um-fields.php:1175
+#: core/um-actions-profile.php:267 core/um-fields.php:1160 core/um-fields.php:1193
 msgid "Change photo"
 msgstr ""
 
-#: core/um-actions-profile.php:243
+#: core/um-actions-profile.php:268
 msgid "Remove photo"
 msgstr ""
 
-#: core/um-actions-profile.php:281
+#: core/um-actions-profile.php:306
 msgid "Tell us a bit about yourself..."
 msgstr ""
 
-#: core/um-actions-profile.php:291
+#: core/um-actions-profile.php:316
 #, php-format
 msgid "This user account status is %s"
 msgstr ""
 
-#: core/um-actions-profile.php:366
+#: core/um-actions-profile.php:391
 msgid "Edit Profile"
 msgstr ""
 
-#: core/um-actions-profile.php:367
+#: core/um-actions-profile.php:392
 msgid "My Account"
 msgstr ""
 
-#: core/um-actions-profile.php:368
+#: core/um-actions-profile.php:393
 msgid "Logout"
+msgstr ""
+
+#: core/um-builtin.php:458 core/um-builtin.php:461 core/um-builtin.php:774
+msgid "Username or E-mail"
+msgstr ""
+
+#: core/um-builtin.php:483 core/um-builtin.php:486
+msgid "First Name"
+msgstr ""
+
+#: core/um-builtin.php:493 core/um-builtin.php:496
+msgid "Last Name"
+msgstr ""
+
+#: core/um-builtin.php:503 core/um-builtin.php:506
+msgid "Display Name"
+msgstr ""
+
+#: core/um-builtin.php:513 core/um-builtin.php:516
+msgid "E-mail Address"
+msgstr ""
+
+#: core/um-builtin.php:524 core/um-builtin.php:527
+msgid "Biography"
+msgstr ""
+
+#: core/um-builtin.php:537 core/um-builtin.php:540
+msgid "Birth Date"
+msgstr ""
+
+#: core/um-builtin.php:551 core/um-builtin.php:554
+msgid "Gender"
+msgstr ""
+
+#: core/um-builtin.php:562
+msgid "Countries"
+msgstr ""
+
+#: core/um-builtin.php:565
+msgid "Country"
+msgstr ""
+
+#: core/um-builtin.php:574 core/um-builtin.php:577
+msgid "Facebook"
+msgstr ""
+
+#: core/um-builtin.php:592 core/um-builtin.php:595
+msgid "Twitter"
+msgstr ""
+
+#: core/um-builtin.php:610 core/um-builtin.php:613
+msgid "LinkedIn"
+msgstr ""
+
+#: core/um-builtin.php:628 core/um-builtin.php:631
+msgid "Google+"
+msgstr ""
+
+#: core/um-builtin.php:646 core/um-builtin.php:649
+msgid "Instagram"
+msgstr ""
+
+#: core/um-builtin.php:664 core/um-builtin.php:667
+msgid "Skype ID"
+msgstr ""
+
+#: core/um-builtin.php:679
+msgid "Roles (Dropdown)"
+msgstr ""
+
+#: core/um-builtin.php:682 core/um-builtin.php:694
+msgid "Account Type"
+msgstr ""
+
+#: core/um-builtin.php:691
+msgid "Roles (Radio)"
+msgstr ""
+
+#: core/um-builtin.php:702
+msgid "Languages"
+msgstr ""
+
+#: core/um-builtin.php:705
+msgid "Languages Spoken"
+msgstr ""
+
+#: core/um-builtin.php:706
+msgid "Select languages"
+msgstr ""
+
+#: core/um-builtin.php:714 core/um-builtin.php:717
+msgid "Phone Number"
+msgstr ""
+
+#: core/um-builtin.php:726 core/um-builtin.php:729
+msgid "Mobile Number"
+msgstr ""
+
+#: core/um-builtin.php:740
+msgid "Profile Photo"
+msgstr ""
+
+#: core/um-builtin.php:743
+msgid "Change your profile photo"
+msgstr ""
+
+#: core/um-builtin.php:744
+msgid "Upload your photo here"
+msgstr ""
+
+#: core/um-builtin.php:753
+msgid "Cover Photo"
+msgstr ""
+
+#: core/um-builtin.php:757
+msgid "Upload profile cover here"
+msgstr ""
+
+#: core/um-builtin.php:767
+msgid "Password Reset"
+msgstr ""
+
+#: core/um-builtin.php:769
+msgid "To reset your password, please enter your email address or username below"
 msgstr ""
 
 #: core/um-builtin.php:777
 msgid "Enter your username or email"
 msgstr ""
 
+#: core/um-builtin.php:787 core/um-builtin.php:790
+msgid "Profile Privacy"
+msgstr ""
+
+#: core/um-builtin.php:791
+msgid "Who can see your public profile?"
+msgstr ""
+
 #: core/um-builtin.php:795 core/um-builtin.php:796
 msgid "Everyone"
 msgstr ""
 
-#: core/um-builtin.php:796 core/um-user.php:407
+#: core/um-builtin.php:796 core/um-user.php:405
 msgid "Only me"
 msgstr ""
 
@@ -3379,6 +3530,10 @@ msgstr ""
 
 #: core/um-builtin.php:807
 msgid "Here you can hide yourself from appearing in public directory"
+msgstr ""
+
+#: core/um-builtin.php:822
+msgid "If you confirm, everything related to your profile will be deleted permanently from the site"
 msgstr ""
 
 #: core/um-cron.php:15
@@ -3399,45 +3554,45 @@ msgstr ""
 msgid "Less than 1 year old"
 msgstr ""
 
-#: core/um-fields.php:897
+#: core/um-fields.php:915
 msgid "Current Password"
 msgstr ""
 
-#: core/um-fields.php:958
+#: core/um-fields.php:976
 #, php-format
 msgid "Confirm New %s"
 msgstr ""
 
-#: core/um-fields.php:1133 core/um-fields.php:1205
+#: core/um-fields.php:1151 core/um-fields.php:1223
 msgid "Upload Photo"
 msgstr ""
 
-#: core/um-fields.php:1175 core/um-fields.php:1260
+#: core/um-fields.php:1193 core/um-fields.php:1278
 msgid "Processing..."
 msgstr ""
 
-#: core/um-fields.php:1221 core/um-fields.php:1260
+#: core/um-fields.php:1239 core/um-fields.php:1278
 msgid "Change file"
 msgstr ""
 
-#: core/um-fields.php:1260
+#: core/um-fields.php:1278
 msgid "Save"
 msgstr ""
 
-#: core/um-fields.php:1898
+#: core/um-fields.php:1912
 #, php-format
 msgid "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some information!"
 msgstr ""
 
-#: core/um-fields.php:1900
+#: core/um-fields.php:1914
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
-#: core/um-files.php:303
+#: core/um-files.php:306
 msgid "Your image is invalid or too large!"
 msgstr ""
 
-#: core/um-files.php:309 core/um-files.php:311
+#: core/um-files.php:312 core/um-files.php:314
 #, php-format
 msgid "Your photo is too small. It must be at least %spx wide."
 msgstr ""
@@ -3452,6 +3607,10 @@ msgstr ""
 
 #: core/um-filters-fields.php:74
 msgid "Untitled photo"
+msgstr ""
+
+#: core/um-filters-profile.php:10
+msgid "About"
 msgstr ""
 
 #: core/um-filters-user.php:11 core/um-filters-user.php:33 core/um-filters-user.php:38
@@ -3782,7 +3941,7 @@ msgstr ""
 msgid "Mail appears from address"
 msgstr ""
 
-#: um-config.php:317 um-config.php:601
+#: um-config.php:317 um-config.php:632
 msgid "e.g. admin@companyname.com"
 msgstr ""
 
@@ -3791,12 +3950,12 @@ msgid "Account Welcome Email"
 msgstr ""
 
 #: um-config.php:333 um-config.php:369 um-config.php:401 um-config.php:433 um-config.php:469 um-config.php:500
-#: um-config.php:531 um-config.php:562 um-config.php:616 um-config.php:647 um-config.php:679
+#: um-config.php:531 um-config.php:562 um-config.php:594 um-config.php:647 um-config.php:678 um-config.php:710
 msgid "Subject Line"
 msgstr ""
 
 #: um-config.php:343 um-config.php:379 um-config.php:411 um-config.php:443 um-config.php:479 um-config.php:510
-#: um-config.php:541 um-config.php:572 um-config.php:626 um-config.php:657 um-config.php:689
+#: um-config.php:541 um-config.php:572 um-config.php:604 um-config.php:657 um-config.php:688 um-config.php:720
 msgid "Message Body"
 msgstr ""
 
@@ -3828,441 +3987,453 @@ msgstr ""
 msgid "Password Reset Email"
 msgstr ""
 
-#: um-config.php:593
+#: um-config.php:585 um-config.php:593 um-config.php:603
+msgid "Password Changed Email"
+msgstr ""
+
+#: um-config.php:624
 msgid "Notifications"
 msgstr ""
 
-#: um-config.php:599
+#: um-config.php:630
 msgid "Admin E-mail Address"
 msgstr ""
 
-#: um-config.php:607 um-config.php:615 um-config.php:625
+#: um-config.php:638 um-config.php:646 um-config.php:656
 msgid "New User Notification"
 msgstr ""
 
-#: um-config.php:638 um-config.php:646 um-config.php:656
+#: um-config.php:669 um-config.php:677 um-config.php:687
 msgid "Account Needs Review Notification"
 msgstr ""
 
-#: um-config.php:670 um-config.php:678 um-config.php:688
+#: um-config.php:701 um-config.php:709 um-config.php:719
 msgid "Account Deletion Notification"
 msgstr ""
 
-#: um-config.php:706
+#: um-config.php:737
 msgid "Uploads"
 msgstr ""
 
-#: um-config.php:712
+#: um-config.php:743
 msgid "Profile Photo Thumbnail Sizes"
 msgstr ""
 
-#: um-config.php:713
+#: um-config.php:744
 msgid "Here you can define which thumbnail sizes will be created for each profile photo upload."
 msgstr ""
 
-#: um-config.php:716 um-config.php:726
+#: um-config.php:747 um-config.php:757
 msgid "Add New Size"
 msgstr ""
 
-#: um-config.php:722
+#: um-config.php:753
 msgid "Cover Photo Thumbnail Sizes"
 msgstr ""
 
-#: um-config.php:723
+#: um-config.php:754
 msgid "Here you can define which thumbnail sizes will be created for each cover photo upload."
 msgstr ""
 
-#: um-config.php:732
+#: um-config.php:763
 msgid "Image Quality"
 msgstr ""
 
-#: um-config.php:733
+#: um-config.php:764
 msgid ""
 "Quality is used to determine quality of image uploads, and ranges from 0 (worst quality, smaller file) to "
-"100 (best quality, biggest file). The default range is 75."
+"100 (best quality, biggest file). The default range is 60."
 msgstr ""
 
-#: um-config.php:741
+#: um-config.php:772
 msgid "Image Upload Maximum Width"
 msgstr ""
 
-#: um-config.php:742
+#: um-config.php:773
 msgid "Any image upload above this width will be resized to this limit automatically."
 msgstr ""
 
-#: um-config.php:750
+#: um-config.php:781
 msgid "Cover Photo Minimum Width"
 msgstr ""
 
-#: um-config.php:751
+#: um-config.php:782
 msgid "This will be the minimum width for cover photo uploads"
 msgstr ""
 
-#: um-config.php:767
+#: um-config.php:798
 msgid "SEO"
 msgstr ""
 
-#: um-config.php:773
+#: um-config.php:804
 msgid "User Profile Title"
 msgstr ""
 
-#: um-config.php:782
+#: um-config.php:813
 msgid "User Profile Dynamic Meta Description"
 msgstr ""
 
-#: um-config.php:783
+#: um-config.php:814
 msgid "You can use dynamic tags to display dynamic user profile data in this field."
 msgstr ""
 
-#: um-config.php:784
+#: um-config.php:815
 msgid "This will be used in the meta description that is available for search-engines."
 msgstr ""
 
-#: um-config.php:798
+#: um-config.php:829
 msgid "Appearance"
 msgstr ""
 
-#: um-config.php:808
+#: um-config.php:839
 msgid "General"
 msgstr ""
 
-#: um-config.php:815
+#: um-config.php:846
 msgid "Members Default Template"
 msgstr ""
 
-#: um-config.php:816
+#: um-config.php:847
 msgid "This will be the default template to output member directory"
 msgstr ""
 
-#: um-config.php:826
+#: um-config.php:857
 msgid "General Active Color"
 msgstr ""
 
-#: um-config.php:828
+#: um-config.php:859
 msgid ""
 "Active color is used commonly with many plugin elements as highlighted color or active selection for "
 "example. This color demonstrates the primary active color of the plugin"
 msgstr ""
 
-#: um-config.php:836
+#: um-config.php:867
 msgid "General Secondary Color"
 msgstr ""
 
-#: um-config.php:838
+#: um-config.php:869
 msgid "Secondary color is used for hovers, or active state for some elements of the plugin"
 msgstr ""
 
-#: um-config.php:846
+#: um-config.php:877
 msgid "Default Primary Button Color"
 msgstr ""
 
-#: um-config.php:855
+#: um-config.php:886
 msgid "Default Primary Button Hover Color"
 msgstr ""
 
-#: um-config.php:864
+#: um-config.php:895
 msgid "Default Primary Button Text Color"
 msgstr ""
 
-#: um-config.php:873
+#: um-config.php:904
 msgid "Default Secondary Button Color"
 msgstr ""
 
-#: um-config.php:882
+#: um-config.php:913
 msgid "Default Secondary Button Hover Color"
 msgstr ""
 
-#: um-config.php:891
+#: um-config.php:922
 msgid "Default Secondary Button Text Color"
 msgstr ""
 
-#: um-config.php:900
+#: um-config.php:931
 msgid "Default Help Icon Color"
 msgstr ""
 
-#: um-config.php:912
+#: um-config.php:943
 msgid "Form Inputs"
 msgstr ""
 
-#: um-config.php:919
+#: um-config.php:950
 msgid "Field Label Color"
 msgstr ""
 
-#: um-config.php:927
+#: um-config.php:958
 msgid "Field Border Style"
 msgstr ""
 
-#: um-config.php:936
+#: um-config.php:967
 msgid "Field Background Color"
 msgstr ""
 
-#: um-config.php:945
+#: um-config.php:976
 msgid "Field Text Color"
 msgstr ""
 
-#: um-config.php:954
+#: um-config.php:985
 msgid "Field Placeholder Color"
 msgstr ""
 
-#: um-config.php:963
+#: um-config.php:994
 msgid "Field Font Icon Color"
 msgstr ""
 
-#: um-config.php:975
+#: um-config.php:1006
 msgid "Profile"
 msgstr ""
 
-#: um-config.php:982
+#: um-config.php:1013
 msgid "Profile Default Template"
 msgstr ""
 
-#: um-config.php:983
+#: um-config.php:1014
 msgid "This will be the default template to output profile"
 msgstr ""
 
-#: um-config.php:991
+#: um-config.php:1022
 msgid "Profile Maximum Width"
 msgstr ""
 
-#: um-config.php:1000
+#: um-config.php:1030
+msgid "Profile Area Maximum Width"
+msgstr ""
+
+#: um-config.php:1039
 msgid "Profile Shortcode Alignment"
 msgstr ""
 
-#: um-config.php:1004 um-config.php:1253 um-config.php:1344
+#: um-config.php:1043 um-config.php:1292 um-config.php:1383
 msgid "Centered"
 msgstr ""
 
-#: um-config.php:1005 um-config.php:1254 um-config.php:1345
+#: um-config.php:1044 um-config.php:1293 um-config.php:1384
 msgid "Left aligned"
 msgstr ""
 
-#: um-config.php:1006 um-config.php:1255 um-config.php:1346
+#: um-config.php:1045 um-config.php:1294 um-config.php:1385
 msgid "Right aligned"
 msgstr ""
 
-#: um-config.php:1014
+#: um-config.php:1053
 msgid "Profile Field Icons"
 msgstr ""
 
-#: um-config.php:1015
+#: um-config.php:1054
 msgid "This is applicable for edit mode only"
 msgstr ""
 
-#: um-config.php:1018 um-config.php:1267 um-config.php:1358
+#: um-config.php:1057 um-config.php:1306 um-config.php:1397
 msgid "Show inside text field"
 msgstr ""
 
-#: um-config.php:1019 um-config.php:1268 um-config.php:1359
+#: um-config.php:1058 um-config.php:1307 um-config.php:1398
 msgid "Show with label"
 msgstr ""
 
-#: um-config.php:1020 um-config.php:1269 um-config.php:1360
+#: um-config.php:1059 um-config.php:1308 um-config.php:1399
 msgid "Turn off"
 msgstr ""
 
-#: um-config.php:1027
+#: um-config.php:1066
 msgid "Profile Primary Button Text"
 msgstr ""
 
-#: um-config.php:1035
+#: um-config.php:1074
 msgid "Profile Secondary Button"
 msgstr ""
 
-#: um-config.php:1043
+#: um-config.php:1082
 msgid "Profile Secondary Button Text"
 msgstr ""
 
-#: um-config.php:1053
+#: um-config.php:1092
 msgid "Profile Associated Role"
 msgstr ""
 
-#: um-config.php:1054
+#: um-config.php:1093
 msgid "Normally, you can leave this to default as this restricts the profile per specified role only"
 msgstr ""
 
-#: um-config.php:1063
+#: um-config.php:1102
 msgid "Profile Base Background Color"
 msgstr ""
 
-#: um-config.php:1072
+#: um-config.php:1111
 msgid "Profile Header Background Color"
 msgstr ""
 
-#: um-config.php:1082
+#: um-config.php:1121
 msgid "Default Profile Photo"
 msgstr ""
 
-#: um-config.php:1083
+#: um-config.php:1122
 msgid "You can change the default profile picture globally here. Please make sure that the photo is 300x300px."
 msgstr ""
 
-#: um-config.php:1102
+#: um-config.php:1141
 msgid "Whether to have rounded profile images, rounded corners, or none for the profile photo"
 msgstr ""
 
-#: um-config.php:1114
+#: um-config.php:1153
 msgid "Profile Cover Photos"
 msgstr ""
 
-#: um-config.php:1123
+#: um-config.php:1162
 msgid "Profile Cover Ratio"
 msgstr ""
 
-#: um-config.php:1124
+#: um-config.php:1163
 msgid "Choose global ratio for cover photos of profiles"
 msgstr ""
 
-#: um-config.php:1138
+#: um-config.php:1177
 msgid "Profile Header Meta Text Color"
 msgstr ""
 
-#: um-config.php:1147
+#: um-config.php:1186
 msgid "Profile Header Link Color"
 msgstr ""
 
-#: um-config.php:1156
+#: um-config.php:1195
 msgid "Profile Header Link Hover"
 msgstr ""
 
-#: um-config.php:1165
+#: um-config.php:1204
 msgid "Profile Header Icon Link Color"
 msgstr ""
 
-#: um-config.php:1174
+#: um-config.php:1213
 msgid "Profile Header Icon Link Hover"
 msgstr ""
 
-#: um-config.php:1182
+#: um-config.php:1221
 msgid "Show display name in profile header"
 msgstr ""
 
-#: um-config.php:1190
+#: um-config.php:1229
 msgid "Show user description in header"
 msgstr ""
 
-#: um-config.php:1198
+#: um-config.php:1237
 msgid "User description maximum chars"
 msgstr ""
 
-#: um-config.php:1207
+#: um-config.php:1246
 msgid "Profile Header Menu Position"
 msgstr ""
 
-#: um-config.php:1209
+#: um-config.php:1248
 msgid "For incompatible themes, please make the menu open from left instead of bottom by default."
 msgstr ""
 
-#: um-config.php:1231
+#: um-config.php:1270
 msgid "Registration Default Template"
 msgstr ""
 
-#: um-config.php:1232
+#: um-config.php:1271
 msgid "This will be the default template to output registration"
 msgstr ""
 
-#: um-config.php:1240
+#: um-config.php:1279
 msgid "Registration Maximum Width"
 msgstr ""
 
-#: um-config.php:1249
+#: um-config.php:1288
 msgid "Registration Shortcode Alignment"
 msgstr ""
 
-#: um-config.php:1263
+#: um-config.php:1302
 msgid "Registration Field Icons"
 msgstr ""
 
-#: um-config.php:1264
+#: um-config.php:1303
 msgid "This controls the display of field icons in the registration form"
 msgstr ""
 
-#: um-config.php:1276
+#: um-config.php:1315
 msgid "Registration Primary Button Text"
 msgstr ""
 
-#: um-config.php:1284
+#: um-config.php:1323
 msgid "Registration Secondary Button"
 msgstr ""
 
-#: um-config.php:1292
+#: um-config.php:1331
 msgid "Registration Secondary Button Text"
 msgstr ""
 
-#: um-config.php:1302
+#: um-config.php:1341
 msgid "Registration Default Role"
 msgstr ""
 
-#: um-config.php:1303
+#: um-config.php:1342
 msgid "This will be the default role assigned to users registering thru registration form"
 msgstr ""
 
-#: um-config.php:1322
+#: um-config.php:1361
 msgid "Login Default Template"
 msgstr ""
 
-#: um-config.php:1323
+#: um-config.php:1362
 msgid "This will be the default template to output login"
 msgstr ""
 
-#: um-config.php:1331
+#: um-config.php:1370
 msgid "Login Maximum Width"
 msgstr ""
 
-#: um-config.php:1340
+#: um-config.php:1379
 msgid "Login Shortcode Alignment"
 msgstr ""
 
-#: um-config.php:1354
+#: um-config.php:1393
 msgid "Login Field Icons"
 msgstr ""
 
-#: um-config.php:1355
+#: um-config.php:1394
 msgid "This controls the display of field icons in the login form"
 msgstr ""
 
-#: um-config.php:1367
+#: um-config.php:1406
 msgid "Login Primary Button Text"
 msgstr ""
 
-#: um-config.php:1375
+#: um-config.php:1414
 msgid "Login Secondary Button"
 msgstr ""
 
-#: um-config.php:1383
+#: um-config.php:1422
 msgid "Login Secondary Button Text"
 msgstr ""
 
-#: um-config.php:1400
+#: um-config.php:1431
+msgid "Login Forgot Password Link"
+msgstr ""
+
+#: um-config.php:1447
 msgid "Advanced"
 msgstr ""
 
-#: um-config.php:1406
+#: um-config.php:1453
 msgid "Disable JS/CSS Compression"
 msgstr ""
 
-#: um-config.php:1408
+#: um-config.php:1455
 msgid ""
 "Not recommended. This will load all plugin js and css files separately and may slow down your website. Use "
 "this setting for development or debugging purposes only."
 msgstr ""
 
-#: um-config.php:1415
+#: um-config.php:1462
 msgid "Never load plugin JS and CSS on the following pages"
 msgstr ""
 
-#: um-config.php:1416
+#: um-config.php:1463
 msgid "Enter a url or page slug (e.g /about/) to disable loading the plugin's css and js on that page."
 msgstr ""
 
-#: um-config.php:1417
+#: um-config.php:1464
 msgid "Add New Page"
 msgstr ""
 
-#: um-config.php:1423
+#: um-config.php:1470
 msgid "Allow Tracking"
 msgstr ""
 
-#: um-config.php:1427
+#: um-config.php:1474
 msgid "Do not allow"
 msgstr ""
 

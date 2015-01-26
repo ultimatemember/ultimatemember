@@ -34,8 +34,13 @@ class UM_Admin_Access {
 	***	@Checks core post type
 	***/
 	function core_post_type( $post_type ){
-		if ( strstr($post_type, 'um_'))
+		
+		if ( strstr($post_type, 'um_') )
 			return true;
+		
+		if ( !class_exists('UM_bbPress_API') && in_array($post_type,array('forum','topic','reply')) )
+			return true;
+		
 		return false;
 	}
 	

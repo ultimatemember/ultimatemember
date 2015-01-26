@@ -78,6 +78,14 @@ $this->sections[] = array(
 				'off'			=> __('Disable'),
         ),
 		
+        array(
+                'id'       		=> 'use_gravatars',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Use Gravatars?' ),
+				'default' 		=> 0,
+				'desc' 	   		=> __('Do you want to use gravatars instead of the default plugin profile photo (If the user did not upload a custom profile photo / avatar)','ultimatemember'),
+        ),
+		
 	)
 
 );

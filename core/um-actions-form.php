@@ -173,7 +173,7 @@
 			
 			if ( isset( $array['force_good_pass'] ) && $array['force_good_pass'] == 1 ) {
 				if ( !$ultimatemember->validation->strong_pass( $args[$key] ) ) {
-				$ultimatemember->form->add_error($key, __('Your password must contain at least one capital letter and one number') );
+				$ultimatemember->form->add_error($key, __('Your password must contain at least one lowercase letter, one capital letter and one number','ultimatemember') );
 				}
 			}
 			

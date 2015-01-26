@@ -134,6 +134,8 @@ class UM_User {
 			// add permissions
 			$user_role = $this->get_role();
 			$this->role_meta = $ultimatemember->query->role_data( $user_role );
+			$this->role_meta = apply_filters('um_user_permissions_filter', $this->role_meta, $this->id);
+			
 			$this->profile = array_merge( $this->profile, (array)$this->role_meta);
 			
 			$this->profile['super_admin'] = ( is_super_admin( $this->id ) ) ? 1 : 0;

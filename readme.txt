@@ -7,7 +7,7 @@ Tags: access control, community, communities, conditional fields, conditional lo
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.23
+Stable Tag: 1.0.25
 
 License: GNU Version 2 or Any Later Version
 
@@ -167,6 +167,21 @@ Yes. The plugin works fine with WordPress network / multisite now. In a recent u
 16. Appearance and Customization Settings
 
 == Changelog ==
+
+= 1.0.25: January 26, 2015 =
+
+* New: addded support to use gravatars (optionally) If the user does not have a custom avatar
+* New: um_user_permissions_filter hook (for developer use)
+* Tweak: plugin uses get_avatar() properly now
+* Fixed: user avatars in backend are fixed
+* Fixed: Mobile_Detect class does not throw php error if it was previously called
+* Fixed: corrected a few translations errors
+
+= 1.0.24: January 26, 2015 =
+
+* Tweak: predefined fields are now localized (translatable)
+* Fixed: PHP warning in comments was fixed
+* Fixed: avatars in comments
 
 = 1.0.23: January 25, 2015 =
 

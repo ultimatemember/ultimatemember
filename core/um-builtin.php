@@ -442,10 +442,10 @@ class UM_Builtin {
 		$this->predefined_fields = array(
 		
 			'user_login' => array(
-				'title' => 'Username',
+				'title' => __('Username','ultimatemember'),
 				'metakey' => 'user_login',
 				'type' => 'text',
-				'label' => 'Username',
+				'label' => __('Username','ultimatemember'),
 				'required' => 1,
 				'public' => 1,
 				'editable' => 0,
@@ -455,10 +455,10 @@ class UM_Builtin {
 			),
 			
 			'username' => array(
-				'title' => 'Username or E-mail',
+				'title' => __('Username or E-mail','ultimatemember'),
 				'metakey' => 'username',
 				'type' => 'text',
-				'label' => 'Username or E-mail',
+				'label' => __('Username or E-mail','ultimatemember'),
 				'required' => 1,
 				'public' => 1,
 				'editable' => 0,
@@ -466,10 +466,10 @@ class UM_Builtin {
 			),
 			
 			'user_password' => array(
-				'title' => 'Password',
+				'title' => __('Password','ultimatemember'),
 				'metakey' => 'user_password',
 				'type' => 'password',
-				'label' => 'Password',
+				'label' => __('Password','ultimatemember'),
 				'required' => 1,
 				'public' => 1,
 				'editable' => 1,
@@ -480,40 +480,40 @@ class UM_Builtin {
 			),
 			
 			'first_name' => array(
-				'title' => 'First Name',
+				'title' => __('First Name','ultimatemember'),
 				'metakey' => 'first_name',
 				'type' => 'text',
-				'label' => 'First Name',
+				'label' => __('First Name','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
 			),
 			
 			'last_name' => array(
-				'title' => 'Last Name',
+				'title' => __('Last Name','ultimatemember'),
 				'metakey' => 'last_name',
 				'type' => 'text',
-				'label' => 'Last Name',
+				'label' => __('Last Name','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
 			),
 			
 			'display_name' => array(
-				'title' => 'Display Name',
+				'title' => __('Display Name','ultimatemember'),
 				'metakey' => 'display_name',
 				'type' => 'text',
-				'label' => 'Display Name',
+				'label' => __('Display Name','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
 			),
 			
 			'user_email' => array(
-				'title' => 'E-mail Address',
+				'title' => __('E-mail Address','ultimatemember'),
 				'metakey' => 'user_email',
 				'type' => 'text',
-				'label' => 'E-mail Address',
+				'label' => __('E-mail Address','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
@@ -521,10 +521,10 @@ class UM_Builtin {
 			),
 			
 			'description' => array(
-				'title' => 'Biography',
+				'title' => __('Biography','ultimatemember'),
 				'metakey' => 'description',
 				'type' => 'textarea',
-				'label' => 'Biography',
+				'label' => __('Biography','ultimatemember'),
 				'html' => 0,
 				'required' => 0,
 				'public' => 1,
@@ -534,10 +534,10 @@ class UM_Builtin {
 			),
 			
 			'birth_date' => array(
-				'title' => 'Birth Date',
+				'title' => __('Birth Date','ultimatemember'),
 				'metakey' => 'birth_date',
 				'type' => 'date',
-				'label' => 'Birth Date',
+				'label' => __('Birth Date','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
@@ -548,10 +548,10 @@ class UM_Builtin {
 			),
 			
 			'gender' => array(
-				'title' => 'Gender',
+				'title' => __('Gender','ultimatemember'),
 				'metakey' => 'gender',
 				'type' => 'radio',
-				'label' => 'Gender',
+				'label' => __('Gender','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
@@ -559,10 +559,10 @@ class UM_Builtin {
 			),
 			
 			'country' => array(
-				'title' => 'Countries',
+				'title' => __('Countries','ultimatemember'),
 				'metakey' => 'country',
 				'type' => 'select',
-				'label' => 'Country',
+				'label' => __('Country','ultimatemember'),
 				'placeholder' => 'Choose a Country',
 				'required' => 0,
 				'public' => 1,
@@ -571,10 +571,10 @@ class UM_Builtin {
 			),
 			
 			'facebook' => array(
-				'title' => 'Facebook',
+				'title' => __('Facebook','ultimatemember'),
 				'metakey' => 'facebook',
 				'type' => 'url',
-				'label' => 'Facebook',
+				'label' => __('Facebook','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
@@ -589,10 +589,10 @@ class UM_Builtin {
 			),
 			
 			'twitter' => array(
-				'title' => 'Twitter',
+				'title' => __('Twitter','ultimatemember'),
 				'metakey' => 'twitter',
 				'type' => 'url',
-				'label' => 'Twitter',
+				'label' => __('Twitter','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
@@ -607,10 +607,10 @@ class UM_Builtin {
 			),
 			
 			'linkedin' => array(
-				'title' => 'LinkedIn',
+				'title' => __('LinkedIn','ultimatemember'),
 				'metakey' => 'linkedin',
 				'type' => 'url',
-				'label' => 'LinkedIn',
+				'label' => __('LinkedIn','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
@@ -625,10 +625,10 @@ class UM_Builtin {
 			),
 			
 			'googleplus' => array(
-				'title' => 'Google+',
+				'title' => __('Google+','ultimatemember'),
 				'metakey' => 'googleplus',
 				'type' => 'url',
-				'label' => 'Google+',
+				'label' => __('Google+','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
@@ -643,10 +643,10 @@ class UM_Builtin {
 			),
 			
 			'instagram' => array(
-				'title' => 'Instagram',
+				'title' => __('Instagram','ultimatemember'),
 				'metakey' => 'instagram',
 				'type' => 'url',
-				'label' => 'Instagram',
+				'label' => __('Instagram','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
@@ -661,10 +661,10 @@ class UM_Builtin {
 			),
 			
 			'skype' => array(
-				'title' => 'Skype ID',
+				'title' => __('Skype ID','ultimatemember'),
 				'metakey' => 'skype',
 				'type' => 'url',
-				'label' => 'Skype ID',
+				'label' => __('Skype ID','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
@@ -676,10 +676,10 @@ class UM_Builtin {
 			),
 			
 			'role_select' => array(
-				'title' => 'Roles (Dropdown)',
+				'title' => __('Roles (Dropdown)','ultimatemember'),
 				'metakey' => 'role_select',
 				'type' => 'select',
-				'label' => 'Account Type',
+				'label' => __('Account Type','ultimatemember'),
 				'placeholder' => 'Choose account type',
 				'required' => 0,
 				'public' => 1,
@@ -688,10 +688,10 @@ class UM_Builtin {
 			),
 			
 			'role_radio' => array(
-				'title' => 'Roles (Radio)',
+				'title' => __('Roles (Radio)','ultimatemember'),
 				'metakey' => 'role_radio',
 				'type' => 'radio',
-				'label' => 'Account Type',
+				'label' => __('Account Type','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
@@ -699,11 +699,11 @@ class UM_Builtin {
 			),
 			
 			'languages' => array(
-				'title' => 'Languages',
+				'title' => __('Languages','ultimatemember'),
 				'metakey' => 'languages',
 				'type' => 'multiselect',
-				'label' => 'Languages Spoken',
-				'placeholder' => 'Select languages',
+				'label' => __('Languages Spoken','ultimatemember'),
+				'placeholder' => __('Select languages','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
@@ -711,10 +711,10 @@ class UM_Builtin {
 			),
 			
 			'phone_number' => array(
-				'title' => 'Phone Number',
+				'title' => __('Phone Number','ultimatemember'),
 				'metakey' => 'phone_number',
 				'type' => 'text',
-				'label' => 'Phone Number',
+				'label' => __('Phone Number','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
@@ -723,10 +723,10 @@ class UM_Builtin {
 			),
 			
 			'mobile_number' => array(
-				'title' => 'Mobile Number',
+				'title' => __('Mobile Number','ultimatemember'),
 				'metakey' => 'mobile_number',
 				'type' => 'text',
-				'label' => 'Mobile Number',
+				'label' => __('Mobile Number','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
@@ -737,11 +737,11 @@ class UM_Builtin {
 			// private use ( not public list )
 		
 			'profile_photo' => array(
-				'title' => 'Profile Photo',
+				'title' => __('Profile Photo','ultimatemember'),
 				'metakey' => 'profile_photo',
 				'type' => 'image',
-				'label' => 'Change your profile photo',
-				'upload_text' => 'Upload your photo here',
+				'label' => __('Change your profile photo','ultimatemember'),
+				'upload_text' => __('Upload your photo here','ultimatemember'),
 				'icon' => 'um-faicon-camera',
 				'crop' => 1,
 				'min_width' => str_replace('px','',um_get_option('profile_photosize')),
@@ -750,11 +750,11 @@ class UM_Builtin {
 			),
 			
 			'cover_photo' => array(
-				'title' => 'Cover Photo',
+				'title' => __('Cover Photo','ultimatemember'),
 				'metakey' => 'cover_photo',
 				'type' => 'image',
-				'label' => 'Change your cover photo',
-				'upload_text' => 'Upload profile cover here',
+				'label' => __('Change your cover photo','ultimatemember'),
+				'upload_text' => __('Upload profile cover here','ultimatemember'),
 				'icon' => 'um-faicon-picture-o',
 				'crop' => 2,
 				'modal_size' => 'large',
@@ -764,14 +764,14 @@ class UM_Builtin {
 			),
 			
 			'password_reset_text' => array(
-				'title' => 'Password Reset',
+				'title' => __('Password Reset','ultimatemember'),
 				'type' => 'block',
-				'content' => '<div style="text-align:center">To reset your password, please enter your email address or username below</div>',
+				'content' => '<div style="text-align:center">' . __('To reset your password, please enter your email address or username below','ultimatemember'). '</div>',
 				'private_use' => true,
 			),
 			
 			'username_b' => array(
-				'title' => 'Username or E-mail',
+				'title' => __('Username or E-mail','ultimatemember'),
 				'metakey' => 'username_b',
 				'type' => 'text',
 				'placeholder' => __('Enter your username or email','ultimatemember'),
@@ -784,16 +784,16 @@ class UM_Builtin {
 			// account page use ( not public )
 			
 			'profile_privacy' => array(
-				'title' => 'Profile Privacy',
+				'title' => __('Profile Privacy','ultimatemember'),
 				'metakey' => 'profile_privacy',
 				'type' => 'select',
-				'label' => 'Profile Privacy',
-				'help' => 'Who can see your public profile?',
+				'label' => __('Profile Privacy','ultimatemember'),
+				'help' => __('Who can see your public profile?','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
-				'default' => __('Everyone'),
-				'options' => array( __('Everyone'), __('Only me') ),
+				'default' => __('Everyone','ultimatemember'),
+				'options' => array( __('Everyone','ultimatemember'), __('Only me','ultimatemember') ),
 				'allowclear' => 0,
 				'account_only' => true,
 				'required_perm' => 'can_make_private_profile',
@@ -808,31 +808,31 @@ class UM_Builtin {
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
-				'default' => 'No',
-				'options' => array('No','Yes'),
+				'default' => __('No','ultimatemember'),
+				'options' => array( __('No','ultimatemember'), __('Yes','ultimatemember') ),
 				'account_only' => true,
 				'required_opt' => array( 'members_page', 1 ),
 			),
 			
 			'delete_account' => array(
-				'title' => 'Delete Account',
+				'title' => __('Delete Account','ultimatemember'),
 				'metakey' => 'delete_account',
 				'type' => 'radio',
-				'label' => 'Delete Account',
-				'help' => 'If you confirm, everything related to your profile will be deleted permanently from the site',
+				'label' => __('Delete Account','ultimatemember'),
+				'help' => __('If you confirm, everything related to your profile will be deleted permanently from the site','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
-				'default' => 'No',
-				'options' => array('Yes','No'),
+				'default' => __('No','ultimatemember'),
+				'options' => array( __('Yes','ultimatemember') , __('No','ultimatemember') ),
 				'account_only' => true,
 			),
 			
 			'single_user_password' => array(
-				'title' => 'Password',
+				'title' => __('Password','ultimatemember'),
 				'metakey' => 'single_user_password',
 				'type' => 'password',
-				'label' => 'Password',
+				'label' => __('Password','ultimatemember'),
 				'required' => 1,
 				'public' => 1,
 				'editable' => 1,

@@ -126,7 +126,7 @@
 		}
 
 		if ( !$ultimatemember->validation->strong_pass( $args['user_password'] ) ) {
-			$ultimatemember->form->add_error('user_password', 'Your password must contain at least one capital letter and one number');
+			$ultimatemember->form->add_error('user_password', __('Your password must contain at least one lowercase letter, one capital letter and one number','ultimatemember') );
 		}
 
 		if ( !$args['confirm_user_password'] ) {

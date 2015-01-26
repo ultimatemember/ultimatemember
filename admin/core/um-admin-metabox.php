@@ -820,7 +820,7 @@ class UM_Admin_Metabox {
 			case '_force_good_pass':
 				?>
 
-					<p><label for="_force_good_pass">Force strong password? <?php $this->tooltip( __('Turn on to force users to create a strong password (must include 1 number and 1 uppercase character). If turned on this option is only applied to register forms and not to login forms.','ultimatemember') ); ?></label>
+					<p><label for="_force_good_pass">Force strong password? <?php $this->tooltip( __('Turn on to force users to create a strong password (A combination of one lowercase letter, one uppercase letter, and one number). If turned on this option is only applied to register forms and not to login forms.','ultimatemember') ); ?></label>
 						<?php if ( isset( $this->edit_mode_value ) ) $this->ui_on_off('_force_good_pass', $this->edit_mode_value ); else  $this->ui_on_off('_force_good_pass', 0 ); ?>
 					</p>
 				
