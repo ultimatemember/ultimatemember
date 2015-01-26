@@ -171,9 +171,28 @@ class UM_Admin_Metabox {
 	***	@load a role metabox
 	***/
 	function load_metabox_role( $object, $box ) {
-		global $ultimatemember;
+		global $ultimatemember, $post;
+
 		$box['id'] = str_replace('um-admin-form-','', $box['id']);
-		include_once um_path . 'admin/templates/role/'. $box['id'] . '.php';
+
+		if ( $box['id'] == 'builder' ) {
+			$UM_Builder = new UM_Admin_Builder();
+			$UM_Builder->form_id = get_the_ID();
+		}
+		
+		preg_match('#\{.*?\}#s', $box['id'], $matches);
+		
+		if ( isset($matches[0]) ){
+			$path = $matches[0];
+			$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
+		} else {
+			$path = um_path;
+		}
+		
+		$path = str_replace('{','', $path );
+		$path = str_replace('}','', $path );
+		
+		include_once $path . 'admin/templates/role/'. $box['id'] . '.php';
 		wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_role_nonce' );
 	}
 	
@@ -181,7 +200,7 @@ class UM_Admin_Metabox {
 	***	@load a form metabox
 	***/
 	function load_metabox_form( $object, $box ) {
-		global $ultimatemember;
+		global $ultimatemember, $post;
 
 		$box['id'] = str_replace('um-admin-form-','', $box['id']);
 
@@ -244,6 +263,8 @@ class UM_Admin_Metabox {
 		add_meta_box('um-admin-form-logout', __('Logout Options'), array(&$this, 'load_metabox_role'), 'um_role', 'normal', 'default');
 		
 		add_meta_box('um-admin-form-delete', __('Delete Options'), array(&$this, 'load_metabox_role'), 'um_role', 'normal', 'default');
+	
+		do_action('um_admin_custom_role_metaboxes');
 		
 	}
 	

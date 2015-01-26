@@ -63,6 +63,7 @@
 	***	@Capitalize first initial
 	***/
 	function um_cap_initials( $name ) {
+		if ( is_email( $name ) ) return $name;
 		$name = str_replace('\' ', '\'', ucwords(str_replace('\'', '\' ', strtolower($name))));
 		return $name;
 	}

@@ -63,7 +63,16 @@
 		if( !is_admin() && !um_user('can_access_wpadmin')) {
 			return false;
 		} else {
+			um_fetch_user( get_current_user_id() );
 			return true;
 		}
 	}
 	add_filter( 'show_admin_bar' , 'um_control_admin_bar');
+	
+	/***
+	***	@fix permission for admin bar
+	***/
+	function um_force_admin_bar() {
+		um_reset_user();
+	}
+	add_action( 'wp_footer', 'um_force_admin_bar' );

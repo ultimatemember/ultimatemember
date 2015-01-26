@@ -44,8 +44,7 @@
 			'?d='. $default . '&amp;s=' . $size . '" class="gravatar avatar avatar-'.$size.' um-avatar" width="'.$size.'" height="'.$size.'" alt="" />';
 			
 		}
-		
-		um_reset_user();
+
 		return $avatar;
 	
 	}

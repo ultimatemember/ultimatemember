@@ -7,7 +7,7 @@ Tags: access control, community, communities, conditional fields, conditional lo
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.25
+Stable Tag: 1.0.27
 
 License: GNU Version 2 or Any Later Version
 
@@ -167,6 +167,15 @@ Yes. The plugin works fine with WordPress network / multisite now. In a recent u
 16. Appearance and Customization Settings
 
 == Changelog ==
+
+= 1.0.27: January 27, 2015 =
+
+* Fixed: WP admin bar issue with some plugins and themes
+* Fixed: conflict with WP Recent Comments With Avatars plugin
+
+= 1.0.26: January 26, 2015 =
+
+* Fixed: Important issue fix (update recommended)
 
 = 1.0.25: January 26, 2015 =
 
