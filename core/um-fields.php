@@ -697,6 +697,10 @@ class UM_Fields {
 					$array['borderstyle'] = 'solid';
 				}
 				
+				if ( !isset( $array['divider_text'] ) ) {
+					$array['divider_text'] = '';
+				}
+				
 				break;
 
 			case 'image':
@@ -1135,7 +1139,11 @@ class UM_Fields {
 				
 			/* A line divider */
 			case 'divider':
-				$output .= '<div class="um-field-divider" style="border-bottom: '.$borderwidth.'px '.$borderstyle.' '.$bordercolor.'"></div>';
+				$output .= '<div class="um-field-divider" style="border-bottom: '.$borderwidth.'px '.$borderstyle.' '.$bordercolor.'">';
+				if ( $divider_text ) {
+					$output .= '<div class="um-field-divider-text"><span>' . $divider_text . '</span></div>';
+				}
+				$output .= '</div>';
 				break;
 				
 			/* Single Image Upload */
@@ -1857,7 +1865,11 @@ class UM_Fields {
 				
 			/* A line divider */
 			case 'divider':
-				$output .= '<div class="um-field-divider" style="border-bottom: '.$borderwidth.'px '.$borderstyle.' '.$bordercolor.'"></div>';
+				$output .= '<div class="um-field-divider" style="border-bottom: '.$borderwidth.'px '.$borderstyle.' '.$bordercolor.'">';
+				if ( $divider_text ) {
+					$output .= '<div class="um-field-divider-text"><span>' . $divider_text . '</span></div>';
+				}
+				$output .= '</div>';
 				break;
 				
 			/* Rating */

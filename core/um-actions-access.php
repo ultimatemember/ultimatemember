@@ -29,8 +29,8 @@
 		
 			$redirect = um_get_option('access_redirect');
 			
-			$redirects[] = trailingslashit( um_get_core_page('login') );
-			$redirects[] = trailingslashit( um_get_option('access_redirect') );
+			$redirects[] = um_get_core_page('login');
+			$redirects[] = um_get_option('access_redirect');
 			
 			$exclude_uris = um_get_option('access_exclude_uris');
 			
@@ -38,7 +38,7 @@
 				$redirects = array_merge( $redirects, $exclude_uris );
 			}
 			
-			$current_url = trailingslashit( $ultimatemember->permalinks->get_current_url(true) );
+			$current_url = $ultimatemember->permalinks->get_current_url( get_option('permalink_structure') );
 		
 			if ( isset( $post->ID ) && in_array( $current_url, $redirects ) ) {
 			 // allow

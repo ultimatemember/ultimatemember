@@ -274,23 +274,25 @@ class UM_Admin_Metabox {
 	function add_metabox_form() {
 		
 		add_meta_box('um-admin-form-mode', __('Select Form Type'), array(&$this, 'load_metabox_form'), 'um_form', 'normal', 'default');
-		
 		add_meta_box('um-admin-form-builder', __('Form Builder'), array(&$this, 'load_metabox_form'), 'um_form', 'normal', 'default');
-		
 		add_meta_box('um-admin-form-shortcode', __('Shortcode'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
 		
 		add_meta_box('um-admin-form-register_customize', __('Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
+		add_meta_box('um-admin-form-register_css', __('Custom CSS'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
 		
 		do_action('um_admin_custom_register_metaboxes');
 
 		add_meta_box('um-admin-form-profile_customize', __('Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
+		add_meta_box('um-admin-form-profile_settings', __('User Meta'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
+		add_meta_box('um-admin-form-profile_css', __('Custom CSS'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
+		
+		do_action('um_admin_custom_profile_metaboxes');
 		
 		add_meta_box('um-admin-form-login_customize', __('Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
+		add_meta_box('um-admin-form-login_settings', __('Options'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
+		add_meta_box('um-admin-form-login_css', __('Custom CSS'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
 		
 		do_action('um_admin_custom_login_metaboxes');
-		
-		add_meta_box('um-admin-form-profile_settings', __('User Meta'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
-		add_meta_box('um-admin-form-login_settings', __('Options'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
 
 	}
 	
@@ -652,6 +654,16 @@ class UM_Admin_Metabox {
 				
 					<p><label for="_width">Thickness (in pixels) <?php $this->tooltip('This is the width in pixels, e.g. 4 or 2, etc'); ?></label>
 						<input type="text" name="_width" id="_width" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : 4; ?>" />
+					</p>
+					
+				<?php
+				break;
+				
+			case '_divider_text':
+				?>
+				
+					<p><label for="_divider_text">Optional Text <?php $this->tooltip( __('Optional text to include with the divider','ultimatemember') ); ?></label>
+						<input type="text" name="_divider_text" id="_divider_text" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" />
 					</p>
 					
 				<?php

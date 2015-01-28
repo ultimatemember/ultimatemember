@@ -1,7 +1,19 @@
 <?php
 
 	/***
-	***	@Excludes menu items
+	***	@add dynamic profile headers
+	***/
+	add_filter( 'wp_nav_menu_items', 'um_add_custom_message_to_menu', 10, 2 );
+	function um_add_custom_message_to_menu( $items, $args ) {
+		global $ultimatemember;
+		if ( !is_user_logged_in() )
+			return $items;
+		$items = $ultimatemember->shortcodes->convert_user_tags( $items );
+		return $items;
+	}
+
+	/***
+	***	@conditional menu items
 	***/
 	if ( ! is_admin() ) {
 	

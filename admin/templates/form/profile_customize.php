@@ -39,6 +39,10 @@
 		<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_profile_max_width', null, um_get_option('profile_max_width') ); ?>" name="_um_profile_max_width" id="_um_profile_max_width" />
 	</p>
 	
+	<p><label for="_um_profile_area_max_width"><?php _e('Profile Area Max. Width (px)','ultimatemember'); ?> <?php $this->tooltip('The maximum width of the profile area inside profile (below profile header)', 'e'); ?></label>
+		<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_profile_area_max_width', null, um_get_option('profile_area_max_width') ); ?>" name="_um_profile_area_max_width" id="_um_profile_area_max_width" />
+	</p>
+	
 	<p><label for="_um_profile_align"><?php _e('Alignment','ultimatemember'); ?> <?php $this->tooltip('The shortcode is centered by default unless you specify otherwise here', 'e'); ?></label>
 		<select name="_um_profile_align" id="_um_profile_align" class="umaf-selectjs" style="width: 100%">
 

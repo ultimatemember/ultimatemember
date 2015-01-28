@@ -3,11 +3,11 @@ Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember
 Donate link: 
-Tags: access control, community, communities, conditional fields, conditional logic, conditional menus, content protection, custom fields, file uploads, form builder, front-end login, front-end registration, hide wp-admin, login, login page, logged-in users, member, members, membership, member directory, profile, profiles, profile builder, registration, restrict content, role creation, role menus, search filters, sign in, sign up, social network, star ratings, toolbar, user, users, user fields, user profiles, user roles
+Tags: access control, community, communities, conditional fields, conditional logic, conditional menus, content protection, custom fields, file uploads, form builder, front-end login, front-end registration, hide wp-admin, login, login page, logged-in users, mandrill, member, members, membership, member directory, profile, profiles, profile builder, registration, restrict content, role creation, role menus, search filters, sign in, sign up, social network, star ratings, toolbar, user, users, user fields, user profiles, user roles
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.27
+Stable Tag: 1.0.29
 
 License: GNU Version 2 or Any Later Version
 
@@ -38,6 +38,8 @@ Features of the plugin include:
 * Mobile adaptive & responsive
 * SEO optimized
 * Developer friendly with dozens of actions and filters
+* Multi-site compatibility
+* Mandrill compatibility
 
 **Front-end registration**
 
@@ -127,6 +129,10 @@ No, we have built Ultimate Member to be extremely easy to use and does not requi
 
 Yes. Ultimate Member is designed to adapt nicely to any screen resolution. It includes specific designs for phones, tablets and desktops. 
 
+= Is Ultimate Member multi-site compatible? =
+
+Yes. Ultimate Member works great on both single site and multi-site WordPress installs.
+
 = Where can I get support? =
 
 If you need help with Ultimate Member the best place to ask for help is via the Ultimate Member community forum where you can get answers from the Ultimate Member team and other members.
@@ -142,10 +148,6 @@ Yes. Ultimate Member will work with any properly coded theme. However, some them
 = Does the plugin work with caching plugins? =
 
 The plugin works with popular caching plugins by automatically excluding Ultimate Member pages from being cached. This ensures other visitors to a page will not see the private information of another user. However, if you add features of Ultimate Member to other pages you have to exclude those pages from being cached through your cache plugin settings panel. 
-
-= Does the plugin work on WordPress Multisite? =
-
-Yes. The plugin works fine with WordPress network / multisite now. In a recent update, we have made it possible to show the user photos network-wide.
 
 == Screenshots ==
 
@@ -167,6 +169,24 @@ Yes. The plugin works fine with WordPress network / multisite now. In a recent u
 16. Appearance and Customization Settings
 
 == Changelog ==
+
+= 1.0.29: January 28, 2015 =
+
+* New: added feature to show user display name in menu (e.g. Welcome, {display_name})
+* New: added option to add text to dividers (which can be added using the drag-and-drop form builder)
+* New: security improvement: added whitelisted IP(s) option to allow you to access the WP-admin screen always (prevents lockout)
+* New: added filter hook um_whitelisted_wpadmin_access to control access to wp-admin login screens (for developers)
+* New: added custom css option to apply extra css styling rules from plugin settings
+* New: added custom css option to each form allowing you to apply extra styling rules per form
+* New: added option to customize profile fields area width (per form basis) besides global option
+* Tweak: compatibility with default permalinks (Pretty permalinks are strongly recommended though!)
+* Tweak: improved the function that gets user IP address
+* Tweak: performance: inline css from the plugin is automatically compressed/minified
+
+= 1.0.28: January 27, 2015 =
+
+* New: added compatibility with wpMandrill to handle email delivery
+* Fixed: Issue with profile edit menu not appearing
 
 = 1.0.27: January 27, 2015 =
 
@@ -239,7 +259,7 @@ Yes. The plugin works fine with WordPress network / multisite now. In a recent u
 
 = 1.0.17: January 22, 2015 =
 
-* New: WordPress Multisite compatibility for user uploads and photos
+* New: WordPress Multi-site compatibility for user uploads and photos
 * Fixed: Searching members by username or email in directory (partial search supported)
 * Fixed: Anonymous tracking
 * Fixed: Minor css fixes

@@ -1,6 +1,19 @@
 <?php
 
 	/***
+	***	@Get user IP
+	***/
+	function um_user_ip() {
+		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+			return $_SERVER['HTTP_CLIENT_IP'];
+
+		} else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) { 
+			return $_SERVER['HTTP_X_FORWARDED_FOR'];
+		}
+		return $_SERVER['REMOTE_ADDR'];
+	}
+
+	/***
 	***	@If conditions are met return true;
 	***/
 	function um_field_conditions_are_met( $data ) {
@@ -211,12 +224,12 @@
 	function um_is_core_uri() {
 		global $ultimatemember;
 		$array = $ultimatemember->permalinks->core;
-		$current_url = trailingslashit( $ultimatemember->permalinks->get_current_url(true) );
-		
+		$current_url = $ultimatemember->permalinks->get_current_url( get_option('permalink_structure') );
+
 		if ( !isset( $array ) || !is_array( $array ) ) return false;
 		
 		foreach( $array as $k => $id ) {
-			$page_url = trailingslashit( get_permalink( $id ) );
+			$page_url = get_permalink( $id );
 			if ( strstr( $current_url, $page_url ) )
 				return true;
 		}
@@ -377,7 +390,9 @@
 	***/
 	function um_edit_my_profile_uri() {
 		global $ultimatemember;
-		$url = $ultimatemember->permalinks->get_current_url(true);
+		$url = $ultimatemember->permalinks->get_current_url( get_option('permalink_structure') );
+		$url = remove_query_arg( 'profiletab', $url );
+		$url = remove_query_arg( 'subnav', $url );
 		$url = add_query_arg( 'um_action', 'edit', $url );
 		return $url;
 	}
@@ -483,6 +498,7 @@
 		$user_id = get_current_user_id();
 		$role = get_user_meta( $user_id, 'role', true );
 		$permissions = $ultimatemember->query->role_data( $role );
+		$permissions = apply_filters('um_user_permissions_filter', $permissions, $user_id);
 		if ( $permissions[ $permission ] == 1 )
 			return true;
 		return false;
@@ -514,14 +530,14 @@
 		
 			case 'edit':
 				if ( get_current_user_id() == $user_id && um_user('can_edit_profile') ) $return = 1;
-				if ( !um_user('can_edit_everyone') ) $return = 0;
-				if ( get_current_user_id() == $user_id && !um_user('can_edit_profile') ) $return = 0;
-				if ( um_user('can_edit_roles') && !in_array( $ultimatemember->query->get_role_by_userid( $user_id ), um_user('can_edit_roles') ) ) $return = 0;
+					elseif ( !um_user('can_edit_everyone') ) $return = 0;
+					elseif ( get_current_user_id() == $user_id && !um_user('can_edit_profile') ) $return = 0;
+					elseif ( um_user('can_edit_roles') && !in_array( $ultimatemember->query->get_role_by_userid( $user_id ), um_user('can_edit_roles') ) ) $return = 0;
 				break;
 				
 			case 'delete':
 				if ( !um_user('can_delete_everyone') ) $return = 0;
-				if ( um_user('can_delete_roles') && !in_array( $ultimatemember->query->get_role_by_userid( $user_id ), um_user('can_delete_roles') ) ) $return = 0;
+				elseif ( um_user('can_delete_roles') && !in_array( $ultimatemember->query->get_role_by_userid( $user_id ), um_user('can_delete_roles') ) ) $return = 0;
 				break;
 			
 		}

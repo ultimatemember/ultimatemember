@@ -9,8 +9,10 @@
 	
 		// Login screen
 		if ( isset( $pagenow ) && $pagenow == 'wp-login.php' && !is_user_logged_in() && !isset( $_REQUEST['action'] ) ) {
-			
+
 			$allowed = um_get_option('wpadmin_login');
+			$allowed = apply_filters('um_whitelisted_wpadmin_access', $allowed );
+			
 			if ( !$allowed ) {
 				
 				$act = um_get_option('wpadmin_login_redirect');
@@ -29,6 +31,8 @@
 		if ( isset( $pagenow ) && $pagenow == 'wp-login.php' && !is_user_logged_in() && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'register' ) {
 			
 			$allowed = um_get_option('wpadmin_register');
+			$allowed = apply_filters('um_whitelisted_wpadmin_access', $allowed );
+			
 			if ( !$allowed ) {
 				
 				$act = um_get_option('wpadmin_register_redirect');

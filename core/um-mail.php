@@ -3,7 +3,21 @@
 class UM_Mail {
 
 	function __construct() {
+
+		add_filter('mandrill_nl2br', array(&$this, 'mandrill_nl2br') );
+		
+	}
 	
+	/***
+	***	@mandrill compatibility
+	***/
+	function mandrill_nl2br($nl2br, $message) {
+		
+		// text emails
+		$nl2br = true;
+		
+		return $nl2br;
+
 	}
 	
 	/***

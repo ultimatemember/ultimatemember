@@ -51,7 +51,7 @@
 			return;
 		
 		$ips = array_map("rtrim", explode("\n", $ips));
-		$user_ip = $_SERVER['REMOTE_ADDR'];
+		$user_ip = um_user_ip();
 		
 		foreach($ips as $ip) {
 			$ip = str_replace('*','',$ip);

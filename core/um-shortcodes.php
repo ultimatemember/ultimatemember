@@ -113,12 +113,21 @@ class UM_Shortcodes {
 	***	@Load dynamic css
 	***/
 	function dynamic_css( $args=array() ) {
+		global $ultimatemember;
 		extract($args);
+		
 		$global = um_path . 'assets/dynamic_css/dynamic_global.php';
 		$file = um_path . 'assets/dynamic_css/dynamic_'.$mode.'.php';
+		
 		include $global;
 		if ( file_exists( $file ) )
 			include $file;
+		
+		if ( isset( $args['custom_css'] ) ) {
+			$css = $args['custom_css'];
+			?><!-- ULTIMATE MEMBER FORM INLINE CSS BEGIN --><style type="text/css"><?php print $ultimatemember->styles->minify( $css ); ?></style><!-- ULTIMATE MEMBER FORM INLINE CSS END --><?php
+		}
+		
 	}
 	
 	/***
@@ -194,6 +203,41 @@ class UM_Shortcodes {
 	function get_shortcode($post_id){
 		$shortcode = '[ultimatemember form_id='.$post_id.']';
 		return $shortcode;
+	}
+	
+	/***
+	***	@convert user tags in a string
+	***/
+	function convert_user_tags( $str ) {
+		
+		$pattern_array = array(
+			'{first_name}',
+			'{last_name}',
+			'{display_name}'
+		);
+		
+		$pattern_array = apply_filters('um_allowed_user_tags_patterns', $pattern_array);
+		
+		$matches = false;
+		foreach ( $pattern_array as $pattern )
+		{
+			if (preg_match($pattern, $str))
+			{
+				$usermeta = str_replace('{','',$pattern);
+				$usermeta = str_replace('}','',$usermeta);
+				if ( um_user( $usermeta ) ){
+					$str = preg_replace('/'.$pattern.'/', um_user($usermeta) , $str );
+				}
+			} 
+		}
+		
+		if ( get_option('permalink_structure') ) {
+			$str = str_replace( untrailingslashit( um_get_core_page('user') ), untrailingslashit( um_user_profile_url() ), $str );
+		} else {
+			$str = str_replace( um_get_core_page('user'), um_user_profile_url(), $str );
+		}
+		
+		return $str;
 	}
 
 }

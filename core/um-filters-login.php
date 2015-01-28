@@ -1,10 +1,31 @@
 <?php
 
 	/***
+	***	@filter to allow whitelisted IP to access the wp-admin login
+	***/
+	add_filter('um_whitelisted_wpadmin_access', 'um_whitelisted_wpadmin_access');
+	function um_whitelisted_wpadmin_access( $allowed ) {
+
+		$ips = um_get_option('wpadmin_allow_ips');
+		
+		if ( !$ips )
+			return $allowed;
+		
+		$ips = array_map("rtrim", explode("\n", $ips));
+		$user_ip = um_user_ip();
+
+		if ( in_array( $user_ip, $ips ) )
+			$allowed = 1;
+		
+		return $allowed;
+		
+	}
+	
+	/***
 	***	@filter to customize errors
 	***/
 	add_filter('login_message', 'um_custom_wp_err_messages');
-	function um_custom_wp_err_messages( $message) {
+	function um_custom_wp_err_messages( $message ) {
 
 		if ( isset( $_REQUEST['err'] ) && !empty( $_REQUEST['err'] ) ) {
 			switch( $_REQUEST['err'] ) {

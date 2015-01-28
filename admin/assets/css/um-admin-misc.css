@@ -155,6 +155,7 @@ body.um-admin-modal-open {
 .um-admin-metabox input[type=text].small {width: 50px}
 
 .um-admin-metabox textarea {min-height: 100px;height: 100px}
+.um-admin-metabox textarea.tall {min-height: 200px;height: 200px}
 
 .wp-picker-container input.wp-color-picker[type="text"] {
 	width: 68px !important;

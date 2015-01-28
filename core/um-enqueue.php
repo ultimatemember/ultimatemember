@@ -3,22 +3,45 @@
 class UM_Enqueue {
 
 	function __construct() {
+		
+		add_action('wp_head',  array(&$this, 'wp_head'), 999); // high-priority
 	
 		add_action('wp_enqueue_scripts',  array(&$this, 'wp_enqueue_scripts'), 0);
 	
 	}
 	
 	/***
+	***	@Enqueue inline css globally
+	***/
+	function wp_head() {
+		$css = um_get_option('custom_css');
+		if ( !$css ) return; ?><!-- ULTIMATE MEMBER INLINE CSS BEGIN --><style type="text/css"><?php print $this->minify( $css ); ?></style><!-- ULTIMATE MEMBER INLINE CSS END --><?php
+	}
+	
+	/***
+	***	@Minify css string
+	***/
+	function minify( $css ) {
+		$css = str_replace(array("\r", "\n"), '', $css);
+		$css = str_replace(' {','{', $css );
+		$css = str_replace('{ ','{', $css );
+		$css = str_replace('; ',';', $css );
+		$css = str_replace(';}','}', $css );
+		$css = str_replace(': ',':', $css );
+		return $css;
+	}
+	
+	/***
 	***	@Enqueue scripts and styles
 	***/
-	function wp_enqueue_scripts(){
+	function wp_enqueue_scripts() {
 		
 		global $ultimatemember;
 		
 		$exclude = um_get_option('js_css_exclude');
 		if ( $exclude && is_array( $exclude ) ) {
 			
-			$c_url = trailingslashit( $ultimatemember->permalinks->get_current_url(true) );
+			$c_url = $ultimatemember->permalinks->get_current_url( get_option('permalink_structure') );
 			
 			foreach( $exclude as $match ) {
 				if ( strstr( $c_url, $match ) )

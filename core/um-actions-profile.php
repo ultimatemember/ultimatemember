@@ -517,7 +517,9 @@
 		
 			<?php foreach( $tabs as $id => $tab ) {
 				
-				$nav_link = $ultimatemember->permalinks->get_current_url(true);
+				$nav_link = $ultimatemember->permalinks->get_current_url( get_option('permalink_structure') );
+				$nav_link = remove_query_arg( 'um_action', $nav_link );
+				$nav_link = remove_query_arg( 'subnav', $nav_link );
 				$nav_link = add_query_arg('profiletab', $id, $nav_link )
 				?>
 			

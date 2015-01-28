@@ -398,7 +398,7 @@ class UM_Builtin {
 			
 			'divider' => array(
 				'name' => 'Divider',
-				'col1' => array('_title','_width','_visibility'),
+				'col1' => array('_title','_width','_divider_text','_visibility'),
 				'col2' => array('_style','_color'),
 				'form_only' => true,
 				'validate' => array(

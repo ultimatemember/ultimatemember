@@ -272,10 +272,16 @@ $this->sections[] = array(
         ),
 		
         array(
+				'id'       		=> 'wpadmin_allow_ips',
+                'type'     		=> 'textarea',
+                'title'    		=> __( 'Whitelisted Backend IPs' ),
+				'desc'			=> __('Always allow the specified IP addresses to access the backend login screen and WP-admin to avoid being locked from site backend.')
+        ),
+		
+        array(
 				'id'       		=> 'blocked_ips',
                 'type'     		=> 'textarea',
                 'title'    		=> __( 'Blocked IP Addresses' ),
-                'desc' 			=> __( 'Enter one IP per line, you can also use wildcards to block a specific range e.g. 41.83.*.*' ),
 				'desc'			=> __('This will block the listed IPs from signing up or signing in to the site, you can use full IP numbers or target specific range with a wildcard')
         ),
 		
@@ -283,7 +289,6 @@ $this->sections[] = array(
 				'id'       		=> 'blocked_emails',
                 'type'     		=> 'textarea',
                 'title'    		=> __( 'Blocked Email Addresses' ),
-                'desc' 			=> __( 'Enter one email address per line and you can also specify all emails from specific service to be blocked by using wildcard: *@hotmail.com' ),
 				'desc'			=> __('This will block the specified e-mail addresses from being able to sign up or sign in to your site.')
         ),
 		
@@ -291,7 +296,6 @@ $this->sections[] = array(
 				'id'       		=> 'blocked_words',
                 'type'     		=> 'textarea',
                 'title'    		=> __( 'Blacklist Words' ),
-                'desc' 			=> __( 'The words specified here can not be used as username during registration, please enter one word per line to prevent the usage of this word in a username / during registration' ),
 				'desc'			=> __('This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username'),
 				'default'		=>  'admin' . "\r\n" . 'administrator' . "\r\n" . 'webmaster' . "\r\n" . 'support' . "\r\n" . 'staff'
         ),
@@ -1439,6 +1443,24 @@ $this->sections[] = array(
                 'title'    		=> __( 'Login Forgot Password Link' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Switch on/off the forgot password link in login form',
+        ),
+		
+	)
+	
+);
+
+$this->sections[] = array(
+	
+    'subsection' => true,
+    'title'      => __( 'Custom CSS'),
+    'fields'     => array(
+
+        array(
+				'id'       		=> 'custom_css',
+                'type'     		=> 'textarea',
+                'title'    		=> __( 'Custom CSS' ),
+				'desc'			=> __('Any custom css rules that you specify here will be applied globally to the plugin.'),
+				'rows'			=> 20,
         ),
 		
 	)

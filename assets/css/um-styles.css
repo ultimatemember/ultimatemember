@@ -312,8 +312,26 @@ p.um-notice.err {
 
 .um-field-divider {
 	width: 100%;
-	margin: 0 0 20px 0;
-	height: 15px;
+	margin: 0 0 12px 0;
+	height: 24px;
+	position: relative;
+}
+
+.um-field-divider-text {
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	bottom: -24px;
+	left: 0;
+	font-size: 16px;
+	padding: 10px 0;
+}
+
+.um-field-divider-text span {
+	background: #fff;
+	color: #555;
+	display: inline-block;
+	padding: 0 15px;
 }
 
 .um-field-icon {
