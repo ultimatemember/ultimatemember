@@ -1265,6 +1265,23 @@ $this->sections[] = array(
 				),
         ),
 		
+        array(
+                'id'       		=> 'profile_empty_text',
+                'type'     		=> 'switch',
+                'title'    		=> __( 'Show a custom message if profile is empty' ),
+				'default' 		=> um_get_metadefault('profile_empty_text'),
+				'desc' 	   		=> 'Switch on/off the custom message that appears when the profile is empty',
+        ),
+		
+        array(
+                'id'       		=> 'profile_empty_text_emo',
+                'type'     		=> 'switch',
+                'title'    		=> __( 'Show the emoticon' ),
+				'default' 		=> um_get_metadefault('profile_empty_text_emo'),
+				'desc' 	   		=> 'Switch on/off the emoticon (sad face) that appears above the message',
+				'required'		=> array( 'profile_empty_text', '=', 1 ),
+        ),
+		
 	)
 	
 );

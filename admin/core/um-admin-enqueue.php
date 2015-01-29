@@ -39,23 +39,6 @@ class UM_Admin_Enqueue {
 	function admin_head(){
 		global $current_screen, $post;
 		$screen_id = $current_screen->id;
-
-		if ( strstr($screen_id, 'um_form') ) $highlighted_id = 3;
-		if ( strstr($screen_id, 'um_role') ) $highlighted_id = 4;
-		if ( strstr($screen_id, 'um_directory') ) $highlighted_id = 5;
-
-		if ( isset($highlighted_id) ) { ?>
-		
-			<script type="text/javascript">
-				jQuery(document).ready( function() {
-					jQuery('#toplevel_page_ultimatemember').addClass('wp-current-submenu wp-has-current-submenu wp-menu-open current');
-					jQuery('#toplevel_page_ultimatemember a:first').addClass('wp-current-submenu wp-has-current-submenu current');
-					jQuery('#toplevel_page_ultimatemember').find('li:eq(<?php echo $highlighted_id; ?>)').addClass('current');
-				});
-			</script>
-		
-		<?php
-		}
 		
 		if ( $this->is_plugin_post_type() ){
 

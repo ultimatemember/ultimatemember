@@ -162,7 +162,7 @@
 		
 		<?php echo $output; ?>
 		
-		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="Update Privacy" class="um-button" /></div><div class="um-clear"></div></div>
+		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Update Privacy','ultimatemember'); ?>" class="um-button" /></div><div class="um-clear"></div></div>
 		
 		<?php
 		
@@ -185,7 +185,7 @@
 		
 		<?php echo $output; ?>
 		
-		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="Update Account" class="um-button" /></div><div class="um-clear"></div></div>
+		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Update Account','ultimatemember'); ?>" class="um-button" /></div><div class="um-clear"></div></div>
 		
 		<?php
 		
@@ -209,7 +209,7 @@
 		
 		<?php echo $output; ?>
 		
-		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="Update Password" class="um-button" /></div><div class="um-clear"></div></div>
+		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Update Password','ultimatemember'); ?>" class="um-button" /></div><div class="um-clear"></div></div>
 		
 		<?php
 		
@@ -279,19 +279,19 @@
 		extract( $args );
 		
 		$tabs[100]['general']['icon'] = 'um-faicon-user';
-		$tabs[100]['general']['title'] = 'Account';
+		$tabs[100]['general']['title'] = __('Account','ultimatemember');
 		
 		$tabs[200]['password']['icon'] = 'um-faicon-asterisk';
-		$tabs[200]['password']['title'] = 'Change Password';
+		$tabs[200]['password']['title'] = __('Change Password','ultimatemember');
 		
 		$tabs[300]['privacy']['icon'] = 'um-faicon-lock';
-		$tabs[300]['privacy']['title'] = 'Privacy';
+		$tabs[300]['privacy']['title'] = __('Privacy','ultimatemember');
 		
 		$tabs[400]['notifications']['icon'] = 'um-icon-ios-bell';
-		$tabs[400]['notifications']['title'] = 'Notifications';
+		$tabs[400]['notifications']['title'] = __('Notifications','ultimatemember');
 		
 		$tabs[500]['delete']['icon'] = 'um-faicon-trash-o';
-		$tabs[500]['delete']['title'] = 'Delete Account';
+		$tabs[500]['delete']['title'] = __('Delete Account','ultimatemember');
 		
 		$ultimatemember->account->tabs = apply_filters('um_account_page_default_tabs_hook', $tabs );
 		

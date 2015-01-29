@@ -109,18 +109,20 @@ class UM_Members {
 	***	@Generate a loop of results
 	***/
 	function get_members($args){
+		
+		global $ultimatemember;
+		
 		extract($args);
 		
 		$query_args = array();
-		
 		$query_args = apply_filters( 'um_prepare_user_query_args', $query_args, $args );
 
 		$users = new WP_User_Query( $query_args );
 		
-		/**
-			Getting the final array
-		**/
-
+		// number of profiles for mobile
+		if ( $ultimatemember->mobile->isMobile() && isset( $profiles_per_page_mobile ) )
+			$profiles_per_page = $profiles_per_page_mobile;
+		
 		$array['users'] = $users->results;
 		
 		$array['total_users'] = (isset( $max_users ) && $max_users && $max_users <= $users->total_users ) ? $max_users : $users->total_users;
@@ -130,7 +132,8 @@ class UM_Members {
 		$array['total_pages'] = ceil( $array['total_users'] / $profiles_per_page );
 		
 		$array['header'] = $this->convert_tags( $header, $array );
-
+		$array['header_single'] = $this->convert_tags( $header_single, $array );
+		
 		$array['users_per_page'] = array_slice($array['users'], ( ( $profiles_per_page * $array['page'] ) - $profiles_per_page ), $profiles_per_page );
 		
 		for( $i = $array['page']; $i <= $array['page'] + 2; $i++ ) {

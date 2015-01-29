@@ -244,7 +244,7 @@
 				
 				<div class="um-profile-photo" data-user_id="<?php echo um_profile_id(); ?>">
 
-					<a href="<?php echo um_user_profile_url(); ?>" class="um-profile-photo-img"><?php echo $overlay . get_avatar( um_user('ID'), $default_size ); ?></a>
+					<a href="<?php echo um_user_profile_url(); ?>" class="um-profile-photo-img" title="<?php echo um_user('display_name'); ?>"><?php echo $overlay . get_avatar( um_user('ID'), $default_size ); ?></a>
 					
 					<?php
 					
@@ -283,7 +283,7 @@
 				
 					<div class="um-main-meta">
 						<?php if ( $args['show_name'] ) { ?>
-						<div class="um-name"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('display_name'); ?></a></div>
+						<div class="um-name"><a href="<?php echo um_user_profile_url(); ?>" title="<?php echo um_user('display_name'); ?>"><?php echo um_user('display_name'); ?></a></div>
 						<?php } ?>
 						<div class="um-clear"></div>
 					</div>

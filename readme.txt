@@ -7,7 +7,7 @@ Tags: access control, community, communities, conditional fields, conditional lo
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.29
+Stable Tag: 1.0.30
 
 License: GNU Version 2 or Any Later Version
 
@@ -169,6 +169,19 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Appearance and Customization Settings
 
 == Changelog ==
+
+= 1.0.30: January 29, 2015 =
+
+* New: added option to control number of profiles to display in members directory for mobile devices
+* New: new admin action hook 'um_extend_admin_menu' to extend plugin administration menu
+* New: Improved plugin accessbility e.g add alt text to links and images so people with disabilities can use screen readers
+* New: added option to show/hide the message that appears if profile is empty (includes emoticon show/hide)
+* Tweak: new translatable strings
+* Tweak: added option to customize single-result text for members directory
+* Tweak: removed unnecessary code from member directory backend
+* Tweak: removed unnecessary js from admin head
+* Fixed: Account page is now translatable
+* Fixed: content restriction widget css in backend
 
 = 1.0.29: January 28, 2015 =
 

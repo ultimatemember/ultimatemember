@@ -108,12 +108,12 @@
 			if ( strpos($value, 'http://') !== 0 ) {
 				$value = 'http://' . $value;
 			}
-			$value = '<a href="'. $value .'" target="'.$data['url_target'].'" ' . $url_rel . '>'.$alt.'</a>';
+			$value = '<a href="'. $value .'" title="'.$alt.'" target="'.$data['url_target'].'" ' . $url_rel . '>'.$alt.'</a>';
 		}
 			
 		if ( !is_array( $value ) ) {
 			if ( is_email( $value ) )
-				$value = '<a href="mailto:'. $value.'">'.$value.'</a>';
+				$value = '<a href="mailto:'. $value.'" title="'.$value.'">'.$value.'</a>';
 		} else {
 			$value = implode(', ', $value);
 		}

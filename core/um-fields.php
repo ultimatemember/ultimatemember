@@ -1920,10 +1920,20 @@ class UM_Fields {
 		// start output here
 		$this->get_fields = $this->get_fields();
 
-		if ( um_is_myprofile() ) {
-			$output .= '<p class="um-profile-note"><i class="um-faicon-frown-o"></i><span>' . sprintf(__('Your profile is looking a little empty. Why not <a href="%s">add</a> some information!','ultimatemember'), add_query_arg('um_action','edit') ) . '</span></p>';
-		} else {
-			$output .= '<p class="um-profile-note"><i class="um-faicon-frown-o"></i><span>' . __('This user has not added any information to their profile yet.','ultimatemember') . '</span></p>';
+		if ( um_get_option('profile_empty_text') ) {
+			
+			$emo = um_get_option('profile_empty_text_emo');
+			if ( $emo ) {
+				$emo = '<i class="um-faicon-frown-o"></i>';
+			} else {
+				$emo = false;
+			}
+			
+			if ( um_is_myprofile() ) {
+				$output .= '<p class="um-profile-note">' . $emo .'<span>' . sprintf(__('Your profile is looking a little empty. Why not <a href="%s">add</a> some information!','ultimatemember'), add_query_arg('um_action','edit') ) . '</span></p>';
+			} else {
+				$output .= '<p class="um-profile-note">'. $emo . '<span>' . __('This user has not added any information to their profile yet.','ultimatemember') . '</span></p>';
+			}
 		}
 		
 		if ( !empty( $this->get_fields ) ) {

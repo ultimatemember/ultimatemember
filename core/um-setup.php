@@ -45,8 +45,10 @@ class UM_Setup {
 			'_um_cover_photos' => '1',
 			'_um_show_name' => '1',
 			'_um_directory_header' => __('{total_users} Members','ultimatemember'),
+			'_um_directory_header_single' => __('{total_users} Member','ultimatemember'),
 			'_um_directory_no_users' => __('We are sorry. We cannot find any users who match your search criteria.','ultimatemember'),
-			'_um_profiles_per_page' => '12',
+			'_um_profiles_per_page' => 12,
+			'_um_profiles_per_page_mobile' => 6,
 			'_um_core' => 'members',
 		);
 		
@@ -88,6 +90,8 @@ class UM_Setup {
 			'_um_profile_show_bio' => 1,
 			'_um_profile_bio_maxchars' => 180,
 			'_um_profile_header_menu' => 'bc',
+			'_um_profile_empty_text' => 1,
+			'_um_profile_empty_text_emo' => 1,
 			'_um_profile_role' => '0',
 			'_um_profile_template' => 'profile',
 			'_um_profile_max_width' => '1000px',

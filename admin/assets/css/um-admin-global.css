@@ -2,7 +2,7 @@
 	- General metabox styling
 */
 
-#um-admin-access-control h3 {
+#um-admin-access-settings h3 {
 	padding: 10px 20px 10px 60px;
 	color: #fff;
 	background: #3ba1da url(../img/logo-small.png) no-repeat 12px center;
@@ -12,17 +12,17 @@
 	-moz-osx-font-smoothing: grayscale !important;
 }
 
-#um-admin-access-control h4 {margin:10px 0 4px 0!important}
+#um-admin-access-settings h4 { margin: 10px 0 4px 0!important}
 
-#um-admin-access-control div.handlediv {
+#um-admin-access-settings div.handlediv {
 	color: #fff !important;
 	-webkit-font-smoothing: antialiased !important;
 	-moz-osx-font-smoothing: grayscale !important;
 }
 
-#um-admin-access-control p {font-size: 13px}
+#um-admin-access-settings p {font-size: 13px}
 
-#um-admin-access-control input[type=text] {font-size: 13px}
+#um-admin-access-settings input[type=text] {font-size: 13px}
 
 /*
 	- Nav Menu
