@@ -48,7 +48,6 @@ class UM_Fields {
 			echo $output;
 			
 		echo '</div>';
-						
 	}
 	
 	/***
@@ -448,28 +447,6 @@ class UM_Fields {
 		
 		return false;
 	}
-	
-	/***
-	***	@Fix for children custom fields
-	***/
-	function find_custom_field_data($key, $fields) {
-		foreach ($fields as $k => $v) {
-		
-			if ( $k == $key ){
-				return $fields[$key];
-			}
-				
-			if (isset($fields[$k]['fields'])) {
-				foreach( $fields[$k]['fields'] as $k1 => $v1 ){
-					if ($k1 == $key){
-						return $fields[$k]['fields'][$k1];
-					}
-				}
-			}
-
-		}
-		return array('');
-	}
 
 	/***
 	***	@Get Field Icon
@@ -509,9 +486,9 @@ class UM_Fields {
 		global $ultimatemember;
 		
 		$fields = $this->get_fields();
-		
-		if ( isset( $fields ) && is_array( $fields ) ) {
-			$array = $this->find_custom_field_data($key, $fields);
+
+		if ( isset( $fields ) && is_array( $fields ) && isset( $fields[$key] ) ) {
+			$array = $fields[$key];
 		} else {
 			$array = $ultimatemember->builtin->predefined_fields[$key];
 		}
@@ -607,6 +584,7 @@ class UM_Fields {
 					$array['disabled_weekdays'] = '[' . implode(',',$array['disabled_weekdays']) . ']';
 				}
 				
+				// When date range is strictly defined
 				if ( $array['range'] == 'date_range' ) {
 					
 					$array['date_min'] = str_replace('/',',',$array['range_start']);
@@ -615,14 +593,31 @@ class UM_Fields {
 				} else {
 					
 					if ( $array['years_x'] == 'past' ) {
-						$array['date_min'] = date('Y,n,d', mktime(0, 0, 0, date("n") , date("d"), date("Y") - $array['years'] ) );
+
+						$date = new DateTime( date('Y-n-d') );
+						$past = $date->modify('-'.$array['years'].' years')->format('Y,n,d');
+						
+						$array['date_min'] = $past;
 						$array['date_max'] = date('Y,n,d');
+	
 					} else if ( $array['years_x'] == 'future' ) {
+						
+						$date = new DateTime( date('Y-n-d') );
+						$future = $date->modify('+'.$array['years'].' years')->format('Y,n,d');
+						
 						$array['date_min'] = date('Y,n,d');	
-						$array['date_max'] = date('Y,n,d', mktime(0, 0, 0, date("n") , date("d"), date("Y") + $array['years'] ) );
+						$array['date_max'] = $future;
+						
 					} else {
-						$array['date_min'] = date('Y,n,d', mktime(0, 0, 0, date("n") , date("d"), date("Y") - ( $array['years'] / 2 ) ) );
-						$array['date_max'] = date('Y,n,d', mktime(0, 0, 0, date("n") , date("d"), date("Y") + ( $array['years'] / 2 ) ) );
+						
+						$date = new DateTime( date('Y-n-d') );
+						$date_f = new DateTime( date('Y-n-d') );
+						$past = $date->modify('-'. ( $array['years'] / 2 ).' years')->format('Y,n,d');
+						$future = $date_f->modify('+'. ( $array['years'] / 2 ).' years')->format('Y,n,d');
+						
+						$array['date_min'] = $past;	
+						$array['date_max'] = $future;
+
 					}
 
 				}
@@ -1340,7 +1335,7 @@ class UM_Fields {
 						
 							$v = rtrim($v);
 							
-							if ( !is_numeric( $k ) ) {
+							if ( !is_numeric( $k ) && in_array($form_key, array('role') ) ) {
 								$option_value = $k;
 							} else {
 								$option_value = $v;
@@ -1438,7 +1433,7 @@ class UM_Fields {
 						
 							$v = rtrim($v);
 							
-							if ( !is_numeric( $k ) ) {
+							if ( !is_numeric( $k ) && in_array($form_key, array('role') ) ) {
 								$option_value = $k;
 							} else {
 								$option_value = $v;

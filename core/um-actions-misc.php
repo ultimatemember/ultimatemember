@@ -65,6 +65,10 @@
 					$success = __('You have successfully changed your password.','ultimatemember');
 					break;
 					
+				case 'account_active':
+					$success = __('Your account is now active! You can login.','ultimatemember');
+					break;
+					
 			}
 		}
 		

@@ -141,9 +141,11 @@
 	add_action('um_profile_header_cover_area', 'um_profile_header_cover_area' );
 	function um_profile_header_cover_area( $args ) {
 		global $ultimatemember;
-
-		if ( $args['cover_enabled'] == 1 ) {
 		
+		if ( $args['cover_enabled'] == 1 ) {
+			
+			$default_cover = um_get_option('default_cover');
+			
 			$overlay = '<span class="um-cover-overlay">
 				<span class="um-cover-overlay-s">
 					<ins>
@@ -155,7 +157,7 @@
 			
 		?>
 
-			<div class="um-cover <?php if ( um_profile('cover_photo') ) echo 'has-cover'; ?>" data-user_id="<?php echo um_profile_id(); ?>" data-ratio="<?php echo $args['cover_ratio']; ?>">
+			<div class="um-cover <?php if ( um_profile('cover_photo') || ( $default_cover && $default_cover['url'] ) ) echo 'has-cover'; ?>" data-user_id="<?php echo um_profile_id(); ?>" data-ratio="<?php echo $args['cover_ratio']; ?>">
 			
 				<?php
 				
@@ -170,7 +172,6 @@
 						echo $ultimatemember->menu->new_ui( 'bc', 'div.um-cover', 'click', $items );
 						
 					}
-
 				?>
 				
 				<?php $ultimatemember->fields->add_hidden_field( 'cover_photo' ); ?>
@@ -195,13 +196,21 @@
 					
 					?>
 						
-					<?php } else { ?>
+					<?php } elseif ( $default_cover && $default_cover['url'] ) {
+
+						$default_cover = $default_cover['url'];
+						
+						echo '<img src="'. $default_cover . '" alt="" />';
+						
+					} else {
 					
-					<?php if ( !isset( $ultimatemember->user->cannot_edit ) ) {  ?>
-					<a href="#" class="um-cover-add um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width"><span class="um-cover-add-i"><i class="um-icon-plus um-tip-n" title="<?php _e('Upload a cover photo','ultimatemember'); ?>"></i></span></a>
-					<?php } ?>
+						if ( !isset( $ultimatemember->user->cannot_edit ) ) { ?>
 					
-					<?php } ?>
+						<a href="#" class="um-cover-add um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width"><span class="um-cover-add-i"><i class="um-icon-plus um-tip-n" title="<?php _e('Upload a cover photo','ultimatemember'); ?>"></i></span></a>
+					
+					<?php }
+					
+					} ?>
 					
 				</div>
 				
@@ -505,12 +514,21 @@
 	function um_profile_navbar( $args ) {
 		global $ultimatemember;
 		
-		$tabs = $ultimatemember->profile->tabs();
+		$tabs = $ultimatemember->profile->tabs_active();
 
-		if ( count( $tabs ) == 1 ) return;
+		$tabs = apply_filters('um_user_profile_tabs', $tabs );
 		
-		$active_tab = $ultimatemember->profile->active_tab;
+		$ultimatemember->user->tabs = $tabs;
 		
+		if ( count( $tabs ) <= 1 ) return;
+		
+		$active_tab = $ultimatemember->profile->active_tab();
+
+		if ( !isset( $tabs[$active_tab] ) )
+			$active_tab = 'main';
+			$ultimatemember->profile->active_tab = $active_tab;
+			$ultimatemember->profile->active_subnav = null;
+
 		?>
 		
 		<div class="um-profile-nav">
@@ -523,20 +541,30 @@
 				$nav_link = add_query_arg('profiletab', $id, $nav_link )
 				?>
 			
-			<div class="um-profile-nav-item <?php if ( $id == $active_tab ) echo 'active'; ?>"><a href="<?php echo $nav_link; ?>" title="<?php echo $tab['name']; ?>"><i class="<?php echo $tab['icon']; ?> uimob500-show uimob340-show uimob800-show"></i><span class="uimob500-hide uimob340-hide uimob800-hide"><?php echo $tab['name']; ?></span></a></div>
+			<div class="um-profile-nav-item <?php if ( !um_get_option('profile_menu_icons') ) { echo 'without-icon'; } ?> <?php if ( $id == $active_tab ) { echo 'active'; } ?>">
+				<a href="<?php echo $nav_link; ?>" title="<?php echo $tab['name']; ?>">
+
+					<i class="<?php echo $tab['icon']; ?>"></i>
+					
+					<span class="uimob500-hide uimob340-hide uimob800-hide title"><?php echo $tab['name']; ?></span>
+					
+					<?php if ( um_get_option('profile_menu_counts') && isset( $tab['count'] ) ) { ?>
+					<span class="uimob500-hide uimob340-hide uimob800-hide count"><?php echo $tab['count']; ?></span>
+					<?php } ?>
+					
+				</a>
+			</div>
 			
 			<?php } ?>
 			
 			<div class="um-clear"></div>
 		</div>
 	
-	<?php
-	
-		foreach( $tabs as $id => $tab ) {
+	<?php foreach( $tabs as $id => $tab ) {
 			
 			if ( isset( $tab['subnav'] ) && $active_tab == $id ) {
 				
-				$active_subnav = (isset($ultimatemember->profile->active_subnav)) ? $ultimatemember->profile->active_subnav : $tab['subnav_default'];
+				$active_subnav = ( $ultimatemember->profile->active_subnav() ) ? $ultimatemember->profile->active_subnav() : $tab['subnav_default'];
 
 				echo '<div class="um-profile-subnav">';
 				foreach( $tab['subnav'] as $id => $subtab ) {

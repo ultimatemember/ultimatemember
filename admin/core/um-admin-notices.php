@@ -15,9 +15,9 @@ class UM_Admin_Notices {
 	***/
 	function main_notices(){
 	
-		$hide_notice = get_option('um_can_register_notice');
+		$hide_register_notice = get_option('um_can_register_notice');
 		
-		if ( !get_option('users_can_register') && !$hide_notice ) {
+		if ( !get_option('users_can_register') && !$hide_register_notice ) {
 			
 			echo '<div class="updated" style="border-color: #3ba1da;"><p>';
 		
@@ -26,6 +26,19 @@ class UM_Admin_Notices {
 			echo '</p></div>';
 		
 		}
+		
+		$hide_exif_notice = get_option('um_show_exif_notice');
+		
+		if ( !extension_loaded('exif') && !$hide_exif_notice ) {
+			
+			echo '<div class="updated" style="border-color: #3ba1da;"><p>';
+		
+			echo sprintf(__( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension. <a href="%s">Hide this notice</a>', 'ultimatemember' ), add_query_arg('um_adm_action', 'um_show_exif_notice') );
+		
+			echo '</p></div>';
+		
+		}
+		
 	}
 	
 	/***

@@ -7,13 +7,21 @@
 			<label class="um-admin-half"><?php _e('Can access wp-admin?','ultimatemember'); ?> <?php $this->tooltip( __('The core admin role must always have access to wp-admin / WordPress backend','ultimatemember') ); ?></label>
 			<span class="um-admin-half"><?php $this->ui_on_off('_um_can_access_wpadmin', 1); ?></span>
 		</p><div class="um-admin-clear"></div>
+		<p>
+			<label class="um-admin-half"><?php _e('Force hiding adminbar in frontend?','ultimatemember'); ?> <?php $this->tooltip( __('Show/hide the adminbar on frontend','ultimatemember') ); ?></label>
+			<span class="um-admin-half"><?php $this->ui_on_off('_um_can_not_see_adminbar', 0); ?></span>
+		</p><div class="um-admin-clear"></div>
 		<?php } else { ?>
 		<p>
 			<label class="um-admin-half"><?php _e('Can access wp-admin?','ultimatemember'); ?> <?php $this->tooltip( __('Allow this role to access the admin dashboard. If turned on the WordPress toolbar will appear at top of the page.','ultimatemember') ); ?></label>
 			<span class="um-admin-half"><?php $this->ui_on_off('_um_can_access_wpadmin', 0); ?></span>
 		</p><div class="um-admin-clear"></div>
+		<p>
+			<label class="um-admin-half"><?php _e('Force hiding adminbar in frontend?','ultimatemember'); ?> <?php $this->tooltip( __('Show/hide the adminbar on frontend','ultimatemember') ); ?></label>
+			<span class="um-admin-half"><?php $this->ui_on_off('_um_can_not_see_adminbar', 1); ?></span>
+		</p><div class="um-admin-clear"></div>
 		<?php } ?>
-		
+
 		<p>
 			<label class="um-admin-half"><?php _e('Can edit other member accounts?','ultimatemember'); ?> <?php $this->tooltip( __('Allow this role to edit accounts of other members','ultimatemember') ); ?></label>
 			<span class="um-admin-half"><?php $this->ui_on_off('_um_can_edit_everyone', 0, true, 1, 'edit-roles', 'xxx'); ?></span>

@@ -391,9 +391,10 @@
 	function um_edit_my_profile_uri() {
 		global $ultimatemember;
 		$url = $ultimatemember->permalinks->get_current_url( get_option('permalink_structure') );
-		$url = remove_query_arg( 'profiletab', $url );
-		$url = remove_query_arg( 'subnav', $url );
-		$url = add_query_arg( 'um_action', 'edit', $url );
+		$url = remove_query_arg('profiletab', $url);
+		$url = remove_query_arg('subnav', $url);
+		$url = add_query_arg('profiletab', 'main', $url);
+		$url = add_query_arg('um_action', 'edit', $url);
 		return $url;
 	}
 	
@@ -711,6 +712,17 @@
 	}
 	
 	/***
+	***	@default cover
+	***/
+	function um_get_default_cover_uri() {
+		$uri = um_get_option('default_cover');
+		$uri = $uri['url'];
+		if ( $uri )
+			return $uri;
+		return '';
+	}
+	
+	/***
 	***	@get user data
 	***/
 	function um_user( $data, $attrs = null ) {
@@ -846,15 +858,27 @@
 					$avatar_uri = um_get_default_avatar_uri();
 				}
 				
-				return '<img src="' . $avatar_uri . '" class="gravatar avatar avatar-'.$attrs.' um-avatar" width="'.$attrs.'" height="'.$attrs.'" alt="" />';
-					
+				if ( $avatar_uri )
+					return '<img src="' . $avatar_uri . '" class="gravatar avatar avatar-'.$attrs.' um-avatar" width="'.$attrs.'" height="'.$attrs.'" alt="" />';
+				
+				if ( !$avatar_uri )
+					return '';
+				
 				break;
 
 			case 'cover_photo':
 				if ( um_profile('cover_photo') ) {
 					$cover_uri = um_get_cover_uri( um_profile('cover_photo'), $attrs );
-					return '<img src="'. $cover_uri .'" alt="" />';
+				} else {
+					$cover_uri = um_get_default_cover_uri();
 				}
+				
+				if ( $cover_uri )
+					return '<img src="'. $cover_uri .'" alt="" />';
+				
+				if ( !$cover_uri )
+					return '';
+				
 				break;
 				
 		}

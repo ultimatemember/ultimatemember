@@ -18,7 +18,7 @@
 	***	@dynamic profile page title
 	***/
 	add_filter('wp_title', 'um_dynamic_user_profile_pagetitle', 100000, 2 );
-	function um_dynamic_user_profile_pagetitle( $title, $sep ) {
+	function um_dynamic_user_profile_pagetitle( $title, $sep = '' ) {
 		global $paged, $page, $ultimatemember;
 
 		$profile_title = um_get_option('profile_title');

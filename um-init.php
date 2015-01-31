@@ -36,6 +36,7 @@ class UM_API {
 		require_once um_path . 'core/um-fields.php';
 		require_once um_path . 'core/um-form.php';
 		require_once um_path . 'core/um-user.php';
+		require_once um_path . 'core/um-user-posts.php';
 		require_once um_path . 'core/um-profile.php';
 		require_once um_path . 'core/um-query.php';
 		require_once um_path . 'core/um-datetime.php';
@@ -74,6 +75,7 @@ class UM_API {
 		require_once um_path . 'core/um-actions-save-profile.php';
 		require_once um_path . 'core/um-actions-modal.php';
 		require_once um_path . 'core/um-actions-misc.php';
+		require_once um_path . 'core/um-actions-posts.php';
 		
 		require_once um_path . 'core/um-filters-login.php';
 		require_once um_path . 'core/um-filters-register.php';
@@ -86,6 +88,7 @@ class UM_API {
 		require_once um_path . 'core/um-filters-members.php';
 		require_once um_path . 'core/um-filters-profile.php';
 		require_once um_path . 'core/um-filters-account.php';
+		require_once um_path . 'core/um-filters-misc.php';
 		
 		/* initialize UM */
 		$this->rewrite = new UM_Rewrite();
@@ -100,6 +103,7 @@ class UM_API {
 		$this->register = new UM_Register();
 		$this->fields = new UM_Fields();
 		$this->user = new UM_User();
+		$this->user_posts = new UM_User_Posts();
 		$this->profile = new UM_Profile();
 		$this->datetime = new UM_DateTime();
 		$this->chart = new UM_Chart();

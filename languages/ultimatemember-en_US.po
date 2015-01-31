@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-29 15:23+0200\n"
-"PO-Revision-Date: 2015-01-29 15:23+0200\n"
+"POT-Creation-Date: 2015-01-30 22:04+0200\n"
+"PO-Revision-Date: 2015-01-30 22:04+0200\n"
 "Last-Translator: Calum Allison <umplugin@gmail.com>\n"
 "Language-Team: Ultimate Member <umplugin@gmail.com>\n"
 "Language: en_US\n"
@@ -579,7 +579,7 @@ msgid ""
 msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:135 admin/core/um-admin-tracking.php:153
-#: um-config.php:1520
+#: um-config.php:1575
 msgid "Allow tracking"
 msgstr ""
 
@@ -1543,7 +1543,7 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:796 admin/core/um-admin-metabox.php:281
 #: admin/core/um-admin-metabox.php:287 admin/core/um-admin-metabox.php:293
 #: admin/templates/form/login_css.php:4 admin/templates/form/profile_css.php:4
-#: admin/templates/form/register_css.php:4 um-config.php:1472 um-config.php:1478
+#: admin/templates/form/register_css.php:4 um-config.php:1527 um-config.php:1533
 msgid "Custom CSS"
 msgstr ""
 
@@ -2573,7 +2573,7 @@ msgstr ""
 msgid "Customize the search result text . e.g. Found 3,000 Members. Leave this blank to not show result text"
 msgstr ""
 
-#: admin/templates/directory/search.php:79 core/um-setup.php:47
+#: admin/templates/directory/search.php:79 core/um-setup.php:47 core/um-setup.php:150
 msgid "{total_users} Members"
 msgstr ""
 
@@ -2585,7 +2585,7 @@ msgstr ""
 msgid "Same as above but in case of 1 user found only"
 msgstr ""
 
-#: admin/templates/directory/search.php:88 core/um-setup.php:48
+#: admin/templates/directory/search.php:88 core/um-setup.php:48 core/um-setup.php:151
 msgid "{total_users} Member"
 msgstr ""
 
@@ -2693,7 +2693,7 @@ msgstr ""
 msgid "<strong>Note:</strong> Form type cannot be changed for the default forms."
 msgstr ""
 
-#: admin/templates/form/mode.php:9 um-config.php:1292
+#: admin/templates/form/mode.php:9 um-config.php:1347
 msgid "Registration Form"
 msgstr ""
 
@@ -2701,7 +2701,7 @@ msgstr ""
 msgid "Profile Form"
 msgstr ""
 
-#: admin/templates/form/mode.php:13 um-config.php:1383
+#: admin/templates/form/mode.php:13 um-config.php:1438
 msgid "Login Form"
 msgstr ""
 
@@ -2789,7 +2789,7 @@ msgstr ""
 msgid "Assign role to form"
 msgstr ""
 
-#: admin/templates/form/register_customize.php:42 um-config.php:1052 um-config.php:1318 um-config.php:1409
+#: admin/templates/form/register_customize.php:42 um-config.php:1052 um-config.php:1373 um-config.php:1464
 msgid "The shortcode is centered by default unless you specify otherwise here"
 msgstr ""
 
@@ -2883,7 +2883,7 @@ msgstr ""
 msgid "Choose from %s available icons"
 msgstr ""
 
-#: admin/templates/role/admin.php:7 admin/templates/role/admin.php:12
+#: admin/templates/role/admin.php:7 admin/templates/role/admin.php:16
 msgid "Can access wp-admin?"
 msgstr ""
 
@@ -2891,41 +2891,49 @@ msgstr ""
 msgid "The core admin role must always have access to wp-admin / WordPress backend"
 msgstr ""
 
-#: admin/templates/role/admin.php:12
+#: admin/templates/role/admin.php:11 admin/templates/role/admin.php:20
+msgid "Force hiding adminbar in frontend?"
+msgstr ""
+
+#: admin/templates/role/admin.php:11 admin/templates/role/admin.php:20
+msgid "Show/hide the adminbar on frontend"
+msgstr ""
+
+#: admin/templates/role/admin.php:16
 msgid ""
 "Allow this role to access the admin dashboard. If turned on the WordPress toolbar will appear at top of the "
 "page."
 msgstr ""
 
-#: admin/templates/role/admin.php:18
+#: admin/templates/role/admin.php:26
 msgid "Can edit other member accounts?"
 msgstr ""
 
-#: admin/templates/role/admin.php:18
+#: admin/templates/role/admin.php:26
 msgid "Allow this role to edit accounts of other members"
 msgstr ""
 
-#: admin/templates/role/admin.php:23
+#: admin/templates/role/admin.php:31
 msgid "Can edit these user roles only"
 msgstr ""
 
-#: admin/templates/role/admin.php:23
+#: admin/templates/role/admin.php:31
 msgid "Which roles that role can edit, choose none to allow role to edit all member roles"
 msgstr ""
 
-#: admin/templates/role/admin.php:36
+#: admin/templates/role/admin.php:44
 msgid "Can delete other member accounts?"
 msgstr ""
 
-#: admin/templates/role/admin.php:36
+#: admin/templates/role/admin.php:44
 msgid "Allow this role to edit the profile fields of certain roles only"
 msgstr ""
 
-#: admin/templates/role/admin.php:41
+#: admin/templates/role/admin.php:49
 msgid "Can delete these user roles only"
 msgstr ""
 
-#: admin/templates/role/admin.php:41
+#: admin/templates/role/admin.php:49
 msgid "Which roles that role can delete, choose none to allow role to delete all member roles"
 msgstr ""
 
@@ -3346,7 +3354,7 @@ msgstr ""
 msgid "%s of %d"
 msgstr ""
 
-#: core/um-actions-misc.php:58 core/um-actions-misc.php:81
+#: core/um-actions-misc.php:58 core/um-actions-misc.php:85
 msgid "Registration is currently disabled"
 msgstr ""
 
@@ -3354,31 +3362,35 @@ msgstr ""
 msgid "You have successfully changed your password."
 msgstr ""
 
-#: core/um-actions-misc.php:77
+#: core/um-actions-misc.php:69
+msgid "Your account is now active! You can login."
+msgstr ""
+
+#: core/um-actions-misc.php:81
 msgid "An error has been encountered"
 msgstr ""
 
-#: core/um-actions-misc.php:85 core/um-filters-login.php:33
+#: core/um-actions-misc.php:89 core/um-filters-login.php:33
 msgid "This email address has been blocked."
 msgstr ""
 
-#: core/um-actions-misc.php:89 core/um-filters-login.php:36
+#: core/um-actions-misc.php:93 core/um-filters-login.php:36
 msgid "Your IP address has been blocked."
 msgstr ""
 
-#: core/um-actions-misc.php:93 core/um-filters-login.php:78
+#: core/um-actions-misc.php:97 core/um-filters-login.php:78
 msgid "Your account has been disabled."
 msgstr ""
 
-#: core/um-actions-misc.php:97 core/um-filters-login.php:81
+#: core/um-actions-misc.php:101 core/um-filters-login.php:81
 msgid "Your account has not been approved yet."
 msgstr ""
 
-#: core/um-actions-misc.php:101 core/um-filters-login.php:84
+#: core/um-actions-misc.php:105 core/um-filters-login.php:84
 msgid "Your account is awaiting e-mail verifications."
 msgstr ""
 
-#: core/um-actions-misc.php:105 core/um-filters-login.php:87
+#: core/um-actions-misc.php:109 core/um-filters-login.php:87
 msgid "Your membership request has been rejected."
 msgstr ""
 
@@ -3815,6 +3827,14 @@ msgstr ""
 msgid "Search Member Directories"
 msgstr ""
 
+#: core/um-user-posts.php:65
+msgid "Posts"
+msgstr ""
+
+#: core/um-user-posts.php:71
+msgid "Comments"
+msgstr ""
+
 #: index.php:57
 msgid "Docs"
 msgstr ""
@@ -3825,6 +3845,53 @@ msgstr ""
 
 #: index.php:63
 msgid "Uninstall"
+msgstr ""
+
+#: templates/profile/comments-single.php:6
+#, php-format
+msgid "On <a href=\"%1$s\">%2$s</a>"
+msgstr ""
+
+#: templates/profile/comments-single.php:15 templates/profile/comments.php:14
+msgid "load more comments"
+msgstr ""
+
+#: templates/profile/comments.php:23
+msgid "You have not made any comments."
+msgstr ""
+
+#: templates/profile/comments.php:23
+msgid "This user has not made any comments."
+msgstr ""
+
+#: templates/profile/posts-single.php:6
+#, php-format
+msgid "%s ago"
+msgstr ""
+
+#: templates/profile/posts-single.php:8
+msgid "no comments"
+msgstr ""
+
+#: templates/profile/posts-single.php:8
+msgid "1 comment"
+msgstr ""
+
+#: templates/profile/posts-single.php:8
+#, php-format
+msgid "% comments"
+msgstr ""
+
+#: templates/profile/posts-single.php:17 templates/profile/posts.php:14
+msgid "load more posts"
+msgstr ""
+
+#: templates/profile/posts.php:23
+msgid "You have not created any posts."
+msgstr ""
+
+#: templates/profile/posts.php:23
+msgid "This user has not created any posts."
 msgstr ""
 
 #: um-config.php:13
@@ -4269,15 +4336,15 @@ msgstr ""
 msgid "Profile Shortcode Alignment"
 msgstr ""
 
-#: um-config.php:1055 um-config.php:1321 um-config.php:1412
+#: um-config.php:1055 um-config.php:1376 um-config.php:1467
 msgid "Centered"
 msgstr ""
 
-#: um-config.php:1056 um-config.php:1322 um-config.php:1413
+#: um-config.php:1056 um-config.php:1377 um-config.php:1468
 msgid "Left aligned"
 msgstr ""
 
-#: um-config.php:1057 um-config.php:1323 um-config.php:1414
+#: um-config.php:1057 um-config.php:1378 um-config.php:1469
 msgid "Right aligned"
 msgstr ""
 
@@ -4289,15 +4356,15 @@ msgstr ""
 msgid "This is applicable for edit mode only"
 msgstr ""
 
-#: um-config.php:1069 um-config.php:1335 um-config.php:1426
+#: um-config.php:1069 um-config.php:1390 um-config.php:1481
 msgid "Show inside text field"
 msgstr ""
 
-#: um-config.php:1070 um-config.php:1336 um-config.php:1427
+#: um-config.php:1070 um-config.php:1391 um-config.php:1482
 msgid "Show with label"
 msgstr ""
 
-#: um-config.php:1071 um-config.php:1337 um-config.php:1428
+#: um-config.php:1071 um-config.php:1392 um-config.php:1483
 msgid "Turn off"
 msgstr ""
 
@@ -4401,125 +4468,162 @@ msgstr ""
 msgid "Show the emoticon"
 msgstr ""
 
-#: um-config.php:1299
-msgid "Registration Default Template"
+#: um-config.php:1293
+msgid "Enable profile menu"
 msgstr ""
 
-#: um-config.php:1300
-msgid "This will be the default template to output registration"
+#: um-config.php:1301
+#, php-format
+msgid "%s Tab"
 msgstr ""
 
-#: um-config.php:1308
-msgid "Registration Maximum Width"
+#: um-config.php:1303
+msgid "Enabled"
 msgstr ""
 
-#: um-config.php:1317
-msgid "Registration Shortcode Alignment"
+#: um-config.php:1304
+msgid "Disabled"
+msgstr ""
+
+#: um-config.php:1313
+msgid "Profile menu default tab"
+msgstr ""
+
+#: um-config.php:1314
+msgid "This will be the default tab on user profile page"
+msgstr ""
+
+#: um-config.php:1323
+msgid "Enable menu icons in desktop view"
 msgstr ""
 
 #: um-config.php:1331
+msgid "Enable counts in menu"
+msgstr ""
+
+#: um-config.php:1339
+msgid "Profile Menu"
+msgstr ""
+
+#: um-config.php:1354
+msgid "Registration Default Template"
+msgstr ""
+
+#: um-config.php:1355
+msgid "This will be the default template to output registration"
+msgstr ""
+
+#: um-config.php:1363
+msgid "Registration Maximum Width"
+msgstr ""
+
+#: um-config.php:1372
+msgid "Registration Shortcode Alignment"
+msgstr ""
+
+#: um-config.php:1386
 msgid "Registration Field Icons"
 msgstr ""
 
-#: um-config.php:1332
+#: um-config.php:1387
 msgid "This controls the display of field icons in the registration form"
 msgstr ""
 
-#: um-config.php:1344
+#: um-config.php:1399
 msgid "Registration Primary Button Text"
 msgstr ""
 
-#: um-config.php:1352
+#: um-config.php:1407
 msgid "Registration Secondary Button"
 msgstr ""
 
-#: um-config.php:1360
+#: um-config.php:1415
 msgid "Registration Secondary Button Text"
 msgstr ""
 
-#: um-config.php:1370
+#: um-config.php:1425
 msgid "Registration Default Role"
 msgstr ""
 
-#: um-config.php:1371
+#: um-config.php:1426
 msgid "This will be the default role assigned to users registering thru registration form"
 msgstr ""
 
-#: um-config.php:1390
+#: um-config.php:1445
 msgid "Login Default Template"
 msgstr ""
 
-#: um-config.php:1391
+#: um-config.php:1446
 msgid "This will be the default template to output login"
 msgstr ""
 
-#: um-config.php:1399
+#: um-config.php:1454
 msgid "Login Maximum Width"
 msgstr ""
 
-#: um-config.php:1408
+#: um-config.php:1463
 msgid "Login Shortcode Alignment"
 msgstr ""
 
-#: um-config.php:1422
+#: um-config.php:1477
 msgid "Login Field Icons"
 msgstr ""
 
-#: um-config.php:1423
+#: um-config.php:1478
 msgid "This controls the display of field icons in the login form"
 msgstr ""
 
-#: um-config.php:1435
+#: um-config.php:1490
 msgid "Login Primary Button Text"
 msgstr ""
 
-#: um-config.php:1443
+#: um-config.php:1498
 msgid "Login Secondary Button"
 msgstr ""
 
-#: um-config.php:1451
+#: um-config.php:1506
 msgid "Login Secondary Button Text"
 msgstr ""
 
-#: um-config.php:1460
+#: um-config.php:1515
 msgid "Login Forgot Password Link"
 msgstr ""
 
-#: um-config.php:1479
+#: um-config.php:1534
 msgid "Any custom css rules that you specify here will be applied globally to the plugin."
 msgstr ""
 
-#: um-config.php:1494
+#: um-config.php:1549
 msgid "Advanced"
 msgstr ""
 
-#: um-config.php:1500
+#: um-config.php:1555
 msgid "Disable JS/CSS Compression"
 msgstr ""
 
-#: um-config.php:1502
+#: um-config.php:1557
 msgid ""
 "Not recommended. This will load all plugin js and css files separately and may slow down your website. Use "
 "this setting for development or debugging purposes only."
 msgstr ""
 
-#: um-config.php:1509
+#: um-config.php:1564
 msgid "Never load plugin JS and CSS on the following pages"
 msgstr ""
 
-#: um-config.php:1510
+#: um-config.php:1565
 msgid "Enter a url or page slug (e.g /about/) to disable loading the plugin's css and js on that page."
 msgstr ""
 
-#: um-config.php:1511
+#: um-config.php:1566
 msgid "Add New Page"
 msgstr ""
 
-#: um-config.php:1517
+#: um-config.php:1572
 msgid "Allow Tracking"
 msgstr ""
 
-#: um-config.php:1521
+#: um-config.php:1576
 msgid "Do not allow"
 msgstr ""
 

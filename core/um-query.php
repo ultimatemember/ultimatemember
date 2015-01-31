@@ -21,9 +21,20 @@ class UM_Query {
 		
 		extract( $args );
 
-		$custom_posts = new WP_Query();
-		$custom_posts->query( $args );
-		return $custom_posts;
+		if ( $post_type == 'comment' ) { // comments
+
+			unset( $args['post_type'] );
+			$comments = get_comments($args);
+			return $comments;
+			
+		} else {
+
+			$custom_posts = new WP_Query();
+			$custom_posts->query( $args );
+			return $custom_posts;
+			
+		}
+		
 	}
 	
 	/***

@@ -40,7 +40,7 @@
 					switch( $mode ) {
 					
 						case 2: 
-							if (isset($roles) && !empty($roles)) {
+							if ( is_user_logged_in() && isset($roles) && !empty($roles)) {
 								if ( in_array( um_user('role'), (array)$roles) ) {
 									$visible = true;
 								} else {

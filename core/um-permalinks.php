@@ -73,6 +73,8 @@ class UM_Permalinks {
 				
 				um_reset_user();
 				
+				exit( wp_redirect( um_get_core_page('login', 'account_active') ) );
+				
 		}
 		
 	}

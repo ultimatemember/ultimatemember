@@ -66,12 +66,16 @@
 
 			foreach( $query as $field => $value ) {
 
-				$operator = 'LIKE';
-				
+				if ( in_array( $field, array('gender') ) ) {
+					$operator = '=';
+				} else {
+					$operator = 'LIKE';
+				}
+
 				if ( in_array( $ultimatemember->fields->get_field_type( $field ), array('checkbox','multiselect') ) ) {
 					$operator = 'LIKE';
 				}
-				
+
 				if ( $value && $field != 'um_search' ) {
 				
 					if ( !in_array( $field, $ultimatemember->members->core_search_fields ) ) {

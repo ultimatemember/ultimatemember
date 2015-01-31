@@ -61,7 +61,7 @@
 			
 			$post_id = get_option('woocommerce_shop_page_id');
 
-		} else if ( is_archive() ) {
+		} else if ( is_archive() || is_front_page() || is_search() || in_the_loop() ) {
 			
 			return;
 

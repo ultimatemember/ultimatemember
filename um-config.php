@@ -168,6 +168,15 @@ $this->sections[] = array(
     'fields'     => array(
 
         array(
+                'id'       		=> 'panic_key',
+                'type'     		=> 'text',
+                'title'   		=> __( 'Panic Key' ),
+				'desc' 	   		=> 'Panic Key is a random generated key that allow you to access the WordPress backend always regardless of backend settings.',
+				'default'		=> $ultimatemember->validation->randomize(),
+				'desc'			=> trailingslashit( get_bloginfo('url') ).'wp-admin/?um_panic_key=<strong>your_panic_key</strong>'
+        ),
+		
+        array(
                 'id'       		=> 'accessible',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
@@ -199,12 +208,33 @@ $this->sections[] = array(
 		),
 		
         array(
-                'id'       		=> 'panic_key',
-                'type'     		=> 'text',
-                'title'   		=> __( 'Panic Key' ),
-				'desc' 	   		=> 'Panic Key is a random generated key that allow you to access the WordPress backend always regardless of backend settings.',
-				'default'		=> $ultimatemember->validation->randomize(),
-				'desc'			=> trailingslashit( get_bloginfo('url') ).'wp-admin/?um_panic_key=<strong>YOUR_PANIC_KEY_VALUE</strong>'
+                'id'       		=> 'exclude_from_main_loop',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Exclude restricted pages from main loop' ),
+				'default' 		=> 1,
+				'desc' 	   		=> 'Whether to exclude restricted pages from main loop',
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
+        ),
+		
+        array(
+                'id'       		=> 'exclude_from_search_loop',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Exclude restricted pages from search loop' ),
+				'default' 		=> 1,
+				'desc' 	   		=> 'Whether to exclude restricted pages from search results',
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
+        ),
+		
+        array(
+                'id'       		=> 'exclude_from_archive_loop',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Exclude restricted pages from archive loop' ),
+				'default' 		=> 1,
+				'desc' 	   		=> 'Whether to exclude restricted pages from archives',
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
         ),
 		
         array(
@@ -1128,13 +1158,20 @@ $this->sections[] = array(
 		array(
 			'id'      			=> 'default_avatar',
 			'type'     			=> 'media',
-			'width'				=> '150',
-			'height'			=> '150',
 			'title'    			=> __('Default Profile Photo', 'ultimatemember'),
 			'desc'     			=> __('You can change the default profile picture globally here. Please make sure that the photo is 300x300px.', 'ultimatemember'),
 			'default'  			=> array(
 					'url'		=> um_url . 'assets/img/default_avatar.jpg',
 			),
+		),
+		
+		array(
+			'id'      			=> 'default_cover',
+			'type'     			=> 'media',
+			'url'				=> true,
+			'preview'			=> false,
+			'title'    			=> __('Default Cover Photo', 'ultimatemember'),
+			'desc'     			=> __('You can change the default cover photo globally here. Please make sure that the default cover is large enough and respects the ratio you are using for cover photos.', 'ultimatemember'),
 		),
 		
         array(
@@ -1283,6 +1320,61 @@ $this->sections[] = array(
         ),
 		
 	)
+	
+);
+
+$tabs = $ultimatemember->profile->tabs_primary();
+$tab_options[] = array(
+                'id'       		=> 'profile_menu',
+                'type'     		=> 'switch',
+                'title'    		=> __('Enable profile menu'),
+				'default' 		=> 1,
+);
+
+foreach( $tabs as $id => $tab ) {
+$tab_options[] = array(
+                'id'       		=> 'profile_tab_' . $id,
+                'type'     		=> 'switch',
+                'title'    		=> sprintf(__('%s Tab','ultimatemember'), $tab ),
+				'default' 		=> 1,
+				'on'			=> __('Enabled'),
+				'off'			=> __('Disabled'),
+				'required'		=> array( 'profile_menu', '=', 1 ),
+);
+}
+
+$tab_options[] = array(
+                'id'       		=> 'profile_menu_default_tab',
+                'type'     		=> 'select',
+				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
+                'title'    		=> __( 'Profile menu default tab' ),
+                'desc' 	   		=> __( 'This will be the default tab on user profile page' ),
+                'default'  		=> 'main',
+				'options' 		=> $ultimatemember->profile->tabs_primary(),
+				'required'		=> array( 'profile_menu', '=', 1 ),
+);
+
+$tab_options[] = array(
+                'id'       		=> 'profile_menu_icons',
+                'type'     		=> 'switch',
+                'title'    		=> __('Enable menu icons in desktop view'),
+				'default' 		=> 1,
+				'required'		=> array( 'profile_menu', '=', 1 ),
+);
+
+$tab_options[] = array(
+                'id'       		=> 'profile_menu_counts',
+                'type'     		=> 'switch',
+                'title'    		=> __('Enable counts in menu'),
+				'default' 		=> 1,
+				'required'		=> array( 'profile_menu', '=', 1 ),
+);
+
+$this->sections[] = array(
+	
+    'subsection' => true,
+    'title'      => __( 'Profile Menu'),
+    'fields'     => $tab_options
 	
 );
 

@@ -129,24 +129,25 @@ class UM_Files {
 	***	@fix image orientation
 	***/
 	function fix_image_orientation($rotate, $source){
-		$exif = @exif_read_data($source);
+		if ( extension_loaded('exif') ){
+			$exif = @exif_read_data($source);
 
-		if (isset($exif['Orientation'])) {
-			switch ($exif['Orientation']) {
-				case 3:
-					$rotate = imagerotate($rotate, 180, 0);
-					break;
+			if (isset($exif['Orientation'])) {
+				switch ($exif['Orientation']) {
+					case 3:
+						$rotate = imagerotate($rotate, 180, 0);
+						break;
 
-				case 6:
-					$rotate = imagerotate($rotate, -90, 0);
-					break;
+					case 6:
+						$rotate = imagerotate($rotate, -90, 0);
+						break;
 
-				case 8:
-					$rotate = imagerotate($rotate, 90, 0);
-					break;
+					case 8:
+						$rotate = imagerotate($rotate, 90, 0);
+						break;
+				}
 			}
 		}
-		
 		return $rotate;
 	}
 	

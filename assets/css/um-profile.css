@@ -342,26 +342,37 @@ font-weight: normal;
 	color: #FFF!important;
 }
 
+.um-profile-nav-item.active a span.count {background: transparent}
+
 .um-profile-nav-item a {
 	color: #fff!important;
-	font-size: 15px;
+	font-size: 14px;
 	font-weight: 600;
-	padding: 7px 20px;
+	padding: 6px 10px 6px 28px;
 	display: block;
 	float: left;
 	border-radius: 4px;
-	margin-left: 10px;
+	margin-left: 5px;
+	position: relative;
 }
 
-.um-profile-nav-item a:hover {
-	background: #555;
+.um-profile-nav-item.without-icon a {padding-left: 10px}
+.um-profile-nav-item.without-icon span.title {padding-left: 0}
+.um-profile-nav-item.without-icon i {display: none}
+
+.um-profile-nav-item a:hover {background: #555}
+.um-profile-nav-item i {font-size: 18px;height: 18px;line-height: 18px;position: absolute;display: block;top: 8px;left: 10px}
+.um-profile-nav-item span.title {padding-left: 5px}
+.um-profile-nav-item span.count {
+	font-size: 12px;
+	font-weight: 300;
+	background: #777;
+	border-radius: 3px;
+	padding: 2px 4px;
+	margin-left: 3px;
 }
 
-.um-profile-nav-item i {
-	font-size: 20px;
-	width: 20px;
-	text-align: center;
-}
+/* Subnav */
 
 .um-profile-subnav {
 	background: #eee;
@@ -415,18 +426,27 @@ font-weight: normal;
 .um-item-link a {
 	color: #333;
 	font-size: 16px;
+	line-height: 20px;
 }
 
 .um-item-link a:hover {
 	text-decoration: underline !important;
 }
 
-.um-item-meta {color: #999}
+.um-item-link i {
+	font-size: 24px;
+	color: #ccc;
+	margin-right: 10px;
+	position: relative;
+	top: 3px;
+}
+
+.um-item-meta {color: #888}
 
 .um-item-meta span {
-    font-size: 14px;
-	font-weight: 500;
-    font-style: italic;
+    font-size: 13px;
+	font-weight: 400;
+	font-style: italic;
 }
 
 .um-item-meta span:not(:last-child):after {
@@ -435,7 +455,7 @@ font-weight: normal;
     content: "•";
 }
 
-.um-item-meta a {border-bottom: 1px solid #E0E0E0;color: #3BA1DA}
+.um-item-meta a {font-weight: bold;border-bottom: 1px solid #E0E0E0;color: #3BA1DA}
 .um-item-meta a:hover {border-bottom-color: #bbb}
 
 .um-load-items {

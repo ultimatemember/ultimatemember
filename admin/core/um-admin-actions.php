@@ -12,6 +12,17 @@
 	}
 	
 	/***
+	***	@Hide exif notice
+	***/
+	add_action('um_admin_do_action__um_show_exif_notice', 'um_admin_do_action__um_show_exif_notice');
+	function um_admin_do_action__um_show_exif_notice( $action ){
+		global $ultimatemember;
+		if ( !is_admin() || !current_user_can('manage_options') ) die();
+		update_option( $action, 1 );
+		exit( wp_redirect( remove_query_arg('um_adm_action') ) );
+	}
+	
+	/***
 	***	@Opt-in tracking
 	***/
 	add_action('um_admin_do_action__opt_into_tracking', 'um_admin_do_action__opt_into_tracking');

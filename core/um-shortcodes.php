@@ -219,22 +219,25 @@ class UM_Shortcodes {
 		$pattern_array = apply_filters('um_allowed_user_tags_patterns', $pattern_array);
 		
 		$matches = false;
-		foreach ( $pattern_array as $pattern )
-		{
-			if (preg_match($pattern, $str))
-			{
+		foreach ( $pattern_array as $pattern ) {
+			
+			if (preg_match($pattern, $str)) {
+				
 				$usermeta = str_replace('{','',$pattern);
 				$usermeta = str_replace('}','',$usermeta);
+				
 				if ( um_user( $usermeta ) ){
 					$str = preg_replace('/'.$pattern.'/', um_user($usermeta) , $str );
 				}
-			} 
-		}
-		
-		if ( get_option('permalink_structure') ) {
-			$str = str_replace( untrailingslashit( um_get_core_page('user') ), untrailingslashit( um_user_profile_url() ), $str );
-		} else {
-			$str = str_replace( um_get_core_page('user'), um_user_profile_url(), $str );
+				
+				if ( get_option('permalink_structure') ) {
+					$str = str_replace( untrailingslashit( um_get_core_page('user') ), untrailingslashit( um_user_profile_url() ), $str );
+				} else {
+					$str = str_replace( um_get_core_page('user'), um_user_profile_url(), $str );
+				}
+				
+			}
+			
 		}
 		
 		return $str;

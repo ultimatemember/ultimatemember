@@ -3,11 +3,11 @@ Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember
 Donate link: 
-Tags: access control, community, communities, conditional fields, conditional logic, conditional menus, content protection, custom fields, file uploads, form builder, front-end login, front-end registration, hide wp-admin, login, login page, logged-in users, mandrill, member, members, membership, member directory, profile, profiles, profile builder, registration, restrict content, role creation, role menus, search filters, sign in, sign up, social network, star ratings, toolbar, user, users, user fields, user profiles, user roles
+Tags: access control, author, authors, author profile, comments, community, communities, conditional fields, conditional logic, conditional menus, content protection, custom fields, file uploads, form builder, front-end login, front-end registration, hide wp-admin, login, login page, logged-in users, mandrill, member, members, membership, member directory, profile, profiles, profile builder, registration, restriction, restrict content, role creation, role menus, search filters, sign in, sign up, social network, star ratings, toolbar, user, users, user fields, user profiles, user roles
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.30
+Stable Tag: 1.0.35
 
 License: GNU Version 2 or Any Later Version
 
@@ -35,6 +35,7 @@ Features of the plugin include:
 * Custom e-mail templates
 * Content restriction
 * Conditional menus
+* Show author posts & comments on user profiles
 * Mobile adaptive & responsive
 * SEO optimized
 * Developer friendly with dozens of actions and filters
@@ -88,6 +89,10 @@ With Ultimate Member you can restrict content on a global or per page/post basis
 **Conditional menus**
 
 The plugin provides a range of customizable text only email templates which are triggered depending on certain events (e.g welcome email, account activation, account deleted etc). Each email type can be turned on/off. The plugin also offers a range of optional admin notification emails so you can find out when a new user registers or if new user needs reviewed.
+
+**Show author posts & comments on user profiles**
+
+The plugin provides a fully flexible menu and tab system on user profiles that allows you to optionally display a user’s posts and comments on their profile. With this feature you can put the focus on a user’s posts by making author posts the default tab when viewing a user profile.
 
 **Mobile adaptive & responsive**
 
@@ -151,24 +156,68 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 == Screenshots ==
 
-1. Front-end User Profile (Edit mode)
-2. Photo / File Upload Modal
-3. Image Crop Feature
-4. Account Page
-5. Photo Modal
-6. User Profile (Cover photo turned off)
-7. Searchable Member Directory
-8. Plugin Dashboard
-9. Plugin Settings Panel
-10. Forms
-11. Custom Field Manager
-12. Adding a New Field
-13. User Roles
-14. Adding a New Role
-15. Adding a New Directory
-16. Appearance and Customization Settings
+1. Screenshot 1
+2. Screenshot 2
+3. Screenshot 3
+4. Screenshot 4
+5. Screenshot 5
+6. Screenshot 6
+7. Screenshot 7
+8. Screenshot 8
+9. Screenshot 9
+10. Screenshot 10
+11. Screenshot 11
+12. Screenshot 12
+13. Screenshot 13
+14. Screenshot 14
+15. Screenshot 15
+16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.35: January 31, 2015 =
+
+* Tweak: exif module is not required anymore and does not stop photo uploads (exif is highly recommended)
+* Fixed: issue with changing a WP administrator role to a community administrator role
+* Fixed: issue with plugin uploads directory on some multisite installations
+* Fixed: conflict with default profile tab and editing profile
+* Fixed: minor css conflict on account page with some themes when viewed on tablets
+
+= 1.0.34: January 31, 2015 =
+
+* New: added option to set a default cover photo
+* New: added option to hide restricted content from search and archive
+* Fixed: php error in title tab with ElegantThemes
+* Fixed: theme conflict with photo/cover upload
+* Fixed: issue with country field showing country code in profile
+* Fixed: issue with setting default tab
+* Fixed: issue with 2-name user roles
+
+= 1.0.33: January 30, 2015 =
+
+* New: Introducing profile menu / tab system (optional)
+* New: display user posts and comments in profile menu (optional)
+* New: added option to force hide adminbar on the frontend even for administrators
+* Tweak: added profile menu options to plugin settings panel
+* Tweak: added option to enable/disable profile menu and/or profile menu tabs
+* Tweak: added option to show or hide post and comment counts (when the tabs are active)
+* Tweak: account activation via e-mail redirects user to login page and displays a success message
+* Fixed: issue with conditional logic on profile fields has been resolved
+* Fixed: bug with searching members by gender
+* Fixed: admin nav menus conditional logic conflict with some themes
+* Fixed: bug with datepicker field on windows servers
+
+= 1.0.32: January 30, 2015 =
+
+* New: added 3 new tags to use in email templates {first_name}, {last_name}, and {gender}
+* Fixed: Issue with account page permalink resolved - [view issue](https://ultimatemember.com/forums/topic/permalink-bug/)
+* Fixed: Issue with conditional menu items showing for un-approved users resolved - [view issue](https://ultimatemember.com/forums/topic/registration/)
+
+= 1.0.31: January 29, 2015 =
+
+* Fixed: Issue with custom user page slug resolved [view issue](https://wordpress.org/support/topic/translate-plugin-9)
+* Fixed: PHP warning in members directory resolved
+* Fixed: Issue with hardcoded user profile URLs in menu
 
 = 1.0.30: January 29, 2015 =
 

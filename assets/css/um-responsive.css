@@ -46,10 +46,12 @@ div.uimob340 .um-profile-nav {
 }
 
 div.uimob340 .um-profile-nav-item a  {
-	padding: 1px 12px;
+	padding: 10px 16px;
 	margin-left: 0;
 	border-radius: 0;
 }
+
+div.uimob340 .um-profile-nav-item i{display:block;position: static;top: auto;left: auto}
 
 div.uimob340 .um-profile-subnav {
 	padding: 8px 15px;
@@ -260,13 +262,16 @@ div.uimob340 .um-account-meta {
 /********************************************/
 
 div.uimob500 .um-profile-nav {
-	padding: 6px;
+	padding: 0;
 }
 
 div.uimob500 .um-profile-nav-item a  {
-	padding: 1px 12px;
-	margin-left: 6px;
+	padding: 10px 16px;
+	margin-left: 0;
+	border-radius: 0;
 }
+
+div.uimob500 .um-profile-nav-item i{display:block;position: static;top: auto;left: auto;font-size: 22px;height: 22px;line-height: 22px;}
 
 div.uimob500 .um-profile-subnav {
 	padding: 8px 15px;
@@ -462,15 +467,17 @@ div.uimob500 .um-account-meta {
 	for 800px and below
 **/
 
-div.uimob800 .um-profile-nav-item a  {
-	padding: 1px 12px;
-	margin-left: 6px;
+div.uimob800 .um-profile-nav {
+	padding: 0;
 }
 
-div.uimob800 .um-profile-nav-item i  {
-	font-size: 25px;
-	width: 25px;
+div.uimob800 .um-profile-nav-item a  {
+	padding: 10px 20px;
+	margin-left: 0;
+	border-radius: 0;
 }
+
+div.uimob800 .um-profile-nav-item i{display:block;position: static;top: auto;left: auto;font-size: 26px;height: 26px;line-height: 26px;}
 
 div.uimob800 .um-profile-subnav {
 	padding: 8px 15px;
@@ -555,6 +562,8 @@ div.uimob800 .um-account-meta img {
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
+	max-width: 100%;
+	height: auto;
 }
 
 div.uimob800 .um-profile-photo {

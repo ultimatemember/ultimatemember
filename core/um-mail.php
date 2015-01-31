@@ -50,6 +50,9 @@ class UM_Mail {
 	
 		$search = array(
 			'{display_name}',
+			'{first_name}',
+			'{last_name}',
+			'{gender}',
 			'{username}',
 			'{email}',
 			'{password}',
@@ -66,6 +69,9 @@ class UM_Mail {
 		
 		$replace = array(
 			um_user('display_name'),
+			um_user('first_name'),
+			um_user('last_name'),
+			um_user('gender'),
 			um_user('user_login'),
 			um_user('user_email'),
 			um_user('_um_cool_but_hard_to_guess_plain_pw'),

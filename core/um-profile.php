@@ -5,31 +5,66 @@ class UM_Profile {
 	function __construct() {
 	
 		add_action('template_redirect', array(&$this, 'active_tab'), 10002);
-
-		$this->active_tab = 'main';
+		add_action('template_redirect', array(&$this, 'active_subnav'), 10002);
 		
 	}
 	
 	/***
-	***	@Global tabs
+	***	@all tab data
 	***/
 	function tabs(){
 		return apply_filters('um_profile_tabs', $tabs = array() );
 	}
 	
 	/***
-	***	@Get active tab
+	***	@tabs that are active
+	***/
+	function tabs_active(){
+		$tabs = $this->tabs();
+		foreach( $tabs as $id => $info ) {
+			if ( !um_get_option('profile_tab_'.$id) )
+				unset( $tabs[$id] );
+		}
+		return $tabs;
+	}
+	
+	/***
+	***	@primary tabs only
+	***/
+	function tabs_primary(){
+		$tabs = $this->tabs();
+		foreach( $tabs as $id => $info ){
+			$primary[$id] = $info['name'];
+		}
+		return $primary;
+	}
+	
+	/***
+	***	@Get active_tab
 	***/
 	function active_tab() {
+		
+		$this->active_tab = um_get_option('profile_menu_default_tab');
 		
 		if ( get_query_var('profiletab') ) {
 			$this->active_tab = get_query_var('profiletab');
 		}
+
+		return $this->active_tab;
+	}
+	
+	/***
+	***	@Get active active_subnav
+	***/
+	function active_subnav() {
+		
+		$this->active_subnav = null;
 		
 		if ( get_query_var('subnav') ) {
 			$this->active_subnav = get_query_var('subnav');
 		}
 		
+		return $this->active_subnav;
 	}
 	
 	/***

@@ -5,7 +5,7 @@ if ( ! class_exists( 'UM_Menu_Item_Custom_Fields' ) ) :
 	class UM_Menu_Item_Custom_Fields {
 
 		public static function load() {
-			add_filter( 'wp_edit_nav_menu_walker', array( __CLASS__, '_filter_walker' ), 99 );
+			add_filter( 'wp_edit_nav_menu_walker', array( __CLASS__, '_filter_walker' ), 200 );
 		}
 
 		public static function _filter_walker( $walker ) {

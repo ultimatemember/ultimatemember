@@ -65,7 +65,7 @@ function um_conditional(){
 				}
 				
 				if ( operator0 == 'contains' ) {
-					if ( live_value.indexOf( value0 ) >= 0 ) {
+					if ( live_value && live_value.indexOf( value0 ) >= 0 ) {
 						jQuery(this).fadeIn();
 					} else {
 						jQuery(this).hide();
@@ -127,7 +127,7 @@ function um_conditional(){
 				}
 				
 				if ( operator0 == 'contains' ) {
-					if ( live_value.indexOf( value0 ) >= 0 ) {
+					if ( live_value && live_value.indexOf( value0 ) >= 0 ) {
 						jQuery(this).hide();
 					} else {
 						jQuery(this).fadeIn();
