@@ -1,7 +1,20 @@
 <?php
 
 	/***
-	***	@Dates
+	***	@field is required?
+	***/
+	add_filter('um_edit_label_all_fields', 'um_edit_label_all_fields', 10, 2);
+	function um_edit_label_all_fields( $label, $data ) {
+		
+		$asterisk = um_get_option('form_asterisk');
+		if ( $asterisk && isset( $data['required'] ) && $data['required'] == 1 )
+			$label = $label . '<span class="um-req" title="'.__('Required','ultimatemember').'">*</span>';
+		
+		return $label;
+	}
+	
+	/***
+	***	@change birth date label in view
 	***/
 	add_filter('um_view_label_birth_date', 'um_view_label_birth_date');
 	function um_view_label_birth_date( $label ) {
@@ -10,7 +23,39 @@
 	}
 	
 	/***
-	***	@Time
+	***	@urls in description
+	***/
+	add_filter('um_profile_field_filter_hook__description', 'um_profile_field_filter_hook__description', 99, 2);
+	function um_profile_field_filter_hook__description( $value, $data ) {
+		global $ultimatemember;
+		
+		$value = preg_replace(
+			 array(
+			   '/(?(?=<a[^>]*>.+<\/a>)
+					 (?:<a[^>]*>.+<\/a>)
+					 |
+					 ([^="\']?)((?:https?|ftp|bf2|):\/\/[^<> \n\r]+)
+				 )/iex',
+			   '/<a([^>]*)target="?[^"\']+"?/i',
+			   '/<a([^>]+)>/i',
+			   '/(^|\s)(www.[^<> \n\r]+)/iex',
+			   '/(([_A-Za-z0-9-]+)(\\.[_A-Za-z0-9-]+)*@([A-Za-z0-9-]+)
+			   (\\.[A-Za-z0-9-]+)*)/iex'
+			   ),
+			 array(
+			   "stripslashes((strlen('\\2')>0?'\\1<a rel=\"nofollow\" href=\"\\2\">\\2</a>\\3':'\\0'))",
+			   '<a\\1',
+			   '<a\\1 target="_blank">',
+			   "stripslashes((strlen('\\2')>0?'\\1<a rel=\"nofollow\" href=\"http://\\2\">\\2</a>\\3':'\\0'))",
+			   "stripslashes((strlen('\\2')>0?'<a rel=\"nofollow\" href=\"mailto:\\0\">\\0</a>':'\\0'))"
+			   ),
+			   $value
+		   );
+		return $value;
+	}
+	
+	/***
+	***	@time
 	***/
 	add_filter('um_profile_field_filter_hook__time', 'um_profile_field_filter_hook__time', 99, 2);
 	function um_profile_field_filter_hook__time( $value, $data ) {
@@ -23,7 +68,7 @@
 	}
 	
 	/***
-	***	@Dates
+	***	@date
 	***/
 	add_filter('um_profile_field_filter_hook__date', 'um_profile_field_filter_hook__date', 99, 2);
 	function um_profile_field_filter_hook__date( $value, $data ) {
@@ -39,7 +84,7 @@
 	}
 	
 	/***
-	***	@Images
+	***	@file
 	***/
 	add_filter('um_profile_field_filter_hook__file', 'um_profile_field_filter_hook__file', 99, 2);
 	function um_profile_field_filter_hook__file( $value, $data ) {
@@ -65,7 +110,7 @@
 	}
 	
 	/***
-	***	@Files
+	***	@image
 	***/
 	add_filter('um_profile_field_filter_hook__image', 'um_profile_field_filter_hook__image', 99, 2);
 	function um_profile_field_filter_hook__image( $value, $data ) {
@@ -83,11 +128,11 @@
 	}
 	
 	/***
-	***	@Global
+	***	@global
 	***/
 	add_filter('um_profile_field_filter_hook__', 'um_profile_field_filter_hook__', 99, 2);
 	function um_profile_field_filter_hook__( $value, $data ) {
-	
+
 		if ( isset( $data['validate'] ) && $data['validate'] != '' && strstr( $data['validate'], 'url' ) ) {
 			$alt = ( isset( $data['url_text'] ) && !empty( $data['url_text'] ) ) ? $data['url_text'] : $value;
 			$url_rel = ( isset( $data['url_rel'] ) ) ? 'rel="nofollow"' : '';
@@ -122,6 +167,7 @@
 		$value = str_replace('http://https://','https://',$value);
 		
 		return $value;
+
 	}
 	
 	/***

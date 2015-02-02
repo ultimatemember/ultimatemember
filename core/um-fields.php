@@ -259,6 +259,7 @@ class UM_Fields {
 			$label = apply_filters("um_view_label_{$key}", $label );
 		} else {
 			$label = apply_filters("um_edit_label_{$key}", $label );
+			$label = apply_filters("um_edit_label_all_fields", $label, $data );
 		}
 			
 		$output .= '<label for="'.$key.$ultimatemember->form->form_suffix.'">'.$label.'</label>';
@@ -502,8 +503,8 @@ class UM_Fields {
 		
 		if ( isset( $array['conditions'] ) && is_array( $array['conditions'] ) && !$this->viewing ) {
 			$array['conditional'] = '';
-			foreach( $array['conditions'] as $key => $cond ) {
-				$array['conditional'] .= ' data-cond-'.$key.'-action="'. $cond[0] . '" data-cond-'.$key.'-field="'. $cond[1] . '" data-cond-'.$key.'-operator="'. $cond[2] . '" data-cond-'.$key.'-value="'. $cond[3] . '"';
+			foreach( $array['conditions'] as $cond_id => $cond ) {
+				$array['conditional'] .= ' data-cond-'.$cond_id.'-action="'. $cond[0] . '" data-cond-'.$cond_id.'-field="'. $cond[1] . '" data-cond-'.$cond_id.'-operator="'. $cond[2] . '" data-cond-'.$cond_id.'-value="'. $cond[3] . '"';
 			}
 			
 			$array['classes'] .= ' um-is-conditional';
@@ -911,7 +912,7 @@ class UM_Fields {
 						$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">';
 								
 								if ( isset( $data['label'] ) ) {
-								$output .= $this->field_label( __('Current Password'), $key, $data);
+								$output .= $this->field_label( __('Current Password','ultimatemember'), $key, $data);
 								}
 								
 								$output .= '<div class="um-field-area">';
@@ -940,7 +941,7 @@ class UM_Fields {
 
 						if ( $this->set_mode == 'account' && um_is_core_page('account') || $this->set_mode == 'password' && um_is_core_page('password-reset') ) {
 							
-							$output .= $this->field_label( 'New Password', $key, $data);
+							$output .= $this->field_label( __('New Password','ultimatemember'), $key, $data);
 						
 						} else if ( isset( $data['label'] ) ) {
 							
@@ -972,7 +973,7 @@ class UM_Fields {
 						$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">';
 								
 								if ( isset( $data['label'] ) ) {
-								$output .= $this->field_label( sprintf( __('Confirm New %s'), $data['label'] ), $key, $data);
+								$output .= $this->field_label( sprintf(__('Confirm New %s','ultimatemember'), $data['label'] ), $key, $data);
 								}
 								
 								$output .= '<div class="um-field-area">';
@@ -1547,14 +1548,14 @@ class UM_Fields {
 				
 			/* HTML */
 			case 'block':
-				$output .= '<div class="um-field ' . $classes . '">
+				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">
 								<div class="um-field-block">'.$content.'</div>
 							</div>';
 				break;
 				
 			/* Shortcode */
 			case 'shortcode':
-				$output .= '<div class="um-field ' . $classes . '">
+				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">
 								<div class="um-field-shortcode">'.do_shortcode($content).'</div>
 							</div>';
 				break;
@@ -1841,14 +1842,14 @@ class UM_Fields {
 				
 			/* HTML */
 			case 'block':
-				$output .= '<div class="um-field ' . $classes . '">
+				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">
 								<div class="um-field-block">'.$content.'</div>
 							</div>';
 				break;
 				
 			/* Shortcode */
 			case 'shortcode':
-				$output .= '<div class="um-field ' . $classes . '">
+				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">
 								<div class="um-field-shortcode">'.do_shortcode($content).'</div>
 							</div>';
 				break;

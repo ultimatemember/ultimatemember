@@ -25,7 +25,7 @@
 		$ultimatemember->user->update_profile( $changes );
 
 		// delete account
-		if ( $_POST['single_user_password'] && isset($_POST['um_account_submit']) && $_POST['um_account_submit'] == __('Delete Account') ) {
+		if ( $_POST['single_user_password'] && isset($_POST['um_account_submit']) && $_POST['um_account_submit'] == __('Delete Account','ultimatemember') ) {
 			if ( current_user_can('delete_users') || um_user('can_delete_profile') ) {
 				if ( !um_user('super_admin') ) {
 					$ultimatemember->user->delete();
@@ -94,7 +94,7 @@
 			}
 		}
 		
-		if ( isset($_POST['um_account_submit']) && $_POST['um_account_submit'] == __('Delete Account') ) {
+		if ( isset($_POST['um_account_submit']) && $_POST['um_account_submit'] == __('Delete Account','ultimatemember') ) {
 			if ( strlen(trim( $_POST['single_user_password'] ) ) == 0 ) {
 					$ultimatemember->form->add_error('single_user_password', 'You must enter your password');
 			} else {
@@ -139,7 +139,7 @@
 		
 		<?php echo $output; ?>
 		
-		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Delete Account'); ?>" class="um-button" /></div><div class="um-clear"></div></div>
+		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Delete Account','ultimatemember'); ?>" class="um-button" /></div><div class="um-clear"></div></div>
 		
 		<?php
 		

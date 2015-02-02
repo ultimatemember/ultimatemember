@@ -230,12 +230,6 @@ class UM_Shortcodes {
 					$str = preg_replace('/'.$pattern.'/', um_user($usermeta) , $str );
 				}
 				
-				if ( get_option('permalink_structure') ) {
-					$str = str_replace( untrailingslashit( um_get_core_page('user') ), untrailingslashit( um_user_profile_url() ), $str );
-				} else {
-					$str = str_replace( um_get_core_page('user'), um_user_profile_url(), $str );
-				}
-				
 			}
 			
 		}

@@ -103,8 +103,10 @@ class UM_User_posts {
 		global $wpdb;
 		if ( !$user_id )
 			$user_id = um_user('ID');
+		
 		$where = get_posts_by_author_sql( $post_type, true, $user_id );
 		$count = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts $where" );
+		
 		return apply_filters('um_pretty_number_formatting', $count);
 	}
 	
@@ -115,10 +117,14 @@ class UM_User_posts {
 		global $wpdb;
 		if ( !$user_id )
 			$user_id = um_user('ID');
-		$count = $wpdb->get_var('
-				 SELECT COUNT(comment_ID) 
-				 FROM ' . $wpdb->comments. ' 
-				 WHERE user_id = "' . $user_id . '"');
+
+		$count = $wpdb->get_var(
+		'SELECT COUNT(comment_ID) FROM ' . $wpdb->comments. ' 
+		WHERE user_id = ' . $user_id . ' 
+		AND comment_approved = "1" 
+		AND comment_type IN ("comment", "")'
+		);
+		
 		return apply_filters('um_pretty_number_formatting', $count);
 	}
 

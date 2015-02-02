@@ -1,48 +1,52 @@
+#
+# Translators:
+# marty mcfly <orakmetin@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Ultimate Member\n"
+"Project-Id-Version: Ultimate Member English=>Turkish\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-02-01 23:22+0200\n"
 "PO-Revision-Date: 2015-02-01 23:22+0200\n"
 "Last-Translator: Calum Allison <umplugin@gmail.com>\n"
-"Language-Team: Ultimate Member <umplugin@gmail.com>\n"
-"Language: en_US\n"
+"Language-Team: Turkish (Turkey) (http://www.transifex.com/projects/p/ultimate-member-englishturkish/language/"
+"tr_TR/)\n"
+"Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 1.7.1\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-KeywordsList: __;_e\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/extensions/customizer/extension_customizer.php:530
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1950
 msgid "You have changes that are not saved. Would you like to save them now?"
-msgstr ""
+msgstr "Kaydedilmemiş değişiklikleriniz bulunmakta. Şimdi kaydetmek ister misiniz?"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/extensions/customizer/extension_customizer.php:531
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1958
 msgid "Are you sure? Resetting will lose all custom values."
-msgstr ""
+msgstr "Emin misiniz? Sıfırlamak özel değerlerinizi kaybetmenize yol açar."
 
 #: admin/core/lib/ReduxFramework/ReduxCore/extensions/customizer/extension_customizer.php:532
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1974
 msgid "Your current options will be replaced with the values of this preset. Would you like to proceed?"
-msgstr ""
+msgstr "Sizin güncel ayarlarınız varsayılan değerlerin yerine geçecek. Devam etmek istiyor musunuz?"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/extensions/customizer/extension_customizer.php:565
 msgid "You have changes that are not saved.  Would you like to save them now?"
-msgstr ""
+msgstr "Kaydedilmemiş değişiklikleriniz bulunmakta. Şimdi kaydetmek ister misiniz?"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/extensions/customizer/extension_customizer.php:566
 msgid "Are you sure?  Resetting will lose all custom values."
-msgstr ""
+msgstr "Emin misiniz? Sıfırlamak özel değerlerinizi kaybetmenize yol açar."
 
 #: admin/core/lib/ReduxFramework/ReduxCore/extensions/customizer/extension_customizer.php:567
 msgid "Your current options will be replaced with the values of this preset.  Would you like to proceed?"
-msgstr ""
+msgstr "Sizin güncel ayarlarınız varsayılan değerlerin yerine geçecek. Devam etmek istiyor musunuz?"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:213
 #, php-format
@@ -56,38 +60,38 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:217
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:221 admin/core/um-admin-metabox.php:292
 msgid "Options"
-msgstr ""
+msgstr "Ayarlar"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1369
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1370
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3587
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3666
 msgid "System Info"
-msgstr ""
+msgstr "Sistem Bilgisi"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1966
 msgid "Are you sure? Resetting will lose all custom values in this section."
-msgstr ""
+msgstr "Emin misiniz? Sıfırlamak bu bölümdeki tüm özel değerlerinizi kaybetmenize yol açar."
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:1981
 msgid "Please Wait"
-msgstr ""
+msgstr "Lütfen Bekleyin"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2106
 msgid "Enable"
-msgstr ""
+msgstr "Etkinleştir"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2111
 msgid "Disable"
-msgstr ""
+msgstr "Etkisizleştir"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2117
 msgid "moving the mouse over"
-msgstr ""
+msgstr "imleç ile oynatmak"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2119
 msgid "clicking"
-msgstr ""
+msgstr "tıklamak"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2123
 #, php-format
@@ -98,71 +102,71 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2128
 msgid "Hints"
-msgstr ""
+msgstr "İpuçları"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:2253 admin/templates/form/login_settings.php:6
 msgid "Default"
-msgstr ""
+msgstr "Varsayılan"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3334
 msgid "Warning- This options panel will not work properly without javascript!"
-msgstr ""
+msgstr "Uyarı- Ayarlar paneli JavaScript olmadan düzgün şekilde çalışmaz!"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3385
 msgid "Developer Mode Enabled"
-msgstr ""
+msgstr "Geliştirici Modu Etkin"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3413
 msgid "Expand"
-msgstr ""
+msgstr "Genişlet"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3415
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3723
 msgid "Save Changes"
-msgstr ""
+msgstr "Değişiklikleri Kaydet"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3419
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3727
 msgid "Reset Section"
-msgstr ""
+msgstr "Bölümü Sıfırla"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3421
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3729
 msgid "Reset All"
-msgstr ""
+msgstr "Hepsini Sıfırla"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3426
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3734
 msgid "Working..."
-msgstr ""
+msgstr "Çalışıyor..."
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3446
 msgid "Settings Imported!"
-msgstr ""
+msgstr "Ayarlar Yüklendi!"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3461
 msgid "All Defaults Restored!"
-msgstr ""
+msgstr "Tüm Varsayılanlar Yüklendi!"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3475
 msgid "Section Defaults Restored!"
-msgstr ""
+msgstr "Bölüm Varsayılanları Yüklendi!"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3489
 msgid "Settings Saved!"
-msgstr ""
+msgstr "Ayarlar Kaydedildi!"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3507
 msgid "Settings have changed, you should save them!"
-msgstr ""
+msgstr "Ayarlar değiştirildi, kaydetmelisin!"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3515
 msgid "error(s) were found!"
-msgstr ""
+msgstr "hata(lar) bulundu!"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/framework.php:3523
 msgid "warning(s) were found!"
-msgstr ""
+msgstr "uyarı(lar) bulundu!"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/class.redux_filesystem.php:22
 msgid "Unable to create a required directory. Please ensure that"
@@ -174,7 +178,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/class.redux_functions.php:253
 msgid "Dismiss"
-msgstr ""
+msgstr "Reddet"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/class.redux_themecheck.php:61
 #, php-format
@@ -194,7 +198,7 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/debug.php:76
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/debug.php:77
 msgid "Options Object"
-msgstr ""
+msgstr "Seçenekler Nesnesi"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/debug.php:54
 msgid "Show Object in Javascript Console Object"
@@ -206,11 +210,11 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/color_gradient/field_color_gradient.php:91
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/color_rgba/field_color_rgba.php:77
 msgid "Transparent"
-msgstr ""
+msgstr "Şeffaflık"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/background/field_background.php:141
 msgid "Background Repeat"
-msgstr ""
+msgstr "Arkaplan Tekrarı"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/background/field_background.php:157
 msgid "Background Clip"
@@ -222,20 +226,20 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/background/field_background.php:188
 msgid "Background Size"
-msgstr ""
+msgstr "Arkaplan Boyutu"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/background/field_background.php:203
 msgid "Background Attachment"
-msgstr ""
+msgstr "Arkaplan Eki"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/background/field_background.php:223
 msgid "Background Position"
-msgstr ""
+msgstr "Arkaplan Pozisyonu"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/background/field_background.php:277
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/media/field_media.php:149
 msgid "No media selected"
-msgstr ""
+msgstr "Hiç ortam dosyası seçilmedi"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/background/field_background.php:314
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/media/field_media.php:193
@@ -243,7 +247,7 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:188 core/um-fields.php:742
 #: core/um-fields.php:763
 msgid "Upload"
-msgstr ""
+msgstr "Yükle"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/background/field_background.php:321
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/media/field_media.php:200
@@ -254,36 +258,36 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:190
 #: core/um-actions-profile.php:168
 msgid "Remove"
-msgstr ""
+msgstr "Kaldır"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/border/field_border.php:114
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/spacing/field_spacing.php:191
 msgid "All"
-msgstr ""
+msgstr "Hepsi"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/border/field_border.php:127
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/spacing/field_spacing.php:215
 msgid "Top"
-msgstr ""
+msgstr "Üst"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/border/field_border.php:134
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/spacing/field_spacing.php:222
 msgid "Right"
-msgstr ""
+msgstr "Sağ"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/border/field_border.php:141
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/spacing/field_spacing.php:229
 msgid "Bottom"
-msgstr ""
+msgstr "Alt"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/border/field_border.php:148
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/spacing/field_spacing.php:236
 msgid "Left"
-msgstr ""
+msgstr "Sol"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/border/field_border.php:162
 msgid "Border style"
-msgstr ""
+msgstr "Kenar biçimi"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/color_gradient/field_color_gradient.php:68
 msgid "From "
@@ -295,32 +299,32 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/dimensions/field_dimensions.php:161
 msgid "Width"
-msgstr ""
+msgstr "Genişlik"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/dimensions/field_dimensions.php:177
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:436
 msgid "Height"
-msgstr ""
+msgstr "Uzunluk"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/dimensions/field_dimensions.php:188
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/dimensions/field_dimensions.php:189
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/spacing/field_spacing.php:245
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/spacing/field_spacing.php:246
 msgid "Units"
-msgstr ""
+msgstr "Birimler"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/gallery/field_gallery.php:73
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:313
 msgid "Add/Edit Gallery"
-msgstr ""
+msgstr "Galeri Ekle/Düzenle"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/gallery/field_gallery.php:74
 msgid "Clear Gallery"
-msgstr ""
+msgstr "Galeriyi Temizle"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/link_color/field_link_color.php:87
 msgid "Regular"
-msgstr ""
+msgstr "Düzenli"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/link_color/field_link_color.php:91
 msgid "Hover"
@@ -328,30 +332,30 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/link_color/field_link_color.php:95
 msgid "Visited"
-msgstr ""
+msgstr "Ziyaret Edildi"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/link_color/field_link_color.php:99
 msgid "Active"
-msgstr ""
+msgstr "Aktif"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/multi_text/field_multi_text.php:61
 msgid "Add More"
-msgstr ""
+msgstr "Daha Fazla Ekle"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/password/field_password.php:62 core/um-builtin.php:469
 #: core/um-builtin.php:472 core/um-builtin.php:832 core/um-builtin.php:835
 msgid "Password"
-msgstr ""
+msgstr "Parola"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/password/field_password.php:63 core/um-builtin.php:445
 #: core/um-builtin.php:448
 msgid "Username"
-msgstr ""
+msgstr "Kullanıcı Adı"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/select/field_select.php:82
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/select_image/field_select_image.php:62
 msgid "Select an item"
-msgstr ""
+msgstr "Bir madde seçin"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/select/field_select.php:126
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/select_image/field_select_image.php:143
@@ -360,23 +364,23 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:68
 msgid "Slide"
-msgstr ""
+msgstr "Slayt"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:73
 #, php-format
 msgid "New %s"
-msgstr ""
+msgstr "Yeni %s"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:145
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:200
 #: admin/core/um-admin-columns.php:26 admin/core/um-admin-columns.php:44
 msgid "Title"
-msgstr ""
+msgstr "Başlık"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:149
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:204
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:153
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:207
@@ -386,28 +390,28 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:167
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:220 core/um-filters-user.php:17
 msgid "Delete"
-msgstr ""
+msgstr "Sil"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/slides/field_slides.php:223
 #, php-format
 msgid "Add %s"
-msgstr ""
+msgstr "Ekle %s"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/switch/field_switch.php:41
 msgid "On"
-msgstr ""
+msgstr "Açık"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/switch/field_switch.php:44
 msgid "Off"
-msgstr ""
+msgstr "Kapalı"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:227
 msgid "Font Family"
-msgstr ""
+msgstr "Yazı Tipi"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:228
 msgid "Font family"
-msgstr ""
+msgstr "Yazı tipi"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:254
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:255
@@ -417,27 +421,27 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:269
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:276
 msgid "Font style"
-msgstr ""
+msgstr "Yazı tipi"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:270
 msgid "Font Weight &amp; Style"
-msgstr ""
+msgstr "Yazı Genişliği &amp; Biçimi"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:276
 msgid "Style"
-msgstr ""
+msgstr "Biçim"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:316
 msgid "Font subsets"
-msgstr ""
+msgstr "Yazı tipi kümeleri"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:318
 msgid "Font Subsets"
-msgstr ""
+msgstr "Yazı Tipi Kümeleri"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:319
 msgid "Subsets"
-msgstr ""
+msgstr "Kümeler"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:319
 msgid "Font script"
@@ -447,34 +451,34 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:337
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:338
 msgid "Text Align"
-msgstr ""
+msgstr "Yazı Hizası"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:359
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:360
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:361
 msgid "Text Transform"
-msgstr ""
+msgstr "Yazı Dönüşümü"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:382
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:383
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:384
 msgid "Font Variant"
-msgstr ""
+msgstr "Yazı Varyantı"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:402
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:403
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:404
 msgid "Text Decoration"
-msgstr ""
+msgstr "Yazı Tasarımı"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:426
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:427
 msgid "Font Size"
-msgstr ""
+msgstr "Yazı Boyutu"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:427
 msgid "Size"
-msgstr ""
+msgstr "Boyut"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:435
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:436
@@ -484,24 +488,24 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:444
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:445
 msgid "Word Spacing"
-msgstr ""
+msgstr "Kelime Aralığı"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:453
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:454
 msgid "Letter Spacing"
-msgstr ""
+msgstr "Harf Aralığı"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:472
 msgid "Font Color"
-msgstr ""
+msgstr "Yazı Rengi"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:474
 msgid "Font color"
-msgstr ""
+msgstr "Yazı rengi"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:851
 msgid "Standard Fonts"
-msgstr ""
+msgstr "Standart Yazı Tipleri"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/fields/typography/field_typography.php:952
 msgid "Google Webfonts"
@@ -509,19 +513,19 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/import_export.php:78
 msgid "Import / Export Options"
-msgstr ""
+msgstr "Ayarları İçe aktar/Dışa aktar"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/import_export.php:81
 msgid "Import Options"
-msgstr ""
+msgstr "Ayarları İçe Aktar"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/import_export.php:82
 msgid "Import from file"
-msgstr ""
+msgstr "Dosyadan çek"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/import_export.php:82
 msgid "Import from URL"
-msgstr ""
+msgstr "URL den çek"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/import_export.php:85
 msgid "Input your backup file below and hit Import to restore your sites options from a backup."
@@ -533,7 +537,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/import_export.php:94
 msgid "Import"
-msgstr ""
+msgstr "İçe Aktar"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/import_export.php:94
 msgid "WARNING! This will overwrite all existing option values, please proceed with caution!"
@@ -541,7 +545,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/import_export.php:97
 msgid "Export Options"
-msgstr ""
+msgstr "Ayarları Dışa Aktar"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/import_export.php:100
 msgid ""
@@ -551,26 +555,26 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/import_export.php:104
 msgid "Copy"
-msgstr ""
+msgstr "Kopyala"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/import_export.php:104
 msgid "Download"
-msgstr ""
+msgstr "İndir"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/import_export.php:104
 msgid "Copy Link"
-msgstr ""
+msgstr "Linki Kopyala"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/import_export.php:140
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/import_export.php:149
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/import_export.php:150
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1533
 msgid "Import / Export"
-msgstr ""
+msgstr "İçe Aktar/Dışa Aktar"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:129
 msgid "Help improve Our Panel"
-msgstr ""
+msgstr "Geliştirme Panelimize Yardım Et"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:130
 msgid ""
@@ -581,20 +585,20 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:135 admin/core/um-admin-tracking.php:153
 #: um-config.php:1625
 msgid "Allow tracking"
-msgstr ""
+msgstr "İzlemeye izin ver"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:140 admin/core/um-admin-tracking.php:154
 msgid "Do not allow tracking"
-msgstr ""
+msgstr "İzlemeye izin verme"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:151
 msgid "Welcome to the Redux Demo Panel"
-msgstr ""
+msgstr "Redux Demo Paneli'ne Hoşgeldiniz"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:152
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:139
 msgid "Getting Started"
-msgstr ""
+msgstr "Başlangıç"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:152
 #, php-format
@@ -605,7 +609,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:152
 msgid "our documentation"
-msgstr ""
+msgstr "dökümanlarımız"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:153
 msgid "Redux Generator"
@@ -621,7 +625,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:154
 msgid "Redux Extensions"
-msgstr ""
+msgstr "Redux Uzantılar"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:154
 #, php-format
@@ -631,11 +635,11 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:154
 msgid "extensions directory"
-msgstr ""
+msgstr "uzantılar klasörü"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:155
 msgid "Like Redux?"
-msgstr ""
+msgstr "Redux'u Beğendin mi?"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:155
 #, php-format
@@ -648,11 +652,11 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:155
 msgid "donation"
-msgstr ""
+msgstr "bağış"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:156
 msgid "Newsletter"
-msgstr ""
+msgstr "Bülten"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:156
 msgid "If you'd like to keep up to with all things Redux, please subscribe to our newsletter"
@@ -660,21 +664,21 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:157
 msgid "Email address"
-msgstr ""
+msgstr "E-posta adresi"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:157
 msgid "Subscribe"
-msgstr ""
+msgstr "Abone"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/tracking.php:166
 msgid "Close"
-msgstr ""
+msgstr "Kapat"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/validation/color/validation_color.php:15
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/validation/color_rgba/validation_color_rgba.php:14
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/validation/colorrgba/validation_colorrgba.php:16
 msgid "This field must be a valid color value."
-msgstr ""
+msgstr "Bu alan bir renk değeri olmalı."
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/validation/comma_numeric/validation_comma_numeric.php:16
 msgid "You must provide a comma separated list of numerical values for this option."
@@ -682,7 +686,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/validation/date/validation_date.php:16
 msgid "This field must be a valid date."
-msgstr ""
+msgstr "Bu alan bir tarih girilmeli."
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/validation/email/validation_email.php:16
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/validation/email_not_empty/validation_email_not_empty.php:16
@@ -691,24 +695,24 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/validation/no_html/validation_no_html.php:15
 msgid "You must not enter any HTML in this field, all HTML tags have been removed."
-msgstr ""
+msgstr "Buraya hiç HTML etiketi girmemelisinz, tüm HTML etiketleri silinecektir."
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/validation/no_special_chars/validation_no_special_chars.php:16
 msgid "You must not enter any special characters in this field, all special characters have been removed."
-msgstr ""
+msgstr "Buraya hiç bir özel karakter girmemelisiniz, tüm özel karakterler silinir."
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/validation/not_empty/validation_not_empty.php:16
 msgid "This field cannot be empty. Please provide a value."
-msgstr ""
+msgstr "Bu alan boş olmamalı. Lütfen bir değer giriniz."
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/validation/numeric/validation_numeric.php:16
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/validation/numeric_not_empty/validation_numeric_not_empty.php:16
 msgid "You must provide a numerical value for this option."
-msgstr ""
+msgstr "Bu seçenek için sayısal bir değer girmelisiniz."
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/validation/url/validation_url.php:16
 msgid "You must provide a valid URL for this option."
-msgstr ""
+msgstr "Bu seçenek için bir URL girilmeli."
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:40
 msgid "Welcome to Redux Framework"
@@ -729,7 +733,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:135
 msgid "What's New"
-msgstr ""
+msgstr "Neler Yeni"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:143
 msgid "Changelog"
@@ -758,11 +762,11 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:210
 #, php-format
 msgid "Version %s"
-msgstr ""
+msgstr "Sürüm %s"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:174
 msgid "Some Feature"
-msgstr ""
+msgstr "Bazı Özellikler"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:178
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:182
@@ -774,7 +778,7 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:225
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:230
 msgid "Feature"
-msgstr ""
+msgstr "Özellik"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:190
 msgid "Some feature"
@@ -782,13 +786,13 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:217
 msgid "More Features"
-msgstr ""
+msgstr "Daha Fazla Özellik"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:223
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:227
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:232
 msgid "description"
-msgstr ""
+msgstr "açıklama"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:238
 msgid "Additional Updates"
@@ -865,7 +869,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:358
 msgid "Download Files"
-msgstr ""
+msgstr "Dosyları İndir"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:360
 msgid ""
@@ -932,7 +936,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:409
 msgid "Need Help?"
-msgstr ""
+msgstr "Yardıma ihtiyacın mı var?"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:413
 msgid "Phenomenal Support"
@@ -981,7 +985,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:441
 msgid "Extensions for Everything"
-msgstr ""
+msgstr "Herşey için Uzantılar"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:445
 msgid "Over 250 Extensions"
@@ -996,7 +1000,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:449
 msgid "Visit the Extension Store"
-msgstr ""
+msgstr "Uzantı Mağazasını Ziyaret Et"
 
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:451
 msgid ""
@@ -1016,7 +1020,7 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/ReduxCore/inc/welcome.php:539
 #, php-format
 msgid "View %s"
-msgstr ""
+msgstr "%s Görüntülenme"
 
 #: admin/core/lib/ReduxFramework/class.redux-plugin.php:306
 msgid "Redux Framework has an embedded demo."
@@ -1024,7 +1028,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/class.redux-plugin.php:306
 msgid "Click here to activate the sample config file."
-msgstr ""
+msgstr "Örnek yapılandırma dosyasını etkinleştirmek için tıkla."
 
 #: admin/core/lib/ReduxFramework/class.redux-plugin.php:407
 msgid "Repo"
@@ -1043,7 +1047,7 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1567
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1713
 msgid "Documentation"
-msgstr ""
+msgstr "Belgeleme"
 
 #: admin/core/lib/ReduxFramework/class.redux-plugin.php:415
 msgid "Deactivate Demo Mode"
@@ -1056,7 +1060,7 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/sample/barebones-config.php:55
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:239
 msgid "Home Settings"
-msgstr ""
+msgstr "Ana Ayarlar"
 
 #: admin/core/lib/ReduxFramework/sample/barebones-config.php:56
 #, php-format
@@ -1158,7 +1162,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:211
 msgid "Tags"
-msgstr ""
+msgstr "Etiketler"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:216
 #, php-format
@@ -1179,7 +1183,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:262
 msgid "Section Show"
-msgstr ""
+msgstr "Bölüm Gösterimi"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:263
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:270
@@ -1188,7 +1192,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:269
 msgid "Media Options"
-msgstr ""
+msgstr "Ortam Seçenekleri"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:278
 msgid "Media w/ URL"
@@ -1367,7 +1371,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:477
 msgid "Slides Options"
-msgstr ""
+msgstr "Slayt Seçenekleri"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:478
 msgid "Unlimited slides with drag and drop sortings."
@@ -1379,11 +1383,11 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:481
 msgid "This is a title"
-msgstr ""
+msgstr "Bu bir başlıktır"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:482
 msgid "Description Here"
-msgstr ""
+msgstr "Açıklama Buraya"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:483
 msgid "Give us a link!"
@@ -1391,7 +1395,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:490
 msgid "Preset"
-msgstr ""
+msgstr "Ön Ayar"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:491
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:493
@@ -1408,11 +1412,11 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:555
 msgid "General Settings"
-msgstr ""
+msgstr "Genel Ayarlar"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:561
 msgid "Main Layout"
-msgstr ""
+msgstr "Ana Düzen"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:562
 msgid "Select main content and sidebar alignment. Choose between 1, 2 or 3 column layout."
@@ -1420,7 +1424,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:595
 msgid "Tracking Code"
-msgstr ""
+msgstr "İzleme Kodu"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:596
 msgid ""
@@ -1430,15 +1434,15 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:603
 msgid "CSS Code"
-msgstr ""
+msgstr "CSS Kod"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:604
 msgid "Paste your CSS code here."
-msgstr ""
+msgstr "CSS kodunuzu buraya yapıştırınız."
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:635
 msgid "Footer Text"
-msgstr ""
+msgstr "Alt Bölüm Yazısı"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:636
 msgid ""
@@ -1448,7 +1452,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:651
 msgid "Styling Options"
-msgstr ""
+msgstr "Biçim Seçenekleri"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:657
 msgid "Theme Stylesheet"
@@ -1502,7 +1506,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:711
 msgid "Links Color Option"
-msgstr ""
+msgstr "Bağlantı Rengi Seçeneği"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:727
 msgid "Header Border Option"
@@ -1545,7 +1549,7 @@ msgstr ""
 #: admin/templates/form/login_css.php:4 admin/templates/form/profile_css.php:4
 #: admin/templates/form/register_css.php:4 um-config.php:1577 um-config.php:1583
 msgid "Custom CSS"
-msgstr ""
+msgstr "Özel CSS"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:797
 msgid "Quickly add some CSS to your theme by adding it to this block."
@@ -1557,11 +1561,11 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:804
 msgid "Custom HTML"
-msgstr ""
+msgstr "Özel HTML"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:805
 msgid "Just like a text box widget."
-msgstr ""
+msgstr "Sadece metin kutusu bileşeninin bir benzeri."
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:806
 msgid "This field is even HTML validated!"
@@ -1569,7 +1573,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:820
 msgid "Field Validation"
-msgstr ""
+msgstr "Onaylama Alanı"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:821
 msgid "Validate ALL fields within Redux."
@@ -1581,7 +1585,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:827
 msgid "Text Option - Email Validated"
-msgstr ""
+msgstr "Metin Seçeneği - E-posta Onayı"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:828
 msgid "This is a little space under the Field Title in the Options table, additional info is good in here."
@@ -1609,7 +1613,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:858
 msgid "This must be a URL."
-msgstr ""
+msgstr "Bu bir URL olmalı."
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:870
 msgid "Text Option - Numeric Validated"
@@ -1617,7 +1621,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:871
 msgid "This must be numeric."
-msgstr ""
+msgstr "Buraya bir sayısal değer gelmeli."
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:879
 msgid "Text Option - Comma Numeric Validated"
@@ -1633,7 +1637,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:889
 msgid "This must be a alpha numeric only."
-msgstr ""
+msgstr "Buraya alfabetik ve sayısal bir değer gelmeli."
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:897
 msgid "Text Option - Str Replace Validated"
@@ -1644,7 +1648,7 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:924
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:933
 msgid "You decide."
-msgstr ""
+msgstr "Sen karar ver."
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:899
 msgid "This field's default value was changed by a filter hook!"
@@ -1759,7 +1763,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1056
 msgid "Images Option"
-msgstr ""
+msgstr "Görseller Seçeneği"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1071
 msgid "Images Option for Layout"
@@ -1781,19 +1785,19 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1133
 msgid "Select Fields"
-msgstr ""
+msgstr "Seçim Alanları"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1139
 msgid "Select Option"
-msgstr ""
+msgstr "Ayar Seç"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1154
 msgid "Multi Select Option"
-msgstr ""
+msgstr "Çoklu Seçme Ayarı"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1169
 msgid "Select Image"
-msgstr ""
+msgstr "Görsel Seç"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1170
 msgid "A preview of the selected image will appear underneath the select box."
@@ -1805,43 +1809,43 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1187
 msgid "Categories Select Option"
-msgstr ""
+msgstr "Kategori Seçme Ayarı"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1196
 msgid "Categories Multi Select Option"
-msgstr ""
+msgstr "Kategorileri Çoklu Seçme Ayarı"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1204
 msgid "Pages Select Option"
-msgstr ""
+msgstr "Sayfa Seçme Ayarı"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1213
 msgid "Pages Multi Select Option"
-msgstr ""
+msgstr "Sayfaları Çoklu Seçme Ayarı"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1221
 msgid "Tags Select Option"
-msgstr ""
+msgstr "Etiket Seçme Ayarı"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1230
 msgid "Tags Multi Select Option"
-msgstr ""
+msgstr "Etiketleri Çoklu Seçme Ayarı"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1238
 msgid "Menus Select Option"
-msgstr ""
+msgstr "Menü Seçme Ayarı"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1247
 msgid "Menus Multi Select Option"
-msgstr ""
+msgstr "Menüleri Çoklu Seçme Ayarı"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1255
 msgid "Post Type Select Option"
-msgstr ""
+msgstr "Yazı Biçimi Seçme Ayarı"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1264
 msgid "Post Type Multi Select Option"
-msgstr ""
+msgstr "Yazı Biçimlerini Çoklu Seçme Ayarı"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1274
 msgid "Post Type Multi Select Option + Sortable"
@@ -1877,7 +1881,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1324
 msgid "<strong>Theme URL:</strong> "
-msgstr ""
+msgstr "<strong>Tema URLsi:</strong> "
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1325
 msgid "<strong>Author:</strong> "
@@ -1897,7 +1901,7 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1358
 msgid "Date Option"
-msgstr ""
+msgstr "Tarih Seçeneği"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1369
 msgid "Button Set Option"
@@ -1920,7 +1924,7 @@ msgstr ""
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1460
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1469
 msgid "This is a title."
-msgstr ""
+msgstr "Bu bir başlıktır."
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1405
 msgid "This is an info field with the warning style applied and a header."
@@ -2003,24 +2007,24 @@ msgstr ""
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1553
 msgid "Theme Information"
-msgstr ""
+msgstr "Tema Bilgisi."
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1719 index.php:58
 msgid "Support"
-msgstr ""
+msgstr "Destek"
 
 #: admin/core/lib/ReduxFramework/sample/sample-config.php:1725
 msgid "Extensions"
-msgstr ""
+msgstr "Uzantılar"
 
 #: admin/core/um-admin-access.php:95
 msgid "Access Control"
-msgstr ""
+msgstr "Veritabanı Kontrolu"
 
 #: admin/core/um-admin-actions-ajax.php:11 admin/core/um-admin-actions-fields.php:11
 #: admin/core/um-admin-actions-modal.php:98
 msgid "Please login as administrator"
-msgstr ""
+msgstr "Lütfen yönetici olarak giriş yapın"
 
 #: admin/core/um-admin-actions-modal.php:23
 msgid "Manage conditional fields support"
@@ -2032,11 +2036,11 @@ msgstr ""
 
 #: admin/core/um-admin-actions-modal.php:30
 msgid "Reset all rules"
-msgstr ""
+msgstr "Tüm kuralları sıfırla"
 
 #: admin/core/um-admin-actions-modal.php:123
 msgid "Search Icons..."
-msgstr ""
+msgstr "İkon ara..."
 
 #: admin/core/um-admin-actions-modal.php:144
 msgid "Setup New Field"
@@ -2048,7 +2052,7 @@ msgstr ""
 
 #: admin/core/um-admin-actions-modal.php:172
 msgid "None"
-msgstr ""
+msgstr "Yok"
 
 #: admin/core/um-admin-actions-modal.php:176
 msgid "Custom Fields"
@@ -2090,11 +2094,11 @@ msgstr ""
 
 #: admin/core/um-admin-columns.php:29 admin/core/um-admin-columns.php:46
 msgid "Date"
-msgstr ""
+msgstr "Tarih"
 
 #: admin/core/um-admin-functions.php:28 admin/core/um-admin-functions.php:31
 msgid "Form updated."
-msgstr ""
+msgstr "Form güncellendi."
 
 #: admin/core/um-admin-functions.php:29 admin/core/um-admin-functions.php:47
 msgid "Custom field updated."
@@ -2110,11 +2114,11 @@ msgstr ""
 
 #: admin/core/um-admin-functions.php:33
 msgid "Form created."
-msgstr ""
+msgstr "Form oluşturuldu."
 
 #: admin/core/um-admin-functions.php:34
 msgid "Form saved."
-msgstr ""
+msgstr "Form kaydedildi."
 
 #: admin/core/um-admin-functions.php:35
 msgid "Form submitted."
@@ -2130,7 +2134,7 @@ msgstr ""
 
 #: admin/core/um-admin-functions.php:46 admin/core/um-admin-functions.php:49
 msgid "Role updated."
-msgstr ""
+msgstr "Rol güncellendi."
 
 #: admin/core/um-admin-functions.php:50
 msgid "Role restored to revision."
@@ -2138,11 +2142,11 @@ msgstr ""
 
 #: admin/core/um-admin-functions.php:51
 msgid "Role created."
-msgstr ""
+msgstr "Rol oluşturuldu."
 
 #: admin/core/um-admin-functions.php:52
 msgid "Role saved."
-msgstr ""
+msgstr "Rol kaydedildi."
 
 #: admin/core/um-admin-functions.php:53
 msgid "Role submitted."
@@ -2159,17 +2163,17 @@ msgstr ""
 #: admin/core/um-admin-metabox.php:112 core/um-builtin.php:812 core/um-builtin.php:827 um-config.php:214
 #: um-config.php:224 um-config.php:234 um-config.php:244 um-config.php:276
 msgid "Yes"
-msgstr ""
+msgstr "Evet"
 
 #: admin/core/um-admin-metabox.php:113 admin/core/um-admin-roles.php:48 core/um-builtin.php:811
 #: core/um-builtin.php:812 core/um-builtin.php:826 core/um-builtin.php:827 um-config.php:215 um-config.php:225
 #: um-config.php:235 um-config.php:245 um-config.php:277
 msgid "No"
-msgstr ""
+msgstr "Hayır"
 
 #: admin/core/um-admin-metabox.php:233
 msgid "General Options"
-msgstr ""
+msgstr "Genel Ayarlar"
 
 #: admin/core/um-admin-metabox.php:234
 msgid "Profile Card"
@@ -2177,7 +2181,7 @@ msgstr ""
 
 #: admin/core/um-admin-metabox.php:235
 msgid "Search Options"
-msgstr ""
+msgstr "Arama Seçeneği"
 
 #: admin/core/um-admin-metabox.php:236
 msgid "Results &amp; Pagination"
@@ -2197,31 +2201,31 @@ msgstr ""
 
 #: admin/core/um-admin-metabox.php:253
 msgid "General Permissions"
-msgstr ""
+msgstr "Genel İzinler"
 
 #: admin/core/um-admin-metabox.php:255
 msgid "Profile Access"
-msgstr ""
+msgstr "Profil Verisi"
 
 #: admin/core/um-admin-metabox.php:257
 msgid "Homepage Options"
-msgstr ""
+msgstr "Anasayfa Ayarları"
 
 #: admin/core/um-admin-metabox.php:259
 msgid "Registration Options"
-msgstr ""
+msgstr "Kayıt Ayarları"
 
 #: admin/core/um-admin-metabox.php:261
 msgid "Login Options"
-msgstr ""
+msgstr "Giriş Ayarları"
 
 #: admin/core/um-admin-metabox.php:263
 msgid "Logout Options"
-msgstr ""
+msgstr "Çıkış Ayarları"
 
 #: admin/core/um-admin-metabox.php:265
 msgid "Delete Options"
-msgstr ""
+msgstr "Silme Ayarları"
 
 #: admin/core/um-admin-metabox.php:276
 msgid "Select Form Type"
@@ -2229,7 +2233,7 @@ msgstr ""
 
 #: admin/core/um-admin-metabox.php:277
 msgid "Form Builder"
-msgstr ""
+msgstr "Form Oluşturucu"
 
 #: admin/core/um-admin-metabox.php:280 admin/core/um-admin-metabox.php:285 admin/core/um-admin-metabox.php:291
 msgid "Customize this form"
@@ -2285,11 +2289,11 @@ msgstr ""
 
 #: admin/core/um-admin-notices.php:55
 msgid "User has been updated."
-msgstr ""
+msgstr "Kullanıcı güncellendi."
 
 #: admin/core/um-admin-notices.php:59
 msgid "Users have been updated."
-msgstr ""
+msgstr "Kullanıcılar güncellendi."
 
 #: admin/core/um-admin-notices.php:63
 msgid "Super administrators cannot be modified."
@@ -2301,11 +2305,11 @@ msgstr ""
 
 #: admin/core/um-admin-redux.php:59 admin/core/um-admin-redux.php:60 index.php:59
 msgid "Settings"
-msgstr ""
+msgstr "Ayarlar"
 
 #: admin/core/um-admin-roles.php:20
 msgid "Role Title"
-msgstr ""
+msgstr "Rol Başlığı"
 
 #: admin/core/um-admin-roles.php:21
 msgid "No. of Members"
@@ -2348,7 +2352,7 @@ msgstr ""
 
 #: admin/core/um-admin-users.php:34
 msgid "Edit"
-msgstr ""
+msgstr "Düzenle"
 
 #: admin/core/um-admin-users.php:35
 msgid "Edit in frontend"
@@ -2364,7 +2368,7 @@ msgstr ""
 
 #: admin/core/um-admin-users.php:200 core/um-fields.php:1197
 msgid "Apply"
-msgstr ""
+msgstr "Uygula"
 
 #: admin/core/um-admin-users.php:206
 msgid "Community role&hellip;"
@@ -2372,11 +2376,11 @@ msgstr ""
 
 #: admin/core/um-admin-users.php:213
 msgid "Change"
-msgstr ""
+msgstr "Değiştir"
 
 #: admin/core/um-admin-users.php:231
 msgid "Community Role"
-msgstr ""
+msgstr "Topluluk Rolü"
 
 #: admin/core/um-admin-users.php:231
 msgid "This is the membership role set by Ultimate Member plugin"
@@ -2384,7 +2388,7 @@ msgstr ""
 
 #: admin/core/um-admin-users.php:233
 msgid "WordPress Role"
-msgstr ""
+msgstr "WordPress Rolü"
 
 #: admin/core/um-admin-users.php:233
 msgid "This is the membership role set by WordPress"
@@ -2392,7 +2396,7 @@ msgstr ""
 
 #: admin/core/um-admin-users.php:235
 msgid "Status"
-msgstr ""
+msgstr "Durum"
 
 #: admin/core/um-admin-users.php:235
 msgid "This is current user status in your membership site"
@@ -2428,7 +2432,7 @@ msgstr ""
 
 #: admin/templates/access/settings.php:24 admin/templates/access/settings.php:50
 msgid "Redirect URL"
-msgstr ""
+msgstr "URL Yönlendirme"
 
 #: admin/templates/access/settings.php:24 admin/templates/access/settings.php:50
 msgid "This is the URL that user is redirected to If he is not permitted to view this content"
@@ -2457,7 +2461,7 @@ msgstr ""
 #: admin/templates/directory/appearance.php:3 admin/templates/form/login_customize.php:14
 #: admin/templates/form/profile_customize.php:26 admin/templates/form/register_customize.php:26
 msgid "Template"
-msgstr ""
+msgstr "Tema"
 
 #: admin/templates/directory/general.php:19
 msgid "User Roles to Display"
@@ -2465,11 +2469,11 @@ msgstr ""
 
 #: admin/templates/directory/general.php:32
 msgid "Only show members who have uploaded a profile photo"
-msgstr ""
+msgstr "Sadece profil fotosu yükleyen kullanıcıları göster"
 
 #: admin/templates/directory/general.php:41
 msgid "Only show members who have uploaded a cover photo"
-msgstr ""
+msgstr "Sadece kapak fotosu yükleyen kullanıcıları göster"
 
 #: admin/templates/directory/general.php:50
 msgid "Sort users by"
@@ -2477,11 +2481,11 @@ msgstr ""
 
 #: admin/templates/directory/general.php:67
 msgid "Meta key"
-msgstr ""
+msgstr "Anahtar kelime"
 
 #: admin/templates/directory/pagination.php:6
 msgid "Number of profiles per page"
-msgstr ""
+msgstr "Sayfa başına düşen profil sayısı"
 
 #: admin/templates/directory/pagination.php:6
 msgid "Number of profiles to appear on page for standard users"
@@ -2497,7 +2501,7 @@ msgstr ""
 
 #: admin/templates/directory/pagination.php:24
 msgid "Maximum number of profiles"
-msgstr ""
+msgstr "En yüksek profil sayısı"
 
 #: admin/templates/directory/pagination.php:24
 msgid ""
@@ -2507,15 +2511,15 @@ msgstr ""
 
 #: admin/templates/directory/profile.php:6
 msgid "Enable Profile Photo"
-msgstr ""
+msgstr "Profil Fotosunu Etkinleştir"
 
 #: admin/templates/directory/profile.php:15
 msgid "Enable Cover Photo"
-msgstr ""
+msgstr "Kapak Fotoğrafını Etkinleştir"
 
 #: admin/templates/directory/profile.php:24
 msgid "Show display name"
-msgstr ""
+msgstr "Görünür ismi göster"
 
 #: admin/templates/directory/profile.php:33
 msgid "Show tagline below profile name"
@@ -2539,7 +2543,7 @@ msgstr ""
 
 #: admin/templates/directory/profile.php:156
 msgid "Show social connect icons"
-msgstr ""
+msgstr "Sosyal bağlantı ikonlarını göster"
 
 #: admin/templates/directory/profile_card.php:3
 msgid "Profile card background"
@@ -2547,7 +2551,7 @@ msgstr ""
 
 #: admin/templates/directory/profile_card.php:7
 msgid "Profile card text"
-msgstr ""
+msgstr "Profil kart yazısı"
 
 #: admin/templates/directory/profile_card.php:11
 msgid "Profile card border color"
@@ -2563,7 +2567,7 @@ msgstr ""
 
 #: admin/templates/directory/search.php:6
 msgid "Enable Search feature"
-msgstr ""
+msgstr "Arama Özelliğini Etkinleştir"
 
 #: admin/templates/directory/search.php:15
 msgid "User Roles that can use search"
@@ -2595,7 +2599,7 @@ msgstr ""
 
 #: admin/templates/directory/search.php:88 core/um-setup.php:48 core/um-setup.php:153
 msgid "{total_users} Member"
-msgstr ""
+msgstr "{total_users} Üye"
 
 #: admin/templates/directory/search.php:94
 msgid "Custom text if no users were found"
@@ -2603,11 +2607,11 @@ msgstr ""
 
 #: admin/templates/directory/search.php:97 core/um-setup.php:49
 msgid "We are sorry. We cannot find any users who match your search criteria."
-msgstr ""
+msgstr "Üzgünüz. Sizin arama kriterlerinize uygun bir üye bulamadık."
 
 #: admin/templates/form/builder.php:14
 msgid "Live Preview"
-msgstr ""
+msgstr "Canlı Önizleme"
 
 #: admin/templates/form/builder.php:28
 msgid "Add Master Row"
@@ -2626,12 +2630,12 @@ msgstr ""
 #: admin/templates/form/login_customize.php:26 admin/templates/form/profile_customize.php:38
 #: admin/templates/form/register_customize.php:38
 msgid "Max. Width (px)"
-msgstr ""
+msgstr "Max. Genişlik (px)"
 
 #: admin/templates/form/login_customize.php:30 admin/templates/form/profile_customize.php:46
 #: admin/templates/form/register_customize.php:42
 msgid "Alignment"
-msgstr ""
+msgstr "Hiza"
 
 #: admin/templates/form/login_customize.php:40 admin/templates/form/profile_customize.php:56
 #: admin/templates/form/register_customize.php:52
@@ -2685,7 +2689,7 @@ msgstr ""
 
 #: admin/templates/form/login_customize.php:92
 msgid "Show Forgot Password Link?"
-msgstr ""
+msgstr "Parolamı Unuttum Bağalntısı Görünsün mü?"
 
 #: admin/templates/form/login_settings.php:3
 msgid "Redirection after Login"
@@ -2703,15 +2707,15 @@ msgstr ""
 
 #: admin/templates/form/mode.php:9 um-config.php:1397
 msgid "Registration Form"
-msgstr ""
+msgstr "Kayıt Formu"
 
 #: admin/templates/form/mode.php:11
 msgid "Profile Form"
-msgstr ""
+msgstr "Profil Formu"
 
 #: admin/templates/form/mode.php:13 um-config.php:1488
 msgid "Login Form"
-msgstr ""
+msgstr "Giriş Formu"
 
 #: admin/templates/form/profile_customize.php:14
 msgid "Make this profile role-specific"
@@ -2719,7 +2723,7 @@ msgstr ""
 
 #: admin/templates/form/profile_customize.php:42
 msgid "Profile Area Max. Width (px)"
-msgstr ""
+msgstr "Profil Bölgesi Max. Genişlik (px)"
 
 #: admin/templates/form/profile_customize.php:107
 msgid "Base Background Color"
@@ -2727,7 +2731,7 @@ msgstr ""
 
 #: admin/templates/form/profile_customize.php:111
 msgid "Enable Cover Photos"
-msgstr ""
+msgstr "Kapak Fotoğrafını Etkinleştir"
 
 #: admin/templates/form/profile_customize.php:119
 msgid "Cover photo ratio"
@@ -2735,23 +2739,23 @@ msgstr ""
 
 #: admin/templates/form/profile_customize.php:129 um-config.php:1195
 msgid "Profile Photo Size"
-msgstr ""
+msgstr "Profil Foto Boyutu"
 
 #: admin/templates/form/profile_customize.php:133 um-config.php:1204
 msgid "Profile Photo Style"
-msgstr ""
+msgstr "Profil Foto Biçimi"
 
 #: admin/templates/form/profile_customize.php:136 um-config.php:1208
 msgid "Circle"
-msgstr ""
+msgstr "Çember"
 
 #: admin/templates/form/profile_customize.php:137 um-config.php:1209
 msgid "Rounded Corners"
-msgstr ""
+msgstr "Yuvarlatılmış Köşeler"
 
 #: admin/templates/form/profile_customize.php:138 um-config.php:1210
 msgid "Square"
-msgstr ""
+msgstr "Kare"
 
 #: admin/templates/form/profile_customize.php:143
 msgid "Header Background Color"
@@ -2763,7 +2767,7 @@ msgstr ""
 
 #: admin/templates/form/profile_customize.php:151
 msgid "Header Link Color"
-msgstr ""
+msgstr "Başlık Linki Rengi"
 
 #: admin/templates/form/profile_customize.php:155
 msgid "Header Link Hover"
@@ -2779,7 +2783,7 @@ msgstr ""
 
 #: admin/templates/form/profile_customize.php:168
 msgid "Show display name in profile header?"
-msgstr ""
+msgstr "Profil başlığında görünür ismi göster?"
 
 #: admin/templates/form/profile_customize.php:177
 msgid "Show user description in profile header?"
@@ -2835,11 +2839,11 @@ msgstr ""
 
 #: admin/templates/modal/dynamic_edit_field.php:6
 msgid "Edit Field"
-msgstr ""
+msgstr "Alanı Düzenle"
 
 #: admin/templates/modal/dynamic_edit_field.php:14 admin/templates/modal/dynamic_edit_row.php:14
 msgid "Update"
-msgstr ""
+msgstr "Güncelle"
 
 #: admin/templates/modal/dynamic_edit_field.php:15 admin/templates/modal/dynamic_edit_row.php:15
 #: admin/templates/modal/dynamic_new_divider.php:15 admin/templates/modal/dynamic_new_field.php:15
@@ -2847,7 +2851,7 @@ msgstr ""
 #: core/um-actions-profile.php:268 core/um-actions-profile.php:278 core/um-actions-profile.php:403
 #: core/um-fields.php:1198 core/um-fields.php:1283
 msgid "Cancel"
-msgstr ""
+msgstr "Vazgeç"
 
 #: admin/templates/modal/dynamic_edit_row.php:6
 msgid "Edit Row Settings"
@@ -2859,7 +2863,7 @@ msgstr ""
 
 #: admin/templates/modal/dynamic_form_preview.php:12
 msgid "Continue editing"
-msgstr ""
+msgstr "Düzenlemeye devam et"
 
 #: admin/templates/modal/dynamic_new_divider.php:6
 msgid "Add a New Divider"
@@ -2868,11 +2872,11 @@ msgstr ""
 #: admin/templates/modal/dynamic_new_divider.php:14 admin/templates/modal/dynamic_new_field.php:14
 #: admin/templates/modal/dynamic_new_group.php:14
 msgid "Add"
-msgstr ""
+msgstr "Ekle"
 
 #: admin/templates/modal/dynamic_new_field.php:6
 msgid "Add a New Field"
-msgstr ""
+msgstr "Yeni Alan Ekle"
 
 #: admin/templates/modal/dynamic_new_group.php:6
 msgid "Add a New Field Group"
@@ -2884,7 +2888,7 @@ msgstr ""
 
 #: admin/templates/modal/fields.php:4
 msgid "Fields Manager"
-msgstr ""
+msgstr "Alan Yöneticisi"
 
 #: admin/templates/modal/fonticons.php:4
 #, php-format
@@ -2915,7 +2919,7 @@ msgstr ""
 
 #: admin/templates/role/admin.php:26
 msgid "Can edit other member accounts?"
-msgstr ""
+msgstr "Diğer üyelerin hesaplarını düzenleyebilsin mi?"
 
 #: admin/templates/role/admin.php:26
 msgid "Allow this role to edit accounts of other members"
@@ -2931,7 +2935,7 @@ msgstr ""
 
 #: admin/templates/role/admin.php:44
 msgid "Can delete other member accounts?"
-msgstr ""
+msgstr "Diğer üyelerin hesaplarını silebilsin mi?"
 
 #: admin/templates/role/admin.php:44
 msgid "Allow this role to edit the profile fields of certain roles only"
@@ -2955,11 +2959,11 @@ msgstr ""
 
 #: admin/templates/role/delete.php:10 admin/templates/role/logout.php:10
 msgid "Go to Homepage"
-msgstr ""
+msgstr "Anasayfaya Git"
 
 #: admin/templates/role/delete.php:11 admin/templates/role/logout.php:11
 msgid "Go to Custom URL"
-msgstr ""
+msgstr "Özel URL ye Git"
 
 #: admin/templates/role/delete.php:18
 msgid "Set a url to redirect this user role to after they delete account"
@@ -2967,7 +2971,7 @@ msgstr ""
 
 #: admin/templates/role/general.php:6
 msgid "Can edit their profile?"
-msgstr ""
+msgstr "Profillerini düzenleyebilsinler mi?"
 
 #: admin/templates/role/general.php:6
 msgid "Can this role edit his own profile?"
@@ -2975,7 +2979,7 @@ msgstr ""
 
 #: admin/templates/role/general.php:11
 msgid "Can delete their account?"
-msgstr ""
+msgstr "Hesaplarını silebilsinler mi?"
 
 #: admin/templates/role/general.php:11
 msgid "Allow this role to delete their account and end their membership on your site"
@@ -3040,7 +3044,7 @@ msgstr ""
 
 #: admin/templates/role/profile.php:6
 msgid "Can view other member profiles?"
-msgstr ""
+msgstr "Diğer üyelerin profillerine bakabilsinler mi?"
 
 #: admin/templates/role/profile.php:6
 msgid "Can this role view all member profiles?"
@@ -3056,7 +3060,7 @@ msgstr ""
 
 #: admin/templates/role/profile.php:24
 msgid "Can make their profile private?"
-msgstr ""
+msgstr "Profillerini gizli yapabilsinler mi?"
 
 #: admin/templates/role/profile.php:24
 msgid "Can this role make their profile private?"
@@ -3072,7 +3076,7 @@ msgstr ""
 
 #: admin/templates/role/register.php:6
 msgid "Registration Status"
-msgstr ""
+msgstr "Kayıt Durumu"
 
 #: admin/templates/role/register.php:6
 msgid "Select the status you would like this user role to have after they register on your site"
@@ -3104,7 +3108,7 @@ msgstr ""
 
 #: admin/templates/role/register.php:58 admin/templates/role/register.php:96
 msgid "Show custom message"
-msgstr ""
+msgstr "Özel ileti göster"
 
 #: admin/templates/role/register.php:66 admin/templates/role/register.php:104
 msgid "Personalize the custom message"
@@ -3137,15 +3141,15 @@ msgstr ""
 
 #: admin/um-admin-init.php:51 core/um-taxonomies.php:18
 msgid "Forms"
-msgstr ""
+msgstr "Formlar"
 
 #: admin/um-admin-init.php:53 core/um-taxonomies.php:36
 msgid "User Roles"
-msgstr ""
+msgstr "Kullanıcı Rolleri"
 
 #: admin/um-admin-init.php:56 core/um-taxonomies.php:56
 msgid "Member Directories"
-msgstr ""
+msgstr "Üye Klasörleri"
 
 #: admin/um-admin-init.php:82
 msgid "Please create a team.php template in admin templates."
@@ -3154,51 +3158,51 @@ msgstr ""
 #: core/um-actions-account.php:28 core/um-actions-account.php:97 core/um-actions-account.php:142
 #: core/um-actions-account.php:294 core/um-builtin.php:818 core/um-builtin.php:821
 msgid "Delete Account"
-msgstr ""
+msgstr "Hesabı Sil"
 
 #: core/um-actions-account.php:82 core/um-actions-password.php:121
 msgid "Your password must contain at least 8 characters"
-msgstr ""
+msgstr "Parolanız en az 8 karakterden oluşmalı"
 
 #: core/um-actions-account.php:86 core/um-actions-password.php:125
 msgid "Your password must contain less than 30 characters"
-msgstr ""
+msgstr "Parolanız en fazla 30 karakterden oluşabilir."
 
 #: core/um-actions-account.php:90 core/um-actions-form.php:176 core/um-actions-password.php:129
 msgid "Your password must contain at least one lowercase letter, one capital letter and one number"
-msgstr ""
+msgstr "Parolan en az bir küçük harf, bir büyük harf ve bir sayıdan oluşmak zorundadır"
 
 #: core/um-actions-account.php:165
 msgid "Update Privacy"
-msgstr ""
+msgstr "Gizliliği Güncelle"
 
 #: core/um-actions-account.php:188
 msgid "Update Account"
-msgstr ""
+msgstr "Hesabı Güncelle"
 
 #: core/um-actions-account.php:212
 msgid "Update Password"
-msgstr ""
+msgstr "Parolayı Güncelle"
 
 #: core/um-actions-account.php:282 um-config.php:106
 msgid "Account"
-msgstr ""
+msgstr "Hesap"
 
 #: core/um-actions-account.php:285
 msgid "Change Password"
-msgstr ""
+msgstr "Parolayı Değiştir"
 
 #: core/um-actions-account.php:288
 msgid "Privacy"
-msgstr ""
+msgstr "Gizlilik"
 
 #: core/um-actions-account.php:291 um-config.php:664
 msgid "Notifications"
-msgstr ""
+msgstr "Bildirimler"
 
 #: core/um-actions-ajax.php:41 core/um-actions-ajax.php:56 core/um-actions-ajax.php:106
 msgid "You can not edit this user"
-msgstr ""
+msgstr "Sen bu üyeyi düzenleyemezsin"
 
 #: core/um-actions-ajax.php:73
 msgid "Invalid parameters"
@@ -3242,15 +3246,15 @@ msgstr ""
 
 #: core/um-actions-form.php:170
 msgid "You can not use HTML tags here"
-msgstr ""
+msgstr "Sen burada HTML taglarını kullanamazsın"
 
 #: core/um-actions-form.php:182
 msgid "Please confirm your password"
-msgstr ""
+msgstr "Lütfen parolanızı doğrulayın"
 
 #: core/um-actions-form.php:185
 msgid "Your passwords do not match"
-msgstr ""
+msgstr "Parolalarınız eşleşmiyor"
 
 #: core/um-actions-form.php:191
 #, php-format
@@ -3264,7 +3268,7 @@ msgstr ""
 
 #: core/um-actions-form.php:207
 msgid "Please enter a valid phone number"
-msgstr ""
+msgstr "Lütfen bir telefon numarası giriniz"
 
 #: core/um-actions-form.php:213 core/um-actions-form.php:219 core/um-actions-form.php:225
 #: core/um-actions-form.php:231 core/um-actions-form.php:237 core/um-actions-form.php:243
@@ -3278,11 +3282,11 @@ msgstr ""
 
 #: core/um-actions-form.php:252 core/um-actions-form.php:266
 msgid "Your username is already taken"
-msgstr ""
+msgstr "Bu kullanıcı adı önceden alınmış"
 
 #: core/um-actions-form.php:254
 msgid "Username cannot be an email"
-msgstr ""
+msgstr "Kullanıcı adı bir e-posta adresi olamaz"
 
 #: core/um-actions-form.php:256 core/um-actions-form.php:270
 msgid "Your username contains invalid characters"
@@ -3315,47 +3319,47 @@ msgstr ""
 
 #: core/um-actions-login.php:16
 msgid "Please enter your username or email"
-msgstr ""
+msgstr "Lütfen kullanıcı adı veya e-posta giriniz"
 
 #: core/um-actions-login.php:20
 msgid "Please enter your username"
-msgstr ""
+msgstr "Lütfen kullanıcı adınızı giriniz"
 
 #: core/um-actions-login.php:24
 msgid "Please enter your email"
-msgstr ""
+msgstr "Lütfen e-posta adresinizi giriniz"
 
 #: core/um-actions-login.php:48
 msgid " Sorry, we can't find an account with that email address"
-msgstr ""
+msgstr "Üzgünüz, bu e-posta adresine sahip bir hesap bulamıyoruz"
 
 #: core/um-actions-login.php:50
 msgid " Sorry, we can't find an account with that username"
-msgstr ""
+msgstr "Üzgünüz, bu kullanıcı adında bir hesap bulamıyoruz"
 
 #: core/um-actions-login.php:54
 msgid "Please enter your password"
-msgstr ""
+msgstr "Lütfen parolanızı giriniz"
 
 #: core/um-actions-login.php:69
 msgid "Password is incorrect. Please try again."
-msgstr ""
+msgstr "Parolanız yanlış. Lütfen tekrar deneyin."
 
 #: core/um-actions-login.php:207
 msgid "Forgot your password?"
-msgstr ""
+msgstr "Parolanızı mı unuttunuz?"
 
 #: core/um-actions-members.php:60
 msgid "Search"
-msgstr ""
+msgstr "Ara"
 
 #: core/um-actions-members.php:60
 msgid "Reset"
-msgstr ""
+msgstr "Sıfırla"
 
 #: core/um-actions-members.php:119
 msgid "Jump to page:"
-msgstr ""
+msgstr "Sayfaya atla:"
 
 #: core/um-actions-members.php:123
 #, php-format
@@ -3384,11 +3388,11 @@ msgstr ""
 
 #: core/um-actions-misc.php:65
 msgid "You have successfully changed your password."
-msgstr ""
+msgstr "Parolanız başarıyla değiştirildi."
 
 #: core/um-actions-misc.php:69
 msgid "Your account is now active! You can login."
-msgstr ""
+msgstr "Hesabınız şu an aktif! Giriş yapabilirsiniz."
 
 #: core/um-actions-misc.php:81
 msgid "An error has been encountered"
@@ -3396,15 +3400,15 @@ msgstr ""
 
 #: core/um-actions-misc.php:89 core/um-filters-login.php:33
 msgid "This email address has been blocked."
-msgstr ""
+msgstr "Bu e-posta adresi engellenmiş."
 
 #: core/um-actions-misc.php:93 core/um-filters-login.php:36
 msgid "Your IP address has been blocked."
-msgstr ""
+msgstr "Sizin IP adresini engellenmiş."
 
 #: core/um-actions-misc.php:97 core/um-filters-login.php:78
 msgid "Your account has been disabled."
-msgstr ""
+msgstr "Sizin hesabınız etkin değil."
 
 #: core/um-actions-misc.php:101 core/um-filters-login.php:81
 msgid "Your account has not been approved yet."
@@ -3412,7 +3416,7 @@ msgstr ""
 
 #: core/um-actions-misc.php:105 core/um-filters-login.php:84
 msgid "Your account is awaiting e-mail verifications."
-msgstr ""
+msgstr "Hesabınız e-posta doğrulamasını beklemekte."
 
 #: core/um-actions-misc.php:109 core/um-filters-login.php:87
 msgid "Your membership request has been rejected."
@@ -3439,11 +3443,11 @@ msgstr ""
 
 #: core/um-actions-password.php:189
 msgid "Reset my password"
-msgstr ""
+msgstr "Parolamı sıfırla"
 
 #: core/um-actions-password.php:216
 msgid "Change my password"
-msgstr ""
+msgstr "Parolamı değiştir"
 
 #: core/um-actions-profile.php:40
 msgid "You are not allowed to edit this user."
@@ -3451,88 +3455,88 @@ msgstr ""
 
 #: core/um-actions-profile.php:153 core/um-builtin.php:756
 msgid "Change your cover photo"
-msgstr ""
+msgstr "Kapak fotomu değiştir"
 
 #: core/um-actions-profile.php:167
 msgid "Change cover photo"
-msgstr ""
+msgstr "Kapak fotosunu değiştir"
 
 #: core/um-actions-profile.php:209
 msgid "Upload a cover photo"
-msgstr ""
+msgstr "Bir kapak fotoğrafı yükle"
 
 #: core/um-actions-profile.php:267
 msgid "Upload photo"
-msgstr ""
+msgstr "Fotoğraf yükle"
 
 #: core/um-actions-profile.php:276 core/um-fields.php:1164 core/um-fields.php:1197
 msgid "Change photo"
-msgstr ""
+msgstr "Fotoğraf değiştir"
 
 #: core/um-actions-profile.php:277
 msgid "Remove photo"
-msgstr ""
+msgstr "Fotoğrafı kaldır"
 
 #: core/um-actions-profile.php:315
 msgid "Tell us a bit about yourself..."
-msgstr ""
+msgstr "Kendin hakkında birazcık bilgi ver..."
 
 #: core/um-actions-profile.php:325
 #, php-format
 msgid "This user account status is %s"
-msgstr ""
+msgstr "Kullanıcı durumu: %s"
 
 #: core/um-actions-profile.php:400
 msgid "Edit Profile"
-msgstr ""
+msgstr "Profili Düzenle"
 
 #: core/um-actions-profile.php:401
 msgid "My Account"
-msgstr ""
+msgstr "Hesabım"
 
 #: core/um-actions-profile.php:402
 msgid "Logout"
-msgstr ""
+msgstr "Çıkış"
 
 #: core/um-builtin.php:458 core/um-builtin.php:461 core/um-builtin.php:774
 msgid "Username or E-mail"
-msgstr ""
+msgstr "Kullanıcı adı veya E-posta"
 
 #: core/um-builtin.php:483 core/um-builtin.php:486
 msgid "First Name"
-msgstr ""
+msgstr "İsim"
 
 #: core/um-builtin.php:493 core/um-builtin.php:496
 msgid "Last Name"
-msgstr ""
+msgstr "Soyisim"
 
 #: core/um-builtin.php:503 core/um-builtin.php:506
 msgid "Display Name"
-msgstr ""
+msgstr "Görünen İsim"
 
 #: core/um-builtin.php:513 core/um-builtin.php:516
 msgid "E-mail Address"
-msgstr ""
+msgstr "E-posta Adresi"
 
 #: core/um-builtin.php:524 core/um-builtin.php:527
 msgid "Biography"
-msgstr ""
+msgstr "Biyografik Bilgi"
 
 #: core/um-builtin.php:537 core/um-builtin.php:540
 msgid "Birth Date"
-msgstr ""
+msgstr "Doğum Tarihi"
 
 #: core/um-builtin.php:551 core/um-builtin.php:554
 msgid "Gender"
-msgstr ""
+msgstr "Cinsiyet"
 
 #: core/um-builtin.php:562
 msgid "Countries"
-msgstr ""
+msgstr "Ülkeler"
 
 #: core/um-builtin.php:565
 msgid "Country"
-msgstr ""
+msgstr "Ülke"
 
 #: core/um-builtin.php:574 core/um-builtin.php:577
 msgid "Facebook"
@@ -3564,7 +3568,7 @@ msgstr ""
 
 #: core/um-builtin.php:682 core/um-builtin.php:694
 msgid "Account Type"
-msgstr ""
+msgstr "Hesap Tipi"
 
 #: core/um-builtin.php:691
 msgid "Roles (Radio)"
@@ -3572,59 +3576,59 @@ msgstr ""
 
 #: core/um-builtin.php:702
 msgid "Languages"
-msgstr ""
+msgstr "Diller"
 
 #: core/um-builtin.php:705
 msgid "Languages Spoken"
-msgstr ""
+msgstr "Konuştuğu Diller"
 
 #: core/um-builtin.php:706
 msgid "Select languages"
-msgstr ""
+msgstr "Dil seçiniz"
 
 #: core/um-builtin.php:714 core/um-builtin.php:717
 msgid "Phone Number"
-msgstr ""
+msgstr "Telefon Numarası"
 
 #: core/um-builtin.php:726 core/um-builtin.php:729
 msgid "Mobile Number"
-msgstr ""
+msgstr "Cep Telefonu Numarası"
 
 #: core/um-builtin.php:740
 msgid "Profile Photo"
-msgstr ""
+msgstr "Profil Fotoğrafı"
 
 #: core/um-builtin.php:743
 msgid "Change your profile photo"
-msgstr ""
+msgstr "Profil fotoğrafını değiştir"
 
 #: core/um-builtin.php:744
 msgid "Upload your photo here"
-msgstr ""
+msgstr "Fotoğrafı buradan yükle"
 
 #: core/um-builtin.php:753
 msgid "Cover Photo"
-msgstr ""
+msgstr "Kapak Fotoğrafı"
 
 #: core/um-builtin.php:757
 msgid "Upload profile cover here"
-msgstr ""
+msgstr "Kapak fotoğrafını buradan yükle"
 
 #: core/um-builtin.php:767
 msgid "Password Reset"
-msgstr ""
+msgstr "Parola Sıfırlama"
 
 #: core/um-builtin.php:769
 msgid "To reset your password, please enter your email address or username below"
-msgstr ""
+msgstr "Parola sıfırlamak için, lütfen e-posta adresinizi veya kullanıcı adınızı giriniz"
 
 #: core/um-builtin.php:777
 msgid "Enter your username or email"
-msgstr ""
+msgstr "Kullanıcı adınızı veya e-posta adresinizi giriniz"
 
 #: core/um-builtin.php:787 core/um-builtin.php:790
 msgid "Profile Privacy"
-msgstr ""
+msgstr "Profil Gizliliği"
 
 #: core/um-builtin.php:791
 msgid "Who can see your public profile?"
@@ -3632,15 +3636,15 @@ msgstr ""
 
 #: core/um-builtin.php:795 core/um-builtin.php:796
 msgid "Everyone"
-msgstr ""
+msgstr "Herkes"
 
 #: core/um-builtin.php:796 core/um-user.php:407
 msgid "Only me"
-msgstr ""
+msgstr "Sadece ben"
 
 #: core/um-builtin.php:803 core/um-builtin.php:806
 msgid "Hide my profile from directory"
-msgstr ""
+msgstr "Benim profilimi diğer üyelerden gizle"
 
 #: core/um-builtin.php:807
 msgid "Here you can hide yourself from appearing in public directory"
@@ -3652,17 +3656,17 @@ msgstr ""
 
 #: core/um-cron.php:15
 msgid "Once Weekly"
-msgstr ""
+msgstr "Haftada Bir"
 
 #: core/um-datetime.php:25
 #, php-format
 msgid "%s year old"
-msgstr ""
+msgstr "%s yaşında"
 
 #: core/um-datetime.php:27
 #, php-format
 msgid "%s years old"
-msgstr ""
+msgstr "%s yaşında"
 
 #: core/um-datetime.php:29
 msgid "Less than 1 year old"
@@ -3670,7 +3674,7 @@ msgstr ""
 
 #: core/um-fields.php:915
 msgid "Current Password"
-msgstr ""
+msgstr "Geçerli Parola"
 
 #: core/um-fields.php:944
 msgid "New Password"
@@ -3679,11 +3683,11 @@ msgstr ""
 #: core/um-fields.php:976
 #, php-format
 msgid "Confirm New %s"
-msgstr ""
+msgstr "Doğrula Yeni %s yı"
 
 #: core/um-fields.php:1155 core/um-fields.php:1227
 msgid "Upload Photo"
-msgstr ""
+msgstr "Foto Yükle"
 
 #: core/um-fields.php:1197 core/um-fields.php:1282
 msgid "Processing..."
@@ -3691,20 +3695,20 @@ msgstr ""
 
 #: core/um-fields.php:1243 core/um-fields.php:1282
 msgid "Change file"
-msgstr ""
+msgstr "Dosya değiştir"
 
 #: core/um-fields.php:1282
 msgid "Save"
-msgstr ""
+msgstr "Kaydet"
 
 #: core/um-fields.php:1929
 #, php-format
 msgid "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some information!"
-msgstr ""
+msgstr "Profiliniz birazcık boş gözüküyor. Biraz bilgi <a href=\"%s\">eklemeye</a> ne dersin?"
 
 #: core/um-fields.php:1931
 msgid "This user has not added any information to their profile yet."
-msgstr ""
+msgstr "Bu kullanıcı henüz profiline hiç bir bilgi eklemedi."
 
 #: core/um-files.php:307
 msgid "Your image is invalid or too large!"
@@ -3721,19 +3725,19 @@ msgstr ""
 
 #: core/um-filters-fields.php:21
 msgid "Age"
-msgstr ""
+msgstr "Yaş"
 
 #: core/um-filters-fields.php:97
 msgid "This file has been removed."
-msgstr ""
+msgstr "Bu dosya silindi."
 
 #: core/um-filters-fields.php:119
 msgid "Untitled photo"
-msgstr ""
+msgstr "Başlıksız foto"
 
 #: core/um-filters-profile.php:10
 msgid "About"
-msgstr ""
+msgstr "Hakkında"
 
 #: core/um-filters-user.php:11 core/um-filters-user.php:33 core/um-filters-user.php:38
 msgid "Approve Membership"
@@ -3753,23 +3757,23 @@ msgstr ""
 
 #: core/um-filters-user.php:15
 msgid "Deactivate"
-msgstr ""
+msgstr "Etkisizleştir"
 
 #: core/um-filters-user.php:16
 msgid "Reactivate"
-msgstr ""
+msgstr "Yeniden Etkinleştir"
 
 #: core/um-filters-user.php:50
 msgid "Deactivate this account"
-msgstr ""
+msgstr "Bu hesabı etkisizleştir"
 
 #: core/um-filters-user.php:54
 msgid "Reactivate this account"
-msgstr ""
+msgstr "Bu hesabı etkinleştir"
 
 #: core/um-filters-user.php:58
 msgid "Delete this user"
-msgstr ""
+msgstr "Bu üyeyi sil"
 
 #: core/um-navmenu-walker-edit.php:18
 msgid "Display Mode"
@@ -3805,19 +3809,19 @@ msgstr ""
 
 #: core/um-taxonomies.php:20 core/um-taxonomies.php:38 core/um-taxonomies.php:58
 msgid "Add New"
-msgstr ""
+msgstr "Yeni Ekle"
 
 #: core/um-taxonomies.php:21
 msgid "Add New Form"
-msgstr ""
+msgstr "Yeni Form Ekle"
 
 #: core/um-taxonomies.php:22
 msgid "Edit Form"
-msgstr ""
+msgstr "Formu Düzenle"
 
 #: core/um-taxonomies.php:23
 msgid "You did not create any forms yet"
-msgstr ""
+msgstr "Henüz form oluşturmadınız."
 
 #: core/um-taxonomies.php:24 core/um-taxonomies.php:42 core/um-taxonomies.php:62
 msgid "Nothing found in Trash"
@@ -3825,7 +3829,7 @@ msgstr ""
 
 #: core/um-taxonomies.php:25
 msgid "Search Forms"
-msgstr ""
+msgstr "Arama Formu"
 
 #: core/um-taxonomies.php:37
 msgid "User Role"
@@ -3837,7 +3841,7 @@ msgstr ""
 
 #: core/um-taxonomies.php:40
 msgid "Edit User Role"
-msgstr ""
+msgstr "Üye Rolünü Düzenle"
 
 #: core/um-taxonomies.php:41
 msgid "You did not create any user roles yet"
@@ -3845,19 +3849,19 @@ msgstr ""
 
 #: core/um-taxonomies.php:43
 msgid "Search User Roles"
-msgstr ""
+msgstr "Üye Rollerini Ara"
 
 #: core/um-taxonomies.php:57
 msgid "Member Directory"
-msgstr ""
+msgstr "Üyeler Sayfası"
 
 #: core/um-taxonomies.php:59
 msgid "Add New Member Directory"
-msgstr ""
+msgstr "Yeni Üyeler Sayfası Ekle"
 
 #: core/um-taxonomies.php:60
 msgid "Edit Member Directory"
-msgstr ""
+msgstr "Üyeler Sayfasını Düzenle"
 
 #: core/um-taxonomies.php:61
 msgid "You did not create any member directories yet"
@@ -3865,15 +3869,15 @@ msgstr ""
 
 #: core/um-taxonomies.php:63
 msgid "Search Member Directories"
-msgstr ""
+msgstr "Üye Klasörlerini Ara"
 
 #: core/um-user-posts.php:65
 msgid "Posts"
-msgstr ""
+msgstr "Yazılar"
 
 #: core/um-user-posts.php:71
 msgid "Comments"
-msgstr ""
+msgstr "Yorumlar"
 
 #: index.php:57
 msgid "Docs"
@@ -3894,28 +3898,28 @@ msgstr ""
 
 #: templates/profile/comments-single.php:15 templates/profile/comments.php:14
 msgid "load more comments"
-msgstr ""
+msgstr "daha fazla yorum"
 
 #: templates/profile/comments.php:23
 msgid "You have not made any comments."
-msgstr ""
+msgstr "Hiç yorumunuz bulunmuyor."
 
 #: templates/profile/comments.php:23
 msgid "This user has not made any comments."
-msgstr ""
+msgstr "Bu üyenin hiç bir yorumu yok."
 
 #: templates/profile/posts-single.php:6
 #, php-format
 msgid "%s ago"
-msgstr ""
+msgstr "%s önce"
 
 #: templates/profile/posts-single.php:8
 msgid "no comments"
-msgstr ""
+msgstr "yorumsuz"
 
 #: templates/profile/posts-single.php:8
 msgid "1 comment"
-msgstr ""
+msgstr "1 yorum"
 
 #: templates/profile/posts-single.php:8
 #, php-format
@@ -3924,15 +3928,15 @@ msgstr ""
 
 #: templates/profile/posts-single.php:17 templates/profile/posts.php:14
 msgid "load more posts"
-msgstr ""
+msgstr "daha fazla yazı"
 
 #: templates/profile/posts.php:23
 msgid "You have not created any posts."
-msgstr ""
+msgstr "Hiç yazınız bulunmuyor."
 
 #: templates/profile/posts.php:23
 msgid "This user has not created any posts."
-msgstr ""
+msgstr "Bu üyenin hiç yazısı yok."
 
 #: um-config.php:13
 msgid "Users"
@@ -3940,7 +3944,7 @@ msgstr ""
 
 #: um-config.php:20
 msgid "Default New User Role"
-msgstr ""
+msgstr "Varsayılan Yeni Kullanıcı Rolü"
 
 #: um-config.php:21
 msgid ""
@@ -3954,7 +3958,7 @@ msgstr ""
 
 #: um-config.php:31
 msgid "Profile Permalink Base"
-msgstr ""
+msgstr "Profil Bağlantı Temeli"
 
 #: um-config.php:32
 msgid "Here you can control the permalink structure of the user profile URL globally"
@@ -3966,7 +3970,7 @@ msgstr ""
 
 #: um-config.php:47
 msgid "User Display Name"
-msgstr ""
+msgstr "Üyenin Görünen Adı"
 
 #: um-config.php:48
 msgid ""
@@ -3988,11 +3992,11 @@ msgstr ""
 
 #: um-config.php:82
 msgid "Members Directory"
-msgstr ""
+msgstr "Üyeler Syfası"
 
 #: um-config.php:90
 msgid "Use Gravatars?"
-msgstr ""
+msgstr "Gravatars Kullanılsın mı?"
 
 #: um-config.php:92
 msgid ""
@@ -4002,23 +4006,23 @@ msgstr ""
 
 #: um-config.php:112
 msgid "Password Account Tab"
-msgstr ""
+msgstr "Hesap Parolası Sekmesi"
 
 #: um-config.php:120
 msgid "Privacy Account Tab"
-msgstr ""
+msgstr "Hesap Gizlilik Sekmesi"
 
 #: um-config.php:128
 msgid "Notifications Account Tab"
-msgstr ""
+msgstr "Hesap Bildirimler Sekmesi"
 
 #: um-config.php:136
 msgid "Delete Account Tab"
-msgstr ""
+msgstr "Hesabı Silme Sekmesi"
 
 #: um-config.php:144
 msgid "Account Deletion Custom Text"
-msgstr ""
+msgstr "Hesap Silme Özelleştirilebilir Yazısı"
 
 #: um-config.php:146
 msgid "This is custom text that will be displayed to users before they delete their accounts from your site"
@@ -4030,11 +4034,11 @@ msgstr ""
 
 #: um-config.php:171
 msgid "Panic Key"
-msgstr ""
+msgstr "Panik Anahtarı"
 
 #: um-config.php:181
 msgid "Global Site Access"
-msgstr ""
+msgstr "Genel Site Ulaşımı"
 
 #: um-config.php:193
 msgid "Custom Redirect URL"
@@ -4042,7 +4046,7 @@ msgstr ""
 
 #: um-config.php:202
 msgid "Exclude the following URLs"
-msgstr ""
+msgstr "Takip URLlerini kısıtla"
 
 #: um-config.php:203
 msgid "Here you can exclude URLs beside the redirect URI to be accessible to everyone"
@@ -4122,7 +4126,7 @@ msgstr ""
 
 #: um-config.php:326
 msgid "Blacklist Words"
-msgstr ""
+msgstr "Yasaklanmış Kelimeler Listesi"
 
 #: um-config.php:327
 msgid ""
@@ -4136,7 +4140,7 @@ msgstr ""
 
 #: um-config.php:348
 msgid "Mail appears from"
-msgstr ""
+msgstr "Postanın kimden geldiğini gösteren isim"
 
 #: um-config.php:349
 msgid "e.g. Site Name"
@@ -4144,7 +4148,7 @@ msgstr ""
 
 #: um-config.php:356
 msgid "Mail appears from address"
-msgstr ""
+msgstr "Postanın geldiği adres"
 
 #: um-config.php:357 um-config.php:672
 msgid "e.g. admin@companyname.com"
@@ -4152,7 +4156,7 @@ msgstr ""
 
 #: um-config.php:364 um-config.php:372 um-config.php:382
 msgid "Account Welcome Email"
-msgstr ""
+msgstr "Üyeliğe Hoşgeldin E-postası"
 
 #: um-config.php:373 um-config.php:409 um-config.php:441 um-config.php:473 um-config.php:509 um-config.php:540
 #: um-config.php:571 um-config.php:602 um-config.php:634 um-config.php:687 um-config.php:718 um-config.php:750
@@ -4166,7 +4170,7 @@ msgstr ""
 
 #: um-config.php:400 um-config.php:408 um-config.php:418
 msgid "Account Activation Email"
-msgstr ""
+msgstr "Üyelik Etkinleştirme E-postası"
 
 #: um-config.php:432 um-config.php:440 um-config.php:450
 msgid "Pending Review Email"
@@ -4190,19 +4194,19 @@ msgstr ""
 
 #: um-config.php:593 um-config.php:601 um-config.php:611
 msgid "Password Reset Email"
-msgstr ""
+msgstr "Parola Sıfırlama E-postası"
 
 #: um-config.php:625 um-config.php:633 um-config.php:643
 msgid "Password Changed Email"
-msgstr ""
+msgstr "Parolanız Değişti E-postası"
 
 #: um-config.php:670
 msgid "Admin E-mail Address"
-msgstr ""
+msgstr "Yönetici E-posta Adresi"
 
 #: um-config.php:678 um-config.php:686 um-config.php:696
 msgid "New User Notification"
-msgstr ""
+msgstr "Yeni Kullanıcı Bildirimi"
 
 #: um-config.php:709 um-config.php:717 um-config.php:727
 msgid "Account Needs Review Notification"
@@ -4210,7 +4214,7 @@ msgstr ""
 
 #: um-config.php:741 um-config.php:749 um-config.php:759
 msgid "Account Deletion Notification"
-msgstr ""
+msgstr "Hesap Silme Bildirimi"
 
 #: um-config.php:777
 msgid "Uploads"
@@ -4218,7 +4222,7 @@ msgstr ""
 
 #: um-config.php:783
 msgid "Profile Photo Thumbnail Sizes"
-msgstr ""
+msgstr "Profil Fotosu Boyutları"
 
 #: um-config.php:784
 msgid "Here you can define which thumbnail sizes will be created for each profile photo upload."
@@ -4226,11 +4230,11 @@ msgstr ""
 
 #: um-config.php:787 um-config.php:797
 msgid "Add New Size"
-msgstr ""
+msgstr "Yeni Boyut Ekle"
 
 #: um-config.php:793
 msgid "Cover Photo Thumbnail Sizes"
-msgstr ""
+msgstr "Kapak Fotosu Boyutları"
 
 #: um-config.php:794
 msgid "Here you can define which thumbnail sizes will be created for each cover photo upload."
@@ -4238,7 +4242,7 @@ msgstr ""
 
 #: um-config.php:803
 msgid "Image Quality"
-msgstr ""
+msgstr "Fotoğraf Kalitesi"
 
 #: um-config.php:804
 msgid ""
@@ -4248,7 +4252,7 @@ msgstr ""
 
 #: um-config.php:812
 msgid "Image Upload Maximum Width"
-msgstr ""
+msgstr "Yüklenen Fotoğrafın Maksimum Genişliği"
 
 #: um-config.php:813
 msgid "Any image upload above this width will be resized to this limit automatically."
@@ -4256,11 +4260,11 @@ msgstr ""
 
 #: um-config.php:821
 msgid "Cover Photo Minimum Width"
-msgstr ""
+msgstr "Kapak Fotoğrafının Minimum Genişliği Olacak"
 
 #: um-config.php:822
 msgid "This will be the minimum width for cover photo uploads"
-msgstr ""
+msgstr "Bu kapak fotoğrafının minimum genişliği olacak"
 
 #: um-config.php:838
 msgid "SEO"
@@ -4268,11 +4272,11 @@ msgstr ""
 
 #: um-config.php:844
 msgid "User Profile Title"
-msgstr ""
+msgstr "Üye Profil Başlığı"
 
 #: um-config.php:853
 msgid "User Profile Dynamic Meta Description"
-msgstr ""
+msgstr "Üye Profilinin Meta Açıklaması"
 
 #: um-config.php:854
 msgid "You can use dynamic tags to display dynamic user profile data in this field."
@@ -4280,7 +4284,7 @@ msgstr ""
 
 #: um-config.php:855
 msgid "This will be used in the meta description that is available for search-engines."
-msgstr ""
+msgstr "Bu arama motorları tarafından kullanılabilir meta açıklaması olarak."
 
 #: um-config.php:869
 msgid "Appearance"
@@ -4300,7 +4304,7 @@ msgstr ""
 
 #: um-config.php:897
 msgid "General Active Color"
-msgstr ""
+msgstr "Genel Aktif Renk"
 
 #: um-config.php:899
 msgid ""
@@ -4310,7 +4314,7 @@ msgstr ""
 
 #: um-config.php:907
 msgid "General Secondary Color"
-msgstr ""
+msgstr "Genel İkincil Renk"
 
 #: um-config.php:909
 msgid "Secondary color is used for hovers, or active state for some elements of the plugin"
@@ -4318,51 +4322,51 @@ msgstr ""
 
 #: um-config.php:917
 msgid "Default Primary Button Color"
-msgstr ""
+msgstr "Varsayılan Birincil Buton Rengi"
 
 #: um-config.php:926
 msgid "Default Primary Button Hover Color"
-msgstr ""
+msgstr "Varsayılan Birincil Buton Üst Rengi"
 
 #: um-config.php:935
 msgid "Default Primary Button Text Color"
-msgstr ""
+msgstr "Varsayılan Birincil Buton Metin Rengi"
 
 #: um-config.php:944
 msgid "Default Secondary Button Color"
-msgstr ""
+msgstr "Varsayılan İkincil Buton Rengi"
 
 #: um-config.php:953
 msgid "Default Secondary Button Hover Color"
-msgstr ""
+msgstr "Varsayılan İkincil Buton Üst Rengi"
 
 #: um-config.php:962
 msgid "Default Secondary Button Text Color"
-msgstr ""
+msgstr "Varsayılan İkincil Buton Metin Rengi"
 
 #: um-config.php:971
 msgid "Default Help Icon Color"
-msgstr ""
+msgstr "Varsayılan Yardım İkonu Rengi"
 
 #: um-config.php:983
 msgid "Form Inputs"
-msgstr ""
+msgstr "Form Girişleri"
 
 #: um-config.php:990
 msgid "Field Label Color"
-msgstr ""
+msgstr "Etiket Alanı Rengi"
 
 #: um-config.php:998
 msgid "Field Border Style"
-msgstr ""
+msgstr "Sınır Alanı Biçimi"
 
 #: um-config.php:1007
 msgid "Field Background Color"
-msgstr ""
+msgstr "Boşluk Alanının Arkaplan Rengi"
 
 #: um-config.php:1016
 msgid "Field Text Color"
-msgstr ""
+msgstr "Yazı Rengi"
 
 #: um-config.php:1025
 msgid "Field Placeholder Color"
@@ -4553,15 +4557,15 @@ msgstr ""
 #: um-config.php:1353
 #, php-format
 msgid "%s Tab"
-msgstr ""
+msgstr "%s Sekmesi"
 
 #: um-config.php:1363
 msgid "Profile menu default tab"
-msgstr ""
+msgstr "Varsayılan profil menüsü sekmesi"
 
 #: um-config.php:1364
 msgid "This will be the default tab on user profile page"
-msgstr ""
+msgstr "Bu varsayılan sekme olabilir kullanıcı profil sayfasında"
 
 #: um-config.php:1373
 msgid "Enable menu icons in desktop view"
@@ -4573,11 +4577,11 @@ msgstr ""
 
 #: um-config.php:1389
 msgid "Profile Menu"
-msgstr ""
+msgstr "Profil Menüsü"
 
 #: um-config.php:1404
 msgid "Registration Default Template"
-msgstr ""
+msgstr "Varsayılan Kayıt Şablonu"
 
 #: um-config.php:1405
 msgid "This will be the default template to output registration"
@@ -4585,7 +4589,7 @@ msgstr ""
 
 #: um-config.php:1413
 msgid "Registration Maximum Width"
-msgstr ""
+msgstr "Maksimum Kayıt Alanı Genişliği"
 
 #: um-config.php:1422
 msgid "Registration Shortcode Alignment"
@@ -4621,7 +4625,7 @@ msgstr ""
 
 #: um-config.php:1495
 msgid "Login Default Template"
-msgstr ""
+msgstr "Varsayılan Giriş Şablonu"
 
 #: um-config.php:1496
 msgid "This will be the default template to output login"
@@ -4629,7 +4633,7 @@ msgstr ""
 
 #: um-config.php:1504
 msgid "Login Maximum Width"
-msgstr ""
+msgstr "Maksimum Giriş Alanı Genişliği"
 
 #: um-config.php:1513
 msgid "Login Shortcode Alignment"
@@ -4657,7 +4661,7 @@ msgstr ""
 
 #: um-config.php:1565
 msgid "Login Forgot Password Link"
-msgstr ""
+msgstr "Parolamı Unuttum Bağlantısına Gir"
 
 #: um-config.php:1584
 msgid "Any custom css rules that you specify here will be applied globally to the plugin."
@@ -4665,7 +4669,7 @@ msgstr ""
 
 #: um-config.php:1599
 msgid "Advanced"
-msgstr ""
+msgstr "Gelişmiş"
 
 #: um-config.php:1605
 msgid "Disable JS/CSS Compression"
@@ -4687,7 +4691,7 @@ msgstr ""
 
 #: um-config.php:1616
 msgid "Add New Page"
-msgstr ""
+msgstr "Yeni Sayfa Ekle"
 
 #: um-config.php:1622
 msgid "Allow Tracking"
@@ -4696,6 +4700,12 @@ msgstr ""
 #: um-config.php:1626
 msgid "Do not allow"
 msgstr ""
+
+#~ msgid "Enabled"
+#~ msgstr "Etkinleştir"
+
+#~ msgid "Disabled"
+#~ msgstr "Etkisizleştir"
 
 #~ msgid "outdatedBrowser_page_message"
 #~ msgstr ""

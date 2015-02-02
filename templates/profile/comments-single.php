@@ -12,7 +12,7 @@
 	<?php if ( isset($modified_args) && count($loop) >= 10 ) { ?>
 	
 		<div class="um-load-items">
-			<a href="#" class="um-ajax-paginate um-button" data-hook="um_load_comments" data-args="<?php echo $modified_args; ?>"><?php _e('load more comments','um-bbpress'); ?></a>
+			<a href="#" class="um-ajax-paginate um-button" data-hook="um_load_comments" data-args="<?php echo $modified_args; ?>"><?php _e('load more comments','ultimatemember'); ?></a>
 		</div>
 		
 	<?php } ?>

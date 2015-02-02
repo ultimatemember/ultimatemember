@@ -127,13 +127,14 @@
 	***/
 	function um_filtered_value( $key, $data = false ) {
 		global $ultimatemember;
+		
 		$value = um_user( $key );
 		
-		if ( !$data ){
-		$data = $ultimatemember->builtin->get_specific_field( $key );
+		if ( !$data ) {
+			$data = $ultimatemember->builtin->get_specific_field( $key );
 		}
 		
-		$type = (isset($data['type']))?$data['type']:'';
+		$type = ( isset($data['type']) ) ? $data['type'] : '';
 
 		$value = apply_filters("um_profile_field_filter_hook__", $value, $data );
 		$value = apply_filters("um_profile_field_filter_hook__{$key}", $value, $data );

@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.35
+Stable Tag: 1.0.36
 
 License: GNU Version 2 or Any Later Version
 
@@ -174,6 +174,20 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.36: February 1, 2015 =
+
+* New: URLs in user description are automatically converted to hyperlinks
+* New: added option to redirect author archive to their UM profile automatically
+* New: added option to show asterisk next to required fields (optional)
+* New: Turkish language file (40% completed)
+* Tweak: updated language file with missing sentences and words
+* Tweak: auto redirect user/ base to user profile (e.g. user/username/)
+* Fixed: issue with wrong comments count on user profile menu
+* Fixed: issue with display name tags in nav menu
+* Fixed: issue with conditional logic for select/multi-select fields
+* Fixed: issue with conditional logic for content blocks and shortcode fields
+* Fixed: conflict with Pods wordpress plugin
 
 = 1.0.35: January 31, 2015 =
 

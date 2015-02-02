@@ -129,13 +129,13 @@
 		<div class="um-members-pagi uimob340-hide uimob500-hide">
 		
 			<?php if ( um_members('page') != 1 ) { ?>
-			<a href="<?php echo $ultimatemember->permalinks->add_query( 'members_page', 1 ); ?>" class="pagi pagi-arrow um-tip-n" title="First Page"><i class="um-faicon-angle-double-left"></i></a>
+			<a href="<?php echo $ultimatemember->permalinks->add_query( 'members_page', 1 ); ?>" class="pagi pagi-arrow um-tip-n" title="<?php _e('First Page','ultimatemember'); ?>"><i class="um-faicon-angle-double-left"></i></a>
 			<?php } else { ?>
 			<span class="pagi pagi-arrow disabled"><i class="um-faicon-angle-double-left"></i></span>
 			<?php } ?>
 			
 			<?php if ( um_members('page') > 1 ) { ?>
-			<a href="<?php echo $ultimatemember->permalinks->add_query( 'members_page', um_members('page') - 1 ); ?>" class="pagi pagi-arrow um-tip-n" title="Previous"><i class="um-faicon-angle-left"></i></a>
+			<a href="<?php echo $ultimatemember->permalinks->add_query( 'members_page', um_members('page') - 1 ); ?>" class="pagi pagi-arrow um-tip-n" title="<?php _e('Previous','ultimatemember'); ?>"><i class="um-faicon-angle-left"></i></a>
 			<?php } else { ?>
 			<span class="pagi pagi-arrow disabled"><i class="um-faicon-angle-left"></i></span>
 			<?php } ?>
@@ -153,13 +153,13 @@
 			<?php } ?>
 			
 			<?php if ( um_members('page') != um_members('total_pages') ) { ?>
-			<a href="<?php echo $ultimatemember->permalinks->add_query( 'members_page', um_members('page') + 1 ); ?>" class="pagi pagi-arrow um-tip-n" title="Next"><i class="um-faicon-angle-right"></i></a>
+			<a href="<?php echo $ultimatemember->permalinks->add_query( 'members_page', um_members('page') + 1 ); ?>" class="pagi pagi-arrow um-tip-n" title="<?php _e('Next','ultimatemember'); ?>"><i class="um-faicon-angle-right"></i></a>
 			<?php } else { ?>
 			<span class="pagi pagi-arrow disabled"><i class="um-faicon-angle-right"></i></span>
 			<?php } ?>
 			
 			<?php if ( um_members('page') != um_members('total_pages') ) { ?>
-			<a href="<?php echo $ultimatemember->permalinks->add_query( 'members_page', um_members('total_pages') ); ?>" class="pagi pagi-arrow um-tip-n" title="Last Page"><i class="um-faicon-angle-double-right"></i></a>
+			<a href="<?php echo $ultimatemember->permalinks->add_query( 'members_page', um_members('total_pages') ); ?>" class="pagi pagi-arrow um-tip-n" title="<?php _e('Last Page','ultimatemember'); ?>"><i class="um-faicon-angle-double-right"></i></a>
 			<?php } else { ?>
 			<span class="pagi pagi-arrow disabled"><i class="um-faicon-angle-double-right"></i></span>
 			<?php } ?>

@@ -6,9 +6,15 @@
 	add_filter( 'wp_nav_menu_items', 'um_add_custom_message_to_menu', 10, 2 );
 	function um_add_custom_message_to_menu( $items, $args ) {
 		global $ultimatemember;
+		
+		// this feature required logged in user
 		if ( !is_user_logged_in() )
 			return $items;
+		
+		um_fetch_user( get_current_user_id() );
 		$items = $ultimatemember->shortcodes->convert_user_tags( $items );
+		um_reset_user();
+		
 		return $items;
 	}
 

@@ -25,6 +25,6 @@ jQuery(document).ready(function() {
 		um_conditional();
 		
 	});
-	jQuery('.um-field input[type=radio], .um-field input[type=checkbox]').trigger('change');
+	jQuery('.um-field select, .um-field input[type=radio], .um-field input[type=checkbox]').trigger('change');
 
 });

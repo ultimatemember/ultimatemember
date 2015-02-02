@@ -14,7 +14,7 @@
 	<?php if ( isset($modified_args) && $loop->have_posts() && $loop->found_posts >= 10 ) { ?>
 	
 		<div class="um-load-items">
-			<a href="#" class="um-ajax-paginate um-button" data-hook="um_load_posts" data-args="<?php echo $modified_args; ?>"><?php _e('load more posts','um-bbpress'); ?></a>
+			<a href="#" class="um-ajax-paginate um-button" data-hook="um_load_posts" data-args="<?php echo $modified_args; ?>"><?php _e('load more posts','ultimatemember'); ?></a>
 		</div>
 		
 	<?php } ?>

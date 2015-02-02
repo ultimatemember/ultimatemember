@@ -11,7 +11,7 @@
 		<?php if ( count($loop) >= 10 ) { ?>
 		
 		<div class="um-load-items">
-			<a href="#" class="um-ajax-paginate um-button" data-hook="um_load_comments" data-args="comment,10,10,<?php echo um_user('user_email'); ?>"><?php _e('load more comments','um-bbpress'); ?></a>
+			<a href="#" class="um-ajax-paginate um-button" data-hook="um_load_comments" data-args="comment,10,10,<?php echo um_user('user_email'); ?>"><?php _e('load more comments','ultimatemember'); ?></a>
 		</div>
 		
 		<?php } ?>
@@ -20,6 +20,6 @@
 		
 <?php } else { ?>
 
-	<?php ( um_is_myprofile() ) ? _e('You have not made any comments.') : _e('This user has not made any comments.'); ?>
+	<?php ( um_is_myprofile() ) ? _e('You have not made any comments.','ultimatemember') : _e('This user has not made any comments.','ultimatemember'); ?>
 
 <?php } ?>

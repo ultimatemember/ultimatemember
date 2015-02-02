@@ -232,7 +232,6 @@ p.um-notice.err {
 	margin: 0 0 0 8px;
 	cursor: pointer;
 	display: inline-block;
-	vertical-align: middle;
 }
 
 .um-tip i {
@@ -241,7 +240,6 @@ p.um-notice.err {
 	line-height: 22px;
 	display: block;
 	position: relative;
-	top: -2px;
 }
 
 .um-tip-text {
@@ -662,3 +660,16 @@ div.um-photo a {
 }
 
 div.um-photo img {max-height: 300px; max-width: 100%;}
+
+/*
+	- other form styles
+*/
+
+span.um-req {
+	margin: 0 0 0 8px;
+	font-size: xx-large;
+	display: inline-block;
+	font-weight: bold;
+	position: relative;
+	top: 10px;
+}

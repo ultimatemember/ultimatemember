@@ -69,13 +69,19 @@ $this->sections[] = array(
         ),
 		
         array(
+                'id'       		=> 'author_redirect',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Automatically redirect author page to their profile?' ),
+				'default' 		=> 1,
+				'desc' 	   		=> __('If enabled, author pages will automatically redirect to the user\'s profile page'),
+        ),
+		
+        array(
                 'id'       		=> 'members_page',
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Members Directory' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Control whether to enable or disable member directories on this site',
-				'on'			=> __('Enable'),
-				'off'			=> __('Disable'),
         ),
 		
         array(
@@ -106,8 +112,6 @@ $this->sections[] = array(
                 'title'   		=> __( 'Password Account Tab' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Enable/disable the Password account tab in account page',
-				'on'			=> 'Enabled',
-				'off'			=> 'Disabled',
         ),
 		
         array(
@@ -116,8 +120,6 @@ $this->sections[] = array(
                 'title'   		=> __( 'Privacy Account Tab' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Enable/disable the Privacy account tab in account page',
-				'on'			=> 'Enabled',
-				'off'			=> 'Disabled',
         ),
 		
         array(
@@ -126,8 +128,6 @@ $this->sections[] = array(
                 'title'   		=> __( 'Notifications Account Tab' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Enable/disable the Notifications account tab in account page',
-				'on'			=> 'Enabled',
-				'off'			=> 'Disabled',
         ),
 		
 		array(
@@ -136,8 +136,6 @@ $this->sections[] = array(
                 'title'   		=> __( 'Delete Account Tab' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Enable/disable the Delete account tab in account page',
-				'on'			=> 'Enabled',
-				'off'			=> 'Disabled',
         ),
 		
         array(
@@ -1038,6 +1036,23 @@ $this->sections[] = array(
 				'transparent'	=> false,
         ),
 		
+        array(
+                'id'       		=> 'form_asterisk',
+                'type'     		=> 'switch',
+                'title'    		=> __( 'Show an asterisk for required fields' ),
+				'default'  		=> 0,
+        ),
+		
+        array(
+				'id'       		=> 'form_asterisk_color',
+                'type'     		=> 'color',
+				'default'		=> um_get_metadefault('form_asterisk_color'),
+                'title'    		=> __( 'Field Required Asterisk Color' ),
+                'validate' 		=> 'color',
+				'transparent'	=> false,
+				'required'		=> array( 'form_asterisk', '=', '1' ),
+        ),
+		
 	)
 	
 );
@@ -1337,8 +1352,6 @@ $tab_options[] = array(
                 'type'     		=> 'switch',
                 'title'    		=> sprintf(__('%s Tab','ultimatemember'), $tab ),
 				'default' 		=> 1,
-				'on'			=> __('Enabled'),
-				'off'			=> __('Disabled'),
 				'required'		=> array( 'profile_menu', '=', 1 ),
 );
 }

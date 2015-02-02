@@ -188,6 +188,15 @@ print "
 ";
 }
 
+if ( $form_asterisk_color ) {
+print "
+.um-$form_id.um span.um-req
+{
+	color: $form_asterisk_color !important;
+}
+";
+}
+
 if ( $form_field_label ) {
 print "
 .um-$form_id.um .um-field-label {

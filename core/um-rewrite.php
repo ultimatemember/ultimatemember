@@ -8,6 +8,8 @@ class UM_Rewrite {
 		
 		add_action('init', array(&$this, 'rewrite_rules') );
 		
+		add_action('template_redirect', array(&$this, 'redirect_author_page'), 9999 );
+		
 		add_action('template_redirect', array(&$this, 'locate_user_profile'), 9999 );
 		
 	}
@@ -54,12 +56,26 @@ class UM_Rewrite {
 				'top'
 			);
 			
-			flush_rewrite_rules();
+			if ( !get_option('um_flush_rules') ) {
+				flush_rewrite_rules(true);
+				update_option('um_flush_rules', true);
+			}
 			
 		}
 		
 	}
 	
+	/***
+	***	@author page to user profile redirect
+	***/
+	function redirect_author_page() {
+		if ( um_get_option('author_redirect') && is_author() ) {
+			$id = get_query_var( 'author' );
+			um_fetch_user( $id );
+			exit( wp_redirect( um_user_profile_url() ) );
+		}
+	}
+		
 	/***
 	***	@locate/display a profile
 	***/
@@ -99,9 +115,15 @@ class UM_Rewrite {
 				um_set_requested_user( $user_id );
 				
 			} else {
-				
+
 				exit( wp_redirect( um_get_core_page('user') ) );
 				
+			}
+			
+		} else if ( um_is_core_page('user') ) { // just base64_decode
+		
+			if ( is_user_logged_in() ) { // just redirect to their profile
+				exit( wp_redirect( um_user_profile_url() ) );
 			}
 			
 		}
