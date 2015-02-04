@@ -286,6 +286,11 @@ font-weight: normal;
 	color: #666;
 }
 
+.um-meta-text p {
+	margin: 0 0 6px 0 !important;
+	padding: 0 !important;
+}
+
 .um-profile-status {display:none}
 .um-profile-status.awaiting_admin_review,
 .um-profile-status.inactive,
@@ -354,6 +359,7 @@ font-weight: normal;
 	border-radius: 4px;
 	margin-left: 5px;
 	position: relative;
+	border-bottom: 0 !important;
 }
 
 .um-profile-nav-item.without-icon a {padding-left: 10px}

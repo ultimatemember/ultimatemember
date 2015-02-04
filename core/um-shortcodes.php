@@ -5,9 +5,34 @@ class UM_Shortcodes {
 	function __construct() {
 	
 		$this->message_mode = false;
+		
+		$this->loop = '';
 
 		add_shortcode('ultimatemember', array(&$this, 'ultimatemember'), 1);
 
+	}
+	
+	/***
+	***	@load a compatible template
+	***/
+	function load_template( $tpl ) {
+		global $ultimatemember;
+		
+		$loop = ( $this->loop ) ? $this->loop : '';
+		
+		if ( isset( $this->set_args ) && is_array( $this->set_args ) ) {
+			$args = $this->set_args;
+			extract( $args );
+		}
+
+		$file = um_path . 'templates/' . $tpl . '.php';
+		$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $tpl . '.php';
+
+		if ( file_exists( $theme_file ) )
+			$file = $theme_file;
+			
+		if ( file_exists( $file ) )
+			include $file;
 	}
 	
 	/***
@@ -135,16 +160,21 @@ class UM_Shortcodes {
 	***/
 	function template_load( $template, $args=array() ) {
 		global $ultimatemember;
-		extract($args);
-		$file = um_path . 'templates/'. $template . '.php';
-		if ( file_exists( $file ) ) include $file;
+		if ( is_array( $args ) ) {
+			$ultimatemember->shortcodes->set_args = $args;
+		}
+		$ultimatemember->shortcodes->load_template( $template );
 	}
 	
 	/***
 	***	@Checks if a template file exists
 	***/
 	function template_exists( $template ) {
-		if (file_exists( um_path . 'templates/'. $template . '.php'))
+		
+		$file = um_path . 'templates/'. $template . '.php';
+		$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $template . '.php';
+		
+		if ( file_exists( $theme_file ) || file_exists( $file ) )
 			return true;
 		return false;
 	}

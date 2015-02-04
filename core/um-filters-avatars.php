@@ -40,8 +40,13 @@
 				$default = '';
 			}
 			
+			$rating = get_option('avatar_rating');
+			if ( !empty( $rating ) ) {
+				$rating = "&amp;r={$rating}";
+			}
+			
 			$avatar = '<img src="' . $protocol . 'gravatar.com/avatar/' . md5( um_user('user_email') ) . 
-			'?d='. $default . '&amp;s=' . $size . '" class="gravatar avatar avatar-'.$size.' um-avatar" width="'.$size.'" height="'.$size.'" alt="" />';
+			'?d='. $default . '&amp;s=' . $size . $rating .'" class="gravatar avatar avatar-'.$size.' um-avatar" width="'.$size.'" height="'.$size.'" alt="" />';
 			
 		}
 

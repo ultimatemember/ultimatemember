@@ -141,6 +141,10 @@ class UM_Permalinks {
 					$search_length  = strlen( '.' );
 					$user_in_url    = substr_replace( $user_in_url , '-' , $pos , $search_length );
 				}
+			} else {
+				
+				$user_in_url = sanitize_title( $user_in_url );
+
 			}
 			
 		}

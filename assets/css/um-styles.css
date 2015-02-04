@@ -295,6 +295,11 @@ p.um-notice.err {
 	position: relative;
 }
 
+.um-field-value p {
+	margin: 0 0 6px 0 !important;
+	padding: 0;
+}
+
 .um-field-block {
 	color: #777;
 	font-size: 17px;
@@ -346,7 +351,7 @@ p.um-notice.err {
 .um-form input[type=text],
 .um-form input[type=password] {
 	padding: 0 12px !important;
-	width: 100% !important;
+	width: 100%;
 	display: block !important;
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;

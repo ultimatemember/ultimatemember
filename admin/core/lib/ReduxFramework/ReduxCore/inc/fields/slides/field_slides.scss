@@ -3,20 +3,31 @@
         margin-bottom: 10px;
         width: 100%;
     }
+
+    .ui-accordion-header {
+        margin-bottom: 0;
+    }
+
+    .full-text,
+    .large-text {
+        width: 100%;
+    }
+
     .redux-slides-accordion-group {
-        margin-bottom: 10px;
         border: 1px solid #dfdfdf !important;
         border-radius: 3px !important;
         margin-top: 0px !important;
+        margin-bottom: 10px;
         background: #f9f9f9;
         padding: 5px;
+
         h3 {
             border: 1px solid #dfdfdf;
-            cursor: move;
+            cursor: move !important;
             font-weight: bold;
             padding: 0 10px !important;
             height: 40px;
-            line-height: 40px;
+            line-height: 40px !important;
             background-color: #f1f1f1;
             background-image: -ms-linear-gradient(top, #f9f9f9, #ececec);
             background-image: -moz-linear-gradient(top, #f9f9f9, #ececec);
@@ -34,6 +45,7 @@
             text-align: center;
         }
     }
+
     #redux-slides-accordion .redux-slides-image {
         height: 250px;
         padding: 5px;
@@ -46,20 +58,29 @@
         -webkit-border-radius: 3px;
         border-radius: 3px;
     }
+
     .redux-slides-add {
         float: right;
         margin-right: 10%;
         display: block;
         margin-bottom: 10px;
     }
+
     .redux-slides-remove {
         color: #ef521d !important;
         float: right;
+        margin-top: 5px;
     }
+
     .redux-slides-header {
         font-weight: bold;
     }
+
     .redux_slides_add_remove {
         margin-bottom: 10px;
+    }
+
+    .ui-state-hover {
+        background-color: #ececec !important;
     }
 }

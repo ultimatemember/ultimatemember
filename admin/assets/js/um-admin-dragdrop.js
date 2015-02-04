@@ -6,15 +6,23 @@ function UM_Drag_and_Drop(){
 		placeholder: "um-fld-placeholder",
 		forcePlaceholderSize:true,
 		update: function(event, ui){
-		
+			
+			jQuery('#publish').attr('disabled','disabled');
+			
 			if ( ui.item.hasClass('um-field-type-group') && ui.item.parents('.um-field-type-group').length > 0  ) {
+				
 				jQuery('.um-admin-drag-col,.um-admin-drag-group').sortable('cancel');
+				
+				jQuery('#publish').removeAttr('disabled');
+				
 			} else {
-			UM_Change_Field_Col();
-			
-			UM_Change_Field_Grp();
-			
-			UM_Rows_Refresh();
+				
+				UM_Change_Field_Col();
+				
+				UM_Change_Field_Grp();
+				
+				UM_Rows_Refresh();
+				
 			}
 			
 		}
@@ -26,6 +34,8 @@ function UM_Drag_and_Drop(){
 		forcePlaceholderSize:true,
 		zIndex: 9999999999,
 		update: function(){
+			
+			jQuery('#publish').attr('disabled','disabled');
 		
 			UM_update_subrows();
 		
@@ -39,6 +49,8 @@ function UM_Drag_and_Drop(){
 		zIndex: 9999999999,
 		update: function(){
 		
+			jQuery('#publish').attr('disabled','disabled');
+			
 			row = jQuery(this);
 			row.find('.um-admin-drag-col').removeClass('cols-1 cols-2 cols-3 cols-last cols-middle');
 			row.find('.um-admin-drag-col').addClass('cols-' + row.find('.um-admin-drag-col').length );
@@ -65,6 +77,8 @@ function UM_Drag_and_Drop(){
 		},
 		update: function(){
 		
+			jQuery('#publish').attr('disabled','disabled');
+			
 			UM_update_rows();
 		
 			UM_Change_Field_Col();
@@ -181,6 +195,8 @@ function UM_Rows_Refresh(){
 	});
 
 	/* FIELDS */
+	var order;
+	order = 0;
 	jQuery('.um-admin-drag-col .um-admin-drag-fld').each(function(){
 			
 		if ( !jQuery(this).hasClass('group') ) {
@@ -197,8 +213,8 @@ function UM_Rows_Refresh(){
 			}
 		}
 		
-		order = jQuery(this).index()+1;
-		
+		order++;
+
 		row = jQuery(this).parents('.um-admin-drag-row').index()+1;
 		row = '_um_row_'+row;
 		
@@ -232,7 +248,7 @@ function UM_Rows_Refresh(){
 		type: 'POST',
 		data: jQuery('.um_update_order').serialize(),
 		success: function(){
-			
+			jQuery('#publish').removeAttr('disabled');
 		}
 	});
 	

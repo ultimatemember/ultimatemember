@@ -42,7 +42,7 @@
 	***	@try and modify the page title in page
 	***/
 	add_filter('the_title', 'um_dynamic_user_profile_title', 100000, 2 );
-	function um_dynamic_user_profile_title( $title, $id ) {
+	function um_dynamic_user_profile_title( $title, $id = '' ) {
 		global $ultimatemember;
 		
 		if( is_admin() )

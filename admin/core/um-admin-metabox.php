@@ -14,7 +14,22 @@ class UM_Admin_Metabox {
 
 		add_action( 'load-post.php', array(&$this, 'add_metabox'), 9 );
 		add_action( 'load-post-new.php', array(&$this, 'add_metabox'), 9 );
+		
+		add_action( 'save_post', array(&$this, 'remove_rewrite_rules_option'), 10, 2 );
 	
+	}
+	
+	/***
+	***	@unset rewrite rules if the slug was changed
+	***/
+	function remove_rewrite_rules_option( $post_id ) {
+		if ( ! wp_is_post_revision( $post_id ) ) {
+			
+			if ( get_post_meta($post_id, '_um_core', true) ) {
+				delete_option('um_flush_rules'); // so they reset rewrite rules
+			}
+			
+		}
 	}
 	
 	/***
@@ -913,7 +928,7 @@ class UM_Admin_Metabox {
 					
 				<?php } else { ?>
 				
-					<p><label for="_format">Time User-Friendly Format <?php $this->tooltip('Choose the displayed time-format for this field'); ?></label>
+					<p><label for="_format">Time Format <?php $this->tooltip('Choose the displayed time-format for this field'); ?></label>
 						<select name="_format" id="_format" class="umaf-selectjs" style="width: 100%">
 							<option value="g:i a" <?php selected( 'g:i a', $this->edit_mode_value ); ?>><?php echo $ultimatemember->datetime->get_time('g:i a'); ?> ( 12-hr format )</option>
 							<option value="g:i A" <?php selected( 'g:i A', $this->edit_mode_value ); ?>><?php echo $ultimatemember->datetime->get_time('g:i A'); ?> ( 12-hr format )</option>
@@ -1247,13 +1262,9 @@ class UM_Admin_Metabox {
 			case '_html':
 				?>
 
-				<div class="um-admin-tri">
-
-					<p><label for="_html">Does this textarea accept HTML? <?php $this->tooltip('Turn on/off HTML tags for this textarea'); ?></label>
-						<?php if ( isset( $this->edit_mode_value ) ) $this->ui_on_off('_html', $this->edit_mode_value ); else  $this->ui_on_off('_html', 0); ?>
-					</p>
-					
-				</div>
+				<p><label for="_html">Does this textarea accept HTML? <?php $this->tooltip('Turn on/off HTML tags for this textarea'); ?></label>
+					<?php if ( isset( $this->edit_mode_value ) ) $this->ui_on_off('_html', $this->edit_mode_value ); else  $this->ui_on_off('_html', 0); ?>
+				</p>
 				
 				<?php
 				break;

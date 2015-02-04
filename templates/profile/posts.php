@@ -1,14 +1,14 @@
-<?php $loop = $ultimatemember->query->make('post_type=post&posts_per_page=10&offset=0&author=' . um_user('ID') ); ?>
+<?php $ultimatemember->shortcodes->loop = $ultimatemember->query->make('post_type=post&posts_per_page=10&offset=0&author=' . um_user('ID') ); ?>
 
-<?php if ( $loop->have_posts()) { ?>
+<?php if ( $ultimatemember->shortcodes->loop->have_posts()) { ?>
 			
-	<?php include_once um_path . 'templates/profile/posts-single.php'; ?>
+	<?php $ultimatemember->shortcodes->load_template('profile/posts-single'); ?>
 	
 	<div class="um-ajax-items">
 	
 		<!--Ajax output-->
 		
-		<?php if ( $loop->found_posts >= 10 ) { ?>
+		<?php if ( $ultimatemember->shortcodes->loop->found_posts >= 10 ) { ?>
 		
 		<div class="um-load-items">
 			<a href="#" class="um-ajax-paginate um-button" data-hook="um_load_posts" data-args="post,10,10,<?php echo um_user('ID'); ?>"><?php _e('load more posts','ultimatemember'); ?></a>

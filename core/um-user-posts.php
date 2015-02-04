@@ -27,11 +27,12 @@ class UM_User_posts {
 		$author = $array[3];
 		
 		$offset_n = $posts_per_page + $offset;
-		$modified_args = "$post_type,$posts_per_page,$offset_n,$author";
 		
-		$loop = $ultimatemember->query->make("post_type=$post_type&posts_per_page=$posts_per_page&offset=$offset&author=$author");
-
-		include_once um_path . 'templates/profile/posts-single.php';
+		$ultimatemember->shortcodes->modified_args = "$post_type,$posts_per_page,$offset_n,$author";
+		
+		$ultimatemember->shortcodes->loop = $ultimatemember->query->make("post_type=$post_type&posts_per_page=$posts_per_page&offset=$offset&author=$author");
+		
+		$ultimatemember->shortcodes->load_template('profile/posts-single');
 		
 	}
 	
@@ -48,11 +49,12 @@ class UM_User_posts {
 		$author = $array[3];
 
 		$offset_n = $posts_per_page + $offset;
-		$modified_args = "$post_type,$posts_per_page,$offset_n,$author";
 		
-		$loop = $ultimatemember->query->make("post_type=$post_type&number=$posts_per_page&offset=$offset&author_email=$author");
+		$ultimatemember->shortcodes->modified_args = "$post_type,$posts_per_page,$offset_n,$author";
+		
+		$ultimatemember->shortcodes->loop = $ultimatemember->query->make("post_type=$post_type&number=$posts_per_page&offset=$offset&author_email=$author");
 
-		include_once um_path . 'templates/profile/comments-single.php';
+		$ultimatemember->shortcodes->load_template('profile/comments-single');
 		
 	}
 	
@@ -81,9 +83,8 @@ class UM_User_posts {
 	***/
 	function add_posts() {
 		global $ultimatemember;
-		
-		include_once um_path . 'templates/profile/posts.php';
-		
+		$ultimatemember->shortcodes->load_template('profile/posts');
+
 	}
 	
 	/***
@@ -91,9 +92,7 @@ class UM_User_posts {
 	***/
 	function add_comments() {
 		global $ultimatemember;
-		
-		include_once um_path . 'templates/profile/comments.php';
-		
+		$ultimatemember->shortcodes->load_template('profile/comments');
 	}
 	
 	/***
@@ -103,6 +102,8 @@ class UM_User_posts {
 		global $wpdb;
 		if ( !$user_id )
 			$user_id = um_user('ID');
+		
+		if ( !$user_id ) return 0;
 		
 		$where = get_posts_by_author_sql( $post_type, true, $user_id );
 		$count = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts $where" );
@@ -117,13 +118,10 @@ class UM_User_posts {
 		global $wpdb;
 		if ( !$user_id )
 			$user_id = um_user('ID');
+		
+		if ( !$user_id ) return 0;
 
-		$count = $wpdb->get_var(
-		'SELECT COUNT(comment_ID) FROM ' . $wpdb->comments. ' 
-		WHERE user_id = ' . $user_id . ' 
-		AND comment_approved = "1" 
-		AND comment_type IN ("comment", "")'
-		);
+		$count = $wpdb->get_var("SELECT COUNT(comment_ID) FROM " . $wpdb->comments. " WHERE user_id = " . $user_id . " AND comment_approved = '1'");
 		
 		return apply_filters('um_pretty_number_formatting', $count);
 	}

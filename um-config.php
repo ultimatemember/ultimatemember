@@ -10,7 +10,7 @@
 $this->sections[] = array(
 
     'icon'       => 'um-faicon-user',
-    'title'      => __( 'Users'),
+    'title'      => __( 'Users','ultimatemember'),
     'fields'     => array(
 		
 		array(
@@ -103,7 +103,7 @@ $this->sections[] = array(
 $this->sections[] = array(
 
     'icon'       => 'um-faicon-cog',
-    'title'      => __( 'Account'),
+    'title'      => __( 'Account','ultimatemember'),
     'fields'     => array(
 
         array(
@@ -162,13 +162,13 @@ $this->sections[] = array(
 $this->sections[] = array(
 
     'icon'       => 'um-faicon-lock',
-    'title'      => __( 'Access'),
+    'title'      => __( 'Access','ultimatemember'),
     'fields'     => array(
 
         array(
                 'id'       		=> 'panic_key',
                 'type'     		=> 'text',
-                'title'   		=> __( 'Panic Key' ),
+                'title'   		=> __( 'Panic Key','ultimatemember' ),
 				'desc' 	   		=> 'Panic Key is a random generated key that allow you to access the WordPress backend always regardless of backend settings.',
 				'default'		=> $ultimatemember->validation->randomize(),
 				'desc'			=> trailingslashit( get_bloginfo('url') ).'wp-admin/?um_panic_key=<strong>your_panic_key</strong>'
@@ -178,7 +178,7 @@ $this->sections[] = array(
                 'id'       		=> 'accessible',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'   		=> __( 'Global Site Access' ),
+                'title'   		=> __( 'Global Site Access','ultimatemember' ),
 				'default' 		=> 0,
 				'desc' 	   		=> 'Globally control the access of your site, you can have seperate restrict options per post/page by editing the desired item.',
 				'options' 		=> array(
@@ -190,7 +190,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'access_redirect',
                 'type'     		=> 'text',
-                'title'   		=> __( 'Custom Redirect URL' ),
+                'title'   		=> __( 'Custom Redirect URL','ultimatemember' ),
 				'desc' 	   		=> 'A logged out user will be redirected to this url If he is not permitted to access the site',
 				'required'		=> array( 'accessible', '=', 2 ),
         ),
@@ -199,8 +199,8 @@ $this->sections[] = array(
 				'id'       		=> 'access_exclude_uris',
                 'type'     		=> 'multi_text',
 				'default'		=> array(),
-                'title'    		=> __( 'Exclude the following URLs' ),
-                'desc' 	   		=> __( 'Here you can exclude URLs beside the redirect URI to be accessible to everyone' ),
+                'title'    		=> __( 'Exclude the following URLs','ultimatemember' ),
+                'desc' 	   		=> __( 'Here you can exclude URLs beside the redirect URI to be accessible to everyone','ultimatemember' ),
 				'add_text'		=> __('Add New URL'),
 				'required'		=> array( 'accessible', '=', 2 ),
 		),
@@ -208,7 +208,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'exclude_from_main_loop',
                 'type'     		=> 'switch',
-                'title'   		=> __( 'Exclude restricted pages from main loop' ),
+                'title'   		=> __( 'Exclude restricted pages from main loop','ultimatemember' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Whether to exclude restricted pages from main loop',
 				'on'			=> __('Yes','ultimatemember'),
@@ -218,7 +218,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'exclude_from_search_loop',
                 'type'     		=> 'switch',
-                'title'   		=> __( 'Exclude restricted pages from search loop' ),
+                'title'   		=> __( 'Exclude restricted pages from search loop','ultimatemember' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Whether to exclude restricted pages from search results',
 				'on'			=> __('Yes','ultimatemember'),
@@ -228,7 +228,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'exclude_from_archive_loop',
                 'type'     		=> 'switch',
-                'title'   		=> __( 'Exclude restricted pages from archive loop' ),
+                'title'   		=> __( 'Exclude restricted pages from archive loop','ultimatemember' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Whether to exclude restricted pages from archives',
 				'on'			=> __('Yes','ultimatemember'),
@@ -238,7 +238,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'wpadmin_login',
                 'type'     		=> 'switch',
-                'title'   		=> __( 'Allow Backend Login Screen for Guests' ),
+                'title'   		=> __( 'Allow Backend Login Screen for Guests','ultimatemember' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Control whether guests are able to access the WP-admin login screen or not',
 				'on'			=> __('Yes','ultimatemember'),
@@ -249,8 +249,8 @@ $this->sections[] = array(
 				'id'       		=> 'wpadmin_login_redirect',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Redirect to alternative login page' ),
-                'desc' 	   		=> __( 'If you disable backend access to login screen, specify here where a user will be redirected' ),
+                'title'    		=> __( 'Redirect to alternative login page','ultimatemember' ),
+                'desc' 	   		=> __( 'If you disable backend access to login screen, specify here where a user will be redirected','ultimatemember' ),
 				'required'		=> array( 'wpadmin_login', '=', 0 ),
                 'default'  		=> 'um_login_page',
 				'options' 		=> array(
@@ -262,7 +262,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'wpadmin_login_redirect_url',
                 'type'     		=> 'text',
-                'title'   		=> __( 'Custom URL' ),
+                'title'   		=> __( 'Custom URL','ultimatemember' ),
 				'desc' 	   		=> 'Enter an alternate url here to redirect a user If they try to access the backend register screen',
 				'required'		=> array( 'wpadmin_login_redirect', '=', 'custom_url' ),
         ),
@@ -270,7 +270,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'wpadmin_register',
                 'type'     		=> 'switch',
-                'title'   		=> __( 'Allow Backend Register Screen for Guests' ),
+                'title'   		=> __( 'Allow Backend Register Screen for Guests','ultimatemember' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Control whether guests are able to access the WP-admin register screen or not',
 				'on'			=> __('Yes','ultimatemember'),
@@ -281,8 +281,8 @@ $this->sections[] = array(
 				'id'       		=> 'wpadmin_register_redirect',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Redirect to alternative register page' ),
-                'desc' 	   		=> __( 'If you disable backend access to register screen, specify here where a user will be redirected' ),
+                'title'    		=> __( 'Redirect to alternative register page','ultimatemember' ),
+                'desc' 	   		=> __( 'If you disable backend access to register screen, specify here where a user will be redirected','ultimatemember' ),
 				'required'		=> array( 'wpadmin_register', '=', 0 ),
                 'default'  		=> 'um_register_page',
 				'options' 		=> array(
@@ -294,7 +294,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'wpadmin_register_redirect_url',
                 'type'     		=> 'text',
-                'title'   		=> __( 'Custom URL' ),
+                'title'   		=> __( 'Custom URL','ultimatemember' ),
 				'desc' 	   		=> 'Enter an alternate url here to redirect a user If they try to access the backend register screen',
 				'required'		=> array( 'wpadmin_register_redirect', '=', 'custom_url' ),
         ),
@@ -302,28 +302,28 @@ $this->sections[] = array(
         array(
 				'id'       		=> 'wpadmin_allow_ips',
                 'type'     		=> 'textarea',
-                'title'    		=> __( 'Whitelisted Backend IPs' ),
+                'title'    		=> __( 'Whitelisted Backend IPs','ultimatemember' ),
 				'desc'			=> __('Always allow the specified IP addresses to access the backend login screen and WP-admin to avoid being locked from site backend.')
         ),
 		
         array(
 				'id'       		=> 'blocked_ips',
                 'type'     		=> 'textarea',
-                'title'    		=> __( 'Blocked IP Addresses' ),
+                'title'    		=> __( 'Blocked IP Addresses','ultimatemember' ),
 				'desc'			=> __('This will block the listed IPs from signing up or signing in to the site, you can use full IP numbers or target specific range with a wildcard')
         ),
 		
         array(
 				'id'       		=> 'blocked_emails',
                 'type'     		=> 'textarea',
-                'title'    		=> __( 'Blocked Email Addresses' ),
+                'title'    		=> __( 'Blocked Email Addresses','ultimatemember' ),
 				'desc'			=> __('This will block the specified e-mail addresses from being able to sign up or sign in to your site.')
         ),
 		
         array(
 				'id'       		=> 'blocked_words',
                 'type'     		=> 'textarea',
-                'title'    		=> __( 'Blacklist Words' ),
+                'title'    		=> __( 'Blacklist Words','ultimatemember' ),
 				'desc'			=> __('This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username'),
 				'default'		=>  'admin' . "\r\n" . 'administrator' . "\r\n" . 'webmaster' . "\r\n" . 'support' . "\r\n" . 'staff'
         ),
@@ -339,29 +339,29 @@ $this->sections[] = array(
 $this->sections[] = array(
 
     'icon'       => 'um-faicon-envelope-o',
-    'title'      => __( 'Emails'),
+    'title'      => __( 'Emails','ultimatemember'),
     'fields'     => array(
 
 		array(
 				'id'       => 'mail_from',
                 'type'     => 'text',
-                'title'    => __( 'Mail appears from' ),
-                'desc' 	   => __( 'e.g. Site Name' ),
+                'title'    => __( 'Mail appears from','ultimatemember' ),
+                'desc' 	   => __( 'e.g. Site Name','ultimatemember' ),
                 'default'  => get_bloginfo('name'),
         ),
 
         array(
                 'id'       => 'mail_from_addr',
                 'type'     => 'text',
-                'title'    => __( 'Mail appears from address' ),
-                'desc' => __( 'e.g. admin@companyname.com' ),
+                'title'    => __( 'Mail appears from address','ultimatemember' ),
+                'desc' => __( 'e.g. admin@companyname.com','ultimatemember' ),
                 'default'  => get_bloginfo('admin_email'),
         ),
 
         array(
                 'id'       => 'welcome_email_on',
                 'type'     => 'switch',
-                'title'    => __( 'Account Welcome Email' ),
+                'title'    => __( 'Account Welcome Email','ultimatemember' ),
 				'default'  => 1,
 				'desc' 	   => 'Whether to send the user an email when his account is automatically approved',
         ),
@@ -369,8 +369,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'welcome_email_sub',
                 'type'     => 'text',
-                'title'    => __( 'Account Welcome Email' ),
-                'subtitle' => __( 'Subject Line' ),
+                'title'    => __( 'Account Welcome Email','ultimatemember' ),
+                'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => 'Welcome to {site_name}!',
 				'required' => array( 'welcome_email_on', '=', 1 ),
 				'desc' 	   => 'This is the subject line of the e-mail',
@@ -379,8 +379,8 @@ $this->sections[] = array(
         array(
 				'id'       => 'welcome_email',
                 'type'     => 'textarea',
-                'title'    => __( 'Account Welcome Email' ),
-                'subtitle' => __( 'Message Body' ),
+                'title'    => __( 'Account Welcome Email','ultimatemember' ),
+                'subtitle' => __( 'Message Body','ultimatemember' ),
 				'required' => array( 'welcome_email_on', '=', 1 ),
                 'default'  => 'Hi {display_name},' . "\r\n\r\n" .
 										  'Thank you for signing up with {site_name}! Your account is now active.' . "\r\n\r\n" .
@@ -397,7 +397,7 @@ $this->sections[] = array(
         array(
                 'id'       => 'checkmail_email_on',
                 'type'     => 'switch',
-                'title'    => __( 'Account Activation Email' ),
+                'title'    => __( 'Account Activation Email','ultimatemember' ),
 				'default'  => 1,
 				'desc' 	   => 'Whether to send the user an email when his account needs e-mail activation',
         ),
@@ -405,8 +405,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'checkmail_email_sub',
                 'type'     => 'text',
-                'title'    => __( 'Account Activation Email' ),
-                'subtitle' => __( 'Subject Line' ),
+                'title'    => __( 'Account Activation Email','ultimatemember' ),
+                'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => 'Please activate your account',
 				'required' => array( 'checkmail_email_on', '=', 1 ),
 				'desc' 	   => 'This is the subject line of the e-mail',
@@ -415,8 +415,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'checkmail_email',
                 'type'     => 'textarea',
-                'title'    => __( 'Account Activation Email' ),
-                'subtitle' => __( 'Message Body' ),
+                'title'    => __( 'Account Activation Email','ultimatemember' ),
+                'subtitle' => __( 'Message Body','ultimatemember' ),
 				'required' => array( 'checkmail_email_on', '=', 1 ),
                 'default'  => 'Hi {display_name},' . "\r\n\r\n" .
 										  'Thank you for signing up with {site_name}! To activate your account, please click the link below to confirm your email address:' . "\r\n\r\n" .
@@ -429,7 +429,7 @@ $this->sections[] = array(
         array(
                 'id'       => 'pending_email_on',
                 'type'     => 'switch',
-                'title'    => __( 'Pending Review Email' ),
+                'title'    => __( 'Pending Review Email','ultimatemember' ),
 				'default'  => 1,
 				'desc' 	   => 'Whether to send the user an email when his account needs admin review',
         ),
@@ -437,8 +437,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'pending_email_sub',
                 'type'     => 'text',
-                'title'    => __( 'Pending Review Email' ),
-                'subtitle' => __( 'Subject Line' ),
+                'title'    => __( 'Pending Review Email','ultimatemember' ),
+                'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => 'Your account is pending review',
 				'required' => array( 'pending_email_on', '=', 1 ),
 				'desc' 	   => 'This is the subject line of the e-mail',
@@ -447,8 +447,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'pending_email',
                 'type'     => 'textarea',
-                'title'    => __( 'Pending Review Email' ),
-                'subtitle' => __( 'Message Body' ),
+                'title'    => __( 'Pending Review Email','ultimatemember' ),
+                'subtitle' => __( 'Message Body','ultimatemember' ),
 				'required' => array( 'pending_email_on', '=', 1 ),
                 'default'  => 'Hi {display_name},' . "\r\n\r\n" .
 										  'Thank you for signing up with {site_name}! Your account is currently being reviewed by a member of our team.' . "\r\n\r\n" .
@@ -461,7 +461,7 @@ $this->sections[] = array(
         array(
                 'id'       => 'approved_email_on',
                 'type'     => 'switch',
-                'title'    => __( 'Account Approved Email' ),
+                'title'    => __( 'Account Approved Email','ultimatemember' ),
 				'default'  => 1,
 				'desc' 	   => 'Whether to send the user an email when his account is approved',
         ),
@@ -469,8 +469,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'approved_email_sub',
                 'type'     => 'text',
-                'title'    => __( 'Account Approved Email' ),
-                'subtitle' => __( 'Subject Line' ),
+                'title'    => __( 'Account Approved Email','ultimatemember' ),
+                'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => 'Your account at {site_name} is now active',
 				'required' => array( 'approved_email_on', '=', 1 ),
 				'desc' 	   => 'This is the subject line of the e-mail',
@@ -479,8 +479,8 @@ $this->sections[] = array(
         array(
 				'id'       => 'approved_email',
                 'type'     => 'textarea',
-                'title'    => __( 'Account Approved Email' ),
-                'subtitle' => __( 'Message Body' ),
+                'title'    => __( 'Account Approved Email','ultimatemember' ),
+                'subtitle' => __( 'Message Body','ultimatemember' ),
 				'required' => array( 'approved_email_on', '=', 1 ),
                 'default'  => 'Hi {display_name},' . "\r\n\r\n" .
 										  'Thank you for signing up with {site_name}! Your account has been approved and is now active.' . "\r\n\r\n" .
@@ -497,7 +497,7 @@ $this->sections[] = array(
         array(
                 'id'       => 'rejected_email_on',
                 'type'     => 'switch',
-                'title'    => __( 'Account Rejected Email' ),
+                'title'    => __( 'Account Rejected Email','ultimatemember' ),
 				'default'  => 1,
 				'desc' 	   => 'Whether to send the user an email when his account is rejected',
         ),
@@ -505,8 +505,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'rejected_email_sub',
                 'type'     => 'text',
-                'title'    => __( 'Account Rejected Email' ),
-                'subtitle' => __( 'Subject Line' ),
+                'title'    => __( 'Account Rejected Email','ultimatemember' ),
+                'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => 'Your account has been rejected',
 				'required' => array( 'rejected_email_on', '=', 1 ),
 				'desc' 	   => 'This is the subject line of the e-mail',
@@ -515,8 +515,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'rejected_email',
                 'type'     => 'textarea',
-                'title'    => __( 'Account Rejected Email' ),
-                'subtitle' => __( 'Message Body' ),
+                'title'    => __( 'Account Rejected Email','ultimatemember' ),
+                'subtitle' => __( 'Message Body','ultimatemember' ),
 				'required' => array( 'rejected_email_on', '=', 1 ),
                 'default'  => 'Hi {display_name},' . "\r\n\r\n" .
 										  'Thank you for applying for membership to {site_name}! We have reviewed your information and unfortunately we are unable to accept you as a member at this moment.'  . "\r\n\r\n" .
@@ -528,7 +528,7 @@ $this->sections[] = array(
         array(
                 'id'       => 'inactive_email_on',
                 'type'     => 'switch',
-                'title'    => __( 'Account Deactivated Email' ),
+                'title'    => __( 'Account Deactivated Email','ultimatemember' ),
 				'default'  => 1,
 				'desc' 	   => 'Whether to send the user an email when his account is deactivated',
         ),
@@ -536,7 +536,7 @@ $this->sections[] = array(
         array(
                 'id'       => 'inactive_email_sub',
                 'type'     => 'text',
-                'title'    => __( 'Account Deactivated Email' ),
+                'title'    => __( 'Account Deactivated Email','ultimatemember' ),
                 'subtitle' => __( 'Subject Line' ),
                 'default'  => 'Your account has been deactivated',
 				'required' => array( 'inactive_email_on', '=', 1 ),
@@ -546,8 +546,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'inactive_email',
                 'type'     => 'textarea',
-                'title'    => __( 'Account Deactivated Email' ),
-                'subtitle' => __( 'Message Body' ),
+                'title'    => __( 'Account Deactivated Email','ultimatemember' ),
+                'subtitle' => __( 'Message Body','ultimatemember' ),
 				'required' => array( 'inactive_email_on', '=', 1 ),
                 'default'  => 'Hi {display_name},' . "\r\n\r\n" .
 										  'This is an automated email to let you know your {site_name} account has been deactivated.'  . "\r\n\r\n" .
@@ -559,7 +559,7 @@ $this->sections[] = array(
         array(
                 'id'       => 'deletion_email_on',
                 'type'     => 'switch',
-                'title'    => __( 'Account Deleted Email' ),
+                'title'    => __( 'Account Deleted Email','ultimatemember' ),
 				'default'  => 1,
 				'desc' 	   => 'Whether to send the user an email when his account is deleted',
         ),
@@ -567,8 +567,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'deletion_email_sub',
                 'type'     => 'text',
-                'title'    => __( 'Account Deleted Email' ),
-                'subtitle' => __( 'Subject Line' ),
+                'title'    => __( 'Account Deleted Email','ultimatemember' ),
+                'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => 'Your account has been deleted',
 				'required' => array( 'deletion_email_on', '=', 1 ),
 				'desc' 	   => 'This is the subject line of the e-mail',
@@ -577,8 +577,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'deletion_email',
                 'type'     => 'textarea',
-                'title'    => __( 'Account Deleted Email' ),
-                'subtitle' => __( 'Message Body' ),
+                'title'    => __( 'Account Deleted Email','ultimatemember' ),
+                'subtitle' => __( 'Message Body','ultimatemember' ),
 				'required' => array( 'deletion_email_on', '=', 1 ),
                 'default'  => 'Hi {display_name},' . "\r\n\r\n" .
 										  'This is an automated email to let you know your {site_name} account has been deleted. All of your personal information has been permanently deleted and you will no longer be able to login to {site_name}.'  . "\r\n\r\n" .
@@ -590,7 +590,7 @@ $this->sections[] = array(
         array(
                 'id'       => 'resetpw_email_on',
                 'type'     => 'switch',
-                'title'    => __( 'Password Reset Email' ),
+                'title'    => __( 'Password Reset Email','ultimatemember' ),
 				'default'  => 1,
 				'desc' 	   => 'Whether to send the user an email when he request to reset password (Recommended, please keep on)',
         ),
@@ -598,8 +598,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'resetpw_email_sub',
                 'type'     => 'text',
-                'title'    => __( 'Password Reset Email' ),
-                'subtitle' => __( 'Subject Line' ),
+                'title'    => __( 'Password Reset Email','ultimatemember' ),
+                'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => 'Reset your password',
 				'required' => array( 'resetpw_email_on', '=', 1 ),
 				'desc' 	   => 'This is the subject line of the e-mail',
@@ -608,8 +608,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'resetpw_email',
                 'type'     => 'textarea',
-                'title'    => __( 'Password Reset Email' ),
-                'subtitle' => __( 'Message Body' ),
+                'title'    => __( 'Password Reset Email','ultimatemember' ),
+                'subtitle' => __( 'Message Body','ultimatemember' ),
 				'required' => array( 'resetpw_email_on', '=', 1 ),
                 'default'  => 'Hi {display_name},' . "\r\n\r\n" .
 										'We received a request to reset the password for your account. If you made this request, click the link below to change your password:'  . "\r\n\r\n" .
@@ -622,7 +622,7 @@ $this->sections[] = array(
         array(
                 'id'       => 'changedpw_email_on',
                 'type'     => 'switch',
-                'title'    => __( 'Password Changed Email' ),
+                'title'    => __( 'Password Changed Email','ultimatemember' ),
 				'default'  => 1,
 				'desc' 	   => 'Whether to send the user an email when he request to reset password (Recommended, please keep on)',
         ),
@@ -630,8 +630,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'changedpw_email_sub',
                 'type'     => 'text',
-                'title'    => __( 'Password Changed Email' ),
-                'subtitle' => __( 'Subject Line' ),
+                'title'    => __( 'Password Changed Email','ultimatemember' ),
+                'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => 'Your {site_name} password has been changed',
 				'required' => array( 'changedpw_email_on', '=', 1 ),
 				'desc' 	   => 'This is the subject line of the e-mail',
@@ -640,8 +640,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'changedpw_email',
                 'type'     => 'textarea',
-                'title'    => __( 'Password Changed Email' ),
-                'subtitle' => __( 'Message Body' ),
+                'title'    => __( 'Password Changed Email','ultimatemember' ),
+                'subtitle' => __( 'Message Body','ultimatemember' ),
 				'required' => array( 'changedpw_email_on', '=', 1 ),
                 'default'  => 'Hi {display_name},' . "\r\n\r\n" .
 										'You recently changed the password associated with your {site_name} account.'  . "\r\n\r\n" .
@@ -661,21 +661,21 @@ $this->sections[] = array(
 $this->sections[] = array(
     
 	'icon'    => 'um-faicon-bell-o',
-    'title'   => __( 'Notifications' ),
+    'title'   => __( 'Notifications','ultimatemember' ),
     'fields'  => array(
 
         array(
                 'id'       => 'admin_email',
                 'type'     => 'text',
-                'title'    => __( 'Admin E-mail Address' ),
+                'title'    => __( 'Admin E-mail Address','ultimatemember' ),
                 'default'  => get_bloginfo('admin_email'),
-				'desc' => __( 'e.g. admin@companyname.com' ),
+				'desc' => __( 'e.g. admin@companyname.com','ultimatemember' ),
         ),
 
         array(
                 'id'       => 'notification_new_user_on',
                 'type'     => 'switch',
-                'title'    => __( 'New User Notification' ),
+                'title'    => __( 'New User Notification','ultimatemember' ),
 				'default'  => 1,
 				'desc' 	   => 'Whether to receive notification when a new user account is approved',
         ),
@@ -683,8 +683,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'notification_new_user_sub',
                 'type'     => 'text',
-                'title'    => __( 'New User Notification' ),
-                'subtitle' => __( 'Subject Line' ),
+                'title'    => __( 'New User Notification','ultimatemember' ),
+                'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => '[{site_name}] New user account',
 				'required' => array( 'notification_new_user_on', '=', 1 ),
 				'desc' 	   => 'This is the subject line of the e-mail',
@@ -693,8 +693,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'notification_new_user',
                 'type'     => 'textarea',
-                'title'    => __( 'New User Notification' ),
-                'subtitle' => __( 'Message Body' ),
+                'title'    => __( 'New User Notification','ultimatemember' ),
+                'subtitle' => __( 'Message Body','ultimatemember' ),
                 'default'  => '{display_name} has just created an account on {site_name}. To view their profile click here:' . "\r\n\r\n" .
 								'{user_profile_link}'  . "\r\n\r\n" .
 								'Here is the submitted registration form:' . "\r\n\r\n" .
@@ -706,7 +706,7 @@ $this->sections[] = array(
         array(
                 'id'       => 'notification_review_on',
                 'type'     => 'switch',
-                'title'    => __( 'Account Needs Review Notification' ),
+                'title'    => __( 'Account Needs Review Notification','ultimatemember' ),
 				'default'  => 0,
 				'desc' 	   => 'Whether to receive notification when an account needs admin review',
         ),
@@ -714,8 +714,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'notification_review_sub',
                 'type'     => 'text',
-                'title'    => __( 'Account Needs Review Notification' ),
-                'subtitle' => __( 'Subject Line' ),
+                'title'    => __( 'Account Needs Review Notification','ultimatemember' ),
+                'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => '[{site_name}] New user awaiting review',
 				'required' => array( 'notification_review_on', '=', 1 ),
 				'desc' 	   => 'This is the subject line of the e-mail',
@@ -724,8 +724,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'notification_review',
                 'type'     => 'textarea',
-                'title'    => __( 'Account Needs Review Notification' ),
-                'subtitle' => __( 'Message Body' ),
+                'title'    => __( 'Account Needs Review Notification','ultimatemember' ),
+                'subtitle' => __( 'Message Body','ultimatemember' ),
                 'default'  => '{display_name} has just applied for membership to {site_name} and is waiting to be reviewed.' . "\r\n\r\n" .
 								'To review this member please click the following link:'  . "\r\n\r\n" .
 								'{user_profile_link}'  . "\r\n\r\n" .
@@ -738,7 +738,7 @@ $this->sections[] = array(
         array(
                 'id'       => 'notification_deletion_on',
                 'type'     => 'switch',
-                'title'    => __( 'Account Deletion Notification' ),
+                'title'    => __( 'Account Deletion Notification','ultimatemember' ),
 				'default'  => 0,
 				'desc' 	   => 'Whether to receive notification when an account is deleted',
         ),
@@ -746,8 +746,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'notification_deletion_sub',
                 'type'     => 'text',
-                'title'    => __( 'Account Deletion Notification' ),
-                'subtitle' => __( 'Subject Line' ),
+                'title'    => __( 'Account Deletion Notification','ultimatemember' ),
+                'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => '[{site_name}] Account deleted',
 				'required' => array( 'notification_deletion_on', '=', 1 ),
 				'desc' 	   => 'This is the subject line of the e-mail',
@@ -756,8 +756,8 @@ $this->sections[] = array(
         array(
                 'id'       => 'notification_deletion',
                 'type'     => 'textarea',
-                'title'    => __( 'Account Deletion Notification' ),
-                'subtitle' => __( 'Message Body' ),
+                'title'    => __( 'Account Deletion Notification','ultimatemember' ),
+                'subtitle' => __( 'Message Body','ultimatemember' ),
                 'default'  => '{display_name} has just deleted their {site_name} account.',
 				'required' => array( 'notification_deletion_on', '=', 1 ),
 				'desc' 	   => 'This is the content of the e-mail',
@@ -774,14 +774,14 @@ $this->sections[] = array(
 $this->sections[] = array(
 
     'icon'       => 'um-faicon-cloud-upload',
-    'title'      => __( 'Uploads'),
+    'title'      => __( 'Uploads','ultimatemember'),
     'fields'     => array(
 		
 		array(
 				'id'       		=> 'photo_thumb_sizes',
                 'type'     		=> 'multi_text',
-                'title'    		=> __( 'Profile Photo Thumbnail Sizes' ),
-                'desc' 	   		=> __( 'Here you can define which thumbnail sizes will be created for each profile photo upload.' ),
+                'title'    		=> __( 'Profile Photo Thumbnail Sizes','ultimatemember' ),
+                'desc' 	   		=> __( 'Here you can define which thumbnail sizes will be created for each profile photo upload.','ultimatemember' ),
                 'default'  		=> array( 40, 80, 190 ),
 				'validate' 		=> 'numeric',
 				'add_text'		=> __('Add New Size'),
@@ -790,8 +790,8 @@ $this->sections[] = array(
 		array(
 				'id'       		=> 'cover_thumb_sizes',
                 'type'     		=> 'multi_text',
-                'title'    		=> __( 'Cover Photo Thumbnail Sizes' ),
-                'desc' 	   		=> __( 'Here you can define which thumbnail sizes will be created for each cover photo upload.' ),
+                'title'    		=> __( 'Cover Photo Thumbnail Sizes','ultimatemember' ),
+                'desc' 	   		=> __( 'Here you can define which thumbnail sizes will be created for each cover photo upload.','ultimatemember' ),
                 'default'  		=> array( 300, 600 ),
 				'validate' 		=> 'numeric',
 				'add_text'		=> __('Add New Size'),
@@ -800,8 +800,8 @@ $this->sections[] = array(
 		array(
 				'id'       		=> 'image_compression',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Image Quality' ),
-                'desc' 	   		=> __( 'Quality is used to determine quality of image uploads, and ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file). The default range is 60.' ),
+                'title'    		=> __( 'Image Quality','ultimatemember' ),
+                'desc' 	   		=> __( 'Quality is used to determine quality of image uploads, and ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file). The default range is 60.','ultimatemember' ),
                 'default'  		=> 60,
 				'validate' 		=> 'numeric',
         ),
@@ -809,8 +809,8 @@ $this->sections[] = array(
 		array(
 				'id'       		=> 'image_max_width',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Image Upload Maximum Width' ),
-                'desc' 	   		=> __( 'Any image upload above this width will be resized to this limit automatically.' ),
+                'title'    		=> __( 'Image Upload Maximum Width','ultimatemember' ),
+                'desc' 	   		=> __( 'Any image upload above this width will be resized to this limit automatically.','ultimatemember' ),
                 'default'  		=> 1000,
 				'validate' 		=> 'numeric',
         ),
@@ -818,8 +818,8 @@ $this->sections[] = array(
 		array(
 				'id'       		=> 'cover_min_width',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Cover Photo Minimum Width' ),
-                'desc' 	   		=> __( 'This will be the minimum width for cover photo uploads' ),
+                'title'    		=> __( 'Cover Photo Minimum Width','ultimatemember' ),
+                'desc' 	   		=> __( 'This will be the minimum width for cover photo uploads','ultimatemember' ),
                 'default'  		=> 1000,
 				'validate' 		=> 'numeric',
         ),
@@ -835,13 +835,13 @@ $this->sections[] = array(
 $this->sections[] = array(
 
     'icon'       => 'um-faicon-search',
-    'title'      => __( 'SEO'),
+    'title'      => __( 'SEO','ultimatemember'),
     'fields'     => array(
 
         array(
                 'id'      		=> 'profile_title',
                 'type'     		=> 'text',
-                'title'    		=> __( 'User Profile Title' ),
+                'title'    		=> __( 'User Profile Title','ultimatemember' ),
                 'default'  		=> '{display_name} | ' . get_bloginfo('name'),
 				'desc' 	   		=> 'This is the title that is displayed on a specific user profile',
         ),
@@ -850,9 +850,8 @@ $this->sections[] = array(
 				'id'       		=> 'profile_desc',
                 'type'     		=> 'textarea',
 				'default'		=> '{display_name} is on {site_name}. Join {site_name} to view {display_name}\'s profile',
-                'title'    		=> __( 'User Profile Dynamic Meta Description' ),
-                'desc' 			=> __( 'You can use dynamic tags to display dynamic user profile data in this field.' ),
-				'desc'			=> __('This will be used in the meta description that is available for search-engines.')
+                'title'    		=> __( 'User Profile Dynamic Meta Description','ultimatemember' ),
+				'desc'			=> __('This will be used in the meta description that is available for search-engines.','ultimatemember')
         ),
 		
 	)
@@ -866,7 +865,7 @@ $this->sections[] = array(
 $this->sections[] = array(
 
     'icon'       => 'um-faicon-paint-brush',
-    'title'      => __( 'Appearance'),
+    'title'      => __( 'Appearance','ultimatemember'),
     'fields'     => array(
 		
 	)
@@ -876,15 +875,15 @@ $this->sections[] = array(
 $this->sections[] = array(
 
     'subsection' => true,
-    'title'      => __( 'General'),
+    'title'      => __( 'General','ultimatemember'),
     'fields'     => array(
 	
 		array(
 				'id'       		=> 'directory_template',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Members Default Template' ),
-                'desc' 	   		=> __( 'This will be the default template to output member directory' ),
+                'title'    		=> __( 'Members Default Template','ultimatemember' ),
+                'desc' 	   		=> __( 'This will be the default template to output member directory','ultimatemember' ),
                 'default'  		=> um_get_metadefault('directory_template'),
 				'options' 		=> $ultimatemember->shortcodes->get_templates( 'members' ),
 				'required'		=> array( 'xxxxxxxxxxxxx', '=', 'sssssssssssssssss' ),
@@ -894,7 +893,7 @@ $this->sections[] = array(
 				'id'       		=> 'active_color',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('active_color'),
-                'title'    		=> __( 'General Active Color' ),
+                'title'    		=> __( 'General Active Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'desc'			=> __('Active color is used commonly with many plugin elements as highlighted color or active selection for example. This color demonstrates the primary active color of the plugin','ultimatemember'),
 				'transparent'	=> false,
@@ -904,7 +903,7 @@ $this->sections[] = array(
 				'id'       		=> 'secondary_color',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('secondary_color'),
-                'title'    		=> __( 'General Secondary Color' ),
+                'title'    		=> __( 'General Secondary Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'desc'			=> __('Secondary color is used for hovers, or active state for some elements of the plugin','ultimatemember'),
 				'transparent'	=> false,
@@ -914,7 +913,7 @@ $this->sections[] = array(
 				'id'       		=> 'primary_btn_color',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('primary_btn_color'),
-                'title'    		=> __( 'Default Primary Button Color' ),
+                'title'    		=> __( 'Default Primary Button Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
@@ -923,7 +922,7 @@ $this->sections[] = array(
 				'id'       		=> 'primary_btn_hover',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('primary_btn_hover'),
-                'title'    		=> __( 'Default Primary Button Hover Color' ),
+                'title'    		=> __( 'Default Primary Button Hover Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
@@ -932,7 +931,7 @@ $this->sections[] = array(
 				'id'       		=> 'primary_btn_text',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('primary_btn_text'),
-                'title'    		=> __( 'Default Primary Button Text Color' ),
+                'title'    		=> __( 'Default Primary Button Text Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
@@ -941,7 +940,7 @@ $this->sections[] = array(
 				'id'       		=> 'secondary_btn_color',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('secondary_btn_color'),
-                'title'    		=> __( 'Default Secondary Button Color' ),
+                'title'    		=> __( 'Default Secondary Button Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
@@ -950,7 +949,7 @@ $this->sections[] = array(
 				'id'       		=> 'secondary_btn_hover',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('secondary_btn_hover'),
-                'title'    		=> __( 'Default Secondary Button Hover Color' ),
+                'title'    		=> __( 'Default Secondary Button Hover Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
@@ -959,7 +958,7 @@ $this->sections[] = array(
 				'id'       		=> 'secondary_btn_text',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('secondary_btn_text'),
-                'title'    		=> __( 'Default Secondary Button Text Color' ),
+                'title'    		=> __( 'Default Secondary Button Text Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
@@ -968,7 +967,7 @@ $this->sections[] = array(
 				'id'       		=> 'help_tip_color',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('help_tip_color'),
-                'title'    		=> __( 'Default Help Icon Color' ),
+                'title'    		=> __( 'Default Help Icon Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
@@ -980,14 +979,14 @@ $this->sections[] = array(
 $this->sections[] = array(
 
     'subsection' => true,
-    'title'      => __( 'Form Inputs'),
+    'title'      => __( 'Form Inputs','ultimatemember'),
     'fields'     => array(
 	
         array(
 				'id'       		=> 'form_field_label',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('form_field_label'),
-                'title'    		=> __( 'Field Label Color' ),
+                'title'    		=> __( 'Field Label Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
@@ -995,7 +994,7 @@ $this->sections[] = array(
         array(
                 'id'      		=> 'form_border',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Field Border Style' ),
+                'title'    		=> __( 'Field Border Style','ultimatemember' ),
                 'default'  		=> um_get_metadefault('form_border'),
 				'desc' 	   		=> 'The default border-style for input/fields in UM forms',
         ),
@@ -1004,7 +1003,7 @@ $this->sections[] = array(
 				'id'       		=> 'form_bg_color',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('form_bg_color'),
-                'title'    		=> __( 'Field Background Color' ),
+                'title'    		=> __( 'Field Background Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
@@ -1022,7 +1021,7 @@ $this->sections[] = array(
 				'id'       		=> 'form_placeholder',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('form_placeholder'),
-                'title'    		=> __( 'Field Placeholder Color' ),
+                'title'    		=> __( 'Field Placeholder Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
@@ -1031,7 +1030,7 @@ $this->sections[] = array(
 				'id'       		=> 'form_icon_color',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('form_icon_color'),
-                'title'    		=> __( 'Field Font Icon Color' ),
+                'title'    		=> __( 'Field Font Icon Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
@@ -1039,7 +1038,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'form_asterisk',
                 'type'     		=> 'switch',
-                'title'    		=> __( 'Show an asterisk for required fields' ),
+                'title'    		=> __( 'Show an asterisk for required fields','ultimatemember' ),
 				'default'  		=> 0,
         ),
 		
@@ -1047,7 +1046,7 @@ $this->sections[] = array(
 				'id'       		=> 'form_asterisk_color',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('form_asterisk_color'),
-                'title'    		=> __( 'Field Required Asterisk Color' ),
+                'title'    		=> __( 'Field Required Asterisk Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
 				'required'		=> array( 'form_asterisk', '=', '1' ),
@@ -1060,15 +1059,15 @@ $this->sections[] = array(
 $this->sections[] = array(
 	
     'subsection' => true,
-    'title'      => __( 'Profile'),
+    'title'      => __( 'Profile','ultimatemember'),
     'fields'     => array(
 
 		array(
 				'id'       		=> 'profile_template',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Profile Default Template' ),
-                'desc' 	   		=> __( 'This will be the default template to output profile' ),
+                'title'    		=> __( 'Profile Default Template','ultimatemember' ),
+                'desc' 	   		=> __( 'This will be the default template to output profile','ultimatemember' ),
                 'default'  		=> um_get_metadefault('profile_template'),
 				'options' 		=> $ultimatemember->shortcodes->get_templates( 'profile' ),
         ),
@@ -1076,7 +1075,7 @@ $this->sections[] = array(
         array(
                 'id'      		=> 'profile_max_width',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Profile Maximum Width' ),
+                'title'    		=> __( 'Profile Maximum Width','ultimatemember' ),
                 'default'  		=> um_get_metadefault('profile_max_width'),
 				'desc' 	   		=> 'The maximum width this shortcode can take from the page width',
         ),
@@ -1084,7 +1083,7 @@ $this->sections[] = array(
         array(
                 'id'      		=> 'profile_area_max_width',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Profile Area Maximum Width' ),
+                'title'    		=> __( 'Profile Area Maximum Width','ultimatemember' ),
                 'default'  		=> um_get_metadefault('profile_area_max_width'),
 				'desc' 	   		=> 'The maximum width of the profile area inside profile (below profile header)',
         ),
@@ -1093,13 +1092,13 @@ $this->sections[] = array(
 				'id'       		=> 'profile_align',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Profile Shortcode Alignment' ),
+                'title'    		=> __( 'Profile Shortcode Alignment','ultimatemember' ),
                 'desc' 	   		=> __( 'The shortcode is centered by default unless you specify otherwise here' ),
                 'default'  		=> um_get_metadefault('profile_align'),
 				'options' 		=> array(
-									'center' 			=> __('Centered'),
-									'left' 				=> __('Left aligned'),
-									'right' 			=> __('Right aligned'),
+									'center' 			=> __('Centered','ultimatemember'),
+									'left' 				=> __('Left aligned','ultimatemember'),
+									'right' 			=> __('Right aligned','ultimatemember'),
 				),
         ),
 		
@@ -1108,19 +1107,19 @@ $this->sections[] = array(
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
                 'title'    		=> __( 'Profile Field Icons' ),
-                'desc' 	   		=> __( 'This is applicable for edit mode only' ),
+                'desc' 	   		=> __( 'This is applicable for edit mode only','ultimatemember' ),
                 'default'  		=> um_get_metadefault('profile_icons'),
 				'options' 		=> array(
-									'field' 			=> __('Show inside text field'),
-									'label' 			=> __('Show with label'),
-									'off' 				=> __('Turn off'),
+									'field' 			=> __('Show inside text field','ultimatemember'),
+									'label' 			=> __('Show with label','ultimatemember'),
+									'off' 				=> __('Turn off','ultimatemember'),
 				),
         ),
 		
         array(
                 'id'      		=> 'profile_primary_btn_word',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Profile Primary Button Text' ),
+                'title'    		=> __( 'Profile Primary Button Text','ultimatemember' ),
                 'default'  		=> um_get_metadefault('profile_primary_btn_word'),
 				'desc' 	   		=> 'The text that is used for updating profile button',
         ),
@@ -1128,7 +1127,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'profile_secondary_btn',
                 'type'     		=> 'switch',
-                'title'    		=> __( 'Profile Secondary Button' ),
+                'title'    		=> __( 'Profile Secondary Button','ultimatemember' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Switch on/off the secondary button display in the form',
         ),
@@ -1136,7 +1135,7 @@ $this->sections[] = array(
         array(
                 'id'      		=> 'profile_secondary_btn_word',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Profile Secondary Button Text' ),
+                'title'    		=> __( 'Profile Secondary Button Text','ultimatemember' ),
                 'default'  		=> um_get_metadefault('profile_secondary_btn_word'),
 				'desc' 	   		=> 'The text that is used for cancelling update profile button',
 				'required'		=> array( 'profile_secondary_btn', '=', 1 ),
@@ -1146,8 +1145,8 @@ $this->sections[] = array(
 				'id'       		=> 'profile_role',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Profile Associated Role' ),
-                'desc' 	   		=> __( 'Normally, you can leave this to default as this restricts the profile per specified role only' ),
+                'title'    		=> __( 'Profile Associated Role','ultimatemember' ),
+                'desc' 	   		=> __( 'Normally, you can leave this to default as this restricts the profile per specified role only','ultimatemember' ),
                 'default'  		=> um_get_metadefault('profile_role'),
 				'options' 		=> $ultimatemember->query->get_roles( $add_default = 'Not specific' ),
         ),
@@ -1156,7 +1155,7 @@ $this->sections[] = array(
 				'id'       		=> 'profile_main_bg',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('profile_main_bg'),
-                'title'    		=> __( 'Profile Base Background Color' ),
+                'title'    		=> __( 'Profile Base Background Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
@@ -1165,7 +1164,7 @@ $this->sections[] = array(
 				'id'       		=> 'profile_header_bg',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('profile_header_bg'),
-                'title'    		=> __( 'Profile Header Background Color' ),
+                'title'    		=> __( 'Profile Header Background Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
@@ -1192,7 +1191,7 @@ $this->sections[] = array(
         array(
                 'id'      		=> 'profile_photosize',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Profile Photo Size' ),
+                'title'    		=> __( 'Profile Photo Size','ultimatemember' ),
                 'default'  		=> um_get_metadefault('profile_photosize'),
 				'desc' 	   		=> 'The global default of profile photo size. This can be overridden by individual form settings',
         ),
@@ -1201,20 +1200,20 @@ $this->sections[] = array(
 				'id'       		=> 'profile_photocorner',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Profile Photo Style' ),
-                'desc' 	   		=> __( 'Whether to have rounded profile images, rounded corners, or none for the profile photo' ),
+                'title'    		=> __( 'Profile Photo Style','ultimatemember' ),
+                'desc' 	   		=> __( 'Whether to have rounded profile images, rounded corners, or none for the profile photo','ultimatemember' ),
                 'default'  		=> um_get_metadefault('profile_photocorner'),
 				'options' 		=> array(
-									'1' 			=> __('Circle'),
-									'2' 			=> __('Rounded Corners'),
-									'3' 			=> __('Square'),
+									'1' 			=> __('Circle','ultimatemember'),
+									'2' 			=> __('Rounded Corners','ultimatemember'),
+									'3' 			=> __('Square','ultimatemember'),
 				),
         ),
 		
         array(
                 'id'       		=> 'profile_cover_enabled',
                 'type'     		=> 'switch',
-                'title'    		=> __( 'Profile Cover Photos' ),
+                'title'    		=> __( 'Profile Cover Photos','ultimatemember' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Switch on/off the profile cover photos',
         ),
@@ -1223,8 +1222,8 @@ $this->sections[] = array(
 				'id'       		=> 'profile_cover_ratio',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Profile Cover Ratio' ),
-                'desc' 	   		=> __( 'Choose global ratio for cover photos of profiles' ),
+                'title'    		=> __( 'Profile Cover Ratio','ultimatemember' ),
+                'desc' 	   		=> __( 'Choose global ratio for cover photos of profiles','ultimatemember' ),
                 'default'  		=> um_get_metadefault('profile_cover_ratio'),
 				'options' 		=> array(
 									'2.7:1' 			=> '2.7:1',
@@ -1238,7 +1237,7 @@ $this->sections[] = array(
 				'id'       		=> 'profile_header_text',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('profile_header_text'),
-                'title'    		=> __( 'Profile Header Meta Text Color' ),
+                'title'    		=> __( 'Profile Header Meta Text Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
@@ -1247,7 +1246,7 @@ $this->sections[] = array(
 				'id'       		=> 'profile_header_link_color',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('profile_header_link_color'),
-                'title'    		=> __( 'Profile Header Link Color' ),
+                'title'    		=> __( 'Profile Header Link Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
@@ -1256,7 +1255,7 @@ $this->sections[] = array(
 				'id'       		=> 'profile_header_link_hcolor',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('profile_header_link_hcolor'),
-                'title'    		=> __( 'Profile Header Link Hover' ),
+                'title'    		=> __( 'Profile Header Link Hover','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
@@ -1265,7 +1264,7 @@ $this->sections[] = array(
 				'id'       		=> 'profile_header_icon_color',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('profile_header_icon_color'),
-                'title'    		=> __( 'Profile Header Icon Link Color' ),
+                'title'    		=> __( 'Profile Header Icon Link Color','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
@@ -1274,7 +1273,7 @@ $this->sections[] = array(
 				'id'       		=> 'profile_header_icon_hcolor',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('profile_header_icon_hcolor'),
-                'title'    		=> __( 'Profile Header Icon Link Hover' ),
+                'title'    		=> __( 'Profile Header Icon Link Hover','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
@@ -1282,7 +1281,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'profile_show_name',
                 'type'     		=> 'switch',
-                'title'    		=> __( 'Show display name in profile header' ),
+                'title'    		=> __( 'Show display name in profile header','ultimatemember' ),
 				'default' 		=> um_get_metadefault('profile_show_name'),
 				'desc' 	   		=> 'Switch on/off the user name on profile header',
         ),
@@ -1290,7 +1289,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'profile_show_bio',
                 'type'     		=> 'switch',
-                'title'    		=> __( 'Show user description in header' ),
+                'title'    		=> __( 'Show user description in header','ultimatemember' ),
 				'default' 		=> um_get_metadefault('profile_show_bio'),
 				'desc' 	   		=> 'Switch on/off the user description on profile header',
         ),
@@ -1298,7 +1297,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'profile_bio_maxchars',
                 'type'     		=> 'text',
-                'title'    		=> __( 'User description maximum chars' ),
+                'title'    		=> __( 'User description maximum chars','ultimatemember' ),
                 'default'  		=> um_get_metadefault('profile_bio_maxchars'),
 				'desc' 	   		=> 'Maximum number of characters to allow in user description field in header.',
 				'required'		=> array( 'profile_show_bio', '=', 1 ),
@@ -1307,7 +1306,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'profile_header_menu',
                 'type'     		=> 'select',
-                'title'    		=> __( 'Profile Header Menu Position' ),
+                'title'    		=> __( 'Profile Header Menu Position','ultimatemember' ),
 				'default' 		=> um_get_metadefault('profile_header_menu'),
 				'desc' 	   		=> __('For incompatible themes, please make the menu open from left instead of bottom by default.','ultimatemember'),
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
@@ -1320,7 +1319,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'profile_empty_text',
                 'type'     		=> 'switch',
-                'title'    		=> __( 'Show a custom message if profile is empty' ),
+                'title'    		=> __( 'Show a custom message if profile is empty','ultimatemember' ),
 				'default' 		=> um_get_metadefault('profile_empty_text'),
 				'desc' 	   		=> 'Switch on/off the custom message that appears when the profile is empty',
         ),
@@ -1328,7 +1327,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'profile_empty_text_emo',
                 'type'     		=> 'switch',
-                'title'    		=> __( 'Show the emoticon' ),
+                'title'    		=> __( 'Show the emoticon','ultimatemember' ),
 				'default' 		=> um_get_metadefault('profile_empty_text_emo'),
 				'desc' 	   		=> 'Switch on/off the emoticon (sad face) that appears above the message',
 				'required'		=> array( 'profile_empty_text', '=', 1 ),
@@ -1342,7 +1341,7 @@ $tabs = $ultimatemember->profile->tabs_primary();
 $tab_options[] = array(
                 'id'       		=> 'profile_menu',
                 'type'     		=> 'switch',
-                'title'    		=> __('Enable profile menu'),
+                'title'    		=> __('Enable profile menu','ultimatemember'),
 				'default' 		=> 1,
 );
 
@@ -1360,8 +1359,8 @@ $tab_options[] = array(
                 'id'       		=> 'profile_menu_default_tab',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Profile menu default tab' ),
-                'desc' 	   		=> __( 'This will be the default tab on user profile page' ),
+                'title'    		=> __( 'Profile menu default tab','ultimatemember' ),
+                'desc' 	   		=> __( 'This will be the default tab on user profile page','ultimatemember' ),
                 'default'  		=> 'main',
 				'options' 		=> $ultimatemember->profile->tabs_primary(),
 				'required'		=> array( 'profile_menu', '=', 1 ),
@@ -1370,7 +1369,7 @@ $tab_options[] = array(
 $tab_options[] = array(
                 'id'       		=> 'profile_menu_icons',
                 'type'     		=> 'switch',
-                'title'    		=> __('Enable menu icons in desktop view'),
+                'title'    		=> __('Enable menu icons in desktop view','ultimatemember'),
 				'default' 		=> 1,
 				'required'		=> array( 'profile_menu', '=', 1 ),
 );
@@ -1378,7 +1377,7 @@ $tab_options[] = array(
 $tab_options[] = array(
                 'id'       		=> 'profile_menu_counts',
                 'type'     		=> 'switch',
-                'title'    		=> __('Enable counts in menu'),
+                'title'    		=> __('Enable counts in menu','ultimatemember'),
 				'default' 		=> 1,
 				'required'		=> array( 'profile_menu', '=', 1 ),
 );
@@ -1386,7 +1385,7 @@ $tab_options[] = array(
 $this->sections[] = array(
 	
     'subsection' => true,
-    'title'      => __( 'Profile Menu'),
+    'title'      => __( 'Profile Menu','ultimatemember'),
     'fields'     => $tab_options
 	
 );
@@ -1394,14 +1393,14 @@ $this->sections[] = array(
 $this->sections[] = array(
 	
     'subsection' => true,
-    'title'      => __( 'Registration Form'),
+    'title'      => __( 'Registration Form','ultimatemember'),
     'fields'     => array(
 		
 		array(
 				'id'       		=> 'register_template',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Registration Default Template' ),
+                'title'    		=> __( 'Registration Default Template','ultimatemember' ),
                 'desc' 	   		=> __( 'This will be the default template to output registration' ),
                 'default'  		=> um_get_metadefault('register_template'),
 				'options' 		=> $ultimatemember->shortcodes->get_templates( 'register' ),
@@ -1410,7 +1409,7 @@ $this->sections[] = array(
         array(
                 'id'      		=> 'register_max_width',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Registration Maximum Width' ),
+                'title'    		=> __( 'Registration Maximum Width','ultimatemember' ),
                 'default'  		=> um_get_metadefault('register_max_width'),
 				'desc' 	   		=> 'The maximum width this shortcode can take from the page width',
         ),
@@ -1419,8 +1418,8 @@ $this->sections[] = array(
 				'id'       		=> 'register_align',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Registration Shortcode Alignment' ),
-                'desc' 	   		=> __( 'The shortcode is centered by default unless you specify otherwise here' ),
+                'title'    		=> __( 'Registration Shortcode Alignment','ultimatemember' ),
+                'desc' 	   		=> __( 'The shortcode is centered by default unless you specify otherwise here','ultimatemember' ),
                 'default'  		=> um_get_metadefault('register_align'),
 				'options' 		=> array(
 									'center' 			=> __('Centered'),
@@ -1433,8 +1432,8 @@ $this->sections[] = array(
 				'id'       		=> 'register_icons',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Registration Field Icons' ),
-                'desc' 	   		=> __( 'This controls the display of field icons in the registration form' ),
+                'title'    		=> __( 'Registration Field Icons','ultimatemember' ),
+                'desc' 	   		=> __( 'This controls the display of field icons in the registration form','ultimatemember' ),
                 'default'  		=> um_get_metadefault('register_icons'),
 				'options' 		=> array(
 									'field' 			=> __('Show inside text field'),
@@ -1446,7 +1445,7 @@ $this->sections[] = array(
         array(
                 'id'      		=> 'register_primary_btn_word',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Registration Primary Button Text' ),
+                'title'    		=> __( 'Registration Primary Button Text','ultimatemember' ),
                 'default'  		=> um_get_metadefault('register_primary_btn_word'),
 				'desc' 	   		=> 'The text that is used for primary button text',
         ),
@@ -1454,7 +1453,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'register_secondary_btn',
                 'type'     		=> 'switch',
-                'title'    		=> __( 'Registration Secondary Button' ),
+                'title'    		=> __( 'Registration Secondary Button','ultimatemember' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Switch on/off the secondary button display in the form',
         ),
@@ -1462,7 +1461,7 @@ $this->sections[] = array(
         array(
                 'id'      		=> 'register_secondary_btn_word',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Registration Secondary Button Text' ),
+                'title'    		=> __( 'Registration Secondary Button Text','ultimatemember' ),
                 'default'  		=> um_get_metadefault('register_secondary_btn_word'),
 				'desc' 	   		=> 'The text that is used for the secondary button text',
 				'required'		=> array( 'register_secondary_btn', '=', 1 ),
@@ -1472,8 +1471,8 @@ $this->sections[] = array(
 				'id'       		=> 'register_role',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Registration Default Role' ),
-                'desc' 	   		=> __( 'This will be the default role assigned to users registering thru registration form' ),
+                'title'    		=> __( 'Registration Default Role','ultimatemember' ),
+                'desc' 	   		=> __( 'This will be the default role assigned to users registering thru registration form','ultimatemember' ),
                 'default'  		=> um_get_metadefault('register_role'),
 				'options' 		=> $ultimatemember->query->get_roles( $add_default = 'Default' ),
         ),
@@ -1492,8 +1491,8 @@ $this->sections[] = array(
 				'id'       		=> 'login_template',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Login Default Template' ),
-                'desc' 	   		=> __( 'This will be the default template to output login' ),
+                'title'    		=> __( 'Login Default Template','ultimatemember' ),
+                'desc' 	   		=> __( 'This will be the default template to output login','ultimatemember' ),
                 'default'  		=> um_get_metadefault('login_template'),
 				'options' 		=> $ultimatemember->shortcodes->get_templates( 'login' ),
         ),
@@ -1501,7 +1500,7 @@ $this->sections[] = array(
         array(
                 'id'      		=> 'login_max_width',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Login Maximum Width' ),
+                'title'    		=> __( 'Login Maximum Width','ultimatemember' ),
                 'default'  		=> um_get_metadefault('login_max_width'),
 				'desc' 	   		=> 'The maximum width this shortcode can take from the page width',
         ),
@@ -1510,13 +1509,13 @@ $this->sections[] = array(
 				'id'       		=> 'login_align',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Login Shortcode Alignment' ),
-                'desc' 	   		=> __( 'The shortcode is centered by default unless you specify otherwise here' ),
+                'title'    		=> __( 'Login Shortcode Alignment','ultimatemember' ),
+                'desc' 	   		=> __( 'The shortcode is centered by default unless you specify otherwise here','ultimatemember' ),
                 'default'  		=> um_get_metadefault('login_align'),
 				'options' 		=> array(
-									'center' 			=> __('Centered'),
-									'left' 				=> __('Left aligned'),
-									'right' 			=> __('Right aligned'),
+									'center' 			=> __('Centered','ultimatemember'),
+									'left' 				=> __('Left aligned','ultimatemember'),
+									'right' 			=> __('Right aligned','ultimatemember'),
 				),
         ),
 		
@@ -1524,20 +1523,20 @@ $this->sections[] = array(
 				'id'       		=> 'login_icons',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Login Field Icons' ),
-                'desc' 	   		=> __( 'This controls the display of field icons in the login form' ),
+                'title'    		=> __( 'Login Field Icons','ultimatemember' ),
+                'desc' 	   		=> __( 'This controls the display of field icons in the login form','ultimatemember' ),
                 'default'  		=> um_get_metadefault('login_icons'),
 				'options' 		=> array(
-									'field' 			=> __('Show inside text field'),
-									'label' 			=> __('Show with label'),
-									'off' 				=> __('Turn off'),
+									'field' 			=> __('Show inside text field','ultimatemember'),
+									'label' 			=> __('Show with label','ultimatemember'),
+									'off' 				=> __('Turn off','ultimatemember'),
 				),
         ),
 		
         array(
                 'id'      		=> 'login_primary_btn_word',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Login Primary Button Text' ),
+                'title'    		=> __( 'Login Primary Button Text','ultimatemember' ),
                 'default'  		=> um_get_metadefault('login_primary_btn_word'),
 				'desc' 	   		=> 'The text that is used for primary button text',
         ),
@@ -1545,7 +1544,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'login_secondary_btn',
                 'type'     		=> 'switch',
-                'title'    		=> __( 'Login Secondary Button' ),
+                'title'    		=> __( 'Login Secondary Button','ultimatemember' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Switch on/off the secondary button display in the form',
         ),
@@ -1553,7 +1552,7 @@ $this->sections[] = array(
         array(
                 'id'      		=> 'login_secondary_btn_word',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Login Secondary Button Text' ),
+                'title'    		=> __( 'Login Secondary Button Text','ultimatemember' ),
                 'default'  		=> um_get_metadefault('login_secondary_btn_word'),
 				'desc' 	   		=> 'The text that is used for the secondary button text',
 				'required'		=> array( 'login_secondary_btn', '=', 1 ),
@@ -1562,7 +1561,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'login_forgot_pass_link',
                 'type'     		=> 'switch',
-                'title'    		=> __( 'Login Forgot Password Link' ),
+                'title'    		=> __( 'Login Forgot Password Link','ultimatemember' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Switch on/off the forgot password link in login form',
         ),
@@ -1574,14 +1573,14 @@ $this->sections[] = array(
 $this->sections[] = array(
 	
     'subsection' => true,
-    'title'      => __( 'Custom CSS'),
+    'title'      => __( 'Custom CSS','ultimatemember'),
     'fields'     => array(
 
         array(
 				'id'       		=> 'custom_css',
                 'type'     		=> 'textarea',
-                'title'    		=> __( 'Custom CSS' ),
-				'desc'			=> __('Any custom css rules that you specify here will be applied globally to the plugin.'),
+                'title'    		=> __( 'Custom CSS','ultimatemember' ),
+				'desc'			=> __('Any custom css rules that you specify here will be applied globally to the plugin.','ultimatemember'),
 				'rows'			=> 20,
         ),
 		
@@ -1596,13 +1595,13 @@ $this->sections[] = array(
 $this->sections[] = array(
 
     'icon'       => 'um-faicon-wrench',
-    'title'      => __( 'Advanced'),
+    'title'      => __('Advanced','ultimatemember'),
     'fields'     => array(
 		
         array(
                 'id'       		=> 'disable_minify',
                 'type'     		=> 'switch',
-                'title'   		=> __( 'Disable JS/CSS Compression' ),
+                'title'   		=> __( 'Disable JS/CSS Compression','ultimatemember' ),
 				'default' 		=> 0,
 				'desc' 	   		=> __('Not recommended. This will load all plugin js and css files separately and may slow down your website. Use this setting for development or debugging purposes only.','ultimatemember'),
         ),
@@ -1611,15 +1610,15 @@ $this->sections[] = array(
 				'id'       		=> 'js_css_exclude',
                 'type'     		=> 'multi_text',
 				'default'		=> array(),
-                'title'    		=> __( 'Never load plugin JS and CSS on the following pages' ),
-                'desc' 	   		=> __( 'Enter a url or page slug (e.g /about/) to disable loading the plugin\'s css and js on that page.' ),
+                'title'    		=> __( 'Never load plugin JS and CSS on the following pages','ultimatemember' ),
+                'desc' 	   		=> __( 'Enter a url or page slug (e.g /about/) to disable loading the plugin\'s css and js on that page.','ultimatemember' ),
 				'add_text'		=> __('Add New Page'),
 		),
 		
         array(
                 'id'       		=> 'allow_tracking',
                 'type'     		=> 'switch',
-                'title'   		=> __( 'Allow Tracking' ),
+                'title'   		=> __( 'Allow Tracking','ultimatemember' ),
 				'default' 		=> 0,
 				'desc' 	   		=> 'Help us improve Ultimate Member’s compatibility with other plugins and themes by allowing us to track non-sensitive data on your site. Click <a href="http://ultimatemember.com/tracking/">here</a> to see what data we track.',
 				'on'			=> __('Allow tracking','ultimatemember'),

@@ -50,7 +50,9 @@ class UM_Form {
 	function form_init(){
 		global $ultimatemember;
 		
-		if (isset($_POST) && !is_admin() && isset( $_POST['form_id'] ) && is_numeric($_POST['form_id']) ) {
+		$http_post = ('POST' == $_SERVER['REQUEST_METHOD']);
+		
+		if ( $http_post && !is_admin() && isset( $_POST['form_id'] ) && is_numeric($_POST['form_id']) ) {
 			
 			$this->form_id = $_POST['form_id'];
 			$this->form_status = get_post_status( $this->form_id );

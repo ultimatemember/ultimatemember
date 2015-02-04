@@ -896,6 +896,11 @@ class UM_Builtin {
 		}
 		
 		foreach( $all as $k => $arr ) {
+			
+			if ( isset( $arr['title'] ) ){
+				$all[$k]['title'] = stripslashes( $arr['title'] );
+			}
+			
 			if ( $exclude_types && in_array( $arr['type'], $exclude_types ) ) {
 				unset( $all[$k] );
 			}
@@ -908,7 +913,7 @@ class UM_Builtin {
 		}
 		
 		$all = $ultimatemember->fields->array_sort_by_column( $all, 'title');
-		
+
 		return $all;
 	}
 	

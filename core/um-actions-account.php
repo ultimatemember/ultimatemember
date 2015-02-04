@@ -10,7 +10,7 @@
 		if ( $_POST['user_password'] && $_POST['confirm_user_password'] ) {
 			$changes['user_pass'] = $_POST['user_password'];
 		}
-		
+
 		foreach( $_POST as $k => $v ) {
 			if ( !strstr( $k, 'password' ) && !strstr( $k, 'um_account' ) ) {
 				$changes[ $k ] = $v;
@@ -38,7 +38,9 @@
 			}
 		}
 		
-		exit( wp_redirect( um_get_core_page('account') ) );
+		$tab = ( get_query_var('um_tab') ) ? get_query_var('um_tab') : 'general';
+		
+		exit( wp_redirect( $ultimatemember->account->tab_link( $tab ) ) );
 		
 	}
 	

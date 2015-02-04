@@ -1,5 +1,142 @@
 # Redux Framework Changelog
 
+## 3.4.1
+* Fixed:   Small filesystem option with bad filter key reference.
+* Added:   Small return if $section filter returned the section empty.
+
+## 3.4.0
+* WP.org Release
+
+## 3.3.10.7
+* Fixed:    Reset section hook firing too early.
+
+## 3.3.10.6
+* Modified: The Redux Repeater field has landed!
+
+## 3.3.10.5
+* Fixed:    #1983 - color_rgba not outputting default values on first load (before save).
+
+## 3.3.10.4
+* Fixed:    Google font enqueues with opt_name to avoid collision with multiple Redux instances.
+
+## 3.3.10.3
+* Fixed:    #1980 - JS errors with sorter & sortable.
+* Fixed:    color_rgba field outputting incorrect information via output/compiler.
+
+## 3.3.10.2
+* Fixed:    #1979 - Goole fonts not properly loading in typography dropdown.
+
+## 3.3.10.1
+* Fixed:    Undefined index error on MU installs.
+
+## 3.3.10
+* Removed:  SASS compile of field CSS, for the time being.  Compiler remains in core.
+* Improved: Panel load time, most notable when not in dev_mode.  Better for your clients.  :)
+* Updated:  Elusive Font library.
+* Fixed:    #1961 - color_rgba field defaulting to black on reset.
+
+## 3.3.9.35
+* Fixed:    #1941 - Datepicker opened off screen.
+* Fixed:    #1756, #1957 - Slider issues.  Thanks @FFIN!
+* Fixed:    #1960 - Duplicate slide when clicking Add.  Again, thanks to @FFIN for the fix.
+* Added:    New filter: apply_filters 'redux/validate/{opt_name}/before_validation'
+* Fixed:    #1745 - Adding settings submenu to empty submenu now works.  Many, many thanks to @No3x for cracking this one!
+
+## 3.3.9.34
+* Fixed:    #1955 - Undefined index rgba in output routine.
+
+## 3.3.9.33
+* Modified: #1947 - Added display:none to TR tag under info field.
+
+## 3.3.9.32
+* Replaced: #1951 - Replaced develop branch of scssphp to master branch due to PHP 5.2 incompatibililty.
+
+## 3.3.9.31
+* Fixed:    #1943 - Removed premature DIV close.
+* Fixed:    #1945 - Media preview not rendering when default ID specified.
+
+## 3.3.9.30
+* Modified: #1930 - reorder 'psedo-class of link_color field.  Thanks @freddessaint
+* Modified: SASS compiler outputs to page by default.  Faster.
+* Fixed:    #1927 - Incorrect dir path to spectrum library in color_rgba field corrected.
+
+## 3.3.9.29
+* Modified: color_rgba field now usees spectrum color picker.  minicolors removed.  Just...too buggy.
+
+## 3.3.9.28
+* Modified: #1922 - Filesystem output function.
+
+## 3.3.9.27
+* Fixed:    Added PHP 5.2 support (ugh!) for SASS compiler.
+
+## 3.3.9.26
+* Fixed:    More SASS compiler tweaking.
+
+## 3.3.9.25
+* Fixed:    PHP errors when disabling SASS.
+
+## 3.3.9.24
+* Fixed     #1909 - malformed DIV class HTML in slider field.
+
+## 3.3.9.23
+* Removed   Argument for SASS compile file output location removed.  Didn't work, too much trouble.
+
+## 3.3.9.22
+* Fixed:    #1904 - select_image field not displaying saved value on page reload.
+
+## 3.3.9.21
+* Fixed:    SASS compile under multi-instance outputting incorrect CSS file
+
+## 3.3.9.20
+* Fixed:    redux-admin scss images converted to base64     
+
+## 3.3.9.17
+* Added     SASS compiler for admin CSS.
+* Added     SASS to CSS for grunt compiler.
+
+## 3.3.9.16
+* Added     SASS compiler for fields.
+
+## 3.3.9.16
+* Updated:  select2 3.5.2
+
+## 3.3.9.15
+* Fixed:    #1856 - Illegal offset string warnings in framework.php.  Thanks @CGlingener.
+* Fixed:    #1874 - Required operator 'contains' and 'not_contains' not working with select set to multi.
+* Fixed:    #1829 - Required operator '=' and '!=' not working with select set to multi.
+
+## 3.3.9.14  
+* Fixed:    #1870 - Border field doubling up on px in output/compiler.
+* Added:    `hidden` argument for fields.
+* Added:    `hidden` argument for sections.
+
+## 3.3.9.12
+* Fixed:    #1868 - Improper panel render when opening expanded, when `open_expanded` set to true.
+* Added:    `hide_expand` argument, to hide the expand options button.
+
+## 3.3.9.11
+* Fixed:    #1865 - Sortable select not saving proper order.
+* Fixed:    #1864 - Footer z-index CSS adjusted.
+
+## 3.3.9.10
+* Fixed:    #1848 - Import-export filed buttons not functioning properly.
+
+## 3.3.9.9
+* Fixed:    #1834 - Wordpress data dealing with IDs as array keys not rendering properly.
+* Fixed:    #1830 - Font lists were added in quotes.  Thanks @karimhossenbux.
+
+## 3.3.9.8
+* Fixed:    #1798 - Fixed lazy load JS to only load visible sections. Much more optimized.
+
+## 3.3.9.7
+* Fixed:    #1821 -  Exo 2 font not working, issue with typography and escaping.
+
+## 3.3.9.6
+* Added:    #1803 - Optgroup support for select field.
+
+## 3.3.9.5
+* Added:    Decimal increments to spinner.
+
 ## 3.3.9.4
 * Added:    Customizer now supports PANEL! Yay 4.0.
 

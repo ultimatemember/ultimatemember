@@ -75,11 +75,11 @@ class UM_Members {
 
 				?>
 				
-				<select name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" class="um-s1" style="width: 100%" data-placeholder="<?php echo $attrs['label']; ?>">
+				<select name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" class="um-s1" style="width: 100%" data-placeholder="<?php echo stripslashes( $attrs['label'] ); ?>">
 	
 					<option></option>
 							
-					<?php foreach( $attrs['options'] as $k => $v ) { ?>
+					<?php foreach( $attrs['options'] as $k => $v ) { $v = stripslashes($v); ?>
 							
 					<option value="<?php echo $v; ?>" <?php um_select_if_in_query_params( $filter, $v ); ?>><?php echo $v; ?></option>
 							

@@ -218,6 +218,8 @@
              * @since ReduxFramework 1.0.0
              */
             function enqueue() {
+                wp_enqueue_style( 'select2-css' );
+                
                 wp_enqueue_script(
                     'redux-field-dimensions-js',
                     ReduxFramework::$_url . 'inc/fields/dimensions/field_dimensions' . Redux_Functions::isMin() . '.js',
@@ -226,12 +228,15 @@
                     true
                 );
 
-                wp_enqueue_style(
-                    'redux-field-dimensions-css',
-                    ReduxFramework::$_url . 'inc/fields/dimensions/field_dimensions.css',
-                    time(),
-                    true
-                );
+                if ($this->parent->args['dev_mode']) {
+                    wp_enqueue_style(
+                        'redux-field-dimensions-css',
+                        ReduxFramework::$_url . 'inc/fields/dimensions/field_dimensions.css',
+                        array(),
+                        time(),
+                        'all'
+                    );
+                }
             }
 
             public function output() {

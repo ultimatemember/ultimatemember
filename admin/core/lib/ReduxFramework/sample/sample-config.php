@@ -687,9 +687,12 @@
                         array(
                             'id'       => 'opt-color-rgba',
                             'type'     => 'color_rgba',
-                            'title'    => __( 'Color RGBA - BETA', 'redux-framework-demo' ),
-                            'subtitle' => __( 'Gives you the RGBA color. Still quite experimental. Use at your own risk.', 'redux-framework-demo' ),
-                            'default'  => array( 'color' => '#dd9933', 'alpha' => '1.0' ),
+                            'title'    => __( 'Color RGBA', 'redux-framework-demo' ),
+                            'subtitle' => __( 'Gives you the RGBA color.', 'redux-framework-demo' ),
+                            'default'  => array( 
+                                'color' => '#7e33dd', 
+                                'alpha' => '.8' 
+                            ),
                             'output'   => array( 'body' ),
                             'mode'     => 'background',
                             'validate' => 'colorrgba',
@@ -1143,10 +1146,37 @@
                             'options'  => array(
                                 '1' => 'Opt 1',
                                 '2' => 'Opt 2',
-                                '3' => 'Opt 3'
+                                '3' => 'Opt 3',
                             ),
                             'default'  => '2'
                         ),
+                        array(
+                            'id'       => 'opt-select-optgroup',
+                            'type'     => 'select',
+                            'title'    => __( 'Select Option with optgroup', 'redux-framework-demo' ),
+                            'subtitle' => __( 'No validation can be done on this field type', 'redux-framework-demo' ),
+                            'desc'     => __( 'This is the description field, again good for additional info.', 'redux-framework-demo' ),
+                            //Must provide key => value pairs for select options
+                            'options'  => array(
+                                'Group 1' => array(
+                                    '1' => 'Opt 1',
+                                    '2' => 'Opt 2',
+                                    '3' => 'Opt 3',
+                                ),
+
+                                'Group 2' => array(
+                                    '4' => 'Opt 4',
+                                    '5' => 'Opt 5',
+                                    '6' => 'Opt 6',
+                                ),
+
+                                '7' => 'Opt 7',
+                                '8' => 'Opt 8',
+                                '9' => 'Opt 9',
+                            ),
+                            'default'  => '2'
+                        ),
+                        
                         array(
                             'id'       => 'opt-multi-select',
                             'type'     => 'select',
@@ -1160,7 +1190,7 @@
                                 '2' => 'Opt 2',
                                 '3' => 'Opt 3'
                             ),
-                            'required' => array( 'select', 'equals', array( '1', '3' ) ),
+                            //'required' => array( 'opt-select', 'equals', array( '1', '3' ) ),
                             'default'  => array( '2', '3' )
                         ),
                         array(
@@ -1525,6 +1555,33 @@
                                 '3' => 'Opt 3'
                             ),
                             'default'         => '2'
+                        ),
+                    )
+                );
+
+                $this->sections[] = array(
+                    'title'  => __( 'WPML Example', 'redux-framework-demo' ),
+                    'desc'   => __( 'These fields can be fully translated by WPML (WordPress Multi-Language). This serves as an example for you to implement. For extra details look at our <a href="http://docs.reduxframework.com/core/advanced/wpml-integration/" target="_blank">WPML Implementation</a> documentation.', 'redux-framework-demo' ),
+                    'icon'   => 'el-icon-home',
+                    // 'submenu' => false, // Setting submenu to false on a given section will hide it from the WordPress sidebar menu!
+                    'fields' => array(
+                        array(
+                            'id'       => 'wpml-text',
+                            'type'     => 'textarea',
+                            'title'    => __( 'WPML Text', 'redux-framework-demo' ),
+                            'desc'     => __( 'This string can be translated via WPML.', 'redux-framework-demo' ),
+                        ),
+                        array(
+                            'id'       => 'wpml-multicheck',
+                            'type'     => 'checkbox',
+                            'title'    => __( 'WPML Multi Checkbox', 'redux-framework-demo' ),
+                            'desc'     => __( 'You can literally translate the values via key.', 'redux-framework-demo' ),
+                            //Must provide key => value pairs for multi checkbox options
+                            'options'  => array(
+                                '1' => 'Option 1',
+                                '2' => 'Option 2',
+                                '3' => 'Option 3'
+                            ),
                         ),
                     )
                 );

@@ -6,7 +6,7 @@ class UM_Rewrite {
 		
 		add_filter('query_vars', array(&$this, 'query_vars'), 10, 1 );
 		
-		add_action('init', array(&$this, 'rewrite_rules') );
+		add_action('init', array(&$this, 'rewrite_rules'), 1 );
 		
 		add_action('template_redirect', array(&$this, 'redirect_author_page'), 9999 );
 		
@@ -57,7 +57,7 @@ class UM_Rewrite {
 			);
 			
 			if ( !get_option('um_flush_rules') ) {
-				flush_rewrite_rules(true);
+				flush_rewrite_rules( true );
 				update_option('um_flush_rules', true);
 			}
 			

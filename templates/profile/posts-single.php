@@ -1,4 +1,4 @@
-	<?php while ($loop->have_posts()) { $loop->the_post(); $post_id = get_the_ID(); ?>
+	<?php while ($ultimatemember->shortcodes->loop->have_posts()) { $ultimatemember->shortcodes->loop->the_post(); $post_id = get_the_ID(); ?>
 
 		<div class="um-item">
 			<div class="um-item-link"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></div>
@@ -11,10 +11,10 @@
 		
 	<?php } ?>
 	
-	<?php if ( isset($modified_args) && $loop->have_posts() && $loop->found_posts >= 10 ) { ?>
+	<?php if ( isset($ultimatemember->shortcodes->modified_args) && $ultimatemember->shortcodes->loop->have_posts() && $ultimatemember->shortcodes->loop->found_posts >= 10 ) { ?>
 	
 		<div class="um-load-items">
-			<a href="#" class="um-ajax-paginate um-button" data-hook="um_load_posts" data-args="<?php echo $modified_args; ?>"><?php _e('load more posts','ultimatemember'); ?></a>
+			<a href="#" class="um-ajax-paginate um-button" data-hook="um_load_posts" data-args="<?php echo $ultimatemember->shortcodes->modified_args; ?>"><?php _e('load more posts','ultimatemember'); ?></a>
 		</div>
 		
 	<?php } ?>

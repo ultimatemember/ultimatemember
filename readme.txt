@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.36
+Stable Tag: 1.0.40
 
 License: GNU Version 2 or Any Later Version
 
@@ -104,7 +104,7 @@ The plugin is very SEO friendly and provides customizable dynamic page titles an
 
 **Developer friendly**
 
-Ultimate Member is developer friendly and includes hundreds of actions and filters for developers to customize the plugin. If you are wanting to integrate with Ultimate Member you can view codex here.
+Ultimate Member is developer friendly and includes hundreds of actions and filters for developers to customize the plugin. If you are wanting to integrate with Ultimate Member you can view [our codex](https://ultimatemember.com/codex/).
 
 **Future plans for Ultimate Member**
 
@@ -116,7 +116,16 @@ If you're a developer and would like to contribute to the source code of the plu
 
 **Support**
 
-Looking for help with Ultimate Member? Join our [community forum](https://ultimatemember.com/forums/) to ask questions and get help from other users as well as the Ultimate Member team. This is also the place to report bugs and plugin/theme compatibility issues. Please note we can only provide basic support to free users of this plugin and much like WordPress itself we rely on the Ultimate Member community to help each other out. You can read about our official support policy [here](https://ultimatemember.com/support-policy/). 
+Looking for help with Ultimate Member? Join our [community forum](https://ultimatemember.com/forums/) to ask questions and get help from other users as well as the Ultimate Member team. This is also the place to report bugs and plugin/theme compatibility issues. Please note we can only provide basic support to free users of this plugin and much like WordPress itself we rely on the Ultimate Member community to help each other out. You can read about our official support policy [here](https://ultimatemember.com/support-policy/).
+
+**Languages**
+
+Ultimate Member has been translated into the following languages:
+
+* English (US)
+* French
+* Italian
+* Turkish
 
 == Installation ==
 
@@ -174,6 +183,39 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.40: February 4, 2015 =
+
+* Tweak: line-breaks and automatic urls are now working for textarea fields
+* Tweak: updated ReduxFramework to latest version
+* Tweak: backend sentences are now properly localized / updated translation
+* Fixed: important issue with field positions in backend form builder
+* Fixed: issue with usernames that have spaces resolved
+* Fixed: conflict with page title in bbpress forums resolved
+* Fixed: issue with escaping the apostrophes resolved
+* Fixed: issue with loading more posts/comments in profile resolved
+
+= 1.0.39: February 3, 2015 =
+
+* New: added support for child templates to allow customizing the templates of plugin via theme or child theme. [See how](https://ultimatemember.com/codex/overriding-default-ultimate-member-profile-templates/)
+* New: added French language pack
+* Tweak: improved localization notification in backend
+* Tweak: improved template loading
+* Fixed: a minor css issue with multi-select field placeholder
+
+= 1.0.38: February 3, 2015 =
+
+* New: added a built-in automatic language pack downloader
+* New: plugin now available in Italian, Turkish (40%)
+* Tweak: If you need the plugin on available language pack you can download it automatically via the dashboard
+* Tweak: when user updates account page the page will refresh and stay in the same tab
+* Fixed: possible permalinks conflict with some wordpress themes
+
+= 1.0.37: February 2, 2015 =
+
+* Tweak: automatic line breaks in user description field
+* Tweak: added gravatar rating parameter to the gravatar function
+* Fixed: permalinks issue with customized slug for user and account pages
 
 = 1.0.36: February 1, 2015 =
 

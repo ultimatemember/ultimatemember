@@ -190,7 +190,7 @@ class UM_Account {
 		$output = ob_get_contents();
 		ob_end_clean();
 		return $output;
-		
+
 	}
 	
 	/***
@@ -219,8 +219,10 @@ class UM_Account {
 	***/
 	function template_load( $template, $args=array() ) {
 		global $ultimatemember;
-		extract($args);
-		$file = um_path . 'templates/'. $template . '.php';
-		if ( file_exists( $file ) ) include $file;
+		if ( is_array( $args ) ) {
+			$ultimatemember->shortcodes->set_args = $args;
+		}
+		$ultimatemember->shortcodes->load_template( $template );
 	}
+
 }

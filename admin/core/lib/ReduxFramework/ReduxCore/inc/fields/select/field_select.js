@@ -6,28 +6,28 @@
     redux.field_objects = redux.field_objects || {};
     redux.field_objects.select = redux.field_objects.select || {};
 
-    $( document ).ready(
-        function() {
-            //redux.field_objects.select.init();
-        }
-    );
-
     redux.field_objects.select.init = function( selector ) {
         if ( !selector ) {
-            selector = $( document ).find( '.redux-container-select' );
+            selector = $( document ).find( '.redux-container-select:visible' );
         }
+        
         $( selector ).each(
             function() {
                 var el = $( this );
                 var parent = el;
+                
                 if ( !el.hasClass( 'redux-field-container' ) ) {
                     parent = el.parents( '.redux-field-container:first' );
+                }
+                if ( parent.is( ":hidden" ) ) { // Skip hidden fields
+                    return;
                 }
                 if ( parent.hasClass( 'redux-field-init' ) ) {
                     parent.removeClass( 'redux-field-init' );
                 } else {
                     return;
                 }
+                
                 el.find( 'select.redux-select-item' ).each(
                     function() {
 

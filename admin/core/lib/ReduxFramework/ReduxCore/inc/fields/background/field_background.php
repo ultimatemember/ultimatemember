@@ -115,7 +115,7 @@
 
                     echo '<input data-id="' . $this->field['id'] . '" name="' . $this->field['name'] . $this->field['name_suffix'] . '[background-color]" id="' . $this->field['id'] . '-color" class="redux-color redux-background-input redux-color-init ' . $this->field['class'] . '"  type="text" value="' . $this->value['background-color'] . '"  data-default-color="' . ( isset( $this->field['default']['background-color'] ) ? $this->field['default']['background-color'] : "" ) . '" />';
                     echo '<input type="hidden" class="redux-saved-color" id="' . $this->field['id'] . '-saved-color' . '" value="">';
-                    
+
                     if ( ! isset( $this->field['transparent'] ) || $this->field['transparent'] !== false ) {
                         $tChecked = "";
                         if ( $this->value['background-color'] == "transparent" ) {
@@ -348,6 +348,9 @@
              * @return      void
              */
             public function enqueue() {
+                wp_enqueue_style( 'select2-css' );
+                wp_enqueue_style( 'wp-color-picker' );
+                
                 wp_enqueue_script(
                     'redux-field-background-js',
                     ReduxFramework::$_url . 'inc/fields/background/field_background' . Redux_Functions::isMin() . '.js',
@@ -356,12 +359,17 @@
                     true
                 );
 
-                wp_enqueue_style(
-                    'redux-field-background-css',
-                    ReduxFramework::$_url . 'inc/fields/background/field_background.css',
-                    time(),
-                    true
-                );
+                if ($this->parent->args['dev_mode']) {
+                    wp_enqueue_style(
+                        'redux-field-background-css',
+                        ReduxFramework::$_url . 'inc/fields/background/field_background.css',
+                        array(),
+                        time(),
+                        'all'
+                    );
+            
+                    wp_enqueue_style( 'redux-color-picker-css' );
+                }
             }
 
             public static function getCSS( $value = array() ) {
