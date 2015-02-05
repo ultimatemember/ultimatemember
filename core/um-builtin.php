@@ -901,7 +901,7 @@ class UM_Builtin {
 				$all[$k]['title'] = stripslashes( $arr['title'] );
 			}
 			
-			if ( $exclude_types && in_array( $arr['type'], $exclude_types ) ) {
+			if ( $exclude_types && isset( $arr['type'] ) && in_array( $arr['type'], $exclude_types ) ) {
 				unset( $all[$k] );
 			}
 			if ( isset( $arr['account_only'] ) || isset( $arr['private_use'] ) ) {

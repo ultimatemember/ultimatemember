@@ -88,13 +88,19 @@ class UM_Admin_Access {
 	***	@add form metabox
 	***/
 	function add_metabox_form() {
+		global $ultimatemember;
 		
-		$types = get_post_types();
+		$types = $ultimatemember->query->get_post_types;
 		foreach($types as $post_type) {
-			if ( $this->core_post_type( $post_type ) ) return;
-			add_meta_box('um-admin-access-settings', __('Access Control'), array(&$this, 'load_metabox_form'), $post_type, 'side', 'default');
 			
+			if ( !$this->core_post_type( $post_type ) ) {
+			
+				add_meta_box('um-admin-access-settings', __('Access Control'), array(&$this, 'load_metabox_form'), $post_type, 'side', 'default');
+
+			}
+		
 			do_action('um_admin_custom_access_metaboxes');
+			
 		}
 		
 	}

@@ -363,7 +363,7 @@ class UM_Admin_Metabox {
 
 		$where = array( 'ID' => $post_id );
 		if (empty($_POST['post_title'])) $_POST['post_title'] = 'Role #'.$post_id;
-        $wpdb->update( $wpdb->posts, array( 'post_title' => $_POST['post_title'], 'post_name' => wp_unique_post_slug( sanitize_title( $_POST['post_title'] ) ) ), $where );
+        $wpdb->update( $wpdb->posts, array( 'post_title' => $_POST['post_title'], 'post_name' => sanitize_title( $_POST['post_title'] ) ), $where );
 		
 		// save
 		delete_post_meta( $post_id, '_um_can_view_roles' );
@@ -421,15 +421,20 @@ class UM_Admin_Metabox {
 			}
 		}
 		
-		$settings['textarea_rows'] = 8;
+		// needed on forms only
+		if ( isset( $screen->id ) && strstr( $screen->id, 'um_form' ) ) {
 		
-		echo '<div class="um-hidden-editor-edit" style="display: none">';
-		wp_editor( '', 'um_editor_edit', $settings );
-		echo '</div>';
-		
-		echo '<div class="um-hidden-editor-new" style="display: none">';
-		wp_editor( '', 'um_editor_new', $settings );
-		echo '</div>';
+			$settings['textarea_rows'] = 8;
+			
+			echo '<div class="um-hidden-editor-edit" style="display: none">';
+			wp_editor( '', 'um_editor_edit', $settings );
+			echo '</div>';
+			
+			echo '<div class="um-hidden-editor-new" style="display: none">';
+			wp_editor( '', 'um_editor_new', $settings );
+			echo '</div>';
+			
+		}
 
 	}
 	

@@ -3,7 +3,19 @@
 class UM_Query {
 
 	function __construct() {
+		
+		add_action('wp_loaded', array(&$this, 'get_post_types'), 100 );
+		
+	}
 	
+	/***
+	***	@get all post types
+	***/
+	function get_post_types() {
+		$array = get_post_types();
+		foreach( $array as $k => $v ) {
+			$this->get_post_types[] = $k;
+		}
 	}
 	
 	/***

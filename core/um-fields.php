@@ -1130,12 +1130,12 @@ class UM_Fields {
 		
 			/* Gap/Space */
 			case 'spacing':
-				$output .= '<div class="um-field-spacing" style="height: '.$spacing.'"></div>';
+				$output .= '<div class="um-field um-field-spacing' . $classes . '"' . $conditional . ' style="height: '.$spacing.'"></div>';
 				break;
 				
 			/* A line divider */
 			case 'divider':
-				$output .= '<div class="um-field-divider" style="border-bottom: '.$borderwidth.'px '.$borderstyle.' '.$bordercolor.'">';
+				$output .= '<div class="um-field um-field-divider' . $classes . '"' . $conditional . ' style="border-bottom: '.$borderwidth.'px '.$borderstyle.' '.$bordercolor.'">';
 				if ( $divider_text ) {
 					$output .= '<div class="um-field-divider-text"><span>' . $divider_text . '</span></div>';
 				}
@@ -1597,7 +1597,9 @@ class UM_Fields {
 	function array_sort_by_column($arr, $col, $dir = SORT_ASC) {
 		$sort_col = array();
 		foreach ($arr as $key=> $row) {
-			$sort_col[$key] = $row[$col];
+			if ( isset( $row[$col] ) ) {
+				$sort_col[$key] = $row[$col];
+			}
 		}
 
 		array_multisort($sort_col, $dir, $arr);
@@ -1856,12 +1858,12 @@ class UM_Fields {
 				
 			/* Gap/Space */
 			case 'spacing':
-				$output .= '<div class="um-field-spacing" style="height: '.$spacing.'"></div>';
+				$output .= '<div class="um-field um-field-spacing' . $classes . '"' . $conditional . ' style="height: '.$spacing.'"></div>';
 				break;
 				
 			/* A line divider */
 			case 'divider':
-				$output .= '<div class="um-field-divider" style="border-bottom: '.$borderwidth.'px '.$borderstyle.' '.$bordercolor.'">';
+				$output .= '<div class="um-field um-field-divider' . $classes . '"' . $conditional . ' style="border-bottom: '.$borderwidth.'px '.$borderstyle.' '.$bordercolor.'">';
 				if ( $divider_text ) {
 					$output .= '<div class="um-field-divider-text"><span>' . $divider_text . '</span></div>';
 				}

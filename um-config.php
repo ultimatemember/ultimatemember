@@ -74,14 +74,18 @@ $this->sections[] = array(
                 'title'   		=> __( 'Automatically redirect author page to their profile?' ),
 				'default' 		=> 1,
 				'desc' 	   		=> __('If enabled, author pages will automatically redirect to the user\'s profile page'),
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
         ),
 		
         array(
                 'id'       		=> 'members_page',
                 'type'     		=> 'switch',
-                'title'   		=> __( 'Members Directory' ),
+                'title'   		=> __( 'Enable Members Directory' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Control whether to enable or disable member directories on this site',
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
         ),
 		
         array(
@@ -90,6 +94,8 @@ $this->sections[] = array(
                 'title'   		=> __( 'Use Gravatars?' ),
 				'default' 		=> 0,
 				'desc' 	   		=> __('Do you want to use gravatars instead of the default plugin profile photo (If the user did not upload a custom profile photo / avatar)','ultimatemember'),
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
         ),
 		
 	)
@@ -112,6 +118,8 @@ $this->sections[] = array(
                 'title'   		=> __( 'Password Account Tab' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Enable/disable the Password account tab in account page',
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
         ),
 		
         array(
@@ -120,6 +128,8 @@ $this->sections[] = array(
                 'title'   		=> __( 'Privacy Account Tab' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Enable/disable the Privacy account tab in account page',
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
         ),
 		
         array(
@@ -128,6 +138,8 @@ $this->sections[] = array(
                 'title'   		=> __( 'Notifications Account Tab' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Enable/disable the Notifications account tab in account page',
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
         ),
 		
 		array(
@@ -136,6 +148,8 @@ $this->sections[] = array(
                 'title'   		=> __( 'Delete Account Tab' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Enable/disable the Delete account tab in account page',
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
         ),
 		
         array(
@@ -201,7 +215,7 @@ $this->sections[] = array(
 				'default'		=> array(),
                 'title'    		=> __( 'Exclude the following URLs','ultimatemember' ),
                 'desc' 	   		=> __( 'Here you can exclude URLs beside the redirect URI to be accessible to everyone','ultimatemember' ),
-				'add_text'		=> __('Add New URL'),
+				'add_text'		=> __('Add New URL','ultimatemember'),
 				'required'		=> array( 'accessible', '=', 2 ),
 		),
 		
@@ -373,7 +387,7 @@ $this->sections[] = array(
                 'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => 'Welcome to {site_name}!',
 				'required' => array( 'welcome_email_on', '=', 1 ),
-				'desc' 	   => 'This is the subject line of the e-mail',
+				'desc' 	   => __('This is the subject line of the e-mail','ultimatemember'),
         ),
 
         array(
@@ -409,7 +423,7 @@ $this->sections[] = array(
                 'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => 'Please activate your account',
 				'required' => array( 'checkmail_email_on', '=', 1 ),
-				'desc' 	   => 'This is the subject line of the e-mail',
+				'desc' 	   => __('This is the subject line of the e-mail','ultimatemember'),
         ),
 
         array(
@@ -441,7 +455,7 @@ $this->sections[] = array(
                 'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => 'Your account is pending review',
 				'required' => array( 'pending_email_on', '=', 1 ),
-				'desc' 	   => 'This is the subject line of the e-mail',
+				'desc' 	   => __('This is the subject line of the e-mail','ultimatemember'),
         ),
 
         array(
@@ -473,7 +487,7 @@ $this->sections[] = array(
                 'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => 'Your account at {site_name} is now active',
 				'required' => array( 'approved_email_on', '=', 1 ),
-				'desc' 	   => 'This is the subject line of the e-mail',
+				'desc' 	   => __('This is the subject line of the e-mail','ultimatemember'),
         ),
 
         array(
@@ -509,7 +523,7 @@ $this->sections[] = array(
                 'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => 'Your account has been rejected',
 				'required' => array( 'rejected_email_on', '=', 1 ),
-				'desc' 	   => 'This is the subject line of the e-mail',
+				'desc' 	   => __('This is the subject line of the e-mail','ultimatemember'),
         ),
 
         array(
@@ -540,7 +554,7 @@ $this->sections[] = array(
                 'subtitle' => __( 'Subject Line' ),
                 'default'  => 'Your account has been deactivated',
 				'required' => array( 'inactive_email_on', '=', 1 ),
-				'desc' 	   => 'This is the subject line of the e-mail',
+				'desc' 	   => __('This is the subject line of the e-mail','ultimatemember'),
         ),
 						
         array(
@@ -571,7 +585,7 @@ $this->sections[] = array(
                 'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => 'Your account has been deleted',
 				'required' => array( 'deletion_email_on', '=', 1 ),
-				'desc' 	   => 'This is the subject line of the e-mail',
+				'desc' 	   => __('This is the subject line of the e-mail','ultimatemember'),
 		),
 
         array(
@@ -602,7 +616,7 @@ $this->sections[] = array(
                 'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => 'Reset your password',
 				'required' => array( 'resetpw_email_on', '=', 1 ),
-				'desc' 	   => 'This is the subject line of the e-mail',
+				'desc' 	   => __('This is the subject line of the e-mail','ultimatemember'),
         ),
 
         array(
@@ -634,7 +648,7 @@ $this->sections[] = array(
                 'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => 'Your {site_name} password has been changed',
 				'required' => array( 'changedpw_email_on', '=', 1 ),
-				'desc' 	   => 'This is the subject line of the e-mail',
+				'desc' 	   => __('This is the subject line of the e-mail','ultimatemember'),
         ),
 
         array(
@@ -678,6 +692,8 @@ $this->sections[] = array(
                 'title'    => __( 'New User Notification','ultimatemember' ),
 				'default'  => 1,
 				'desc' 	   => 'Whether to receive notification when a new user account is approved',
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
         ),
 
         array(
@@ -687,7 +703,7 @@ $this->sections[] = array(
                 'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => '[{site_name}] New user account',
 				'required' => array( 'notification_new_user_on', '=', 1 ),
-				'desc' 	   => 'This is the subject line of the e-mail',
+				'desc' 	   => __('This is the subject line of the e-mail','ultimatemember'),
         ),
 
         array(
@@ -709,6 +725,8 @@ $this->sections[] = array(
                 'title'    => __( 'Account Needs Review Notification','ultimatemember' ),
 				'default'  => 0,
 				'desc' 	   => 'Whether to receive notification when an account needs admin review',
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
         ),
 
         array(
@@ -718,7 +736,7 @@ $this->sections[] = array(
                 'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => '[{site_name}] New user awaiting review',
 				'required' => array( 'notification_review_on', '=', 1 ),
-				'desc' 	   => 'This is the subject line of the e-mail',
+				'desc' 	   => __('This is the subject line of the e-mail','ultimatemember'),
         ),
 
         array(
@@ -741,6 +759,8 @@ $this->sections[] = array(
                 'title'    => __( 'Account Deletion Notification','ultimatemember' ),
 				'default'  => 0,
 				'desc' 	   => 'Whether to receive notification when an account is deleted',
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
         ),
 
         array(
@@ -750,7 +770,7 @@ $this->sections[] = array(
                 'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => '[{site_name}] Account deleted',
 				'required' => array( 'notification_deletion_on', '=', 1 ),
-				'desc' 	   => 'This is the subject line of the e-mail',
+				'desc' 	   => __('This is the subject line of the e-mail','ultimatemember'),
         ),
 
         array(
@@ -784,7 +804,7 @@ $this->sections[] = array(
                 'desc' 	   		=> __( 'Here you can define which thumbnail sizes will be created for each profile photo upload.','ultimatemember' ),
                 'default'  		=> array( 40, 80, 190 ),
 				'validate' 		=> 'numeric',
-				'add_text'		=> __('Add New Size'),
+				'add_text'		=> __('Add New Size','ultimatemember'),
 		),
 		
 		array(
@@ -794,7 +814,7 @@ $this->sections[] = array(
                 'desc' 	   		=> __( 'Here you can define which thumbnail sizes will be created for each cover photo upload.','ultimatemember' ),
                 'default'  		=> array( 300, 600 ),
 				'validate' 		=> 'numeric',
-				'add_text'		=> __('Add New Size'),
+				'add_text'		=> __('Add New Size','ultimatemember'),
 		),
 		
 		array(
@@ -1040,6 +1060,8 @@ $this->sections[] = array(
                 'type'     		=> 'switch',
                 'title'    		=> __( 'Show an asterisk for required fields','ultimatemember' ),
 				'default'  		=> 0,
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
         ),
 		
         array(
@@ -1130,6 +1152,8 @@ $this->sections[] = array(
                 'title'    		=> __( 'Profile Secondary Button','ultimatemember' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Switch on/off the secondary button display in the form',
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
         ),
 		
         array(
@@ -1216,6 +1240,8 @@ $this->sections[] = array(
                 'title'    		=> __( 'Profile Cover Photos','ultimatemember' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Switch on/off the profile cover photos',
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
         ),
 		
 		array(
@@ -1284,6 +1310,8 @@ $this->sections[] = array(
                 'title'    		=> __( 'Show display name in profile header','ultimatemember' ),
 				'default' 		=> um_get_metadefault('profile_show_name'),
 				'desc' 	   		=> 'Switch on/off the user name on profile header',
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
         ),
 		
         array(
@@ -1292,6 +1320,8 @@ $this->sections[] = array(
                 'title'    		=> __( 'Show user description in header','ultimatemember' ),
 				'default' 		=> um_get_metadefault('profile_show_bio'),
 				'desc' 	   		=> 'Switch on/off the user description on profile header',
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
         ),
 		
         array(
@@ -1322,6 +1352,8 @@ $this->sections[] = array(
                 'title'    		=> __( 'Show a custom message if profile is empty','ultimatemember' ),
 				'default' 		=> um_get_metadefault('profile_empty_text'),
 				'desc' 	   		=> 'Switch on/off the custom message that appears when the profile is empty',
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
         ),
 		
         array(
@@ -1330,6 +1362,8 @@ $this->sections[] = array(
                 'title'    		=> __( 'Show the emoticon','ultimatemember' ),
 				'default' 		=> um_get_metadefault('profile_empty_text_emo'),
 				'desc' 	   		=> 'Switch on/off the emoticon (sad face) that appears above the message',
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
 				'required'		=> array( 'profile_empty_text', '=', 1 ),
         ),
 		
@@ -1343,6 +1377,8 @@ $tab_options[] = array(
                 'type'     		=> 'switch',
                 'title'    		=> __('Enable profile menu','ultimatemember'),
 				'default' 		=> 1,
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
 );
 
 foreach( $tabs as $id => $tab ) {
@@ -1352,6 +1388,8 @@ $tab_options[] = array(
                 'title'    		=> sprintf(__('%s Tab','ultimatemember'), $tab ),
 				'default' 		=> 1,
 				'required'		=> array( 'profile_menu', '=', 1 ),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
 );
 }
 
@@ -1372,6 +1410,8 @@ $tab_options[] = array(
                 'title'    		=> __('Enable menu icons in desktop view','ultimatemember'),
 				'default' 		=> 1,
 				'required'		=> array( 'profile_menu', '=', 1 ),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
 );
 
 $tab_options[] = array(
@@ -1380,6 +1420,8 @@ $tab_options[] = array(
                 'title'    		=> __('Enable counts in menu','ultimatemember'),
 				'default' 		=> 1,
 				'required'		=> array( 'profile_menu', '=', 1 ),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
 );
 
 $this->sections[] = array(
@@ -1456,6 +1498,8 @@ $this->sections[] = array(
                 'title'    		=> __( 'Registration Secondary Button','ultimatemember' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Switch on/off the secondary button display in the form',
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
         ),
 		
         array(
@@ -1547,6 +1591,8 @@ $this->sections[] = array(
                 'title'    		=> __( 'Login Secondary Button','ultimatemember' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Switch on/off the secondary button display in the form',
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
         ),
 		
         array(
@@ -1564,6 +1610,8 @@ $this->sections[] = array(
                 'title'    		=> __( 'Login Forgot Password Link','ultimatemember' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Switch on/off the forgot password link in login form',
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
         ),
 		
 	)
@@ -1604,6 +1652,8 @@ $this->sections[] = array(
                 'title'   		=> __( 'Disable JS/CSS Compression','ultimatemember' ),
 				'default' 		=> 0,
 				'desc' 	   		=> __('Not recommended. This will load all plugin js and css files separately and may slow down your website. Use this setting for development or debugging purposes only.','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
         ),
 		
 		array(
@@ -1612,7 +1662,7 @@ $this->sections[] = array(
 				'default'		=> array(),
                 'title'    		=> __( 'Never load plugin JS and CSS on the following pages','ultimatemember' ),
                 'desc' 	   		=> __( 'Enter a url or page slug (e.g /about/) to disable loading the plugin\'s css and js on that page.','ultimatemember' ),
-				'add_text'		=> __('Add New Page'),
+				'add_text'		=> __('Add New Page','ultimatemember'),
 		),
 		
         array(

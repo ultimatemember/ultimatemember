@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.40
+Stable Tag: 1.0.41
 
 License: GNU Version 2 or Any Later Version
 
@@ -183,6 +183,15 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.41: February 5, 2015 =
+
+* New: added access control settings to custom post types, you can have custom access settings applied to your custom post types now
+* New: divider and spacing fields fully support conditional logic
+* Tweak: Turkish language completed
+* Tweak: updated some translations
+* Fixed: a couple of PHP warnings and errors have been resolved
+* Fixed: conflict with MailPoet plugin has been resolved
 
 = 1.0.40: February 4, 2015 =
 
