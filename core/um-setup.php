@@ -379,19 +379,19 @@ class UM_Setup {
 			foreach( $users as $id ) {
 				
 				if ( !get_user_meta( $id, 'account_status', true ) ) {
-				
 					update_user_meta( $id, 'account_status', 'approved' );
-					
 				}
 				
+				delete_user_meta( $id, 'role' );
+				
 				if ( !is_super_admin( $id ) ) {
-				
-					update_user_meta( $id, 'role', 'member' );
-					
+					if ( is_numeric( $id ) ) {
+						update_user_meta( $id, 'role', 'member' );
+					}
 				} else {
-				
-					update_user_meta( $id, 'role', 'admin' );
-					
+					if ( is_numeric( $id ) ) {
+						update_user_meta( $id, 'role', 'admin' );
+					}
 				}
 				
 			}

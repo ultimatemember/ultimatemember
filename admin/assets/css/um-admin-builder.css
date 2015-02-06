@@ -175,6 +175,12 @@
 	cursor: move !important;
 }
 
+.um-admin-drag-fld-title i {
+	width: 24px;
+	display: inline-block;
+	text-align: center;
+}
+
 .um-admin-drag-fld.um-field-type-group {background: #555;border: 0}
 .um-admin-drag-fld-title.um-field-type-group,.um-admin-drag-fld-type.um-field-type-group {color: #fff}
 .um-admin-drag-group {background: #FCFCFC;cursor: default;padding: 20px;border: 1px dashed #bbb;}

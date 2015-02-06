@@ -30,6 +30,9 @@
 	function um_profile_field_filter_hook__description( $value, $data ) {
 		global $ultimatemember;
 		
+		if ( isset( $data ) && isset( $data['html'] ) && $data['html'] == 1 )
+			return $value;
+		
 		$value = preg_replace(
 			 array(
 			   '/(?(?=<a[^>]*>.+<\/a>)
@@ -54,7 +57,6 @@
 		   );
 		   
 		$value = wpautop($value);
-		
 		return $value;
 	}
 	
@@ -147,12 +149,14 @@
 				&& !strstr( $value, '.net' )
 				&& !strstr( $value, '.org' )
 			) {
-				if ( $data['validate'] == 'facebook_url' ) $value = 'http://facebook.com/' . $value;
-				if ( $data['validate'] == 'twitter_url' ) $value = 'http://twitter.com/' . $value;
-				if ( $data['validate'] == 'linkedin_url' ) $value = 'http://linkedin.com/' . $value;
-				if ( $data['validate'] == 'skype' ) $value = 'http://skype.com/' . $value;
-				if ( $data['validate'] == 'googleplus_url' ) $value = 'http://plus.google.com/' . $value;
-				if ( $data['validate'] == 'instagram_url' ) $value = 'http://instagram.com/' . $value;	
+				if ( $data['validate'] == 'soundcloud_url' ) $value = 'https://soundcloud.com/' . $value;
+				if ( $data['validate'] == 'youtube_url' ) $value = 'https://youtube.com/user/' . $value;
+				if ( $data['validate'] == 'facebook_url' ) $value = 'https://facebook.com/' . $value;
+				if ( $data['validate'] == 'twitter_url' ) $value = 'https://twitter.com/' . $value;
+				if ( $data['validate'] == 'linkedin_url' ) $value = 'https://linkedin.com/' . $value;
+				if ( $data['validate'] == 'skype' ) $value = 'https://skype.com/' . $value;
+				if ( $data['validate'] == 'googleplus_url' ) $value = 'https://plus.google.com/' . $value;
+				if ( $data['validate'] == 'instagram_url' ) $value = 'https://instagram.com/' . $value;	
 			}
 			if ( strpos($value, 'http://') !== 0 ) {
 				$value = 'http://' . $value;

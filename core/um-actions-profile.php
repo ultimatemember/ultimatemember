@@ -150,7 +150,7 @@
 				<span class="um-cover-overlay-s">
 					<ins>
 						<i class="um-faicon-picture-o"></i>
-						<span class="um-cover-overlay-t">'.__('Change your cover photo').'</span>
+						<span class="um-cover-overlay-t">'.__('Change your cover photo','ultimatemember').'</span>
 					</ins>
 				</span>
 			</span>';

@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.41
+Stable Tag: 1.0.42
 
 License: GNU Version 2 or Any Later Version
 
@@ -183,6 +183,19 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.42: February 6, 2015 =
+
+* New: added option to block specific e-mail domains from registering
+* New: 2 new social profile fields: YouTube and SoundCloud
+* New: added option to show field icons in profile header
+* New: import/export plugin settings feature added to the backend
+* New: added option to duplicate forms in backend with one click
+* Tweak: cleaned up installation code
+* Tweak: minor css modifications
+* Fixed: adding HTML and iframe content to html-allowed textarea fields
+* Fixed: upload folders permissions with some configurations and servers
+* Fixed: live preview of profile forms in backend
 
 = 1.0.41: February 5, 2015 =
 

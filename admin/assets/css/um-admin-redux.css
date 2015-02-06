@@ -11,6 +11,14 @@
 	border: 0 !important;
 }
 
+.redux-container #import_export_default_section_group h4 {
+	margin: 0 0 12px 0 !important;
+}
+
+.redux-container #import_export_default_section_group .hr {
+	height: 4px !important;
+}
+
 .redux-sidebar .redux-group-menu li.active a, .redux-sidebar .redux-group-menu li.active a:hover, .redux-sidebar .redux-group-menu li.activeChild a, .redux-sidebar .redux-group-menu li.activeChild a:hover {
 	background: transparent;
 }

@@ -340,6 +340,12 @@
 
 			case 'um_admin_preview_form':
 				
+				$mode = $ultimatemember->query->get_attr('mode', $arg1 );
+				
+				if ( $mode == 'profile' ) {
+					$ultimatemember->fields->editing = true;
+				}
+				
 				$output = do_shortcode('[ultimatemember form_id='.$arg1.']');
 				
 				break;

@@ -317,28 +317,28 @@ $this->sections[] = array(
 				'id'       		=> 'wpadmin_allow_ips',
                 'type'     		=> 'textarea',
                 'title'    		=> __( 'Whitelisted Backend IPs','ultimatemember' ),
-				'desc'			=> __('Always allow the specified IP addresses to access the backend login screen and WP-admin to avoid being locked from site backend.')
+				'desc'			=> __('Always allow the specified IP addresses to access the backend login screen and WP-admin to avoid being locked from site backend.','ultimatemember'),
         ),
 		
         array(
 				'id'       		=> 'blocked_ips',
                 'type'     		=> 'textarea',
                 'title'    		=> __( 'Blocked IP Addresses','ultimatemember' ),
-				'desc'			=> __('This will block the listed IPs from signing up or signing in to the site, you can use full IP numbers or target specific range with a wildcard')
+				'desc'			=> __('This will block the listed IPs from signing up or signing in to the site, you can use full IP numbers or target specific range with a wildcard','ultimatemember'),
         ),
 		
         array(
 				'id'       		=> 'blocked_emails',
                 'type'     		=> 'textarea',
                 'title'    		=> __( 'Blocked Email Addresses','ultimatemember' ),
-				'desc'			=> __('This will block the specified e-mail addresses from being able to sign up or sign in to your site.')
+				'desc'			=> __('This will block the specified e-mail addresses from being able to sign up or sign in to your site. To block an entire domain, use something like *@domain.com','ultimatemember'),
         ),
 		
         array(
 				'id'       		=> 'blocked_words',
                 'type'     		=> 'textarea',
                 'title'    		=> __( 'Blacklist Words','ultimatemember' ),
-				'desc'			=> __('This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username'),
+				'desc'			=> __('This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username','ultimatemember'),
 				'default'		=>  'admin' . "\r\n" . 'administrator' . "\r\n" . 'webmaster' . "\r\n" . 'support' . "\r\n" . 'staff'
         ),
 		
@@ -1260,6 +1260,16 @@ $this->sections[] = array(
         ),
 		
         array(
+                'id'       		=> 'profile_show_metaicon',
+                'type'     		=> 'switch',
+                'title'    		=> __( 'Profile Header Meta Text Icon','ultimatemember' ),
+				'default' 		=> 0,
+				'desc' 	   		=> __('Display field icons for related user meta fields in header or not','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+        ),
+		
+        array(
 				'id'       		=> 'profile_header_text',
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('profile_header_text'),
@@ -1645,7 +1655,14 @@ $this->sections[] = array(
     'icon'       => 'um-faicon-wrench',
     'title'      => __('Advanced','ultimatemember'),
     'fields'     => array(
-		
+			
+		array(
+				'id'            	=> 'import_export',
+				'type'          	=> 'import_export',
+				'title'         	=> __('Import & Export Settings','ultimatemember'),
+				'full_width'    	=> true,
+		),
+	
         array(
                 'id'       		=> 'disable_minify',
                 'type'     		=> 'switch',

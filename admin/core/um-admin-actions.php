@@ -1,6 +1,48 @@
 <?php
 
 	/***
+	***	@duplicate form
+	***/
+	add_action('um_admin_do_action__duplicate_form', 'um_admin_do_action__duplicate_form');
+	function um_admin_do_action__duplicate_form( $action ){
+		global $ultimatemember;
+		if ( !is_admin() || !current_user_can('manage_options') ) die();
+		if ( !isset($_REQUEST['post_id']) || !is_numeric( $_REQUEST['post_id'] ) ) die();
+		
+		$post_id = $_REQUEST['post_id'];
+		
+		$n = array(
+			'post_type' 	  	=> 'um_form',
+			'post_title'		=> sprintf(__('Duplicate of %s','ultimatemember'), get_the_title($post_id) ),
+			'post_status'		=> 'publish',
+			'post_author'   	=> um_user('ID'),
+		);
+
+		$n_id = wp_insert_post( $n );
+		
+		$n_fields = get_post_custom( $post_id );
+		foreach ( $n_fields as $key => $value ) {
+			
+			if ( $key == '_um_custom_fields' ) {
+				$the_value = unserialize( $value[0] );
+			} else {
+				$the_value = $value[0];
+			}
+		
+			update_post_meta( $n_id, $key, $the_value );
+			
+		}
+		
+		delete_post_meta($n_id, '_um_core');
+		
+		$url = admin_url('edit.php?post_type=um_form');
+		$url = add_query_arg('update','form_duplicated',$url);
+		
+		exit( wp_redirect( $url ) );
+		
+	}
+
+	/***
 	***	@download a language remotely
 	***/
 	add_action('um_admin_do_action__um_language_downloader', 'um_admin_do_action__um_language_downloader');

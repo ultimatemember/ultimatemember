@@ -98,11 +98,15 @@ class UM_Files {
 		$this->upload_temp_url = $this->upload_baseurl . 'temp/';
 
 		if (!file_exists( $this->upload_basedir )) {
-			@mkdir( $this->upload_basedir, 0777, true);
+			$old = umask(0);
+			@mkdir( $this->upload_basedir, 0755, true);
+			umask($old);
 		}
 
 		if (!file_exists( $this->upload_temp )) {
-			@mkdir( $this->upload_temp , 0777, true);
+			$old = umask(0);
+			@mkdir( $this->upload_temp , 0755, true);
+			umask($old);
 		}
 		
 	}
@@ -241,7 +245,9 @@ class UM_Files {
 	***/
 	function make_dir( $dir ){
 	
-		@mkdir( $dir, 0777, true);
+		$old = umask(0);
+		@mkdir( $dir, 0755, true);
+		umask($old);
 		
 	}
 	
@@ -415,7 +421,9 @@ class UM_Files {
 	
 		// if he does not have uploads dir yet
 		if ( !file_exists( $this->upload_basedir . $user_id . '/' ) ) {
-			@mkdir( $this->upload_basedir . $user_id . '/' , 0777, true);
+			$old = umask(0);
+			@mkdir( $this->upload_basedir . $user_id . '/' , 0755, true);
+			umask($old);
 		}
 		
 		// name and extension stuff

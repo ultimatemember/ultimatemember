@@ -89,6 +89,10 @@
 					$err = __('This email address has been blocked.','ultimatemember');
 					break;
 					
+				case 'blocked_domain':
+					$err = __('We do not accept registrations from that domain.','ultimatemember');
+					break;
+					
 				case 'blocked_ip':
 					$err = __('Your IP address has been blocked.','ultimatemember');
 					break;

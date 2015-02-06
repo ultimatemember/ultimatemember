@@ -12,6 +12,28 @@ class UM_Admin_Columns {
 		add_filter('manage_edit-um_directory_columns', array(&$this, 'manage_edit_um_directory_columns') );
 		add_action('manage_um_directory_posts_custom_column', array(&$this, 'manage_um_directory_posts_custom_column'), 10, 3);
 		
+		add_filter('post_row_actions', array(&$this, 'post_row_actions'), 99, 2);
+		
+	}
+	
+	/***
+	***	@custom row actions
+	***/
+	function post_row_actions($actions, $post){
+		//check for your post type
+		if ($post->post_type =="um_form"){
+			$actions['um_duplicate'] = '<a href="' . $this->duplicate_uri( $post->ID ) . '">' . __('Duplicate','ultimatemember') . '</a>';
+		}
+		return $actions;
+	}
+
+	/***
+	***	@duplicate a form
+	***/
+	function duplicate_uri( $id ) {
+		$url = add_query_arg('um_adm_action', 'duplicate_form', admin_url('edit.php?post_type=um_form') );
+		$url = add_query_arg('post_id', $id, $url);
+		return $url;
 	}
 	
 	/***

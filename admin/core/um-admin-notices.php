@@ -110,6 +110,10 @@ class UM_Admin_Notices {
 
 		$update = $_REQUEST['update'];
 		switch($update) {
+			
+			case 'form_duplicated':
+				$messages[0]['content'] = __('The form has been duplicated successfully.','ultimatemember');
+				break;
 		
 			case 'user_updated':
 				$messages[0]['content'] = __('User has been updated.','ultimatemember');

@@ -277,8 +277,10 @@ p.um-notice.err {
 	float: left;
 	margin: 0 8px 0 0;
 	height: 22px;
-	line-height: 22px;
+	line-height: 18px;
 	display: inline-block;
+	width: 24px;
+	text-align: center;
 }
 .um-field-label .um-field-label-icon  i { font-size: 22px; height: 22px; line-height: 22px; vertical-align: middle; }
 

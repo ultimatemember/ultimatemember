@@ -675,6 +675,42 @@ class UM_Builtin {
 				'url_text' => 'Skype',
 			),
 			
+			'youtube' => array(
+				'title' => __('YouTube','ultimatemember'),
+				'metakey' => 'youtube',
+				'type' => 'url',
+				'label' => __('YouTube','ultimatemember'),
+				'required' => 0,
+				'public' => 1,
+				'editable' => 1,
+				'url_target' => '_blank',
+				'url_rel' => 'nofollow',
+				'icon' => 'um-faicon-youtube',
+				'validate' => 'youtube_url',
+				'url_text' => 'YouTube',
+				'advanced' => 'social',
+				'color' => '#e52d27',
+				'match' => 'https://youtube.com/',
+			),
+			
+			'soundcloud' => array(
+				'title' => __('SoundCloud','ultimatemember'),
+				'metakey' => 'soundcloud',
+				'type' => 'url',
+				'label' => __('SoundCloud','ultimatemember'),
+				'required' => 0,
+				'public' => 1,
+				'editable' => 1,
+				'url_target' => '_blank',
+				'url_rel' => 'nofollow',
+				'icon' => 'um-faicon-soundcloud',
+				'validate' => 'soundcloud_url',
+				'url_text' => 'SoundCloud',
+				'advanced' => 'social',
+				'color' => '#f50',
+				'match' => 'https://soundcloud.com/',
+			),
+			
 			'role_select' => array(
 				'title' => __('Roles (Dropdown)','ultimatemember'),
 				'metakey' => 'role_select',
@@ -934,12 +970,14 @@ class UM_Builtin {
 		$array['numeric'] = 'Numeric value only';
 		$array['phone_number'] = 'Phone Number';
 		$array['skype'] = 'Skype ID';
+		$array['soundcloud'] = 'SoundCloud Profile';
 		$array['twitter_url'] = 'Twitter URL';
 		$array['unique_email'] = 'Unique E-mail';
 		$array['unique_value'] = 'Unique Metakey value';
 		$array['unique_username'] = 'Unique Username';
 		$array['unique_username_or_email'] = 'Unique Username/E-mail';
 		$array['url'] = 'Website URL';
+		$array['youtube_url'] = 'YouTube Profile';
 		$array['custom'] = 'Custom Validation';
 		
 		$array = apply_filters('um_admin_field_validation_hook', $array );
