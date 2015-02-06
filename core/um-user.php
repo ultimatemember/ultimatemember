@@ -21,10 +21,11 @@ class UM_User {
 	
 		$this->preview = false;
 		
-		// a list of keys that should be done on wp_update_user
+		// a list of keys that should never be in wp_usermeta
 		$this->update_user_keys = array(
 			'user_email',
 			'user_pass',
+			'user_password',
 		);
 		
 		$this->target_id = null;

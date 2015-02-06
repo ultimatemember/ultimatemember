@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.42
+Stable Tag: 1.0.43
 
 License: GNU Version 2 or Any Later Version
 
@@ -124,6 +124,7 @@ Ultimate Member has been translated into the following languages:
 
 * English (US)
 * French
+* German
 * Italian
 * Turkish
 
@@ -183,6 +184,14 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.43: February 7, 2015 =
+
+* New: added German (Deutsch) language support
+* Tweak: updated all translation packs
+* Fixed: profile social links in member directory
+* Fixed: prevent storing user_pass in usermeta table
+* Fixed: php error triggered from um-access.php file
 
 = 1.0.42: February 6, 2015 =
 

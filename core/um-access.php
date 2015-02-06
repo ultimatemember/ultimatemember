@@ -33,10 +33,12 @@ class UM_Access {
 	function get_meta( $post_id ) {
 		global $post;
 		$meta = get_post_custom( $post_id );
-		foreach ($meta as $k => $v){
-			if ( strstr($k, '_um_') ) {
-				$k = str_replace('_um_', '', $k);
-				$array[$k] = $v[0];
+		if ( isset( $meta ) && is_array( $meta ) ) {
+			foreach ($meta as $k => $v){
+				if ( strstr($k, '_um_') ) {
+					$k = str_replace('_um_', '', $k);
+					$array[$k] = $v[0];
+				}
 			}
 		}
 		if ( isset( $array ) )

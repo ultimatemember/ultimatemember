@@ -2,7 +2,7 @@
 
 	<div class="um-admin-dash-col">
 	
-		<h3>Recent Members</h3>
+		<h3><?php _e('Recent Members','ultimatemember'); ?></h3>
 
 		<?php foreach( $ultimatemember->query->get_users_by_status('approved') as $user_id ) { um_fetch_user( $user_id ); ?>
 
@@ -43,7 +43,7 @@
 	<div class="um-admin-dash-col">
 	
 		<?php $users = $ultimatemember->query->get_users_by_status('awaiting_admin_review'); ?>
-		<h3>Users Awaiting Review<span class="um-admin-dash-count red count-0">0</span></h3>
+		<h3><?php _e('Users Awaiting Review','ultimatemember'); ?><span class="um-admin-dash-count red count-0">0</span></h3>
 
 		<?php foreach( $users as $user_id ) { um_fetch_user( $user_id ); ?>
 
@@ -92,7 +92,7 @@
 	<div class="um-admin-dash-col">
 	
 		<?php $users = $ultimatemember->query->get_users_by_status('awaiting_email_confirmation'); ?>
-		<h3>Pending e-mail confirmation<span class="um-admin-dash-count red count-0">0</span></h3>
+		<h3><?php _e('Pending e-mail confirmation','ultimatemember'); ?><span class="um-admin-dash-count red count-0">0</span></h3>
 
 		<?php foreach( $users as $user_id ) { um_fetch_user( $user_id ); ?>
 
@@ -125,7 +125,7 @@
 	<div class="um-admin-dash-col">
 	
 		<?php $users = $ultimatemember->query->get_users_by_status('inactive'); ?>
-		<h3>Recently Deactivated<span class="um-admin-dash-count red count-0">0</span></h3>
+		<h3><?php _e('Recently Deactivated','ultimatemember'); ?><span class="um-admin-dash-count red count-0">0</span></h3>
 
 		<?php foreach( $users as $user_id ) { um_fetch_user( $user_id ); ?>
 

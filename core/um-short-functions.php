@@ -119,6 +119,7 @@
 		}
 		$value = str_replace('https://https://','https://',$value);
 		$value = str_replace('http://https://','https://',$value);
+		$value = str_replace('https://http://','https://',$value);
 		return $value;
 	}
 	

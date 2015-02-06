@@ -17,19 +17,19 @@ $this->sections[] = array(
 				'id'       		=> 'default_role',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Default New User Role' ),
-                'desc' 	   		=> __( 'Select the default role that will be assigned to user after registration If you did not specify custom role settings per form.' ),
+                'title'    		=> __( 'Default New User Role','ultimatemember' ),
+                'desc' 	   		=> __( 'Select the default role that will be assigned to user after registration If you did not specify custom role settings per form.','ultimatemember' ),
                 'default'  		=> 'member',
 				'options' 		=> $ultimatemember->query->get_roles( ),
-				'placeholder' 	=> __('Choose user role...'),
+				'placeholder' 	=> __('Choose user role...','ultimatemember'),
         ),
 		
 		array(
 				'id'       		=> 'permalink_base',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'Profile Permalink Base' ),
-                'desc' 	   		=> __( 'Here you can control the permalink structure of the user profile URL globally' ),
+                'title'    		=> __( 'Profile Permalink Base','ultimatemember' ),
+                'desc' 	   		=> __( 'Here you can control the permalink structure of the user profile URL globally','ultimatemember' ),
                 'default'  		=> 'user_login',
 				'desc'			=> 'e.g. ' . trailingslashit( um_get_core_page('user') ) .'<strong>username</strong>/',
 				'options' 		=> array(
@@ -37,15 +37,15 @@ $this->sections[] = array(
 									'name' 				=> 'First and Last Name',
 									'user_id' 			=> 'User ID',
 				),
-				'placeholder' 	=> __('Select...')
+				'placeholder' 	=> __('Select...','ultimatemember')
         ),
 		
 		array(
 				'id'       		=> 'display_name',
                 'type'     		=> 'select',
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> __( 'User Display Name' ),
-                'desc' 	   		=> __( 'This is the name that will be displayed for users on the front end of your site. Default setting uses first/last name as display name if it exists' ),
+                'title'    		=> __( 'User Display Name','ultimatemember' ),
+                'desc' 	   		=> __( 'This is the name that will be displayed for users on the front end of your site. Default setting uses first/last name as display name if it exists','ultimatemember' ),
                 'default'  		=> 'full_name',
 				'options' 		=> array(
 									'username' 			=> 'Username',
@@ -63,17 +63,17 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'display_name_field',
                 'type'     		=> 'text',
-                'title'   		=> __( 'Display Name Custom Field(s)' ),
-				'desc' 	   		=> 'Specify the custom field meta key or custom fields seperated by comma that you want to use to display users name on the frontend of your site',
+                'title'   		=> __( 'Display Name Custom Field(s)','ultimatemember' ),
+				'desc' 	   		=> __('Specify the custom field meta key or custom fields seperated by comma that you want to use to display users name on the frontend of your site','ultimatemember'),
 				'required'		=> array( 'display_name', '=', 'field' ),
         ),
 		
         array(
                 'id'       		=> 'author_redirect',
                 'type'     		=> 'switch',
-                'title'   		=> __( 'Automatically redirect author page to their profile?' ),
+                'title'   		=> __( 'Automatically redirect author page to their profile?','ultimatemember'),
 				'default' 		=> 1,
-				'desc' 	   		=> __('If enabled, author pages will automatically redirect to the user\'s profile page'),
+				'desc' 	   		=> __('If enabled, author pages will automatically redirect to the user\'s profile page','ultimatemember'),
 				'on'			=> __('Yes','ultimatemember'),
 				'off'			=> __('No','ultimatemember'),
         ),
@@ -81,9 +81,9 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'members_page',
                 'type'     		=> 'switch',
-                'title'   		=> __( 'Enable Members Directory' ),
+                'title'   		=> __( 'Enable Members Directory','ultimatemember' ),
 				'default' 		=> 1,
-				'desc' 	   		=> 'Control whether to enable or disable member directories on this site',
+				'desc' 	   		=> __('Control whether to enable or disable member directories on this site','ultimatemember'),
 				'on'			=> __('Yes','ultimatemember'),
 				'off'			=> __('No','ultimatemember'),
         ),
@@ -91,7 +91,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'use_gravatars',
                 'type'     		=> 'switch',
-                'title'   		=> __( 'Use Gravatars?' ),
+                'title'   		=> __( 'Use Gravatars?','ultimatemember' ),
 				'default' 		=> 0,
 				'desc' 	   		=> __('Do you want to use gravatars instead of the default plugin profile photo (If the user did not upload a custom profile photo / avatar)','ultimatemember'),
 				'on'			=> __('Yes','ultimatemember'),
@@ -115,7 +115,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'account_tab_password',
                 'type'     		=> 'switch',
-                'title'   		=> __( 'Password Account Tab' ),
+                'title'   		=> __( 'Password Account Tab','ultimatemember' ),
 				'default' 		=> 1,
 				'desc' 	   		=> 'Enable/disable the Password account tab in account page',
 				'on'			=> __('On','ultimatemember'),
@@ -125,9 +125,9 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'account_tab_privacy',
                 'type'     		=> 'switch',
-                'title'   		=> __( 'Privacy Account Tab' ),
+                'title'   		=> __( 'Privacy Account Tab','ultimatemember' ),
 				'default' 		=> 1,
-				'desc' 	   		=> 'Enable/disable the Privacy account tab in account page',
+				'desc' 	   		=> __('Enable/disable the Privacy account tab in account page','ultimatemember'),
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
@@ -135,9 +135,9 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'account_tab_notifications',
                 'type'     		=> 'switch',
-                'title'   		=> __( 'Notifications Account Tab' ),
+                'title'   		=> __( 'Notifications Account Tab','ultimatemember' ),
 				'default' 		=> 1,
-				'desc' 	   		=> 'Enable/disable the Notifications account tab in account page',
+				'desc' 	   		=> __('Enable/disable the Notifications account tab in account page','ultimatemember'),
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
@@ -145,9 +145,9 @@ $this->sections[] = array(
 		array(
                 'id'       		=> 'account_tab_delete',
                 'type'     		=> 'switch',
-                'title'   		=> __( 'Delete Account Tab' ),
+                'title'   		=> __( 'Delete Account Tab','ultimatemember' ),
 				'default' 		=> 1,
-				'desc' 	   		=> 'Enable/disable the Delete account tab in account page',
+				'desc' 	   		=> __('Enable/disable the Delete account tab in account page','ultimatemember'),
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
@@ -155,8 +155,8 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'delete_account_text',
                 'type'    		=> 'editor',
-                'title'    		=> __( 'Account Deletion Custom Text' ),
-                'default'  		=> 'Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account enter your password below',
+                'title'    		=> __( 'Account Deletion Custom Text','ultimatemember' ),
+                'default'  		=> __('Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account enter your password below','ultimatemember'),
 				'desc' 	   		=> __('This is custom text that will be displayed to users before they delete their accounts from your site','ultimatemember'),
 				'args'     		=> array(
 								'teeny'            => false,
@@ -183,7 +183,7 @@ $this->sections[] = array(
                 'id'       		=> 'panic_key',
                 'type'     		=> 'text',
                 'title'   		=> __( 'Panic Key','ultimatemember' ),
-				'desc' 	   		=> 'Panic Key is a random generated key that allow you to access the WordPress backend always regardless of backend settings.',
+				'desc' 	   		=> __('Panic Key is a random generated key that allow you to access the WordPress backend always regardless of backend settings.','ultimatemember'),
 				'default'		=> $ultimatemember->validation->randomize(),
 				'desc'			=> trailingslashit( get_bloginfo('url') ).'wp-admin/?um_panic_key=<strong>your_panic_key</strong>'
         ),
@@ -194,7 +194,7 @@ $this->sections[] = array(
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
                 'title'   		=> __( 'Global Site Access','ultimatemember' ),
 				'default' 		=> 0,
-				'desc' 	   		=> 'Globally control the access of your site, you can have seperate restrict options per post/page by editing the desired item.',
+				'desc' 	   		=> __('Globally control the access of your site, you can have seperate restrict options per post/page by editing the desired item.','ultimatemember'),
 				'options' 		=> array(
 									0 		=> 'Site accessible to Everyone',
 									2 		=> 'Site accessible to Logged In Users'
@@ -205,7 +205,7 @@ $this->sections[] = array(
                 'id'       		=> 'access_redirect',
                 'type'     		=> 'text',
                 'title'   		=> __( 'Custom Redirect URL','ultimatemember' ),
-				'desc' 	   		=> 'A logged out user will be redirected to this url If he is not permitted to access the site',
+				'desc' 	   		=> __('A logged out user will be redirected to this url If he is not permitted to access the site','ultimatemember'),
 				'required'		=> array( 'accessible', '=', 2 ),
         ),
 		
@@ -224,7 +224,7 @@ $this->sections[] = array(
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Exclude restricted pages from main loop','ultimatemember' ),
 				'default' 		=> 1,
-				'desc' 	   		=> 'Whether to exclude restricted pages from main loop',
+				'desc' 	   		=> __('Whether to exclude restricted pages from main loop','ultimatemember'),
 				'on'			=> __('Yes','ultimatemember'),
 				'off'			=> __('No','ultimatemember'),
         ),
@@ -234,7 +234,7 @@ $this->sections[] = array(
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Exclude restricted pages from search loop','ultimatemember' ),
 				'default' 		=> 1,
-				'desc' 	   		=> 'Whether to exclude restricted pages from search results',
+				'desc' 	   		=> __('Whether to exclude restricted pages from search results','ultimatemember'),
 				'on'			=> __('Yes','ultimatemember'),
 				'off'			=> __('No','ultimatemember'),
         ),
@@ -244,7 +244,7 @@ $this->sections[] = array(
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Exclude restricted pages from archive loop','ultimatemember' ),
 				'default' 		=> 1,
-				'desc' 	   		=> 'Whether to exclude restricted pages from archives',
+				'desc' 	   		=> __('Whether to exclude restricted pages from archives','ultimatemember'),
 				'on'			=> __('Yes','ultimatemember'),
 				'off'			=> __('No','ultimatemember'),
         ),
@@ -254,7 +254,7 @@ $this->sections[] = array(
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Allow Backend Login Screen for Guests','ultimatemember' ),
 				'default' 		=> 1,
-				'desc' 	   		=> 'Control whether guests are able to access the WP-admin login screen or not',
+				'desc' 	   		=> __('Control whether guests are able to access the WP-admin login screen or not','ultimatemember'),
 				'on'			=> __('Yes','ultimatemember'),
 				'off'			=> __('No','ultimatemember'),
         ),
@@ -277,7 +277,7 @@ $this->sections[] = array(
                 'id'       		=> 'wpadmin_login_redirect_url',
                 'type'     		=> 'text',
                 'title'   		=> __( 'Custom URL','ultimatemember' ),
-				'desc' 	   		=> 'Enter an alternate url here to redirect a user If they try to access the backend register screen',
+				'desc' 	   		=> __('Enter an alternate url here to redirect a user If they try to access the backend register screen','ultimatemember'),
 				'required'		=> array( 'wpadmin_login_redirect', '=', 'custom_url' ),
         ),
 		
@@ -286,7 +286,7 @@ $this->sections[] = array(
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Allow Backend Register Screen for Guests','ultimatemember' ),
 				'default' 		=> 1,
-				'desc' 	   		=> 'Control whether guests are able to access the WP-admin register screen or not',
+				'desc' 	   		=> __('Control whether guests are able to access the WP-admin register screen or not','ultimatemember'),
 				'on'			=> __('Yes','ultimatemember'),
 				'off'			=> __('No','ultimatemember'),
         ),
@@ -309,7 +309,7 @@ $this->sections[] = array(
                 'id'       		=> 'wpadmin_register_redirect_url',
                 'type'     		=> 'text',
                 'title'   		=> __( 'Custom URL','ultimatemember' ),
-				'desc' 	   		=> 'Enter an alternate url here to redirect a user If they try to access the backend register screen',
+				'desc' 	   		=> __('Enter an alternate url here to redirect a user If they try to access the backend register screen','ultimatemember'),
 				'required'		=> array( 'wpadmin_register_redirect', '=', 'custom_url' ),
         ),
 		
@@ -377,7 +377,7 @@ $this->sections[] = array(
                 'type'     => 'switch',
                 'title'    => __( 'Account Welcome Email','ultimatemember' ),
 				'default'  => 1,
-				'desc' 	   => 'Whether to send the user an email when his account is automatically approved',
+				'desc' 	   => __('Whether to send the user an email when his account is automatically approved','ultimatemember'),
         ),
 		
         array(
@@ -413,7 +413,7 @@ $this->sections[] = array(
                 'type'     => 'switch',
                 'title'    => __( 'Account Activation Email','ultimatemember' ),
 				'default'  => 1,
-				'desc' 	   => 'Whether to send the user an email when his account needs e-mail activation',
+				'desc' 	   => __('Whether to send the user an email when his account needs e-mail activation','ultimatemember'),
         ),
 		
         array(
@@ -445,7 +445,7 @@ $this->sections[] = array(
                 'type'     => 'switch',
                 'title'    => __( 'Pending Review Email','ultimatemember' ),
 				'default'  => 1,
-				'desc' 	   => 'Whether to send the user an email when his account needs admin review',
+				'desc' 	   => __('Whether to send the user an email when his account needs admin review','ultimatemember'),
         ),
 		
         array(
@@ -477,7 +477,7 @@ $this->sections[] = array(
                 'type'     => 'switch',
                 'title'    => __( 'Account Approved Email','ultimatemember' ),
 				'default'  => 1,
-				'desc' 	   => 'Whether to send the user an email when his account is approved',
+				'desc' 	   => __('Whether to send the user an email when his account is approved','ultimatemember'),
         ),
 		
         array(
@@ -513,7 +513,7 @@ $this->sections[] = array(
                 'type'     => 'switch',
                 'title'    => __( 'Account Rejected Email','ultimatemember' ),
 				'default'  => 1,
-				'desc' 	   => 'Whether to send the user an email when his account is rejected',
+				'desc' 	   => __('Whether to send the user an email when his account is rejected','ultimatemember'),
         ),
 		
         array(
@@ -544,7 +544,7 @@ $this->sections[] = array(
                 'type'     => 'switch',
                 'title'    => __( 'Account Deactivated Email','ultimatemember' ),
 				'default'  => 1,
-				'desc' 	   => 'Whether to send the user an email when his account is deactivated',
+				'desc' 	   => __('Whether to send the user an email when his account is deactivated','ultimatemember'),
         ),
 		
         array(
@@ -575,7 +575,7 @@ $this->sections[] = array(
                 'type'     => 'switch',
                 'title'    => __( 'Account Deleted Email','ultimatemember' ),
 				'default'  => 1,
-				'desc' 	   => 'Whether to send the user an email when his account is deleted',
+				'desc' 	   => __('Whether to send the user an email when his account is deleted','ultimatemember'),
         ),
 		
         array(
@@ -606,7 +606,7 @@ $this->sections[] = array(
                 'type'     => 'switch',
                 'title'    => __( 'Password Reset Email','ultimatemember' ),
 				'default'  => 1,
-				'desc' 	   => 'Whether to send the user an email when he request to reset password (Recommended, please keep on)',
+				'desc' 	   => __('Whether to send the user an email when he request to reset password (Recommended, please keep on)','ultimatemember'),
         ),
 		
         array(
@@ -638,7 +638,7 @@ $this->sections[] = array(
                 'type'     => 'switch',
                 'title'    => __( 'Password Changed Email','ultimatemember' ),
 				'default'  => 1,
-				'desc' 	   => 'Whether to send the user an email when he request to reset password (Recommended, please keep on)',
+				'desc' 	   => __('Whether to send the user an email when he request to reset password (Recommended, please keep on)','ultimatemember'),
         ),
 		
         array(
@@ -691,7 +691,7 @@ $this->sections[] = array(
                 'type'     => 'switch',
                 'title'    => __( 'New User Notification','ultimatemember' ),
 				'default'  => 1,
-				'desc' 	   => 'Whether to receive notification when a new user account is approved',
+				'desc' 	   => __('Whether to receive notification when a new user account is approved','ultimatemember'),
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
@@ -716,7 +716,7 @@ $this->sections[] = array(
 								'Here is the submitted registration form:' . "\r\n\r\n" .
 								'{submitted_registration}',
 				'required' => array( 'notification_new_user_on', '=', 1 ),
-				'desc' 	   => 'This is the content of the e-mail',
+				'desc' 	   => __('This is the content of the e-mail','ultimatemember'),
         ),
 
         array(
@@ -724,7 +724,7 @@ $this->sections[] = array(
                 'type'     => 'switch',
                 'title'    => __( 'Account Needs Review Notification','ultimatemember' ),
 				'default'  => 0,
-				'desc' 	   => 'Whether to receive notification when an account needs admin review',
+				'desc' 	   => __('Whether to receive notification when an account needs admin review','ultimatemember'),
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
@@ -750,7 +750,7 @@ $this->sections[] = array(
 								'Here is the submitted registration form:' . "\r\n\r\n" .
 								'{submitted_registration}',
 				'required' => array( 'notification_review_on', '=', 1 ),
-				'desc' 	   => 'This is the content of the e-mail',
+				'desc' 	   => __('This is the content of the e-mail','ultimatemember'),
 		),
 
         array(
@@ -758,7 +758,7 @@ $this->sections[] = array(
                 'type'     => 'switch',
                 'title'    => __( 'Account Deletion Notification','ultimatemember' ),
 				'default'  => 0,
-				'desc' 	   => 'Whether to receive notification when an account is deleted',
+				'desc' 	   => __('Whether to receive notification when an account is deleted','ultimatemember'),
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
@@ -780,7 +780,7 @@ $this->sections[] = array(
                 'subtitle' => __( 'Message Body','ultimatemember' ),
                 'default'  => '{display_name} has just deleted their {site_name} account.',
 				'required' => array( 'notification_deletion_on', '=', 1 ),
-				'desc' 	   => 'This is the content of the e-mail',
+				'desc' 	   => __('This is the content of the e-mail','ultimatemember'),
         ),
 
 	)
@@ -861,9 +861,9 @@ $this->sections[] = array(
         array(
                 'id'      		=> 'profile_title',
                 'type'     		=> 'text',
-                'title'    		=> __( 'User Profile Title','ultimatemember' ),
+                'title'    		=> __('User Profile Title','ultimatemember'),
                 'default'  		=> '{display_name} | ' . get_bloginfo('name'),
-				'desc' 	   		=> 'This is the title that is displayed on a specific user profile',
+				'desc' 	   		=> __('This is the title that is displayed on a specific user profile','ultimatemember'),
         ),
 
         array(
@@ -1016,7 +1016,7 @@ $this->sections[] = array(
                 'type'     		=> 'text',
                 'title'    		=> __( 'Field Border Style','ultimatemember' ),
                 'default'  		=> um_get_metadefault('form_border'),
-				'desc' 	   		=> 'The default border-style for input/fields in UM forms',
+				'desc' 	   		=> __('The default border-style for input/fields in UM forms','ultimatemember'),
         ),
 		
         array(
@@ -1107,7 +1107,7 @@ $this->sections[] = array(
                 'type'     		=> 'text',
                 'title'    		=> __( 'Profile Area Maximum Width','ultimatemember' ),
                 'default'  		=> um_get_metadefault('profile_area_max_width'),
-				'desc' 	   		=> 'The maximum width of the profile area inside profile (below profile header)',
+				'desc' 	   		=> __('The maximum width of the profile area inside profile (below profile header)','ultimatemember'),
         ),
 		
 		array(
@@ -1143,7 +1143,7 @@ $this->sections[] = array(
                 'type'     		=> 'text',
                 'title'    		=> __( 'Profile Primary Button Text','ultimatemember' ),
                 'default'  		=> um_get_metadefault('profile_primary_btn_word'),
-				'desc' 	   		=> 'The text that is used for updating profile button',
+				'desc' 	   		=> __('The text that is used for updating profile button','ultimatemember'),
         ),
 		
         array(
@@ -1151,7 +1151,7 @@ $this->sections[] = array(
                 'type'     		=> 'switch',
                 'title'    		=> __( 'Profile Secondary Button','ultimatemember' ),
 				'default' 		=> 1,
-				'desc' 	   		=> 'Switch on/off the secondary button display in the form',
+				'desc' 	   		=> __('Switch on/off the secondary button display in the form','ultimatemember'),
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
@@ -1161,7 +1161,7 @@ $this->sections[] = array(
                 'type'     		=> 'text',
                 'title'    		=> __( 'Profile Secondary Button Text','ultimatemember' ),
                 'default'  		=> um_get_metadefault('profile_secondary_btn_word'),
-				'desc' 	   		=> 'The text that is used for cancelling update profile button',
+				'desc' 	   		=> __('The text that is used for cancelling update profile button','ultimatemember'),
 				'required'		=> array( 'profile_secondary_btn', '=', 1 ),
         ),
 		
@@ -1217,7 +1217,7 @@ $this->sections[] = array(
                 'type'     		=> 'text',
                 'title'    		=> __( 'Profile Photo Size','ultimatemember' ),
                 'default'  		=> um_get_metadefault('profile_photosize'),
-				'desc' 	   		=> 'The global default of profile photo size. This can be overridden by individual form settings',
+				'desc' 	   		=> __('The global default of profile photo size. This can be overridden by individual form settings','ultimatemember'),
         ),
 		
 		array(
@@ -1239,7 +1239,7 @@ $this->sections[] = array(
                 'type'     		=> 'switch',
                 'title'    		=> __( 'Profile Cover Photos','ultimatemember' ),
 				'default' 		=> 1,
-				'desc' 	   		=> 'Switch on/off the profile cover photos',
+				'desc' 	   		=> __('Switch on/off the profile cover photos','ultimatemember'),
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
@@ -1319,7 +1319,7 @@ $this->sections[] = array(
                 'type'     		=> 'switch',
                 'title'    		=> __( 'Show display name in profile header','ultimatemember' ),
 				'default' 		=> um_get_metadefault('profile_show_name'),
-				'desc' 	   		=> 'Switch on/off the user name on profile header',
+				'desc' 	   		=> __('Switch on/off the user name on profile header','ultimatemember'),
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
@@ -1329,7 +1329,7 @@ $this->sections[] = array(
                 'type'     		=> 'switch',
                 'title'    		=> __( 'Show user description in header','ultimatemember' ),
 				'default' 		=> um_get_metadefault('profile_show_bio'),
-				'desc' 	   		=> 'Switch on/off the user description on profile header',
+				'desc' 	   		=> __('Switch on/off the user description on profile header','ultimatemember'),
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
@@ -1339,7 +1339,7 @@ $this->sections[] = array(
                 'type'     		=> 'text',
                 'title'    		=> __( 'User description maximum chars','ultimatemember' ),
                 'default'  		=> um_get_metadefault('profile_bio_maxchars'),
-				'desc' 	   		=> 'Maximum number of characters to allow in user description field in header.',
+				'desc' 	   		=> __('Maximum number of characters to allow in user description field in header.','ultimatemember'),
 				'required'		=> array( 'profile_show_bio', '=', 1 ),
         ),
 		
@@ -1361,7 +1361,7 @@ $this->sections[] = array(
                 'type'     		=> 'switch',
                 'title'    		=> __( 'Show a custom message if profile is empty','ultimatemember' ),
 				'default' 		=> um_get_metadefault('profile_empty_text'),
-				'desc' 	   		=> 'Switch on/off the custom message that appears when the profile is empty',
+				'desc' 	   		=> __('Switch on/off the custom message that appears when the profile is empty','ultimatemember'),
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
@@ -1371,7 +1371,7 @@ $this->sections[] = array(
                 'type'     		=> 'switch',
                 'title'    		=> __( 'Show the emoticon','ultimatemember' ),
 				'default' 		=> um_get_metadefault('profile_empty_text_emo'),
-				'desc' 	   		=> 'Switch on/off the emoticon (sad face) that appears above the message',
+				'desc' 	   		=> __('Switch on/off the emoticon (sad face) that appears above the message','ultimatemember'),
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
 				'required'		=> array( 'profile_empty_text', '=', 1 ),
@@ -1463,7 +1463,7 @@ $this->sections[] = array(
                 'type'     		=> 'text',
                 'title'    		=> __( 'Registration Maximum Width','ultimatemember' ),
                 'default'  		=> um_get_metadefault('register_max_width'),
-				'desc' 	   		=> 'The maximum width this shortcode can take from the page width',
+				'desc' 	   		=> __('The maximum width this shortcode can take from the page width','ultimatemember'),
         ),
 		
 		array(
@@ -1499,7 +1499,7 @@ $this->sections[] = array(
                 'type'     		=> 'text',
                 'title'    		=> __( 'Registration Primary Button Text','ultimatemember' ),
                 'default'  		=> um_get_metadefault('register_primary_btn_word'),
-				'desc' 	   		=> 'The text that is used for primary button text',
+				'desc' 	   		=> __('The text that is used for primary button text','ultimatemember'),
         ),
 		
         array(
@@ -1507,7 +1507,7 @@ $this->sections[] = array(
                 'type'     		=> 'switch',
                 'title'    		=> __( 'Registration Secondary Button','ultimatemember' ),
 				'default' 		=> 1,
-				'desc' 	   		=> 'Switch on/off the secondary button display in the form',
+				'desc' 	   		=> __('Switch on/off the secondary button display in the form','ultimatemember'),
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
@@ -1517,7 +1517,7 @@ $this->sections[] = array(
                 'type'     		=> 'text',
                 'title'    		=> __( 'Registration Secondary Button Text','ultimatemember' ),
                 'default'  		=> um_get_metadefault('register_secondary_btn_word'),
-				'desc' 	   		=> 'The text that is used for the secondary button text',
+				'desc' 	   		=> __('The text that is used for the secondary button text','ultimatemember'),
 				'required'		=> array( 'register_secondary_btn', '=', 1 ),
         ),
 		
@@ -1556,7 +1556,7 @@ $this->sections[] = array(
                 'type'     		=> 'text',
                 'title'    		=> __( 'Login Maximum Width','ultimatemember' ),
                 'default'  		=> um_get_metadefault('login_max_width'),
-				'desc' 	   		=> 'The maximum width this shortcode can take from the page width',
+				'desc' 	   		=> __('The maximum width this shortcode can take from the page width','ultimatemember'),
         ),
 		
 		array(
@@ -1592,7 +1592,7 @@ $this->sections[] = array(
                 'type'     		=> 'text',
                 'title'    		=> __( 'Login Primary Button Text','ultimatemember' ),
                 'default'  		=> um_get_metadefault('login_primary_btn_word'),
-				'desc' 	   		=> 'The text that is used for primary button text',
+				'desc' 	   		=> __('The text that is used for primary button text','ultimatemember'),
         ),
 		
         array(
@@ -1600,7 +1600,7 @@ $this->sections[] = array(
                 'type'     		=> 'switch',
                 'title'    		=> __( 'Login Secondary Button','ultimatemember' ),
 				'default' 		=> 1,
-				'desc' 	   		=> 'Switch on/off the secondary button display in the form',
+				'desc' 	   		=> __('Switch on/off the secondary button display in the form','ultimatemember'),
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
@@ -1610,7 +1610,7 @@ $this->sections[] = array(
                 'type'     		=> 'text',
                 'title'    		=> __( 'Login Secondary Button Text','ultimatemember' ),
                 'default'  		=> um_get_metadefault('login_secondary_btn_word'),
-				'desc' 	   		=> 'The text that is used for the secondary button text',
+				'desc' 	   		=> __('The text that is used for the secondary button text','ultimatemember'),
 				'required'		=> array( 'login_secondary_btn', '=', 1 ),
         ),
 		
@@ -1619,7 +1619,7 @@ $this->sections[] = array(
                 'type'     		=> 'switch',
                 'title'    		=> __( 'Login Forgot Password Link','ultimatemember' ),
 				'default' 		=> 1,
-				'desc' 	   		=> 'Switch on/off the forgot password link in login form',
+				'desc' 	   		=> __('Switch on/off the forgot password link in login form','ultimatemember'),
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
