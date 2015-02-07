@@ -1,17 +1,34 @@
 <?php
 
-	/***
-	***	@Get user IP
-	***/
-	function um_user_ip() {
-		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-			return $_SERVER['HTTP_CLIENT_IP'];
+/**
+ * @function um_user_ip()
+ *
+ * @description This function returns the IP address of user.
+ *
+ * @usage <?php $user_ip = um_user_ip(); ?>
+ *
+ * @returns Returns the user's IP address.
+ *
+ * @example The example below can retrieve the user's IP address
 
-		} else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) { 
-			return $_SERVER['HTTP_X_FORWARDED_FOR'];
-		}
-		return $_SERVER['REMOTE_ADDR'];
+	<?php
+	
+		$user_ip = um_user_ip();
+		echo 'User IP address is: ' . $user_ip; // prints the user IP address e.g. 127.0.0.1
+		
+	?>
+
+ *
+ *
+ */
+function um_user_ip() {
+	if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+		return $_SERVER['HTTP_CLIENT_IP'];
+	} else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) { 
+		return $_SERVER['HTTP_X_FORWARDED_FOR'];
 	}
+	return $_SERVER['REMOTE_ADDR'];
+}
 
 	/***
 	***	@If conditions are met return true;
@@ -144,19 +161,40 @@
 		return $value;
 	}
 	
-	/***
-	***	@profile user ID
-	***/
-	function um_profile_id() {
+/**
+ * @function um_profile_id()
+ *
+ * @description This function returns the user ID for current profile.
+ *
+ * @usage <?php $user_id = um_profile_id(); ?>
+ *
+ * @returns Returns the user ID of profile if found, or current user ID if user is logged in. Also returns blank 
+   if no user ID is set.
+ *
+ * @example The example below will retrieve the user ID when viewing someone profile.
+
+	<?php
 	
-		if ( um_get_requested_user() ) {
-			return um_get_requested_user();
-		} else if ( is_user_logged_in() && get_current_user_id() ) {
-			return get_current_user_id();
+		$user_id = um_profile_id();
+		if ( $user_id == 1 ) {
+			echo 'This is administrator profile.';
 		}
 		
-		return 0;
+	?>
+
+ *
+ *
+ */
+function um_profile_id() {
+	
+	if ( um_get_requested_user() ) {
+		return um_get_requested_user();
+	} else if ( is_user_logged_in() && get_current_user_id() ) {
+		return get_current_user_id();
 	}
+		
+	return 0;
+}
 
 	/***
 	***	@Check that temp upload is valid
@@ -346,21 +384,49 @@
 		return $ultimatemember->members->results[ $argument ];
 	}
 	
-	/***
-	***	@reset user clean
-	***/
-	function um_reset_user_clean() {
-		global $ultimatemember;
-		$ultimatemember->user->reset( true );
-	}
+/**
+ * @function um_reset_user_clean()
+ *
+ * @description This function is similar to um_reset_user() with a difference that it will not use the logged-in user
+	data after resetting. It is a hard-reset function for all user data.
+ *
+ * @usage <?php um_reset_user_clean(); ?>
+ *
+ * @returns Clears the user data. You need to fetch a user manually after using this function.
+ *
+ * @example You can reset user data by using the following line in your code
+
+	<?php um_reset_user_clean(); ?>
+
+ *
+ *
+ */
+function um_reset_user_clean() {
+	global $ultimatemember;
+	$ultimatemember->user->reset( true );
+}
 	
-	/***
-	***	@reset user
-	***/
-	function um_reset_user() {
-		global $ultimatemember;
-		$ultimatemember->user->reset();
-	}
+/**
+ * @function um_reset_user()
+ *
+ * @description This function resets the current user. You can use it to reset user data after
+	retrieving the details of a specific user.
+ *
+ * @usage <?php um_reset_user(); ?>
+ *
+ * @returns Clears the user data. If a user is logged in, the user data will be reset to that user's data
+ *
+ * @example You can reset user data by using the following line in your code
+
+	<?php um_reset_user(); ?>
+
+ *
+ *
+ */
+function um_reset_user() {
+	global $ultimatemember;
+	$ultimatemember->user->reset();
+}
 	
 	/***
 	***	@gets the queried user
@@ -479,7 +545,10 @@
 	***/
 	function um_can_edit_field( $data ) {
 		global $ultimatemember;
-		if ( $ultimatemember->fields->editing == true && $ultimatemember->fields->set_mode == 'profile' ) {
+		
+		if ( isset( $ultimatemember->fields->editing ) && $ultimatemember->fields->editing == true && 
+				isset( $ultimatemember->fields->set_mode ) && $ultimatemember->fields->set_mode == 'profile' ) {
+					
 			if ( is_user_logged_in() && isset( $data['editable'] ) && $data['editable'] == 0 ) {
 				
 				if ( um_is_user_himself() && !um_user('can_edit_everyone') )
@@ -489,8 +558,11 @@
 					return false;
 					
 			}
+			
 		}
+		
 		return true;
+		
 	}
 	
 	/***
@@ -567,29 +639,49 @@
 		return um_get_option('admin_email');
 	}
 	
-	/***
-	***	@Gets an option from DB
-	***/
-	function um_get_option($option_id) {
-		global $ultimatemember;
-		$um_options = $ultimatemember->options;
-		if ( isset($um_options[$option_id]) && !empty( $um_options[$option_id] ) )	{
-			return $um_options[$option_id];
-		}
-		
-		switch($option_id){
-		
-			case 'site_name':
-				return get_bloginfo('name');
-				break;
-				
-			case 'admin_email':
-				return get_bloginfo('admin_email');
-				break;
-				
-		}
-		
+/**
+ * @function um_get_option()
+ *
+ * @description This function returns the value of an option or setting.
+ *
+ * @usage <?php $value = um_get_option( $setting ); ?>
+ *
+ * @param $option_id (string) (required) The option or setting that you want to retrieve
+ *
+ * @returns Returns the value of the setting you requested, or a blank value if the setting
+	does not exist.
+ *
+ * @example Get default user role set in global options
+
+	<?php $default_role = um_get_option('default_role'); ?>
+
+ *
+ * @example Get blocked IP addresses set in backend
+ 
+	<?php $blocked_ips = um_get_option('blocked_ips'); ?>
+	
+ *
+ */
+function um_get_option($option_id) {
+	global $ultimatemember;
+	$um_options = $ultimatemember->options;
+	if ( isset($um_options[$option_id]) && !empty( $um_options[$option_id] ) )	{
+		return $um_options[$option_id];
 	}
+		
+	switch($option_id){
+		
+		case 'site_name':
+			return get_bloginfo('name');
+			break;
+				
+		case 'admin_email':
+			return get_bloginfo('admin_email');
+			break;
+				
+	}
+		
+}
 	
 	/***
 	***	@Display a link to profile page
@@ -607,13 +699,42 @@
 		return $ultimatemember->query->get_roles();
 	}
 	
-	/***
-	***	@Sets up a user profile by ID
-	***/
-	function um_fetch_user( $user_id ) {
-		global $ultimatemember;
-		$ultimatemember->user->set( $user_id );
-	}
+/**
+ * @function um_fetch_user()
+ *
+ * @description This function sets a user and allow you to retrieve any information for the retrieved user
+ *
+ * @usage <?php um_fetch_user( $user_id ); ?>
+ *
+ * @param $user_id (numeric) (required) A user ID is required. This is the user's ID that you wish to set/retrieve
+ *
+ * @returns Sets a specific user and prepares profile data and user permissions and makes them accessible.
+ *
+ * @example The example below will set user ID 5 prior to retrieving his profile information.
+
+	<?php
+	
+		um_fetch_user(5);
+		echo um_user('display_name'); // returns the display name of user ID 5
+		
+	?>
+
+ *
+ * @example In the following example you can fetch the profile of a logged-in user dynamically.
+ 
+	<?php
+	
+		um_fetch_user( get_current_user_id() );
+		echo um_user('display_name'); // returns the display name of logged-in user
+		
+	?>
+ 
+ *
+ */
+function um_fetch_user( $user_id ) {
+	global $ultimatemember;
+	$ultimatemember->user->set( $user_id );
+}
 	
 	/***
 	***	@Load profile key
@@ -724,164 +845,192 @@
 		return '';
 	}
 	
-	/***
-	***	@get user data
-	***/
-	function um_user( $data, $attrs = null ) {
-		global $ultimatemember;
+/**
+ * @function um_user()
+ *
+ * @description This function can be used to get user's data. This can be user profile data or user permissions.
+ *
+ * @usage <?php echo um_user( $data ); ?>
+ *
+ * @param $data (string) (required) The field or data you want to retrieve for user.
+ * @param $attrs (string) (optional) Additional attribute for profile data that may need extra configuration.
+ *
+ * @returns Returns the user data requested If found. A user must be previously set using um_fetch_user() to 
+	properly retrieve user data.
+ *
+ * @example The example below can retrieve the user's display name
+
+	<?php
+	
+		$display_name = um_user('display_name');
+		echo $display_name; // prints the user's display name
 		
-		switch($data){
+	?>
+
+ *
+ * @example The example below can retrieve user's community role
+ 
+	<?php echo um_user('role_name'); // example: Member or Admin ?>
+ 
+ *
+ */
+function um_user( $data, $attrs = null ) {
+	
+	global $ultimatemember;
 		
-			default:
+	switch($data){
+		
+		default:
 			
-				$value = um_profile($data);
+			$value = um_profile($data);
 				
-				if ( $ultimatemember->validation->is_serialized( $value ) ) {
-					$value = unserialize( $value );
-				}
+			if ( $ultimatemember->validation->is_serialized( $value ) ) {
+				$value = unserialize( $value );
+			}
 				
-				return $value;
+			return $value;
+			break;
 				
-				break;
+		case 'full_name':
+			
+			if ( !um_profile( $data ) ) {
 				
-			case 'full_name':
-				if ( !um_profile( $data ) ) {
-				
-					if ( um_user('first_name') && um_user('last_name') ) {
-						$full_name = um_user('first_name') . '.' . um_user('last_name');
-					} else {
-						$full_name = um_user('display_name');
-					}
-					
-					$full_name = $ultimatemember->validation->safe_name_in_url( $full_name );
-					update_user_meta( um_user('ID'), 'full_name', $full_name );
-					
-					return $full_name;
-					
+				if ( um_user('first_name') && um_user('last_name') ) {
+					$full_name = um_user('first_name') . '.' . um_user('last_name');
 				} else {
-				
-					return um_profile( $data );
+					$full_name = um_user('display_name');
+				}
 					
-				}
-				break;
-				
-			case 'display_name':
-			
-				$op = um_get_option('display_name');
-				
-				if ( $op == 'full_name' ) {
-					if ( um_user('first_name') && um_user('last_name') ) {
-						return um_user('first_name') . ' ' . um_user('last_name');
-					} else {
-						return um_profile( $data );
-					}
-				}
-				
-				if ( $op == 'sur_name' ) {
-					if ( um_user('first_name') && um_user('last_name') ) {
-						return um_user('last_name') . ', ' . um_user('first_name');
-					} else {
-						return um_profile( $data );
-					}
-				}
-				
-				if ( $op == 'first_name' ) {
-					if ( um_user('first_name') ) {
-						return um_user('first_name');
-					} else {
-						return um_profile( $data );
-					}
-				}
-				
-				if ( $op == 'username' ) {
-					return um_user('user_login');
-				}
-				
-				if ( $op == 'initial_name' ) {
-					if ( um_user('first_name') && um_user('last_name') ) {
-						$initial = um_user('last_name');
-						return um_user('first_name') . ' ' . $initial[0];
-					} else {
-						return um_profile( $data );
-					}
-				}
-				
-				if ( $op == 'initial_name_f' ) {
-					if ( um_user('first_name') && um_user('last_name') ) {
-						$initial = um_user('first_name');
-						return $initial[0] . ' ' . um_user('last_name');
-					} else {
-						return um_profile( $data );
-					}
-				}
-				
-				if ( $op == 'public_name' ) {
-					return um_profile( $data );
-				}
-				
-				if ( $op == 'field' && um_get_option('display_name_field') != '' ) {
-					$fields = array_filter(preg_split('/[,\s]+/', um_get_option('display_name_field') )); 
-					$output = '';
-					foreach( $fields as $field ) {
-						$output .= um_profile( $field ) . ' ';
-					}
-					return $output;
-				}
+				$full_name = $ultimatemember->validation->safe_name_in_url( $full_name );
+				update_user_meta( um_user('ID'), 'full_name', $full_name );
+					
+				return $full_name;
+					
+			} else {
 				
 				return um_profile( $data );
+					
+			}
+			break;
 				
-				break;
+		case 'display_name':
+			
+			$op = um_get_option('display_name');
 				
-			case 'role_select':
-			case 'role_radio':
-				return um_user('role_name');
-				break;
-				
-			case 'submitted':
-				$array = um_profile($data);
-				if ( empty( $array ) ) return '';
-				$array = unserialize( $array );
-				return $array;	
-				break;
-
-			case 'password_reset_link':
-				return $ultimatemember->password->reset_url();
-				break;
-				
-			case 'account_activation_link':
-				return $ultimatemember->permalinks->activate_url();
-				break;
-
-			case 'profile_photo':
-				
-				if ( um_profile('profile_photo') ) {
-					$avatar_uri = um_get_avatar_uri( um_profile('profile_photo'), $attrs );
+			if ( $op == 'full_name' ) {
+				if ( um_user('first_name') && um_user('last_name') ) {
+					return um_user('first_name') . ' ' . um_user('last_name');
 				} else {
-					$avatar_uri = um_get_default_avatar_uri();
+					return um_profile( $data );
 				}
+			}
 				
-				if ( $avatar_uri )
-					return '<img src="' . $avatar_uri . '" class="gravatar avatar avatar-'.$attrs.' um-avatar" width="'.$attrs.'" height="'.$attrs.'" alt="" />';
-				
-				if ( !$avatar_uri )
-					return '';
-				
-				break;
-
-			case 'cover_photo':
-				if ( um_profile('cover_photo') ) {
-					$cover_uri = um_get_cover_uri( um_profile('cover_photo'), $attrs );
+			if ( $op == 'sur_name' ) {
+				if ( um_user('first_name') && um_user('last_name') ) {
+					return um_user('last_name') . ', ' . um_user('first_name');
 				} else {
-					$cover_uri = um_get_default_cover_uri();
+					return um_profile( $data );
 				}
+			}
 				
-				if ( $cover_uri )
-					return '<img src="'. $cover_uri .'" alt="" />';
+			if ( $op == 'first_name' ) {
+				if ( um_user('first_name') ) {
+					return um_user('first_name');
+				} else {
+					return um_profile( $data );
+				}
+			}
 				
-				if ( !$cover_uri )
-					return '';
+			if ( $op == 'username' ) {
+				return um_user('user_login');
+			}
 				
-				break;
+			if ( $op == 'initial_name' ) {
+				if ( um_user('first_name') && um_user('last_name') ) {
+					$initial = um_user('last_name');
+					return um_user('first_name') . ' ' . $initial[0];
+				} else {
+					return um_profile( $data );
+				}
+			}
 				
-		}
+			if ( $op == 'initial_name_f' ) {
+				if ( um_user('first_name') && um_user('last_name') ) {
+					$initial = um_user('first_name');
+					return $initial[0] . ' ' . um_user('last_name');
+				} else {
+					return um_profile( $data );
+				}
+			}
+				
+			if ( $op == 'public_name' ) {
+				return um_profile( $data );
+			}
+				
+			if ( $op == 'field' && um_get_option('display_name_field') != '' ) {
+				$fields = array_filter(preg_split('/[,\s]+/', um_get_option('display_name_field') )); 
+				$output = '';
+				foreach( $fields as $field ) {
+					$output .= um_profile( $field ) . ' ';
+				}
+				return $output;
+			}
+				
+			return um_profile( $data );
+				
+			break;
+				
+		case 'role_select':
+		case 'role_radio':
+			return um_user('role_name');
+			break;
+				
+		case 'submitted':
+			$array = um_profile($data);
+			if ( empty( $array ) ) return '';
+			$array = unserialize( $array );
+			return $array;	
+			break;
+
+		case 'password_reset_link':
+			return $ultimatemember->password->reset_url();
+			break;
+				
+		case 'account_activation_link':
+			return $ultimatemember->permalinks->activate_url();
+			break;
+
+		case 'profile_photo':
+				
+			if ( um_profile('profile_photo') ) {
+				$avatar_uri = um_get_avatar_uri( um_profile('profile_photo'), $attrs );
+			} else {
+				$avatar_uri = um_get_default_avatar_uri();
+			}
+				
+			if ( $avatar_uri )
+				return '<img src="' . $avatar_uri . '" class="gravatar avatar avatar-'.$attrs.' um-avatar" width="'.$attrs.'" height="'.$attrs.'" alt="" />';
+				
+			if ( !$avatar_uri )
+				return '';
+				
+			break;
+
+		case 'cover_photo':
+			if ( um_profile('cover_photo') ) {
+				$cover_uri = um_get_cover_uri( um_profile('cover_photo'), $attrs );
+			} else {
+				$cover_uri = um_get_default_cover_uri();
+			}
+				
+			if ( $cover_uri )
+				return '<img src="'. $cover_uri .'" alt="" />';
+				
+			if ( !$cover_uri )
+				return '';
+				
+			break;
+
 	}
+	
+}

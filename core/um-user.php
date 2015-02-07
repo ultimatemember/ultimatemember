@@ -26,10 +26,11 @@ class UM_User {
 			'user_email',
 			'user_pass',
 			'user_password',
+			'display_name',
 		);
 		
 		$this->target_id = null;
-		
+
 	}
 	
 	/***
@@ -127,7 +128,7 @@ class UM_User {
 			foreach($this->usermeta as $k=>$v){
 				$this->profile[$k] = $v[0];
 			}
-			
+
 			// add user stuff
 			$this->profile['post_count'] = $ultimatemember->query->count_posts($this->id);
 			$this->profile['comment_count'] = $ultimatemember->query->count_comments($this->id);

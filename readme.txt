@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.43
+Stable Tag: 1.0.44
 
 License: GNU Version 2 or Any Later Version
 
@@ -184,6 +184,14 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.44: February 8, 2015 =
+
+* Tweak: improved performance: unused user photos are deleted when user upload
+* Tweak: cleaned up dashboard code
+* Tweak: updated current translations
+* Fixed: display name field should be updated with wp_update_user and not in usermeta
+* Fixed: admin js and css should are loaded in UM backend only
 
 = 1.0.43: February 7, 2015 =
 

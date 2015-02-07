@@ -7,35 +7,21 @@
 		<div class="um-admin-dash-head-logo">
 			<h2>Dashboard</h2>
 			<span><?php echo ultimatemember_version; ?></span>
-		</div>
-		
-		<div class="um-admin-clear"></div>
-	
+		</div><div class="um-admin-clear"></div>
+
 	</div>
 	
 	<div class="um-admin-dash-body">
-	
-		<div class="um-admin-dash-nav">
-		
-			<a href="#" class="active" data-rel="overview"><span class="um-admin-dash-nav-title">Dashboard Overview</span></a>
-			
-		</div>
-		
+
 		<div class="um-admin-dash-main">
 			
-			<?php $tabs = array('overview'); ?>
+			<div class="um-admin-dash-content">
 			
-			<?php foreach( $tabs as $tab ) { ?>
-			<div class="um-admin-dash-content" id="<?php echo $tab; ?>">
-			
-				<?php include_once um_path . 'admin/templates/dashboard/'. $tab . '.php'; ?>
-				
+				<?php include_once um_path . 'admin/templates/dashboard/overview.php'; ?>
+
 			</div>
-			<?php } ?>
 			
-		</div>
-		
-		<div class="um-admin-clear"></div>
+		</div><div class="um-admin-clear"></div>
 	
 	</div>
 

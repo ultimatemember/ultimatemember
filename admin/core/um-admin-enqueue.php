@@ -232,9 +232,7 @@ class UM_Admin_Enqueue {
 		if ( strstr( $screen_id, 'ultimatemember') || strstr( $screen_id, 'um_') || strstr($screen_id, 'user') || strstr($screen_id, 'profile') )return true;
 		
 		if ( $screen_id == 'nav-menus' ) return true;
-		
-		if ( isset( $post->post_type ) ) return true;
-		
+
 		return false;
 		
 	}
@@ -252,36 +250,33 @@ class UM_Admin_Enqueue {
 	***	@Enqueue scripts and styles
 	***/
 	function admin_enqueue_scripts(){
-		global $ultimatemember;
+		global $ultimatemember, $post;
 		
 		if ( $this->is_UM_admin() ) {
 
-		$ultimatemember->styles->wp_enqueue_scripts();
+			$ultimatemember->styles->wp_enqueue_scripts();
+
+			$this->load_global_css();
+			$this->load_form();
+			$this->load_modal();
+			$this->load_dashboard();
+			$this->load_field();
+			$this->load_users_js();
+			$this->load_builder();
+			$this->load_redux_css();
+			$this->load_css();
+			$this->load_core_wp();
+			$this->load_ajax_js();
+			$this->load_custom_scripts();
 		
-		$this->load_global_css();
-		
-		$this->load_form();
-		
-		$this->load_modal();
-		
-		$this->load_dashboard();
-		
-		$this->load_field();
-		
-		$this->load_users_js();
-		
-		$this->load_builder();
-		
-		$this->load_redux_css();
-		
-		$this->load_css();
-		
-		$this->load_core_wp();
-		
-		$this->load_ajax_js();
-		
-		$this->load_custom_scripts();
-		
+		} else if ( isset( $post->post_type ) ) {
+			
+			$ultimatemember->styles->wp_enqueue_scripts();
+			
+			$this->load_global_css();
+			$this->load_css();
+			$this->load_custom_scripts();
+			
 		}
 		
 	}

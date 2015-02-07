@@ -502,15 +502,10 @@ class UM_Files {
 		rmdir( $dir );
 
 		// update user's meta
-		$existing = get_user_meta( $user_id, $key, true );
-		if ( $existing ) {
-			$file = basename( $existing );
-			if ( $file != $filename ) {
-				$delete_src = $this->upload_basedir . $user_id . '/' . basename( $existing );
-				unlink( $delete_src );
-			}
-		}
 		update_user_meta( $user_id, $key, $filename );
+		
+		// this action is executed after upload
+		do_action('um_after_user_upload', $user_id );
 
 		// the url of upload
 		return $this->upload_baseurl . $user_id . '/' . $filename;
