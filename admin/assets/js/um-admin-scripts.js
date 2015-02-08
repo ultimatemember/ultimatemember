@@ -1,16 +1,3 @@
-function um_admin_live_update_scripts() {
-
-	jQuery('.um-admin-modal-body:visible select').select2({
-		allowClear: false,
-		minimumResultsForSearch: 10
-	});
-
-	jQuery('.um-adm-conditional').each(function(){jQuery(this).trigger('change');});
-	
-	jQuery('.um-admin-colorpicker').wpColorPicker();
-	
-}
-
 jQuery(document).ready(function() {
 
 	/**

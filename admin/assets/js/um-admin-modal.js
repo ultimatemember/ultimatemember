@@ -1,3 +1,16 @@
+function um_admin_live_update_scripts() {
+
+	jQuery('.um-admin-modal-body:visible select').select2({
+		allowClear: false,
+		minimumResultsForSearch: 10
+	});
+
+	jQuery('.um-adm-conditional').each(function(){jQuery(this).trigger('change');});
+	
+	jQuery('.um-admin-colorpicker').wpColorPicker();
+	
+}
+
 function um_admin_new_modal( id, ajax, size ){
 	
 	var modal = jQuery('body').find('.um-admin-overlay');

@@ -90,7 +90,9 @@ class UM_Rewrite {
 				
 				// Try nice name
 				if ( !$user_id ) {
-					$the_user = get_user_by( 'slug', um_queried_user() );
+					$slug = um_queried_user();
+					$slug = str_replace('.','-',$slug);
+					$the_user = get_user_by( 'slug', $slug );
 					if ( isset( $the_user->ID ) ){
 						$user_id = $the_user->ID;
 					}

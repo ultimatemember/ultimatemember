@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.45
+Stable Tag: 1.0.46
 
 License: GNU Version 2 or Any Later Version
 
@@ -124,6 +124,7 @@ Ultimate Member has been translated into the following languages:
 
 * English (US)
 * French
+* Spanish
 * German
 * Italian
 * Turkish
@@ -184,6 +185,15 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.46: February 8, 2015 =
+
+(Update Recommended)
+
+* New: added Spanish language pack
+* Fixed: important JS conflict in admin when UM is active
+* Fixed: profile permalink issue for e-mail usernames
+* Fixed: installation issue on some WP databases
 
 = 1.0.45: February 8, 2015 =
 

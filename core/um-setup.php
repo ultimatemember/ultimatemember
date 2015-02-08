@@ -345,12 +345,13 @@ class UM_Setup {
 						'post_title'		=> $array['title'],
 						'post_content'		=> $content,
 						'post_name'			=> $slug,
-						'post_type' 	  	=> 'page',
+						'post_type' 	  	=> 'post',
 						'post_status'		=> 'publish',
 						'post_author'   	=> um_user('ID'),
 					);
 					
 					$post_id = wp_insert_post( $user_page );
+					wp_update_post( array('ID' => $post_id, 'post_type' => 'page' ) );
 					
 					update_post_meta($post_id, '_um_core', $slug);
 					

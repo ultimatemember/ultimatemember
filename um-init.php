@@ -16,10 +16,11 @@ class UM_API {
 		
 		$this->available_languages = array(
 			'en_US' => 'English (US)',
+			'es_ES' => 'Español',
 			'fr_FR' => 'Français',
+			'it_IT' => 'Italiano',
 			'de_DE'	=> 'Deutsch',
 			'tr_TR' => 'Türkçe',
-			'it_IT' => 'Italiano'
 		);
 		
 	}
