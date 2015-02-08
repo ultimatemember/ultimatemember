@@ -80,6 +80,11 @@
 				
 					if ( !in_array( $field, $ultimatemember->members->core_search_fields ) ) {
 						
+						if ( strstr($field, 'role_' ) ) {
+							$field = 'role';
+							$operator = '=';
+						}
+						
 						$query_args['meta_query'][] = array(
 							'key' => $field,
 							'value' => $value,

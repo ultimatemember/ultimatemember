@@ -111,6 +111,10 @@ class UM_Admin_Notices {
 		$update = $_REQUEST['update'];
 		switch($update) {
 			
+			case 'purged_temp':
+				$messages[0]['content'] = __('Your temp uploads directory is now clean.','ultimatemember');
+				break;
+				
 			case 'form_duplicated':
 				$messages[0]['content'] = __('The form has been duplicated successfully.','ultimatemember');
 				break;

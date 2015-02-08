@@ -504,9 +504,6 @@ class UM_Files {
 		// update user's meta
 		update_user_meta( $user_id, $key, $filename );
 		
-		// this action is executed after upload
-		do_action('um_after_user_upload', $user_id );
-
 		// the url of upload
 		return $this->upload_baseurl . $user_id . '/' . $filename;
 		
@@ -518,7 +515,7 @@ class UM_Files {
 	function remove_dir($dir) { 
 		if ( file_exists( $dir ) ) {
 			foreach(glob($dir . '/*') as $file) { 
-				if(is_dir($file)) remove_dir($file); else unlink($file); 
+				if(is_dir($file)) $this->remove_dir($file); else unlink($file); 
 			} rmdir($dir);
 		}
 	}

@@ -1,110 +1,11 @@
-/*
-	- General
-*/
-
-.um-admin.toplevel_page_ultimatemember div.error,
-.um-admin.toplevel_page_ultimatemember div.updated
-{
-	margin: 18px 20px 0 2px !important;
+.wrap h2 sup {
+	font-size: 15px;
 }
 
-.um-admin-dash-container {
-	box-sizing: border-box;
-	margin: 18px 20px 20px 2px !important;
-	background: none !important;
-	overflow: hidden;
-}
+.wrap a.red,
+.wrap span.red {color:#A00}
 
-.um-admin-dash-container * {
-	-webkit-font-smoothing: antialiased !important;
-	-moz-osx-font-smoothing: grayscale !important;
-}
-
-.um-admin-dash-container a.ok {color: #7ACF58}
-.um-admin-dash-container a.red {color: #C74A4A}
-
-.um-admin-dash-count {
-	background: #7ACF58;
-	color: #fff;
-	padding: 2px 6px;
-	border-radius: 3px;
-	font-family: Open Sans;
-	font-weight: 700;
-	font-size: 12px;
-	margin-left: 10px;
-	display: none;
-}
-.um-admin-dash-count.count-0 {background: #ddd !important}
-.um-admin-dash-count.red {background:#C74A4A}
-
-.um-admin-dash-head {
-	background: #3ba1da;
-	padding: 0 0 0 20px;
-}
-
-.um-admin-dash-foot {
-	border-radius: 0;
-	background: none !important;
-	padding: 10px 0;
-	border-top: 1px solid #D8D8D8;
-}
-
-/*
-	- Header
-*/
-
-.um-admin-dash-head-logo {
-	float: left;
-	margin: 20px 10px;
-}
-
-.um-admin-dash-head h2 {
-	color: #fff;
-	font-size: 24px !important;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	background: url(../img/logo-header.png) no-repeat left 8px;
-	padding: 10px 10px 10px 80px;
-	margin: 0 !important;
-	display: inline-block;
-	font-style: normal;
-	padding-right: 5px;
-	line-height: 29px;
-}
-
-.um-admin-dash-head span {
-	color: #fff !important;
-	font-size: 14px;
-	position: relative;
-	top: -10px;
-	font-weight: 600;
-	padding-left: 4px;
-}
-
-/*
-	- Main
-*/
-
-.um-admin-dash-main {
-	margin-left: 201px;
-	border-left: 1px solid #D8D8D8;
-	padding: 0 30px 30px 30px;
-	box-shadow: 0px 1px 0px #FFF inset;
-	border-left: none;
-	margin-left: 0;
-}
-
-.um-admin-dash-main h3{
-	font-weight: 500;
-	padding: 30px 0 10px 0;
-	margin: 0 !important;
-}
-
-.um-admin-dash-main h4{
-	font-weight: 500;
-	padding: 30px 0 10px 0;
-	margin: 0 !important;
-}
+.wrap span.ok {color:#7ACF58}
 
 .um-admin-dash-review {
 	text-decoration: none !important;
@@ -114,9 +15,10 @@
 	right: 4px;
 }
 
-/*
-	- Share icons
-*/
+.um-admin-dash-content h4 {
+	margin: 10px 0 3px 0;
+	padding: 0;
+}
 
 .um-admin-dash-share {
 	margin-top: 11px !important;
@@ -132,10 +34,6 @@
 	font-size: 22px !important;
 }
 .um-admin-dash-share a:hover {color: #3ba1da !important}
-
-/*
-	- Dashboard styles
-*/
 
 .um-admin-dash-four-col .um-admin-dash-col {
 	float: left;
@@ -161,17 +59,10 @@
 .um-admin-dash-col a:hover {text-decoration: underline}
 .um-admin-dash-col a {text-decoration: none}
 
-.um-admin-dash-num {
-	display: inline-block;
-	margin: 8px 0 0 0;
-	font-size: 28px;
-	font-weight: 300;
-}
-
 .um-admin-dash-item {
 	padding: 5px 0;
 	vertical-align: middle;
-	border-top: 1px solid #e5e5e5;
+	border-top: 1px solid #eee;
 	display: inline-block;
 	width: 100%;
 	box-sizing: border-box;

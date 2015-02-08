@@ -555,7 +555,7 @@ class UM_Builtin {
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,
-				'options' => array('Male','Female')
+				'options' => array( __('Male','ultimatemember'), __('Female','ultimatemember') )
 			),
 			
 			'country' => array(
@@ -563,7 +563,7 @@ class UM_Builtin {
 				'metakey' => 'country',
 				'type' => 'select',
 				'label' => __('Country','ultimatemember'),
-				'placeholder' => 'Choose a Country',
+				'placeholder' => __('Choose a Country','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,

@@ -1,6 +1,21 @@
 <?php
 
 	/***
+	***	@purge temp
+	***/
+	add_action('um_admin_do_action__purge_temp', 'um_admin_do_action__purge_temp');
+	function um_admin_do_action__purge_temp( $action ){
+		global $ultimatemember;
+		if ( !is_admin() || !current_user_can('manage_options') ) die();
+		
+		$ultimatemember->files->remove_dir( $ultimatemember->files->upload_temp );
+		
+		$url = remove_query_arg('um_adm_action', $ultimatemember->permalinks->get_current_url() );
+		$url = add_query_arg('update','purged_temp',$url);
+		exit( wp_redirect($url) );
+	}
+	
+	/***
 	***	@duplicate form
 	***/
 	add_action('um_admin_do_action__duplicate_form', 'um_admin_do_action__duplicate_form');

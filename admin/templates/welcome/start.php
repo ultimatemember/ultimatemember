@@ -1,5 +1,5 @@
 
-	<?php global $ultimatemember; include_once um_path . 'admin/templates/about_header.php'; ?>
+	<?php global $ultimatemember; include_once um_path . 'admin/templates/welcome/about_header.php'; ?>
 
 	<div class="changelog headline-feature dfw">
 		<h2>Getting Started</h2>
@@ -63,4 +63,4 @@
 		</div>
 	</div>
 	
-	<?php include_once um_path . 'admin/templates/about_footer.php'; ?>
+	<?php include_once um_path . 'admin/templates/welcome/about_footer.php'; ?>

@@ -61,6 +61,7 @@ class UM_Members {
 		global $ultimatemember;
 
 		$fields = $ultimatemember->builtin->all_user_fields;
+		
 		$attrs = $fields[$filter];
 		
 		if ( $ultimatemember->builtin->is_dropdown_field( $filter ) ) {
@@ -79,9 +80,18 @@ class UM_Members {
 	
 					<option></option>
 							
-					<?php foreach( $attrs['options'] as $k => $v ) { $v = stripslashes($v); ?>
+					<?php foreach( $attrs['options'] as $k => $v ) {
+						
+						$v = stripslashes($v);
+						
+						$opt = $v;
+						
+						if ( strstr($filter, 'role_') )
+							$opt = $k;
+
+					?>
 							
-					<option value="<?php echo $v; ?>" <?php um_select_if_in_query_params( $filter, $v ); ?>><?php echo $v; ?></option>
+					<option value="<?php echo $opt; ?>" <?php um_select_if_in_query_params( $filter, $opt ); ?>><?php echo $v; ?></option>
 							
 					<?php } ?>
 

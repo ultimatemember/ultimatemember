@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.46
+Stable Tag: 1.0.47
 
 License: GNU Version 2 or Any Later Version
 
@@ -185,6 +185,15 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.47: February 9, 2015 =
+
+* New: A more native dashboard for Ultimate Member
+* New: view your temp uploads directory size and purge it from dashboard
+* Fixed: user uploads bug with handling photo uploads at once
+* Fixed: issue with using UM role as search filter in directory
+* Fixed: a little icon issue with directory backend
+* Fixed: localized a few words from predefined fields
 
 = 1.0.46: February 8, 2015 =
 
