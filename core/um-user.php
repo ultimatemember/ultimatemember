@@ -319,13 +319,23 @@ class UM_User {
 		}
 		
 		$ultimatemember->files->remove_dir( um_user_uploads_dir() );
-		
-		require_once( ABSPATH . 'wp-admin/includes/user.php' );
-		
+
 		if ( is_multisite() ) {
+			
+			if ( !function_exists('wpmu_delete_user') ) {
+				require_once( ABSPATH . 'wp-admin/includes/ms.php' );
+			}
+			
 			wpmu_delete_user( $this->id );
+			
 		} else {
+			
+			if ( !function_exists('wp_delete_user') ) {
+				require_once( ABSPATH . 'wp-admin/includes/user.php' );
+			}
+			
 			wp_delete_user( $this->id );
+			
 		}
 
 	}
