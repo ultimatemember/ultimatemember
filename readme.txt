@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.47
+Stable Tag: 1.0.48
 
 License: GNU Version 2 or Any Later Version
 
@@ -185,6 +185,18 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.48: February 10, 2015 =
+
+* New: added translation downloader/updater in plugin dashboard
+* New: added admin notice when language is updated or downloaded
+* Tweak: redirect to login page by default if content is restricted
+* Tweak: redirect back to the protected content after successful login
+* Tweak: small modifications to plugin admin css
+* Fixed: issue with registration form per role not appearing (when logged in)
+* Fixed: image and file uploads strip illegal characters from file name
+* Fixed: small issue with mandrill plugin
+* Fixed: bug with role creation that have used slugs that exist in database
 
 = 1.0.47: February 9, 2015 =
 

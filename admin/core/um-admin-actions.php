@@ -67,7 +67,6 @@
 		
 		$locale = get_option('WPLANG');
 		if ( !$locale ) return;
-		if ( file_exists( WP_LANG_DIR . '/plugins/ultimatemember-'.$locale.'.mo' ) ) return;
 		if ( !isset( $ultimatemember->available_languages[$locale] ) ) return;
 		
 		$path = $ultimatemember->files->upload_basedir;
@@ -86,7 +85,9 @@
 		copy( $remote2_tmp, $path . 'ultimatemember-' . $locale . '.mo' );
 		unlink( $remote2_tmp );
 
-		exit( wp_redirect( remove_query_arg('um_adm_action') ) );
+		$url = remove_query_arg('um_adm_action', $ultimatemember->permalinks->get_current_url() );
+		$url = add_query_arg('update','language_updated',$url);
+		exit( wp_redirect($url) );
 		
 	}
 	

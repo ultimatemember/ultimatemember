@@ -15,15 +15,19 @@ class UM_Access {
 	***	@do actions based on priority
 	***/
 	function template_redirect() {
-	
+		global $ultimatemember;
+		
 		do_action('um_access_homepage_per_role');
 		
 		do_action('um_access_global_settings');
 		
 		do_action('um_access_post_settings');
 		
-		if ( $this->redirect_handler && !$this->allow_access )
+		if ( $this->redirect_handler && !$this->allow_access ) {
+			$curr = $ultimatemember->permalinks->get_current_url();
+			$this->redirect_handler = add_query_arg('redirect_to', $curr, $this->redirect_handler);
 			exit( wp_redirect( $this->redirect_handler ) );
+		}
 		
 	}
 	

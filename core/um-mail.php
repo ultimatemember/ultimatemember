@@ -11,7 +11,7 @@ class UM_Mail {
 	/***
 	***	@mandrill compatibility
 	***/
-	function mandrill_nl2br($nl2br, $message) {
+	function mandrill_nl2br($nl2br, $message = '') {
 		
 		// text emails
 		$nl2br = true;

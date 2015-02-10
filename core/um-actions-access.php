@@ -114,7 +114,7 @@
 			case 2:
 				
 				if ( !is_user_logged_in() ){
-					if ( !$access_redirect ) $access_redirect = home_url();
+					if ( !$access_redirect ) $access_redirect = um_get_core_page('login');
 					$redirect_to = $access_redirect;
 				}
 				

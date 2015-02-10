@@ -122,7 +122,10 @@ class UM_Admin_Metabox {
 	***/
 	function ui_on_off( $id, $default=0, $is_conditional=false, $cond1='', $cond1_show='', $cond1_hide='', $yes='', $no='' ) {
 
-		$meta = get_post_meta( get_the_ID(), $id, true );
+		$meta = (string)get_post_meta( get_the_ID(), $id, true );
+		if ( $meta === '0' && $default > 0 ) {
+			$default = $meta;
+		}
 		
 		$yes = ( !empty( $yes ) ) ? $yes : __('Yes');
 		$no = ( !empty( $no ) ) ? $no : __('No');

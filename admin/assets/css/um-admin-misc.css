@@ -115,8 +115,10 @@ body.um-admin-modal-open {
 	margin: 0 0 8px 0 !important;
 	padding: 0!important;
 	font-size: 13px;
-	color: #888;
+	color: #666;
 }
+
+.um-admin-metabox label strong {color: #222}
 
 .um-admin-metabox input[type=text]:disabled{
 	opacity: 0.7 !important;

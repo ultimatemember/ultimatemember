@@ -98,12 +98,14 @@ class UM_Shortcodes {
 		}
 
 		$args = apply_filters('um_shortcode_args_filter', $args );
-		
-		if ( um_profile_id() && isset( $args['role'] ) && $args['role'] && $args['role'] != $ultimatemember->query->get_role_by_userid( um_profile_id() ) )
-			return;
 
 		extract( $args, EXTR_SKIP );
 		
+		// for profiles only
+		if ( $mode == 'profile' && um_profile_id() && isset( $args['role'] ) && $args['role'] && 
+				$args['role'] != $ultimatemember->query->get_role_by_userid( um_profile_id() ) )
+			return;
+
 		do_action("um_pre_{$mode}_shortcode", $args);
 		
 		do_action("um_before_form_is_loaded", $args);

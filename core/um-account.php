@@ -114,30 +114,56 @@ class UM_Account {
 	function get_tab_output( $id ) {
 		global $ultimatemember;
 		
+		$output = null;
+		
 		switch( $id ) {
-			case 'privacy' :
+			
+			case 'notifications':
+				$output = apply_filters("um_account_content_hook_{$id}", $output);
+				return $output;
+				break;
+
+			case 'privacy':
 				$args = 'profile_privacy,hide_in_members';
+				$fields = $ultimatemember->builtin->get_specific_fields( $args );
+				foreach( $fields as $key => $data ){
+					$output .= $ultimatemember->fields->edit_field( $key, $data );
+				}
+				return $output;
 				break;
-			case 'delete' :
+				
+			case 'delete':
 				$args = 'single_user_password';
+				$fields = $ultimatemember->builtin->get_specific_fields( $args );
+				foreach( $fields as $key => $data ){
+					$output .= $ultimatemember->fields->edit_field( $key, $data );
+				}
+				return $output;
 				break;
-			case 'general' :
+				
+			case 'general':
 				$args = 'user_login,first_name,last_name,user_email';
+				$fields = $ultimatemember->builtin->get_specific_fields( $args );
+				foreach( $fields as $key => $data ){
+					$output .= $ultimatemember->fields->edit_field( $key, $data );
+				}
+				return $output;
 				break;
-			case 'password' :
+				
+			case 'password':
 				$args = 'user_password';
+				$fields = $ultimatemember->builtin->get_specific_fields( $args );
+				foreach( $fields as $key => $data ){
+					$output .= $ultimatemember->fields->edit_field( $key, $data );
+				}
+				return $output;
 				break;
+				
 			default :
 				$args = null;
 				break;
+
 		}
-		
-		$fields = $ultimatemember->builtin->get_specific_fields( $args );
-		$output = null;
-		foreach( $fields as $key => $data ){
-			$output .= $ultimatemember->fields->edit_field( $key, $data );
-		}
-		return $output;
 	}
 	
 	/***

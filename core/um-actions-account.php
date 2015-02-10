@@ -38,6 +38,8 @@
 			}
 		}
 		
+		do_action('um_pre_account_update');
+		
 		$tab = ( get_query_var('um_tab') ) ? get_query_var('um_tab') : 'general';
 		
 		exit( wp_redirect( $ultimatemember->account->tab_link( $tab ) ) );
@@ -212,6 +214,30 @@
 		<?php echo $output; ?>
 		
 		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Update Password','ultimatemember'); ?>" class="um-button" /></div><div class="um-clear"></div></div>
+		
+		<?php
+		
+		}
+	}
+	
+	/***
+	***	@display tab "Notifications"
+	***/
+	add_action('um_account_tab__notifications', 'um_account_tab__notifications');
+	function um_account_tab__notifications( $info ) {
+		global $ultimatemember;
+		extract( $info );
+		extract( $info );
+		
+		$output = $ultimatemember->account->get_tab_output('notifications');
+		
+		if ( $output ) { ?>
+		
+		<div class="um-account-heading uimob340-hide uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
+		
+		<?php echo $output; ?>
+		
+		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Update Notifications','ultimatemember'); ?>" class="um-button" /></div><div class="um-clear"></div></div>
 		
 		<?php
 		

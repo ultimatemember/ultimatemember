@@ -50,7 +50,8 @@ class UM_Admin_Dashboard {
 	***	@load metabox stuff
 	***/
 	function on_load_page() {
-
+		global $ultimatemember;
+		
 		wp_enqueue_script('common');
 		wp_enqueue_script('wp-lists');
 		wp_enqueue_script('postbox');
@@ -62,7 +63,33 @@ class UM_Admin_Dashboard {
 		add_meta_box('um-metaboxes-contentbox-1', __('Users Overview','ultimatemember'), array(&$this, 'users_overview'), $this->pagehook, 'normal', 'core');
 		
 		add_meta_box('um-metaboxes-sidebox-1', __('Purge Temp Files','ultimatemember'), array(&$this, 'purge_temp'), $this->pagehook, 'side', 'core');
-
+		
+		if ( $this->language_avaialable_not_installed() ) {
+			add_meta_box('um-metaboxes-sidebox-2', __('Language','ultimatemember'), array(&$this, 'dl_language'), $this->pagehook, 'side', 'core');
+		} else if ( $this->language_avaialable_installed() ) {
+			add_meta_box('um-metaboxes-sidebox-2', __('Language','ultimatemember'), array(&$this, 'up_language'), $this->pagehook, 'side', 'core');
+		} else if ( $this->language_not_available() ) {
+			add_meta_box('um-metaboxes-sidebox-2', __('Language','ultimatemember'), array(&$this, 'ct_language'), $this->pagehook, 'side', 'core');
+		}
+		
+	}
+	
+	function up_language() {
+		global $ultimatemember;
+		$locale = get_option('WPLANG');
+		include_once um_path . 'admin/templates/dashboard/language-update.php';
+	}
+	
+	function dl_language() {
+		global $ultimatemember;
+		$locale = get_option('WPLANG');
+		include_once um_path . 'admin/templates/dashboard/language-download.php';
+	}
+	
+	function ct_language() {
+		global $ultimatemember;
+		$locale = get_option('WPLANG');
+		include_once um_path . 'admin/templates/dashboard/language-contrib.php';
 	}
 	
 	function users_overview() {
@@ -73,6 +100,38 @@ class UM_Admin_Dashboard {
 	function purge_temp() {
 		global $ultimatemember;
 		include_once um_path . 'admin/templates/dashboard/purge.php';
+	}
+	
+	/***
+	***	@language not available
+	***/
+	function language_not_available() {
+		$locale = get_option('WPLANG');
+		if ( $locale && !isset( $ultimatemember->available_languages[$locale] ) && !file_exists( WP_LANG_DIR . '/plugins/ultimatemember-' . $locale . '.mo' ) )
+			return true;
+		return false;
+	}
+	
+	/***
+	***	@language available but not installed
+	***/
+	function language_avaialable_not_installed() {
+		global $ultimatemember;
+		$locale = get_option('WPLANG');
+		if ( $locale && isset( $ultimatemember->available_languages[$locale] ) && !file_exists( WP_LANG_DIR . '/plugins/ultimatemember-' . $locale . '.mo' ) )
+			return true;
+		return false;
+	}
+	
+	/***
+	***	@language available and installed
+	***/
+	function language_avaialable_installed() {
+		global $ultimatemember;
+		$locale = get_option('WPLANG');
+		if ( $locale && isset( $ultimatemember->available_languages[$locale] ) && file_exists( WP_LANG_DIR . '/plugins/ultimatemember-' . $locale . '.mo' ) )
+			return true;
+		return false;
 	}
 	
 	/***

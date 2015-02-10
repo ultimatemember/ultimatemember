@@ -248,7 +248,7 @@ class UM_Admin_Users {
 		
 			um_fetch_user( $user_id );
 			if ( um_user('account_status') == 'approved' ) {
-				$output = '<span class="um-admin-tag small ok">'.um_user('account_status_name').'</span>';
+				$output = '<span class="um-admin-tag small approved">'.um_user('account_status_name').'</span>';
 			} else {
 				$output = '<span class="um-admin-tag small pending">'.um_user('account_status_name').'</span>';
 			}

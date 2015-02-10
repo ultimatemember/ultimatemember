@@ -27,7 +27,9 @@ class UM_Admin_Notices {
 		$path = str_replace('//','/',$path);
 		
 		if ( !file_exists( $path ) ) {
+			$old = umask(0);
 			@mkdir( $path, 0777, true);
+			umask($old);
 		}
 		
 	}
@@ -111,6 +113,10 @@ class UM_Admin_Notices {
 		$update = $_REQUEST['update'];
 		switch($update) {
 			
+			case 'language_updated':
+				$messages[0]['content'] = __('Your translation files have been updated successfully.','ultimatemember');
+				break;
+				
 			case 'purged_temp':
 				$messages[0]['content'] = __('Your temp uploads directory is now clean.','ultimatemember');
 				break;

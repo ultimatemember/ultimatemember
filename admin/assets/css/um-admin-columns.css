@@ -54,10 +54,20 @@
 	line-height: 34px;
 }
 .um-admin-tag.small {font-size: 13px;height:28px;line-height: 28px;display:inline;padding: 4px 10px;background: transparent;color: #666;border-radius:0;}
-.um-admin-tag.ok {border-left: 2px solid #93ba37}
+.um-admin-tag.approved {border-left: 2px solid #7ACF58}
 .um-admin-tag.pending {border-left: 2px solid #b76767}
 
 .um-admin-txtspace {margin: 0 0 0 10px;}
 
-.um-adm-ico {font-size: 20px;margin-top: 5px;display:inline-block;color:#3ba1da}
+.um-adm-ico {
+	font-size: 20px;
+	width: 20px;
+	text-align: center;
+	margin-top: 5px;
+	display: inline-block;
+	color: #7ACF58;
+}
+
+.um-adm-ico.inactive {color: #b76767}
+
 .um-adm-ico.pointer {cursor: pointer}

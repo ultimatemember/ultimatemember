@@ -181,7 +181,7 @@ class UM_Query {
 				$real_role_slug =  $role_slug;
 			}
 		} else {
-			$post_id = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_name = '$role_slug'");
+			$post_id = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND post_name = '$role_slug'");
 			$real_role_slug = $role_slug;
 		}
 		
