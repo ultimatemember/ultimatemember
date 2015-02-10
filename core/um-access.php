@@ -24,8 +24,13 @@ class UM_Access {
 		do_action('um_access_post_settings');
 		
 		if ( $this->redirect_handler && !$this->allow_access ) {
-			$curr = $ultimatemember->permalinks->get_current_url();
-			$this->redirect_handler = add_query_arg('redirect_to', $curr, $this->redirect_handler);
+			
+			// login page add protected page automatically
+			if ( strstr( $this->redirect_handler, um_get_core_page('login') ) ){
+				$curr = $ultimatemember->permalinks->get_current_url();
+				$this->redirect_handler = add_query_arg('redirect_to', $curr, $this->redirect_handler);
+			}
+			
 			exit( wp_redirect( $this->redirect_handler ) );
 		}
 		

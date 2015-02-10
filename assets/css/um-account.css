@@ -2,6 +2,11 @@
 	- Layout
 */
 
+.um-account p.um-notice {
+	margin: 0 0 20px 0 !important;
+	padding: 12px 15px !important;
+}
+
 .um-account a:focus {
     outline: 0 !important; /*removes the dotted border*/
 }

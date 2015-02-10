@@ -39,12 +39,15 @@
 		
 		$metabox = new UM_Admin_Metabox();
 		
+		$fields_without_metakey = array('block','shortcode','spacing','divider','group');
+		$fields_without_metakey = apply_filters('um_fields_without_metakey', $fields_without_metakey );
+		
 		$fields = $ultimatemember->query->get_attr('custom_fields', $form_id);
 		$count = 1;
 		if ( isset( $fields ) && !empty( $fields) ) $count = count($fields)+1;
 		
 		// set unique meta key
-		if ( in_array( $field_type, array('block','shortcode','spacing','divider','group') ) && !isset($array['post']['_metakey']) ) {
+		if ( in_array( $field_type, $fields_without_metakey ) && !isset($array['post']['_metakey']) ) {
 			$array['post']['_metakey'] = "um_{$field_type}_{$form_id}_{$count}";
 		}
 		

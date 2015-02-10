@@ -29,18 +29,19 @@
 		
 			$redirect = um_get_option('access_redirect');
 			
-			$redirects[] = um_get_core_page('login');
-			$redirects[] = um_get_option('access_redirect');
-			
+			$redirects[] = untrailingslashit( um_get_core_page('login') );
+			$redirects[] = untrailingslashit( um_get_option('access_redirect') );
+
 			$exclude_uris = um_get_option('access_exclude_uris');
 			
 			if ( $exclude_uris ) {
 				$redirects = array_merge( $redirects, $exclude_uris );
 			}
-			
+
 			$current_url = $ultimatemember->permalinks->get_current_url( get_option('permalink_structure') );
-		
-			if ( isset( $post->ID ) && in_array( $current_url, $redirects ) ) {
+			$current_url = untrailingslashit( $current_url );
+			
+			if ( ( isset( $post->ID ) || is_home() ) && in_array( $current_url, $redirects ) ) {
 			 // allow
 			} else {
 				$ultimatemember->access->redirect_handler = $redirect;

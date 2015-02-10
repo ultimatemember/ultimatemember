@@ -440,6 +440,7 @@ p.um-notice.err {
 	margin: 0 0 0 36px;
 	line-height: 24px;
 	color: #888 !important;
+	display: inline-block;
 }
 
 /*

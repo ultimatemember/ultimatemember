@@ -111,7 +111,7 @@ $this->sections[] = array(
     'icon'       => 'um-faicon-cog',
     'title'      => __( 'Account','ultimatemember'),
     'fields'     => array(
-
+	
         array(
                 'id'       		=> 'account_tab_password',
                 'type'     		=> 'switch',
@@ -163,6 +163,16 @@ $this->sections[] = array(
 								'media_buttons'    => false,
 								'textarea_rows'    => 6
 				),
+        ),
+		
+        array(
+                'id'       		=> 'account_require_strongpass',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Require a strong password?','ultimatemember' ),
+				'default' 		=> 0,
+				'desc' 	   		=> __('Enable or disable a strong password rules on account page / change password tab','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
         ),
 
 	)
@@ -1669,6 +1679,16 @@ $this->sections[] = array(
                 'title'   		=> __( 'Disable JS/CSS Compression','ultimatemember' ),
 				'default' 		=> 0,
 				'desc' 	   		=> __('Not recommended. This will load all plugin js and css files separately and may slow down your website. Use this setting for development or debugging purposes only.','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+        ),
+		
+        array(
+                'id'       		=> 'disable_menu',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Disable Nav Menu Settings','ultimatemember' ),
+				'default' 		=> 0,
+				'desc' 	   		=> __('This can disable the settings that appear in nav menus to apply custom access settings to nav items.','ultimatemember'),
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),

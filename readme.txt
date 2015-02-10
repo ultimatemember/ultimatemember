@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.48
+Stable Tag: 1.0.49
 
 License: GNU Version 2 or Any Later Version
 
@@ -185,6 +185,13 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.49: February 10, 2015 =
+
+* New: added option to disable UM menu (fixes conflict with mega-menu on some themes/plugins)
+* New: added option to disable strong password in Account / Password change tab
+* New: added a notice to Account page when user updates account
+* Fixed: issue with global access settings
 
 = 1.0.48: February 10, 2015 =
 

@@ -21,6 +21,7 @@ class UM_Cron {
 	public function schedule_Events() {
 		$this->weekly_events();
 		$this->daily_events();
+		$this->hourly_events();
 	}
 
 	private function weekly_events() {
@@ -32,6 +33,12 @@ class UM_Cron {
 	private function daily_events() {
 		if ( ! wp_next_scheduled( 'um_daily_scheduled_events' ) ) {
 			wp_schedule_event( current_time( 'timestamp' ), 'daily', 'um_daily_scheduled_events' );
+		}
+	}
+	
+	private function hourly_events() {
+		if ( ! wp_next_scheduled( 'um_hourly_scheduled_events' ) ) {
+			wp_schedule_event( current_time( 'timestamp' ), 'hourly', 'um_hourly_scheduled_events' );
 		}
 	}
 

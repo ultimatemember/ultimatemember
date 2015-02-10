@@ -457,7 +457,7 @@ class UM_Admin_Metabox {
 		
 			default:
 			
-				do_action("um_admin_field_edit_hook__{$attribute}", $attribute);
+				do_action("um_admin_field_edit_hook{$attribute}", $this->edit_mode_value);
 				
 				break;
 				

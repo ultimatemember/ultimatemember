@@ -842,6 +842,12 @@ class UM_Fields {
 		/* Begin by field type */
 
 		switch( $type ) {
+			
+			/* Default: Integration */
+			default:
+				$mode = (isset($this->set_mode))?$this->set_mode:'no_mode';
+				$output .= apply_filters("um_edit_field_{$mode}_{$type}", $output, $data);
+				break;
 
 			/* Text */
 			case 'text':

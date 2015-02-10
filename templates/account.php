@@ -20,6 +20,8 @@
 			
 				<?php
 				
+				do_action('um_before_form', $args);
+				
 				foreach( $ultimatemember->account->tabs as $k => $arr ) {
 				
 					foreach( $arr as $id => $info ) { extract( $info );

@@ -61,6 +61,10 @@
 		if ( isset( $_REQUEST['updated'] ) && !empty( $_REQUEST['updated'] ) && !$ultimatemember->form->errors ) {
 			switch( $_REQUEST['updated'] ) {
 				
+				case 'account':
+					$success = __('Your account was updated successfully.','ultimatemember');
+					break;
+					
 				case 'password_changed':
 					$success = __('You have successfully changed your password.','ultimatemember');
 					break;

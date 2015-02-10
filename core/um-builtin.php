@@ -908,13 +908,17 @@ class UM_Builtin {
 	}
 	
 	/***
-	***	@predefined + custom fields ( Global, not form wide )
+	***	@may be used to show a dropdown, or source for user meta
 	***/
 	function all_user_fields( $exclude_types = null ) {
 	
 		global $ultimatemember;
 		
-		$this->fields_dropdown = array('image','file','password','textarea','rating','block','shortcode','spacing','divider','group');
+		$fields_without_metakey = array('block','shortcode','spacing','divider','group');
+		$fields_without_metakey = apply_filters('um_fields_without_metakey', $fields_without_metakey );
+		
+		$this->fields_dropdown = array('image','file','password','textarea','rating');
+		$this->fields_dropdown = array_merge( $this->fields_dropdown, $fields_without_metakey );
 		
 		$custom = $this->custom_fields;
 		$predefined = $this->predefined_fields;
@@ -923,7 +927,7 @@ class UM_Builtin {
 			$exclude_types = explode(',', $exclude_types);
 		}
 		
-		$all = array( '' => '' );
+		$all = array( 0 => '' );
 		
 		if ( is_array( $custom ) ){
 		$all = $all + array_merge( $predefined, $custom );
@@ -932,6 +936,10 @@ class UM_Builtin {
 		}
 		
 		foreach( $all as $k => $arr ) {
+			
+			if ( $k == 0 ) {
+				unset($all[$k]);
+			}
 			
 			if ( isset( $arr['title'] ) ){
 				$all[$k]['title'] = stripslashes( $arr['title'] );
@@ -949,6 +957,8 @@ class UM_Builtin {
 		}
 		
 		$all = $ultimatemember->fields->array_sort_by_column( $all, 'title');
+		
+		$all = array( 0 => '') + $all;
 
 		return $all;
 	}

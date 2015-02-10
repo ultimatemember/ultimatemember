@@ -38,11 +38,15 @@
 			}
 		}
 		
-		do_action('um_pre_account_update');
+		do_action('um_post_account_update');
 		
 		$tab = ( get_query_var('um_tab') ) ? get_query_var('um_tab') : 'general';
 		
-		exit( wp_redirect( $ultimatemember->account->tab_link( $tab ) ) );
+		$url = $ultimatemember->account->tab_link( $tab );
+		
+		$url = add_query_arg('updated','account',$url);
+		
+		exit( wp_redirect( $url ) );
 		
 	}
 	
@@ -78,21 +82,25 @@
 			} else { // correct password
 				
 				if ( $_POST['user_password'] != $_POST['confirm_user_password'] && $_POST['user_password'] ) {
-					$ultimatemember->form->add_error('user_password', 'Your new password does not match');
+					$ultimatemember->form->add_error('user_password', __('Your new password does not match','ultimatemember') );
 					$ultimatemember->account->current_tab = 'password';
 				}
 				
-				if ( strlen( utf8_decode( $_POST['user_password'] ) ) < 8 ) {
-					$ultimatemember->form->add_error('user_password', __('Your password must contain at least 8 characters') );
-				}	
-			
-				if ( strlen( utf8_decode( $_POST['user_password'] ) ) > 30 ) {
-					$ultimatemember->form->add_error('user_password', __('Your password must contain less than 30 characters') );
-				}
+				if ( um_get_option('account_require_strongpass') ) {
+					
+					if ( strlen( utf8_decode( $_POST['user_password'] ) ) < 8 ) {
+						$ultimatemember->form->add_error('user_password', __('Your password must contain at least 8 characters','ultimatemember') );
+					}	
 				
-				if ( !$ultimatemember->validation->strong_pass( $_POST['user_password'] ) ) {
-					$ultimatemember->form->add_error('user_password', __('Your password must contain at least one lowercase letter, one capital letter and one number','ultimatemember') );
-					$ultimatemember->account->current_tab = 'password';
+					if ( strlen( utf8_decode( $_POST['user_password'] ) ) > 30 ) {
+						$ultimatemember->form->add_error('user_password', __('Your password must contain less than 30 characters','ultimatemember') );
+					}
+					
+					if ( !$ultimatemember->validation->strong_pass( $_POST['user_password'] ) ) {
+						$ultimatemember->form->add_error('user_password', __('Your password must contain at least one lowercase letter, one capital letter and one number','ultimatemember') );
+						$ultimatemember->account->current_tab = 'password';
+					}
+					
 				}
 				
 			}
