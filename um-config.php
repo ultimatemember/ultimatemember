@@ -1702,6 +1702,15 @@ $this->sections[] = array(
 				'add_text'		=> __('Add New Page','ultimatemember'),
 		),
 		
+		array(
+				'id'       		=> 'js_css_include',
+                'type'     		=> 'multi_text',
+				'default'		=> array(),
+                'title'    		=> __( 'Only load plugin JS and CSS on the following pages','ultimatemember' ),
+                'desc' 	   		=> __( 'Enter a url or page slug (e.g /about/) to enable loading the plugin\'s css and js on that page.','ultimatemember' ),
+				'add_text'		=> __('Add New Page','ultimatemember'),
+		),
+		
         array(
                 'id'       		=> 'allow_tracking',
                 'type'     		=> 'switch',

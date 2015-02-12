@@ -596,7 +596,8 @@ class UM_Fields {
 					if ( $array['years_x'] == 'past' ) {
 
 						$date = new DateTime( date('Y-n-d') );
-						$past = $date->modify('-'.$array['years'].' years')->format('Y,n,d');
+						$past = $date->modify('-'.$array['years'].' years');
+						$past = $date->format('Y,n,d');
 						
 						$array['date_min'] = $past;
 						$array['date_max'] = date('Y,n,d');
@@ -604,7 +605,8 @@ class UM_Fields {
 					} else if ( $array['years_x'] == 'future' ) {
 						
 						$date = new DateTime( date('Y-n-d') );
-						$future = $date->modify('+'.$array['years'].' years')->format('Y,n,d');
+						$future = $date->modify('+'.$array['years'].' years');
+						$future = $date->format('Y,n,d');
 						
 						$array['date_min'] = date('Y,n,d');	
 						$array['date_max'] = $future;
@@ -613,8 +615,10 @@ class UM_Fields {
 						
 						$date = new DateTime( date('Y-n-d') );
 						$date_f = new DateTime( date('Y-n-d') );
-						$past = $date->modify('-'. ( $array['years'] / 2 ).' years')->format('Y,n,d');
-						$future = $date_f->modify('+'. ( $array['years'] / 2 ).' years')->format('Y,n,d');
+						$past = $date->modify('-'. ( $array['years'] / 2 ).' years');
+						$past = $date->format('Y,n,d');
+						$future = $date_f->modify('+'. ( $array['years'] / 2 ).' years');
+						$future = $date_f->format('Y,n,d');
 						
 						$array['date_min'] = $past;	
 						$array['date_max'] = $future;

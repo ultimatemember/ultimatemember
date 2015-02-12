@@ -26,14 +26,18 @@
 			}
 			
 			$count = count( $search_filters );
-			
+
 			?>
 			
 			<div class="um-search um-search-<?php echo $count; ?>">
 			
 				<form method="get" action="" />
 				
-					<?php
+					<?php if ( isset( $_REQUEST['page_id'] ) && get_option('permalink_structure') == 0 ) { ?>
+					
+					<input type="hidden" name="page_id" id="page_id" value="<?php echo $_REQUEST['page_id']; ?>" />
+					
+					<?php }
 
 					$i = 0;
 					foreach( $search_filters as $filter ) {
@@ -54,7 +58,7 @@
 					<div class="um-clear"></div>
 					
 					<div class="um-search-submit">
-					
+
 						<input type="hidden" name="um_search" id="um_search" value="1" />
 						
 						<a href="#" class="um-button um-do-search"><?php _e('Search','ultimatemember'); ?></a><a href="<?php echo $ultimatemember->permalinks->get_current_url( true ); ?>" class="um-button um-alt"><?php _e('Reset','ultimatemember'); ?></a>

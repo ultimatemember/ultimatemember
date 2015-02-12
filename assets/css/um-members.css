@@ -178,6 +178,7 @@
 	background: #fff;
 	width: 140px;
 	height: 140px;
+	float: none !important;
 }
 
 .um-member.with-cover .um-member-photo {padding-top: 0}
@@ -187,7 +188,7 @@
 	position: relative;
 	top: -35px;
 	margin-bottom: -45px !important;
-	float: none;
+	float: none !important;
 	opacity: 1;
 }
 

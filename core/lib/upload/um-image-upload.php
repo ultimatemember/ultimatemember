@@ -17,7 +17,8 @@ if(isset($_FILES[$id]['name'])) {
 		$temp = $_FILES[$id]["tmp_name"];
 		$file = $_FILES[$id]["name"];
 		$file = str_replace(array('(',')','+','&','?','%','{','}','[',']','=',',',';',' '),'',$file);
-
+		$file = strtolower($file);
+		
 		$error = $ultimatemember->files->check_image_upload( $temp, $id );
 		if ( $error ){
 			

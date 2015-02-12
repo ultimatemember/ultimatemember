@@ -39,12 +39,24 @@ class UM_Enqueue {
 		global $ultimatemember;
 		
 		$exclude = um_get_option('js_css_exclude');
-		if ( $exclude && is_array( $exclude ) ) {
+		if ( $exclude && !is_admin() && is_array( $exclude ) ) {
 			
 			$c_url = $ultimatemember->permalinks->get_current_url( get_option('permalink_structure') );
 			
 			foreach( $exclude as $match ) {
-				if ( strstr( $c_url, $match ) )
+				if ( strstr( $c_url, untrailingslashit( $match ) ) )
+					return;
+			}
+			
+		}
+		
+		$include = um_get_option('js_css_include');
+		if ( $include && !is_admin() && is_array( $include ) ) {
+			
+			$c_url = $ultimatemember->permalinks->get_current_url( get_option('permalink_structure') );
+
+			foreach( $include as $match ) {
+				if ( !strstr( $c_url, untrailingslashit( $match ) ) )
 					return;
 			}
 			
@@ -62,6 +74,13 @@ class UM_Enqueue {
 			wp_register_style('um_minified', um_url . 'assets/css/um.min.css' );
 			wp_enqueue_style('um_minified');
 		
+		}
+		
+		// load a localized version for date/time
+		$locale = get_option('WPLANG');
+		if ( $locale && file_exists( um_path . 'assets/js/pickadate/translations/' . $locale . '.js' ) ) {
+			wp_register_script('um_datetime_locale', um_url . 'assets/js/pickadate/translations/' . $locale . '.js', '', '', true );
+			wp_enqueue_script('um_datetime_locale');
 		}
 		
 	}

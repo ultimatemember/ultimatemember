@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.49
+Stable Tag: 1.0.50
 
 License: GNU Version 2 or Any Later Version
 
@@ -185,6 +185,15 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.50: February 12, 2015 =
+
+* New: added option to include plugin js/css only on specific pages (user suggestion)
+* Tweak: image and file uploads tweaked
+* Fixed: date and time picker localization
+* Fixed: bug with date and time fields
+* Fixed: issue with searching members with default permalinks used
+* Fixed: minor css fixes
 
 = 1.0.49: February 10, 2015 =
 
