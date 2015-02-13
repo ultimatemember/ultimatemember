@@ -117,6 +117,23 @@
 	color: #aaa;
 }
 
+.um-admin-infobox p,
+.um-admin-infobox label {
+	color: #666;
+}
+
+.um-admin-infobox p {
+	border-top: 1px solid #e5e5e5;
+	padding-top: 15px;
+}
+
+.um-admin-infobox label {
+	font-weight: bold;
+	display: block;
+	color: #333;
+	cursor: default;
+}
+
 /*
 	- Conditional fields
 */

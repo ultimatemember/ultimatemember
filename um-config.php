@@ -1696,7 +1696,7 @@ $this->sections[] = array(
         array(
                 'id'       		=> 'js_css_exlcude_home',
                 'type'     		=> 'switch',
-                'title'   		=> __( 'Never load plugin JS and CSS on homepage?','ultimatemember' ),
+                'title'   		=> __( 'Never load plugin JS and CSS on homepage','ultimatemember' ),
 				'default' 		=> 0,
 				'desc' 	   		=> __('This can disable loading plugin js and css files on home page.','ultimatemember'),
 				'on'			=> __('On','ultimatemember'),

@@ -101,9 +101,12 @@ function um_user_ip() {
 	/***
 	***	@Get submitted user information
 	***/
-	function um_user_submitted_registration() {
+	function um_user_submitted_registration( $style = false ) {
 		$output = null;
 		$data = um_user('submitted');
+		
+		if ( $style ) $output .= '<div class="um-admin-infobox">';
+		
 		if ( isset( $data ) && is_array( $data ) ) {
 			foreach( $data as $k => $v ) {
 				
@@ -113,12 +116,20 @@ function um_user_ip() {
 						$v = implode(',', $v );
 					}
 					
-					$output .= "$k: $v" . "\r\n";
-				
+					if ( $style ) {
+						if ( !$v ) $v = __('(empty)','ultimatemember');
+						$output .= "<p><label>$k</label><span>$v</span></p>";
+					} else {
+						$output .= "$k: $v" . "\r\n";
+					}
+					
 				}
 				
 			}
 		}
+		
+		if ( $style ) $output .= '</div>';
+		
 		return $output;
 	}
 	

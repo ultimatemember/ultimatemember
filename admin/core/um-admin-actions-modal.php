@@ -358,9 +358,7 @@
 				
 				$submitted = um_user('submitted');
 				
-				$form_id = $submitted['form_id'];
-				
-				$output = do_shortcode('[ultimatemember form_id='.$form_id.']');
+				$output = um_user_submitted_registration( true );
 				
 				break;
 				

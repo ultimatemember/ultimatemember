@@ -172,11 +172,6 @@ class UM_Admin_Users {
 				
 			}
 			
-			// filter by user role
-			if ( isset($_REQUEST['um_filter_role']) ) {
-				exit( wp_redirect( admin_url('users.php?um_role=' . $_REQUEST['um_filter_role'] ) ) );
-			}
-				
 			// bulk edit users
 			if ( isset($_REQUEST['users']) && is_array($_REQUEST['users']) && isset($_REQUEST['um_bulkedit']) && $_REQUEST['um_bulkedit'] != '' && isset($_REQUEST['um_bulk_action']) && !empty($_REQUEST['um_bulk_action']) ){
 			
@@ -214,6 +209,11 @@ class UM_Admin_Users {
 				wp_redirect( admin_url('users.php') );
 				exit;
 				
+			}
+			
+			// filter by user role
+			if ( isset($_REQUEST['um_filter_role']) && !$_REQUEST['new_role'] && $_REQUEST['um_filter_role'] ) {
+				exit( wp_redirect( admin_url('users.php?um_role=' . $_REQUEST['um_filter_role'] ) ) );
 			}
 			
 		}
