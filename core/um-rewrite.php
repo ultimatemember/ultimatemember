@@ -125,7 +125,18 @@ class UM_Rewrite {
 		} else if ( um_is_core_page('user') ) { // just base64_decode
 		
 			if ( is_user_logged_in() ) { // just redirect to their profile
-				exit( wp_redirect( um_user_profile_url() ) );
+				
+				$query = $ultimatemember->permalinks->get_query_array();
+				
+				$url = um_user_profile_url();
+				
+				if ( $query ) {
+					foreach( $query as $key => $val ) {
+						$url = add_query_arg($key, $val, $url);
+					}
+				}
+				
+				exit( wp_redirect( $url ) );
 			}
 			
 		}

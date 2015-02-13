@@ -33,29 +33,9 @@
 		if ( isset( $data ) && isset( $data['html'] ) && $data['html'] == 1 )
 			return $value;
 		
-		$value = preg_replace(
-			 array(
-			   '/(?(?=<a[^>]*>.+<\/a>)
-					 (?:<a[^>]*>.+<\/a>)
-					 |
-					 ([^="\']?)((?:https?|ftp|bf2|):\/\/[^<> \n\r]+)
-				 )/iex',
-			   '/<a([^>]*)target="?[^"\']+"?/i',
-			   '/<a([^>]+)>/i',
-			   '/(^|\s)(www.[^<> \n\r]+)/iex',
-			   '/(([_A-Za-z0-9-]+)(\\.[_A-Za-z0-9-]+)*@([A-Za-z0-9-]+)
-			   (\\.[A-Za-z0-9-]+)*)/iex'
-			   ),
-			 array(
-			   "stripslashes((strlen('\\2')>0?'\\1<a rel=\"nofollow\" href=\"\\2\">\\2</a>\\3':'\\0'))",
-			   '<a\\1',
-			   '<a\\1 target="_blank">',
-			   "stripslashes((strlen('\\2')>0?'\\1<a rel=\"nofollow\" href=\"http://\\2\">\\2</a>\\3':'\\0'))",
-			   "stripslashes((strlen('\\2')>0?'<a rel=\"nofollow\" href=\"mailto:\\0\">\\0</a>':'\\0'))"
-			   ),
-			   $value
-		   );
-		   
+		$value = preg_replace('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', ' <a href="$1" target="_blank">$1</a> ', $value." ");
+		$value = preg_replace('$(www\.[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', '<a target="_blank" href="http://$1">$1</a> ', $value." ");
+
 		$value = wpautop($value);
 		return $value;
 	}

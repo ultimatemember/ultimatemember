@@ -424,6 +424,10 @@ class UM_Fields {
 			
 				if ( um_user( $key ) && $this->editing == true ) {
 					
+					if ( strstr($key, 'role_') ) {
+						$key = 'role';
+					}
+					
 					if ( um_user( $key ) == $value ) {
 						return true;
 					}

@@ -17,9 +17,7 @@
 .um-admin.post-type-um_role .manage-column.column-count {width: 150px}
 .um-admin.post-type-um_role .manage-column.column-core {width: 150px}
 
-.um-admin.users-php .manage-column.column-username {width: 200px}
-.um-admin.users-php .manage-column.column-role {width: 140px}
-.um-admin.users-php .manage-column.column-name {width: 140px}
+.um-admin.users-php .manage-column.column-username {width: 300px}
 .um-admin.users-php .manage-column.column-um_role {width: 140px}
 .um-admin.users-php .manage-column.column-um_status {width: 160px}
 
@@ -55,7 +53,7 @@
 }
 .um-admin-tag.small {font-size: 13px;height:28px;line-height: 28px;display:inline;padding: 4px 10px;background: transparent;color: #666;border-radius:0;}
 .um-admin-tag.approved {border-left: 2px solid #7ACF58}
-.um-admin-tag.pending {border-left: 2px solid #b76767}
+.um-admin-tag.pending {border-left: 2px solid #C74A4A}
 
 .um-admin-txtspace {margin: 0 0 0 10px;}
 
@@ -68,6 +66,6 @@
 	color: #7ACF58;
 }
 
-.um-adm-ico.inactive {color: #b76767}
+.um-adm-ico.inactive {color: #C74A4A}
 
 .um-adm-ico.pointer {cursor: pointer}

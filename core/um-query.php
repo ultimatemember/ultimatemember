@@ -62,9 +62,19 @@ class UM_Query {
 	}
 	
 	/***
-	***	@Get users by meta
+	***	@Count users by status
 	***/
-	function get_users_by_status($rule, $number = 5){
+	function count_users_by_status( $status ) {
+		$args = array( 'fields' => 'ID', 'number' => 0 );
+		$args['meta_query'][] = array(array('key' => 'account_status','value' => $status,'compare' => '='));
+		$users = new WP_User_Query( $args );
+		return count($users->results);
+	}
+	
+	/***
+	***	@Get users by status
+	***/
+	function get_users_by_status($status, $number = 5){
 		global $wpdb;
 		
 		$args = array( 'fields' => 'ID', 'number' => $number, 'orderby' => 'user_registered', 'order' => 'desc' );
@@ -72,7 +82,7 @@ class UM_Query {
 		$args['meta_query'][] = array(
 			array(
 				'key'     => 'account_status',
-				'value'   => $rule,
+				'value'   => $status,
 				'compare' => '='
 			)
 		);

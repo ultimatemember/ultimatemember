@@ -56,13 +56,11 @@ class UM_Admin_Dashboard {
 		wp_enqueue_script('wp-lists');
 		wp_enqueue_script('postbox');
 
-		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
-		
 		/** custom metaboxes for dashboard defined here **/
 		
-		add_meta_box('um-metaboxes-contentbox-1', __('Users Overview','ultimatemember'), array(&$this, 'users_overview'), $this->pagehook, 'normal', 'core');
+		add_meta_box('um-metaboxes-contentbox-1', __('Users Overview','ultimatemember'), array(&$this, 'users_overview'), $this->pagehook, 'core', 'core');
 		
-		add_meta_box('um-metaboxes-sidebox-1', __('Purge Temp Files','ultimatemember'), array(&$this, 'purge_temp'), $this->pagehook, 'side', 'core');
+		add_meta_box('um-metaboxes-mainbox-1', __('Purge Temp Files','ultimatemember'), array(&$this, 'purge_temp'), $this->pagehook, 'normal', 'core');
 		
 		if ( $this->language_avaialable_not_installed() ) {
 			add_meta_box('um-metaboxes-sidebox-2', __('Language','ultimatemember'), array(&$this, 'dl_language'), $this->pagehook, 'side', 'core');
@@ -163,27 +161,25 @@ class UM_Admin_Dashboard {
 		<div id="um-metaboxes-general" class="wrap">
 		
 			<h2>Ultimate Member <sup><?php echo ultimatemember_version; ?></sup></h2>
-			
-			<form action="admin-post.php" method="post">
-				
+
 				<?php wp_nonce_field('um-metaboxes-general'); ?>
 				<?php wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false ); ?>
 				<?php wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false ); ?>
 				
 				<input type="hidden" name="action" value="save_um_metaboxes_general" />
 				
-				<div id="poststuff">
+				<div id="dashboard-widgets-wrap">
 		
-					 <div id="post-body" class="metabox-holder columns-<?php echo 1 == get_current_screen()->get_columns() ? '1' : '2'; ?>"> 
+					 <div id="dashboard-widgets" class="metabox-holder um-metabox-holder"> 
 
-						  <div id="postbox-container-2" class="postbox-container"><?php do_meta_boxes($this->pagehook,'normal',null);  ?></div>	    
-						  <div id="postbox-container-1" class="postbox-container"><?php do_meta_boxes($this->pagehook,'side',null); ?></div>   						  
+							<div id="postbox-container-1" class="postbox-container"><?php do_meta_boxes($this->pagehook,'core',null);  ?></div>
+							<div id="postbox-container-2" class="postbox-container"><?php do_meta_boxes($this->pagehook,'normal',null); ?></div>
+							<div id="postbox-container-3" class="postbox-container"><?php do_meta_boxes($this->pagehook,'side',null); ?></div>
 
 					 </div>
 
 				</div>
-				 
-			</form>
+
 		</div><div class="um-admin-clear"></div>
 		
 		<div class="um-admin-dash-share"><?php global $reduxConfig; foreach ( $reduxConfig->args['share_icons'] as $k => $arr ) { ?><a href="<?php echo $arr['url']; ?>" class="um-about-icon um-admin-tipsy-n" title="<?php echo $arr['title']; ?>" target="_blank"><i class="<?php echo $arr['icon']; ?>"></i></a><?php } ?>	

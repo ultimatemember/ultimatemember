@@ -266,6 +266,10 @@ p.um-notice.err {
 	padding: 15px 0 0 0;
 }
 
+.um-field-b{
+	padding-top: 0 !important;
+}
+
 .um-field.um-is-conditional {
 	display: none;
 }

@@ -78,6 +78,10 @@
 		if ( isset( $args['submitted']['description'] ) ) {
 			$to_update['description'] = $ultimatemember->validation->remove_html( $args['submitted']['description'] );
 		}
+		
+		if ( isset( $args['submitted']['role'] ) && !empty( $args['submitted']['role'] ) ) {
+			$to_update['role'] = $args['submitted']['role'];
+		}
 
 		if ( is_array( $to_update ) ) {
 			$ultimatemember->user->update_profile( $to_update );

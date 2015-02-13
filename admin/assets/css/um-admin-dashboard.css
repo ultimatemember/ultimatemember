@@ -1,11 +1,18 @@
+.wrap h2 {
+	font-size: 23px;
+	font-weight: 400;
+	padding: 9px 15px 4px 0px;
+	line-height: 29px;
+}
+
 .wrap h2 sup {
 	font-size: 15px;
 }
 
-.wrap a.red,
-.wrap span.red {color:#b76767}
-
+.wrap a.red, .wrap span.red {color:#C74A4A}
 .wrap span.ok {color:#7ACF58}
+
+/* Misc */
 
 .um-admin-dash-review {
 	text-decoration: none !important;
@@ -15,10 +22,56 @@
 	right: 4px;
 }
 
-.um-admin-dash-content h4 {
-	margin: 10px 0 3px 0;
-	padding: 0;
+/* Dashboard widgets */
+
+.um-metabox-holder p.sub {
+    padding: 0 4px 2px 4px;
+	margin: 0 0 8px 0;
+    color: #8F8F8F;
+    font-size: 14px;
+	border-bottom: 1px solid #ECECEC;
 }
+
+.um-metabox-holder .table {
+    float: left;
+    width: 45%;
+}
+
+.um-metabox-holder a.warning {
+	color: #C74A4A !important;
+	background: transparent !important;
+	border: 0;
+}
+
+.um-metabox-holder .table_right {
+    float: right;
+    width: 45%;
+}
+
+.um-metabox-holder td.b {
+    padding-right: 6px;
+    text-align: right;
+    font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
+    font-size: 14px;
+    width: 1%;
+}
+
+.um-metabox-holder td.b {
+    text-align: right;
+    font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
+    font-size: 14px;
+}
+
+.um-metabox-holder table td {
+    white-space: nowrap;
+	font-size: 12px;
+}
+
+.um-metabox-holder td.b a {
+    font-size: 18px;
+}
+
+/* Share bar */
 
 .um-admin-dash-share {
 	margin-top: 11px !important;
@@ -34,74 +87,3 @@
 	font-size: 22px !important;
 }
 .um-admin-dash-share a:hover {color: #3ba1da !important}
-
-.um-admin-dash-four-col .um-admin-dash-col {
-	float: left;
-	width: 25%;
-	text-align: center;
-}
-
-.um-admin-dash-three-col {border-bottom: 1px solid #ddd;padding-bottom: 25px}
-
-.um-admin-dash-three-col .um-admin-dash-col {
-	float: left;
-	width: 33%;
-	text-align: center;
-}
-
-.um-admin-dash-two-col .um-admin-dash-col {
-	display: inline-block;
-	width: 46%;
-	margin-right: 3%;
-	vertical-align: top;
-}
-
-.um-admin-dash-col a:hover {text-decoration: underline}
-.um-admin-dash-col a {text-decoration: none}
-
-.um-admin-dash-item {
-	padding: 5px 0;
-	vertical-align: middle;
-	border-top: 1px solid #eee;
-	display: inline-block;
-	width: 100%;
-	box-sizing: border-box;
-}
-.um-admin-dash-item * {vertical-align: middle}
-
-.um-admin-dash-thumb {
-	display: inline-block;
-	width: 30px;
-	margin-right: 10px;
-}
-
-.um-admin-dash-thumb a,
-.um-admin-dash-thumb img {
-	display: block;
-	overflow: hidden;
-	border-radius: 999px;
-}
-
-.um-admin-dash-info {
-	display: inline-block;
-	width: 130px;
-	margin-right: 6px;
-	-ms-word-break: break-all;
-	word-break: break-word;
-	word-wrap: break-word;
-	line-height: 14px;
-}
-
-.um-admin-dash-meta {
-	display: inline-block;
-	width: 100px;
-	margin-right: 6px;
-	position: relative;
-	line-height: 14px;
-}
-
-.um-admin-dash-more {
-	display: inline-block;
-	color: #aaa;
-	line-height: 14px;
-}

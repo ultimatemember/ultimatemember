@@ -16,7 +16,7 @@ class UM_Admin_Users {
 		
 		add_filter('views_users', array(&$this, 'views_users') );
 		
-		add_filter('pre_user_query', array(&$this, 'um_role_filter') );
+		add_filter('pre_user_query', array(&$this, 'custom_users_filter') );
 		
 		add_filter('user_row_actions', array(&$this, 'user_row_actions'), 10, 2);
 				
@@ -27,21 +27,28 @@ class UM_Admin_Users {
 	***/
 	function user_row_actions($actions, $user_object) {
 
-		um_fetch_user( $user_object->ID );
+		$user_id = $user_object->ID;
+		um_fetch_user( $user_id );
 
 		$actions = array();
 
-		$actions['backend_profile'] = "<a class='' href='" . admin_url('user-edit.php?user_id='. $user_object->ID ) . "'>" . __( 'Edit','ultimatemember' ) . "</a>";
+		$actions['backend_profile'] = "<a class='' href='" . admin_url('user-edit.php?user_id='. $user_id ) . "'>" . __( 'Edit','ultimatemember' ) . "</a>";
 		$actions['frontend_profile'] = "<a class='' href='" . um_user_profile_url() . "'>" . __( 'Edit in frontend','ultimatemember') . "</a>";
+		
+		if ( um_user('submitted') ) {
+
+		$actions['view_info'] = '<a href="#" data-modal="UM_preview_registration" data-modal-size="smaller" data-dynamic-content="um_admin_review_registration" data-arg1="'.$user_id.'" data-arg2="edit_registration">' . __('Info','ultimatemember') . '</a>';
+		
+		}
 
 		return $actions;
 
 	}
 
 	/***
-	***	@Custom role filter
+	***	@custom users filter
 	***/
-	function um_role_filter( $query ){
+	function custom_users_filter( $query ){
 		global $pagenow;
 
 		if ( is_admin() && $pagenow=='users.php' && isset($_GET[ $this->custom_role ]) && $_GET[ $this->custom_role ] != '') {
@@ -60,6 +67,23 @@ class UM_Admin_Users {
 			);
 
 		}
+		
+		if ( is_admin() && $pagenow=='users.php' && isset($_GET[ 'status' ]) && $_GET[ 'status' ] != '') {
+			
+			$query->status = urldecode($_GET[ 'status' ]);
+
+			global $wpdb;
+
+			$query->query_where = 
+			str_replace('WHERE 1=1', 
+					"WHERE 1=1 AND {$wpdb->users}.ID IN (
+						 SELECT {$wpdb->usermeta}.user_id FROM $wpdb->usermeta 
+							WHERE {$wpdb->usermeta}.meta_key = 'account_status' 
+							AND {$wpdb->usermeta}.meta_value = '{$query->status}')", 
+					$query->query_where
+			);
+
+		}
 
 		return $query;
 		
@@ -71,24 +95,32 @@ class UM_Admin_Users {
 	function views_users( $views ) {
 		global $ultimatemember, $query;
 
-		remove_filter('pre_user_query', array(&$this, 'um_role_filter') );
+		remove_filter('pre_user_query', array(&$this, 'custom_users_filter') );
 		
 		$views = array();
 
-		if ( !isset($_REQUEST[ $this->custom_role ]) ) {
-		$views['all'] = '<a href="'.admin_url('users.php').'" class="current">All <span class="count">('.$ultimatemember->query->count_users().')</span></a>';
+		if ( !isset($_REQUEST[ $this->custom_role ]) && !isset($_REQUEST['status']) ) {
+			$views['all'] = '<a href="'.admin_url('users.php').'" class="current">All <span class="count">('.$ultimatemember->query->count_users().')</span></a>';
 		} else {
-		$views['all'] = '<a href="'.admin_url('users.php').'">All <span class="count">('.$ultimatemember->query->count_users().')</span></a>';
+			$views['all'] = '<a href="'.admin_url('users.php').'">All <span class="count">('.$ultimatemember->query->count_users().')</span></a>';
 		}
 		
-		$roles = $ultimatemember->query->get_roles();
+		$status = array(
+			'approved' => __('Approved','ultimatemember'),
+			'awaiting_admin_review' => __('Pending review','ultimatemember'),
+			'awaiting_email_confirmation' => __('Waiting e-mail confirmation','ultimatemember'),
+			'inactive' => __('Inactive','ultimatemember'),
+			'rejected' => __('Rejected','ultimatemember'),
+		);
 		
-		foreach($roles as $role => $role_name){
-			if ( isset($_REQUEST[ $this->custom_role ]) && $_REQUEST[ $this->custom_role ] == $role) {
-			$views[ $role ] = '<a href="'.admin_url('users.php').'?'.$this->custom_role.'='.$role.'" class="current">'.$role_name.' <span class="count">('. $ultimatemember->query->count_users_by_role($role) .')</span></a>';
+		foreach( $status as $k => $v ) {
+			if ( isset($_REQUEST['status']) && $_REQUEST['status'] == $k ) {
+				$current = 'class="current"';
 			} else {
-			$views[ $role ] = '<a href="'.admin_url('users.php').'?'.$this->custom_role.'='.$role.'">'.$role_name.' <span class="count">('. $ultimatemember->query->count_users_by_role($role) . ')</span></a>';
+				$current = '';
 			}
+			
+			$views[ $k ] = '<a href="'.admin_url('users.php').'?status='.$k.'" ' . $current . '>'. $v . ' <span class="count">('.$ultimatemember->query->count_users_by_status( $k ).')</span></a>';
 		}
 		
 		return $views;
@@ -140,8 +172,13 @@ class UM_Admin_Users {
 				
 			}
 			
+			// filter by user role
+			if ( isset($_REQUEST['um_filter_role']) ) {
+				exit( wp_redirect( admin_url('users.php?um_role=' . $_REQUEST['um_filter_role'] ) ) );
+			}
+				
 			// bulk edit users
-			if (isset($_REQUEST['users']) && is_array($_REQUEST['users']) && isset($_REQUEST['um_bulkedit']) && $_REQUEST['um_bulkedit'] != '' && isset($_REQUEST['um_bulk_action']) && !empty($_REQUEST['um_bulk_action']) ){
+			if ( isset($_REQUEST['users']) && is_array($_REQUEST['users']) && isset($_REQUEST['um_bulkedit']) && $_REQUEST['um_bulkedit'] != '' && isset($_REQUEST['um_bulk_action']) && !empty($_REQUEST['um_bulk_action']) ){
 			
 					if ( ! current_user_can( 'edit_users' ) )
 						wp_die( __( 'You do not have enough permissions to do that.','ultimatemember') );
@@ -188,6 +225,22 @@ class UM_Admin_Users {
 	function restrict_manage_users() {
 		global $ultimatemember;
 		?>
+			
+			<div class="actions">
+			
+				<label class="screen-reader-text" for="um_filter_role"><?php _e('Filter by','ultimatemember'); ?></label>
+				<select name="um_filter_role" id="um_filter_role" class="umaf-selectjs" style="width: 120px">
+					<option value="0"><?php _e('Filter by','ultimatemember'); ?></option>
+					<?php
+						$roles = $ultimatemember->query->get_roles();
+						foreach( $roles as $role => $role_name ) { ?>
+						<option value="<?php echo $role; ?>"><?php echo $role_name; ?></option>
+						<?php } ?>
+				</select>
+				
+				<input name="um_role" id="um_role" class="button" value="<?php _e('Filter'); ?>" type="submit" />
+		
+			</div>
 			
 			<div class="actions">
 			

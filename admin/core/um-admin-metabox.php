@@ -26,7 +26,7 @@ class UM_Admin_Metabox {
 		if ( ! wp_is_post_revision( $post_id ) ) {
 			
 			if ( get_post_meta($post_id, '_um_core', true) ) {
-				delete_option('um_flush_rules'); // so they reset rewrite rules
+				flush_rewrite_rules( true ); // so they reset rewrite rules
 			}
 			
 		}

@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.50
+Stable Tag: 1.0.51
 
 License: GNU Version 2 or Any Later Version
 
@@ -185,6 +185,18 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.51: February 13, 2015 =
+
+* New: show registration info for each user in users backend
+* New: show user stats at a glance in plugin dashboard
+* New: sort users in backend by account status
+* New: sort users in backend by user role
+* New: added option to disable plugin css and js on homepage
+* Tweak: updated language and translations files
+* Fixed: issue with changing user role from Profile page
+* Fixed: php bug with user description that has links
+* Fixed: small issue with rewrite rules
 
 = 1.0.50: February 12, 2015 =
 

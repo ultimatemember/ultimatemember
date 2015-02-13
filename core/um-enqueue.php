@@ -38,6 +38,11 @@ class UM_Enqueue {
 		
 		global $ultimatemember;
 		
+		$exclude_home = um_get_option('js_css_exlcude_home');
+		if ( $exclude_home && ( is_home() || is_front_page() ) ) {
+			return;
+		}
+		
 		$exclude = um_get_option('js_css_exclude');
 		if ( $exclude && !is_admin() && is_array( $exclude ) ) {
 			

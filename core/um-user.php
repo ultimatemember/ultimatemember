@@ -295,7 +295,6 @@ class UM_User {
 	function reject(){
 		global $ultimatemember;
 		$this->set_status('rejected');
-		$this->delete( false );
 		$ultimatemember->mail->send( um_user('user_email'), 'rejected_email' );
 	}
 	

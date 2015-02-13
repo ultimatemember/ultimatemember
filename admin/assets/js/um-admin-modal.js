@@ -245,8 +245,10 @@ jQuery(document).ready(function() {
 	/**
 		fire new modal
 	**/
-	jQuery(document).on('click', 'a[data-modal^="UM_"], span[data-modal^="UM_"]', function(){
+	jQuery(document).on('click', 'a[data-modal^="UM_"], span[data-modal^="UM_"]', function(e){
 		
+		e.preventDefault();
+
 		var modal_id = jQuery(this).attr('data-modal');
 
 		if ( jQuery(this).attr('data-back') ) {
@@ -265,6 +267,8 @@ jQuery(document).ready(function() {
 		} else {
 			um_admin_new_modal( modal_id );
 		}
+		
+		return false;
 
 	});
 	
