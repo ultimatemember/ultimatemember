@@ -1,11 +1,11 @@
-.wrap h2 {
+#um-metaboxes-general.wrap h2 {
 	font-size: 23px;
 	font-weight: 400;
 	padding: 9px 15px 4px 0px;
 	line-height: 29px;
 }
 
-.wrap h2 sup {
+#um-metaboxes-general.wrap h2 sup {
 	font-size: 15px;
 }
 

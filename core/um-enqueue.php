@@ -35,9 +35,8 @@ class UM_Enqueue {
 	***	@Enqueue scripts and styles
 	***/
 	function wp_enqueue_scripts() {
-		
 		global $ultimatemember;
-		
+
 		$exclude_home = um_get_option('js_css_exlcude_home');
 		if ( $exclude_home && ( is_home() || is_front_page() ) ) {
 			return;
@@ -49,24 +48,33 @@ class UM_Enqueue {
 			$c_url = $ultimatemember->permalinks->get_current_url( get_option('permalink_structure') );
 			
 			foreach( $exclude as $match ) {
-				if ( strstr( $c_url, untrailingslashit( $match ) ) )
+				if ( strstr( $c_url, untrailingslashit( $match ) ) ) {
 					return;
+				}
 			}
 			
 		}
 		
 		$include = um_get_option('js_css_include');
 		if ( $include && !is_admin() && is_array( $include ) ) {
-			
+
 			$c_url = $ultimatemember->permalinks->get_current_url( get_option('permalink_structure') );
 
 			foreach( $include as $match ) {
-				if ( !strstr( $c_url, untrailingslashit( $match ) ) )
-					return;
+				if ( strstr( $c_url, untrailingslashit( $match ) ) ) {
+					$force_load = true;
+				} else {
+					if ( !isset( $force_load ) ) {
+						$force_load = false;
+					}
+				}
 			}
-			
+
 		}
+
+		if ( isset($force_load) && $force_load == false ) return;
 		
+		// enqueue styles
 		if ( um_get_option('disable_minify') ) {
 			
 			$this->load_original();

@@ -113,6 +113,18 @@ class UM_Admin_Notices {
 		$update = $_REQUEST['update'];
 		switch($update) {
 			
+			case 'confirm_delete':
+			
+				$confirm_uri = urldecode($_REQUEST['_refer']);
+				$users = implode(', ', $_REQUEST['user']);
+				
+				$ignore = admin_url('users.php');
+				
+				$messages[0]['err_content'] = sprintf(__('Are you sure you want to delete the selected user(s)? The following users will be deleted: (%s) <strong>This cannot be undone!</strong>','ultimatemember'), $users);
+				$messages[0]['err_content'] .= '&nbsp;&nbsp;<a href="'.$confirm_uri.'" class="button-primary">' . __('Yes! Delete','ultimatemember') . '</a>&nbsp;&nbsp;<a href="'.$ignore.'" class="button">' . __('Cancel','ultimatemember') . '</a>';
+				
+				break;
+				
 			case 'language_updated':
 				$messages[0]['content'] = __('Your translation files have been updated successfully.','ultimatemember');
 				break;

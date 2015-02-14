@@ -183,6 +183,21 @@ class UM_Admin_Users {
 					$users = $_REQUEST['users'];
 					$bulk_action = $_REQUEST['um_bulk_action'];
 					
+					if ( $bulk_action == 'um_delete' ) { // this needs confirmation
+						
+						$uri = admin_url('users.php');
+						$userids = array_map( 'intval', (array) $_REQUEST['users'] );
+						
+						if ( is_array( $userids ) ) {
+							$uri = add_query_arg('um_adm_action', 'delete_users', $uri);
+							foreach( $userids as $user_id ) {
+								$uri = add_query_arg('user[]', $user_id, $uri);
+							}
+							exit( wp_redirect( $uri ) );
+						}
+
+					}
+					
 					foreach($users as $user_id){
 						$ultimatemember->user->set( $user_id );
 						if ( !um_user('super_admin') ) {
@@ -196,6 +211,7 @@ class UM_Admin_Users {
 						}
 					}
 					
+					// Finished. redirect now
 					if ( $admin_err == 0 ){
 						wp_redirect( admin_url('users.php?update=users_updated') );
 						exit;

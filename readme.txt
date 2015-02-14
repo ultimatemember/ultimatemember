@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.52
+Stable Tag: 1.0.53
 
 License: GNU Version 2 or Any Later Version
 
@@ -185,6 +185,12 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.53: February 14, 2015 =
+
+* Tweak: when deleting users in backend, users will be deleted upon confirmation only
+* Tweak: deleted users content is assigned to admin by default (to avoid losing content)
+* Fixed: include plugin js and css on specific pages only
 
 = 1.0.52: February 13, 2015 =
 
