@@ -171,9 +171,9 @@ class UM_User {
 	/***
 	***	@Automatic login by user id
 	***/
-	function auto_login( $user_id ) {
+	function auto_login( $user_id, $rememberme = 0 ) {
 		wp_set_current_user($user_id);
-		wp_set_auth_cookie($user_id);
+		wp_set_auth_cookie($user_id, $rememberme );
 	}
 	
 	/***

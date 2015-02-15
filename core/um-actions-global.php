@@ -20,7 +20,7 @@
 		
 		if ( is_admin() ) return;
 	
-		echo '<input type="hidden" name="timestamp" id="timestamp" value="'.time().'" />';
+		echo '<input type="hidden" name="timestamp" id="timestamp" value="'. current_time( 'timestamp' ) .'" />';
 		
 		?>
 		

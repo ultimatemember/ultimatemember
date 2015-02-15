@@ -23,6 +23,16 @@
 	}
 	
 	/***
+	***	@user's registration date
+	***/
+	add_filter('um_profile_field_filter_hook__user_registered', 'um_profile_field_filter_hook__user_registered', 99, 2);
+	function um_profile_field_filter_hook__user_registered( $value, $data ) {
+		$value = strtotime($value);
+		$value = sprintf(__('Joined %s','ultimatemember'), date('d M Y', $value) );
+		return $value;
+	}
+	
+	/***
 	***	@urls in description
 	***/
 	add_filter('um_profile_field_filter_hook__description', 'um_profile_field_filter_hook__description', 99, 2);

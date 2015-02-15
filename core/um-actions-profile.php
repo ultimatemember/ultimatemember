@@ -121,7 +121,6 @@
 	***/
 	add_action('wp_head', 'um_profile_dynamic_meta_desc', 9999999);
 	function um_profile_dynamic_meta_desc() {
-	
 		global $ultimatemember;
 		
 		if ( um_is_core_page('user') && um_get_requested_user() ) {
@@ -129,15 +128,26 @@
 			um_fetch_user( um_get_requested_user() );
 			
 			$content = $ultimatemember->mail->convert_tags( um_get_option('profile_desc') );
+			$user_id = um_user('ID');
+			$url = um_user_profile_url();
 			
-			um_reset_user();
+			if ( um_profile('profile_photo') ) {
+				$avatar = um_user_uploads_uri() . um_profile('profile_photo');
+			} else {
+				$avatar = um_get_default_avatar_uri();
+			}
 			
-			?>
+			um_reset_user(); ?>
 		
 			<meta name="description" content="<?php echo $content; ?>">
+			
+			<meta property="og:title" content="<?php echo um_get_display_name( $user_id ); ?>" />
+			<meta property="og:type" content="article" />
+			<meta property="og:image" content="<?php echo $avatar; ?>" />
+			<meta property="og:url" content="<?php echo $url; ?>" />
+			<meta property="og:description" content="<?php echo $content; ?>" />
 		
-			<?php
-		
+		<?php
 		}
 	}
 	

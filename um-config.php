@@ -1634,6 +1634,16 @@ $this->sections[] = array(
 				'off'			=> __('Off','ultimatemember'),
         ),
 		
+        array(
+                'id'       		=> 'login_show_rememberme',
+                'type'     		=> 'switch',
+                'title'    		=> __( 'Show "Remember Me"','ultimatemember' ),
+				'default' 		=> 1,
+				'desc' 	   		=> __('Allow users to choose If they want to stay signed in even after closing the browser. If you do not show this option, the default will be to not remember login session.','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+        ),
+		
 	)
 	
 );

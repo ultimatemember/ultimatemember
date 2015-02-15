@@ -100,6 +100,7 @@
 
 .um-col {padding-bottom: 20px}
 .um-col-alt {margin: 0 0 5px 0}
+.um-col-alt-s {padding-top: 10px}
 .um-col-alt-b {padding-top: 20px}
 
 .um-col-121 {float: left;width: 48%}
@@ -123,10 +124,15 @@
 .um-field-tri .um-raty i {font-size: 21px}
 
 .um-button i {
-	font-size: 22px;
-	position: absolute;
-	left: 20px;
-	top: 14px;
+    font-size: 22px;
+    width: 22px;
+    height: 12px !important;
+    display: inline-block;
+    line-height: 12px !important;
+    vertical-align: middle !important;
+    position: relative;
+    top: -6px;
+    margin-right: 8px;
 }
 
 /*
@@ -166,6 +172,15 @@ p.um-notice {
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
+	position: relative;
+}
+
+p.um-notice i {
+	position: absolute;
+	right: 14px;
+	top: 1px;
+	font-size: 30px;
+	cursor: pointer;
 }
 
 p.um-notice.success {
@@ -266,7 +281,7 @@ p.um-notice.err {
 	padding: 15px 0 0 0;
 }
 
-.um-field-b{
+.um-field-b, .um-field-c {
 	padding-top: 0 !important;
 }
 
@@ -410,6 +425,12 @@ p.um-notice.err {
 	- Radio & Checkboxes
 */
 
+.um-field-c .um-field-checkbox {
+	margin: 0 !important;
+	position: relative;
+	top: -14px;
+}
+
 .um-field-checkbox,
 .um-field-radio {
 	display: block;
@@ -443,7 +464,7 @@ p.um-notice.err {
 
 .um-field-checkbox-option,
 .um-field-radio-option {
-	margin: 0 0 0 36px;
+	margin: 0 0 0 32px;
 	line-height: 24px;
 	color: #888 !important;
 	display: inline-block;

@@ -8,13 +8,13 @@
 
 		$actions = null;
 
-		$actions['um_approve_membership'] = array( 'label' => __('Approve Membership') );
-		$actions['um_reject_membership'] = array( 'label' => __('Reject Membership') );
-		$actions['um_put_as_pending'] = array( 'label' => __('Put as Pending Review') );
-		$actions['um_resend_activation'] = array( 'label' => __('Resend Activation E-mail') );
-		$actions['um_deactivate'] = array( 'label' => __('Deactivate') );
-		$actions['um_reenable'] = array( 'label' => __('Reactivate') );
-		$actions['um_delete'] = array( 'label' => __('Delete') );
+		$actions['um_approve_membership'] = array( 'label' => __('Approve Membership','ultimatemember') );
+		$actions['um_reject_membership'] = array( 'label' => __('Reject Membership','ultimatemember') );
+		$actions['um_put_as_pending'] = array( 'label' => __('Put as Pending Review','ultimatemember') );
+		$actions['um_resend_activation'] = array( 'label' => __('Resend Activation E-mail','ultimatemember') );
+		$actions['um_deactivate'] = array( 'label' => __('Deactivate','ultimatemember') );
+		$actions['um_reenable'] = array( 'label' => __('Reactivate','ultimatemember') );
+		$actions['um_delete'] = array( 'label' => __('Delete','ultimatemember') );
 		
 		return $actions;
 	}
@@ -30,32 +30,32 @@
 		if ( !um_user('super_admin') ) {
 		
 			if ( um_user('account_status') == 'awaiting_admin_review' ){
-				$actions['um_approve_membership'] = array( 'label' => __('Approve Membership') );
-				$actions['um_reject_membership'] = array( 'label' => __('Reject Membership') );
+				$actions['um_approve_membership'] = array( 'label' => __('Approve Membership','ultimatemember') );
+				$actions['um_reject_membership'] = array( 'label' => __('Reject Membership','ultimatemember') );
 			}
 			
 			if ( um_user('account_status') == 'rejected' ) {
-				$actions['um_approve_membership'] = array( 'label' => __('Approve Membership') );
+				$actions['um_approve_membership'] = array( 'label' => __('Approve Membership','ultimatemember') );
 			}
 			
 			if ( um_user('account_status') == 'approved' ) {
-				$actions['um_put_as_pending'] = array( 'label' => __('Put as Pending Review') );
+				$actions['um_put_as_pending'] = array( 'label' => __('Put as Pending Review','ultimatemember') );
 			}
 			
 			if ( um_user('account_status') == 'awaiting_email_confirmation' ) {
-				$actions['um_resend_activation'] = array( 'label' => __('Resend Activation E-mail') );
+				$actions['um_resend_activation'] = array( 'label' => __('Resend Activation E-mail','ultimatemember') );
 			}
 			
 			if (  um_user('account_status') != 'inactive' ) {
-				$actions['um_deactivate'] = array( 'label' => __('Deactivate this account') );
+				$actions['um_deactivate'] = array( 'label' => __('Deactivate this account','ultimatemember') );
 			}
 			
 			if (  um_user('account_status') == 'inactive' ) {
-				$actions['um_reenable'] = array( 'label' => __('Reactivate this account') );
+				$actions['um_reenable'] = array( 'label' => __('Reactivate this account','ultimatemember') );
 			}
 			
 			if ( um_current_user_can( 'delete', um_profile_id() ) ) {
-				$actions['um_delete'] = array( 'label' => __('Delete this user') );
+				$actions['um_delete'] = array( 'label' => __('Delete this user','ultimatemember') );
 			}
 			
 		}

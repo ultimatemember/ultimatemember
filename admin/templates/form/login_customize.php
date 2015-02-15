@@ -97,6 +97,15 @@
 		</span>
 	</p><div class="um-admin-clear"></div>
 	
+	<p>
+		<label><?php _e('Show "Remember Me"?','ultimatemember'); ?></label>
+		<span>
+			
+			<?php $this->ui_on_off('_um_login_show_rememberme', um_get_option('login_show_rememberme') ); ?>
+				
+		</span>
+	</p><div class="um-admin-clear"></div>
+	
 	</div>
 	
 </div>

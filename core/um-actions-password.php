@@ -74,7 +74,7 @@
 			wp_die('Hello, spam bot!');
 
 		$form_timestamp  = trim($_POST['timestamp']);
-		$live_timestamp  = time();
+		$live_timestamp  = current_time( 'timestamp' );
 					
 		if ( $form_timestamp == '' )
 			wp_die( __('Hello, spam bot!') );
@@ -105,7 +105,7 @@
 			wp_die('Hello, spam bot!');
 
 		$form_timestamp  = trim($_POST['timestamp']);
-		$live_timestamp  = time();
+		$live_timestamp  = current_time( 'timestamp' );
 					
 		if ( $form_timestamp == '' )
 			wp_die( __('Hello, spam bot!') );

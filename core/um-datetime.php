@@ -20,7 +20,7 @@ class UM_DateTime {
 		$then_ts = strtotime($then);
 		$then_year = date('Y', $then_ts);
 		$age = date('Y') - $then_year;
-		if(strtotime('+' . $age . ' years', $then_ts) > time()) $age--;
+		if( strtotime('+' . $age . ' years', $then_ts) > current_time( 'timestamp' ) ) $age--;
 		if ( $age == 1 )
 			return sprintf(__('%s year old','ultimatemember'), $age );
 		if ( $age > 1 )

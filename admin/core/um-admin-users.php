@@ -16,6 +16,8 @@ class UM_Admin_Users {
 		
 		add_filter('views_users', array(&$this, 'views_users') );
 		
+		add_filter('pre_user_query', array(&$this, 'sort_by_newest') );
+		
 		add_filter('pre_user_query', array(&$this, 'custom_users_filter') );
 		
 		add_filter('user_row_actions', array(&$this, 'user_row_actions'), 10, 2);
@@ -43,6 +45,27 @@ class UM_Admin_Users {
 
 		return $actions;
 
+	}
+	
+	/***
+	***	@sort users by newest first
+	***/
+	function sort_by_newest( $query ){
+		global $pagenow;
+
+		if ( is_admin() && $pagenow == 'users.php' ) {
+			
+			global $wpdb;
+
+			if (!isset($_REQUEST['orderby'])) {
+				$query->query_vars["order"] = 'desc';
+				$query->query_orderby = " ORDER BY user_registered ".($query->query_vars["order"] == "desc" ? "desc " : "asc ");//set sort order
+			}
+
+		}
+
+		return $query;
+		
 	}
 
 	/***

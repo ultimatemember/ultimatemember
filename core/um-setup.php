@@ -143,6 +143,7 @@ class UM_Setup {
 			'_um_login_primary_btn_hover' => '#44b0ec',
 			'_um_login_primary_btn_text' => '#fff',
 			'_um_login_forgot_pass_link' => 1,
+			'_um_login_show_rememberme' => 1,
 			'_um_login_secondary_btn' => 1,
 			'_um_login_secondary_btn_word' => __('Register','ultimatemember'),
 			'_um_login_secondary_btn_color' => '#eee',

@@ -159,7 +159,7 @@
 
 			if ( isset( $array['required'] ) && $array['required'] == 1 ) {
 				if ( !isset($args[$key]) || $args[$key] == '' ) {
-				$ultimatemember->form->add_error($key, sprintf(__('%s is required'), $array['label']) );
+				$ultimatemember->form->add_error($key, sprintf( __('%s is required','ultimatemember'), $array['label'] ) );
 				}
 			}
 			

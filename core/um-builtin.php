@@ -499,6 +499,17 @@ class UM_Builtin {
 				'editable' => 1,
 			),
 			
+			'user_registered' => array(
+				'title' => __('Regisration Date','ultimatemember'),
+				'metakey' => 'user_registered',
+				'type' => 'text',
+				'label' => __('Regisration Date','ultimatemember'),
+				'required' => 0,
+				'public' => 1,
+				'editable' => 1,
+				'edit_forbidden' => 1,
+			),
+			
 			'display_name' => array(
 				'title' => __('Display Name','ultimatemember'),
 				'metakey' => 'display_name',

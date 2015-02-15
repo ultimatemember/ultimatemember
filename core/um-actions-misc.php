@@ -12,9 +12,7 @@
 		
 			echo '<input type="hidden" name="redirect_to" id="redirect_to" value="'.$_REQUEST['redirect_to'].'" />';
 
-		}
-
-		if ( isset( $args['after_login'] ) && !empty( $args['after_login'] ) ) {
+		} else if ( isset( $args['after_login'] ) && !empty( $args['after_login'] ) ) {
 			
 			switch( $args['after_login'] ) {
 				
@@ -121,11 +119,11 @@
 		}
 		
 		if ( isset( $err ) && !empty( $err ) ) {
-			$output .= '<p class="um-notice err">' . $err . '</p>';
+			$output .= '<p class="um-notice err"><i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i>' . $err . '</p>';
 		}
 		
 		if ( isset( $success ) && !empty( $success ) ) {
-			$output .= '<p class="um-notice success">' . $success . '</p>';
+			$output .= '<p class="um-notice success"><i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i>' . $success . '</p>';
 		}
 		
 		echo $output;

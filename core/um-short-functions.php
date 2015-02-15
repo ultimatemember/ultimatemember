@@ -103,7 +103,9 @@ function um_user_ip() {
 	***/
 	function um_user_submitted_registration( $style = false ) {
 		$output = null;
+		
 		$data = um_user('submitted');
+		$udata = get_userdata( um_user('ID') );
 		
 		if ( $style ) $output .= '<div class="um-admin-infobox">';
 		
@@ -114,6 +116,11 @@ function um_user_ip() {
 				
 					if ( is_array($v) ) {
 						$v = implode(',', $v );
+					}
+					
+					if ( $k == 'timestamp' ) {
+						$k = __('date submitted','ultimatemember');
+						$v = date("d M Y H:i", $v);
 					}
 					
 					if ( $style ) {
@@ -795,10 +802,10 @@ function um_fetch_user( $user_id ) {
 		global $ultimatemember;
 		$uri = false;
 		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/cover_photo.jpg' ) ) {
-			$uri = um_user_uploads_uri() . 'cover_photo.jpg?' . time();
+			$uri = um_user_uploads_uri() . 'cover_photo.jpg?' . current_time( 'timestamp' );
 		}
 		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/cover_photo-' . $attrs. '.jpg' ) ){
-			$uri = um_user_uploads_uri() . 'cover_photo-'.$attrs.'.jpg?' . time();
+			$uri = um_user_uploads_uri() . 'cover_photo-'.$attrs.'.jpg?' . current_time( 'timestamp' );
 		}
 		return $uri;
 	}
@@ -813,7 +820,7 @@ function um_fetch_user( $user_id ) {
 
 		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo-' . $attrs. '.jpg' ) ) {
 			
-			$uri = um_user_uploads_uri() . 'profile_photo-'.$attrs.'.jpg?' . time();
+			$uri = um_user_uploads_uri() . 'profile_photo-'.$attrs.'.jpg?' . current_time( 'timestamp' );
 		
 		} else {
 			
@@ -822,11 +829,11 @@ function um_fetch_user( $user_id ) {
 			
 			if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo-' . $find. '.jpg' ) ) {
 				
-				$uri = um_user_uploads_uri() . 'profile_photo-'.$find.'.jpg?' . time();
+				$uri = um_user_uploads_uri() . 'profile_photo-'.$find.'.jpg?' . current_time( 'timestamp' );
 			
 			} else if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo.jpg' ) ) {
 				
-				$uri = um_user_uploads_uri() . 'profile_photo.jpg?' . time();
+				$uri = um_user_uploads_uri() . 'profile_photo.jpg?' . current_time( 'timestamp' );
 			
 			}
 			

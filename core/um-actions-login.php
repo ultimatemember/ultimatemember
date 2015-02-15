@@ -45,13 +45,13 @@
 		
 		if ( !username_exists( $user_name ) ) {
 			if ( $is_email ) {
-				$ultimatemember->form->add_error( $field,  __(' Sorry, we can\'t find an account with that email address') );
+				$ultimatemember->form->add_error( $field,  __(' Sorry, we can\'t find an account with that email address','ultimatemember') );
 			} else {
-				$ultimatemember->form->add_error( $field,  __(' Sorry, we can\'t find an account with that username') );
+				$ultimatemember->form->add_error( $field,  __(' Sorry, we can\'t find an account with that username','ultimatemember') );
 			}
 		} else {
 			if ( $args['user_password'] == '' ) {
-				$ultimatemember->form->add_error( 'user_password',  __('Please enter your password') );
+				$ultimatemember->form->add_error( 'user_password',  __('Please enter your password','ultimatemember') );
 			}
 		}
 		
@@ -66,7 +66,7 @@
 
 				case 'incorrect_password':
 					if ( username_exists( $user_name ) ) {
-						$ultimatemember->form->add_error( 'user_password',  __('Password is incorrect. Please try again.') );
+						$ultimatemember->form->add_error( 'user_password',  __('Password is incorrect. Please try again.','ultimatemember') );
 					}
 					break;
 					
@@ -116,7 +116,9 @@
 		global $ultimatemember;
 		extract( $args );
 
-		$ultimatemember->user->auto_login( um_user('ID') );
+		$rememberme = ( isset($args['rememberme']) ) ? 1 : 0;
+		
+		$ultimatemember->user->auto_login( um_user('ID'), $rememberme );
 		
 		// Priority redirect
 		if ( isset( $args['redirect_to'] ) ) {
@@ -173,6 +175,10 @@
 		?>
 		
 		<div class="um-col-alt">
+
+			<?php if ( isset( $args['show_rememberme'] ) && $args['show_rememberme'] ) {
+					echo $ultimatemember->fields->checkbox('rememberme', __('Keep me signed in','ultimatemember') );
+			} ?>
 
 			<?php if ( isset($args['secondary_btn']) && $args['secondary_btn'] != 0 ) { ?>
 			
