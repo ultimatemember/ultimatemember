@@ -15,7 +15,14 @@ jQuery(document).ready(function() {
 		live_value = jQuery(this).val();
 
 		if ( jQuery(this).is(':checkbox') ) {
-			live_value = jQuery(this).parents('.um-field').find('input:checked').val();
+			if ( jQuery(this).parents('.um-field').find('input:checked').length > 1 ) {
+				live_value = '';
+				jQuery(this).parents('.um-field').find('input:checked').each(function(){
+					live_value = live_value + jQuery(this).val() + ' ';
+				});
+			} else {
+				live_value = jQuery(this).parents('.um-field').find('input:checked').val();
+			}
 		}
 		
 		if ( jQuery(this).is(':radio') ) {

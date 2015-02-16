@@ -6,13 +6,24 @@ class UM_Members {
 		
 		add_filter('pre_user_query', array(&$this, 'custom_order_query') );
 		
+		add_filter('user_search_columns', array(&$this, 'add_display_name'), 99 );
+		
 		add_action('template_redirect', array(&$this, 'access_members'), 555);
 		
 		$this->core_search_fields = array(
 			'user_login',
 			'username',
+			'display_name',
 		);
 		
+	}
+	
+	/***
+	***	@Add display name
+	***/
+	function add_display_name(){
+		$search_columns[] = 'display_name';
+		return $search_columns;
 	}
 	
 	/***

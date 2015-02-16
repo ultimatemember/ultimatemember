@@ -33,9 +33,9 @@ $this->sections[] = array(
                 'default'  		=> 'user_login',
 				'desc'			=> 'e.g. ' . trailingslashit( um_get_core_page('user') ) .'<strong>username</strong>/',
 				'options' 		=> array(
-									'user_login' 		=> 'Username',
-									'name' 				=> 'First and Last Name',
-									'user_id' 			=> 'User ID',
+									'user_login' 		=> __('Username','ultimatemember'),
+									'name' 				=> __('First and Last Name','ultimatemember'),
+									'user_id' 			=> __('User ID','ultimatemember'),
 				),
 				'placeholder' 	=> __('Select...','ultimatemember')
         ),
@@ -48,14 +48,14 @@ $this->sections[] = array(
                 'desc' 	   		=> __( 'This is the name that will be displayed for users on the front end of your site. Default setting uses first/last name as display name if it exists','ultimatemember' ),
                 'default'  		=> 'full_name',
 				'options' 		=> array(
-									'username' 			=> 'Username',
-									'full_name' 		=> 'First name & last name',
-									'sur_name' 			=> 'Last name & first name',
-									'initial_name'		=> 'First name & first initial of last name',
-									'initial_name_f'	=> 'First initial of first name & last name',
-									'first_name'		=> 'First name only',
-									'public_name'		=> 'Display name',
-									'field' 			=> 'Custom field(s)',
+									'username' 			=> __('Username','ultimatemember'),
+									'full_name' 		=> __('First name & last name','ultimatemember'),
+									'sur_name' 			=> __('Last name & first name','ultimatemember'),
+									'initial_name'		=> __('First name & first initial of last name','ultimatemember'),
+									'initial_name_f'	=> __('First initial of first name & last name','ultimatemember'),
+									'first_name'		=> __('First name only','ultimatemember'),
+									'public_name'		=> __('Display name','ultimatemember'),
+									'field' 			=> __('Custom field(s)','ultimatemember'),
 				),
 				'placeholder' 	=> __('Select...')
         ),
@@ -561,7 +561,7 @@ $this->sections[] = array(
                 'id'       => 'inactive_email_sub',
                 'type'     => 'text',
                 'title'    => __( 'Account Deactivated Email','ultimatemember' ),
-                'subtitle' => __( 'Subject Line' ),
+                'subtitle' => __( 'Subject Line','ultimatemember' ),
                 'default'  => 'Your account has been deactivated',
 				'required' => array( 'inactive_email_on', '=', 1 ),
 				'desc' 	   => __('This is the subject line of the e-mail','ultimatemember'),
@@ -1548,7 +1548,7 @@ $this->sections[] = array(
 $this->sections[] = array(
 	
     'subsection' => true,
-    'title'      => __( 'Login Form'),
+    'title'      => __( 'Login Form','ultimatemember'),
     'fields'     => array(
 	
 		array(

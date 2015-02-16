@@ -20,7 +20,7 @@
 		foreach( $ultimatemember->members->core_search_fields as $key ) {
 			if ( isset( $query[$key] ) ) {
 				$query_args['search']         = '*' . $query[$key] . '*';
-				$query_args['search_columns'] = array( 'user_login', 'user_email' );
+				$query_args['search_columns'] = array( 'user_login', 'user_email', 'display_name' );
 			}
 		}
 

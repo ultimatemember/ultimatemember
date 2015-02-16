@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.56
+Stable Tag: 1.0.58
 
 License: GNU Version 2 or Any Later Version
 
@@ -186,6 +186,20 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.58: February 16, 2015 =
+
+* Fixed: display name as search field in member directory
+* Fixed: translation issues in backend settings
+* Fixed: issue with non-english letters in display names
+* Fixed: bug with multiple default values for multi-select and checkbox fields
+* Fixed: bug with multiple conditional logic based on different checkbox values
+
+= 1.0.57: February 16, 2015 =
+
+* Tweak: Italian language up-to-date
+* Fixed: issue with registration where it can trigger a php warning
+* Fixed: some translation issues
 
 = 1.0.56: February 15, 2015 =
 

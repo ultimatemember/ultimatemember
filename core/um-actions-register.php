@@ -39,14 +39,14 @@
 			$user_login = $user_email;
 		}
 		
-		if ( isset( $username ) && !isset($user_login) ) {
+		if ( isset( $username ) && !isset($args['user_login']) ) {
 			$user_login = $username;
 		}
-		
+
 		if ( isset( $username ) && is_email( $username ) ) {
 			$user_email = $username;
 		}
-		
+
 		if (!isset($user_password)){
 			$user_password = $ultimatemember->validation->generate();
 		}
