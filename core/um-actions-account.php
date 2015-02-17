@@ -58,26 +58,26 @@
 		global $ultimatemember;
 		
 		if ( strlen(trim( $_POST['first_name'] ) ) == 0 ) {
-			$ultimatemember->form->add_error('first_name', 'You must provide your first name');
+			$ultimatemember->form->add_error('first_name', __('You must provide your first name','ultimatemember') );
 		}
 		
 		if ( strlen(trim( $_POST['last_name'] ) ) == 0 ) {
-			$ultimatemember->form->add_error('last_name', 'You must provide your last name');
+			$ultimatemember->form->add_error('last_name', __('You must provide your last name','ultimatemember') );
 		}
 		
 		if ( strlen(trim( $_POST['user_email'] ) ) == 0 ) {
-			$ultimatemember->form->add_error('user_email', 'You must provide your e-mail');
+			$ultimatemember->form->add_error('user_email', __('You must provide your e-mail','ultimatemember') );
 		}
 		
 		if ( !is_email( $_POST['user_email'] ) ) {
-			$ultimatemember->form->add_error('user_email', 'Please provide a valid e-mail');
+			$ultimatemember->form->add_error('user_email', __('Please provide a valid e-mail','ultimatemember') );
 		}
 		
 		$ultimatemember->account->current_tab = 'general';
 		
 		if ( $_POST['current_user_password'] != '' ) {
 			if ( !wp_check_password( $_POST['current_user_password'], um_user('user_pass'), um_user('ID') ) ) {
-				$ultimatemember->form->add_error('current_user_password', 'This is not your password');
+				$ultimatemember->form->add_error('current_user_password', __('This is not your password','ultimatemember') );
 				$ultimatemember->account->current_tab = 'password';
 			} else { // correct password
 				
@@ -108,10 +108,10 @@
 		
 		if ( isset($_POST['um_account_submit']) && $_POST['um_account_submit'] == __('Delete Account','ultimatemember') ) {
 			if ( strlen(trim( $_POST['single_user_password'] ) ) == 0 ) {
-					$ultimatemember->form->add_error('single_user_password', 'You must enter your password');
+					$ultimatemember->form->add_error('single_user_password', __('You must enter your password','ultimatemember') );
 			} else {
 				if ( !wp_check_password( $_POST['single_user_password'], um_user('user_pass'), um_user('ID') ) ) {
-					$ultimatemember->form->add_error('single_user_password', 'This is not your password');
+					$ultimatemember->form->add_error('single_user_password', __('This is not your password','ultimatemember') );
 				}
 			}
 			$ultimatemember->account->current_tab = 'delete';

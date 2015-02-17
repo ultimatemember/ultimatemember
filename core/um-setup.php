@@ -379,12 +379,11 @@ class UM_Setup {
 			
 			$users = get_users( array('fields' => 'ID') );
 			foreach( $users as $id ) {
-				
-				if ( !get_user_meta( $id, 'account_status', true ) ) {
-					update_user_meta( $id, 'account_status', 'approved' );
-				}
-				
+
+				delete_user_meta( $id, 'account_status' );
 				delete_user_meta( $id, 'role' );
+				
+				update_user_meta( $id, 'account_status', 'approved' );
 				
 				if ( !is_super_admin( $id ) ) {
 					if ( is_numeric( $id ) ) {

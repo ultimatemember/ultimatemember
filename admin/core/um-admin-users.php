@@ -317,14 +317,7 @@ class UM_Admin_Users {
 	
 		$admin = new UM_Admin_Metabox();
 		
-		unset($columns['posts']);
-		unset($columns['email']);
-		
 		$columns['um_role'] = __('Community Role','ultimatemember') . $admin->_tooltip( __('This is the membership role set by Ultimate Member plugin','ultimatemember') );
-		
-		$columns['role'] = __('WordPress Role','ultimatemember') . $admin->_tooltip( __('This is the membership role set by WordPress','ultimatemember') );
-		
-		$columns['um_status'] = __('Status','ultimatemember') . $admin->_tooltip( __('This is current user status in your membership site','ultimatemember') );
 
 		return $columns;
 	}
@@ -333,20 +326,7 @@ class UM_Admin_Users {
 	***	@show user columns
 	***/
 	function manage_users_custom_column($value, $column_name, $user_id) {
-	
 		global $ultimatemember;
-
-		if ( 'um_status' == $column_name ) {
-		
-			um_fetch_user( $user_id );
-			if ( um_user('account_status') == 'approved' ) {
-				$output = '<span class="um-admin-tag small approved">'.um_user('account_status_name').'</span>';
-			} else {
-				$output = '<span class="um-admin-tag small pending">'.um_user('account_status_name').'</span>';
-			}
-			return $output;
-			
-		}
 
 		if ( $this->custom_role == $column_name ) {
 		

@@ -22,7 +22,6 @@ class UM_Rewrite {
 		$public_query_vars[] = 'um_tab';
 		$public_query_vars[] = 'profiletab';
 		$public_query_vars[] = 'subnav';
-		$public_query_vars[] = 'members_page';
 		return $public_query_vars;
 	}
 	

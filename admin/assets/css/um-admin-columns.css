@@ -17,10 +17,6 @@
 .um-admin.post-type-um_role .manage-column.column-count {width: 150px}
 .um-admin.post-type-um_role .manage-column.column-core {width: 150px}
 
-.um-admin.users-php .manage-column.column-username {width: 300px}
-.um-admin.users-php .manage-column.column-um_role {width: 140px}
-.um-admin.users-php .manage-column.column-um_status {width: 160px}
-
 .um-admin.users-php .tablenav.top .bulkactions,
  .um-admin.users-php .tablenav.bottom .bulkactions{display:none}
 

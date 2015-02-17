@@ -34,7 +34,7 @@ class UM_Permalinks {
 		global $post;
 
 		if ( is_front_page() ) :
-			$page_url = home_url();
+			$page_url = home_url() . $_SERVER["REQUEST_URI"];
 		else :
 			$page_url = 'http';
 
