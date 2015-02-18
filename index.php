@@ -3,7 +3,7 @@
 Plugin Name: Ultimate Member
 Plugin URI: http://ultimatemember.com/
 Description: Ultimate Member is a powerful community and membership plugin that allows you to create beautiful community and membership sites with WordPress
-Version: 1.0.59
+Version: 1.0.60
 Author: Ultimate Member
 Author URI: http://ultimatemember.com/
 */

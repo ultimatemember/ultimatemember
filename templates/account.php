@@ -23,13 +23,13 @@
 				do_action('um_before_form', $args);
 				
 				foreach( $ultimatemember->account->tabs as $k => $arr ) {
-				
+
 					foreach( $arr as $id => $info ) { extract( $info );
 					
 						$current_tab = $ultimatemember->account->current_tab;
-						
+
 						if ( um_get_option('account_tab_'.$id ) == 1 || $id == 'general' ) {
-					
+
 							?>
 							
 							<div class="um-account-nav uimob340-show uimob500-show"><a href="#" data-tab="<?php echo $id; ?>" class="<?php if ( $id == $current_tab ) echo 'current'; ?>"><?php echo $title; ?>

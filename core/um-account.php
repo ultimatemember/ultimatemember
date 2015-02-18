@@ -6,12 +6,37 @@ class UM_Account {
 	
 		add_shortcode('ultimatemember_account', array(&$this, 'ultimatemember_account'), 1);
 		
+		add_filter('um_account_page_default_tabs_hook', array(&$this, 'core_tabs'), 1);
+		
 		add_action('template_redirect', array(&$this, 'account'), 10001 );
 		
 		add_action('template_redirect', array(&$this, 'form_init'), 10002);
 		
 		$this->current_tab = 'general';
 
+	}
+	
+	/***
+	***	@get core account tabs
+	***/
+	function core_tabs() {
+		
+		$tabs[100]['general']['icon'] = 'um-faicon-user';
+		$tabs[100]['general']['title'] = __('Account','ultimatemember');
+		
+		$tabs[200]['password']['icon'] = 'um-faicon-asterisk';
+		$tabs[200]['password']['title'] = __('Change Password','ultimatemember');
+		
+		$tabs[300]['privacy']['icon'] = 'um-faicon-lock';
+		$tabs[300]['privacy']['title'] = __('Privacy','ultimatemember');
+		
+		$tabs[400]['notifications']['icon'] = 'um-faicon-bell';
+		$tabs[400]['notifications']['title'] = __('Notifications','ultimatemember');
+		
+		$tabs[500]['delete']['icon'] = 'um-faicon-trash-o';
+		$tabs[500]['delete']['title'] = __('Delete Account','ultimatemember');
+		
+		return $tabs;
 	}
 	
 	/***
@@ -160,7 +185,8 @@ class UM_Account {
 				break;
 				
 			default :
-				$args = null;
+				$output = apply_filters("um_account_content_hook_{$id}", $output);
+				return $output;
 				break;
 
 		}

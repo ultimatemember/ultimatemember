@@ -420,7 +420,7 @@ class UM_Fields {
 			
 			} else {
 			
-				if ( isset( $ultimatemember->form->post_form[$key] ) &&$value == $ultimatemember->form->post_form[$key] ) {
+				if ( isset( $ultimatemember->form->post_form[$key] ) && $value == $ultimatemember->form->post_form[$key] ) {
 					return true;
 				}
 			
@@ -1387,7 +1387,7 @@ class UM_Fields {
 							}
 							
 							$output .= '<option value="'.$option_value.'" ';
-							if ( $this->is_selected($key, $option_value, $data) ) { 
+							if ( $this->is_selected($form_key, $option_value, $data) ) { 
 								$output.= 'selected';
 							}
 							$output .= '>'.$v.'</option>';

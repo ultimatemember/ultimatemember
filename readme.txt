@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1
 
-Stable Tag: 1.0.59
+Stable Tag: 1.0.60
 
 License: GNU Version 2 or Any Later Version
 
@@ -187,6 +187,15 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.60: February 18, 2015 =
+
+* Tweak: added a protection to prevent wp-admin lockout for admin users
+* Tweak: new hook for account page form submitting (for developers)
+* Tweak: added a few missing translations
+* Fixed: issue with roles dropdown not saving its state
+* Fixed: issue with roles dropdown when made required in form
+* Fixed: issue with tabbing on form fields
 
 = 1.0.59: February 17, 2015 =
 

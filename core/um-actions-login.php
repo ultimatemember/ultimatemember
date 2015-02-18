@@ -13,15 +13,15 @@
 		$mode = $args['mode'];
 
 		if ( isset( $args['username'] ) && $args['username'] == '' ) {
-			$ultimatemember->form->add_error( 'username',  __('Please enter your username or email') );
+			$ultimatemember->form->add_error( 'username',  __('Please enter your username or email','ultimatemember') );
 		}
 		
 		if ( isset( $args['user_login'] ) && $args['user_login'] == '' ) {
-			$ultimatemember->form->add_error( 'user_login',  __('Please enter your username') );
+			$ultimatemember->form->add_error( 'user_login',  __('Please enter your username','ultimatemember') );
 		}
 		
 		if ( isset( $args['user_email'] ) && $args['user_email'] == '' ) {
-			$ultimatemember->form->add_error( 'user_email',  __('Please enter your email') );
+			$ultimatemember->form->add_error( 'user_email',  __('Please enter your email','ultimatemember') );
 		}
 		
 		if ( isset( $args['username'] ) ) {

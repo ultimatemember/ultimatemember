@@ -54,7 +54,7 @@
 	***/
 	function um_block_wpadmin_by_user_role(){
 		global $ultimatemember;
-		if( is_admin() && !defined('DOING_AJAX') && um_user('ID') && !um_user('can_access_wpadmin')){
+		if( is_admin() && !defined('DOING_AJAX') && um_user('ID') && !um_user('can_access_wpadmin') && !is_super_admin( um_user('ID') ) ){
 			um_redirect_home();
 		}
 	}

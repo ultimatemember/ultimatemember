@@ -442,7 +442,9 @@ p.um-notice.err {
 .um-field-checkbox:hover i, .um-field-radio:hover i {color: #666}
 
 .um-field-checkbox input,
-.um-field-radio input{display:none!important}
+.um-field-radio input{
+	opacity: 0 !important;
+}
 
 .um-field-checkbox-state,
 .um-field-radio-state {
@@ -464,7 +466,7 @@ p.um-notice.err {
 
 .um-field-checkbox-option,
 .um-field-radio-option {
-	margin: 0 0 0 32px;
+	margin: 0 0 0 22px;
 	line-height: 24px;
 	color: #888 !important;
 	display: inline-block;

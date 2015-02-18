@@ -22,6 +22,9 @@
 			unset( $changes['hide_in_members'] );
 		}
 
+		// fired on account page, just before updating profile
+		do_action('um_account_pre_update_profile', $changes, um_user('ID') );
+		
 		$ultimatemember->user->update_profile( $changes );
 
 		// delete account
@@ -211,7 +214,6 @@
 	function um_account_tab__password( $info ) {
 		global $ultimatemember;
 		extract( $info );
-		extract( $info );
 		
 		$output = $ultimatemember->account->get_tab_output('password');
 		
@@ -234,7 +236,6 @@
 	add_action('um_account_tab__notifications', 'um_account_tab__notifications');
 	function um_account_tab__notifications( $info ) {
 		global $ultimatemember;
-		extract( $info );
 		extract( $info );
 		
 		$output = $ultimatemember->account->get_tab_output('notifications');
@@ -314,22 +315,9 @@
 		global $ultimatemember;
 		extract( $args );
 		
-		$tabs[100]['general']['icon'] = 'um-faicon-user';
-		$tabs[100]['general']['title'] = __('Account','ultimatemember');
+		$ultimatemember->account->tabs = apply_filters('um_account_page_default_tabs_hook', $tabs=array() );
 		
-		$tabs[200]['password']['icon'] = 'um-faicon-asterisk';
-		$tabs[200]['password']['title'] = __('Change Password','ultimatemember');
-		
-		$tabs[300]['privacy']['icon'] = 'um-faicon-lock';
-		$tabs[300]['privacy']['title'] = __('Privacy','ultimatemember');
-		
-		$tabs[400]['notifications']['icon'] = 'um-faicon-bell';
-		$tabs[400]['notifications']['title'] = __('Notifications','ultimatemember');
-		
-		$tabs[500]['delete']['icon'] = 'um-faicon-trash-o';
-		$tabs[500]['delete']['title'] = __('Delete Account','ultimatemember');
-		
-		$ultimatemember->account->tabs = apply_filters('um_account_page_default_tabs_hook', $tabs );
+		ksort( $ultimatemember->account->tabs  );
 		
 		?>
 

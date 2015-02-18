@@ -93,7 +93,7 @@
 		
 			$words = array_map("rtrim", explode("\n", $words));
 			foreach( $fields as $key => $array ) {
-				if ( isset( $args[$key] ) ) {
+				if ( isset( $args[$key] ) && !empty( $args[$key] ) ) {
 					if ( isset($array['validate']) && in_array( $array['validate'], array('unique_username','unique_email','unique_username_or_email') ) ) {
 						if ( preg_grep( "/".$args[$key]."/i" , $words ) ) {
 							$ultimatemember->form->add_error( $key,  __('You are not allowed to use this word as your username.','ultimatemember') );
@@ -155,11 +155,17 @@
 
 		foreach( $fields as $key => $array ) {
 			
+			if ( $key == 'role_select' || $key == 'role_radio' ) {
+				if ( isset($args['role']) && empty($args['role']) && isset( $array['required'] ) && $array['required'] == 1 ) {
+					$ultimatemember->form->add_error($key, __('Please specify account type.','ultimatemember') );
+				}
+			}
+			
 			if ( isset( $args[$key] ) ) {
 
 			if ( isset( $array['required'] ) && $array['required'] == 1 ) {
 				if ( !isset($args[$key]) || $args[$key] == '' ) {
-				$ultimatemember->form->add_error($key, sprintf( __('%s is required','ultimatemember'), $array['label'] ) );
+					$ultimatemember->form->add_error($key, sprintf( __('%s is required','ultimatemember'), $array['label'] ) );
 				}
 			}
 			
@@ -302,14 +308,26 @@
 						
 					case 'unique_email':
 						
-						if ( $args[$key] == '' ) {
-							$ultimatemember->form->add_error($key, __('You must provide your email','ultimatemember') );
-						} else if ( $mode == 'register' && email_exists( $args[$key] ) ) {
-							$ultimatemember->form->add_error($key, __('This email is already linked to an existing account','ultimatemember') );
-						} else if ( !is_email( $args[$key] ) ) {
-							$ultimatemember->form->add_error($key, __('This is not a valid email','ultimatemember') );
-						} else if ( !$ultimatemember->validation->safe_username( $args[$key] ) ) {
-							$ultimatemember->form->add_error($key,  __('Your email contains invalid characters','ultimatemember') );
+						if ( in_array( $key, array('user_email') ) ) {
+							
+							if ( $args[$key] == '' && in_array( $key, array('user_email') ) ) {
+								$ultimatemember->form->add_error($key, __('You must provide your email','ultimatemember') );
+							} else if ( $mode == 'register' && email_exists( $args[$key] ) ) {
+								$ultimatemember->form->add_error($key, __('This email is already linked to an existing account','ultimatemember') );
+							} else if ( !is_email( $args[$key] ) ) {
+								$ultimatemember->form->add_error($key, __('This is not a valid email','ultimatemember') );
+							} else if ( !$ultimatemember->validation->safe_username( $args[$key] ) ) {
+								$ultimatemember->form->add_error($key,  __('Your email contains invalid characters','ultimatemember') );
+							}
+						
+						} else {
+						
+							if ( $args[$key] != '' && !is_email($args[$key]) ) {
+								$ultimatemember->form->add_error($key, __('This is not a valid email','ultimatemember') );
+							} else if ( $args[$key] != '' && email_exists( $args[$key] ) ) {
+								$ultimatemember->form->add_error($key, __('This email is already linked to an existing account','ultimatemember') );
+							}
+							
 						}
 						
 						break;
