@@ -118,9 +118,10 @@
 					if ( !$access_redirect ) $access_redirect = um_get_core_page('login');
 					$redirect_to = $access_redirect;
 				}
-				
+
 				if ( is_user_logged_in() && isset( $access_roles ) && !empty( $access_roles ) ){
 					if ( !in_array( um_user('role'), unserialize( $access_roles ) ) ) {
+						if ( !$access_redirect ) $access_redirect = um_get_core_page('login');
 						$redirect_to = $access_redirect;
 					}
 				}

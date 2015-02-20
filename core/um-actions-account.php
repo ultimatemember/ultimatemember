@@ -60,19 +60,19 @@
 	function um_submit_account_errors_hook( $args ) {
 		global $ultimatemember;
 		
-		if ( strlen(trim( $_POST['first_name'] ) ) == 0 ) {
+		if ( isset($_POST['first_name']) && strlen(trim( $_POST['first_name'] ) ) == 0 ) {
 			$ultimatemember->form->add_error('first_name', __('You must provide your first name','ultimatemember') );
 		}
 		
-		if ( strlen(trim( $_POST['last_name'] ) ) == 0 ) {
+		if ( isset($_POST['last_name']) && strlen(trim( $_POST['last_name'] ) ) == 0 ) {
 			$ultimatemember->form->add_error('last_name', __('You must provide your last name','ultimatemember') );
 		}
 		
-		if ( strlen(trim( $_POST['user_email'] ) ) == 0 ) {
+		if ( isset($_POST['user_email']) && strlen(trim( $_POST['user_email'] ) ) == 0 ) {
 			$ultimatemember->form->add_error('user_email', __('You must provide your e-mail','ultimatemember') );
 		}
 		
-		if ( !is_email( $_POST['user_email'] ) ) {
+		if ( isset($_POST['user_email']) && !is_email( $_POST['user_email'] ) ) {
 			$ultimatemember->form->add_error('user_email', __('Please provide a valid e-mail','ultimatemember') );
 		}
 		

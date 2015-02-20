@@ -176,11 +176,14 @@ p.um-notice {
 }
 
 p.um-notice i {
-	position: absolute;
-	right: 14px;
-	top: 1px;
-	font-size: 30px;
-	cursor: pointer;
+    position: absolute;
+    right: 14px;
+    font-size: 36px;
+    cursor: pointer;
+    top: 7px;
+    display: block;
+    height: 30px;
+    line-height: 30px;
 }
 
 p.um-notice.success {

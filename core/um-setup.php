@@ -399,6 +399,14 @@ class UM_Setup {
 
 		}
 		
+		if ( !get_option('um_hashed_passwords_fix') ) {
+			update_option('um_hashed_passwords_fix', 1);
+			$users = get_users( array('fields' => 'ID') );
+			foreach( $users as $id ) {
+				delete_user_meta( $id, '_um_cool_but_hard_to_guess_plain_pw' );
+			}
+		}
+		
 	}
 	
 	/***

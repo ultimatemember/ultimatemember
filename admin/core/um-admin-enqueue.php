@@ -10,7 +10,7 @@ class UM_Admin_Enqueue {
 		
 		add_action('admin_enqueue_scripts',  array(&$this, 'admin_enqueue_scripts'), 9);
 		
-		add_filter('admin_body_class', array(&$this, 'admin_body_class'), 9 );
+		add_filter('admin_body_class', array(&$this, 'admin_body_class'), 999 );
 		
 		add_filter('enter_title_here', array(&$this, 'enter_title_here') );
 
@@ -243,9 +243,10 @@ class UM_Admin_Enqueue {
 	***	@Adds class to our admin pages
 	***/
 	function admin_body_class($classes){
-		if ( $this->is_UM_admin() )
-			$classes .= 'um-admin';	
-		return $classes;
+		if ( $this->is_UM_admin() ) {
+			return "$classes um-admin";
+		}
+		return $classes;	
 	}
 	
 	/***

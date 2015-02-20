@@ -166,6 +166,16 @@ $this->sections[] = array(
         ),
 		
         array(
+                'id'       		=> 'account_name',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Add a First & Last Name fields','ultimatemember' ),
+				'default' 		=> 1,
+				'desc' 	   		=> __('Whether to enable these fields on the user account page by default or hide them.','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+        ),
+		
+        array(
                 'id'       		=> 'account_require_strongpass',
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Require a strong password?','ultimatemember' ),

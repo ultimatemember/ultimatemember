@@ -530,12 +530,17 @@
 	function um_profile_navbar( $args ) {
 		global $ultimatemember;
 		
+		if ( !um_get_option('profile_menu') )
+			return;
+		
+		// get active tabs
 		$tabs = $ultimatemember->profile->tabs_active();
 
 		$tabs = apply_filters('um_user_profile_tabs', $tabs );
 		
 		$ultimatemember->user->tabs = $tabs;
 		
+		// need enough tabs to continue
 		if ( count( $tabs ) <= 1 ) return;
 		
 		$active_tab = $ultimatemember->profile->active_tab();

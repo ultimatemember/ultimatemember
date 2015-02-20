@@ -1,6 +1,15 @@
 jQuery(document).ready(function() {
 
+	jQuery('.um-profile.um-viewing .um-profile-body .um-row').each(function(){
+		var this_row = jQuery(this);
+		if ( this_row.find('.um-field').length == 0 ) {
+			this_row.prev('.um-row-heading').remove();
+			this_row.remove();
+		}
+	});
+	
 	if ( jQuery('.um-profile.um-viewing .um-profile-body').length && jQuery('.um-profile.um-viewing .um-profile-body').find('.um-field').length == 0 ) {
+		jQuery('.um-row-heading,.um-row').remove();
 		jQuery('.um-profile-note').show();
 	}
 	

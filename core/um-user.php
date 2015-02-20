@@ -265,9 +265,10 @@ class UM_User {
 		}
 		
 		$this->set_status('approved');
-		$this->delete_meta('account_secret_hash');
-		
 		$ultimatemember->mail->send( um_user('user_email'), $email_tpl );
+		
+		$this->delete_meta('account_secret_hash');
+		$this->delete_meta('_um_cool_but_hard_to_guess_plain_pw');
 	}
 	
 	/***
