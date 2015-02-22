@@ -177,9 +177,7 @@ class UM_Password {
 		do_action("um_before_form_is_loaded", $args);
 		
 		do_action("um_before_{$mode}_form_is_loaded", $args);
-		
-		do_action("um_before_{$template}_form_is_loaded", $args);
-		
+
 		$this->template_load( $template, $args );
 		
 		if ( !is_admin() && !defined( 'DOING_AJAX' ) ) {

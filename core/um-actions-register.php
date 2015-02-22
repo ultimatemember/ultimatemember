@@ -98,7 +98,7 @@
 		$ultimatemember->user->set_plain_password( $args['user_password'] );
 		
 		do_action('um_post_registration_save', $user_id, $args);
-				
+
 		do_action('um_post_registration_listener', $user_id, $args);
 		
 		do_action('um_post_registration', $user_id, $args);
@@ -236,18 +236,24 @@
 		// DO NOT add when reviewing user's details
 		if ( isset( $ultimatemember->user->preview ) && $ultimatemember->user->preview == true && is_admin() ) return;
 		
+		$primary_btn_word = $args['primary_btn_word'];
+		$primary_btn_word = apply_filters('um_register_form_button_one', $primary_btn_word);
+		
+		$secondary_btn_word = $args['secondary_btn_word'];
+		$secondary_btn_word = apply_filters('um_register_form_button_two', $secondary_btn_word);
+		
 		?>
 		
 		<div class="um-col-alt">
 		
 			<?php if ( isset($args['secondary_btn']) && $args['secondary_btn'] != 0 ) { ?>
 			
-			<div class="um-left um-half"><input type="submit" value="<?php echo $args['primary_btn_word']; ?>" class="um-button" /></div>
-			<div class="um-right um-half"><a href="<?php echo um_get_core_page('login'); ?>" class="um-button um-alt"><?php echo $args['secondary_btn_word']; ?></a></div>
+			<div class="um-left um-half"><input type="submit" value="<?php echo $primary_btn_word; ?>" class="um-button" /></div>
+			<div class="um-right um-half"><a href="<?php echo um_get_core_page('login'); ?>" class="um-button um-alt"><?php echo $secondary_btn_word; ?></a></div>
 			
 			<?php } else { ?>
 			
-			<div class="um-center"><input type="submit" value="<?php echo $args['primary_btn_word']; ?>" class="um-button" /></div>
+			<div class="um-center"><input type="submit" value="<?php echo $primary_btn_word; ?>" class="um-button" /></div>
 			
 			<?php } ?>
 			

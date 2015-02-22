@@ -309,8 +309,6 @@ p.um-notice.err {
 .um-field-label .um-field-label-icon  i { font-size: 22px; height: 22px; line-height: 22px; vertical-align: middle; }
 
 .um-field-label label {
-	display: inline-block !important;
-	height: 22px;
 	font-size: 15px !important;
 	line-height: 22px !important;
 	font-weight: bold;
@@ -439,7 +437,7 @@ p.um-notice.err {
 	display: block;
 	margin: 8px 0;
 	position: relative;
-	cursor: pointer;
+	cursor: pointer !important;
 }
 
 .um-field-checkbox:hover i, .um-field-radio:hover i {color: #666}
@@ -447,6 +445,9 @@ p.um-notice.err {
 .um-field-checkbox input,
 .um-field-radio input{
 	opacity: 0 !important;
+	display: inline !important;
+	width: 0 !important;
+	float: left;
 }
 
 .um-field-checkbox-state,
@@ -469,10 +470,10 @@ p.um-notice.err {
 
 .um-field-checkbox-option,
 .um-field-radio-option {
-	margin: 0 0 0 22px;
+	margin: 0px 0px 0px 36px;
 	line-height: 24px;
 	color: #888 !important;
-	display: inline-block;
+	display: block;
 }
 
 /*

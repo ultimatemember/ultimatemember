@@ -71,6 +71,26 @@
     font-size: 18px;
 }
 
+.um-metabox-holder .norm i {
+	display: inline-block;
+	width: 30px;
+	text-align: center;
+}
+
+.um-metabox-holder .norm p {
+	margin: 5px 0;
+}
+
+.um-metabox-holder .norm .count {
+	font-size: 16px;
+	font-family: Gerogia;
+	color: #999;
+	width: 40px;
+	display: inline-block;
+	text-align: right;
+	margin-right: 10px;
+}
+
 /* Share bar */
 
 .um-admin-dash-share {

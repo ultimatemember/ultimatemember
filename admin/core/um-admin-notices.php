@@ -74,6 +74,7 @@ class UM_Admin_Notices {
 		
 		$locale = get_option('WPLANG');
 		if ( !$locale ) return;
+		if ( strstr( $locale, 'en_' ) ) return; // really, english!
 		if ( file_exists( WP_LANG_DIR . '/plugins/ultimatemember-' . $locale . '.mo' ) ) return;
 		
 		if ( isset( $ultimatemember->available_languages[$locale] ) ) {

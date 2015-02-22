@@ -60,7 +60,7 @@ class UM_Admin_Dashboard {
 		
 		add_meta_box('um-metaboxes-contentbox-1', __('Users Overview','ultimatemember'), array(&$this, 'users_overview'), $this->pagehook, 'core', 'core');
 		
-		add_meta_box('um-metaboxes-mainbox-1', __('Purge Temp Files','ultimatemember'), array(&$this, 'purge_temp'), $this->pagehook, 'normal', 'core');
+		add_meta_box('um-metaboxes-sidebox-1', __('Purge Temp Files','ultimatemember'), array(&$this, 'purge_temp'), $this->pagehook, 'side', 'core');
 		
 		if ( $this->language_avaialable_not_installed() ) {
 			add_meta_box('um-metaboxes-sidebox-2', __('Language','ultimatemember'), array(&$this, 'dl_language'), $this->pagehook, 'side', 'core');
@@ -105,7 +105,7 @@ class UM_Admin_Dashboard {
 	***/
 	function language_not_available() {
 		$locale = get_option('WPLANG');
-		if ( $locale && !isset( $ultimatemember->available_languages[$locale] ) && !file_exists( WP_LANG_DIR . '/plugins/ultimatemember-' . $locale . '.mo' ) )
+		if ( $locale && !strstr($locale, 'en_') && !isset( $ultimatemember->available_languages[$locale] ) && !file_exists( WP_LANG_DIR . '/plugins/ultimatemember-' . $locale . '.mo' ) )
 			return true;
 		return false;
 	}
