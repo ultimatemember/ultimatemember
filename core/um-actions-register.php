@@ -242,6 +242,9 @@
 		$secondary_btn_word = $args['secondary_btn_word'];
 		$secondary_btn_word = apply_filters('um_register_form_button_two', $secondary_btn_word);
 		
+		$secondary_btn_url = ( isset( $args['secondary_btn_url'] ) && $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page('login');
+		$secondary_btn_url = apply_filters('um_register_form_button_two_url', $secondary_btn_url);
+		
 		?>
 		
 		<div class="um-col-alt">
@@ -249,7 +252,7 @@
 			<?php if ( isset($args['secondary_btn']) && $args['secondary_btn'] != 0 ) { ?>
 			
 			<div class="um-left um-half"><input type="submit" value="<?php echo $primary_btn_word; ?>" class="um-button" /></div>
-			<div class="um-right um-half"><a href="<?php echo um_get_core_page('login'); ?>" class="um-button um-alt"><?php echo $secondary_btn_word; ?></a></div>
+			<div class="um-right um-half"><a href="<?php echo $secondary_btn_url; ?>" class="um-button um-alt"><?php echo $secondary_btn_word; ?></a></div>
 			
 			<?php } else { ?>
 			

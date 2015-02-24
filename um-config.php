@@ -1541,6 +1541,15 @@ $this->sections[] = array(
 				'required'		=> array( 'register_secondary_btn', '=', 1 ),
         ),
 		
+        array(
+                'id'      		=> 'register_secondary_btn_url',
+                'type'     		=> 'text',
+                'title'    		=> __( 'Registration Secondary Button URL','ultimatemember' ),
+                'default'  		=> um_get_metadefault('register_secondary_btn_url'),
+				'desc' 	   		=> __('You can replace default link for this button by entering custom URL','ultimatemember'),
+				'required'		=> array( 'login_secondary_btn', '=', 1 ),
+        ),
+		
 		array(
 				'id'       		=> 'register_role',
                 'type'     		=> 'select',
@@ -1631,6 +1640,15 @@ $this->sections[] = array(
                 'title'    		=> __( 'Login Secondary Button Text','ultimatemember' ),
                 'default'  		=> um_get_metadefault('login_secondary_btn_word'),
 				'desc' 	   		=> __('The text that is used for the secondary button text','ultimatemember'),
+				'required'		=> array( 'login_secondary_btn', '=', 1 ),
+        ),
+		
+        array(
+                'id'      		=> 'login_secondary_btn_url',
+                'type'     		=> 'text',
+                'title'    		=> __( 'Login Secondary Button URL','ultimatemember' ),
+                'default'  		=> um_get_metadefault('login_secondary_btn_url'),
+				'desc' 	   		=> __('You can replace default link for this button by entering custom URL','ultimatemember'),
 				'required'		=> array( 'login_secondary_btn', '=', 1 ),
         ),
 		

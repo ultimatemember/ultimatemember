@@ -18,7 +18,7 @@
 	display: none;
 }
 
-.um-profile img {display: block;overflow:hidden;border-radius:0;margin: 0}
+.um-profile img {display: block;overflow:hidden;border-radius:0;margin: 0 !important}
 
 .um-profile a,
 .um-profile a:hover {text-decoration:none !important}

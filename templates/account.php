@@ -28,7 +28,7 @@
 					
 						$current_tab = $ultimatemember->account->current_tab;
 
-						if ( um_get_option('account_tab_'.$id ) == 1 || $id == 'general' ) {
+						if ( isset($info['custom']) || um_get_option('account_tab_'.$id ) == 1 || $id == 'general' ) {
 
 							?>
 							

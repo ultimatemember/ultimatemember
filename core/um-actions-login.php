@@ -172,6 +172,15 @@
 		// DO NOT add when reviewing user's details
 		if ( $ultimatemember->user->preview == true && is_admin() ) return;
 		
+		$primary_btn_word = $args['primary_btn_word'];
+		$primary_btn_word = apply_filters('um_login_form_button_one', $primary_btn_word);
+		
+		$secondary_btn_word = $args['secondary_btn_word'];
+		$secondary_btn_word = apply_filters('um_login_form_button_two', $secondary_btn_word);
+		
+		$secondary_btn_url = ( isset( $args['secondary_btn_url'] ) && $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page('register');
+		$secondary_btn_url = apply_filters('um_login_form_button_two_url', $secondary_btn_url);
+		
 		?>
 		
 		<div class="um-col-alt">
@@ -182,8 +191,8 @@
 
 			<?php if ( isset($args['secondary_btn']) && $args['secondary_btn'] != 0 ) { ?>
 			
-			<div class="um-left um-half"><input type="submit" value="<?php echo $args['primary_btn_word']; ?>" class="um-button" /></div>
-			<div class="um-right um-half"><a href="<?php echo um_get_core_page('register'); ?>" class="um-button um-alt"><?php echo $args['secondary_btn_word']; ?></a></div>
+			<div class="um-left um-half"><input type="submit" value="<?php echo $primary_btn_word; ?>" class="um-button" /></div>
+			<div class="um-right um-half"><a href="<?php echo $secondary_btn_url; ?>" class="um-button um-alt"><?php echo $secondary_btn_word; ?></a></div>
 			
 			<?php } else { ?>
 			

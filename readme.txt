@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1.1
 
-Stable Tag: 1.0.64
+Stable Tag: 1.0.65
 
 License: GNU Version 2 or Any Later Version
 
@@ -188,6 +188,14 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.65: February 24, 2015 =
+
+* New: added option to customize register form secondary button URL
+* New: added option to customize login form secondary button URL
+* Fixed: issue with global access lock when homepage is excluded
+* Fixed: issue with custom account tabs
+* Fixed: minor css conflict with profile photo
 
 = 1.0.64: February 22, 2015 =
 

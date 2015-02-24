@@ -37,15 +37,19 @@
 			if ( $exclude_uris ) {
 				$redirects = array_merge( $redirects, $exclude_uris );
 			}
-
+			
+			$redirects = array_unique( $redirects );
+			
 			$current_url = $ultimatemember->permalinks->get_current_url( get_option('permalink_structure') );
 			$current_url = untrailingslashit( $current_url );
+			$current_url_slash = trailingslashit( $current_url );
 			
-			if ( ( isset( $post->ID ) || is_home() ) && in_array( $current_url, $redirects ) ) {
-			 // allow
+			if ( ( isset( $post->ID ) || is_home() ) && ( in_array( $current_url, $redirects ) || in_array( $current_url_slash, $redirects ) ) ) {
+				// allow
 			} else {
 				$ultimatemember->access->redirect_handler = $redirect;
 			}
+			
 		}
 
 	}
