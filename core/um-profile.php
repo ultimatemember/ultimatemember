@@ -49,6 +49,8 @@ class UM_Profile {
 		if ( get_query_var('profiletab') ) {
 			$this->active_tab = get_query_var('profiletab');
 		}
+		
+		$this->active_tab = apply_filters( 'um_profile_active_tab', $this->active_tab );
 
 		return $this->active_tab;
 	}
@@ -76,7 +78,7 @@ class UM_Profile {
 		
 		foreach( $array as $key ) {
 			$data = '';
-			if ( $key && um_user( $key ) ) {
+			if ( $key && um_filtered_value( $key ) ) {
 				
 				if ( isset( $ultimatemember->builtin->all_user_fields[$key]['icon'] ) ) {
 					$icon = $ultimatemember->builtin->all_user_fields[$key]['icon'];

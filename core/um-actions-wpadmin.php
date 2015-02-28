@@ -7,6 +7,12 @@
 	function um_block_wpadmin_for_guests() {
 	global $pagenow;
 	
+		// Logout screen
+		if ( isset( $pagenow ) && $pagenow == 'wp-login.php' && is_user_logged_in() && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'logout' ) {
+			$redirect = um_get_core_page('logout');
+			exit( wp_redirect( $redirect ) );
+		}
+			
 		// Login screen
 		if ( isset( $pagenow ) && $pagenow == 'wp-login.php' && !is_user_logged_in() && !isset( $_REQUEST['action'] ) ) {
 

@@ -162,11 +162,18 @@
 		
 		<?php echo $output; ?>
 		
-		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Delete Account','ultimatemember'); ?>" class="um-button" /></div><div class="um-clear"></div></div>
+		<div class="um-col-alt um-col-alt-b">
+			<div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Delete Account','ultimatemember'); ?>" class="um-button" /></div>
+			<?php do_action('um_after_account_delete_button'); ?>
+			<div class="um-clear"></div>
+		</div>
 		
 		<?php
 		
 		}
+		
+		do_action('um_after_account_delete');
+		
 	}
 
 	/***
@@ -185,11 +192,18 @@
 		
 		<?php echo $output; ?>
 		
-		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Update Privacy','ultimatemember'); ?>" class="um-button" /></div><div class="um-clear"></div></div>
+		<div class="um-col-alt um-col-alt-b">
+			<div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Update Privacy','ultimatemember'); ?>" class="um-button" /></div>
+			<?php do_action('um_after_account_privacy_button'); ?>
+			<div class="um-clear"></div>
+		</div>
 		
 		<?php
 		
 		}
+		
+		do_action('um_after_account_privacy');
+		
 	}
 
 	/***
@@ -199,7 +213,7 @@
 	function um_account_tab__general( $info ) {
 		global $ultimatemember;
 		extract( $info );
-		
+
 		$output = $ultimatemember->account->get_tab_output('general');
 		
 		if ( $output ) { ?>
@@ -208,11 +222,18 @@
 		
 		<?php echo $output; ?>
 		
-		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Update Account','ultimatemember'); ?>" class="um-button" /></div><div class="um-clear"></div></div>
+		<div class="um-col-alt um-col-alt-b">
+			<div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Update Account','ultimatemember'); ?>" class="um-button" /></div>
+			<?php do_action('um_after_account_general_button'); ?>
+			<div class="um-clear"></div>
+		</div>
 		
 		<?php
-		
+
 		}
+		
+		do_action('um_after_account_general');
+		
 	}
 	
 	/***
@@ -231,11 +252,18 @@
 		
 		<?php echo $output; ?>
 		
-		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Update Password','ultimatemember'); ?>" class="um-button" /></div><div class="um-clear"></div></div>
+		<div class="um-col-alt um-col-alt-b">
+			<div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Update Password','ultimatemember'); ?>" class="um-button" /></div>
+			<?php do_action('um_after_account_password_button'); ?>
+			<div class="um-clear"></div>
+		</div>
 		
 		<?php
 		
 		}
+		
+		do_action('um_after_account_password');
+		
 	}
 	
 	/***
@@ -254,11 +282,18 @@
 		
 		<?php echo $output; ?>
 		
-		<div class="um-col-alt um-col-alt-b"><div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Update Notifications','ultimatemember'); ?>" class="um-button" /></div><div class="um-clear"></div></div>
+		<div class="um-col-alt um-col-alt-b">
+			<div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Update Notifications','ultimatemember'); ?>" class="um-button" /></div>
+			<?php do_action('um_after_account_notifications_button'); ?>
+			<div class="um-clear"></div>
+		</div>
 		
 		<?php
-		
+
 		}
+		
+		do_action('um_after_account_notifications');
+		
 	}
 	
 	/***

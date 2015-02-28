@@ -18,6 +18,7 @@ class UM_Files {
 			'xlsx' 	=> array('icon' 	=> 'um-faicon-file-excel-o', 'color' => '#51BA6A' ),
 			'zip' 	=> array('icon' 	=> 'um-faicon-file-zip-o' ),
 			'rar' 	=> array('icon'		=> 'um-faicon-file-zip-o' ),
+			'mp3'	=> array('icon'		=> 'um-faicon-file-audio-o' ),
 		);
 		
 		$this->default_file_fonticon = 'um-faicon-file-o';
@@ -54,6 +55,7 @@ class UM_Files {
 		$array['xlsx'] = 'XLSX';
 		$array['zip'] = 'ZIP';
 		$array['rar'] = 'RAR';
+		$array['mp3'] = 'MP3';
 		
 		$array = apply_filters('um_allowed_file_types', $array);
 		return $array;
@@ -316,9 +318,9 @@ class UM_Files {
 		} elseif ( isset($data['min_size']) && ( $fileinfo['size'] < $data['min_size'] ) ) {
 			$error = $data['min_size_error'];
 		} elseif ( isset($data['min_width']) && ( $fileinfo['width'] < $data['min_width'] ) ) {
-			$error = sprintf(__('Your photo is too small. It must be at least %spx wide.'), $data['min_width']);
+			$error = sprintf(__('Your photo is too small. It must be at least %spx wide.','ultimatemember'), $data['min_width']);
 		} elseif ( isset($data['min_height']) && ( $fileinfo['height'] < $data['min_height'] ) ) {
-			$error = sprintf(__('Your photo is too small. It must be at least %spx wide.'), $data['min_height']);
+			$error = sprintf(__('Your photo is too small. It must be at least %spx wide.','ultimatemember'), $data['min_height']);
 		}
 		
 		return $error;
@@ -502,6 +504,8 @@ class UM_Files {
 		rmdir( $dir );
 
 		// update user's meta
+		do_action('um_before_upload_db_meta', $user_id, $key );
+		do_action("um_before_upload_db_meta_{$key}", $user_id );
 		update_user_meta( $user_id, $key, $filename );
 		
 		// the url of upload

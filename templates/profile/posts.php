@@ -22,4 +22,4 @@
 
 	<?php ( um_is_myprofile() ) ? _e('You have not created any posts.','ultimatemember') : _e('This user has not created any posts.','ultimatemember'); ?>
 
-<?php } ?>
+<?php } wp_reset_postdata(); ?>

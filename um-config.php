@@ -393,6 +393,14 @@ $this->sections[] = array(
         ),
 
         array(
+                'id'       => 'email_html',
+                'type'     => 'switch',
+                'title'    => __( 'Use HTML for E-mails?','ultimatemember' ),
+				'default'  => 0,
+				'desc' 	   => __('If you enable HTML for e-mails, you can customize the HTML e-mail templates found in <strong>templates/email</strong> folder.','ultimatemember'),
+        ),
+		
+        array(
                 'id'       => 'welcome_email_on',
                 'type'     => 'switch',
                 'title'    => __( 'Account Welcome Email','ultimatemember' ),

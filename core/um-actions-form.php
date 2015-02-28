@@ -152,8 +152,12 @@
 		$form_id = $args['form_id'];
 		$mode = $args['mode'];
 		$fields = unserialize( $args['custom_fields'] );
-
+		
 		foreach( $fields as $key => $array ) {
+			
+			if ( isset( $array['type'] ) && $array['type'] == 'checkbox' && isset( $array['required'] ) && $array['required'] == 1 && !isset( $args[$key] ) ) {
+				$ultimatemember->form->add_error($key, sprintf(__('You must check %s.','ultimatemember'), $array['title'] ) );
+			}
 			
 			if ( $key == 'role_select' || $key == 'role_radio' ) {
 				if ( isset($args['role']) && empty($args['role']) && isset( $array['required'] ) && $array['required'] == 1 ) {

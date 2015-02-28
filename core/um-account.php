@@ -33,8 +33,8 @@ class UM_Account {
 		$tabs[400]['notifications']['icon'] = 'um-faicon-bell';
 		$tabs[400]['notifications']['title'] = __('Notifications','ultimatemember');
 		
-		$tabs[500]['delete']['icon'] = 'um-faicon-trash-o';
-		$tabs[500]['delete']['title'] = __('Delete Account','ultimatemember');
+		$tabs[9999]['delete']['icon'] = 'um-faicon-trash-o';
+		$tabs[9999]['delete']['title'] = __('Delete Account','ultimatemember');
 		
 		return $tabs;
 	}

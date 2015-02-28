@@ -306,7 +306,7 @@ p.um-notice.err {
 	width: 24px;
 	text-align: center;
 }
-.um-field-label .um-field-label-icon  i { font-size: 22px; height: 22px; line-height: 22px; vertical-align: middle; }
+.um-field-label .um-field-label-icon i { font-size: 22px; position: relative; top: 1px; }
 
 .um-field-label label {
 	font-size: 15px !important;
@@ -713,4 +713,16 @@ span.um-req {
 	font-weight: bold;
 	position: relative;
 	top: 10px;
+}
+
+.um-large-text {
+	font-size: 18px;
+	color: #666;
+}
+
+.um-large-text span {
+	background: #eee;
+	padding: 2px 4px;
+	color: #333;
+	border-radius: 3px;
 }

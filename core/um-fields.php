@@ -105,6 +105,11 @@ class UM_Fields {
 			}
 		}
 		
+		// custom fields support
+		if ( isset( $ultimatemember->builtin->predefined_fields[$id] ) && isset( $ultimatemember->builtin->predefined_fields[$id]['custom'] ) ) {
+			$args = array_merge( $ultimatemember->builtin->predefined_fields[$id], $args);
+		}
+		
 		$fields[$id] = $args;
 		
 		// for group field only
@@ -370,7 +375,7 @@ class UM_Fields {
 			
 			return um_user( $key );
 		
-		} else if ( um_user( $key ) && $this->viewing == true ) {
+		} else if ( ( um_user( $key ) || isset($data['show_anyway']) ) && $this->viewing == true ) {
 		
 			$value = um_filtered_value( $key, $data );
 			return $value;
@@ -1246,7 +1251,7 @@ class UM_Fields {
 					
 					$output .= '<div class="um-modal-footer">
 									<div class="um-modal-right">
-										<a href="#" class="um-modal-btn um-finish-upload image disabled" data-key="'.$key.'" data-change="'.__('Change photo').'" data-processing="'.__('Processing...','ultimatemember').'"> ' . __('Apply','ultimatemember') . '</a>
+										<a href="#" class="um-modal-btn um-finish-upload image disabled" data-key="'.$key.'" data-change="'.__('Change photo','ultimatemember').'" data-processing="'.__('Processing...','ultimatemember').'"> ' . __('Apply','ultimatemember') . '</a>
 										<a href="#" class="um-modal-btn alt" data-action="um_remove_modal"> ' . __('Cancel','ultimatemember') . '</a>
 									</div>
 									<div class="um-clear"></div>
@@ -1292,7 +1297,7 @@ class UM_Fields {
 												<span class="filename">' . $this->field_value( $key, $default, $data ) . '</span>
 											</a>
 										</div>
-							</div><a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. __('Change file') . '</a>';
+							</div><a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. __('Change file','ultimatemember') . '</a>';
 						
 					} else {
 					

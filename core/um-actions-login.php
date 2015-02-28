@@ -120,6 +120,9 @@
 		
 		$ultimatemember->user->auto_login( um_user('ID'), $rememberme );
 		
+		// Hook that runs after successful login and before user is redirected
+		do_action('um_on_login_before_redirect', um_user('ID') );
+		
 		// Priority redirect
 		if ( isset( $args['redirect_to'] ) ) {
 			exit( wp_redirect( $args['redirect_to'] ) );

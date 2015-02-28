@@ -14,10 +14,25 @@ class UM_Mail {
 	function mandrill_nl2br($nl2br, $message = '') {
 		
 		// text emails
-		$nl2br = true;
+		if ( !um_get_option('email_html') ) {
+			$nl2br = true;
+		}
 		
 		return $nl2br;
 
+	}
+	
+	/***
+	***	@check If template exists
+	***/
+	function email_template( $template ) {
+		if ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/email/' . $template . '.html' ) ) {
+			return get_stylesheet_directory() . '/ultimate-member/templates/email/' . $template . '.html';
+		}
+		if ( file_exists( um_path . 'templates/email/' . $template . '.html' ) ) {
+			return um_url . 'templates/email/' . $template . '.html';
+		}
+		return false;
 	}
 	
 	/***
@@ -30,17 +45,35 @@ class UM_Mail {
 		if ( !is_email( $email ) ) return;
 		
 		$this->attachments = null;
-		
 		$this->headers = 'From: '. um_get_option('mail_from') .' <'. um_get_option('mail_from_addr') .'>' . "\r\n";
 
 		$this->subject = um_get_option( $template . '_sub' );
 		$this->subject = $this->convert_tags( $this->subject );
+
+		// HTML e-mail
+		if ( um_get_option('email_html') && $this->email_template( $template ) ) {
+			$this->message = file_get_contents( $this->email_template( $template ) );
+		} else {
+			$this->message = um_get_option( $template );
+		}
 		
-		$this->message = um_get_option( $template );
+		// Convert tags in body
 		$this->message = $this->convert_tags( $this->message );
 
+		// Send mail
+		add_filter( 'wp_mail_content_type', array(&$this, 'set_content_type') );
 		wp_mail( $email, $this->subject, $this->message, $this->headers, $this->attachments );
-
+		remove_filter( 'wp_mail_content_type', array(&$this, 'set_content_type')  );
+		
+	}
+	
+	/***
+	***	@maybe sending HTML emails
+	***/
+	function set_content_type( $content_type ) {
+		if ( um_get_option('email_html') )
+			return 'text/html';
+		return 'text/plain';
 	}
 	
 	/***
@@ -58,11 +91,14 @@ class UM_Mail {
 			'{password}',
 			'{login_url}',
 			'{site_name}',
+			'{site_url}',
 			'{account_activation_link}',
 			'{password_reset_link}',
 			'{admin_email}',
 			'{user_profile_link}',
+			'{user_account_link}',
 			'{submitted_registration}',
+			'{user_avatar_url}',
 		);
 		
 		$search = apply_filters('um_template_tags_patterns_hook', $search);
@@ -77,11 +113,14 @@ class UM_Mail {
 			um_user('_um_cool_but_hard_to_guess_plain_pw'),
 			um_get_core_page('login'),
 			um_get_option('site_name'),
+			get_bloginfo('url'),
 			um_user('account_activation_link'),
 			um_user('password_reset_link'),
 			um_admin_email(),
 			um_user_profile_url(),
+			um_get_core_page('account'),
 			um_user_submitted_registration(),
+			um_get_user_avatar_url(),
 		);
 		
 		$replace = apply_filters('um_template_tags_replaces_hook', $replace);

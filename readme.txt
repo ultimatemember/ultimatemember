@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1.1
 
-Stable Tag: 1.0.65
+Stable Tag: 1.0.69
 
 License: GNU Version 2 or Any Later Version
 
@@ -188,6 +188,32 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.69: February 28, 2015 =
+
+* Tweak: better WP logout handling
+* Tweak: new action and filter hooks added
+
+= 1.0.68: February 27, 2015 =
+
+* New: added support for mp3 as allowed filetype / upload
+* Fixed: bug with profile privacy option (on non-english sites)
+* Fixed: uncommon php warning caused by um_get_user_avatar_url() function
+* Fixed: new translation corrections
+
+= 1.0.67: February 26, 2015 =
+
+* New: Improved the default HTML e-mail templates design
+* New: added a bunch of action hooks to account tabs and content
+* Tweak: added a few template tags to use in email: {site_url}, {user_account_link}
+* Fixed: issue with making a checkbox required prior to registering
+* Fixed: issue with comments showing in posts tab under profile
+* Fixed: issue with plugin uninstallation link not showing in multisite
+
+= 1.0.66: February 25, 2015 =
+
+* New: added option to send e-mails as HTML
+* New: added default HTML templates for e-mail notifications
 
 = 1.0.65: February 24, 2015 =
 

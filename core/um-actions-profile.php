@@ -82,6 +82,10 @@
 		if ( isset( $args['submitted']['role'] ) && !empty( $args['submitted']['role'] ) ) {
 			$to_update['role'] = $args['submitted']['role'];
 		}
+		
+		do_action('um_user_pre_updating_profile', $to_update );
+		
+		$to_update = apply_filters('um_user_pre_updating_profile_array', $to_update);
 
 		if ( is_array( $to_update ) ) {
 			$ultimatemember->user->update_profile( $to_update );
@@ -307,10 +311,17 @@
 				<div class="um-profile-meta">
 				
 					<div class="um-main-meta">
+					
 						<?php if ( $args['show_name'] ) { ?>
-						<div class="um-name"><a href="<?php echo um_user_profile_url(); ?>" title="<?php echo um_user('display_name'); ?>"><?php echo um_user('display_name'); ?></a></div>
+						<div class="um-name">
+							<a href="<?php echo um_user_profile_url(); ?>" title="<?php echo um_user('display_name'); ?>"><?php echo um_user('display_name'); ?></a>
+						</div>
 						<?php } ?>
+						
 						<div class="um-clear"></div>
+						
+						<?php do_action('um_after_profile_header_name'); ?>
+						
 					</div>
 					
 					<?php if ( isset( $args['metafields'] ) && !empty( $args['metafields'] ) ) { ?>

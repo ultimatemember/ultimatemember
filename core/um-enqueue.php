@@ -81,10 +81,10 @@ class UM_Enqueue {
 			
 		} else {
 		
-			wp_register_script('um_minified', um_url . 'assets/js/um.min.js', array('jquery'), '', true );
+			wp_register_script('um_minified', um_url . 'assets/js/um.min.js', array('jquery'), ultimatemember_version, true );
 			wp_enqueue_script('um_minified');
 			
-			wp_register_style('um_minified', um_url . 'assets/css/um.min.css' );
+			wp_register_style('um_minified', um_url . 'assets/css/um.min.css', '', ultimatemember_version, 'all' );
 			wp_enqueue_style('um_minified');
 		
 		}
@@ -92,7 +92,7 @@ class UM_Enqueue {
 		// load a localized version for date/time
 		$locale = get_option('WPLANG');
 		if ( $locale && file_exists( um_path . 'assets/js/pickadate/translations/' . $locale . '.js' ) ) {
-			wp_register_script('um_datetime_locale', um_url . 'assets/js/pickadate/translations/' . $locale . '.js', '', '', true );
+			wp_register_script('um_datetime_locale', um_url . 'assets/js/pickadate/translations/' . $locale . '.js', '', ultimatemember_version, true );
 			wp_enqueue_script('um_datetime_locale');
 		}
 		
@@ -118,7 +118,7 @@ class UM_Enqueue {
 		$this->load_datetimepicker();
 		
 		$this->load_raty();
-		
+
 		$this->load_imagecrop();
 		
 		$this->load_masonry();

@@ -853,6 +853,18 @@ function um_fetch_user( $user_id ) {
 	}
 	
 	/***
+	***	@get user avatar url
+	***/
+	function um_get_user_avatar_url() {
+		if ( um_profile('profile_photo') ) {
+			$avatar_uri = um_get_avatar_uri( um_profile('profile_photo'), 32 );
+		} else {
+			$avatar_uri = um_get_default_avatar_uri();
+		}
+		return $avatar_uri;
+	}
+	
+	/***
 	***	@default cover
 	***/
 	function um_get_default_cover_uri() {
