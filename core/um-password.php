@@ -21,7 +21,7 @@ class UM_Password {
 	
 		global $ultimatemember;
 		
-		if ( isset($_REQUEST['act']) && $_REQUEST['act'] == 'reset_password' && isset($_REQUEST['hash']) && strlen($_REQUEST['hash']) == 30 &&
+		if ( isset($_REQUEST['act']) && $_REQUEST['act'] == 'reset_password' && isset($_REQUEST['hash']) && strlen($_REQUEST['hash']) == 40 &&
 			isset($_REQUEST['user_id']) && is_numeric($_REQUEST['user_id']) ) {
 			
 				um_fetch_user( $_REQUEST['user_id'] );

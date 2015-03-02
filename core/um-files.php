@@ -468,6 +468,9 @@ class UM_Files {
 				}
 			
 			}
+			
+			// removes a synced profile photo
+			delete_user_meta( $user_id, 'synced_profile_photo' );
 		
 		}
 		
