@@ -347,7 +347,7 @@ class UM_Fields {
 	function field_value( $key, $default = false, $data = null ) {
 		global $ultimatemember;
 		
-		if ( isset($_SESSION) && isset($_SESSION['um_social_profile'][$key]) )
+		if ( isset($_SESSION) && isset($_SESSION['um_social_profile'][$key]) && isset( $this->set_mode ) && $this->set_mode == 'register' )
 			return $_SESSION['um_social_profile'][$key];
 		
 		$type = (isset($data['type']))?$data['type']:'';
@@ -1427,8 +1427,8 @@ class UM_Fields {
 						
 						$output .= '</div>';
 							
-						if ( $this->is_error($key) ) {
-							$output .= $this->field_error( $this->show_error($key) );
+						if ( $this->is_error($form_key) ) {
+							$output .= $this->field_error( $this->show_error($form_key) );
 						}
 					
 						$output .= '</div>';
@@ -1566,8 +1566,8 @@ class UM_Fields {
 							
 						$output .= '</div>';
 							
-						if ( $this->is_error($key) ) {
-							$output .= $this->field_error( $this->show_error($key) );
+						if ( $this->is_error($form_key) ) {
+							$output .= $this->field_error( $this->show_error($form_key) );
 						}
 					
 						$output .= '</div>';

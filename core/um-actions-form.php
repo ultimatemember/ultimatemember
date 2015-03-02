@@ -161,7 +161,7 @@
 			
 			if ( $key == 'role_select' || $key == 'role_radio' ) {
 				if ( isset($args['role']) && empty($args['role']) && isset( $array['required'] ) && $array['required'] == 1 ) {
-					$ultimatemember->form->add_error($key, __('Please specify account type.','ultimatemember') );
+					$ultimatemember->form->add_error('role', __('Please specify account type.','ultimatemember') );
 				}
 			}
 			

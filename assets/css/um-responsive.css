@@ -234,6 +234,21 @@ div.uimob340 .um-account-main {
 	box-sizing: border-box;
 }
 
+div.uimob340 .um-account-main .um-provider {
+	padding: 15px 0 0 0;
+}
+
+div.uimob340 .um-account-main .um-left {
+	float: none;
+	display: block;
+}
+
+div.uimob340 .um-account-main .um-right {
+	float: none;
+	display: block;
+	margin-top: 10px;
+}
+
 div.uimob340 .um-account-tab {
 	padding-bottom: 20px;
 	border-bottom: 1px solid #eee;
@@ -456,6 +471,21 @@ div.uimob500 .um-account-main {
 	box-sizing: border-box;
 }
 
+div.uimob500 .um-account-main .um-provider {
+	padding: 15px 0 0 0;
+}
+
+div.uimob500 .um-account-main .um-left {
+	float: none;
+	display: block;
+}
+
+div.uimob500 .um-account-main .um-right {
+	float: none;
+	display: block;
+	margin-top: 10px;
+}
+
 div.uimob500 .um-account-tab {
 	padding-bottom: 20px;
 	border-bottom: 1px solid #eee;
@@ -501,6 +531,21 @@ div.uimob800 .um-profile-subnav span {
 div.uimob800 .um-account-main {
 	width: 90%;
 	max-width: 450px;
+}
+
+div.uimob800 .um-account-main .um-provider {
+	padding: 15px 0 0 0;
+}
+
+div.uimob800 .um-account-main .um-left {
+	float: none;
+	display: block;
+}
+
+div.uimob800 .um-account-main .um-right {
+	float: none;
+	display: block;
+	margin-top: 10px;
 }
 
 div.uimob800 .um-account-side {

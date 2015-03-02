@@ -1684,6 +1684,7 @@ $this->sections[] = array(
 	
 );
 
+if ( um_get_option('enable_custom_css') ) {
 $this->sections[] = array(
 	
     'subsection' => true,
@@ -1701,6 +1702,7 @@ $this->sections[] = array(
 	)
 	
 );
+}
 
 /***
 ***	@
@@ -1766,6 +1768,15 @@ $this->sections[] = array(
                 'desc' 	   		=> __( 'Enter a url or page slug (e.g /about/) to enable loading the plugin\'s css and js on that page.','ultimatemember' ),
 				'add_text'		=> __('Add New Page','ultimatemember'),
 		),
+		
+        array(
+                'id'       		=> 'enable_custom_css',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Enable custom css tab?','ultimatemember' ),
+				'default' 		=> 0,
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+        ),
 		
         array(
                 'id'       		=> 'allow_tracking',

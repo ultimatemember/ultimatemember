@@ -17,6 +17,7 @@ class UM_DateTime {
 	***	@Get age
 	***/
 	function get_age($then) {
+		if ( !$then ) return '';
 		$then_ts = strtotime($then);
 		$then_year = date('Y', $then_ts);
 		$age = date('Y') - $then_year;

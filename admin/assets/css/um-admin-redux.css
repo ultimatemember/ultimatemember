@@ -49,6 +49,10 @@
 	background: none !important;
 }
 
+.redux-container-sortable .checkbox-container input {
+	display: none;
+}
+
 #redux-header {
     background: #3ba1da !important;
     border-color: #3ba1da !important;

@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1.1
 
-Stable Tag: 1.0.69
+Stable Tag: 1.0.70
 
 License: GNU Version 2 or Any Later Version
 
@@ -188,6 +188,16 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.70: March 2, 2015 =
+
+* Tweak: added a filter hook to control profile photo url
+* Tweak: harder random generated passwords by making the length 40 characters for a key/password
+* Tweak: added option to enable/disable custom css tab (off by default)
+* Tweak: changed rewrite rules to be compatible with some themes and plugins
+* Fixed: bug with Role field not showing error when required and left empty
+* Fixed: bug with showing incorrect age when users did not fill their age
+* Fixed: issue with template name for custom profile templates
 
 = 1.0.69: February 28, 2015 =
 

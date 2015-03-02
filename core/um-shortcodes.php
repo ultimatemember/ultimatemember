@@ -200,7 +200,7 @@ class UM_Shortcodes {
 		$paths[] = glob( um_path . 'templates/' . '*.php');
 		
 		if ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' ) ) {
-			$paths[] = glob( get_stylesheet_directory() . '/ultimate-member/templates/' . '*.php');
+			$paths[] = glob( get_stylesheet_directory() . '/ultimate-member/templates/' . '*.php' );
 		}
 		
 		foreach($paths as $k => $files){
@@ -218,7 +218,7 @@ class UM_Shortcodes {
 						T_DOC_COMMENT   // PHPDoc comments      
 					);
 					foreach( $tokens as $token ) {
-						if( in_array($token[0], $comment) && $clean_filename != $excluded ) {
+						if( in_array($token[0], $comment) && strstr( $token[1], '/* Template:' ) && $clean_filename != $excluded ) {
 							$txt = $token[1];
 							$txt = str_replace('/* Template: ','',$txt);
 							$txt = str_replace(' */','',$txt);

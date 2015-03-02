@@ -223,7 +223,7 @@ class UM_User {
 	function password_reset_hash(){
 		global $ultimatemember;
 
-		$this->profile['reset_pass_hash'] = $ultimatemember->validation->generate(30);
+		$this->profile['reset_pass_hash'] = $ultimatemember->validation->generate();
 		$this->update_usermeta_info('reset_pass_hash');
 		
 	}
@@ -236,7 +236,7 @@ class UM_User {
 		
 		do_action('um_before_user_hash_is_changed');
 
-		$this->profile['account_secret_hash'] = $ultimatemember->validation->generate(30);
+		$this->profile['account_secret_hash'] = $ultimatemember->validation->generate();
 		$this->update_usermeta_info('account_secret_hash');
 
 		do_action('um_after_user_hash_is_changed');

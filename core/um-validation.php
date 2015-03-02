@@ -129,8 +129,8 @@ class UM_Validation {
 	/***
 	***	@generate a password, hash, or similar
 	***/
-	function generate( $length = 12 ) {
-		return wp_generate_password($length, false);
+	function generate( $length = 40 ) {
+		return wp_generate_password( $length, false );
 	}
 	
 	/***
