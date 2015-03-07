@@ -428,15 +428,15 @@ class UM_Admin_Metabox {
 		}
 		
 		// needed on forms only
-		if ( isset( $screen->id ) && strstr( $screen->id, 'um_form' ) ) {
+		if ( !isset( $this->is_loaded ) && isset( $screen->id ) && strstr( $screen->id, 'um_form' ) ) {
 		
 			$settings['textarea_rows'] = 8;
 			
-			echo '<div class="um-hidden-editor-edit" style="display: none">';
+			echo '<div class="um-hidden-editor-edit" style="display:none;">';
 			wp_editor( '', 'um_editor_edit', $settings );
 			echo '</div>';
 			
-			echo '<div class="um-hidden-editor-new" style="display: none">';
+			echo '<div class="um-hidden-editor-new" style="display:none;">';
 			wp_editor( '', 'um_editor_new', $settings );
 			echo '</div>';
 			

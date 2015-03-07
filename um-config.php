@@ -1722,6 +1722,16 @@ $this->sections[] = array(
 		),
 	
         array(
+                'id'       		=> 'enable_timebot',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Enable Time Check Security','ultimatemember' ),
+				'default' 		=> 1,
+				'desc' 	   		=> __('Turn this option off if you have a conflict with other plugins causing a spam bot message to appear unexpectedly.','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+        ),
+		
+        array(
                 'id'       		=> 'disable_minify',
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Disable JS/CSS Compression','ultimatemember' ),

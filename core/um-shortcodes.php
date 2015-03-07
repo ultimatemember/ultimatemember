@@ -252,7 +252,8 @@ class UM_Shortcodes {
 		$pattern_array = array(
 			'{first_name}',
 			'{last_name}',
-			'{display_name}'
+			'{display_name}',
+			'{user_avatar_small}',
 		);
 		
 		$pattern_array = apply_filters('um_allowed_user_tags_patterns', $pattern_array);
@@ -264,6 +265,11 @@ class UM_Shortcodes {
 				
 				$usermeta = str_replace('{','',$pattern);
 				$usermeta = str_replace('}','',$usermeta);
+				
+				if ( $usermeta == 'user_avatar_small' ) {
+					$value = um_user('profile_photo', 40);
+					$str = preg_replace('/'.$pattern.'/', $value , $str );
+				}
 				
 				if ( um_user( $usermeta ) ){
 					$str = preg_replace('/'.$pattern.'/', um_user($usermeta) , $str );

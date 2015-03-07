@@ -15,7 +15,7 @@ function um_conditional(){
 			if (  action0 == 'show' && field0 == live_field ) {
 			
 				if ( operator0 == 'empty' ) {
-					if ( live_value == '' ) {
+					if ( !live_value || live_value == '' ) {
 						jQuery(this).fadeIn();
 					} else {
 						jQuery(this).hide();
@@ -23,7 +23,7 @@ function um_conditional(){
 				}
 				
 				if ( operator0 == 'not empty' ) {
-					if ( live_value != '' ) {
+					if ( live_value && live_value != '' ) {
 						jQuery(this).fadeIn();
 					} else {
 						jQuery(this).hide();
@@ -77,7 +77,7 @@ function um_conditional(){
 			if (  action0 == 'hide' && field0 == live_field ) {
 			
 				if ( operator0 == 'empty' ) {
-					if ( live_value == '' ) {
+					if ( !live_value || live_value == '' ) {
 						jQuery(this).hide();
 					} else {
 						jQuery(this).fadeIn();
@@ -85,7 +85,7 @@ function um_conditional(){
 				}
 				
 				if ( operator0 == 'not empty' ) {
-					if ( live_value != '' ) {
+					if ( live_value && live_value != '' ) {
 						jQuery(this).hide();
 					} else {
 						jQuery(this).fadeIn();

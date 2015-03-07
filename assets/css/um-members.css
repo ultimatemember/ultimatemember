@@ -220,7 +220,7 @@
 }
 
 .um-member-name a:hover {
-	color: #3ba1da !important;
+	color: #3ba1da;
 }
 
 .um-member-tagline {
@@ -320,7 +320,7 @@
 
 .um-members-pagi span.current,
 .um-members-pagi span.current:hover {
-	background: #3ba1da !important;
+	background: #3ba1da;
 	color: #fff !important;
 }
 
@@ -345,5 +345,5 @@
 
 .um-members-pagi a:hover {
 	text-decoration: none !important;
-	color: #3ba1da !important;
+	color: #3ba1da;
 }

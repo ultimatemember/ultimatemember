@@ -33,6 +33,7 @@
 
 .redux-sidebar .redux-group-menu li.active a, .admin-color-fresh .redux-sidebar .redux-group-menu li.activeChild a {
 	color: #3ba1da !important;
+	background: #e5e5e5;
 }
 
 .redux-sidebar .redux-group-menu li.activeChild.hasSubSections a {
@@ -47,6 +48,9 @@
 
 .redux-main {
 	background: none !important;
+	box-shadow: none !important;
+	border-left: 0 !important;
+	padding: 0 25px;
 }
 
 .redux-container-sortable .checkbox-container input {
@@ -54,29 +58,34 @@
 }
 
 #redux-header {
-    background: #3ba1da !important;
-    border-color: #3ba1da !important;
-	border-radius: 0 !important;
-	padding: 0 0 0 20px !important;
-	border-bottom: 0 !important;
+    background: transparent !important;
+    border: none !important;
+	padding: 0 !important;
+}
+
+.redux-container #redux-header .display_header {
+	margin: 0 0 10px 0 !important;
 }
 
 #redux-header .display_header span {
-	color: #fff !important;
-	font-size: 14px;
+	font-size: 15px;
 	position: relative;
-	top: -10px;
-	font-weight: 600;
+	top: -8px;
+	left: -3px;
 	padding-left: 4px;
+	font-weight: 400;
+	line-height: 29px;
+	color: #222 !important;
 }
 
 #redux-header h2 {
-	color: #fff;
-	font-size: 24px !important;
+	color: #222;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	background: url(../img/logo-header.png) no-repeat left 8px;
-	padding: 10px 10px 10px 80px;
+	font-size: 23px;
+	font-weight: 400;
+	padding: 2px 15px 4px 0px;
+	line-height: 29px;
 }
 
 #redux-share {margin-top: 11px !important}
@@ -118,15 +127,16 @@
 
 .redux-sidebar .redux-group-tab-link-a i {
     vertical-align: middle;
-    font-size: 1.5em;
+    font-size: 1.2em;
     position: absolute;
 	width: 20px;
 	text-align: center;
-	top: 8px;
+	top: 6px;
+	color: #888;
 }
 
 .redux-sidebar .redux-menu-warning i, .redux-sidebar .redux-menu-error i, .redux-sidebar .hasSubSections .extraIconSubsections i {
-	top: 14px;
+	top: 11px;
 }
 
 .redux-container ul.data-full{padding:0!important;margin:0!important}
@@ -140,38 +150,51 @@
 
 .redux-container-switch {font-size: 13px}
 
+.redux-sidebar .redux-group-menu li {
+	margin-top: 4px;
+}
+
 .redux-sidebar .redux-group-menu li a {
 	color: #555;
 	opacity: 1 !important;
-	padding: 10px 4px 10px 14px;
+	padding: 6px 4px 6px 14px;
+	border-radius: 3px;
+	border: none;
+	transition: all .2s linear !important;
 }
 
 .redux-sidebar .redux-group-menu li a:hover {
-	background: #ddd;
-	color: #555;
+	background: #e5e5e5;
+	color: #333;
 }
 
 .redux-sidebar .redux-group-menu li.activeChild.hasSubSections a {
 	background: #3ba1da !important;
+	color: #fff;
 }
+
+.redux-sidebar .redux-group-menu li.activeChild.hasSubSections a i {color: #fff !important}
 
 .redux-sidebar .redux-group-menu li.activeChild.hasSubSections ul.subsection li.active {
 	border-right: 0;
 }
 
 .redux-sidebar .redux-group-menu li.activeChild.hasSubSections ul.subsection li {
-	border-right: 1px solid #DEDEDE;
+	border-right: 0;
+	margin-top: 4px;
+	padding-left: 12px;
 }
 
 .redux-sidebar .redux-group-menu li.activeChild.hasSubSections ul.subsection li a {
 	background: transparent !important;
 	color: #555 !important;
-	border-bottom: 1px solid #E7E7E7;
-	padding: 10px 4px 10px 14px !important;
+	border-bottom: 0;
+	padding: 6px 4px 6px 14px !important;
 }
 
 .redux-sidebar .redux-group-menu li.activeChild.hasSubSections ul.subsection li a:hover {
-	background: #ddd !important;
+	background: #e5e5e5 !important;
+	color: #333 !important;
 }
 
 .redux-sidebar .redux-group-menu li.activeChild.hasSubSections ul.subsection li.active a {

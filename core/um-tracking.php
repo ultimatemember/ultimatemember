@@ -1,6 +1,6 @@
 <?php
 
-class UM_Admin_Tracking {
+class UM_Tracking {
 
 	private $data;
 
@@ -17,6 +17,8 @@ class UM_Admin_Tracking {
 	***/
 	private function setup_data() {
 
+		global $ultimatemember;
+		
 		$data = array();
 
 		// Retrieve current theme info
@@ -64,6 +66,12 @@ class UM_Admin_Tracking {
 		
 		$data['multisite'] = ( is_multisite() ) ? 1 : 0;
 		
+		if ( !get_option('__ultimatemember_sitekey') ) {
+			$ultimatemember->setup->install_basics();
+		}
+		
+		$data['unique_sitekey'] = get_option('__ultimatemember_sitekey');
+		
 		$this->data = $data;
 
 	}
@@ -74,14 +82,6 @@ class UM_Admin_Tracking {
 	private function tracking_allowed() {
 		if ( !um_get_option('allow_tracking') )
 			return 0;
-			
-			if( stristr( network_site_url( '/' ), 'dev' ) !== false ||
-				stristr( network_site_url( '/' ), 'localhost' ) !== false ||
-				stristr( network_site_url( '/' ), ':8888' ) !== false // This is common with MAMP on OS X
-			) {
-				return 0;
-			}
-			
 		return 1;
 	}
 	
@@ -100,9 +100,9 @@ class UM_Admin_Tracking {
 		if( ! $this->tracking_allowed() && ! $override )
 			return;
 
-		// Send a maximum of once per week
+		// Send a maximum of once per period
 		$last_send = $this->get_last_send();
-		if( $last_send && $last_send > strtotime( '-1 week' ) )
+		if( $last_send && $last_send > strtotime( '-1 day' ) )
 			return;
 		
 		$this->setup_data();
@@ -118,14 +118,13 @@ class UM_Admin_Tracking {
 		) );
 
 		update_option( 'um_tracking_last_send', time() );
-
 	}
 	
 	/***
 	***	@run a scheduled report
 	***/
 	private function schedule_send() {
-		add_action( 'um_weekly_scheduled_events', array( $this, 'send_checkin' ) );
+		add_action( 'um_daily_scheduled_events', array( $this, 'send_checkin' ) );
 	}
 
 	/***

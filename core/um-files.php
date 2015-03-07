@@ -378,6 +378,8 @@ class UM_Files {
 	
 		delete_user_meta( $user_id, $type );
 		
+		do_action("um_after_remove_{$type}", $user_id);
+		
 		$dir = $this->upload_basedir . $user_id . '/';
 		$prefix = $type;
 		chdir($dir);
@@ -417,16 +419,23 @@ class UM_Files {
 	}
 	
 	/***
-	***	@new user upload
+	***	@make a user folder for uploads
 	***/
-	function new_user_upload( $user_id, $source, $key ) {
-	
-		// if he does not have uploads dir yet
+	function new_user( $user_id ) {
 		if ( !file_exists( $this->upload_basedir . $user_id . '/' ) ) {
 			$old = umask(0);
 			@mkdir( $this->upload_basedir . $user_id . '/' , 0755, true);
 			umask($old);
 		}
+	}
+	
+	/***
+	***	@new user upload
+	***/
+	function new_user_upload( $user_id, $source, $key ) {
+	
+		// if he does not have uploads dir yet
+		$this->new_user( $user_id );
 		
 		// name and extension stuff
 		$source_name = basename( $source );
@@ -443,7 +452,10 @@ class UM_Files {
 		$name = str_replace( $ext, '', $source_name );
 		$filename = $name . $ext;
 
-		// copy file
+		// copy & overwrite file
+		if ( file_exists( $this->upload_basedir . $user_id . '/' . $filename ) ) {
+			unlink( $this->upload_basedir . $user_id . '/' . $filename );
+		}
 		copy( $source, $this->upload_basedir . $user_id . '/' . $filename );
 		
 		// thumbs

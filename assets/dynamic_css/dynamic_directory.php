@@ -12,7 +12,7 @@ print ".um-$form_id .um-member {
 if ( isset( $css_card_thickness ) ) {
 
 print ".um-$form_id .um-member {
-	border-width: $css_card_thickness !important;
+	border-width: $css_card_thickness;
 }";
 
 }
@@ -20,7 +20,7 @@ print ".um-$form_id .um-member {
 if ($css_profile_card_text) {
 
 print ".um-$form_id .um-member-card * {
-	color: $css_profile_card_text!important;
+	color: $css_profile_card_text;
 }";
 
 }
@@ -28,7 +28,7 @@ print ".um-$form_id .um-member-card * {
 if ($css_card_bordercolor) {
 
 print ".um-$form_id .um-member {
-	border-color: $css_card_bordercolor!important;
+	border-color: $css_card_bordercolor;
 }";
 
 }
@@ -36,7 +36,7 @@ print ".um-$form_id .um-member {
 if ($css_img_bordercolor) {
 
 print ".um-$form_id .um-member-photo img {
-	border-color: $css_img_bordercolor!important;
+	border-color: $css_img_bordercolor;
 }";
 
 }

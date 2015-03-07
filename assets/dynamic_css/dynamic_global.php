@@ -63,46 +63,46 @@ print ".um-$form_id.um {
 
 if ( $primary_btn_color ) {
 print ".um-$form_id.um input[type=submit]:disabled:hover {
-	background: $primary_btn_color !important;
+	background: $primary_btn_color;
 }";
 print ".um-$form_id.um input[type=submit].um-button,
 .um-$form_id.um input[type=submit].um-button:focus,
 .um-$form_id.um a.um-button {
-	background: $primary_btn_color !important;
+	background: $primary_btn_color;
 }";
 }
 
 if ( $primary_btn_hover ) {
 print ".um-$form_id.um input[type=submit].um-button:hover,
 .um-$form_id.um a.um-button:hover {
-	background-color: $primary_btn_hover !important;
+	background-color: $primary_btn_hover;
 }";
 }
 
 if ( $primary_btn_text ) {
 print ".um-$form_id.um .um-button {
-	color: $primary_btn_text !important;
+	color: $primary_btn_text;
 }";
 }
 
 if ( $secondary_btn_color ) {
 print ".um-$form_id.um .um-button.um-alt,
 .um-$form_id.um input[type=submit].um-button.um-alt {
-	background: $secondary_btn_color !important;
+	background: $secondary_btn_color;
 }";
 }
 
 if ( $secondary_btn_hover ) {
 print ".um-$form_id.um .um-button.um-alt:hover,
 .um-$form_id.um input[type=submit].um-button.um-alt:hover{
-	background: $secondary_btn_hover !important;
+	background: $secondary_btn_hover;
 }";
 }
 
 if ( $secondary_btn_text ) {
 print ".um-$form_id.um .um-button.um-alt,
 .um-$form_id.um input[type=submit].um-button.um-alt {
-	color: $secondary_btn_text !important;
+	color: $secondary_btn_text;
 }";
 }
 
@@ -134,7 +134,7 @@ print "
 .select2-container .select2-choice,
 .select2-container-multi .select2-choices
 {
-	background-color: $form_bg_color !important;
+	background-color: $form_bg_color;
 }
 ";
 }
@@ -144,25 +144,25 @@ print "
 
 .um-$form_id.um .um-form ::-webkit-input-placeholder
 {
-	color:  $form_placeholder !important;
+	color:  $form_placeholder;
 	opacity: 1 !important;
 }
 
 .um-$form_id.um .um-form ::-moz-placeholder
 {
-	color:  $form_placeholder !important;
+	color:  $form_placeholder;
 	opacity: 1 !important;
 }
 
 .um-$form_id.um .um-form ::-moz-placeholder
 {
-	color:  $form_placeholder !important;
+	color:  $form_placeholder;
 	opacity: 1 !important;
 }
 
 .um-$form_id.um .um-form ::-ms-input-placeholder
 {
-	color:  $form_placeholder !important;
+	color:  $form_placeholder;
 	opacity: 1 !important;
 }
 
@@ -170,7 +170,7 @@ print "
 .select2-default *,
 .select2-container-multi .select2-choices .select2-search-field input
 {
-	color:  $form_placeholder !important;
+	color:  $form_placeholder;
 }
 
 ";
@@ -183,7 +183,7 @@ print "
 .select2-search:before,
 .select2-search-choice-close:before
 {
-	color: $form_icon_color !important;
+	color: $form_icon_color;
 }
 ";
 }
@@ -192,7 +192,7 @@ if ( $form_asterisk_color ) {
 print "
 .um-$form_id.um span.um-req
 {
-	color: $form_asterisk_color !important;
+	color: $form_asterisk_color;
 }
 ";
 }

@@ -228,6 +228,12 @@
 			
 				switch( $array['validate'] ) {
 				
+					case 'numeric':
+						if ( $args[$key] && !is_numeric( $args[$key] ) ) {
+							$ultimatemember->form->add_error($key, __('Please enter numbers only in this field','ultimatemember') );
+						}
+						break;
+						
 					case 'phone_number':
 						if ( !$ultimatemember->validation->is_phone_number( $args[$key] ) ) {
 							$ultimatemember->form->add_error($key, __('Please enter a valid phone number','ultimatemember') );

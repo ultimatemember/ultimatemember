@@ -12,6 +12,8 @@ class UM_API {
 
 		add_action('init',  array(&$this, 'init'), 0);
 		
+		add_action('init',  array(&$this, 'load_addons') );
+
 		$this->honeypot = 'request';
 		
 		$this->available_languages = array(
@@ -26,6 +28,20 @@ class UM_API {
 			'tr_TR' => 'Türkçe',
 		);
 		
+		$this->addons['bp_avatar_transfer'] = array( __( 'BuddyPress Avatar Transfer','ultimatemember' ), __('This tool enables you to migrate your custom user photos from BuddyPress to use with Ultimate Member.','ultimatemember') );
+		
+	}
+	
+	/***
+	***	@Load add-ons
+	***/
+	function load_addons() {
+		global $ultimatemember;
+		if ( !is_admin() ) return;
+		foreach( $ultimatemember->addons as $addon => $name ) {
+			if ( um_get_option('addon_' . $addon ) == 1 )
+				include_once um_path . 'addons/'.$addon.'.php';
+		}
 	}
 	
 	/***
@@ -67,6 +83,7 @@ class UM_API {
 		require_once um_path . 'core/um-modal.php';
 		require_once um_path . 'core/um-cron.php';
 		require_once um_path . 'core/um-cache.php';
+		require_once um_path . 'core/um-tracking.php';
 		
 		require_once um_path . 'core/lib/mobiledetect/Mobile_Detect.php';
 		
@@ -101,6 +118,7 @@ class UM_API {
 		require_once um_path . 'core/um-filters-profile.php';
 		require_once um_path . 'core/um-filters-account.php';
 		require_once um_path . 'core/um-filters-misc.php';
+		require_once um_path . 'core/um-filters-addons.php';
 		
 		/* initialize UM */
 		$this->rewrite = new UM_Rewrite();
@@ -134,6 +152,7 @@ class UM_API {
 		$this->modal = new UM_Modal();
 		$this->cron = new UM_Cron();
 		$this->cache = new UM_Cache();
+		$this->tracking = new UM_Tracking();
 		
 		$this->mobile = new Mobile_Detect;
 

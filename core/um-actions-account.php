@@ -162,6 +162,8 @@
 		
 		<?php echo $output; ?>
 		
+		<?php do_action('um_after_account_delete'); ?>
+		
 		<div class="um-col-alt um-col-alt-b">
 			<div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Delete Account','ultimatemember'); ?>" class="um-button" /></div>
 			<?php do_action('um_after_account_delete_button'); ?>
@@ -171,9 +173,7 @@
 		<?php
 		
 		}
-		
-		do_action('um_after_account_delete');
-		
+
 	}
 
 	/***
@@ -192,6 +192,8 @@
 		
 		<?php echo $output; ?>
 		
+		<?php do_action('um_after_account_privacy'); ?>
+		
 		<div class="um-col-alt um-col-alt-b">
 			<div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Update Privacy','ultimatemember'); ?>" class="um-button" /></div>
 			<?php do_action('um_after_account_privacy_button'); ?>
@@ -201,9 +203,7 @@
 		<?php
 		
 		}
-		
-		do_action('um_after_account_privacy');
-		
+
 	}
 
 	/***
@@ -222,6 +222,8 @@
 		
 		<?php echo $output; ?>
 		
+		<?php do_action('um_after_account_general'); ?>
+		
 		<div class="um-col-alt um-col-alt-b">
 			<div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Update Account','ultimatemember'); ?>" class="um-button" /></div>
 			<?php do_action('um_after_account_general_button'); ?>
@@ -231,9 +233,7 @@
 		<?php
 
 		}
-		
-		do_action('um_after_account_general');
-		
+
 	}
 	
 	/***
@@ -252,6 +252,8 @@
 		
 		<?php echo $output; ?>
 		
+		<?php do_action('um_after_account_password'); ?>
+		
 		<div class="um-col-alt um-col-alt-b">
 			<div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Update Password','ultimatemember'); ?>" class="um-button" /></div>
 			<?php do_action('um_after_account_password_button'); ?>
@@ -261,9 +263,7 @@
 		<?php
 		
 		}
-		
-		do_action('um_after_account_password');
-		
+
 	}
 	
 	/***
@@ -282,6 +282,8 @@
 		
 		<?php echo $output; ?>
 		
+		<?php do_action('um_after_account_notifications'); ?>
+		
 		<div class="um-col-alt um-col-alt-b">
 			<div class="um-left"><input type="submit" name="um_account_submit" id="um_account_submit" value="<?php _e('Update Notifications','ultimatemember'); ?>" class="um-button" /></div>
 			<?php do_action('um_after_account_notifications_button'); ?>
@@ -291,9 +293,7 @@
 		<?php
 
 		}
-		
-		do_action('um_after_account_notifications');
-		
+
 	}
 	
 	/***

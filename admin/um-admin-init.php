@@ -39,8 +39,7 @@ class UM_Admin_API {
 		require_once um_path . 'admin/core/um-admin-roles.php';
 		require_once um_path . 'admin/core/um-admin-builder.php';
 		require_once um_path . 'admin/core/um-admin-dragdrop.php';
-		require_once um_path . 'admin/core/um-admin-tracking.php';
-		
+
 		require_once um_path . 'admin/core/um-admin-actions-user.php';
 		require_once um_path . 'admin/core/um-admin-actions-modal.php';
 		require_once um_path . 'admin/core/um-admin-actions-fields.php';
@@ -60,8 +59,7 @@ class UM_Admin_API {
 		$this->access = new UM_Admin_Access();
 		$this->builder = new UM_Admin_Builder();
 		$this->dragdrop = new UM_Admin_DragDrop();
-		$this->tracking = new UM_Admin_Tracking();
-		
+
 		if ( 	is_admin() && 
 				current_user_can('manage_options') && 
 				isset($_REQUEST['um_adm_action']) && 

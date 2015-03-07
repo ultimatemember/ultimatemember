@@ -85,7 +85,7 @@
 	line-height: 2em;
 }
 
-.um-account-name a:hover {color: #3ba1da !important}
+.um-account-name a:hover {color: #3ba1da}
 
 /*
 	- Account nav
@@ -105,7 +105,7 @@
 }
 
 .um-account-nav a.current{
-	color: #3ba1da !important;
+	color: #3ba1da;
 	font-weight: bold;
 }
 

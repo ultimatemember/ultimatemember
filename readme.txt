@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1.1
 
-Stable Tag: 1.0.71
+Stable Tag: 1.0.76
 
 License: GNU Version 2 or Any Later Version
 
@@ -188,6 +188,33 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.76: March 7, 2015 =
+
+* New: added {user_avatar_small} tag to display user photo in menu (requires extra css work)
+* Tweak: Removed !important css rules from colors and backgrounds
+* Fixed: issue with content block field
+
+= 1.0.75: March 5, 2015 =
+
+* New: improved & modern html e-mail templates
+* New: addon to transfer BuddyPress profile photos to Ultimate Member (user request)
+* New: added option to turn off time bot feature (fixes conflict with plugins)
+* New: added built-in addons support
+* Tweak: improved backend design and css
+
+= 1.0.74: March 4, 2015 =
+
+* Fixed: bug with numeric validation for a field
+* Fixed: bug with conditional logic rules with checkbox
+
+= 1.0.73: March 3, 2015 =
+
+* Tweak: general code improvements
+
+= 1.0.72: March 2, 2015 =
+
+* Fixed: bug with e-mail activation since last update
 
 = 1.0.71: March 2, 2015 =
 

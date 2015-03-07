@@ -154,7 +154,7 @@ class UM_Admin_Dashboard {
 	function admin_page() {
 		
 		$page = $_REQUEST['page'];
-		if ( $page == 'ultimatemember' ) {
+		if ( $page == 'ultimatemember' && !isset($_REQUEST['um-addon']) ) {
 
 		?>
 		
