@@ -168,8 +168,9 @@
 				}
 				
 				if ( um_user( $status . '_action' ) == 'show_message' && um_user( $status . '_message' ) != '' ) {
-					$url = $ultimatemember->permalinks->add_query( 'message', $status );
-					$url = $ultimatemember->permalinks->add_query( 'uid', um_user('ID') );
+					$url = um_get_core_page('register');
+					$url = add_query_arg( 'message', $status, $url );
+					$url = add_query_arg( 'uid', um_user('ID'), $url );
 					exit( wp_redirect( $url ) );
 				}
 				

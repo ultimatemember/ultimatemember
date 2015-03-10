@@ -824,6 +824,22 @@ $this->sections[] = array(
     'icon'       => 'um-faicon-cloud-upload',
     'title'      => __( 'Uploads','ultimatemember'),
     'fields'     => array(
+	
+		array(
+				'id'       		=> 'profile_photo_max_size',
+                'type'     		=> 'text',
+                'title'    		=> __( 'Profile Photo Maximum File Size','ultimatemember' ),
+                'desc' 	   		=> __( 'Sets a maximum size for the uploaded photo','ultimatemember' ),
+				'validate' 		=> 'numeric',
+        ),
+		
+		array(
+				'id'       		=> 'cover_photo_max_size',
+                'type'     		=> 'text',
+                'title'    		=> __( 'Cover Photo Maximum File Size','ultimatemember' ),
+                'desc' 	   		=> __( 'Sets a maximum size for the uploaded cover','ultimatemember' ),
+				'validate' 		=> 'numeric',
+        ),
 		
 		array(
 				'id'       		=> 'photo_thumb_sizes',

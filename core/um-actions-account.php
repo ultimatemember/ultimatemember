@@ -17,7 +17,7 @@
 			}
 		}
 		
-		if ( isset( $changes['hide_in_members'] ) && $changes['hide_in_members'] == 'No' ){
+		if ( isset( $changes['hide_in_members'] ) && $changes['hide_in_members'] == __('No','ultimatemember') ) {
 			delete_user_meta( um_user('ID'), 'hide_in_members' );
 			unset( $changes['hide_in_members'] );
 		}

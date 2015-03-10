@@ -714,15 +714,3 @@ span.um-req {
 	position: relative;
 	top: 10px;
 }
-
-.um-large-text {
-	font-size: 18px;
-	color: #666;
-}
-
-.um-large-text span {
-	background: #eee;
-	padding: 2px 4px;
-	color: #333;
-	border-radius: 3px;
-}

@@ -119,6 +119,7 @@ class UM_API {
 		require_once um_path . 'core/um-filters-account.php';
 		require_once um_path . 'core/um-filters-misc.php';
 		require_once um_path . 'core/um-filters-addons.php';
+		require_once um_path . 'core/um-filters-commenting.php';
 		
 		/* initialize UM */
 		$this->rewrite = new UM_Rewrite();

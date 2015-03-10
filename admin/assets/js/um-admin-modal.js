@@ -286,13 +286,22 @@ jQuery(document).ready(function() {
 		submit font icon
 	**/
 	jQuery(document).on('click', '#UM_fonticons a.um-admin-modal-back:not(.um-admin-modal-cancel)', function(){
+		var v_id = '';
 		var icon_selected = jQuery(this).attr('data-code');
 		if (icon_selected != ''){
-		jQuery('#' + jQuery(this).attr('data-modal') ).find('input#_icon').val( icon_selected );
-		jQuery('#' + jQuery(this).attr('data-modal') ).find('span.um-admin-icon-value').html('<i class="'+icon_selected+'"></i>');
-		jQuery('#' + jQuery(this).attr('data-modal') ).find('.um-admin-icon-clear').show();
+			if ( jQuery(this).attr('data-modal') ) {
+				v_id = '#' + jQuery(this).attr('data-modal');
+			} else {
+				v_id = '.postbox';
+			}
+			jQuery( v_id ).find('input#_icon,input#_um_icon').val( icon_selected );
+			jQuery( v_id ).find('span.um-admin-icon-value').html('<i class="'+icon_selected+'"></i>');
+			jQuery( v_id ).find('.um-admin-icon-clear').show();
 		}
 		jQuery(this).attr('data-code', '');
+		if ( v_id == '.postbox' ) {
+			um_admin_remove_modal();
+		}
 	});
 	
 	/**
@@ -302,7 +311,7 @@ jQuery(document).ready(function() {
 		var element = jQuery(this).parents('p');
 		jQuery('#UM_fonticons a.um-admin-modal-back').attr('data-code', '');
 		element.find('input[type=hidden]').val('');
-		element.find('.um-admin-icon-value').html('No icon');
+		element.find('.um-admin-icon-value').html('No Icon');
 		jQuery(this).hide();
 	});
 	

@@ -51,10 +51,31 @@ class UM_User {
 		return $new;
 	}
 	
-	/***
-	***	@Set user
-	***/
-	function set( $user_id = null, $clean=false ) {
+	/**
+	 * @function set()
+	 *
+	 * @description This method lets you set a user. For example, to retrieve a profile or anything related to that user.
+	 *
+	 * @usage <?php $ultimatemember->user->set( $user_id, $clean = false ); ?>
+	 *
+	 * @param $user_id (numeric) (optional) Which user to retrieve. A numeric user ID
+	 * @param $clean (boolean) (optional) Should be true or false. Basically, if you did not provide a user ID It will set the current logged in user as a profile
+	 *
+	 * @returns This API method does not return anything. It sets user profile and permissions and allow you to retrieve any details for that user.
+	 *
+	 * @example The following example makes you set a user and retrieve their display name after that using the user API.
+
+		<?php
+		
+			$ultimatemember->user->set( 12 );
+			$display_name = $ultimatemember->user->profile['display_name']; // Should print user display name
+			
+		?>
+
+	 *
+	 *
+	 */
+	function set( $user_id = null, $clean = false ) {
 		global $ultimatemember;
 		
 		if ( isset( $this->profile ) ) {
@@ -168,9 +189,31 @@ class UM_User {
 		}
 	}
 	
-	/***
-	***	@Automatic login by user id
-	***/
+	/**
+	 * @function auto_login()
+	 *
+	 * @description This method lets you auto sign-in a user to your site.
+	 *
+	 * @usage <?php $ultimatemember->user->auto_login( $user_id, $rememberme = false ); ?>
+	 *
+	 * @param $user_id (numeric) (required) Which user ID to sign in automatically
+	 * @param $rememberme (boolean) (optional) Should be true or false. If you want the user sign in session to use cookies, use true
+	 *
+	 * @returns Sign in the specified user automatically.
+	 *
+	 * @example The following example lets you sign in a user automatically by their ID.
+
+		<?php $ultimatemember->user->auto_login( 2 ); ?>
+
+	 *
+	 *
+	 * @example The following example lets you sign in a user automatically by their ID and makes the plugin remember their session.
+
+		<?php $ultimatemember->user->auto_login( 10, true ); ?>
+
+	 *
+	 *
+	 */
 	function auto_login( $user_id, $rememberme = 0 ) {
 		wp_set_current_user($user_id);
 		wp_set_auth_cookie($user_id, $rememberme );
@@ -190,9 +233,32 @@ class UM_User {
 		update_user_meta( $this->id, '_um_cool_but_hard_to_guess_plain_pw', $plain );
 	}
 	
-	/***
-	***	@Set user's role
-	***/
+	/**
+	 * @function set_role()
+	 *
+	 * @description This method assign a role to a user. The user must be already set before processing this API method.
+	 *
+	 * @usage <?php $ultimatemember->user->set_role( $role ); ?>
+	 *
+	 * @param $role (string) (required) The user role slug you want to assign to user.
+	 *
+	 * @returns Changes user role if the given user role was a valid plugin role.
+	 *
+	 * @example Set a user and give them the role community-member
+
+		<?php
+		
+		// Sets a user. Can accept numeric user ID
+		um_fetch_user( 14 );
+		
+		// Change user role
+		$ultimatemember->user->set_role('community-member');
+		
+		?>
+
+	 *
+	 *
+	 */
 	function set_role( $role ){
 	
 		do_action('um_before_user_role_is_changed');
@@ -252,9 +318,27 @@ class UM_User {
 		$ultimatemember->mail->send( um_user('user_email'), 'resetpw_email' );
 	}
 	
-	/***
-	***	@approves a user
-	***/
+	/**
+	 * @function approve()
+	 *
+	 * @description This method approves a user membership and sends them an optional welcome/approval e-mail.
+	 *
+	 * @usage <?php $ultimatemember->user->approve(); ?>
+	 *
+	 * @returns Approves a user membership.
+	 *
+	 * @example Approve a pending user and allow him to sign-in to your site.
+
+		<?php
+		
+			um_fetch_user( 352 );
+			$ultimatemember->user->approve();
+			
+		?>
+
+	 *
+	 *
+	 */
 	function approve(){
 		global $ultimatemember;
 		
@@ -284,27 +368,81 @@ class UM_User {
 		$ultimatemember->mail->send( um_user('user_email'), 'checkmail_email' );
 	}
 	
-	/***
-	***	@pending review
-	***/
+	/**
+	 * @function pending()
+	 *
+	 * @description This method puts a user under manual review by administrator and sends them an optional e-mail.
+	 *
+	 * @usage <?php $ultimatemember->user->pending(); ?>
+	 *
+	 * @returns Puts a user under review and sends them an email optionally.
+	 *
+	 * @example An example of putting a user pending manual review
+
+		<?php
+		
+			um_fetch_user( 54 );
+			$ultimatemember->user->pending();
+			
+		?>
+
+	 *
+	 *
+	 */
 	function pending(){
 		global $ultimatemember;
 		$this->set_status('awaiting_admin_review');
 		$ultimatemember->mail->send( um_user('user_email'), 'pending_email' );
 	}
 	
-	/***
-	***	@reject membership
-	***/
+	/**
+	 * @function reject()
+	 *
+	 * @description This method rejects a user membership and sends them an optional e-mail.
+	 *
+	 * @usage <?php $ultimatemember->user->reject(); ?>
+	 *
+	 * @returns Rejects a user membership.
+	 *
+	 * @example Reject a user membership example
+
+		<?php
+		
+			um_fetch_user( 114 );
+			$ultimatemember->user->reject();
+			
+		?>
+
+	 *
+	 *
+	 */
 	function reject(){
 		global $ultimatemember;
 		$this->set_status('rejected');
 		$ultimatemember->mail->send( um_user('user_email'), 'rejected_email' );
 	}
 	
-	/***
-	***	@deactivate membership
-	***/
+	/**
+	 * @function deactivate()
+	 *
+	 * @description This method deactivates a user membership and sends them an optional e-mail.
+	 *
+	 * @usage <?php $ultimatemember->user->deactivate(); ?>
+	 *
+	 * @returns Deactivates a user membership.
+	 *
+	 * @example Deactivate a user membership with the following example
+
+		<?php
+		
+			um_fetch_user( 32 );
+			$ultimatemember->user->deactivate();
+			
+		?>
+
+	 *
+	 *
+	 */
 	function deactivate(){
 		global $ultimatemember;
 		$this->set_status('inactive');
@@ -343,9 +481,32 @@ class UM_User {
 
 	}
 	
-	/***
-	***	@Get user's role in UM
-	***/
+	/**
+	 * @function get_role()
+	 *
+	 * @description This method gets a user role in slug format. e.g. member
+	 *
+	 * @usage <?php $ultimatemember->user->get_role(); ?>
+	 *
+	 * @returns The user role's slug.
+	 *
+	 * @example Do something if the user's role is paid-member
+
+		<?php
+		
+			um_fetch_user( 12 );
+			
+			if ( $ultimatemember->user->get_role() == 'paid-member' ) {
+				// Show this to paid customers
+			} else {
+				// You are a free member
+			}
+			
+		?>
+
+	 *
+	 *
+	 */
 	function get_role() {
 		if (isset($this->profile['role']) && !empty( $this->profile['role'] ) ) {
 			return $this->profile['role'];
@@ -358,9 +519,32 @@ class UM_User {
 		}
 	}
 	
-	/***
-	***	@Get user's role name in UM
-	***/
+	/**
+	 * @function get_role_name()
+	 *
+	 * @description This method is similar to $ultimatemember->user->get_role() but returns the role name instead of slug.
+	 *
+	 * @usage <?php $ultimatemember->user->get_role_name(); ?>
+	 *
+	 * @returns The user role's name.
+	 *
+	 * @example Do something if the user's role is Paid Customer
+
+		<?php
+		
+			um_fetch_user( 12 );
+			
+			if ( $ultimatemember->user->get_role_name() == 'Paid Customer' ) {
+				// Show this to paid customers
+			} else {
+				// You are a free member
+			}
+			
+		?>
+
+	 *
+	 *
+	 */
 	function get_role_name() {
 		return $this->profile['role_name'];
 	}
@@ -372,9 +556,29 @@ class UM_User {
 		update_user_meta( $this->id, $key, $this->profile[$key] );
 	}
 
-	/***
-	***	@Delete any meta key
-	***/
+	/**
+	 * @function delete_meta()
+	 *
+	 * @description This method can be used to delete user's meta key.
+	 *
+	 * @usage <?php $ultimatemember->user->delete_meta( $key ); ?>
+	 *
+	 * @param $key (string) (required) The meta field key to remove from user
+	 *
+	 * @returns This method will not return anything. The specified meta key will be deleted from database for the specified user.
+	 *
+	 * @example Delete user's age field
+
+		<?php
+		
+			um_fetch_user( 15 );
+			$ultimatemember->user->delete_meta( 'age' );
+			
+		?>
+
+	 *
+	 *
+	 */
 	function delete_meta( $key ){
 		delete_user_meta( $this->id, $key );
 	}
@@ -414,9 +618,32 @@ class UM_User {
 		return $items;
 	}
 	
-	/***
-	***	@If it is a private profile
-	***/
+	/**
+	 * @function is_private_profile()
+	 *
+	 * @description This method checks if give user profile is private.
+	 *
+	 * @usage <?php $ultimatemember->user->is_private_profile( $user_id ); ?>
+	 *
+	 * @param $user_id (numeric) (required) A user ID must be passed to check if the user profile is private
+	 *
+	 * @returns Returns true if user profile is private and false if user profile is public.
+	 *
+	 * @example This example display a specific user's name If his profile is public
+
+		<?php
+		
+			um_fetch_user( 60 );
+			$is_private = $ultimatemember->user->is_private_profile( 60 );
+			if ( !$is_private ) {
+				echo 'User is public and his name is ' . um_user('display_name');
+			}
+			
+		?>
+
+	 *
+	 *
+	 */
 	function is_private_profile( $user_id ) {
 		$privacy = get_user_meta( $user_id, 'profile_privacy', true );
 		if ( $privacy == __('Only me','ultimatemember') ) {
@@ -425,9 +652,32 @@ class UM_User {
 		return false;
 	}
 	
-	/***
-	***	@If it is un-approved profile
-	***/
+	/**
+	 * @function is_approved()
+	 *
+	 * @description This method can be used to determine If a certain user is approved or not.
+	 *
+	 * @usage <?php $ultimatemember->user->is_approved( $user_id ); ?>
+	 *
+	 * @param $user_id (numeric) (required) The user ID to check approval status for
+	 *
+	 * @returns True if user is approved and false if user is not approved.
+	 *
+	 * @example Do something If a user's membership is approved
+
+		<?php
+		
+			if ( $ultimatemember->user->is_approved( 55 ) {
+				// User account is approved
+			} else {
+				// User account is not approved
+			}
+			
+		?>
+
+	 *
+	 *
+	 */
 	function is_approved( $user_id ) {
 		$status = get_user_meta( $user_id, 'account_status', true );
 		if ( $status == 'approved' || $status == '' ) {
@@ -520,9 +770,31 @@ class UM_User {
 		return false;
 	}
 	
-	/***
-	***	@user exists by id
-	***/
+	/**
+	 * @function user_exists_by_id()
+	 *
+	 * @description This method checks if a user exists or not in your site based on the user ID.
+	 *
+	 * @usage <?php $ultimatemember->user->user_exists_by_id( $user_id ); ?>
+	 *
+	 * @param $user_id (numeric) (required) A user ID must be passed to check if the user exists
+	 *
+	 * @returns Returns true if user exists and false if user does not exist.
+	 *
+	 * @example Basic Usage
+
+		<?php
+		
+			$boolean = $ultimatemember->user->user_exists_by_id( 15 );
+			if ( $boolean ) {
+				// That user exists
+			}
+			
+		?>
+
+	 *
+	 *
+	 */
 	function user_exists_by_id( $user_id ) {
 		$aux = get_userdata( $user_id );
 		if($aux==false){

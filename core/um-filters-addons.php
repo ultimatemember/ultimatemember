@@ -24,7 +24,14 @@
 
 			'icon'       => 'um-faicon-plug',
 			'title'      => __( 'Add ons','ultimatemember'),
-			'fields'     => $array
+
+		);
+		
+		$sections[] = array(
+
+			'subsection' => true,
+			'title'      => __( 'Built-in Add ons','ultimatemember'),
+			'fields'	 => $array,
 
 		);
 

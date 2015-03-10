@@ -249,6 +249,8 @@ class UM_Shortcodes {
 	***/
 	function convert_user_tags( $str ) {
 		
+		$value = '';
+		
 		$pattern_array = array(
 			'{first_name}',
 			'{last_name}',
@@ -268,11 +270,14 @@ class UM_Shortcodes {
 				
 				if ( $usermeta == 'user_avatar_small' ) {
 					$value = um_user('profile_photo', 40);
-					$str = preg_replace('/'.$pattern.'/', $value , $str );
+				} elseif ( um_user( $usermeta ) ){
+					$value = um_user( $usermeta );
 				}
 				
-				if ( um_user( $usermeta ) ){
-					$str = preg_replace('/'.$pattern.'/', um_user($usermeta) , $str );
+				$value = apply_filters("um_profile_tag_hook__{$usermeta}", $value, um_user('ID') );
+				
+				if ( $value ) {
+					$str = preg_replace('/'.$pattern.'/', $value , $str );
 				}
 				
 			}

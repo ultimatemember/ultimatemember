@@ -33,7 +33,7 @@
 
 .redux-sidebar .redux-group-menu li.active a, .admin-color-fresh .redux-sidebar .redux-group-menu li.activeChild a {
 	color: #3ba1da !important;
-	background: #e5e5e5;
+	background: #e5e5e5 !important;
 }
 
 .redux-sidebar .redux-group-menu li.activeChild.hasSubSections a {
@@ -198,8 +198,8 @@
 }
 
 .redux-sidebar .redux-group-menu li.activeChild.hasSubSections ul.subsection li.active a {
-	background: #555 !important;
-	color: #fff !important;
+	color: #3ba1da !important;
+	background: #e5e5e5 !important;
 }
 
 .redux-sidebar .redux-group-menu li.activeChild.hasSubSections .active a:after {
