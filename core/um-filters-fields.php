@@ -131,7 +131,7 @@
 		
 		if ( !$value ) return '';
 
-		if ( ( isset( $data['validate'] ) && $data['validate'] != '' && strstr( $data['validate'], 'url' ) ) || ( $data['type'] == 'url' ) ) {
+		if ( ( isset( $data['validate'] ) && $data['validate'] != '' && strstr( $data['validate'], 'url' ) ) || ( isset( $data['type'] ) && $data['type'] == 'url' ) ) {
 			$alt = ( isset( $data['url_text'] ) && !empty( $data['url_text'] ) ) ? $data['url_text'] : $value;
 			$url_rel = ( isset( $data['url_rel'] ) ) ? 'rel="nofollow"' : '';
 			if( !strstr( $value, 'http' )

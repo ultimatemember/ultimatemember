@@ -1,3 +1,14 @@
+#um-extensions-wrap a.plugin-image, 
+#um-extensions-wrap a.plugin-image img {
+	max-width: 100%;
+	display: block;
+}
+
+#um-extensions-wrap .plugin-card .name,
+#um-extensions-wrap .plugin-card .desc {
+	margin-left: 0;
+}
+
 #um-metaboxes-general.wrap h2 {
 	font-size: 23px;
 	font-weight: 400;

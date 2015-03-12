@@ -1,0 +1,29 @@
+.um-login.um-logout {
+	max-width: 300px !important;
+}
+
+.um-misc-with-img {
+	position: relative;
+	font-size: 15px;
+	border-bottom: 3px solid #eee;
+	text-align: center;
+	
+	margin-bottom: 14px;
+	padding-top: 4px;
+	padding-bottom: 14px;
+}
+
+.um-misc-img {
+	text-align: center;
+}
+
+.um-misc-img img {
+	border-radius: 999px;
+	height: auto !important;
+	display: inline-block;
+}
+
+.um-misc-ul,
+.um-misc-ul li {
+	font-size: 14px;
+}

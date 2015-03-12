@@ -91,10 +91,10 @@ jQuery(document).ready(function() {
 		Tooltips
 	**/
 	
-	jQuery('.um-admin-tipsy-n,#redux-share a').tipsy({gravity: 'n', opacity: 1, live: true });
-	jQuery('.um-admin-tipsy-w').tipsy({gravity: 'w', opacity: 1, live: true });
-	jQuery('.um-admin-tipsy-e').tipsy({gravity: 'e', opacity: 1, live: true });
-	jQuery('.um-admin-tipsy-s').tipsy({gravity: 's', opacity: 1, live: true });
+	jQuery('.um-admin-tipsy-n,#redux-share a').tipsy({gravity: 'n', opacity: 1, live: 'a.live' });
+	jQuery('.um-admin-tipsy-w').tipsy({gravity: 'w', opacity: 1, live: 'a.live' });
+	jQuery('.um-admin-tipsy-e').tipsy({gravity: 'e', opacity: 1, live: 'a.live' });
+	jQuery('.um-admin-tipsy-s').tipsy({gravity: 's', opacity: 1, live: 'a.live' });
 	
 	/**
 		Conditional fields

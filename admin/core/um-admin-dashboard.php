@@ -43,6 +43,8 @@ class UM_Admin_Dashboard {
 		}
 		
 		do_action('um_extend_admin_menu');
+		
+		add_submenu_page( $this->slug, __('Extensions', $this->slug), '<span style="color: #19e0ff">' .__('Extensions', $this->slug) . '</span>', 'manage_options', $this->slug . '-extensions', array(&$this, 'admin_page') );
 	
 	}
 	
@@ -195,6 +197,10 @@ class UM_Admin_Dashboard {
 		</script>
 		
 		<?php
+			
+		} else if ( $page == 'ultimatemember-extensions' ) {
+			
+			include_once um_path . 'admin/templates/extensions.php';
 			
 		} else if ( strstr( $page, 'ultimatemember-' ) ) {
 

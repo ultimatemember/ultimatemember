@@ -98,6 +98,16 @@ $this->sections[] = array(
 				'off'			=> __('No','ultimatemember'),
         ),
 		
+        array(
+                'id'       		=> 'reset_require_strongpass',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Require a strong password? (when user resets password only)','ultimatemember' ),
+				'default' 		=> 0,
+				'desc' 	   		=> __('Enable or disable a strong password rules on password reset and change procedure','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+        ),
+		
 	)
 
 );

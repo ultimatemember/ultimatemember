@@ -1,6 +1,23 @@
 <?php
 
 	/***
+	***	@conditional logout form
+	***/
+	add_filter('um_shortcode_args_filter', 'um_display_logout_form', 99);
+	function um_display_logout_form( $args ) {
+		global $ultimatemember;
+
+		if ( is_user_logged_in() && isset( $args['mode'] ) && $args['mode'] == 'login' ) {
+			
+			$args['template'] = 'logout';
+		
+		}
+		
+		return $args;
+		
+	}
+	
+	/***
 	***	@filter for shortcode args
 	***/
 	add_filter('um_shortcode_args_filter', 'um_shortcode_args_filter', 99);

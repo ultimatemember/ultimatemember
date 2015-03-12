@@ -117,16 +117,20 @@
 			$ultimatemember->form->add_error('user_password', 'You must enter a new password');
 		}
 
-		if ( strlen( utf8_decode( $args['user_password'] ) ) < 8 ) {
-			$ultimatemember->form->add_error('user_password', __('Your password must contain at least 8 characters') );
-		}
+		if ( um_get_option('reset_require_strongpass') ) {
 			
-		if ( strlen( utf8_decode( $args['user_password'] ) ) > 30 ) {
-			$ultimatemember->form->add_error('user_password', __('Your password must contain less than 30 characters') );
-		}
+			if ( strlen( utf8_decode( $args['user_password'] ) ) < 8 ) {
+				$ultimatemember->form->add_error('user_password', __('Your password must contain at least 8 characters') );
+			}
+				
+			if ( strlen( utf8_decode( $args['user_password'] ) ) > 30 ) {
+				$ultimatemember->form->add_error('user_password', __('Your password must contain less than 30 characters') );
+			}
 
-		if ( !$ultimatemember->validation->strong_pass( $args['user_password'] ) ) {
-			$ultimatemember->form->add_error('user_password', __('Your password must contain at least one lowercase letter, one capital letter and one number','ultimatemember') );
+			if ( !$ultimatemember->validation->strong_pass( $args['user_password'] ) ) {
+				$ultimatemember->form->add_error('user_password', __('Your password must contain at least one lowercase letter, one capital letter and one number','ultimatemember') );
+			}
+		
 		}
 
 		if ( !$args['confirm_user_password'] ) {

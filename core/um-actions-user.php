@@ -48,3 +48,19 @@
 		}
 		
 	}
+	
+	/***
+	***	@adds main links to a logout widget
+	***/
+	add_action('um_logout_user_links', 'um_logout_user_links', 100 );
+	function um_logout_user_links( $args ) {
+		global $ultimatemember;
+	
+	?>
+	
+		<li><a href="<?php echo um_get_core_page('account'); ?>"><?php _e('Your account','ultimatemember'); ?></a></li>
+		<li><a href="<?php echo add_query_arg('redirect_to', $ultimatemember->permalinks->get_current_url(true), um_get_core_page('logout') ); ?>"><?php _e('Logout','ultimatemember'); ?></a></li>
+	
+	<?php
+	
+	}

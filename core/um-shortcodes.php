@@ -38,7 +38,7 @@ class UM_Shortcodes {
 	/***
 	***	@Add class based on shortcode
 	***/
-	function get_class( $mode ){
+	function get_class( $mode, $args = array() ){
 	
 		global $ultimatemember;
 		
@@ -54,6 +54,10 @@ class UM_Shortcodes {
 		
 		if ( $ultimatemember->fields->viewing == true ) {
 			$classes .= ' um-viewing';
+		}
+		
+		if ( isset( $args['template'] ) && $args['template'] != $args['mode'] ) {
+			$classes .= ' um-' . $args['template'];
 		}
 		
 		$classes = apply_filters('um_form_official_classes__hook', $classes);
@@ -97,6 +101,7 @@ class UM_Shortcodes {
 			$args = array_merge( $this->get_css_args( $args ), $args );
 		}
 
+		// filter for arguments
 		$args = apply_filters('um_shortcode_args_filter', $args );
 
 		extract( $args, EXTR_SKIP );
@@ -106,6 +111,7 @@ class UM_Shortcodes {
 				$args['role'] != $ultimatemember->query->get_role_by_userid( um_profile_id() ) )
 			return;
 
+		// start loading the template here
 		do_action("um_pre_{$mode}_shortcode", $args);
 		
 		do_action("um_before_form_is_loaded", $args);

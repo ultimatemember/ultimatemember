@@ -219,11 +219,18 @@ function um_profile_id() {
 	***/
 	function um_is_temp_upload( $url ) {
 		global $ultimatemember;
+
 		$url = explode('/ultimatemember/temp/', $url);
 		if ( isset( $url[1] ) ) {
-			$src = $ultimatemember->files->upload_temp . $url[1];
-			if ( !file_exists( $src ) )
+			
+			if ( strstr( $url[1], '../' ) || strstr( $url[1], '%' ) ) {
 				return false;
+			}
+
+			$src = $ultimatemember->files->upload_temp . $url[1];
+			if ( !file_exists( $src ) ) {
+				return false;
+			}
 			return $src;
 		}
 		return false;

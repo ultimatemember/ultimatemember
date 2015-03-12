@@ -365,10 +365,12 @@ class UM_Files {
 		}
 		
 		$is_temp = um_is_temp_upload( $src );
-		if ( $is_temp )
+		if ( $is_temp ) {
 			unlink( $is_temp );
 			rmdir( dirname( $is_temp ) );
-
+		} else {
+			die('Not a valid temp file');
+		}
 	}
 	
 	/***

@@ -63,7 +63,7 @@
 		global $ultimatemember;
 		
 		// errors on general tab
-		if ( isset($_POST['um_account_submit']) && !$_POST['um_account_submit'] == __('Delete Account','ultimatemember') ) {
+		if ( isset($_POST['um_account_submit']) && $_POST['um_account_submit'] != __('Delete Account','ultimatemember') ) {
 			
 			if ( isset($_POST['first_name']) && strlen(trim( $_POST['first_name'] ) ) == 0 ) {
 				$ultimatemember->form->add_error('first_name', __('You must provide your first name','ultimatemember') );

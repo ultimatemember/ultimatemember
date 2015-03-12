@@ -160,6 +160,9 @@ class UM_Enqueue {
 		wp_register_style('um_account', um_url . 'assets/css/um-account.css' );
 		wp_enqueue_style('um_account');
 		
+		wp_register_style('um_misc', um_url . 'assets/css/um-misc.css' );
+		wp_enqueue_style('um_misc');
+		
 	}
 	
 	/***

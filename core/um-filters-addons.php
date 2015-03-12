@@ -23,18 +23,45 @@
 		$sections[] = array(
 
 			'icon'       => 'um-faicon-plug',
-			'title'      => __( 'Add ons','ultimatemember'),
+			'title'      => __( 'Extensions','ultimatemember'),
 
 		);
 		
 		$sections[] = array(
 
 			'subsection' => true,
-			'title'      => __( 'Built-in Add ons','ultimatemember'),
+			'title'      => __( 'Tools','ultimatemember'),
 			'fields'	 => $array,
 
 		);
 
+		return $sections;
+		
+	}
+	
+	/***
+	***	@licenses
+	***/
+	add_filter("redux/options/um_options/sections", 'um_add_licenses_tab', 9999 );
+	function um_add_licenses_tab($sections){
+		global $ultimatemember;
+		
+		$fields = array();
+		$fields = apply_filters('um_licensed_products_settings', $fields );
+		
+		if ( $fields ) {
+		
+		$sections[] = array(
+
+			'icon'       => 'um-faicon-key',
+			'title'      => __( 'Licenses','ultimatemember'),
+			'fields'	 => $fields,
+			'subsection' => false,
+
+		);
+		
+		}
+		
 		return $sections;
 		
 	}

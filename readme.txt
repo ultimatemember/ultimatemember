@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1.1
 
-Stable Tag: 1.0.78
+Stable Tag: 1.0.83
 
 License: GNU Version 2 or Any Later Version
 
@@ -41,6 +41,19 @@ Features of the plugin include:
 * Developer friendly with dozens of actions and filters
 * Multi-site compatibility
 * Mandrill compatibility
+
+**Paid Extensions**
+
+You can extend the power of Ultimate Member with one of our premium extensions:
+
+* [Social Login](https://ultimatemember.com/extensions/social-login/)
+* [MailChimp](https://ultimatemember.com/extensions/mailchimp/)
+* [bbPress](https://ultimatemember.com/extensions/bbpress/)
+* [myCRED](https://ultimatemember.com/extensions/mycred/)
+
+**Free Extensions**
+
+* [Google reCAPTCHA](https://ultimatemember.com/extensions/google-recaptcha/)
 
 **Front-end registration**
 
@@ -188,6 +201,33 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.83: March 12, 2015 =
+
+* New: added a logout template If user is already logged in (customizable)
+* New: strong password formula not required when resetting password (optional)
+* Fixed: jQuery issue with live() method - Thanks to Jim Wetton
+
+= 1.0.82: March 11, 2015 =
+
+* Fixed: issue with saving user account general tab
+
+= 1.0.81: March 11, 2015 =
+
+* New: official support for plugin extensions released
+
+= 1.0.80: March 10, 2015 =
+
+* Tweak: added licensing support to plugin core
+* Fixed: issue with account form
+
+= 1.0.79: March 10, 2015 =
+
+* Tweak: Redux up to date
+* Fixed: security issue related to deleting a temp file via ajax
+* Fixed: bug with a php warning on undefined field type
+
+Credits to "James Golovich http://www.pritect.net" for the security checks
 
 = 1.0.78: March 10, 2015 =
 
