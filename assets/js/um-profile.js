@@ -29,8 +29,10 @@ jQuery(document).ready(function() {
 	});
 
 	jQuery(document).on('click', '.um-photo-modal', function(e){
+		e.preventDefault();
 		var photo_src = jQuery(this).attr('data-src');
 		um_new_modal('um_view_photo', 'fit', true, photo_src );
+		return false;
 	});
 
 	jQuery(document).on('click', '.um-reset-profile-photo', function(e){

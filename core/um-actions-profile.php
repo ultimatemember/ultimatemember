@@ -243,6 +243,21 @@
 	}
 	
 	/***
+	***	@Show social links as icons below profile name
+	***/
+	add_action('um_after_profile_header_name_args','um_social_links_icons', 50 );
+	function um_social_links_icons( $args ) {
+		global $ultimatemember;
+		if ( isset($args['show_social_links']) && $args['show_social_links'] ) {
+
+			echo '<div class="um-profile-connect um-member-connect">';
+			echo $ultimatemember->fields->show_social_urls();
+			echo '</div>';
+
+		}
+	}
+
+	/***
 	***	@profile header
 	***/
 	add_action('um_profile_header', 'um_profile_header' );
@@ -320,6 +335,7 @@
 						
 						<div class="um-clear"></div>
 						
+						<?php do_action('um_after_profile_header_name_args', $args ); ?>
 						<?php do_action('um_after_profile_header_name'); ?>
 						
 					</div>

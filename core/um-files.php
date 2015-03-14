@@ -314,7 +314,7 @@ class UM_Files {
 		if ( $fileinfo['invalid_image'] == true ) {
 			$error = sprintf(__('Your image is invalid or too large!','ultimatemember') );
 		} elseif ( !$this->in_array( $fileinfo['extension'], $data['allowed_types'] ) ) {
-			$error = $data['extension_error'];
+			$error = ( isset( $data['extension_error'] ) && !empty( $data['extension_error'] ) ) ? $data['extension_error'] : 'not allowed';
 		} elseif ( isset($data['min_size']) && ( $fileinfo['size'] < $data['min_size'] ) ) {
 			$error = $data['min_size_error'];
 		} elseif ( isset($data['min_width']) && ( $fileinfo['width'] < $data['min_width'] ) ) {
@@ -337,7 +337,7 @@ class UM_Files {
 		$data = $ultimatemember->fields->get_field($field);
 		
 		if ( !$this->in_array( $extension, $data['allowed_types'] ) ) {
-			$error = $data['extension_error'];
+			$error = ( isset( $data['extension_error'] ) && !empty( $data['extension_error'] ) ) ? $data['extension_error'] : 'not allowed';
 		} elseif ( isset($data['min_size']) && ( $fileinfo['size'] < $data['min_size'] ) ) {
 			$error = $data['min_size_error'];
 		}

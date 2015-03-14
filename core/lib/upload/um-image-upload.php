@@ -32,5 +32,7 @@ if(isset($_FILES[$id]['name'])) {
 
     }
 	
+} else {
+	$ret['error'] = __('Theme Compatibility Issue.','ultimatemember');
 }
 echo json_encode($ret);

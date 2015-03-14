@@ -46,7 +46,7 @@
 	/***
 	***	@empty the honeypot value
 	***/
-	add_action('wp_footer', 'um_add_form_honeypot_js');
+	add_action('wp_footer', 'um_add_form_honeypot_js', 99999999999999999 );
 	function um_add_form_honeypot_js() { global $ultimatemember; ?>
 	
 		<script type="text/javascript">jQuery( '#<?php echo $ultimatemember->honeypot; ?>' ).val( '' );</script>

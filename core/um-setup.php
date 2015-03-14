@@ -91,6 +91,7 @@ class UM_Setup {
 			'_um_secondary_btn_hover' => '#e5e5e5',
 			'_um_secondary_btn_text' => '#666',
 			'_um_profile_show_name' => 1,
+			'_um_profile_show_social_links' => 0,
 			'_um_profile_show_bio' => 1,
 			'_um_profile_bio_maxchars' => 180,
 			'_um_profile_header_menu' => 'bc',

@@ -52,7 +52,7 @@ class UM_User_posts {
 		
 		$ultimatemember->shortcodes->modified_args = "$post_type,$posts_per_page,$offset_n,$author";
 		
-		$ultimatemember->shortcodes->loop = $ultimatemember->query->make("post_type=$post_type&number=$posts_per_page&offset=$offset&author_email=$author");
+		$ultimatemember->shortcodes->loop = $ultimatemember->query->make("post_type=$post_type&number=$posts_per_page&offset=$offset&user_id=$author");
 
 		$ultimatemember->shortcodes->load_template('profile/comments-single');
 		

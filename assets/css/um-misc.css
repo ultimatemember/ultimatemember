@@ -27,3 +27,17 @@
 .um-misc-ul li {
 	font-size: 14px;
 }
+
+/* profile misc */
+
+.um-profile-connect.um-member-connect {
+	padding: 5px 0 10px 0;
+}
+
+.um-profile-connect.um-member-connect a {
+	text-align: center;
+	width: 36px;
+	line-height: 36px;
+	height: 36px;
+	font-size: 20px;
+}

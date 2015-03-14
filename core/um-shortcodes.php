@@ -10,6 +10,30 @@ class UM_Shortcodes {
 
 		add_shortcode('ultimatemember', array(&$this, 'ultimatemember'), 1);
 
+		add_filter( 'body_class', array(&$this, 'body_class'), 0 );
+
+	}
+	
+	/***
+	***	@extend body classes
+	***/
+	function body_class( $classes ) {
+		global $ultimatemember;
+		$array = $ultimatemember->permalinks->core;
+		
+		foreach( $array as $slug => $info ) {
+			if ( um_is_core_page( $slug ) ) {
+				$classes[] = 'um-page-' . $slug;
+			}
+		}
+		
+		if ( is_user_logged_in() ) {
+			$classes[] = 'um-page-loggedin';
+		} else {
+			$classes[] = 'um-page-loggedout';
+		}
+		
+		return $classes;
 	}
 	
 	/***

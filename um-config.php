@@ -1379,6 +1379,16 @@ $this->sections[] = array(
         ),
 		
         array(
+                'id'       		=> 'profile_show_social_links',
+                'type'     		=> 'switch',
+                'title'    		=> __( 'Show social links in profile header','ultimatemember' ),
+				'default' 		=> um_get_metadefault('profile_show_social_links'),
+				'desc' 	   		=> __('Switch on/off the social links on profile header','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+        ),
+		
+        array(
                 'id'       		=> 'profile_show_bio',
                 'type'     		=> 'switch',
                 'title'    		=> __( 'Show user description in header','ultimatemember' ),

@@ -65,3 +65,8 @@
 .um-adm-ico.inactive {color: #C74A4A}
 
 .um-adm-ico.pointer {cursor: pointer}
+
+.um-admin-icontext i {
+	font-size: 18px;
+	margin: 0 5px 0 0;
+}

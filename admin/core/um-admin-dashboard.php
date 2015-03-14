@@ -44,7 +44,7 @@ class UM_Admin_Dashboard {
 		
 		do_action('um_extend_admin_menu');
 		
-		add_submenu_page( $this->slug, __('Extensions', $this->slug), '<span style="color: #19e0ff">' .__('Extensions', $this->slug) . '</span>', 'manage_options', $this->slug . '-extensions', array(&$this, 'admin_page') );
+		add_submenu_page( $this->slug, __('Extensions', $this->slug), '<span style="color: #3dc3e5">' .__('Extensions', $this->slug) . '</span>', 'manage_options', $this->slug . '-extensions', array(&$this, 'admin_page') );
 	
 	}
 	

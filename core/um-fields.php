@@ -41,7 +41,7 @@ class UM_Fields {
 		foreach( $social as $k => $arr ) {
 			if ( um_profile( $k ) ) { ?>
 				
-				<a href="<?php echo um_filtered_social_link( $k , $arr['match'] ); ?>" style="background: <?php echo $arr['color']; ?>;" target="_blank"><i class="<?php echo $arr['icon']; ?>"></i></a>
+				<a href="<?php echo um_filtered_social_link( $k , $arr['match'] ); ?>" style="background: <?php echo $arr['color']; ?>;" target="_blank" class="um-tip-n" title="<?php echo $arr['title']; ?>"><i class="<?php echo $arr['icon']; ?>"></i></a>
 				
 			<?php
 			}

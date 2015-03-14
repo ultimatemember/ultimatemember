@@ -174,6 +174,15 @@
 	</p><div class="um-admin-clear"></div>
 	
 	<p>
+		<label><?php _e('Show social links in profile header?','ultimatemember'); ?></label>
+		<span>
+			
+			<?php $this->ui_on_off('_um_profile_show_social_links', 0 ); ?>
+				
+		</span>
+	</p><div class="um-admin-clear"></div>
+	
+	<p>
 		<label><?php _e('Show user description in profile header?','ultimatemember'); ?></label>
 		<span>
 			

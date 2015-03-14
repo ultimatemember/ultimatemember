@@ -1,4 +1,4 @@
-<?php $ultimatemember->shortcodes->loop = $ultimatemember->query->make('post_type=comment&number=10&offset=0&author_email=' . um_user('user_email') ); ?>
+<?php $ultimatemember->shortcodes->loop = $ultimatemember->query->make('post_type=comment&number=10&offset=0&user_id=' . um_user('ID') ); ?>
 
 <?php if ( $ultimatemember->shortcodes->loop ) { ?>
 			
@@ -11,7 +11,7 @@
 		<?php if ( count($ultimatemember->shortcodes->loop) >= 10 ) { ?>
 		
 		<div class="um-load-items">
-			<a href="#" class="um-ajax-paginate um-button" data-hook="um_load_comments" data-args="comment,10,10,<?php echo um_user('user_email'); ?>"><?php _e('load more comments','ultimatemember'); ?></a>
+			<a href="#" class="um-ajax-paginate um-button" data-hook="um_load_comments" data-args="comment,10,10,<?php echo um_user('ID'); ?>"><?php _e('load more comments','ultimatemember'); ?></a>
 		</div>
 		
 		<?php } ?>

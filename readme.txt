@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.1.1
 
-Stable Tag: 1.0.83
+Stable Tag: 1.0.85
 
 License: GNU Version 2 or Any Later Version
 
@@ -201,6 +201,19 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.0.85: March 14, 2015 =
+
+* New: added option to show user social links in profile header (optional)
+* New: added option to display post featured image in profile "posts" tab
+* Tweak: improved error reporting for theme conflicts on photo upload
+* Fixed: issue with comments tab on profile
+
+= 1.0.84: March 13, 2015 =
+
+* New: adds automatic body class to UM core pages automatically
+* Fixed: important jQuery issue
+* Fixed: upload security issue - extension error was empty
 
 = 1.0.83: March 12, 2015 =
 
