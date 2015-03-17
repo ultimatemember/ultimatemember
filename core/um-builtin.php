@@ -500,10 +500,10 @@ class UM_Builtin {
 			),
 			
 			'user_registered' => array(
-				'title' => __('Regisration Date','ultimatemember'),
+				'title' => __('Registration Date','ultimatemember'),
 				'metakey' => 'user_registered',
 				'type' => 'text',
-				'label' => __('Regisration Date','ultimatemember'),
+				'label' => __('Registration Date','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
 				'editable' => 1,

@@ -2,7 +2,7 @@
 
 	<div class="um-form">
 	
-		<form method="post" action="">
+		<?php if ( um_is_on_edit_profile() ) { ?><form method="post" action=""><?php } ?>
 		
 			<?php do_action('um_profile_header_cover_area', $args ); ?>
 			
@@ -25,7 +25,7 @@
 				
 			?>
 		
-		</form>
+		<?php if ( um_is_on_edit_profile() ) { ?></form><?php } ?>
 	
 	</div>
 	

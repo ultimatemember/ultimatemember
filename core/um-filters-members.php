@@ -34,7 +34,7 @@
 		global $ultimatemember;
 		extract( $args );
 		
-		if ( !current_user_can('manage_options') ) {
+		if ( !um_user_can('can_edit_everyone') ) {
 		
 			$query_args['meta_query'][] = array(
 				'key' => 'account_status',
