@@ -10,7 +10,8 @@ class UM_Admin_Dashboard {
 		$this->about_tabs['start'] = 'Getting Started';
 
 		add_action('admin_menu', array(&$this, 'primary_admin_menu'), 0);
-		add_action('admin_menu', array(&$this, 'secondary_menu_items'), 1000); 
+		add_action('admin_menu', array(&$this, 'secondary_menu_items'), 1000);
+		add_action('admin_menu', array(&$this, 'extension_menu'), 9999); 
 		
 	}
 	
@@ -43,9 +44,14 @@ class UM_Admin_Dashboard {
 		}
 		
 		do_action('um_extend_admin_menu');
-		
-		add_submenu_page( $this->slug, __('Extensions', $this->slug), '<span style="color: #3dc3e5">' .__('Extensions', $this->slug) . '</span>', 'manage_options', $this->slug . '-extensions', array(&$this, 'admin_page') );
 	
+	}
+	
+	/***
+	***	@extension menu
+	***/
+	function extension_menu() {
+		add_submenu_page( $this->slug, __('Extensions', $this->slug), '<span style="color: #3dc3e5">' .__('Extensions', $this->slug) . '</span>', 'manage_options', $this->slug . '-extensions', array(&$this, 'admin_page') );
 	}
 	
 	/***

@@ -380,6 +380,8 @@ class UM_Admin_Metabox {
 				update_post_meta( $post_id, $k, $v);
 			}
 		}
+
+		do_action('um_admin_after_editing_role', $post_id, $post);
 		
 	}
 	

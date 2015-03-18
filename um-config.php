@@ -1829,7 +1829,7 @@ $this->sections[] = array(
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Allow Tracking','ultimatemember' ),
 				'default' 		=> 0,
-				'desc' 	   		=> 'Help us improve Ultimate Member’s compatibility with other plugins and themes by allowing us to track non-sensitive data on your site. Click <a href="http://ultimatemember.com/tracking/">here</a> to see what data we track.',
+				'desc' 	   		=> __( 'Help us improve Ultimate Member’s compatibility with other plugins and themes by allowing us to track non-sensitive data on your site. Click <a href="https://ultimatemember.com/tracking/" target="_blank">here</a> to see what data we track.', 'ultimatemember' ),
 				'on'			=> __('Allow tracking','ultimatemember'),
 				'off'			=> __('Do not allow','ultimatemember'),
         ),

@@ -150,10 +150,6 @@ class UM_User {
 				$this->profile[$k] = $v[0];
 			}
 
-			// add user stuff
-			$this->profile['post_count'] = $ultimatemember->query->count_posts($this->id);
-			$this->profile['comment_count'] = $ultimatemember->query->count_comments($this->id);
-			
 			// add permissions
 			$user_role = $this->get_role();
 			$this->role_meta = $ultimatemember->query->role_data( $user_role );
