@@ -56,6 +56,8 @@
 			</div><div class="um-clear"></div>
 			
 		</form>
+		
+		<?php do_action('um_after_account_page_load'); ?>
 	
 	</div>
 	

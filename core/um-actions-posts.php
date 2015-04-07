@@ -7,6 +7,9 @@
 	function um_pre_get_posts($query) {
 
 		if ( !is_admin() && $query->is_main_query() ) {
+			
+			// Incompatibility with The Events Calendar
+			if ( isset( $query->query['post_type'] ) && $query->query['post_type'] == 'tribe_events' ) return;
 
 			if ( $query->is_search || $query->is_archive() || $query->is_home ) {
 				

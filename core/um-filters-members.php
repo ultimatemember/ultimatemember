@@ -66,6 +66,8 @@
 
 			foreach( $query as $field => $value ) {
 
+				if(in_array($field, array('members_page'))) continue;
+				
 				if ( in_array( $field, array('gender') ) ) {
 					$operator = '=';
 				} else {
@@ -175,6 +177,8 @@
 			if ( isset( $order ) ) {
 				$query_args['order'] = $order;
 			}
+			
+			$query_args = apply_filters('um_modify_sortby_parameter', $query_args, $sortby);
 
 		}
 		

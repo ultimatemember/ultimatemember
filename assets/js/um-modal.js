@@ -24,7 +24,7 @@ jQuery(document).ready(function() {
 		um_modal_responsive();
 		
 		jQuery.ajax({
-			url: ultimatemember_ajax_url,
+			url: um_scripts.ajaxurl,
 			type: 'post',
 			data: {
 				action: 'ultimatemember_remove_file',
@@ -54,7 +54,7 @@ jQuery(document).ready(function() {
 		um_modal_responsive();
 		
 		jQuery.ajax({
-			url: ultimatemember_ajax_url,
+			url: um_scripts.ajaxurl,
 			type: 'post',
 			data: {
 				action: 'ultimatemember_remove_file',
@@ -99,7 +99,7 @@ jQuery(document).ready(function() {
 			jQuery(this).html( jQuery(this).attr('data-processing') ).addClass('disabled');
 
 			jQuery.ajax({
-				url: ultimatemember_ajax_url,
+				url: um_scripts.ajaxurl,
 				type: 'POST',
 				data: {
 					action: 'ultimatemember_resize_image',

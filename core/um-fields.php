@@ -246,7 +246,16 @@ class UM_Fields {
 	***	@Print field error
 	***/
 	function field_error($text) {
-		$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>'.$text.'</div>';
+		global $ultimatemember;
+		if ( isset( $this->set_id ) && $ultimatemember->form->processing == $this->set_id ) {
+			$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>'.$text.'</div>';
+		} else {
+			$output = '';
+		}
+		
+		if ( !$ultimatemember->form->processing ) {
+			$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>'.$text.'</div>';
+		}
 		return $output;
 	}
 	
@@ -2017,7 +2026,7 @@ class UM_Fields {
 			}
 			
 			if ( um_is_myprofile() ) {
-				$output .= '<p class="um-profile-note">' . $emo .'<span>' . sprintf(__('Your profile is looking a little empty. Why not <a href="%s">add</a> some information!','ultimatemember'), add_query_arg('um_action','edit') ) . '</span></p>';
+				$output .= '<p class="um-profile-note">' . $emo .'<span>' . sprintf(__('Your profile is looking a little empty. Why not <a href="%s">add</a> some information!','ultimatemember'), um_edit_profile_url() ) . '</span></p>';
 			} else {
 				$output .= '<p class="um-profile-note">'. $emo . '<span>' . __('This user has not added any information to their profile yet.','ultimatemember') . '</span></p>';
 			}

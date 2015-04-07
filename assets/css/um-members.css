@@ -215,12 +215,8 @@
 .um-member-name a {
 	font-size: 16px;
 	line-height: 26px;
-	color: #444 !important;
+	color: #444;
 	font-weight: 700;
-}
-
-.um-member-name a:hover {
-	color: #3ba1da;
 }
 
 .um-member-tagline {
@@ -247,8 +243,6 @@
 	height: 32px;
 	line-height: 32px;
 }
-
-.um-member-more a:hover, .um-member-less a:hover{color: #3ba1da}
 
 .um-member-meta {
 	display: none;
@@ -320,7 +314,6 @@
 
 .um-members-pagi span.current,
 .um-members-pagi span.current:hover {
-	background: #3ba1da;
 	color: #fff !important;
 }
 
@@ -345,5 +338,4 @@
 
 .um-members-pagi a:hover {
 	text-decoration: none !important;
-	color: #3ba1da;
 }

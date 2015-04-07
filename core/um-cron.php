@@ -8,7 +8,7 @@ class UM_Cron {
 	}
 
 	public function add_schedules( $schedules = array() ) {
-	
+
 		// Adds once weekly to the existing schedules.
 		$schedules['weekly'] = array(
 			'interval' => 604800,

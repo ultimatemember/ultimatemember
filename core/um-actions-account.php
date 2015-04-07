@@ -80,6 +80,10 @@
 			if ( isset($_POST['user_email']) && !is_email( $_POST['user_email'] ) ) {
 				$ultimatemember->form->add_error('user_email', __('Please provide a valid e-mail','ultimatemember') );
 			}
+			
+			if ( email_exists( $_POST['user_email'] ) && email_exists( $_POST['user_email'] ) != get_current_user_id() ) {
+				$ultimatemember->form->add_error('user_email', __('Email already linked to another account','ultimatemember') );
+			}
 		
 		}
 		$ultimatemember->account->current_tab = 'general';

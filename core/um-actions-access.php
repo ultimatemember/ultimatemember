@@ -12,8 +12,9 @@
 		if ( um_user('default_homepage') ) return;
 		if ( !um_user('redirect_homepage') ) return;
 		
-		if( is_home() || is_front_page() )
+		if( is_front_page() ) {
 			$ultimatemember->access->redirect_handler = um_user('redirect_homepage');
+		}
 	}
 	
 	/***
@@ -28,6 +29,8 @@
 		if ( $access == 2 && !is_user_logged_in() ) {
 		
 			$redirect = um_get_option('access_redirect');
+			if ( !$redirect ) 
+				$redirect = um_get_core_page('login');
 			
 			$redirects[] = untrailingslashit( um_get_core_page('login') );
 			$redirects[] = untrailingslashit( um_get_option('access_redirect') );
@@ -37,7 +40,7 @@
 			if ( $exclude_uris ) {
 				$redirects = array_merge( $redirects, $exclude_uris );
 			}
-			
+
 			$redirects = array_unique( $redirects );
 			
 			$current_url = $ultimatemember->permalinks->get_current_url( get_option('permalink_structure') );

@@ -8,7 +8,7 @@
 					$image_url = wp_get_attachment_image_src( $image_id, 'full', true );
 			?>
 			
-			<div class="um-item-img"><a href="#" class="um-photo-modal" data-src="<?php echo $image_url[0]; ?>"><?php echo get_the_post_thumbnail( $post_id, 'medium' ); ?></a></div>
+			<div class="um-item-img"><a href="<?php the_permalink(); ?>"><?php echo get_the_post_thumbnail( $post_id, 'medium' ); ?></a></div>
 			
 			<?php } ?>
 			

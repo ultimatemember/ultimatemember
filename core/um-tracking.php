@@ -16,9 +16,8 @@ class UM_Tracking {
 	***	@setup info array
 	***/
 	private function setup_data() {
-
 		global $ultimatemember;
-		
+
 		$data = array();
 
 		// Retrieve current theme info
@@ -33,16 +32,10 @@ class UM_Tracking {
 		}
 
 		$data['url'] = home_url();
-		
 		$data['theme'] = $theme;
 		$data['theme_version'] = $theme_ver;
-		
 		$data['wp_version'] = get_bloginfo( 'version' );
-		
 		$data['version'] = ultimatemember_version;
-		
-		$result = count_users();
-		$data['users_count'] = $result['total_users'];
 
 		// Retrieve current plugin information
 		if( ! function_exists( 'get_plugins' ) ) {
@@ -61,15 +54,14 @@ class UM_Tracking {
 
 		$data['active_plugins']   = $active_plugins;
 		$data['inactive_plugins'] = $plugins;
-
 		$data['language'] = get_bloginfo('language');
-		
 		$data['multisite'] = ( is_multisite() ) ? 1 : 0;
 		
 		if ( !get_option('__ultimatemember_sitekey') ) {
 			$ultimatemember->setup->install_basics();
 		}
 		
+		$data['email'] = get_option('admin_email');
 		$data['unique_sitekey'] = get_option('__ultimatemember_sitekey');
 		
 		$this->data = $data;
@@ -107,6 +99,12 @@ class UM_Tracking {
 		
 		$this->setup_data();
 		
+		if ( !get_option('__ultimatemember_coupon_sent') ) {
+			$this->data['send_discount'] = 1;
+		} else {
+			$this->data['send_discount'] = 0;
+		}
+		
 		$request = wp_remote_post( 'https://ultimatemember.com/?um_action=checkin', array(
 			'method'      => 'POST',
 			'timeout'     => 20,
@@ -118,6 +116,7 @@ class UM_Tracking {
 		) );
 
 		update_option( 'um_tracking_last_send', time() );
+		update_option( '__ultimatemember_coupon_sent', 1 );
 	}
 	
 	/***
@@ -145,7 +144,7 @@ class UM_Tracking {
 
 		echo '<div class="updated" style="border-color: #3ba1da;"><p>';
 		
-		echo __( 'Help us improve Ultimate Member’s compatibility with other plugins and themes by allowing us to track non-sensitive data on your site. Click <a href="https://ultimatemember.com/tracking/" target="_blank">here</a> to see what data we track.', 'ultimatemember' );
+		echo __( 'Allow Ultimate Member to track plugin usage? Opt-in to tracking and our newsletter and we will immediately e-mail you a 20% discount which you can use on any of our extensions. No sensitive data is tracked.', 'ultimatemember' );
 		
 		echo '</p>';
 		

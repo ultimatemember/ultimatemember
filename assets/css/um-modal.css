@@ -96,7 +96,6 @@
 	height: 44px;
 	line-height: 44px;
 	color: #fff;
-	background: #3ba1da;
 	padding: 0 20px;
 	box-sizing: border-box;
 	font-size: 17px;
@@ -118,7 +117,6 @@
 .um-modal-btn.disabled:hover {
 	opacity: 0.5;
 	cursor: default !important;
-	background: #3ba1da;
 }
 
 .um-modal-btn {
@@ -132,7 +130,6 @@
 	padding: 0 20px;
 	text-align: center;
 	color: #fff;
-	background: #3ba1da;
 	vertical-align: middle;
 	font-size: 14px;
 	box-sizing: border-box;

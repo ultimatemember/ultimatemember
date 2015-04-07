@@ -32,19 +32,16 @@ class UM_Admin_Users {
 		$user_id = $user_object->ID;
 		um_fetch_user( $user_id );
 
-		$actions = array();
+		unset( $actions['edit'] );
+		unset( $actions['delete'] );
 
 		$actions['backend_profile'] = "<a class='' href='" . admin_url('user-edit.php?user_id='. $user_id ) . "'>" . __( 'Edit','ultimatemember' ) . "</a>";
 		$actions['frontend_profile'] = "<a class='' href='" . um_user_profile_url() . "'>" . __( 'Edit in frontend','ultimatemember') . "</a>";
 		
 		if ( um_user('submitted') ) {
-
-		$actions['view_info'] = '<a href="#" data-modal="UM_preview_registration" data-modal-size="smaller" data-dynamic-content="um_admin_review_registration" data-arg1="'.$user_id.'" data-arg2="edit_registration">' . __('Info','ultimatemember') . '</a>';
-		
+			$actions['view_info'] = '<a href="#" data-modal="UM_preview_registration" data-modal-size="smaller" data-dynamic-content="um_admin_review_registration" data-arg1="'.$user_id.'" data-arg2="edit_registration">' . __('Info','ultimatemember') . '</a>';
 		}
-
 		return $actions;
-
 	}
 	
 	/***

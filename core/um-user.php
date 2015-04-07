@@ -174,6 +174,25 @@ class UM_User {
 	}
 	
 	/***
+	***	@Security check for roles
+	***/
+	function is_secure_role( $user_id, $role ) {
+		
+		if ( is_admin() ) return;
+		
+		if ( $role == 'admin' ) {
+			$this->delete( false );
+			wp_die( __('This is not allowed for security reasons.','ultimatemember') );
+		}
+		
+		if ( um_get_option('advanced_denied_roles') && strstr( um_get_option('advanced_denied_roles'), $role ) ) {
+			$this->delete( false );
+			wp_die( __('This is not allowed for security reasons.','ultimatemember') );
+		}
+		
+	}
+	
+	/***
 	***	@Clean user profile
 	***/
 	function clean(){
@@ -219,6 +238,15 @@ class UM_User {
 	***	@Set user's registration details
 	***/
 	function set_registration_details( $submitted ) {
+		
+		if ( isset( $submitted['user_pass'] ) ) {
+			unset( $submitted['user_pass'] );
+		}
+		
+		if ( isset( $submitted['user_password'] ) ) {
+			unset( $submitted['user_password'] );
+		}
+		
 		update_user_meta( $this->id, 'submitted', $submitted );
 	}
 	
@@ -258,6 +286,8 @@ class UM_User {
 	function set_role( $role ){
 	
 		do_action('um_before_user_role_is_changed');
+		
+		do_action('um_member_role_upgrade', $role, $this->profile['role'] );
 		
 		$this->profile['role'] = $role;
 		$this->update_usermeta_info('role');
@@ -453,6 +483,7 @@ class UM_User {
 		
 		if ( $send_mail ) {
 			$ultimatemember->mail->send( um_user('user_email'), 'deletion_email' );
+			$ultimatemember->mail->send( um_admin_email(), 'notification_deletion', array('admin' => true ) );
 		}
 		
 		$ultimatemember->files->remove_dir( um_user_uploads_dir() );

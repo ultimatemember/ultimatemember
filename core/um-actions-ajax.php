@@ -1,7 +1,7 @@
 <?php
 	
 	/***
-	***	@Global ajax URLs
+	***	@fallback for ajax urls
 	***/
 	add_action('wp_head','ultimatemember_ajax_urls');
 	add_action('admin_head','ultimatemember_ajax_urls');
@@ -16,6 +16,7 @@
 		</script>
 		
 	<?php
+
 	}
 	
 	/***

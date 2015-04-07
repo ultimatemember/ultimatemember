@@ -114,17 +114,17 @@
 			wp_die( __('Whoa, slow down! You\'re seeing this message because you tried to submit a form too fast and we think you might be a spam bot. If you are a real human being please wait a few seconds before submitting the form. Thanks!') );
 		
 		if ( !$args['user_password'] ) {
-			$ultimatemember->form->add_error('user_password', 'You must enter a new password');
+			$ultimatemember->form->add_error('user_password', __('You must enter a new password','ultimatemember') );
 		}
 
 		if ( um_get_option('reset_require_strongpass') ) {
 			
 			if ( strlen( utf8_decode( $args['user_password'] ) ) < 8 ) {
-				$ultimatemember->form->add_error('user_password', __('Your password must contain at least 8 characters') );
+				$ultimatemember->form->add_error('user_password', __('Your password must contain at least 8 characters','ultimatemember') );
 			}
 				
 			if ( strlen( utf8_decode( $args['user_password'] ) ) > 30 ) {
-				$ultimatemember->form->add_error('user_password', __('Your password must contain less than 30 characters') );
+				$ultimatemember->form->add_error('user_password', __('Your password must contain less than 30 characters','ultimatemember') );
 			}
 
 			if ( !$ultimatemember->validation->strong_pass( $args['user_password'] ) ) {
@@ -134,11 +134,11 @@
 		}
 
 		if ( !$args['confirm_user_password'] ) {
-			$ultimatemember->form->add_error('confirm_user_password', 'You must confirm your new password');
+			$ultimatemember->form->add_error('confirm_user_password', __('You must confirm your new password','ultimatemember') );
 		}
 		
 		if ( $args['user_password'] != $args['confirm_user_password'] ) {
-			$ultimatemember->form->add_error('confirm_user_password', 'Your passwords do not match');
+			$ultimatemember->form->add_error('confirm_user_password', __('Your passwords do not match','ultimatemember') );
 		}
 
 	}

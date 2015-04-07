@@ -22,6 +22,11 @@
 		
 		switch( $_REQUEST['um_action'] ) {
 		
+			default:
+				$uid = ( isset( $_REQUEST['uid'] ) ) ? $_REQUEST['uid'] : 0;
+				do_action('um_action_user_request_hook', $_REQUEST['um_action'], $uid);
+				break;
+				
 			case 'edit':
 				$ultimatemember->fields->editing = true;
 				if ( !um_can_edit_my_profile() ) {

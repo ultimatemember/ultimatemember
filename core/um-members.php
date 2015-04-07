@@ -73,9 +73,13 @@ class UM_Members {
 
 		$fields = $ultimatemember->builtin->all_user_fields;
 		
-		$attrs = $fields[$filter];
+		if ( isset( $fields[$filter] ) ) {
+			$attrs = $fields[$filter];
+		} else {
+			$attrs = apply_filters("um_custom_search_field_{$filter}", array() );
+		}
 		
-		if ( $ultimatemember->builtin->is_dropdown_field( $filter ) ) {
+		if ( $ultimatemember->builtin->is_dropdown_field( $filter, $attrs ) ) {
 			$type = 'select';
 		} else {
 			$type = 'text';
@@ -98,6 +102,9 @@ class UM_Members {
 						$opt = $v;
 						
 						if ( strstr($filter, 'role_') )
+							$opt = $k;
+						
+						if ( isset( $attrs['custom'] ) )
 							$opt = $k;
 
 					?>

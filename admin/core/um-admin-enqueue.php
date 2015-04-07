@@ -271,6 +271,11 @@ class UM_Admin_Enqueue {
 			$this->load_core_wp();
 			$this->load_ajax_js();
 			$this->load_custom_scripts();
+			
+			if ( is_rtl() ) {
+				wp_register_style('um_admin_rtl', um_url . 'admin/assets/css/um-admin-rtl.css' );
+				wp_enqueue_style('um_admin_rtl');
+			}
 		
 		}
 		

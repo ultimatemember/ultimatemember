@@ -56,7 +56,7 @@
 }
 
 .um-cover-add {
-	color: #aaa !important;
+	color: #aaa;
 	font-size: 36px;
 	width: 100%;
 	display: table;
@@ -66,8 +66,6 @@
 	display: table-cell;
 	vertical-align: middle;
 }
-
-.um-cover-add:hover { color: #3ba1da }
 
 .um-cover-e {
 	text-align: center;
@@ -349,7 +347,6 @@ font-weight: normal;
 
 .um-profile-nav-item.active a,
 .um-profile-nav-item.active a:hover {
-	background: #3ba1da;
 	color: #FFF!important;
 }
 
@@ -400,7 +397,6 @@ font-weight: normal;
 	font-weight: 600;
 	margin: 0 20px;
 }
-.um-profile-subnav a.active {color: #3ba1da}
 .um-profile-subnav a:hover {color: #333}
 
 .um-profile-subnav span {
@@ -486,7 +482,7 @@ font-weight: normal;
     content: "•";
 }
 
-.um-item-meta a {font-weight: bold;border-bottom: 1px solid #E0E0E0;color: #3ba1da}
+.um-item-meta a {font-weight: bold;border-bottom: 1px solid #E0E0E0}
 .um-item-meta a:hover {border-bottom-color: #bbb}
 
 .um-load-items {

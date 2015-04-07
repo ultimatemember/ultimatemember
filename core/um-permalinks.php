@@ -59,21 +59,22 @@ class UM_Permalinks {
 	***/
 	function activate_account_via_email_link(){
 		global $ultimatemember;
-		
+
 		if ( isset($_REQUEST['act']) && $_REQUEST['act'] == 'activate_via_email' && isset($_REQUEST['hash']) && strlen($_REQUEST['hash']) == 40 &&
 			isset($_REQUEST['user_id']) && is_numeric($_REQUEST['user_id']) ) { // valid token
 				
 				um_fetch_user( $_REQUEST['user_id'] );
-				
+
 				if ( um_user('account_status') != 'awaiting_email_confirmation' ) wp_die('The activation link you used is invalid or has expired.');
 				
 				if ( $_REQUEST['hash'] != um_user('account_secret_hash') ) wp_die('The secret key provided does not match this one for the user.');
 
 				$ultimatemember->user->approve();
+				$redirect = ( um_user('url_email_activate') ) ? um_user('url_email_activate') : um_get_core_page('login', 'account_active');
 				
 				um_reset_user();
-				
-				exit( wp_redirect( um_get_core_page('login', 'account_active') ) );
+
+				exit( wp_redirect( $redirect ) );
 				
 		}
 		
@@ -128,7 +129,7 @@ class UM_Permalinks {
 	***/
 	function profile_url() {
 		global $ultimatemember;
-		
+
 		$profile_url = $this->core['user'];
 		$profile_url = get_permalink($profile_url);
 		

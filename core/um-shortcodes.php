@@ -21,6 +21,8 @@ class UM_Shortcodes {
 		global $ultimatemember;
 		$array = $ultimatemember->permalinks->core;
 		
+		if ( !$array ) return $classes;
+		
 		foreach( $array as $slug => $info ) {
 			if ( um_is_core_page( $slug ) ) {
 				$classes[] = 'um-page-' . $slug;
@@ -104,7 +106,7 @@ class UM_Shortcodes {
 
 		$defaults = array();
 		$args = wp_parse_args( $args, $defaults );
-
+		
 		// when to not continue
 		$this->form_id = (isset($args['form_id'])) ? $args['form_id'] : null;
 		if (!$this->form_id) return;
@@ -113,6 +115,9 @@ class UM_Shortcodes {
 		
 		// get data into one global array
 		$post_data = $ultimatemember->query->post_data( $this->form_id );
+		
+		$args = apply_filters('um_pre_args_setup', $post_data );
+
 		if ( !isset( $args['template'] ) ) $args['template'] = '';
 		if ( isset( $post_data['template'] ) && $post_data['template'] != $args['template']) $args['template'] = $post_data['template'];
 		if ( !$this->template_exists( $args['template'] ) ) $args['template'] = $post_data['mode'];
@@ -146,9 +151,11 @@ class UM_Shortcodes {
 		
 		$this->dynamic_css( $args );
 		
-		if ( um_get_requested_user() ) {
+		if ( um_get_requested_user() || $mode == 'logout' ) {
 			um_reset_user();
 		}
+		
+		do_action('um_after_everything_output');
 
 		$output = ob_get_contents();
 		ob_end_clean();
@@ -286,6 +293,7 @@ class UM_Shortcodes {
 			'{last_name}',
 			'{display_name}',
 			'{user_avatar_small}',
+			'{username}',
 		);
 		
 		$pattern_array = apply_filters('um_allowed_user_tags_patterns', $pattern_array);
@@ -302,6 +310,10 @@ class UM_Shortcodes {
 					$value = um_user('profile_photo', 40);
 				} elseif ( um_user( $usermeta ) ){
 					$value = um_user( $usermeta );
+				}
+				
+				if ( $usermeta == 'username' ) {
+					$value = um_user('user_login');
 				}
 				
 				$value = apply_filters("um_profile_tag_hook__{$usermeta}", $value, um_user('ID') );

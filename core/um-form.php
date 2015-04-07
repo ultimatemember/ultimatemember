@@ -12,6 +12,8 @@ class UM_Form {
 		
 		$this->errors = null;
 		
+		$this->processing = null;
+		
 		add_action('init', array(&$this, 'form_init'), 2);
 		
 		add_action('init', array(&$this, 'field_declare'), 10);
@@ -106,6 +108,8 @@ class UM_Form {
 		if (isset($form['form_id'])){
 		
 			$this->form_suffix = '-' . $form['form_id'];
+			
+			$this->processing = $form['form_id'];
 			
 			foreach($form as $key => $value){
 				if (strstr($key, $this->form_suffix) ) {

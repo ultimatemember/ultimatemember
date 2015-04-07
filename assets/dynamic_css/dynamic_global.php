@@ -12,7 +12,19 @@ print "
 
 .um-$form_id.um .um-tip:hover,
 .um-$form_id.um .um-field-radio.active i,
-.um-$form_id.um .um-field-checkbox.active i 
+.um-$form_id.um .um-field-checkbox.active i,
+.um-$form_id.um .um-member-name a:hover,
+.um-$form_id.um .um-member-more a:hover,
+.um-$form_id.um .um-member-less a:hover,
+.um-$form_id.um .um-members-pagi a:hover,
+.um-$form_id.um .um-cover-add:hover,
+.um-$form_id.um .um-profile-subnav a.active,
+.um-$form_id.um .um-item-meta a,
+.um-account-name a:hover,
+.um-account-nav a.current,
+.um-account-side li a.current span.um-account-icon,
+.um-account-side li a.current:hover span.um-account-icon,
+.um-dropdown li a:hover
 {
 	color: $active_color;
 }
@@ -20,7 +32,17 @@ print "
 .um-$form_id.um .um-field-group-head,
 .picker__box,
 .picker__nav--prev:hover,
-.picker__nav--next:hover
+.picker__nav--next:hover,
+.um-$form_id.um .um-members-pagi span.current,
+.um-$form_id.um .um-members-pagi span.current:hover,
+.um-$form_id.um .um-profile-nav-item.active a,
+.um-$form_id.um .um-profile-nav-item.active a:hover,
+.upload,
+.um-modal-header,
+.um-modal-btn,
+.um-modal-btn.disabled,
+.um-modal-btn.disabled:hover,
+div.uimob800 .um-account-side li a.current,div.uimob800 .um-account-side li a.current:hover
 {
 	background: $active_color;
 }

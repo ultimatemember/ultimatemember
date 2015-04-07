@@ -54,16 +54,14 @@
 .um-admin-txtspace {margin: 0 0 0 10px;}
 
 .um-adm-ico {
-	font-size: 20px;
-	width: 20px;
+	font-size: 18px;
+	width: 18px;
 	text-align: center;
-	margin-top: 5px;
 	display: inline-block;
 	color: #7ACF58;
 }
 
 .um-adm-ico.inactive {color: #C74A4A}
-
 .um-adm-ico.pointer {cursor: pointer}
 
 .um-admin-icontext i {

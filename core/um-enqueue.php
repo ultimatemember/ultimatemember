@@ -79,14 +79,32 @@ class UM_Enqueue {
 			
 			$this->load_original();
 			
+			wp_localize_script( 'um_scripts', 'um_scripts', array(
+					'ajaxurl' => admin_url( 'admin-ajax.php' ),
+					'fileupload' => um_url . 'core/lib/upload/um-file-upload.php',
+					'imageupload' => um_url . 'core/lib/upload/um-image-upload.php'
+			) );
+			
 		} else {
 		
 			wp_register_script('um_minified', um_url . 'assets/js/um.min.js', array('jquery'), ultimatemember_version, true );
 			wp_enqueue_script('um_minified');
 			
+			wp_localize_script( 'um_minified', 'um_scripts', array(
+					'ajaxurl' => admin_url( 'admin-ajax.php' ),
+					'fileupload' => um_url . 'core/lib/upload/um-file-upload.php',
+					'imageupload' => um_url . 'core/lib/upload/um-image-upload.php'
+			) );
+		
 			wp_register_style('um_minified', um_url . 'assets/css/um.min.css', '', ultimatemember_version, 'all' );
 			wp_enqueue_style('um_minified');
 		
+		}
+		
+		// rtl style
+		if ( is_rtl() ) {
+			wp_register_style('um_rtl', um_url . 'assets/css/um.rtl.css', '', ultimatemember_version, 'all' );
+			wp_enqueue_style('um_rtl');
 		}
 		
 		// load a localized version for date/time

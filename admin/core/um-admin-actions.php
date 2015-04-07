@@ -6,7 +6,7 @@
 	add_action('um_admin_do_action__delete_users', 'um_admin_do_action__delete_users');
 	function um_admin_do_action__delete_users( $action ){
 		global $ultimatemember;
-		if ( !is_admin() || !current_user_can('manage_options') ) die();
+		if ( !is_admin() || !current_user_can( 'edit_users' ) ) die();
 		
 		$redirect = admin_url('users.php');
 		
@@ -219,7 +219,7 @@
 	add_action('um_admin_do_action__user_action', 'um_admin_do_action__user_action');
 	function um_admin_do_action__user_action( $action ){
 		global $ultimatemember;
-		if ( !is_admin() || !current_user_can('manage_options') ) die();
+		if ( !is_admin() || !current_user_can( 'edit_users' ) ) die();
 		if ( !isset( $_REQUEST['sub'] ) ) die();
 		if ( !isset($_REQUEST['user_id']) ) die();
 		

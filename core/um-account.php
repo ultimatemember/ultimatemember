@@ -30,7 +30,7 @@ class UM_Account {
 		$tabs[300]['privacy']['icon'] = 'um-faicon-lock';
 		$tabs[300]['privacy']['title'] = __('Privacy','ultimatemember');
 		
-		$tabs[400]['notifications']['icon'] = 'um-faicon-bell';
+		$tabs[400]['notifications']['icon'] = 'um-faicon-envelope';
 		$tabs[400]['notifications']['title'] = __('Notifications','ultimatemember');
 		
 		$tabs[9999]['delete']['icon'] = 'um-faicon-trash-o';

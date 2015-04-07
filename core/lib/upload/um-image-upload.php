@@ -33,6 +33,6 @@ if(isset($_FILES[$id]['name'])) {
     }
 	
 } else {
-	$ret['error'] = __('Theme Compatibility Issue.','ultimatemember');
+	$ret['error'] = __('A theme or plugin compatibility issue','ultimatemember');
 }
 echo json_encode($ret);

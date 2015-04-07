@@ -3,11 +3,11 @@ Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember
 Donate link: 
-Tags: access control, author, authors, author profile, comments, community, communities, conditional fields, conditional logic, conditional menus, content protection, custom fields, file uploads, form builder, front-end login, front-end registration, hide wp-admin, login, login page, logged-in users, mandrill, member, members, membership, member directory, profile, profiles, profile builder, registration, restriction, restrict content, role creation, role menus, search filters, sign in, sign up, social network, star ratings, toolbar, user, users, user fields, user profiles, user roles
+Tags: access control, author, authors, author profile, comments, community, communities, conditional fields, conditional logic, conditional menus, content protection, custom fields, file uploads, form builder, front-end login, front-end registration, hide wp-admin, login, login page, logged-in users, mandrill, member, members, membership, member directory, profile, profiles, profile builder, registration, restriction, restrict content, role creation, role menus, search filters, sign in, sign up, social network, star ratings, toolbar, user, users, user fields, user profile, user-profile, user profiles, user roles
 Requires at least: 4.1
 Tested up to: 4.1.1
 
-Stable Tag: 1.0.89
+Stable Tag: 1.1.6
 
 License: GNU Version 2 or Any Later Version
 
@@ -41,14 +41,17 @@ Features of the plugin include:
 * Developer friendly with dozens of actions and filters
 * Multi-site compatibility
 * Mandrill compatibility
+* Multi language support
 
 **Paid Extensions**
 
 You can extend the power of Ultimate Member with one of our premium extensions:
 
+* [Real-time Notifications](https://ultimatemember.com/extensions/real-time-notifications/)
 * [Social Login](https://ultimatemember.com/extensions/social-login/)
 * [bbPress](https://ultimatemember.com/extensions/bbpress/)
 * [MailChimp](https://ultimatemember.com/extensions/mailchimp/)
+* [User Reviews](https://ultimatemember.com/extensions/user-reviews/)
 * [myCRED](https://ultimatemember.com/extensions/mycred/)
 * [Notices](https://ultimatemember.com/extensions/notices/)
 
@@ -145,6 +148,7 @@ Ultimate Member has been translated into the following languages:
 * Suomi
 * Polski
 * Türkçe
+* العربية
 
 == Installation ==
 
@@ -202,6 +206,88 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.1.6: April 7, 2015 =
+
+* Fixed: major bug with datepicker (Update recommended)
+
+= 1.1.5: April 4, 2015 =
+
+* New: new action hook that runs when user role is changed um_member_role_upgrade
+* Fixed: bug/compatibility issue with caching UM roles data
+* Fixed: bug with changing role settings/permissions
+* Fixed: bug with setting e-mail activation redirect URL
+
+= 1.1.4: April 2, 2015 =
+
+* Fixed: Major bug with dropdown and date fields (Update recommended)
+* Fixed: hard-coded translation issues
+
+= 1.1.3: April 1, 2015 =
+
+* New: added option to manage if access control widgets can be edited by admins only
+* Tweak: update to last security patch - deletes user who try to get unauthorized access
+
+= 1.1.2: March 30, 2015 =
+
+* Fixed: Important security patch - please update
+* Fixed: conflict with The Events Calendar plugin
+* Fixed: bug with edit profile link
+
+= 1.1.1: March 29, 2015 =
+
+* Fixed: bug where you user could use an already existing e-mail in account page
+* Fixed: bug with special characaters in username
+* Fixed: bug with showing draft posts in user profile
+
+= 1.1.0: March 27, 2015 =
+
+* New: added multi language support to assign different languages to different forms (beta feature)
+* New: added RTL support (beta, still partial)
+* New: added a dashboard widget to view latest blog posts from the plugin
+* Tweak: changed manage_options permission to edit_users on some admin actions
+* Fixed: corrected all active color references in the css
+* Fixed: bug with user_row_actions filter
+* Fixed: do not store user_pass in submitted metakey during registration
+
+= 1.0.96: March 25, 2015 =
+
+* New: Added Arabic language (ar) support
+* Fixed: Date fields not working in Safari
+* Fixed: issue with HTML e-mails
+* Fixed: issue with showing sidebar logout widget on bbpress forums
+
+= 1.0.95: March 24, 2015 =
+
+* Tweak: added more hooks to mail function to allow for sending custom e-mails
+* Fixed: issue with content lock settings in backend appearing for non-admins
+* Fixed: issue with form errors handling
+
+= 1.0.94: March 23, 2015 =
+
+* Fixed: bug with member directory search
+* Fixed: bug with custom role homepage
+
+= 1.0.93: March 22, 2015 =
+
+* Fixed: bug with showing register and login forms on same page
+
+= 1.0.92: March 20, 2015 =
+
+* New: added option to customize redirection URL after e-mail activation
+* Fixed: issue with hardcoded ajax/upload URLs - they are now localized
+* Fixed: issue with admin notification for a deleted account
+* Fixed: admin notifications are in plain text format
+
+= 1.0.91: March 20, 2015 =
+
+* Tweak: featured image in user posts goes to post link
+* Fixed: solved a bug with e-mail validation
+
+= 1.0.90: March 19, 2015 =
+
+* Tweak: minor admin css changes
+* Tweak: error message for frontend upload with theme/plugin conflicts
 
 = 1.0.89: March 18, 2015 =
 

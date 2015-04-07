@@ -29,6 +29,10 @@
 				
 				<?php
 				
+				$custom_search = apply_filters('um_admin_custom_search_filters', array() );
+				$searchable_fields = $ultimatemember->builtin->all_user_fields('date,time,url');
+				$searchable_fields = $searchable_fields + $custom_search;
+				
 				$meta_test = get_post_meta( get_the_ID(), '_um_search_fields', true );
 				$i = 0;
 				if ( is_array( $meta_test ) ) { 
@@ -38,7 +42,7 @@
 				<span class="um-admin-field">
 				
 				<select name="_um_search_fields[]" id="_um_search_fields" class="umaf-selectjs" style="width: 300px" data-placeholder="Choose a field">
-					<?php foreach($ultimatemember->builtin->all_user_fields('date,time,url') as $key => $arr) { ?>
+					<?php foreach( $searchable_fields as $key => $arr) { ?>
 					<option value="<?php echo $key; ?>" <?php selected($key, $val ); ?>><?php echo isset( $arr['title'] ) ? $arr['title'] : ''; ?></option>
 					<?php } ?>	
 				</select>
@@ -59,7 +63,7 @@
 				<span class="um-admin-field">
 				
 				<select name="_um_search_fields[]" id="_um_search_fields" class="umaf-selectjs" style="width: 300px" data-placeholder="Choose a field">
-					<?php foreach($ultimatemember->builtin->all_user_fields('date,time,url') as $key => $arr) { ?>
+					<?php foreach( $searchable_fields as $key => $arr) { ?>
 					<option value="<?php echo $key; ?>" <?php selected($key, $ultimatemember->query->get_meta_value('_um_search_fields', $key) ); ?>><?php echo isset( $arr['title'] ) ? $arr['title'] : ''; ?></option>
 					<?php } ?>	
 				</select>

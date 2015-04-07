@@ -11,10 +11,7 @@ class UM_ADDON_bp_avatar_transfer {
 		add_action('um_admin_addon_hook', array(&$this, 'um_admin_addon_hook') );
 
 	}
-	
-	/***
-	***	@extends the admin menu
-	***/
+
 	function admin_menu() {
 		
 		global $ultimatemember;
@@ -22,10 +19,7 @@ class UM_ADDON_bp_avatar_transfer {
 		add_submenu_page('ultimatemember', $this->addon[0], $this->addon[0], 'manage_options', 'bp_avatar_transfer', array(&$this, 'content') );
 		
 	}
-	
-	/***
-	***	@Runs a custom hook
-	***/
+
 	function um_admin_addon_hook( $hook ) {
 		global $ultimatemember;
 		switch( $hook ) {
@@ -63,10 +57,7 @@ class UM_ADDON_bp_avatar_transfer {
 				break;
 		}
 	}
-	
-	/***
-	***	@Change admin content
-	***/
+
 	function admin_init() {
 		if ( isset( $_REQUEST['um-addon-hook'] ) ) {
 			$hook = $_REQUEST['um-addon-hook'];

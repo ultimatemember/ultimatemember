@@ -58,6 +58,7 @@
 					<option value="last_name" <?php selected('last_name', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>>Last Name</option>
 					<option value="random" <?php selected('random', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>>Random</option>
 					<option value="other" <?php selected('other', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>>Other (custom field)</option>
+					<?php do_action('um_admin_directory_sort_users_select', '_um_sortby'); ?>
 				</select>
 				
 			</span>

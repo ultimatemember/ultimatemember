@@ -48,6 +48,7 @@
 		<!-- Email Approval Settings -->
 		
 		<div class="checkmail">
+		
 		<p>
 			<label class="um-admin-half"><?php _e('Action to be taken after registration','ultimatemember'); ?> <?php $this->tooltip( __('Select what action is taken after a person registers on your site. Depending on the status you can redirect them to their profile, a custom url or show a custom message','ultimatemember') ); ?></label>
 			<span class="um-admin-half">
@@ -79,6 +80,16 @@
 			
 			</span>
 		</p><div class="um-admin-clear"></div>
+		
+		<p>
+			<label class="um-admin-half" for="_um_url_email_activate"><?php _e('URL redirect after e-mail activation','ultimatemember'); ?> <?php $this->tooltip( __('If you want users to go to a specific page other than login page after e-mail activation, enter the URL here.','ultimatemember') ); ?></label>
+			<span class="um-admin-half">
+				
+				<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_url_email_activate', null, 'na'); ?>" name="_um_url_email_activate" id="_um_url_email_activate" />
+			
+			</span>
+		</p><div class="um-admin-clear"></div>
+		
 		</div>
 		
 		<!-- Email Approval Settings -->

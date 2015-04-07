@@ -329,7 +329,11 @@
 					
 						<?php if ( $args['show_name'] ) { ?>
 						<div class="um-name">
+							
 							<a href="<?php echo um_user_profile_url(); ?>" title="<?php echo um_user('display_name'); ?>"><?php echo um_user('display_name'); ?></a>
+							
+							<?php do_action('um_after_profile_name_inline', $args ); ?>
+						
 						</div>
 						<?php } ?>
 						
@@ -382,7 +386,7 @@
 	function um_pre_profile_shortcode($args){
 		global $ultimatemember;
 		extract( $args );
-
+		
 		if ( $mode == 'profile' && $ultimatemember->fields->editing == false ) {
 			$ultimatemember->fields->viewing = 1;
 			
@@ -440,7 +444,7 @@
 			<?php
 			
 			$items = array(
-				'editprofile' => '<a href="'.um_edit_my_profile_uri().'" class="real_url">'.__('Edit Profile','ultimatemember').'</a>',
+				'editprofile' => '<a href="'.um_edit_profile_url().'" class="real_url">'.__('Edit Profile','ultimatemember').'</a>',
 				'myaccount' => '<a href="'.um_get_core_page('account').'" class="real_url">'.__('My Account','ultimatemember').'</a>',
 				'logout' => '<a href="'.um_get_core_page('logout').'" class="real_url">'.__('Logout','ultimatemember').'</a>',
 				'cancel' => '<a href="#" class="um-dropdown-hide">'.__('Cancel','ultimatemember').'</a>',
@@ -460,10 +464,10 @@
 				$items = array_merge( $items, $actions );
 				}
 				
+				$items = apply_filters('um_profile_edit_menu_items', $items, um_profile_id() );
+				
 				$items['cancel'] = $cancel;
-				
-				$items = apply_filters('um_profile_edit_menu_items', $items );
-				
+
 			} else {
 			
 				$items = apply_filters('um_myprofile_edit_menu_items', $items );

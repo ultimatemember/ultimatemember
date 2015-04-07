@@ -95,7 +95,7 @@
 			foreach( $fields as $key => $array ) {
 				if ( isset( $args[$key] ) && !empty( $args[$key] ) ) {
 					if ( isset($array['validate']) && in_array( $array['validate'], array('unique_username','unique_email','unique_username_or_email') ) ) {
-						if ( preg_grep( "/".$args[$key]."/i" , $words ) ) {
+						if ( !$ultimatemember->form->has_error( $key ) && preg_grep( "/".$args[$key]."/i" , $words ) ) {
 							$ultimatemember->form->add_error( $key,  __('You are not allowed to use this word as your username.','ultimatemember') );
 						}
 					}

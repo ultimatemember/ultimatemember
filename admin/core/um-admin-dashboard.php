@@ -68,6 +68,8 @@ class UM_Admin_Dashboard {
 		
 		add_meta_box('um-metaboxes-contentbox-1', __('Users Overview','ultimatemember'), array(&$this, 'users_overview'), $this->pagehook, 'core', 'core');
 		
+		add_meta_box('um-metaboxes-mainbox-1', __('Latest from our blog','ultimatemember'), array(&$this, 'um_news'), $this->pagehook, 'normal', 'core');
+		
 		add_meta_box('um-metaboxes-sidebox-1', __('Purge Temp Files','ultimatemember'), array(&$this, 'purge_temp'), $this->pagehook, 'side', 'core');
 		
 		if ( $this->language_avaialable_not_installed() ) {
@@ -96,6 +98,11 @@ class UM_Admin_Dashboard {
 		global $ultimatemember;
 		$locale = get_option('WPLANG');
 		include_once um_path . 'admin/templates/dashboard/language-contrib.php';
+	}
+	
+	function um_news() {
+		global $ultimatemember;
+		include_once um_path . 'admin/templates/dashboard/feed.php';
 	}
 	
 	function users_overview() {

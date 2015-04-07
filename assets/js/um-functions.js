@@ -360,9 +360,9 @@ function initImageUpload_UM( trigger ) {
 		} else {
 			upload_text = '';
 		}
-		
+
 		trigger.uploadFile({
-			url: ultimatemember_image_upload_url,
+			url: um_scripts.imageupload,
 			method: "POST",
 			multiple: false,
 			formData: {key: trigger.data('key'), set_id: trigger.data('set_id'), set_mode: trigger.data('set_mode') },
@@ -442,7 +442,7 @@ function initFileUpload_UM( trigger ) {
 		}
 		
 		trigger.uploadFile({
-			url: ultimatemember_file_upload_url,
+			url: um_scripts.fileupload,
 			method: "POST",
 			multiple: false,
 			formData: {key: trigger.data('key'), set_id: trigger.data('set_id'), set_mode: trigger.data('set_mode') },

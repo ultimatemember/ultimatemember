@@ -240,6 +240,8 @@
 						<div class="um-member-name"><a href="<?php echo um_user_profile_url(); ?>" title="<?php echo um_cap_initials( um_user('display_name') ); ?>"><?php echo um_cap_initials( um_user('display_name') ); ?></a></div>
 						<?php } ?>
 						
+						<?php do_action('um_members_after_user_name', um_user('ID'), $args); ?>
+						
 						<?php
 						if ( $show_tagline && is_array( $tagline_fields ) ) {
 							foreach( $tagline_fields as $key ) {

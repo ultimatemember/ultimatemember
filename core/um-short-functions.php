@@ -278,7 +278,7 @@ function um_profile_id() {
 	***/
 	function um_is_core_page( $page ) {
 		global $post, $ultimatemember;
-		if ( isset($post->ID) && $post->ID == $ultimatemember->permalinks->core[ $page ] )
+		if ( isset($post->ID) && isset( $ultimatemember->permalinks->core[ $page ] ) && $post->ID == $ultimatemember->permalinks->core[ $page ] )
 			return true;
 		return false;
 	}
@@ -321,7 +321,7 @@ function um_profile_id() {
 		global $ultimatemember;
 		if ( isset($_REQUEST['um_search']) ) {
 			$query = $ultimatemember->permalinks->get_query_array();
-			if ( in_array( $val, $query ) )
+			if ( isset( $query[$filter] ) && $val == $query[$filter] )
 				echo 'selected="selected"';
 		}
 		echo '';
@@ -473,19 +473,6 @@ function um_reset_user() {
 	}
 	
 	/***
-	***	@Returns profile edit link
-	***/
-	function um_edit_my_profile_uri() {
-		global $ultimatemember;
-		$url = $ultimatemember->permalinks->get_current_url( get_option('permalink_structure') );
-		$url = remove_query_arg('profiletab', $url);
-		$url = remove_query_arg('subnav', $url);
-		$url = add_query_arg('profiletab', 'main', $url);
-		$url = add_query_arg('um_action', 'edit', $url);
-		return $url;
-	}
-	
-	/***
 	***	@remove edit profile args from url
 	***/
 	function um_edit_my_profile_cancel_uri() {
@@ -605,7 +592,9 @@ function um_reset_user() {
 		$role = get_user_meta( $user_id, 'role', true );
 		$permissions = $ultimatemember->query->role_data( $role );
 		$permissions = apply_filters('um_user_permissions_filter', $permissions, $user_id);
-		if ( $permissions[ $permission ] == 1 )
+		if ( isset( $permissions[ $permission ] ) && is_serialized( $permissions[ $permission ] ) )
+			return unserialize( $permissions[ $permission ] );
+		if ( isset( $permissions[ $permission ] ) && $permissions[ $permission ] == 1 )
 			return true;
 		return false;
 	}
@@ -651,6 +640,18 @@ function um_reset_user() {
 		um_fetch_user( $user_id );
 
 		return $return;
+	}
+	
+	/***
+	***	@Returns the edit profile link
+	***/
+	function um_edit_profile_url(){
+		global $ultimatemember;
+		$url = remove_query_arg('profiletab');
+		$url = remove_query_arg('subnav', $url);
+		$url = add_query_arg('profiletab', 'main',$url);
+		$url = add_query_arg('um_action','edit', $url);
+		return $url;
 	}
 	
 	/***
@@ -821,6 +822,14 @@ function um_fetch_user( $user_id ) {
 			$uri = um_user_uploads_uri() . 'cover_photo-'.$attrs.'.jpg?' . current_time( 'timestamp' );
 		}
 		return $uri;
+	}
+	
+	/***
+	***	@get avatar URL instead of image
+	***/
+	function um_get_avatar_url($get_avatar){
+		preg_match('/src="(.*?)"/i', $get_avatar, $matches);
+		return $matches[1];
 	}
 	
 	/***

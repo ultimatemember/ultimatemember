@@ -85,8 +85,6 @@
 	line-height: 2em;
 }
 
-.um-account-name a:hover {color: #3ba1da}
-
 /*
 	- Account nav
 */
@@ -105,7 +103,6 @@
 }
 
 .um-account-nav a.current{
-	color: #3ba1da;
 	font-weight: bold;
 }
 
@@ -135,7 +132,7 @@
 	list-style-type: none !important;
 }
 
-.um-account-side li {margin-bottom: 6px !important;background: #eee;}
+.um-account-side li {margin-bottom: 1px !important;background: #eee;}
 
 .um-account-side li a{
 	display: block;
@@ -152,6 +149,7 @@
 	right: 10px;
 	top: 6px;
 	font-size: 26px;
+	opacity: 0.6;
 }
 
 .um-account-side li a span.um-account-icon,
@@ -168,10 +166,6 @@
 	padding: 0px 15px;
 	font-weight: normal !important;
 }
-
-.um-account-side li a.current span.um-account-icon,
-.um-account-side li a.current:hover span.um-account-icon
- {color: #3ba1da}
 
 .um-account-side li a span.um-account-icon i {
 	display: block;

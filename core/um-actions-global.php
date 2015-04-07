@@ -50,5 +50,5 @@
 	function um_add_form_honeypot_js() { global $ultimatemember; ?>
 	
 		<script type="text/javascript">jQuery( '#<?php echo $ultimatemember->honeypot; ?>' ).val( '' );</script>
-	
+		
 	<?php }

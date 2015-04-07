@@ -23,7 +23,7 @@ jQuery(document).ready(function() {
 		
 		jQuery('.um-account-nav a').removeClass('current');
 		jQuery('.um-account-nav a[data-tab='+tab_+']').addClass('current');
-		
+
 		return false;
 	});
 

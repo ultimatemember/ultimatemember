@@ -1,10 +1,24 @@
 <?php
 
+	$premium['real-time-notifications'] = array(
+		'url' => 'https://ultimatemember.com/extensions/real-time-notifications/',
+		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/04/notifications-01-copy.png',
+		'name' => 'Real-time Notifications',
+		'desc' => 'Add a real-time notification system to your site so users can receive updates and notifications directly on your website as they happen.',
+	);
+	
+	$premium['user-reviews'] = array(
+		'url' => 'https://ultimatemember.com/extensions/user-reviews/',
+		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/03/userrating800x300.png',
+		'name' => 'User Reviews',
+		'desc' => 'With our user reviews extension, you can add a 5 star user rating and review system to your site so users can rate/review each other.',
+	);
+
 	$premium['social-login'] = array(
 		'url' => 'https://ultimatemember.com/extensions/social-login/',
-		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/02/sociallogin.png',
+		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/02/socialloginv2-011.png',
 		'name' => 'Social Login',
-		'desc' => 'This extension allows users to register and login to your site using their social network accounts (Facebook, Twitter, Google+, LinkedIn)',
+		'desc' => 'This extension allows users to register and login to your site using their social network accounts (Facebook, Twitter, Google+, LinkedIn, Instagram, VK)',
 	);
 	
 	$premium['bbpress'] = array(
@@ -34,6 +48,13 @@
 		'name' => 'Notices',
 		'desc' => 'Alert users to important information or let them know about promotions or new features using conditional notices.',
 	);
+	
+	/*$free['online-users'] = array(
+		'url' => 'https://ultimatemember.com/extensions/online-users/',
+		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/04/onlineuser1-01-copy.png',
+		'name' => 'Online Users',
+		'desc' => 'Adds online users widget to your site and allow you to show the online users anywhere with a simple shortcode, and also see user online status.'
+	);*/
 	
 	$free['google-recaptcha'] = array(
 		'url' => 'https://ultimatemember.com/extensions/google-recaptcha/',

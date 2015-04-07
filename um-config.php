@@ -344,6 +344,15 @@ $this->sections[] = array(
         ),
 		
         array(
+                'id'       		=> 'access_widget_admin_only',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Enable the Access Control widget for Admins only?','ultimatemember' ),
+				'default' 		=> 1,
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
+        ),
+		
+        array(
 				'id'       		=> 'wpadmin_allow_ips',
                 'type'     		=> 'textarea',
                 'title'    		=> __( 'Whitelisted Backend IPs','ultimatemember' ),
@@ -1758,6 +1767,14 @@ $this->sections[] = array(
 		),
 	
         array(
+                'id'      		=> 'advanced_denied_roles',
+                'type'     		=> 'text',
+                'title'    		=> __( 'Do not allow registering these roles','ultimatemember' ),
+                'default'  		=> '',
+				'desc' 	   		=> __('Comma seperate roles (role slugs) that can not be registered from frontend ever for security.','ultimatemember'),
+        ),
+		
+        array(
                 'id'       		=> 'enable_timebot',
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Enable Time Check Security','ultimatemember' ),
@@ -1829,9 +1846,8 @@ $this->sections[] = array(
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Allow Tracking','ultimatemember' ),
 				'default' 		=> 0,
-				'desc' 	   		=> __( 'Help us improve Ultimate Member’s compatibility with other plugins and themes by allowing us to track non-sensitive data on your site. Click <a href="https://ultimatemember.com/tracking/" target="_blank">here</a> to see what data we track.', 'ultimatemember' ),
-				'on'			=> __('Allow tracking','ultimatemember'),
-				'off'			=> __('Do not allow','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
         ),
 
 	)

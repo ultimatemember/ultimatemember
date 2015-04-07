@@ -26,9 +26,18 @@ class UM_API {
 			'fi_FI' => 'Suomi',
 			'pl_PL' => 'Polski',
 			'tr_TR' => 'Türkçe',
+			'ar' 	=> 'العربية'
 		);
 		
-		$this->addons['bp_avatar_transfer'] = array( __( 'BuddyPress Avatar Transfer','ultimatemember' ), __('This tool enables you to migrate your custom user photos from BuddyPress to use with Ultimate Member.','ultimatemember') );
+		$this->addons['multi_language'] = array(
+				__( 'Multi Language Support','ultimatemember' ),
+				__('This add-on helps you offer multi language forms to your visitors based on the languages you want.','ultimatemember')
+		);
+		
+		$this->addons['bp_avatar_transfer'] = array(
+				__( 'BuddyPress Avatar Transfer','ultimatemember' ),
+				__('This add-on enables you to migrate your custom user photos from BuddyPress to use with Ultimate Member.','ultimatemember')
+		);
 		
 	}
 	
@@ -37,10 +46,10 @@ class UM_API {
 	***/
 	function load_addons() {
 		global $ultimatemember;
-		if ( !is_admin() ) return;
 		foreach( $ultimatemember->addons as $addon => $name ) {
-			if ( um_get_option('addon_' . $addon ) == 1 )
+			if ( um_get_option('addon_' . $addon ) == 1 ) {
 				include_once um_path . 'addons/'.$addon.'.php';
+			}
 		}
 	}
 	

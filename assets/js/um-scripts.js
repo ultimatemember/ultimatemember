@@ -55,18 +55,21 @@ jQuery(document).ready(function() {
 
 	jQuery('.um-datepicker').each(function(){
 		elem = jQuery(this);
-		
+
 		if ( elem.attr('data-disabled_weekdays') != '' ) {
 			var disable = JSON.parse( elem.attr('data-disabled_weekdays') );
 		} else {
 			var disable = false;
 		}
-		
+
 		var years_n = elem.attr('data-years');
 		
-		var min = new Date( elem.attr('data-date_min') );
-		var max = new Date( elem.attr('data-date_max') );
+		var min = elem.attr('data-date_min');
+		var max = elem.attr('data-date_max');
 
+		var min = min.split(",");
+		var max = max.split(",");
+		
 		elem.pickadate({
 			selectYears: years_n,
 			min: min,
@@ -74,7 +77,9 @@ jQuery(document).ready(function() {
 			disable: disable,
 			format: elem.attr('data-format'),
 			formatSubmit: 'yyyy/mm/dd',
-			hiddenName: true
+			hiddenName: true,
+			onOpen: function() { elem.blur(); },
+			onClose: function() { elem.blur(); }
 		});
 	});
 
@@ -85,7 +90,9 @@ jQuery(document).ready(function() {
 			format: elem.attr('data-format'),
 			interval: parseInt( elem.attr('data-intervals') ),
 			formatSubmit: 'HH:i',
-			hiddenName: true
+			hiddenName: true,
+			onOpen: function() { elem.blur(); },
+			onClose: function() { elem.blur(); }
 		});
 	});
 
@@ -123,7 +130,7 @@ jQuery(document).ready(function() {
 		parent.find('input[type=hidden]').val('');
 		
 		jQuery.ajax({
-			url: ultimatemember_ajax_url,
+			url: um_scripts.ajaxurl,
 			type: 'post',
 			data: {
 				action: 'ultimatemember_remove_file',
@@ -143,7 +150,7 @@ jQuery(document).ready(function() {
 		parent.find('input[type=hidden]').val('');
 		
 		jQuery.ajax({
-			url: ultimatemember_ajax_url,
+			url: um_scripts.ajaxurl,
 			type: 'post',
 			data: {
 				action: 'ultimatemember_remove_file',
@@ -222,7 +229,7 @@ jQuery(document).ready(function() {
 		var hook = jQuery(this).data('hook');
 		var container = jQuery(this).parents('.um').find('.um-ajax-items');
 		jQuery.ajax({
-			url: ultimatemember_ajax_url,
+			url: um_scripts.ajaxurl,
 			type: 'post',
 			data: {
 				action: 'ultimatemember_ajax_paginate',
@@ -251,7 +258,7 @@ jQuery(document).ready(function() {
 		}
 		
 		jQuery.ajax({
-			url: ultimatemember_ajax_url,
+			url: um_scripts.ajaxurl,
 			type: 'post',
 			data: {
 				action: 'ultimatemember_muted_action',

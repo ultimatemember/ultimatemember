@@ -32,7 +32,7 @@
 	function um_new_user_via_wpadmin( $user_id ) {
 		
 		if ( is_admin() ) {
-		
+
 			global $ultimatemember;
 			
 			if ( isset( $_POST['role'] ) && $_POST['role'] == 'administrator' ) {

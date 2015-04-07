@@ -17,10 +17,16 @@ class UM_Builtin {
 	/***
 	***	@regular or multi-select/options
 	***/
-	function is_dropdown_field( $field ) {
+	function is_dropdown_field( $field, $attrs ) {
+		
+		if ( isset( $attrs['options'] ) )
+			return true;
+		
 		$fields = $this->all_user_fields;
+		
 		if ( isset($fields[$field]['options']) )
 			return true;
+		
 		return false;
 	}
 	

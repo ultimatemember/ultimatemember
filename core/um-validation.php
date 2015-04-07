@@ -5,7 +5,6 @@ class UM_Validation {
 	function __construct() {
 
 		$this->regex_safe = '/\A[\w\-\.]+\z/';
-		$this->regex_safe_email = '/\A[\w\-\.\@]+\z/';
 		$this->regex_phone_number = '/\A[\d\-\.\+\(\)\ ]+\z/';
 		
 	}
@@ -54,8 +53,8 @@ class UM_Validation {
 	***	@space, dash, underscore
 	***/
 	function safe_username( $string ) {
-		if ( is_email( $string ) && !preg_match( $this->regex_safe_email, $string ) )
-			return false;
+		if ( is_email( $string ) )
+			return true;
 		if ( !is_email( $string) && !preg_match( $this->regex_safe, $string ) )
 			return false;
 		return true;
