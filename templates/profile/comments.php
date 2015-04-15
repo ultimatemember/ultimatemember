@@ -20,6 +20,6 @@
 		
 <?php } else { ?>
 
-	<?php ( um_is_myprofile() ) ? _e('You have not made any comments.','ultimatemember') : _e('This user has not made any comments.','ultimatemember'); ?>
-
+	<div class="um-profile-note"><span><?php echo ( um_profile_id() == get_current_user_id() ) ? __('You have not made any comments.','ultimatemember') : __('This user has not made any comments.','ultimatemember'); ?></span></div>
+	
 <?php } ?>

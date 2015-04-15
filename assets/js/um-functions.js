@@ -751,3 +751,35 @@ function um_modal_size( aclass ) {
 function um_modal_add_attr( id, value ) {
 	jQuery('.um-modal:visible').data( id, value );
 }
+
+function prepare_Modal() {
+	if ( jQuery('.um-popup-overlay').length == 0 ) {
+		jQuery('body').append('<div class="um-popup-overlay"></div>');
+		jQuery('body').append('<div class="um-popup"></div>');
+		jQuery('.um-popup').addClass('loading');
+	}
+}
+
+function remove_Modal() {
+	if ( jQuery('.um-popup-overlay').length ) {
+		jQuery('.um-popup').empty().remove();
+		jQuery('.um-popup-overlay').empty().remove();
+	}
+}
+
+function show_Modal( contents ) {
+	if ( jQuery('.um-popup-overlay').length ) {
+		jQuery('.um-popup').removeClass('loading').html( contents );
+		jQuery('.um-popup').mCustomScrollbar({
+			theme:"dark-3"
+		});
+	}
+}
+
+function responsive_Modal() {
+	if ( jQuery('.um-popup-overlay').length ) {
+		jQuery('.um-popup').css({
+			'max-height': ( 80 / 100 ) * jQuery(window).height() + 'px'
+		});
+	}
+}

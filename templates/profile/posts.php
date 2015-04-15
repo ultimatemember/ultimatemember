@@ -20,6 +20,6 @@
 		
 <?php } else { ?>
 
-	<?php ( um_is_myprofile() ) ? _e('You have not created any posts.','ultimatemember') : _e('This user has not created any posts.','ultimatemember'); ?>
-
+	<div class="um-profile-note"><span><?php echo ( um_profile_id() == get_current_user_id() ) ? __('You have not created any posts.','ultimatemember') : __('This user has not created any posts.','ultimatemember'); ?></span></div>
+	
 <?php } wp_reset_postdata(); ?>

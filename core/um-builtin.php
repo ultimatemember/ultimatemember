@@ -31,6 +31,17 @@ class UM_Builtin {
 	}
 	
 	/***
+	***	@get a field
+	***/
+	function get_a_field( $field ) {
+		$fields = $this->all_user_fields;
+		if ( isset( $fields[$field] ) ) {
+			return $fields[$field];
+		}
+		return '';
+	}
+	
+	/***
 	***	@get specific fields
 	***/
 	function get_specific_fields( $fields ) {
@@ -576,7 +587,7 @@ class UM_Builtin {
 			),
 			
 			'country' => array(
-				'title' => __('Countries','ultimatemember'),
+				'title' => __('Country','ultimatemember'),
 				'metakey' => 'country',
 				'type' => 'select',
 				'label' => __('Country','ultimatemember'),
@@ -929,16 +940,20 @@ class UM_Builtin {
 	/***
 	***	@may be used to show a dropdown, or source for user meta
 	***/
-	function all_user_fields( $exclude_types = null ) {
+	function all_user_fields( $exclude_types = null, $show_all = false ) {
 	
 		global $ultimatemember;
 		
 		$fields_without_metakey = array('block','shortcode','spacing','divider','group');
 		$fields_without_metakey = apply_filters('um_fields_without_metakey', $fields_without_metakey );
 		
-		$this->fields_dropdown = array('image','file','password','textarea','rating');
-		$this->fields_dropdown = array_merge( $this->fields_dropdown, $fields_without_metakey );
-		
+		if ( !$show_all ) {
+			$this->fields_dropdown = array('image','file','password','textarea','rating');
+			$this->fields_dropdown = array_merge( $this->fields_dropdown, $fields_without_metakey );
+		} else {
+			$this->fields_dropdown = $fields_without_metakey;
+		}
+
 		$custom = $this->custom_fields;
 		$predefined = $this->predefined_fields;
 		
@@ -968,7 +983,9 @@ class UM_Builtin {
 				unset( $all[$k] );
 			}
 			if ( isset( $arr['account_only'] ) || isset( $arr['private_use'] ) ) {
-				unset( $all[$k] );
+				if ( !$show_all ) {
+					unset( $all[$k] );
+				}
 			}
 			if ( isset( $arr['type'] ) && in_array( $arr['type'], $this->fields_dropdown ) ) {
 				unset( $all[$k] );

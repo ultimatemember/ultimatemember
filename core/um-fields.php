@@ -299,10 +299,12 @@ class UM_Fields {
 		if ( isset( $data['help'] ) && !empty( $data['help'] ) && $this->viewing == false && !strstr($key, 'confirm_user_pass') ) {
 			
 			if ( !$ultimatemember->mobile->isMobile() ) {
-				$output .= '<span class="um-tip um-tip-w" title="'.$data['help'].'"><i class="um-icon-help-circled"></i></span>';
+				if ( !isset( $this->disable_tooltips ) ) {
+					$output .= '<span class="um-tip um-tip-w" title="'.$data['help'].'"><i class="um-icon-help-circled"></i></span>';
+				}
 			}
 			
-			if ( $ultimatemember->mobile->isMobile() ) {
+			if ( $ultimatemember->mobile->isMobile() || isset( $this->disable_tooltips ) ) {
 				$output .= '<span class="um-tip-text">'. $data['help'] . '</span>';
 			}
 			
@@ -339,7 +341,7 @@ class UM_Fields {
 			$classes .= 'um-timepicker ';
 		}
 		
-		if ( isset($data['icon']) && $data['icon'] && $this->field_icons == 'field' ) {
+		if ( isset($data['icon']) && $data['icon'] && isset( $this->field_icons ) && $this->field_icons == 'field' ) {
 			$classes .= 'um-iconed';
 		}
 
@@ -515,6 +517,19 @@ class UM_Fields {
 	}
 	
 	/***
+	***	@Get Field Title
+	***/
+	function get_field_title( $key ) {
+		global $ultimatemember;
+		$fields = $ultimatemember->builtin->all_user_fields;
+		if ( isset( $fields[$key]['title'] ) )
+			return $fields[$key]['title'];
+		if ( isset( $fields[$key]['label'] ) )
+			return $fields[$key]['label'];
+		return __('Custom Field','ultimatemember');
+	}
+	
+	/***
 	***	@Get form fields
 	***/
 	function get_fields() {
@@ -534,7 +549,7 @@ class UM_Fields {
 		if ( isset( $fields ) && is_array( $fields ) && isset( $fields[$key] ) ) {
 			$array = $fields[$key];
 		} else {
-			$array = $ultimatemember->builtin->predefined_fields[$key];
+			$array = (isset( $ultimatemember->builtin->predefined_fields[$key] ) ) ? $ultimatemember->builtin->predefined_fields[$key] :  $ultimatemember->builtin->all_user_fields[$key];
 		}
 		
 		$array['classes'] = null;
@@ -1069,7 +1084,7 @@ class UM_Fields {
 
 						$output .= '<div class="um-field-area">';
 						
-						if ( isset($icon) && $icon && $this->field_icons == 'field' ) {
+						if ( isset($icon) && $icon && isset($this->field_icons) && $this->field_icons == 'field' ) {
 						
 						$output .= '<div class="um-field-icon"><i class="'.$icon.'"></i></div>';
 						

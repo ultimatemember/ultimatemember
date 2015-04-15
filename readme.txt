@@ -3,11 +3,11 @@ Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember
 Donate link: 
-Tags: access control, author, authors, author profile, comments, community, communities, conditional fields, conditional logic, conditional menus, content protection, custom fields, file uploads, form builder, front-end login, front-end registration, hide wp-admin, login, login page, logged-in users, mandrill, member, members, membership, member directory, profile, profiles, profile builder, registration, restriction, restrict content, role creation, role menus, search filters, sign in, sign up, social network, star ratings, toolbar, user, users, user fields, user profile, user-profile, user profiles, user roles
+Tags: access control, author, authors, author profile, comments, community, communities, conditional fields, conditional logic, conditional menus, content protection, custom fields, file uploads, form builder, front-end login, front-end registration, gravatar, hide wp-admin, login, login page, logged-in users, mandrill, member, members, membership, member directory, online users, profile, profiles, profile builder, registration, restriction, restrict content, role creation, role menus, search filters, sign in, sign up, social network, star ratings, toolbar, user, users, user fields, user profile, user-profile, user profiles, user roles
 Requires at least: 4.1
 Tested up to: 4.1.1
 
-Stable Tag: 1.1.6
+Stable Tag: 1.2.2
 
 License: GNU Version 2 or Any Later Version
 
@@ -15,13 +15,9 @@ The easiest way to create powerful online communities and beautiful user profile
 
 == Description ==
 
-Ultimate Member is a powerful plugin that allows you to add beautiful user profiles to your site and create advanced online communities. The plugin enables users to sign up and become members of your site all from the front-end. With a focus on flexibility and simplicity creating a community and membership site with WordPress has never been so easy.
+Ultimate Member is a powerful and flexible plugin that makes it a breeze for users to sign-up and become members. The plugin allows you to add beautiful user profiles to your site and is perfect for creating advanced online communities. Lightweight and highly extendible, Ultimate Member will enable you to create almost any type of site where users can join and become members with absolute ease.
 
-**Check out all of the plugin features on our [Live Demo](https://ultimatemember.com/).**
-
-**Get support by posting in our [community forum](https://ultimatemember.com/forums/).**
-
-Features of the plugin include:
+= Features of the plugin include: =
 
 * Front-end user registration
 * Front-end user login
@@ -43,111 +39,47 @@ Features of the plugin include:
 * Mandrill compatibility
 * Multi language support
 
-**Paid Extensions**
+Read about all of the plugin's features at [Ultimate Member](https://ultimatemember.com)
 
-You can extend the power of Ultimate Member with one of our premium extensions:
+= Paid Extensions =
 
-* [Real-time Notifications](https://ultimatemember.com/extensions/real-time-notifications/)
-* [Social Login](https://ultimatemember.com/extensions/social-login/)
-* [bbPress](https://ultimatemember.com/extensions/bbpress/)
-* [MailChimp](https://ultimatemember.com/extensions/mailchimp/)
-* [User Reviews](https://ultimatemember.com/extensions/user-reviews/)
-* [myCRED](https://ultimatemember.com/extensions/mycred/)
-* [Notices](https://ultimatemember.com/extensions/notices/)
+Ultimate Member has a range of extensions that allow you to extend the power of the plugin
 
-**Free Extensions**
+* [Real-time Notifications](https://ultimatemember.com/extensions/real-time-notifications/) - Add a notifications system to your site so users can receive real-time notifications
+* [Social Login](https://ultimatemember.com/extensions/social-login/) - Let users register & login to your site via Facebook, Twitter, G+, LinkedIn, Instagram and Vkontakte (VK.com)
+* [bbPress](https://ultimatemember.com/extensions/bbpress/) - With the bbPress extension you can beautifully integrate Ultimate Member with bbPress
+* [MailChimp](https://ultimatemember.com/extensions/mailchimp/) - Allow users to subscribe to your MailChimp lists when they signup on your site and sync user meta to MailChimp
+* [User Reviews](https://ultimatemember.com/extensions/user-reviews/) - Allow users to rate & review each other using a 5 star rate/review system
+* [myCRED](https://ultimatemember.com/extensions/mycred/) - With the myCRED extension you can integrate Ultimate Member with the popular myCRED points management plugin
+* [Notices](https://ultimatemember.com/extensions/notices/) - Alert users to important information using conditional notices
+* [Profile Completeness](https://ultimatemember.com/extensions/profile-completeness/) - Encourage or force users to complete their profiles with the profile completeness extension
 
-* [Google reCAPTCHA](https://ultimatemember.com/extensions/google-recaptcha/)
+= Free Extensions =
 
-**Front-end registration**
+* [Google reCAPTCHA](https://ultimatemember.com/extensions/google-recaptcha/) - Stop bots on your registration & login forms with Google reCAPTCHA
+* [Online Users](https://ultimatemember.com/extensions/online-users/) - Display what users are online with this extension
 
-Ultimate Member allows visitors to your site to register and become members. You can decide whether users can register automatically; require them to active account via email link or you an admin can manually approve/reject user registrations after reviewing details.
-
-**Front-end login**
-
-Allow users to login directly from your site and avoid the ugly WordPress login page. You can decide where users are redirected to after logging in and set custom redirects depending on the user's role.
-
-**User profiles**
-
-Ultimate Member gives every user of your site a beautiful user profile where they can edit their information. You can create unique profiles for each user role and decide what information to show on the profiles.
-
-**Custom form fields**
-
-With our custom profile fields, Ultimate Member allows you to gather any information you like from user's when they register or when they fill in their profiles. The plugin comes with a full range of field types including: text box, textarea, dropdown, multi-select, radio, checkbox, url, password, image upload, file upload, date picker, time picker and star ratings.
-
-**Conditional logic for form fields**
-
-You can create advanced register, login and profile forms by applying conditional logic to any fields you like. This allows you to show or hide fields depending on a user’s actions when they fill in a form.
-
-**Drag and drop form builder**
-
-Our advanced drag and drop form builder makes it extremely easy to build unique registration, login and profile forms for your site. The form builder allows for up to three columns and multiple rows which enables you to create distinct sections to the forms.
-
-**User account page**
-
-The plugin provides users with an account page where users can change their account settings. The account page allows users to control their privacy settings, change their password and delete their own account. Admins can alter what shows on the account page depending on the amount of control you want users to have over their accounts.
-
-**Custom user roles**
-
-With Ultimate Member you can create your own user roles and apply different controls and permissions to each user role. This flexibility is perfect for site's that have multiple user types.
-
-**Member directories**
-
-The plugin allows you to create multiple member directories to allow people to easily search and find other users. The member directories are very flexible and you can control what user roles show in a directory; the order users appear in the directory; what search filters appear; what user roles can use the search filters and much more.
-
-**Custom e-mail templates**
-
-The plugin provides a range of customizable text only email templates which are triggered depending on certain events (e.g welcome email, account activation, account deleted etc). Each email type can be turned on/off. The plugin also offers a range of optional admin notification emails so you can find out when a new user registers or if new user needs reviewed.
-
-**Content restriction**
-
-With Ultimate Member you can restrict content on a global or per page/post basis. You can restrict pages/posts so everyone can see the page/post; only logged out users can see the page/post or only logged in users can see the page/post (you can also restrict it to certain user roles). You can also set redirect urls for when people who are not allowed to access the page/post
-
-**Conditional menus**
-
-The plugin provides a range of customizable text only email templates which are triggered depending on certain events (e.g welcome email, account activation, account deleted etc). Each email type can be turned on/off. The plugin also offers a range of optional admin notification emails so you can find out when a new user registers or if new user needs reviewed.
-
-**Show author posts & comments on user profiles**
-
-The plugin provides a fully flexible menu and tab system on user profiles that allows you to optionally display a user’s posts and comments on their profile. With this feature you can put the focus on a user’s posts by making author posts the default tab when viewing a user profile.
-
-**Mobile adaptive & responsive**
-
-Ultimate Member has been built with a focus on mobile and is fully mobile adaptive and responsive. The plugin has completely separate designs for mobiles, tablets and larger screens which means the plugin will look and function great on all devices.
-
-**SEO optimized**
-
-The plugin is very SEO friendly and provides customizable dynamic page titles and meta descriptions for every user of your site.
-
-**Developer friendly**
-
-Ultimate Member is developer friendly and includes hundreds of actions and filters for developers to customize the plugin. If you are wanting to integrate with Ultimate Member you can view [our codex](https://ultimatemember.com/codex/).
-
-**Future plans for Ultimate Member**
-
-We have big plans for Ultimate Member and we will be working extremely hard to create the best community plugin ever. In the near future we will be releasing extensions on our site that will allow you to add extra features and extend the functionality of Ultimate Member.  If you'd like to find out when the first extensions will be ready you can follow us on [Twitter](https://twitter.com/umplugin), like us on [Facebook](https://www.facebook.com/pages/Ultimate-Member/1413909622233054) or view our [Trello roadmap](https://trello.com/b/30quaczv/ultimate-member).
-
-**Development**
+= Development =
 
 If you're a developer and would like to contribute to the source code of the plugin you can do so via our [GitHub Repository](https://github.com/ultimatemember/ultimatemember).
 
-**Support**
+= Support =
 
-Looking for help with Ultimate Member? Join our [community forum](https://ultimatemember.com/forums/) to ask questions and get help from other users as well as the Ultimate Member team. This is also the place to report bugs and plugin/theme compatibility issues. Please note we can only provide basic support to free users of this plugin and much like WordPress itself we rely on the Ultimate Member community to help each other out. You can read about our official support policy [here](https://ultimatemember.com/support-policy/).
+Looking for help with Ultimate Member? Join our [community forum](https://ultimatemember.com/forums/) to ask questions and get help from other users as well as the Ultimate Member team. This is also the place to report bugs and plugin/theme compatibility issues. As well as providing basic free support we also provide paid priority support for users who want faster and more in-depth support.
 
-**Languages**
+= Languages =
 
 Ultimate Member has been translated into the following languages:
 
 * English (US)
-* Español
-* Français
-* Italiano
-* Deutsch
-* Nederlands
-* Suomi
-* Polski
-* Türkçe
+* Spanish - Español
+* French - Français
+* Italian - Italiano
+* German - Deutsch
+* Dutch - Nederlands
+* Finnish - Suomi
+* Polish - Polski
+* Turkish - Türkçe
 * العربية
 
 == Installation ==
@@ -206,6 +138,16 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.2.2: April 15, 2015 =
+
+* New: added caching to user roles and user permissions to save queries
+* New: added user switching feature to allow super admins to sign in as another user easily (without password)
+* New: added new modal css/js for future support
+* New: added custom scrollbar support for future development use
+* Tweak: added form elements focus css
+* Fixed: bug with required radio button
+* Fixed: prevent access for backend login/register/lost password for a logged in user
 
 = 1.1.6: April 7, 2015 =
 

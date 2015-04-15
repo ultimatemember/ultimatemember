@@ -60,6 +60,10 @@
 			
 		}
 		
+		if ( current_user_can('delete_users') ) {
+			$actions['um_switch_user'] = array( 'label' => __('Login as this user','ultimatemember') );
+		}
+		
 		um_fetch_user( um_profile_id() );
 		
 		return $actions;

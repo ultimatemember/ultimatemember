@@ -30,7 +30,7 @@ jQuery(document).ready(function() {
 	jQuery('.um-tip-e').tipsy({gravity: 'e', opacity: 1, live: 'a.live', offset: 3 });
 	jQuery('.um-tip-s').tipsy({gravity: 's', opacity: 1, live: 'a.live', offset: 3 });
 
-	jQuery('.um-field input[type=radio]').change(function(){
+	jQuery(document).on('change', '.um-field input[type=radio]', function(){
 		var field = jQuery(this).parents('.um-field');
 		var this_field = jQuery(this).parents('label');
 		field.find('.um-field-radio').removeClass('active');
@@ -39,7 +39,7 @@ jQuery(document).ready(function() {
 		this_field.find('i').removeClass().addClass('um-icon-android-radio-button-on');
 	});
 
-	jQuery('.um-field input[type=checkbox]').change(function(){
+	jQuery(document).on('change', '.um-field input[type=checkbox]', function(){
 		
 		var field = jQuery(this).parents('.um-field');
 		var this_field = jQuery(this).parents('label');

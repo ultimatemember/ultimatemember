@@ -59,9 +59,7 @@ class UM_Rewrite {
 				flush_rewrite_rules( true );
 				update_option('um_flush_rules', true);
 			}
-			
-			flush_rewrite_rules( true );
-			
+
 		}
 		
 	}

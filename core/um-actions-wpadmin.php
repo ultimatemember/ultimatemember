@@ -32,7 +32,7 @@
 				exit( wp_redirect( $redirect ) );
 			}
 		}
-		
+
 		// Register screen
 		if ( isset( $pagenow ) && $pagenow == 'wp-login.php' && !is_user_logged_in() && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'register' ) {
 			
@@ -51,6 +51,22 @@
 				}
 				exit( wp_redirect( $redirect ) );
 			}
+		}
+		
+		// Lost password page
+		if ( isset( $pagenow ) && $pagenow == 'wp-login.php' && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'lostpassword' ) {
+			exit( wp_redirect( um_get_core_page('password-reset') ) );
+		}
+		
+		// Prevention for logged in user
+		if ( isset( $pagenow ) && $pagenow == 'wp-login.php' && is_user_logged_in() ) {
+			
+			if ( !um_user('can_access_wpadmin') ) {
+				exit( wp_redirect( home_url() ) );
+			} else {
+				exit( wp_redirect( admin_url() ) );
+			}
+		
 		}
 
 	}

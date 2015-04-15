@@ -49,12 +49,12 @@
 		'desc' => 'Alert users to important information or let them know about promotions or new features using conditional notices.',
 	);
 	
-	/*$free['online-users'] = array(
+	$free['online-users'] = array(
 		'url' => 'https://ultimatemember.com/extensions/online-users/',
 		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/04/onlineuser1-01-copy.png',
 		'name' => 'Online Users',
 		'desc' => 'Adds online users widget to your site and allow you to show the online users anywhere with a simple shortcode, and also see user online status.'
-	);*/
+	);
 	
 	$free['google-recaptcha'] = array(
 		'url' => 'https://ultimatemember.com/extensions/google-recaptcha/',

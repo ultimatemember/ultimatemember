@@ -136,6 +136,8 @@ class UM_Enqueue {
 		$this->load_datetimepicker();
 		
 		$this->load_raty();
+		
+		$this->load_scrollbar();
 
 		$this->load_imagecrop();
 		
@@ -283,6 +285,19 @@ class UM_Enqueue {
 		wp_register_style('um_datetime_time', um_url . 'assets/css/pickadate/default.time.css' );
 		wp_enqueue_style('um_datetime_time');
 		
+	}
+	
+	/***
+	***	@Load scrollbar
+	***/
+	function load_scrollbar(){
+	
+		wp_register_script('um_scrollbar', um_url . 'assets/js/um-scrollbar.js' );
+		wp_enqueue_script('um_scrollbar');
+		
+		wp_register_style('um_scrollbar', um_url . 'assets/css/um-scrollbar.css' );
+		wp_enqueue_style('um_scrollbar');
+
 	}
 	
 	/***

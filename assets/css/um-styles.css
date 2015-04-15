@@ -194,6 +194,13 @@ p.um-notice.err {
 	background: #C74A4A;
 }
 
+p.um-notice.warning {
+	background: #f9f9d1;
+	color: #666;
+	border: 1px solid #efe4a2;
+	padding: 8px 15px !important;
+}
+
 /*
 	- Errors
 */
@@ -391,11 +398,9 @@ p.um-notice.err {
 	outline: none !important;
 }
 
-.um-form input[type=text]:focus ,
+.um-form input[type=text]:focus,
 .um-form input[type=password]:focus,
 .um-form textarea:focus {
-	border-color: #ccc;
-	background-color: #fff !important;
 	box-shadow: none !important;
 	outline: none !important;
 }
@@ -708,9 +713,9 @@ div.um-photo img {max-height: 300px; max-width: 100%;}
 
 span.um-req {
 	margin: 0 0 0 8px;
-	font-size: xx-large;
+	font-size: x-large;
 	display: inline-block;
 	font-weight: bold;
 	position: relative;
-	top: 10px;
+	top: 8px;
 }

@@ -17,7 +17,7 @@
 		}
 		
 		if ( isset($_REQUEST['uid'])){
-		$uid = $_REQUEST['uid'];
+			$uid = $_REQUEST['uid'];
 		}
 		
 		switch( $_REQUEST['um_action'] ) {
@@ -26,13 +26,19 @@
 				$uid = ( isset( $_REQUEST['uid'] ) ) ? $_REQUEST['uid'] : 0;
 				do_action('um_action_user_request_hook', $_REQUEST['um_action'], $uid);
 				break;
-				
+		
 			case 'edit':
 				$ultimatemember->fields->editing = true;
 				if ( !um_can_edit_my_profile() ) {
 					$url = um_edit_my_profile_cancel_uri();
 					exit(  wp_redirect( $url ) ); 
 				}
+				break;
+				
+			case 'um_switch_user':
+				if ( !current_user_can('delete_users') ) return;
+				$ultimatemember->user->auto_login( $_REQUEST['uid'] );
+				exit( wp_redirect( $ultimatemember->permalinks->get_current_url( true ) ) );
 				break;
 				
 			case 'um_reject_membership':

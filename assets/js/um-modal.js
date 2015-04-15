@@ -1,5 +1,9 @@
 jQuery(document).ready(function() {
 	
+	jQuery(document).on('click', '.um-popup-overlay', function(){
+		remove_Modal();
+	});
+	
 	jQuery(document).on('click', '.um-modal-overlay, a[data-action="um_remove_modal"]', function(){
 		um_remove_modal();
 	});

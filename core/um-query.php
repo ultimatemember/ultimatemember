@@ -207,6 +207,10 @@ class UM_Query {
 	function role_data( $role_slug ) {
 		global $wpdb, $ultimatemember;
 
+		if ( get_option("um_cached_role_{$role_slug}") ) {
+			return get_option("um_cached_role_{$role_slug}");
+		}
+		
 		if ($role_slug == 'admin' || $role_slug == 'member'){
 			$try = $this->find_post_id('um_role','_um_core',$role_slug);
 			if ( isset( $try ) ){
@@ -234,6 +238,10 @@ class UM_Query {
 			// no permissions, something wrong
 			$array = $ultimatemember->setup->get_initial_permissions( $role_slug );
 
+		}
+		
+		if ( !get_option("um_cached_role_{$role_slug}") ) {
+			update_option("um_cached_role_{$role_slug}", $array );
 		}
 
 		return $array;

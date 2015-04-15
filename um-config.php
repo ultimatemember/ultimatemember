@@ -1077,9 +1077,17 @@ $this->sections[] = array(
         array(
                 'id'      		=> 'form_border',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Field Border Style','ultimatemember' ),
+                'title'    		=> __( 'Field Border','ultimatemember' ),
                 'default'  		=> um_get_metadefault('form_border'),
 				'desc' 	   		=> __('The default border-style for input/fields in UM forms','ultimatemember'),
+        ),
+		
+        array(
+                'id'      		=> 'form_border_hover',
+                'type'     		=> 'text',
+                'title'    		=> __( 'Field Border on Focus','ultimatemember' ),
+                'default'  		=> um_get_metadefault('form_border_hover'),
+				'desc' 	   		=> __('The default border style for fields on hover state','ultimatemember'),
         ),
 		
         array(
@@ -1087,6 +1095,15 @@ $this->sections[] = array(
                 'type'     		=> 'color',
 				'default'		=> um_get_metadefault('form_bg_color'),
                 'title'    		=> __( 'Field Background Color','ultimatemember' ),
+                'validate' 		=> 'color',
+				'transparent'	=> false,
+        ),
+		
+        array(
+				'id'       		=> 'form_bg_color_focus',
+                'type'     		=> 'color',
+				'default'		=> um_get_metadefault('form_bg_color_focus'),
+                'title'    		=> __( 'Field Background Color on Focus','ultimatemember' ),
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),

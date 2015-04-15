@@ -148,6 +148,16 @@ print "
 ";
 }
 
+if ( $form_border_hover ) {
+print "
+.um-$form_id.um .um-form input[type=text]:focus,
+.um-$form_id.um .um-form input[type=password]:focus,
+.um-$form_id.um .um-form textarea:focus {
+	border: $form_border_hover !important;
+}
+";
+}
+
 if ( $form_bg_color ) {
 print "
 .um-$form_id.um .um-form input[type=text],
@@ -157,6 +167,16 @@ print "
 .select2-container-multi .select2-choices
 {
 	background-color: $form_bg_color;
+}
+";
+}
+
+if ( $form_bg_color_focus ) {
+print "
+.um-$form_id.um .um-form input[type=text]:focus,
+.um-$form_id.um .um-form input[type=password]:focus,
+.um-$form_id.um .um-form textarea:focus {
+	background-color: $form_bg_color_focus;
 }
 ";
 }

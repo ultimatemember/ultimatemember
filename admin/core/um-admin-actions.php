@@ -1,6 +1,17 @@
 <?php
 
 	/***
+	***	@when role is saved
+	***/
+	function um_admin_delete_role_cache($post_id, $post){
+		if(get_post_type( $post_id ) == 'um_role'){
+			$slug = $post->post_name;
+			delete_option("um_cached_role_{$slug}");
+		}
+	}
+	add_action('save_post', 'um_admin_delete_role_cache', 1111, 2);
+
+	/***
 	***	@delete users need confirmation
 	***/
 	add_action('um_admin_do_action__delete_users', 'um_admin_do_action__delete_users');

@@ -73,6 +73,8 @@
 			</span>
 		</p><div class="um-admin-clear"></div>
 		
+		<?php do_action('um_admin_extend_directory_options_general', $this); ?>
+		
 	</div>
 	
 	<div class="um-admin-clear"></div>

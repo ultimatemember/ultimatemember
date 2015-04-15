@@ -2,6 +2,8 @@
 
 	<div class="um-form">
 	
+		<?php do_action('um_profile_before_header', $args ); ?>
+		
 		<?php if ( um_is_on_edit_profile() ) { ?><form method="post" action=""><?php } ?>
 		
 			<?php do_action('um_profile_header_cover_area', $args ); ?>
