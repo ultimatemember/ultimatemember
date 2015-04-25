@@ -64,6 +64,8 @@ class UM_Builtin {
 		foreach ($fields as $field ) {
 			if ( isset( $this->predefined_fields[$field] ) ) {
 				$array = $this->predefined_fields[$field];
+			} else if ( isset( $this->saved_fields[$field] ) ) {
+				$array = $this->saved_fields[$field];
 			}
 		}
 		return $array;
@@ -455,6 +457,8 @@ class UM_Builtin {
 	function set_predefined_fields(){
 	
 		global $ultimatemember;
+		
+		$profile_privacy = apply_filters('um_profile_privacy_options', array( __('Everyone','ultimatemember'), __('Only me','ultimatemember') ) );
 		
 		$this->predefined_fields = array(
 		
@@ -859,7 +863,7 @@ class UM_Builtin {
 				'public' => 1,
 				'editable' => 1,
 				'default' => __('Everyone','ultimatemember'),
-				'options' => array( __('Everyone','ultimatemember'), __('Only me','ultimatemember') ),
+				'options' => $profile_privacy,
 				'allowclear' => 0,
 				'account_only' => true,
 				'required_perm' => 'can_make_private_profile',

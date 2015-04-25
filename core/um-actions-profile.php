@@ -5,20 +5,33 @@
 	***/
 	add_action('um_profile_content_main','um_profile_content_main');
 	function um_profile_content_main( $args ) {
-		
 		extract( $args );
+		
+		$can_view = apply_filters('um_profile_can_view_main', -1, um_profile_id() );
+		
+		if ( $can_view == -1 ) {
 	
-		do_action("um_before_form", $args);
-				
-		do_action("um_before_{$template}_fields", $args);
-				
-		do_action("um_main_{$template}_fields", $args);
-				
-		do_action("um_after_form_fields", $args);
-				
-		do_action("um_after_{$template}_fields", $args);
-				
-		do_action("um_after_form", $args);
+			do_action("um_before_form", $args);
+					
+			do_action("um_before_{$mode}_fields", $args);
+					
+			do_action("um_main_{$mode}_fields", $args);
+					
+			do_action("um_after_form_fields", $args);
+					
+			do_action("um_after_{$mode}_fields", $args);
+					
+			do_action("um_after_form", $args);
+		
+		} else {
+			
+			?>
+			
+			<div class="um-profile-note"><span><i class="um-faicon-lock"></i><?php echo $can_view; ?></span></div>
+			
+			<?php
+			
+		}
 	
 	}
 	
@@ -158,7 +171,7 @@
 	/***
 	***	@profile header cover
 	***/
-	add_action('um_profile_header_cover_area', 'um_profile_header_cover_area' );
+	add_action('um_profile_header_cover_area', 'um_profile_header_cover_area', 9 );
 	function um_profile_header_cover_area( $args ) {
 		global $ultimatemember;
 		
@@ -260,7 +273,7 @@
 	/***
 	***	@profile header
 	***/
-	add_action('um_profile_header', 'um_profile_header' );
+	add_action('um_profile_header', 'um_profile_header', 9 );
 	function um_profile_header( $args ) {
 		global $ultimatemember;
 		
@@ -557,7 +570,7 @@
 	/***
 	***	@display the available profile tabs
 	***/
-	add_action('um_profile_navbar', 'um_profile_navbar');
+	add_action('um_profile_navbar', 'um_profile_navbar', 9 );
 	function um_profile_navbar( $args ) {
 		global $ultimatemember;
 		
@@ -576,10 +589,11 @@
 		
 		$active_tab = $ultimatemember->profile->active_tab();
 
-		if ( !isset( $tabs[$active_tab] ) )
+		if ( !isset( $tabs[$active_tab] ) ) {
 			$active_tab = 'main';
 			$ultimatemember->profile->active_tab = $active_tab;
 			$ultimatemember->profile->active_subnav = null;
+		}
 
 		?>
 		
@@ -587,13 +601,15 @@
 		
 			<?php foreach( $tabs as $id => $tab ) {
 				
+				if ( isset( $tab['hidden'] ) ) continue;
+				
 				$nav_link = $ultimatemember->permalinks->get_current_url( get_option('permalink_structure') );
 				$nav_link = remove_query_arg( 'um_action', $nav_link );
 				$nav_link = remove_query_arg( 'subnav', $nav_link );
-				$nav_link = add_query_arg('profiletab', $id, $nav_link )
+				$nav_link =  add_query_arg('profiletab', $id, $nav_link );
 				?>
 			
-			<div class="um-profile-nav-item <?php if ( !um_get_option('profile_menu_icons') ) { echo 'without-icon'; } ?> <?php if ( $id == $active_tab ) { echo 'active'; } ?>">
+			<div class="um-profile-nav-item um-profile-nav-<?php echo $id; ?> <?php if ( !um_get_option('profile_menu_icons') ) { echo 'without-icon'; } ?> <?php if ( $id == $active_tab ) { echo 'active'; } ?>">
 				<a href="<?php echo $nav_link; ?>" title="<?php echo $tab['name']; ?>">
 
 					<i class="<?php echo $tab['icon']; ?>"></i>
@@ -610,6 +626,7 @@
 			<?php } ?>
 			
 			<div class="um-clear"></div>
+			
 		</div>
 	
 	<?php foreach( $tabs as $id => $tab ) {

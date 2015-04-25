@@ -18,7 +18,7 @@
 			
 				echo '<div class="um-field-block">';
 				
-				echo '<p>A password reset link has been sent to <strong>' . $ultimatemember->password->reset_request['user_email'] . '</strong>. Please check your inbox!</p>';
+				echo '<p>' . __('We have sent you a password reset link to your e-mail. Please check your inbox.','ultimatemember') . '</p>';
 				
 				echo '</div>';
 				

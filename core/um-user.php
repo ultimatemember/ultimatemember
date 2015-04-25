@@ -481,6 +481,8 @@ class UM_User {
 	function delete( $send_mail = true ) {
 		global $ultimatemember;
 		
+		do_action( 'um_delete_user', um_user('ID') );
+		
 		if ( $send_mail ) {
 			$ultimatemember->mail->send( um_user('user_email'), 'deletion_email' );
 			$ultimatemember->mail->send( um_admin_email(), 'notification_deletion', array('admin' => true ) );
@@ -710,6 +712,20 @@ class UM_User {
 		if ( $status == 'approved' || $status == '' ) {
 			return true;
 		}
+		return false;
+	}
+	
+	/***
+	***	@Is private
+	***/
+	function is_private_case( $user_id, $case ) {
+		$privacy = get_user_meta( $user_id, 'profile_privacy', true );
+		
+		if ( $privacy == $case ) {
+			$bool = apply_filters('um_is_private_filter_hook', false, $privacy, $user_id );
+			return $bool;
+		}
+		
 		return false;
 	}
 	

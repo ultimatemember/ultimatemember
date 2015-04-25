@@ -51,7 +51,7 @@ class UM_Admin_Users {
 		global $pagenow;
 
 		if ( is_admin() && $pagenow == 'users.php' ) {
-			
+
 			global $wpdb;
 
 			if (!isset($_REQUEST['orderby'])) {
@@ -73,7 +73,7 @@ class UM_Admin_Users {
 
 		if ( is_admin() && $pagenow=='users.php' && isset($_GET[ $this->custom_role ]) && $_GET[ $this->custom_role ] != '') {
 			
-			$query->role = urldecode($_GET[ $this->custom_role ]);
+			$role = urldecode($_GET[ $this->custom_role ]);
 
 			global $wpdb;
 
@@ -82,7 +82,7 @@ class UM_Admin_Users {
 					"WHERE 1=1 AND {$wpdb->users}.ID IN (
 						 SELECT {$wpdb->usermeta}.user_id FROM $wpdb->usermeta 
 							WHERE {$wpdb->usermeta}.meta_key = 'role' 
-							AND {$wpdb->usermeta}.meta_value = '{$query->role}')", 
+							AND {$wpdb->usermeta}.meta_value = '{$role}')", 
 					$query->query_where
 			);
 
@@ -90,7 +90,7 @@ class UM_Admin_Users {
 		
 		if ( is_admin() && $pagenow=='users.php' && isset($_GET[ 'status' ]) && $_GET[ 'status' ] != '') {
 			
-			$query->status = urldecode($_GET[ 'status' ]);
+			$status = urldecode($_GET[ 'status' ]);
 
 			global $wpdb;
 
@@ -99,7 +99,7 @@ class UM_Admin_Users {
 					"WHERE 1=1 AND {$wpdb->users}.ID IN (
 						 SELECT {$wpdb->usermeta}.user_id FROM $wpdb->usermeta 
 							WHERE {$wpdb->usermeta}.meta_key = 'account_status' 
-							AND {$wpdb->usermeta}.meta_value = '{$query->status}')", 
+							AND {$wpdb->usermeta}.meta_value = '{$status}')", 
 					$query->query_where
 			);
 

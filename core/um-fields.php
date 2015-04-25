@@ -517,6 +517,19 @@ class UM_Fields {
 	}
 	
 	/***
+	***	@Get Field Label
+	***/
+	function get_label( $key ) {
+		global $ultimatemember;
+		$fields = $ultimatemember->builtin->all_user_fields;
+		if ( isset( $fields[$key]['label'] ) )
+			return $fields[$key]['label'];
+		if ( isset( $fields[$key]['title'] ) )
+			return $fields[$key]['title'];
+		return '';
+	}
+	
+	/***
 	***	@Get Field Title
 	***/
 	function get_field_title( $key ) {
@@ -927,7 +940,7 @@ class UM_Fields {
 
 						$output .= '<div class="um-field-area">';
 						
-						if ( isset($icon) && $icon && $this->field_icons == 'field' ) {
+						if ( isset($icon) && $icon && isset( $this->field_icons ) && $this->field_icons == 'field' ) {
 						
 						$output .= '<div class="um-field-icon"><i class="'.$icon.'"></i></div>';
 						
@@ -1112,7 +1125,7 @@ class UM_Fields {
 
 						$output .= '<div class="um-field-area">';
 						
-						if ( isset($icon) && $icon && $this->field_icons == 'field' ) {
+						if ( isset($icon) && $icon && isset( $this->field_icons ) && $this->field_icons == 'field' ) {
 						
 						$output .= '<div class="um-field-icon"><i class="'.$icon.'"></i></div>';
 						

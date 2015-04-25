@@ -59,7 +59,7 @@
 	?>
 	
 		<li><a href="<?php echo um_get_core_page('account'); ?>"><?php _e('Your account','ultimatemember'); ?></a></li>
-		<li><a href="<?php echo add_query_arg('redirect_to', $ultimatemember->permalinks->get_current_url(true), um_get_core_page('logout') ); ?>"><?php _e('Logout','ultimatemember'); ?></a></li>
+		<li><a href="<?php echo esc_url( add_query_arg('redirect_to', $ultimatemember->permalinks->get_current_url(true), um_get_core_page('logout') ) ); ?>"><?php _e('Logout','ultimatemember'); ?></a></li>
 	
 	<?php
 	

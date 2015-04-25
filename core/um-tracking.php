@@ -139,8 +139,8 @@ class UM_Tracking {
 		if ( $hide_notice )
 			return;
 
-		$optin_url  = add_query_arg( 'um_adm_action', 'opt_into_tracking' );
-		$optout_url = add_query_arg( 'um_adm_action', 'opt_out_of_tracking' );
+		$optin_url  =  esc_url( add_query_arg( 'um_adm_action', 'opt_into_tracking' ) );
+		$optout_url =  esc_url( add_query_arg( 'um_adm_action', 'opt_out_of_tracking' ) );
 
 		echo '<div class="updated" style="border-color: #3ba1da;"><p>';
 		

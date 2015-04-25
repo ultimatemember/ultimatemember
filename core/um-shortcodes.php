@@ -134,7 +134,7 @@ class UM_Shortcodes {
 		$args = apply_filters('um_shortcode_args_filter', $args );
 
 		extract( $args, EXTR_SKIP );
-		
+
 		// for profiles only
 		if ( $mode == 'profile' && um_profile_id() && isset( $args['role'] ) && $args['role'] && 
 				$args['role'] != $ultimatemember->query->get_role_by_userid( um_profile_id() ) )
@@ -307,7 +307,7 @@ class UM_Shortcodes {
 				$usermeta = str_replace('}','',$usermeta);
 				
 				if ( $usermeta == 'user_avatar_small' ) {
-					$value = um_user('profile_photo', 40);
+					$value = get_avatar( um_user('ID'), 40 );
 				} elseif ( um_user( $usermeta ) ){
 					$value = um_user( $usermeta );
 				}

@@ -81,7 +81,7 @@
 					return new WP_Error( $status, __('Your account has not been approved yet.','ultimatemember') );
 					break;
 				case 'awaiting_email_confirmation':
-					return new WP_Error( $status, __('Your account is awaiting e-mail verifications.','ultimatemember') );
+					return new WP_Error( $status, __('Your account is awaiting e-mail verification.','ultimatemember') );
 					break;
 				case 'rejected':
 					return new WP_Error( $status, __('Your membership request has been rejected.','ultimatemember') );

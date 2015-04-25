@@ -90,14 +90,27 @@ function um_user_ip() {
 	}
 	
 	/***
-	***	@Capitalize first initial
+	***	@Get limit of words from sentence
 	***/
-	function um_cap_initials( $name ) {
-		if ( is_email( $name ) ) return $name;
-		$name = str_replace('\' ', '\'', ucwords( str_replace('\'', '\' ', mb_strtolower($name, 'UTF-8') ) ) );
-		return $name;
+	function um_get_snippet( $str, $wordCount = 10 ) {
+		if ( str_word_count( $str ) > $wordCount ) {
+		  $str = implode( 
+			'', 
+			array_slice( 
+			  preg_split(
+				'/([\s,\.;\?\!]+)/', 
+				$str, 
+				$wordCount*2+1, 
+				PREG_SPLIT_DELIM_CAPTURE
+			  ),
+			  0,
+			  $wordCount*2-1
+			)
+		  );
+		}
+	  return $str;
 	}
-	
+
 	/***
 	***	@Get submitted user information
 	***/
@@ -264,7 +277,7 @@ function um_profile_id() {
 			$url = get_permalink( $ultimatemember->permalinks->core[ $slug ] );
 			
 			if ( $updated )
-				$url = add_query_arg( 'updated', $updated, $url );
+				$url =  add_query_arg( 'updated', esc_attr( $updated ), $url );
 				
 			return $url;
 			
@@ -523,6 +536,8 @@ function um_reset_user() {
 	function um_can_view_profile( $user_id ){
 		global $ultimatemember;
 		
+		if ( !um_user('can_view_all') && $user_id != get_current_user_id() && is_user_logged_in() ) return false;
+		
 		if ( um_current_user_can('edit', $user_id ) ) {
 			return true;
 		}
@@ -536,9 +551,7 @@ function um_reset_user() {
 		}
 		
 		if ( !um_user('can_access_private_profile') && $ultimatemember->user->is_private_profile( $user_id ) ) return false;
-		
-		if ( !um_user('can_view_all') && $user_id != get_current_user_id() ) return false;
-		
+
 		if ( um_user('can_view_roles') && $user_id != get_current_user_id() ) {
 			if ( !in_array( $ultimatemember->query->get_role_by_userid( $user_id ), um_user('can_view_roles') ) ) {
 				return false;
@@ -647,11 +660,11 @@ function um_reset_user() {
 	***/
 	function um_edit_profile_url(){
 		global $ultimatemember;
-		$url = um_get_core_page('user');
+		$url = um_user_profile_url();
 		$url = remove_query_arg('profiletab', $url);
 		$url = remove_query_arg('subnav', $url);
-		$url = add_query_arg('profiletab', 'main',$url);
-		$url = add_query_arg('um_action','edit', $url);
+		$url = add_query_arg( 'profiletab', 'main', $url );
+		$url = add_query_arg( 'um_action',  'edit', $url );
 		return $url;
 	}
 	

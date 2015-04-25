@@ -727,3 +727,14 @@ div.uimob960 .um-gutter-sizer {width: 4%}
 	}
 
 }
+
+@media screen and (max-width: 600px) {
+	
+	.um-popup {
+		width: 90%;
+		margin-left: 5%;
+		left: 0;
+		top: 5%;
+	}
+	
+}

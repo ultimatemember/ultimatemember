@@ -1482,15 +1482,19 @@ $tab_options[] = array(
 );
 
 foreach( $tabs as $id => $tab ) {
-$tab_options[] = array(
-                'id'       		=> 'profile_tab_' . $id,
-                'type'     		=> 'switch',
-                'title'    		=> sprintf(__('%s Tab','ultimatemember'), $tab ),
-				'default' 		=> 1,
-				'required'		=> array( 'profile_menu', '=', 1 ),
-				'on'			=> __('On','ultimatemember'),
-				'off'			=> __('Off','ultimatemember'),
-);
+	
+	if ( isset( $tab['_builtin'] ) ) continue;
+
+	$tab_options[] = array(
+					'id'       		=> 'profile_tab_' . $id,
+					'type'     		=> 'switch',
+					'title'    		=> sprintf(__('%s Tab','ultimatemember'), $tab ),
+					'default' 		=> 1,
+					'required'		=> array( 'profile_menu', '=', 1 ),
+					'on'			=> __('On','ultimatemember'),
+					'off'			=> __('Off','ultimatemember'),
+	);
+
 }
 
 $tab_options[] = array(

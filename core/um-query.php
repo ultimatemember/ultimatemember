@@ -119,6 +119,13 @@ class UM_Query {
 	***/
 	function get_role_by_userid( $user_id ) {
 		$role = get_user_meta( $user_id, 'role', true );
+		if ( !$role ) {
+			if ( $user_id == get_current_user_id() && current_user_can('edit_users') ) {
+				$role = 'admin';
+			} else {
+				$role = 'member';
+			}
+		}
 		return $role;
 	}
 	

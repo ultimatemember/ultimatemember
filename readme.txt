@@ -5,9 +5,9 @@ Contributors: ultimatemember
 Donate link: 
 Tags: access control, author, authors, author profile, comments, community, communities, conditional fields, conditional logic, conditional menus, content protection, custom fields, file uploads, form builder, front-end login, front-end registration, gravatar, hide wp-admin, login, login page, logged-in users, mandrill, member, members, membership, member directory, online users, profile, profiles, profile builder, registration, restriction, restrict content, role creation, role menus, search filters, sign in, sign up, social network, star ratings, toolbar, user, users, user fields, user profile, user-profile, user profiles, user roles
 Requires at least: 4.1
-Tested up to: 4.1.1
+Tested up to: 4.2
 
-Stable Tag: 1.2.2
+Stable Tag: 1.2.8
 
 License: GNU Version 2 or Any Later Version
 
@@ -79,6 +79,7 @@ Ultimate Member has been translated into the following languages:
 * Dutch - Nederlands
 * Finnish - Suomi
 * Polish - Polski
+* Russian - Русский
 * Turkish - Türkçe
 * العربية
 
@@ -138,6 +139,41 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.2.8: April 25, 2015 =
+
+* Fixed: Important WP 4.2 conflict resolved: filtering users in backend
+
+= 1.2.7: April 25, 2015 =
+
+* Tweak: Compatible with WordPress 4.2
+* Tweak: general code tweaks and improvements
+* Tweak: new action hook when user is deleted
+* Tweak: new action/filter hooks for profiles (developers)
+* Tweak: new filter hook for profile privacy option
+* Fixed: permalink issues
+
+= 1.2.6: April 22, 2015 =
+
+* Fixed: password reset security fix ( do not reveal emails )
+* Fixed: bug with custom profile templates
+* Fixed: display name in member directories
+* Fixed: URL fields display in member directory
+* Fixed: many bugs with previous version
+
+= 1.2.5: April 21, 2015 =
+
+* Fixed: e-mail activation bugs
+
+= 1.2.4: April 20, 2015 =
+
+* New: added Russian language support
+* Fixed: Security patch related to add_query_arg()
+* Fixed: bug with approval HTML e-mail
+
+= 1.2.3: April 16, 2015 =
+
+* Fixed: major bug with admin capability / editing user profiles via frontend
 
 = 1.2.2: April 15, 2015 =
 

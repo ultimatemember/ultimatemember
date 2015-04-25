@@ -101,7 +101,7 @@
 			case 'awaiting_email_confirmation':
 			case 'rejected':
 				um_reset_user();
-				exit( wp_redirect( add_query_arg( 'err', $status, $ultimatemember->permalinks->get_current_url() ) ) );
+				exit( wp_redirect(  add_query_arg( 'err', esc_attr( $status ), $ultimatemember->permalinks->get_current_url() ) ) );
 				break;
 				
 		}

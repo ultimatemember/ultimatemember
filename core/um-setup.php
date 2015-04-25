@@ -366,6 +366,7 @@ class UM_Setup {
 						'post_type' 	  	=> 'post',
 						'post_status'		=> 'publish',
 						'post_author'   	=> um_user('ID'),
+						'comment_status'    => 'closed'
 					);
 					
 					$post_id = wp_insert_post( $user_page );

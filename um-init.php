@@ -25,6 +25,7 @@ class UM_API {
 			'nl_NL' => 'Nederlands',
 			'fi_FI' => 'Suomi',
 			'pl_PL' => 'Polski',
+			'ru_RU' => 'Русский',
 			'tr_TR' => 'Türkçe',
 			'ar' 	=> 'العربية'
 		);

@@ -66,13 +66,11 @@ class UM_User_posts {
 		$tabs['posts'] = array(
 			'name' => __('Posts','ultimatemember'),
 			'icon' => 'um-faicon-pencil',
-			'count' => $this->count_user_posts_by_type(),
 		);
 		
 		$tabs['comments'] = array(
 			'name' => __('Comments','ultimatemember'),
 			'icon' => 'um-faicon-comment',
-			'count' => $this->count_user_comments(),
 		);
 		
 		return $tabs;

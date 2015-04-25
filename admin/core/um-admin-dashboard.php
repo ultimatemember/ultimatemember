@@ -20,7 +20,7 @@ class UM_Admin_Dashboard {
 	***/
 	function primary_admin_menu() {
 		
-		$this->pagehook = add_menu_page( __('Ultimate Member', $this->slug), __('Ultimate Member', $this->slug), 'manage_options', $this->slug, array(&$this, 'admin_page'), 'dashicons-admin-users', '66.78578');
+		$this->pagehook = add_menu_page( __('Ultimate Member', $this->slug), __('Ultimate Member', $this->slug), 'manage_options', $this->slug, array(&$this, 'admin_page'), 'dashicons-admin-users', '42.78578');
 		add_action('load-'.$this->pagehook, array(&$this, 'on_load_page'));
 		
 		add_submenu_page( $this->slug, __('Dashboard', $this->slug), __('Dashboard', $this->slug), 'manage_options', $this->slug, array(&$this, 'admin_page') );

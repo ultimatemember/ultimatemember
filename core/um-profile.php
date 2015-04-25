@@ -22,7 +22,7 @@ class UM_Profile {
 	function tabs_active(){
 		$tabs = $this->tabs();
 		foreach( $tabs as $id => $info ) {
-			if ( !um_get_option('profile_tab_'.$id) )
+			if ( !um_get_option('profile_tab_'.$id) && !isset( $info['_builtin'] ) )
 				unset( $tabs[$id] );
 		}
 		return $tabs;
@@ -34,7 +34,9 @@ class UM_Profile {
 	function tabs_primary(){
 		$tabs = $this->tabs();
 		foreach( $tabs as $id => $info ){
-			$primary[$id] = $info['name'];
+			if ( isset( $info['name'] ) ) {
+				$primary[$id] = $info['name'];
+			}
 		}
 		return $primary;
 	}

@@ -324,6 +324,16 @@ font-weight: normal;
 	line-height: 70px;
 }
 
+.um-profile-note i.um-faicon-lock{
+	position: relative;
+	top: 1px;
+	display: inline-block;
+	font-size: 24px;
+	height: auto;
+	line-height: 24px;
+	margin-right: 10px;
+}
+
 .um-profile-note span {
 	margin-top: 10px;
 	display: block;

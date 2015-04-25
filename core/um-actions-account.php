@@ -49,7 +49,7 @@
 		
 		$url = $ultimatemember->account->tab_link( $tab );
 		
-		$url = add_query_arg('updated','account',$url);
+		$url = add_query_arg( 'updated', 'account', $url );
 		
 		exit( wp_redirect( $url ) );
 		
@@ -283,6 +283,10 @@
 		if ( $output ) { ?>
 		
 		<div class="um-account-heading uimob340-hide uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
+		
+		<div class="um-field">
+			<div class="um-field-label"><label for=""><?php _e('Email me when','ultimatemember'); ?></label><div class="um-clear"></div></div>
+		</div>
 		
 		<?php echo $output; ?>
 		

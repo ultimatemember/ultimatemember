@@ -101,7 +101,7 @@ class UM_Account {
 		
 		} else {
 			
-			$url = add_query_arg( 'um_tab', $id, um_get_core_page('account') );
+			$url = esc_url( add_query_arg( 'um_tab', $id, um_get_core_page('account') ) );
 			
 		}
 		

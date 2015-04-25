@@ -1,5 +1,12 @@
 <?php
 
+	$premium['profile-completeness'] = array(
+		'url' => 'https://ultimatemember.com/extensions/profile-completeness/',
+		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/04/pc3-01-copy.png',
+		'name' => 'Profile Completeness',
+		'desc' => 'Encourage users to complete their profiles or force them to fill specific profile fields with the Profile Completeness extension.',
+	);
+	
 	$premium['real-time-notifications'] = array(
 		'url' => 'https://ultimatemember.com/extensions/real-time-notifications/',
 		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/04/notifications-01-copy.png',
