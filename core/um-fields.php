@@ -1244,17 +1244,16 @@ class UM_Fields {
 					
 					if ( $this->field_value( $key, $default, $data ) ) {
 					
-						$uri = um_user_uploads_uri() . $this->field_value( $key, $default, $data );
+						$img = $this->field_value( $key, $default, $data );
 						
 						if ( isset( $ultimatemember->form->errors ) && !empty( $ultimatemember->form->errors ) ) {
 							if ( isset( $this->set_mode ) && $this->set_mode == 'register' ) {
-								$uri = $this->field_value( $key, $default, $data );
+								$img = $this->field_value( $key, $default, $data );
 							}
 						}
 						
 						$output .= '<div class="um-single-image-preview show '. $crop_class .'" data-crop="'.$crop_data.'" data-key="'.$key.'">
-								<a href="#" class="cancel"><i class="um-icon-close"></i></a>
-								<img src="' . $uri . '" alt="" />
+								<a href="#" class="cancel"><i class="um-icon-close"></i></a>' . $img . '
 							</div><a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. __('Change photo') . '</a>';
 						
 					} else {
