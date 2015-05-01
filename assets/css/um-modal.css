@@ -5,7 +5,12 @@
 	position: fixed;
 	top: 0;
 	left: 0;
-	z-index: 1564;
+	z-index: 1999992;
+}
+
+.um-popup * {
+	-webkit-font-smoothing: antialiased !important;
+	-moz-osx-font-smoothing: grayscale !important;
 }
 
 .um-popup {
@@ -19,16 +24,22 @@
 	width: 500px;
 	background: #fff;
 	box-shadow: 0 1px 3px #111;
-	z-index: 1565;
+	z-index: 1999993;
 	box-sizing: border-box;
 	overflow: auto;
 	color: #888;
-	padding: 10px 0;
+	padding: 0 !important;
+	-webkit-font-smoothing: antialiased !important;
+	-moz-osx-font-smoothing: grayscale !important;
 }
 
 .um-popup.loading {
 	background: #fff url(../img/loading.gif) no-repeat center;
 	min-height: 100px;
+}
+
+.um-popup a {
+	outline: none !important;
 }
 
 /*
@@ -42,7 +53,7 @@
 	position: fixed;
 	top: 0;
 	left: 0;
-	z-index: 100000;
+	z-index: 1999992;
 }
 
 /*
@@ -76,7 +87,7 @@
 	position: fixed;
 	left: 50%;
 	display: none;
-	z-index: 100010;
+	z-index: 1999993;
 	box-sizing: border-box;
 	bottom: -50px;
 }

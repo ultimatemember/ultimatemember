@@ -115,7 +115,7 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
     height: auto !important;
     width: auto !important;
     opacity: 0 !important;
-    z-index: 100030 !important;
+    z-index: 1999997 !important;
     /* styles required for IE to work */
     background-color: #fff !important;
     filter: alpha(opacity=0) !important;
@@ -125,7 +125,7 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
     width: 100%;
     margin-top: -1px;
     position: absolute;
-    z-index: 100040 !important;
+    z-index: 1999998 !important;
     top: 100%;
 
     background: #fff;
@@ -216,7 +216,7 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
     padding-right: 4px !important;
 
     position: relative !important;
-    z-index: 100050 !important;
+    z-index: 1999999 !important;
 
     white-space: nowrap !important;
 }

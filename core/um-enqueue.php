@@ -86,7 +86,7 @@ class UM_Enqueue {
 			) );
 			
 		} else {
-		
+
 			wp_register_script('um_minified', um_url . 'assets/js/um.min.js', array('jquery'), ultimatemember_version, true );
 			wp_enqueue_script('um_minified');
 			

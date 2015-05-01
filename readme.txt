@@ -5,9 +5,9 @@ Contributors: ultimatemember
 Donate link: 
 Tags: access control, author, authors, author profile, comments, community, communities, conditional fields, conditional logic, conditional menus, content protection, custom fields, file uploads, form builder, front-end login, front-end registration, gravatar, hide wp-admin, login, login page, logged-in users, mandrill, member, members, membership, member directory, online users, profile, profiles, profile builder, registration, restriction, restrict content, role creation, role menus, search filters, sign in, sign up, social network, star ratings, toolbar, user, users, user fields, user profile, user-profile, user profiles, user roles
 Requires at least: 4.1
-Tested up to: 4.2
+Tested up to: 4.2.1
 
-Stable Tag: 1.2.8
+Stable Tag: 1.2.92
 
 License: GNU Version 2 or Any Later Version
 
@@ -45,6 +45,7 @@ Read about all of the plugin's features at [Ultimate Member](https://ultimatemem
 
 Ultimate Member has a range of extensions that allow you to extend the power of the plugin
 
+* [Followers](https://ultimatemember.com/extensions/followers/) - Allow users to follow each other on your site and protect their profile information
 * [Real-time Notifications](https://ultimatemember.com/extensions/real-time-notifications/) - Add a notifications system to your site so users can receive real-time notifications
 * [Social Login](https://ultimatemember.com/extensions/social-login/) - Let users register & login to your site via Facebook, Twitter, G+, LinkedIn, Instagram and Vkontakte (VK.com)
 * [bbPress](https://ultimatemember.com/extensions/bbpress/) - With the bbPress extension you can beautifully integrate Ultimate Member with bbPress
@@ -139,6 +140,28 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.2.92: May 2, 2015 =
+
+* New: Important: Introduces the Ultimate Member RESTful API
+* Tweak: improved um_user_ip() function
+* Fixed: issue with invalid html on profile photo and cover photo
+
+= 1.2.91: April 30, 2015 =
+
+* New: added custom field validation support via hooks um_custom_field_validation_{$hook}
+* Fixed: important bug with profile menu tabs / system
+
+= 1.2.9: April 29, 2015 =
+
+* New: display pending users count in backend
+* Tweak: improved user deletion process from backend
+* Tweak: tweaked filter for register/login buttons
+* Tweak: disabled registration timebot for admins
+* Fixed: wp-load.php path in image and file upload scripts
+* Fixed: RTL compatibility bugs
+* Fixed: bug with registration and role field
+* Fixed: bug with edit profile and biography length in header
 
 = 1.2.8: April 25, 2015 =
 

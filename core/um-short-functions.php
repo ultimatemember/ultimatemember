@@ -22,12 +22,18 @@
  *
  */
 function um_user_ip() {
-	if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-		return $_SERVER['HTTP_CLIENT_IP'];
-	} else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) { 
-		return $_SERVER['HTTP_X_FORWARDED_FOR'];
+	$ip = '127.0.0.1';
+
+	if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+		//check ip from share internet
+		$ip = $_SERVER['HTTP_CLIENT_IP'];
+	} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+		//to check ip is pass from proxy
+		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+	} elseif( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
+		$ip = $_SERVER['REMOTE_ADDR'];
 	}
-	return $_SERVER['REMOTE_ADDR'];
+	return apply_filters( 'um_user_ip', $ip );
 }
 
 	/***
@@ -490,6 +496,7 @@ function um_reset_user() {
 	***/
 	function um_edit_my_profile_cancel_uri() {
 		$url = remove_query_arg( 'um_action' );
+		$url = remove_query_arg( 'profiletab', $url );
 		return $url;
 	}
 	
@@ -871,6 +878,10 @@ function um_fetch_user( $user_id ) {
 				
 				$uri = um_user_uploads_uri() . 'profile_photo.jpg?' . current_time( 'timestamp' );
 			
+			}
+			
+			if ( $attrs == 'original' ) {
+				$uri = um_user_uploads_uri() . 'profile_photo.jpg?' . current_time( 'timestamp' );
 			}
 			
 		}

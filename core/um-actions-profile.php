@@ -7,6 +7,9 @@
 	function um_profile_content_main( $args ) {
 		extract( $args );
 		
+		if ( !um_get_option('profile_tab_main') && !isset( $_REQUEST['um_action'] ) )
+			return;
+		
 		$can_view = apply_filters('um_profile_can_view_main', -1, um_profile_id() );
 		
 		if ( $can_view == -1 ) {
@@ -374,8 +377,9 @@
 					<div class="um-meta-text">
 						<textarea placeholder="<?php _e('Tell us a bit about yourself...','ultimatemember'); ?>" name="<?php echo 'description-' . $args['form_id']; ?>" id="<?php echo 'description-' . $args['form_id']; ?>"><?php if ( um_user('description') ) { echo um_user('description'); } ?></textarea>
 						
-						<?php if ( $ultimatemember->fields->is_error('description') )
-							echo $ultimatemember->fields->field_error( $ultimatemember->fields->show_error('description') ); ?>
+						<?php if ( $ultimatemember->fields->is_error('description') ) {
+						echo $ultimatemember->fields->field_error( $ultimatemember->fields->show_error('description'), true ); } 
+						?>
 						
 					</div>
 					
@@ -581,7 +585,7 @@
 		$tabs = $ultimatemember->profile->tabs_active();
 
 		$tabs = apply_filters('um_user_profile_tabs', $tabs );
-		
+
 		$ultimatemember->user->tabs = $tabs;
 		
 		// need enough tabs to continue
@@ -613,6 +617,8 @@
 				<a href="<?php echo $nav_link; ?>" title="<?php echo $tab['name']; ?>">
 
 					<i class="<?php echo $tab['icon']; ?>"></i>
+					
+					<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?><span class="um-tab-notifier uimob500-show uimob340-show uimob800-show"><?php echo $tab['notifier']; ?></span><?php } ?>
 					
 					<span class="uimob500-hide uimob340-hide uimob800-hide title"><?php echo $tab['name']; ?></span>
 					

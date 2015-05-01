@@ -141,7 +141,7 @@
 		}
 		
 	}
-	
+
 	/***
 	***	@Error processing hook : standard
 	***/
@@ -159,12 +159,12 @@
 				$ultimatemember->form->add_error($key, sprintf(__('%s is required.','ultimatemember'), $array['title'] ) );
 			}
 			
-			if ( isset( $array['type'] ) && $array['type'] == 'radio' && isset( $array['required'] ) && $array['required'] == 1 && !isset( $args[$key] ) ) {
+			if ( isset( $array['type'] ) && $array['type'] == 'radio' && isset( $array['required'] ) && $array['required'] == 1 && !isset( $args[$key] ) && !in_array($key, array('role_radio','role_select') ) ) {
 				$ultimatemember->form->add_error($key, sprintf(__('%s is required.','ultimatemember'), $array['title'] ) );
 			}
 			
 			if ( $key == 'role_select' || $key == 'role_radio' ) {
-				if ( isset($args['role']) && empty($args['role']) && isset( $array['required'] ) && $array['required'] == 1 ) {
+				if ( isset( $array['required'] ) && $array['required'] == 1 && ( !isset( $args['role'] ) || empty( $args['role'] ) ) ) {
 					$ultimatemember->form->add_error('role', __('Please specify account type.','ultimatemember') );
 				}
 			}
@@ -232,6 +232,11 @@
 			
 				switch( $array['validate'] ) {
 				
+					case 'custom':
+						$custom = $array['custom_validate'];
+						do_action("um_custom_field_validation_{$custom}", $key, $array );
+						break;
+						
 					case 'numeric':
 						if ( $args[$key] && !is_numeric( $args[$key] ) ) {
 							$ultimatemember->form->add_error($key, __('Please enter numbers only in this field','ultimatemember') );

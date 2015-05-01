@@ -99,6 +99,8 @@
 		
 		$ultimatemember->user->set_plain_password( $args['user_password'] );
 		
+		do_action('um_new_user_registration_plain');
+		
 		do_action('um_post_registration_save', $user_id, $args);
 
 		do_action('um_post_registration_listener', $user_id, $args);
@@ -237,13 +239,13 @@
 		if ( isset( $ultimatemember->user->preview ) && $ultimatemember->user->preview == true && is_admin() ) return;
 		
 		$primary_btn_word = $args['primary_btn_word'];
-		$primary_btn_word = apply_filters('um_register_form_button_one', $primary_btn_word);
+		$primary_btn_word = apply_filters('um_register_form_button_one', $primary_btn_word, $args );
 		
 		$secondary_btn_word = $args['secondary_btn_word'];
-		$secondary_btn_word = apply_filters('um_register_form_button_two', $secondary_btn_word);
+		$secondary_btn_word = apply_filters('um_register_form_button_two', $secondary_btn_word, $args );
 		
 		$secondary_btn_url = ( isset( $args['secondary_btn_url'] ) && $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page('login');
-		$secondary_btn_url = apply_filters('um_register_form_button_two_url', $secondary_btn_url);
+		$secondary_btn_url = apply_filters('um_register_form_button_two_url', $secondary_btn_url, $args );
 		
 		?>
 		

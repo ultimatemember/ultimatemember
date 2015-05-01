@@ -1,6 +1,13 @@
 <?php
 
-require_once("../../../../../../wp-load.php");
+$i = 0;
+$dirname = dirname( __FILE__ );
+do {
+	$dirname = dirname( $dirname );
+	$wp_load = "{$dirname}/wp-load.php";
+}
+while( ++$i < 10 && !file_exists( $wp_load ) );
+require_once( $wp_load );
 global $ultimatemember;
 
 $id = $_POST['key'];

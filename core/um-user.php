@@ -30,7 +30,19 @@ class UM_User {
 		);
 		
 		$this->target_id = null;
+		
+		// When the cache should be cleared 
+		add_action('um_delete_user_hook', array(&$this, 'remove_cached_queue') );
+		add_action('um_new_user_registration_plain', array(&$this, 'remove_cached_queue') );
+		add_action('um_after_user_status_is_changed_hook', array(&$this, 'remove_cached_queue') );
 
+	}
+	
+	/***
+	***	@Remove cached queue from Users backend
+	***/
+	function remove_cached_queue() {
+		delete_option('um_cached_users_queue');
 	}
 	
 	/***
@@ -305,7 +317,9 @@ class UM_User {
 		
 		$this->update_usermeta_info('account_status');
 		
-		do_action('um_after_user_status_is_changed', $status);
+		do_action( 'um_after_user_status_is_changed_hook' );
+		
+		do_action( 'um_after_user_status_is_changed', $status);
 		
 	}
 	
@@ -481,15 +495,19 @@ class UM_User {
 	function delete( $send_mail = true ) {
 		global $ultimatemember;
 		
+		do_action( 'um_delete_user_hook' );
 		do_action( 'um_delete_user', um_user('ID') );
 		
+		// send email notifications
 		if ( $send_mail ) {
 			$ultimatemember->mail->send( um_user('user_email'), 'deletion_email' );
 			$ultimatemember->mail->send( um_admin_email(), 'notification_deletion', array('admin' => true ) );
 		}
 		
+		// remove uploads
 		$ultimatemember->files->remove_dir( um_user_uploads_dir() );
-
+		
+		// remove user
 		if ( is_multisite() ) {
 			
 			if ( !function_exists('wpmu_delete_user') ) {

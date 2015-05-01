@@ -83,7 +83,7 @@ class UM_Form {
 					if ( $form_timestamp == '' && um_get_option('enable_timebot') == 1 )
 						wp_die( __('Hello, spam bot!') );
 
-					if ( $live_timestamp - $form_timestamp < 6 && um_get_option('enable_timebot') == 1  )
+					if ( !current_user_can('manage_options') && $live_timestamp - $form_timestamp < 6 && um_get_option('enable_timebot') == 1  )
 						wp_die( __('Whoa, slow down! You\'re seeing this message because you tried to submit a form too fast and we think you might be a spam bot. If you are a real human being please wait a few seconds before submitting the form. Thanks!') );
 
 				}

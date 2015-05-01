@@ -9,7 +9,7 @@
 
 .um .um-single-image-preview > img {
 	max-height: 300px;
-	display: block;
+	display: inline-block;
 	overflow: hidden;
 	margin: auto;
 	-moz-border-radius: 3px;

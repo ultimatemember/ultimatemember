@@ -1,4 +1,4 @@
-<div class="um <?php echo $this->get_class( $mode ); ?> um-<?php echo $form_id; ?>" data-error_required="This field is required" data-password_not_match="Passwords do not match" data-password_not_long="Password must be 8 characters at least">
+<div class="um <?php echo $this->get_class( $mode ); ?> um-<?php echo $form_id; ?>">
 
 	<div class="um-form">
 	

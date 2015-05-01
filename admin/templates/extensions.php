@@ -1,5 +1,12 @@
 <?php
 
+	$premium['followers'] = array(
+		'url' => 'https://ultimatemember.com/extensions/followers/',
+		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/04/followers-01-copy.png',
+		'name' => 'Followers',
+		'desc' => ' With the followers extension you can increase user interaction on your site by allowing users to follow each other.',
+	);
+	
 	$premium['profile-completeness'] = array(
 		'url' => 'https://ultimatemember.com/extensions/profile-completeness/',
 		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/04/pc3-01-copy.png',

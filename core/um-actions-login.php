@@ -171,18 +171,18 @@
 	add_action('um_after_login_fields', 'um_add_submit_button_to_login', 1000);
 	function um_add_submit_button_to_login($args){
 		global $ultimatemember;
-		
+
 		// DO NOT add when reviewing user's details
 		if ( $ultimatemember->user->preview == true && is_admin() ) return;
 		
 		$primary_btn_word = $args['primary_btn_word'];
-		$primary_btn_word = apply_filters('um_login_form_button_one', $primary_btn_word);
+		$primary_btn_word = apply_filters('um_login_form_button_one', $primary_btn_word, $args );
 		
 		$secondary_btn_word = $args['secondary_btn_word'];
-		$secondary_btn_word = apply_filters('um_login_form_button_two', $secondary_btn_word);
+		$secondary_btn_word = apply_filters('um_login_form_button_two', $secondary_btn_word, $args );
 		
 		$secondary_btn_url = ( isset( $args['secondary_btn_url'] ) && $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page('register');
-		$secondary_btn_url = apply_filters('um_login_form_button_two_url', $secondary_btn_url);
+		$secondary_btn_url = apply_filters('um_login_form_button_two_url', $secondary_btn_url, $args );
 		
 		?>
 		

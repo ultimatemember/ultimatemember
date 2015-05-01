@@ -42,12 +42,27 @@ class UM_Profile {
 	}
 	
 	/***
+	***	@Activated tabs in backend
+	***/
+	function tabs_enabled(){
+		$tabs = $this->tabs();
+		foreach( $tabs as $id => $info ){
+			if ( isset( $info['name'] ) ) {
+				if ( um_get_option('profile_tab_'.$id) || isset( $info['_builtin'] ) ) {
+					$primary[$id] = $info['name'];
+				}
+			}
+		}
+		return ( isset( $primary ) ) ? $primary : '';
+	}
+	
+	/***
 	***	@Get active_tab
 	***/
 	function active_tab() {
-		
+
 		$this->active_tab = um_get_option('profile_menu_default_tab');
-		
+
 		if ( get_query_var('profiletab') ) {
 			$this->active_tab = get_query_var('profiletab');
 		}

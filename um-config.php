@@ -1482,8 +1482,6 @@ $tab_options[] = array(
 );
 
 foreach( $tabs as $id => $tab ) {
-	
-	if ( isset( $tab['_builtin'] ) ) continue;
 
 	$tab_options[] = array(
 					'id'       		=> 'profile_tab_' . $id,
@@ -1504,7 +1502,7 @@ $tab_options[] = array(
                 'title'    		=> __( 'Profile menu default tab','ultimatemember' ),
                 'desc' 	   		=> __( 'This will be the default tab on user profile page','ultimatemember' ),
                 'default'  		=> 'main',
-				'options' 		=> $ultimatemember->profile->tabs_primary(),
+				'options' 		=> $ultimatemember->profile->tabs_enabled(),
 				'required'		=> array( 'profile_menu', '=', 1 ),
 );
 

@@ -13,6 +13,57 @@ class UM_Admin_Dashboard {
 		add_action('admin_menu', array(&$this, 'secondary_menu_items'), 1000);
 		add_action('admin_menu', array(&$this, 'extension_menu'), 9999); 
 		
+		add_action( 'admin_head', array( $this, 'menu_order_count' ) );
+		
+	}
+	
+	/**
+	 * Get pending users (in queue)
+	 */
+	function get_pending_users_count() {
+		
+		if ( get_option('um_cached_users_queue') > 0 ) {
+			return get_option('um_cached_users_queue');
+		}
+		
+		$args = array( 'fields' => 'ID', 'number' => 20 );
+		$args['meta_query']['relation'] = 'OR';
+		$args['meta_query'][] = array(
+				'key' => 'account_status',
+				'value' => 'awaiting_email_confirmation',
+				'compare' => '='
+		);
+		$args['meta_query'][] = array(
+				'key' => 'account_status',
+				'value' => 'awaiting_admin_review',
+				'compare' => '='
+		);
+		$users = new WP_User_Query( $args );
+		
+		delete_option('um_cached_users_queue');
+		add_option('um_cached_users_queue', count($users->results), '', 'no' );
+		
+		return count($users->results);
+	}
+	
+	/**
+	 * Manage order of admin menu items
+	 */
+	public function menu_order_count() {
+		global $menu, $submenu;
+		
+		$count = $this->get_pending_users_count();
+		
+		foreach( $menu as $key => $menu_item ) {
+			if ( 0 === strpos( $menu_item[0], _x( 'Users', 'Admin menu name' ) ) ) {
+				$menu[ $key ][0] .= ' <span class="update-plugins count-'.$count.'"><span class="processing-count">'.$count.'</span></span>';
+			}
+		}
+		foreach ( $submenu['users.php'] as $key => $menu_item ) {
+			if ( 0 === strpos( $menu_item[0], _x( 'All Users', 'Admin menu name' ) ) ) {
+				$submenu['users.php'][ $key ][0] .= ' <span class="update-plugins count-'.$count.'"><span class="processing-count">'.$count.'</span></span>';
+			}
+		}
 	}
 	
 	/***
@@ -51,7 +102,7 @@ class UM_Admin_Dashboard {
 	***	@extension menu
 	***/
 	function extension_menu() {
-		add_submenu_page( $this->slug, __('Extensions', $this->slug), '<span style="color: #3dc3e5">' .__('Extensions', $this->slug) . '</span>', 'manage_options', $this->slug . '-extensions', array(&$this, 'admin_page') );
+		add_submenu_page( $this->slug, __('Extensions', $this->slug), '<span style="color: #00B9EB">' .__('Extensions', $this->slug) . '</span>', 'manage_options', $this->slug . '-extensions', array(&$this, 'admin_page') );
 	}
 	
 	/***

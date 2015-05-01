@@ -1,4 +1,4 @@
-.tipsy { padding: 5px; position: absolute; z-index: 100020; }
+.tipsy { padding: 5px; position: absolute; z-index: 9999999999; }
 
 .tipsy-inner {
 	font-size: 13px !important;
@@ -6,7 +6,7 @@
 	background-color: #333333 !important;
 	color: #fff !important;
 	max-width: 250px !important;
-	padding: 10px 12px !important;
+	padding: 6px 10px !important;
 	text-align: left !important;
 	word-wrap: break-word !important;
 	-webkit-font-smoothing: antialiased !important;

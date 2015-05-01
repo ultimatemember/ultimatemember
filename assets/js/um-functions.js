@@ -770,16 +770,22 @@ function remove_Modal() {
 function show_Modal( contents ) {
 	if ( jQuery('.um-popup-overlay').length ) {
 		jQuery('.um-popup').removeClass('loading').html( contents );
-		jQuery('.um-popup').mCustomScrollbar({
-			theme:"dark-3"
-		});
 	}
 }
 
 function responsive_Modal() {
 	if ( jQuery('.um-popup-overlay').length ) {
-		jQuery('.um-popup').css({
-			'max-height': ( 80 / 100 ) * jQuery(window).height() + 'px'
+
+		ag_height = jQuery(window).height() - jQuery('.um-popup-header').outerHeight() - jQuery('.um-popup-footer').outerHeight() - 40;
+		if ( ag_height > 350 ) {
+			ag_height = 350;
+		}
+		
+		jQuery('.um-popup-autogrow').css({
+			'height': ag_height + 'px'
 		});
+		jQuery('.um-popup-autogrow').mCustomScrollbar({
+			theme:"dark-3"
+		}).mCustomScrollbar("scrollTo", "bottom",{ scrollInertia:0});
 	}
 }
