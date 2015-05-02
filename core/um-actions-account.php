@@ -28,7 +28,7 @@
 		$ultimatemember->user->update_profile( $changes );
 
 		// delete account
-		if ( $_POST['single_user_password'] && isset($_POST['um_account_submit']) && $_POST['um_account_submit'] == __('Delete Account','ultimatemember') ) {
+		if ( isset($_POST['single_user_password']) && isset($_POST['um_account_submit']) && $_POST['um_account_submit'] == __('Delete Account','ultimatemember') ) {
 			if ( current_user_can('delete_users') || um_user('can_delete_profile') ) {
 				if ( !um_user('super_admin') ) {
 					$ultimatemember->user->delete();
