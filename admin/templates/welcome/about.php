@@ -1,9 +1,9 @@
 
 	<?php global $ultimatemember; include_once um_path . 'admin/templates/welcome/about_header.php'; ?>
 	
-	<div class="changelog headline-feature dfw">
+	<div class="changelog feature-list">
 		<h2>Introducing Ultimate Member</h2>
-		<div class="feature-section">
+		<div class="feature-section headline-feature">
 			
 			<h3><em>Create beautiful community websites with WordPress!</em></h3>
 			
@@ -13,8 +13,6 @@
 			
 		</div>
 	</div>
-
-	<hr />
 
 	<div class="changelog feature-list">
 		

@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.2.1
 
-Stable Tag: 1.2.92
+Stable Tag: 1.2.93
 
 License: GNU Version 2 or Any Later Version
 
@@ -140,6 +140,14 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.2.93: May 5, 2015 =
+
+* New: user profiles are cached to speed up load time
+* New: emoji support added to bio / user descriptions
+* Fixed: issues with bio field HTML 
+* Fixed: WP-admin PHP warning
+* Fixed: bug with localization of en_US.po file
 
 = 1.2.92: May 2, 2015 =
 

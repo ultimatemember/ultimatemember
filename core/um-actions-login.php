@@ -106,6 +106,9 @@
 				
 		}
 		
+		if ( isset( $args['form_id'] ) && $args['form_id'] == $ultimatemember->shortcodes->core_login_form() &&  $ultimatemember->form->errors  )
+			exit( wp_redirect( um_get_core_page('login') ) );
+		
 	}
 	
 	/***
@@ -159,7 +162,9 @@
 	function um_submit_form_login($args){
 		global $ultimatemember;
 		
-		if ( !isset($ultimatemember->form->errors) ) do_action( 'um_user_login', $args );
+		if ( !isset($ultimatemember->form->errors) ) {
+			do_action( 'um_user_login', $args );
+		}
 		
 		do_action('um_user_login_extra_hook', $args );
 		

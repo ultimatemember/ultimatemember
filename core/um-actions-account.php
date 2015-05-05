@@ -45,6 +45,8 @@
 		
 		do_action('um_post_account_update');
 		
+		do_action('um_after_user_account_updated', get_current_user_id() );
+		
 		$tab = ( get_query_var('um_tab') ) ? get_query_var('um_tab') : 'general';
 		
 		$url = $ultimatemember->account->tab_link( $tab );

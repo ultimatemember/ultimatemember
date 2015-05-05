@@ -1084,9 +1084,9 @@ function um_user( $data, $attrs = null ) {
 			} else {
 				$avatar_uri = um_get_default_avatar_uri();
 			}
-			
+
 			$avatar_uri = apply_filters('um_user_avatar_url_filter', $avatar_uri, um_user('ID') );
-				
+
 			if ( $avatar_uri )
 				return '<img src="' . $avatar_uri . '" class="gravatar avatar avatar-'.$attrs.' um-avatar" width="'.$attrs.'" height="'.$attrs.'" alt="" />';
 				

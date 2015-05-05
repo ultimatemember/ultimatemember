@@ -250,36 +250,6 @@ $this->sections[] = array(
 		),
 		
         array(
-                'id'       		=> 'exclude_from_main_loop',
-                'type'     		=> 'switch',
-                'title'   		=> __( 'Exclude restricted pages from main loop','ultimatemember' ),
-				'default' 		=> 1,
-				'desc' 	   		=> __('Whether to exclude restricted pages from main loop','ultimatemember'),
-				'on'			=> __('Yes','ultimatemember'),
-				'off'			=> __('No','ultimatemember'),
-        ),
-		
-        array(
-                'id'       		=> 'exclude_from_search_loop',
-                'type'     		=> 'switch',
-                'title'   		=> __( 'Exclude restricted pages from search loop','ultimatemember' ),
-				'default' 		=> 1,
-				'desc' 	   		=> __('Whether to exclude restricted pages from search results','ultimatemember'),
-				'on'			=> __('Yes','ultimatemember'),
-				'off'			=> __('No','ultimatemember'),
-        ),
-		
-        array(
-                'id'       		=> 'exclude_from_archive_loop',
-                'type'     		=> 'switch',
-                'title'   		=> __( 'Exclude restricted pages from archive loop','ultimatemember' ),
-				'default' 		=> 1,
-				'desc' 	   		=> __('Whether to exclude restricted pages from archives','ultimatemember'),
-				'on'			=> __('Yes','ultimatemember'),
-				'off'			=> __('No','ultimatemember'),
-        ),
-		
-        array(
                 'id'       		=> 'wpadmin_login',
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Allow Backend Login Screen for Guests','ultimatemember' ),
@@ -1784,7 +1754,7 @@ $this->sections[] = array(
 				'title'         	=> __('Import & Export Settings','ultimatemember'),
 				'full_width'    	=> true,
 		),
-	
+
         array(
                 'id'      		=> 'advanced_denied_roles',
                 'type'     		=> 'text',

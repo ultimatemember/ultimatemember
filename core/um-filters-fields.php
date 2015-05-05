@@ -45,8 +45,8 @@
 		
 		$value = preg_replace('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', ' <a href="$1" target="_blank">$1</a> ', $value." ");
 		$value = preg_replace('$(www\.[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', '<a target="_blank" href="http://$1">$1</a> ', $value." ");
-
 		$value = wpautop($value);
+
 		return $value;
 	}
 	
@@ -128,7 +128,7 @@
 	***/
 	add_filter('um_profile_field_filter_hook__', 'um_profile_field_filter_hook__', 99, 2);
 	function um_profile_field_filter_hook__( $value, $data ) {
-		
+		global $ultimatemember;
 		if ( !$value ) return '';
 
 		if ( ( isset( $data['validate'] ) && $data['validate'] != '' && strstr( $data['validate'], 'url' ) ) || ( isset( $data['type'] ) && $data['type'] == 'url' ) ) {
@@ -165,7 +165,9 @@
 		
 		$value = str_replace('https://https://','https://',$value);
 		$value = str_replace('http://https://','https://',$value);
-
+		
+		$value = $ultimatemember->shortcodes->emotize( $value );
+		
 		return $value;
 
 	}

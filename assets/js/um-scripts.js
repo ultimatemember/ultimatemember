@@ -30,8 +30,8 @@ jQuery(document).ready(function() {
 	jQuery('.um-tip-e').tipsy({gravity: 'e', opacity: 1, live: 'a.live', offset: 3, delayIn: 500 });
 	jQuery('.um-tip-s').tipsy({gravity: 's', opacity: 1, live: 'a.live', offset: 3, delayIn: 500 });
 
-	jQuery(document).on('change', '.um-field input[type=radio]', function(){
-		var field = jQuery(this).parents('.um-field');
+	jQuery(document).on('change', '.um-field-area input[type=radio]', function(){
+		var field = jQuery(this).parents('.um-field-area');
 		var this_field = jQuery(this).parents('label');
 		field.find('.um-field-radio').removeClass('active');
 		field.find('.um-field-radio').find('i').removeClass().addClass('um-icon-android-radio-button-off');
@@ -39,9 +39,9 @@ jQuery(document).ready(function() {
 		this_field.find('i').removeClass().addClass('um-icon-android-radio-button-on');
 	});
 
-	jQuery(document).on('change', '.um-field input[type=checkbox]', function(){
+	jQuery(document).on('change', '.um-field-area input[type=checkbox]', function(){
 		
-		var field = jQuery(this).parents('.um-field');
+		var field = jQuery(this).parents('.um-field-area');
 		var this_field = jQuery(this).parents('label');
 		if ( this_field.hasClass('active') ) {
 		this_field.removeClass('active');

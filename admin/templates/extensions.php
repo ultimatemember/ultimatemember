@@ -83,6 +83,11 @@
 		
 	<h2>Ultimate Member - Extensions</h2>
 	
+	<div class="wp-filter um-admin-notice um-filter">
+		<div class="alignleft"><strong>Core Extensions Bundle</strong> – Check out our extensions bundle which includes all extensions at a significant discount.</div>
+		<div class="alignright"><a href="https://ultimatemember.com/core-extensions-bundle/" class="button button-primary" target="_blank">View our Extensions Bundle</a></div>
+	</div>
+	
 	<div class="wp-filter">
 		<ul class="filter-links">
 			<li><a href='?page=ultimatemember-extensions&filter=premium' class='<?php if ( !isset($_REQUEST['filter']) || isset( $_REQUEST['filter'] ) && $_REQUEST['filter'] == 'premium' ) { echo 'current'; } ?>'>Premium</a></li>

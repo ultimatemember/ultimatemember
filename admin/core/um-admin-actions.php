@@ -4,9 +4,16 @@
 	***	@when role is saved
 	***/
 	function um_admin_delete_role_cache($post_id, $post){
+		global $ultimatemember;
 		if(get_post_type( $post_id ) == 'um_role'){
 			$slug = $post->post_name;
 			delete_option("um_cached_role_{$slug}");
+			
+			// need to remove cache of all users
+			$users = get_users( array( 'fields' => array( 'ID' ), 'meta_key' => 'role', 'meta_value' => $slug ) );
+			foreach( $users as $user ) {
+				$ultimatemember->user->remove_cache( $user->ID );
+			}
 		}
 	}
 	add_action('save_post', 'um_admin_delete_role_cache', 1111, 2);

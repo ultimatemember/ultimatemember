@@ -35,7 +35,13 @@ class UM_User {
 		add_action('um_delete_user_hook', array(&$this, 'remove_cached_queue') );
 		add_action('um_new_user_registration_plain', array(&$this, 'remove_cached_queue') );
 		add_action('um_after_user_status_is_changed_hook', array(&$this, 'remove_cached_queue') );
-
+		
+		// When user cache should be cleared
+		add_action('um_after_user_updated', array(&$this, 'remove_cache') );
+		add_action('um_after_user_account_updated', array(&$this, 'remove_cache') );
+		add_action('personal_options_update', array(&$this, 'remove_cache') );
+		add_action('edit_user_profile_update', array(&$this, 'remove_cache') );
+		
 	}
 	
 	/***
@@ -61,6 +67,20 @@ class UM_User {
 		}
 
 		return $new;
+	}
+	
+	function get_cached_data( $user_id ) {
+		$find_user = get_option("um_cache_userdata_{$user_id}");
+		if ( $find_user )
+			return $find_user;
+	}
+	
+	function setup_cache( $user_id, $profile ) {
+		update_option( "um_cache_userdata_{$user_id}", $profile );
+	}
+	
+	function remove_cache( $user_id ) {
+		delete_option( "um_cache_userdata_{$user_id}" );
 	}
 	
 	/**
@@ -93,6 +113,18 @@ class UM_User {
 		if ( isset( $this->profile ) ) {
 			unset( $this->profile );
 		}
+		
+		if ($user_id) {
+			$this->id = $user_id;
+		} elseif (is_user_logged_in() && $clean == false ){
+			$this->id = get_current_user_id();
+		} else {
+			$this->id = 0;
+		}
+		
+		if ( $this->get_cached_data( $this->id ) ) {
+			$this->profile = $this->get_cached_data( $this->id );
+		} else {
 		
 		if ($user_id) {
 		
@@ -173,7 +205,12 @@ class UM_User {
 				
 			// clean profile
 			$this->clean();
+			
+			// Setup cache
+			$this->setup_cache( $this->id, $this->profile );
 
+		}
+		
 		}
 		
 	}

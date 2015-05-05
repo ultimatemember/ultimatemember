@@ -1,7 +1,7 @@
 
 	<?php global $ultimatemember; include_once um_path . 'admin/templates/welcome/about_header.php'; ?>
 
-	<div class="changelog headline-feature dfw">
+	<div class="changelog feature-list">
 		<h2>Getting Started</h2>
 		<div class="feature-section">
 
@@ -9,8 +9,6 @@
 			
 		</div>
 	</div>
-	
-	<hr />
 
 	<div class="changelog feature-list">
 		
@@ -50,15 +48,13 @@
 		
 	</div>
 	
-	<hr />
-	
-	<div class="changelog headline-feature dfw">
+	<div class="changelog feature-list">
 		<h2>Need more help?</h2>
 		<div class="feature-section">
 
 			<p>If you want to learn more about Ultimate Member you’ll need to register on our website where you will be able to interact and get help from other Ultimate Member users via our community forum and also be able to access other useful resources including the plugin’s documentation.</p>
 			
-			<p style="text-align:center"><a href="https://ultimatemember.com/forums/" target="_blank" class="button button-primary">Join the Ultimate Member Community</a></p>
+			<p class="um-admin-notice" style="text-align:center"><a href="https://ultimatemember.com/forums/" target="_blank" class="button button-primary">Join the Ultimate Member Community</a></p>
 			
 		</div>
 	</div>

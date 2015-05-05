@@ -11,7 +11,77 @@ class UM_Shortcodes {
 		add_shortcode('ultimatemember', array(&$this, 'ultimatemember'), 1);
 
 		add_filter( 'body_class', array(&$this, 'body_class'), 0 );
+		
+		$this->emoji[':)'] = 'https://s.w.org/images/core/emoji/72x72/1f604.png';
+		$this->emoji[':smiley:'] = 'https://s.w.org/images/core/emoji/72x72/1f603.png';
+		$this->emoji[':D'] = 'https://s.w.org/images/core/emoji/72x72/1f600.png';
+		$this->emoji[':$'] = 'https://s.w.org/images/core/emoji/72x72/1f60a.png';
+		$this->emoji[':relaxed:'] = 'https://s.w.org/images/core/emoji/72x72/263a.png';
+		$this->emoji[';)'] = 'https://s.w.org/images/core/emoji/72x72/1f609.png';
+		$this->emoji[':heart_eyes:'] = 'https://s.w.org/images/core/emoji/72x72/1f60d.png';
+		$this->emoji[':kissing_heart:'] = 'https://s.w.org/images/core/emoji/72x72/1f618.png';
+		$this->emoji[':kissing_closed_eyes:'] = 'https://s.w.org/images/core/emoji/72x72/1f61a.png';
+		$this->emoji[':kissing:'] = 'https://s.w.org/images/core/emoji/72x72/1f617.png';
+		$this->emoji[':kissing_smiling_eyes:'] = 'https://s.w.org/images/core/emoji/72x72/1f619.png';
+		$this->emoji[';P'] = 'https://s.w.org/images/core/emoji/72x72/1f61c.png';
+		$this->emoji[':P'] = 'https://s.w.org/images/core/emoji/72x72/1f61b.png';
+		$this->emoji[':stuck_out_tongue_closed_eyes:'] = 'https://s.w.org/images/core/emoji/72x72/1f61d.png';
+		$this->emoji[':flushed:'] = 'https://s.w.org/images/core/emoji/72x72/1f633.png';
+		$this->emoji[':grin:'] = 'https://s.w.org/images/core/emoji/72x72/1f601.png';
+		$this->emoji[':pensive:'] = 'https://s.w.org/images/core/emoji/72x72/1f614.png';
+		$this->emoji[':relieved:'] = 'https://s.w.org/images/core/emoji/72x72/1f60c.png';
+		$this->emoji[':unamused'] = 'https://s.w.org/images/core/emoji/72x72/1f612.png';
+		$this->emoji[':('] = 'https://s.w.org/images/core/emoji/72x72/1f61e.png';
+		$this->emoji[':persevere:'] = 'https://s.w.org/images/core/emoji/72x72/1f623.png';
+		$this->emoji[":'("] = 'https://s.w.org/images/core/emoji/72x72/1f622.png';
+		$this->emoji[':joy:'] = 'https://s.w.org/images/core/emoji/72x72/1f602.png';
+		$this->emoji[':sob:'] = 'https://s.w.org/images/core/emoji/72x72/1f62d.png';
+		$this->emoji[':sleepy:'] = 'https://s.w.org/images/core/emoji/72x72/1f62a.png';
+		$this->emoji[':disappointed_relieved:'] = 'https://s.w.org/images/core/emoji/72x72/1f625.png';
+		$this->emoji[':cold_sweat:'] = 'https://s.w.org/images/core/emoji/72x72/1f630.png';
+		$this->emoji[':sweat_smile:'] = 'https://s.w.org/images/core/emoji/72x72/1f605.png';
+		$this->emoji[':sweat:'] = 'https://s.w.org/images/core/emoji/72x72/1f613.png';
+		$this->emoji[':weary:'] = 'https://s.w.org/images/core/emoji/72x72/1f629.png';
+		$this->emoji[':tired_face:'] = 'https://s.w.org/images/core/emoji/72x72/1f62b.png';
+		$this->emoji[':fearful:'] = 'https://s.w.org/images/core/emoji/72x72/1f628.png';
+		$this->emoji[':scream:'] = 'https://s.w.org/images/core/emoji/72x72/1f631.png';
+		$this->emoji[':angry:'] = 'https://s.w.org/images/core/emoji/72x72/1f620.png';
+		$this->emoji[':rage:'] = 'https://s.w.org/images/core/emoji/72x72/1f621.png';
+		$this->emoji[':triumph'] = 'https://s.w.org/images/core/emoji/72x72/1f624.png';
+		$this->emoji[':confounded:'] = 'https://s.w.org/images/core/emoji/72x72/1f616.png';
+		$this->emoji[':laughing:'] = 'https://s.w.org/images/core/emoji/72x72/1f606.png';
+		$this->emoji[':yum:'] = 'https://s.w.org/images/core/emoji/72x72/1f60b.png';
+		$this->emoji[':mask:'] = 'https://s.w.org/images/core/emoji/72x72/1f637.png';
+		$this->emoji[':cool:'] = 'https://s.w.org/images/core/emoji/72x72/1f60e.png';
+		$this->emoji[':sleeping:'] = 'https://s.w.org/images/core/emoji/72x72/1f634.png';
+		$this->emoji[':dizzy_face:'] = 'https://s.w.org/images/core/emoji/72x72/1f635.png';
+		$this->emoji[':astonished:'] = 'https://s.w.org/images/core/emoji/72x72/1f632.png';
+		$this->emoji[':worried:'] = 'https://s.w.org/images/core/emoji/72x72/1f61f.png';
+		$this->emoji[':frowning:'] = 'https://s.w.org/images/core/emoji/72x72/1f626.png';
+		$this->emoji[':anguished:'] = 'https://s.w.org/images/core/emoji/72x72/1f627.png';
+		$this->emoji[':smiling_imp:'] = 'https://s.w.org/images/core/emoji/72x72/1f608.png';
+		$this->emoji[':imp:'] = 'https://s.w.org/images/core/emoji/72x72/1f47f.png';
+		$this->emoji[':open_mouth:'] = 'https://s.w.org/images/core/emoji/72x72/1f62e.png';
+		$this->emoji[':grimacing:'] = 'https://s.w.org/images/core/emoji/72x72/1f62c.png';
+		$this->emoji[':neutral_face:'] = 'https://s.w.org/images/core/emoji/72x72/1f610.png';
+		$this->emoji[':confused:'] = 'https://s.w.org/images/core/emoji/72x72/1f615.png';
+		$this->emoji[':hushed:'] = 'https://s.w.org/images/core/emoji/72x72/1f62f.png';
+		$this->emoji[':no_mouth:'] = 'https://s.w.org/images/core/emoji/72x72/1f636.png';
+		$this->emoji[':innocent:'] = 'https://s.w.org/images/core/emoji/72x72/1f607.png';
+		$this->emoji[':smirk:'] = 'https://s.w.org/images/core/emoji/72x72/1f60f.png';
+		$this->emoji[':expressionless:'] = 'https://s.w.org/images/core/emoji/72x72/1f611.png';
 
+	}
+	
+	/***
+	***	@emoji support
+	***/
+	function emotize( $content ) {
+		$content = stripslashes( $content );
+		foreach( $this->emoji as $code => $val ) {
+			$content = str_replace( $code, '<img src="'.$val.'" alt="'.$code.'" title="'.$code.'" class="emoji" />', $content );
+		}
+		return $content;
 	}
 	
 	/***
@@ -36,6 +106,14 @@ class UM_Shortcodes {
 		}
 		
 		return $classes;
+	}
+	
+	/***
+	***	@Retrieve core login form
+	***/
+	function core_login_form() {
+		$forms = get_posts( array( 'post_type' => 'um_form', 'posts_per_page' => 1, 'meta_key' => '_um_core', 'meta_value' => 'login' ) );
+		return $forms[0]->ID;
 	}
 	
 	/***

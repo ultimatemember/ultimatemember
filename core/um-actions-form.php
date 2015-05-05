@@ -196,9 +196,7 @@
 			}
 			
 			if ( isset( $array['html'] ) && $array['html'] == 0 ) {
-				if ( $args[$key] != htmlspecialchars($args[$key]) ) {
-				$ultimatemember->form->add_error($key, __('You can not use HTML tags here','ultimatemember') );
-				}
+				$args[$key] = strip_tags( $args[$key] );
 			}
 			
 			if ( isset( $array['force_good_pass'] ) && $array['force_good_pass'] == 1 ) {

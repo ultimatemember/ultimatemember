@@ -3,7 +3,7 @@
 Plugin Name: Ultimate Member
 Plugin URI: http://ultimatemember.com/
 Description: The easiest way to create powerful online communities and beautiful user profiles with WordPress
-Version: 1.2.92
+Version: 1.2.93
 Author: Ultimate Member
 Author URI: http://ultimatemember.com/
 */
@@ -29,7 +29,7 @@ Author URI: http://ultimatemember.com/
 	***	@Display a welcome page
 	***/
 	function ultimatemember_activation_hook( $plugin ) {
-	
+
 		if( $plugin == um_plugin && get_option('um_version') != ultimatemember_version ) {
 		
 			update_option('um_version', ultimatemember_version );

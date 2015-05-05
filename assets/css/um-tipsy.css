@@ -1,4 +1,4 @@
-.tipsy { padding: 5px; position: absolute; z-index: 9999999999; }
+.tipsy { padding: 5px; position: absolute; z-index: 9999999999!important; }
 
 .tipsy-inner {
 	font-size: 13px !important;

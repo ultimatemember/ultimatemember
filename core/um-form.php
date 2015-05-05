@@ -55,7 +55,7 @@ class UM_Form {
 		$http_post = ('POST' == $_SERVER['REQUEST_METHOD']);
 		
 		if ( $http_post && !is_admin() && isset( $_POST['form_id'] ) && is_numeric($_POST['form_id']) ) {
-			
+
 			$this->form_id = $_POST['form_id'];
 			$this->form_status = get_post_status( $this->form_id );
 			
@@ -72,9 +72,9 @@ class UM_Form {
 				
 				$this->post_form = array_merge( $this->form_data, $this->post_form );
 
-				if ( $_POST[ $ultimatemember->honeypot ] != '' )
+				if ( isset( $_POST[ $ultimatemember->honeypot ] ) && $_POST[ $ultimatemember->honeypot ] != '' )
 					wp_die('Hello, spam bot!');
-				
+
 				if ( !in_array( $this->form_data['mode'], array('login') ) ) {
 				
 					$form_timestamp  = trim($_POST['timestamp']);

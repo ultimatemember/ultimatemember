@@ -172,7 +172,7 @@ class UM_Admin_Enqueue {
 		
 		wp_register_style('um_admin_columns', um_url . 'admin/assets/css/um-admin-columns.css' );
 		wp_enqueue_style('um_admin_columns');
-		
+
 		wp_register_style('um_admin_misc', um_url . 'admin/assets/css/um-admin-misc.css' );
 		wp_enqueue_style('um_admin_misc');
 
@@ -277,6 +277,10 @@ class UM_Admin_Enqueue {
 				wp_enqueue_style('um_admin_rtl');
 			}
 		
+		} else {
+			
+			$this->load_global_css();
+			
 		}
 		
 	}

@@ -23,12 +23,15 @@
 	background: #3ba1da url(../img/logo_small.png) no-repeat center 0px !important;
 }
 
-.um-about-wrap a.button-primary {
-	height: 46px;
-	line-height: 46px;
-	padding: 0 20px !important;
-	font-size: 14px;
-	border: none;
+.um-about-wrap .ultimatemember-actions a.button-primary,
+.um-about-wrap .ultimatemember-actions a.button {
+	vertical-align: top;
+	margin: 0 5px 0 0;
+}
+
+.changelog a.button-primary {
+	height: 40px;
+	line-height: 38px;
 }
 
 .um-about-wrap a {text-decoration: none}
@@ -92,16 +95,6 @@ body.um-admin-modal-open {
 	position: relative;
 	top: 1px;
 }
-
-.um-admin a.button-primary,
-.um-admin input.button-primary {
-	background: #3ba1da;
-	box-shadow: none !important;
-	border-radius: 2px;
-	color: #fff;
-}
-.um-admin a.button-primary:hover,
-.um-admin input.button-primary:hover {background: #44b0ec;}
 
 /*
 	- Form Inputs

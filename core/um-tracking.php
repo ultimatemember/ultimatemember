@@ -142,7 +142,7 @@ class UM_Tracking {
 		$optin_url  =  esc_url( add_query_arg( 'um_adm_action', 'opt_into_tracking' ) );
 		$optout_url =  esc_url( add_query_arg( 'um_adm_action', 'opt_out_of_tracking' ) );
 
-		echo '<div class="updated" style="border-color: #3ba1da;"><p>';
+		echo '<div class="updated um-admin-notice"><p>';
 		
 		echo __( 'Allow Ultimate Member to track plugin usage? Opt-in to tracking and our newsletter and we will immediately e-mail you a 20% discount which you can use on any of our extensions. No sensitive data is tracked.', 'ultimatemember' );
 		
