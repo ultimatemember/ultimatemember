@@ -72,7 +72,7 @@ class UM_Account {
 		global $ultimatemember;
 		
 		if ( um_is_core_page('account') && !is_user_logged_in() ) {
-			um_redirect_home();
+			exit( wp_redirect( add_query_arg('redirect_to', urlencode( um_get_core_page('account') ) , um_get_core_page('login') ) ) );
 		}
 		
 		if ( um_is_core_page('account') ) {

@@ -20,7 +20,7 @@
 .um-misc-img img {
 	border-radius: 999px;
 	height: auto !important;
-	display: inline-block;
+	display: inline-block !important;
 }
 
 .um-misc-ul,
@@ -28,8 +28,30 @@
 	font-size: 14px;
 }
 
-/* profile misc */
+/* responsive embeds */
+.um-youtube,
+.um-vimeo,
+.um-googlemap {
+	position: relative;
+	height: 0;
+	overflow: hidden;
+}
 
+.um-youtube {padding-bottom: 56.25%;}
+.um-vimeo {padding-bottom: 56.25%;}
+.um-googlemap {padding-bottom: 75%;}
+
+.um-youtube iframe,
+.um-vimeo iframe,
+.um-googlemap iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100% !important;
+	height: 100% !important;
+}
+
+/* profile misc */
 .um-profile-connect.um-member-connect {
 	padding: 5px 0 10px 0;
 }

@@ -24,7 +24,10 @@ class UM_Password {
 		if ( isset($_REQUEST['act']) && $_REQUEST['act'] == 'reset_password' && isset($_REQUEST['hash']) && strlen($_REQUEST['hash']) == 40 &&
 			isset($_REQUEST['user_id']) && is_numeric($_REQUEST['user_id']) ) {
 			
-				um_fetch_user( $_REQUEST['user_id'] );
+				$user_id = absint( $_REQUEST['user_id'] );
+				delete_option( "um_cache_userdata_{$user_id}" );
+				
+				um_fetch_user( $user_id );
 				
 				if ( $_REQUEST['hash'] != um_user('reset_pass_hash') ) wp_die( __('This is not a valid hash, or it has expired.','ultimatemember') );
 

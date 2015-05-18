@@ -327,6 +327,7 @@ class UM_Admin_Users {
 
 		if ( $this->custom_role == $column_name ) {
 		
+			delete_option( "um_cache_userdata_{$user_id}" );
 			um_fetch_user( $user_id );
 			return um_user('role_name');
 			

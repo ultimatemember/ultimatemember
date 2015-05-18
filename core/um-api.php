@@ -52,6 +52,7 @@ class UM_REST_API {
 		$vars[] = 'type';
 		$vars[] = 'data';
 		$vars[] = 'fields';
+		$vars[] = 'value';
 		$vars[] = 'number';
 		$vars[] = 'id';
 		$vars[] = 'email';
@@ -189,12 +190,24 @@ class UM_REST_API {
 
 		switch( $query_mode ) :
 
+			case 'get.stats':
+				$data = $this->get_stats( $args );
+				break;
+				
 			case 'get.users':
 				$data = $this->get_users( $args );
 				break;
 				
 			case 'get.user':
 				$data = $this->get_auser( $args );
+				break;
+				
+			case 'update.user':
+				$data = $this->update_user( $args );
+				break;
+				
+			case 'delete.user':
+				$data = $this->delete_user( $args );
 				break;
 
 			case 'get.following':
@@ -215,6 +228,100 @@ class UM_REST_API {
 
 		// Send out data to the output function
 		$this->output();
+	}
+	
+	/**
+	 * Get some stats
+	 */
+	public function get_stats( $args ) {
+		global $wpdb, $ultimatemember;
+		extract( $args );
+		
+		$response = array();
+		$error = array();
+		
+		$query = "SELECT COUNT(*) FROM {$wpdb->prefix}users";
+		$count = absint( $wpdb->get_var($query) );
+		$response['stats']['total_users'] = $count;
+		
+		include_once um_path . 'admin/core/um-admin-dashboard.php';
+		$pending = $um_dashboard->get_pending_users_count();
+		$response['stats']['pending_users'] = absint( $pending );
+		
+		if ( class_exists( 'UM_Notifications_API') ) {
+			$query = "SELECT COUNT(*) FROM {$wpdb->prefix}um_notifications";
+			$total_notifications = absint( $wpdb->get_var( $query ) );
+			$response['stats']['total_notifications'] = $total_notifications;
+		}
+		
+		if ( class_exists( 'UM_Messaging_API') ) {
+			$query = "SELECT COUNT(*) FROM {$wpdb->prefix}um_conversations";
+			$total_conversations = absint( $wpdb->get_var( $query ) );
+			$response['stats']['total_conversations'] = $total_conversations;
+			
+			$query = "SELECT COUNT(*) FROM {$wpdb->prefix}um_messages";
+			$total_messages = absint( $wpdb->get_var( $query ) );
+			$response['stats']['total_messages'] = $total_messages;
+		}
+		
+		if ( class_exists( 'UM_Online_API') ) {
+			global $um_online;
+			$total_online = count( $um_online->get_users() );
+			$response['stats']['total_online'] = $total_online;
+		}
+		
+		if ( class_exists( 'UM_Reviews_API') ) {
+			$query = "SELECT COUNT(*) FROM {$wpdb->prefix}posts WHERE post_status='publish' AND post_type='um_review'";
+			$total_reviews = absint( $wpdb->get_var( $query ) );
+			$response['stats']['total_reviews'] = $total_reviews;
+		}
+		
+		return $response;
+	}
+	
+	/**
+	 * Update user API query
+	 */
+	public function update_user( $args ) {
+		global $ultimatemember;
+		extract( $args );
+		
+		$response = array();
+		$error = array();
+		
+		if ( !$id ) {
+			$error['error'] = __('You must provide a user ID','ultimatemember');
+			return $error;
+		}
+		
+		if ( !$data ) {
+			$error['error'] = __('You need to provide data to update','ultimatemember');
+			return $error;
+		}
+		
+		um_fetch_user( $id );
+		
+		switch ( $data ) {
+			case 'status':
+				$ultimatemember->user->set_status( $value );
+				$response['success'] = __('User status has been changed.','ultimatemember');
+				break;
+			case 'role':
+				$ultimatemember->user->set_role( $value );
+				$response['success'] = __('User level has been changed.','ultimatemember');
+				break;
+			case 'wp_role':
+				$wp_user_object = new WP_User( $id );
+				$wp_user_object->set_role( $value );
+				$response['success'] = __('User WordPress role has been changed.','ultimatemember');
+				break;
+			default:
+				update_user_meta( $id, $data, esc_attr( $value ) );
+				$response['success'] = __('User meta has been changed.','ultimatemember');
+				break;
+		}
+		
+		return $response;
 	}
 	
 	/**
@@ -362,6 +469,35 @@ class UM_REST_API {
 	}
 	
 	/**
+	 * Process delete user via API
+	 */
+	public function delete_user( $args ) {
+		global $ultimatemember;
+		extract( $args );
+		
+		$response = array();
+		$error = array();
+		
+		if ( !isset( $id ) ) {
+			$error['error'] = __('You must provide a user ID','ultimatemember');
+			return $error;
+		}
+		
+		$user = get_userdata( $id );
+		if ( !$user ) {
+			$error['error'] = __('Invalid user specified','ultimatemember');
+			return $error;
+		}
+		
+		um_fetch_user( $id );
+		$ultimatemember->user->delete();
+		
+		$response['success'] = __('User has been successfully deleted.','ultimatemember');
+		
+		return $response;
+	}
+	
+	/**
 	 * Process Get user API Request
 	 */
 	public function get_auser( $args ) {
@@ -489,8 +625,11 @@ class UM_REST_API {
 		$accepted = apply_filters( 'um_api_valid_query_modes', array(
 			'get.users',
 			'get.user',
+			'update.user',
+			'delete.user',
 			'get.following',
 			'get.followers',
+			'get.stats',
 		) );
 
 		$query = isset( $wp_query->query_vars['um-api'] ) ? $wp_query->query_vars['um-api'] : null;

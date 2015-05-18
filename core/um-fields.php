@@ -592,6 +592,14 @@ class UM_Fields {
 		
 		switch( $array['type'] ) {
 
+			case 'googlemap':
+			case 'youtube_video':
+			case 'vimeo_video':
+			case 'soundcloud_track':
+				$array['disabled'] = '';
+				$array['input'] = 'text';
+				break;
+				
 			case 'text':
 				
 				$array['disabled'] = '';
@@ -916,6 +924,37 @@ class UM_Fields {
 				$mode = (isset($this->set_mode))?$this->set_mode:'no_mode';
 				$output .= apply_filters("um_edit_field_{$mode}_{$type}", $output, $data);
 				break;
+				
+			/* Other fields */
+			case 'googlemap':
+			case 'youtube_video':
+			case 'vimeo_video':
+			case 'soundcloud_track':
+
+				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">';
+						
+						if ( isset( $data['label'] ) ) {
+						$output .= $this->field_label($label, $key, $data);
+						}
+
+						$output .= '<div class="um-field-area">';
+						
+						if ( isset($icon) && $icon && isset( $this->field_icons ) && $this->field_icons == 'field' ) {
+						
+						$output .= '<div class="um-field-icon"><i class="'.$icon.'"></i></div>';
+						
+						}
+						
+						$output .= '<input '.$disabled.' class="'.$this->get_class($key, $data).'" type="'.$input.'" name="'.$key.$ultimatemember->form->form_suffix.'" id="'.$key.$ultimatemember->form->form_suffix.'" value="'. htmlspecialchars( $this->field_value( $key, $default, $data ) ) .'" placeholder="'.$placeholder.'" data-validate="'.$validate.'" data-key="'.$key.'" />
+							
+						</div>';
+							
+						if ( $this->is_error($key) ) {
+							$output .= $this->field_error( $this->show_error($key) );
+						}
+					
+						$output .= '</div>';
+				break;
 
 			/* Text */
 			case 'text':
@@ -934,7 +973,7 @@ class UM_Fields {
 						
 						}
 						
-						$output .= '<input '.$disabled.' class="'.$this->get_class($key, $data).'" type="'.$input.'" name="'.$key.$ultimatemember->form->form_suffix.'" id="'.$key.$ultimatemember->form->form_suffix.'" value="'. $this->field_value( $key, $default, $data ) .'" placeholder="'.$placeholder.'" data-validate="'.$validate.'" data-key="'.$key.'" />
+						$output .= '<input '.$disabled.' class="'.$this->get_class($key, $data).'" type="'.$input.'" name="'.$key.$ultimatemember->form->form_suffix.'" id="'.$key.$ultimatemember->form->form_suffix.'" value="'. htmlspecialchars( $this->field_value( $key, $default, $data ) ) .'" placeholder="'.$placeholder.'" data-validate="'.$validate.'" data-key="'.$key.'" />
 							
 						</div>';
 							
@@ -1239,7 +1278,12 @@ class UM_Fields {
 					if ( $this->field_value( $key, $default, $data ) ) {
 					
 						if ( !in_array( $key, array('profile_photo','cover_photo') ) ) {
-							$img = '<img src="' . um_user_uploads_uri() . $this->field_value( $key, $default, $data ) . '" alt="" />';
+							if ( isset( $this->set_mode ) && $this->set_mode == 'register' ) {
+								$imgValue = $this->field_value( $key, $default, $data );
+							} else {
+								$imgValue = um_user_uploads_uri() . $this->field_value( $key, $default, $data );
+							}
+							$img = '<img src="' . $imgValue . '" alt="" />';
 						} else {
 							$img = '';
 						}
@@ -1952,7 +1996,7 @@ class UM_Fields {
 						}
 
 						$output .= '<div class="um-field-area">';
-						$output .= '<div class="um-field-value">' . $this->field_value( $key, $default, $data ) . '</div>';
+						$output .= '<div class="um-field-value">' . stripslashes( $this->field_value( $key, $default, $data ) ) . '</div>';
 						$output .= '</div>';
 						
 						$output .= '</div>';

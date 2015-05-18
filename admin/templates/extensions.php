@@ -1,10 +1,17 @@
 <?php
 
+	$premium['private-messages'] = array(
+		'url' => 'https://ultimatemember.com/extensions/private-messages/',
+		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/05/privatemessages-01-copy.png',
+		'name' => 'Private Messages',
+		'desc' => 'Add a private messaging system to your site and allow users to privately message each other. Perfect for websites where users needly to interact one on one.',
+	);
+	
 	$premium['followers'] = array(
 		'url' => 'https://ultimatemember.com/extensions/followers/',
 		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/04/followers-01-copy.png',
 		'name' => 'Followers',
-		'desc' => ' With the followers extension you can increase user interaction on your site by allowing users to follow each other.',
+		'desc' => 'With the followers extension you can increase user interaction on your site by allowing users to follow each other.',
 	);
 	
 	$premium['profile-completeness'] = array(

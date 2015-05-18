@@ -13,7 +13,7 @@ class UM_Cache {
 	***/
 	function do_not_cache() {
 	
-		if ( um_is_core_uri() ) {
+		if ( um_is_core_uri() && ! defined( 'DONOTCACHEPAGE' ) ) {
 			define( "DONOTCACHEPAGE", true );
 		}
 		

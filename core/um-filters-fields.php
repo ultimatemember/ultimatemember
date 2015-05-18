@@ -23,12 +23,64 @@
 	}
 	
 	/***
+	***	@outputs a soundcloud track
+	***/
+	add_filter('um_profile_field_filter_hook__soundcloud_track', 'um_profile_field_filter_hook__soundcloud_track', 99, 2);
+	function um_profile_field_filter_hook__soundcloud_track( $value, $data ) {
+		
+		if ( !is_numeric( $value ) ) {
+			return __('Invalid soundcloud track ID','ultimatemember');
+		}
+		
+		$value = '<div class="um-soundcloud">
+					<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' . $value . '&amp;color=ff6600&amp;auto_play=false&amp;show_artwork=true"></iframe>
+					</div>';
+					
+		return $value;
+	}
+	
+	/***
+	***	@outputs a youtube video
+	***/
+	add_filter('um_profile_field_filter_hook__youtube_video', 'um_profile_field_filter_hook__youtube_video', 99, 2);
+	function um_profile_field_filter_hook__youtube_video( $value, $data ) {
+		$value = ( strstr( $value, 'http') || strstr( $value, '://' ) ) ? um_youtube_id_from_url( $value ) : $value;
+		$value = '<div class="um-youtube">
+					<iframe width="600" height="450" src="https://www.youtube.com/embed/' . $value . '" frameborder="0" allowfullscreen></iframe>
+					</div>';
+		return $value;
+	}
+	
+	/***
+	***	@outputs a vimeo video
+	***/
+	add_filter('um_profile_field_filter_hook__vimeo_video', 'um_profile_field_filter_hook__vimeo_video', 99, 2);
+	function um_profile_field_filter_hook__vimeo_video( $value, $data ) {
+		$value = ( !is_numeric( $value ) ) ? (int) substr(parse_url($value, PHP_URL_PATH), 1) : $value;
+		$value = '<div class="um-vimeo">
+					<iframe src="https://player.vimeo.com/video/'. $value . '" width="600" height="450" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+					</div>';
+		return $value;
+	}
+	
+	/***
+	***	@outputs a google map
+	***/
+	add_filter('um_profile_field_filter_hook__googlemap', 'um_profile_field_filter_hook__googlemap', 99, 2);
+	function um_profile_field_filter_hook__googlemap( $value, $data ) {
+		$value = '<div class="um-googlemap">
+					<iframe width="600" height="450" frameborder="0" style="border:0" src="https://maps.google.it/maps?q=' . urlencode( $value ) . '&output=embed"></iframe>
+				</div>';
+		return $value;
+	}
+	
+	/***
 	***	@user's registration date
 	***/
 	add_filter('um_profile_field_filter_hook__user_registered', 'um_profile_field_filter_hook__user_registered', 99, 2);
 	function um_profile_field_filter_hook__user_registered( $value, $data ) {
 		$value = strtotime($value);
-		$value = sprintf(__('Joined %s','ultimatemember'), date('d M Y', $value) );
+		$value = sprintf(__('Joined %s','ultimatemember'), date_i18n('d M Y', $value) );
 		return $value;
 	}
 	

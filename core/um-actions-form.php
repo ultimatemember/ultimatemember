@@ -196,7 +196,9 @@
 			}
 			
 			if ( isset( $array['html'] ) && $array['html'] == 0 ) {
-				$args[$key] = strip_tags( $args[$key] );
+				if ( wp_strip_all_tags( $args[$key] ) != $args[$key] ) {
+					$ultimatemember->form->add_error($key, __('You can not use HTML tags here','ultimatemember') );
+				}
 			}
 			
 			if ( isset( $array['force_good_pass'] ) && $array['force_good_pass'] == 1 ) {

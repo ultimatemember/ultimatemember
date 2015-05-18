@@ -91,6 +91,8 @@
 		
 		$output = $uri;
 		
+		delete_option( "um_cache_userdata_{$user_id}" );
+		
 		if(is_array($output)){ print_r($output); }else{ echo $output; } die;
 
 	}

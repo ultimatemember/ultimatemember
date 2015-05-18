@@ -135,6 +135,17 @@
 	color: #888;
 }
 
+@media screen and (max-width:1124px){
+	.redux-sidebar .redux-group-tab-link-a i {
+		position: relative;
+		top: auto;
+	}
+	.redux-sidebar .redux-group-menu li a {
+		text-align: center;
+		padding: 6px !important;
+	}
+}
+
 .redux-sidebar .redux-menu-warning i, .redux-sidebar .redux-menu-error i, .redux-sidebar .hasSubSections .extraIconSubsections i {
 	top: 11px;
 }

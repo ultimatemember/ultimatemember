@@ -78,7 +78,7 @@
 					$operator = 'LIKE';
 				}
 
-				if ( $value && $field != 'um_search' ) {
+				if ( $value && $field != 'um_search' && $field != 'page_id' ) {
 				
 					if ( !in_array( $field, $ultimatemember->members->core_search_fields ) ) {
 						

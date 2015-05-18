@@ -428,6 +428,70 @@ class UM_Builtin {
 				)
 			),
 			
+			'googlemap' => array(
+				'name' => 'Google Map',
+				'col1' => array('_title','_metakey','_help','_visibility'),
+				'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
+				'col3' => array('_required','_editable','_icon'),
+				'validate' => array(
+					'_title' => array(
+						'mode' => 'required',
+						'error' => 'You must provide a title'
+					),
+					'_metakey' => array(
+						'mode' => 'unique',
+					),
+				)
+			),
+			
+			'youtube_video' => array(
+				'name' => 'YouTube Video',
+				'col1' => array('_title','_metakey','_help','_visibility'),
+				'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
+				'col3' => array('_required','_editable','_icon'),
+				'validate' => array(
+					'_title' => array(
+						'mode' => 'required',
+						'error' => 'You must provide a title'
+					),
+					'_metakey' => array(
+						'mode' => 'unique',
+					),
+				)
+			),
+			
+			'vimeo_video' => array(
+				'name' => 'Vimeo Video',
+				'col1' => array('_title','_metakey','_help','_visibility'),
+				'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
+				'col3' => array('_required','_editable','_icon'),
+				'validate' => array(
+					'_title' => array(
+						'mode' => 'required',
+						'error' => 'You must provide a title'
+					),
+					'_metakey' => array(
+						'mode' => 'unique',
+					),
+				)
+			),
+			
+			'soundcloud_track' => array(
+				'name' => 'SoundCloud Track',
+				'col1' => array('_title','_metakey','_help','_visibility'),
+				'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate'),
+				'col3' => array('_required','_editable','_icon'),
+				'validate' => array(
+					'_title' => array(
+						'mode' => 'required',
+						'error' => 'You must provide a title'
+					),
+					'_metakey' => array(
+						'mode' => 'unique',
+					),
+				)
+			),
+			
 			/*'group' => array(
 				'name' => 'Field Group',
 				'col1' => array('_title','_max_entries'),

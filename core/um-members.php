@@ -21,7 +21,7 @@ class UM_Members {
 	/***
 	***	@Add display name
 	***/
-	function add_display_name(){
+	function add_display_name( $search_columns ){
 		$search_columns[] = 'display_name';
 		return $search_columns;
 	}
