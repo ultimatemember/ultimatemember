@@ -38,6 +38,184 @@ Read about all of the plugin's features at [Ultimate Member](https://ultimatemem
 
 #####Changelog
 =======================
+= 1.3.29: October 31, 2015 =
+
+* New: added new documentation links to plugin files
+* New: added filters to control profile photo menu (for developers)
+* Fixed: added security patch to remove decrypted passwords from database
+* Fixed: bug with blocked words during registration
+* Fixed: some localization strings
+* Fixed: php warnings/bugs on specific installs
+
+= 1.3.28: October 13, 2015 =
+
+* Fixed: Bug with plugin folder structure
+
+= 1.3.27: October 13, 2015 =
+
+* Fixed: Role name display in Users dashboard
+
+= 1.3.26: September 25, 2015 =
+
+* New: added Greek language support
+* Tweak: added custom class to every user meta in member directory
+* Tweak: added option to stop flushing rewrite rules every load (performance tweak)
+* Fixed: WPML issue on multisite install
+* Fixed: Removed redux menu from tools
+* Fixed: fix for wp_authenticate_username_password()
+* Fixed: searching users by e-mail address
+* Fixed: conflict with sites with thousands of pages
+
+= 1.3.25: September 7, 2015 =
+
+* Fixed: 404 error on UM pages
+
+= 1.3.24: September 6, 2015 =
+
+* Tweak: saved some database queries
+* Tweak: plugin not compatible with cache plugins out of the box - needs to exclude dynamic urls from cache
+* Tweak: added more development filters in backend
+
+= 1.3.23: September 2, 2015 =
+
+* Fixed: PHP strstr() notice on profile
+
+= 1.3.22: September 2, 2015 =
+
+* Fixed: compatibility bug with older PHP versions
+
+= 1.3.21: September 2, 2015 =
+
+* Tweak: added security by sanitizing file/image uploads
+* Fixed: issue with account page > notifications tab
+* Fixed: image upload path in email notification
+* Fixed: php issue with displaying name
+* Fixed: missing localisation strings
+* Fixed: couple of php notices
+
+= 1.3.20: August 28, 2015 =
+
+* New: added security measure for profile photo uploads
+* New: added filter to hook in registration details sent in email notification
+* New: added core pages filter to allow you change pages of extensions within plugin settings (e.g. activity)
+* Fixed: multi-select field filtering bug
+* Fixed: strip slashes from field names in fields modal
+* Fixed: show drag and drop footer content only in the drag and drop form builder page
+* Fixed: profile photo crop/upload issue
+* Fixed: category/post specific restriction conflict
+* Fixed: display UM classes only in UM pages
+* Fixed: minor code improvements
+
+= 1.3.19: August 20, 2015 =
+
+* Fixed: please update - profile issue
+
+= 1.3.18: August 20, 2015 =
+
+* New: filter for comment types tab in profile
+* New: jQuery.scrollto script added (for developers and extensions support)
+* Fixed: XSS vulnerability in text input
+* Fixed: user goes to profile about tab after editing profile
+
+= 1.3.17: August 13, 2015 =
+
+* New: added Brazilian Portuguese language support
+* Tweak: added support for upcoming social activity extension
+
+= 1.3.16: August 11, 2015 =
+
+* New: added option to restrict categories in addition to per post content restriction
+* New: added support to use dynamic user/profile ID in shortcode field e.g. [your-shortcode user_id={profile_id}]
+* New: added security feature to disable admin logging via frontend (optional)
+* New: added filter to um_get_core_page() function (for developers)
+* Tweak: removed delay from tooltips
+* Fixed: conflict with Podcast feed
+
+= 1.3.15: August 4, 2015 =
+
+* Fixed: issue with logout from adminbar
+
+= 1.3.14: August 4, 2015 =
+
+* New: added last login date support
+* New: show user's last login in profile
+* New: added sorting members by last login date
+* New: added option to re-assign core pages in plugin settings
+* Fixed: issue with multi-select required field
+* Fixed: URL validation for custom fields
+* Fixed: backend user filtering by non-english role
+* Fixed: RTL css bugs
+
+= 1.3.13: July 22, 2015 =
+
+* Fixed: Woocommerce manual order dropdown conflict
+
+= 1.3.12: July 22, 2015 =
+
+* New: ability to delete user cache from plugin dashboard
+* New: function is_ultimatemember() checks if user is on UM page (developers)
+* New: option to disallow editing email in account page
+* New: added Spanish (Mexico) language support
+* Fixed: bug with profile viewing and user roles
+* Fixed: Woocommerce dropdown bugs/conflicts
+* Fixed: ipad/tablet css fixes for profile columns
+* Fixed: deleting users delete their content
+
+= 1.3.11: July 8, 2015 =
+
+* Fixed: Redux errors and popups in backend
+
+= 1.3.1: July 7, 2015 =
+
+* Fixed: major issue with showing HTML in profiles
+
+= 1.3.0: July 7, 2015 =
+
+* New: easily sync UM roles with WP roles with role settings
+* New: first steps towards WPML compatibility
+* New: option to show member results only If user has searched
+* New: add .um-err class to UM form if the form contains errors
+* New: updated redux framework to latest version
+* Fixed: feed issue with private / access locked posts
+
+= 1.2.997: June 21, 2015 =
+
+* New: added support for Farsi / Romanian language
+* Tweak: adapted core community roles to prevent conflicts
+* Fixed: bug with search results pagination
+* Fixed: issue with panic key usage and wp-admin screen
+* Fixed: bug with custom field validation action
+
+= 1.2.996: June 11, 2015 =
+
+* Fixed: php notice causing errors to appear in both frontend and backend
+
+= 1.2.995: June 11, 2015 =
+
+* New: added required support for WooCommerce extension
+* Tweak: added option to fix conflicts of user profile links using different server method to get current url
+* Fixed: security fix for redux framework added
+* Fixed: button appearance on tablets
+* Fixed: member search by display name
+
+= 1.2.994: June 6, 2015 =
+
+* Tweak: added a filter hook to change priority of enqueued styles/scripts
+* Fixed: UM forms and elements not appearing in IE
+* Fixed: Skype field output
+* Fixed: conflict with libraries using Mobile Detect
+* Fixed: issue with WP locale (using get_locale() now instead)
+
+= 1.2.993: May 29, 2015 =
+
+* Fixed: correction to last update
+* Fixed: Private messages extension bug
+
+= 1.2.99: May 29, 2015 =
+
+* New: added Czech language support
+* Fixed: WooCommerce dropdown issues and bugs in backend
+
 = 1.2.98: May 18, 2015 =
 
 * New: added Google map field
@@ -797,4 +975,3 @@ Credits to "James Golovich http://www.pritect.net" for the security checks
 
 = 1.0.0: January, 2015 =
 
-* First official release!
