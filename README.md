@@ -1,10 +1,14 @@
-Ultimate Member
+Ultimate Member 
 ==============
-Ultimate Member is a powerful and flexible plugin that makes it a breeze for users to sign-up and become members. The plugin allows you to add beautiful user profiles to your site and is perfect for creating advanced online communities. Lightweight and highly extendible, Ultimate Member will enable you to create almost any type of site where users can join and become members with absolute ease.
+Ultimate Member is a powerful and flexible WordPress plugin that makes it a breeze for users to sign-up and become members. The plugin allows you to add beautiful user profiles to your site and is perfect for creating advanced online communities. Lightweight and highly extendible, Ultimate Member will enable you to create almost any type of site where users can join and become members with absolute ease.
 
-|Requires at least|Tested up to|Stable Tag|
-| :------------: |:---------------:| :-----:|
-|4.1|4.3|1.3.29
+|Requires at least|Tested up to|
+| :------------: |:---------------:|
+|WordPress 4.1|WordPress 4.3|
+
+| Stable Tag |
+|:-------:|
+|1.3.29|
 
 ##Features of the plugin include:
 - Front-end user registration
@@ -31,9 +35,10 @@ Read about all of the plugin's features at [Ultimate Member](https://ultimatemem
 
 Installation
 ======================
-1. Activate the plugin
-2. That's it. Go to Ultimate Member > Settings to customize plugin options
-3. For more details, please visit the official [Documentation](https://ultimatemember.com/docs/) page.
+1. Download and extract the plugin, and copy the plugin folder into your wp-content/plugins directory.
+2. Activate the plugin
+3. That's it. Go to Ultimate Member > Settings to customize plugin options
+4. For more details, please visit the official [Documentation](https://ultimatemember.com/docs/) page.
 
 Changelog
 =======================
