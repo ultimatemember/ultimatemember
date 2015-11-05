@@ -489,7 +489,7 @@ function um_profile_id() {
 		if ( isset($_REQUEST['um_search']) ) {
 			$query = $ultimatemember->permalinks->get_query_array();
 			if ( $query[$filter] != '' ) {
-				echo $query[$filter];
+				echo stripslashes_deep( $query[$filter] );
 			}
 		}
 		echo '';
