@@ -40,6 +40,15 @@ Installation
 3. That's it. Go to Ultimate Member > Settings to customize plugin options
 4. For more details, please visit the official [Documentation](https://ultimatemember.com/docs/) page.
 
+Documentation & Support
+======================
+Got a problem or need help with Ultimate Member? Head over to our [documentation](http://docs.ultimatemember.com/) and perform a search of the knowledge base. If you can’t find a solution to your issue then you can create a [support ticket](https://ultimatemember.com/support-contact/).
+
+
+License
+====================
+GNU Version 2 or Any Later Version
+
 Changelog
 =======================
 = 1.3.29: October 31, 2015 =
