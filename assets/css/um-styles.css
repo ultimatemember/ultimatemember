@@ -324,6 +324,7 @@ p.um-notice.warning {
 
 .um-field-area {
 	position: relative;
+	word-wrap: break-word;
 }
 
 .um-field-value p {
@@ -547,10 +548,11 @@ p.um-notice.warning {
 */
 
 .um div.disabled,
+.um-disabled,
 .um input[type=submit]:disabled,
 .um input[type=text]:disabled {
 	opacity: 0.6 !important;
-	cursor: default !important;
+	cursor: no-drop !important;
 }
 
 input[type=submit].um-button,
@@ -566,6 +568,7 @@ input[type=submit].um-button:focus {
 	outline: none !important;
 	margin: 0;
 	opacity: 1;
+	-webkit-appearance: none;
 }
 
 input[type=submit].um-button:hover {
@@ -713,9 +716,6 @@ div.um-photo img {max-height: 300px; max-width: 100%;}
 
 span.um-req {
 	margin: 0 0 0 8px;
-	font-size: x-large;
+	font-size: 14px;
 	display: inline-block;
-	font-weight: bold;
-	position: relative;
-	top: 8px;
 }

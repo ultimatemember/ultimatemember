@@ -72,11 +72,14 @@ class UM_User {
 	}
 	
 	function get_cached_data( $user_id ) {
-		$find_user = get_option("um_cache_userdata_{$user_id}");
-		if ( $find_user ) {
-			$find_user = apply_filters('um_user_permissions_filter', $find_user, $user_id);
-			return $find_user;
+		if ( is_numeric( $user_id ) && $user_id > 0 ) {
+			$find_user = get_option("um_cache_userdata_{$user_id}");
+			if ( $find_user ) {
+				$find_user = apply_filters('um_user_permissions_filter', $find_user, $user_id);
+				return $find_user;
+			}
 		}
+		return '';
 	}
 	
 	function setup_cache( $user_id, $profile ) {
@@ -174,23 +177,23 @@ class UM_User {
 			}
 
 			if ( $this->usermeta['account_status'][0] == 'approved' ) {
-				$this->usermeta['account_status_name'][0] = 'Approved';
+				$this->usermeta['account_status_name'][0] = __('Approved','ultimatemember');
 			}
 
 			if ( $this->usermeta['account_status'][0] == 'awaiting_email_confirmation' ) {
-				$this->usermeta['account_status_name'][0] = 'Awaiting E-mail Confirmation';
+				$this->usermeta['account_status_name'][0] = __('Awaiting E-mail Confirmation','ultimatemember');
 			}
 				
 			if ( $this->usermeta['account_status'][0] == 'awaiting_admin_review' ) {
-				$this->usermeta['account_status_name'][0] = 'Pending Review';
+				$this->usermeta['account_status_name'][0] = __('Pending Review','ultimatemember');
 			}
 			
 			if ( $this->usermeta['account_status'][0] == 'rejected' ) {
-				$this->usermeta['account_status_name'][0] = 'Membership Rejected';
+				$this->usermeta['account_status_name'][0] = __('Membership Rejected','ultimatemember');
 			}
 			
 			if ( $this->usermeta['account_status'][0] == 'inactive' ) {
-				$this->usermeta['account_status_name'][0] = 'Membership Inactive';
+				$this->usermeta['account_status_name'][0] = __('Membership Inactive','ultimatemember');
 			}
 			
 			// add user meta
@@ -300,7 +303,16 @@ class UM_User {
 			unset( $submitted['user_password'] );
 		}
 		
+		if ( isset( $submitted['confirm_user_password'] ) ) {
+			unset( $submitted['confirm_user_password'] );
+		}
+
+		do_action('um_before_save_registration_details', $this->id, $submitted );
+		
 		update_user_meta( $this->id, 'submitted', $submitted );
+		
+		do_action('um_after_save_registration_details', $this->id, $submitted );
+		
 	}
 	
 	/***
@@ -310,32 +322,6 @@ class UM_User {
 		update_user_meta( $this->id, '_um_cool_but_hard_to_guess_plain_pw', $plain );
 	}
 	
-	/**
-	 * @function set_role()
-	 *
-	 * @description This method assign a role to a user. The user must be already set before processing this API method.
-	 *
-	 * @usage <?php $ultimatemember->user->set_role( $role ); ?>
-	 *
-	 * @param $role (string) (required) The user role slug you want to assign to user.
-	 *
-	 * @returns Changes user role if the given user role was a valid plugin role.
-	 *
-	 * @example Set a user and give them the role community-member
-
-		<?php
-		
-		// Sets a user. Can accept numeric user ID
-		um_fetch_user( 14 );
-		
-		// Change user role
-		$ultimatemember->user->set_role('community-member');
-		
-		?>
-
-	 *
-	 *
-	 */
 	function set_role( $role ){
 		
 		do_action('um_when_role_is_set', um_user('ID') );
@@ -348,6 +334,8 @@ class UM_User {
 		$this->update_usermeta_info('role');
 		
 		do_action('um_after_user_role_is_changed');
+		
+		do_action('um_after_user_role_is_updated', um_user('ID'), $role );
 		
 	}
 	
@@ -534,6 +522,9 @@ class UM_User {
 	function deactivate(){
 		global $ultimatemember;
 		$this->set_status('inactive');
+		
+		do_action('um_after_user_is_inactive', um_user('ID') );
+		
 		$ultimatemember->mail->send( um_user('user_email'), 'inactive_email' );
 	}
 	
@@ -570,7 +561,7 @@ class UM_User {
 				require_once( ABSPATH . 'wp-admin/includes/user.php' );
 			}
 			
-			wp_delete_user( $this->id, 1 );
+			wp_delete_user( $this->id );
 			
 		}
 
@@ -614,40 +605,18 @@ class UM_User {
 		}
 	}
 	
-	/**
-	 * @function get_role_name()
-	 *
-	 * @description This method is similar to $ultimatemember->user->get_role() but returns the role name instead of slug.
-	 *
-	 * @usage <?php $ultimatemember->user->get_role_name(); ?>
-	 *
-	 * @returns The user role's name.
-	 *
-	 * @example Do something if the user's role is Paid Customer
-
-		<?php
-		
-			um_fetch_user( 12 );
-			
-			if ( $ultimatemember->user->get_role_name() == 'Paid Customer' ) {
-				// Show this to paid customers
-			} else {
-				// You are a free member
-			}
-			
-		?>
-
-	 *
-	 *
-	 */
-	function get_role_name() {
-		return $this->profile['role_name'];
+	function get_role_name( $slug ) {
+		global $wpdb;
+		$post_id = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND post_name = '$slug'");
+		return get_the_title( $post_id );
 	}
 	
 	/***
 	***	@Update one key in user meta
 	***/
-	function update_usermeta_info( $key ){
+	function update_usermeta_info( $key ) {
+		// delete the key first just in case
+		delete_user_meta( $this->id, $key );
 		update_user_meta( $this->id, $key, $this->profile[$key] );
 	}
 

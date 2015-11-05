@@ -89,20 +89,22 @@ class UM_Shortcodes {
 	***/
 	function body_class( $classes ) {
 		global $ultimatemember;
+
 		$array = $ultimatemember->permalinks->core;
-		
 		if ( !$array ) return $classes;
 		
 		foreach( $array as $slug => $info ) {
 			if ( um_is_core_page( $slug ) ) {
+				
 				$classes[] = 'um-page-' . $slug;
-			}
-		}
+				
+				if ( is_user_logged_in() ) {
+					$classes[] = 'um-page-loggedin';
+				} else {
+					$classes[] = 'um-page-loggedout';
+				}
 		
-		if ( is_user_logged_in() ) {
-			$classes[] = 'um-page-loggedin';
-		} else {
-			$classes[] = 'um-page-loggedout';
+			}
 		}
 		
 		return $classes;
@@ -150,6 +152,10 @@ class UM_Shortcodes {
 		
 		if ( is_admin() ) {
 			$classes .= ' um-in-admin';
+		}
+		
+		if ( isset( $ultimatemember->form->errors ) && $ultimatemember->form->errors ) {
+			$classes .= ' um-err';
 		}
 		
 		if ( $ultimatemember->fields->editing == true ) {
@@ -257,10 +263,14 @@ class UM_Shortcodes {
 		extract($args);
 		
 		$global = um_path . 'assets/dynamic_css/dynamic_global.php';
-		$file = um_path . 'assets/dynamic_css/dynamic_'.$mode.'.php';
+		
+		if ( isset( $mode ) ) {
+			$file = um_path . 'assets/dynamic_css/dynamic_'.$mode.'.php';
+		}
 		
 		include $global;
-		if ( file_exists( $file ) )
+		
+		if ( isset( $file ) && file_exists( $file ) )
 			include $file;
 		
 		if ( isset( $args['custom_css'] ) ) {

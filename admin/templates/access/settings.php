@@ -1,7 +1,14 @@
+	<?php
+		
+		$metabox = new UM_Admin_Metabox();
+		
+		do_action('um_admin_before_access_settings', $metabox);
+		
+	?>
+	
 	<h4><?php _e('Apply custom access settings?','ultimatemember'); ?> <?php $this->tooltip( __('Switch to yes to override global access settings','ultimatemember'), 'e'); ?></h4>
 	
 	<p>
-		<?php $metabox = new UM_Admin_Metabox(); ?>
 		<span><?php $metabox->ui_on_off('_um_custom_access_settings', 0, true, 1, '_um_custom_access_settings', 'xxx'); ?>	</span>
 	</p>
 	
@@ -16,6 +23,8 @@
 			<label><input type="radio" name="_um_accessible" value="0" <?php if (!isset($value) || $value == 0 ) echo 'checked="checked"'; ?> /> <?php _e('Content accessible to Everyone','ultimatemember'); ?></label><br />
 			<label><input type="radio" name="_um_accessible" value="1" <?php if (isset($value)) checked(1, $value); ?> /> <?php _e('Content accessible to Logged Out Users','ultimatemember'); ?></label><br />
 			<label><input type="radio" name="_um_accessible" value="2" <?php if (isset($value)) checked(2, $value); ?> /> <?php _e('Content accessible to Logged In Users','ultimatemember'); ?></label>
+			
+			<?php do_action( 'um_admin_extend_access_settings' ); ?>
 			
 		</p>
 		

@@ -67,6 +67,23 @@ div.uimob800 .um-header .um-profile-meta {
 	margin-left: 10px;
 }
 
+.um-account-side li a span.um-account-icon,
+.um-account-side li a.current span.um-account-icon,
+.um-account-side li a.current:hover span.um-account-icon {
+	float: right;
+	border-left: 1px solid #ccc;
+}
+
+.um-account-side li a span.um-account-title {
+	padding-right: 20px;
+	float: right;
+}
+
+.um-account-side li a span.um-account-arrow {
+	right: auto;
+	left: 10px;
+}
+
 .um-field-label .um-field-label-icon {
     float: right;
     margin: 0 0 0 8px;

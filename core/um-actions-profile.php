@@ -66,28 +66,30 @@
 		do_action('um_user_before_updating_profile', $userinfo );
 		
 		// loop through fields
-		foreach( $fields as $key => $array ) {
-		
-			if ( $fields[$key]['type'] == 'multiselect' ||  $fields[$key]['type'] == 'checkbox' && !isset($args['submitted'][$key]) ) {
-				delete_user_meta( um_user('ID'), $key );
-			}
+		if ( isset( $fields ) && is_array( $fields ) ) {
+			foreach( $fields as $key => $array ) {
 			
-			if ( isset( $args['submitted'][ $key ] ) ) {
-
-				if ( isset( $fields[$key]['type'] ) && in_array( $fields[$key]['type'], array('image','file') ) && um_is_temp_upload( $args['submitted'][ $key ] )  ) {
-					
-					$files[ $key ] = $args['submitted'][ $key ];
-				
-				} else {
-
-					if ( isset( $userinfo[$key]) && $args['submitted'][$key] != $userinfo[$key] ) {
-						$to_update[ $key ] = $args['submitted'][ $key ];
-					} else if ( $args['submitted'][$key] ) {
-						$to_update[ $key ] = $args['submitted'][ $key ];
-					}
-				
+				if ( $fields[$key]['type'] == 'multiselect' ||  $fields[$key]['type'] == 'checkbox' && !isset($args['submitted'][$key]) ) {
+					delete_user_meta( um_user('ID'), $key );
 				}
 				
+				if ( isset( $args['submitted'][ $key ] ) ) {
+
+					if ( isset( $fields[$key]['type'] ) && in_array( $fields[$key]['type'], array('image','file') ) && um_is_temp_upload( $args['submitted'][ $key ] )  ) {
+						
+						$files[ $key ] = $args['submitted'][ $key ];
+					
+					} else {
+
+						if ( isset( $userinfo[$key]) && $args['submitted'][$key] != $userinfo[$key] ) {
+							$to_update[ $key ] = $args['submitted'][ $key ];
+						} else if ( $args['submitted'][$key] ) {
+							$to_update[ $key ] = $args['submitted'][ $key ];
+						}
+					
+					}
+					
+				}
 			}
 		}
 		
@@ -319,6 +321,8 @@
 								'<a href="#" class="um-dropdown-hide">'.__('Cancel','ultimatemember').'</a>',
 							);
 							
+							$items = apply_filters('um_user_photo_menu_view', $items );
+							
 							echo $ultimatemember->menu->new_ui( 'bc', 'div.um-profile-photo', 'click', $items );
 							
 						} else if ( $ultimatemember->fields->editing == true ) {
@@ -328,6 +332,8 @@
 								'<a href="#" class="um-reset-profile-photo" data-user_id="'.um_profile_id().'" data-default_src="'.um_get_default_avatar_uri().'">'.__('Remove photo','ultimatemember').'</a>',
 								'<a href="#" class="um-dropdown-hide">'.__('Cancel','ultimatemember').'</a>',
 							);
+							
+							$items = apply_filters('um_user_photo_menu_edit', $items );
 							
 							echo $ultimatemember->menu->new_ui( 'bc', 'div.um-profile-photo', 'click', $items );
 							
@@ -346,7 +352,7 @@
 						<?php if ( $args['show_name'] ) { ?>
 						<div class="um-name">
 							
-							<a href="<?php echo um_user_profile_url(); ?>" title="<?php echo um_user('display_name'); ?>"><?php echo um_user('display_name'); ?></a>
+							<a href="<?php echo um_user_profile_url(); ?>" title="<?php echo um_user('display_name'); ?>"><?php echo um_user('display_name', 'html'); ?></a>
 							
 							<?php do_action('um_after_profile_name_inline', $args ); ?>
 						
@@ -389,7 +395,11 @@
 						<span><?php printf(__('This user account status is %s','ultimatemember'), um_user('account_status_name') ); ?></span>
 					</div>
 					
+					<?php do_action('um_after_header_meta', um_user('ID'), $args ); ?>
+					
 				</div><div class="um-clear"></div>
+				
+				<?php do_action('um_after_header_info', um_user('ID'), $args); ?>
 				
 			</div>
 			
@@ -598,7 +608,16 @@
 			$ultimatemember->profile->active_tab = $active_tab;
 			$ultimatemember->profile->active_subnav = null;
 		}
-
+		
+		// Move default tab priority
+		$default_tab = um_get_option('profile_menu_default_tab');
+		$dtab = ( isset( $tabs[$default_tab] ) )? $tabs[$default_tab] : 'main';
+		if ( isset( $tabs[ $default_tab ] ) ) {
+			unset( $tabs[$default_tab] );
+			$dtabs[$default_tab] = $dtab;
+			$tabs = $dtabs + $tabs;
+		}
+		
 		?>
 		
 		<div class="um-profile-nav">
@@ -611,6 +630,9 @@
 				$nav_link = remove_query_arg( 'um_action', $nav_link );
 				$nav_link = remove_query_arg( 'subnav', $nav_link );
 				$nav_link =  add_query_arg('profiletab', $id, $nav_link );
+				
+				$nav_link = apply_filters("um_profile_menu_link_{$id}", $nav_link);
+				
 				?>
 			
 			<div class="um-profile-nav-item um-profile-nav-<?php echo $id; ?> <?php if ( !um_get_option('profile_menu_icons') ) { echo 'without-icon'; } ?> <?php if ( $id == $active_tab ) { echo 'active'; } ?>">
@@ -618,13 +640,11 @@
 
 					<i class="<?php echo $tab['icon']; ?>"></i>
 					
-					<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?><span class="um-tab-notifier uimob500-show uimob340-show uimob800-show"><?php echo $tab['notifier']; ?></span><?php } ?>
+					<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?>
+					<span class="um-tab-notifier uimob500-show uimob340-show uimob800-show"><?php echo $tab['notifier']; ?></span>
+					<?php } ?>
 					
 					<span class="uimob500-hide uimob340-hide uimob800-hide title"><?php echo $tab['name']; ?></span>
-					
-					<?php if ( um_get_option('profile_menu_counts') && isset( $tab['count'] ) ) { ?>
-					<span class="uimob500-hide uimob340-hide uimob800-hide count"><?php echo $tab['count']; ?></span>
-					<?php } ?>
 					
 				</a>
 			</div>

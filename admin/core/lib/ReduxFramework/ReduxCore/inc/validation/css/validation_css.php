@@ -11,7 +11,7 @@
              */
             function __construct( $parent, $field, $value, $current ) {
 
-                $this ->parent = $parent;
+                $this->parent  = $parent;
                 $this->field   = $field;
                 $this->value   = $value;
                 $this->current = $current;
@@ -29,11 +29,14 @@
              */
             function validate() {
 
-                // Strip all html
                 $data = $this->value;
-                
+
                 $data = wp_filter_nohtml_kses( $data );
                 $data = str_replace( '&gt;', '>', $data );
+
+                if ($data != $this->value) {
+                    $this->warning = __( 'Unsafe strings were found in your CSS and have been filtered out.', 'redux-framework' );
+                }
 
                 $this->value = $data;
 

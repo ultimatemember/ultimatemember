@@ -51,4 +51,5 @@
 	
 		<script type="text/javascript">jQuery( '#<?php echo $ultimatemember->honeypot; ?>' ).val( '' );</script>
 		
-	<?php }
+	<?php
+	}

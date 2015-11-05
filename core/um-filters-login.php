@@ -90,6 +90,6 @@
 			
 		}
 
-		return wp_authenticate_username_password( null, $username, $password );
+		return wp_authenticate_username_password( $user, $username, $password );
 
 	}

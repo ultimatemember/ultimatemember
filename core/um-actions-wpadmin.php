@@ -5,8 +5,14 @@
 	***/
 	add_action('init','um_block_wpadmin_for_guests');
 	function um_block_wpadmin_for_guests() {
-	global $pagenow;
+		global $pagenow;
 	
+		if ( isset( $_REQUEST['um_panic_key'] ) &&  $_REQUEST['um_panic_key'] == um_get_option('panic_key') ) {
+			exit( wp_redirect( add_query_arg('_verified_key', $_REQUEST['um_panic_key'], wp_login_url() ) ) );
+		}
+		
+		if ( !isset( $_REQUEST['_verified_key'] ) || $_REQUEST['_verified_key'] != um_get_option('panic_key') ) {
+			
 		// Logout screen
 		if ( isset( $pagenow ) && $pagenow == 'wp-login.php' && is_user_logged_in() && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'logout' ) {
 			$redirect = um_get_core_page('logout');
@@ -69,6 +75,8 @@
 			} else {
 				exit( wp_redirect( admin_url() ) );
 			}
+		
+		}
 		
 		}
 

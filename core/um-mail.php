@@ -28,14 +28,22 @@ class UM_Mail {
 	***	@check If template exists
 	***/
 	function email_template( $template, $args = array() ) {
-		if ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/email/' . $template . '.html' ) ) {
-			return get_stylesheet_directory() . '/ultimate-member/templates/email/' . $template . '.html';
+		$lang = '';
+		
+		if ( function_exists('icl_get_current_language') ) {
+			if ( icl_get_current_language() != 'en' ) {
+				$lang = icl_get_current_language() . '/';
+			}
+		}
+		
+		if ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/email/' . $lang . $template . '.html' ) ) {
+			return get_stylesheet_directory() . '/ultimate-member/templates/email/' . $lang . $template . '.html';
 		}
 
 		if ( isset( $args['path'] ) ) {
-			$path = $args['path'];
+			$path = $args['path'] . $lang;
 		} else {
-			$path = um_path . 'templates/email/';
+			$path = um_path . 'templates/email/' . $lang;
 		}
 		
 		if ( file_exists( $path . $template . '.html' ) ) {
@@ -89,13 +97,13 @@ class UM_Mail {
 	***	@maybe sending HTML emails
 	***/
 	function set_content_type( $content_type ) {
+		if ( $this->force_plain_text == 'forced' )
+			return 'text/plain';
 		
-		if ( $this->force_plain_text == 'forced' ) return 'text/plain';
-		
-		if ( um_get_option('email_html') ) return 'text/html';
+		if ( um_get_option('email_html') )
+			return 'text/html';
 		
 		return 'text/plain';
-	
 	}
 	
 	/***

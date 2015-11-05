@@ -18,8 +18,8 @@
 	
 	<p class="um-admin-notice ultimatemember-actions">
 		<a href="<?php echo admin_url('admin.php?page=um_options'); ?>" class="button button-primary"><?php _e('Settings','ultimatemember'); ?></a>
-		<a href="https://ultimatemember.com/docs/" class="button button-secondary" target="_blank"><?php _e('Docs','ultimatemember'); ?></a>
-		<a href="https://ultimatemember.com/forums/" class="button button-secondary" target="_blank"><?php _e('Support','ultimatemember'); ?></a>
+		<a href="http://docs.ultimatemember.com/" class="button button-secondary" target="_blank"><?php _e('Docs','ultimatemember'); ?></a>
+		<a href="https://ultimatemember.com/support-contact/" class="button button-secondary" target="_blank"><?php _e('Support','ultimatemember'); ?></a>
 		<a href="https://twitter.com/share" class="twitter-share-button" data-url="https://ultimatemember.com/" data-text="<?php echo esc_attr( $tweets[0] ); ?>" data-via="umplugin" data-size="large">Tweet</a>
 			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 	</p>

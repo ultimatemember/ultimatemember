@@ -627,14 +627,6 @@ div.uimob800 .um-gutter-sizer {width: 4%}
 
 /********************************************/
 
-div.uimob960 .um-col-131,
-div.uimob960 .um-col-132,
-div.uimob960 .um-col-133 {
-	float: none;
-	width: 100%;
-	margin: 0;
-}
-
 div.uimob960 .um-search {
 	padding: 20px 0 !important;
 	width: 100% !important;

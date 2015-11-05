@@ -107,6 +107,9 @@ class UM_Validation {
 			}
 			
 		} else {
+			
+			if ( strstr( $url, 'http://') || strstr( $url, 'https://') )
+				return true;
 		
 		}
 		

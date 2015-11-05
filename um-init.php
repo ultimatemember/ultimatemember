@@ -19,23 +19,24 @@ class UM_API {
 		$this->available_languages = array(
 			'en_US' => 'English (US)',
 			'es_ES' => 'Español',
+			'es_MX' => 'Español (México)',
 			'fr_FR' => 'Français',
 			'it_IT' => 'Italiano',
 			'de_DE'	=> 'Deutsch',
 			'nl_NL' => 'Nederlands',
+			'pt_BR' => 'Português do Brasil',
 			'fi_FI' => 'Suomi',
+			'ro_RO' => 'Română',
 			'da_DK' => 'Dansk',
 			'sv_SE' => 'Svenska',
 			'pl_PL' => 'Polski',
+			'cs_CZ' => 'Czech',
+			'el'	=> 'Greek',
 			'ru_RU' => 'Русский',
 			'tr_TR' => 'Türkçe',
+			'fa_IR' => 'Farsi',
 			'he_IL' => 'Hebrew',
 			'ar' 	=> 'العربية'
-		);
-		
-		$this->addons['multi_language'] = array(
-				__( 'Multi Language Support','ultimatemember' ),
-				__('This add-on helps you offer multi language forms to your visitors based on the languages you want.','ultimatemember')
 		);
 		
 		$this->addons['bp_avatar_transfer'] = array(
@@ -96,10 +97,11 @@ class UM_API {
 		require_once um_path . 'core/um-logout.php';
 		require_once um_path . 'core/um-modal.php';
 		require_once um_path . 'core/um-cron.php';
-		require_once um_path . 'core/um-cache.php';
 		require_once um_path . 'core/um-tracking.php';
 		
-		require_once um_path . 'core/lib/mobiledetect/Mobile_Detect.php';
+		if ( !class_exists( 'Mobile_Detect' ) ) {
+			require_once um_path . 'core/lib/mobiledetect/Mobile_Detect.php';
+		}
 		
 		require_once um_path . 'core/um-actions-form.php';
 		require_once um_path . 'core/um-actions-access.php';
@@ -164,7 +166,6 @@ class UM_API {
 		$this->logout = new UM_Logout();
 		$this->modal = new UM_Modal();
 		$this->cron = new UM_Cron();
-		$this->cache = new UM_Cache();
 		$this->tracking = new UM_Tracking();
 		
 		$this->mobile = new Mobile_Detect;
@@ -172,9 +173,12 @@ class UM_API {
 		$this->options = get_option('um_options');
 		
 		$domain = 'ultimatemember';
-		$locale = ( get_option('WPLANG') ) ? get_option('WPLANG') : 'en_US';
+		$locale = ( get_locale() != '' ) ? get_locale() : 'en_US';
 		load_textdomain($domain, WP_LANG_DIR . '/plugins/' .$domain.'-'.$locale.'.mo');
 		
+		if ( !get_option('show_avatars') )
+			update_option('show_avatars', 1 );
+
 	}
 	
 }

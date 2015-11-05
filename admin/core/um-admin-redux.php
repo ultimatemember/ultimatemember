@@ -6,7 +6,6 @@
 
             public $args = array();
             public $sections = array();
-            public $theme;
             public $ReduxFramework;
 
             public function __construct() {
@@ -15,20 +14,13 @@
                     return;
                 }
 
-                // This is needed. Bah WordPress bugs.  ;)
-                if ( true == Redux_Helpers::isTheme( __FILE__ ) ) {
-                    $this->initSettings();
-                } else {
-					//add_action( 'plugins_loaded', array( $this, 'initSettings' ), 10 );
-                    add_action( 'wp_loaded', array( $this, 'initSettings' ), 10 );
-                }
+				add_action( 'wp_loaded', array( $this, 'initSettings' ), 10 );
 
             }
 
             public function initSettings() {
 
                 $this->setArguments();
-                $this->setHelpTabs();
                 $this->setSections();
 
                 if ( ! isset( $this->args['opt_name'] ) ) { // No errors please
@@ -43,10 +35,6 @@
 				include_once um_path . 'um-config.php';
 
             }
-
-			public function setHelpTabs() {
-
-			}
 
 			public function setArguments() {
 
@@ -80,7 +68,7 @@
 					'transient_time'    => 60 * MINUTE_IN_SECONDS,
 					'output'            => true,                    // Global shut-off for dynamic CSS output by the framework. Will also disable google fonts output
 					'output_tag'        => true,                    // Allows dynamic CSS to be generated for customizer and google fonts, but stops the dynamic CSS from going to the head
-					'footer_credit'     => false,                   // Disable the footer credit of Redux. Please leave if you can help it.
+					'footer_credit'     => '&nbsp;',                   // Disable the footer credit of Redux. Please leave if you can help it.
 					
 				);
 				
@@ -115,7 +103,7 @@
 					'title' => 'We\'re on YouTube',
 					'icon'  => 'um-icon-social-youtube'
 				);
-
+				
 			}
 
         }

@@ -1,5 +1,26 @@
 <?php
 
+	$premium['verified-users'] = array(
+		'url' => 'https://ultimatemember.com/extensions/verified-users/',
+		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/09/image.png',
+		'name' => 'Verified Users',
+		'desc' => 'Add a user verficiation system to your site so users can request verification and be manually verified by site admin.',
+	);
+	
+	$premium['social-activity'] = array(
+		'url' => 'https://ultimatemember.com/extensions/social-activity/',
+		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/08/socialactivity1.png',
+		'name' => 'Social Activity',
+		'desc' => 'Increase engagement and allow users to interact with each other by adding an activity system to your site.',
+	);
+	
+	$premium['woocommerce'] = array(
+		'url' => 'https://ultimatemember.com/extensions/woocommerce/',
+		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/05/woocommerce-01-copy.png',
+		'name' => 'WooCommerce',
+		'desc' => 'Integrates the popular e-commerce plugin WooCommerce with Ultimate Member.',
+	);
+	
 	$premium['private-messages'] = array(
 		'url' => 'https://ultimatemember.com/extensions/private-messages/',
 		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/05/privatemessages-01-copy.png',

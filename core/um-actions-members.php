@@ -122,11 +122,13 @@
 			
 			<?php _e('Jump to page:','ultimatemember'); ?>
 			
+			<?php if ( um_members('pages_to_show') && is_array( um_members('pages_to_show') ) ) { ?>
 			<select onChange="window.location.href=this.value" class="um-s1" style="width: 100px">
 				<?php foreach( um_members('pages_to_show') as $i ) { ?>
 				<option value="<?php echo $ultimatemember->permalinks->add_query( 'members_page', $i ); ?>" <?php selected($i, um_members('page')); ?>><?php printf(__('%s of %d','ultimatemember'), $i, um_members('total_pages') ); ?></option>
 				<?php } ?>
 			</select>
+			<?php } ?>
 		
 		</div>
 		
@@ -144,6 +146,7 @@
 			<span class="pagi pagi-arrow disabled"><i class="um-faicon-angle-left"></i></span>
 			<?php } ?>
 			
+			<?php if ( um_members('pages_to_show') && is_array( um_members('pages_to_show') ) ) { ?>
 			<?php foreach( um_members('pages_to_show') as $i ) { ?>
 		
 				<?php if ( um_members('page') == $i ) { ?>
@@ -154,6 +157,7 @@
 				
 				<?php } ?>
 			
+			<?php } ?>
 			<?php } ?>
 			
 			<?php if ( um_members('page') != um_members('total_pages') ) { ?>
@@ -184,6 +188,9 @@
 		global $ultimatemember;
 
 		extract( $args );
+		
+		if ( isset( $args['search'] ) && $args['search'] == 1 && isset( $args['must_search'] ) && $args['must_search'] == 1 && !isset( $_REQUEST['um_search'] ) )
+			return;
 		
 		if ( um_members('no_users') ) {
 		
@@ -237,7 +244,7 @@
 					<div class="um-member-card <?php if (!$profile_photo) { echo 'no-photo'; } ?>">
 						
 						<?php if ( $show_name ) { ?>
-						<div class="um-member-name"><a href="<?php echo um_user_profile_url(); ?>" title="<?php echo um_user('display_name'); ?>"><?php echo um_user('display_name'); ?></a></div>
+						<div class="um-member-name"><a href="<?php echo um_user_profile_url(); ?>" title="<?php echo um_user('display_name'); ?>"><?php echo um_user('display_name', 'html'); ?></a></div>
 						<?php } ?>
 						
 						<?php do_action('um_members_just_after_name', um_user('ID'), $args); ?>
@@ -247,7 +254,7 @@
 						<?php
 						if ( $show_tagline && is_array( $tagline_fields ) ) {
 							foreach( $tagline_fields as $key ) {
-								if ( $key && um_user( $key ) ) {
+								if ( $key && um_filtered_value( $key ) ) {
 									$value = um_filtered_value( $key );
 
 						?>
@@ -271,12 +278,12 @@
 							<div class="um-member-meta <?php if ( !$userinfo_animate ) { echo 'no-animate'; } ?>">
 							
 								<?php foreach( $reveal_fields as $key ) {
-										if ( $key && um_user( $key ) ) {
+										if ( $key && um_filtered_value( $key ) ) {
 											$value = um_filtered_value( $key );
 											
 								?>
 								
-								<div class="um-member-metaline"><span><strong><?php echo $ultimatemember->fields->get_label( $key ); ?>:</strong> <?php echo $value; ?></span></div>
+								<div class="um-member-metaline um-member-metaline-<?php echo $key; ?>"><span><strong><?php echo $ultimatemember->fields->get_label( $key ); ?>:</strong> <?php echo $value; ?></span></div>
 								
 								<?php 
 									}

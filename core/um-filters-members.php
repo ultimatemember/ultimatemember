@@ -20,10 +20,8 @@
 		foreach( $ultimatemember->members->core_search_fields as $key ) {
 			if ( isset( $query[$key] ) ) {
 				$query_args['search']         = '*' . $query[$key] . '*';
-				$query_args['search_columns'] = array( 'user_login', 'user_email', 'display_name' );
 			}
 		}
-
 		return $query_args;
 	}
 	
@@ -182,6 +180,19 @@
 
 		}
 		
+		return $query_args;
+	}
+	
+	/***
+	***	@sorting by last login date
+	***/
+	add_filter('um_modify_sortby_parameter', 'um_sortby_last_login', 100, 2 );
+	function um_sortby_last_login( $query_args, $sortby ) {
+		if ( $sortby == 'last_login' ) {
+			$query_args['orderby'] = 'meta_value_num';
+			$query_args['order'] = 'desc';
+			$query_args['meta_key'] = '_um_last_login';
+		}
 		return $query_args;
 	}
 	

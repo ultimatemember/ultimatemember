@@ -14,7 +14,7 @@ class UM_Admin_API {
 		if ( !class_exists( 'ReduxFramework' ) && file_exists( um_path . 'admin/core/lib/ReduxFramework/ReduxCore/framework.php' ) ) {
 			require_once( um_path . 'admin/core/lib/ReduxFramework/ReduxCore/framework.php' );
 		}
-		if ( file_exists ( um_path . 'admin/core/um-admin-redux.php' ) ) {
+		if ( !isset( $redux_demo ) && file_exists( um_path . 'admin/core/um-admin-redux.php' ) ) {
 			require_once( um_path . 'admin/core/um-admin-redux.php' );
 		}
 		

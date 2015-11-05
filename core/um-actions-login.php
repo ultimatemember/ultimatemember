@@ -100,6 +100,23 @@
 	}
 	
 	/***
+	***	@store last login timestamp
+	***/
+	add_action('um_on_login_before_redirect', 'um_store_lastlogin_timestamp', 10);
+	function um_store_lastlogin_timestamp( $user_id ) {
+		delete_user_meta( $user_id, '_um_last_login' );
+		update_user_meta( $user_id, '_um_last_login', current_time( 'timestamp' ) );
+	}
+	
+	add_action( 'wp_login', 'um_store_lastlogin_timestamp_' );
+	function um_store_lastlogin_timestamp_( $login ) {
+		$user = get_user_by('login',$login);
+		$user_id = $user->ID;
+		delete_user_meta( $user_id, '_um_last_login' );
+		update_user_meta( $user_id, '_um_last_login', current_time( 'timestamp' ) );
+	}
+	
+	/***
 	***	@login user
 	***/
 	add_action('um_user_login', 'um_user_login', 10);
@@ -108,6 +125,9 @@
 		extract( $args );
 
 		$rememberme = ( isset($args['rememberme']) ) ? 1 : 0;
+		
+		if ( um_get_option('deny_admin_frontend_login') && strstr( um_user('wp_roles' ), 'administrator' ) )
+			wp_die( __('This action has been prevented for security measures.','ultimatemember') );
 		
 		$ultimatemember->user->auto_login( um_user('ID'), $rememberme );
 		

@@ -129,6 +129,10 @@ class UM_Admin_DragDrop {
 	function load_field_order(){
 	
 		global $ultimatemember;
+		
+		$screen = get_current_screen();
+		
+		if ( !isset( $screen->id ) || $screen->id != 'um_form' ) return;
 
 		?>
 		

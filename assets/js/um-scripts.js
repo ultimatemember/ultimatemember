@@ -25,10 +25,10 @@ jQuery(document).ready(function() {
 		jQuery(this).parents( parent ).find( child ).trigger('click');
 	});
 
-	jQuery('.um-tip-n').tipsy({gravity: 'n', opacity: 1, live: 'a.live', offset: 3, delayIn: 500 });
-	jQuery('.um-tip-w').tipsy({gravity: 'w', opacity: 1, live: 'a.live', offset: 3, delayIn: 500 });
-	jQuery('.um-tip-e').tipsy({gravity: 'e', opacity: 1, live: 'a.live', offset: 3, delayIn: 500 });
-	jQuery('.um-tip-s').tipsy({gravity: 's', opacity: 1, live: 'a.live', offset: 3, delayIn: 500 });
+	jQuery('.um-tip-n').tipsy({gravity: 'n', opacity: 1, live: 'a.live', offset: 3 });
+	jQuery('.um-tip-w').tipsy({gravity: 'w', opacity: 1, live: 'a.live', offset: 3 });
+	jQuery('.um-tip-e').tipsy({gravity: 'e', opacity: 1, live: 'a.live', offset: 3 });
+	jQuery('.um-tip-s').tipsy({gravity: 's', opacity: 1, live: 'a.live', offset: 3 });
 
 	jQuery(document).on('change', '.um-field-area input[type=radio]', function(){
 		var field = jQuery(this).parents('.um-field-area');

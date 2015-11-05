@@ -9,6 +9,23 @@ class UM_Query {
 	}
 	
 	/***
+	***	@get wp pages
+	***/
+	function wp_pages() {
+		$count_pages = wp_count_posts('page');
+		
+		if ( $count_pages->publish > 300 )
+			return;
+		
+		$pages = get_pages();
+		$array = '';
+		foreach ($pages as $page_data) {
+			$array[ $page_data->ID ] = $page_data->post_title;
+		}
+		return $array;
+	}
+	
+	/***
 	***	@get all forms
 	***/
 	function forms() {
@@ -58,6 +75,7 @@ class UM_Query {
 
 			unset( $args['post_type'] );
 			unset( $args['post_status'] );
+			$args['type__not_in'] = apply_filters( 'um_excluded_comment_types', array('') );
 			
 			$comments = get_comments($args);
 			return $comments;
@@ -89,7 +107,15 @@ class UM_Query {
 	***/
 	function count_users_by_status( $status ) {
 		$args = array( 'fields' => 'ID', 'number' => 0 );
-		$args['meta_query'][] = array(array('key' => 'account_status','value' => $status,'compare' => '='));
+		if ( $status == 'unassigned' ) {
+			$args['meta_query'][] = array(array('key' => 'account_status','compare' => 'NOT EXISTS'));
+			$users = new WP_User_Query( $args );
+			foreach( $users->results as $user ) {
+				update_user_meta( $user, 'account_status', 'approved' );
+			}
+		} else {
+			$args['meta_query'][] = array(array('key' => 'account_status','value' => $status,'compare' => '='));
+		}
 		$users = new WP_User_Query( $args );
 		return count($users->results);
 	}
@@ -232,7 +258,6 @@ class UM_Query {
 		if ( isset($post_id) && $post_id != '' ){
 			$meta = get_post_custom( $post_id );
 			$array['role'] = $real_role_slug;
-			$array['role_name'] = get_the_title( $post_id );
 			foreach ($meta as $k => $v){
 				if ( strstr($k, '_um_') ) {
 					$k = str_replace('_um_', '', $k);
@@ -312,7 +337,7 @@ class UM_Query {
 	}
 	
 	/***
-	***	@Is a core post/role
+	***	@Checks if its a core page of UM
 	***/
 	function is_core( $post_id ){
 		$is_core = get_post_meta($post_id, '_um_core', true);

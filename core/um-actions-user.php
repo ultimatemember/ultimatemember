@@ -1,6 +1,20 @@
 <?php
 
 	/***
+	***	@sync with WP role
+	***/
+	add_action('um_after_user_role_is_updated','um_setup_synced_wp_role', 50, 2);
+	function um_setup_synced_wp_role( $user_id, $role ) {
+		global $ultimatemember;
+		$meta = $ultimatemember->query->role_data( $role );
+		$meta = apply_filters('um_user_permissions_filter', $meta, $user_id);
+		if ( isset( $meta['synced_role'] ) && $meta['synced_role'] ) {
+			$wp_user_object = new WP_User( $user_id );
+			$wp_user_object->set_role( $meta['synced_role'] );
+		}
+	}
+		
+	/***
 	***	@after user uploads, clean up uploads dir
 	***/
 	add_action('um_after_user_upload','um_remove_unused_uploads', 10);

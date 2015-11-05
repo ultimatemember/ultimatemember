@@ -51,13 +51,13 @@
 			<span class="um-admin-half">
 			
 				<select name="_um_sortby" id="_um_sortby" class="umaf-selectjs um-adm-conditional" style="width: 300px" data-cond1='other' data-cond1-show='custom-field'>
-					<option value="user_registered_desc" <?php selected('user_registered_desc', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>>New users first</option>
-					<option value="user_registered_asc" <?php selected('user_registered_asc', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>>Old users first</option>
-					<option value="display_name" <?php selected('display_name', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>>Display Name</option>
-					<option value="first_name" <?php selected('first_name', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>>First Name</option>
-					<option value="last_name" <?php selected('last_name', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>>Last Name</option>
-					<option value="random" <?php selected('random', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>>Random</option>
-					<option value="other" <?php selected('other', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>>Other (custom field)</option>
+					<option value="user_registered_desc" <?php selected('user_registered_desc', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>><?php _e('New users first','ultimatemember'); ?></option>
+					<option value="user_registered_asc" <?php selected('user_registered_asc', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>><?php _e('Old users first','ultimatemember'); ?></option>
+					<option value="last_login" <?php selected('last_login', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>><?php _e('Last login','ultimatemember'); ?></option>
+					<option value="display_name" <?php selected('display_name', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>><?php _e('Display Name','ultimatemember'); ?></option>
+					<option value="first_name" <?php selected('first_name', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>><?php _e('First Name','ultimatemember'); ?></option>
+					<option value="last_name" <?php selected('last_name', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>><?php _e('Last Name','ultimatemember'); ?></option>
+					<option value="other" <?php selected('other', $ultimatemember->query->get_meta_value('_um_sortby') ); ?>><?php _e('Other (custom field)','ultimatemember'); ?></option>
 					<?php do_action('um_admin_directory_sort_users_select', '_um_sortby'); ?>
 				</select>
 				

@@ -380,7 +380,16 @@ class UM_Setup {
 				/** DONE **/
 				
 			}
-			if ( isset( $core_pages ) ) update_option('um_core_pages', $core_pages);
+			if ( isset( $core_pages ) ) {
+				update_option('um_core_pages', $core_pages);
+				$options = get_option('um_options');
+				foreach( $core_pages as $o_slug => $page_id ) {
+					$options['core_' . $o_slug] = $page_id;
+				}
+				if ( isset( $options ) ) {
+					update_option('um_options', $options );
+				}
+			}
 			
 		}
 	

@@ -1,0 +1,84 @@
+body.um-admin .actions,
+body.um-admin .bulkactions {
+	float: left;
+	margin: 0!important;
+	padding:0!important;
+	top: 0!important;
+}
+
+body.um-admin .actions .button {
+	height: 29px !important;
+	margin: 0 12px 0 0 !important;
+	display: inline !important;
+	position: relative;
+}
+
+body.um-admin .select2-container {margin-right: 2px!important;}
+
+body.um-admin .select2-drop,
+body.um-admin .select2-drop.select2-drop-above,
+body.um-admin .select2-drop-active,
+body.um-admin .select2-container-multi .select2-choices
+{border: 1px solid #ddd !important}
+
+body.um-admin .select2-container .select2-choice
+{
+	height: 27px !important;
+	line-height: 27px !important;
+	border: 1px solid #ddd !important;
+	color: #888 !important;
+}
+
+body.um-admin .select2-container .select2-choice > .select2-chosen {
+	font-size: 13px !important;
+}
+
+body.um-admin .select2-container .select2-choice {
+	font-size: 13px !important;
+}
+
+body.um-admin .select2-container .select2-choice .select2-arrow:before {
+	font-size: 23px !important;
+	line-height: 27px;
+}
+
+body.um-admin .select2-search-choice-close:before {
+	font-size: 20px !important;
+	color: #aaa;
+	line-height: 27px;
+}
+
+body.um-admin .select2-container-multi .select2-search-choice-close:before {
+	font-size: 15px !important;
+}
+
+body.um-admin .select2-search input[type=text] {
+	font-size: 13px !important;
+}
+
+body.um-admin .select2-results li {
+	font-size: 13px !important;
+}
+
+body.um-admin .select2-results .select2-no-results,
+body.um-admin .select2-results .select2-searching,
+body.um-admin .select2-results .select2-selection-limit {
+	font-size: 13px !important;
+}
+
+body.um-admin .select2-container-multi .select2-choices .select2-search-choice {
+    line-height: 13px !important;
+	font-size: 13px !important;
+}
+
+body.um-admin .select2-drop-mask {
+    z-index: 10020 !important;
+}
+
+body.um-admin .select2-drop {
+    z-index: 10030 !important;
+}
+
+body.um-admin .select2-search {
+    z-index: 10040 !important;
+}

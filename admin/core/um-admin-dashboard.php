@@ -84,6 +84,7 @@ class UM_Admin_Dashboard {
 				'value' => 'awaiting_admin_review',
 				'compare' => '='
 		);
+		$args = apply_filters('um_admin_pending_queue_filter', $args );
 		$users = new WP_User_Query( $args );
 		
 		delete_option('um_cached_users_queue');
@@ -150,7 +151,11 @@ class UM_Admin_Dashboard {
 	***	@extension menu
 	***/
 	function extension_menu() {
+		
 		add_submenu_page( $this->slug, __('Extensions', $this->slug), '<span style="color: #00B9EB">' .__('Extensions', $this->slug) . '</span>', 'manage_options', $this->slug . '-extensions', array(&$this, 'admin_page') );
+		
+		remove_submenu_page('tools.php','redux-about');
+		
 	}
 	
 	/***
@@ -170,6 +175,7 @@ class UM_Admin_Dashboard {
 		add_meta_box('um-metaboxes-mainbox-1', __('Latest from our blog','ultimatemember'), array(&$this, 'um_news'), $this->pagehook, 'normal', 'core');
 		
 		add_meta_box('um-metaboxes-sidebox-1', __('Purge Temp Files','ultimatemember'), array(&$this, 'purge_temp'), $this->pagehook, 'side', 'core');
+		add_meta_box('um-metaboxes-sidebox-2', __('User Cache','ultimatemember'), array(&$this, 'user_cache'), $this->pagehook, 'side', 'core');
 		
 		if ( $this->language_avaialable_not_installed() ) {
 			add_meta_box('um-metaboxes-sidebox-2', __('Language','ultimatemember'), array(&$this, 'dl_language'), $this->pagehook, 'side', 'core');
@@ -212,6 +218,11 @@ class UM_Admin_Dashboard {
 	function purge_temp() {
 		global $ultimatemember;
 		include_once um_path . 'admin/templates/dashboard/purge.php';
+	}
+	
+	function user_cache() {
+		global $ultimatemember;
+		include_once um_path . 'admin/templates/dashboard/cache.php';
 	}
 	
 	/***

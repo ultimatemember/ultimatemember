@@ -12,6 +12,15 @@
 		</p><div class="um-admin-clear"></div>
 		
 		<p class="search-options">
+			<label class="um-admin-half"><?php _e('Show results only after search','ultimatemember'); ?> <?php $this->tooltip('If turned on, member results will only appear after search is performed'); ?></label>
+			<span class="um-admin-half">
+			
+				<?php $this->ui_on_off('_um_must_search', 0); ?>
+				
+			</span>
+		</p><div class="um-admin-clear"></div>
+		
+		<p class="search-options">
 			<label class="um-admin-half"><?php _e('User Roles that can use search','ultimatemember'); ?> <?php $this->tooltip('If you want to allow specific user roles to be able to search only'); ?></label>
 			<span class="um-admin-half">
 			

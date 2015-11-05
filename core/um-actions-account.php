@@ -53,6 +53,14 @@
 		
 		$url = add_query_arg( 'updated', 'account', $url );
 		
+		if ( function_exists('icl_get_current_language') ) {
+			if ( icl_get_current_language() != icl_get_default_language() ) {
+				$url = $ultimatemember->permalinks->get_current_url( true );
+				$url = add_query_arg( 'updated', 'account', $url );
+				exit( wp_redirect( $url ) );
+			}
+		}
+		
 		exit( wp_redirect( $url ) );
 		
 	}
@@ -286,9 +294,11 @@
 		
 		<div class="um-account-heading uimob340-hide uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
 		
+		<?php if ( class_exists('UM_Messaging_API') || class_exists('UM_Followers_API') ) { ?>
 		<div class="um-field">
 			<div class="um-field-label"><label for=""><?php _e('Email me when','ultimatemember'); ?></label><div class="um-clear"></div></div>
 		</div>
+		<?php } ?>
 		
 		<?php echo $output; ?>
 		
@@ -352,7 +362,7 @@
 			
 			<?php } ?>
 			
-			<div class="um-account-name uimob800-hide"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('display_name'); ?></a></div>
+			<div class="um-account-name uimob800-hide"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('display_name', 'html'); ?></a></div>
 		
 		</div>
 	
@@ -396,7 +406,7 @@
 						
 						<span class="um-account-icon uimob800-hide"><i class="<?php echo $icon; ?>"></i></span>
 						<span class="um-account-title uimob800-hide"><?php echo $title; ?></span>
-						<span class="um-account-arrow uimob800-hide"><i class="um-faicon-angle-right"></i></span>
+						<span class="um-account-arrow uimob800-hide"><?php echo ( is_rtl() ) ? '<i class="um-faicon-angle-left"></i>' : '<i class="um-faicon-angle-right"></i>'; ?></span>
 					</a>
 				</li>
 				

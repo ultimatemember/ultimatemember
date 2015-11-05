@@ -1,8 +1,8 @@
 
 	<?php global $ultimatemember; include_once um_path . 'admin/templates/welcome/about_header.php'; ?>
 
-	<div class="changelog feature-list">
-		<h2>Getting Started</h2>
+	<div class="changelog">
+		<h3>Getting Started</h3>
 		<div class="feature-section">
 
 			<p>Ultimate Member has been designed to be as easy to use as possible and you shouldn’t run into any difficulties. However, the plugin contains lots of different elements so we have created the following page to help you get started with Ultimate Member.</p>
@@ -10,11 +10,11 @@
 		</div>
 	</div>
 
-	<div class="changelog feature-list">
+	<div class="changelog">
 		
-		<div class="feature-section col two-col">
+		<div class="feature-section under-the-hood two-col">
 			
-			<div>
+			<div class="col">
 				<h4>Automatically installed pages</h4>
 				<p>Upon activation the plugin will install 7 core pages. These pages are required for the plugin to function correctly and cannot be deleted.</p>
 				<p>
@@ -30,7 +30,7 @@
 				</p>
 			</div>
 
-			<div class="last-feature">
+			<div class="col">
 				<h4>Getting started</h4>
 				<p>The plugin has several different elements in the WordPress admin that allow you to customize your community/membership site:</p>
 				<p>
@@ -52,9 +52,9 @@
 		<h2>Need more help?</h2>
 		<div class="feature-section">
 
-			<p>If you want to learn more about Ultimate Member you’ll need to register on our website where you will be able to interact and get help from other Ultimate Member users via our community forum and also be able to access other useful resources including the plugin’s documentation.</p>
+			<p>If you have run into an issue with Ultimate Member, you should first have a look at our documentation and perform a search of the docs. If, after performing a search of the docs you can not find anything related to your issue/question then you can submit a <a href="https://ultimatemember.com/support-contact/" target="_blank">support ticket</a>.</p>
 			
-			<p class="um-admin-notice" style="text-align:center"><a href="https://ultimatemember.com/forums/" target="_blank" class="button button-primary">Join the Ultimate Member Community</a></p>
+			<p class="um-admin-notice" style="text-align:center"><a href="http://docs.ultimatemember.com/" target="_blank" class="button button-primary">View Documentation</a></p>
 			
 		</div>
 	</div>

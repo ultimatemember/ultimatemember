@@ -52,7 +52,11 @@ class UM_Form {
 	function form_init(){
 		global $ultimatemember;
 		
-		$http_post = ('POST' == $_SERVER['REQUEST_METHOD']);
+		if ( isset( $_SERVER['REQUEST_METHOD'] ) ) {
+			$http_post = ('POST' == $_SERVER['REQUEST_METHOD']);
+		} else {
+			$http_post = 'POST';
+		}
 		
 		if ( $http_post && !is_admin() && isset( $_POST['form_id'] ) && is_numeric($_POST['form_id']) ) {
 

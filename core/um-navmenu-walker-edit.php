@@ -27,8 +27,6 @@ class UM_Menu_Item_Custom_Fields_Editor {
 			return;
 		}
 
-		check_admin_referer( 'update-nav_menu', 'update-nav-menu-nonce' );
-
 		foreach ( self::$fields as $_key => $label ) {
 			$key = sprintf( 'menu-item-%s', $_key );
 

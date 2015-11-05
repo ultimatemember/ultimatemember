@@ -23,7 +23,7 @@ if(isset($_FILES[$id]['name'])) {
 	
 		$temp = $_FILES[$id]["tmp_name"];
 		$file = $_FILES[$id]["name"];
-		$file = str_replace(array('#','(',')','+','&','?','%','{','}','[',']','=',',',';','>','<','~',':','$',' '),'',$file);
+		$file = sanitize_file_name($file);
 		$extension = pathinfo($file, PATHINFO_EXTENSION);
 		
 		$error = $ultimatemember->files->check_file_upload( $temp, $extension, $id );

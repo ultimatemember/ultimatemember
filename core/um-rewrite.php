@@ -31,36 +31,34 @@ class UM_Rewrite {
 	function rewrite_rules(){
 
 		global $ultimatemember;
-		
-		if ( isset( $ultimatemember->permalinks->core['user'] ) ) {
+
+		if ( isset( $ultimatemember->permalinks->core['user'] ) && !um_get_option('um_flush_stop') ) {
 		
 			$user_page_id = $ultimatemember->permalinks->core['user'];
 			$account_page_id = $ultimatemember->permalinks->core['account'];
-			
 			$user = get_post($user_page_id);
-			$user_slug = $user->post_name;
+			
+			if ( isset( $user->post_name ) ) {
+				
+				$user_slug = $user->post_name;
+				$account = get_post($account_page_id);
+				$account_slug = $account->post_name;
+					
+				add_rewrite_rule(
+						'^'.$user_slug.'/([^/]*)$',
+						'index.php?page_id='.$user_page_id.'&um_user=$matches[1]',
+						'top'
+				);
+					
+				add_rewrite_rule(
+						'^'.$account_slug.'/([^/]*)$',
+						'index.php?page_id='.$account_page_id.'&um_tab=$matches[1]',
+						'top'
+				);
 
-			$account = get_post($account_page_id);
-			$account_slug = $account->post_name;
-			
-			add_rewrite_rule(
-				'^'.$user_slug.'/([^/]*)$',
-				'index.php?page_id='.$user_page_id.'&um_user=$matches[1]',
-				'top'
-			);
-			
-			add_rewrite_rule(
-				'^'.$account_slug.'/([^/]*)$',
-				'index.php?page_id='.$account_page_id.'&um_tab=$matches[1]',
-				'top'
-			);
-			
-			if ( !get_option('um_flush_rules') ) {
 				flush_rewrite_rules( true );
-				update_option('um_flush_rules', true);
+
 			}
-			
-			flush_rewrite_rules( true );
 
 		}
 		

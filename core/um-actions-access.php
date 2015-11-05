@@ -60,6 +60,57 @@
 	/***
 	***	@
 	***/
+	add_action('um_access_category_settings','um_access_category_settings');
+	function um_access_category_settings() {
+		global $post, $wp_query, $ultimatemember;
+		if ( is_single() && get_the_category() ) {
+			$categories = get_the_category();
+			foreach( $categories as $cat ) {
+				$term_id = $cat->term_id;
+				$opt = get_option("category_$term_id");
+				if ( isset( $opt['_um_accessible'] ) ) {
+					switch( $opt['_um_accessible'] ) {
+						
+						case 0:	
+							$ultimatemember->access->allow_access = true;
+							$ultimatemember->access->redirect_handler = false; // open to everyone
+							break;
+				
+						case 1:
+							
+							if ( is_user_logged_in() )
+								$ultimatemember->access->redirect_handler = ( isset( $opt['_um_redirect'] ) ) ? $opt['_um_redirect'] : home_url();
+							
+							if ( !is_user_logged_in() )
+								$ultimatemember->access->allow_access = true;
+							
+							break;
+							
+						case 2:
+						
+							if ( !is_user_logged_in() )
+								$ultimatemember->access->redirect_handler = ( isset( $opt['_um_redirect'] ) ) ? $opt['_um_redirect'] : um_get_core_page('login');
+							
+							if ( is_user_logged_in() && isset( $opt['_um_roles'] ) && !empty( $opt['_um_roles'] ) ){
+								if ( !in_array( um_user('role'), $opt['_um_roles'] ) ) {
+									
+									if ( is_user_logged_in() )
+										$ultimatemember->access->redirect_handler = ( isset( $opt['_um_redirect'] ) ) ? $opt['_um_redirect'] : home_url();
+									
+									if ( !is_user_logged_in() )
+										$ultimatemember->access->redirect_handler =  um_get_core_page('login');
+								}
+							}
+							
+					}
+				}
+			}
+		}
+	}
+	
+	/***
+	***	@
+	***/
 	add_action('um_access_post_settings','um_access_post_settings');
 	function um_access_post_settings() {
 		global $post, $ultimatemember;
@@ -128,7 +179,13 @@
 
 				if ( is_user_logged_in() && isset( $access_roles ) && !empty( $access_roles ) ){
 					if ( !in_array( um_user('role'), unserialize( $access_roles ) ) ) {
-						if ( !$access_redirect ) $access_redirect = um_get_core_page('login');
+						if ( !$access_redirect ) {
+							if ( is_user_logged_in() ) {
+								$access_redirect = home_url();
+							} else {
+								$access_redirect = um_get_core_page('login');
+							}
+						}
 						$redirect_to = $access_redirect;
 					}
 				}
@@ -138,7 +195,12 @@
 		}
 		
 		if ( $redirect_to ) {
-			$ultimatemember->access->redirect_handler = $redirect_to;
+			if ( is_feed() ) {
+
+			} else {
+				$ultimatemember->access->allow_access = false;
+				$ultimatemember->access->redirect_handler = $redirect_to;
+			}
 		}
 		
 	}

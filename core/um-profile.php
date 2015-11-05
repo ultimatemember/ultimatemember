@@ -22,7 +22,7 @@ class UM_Profile {
 	function tabs_active(){
 		$tabs = $this->tabs();
 		foreach( $tabs as $id => $info ) {
-			if ( !um_get_option('profile_tab_'.$id) && !isset( $info['_builtin'] ) )
+			if ( !um_get_option('profile_tab_'.$id) && !isset( $info['_builtin'] ) && !isset( $info['custom'] ) )
 				unset( $tabs[$id] );
 		}
 		return $tabs;

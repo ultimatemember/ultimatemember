@@ -313,7 +313,7 @@ font-weight: normal;
 .um-profile-note {
 	display: none;
 	text-align: center;
-	margin-top: 20px;
+	padding-top: 20px;
 	color: #666;
 }
 
@@ -326,7 +326,7 @@ font-weight: normal;
 
 .um-profile-note i.um-faicon-lock{
 	position: relative;
-	top: 1px;
+	top: 2px;
 	display: inline-block;
 	font-size: 24px;
 	height: auto;
@@ -408,6 +408,7 @@ font-weight: normal;
 	font-size: 15px;
 	font-weight: 600;
 	margin: 0 20px;
+	border-bottom: none !important;
 }
 .um-profile-subnav a:hover {color: #333}
 

@@ -25,6 +25,10 @@
 	box-sizing: border-box;
 }
 
+.um-account-main a {
+	border-bottom: none !important;
+}
+
 .um-account-tab {
 	display: none;
 }
@@ -97,7 +101,7 @@
 	text-decoration: none !important;
 	position: relative;
 	padding-left: 40px;
-	border-bottom: 1px solid #eee;
+	border-bottom: 1px solid #eee !important;
 	transition: all .2s linear;
 	font-size: 14px;
 }

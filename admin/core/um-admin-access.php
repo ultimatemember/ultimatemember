@@ -8,7 +8,7 @@ class UM_Admin_Access {
 
 		add_action( 'load-post.php', array(&$this, 'add_metabox'), 9 );
 		add_action( 'load-post-new.php', array(&$this, 'add_metabox'), 9 );
-	
+
 	}
 	
 	/***
@@ -36,6 +36,9 @@ class UM_Admin_Access {
 	function core_post_type( $post_type ){
 		
 		if ( strstr($post_type, 'um_') )
+			return true;
+		
+		if ( $post_type == 'shop_order' )
 			return true;
 		
 		if ( !class_exists('UM_bbPress_API') && in_array($post_type,array('forum','topic','reply')) )
@@ -97,7 +100,7 @@ class UM_Admin_Access {
 			
 			if ( !$this->core_post_type( $post_type ) ) {
 			
-				add_meta_box('um-admin-access-settings', __('Access Control'), array(&$this, 'load_metabox_form'), $post_type, 'side', 'default');
+				add_meta_box('um-admin-access-settings', __('Ultimate Member'), array(&$this, 'load_metabox_form'), $post_type, 'side', 'default');
 
 			}
 		

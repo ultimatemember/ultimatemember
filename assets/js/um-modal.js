@@ -45,7 +45,7 @@ jQuery(document).ready(function() {
 		var parent = jQuery(this).parents('.um-modal-body');
 		var src = jQuery(this).parents('.um-modal-body').find('.um-single-image-preview img').attr('src');
 		
-		parent.find('.um-modal .um-single-image-preview img').cropper("destroy");
+		jQuery('img.cropper-hidden').cropper('destroy');
 		
 		parent.find('.um-single-image-preview img').attr('src', '');
 		

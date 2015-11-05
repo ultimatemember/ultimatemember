@@ -35,12 +35,14 @@ class UM_Admin_Users {
 		unset( $actions['edit'] );
 		unset( $actions['delete'] );
 
-		$actions['backend_profile'] = "<a class='' href='" . admin_url('user-edit.php?user_id='. $user_id ) . "'>" . __( 'Edit','ultimatemember' ) . "</a>";
-		$actions['frontend_profile'] = "<a class='' href='" . um_user_profile_url() . "'>" . __( 'Edit in frontend','ultimatemember') . "</a>";
+		$actions['frontend_profile'] = "<a class='' href='" . um_user_profile_url() . "'>" . __( 'Profile','ultimatemember') . "</a>";
 		
 		if ( um_user('submitted') ) {
 			$actions['view_info'] = '<a href="#" data-modal="UM_preview_registration" data-modal-size="smaller" data-dynamic-content="um_admin_review_registration" data-arg1="'.$user_id.'" data-arg2="edit_registration">' . __('Info','ultimatemember') . '</a>';
 		}
+		
+		$actions = apply_filters('um_admin_user_row_actions', $actions, $user_id );
+		
 		return $actions;
 	}
 	
@@ -48,17 +50,13 @@ class UM_Admin_Users {
 	***	@sort users by newest first
 	***/
 	function sort_by_newest( $query ){
-		global $pagenow;
+		global $wpdb, $pagenow;
 
 		if ( is_admin() && $pagenow == 'users.php' ) {
-
-			global $wpdb;
-
 			if (!isset($_REQUEST['orderby'])) {
 				$query->query_vars["order"] = 'desc';
 				$query->query_orderby = " ORDER BY user_registered ".($query->query_vars["order"] == "desc" ? "desc " : "asc ");//set sort order
 			}
-
 		}
 
 		return $query;
@@ -69,14 +67,11 @@ class UM_Admin_Users {
 	***	@custom users filter
 	***/
 	function custom_users_filter( $query ){
-		global $pagenow;
+		global $wpdb, $pagenow;
 
 		if ( is_admin() && $pagenow=='users.php' && isset($_GET[ $this->custom_role ]) && $_GET[ $this->custom_role ] != '') {
 			
-			$role = urldecode($_GET[ $this->custom_role ]);
-
-			global $wpdb;
-
+			$role = $_GET[ $this->custom_role ];
 			$query->query_where = 
 			str_replace('WHERE 1=1', 
 					"WHERE 1=1 AND {$wpdb->users}.ID IN (
@@ -91,17 +86,24 @@ class UM_Admin_Users {
 		if ( is_admin() && $pagenow=='users.php' && isset($_GET[ 'status' ]) && $_GET[ 'status' ] != '') {
 			
 			$status = urldecode($_GET[ 'status' ]);
-
-			global $wpdb;
-
-			$query->query_where = 
-			str_replace('WHERE 1=1', 
-					"WHERE 1=1 AND {$wpdb->users}.ID IN (
-						 SELECT {$wpdb->usermeta}.user_id FROM $wpdb->usermeta 
-							WHERE {$wpdb->usermeta}.meta_key = 'account_status' 
-							AND {$wpdb->usermeta}.meta_value = '{$status}')", 
-					$query->query_where
+			
+			if ( $status == 'needs-verification') {
+			$query->query_where = str_replace('WHERE 1=1', 
+						"WHERE 1=1 AND {$wpdb->users}.ID IN (
+							 SELECT {$wpdb->usermeta}.user_id FROM $wpdb->usermeta 
+								WHERE {$wpdb->usermeta}.meta_key = '_um_verified' 
+								AND {$wpdb->usermeta}.meta_value = 'pending')", 
+						$query->query_where
 			);
+			} else {
+			$query->query_where = str_replace('WHERE 1=1', 
+						"WHERE 1=1 AND {$wpdb->users}.ID IN (
+							 SELECT {$wpdb->usermeta}.user_id FROM $wpdb->usermeta 
+								WHERE {$wpdb->usermeta}.meta_key = 'account_status' 
+								AND {$wpdb->usermeta}.meta_value = '{$status}')", 
+						$query->query_where
+			);
+			}
 
 		}
 
@@ -130,8 +132,10 @@ class UM_Admin_Users {
 			'awaiting_admin_review' => __('Pending review','ultimatemember'),
 			'awaiting_email_confirmation' => __('Waiting e-mail confirmation','ultimatemember'),
 			'inactive' => __('Inactive','ultimatemember'),
-			'rejected' => __('Rejected','ultimatemember'),
+			'rejected' => __('Rejected','ultimatemember')
 		);
+		
+		$ultimatemember->query->count_users_by_status( 'unassigned' );
 		
 		foreach( $status as $k => $v ) {
 			if ( isset($_REQUEST['status']) && $_REQUEST['status'] == $k ) {
@@ -142,6 +146,8 @@ class UM_Admin_Users {
 			
 			$views[ $k ] = '<a href="'.admin_url('users.php').'?status='.$k.'" ' . $current . '>'. $v . ' <span class="count">('.$ultimatemember->query->count_users_by_status( $k ).')</span></a>';
 		}
+		
+		$views = apply_filters('um_admin_views_users', $views );
 		
 		return $views;
 	}
@@ -270,7 +276,7 @@ class UM_Admin_Users {
 					<?php
 						$roles = $ultimatemember->query->get_roles();
 						foreach( $roles as $role => $role_name ) { ?>
-						<option value="<?php echo $role; ?>"><?php echo $role_name; ?></option>
+						<option value="<?php echo urlencode( $role ); ?>"><?php echo $role_name; ?></option>
 						<?php } ?>
 				</select>
 				
@@ -313,7 +319,7 @@ class UM_Admin_Users {
 	function manage_users_columns($columns) {
 	
 		$admin = new UM_Admin_Metabox();
-		
+
 		$columns['um_role'] = __('Community Role','ultimatemember') . $admin->_tooltip( __('This is the membership role set by Ultimate Member plugin','ultimatemember') );
 
 		return $columns;
@@ -327,9 +333,11 @@ class UM_Admin_Users {
 
 		if ( $this->custom_role == $column_name ) {
 		
-			delete_option( "um_cache_userdata_{$user_id}" );
+			if ( get_option( "um_cache_userdata_{$user_id}" ) ) {
+				delete_option( "um_cache_userdata_{$user_id}" );
+			}
 			um_fetch_user( $user_id );
-			return um_user('role_name');
+			return $ultimatemember->user->get_role_name( um_user('role') );
 			
 		}
 			

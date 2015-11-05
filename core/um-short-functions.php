@@ -1,5 +1,99 @@
 <?php
 
+	function um_mail_content_type( $content_type ) {
+		return 'text/html';
+	}
+	
+	function UM_Mail( $user_id_or_email = 1, $subject_line = 'Email Subject', $template, $path = null, $args = array() ) {
+		
+		if ( absint( $user_id_or_email ) ) {
+			$user = get_userdata( $user_id_or_email );
+			$email = $user->user_email;
+		} else {
+			$email = $user_id_or_email;
+		}
+		
+		$headers = 'From: '. um_get_option('mail_from') .' <'. um_get_option('mail_from_addr') .'>' . "\r\n";
+		$attachments = null;
+		
+		if ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/email/' . get_locale() . '/' . $template . '.html' ) ) {
+			$path_to_email = get_stylesheet_directory() . '/ultimate-member/templates/email/' . get_locale() . '/' . $template . '.html';
+		} else if ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/email/' . $template . '.html' ) ) {
+			$path_to_email = get_stylesheet_directory() . '/ultimate-member/templates/email/' . $template . '.html';
+		} else {
+			$path_to_email = $path . $template . '.html';
+		}
+
+		if ( um_get_option('email_html') ) {
+			$message = file_get_contents( $path_to_email );
+			add_filter( 'wp_mail_content_type', 'um_mail_content_type' );
+		} else {
+			$message = ( um_get_option('email-' . $template ) ) ? um_get_option('email-' . $template ) : 'Untitled';
+		}
+		
+		$message = um_convert_tags( $message, $args );
+		wp_mail( $email, $subject_line, $message, $headers, $attachments );
+	}
+	
+	/***
+	***	@convert template tags
+	***/
+	function um_convert_tags( $content, $args = array() ) {
+	
+		$search = array(
+			'{display_name}',
+			'{first_name}',
+			'{last_name}',
+			'{gender}',
+			'{username}',
+			'{email}',
+			'{password}',
+			'{login_url}',
+			'{site_name}',
+			'{site_url}',
+			'{account_activation_link}',
+			'{password_reset_link}',
+			'{admin_email}',
+			'{user_profile_link}',
+			'{user_account_link}',
+			'{submitted_registration}',
+			'{user_avatar_url}',
+		);
+		
+		$search = apply_filters('um_template_tags_patterns_hook', $search);
+		
+		$replace = array(
+			um_user('display_name'),
+			um_user('first_name'),
+			um_user('last_name'),
+			um_user('gender'),
+			um_user('user_login'),
+			um_user('user_email'),
+			um_user('_um_cool_but_hard_to_guess_plain_pw'),
+			um_get_core_page('login'),
+			um_get_option('site_name'),
+			get_bloginfo('url'),
+			um_user('account_activation_link'),
+			um_user('password_reset_link'),
+			um_admin_email(),
+			um_user_profile_url(),
+			um_get_core_page('account'),
+			um_user_submitted_registration(),
+			um_get_user_avatar_url(),
+		);
+		
+		$replace = apply_filters('um_template_tags_replaces_hook', $replace);
+		
+		$content = str_replace($search, $replace, $content);
+		
+		if ( isset( $args['tags'] ) && isset( $args['tags_replace'] ) ) {
+			$content = str_replace($args['tags'], $args['tags_replace'], $content);
+		}
+		
+		return $content;
+		
+	}
+
 /**
  * @function um_user_ip()
  *
@@ -129,7 +223,15 @@ function um_user_ip() {
 		if ( $style ) $output .= '<div class="um-admin-infobox">';
 		
 		if ( isset( $data ) && is_array( $data ) ) {
+			
+			$data = apply_filters('um_email_registration_data', $data );
+			
 			foreach( $data as $k => $v ) {
+				
+				if ( !is_array( $v ) && strstr( $v, 'ultimatemember/temp' ) ) {
+					$file = basename( $v );
+					$v = um_user_uploads_uri() . $file;
+				}
 				
 				if ( !strstr( $k, 'user_pass' ) && $k != 'g-recaptcha-response' && $k != 'request' ) {
 				
@@ -198,30 +300,7 @@ function um_user_ip() {
 		return $value;
 	}
 	
-/**
- * @function um_profile_id()
- *
- * @description This function returns the user ID for current profile.
- *
- * @usage <?php $user_id = um_profile_id(); ?>
- *
- * @returns Returns the user ID of profile if found, or current user ID if user is logged in. Also returns blank 
-   if no user ID is set.
- *
- * @example The example below will retrieve the user ID when viewing someone profile.
 
-	<?php
-	
-		$user_id = um_profile_id();
-		if ( $user_id == 1 ) {
-			echo 'This is administrator profile.';
-		}
-		
-	?>
-
- *
- *
- */
 function um_profile_id() {
 	
 	if ( um_get_requested_user() ) {
@@ -229,7 +308,7 @@ function um_profile_id() {
 	} else if ( is_user_logged_in() && get_current_user_id() ) {
 		return get_current_user_id();
 	}
-		
+
 	return 0;
 }
 
@@ -273,23 +352,103 @@ function um_profile_id() {
 	}
 	
 	/***
+	***	@Get a translated core page URL
+	***/
+	function um_get_url_for_language( $post_id, $language )
+	{
+		$lang_post_id = icl_object_id( $post_id , 'page', true, $language );
+		 
+		$url = "";
+		if($lang_post_id != 0) {
+			$url = get_permalink( $lang_post_id );
+		}else {
+			// No page found, it's most likely the homepage
+			global $sitepress;
+			$url = $sitepress->language_url( $language );
+		}
+		 
+		return $url;
+	}
+	
+	/***
+	***	@Get core page url
+	***/
+	function um_time_diff( $time1, $time2 ) {
+		global $ultimatemember;
+		return $ultimatemember->datetime->time_diff( $time1, $time2 );
+	}
+	
+	/***
+	***	@Get user's last login timestamp
+	***/
+	function um_user_last_login_timestamp( $user_id ) {
+		$value = get_user_meta( $user_id, '_um_last_login', true );
+		if ( $value )
+			return $value;
+		return '';
+	}
+	
+	/***
+	***	@Get user's last login time
+	***/
+	function um_user_last_login_date( $user_id ) {
+		$value = get_user_meta( $user_id, '_um_last_login', true );
+		if ( $value )
+			return date_i18n('F d, Y', $value );
+		return '';
+	}
+	
+	/***
+	***	@Get user's last login (time diff)
+	***/
+	function um_user_last_login( $user_id ) {
+		$value = get_user_meta( $user_id, '_um_last_login', true );
+		if ( $value ) {
+			$value = um_time_diff( $value, current_time('timestamp') );
+		} else {
+			$value = '';
+		}
+		return $value;
+	}
+	
+	/***
 	***	@Get core page url
 	***/
 	function um_get_core_page( $slug, $updated = false) {
 		global $ultimatemember;
+		$url = '';
 		
 		if ( isset( $ultimatemember->permalinks->core[ $slug ] ) ) {
-			
 			$url = get_permalink( $ultimatemember->permalinks->core[ $slug ] );
-			
 			if ( $updated )
-				$url =  add_query_arg( 'updated', esc_attr( $updated ), $url );
-				
+				$url =  add_query_arg( 'updated', esc_attr( $updated ), $url );	
+		}
+		
+		if ( function_exists('icl_get_current_language') && icl_get_current_language() != icl_get_default_language() && $slug == 'account' ) {
+			if ( get_post_meta( get_the_ID() , '_um_wpml_account', true ) == 1 ) {
+				$url = get_permalink( get_the_ID() );
+			}
+			if ( get_post_meta( get_the_ID() , '_um_wpml_user', true ) == 1 ) {
+				$url = um_get_url_for_language( $ultimatemember->permalinks->core[ $slug ], icl_get_current_language() );
+			}
+		}
+		
+		if ( $url ) {
+			$url = apply_filters('um_get_core_page_filter', $url, $slug, $updated);
 			return $url;
-			
 		}
 		
 		return '';
+	}
+	
+	/***
+	***	@boolean check if we are on UM page
+	***/
+	function is_ultimatemember() {
+		global $post, $ultimatemember;
+		if ( isset($post->ID) && in_array( $post->ID, $ultimatemember->permalinks->core ) )
+			return true;
+		return false;
 	}
 	
 	/***
@@ -298,6 +457,8 @@ function um_profile_id() {
 	function um_is_core_page( $page ) {
 		global $post, $ultimatemember;
 		if ( isset($post->ID) && isset( $ultimatemember->permalinks->core[ $page ] ) && $post->ID == $ultimatemember->permalinks->core[ $page ] )
+			return true;
+		if ( isset($post->ID) && get_post_meta( $post->ID, '_um_wpml_' . $page, true ) == 1 )
 			return true;
 		return false;
 	}
@@ -327,8 +488,9 @@ function um_profile_id() {
 		global $ultimatemember;
 		if ( isset($_REQUEST['um_search']) ) {
 			$query = $ultimatemember->permalinks->get_query_array();
-			if ( $query[$filter] != '' )
+			if ( $query[$filter] != '' ) {
 				echo $query[$filter];
+			}
 		}
 		echo '';
 	}
@@ -410,10 +572,12 @@ function um_profile_id() {
 	***	@get a user's display name
 	***/
 	function um_get_display_name( $user_id ) {
-		$user = get_userdata( $user_id );
-		return $user->display_name;
+		um_fetch_user( $user_id );
+		$name = um_user('display_name');
+		um_reset_user();
+		return $name;
 	}
-	
+
 	/***
 	***	@get members to show in directory
 	***/
@@ -497,6 +661,7 @@ function um_reset_user() {
 	function um_edit_my_profile_cancel_uri() {
 		$url = remove_query_arg( 'um_action' );
 		$url = remove_query_arg( 'profiletab', $url );
+		$url = add_query_arg('profiletab', 'main', $url );
 		return $url;
 	}
 	
@@ -517,8 +682,11 @@ function um_reset_user() {
 	***/
 	function um_can_view_field( $data ) {
 		global $ultimatemember;
+		
+		if ( !isset( $ultimatemember->fields->set_mode ) )
+			$ultimatemember->fields->set_mode = '';
 
-		if ( isset( $data['public'] ) ) {
+		if ( isset( $data['public'] ) && $ultimatemember->fields->set_mode != 'register' ) {
 		
 			if ( !is_user_logged_in() && $data['public'] != '1' ) return false;
 			
@@ -559,8 +727,8 @@ function um_reset_user() {
 		
 		if ( !um_user('can_access_private_profile') && $ultimatemember->user->is_private_profile( $user_id ) ) return false;
 
-		if ( um_user('can_view_roles') && $user_id != get_current_user_id() ) {
-			if ( !in_array( $ultimatemember->query->get_role_by_userid( $user_id ), um_user('can_view_roles') ) ) {
+		if ( um_user_can('can_view_roles') && $user_id != get_current_user_id() ) {
+			if ( !in_array( $ultimatemember->query->get_role_by_userid( $user_id ), um_user_can('can_view_roles') ) ) {
 				return false;
 			}
 		}
@@ -608,6 +776,8 @@ function um_reset_user() {
 	***/
 	function um_user_can( $permission ) {
 		global $ultimatemember;
+		if ( !is_user_logged_in() )
+			return false;
 		$user_id = get_current_user_id();
 		$role = get_user_meta( $user_id, 'role', true );
 		$permissions = $ultimatemember->query->role_data( $role );
@@ -717,6 +887,7 @@ function um_reset_user() {
  */
 function um_get_option($option_id) {
 	global $ultimatemember;
+	if ( !isset( $ultimatemember->options ) ) return '';
 	$um_options = $ultimatemember->options;
 	if ( isset($um_options[$option_id]) && !empty( $um_options[$option_id] ) )	{
 		return $um_options[$option_id];
@@ -948,40 +1119,11 @@ function um_fetch_user( $user_id ) {
 			return $uri;
 		return '';
 	}
-	
-/**
- * @function um_user()
- *
- * @description This function can be used to get user's data. This can be user profile data or user permissions.
- *
- * @usage <?php echo um_user( $data ); ?>
- *
- * @param $data (string) (required) The field or data you want to retrieve for user.
- * @param $attrs (string) (optional) Additional attribute for profile data that may need extra configuration.
- *
- * @returns Returns the user data requested If found. A user must be previously set using um_fetch_user() to 
-	properly retrieve user data.
- *
- * @example The example below can retrieve the user's display name
 
-	<?php
-	
-		$display_name = um_user('display_name');
-		echo $display_name; // prints the user's display name
-		
-	?>
-
- *
- * @example The example below can retrieve user's community role
- 
-	<?php echo um_user('role_name'); // example: Member or Admin ?>
- 
- *
- */
 function um_user( $data, $attrs = null ) {
 	
 	global $ultimatemember;
-		
+	
 	switch($data){
 		
 		default:
@@ -1023,70 +1165,69 @@ function um_user( $data, $attrs = null ) {
 				
 			if ( $op == 'full_name' ) {
 				if ( um_user('first_name') && um_user('last_name') ) {
-					return um_user('first_name') . ' ' . um_user('last_name');
+					$name = um_user('first_name') . ' ' . um_user('last_name');
 				} else {
-					return um_profile( $data );
+					$name = um_profile( $data );
 				}
 			}
 				
 			if ( $op == 'sur_name' ) {
 				if ( um_user('first_name') && um_user('last_name') ) {
-					return um_user('last_name') . ', ' . um_user('first_name');
+					$name = um_user('last_name') . ', ' . um_user('first_name');
 				} else {
-					return um_profile( $data );
+					$name = um_profile( $data );
 				}
 			}
 				
 			if ( $op == 'first_name' ) {
 				if ( um_user('first_name') ) {
-					return um_user('first_name');
+					$name = um_user('first_name');
 				} else {
-					return um_profile( $data );
+					$name = um_profile( $data );
 				}
 			}
 				
 			if ( $op == 'username' ) {
-				return um_user('user_login');
+				$name = um_user('user_login');
 			}
 				
 			if ( $op == 'initial_name' ) {
 				if ( um_user('first_name') && um_user('last_name') ) {
 					$initial = um_user('last_name');
-					return um_user('first_name') . ' ' . $initial[0];
+					$name = um_user('first_name') . ' ' . $initial[0];
 				} else {
-					return um_profile( $data );
+					$name = um_profile( $data );
 				}
 			}
 				
 			if ( $op == 'initial_name_f' ) {
 				if ( um_user('first_name') && um_user('last_name') ) {
 					$initial = um_user('first_name');
-					return $initial[0] . ' ' . um_user('last_name');
+					$name = $initial[0] . ' ' . um_user('last_name');
 				} else {
-					return um_profile( $data );
+					$name = um_profile( $data );
 				}
 			}
 				
 			if ( $op == 'public_name' ) {
-				return um_profile( $data );
+				$name = um_profile( $data );
 			}
 				
 			if ( $op == 'field' && um_get_option('display_name_field') != '' ) {
 				$fields = array_filter(preg_split('/[,\s]+/', um_get_option('display_name_field') )); 
-				$output = '';
+				$name = '';
 				foreach( $fields as $field ) {
-					$output .= um_profile( $field ) . ' ';
+					$name .= um_profile( $field ) . ' ';
 				}
-				return $output;
 			}
-				
-			return um_profile( $data );
-				
+			
+			return apply_filters('um_user_display_name_filter', $name, um_user('ID'), ( $attrs == 'html' ) ? 1 : 0 );
+			
 			break;
 				
 		case 'role_select':
 		case 'role_radio':
-			return um_user('role_name');
+			return $ultimatemember->user->get_role_name( um_user('role') );
 			break;
 				
 		case 'submitted':

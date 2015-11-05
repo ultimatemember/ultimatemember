@@ -311,9 +311,16 @@ class UM_Files {
 		$fileinfo = $this->get_image_data($file);
 		$data = $ultimatemember->fields->get_field($field);
 		
+		if ( $data == null ) {
+			$data = apply_filters("um_custom_image_handle_{$field}", '' );
+			if ( !$data  ) {
+				$error = __('This media type is not recognized.','ultimatemember');
+			}
+		}
+	
 		if ( $fileinfo['invalid_image'] == true ) {
 			$error = sprintf(__('Your image is invalid or too large!','ultimatemember') );
-		} elseif ( !$this->in_array( $fileinfo['extension'], $data['allowed_types'] ) ) {
+		} elseif ( isset( $data['allowed_types'] ) && !$this->in_array( $fileinfo['extension'], $data['allowed_types'] ) ) {
 			$error = ( isset( $data['extension_error'] ) && !empty( $data['extension_error'] ) ) ? $data['extension_error'] : 'not allowed';
 		} elseif ( isset($data['min_size']) && ( $fileinfo['size'] < $data['min_size'] ) ) {
 			$error = $data['min_size_error'];
@@ -439,6 +446,14 @@ class UM_Files {
 		// if he does not have uploads dir yet
 		$this->new_user( $user_id );
 		
+		if ( is_user_logged_in() && ( get_current_user_id() != $user_id ) && !um_user_can('can_edit_everyone') ) {
+			wp_die( __('Unauthorized to do this attempt.','ultimatemember') );
+		}
+		
+		if ( !is_user_logged_in() && ( $key == 'profile_photo' || $key == 'cover_photo' ) ) {
+			wp_die( __('Unauthorized to do this attempt.','ultimatemember') );
+		}
+		
 		// name and extension stuff
 		$source_name = basename( $source );
 		
@@ -523,7 +538,11 @@ class UM_Files {
 		// update user's meta
 		do_action('um_before_upload_db_meta', $user_id, $key );
 		do_action("um_before_upload_db_meta_{$key}", $user_id );
+		
 		update_user_meta( $user_id, $key, $filename );
+		
+		do_action('um_after_upload_db_meta', $user_id, $key );
+		do_action("um_after_upload_db_meta_{$key}", $user_id );
 		
 		// the url of upload
 		return $this->upload_baseurl . $user_id . '/' . $filename;

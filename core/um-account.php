@@ -101,7 +101,7 @@ class UM_Account {
 		
 		} else {
 			
-			$url = esc_url( add_query_arg( 'um_tab', $id, um_get_core_page('account') ) );
+			$url = add_query_arg( 'um_tab', $id, um_get_core_page('account') );
 			
 		}
 		
@@ -153,6 +153,7 @@ class UM_Account {
 			case 'privacy':
 				
 				$args = 'profile_privacy,hide_in_members';
+				$args = apply_filters('um_account_tab_privacy_fields', $args );
 				
 				$fields = $ultimatemember->builtin->get_specific_fields( $args );
 				foreach( $fields as $key => $data ){
@@ -182,6 +183,10 @@ class UM_Account {
 				
 				if ( !um_get_option('account_name') ) {
 					$args = 'user_login,user_email';
+				}
+				
+				if ( !um_get_option('account_email') && !um_user('can_edit_everyone') ) {
+					$args = str_replace(',user_email','', $args );
 				}
 				
 				$fields = $ultimatemember->builtin->get_specific_fields( $args );

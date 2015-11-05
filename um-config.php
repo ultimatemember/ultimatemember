@@ -6,6 +6,68 @@
 /***
 ***	@
 ***/
+
+$core_pages = array(
+	'user' => __('User page','ultimatemember'),
+	'account' => __('Account page','ultimatemember'),
+	'members' => __('Members page','ultimatemember'),
+	'register' => __('Register page','ultimatemember'),
+	'login' => __('Login page','ultimatemember'),
+	'logout' => __('Logout page','ultimatemember'),
+	'password-reset' => __('Password reset page','ultimatemember'),
+);
+
+$core_pages = apply_filters('um_core_pages', $core_pages );
+
+foreach( $core_pages as $page_s => $page ) {
+	$page_setup[] = array(
+				'id'       		=> 'core_' . $page_s,
+                'type'     		=> 'select',
+				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
+                'title'    		=> $page,
+                'default'  		=> ( isset( $ultimatemember->permalinks->core[ $page_s ] ) ) ? $ultimatemember->permalinks->core[ $page_s ] : '' ,
+				'options' 		=> $ultimatemember->query->wp_pages(),
+				'placeholder' 	=> __('Choose a page...','ultimatemember'),
+				'compiler' 		=> true,
+        );
+}
+
+$this->sections[] = array(
+
+    'icon'       => 'um-faicon-cog',
+    'title'      => __( 'Setup','ultimatemember'),
+    'fields'     => $page_setup
+
+);
+
+/***
+***	@
+***/
+
+add_filter('redux/options/um_options/compiler', 'um_core_page_setting_saved', 100, 3);
+function um_core_page_setting_saved($options, $css, $changed_values) {
+	$core_pages = array(
+		'user' => __('User page','ultimatemember'),
+		'account' => __('Account page','ultimatemember'),
+		'members' => __('Members page','ultimatemember'),
+		'register' => __('Register page','ultimatemember'),
+		'login' => __('Login page','ultimatemember'),
+		'logout' => __('Logout page','ultimatemember'),
+		'password-reset' => __('Password reset page','ultimatemember'),
+	);
+	$pages = get_option('um_core_pages');
+	
+	$core_pages = apply_filters('um_core_pages', $core_pages );
+
+	foreach( $core_pages as $slug => $page ) {
+		$pages[ $slug ] = $options['core_' . $slug ];
+	}
+	update_option( 'um_core_pages', $pages );
+}
+
+/***
+***	@
+***/
 	
 $this->sections[] = array(
 
@@ -20,7 +82,7 @@ $this->sections[] = array(
                 'title'    		=> __( 'Default New User Role','ultimatemember' ),
                 'desc' 	   		=> __( 'Select the default role that will be assigned to user after registration If you did not specify custom role settings per form.','ultimatemember' ),
                 'default'  		=> 'member',
-				'options' 		=> $ultimatemember->query->get_roles( ),
+				'options' 		=> $ultimatemember->query->get_roles(),
 				'placeholder' 	=> __('Choose user role...','ultimatemember'),
         ),
 		
@@ -186,6 +248,16 @@ $this->sections[] = array(
         ),
 		
         array(
+                'id'       		=> 'account_email',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Allow users to change e-mail','ultimatemember' ),
+				'default' 		=> 1,
+				'desc' 	   		=> __('Whether to allow users changing their email in account page.','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+        ),
+		
+        array(
                 'id'       		=> 'account_require_strongpass',
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Require a strong password?','ultimatemember' ),
@@ -255,6 +327,16 @@ $this->sections[] = array(
                 'title'   		=> __( 'Allow Backend Login Screen for Guests','ultimatemember' ),
 				'default' 		=> 1,
 				'desc' 	   		=> __('Control whether guests are able to access the WP-admin login screen or not','ultimatemember'),
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
+        ),
+		
+        array(
+                'id'       		=> 'deny_admin_frontend_login',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Disable Admin Login via Frontend','ultimatemember' ),
+				'default' 		=> 0,
+				'desc' 	   		=> __('DO NOT turn this option on if you have set the option  "Allow Backend Login Screen for Guests" to NO. This will result in being locked out of admin.','ultimatemember'),
 				'on'			=> __('Yes','ultimatemember'),
 				'off'			=> __('No','ultimatemember'),
         ),
@@ -817,7 +899,7 @@ $this->sections[] = array(
 		array(
 				'id'       		=> 'profile_photo_max_size',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Profile Photo Maximum File Size','ultimatemember' ),
+                'title'    		=> __( 'Profile Photo Maximum File Size (bytes)','ultimatemember' ),
                 'desc' 	   		=> __( 'Sets a maximum size for the uploaded photo','ultimatemember' ),
 				'validate' 		=> 'numeric',
         ),
@@ -825,7 +907,7 @@ $this->sections[] = array(
 		array(
 				'id'       		=> 'cover_photo_max_size',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Cover Photo Maximum File Size','ultimatemember' ),
+                'title'    		=> __( 'Cover Photo Maximum File Size (bytes)','ultimatemember' ),
                 'desc' 	   		=> __( 'Sets a maximum size for the uploaded cover','ultimatemember' ),
 				'validate' 		=> 'numeric',
         ),
@@ -833,7 +915,7 @@ $this->sections[] = array(
 		array(
 				'id'       		=> 'photo_thumb_sizes',
                 'type'     		=> 'multi_text',
-                'title'    		=> __( 'Profile Photo Thumbnail Sizes','ultimatemember' ),
+                'title'    		=> __( 'Profile Photo Thumbnail Sizes (px)','ultimatemember' ),
                 'desc' 	   		=> __( 'Here you can define which thumbnail sizes will be created for each profile photo upload.','ultimatemember' ),
                 'default'  		=> array( 40, 80, 190 ),
 				'validate' 		=> 'numeric',
@@ -843,7 +925,7 @@ $this->sections[] = array(
 		array(
 				'id'       		=> 'cover_thumb_sizes',
                 'type'     		=> 'multi_text',
-                'title'    		=> __( 'Cover Photo Thumbnail Sizes','ultimatemember' ),
+                'title'    		=> __( 'Cover Photo Thumbnail Sizes (px)','ultimatemember' ),
                 'desc' 	   		=> __( 'Here you can define which thumbnail sizes will be created for each cover photo upload.','ultimatemember' ),
                 'default'  		=> array( 300, 600 ),
 				'validate' 		=> 'numeric',
@@ -862,7 +944,7 @@ $this->sections[] = array(
 		array(
 				'id'       		=> 'image_max_width',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Image Upload Maximum Width','ultimatemember' ),
+                'title'    		=> __( 'Image Upload Maximum Width (px)','ultimatemember' ),
                 'desc' 	   		=> __( 'Any image upload above this width will be resized to this limit automatically.','ultimatemember' ),
                 'default'  		=> 1000,
 				'validate' 		=> 'numeric',
@@ -871,7 +953,7 @@ $this->sections[] = array(
 		array(
 				'id'       		=> 'cover_min_width',
                 'type'     		=> 'text',
-                'title'    		=> __( 'Cover Photo Minimum Width','ultimatemember' ),
+                'title'    		=> __( 'Cover Photo Minimum Width (px)','ultimatemember' ),
                 'desc' 	   		=> __( 'This will be the minimum width for cover photo uploads','ultimatemember' ),
                 'default'  		=> 1000,
 				'validate' 		=> 'numeric',
@@ -1486,16 +1568,6 @@ $tab_options[] = array(
 				'off'			=> __('Off','ultimatemember'),
 );
 
-$tab_options[] = array(
-                'id'       		=> 'profile_menu_counts',
-                'type'     		=> 'switch',
-                'title'    		=> __('Enable counts in menu','ultimatemember'),
-				'default' 		=> 1,
-				'required'		=> array( 'profile_menu', '=', 1 ),
-				'on'			=> __('On','ultimatemember'),
-				'off'			=> __('Off','ultimatemember'),
-);
-
 $this->sections[] = array(
 	
     'subsection' => true,
@@ -1755,6 +1827,29 @@ $this->sections[] = array(
 				'full_width'    	=> true,
 		),
 
+        array(
+                'id'       		=> 'um_flush_stop',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Stop rewriting rules on every load','ultimatemember' ),
+				'default' 		=> 0,
+				'desc' 	   		=> __('Turn on If you have performance issue and are not getting 404 error/conflicts with other plugins/themes.','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+        ),
+		
+		array(
+				'id'       		=> 'current_url_method',
+                'type'     		=> 'select',
+				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
+                'title'    		=> __( 'Current URL Method','ultimatemember' ),
+                'desc' 	   		=> __( 'Change this If you are having conflicts with profile links or redirections.','ultimatemember' ),
+                'default'  		=> 'SERVER_NAME',
+				'options' 		=> array(
+									'SERVER_NAME' 			=> __('Use SERVER_NAME','ultimatemember'),
+									'HTTP_HOST' 			=> __('Use HTTP_HOST','ultimatemember'),
+				),
+        ),
+		
         array(
                 'id'      		=> 'advanced_denied_roles',
                 'type'     		=> 'text',

@@ -566,6 +566,9 @@ class UM_Fields {
 		if ( isset( $fields ) && is_array( $fields ) && isset( $fields[$key] ) ) {
 			$array = $fields[$key];
 		} else {
+			if ( !isset( $ultimatemember->builtin->predefined_fields[$key] ) && !isset( $ultimatemember->builtin->all_user_fields[$key] ) ) {
+				return '';
+			}
 			$array = (isset( $ultimatemember->builtin->predefined_fields[$key] ) ) ? $ultimatemember->builtin->predefined_fields[$key] :  $ultimatemember->builtin->all_user_fields[$key];
 		}
 		
@@ -803,7 +806,7 @@ class UM_Fields {
 				if ( $array['min_width'] == '' && $array['crop'] == 3 ) $array['min_width'] = 600;
 				if ( $array['min_height'] == '' && $array['crop'] == 3 ) $array['min_height'] = 600;
 				
-				if (!isset($array['invalid_image'])) $array['invalid_image'] = "Please upload a valid image!";
+				if (!isset($array['invalid_image'])) $array['invalid_image'] = __("Please upload a valid image!",'ultimatemember');
 				if (!isset($array['allowed_types'])) {
 					$array['allowed_types'] = "gif,jpg,jpeg,png";
 				} else {
@@ -811,10 +814,10 @@ class UM_Fields {
 				}
 				if (!isset($array['upload_text'])) $array['upload_text'] = '';
 				if (!isset($array['button_text'])) $array['button_text'] = __('Upload','ultimatemember');
-				if (!isset($array['extension_error'])) $array['extension_error'] =  "Sorry this is not a valid image.";
-				if (!isset($array['max_size_error'])) $array['max_size_error'] = "This image is too large!";
-				if (!isset($array['min_size_error'])) $array['min_size_error'] = "This image is too small!";
-				if (!isset($array['max_files_error'])) $array['max_files_error'] = "You can only upload one image";
+				if (!isset($array['extension_error'])) $array['extension_error'] =  __("Sorry this is not a valid image.",'ultimatemember');
+				if (!isset($array['max_size_error'])) $array['max_size_error'] = __("This image is too large!",'ultimatemember');
+				if (!isset($array['min_size_error'])) $array['min_size_error'] = __("This image is too small!",'ultimatemember');
+				if (!isset($array['max_files_error'])) $array['max_files_error'] = __("You can only upload one image",'ultimatemember');
 				if (!isset($array['max_size'])) $array['max_size'] = 999999999;
 				if (!isset($array['upload_help_text'])) $array['upload_help_text'] = '';
 				if (!isset($array['icon']) ) $array['icon'] = '';
@@ -1290,7 +1293,7 @@ class UM_Fields {
 						
 						$output .= '<div class="um-single-image-preview show '. $crop_class .'" data-crop="'.$crop_data.'" data-key="'.$key.'">
 								<a href="#" class="cancel"><i class="um-icon-close"></i></a>' . $img . '
-							</div><a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. __('Change photo') . '</a>';
+							</div><a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. __('Change photo','ultimatemember') . '</a>';
 						
 					} else {
 					
@@ -1475,7 +1478,7 @@ class UM_Fields {
 						
 						// add an empty option!
 						$output .= '<option value=""></option>';
-						
+
 						// add options
 						foreach($options as $k => $v) {
 						
@@ -1485,6 +1488,10 @@ class UM_Fields {
 								$option_value = $k;
 							} else {
 								$option_value = $v;
+							}
+							
+							if ( isset( $options_pair ) ) {
+								$option_value = $k;
 							}
 							
 							$output .= '<option value="'.$option_value.'" ';
@@ -1678,7 +1685,7 @@ class UM_Fields {
 							}
 							
 							$output .= '<label class="um-field-checkbox '.$active.' um-field-half '.$col_class.'">';
-							$output .= '<input type="checkbox" name="'.$key.'[]" value="'.$v.'" ';
+							$output .= '<input type="checkbox" name="'.$key.'[]" value="'.strip_tags( $v ).'" ';
 							
 							if ( $this->is_selected($key, $v, $data) ) { 
 								$output.= 'checked';
@@ -1687,7 +1694,7 @@ class UM_Fields {
 							$output .= ' />';
 							
 							$output .= '<span class="um-field-checkbox-state"><i class="'.$class.'"></i></span>';
-							$output .= '<span class="um-field-checkbox-option">'.$v.'</span>';
+							$output .= '<span class="um-field-checkbox-option">'. $v .'</span>';
 							$output .= '</label>';
 						
 							if ($i % 2 == 0) {
@@ -1716,8 +1723,11 @@ class UM_Fields {
 				
 			/* Shortcode */
 			case 'shortcode':
+			
+				$content = str_replace('{profile_id}', um_profile_id(), $content );
+				
 				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">
-								<div class="um-field-shortcode">'.do_shortcode($content).'</div>
+								<div class="um-field-shortcode">' . do_shortcode($content) . '</div>
 							</div>';
 				break;
 				
@@ -1994,9 +2004,11 @@ class UM_Fields {
 						if ( isset( $data['label'] ) ) {
 							$output .= $this->field_label($label, $key, $data);
 						}
+						
+						$res = stripslashes( $this->field_value( $key, $default, $data ) );
 
 						$output .= '<div class="um-field-area">';
-						$output .= '<div class="um-field-value">' . stripslashes( $this->field_value( $key, $default, $data ) ) . '</div>';
+						$output .= '<div class="um-field-value">' . $res . '</div>';
 						$output .= '</div>';
 						
 						$output .= '</div>';
@@ -2012,8 +2024,11 @@ class UM_Fields {
 				
 			/* Shortcode */
 			case 'shortcode':
+			
+				$content = str_replace('{profile_id}', um_profile_id(), $content );
+				
 				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">
-								<div class="um-field-shortcode">'.do_shortcode($content).'</div>
+								<div class="um-field-shortcode">' . do_shortcode($content) . '</div>
 							</div>';
 				break;
 				

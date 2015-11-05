@@ -25,7 +25,8 @@
              * @const       string VERSION The plugin version, used for cache-busting and script file references
              * @since       3.0.0
              */
-            const VERSION = '3.4.1';
+
+            const VERSION = '3.5.4.3';
 
             /**
              * @access      protected
@@ -183,7 +184,12 @@
             }
 
             public function load_first() {
-                $path = str_replace( WP_PLUGIN_DIR . '/', '', __FILE__ );
+                $plugin_dir = Redux_Helpers::cleanFilePath(WP_PLUGIN_DIR) . '/';
+                $self_file  = Redux_Helpers::cleanFilePath( __FILE__ );
+                
+                $path       = str_replace( $plugin_dir , '', $self_file );
+                $path       = str_replace('class.redux-plugin.php', 'redux-framework.php', $path);
+                
                 if ( $plugins = get_option( 'active_plugins' ) ) {
                     if ( $key = array_search( $path, $plugins ) ) {
                         array_splice( $plugins, $key, 1 );
@@ -404,10 +410,10 @@
                 if ( strpos( $file, 'redux-framework.php' ) !== false && is_plugin_active( $file ) ) {
 
                     $new_links = array(
+                        '<a href="http://docs.reduxframework.com/" target="_blank">' . __( 'Docs', 'redux-framework' ) . '</a>',
                         '<a href="https://github.com/ReduxFramework/redux-framework" target="_blank">' . __( 'Repo', 'redux-framework' ) . '</a>',
-                        '<a href="http://generate.reduxframework.com/" target="_blank">' . __( 'Generator', 'redux-framework' ) . '</a>',
-                        '<a href="https://github.com/ReduxFramework/redux-framework/issues/" target="_blank">' . __( 'Issues', 'redux-framework' ) . '</a>',
-                        '<a href="http://docs.reduxframework.com/" target="_blank">' . __( 'Documentation', 'redux-framework' ) . '</a>',
+                        '<a href="http://build.reduxframework.com/" target="_blank">' . __( 'Builder', 'redux-framework' ) . '</a>',
+                        '<a href="' . admin_url( 'tools.php?page=redux-support' ) . '">' . __( 'Get Support', 'redux-framework' ) . '</a>',
                     );
 
                     if ( ( is_multisite() && $this->plugin_network_activated ) || ! is_network_admin() || ! is_multisite() ) {
