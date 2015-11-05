@@ -25,18 +25,13 @@ Ultimate Member is a powerful and flexible plugin that makes it a breeze for use
 
 Read about all of the plugin's features at [Ultimate Member](https://ultimatemember.com/)
 
-#####Installation
+Installation
 ======================
 1. Activate the plugin
 2. That's it. Go to Ultimate Member > Settings to customize plugin options
 3. For more details, please visit the official [Documentation](https://ultimatemember.com/docs/) page.
 
-
-#####Bug Reporting / Feature Request
-=======================
-
-
-#####Changelog
+Changelog
 =======================
 = 1.3.29: October 31, 2015 =
 
