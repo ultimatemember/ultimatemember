@@ -157,7 +157,7 @@
 			if ( $sortby == 'other' && $sortby_custom ) {
 			
 				$query_args['meta_key'] = $sortby_custom;
-				$query_args['orderby'] = 'meta_value';
+				$query_args['orderby'] = 'meta_value, display_name';
 				
 			} else if ( in_array( $sortby, array( 'last_name', 'first_name' ) ) ) {
 			

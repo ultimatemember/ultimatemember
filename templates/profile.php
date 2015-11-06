@@ -1,4 +1,4 @@
-<div class="um <?php echo $this->get_class( $mode ); ?> um-<?php echo $form_id; ?>">
+<div class="um <?php echo $this->get_class( $mode ); ?> um-<?php echo $form_id; ?> um-role-<?php echo um_user('role'); ?> ">
 
 	<div class="um-form">
 	
