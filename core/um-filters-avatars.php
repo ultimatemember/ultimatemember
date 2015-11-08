@@ -48,6 +48,9 @@
 			$avatar = '<img src="' . $protocol . 'gravatar.com/avatar/' . md5( um_user('user_email') ) . 
 			'?d='. $default . '&amp;s=' . $size . $rating .'" class="gravatar avatar avatar-'.$size.' um-avatar" width="'.$size.'" height="'.$size.'" alt="" />';
 			
+		}else if( empty( $avatar ) ){
+			$default_avatar_uri = um_get_default_avatar_uri();
+			$avatar = '<img src="' .$default_avatar_uri  .'" class="gravatar avatar avatar-'.$size.' um-avatar" width="'.$size.'" height="'.$size.'" alt="" />';
 		}
 
 		return $avatar;
