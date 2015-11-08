@@ -2,13 +2,11 @@ Ultimate Member
 ==============
 Ultimate Member is a powerful and flexible WordPress plugin that makes it a breeze for users to sign-up and become members. The plugin allows you to add beautiful user profiles to your site and is perfect for creating advanced online communities. Lightweight and highly extendible, Ultimate Member will enable you to create almost any type of site where users can join and become members with absolute ease.
 
-|Requires at least|Tested up to|
-| :------------: |:---------------:|
-|WordPress 4.1|WordPress 4.3|
+| Latest Version |Requires at least|Tested up to|
+| :------------: |:------------: |:---------------:|
+| 1.3.29 | WordPress 4.1|WordPress 4.3|
 
-| Stable Tag |
-|:-------:|
-|1.3.29|
+
 
 ##Features of the plugin include:
 - Front-end user registration
