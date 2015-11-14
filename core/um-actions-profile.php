@@ -376,7 +376,7 @@
 
 					<?php if ( $ultimatemember->fields->viewing == true && um_user('description') && $args['show_bio'] ) { ?>
 					
-					<div class="um-meta-text"><?php echo um_filtered_value('description'); ?></div>
+					<div class="um-meta-text"><?php echo wp_strip_all_tags( um_filtered_value('description') ); ?></div>
 					
 					<?php } else if ( $ultimatemember->fields->editing == true  && $args['show_bio'] ) { ?>
 					
