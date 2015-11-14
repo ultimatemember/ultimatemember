@@ -254,7 +254,7 @@ class UM_Admin_Users {
 			}
 			
 			// filter by user role
-			if ( isset($_REQUEST['um_filter_role']) && !$_REQUEST['new_role'] && $_REQUEST['um_filter_role'] ) {
+			if ( isset($_REQUEST['um_filter_role']) && ! isset( $_REQUEST['new_role'] ) && $_REQUEST['um_filter_role'] ) {
 				exit( wp_redirect( admin_url('users.php?um_role=' . $_REQUEST['um_filter_role'] ) ) );
 			}
 			
