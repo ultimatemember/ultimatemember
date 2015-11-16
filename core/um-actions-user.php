@@ -31,7 +31,7 @@
 			
 			foreach($files as $file) {
 				$str = basename($file);
-				if ( !strstr( $str, 'profile_photo') && !strstr( $str, 'cover_photo') && !preg_grep('/' . $str . '/', $array ) )
+				if ( !strstr( $str, 'profile_photo') && !strstr( $str, 'cover_photo') && !strstr( $str, 'stream_photo') && !preg_grep('/' . $str . '/', $array ) )
 					unlink( $file );
 			}
 			
