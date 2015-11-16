@@ -24,14 +24,15 @@ if(isset($_FILES[$id]['name'])) {
 		$temp = $_FILES[$id]["tmp_name"];
 		$file = $_FILES[$id]["name"];
 		$file = sanitize_file_name($file);
-		
+		 $ext = pathinfo($file, PATHINFO_EXTENSION);
+
 		$error = $ultimatemember->files->check_image_upload( $temp, $id );
 		if ( $error ){
 			
 			$ret['error'] = $error;
 		
 		} else {
-			$file = "stream_photo_".md5($file)."_".uniqid();
+			$file = "stream_photo_".md5($file)."_".uniqid().".".$ext;
 			$ret[] = $ultimatemember->files->new_image_upload_temp( $temp, $file, um_get_option('image_compression') );
 			
 		}
