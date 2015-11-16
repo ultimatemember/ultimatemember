@@ -27,7 +27,7 @@
 			
 			um_fetch_user( um_get_requested_user() );
 			
-			$profile_title = $ultimatemember->mail->convert_tags( $profile_title );
+			$profile_title = um_convert_tags( $profile_title );
 			
 			$title = $profile_title;
 			

@@ -149,7 +149,7 @@
 		
 			um_fetch_user( um_get_requested_user() );
 			
-			$content = $ultimatemember->mail->convert_tags( um_get_option('profile_desc') );
+			$content = um_convert_tags( um_get_option('profile_desc') );
 			$user_id = um_user('ID');
 			$url = um_user_profile_url();
 			
