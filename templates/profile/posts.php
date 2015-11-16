@@ -1,4 +1,6 @@
-<?php $ultimatemember->shortcodes->loop = $ultimatemember->query->make('post_type=post&posts_per_page=10&offset=0&author=' . um_user('ID') ); ?>
+<?php $query_posts = $ultimatemember->query->make('post_type=post&posts_per_page=10&offset=0&author=' . um_user('ID') ); ?>
+
+<?php $ultimatemember->shortcodes->loop = apply_filters('um_profile_query_make_posts', $query_posts ); ?>
 
 <?php if ( $ultimatemember->shortcodes->loop->have_posts()) { ?>
 			
