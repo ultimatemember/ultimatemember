@@ -9,7 +9,7 @@
 
 		if ( isset( $changes['first_name'] ) && isset( $changes['last_name'] ) ) {
 			
-			if ( $changes['first_name'] && $changes['last_name'] ) {
+			if ( $changes['first_name'] && $changes['last_name'] && um_get_option('display_name') != 'public_name' ) {
 				
 				wp_update_user( array( 'ID' => $ultimatemember->user->id, 'display_name' => $changes['first_name'] . ' ' . $changes['last_name'] ) );
 
@@ -54,8 +54,13 @@
 				}
 			}
 
-			update_user_meta( $ultimatemember->user->id, 'full_name', $full_name );
+				update_user_meta( $ultimatemember->user->id, 'full_name', $full_name );
+			
 			
 		}
 		
+		if( um_get_option('display_name') === 'public_name' ){
+			update_user_meta( $ultimatemember->user->id, 'display_name', $changes['display_name'] );
+		}
+
 	}
