@@ -919,6 +919,8 @@ class UM_Fields {
 			}
 		}
 
+		$type = apply_filters("um_hook_for_field_{$type}", $type );
+
 		/* Begin by field type */
 		switch( $type ) {
 			
@@ -1459,6 +1461,8 @@ class UM_Fields {
 						if (!isset($options)){
 							$options = $ultimatemember->builtin->get ( 'countries' );
 						}
+
+
 						
 						// role field
 						if ( $form_key == 'role' ) {
@@ -1476,6 +1480,8 @@ class UM_Fields {
 							$options = $new_roles;
 						}
 						
+						$options = apply_filters("um_multiselect_options_{$data['type']}", $options, $data );
+
 						// add an empty option!
 						$output .= '<option value=""></option>';
 
