@@ -919,6 +919,8 @@ class UM_Fields {
 			}
 		}
 
+		$type = apply_filters("um_hook_for_field_{$type}", $type );
+		
 		/* Begin by field type */
 		switch( $type ) {
 			
@@ -1457,6 +1459,8 @@ class UM_Fields {
 						}
 						
 						if (!isset($options)){
+							$options = apply_filters("um_multiselect_options_{$data['type']}", $options, $data );
+
 							$options = $ultimatemember->builtin->get ( 'countries' );
 						}
 						
