@@ -1480,8 +1480,7 @@ class UM_Fields {
 							$options = $new_roles;
 						}
 						
-						$options = apply_filters("um_multiselect_options_{$data['type']}", $options, $data );
-
+						
 						// add an empty option!
 						$output .= '<option value=""></option>';
 
@@ -1540,10 +1539,12 @@ class UM_Fields {
 						if ( isset($options) && $options == 'builtin'){
 							$options = $ultimatemember->builtin->get ( $filter );
 						}
-						
+
 						if (!isset($options)){
 							$options = $ultimatemember->builtin->get ( 'countries' );
 						}
+
+						$options = apply_filters("um_multiselect_options_{$data['type']}", $options, $data );
 						
 						// add an empty option!
 						$output .= '<option value=""></option>';
