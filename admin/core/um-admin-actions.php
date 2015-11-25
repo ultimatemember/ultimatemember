@@ -27,7 +27,7 @@
 		foreach($ultimatemember->query->get_roles() as $role_id => $role) {
 		echo '<label><input type="checkbox" name="_um_roles[]" value="' . $role_id . '" /> ' . $role . '</label>';
 		}
-		echo '<p class="description">' . __('This is applicable only if you allow logged-in users to view the content.','ultimatemember') . '</p>';
+		echo '<p class="description">' . __('This is applicable only if you restrict the content to logged-in users.','ultimatemember') . '</p>';
 		echo '</div>';
 		
 		echo '<div class="form-field term-redirect-wrap">';
