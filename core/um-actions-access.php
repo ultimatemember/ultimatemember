@@ -63,11 +63,14 @@
 	add_action('um_access_category_settings','um_access_category_settings');
 	function um_access_category_settings() {
 		global $post, $wp_query, $ultimatemember;
-		if ( is_single() && get_the_category() ) {
+		if ( is_single() || get_the_category() ) {
+		
+
 			$categories = get_the_category();
 			foreach( $categories as $cat ) {
 				$term_id = $cat->term_id;
 				$opt = get_option("category_$term_id");
+				
 				if ( isset( $opt['_um_accessible'] ) ) {
 					switch( $opt['_um_accessible'] ) {
 						
@@ -88,8 +91,8 @@
 							
 						case 2:
 						
-							if ( !is_user_logged_in() )
-								$ultimatemember->access->redirect_handler = ( isset( $opt['_um_redirect'] ) ) ? $opt['_um_redirect'] : um_get_core_page('login');
+							if ( ! is_user_logged_in() )
+								$ultimatemember->access->redirect_handler = ( isset( $opt['_um_redirect'] ) && ! empty( $opt['_um_redirect']  ) ) ? $opt['_um_redirect'] : um_get_core_page('login');
 							
 							if ( is_user_logged_in() && isset( $opt['_um_roles'] ) && !empty( $opt['_um_roles'] ) ){
 								if ( !in_array( um_user('role'), $opt['_um_roles'] ) ) {
