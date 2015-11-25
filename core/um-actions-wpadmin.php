@@ -6,80 +6,83 @@
 	add_action('init','um_block_wpadmin_for_guests');
 	function um_block_wpadmin_for_guests() {
 		global $pagenow;
-	
+		
+
+
 		if ( isset( $_REQUEST['um_panic_key'] ) &&  $_REQUEST['um_panic_key'] == um_get_option('panic_key') ) {
 			exit( wp_redirect( add_query_arg('_verified_key', $_REQUEST['um_panic_key'], wp_login_url() ) ) );
 		}
 		
 		if ( !isset( $_REQUEST['_verified_key'] ) || $_REQUEST['_verified_key'] != um_get_option('panic_key') ) {
-			
-		// Logout screen
-		if ( isset( $pagenow ) && $pagenow == 'wp-login.php' && is_user_logged_in() && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'logout' ) {
-			$redirect = um_get_core_page('logout');
-			if ( isset( $_REQUEST['redirect_to'] ) && !empty( $_REQUEST['redirect_to'] ) ) {
-				$redirect = add_query_arg( 'redirect_to', $_REQUEST['redirect_to'], $redirect );
-			}
-			exit( wp_redirect( $redirect ) );
-		}
-			
-		// Login screen
-		if ( isset( $pagenow ) && $pagenow == 'wp-login.php' && !is_user_logged_in() && !isset( $_REQUEST['action'] ) ) {
+			// Logout screen
+			if ( isset( $pagenow ) && $pagenow == 'wp-login.php' && is_user_logged_in() && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'logout' ) {
+				$redirect = um_get_core_page('logout');
 
-			$allowed = um_get_option('wpadmin_login');
-			$allowed = apply_filters('um_whitelisted_wpadmin_access', $allowed );
-			
-			if ( !$allowed ) {
-				
-				$act = um_get_option('wpadmin_login_redirect');
-				$custom_url = um_get_option('wpadmin_login_redirect_url');
-				
-				if ( $act == 'um_login_page' || !$custom_url ) {
-					$redirect = um_get_core_page('login');
-				} else {
-					$redirect = $custom_url;
+				if ( isset( $_REQUEST['redirect_to'] ) && !empty( $_REQUEST['redirect_to'] ) ) {
+					$redirect = add_query_arg( 'redirect_to', $_REQUEST['redirect_to'], $redirect );
 				}
 				exit( wp_redirect( $redirect ) );
 			}
-		}
+				
+			// Login screen
+			if ( isset( $pagenow ) && $pagenow == 'wp-login.php' && !is_user_logged_in() && !isset( $_REQUEST['action'] ) ) {
 
-		// Register screen
-		if ( isset( $pagenow ) && $pagenow == 'wp-login.php' && !is_user_logged_in() && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'register' ) {
-			
-			$allowed = um_get_option('wpadmin_register');
-			$allowed = apply_filters('um_whitelisted_wpadmin_access', $allowed );
-			
-			if ( !$allowed ) {
+				$allowed = um_get_option('wpadmin_login');
+				$allowed = apply_filters('um_whitelisted_wpadmin_access', $allowed );
 				
-				$act = um_get_option('wpadmin_register_redirect');
-				$custom_url = um_get_option('wpadmin_register_redirect_url');
-				
-				if ( $act == 'um_register_page' || !$custom_url ) {
-					$redirect = um_get_core_page('register');
-				} else {
-					$redirect = $custom_url;
+				if ( !$allowed ) {
+					
+					$act = um_get_option('wpadmin_login_redirect');
+					$custom_url = um_get_option('wpadmin_login_redirect_url');
+					
+					if ( $act == 'um_login_page' || !$custom_url ) {
+						$redirect = um_get_core_page('login');
+					} else {
+						$redirect = $custom_url;
+					}
+					exit( wp_redirect( $redirect ) );
 				}
-				exit( wp_redirect( $redirect ) );
 			}
-		}
+
+			// Register screen
+			if ( isset( $pagenow ) && $pagenow == 'wp-login.php' && !is_user_logged_in() && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'register' ) {
+				
+				$allowed = um_get_option('wpadmin_register');
+				$allowed = apply_filters('um_whitelisted_wpadmin_access', $allowed );
+				
+				if ( !$allowed ) {
+					
+					$act = um_get_option('wpadmin_register_redirect');
+					$custom_url = um_get_option('wpadmin_register_redirect_url');
+					
+					if ( $act == 'um_register_page' || !$custom_url ) {
+						$redirect = um_get_core_page('register');
+					} else {
+						$redirect = $custom_url;
+					}
+					exit( wp_redirect( $redirect ) );
+				}
+			}
 		
-		// Lost password page
-		if ( isset( $pagenow ) && $pagenow == 'wp-login.php' && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'lostpassword' ) {
-			exit( wp_redirect( um_get_core_page('password-reset') ) );
-		}
-		
-		// Prevention for logged in user
-		if ( isset( $pagenow ) && $pagenow == 'wp-login.php' && is_user_logged_in() ) {
+			// Lost password page
+			if ( isset( $pagenow ) && $pagenow == 'wp-login.php' && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'lostpassword' ) {
+				exit( wp_redirect( um_get_core_page('password-reset') ) );
+			}
+
+			// Prevention for logged in user
+			if ( isset( $pagenow ) && $pagenow == 'wp-login.php' && is_user_logged_in() && isset(  $_REQUEST['action'] ) && $_REQUEST['action'] != 'postpass' ) {
+				
+				if ( !um_user('can_access_wpadmin') ) {
+					exit( wp_redirect( home_url() ) );
+				} else {
+					exit( wp_redirect( admin_url() ) );
+				}
 			
-			if ( !um_user('can_access_wpadmin') ) {
-				exit( wp_redirect( home_url() ) );
-			} else {
-				exit( wp_redirect( admin_url() ) );
 			}
-		
-		}
 		
 		}
 
+		
 	}
 	
 	/***
