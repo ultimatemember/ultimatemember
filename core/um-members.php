@@ -136,14 +136,13 @@ class UM_Members {
 		
 		$query_args = array();
 		$query_args = apply_filters( 'um_prepare_user_query_args', $query_args, $args );
-
 		$users = new WP_User_Query( $query_args );
 		
 		// number of profiles for mobile
 		if ( $ultimatemember->mobile->isMobile() && isset( $profiles_per_page_mobile ) )
 			$profiles_per_page = $profiles_per_page_mobile;
 		
-		$array['users'] = $users->results;
+		$array['users'] = array_unique( $users->results );
 		
 		$array['total_users'] = (isset( $max_users ) && $max_users && $max_users <= $users->total_users ) ? $max_users : $users->total_users;
 

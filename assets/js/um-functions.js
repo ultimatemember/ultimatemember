@@ -4,7 +4,8 @@ var live_value;
 function um_conditional(){
 
 	jQuery('.um-field.um-is-conditional').each(function(){
-	
+		//console.log('-----');
+		var found = 0;
 		for (var i = 0; i < 5; i++) {
 		
 			var action0 = jQuery(this).data('cond-'+i+'-action');
@@ -12,73 +13,91 @@ function um_conditional(){
 			var operator0 = jQuery(this).data('cond-'+i+'-operator');
 			var value0 = jQuery(this).data('cond-'+i+'-value');
 			
-			if (  action0 == 'show' && field0 == live_field ) {
 			
+			if (  action0 == 'show' && field0 == live_field && typeof value0 !== 'undefined' ) {
+				//console.log( 'show',i,'conditional='+value0, 'option='+live_value );
+
 				if ( operator0 == 'empty' ) {
-					if ( !live_value || live_value == '' ) {
+					if ( !live_value || live_value == '' || found > 0 ) {
 						jQuery(this).fadeIn();
+						found++;
 					} else {
 						jQuery(this).hide();
+						
 					}
 				}
 				
 				if ( operator0 == 'not empty' ) {
-					if ( live_value && live_value != '' ) {
+					if ( live_value && live_value != '' || found > 0 ) {
 						jQuery(this).fadeIn();
+						found++;
 					} else {
 						jQuery(this).hide();
+
 					}
 				}
 				
 				if ( operator0 == 'equals to' ) {
-					if ( value0 == live_value ) {
+					if ( value0 == live_value  || found > 0 ) {
 						jQuery(this).fadeIn();
+						found++;
 					} else {
 						jQuery(this).hide();
+
 					}
 				}
 				
 				if ( operator0 == 'not equals' ) {
-					if ( jQuery.isNumeric( value0 ) && parseInt( live_value ) != parseInt( value0 ) && live_value ) {
+					if ( jQuery.isNumeric( value0 ) && parseInt( live_value ) != parseInt( value0 ) && live_value  || found > 0 ) {
 						jQuery(this).fadeIn();
-					} else if ( !jQuery.isNumeric( value0 ) && value0 != live_value ) {
+						found++;
+					} else if ( !jQuery.isNumeric( value0 ) && value0 != live_value  || found > 0 ) {
 						jQuery(this).fadeIn();
+						found++;
 					} else {
 						jQuery(this).hide();
+
 					}
 				}
 				
 				if ( operator0 == 'greater than' ) {
-					if ( jQuery.isNumeric( value0 ) && parseInt( live_value ) > parseInt( value0 ) ) {
+					if ( jQuery.isNumeric( value0 ) && parseInt( live_value ) > parseInt( value0 )   || found > 0) {
 						jQuery(this).fadeIn();
+						found++;
 					} else {
 						jQuery(this).hide();
+
 					}
 				}
 				
 				if ( operator0 == 'less than' ) {
-					if ( jQuery.isNumeric( value0 ) && parseInt( live_value ) < parseInt( value0 ) && live_value ) {
+					if ( jQuery.isNumeric( value0 ) && parseInt( live_value ) < parseInt( value0 ) && live_value   || found > 0) {
 						jQuery(this).fadeIn();
+						found++;
 					} else {
 						jQuery(this).hide();
+
 					}
 				}
 				
 				if ( operator0 == 'contains' ) {
-					if ( live_value && live_value.indexOf( value0 ) >= 0 ) {
+					if ( live_value && live_value.indexOf( value0 ) >= 0  || found > 0 ) {
 						jQuery(this).fadeIn();
+						found++;
 					} else {
 						jQuery(this).hide();
+
 					}
 				}
 				
 			}
 			
-			if (  action0 == 'hide' && field0 == live_field ) {
+			if (  action0 == 'hide' && field0 == live_field && typeof value0 !== 'undefined'  ) {
 			
 				if ( operator0 == 'empty' ) {
 					if ( !live_value || live_value == '' ) {
 						jQuery(this).hide();
+						found++;
 					} else {
 						jQuery(this).fadeIn();
 					}
@@ -87,6 +106,7 @@ function um_conditional(){
 				if ( operator0 == 'not empty' ) {
 					if ( live_value && live_value != '' ) {
 						jQuery(this).hide();
+						found++;
 					} else {
 						jQuery(this).fadeIn();
 					}
@@ -95,6 +115,7 @@ function um_conditional(){
 				if ( operator0 == 'equals to' ) {
 					if ( value0 == live_value ) {
 						jQuery(this).hide();
+						found++;
 					} else {
 						jQuery(this).fadeIn();
 					}
@@ -103,8 +124,10 @@ function um_conditional(){
 				if ( operator0 == 'not equals' ) {
 					if ( jQuery.isNumeric( value0 ) && parseInt( live_value ) != parseInt( value0 ) && live_value ) {
 						jQuery(this).hide();
+						found++;
 					} else if ( !jQuery.isNumeric( value0 ) && value0 != live_value ) {
 						jQuery(this).hide();
+						found++;
 					} else {
 						jQuery(this).fadeIn();
 					}
@@ -113,6 +136,7 @@ function um_conditional(){
 				if ( operator0 == 'greater than' ) {
 					if ( jQuery.isNumeric( value0 ) && parseInt( live_value ) > parseInt( value0 ) ) {
 						jQuery(this).hide();
+						found++;
 					} else {
 						jQuery(this).fadeIn();
 					}
@@ -121,6 +145,7 @@ function um_conditional(){
 				if ( operator0 == 'less than' ) {
 					if ( jQuery.isNumeric( value0 ) && parseInt( live_value ) < parseInt( value0 ) && live_value ) {
 						jQuery(this).hide();
+						found++;
 					} else {
 						jQuery(this).fadeIn();
 					}
@@ -129,11 +154,13 @@ function um_conditional(){
 				if ( operator0 == 'contains' ) {
 					if ( live_value && live_value.indexOf( value0 ) >= 0 ) {
 						jQuery(this).hide();
+						found++;
 					} else {
 						jQuery(this).fadeIn();
 					}
 				}
-				
+				//console.log( 'hide',i,value0, live_value );
+
 			}
 		
 		}
