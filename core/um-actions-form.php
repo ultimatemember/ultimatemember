@@ -155,6 +155,8 @@
 		
 		foreach( $fields as $key => $array ) {
 			
+			$array = apply_filters('um_get_custom_field_array', $array, $fields );
+
 			if ( isset( $array['type'] ) && $array['type'] == 'checkbox' && isset( $array['required'] ) && $array['required'] == 1 && !isset( $args[$key] ) ) {
 				$ultimatemember->form->add_error($key, sprintf(__('%s is required.','ultimatemember'), $array['title'] ) );
 			}

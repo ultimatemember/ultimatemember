@@ -262,3 +262,43 @@
 		return $array;
 		
 	}
+
+	/***
+	*** @validate conditional logic
+	***/
+	add_filter('um_get_custom_field_array', 'um_get_custom_field_array',99,2);
+
+	function um_get_custom_field_array( $array, $fields ){
+		
+		if( isset( $array['conditions'] ) ){
+				$found = 0;
+				for( $a = 0; $a < count( $array['conditions'] ); $a++ ){
+					    if(  isset( $array['conditional_value'] ) || isset( $array['conditional_value'.$a] ) ){
+						
+							if( isset( $array['conditions'] ) && ! empty( $array['conditions'] ) ){
+								
+								$arr_conditions = array();
+
+								foreach ($array['conditions'] as $key => $value) {
+									$metakey = $fields[ $value[1] ]['metakey'] ;
+									$arr_conditions[ $metakey ] = $_POST[ $metakey ];
+								}
+
+								foreach ($array['conditions'] as $key => $value) {
+									$metakey = $fields[ $value[1] ]['metakey'] ;
+									$arr_conditions[ $metakey ] = $_POST[ $metakey ];
+									 if( isset( $_POST[ $metakey ] ) &&   isset( $array['conditional_value'] )  && $_POST[ $metakey ] !== $array['conditional_value'] ){
+									 		$array['required'] = 0;
+									 }
+									 if( isset( $_POST[ $metakey ] ) && isset( $array['conditional_value'.$a] ) &&  $_POST[ $metakey ] !== $array['conditional_value'.$a] ){
+									 		$array['required'] = 0;
+									 }
+								}
+
+							}
+						}
+				}
+		}
+
+		 return $array;
+	}
