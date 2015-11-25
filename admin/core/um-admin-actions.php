@@ -5,7 +5,6 @@
 	* Add access settings to category
 	*
 	**/
-	
 
 	add_action( 'category_add_form_fields', 'um_category_access_fields_create' );
 	add_action( 'category_edit_form_fields', 'um_category_access_fields_edit' );
@@ -55,7 +54,7 @@
 			<label><input type="radio" name="_um_accessible" value="2" ' . checked( 2, $_um_accessible, 0 ) . ' /> ' . __('Content accessible to Logged In Users','ultimatemember') . '</label>';
 		echo '<p class="description">Who can see content/posts in this category.</p>';
 		echo "</td></tr>";
-		
+
 		echo "<tr class='form-field form-required term-roles-wrap'>";
 		echo "<th scope='row'><label>" .  __('Roles who can see the content','ultimatemember') . "</label></th>";
 		echo '<td>';
@@ -69,34 +68,34 @@
 		}
 		echo '<p class="description">' . __('Users who cannot see content will get redirected to that URL.','ultimatemember') . '</p>';
 		echo "</td></tr>";
-		
+
 		echo "<tr class='form-field form-required term-redirect-wrap'>";
 		echo "<th scope='row'><label>" . __('Content Restriction Redirect URL','ultimatemember') . "</label></th>";
 		echo '<td>';
 		echo '<input type="text" name="_um_redirect" id="_um_redirect" value="' . $_um_redirect . '" />';
 		echo '<p class="description">' . __('Users who cannot see content will get redirected to that URL.','ultimatemember') . '</p>';
 		echo "</td></tr>";
-		
+
 	}
 
 	function um_category_access_fields_save( $termID ){
 
 		if ( isset( $_POST['_um_accessible'] ) ) {
-			
+
 			// get options from database - if not a array create a new one
 			$termMeta = get_option( "category_$termID" );
 			if ( !is_array( $termMeta ))
 				$termMeta = array();
-			
+
 			// get value and save it into the database - maybe you have to sanitize your values (urls, etc...)
 			$termMeta['_um_accessible'] = isset( $_POST['_um_accessible'] ) ? $_POST['_um_accessible'] : '';
 			$termMeta['_um_redirect'] = isset( $_POST['_um_redirect'] ) ? $_POST['_um_redirect'] : '';
 			$termMeta['_um_roles'] = isset( $_POST['_um_roles'] ) ? $_POST['_um_roles'] : '';
-			
+
 			update_option( "category_$termID", $termMeta );
 		}
 	}
-	
+
 	/***
 	***	@Allow mass syncing for roles
 	***/
@@ -104,64 +103,64 @@
 	function um_admin_do_action__mass_role_sync( $action ){
 		global $ultimatemember;
 		if ( !is_admin() || !current_user_can( 'edit_user' ) ) die();
-		
+
 		if ( !isset($_REQUEST['post']) || !is_numeric( $_REQUEST['post'] ) ) die();
 
 		$post_id = (int) $_REQUEST['post'];
-		
+
 		$post = get_post( $post_id );
 		$slug = $post->post_name;
-		
+
 		if ( $slug != $_REQUEST['um_role'] )
 			die();
-		
+
 		if ( get_post_meta( $post_id, '_um_synced_role', true ) != $_REQUEST['wp_role'] )
 			die();
-		
+
 		if ( $slug == 'admin' ) {
 			$_REQUEST['wp_role'] = 'administrator';
 			update_post_meta( $post_id, '_um_synced_role', 'administrator' );
 		}
-		
+
 		$wp_role = ( $_REQUEST['wp_role'] ) ? $_REQUEST['wp_role'] : 'subscriber';
-		
+
 		$users = get_users( array( 'fields' => array( 'ID' ), 'meta_key' => 'role', 'meta_value' => $slug ) );
 		foreach( $users as $user_id ) {
 			$wp_user_object = new WP_User( $user_id );
 			$wp_user_object->set_role( $wp_role );
 		}
-		
+
 		exit( wp_redirect( admin_url( 'post.php?post=' . $post_id ) . '&action=edit&message=1' ) );
-	
+
 	}
-	
+
 	/***
 	***	@add option for WPML
 	***/
 	add_action('um_admin_before_access_settings', 'um_admin_wpml_post_options', 10, 1 );
 	function um_admin_wpml_post_options( $instance ) {
-	
+
 		if ( !function_exists('icl_get_current_language') )
 			return;
-		
+
 		?>
-		
+
 		<h4><?php _e('This is a translation of UM profile page?','ultimatemember'); ?></h4>
-		
+
 		<p>
 			<span><?php $instance->ui_on_off( '_um_wpml_user', 0 ); ?></span>
 		</p>
-		
+
 		<h4><?php _e('This is a translation of UM account page?','ultimatemember'); ?></h4>
-		
+
 		<p>
 			<span><?php $instance->ui_on_off( '_um_wpml_account', 0 ); ?></span>
 		</p>
-		
+
 		<?php
-	
+
 	}
-	
+
 	/***
 	***	@when role is saved
 	***/
@@ -169,14 +168,14 @@
 		global $wpdb, $ultimatemember;
 		if( get_post_type( $post_id ) == 'um_role') {
 			$slug = $post->post_name;
-			
+
 			$is_core = get_post_meta( $post_id, '_um_core', true );
 			if ( $is_core == 'member' || $is_core == 'admin' ) {
 				$slug = $is_core;
 				$where = array( 'ID' => $post_id );
 				$wpdb->update( $wpdb->posts, array( 'post_name' => $slug ), $where );
 			}
-			
+
 			delete_option("um_cached_role_{$slug}");
 
 			// need to remove cache of all users
