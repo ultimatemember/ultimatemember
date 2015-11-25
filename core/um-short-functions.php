@@ -1093,7 +1093,7 @@ function um_fetch_user( $user_id ) {
 		$uri = um_get_option('default_avatar');
 		$uri = $uri['url'];
 		if ( !$uri )
-			$uri = um_url . 'assets/img/default_avatar.jpg';
+			$uri = UM_URL . 'assets/img/default_avatar.jpg';
 		return $uri;
 	}
 	

@@ -190,39 +190,39 @@ class UM_Admin_Dashboard {
 	function up_language() {
 		global $ultimatemember;
 		$locale = get_option('WPLANG');
-		include_once um_path . 'admin/templates/dashboard/language-update.php';
+		include_once UM_PATH . 'admin/templates/dashboard/language-update.php';
 	}
 	
 	function dl_language() {
 		global $ultimatemember;
 		$locale = get_option('WPLANG');
-		include_once um_path . 'admin/templates/dashboard/language-download.php';
+		include_once UM_PATH . 'admin/templates/dashboard/language-download.php';
 	}
 	
 	function ct_language() {
 		global $ultimatemember;
 		$locale = get_option('WPLANG');
-		include_once um_path . 'admin/templates/dashboard/language-contrib.php';
+		include_once UM_PATH . 'admin/templates/dashboard/language-contrib.php';
 	}
 	
 	function um_news() {
 		global $ultimatemember;
-		include_once um_path . 'admin/templates/dashboard/feed.php';
+		include_once UM_PATH . 'admin/templates/dashboard/feed.php';
 	}
 	
 	function users_overview() {
 		global $ultimatemember;
-		include_once um_path . 'admin/templates/dashboard/users.php';
+		include_once UM_PATH . 'admin/templates/dashboard/users.php';
 	}
 	
 	function purge_temp() {
 		global $ultimatemember;
-		include_once um_path . 'admin/templates/dashboard/purge.php';
+		include_once UM_PATH . 'admin/templates/dashboard/purge.php';
 	}
 	
 	function user_cache() {
 		global $ultimatemember;
-		include_once um_path . 'admin/templates/dashboard/cache.php';
+		include_once UM_PATH . 'admin/templates/dashboard/cache.php';
 	}
 	
 	/***
@@ -323,15 +323,15 @@ class UM_Admin_Dashboard {
 			
 		} else if ( $page == 'ultimatemember-extensions' ) {
 			
-			include_once um_path . 'admin/templates/extensions.php';
+			include_once UM_PATH . 'admin/templates/extensions.php';
 			
 		} else if ( strstr( $page, 'ultimatemember-' ) ) {
 
 			$template = str_replace('ultimatemember-','',$page);
-			$file = um_path . 'admin/templates/welcome/'. $template . '.php';
+			$file = UM_PATH . 'admin/templates/welcome/'. $template . '.php';
 
 			if ( file_exists( $file ) ){
-				include_once um_path . 'admin/templates/welcome/'. $template . '.php';
+				include_once UM_PATH . 'admin/templates/welcome/'. $template . '.php';
 			}
 
 		}

@@ -1331,7 +1331,7 @@ $this->sections[] = array(
 			'title'    			=> __('Default Profile Photo', 'ultimatemember'),
 			'desc'     			=> __('You can change the default profile picture globally here. Please make sure that the photo is 300x300px.', 'ultimatemember'),
 			'default'  			=> array(
-					'url'		=> um_url . 'assets/img/default_avatar.jpg',
+					'url'		=> UM_URL . 'assets/img/default_avatar.jpg',
 			),
 		),
 		
