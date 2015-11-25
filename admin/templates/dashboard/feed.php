@@ -11,8 +11,6 @@
 			'show_date'    	=> 1,
 	));
 
-		echo "</div>";
-		
-	echo "<style type='text/css'>#um-metaboxes-mainbox-1 a.rsswidget {font-weight: 400}#um-metaboxes-mainbox-1 .rss-widget span.rss-date{ color: #777; margin-left: 12px;}</style>";
+	echo "</div>";
 
-?>
+	echo "<style type='text/css'>#um-metaboxes-mainbox-1 a.rsswidget {font-weight: 400}#um-metaboxes-mainbox-1 .rss-widget span.rss-date{ color: #777; margin-left: 12px;}</style>";
