@@ -21,12 +21,12 @@ class UM_Admin_API {
 		require_once UM_PATH . 'admin/core/um-admin-dashboard.php';
 
 	}
-	
+
 	/***
 	***	@Init
 	***/
 	function admin_init(){
-	
+
 		global $ultimatemember;
 
 		require_once UM_PATH . 'admin/core/um-admin-columns.php';
@@ -60,16 +60,16 @@ class UM_Admin_API {
 		$this->builder = new UM_Admin_Builder();
 		$this->dragdrop = new UM_Admin_DragDrop();
 
-		if ( 	is_admin() && 
-				current_user_can('manage_options') && 
-				isset($_REQUEST['um_adm_action']) && 
+		if ( 	is_admin() &&
+				current_user_can('manage_options') &&
+				isset($_REQUEST['um_adm_action']) &&
 				$_REQUEST['um_adm_action'] != ''
 			)
 		{
 			do_action("um_admin_do_action__", $_REQUEST['um_adm_action'] );
 			do_action("um_admin_do_action__{$_REQUEST['um_adm_action']}", $_REQUEST['um_adm_action'] );
 		}
-		
+
 	}
 
 }

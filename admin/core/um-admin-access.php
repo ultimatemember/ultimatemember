@@ -10,14 +10,14 @@ class UM_Admin_Access {
 		add_action( 'load-post-new.php', array(&$this, 'add_metabox'), 9 );
 
 	}
-	
+
 	/***
 	***	@add a helper tooltip
 	***/
 	function tooltip( $text, $e = false ){
-	
+
 		?>
-		
+
 		<span class="um-admin-tip">
 			<?php if ($e == 'e' ) { ?>
 			<span class="um-admin-tipsy-e" title="<?php echo $text; ?>"><i class="dashicons dashicons-editor-help"></i></span>
@@ -25,39 +25,39 @@ class UM_Admin_Access {
 			<span class="um-admin-tipsy-w" title="<?php echo $text; ?>"><i class="dashicons dashicons-editor-help"></i></span>
 			<?php } ?>
 		</span>
-		
+
 		<?php
-	
+
 	}
 
 	/***
 	***	@Checks core post type
 	***/
 	function core_post_type( $post_type ){
-		
+
 		if ( strstr($post_type, 'um_') )
 			return true;
-		
+
 		if ( $post_type == 'shop_order' )
 			return true;
-		
+
 		if ( !class_exists('UM_bbPress_API') && in_array($post_type,array('forum','topic','reply')) )
 			return true;
-		
+
 		return false;
 	}
-	
+
 	/***
 	***	@Init the metaboxes
 	***/
 	function add_metabox() {
 		global $current_screen;
-		
+
 		add_action( 'add_meta_boxes', array(&$this, 'add_metabox_form'), 1 );
 		add_action( 'save_post', array(&$this, 'save_metabox_form'), 10, 2 );
-		
+
 	}
-	
+
 	/***
 	***	@load a form metabox
 	***/
@@ -70,44 +70,44 @@ class UM_Admin_Access {
 			$UM_Builder = new UM_Admin_Builder();
 			$UM_Builder->form_id = get_the_ID();
 		}
-		
+
 		preg_match('#\{.*?\}#s', $box['id'], $matches);
-		
+
 		if ( isset($matches[0]) ){
 			$path = $matches[0];
 			$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
 		} else {
-			$path = um_path;
+			$path = UM_PATH;
 		}
-		
+
 		$path = str_replace('{','', $path );
 		$path = str_replace('}','', $path );
-		
+
 		include_once $path . 'admin/templates/access/'. $box['id'] . '.php';
 		wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_access_nonce' );
 	}
-	
+
 	/***
 	***	@add form metabox
 	***/
 	function add_metabox_form() {
 		global $ultimatemember;
-		
+
 		if ( um_get_option('access_widget_admin_only') && !current_user_can( 'edit_users' ) ) return;
-		
+
 		$types = $ultimatemember->query->get_post_types;
 		foreach($types as $post_type) {
-			
+
 			if ( !$this->core_post_type( $post_type ) ) {
-			
+
 				add_meta_box('um-admin-access-settings', __('Ultimate Member'), array(&$this, 'load_metabox_form'), $post_type, 'side', 'default');
 
 			}
-		
+
 			do_action('um_admin_custom_access_metaboxes');
-			
+
 		}
-		
+
 	}
 
 	/***
@@ -122,7 +122,7 @@ class UM_Admin_Access {
 		// validate user
 		$post_type = get_post_type_object( $post->post_type );
 		if ( !current_user_can( $post_type->cap->edit_post, $post_id ) ) return $post_id;
-		
+
 		// save
 		$multi_choice_keys = apply_filters('um_admin_multi_choice_keys', array() );
 		if ( $multi_choice_keys ) {
@@ -137,5 +137,5 @@ class UM_Admin_Access {
 		}
 
 	}
-	
+
 }

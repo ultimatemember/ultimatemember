@@ -31,7 +31,7 @@
             }
 
             public function setSections() {
-			
+
 				include_once um_path . 'um-config.php';
 
             }
@@ -46,7 +46,7 @@
 					'allow_sub_menu'    => false,                    // Show the sections below the admin menu item or not
 					'menu_title'        => __('Settings', 'ultimatemember'),
 					'page_title'        => __('Settings', 'ultimatemember'),
-				   
+
 					'google_api_key' => '', // Must be defined to add google fonts to the typography module
 					'async_typography'  => true,                    // Use a asynchronous font on the front end or font string
 					'admin_bar'         => false,                    // Show the panel pages on the admin bar
@@ -69,9 +69,9 @@
 					'output'            => true,                    // Global shut-off for dynamic CSS output by the framework. Will also disable google fonts output
 					'output_tag'        => true,                    // Allows dynamic CSS to be generated for customizer and google fonts, but stops the dynamic CSS from going to the head
 					'footer_credit'     => '&nbsp;',                   // Disable the footer credit of Redux. Please leave if you can help it.
-					
+
 				);
-				
+
 				// SOCIAL ICONS -> Setup custom links in the footer for quick links in your panel footer icons.
 				$this->args['share_icons'][] = array(
 					'url'   => 'https://github.com/ultimatemember/ultimatemember',
@@ -103,12 +103,12 @@
 					'title' => 'We\'re on YouTube',
 					'icon'  => 'um-icon-social-youtube'
 				);
-				
+
 			}
 
         }
 
         global $reduxConfig;
         $reduxConfig = new UM_Redux_Framework_Config();
-		
+
     }
