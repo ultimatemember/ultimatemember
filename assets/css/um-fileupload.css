@@ -25,7 +25,9 @@
 }
 
 .um-single-image-preview.show,
-.um-single-file-preview.show {display: block}
+.um-single-file-preview.show {
+	display: block;
+}
 
 .um-single-image-preview > img {
 	max-width: 100%;
@@ -61,7 +63,9 @@
 	overflow: hidden;
 }
 .um-single-image-preview a.cancel i:before,
-.um-single-file-preview a.cancel i:before{line-height:inherit}
+.um-single-file-preview a.cancel i:before{
+	line-height:inherit;
+}
 
 /*
 	- file info
@@ -89,7 +93,9 @@
 	line-height: 70px;
 	overflow: hidden;
 }
-.um-single-fileinfo span.icon i:before{line-height:inherit}
+.um-single-fileinfo span.icon i:before {
+	line-height: inherit;
+}
 
 .um-single-fileinfo span.filename {
 	display: block;
@@ -192,9 +198,11 @@
 	box-sizing: border-box;
 	transition: 0.2s;
 }
-  
+	
 .upload:hover {
 	background: #44b0ec;
 }
 
-.um-modal input[type="file"]::-webkit-file-upload-button { cursor: pointer }
+.um-modal input[type='file']::-webkit-file-upload-button {
+	cursor: pointer;
+}

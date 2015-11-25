@@ -38,8 +38,8 @@ class UM_Uninstall {
 		$roles = get_posts( array( 'post_type' => 'um_role', 'numberposts'   => -1 ) );
 		foreach( $roles as $role ) {wp_delete_post( $role->ID, 1 );}
 
-		if ( is_plugin_active( um_plugin ) ) {
-			deactivate_plugins( um_plugin );
+		if ( is_plugin_active( UM_PLUGIN ) ) {
+			deactivate_plugins( UM_PLUGIN );
 		}
 		
 		exit( wp_redirect( admin_url('plugins.php') ) );

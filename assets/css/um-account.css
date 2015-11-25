@@ -77,9 +77,9 @@
 	display: inline-block;
 }
 
-.um-account-meta.radius-1 img { 	-moz-border-radius: 999px;-webkit-border-radius: 999px;border-radius: 999px }
-.um-account-meta.radius-2 img { 	-moz-border-radius: 4px;-webkit-border-radius: 4px;border-radius: 4px }
-.um-account-meta.radius-3 img { 	-moz-border-radius: 0;-webkit-border-radius: 0;border-radius: 0 }
+.um-account-meta.radius-1 img { -moz-border-radius: 999px;-webkit-border-radius: 999px;border-radius: 999px; }
+.um-account-meta.radius-2 img { -moz-border-radius: 4px;-webkit-border-radius: 4px;border-radius: 4px; }
+.um-account-meta.radius-3 img { -moz-border-radius: 0;-webkit-border-radius: 0;border-radius: 0; }
 
 .um-account-name a {
 	font-weight: bold;
@@ -185,7 +185,10 @@
 	color: #555;
 }
 
-.um-account-side li a:hover {color: #444; background: #ddd}
+.um-account-side li a:hover {
+	color: #444; 
+	background: #ddd;
+}
 
 .um-account-side li a.current,
 .um-account-side li a.current:hover {

@@ -79,10 +79,10 @@ class UM_Admin_Enqueue {
 	***/
 	function load_form(){
 	
-		wp_register_style('um_admin_form', um_url . 'admin/assets/css/um-admin-form.css' );
+		wp_register_style('um_admin_form', UM_URL . 'admin/assets/css/um-admin-form.css' );
 		wp_enqueue_style('um_admin_form');
 		
-		wp_register_script('um_admin_form', um_url . 'admin/assets/js/um-admin-form.js', '', '', true );
+		wp_register_script('um_admin_form', UM_URL . 'admin/assets/js/um-admin-form.js', '', '', true );
 		wp_enqueue_script('um_admin_form');
 		
 	}
@@ -92,10 +92,10 @@ class UM_Admin_Enqueue {
 	***/
 	function load_dashboard(){
 
-		wp_register_style('um_admin_dashboard', um_url . 'admin/assets/css/um-admin-dashboard.css' );
+		wp_register_style('um_admin_dashboard', UM_URL . 'admin/assets/css/um-admin-dashboard.css' );
 		wp_enqueue_style('um_admin_dashboard');
 		
-		wp_register_script('um_admin_dashboard', um_url . 'admin/assets/js/um-admin-dashboard.js', '', '', true );
+		wp_register_script('um_admin_dashboard', UM_URL . 'admin/assets/js/um-admin-dashboard.js', '', '', true );
 		wp_enqueue_script('um_admin_dashboard');
 		
 	}
@@ -105,10 +105,10 @@ class UM_Admin_Enqueue {
 	***/
 	function load_modal(){
 
-		wp_register_style('um_admin_modal', um_url . 'admin/assets/css/um-admin-modal.css' );
+		wp_register_style('um_admin_modal', UM_URL . 'admin/assets/css/um-admin-modal.css' );
 		wp_enqueue_style('um_admin_modal');
 		
-		wp_register_script('um_admin_modal', um_url . 'admin/assets/js/um-admin-modal.js', '', '', true );
+		wp_register_script('um_admin_modal', UM_URL . 'admin/assets/js/um-admin-modal.js', '', '', true );
 		wp_enqueue_script('um_admin_modal');
 		
 	}
@@ -118,7 +118,7 @@ class UM_Admin_Enqueue {
 	***/
 	function load_field(){
 
-		wp_register_script('um_admin_field', um_url . 'admin/assets/js/um-admin-field.js', '', '', true );
+		wp_register_script('um_admin_field', UM_URL . 'admin/assets/js/um-admin-field.js', '', '', true );
 		wp_enqueue_script('um_admin_field');
 		
 	}
@@ -128,7 +128,7 @@ class UM_Admin_Enqueue {
 	***/
 	function load_users_js(){
 
-		wp_register_script('um_admin_users', um_url . 'admin/assets/js/um-admin-users.js', '', '', true );
+		wp_register_script('um_admin_users', UM_URL . 'admin/assets/js/um-admin-users.js', '', '', true );
 		wp_enqueue_script('um_admin_users');
 		
 	}
@@ -138,13 +138,13 @@ class UM_Admin_Enqueue {
 	***/
 	function load_builder(){
 	
-		wp_register_script('um_admin_builder', um_url . 'admin/assets/js/um-admin-builder.js', '', '', true );
+		wp_register_script('um_admin_builder', UM_URL . 'admin/assets/js/um-admin-builder.js', '', '', true );
 		wp_enqueue_script('um_admin_builder');
 		
-		wp_register_script('um_admin_dragdrop', um_url . 'admin/assets/js/um-admin-dragdrop.js', '', '', true );
+		wp_register_script('um_admin_dragdrop', UM_URL . 'admin/assets/js/um-admin-dragdrop.js', '', '', true );
 		wp_enqueue_script('um_admin_dragdrop');
 		
-		wp_register_style('um_admin_builder', um_url . 'admin/assets/css/um-admin-builder.css' );
+		wp_register_style('um_admin_builder', UM_URL . 'admin/assets/css/um-admin-builder.css' );
 		wp_enqueue_style('um_admin_builder');
 		
 	}
@@ -167,17 +167,17 @@ class UM_Admin_Enqueue {
 	***/
 	function load_css(){
 	
-		wp_register_style('um_admin_menu', um_url . 'admin/assets/css/um-admin-menu.css' );
+		wp_register_style('um_admin_menu', UM_URL . 'admin/assets/css/um-admin-menu.css' );
 		wp_enqueue_style('um_admin_menu');
 		
-		wp_register_style('um_admin_columns', um_url . 'admin/assets/css/um-admin-columns.css' );
+		wp_register_style('um_admin_columns', UM_URL . 'admin/assets/css/um-admin-columns.css' );
 		wp_enqueue_style('um_admin_columns');
 
-		wp_register_style('um_admin_misc', um_url . 'admin/assets/css/um-admin-misc.css' );
+		wp_register_style('um_admin_misc', UM_URL . 'admin/assets/css/um-admin-misc.css' );
 		wp_enqueue_style('um_admin_misc');
 		
 		if ( get_post_type() != 'shop_order' ) {
-			wp_register_style('um_admin_select2', um_url . 'admin/assets/css/um-admin-select2.css' );
+			wp_register_style('um_admin_select2', UM_URL . 'admin/assets/css/um-admin-select2.css' );
 			wp_enqueue_style('um_admin_select2');
 		}
 
@@ -188,7 +188,7 @@ class UM_Admin_Enqueue {
 	***/
 	function load_global_css(){
 	
-		wp_register_style('um_admin_global', um_url . 'admin/assets/css/um-admin-global.css' );
+		wp_register_style('um_admin_global', UM_URL . 'admin/assets/css/um-admin-global.css' );
 		wp_enqueue_style('um_admin_global');
 		
 	}
@@ -198,7 +198,7 @@ class UM_Admin_Enqueue {
 	***/
 	function load_custom_scripts(){
 	
-		wp_register_script('um_admin_scripts', um_url . 'admin/assets/js/um-admin-scripts.js', '', '', true );
+		wp_register_script('um_admin_scripts', UM_URL . 'admin/assets/js/um-admin-scripts.js', '', '', true );
 		wp_enqueue_script('um_admin_scripts');
 		
 	}
@@ -208,7 +208,7 @@ class UM_Admin_Enqueue {
 	***/
 	function load_ajax_js(){
 	
-		wp_register_script('um_admin_ajax', um_url . 'admin/assets/js/um-admin-ajax.js', '', '', true );
+		wp_register_script('um_admin_ajax', UM_URL . 'admin/assets/js/um-admin-ajax.js', '', '', true );
 		wp_enqueue_script('um_admin_ajax');
 		
 	}
@@ -218,7 +218,7 @@ class UM_Admin_Enqueue {
 	***/
 	function load_redux_css(){
 	
-		wp_register_style('um_admin_redux', um_url . 'admin/assets/css/um-admin-redux.css' );
+		wp_register_style('um_admin_redux', UM_URL . 'admin/assets/css/um-admin-redux.css' );
 		wp_enqueue_style('um_admin_redux');
 		
 	}
@@ -280,7 +280,7 @@ class UM_Admin_Enqueue {
 			$this->load_custom_scripts();
 			
 			if ( is_rtl() ) {
-				wp_register_style('um_admin_rtl', um_url . 'admin/assets/css/um-admin-rtl.css' );
+				wp_register_style('um_admin_rtl', UM_URL . 'admin/assets/css/um-admin-rtl.css' );
 				wp_enqueue_style('um_admin_rtl');
 			}
 		

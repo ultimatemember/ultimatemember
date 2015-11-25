@@ -4,10 +4,10 @@ class UM_API {
 
 	function __construct() {
 
-		require_once um_path . 'core/um-short-functions.php';
+		require_once UM_PATH . 'core/um-short-functions.php';
 		
 		if (is_admin()){
-			require_once um_path . 'admin/um-admin-init.php';
+			require_once UM_PATH . 'admin/um-admin-init.php';
 		}
 
 		add_action('init',  array(&$this, 'init'), 0);
@@ -53,7 +53,7 @@ class UM_API {
 		global $ultimatemember;
 		foreach( $ultimatemember->addons as $addon => $name ) {
 			if ( um_get_option('addon_' . $addon ) == 1 ) {
-				include_once um_path . 'addons/'.$addon.'.php';
+				include_once UM_PATH . 'addons/'.$addon.'.php';
 			}
 		}
 	}
@@ -65,74 +65,74 @@ class UM_API {
 
 		ob_start();
 		
-		require_once um_path . 'core/um-api.php';
-		require_once um_path . 'core/um-rewrite.php';
-		require_once um_path . 'core/um-setup.php';
-		require_once um_path . 'core/um-uninstall.php';
-		require_once um_path . 'core/um-fonticons.php';
-		require_once um_path . 'core/um-login.php';
-		require_once um_path . 'core/um-register.php';
-		require_once um_path . 'core/um-enqueue.php';
-		require_once um_path . 'core/um-shortcodes.php';
-		require_once um_path . 'core/um-account.php';
-		require_once um_path . 'core/um-password.php';
-		require_once um_path . 'core/um-fields.php';
-		require_once um_path . 'core/um-form.php';
-		require_once um_path . 'core/um-user.php';
-		require_once um_path . 'core/um-user-posts.php';
-		require_once um_path . 'core/um-profile.php';
-		require_once um_path . 'core/um-query.php';
-		require_once um_path . 'core/um-datetime.php';
-		require_once um_path . 'core/um-chart.php';
-		require_once um_path . 'core/um-builtin.php';
-		require_once um_path . 'core/um-files.php';
-		require_once um_path . 'core/um-taxonomies.php';
-		require_once um_path . 'core/um-validation.php';
-		require_once um_path . 'core/um-navmenu.php';
-		require_once um_path . 'core/um-menu.php';
-		require_once um_path . 'core/um-access.php';
-		require_once um_path . 'core/um-permalinks.php';
-		require_once um_path . 'core/um-mail.php';
-		require_once um_path . 'core/um-members.php';
-		require_once um_path . 'core/um-logout.php';
-		require_once um_path . 'core/um-modal.php';
-		require_once um_path . 'core/um-cron.php';
-		require_once um_path . 'core/um-tracking.php';
+		require_once UM_PATH . 'core/um-api.php';
+		require_once UM_PATH . 'core/um-rewrite.php';
+		require_once UM_PATH . 'core/um-setup.php';
+		require_once UM_PATH . 'core/um-uninstall.php';
+		require_once UM_PATH . 'core/um-fonticons.php';
+		require_once UM_PATH . 'core/um-login.php';
+		require_once UM_PATH . 'core/um-register.php';
+		require_once UM_PATH . 'core/um-enqueue.php';
+		require_once UM_PATH . 'core/um-shortcodes.php';
+		require_once UM_PATH . 'core/um-account.php';
+		require_once UM_PATH . 'core/um-password.php';
+		require_once UM_PATH . 'core/um-fields.php';
+		require_once UM_PATH . 'core/um-form.php';
+		require_once UM_PATH . 'core/um-user.php';
+		require_once UM_PATH . 'core/um-user-posts.php';
+		require_once UM_PATH . 'core/um-profile.php';
+		require_once UM_PATH . 'core/um-query.php';
+		require_once UM_PATH . 'core/um-datetime.php';
+		require_once UM_PATH . 'core/um-chart.php';
+		require_once UM_PATH . 'core/um-builtin.php';
+		require_once UM_PATH . 'core/um-files.php';
+		require_once UM_PATH . 'core/um-taxonomies.php';
+		require_once UM_PATH . 'core/um-validation.php';
+		require_once UM_PATH . 'core/um-navmenu.php';
+		require_once UM_PATH . 'core/um-menu.php';
+		require_once UM_PATH . 'core/um-access.php';
+		require_once UM_PATH . 'core/um-permalinks.php';
+		require_once UM_PATH . 'core/um-mail.php';
+		require_once UM_PATH . 'core/um-members.php';
+		require_once UM_PATH . 'core/um-logout.php';
+		require_once UM_PATH . 'core/um-modal.php';
+		require_once UM_PATH . 'core/um-cron.php';
+		require_once UM_PATH . 'core/um-tracking.php';
 		
 		if ( !class_exists( 'Mobile_Detect' ) ) {
-			require_once um_path . 'core/lib/mobiledetect/Mobile_Detect.php';
+			require_once UM_PATH . 'core/lib/mobiledetect/Mobile_Detect.php';
 		}
 		
-		require_once um_path . 'core/um-actions-form.php';
-		require_once um_path . 'core/um-actions-access.php';
-		require_once um_path . 'core/um-actions-wpadmin.php';
-		require_once um_path . 'core/um-actions-core.php';
-		require_once um_path . 'core/um-actions-ajax.php';
-		require_once um_path . 'core/um-actions-login.php';
-		require_once um_path . 'core/um-actions-register.php';
-		require_once um_path . 'core/um-actions-profile.php';
-		require_once um_path . 'core/um-actions-account.php';
-		require_once um_path . 'core/um-actions-password.php';
-		require_once um_path . 'core/um-actions-members.php';
-		require_once um_path . 'core/um-actions-global.php';
-		require_once um_path . 'core/um-actions-user.php';
-		require_once um_path . 'core/um-actions-save-profile.php';
-		require_once um_path . 'core/um-actions-modal.php';
-		require_once um_path . 'core/um-actions-misc.php';
+		require_once UM_PATH . 'core/um-actions-form.php';
+		require_once UM_PATH . 'core/um-actions-access.php';
+		require_once UM_PATH . 'core/um-actions-wpadmin.php';
+		require_once UM_PATH . 'core/um-actions-core.php';
+		require_once UM_PATH . 'core/um-actions-ajax.php';
+		require_once UM_PATH . 'core/um-actions-login.php';
+		require_once UM_PATH . 'core/um-actions-register.php';
+		require_once UM_PATH . 'core/um-actions-profile.php';
+		require_once UM_PATH . 'core/um-actions-account.php';
+		require_once UM_PATH . 'core/um-actions-password.php';
+		require_once UM_PATH . 'core/um-actions-members.php';
+		require_once UM_PATH . 'core/um-actions-global.php';
+		require_once UM_PATH . 'core/um-actions-user.php';
+		require_once UM_PATH . 'core/um-actions-save-profile.php';
+		require_once UM_PATH . 'core/um-actions-modal.php';
+		require_once UM_PATH . 'core/um-actions-misc.php';
 
-		require_once um_path . 'core/um-filters-login.php';
-		require_once um_path . 'core/um-filters-fields.php';
-		require_once um_path . 'core/um-filters-files.php';
-		require_once um_path . 'core/um-filters-navmenu.php';
-		require_once um_path . 'core/um-filters-avatars.php';
-		require_once um_path . 'core/um-filters-arguments.php';
-		require_once um_path . 'core/um-filters-user.php';
-		require_once um_path . 'core/um-filters-members.php';
-		require_once um_path . 'core/um-filters-profile.php';
-		require_once um_path . 'core/um-filters-account.php';
-		require_once um_path . 'core/um-filters-misc.php';
-		require_once um_path . 'core/um-filters-addons.php';
-		require_once um_path . 'core/um-filters-commenting.php';
+		require_once UM_PATH . 'core/um-filters-login.php';
+		require_once UM_PATH . 'core/um-filters-fields.php';
+		require_once UM_PATH . 'core/um-filters-files.php';
+		require_once UM_PATH . 'core/um-filters-navmenu.php';
+		require_once UM_PATH . 'core/um-filters-avatars.php';
+		require_once UM_PATH . 'core/um-filters-arguments.php';
+		require_once UM_PATH . 'core/um-filters-user.php';
+		require_once UM_PATH . 'core/um-filters-members.php';
+		require_once UM_PATH . 'core/um-filters-profile.php';
+		require_once UM_PATH . 'core/um-filters-account.php';
+		require_once UM_PATH . 'core/um-filters-misc.php';
+		require_once UM_PATH . 'core/um-filters-addons.php';
+		require_once UM_PATH . 'core/um-filters-commenting.php';
 		
 		/* initialize UM */
 		$this->api = new UM_REST_API();

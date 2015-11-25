@@ -12,25 +12,25 @@ Author URI: http://ultimatemember.com/
 	
 	$plugin_data = get_plugin_data( __FILE__ );
 
-	define('um_url',plugin_dir_url(__FILE__ ));
-	define('um_path',plugin_dir_path(__FILE__ ));
-	define('um_plugin', plugin_basename( __FILE__ ) );
+	define('UM_URL',plugin_dir_url(__FILE__ ));
+	define('UM_PATH',plugin_dir_path(__FILE__ ));
+	define('UM_PLUGIN', plugin_basename( __FILE__ ) );
 	
 	define('ultimatemember_version', $plugin_data['Version'] );
 	
-	$plugin = um_plugin;
+	$plugin = UM_PLUGIN;
 
 	/***
 	***	@Init
 	***/
-	require_once um_path . 'um-init.php';
+	require_once UM_PATH . 'um-init.php';
 	
 	/***
 	***	@Display a welcome page
 	***/
 	function ultimatemember_activation_hook( $plugin ) {
 
-		if( $plugin == um_plugin && get_option('um_version') != ultimatemember_version ) {
+		if( $plugin == UM_PLUGIN && get_option('um_version') != ultimatemember_version ) {
 		
 			update_option('um_version', ultimatemember_version );
 			

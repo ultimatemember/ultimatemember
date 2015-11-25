@@ -1,4 +1,4 @@
-<?php if (  $this->dir_size('temp') > 0.1 ) { ?>
+<?php if ( 0.1 < $this->dir_size('temp') ) { ?>
 
 <p>You can free up <span class="red"><?php echo $this->dir_size('temp'); ?>MB</span> by purging your temp upload directory.</p>
 
