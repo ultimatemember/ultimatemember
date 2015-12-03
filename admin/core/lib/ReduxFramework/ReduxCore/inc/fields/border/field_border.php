@@ -122,34 +122,34 @@ if ( ! class_exists( 'ReduxFramework_border' ) ) {
             echo '<input type="hidden" class="field-units" value="px">';
 
             if ( isset( $this->field['all'] ) && $this->field['all'] == true ) {
-                echo '<div class="field-border-input input-prepend"><span class="add-on"><i class="el el-fullscreen icon-large"></i></span><input type="text" class="redux-border-all redux-border-input mini' . $this->field['class'] . '" placeholder="' . __( 'All', 'redux-framework' ) . '" rel="' . $this->field['id'] . '-all" value="' . $this->value['top'] . '"></div>';
+                echo '<div class="field-border-input input-prepend"><span class="add-on"><i class="el el-fullscreen icon-large"></i></span><input type="text" class="redux-border-all redux-border-input mini ' . $this->field['class'] . '" placeholder="' . __( 'All', 'redux-framework' ) . '" rel="' . $this->field['id'] . '-all" value="' . $this->value['top'] . '"></div>';
             }
 
-            echo '<input type="hidden" class="redux-border-value" id="' . $this->field['id'] . '-top" name="' . $this->field['name'] . $this->field['name_suffix'] . '[border-top]" value="' . ( $this->value['top'] ? $this->value['top'] . 'px' : 0 ) . '">';
-            echo '<input type="hidden" class="redux-border-value" id="' . $this->field['id'] . '-right" name="' . $this->field['name'] . $this->field['name_suffix'] . '[border-right]" value="' . ( $this->value['right'] ? $this->value['right'] . 'px' : 0 ) . '">';
-            echo '<input type="hidden" class="redux-border-value" id="' . $this->field['id'] . '-bottom" name="' . $this->field['name'] . $this->field['name_suffix'] . '[border-bottom]" value="' . ( $this->value['bottom'] ? $this->value['bottom'] . 'px' : 0 ) . '">';
-            echo '<input type="hidden" class="redux-border-value" id="' . $this->field['id'] . '-left" name="' . $this->field['name'] . $this->field['name_suffix'] . '[border-left]" value="' . ( $this->value['left'] ? $this->value['left'] . 'px' : 0 ) . '">';
+            echo '<input type="hidden" class="redux-border-value" id="' . $this->field['id'] . '-top" name="' . $this->field['name'] . $this->field['name_suffix'] . '[border-top]" value="' . ( $this->value['top'] ? $this->value['top'] . 'px' : '' ) . '">';
+            echo '<input type="hidden" class="redux-border-value" id="' . $this->field['id'] . '-right" name="' . $this->field['name'] . $this->field['name_suffix'] . '[border-right]" value="' . ( $this->value['right'] ? $this->value['right'] . 'px' : '' ) . '">';
+            echo '<input type="hidden" class="redux-border-value" id="' . $this->field['id'] . '-bottom" name="' . $this->field['name'] . $this->field['name_suffix'] . '[border-bottom]" value="' . ( $this->value['bottom'] ? $this->value['bottom'] . 'px' : '' ) . '">';
+            echo '<input type="hidden" class="redux-border-value" id="' . $this->field['id'] . '-left" name="' . $this->field['name'] . $this->field['name_suffix'] . '[border-left]" value="' . ( $this->value['left'] ? $this->value['left'] . 'px' : '' ) . '">';
 
             if ( ! isset( $this->field['all'] ) || $this->field['all'] !== true ) {
                 /**
                  * Top
                  * */
                 if ( $this->field['top'] === true ) {
-                    echo '<div class="field-border-input input-prepend"><span class="add-on"><i class="el el-arrow-up icon-large"></i></span><input type="text" class="redux-border-top redux-border-input mini' . $this->field['class'] . '" placeholder="' . __( 'Top', 'redux-framework' ) . '" rel="' . $this->field['id'] . '-top" value="' . $this->value['top'] . '"></div>';
+                    echo '<div class="field-border-input input-prepend"><span class="add-on"><i class="el el-arrow-up icon-large"></i></span><input type="text" class="redux-border-top redux-border-input mini ' . $this->field['class'] . '" placeholder="' . __( 'Top', 'redux-framework' ) . '" rel="' . $this->field['id'] . '-top" value="' . $this->value['top'] . '"></div>';
                 }
 
                 /**
                  * Right
                  * */
                 if ( $this->field['right'] === true ) {
-                    echo '<div class="field-border-input input-prepend"><span class="add-on"><i class="el el-arrow-right icon-large"></i></span><input type="text" class="redux-border-right redux-border-input mini' . $this->field['class'] . '" placeholder="' . __( 'Right', 'redux-framework' ) . '" rel="' . $this->field['id'] . '-right" value="' . $this->value['right'] . '"></div>';
+                    echo '<div class="field-border-input input-prepend"><span class="add-on"><i class="el el-arrow-right icon-large"></i></span><input type="text" class="redux-border-right redux-border-input mini ' . $this->field['class'] . '" placeholder="' . __( 'Right', 'redux-framework' ) . '" rel="' . $this->field['id'] . '-right" value="' . $this->value['right'] . '"></div>';
                 }
 
                 /**
                  * Bottom
                  * */
                 if ( $this->field['bottom'] === true ) {
-                    echo '<div class="field-border-input input-prepend"><span class="add-on"><i class="el el-arrow-down icon-large"></i></span><input type="text" class="redux-border-bottom redux-border-input mini' . $this->field['class'] . '" placeholder="' . __( 'Bottom', 'redux-framework' ) . '" rel="' . $this->field['id'] . '-bottom" value="' . $this->value['bottom'] . '"></div>';
+                    echo '<div class="field-border-input input-prepend"><span class="add-on"><i class="el el-arrow-down icon-large"></i></span><input type="text" class="redux-border-bottom redux-border-input mini ' . $this->field['class'] . '" placeholder="' . __( 'Bottom', 'redux-framework' ) . '" rel="' . $this->field['id'] . '-bottom" value="' . $this->value['bottom'] . '"></div>';
                 }
 
                 /**
@@ -168,6 +168,7 @@ if ( ! class_exists( 'ReduxFramework_border' ) ) {
                     'solid'  => 'Solid',
                     'dashed' => 'Dashed',
                     'dotted' => 'Dotted',
+                    'double' => "Double",
                     'none'   => 'None'
                 );
                 echo '<select original-title="' . __( 'Border style', 'redux-framework' ) . '" id="' . $this->field['id'] . '[border-style]" name="' . $this->field['name'] . $this->field['name_suffix'] . '[border-style]" class="tips redux-border-style ' . $this->field['class'] . '" rows="6" data-id="' . $this->field['id'] . '">';
@@ -206,27 +207,39 @@ if ( ! class_exists( 'ReduxFramework_border' ) ) {
          */
         function enqueue() {
             $min = Redux_Functions::isMin();
-            wp_enqueue_style( 'select2-css' );
-            wp_enqueue_style( 'wp-color-picker' );
             
-            wp_enqueue_script(
-                'redux-field-border-js',
-                ReduxFramework::$_url . 'inc/fields/border/field_border' . $min . '.js',
-                array( 'jquery', 'select2-js', 'wp-color-picker', 'redux-js' ),
-                time(),
-                true
-            );
+            if (!wp_style_is ( 'select2-css' )) {
+                wp_enqueue_style( 'select2-css' );
+            }
+            
+            if (!wp_style_is ( 'wp-color-picker' )) {
+                wp_enqueue_style( 'wp-color-picker' );
+            }
+            
+            if (!wp_script_is ( 'redux-field-border-js' )) {
+                wp_enqueue_script(
+                    'redux-field-border-js',
+                    ReduxFramework::$_url . 'inc/fields/border/field_border' . $min . '.js',
+                    array( 'jquery', 'select2-js', 'wp-color-picker', 'redux-js' ),
+                    time(),
+                    true
+                );
+            }
 
             if ($this->parent->args['dev_mode']) {
-                wp_enqueue_style( 'redux-color-picker-css' );
+                if (!wp_style_is ( 'redux-color-picker-css' )) {
+                    wp_enqueue_style( 'redux-color-picker-css' );
+                }
                 
-                wp_enqueue_style(
-                    'redux-field-border-css',
-                    ReduxFramework::$_url . 'inc/fields/border/field_border.css',
-                    array(),
-                    time(),
-                    'all'
-                );
+                if (!wp_style_is ( 'redux-field-border-css' )) {
+                    wp_enqueue_style(
+                        'redux-field-border-css',
+                        ReduxFramework::$_url . 'inc/fields/border/field_border.css',
+                        array(),
+                        time(),
+                        'all'
+                    );
+                }
             }
         } //function
 
@@ -246,7 +259,7 @@ if ( ! class_exists( 'ReduxFramework_border' ) ) {
                 'style' => ! empty( $this->value['border-style'] ) ? $this->value['border-style'] : 'inherit'
             );
 
-            $borderWidth = '0px';
+            $borderWidth = '';
             if ( isset( $this->value['border-width'] ) ) {
                 $borderWidth = $this->value['border-width'];
             }
@@ -280,20 +293,30 @@ if ( ! class_exists( 'ReduxFramework_border' ) ) {
                     if ( $key == "color" || $key == "style" ) {
                         continue;
                     }
-                    $style .= 'border-' . $key . ':' . $value . ' ' . $cleanValue['style'] . ' ' . $cleanValue['color'] . ';';
+                    if (!empty($value)) {
+                        $style .= 'border-' . $key . ':' . $value . ' ' . $cleanValue['style'] . ' ' . $cleanValue['color'] . ';';
+                    }
                 }
             } else {
-                $style .= 'border:' . $cleanValue['top'] . ' ' . $cleanValue['style'] . ' ' . $cleanValue['color'] . ';';
+                if (!empty($cleanValue['top'])) {
+                    $style .= 'border:' . $cleanValue['top'] . ' ' . $cleanValue['style'] . ' ' . $cleanValue['color'] . ';';
+                }
             }
 
             if ( ! empty( $this->field['output'] ) && is_array( $this->field['output'] ) ) {
                 $keys = implode( ",", $this->field['output'] );
-                $this->parent->outputCSS .= $keys . "{" . $style . '}';
+                
+                if (!empty($style)) {
+                    $this->parent->outputCSS .= $keys . "{" . $style . '}';
+                }
             }
 
             if ( ! empty( $this->field['compiler'] ) && is_array( $this->field['compiler'] ) ) {
                 $keys = implode( ",", $this->field['compiler'] );
-                $this->parent->compilerCSS .= $keys . "{" . $style . '}';
+                
+                if (!empty($style)) {
+                    $this->parent->compilerCSS .= $keys . "{" . $style . '}';
+                }
             }
         }
     } //class

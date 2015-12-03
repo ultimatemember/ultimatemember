@@ -12,6 +12,8 @@
     // This is your option name where all the Redux data is stored.
     $opt_name = "redux_demo";
 
+    // This line is only for altering the demo. Can be easily removed.
+    $opt_name = apply_filters( 'redux_demo/opt_name', $opt_name );
 
     /*
      *
@@ -51,29 +53,6 @@
             }
         }
     }
-
-    /*
-     *
-     * --> Action hook examples
-     *
-     */
-
-    // If Redux is running as a plugin, this will remove the demo notice and links
-    //add_action( 'redux/loaded', 'remove_demo' );
-
-    // Function to test the compiler hook and demo CSS output.
-    // Above 10 is a priority, but 2 in necessary to include the dynamically generated CSS to be sent to the function.
-    //add_filter('redux/options/' . $opt_name . '/compiler', 'compiler_action', 10, 3);
-
-    // Change the arguments after they've been declared, but before the panel is created
-    //add_filter('redux/options/' . $opt_name . '/args', 'change_arguments' );
-
-    // Change the default value of a field after it's been set, but before it's been useds
-    //add_filter('redux/options/' . $opt_name . '/defaults', 'change_defaults' );
-
-    // Dynamically add a section. Can be also used to modify sections/fields
-    //add_filter('redux/options/' . $opt_name . '/sections', 'dynamic_section');
-
 
     /**
      * ---> SET ARGUMENTS
@@ -158,10 +137,8 @@
         // FUTURE -> Not in use yet, but reserved or partially implemented. Use at your own risk.
         'database'             => '',
         // possible: options, theme_mods, theme_mods_expanded, transient. Not fully functional, warning!
-        'system_info'          => false,
-        // REMOVE
-
-        //'compiler'             => true,
+        'use_cdn'              => true,
+        // If you prefer not to use the CDN for Select2, Ace Editor, and others, you may download the Redux Vendor Support plugin yourself and run locally or embed it in your code.
 
         // HINTS
         'hints'                => array(
@@ -300,20 +277,21 @@
      */
 
     // -> START Basic Fields
-
     Redux::setSection( $opt_name, array(
-        'title' => __( 'Basic Fields', 'redux-framework-demo' ),
-        'id'    => 'basic',
-        'desc'  => __( '', 'redux-framework-demo' ),
-        'icon'  => 'el el-home'
+        'title'            => __( 'Basic Fields', 'redux-framework-demo' ),
+        'id'               => 'basic',
+        'desc'             => __( 'These are really basic fields!', 'redux-framework-demo' ),
+        'customizer_width' => '400px',
+        'icon'             => 'el el-home'
     ) );
 
     Redux::setSection( $opt_name, array(
-        'title'      => __( 'Checkbox', 'redux-framework-demo' ),
-        'id'         => 'basic-checkbox',
-        'subsection' => true,
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/checkbox/" target="_blank">http://docs.reduxframework.com/core/fields/checkbox/</a>',
-        'fields'     => array(
+        'title'            => __( 'Checkbox', 'redux-framework-demo' ),
+        'id'               => 'basic-checkbox',
+        'subsection'       => true,
+        'customizer_width' => '450px',
+        'desc'             => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/checkbox/" target="_blank">docs.reduxframework.com/core/fields/checkbox/</a>',
+        'fields'           => array(
             array(
                 'id'       => 'opt-checkbox',
                 'type'     => 'checkbox',
@@ -360,11 +338,12 @@
         )
     ) );
     Redux::setSection( $opt_name, array(
-        'title'      => __( 'Radio', 'redux-framework-demo' ),
-        'id'         => 'basic-Radio',
-        'subsection' => true,
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/radio/" target="_blank">http://docs.reduxframework.com/core/fields/radio/</a>',
-        'fields'     => array(
+        'title'            => __( 'Radio', 'redux-framework-demo' ),
+        'id'               => 'basic-Radio',
+        'subsection'       => true,
+        'customizer_width' => '500px',
+        'desc'             => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/radio/" target="_blank">docs.reduxframework.com/core/fields/radio/</a>',
+        'fields'           => array(
             array(
                 'id'       => 'opt-radio',
                 'type'     => 'radio',
@@ -393,7 +372,7 @@
         'title'      => __( 'Sortable', 'redux-framework-demo' ),
         'id'         => 'basic-Sortable',
         'subsection' => true,
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/sortable/" target="_blank">http://docs.reduxframework.com/core/fields/sortable/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/sortable/" target="_blank">docs.reduxframework.com/core/fields/sortable/</a>',
         'fields'     => array(
             array(
                 'id'       => 'opt-sortable',
@@ -403,8 +382,8 @@
                 'desc'     => __( 'This is the description field, again good for additional info.', 'redux-framework-demo' ),
                 'label'    => true,
                 'options'  => array(
-                    'Text One' => 'Item 1',
-                    'Text Two' => 'Item 2',
+                    'Text One'   => 'Item 1',
+                    'Text Two'   => 'Item 2',
                     'Text Three' => 'Item 3',
                 )
             ),
@@ -431,11 +410,12 @@
 
 
     Redux::setSection( $opt_name, array(
-        'title'      => __( 'Text', 'redux-framework-demo' ),
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/text/" target="_blank">http://docs.reduxframework.com/core/fields/text/</a>',
-        'id'         => 'basic-Text',
-        'subsection' => true,
-        'fields'     => array(
+        'title'            => __( 'Text', 'redux-framework-demo' ),
+        'desc'             => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/text/" target="_blank">docs.reduxframework.com/core/fields/text/</a>',
+        'id'               => 'basic-Text',
+        'subsection'       => true,
+        'customizer_width' => '700px',
+        'fields'           => array(
             array(
                 'id'       => 'text-example',
                 'type'     => 'text',
@@ -471,7 +451,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Multi Text', 'redux-framework-demo' ),
         'id'         => 'basic-Multi Text',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/multi-text/" target="_blank">http://docs.reduxframework.com/core/fields/multi-text/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/multi-text/" target="_blank">docs.reduxframework.com/core/fields/multi-text/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -486,7 +466,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Password', 'redux-framework-demo' ),
         'id'         => 'basic-Password',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/password/" target="_blank">http://docs.reduxframework.com/core/fields/password/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/password/" target="_blank">docs.reduxframework.com/core/fields/password/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -505,7 +485,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Textarea', 'redux-framework-demo' ),
         'id'         => 'basic-Textarea',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/textarea/" target="_blank">http://docs.reduxframework.com/core/fields/textarea/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/textarea/" target="_blank">docs.reduxframework.com/core/fields/textarea/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -521,16 +501,17 @@
 
     // -> START Editors
     Redux::setSection( $opt_name, array(
-        'title' => __( 'Editors', 'redux-framework-demo' ),
-        'id'    => 'editor',
-        'icon'  => 'el el-edit',
+        'title'            => __( 'Editors', 'redux-framework-demo' ),
+        'id'               => 'editor',
+        'customizer_width' => '500px',
+        'icon'             => 'el el-edit',
     ) );
 
     Redux::setSection( $opt_name, array(
         'title'      => __( 'WordPress Editor', 'redux-framework-demo' ),
         'id'         => 'editor-wordpress',
         //'icon'  => 'el el-home'
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/editor/" target="_blank">http://docs.reduxframework.com/core/fields/editor/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/editor/" target="_blank">docs.reduxframework.com/core/fields/editor/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -563,7 +544,7 @@
                 'full_width' => true
             ),
         ),
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/editor/" target="_blank">http://docs.reduxframework.com/core/fields/editor/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/editor/" target="_blank">docs.reduxframework.com/core/fields/editor/</a>',
     ) );
 
     Redux::setSection( $opt_name, array(
@@ -571,7 +552,7 @@
         'id'         => 'editor-ace',
         //'icon'  => 'el el-home'
         'subsection' => true,
-        'desc'       => __( 'For full documentation on the this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/ace-editor/" target="_blank">http://docs.reduxframework.com/core/fields/ace-editor/</a>',
+        'desc'       => __( 'For full documentation on the this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/ace-editor/" target="_blank">docs.reduxframework.com/core/fields/ace-editor/</a>',
         'fields'     => array(
             array(
                 'id'       => 'opt-ace-editor-css',
@@ -580,7 +561,7 @@
                 'subtitle' => __( 'Paste your CSS code here.', 'redux-framework-demo' ),
                 'mode'     => 'css',
                 'theme'    => 'monokai',
-                'desc'     => 'Possible modes can be found at <a href="http://ace.c9.io" target="_blank">http://ace.c9.io/</a>.',
+                'desc'     => 'Possible modes can be found at <a href="' . 'http://' . 'ace.c9.io" target="_blank">' . 'http://' . 'ace.c9.io/</a>.',
                 'default'  => "#header{\n   margin: 0 auto;\n}"
             ),
             array(
@@ -590,7 +571,7 @@
                 'subtitle' => __( 'Paste your JS code here.', 'redux-framework-demo' ),
                 'mode'     => 'javascript',
                 'theme'    => 'chrome',
-                'desc'     => 'Possible modes can be found at <a href="http://ace.c9.io" target="_blank">http://ace.c9.io/</a>.',
+                'desc'     => 'Possible modes can be found at <a href="' . 'http://' . 'ace.c9.io" target="_blank">' . 'http://' . 'ace.c9.io/</a>.',
                 'default'  => "jQuery(document).ready(function(){\n\n});"
             ),
             array(
@@ -601,7 +582,7 @@
                 'subtitle'   => __( 'Paste your PHP code here.', 'redux-framework-demo' ),
                 'mode'       => 'php',
                 'theme'      => 'chrome',
-                'desc'       => 'Possible modes can be found at <a href="http://ace.c9.io" target="_blank">http://ace.c9.io/</a>.',
+                'desc'       => 'Possible modes can be found at <a href="' . 'http://' . 'ace.c9.io" target="_blank">' . 'http://' . 'ace.c9.io/</a>.',
                 'default'    => '<?php
     echo "PHP String";'
             ),
@@ -621,7 +602,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Color', 'redux-framework-demo' ),
         'id'         => 'color-Color',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/color/" target="_blank">http://docs.reduxframework.com/core/fields/color/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/color/" target="_blank">docs.reduxframework.com/core/fields/color/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -644,7 +625,7 @@
     ) );
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Color Gradient', 'redux-framework-demo' ),
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/color-gradient/" target="_blank">http://docs.reduxframework.com/core/fields/color-gradient/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/color-gradient/" target="_blank">docs.reduxframework.com/core/fields/color-gradient/</a>',
         'id'         => 'color-gradient',
         'subsection' => true,
         'fields'     => array(
@@ -663,7 +644,7 @@
     ) );
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Color RGBA', 'redux-framework-demo' ),
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/color-rgba/" target="_blank">http://docs.reduxframework.com/core/fields/color-rgba/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/color-rgba/" target="_blank">docs.reduxframework.com/core/fields/color-rgba/</a>',
         'id'         => 'color-rgba',
         'subsection' => true,
         'fields'     => array(
@@ -678,13 +659,13 @@
                 ),
                 //'output'   => array( 'body' ),
                 'mode'     => 'background',
-                'validate' => 'colorrgba',
+                //'validate' => 'colorrgba',
             ),
         )
     ) );
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Link Color', 'redux-framework-demo' ),
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/link-color/" target="_blank">http://docs.reduxframework.com/core/fields/link-color/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/link-color/" target="_blank">docs.reduxframework.com/core/fields/link-color/</a>',
         'id'         => 'color-link',
         'subsection' => true,
         'fields'     => array(
@@ -709,7 +690,7 @@
 
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Palette Colors', 'redux-framework-demo' ),
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/palette-color/" target="_blank">http://docs.reduxframework.com/core/fields/palette-color/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/palette-color/" target="_blank">docs.reduxframework.com/core/fields/palette-color/</a>',
         'id'         => 'color-palette',
         'subsection' => true,
         'fields'     => array(
@@ -719,9 +700,9 @@
                 'title'    => __( 'Palette Color Option', 'redux-framework-demo' ),
                 'subtitle' => __( 'Only color validation can be done on this field type', 'redux-framework-demo' ),
                 'desc'     => __( 'This is the description field, again good for additional info.', 'redux-framework-demo' ),
-                'default'   => 'red',
-                'palettes'  => array(
-                    'red' => array(
+                'default'  => 'red',
+                'palettes' => array(
+                    'red'  => array(
                         '#ef9a9a',
                         '#f44336',
                         '#ff1744',
@@ -744,7 +725,7 @@
             ),
         )
     ) );
-    
+
 
     // -> START Design Fields
     Redux::setSection( $opt_name, array(
@@ -769,13 +750,13 @@
             ),
 
         ),
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/background/" target="_blank">http://docs.reduxframework.com/core/fields/background/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/background/" target="_blank">docs.reduxframework.com/core/fields/background/</a>',
     ) );
 
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Border', 'redux-framework-demo' ),
         'id'         => 'design-border',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/border/" target="_blank">http://docs.reduxframework.com/core/fields/border/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/border/" target="_blank">docs.reduxframework.com/core/fields/border/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -819,7 +800,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Dimensions', 'redux-framework-demo' ),
         'id'         => 'design-dimensions',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/dimensions/" target="_blank">http://docs.reduxframework.com/core/fields/dimensions/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/dimensions/" target="_blank">docs.reduxframework.com/core/fields/dimensions/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -855,7 +836,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Spacing', 'redux-framework-demo' ),
         'id'         => 'design-spacing',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/spacing/" target="_blank">http://docs.reduxframework.com/core/fields/spacing/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/spacing/" target="_blank">docs.reduxframework.com/core/fields/spacing/</a>',
         'subsection' => true,
         'fields'     => array(
 
@@ -925,7 +906,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Gallery', 'redux-framework-demo' ),
         'id'         => 'media-gallery',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/gallery/" target="_blank">http://docs.reduxframework.com/core/fields/gallery/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/gallery/" target="_blank">docs.reduxframework.com/core/fields/gallery/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -941,7 +922,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Media', 'redux-framework-demo' ),
         'id'         => 'media-media',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/media/" target="_blank">http://docs.reduxframework.com/core/fields/media/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/media/" target="_blank">docs.reduxframework.com/core/fields/media/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -994,7 +975,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Slides', 'redux-framework-demo' ),
         'id'         => 'additional-slides',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/slides/" target="_blank">http://docs.reduxframework.com/core/fields/slides/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/slides/" target="_blank">docs.reduxframework.com/core/fields/slides/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -1023,7 +1004,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Divide', 'redux-framework-demo' ),
         'id'         => 'presentation-divide',
-        'desc'       => __( 'The spacer to the section menu as seen to the left (after this section block) is the divide "section". Also the divider below is the divide "field".', 'redux-framework-demo' ) . '<br />' . __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/divide/" target="_blank">http://docs.reduxframework.com/core/fields/divide/</a>',
+        'desc'       => __( 'The spacer to the section menu as seen to the left (after this section block) is the divide "section". Also the divider below is the divide "field".', 'redux-framework-demo' ) . '<br />' . __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/divide/" target="_blank">docs.reduxframework.com/core/fields/divide/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -1036,7 +1017,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Info', 'redux-framework-demo' ),
         'id'         => 'presentation-info',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/info/" target="_blank">http://docs.reduxframework.com/core/fields/info/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/info/" target="_blank">docs.reduxframework.com/core/fields/info/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -1131,7 +1112,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Section', 'redux-framework-demo' ),
         'id'         => 'presentation-section',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/section/" target="_blank">http://docs.reduxframework.com/core/fields/section/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/section/" target="_blank">docs.reduxframework.com/core/fields/section/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -1181,7 +1162,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Button Set', 'redux-framework-demo' ),
         'id'         => 'switch_buttonset-set',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/button-set/" target="_blank">http://docs.reduxframework.com/core/fields/button-set/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/button-set/" target="_blank">docs.reduxframework.com/core/fields/button-set/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -1220,7 +1201,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Switch', 'redux-framework-demo' ),
         'id'         => 'switch_buttonset-switch',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/switch/" target="_blank">http://docs.reduxframework.com/core/fields/switch/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/switch/" target="_blank">docs.reduxframework.com/core/fields/switch/</a>',
         'subsection' => true,
         'fields'     => array(
 
@@ -1279,7 +1260,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Select', 'redux-framework-demo' ),
         'id'         => 'select-select',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/select/" target="_blank">http://docs.reduxframework.com/core/fields/select/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/select/" target="_blank">docs.reduxframework.com/core/fields/select/</a>',
         'subsection' => true,
         'fields'     => array(
 
@@ -1504,7 +1485,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Image Select', 'redux-framework-demo' ),
         'id'         => 'select-image_select',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/image-select/" target="_blank">http://docs.reduxframework.com/core/fields/image-select/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/image-select/" target="_blank">docs.reduxframework.com/core/fields/image-select/</a>',
         'subsection' => true,
         'fields'     => array(
 
@@ -1599,7 +1580,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Select Image', 'redux-framework-demo' ),
         'id'         => 'select-select_image',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/select-image/" target="_blank">http://docs.reduxframework.com/core/fields/select-image/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/select-image/" target="_blank">docs.reduxframework.com/core/fields/select-image/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -1633,7 +1614,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Slider', 'redux-framework-demo' ),
         'id'         => 'slider_spinner-slider',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/slider/" target="_blank">http://docs.reduxframework.com/core/fields/slider/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/slider/" target="_blank">docs.reduxframework.com/core/fields/slider/</a>',
         'fields'     => array(
 
             array(
@@ -1697,7 +1678,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Spinner', 'redux-framework-demo' ),
         'id'         => 'slider_spinner-spinner',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/spinner/" target="_blank">http://docs.reduxframework.com/core/fields/spinner/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/spinner/" target="_blank">docs.reduxframework.com/core/fields/spinner/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -1717,7 +1698,7 @@
     Redux::setSection( $opt_name, array(
         'title'  => __( 'Typography', 'redux-framework-demo' ),
         'id'     => 'typography',
-        'desc'   => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/typography/" target="_blank">http://docs.reduxframework.com/core/fields/typography/</a>',
+        'desc'   => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/typography/" target="_blank">docs.reduxframework.com/core/fields/typography/</a>',
         'icon'   => 'el el-font',
         'fields' => array(
             array(
@@ -1799,7 +1780,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Date', 'redux-framework-demo' ),
         'id'         => 'additional-date',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/date/" target="_blank">http://docs.reduxframework.com/core/fields/date/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/date/" target="_blank">docs.reduxframework.com/core/fields/date/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -1815,7 +1796,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Sorter', 'redux-framework-demo' ),
         'id'         => 'additional-sorter',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/sorter/" target="_blank">http://docs.reduxframework.com/core/fields/sorter/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/sorter/" target="_blank">docs.reduxframework.com/core/fields/sorter/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -1863,7 +1844,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Raw', 'redux-framework-demo' ),
         'id'         => 'additional-raw',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/raw/" target="_blank">http://docs.reduxframework.com/core/fields/raw/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/raw/" target="_blank">docs.reduxframework.com/core/fields/raw/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -1895,7 +1876,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Callback', 'redux-framework-demo' ),
         'id'         => 'additional-callback',
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/callback/" target="_blank">http://docs.reduxframework.com/core/fields/callback/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/callback/" target="_blank">docs.reduxframework.com/core/fields/callback/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -1913,7 +1894,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Field Validation', 'redux-framework-demo' ),
         'id'         => 'validation',
-        'desc'       => __( 'For full documentation on validation, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/the-basics/validation/" target="_blank">http://docs.reduxframework.com/core/the-basics/validation/</a>',
+        'desc'       => __( 'For full documentation on validation, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/the-basics/validation/" target="_blank">docs.reduxframework.com/core/the-basics/validation/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -2079,7 +2060,7 @@
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Field Required / Linking', 'redux-framework-demo' ),
         'id'         => 'required',
-        'desc'       => __( 'For full documentation on validation, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/the-basics/required/" target="_blank">http://docs.reduxframework.com/core/the-basics/required/</a>',
+        'desc'       => __( 'For full documentation on validation, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/the-basics/required/" target="_blank">docs.reduxframework.com/core/the-basics/required/</a>',
         'subsection' => true,
         'fields'     => array(
             array(
@@ -2184,7 +2165,7 @@
 
     Redux::setSection( $opt_name, array(
         'title'      => __( 'WPML Integration', 'redux-framework-demo' ),
-        'desc'       => __( 'These fields can be fully translated by WPML (WordPress Multi-Language). This serves as an example for you to implement. For extra details look at our <a href="http://docs.reduxframework.com/core/advanced/wpml-integration/" target="_blank">WPML Implementation</a> documentation.', 'redux-framework-demo' ),
+        'desc'       => __( 'These fields can be fully translated by WPML (WordPress Multi-Language). This serves as an example for you to implement. For extra details look at our <a href="//docs.reduxframework.com/core/advanced/wpml-integration/" target="_blank">WPML Implementation</a> documentation.', 'redux-framework-demo' ),
         'subsection' => true,
         // 'submenu' => false, // Setting submenu to false on a given section will hide it from the WordPress sidebar menu!
         'fields'     => array(
@@ -2242,7 +2223,8 @@
                     'id'       => '17',
                     'type'     => 'raw',
                     'markdown' => true,
-                    'content'  => file_get_contents( dirname( __FILE__ ) . '/../README.md' )
+                    'content_path' => dirname( __FILE__ ) . '/../README.md', // FULL PATH, not relative please
+                    //'content' => 'Raw content here',
                 ),
             ),
         );
@@ -2252,17 +2234,48 @@
      * <--- END SECTIONS
      */
 
+
+    /*
+     *
+     * YOU MUST PREFIX THE FUNCTIONS BELOW AND ACTION FUNCTION CALLS OR ANY OTHER CONFIG MAY OVERRIDE YOUR CODE.
+     *
+     */
+
+    /*
+    *
+    * --> Action hook examples
+    *
+    */
+
+    // If Redux is running as a plugin, this will remove the demo notice and links
+    //add_action( 'redux/loaded', 'remove_demo' );
+
+    // Function to test the compiler hook and demo CSS output.
+    // Above 10 is a priority, but 2 in necessary to include the dynamically generated CSS to be sent to the function.
+    //add_filter('redux/options/' . $opt_name . '/compiler', 'compiler_action', 10, 3);
+
+    // Change the arguments after they've been declared, but before the panel is created
+    //add_filter('redux/options/' . $opt_name . '/args', 'change_arguments' );
+
+    // Change the default value of a field after it's been set, but before it's been useds
+    //add_filter('redux/options/' . $opt_name . '/defaults', 'change_defaults' );
+
+    // Dynamically add a section. Can be also used to modify sections/fields
+    //add_filter('redux/options/' . $opt_name . '/sections', 'dynamic_section');
+
     /**
      * This is a test function that will let you see when the compiler hook occurs.
      * It only runs if a field    set with compiler=>true is changed.
      * */
-    function compiler_action( $options, $css, $changed_values ) {
-        echo '<h1>The compiler hook has run!</h1>';
-        echo "<pre>";
-        print_r( $changed_values ); // Values that have changed since the last save
-        echo "</pre>";
-        //print_r($options); //Option values
-        //print_r($css); // Compiler selector CSS values  compiler => array( CSS SELECTORS )
+    if ( ! function_exists( 'compiler_action' ) ) {
+        function compiler_action( $options, $css, $changed_values ) {
+            echo '<h1>The compiler hook has run!</h1>';
+            echo "<pre>";
+            print_r( $changed_values ); // Values that have changed since the last save
+            echo "</pre>";
+            //print_r($options); //Option values
+            //print_r($css); // Compiler selector CSS values  compiler => array( CSS SELECTORS )
+        }
     }
 
     /**
@@ -2315,48 +2328,58 @@
      * NOTE: the defined constants for URLs, and directories will NOT be available at this point in a child theme,
      * so you must use get_template_directory_uri() if you want to use any of the built in icons
      * */
-    function dynamic_section( $sections ) {
-        //$sections = array();
-        $sections[] = array(
-            'title'  => __( 'Section via hook', 'redux-framework-demo' ),
-            'desc'   => __( '<p class="description">This is a section created by adding a filter to the sections array. Can be used by child themes to add/remove sections from the options.</p>', 'redux-framework-demo' ),
-            'icon'   => 'el el-paper-clip',
-            // Leave this as a blank section, no options just some intro text set above.
-            'fields' => array()
-        );
+    if ( ! function_exists( 'dynamic_section' ) ) {
+        function dynamic_section( $sections ) {
+            //$sections = array();
+            $sections[] = array(
+                'title'  => __( 'Section via hook', 'redux-framework-demo' ),
+                'desc'   => __( '<p class="description">This is a section created by adding a filter to the sections array. Can be used by child themes to add/remove sections from the options.</p>', 'redux-framework-demo' ),
+                'icon'   => 'el el-paper-clip',
+                // Leave this as a blank section, no options just some intro text set above.
+                'fields' => array()
+            );
 
-        return $sections;
+            return $sections;
+        }
     }
 
     /**
      * Filter hook for filtering the args. Good for child themes to override or add to the args array. Can also be used in other functions.
      * */
-    function change_arguments( $args ) {
-        //$args['dev_mode'] = true;
+    if ( ! function_exists( 'change_arguments' ) ) {
+        function change_arguments( $args ) {
+            //$args['dev_mode'] = true;
 
-        return $args;
+            return $args;
+        }
     }
 
     /**
      * Filter hook for filtering the default value of any given field. Very useful in development mode.
      * */
-    function change_defaults( $defaults ) {
-        $defaults['str_replace'] = 'Testing filter hook!';
+    if ( ! function_exists( 'change_defaults' ) ) {
+        function change_defaults( $defaults ) {
+            $defaults['str_replace'] = 'Testing filter hook!';
 
-        return $defaults;
-    }
-
-    // Remove the demo link and the notice of integrated demo from the redux-framework plugin
-    function remove_demo() {
-
-        // Used to hide the demo mode link from the plugin page. Only used when Redux is a plugin.
-        if ( class_exists( 'ReduxFrameworkPlugin' ) ) {
-            remove_filter( 'plugin_row_meta', array(
-                ReduxFrameworkPlugin::instance(),
-                'plugin_metalinks'
-            ), null, 2 );
-
-            // Used to hide the activation notice informing users of the demo panel. Only used when Redux is a plugin.
-            remove_action( 'admin_notices', array( ReduxFrameworkPlugin::instance(), 'admin_notices' ) );
+            return $defaults;
         }
     }
+
+    /**
+     * Removes the demo link and the notice of integrated demo from the redux-framework plugin
+     */
+    if ( ! function_exists( 'remove_demo' ) ) {
+        function remove_demo() {
+            // Used to hide the demo mode link from the plugin page. Only used when Redux is a plugin.
+            if ( class_exists( 'ReduxFrameworkPlugin' ) ) {
+                remove_filter( 'plugin_row_meta', array(
+                    ReduxFrameworkPlugin::instance(),
+                    'plugin_metalinks'
+                ), null, 2 );
+
+                // Used to hide the activation notice informing users of the demo panel. Only used when Redux is a plugin.
+                remove_action( 'admin_notices', array( ReduxFrameworkPlugin::instance(), 'admin_notices' ) );
+            }
+        }
+    }
+

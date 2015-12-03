@@ -29,16 +29,20 @@
             function render() {
 
                 if ( ! empty( $this->field['include'] ) && file_exists( $this->field['include'] ) ) {
-                    require_once( $this->field['include'] );
+                    require_once $this->field['include'];
+                }
+
+                if ( isset( $this->field['content_path'] ) && ! empty( $this->field['content_path'] ) && file_exists( $this->field['content_path'] ) ) {
+                    $this->field['content'] = $this->parent->filesystem->execute( 'get_contents', $this->field['content_path'] );
                 }
 
                 if ( ! empty( $this->field['content'] ) && isset( $this->field['content'] ) ) {
                     if ( isset( $this->field['markdown'] ) && $this->field['markdown'] == true ) {
                         require_once dirname( __FILE__ ) . "/parsedown.php";
                         $Parsedown = new Parsedown();
-                        echo $Parsedown->text( $this->field['content'] );
+                        echo $Parsedown->text( wp_kses_post($this->field['content']) );
                     } else {
-                        echo $this->field['content'];
+                        echo wp_kses_post($this->field['content']);
                     }
                 }
 

@@ -97,7 +97,7 @@ if( !class_exists( 'ReduxFramework_color_rgba' ) ) {
             
             // Color picker container
             echo '<div 
-                      class="redux-color-rgba-container' . $this->field['class'] . '" 
+                      class="redux-color-rgba-container ' . $this->field['class'] . '" 
                       data-id="'                        . $field_id . '"
                       data-show-input="'                . $this->field['options']['show_input'] . '"
                       data-show-initial="'              . $this->field['options']['show_initial'] . '"
@@ -129,7 +129,7 @@ if( !class_exists( 'ReduxFramework_color_rgba' ) ) {
             }
             
             echo '<input
-                        name="' . $opt_name . '[' . $field_id . '][color]"
+                        name="' . $this->field['name'] . $this->field['name_suffix'] . '[color]"
                         id="' . $field_id . '-color"
                         class="redux-color-rgba"
                         type="text"
@@ -154,7 +154,7 @@ if( !class_exists( 'ReduxFramework_color_rgba' ) ) {
                         type="hidden"
                         class="redux-hidden-alpha"
                         data-id="' . $field_id . '-alpha"
-                        name="' . $opt_name . '[' . $field_id . '][alpha]' .  '"
+                        name="' . $this->field['name'] . $this->field['name_suffix'] . '[alpha]' .  '"
                         id="' . $field_id . '-alpha"
                         value="' . $this->value['alpha'] . '"
                       />';
@@ -164,7 +164,7 @@ if( !class_exists( 'ReduxFramework_color_rgba' ) ) {
                         type="hidden"
                         class="redux-hidden-rgba"
                         data-id="' . $field_id . '-rgba"
-                        name="' . $opt_name . '[' . $field_id . '][rgba]' .  '"
+                        name="' . $this->field['name'] . $this->field['name_suffix'] . '[rgba]' .  '"
                         id="' . $field_id . '-rgba"
                         value="' . $this->value['rgba'] . '"
                       />';             
@@ -185,36 +185,33 @@ if( !class_exists( 'ReduxFramework_color_rgba' ) ) {
             
             // Set up min files for dev_mode = false.
             $min = Redux_Functions::isMin();
-            
-            // Spectrum colour picker
-            wp_enqueue_script(
-                'redux-spectrum-js', 
-                ReduxFramework::$_url . 'assets/js/vendor/spectrum/redux-spectrum' . $min . '.js', 
-                array('jquery'), 
-                time(), 
-                true
-            );
 
             // Field dependent JS
-            wp_enqueue_script(
-                'redux-field-color-rgba-js', 
-                ReduxFramework::$_url . 'inc/fields/color_rgba/field_color_rgba' . Redux_Functions::isMin() . '.js',
-                array('jquery', 'redux-spectrum-js'), 
-                time(), 
-                true
-            );
+            if (!wp_script_is ( 'redux-field-color-rgba-js' )) {
+                wp_enqueue_script(
+                    'redux-field-color-rgba-js', 
+                    ReduxFramework::$_url . 'inc/fields/color_rgba/field_color_rgba' . Redux_Functions::isMin() . '.js',
+                    array('jquery', 'redux-spectrum-js'), 
+                    time(), 
+                    true
+                );
+            }
             
             // Spectrum CSS
-            wp_enqueue_style('redux-spectrum-css');
+            if (!wp_style_is ( 'redux-spectrum-css' )) {
+                wp_enqueue_style('redux-spectrum-css');
+            }
             
             if ($this->parent->args['dev_mode']) {
-                wp_enqueue_style(
-                    'redux-field-color-rgba-css',
-                    ReduxFramework::$_url . 'inc/fields/color_rgba/field_color_rgba.css',
-                    array(),
-                    time(),
-                    'all'
-                );
+                if (!wp_style_is ( 'redux-field-color-rgba-css' )) {
+                    wp_enqueue_style(
+                        'redux-field-color-rgba-css',
+                        ReduxFramework::$_url . 'inc/fields/color_rgba/field_color_rgba.css',
+                        array(),
+                        time(),
+                        'all'
+                    );
+                }
             }
         }
 
@@ -280,13 +277,17 @@ if( !class_exists( 'ReduxFramework_color_rgba' ) ) {
                 $style .= $mode . ':' . $color_val . ';';
                 
                 if ( ! empty( $this->field['output'] ) && is_array( $this->field['output'] ) ) {
-                    $css = Redux_Functions::parseCSS( $this->field['output'], $style, $color_val );
-                    $this->parent->outputCSS .= $css;
+                    if (!empty($color_val)) {
+                        $css = Redux_Functions::parseCSS( $this->field['output'], $style, $color_val );
+                        $this->parent->outputCSS .= $css;
+                    }
                 }
 
                 if ( ! empty( $this->field['compiler'] ) && is_array( $this->field['compiler'] ) ) {
-                    $css = Redux_Functions::parseCSS( $this->field['compiler'], $style, $color_val );
-                    $this->parent->compilerCSS .= $css ;
+                    if (!empty($color_val)) {
+                        $css = Redux_Functions::parseCSS( $this->field['compiler'], $style, $color_val );
+                        $this->parent->compilerCSS .= $css ;
+                    }
                 }
             }
         }

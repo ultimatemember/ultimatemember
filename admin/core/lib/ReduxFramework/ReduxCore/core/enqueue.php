@@ -32,6 +32,8 @@
 
                 $this->enqueue_fields();
 
+                add_filter("redux/{$this->parent->args['opt_name']}/localize", array('Redux_Helpers', 'localize'));
+
                 $this->set_localized_data();
 
                 /**
@@ -78,22 +80,27 @@
                 //*****************************************************************
                 // Select2 CSS
                 //*****************************************************************
-                wp_register_style(
+                Redux_CDN::register_style(
                     'select2-css',
-                    ReduxFramework::$_url . 'assets/js/vendor/select2/select2.css',
+                    '//cdn.jsdelivr.net/select2/3.5.2/select2.css',
                     array(),
-                    $this->timestamp,
+                    '3.5.2',//$this->timestamp,
                     'all'
                 );
 
                 //*****************************************************************
                 // Spectrum CSS
                 //*****************************************************************
+                $css_file = 'redux-spectrum.min.css';
+                if ($this->parent->args['dev_mode']) {
+                    $css_file = 'redux-spectrum.css';
+                }                
+                
                 wp_register_style(
                     'redux-spectrum-css',
-                    ReduxFramework::$_url . 'assets/css/vendor/spectrum/redux-spectrum.css',
+                    ReduxFramework::$_url . 'assets/css/vendor/spectrum/' . $css_file,
                     array(),
-                    $this->timestamp,
+                    '1.3.3',
                     'all'
                 );
 
@@ -111,11 +118,16 @@
                 //*****************************************************************
                 // QTip CSS
                 //*****************************************************************
+                $css_file = 'jquery.qtip.min.css';
+                if ($this->parent->args['dev_mode']) {
+                    $css_file = 'jquery.qtip.css';
+                }
+
                 wp_enqueue_style(
                     'qtip-css',
-                    ReduxFramework::$_url . 'assets/css/vendor/qtip/jquery.qtip.css',
+                    ReduxFramework::$_url . 'assets/css/vendor/qtip/' . $css_file,
                     array(),
-                    $this->timestamp,
+                    '2.2.0',
                     'all'
                 );
 
@@ -197,14 +209,55 @@
                 //*****************************************************************
                 // Select2 JS
                 //*****************************************************************
-                wp_register_script(
+                
+                // JWp6 plugin giving us problems.  They need to update.
+                if (  wp_script_is ( 'jquerySelect2' )) {
+                    wp_deregister_script( 'jquerySelect2' );
+                    wp_dequeue_script('jquerySelect2');
+                    wp_dequeue_style('jquerySelect2Style');
+                }
+                
+                
+                Redux_CDN::register_script(
                     'select2-js',
-                    ReduxFramework::$_url . 'assets/js/vendor/select2/select2.js',
+                    '//cdn.jsdelivr.net/select2/3.5.2/select2' . $this->min . '.js',
                     array( 'jquery', 'redux-select2-sortable-js' ),
-                    $this->timestamp,
+                    '3.5.2',
                     true
                 );
 
+                //*****************************************************************
+                // QTip JS
+                //*****************************************************************
+                $js_file = 'jquery.qtip.min.js';
+                if ($this->parent->args['dev_mode']) {
+                    $js_file = 'jquery.qtip.js';
+                }
+                
+                wp_enqueue_script(
+                    'qtip-js',
+                    ReduxFramework::$_url . 'assets/js/vendor/qtip/' . $js_file,
+                    array( 'jquery' ),
+                    '2.2.0',
+                    true
+                );
+
+                //*****************************************************************
+                // Spectrum JS
+                //*****************************************************************
+                $js_file = 'redux-spectrum.min.js';
+                if ($this->parent->args['dev_mode']) {
+                    $js_file = 'redux-spectrum.js';
+                }
+                
+                wp_register_script(
+                    'redux-spectrum-js',
+                    ReduxFramework::$_url . 'assets/js/vendor/spectrum/' . $js_file,
+                    array( 'jquery' ),
+                    '1.3.3',
+                    true
+                );                
+                
                 $depArray = array( 'jquery' );
 
                 //*****************************************************************
@@ -242,55 +295,59 @@
                 );
             }
 
+            public function _enqueue_field($field) {
+                // TODO AFTER GROUP WORKS - Revert IF below
+                // if( isset( $field['type'] ) && $field['type'] != 'callback' ) {
+                if ( isset( $field['type'] ) && $field['type'] != 'callback' ) {
+
+                    $field_class = 'ReduxFramework_' . $field['type'];
+
+                    /**
+                     * Field class file
+                     * filter 'redux/{opt_name}/field/class/{field.type}
+                     *
+                     * @param       string        field class file path
+                     * @param array $field        field config data
+                     */
+                    $class_file = apply_filters( "redux/{$this->parent->args['opt_name']}/field/class/{$field['type']}", ReduxFramework::$_dir . "inc/fields/{$field['type']}/field_{$field['type']}.php", $field );
+                    if ( $class_file ) {
+                        if ( ! class_exists( $field_class ) ) {
+                            if ( file_exists( $class_file ) ) {
+                                require_once $class_file;
+                            }
+                        }
+
+                        if ( ( method_exists( $field_class, 'enqueue' ) ) || method_exists( $field_class, 'localize' ) ) {
+
+                            if ( ! isset( $this->parent->options[ $field['id'] ] ) ) {
+                                $this->parent->options[ $field['id'] ] = "";
+                            }
+                            $theField = new $field_class( $field, $this->parent->options[ $field['id'] ], $this->parent );
+
+                            // Move dev_mode check to a new if/then block
+                            if ( ! wp_script_is( 'redux-field-' . $field['type'] . '-js', 'enqueued' ) && class_exists( $field_class ) && method_exists( $field_class, 'enqueue' ) ) {
+                                $theField->enqueue();
+                            }
+
+                            if ( method_exists( $field_class, 'localize' ) ) {
+                                $params = $theField->localize( $field );
+                                if ( ! isset( $this->parent->localize_data[ $field['type'] ] ) ) {
+                                    $this->parent->localize_data[ $field['type'] ] = array();
+                                }
+                                $this->parent->localize_data[ $field['type'] ][ $field['id'] ] = $theField->localize( $field );
+                            }
+
+                            unset( $theField );
+                        }
+                    }
+                }
+            }
+
             private function enqueue_fields() {
                 foreach ( $this->parent->sections as $section ) {
                     if ( isset( $section['fields'] ) ) {
                         foreach ( $section['fields'] as $field ) {
-                            // TODO AFTER GROUP WORKS - Revert IF below
-                            // if( isset( $field['type'] ) && $field['type'] != 'callback' ) {
-                            if ( isset( $field['type'] ) && $field['type'] != 'callback' ) {
-
-                                $field_class = 'ReduxFramework_' . $field['type'];
-
-                                /**
-                                 * Field class file
-                                 * filter 'redux/{opt_name}/field/class/{field.type}
-                                 *
-                                 * @param       string        field class file path
-                                 * @param array $field        field config data
-                                 */
-                                $class_file = apply_filters( "redux/{$this->parent->args['opt_name']}/field/class/{$field['type']}", ReduxFramework::$_dir . "inc/fields/{$field['type']}/field_{$field['type']}.php", $field );
-                                if ( $class_file ) {
-                                    if ( ! class_exists( $field_class ) ) {
-                                        if ( file_exists( $class_file ) ) {
-                                            require_once( $class_file );
-                                        }
-                                    }
-
-                                    if ( ( method_exists( $field_class, 'enqueue' ) ) || method_exists( $field_class, 'localize' ) ) {
-
-                                        if ( ! isset( $this->parent->options[ $field['id'] ] ) ) {
-                                            $this->parent->options[ $field['id'] ] = "";
-                                        }
-                                        $theField = new $field_class( $field, $this->parent->options[ $field['id'] ], $this->parent );
-
-                                        // Move dev_mode check to a new if/then block
-                                        if ( ! wp_script_is( 'redux-field-' . $field['type'] . '-js', 'enqueued' ) && class_exists( $field_class ) && method_exists( $field_class, 'enqueue' ) ) {
-                                            $theField->enqueue();
-                                        }
-
-                                        if ( method_exists( $field_class, 'localize' ) ) {
-                                            $params = $theField->localize( $field );
-                                            if ( ! isset( $this->parent->localize_data[ $field['type'] ] ) ) {
-                                                $this->parent->localize_data[ $field['type'] ] = array();
-                                            }
-                                            $this->parent->localize_data[ $field['type'] ][ $field['id'] ] = $theField->localize( $field );
-                                        }
-
-                                        unset( $theField );
-                                    }
-                                }
-                            }
+                            $this->_enqueue_field( $field );
                         }
                     }
                 }
@@ -346,6 +403,10 @@
             }
 
             private function set_localized_data() {
+                if (!empty($this->parent->args['last_tab'])) {
+                    $this->parent->localize_data['last_tab']       = $this->parent->args['last_tab'];
+                }
+                
                 $this->parent->localize_data['required']       = $this->parent->required;
                 $this->parent->localize_data['fonts']          = $this->parent->fonts;
                 $this->parent->localize_data['required_child'] = $this->parent->required_child;
@@ -377,12 +438,7 @@
                     }
                 }
 
-                if ( isset( $this->parent->args['dev_mode'] ) && $this->parent->args['dev_mode'] == true ) {
-                    $nonce                               = wp_create_nonce( 'redux-ads-nonce' );
-                    $base                                = admin_url( 'admin-ajax.php' ) . '?action=redux_p&nonce=' . $nonce . '&url=';
-                    $url                                 = $base . urlencode( 'http://ads.reduxframework.com/api/index.php?js&g&1&v=2' ) . '&proxy=' . urlencode( $base ) . '';
-                    $this->parent->localize_data['rAds'] = '<span data-id="1" class="mgv1_1"><script type="text/javascript">(function(){if (mysa_mgv1_1) return; var ma = document.createElement("script"); ma.type = "text/javascript"; ma.async = true; ma.src = "' . $url . '"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ma, s) })();var mysa_mgv1_1=true;</script></span>';
-                }
+
 
                 $this->parent->localize_data['fieldsHidden'] = $this->parent->fieldsHidden;
                 $this->parent->localize_data['options']      = $this->parent->options;
@@ -440,6 +496,7 @@
                     'alert'   => __( 'There was a problem with your action. Please try again or reload the page.', 'redux-framework' ),
                 );
 
+                $this->parent->localize_data = apply_filters( "redux/{$this->parent->args['opt_name']}/localize", $this->parent->localize_data );
 
                 $this->get_warnings_and_errors_array();
 

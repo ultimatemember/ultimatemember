@@ -244,17 +244,19 @@
                     $status   = array( 'http_code' => 'ERROR' );
                 }
 
-                if ( isset( $response['headers']['content-type'] ) ) {
+                if ( ! is_wp_error( $response ) && isset( $response['headers']['content-type'] ) ) {
                     header( 'Content-Type: ' . $response['headers']['content-type'] );
                 }
-                if ( isset( $response['headers']['content-language'] ) ) {
+                if ( ! is_wp_error( $response ) && isset( $response['headers']['content-language'] ) ) {
                     header( 'Content-Language: ' . $response['headers']['content-language'] );
                 }
-                if ( isset( $response['headers']['set-cookie'] ) ) {
+                if ( ! is_wp_error( $response ) && isset( $response['headers']['set-cookie'] ) ) {
                     header( 'Set-Cookie: ' . $response['headers']['set-cookie'] );
                 }
 
-                print str_replace( 'ads.reduxframework.com', 'look.reduxframework.com', $contents );
+                if ( isset( $contents ) ) {
+                    print str_replace( 'ads.reduxframework.com', 'look.reduxframework.com', $contents );
+                }
 
             } else {
 
