@@ -147,6 +147,14 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 == Changelog ==
 
+= 1.3.30: December 3, 2015 =
+
+* New: added Simplified Chinese language support
+* Tweak: added many new filters (for developers)
+* Fixed: Display name update in profile
+* Fixed: Photo upload unique IDs
+* Fixed: Remove duplicated method um_convert_tags
+
 = 1.3.29: October 31, 2015 =
 
 * New: added new documentation links to plugin files
