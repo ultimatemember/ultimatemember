@@ -99,6 +99,9 @@
 
 		}
 		
+		// allow filtering
+		$query_args = apply_filters('um_query_args_filter', $query_args );
+		
 		if ( count ($query_args['meta_query']) == 1 ) {
 			unset( $query_args['meta_query'] );
 		}
