@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.3
 
-Stable Tag: 1.3.29
+Stable Tag: 1.3.30
 
 License: GNU Version 2 or Any Later Version
 
@@ -91,6 +91,7 @@ Ultimate Member has been translated into the following languages:
 * Polish - Polski
 * Czech
 * Greek
+* Simplified Chinese
 * Russian - Русский
 * Turkish - Türkçe
 * Farsi - فارسى
