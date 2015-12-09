@@ -27,7 +27,6 @@ Ultimate Member is a powerful and flexible WordPress plugin that makes it a bree
 - Developer friendly with dozens of actions and filters
 - Multi-site compatibility
 - Mandrill compatibility
-- WPML Support
 
 Read about all of the plugin's features at [Ultimate Member](https://ultimatemember.com/)
 
