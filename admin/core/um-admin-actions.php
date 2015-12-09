@@ -27,7 +27,7 @@
 		foreach($ultimatemember->query->get_roles() as $role_id => $role) {
 		echo '<label><input type="checkbox" name="_um_roles[]" value="' . $role_id . '" /> ' . $role . '</label>';
 		}
-		echo '<p class="description">' . __('This is applicable only if you allow logged-in users to view the content.','ultimatemember') . '</p>';
+		echo '<p class="description">' . __('This is applicable only if you restrict the content to logged-in users.','ultimatemember') . '</p>';
 		echo '</div>';
 		
 		echo '<div class="form-field term-redirect-wrap">';
@@ -270,19 +270,24 @@
 	}
 	
 	/***
-	***	@secure passwords
+	*** @secure passwords
+	*** Updated by Bo Carlson (bo@fictiontribe.com) to clear fields in DB without looping users. Much faster.
 	***/
 	add_action('um_admin_do_action__um_passwords_secured', 'um_admin_do_action__um_passwords_secured');
 	function um_admin_do_action__um_passwords_secured( $action ){
-		global $ultimatemember;
+		global $ultimatemember; //ultimate member global object
+		global $wpdb; //Wordpress DB object
+
+		//die if admin can't manage options
 		if ( !is_admin() || !current_user_can('manage_options') ) die();
-		
-		$users = get_users();
-		foreach( $users as $user ) {
-			delete_user_meta( $user->ID, 'confirm_user_password' );
-			update_user_meta( $user->ID, 'submitted', '' );
-		}
-		
+
+		//remove all confirm_user_password from DB
+		$wpdb->delete($wpdb->usermeta,['meta_key'=>'confirm_user_password']);
+
+		//then reset submitted
+		$wpdb->update($wpdb->usermeta,['meta_value'=>''],['meta_key'=>'submitted']);
+
+		//then set flag that update is complete and redirect to admin home
 		update_option( 'um_passwords_secured', 1 );
 		exit( wp_redirect( admin_url() ) );
 	}

@@ -1,0 +1,3806 @@
+msgid ""
+msgstr "MIME-Version: 1.0\n"
+
+#. Name.
+msgid "Redux Framework"
+msgstr ""
+
+#. Short description.
+msgid "Redux is a simple, truly extensible and fully responsive options framework for WordPress themes and plugins. Ships with an integrated demo."
+msgstr ""
+
+#. Screenshot description.
+msgid "This is the demo mode of Redux Framework. Activate it and you will find a fully-functional admin panel that you can play with. On the Plugins page, beneath the description and an activated Redux Framework, you will find a Demo Mode link. Click that link to activate or deactivate the sample-config file Redux ships with.  Don't take our word for it, check out our online demo and try Redux without installing a thing! <a href=\"http://demo.reduxframework.com/wp-admin/\"><strong>http://demo.reduxframework.com/wp-admin/</strong></a>"
+msgstr ""
+
+#. Found in description header.
+msgid "Online Demo"
+msgstr ""
+
+#. Found in description header.
+msgid "Use the Redux Builder to Get Started"
+msgstr ""
+
+#. Found in description header.
+msgid "Docs &amp; Support"
+msgstr ""
+
+#. Found in description header.
+msgid "Redux Framework Needs Your Support"
+msgstr ""
+
+#. Found in description header.
+msgid "Fields Types"
+msgstr ""
+
+#. Found in description header.
+msgid "Additional Features"
+msgstr ""
+
+#. Found in description header.
+msgid "Translators &amp; Non-English Speakers"
+msgstr ""
+
+#. Found in description header.
+msgid "Get Involved"
+msgstr ""
+
+#. Found in description list item.
+msgid "Background"
+msgstr ""
+
+#. Found in description list item.
+msgid "Border"
+msgstr ""
+
+#. Found in description list item.
+msgid "Button Set"
+msgstr ""
+
+#. Found in description list item.
+msgid "Checkbox / Multi-Check"
+msgstr ""
+
+#. Found in description list item.
+msgid "Color (WordPress Native)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Color Gradient"
+msgstr ""
+
+#. Found in description list item.
+msgid "Color RGBA"
+msgstr ""
+
+#. Found in description list item.
+msgid "Date"
+msgstr ""
+
+#. Found in description list item.
+msgid "Dimensions (Height/Width)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Divide (Divider)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Editor (WordPress Native)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Gallery (WordPress Native)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Image Select (Patterns/Presets)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Import/Export"
+msgstr ""
+
+#. Found in description list item.
+msgid "Info (Header/Notice)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Link Color"
+msgstr ""
+
+#. Found in description list item.
+msgid "Media (WordPress Native)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Multi-Text"
+msgstr ""
+
+#. Found in description list item.
+msgid "Password"
+msgstr ""
+
+#. Found in description list item.
+msgid "Radio (w/ WordPress Data)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Raw (HTML/PHP/MarkDown)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Section (Indent and Group Fields)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Select (Select/Multi-Select w/ Select2 &amp; WordPress Data)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Select Image"
+msgstr ""
+
+#. Found in description list item.
+msgid "Slider (Drag a Handle)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Slides (Multiple Images, Titles, and Descriptions)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Sortable (Drag/Drop Checkbox/Input Fields)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Sorter (Drag/Drop Manager - Works great for content blocks)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Spacing (Margin/Padding/Absolute)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Spinner"
+msgstr ""
+
+#. Found in description list item.
+msgid "Switch"
+msgstr ""
+
+#. Found in description list item.
+msgid "Text"
+msgstr ""
+
+#. Found in description list item.
+msgid "Textarea"
+msgstr ""
+
+#. Found in description list item.
+msgid "The most advanced typography module complete with preview, Google fonts, and auto-css output!"
+msgstr ""
+
+#. Found in description list item.
+msgid "Field Validation"
+msgstr ""
+
+#. Found in description list item.
+msgid "MANY translations. (See below)"
+msgstr ""
+
+#. Found in description list item.
+msgid "Full value escaping."
+msgstr ""
+
+#. Found in description list item.
+msgid "Required - Link visibility from parent fields. Set this to affect the visibility of the field on the parent's value. Fully nested with multiple required parents possible."
+msgstr ""
+
+#. Found in description list item.
+msgid "Output CSS Automatically - Redux generates CSS and the appropriate Google Fonts stylesheets for you on select fields. You need only specify the CSS selector to apply the CSS to (limited to certain fields)."
+msgstr ""
+
+#. Found in description list item.
+msgid "Compiler integration! A custom hook runs when any fields with the argument <code>compile =&gt; true</code> are changed."
+msgstr ""
+
+#. Found in description list item.
+msgid "Oh, and did we mention a fully integrated Google Webfonts setup that will make you so happy you'll want to cry?"
+msgstr ""
+
+#. Found in description paragraph.
+msgid "Redux is a simple, truly extensible and fully responsive options framework for WordPress themes and plugins. Built on the WordPress Settings API, Redux supports a multitude of field types as well as: custom error handling, custom fields &amp; validation types, and import/export functionality."
+msgstr ""
+
+#. Found in description paragraph.
+msgid "We have extremely extensive docs. Please visit <a href=\"http://docs.reduxframework.com/\">http://docs.reduxframework.com/</a> If that doesn’t solve your concern, you should search <a href=\"https://github.com/reduxframework/redux-framework/issues\">the issue tracker on Github</a>. If you can't locate any topics that pertain to your particular issue, <a href=\"https://github.com/reduxframework/redux-framework/issues/new\">post a new issue</a> for it. Before you submit an issue, please read <a href=\"https://github.com/redux-framework/redux-framework/blob/master/CONTRIBUTING.md\">our contributing requirements</a>. We build off of the dev version and push to WordPress.org when all is confirmed stable and ready for release."
+msgstr ""
+
+#. Found in description paragraph.
+msgid "It is hard to continue development and support for this free plugin without contributions from users like you. If you enjoy using Redux Framework, and find it useful, please consider <a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=MMFMHWUPKHKPW\">making a donation</a>. Your donation will help encourage and support the plugin's continued development and better user support."
+msgstr ""
+
+#. Found in description paragraph.
+msgid "We need your help to translate Redux into your language! Redux is part of the WP-Translations.org team. To help us translate Redux create a few account here: <a href=\"https://www.transifex.com/organization/wp-translations\">https://www.transifex.com/organization/wp-translations</a>. Once you're in, you can head over to the <a href=\"https://www.transifex.com/projects/p/redux-framework/\">Redux sub-project</a> and translate away. Thank you for your assistance."
+msgstr ""
+
+#. Found in installation header.
+msgid "For Complete Documentation and Examples"
+msgstr ""
+
+#. Found in installation paragraph.
+msgid "Visit: <a href=\"http://docs.reduxframework.com/\">http://docs.reduxframework.com/</a>"
+msgstr ""
+
+#. Found in faq header.
+msgid "Why doesn't this plugin do anything?"
+msgstr ""
+
+#. Found in faq header.
+msgid "How can I learn more about Redux?"
+msgstr ""
+
+#. Found in faq header.
+msgid "You don't have much content in this FAQ section"
+msgstr ""
+
+#. Found in faq paragraph.
+msgid "Redux is an options framework... in other words, it's not designed to do anything on its own! You can however activate a demo mode to see how it works."
+msgstr ""
+
+#. Found in faq paragraph.
+msgid "Visit our website at <a href=\"http://reduxframework.com/\">http://reduxframework.com/</a>"
+msgstr ""
+
+#. Found in faq paragraph.
+msgid "That's because the real FAQ section is on our site! Please visit <a href=\"http://docs.reduxframework.com/faq/\">http://docs.reduxframework.com/faq/</a>"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.5.8.1"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.5.8"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.5.7"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.5.6.1"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.5.6"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.5.5.1"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.5.5"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.5.4.3"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.5.4"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.5.3.1"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.5.3"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.5.1"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.5.0"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.4.1"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.4.0"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.9.4"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.9.2"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.9"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.8.3"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.8"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.7"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.6.8"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.6"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.5"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.4.9"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.4.8"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.4.7"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.4.6"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.4.5"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.4.4"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.4.3"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.4.2"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.4.1"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.4"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.3"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.2"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.1"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.3.0"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.2.9.13"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.2.9"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.2.8"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.2.7"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.2.6"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.2.5"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.2.4"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.2.3"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.2.1"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.2.0"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.1.9"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.1.8"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.1.7"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.1.6"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.1.5"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.1.4"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.1.3"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.1.2"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.1.0"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.0.9"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.0.8"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.0.7"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.0.6"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.0.5"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.0.4"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.0.3"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.0.2"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.0.1"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.0.0"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "3.0"
+msgstr ""
+
+#. Found in remaining content header.
+msgid "Attribution"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Issue with added plugin textdomain support."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Customizer preview callback working again."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    last_tab argument not working."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2637 - color picker clear."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2633."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2624 - Border field saving/output 0px when no default set.  Now accepts no default and outputs no CSS for blank values."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    color_rgba no long outputs CSS with empty color values."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2612 - pseudo classes not appending to multiple selectors in link_color output."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: The mass data escaping of Redux Core output.  Part I."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2609 - Section not folding correctly with class argument specified."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2607 - button_set required scalar check for array returned by terms in the data arg.  Thanks @Enchiridion."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Fixing more inconsistencies with wp_filesystem dirlist.  How about some proper documentation, Otto?"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2582: Added extra check for get_terms to avoid error."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     Filesystem proxy dirlist triggering file permission errors on empty array."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2571 - Sorter adding extra disable column on new entries if 'disabled' is lowercase."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Updated   Fields css for dev_mode off."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Updated:  Updated container.tpl version."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2570 - multi-text field CSS bleeding over into WP."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     Customizer customizer_only and customizer section overrides. Also global customizer =&gt; false was not working."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added     Security suggestions posed in #2543 by Julio Potier from SecuPress."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    'dirlist' in filesystem proxy returning permission error on empty dirs."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added     setOption and getOption to Redux API."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added     'hide_save' argument."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    'readonly' argument for textarea."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2545 - CSS validator error output misconfigured."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    ACE adding escape slashes to quotes via CSS validation, causing improper error message."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    <code>ajax_save</code> arg for fields.  Setting to false will reload the options panel when the set option has changed."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2532 - Spinner field arrow spacing off when dev_mode set to false due to missing <code>!important</code> CSS suffix."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    <code>autocomplete</code> arg to text field.  This is FALSE by default."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Color RGBA field missing name_suffix.  Will now work in repeater extension."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:     Index error regarding icon argument."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     Customizer WP 4.3 final fixes."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     #2500 - Conflict with outdated select2 in JW Player plugin."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: icon_type no longer needed for section icons. Now detects if URLs are provided for images."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Various customizer fixes. HTML in the customizer title."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Media URL now is 95% wide."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Select2 now 100% width instead of just resolve (that doesn't always work)."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Field enqueue method to allow for more flexibility."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    Support for Airplane Mode plugin (https://github.com/norcross/airplane-mode) by @norcross. Thanks @chriscct7  #2463"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Undefined index in theme-check enhancements. Thanks @winwinwebdesign!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Removed:  SASS compiler &amp; code. Note needed."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Undefined index when removing a section."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Typography bug onload always saying settings have changed."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Added minified customizer JS."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Redux CUSTOMIZER! YEA!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Small echo in Redux API"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Sigh, PHP 5.2 issues."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Date-time fixes with CSS overloading and positioning."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    Lite support for https://wordpress.org/plugins/plugin-dependencies/"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: CDN to be a more bulletproof solution (http://jsdelivr.net)."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: CDN alerts to be more clear, and have proper links."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Bad code in raw field hosing up the entire panel."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: #2436 - Validation check for any validation type ending in 'not_empty' now recognized."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Undefined index for undeclared variable in Theme-Check checks."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Annoying Redux Theme-Check notices."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    How some functions were called."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Better .org hinting for theme submission."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Dissmissable Redux Admin notices now use the WP 4.2 dismiss JS and Ajax. Pretty."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Admin notice code is now it's own isolated class inside core."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Use DB for admin notice, not flat-files. Boo."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Sample configs not to cause errors if multiple users use the same function name."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    CDN internationalization class."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Parsedown so as not to throw a shortcode error that didn't actually exist."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2446 - Non google font choice not saving in certain instances."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Added additional check in redux.js to stop errors with panels containing multiple raw fields."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Hopefully, the issue of settings not saving on first install when using the Redux API."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Set use_cdn argument to true, by default."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     #2437 - undefined value set to blank line height."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2429 - Required evaluator 'contains' not working properly with multi_check"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2426 - Section field not indenting."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Divider field not rendering properly."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    <code>fieldset_class</code> argument for fields.  Thanks @Enchiridion."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    Option to set checkbox label.  Thanks @Enchiridion."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    javascript .trigger('change') to switch, spinner, and image_select.  Thanks @Enchiridion."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Ajax change output of error and notice via hooks."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2414 - Bad ajax save due to mis-initialized variable."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    CSS in metabox fields all wanky."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    'reload_on_change' arg for fields, to force page reload after setting change."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2377 - Replaced mysql_gets_server_info with $wpdb."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Templates to properly excape values."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Import/Export to properly be full-width and use lazy-load JS."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: CSS for sections to bound to the section, not all of Redux."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2368 - Options panel layout offset."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2369 - validate_callback not working for color, color_gradient, and date."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2355 - Space missing in switch class arg."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Fixed all fields without leading space in class arg."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Restrict table modification to redux-container."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Container overflow for pre's."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Redux API to include removeSection and removeField."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    Added before and after hooks to any panel template file."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2351 - WP_Error check added to admin blast remote get."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Moved styling for the divide field into it's own CSS file."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: All WP Color Pickers to properly save the value before save."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    CSS Styles for the customizer.  ;)"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Panel is MUCH more responsive now."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Small stylings for a few fields."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Added extra qTip class."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Ajax save animation. Added fallback for pre 4.2 CSS."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Small issue with Redux info boxes and spacing."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Small bug with the Redux API where divide sections were causing errors."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Small admin blast fix."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Qtip and Spectrum vendor libraries restored to local."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Admin notice loading on front end."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Callback actions run with do_action_ref_array now."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    show_options_object argument to enable or disable option object."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    Error suppressing to filesystem class to avoid notice errors when site goes down."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Panels not rendering, again"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    Vendor support plugin link to CDN fallback message."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Moved vendor libraries ACE, select2, qtip, and spectrum to CDN."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Removed:  Local installs of above libraries."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Option panel not rendering due to experimental code."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    How sorter works with data"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: How the data arg is stored in Redux."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Removed:  sysinfo.php.  No longer needed in lieu of our support URL feature."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Removed:  debug.php.  Moved to options_object extension."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: #2274 - PHP Unit test compatibility.  Thanks @daithi-coombes."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: #2144 - Optional class argument per image.  Thanks @paulthecoder."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2278 - More W3 Total Cache hacks."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed: #2258 - welcome redirect error with embedding plugin scenarios."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed: Redux plugin load order when activating plugins."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed: #2271 - stuck redirect on godaddy (seriously, get a real host, people) servers."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed: #2216 - Reset section not always working within FF."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: update_notice arg only truly shows up if dev_mode is on."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    Tooltip to developer mode badge, for informational purposes."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Added css_layout ext to default value filter, to avoid errors."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2239 - Various extensions didn't support default values for default arg.  Filtered out offending extensions."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed: WP.org ONLY SVN mixup."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:   #2228 - Submenu items still visible if permissions not allowed."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:   Import/Export showing up in customizer."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Admin-fresh theme to match new WordPress 4.2"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Redux widget now has a proper ID. Thanks @corradomatt!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Added text-shadow to submenu items to give a stronger \"pop\""
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Page_slug now dynamically generated if not specified."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Admin blast message pinging server on each load after three day expiration.  Possible slow down of the overall panel loading time."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:   #2221 - Background field media not enqueueing when used with no other media based fields."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:   #2214: Bad path for import/export enqueue."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Release: Wp.org release."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2214 - Import/export field contained bad enqueue path."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: If running localhost or WP_DEBUG is set to true, Redux dev_mode is forced to true."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Redux News dashboard widget appears only when dev_mode is true or in a local host environment."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     #2127 - Elusive icons not working in footer as before."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     Issue where Status tab not showing extension versions properly."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     Issue in support URL not passing data correctly."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     Support URLs now work even if max_input_vars is way low in PHP 5.3+"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     #2197 - Import/export not loading proper for those who have opted to install Wordpress in ways it was never intended."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    'Generate Support URL' feature kicking back error."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     Sortable checkbox labels not displaying properly."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     Sortable textbox not displaying default value as placeholder."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Updated:  sample-config with accurate example for both sortable modes."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     #2181 - Fixed issue with Ajax Save when PHP 5.3 Magic Quotes were disabled."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2181 - Lingering issue with Ajax Save and PHP Magic Quotes."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2181 - Issue with PHP &lt; 5.4 and the Ace Editor field. Oy."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2163 - Undefined error in JS."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2176 - Infinite loop in the customizer for live preview of themes."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Support page now works."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Fix for MySQL deprecated functions in php 5.5+."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2155 - Fixed import with ajax_save."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Changelog now uses raw field parsedown if present."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    Redux Framework News Widget on the WP Dashboard."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2156: <code>label</code> argument not recognized when using sortable as textbox."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2140 Another PHP 5.2 issue with ajax_save."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Opt groups for select field now working in customizer even if not supported."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    <code>full_width</code> arg now makes ANY field full-width.  :)"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2133 - Ajax save adding extra backspashes in PHP 5.2 only (They didn't use array map properly)."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Customizer wasn't working. Thanks @sgssandhu!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2125 - Compiler not firing on first save, when using ajax_save."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2118 - Typography JS error."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Odd typography bug no one has reported."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Sticky header and footer to remain within the redux-main container."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     #2097 - Slash fix for ajax_save that was previously believed to be an isolated issue. Now applied on all ajax saves."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2086 - color_rgba improperly functioning when transparent mode set to false."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     Import/Export bug where it wasn't running."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified  Locations of the core extensions directory as well as grunt configuration."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     #2047 - Validation will now accept 0 as a value to be tested. Thanks @Ninos!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added     url_slug validation with option flush_permalinks!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     Issue where the remove of background field was always showing an empty preview box. "
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified  Turned ajax_save on by default for additional bug reports.  ;)"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified  Added some margin above validation errors/warnings so they look better."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified  Removed previous element border for any section so it looks better."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     #2081 - Section field hiding any field after.  Weird."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added     #2047 - <code>output_transparent</code> argument to output the blank color feature as 'transparent'."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     #2080 - missing 'rem' unit and inability to process float values.  Thanks to @HELWATANY for the fixes!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     #2043 - misaligned images in image_select field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    #2064 - Merge argument for image_select. Thanks @Ninos"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Import/Export is now an extensiona and decoupled from the core."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Spinner had a nasty number bug, now resolved."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2076 - RTL bug with old ID's. Thanks @mahfoozroy."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2072 - Ajax_save editor type bug fix."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #2058 - Incorrect path in include statement for sysinfo.php"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Templates now have versioning with a warning (dev_mode only) if they are outdated from the core templates."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Ajax saving now has overlay during save to avoid confusion for users."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Template files even more for simplicity and ease."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Saving. Redux now has the ajax_save argument if you want it!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Validation warnings now work."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Changed set_transient function to public to avoid errors in new templating code."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Entire panel template is now decoupled from the theme and implemented with many filters for easy customization."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:   #1478 - Import/export failing when two instances if Redux in use.  Thanks, @desaiuditd!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:   Section field not indenting properly, if at all."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:   #2031 - Proper CSS sanitization for compliancy with WP.org. "
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:   #2027 - added isset()"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:   #2019 - Reset issues with PHP 5.2.  Thanks a bunch, @Webcreations907!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:   #2023: Issue with custom submenus in menu."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:   #2025: Issue with select sorting."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Update:  ACE Editor.  Thanks @corradomatt."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:   Small filesystem option with bad filter key reference.."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:   Small return if $section filter returned the section empty."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Reset section hook firing too early."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: The Redux Repeater field has landed!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1983 - color_rgba not outputting default values on first load (before save)."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Google font enqueues with opt_name to avoid collision with multiple Redux instances."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1980 - JS errors with sorter &amp; sortable."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    color_rgba field outputting incorrect information via output/compiler."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1979 - Goole fonts not properly loading in typography dropdown."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Undefined index error on MU installs."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Removed:  SASS compile of field CSS, for the time being.  Compiler remains in core."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Improved: Panel load time, most notable when not in dev_mode.  Better for your clients.  :)"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Updated:  Elusive Font library."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1961 - color_rgba field defaulting to black on reset."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1941 - Datepicker opened off screen."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1756, #1957 - Slider issues.  Thanks @FFIN!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1960 - Duplicate slide when clicking Add.  Again, thanks to @FFIN for the fix."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    New filter: apply_filters 'redux/validate/{opt_name}/before_validation'"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1745 - Adding settings submenu to empty submenu now works.  Many, many thanks to @No3x for cracking this one!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1955 - Undefined index rgba in output routine."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: #1947 - Added display:none to TR tag under info field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Replaced: #1951 - Replaced develop branch of scssphp to master branch due to PHP 5.2 incompatibililty."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1943 - Removed premature DIV close."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1945 - Media preview not rendering when default ID specified."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: #1930 - reorder 'psedo-class of link_color field.  Thanks @freddessaint"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: SASS compiler outputs to page by default.  Faster."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1927 - Incorrect dir path to spectrum library in color_rgba field corrected."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: color_rgba field now usees spectrum color picker.  minicolors removed.  Just...too buggy."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: #1922 - Filesystem output function."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Added PHP 5.2 support (ugh!) for SASS compiler."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    More SASS compiler tweaking."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    PHP errors when disabling SASS."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed     #1909 - malformed DIV class HTML in slider field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Removed   Argument for SASS compile file output location removed.  Didn't work, too much trouble."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1904 - select_image field not displaying saved value on page reload."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    SASS compile under multi-instance outputting incorrect CSS file"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    redux-admin scss images converted to base64"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added     SASS compiler for admin CSS."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added     SASS to CSS for grunt compiler."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added     SASS compiler for fields."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Updated:  select2 3.5.2"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1856 - Illegal offset string warnings in framework.php.  Thanks @CGlingener."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1874 - Required operator 'contains' and 'not_contains' not working with select set to multi."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1829 - Required operator '=' and '!=' not working with select set to multi."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1870 - Border field doubling up on px in output/compiler."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    <code>hidden</code> argument for fields."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    <code>hidden</code> argument for sections."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1868 - Improper panel render when opening expanded, when <code>open_expanded</code> set to true."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    <code>hide_expand</code> argument, to hide the expand options button."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1865 - Sortable select not saving proper order."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1864 - Footer z-index CSS adjusted."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1848 - Import-export filed buttons not functioning properly."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1834 - Wordpress data dealing with IDs as array keys not rendering properly."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1830 - Font lists were added in quotes.  Thanks @karimhossenbux."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1798 - Fixed lazy load JS to only load visible sections. Much more optimized."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1821 -  Exo 2 font not working, issue with typography and escaping."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    #1803 - Optgroup support for select field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    Decimal increments to spinner."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    Customizer now supports PANEL! Yay 4.0."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1789 - Customizer now properly working again with WP 4.0. Odd bug."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1670 - Fixed some extra themecheck and customizer issues."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1782 - Media field not showing files after upload? Hopefully this fixes it."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1775 - Call to undefined function is_customize_preview() in pre WP 4.0."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Issue where in some cases tracking still occuring after opt-out."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Documentation URL."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1742 - Sidebar subsections don't always expand."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1758 - Thanks @echo1consulting!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    'hidden' to menu_type argument to allow for hidden menus until available."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    #1749 - Remove font-wight and font-style from css output when not in use."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Added the \"redux/options/{$this-&gt;args['opt_name']}/compiler/advanced\" hook for more advanced compiling."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    Suggestions as per #1709. Thanks @echo1consulting."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Removed a cURL instance from the core and fixed the developer ad resizing."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed: PHP 5.2 issues. <em>sigh</em>"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:   #1593 - Great pull request by @JonasDoebertin. Now you can enqueue dynamic output to the login screen or admin backend."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:   Customizer wasn't saving at all! That's been like 4 months. No one's reported it. Hmm."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed: #1702 - Customizer only fields were being erased on panel save."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:   Various Theme-Check errors with languages."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added: Theme-Check class to help devs know what is what."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed: The way we include files from include_once to require_once everywhere."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Language files to reflect new strings."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Formatted a bunch of old class files."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added: Notice on the updates for non-devs to use the new dev_mode disabler plugin and notify their developer.  ;)"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Updated potomo, thanks @shivapoudel."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added: Grunt checktextdomain and made improvements. Thanks @shivapoudel. "
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   #1685 - Specifying no default argument for image_select caused errors on reset."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1667 - Slides Upload button causing JS error."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed: #1670 - Fix for Theme Check -&gt; <code>add_setting() method needs to have a sanitization callback function passed.</code>"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:  #1661 - Fix for undefined index in some versions of PHP. Thanks @gianbalex!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Removed makepot and used grunt-wp-i18n instead."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added a jshintrc file"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added a <code>grunt addtextdomain</code> to correct any bad textdomains in the core."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Updated .gitignore for better readability"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Updates to a few other files including package.json."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Updated language files."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Update codestyles/.editorconfig to reflect the project's standards. "
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:  #1653 - Better admin bar with external links: Admin bar menu priority, icon, and external links. Thanks @shivapoudel!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      #1651 - <code>library_filter</code> argument.  Allows specification of what files to display in the media library."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   #1651 - <code>mode</code> argument accepts either file type or mime type (but not both)."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1650 - Toogle error with responsive CSS."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1643 - Slight border issue (2px) on sticky footer."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1642 - Added <code>font_family_clear</code> arg, enabling the clear option for font-family."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1638 - Spacing field not outputting when units values attached to default values."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified    #1644 - <code>import_icon</code> argument now accepts wordpress dashicons"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1634 - Double border for sections field. Thanks @AlexandruDoda"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Changelog location to now Changelog.md."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1632 - Sortable with no defaults set revert to false (instead of options values)."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Labels for sortable in text mode updated to match framework."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      #1586 - Class-level declaration for callbacks and validation. Thanks @echo1consulting."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Typography field now fully dynamic."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   No longer require a google_api_key for the typography module.  :)"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      FTP credentials screen giving a \"undefined submit_button function\". Resolved."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1623 - Registered older noUISlider JS under a new name to avoid conflicts."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   #1622 - Removed googlefonts.js dependency."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   CSS for menu items when active (no hover)."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Visual feedback to left menu if active."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1600 - ACE Editor bombing in PHP 5.2 environments."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1591 - Erroneous outputting of font-weight and font-style when no font-family selected."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Updated:    #1569 - Improved submenu highlighting."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      #1487 - Added <code>get_default_value</code> function into the framework.php"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Framework URI errors when using child themes. Some restructuring."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Framework URI errors when embedded in theme with Windows."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      image_size as an option for the data argument. Thanks @Gyroscopic!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   How we declare the uploads directory and URL. Using core WP functions now."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1560 - IE8 RGBA fallack"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Language files."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1543 - Hint icon not changing when set in args."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1537 - Media field not accepting images with mode set to false."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1529 - ACE Editor conflict with Visual Composer."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      #1530 - Added argument to specify admin bar icon, <code>admin_bar_icon</code>.  Thanks Ninos!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1532 - Media field not accepting any mime type when <code>'mode' =&gt; false</code>."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1520 - Checkbox field not displaying Wordpress data when using data argument."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1516 - Invalid index and foreach when using compiler and async_typography."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1509 - Sorter adding unnecessary bits on some items."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1514 - Customizer and multisite not getting on properly."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1512 - Slides 'Upload' button not showing or saving selected image."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Checkboxes with required were working in reverse."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      ASync Typography now works! No more flashing fonts."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1489 - Color picker UI lining up improperly."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1497 - dev_mode spinner issue."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Spelling error in tracking dialog."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Updated ace_editor."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Many MANY fields for the group field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Some CSS bugs."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1481 - Custom fonts loading in google font CSS."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1485 - Customizer 'invalid argument' error.  Thanks @rnlmedia."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1472 - font style not displaying saved valie with no font-family argument set."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1471 - raw field and required not playing nice together."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      An annoying notice at the top so our devs don't ship with dev_mode on.  ;)"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1462 - Google fonts not loading in font drop down."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      More WP FileSystem tanking. Did PHP fallback before FTP. Works 99.9% of the time without credentials."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Incorrect folder CHMOD in filesystem class."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1454 - Chmod permissions for redux folder."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1451 - Googlefonts not loading due to failing copy function."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1450 - Saves witch values with no <code>on</code> or <code>off</code> args make the core unhappy."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1444, again, due to filesystem growing pains."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1449 - Restoring <code>options</code> argument over a lousy attempt to fix placeholder."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      More file permission issues."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Font debug was left from last commit. Sorry all."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1444 - output of typography all_styles when font_style UI was hidden.              "
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1440 - flaw in new cleanFilePath logic."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1432 - Theme check failing when double-slashes existed in get_template_directory() return."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Removed:    curlRead from helper class."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1426 - menu_name not appearing on front end admin bar."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      #1427 - button_set added to customizer UI.  Thanks @wpexplorer."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1429 - ACE Editor erroring with no default value set."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      wp_filesystem now initialized with credentials in an effort to combat the tmp file issue."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Code purification."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   How section tabs work. Isolated within the redux-container class."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   #1412 - Redesigned text label, placeholder fix."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1408 &amp; #1357 - Typography subsets losing value after multiple saves on other panels."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1403 - unit value no longer prints after empty typography values"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1403 - Backup font not appearing in font-family variable."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Customizer now supports section and field <code>permissions</code> argument."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1399 - Customizer respects <code>page_permissions</code> argument."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1400 - output/compiler string incomplete using multiple selectors."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1396 - Custom fonts cutting off multiple families in selector, after save."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Typography attempting to queue up non google fonts on backend."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      #1395 - Display of child theme status in sysinfo, thanks @SiR-DanieL."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1387 - Page jump when clicking \"Options Object\".  Thanks @rrikesh."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1376 - checkbox.min.js missing."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Static variable changes for instances and basic comment cleanup"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1361 - Raw field not hiding with required."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Datepicker not formatting properly.  Still needs some work."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1357 - Preview not rendering font on page load."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1356 - Color fields and transparency not syncing due to new JS."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1354 - Add class check for W3_ObjectCache."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1341 - JS not initializing properly in import_export."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1226 - W3 Total Cache was affecting validation and compiler hooks."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Menu errors weren't showing properly for non-subsectioned items."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1341 - Import/Export buttons not functioning. Also fixed sortable somehow."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Slides not initializing with the last fix."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Slides field was not properly initialized for the media elements. Fixed."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1337 - <code>redux</code> JS dependency loading issue.  Many thanks @tpaksu"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1336 - fixed default font in preview."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1334 - Typography not un-saving italics."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      #1332 - New validation: numeric_not_empty."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1330 - Required not working on all fields."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1322 - Sections not folding with required argument."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1270 - Editor field compiler hook not firing in visual mode."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      select2 dependency in select_image, and other fields."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Filter out <code>@eaDir</code> directories in extensions folder."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Fixed the image_select presets to work again. Also now will function even if import/export is disabled."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Minor tweaks for metabox update."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1297 - Missing space in image_select class."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Slider field tweaked for metaboxes."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1291 - Change of font-family would not trigger preview, or show in open preview.  "
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1289 - Typography not retaining size/height/spacing/word/letter spacing settings."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1288 - Background color-picker dependency missing.  Thanks @farhanwazir."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Search extension failed do to dependency issue from the core."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1281 - color field output/compiler outputting incorrect selector when only one array present."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Update check only appears once if multiple instances of Redux are loaded in the same wordpress instance."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Changing font-family in typography didn't trigger 'save changes' notification."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      More typography: Back up font appearing in font-family when opening selector."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Typography: undefined message when NOT using google fonts.  Thanks @farhanwazir"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Typography font backup not in sync with font-family."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Typography not saving font-family after switching back and forth between standard and google fonts."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Background field selects not properly aligned."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Removed select field dependency from background field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1264 - Color-picker/transparent checkbox functionality."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Typography fine-tuning."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      All typography select fields render as select2."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Switching between transparency on and off now restores the last chosen color in all color fields. "
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Redux uploads dir should NOT be ~/wp-content/uploads, but just wp-content. As per Otto."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Navigation no longer has that annoying outline around the links. Yuk."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1218 - Select2 multi select not accepting any keyboard input."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1228 - CSS fixes"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      <code>hide_reset</code> argument, to hide the Reset All and Reset Section buttons.        "
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      <code>content_title</code> argument to slides field.  Thanks @psaikali!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      <code>customizer_only</code> argument for fields &amp; sections, contributed by @andreilupu."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      select2 args for spacing field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      select2 args for the following fields: typography, background, border, dimensions and slider."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Portions of core javascript rewritten into object code."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   All field javascript rewritten using jQuery objects (versus standard function)."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Typography field rewritten to fill out font-family field dynamically, versus on page load."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified    data =&gt; taxonomies now has a little more power behind it."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1255 - button_set multi field not saving when all buttons not selected."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1254 - Border field with 0px not outputting properly."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1250 - Typography preview font-size not set in preview."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      #1247 - Spacing field not outputting properly in <code>absolute</code> mode."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Typography previewing hidden until font inputs are changed."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Vendor js not loading properly when dev_mode = true"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Border field not outputting properly."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Centralized import/export code in anticipation of new builder features."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Removed rogue echo statement."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   select2 loads only when a field requires it."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   More code to load JS on demand for fields require it."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Field specific JS only loads with active field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Hints stopped working due to classname change."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Permissions argument on section array not filtering out raw field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Too many CSS tweaks to list, due to last build."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Sortable and Sorter fields now sort without page scroll when page size is under 782px."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Hint icon defaults to left position when screen size is under 782px."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      <code>permissions</code> argument for fields and sections erasing saved field data.  See #1231"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      In dev_mode panel CSS was being loaded 2x."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Typography color picker bleeding under other elements.  #1225"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Hint icon_color index error from builder.  #1222"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      <code>output</code> argument for <code>color</code> and <code>color_rgba</code> fields accepts key/pairs for different modes."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      disable_save_warn flags to the arguments to disable the \"you should save\" slidedown."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Actions hooks for errors and warnings."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Redux now ignores any directories that begin with <code>.</code> in the extension folder.  See #1213."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Redux not saving when validating uploads."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Border field output/compiler formatting.  Removed 'inherit' in place of default values.  See #1208."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Trim() warning in framework.php when saving.  See #1209, #1201."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Typography not outputting all styles when <code>all_styles</code> set to true."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      'Cannot send header' issues with typography."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Small CSS classes for flashing fonts where web-font-loader."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      ASync Flash on fonts. FINALLY. What a pain."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      3+ JavaScript errors found in the background field. Now works flawlessly."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      PHP warnings in background field.  #1173.  Thanks, @abossola."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      CSS validation not respecting child selector symbol. #1162"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Extra check for typography bug."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Error css alignment issue with subsections."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      javascript error in typography field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Added a title to the google fonts stylesheet to fix validation errors."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      One more slides field error check, and an extra JS goodie for an extension."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Leftover debug code messing up slides field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      More reliable saved action hook."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Removed erroneous debug output in link_color field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Dimension field default now accepts either <code>units</code> or <code>unit</code>."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Google CSS moved into HEAD via WP enqueue."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Now do a trim on all fields before validating. No need to alert because of a space..."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Typography field CSS completely rewritten. All thanks to @eplanetdesign!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Various CSS fixes and improvements."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Turned of mod_rewrite check."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   How errors are displayed, no longer dependent on the ID, now proper classes."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Error notice stays until all errors are gone. Also updates it's number as errors fixed!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Moved google font files to proprietary folder in upload to help with permission issues."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Formatting of field files. Normalizing headers."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:        is_empty / empty / !isset    AND    not_empty / !empty / isset as required operations"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Reset defaults error."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:        <code>show</code> argument to turn on and off input boxes in slider."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Required now works with muti-check fields and button set when set to multi."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Import works again. A single line was missed..."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        link_color field not outputting CSS properly via compiler or output.  Thanks @vertigo7x"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Sorter field CSS.  Buttons were all smushed together."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        'undefined' error in typography.js.  Thanks @ksere."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Another stray undefined index. Oy."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:        <code>open_expanded</code> argument to start the panel completely expanded initially."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Various bad mistakes. Oy."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Slight typography speed improvement. Less HTML hopefully faster page loads."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Unload error on first load if the typography defaults are not set."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Errors pertaining to mod_rewrite check."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        All those headers already set errors."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:        $changed_values variable to save hooks denoting the old values on a save."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:        Pointers to Extensions on load."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:     CSS Output for the background field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Validation error messages not appearing on save."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:     Speed boost on validation types."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Sortable field not saving properly."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Erroneous data in admin.less"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Responsive issues with spacing and dimension fields."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Style conflicts with WP 3.9. Added register filter to fields via id."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Metaboxes issues."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Compiler hook in the customizer now passes the CSS."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Compiler hook now properly fires in the customizer."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Validation error with headers already being set."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Added mode for width/height to override dimensions css output."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Restoring lost formatting from multiple merges."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        New sorter default values get set properly now.  ;)"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Removed erroneous 's' character from HTML."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Info field didn't intend within section."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:        Compiler hook wasn't running."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:        Prevent Redux from firing on AJAX heartbeat, but added hook for it 'redux/ajax/heartbeat'."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:        Tick mark if section has sub sections. Hidden when subsections expanded."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:        Check to make sure a field isn't empty after the filter. If it is empty, skip over it."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:        Subsections now show icon if they have it. Show text only (without indent) if they do not."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Small bug in image_select javascript."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Import hook, just because we can.  :)"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Customizer preview now TRULY outputs CSS even if output_tag is set to false;"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Reset section, etc. Discovered an odd WordPress thing."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Image_select size override."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Customizer save not firing the compiler hook."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Customizer not outputting CSS if output_tag is set to false."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Small empty variable check. Undefined index in the defaults generating function."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      WP 3.9 update made editor field button look ugly."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Save hook not firing when save_default set to false."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Reset section anomalies.  Maybe."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Array of values in required not recognized."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Updated hint defaults to prevent index warning."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Removed leftover debug code."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      New readonly argument for text field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Reset/Reset section actions hooks now fire properly."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      When developer uses section field but does not specify an indent argument."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Dynamic URL for slides"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Accidently removed reset action on section reset. Restored."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Section defaults bug for certain field types."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Dynamic URL if site URL changed now updates media properly if attachement exists."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Customizer now correctly does live preview."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Special enqueue case fix."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      A few more hooks for defaults and options."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Small undefined index error."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Section key generation via title."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   File intending."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Custom menus not displaying options panel."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Single checkbox option not retaining checked value."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Border field returning bad CSS in CSS compiler."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Import/Export fix.  Thanks, @CGlingener!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Save warning now is sticky to the top and responsive."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Mobile fixes for Redux. Looks great on small screens how."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Slight CSS fixes."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Compiler fixes and added notices."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Import/Export more reasonable text."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      <code>force_output</code> on the field level to bypass the required check that removes the output if the field is hidden. Thanks @rffaguiar."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Fully compatible with WordPress 3.9. Now it just works.  ;)"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Info and divide field now work with required."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Fallback. Now if the media, slides, or background URL doesn't match the site URL, but the attachment ID is present, the data is updated."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Last tab not properly set.  Slow rendering."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Replaced transients with cookies. Less DB queries."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Undefined variable issues for new required methods."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Default_show display error with a non-array being steralized."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Multiple required parent value checking! Booya!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Sections now fold with required."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      select2 not rendering properly when dev_mode = false, because of ace_editor fix."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Removed mistakenly compiled test code from redux.js."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      ace_editor not rendering properly in certain instances."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Small change to import_export field in checking for existing instance of itself."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      import_export not rendering when the menutype argument was set to menu"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Ace_editor not enqueued unless used. MEMORY HOG."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Color_Gradient transparency to was being auto-selected if from way transparent."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Enqueue select with slider for local dev."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   removed add_submenu_page when creating a submenu for us in the WP admin area.  WP approved API is used in it's place to being Redux up to wp.org theme check standards."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Massive speed issue with button_set. Resolved."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Issue where default values throws an error if ID is not set."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Continuing effort to ensure proper loading of config from child themes."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Import/Export array search bug if section['fields'] is not defined."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Inconsistencies in import/export across different versions of PHP."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Redux checks for child or parent theme exclusively before loading."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Typography custom preview text/size not outputting."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      No font selected in typography would default to 'inherit'."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Hint feature kicking back a notice if no title was specified."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Sortable field, when used a checkboxes, were all checked by default, even when set not to be."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      button_set field not setting properly in multi mode."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Javascript console object not printing options object."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Load errors from child themes no longer occur."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Compiler output for slider field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      update_check produced a fatal error on a local install with no internet connection."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Compiler hook failing on slider."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Error on update_check when the response code was something other than 200."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      image_select images not resizing properly in FF and IE."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Layout for the typography field, so everything isn't smushed together.  The new layout is as follows:"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      link_color field showing notice on default, if user enters no defaults."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Fixed tab notice in framework.php if no tab parameter is set in URL."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:      Hide demo hook wasn't hiding demo links."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Admin notice for new builds of Redux on Github as they become available.  This feature is available on in dev_mode, and may be turned off by setting the <code>update_notice</code> argument to false.  See the Arguments page of the wiki for more details."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      text-transform option for the typography field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Newsletter sign-up popup at first load of the Redux options panel."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Added PHP 5.2 support for import/export."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Action hooks for options reset and options reset section."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Theme responsive for date picker."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      New slider.  Better looking UI, double handles and support for floating point values.  See the wiki for more info."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Typography improvements."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Hints!  More info:  https://github.com/ReduxFramework/ReduxFramework/wiki/Using-Hints-in-Fields"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Complete Wordpress admin color styles. Blessed LESS/SCSS mixins.  ;)"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Font family not required for the typography module any longer."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Support for using the divide field in folding."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Error trapping in typography.js for those still attempting to use typography with no font-family."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      Full asynchronous font loading."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:      email_not_empty validation field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Typography word and letter spacing now accept negative values."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Typography preview shows spaces between upper and lower case groupings."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Google font CSS moved to header so pages will pass HTML5 validation."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   Removed Google font CSS line from header (because it's in the footer via wp_enqueue_style."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified:   RGBA Field stability.  Thank you, @SilverKenn."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Reverted:   email validation field only checks for valid email.  not_empty check moved to new validation field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Improper enqueue in tracking class."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Few classes missed for various fields."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Spacing field kicking back notices and warnings when 'output' wasn't set."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Added file_exists check to all include lines in framework.php"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Background field now works with dynamic preview as it should."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Extension fields now enqueueing properly."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    Text-align to typography field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Servers returning forwards slashes in TEMPLATEPATH, while Redux is installed embedded would not show options menu."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    On and Off for switch field not displaying language translation."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    email validation allowing a blank field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Now allow for empty values as valid keys."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    Dismiss option to admin notices (internal function)"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    CSS spacing issue"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Customizer now works and doesn't break other customizer fields outside of Redux."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Several minor bug fixes"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    Metabox support via extension http://reduxframework.com/extensions/"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    Admin-bar menu"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Section field now folds."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    wp_content_dir path now handles double forward slashes."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Typography field missing italics in Google fonts."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Default color in border field not saving properly."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    hex2rgba in class.redux_helpers.php changed to static."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    'sortable' field type not saving options as default."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Specified default color not set when clicking the color box default button."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Sorter field options are now saved as default in database."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Issues with checkboxes displaying default values instead of labels."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Outstanding render issues with spacing field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Plugins using Redux from load failure."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    'not_empty' field validation."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed:    Media field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    'read-only' option for media text field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    'mode' option to image_select, so CSS output element may be specified."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added:    Admin Bar menu for option panel."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: media field 'read-only' to 'readonly' to vonform to HTML standards."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Modified: Removed raw_align field and added align option to raw field. See wiki for more info."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Removed:  EDD extension. It never belonged in Core and will be re-released as a downloadable extension shortly"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Removed:  Group field, temporarily."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Removed:  wp_get_current_user check.  See https://github.com/ReduxFramework/ReduxFramework/wiki/How-to-fix-%22Fatal-error%3A-Call-to-undefined-function-wp_get_current_user%28%29-%22"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Typography font arrays may not contain comma spaces."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Merge in pull request - 542, code cleanup and better readability"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Change how HTML is output to support metaboxes"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "CSS only on pages that matter, better checks."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "font-backup in typography now appends to font-family in output and compiler."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "More fixes for Google font css outputting."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Addded output and compiler to field_image_select.  Images will be output as 'background-image'."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed output in field_background."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Prevent standard fonts from outputting to Google fonts CSS call."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "class_exists in field_section checking for incorrect classname."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "sample_config fix."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Compiler not outputting CSS without output set to comthing other than false."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Google fonts not rendering on frontend."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Rewrote sample_config as a class"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed error in redux-framework.php."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added select_image field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed a few undefined variables"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Removed old code from the repo."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix for validation."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Remove the compiler hook by default."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix to sortable field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added an extra check for link color. Removes user error."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Localization updates."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Error in slides."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed the info box bug with spacing and padding."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed the first item in each section having WAY too much padding.  ;)"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed section reset issue where values weren't being saved to the db properly."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature - Sortable select boxes!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature - Reset a section only or the whole panel!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "New Field - RGBA Color Field!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Improvement - Use of REM throughout."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed Typography - Fix output option and various small bugs."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed Border - Fix output option and various small bugs."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed Dimensions - Fix output option and various small bugs."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed Image_select - Various small bugs."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed Slides - Various small bugs."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed Sortable - Using native jQuery UI library same as within WordPress."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed Slider and Spinner Input Field - Values now move to the closest valid value in regards to the step, automatically."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed Ace Editor"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "FEATURE - All CSS/JS files are compiled into a single file now! Speed improvements for the backend. "
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix in how WordPress data is received, improved some output."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix for various fields not triggering fold/compiler/save."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed elusive icons to use the new version and classes."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed media thumb to only be the thumbnail version."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed admin https error with WordPress core not renaming URL."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Placeholders throughout the framework are now properly there."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature - Setting to not save defaults to database on load."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed - Computability issue with GT3 builder."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed localization issue with default values."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Language - Added Russian"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature - Media now can have any content type passed in to limit content types."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Allow negative values in typography and other fields."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "WordPress 3.8 computability."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "CSS validation issue."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature - User contributed text direction feature."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "EDD Extension now fully function for plugins or themes."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Removed get_theme_data() fallbacks, we're well pass WordPress 3.4 now.  ;)"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "A ton of other small updates and improvements."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 224 - Image Select width was breaking the panel."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 181 - Broken panel in firefox"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 225 - 0px typography bug. Thanks @partnuz."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 228 - Resolved a duplicated enqueue on color_link field. Thanks @vertigo7x."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 231 - Field spacing bug fixes."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 232 &amp; 233 - Dimensions: bug fix with units and multiple units. Thanks @kpodemski"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 234 - Pass options as a ref so validating actions can modify/sanitize them. Thanks @ZeroBeeOne"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 222 - Tab cookie function wasn't working."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature - Pass params to Select2. Thanks @andreilupu"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 238 - Fix for conditional output. Thanks @partnuz."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 211 - Google Web font wasn't loading at first init of theme."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 210 - Elusive Icons update. Changed classes to force use of full elusive name."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 247 - Media thumbnails were not showing. Also fixed media to keep the largest file, but display the small version in the panel as a thumb. Thanks @kwayyinfotech."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 144 - JS error when no item found in slider."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 246 - Typography output errors."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature &amp; Issue 259 - Multi-Text now support validation!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 248/261 - Links color issue. Also fixed color validation."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature &amp; Issue 262 - Now registered sidebars can be used as a data type."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 194/276 - Custom taxonomy terms now passing properly. Thanks @kprovance."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature &amp; Issue 273 - Argument save_defaults: Disable the auto-save of the default options to the database if not set."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature - Docs now being moved to the wiki for community participation."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Issue 283 - Date placeholder. Thanks @kprovance."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Issue 285 - HTTPS errors on admin. Known WordPress bug. Resolved."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 288 - Float values now possible for border, dimensions, and spacing."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature - Media field can now accept non-image files with a argument being set."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 252 - Post Type data wasn't working properly. Thanks @Abu-Taymiyyah."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 213 - Radio and Button Set wasn't folding."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature - Added possibility to set default icon class for all sections and tabs."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature - Make is to the WP dir can be moved elsewhere and Redux still function."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added Spanish Language. Thanks @vertigo7x."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 5 - Small RGBA validation fix."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 176 - Fold by Image Select. Thanks @andreilupu."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 194 - Custom taxonomy terms in select field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 195 - Border defaults not working."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 197 - Hidden elements were showing up on a small screen. Thanks @ThinkUpThemes."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix issue 200 - Compiler not working with media field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 201 - Spacing field not using default values."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 202 - Dimensions field not using units."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 208 - Checkbox + Required issue."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 211 - Google Font default not working on page load."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 214 - Validation notice not working for fields."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 181/224 - Firefox 24 image resize errors."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 223 - Slides were losing the url input field for the image link."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix - Various issues in the password field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed various spelling issues and typos in sample-config file."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Initialize vars before extract() - to shut down undefined vars wargnings."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Various other fixes."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Version push to ensure all bugs fixes were deployed to users. Various."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature - Completely redone spacing field. Choose to apply to sides or all at once with CSS output!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature - Completely redone border field. Choose to apply to sides or all at once with CSS output!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature - Added opt-in anonymous tracking, allowing us to further analyze usage."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature - Enable weekly updates of the Google Webfonts cache is desired. Also remove the Google Webfont files from shipping with Redux. Will re-download at first panel run to ensure users always have the most recent copy."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Language translation of german updated alone with ReduxFramework pot file."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 146 - Spacing field not storing data."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix - Firefox field description rendering bug."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix - Small issue where themes without tags were getting errors from the sample data."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Hide customizer fields by default while still under development."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 123 - Language translations to actually function properly embedded as well as in the plugin."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 151 - Media field uses thumbnail not full image for preview. Also now storing the thumbnail URL. Uses the smallest available size as the thumb regardless of the name."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fix Issue 147 - Option to pass params to select2. Contributed by @andreilupu. Thanks!"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added trim function to ace editor value to prevent whitespace before and after value keep being added"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "htmlspecialchars() value in pre editor for ace. to prevent html tags being hidden in editor and rendered in dom"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature: Added optional 'add_text' argument for multi_text field so users can define button text."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added consistent remove button on multi text, and used sanitize function for section id"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature: Added roles as data for field data"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Feature: Adding data layout options for multi checkbox and radio, we now have quarter, third, half, and full column layouts for these fields."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Started work on class definitions of each field and class. Preparing for the panel builder we are planning to make."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed how Redux is initialised so it works in any and all files without hooking into the init function."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Issue #151: Added thumbnails to media and displayed those instead of full image."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Issue #144: Slides had error if last slide was deleted."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Color field was outputting hex in the wrong location."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added ACE Editor field, allowing for better inline editing."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed an odd saving issue."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed link issues in the framework"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Issue #135: jQuery UI wasn't being properly queued"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Issue #140: Admin notice glitch. See http://reduxframework.com/2013/10/wordpress-notifications-custom-options-panels/"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Use hooks instead of custom variable for custom admin CSS"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added \"raw\" field that allows PHP or a hook to embed anything in the panel."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Submenus in Admin now change the tabs without reloading the page."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Small fix for multi-text."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Added IT_it and RO_ro languages."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Updated readme file for languages."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed Issue #129: Spacing field giving an undefined."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed Issue #131: Google Fonts stylesheet appending to body and also to the top of the header. Now properly placed both at the end of the head tag as to overload any theme stylesheets."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed issue #132 (See #134, thanks @andreilupu): Could not have multiple WordPress Editors (wp_editor) as the same ID was shared. Also fixed various styles to match WordPress for this field."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Fixed Issue #133: Issue when custom admin stylesheet was used, a JS error resulted."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Improvements to slides, various field fixes and improvements. Also fixed a few user submitted issues."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Backing out a bit of submitted code that caused the input field to not properly break."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "Initial WordPress.org plugin release."
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "<a href=\"https://github.com/leemason/NHP-Theme-Options-Framework\">NHP</a>"
+msgstr ""
+
+#. Found in remaining content list item.
+msgid "<a href=\"https://github.com/syamilmj/Options-Framework\" title=\"Slightly Modified Options Framework\">SMOF</a>"
+msgstr ""
+
+#. Found in remaining content paragraph.
+msgid "Redux is now hosted on WordPress.org! Update in order to get proper, stable updates."
+msgstr ""
+
+#. Found in remaining content paragraph.
+msgid "Redux is was originally based off the following frameworks:"
+msgstr ""
+
+#. Found in remaining content paragraph.
+msgid "It has now a completely different code base. If you like what you see, realize this is a labor of love. Please <a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=N5AD7TSH8YA5U\">donate to the Redux Framework</a> if you are able."
+msgstr ""

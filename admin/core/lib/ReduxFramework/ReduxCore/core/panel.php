@@ -50,7 +50,7 @@
                 if ( $this->parent->args['dev_mode'] ) {
                     $this->template_file_check_notice();
                 }
-                
+
                 /**
                  * action 'redux/{opt_name}/panel/before'
                  */
@@ -65,7 +65,7 @@
                 echo '<noscript><div class="no-js">' . __( 'Warning- This options panel will not work properly without javascript!', 'redux-framework' ) . '</div></noscript>';
 
                 // Security is vital!
-                echo '<input type="hidden" id="ajaxsecurity" name="security" value="' . wp_create_nonce( 'redux_ajax_nonce' ) . '" />';
+                echo '<input type="hidden" id="ajaxsecurity" name="security" value="' . wp_create_nonce( 'redux_ajax_nonce' . $this->parent->args['opt_name'] ) . '" />';
 
                 /**
                  * action 'redux-page-before-form-{opt_name}'
@@ -181,7 +181,7 @@
                          *
                          * @param string translated "settings saved" text
                          */
-                        echo '<div class="saved_notice admin-notice notice-green"><strong>' . apply_filters( "redux-saved-text-{$this->parent->args['opt_name']}", __( 'Settings Saved!', 'redux-framework' ) ) . '</strong></div>';
+                        echo '<div class="saved_notice admin-notice notice-green">' . apply_filters( "redux-saved-text-{$this->parent->args['opt_name']}", '<strong>'.__( 'Settings Saved!', 'redux-framework' ) ).'</strong>' . '</div>';
                     }
 
                     unset( $this->parent->transients['last_save_mode'] );
@@ -247,40 +247,12 @@
                     $path = $this->original_path . $file;
                 }
 
+                do_action( "redux/{$this->parent->args['opt_name']}/panel/template/" . $file . '/before' );
                 $path = apply_filters( "redux/{$this->parent->args['opt_name']}/panel/template/" . $file, $path );
+                do_action( "redux/{$this->parent->args['opt_name']}/panel/template/" . $file . '/after' );
 
-                include( $path );
+                require $path;
 
-            }
-
-            /**
-             * Retrieve metadata from a file. Based on WP Core's get_file_data function
-             *
-             * @since 2.1.1
-             *
-             * @param string $file Path to the file
-             *
-             * @return string
-             */
-            public function get_file_version( $file ) {
-                // We don't need to write to the file, so just open for reading.
-                $fp = fopen( $file, 'r' );
-
-                // Pull only the first 8kiB of the file in.
-                $file_data = fread( $fp, 8192 );
-
-                // PHP will close file handle, but we are good citizens.
-                fclose( $fp );
-
-                // Make sure we catch CR-only line endings.
-                $file_data = str_replace( "\r", "\n", $file_data );
-                $version   = '';
-
-                if ( preg_match( '/^[ \t\/*#@]*' . preg_quote( '@version', '/' ) . '(.*)$/mi', $file_data, $match ) && $match[1] ) {
-                    $version = _cleanup_header_comment( $match[1] );
-                }
-
-                return $version;
             }
 
             /**
@@ -331,8 +303,8 @@
                     }
 
                     if ( $developer_theme_file ) {
-                        $core_version      = $this->get_file_version( $this->original_path . $file );
-                        $developer_version = $this->get_file_version( $developer_theme_file );
+                        $core_version      = Redux_Helpers::get_template_version( $this->original_path . $file );
+                        $developer_version = Redux_Helpers::get_template_version( $developer_theme_file );
 
                         if ( $core_version && $developer_version && version_compare( $developer_version, $core_version, '<' ) ) {
                             ?>

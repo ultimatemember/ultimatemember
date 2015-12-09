@@ -11,7 +11,7 @@
 
     // This is your option name where all the Redux data is stored.
     $opt_name = "redux_demo";
-    
+
     /**
      * ---> SET ARGUMENTS
      * All the possible arguments for Redux.
@@ -95,9 +95,10 @@
         // FUTURE -> Not in use yet, but reserved or partially implemented. Use at your own risk.
         'database'             => '',
         // possible: options, theme_mods, theme_mods_expanded, transient. Not fully functional, warning!
-        'system_info'          => false,
-        // REMOVE
-        
+
+        'use_cdn'              => true,
+        // If you prefer not to use the CDN for Select2, Ace Editor, and others, you may download the Redux Vendor Support plugin yourself and run locally or embed it in your code.
+
         //'compiler'             => true,
 
         // HINTS
@@ -220,8 +221,8 @@
     /*
      * <--- END HELP TABS
      */
-    
-    
+
+
     /*
      *
      * ---> START SECTIONS
@@ -237,32 +238,34 @@
 
     // -> START Basic Fields
     Redux::setSection( $opt_name, array(
-        'title'     => __( 'Basic Field', 'redux-framework-demo' ),
-        'id'        => 'basic',
-        'desc'      => __( 'Basic field with no subsections.', 'redux-framework-demo' ),
-        'icon'      => 'el el-home',
-        'fields'    => array(
-            'id'       => 'opt-text',
-            'type'     => 'text',
-            'title'    => __( 'Example Text', 'redux-framework-demo' ),
-            'desc'     => __( 'Example description.', 'redux-framework-demo' ),
-            'subtitle' => __( 'Example subtitle.', 'redux-framework-demo' ),
-            'hint'     => array(
-               'content' => 'This is a <b>hint</b> tool-tip for the text field.<br/><br/>Add any HTML based text you like here.',
-           )            
+        'title'  => __( 'Basic Field', 'redux-framework-demo' ),
+        'id'     => 'basic',
+        'desc'   => __( 'Basic field with no subsections.', 'redux-framework-demo' ),
+        'icon'   => 'el el-home',
+        'fields' => array(
+            array(
+                'id'       => 'opt-text',
+                'type'     => 'text',
+                'title'    => __( 'Example Text', 'redux-framework-demo' ),
+                'desc'     => __( 'Example description.', 'redux-framework-demo' ),
+                'subtitle' => __( 'Example subtitle.', 'redux-framework-demo' ),
+                'hint'     => array(
+                    'content' => 'This is a <b>hint</b> tool-tip for the text field.<br/><br/>Add any HTML based text you like here.',
+                )
+            )
         )
-    ) );    
+    ) );
 
     Redux::setSection( $opt_name, array(
         'title' => __( 'Basic Fields', 'redux-framework-demo' ),
         'id'    => 'basic',
         'desc'  => __( 'Basic fields as subsections.', 'redux-framework-demo' ),
         'icon'  => 'el el-home'
-    ) );    
-    
+    ) );
+
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Text', 'redux-framework-demo' ),
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/text/" target="_blank">http://docs.reduxframework.com/core/fields/text/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/text/" target="_blank">//docs.reduxframework.com/core/fields/text/</a>',
         'id'         => 'opt-text-subsection',
         'subsection' => true,
         'fields'     => array(
@@ -276,15 +279,15 @@
             ),
         )
     ) );
-    
+
     Redux::setSection( $opt_name, array(
         'title'      => __( 'Text Area', 'redux-framework-demo' ),
-        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="http://docs.reduxframework.com/core/fields/textarea/" target="_blank">http://docs.reduxframework.com/core/fields/textarea/</a>',
+        'desc'       => __( 'For full documentation on this field, visit: ', 'redux-framework-demo' ) . '<a href="//docs.reduxframework.com/core/fields/textarea/" target="_blank">//docs.reduxframework.com/core/fields/textarea/</a>',
         'id'         => 'opt-textarea-subsection',
         'subsection' => true,
         'fields'     => array(
             array(
-                'id'       => 'text-example',
+                'id'       => 'textarea-example',
                 'type'     => 'textarea',
                 'title'    => __( 'Text Area Field', 'redux-framework-demo' ),
                 'subtitle' => __( 'Subtitle', 'redux-framework-demo' ),
@@ -292,8 +295,8 @@
                 'default'  => 'Default Text',
             ),
         )
-    ) );    
-    
+    ) );
+
     /*
      * <--- END SECTIONS
      */

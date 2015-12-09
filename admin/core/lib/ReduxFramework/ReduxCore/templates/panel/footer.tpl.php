@@ -5,7 +5,7 @@
      *
      * @author        Redux Framework
      * @package       ReduxFramework/Templates
-     * @version       3.5.0.6
+     * @version:      3.5.6.7
      */
 ?>
 <div id="redux-sticky-padder" style="display: none;">&nbsp;</div>
@@ -23,17 +23,18 @@
                     }
                     ?>
 
-                    <a href="<?php echo $link['url'] ?>" title="<?php echo $link['title']; ?>" target="_blank">
+                    <a href="<?php echo esc_url( $link['url'] ) ?>" title="<?php echo esc_attr( $link['title'] ); ?>"
+                       target="_blank">
 
                         <?php if ( isset( $link['icon'] ) && ! empty( $link['icon'] ) ) : ?>
                             <i class="<?php
                                 if ( strpos( $link['icon'], 'el-icon' ) !== false && strpos( $link['icon'], 'el ' ) === false ) {
                                     $link['icon'] = 'el ' . $link['icon'];
                                 }
-                                echo $link['icon'];
+                                echo esc_attr( $link['icon'] );
                             ?>"></i>
                         <?php else : ?>
-                            <img src="<?php echo $link['img'] ?>"/>
+                            <img src="<?php echo esc_url( $link['img'] ); ?>"/>
                         <?php endif; ?>
 
                     </a>
@@ -44,11 +45,14 @@
 
         <div class="redux-action_bar">
             <span class="spinner"></span>
-            <?php submit_button( __( 'Save Changes', 'redux-framework' ), 'primary', 'redux_save', false ); ?>
+            
+            <?php if ( false === $this->parent->args['hide_save'] ) : ?>
+                <?php submit_button( __( 'Save Changes', 'redux-framework' ), 'primary', 'redux_save', false ); ?>
+            <?php endif; ?>
 
             <?php if ( false === $this->parent->args['hide_reset'] ) : ?>
-                <?php submit_button( __( 'Reset Section', 'redux-framework' ), 'secondary', $this->parent->args['opt_name'] . '[defaults-section]', false ); ?>
-                <?php submit_button( __( 'Reset All', 'redux-framework' ), 'secondary', $this->parent->args['opt_name'] . '[defaults]', false ); ?>
+                <?php submit_button( __( 'Reset Section', 'redux-framework' ), 'secondary', $this->parent->args['opt_name'] . '[defaults-section]', false, array( 'id' => 'redux-defaults-section' ) ); ?>
+                <?php submit_button( __( 'Reset All', 'redux-framework' ), 'secondary', $this->parent->args['opt_name'] . '[defaults]', false, array( 'id' => 'redux-defaults' ) ); ?>
             <?php endif; ?>
 
         </div>
