@@ -2,9 +2,9 @@ Ultimate Member
 ==============
 Ultimate Member is a powerful and flexible WordPress plugin that makes it a breeze for users to sign-up and become members. The plugin allows you to add beautiful user profiles to your site and is perfect for creating advanced online communities. Lightweight and highly extendible, Ultimate Member will enable you to create almost any type of site where users can join and become members with absolute ease.
 
-| Latest Version |Requires at least|Tested up to|
-| :------------: |:------------: |:---------------:|
-| 1.3.29 | WordPress 4.1|WordPress 4.3|
+| Latest Version |Requires at least|
+| :------------: |:------------:|
+| 1.3.30 | WordPress 4.1 or higher
 
 
 
@@ -27,6 +27,7 @@ Ultimate Member is a powerful and flexible WordPress plugin that makes it a bree
 - Developer friendly with dozens of actions and filters
 - Multi-site compatibility
 - Mandrill compatibility
+- WPML Support
 
 Read about all of the plugin's features at [Ultimate Member](https://ultimatemember.com/)
 
@@ -48,6 +49,14 @@ GNU Version 2 or Any Later Version
 
 Changelog
 =======================
+= 1.3.30: December 3, 2015 =
+
+* New: added Simplified Chinese language support
+* Tweak: added many new filters (for developers)
+* Fixed: Display name update in profile
+* Fixed: Photo upload unique IDs
+* Fixed: Remove duplicated method um_convert_tags
+
 = 1.3.29: October 31, 2015 =
 
 * New: added new documentation links to plugin files
