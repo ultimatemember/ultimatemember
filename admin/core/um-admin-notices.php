@@ -161,18 +161,20 @@ class UM_Admin_Notices {
 			
 			case 'confirm_delete':
 			
-				$confirm_uri = urldecode($_REQUEST['_refer']);
+				$confirm_uri = sanitize_text_field( urldecode($_REQUEST['_wp_http_referer']) );
 				$users = '';
 				
-				foreach( $_REQUEST['user'] as $user_id ) {
-					$user = get_userdata( $user_id );
-					$users .= '#' . $user_id . ': ' . $user->user_login . '<br />';
+				if( isset( $_REQUEST['user'] ) ){
+					foreach( $_REQUEST['user'] as $user_id ) {
+						$user = get_userdata( $user_id );
+						$users .= '#' . $user_id . ': ' . $user->user_login . '<br />';
+					}
 				}
 				
 				$ignore = admin_url('users.php');
 				
 				$messages[0]['err_content'] = sprintf(__('Are you sure you want to delete the selected user(s)? The following users will be deleted: <p>%s</p> <strong>This cannot be undone!</strong>','ultimatemember'), $users);
-				$messages[0]['err_content'] .= '<p><a href="'. esc_attr( $confirm_uri ) .'" class="button-primary">' . __('Remove','ultimatemember') . '</a>&nbsp;&nbsp;<a href="'.$ignore.'" class="button">' . __('Undo','ultimatemember') . '</a></p>';
+				$messages[0]['err_content'] .= '<p><a href="'. esc_html( $confirm_uri ) .'" class="button-primary">' . __('Remove','ultimatemember') . '</a>&nbsp;&nbsp;<a href="'.$ignore.'" class="button">' . __('Undo','ultimatemember') . '</a></p>';
 				
 				break;
 				

@@ -240,8 +240,8 @@
 				$uri = add_query_arg('user[]', $user_id, $uri);
 				$redirect = add_query_arg('user[]', $user_id, $redirect);
 			}
-			$uri = add_query_arg('confirm', 1, $uri);
-			$redirect = add_query_arg('_refer', urlencode($uri), $redirect);
+			$uri = add_query_arg('_refer', $_POST['_wp_http_referer'], $redirect);
+			$redirect = add_query_arg('confirm', 1, $uri);
 			
 			exit( wp_redirect($redirect) );
 			

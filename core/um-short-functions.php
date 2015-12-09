@@ -424,7 +424,10 @@ function um_profile_id() {
 				$url =  add_query_arg( 'updated', esc_attr( $updated ), $url );	
 		}
 		
-		if ( function_exists('icl_get_current_language') && icl_get_current_language() != icl_get_default_language() && $slug == 'account' ) {
+		if ( function_exists('icl_get_current_language') && icl_get_current_language() != icl_get_default_language()  ) {
+			
+			$url = um_get_url_for_language( $ultimatemember->permalinks->core[ $slug ], icl_get_current_language() );
+			
 			if ( get_post_meta( get_the_ID() , '_um_wpml_account', true ) == 1 ) {
 				$url = get_permalink( get_the_ID() );
 			}

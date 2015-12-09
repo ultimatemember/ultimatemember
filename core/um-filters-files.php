@@ -11,7 +11,7 @@
 		
 			if ( get_current_blog_id() == '1' ) return $dir;
 			
-			$split = explode('sites',$dir);
+			$split = explode('sites/',$dir);
 			$um_dir = 'ultimatemember/';
 			$dir = $split[0] . $um_dir;
 
