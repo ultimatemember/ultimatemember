@@ -160,8 +160,8 @@ class UM_Admin_Notices {
 		switch($update) {
 			
 			case 'confirm_delete':
-			
-				$confirm_uri = sanitize_text_field( urldecode($_REQUEST['_wp_http_referer']) );
+				$wp_http_referer = isset( $_REQUEST['_wp_http_referer'] ) ? $_REQUEST['_wp_http_referer']: '';
+				$confirm_uri = sanitize_text_field( urldecode( $wp_http_referer ) );
 				$users = '';
 				
 				if( isset( $_REQUEST['user'] ) ){

@@ -208,8 +208,8 @@ class UM_Admin_Users {
 					
 					$users = $_REQUEST['users'];
 					$bulk_action = current( array_filter( $_REQUEST['um_bulk_action']) );
-
-					if ( in_array('um_delete', $bulk_action ) > -1 )  { // this needs confirmation
+					
+					if ( 'um_delete' == $bulk_action )  { // this needs confirmation
 						
 						$uri = admin_url('users.php');
 						$userids = array_map( 'intval', (array) $_REQUEST['users'] );
@@ -254,9 +254,13 @@ class UM_Admin_Users {
 			}
 			
 			// filter by user role
-			if ( isset($_REQUEST['um_filter_role']) && ( ! isset( $_REQUEST['new_role'] )  ||  empty( $_REQUEST['new_role'] ) ) && $_REQUEST['um_filter_role'] ) {
+			if ( isset($_REQUEST['um_filter_role']) && ! isset( $_REQUEST['um_filter_processed'] ) && ( ! isset( $_REQUEST['new_role'] )  ||  empty( $_REQUEST['new_role'] ) ) && $_REQUEST['um_filter_role'] ) {
 				$filter_role = current( array_filter(  $_REQUEST['um_filter_role'] ) );
-				exit( wp_redirect( admin_url('users.php?um_role=' .$filter_role ) ) );
+				$uri = add_query_arg('um_role',$filter_role);
+				$uri = add_query_arg('s',$_REQUEST['s'], $uri);
+				$uri = add_query_arg('um_filter_processed',true, $uri);
+				
+				exit( wp_redirect( $uri ) );
 			}
 			
 		}
@@ -276,8 +280,9 @@ class UM_Admin_Users {
 					<option value="0"><?php _e('Filter by','ultimatemember'); ?></option>
 					<?php
 						$roles = $ultimatemember->query->get_roles();
+						$um_filter_role = isset( $_REQUEST['um_filter_role'] )? current( array_filter($_REQUEST['um_filter_role']) ):'';
 						foreach( $roles as $role => $role_name ) { ?>
-						<option value="<?php echo urlencode( $role ); ?>"><?php echo $role_name; ?></option>
+						<option value="<?php echo urlencode( $role ); ?>" <?php selected($role,$um_filter_role); ?>><?php echo $role_name; ?></option>
 						<?php } ?>
 				</select>
 				
