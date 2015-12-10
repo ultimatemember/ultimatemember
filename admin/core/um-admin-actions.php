@@ -282,10 +282,10 @@
 		if ( !is_admin() || !current_user_can('manage_options') ) die();
 
 		//remove all confirm_user_password from DB
-		$wpdb->delete($wpdb->usermeta,['meta_key'=>'confirm_user_password']);
+		$wpdb->delete($wpdb->usermeta,array('meta_key'=>'confirm_user_password') );
 
 		//then reset submitted
-		$wpdb->update($wpdb->usermeta,['meta_value'=>''],['meta_key'=>'submitted']);
+		$wpdb->update($wpdb->usermeta,array('meta_value'=>''),array('meta_key'=>'submitted') );
 
 		//then set flag that update is complete and redirect to admin home
 		update_option( 'um_passwords_secured', 1 );
