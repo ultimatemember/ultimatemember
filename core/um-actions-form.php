@@ -365,6 +365,25 @@
 								}
 								
 								break;
+
+							case 'unique_value':
+
+								if ( $args[$key] != '' ) {
+									
+									$args_unique_meta = array(
+										'meta_key' => $key,
+										'meta_value' => $args[ $key ],
+										'compare' => '=',
+										'exclude' => array( $args['user_id'] ),
+									);
+
+									$meta_key_exists = get_users( $args_unique_meta );
+									
+									if( $meta_key_exists ){
+									   $ultimatemember->form->add_error( $key , __('You must provide a unique value','ultimatemember') );
+									}
+								}
+							break;
 						
 						}
 						
