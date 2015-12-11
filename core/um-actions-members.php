@@ -94,7 +94,15 @@
 		global $ultimatemember;
 		extract( $args );
 		
-		if ( um_members('header') && isset($_REQUEST['um_search']) && um_members('users_per_page') ) { ?>
+		if ( isset($_REQUEST['um_search']) ) {
+			$is_filtering = 1;
+		} else if ( $ultimatemember->is_filtering == 1 ) {
+			$is_filtering = 1;
+		} else {
+			$is_filtering = 0;
+		}
+		
+		if ( um_members('header') && $is_filtering && um_members('users_per_page') ) { ?>
 		
 			<div class="um-members-intro">
 				

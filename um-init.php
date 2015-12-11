@@ -2,7 +2,11 @@
 
 class UM_API {
 
+	public $is_filtering;
+	
 	function __construct() {
+	
+		$this->is_filtering = 0;
 
 		require_once um_path . 'core/um-short-functions.php';
 		
