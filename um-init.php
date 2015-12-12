@@ -15,6 +15,7 @@ class UM_API {
 		}
 
 		add_action('init',  array(&$this, 'init'), 0);
+		add_action('init',  array(&$this, 'form'), 10);
 		
 		add_action('init',  array(&$this, 'load_addons') );
 
@@ -158,7 +159,6 @@ class UM_API {
 		$this->datetime = new UM_DateTime();
 		$this->chart = new UM_Chart();
 		$this->builtin = new UM_Builtin();
-		$this->form = new UM_Form();
 		$this->files = new UM_Files();
 		$this->taxonomies = new UM_Taxonomies();
 		$this->validation = new UM_Validation();
@@ -184,6 +184,10 @@ class UM_API {
 		if ( !get_option('show_avatars') )
 			update_option('show_avatars', 1 );
 
+	}
+	
+	function form() {
+		$this->form = new UM_Form();
 	}
 	
 }

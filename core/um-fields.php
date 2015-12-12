@@ -1559,7 +1559,9 @@ class UM_Fields {
 						
 							$v = rtrim($v);
 							
-							if ( is_string( $k ) ) {
+							$use_keyword = apply_filters('um_multiselect_option_value', 0, $data['type'] );
+							
+							if ( $use_keyword ) {
 								$opt_value = $k;
 							} else {
 								$opt_value = $v;
