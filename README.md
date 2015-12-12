@@ -48,6 +48,19 @@ GNU Version 2 or Any Later Version
 
 Changelog
 =======================
+= 1.3.32: December 10, 2015 =
+
+* Fixed: array format and notices
+* Fixed: users search, delete confirmation and role filter
+* Fixed: unique key field validation
+
+= 1.3.31: December 9, 2015 =
+
+* Fixed: Add slash in base url filter for multisite
+* Fixed: manage user roles, status and filters
+* Fixed: Enable WPML support to all UM url/links
+* Fixed: Sanitize referers and printing notices in admin screens
+
 = 1.3.30: December 3, 2015 =
 
 * New: added Simplified Chinese language support
