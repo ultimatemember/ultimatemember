@@ -68,14 +68,16 @@
 }
 
 #redux-header .display_header span {
-	font-size: 15px;
+	font-size: 14px;
 	position: relative;
-	top: -8px;
-	left: -2px;
-	padding-left: 0;
 	font-weight: 400;
-	line-height: 29px;
-	color: #222 !important;
+	background: #3ba1da;
+	color: #fff !important;
+	padding: 2px 4px !important;
+	border-radius: 3px;
+	position: relative;
+	top: -3px;
+	left: 0;
 }
 
 #redux-header h2 {
@@ -86,6 +88,7 @@
 	font-weight: 400;
 	padding: 1px 15px 4px 0px;
 	line-height: 29px;
+	margin: 5px 0 0 0;
 }
 
 #redux-share {margin-top: 11px !important}

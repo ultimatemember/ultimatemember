@@ -70,7 +70,7 @@
             }
 
             public static function isWpDebug() {
-                return ( defined( 'WP_DEBUG' ) && WP_DEBUG == true );
+                return 0;
             }
 
             public static function getTrackingObject() {

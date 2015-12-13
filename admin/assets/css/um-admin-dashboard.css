@@ -9,6 +9,20 @@
 	margin-left: 0;
 }
 
+#um-metaboxes-general h2 sup {
+	font-size: 14px;
+	position: relative;
+	font-weight: 400;
+	background: #3ba1da;
+	color: #fff !important;
+	padding: 2px 4px !important;
+	border-radius: 3px;
+	position: relative;
+	top: 5px;
+	left: 3px;
+	border: none !important;
+}
+
 .wrap a.red, .wrap span.red {color:#C74A4A}
 .wrap span.ok {color:#7ACF58}
 
