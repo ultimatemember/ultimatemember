@@ -9,17 +9,6 @@
 	margin-left: 0;
 }
 
-#um-metaboxes-general.wrap h2 {
-	font-size: 23px;
-	font-weight: 400;
-	padding: 9px 15px 4px 0px;
-	line-height: 29px;
-}
-
-#um-metaboxes-general.wrap h2 sup {
-	font-size: 15px;
-}
-
 .wrap a.red, .wrap span.red {color:#C74A4A}
 .wrap span.ok {color:#7ACF58}
 
