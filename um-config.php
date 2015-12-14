@@ -226,7 +226,7 @@ $this->sections[] = array(
 		
         array(
                 'id'       		=> 'delete_account_text',
-                'type'    		=> 'editor',
+                'type'    		=> 'textarea', // bug with wp 4.4? should be editor
                 'title'    		=> __( 'Account Deletion Custom Text','ultimatemember' ),
                 'default'  		=> __('Are you sure you want to delete your account? This will erase all of your account data from the site. To delete your account enter your password below','ultimatemember'),
 				'desc' 	   		=> __('This is custom text that will be displayed to users before they delete their accounts from your site','ultimatemember'),
