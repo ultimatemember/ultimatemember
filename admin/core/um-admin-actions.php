@@ -270,29 +270,6 @@
 	}
 	
 	/***
-	*** @secure passwords
-	*** Updated by Bo Carlson (bo@fictiontribe.com) to clear fields in DB without looping users. Much faster.
-	***/
-	add_action('um_admin_do_action__um_passwords_secured', 'um_admin_do_action__um_passwords_secured');
-	function um_admin_do_action__um_passwords_secured( $action ){
-		global $ultimatemember; //ultimate member global object
-		global $wpdb; //Wordpress DB object
-
-		//die if admin can't manage options
-		if ( !is_admin() || !current_user_can('manage_options') ) die();
-
-		//remove all confirm_user_password from DB
-		$wpdb->delete($wpdb->usermeta,array('meta_key'=>'confirm_user_password') );
-
-		//then reset submitted
-		$wpdb->update($wpdb->usermeta,array('meta_value'=>''),array('meta_key'=>'submitted') );
-
-		//then set flag that update is complete and redirect to admin home
-		update_option( 'um_passwords_secured', 1 );
-		exit( wp_redirect( admin_url() ) );
-	}
-	
-	/***
 	***	@purge temp
 	***/
 	add_action('um_admin_do_action__purge_temp', 'um_admin_do_action__purge_temp');
