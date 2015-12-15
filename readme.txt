@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.4
 
-Stable Tag: 1.3.34
+Stable Tag: 1.3.35
 
 License: GNU Version 2 or Any Later Version
 
@@ -145,6 +145,10 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.35: December 15, 2015 =
+
+* Fixed: registration/login issues resolved
 
 = 1.3.34: December 15, 2015 =
 
