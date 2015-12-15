@@ -152,9 +152,7 @@ class UM_Admin_Notices {
 		switch($update) {
 
 			case 'confirm_delete':
-				$wp_http_referer = isset( $_REQUEST['_wp_http_referer'] ) ? $_REQUEST['_wp_http_referer']: '';
-				$confirm_uri = sanitize_text_field( urldecode( $wp_http_referer ) );
-				$confirm_uri = $confirm_uri ?: admin_url('users.php?' . http_build_query(array(
+				$confirm_uri = admin_url('users.php?' . http_build_query(array(
 						'um_adm_action' => 'delete_users',
 						'user'          => array_map('intval', (array) $_REQUEST['user']),
 						'confirm'       => 1
