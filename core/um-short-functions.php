@@ -695,6 +695,9 @@ function um_reset_user() {
 			
 			if ( is_user_logged_in() ) {
 			
+				if ( $data['public'] == '-3' && !um_is_user_himself() && !in_array( $ultimatemember->query->get_role_by_userid( get_current_user_id() ), $data['roles'] ) )
+					return false;
+					
 				if ( !um_is_user_himself() && $data['public'] == '-1' && !um_user_can('can_edit_everyone') )
 					return false;
 					

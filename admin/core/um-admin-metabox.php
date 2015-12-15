@@ -1396,10 +1396,11 @@ class UM_Admin_Metabox {
 				?>
 				
 					<p><label for="_public">Privacy <?php $this->tooltip('Field privacy allows you to select who can view this field on the front-end. The site admin can view all fields regardless of the option set here.'); ?></label>
-						<select name="_public" id="_public" class="umaf-selectjs um-adm-conditional" data-cond1='-2' data-cond1-show='_roles' style="width: 100%">
+						<select name="_public" id="_public" class="umaf-selectjs um-adm-conditional" data-cond1='-2' data-cond1-show='_roles' data-cond2='-3' data-cond2-show='_roles'  style="width: 100%">
 							<option value="1" <?php selected( 1, $this->edit_mode_value ); ?>>Everyone</option>
 							<option value="2" <?php selected( 2, $this->edit_mode_value ); ?>>Members</option>
 							<option value="-1" <?php selected( -1, $this->edit_mode_value ); ?>>Only visible to profile owner and admins</option>
+							<option value="-3" <?php selected( -3, $this->edit_mode_value ); ?>>Only visible to profile owner and specific roles</option>
 							<option value="-2" <?php selected( -2, $this->edit_mode_value ); ?>>Only specific member roles</option>
 						</select>
 					</p>
