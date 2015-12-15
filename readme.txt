@@ -148,6 +148,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = 1.3.34: December 15, 2015 =
 
+* New: new privacy option for fields: allow profile owner & specific roles to view the field
 * Fixed: wrong php syntax in admin notice
 
 = 1.3.33: December 15, 2015 =
