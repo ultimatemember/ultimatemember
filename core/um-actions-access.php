@@ -63,7 +63,12 @@
 	add_action('um_access_category_settings','um_access_category_settings');
 	function um_access_category_settings() {
 		global $post, $wp_query, $ultimatemember;
-		if ( is_single() || get_the_category() && ! is_front_page() && ! is_home() ) {
+
+		if( is_front_page() || is_home() ){
+			return;
+		}
+		
+		if ( is_single() || get_the_category() ) {
 		
 
 			$categories = get_the_category();
@@ -123,7 +128,7 @@
 			
 			$post_id = get_option('woocommerce_shop_page_id');
 
-		} else if ( is_archive() || is_front_page() || is_search() || in_the_loop() ) {
+		} else if ( is_archive() || is_front_page() || is_home() || is_search() || in_the_loop() ) {
 			
 			return;
 
