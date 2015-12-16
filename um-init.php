@@ -4,6 +4,8 @@ class UM_API {
 
 	public $is_filtering;
 	
+	public $addons = null;
+	
 	function __construct() {
 	
 		$this->is_filtering = 0;
@@ -56,9 +58,11 @@ class UM_API {
 	***/
 	function load_addons() {
 		global $ultimatemember;
-		foreach( $ultimatemember->addons as $addon => $name ) {
-			if ( um_get_option('addon_' . $addon ) == 1 ) {
-				include_once um_path . 'addons/'.$addon.'.php';
+		if ( isset( $ultimatemember->addons ) && is_array( $ultimatemember->addons ) ) {
+			foreach( $ultimatemember->addons as $addon => $name ) {
+				if ( um_get_option('addon_' . $addon ) == 1 ) {
+					include_once um_path . 'addons/'.$addon.'.php';
+				}
 			}
 		}
 	}

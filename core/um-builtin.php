@@ -2,6 +2,8 @@
 
 class UM_Builtin {
 
+	public $predefined_fields = array();
+
 	function __construct() {
 
 		add_action('init',  array(&$this, 'set_core_fields'), 1);
@@ -522,11 +524,13 @@ class UM_Builtin {
 	
 		global $ultimatemember;
 		
-		if ( class_exists('UM_Query') ) {
-			$um_roles = $ultimatemember->query->get_roles( false, array('admin') );
+		if ( !isset( $ultimatemember->query ) || ! method_exists( $ultimatemember->query, 'get_roles' ) ) {
+			return;
 		} else {
-			$um_roles = array();
+			//die('Method loaded!');
 		}
+		
+		$um_roles = $ultimatemember->query->get_roles( false, array('admin') );
 		
 		$profile_privacy = apply_filters('um_profile_privacy_options', array( __('Everyone','ultimatemember'), __('Only me','ultimatemember') ) );
 		

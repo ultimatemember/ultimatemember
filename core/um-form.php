@@ -43,7 +43,11 @@ class UM_Form {
 	***/
 	function field_declare(){
 		global $ultimatemember;
-		$this->all_fields = $ultimatemember->builtin->custom_fields;
+		if ( isset( $ultimatemember->builtin->custom_fields ) ) {
+			$this->all_fields = $ultimatemember->builtin->custom_fields;
+		} else {
+			$this->all_fields = null;
+		}
 	}
 	
 	/***

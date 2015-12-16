@@ -443,6 +443,12 @@ class UM_Setup {
 	
 		global $wpdb, $ultimatemember;
 		
+		if ( !isset( $ultimatemember->query ) || ! method_exists( $ultimatemember->query, 'get_roles' ) ) {
+			return;
+		} else {
+			//die('Method loaded!');
+		}
+			
 		$admin = $ultimatemember->query->find_post_id('um_role','_um_core','admin');
 
 		if ( !$admin && current_user_can('manage_options') && um_user('ID') ){
