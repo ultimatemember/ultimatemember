@@ -112,6 +112,11 @@
 							
 					}
 				}
+
+				if( is_archive() ){
+					$ultimatemember->access->allow_access = true;
+					$ultimatemember->access->redirect_handler = false; // open to everyone
+				}
 			}
 		}
 	}
