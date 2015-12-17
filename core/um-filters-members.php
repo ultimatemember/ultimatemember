@@ -62,39 +62,41 @@
 			
 			$query = $ultimatemember->permalinks->get_query_array();
 
-			foreach( $query as $field => $value ) {
+			if ( $query && is_array( $query ) ) {
+				foreach( $query as $field => $value ) {
 
-				if(in_array($field, array('members_page'))) continue;
-				
-				if ( in_array( $field, array('gender') ) ) {
-					$operator = '=';
-				} else {
-					$operator = 'LIKE';
-				}
-
-				if ( in_array( $ultimatemember->fields->get_field_type( $field ), array('checkbox','multiselect') ) ) {
-					$operator = 'LIKE';
-				}
-
-				if ( $value && $field != 'um_search' && $field != 'page_id' ) {
-				
-					if ( !in_array( $field, $ultimatemember->members->core_search_fields ) ) {
-						
-						if ( strstr($field, 'role_' ) ) {
-							$field = 'role';
-							$operator = '=';
-						}
-						
-						$query_args['meta_query'][] = array(
-							'key' => $field,
-							'value' => $value,
-							'compare' => $operator,
-						);
-						
+					if(in_array($field, array('members_page'))) continue;
+					
+					if ( in_array( $field, array('gender') ) ) {
+						$operator = '=';
+					} else {
+						$operator = 'LIKE';
 					}
-				
+
+					if ( in_array( $ultimatemember->fields->get_field_type( $field ), array('checkbox','multiselect') ) ) {
+						$operator = 'LIKE';
+					}
+
+					if ( $value && $field != 'um_search' && $field != 'page_id' ) {
+					
+						if ( !in_array( $field, $ultimatemember->members->core_search_fields ) ) {
+							
+							if ( strstr($field, 'role_' ) ) {
+								$field = 'role';
+								$operator = '=';
+							}
+							
+							$query_args['meta_query'][] = array(
+								'key' => $field,
+								'value' => $value,
+								'compare' => $operator,
+							);
+							
+						}
+					
+					}
+					
 				}
-				
 			}
 
 		}
