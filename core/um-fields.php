@@ -1463,8 +1463,11 @@ class UM_Fields {
 						if (!isset($options)){
 							$options = $ultimatemember->builtin->get ( 'countries' );
 						}
-
-
+						
+						if ( isset( $options ) ) {
+							$options = apply_filters('um_select_dropdown_dynamic_options', $options, $data );
+							$options = apply_filters("um_select_dropdown_dynamic_options_{$key}", $options );
+						}
 						
 						// role field
 						if ( $form_key == 'role' ) {
@@ -1549,7 +1552,11 @@ class UM_Fields {
 							$options = $ultimatemember->builtin->get ( 'countries' );
 						}
 
-						$options = apply_filters("um_multiselect_options_{$data['type']}", $options, $data );
+						if ( isset( $options ) ) {
+							$options = apply_filters('um_multiselect_options', $options, $data );
+							$options = apply_filters("um_multiselect_options_{$key}", $options );
+							$options = apply_filters("um_multiselect_options_{$data['type']}", $options, $data );
+						}
 						
 						// add an empty option!
 						$output .= '<option value=""></option>';
@@ -1591,6 +1598,11 @@ class UM_Fields {
 			
 				$form_key = str_replace('role_radio','role',$key);
 				
+				if ( isset( $options ) ) {
+					$options = apply_filters('um_radio_field_options', $options, $data );
+					$options = apply_filters("um_radio_field_options_{$key}", $options );
+				}
+						
 				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">';
 						
 						if ( isset( $data['label'] ) ) {
@@ -1674,6 +1686,12 @@ class UM_Fields {
 			
 			/* Checkbox */
 			case 'checkbox':
+			
+				if ( isset( $options ) ) {
+					$options = apply_filters('um_checkbox_field_options', $options, $data );
+					$options = apply_filters("um_checkbox_field_options_{$key}", $options );
+				}
+				
 				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">';
 						
 						if ( isset( $data['label'] ) ) {
