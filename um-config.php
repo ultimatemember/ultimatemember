@@ -20,7 +20,10 @@ $core_pages = array(
 $core_pages = apply_filters('um_core_pages', $core_pages );
 
 foreach( $core_pages as $page_s => $page ) {
-	if( ! empty( $ultimatemember->query->wp_pages() ) ){
+
+	$have_pages = $ultimatemember->query->wp_pages();
+	
+	if( ! empty( $have_pages ) ){
 		$page_setup[] = array(
 					'id'       		=> 'core_' . $page_s,
 	                'type'     		=> 'select',
