@@ -20,16 +20,27 @@ $core_pages = array(
 $core_pages = apply_filters('um_core_pages', $core_pages );
 
 foreach( $core_pages as $page_s => $page ) {
-	$page_setup[] = array(
-				'id'       		=> 'core_' . $page_s,
-                'type'     		=> 'select',
-				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-                'title'    		=> $page,
-                'default'  		=> ( isset( $ultimatemember->permalinks->core[ $page_s ] ) ) ? $ultimatemember->permalinks->core[ $page_s ] : '' ,
-				'options' 		=> $ultimatemember->query->wp_pages(),
-				'placeholder' 	=> __('Choose a page...','ultimatemember'),
-				'compiler' 		=> true,
-        );
+	if( empty( $ultimatemember->query->wp_pages() ) ){
+		$page_setup[] = array(
+					'id'       		=> 'core_' . $page_s,
+	                'type'     		=> 'select',
+					'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
+	                'title'    		=> $page,
+	                'default'  		=> ( isset( $ultimatemember->permalinks->core[ $page_s ] ) ) ? $ultimatemember->permalinks->core[ $page_s ] : '' ,
+					'options' 		=> $ultimatemember->query->wp_pages(),
+					'placeholder' 	=> __('Choose a page...','ultimatemember'),
+					'compiler' 		=> true,
+	        );
+	}else{
+		$page_setup[] = array(
+		                'id'       		=> 'core_' . $page_s,
+		                'type'     		=> 'text',
+		                'title'    		=> $page,
+	                	'placeholder' 	=> __('Add page ID','ultimatemember'),
+						'default'       => ( isset( $ultimatemember->permalinks->core[ $page_s ] ) ) ? $ultimatemember->permalinks->core[ $page_s ] : '',
+		    			'compiler' 		=> true,
+	        );
+	}
 }
 
 $this->sections[] = array(
