@@ -6,6 +6,7 @@ function um_conditional(){
 	jQuery('.um-field.um-is-conditional').each(function(){
 		//console.log('-----');
 		var found = 0;
+		var um_field_key = jQuery(this).data('key');
 		for (var i = 0; i < 5; i++) {
 		
 			var action0 = jQuery(this).data('cond-'+i+'-action');
@@ -15,14 +16,15 @@ function um_conditional(){
 			
 			
 			if (  action0 == 'show' && field0 == live_field && typeof value0 !== 'undefined' ) {
-				//console.log( 'show',i,'conditional='+value0, 'option='+live_value );
-
+				
 				if ( operator0 == 'empty' ) {
 					if ( !live_value || live_value == '' || found > 0 ) {
 						jQuery(this).fadeIn();
 						found++;
 					} else {
 						jQuery(this).hide();
+						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
+						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
 						
 					}
 				}
@@ -33,7 +35,9 @@ function um_conditional(){
 						found++;
 					} else {
 						jQuery(this).hide();
-
+						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
+						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
+						
 					}
 				}
 				
@@ -43,7 +47,9 @@ function um_conditional(){
 						found++;
 					} else {
 						jQuery(this).hide();
-
+						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
+						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
+						
 					}
 				}
 				
@@ -56,7 +62,9 @@ function um_conditional(){
 						found++;
 					} else {
 						jQuery(this).hide();
-
+						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
+						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
+						
 					}
 				}
 				
@@ -66,7 +74,9 @@ function um_conditional(){
 						found++;
 					} else {
 						jQuery(this).hide();
-
+						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
+						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
+						
 					}
 				}
 				
@@ -76,7 +86,9 @@ function um_conditional(){
 						found++;
 					} else {
 						jQuery(this).hide();
-
+						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
+						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
+						
 					}
 				}
 				
@@ -86,7 +98,9 @@ function um_conditional(){
 						found++;
 					} else {
 						jQuery(this).hide();
-
+						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
+						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
+						
 					}
 				}
 				
@@ -100,6 +114,7 @@ function um_conditional(){
 						found++;
 					} else {
 						jQuery(this).fadeIn();
+
 					}
 				}
 				
@@ -109,6 +124,8 @@ function um_conditional(){
 						found++;
 					} else {
 						jQuery(this).fadeIn();
+						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').show();
+						
 					}
 				}
 				
@@ -118,6 +135,8 @@ function um_conditional(){
 						found++;
 					} else {
 						jQuery(this).fadeIn();
+						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').show();
+						
 					}
 				}
 				
@@ -130,6 +149,8 @@ function um_conditional(){
 						found++;
 					} else {
 						jQuery(this).fadeIn();
+						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').show();
+						
 					}
 				}
 				
@@ -139,6 +160,8 @@ function um_conditional(){
 						found++;
 					} else {
 						jQuery(this).fadeIn();
+						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').show();
+						
 					}
 				}
 				
@@ -148,6 +171,8 @@ function um_conditional(){
 						found++;
 					} else {
 						jQuery(this).fadeIn();
+						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').show();
+						
 					}
 				}
 				
@@ -157,6 +182,8 @@ function um_conditional(){
 						found++;
 					} else {
 						jQuery(this).fadeIn();
+						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').show();
+						
 					}
 				}
 				//console.log( 'hide',i,value0, live_value );
@@ -827,4 +854,15 @@ function responsive_Modal() {
 			
 		}
 	}
+}
+
+function um_reset_field( dOm ){
+	//console.log(dOm);
+	jQuery(dOm)
+	 .find('div.um-field-area')
+	 .find('input,textarea,select')
+	 .not(':button, :submit, :reset, :hidden')
+	 .val('')
+	 .removeAttr('checked')
+	 .removeAttr('selected');
 }
