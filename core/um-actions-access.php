@@ -87,7 +87,7 @@
 						case 1:
 							
 							if ( is_user_logged_in() )
-								$ultimatemember->access->redirect_handler = ( isset( $opt['_um_redirect'] ) ) ? $opt['_um_redirect'] : home_url();
+								$ultimatemember->access->redirect_handler = ( isset( $opt['_um_redirect'] ) ) ? $opt['_um_redirect'] : site_url();
 							
 							if ( !is_user_logged_in() )
 								$ultimatemember->access->allow_access = true;
@@ -103,7 +103,7 @@
 								if ( !in_array( um_user('role'), $opt['_um_roles'] ) ) {
 									
 									if ( is_user_logged_in() )
-										$ultimatemember->access->redirect_handler = ( isset( $opt['_um_redirect'] ) ) ? $opt['_um_redirect'] : home_url();
+										$ultimatemember->access->redirect_handler = ( isset( $opt['_um_redirect'] ) ) ? $opt['_um_redirect'] : site_url();
 									
 									if ( !is_user_logged_in() )
 										$ultimatemember->access->redirect_handler =  um_get_core_page('login');
@@ -194,7 +194,7 @@
 					if ( !in_array( um_user('role'), unserialize( $access_roles ) ) ) {
 						if ( !$access_redirect ) {
 							if ( is_user_logged_in() ) {
-								$access_redirect = home_url();
+								$access_redirect = site_url();
 							} else {
 								$access_redirect = um_get_core_page('login');
 							}
