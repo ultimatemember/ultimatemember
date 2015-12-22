@@ -203,6 +203,7 @@
 
 			<?php if ( isset( $args['show_rememberme'] ) && $args['show_rememberme'] ) {
 					echo $ultimatemember->fields->checkbox('rememberme', __('Keep me signed in','ultimatemember') );
+					echo '<div class="um-clear"></div>';
 			} ?>
 
 			<?php if ( isset($args['secondary_btn']) && $args['secondary_btn'] != 0 ) { ?>
