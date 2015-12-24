@@ -1,11 +1,6 @@
 <?php
 
 	/***
-	***	@Disable password change default notice by WP
-	***/
-	add_filter( 'send_password_change_email', '__return_false' );
-
-	/***
 	***	@Get all bulk actions
 	***/
 	add_filter('um_admin_bulk_user_actions_hook', 'um_admin_bulk_user_actions_hook', 1);
