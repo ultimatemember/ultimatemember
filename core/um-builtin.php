@@ -594,6 +594,26 @@ class UM_Builtin {
 				'editable' => 1,
 			),
 			
+			'nickname' => array(
+				'title' => __('Nickname','ultimatemember'),
+				'metakey' => 'nickname',
+				'type' => 'text',
+				'label' => __('Nickname','ultimatemember'),
+				'required' => 0,
+				'public' => 1,
+				'editable' => 1,
+			),
+			
+			'display_name' => array(
+				'title' => __('Display Name','ultimatemember'),
+				'metakey' => 'display_name',
+				'type' => 'text',
+				'label' => __('Display Name','ultimatemember'),
+				'required' => 0,
+				'public' => 1,
+				'editable' => 1,
+			),
+			
 			'user_registered' => array(
 				'title' => __('Registration Date','ultimatemember'),
 				'metakey' => 'user_registered',
@@ -614,16 +634,6 @@ class UM_Builtin {
 				'public' => 1,
 				'editable' => 1,
 				'edit_forbidden' => 1,
-			),
-			
-			'display_name' => array(
-				'title' => __('Display Name','ultimatemember'),
-				'metakey' => 'display_name',
-				'type' => 'text',
-				'label' => __('Display Name','ultimatemember'),
-				'required' => 0,
-				'public' => 1,
-				'editable' => 1,
 			),
 			
 			'user_email' => array(

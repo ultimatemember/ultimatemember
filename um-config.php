@@ -122,15 +122,16 @@ $this->sections[] = array(
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
                 'title'    		=> __( 'User Display Name','ultimatemember' ),
                 'desc' 	   		=> __( 'This is the name that will be displayed for users on the front end of your site. Default setting uses first/last name as display name if it exists','ultimatemember' ),
-                'default'  		=> 'full_name',
+                'default'  		=> 'default',
 				'options' 		=> array(
+									'default'			=> __('Default WP Display Name','ultimatemember'),
+									'nickname'			=> __('Nickname','ultimatemember'),
 									'username' 			=> __('Username','ultimatemember'),
 									'full_name' 		=> __('First name & last name','ultimatemember'),
 									'sur_name' 			=> __('Last name & first name','ultimatemember'),
 									'initial_name'		=> __('First name & first initial of last name','ultimatemember'),
 									'initial_name_f'	=> __('First initial of first name & last name','ultimatemember'),
 									'first_name'		=> __('First name only','ultimatemember'),
-									'public_name'		=> __('Display name','ultimatemember'),
 									'field' 			=> __('Custom field(s)','ultimatemember'),
 				),
 				'placeholder' 	=> __('Select...')

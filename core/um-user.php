@@ -198,6 +198,7 @@ class UM_User {
 			
 			// add user meta
 			foreach($this->usermeta as $k=>$v){
+				if ( $k == 'display_name') continue;
 				$this->profile[$k] = $v[0];
 			}
 
