@@ -122,7 +122,7 @@ $this->sections[] = array(
 				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
                 'title'    		=> __( 'User Display Name','ultimatemember' ),
                 'desc' 	   		=> __( 'This is the name that will be displayed for users on the front end of your site. Default setting uses first/last name as display name if it exists','ultimatemember' ),
-                'default'  		=> 'default',
+                'default'  		=> 'full_name',
 				'options' 		=> array(
 									'default'			=> __('Default WP Display Name','ultimatemember'),
 									'nickname'			=> __('Nickname','ultimatemember'),

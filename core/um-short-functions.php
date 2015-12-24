@@ -1187,7 +1187,7 @@ function um_user( $data, $attrs = null ) {
 				
 			if ( $op == 'sur_name' ) {
 				if ( um_user('first_name') && um_user('last_name') ) {
-					$name = um_user('last_name') . ', ' . um_user('first_name');
+					$name = um_user('last_name') . ' ' . um_user('first_name');
 				} else {
 					$name = um_profile( $data );
 				}
