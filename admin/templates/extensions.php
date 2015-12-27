@@ -1,5 +1,12 @@
 <?php
 
+	$premium['user-tags'] = array(
+		'url' => 'https://ultimatemember.com/extensions/user-tags/',
+		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/12/user-tags-copy.jpg',
+		'name' => 'User Tags',
+		'desc' => 'Add a user tag system to your site and allow users to associate tags with their profile and enable users to find other users easily with the same tag.',
+	);
+	
 	$premium['verified-users'] = array(
 		'url' => 'https://ultimatemember.com/extensions/verified-users/',
 		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/09/image.png',
