@@ -1399,6 +1399,7 @@ $this->sections[] = array(
                 'desc' 	   		=> __( 'Choose global ratio for cover photos of profiles','ultimatemember' ),
                 'default'  		=> um_get_metadefault('profile_cover_ratio'),
 				'options' 		=> array(
+									'1.6:1' 			=> '1.6:1',
 									'2.7:1' 			=> '2.7:1',
 									'2.2:1' 			=> '2.2:1',
 									'3.2:1' 			=> '3.2:1',
