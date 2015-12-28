@@ -22,7 +22,7 @@ $core_pages = apply_filters('um_core_pages', $core_pages );
 foreach( $core_pages as $page_s => $page ) {
 
 	$have_pages = $ultimatemember->query->wp_pages();
-	
+
 	if( ! empty( $have_pages ) ){
 		$page_setup[] = array(
 					'id'       		=> 'core_' . $page_s,
@@ -70,7 +70,7 @@ function um_core_page_setting_saved($options, $css, $changed_values) {
 		'password-reset' => __('Password reset page','ultimatemember'),
 	);
 	$pages = get_option('um_core_pages');
-	
+
 	$core_pages = apply_filters('um_core_pages', $core_pages );
 
 	foreach( $core_pages as $slug => $page ) {
@@ -82,13 +82,13 @@ function um_core_page_setting_saved($options, $css, $changed_values) {
 /***
 ***	@
 ***/
-	
+
 $this->sections[] = array(
 
     'icon'       => 'um-faicon-user',
     'title'      => __( 'Users','ultimatemember'),
     'fields'     => array(
-		
+
 		array(
 				'id'       		=> 'default_role',
                 'type'     		=> 'select',
@@ -99,7 +99,7 @@ $this->sections[] = array(
 				'options' 		=> $ultimatemember->query->get_roles(),
 				'placeholder' 	=> __('Choose user role...','ultimatemember'),
         ),
-		
+
 		array(
 				'id'       		=> 'permalink_base',
                 'type'     		=> 'select',
@@ -115,7 +115,7 @@ $this->sections[] = array(
 				),
 				'placeholder' 	=> __('Select...','ultimatemember')
         ),
-		
+
 		array(
 				'id'       		=> 'display_name',
                 'type'     		=> 'select',
@@ -136,7 +136,7 @@ $this->sections[] = array(
 				),
 				'placeholder' 	=> __('Select...')
         ),
-		
+
         array(
                 'id'       		=> 'display_name_field',
                 'type'     		=> 'text',
@@ -144,7 +144,7 @@ $this->sections[] = array(
 				'desc' 	   		=> __('Specify the custom field meta key or custom fields seperated by comma that you want to use to display users name on the frontend of your site','ultimatemember'),
 				'required'		=> array( 'display_name', '=', 'field' ),
         ),
-		
+
         array(
                 'id'       		=> 'author_redirect',
                 'type'     		=> 'switch',
@@ -154,7 +154,7 @@ $this->sections[] = array(
 				'on'			=> __('Yes','ultimatemember'),
 				'off'			=> __('No','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'members_page',
                 'type'     		=> 'switch',
@@ -164,7 +164,7 @@ $this->sections[] = array(
 				'on'			=> __('Yes','ultimatemember'),
 				'off'			=> __('No','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'use_gravatars',
                 'type'     		=> 'switch',
@@ -174,7 +174,7 @@ $this->sections[] = array(
 				'on'			=> __('Yes','ultimatemember'),
 				'off'			=> __('No','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'reset_require_strongpass',
                 'type'     		=> 'switch',
@@ -184,7 +184,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
 	)
 
 );
@@ -192,13 +192,13 @@ $this->sections[] = array(
 /***
 ***	@
 ***/
-	
+
 $this->sections[] = array(
 
     'icon'       => 'um-faicon-cog',
     'title'      => __( 'Account','ultimatemember'),
     'fields'     => array(
-	
+
         array(
                 'id'       		=> 'account_tab_password',
                 'type'     		=> 'switch',
@@ -208,7 +208,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'account_tab_privacy',
                 'type'     		=> 'switch',
@@ -218,7 +218,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'account_tab_notifications',
                 'type'     		=> 'switch',
@@ -228,7 +228,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
 		array(
                 'id'       		=> 'account_tab_delete',
                 'type'     		=> 'switch',
@@ -238,7 +238,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'delete_account_text',
                 'type'    		=> 'textarea', // bug with wp 4.4? should be editor
@@ -251,7 +251,7 @@ $this->sections[] = array(
 								'textarea_rows'    => 6
 				),
         ),
-		
+
         array(
                 'id'       		=> 'account_name',
                 'type'     		=> 'switch',
@@ -261,7 +261,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'account_email',
                 'type'     		=> 'switch',
@@ -271,7 +271,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'account_require_strongpass',
                 'type'     		=> 'switch',
@@ -304,7 +304,7 @@ $this->sections[] = array(
 				'default'		=> $ultimatemember->validation->randomize(),
 				'desc'			=> trailingslashit( get_bloginfo('url') ).'wp-admin/?um_panic_key=<strong>your_panic_key</strong>'
         ),
-		
+
         array(
                 'id'       		=> 'accessible',
                 'type'     		=> 'select',
@@ -325,7 +325,7 @@ $this->sections[] = array(
 				'desc' 	   		=> __('A logged out user will be redirected to this url If he is not permitted to access the site','ultimatemember'),
 				'required'		=> array( 'accessible', '=', 2 ),
         ),
-		
+
 		array(
 				'id'       		=> 'access_exclude_uris',
                 'type'     		=> 'multi_text',
@@ -335,7 +335,7 @@ $this->sections[] = array(
 				'add_text'		=> __('Add New URL','ultimatemember'),
 				'required'		=> array( 'accessible', '=', 2 ),
 		),
-		
+
         array(
                 'id'       		=> 'wpadmin_login',
                 'type'     		=> 'switch',
@@ -345,7 +345,7 @@ $this->sections[] = array(
 				'on'			=> __('Yes','ultimatemember'),
 				'off'			=> __('No','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'deny_admin_frontend_login',
                 'type'     		=> 'switch',
@@ -355,7 +355,7 @@ $this->sections[] = array(
 				'on'			=> __('Yes','ultimatemember'),
 				'off'			=> __('No','ultimatemember'),
         ),
-		
+
 		array(
 				'id'       		=> 'wpadmin_login_redirect',
                 'type'     		=> 'select',
@@ -369,7 +369,7 @@ $this->sections[] = array(
 									'custom_url' 		=> 'Custom URL',
 				)
         ),
-		
+
         array(
                 'id'       		=> 'wpadmin_login_redirect_url',
                 'type'     		=> 'text',
@@ -377,7 +377,7 @@ $this->sections[] = array(
 				'desc' 	   		=> __('Enter an alternate url here to redirect a user If they try to access the backend register screen','ultimatemember'),
 				'required'		=> array( 'wpadmin_login_redirect', '=', 'custom_url' ),
         ),
-		
+
         array(
                 'id'       		=> 'wpadmin_register',
                 'type'     		=> 'switch',
@@ -387,7 +387,7 @@ $this->sections[] = array(
 				'on'			=> __('Yes','ultimatemember'),
 				'off'			=> __('No','ultimatemember'),
         ),
-		
+
 		array(
 				'id'       		=> 'wpadmin_register_redirect',
                 'type'     		=> 'select',
@@ -401,7 +401,7 @@ $this->sections[] = array(
 									'custom_url' 		=> 'Custom URL',
 				)
         ),
-		
+
         array(
                 'id'       		=> 'wpadmin_register_redirect_url',
                 'type'     		=> 'text',
@@ -409,7 +409,7 @@ $this->sections[] = array(
 				'desc' 	   		=> __('Enter an alternate url here to redirect a user If they try to access the backend register screen','ultimatemember'),
 				'required'		=> array( 'wpadmin_register_redirect', '=', 'custom_url' ),
         ),
-		
+
         array(
                 'id'       		=> 'access_widget_admin_only',
                 'type'     		=> 'switch',
@@ -418,28 +418,28 @@ $this->sections[] = array(
 				'on'			=> __('Yes','ultimatemember'),
 				'off'			=> __('No','ultimatemember'),
         ),
-		
+
         array(
 				'id'       		=> 'wpadmin_allow_ips',
                 'type'     		=> 'textarea',
                 'title'    		=> __( 'Whitelisted Backend IPs','ultimatemember' ),
 				'desc'			=> __('Always allow the specified IP addresses to access the backend login screen and WP-admin to avoid being locked from site backend.','ultimatemember'),
         ),
-		
+
         array(
 				'id'       		=> 'blocked_ips',
                 'type'     		=> 'textarea',
                 'title'    		=> __( 'Blocked IP Addresses','ultimatemember' ),
 				'desc'			=> __('This will block the listed IPs from signing up or signing in to the site, you can use full IP numbers or target specific range with a wildcard','ultimatemember'),
         ),
-		
+
         array(
 				'id'       		=> 'blocked_emails',
                 'type'     		=> 'textarea',
                 'title'    		=> __( 'Blocked Email Addresses','ultimatemember' ),
 				'desc'			=> __('This will block the specified e-mail addresses from being able to sign up or sign in to your site. To block an entire domain, use something like *@domain.com','ultimatemember'),
         ),
-		
+
         array(
 				'id'       		=> 'blocked_words',
                 'type'     		=> 'textarea',
@@ -447,7 +447,7 @@ $this->sections[] = array(
 				'desc'			=> __('This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username','ultimatemember'),
 				'default'		=>  'admin' . "\r\n" . 'administrator' . "\r\n" . 'webmaster' . "\r\n" . 'support' . "\r\n" . 'staff'
         ),
-		
+
 	)
 
 );
@@ -455,7 +455,7 @@ $this->sections[] = array(
 /***
 ***	@
 ***/
-	
+
 $this->sections[] = array(
 
     'icon'       => 'um-faicon-envelope-o',
@@ -485,7 +485,7 @@ $this->sections[] = array(
 				'default'  => 0,
 				'desc' 	   => __('If you enable HTML for e-mails, you can customize the HTML e-mail templates found in <strong>templates/email</strong> folder.','ultimatemember'),
         ),
-		
+
         array(
                 'id'       => 'welcome_email_on',
                 'type'     => 'switch',
@@ -493,7 +493,7 @@ $this->sections[] = array(
 				'default'  => 1,
 				'desc' 	   => __('Whether to send the user an email when his account is automatically approved','ultimatemember'),
         ),
-		
+
         array(
                 'id'       => 'welcome_email_sub',
                 'type'     => 'text',
@@ -521,7 +521,7 @@ $this->sections[] = array(
 										  'Thanks,' . "\r\n" .
 										  '{site_name}',
         ),
-		
+
         array(
                 'id'       => 'checkmail_email_on',
                 'type'     => 'switch',
@@ -529,7 +529,7 @@ $this->sections[] = array(
 				'default'  => 1,
 				'desc' 	   => __('Whether to send the user an email when his account needs e-mail activation','ultimatemember'),
         ),
-		
+
         array(
                 'id'       => 'checkmail_email_sub',
                 'type'     => 'text',
@@ -553,7 +553,7 @@ $this->sections[] = array(
 										  'Thanks,' . "\r\n" .
 										  '{site_name}',
         ),
-		
+
         array(
                 'id'       => 'pending_email_on',
                 'type'     => 'switch',
@@ -561,7 +561,7 @@ $this->sections[] = array(
 				'default'  => 1,
 				'desc' 	   => __('Whether to send the user an email when his account needs admin review','ultimatemember'),
         ),
-		
+
         array(
                 'id'       => 'pending_email_sub',
                 'type'     => 'text',
@@ -585,7 +585,7 @@ $this->sections[] = array(
 										  'Thanks,' . "\r\n" .
 										  '{site_name}',
         ),
-		
+
         array(
                 'id'       => 'approved_email_on',
                 'type'     => 'switch',
@@ -593,7 +593,7 @@ $this->sections[] = array(
 				'default'  => 1,
 				'desc' 	   => __('Whether to send the user an email when his account is approved','ultimatemember'),
         ),
-		
+
         array(
                 'id'       => 'approved_email_sub',
                 'type'     => 'text',
@@ -621,7 +621,7 @@ $this->sections[] = array(
 										  'Thanks,' . "\r\n" .
 										  '{site_name}',
         ),
-		
+
         array(
                 'id'       => 'rejected_email_on',
                 'type'     => 'switch',
@@ -629,7 +629,7 @@ $this->sections[] = array(
 				'default'  => 1,
 				'desc' 	   => __('Whether to send the user an email when his account is rejected','ultimatemember'),
         ),
-		
+
         array(
                 'id'       => 'rejected_email_sub',
                 'type'     => 'text',
@@ -660,7 +660,7 @@ $this->sections[] = array(
 				'default'  => 1,
 				'desc' 	   => __('Whether to send the user an email when his account is deactivated','ultimatemember'),
         ),
-		
+
         array(
                 'id'       => 'inactive_email_sub',
                 'type'     => 'text',
@@ -670,7 +670,7 @@ $this->sections[] = array(
 				'required' => array( 'inactive_email_on', '=', 1 ),
 				'desc' 	   => __('This is the subject line of the e-mail','ultimatemember'),
         ),
-						
+
         array(
                 'id'       => 'inactive_email',
                 'type'     => 'textarea',
@@ -691,7 +691,7 @@ $this->sections[] = array(
 				'default'  => 1,
 				'desc' 	   => __('Whether to send the user an email when his account is deleted','ultimatemember'),
         ),
-		
+
         array(
                 'id'       => 'deletion_email_sub',
                 'type'     => 'text',
@@ -714,7 +714,7 @@ $this->sections[] = array(
 										  'Thanks,' . "\r\n" .
 										  '{site_name}',
         ),
-		
+
         array(
                 'id'       => 'resetpw_email_on',
                 'type'     => 'switch',
@@ -722,7 +722,7 @@ $this->sections[] = array(
 				'default'  => 1,
 				'desc' 	   => __('Whether to send the user an email when he request to reset password (Recommended, please keep on)','ultimatemember'),
         ),
-		
+
         array(
                 'id'       => 'resetpw_email_sub',
                 'type'     => 'text',
@@ -741,12 +741,12 @@ $this->sections[] = array(
 				'required' => array( 'resetpw_email_on', '=', 1 ),
                 'default'  => 'Hi {display_name},' . "\r\n\r\n" .
 										'We received a request to reset the password for your account. If you made this request, click the link below to change your password:'  . "\r\n\r\n" .
-										'{password_reset_link}'  . "\r\n\r\n" . 
+										'{password_reset_link}'  . "\r\n\r\n" .
 										'If you didn\'t make this request, you can ignore this email'  . "\r\n\r\n" .
 										'Thanks,' . "\r\n" .
 										'{site_name}',
         ),
-		
+
         array(
                 'id'       => 'changedpw_email_on',
                 'type'     => 'switch',
@@ -754,7 +754,7 @@ $this->sections[] = array(
 				'default'  => 1,
 				'desc' 	   => __('Whether to send the user an email when he request to reset password (Recommended, please keep on)','ultimatemember'),
         ),
-		
+
         array(
                 'id'       => 'changedpw_email_sub',
                 'type'     => 'text',
@@ -773,7 +773,7 @@ $this->sections[] = array(
 				'required' => array( 'changedpw_email_on', '=', 1 ),
                 'default'  => 'Hi {display_name},' . "\r\n\r\n" .
 										'You recently changed the password associated with your {site_name} account.'  . "\r\n\r\n" .
-										'If you did not make this change and believe your {site_name} account has been compromised, please contact us at the following email address: {admin_email}'  . "\r\n\r\n" . 
+										'If you did not make this change and believe your {site_name} account has been compromised, please contact us at the following email address: {admin_email}'  . "\r\n\r\n" .
 										'Thanks,' . "\r\n" .
 										'{site_name}',
         ),
@@ -787,7 +787,7 @@ $this->sections[] = array(
 ***/
 
 $this->sections[] = array(
-    
+
 	'icon'    => 'um-faicon-bell-o',
     'title'   => __( 'Notifications','ultimatemember' ),
     'fields'  => array(
@@ -898,19 +898,19 @@ $this->sections[] = array(
         ),
 
 	)
-   
+
 );
 
 /***
 ***	@
 ***/
-	
+
 $this->sections[] = array(
 
     'icon'       => 'um-faicon-cloud-upload',
     'title'      => __( 'Uploads','ultimatemember'),
     'fields'     => array(
-	
+
 		array(
 				'id'       		=> 'profile_photo_max_size',
                 'type'     		=> 'text',
@@ -918,7 +918,7 @@ $this->sections[] = array(
                 'desc' 	   		=> __( 'Sets a maximum size for the uploaded photo','ultimatemember' ),
 				'validate' 		=> 'numeric',
         ),
-		
+
 		array(
 				'id'       		=> 'cover_photo_max_size',
                 'type'     		=> 'text',
@@ -926,7 +926,7 @@ $this->sections[] = array(
                 'desc' 	   		=> __( 'Sets a maximum size for the uploaded cover','ultimatemember' ),
 				'validate' 		=> 'numeric',
         ),
-		
+
 		array(
 				'id'       		=> 'photo_thumb_sizes',
                 'type'     		=> 'multi_text',
@@ -936,7 +936,7 @@ $this->sections[] = array(
 				'validate' 		=> 'numeric',
 				'add_text'		=> __('Add New Size','ultimatemember'),
 		),
-		
+
 		array(
 				'id'       		=> 'cover_thumb_sizes',
                 'type'     		=> 'multi_text',
@@ -946,7 +946,7 @@ $this->sections[] = array(
 				'validate' 		=> 'numeric',
 				'add_text'		=> __('Add New Size','ultimatemember'),
 		),
-		
+
 		array(
 				'id'       		=> 'image_compression',
                 'type'     		=> 'text',
@@ -955,7 +955,7 @@ $this->sections[] = array(
                 'default'  		=> 60,
 				'validate' 		=> 'numeric',
         ),
-		
+
 		array(
 				'id'       		=> 'image_max_width',
                 'type'     		=> 'text',
@@ -964,7 +964,7 @@ $this->sections[] = array(
                 'default'  		=> 1000,
 				'validate' 		=> 'numeric',
         ),
-		
+
 		array(
 				'id'       		=> 'cover_min_width',
                 'type'     		=> 'text',
@@ -981,7 +981,7 @@ $this->sections[] = array(
 /***
 ***	@
 ***/
-	
+
 $this->sections[] = array(
 
     'icon'       => 'um-faicon-search',
@@ -1003,7 +1003,7 @@ $this->sections[] = array(
                 'title'    		=> __( 'User Profile Dynamic Meta Description','ultimatemember' ),
 				'desc'			=> __('This will be used in the meta description that is available for search-engines.','ultimatemember')
         ),
-		
+
 	)
 
 );
@@ -1011,13 +1011,13 @@ $this->sections[] = array(
 /***
 ***	@
 ***/
-	
+
 $this->sections[] = array(
 
     'icon'       => 'um-faicon-paint-brush',
     'title'      => __( 'Appearance','ultimatemember'),
     'fields'     => array(
-		
+
 	)
 
 );
@@ -1027,7 +1027,7 @@ $this->sections[] = array(
     'subsection' => true,
     'title'      => __( 'General','ultimatemember'),
     'fields'     => array(
-	
+
 		array(
 				'id'       		=> 'directory_template',
                 'type'     		=> 'select',
@@ -1038,7 +1038,7 @@ $this->sections[] = array(
 				'options' 		=> $ultimatemember->shortcodes->get_templates( 'members' ),
 				'required'		=> array( 'xxxxxxxxxxxxx', '=', 'sssssssssssssssss' ),
         ),
-		
+
         array(
 				'id'       		=> 'active_color',
                 'type'     		=> 'color',
@@ -1048,7 +1048,7 @@ $this->sections[] = array(
 				'desc'			=> __('Active color is used commonly with many plugin elements as highlighted color or active selection for example. This color demonstrates the primary active color of the plugin','ultimatemember'),
 				'transparent'	=> false,
         ),
-		
+
         array(
 				'id'       		=> 'secondary_color',
                 'type'     		=> 'color',
@@ -1058,7 +1058,7 @@ $this->sections[] = array(
 				'desc'			=> __('Secondary color is used for hovers, or active state for some elements of the plugin','ultimatemember'),
 				'transparent'	=> false,
         ),
-		
+
         array(
 				'id'       		=> 'primary_btn_color',
                 'type'     		=> 'color',
@@ -1067,7 +1067,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
         array(
 				'id'       		=> 'primary_btn_hover',
                 'type'     		=> 'color',
@@ -1076,7 +1076,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
         array(
 				'id'       		=> 'primary_btn_text',
                 'type'     		=> 'color',
@@ -1085,7 +1085,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
         array(
 				'id'       		=> 'secondary_btn_color',
                 'type'     		=> 'color',
@@ -1094,7 +1094,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
         array(
 				'id'       		=> 'secondary_btn_hover',
                 'type'     		=> 'color',
@@ -1103,7 +1103,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
         array(
 				'id'       		=> 'secondary_btn_text',
                 'type'     		=> 'color',
@@ -1112,7 +1112,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
         array(
 				'id'       		=> 'help_tip_color',
                 'type'     		=> 'color',
@@ -1121,9 +1121,9 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
 	)
-	
+
 );
 
 $this->sections[] = array(
@@ -1131,7 +1131,7 @@ $this->sections[] = array(
     'subsection' => true,
     'title'      => __( 'Form Inputs','ultimatemember'),
     'fields'     => array(
-	
+
         array(
 				'id'       		=> 'form_field_label',
                 'type'     		=> 'color',
@@ -1140,7 +1140,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
         array(
                 'id'      		=> 'form_border',
                 'type'     		=> 'text',
@@ -1148,7 +1148,7 @@ $this->sections[] = array(
                 'default'  		=> um_get_metadefault('form_border'),
 				'desc' 	   		=> __('The default border-style for input/fields in UM forms','ultimatemember'),
         ),
-		
+
         array(
                 'id'      		=> 'form_border_hover',
                 'type'     		=> 'text',
@@ -1156,7 +1156,7 @@ $this->sections[] = array(
                 'default'  		=> um_get_metadefault('form_border_hover'),
 				'desc' 	   		=> __('The default border style for fields on hover state','ultimatemember'),
         ),
-		
+
         array(
 				'id'       		=> 'form_bg_color',
                 'type'     		=> 'color',
@@ -1165,7 +1165,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
         array(
 				'id'       		=> 'form_bg_color_focus',
                 'type'     		=> 'color',
@@ -1174,7 +1174,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
         array(
 				'id'       		=> 'form_text_color',
                 'type'     		=> 'color',
@@ -1183,7 +1183,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
         array(
 				'id'       		=> 'form_placeholder',
                 'type'     		=> 'color',
@@ -1192,7 +1192,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
         array(
 				'id'       		=> 'form_icon_color',
                 'type'     		=> 'color',
@@ -1201,7 +1201,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
         array(
                 'id'       		=> 'form_asterisk',
                 'type'     		=> 'switch',
@@ -1210,7 +1210,7 @@ $this->sections[] = array(
 				'on'			=> __('Yes','ultimatemember'),
 				'off'			=> __('No','ultimatemember'),
         ),
-		
+
         array(
 				'id'       		=> 'form_asterisk_color',
                 'type'     		=> 'color',
@@ -1220,13 +1220,13 @@ $this->sections[] = array(
 				'transparent'	=> false,
 				'required'		=> array( 'form_asterisk', '=', '1' ),
         ),
-		
+
 	)
-	
+
 );
 
 $this->sections[] = array(
-	
+
     'subsection' => true,
     'title'      => __( 'Profile','ultimatemember'),
     'fields'     => array(
@@ -1240,7 +1240,7 @@ $this->sections[] = array(
                 'default'  		=> um_get_metadefault('profile_template'),
 				'options' 		=> $ultimatemember->shortcodes->get_templates( 'profile' ),
         ),
-		
+
         array(
                 'id'      		=> 'profile_max_width',
                 'type'     		=> 'text',
@@ -1248,7 +1248,7 @@ $this->sections[] = array(
                 'default'  		=> um_get_metadefault('profile_max_width'),
 				'desc' 	   		=> 'The maximum width this shortcode can take from the page width',
         ),
-		
+
         array(
                 'id'      		=> 'profile_area_max_width',
                 'type'     		=> 'text',
@@ -1256,7 +1256,7 @@ $this->sections[] = array(
                 'default'  		=> um_get_metadefault('profile_area_max_width'),
 				'desc' 	   		=> __('The maximum width of the profile area inside profile (below profile header)','ultimatemember'),
         ),
-		
+
 		array(
 				'id'       		=> 'profile_align',
                 'type'     		=> 'select',
@@ -1270,7 +1270,7 @@ $this->sections[] = array(
 									'right' 			=> __('Right aligned','ultimatemember'),
 				),
         ),
-		
+
 		array(
 				'id'       		=> 'profile_icons',
                 'type'     		=> 'select',
@@ -1284,7 +1284,7 @@ $this->sections[] = array(
 									'off' 				=> __('Turn off','ultimatemember'),
 				),
         ),
-		
+
         array(
                 'id'      		=> 'profile_primary_btn_word',
                 'type'     		=> 'text',
@@ -1292,7 +1292,7 @@ $this->sections[] = array(
                 'default'  		=> um_get_metadefault('profile_primary_btn_word'),
 				'desc' 	   		=> __('The text that is used for updating profile button','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'profile_secondary_btn',
                 'type'     		=> 'switch',
@@ -1302,7 +1302,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
         array(
                 'id'      		=> 'profile_secondary_btn_word',
                 'type'     		=> 'text',
@@ -1311,7 +1311,7 @@ $this->sections[] = array(
 				'desc' 	   		=> __('The text that is used for cancelling update profile button','ultimatemember'),
 				'required'		=> array( 'profile_secondary_btn', '=', 1 ),
         ),
-		
+
 		array(
 				'id'       		=> 'profile_role',
                 'type'     		=> 'select',
@@ -1321,7 +1321,7 @@ $this->sections[] = array(
                 'default'  		=> um_get_metadefault('profile_role'),
 				'options' 		=> $ultimatemember->query->get_roles( $add_default = 'Not specific' ),
         ),
-		
+
         array(
 				'id'       		=> 'profile_main_bg',
                 'type'     		=> 'color',
@@ -1330,7 +1330,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
         array(
 				'id'       		=> 'profile_header_bg',
                 'type'     		=> 'color',
@@ -1339,7 +1339,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
 		array(
 			'id'      			=> 'default_avatar',
 			'type'     			=> 'media',
@@ -1349,7 +1349,7 @@ $this->sections[] = array(
 					'url'		=> um_url . 'assets/img/default_avatar.jpg',
 			),
 		),
-		
+
 		array(
 			'id'      			=> 'default_cover',
 			'type'     			=> 'media',
@@ -1358,7 +1358,7 @@ $this->sections[] = array(
 			'title'    			=> __('Default Cover Photo', 'ultimatemember'),
 			'desc'     			=> __('You can change the default cover photo globally here. Please make sure that the default cover is large enough and respects the ratio you are using for cover photos.', 'ultimatemember'),
 		),
-		
+
         array(
                 'id'      		=> 'profile_photosize',
                 'type'     		=> 'text',
@@ -1366,7 +1366,7 @@ $this->sections[] = array(
                 'default'  		=> um_get_metadefault('profile_photosize'),
 				'desc' 	   		=> __('The global default of profile photo size. This can be overridden by individual form settings','ultimatemember'),
         ),
-		
+
 		array(
 				'id'       		=> 'profile_photocorner',
                 'type'     		=> 'select',
@@ -1380,7 +1380,7 @@ $this->sections[] = array(
 									'3' 			=> __('Square','ultimatemember'),
 				),
         ),
-		
+
         array(
                 'id'       		=> 'profile_cover_enabled',
                 'type'     		=> 'switch',
@@ -1390,7 +1390,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
 		array(
 				'id'       		=> 'profile_cover_ratio',
                 'type'     		=> 'select',
@@ -1405,7 +1405,7 @@ $this->sections[] = array(
 				),
 				'required'		=> array( 'profile_cover_enabled', '=', 1 ),
         ),
-		
+
         array(
                 'id'       		=> 'profile_show_metaicon',
                 'type'     		=> 'switch',
@@ -1415,7 +1415,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
         array(
 				'id'       		=> 'profile_header_text',
                 'type'     		=> 'color',
@@ -1424,7 +1424,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
         array(
 				'id'       		=> 'profile_header_link_color',
                 'type'     		=> 'color',
@@ -1433,7 +1433,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
         array(
 				'id'       		=> 'profile_header_link_hcolor',
                 'type'     		=> 'color',
@@ -1442,7 +1442,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
         array(
 				'id'       		=> 'profile_header_icon_color',
                 'type'     		=> 'color',
@@ -1451,7 +1451,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
         array(
 				'id'       		=> 'profile_header_icon_hcolor',
                 'type'     		=> 'color',
@@ -1460,7 +1460,7 @@ $this->sections[] = array(
                 'validate' 		=> 'color',
 				'transparent'	=> false,
         ),
-		
+
         array(
                 'id'       		=> 'profile_show_name',
                 'type'     		=> 'switch',
@@ -1470,7 +1470,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'profile_show_social_links',
                 'type'     		=> 'switch',
@@ -1480,7 +1480,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'profile_show_bio',
                 'type'     		=> 'switch',
@@ -1490,7 +1490,17 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
+        array(
+                'id'       		=> 'profile_show_html_bio',
+                'type'     		=> 'switch',
+                'title'    		=> __( 'Enable html support for user description','ultimatemember' ),
+				'default' 		=> um_get_metadefault('profile_show_html_bio'),
+				'desc' 	   		=> __('Switch on/off to enable/disable support for html tags on user description.','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+        ),
+
         array(
                 'id'       		=> 'profile_bio_maxchars',
                 'type'     		=> 'text',
@@ -1499,7 +1509,7 @@ $this->sections[] = array(
 				'desc' 	   		=> __('Maximum number of characters to allow in user description field in header.','ultimatemember'),
 				'required'		=> array( 'profile_show_bio', '=', 1 ),
         ),
-		
+
         array(
                 'id'       		=> 'profile_header_menu',
                 'type'     		=> 'select',
@@ -1512,7 +1522,7 @@ $this->sections[] = array(
 									'lc' 		=> 'Left of Icon',
 				),
         ),
-		
+
         array(
                 'id'       		=> 'profile_empty_text',
                 'type'     		=> 'switch',
@@ -1522,7 +1532,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'profile_empty_text_emo',
                 'type'     		=> 'switch',
@@ -1533,9 +1543,9 @@ $this->sections[] = array(
 				'off'			=> __('Off','ultimatemember'),
 				'required'		=> array( 'profile_empty_text', '=', 1 ),
         ),
-		
+
 	)
-	
+
 );
 
 $tabs = $ultimatemember->profile->tabs_primary();
@@ -1584,19 +1594,19 @@ $tab_options[] = array(
 );
 
 $this->sections[] = array(
-	
+
     'subsection' => true,
     'title'      => __( 'Profile Menu','ultimatemember'),
     'fields'     => $tab_options
-	
+
 );
 
 $this->sections[] = array(
-	
+
     'subsection' => true,
     'title'      => __( 'Registration Form','ultimatemember'),
     'fields'     => array(
-		
+
 		array(
 				'id'       		=> 'register_template',
                 'type'     		=> 'select',
@@ -1606,7 +1616,7 @@ $this->sections[] = array(
                 'default'  		=> um_get_metadefault('register_template'),
 				'options' 		=> $ultimatemember->shortcodes->get_templates( 'register' ),
         ),
-		
+
         array(
                 'id'      		=> 'register_max_width',
                 'type'     		=> 'text',
@@ -1614,7 +1624,7 @@ $this->sections[] = array(
                 'default'  		=> um_get_metadefault('register_max_width'),
 				'desc' 	   		=> __('The maximum width this shortcode can take from the page width','ultimatemember'),
         ),
-		
+
 		array(
 				'id'       		=> 'register_align',
                 'type'     		=> 'select',
@@ -1628,7 +1638,7 @@ $this->sections[] = array(
 									'right' 			=> __('Right aligned'),
 				),
         ),
-		
+
 		array(
 				'id'       		=> 'register_icons',
                 'type'     		=> 'select',
@@ -1642,7 +1652,7 @@ $this->sections[] = array(
 									'off' 				=> __('Turn off'),
 				),
         ),
-		
+
         array(
                 'id'      		=> 'register_primary_btn_word',
                 'type'     		=> 'text',
@@ -1650,7 +1660,7 @@ $this->sections[] = array(
                 'default'  		=> um_get_metadefault('register_primary_btn_word'),
 				'desc' 	   		=> __('The text that is used for primary button text','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'register_secondary_btn',
                 'type'     		=> 'switch',
@@ -1660,7 +1670,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
         array(
                 'id'      		=> 'register_secondary_btn_word',
                 'type'     		=> 'text',
@@ -1669,7 +1679,7 @@ $this->sections[] = array(
 				'desc' 	   		=> __('The text that is used for the secondary button text','ultimatemember'),
 				'required'		=> array( 'register_secondary_btn', '=', 1 ),
         ),
-		
+
         array(
                 'id'      		=> 'register_secondary_btn_url',
                 'type'     		=> 'text',
@@ -1678,7 +1688,7 @@ $this->sections[] = array(
 				'desc' 	   		=> __('You can replace default link for this button by entering custom URL','ultimatemember'),
 				'required'		=> array( 'login_secondary_btn', '=', 1 ),
         ),
-		
+
 		array(
 				'id'       		=> 'register_role',
                 'type'     		=> 'select',
@@ -1688,17 +1698,17 @@ $this->sections[] = array(
                 'default'  		=> um_get_metadefault('register_role'),
 				'options' 		=> $ultimatemember->query->get_roles( $add_default = 'Default' ),
         ),
-		
+
 	)
-	
+
 );
 
 $this->sections[] = array(
-	
+
     'subsection' => true,
     'title'      => __( 'Login Form','ultimatemember'),
     'fields'     => array(
-	
+
 		array(
 				'id'       		=> 'login_template',
                 'type'     		=> 'select',
@@ -1708,7 +1718,7 @@ $this->sections[] = array(
                 'default'  		=> um_get_metadefault('login_template'),
 				'options' 		=> $ultimatemember->shortcodes->get_templates( 'login' ),
         ),
-		
+
         array(
                 'id'      		=> 'login_max_width',
                 'type'     		=> 'text',
@@ -1716,7 +1726,7 @@ $this->sections[] = array(
                 'default'  		=> um_get_metadefault('login_max_width'),
 				'desc' 	   		=> __('The maximum width this shortcode can take from the page width','ultimatemember'),
         ),
-		
+
 		array(
 				'id'       		=> 'login_align',
                 'type'     		=> 'select',
@@ -1730,7 +1740,7 @@ $this->sections[] = array(
 									'right' 			=> __('Right aligned','ultimatemember'),
 				),
         ),
-		
+
 		array(
 				'id'       		=> 'login_icons',
                 'type'     		=> 'select',
@@ -1744,7 +1754,7 @@ $this->sections[] = array(
 									'off' 				=> __('Turn off','ultimatemember'),
 				),
         ),
-		
+
         array(
                 'id'      		=> 'login_primary_btn_word',
                 'type'     		=> 'text',
@@ -1752,7 +1762,7 @@ $this->sections[] = array(
                 'default'  		=> um_get_metadefault('login_primary_btn_word'),
 				'desc' 	   		=> __('The text that is used for primary button text','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'login_secondary_btn',
                 'type'     		=> 'switch',
@@ -1762,7 +1772,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
         array(
                 'id'      		=> 'login_secondary_btn_word',
                 'type'     		=> 'text',
@@ -1771,7 +1781,7 @@ $this->sections[] = array(
 				'desc' 	   		=> __('The text that is used for the secondary button text','ultimatemember'),
 				'required'		=> array( 'login_secondary_btn', '=', 1 ),
         ),
-		
+
         array(
                 'id'      		=> 'login_secondary_btn_url',
                 'type'     		=> 'text',
@@ -1780,7 +1790,7 @@ $this->sections[] = array(
 				'desc' 	   		=> __('You can replace default link for this button by entering custom URL','ultimatemember'),
 				'required'		=> array( 'login_secondary_btn', '=', 1 ),
         ),
-		
+
         array(
                 'id'       		=> 'login_forgot_pass_link',
                 'type'     		=> 'switch',
@@ -1790,7 +1800,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'login_show_rememberme',
                 'type'     		=> 'switch',
@@ -1800,14 +1810,14 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
 	)
-	
+
 );
 
 if ( um_get_option('enable_custom_css') ) {
 $this->sections[] = array(
-	
+
     'subsection' => true,
     'title'      => __( 'Custom CSS','ultimatemember'),
     'fields'     => array(
@@ -1819,22 +1829,22 @@ $this->sections[] = array(
 				'desc'			=> __('Any custom css rules that you specify here will be applied globally to the plugin.','ultimatemember'),
 				'rows'			=> 20,
         ),
-		
+
 	)
-	
+
 );
 }
 
 /***
 ***	@
 ***/
-	
+
 $this->sections[] = array(
 
     'icon'       => 'um-faicon-wrench',
     'title'      => __('Advanced','ultimatemember'),
     'fields'     => array(
-			
+
 		array(
 				'id'            	=> 'import_export',
 				'type'          	=> 'import_export',
@@ -1851,7 +1861,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
 		array(
 				'id'       		=> 'current_url_method',
                 'type'     		=> 'select',
@@ -1864,7 +1874,7 @@ $this->sections[] = array(
 									'HTTP_HOST' 			=> __('Use HTTP_HOST','ultimatemember'),
 				),
         ),
-		
+
         array(
                 'id'      		=> 'advanced_denied_roles',
                 'type'     		=> 'text',
@@ -1872,7 +1882,7 @@ $this->sections[] = array(
                 'default'  		=> '',
 				'desc' 	   		=> __('Comma seperate roles (role slugs) that can not be registered from frontend ever for security.','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'enable_timebot',
                 'type'     		=> 'switch',
@@ -1882,7 +1892,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'disable_minify',
                 'type'     		=> 'switch',
@@ -1892,7 +1902,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'disable_menu',
                 'type'     		=> 'switch',
@@ -1902,7 +1912,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'js_css_exlcude_home',
                 'type'     		=> 'switch',
@@ -1912,7 +1922,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
 		array(
 				'id'       		=> 'js_css_exclude',
                 'type'     		=> 'multi_text',
@@ -1921,7 +1931,7 @@ $this->sections[] = array(
                 'desc' 	   		=> __( 'Enter a url or page slug (e.g /about/) to disable loading the plugin\'s css and js on that page.','ultimatemember' ),
 				'add_text'		=> __('Add New Page','ultimatemember'),
 		),
-		
+
 		array(
 				'id'       		=> 'js_css_include',
                 'type'     		=> 'multi_text',
@@ -1930,7 +1940,7 @@ $this->sections[] = array(
                 'desc' 	   		=> __( 'Enter a url or page slug (e.g /about/) to enable loading the plugin\'s css and js on that page.','ultimatemember' ),
 				'add_text'		=> __('Add New Page','ultimatemember'),
 		),
-		
+
         array(
                 'id'       		=> 'enable_custom_css',
                 'type'     		=> 'switch',
@@ -1939,7 +1949,7 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
-		
+
         array(
                 'id'       		=> 'allow_tracking',
                 'type'     		=> 'switch',
