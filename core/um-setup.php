@@ -5,11 +5,11 @@ class UM_Setup {
 	function __construct() {
 
 		add_action('init',  array(&$this, 'install_basics'), 9);
-		
+
 		add_action('init',  array(&$this, 'install_default_forms'), 9);
-		
+
 		add_action('init',  array(&$this, 'install_default_roles'), 9);
-		
+
 		add_action('init',  array(&$this, 'install_posts_roles'), 9);
 
 		$this->core_forms = array(
@@ -17,7 +17,7 @@ class UM_Setup {
 			'login',
 			'profile',
 		);
-		
+
 		$this->core_directories = array(
 			'members',
 		);
@@ -53,7 +53,7 @@ class UM_Setup {
 			'_um_profiles_per_page_mobile' => 6,
 			'_um_core' => 'members',
 		);
-		
+
 		$this->core_global_meta_all = array(
 			'_um_primary_btn_color',
 			'_um_primary_btn_hover',
@@ -74,7 +74,7 @@ class UM_Setup {
 			'_um_help_tip_color',
 			'_um_secondary_color',
 		);
-		
+
 		$this->core_form_meta_all = array(
 			'_um_help_tip_color' => '#ccc',
 			'_um_active_color' => '#3ba1da',
@@ -97,6 +97,7 @@ class UM_Setup {
 			'_um_profile_show_name' => 1,
 			'_um_profile_show_social_links' => 0,
 			'_um_profile_show_bio' => 1,
+			'profile_show_html_bio' => 0,
 			'_um_profile_bio_maxchars' => 180,
 			'_um_profile_header_menu' => 'bc',
 			'_um_profile_empty_text' => 1,
@@ -162,9 +163,9 @@ class UM_Setup {
 			'_um_directory_header' => __('{total_users} Members','ultimatemember'),
 			'_um_directory_header_single' => __('{total_users} Member','ultimatemember'),
 		);
-		
+
 		$this->core_form_meta_all = apply_filters('um_core_form_meta_all', $this->core_form_meta_all );
-		
+
 		$this->core_form_meta['register'] = array(
 			'_um_custom_fields' => 'a:6:{s:10:"user_login";a:15:{s:5:"title";s:8:"Username";s:7:"metakey";s:10:"user_login";s:4:"type";s:4:"text";s:5:"label";s:8:"Username";s:8:"required";i:1;s:6:"public";i:1;s:8:"editable";i:0;s:8:"validate";s:15:"unique_username";s:9:"min_chars";i:3;s:9:"max_chars";i:24;s:8:"position";s:1:"1";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:10:"user_email";a:13:{s:5:"title";s:14:"E-mail Address";s:7:"metakey";s:10:"user_email";s:4:"type";s:4:"text";s:5:"label";s:14:"E-mail Address";s:8:"required";i:0;s:6:"public";i:1;s:8:"editable";i:1;s:8:"validate";s:12:"unique_email";s:8:"position";s:1:"4";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:13:"user_password";a:16:{s:5:"title";s:8:"Password";s:7:"metakey";s:13:"user_password";s:4:"type";s:8:"password";s:5:"label";s:8:"Password";s:8:"required";i:1;s:6:"public";i:1;s:8:"editable";i:1;s:9:"min_chars";i:8;s:9:"max_chars";i:30;s:15:"force_good_pass";i:1;s:18:"force_confirm_pass";i:1;s:8:"position";s:1:"5";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:10:"first_name";a:12:{s:5:"title";s:10:"First Name";s:7:"metakey";s:10:"first_name";s:4:"type";s:4:"text";s:5:"label";s:10:"First Name";s:8:"required";i:0;s:6:"public";i:1;s:8:"editable";i:1;s:8:"position";s:1:"2";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:9:"last_name";a:12:{s:5:"title";s:9:"Last Name";s:7:"metakey";s:9:"last_name";s:4:"type";s:4:"text";s:5:"label";s:9:"Last Name";s:8:"required";i:0;s:6:"public";i:1;s:8:"editable";i:1;s:8:"position";s:1:"3";s:6:"in_row";s:9:"_um_row_1";s:10:"in_sub_row";s:1:"0";s:9:"in_column";s:1:"1";s:8:"in_group";s:0:"";}s:9:"_um_row_1";a:4:{s:4:"type";s:3:"row";s:2:"id";s:9:"_um_row_1";s:8:"sub_rows";s:1:"1";s:4:"cols";s:1:"1";}}',
 			'_um_mode' => 'register',
@@ -204,7 +205,7 @@ class UM_Setup {
 			'after_login' => 'redirect_admin',
 			'after_logout' => 'redirect_home',
 		);
-		
+
 		// non-admin permissions
 		$this->nonadmin_perms = array(
 			'core' => 'member',
@@ -216,9 +217,9 @@ class UM_Setup {
 			'can_access_private_profile' => 0,
 			'after_login' => 'redirect_profile',
 		);
-		
+
 	}
-	
+
 	/***
 	***	@Get default permissions
 	***/
@@ -232,7 +233,7 @@ class UM_Setup {
 			return $perms;
 		}
 	}
-	
+
 	/***
 	***	@Basics
 	***/
@@ -240,7 +241,7 @@ class UM_Setup {
 		if ( !get_option('__ultimatemember_sitekey') )
 			update_option('__ultimatemember_sitekey', str_replace( array('http://','https://'), '', sanitize_user( get_bloginfo('url') ) ) . '-' . wp_generate_password( 20, false ) );
 	}
-	
+
 	/***
 	***	@Default Forms
 	***/
@@ -248,19 +249,19 @@ class UM_Setup {
 		global $wpdb, $ultimatemember;
 
 		if ( current_user_can('manage_options') && um_user('ID') && !get_option('um_is_installed') ) {
-			
+
 			update_option('um_is_installed', 1);
-			
+
 			// Install Core Forms
 			foreach($this->core_forms as $id ) {
-				
+
 				/**
 					If page does not exist
 					Create it
 				**/
 				$page_exists = $ultimatemember->query->find_post_id('um_form','_um_core', $id);
 				if ( !$page_exists ) {
-			
+
 					if ( $id == 'register' ) {
 						$title = 'Default Registration';
 					} else if ( $id == 'login' ) {
@@ -268,16 +269,16 @@ class UM_Setup {
 					} else {
 						$title = 'Default Profile';
 					}
-					
+
 					$form = array(
 						'post_type' 	  	=> 'um_form',
 						'post_title'		=> $title,
 						'post_status'		=> 'publish',
 						'post_author'   	=> um_user('ID'),
 					);
-					
+
 					$form_id = wp_insert_post( $form );
-					
+
 					foreach( $this->core_form_meta[$id] as $key => $value ) {
 						if ( $key == '_um_custom_fields' ) {
 							$array = unserialize( $value );
@@ -286,38 +287,38 @@ class UM_Setup {
 							update_post_meta($form_id, $key, $value);
 						}
 					}
-					
+
 					$this->setup_shortcode[$id] = '[ultimatemember form_id='.$form_id.']';
 
 					$core_forms[ $form_id ] = $form_id;
-				
+
 				}
 				/** DONE **/
-				
+
 			}
 			if ( isset( $core_forms ) ) update_option('um_core_forms', $core_forms);
-			
+
 			// Install Core Directories
 			foreach($this->core_directories as $id ) {
-			
+
 				/**
 					If page does not exist
 					Create it
 				**/
 				$page_exists = $ultimatemember->query->find_post_id('um_directory','_um_core', $id);
 				if ( !$page_exists ) {
-			
+
 					$title = 'Members';
-					
+
 					$form = array(
 						'post_type' 	  	=> 'um_directory',
 						'post_title'		=> $title,
 						'post_status'		=> 'publish',
 						'post_author'   	=> um_user('ID'),
 					);
-					
+
 					$form_id = wp_insert_post( $form );
-					
+
 					foreach( $this->core_directory_meta[$id] as $key => $value ) {
 						if ( $key == '_um_custom_fields' ) {
 							$array = unserialize( $value );
@@ -326,17 +327,17 @@ class UM_Setup {
 							update_post_meta($form_id, $key, $value);
 						}
 					}
-					
+
 					$this->setup_shortcode[$id] = '[ultimatemember form_id='.$form_id.']';
 
 					$core_directories[ $form_id ] = $form_id;
-				
+
 				}
 				/** DONE **/
-				
+
 			}
 			if ( isset( $core_directories ) ) update_option('um_core_directories', $core_directories);
-			
+
 			// Install Core Pages
 			foreach($this->core_pages as $slug => $array ) {
 
@@ -346,7 +347,7 @@ class UM_Setup {
 				**/
 				$page_exists = $ultimatemember->query->find_post_id('page','_um_core', $slug);
 				if ( !$page_exists ) {
-				
+
 					if ( $slug == 'logout' ) {
 						$content = '';
 					} else if ( $slug == 'account' ) {
@@ -358,7 +359,7 @@ class UM_Setup {
 					} else {
 						$content = $this->setup_shortcode[$slug];
 					}
-				
+
 					$user_page = array(
 						'post_title'		=> $array['title'],
 						'post_content'		=> $content,
@@ -368,17 +369,17 @@ class UM_Setup {
 						'post_author'   	=> um_user('ID'),
 						'comment_status'    => 'closed'
 					);
-					
+
 					$post_id = wp_insert_post( $user_page );
 					wp_update_post( array('ID' => $post_id, 'post_type' => 'page' ) );
-					
+
 					update_post_meta($post_id, '_um_core', $slug);
-					
+
 					$core_pages[ $slug ] = $post_id;
-				
+
 				}
 				/** DONE **/
-				
+
 			}
 			if ( isset( $core_pages ) ) {
 				update_option('um_core_pages', $core_pages);
@@ -390,28 +391,28 @@ class UM_Setup {
 					update_option('um_options', $options );
 				}
 			}
-			
+
 		}
-	
+
 	}
-	
+
 	/***
 	***	@First setup of core roles
 	***/
 	function install_default_roles(){
-	
+
 		if ( !get_option('um_first_setup_roles') ) {
 
 			update_option('um_first_setup_roles', 1);
-			
+
 			$users = get_users( array('fields' => 'ID') );
 			foreach( $users as $id ) {
 
 				delete_user_meta( $id, 'account_status' );
 				delete_user_meta( $id, 'role' );
-				
+
 				update_user_meta( $id, 'account_status', 'approved' );
-				
+
 				if ( !is_super_admin( $id ) ) {
 					if ( is_numeric( $id ) ) {
 						update_user_meta( $id, 'role', 'member' );
@@ -421,11 +422,11 @@ class UM_Setup {
 						update_user_meta( $id, 'role', 'admin' );
 					}
 				}
-				
+
 			}
 
 		}
-		
+
 		if ( !get_option('um_hashed_passwords_fix') ) {
 			update_option('um_hashed_passwords_fix', 1);
 			$users = get_users( array('fields' => 'ID') );
@@ -433,26 +434,26 @@ class UM_Setup {
 				delete_user_meta( $id, '_um_cool_but_hard_to_guess_plain_pw' );
 			}
 		}
-		
+
 	}
-	
+
 	/***
 	***	@Build default roles
 	***/
 	function install_posts_roles(){
-	
+
 		global $wpdb, $ultimatemember;
-		
+
 		if ( !isset( $ultimatemember->query ) || ! method_exists( $ultimatemember->query, 'get_roles' ) ) {
 			return;
 		} else {
 			//die('Method loaded!');
 		}
-			
+
 		$admin = $ultimatemember->query->find_post_id('um_role','_um_core','admin');
 
 		if ( !$admin && current_user_can('manage_options') && um_user('ID') ){
-		
+
 			$admin_role = array(
 				'post_title'		=> 'Admin',
 				'post_name'			=> 'admin',
@@ -460,17 +461,17 @@ class UM_Setup {
 				'post_status'		=> 'publish',
 				'post_author'   	=> um_user('ID'),
 			);
-			
+
 			$post_id = wp_insert_post( $admin_role );
-			
+
 			foreach( $this->get_initial_permissions('admin') as $key => $value ) update_post_meta($post_id, "_um_" . $key, $value);
-			
+
 		}
-		
+
 		$member = $ultimatemember->query->find_post_id('um_role','_um_core','member');
-		
+
 		if ( !$member && current_user_can('manage_options') && um_user('ID') ){
-		
+
 			$member_role = array(
 				'post_title'		=> 'Member',
 				'post_name'			=> 'member',
@@ -478,13 +479,13 @@ class UM_Setup {
 				'post_status'		=> 'publish',
 				'post_author'   	=> um_user('ID'),
 			);
-			
+
 			$post_id = wp_insert_post( $member_role );
-			
+
 			foreach( $this->get_initial_permissions('member') as $key => $value ) update_post_meta($post_id, "_um_" . $key, $value);
-			
+
 		}
-		
+
 	}
 
 }

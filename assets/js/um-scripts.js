@@ -3,7 +3,7 @@ jQuery(document).ready(function() {
 	jQuery(document).on('click', '.um-dropdown a', function(e){
 		return false;
 	});
-	
+
 	jQuery(document).on('click', '.um-dropdown a.real_url', function(e){
 		window.location = jQuery(this).attr('href');
 	});
@@ -40,7 +40,7 @@ jQuery(document).ready(function() {
 	});
 
 	jQuery(document).on('change', '.um-field-area input[type=checkbox]', function(){
-		
+
 		var field = jQuery(this).parents('.um-field-area');
 		var this_field = jQuery(this).parents('label');
 		if ( this_field.hasClass('active') ) {
@@ -63,13 +63,13 @@ jQuery(document).ready(function() {
 		}
 
 		var years_n = elem.attr('data-years');
-		
+
 		var min = elem.attr('data-date_min');
 		var max = elem.attr('data-date_max');
 
-		var min = min.split(",");
-		var max = max.split(",");
-		
+		var min = min.length ? new Date(min.split(",")) : null;
+		var max = max.length ? new Date(max.split(",")) : null;
+
 		elem.pickadate({
 			selectYears: years_n,
 			min: min,
@@ -85,7 +85,7 @@ jQuery(document).ready(function() {
 
 	jQuery('.um-timepicker').each(function(){
 		elem = jQuery(this);
-		
+
 		elem.pickatime({
 			format: elem.attr('data-format'),
 			interval: parseInt( elem.attr('data-intervals') ),
@@ -128,7 +128,7 @@ jQuery(document).ready(function() {
 		parent.find('.um-single-image-preview').hide();
 		parent.find('.um-btn-auto-width').html('Upload');
 		parent.find('input[type=hidden]').val('');
-		
+
 		jQuery.ajax({
 			url: um_scripts.ajaxurl,
 			type: 'post',
@@ -137,7 +137,7 @@ jQuery(document).ready(function() {
 				src: src
 			}
 		});
-		
+
 		return false;
 	});
 
@@ -148,7 +148,7 @@ jQuery(document).ready(function() {
 		parent.find('.um-single-file-preview').hide();
 		parent.find('.um-btn-auto-width').html('Upload');
 		parent.find('input[type=hidden]').val('');
-		
+
 		jQuery.ajax({
 			url: um_scripts.ajaxurl,
 			type: 'post',
@@ -157,7 +157,7 @@ jQuery(document).ready(function() {
 				src: src
 			}
 		});
-		
+
 		return false;
 	});
 
@@ -165,24 +165,24 @@ jQuery(document).ready(function() {
 		allowClear: true,
 		minimumResultsForSearch: 10
 	});
-	
+
 	jQuery(".um-s2").select2({
 		allowClear: false,
 		minimumResultsForSearch: 10
 	});
-	
+
 	jQuery('.um-s1,.um-s2').css({'display':'block'});
 
 	jQuery(document).on('click', '.um-field-group-head:not(.disabled)', function(){
 		var field = jQuery(this).parents('.um-field-group');
 		var limit = field.data('max_entries');
-		
+
 		if ( field.find('.um-field-group-body').is(':hidden')){
 			field.find('.um-field-group-body').show();
 		} else {
 			field.find('.um-field-group-body:first').clone().appendTo( field );
 		}
-		
+
 		increase_id = 0;
 		field.find('.um-field-group-body').each(function(){
 			increase_id++;
@@ -193,34 +193,34 @@ jQuery(document).ready(function() {
 				input.parent().parent().find('label').attr('for', input.data('key') + '-' + increase_id );
 			});
 		});
-		
+
 		if ( limit > 0 && field.find('.um-field-group-body').length == limit ) {
-			
+
 			jQuery(this).addClass('disabled');
-			
+
 		}
-		
+
 	});
 
 	jQuery(document).on('click', '.um-field-group-cancel', function(e){
 		e.preventDefault();
 		var field = jQuery(this).parents('.um-field-group');
-		
+
 		var limit = field.data('max_entries');
-		
+
 		if ( field.find('.um-field-group-body').length > 1 ) {
 		jQuery(this).parents('.um-field-group-body').remove();
 		} else {
 		jQuery(this).parents('.um-field-group-body').hide();
 		}
-		
+
 		if ( limit > 0 && field.find('.um-field-group-body').length < limit ) {
 			field.find('.um-field-group-head').removeClass('disabled');
 		}
-		
+
 		return false;
 	});
-	
+
 	jQuery(document).on('click', '.um-ajax-paginate', function(e){
 		e.preventDefault();
 		var parent = jQuery(this).parent();
@@ -246,17 +246,17 @@ jQuery(document).ready(function() {
 		});
 		return false;
 	});
-	
+
 	jQuery(document).on('click', '.um-ajax-action', function(e){
 		e.preventDefault();
 		var hook = jQuery(this).data('hook');
 		var user_id = jQuery(this).data('user_id');
 		var arguments = jQuery(this).data('arguments');
-	
+
 		if ( jQuery(this).data('js-remove') ){
 			jQuery(this).parents('.'+jQuery(this).data('js-remove')).fadeOut('fast');
 		}
-		
+
 		jQuery.ajax({
 			url: um_scripts.ajaxurl,
 			type: 'post',

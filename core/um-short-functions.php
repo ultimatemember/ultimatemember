@@ -1168,6 +1168,14 @@ function um_user( $data, $attrs = null ) {
 		case 'display_name':
 			
 			$op = um_get_option('display_name');
+			
+			if ( $op == 'default' ) {
+				$name = um_profile('display_name');
+			}
+			
+			if ( $op == 'nickname' ) {
+				$name = um_profile('nickname');
+			}
 				
 			if ( $op == 'full_name' ) {
 				if ( um_user('first_name') && um_user('last_name') ) {
@@ -1179,7 +1187,7 @@ function um_user( $data, $attrs = null ) {
 				
 			if ( $op == 'sur_name' ) {
 				if ( um_user('first_name') && um_user('last_name') ) {
-					$name = um_user('last_name') . ', ' . um_user('first_name');
+					$name = um_user('last_name') . ' ' . um_user('first_name');
 				} else {
 					$name = um_profile( $data );
 				}
@@ -1214,11 +1222,7 @@ function um_user( $data, $attrs = null ) {
 					$name = um_profile( $data );
 				}
 			}
-				
-			if ( $op == 'public_name' ) {
-				$name = um_profile( $data );
-			}
-				
+
 			if ( $op == 'field' && um_get_option('display_name_field') != '' ) {
 				$fields = array_filter(preg_split('/[,\s]+/', um_get_option('display_name_field') )); 
 				$name = '';

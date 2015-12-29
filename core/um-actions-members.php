@@ -222,7 +222,7 @@
 				
 				<?php $i = 0; foreach( um_members('users_per_page') as $member) { $i++; um_fetch_user( $member ); ?>
 			
-				<div class="um-member <?php echo um_user('account_status'); ?> <?php if ($cover_photos) { echo 'with-cover'; } ?>">
+				<div class="um-member um-role-<?php echo um_user('role'); ?> <?php echo um_user('account_status'); ?> <?php if ($cover_photos) { echo 'with-cover'; } ?>">
 				
 					<span class="um-member-status <?php echo um_user('account_status'); ?>"><?php echo um_user('account_status_name'); ?></span>
 					
@@ -237,7 +237,7 @@
 					?>
 					
 					<div class="um-member-cover" data-ratio="<?php echo um_get_option('profile_cover_ratio'); ?>">
-						<div class="um-member-cover-e"><?php echo um_user('cover_photo', $cover_size); ?></div>
+						<div class="um-member-cover-e"><a href="<?php echo um_user_profile_url(); ?>" title="<?php echo um_user('display_name'); ?>"><?php echo um_user('cover_photo', $cover_size); ?></a></div>
 					</div>
 					
 					<?php } ?>
