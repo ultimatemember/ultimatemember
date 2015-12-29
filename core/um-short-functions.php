@@ -1168,7 +1168,7 @@ function um_user( $data, $attrs = null ) {
 		case 'display_name':
 			
 			$op = um_get_option('display_name');
-			
+
 			if ( $op == 'default' ) {
 				$name = um_profile('display_name');
 			}
@@ -1182,6 +1182,9 @@ function um_user( $data, $attrs = null ) {
 					$name = um_user('first_name') . ' ' . um_user('last_name');
 				} else {
 					$name = um_profile( $data );
+				}
+				if ( ! $name ) {
+					$name = um_user('user_login');
 				}
 			}
 				

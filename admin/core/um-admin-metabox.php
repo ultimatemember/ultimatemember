@@ -327,7 +327,11 @@ class UM_Admin_Metabox {
 		delete_post_meta( $post_id, '_um_reveal_fields' );
 		delete_post_meta( $post_id, '_um_search_fields' );
 		delete_post_meta( $post_id, '_um_roles_can_search' );
+		delete_post_meta( $post_id, '_um_show_these_users' );
 		foreach( $_POST as $k => $v ) {
+			if ( $k == '_um_show_these_users' && trim( $_POST[ $k ] ) ) {
+				$v = preg_split('/[\r\n]+/', $v, -1, PREG_SPLIT_NO_EMPTY);
+			}
 			if (strstr($k, '_um_')){
 				update_post_meta( $post_id, $k, $v);
 			}
