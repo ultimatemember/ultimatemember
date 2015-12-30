@@ -1168,6 +1168,7 @@ function um_user( $data, $attrs = null ) {
 		case 'display_name':
 			
 			$op = um_get_option('display_name');
+			$name = '';
 			
 			if ( $op == 'default' ) {
 				$name = um_profile('display_name');
