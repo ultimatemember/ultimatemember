@@ -1219,8 +1219,33 @@ class UM_Fields {
 						
 						$output .= '<div class="um-field-area">';
 
-						$output .= '<textarea style="height: '.$height.';" class="'.$this->get_class($key, $data).'" name="'.$key.'" id="'.$key.'" placeholder="'.$placeholder.'">'.$this->field_value( $key, $default, $data ).'</textarea>
-							
+						if ( isset( $data['html'] ) && $data['html'] != 0 && $key != "description" ) {
+						
+
+							$textarea_settings = array( 
+								'media_buttons' => false, 
+								'wpautop' => false, 
+								'editor_class' => $this->get_class($key, $data),
+								'editor_height' => $height,
+								'tinymce'=> array(
+									'toolbar1' => 'formatselect,bullist,numlist,bold,italic,underline,forecolor,blockquote,hr,removeformat,link,unlink,undo,redo',
+									'toolbar2' => ''
+								) 
+							);
+						
+							// turn on the output buffer
+							ob_start();
+						
+							// echo the editor to the buffer
+							wp_editor( $this->field_value( $key, $default, $data ) , $key, $textarea_settings );
+						
+							// add the contents of the buffer to the output variable
+							$output .=  ob_get_clean();
+						
+						}
+						else $output .= '<textarea style="height: '.$height.';" class="'.$this->get_class($key, $data).'" name="'.$key.'" id="'.$key.'" placeholder="'.$placeholder.'">'.$this->field_value( $key, $default, $data ).'</textarea>';
+
+						$output .= '							
 						</div>';
 							
 						if ( $this->is_error($key) ) {

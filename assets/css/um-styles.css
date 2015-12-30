@@ -428,6 +428,16 @@ p.um-notice.warning {
 	outline: none !important;
 }
 
+.um-form .wp-editor-container {
+	border: 1px solid #ddd;
+}
+
+.um-form .wp-editor-container textarea {
+	background: #ddd !important;
+	color: #222 !important;
+	border-radius: 0;
+}
+
 /*
 	- Radio & Checkboxes
 */
