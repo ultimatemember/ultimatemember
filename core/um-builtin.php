@@ -147,6 +147,22 @@ class UM_Builtin {
 				)
 			),
 			
+			'number' => array(
+				'name' => __('Number','ultimatemember'),
+				'col1' => array('_title','_metakey','_help','_default','_min','_visibility'),
+				'col2' => array('_label','_placeholder','_public','_roles','_validate','_custom_validate','_max'),
+				'col3' => array('_required','_editable','_icon'),
+				'validate' => array(
+					'_title' => array(
+						'mode' => 'required',
+						'error' => __('You must provide a title','ultimatemember')
+					),
+					'_metakey' => array(
+						'mode' => 'unique',
+					),
+				)
+			),
+			
 			'textarea' => array(
 				'name' => 'Textarea',
 				'col1' => array('_title','_metakey','_help','_height','_max_chars','_max_words','_visibility'),

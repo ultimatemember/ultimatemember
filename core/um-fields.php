@@ -623,6 +623,12 @@ class UM_Fields {
 
 				break;
 				
+			case 'number':
+
+				$array['disabled'] = '';
+
+				break;
+
 			case 'url':
 				
 				$array['input'] = 'text';
@@ -981,6 +987,34 @@ class UM_Fields {
 						}
 						
 						$output .= '<input '.$disabled.' class="'.$this->get_class($key, $data).'" type="'.$input.'" name="'.$key.$ultimatemember->form->form_suffix.'" id="'.$key.$ultimatemember->form->form_suffix.'" value="'. htmlspecialchars( $this->field_value( $key, $default, $data ) ) .'" placeholder="'.$placeholder.'" data-validate="'.$validate.'" data-key="'.$key.'" />
+							
+						</div>';
+							
+						if ( $this->is_error($key) ) {
+							$output .= $this->field_error( $this->show_error($key) );
+						}
+					
+						$output .= '</div>';
+				break;
+
+			/* Number */
+			case 'number':
+
+				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">';
+						
+						if ( isset( $data['label'] ) ) {
+						$output .= $this->field_label($label, $key, $data);
+						}
+
+						$output .= '<div class="um-field-area">';
+						
+						if ( isset($icon) && $icon && isset( $this->field_icons ) && $this->field_icons == 'field' ) {
+						
+						$output .= '<div class="um-field-icon"><i class="'.$icon.'"></i></div>';
+						
+						}
+						
+						$output .= '<input '.$disabled.' class="'.$this->get_class($key, $data).'" type="number" name="'.$key.$ultimatemember->form->form_suffix.'" id="'.$key.$ultimatemember->form->form_suffix.'" value="'. htmlspecialchars( $this->field_value( $key, $default, $data ) ) .'" placeholder="'.$placeholder.'" data-validate="'.$validate.'" data-key="'.$key.'" min="' . $min . '" max="' . $max . '" />
 							
 						</div>';
 							

@@ -1247,6 +1247,26 @@ class UM_Admin_Metabox {
 				<?php
 				break;
 				
+			case '_min':
+				?>
+				
+					<p><label for="_min">Minimum Number <?php $this->tooltip( __('Minimum number that can be entered in this field','ultimatemember') ); ?></label>
+						<input type="text" name="_min" id="_min" value="<?php echo $this->edit_mode_value; ?>" />
+					</p>
+				
+				<?php
+				break;
+				
+			case '_max':
+				?>
+				
+					<p><label for="_max">Maximum Number <?php $this->tooltip( __('Maximum number that can be entered in this field','ultimatemember') ); ?></label>
+						<input type="text" name="_max" id="_max" value="<?php echo $this->edit_mode_value; ?>" />
+					</p>
+				
+				<?php
+				break;
+				
 			case '_min_chars':
 				?>
 				
