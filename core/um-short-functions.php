@@ -34,7 +34,14 @@
 		$message = um_convert_tags( $message, $args );
 		wp_mail( $email, $subject_line, $message, $headers, $attachments );
 	}
-	
+
+	/***
+	***	@Convert urls to clickable links
+	***/
+	function um_clickable_links($s) {
+		return preg_replace('@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@', '<a href="$1" class="um-link" target="_blank">$1</a>', $s);
+	}
+
 	/***
 	***	@convert template tags
 	***/
