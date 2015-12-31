@@ -167,7 +167,7 @@
 								if ( !isset( $array['account_only'] ) && !isset( $array['private_use'] ) ) {
 						?>
 						
-						<a href="#" class="button" data-silent_action="um_admin_add_field_from_predefined" data-arg1="<?php echo $field_key; ?>" data-arg2="<?php echo $arg2; ?>"><?php echo stripslashes( $array['title'] ); ?></a>
+						<a href="#" class="button" data-silent_action="um_admin_add_field_from_predefined" data-arg1="<?php echo $field_key; ?>" data-arg2="<?php echo $arg2; ?>"><?php echo um_trim_string( stripslashes( $array['title'] ), 20 ); ?></a>
 
 						<?php } } } else { echo '<p>' . __('None','ultimatemember') . '</p>'; } ?>
 						
@@ -182,7 +182,7 @@
 
 						?>
 						
-						<a href="#" class="button with-icon" data-silent_action="um_admin_add_field_from_list" data-arg1="<?php echo $field_key; ?>" data-arg2="<?php echo $arg2; ?>"><?php echo stripslashes( $array['title'] ); ?><span class="remove"></span></a>
+						<a href="#" class="button with-icon" data-silent_action="um_admin_add_field_from_list" data-arg1="<?php echo $field_key; ?>" data-arg2="<?php echo $arg2; ?>"><?php echo um_trim_string( stripslashes( $array['title'] ), 20 ); ?><span class="remove"></span></a>
 						
 						<?php } } else { echo '<p>' . __('You did not create any custom fields', 'ultimatemember') . '</p>'; } ?>
 						

@@ -36,6 +36,13 @@
 	}
 
 	/***
+	***	@Trim string by char length
+	***/
+	function um_trim_string( $s, $length = 20 ) {
+		$s = strlen($s) > $length ? substr($s,0,$length)."..." : $s;
+		return $s;
+	}
+	/***
 	***	@Convert urls to clickable links
 	***/
 	function um_clickable_links($s) {
