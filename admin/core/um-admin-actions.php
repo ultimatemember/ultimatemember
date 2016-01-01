@@ -1,5 +1,49 @@
 <?php
 
+	/***
+	***	@Add community role to user creatino page
+	***/
+	add_action('admin_footer_text', 'um_add_custom_user_profile_fields');
+	function um_add_custom_user_profile_fields() {
+		global $ultimatemember, $pagenow;
+
+		if( $pagenow !== 'user-new.php' )
+			return;
+
+		if( !current_user_can('manage_options') )
+			return false;
+
+	?>
+	<table id="table_my_custom_field" style="display:none;">
+		<tr>
+			<th><label for="um_role"><?php _e( 'Community Role', 'ultimatemember' ); ?></label></th>
+			<td>
+				<select name="um_role" id="um_role">
+				<?php foreach( $ultimatemember->query->get_roles() as $key => $value ) { ?>
+					<option value="<?php echo $key; ?>" <?php selected( um_get_option('default_role'), $key ); ?> ><?php echo $value; ?></option>
+				<?php } ?>
+				</select>
+			</td>
+		</tr>
+	</table>
+	<script>
+	jQuery(function($){
+		$('#table_my_custom_field tr').insertAfter($('#role').parentsUntil('tr').parent());
+	});
+	</script>
+	<?php
+	}
+
+	/***
+	***	@Save the community role in user creation in backend
+	***/
+	add_action('user_register', 'um_save_custom_user_profile_fields');
+	function um_save_custom_user_profile_fields( $user_id ) {
+		if( !current_user_can('manage_options') || !is_admin() || !isset( $_POST['um_role'] ) )
+			return false;
+		update_user_meta($user_id, 'role', sanitize_title_with_dashes( $_POST['um_role'] ) );
+	}
+
 	/**
 	*
 	* Add access settings to category
