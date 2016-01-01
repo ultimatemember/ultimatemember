@@ -42,11 +42,25 @@
 		$s = strlen($s) > $length ? substr($s,0,$length)."..." : $s;
 		return $s;
 	}
+
 	/***
 	***	@Convert urls to clickable links
 	***/
 	function um_clickable_links($s) {
 		return preg_replace('@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@', '<a href="$1" class="um-link" target="_blank">$1</a>', $s);
+	}
+	
+	/***
+	***	@Get where user should be headed after logging
+	***/
+	function um_dynamic_login_page_redirect( $redirect_to = '' ) {
+		global $ultimatemember;
+		$uri = um_get_core_page( 'login' );
+		if ( ! $redirect_to ) {
+			$redirect_to = $ultimatemember->permalinks->get_current_url();
+		}
+		$uri = add_query_arg( 'redirect_to', $redirect_to, $uri );
+		return $uri;
 	}
 
 	/***
@@ -63,6 +77,7 @@
 			'{email}',
 			'{password}',
 			'{login_url}',
+			'{login_referrer}',
 			'{site_name}',
 			'{site_url}',
 			'{account_activation_link}',
@@ -85,6 +100,7 @@
 			um_user('user_email'),
 			um_user('_um_cool_but_hard_to_guess_plain_pw'),
 			um_get_core_page('login'),
+			um_dynamic_login_page_redirect(),
 			um_get_option('site_name'),
 			get_bloginfo('url'),
 			um_user('account_activation_link'),
