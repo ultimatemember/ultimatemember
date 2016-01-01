@@ -17,9 +17,6 @@
 .um-admin.post-type-um_role .manage-column.column-count {width: 150px}
 .um-admin.post-type-um_role .manage-column.column-core {width: 150px}
 
-.um-admin.users-php .tablenav.top .bulkactions,
- .um-admin.users-php .tablenav.bottom .bulkactions{display:none}
-
 .um-admin.post-type-um_form td.column-shortcode,
 .um-admin.post-type-um_form td.column-id,
 .um-admin.post-type-um_directory td.column-shortcode,

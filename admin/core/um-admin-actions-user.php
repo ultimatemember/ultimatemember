@@ -31,6 +31,8 @@
 				break;
 				
 			case 'um_delete':
+				if ( is_admin() )
+					wp_die('This action is not allowed in backend.','ultimatemember');
 				$ultimatemember->user->delete();
 				break;
 

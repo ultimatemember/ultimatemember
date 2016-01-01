@@ -81,12 +81,6 @@ jQuery(document).ready(function() {
 		minimumResultsForSearch: 10
 	});
 	
-	jQuery("body.um-admin .actions select:not('.umaf-selectjs')").select2({
-		allowClear: false,
-		minimumResultsForSearch: 10,
-		width: '160px'
-	});
-	
 	/**
 		Tooltips
 	**/

@@ -44,6 +44,49 @@ class UM_User {
 		add_action('um_when_role_is_set', array(&$this, 'remove_cache') );
 		add_action('um_when_status_is_set', array(&$this, 'remove_cache') );
 		
+		add_action( 'show_user_profile',        array( $this, 'community_role_edit' ) );
+		add_action( 'edit_user_profile',        array( $this, 'community_role_edit' ) );
+		add_action( 'personal_options_update',  array( $this, 'community_role_save' ) );
+		add_action( 'edit_user_profile_update', array( $this, 'community_role_save' ) );
+		
+	}
+	
+	/**
+	 * Allow changing community role
+	 */
+	function community_role_edit( $user ) {
+		global $ultimatemember;
+		if ( current_user_can( 'edit_users' ) && current_user_can( 'edit_user', $user->ID ) ) {
+			$user = get_userdata( $user->ID );
+			?>
+			<table class="form-table">
+				<tbody>
+					<tr>
+						<th>
+							<label for="um_role"><?php _e( 'Community Role', 'ultimatemember' ); ?></label>
+						</th>
+						<td>
+							<select name="um_role" id="um_role">
+							<?php foreach( $ultimatemember->query->get_roles() as $key => $value ) { ?>
+							<option value="<?php echo $key; ?>" <?php selected( um_user('role'), $key ); ?> ><?php echo $value; ?></option>
+							<?php } ?>
+							</select>
+							<span class="description"><?php _e( 'Assign or change the community role for this user', 'ultimatemember' ); ?></span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		<?php }
+	}
+	
+	/**
+	 * Save community role
+	 */
+	public function community_role_save( $user_id ) {
+		if ( current_user_can( 'edit_user', $user_id ) && isset( $_POST['um_role'] ) ) {
+			update_user_meta( $user_id, 'role', sanitize_title_with_dashes( $_POST['um_role'] ) );
+			delete_option( "um_cache_userdata_{$user_id}" );
+		}
 	}
 	
 	/***
