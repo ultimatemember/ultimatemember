@@ -415,7 +415,7 @@
 		um_fetch_user( $_REQUEST['user_id'] );
 	
 		$subaction = $_REQUEST['sub'];
-		
+
 		do_action("um_admin_user_action_hook", $subaction);
 		do_action("um_admin_user_action_{$subaction}_hook");
 		
