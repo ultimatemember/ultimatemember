@@ -192,7 +192,7 @@ class UM_Shortcodes {
 		
 		$args = wp_parse_args( $args, $defaults );
 		
-		$args['lock_text'] = $this->convert_locker_tags( $args['lock_text'] );
+		//$args['lock_text'] = $this->convert_locker_tags( $args['lock_text'] );
 
 		if ( !is_user_logged_in() ) {
 			if ( $args['show_lock'] == 'no' ) {
@@ -202,7 +202,7 @@ class UM_Shortcodes {
 				$ultimatemember->shortcodes->load_template( 'login-to-view' );
 			}
 		} else {
-			echo do_shortcode( $this->convert_locker_tags( $content ) );
+			echo do_shortcode( $this->convert_locker_tags( wpautop( $content ) ) );
 		}
 		
 		$output = ob_get_contents();
