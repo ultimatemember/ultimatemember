@@ -11,7 +11,8 @@ class UM_Shortcodes {
 		add_shortcode('ultimatemember', array(&$this, 'ultimatemember'), 1);
 		
 		add_shortcode('um_loggedin', array(&$this, 'um_loggedin') );
-
+		add_shortcode('um_loggedout', array(&$this, 'um_loggedout') );
+		
 		add_filter( 'body_class', array(&$this, 'body_class'), 0 );
 
 		$this->emoji[':)'] = 'https://s.w.org/images/core/emoji/72x72/1f604.png';
@@ -202,6 +203,25 @@ class UM_Shortcodes {
 			}
 		} else {
 			echo do_shortcode( $this->convert_locker_tags( $content ) );
+		}
+		
+		$output = ob_get_contents();
+		ob_end_clean();
+		return $output;
+	}
+	
+	/***
+	***	@Logged-out only content
+	***/
+	function um_loggedout( $args = array(), $content = "" ) {
+		global $ultimatemember;
+		ob_start();
+
+		// Hide for logged in users
+		if ( is_user_logged_in() ) {
+			echo '';
+		} else {
+			echo do_shortcode( wpautop( $content ) );
 		}
 		
 		$output = ob_get_contents();
