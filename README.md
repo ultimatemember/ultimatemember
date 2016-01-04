@@ -48,3 +48,8 @@ GNU Version 2 or Any Later Version
 Releases
 ====================
 [Latest Release: Ultimate Member v1.3.35](https://github.com/ultimatemember/ultimatemember/releases).
+
+Changelog
+====================
+[ From v1.0.0 to latest version ](https://wordpress.org/plugins/ultimate-member/changelog/).
+
