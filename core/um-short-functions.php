@@ -1209,12 +1209,10 @@ function um_user( $data, $attrs = null ) {
 		case 'display_name':
 			
 			$op = um_get_option('display_name');
-<<<<<<< HEAD
+
 			$name = '';
 			
-=======
 
->>>>>>> 8a95eda1ec440cbf18dff26b709c5f163d0c83f9
 			if ( $op == 'default' ) {
 				$name = um_profile('display_name');
 			}
