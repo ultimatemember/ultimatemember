@@ -34,7 +34,35 @@
 		$message = um_convert_tags( $message, $args );
 		wp_mail( $email, $subject_line, $message, $headers, $attachments );
 	}
+
+	/***
+	***	@Trim string by char length
+	***/
+	function um_trim_string( $s, $length = 20 ) {
+		$s = strlen($s) > $length ? substr($s,0,$length)."..." : $s;
+		return $s;
+	}
+
+	/***
+	***	@Convert urls to clickable links
+	***/
+	function um_clickable_links($s) {
+		return preg_replace('@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@', '<a href="$1" class="um-link" target="_blank">$1</a>', $s);
+	}
 	
+	/***
+	***	@Get where user should be headed after logging
+	***/
+	function um_dynamic_login_page_redirect( $redirect_to = '' ) {
+		global $ultimatemember;
+		$uri = um_get_core_page( 'login' );
+		if ( ! $redirect_to ) {
+			$redirect_to = $ultimatemember->permalinks->get_current_url();
+		}
+		$uri = add_query_arg( 'redirect_to', $redirect_to, $uri );
+		return $uri;
+	}
+
 	/***
 	***	@convert template tags
 	***/
@@ -49,6 +77,7 @@
 			'{email}',
 			'{password}',
 			'{login_url}',
+			'{login_referrer}',
 			'{site_name}',
 			'{site_url}',
 			'{account_activation_link}',
@@ -71,6 +100,7 @@
 			um_user('user_email'),
 			um_user('_um_cool_but_hard_to_guess_plain_pw'),
 			um_get_core_page('login'),
+			um_dynamic_login_page_redirect(),
 			um_get_option('site_name'),
 			get_bloginfo('url'),
 			um_user('account_activation_link'),
@@ -90,6 +120,17 @@
 			$content = str_replace($args['tags'], $args['tags_replace'], $content);
 		}
 		
+		$regex = '~\{([^}]*)\}~'; 
+		preg_match_all($regex, $content, $matches);
+
+		// Support for all usermeta keys
+		if ( isset( $matches[1] ) && is_array( $matches[1] ) && !empty( $matches[1] ) ) {
+			foreach( $matches[1] as $match ) {
+				$strip_key = str_replace('usermeta:','', $match );
+				$content = str_replace( '{' . $match . '}', um_user( $strip_key ), $content);
+			}
+		}
+
 		return $content;
 		
 	}
@@ -1168,8 +1209,12 @@ function um_user( $data, $attrs = null ) {
 		case 'display_name':
 			
 			$op = um_get_option('display_name');
+<<<<<<< HEAD
 			$name = '';
 			
+=======
+
+>>>>>>> 8a95eda1ec440cbf18dff26b709c5f163d0c83f9
 			if ( $op == 'default' ) {
 				$name = um_profile('display_name');
 			}
@@ -1183,6 +1228,9 @@ function um_user( $data, $attrs = null ) {
 					$name = um_user('first_name') . ' ' . um_user('last_name');
 				} else {
 					$name = um_profile( $data );
+				}
+				if ( ! $name ) {
+					$name = um_user('user_login');
 				}
 			}
 				

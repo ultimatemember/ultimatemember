@@ -7,6 +7,11 @@
 		}
 	}
 	
+	$show_these_users = get_post_meta( get_the_ID(), '_um_show_these_users', true );
+	if ( $show_these_users ) {
+		$show_these_users = implode("\n", str_replace("\r", "", $show_these_users));
+	}
+	
 ?>
 
 <div class="um-admin-metabox">
@@ -69,6 +74,15 @@
 			<span class="um-admin-half">
 			
 				<input type="text" name="_um_sortby_custom" id="_um_sortby_custom" value="<?php echo $ultimatemember->query->get_meta_value('_um_sortby_custom', null, 'na' ); ?>" />
+				
+			</span>
+		</p><div class="um-admin-clear"></div>
+		
+		<p>
+			<label class="um-admin-half"><?php _e('Only show specific users (Enter one username per line)','ultimatemember'); ?></label>
+			<span class="um-admin-half">
+			
+				<textarea name="_um_show_these_users" id="_um_show_these_users"><?php echo $show_these_users; ?></textarea>
 				
 			</span>
 		</p><div class="um-admin-clear"></div>

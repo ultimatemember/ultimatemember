@@ -143,6 +143,14 @@
 			);
 		}
 		
+		// show specific usernames
+		if ( isset( $show_these_users ) && $show_these_users && is_array( $show_these_users ) ) {
+			foreach( $show_these_users as $username ) {
+				$users_array[] = username_exists( $username );
+			}
+			$query_args['include'] = $users_array;
+		}
+		
 		// add roles to appear in directory 
 		if ( !empty( $roles ) ) {
 		

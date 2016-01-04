@@ -14,7 +14,7 @@
 		$actions['um_resend_activation'] = array( 'label' => __('Resend Activation E-mail','ultimatemember') );
 		$actions['um_deactivate'] = array( 'label' => __('Deactivate','ultimatemember') );
 		$actions['um_reenable'] = array( 'label' => __('Reactivate','ultimatemember') );
-		$actions['um_delete'] = array( 'label' => __('Delete','ultimatemember') );
+		//$actions['um_delete'] = array( 'label' => __('Delete','ultimatemember') );
 		
 		return $actions;
 	}

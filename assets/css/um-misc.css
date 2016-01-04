@@ -89,3 +89,20 @@
   -webkit-animation-iteration-count: 1;
   animation-iteration-count: 1;
 }
+
+/* content lockers */
+.um-locked-content {
+	width: 100%;
+	box-sizing: border-box;
+	border: 2px dotted #cc3000;
+	color: #333;
+	background: #fff;
+	font-size: 14px;
+	padding: 20px;
+	border-radius: 4px;
+	margin-bottom: 20px;
+}
+
+.um-locked-content a {
+	border: none !important;
+}

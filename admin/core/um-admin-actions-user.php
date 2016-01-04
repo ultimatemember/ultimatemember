@@ -6,9 +6,13 @@
 	add_action('um_admin_user_action_hook', 'um_admin_user_action_hook');
 	function um_admin_user_action_hook( $action ){
 		global $ultimatemember;
-			
+		
 		switch ( $action ) {
 			
+			default:
+				do_action("um_admin_custom_hook_{$action}", $ultimatemember->user->id );
+				break;
+
 			case 'um_put_as_pending':
 				$ultimatemember->user->pending();
 				break;
@@ -31,6 +35,8 @@
 				break;
 				
 			case 'um_delete':
+				if ( is_admin() )
+					wp_die('This action is not allowed in backend.','ultimatemember');
 				$ultimatemember->user->delete();
 				break;
 

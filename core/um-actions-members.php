@@ -228,10 +228,12 @@
 					
 					<?php if ($cover_photos) { 
 						
+						$sizes = um_get_option('cover_thumb_sizes');
+						
 						if ( $ultimatemember->mobile->isTablet() ) {
-							$cover_size = 600;
+							$cover_size = $sizes[1];
 						} else {
-							$cover_size = 300;
+							$cover_size = $sizes[0];
 						}
 						
 					?>

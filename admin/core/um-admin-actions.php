@@ -1,5 +1,49 @@
 <?php
 
+	/***
+	***	@Add community role to user creatino page
+	***/
+	add_action('admin_footer_text', 'um_add_custom_user_profile_fields');
+	function um_add_custom_user_profile_fields() {
+		global $ultimatemember, $pagenow;
+
+		if( $pagenow !== 'user-new.php' )
+			return;
+
+		if( !current_user_can('manage_options') )
+			return false;
+
+	?>
+	<table id="table_my_custom_field" style="display:none;">
+		<tr>
+			<th><label for="um_role"><?php _e( 'Community Role', 'ultimatemember' ); ?></label></th>
+			<td>
+				<select name="um_role" id="um_role">
+				<?php foreach( $ultimatemember->query->get_roles() as $key => $value ) { ?>
+					<option value="<?php echo $key; ?>" <?php selected( um_get_option('default_role'), $key ); ?> ><?php echo $value; ?></option>
+				<?php } ?>
+				</select>
+			</td>
+		</tr>
+	</table>
+	<script>
+	jQuery(function($){
+		$('#table_my_custom_field tr').insertAfter($('#role').parentsUntil('tr').parent());
+	});
+	</script>
+	<?php
+	}
+
+	/***
+	***	@Save the community role in user creation in backend
+	***/
+	add_action('user_register', 'um_save_custom_user_profile_fields');
+	function um_save_custom_user_profile_fields( $user_id ) {
+		if( !current_user_can('manage_options') || !is_admin() || !isset( $_POST['um_role'] ) )
+			return false;
+		update_user_meta($user_id, 'role', sanitize_title_with_dashes( $_POST['um_role'] ) );
+	}
+
 	/**
 	*
 	* Add access settings to category
@@ -186,68 +230,6 @@
 		}
 	}
 	add_action('save_post', 'um_admin_delete_role_cache', 1111, 2);
-
-	/***
-	***	@delete users need confirmation
-	***/
-	add_action('um_admin_do_action__delete_users', 'um_admin_do_action__delete_users');
-	function um_admin_do_action__delete_users( $action ){
-		global $ultimatemember;
-		if ( !is_admin() || !current_user_can( 'edit_users' ) ) die();
-		
-		$redirect = admin_url('users.php');
-		
-		$users = array_map( 'intval', (array) $_REQUEST['user'] );
-		if ( !$users ) exit( wp_redirect( $redirect ) );
-		
-		if ( isset( $_REQUEST['confirm'] ) && $_REQUEST['confirm'] == 1 ) { // delete
-			
-			$bulk_action = 'um_delete';
-			
-			foreach($users as $user_id){
-				$ultimatemember->user->set( $user_id );
-				if ( !um_user('super_admin') ) {
-						
-					do_action("um_admin_user_action_hook", $bulk_action);
-							
-					do_action("um_admin_user_action_{$bulk_action}_hook");
-							
-				} else {
-					$admin_err = 1;
-				}
-			}
-					
-			// Finished. redirect now
-			if ( $admin_err == 0 ){
-				wp_redirect( admin_url('users.php?update=users_updated') );
-				exit;
-			} else {
-				wp_redirect( admin_url('users.php?update=err_users_updated') );
-				exit;
-			}
-			
-		} else {
-			
-			$redirect = add_query_arg('update','confirm_delete',$redirect);
-			
-			foreach( $users as $id ) {
-				$query .= '&user[]='.$id;
-			}
-			
-			$uri = $ultimatemember->permalinks->get_current_url( true );
-			$uri = add_query_arg('um_adm_action', 'delete_users', $uri);
-			foreach( $users as $user_id ) {
-				$uri = add_query_arg('user[]', $user_id, $uri);
-				$redirect = add_query_arg('user[]', $user_id, $redirect);
-			}
-			$uri = add_query_arg('_refer', $_POST['_wp_http_referer'], $redirect);
-			$redirect = add_query_arg('confirm', 1, $uri);
-			
-			exit( wp_redirect($redirect) );
-			
-		}
-		
-	}
 	
 	/***
 	***	@clear user cache
@@ -433,7 +415,7 @@
 		um_fetch_user( $_REQUEST['user_id'] );
 	
 		$subaction = $_REQUEST['sub'];
-		
+
 		do_action("um_admin_user_action_hook", $subaction);
 		do_action("um_admin_user_action_{$subaction}_hook");
 		

@@ -381,6 +381,7 @@ p.um-notice.warning {
 }
 
 .um-form input[type=text],
+.um-form input[type=number],
 .um-form input[type=password] {
 	padding: 0 12px !important;
 	width: 100%;
@@ -399,7 +400,14 @@ p.um-notice.warning {
 	outline: none !important;
 }
 
+.um-form input[type=number] {
+	width: auto;
+	padding: 0 0 0 5px !important;
+	height: 30px !important;
+}
+
 .um-form input[type=text]:focus,
+.um-form input[type=number]:focus,
 .um-form input[type=password]:focus,
 .um-form textarea:focus {
 	box-shadow: none !important;
@@ -426,6 +434,16 @@ p.um-notice.warning {
 	min-height: 80px !important;
 	box-shadow: none;
 	outline: none !important;
+}
+
+.um-form .wp-editor-container {
+	border: 1px solid #ddd;
+}
+
+.um-form .wp-editor-container textarea {
+	background: #ddd !important;
+	color: #222 !important;
+	border-radius: 0;
 }
 
 /*
@@ -550,7 +568,8 @@ p.um-notice.warning {
 .um div.disabled,
 .um-disabled,
 .um input[type=submit]:disabled,
-.um input[type=text]:disabled {
+.um input[type=text]:disabled,
+.um input[type=number]:disabled {
 	opacity: 0.6 !important;
 	cursor: no-drop !important;
 }

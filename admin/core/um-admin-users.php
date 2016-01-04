@@ -7,21 +7,21 @@ class UM_Admin_Users {
 		$this->custom_role = 'um_role';
 
 		add_filter('manage_users_columns', array(&$this, 'manage_users_columns') );
-		
+
 		add_action('manage_users_custom_column', array(&$this, 'manage_users_custom_column'), 10, 3);
-		
+
 		add_action('restrict_manage_users', array(&$this, 'restrict_manage_users') );
-		
+
 		add_action('admin_init',  array(&$this, 'um_bulk_users_edit'), 9);
-		
+
 		add_filter('views_users', array(&$this, 'views_users') );
-		
+
 		add_filter('pre_user_query', array(&$this, 'sort_by_newest') );
-		
+
 		add_filter('pre_user_query', array(&$this, 'custom_users_filter') );
-		
+
 		add_filter('user_row_actions', array(&$this, 'user_row_actions'), 10, 2);
-				
+
 	}
 	
 	/***
@@ -32,17 +32,14 @@ class UM_Admin_Users {
 		$user_id = $user_object->ID;
 		um_fetch_user( $user_id );
 
-		unset( $actions['edit'] );
-		unset( $actions['delete'] );
+		$actions['frontend_profile'] = "<a class='' href='" . um_user_profile_url() . "'>" . __( 'View profile','ultimatemember') . "</a>";
 
-		$actions['frontend_profile'] = "<a class='' href='" . um_user_profile_url() . "'>" . __( 'Profile','ultimatemember') . "</a>";
-		
 		if ( um_user('submitted') ) {
 			$actions['view_info'] = '<a href="#" data-modal="UM_preview_registration" data-modal-size="smaller" data-dynamic-content="um_admin_review_registration" data-arg1="'.$user_id.'" data-arg2="edit_registration">' . __('Info','ultimatemember') . '</a>';
 		}
-		
+
 		$actions = apply_filters('um_admin_user_row_actions', $actions, $user_id );
-		
+
 		return $actions;
 	}
 	
@@ -208,22 +205,7 @@ class UM_Admin_Users {
 					
 					$users = $_REQUEST['users'];
 					$bulk_action = current( array_filter( $_REQUEST['um_bulk_action']) );
-					
-					if ( 'um_delete' == $bulk_action )  { // this needs confirmation
-						
-						$uri = admin_url('users.php');
-						$userids = array_map( 'intval', (array) $_REQUEST['users'] );
-						
-						if ( is_array( $userids ) ) {
-							$uri = add_query_arg('um_adm_action', 'delete_users', $uri);
-							foreach( $userids as $user_id ) {
-								$uri = add_query_arg('user[]', $user_id, $uri);
-							}
-							exit( wp_redirect( $uri ) );
-						}
 
-					}
-					
 					foreach($users as $user_id){
 						$ultimatemember->user->set( $user_id );
 						if ( !um_user('super_admin') ) {
@@ -273,10 +255,10 @@ class UM_Admin_Users {
 		global $ultimatemember;
 		?>
 			
-			<div class="actions">
+			<div style="float:right;margin:0 4px">
 			
 				<label class="screen-reader-text" for="um_filter_role"><?php _e('Filter by','ultimatemember'); ?></label>
-				<select name="um_filter_role[]" id="um_filter_role" class="umaf-selectjs" style="width: 120px">
+				<select name="um_filter_role[]" id="um_filter_role" class="" style="width: 120px">
 					<option value="0"><?php _e('Filter by','ultimatemember'); ?></option>
 					<?php
 						$roles = $ultimatemember->query->get_roles();
@@ -290,11 +272,11 @@ class UM_Admin_Users {
 		
 			</div>
 			
-			<div class="actions">
+			<div style="float:right;margin:0 4px">
 			
-				<label class="screen-reader-text" for="um_bulk_action"><?php _e('Take Action','ultimatemember'); ?></label>
-				<select name="um_bulk_action[]" id="um_bulk_action" class="umaf-selectjs" style="width: 200px">
-					<option value="0"><?php _e('Take Action','ultimatemember'); ?></option>
+				<label class="screen-reader-text" for="um_bulk_action"><?php _e('UM Action','ultimatemember'); ?></label>
+				<select name="um_bulk_action[]" id="um_bulk_action" class="" style="width: 200px">
+					<option value="0"><?php _e('UM Action','ultimatemember'); ?></option>
 					<?php echo $ultimatemember->user->get_bulk_admin_actions(); ?>
 				</select>
 				
@@ -302,10 +284,10 @@ class UM_Admin_Users {
 		
 			</div>
 			
-			<div class="actions">
+			<div style="float:right;margin:0 4px">
 			
 				<label class="screen-reader-text" for="um_change_role"><?php _e('Community role&hellip;','ultimatemember'); ?></label>
-				<select name="um_change_role[]" id="um_change_role" class="umaf-selectjs" style="width: 160px">
+				<select name="um_change_role[]" id="um_change_role" class="" style="width: 160px">
 					<?php foreach($ultimatemember->query->get_roles( $add_default = 'Community role&hellip;' ) as $key => $value) { ?>
 					<option value="<?php echo $key; ?>"><?php echo $value; ?></option>
 					<?php } ?>

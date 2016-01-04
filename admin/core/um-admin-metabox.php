@@ -327,7 +327,11 @@ class UM_Admin_Metabox {
 		delete_post_meta( $post_id, '_um_reveal_fields' );
 		delete_post_meta( $post_id, '_um_search_fields' );
 		delete_post_meta( $post_id, '_um_roles_can_search' );
+		delete_post_meta( $post_id, '_um_show_these_users' );
 		foreach( $_POST as $k => $v ) {
+			if ( $k == '_um_show_these_users' && trim( $_POST[ $k ] ) ) {
+				$v = preg_split('/[\r\n]+/', $v, -1, PREG_SPLIT_NO_EMPTY);
+			}
 			if (strstr($k, '_um_')){
 				update_post_meta( $post_id, $k, $v);
 			}
@@ -1238,6 +1242,26 @@ class UM_Admin_Metabox {
 				
 					<p><label for="_max_words">Maximum allowed words <?php $this->tooltip('If you want to enable only a maximum number of words to be input in this textarea. Leave empty to disable this setting'); ?></label>
 						<input type="text" name="_max_words" id="_max_words" value="<?php echo $this->edit_mode_value; ?>" />
+					</p>
+				
+				<?php
+				break;
+				
+			case '_min':
+				?>
+				
+					<p><label for="_min">Minimum Number <?php $this->tooltip( __('Minimum number that can be entered in this field','ultimatemember') ); ?></label>
+						<input type="text" name="_min" id="_min" value="<?php echo $this->edit_mode_value; ?>" />
+					</p>
+				
+				<?php
+				break;
+				
+			case '_max':
+				?>
+				
+					<p><label for="_max">Maximum Number <?php $this->tooltip( __('Maximum number that can be entered in this field','ultimatemember') ); ?></label>
+						<input type="text" name="_max" id="_max" value="<?php echo $this->edit_mode_value; ?>" />
 					</p>
 				
 				<?php

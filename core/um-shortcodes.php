@@ -9,7 +9,10 @@ class UM_Shortcodes {
 		$this->loop = '';
 
 		add_shortcode('ultimatemember', array(&$this, 'ultimatemember'), 1);
-
+		
+		add_shortcode('um_loggedin', array(&$this, 'um_loggedin') );
+		add_shortcode('um_loggedout', array(&$this, 'um_loggedout') );
+		
 		add_filter( 'body_class', array(&$this, 'body_class'), 0 );
 
 		$this->emoji[':)'] = 'https://s.w.org/images/core/emoji/72x72/1f604.png';
@@ -175,6 +178,57 @@ class UM_Shortcodes {
 		return $classes;
 	}
 
+	/***
+	***	@Logged-in only content
+	***/
+	function um_loggedin( $args = array(), $content = "" ) {
+		global $ultimatemember;
+		ob_start();
+
+		$defaults = array(
+			'lock_text' => __('This content has been restricted to logged in users only. Please <a href="{login_referrer}">login</a> to view this content.','ultimatemember' ),
+			'show_lock' => 'yes'
+		);
+		
+		$args = wp_parse_args( $args, $defaults );
+		
+		//$args['lock_text'] = $this->convert_locker_tags( $args['lock_text'] );
+
+		if ( !is_user_logged_in() ) {
+			if ( $args['show_lock'] == 'no' ) {
+				echo '';
+			} else {
+				$ultimatemember->shortcodes->set_args = $args;
+				$ultimatemember->shortcodes->load_template( 'login-to-view' );
+			}
+		} else {
+			echo do_shortcode( $this->convert_locker_tags( wpautop( $content ) ) );
+		}
+		
+		$output = ob_get_contents();
+		ob_end_clean();
+		return $output;
+	}
+	
+	/***
+	***	@Logged-out only content
+	***/
+	function um_loggedout( $args = array(), $content = "" ) {
+		global $ultimatemember;
+		ob_start();
+
+		// Hide for logged in users
+		if ( is_user_logged_in() ) {
+			echo '';
+		} else {
+			echo do_shortcode( wpautop( $content ) );
+		}
+		
+		$output = ob_get_contents();
+		ob_end_clean();
+		return $output;
+	}
+	
 	/***
 	***	@Shortcode
 	***/
@@ -368,6 +422,14 @@ class UM_Shortcodes {
 	function get_shortcode($post_id){
 		$shortcode = '[ultimatemember form_id='.$post_id.']';
 		return $shortcode;
+	}
+	
+	/***
+	***	@convert access lock tags
+	***/
+	function convert_locker_tags( $str ) {
+		$str = um_convert_tags( $str );
+		return $str;
 	}
 
 	/***

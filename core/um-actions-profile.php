@@ -378,9 +378,9 @@
 
 					<div class="um-meta-text">
 						<?php if( um_get_option( 'profile_show_html_bio' ) ) : ?>
-							<?php echo strip_tags(um_filtered_value('description'), '<p><a><img><br><strong><b><em><i><quote><sub><sup>'); ?>
+							<?php echo um_clickable_links( strip_tags( um_filtered_value('description'), '<p><a><img><br><strong><b><em><i><quote><sub><sup>') ); ?>
 						<?php else : ?>
-							<?php echo wp_strip_all_tags( um_filtered_value('description') ); ?>
+							<?php echo um_clickable_links( wp_strip_all_tags( um_filtered_value('description') ) ); ?>
 						<?php endif; ?>
 					</div>
 
