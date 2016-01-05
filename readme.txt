@@ -147,6 +147,30 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 == Changelog ==
 
+= 1.3.36: January 5, 2016 =
+
+* New: added in-page content restriction to protect content for logged-in or logged out users
+* New: added community role field to user creation in backend
+* New: added community role field to user editing in backend
+* New: show specific users in members directory
+* New: added a new field type: Number
+* New: added filter hooks to specific profile fields
+* New: added custom admin bulk actions support
+* New: added usermeta support to content locking feature in-page
+* Tweak: several tweaks in core to be more WordPress native
+* Tweak: added fallback for page setup selections
+* Tweak: automatic clickable links in profile header bio
+* Tweak: trim long field labels in backend fields modal
+* Fixed: profile page SEO title
+* Fixed: multi-site redirect support
+* Fixed: activation hash comparison
+* Fixed: page setup fallback field
+* Fixed: prevents php warnings and notices
+* Fixed: WP-CLI and cronjobs issues
+* Fixed: category posts restriction and redirection
+* Fixed: category access settings
+* Fixed: activation link
+
 = 1.3.35: December 15, 2015 =
 
 * Fixed: registration/login issues resolved
