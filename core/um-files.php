@@ -96,6 +96,10 @@ class UM_Files {
 		$this->upload_basedir = apply_filters('um_upload_basedir_filter', $this->upload_basedir );
 		$this->upload_baseurl = apply_filters('um_upload_baseurl_filter', $this->upload_baseurl );
 		
+		if( is_ssl() ){
+			 $this->upload_baseurl = str_replace("http://", "https://",  $this->upload_baseurl);
+		}
+
 		$this->upload_temp = $this->upload_basedir . 'temp/';
 		$this->upload_temp_url = $this->upload_baseurl . 'temp/';
 
