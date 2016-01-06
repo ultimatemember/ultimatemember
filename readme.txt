@@ -147,7 +147,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 == Changelog ==
 
-= 1.3.36: January 5, 2016 =
+= 1.3.36: January 6, 2016 =
 
 * New: added in-page content restriction to protect content for logged-in or logged out users
 * New: added community role field to user creation in backend
