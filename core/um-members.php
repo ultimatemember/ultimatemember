@@ -118,7 +118,7 @@ class UM_Members {
 
 				?>
 
-				<input type="text" name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" placeholder="<?php echo $attrs['label']; ?>" value="<?php um_queried_search_value( $filter ); ?>" />
+				<input type="text" name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" placeholder="<?php echo isset( $attrs['label'] ) ? $attrs['label'] : ''; ?>" value="<?php um_queried_search_value( $filter ); ?>" />
 
 				<?php
 
