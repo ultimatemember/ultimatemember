@@ -49,12 +49,29 @@
 	* Add access settings to category
 	*
 	**/
-	
-	add_action( 'category_add_form_fields', 'um_category_access_fields_create' );
-	add_action( 'category_edit_form_fields', 'um_category_access_fields_edit' );
-	add_action( 'create_category', 'um_category_access_fields_save' );
-	add_action( 'edited_category', 'um_category_access_fields_save' );
 
+	$exclude_taxonomies = array(
+			'post_tag',
+			'nav_menu',
+			'link_category',
+			'post_format',
+			'um_user_tag',
+			'um_hashtag',
+	);
+
+	$taxonomies = get_taxonomies(); 
+
+
+	foreach ($taxonomies as $key => $taxonomy) {
+		if( ! in_array( $key , $exclude_taxonomies ) ){
+			add_action( $taxonomy.'_add_form_fields', 'um_category_access_fields_create' );
+			add_action( $taxonomy.'_edit_form_fields', 'um_category_access_fields_edit' );
+			add_action( 'create_'.$taxonomy, 'um_category_access_fields_save' );
+			add_action( 'edited_'.$taxonomy, 'um_category_access_fields_save' );
+		}
+	}
+
+	
 	function um_category_access_fields_create( $term ){
 		global $ultimatemember;
 		
