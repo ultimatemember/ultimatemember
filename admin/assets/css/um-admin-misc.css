@@ -136,13 +136,7 @@ body.um-admin-modal-open {
 	width: 100%;
 	max-width: 100%;
 	display: block;
-	color: #666 !important;
-	background: #fff;
-	border: 1px solid #ddd;
-	border-radius: 2px;
-	outline: none !important;
 	box-sizing: border-box !important;
-	box-shadow: none !important;
 	font-size: 13px !important;
 	line-height: 1.4em !important;
 	padding: 4px 10px !important;
@@ -157,12 +151,6 @@ body.um-admin-modal-open {
 .um-admin-metabox input[type=text].um-admin-error,
 .um-admin-metabox textarea.um-admin-error
 {border-color: #C74A4A!important}
-
-.um-admin-metabox input[type=text]:focus,
-.um-admin-metabox textarea:focus{
-	border-color: #ccc;
-	background-color: #fff !important;
-}
 
 .um-admin-metabox input[type=text].small {width: 54px}
 
