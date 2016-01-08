@@ -866,3 +866,14 @@ function um_reset_field( dOm ){
 	 .removeAttr('checked')
 	 .removeAttr('selected');
 }
+
+jQuery(function(){
+
+	jQuery(".um-search form *").keypress(function(e){
+			 if (e.which == 13) {
+			    jQuery('.um-search form').submit();
+			    return false;  
+			  }
+	});
+
+});
