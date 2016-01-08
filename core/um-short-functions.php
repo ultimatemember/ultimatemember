@@ -284,6 +284,7 @@ function um_user_ip() {
 						$k = __('date submitted','ultimatemember');
 						$v = date("d M Y H:i", $v);
 					}
+					$v = urlencode( $v );
 					
 					if ( $style ) {
 						if ( !$v ) $v = __('(empty)','ultimatemember');
@@ -1051,6 +1052,11 @@ function um_fetch_user( $user_id ) {
 	***/
 	function um_user_uploads_uri() {
 		global $ultimatemember;
+
+		if( is_ssl() ){
+			 $ultimatemember->files->upload_baseurl = str_replace("http://", "https://",  $ultimatemember->files->upload_baseurl );
+		}
+
 		$uri = $ultimatemember->files->upload_baseurl . um_user('ID') . '/';
 		return $uri;
 	}
