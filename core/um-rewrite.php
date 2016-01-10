@@ -43,18 +43,43 @@ class UM_Rewrite {
 				$user_slug = $user->post_name;
 				$account = get_post($account_page_id);
 				$account_slug = $account->post_name;
-					
+				
+
 				add_rewrite_rule(
-						'^'.$user_slug.'/([^/]*)$',
-						'index.php?page_id='.$user_page_id.'&um_user=$matches[1]',
-						'top'
+								'^'.$user_slug.'/([^/]*)$',
+								'index.php?page_id='.$user_page_id.'&um_user=$matches[1]',
+								'top'
 				);
-					
+							
 				add_rewrite_rule(
-						'^'.$account_slug.'/([^/]*)$',
-						'index.php?page_id='.$account_page_id.'&um_tab=$matches[1]',
-						'top'
+								'^'.$account_slug.'/([^/]*)$',
+								'index.php?page_id='.$account_page_id.'&um_tab=$matches[1]',
+								'top'
 				);
+				
+				if ( function_exists('icl_object_id') || function_exists('icl_get_current_language') && icl_get_current_language() != icl_get_default_language() ) {
+					
+					if( function_exists('icl_get_current_language') ){
+						$language_code = icl_get_current_language();
+					}else if( function_exists('icl_object_id') ){
+						$language_code = ICL_LANGUAGE_CODE;
+					}
+					
+					add_rewrite_rule(
+							'^'.$language_code.'/'.$user_slug.'/([^/]*)$',
+							'index.php?page_id='.$user_page_id.'&um_user=$matches[1]',
+							'bottom'
+					);
+						
+					add_rewrite_rule(
+							'^'.$language_code.'/'.$account_slug.'/([^/]*)$',
+							'index.php?page_id='.$account_page_id.'&um_tab=$matches[1]',
+							'bottom'
+					);
+
+				}else{
+					
+				}
 
 				flush_rewrite_rules( true );
 
