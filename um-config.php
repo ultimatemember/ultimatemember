@@ -1877,6 +1877,16 @@ $this->sections[] = array(
         ),
 
         array(
+                'id'      		=> 'um_port_forwarding_url',
+                'type'     		=> 'switch',
+                'title'    		=> __( 'Allow Port forwarding in URL','ultimatemember' ),
+                'default'  		=> 0,
+				'desc' 	   		=> __('Turn on If you want to include port number in URLs','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+        ),
+
+        array(
                 'id'      		=> 'advanced_denied_roles',
                 'type'     		=> 'text',
                 'title'    		=> __( 'Do not allow registering these roles','ultimatemember' ),

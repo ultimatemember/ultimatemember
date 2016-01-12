@@ -33,8 +33,10 @@ class UM_Permalinks {
 	function get_current_url( $no_query_params = false ) {
 		global $post;
 
-		$server_name_method = ( um_get_option('current_url_method') ) ? um_get_option('current_url_method') : 'SERVER_NAME';
-
+			 $um_get_option = get_option('um_options');
+		$server_name_method = ( $um_get_option['current_url_method'] ) ? $um_get_option['current_url_method'] : 'SERVER_NAME';
+	$um_port_forwarding_url = ( $um_get_option['um_port_forwarding_url'] ) ? $um_get_option['um_port_forwarding_url']: '';
+			
 		if ( !isset( $_SERVER['SERVER_NAME'] ) )
 			return '';
 
@@ -52,16 +54,19 @@ class UM_Permalinks {
 			}
 			$page_url .= "://";
 
-			if ( isset( $_SERVER["SERVER_PORT"] ) && $_SERVER["SERVER_PORT"] != "80" && $_SERVER["SERVER_PORT"] != "443" ) {
+			if ( $um_port_forwarding_url == 1 && isset( $_SERVER["SERVER_PORT"] ) ) {
 				$page_url .= $_SERVER[ $server_name_method ].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+				
 			} else {
 				$page_url .= $_SERVER[ $server_name_method ].$_SERVER["REQUEST_URI"];
 			}
+			
 		}
 
 		if ( $no_query_params == true ) {
 			$page_url = strtok($page_url, '?');
 		}
+		
 
 		return apply_filters( 'um_get_current_page_url', $page_url );
 	}
