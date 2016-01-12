@@ -54,27 +54,32 @@ class UM_Rewrite {
 						$language_code = ICL_LANGUAGE_CODE;
 					}
 
-					// get the post ID in en
+					// User page translated slug
 					$lang_post_id = icl_object_id( $user->ID, 'post', FALSE, $language_code );
-					// get the post object
 					$lang_post_obj = get_post( $lang_post_id );
-					// get the name
 					if( isset( $lang_post_obj->post_name ) ){
 						$user_slug = $lang_post_obj->post_name;
 					}
 					
+					// Account page translated slug
+					$lang_post_id = icl_object_id( $account->ID, 'post', FALSE, $language_code );
+					$lang_post_obj = get_post( $lang_post_id );
+					if( isset( $lang_post_obj->post_name ) ){
+						$account_slug = $lang_post_obj->post_name;
+					}
+
 					if(  $language_code != icl_get_default_language() ){
 						$add_lang_code = $language_code;
 					}
 					
 				}
 				
-				add_rewrite_rule($user_slug.'/([^/]+)/?$',
+				add_rewrite_rule( $user_slug.'/([^/]+)/?$',
 									'index.php?page_id='.$user_page_id.'&um_user=$matches[1]&lang='.$add_lang_code,
 									'top'
 				);
 										
-				add_rewrite_rule($account_slug.'/([^/]+)?$',
+				add_rewrite_rule( $account_slug.'/([^/]+)?$',
 									'index.php?page_id='.$account_page_id.'&um_tab=$matches[1]&lang='.$add_lang_code,
 									'top'
 				);
