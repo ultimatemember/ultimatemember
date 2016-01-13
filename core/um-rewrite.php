@@ -133,7 +133,7 @@ class UM_Rewrite {
 
 			}
 			
-			if ( um_get_option('permalink_base') == 'name' ) {
+			if ( in_array( um_get_option('permalink_base'), array('name','name_dash','name_dot','name_plus') ) ) {
 				$user_id = $ultimatemember->user->user_exists_by_name( um_queried_user() );
 
 			}

@@ -196,7 +196,15 @@ class UM_Permalinks {
 		}
 
 		if ( um_get_option('permalink_base') == 'name' ) {
-			$user_in_url = rawurlencode( strtolower( um_user('full_name') ) );
+			$user_in_url = rawurlencode( strtolower( str_replace(" ",".",um_user('full_name') ) ) );
+		}
+
+		if ( um_get_option('permalink_base') == 'name_dash' ) {
+			$user_in_url = rawurlencode( strtolower( str_replace(" ","-",um_user('full_name') ) ) );
+		}
+
+		if ( um_get_option('permalink_base') == 'name_plus' ) {
+			$user_in_url = strtolower( str_replace(" ","+",um_user('full_name') ) );
 		}
 
 		if ( get_option('permalink_structure') ) {

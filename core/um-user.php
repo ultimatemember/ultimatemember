@@ -877,6 +877,7 @@ class UM_User {
 			return count( $duplicates );
 		return false;
 	}
+
 	
 	/***
 	***	@user exists by name
@@ -885,12 +886,14 @@ class UM_User {
 	
 		global $ultimatemember;
 		$value = $ultimatemember->validation->safe_name_in_url( $value );
-		
+		$value = um_clean_user_basename( $value );
+
 		$ids = get_users(array( 'fields' => 'ID', 'meta_key' => 'full_name','meta_value' => $value ,'meta_compare' => '=') );
 		if ( isset( $ids[0] ) ) 
 			return $ids[0];
 		return false;
 	}
+
 	
 	/**
 	 * @function user_exists_by_id()

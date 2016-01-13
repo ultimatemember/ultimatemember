@@ -110,7 +110,9 @@ $this->sections[] = array(
 				'desc'			=> 'e.g. ' . trailingslashit( um_get_core_page('user') ) .'<strong>username</strong>/',
 				'options' 		=> array(
 									'user_login' 		=> __('Username','ultimatemember'),
-									'name' 				=> __('First and Last Name','ultimatemember'),
+									'name' 				=> __('First and Last Name with \'.\'','ultimatemember'),
+									'name_dash' 		=> __('First and Last Name with \'-\'','ultimatemember'),
+									'name_plus' 		=> __('First and Last Name with \'+\'','ultimatemember'),
 									'user_id' 			=> __('User ID','ultimatemember'),
 				),
 				'placeholder' 	=> __('Select...','ultimatemember')

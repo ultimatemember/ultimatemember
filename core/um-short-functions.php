@@ -64,6 +64,17 @@
 	}
 
 	/***
+	*** @user clean basename
+	***/
+	function um_clean_user_basename( $value ){
+
+		$value = str_replace('.', ' ', $value);
+		$value = str_replace('-', ' ', $value);
+		$value = str_replace('+', ' ', $value);
+
+		return $value;
+	}
+	/***
 	***	@convert template tags
 	***/
 	function um_convert_tags( $content, $args = array() ) {
@@ -1193,7 +1204,7 @@ function um_user( $data, $attrs = null ) {
 		case 'full_name':
 
 			if ( um_user('first_name') && um_user('last_name') ) {
-				$full_name = um_user('first_name') . '.' . um_user('last_name');
+				$full_name = um_user('first_name') . ' ' . um_user('last_name');
 			} else {
 				$full_name = um_user('display_name');
 			}
