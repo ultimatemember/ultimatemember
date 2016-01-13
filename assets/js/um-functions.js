@@ -869,6 +869,7 @@ function um_reset_field( dOm ){
 
 jQuery(function(){
 
+	// Submit search form on keypress 'Enter'
 	jQuery(".um-search form *").keypress(function(e){
 			 if (e.which == 13) {
 			    jQuery('.um-search form').submit();
@@ -876,4 +877,10 @@ jQuery(function(){
 			  }
 	});
 
+	// Fixed touchscreen sensitivity
+	jQuery(document).on('touchend', function(){
+		jQuery(".select2-search, .select2-focusser").remove();
+	})
+
 });
+
