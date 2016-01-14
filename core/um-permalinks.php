@@ -12,10 +12,37 @@ class UM_Permalinks {
 
 		add_action('init',  array(&$this, 'activate_account_via_email_link'), 1);
 
+		remove_action( 'wp_head', 'rel_canonical' );
+		add_action('wp_head',  array(&$this, 'um_rel_canonical_'), 9 );
+		
 		$this->current_url = $this->get_current_url();
 
 	}
 
+	/***
+	***	@SEO canonical href bugfix
+	***/
+	function um_rel_canonical_() {
+		if ( !is_singular() )
+			return;
+
+		global $ultimatemember, $wp_the_query;
+		if ( !$id = $wp_the_query->get_queried_object_id() )
+			return;
+
+		if( $this->core['user'] == $id ) {
+			$link = $this->get_current_url();
+			echo "<link rel='canonical' href='$link' />\n";
+			return;
+		}
+		
+		$link = get_permalink( $id );
+		if ( $page = get_query_var('cpage') )
+			$link = get_comments_pagenum_link( $page );
+		echo "<link rel='canonical' href='$link' />\n";
+
+	}
+	
 	/***
 	***	@Get query as array
 	***/
