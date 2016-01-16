@@ -330,7 +330,10 @@
 			
 			<div class="um-account-meta-img"><a href="<?php echo um_user_profile_url(); ?>"><?php echo get_avatar( um_user('ID'), 120); ?></a></div>
 			
-			<div class="um-account-name"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('display_name'); ?></a></div>
+			<div class="um-account-name">
+				<a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('display_name'); ?></a>
+				<div class="um-account-profile-link"><a href="<?php echo um_user_profile_url(); ?>" class="um-link"><?php _e('View profile','ultimatemember'); ?></a></div>
+			</div>
 		
 		</div>
 	
@@ -362,7 +365,10 @@
 			
 			<?php } ?>
 			
-			<div class="um-account-name uimob800-hide"><a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('display_name', 'html'); ?></a></div>
+			<div class="um-account-name uimob800-hide">
+				<a href="<?php echo um_user_profile_url(); ?>"><?php echo um_user('display_name', 'html'); ?></a>
+				<div class="um-account-profile-link"><a href="<?php echo um_user_profile_url(); ?>" class="um-link"><?php _e('View profile','ultimatemember'); ?></a></div>
+			</div>
 		
 		</div>
 	
