@@ -35,7 +35,7 @@
 		global $ultimatemember;
 		extract($args);
 		
-		
+
 		if ( isset( $username ) && !isset($args['user_login']) ) {
 			$user_login = $username;
 		}
@@ -56,7 +56,7 @@
 
 		$unique_userID = $ultimatemember->query->count_users() + 1;
 		
-		if ( !isset( $user_login ) ) {
+		if ( ! isset( $user_login ) ) {
 			$user_login = 'user' . $unique_userID;
 		}
 
@@ -64,12 +64,12 @@
 			$user_email = $username;
 		}
 
-		if (!isset($user_password)){
+		if ( ! isset( $user_password ) ){
 			$user_password = $ultimatemember->validation->generate();
 		}
 		
 		
-		if( !isset($user_email) ) {
+		if( ! isset( $user_email ) ) {
 			$user_email = 'nobody' . $unique_userID . '@' . get_bloginfo('name');
 		}
 
