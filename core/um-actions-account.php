@@ -9,6 +9,8 @@
 
 		if ( $_POST['user_password'] && $_POST['confirm_user_password'] ) {
 			$changes['user_pass'] = $_POST['user_password'];
+			add_filter('send_password_change_email','um_send_password_change_email');
+	
 		}
 
 		foreach( $_POST as $k => $v ) {
