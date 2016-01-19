@@ -281,12 +281,12 @@
 
 								foreach ($array['conditions'] as $key => $value) {
 									$metakey = $fields[ $value[1] ]['metakey'] ;
-									$arr_conditions[ $metakey ] = $_POST[ $metakey ];
+									$arr_conditions[ $metakey ] = isset( $_POST[ $metakey ] )? $_POST[ $metakey ]: '';
 								}
 
 								foreach ($array['conditions'] as $key => $value) {
 									$metakey = $fields[ $value[1] ]['metakey'] ;
-									$arr_conditions[ $metakey ] = $_POST[ $metakey ];
+									$arr_conditions[ $metakey ] = isset( $_POST[ $metakey ] )? $_POST[ $metakey ]: '';
 									 if( isset( $_POST[ $metakey ] ) &&   isset( $array['conditional_value'] )  && $_POST[ $metakey ] !== $array['conditional_value'] ){
 									 		$array['required'] = 0;
 									 }
