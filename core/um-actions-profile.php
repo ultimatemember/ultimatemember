@@ -387,8 +387,8 @@
 					<?php } else if ( $ultimatemember->fields->editing == true  && $args['show_bio'] ) { ?>
 
 					<div class="um-meta-text">
-						<textarea placeholder="<?php _e('Tell us a bit about yourself...','ultimatemember'); ?>" name="<?php echo 'description-' . $args['form_id']; ?>" id="<?php echo 'description-' . $args['form_id']; ?>"><?php if ( um_user('description') ) { echo um_user('description'); } ?></textarea>
-
+						<textarea id="um-meta-bio" data-character-limit="<?php echo um_get_option('profile_bio_maxchars'); ?>" placeholder="<?php _e('Tell us a bit about yourself...','ultimatemember'); ?>" name="<?php echo 'description-' . $args['form_id']; ?>" id="<?php echo 'description-' . $args['form_id']; ?>"><?php if ( um_user('description') ) { echo um_user('description'); } ?></textarea>
+						<span class="um-meta-bio-character um-right"><span class="um-bio-limit"><?php echo um_get_option('profile_bio_maxchars'); ?></span> <?php _e('characters remaining','ultimatemember'); ?>.</span>
 						<?php if ( $ultimatemember->fields->is_error('description') ) {
 						echo $ultimatemember->fields->field_error( $ultimatemember->fields->show_error('description'), true ); }
 						?>
