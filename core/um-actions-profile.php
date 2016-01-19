@@ -388,7 +388,7 @@
 
 					<div class="um-meta-text">
 						<textarea id="um-meta-bio" data-character-limit="<?php echo um_get_option('profile_bio_maxchars'); ?>" placeholder="<?php _e('Tell us a bit about yourself...','ultimatemember'); ?>" name="<?php echo 'description-' . $args['form_id']; ?>" id="<?php echo 'description-' . $args['form_id']; ?>"><?php if ( um_user('description') ) { echo um_user('description'); } ?></textarea>
-						<span class="um-meta-bio-character um-right"><span class="um-bio-limit"><?php echo um_get_option('profile_bio_maxchars'); ?></span> <?php _e('characters remaining','ultimatemember'); ?>.</span>
+						<span class="um-meta-bio-character um-right"><span class="um-bio-limit"><?php echo um_get_option('profile_bio_maxchars'); ?></span></span>
 						<?php if ( $ultimatemember->fields->is_error('description') ) {
 						echo $ultimatemember->fields->field_error( $ultimatemember->fields->show_error('description'), true ); }
 						?>
