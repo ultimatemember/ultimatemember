@@ -81,14 +81,16 @@ jQuery(document).ready(function() {
 
 	// Bio characters limit
 	function um_update_bio_countdown() {
-		var um_bio_limit = jQuery('textarea[id=um-meta-bio]').attr( "data-character-limit" );
-	    var remaining = um_bio_limit - jQuery('textarea[id=um-meta-bio]').val().length;
-	    jQuery('span.um-meta-bio-character span.um-bio-limit').text( remaining );
-	   if( remaining  < 5 ){
-	   		jQuery('span.um-meta-bio-character').css('color','red');
-	   }else{
-	   		jQuery('span.um-meta-bio-character').css('color','');
-	   }
+		if( typeof jQuery('textarea[id=um-meta-bio]').val() !== 'undefined' ){
+			var um_bio_limit = jQuery('textarea[id=um-meta-bio]').attr( "data-character-limit" );
+		    var remaining = um_bio_limit - jQuery('textarea[id=um-meta-bio]').val().length;
+		    jQuery('span.um-meta-bio-character span.um-bio-limit').text( remaining );
+			   if( remaining  < 5 ){
+			   		jQuery('span.um-meta-bio-character').css('color','red');
+			   }else{
+			   		jQuery('span.um-meta-bio-character').css('color','');
+			   }
+		}
 	}
 
 	um_update_bio_countdown();
