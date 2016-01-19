@@ -14,7 +14,7 @@ class UM_Permalinks {
 
 		remove_action( 'wp_head', 'rel_canonical' );
 		add_action('wp_head',  array(&$this, 'um_rel_canonical_'), 9 );
-		
+
 		$this->current_url = $this->get_current_url();
 
 	}
@@ -35,14 +35,14 @@ class UM_Permalinks {
 			echo "<link rel='canonical' href='$link' />\n";
 			return;
 		}
-		
+
 		$link = get_permalink( $id );
 		if ( $page = get_query_var('cpage') )
 			$link = get_comments_pagenum_link( $page );
 		echo "<link rel='canonical' href='$link' />\n";
 
 	}
-	
+
 	/***
 	***	@Get query as array
 	***/
@@ -63,7 +63,7 @@ class UM_Permalinks {
 			$um_get_option = get_option('um_options');
 			$server_name_method = ( $um_get_option['current_url_method'] ) ? $um_get_option['current_url_method'] : 'SERVER_NAME';
 			$um_port_forwarding_url = ( isset( $um_get_option['um_port_forwarding_url'] ) ) ? $um_get_option['um_port_forwarding_url']: '';
-			
+
 		if ( !isset( $_SERVER['SERVER_NAME'] ) )
 			return '';
 
@@ -83,17 +83,17 @@ class UM_Permalinks {
 
 			if ( $um_port_forwarding_url == 1 && isset( $_SERVER["SERVER_PORT"] ) ) {
 				$page_url .= $_SERVER[ $server_name_method ].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-				
+
 			} else {
 				$page_url .= $_SERVER[ $server_name_method ].$_SERVER["REQUEST_URI"];
 			}
-			
+
 		}
 
 		if ( $no_query_params == true ) {
 			$page_url = strtok($page_url, '?');
 		}
-		
+
 
 		return apply_filters( 'um_get_current_page_url', $page_url );
 	}
@@ -118,6 +118,21 @@ class UM_Permalinks {
 
 				$ultimatemember->user->approve();
 				$redirect = ( um_user('url_email_activate') ) ? um_user('url_email_activate') : um_get_core_page('login', 'account_active');
+				$login    = (bool) um_user('login_email_activate');
+
+				// log in automatically
+				if ( !is_user_logged_in() && $login ) {
+					$user = get_userdata($user_id);
+					$user_id = $user->ID;
+
+					// update wp user
+					wp_set_current_user( $user_id, $user_login );
+					wp_set_auth_cookie( $user_id );
+
+					ob_start();
+					do_action( 'wp_login', $user_login );
+					ob_end_clean();
+				}
 
 				um_reset_user();
 
@@ -185,8 +200,8 @@ class UM_Permalinks {
 
 		// WPML compatibility
 		if ( function_exists('icl_object_id') ) {
-					
-					
+
+
 			$language_code = ICL_LANGUAGE_CODE;
 			$lang_post_id = icl_object_id( $page_id , 'page', true, $language_code );
 
