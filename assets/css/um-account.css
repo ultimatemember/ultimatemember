@@ -2,6 +2,10 @@
 	- Layout
 */
 
+.um-account i {
+	vertical-align: baseline !important;
+}
+
 .um-account p.um-notice {
 	margin: 0 0 20px 0 !important;
 	padding: 12px 15px !important;
@@ -81,12 +85,21 @@
 .um-account-meta.radius-2 img { 	-moz-border-radius: 4px;-webkit-border-radius: 4px;border-radius: 4px }
 .um-account-meta.radius-3 img { 	-moz-border-radius: 0;-webkit-border-radius: 0;border-radius: 0 }
 
+.um-account-name {
+	padding-top: 12px;
+}
+
 .um-account-name a {
 	font-weight: bold;
-	color: #555 !important;
+	color: #555;
 	text-decoration: none !important;
 	font-size: 18px;
-	line-height: 2em;
+	line-height: 1.4em;
+}
+
+.um-account-profile-link a {
+	font-size: 13px;
+	font-weight: normal;
 }
 
 /*

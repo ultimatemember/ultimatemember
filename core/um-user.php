@@ -434,6 +434,15 @@ class UM_User {
 		$this->password_reset_hash();
 		$ultimatemember->mail->send( um_user('user_email'), 'resetpw_email' );
 	}
+
+	
+	/***
+	***	@password changed email
+	***/
+	function password_changed(){
+		global $ultimatemember;
+		$ultimatemember->mail->send( um_user('user_email'), 'changedpw_email' );
+	}
 	
 	/**
 	 * @function approve()
