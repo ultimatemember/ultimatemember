@@ -116,7 +116,7 @@ class UM_Permalinks {
 
 				if (  strtolower($_REQUEST['hash']) !== strtolower( um_user('account_secret_hash') )  ) wp_die('The secret key provided does not match this one for the user.');
 
-				// $ultimatemember->user->approve();
+				$ultimatemember->user->approve();
 				$redirect = ( um_user('url_email_activate') ) ? um_user('url_email_activate') : um_get_core_page('login', 'account_active');
 				$login    = (bool) um_user('login_email_activate');
 
