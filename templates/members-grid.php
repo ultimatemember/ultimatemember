@@ -1,38 +1,35 @@
-		
-			<div class="um-members">
+<div class="um-members">
 			
-				<div class="um-gutter-sizer"></div>
-				
-				<?php $i = 0; foreach( um_members('users_per_page') as $member) { $i++; um_fetch_user( $member ); ?>
+	<div class="um-gutter-sizer"></div>
+	
+	<?php $i = 0; foreach( um_members('users_per_page') as $member) { $i++; um_fetch_user( $member ); ?>
 			
-				<div class="um-member um-role-<?php echo um_user('role'); ?> <?php echo um_user('account_status'); ?> <?php if ($cover_photos) { echo 'with-cover'; } ?>">
+	<div class="um-member um-role-<?php echo um_user('role'); ?> <?php echo um_user('account_status'); ?> <?php if ($cover_photos) { echo 'with-cover'; } ?>">
 				
-					<span class="um-member-status <?php echo um_user('account_status'); ?>"><?php echo um_user('account_status_name'); ?></span>
+		<span class="um-member-status <?php echo um_user('account_status'); ?>"><?php echo um_user('account_status_name'); ?></span>
 					
-					<?php if ($cover_photos) { 
-						
-						$sizes = um_get_option('cover_thumb_sizes');
-						
-						if ( $ultimatemember->mobile->isTablet() ) {
-							$cover_size = $sizes[1];
-						} else {
-							$cover_size = $sizes[0];
-						}
-						
-					?>
-					
-					<div class="um-member-cover" data-ratio="<?php echo um_get_option('profile_cover_ratio'); ?>">
-						<div class="um-member-cover-e"><a href="<?php echo um_user_profile_url(); ?>" title="<?php echo um_user('display_name'); ?>"><?php echo um_user('cover_photo', $cover_size); ?></a></div>
-					</div>
-					
-					<?php } ?>
+		<?php
+		if ($cover_photos) {
+			$sizes = um_get_option('cover_thumb_sizes');
+			if ( $ultimatemember->mobile->isTablet() ) {
+				$cover_size = $sizes[1];
+			} else {
+				$cover_size = $sizes[0];
+			}
+		?>
+
+		<div class="um-member-cover" data-ratio="<?php echo um_get_option('profile_cover_ratio'); ?>">
+			<div class="um-member-cover-e"><a href="<?php echo um_user_profile_url(); ?>" title="<?php echo um_user('display_name'); ?>"><?php echo um_user('cover_photo', $cover_size); ?></a></div>
+		</div>
+
+		<?php } ?>
 		
-					<?php if ($profile_photo) {
-						$default_size = str_replace( 'px', '', um_get_option('profile_photosize') );
-						$corner = um_get_option('profile_photocorner');
-						?>
-					<div class="um-member-photo radius-<?php echo $corner; ?>"><a href="<?php echo um_user_profile_url(); ?>" title="<?php echo um_user('display_name'); ?>"><?php echo get_avatar( um_user('ID'), $default_size ); ?></a></div>
-					<?php } ?>
+		<?php if ($profile_photo) {
+			$default_size = str_replace( 'px', '', um_get_option('profile_photosize') );
+			$corner = um_get_option('profile_photocorner');
+		?>
+		<div class="um-member-photo radius-<?php echo $corner; ?>"><a href="<?php echo um_user_profile_url(); ?>" title="<?php echo um_user('display_name'); ?>"><?php echo get_avatar( um_user('ID'), $default_size ); ?></a></div>
+		<?php } ?>
 					
 					<div class="um-member-card <?php if (!$profile_photo) { echo 'no-photo'; } ?>">
 						
@@ -101,18 +98,15 @@
 						
 					</div>
 					
-				</div>
+	</div>
 				
-				<?php 
-				
-					um_reset_user_clean();
-				
-				} // end foreach
-				
-				um_reset_user();
-				
-				?>
-				
-				<div class="um-clear"></div>
-				
-			</div>
+	<?php 
+	um_reset_user_clean();
+	} // end foreach
+
+	um_reset_user();
+	?>
+
+	<div class="um-clear"></div>
+
+</div>
