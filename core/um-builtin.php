@@ -1050,6 +1050,7 @@ class UM_Builtin {
 		global $ultimatemember;
 		
 		$fields_without_metakey = array('block','shortcode','spacing','divider','group');
+		remove_filter('um_fields_without_metakey', 'um_user_tags_requires_no_metakey');
 		$fields_without_metakey = apply_filters('um_fields_without_metakey', $fields_without_metakey );
 		
 		if ( !$show_all ) {
