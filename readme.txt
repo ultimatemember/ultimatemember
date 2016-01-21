@@ -91,6 +91,7 @@ Ultimate Member has been translated into the following languages:
 * Polish - Polski
 * Czech
 * Greek
+* Indonesian
 * Simplified Chinese
 * Russian - Русский
 * Turkish - Türkçe

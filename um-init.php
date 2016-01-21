@@ -38,6 +38,7 @@ class UM_API {
 			'pl_PL' => 'Polski',
 			'cs_CZ' => 'Czech',
 			'el'	=> 'Greek',
+			'id_ID' => 'Indonesian',
 			'zh_CN'	=> 'Simplified Chinese',
 			'ru_RU' => 'Русский',
 			'tr_TR' => 'Türkçe',
