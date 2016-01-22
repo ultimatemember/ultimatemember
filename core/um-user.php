@@ -490,7 +490,7 @@ class UM_User {
 	/***
 	***	@pending email
 	***/
-	function email_pending(){
+	function email_pending() {
 		global $ultimatemember;
 		$this->assign_secretkey();
 		$this->set_status('awaiting_email_confirmation');
