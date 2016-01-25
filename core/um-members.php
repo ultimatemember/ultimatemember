@@ -76,6 +76,9 @@ class UM_Members {
 
 		if ( $ultimatemember->builtin->is_dropdown_field( $filter, $attrs ) ) {
 			$type = 'select';
+		} else if ( 'user_tags' == $attrs['type'] ) {
+			$attrs['options'] = apply_filters('um_multiselect_options_user_tags', array(), $attrs);
+			$type = 'select';
 		} else {
 			$type = 'text';
 		}
