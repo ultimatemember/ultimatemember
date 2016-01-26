@@ -6,99 +6,81 @@
  */
 .picker__list {
   list-style: none;
-  padding: 0.75em 0 4.2em;
-  margin: 0;
+  list-style: none !important;
+  padding: 5px !important;
+  margin: 0px !important;
 }
+
 /**
  * The times on the clock.
  */
 .picker__list-item {
-  border-bottom: 1px solid #dddddd;
-  border-top: 1px solid #dddddd;
-  margin-bottom: -1px;
   position: relative;
-  background: #ffffff;
-  padding: .75em 1.25em;
-}
+  border-radius: 2px;
+  display: inline-block;
+  width: 25%;
+  text-align: center;
+  box-sizing: border-box;
+  padding: 6px 0px !important;
+  margin: 5px 0 !important;
+} 
+
 @media (min-height: 46.75em) {
   .picker__list-item {
-    padding: .5em 1em;
+
   }
 }
+
 /* Hovered time */
 .picker__list-item:hover {
   cursor: pointer;
-  color: #000000;
-  background: #b1dcfb;
-  border-color: #0089ec;
   z-index: 10;
 }
 /* Highlighted and hovered/focused time */
 .picker__list-item--highlighted {
-  border-color: #0089ec;
   z-index: 10;
 }
+
 .picker__list-item--highlighted:hover,
 .picker--focused .picker__list-item--highlighted {
   cursor: pointer;
-  color: #000000;
-  background: #b1dcfb;
+   font-weight: bold;
 }
+
 /* Selected and hovered/focused time */
 .picker__list-item--selected,
 .picker__list-item--selected:hover,
 .picker--focused .picker__list-item--selected {
-  background: #0089ec;
-  color: #ffffff;
   z-index: 10;
 }
+
 /* Disabled time */
 .picker__list-item--disabled,
 .picker__list-item--disabled:hover,
 .picker--focused .picker__list-item--disabled {
-  background: #f5f5f5;
-  border-color: #f5f5f5;
-  color: #dddddd;
+  color: #a9e792;
   cursor: default;
-  border-color: #dddddd;
+  background: transparent;
   z-index: auto;
 }
+
 /**
  * The clear button
  */
 .picker--time .picker__button--clear {
-  display: block;
-  width: 80%;
-  margin: 1em auto 0;
-  padding: 1em 1.25em;
+  width: 100%;
+  display: inline-block;
   background: none;
-  border: 0;
-  font-weight: 500;
-  font-size: .67em;
-  text-align: center;
-  text-transform: uppercase;
-  color: #666;
+  box-shadow: none !important;
+  border: 0!important;
+  outline: 0 !important;
+  background: none !important;
+  border-radius: 0 0 2px 2px;
+  color: #fff !important;
 }
 .picker--time .picker__button--clear:hover,
 .picker--time .picker__button--clear:focus {
-  color: #000000;
-  background: #b1dcfb;
-  background: #ee2200;
-  border-color: #ee2200;
-  cursor: pointer;
-  color: #ffffff;
-  outline: none;
-}
-.picker--time .picker__button--clear:before {
-  top: -0.25em;
-  color: #666;
-  font-size: 1.25em;
-  font-weight: bold;
-}
-.picker--time .picker__button--clear:hover:before,
-.picker--time .picker__button--clear:focus:before {
-  color: #ffffff;
-  border-color: #ffffff;
+	cursor: pointer;
 }
 
 /* ==========================================================================
@@ -109,18 +91,18 @@
  */
 .picker--time .picker__frame {
   min-width: 256px;
-  max-width: 320px;
+  max-width: 400px;
 }
 /**
  * The picker box.
  */
 .picker--time .picker__box {
-  font-size: 1em;
-  background: #f2f2f2;
+  font-size: 15px;
   padding: 0;
+  border-radius: 2px !important;
 }
 @media (min-height: 40.125em) {
-  .picker--time .picker__box {
-    margin-bottom: 5em;
-  }
+	.picker--time .picker__frame {
+		margin-bottom: 10% !important;
+	}
 }

@@ -8,14 +8,15 @@
   font-size: 16px;
   text-align: left;
   line-height: 1.2;
-  color: #000000;
+  color: #fff;
   position: absolute;
   z-index: 10000;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
+
 /**
  * The picker input element.
  */
@@ -49,22 +50,19 @@
  */
 .picker__holder,
 .picker__frame {
-  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  -webkit-transform: translateY(100%);
-      -ms-transform: translateY(100%);
-          transform: translateY(100%);
+  top: 100%;
 }
 /**
  * The holder should overlay the entire screen.
  */
 .picker__holder {
   position: fixed;
-  transition: background 0.15s ease-out, -webkit-transform 0s 0.15s;
-  transition: background 0.15s ease-out, transform 0s 0.15s;
-  -webkit-backface-visibility: hidden;
+  -webkit-transition: background 0.15s ease-out, top 0s 0.15s;
+  -moz-transition: background 0.15s ease-out, top 0s 0.15s;
+  transition: background 0.15s ease-out, top 0s 0.15s;
 }
 /**
  * The frame that bounds the box contents of the picker.
@@ -73,12 +71,14 @@
   position: absolute;
   margin: 0 auto;
   min-width: 256px;
-  max-width: 666px;
+  max-width: 400px;
   width: 100%;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
   -moz-opacity: 0;
   opacity: 0;
+  -webkit-transition: all 0.15s ease-out;
+  -moz-transition: all 0.15s ease-out;
   transition: all 0.15s ease-out;
 }
 @media (min-height: 33.875em) {
@@ -90,9 +90,9 @@
   }
 }
 @media (min-height: 40.125em) {
-  .picker__frame {
-    margin-bottom: 7.5%;
-  }
+	.picker__frame {
+		margin-bottom: 15% !important;
+	}
 }
 /**
  * The wrapper sets the stage to vertically align the box contents.
@@ -111,50 +111,46 @@
  * The box contains all the picker contents.
  */
 .picker__box {
-  background: #ffffff;
   display: table-cell;
   vertical-align: middle;
 }
 @media (min-height: 26.5em) {
   .picker__box {
-    font-size: 1.25em;
+
   }
 }
 @media (min-height: 33.875em) {
   .picker__box {
     display: block;
-    font-size: 1.33em;
-    border: 1px solid #777777;
-    border-top-color: #898989;
-    border-bottom-width: 0;
-    border-radius: 5px 5px 0 0;
-    box-shadow: 0 12px 36px 16px rgba(0, 0, 0, 0.24);
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
   }
 }
 @media (min-height: 40.125em) {
   .picker__box {
-    font-size: 1.5em;
+
     border-bottom-width: 1px;
-    border-radius: 5px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
   }
 }
 /**
  * When the picker opens...
  */
 .picker--opened .picker__holder {
-  -webkit-transform: translateY(0);
-      -ms-transform: translateY(0);
-          transform: translateY(0);
+  top: 0;
   background: transparent;
   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#1E000000,endColorstr=#1E000000)";
   zoom: 1;
-  background: rgba(0, 0, 0, 0.32);
+  background: rgba(0, 0, 0, 0.7);
+  -webkit-transition: background 0.15s ease-out;
+  -moz-transition: background 0.15s ease-out;
   transition: background 0.15s ease-out;
 }
 .picker--opened .picker__frame {
-  -webkit-transform: translateY(0);
-      -ms-transform: translateY(0);
-          transform: translateY(0);
+  top: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
   filter: alpha(opacity=100);
   -moz-opacity: 1;
@@ -166,3 +162,6 @@
     bottom: 0;
   }
 }
+/**
+ * For `large` screens, transform into an inline picker.
+ */
