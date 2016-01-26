@@ -145,8 +145,6 @@ class UM_Enqueue {
 
 		$this->load_modal();
 
-		$this->load_css();
-
 		$this->load_fileupload();
 
 		$this->load_datetimepicker();
@@ -167,6 +165,9 @@ class UM_Enqueue {
 
 		$this->load_customjs();
 
+		$this->load_css();
+
+
 	}
 
 	/***
@@ -184,9 +185,7 @@ class UM_Enqueue {
 	***/
 	function load_css(){
 
-		wp_register_style('um_styles', um_url . 'assets/css/um-styles.css' );
-		wp_enqueue_style('um_styles');
-
+		
 		wp_register_style('um_members', um_url . 'assets/css/um-members.css' );
 		wp_enqueue_style('um_members');
 
@@ -198,6 +197,10 @@ class UM_Enqueue {
 
 		wp_register_style('um_misc', um_url . 'assets/css/um-misc.css' );
 		wp_enqueue_style('um_misc');
+
+		wp_register_style('um_styles', um_url . 'assets/css/um-styles.css' );
+		wp_enqueue_style('um_styles');
+
 
 	}
 
