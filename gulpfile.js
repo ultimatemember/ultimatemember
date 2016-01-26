@@ -49,6 +49,7 @@ gulp.task('scripts', function() {
                 './assets/js/um-fileupload.js', 
                 './assets/js/um-functions.js', 
                 './assets/js/um-jquery-form.js', 
+                './assets/js/um-masonry.js', 
                 './assets/js/um-members.js', 
                 './assets/js/um-modal.js', 
                 './assets/js/um-profile.js', 
