@@ -63,13 +63,6 @@ gulp.task('scripts', function() {
                 .pipe(concat("um.min.js"))
                 .pipe(gulp.dest('assets/js'));
 
-            // Select2 not minified
-            gulp.src([
-                './assets/vendor/select2/dist/js/select2.full.js',
-                ])
-                .pipe(concat("um-select.js"))
-                .pipe(gulp.dest('assets/js'));
-
             gulp.src([
                 './assets/vendor/select2/dist/css/select2.css',
                 './assets/css/um-misc.css',
