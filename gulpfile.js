@@ -63,21 +63,13 @@ gulp.task('scripts', function() {
                 .pipe(concat("um.min.js"))
                 .pipe(gulp.dest('assets/js'));
 
-            // Copy Select2 ( full or not minified )
-            // script
+            // Select2 not minified
             gulp.src([
                 './assets/vendor/select2/dist/js/select2.full.js',
                 ])
                 .pipe(concat("um-select.js"))
                 .pipe(gulp.dest('assets/js'));
-            // css
-            gulp.src([
-                './assets/vendor/select2/dist/css/select2.css',
-                ])
-                .pipe(concat("um-select.css"))
-                .pipe(gulp.dest('assets/css'));
 
-            // Merge and minify all CSS files
             gulp.src([
                 './assets/vendor/select2/dist/css/select2.css',
                 './assets/css/um-misc.css',
