@@ -738,3 +738,702 @@ span.um-req {
 	font-size: 14px;
 	display: inline-block;
 }
+
+
+/**
+ * UM Select2.js
+ */
+.um-form .select2-container--default .select2-selection--single {
+    background-color: #fff;
+    border: 2px solid #ddd;
+    border-radius: 2px;
+}
+.um-form  .select2-container .select2-selection {
+    display: block !important;
+    height: 40px !important;
+    padding: 0 0 0 12px !important;
+    overflow: hidden !important;
+     white-space: nowrap !important;
+    line-height: 40px !important;
+    color: #666 !important;
+    font-size: 15px !important;
+    text-align: left !important;
+    text-decoration: none !important;
+    -moz-border-radius: 2px !important;
+    -webkit-border-radius: 2px !important;
+    border-radius: 2px !important;
+    background-clip: padding-box !important;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background: none !important;
+    background-color: #fff !important;
+    font-weight: normal;
+}
+
+.um-form  .select2-container .select2-selection .select2-arrow {
+    display: inline-block !important;
+    width: 34px !important;
+    position: absolute !important;
+    right: 0 !important;
+    top: 0 !important;
+    -moz-border-radius: 0 2px 2px 0 !important;
+    -webkit-border-radius: 0 2px 2px 0 !important;
+    border-radius: 0 2px 2px 0 !important;
+    background-clip: padding-box !important;
+    text-align: center !important;
+    background: transparent !important;
+    border-left: 0 !important;
+}
+.um-form  .select2-selection__clear,
+.um-form  .select2-selection__arrow{
+	 	font-size: 32px !important;
+     	line-height: 40px;
+      	display: inline-block !important;
+      	color: #aaa;
+      	font-weight: normal !important;
+}
+.um-form  .select2-selection__arrow b[role=presentation]{
+	display:none;
+}
+.um-form .select2-selection__arrow:before {
+    content: "\f3d0" !important;
+    font-size: 27px !important;
+    font-family: "Ionicons" !important;
+    width: 100% !important;
+    display: block;
+    line-height: 40px;
+}
+.um-form .select2-selection__clear{
+	content: '';
+}
+.um-form .select2-selection__clear:before{
+    content: "\f2d7" !important;
+    font-size: 22px !important;
+    font-family: "Ionicons" !important;
+    right: 4px !important;
+    position: relative !important;
+    display: block;
+    width: 100%;
+    line-height: 40px;
+}
+.um-form  .select2-container .select2-selection--single .select2-selection__rendered{
+		padding-left: 0px !important
+}
+
+.um-form .select2-container--default .select2-selection__clear:before {
+    right: 0!important;
+    line-height: 40px;
+}
+
+/** Multi-select */
+.um-form .select2-selection.select2-selection--multiple .select2-choices {
+    height: auto !important;
+    height: 1% !important;
+    margin: 0 !important;
+    padding: 1px 3px !important;
+    position: relative !important;
+    cursor: text !important;
+    overflow: hidden !important;
+    -moz-border-radius: 2px !important;
+    -webkit-border-radius: 2px !important;
+    border-radius: 2px !important;
+    box-shadow: none !important;
+}
+
+.um-form .select2-selection.select2-selection--multiple .select2-selection__rendered .select2-selection__choice {
+	padding: 0px 5px;
+    margin: 3px 0 4px 5px !important;
+    position: relative;
+    line-height: 27px;
+    font-size: 14px;
+    color: #666;
+    cursor: default;
+    border: 1px solid #dddddd;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    box-shadow: none !important;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background: none !important;
+    background-color: #f9f9f9 !important;
+}
+
+.um-form .select2-selection__clear:before {
+   right: 0px!important;
+   line-height: 28px;
+}
+.um-form .select2-selection.select2-selection--multiple{
+	border: 2px solid #ddd !important;
+}
+.um-form .select2-selection.select2-selection--multiple .select2-selection__choice__remove{
+    font-size: 16px !important;
+    right: 0 !important;
+    line-height: 23px !important;
+}
+.um-form .select2-container--default .select2-selection--multiple .select2-selection__clear {
+    display:none !important;
+}
+.um-form .select2-container .select2-selection.select2-selection--multiple{
+	overflow: visible !important;
+    padding: 0px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered{
+	line-height: 36px;
+}
+.select2-results .select2-no-results, 
+.select2-results .select2-searching, 
+.select2-results .select2-selection-limit,
+.select2-results .select2-results__options .select2-results__option {
+    display: list-item !important;
+    padding: 5px !important;
+    font-size: 15px !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+.select2-results .select2-results__option--highlighted{
+    list-style: none;
+    display: list-item;
+    background: #f4f4f4 !important;
+    font-size: 15px !important;
+    margin: 0!important;
+   	padding: 3px 7px 4px !important;
+    color: #666 !important;
+}
+.select2-container--default .select2-results__option[aria-selected=true]{
+	background: #f4f4f4 !important;
+}
+
+.select2-container--open .select2-dropdown--above,
+.select2-container--open .select2-dropdown--below{
+	padding: 5px!important;
+    margin-top: 35px !important;
+    border: 2px solid #f4f4f4;
+}
+
+/**
+ * UM Pickadate.js
+ */
+/**
+ * Note: the root picker element should *NOT* be styled more than whatâ€™s here.
+ */
+.um-form .picker {
+  font-size: 16px;
+  text-align: left;
+  line-height: 1.2;
+  color: #fff;
+  position: absolute;
+  z-index: 10000;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/**
+ * The picker input element.
+ */
+.um-form .picker__input {
+  cursor: default;
+}
+/**
+ * When the picker is opened, the input element is â€œactivatedâ€.
+ */
+.um-form .picker__input.picker__input--active {
+  border-color: #0089ec;
+}
+/**
+ * The holder is the only â€œscrollableâ€ top-level container element.
+ */
+.um-form .picker__holder {
+  width: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/*!
+ * Default mobile-first, responsive styling for pickadate.js
+ * Demo: http://amsul.github.io/pickadate.js
+ */
+/**
+ * Note: the root picker element should *NOT* be styled more than whatâ€™s here.
+ */
+/**
+ * Make the holder and frame fullscreen.
+ */
+.um-form .picker__holder,
+.um-form .picker__frame {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 100%;
+}
+/**
+ * The holder should overlay the entire screen.
+ */
+.um-form .picker__holder {
+  position: fixed;
+  -webkit-transition: background 0.15s ease-out, top 0s 0.15s;
+  -moz-transition: background 0.15s ease-out, top 0s 0.15s;
+  transition: background 0.15s ease-out, top 0s 0.15s;
+}
+/**
+ * The frame that bounds the box contents of the picker.
+ */
+.um-form .picker__frame {
+  position: absolute;
+  margin: 0 auto;
+  min-width: 256px;
+  max-width: 400px;
+  width: 100%;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  -moz-opacity: 0;
+  opacity: 0;
+  -webkit-transition: all 0.15s ease-out;
+  -moz-transition: all 0.15s ease-out;
+  transition: all 0.15s ease-out;
+}
+@media (min-height: 33.875em) {
+  .um-form .picker__frame {
+    overflow: visible;
+    top: auto;
+    bottom: -100%;
+    max-height: 80%;
+  }
+}
+@media (min-height: 40.125em) {
+	.um-form .picker__frame {
+		margin-bottom: 15% !important;
+	}
+}
+/**
+ * The wrapper sets the stage to vertically align the box contents.
+ */
+.um-form .picker__wrap {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+@media (min-height: 33.875em) {
+  .um-form .picker__wrap {
+    display: block;
+  }
+}
+/**
+ * The box contains all the picker contents.
+ */
+.um-form .picker__box {
+  display: table-cell;
+  vertical-align: middle;
+}
+@media (min-height: 26.5em) {
+  .um-form .picker__box {
+
+  }
+}
+@media (min-height: 33.875em) {
+  .um-form .picker__box {
+    display: block;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+  }
+}
+@media (min-height: 40.125em) {
+  .um-form .picker__box {
+
+    border-bottom-width: 1px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+  }
+}
+/**
+ * When the picker opens...
+ */
+.um-form .picker--opened .picker__holder {
+  top: 0;
+  background: transparent;
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#1E000000,endColorstr=#1E000000)";
+  zoom: 1;
+  background: rgba(0, 0, 0, 0.7);
+  -webkit-transition: background 0.15s ease-out;
+  -moz-transition: background 0.15s ease-out;
+  transition: background 0.15s ease-out;
+}
+.um-form .picker--opened .picker__frame {
+  top: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: alpha(opacity=100);
+  -moz-opacity: 1;
+  opacity: 1;
+}
+@media (min-height: 33.875em) {
+  .um-form .picker--opened .picker__frame {
+    top: auto;
+    bottom: 0;
+  }
+}
+
+/* ==========================================================================
+   $BASE-DATE-PICKER
+   ========================================================================== */
+/**
+ * The picker box.
+ */
+.um-form .picker__box {
+
+}
+/**
+ * The header containing the month and year stuff.
+ */
+.um-form .picker__header {
+  text-align: center;
+  position: relative;
+  margin-top: .75em;
+  border-radius: 2px 2px 0 0;
+  padding: 15px 0;
+  font-size: 18px;
+}
+/**
+ * The month and year labels.
+ */
+.um-form .picker__month,
+.um-form .picker__year {
+  display: inline-block;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.um-form .picker__year {
+
+}
+/**
+ * The month and year selectors.
+ */
+.um-form .picker__select--month,
+.um-form .picker__select--year {
+  margin-left: .25em;
+  margin-right: .25em;
+  font-size: 16px;
+  color: #999;
+  background: #fff !important;
+  outline: 0 !important;
+  border: 0 !important;
+}
+@media (min-width: 24.5em) {
+  .um-form .picker__select--month,
+  .um-form .picker__select--year {
+    margin-top: -0.5em;
+  }
+}
+.um-form .picker__select--month {
+  width: 35%;
+}
+.um-form .picker__select--year {
+  width: 22.5%;
+}
+.um-form .picker__select--month:focus,
+.um-form .picker__select--year:focus {
+
+}
+/**
+ * The month navigation buttons.
+ */
+.um-form .picker__nav--prev,
+.um-form .picker__nav--next {
+  position: absolute;
+  padding: .5em 1.25em;
+  width: 1em;
+  height: 1em;
+  box-sizing: content-box !important;
+  top: 8px;
+  color: #fff;
+}
+@media (min-width: 24.5em) {
+  .um-form .picker__nav--prev,
+  .um-form .picker__nav--next {
+
+  }
+}
+.um-form .picker__nav--prev {
+  left: 0;
+  padding-right: 1.25em;
+}
+@media (min-width: 24.5em) {
+  .um-form .picker__nav--prev {
+    padding-right: 1.5em;
+  }
+}
+.um-form .picker__nav--next {
+  right: 0;
+  padding-left: 1.25em;
+}
+@media (min-width: 24.5em) {
+  .um-form .picker__nav--next {
+    padding-left: 1.5em;
+  }
+}
+.um-form .picker__nav--prev:before,
+.um-form .picker__nav--next:before {
+  content: " ";
+  border-top: .5em solid transparent;
+  border-bottom: .5em solid transparent;
+  
+  border-right: 0.5em solid #fff;
+  
+  width: 0;
+  height: 0;
+  display: block;
+  margin: 0 auto;
+}
+.um-form .picker__nav--next:before {
+  border-right: 0;
+  
+  border-left: 0.5em solid #fff;
+  
+}
+.um-form .picker__nav--prev:hover,
+.um-form .picker__nav--next:hover {
+  cursor: pointer;
+  color: #fff;
+}
+.um-form .picker__nav--disabled,
+.um-form .picker__nav--disabled:hover,
+.um-form .picker__nav--disabled:before,
+.um-form .picker__nav--disabled:before:hover {
+  cursor: default;
+  background: none;
+}
+
+/**
+ * The calendar table of dates
+ */
+.um-form .picker__table {
+  text-align: center;
+  border-collapse: collapse;
+  border-spacing: 0;
+  table-layout: fixed;
+  font-size: inherit;
+  width: 100%;
+  margin-top: 5px;
+  border: none;
+  margin-bottom: 0;
+}
+@media (min-height: 33.875em) {
+  .um-form .picker__table {
+
+  }
+}
+
+.um-form .picker__table th {
+
+}
+
+.um-form .picker__table td {
+  margin: 0;
+  padding: 0px 10px;
+  text-align: center;
+  border: 0;
+}
+/**
+ * The weekday labels
+ */
+.um-form .picker__weekday {
+  width: 14.285714286%;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0 !important;
+  /* Increase the spacing a tad */
+}
+@media (min-height: 33.875em) {
+  .um-form .picker__weekday {
+  
+  }
+}
+/**
+ * The days on the calendar
+ */
+.um-form .picker__day {
+  padding: 10px 0;
+  line-height: 1em !important;
+}
+.um-form .picker__day--today {
+  position: relative;
+}
+.um-form .picker__day--outfocus {
+	opacity: 0.75;
+}
+.um-form .picker__day--infocus:hover,
+.um-form .picker__day--outfocus:hover {
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.um-form .picker__day--highlighted {
+
+}
+.um-form .picker__day--highlighted:hover,
+.um-form .picker--focused .picker__day--highlighted {
+  border-radius: 2px;
+}
+
+.um-form .picker__day--selected,
+.um-form .picker__day--selected:hover,
+.um-form .picker--focused .picker__day--selected {
+
+}
+.um-form .picker__day--disabled,
+.um-form .picker__day--disabled:hover {
+  cursor: default;
+  background: transparent !important;
+  opacity: 0.3;
+}
+.um-form .picker__day--highlighted.picker__day--disabled,
+.um-form .picker__day--highlighted.picker__day--disabled:hover {
+
+}
+
+/**
+ * The footer containing the "today" and "clear" buttons.
+ */
+.um-form .picker__footer {
+  text-align: center;
+  height: 50px !important;
+  line-height: 50px !important;
+  margin-top: 5px;
+  border-radius: 0 0 2px 2px;
+}
+.um-form .picker__button--today,
+.um-form .picker__button--clear {
+  width: 50%;
+  display: inline-block;
+  background: none !important;
+  box-shadow: none !important;
+  border: 0!important;
+  outline: 0 !important;
+  box-sizing: border-box !important;
+}
+.um-form .picker__button--today:hover,
+.um-form .picker__button--clear:hover,
+.um-form .picker__button--today:focus,
+.um-form .picker__button--clear:focus {
+	cursor: pointer;
+}
+
+/* ==========================================================================
+   $BASE-TIME-PICKER
+   ========================================================================== */
+/**
+ * The list of times.
+ */
+.um-form .picker__list {
+  list-style: none;
+  list-style: none !important;
+  padding: 5px !important;
+  margin: 0px !important;
+}
+
+/**
+ * The times on the clock.
+ */
+.um-form .picker__list-item {
+  position: relative;
+  border-radius: 2px;
+  display: inline-block;
+  width: 25%;
+  text-align: center;
+  box-sizing: border-box;
+  padding: 6px 0px !important;
+  margin: 5px 0 !important;
+} 
+
+@media (min-height: 46.75em) {
+  .um-form .picker__list-item {
+
+  }
+}
+
+/* Hovered time */
+.um-form .picker__list-item:hover {
+  cursor: pointer;
+  z-index: 10;
+}
+/* Highlighted and hovered/focused time */
+.um-form .picker__list-item--highlighted {
+  z-index: 10;
+}
+
+.um-form .picker__list-item--highlighted:hover,
+.um-form .picker--focused .picker__list-item--highlighted {
+  cursor: pointer;
+   font-weight: bold;
+}
+
+/* Selected and hovered/focused time */
+.um-form .picker__list-item--selected,
+.um-form .picker__list-item--selected:hover,
+.um-form .picker--focused .picker__list-item--selected {
+  z-index: 10;
+}
+
+/* Disabled time */
+.um-form .picker__list-item--disabled,
+.um-form .picker__list-item--disabled:hover,
+.um-form .picker--focused .picker__list-item--disabled {
+  color: #a9e792;
+  cursor: default;
+  background: transparent;
+  z-index: auto;
+}
+
+/**
+ * The clear button
+ */
+.um-form .picker--time .picker__button--clear {
+  width: 100%;
+  display: inline-block;
+  background: none;
+  box-shadow: none !important;
+  border: 0!important;
+  outline: 0 !important;
+  background: none !important;
+  border-radius: 0 0 2px 2px;
+  color: #fff !important;
+}
+.um-form .picker--time .picker__button--clear:hover,
+.um-form .picker--time .picker__button--clear:focus {
+	cursor: pointer;
+}
+
+/* ==========================================================================
+   $DEFAULT-TIME-PICKER
+   ========================================================================== */
+/**
+ * The frame the bounds the time picker.
+ */
+.um-form .picker--time .picker__frame {
+  min-width: 256px;
+  max-width: 400px;
+}
+/**
+ * The picker box.
+ */
+.um-form .picker--time .picker__box {
+  font-size: 15px;
+  padding: 0;
+  border-radius: 2px !important;
+}
+@media (min-height: 40.125em) {
+	.um-form .picker--time .picker__frame {
+		margin-bottom: 10% !important;
+	}
+}
