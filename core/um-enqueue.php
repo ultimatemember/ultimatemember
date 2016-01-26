@@ -82,7 +82,7 @@ class UM_Enqueue {
 		if ( isset($force_load) && $force_load == false ) return;
 
 		// enqueue styles
-		if ( um_get_option('disable_minify') ) {
+		if ( um_get_option('disable_minify') && ! is_admin() ) {
 
 			$this->load_original();
 
