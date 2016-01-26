@@ -35,8 +35,7 @@ gulp.task('scripts', function() {
               ])
               .pipe(gulp.dest('assets/css/pickadate/'));
 
-            // ** Front-end  ** //
-            // Minify JS files
+            // Minify js files
             gulp.src([
                 './assets/vendor/select2/dist/js/select2.full.js',
                 './assets/vendor/pickadate/lib/picker.js',
@@ -60,7 +59,7 @@ gulp.task('scripts', function() {
                 './assets/js/um-scrollto.js', 
                 './assets/js/um-tipsy.js'
                 ])
-                .pipe(uglify())
+                //.pipe(uglify())
                 .pipe(concat("um.min.js"))
                 .pipe(gulp.dest('assets/js'));
 
@@ -84,29 +83,6 @@ gulp.task('scripts', function() {
                 .pipe(cssnano())
                 .pipe(concat("um.min.css"))
                 .pipe(gulp.dest('assets/css'));
-
-            // ** Back-end ** //
-            
-            // Styles
-            gulp.src([
-                './assets/css/um-fonticons-fa.css',
-                './assets/css/um-fonticons-ii.css',
-                './assets/css/um-raty.css',
-                './assets/css/um-modal.css',
-                './assets/css/um-responsive.css',
-                './assets/css/um-scrollbar.css',
-                './assets/css/um-tipsy.css',
-                './assets/vendor/select2/dist/css/select2.css',
-                ])
-                .pipe(cssnano())
-                .pipe(concat("um-admin.min.css"))
-                .pipe(gulp.dest('admin/assets/css'));
-
-            // Fonts
-            gulp.src([
-                'assets/font/*',
-                ])
-                .pipe(gulp.dest('admin/assets/font/'));
   
 });
 
