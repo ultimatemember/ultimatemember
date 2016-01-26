@@ -161,30 +161,17 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
-
-	jQuery('.um-s1,.um-s2').each(function(){
-		elem = jQuery(this);
-
-		var max_entries = elem.data('maxsize');
-		var select_options = {
-			minimumResultsForSearch: 5
-		};
-
-		if( max_entries > 0 ){
-			select_options.maximumSelectionLength = max_entries;
-		}
-
-		if( elem.hasClass('um-s1') ){
-			select_options.allowClear = true;
-		}else if( elem.hasClass('um-s2') ){
-			select_options.allowClear = false;
-		}
-
-		elem.select2(select_options);
-
-		elem.css({'display':'block'});
-
+	jQuery(".um-s1").select2({
+		allowClear: true,
+		minimumResultsForSearch: 10
 	});
+
+	jQuery(".um-s2").select2({
+		allowClear: false,
+		minimumResultsForSearch: 10
+	});
+
+	jQuery('.um-s1,.um-s2').css({'display':'block'});
 
 	jQuery(document).on('click', '.um-field-group-head:not(.disabled)', function(){
 		var field = jQuery(this).parents('.um-field-group');
