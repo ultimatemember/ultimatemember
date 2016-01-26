@@ -103,8 +103,14 @@ class UM_Enqueue {
 					'imageupload' => um_url . 'core/lib/upload/um-image-upload.php'
 			) );
 
-			wp_register_style('um_minified', um_url . 'assets/css/um.min.css', '', ultimatemember_version, 'all' );
-			wp_enqueue_style('um_minified');
+			if( is_admin() ){
+				wp_register_style('um_admin_minified', um_url . 'admin/assets/css/um-admin.min.css', '', ultimatemember_version, 'all' );
+				wp_enqueue_style('um_admin_minified');
+			}else{
+				wp_register_style('um_minified', um_url . 'assets/css/um.min.css', '', ultimatemember_version, 'all' );
+				wp_enqueue_style('um_minified');
+			}
+
 
 		}
 
