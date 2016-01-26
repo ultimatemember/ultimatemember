@@ -104,7 +104,7 @@ class UM_Permalinks {
 	function activate_account_via_email_link(){
 		global $ultimatemember;
 
-		if ( isset($_REQUEST['act']) && $_REQUEST['act'] == 'activate_via_email' && isset($_REQUEST['hash']) && strlen($_REQUEST['hash']) == 40 &&
+		if ( isset($_REQUEST['act']) && $_REQUEST['act'] == 'activate_via_email' && isset($_REQUEST['hash']) && is_string($_REQUEST['hash']) && strlen($_REQUEST['hash']) == 40 &&
 			isset($_REQUEST['user_id']) && is_numeric($_REQUEST['user_id']) ) { // valid token
 
 				$user_id = absint( $_REQUEST['user_id'] );
