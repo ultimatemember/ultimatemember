@@ -217,11 +217,9 @@ class UM_Admin_Enqueue {
 	***	@Load Redux css
 	***/
 	function load_redux_css(){
-		
-		if( isset(  $_GET['page']  ) && $_GET['page'] == 'um_options' ){
-			wp_register_style('um_admin_redux', um_url . 'admin/assets/css/um-admin-redux.css' );
-			wp_enqueue_style('um_admin_redux');
-		}
+	
+		wp_register_style('um_admin_redux', um_url . 'admin/assets/css/um-admin-redux.css' );
+		wp_enqueue_style('um_admin_redux');
 		
 	}
 	

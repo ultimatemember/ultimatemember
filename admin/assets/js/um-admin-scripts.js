@@ -71,25 +71,16 @@ jQuery(document).ready(function() {
 		Select Dropdowns
 	**/
 	
-	jQuery('.um-admin-field select,.umaf-selectjs').each(function(){
-		elem = jQuery(this);
-
-		var select_options = {
-			minimumResultsForSearch: 10,
-			width: 'resolve',
-		};
-
-		if( elem.hasClass('umaf-selectjs') ){
-			select_options.allowClear = false;
-		}else{
-			select_options.allowClear = true;
-		}
-
-		elem.select2(select_options);
-
-		elem.css({'display':'block'});
-
+	jQuery(".umaf-selectjs").select2({
+		allowClear: false,
+		minimumResultsForSearch: 10
 	});
+	
+	jQuery('.um-admin-field select').select2({
+		allowClear: true,
+		minimumResultsForSearch: 10
+	});
+	
 	/**
 		Tooltips
 	**/
