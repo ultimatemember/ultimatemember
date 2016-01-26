@@ -102,25 +102,31 @@
 }
 
 /* ==========================================================================
-   $DEFAULT-TIME-PICKER
+   $CLASSIC-TIME-PICKER
    ========================================================================== */
 /**
- * The frame the bounds the time picker.
+ * Note: the root picker element should __NOT__ be styled
+ * more than what’s here. Style the `.picker__holder` instead.
  */
-.picker--time .picker__frame {
+.picker--time {
   min-width: 256px;
   max-width: 320px;
 }
 /**
- * The picker box.
+ * The holder is the base of the picker.
  */
-.picker--time .picker__box {
-  font-size: 1em;
+.picker--time .picker__holder {
   background: #f2f2f2;
-  padding: 0;
 }
 @media (min-height: 40.125em) {
-  .picker--time .picker__box {
-    margin-bottom: 5em;
+  .picker--time .picker__holder {
+    font-size: .875em;
   }
+}
+/**
+ * The box contains the list of times.
+ */
+.picker--time .picker__box {
+  padding: 0;
+  position: relative;
 }
