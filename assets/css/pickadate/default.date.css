@@ -228,6 +228,7 @@
 }
 .picker__button--today,
 .picker__button--clear {
+  margin: 0 !important;
   width: 50%;
   display: inline-block;
   background: none !important;
