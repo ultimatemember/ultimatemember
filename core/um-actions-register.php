@@ -171,6 +171,11 @@
 		
 			do_action("track_{$status}_user_registration");
 			
+			// Priority redirect
+			if ( isset( $args['redirect_to'] ) ) {
+				exit( wp_redirect( $args['redirect_to'] ) );
+			}
+			
 			if ( $status == 'approved' ) {
 				
 				$ultimatemember->user->auto_login($user_id);
