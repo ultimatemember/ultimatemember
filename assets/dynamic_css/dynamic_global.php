@@ -146,6 +146,7 @@ print ".um-$form_id.um .um-button.um-alt,
 if ( $form_border ) {
 print "
 .um-$form_id.um .um-form input[type=text],
+.um-$form_id.um .um-form input[type=tel],
 .um-$form_id.um .um-form input[type=number],
 .um-$form_id.um .um-form input[type=password],
 .um-$form_id.um .um-form textarea,
@@ -167,6 +168,7 @@ print "
 if ( $form_border_hover ) {
 print "
 .um-$form_id.um .um-form input[type=text]:focus,
+.um-$form_id.um .um-form input[type=tel]:focus,
 .um-$form_id.um .um-form input[type=number]:focus,
 .um-$form_id.um .um-form input[type=password]:focus,
 .um-$form_id.um .um-form textarea:focus {
@@ -178,6 +180,7 @@ print "
 if ( $form_bg_color ) {
 print "
 .um-$form_id.um .um-form input[type=text],
+.um-$form_id.um .um-form input[type=tel],
 .um-$form_id.um .um-form input[type=number],
 .um-$form_id.um .um-form input[type=password],
 .um-$form_id.um .um-form textarea,
@@ -192,6 +195,7 @@ print "
 if ( $form_bg_color_focus ) {
 print "
 .um-$form_id.um .um-form input[type=text]:focus,
+.um-$form_id.um .um-form input[type=tel]:focus,
 .um-$form_id.um .um-form input[type=number]:focus,
 .um-$form_id.um .um-form input[type=password]:focus,
 .um-$form_id.um .um-form textarea:focus {
@@ -270,6 +274,7 @@ if ( $form_text_color ) {
 print "
 
 .um-$form_id.um .um-form input[type=text],
+.um-$form_id.um .um-form input[type=tel],
 .um-$form_id.um .um-form input[type=password],
 .um-$form_id.um .um-form textarea
 {
