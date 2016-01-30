@@ -40,6 +40,7 @@
 		
 		delete_user_meta( $args['user_id'], 'reset_pass_hash');
 		delete_user_meta( $args['user_id'], 'reset_pass_hash_token');
+		delete_user_meta( $args['user_id'], 'password_rst_attempts');
 
 		do_action('um_after_changing_user_password', $args['user_id'] );
 		
@@ -105,7 +106,19 @@
 		$user = $_POST['username_b'];
 		
 		if ( ( !is_email( $user ) && !username_exists( $user ) ) || ( is_email( $user ) && !email_exists( $user ) ) ) {
-			$ultimatemember->form->add_error('username_b', __(' We can\'t find an account registered with that address or username ','ultimatemember') );
+			$ultimatemember->form->add_error('username_b', __('We can\'t find an account registered with that address or username','ultimatemember') );
+		} else {
+			if ( is_email( $user ) ) {
+				$user_id = email_exists( $user );
+			} else {
+				$user_id = username_exists( $user );
+			}
+			$attempts = (int)get_user_meta( $user_id, 'password_rst_attempts', true );
+			if ( $attempts >= 3 ) {
+				$ultimatemember->form->add_error('username_b', __('You have reached the limit for requesting password change for this user already. Contact support if you cannot open the email','ultimatemember') );
+			} else {
+				update_user_meta( $user_id, 'password_rst_attempts', $attempts + 1 );
+			}
 		}
 		
 	}

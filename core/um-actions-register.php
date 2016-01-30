@@ -105,7 +105,9 @@
 			$role = um_get_option('default_role');
 		}
 		
-		$ultimatemember->user->is_secure_role( $user_id, $role );
+		if ( !in_array( $role, $ultimatemember->query->get_roles( false, array('admin') ) ) ) {
+			$role = um_get_option('default_role');
+		}
 
 		$ultimatemember->user->set_role( $role );
 		
@@ -231,7 +233,7 @@
 	***	@Register user with predefined role in options
 	***/
 	add_action('um_after_register_fields', 'um_add_user_role');
-	function um_add_user_role($args){
+	function um_add_user_role( $args ){
 		
 		global $ultimatemember;
 		

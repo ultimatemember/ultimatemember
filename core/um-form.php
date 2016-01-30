@@ -73,12 +73,25 @@ class UM_Form {
 				$this->post_form = $_POST;
 				
 				$this->post_form = $this->beautify( $this->post_form );
-				
+
 				$this->form_data = $ultimatemember->query->post_data( $this->form_id );
 				
 				$this->post_form['submitted'] = $this->post_form;
 				
 				$this->post_form = array_merge( $this->form_data, $this->post_form );
+
+				if ( isset( $this->form_data['role'] ) && $_POST['role'] != $this->form_data['role'] ) {
+					wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
+				} else {
+					if ( isset( $this->form_data['custom_fields'] ) && strstr( $this->form_data['custom_fields'], 'role_' ) ) {
+						// In this case, admin allowed users to choose a role during registration
+					} else {
+						$role = um_get_option('default_role');
+						if ( $role != $_POST['role'] ) {
+							wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
+						}
+					}
+				}
 
 				if ( isset( $_POST[ $ultimatemember->honeypot ] ) && $_POST[ $ultimatemember->honeypot ] != '' )
 					wp_die('Hello, spam bot!');
