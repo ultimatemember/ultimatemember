@@ -12,6 +12,8 @@ class UM_Account {
 		
 		add_action('template_redirect', array(&$this, 'form_init'), 10002);
 		
+		add_filter('um_predefined_fields_hook', array(&$this,'predefined_fields_hook'),1 );
+
 		$this->current_tab = 'general';
 
 	}
@@ -304,4 +306,16 @@ class UM_Account {
 		$ultimatemember->shortcodes->load_template( $template );
 	}
 
+	/***
+	** @filter account fields
+	****/
+	function predefined_fields_hook( $predefined_fields ){
+
+		$account_hide_in_directory =  um_get_option('account_hide_in_directory');
+		if( !  $account_hide_in_directory  ){
+			unset( $predefined_fields['hide_in_members'] );
+		}
+		
+		return $predefined_fields;
+	}
 }

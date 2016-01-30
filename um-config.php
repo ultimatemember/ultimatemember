@@ -275,6 +275,16 @@ $this->sections[] = array(
         ),
 
         array(
+                'id'       		=> 'account_hide_in_directory',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Allow users to hide their profiles from directory','ultimatemember' ),
+				'default' 		=> 1,
+				'desc' 	   		=> __('Whether to allow users changing their profile visibility from member directory in account page.','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+        ),
+
+        array(
                 'id'       		=> 'account_require_strongpass',
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Require a strong password?','ultimatemember' ),

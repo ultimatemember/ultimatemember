@@ -290,6 +290,12 @@ class UM_Files {
 
 		$array['image'] = @getimagesize($file);
 
+		if ( empty( $_FILES['tmp_name'] ) ){
+			$array['invalid_image'] = true;
+			$array['error_type'] = 'too_large';
+			return $array;
+		}
+
 		if ( $array['image'] > 0 ) {
 
 			$array['invalid_image'] = false;
@@ -329,7 +335,11 @@ class UM_Files {
 		}
 
 		if ( $fileinfo['invalid_image'] == true ) {
-			$error = sprintf(__('Your image is invalid or too large!','ultimatemember') );
+			if( isset( $fileinfo['error_type'] ) && $fileinfo['error_type'] == 'too_large' ){
+				$error = sprintf(__('The uploaded image was too large. You must upload a file smaller than %s','ultimatemember') , ini_get("upload_max_filesize") );
+			}else{
+				$error = sprintf(__('Your image is invalid or too large!','ultimatemember') );
+			}
 		} elseif ( isset( $data['allowed_types'] ) && !$this->in_array( $fileinfo['extension'], $data['allowed_types'] ) ) {
 			$error = ( isset( $data['extension_error'] ) && !empty( $data['extension_error'] ) ) ? $data['extension_error'] : 'not allowed';
 		} elseif ( isset($data['min_size']) && ( $fileinfo['size'] < $data['min_size'] ) ) {
