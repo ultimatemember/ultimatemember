@@ -59,3 +59,40 @@
 
 		return (strlen($title)!==strlen(utf8_decode($title))) ? $title : utf8_encode($title);
 	}
+
+
+
+	/***
+	*** @Add cover photo label of file size limit
+	***/
+	add_filter('um_predefined_fields_hook','um_change_profile_cover_photo_label',10,1);
+	function um_change_profile_cover_photo_label( $args ){
+		global $ultimatemember;
+		$max_size =  $ultimatemember->files->format_bytes( $args['cover_photo']['max_size'] );
+		list( $file_size, $unit ) = explode(' ', $max_size );
+
+		if( $file_size >= 999999999  ){
+
+		}else{
+			$args['cover_photo']['upload_text'] .= '( '.__('maximum file size','ultimatemember').': '.$file_size.$unit.' )';
+		}
+		return $args;
+	}
+
+
+	/***
+	*** @Add profile photo label of file size limit
+	***/
+	add_filter('um_predefined_fields_hook','um_change_profile_photo_label',10,1);
+	function um_change_profile_photo_label( $args ){
+		global $ultimatemember;
+		$max_size =  $ultimatemember->files->format_bytes( $args['profile_photo']['max_size'] );
+		list( $file_size, $unit ) = explode(' ', $max_size );
+
+		if( $file_size >= 999999999  ){
+
+		}else{
+			$args['profile_photo']['upload_text'] .= '( '.__('maximum file size','ultimatemember').': '.$file_size.$unit.' )';
+		}
+		return $args;
+	}
