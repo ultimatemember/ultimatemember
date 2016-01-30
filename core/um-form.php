@@ -86,9 +86,11 @@ class UM_Form {
 					if ( isset( $this->form_data['custom_fields'] ) && strstr( $this->form_data['custom_fields'], 'role_' ) ) {
 						// In this case, admin allowed users to choose a role during registration
 					} else {
-						$role = um_get_option('default_role');
-						if ( $role != $_POST['role'] ) {
-							wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
+						if ( isset( $_POST['role'] ) ) {
+							$role = um_get_option('default_role');
+							if ( $role != $_POST['role'] ) {
+								wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
+							}
 						}
 					}
 				}
