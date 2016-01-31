@@ -29,6 +29,7 @@ class UM_Mail {
 	***/
 	function email_template( $template, $args = array() ) {
 		$lang = '';
+		$template_path = false;
 
 		if ( function_exists('icl_get_current_language') ) {
 			if ( icl_get_current_language() != 'en' ) {
@@ -39,7 +40,7 @@ class UM_Mail {
 		}
 
 		if ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/email/' . $lang . $template . '.html' ) ) {
-			return get_stylesheet_directory() . '/ultimate-member/templates/email/' . $lang . $template . '.html';
+			$template_path = get_stylesheet_directory() . '/ultimate-member/templates/email/' . $lang . $template . '.html';
 		}
 
 		if ( isset( $args['path'] ) ) {
@@ -49,10 +50,10 @@ class UM_Mail {
 		}
 
 		if ( file_exists( $path . $template . '.html' ) ) {
-			return $path . $template . '.html';
+			$template_path = $path . $template . '.html';
 		}
 
-		return false;
+		return apply_filters( 'um_email_template_path', $template_path, $template, $args );
 
 	}
 
