@@ -19,6 +19,14 @@ class UM_Files {
 			'zip' 	=> array('icon' 	=> 'um-faicon-file-zip-o' ),
 			'rar' 	=> array('icon'		=> 'um-faicon-file-zip-o' ),
 			'mp3'	=> array('icon'		=> 'um-faicon-file-audio-o' ),
+			'jpg' 	=> array('icon' 	=> 'um-faicon-picture-o' ),
+			'jpeg' 	=> array('icon' 	=> 'um-faicon-picture-o' ),
+			'png' 	=> array('icon' 	=> 'um-icon-image' ),
+			'gif' 	=> array('icon' 	=> 'um-icon-images' ),
+			'eps' 	=> array('icon' 	=> 'um-icon-images' ),
+			'psd' 	=> array('icon' 	=> 'um-icon-images' ),
+			'tif' 	=> array('icon' 	=> 'um-icon-image' ),
+			'tiff' 	=> array('icon' 	=> 'um-icon-image' ),
 		);
 
 		$this->default_file_fonticon = 'um-faicon-file-o';
@@ -44,18 +52,26 @@ class UM_Files {
 	***/
 	function allowed_file_types() {
 
-		$array['pdf'] = 'PDF';
-		$array['txt'] = 'Text';
-		$array['csv'] = 'CSV';
-		$array['doc'] = 'DOC';
+		$array['pdf']  = 'PDF';
+		$array['txt']  = 'Text';
+		$array['csv']  = 'CSV';
+		$array['doc']  = 'DOC';
 		$array['docx'] = 'DOCX';
-		$array['odt'] = 'ODT';
-		$array['ods'] = 'ODS';
-		$array['xls'] = 'XLS';
+		$array['odt']  = 'ODT';
+		$array['ods']  = 'ODS';
+		$array['xls']  = 'XLS';
 		$array['xlsx'] = 'XLSX';
-		$array['zip'] = 'ZIP';
-		$array['rar'] = 'RAR';
-		$array['mp3'] = 'MP3';
+		$array['zip']  = 'ZIP';
+		$array['rar']  = 'RAR';
+		$array['mp3']  = 'MP3';
+		$array['jpg']  = 'JPG';
+		$array['jpeg'] = 'JPEG';
+		$array['png']  = 'PNG';
+		$array['gif']  = 'GIF';
+		$array['eps']  = 'EPS';
+		$array['psd']  = 'PSD';
+		$array['tif']  = 'TIF';
+		$array['tiff'] = 'TIFF';
 
 		$array = apply_filters('um_allowed_file_types', $array);
 		return $array;
