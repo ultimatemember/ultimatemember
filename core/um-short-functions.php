@@ -516,6 +516,10 @@ function um_profile_id() {
 			return true;
 		if ( isset($post->ID) && get_post_meta( $post->ID, '_um_wpml_' . $page, true ) == 1 )
 			return true;
+		if ( isset( $ultimatemember->permalinks->core[ $page ] ) 
+			&& get_post_meta( $post->ID, '_icl_lang_duplicate_of', true ) == $ultimatemember->permalinks->core[ $page ] )
+			return true;
+		
 		return false;
 	}
 
