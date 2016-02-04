@@ -934,7 +934,7 @@ class UM_Fields {
 		}
 
 		$type = apply_filters("um_hook_for_field_{$type}", $type );
-
+		
 		/* Begin by field type */
 		switch( $type ) {
 
@@ -2109,6 +2109,8 @@ class UM_Fields {
 						}
 
 						$res = stripslashes( $this->field_value( $key, $default, $data ) );
+						
+						$res = apply_filters("um_view_field_value_{$type}", $res, $data );
 
 						$output .= '<div class="um-field-area">';
 						$output .= '<div class="um-field-value">' . $res . '</div>';
@@ -2267,7 +2269,14 @@ class UM_Fields {
 							$output .= '<div class="um-col-1">';
 							$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
 							if ( $col1_fields ) {
-							foreach( $col1_fields as $key => $data ) {$output .= $this->view_field( $key, $data );}
+								foreach( $col1_fields as $key => $data ) {
+
+									$data  = apply_filters("um_view_field_output_".$data['type'],  $data);
+
+									$output .= $this->view_field( $key, $data );
+
+									
+								}
 							}
 							$output .= '</div>';
 
@@ -2276,14 +2285,26 @@ class UM_Fields {
 							$output .= '<div class="um-col-121">';
 							$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
 							if ( $col1_fields ) {
-							foreach( $col1_fields as $key => $data ) {$output .= $this->view_field( $key, $data );}
+								foreach( $col1_fields as $key => $data ) {
+
+									$data  = apply_filters("um_view_field_output_".$data['type'],  $data);
+
+									$output .= $this->view_field( $key, $data );
+
+								}
 							}
 							$output .= '</div>';
 
 							$output .= '<div class="um-col-122">';
 							$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
 							if ( $col2_fields ) {
-							foreach( $col2_fields as $key => $data ) {$output .= $this->view_field( $key, $data );}
+								foreach( $col2_fields as $key => $data ) {
+
+									$data  = apply_filters("um_view_field_output_".$data['type'],  $data);
+
+									$output .= $this->view_field( $key, $data );
+
+								}
 							}
 							$output .= '</div><div class="um-clear"></div>';
 
@@ -2292,21 +2313,39 @@ class UM_Fields {
 							$output .= '<div class="um-col-131">';
 							$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
 							if ( $col1_fields ) {
-							foreach( $col1_fields as $key => $data ) {$output .= $this->view_field( $key, $data );}
+								foreach( $col1_fields as $key => $data ) {
+
+									$data  = apply_filters("um_view_field_output_".$data['type'],  $data);
+
+									$output .= $this->view_field( $key, $data );
+
+								}
 							}
 							$output .= '</div>';
 
 							$output .= '<div class="um-col-132">';
 							$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
 							if ( $col2_fields ) {
-							foreach( $col2_fields as $key => $data ) {$output .= $this->view_field( $key, $data );}
+								foreach( $col2_fields as $key => $data ) {
+
+									$data  = apply_filters("um_view_field_output_".$data['type'],  $data);
+
+									$output .= $this->view_field( $key, $data );
+
+								}
 							}
 							$output .= '</div>';
 
 							$output .= '<div class="um-col-133">';
 							$col3_fields = $this->get_fields_in_column( $subrow_fields, 3 );
 							if ( $col3_fields ) {
-							foreach( $col3_fields as $key => $data ) {$output .= $this->view_field( $key, $data );}
+								foreach( $col3_fields as $key => $data ) {
+
+									$data  = apply_filters("um_view_field_output_".$data['type'],  $data);
+
+									$output .= $this->view_field( $key, $data );
+
+								}
 							}
 							$output .= '</div><div class="um-clear"></div>';
 
