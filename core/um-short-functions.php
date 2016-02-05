@@ -517,10 +517,12 @@ function um_profile_id() {
 		if ( isset($post->ID) && get_post_meta( $post->ID, '_um_wpml_' . $page, true ) == 1 )
 			return true;
 
-		$_icl_lang_duplicate_of = get_post_meta( $post->ID, '_icl_lang_duplicate_of', true );
+		if( isset($post->ID) ){
+			$_icl_lang_duplicate_of = get_post_meta( $post->ID, '_icl_lang_duplicate_of', true );
 
-		if (  isset($post->ID) && isset( $ultimatemember->permalinks->core[ $page ] ) && (  (  $_icl_lang_duplicate_of == $ultimatemember->permalinks->core[ $page ] && ! empty( $_icl_lang_duplicate_of ) ) || $ultimatemember->permalinks->core[ $page ] == $post->ID ) )
-			return true;
+			if (  isset( $ultimatemember->permalinks->core[ $page ] ) && (  (  $_icl_lang_duplicate_of == $ultimatemember->permalinks->core[ $page ] && ! empty( $_icl_lang_duplicate_of ) ) || $ultimatemember->permalinks->core[ $page ] == $post->ID ) )
+				return true;
+		}
 
 		return false;
 	}
