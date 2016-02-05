@@ -215,11 +215,10 @@
 		$file = um_path . 'templates/members-grid.php';
 		$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/members-grid.php';
 		
-		if ( file_exists( $theme_file ) )
+		if ( file_exists( $theme_file )  ){
 			$file = $theme_file;
-
-		if ( um_members('users_per_page') ) {
-			include_once $file;
 		}
+
+		include_once $file;
 
 	}
