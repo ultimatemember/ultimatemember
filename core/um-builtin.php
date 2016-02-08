@@ -843,6 +843,24 @@ class UM_Builtin {
 				'color' => '#f50',
 				'match' => 'https://soundcloud.com/',
 			),
+
+			'vk' => array(
+				'title' => __('VKontakte','ultimatemember'),
+				'metakey' => 'vkontakte',
+				'type' => 'url',
+				'label' => __('VKontakte','ultimatemember'),
+				'required' => 0,
+				'public' => 1,
+				'editable' => 1,
+				'url_target' => '_blank',
+				'url_rel' => 'nofollow',
+				'icon' => 'um-faicon-vk',
+				'validate' => 'vk_url',
+				'url_text' => 'VKontakte',
+				'advanced' => 'social',
+				'color' => '#2B587A',
+				'match' => 'https://vk.com/',
+			),
 			
 			'role_select' => array(
 				'title' => __('Roles (Dropdown)','ultimatemember'),
@@ -1118,6 +1136,7 @@ class UM_Builtin {
 		$array['google_url'] = __('Google+ URL','ultimatemember');
 		$array['instagram_url'] = __('Instagram URL','ultimatemember');
 		$array['linkedin_url'] = __('LinkedIn URL','ultimatemember');
+		$array['vk_url'] = __('VKontakte URL','ultimatemember');
 		$array['lowercase'] = __('Lowercase only','ultimatemember');
 		$array['numeric'] = __('Numeric value only','ultimatemember');
 		$array['phone_number'] = __('Phone Number','ultimatemember');
