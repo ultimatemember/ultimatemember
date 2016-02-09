@@ -299,6 +299,12 @@
 									$ultimatemember->form->add_error($key, sprintf(__('Please enter a valid %s username or profile URL','ultimatemember'), $array['label'] ) );
 								}
 								break;
+
+							case 'vk_url':
+								if ( !$ultimatemember->validation->is_url( $args[$key], 'vk.com' ) ) {
+									$ultimatemember->form->add_error($key, sprintf(__('Please enter a valid %s username or profile URL','ultimatemember'), $array['label'] ) );
+								}
+								break;
 								
 							case 'url':
 								if ( !$ultimatemember->validation->is_url( $args[$key] ) ) {
