@@ -80,7 +80,7 @@ class UM_Form {
 
 				$this->post_form = array_merge( $this->form_data, $this->post_form );
 
-				if ( isset( $this->form_data['role'] ) && ( (boolean) $this->form_data['role'] ) && $_POST['role'] != $this->form_data['role'] ) {
+				if ( isset( $this->form_data['role'] ) && ( (boolean) $this->form_data['role'] ) && isset(  $_POST['role']  ) && $_POST['role'] != $this->form_data['role'] ) {
 					wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
 				} else {
 					if ( isset( $this->form_data['custom_fields'] ) && strstr( $this->form_data['custom_fields'], 'role_' ) ) {
