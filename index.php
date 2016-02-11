@@ -7,7 +7,7 @@ Version: 1.3.36
 Author: Ultimate Member
 Author URI: http://ultimatemember.com/
 */
-
+	defined('ABSPATH') || exit;
 	require_once(ABSPATH.'wp-admin/includes/plugin.php');
 	
 	$plugin_data = get_plugin_data( __FILE__ );
