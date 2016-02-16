@@ -742,3 +742,12 @@ span.um-req {
 	font-size: 14px;
 	display: inline-block;
 }
+
+small.um-max-filesize {
+    display: block;
+    color: #999999;
+    padding-top: 5px;
+}
+small.um-max-filesize span{
+	font-size: 12px;
+}
