@@ -74,7 +74,7 @@
 		if( $file_size >= 999999999  ){
 
 		}else{
-			$args['cover_photo']['upload_text'] .= '( '.__('maximum file size','ultimatemember').': '.$file_size.$unit.' )';
+			$args['cover_photo']['upload_text'] .= '<small class=\'um-max-filesize\'>( '.__('max','ultimatemember').': <span>'.$file_size.$unit.'</span> )</small>';
 		}
 		return $args;
 	}
@@ -92,7 +92,7 @@
 		if( $file_size >= 999999999  ){
 
 		}else{
-			$args['profile_photo']['upload_text'] .= '( '.__('maximum file size','ultimatemember').': '.$file_size.$unit.' )';
+			$args['profile_photo']['upload_text'] .= '<small class=\'um-max-filesize\'>( '.__('max','ultimatemember').': <span>'.$file_size.$unit.'</span> )</small>';
 		}
 		return $args;
 	}
