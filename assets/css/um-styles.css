@@ -751,3 +751,8 @@ small.um-max-filesize {
 small.um-max-filesize span{
 	font-size: 12px;
 }
+
+.um-form .um-field .um-field-area input.um-form-field.um-validate-not-matched,
+.um-form .um-field .um-field-area input.um-form-field.um-validate-not-matched:focus {
+	border-color: #DB2929 !important;
+}
