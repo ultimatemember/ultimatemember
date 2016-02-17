@@ -182,7 +182,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * Fixed: change password
 * Fixed: members grid override
 * Fixed: tipsy.js error
-* Fixed: account page using other user's info
+* Fixed: Plugin conflict causing account page displaying wrong info
 * Fixed: email locale tempalte path
 * Fixed: invalid role
 * Fixed: validation for change password
