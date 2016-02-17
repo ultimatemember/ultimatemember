@@ -211,11 +211,69 @@ function UM_check_password_matched() {
 		}
 	});
 }
+
+var xhrValidateUsername = false;
+function UM_check_username() {
+	jQuery(document).on('input[data-key=user_login]').on('keyup', function() {
+		var field = jQuery('input[data-key=user_login]');
+		var value = field.val();
+
+		if(field.parents('.um-field').find('.um-field-error').length) {
+			var error = field.parents('.um-field').find('.um-field-error');
+		} else {
+			var error = jQuery('<div class="um-field-error"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>Your username is already taken</div>');
+		}
+
+		// abort previous xhr request
+		if(xhrValidateUsername) {
+			xhrValidateUsername.abort();
+		}
+
+		if(!value) {
+			field.removeClass('um-searching-username');
+
+			return;
+		}
+
+		field.addClass('um-searching-username');
+
+		xhrValidateUsername = jQuery.ajax({
+			url  : um_scripts.ajaxurl,
+			type : 'post',
+			data : {
+				action   : 'ultimatemember_check_username_exists',
+				username : value
+			},
+			complete: function(){
+				field.removeClass('um-searching-username');
+			},
+			success: function(exists){
+				if(parseInt(exists) > 0) {
+					field.removeClass('um-validate-username-unique').addClass('um-validate-username-exists');
+
+					if(!field.parents('.um-field').find('.um-field-error').length) {
+						field.parents('.um-field').append(error);
+					}
+
+					error.show();
+				} else {
+					field.removeClass('um-validate-username-exists').addClass('um-validate-username-unique');
+					error.hide();
+				}
+			}
+		});
+	});
+}
+
 jQuery(document).ready(function(){
 	if(jQuery('input[data-key=user_password],input[data-key=confirm_user_password]').length == 2) {
 		UM_check_password_matched();
 	}
-})
+
+	if(jQuery('input[data-key=user_login]').length) {
+		UM_check_username();
+	}
+});
 
 function UM_hide_menus() {
 

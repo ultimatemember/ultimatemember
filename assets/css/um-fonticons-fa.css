@@ -784,6 +784,10 @@
 .um-faicon-spinner:before {
   content: "\f110";
 }
+.um-faicon-spin {
+  -webkit-animation: um-faicon-spin 2s infinite linear;
+  animation: um-faicon-spin 2s infinite linear;
+}
 .um-faicon-circle:before {
   content: "\f111";
 }
@@ -1532,7 +1536,7 @@
   content: "\f20c";
 }
 
-@-moz-keyframes spin {
+@-moz-keyframes um-faicon-spin {
   0% {
     -moz-transform: rotate(0deg);
   }
@@ -1540,7 +1544,7 @@
     -moz-transform: rotate(359deg);
   }
 }
-@-webkit-keyframes spin {
+@-webkit-keyframes um-faicon-spin {
   0% {
     -webkit-transform: rotate(0deg);
   }
@@ -1548,7 +1552,7 @@
     -webkit-transform: rotate(359deg);
   }
 }
-@-o-keyframes spin {
+@-o-keyframes um-faicon-spin {
   0% {
     -o-transform: rotate(0deg);
   }
@@ -1556,7 +1560,7 @@
     -o-transform: rotate(359deg);
   }
 }
-@-ms-keyframes spin {
+@-ms-keyframes um-faicon-spin {
   0% {
     -ms-transform: rotate(0deg);
   }
@@ -1564,7 +1568,7 @@
     -ms-transform: rotate(359deg);
   }
 }
-@keyframes spin {
+@keyframes um-faicon-spin {
   0% {
     transform: rotate(0deg);
   }
