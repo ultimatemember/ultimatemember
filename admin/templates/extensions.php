@@ -1,5 +1,12 @@
 <?php
 
+	$premium['instagram'] = array(
+		'url' => 'https://ultimatemember.com/extensions/instagram/',
+		'image' => 'https://ultimatemember.com/wp-content/uploads/2016/02/instagram-copy.png',
+		'name' => 'Instagram',
+		'desc' => 'Let users can connect to their instagram account and display the latest 18 Instagram photos directly on their profile.',
+	);
+	
 	$premium['user-tags'] = array(
 		'url' => 'https://ultimatemember.com/extensions/user-tags/',
 		'image' => 'https://ultimatemember.com/wp-content/uploads/2015/12/user-tags-copy.jpg',

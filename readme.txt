@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.4
 
-Stable Tag: 1.3.36
+Stable Tag: 1.3.37
 
 License: GNU Version 2 or Any Later Version
 
@@ -44,6 +44,7 @@ Read about all of the plugin's features at [Ultimate Member](https://ultimatemem
 
 Ultimate Member has a range of extensions that allow you to extend the power of the plugin
 
+* [Instagram](https://ultimatemember.com/extensions/instagram/) - Allow users to show their Instagram photos on their profile
 * [User Tags](https://ultimatemember.com/extensions/user-tags/) - Lets you add a user tag system to your website
 * [Social Activity](https://ultimatemember.com/extensions/social-activity/) - Let users create public wall posts & see the activity of other users
 * [WooCommerce](https://ultimatemember.com/extensions/woocommerce/) - Allow you to integrate WooCommerce with Ultimate Member
@@ -147,6 +148,56 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.37: February 17, 2016 =
+
+* New: Add password confirmation validation
+* New: Add VK url validation
+* New: Add Vkontakte as predefined url field
+* New: Add additional file types
+* New: Add file size limit label in image field
+* New: Added password reset limit
+* New: Allow redirect_to param after registration
+* New: Indonesian language support added
+* New: Add bio characters limit
+* Tweak: Use native WP masonry script instead of duplicating it
+* Tweak: Add image upload notice
+* Tweak: Add option to allow users to hide profiles from member page
+* Tweak: Add filters to modify output field
+* Tweak: Add filter hook for email template path
+* Tweak: Tweak upload form styles
+* Tweak: Remove masonry from core and gulp
+* Tweak: Add admin assets and apply minification
+* Tweak: Update pickadate assets
+* Tweak: Allowing usertags in search filters
+* Tweak: Allow members template to be customized/overridden
+* Tweak: Option to login user after clicking the activation link
+* Tweak: Remove bio count strings
+* Fixed: bio limit javascript error
+* Fixed: ssl checker for load balancers
+* Fixed: redirect loop with wpml permalink
+* Fixed: WPML permalink and form compatibility
+* Fixed: blocked words
+* Fixed: searching with space
+* Fixed: change password
+* Fixed: members grid override
+* Fixed: tipsy.js error
+* Fixed: account page using other user's info
+* Fixed: email locale tempalte path
+* Fixed: invalid role
+* Fixed: validation for change password
+* Fixed: unchecked access roles
+* Fixed: telno input styles
+* Fixed: escape display name in title attributes
+* Fixed: datepicker css issue with some themes
+* Fixed: make sure the hash parameter is a string
+* Fixed: loading core assets
+* Fixed: title tags not updated
+* Fixed: empty uneditable fields
+* Fixed: account deletion on one submission
+* Fixed: Fixed indentation
+* Fixed: user_login fallbacks and remove email address
+* Fixed: password changed email template
 
 = 1.3.36: January 6, 2016 =
 
