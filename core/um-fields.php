@@ -934,7 +934,7 @@ class UM_Fields {
 		}
 
 		$type = apply_filters("um_hook_for_field_{$type}", $type );
-		
+
 		/* Begin by field type */
 		switch( $type ) {
 
@@ -2109,7 +2109,7 @@ class UM_Fields {
 						}
 
 						$res = stripslashes( $this->field_value( $key, $default, $data ) );
-						
+
 						$res = apply_filters("um_view_field_value_{$type}", $res, $data );
 
 						$output .= '<div class="um-field-area">';
@@ -2275,7 +2275,7 @@ class UM_Fields {
 
 									$output .= $this->view_field( $key, $data );
 
-									
+
 								}
 							}
 							$output .= '</div>';

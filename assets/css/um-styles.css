@@ -751,3 +751,17 @@ small.um-max-filesize {
 small.um-max-filesize span{
 	font-size: 12px;
 }
+
+.um-form .um-field .um-field-area input.um-form-field.um-validate-not-matched,
+.um-form .um-field .um-field-area input.um-form-field.um-validate-not-matched:focus,
+.um-form .um-field .um-field-area input.um-form-field.um-validate-username-exists,
+.um-form .um-field .um-field-area input.um-form-field.um-validate-username-exists:focus {
+	border-color: #DB2929 !important;
+}
+
+.um-form .um-field .um-field-area input.um-searching-username {
+	background-image: url('../img/loading.gif');
+	background-position: right center;
+	background-repeat: no-repeat;
+	background-size: 24px 24px;
+}
