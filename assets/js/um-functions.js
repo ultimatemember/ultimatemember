@@ -197,7 +197,7 @@ function um_conditional(){
 }
 
 function UM_check_password_matched() {
-	jQuery(document).on('input[data-key=user_password],input[data-key=confirm_user_password]').on('keyup', function(e) {
+	jQuery(document).on('keyup', 'input[data-key=user_password],input[data-key=confirm_user_password]', function(e) {
 		var value = jQuery('input[data-key=user_password]').val();
 		var match = jQuery('input[data-key=confirm_user_password]').val();
 		var field = jQuery('input[data-key=user_password],input[data-key=confirm_user_password]');
@@ -214,7 +214,7 @@ function UM_check_password_matched() {
 
 var xhrValidateUsername = false;
 function UM_check_username() {
-	jQuery(document).on('input[data-key=user_login]:not([disabled=disabled])').on('keyup', function() {
+	jQuery(document).on('keyup', 'input[data-key=user_login]:not([disabled=disabled])', function() {
 		var field = jQuery('input[data-key=user_login]');
 		var value = field.val();
 
