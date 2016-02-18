@@ -214,7 +214,7 @@ function UM_check_password_matched() {
 
 var xhrValidateUsername = false;
 function UM_check_username() {
-	jQuery(document).on('input[data-key=user_login]').on('keyup', function() {
+	jQuery(document).on('input[data-key=user_login]:not([disabled=disabled])').on('keyup', function() {
 		var field = jQuery('input[data-key=user_login]');
 		var value = field.val();
 
