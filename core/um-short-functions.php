@@ -295,8 +295,7 @@ function um_user_ip() {
 						$k = __('date submitted','ultimatemember');
 						$v = date("d M Y H:i", $v);
 					}
-					$v = urlencode( $v );
-
+				
 					if ( $style ) {
 						if ( !$v ) $v = __('(empty)','ultimatemember');
 						$output .= "<p><label>$k</label><span>$v</span></p>";
