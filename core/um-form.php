@@ -81,7 +81,7 @@ class UM_Form {
 
 				$this->post_form = array_merge( $this->form_data, $this->post_form );
 				
-				$role = um_get_option('default_role');
+				$role = $this->assigned_role( $this->form_id );
 				
 				if ( isset( $this->form_data['role'] ) && ( (boolean) $this->form_data['role'] ) && isset(  $_POST['role']  ) && $_POST['role'] != $role ) {
 					wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
@@ -168,4 +168,12 @@ class UM_Form {
 		return $output;
 	}
 
+	function assigned_role( $post_id ){
+		$role = get_post_meta( $post_id, '_um_register_role', true );
+
+		if( ! $role ){
+			$role = um_get_option('default_role');
+		}
+		return $role;
+	}
 }
