@@ -230,8 +230,8 @@ class UM_Admin_Builder {
 							<?php } else if ( isset($keyarray['icon']) && !empty( $keyarray['icon'] ) ) { ?>
 								<i class="<?php echo $keyarray['icon']; ?>"></i>
 							<?php } ?><?php echo $title; ?></div>
-							
-						<div class="um-admin-drag-fld-type um-field-type-<?php echo $type; ?>"><?php echo $ultimatemember->builtin->core_fields[$type]['name']; ?></div>
+							<?php $field_name = isset( $ultimatemember->builtin->core_fields[$type]['name'] )?$ultimatemember->builtin->core_fields[$type]['name']:''; ?>
+						<div class="um-admin-drag-fld-type um-field-type-<?php echo $type; ?>"><?php echo $field_name; ?></div>
 						<div class="um-admin-drag-fld-icons um-field-type-<?php echo $type; ?>">
 						
 							<a href="#" class="um-admin-tipsy-n" title="Edit" data-modal="UM_edit_field" data-modal-size="normal" data-dynamic-content="um_admin_edit_field_popup" data-arg1="<?php echo $type; ?>" data-arg2="<?php echo $this->form_id; ?>" data-arg3="<?php echo $key; ?>"><i class="um-faicon-pencil"></i></a>
