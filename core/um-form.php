@@ -62,6 +62,7 @@ class UM_Form {
 			$http_post = 'POST';
 		}
 
+
 		if ( $http_post && !is_admin() && isset( $_POST['form_id'] ) && is_numeric($_POST['form_id']) ) {
 
 			$this->form_id = $_POST['form_id'];
@@ -75,19 +76,20 @@ class UM_Form {
 				$this->post_form = $this->beautify( $this->post_form );
 
 				$this->form_data = $ultimatemember->query->post_data( $this->form_id );
-
+				
 				$this->post_form['submitted'] = $this->post_form;
 
 				$this->post_form = array_merge( $this->form_data, $this->post_form );
-
-				if ( isset( $this->form_data['role'] ) && ( (boolean) $this->form_data['role'] ) && isset(  $_POST['role']  ) && $_POST['role'] != $this->form_data['role'] ) {
+				
+				$role = um_get_option('default_role');
+				
+				if ( isset( $this->form_data['role'] ) && ( (boolean) $this->form_data['role'] ) && isset(  $_POST['role']  ) && $_POST['role'] != $role ) {
 					wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
 				} else {
 					if ( isset( $this->form_data['custom_fields'] ) && strstr( $this->form_data['custom_fields'], 'role_' ) ) {
 						// In this case, admin allowed users to choose a role during registration
 					} else {
 						if ( isset( $_POST['role'] ) ) {
-							$role = um_get_option('default_role');
 							if ( $role != $_POST['role'] ) {
 								wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
 							}
