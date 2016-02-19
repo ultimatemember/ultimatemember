@@ -270,9 +270,11 @@ jQuery(document).ready(function(){
 		UM_check_password_matched();
 	}
 
+	/* 
 	if(jQuery('input[data-key=user_login]').length) {
 		UM_check_username();
 	}
+	*/
 });
 
 function UM_hide_menus() {
