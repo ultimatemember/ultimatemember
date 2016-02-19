@@ -217,9 +217,3 @@ pip-log.txt
 
 node_modules/
 assets/vendor/
-.bowerrc
-.jshintrc
-bower.json
-gulpfile.js
-manifest.json
-package.json
