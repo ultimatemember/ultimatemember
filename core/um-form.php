@@ -82,22 +82,19 @@ class UM_Form {
 				$this->post_form = array_merge( $this->form_data, $this->post_form );
 				
 				$role = $this->assigned_role( $this->form_id );
-				
-				if( $role ){ // has assigned role.  Validate non-global forms
+
+				if( $role && isset( $this->form_data['custom_fields'] ) && ! strstr( $this->form_data['custom_fields'], 'role_' ) ){ // has assigned role.  Validate non-global forms
 					if ( isset( $this->form_data['role'] ) && ( (boolean) $this->form_data['role'] ) && isset(  $_POST['role']  ) && $_POST['role'] != $role ) {
 						wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
 					} else {
-						if ( isset( $this->form_data['custom_fields'] ) && strstr( $this->form_data['custom_fields'], 'role_' ) ) {
-							// In this case, admin allowed users to choose a role during registration
-						} else {
-							if ( isset( $_POST['role'] ) ) {
-								if ( $role != $_POST['role'] ) {
+						if ( isset( $_POST['role'] ) ) {
+							if ( $role != $_POST['role'] ) {
 									wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
-								}
 							}
 						}
 					}
 				}
+
 				if ( isset( $_POST[ $ultimatemember->honeypot ] ) && $_POST[ $ultimatemember->honeypot ] != '' )
 					wp_die('Hello, spam bot!');
 
@@ -170,7 +167,14 @@ class UM_Form {
 	}
 
 	function assigned_role( $post_id ){
-		$role = get_post_meta( $post_id, '_um_register_role', true );
+
+		$register_use_globals = get_post_meta( $post_id, '_um_register_use_globals', true);
+		
+		if( $register_use_globals == 1 ){
+			$role = um_get_option('default_role');
+		}else if( $register_use_globals == 0 ){
+			$role = get_post_meta( $post_id, '_um_register_role', true );
+		}
 
 		if( ! $role ){
 			$role = false;
