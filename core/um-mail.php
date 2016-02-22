@@ -37,6 +37,13 @@ class UM_Mail {
 			}
 		} else {
 			$lang = get_locale();
+
+			if( $lang == 'en_US' ){
+				$lang = '/';
+			}else{
+				$lang .= '/';
+			}
+			
 		}
 
 		if ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/email/' . $lang . $template . '.html' ) ) {
@@ -75,6 +82,7 @@ class UM_Mail {
 		if ( isset( $args['admin'] ) || isset( $args['plain_text'] ) ) {
 			$this->force_plain_text = 'forced';
 		}
+		
 
 		// HTML e-mail or text
 		if ( um_get_option('email_html') && $this->email_template( $template, $args ) ) {
