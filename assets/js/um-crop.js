@@ -379,11 +379,12 @@
 
     initContainer: function () {
       var $container = this.$container;
-
-      this.container = {
-        width: max($container.width(), 300),
-        height: max($container.height(), 150)
-      };
+		if($container !== NULL){
+		  this.container = {
+			width: max($container.width(), 300),
+			height: max($container.height(), 150)
+		  };
+		}
     },
 
     initCropper: function () {
