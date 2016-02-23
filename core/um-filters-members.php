@@ -126,11 +126,20 @@
 		$query_args['meta_query']['relation'] = 'AND';
 
 		// must have a profile photo
-		if ( $has_profile_photo == 1 ) {
+		if ( $has_profile_photo == 1 && ! um_get_option('use_gravatars') ) {
 			$query_args['meta_query'][] = array(
-				'key' => 'profile_photo',
-				'value' => '',
-				'compare' => '!='
+				'relation' => 'OR',
+				array(
+					'key' => 'synced_profile_photo', // social login
+					'value' => '',
+					'compare' => '!='
+				),
+				array(
+					'key' => 'profile_photo', // from upload form
+					'value' => '',
+					'compare' => '!='
+				)
+				
 			);
 		}
 
