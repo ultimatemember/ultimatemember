@@ -123,7 +123,9 @@ class UM_Shortcodes {
 	*/
 	function core_login_form() {
 		$forms = get_posts(array('post_type' => 'um_form', 'posts_per_page' => 1, 'meta_key' => '_um_core', 'meta_value' => 'login'));
-		return $forms[0]->ID;
+		$form_id = isset( $forms[0]->ID ) ? $forms[0]->ID: 0;
+
+		return $form_id;
 	}
 
 	/***
