@@ -34,7 +34,7 @@
 		</p><div class="um-admin-clear"></div>
 		
 		<p>
-			<label class="um-admin-half"><?php _e('Only show members who have uploaded a profile photo','ultimatemember'); ?></label>
+			<label class="um-admin-half"><?php _e('Only show members who have uploaded a profile photo','ultimatemember'); ?><?php $this->tooltip('If \'Use Gravatars\' as profile photo is enabled, this option is ignored'); ?></label>
 			<span class="um-admin-half">
 			
 				<?php $this->ui_on_off('_um_has_profile_photo'); ?>

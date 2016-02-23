@@ -130,7 +130,7 @@
 			$query_args['meta_query'][] = array(
 				'relation' => 'OR',
 				array(
-					'key' => 'synced_profile_photo', // social login
+					'key' => 'synced_profile_photo', // addons
 					'value' => '',
 					'compare' => '!='
 				),
