@@ -57,7 +57,7 @@ class UM_User {
 	function community_role_edit( $user ) {
 		global $ultimatemember;
 		if ( current_user_can( 'edit_users' ) && current_user_can( 'edit_user', $user->ID ) ) {
-			$user = get_userdata( $user->ID );
+			um_fetch_user(  $user->ID );
 			?>
 			<table class="form-table">
 				<tbody>
