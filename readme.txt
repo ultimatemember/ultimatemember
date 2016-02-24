@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.4
 
-Stable Tag: 1.3.38
+Stable Tag: 1.3.39
 
 License: GNU Version 2 or Any Later Version
 
@@ -148,6 +148,25 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.39: February 24, 2016 =
+
+* New: add gravatar transfer tool
+* New: show users with gravatar photo in member directory
+* New: add upgrade class for data migration
+* Tweak: Set last login for new users to show in member directory
+* Tweak: validate roles for forms without fields
+* Tweak: cropper js update
+* Tweak: update minified script
+* Tweak: tooltip and comment
+* Fixed: member search query
+* Fixed: Registration process with pending and show message enabled
+* Fixed: Fix form security validation
+* Fixed: email content type, template and localization
+* Fixed: remove php notices
+* Fixed: custom columns for roles
+* Fixed: admin bar visibility per user role
+* Fixed: community role editing
 
 = 1.3.38: February 19, 2016 =
 
