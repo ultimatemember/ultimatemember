@@ -28,12 +28,7 @@
 
 		$avatar = um_user('profile_photo', $size);
 
-		if ( !um_profile('profile_photo') && um_get_option('use_gravatars') ) {
-			if ( is_ssl() ) {
-				$protocol = 'https://';
-			} else {
-				$protocol = 'http://';
-			}
+		if ( ! $avatar && um_get_option('use_gravatars') ) {
 			
 			$default = get_option( 'avatar_default', 'mystery' );
 			if ( $default == 'gravatar_default' ) {
@@ -45,14 +40,18 @@
 				$rating = "&amp;r={$rating}";
 			}
 			
-			$avatar = '<img src="' . $protocol . 'gravatar.com/avatar/' . md5( um_user('user_email') ) . 
-			'?d='. $default . '&amp;s=' . $size . $rating .'" class="gravatar avatar avatar-'.$size.' um-avatar" width="'.$size.'" height="'.$size.'" alt="" />';
+			
+			$avatar_url = um_get_domain_protocol().'gravatar.com/avatar/'.um_user('synced_gravatar_hashed_id');
+		
+			$avatar = '<img src="' .$avatar_url .'?d='. $default . '&amp;s=' . $size . $rating .'" class="func-um_get_avatar gravatar avatar avatar-'.$size.' um-avatar" width="'.$size.'" height="'.$size.'" alt="" />';
 			
 		}else if( empty( $avatar ) ){
 			$default_avatar_uri = um_get_default_avatar_uri();
+
 			$avatar = '<img src="' .$default_avatar_uri  .'" class="gravatar avatar avatar-'.$size.' um-avatar" width="'.$size.'" height="'.$size.'" alt="" />';
 		}
 
 		return $avatar;
 	
 	}
+

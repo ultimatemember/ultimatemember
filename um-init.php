@@ -52,6 +52,11 @@ class UM_API {
 			__('This add-on enables you to migrate your custom user photos from BuddyPress to use with Ultimate Member.', 'ultimatemember'),
 		);
 
+		$this->addons['gravatar_transfer'] = array(
+			__('Gravatar Transfer', 'ultimatemember'),
+			__('This add-on enables you to link gravatar photos to user accounts with their email address.', 'ultimatemember'),
+		);
+
 	}
 
 	/***
