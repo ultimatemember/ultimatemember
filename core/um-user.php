@@ -346,6 +346,13 @@ class UM_User {
 	function set_plain_password( $plain ) {
 		update_user_meta( $this->id, '_um_cool_but_hard_to_guess_plain_pw', $plain );
 	}
+
+	/**
+	 * Set last login for new registered users
+	 */
+	function set_last_login(){
+		update_user_meta(  $this->id, '_um_last_login', current_time( 'timestamp' ) );
+	}
 	
 	function set_role( $role ){
 		
