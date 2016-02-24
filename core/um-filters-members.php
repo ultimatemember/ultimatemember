@@ -138,6 +138,11 @@
 					'key' => 'profile_photo', // from upload form
 					'value' => '',
 					'compare' => '!='
+				),
+				array(
+					'key' => 'synced_gravatar_hashed_id', //  gravatar
+					'value' => '',
+					'compare' => '!='
 				)
 				
 			);
@@ -151,6 +156,7 @@
 				'compare' => '!='
 			);
 		}
+
 
 		// show specific usernames
 		if ( isset( $show_these_users ) && $show_these_users && is_array( $show_these_users ) ) {
@@ -175,6 +181,7 @@
 		$query_args['order'] = 'ASC';
 
 		if ( isset( $sortby ) ) {
+
 
 			if ( $sortby == 'other' && $sortby_custom ) {
 
@@ -232,3 +239,4 @@
 
 		return $result;
 	}
+
