@@ -13,6 +13,7 @@ class UM_API {
 		require_once um_path . 'core/um-short-functions.php';
 
 		if (is_admin()) {
+			require_once um_path . 'admin/core/um-admin-upgrade.php';
 			require_once um_path . 'admin/um-admin-init.php';
 		}
 
