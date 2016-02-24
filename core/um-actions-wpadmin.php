@@ -99,19 +99,15 @@
 	/***
 	***	@hide admin bar appropriately
 	***/
-	function um_control_admin_bar(){
+	function um_control_admin_bar( $content ){
+		
 		if ( um_user('can_not_see_adminbar') )
 			return false;
 
-		if( !is_admin() && !um_user('can_access_wpadmin') ) {
-			return false;
-		} else {
-			um_fetch_user( get_current_user_id() );
-			return true;
-		}
+		return $content;
 	}
 	add_filter( 'show_admin_bar' , 'um_control_admin_bar');
-	
+		
 	/***
 	***	@fix permission for admin bar
 	***/
