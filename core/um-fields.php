@@ -2175,6 +2175,8 @@ class UM_Fields {
 		// Custom filter for field output
 		if ( isset( $this->set_mode ) ) {
 			$output = apply_filters("um_{$key}_form_show_field", $output, $this->set_mode);
+			$output = apply_filters("um_{$type}_form_show_field", $output, $this->set_mode);
+			
 		}
 
 		return $output;
