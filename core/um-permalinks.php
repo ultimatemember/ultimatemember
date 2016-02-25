@@ -241,7 +241,7 @@ class UM_Permalinks {
 		{
 			$full_name = um_user( 'full_name' );
 			$count     = $wpdb->get_var( $wpdb->prepare(
-				"SELECT COUNT(*) as count FROM %s WHERE meta_key = 'full_name' && meta_value = '%s'",
+				"SELECT COUNT(*) as count FROM %s WHERE meta_key = 'full_name' && meta_value = %s ",
 				$wpdb->usermeta,
 				um_user( 'full_name' )
 			) );
