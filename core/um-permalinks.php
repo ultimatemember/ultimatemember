@@ -186,7 +186,7 @@ class UM_Permalinks {
 	***	@get profile url for set user
 	***/
 	function profile_url() {
-		global $ultimatemember;
+		global $ultimatemember, $wpdb;
 
 		$page_id = $this->core['user'];
 		$profile_url = get_permalink( $page_id );
@@ -236,16 +236,33 @@ class UM_Permalinks {
 			$user_in_url = um_user('ID');
 		}
 
-		if ( um_get_option('permalink_base') == 'name' ) {
-			$user_in_url = rawurlencode( strtolower( str_replace(" ",".",um_user('full_name') ) ) );
-		}
+		$full_name_permalinks = array( 'name', 'name_dash', 'name_plus' );
+		if( in_array( um_get_option( 'permalink_base'),  $full_name_permalinks ) )
+		{
+			$full_name = um_user( 'full_name' );
+			$count     = $wpdb->get_var( sprintf(
+				"SELECT COUNT(*) as count FROM %s WHERE meta_key = 'full_name' && meta_value = '%s'",
+				$wpdb->usermeta,
+				um_user( 'full_name' )
+			) );
 
-		if ( um_get_option('permalink_base') == 'name_dash' ) {
-			$user_in_url = rawurlencode( strtolower( str_replace(" ","-",um_user('full_name') ) ) );
-		}
+			if( $count > 1 )
+			{
+				$full_name .= ' ' . um_user( 'ID' );
+			}
 
-		if ( um_get_option('permalink_base') == 'name_plus' ) {
-			$user_in_url = strtolower( str_replace(" ","+",um_user('full_name') ) );
+			switch( um_get_option('permalink_base') )
+			{
+				case 'name':
+					$user_in_url = rawurlencode( strtolower( str_replace( " ", ".", $full_name ) ) );
+					break;
+				case 'name_dash':
+					$user_in_url = rawurlencode( strtolower( str_replace(" ", "-", $full_name ) ) );
+					break;
+				case 'name_plus':
+					$user_in_url = strtolower( str_replace(" ", "+" , $full_name ) );
+					break;
+			}
 		}
 
 		if ( get_option('permalink_structure') ) {
