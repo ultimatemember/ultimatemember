@@ -69,7 +69,7 @@
 		if ( isset( $fields ) && is_array( $fields ) ) {
 			foreach( $fields as $key => $array ) {
 
-				if( !um_user_can( 'can_edit_everyone' ) && !$fields[$key]['editable'] ) continue;
+				if( !um_user_can( 'can_edit_everyone' ) && isset($fields[$key]['editable']) && !$fields[$key]['editable'] ) continue;
 
 				if ( $fields[$key]['type'] == 'multiselect' ||  $fields[$key]['type'] == 'checkbox' && !isset($args['submitted'][$key]) ) {
 					delete_user_meta( um_user('ID'), $key );
