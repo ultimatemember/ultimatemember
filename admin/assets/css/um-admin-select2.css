@@ -61,7 +61,7 @@ body.um-admin .select2-drop-mask {
 }
 
 body.um-admin .select2-drop {
-    z-index: 10030 !important;
+    z-index: 999999 !important;
 }
 
 body.um-admin .select2-search {
