@@ -104,7 +104,7 @@
 		if ( um_user('can_not_see_adminbar') )
 			return false;
 
-		return $content;
+		return true;
 	}
 	add_filter( 'show_admin_bar' , 'um_control_admin_bar');
 		
