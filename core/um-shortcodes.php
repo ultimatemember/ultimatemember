@@ -12,6 +12,8 @@ class UM_Shortcodes {
 
 		add_shortcode('um_loggedin', array(&$this, 'um_loggedin'));
 		add_shortcode('um_loggedout', array(&$this, 'um_loggedout'));
+		add_shortcode('um_show_content', array(&$this, 'um_shortcode_show_content_for_role') );
+	
 
 		add_filter('body_class', array(&$this, 'body_class'), 0);
 
@@ -510,4 +512,33 @@ class UM_Shortcodes {
 		return $str;
 	}
 
+	/**
+	 * Shortcode: Show custom content to specific role
+	 * 
+	 * [um_show_content roles='member'] <!-- insert content here -->  [/um_show_content]
+	 * You can add multiple target roles, just use ',' e.g.  [um_show_content roles='member,candidates,pets']
+	 * 
+	 * @param  array $atts    
+	 * @param  string $content
+	 * @return string
+	 */
+	function um_shortcode_show_content_for_role( $atts = array() , $content = '' ) {
+	    $a = shortcode_atts( array(
+	        'roles' => 'member',
+	    ), $atts );
+
+	    $roles = explode(",", $a['roles'] );
+	    
+	    // For multiple target roles
+	    if(is_array( $roles ) && in_array( um_user('role'), $roles ) ){
+	      return $content;
+	    }
+	    // Single target role
+	    if( $atts['roles'] == um_user('role') ){
+	       return $content;
+	    }
+	  
+	    return '';
+	}
+	
 }
