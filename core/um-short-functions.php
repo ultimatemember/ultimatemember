@@ -71,6 +71,7 @@
 		$value = str_replace('.', ' ', $value);
 		$value = str_replace('-', ' ', $value);
 		$value = str_replace('+', ' ', $value);
+		$value = preg_replace('/\d+$/', '', $value);
 
 		return $value;
 	}
@@ -295,7 +296,7 @@ function um_user_ip() {
 						$k = __('date submitted','ultimatemember');
 						$v = date("d M Y H:i", $v);
 					}
-				
+
 					if ( $style ) {
 						if ( !$v ) $v = __('(empty)','ultimatemember');
 						$output .= "<p><label>$k</label><span>$v</span></p>";
@@ -1329,7 +1330,7 @@ function um_fetch_user( $user_id ) {
 				break;
 
 			case 'profile_photo':
-				
+
 				$has_profile_photo = false;
 
 				if ( um_profile('profile_photo') ) {
@@ -1340,9 +1341,9 @@ function um_fetch_user( $user_id ) {
 				}
 
 				$avatar_uri = apply_filters('um_user_avatar_url_filter', $avatar_uri, um_user('ID') );
-				
+
 				if ( $avatar_uri )
-					
+
 					if( um_get_option('use_gravatars') && ! um_user('synced_profile_photo') && ! $has_profile_photo ){
 						$avatar_uri  = um_get_domain_protocol().'gravatar.com/avatar/'.um_user('synced_gravatar_hashed_id');
 						$avatar_uri = add_query_arg('s',400, $avatar_uri);
@@ -1385,7 +1386,7 @@ function um_fetch_user( $user_id ) {
 		} else {
 				$protocol = 'http://';
 		}
-		
+
 		return $protocol;
 	}
 
