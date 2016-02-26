@@ -71,7 +71,6 @@
 		$value = str_replace('.', ' ', $value);
 		$value = str_replace('-', ' ', $value);
 		$value = str_replace('+', ' ', $value);
-		$value = preg_replace('/\d+$/', '', $value);
 
 		return $value;
 	}

@@ -3,11 +3,11 @@
 class UM_User {
 
 	function __construct() {
-	
+
 		$this->id = 0;
 		$this->usermeta = null;
 		$this->data = null;
-		
+
 		$this->banned_keys = array(
 			'metabox','postbox','meta-box',
 			'dismissed_wp_pointers', 'session_tokens',
@@ -16,11 +16,11 @@ class UM_User {
 			'managenav', 'nav_menu','user_activation_key',
 			'level_', 'wp_user_level'
 		);
-		
+
 		add_action('init',  array(&$this, 'set'), 1);
-	
+
 		$this->preview = false;
-		
+
 		// a list of keys that should never be in wp_usermeta
 		$this->update_user_keys = array(
 			'user_email',
@@ -28,14 +28,14 @@ class UM_User {
 			'user_password',
 			'display_name',
 		);
-		
+
 		$this->target_id = null;
-		
-		// When the cache should be cleared 
+
+		// When the cache should be cleared
 		add_action('um_delete_user_hook', array(&$this, 'remove_cached_queue') );
 		add_action('um_new_user_registration_plain', array(&$this, 'remove_cached_queue') );
 		add_action('um_after_user_status_is_changed_hook', array(&$this, 'remove_cached_queue') );
-		
+
 		// When user cache should be cleared
 		add_action('um_after_user_updated', array(&$this, 'remove_cache') );
 		add_action('um_after_user_account_updated', array(&$this, 'remove_cache') );
@@ -43,14 +43,14 @@ class UM_User {
 		add_action('edit_user_profile_update', array(&$this, 'remove_cache') );
 		add_action('um_when_role_is_set', array(&$this, 'remove_cache') );
 		add_action('um_when_status_is_set', array(&$this, 'remove_cache') );
-		
+
 		add_action( 'show_user_profile',        array( $this, 'community_role_edit' ) );
 		add_action( 'edit_user_profile',        array( $this, 'community_role_edit' ) );
 		add_action( 'personal_options_update',  array( $this, 'community_role_save' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'community_role_save' ) );
-		
+
 	}
-	
+
 	/**
 	 * Allow changing community role
 	 */
@@ -78,7 +78,7 @@ class UM_User {
 			</table>
 		<?php }
 	}
-	
+
 	/**
 	 * Save community role
 	 */
@@ -88,14 +88,14 @@ class UM_User {
 			delete_option( "um_cache_userdata_{$user_id}" );
 		}
 	}
-	
+
 	/***
 	***	@Remove cached queue from Users backend
 	***/
 	function remove_cached_queue() {
 		delete_option('um_cached_users_queue');
 	}
-	
+
 	/***
 	***	@Converts object to array
 	***/
@@ -113,7 +113,7 @@ class UM_User {
 
 		return $new;
 	}
-	
+
 	function get_cached_data( $user_id ) {
 		if ( is_numeric( $user_id ) && $user_id > 0 ) {
 			$find_user = get_option("um_cache_userdata_{$user_id}");
@@ -124,15 +124,15 @@ class UM_User {
 		}
 		return '';
 	}
-	
+
 	function setup_cache( $user_id, $profile ) {
 		update_option( "um_cache_userdata_{$user_id}", $profile );
 	}
-	
+
 	function remove_cache( $user_id ) {
 		delete_option( "um_cache_userdata_{$user_id}" );
 	}
-	
+
 	/**
 	 * @function set()
 	 *
@@ -148,10 +148,10 @@ class UM_User {
 	 * @example The following example makes you set a user and retrieve their display name after that using the user API.
 
 		<?php
-		
+
 			$ultimatemember->user->set( 12 );
 			$display_name = $ultimatemember->user->profile['display_name']; // Should print user display name
-			
+
 		?>
 
 	 *
@@ -159,11 +159,11 @@ class UM_User {
 	 */
 	function set( $user_id = null, $clean = false ) {
 		global $ultimatemember;
-		
+
 		if ( isset( $this->profile ) ) {
 			unset( $this->profile );
 		}
-		
+
 		if ($user_id) {
 			$this->id = $user_id;
 		} elseif (is_user_logged_in() && $clean == false ){
@@ -171,37 +171,37 @@ class UM_User {
 		} else {
 			$this->id = 0;
 		}
-		
+
 		if ( $this->get_cached_data( $this->id ) ) {
 			$this->profile = $this->get_cached_data( $this->id );
 		} else {
-		
+
 		if ($user_id) {
-		
+
 			$this->id = $user_id;
 			$this->usermeta = get_user_meta($user_id);
 			$this->data = get_userdata($this->id);
-			
+
 		} elseif (is_user_logged_in() && $clean == false ){
-		
+
 			$this->id = get_current_user_id();
 			$this->usermeta = get_user_meta($this->id);
 			$this->data = get_userdata($this->id);
-			
+
 		} else {
-		
+
 			$this->id = 0;
 			$this->usermeta = null;
 			$this->data = null;
-		
+
 		}
-		
+
 		// we have a user, populate a profile
 		if ( $this->id && $this->toArray($this->data) ) {
 
 			// add user data
 			$this->data = $this->toArray($this->data);
-			
+
 			foreach( $this->data as $k=>$v ) {
 				if ($k == 'roles') {
 					$this->profile['wp_roles'] = implode(',',$v);
@@ -213,7 +213,7 @@ class UM_User {
 					$this->profile[$k] = $v;
 				}
 			}
-			
+
 			// add account status
 			if ( !isset( $this->usermeta['account_status'][0] ) )  {
 				$this->usermeta['account_status'][0] = 'approved';
@@ -226,19 +226,19 @@ class UM_User {
 			if ( $this->usermeta['account_status'][0] == 'awaiting_email_confirmation' ) {
 				$this->usermeta['account_status_name'][0] = __('Awaiting E-mail Confirmation','ultimatemember');
 			}
-				
+
 			if ( $this->usermeta['account_status'][0] == 'awaiting_admin_review' ) {
 				$this->usermeta['account_status_name'][0] = __('Pending Review','ultimatemember');
 			}
-			
+
 			if ( $this->usermeta['account_status'][0] == 'rejected' ) {
 				$this->usermeta['account_status_name'][0] = __('Membership Rejected','ultimatemember');
 			}
-			
+
 			if ( $this->usermeta['account_status'][0] == 'inactive' ) {
 				$this->usermeta['account_status_name'][0] = __('Membership Inactive','ultimatemember');
 			}
-			
+
 			// add user meta
 			foreach($this->usermeta as $k=>$v){
 				if ( $k == 'display_name') continue;
@@ -251,28 +251,28 @@ class UM_User {
 			$this->role_meta = apply_filters('um_user_permissions_filter', $this->role_meta, $this->id);
 
 			$this->profile = array_merge( $this->profile, (array)$this->role_meta);
-			
+
 			$this->profile['super_admin'] = ( is_super_admin( $this->id ) ) ? 1 : 0;
-				
+
 			// clean profile
 			$this->clean();
-			
+
 			// Setup cache
 			$this->setup_cache( $this->id, $this->profile );
 
 		}
-		
+
 		}
-		
+
 	}
-	
+
 	/***
 	***	@reset user data
 	***/
 	function reset( $clean = false ){
 		$this->set(0, $clean);
 	}
-	
+
 	/***
 	***	@Clean user profile
 	***/
@@ -284,7 +284,7 @@ class UM_User {
 			}
 		}
 	}
-	
+
 	/**
 	 * @function auto_login()
 	 *
@@ -314,32 +314,32 @@ class UM_User {
 		wp_set_current_user($user_id);
 		wp_set_auth_cookie($user_id, $rememberme );
 	}
-	
+
 	/***
 	***	@Set user's registration details
 	***/
 	function set_registration_details( $submitted ) {
-		
+
 		if ( isset( $submitted['user_pass'] ) ) {
 			unset( $submitted['user_pass'] );
 		}
-		
+
 		if ( isset( $submitted['user_password'] ) ) {
 			unset( $submitted['user_password'] );
 		}
-		
+
 		if ( isset( $submitted['confirm_user_password'] ) ) {
 			unset( $submitted['confirm_user_password'] );
 		}
 
 		do_action('um_before_save_registration_details', $this->id, $submitted );
-		
+
 		update_user_meta( $this->id, 'submitted', $submitted );
-		
+
 		do_action('um_after_save_registration_details', $this->id, $submitted );
-		
+
 	}
-	
+
 	/***
 	***	@A plain version of password
 	***/
@@ -353,41 +353,41 @@ class UM_User {
 	function set_last_login(){
 		update_user_meta(  $this->id, '_um_last_login', current_time( 'timestamp' ) );
 	}
-	
+
 	function set_role( $role ){
-		
+
 		do_action('um_when_role_is_set', um_user('ID') );
-	
+
 		do_action('um_before_user_role_is_changed');
-		
+
 		do_action('um_member_role_upgrade', $role, $this->profile['role'] );
-		
+
 		$this->profile['role'] = $role;
 		$this->update_usermeta_info('role');
-		
+
 		do_action('um_after_user_role_is_changed');
-		
+
 		do_action('um_after_user_role_is_updated', um_user('ID'), $role );
-		
+
 	}
-	
+
 	/***
 	***	@Set user's account status
 	***/
 	function set_status( $status ){
-	
+
 		do_action( 'um_when_status_is_set', um_user('ID') );
-		
+
 		$this->profile['account_status'] = $status;
-		
+
 		$this->update_usermeta_info('account_status');
-		
+
 		do_action( 'um_after_user_status_is_changed_hook' );
-		
+
 		do_action( 'um_after_user_status_is_changed', $status);
-		
+
 	}
-	
+
 	/***
 	***	@Set user's hash for password reset
 	***/
@@ -396,24 +396,24 @@ class UM_User {
 
 		$this->profile['reset_pass_hash'] = $ultimatemember->validation->generate();
 		$this->update_usermeta_info('reset_pass_hash');
-		
+
 	}
-	
+
 	/***
 	***	@Set user's hash
 	***/
 	function assign_secretkey(){
 		global $ultimatemember;
-		
+
 		do_action('um_before_user_hash_is_changed');
 
 		$this->profile['account_secret_hash'] = $ultimatemember->validation->generate();
 		$this->update_usermeta_info('account_secret_hash');
 
 		do_action('um_after_user_hash_is_changed');
-		
+
 	}
-	
+
 	/***
 	***	@password reset email
 	***/
@@ -423,7 +423,7 @@ class UM_User {
 		$ultimatemember->mail->send( um_user('user_email'), 'resetpw_email' );
 	}
 
-	
+
 	/***
 	***	@password changed email
 	***/
@@ -431,7 +431,7 @@ class UM_User {
 		global $ultimatemember;
 		$ultimatemember->mail->send( um_user('user_email'), 'changedpw_email' );
 	}
-	
+
 	/**
 	 * @function approve()
 	 *
@@ -444,10 +444,10 @@ class UM_User {
 	 * @example Approve a pending user and allow him to sign-in to your site.
 
 		<?php
-		
+
 			um_fetch_user( 352 );
 			$ultimatemember->user->approve();
-			
+
 		?>
 
 	 *
@@ -455,26 +455,26 @@ class UM_User {
 	 */
 	function approve(){
 		global $ultimatemember;
-		
+
 		$user_id = um_user('ID');
 		delete_option( "um_cache_userdata_{$user_id}" );
-		
+
 		if ( um_user('account_status') == 'awaiting_admin_review' ) {
 			$email_tpl = 'approved_email';
 		} else {
 			$email_tpl = 'welcome_email';
 		}
-		
+
 		$this->set_status('approved');
 		$ultimatemember->mail->send( um_user('user_email'), $email_tpl );
-		
+
 		$this->delete_meta('account_secret_hash');
 		$this->delete_meta('_um_cool_but_hard_to_guess_plain_pw');
-		
+
 		do_action('um_after_user_is_approved', um_user('ID') );
-		
+
 	}
-	
+
 	/***
 	***	@pending email
 	***/
@@ -484,7 +484,7 @@ class UM_User {
 		$this->set_status('awaiting_email_confirmation');
 		$ultimatemember->mail->send( um_user('user_email'), 'checkmail_email' );
 	}
-	
+
 	/**
 	 * @function pending()
 	 *
@@ -497,10 +497,10 @@ class UM_User {
 	 * @example An example of putting a user pending manual review
 
 		<?php
-		
+
 			um_fetch_user( 54 );
 			$ultimatemember->user->pending();
-			
+
 		?>
 
 	 *
@@ -511,7 +511,7 @@ class UM_User {
 		$this->set_status('awaiting_admin_review');
 		$ultimatemember->mail->send( um_user('user_email'), 'pending_email' );
 	}
-	
+
 	/**
 	 * @function reject()
 	 *
@@ -524,10 +524,10 @@ class UM_User {
 	 * @example Reject a user membership example
 
 		<?php
-		
+
 			um_fetch_user( 114 );
 			$ultimatemember->user->reject();
-			
+
 		?>
 
 	 *
@@ -538,7 +538,7 @@ class UM_User {
 		$this->set_status('rejected');
 		$ultimatemember->mail->send( um_user('user_email'), 'rejected_email' );
 	}
-	
+
 	/**
 	 * @function deactivate()
 	 *
@@ -551,10 +551,10 @@ class UM_User {
 	 * @example Deactivate a user membership with the following example
 
 		<?php
-		
+
 			um_fetch_user( 32 );
 			$ultimatemember->user->deactivate();
-			
+
 		?>
 
 	 *
@@ -563,51 +563,51 @@ class UM_User {
 	function deactivate(){
 		global $ultimatemember;
 		$this->set_status('inactive');
-		
+
 		do_action('um_after_user_is_inactive', um_user('ID') );
-		
+
 		$ultimatemember->mail->send( um_user('user_email'), 'inactive_email' );
 	}
-	
+
 	/***
 	***	@delete user
 	***/
 	function delete( $send_mail = true ) {
 		global $ultimatemember;
-		
+
 		do_action( 'um_delete_user_hook' );
 		do_action( 'um_delete_user', um_user('ID') );
-		
+
 		// send email notifications
 		if ( $send_mail ) {
 			$ultimatemember->mail->send( um_user('user_email'), 'deletion_email' );
 			$ultimatemember->mail->send( um_admin_email(), 'notification_deletion', array('admin' => true ) );
 		}
-		
+
 		// remove uploads
 		$ultimatemember->files->remove_dir( um_user_uploads_dir() );
-		
+
 		// remove user
 		if ( is_multisite() ) {
-			
+
 			if ( !function_exists('wpmu_delete_user') ) {
 				require_once( ABSPATH . 'wp-admin/includes/ms.php' );
 			}
-			
+
 			wpmu_delete_user( $this->id );
-			
+
 		} else {
-			
+
 			if ( !function_exists('wp_delete_user') ) {
 				require_once( ABSPATH . 'wp-admin/includes/user.php' );
 			}
-			
+
 			wp_delete_user( $this->id );
-			
+
 		}
 
 	}
-	
+
 	/**
 	 * @function get_role()
 	 *
@@ -620,15 +620,15 @@ class UM_User {
 	 * @example Do something if the user's role is paid-member
 
 		<?php
-		
+
 			um_fetch_user( 12 );
-			
+
 			if ( $ultimatemember->user->get_role() == 'paid-member' ) {
 				// Show this to paid customers
 			} else {
 				// You are a free member
 			}
-			
+
 		?>
 
 	 *
@@ -645,13 +645,13 @@ class UM_User {
 			}
 		}
 	}
-	
+
 	function get_role_name( $slug ) {
 		global $wpdb;
 		$post_id = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND post_name = '$slug'");
 		return get_the_title( $post_id );
 	}
-	
+
 	/***
 	***	@Update one key in user meta
 	***/
@@ -675,10 +675,10 @@ class UM_User {
 	 * @example Delete user's age field
 
 		<?php
-		
+
 			um_fetch_user( 15 );
 			$ultimatemember->user->delete_meta( 'age' );
-			
+
 		?>
 
 	 *
@@ -687,7 +687,7 @@ class UM_User {
 	function delete_meta( $key ){
 		delete_user_meta( $this->id, $key );
 	}
-	
+
 	/***
 	***	@Get all bulk actions
 	***/
@@ -706,7 +706,7 @@ class UM_User {
 		}
 		return $output;
 	}
-	
+
 	/***
 	***	@Get admin actions for individual user
 	***/
@@ -722,7 +722,7 @@ class UM_User {
 		}
 		return $items;
 	}
-	
+
 	/**
 	 * @function is_private_profile()
 	 *
@@ -737,13 +737,13 @@ class UM_User {
 	 * @example This example display a specific user's name If his profile is public
 
 		<?php
-		
+
 			um_fetch_user( 60 );
 			$is_private = $ultimatemember->user->is_private_profile( 60 );
 			if ( !$is_private ) {
 				echo 'User is public and his name is ' . um_user('display_name');
 			}
-			
+
 		?>
 
 	 *
@@ -756,7 +756,7 @@ class UM_User {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * @function is_approved()
 	 *
@@ -771,13 +771,13 @@ class UM_User {
 	 * @example Do something If a user's membership is approved
 
 		<?php
-		
+
 			if ( $ultimatemember->user->is_approved( 55 ) {
 				// User account is approved
 			} else {
 				// User account is not approved
 			}
-			
+
 		?>
 
 	 *
@@ -790,77 +790,77 @@ class UM_User {
 		}
 		return false;
 	}
-	
+
 	/***
 	***	@Is private
 	***/
 	function is_private_case( $user_id, $case ) {
 		$privacy = get_user_meta( $user_id, 'profile_privacy', true );
-		
+
 		if ( $privacy == $case ) {
 			$bool = apply_filters('um_is_private_filter_hook', false, $privacy, $user_id );
 			return $bool;
 		}
-		
+
 		return false;
 	}
-	
+
 	/***
 	***	@update files
 	***/
 	function update_files( $changes ) {
-		
+
 		global $ultimatemember;
-		
+
 		foreach( $changes as $key => $uri ) {
 			$src = um_is_temp_upload( $uri );
 			$ultimatemember->files->new_user_upload( $this->id, $src, $key );
 		}
-		
+
 	}
-	
+
 	/***
 	***	@update profile
 	***/
 	function update_profile( $changes ) {
-	
+
 		global $ultimatemember;
-		
+
 		$args['ID'] = $this->id;
 
 		// save or update profile meta
 		foreach( $changes as $key => $value ) {
-		
+
 			if ( !in_array( $key, $this->update_user_keys ) ) {
-				
+
 				update_user_meta( $this->id, $key, $value );
-			
+
 			} else {
-				
+
 				$args[$key] = esc_attr( $changes[$key] );
 
 			}
-			
+
 		}
-		
+
 		// hook for name changes
 		do_action('um_update_profile_full_name', $changes );
-		
+
 		// update user
 		if ( count( $args ) > 1 ) {
 			wp_update_user( $args );
 		}
-	
+
 	}
-	
+
 	/***
 	***	@user exists by meta key and value
 	***/
 	function user_has_metadata( $key, $value ) {
-		
+
 		global $ultimatemember;
 		$value = $ultimatemember->validation->safe_name_in_url( $value );
-		
+
 		$ids = get_users(array( 'fields' => 'ID', 'meta_key' => $key,'meta_value' => $value,'meta_compare' => '=') );
 		if ( !isset( $ids ) || empty( $ids ) ) return false;
 		foreach( $ids as $k => $id ) {
@@ -875,23 +875,29 @@ class UM_User {
 		return false;
 	}
 
-	
+
 	/***
 	***	@user exists by name
 	***/
 	function user_exists_by_name( $value ) {
-	
+
 		global $ultimatemember;
 		$value = $ultimatemember->validation->safe_name_in_url( $value );
 		$value = um_clean_user_basename( $value );
 
+		// if duplicate full name, return the user id
+		if( preg_match( '/\d+$/', $value, $matches ) )
+		{
+			return $matches[0];
+		}
+
 		$ids = get_users(array( 'fields' => 'ID', 'meta_key' => 'full_name','meta_value' => $value ,'meta_compare' => '=') );
-		if ( isset( $ids[0] ) ) 
+		if ( isset( $ids[0] ) )
 			return $ids[0];
 		return false;
 	}
 
-	
+
 	/**
 	 * @function user_exists_by_id()
 	 *
@@ -906,12 +912,12 @@ class UM_User {
 	 * @example Basic Usage
 
 		<?php
-		
+
 			$boolean = $ultimatemember->user->user_exists_by_id( 15 );
 			if ( $boolean ) {
 				// That user exists
 			}
-			
+
 		?>
 
 	 *
@@ -925,5 +931,5 @@ class UM_User {
 			return $user_id;
 		}
 	}
-	
+
 }
