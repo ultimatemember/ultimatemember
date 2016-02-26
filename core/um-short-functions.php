@@ -66,11 +66,15 @@
 	/***
 	*** @user clean basename
 	***/
-	function um_clean_user_basename( $value ){
+	function um_clean_user_basename( $value ) {
 
+		$value = str_replace('<hon>', '', $value);
+		$value = preg_replace('/^([a-z]{2,3})\./', '$1<hon>', $value);
+		$value = preg_replace('/([a-z]{2,3})\.$/', '$1<hon>', $value);
 		$value = str_replace('.', ' ', $value);
 		$value = str_replace('-', ' ', $value);
 		$value = str_replace('+', ' ', $value);
+		$value = str_replace('<hon>', '.', $value);
 
 		return $value;
 	}

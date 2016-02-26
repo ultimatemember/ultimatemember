@@ -240,11 +240,10 @@ class UM_Permalinks {
 		if( in_array( um_get_option( 'permalink_base'),  $full_name_permalinks ) )
 		{
 			$full_name = um_user( 'full_name' );
-			$count     = $wpdb->get_var( $wpdb->prepare(
-				"SELECT COUNT(*) as count FROM %s WHERE meta_key = 'full_name' && meta_value = %s ",
-				$wpdb->usermeta,
-				um_user( 'full_name' )
-			) );
+			$count     = intval( $wpdb->get_var( $wpdb->prepare(
+				"SELECT COUNT(*) as count FROM {$wpdb->usermeta} WHERE meta_key = 'full_name' AND meta_value = '%s'",
+				$full_name
+			) ) );
 
 			if( $count > 1 )
 			{
