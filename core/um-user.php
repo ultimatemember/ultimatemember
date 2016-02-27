@@ -886,7 +886,7 @@ class UM_User {
 		$value = um_clean_user_basename( $value );
 
 		// if duplicate full name, return the user id
-		if( preg_match( '/\d+$/', $value, $matches ) )
+		if( preg_match( '/( |\.|\-)\d+$/', $value, $matches ) )
 		{
 			return $matches[0];
 		}
