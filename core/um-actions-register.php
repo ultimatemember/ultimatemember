@@ -116,7 +116,7 @@
 			$role = um_get_option('default_role');
 		}
 
-		if ( !in_array( $role, $ultimatemember->query->get_roles( false, array('admin') ) ) ) {
+		if ( !array_key_exists( $role, $ultimatemember->query->get_roles( false, array('admin') ) ) ) {
 			$role = um_get_option('default_role');
 		}
 
