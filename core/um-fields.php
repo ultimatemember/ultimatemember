@@ -1569,7 +1569,7 @@ class UM_Fields {
 								$option_value = $k;
 							}
 
-							$output .= '<option value="'.$option_value.'" ';
+							$output .= '<option value="' . htmlentities($option_value) . '" ';
 							if ( $this->is_selected($form_key, $option_value, $data) ) {
 								$output.= 'selected';
 							}
@@ -1639,7 +1639,7 @@ class UM_Fields {
 								$opt_value = $v;
 							}
 
-							$output .= '<option value="'.$opt_value.'" ';
+							$output .= '<option value="'.htmlentities($opt_value).'" ';
 							if ( $this->is_selected($key, $opt_value, $data) ) {
 								$output.= 'selected';
 							}
@@ -1721,7 +1721,7 @@ class UM_Fields {
 							}
 
 							$output .= '<label class="um-field-radio '.$active.' um-field-half '.$col_class.'">';
-							$output .= '<input type="radio" name="'.$form_key.'" value="'.$option_value.'" ';
+							$output .= '<input type="radio" name="'.$form_key.'" value="'.htmlentities($option_value).'" ';
 
 							if ( $this->is_radio_checked($key, $option_value, $data) ) {
 								$output.= 'checked';
