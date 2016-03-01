@@ -1397,3 +1397,21 @@ function um_fetch_user( $user_id ) {
 		return $protocol;
 	}
 
+	/**
+	 * Check if meta_value exists
+	 * @param  string $key
+	 * @param  mixed $value 
+	 * @return integer
+	 */
+	function um_is_meta_value_exists( $key, $value ){
+		global $wpdb;
+
+		$count = $wpdb->get_var( $wpdb->prepare(
+				"SELECT COUNT(*) as count FROM {$wpdb->usermeta} WHERE meta_key = %s AND meta_value = %s ",
+				$key,
+				$value
+		) );
+
+		return $count;
+	}
+
