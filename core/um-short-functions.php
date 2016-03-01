@@ -68,6 +68,7 @@
 	***/
 	function um_clean_user_basename( $value ) {
 
+		$raw_value = $value;
 		$value = str_replace('<hon>', '', $value);
 		$value = preg_replace('/^([a-z]{2,3})\./', '$1<hon>', $value);
 		$value = preg_replace('/([a-z]{2,3})\.$/', '$1<hon>', $value);
@@ -76,6 +77,8 @@
 		$value = str_replace('+', ' ', $value);
 		$value = str_replace('<hon>', '.', $value);
 
+		$value = apply_filters('um_clean_user_basename_filter', $value, $raw_value );
+		
 		return $value;
 	}
 	/***

@@ -68,3 +68,30 @@
 		
 		return $actions;
 	}
+
+
+	/**
+	 * Filter user basename
+	 * @param  string $value 
+	 * @return string
+	 * @hook_filter: um_clean_user_basename_filter       
+	 */
+	add_filter('um_clean_user_basename_filter','um_clean_user_basename_filter',2,10);
+	function um_clean_user_basename_filter( $value, $raw ){
+		
+		// Checks if last name has dash
+		if( ! empty( um_user('last_name') ) && strrpos( um_user('last_name') ,"-") ){
+			$current_user_last_name = strtolower( um_user('last_name') );
+			
+			if( strrpos($raw, $current_user_last_name) > -1 ){
+				$a = strrpos($current_user_last_name, $raw); 
+				$swap_lastname = substr($current_user_last_name, $a);
+				$swap_lastname = str_replace('-',' ', $swap_lastname);
+				$value = str_replace( $swap_lastname, $current_user_last_name, $value);
+			}
+		}
+
+		return $value;
+
+	}
+
