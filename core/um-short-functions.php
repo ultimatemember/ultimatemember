@@ -1216,6 +1216,10 @@ function um_fetch_user( $user_id ) {
 					$value = unserialize( $value );
 				}
 
+				if( $data == 'role' ){
+					return strtolower($value);
+				}
+
 				return $value;
 				break;
 
