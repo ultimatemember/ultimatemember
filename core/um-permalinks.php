@@ -211,8 +211,6 @@ class UM_Permalinks {
 		        global $sitepress;
 		        $profile_url = $sitepress->language_url( $language );
 		    }
-
-
 		}
 
 		if ( um_get_option('permalink_base') == 'user_login' ) {
@@ -240,10 +238,12 @@ class UM_Permalinks {
 		if( in_array( um_get_option( 'permalink_base'),  $full_name_permalinks ) )
 		{
 			$full_name = um_user( 'full_name' );
-			$count     = intval( $wpdb->get_var( $wpdb->prepare(
-				"SELECT COUNT(*) as count FROM {$wpdb->usermeta} WHERE meta_key = 'full_name' AND meta_value = '%s'",
-				$full_name
-			) ) );
+			$last_name = um_user( 'last_name' );
+			$count     = intval( um_is_meta_value_exists( 'full_name', $full_name ) );
+
+			if( strpos( $last_name, '-') > -1 && strpos( $full_name, '-' ) > -1 ){
+				$full_name  = str_replace('-', '_', $full_name  );
+			}
 
 			if( $count > 1 )
 			{
