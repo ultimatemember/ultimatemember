@@ -57,7 +57,8 @@ class UM_User {
 	function community_role_edit( $user ) {
 		global $ultimatemember;
 		if ( current_user_can( 'edit_users' ) && current_user_can( 'edit_user', $user->ID ) ) {
-			um_fetch_user(  $user->ID );
+			
+			$um_user_role = get_user_meta($user->ID,'role',true);
 			?>
 			<table class="form-table">
 				<tbody>
@@ -68,7 +69,7 @@ class UM_User {
 						<td>
 							<select name="um_role" id="um_role">
 							<?php foreach( $ultimatemember->query->get_roles() as $key => $value ) { ?>
-							<option value="<?php echo $key; ?>" <?php selected( um_user('role'), $key ); ?> ><?php echo $value; ?></option>
+							<option value="<?php echo $key; ?>" <?php selected( $um_user_role, $key ); ?> ><?php echo $value; ?></option>
 							<?php } ?>
 							</select>
 							<span class="description"><?php _e( 'Assign or change the community role for this user', 'ultimatemember' ); ?></span>
