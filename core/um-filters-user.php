@@ -27,7 +27,9 @@
 
 		$actions = null;
 		
-		if ( !um_user('super_admin') ) {
+		um_fetch_user( um_profile_id() );
+
+		if ( current_user_can('manage_options') ) {
 		
 			if ( um_user('account_status') == 'awaiting_admin_review' ){
 				$actions['um_approve_membership'] = array( 'label' => __('Approve Membership','ultimatemember') );
@@ -64,7 +66,7 @@
 			$actions['um_switch_user'] = array( 'label' => __('Login as this user','ultimatemember') );
 		}
 		
-		um_fetch_user( um_profile_id() );
+		
 		
 		return $actions;
 	}
