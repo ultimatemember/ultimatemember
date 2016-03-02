@@ -54,13 +54,54 @@
 	***	@Get where user should be headed after logging
 	***/
 	function um_dynamic_login_page_redirect( $redirect_to = '' ) {
+		
 		global $ultimatemember;
+		
 		$uri = um_get_core_page( 'login' );
+		
 		if ( ! $redirect_to ) {
 			$redirect_to = $ultimatemember->permalinks->get_current_url();
 		}
-		$uri = add_query_arg( 'redirect_to', $redirect_to, $uri );
+
+		$redirect_key = um_set_redirect_url( $redirect_to );
+
+		$uri = add_query_arg( 'redirect_to', $redirect_key, $uri );
+
 		return $uri;
+	}
+
+	/**
+	 * Set redirect key
+	 * @param  string $url 
+	 * @return string $redirect_key
+	 */
+	function um_set_redirect_url( $url ){
+		
+		$redirect_key = wp_generate_password(12,false);
+
+		$_SESSION['um_redirect_key'] = array( $redirect_key => $url );
+
+		return $redirect_key;
+	}
+
+	/**
+	 * Set redirect key
+	 * @param  string $url 
+	 * @return string $redirect_key
+	 */
+	function um_get_redirect_url( $key ){
+		
+		if( isset( $_SESSION['um_redirect_key'][ $key ] ) ){
+			
+			$url = $_SESSION['um_redirect_key'][ $key ];
+
+			unset( $_SESSION['um_redirect_key'] );
+
+			return $url;
+
+		}
+
+		return;
 	}
 
 	/***
