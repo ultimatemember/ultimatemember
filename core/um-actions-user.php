@@ -13,7 +13,7 @@
 			$wp_user_object->set_role( $meta['synced_role'] );
 		}
 	}
-		
+
 	/***
 	***	@after user uploads, clean up uploads dir
 	***/
@@ -22,21 +22,21 @@
 		global $ultimatemember;
 
 		um_fetch_user( $user_id );
-		
+
 		$array = $ultimatemember->user->profile;
 
 		$files = glob( um_user_uploads_dir() . '*', GLOB_BRACE);
 
 		if ( file_exists( um_user_uploads_dir() ) && $files && isset( $array ) && is_array( $array ) ) {
-			
+
 			foreach($files as $file) {
 				$str = basename($file);
 				if ( !strstr( $str, 'profile_photo') && !strstr( $str, 'cover_photo') && !strstr( $str, 'stream_photo') && !preg_grep('/' . $str . '/', $array ) )
 					unlink( $file );
 			}
-			
+
 		}
-		
+
 	}
 
 	/***
@@ -44,37 +44,37 @@
 	***/
 	add_action( 'user_register', 'um_new_user_via_wpadmin', 10, 1 );
 	function um_new_user_via_wpadmin( $user_id ) {
-		
+
 		if ( is_admin() ) {
 
 			global $ultimatemember;
-			
-			if ( isset( $_POST['role'] ) && $_POST['role'] == 'administrator' ) {
-				$args['role'] = 'admin';
+
+			if( isset( $_POST['um_role'] ) ) {
+				$args['role'] = $_POST['um_role'];
 			} else {
-				$args['role'] = 'member';
+				$args['role'] = um_get_option('default_role');
 			}
 
 			do_action('um_after_new_user_register', $user_id, $args);
-			
+
 			do_action('um_update_profile_full_name', $_POST);
 
 		}
-		
+
 	}
-	
+
 	/***
 	***	@adds main links to a logout widget
 	***/
 	add_action('um_logout_user_links', 'um_logout_user_links', 100 );
 	function um_logout_user_links( $args ) {
 		global $ultimatemember;
-	
+
 	?>
-	
+
 		<li><a href="<?php echo um_get_core_page('account'); ?>"><?php _e('Your account','ultimatemember'); ?></a></li>
 		<li><a href="<?php echo esc_url( add_query_arg('redirect_to', $ultimatemember->permalinks->get_current_url(true), um_get_core_page('logout') ) ); ?>"><?php _e('Logout','ultimatemember'); ?></a></li>
-	
+
 	<?php
-	
+
 	}

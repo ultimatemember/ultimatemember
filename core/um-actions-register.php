@@ -107,7 +107,7 @@
 	***/
 	add_action('um_after_new_user_register', 'um_after_new_user_register', 10, 2);
 	function um_after_new_user_register($user_id, $args){
-		global $ultimatemember;
+		global $ultimatemember, $pagenow;
 		extract($args);
 
 		um_fetch_user( $user_id );
@@ -116,7 +116,7 @@
 			$role = um_get_option('default_role');
 		}
 
-		if ( !array_key_exists( $role, $ultimatemember->query->get_roles( false, array('admin') ) ) ) {
+		if ( $pagenow != 'user-new.php' && !array_key_exists( $role, $ultimatemember->query->get_roles( false, array('admin') ) ) ) {
 			$role = um_get_option('default_role');
 		}
 
