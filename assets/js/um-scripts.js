@@ -64,11 +64,26 @@ jQuery(document).ready(function() {
 
 		var years_n = elem.attr('data-years');
 
-		var min = elem.attr('data-date_min');
-		var max = elem.attr('data-date_max');
+		var minRange = elem.attr('data-date_min');
+		var maxRange = elem.attr('data-date_max');
 
-		var min = min.length ? new Date(min.split(",")) : null;
-		var max = max.length ? new Date(max.split(",")) : null;
+		var minSplit = minRange.split(",");
+		var maxSplit = maxRange.split(",");
+
+		var min = minSplit.length ? new Date(minSplit) : null;
+		var max = minSplit.length ? new Date(maxSplit) : null;
+
+		// fix min date for safari
+		if(min && min.toString() == 'Invalid Date' && minSplit.length == 3) {
+			var minDateString = minSplit[1] + '/' + minSplit[2] + '/' + minSplit[0];
+			min = new Date(Date.parse(minDateString));
+		}
+
+		// fix max date for safari
+		if(max && max.toString() == 'Invalid Date' && maxSplit.length == 3) {
+			var maxDateString = maxSplit[1] + '/' + maxSplit[2] + '/' + maxSplit[0];
+			max = new Date(Date.parse(maxDateString));
+		}
 
 		elem.pickadate({
 			selectYears: years_n,
