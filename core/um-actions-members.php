@@ -223,6 +223,6 @@
 			$file = $theme_file;
 		}
 
-		include_once $file;
+		include $file;
 
 	}
