@@ -77,7 +77,7 @@ class UM_Account {
 			
 			$redirect_to = add_query_arg(	
 				'redirect_to', 
-				um_set_redirect_url( um_get_core_page('account') ) , 
+				urlencode_deep( um_get_core_page('account') ) , 
 				um_get_core_page('login') 
 			);
 			

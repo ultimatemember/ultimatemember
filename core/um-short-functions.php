@@ -63,7 +63,7 @@
 			$redirect_to = $ultimatemember->permalinks->get_current_url();
 		}
 
-		$redirect_key = um_set_redirect_url( $redirect_to );
+		$redirect_key = urlencode_deep( $redirect_to );
 
 		$uri = add_query_arg( 'redirect_to', $redirect_key, $uri );
 
@@ -77,6 +77,10 @@
 	 */
 	function um_set_redirect_url( $url ){
 		
+		if( um_is_session_started() === FALSE ){
+				session_start();
+		}
+
 		$redirect_key = wp_generate_password(12,false);
 
 		$_SESSION['um_redirect_key'] = array( $redirect_key => $url );
@@ -91,6 +95,10 @@
 	 */
 	function um_get_redirect_url( $key ){
 		
+		if( um_is_session_started() === FALSE ){
+				session_start();
+		}
+
 		if( isset( $_SESSION['um_redirect_key'][ $key ] ) ){
 			
 			$url = $_SESSION['um_redirect_key'][ $key ];
@@ -111,6 +119,25 @@
 
 		return;
 	}
+
+
+	/**
+	 * Checks if session has been started
+	 * @return bool
+	*/
+	function um_is_session_started(){
+		
+		if ( php_sapi_name() !== 'cli' ) {
+		        if ( version_compare(phpversion(), '5.4.0', '>=') ) {
+		            return session_status() === PHP_SESSION_ACTIVE ? TRUE : FALSE;
+		        } else {
+		            return session_id() === '' ? FALSE : TRUE;
+		        }
+		}
+		
+		return FALSE;
+	}
+
 
 	/***
 	*** @user clean basename

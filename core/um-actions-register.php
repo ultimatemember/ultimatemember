@@ -188,7 +188,7 @@
 
 			// Priority redirect
 			if ( isset( $args['redirect_to'] ) ) {
-				exit( wp_redirect( um_get_redirect_url( $args['redirect_to'] ) ) );
+				exit( wp_redirect(  urldecode( $args['redirect_to'] ) ) );
 			}
 
 			if ( $status == 'approved' ) {

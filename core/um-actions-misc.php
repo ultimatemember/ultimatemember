@@ -9,8 +9,8 @@
 		global $ultimatemember;
 		
 		if ( isset( $_REQUEST['redirect_to'] ) && !empty( $_REQUEST['redirect_to'] ) ) {
-			
-			echo '<input type="hidden" name="redirect_to" id="redirect_to" value="'.esc_attr($_REQUEST['redirect_to']).'" />';
+			$url = urlencode_deep( $_REQUEST['redirect_to'] );
+			echo '<input type="hidden" name="redirect_to" id="redirect_to" value="'.esc_attr( $url ).'" />';
 
 		} else if ( isset( $args['after_login'] ) && !empty( $args['after_login'] ) ) {
 			
@@ -33,9 +33,9 @@
 					break;
 					
 			}
-			$url = esc_attr( um_set_redirect_url( $url ) );
+			$url = urlencode_deep( $url );
 
-			echo '<input type="hidden" name="redirect_to" id="redirect_to" value="' . $url . '" />';
+			echo '<input type="hidden" name="redirect_to" id="redirect_to" value="' . esc_attr( $url ) . '" />';
 			
 		}
 		
