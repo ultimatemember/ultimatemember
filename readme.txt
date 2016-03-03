@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.4
 
-Stable Tag: 1.3.41
+Stable Tag: 1.3.42
 
 License: GNU Version 2 or Any Later Version
 
@@ -148,6 +148,11 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.42: March 3, 2016 =
+* Fixed: email template and localization
+* Fixed: redirect URL
+
 = 1.3.41: March 3, 2016 =
 * Fixed: Registration form redirect url
 
