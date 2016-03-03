@@ -95,10 +95,18 @@
 			
 			$url = $_SESSION['um_redirect_key'][ $key ];
 
-			unset( $_SESSION['um_redirect_key'] );
-
 			return $url;
 
+		}else{
+
+			if( isset( $_SESSION['um_redirect_key'] ) ){
+				foreach ( $_SESSION['um_redirect_key'] as $key => $url ) {
+
+					return $url;
+
+					break;
+				}
+			}
 		}
 
 		return;
