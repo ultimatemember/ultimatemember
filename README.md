@@ -4,7 +4,7 @@ Ultimate Member is a powerful and flexible WordPress plugin that makes it a bree
 
 | Latest Version |Requires at least|
 | :------------: |:------------:|
-| 1.3.40| WordPress 4.1 or higher
+| 1.3.41| WordPress 4.1 or higher
 
 
 ##Features of the plugin include:

@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.4
 
-Stable Tag: 1.3.40
+Stable Tag: 1.3.41
 
 License: GNU Version 2 or Any Later Version
 
@@ -148,6 +148,8 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+= 1.3.41: March 3, 2016 =
+* Fixed: Registration form redirect url
 
 = 1.3.40: March 3, 2016 =
 
