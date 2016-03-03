@@ -162,6 +162,10 @@
 					$ultimatemember->form->add_error($key, sprintf(__('%s is required.','ultimatemember'), $array['title'] ) );
 				}
 
+                if ( isset( $array['type'] ) && $array['type'] == 'user_tags' && isset( $array['required'] ) && $array['required'] == 1 && !isset( $args[$key] ) ) {
+                    $ultimatemember->form->add_error($key, sprintf(__('%s is required.','ultimatemember'), $array['title'] ) );
+                }
+
 				if ( isset( $array['type'] ) && $array['type'] == 'radio' && isset( $array['required'] ) && $array['required'] == 1 && !isset( $args[$key] ) && !in_array($key, array('role_radio','role_select') ) ) {
 					$ultimatemember->form->add_error($key, sprintf(__('%s is required.','ultimatemember'), $array['title'] ) );
 				}
