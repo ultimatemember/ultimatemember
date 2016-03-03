@@ -152,6 +152,10 @@
 		$form_id = $args['form_id'];
 		$mode = $args['mode'];
 		$fields = unserialize( $args['custom_fields'] );
+   
+	    if ( get_post_meta( $form_id, '_um_profile_photo_required', true ) && empty( $args['profile_photo'] ) ) {
+	        $ultimatemember->form->add_error('profile_photo', sprintf(__('%s is required.','ultimatemember'), 'Profile Photo' ) );
+	    }
 
 		if( isset(  $fields ) && ! empty(  $fields ) ){
 			foreach( $fields as $key => $array ) {
