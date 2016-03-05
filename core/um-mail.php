@@ -38,7 +38,7 @@ class UM_Mail {
 		} else {
 			
 			$lang = get_locale();
-			$arr_english_lang = array('en_US','en_NZ','en_ZA','en_AU','en_GB');
+			$arr_english_lang = array('en','en_US','en_NZ','en_ZA','en_AU','en_GB');
 
 			if( in_array( $lang, $arr_english_lang ) ){
 				$lang = '';
