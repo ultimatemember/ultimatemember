@@ -135,7 +135,7 @@
 		do_action('um_on_login_before_redirect', um_user('ID') );
 		
 		// Priority redirect
-		if ( isset( $args['redirect_to'] ) ) {
+		if ( isset( $args['redirect_to'] ) && ! empty( $args['redirect_to']  ) ) {
 			exit( wp_redirect(  urldecode( $args['redirect_to'] ) ) );
 		}
 		
