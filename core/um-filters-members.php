@@ -32,7 +32,9 @@
 		global $ultimatemember;
 		extract( $args );
 
-		if ( !um_user_can('can_edit_everyone') ) {
+		$query_args['meta_query']['relation'] = 'AND';
+
+		if ( !um_user_can('can_edit_everyone')  ) {
 
 			$query_args['meta_query'][] = array(
 				'key' => 'account_status',
@@ -208,6 +210,7 @@
 			$query_args = apply_filters('um_modify_sortby_parameter', $query_args, $sortby);
 
 		}
+
 
 		return $query_args;
 	}
