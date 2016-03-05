@@ -253,9 +253,11 @@
 
 		if ( isset( $args['custom_fields']['role_select'] ) || isset( $args['custom_fields']['role_radio'] ) ) return;
 
-		if (isset($args['role']) && !empty($args['role'])) {
+		$use_global_settings = get_post_meta( $args['form_id'], '_um_register_use_globals', true);
+		
+		if (isset($args['role']) && !empty($args['role']) && $use_global_settings == 0 ) {
 			$role = $args['role'];
-		} else {
+		} else if( $use_global_settings == 1 ) {
 			$role = um_get_option('default_role');
 		}
 
