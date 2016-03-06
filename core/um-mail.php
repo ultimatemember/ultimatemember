@@ -40,7 +40,7 @@ class UM_Mail {
 			$lang = get_locale();
 			$arr_english_lang = array('en','en_US','en_NZ','en_ZA','en_AU','en_GB');
 
-			if( in_array( $lang, $arr_english_lang ) ){
+			if( in_array( $lang, $arr_english_lang ) || strpos( $lang , 'en_' ) > -1 ){
 				$lang = '';
 			} else {
 				$lang .= '/';
