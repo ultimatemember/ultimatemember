@@ -2426,8 +2426,12 @@ class UM_Fields {
 			if ( $borderradius ) $css_heading_borderradius = 'border-radius: ' . $borderradius . ' ' . $borderradius . ' 0px 0px;';
 
 			$output .= '<div class="um-row-heading" style="' . $css_heading_background_color . $css_heading_padding . $css_heading_text_color . $css_heading_borderradius . '">';
-			if ( isset($icon) ) $output .= '<span class="um-row-heading-icon"><i class="' . $icon . '"></i></span>';
-			$output .= $heading_text .'</div>';
+			
+			if ( isset( $icon ) ) {
+				$output .= '<span class="um-row-heading-icon"><i class="' . $icon . '"></i></span>';
+			}
+			
+			$output .= ( ! empty( $heading_text ) ? $heading_text: '') .'</div>';
 
 		} else {
 
