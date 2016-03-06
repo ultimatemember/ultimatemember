@@ -615,7 +615,7 @@ class UM_Fields {
 
 				$array['disabled'] = '';
 
-				if ( $key == 'user_login' && $this->set_mode == 'account' ) {
+				if ( $key == 'user_login' && isset(  $this->set_mode ) && $this->set_mode == 'account' ) {
 					$array['disabled'] = 'disabled="disabled"';
 				}
 
