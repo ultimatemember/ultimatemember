@@ -426,14 +426,14 @@ class UM_Fields {
 
 			if ( !isset( $ultimatemember->form->post_form ) ) {
 
-				$value = um_user( $key );
-				$value = apply_filters('um_is_selected_filter_value', $value );
+				$field_value = um_user( $key );
+				$field_value= apply_filters('um_is_selected_filter_value', $field_value);
 
-				if ( $value && $this->editing == true && is_array( $value ) && in_array( $value, $value ) ) {
+				if ( $field_value && $this->editing == true && is_array( $field_value ) && in_array( $value, $field_value ) ) {
 					return true;
 				}
 
-				if ( $value && $this->editing == true && !is_array( $value ) && $value == $value ) {
+				if ( $field_value && $this->editing == true && !is_array( $field_value ) && $field_value == $value ) {
 					return true;
 				}
 
