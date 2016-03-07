@@ -21,6 +21,14 @@
 				if ( isset( $_REQUEST['redirect_to'] ) && !empty( $_REQUEST['redirect_to'] ) ) {
 					$redirect = add_query_arg( 'redirect_to', $_REQUEST['redirect_to'], $redirect );
 				}
+				
+				/* ---------- */
+				//Add support query string data after user login
+				if($_SERVER['QUERY_STRING']) {
+					$redirect .= '?'.$_SERVER['QUERY_STRING'];
+				}
+				/* ---------- */
+				
 				exit( wp_redirect( $redirect ) );
 			}
 				
