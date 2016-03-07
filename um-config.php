@@ -1899,6 +1899,16 @@ $this->sections[] = array(
         ),
 
         array(
+                'id'      		=> 'um_force_utf8_strings',
+                'type'     		=> 'switch',
+                'title'    		=> __( 'Force Strings to UTF-8 Encoding','ultimatemember' ),
+                'default'  		=> 0,
+				'desc' 	   		=> __('Turn on If you want to force labels and fields to use UTF-8 encoding','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+        ),
+
+        array(
                 'id'       		=> 'enable_timebot',
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Enable Time Check Security','ultimatemember' ),

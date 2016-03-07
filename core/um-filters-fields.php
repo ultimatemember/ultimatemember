@@ -302,3 +302,40 @@
 
 		 return $array;
 	}
+
+
+	/**
+	 * Force fields to use UTF-8 encoding
+	 * @param  mixed $value
+	 * @return mixed
+	 * @uses  hook filter: um_profile_field_filter_hook__
+	 */
+	add_filter('um_profile_field_filter_hook__','um_force_utf8_fields',1,10);
+	function um_force_utf8_fields( $value ){
+		
+		if( ! um_get_option('um_force_utf8_strings') ) 
+			return $value;
+
+		$value = um_force_utf8_string( $value );
+
+		return $value;
+
+	}
+
+	/**
+	 * Filter profile data value
+	 * @param  mixed $value
+	 * @return mixed
+	 * @uses   hook filter: um_is_selected_filter_value
+	 */
+	add_filter('um_is_selected_filter_value','um_is_selected_filter_value',1,9);
+	function um_is_selected_filter_value( $value ){
+		global $ultimatemember;
+
+		if( ! um_get_option('um_force_utf8_strings') ) 
+			return $value;
+
+		$value = um_force_utf8_string( $value );
+		
+		return $value;
+	}

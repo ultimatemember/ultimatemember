@@ -414,9 +414,11 @@ class UM_Fields {
 	function is_selected($key, $value, $data){
 		global $ultimatemember;
 
-		if ( isset( $ultimatemember->form->post_form[$key] ) && is_array( $ultimatemember->form->post_form[$key] ) ) {
+		$key = apply_filters('um_is_selected_filter_key', $key );
 
-			if ( in_array( $value, $ultimatemember->form->post_form[$key] ) ){
+		if ( isset( $ultimatemember->form->post_form[ $key ] ) && is_array( $ultimatemember->form->post_form[ $key ] ) ) {
+
+			if ( in_array( $value, $ultimatemember->form->post_form[ $key ] ) ){
 				return true;
 			}
 
@@ -424,11 +426,14 @@ class UM_Fields {
 
 			if ( !isset( $ultimatemember->form->post_form ) ) {
 
-				if ( um_user( $key ) && $this->editing == true && is_array( um_user( $key ) ) && in_array($value, um_user( $key ) ) ) {
+				$value = um_user( $key );
+				$value = apply_filters('um_is_selected_filter_value', $value );
+
+				if ( $value && $this->editing == true && is_array( $value ) && in_array( $value, $value ) ) {
 					return true;
 				}
 
-				if ( um_user( $key ) && $this->editing == true && !is_array( um_user( $key ) ) && um_user( $key ) == $value ) {
+				if ( $value && $this->editing == true && !is_array( $value ) && $value == $value ) {
 					return true;
 				}
 

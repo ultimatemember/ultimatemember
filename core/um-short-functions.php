@@ -1495,3 +1495,35 @@ function um_fetch_user( $user_id ) {
 		return $count;
 	}
 
+	/**
+	 * Force strings to UTF-8 encoded
+	 * @param  mixed $value
+	 * @return mixed
+	 */
+	function um_force_utf8_string( $value ){
+
+		if( is_array( $value ) ){
+			$arr_value = array();
+			foreach ($value as $key => $value) {
+				$utf8_decoded_value = utf8_decode( $value );
+
+				if( mb_check_encoding( $utf8_decoded_value, 'UTF-8') ){ 
+				 	array_push( $arr_value, $utf8_decoded_value );
+				}else{
+					array_push( $arr_value, $value );
+				}
+
+			}
+			return $arr_value;
+		}else{
+
+			$utf8_decoded_value = utf8_decode($value);
+
+			if( mb_check_encoding( $utf8_decoded_value, 'UTF-8') ){ 
+			 	return $utf8_decoded_value;
+			}
+		}
+
+		return $value;
+
+	}
