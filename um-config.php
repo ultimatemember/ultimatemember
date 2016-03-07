@@ -178,6 +178,17 @@ $this->sections[] = array(
         ),
 
         array(
+                'id'       		=> 'use_um_gravatar_default_image',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Use Default plugin avatar as Gravatar\'s Default avatar','ultimatemember' ),
+				'default' 		=> 0,
+				'desc' 	   		=> __('Do you want to use the plugin default avatar instead of the gravatar default photo (If the user did not upload a custom profile photo / avatar)','ultimatemember'),
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
+				'required'		=> array( 'use_gravatars', '=', 1 ),
+        ),
+
+        array(
                 'id'       		=> 'reset_require_strongpass',
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Require a strong password? (when user resets password only)','ultimatemember' ),
