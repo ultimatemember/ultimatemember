@@ -67,6 +67,7 @@ class UM_Form {
 
 			$this->form_id = $_POST['form_id'];
 			$this->form_status = get_post_status( $this->form_id );
+			
 
 			if ( $this->form_status == 'publish' ) {
 
@@ -95,8 +96,9 @@ class UM_Form {
 					}
 				}
 
-				if ( isset( $_POST[ $ultimatemember->honeypot ] ) && $_POST[ $ultimatemember->honeypot ] != '' )
+				if ( isset( $_POST[ $ultimatemember->honeypot ] ) && $_POST[ $ultimatemember->honeypot ] != '' ){
 					wp_die('Hello, spam bot!');
+				}
 
 				if ( !in_array( $this->form_data['mode'], array('login') ) ) {
 
@@ -112,7 +114,7 @@ class UM_Form {
 				}
 
 				/* Continue based on form mode - pre-validation */
-
+		
 				do_action('um_submit_form_errors_hook', $this->post_form );
 
 				do_action("um_submit_form_{$this->post_form['mode']}", $this->post_form );
