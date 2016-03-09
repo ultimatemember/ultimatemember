@@ -16,12 +16,14 @@
 		extract( $args );
 
 		$query = $ultimatemember->permalinks->get_query_array();
-
+		
 		foreach( $ultimatemember->members->core_search_fields as $key ) {
-			if ( isset( $query[$key] ) ) {
+			
+			if ( isset( $query[$key] ) && ! empty( $query[$key]  ) ) {
 				$query_args['search']         = '*' . trim($query[$key]) . '*';
 			}
 		}
+		
 		return $query_args;
 	}
 
@@ -109,7 +111,6 @@
 		if ( count ($query_args['meta_query']) == 1 ) {
 			unset( $query_args['meta_query'] );
 		}
-
 		return $query_args;
 
 	}
