@@ -1557,6 +1557,7 @@ class UM_Builtin {
 							'SO' => __('Somalia',"ultimatemember"),
 							'ZA' => __('South Africa',"ultimatemember"),
 							'GS' => __('South Georgia and the South Sandwich Islands',"ultimatemember"),
+							'SS' => __('South Sudan',"ultimatemember"),
 							'ES' => __('Spain',"ultimatemember"),
 							'LK' => __('Sri Lanka',"ultimatemember"),
 							'SD' => __('Sudan',"ultimatemember"),
