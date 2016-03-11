@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.4
 
-Stable Tag: 1.3.43
+Stable Tag: 1.3.38
 
 License: GNU Version 2 or Any Later Version
 
@@ -148,6 +148,19 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.44: March 11, 2016 =
+* New: an option to force Strings to use UTF-8 encoding
+* New: an option to change Gravatar default image
+* New: South Sudan to the list of countries.
+* Fixed: update profile edit
+* Fixed: remove feed from content restriction
+* Fixed: search username query
+* Fixed: support for server query string data after user login
+* Fixed: matching fields values
+* Fixed: email template path
+* Fixed: shortcode within [um_show_content] shortcode
+* Tweak: remove notices
 
 = 1.3.43: March 5, 2016 =
 * Fixed: redirect URL after login
