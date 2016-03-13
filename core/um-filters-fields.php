@@ -329,6 +329,7 @@
 	 * @uses   hook filter: um_is_selected_filter_value
 	 */
 	add_filter('um_is_selected_filter_value','um_is_selected_filter_value',1,9);
+	add_filter('um_select_dropdown_dynamic_option_value','um_is_selected_filter_value',1,10);
 	function um_is_selected_filter_value( $value ){
 		global $ultimatemember;
 
@@ -338,4 +339,26 @@
 		$value = um_force_utf8_string( $value );
 		
 		return $value;
+	}
+
+	/**
+	 * Filter select dropdown to use UTF-8 encoding
+	 * @param  array $options 
+	 * @param  array $data    
+	 * @return $options
+	 * @uses   hook filter: um_select_dropdown_dynamic_options
+	 */
+	add_filter('um_select_dropdown_dynamic_options','um_select_dropdown_dynamic_options_to_utf8',2,10);
+	function um_select_dropdown_dynamic_options_to_utf8( $options, $data ){
+		global $ultimatemember;
+
+		if( ! um_get_option('um_force_utf8_strings') ) 
+			return $options;
+
+		foreach ( $options as $key => $value ) {
+			$options[ $key ] = um_force_utf8_string( $value );
+		
+		}
+
+		return $options;
 	}

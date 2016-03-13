@@ -90,3 +90,24 @@
 
 	}
 
+
+	/**
+	 * Filter before update profile to force utf8 strings
+	 * @param  mixed $value
+	 * @return mixed
+	 * @uses   hook filter: um_is_selected_filter_value
+	 */
+	add_filter('um_before_update_profile','um_before_update_profile',2,10);
+	function um_before_update_profile( $changes, $user_id ){
+		global $ultimatemember;
+
+		if( ! um_get_option('um_force_utf8_strings') ) 
+			return $changes;
+
+		foreach( $changes as $key => $value ) {
+			$changes[ $key ] = um_force_utf8_string( $value );
+
+		}
+		
+		return $changes;
+	}

@@ -1573,8 +1573,11 @@ class UM_Fields {
 							if ( isset( $options_pair ) ) {
 								$option_value = $k;
 							}
+							
+							$option_value = htmlentities($option_value);
+							$option_value = apply_filters('um_select_dropdown_dynamic_option_value', $option_value);
 
-							$output .= '<option value="' . htmlentities($option_value) . '" ';
+							$output .= '<option value="' . $option_value . '" ';
 							if ( $this->is_selected($form_key, $option_value, $data) ) {
 								$output.= 'selected';
 							}

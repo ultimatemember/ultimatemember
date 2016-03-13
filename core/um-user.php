@@ -829,7 +829,7 @@ class UM_User {
 
 		$args['ID'] = $this->id;
 
-		$changes = apply_filters('um_before_update_profile');
+		$changes = apply_filters('um_before_update_profile', $changes, $this->id);
 
 		// save or update profile meta
 		foreach( $changes as $key => $value ) {
