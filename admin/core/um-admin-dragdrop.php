@@ -26,13 +26,15 @@ class UM_Admin_DragDrop {
 		
 		$this->row_data = get_option('um_form_rowdata_'. $form_id );
 		
-		foreach( $fields as $key => $array ) {
-			if ( $array['type'] == 'row' ) {
-				$this->row_data[$key] = $array;
-				unset( $fields[$key] );
+		if( isset( $fields ) ){
+			foreach( $fields as $key => $array ) {
+				if ( $array['type'] == 'row' ) {
+					$this->row_data[$key] = $array;
+					unset( $fields[$key] );
+				}
 			}
 		}
-
+		
 		foreach( $_POST as $key => $value ) {
 		
 			// adding rows
