@@ -1,4 +1,4 @@
-=== Ultimate Member ===
+﻿=== Ultimate Member ===
 Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember, champsupertramp
@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.4
 
-Stable Tag: 1.3.38
+Stable Tag: 1.3.44
 
 License: GNU Version 2 or Any Later Version
 
