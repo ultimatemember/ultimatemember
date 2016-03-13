@@ -829,6 +829,8 @@ class UM_User {
 
 		$args['ID'] = $this->id;
 
+		$changes = apply_filters('um_before_update_profile');
+
 		// save or update profile meta
 		foreach( $changes as $key => $value ) {
 
@@ -925,7 +927,7 @@ class UM_User {
 	 *
 	 */
 	function user_exists_by_id( $user_id ) {
-		$aux = get_userdata( $user_id );
+		$aux = get_userdata( intval( $user_id ) );
 		if($aux==false){
 			return false;
 		} else {
