@@ -54,11 +54,11 @@
 	***	@Get where user should be headed after logging
 	***/
 	function um_dynamic_login_page_redirect( $redirect_to = '' ) {
-		
+
 		global $ultimatemember;
-		
+
 		$uri = um_get_core_page( 'login' );
-		
+
 		if ( ! $redirect_to ) {
 			$redirect_to = $ultimatemember->permalinks->get_current_url();
 		}
@@ -72,11 +72,11 @@
 
 	/**
 	 * Set redirect key
-	 * @param  string $url 
+	 * @param  string $url
 	 * @return string $redirect_key
 	 */
 	function um_set_redirect_url( $url ){
-		
+
 		if( um_is_session_started() === FALSE ){
 				session_start();
 		}
@@ -90,17 +90,17 @@
 
 	/**
 	 * Set redirect key
-	 * @param  string $url 
+	 * @param  string $url
 	 * @return string $redirect_key
 	 */
 	function um_get_redirect_url( $key ){
-		
+
 		if( um_is_session_started() === FALSE ){
 				session_start();
 		}
 
 		if( isset( $_SESSION['um_redirect_key'][ $key ] ) ){
-			
+
 			$url = $_SESSION['um_redirect_key'][ $key ];
 
 			return $url;
@@ -126,7 +126,7 @@
 	 * @return bool
 	*/
 	function um_is_session_started(){
-		
+
 		if ( php_sapi_name() !== 'cli' ) {
 		        if ( version_compare(phpversion(), '5.4.0', '>=') ) {
 		            return session_status() === PHP_SESSION_ACTIVE ? TRUE : FALSE;
@@ -134,7 +134,7 @@
 		            return session_id() === '' ? FALSE : TRUE;
 		        }
 		}
-		
+
 		return FALSE;
 	}
 
@@ -145,16 +145,11 @@
 	function um_clean_user_basename( $value ) {
 
 		$raw_value = $value;
-		$value = str_replace('<hon>', '', $value);
-		$value = preg_replace('/^([a-z]{2,3})\./', '$1<hon>', $value);
-		$value = preg_replace('/([a-z]{2,3})\.$/', '$1<hon>', $value);
-		$value = str_replace('.', ' ', $value);
 		$value = str_replace('-', ' ', $value);
 		$value = str_replace('+', ' ', $value);
-		$value = str_replace('<hon>', '.', $value);
 
 		$value = apply_filters('um_clean_user_basename_filter', $value, $raw_value );
-		
+
 		return $value;
 	}
 	/***
@@ -1482,7 +1477,7 @@ function um_fetch_user( $user_id ) {
 	/**
 	 * Check if meta_value exists
 	 * @param  string $key
-	 * @param  mixed $value 
+	 * @param  mixed $value
 	 * @return integer
 	 */
 	function um_is_meta_value_exists( $key, $value ){
@@ -1509,7 +1504,7 @@ function um_fetch_user( $user_id ) {
 			foreach ($value as $key => $value) {
 				$utf8_decoded_value = utf8_decode( $value );
 
-				if( mb_check_encoding( $utf8_decoded_value, 'UTF-8') ){ 
+				if( mb_check_encoding( $utf8_decoded_value, 'UTF-8') ){
 				 	array_push( $arr_value, $utf8_decoded_value );
 				}else{
 					array_push( $arr_value, $value );
@@ -1521,7 +1516,7 @@ function um_fetch_user( $user_id ) {
 
 			$utf8_decoded_value = utf8_decode($value);
 
-			if( mb_check_encoding( $utf8_decoded_value, 'UTF-8') ){ 
+			if( mb_check_encoding( $utf8_decoded_value, 'UTF-8') ){
 			 	return $utf8_decoded_value;
 			}
 		}
