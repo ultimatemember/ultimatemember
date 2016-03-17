@@ -288,4 +288,8 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
+	jQuery(document).on('click', '#um-search-button', function() {
+		jQuery(this).parents('form').submit();
+	});
+
 });

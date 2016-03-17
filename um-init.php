@@ -58,6 +58,12 @@ class UM_API {
 			__('This add-on enables you to link gravatar photos to user accounts with their email address.', 'ultimatemember'),
 		);
 
+		// include widgets
+		require_once um_path . 'core/widgets/um-search-widget.php';
+
+		// init widgets
+		add_action( 'widgets_init', array(&$this, 'widgets_init' ) );
+
 	}
 
 	/***
@@ -196,6 +202,10 @@ class UM_API {
 			update_option('show_avatars', 1);
 		}
 
+	}
+
+	function widgets_init() {
+		register_widget( 'um_search_widget' );
 	}
 
 }
