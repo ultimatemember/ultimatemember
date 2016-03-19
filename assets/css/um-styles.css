@@ -765,3 +765,18 @@ small.um-max-filesize span{
 	background-repeat: no-repeat;
 	background-size: 24px 24px;
 }
+
+.um-search-area {
+	position: relative;
+	max-width: 300px;
+}
+
+.um-search-area .um-search-field {
+	width: 100%;
+}
+
+.um-search-area .um-search-icon {
+	position: absolute;
+	top: 7px;
+	right: 10px;
+}

@@ -1524,3 +1524,46 @@ function um_fetch_user( $user_id ) {
 		return $value;
 
 	}
+
+	/**
+	 * Filters the search query.
+	 *
+	 * @param  string $search
+	 * @return string
+	 */
+	function um_filter_search($search) {
+		$search = trim( strip_tags( $search ) );
+		$search = preg_replace('/[^a-z \.\@\_\-]+/i', '', $search);
+
+		return $search;
+	}
+
+	/**
+	 * Returns the user search query
+	 * @return string
+	 */
+	function um_get_search_query() {
+		global $ultimatemember;
+
+		$query  = $ultimatemember->permalinks->get_query_array();
+		$search = isset( $query['search'] ) ? $query['search'] : '';
+
+		return um_filter_search($search);
+	}
+
+	/**
+	 * Returns the ultimate member search form
+	 * @return string
+	 */
+	function um_get_search_form() {
+		return do_shortcode( '[ultimatemember_searchform]' );
+	}
+
+	/**
+	 * Display the search form.
+	 *
+	 * @return string
+	 */
+	function um_search_form() {
+		echo um_get_search_form();
+	}

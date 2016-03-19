@@ -13,6 +13,7 @@ class UM_Shortcodes {
 		add_shortcode('um_loggedin', array(&$this, 'um_loggedin'));
 		add_shortcode('um_loggedout', array(&$this, 'um_loggedout'));
 		add_shortcode('um_show_content', array(&$this, 'um_shortcode_show_content_for_role') );
+		add_shortcode('ultimatemember_searchform', array(&$this, 'ultimatemember_searchform') );
 
 
 		add_filter('body_class', array(&$this, 'body_class'), 0);
@@ -568,6 +569,22 @@ class UM_Shortcodes {
 		}
 
 	    return '';
+	}
+
+	public function ultimatemember_searchform($args = array(), $content = "") {
+		// turn off buffer
+		ob_start();
+
+		// load template
+		$this->load_template( 'searchform' );
+
+		// get the buffer
+		$template = ob_get_contents();
+
+		// clear the buffer
+		ob_end_clean();
+
+		return $template;
 	}
 
 }
