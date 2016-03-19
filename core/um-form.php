@@ -20,6 +20,20 @@ class UM_Form {
 
 	}
 
+	/**
+	 * Count the form errors.
+	 * @return integer
+	 */
+	function count_errors() {
+		$errors = $this->errors;
+
+		if( $errors && is_array( $errors ) ) {
+			return count( $errors );
+		}
+
+		return 0;
+	}
+
 	/***
 	***	@add errors
 	***/
@@ -67,7 +81,7 @@ class UM_Form {
 
 			$this->form_id = $_POST['form_id'];
 			$this->form_status = get_post_status( $this->form_id );
-			
+
 
 			if ( $this->form_status == 'publish' ) {
 
@@ -77,11 +91,11 @@ class UM_Form {
 				$this->post_form = $this->beautify( $this->post_form );
 
 				$this->form_data = $ultimatemember->query->post_data( $this->form_id );
-				
+
 				$this->post_form['submitted'] = $this->post_form;
 
 				$this->post_form = array_merge( $this->form_data, $this->post_form );
-				
+
 				$role = $this->assigned_role( $this->form_id );
 
 				if( $role && isset( $this->form_data['custom_fields'] ) && ! strstr( $this->form_data['custom_fields'], 'role_' ) ){ // has assigned role.  Validate non-global forms
@@ -114,7 +128,7 @@ class UM_Form {
 				}
 
 				/* Continue based on form mode - pre-validation */
-		
+
 				do_action('um_submit_form_errors_hook', $this->post_form );
 
 				do_action("um_submit_form_{$this->post_form['mode']}", $this->post_form );
@@ -171,7 +185,7 @@ class UM_Form {
 	function assigned_role( $post_id ){
 
 		$register_use_globals = get_post_meta( $post_id, '_um_register_use_globals', true);
-		
+
 		if( $register_use_globals == 1 ){
 			$role = um_get_option('default_role');
 		}else if( $register_use_globals == 0 ){

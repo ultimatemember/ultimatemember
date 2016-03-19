@@ -1594,6 +1594,30 @@ foreach( $tabs as $id => $tab ) {
 					'off'			=> __('Off','ultimatemember'),
 	);
 
+	$tab_options[] = array(
+		            'id'       		=> 'profile_tab_' . $id . '_privacy',
+		            'type'     		=> 'select',
+					'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
+		            'title'    		=> sprintf( __( 'Who can see %s Tab?','ultimatemember' ), $tab ),
+		            'desc' 	   		=> __( 'Select which users can view this tab.','ultimatemember' ),
+		            'default'  		=> 0,
+					'options' 		=> $ultimatemember->profile->tabs_privacy(),
+					'required'		=> array( 'profile_tab_' . $id, '=', 1 ),
+	);
+
+	$tab_options[] = array(
+					'id'       		=> 'profile_tab_' . $id . '_roles',
+	                'type'     		=> 'select',
+	                'multi'         => true,
+					'select2'		=> array( 'allowClear' => 1, 'minimumResultsForSearch' => -1 ),
+	                'title'    		=> __( 'Allowed roles','ultimatemember' ),
+	                'desc' 	   		=> __( 'Select the the user roles allowed to view this tab.','ultimatemember' ),
+	                'default'  		=> '',
+					'options' 		=> $ultimatemember->query->get_roles(),
+					'placeholder' 	=> __( 'Choose user roles...','ultimatemember' ),
+					'required'		=> array( 'profile_tab_' . $id . '_privacy', '=', 4 ),
+    );
+
 }
 
 $tab_options[] = array(

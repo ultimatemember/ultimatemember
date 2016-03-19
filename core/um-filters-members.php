@@ -16,14 +16,14 @@
 		extract( $args );
 
 		$query = $ultimatemember->permalinks->get_query_array();
-		
+
 		foreach( $ultimatemember->members->core_search_fields as $key ) {
-			
+
 			if ( isset( $query[$key] ) && ! empty( $query[$key]  ) ) {
 				$query_args['search']         = '*' . trim($query[$key]) . '*';
 			}
 		}
-		
+
 		return $query_args;
 	}
 
@@ -65,6 +65,12 @@
 		if ( isset( $_REQUEST['um_search'] ) ) {
 
 			$query = $ultimatemember->permalinks->get_query_array();
+
+			// if searching
+			if( isset( $query['search'] ) ) {
+				$query_args['search'] = '*' . um_filter_search( $query['search'] ) . '*';
+				unset( $query['search'] );
+			}
 
 			if ( $query && is_array( $query ) ) {
 				foreach( $query as $field => $value ) {
@@ -147,7 +153,7 @@
 					'value' => '',
 					'compare' => '!='
 				)
-				
+
 			);
 		}
 
