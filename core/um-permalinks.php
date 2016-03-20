@@ -191,27 +191,9 @@ class UM_Permalinks {
 		$page_id = $this->core['user'];
 		$profile_url = get_permalink( $page_id );
 
-		if ( function_exists('icl_get_current_language') && icl_get_current_language() != icl_get_default_language() ) {
-			if ( get_the_ID() > 0 && get_post_meta( get_the_ID(), '_um_wpml_user', true ) == 1 ) {
-				$profile_url = get_permalink( get_the_ID() );
-			}
-		}
 
-		// WPML compatibility
-		if ( function_exists('icl_object_id') ) {
+		$profile_url = apply_filters('um_localize_permalink_filter', $this->core, $page_id, $profile_url );
 
-
-			$language_code = ICL_LANGUAGE_CODE;
-			$lang_post_id = icl_object_id( $page_id , 'page', true, $language_code );
-
-			 if($lang_post_id != 0) {
-		        $profile_url = get_permalink( $lang_post_id );
-		    }else {
-		        // No page found, it's most likely the homepage
-		        global $sitepress;
-		        $profile_url = $sitepress->language_url( $language );
-		    }
-		}
 
 		if ( um_get_option('permalink_base') == 'user_login' ) {
 			$user_in_url = um_user('user_login');

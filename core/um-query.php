@@ -12,16 +12,20 @@ class UM_Query {
 	***	@get wp pages
 	***/
 	function wp_pages() {
-		$count_pages = wp_count_posts('page');
+		global $wpdb;
+		$pages = $wpdb->get_results('SELECT * FROM '.$wpdb->posts.' WHERE post_type = "page" AND post_status = "publish" ', OBJECT);
+		$count_pages = $wpdb->num_rows;
 		
-		if ( $count_pages->publish > 300 )
-			return;
+		if ( $count_pages > 300 )
+			return 'reached_maximum_limit';
 		
-		$pages = get_pages();
 		$array = '';
-		foreach ($pages as $page_data) {
-			$array[ $page_data->ID ] = $page_data->post_title;
+		if( $wpdb->num_rows > 0 ){
+			foreach ($pages as $page_data) {
+				$array[ $page_data->ID ] = $page_data->post_title;
+			}
 		}
+
 		return $array;
 	}
 	

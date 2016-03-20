@@ -1567,3 +1567,18 @@ function um_fetch_user( $user_id ) {
 	function um_search_form() {
 		echo um_get_search_form();
 	}
+
+	/**
+	 * Get localization
+	 * @return string
+	 */
+	function um_get_locale(){
+
+		$lang_code = get_locale();
+
+		if( strpos( $lang_code , 'en_' ) > -1 || empty( $lang_code ) ||  $lang_code == 0 ){
+			return 'en';
+		}
+		
+		return $lang_code;
+	}

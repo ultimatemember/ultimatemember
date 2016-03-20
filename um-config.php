@@ -23,27 +23,31 @@ foreach( $core_pages as $page_s => $page ) {
 
 	$have_pages = $ultimatemember->query->wp_pages();
 
-	if( ! empty( $have_pages ) ){
-		$page_setup[] = array(
-					'id'       		=> 'core_' . $page_s,
-	                'type'     		=> 'select',
-					'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
-	                'title'    		=> $page,
-	                'default'  		=> ( isset( $ultimatemember->permalinks->core[ $page_s ] ) ) ? $ultimatemember->permalinks->core[ $page_s ] : '' ,
-					'options' 		=> $ultimatemember->query->wp_pages(),
-					'placeholder' 	=> __('Choose a page...','ultimatemember'),
-					'compiler' 		=> true,
-	        );
-	}else{
-		$page_setup[] = array(
-		                'id'       		=> 'core_' . $page_s,
+	$page_id = 'core_' . $page_s;
+	$page_id = apply_filters('um_core_page_id_filter', $page_id );
+
+	if( 'reached_maximum_limit' == $have_pages ){
+			$page_setup[] = array(
+		                'id'       		=> $page_id,
 		                'type'     		=> 'text',
 		                'title'    		=> $page,
 	                	'placeholder' 	=> __('Add page ID','ultimatemember'),
-						'default'       => ( isset( $ultimatemember->permalinks->core[ $page_s ] ) ) ? $ultimatemember->permalinks->core[ $page_s ] : '',
+						'default'       => ( isset( $ultimatemember->permalinks->core[ $page_id ] ) ) ? $ultimatemember->permalinks->core[ $page_id ] : '',
 		    			'compiler' 		=> true,
 	        );
+	}else{
+			$page_setup[] = array(
+						'id'       		=> $page_id,
+		                'type'     		=> 'select',
+						'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
+		                'title'    		=> $page,
+		                'default'  		=> ( isset( $ultimatemember->permalinks->core[ $page_id ] ) ) ? $ultimatemember->permalinks->core[ $page_id ] : '' ,
+						'options' 		=> $ultimatemember->query->wp_pages(),
+						'placeholder' 	=> __('Choose a page...','ultimatemember'),
+						'compiler' 		=> true,
+	        );
 	}
+	
 }
 
 $this->sections[] = array(
