@@ -223,10 +223,7 @@ class UM_Permalinks {
 			$last_name = um_user( 'last_name' );
 			$count     = intval( um_is_meta_value_exists( 'full_name', $full_name ) );
 
-			if( strpos( $last_name, '-') > -1 && strpos( $full_name, '-' ) > -1 ){
-				$full_name  = str_replace('-', '_', $full_name  );
-			}
-
+			
 			if( $count > 1 )
 			{
 				$full_name .= ' ' . um_user( 'ID' );
@@ -235,15 +232,46 @@ class UM_Permalinks {
 			switch( um_get_option('permalink_base') )
 			{
 				case 'name':
-					$user_in_url = rawurlencode( strtolower( str_replace( " ", ".", $full_name ) ) );
+
+					$full_name_slug = $full_name;
+					$difficulties = 0;
+					
+					if( strpos( $full_name, '.' ) > -1 ){
+						$full_name = str_replace(".", "_", $full_name );
+						$difficulties++;
+					}
+					
+					$full_name = strtolower( str_replace( " ", ".", $full_name ) );
+					
+					if( strpos( $full_name, '_.' ) > -1 ){
+						$full_name  = str_replace('_.', '_', $full_name );
+						$difficulties++;
+					}
+
+					$full_name_slug = str_replace( '-' ,  '.', $full_name_slug );
+					$full_name_slug = str_replace( ' ' ,  '.', $full_name_slug );
+					$full_name_slug = str_replace( '..' , '.', $full_name_slug );
+
+					if( $difficulties > 0 ){
+						update_user_meta( um_user('ID'), 'um_user_profile_url_slug_name_'.$full_name_slug, $full_name );
+					}
+
+					
+					$user_in_url = rawurlencode( $full_name_slug );
+
 					break;
 				case 'name_dash':
+					if( strpos( $last_name, '-') > -1 && strpos( $full_name, '-' ) > -1 ){
+						$full_name  = str_replace('-', '_', $full_name  );
+					}
 					$user_in_url = rawurlencode( strtolower( str_replace(" ", "-", $full_name ) ) );
 					break;
 				case 'name_plus':
 					$user_in_url = strtolower( str_replace(" ", "+" , $full_name ) );
 					break;
 			}
+
+
 		}
 
 		if ( get_option('permalink_structure') ) {

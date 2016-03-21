@@ -893,10 +893,11 @@ class UM_User {
 		{
 			return $matches[0];
 		}
-
+		
 		$ids = get_users(array( 'fields' => 'ID', 'meta_key' => 'full_name','meta_value' => $value ,'meta_compare' => '=') );
 		if ( isset( $ids[0] ) )
 			return $ids[0];
+
 		return false;
 	}
 

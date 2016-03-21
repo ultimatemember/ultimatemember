@@ -145,6 +145,7 @@
 	function um_clean_user_basename( $value ) {
 
 		$raw_value = $value;
+		$value = str_replace('.', ' ', $value);
 		$value = str_replace('-', ' ', $value);
 		$value = str_replace('+', ' ', $value);
 

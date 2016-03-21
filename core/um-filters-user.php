@@ -80,10 +80,38 @@
 	 */
 	add_filter('um_clean_user_basename_filter','um_clean_user_basename_filter',2,10);
 	function um_clean_user_basename_filter( $value, $raw ){
+		global $wpdb;
+		$permalink_base =  um_get_option('permalink_base');
 		
-		// Checks if last name has dash
-		if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
-			$value = str_replace( '_', '-', $value );
+		switch( $permalink_base ){
+				case 'name':
+					
+					$slugname = $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT meta_value FROM ".$wpdb->usermeta." WHERE meta_key = %s ", 
+							'um_user_profile_url_slug_name_'.$raw,
+							$raw
+						)
+					);
+
+					$value = $slugname;
+					if( ! empty( $value ) && strrpos( $value ,".") > -1 ){
+						$value = str_replace( '.', ' ', $value );
+					}
+
+					// Checks if last name has a dash
+					if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
+						$value = str_replace( '_', '. ', $value );
+					}
+					
+				break;
+
+				default:
+				// Checks if last name has a dash
+				if( ! empty( $value ) && strrpos( $value ,"_") > -1 && substr( $value , "_") == 1 ){
+					$value = str_replace( '_', '-', $value );
+				}
+				break;
 		}
 
 		return $value;
