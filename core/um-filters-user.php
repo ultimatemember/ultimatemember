@@ -81,20 +81,35 @@
 	add_filter('um_clean_user_basename_filter','um_clean_user_basename_filter',2,10);
 	function um_clean_user_basename_filter( $value, $raw ){
 		global $wpdb;
-		$permalink_base =  um_get_option('permalink_base');
-		
+
+		$permalink_base = um_get_option('permalink_base');
+			$user_query = new WP_User_Query( 
+				array(
+					 'meta_query'    => array(
+			            'relation'  => 'AND',
+			            array( 
+			                'key'     => 'um_user_profile_url_slug_name_'.$raw,
+			            ),
+			            array(
+			                'key'     => 'account_status',
+			                'value'   => 'awaiting_admin_review',
+			                'compare' => '!='
+			            )
+			        )
+				)
+
+			);
+				$result = current( $user_query->get_results() );
+			  $slugname =  '';
+
+		if( isset( $result->data->ID ) ){
+			  $slugname =  get_user_meta( $result->data->ID, 'um_user_profile_url_slug_name_'.$raw, true );
+			  $value = $slugname;
+		}
+
 		switch( $permalink_base ){
 				case 'name':
 					
-					$slugname = $wpdb->get_var(
-						$wpdb->prepare(
-							"SELECT meta_value FROM ".$wpdb->usermeta." WHERE meta_key = %s ", 
-							'um_user_profile_url_slug_name_'.$raw,
-							$raw
-						)
-					);
-
-					$value = $slugname;
 					if( ! empty( $value ) && strrpos( $value ,".") > -1 ){
 						$value = str_replace( '.', ' ', $value );
 					}
@@ -106,11 +121,40 @@
 					
 				break;
 
+				case 'name_dash':
+					
+					if( ! empty( $value ) && strrpos( $value ,"-") > -1 ){
+						$value = str_replace( '-', ' ', $value );
+					}
+
+					// Checks if last name has a dash
+					if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
+						$value = str_replace( '_', '-', $value );
+					}
+
+				break;
+
+
+				case 'name_plus':
+					
+					if( ! empty( $value ) && strrpos( $value ,"+") > -1 ){
+						$value = str_replace( '+', ' ', $value );
+					}
+
+					// Checks if last name has a dash
+					if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
+						$value = str_replace( '_', '+', $value );
+					}
+
+				break;
+
 				default:
-				// Checks if last name has a dash
-				if( ! empty( $value ) && strrpos( $value ,"_") > -1 && substr( $value , "_") == 1 ){
-					$value = str_replace( '_', '-', $value );
-				}
+
+					// Checks if last name has a dash
+					if( ! empty( $value ) && strrpos( $value ,"_") > -1 && substr( $value , "_") == 1 ){
+						$value = str_replace( '_', '-', $value );
+					}
+
 				break;
 		}
 

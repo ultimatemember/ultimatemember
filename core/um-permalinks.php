@@ -260,14 +260,65 @@ class UM_Permalinks {
 					$user_in_url = rawurlencode( $full_name_slug );
 
 					break;
+					
 				case 'name_dash':
+					
+					$difficulties = 0;
+					
+					$full_name_slug = strtolower( $full_name );
+
+					// if name has dashed replace with underscore
 					if( strpos( $last_name, '-') > -1 && strpos( $full_name, '-' ) > -1 ){
+						$difficulties++;
 						$full_name  = str_replace('-', '_', $full_name  );
 					}
-					$user_in_url = rawurlencode( strtolower( str_replace(" ", "-", $full_name ) ) );
+					// if name has space, replace with dash
+					$full_name_slug = str_replace( ' ' ,  '-', $full_name_slug );
+
+					// if name has period
+					if( strpos( $last_name, '.') > -1 && strpos( $full_name, '.' ) > -1 ){
+						$difficulties++;
+					}
+
+					$full_name_slug = str_replace( '.' ,  '-', $full_name_slug );
+					$full_name_slug = str_replace( '--' , '-', $full_name_slug );
+
+					if( $difficulties > 0 ){
+						update_user_meta( um_user('ID'), 'um_user_profile_url_slug_name_'.$full_name_slug, $full_name );
+					}
+
+					$user_in_url = rawurlencode(  $full_name_slug );
+
 					break;
+
 				case 'name_plus':
-					$user_in_url = strtolower( str_replace(" ", "+" , $full_name ) );
+										
+					$difficulties = 0;
+					
+					$full_name_slug = strtolower( $full_name );
+
+					// if name has dashed replace with underscore
+					if( strpos( $last_name, '+') > -1 && strpos( $full_name, '+' ) > -1 ){
+						$difficulties++;
+						$full_name  = str_replace('-', '_', $full_name  );
+					}
+					// if name has space, replace with dash
+					$full_name_slug = str_replace( ' ' ,  '+', $full_name_slug );
+
+					// if name has period
+					if( strpos( $last_name, '.') > -1 && strpos( $full_name, '.' ) > -1 ){
+						$difficulties++;
+					}
+
+					$full_name_slug = str_replace( '.' ,  '+', $full_name_slug );
+					$full_name_slug = str_replace( '++' , '+', $full_name_slug );
+
+					if( $difficulties > 0 ){
+						update_user_meta( um_user('ID'), 'um_user_profile_url_slug_name_'.$full_name_slug, $full_name );
+					}
+
+					$user_in_url = $full_name_slug;
+					
 					break;
 			}
 
