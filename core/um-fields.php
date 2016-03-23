@@ -298,18 +298,18 @@ class UM_Fields {
 			$label = apply_filters("um_edit_label_all_fields", $label, $data );
 		}
 
-		$output .= '<label for="'.$key.$ultimatemember->form->form_suffix.'">'.$label.'</label>';
+		$output .= '<label for="'.$key.$ultimatemember->form->form_suffix.'">'.__( $label, UM_TEXTDOMAIN ).'</label>';
 
 		if ( isset( $data['help'] ) && !empty( $data['help'] ) && $this->viewing == false && !strstr($key, 'confirm_user_pass') ) {
 
 			if ( !$ultimatemember->mobile->isMobile() ) {
 				if ( !isset( $this->disable_tooltips ) ) {
-					$output .= '<span class="um-tip um-tip-w" title="'.$data['help'].'"><i class="um-icon-help-circled"></i></span>';
+					$output .= '<span class="um-tip um-tip-w" title="'.__( $data['help'], UM_TEXTDOMAIN ).'"><i class="um-icon-help-circled"></i></span>';
 				}
 			}
 
 			if ( $ultimatemember->mobile->isMobile() || isset( $this->disable_tooltips ) ) {
-				$output .= '<span class="um-tip-text">'. $data['help'] . '</span>';
+				$output .= '<span class="um-tip-text">'.__( $data['help'], UM_TEXTDOMAIN ). '</span>';
 			}
 
 		}

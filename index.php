@@ -15,6 +15,7 @@ Author URI: http://ultimatemember.com/
 	define('um_url',plugin_dir_url(__FILE__ ));
 	define('um_path',plugin_dir_path(__FILE__ ));
 	define('um_plugin', plugin_basename( __FILE__ ) );
+	define('UM_TEXTDOMAIN', 'ultimatemember');
 	
 	define('ultimatemember_version', $plugin_data['Version'] );
 	
