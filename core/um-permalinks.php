@@ -236,6 +236,7 @@ class UM_Permalinks {
 					$full_name_slug = $full_name;
 					$difficulties = 0;
 					
+
 					if( strpos( $full_name, '.' ) > -1 ){
 						$full_name = str_replace(".", "_", $full_name );
 						$difficulties++;
