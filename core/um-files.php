@@ -192,15 +192,15 @@ class UM_Files {
 
 		if ($info['mime'] == 'image/jpeg'){
 
-			$image = imagecreatefromjpeg($source);
+			$image = imagecreatefromjpeg( $source );
 
 		} else if ($info['mime'] == 'image/gif'){
 
-			$image = imagecreatefromgif($source);
+			$image = imagecreatefromgif( $source );
 
 		} else if ($info['mime'] == 'image/png'){
 
-			$image = imagecreatefrompng($source);
+			$image = imagecreatefrompng( $source );
 
 		}
 
@@ -213,37 +213,57 @@ class UM_Files {
 
 			$image_p = imagecreatetruecolor( $new_w, $new_h );
 			imagecopyresampled( $image_p, $image, 0, 0, 0, 0, $new_w, $new_h, $w, $h );
-			$image_p = $this->fix_image_orientation($image_p, $source);
-			imagejpeg( $image_p, $destination, $quality);
+			$image_p = $this->fix_image_orientation( $image_p, $source );
+			
+			if ( $info['mime'] == 'image/jpeg' ){
+				$has_copied = imagejpeg( $image_p, $destination, $quality );
+			}else if ( $info['mime'] == 'image/gif' ){
+				$has_copied = imagegif( $image_p, $destination );
+			}else if ( $info['mime'] == 'image/png' ){
+				$has_copied = imagepng( $image_p, $destination, $quality );
+			}
+
+			$info['um_has_max_width'] = 'custom';
+			$info['um_has_copied'] = $has_copied ? 'yes':'no';
 
 		} else {
 
-			$image = $this->fix_image_orientation($image, $source);
-			imagejpeg( $image, $destination, $quality);
+			$image = $this->fix_image_orientation( $image, $source );
+			
 
+			if ( $info['mime'] == 'image/jpeg' ){
+				$has_copied = imagejpeg( $image, $destination, $quality );
+			}else if ( $info['mime'] == 'image/gif' ){
+				$has_copied = imagegif( $image, $destination );
+			}else if ( $info['mime'] == 'image/png' ){
+				$has_copied = imagepng( $image, $destination );
+			}
+			$info['um_has_max_width'] = 'default';
+			$info['um_has_copied'] = $has_copied ? 'yes':'no';
 		}
 
+		return $info;
 	}
 
 	/***
 	***	@Process a file
 	***/
-	function upload_temp_file($source, $destination) {
+	function upload_temp_file( $source, $destination ) {
 
-		move_uploaded_file($source, $destination);
+		move_uploaded_file( $source, $destination );
 
 	}
 
 	/***
 	***	@Process a temp upload
 	***/
-	function new_image_upload_temp($source, $destination, $quality = 100){
+	function new_image_upload_temp( $source, $destination, $quality = 100 ){
 
 		$unique_dir = $this->unique_dir();
 
 		$this->make_dir( $unique_dir['dir'] );
 
-		$this->create_and_copy_image($source, $unique_dir['dir'] . $destination, $quality);
+		$info = $this->create_and_copy_image( $source, $unique_dir['dir'] . $destination, $quality );
 
 		$url = $unique_dir['url'] . $destination;
 
@@ -254,13 +274,13 @@ class UM_Files {
 	/***
 	***	@Process a temp upload for files
 	***/
-	function new_file_upload_temp($source, $destination ){
+	function new_file_upload_temp( $source, $destination ){
 
 		$unique_dir = $this->unique_dir();
 
 		$this->make_dir( $unique_dir['dir'] );
 
-		$this->upload_temp_file($source, $unique_dir['dir'] . $destination);
+		$this->upload_temp_file( $source, $unique_dir['dir'] . $destination );
 
 		$url = $unique_dir['url'] . $destination;
 
@@ -275,24 +295,24 @@ class UM_Files {
 
 		$old = umask(0);
 		@mkdir( $dir, 0755, true);
-		umask($old);
+		umask( $old );
 
 	}
 
 	/***
 	***	@Get extension by mime type
 	***/
-	function get_extension_by_mime_type($mime){
-		$split = explode('/',$mime);
+	function get_extension_by_mime_type( $mime ){
+		$split = explode('/', $mime );
 		return $split[1];
 	}
 
 	/***
 	***	@Get file data
 	***/
-	function get_file_data($file){
+	function get_file_data( $file ){
 
-		$array['size'] = filesize($file);
+		$array['size'] = filesize( $file );
 
 		return $array;
 	}
@@ -300,17 +320,17 @@ class UM_Files {
 	/***
 	***	@Get image data
 	***/
-	function get_image_data($file){
+	function get_image_data( $file ){
 
-		$array['size'] = filesize($file);
+		$array['size'] = filesize( $file );
 
-		$array['image'] = @getimagesize($file);
+		$array['image'] = @getimagesize( $file );
 
 		if ( $array['image'] > 0 ) {
 
 			$array['invalid_image'] = false;
 
-			list($width, $height, $type, $attr) = @getimagesize($file);
+			list($width, $height, $type, $attr) = @getimagesize( $file );
 
 			$array['width'] = $width;
 			$array['height'] = $height;
@@ -330,12 +350,12 @@ class UM_Files {
 	/***
 	***	@Check image upload and handle errors
 	***/
-	function check_image_upload($file, $field) {
+	function check_image_upload( $file, $field ) {
 		global $ultimatemember;
 		$error = null;
 
-		$fileinfo = $this->get_image_data($file);
-		$data = $ultimatemember->fields->get_field($field);
+		$fileinfo = $this->get_image_data( $file );
+		$data = $ultimatemember->fields->get_field( $field );
 
 		if ( $data == null ) {
 			$data = apply_filters("um_custom_image_handle_{$field}", '' );
@@ -362,12 +382,12 @@ class UM_Files {
 	/***
 	***	@Check file upload and handle errors
 	***/
-	function check_file_upload($file, $extension, $field) {
+	function check_file_upload( $file, $extension, $field ) {
 		global $ultimatemember;
 		$error = null;
 
-		$fileinfo = $this->get_file_data($file);
-		$data = $ultimatemember->fields->get_field($field);
+		$fileinfo = $this->get_file_data( $file );
+		$data = $ultimatemember->fields->get_field( $field );
 
 		if ( !$this->in_array( $extension, $data['allowed_types'] ) ) {
 			$error = ( isset( $data['extension_error'] ) && !empty( $data['extension_error'] ) ) ? $data['extension_error'] : 'not allowed';
@@ -381,9 +401,12 @@ class UM_Files {
 	/***
 	***	@If a value exists in comma seperated list
 	***/
-	function in_array($value, $array){
-		if (in_array($value, explode(',',$array)))
+	function in_array( $value, $array ){
+		
+		if ( in_array( $value, explode(',', $array ) ) ){
 			return true;
+		}
+
 		return false;
 	}
 
@@ -402,8 +425,8 @@ class UM_Files {
 			unlink( $is_temp );
 			rmdir( dirname( $is_temp ) );
 		} else {
-			die('Not a valid temp file');
-		}
+			wp_die( __('Ultimate Member: Not a valid temp file','ultimatemember') );
+		} 
 	}
 
 	/***
@@ -442,13 +465,34 @@ class UM_Files {
 		$targ_x2 = $crop[2];
 		$targ_y2 = $crop[3];
 
-		$img_r = imagecreatefromjpeg($file);
+		
+		$info = @getimagesize( $file );
+
+		if ( $info['mime'] == 'image/gif' ){
+
+			$img_r = imagecreatefromgif( $file );
+
+		} else if ( $info['mime'] == 'image/png' ){
+
+			$img_r = imagecreatefrompng( $file );
+
+		}else{
+			$img_r = imagecreatefromjpeg( $file );
+		}
+
 		$dst_r = imagecreatetruecolor( $targ_x2, $targ_y2 );
 
 		imagecopy( $dst_r, $img_r, 0, 0, $targ_x1, $targ_y1, $targ_x2, $targ_y2 );
-		imagejpeg( $dst_r, $this->path_only( $file ) . basename( $file ), 100);
 
-		$split = explode('/ultimatemember/temp/', $file);
+		if ( $info['mime'] == 'image/gif' ){
+			imagegif( $dst_r, $this->path_only( $file ) . basename( $file ) );
+		} else if ( $info['mime'] == 'image/png' ){
+			imagepng( $dst_r, $this->path_only( $file ) . basename( $file ), 9, PNG_NO_FILTER );
+		}else{
+			imagejpeg( $dst_r, $this->path_only( $file ) . basename( $file ), 100 );
+		}
+
+		$split = explode('/ultimatemember/temp/', $file );
 		return $this->upload_temp_url . $split[1];
 
 	}
@@ -501,10 +545,13 @@ class UM_Files {
 		}
 		copy( $source, $this->upload_basedir . $user_id . '/' . $filename );
 
+		$info = @getimagesize( $source );
+
 		// thumbs
 		if ( $key == 'profile_photo' ) {
 
-			list($w, $h) = @getimagesize( $source );
+			 list($w, $h) = @getimagesize( $source );
+				
 
 			$sizes = um_get_option('photo_thumb_sizes');
 			foreach( $sizes as $size ) {
@@ -514,12 +561,25 @@ class UM_Files {
 				}
 
 				if ( $size < $w ) {
+					
+					if ( $info['mime'] == 'image/jpeg' ){
+						$thumb_s = imagecreatefromjpeg( $source );
+					}else if ( $info['mime'] == 'image/gif' ){
+						$thumb_s = imagecreatefromgif( $source );
+					}else if ( $info['mime'] == 'image/png' ){
+						$thumb_s = imagecreatefrompng( $source );
+					}
 
-				$thumb_s = imagecreatefromjpeg( $source );
-				$thumb = imagecreatetruecolor( $size, $size );
-				imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $size, $w, $h );
-				imagejpeg( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext, 100);
+					$thumb = imagecreatetruecolor( $size, $size );
+					imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $size, $w, $h );
 
+					if ( $info['mime'] == 'image/jpeg' ){
+						imagejpeg( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext, 100);
+					}else if ( $info['mime'] == 'image/png' ){
+						imagepng( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext, 9,PNG_NO_FILTER);
+					}else if ( $info['mime'] == 'image/gif' ){
+						imagegif( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext);
+					}
 				}
 
 			}
@@ -545,11 +605,24 @@ class UM_Files {
 
 				if ( $size < $w ) {
 
-				$thumb_s = imagecreatefromjpeg( $source );
-				$thumb = imagecreatetruecolor( $size, $height );
-				imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $height, $w, $h );
-				imagejpeg( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext, 100);
+					if ( $info['mime'] == 'image/jpeg' ){
+							$thumb_s = imagecreatefromjpeg( $source );
+					}else if ( $info['mime'] == 'image/gif' ){
+							$thumb_s = imagecreatefromgif( $source );
+					}else if ( $info['mime'] == 'image/png' ){
+							$thumb_s = imagecreatefrompng( $source );
+					}
 
+					$thumb = imagecreatetruecolor( $size, $height );
+					imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $height, $w, $h );
+					
+					if ( $info['mime'] == 'image/jpeg' ){
+						imagejpeg( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext, 100);
+					}else if ( $info['mime'] == 'image/png' ){
+						imagepng( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext, 9,PNG_NO_FILTER);
+					}else if ( $info['mime'] == 'image/gif' ){
+						imagegif( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext);
+					}
 				}
 
 			}
