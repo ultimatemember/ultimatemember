@@ -406,6 +406,12 @@
 					<?php do_action('um_after_header_meta', um_user('ID'), $args ); ?>
 
 				</div><div class="um-clear"></div>
+   
+		        <?php
+		        if ( $ultimatemember->fields->is_error( 'profile_photo' ) ) {
+		            echo $ultimatemember->fields->field_error( $ultimatemember->fields->show_error('profile_photo'), 'force_show' );
+		        }
+		        ?>
 
 				<?php do_action('um_after_header_info', um_user('ID'), $args); ?>
 
