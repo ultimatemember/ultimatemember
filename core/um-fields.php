@@ -909,7 +909,13 @@ class UM_Fields {
 		if ( !um_can_edit_field( $data ) ) return;
 
 		// fields that need to be disabled in edit mode (profile)
-		if ( in_array( $key, array('user_email','username','user_login','user_password') ) && $this->editing == true && $this->set_mode == 'profile' ) {
+		$arr_restricted_fields = array('user_email','username','user_login','user_password');
+		
+		if( um_get_option('editable_primary_email_in_profile') == 1 ){
+			unset( $arr_restricted_fields[0] ); // remove user_email
+		}
+
+		if ( in_array( $key, $arr_restricted_fields ) && $this->editing == true && $this->set_mode == 'profile' ) {
 			return;
 		}
 
