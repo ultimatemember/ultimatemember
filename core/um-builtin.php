@@ -649,6 +649,16 @@ class UM_Builtin {
 				'label' => __('E-mail Address','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
+				'validate' => 'unique_email',
+			),
+
+			'secondary_user_email' => array(
+				'title' => __('Secondary E-mail Address','ultimatemember'),
+				'metakey' => 'secondary_user_email',
+				'type' => 'text',
+				'label' => __('Secondary E-mail Address','ultimatemember'),
+				'required' => 0,
+				'public' => 1,
 				'editable' => 1,
 				'validate' => 'unique_email',
 			),

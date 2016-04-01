@@ -372,6 +372,8 @@
 										$ultimatemember->form->add_error($key, __('This is not a valid email','ultimatemember') );
 									} else if ( $args[$key] != '' && email_exists( $args[$key] ) ) {
 										$ultimatemember->form->add_error($key, __('This email is already linked to an existing account','ultimatemember') );
+									} else if ( $args[$key] != '' && um_is_meta_value_exists( $key, $args[ $key ] ) ) {
+										$ultimatemember->form->add_error($key, __('This email is already linked to an existing account','ultimatemember') );
 									}
 
 								}
