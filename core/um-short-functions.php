@@ -1481,16 +1481,27 @@ function um_fetch_user( $user_id ) {
 	 * @param  mixed $value
 	 * @return integer
 	 */
-	function um_is_meta_value_exists( $key, $value ){
+	function um_is_meta_value_exists( $key, $value, $return_user_id = false ){
 		global $wpdb;
 
-		$count = $wpdb->get_var( $wpdb->prepare(
-				"SELECT COUNT(*) as count FROM {$wpdb->usermeta} WHERE meta_key = %s AND meta_value = %s ",
-				$key,
-				$value
-		) );
+		if( ! $return_user_id ){
+			$count = $wpdb->get_var( $wpdb->prepare(
+					"SELECT COUNT(*) as count FROM {$wpdb->usermeta} WHERE meta_key = %s AND meta_value = %s ",
+					$key,
+					$value
+			) );
 
-		return $count;
+			return $count;
+		}
+
+			$user_id = $wpdb->get_var( $wpdb->prepare(
+					"SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key = %s AND meta_value = %s ",
+					$key,
+					$value
+			) );
+
+			return $user_id;
+
 	}
 
 	/**
