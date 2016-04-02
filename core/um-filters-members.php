@@ -236,6 +236,17 @@
 	}
 
 	/***
+	***	@sorting random
+	***/
+	add_filter('pre_user_query', function($query) {
+	   if($query->query_vars["orderby"] == 'random') {
+	       $query->query_orderby = 'ORDER by RAND()';
+	   }
+
+	   return $query;
+	});
+
+	/***
 	***	@hook in the member results array
 	***/
 	add_filter('um_prepare_user_results_array', 'um_prepare_user_results_array', 50, 2);
