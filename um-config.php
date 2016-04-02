@@ -202,6 +202,16 @@ $this->sections[] = array(
 				'off'			=> __('Off','ultimatemember'),
         ),
 
+        array(
+                'id'       		=> 'editable_primary_email_in_profile',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Editable primary email field in profile view','ultimatemember' ),
+				'default' 		=> 0,
+				'desc' 	   		=> __('Allow users to edit their primary emails in profile view ( when email address field is added only )','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+        ),
+
 	)
 
 );

@@ -139,7 +139,15 @@
 			
 		</select>
 	</p>
-	
+       
+	<p><label for="_um_profile_photo_required"><?php _e('Make Profile Photo Required','ultimatemember'); ?><?php $this->tooltip('Require user to update a profile photo when updating their profile', 'e'); ?></label>
+	    <span>
+	        
+	        <?php $this->ui_on_off('_um_profile_photo_required'); ?>
+	            
+	    </span>
+	</p>
+
 	<p><label for="_um_profile_header_bg"><?php _e('Header Background Color','ultimatemember'); ?></label>
 		<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_profile_header_bg', null, um_get_option('profile_header_bg') ); ?>" class="um-admin-colorpicker" name="_um_profile_header_bg" id="_um_profile_header_bg" data-default-color="<?php echo um_get_option('profile_header_bg'); ?>" />
 	</p>
