@@ -43,9 +43,16 @@
 			if( um_get_option('use_gravatars') && ! um_user('synced_profile_photo') && ! $has_profile_photo ){
 						$avatar_url  = um_get_domain_protocol().'gravatar.com/avatar/'.um_user('synced_gravatar_hashed_id');
 						$avatar_url = add_query_arg('s',400, $avatar_url);
-						if( um_get_option('use_um_gravatar_default_image') ){
-							$avatar_url = add_query_arg('d', um_get_default_avatar_uri(), $avatar_url  );
+						$gravatar_type = um_get_option('use_um_gravatar_default_builtin_image');
+						
+						if( $gravatar_type == 'default' ){
+							if( um_get_option('use_um_gravatar_default_image') ){
+								$avatar_url = add_query_arg('d', um_get_default_avatar_uri(), $avatar_url  );
+							}
+						}else{
+								$avatar_url = add_query_arg('d', $gravatar_type, $avatar_url  );
 						}
+						
 			}
 			
 			$avatar = '<img src="' .$avatar_url .'?d='. $default . '&amp;s=' . $size . $rating .'" class="func-um_get_avatar gravatar avatar avatar-'.$size.' um-avatar" width="'.$size.'" height="'.$size.'" alt="" />';

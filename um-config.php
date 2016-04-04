@@ -181,6 +181,26 @@ $this->sections[] = array(
 				'off'			=> __('No','ultimatemember'),
         ),
 
+		array(
+				'id'       		=> 'use_um_gravatar_default_builtin_image',
+                'type'     		=> 'select',
+				 'title'    	=> __( 'Use Gravatar builtin image','ultimatemember' ),
+                'desc' 	   		=> __( 'Gravatar has a number of built in options which you can also use as defaults','ultimatemember' ),
+                'default'  		=> 'default',
+				'options' 		=> array(
+									'default'		=> __('Default','ultimatemember'),
+									'404'			=> __('404 ( File Not Found response )','ultimatemember'),
+									'mm'			=> __('Mystery Man','ultimatemember'),
+									'identicon'		=> __('Identicon','ultimatemember'),
+									'monsterid'		=> __('Monsterid','ultimatemember'),
+									'wavatar'		=> __('Wavatar','ultimatemember'),
+									'retro'			=> __('Retro','ultimatemember'),
+									'blank'			=> __('Blank ( a transparent PNG image )','ultimatemember'),
+
+				),
+				'required'		=> array( 'use_gravatars', '=', 1 ),
+				'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
+		 ),
         array(
                 'id'       		=> 'use_um_gravatar_default_image',
                 'type'     		=> 'switch',
@@ -189,7 +209,7 @@ $this->sections[] = array(
 				'desc' 	   		=> __('Do you want to use the plugin default avatar instead of the gravatar default photo (If the user did not upload a custom profile photo / avatar)','ultimatemember'),
 				'on'			=> __('Yes','ultimatemember'),
 				'off'			=> __('No','ultimatemember'),
-				'required'		=> array( 'use_gravatars', '=', 1 ),
+				'required'		=> array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
         ),
 
         array(
