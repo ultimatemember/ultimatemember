@@ -221,9 +221,11 @@ class UM_Permalinks {
 		{
 			$full_name = um_user( 'full_name' );
 			$last_name = um_user( 'last_name' );
-			$count     = intval( um_is_meta_value_exists( 'full_name', $full_name ) );
+			$first_name = um_user( 'first_name' );
 
-			
+			$count  = intval( um_is_meta_value_exists( 'full_name', $full_name ) );
+
+
 			if( $count > 1 )
 			{
 				$full_name .= ' ' . um_user( 'ID' );
@@ -231,7 +233,7 @@ class UM_Permalinks {
 
 			switch( um_get_option('permalink_base') )
 			{
-				case 'name':
+				case 'name': // dotted
 
 					$full_name_slug = $full_name;
 					$difficulties = 0;
@@ -248,11 +250,17 @@ class UM_Permalinks {
 						$full_name  = str_replace('_.', '_', $full_name );
 						$difficulties++;
 					}
-
+					
 					$full_name_slug = str_replace( '-' ,  '.', $full_name_slug );
 					$full_name_slug = str_replace( ' ' ,  '.', $full_name_slug );
 					$full_name_slug = str_replace( '..' , '.', $full_name_slug );
 
+					if( strpos( $full_name, '.' ) > -1 ){
+						$full_name  = str_replace('.', ' ', $full_name );
+						$difficulties++;
+					}
+
+		
 					if( $difficulties > 0 ){
 						update_user_meta( um_user('ID'), 'um_user_profile_url_slug_name_'.$full_name_slug, $full_name );
 					}
@@ -262,14 +270,19 @@ class UM_Permalinks {
 
 					break;
 					
-				case 'name_dash':
+				case 'name_dash': // dashed
 					
 					$difficulties = 0;
 					
 					$full_name_slug = strtolower( $full_name );
 
-					// if name has dashed replace with underscore
+					// if last name has dashed replace with underscore
 					if( strpos( $last_name, '-') > -1 && strpos( $full_name, '-' ) > -1 ){
+						$difficulties++;
+						$full_name  = str_replace('-', '_', $full_name  );
+					}
+					// if first name has dashed replace with underscore
+					if( strpos( $first_name, '-') > -1 && strpos( $full_name, '-' ) > -1 ){
 						$difficulties++;
 						$full_name  = str_replace('-', '_', $full_name  );
 					}
@@ -292,20 +305,29 @@ class UM_Permalinks {
 
 					break;
 
-				case 'name_plus':
+				case 'name_plus': // plus
 										
 					$difficulties = 0;
 					
 					$full_name_slug = strtolower( $full_name );
 
-					// if name has dashed replace with underscore
+					// if last name has dashed replace with underscore
 					if( strpos( $last_name, '+') > -1 && strpos( $full_name, '+' ) > -1 ){
 						$difficulties++;
 						$full_name  = str_replace('-', '_', $full_name  );
 					}
+					// if first name has dashed replace with underscore
+					if( strpos( $first_name, '+') > -1 && strpos( $full_name, '+' ) > -1 ){
+						$difficulties++;
+						$full_name  = str_replace('-', '_', $full_name  );
+					}
+					if( strpos( $last_name, '-') > -1 || strpos( $first_name, '-') > -1 || strpos( $full_name, '-') > -1 ){
+						$difficulties++;
+					}
 					// if name has space, replace with dash
 					$full_name_slug = str_replace( ' ' ,  '+', $full_name_slug );
-
+					$full_name_slug = str_replace( '-' ,  '+', $full_name_slug );
+					
 					// if name has period
 					if( strpos( $last_name, '.') > -1 && strpos( $full_name, '.' ) > -1 ){
 						$difficulties++;
