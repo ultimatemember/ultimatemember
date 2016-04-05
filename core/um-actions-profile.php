@@ -120,7 +120,8 @@
 		do_action('um_user_after_updating_profile', $to_update );
 
 		if ( !isset( $args['is_signup'] ) ) {
-			exit( wp_redirect( um_edit_my_profile_cancel_uri() ) );
+			$url = $ultimatemember->permalinks->profile_url();
+			exit( wp_redirect( um_edit_my_profile_cancel_uri( $url ) ) );
 		}
 
 	}

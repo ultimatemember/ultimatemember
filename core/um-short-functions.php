@@ -803,10 +803,15 @@ function um_reset_user() {
 	/***
 	***	@remove edit profile args from url
 	***/
-	function um_edit_my_profile_cancel_uri() {
-		$url = remove_query_arg( 'um_action' );
-		$url = remove_query_arg( 'profiletab', $url );
-		$url = add_query_arg('profiletab', 'main', $url );
+	function um_edit_my_profile_cancel_uri( $url = '' ) {
+		global $ultimatemember;
+		
+		if(  empty(  $url ) ){
+			$url = remove_query_arg( 'um_action' );
+			$url = remove_query_arg( 'profiletab', $url );
+			$url = add_query_arg('profiletab', 'main', $url );
+		}
+
 		return $url;
 	}
 
