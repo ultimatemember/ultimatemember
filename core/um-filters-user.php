@@ -107,44 +107,60 @@
 			  $value = $slugname;
 		}
 
+		$value = apply_filters("um_permalink_base_before_filter", $value );
+		$raw_value = $value;
+
 		switch( $permalink_base ){
 				case 'name':
-					
-					if( ! empty( $value ) && strrpos( $value ,".") > -1 ){
-						$value = str_replace( '.', ' ', $value );
-					}
 
-					// Checks if last name has a dash
+
 					if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
 						$value = str_replace( '_', '. ', $value );
 					}
+
+					if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
+						$value = str_replace( '_', '-', $value );
+					}
+
+					if( ! empty( $value ) && strrpos( $value ,".") > -1 && strrpos( $raw_value ,"_" ) <= -1 ){
+						$value = str_replace( '.', ' ', $value );
+					}
+
+					$value = apply_filters("um_permalink_base_after_filter_name", $value, $raw_value );
 					
 				break;
 
 				case 'name_dash':
-					
+
 					if( ! empty( $value ) && strrpos( $value ,"-") > -1 ){
 						$value = str_replace( '-', ' ', $value );
 					}
 
+					if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
+						$value = str_replace( '_', '-', $value );
+					}
+					
 					// Checks if last name has a dash
 					if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
 						$value = str_replace( '_', '-', $value );
 					}
 
+					$value = apply_filters("um_permalink_base_after_filter_name_dash", $value, $raw_value );
+
 				break;
 
 
 				case 'name_plus':
-					
+
 					if( ! empty( $value ) && strrpos( $value ,"+") > -1 ){
 						$value = str_replace( '+', ' ', $value );
 					}
 
-					// Checks if last name has a dash
 					if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
 						$value = str_replace( '_', '+', $value );
 					}
+
+					$value = apply_filters("um_permalink_base_after_filter_name_plus", $value, $raw_value );
 
 				break;
 
@@ -154,6 +170,8 @@
 					if( ! empty( $value ) && strrpos( $value ,"_") > -1 && substr( $value , "_") == 1 ){
 						$value = str_replace( '_', '-', $value );
 					}
+
+					$value = apply_filters("um_permalink_base_after_filter", $value, $raw_value );
 
 				break;
 		}

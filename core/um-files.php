@@ -481,7 +481,7 @@ class UM_Files {
 
 		
 		$info = @getimagesize( $file );
-
+		
 		if ( $info['mime'] == 'image/gif' ){
 			
 			$img_r = imagecreatefromgif( $file );
@@ -491,12 +491,12 @@ class UM_Files {
 
 		} else if ( $info['mime'] == 'image/png' ){
 			
-			$srcImage = imagecreatefrompng( $file );
-			$targetImage = imagecreatetruecolor( $targ_x2, $targ_y2 );   
-			imagealphablending( $targetImage, false );
-			imagesavealpha( $targetImage, true );
-			imagecopyresampled( $targetImage, $srcImage, 0, 0, 0, 0, $targ_x1, $targ_y1, $targ_x2, $targ_y2 );
-			imagepng( $srcImage, $this->path_only( $file ) . basename( $file ) );
+			$img_r = imagecreatefrompng( $file );
+			$dst_r = imagecreatetruecolor( $targ_x2, $targ_y2 );
+			imagealphablending( $dst_r, false);
+		    imagesavealpha( $dst_r, true);
+		    imagecopy( $dst_r, $img_r, 0, 0, $targ_x1, $targ_y1, $targ_x2, $targ_y2 );
+			imagepng( $dst_r, $this->path_only( $file ) . basename( $file ) );
 
 		}else{
 
@@ -539,19 +539,8 @@ class UM_Files {
 			wp_die( __('Unauthorized to do this attempt.','ultimatemember') );
 		}
 
-		// name and extension stuff
-		$source_name = basename( $source );
-
-		if ( $key == 'profile_photo' ) {
-			$source_name = 'profile_photo.jpg';
-		}
-
-		if ( $key == 'cover_photo' ) {
-			$source_name = 'cover_photo.jpg';
-		}
-
-		$ext = '.' . pathinfo($source_name, PATHINFO_EXTENSION);
-		$name = str_replace( $ext, '', $source_name );
+		$ext = '.' . pathinfo($source, PATHINFO_EXTENSION);
+		$name = $key;
 		$filename = $name . $ext;
 
 		// copy & overwrite file
@@ -565,11 +554,14 @@ class UM_Files {
 		// thumbs
 		if ( $key == 'profile_photo' ) {
 
-			 list($w, $h) = @getimagesize( $source );
+			list($w, $h) = @getimagesize( $source );
 				
 
 			$sizes = um_get_option('photo_thumb_sizes');
 			foreach( $sizes as $size ) {
+				
+				$ratio = round( $w / $h, 2 );
+				$height = round( $size / $ratio, 2 );
 
 				if ( file_exists(  $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext ) ) {
 					unlink( $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext );
@@ -581,30 +573,21 @@ class UM_Files {
 						$thumb_s = imagecreatefromjpeg( $source );
 						$thumb = imagecreatetruecolor( $size, $size );
 						imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $size, $w, $h );
-
+						imagejpeg( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext, 100);
+						imagejpeg( $thumb, $this->upload_basedir . $user_id . '/' . $name . $ext, 100);
+					}else if ( $info['mime'] == 'image/png' ){
+						$thumb_s  = imagecreatefrompng( $source );
+						$thumb = imagecreatetruecolor( $size, $size ); 
+						imagealphablending( $thumb, false);
+		    			imagesavealpha( $thumb, true);
+		    			imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $size, $w, $h );
+						imagepng( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext );
 					}else if ( $info['mime'] == 'image/gif' ){
 						$thumb_s = imagecreatefromgif( $source );
 						$thumb = imagecreatetruecolor( $size, $size );
 						imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $size, $w, $h );
-
-					}
-
-					
-					if ( $info['mime'] == 'image/jpeg' ){
-						imagejpeg( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext, 100);
-					}else if ( $info['mime'] == 'image/png' ){
-						
-						$srcImage =  imagecreatefrompng( $source );
-						$targetImage = imagecreatetruecolor( $size, $size );   
-						imagealphablending( $targetImage, false );
-						imagesavealpha( $targetImage, true );
-						imagecopyresampled( $targetImage, $srcImage, 0, 0, 0, 0, $size, $size, $w, $h );
-						imagepng( $srcImage, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext, 0 ,PNG_ALL_FILTERS);
-
-					}else if ( $info['mime'] == 'image/gif' ){
-
 						imagegif( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext);
-
+						imagegif( $thumb, $this->upload_basedir . $user_id . '/' . $name . $ext);
 					}
 				}
 
@@ -632,28 +615,21 @@ class UM_Files {
 				if ( $size < $w ) {
 
 					if ( $info['mime'] == 'image/jpeg' ){
-							$thumb = imagecreatetruecolor( $size, $height );
-							imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $height, $w, $h );
-							$thumb_s = imagecreatefromjpeg( $source );
-					}else if ( $info['mime'] == 'image/gif' ){
-							$thumb = imagecreatetruecolor( $size, $height );
-							imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $height, $w, $h );
-							$thumb_s = imagecreatefromgif( $source );
-					}
-
-					
-					if ( $info['mime'] == 'image/jpeg' ){
+						$thumb = imagecreatetruecolor( $size, $height );
+						$thumb_s = imagecreatefromjpeg( $source );
+						imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $height, $w, $h );
 						imagejpeg( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext, 100);
 					}else if ( $info['mime'] == 'image/png' ){
-						
-						$srcImage = imagecreatefrompng( $source );
-						$targetImage = imagecreatetruecolor( $size, $height );   
-						imagealphablending( $targetImage, false );
-						imagesavealpha( $targetImage, true );
-						imagecopyresampled( $targetImage, $srcImage, 0, 0, 0, 0, $size, $height, $w, $h );
-
-						imagepng($srcImage, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext, 0 ,PNG_ALL_FILTERS);
+						$thumb_s  = imagecreatefrompng( $source );
+						$thumb = imagecreatetruecolor( $size, $height ); 
+						imagealphablending( $thumb, false);
+		    			imagesavealpha( $thumb, true);
+		    			imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $height, $w, $h );
+						imagepng( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext );
 					}else if ( $info['mime'] == 'image/gif' ){
+						$thumb = imagecreatetruecolor( $size, $height );
+						$thumb_s = imagecreatefromgif( $source );
+						imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $height, $w, $h );
 						imagegif( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext);
 					}
 				}

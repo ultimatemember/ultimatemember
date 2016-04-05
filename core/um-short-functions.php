@@ -803,10 +803,15 @@ function um_reset_user() {
 	/***
 	***	@remove edit profile args from url
 	***/
-	function um_edit_my_profile_cancel_uri() {
-		$url = remove_query_arg( 'um_action' );
-		$url = remove_query_arg( 'profiletab', $url );
-		$url = add_query_arg('profiletab', 'main', $url );
+	function um_edit_my_profile_cancel_uri( $url = '' ) {
+		global $ultimatemember;
+		
+		if(  empty(  $url ) ){
+			$url = remove_query_arg( 'um_action' );
+			$url = remove_query_arg( 'profiletab', $url );
+			$url = add_query_arg('profiletab', 'main', $url );
+		}
+
 		return $url;
 	}
 
@@ -1187,11 +1192,12 @@ function um_fetch_user( $user_id ) {
 	function um_get_cover_uri( $image, $attrs ) {
 		global $ultimatemember;
 		$uri = false;
-		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/cover_photo.jpg' ) ) {
-			$uri = um_user_uploads_uri() . 'cover_photo.jpg?' . current_time( 'timestamp' );
+		$ext = '.' . pathinfo($image, PATHINFO_EXTENSION);
+		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/cover_photo'.$ext ) ) {
+			$uri = um_user_uploads_uri() . 'cover_photo'.$ext.'?' . current_time( 'timestamp' );
 		}
-		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/cover_photo-' . $attrs. '.jpg' ) ){
-			$uri = um_user_uploads_uri() . 'cover_photo-'.$attrs.'.jpg?' . current_time( 'timestamp' );
+		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/cover_photo-' .$attrs.$ext ) ){
+			$uri = um_user_uploads_uri() . 'cover_photo-'.$attrs.$ext.'?' . current_time( 'timestamp' );
 		}
 		return $uri;
 	}
@@ -1211,28 +1217,28 @@ function um_fetch_user( $user_id ) {
 		global $ultimatemember;
 		$uri = false;
 		$find = false;
+		$ext = '.' . pathinfo($image, PATHINFO_EXTENSION);
+		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo-' . $attrs. $ext ) ) {
 
-		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo-' . $attrs. '.jpg' ) ) {
-
-			$uri = um_user_uploads_uri() . 'profile_photo-'.$attrs.'.jpg?' . current_time( 'timestamp' );
+			$uri = um_user_uploads_uri() . 'profile_photo-'.$attrs.$ext.'?' . current_time( 'timestamp' );
 
 		} else {
 
 			$sizes = um_get_option('photo_thumb_sizes');
 			if ( is_array( $sizes ) ) $find = um_closest_num( $sizes, $attrs );
 
-			if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo-' . $find. '.jpg' ) ) {
+			if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo-' . $find.$ext ) ) {
 
-				$uri = um_user_uploads_uri() . 'profile_photo-'.$find.'.jpg?' . current_time( 'timestamp' );
+				$uri = um_user_uploads_uri() . 'profile_photo-'.$find.$ext.'?' . current_time( 'timestamp' );
 
-			} else if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo.jpg' ) ) {
+			} else if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo'.$ext ) ) {
 
-				$uri = um_user_uploads_uri() . 'profile_photo.jpg?' . current_time( 'timestamp' );
+				$uri = um_user_uploads_uri() . 'profile_photo'.$ext.'?' . current_time( 'timestamp' );
 
 			}
 
 			if ( $attrs == 'original' ) {
-				$uri = um_user_uploads_uri() . 'profile_photo.jpg?' . current_time( 'timestamp' );
+				$uri = um_user_uploads_uri() . 'profile_photo'.$ext.'?' . current_time( 'timestamp' );
 			}
 
 		}
@@ -1429,9 +1435,16 @@ function um_fetch_user( $user_id ) {
 					if( um_get_option('use_gravatars') && ! um_user('synced_profile_photo') && ! $has_profile_photo ){
 						$avatar_uri  = um_get_domain_protocol().'gravatar.com/avatar/'.um_user('synced_gravatar_hashed_id');
 						$avatar_uri = add_query_arg('s',400, $avatar_uri);
-						if( um_get_option('use_um_gravatar_default_image') ){
-							$avatar_uri = add_query_arg('d', um_get_default_avatar_uri(), $avatar_uri  );
+						$gravatar_type = um_get_option('use_um_gravatar_default_builtin_image');
+
+						if( $gravatar_type == 'default' ){
+							if( um_get_option('use_um_gravatar_default_image') ){
+								$avatar_uri = add_query_arg('d', um_get_default_avatar_uri(), $avatar_uri  );
+							}
+						}else{
+								$avatar_uri = add_query_arg('d', $gravatar_type, $avatar_uri  );
 						}
+						
 					}
 
 					return '<img src="' . $avatar_uri . '" class="func-um_user gravatar avatar avatar-'.$attrs.' um-avatar" width="'.$attrs.'" height="'.$attrs.'" alt="" />';

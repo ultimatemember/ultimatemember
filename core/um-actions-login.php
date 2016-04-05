@@ -78,7 +78,9 @@
 	add_action( 'um_before_login_fields', 'um_display_login_errors' );
 	function um_display_login_errors( $args ) {
 		global $ultimatemember;
-
+	
+		$error = '';
+	
 		if( $ultimatemember->form->count_errors() > 0 ) {
 			$error = array_values( $ultimatemember->form->errors );
 			$error = array_shift( $error );

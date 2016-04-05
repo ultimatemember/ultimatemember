@@ -165,6 +165,8 @@ class UM_Rewrite {
 				}
 
 				exit( wp_redirect( $url ) );
+			}else{
+				exit( wp_redirect( home_url() ) );
 			}
 
 		}

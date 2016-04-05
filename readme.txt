@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.4
 
-Stable Tag: 1.3.44
+Stable Tag: 1.3.46
 
 License: GNU Version 2 or Any Later Version
 
@@ -148,6 +148,37 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.47: April 6, 2016 =
+* Fixed: Fatal errors with language filter file
+
+= 1.3.46: April 6, 2016 =
+* Fixed: Search widget fatal error
+* Fixed: image jpeg upload sizes
+
+= 1.3.45: April 6, 2016 =
+* New: support for wordfence and limit login
+* New: search widget
+* New: secondary email address
+* Added: hook to password reset form fields
+* Added: privacy options for profile menu tabs
+* Added: option to allow primary email editable in profile view
+* Added: member directory sort randomly
+* Fixed: user page redirection
+* Fixed: admin script error
+* Fixed: invalid image path
+* Fixed: upload image png with transparency
+* Fixed: permalink basename fallback
+* Fixed: casting variable and add new filter
+* Fixed: remove notices
+* Fixed: search users by tag
+* Fixed: force UT8 encoding option
+* Fixed: email content type
+* Fixed: WPML compatibility
+* Fixed: permalink base name format and redirect loop in profile page
+* Fixed: form labels textdomain
+* Fixed: edit profile redirect
+* Tweak: accept period in profile url
 
 = 1.3.44: March 11, 2016 =
 * New: an option to force Strings to use UTF-8 encoding

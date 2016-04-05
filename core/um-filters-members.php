@@ -238,13 +238,12 @@
 	/***
 	***	@sorting random
 	***/
-	add_filter( 'pre_user_query', 'um_sortby_random' );
-	function um_sortby_random( $query ) {
-	   if($query->query_vars["orderby"] == 'random') {
+	add_filter('pre_user_query','um_modify_sortby_randomly');
+	function um_modify_sortby_randomly( $query ){
+ 		if($query->query_vars["orderby"] == 'random') {
 	       $query->query_orderby = 'ORDER by RAND()';
-	   }
-
-	   return $query;
+	   	}
+		return $query;
 	}
 
 	/***
