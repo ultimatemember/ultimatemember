@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.4
 
-Stable Tag: 1.3.45
+Stable Tag: 1.3.46
 
 License: GNU Version 2 or Any Later Version
 
@@ -148,6 +148,10 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+= 1.3.46: April 6, 2016 =
+* Fixed: Search widget fatal error
+* Fixed: image jpeg upload sizes
+
 = 1.3.45: April 6, 2016 =
 * New: support for wordfence and limit login
 * New: search widget
