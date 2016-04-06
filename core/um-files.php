@@ -616,8 +616,8 @@ class UM_Files {
 
 					if ( $info['mime'] == 'image/jpeg' ){
 						$thumb = imagecreatetruecolor( $size, $height );
-						imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $height, $w, $h );
 						$thumb_s = imagecreatefromjpeg( $source );
+						imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $height, $w, $h );
 						imagejpeg( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext, 100);
 					}else if ( $info['mime'] == 'image/png' ){
 						$thumb_s  = imagecreatefrompng( $source );
@@ -628,8 +628,8 @@ class UM_Files {
 						imagepng( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext );
 					}else if ( $info['mime'] == 'image/gif' ){
 						$thumb = imagecreatetruecolor( $size, $height );
-						imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $height, $w, $h );
 						$thumb_s = imagecreatefromgif( $source );
+						imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $height, $w, $h );
 						imagegif( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext);
 					}
 				}
