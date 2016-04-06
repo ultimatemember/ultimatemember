@@ -148,6 +148,10 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.47: April 6, 2016 =
+* Fixed: Fatal errors with language filter file
+
 = 1.3.46: April 6, 2016 =
 * Fixed: Search widget fatal error
 * Fixed: image jpeg upload sizes
