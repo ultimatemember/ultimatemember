@@ -243,7 +243,7 @@
  		if($query->query_vars["orderby"] == 'random') {
 	       $query->query_orderby = 'ORDER by RAND()';
 	   	}
-		return $query;		
+		return $query;
 	}
 
 	/***
