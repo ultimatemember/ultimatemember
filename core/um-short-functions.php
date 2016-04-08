@@ -1489,6 +1489,18 @@ function um_fetch_user( $user_id ) {
 	}
 
 	/**
+	 * Set SSL to media URI
+	 */
+	function um_secure_media_uri( $url ){
+		
+		if( is_ssl() ){
+			$url = str_replace('http:', 'https:', $url );
+		}
+
+		return $url;
+	}
+
+	/**
 	 * Check if meta_value exists
 	 * @param  string $key
 	 * @param  mixed $value
