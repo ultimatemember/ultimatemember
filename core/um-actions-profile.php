@@ -380,10 +380,23 @@
 					<?php if ( $ultimatemember->fields->viewing == true && um_user('description') && $args['show_bio'] ) { ?>
 
 					<div class="um-meta-text">
-						<?php if( um_get_option( 'profile_show_html_bio' ) ) : ?>
-							<?php echo um_clickable_links( strip_tags( um_filtered_value('description'), '<p><a><img><br><strong><b><em><i><quote><sub><sup>') ); ?>
+						<?php 
+						$allowed_tags = array(
+							    'a' => array(
+							        'href' => array(),
+							        'title' => array()
+							    ),
+							    'br' => array(),
+							    'em' => array(),
+							    'strong' => array(),
+						);
+						
+						$description = get_user_meta( um_user('ID') , 'description', true);
+						
+						if( um_get_option( 'profile_show_html_bio' ) ) : ?>
+							<?php echo make_clickable( wp_kses( $description, $allowed_tags) ); ?>
 						<?php else : ?>
-							<?php echo um_clickable_links( wp_strip_all_tags( um_filtered_value('description') ) ); ?>
+							<?php echo esc_html( $description ); ?>
 						<?php endif; ?>
 					</div>
 
