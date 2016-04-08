@@ -1490,6 +1490,8 @@ function um_fetch_user( $user_id ) {
 
 	/**
 	 * Set SSL to media URI
+	 * @param  string $url
+	 * @return string
 	 */
 	function um_secure_media_uri( $url ){
 		
