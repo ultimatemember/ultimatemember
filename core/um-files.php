@@ -540,15 +540,20 @@ class UM_Files {
 		}
 
 		$ext = '.' . pathinfo($source, PATHINFO_EXTENSION);
-		$name = $key;
-		$filename = $name . $ext;
-
+		
 		// copy & overwrite file
+			
+		if( in_array( $key , array('profile_photo','cover_photo') ) ){
+			$filename = $key . $ext;
+		}else{
+			$filename = basename( $source );
+		}
+		
 		if ( file_exists( $this->upload_basedir . $user_id . '/' . $filename ) ) {
 			unlink( $this->upload_basedir . $user_id . '/' . $filename );
 		}
 		copy( $source, $this->upload_basedir . $user_id . '/' . $filename );
-
+		
 		$info = @getimagesize( $source );
 
 		// thumbs
@@ -596,9 +601,7 @@ class UM_Files {
 			// removes a synced profile photo
 			delete_user_meta( $user_id, 'synced_profile_photo' );
 
-		}
-
-		if ( $key == 'cover_photo' ) {
+		}else if ( $key == 'cover_photo' ) {
 
 			list($w, $h) = @getimagesize( $source );
 
@@ -635,6 +638,8 @@ class UM_Files {
 				}
 
 			}
+
+		}else{
 
 		}
 
