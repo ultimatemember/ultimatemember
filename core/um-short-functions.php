@@ -1319,7 +1319,24 @@ function um_fetch_user( $user_id ) {
 
 				return $full_name;
 
-				break;
+			break;
+
+			case 'first_and_last_name_initial':
+				
+				$f_and_l_initial = '';
+
+				if ( um_user('first_name') && um_user('last_name') ) {
+					$initial = um_user('last_name');
+					$f_and_l_initial =  um_user('first_name').' '.$initial[0];
+				}else{
+					$f_and_l_initial = um_profile( $data );
+				}
+
+				$f_and_l_initial = $ultimatemember->validation->safe_name_in_url( $f_and_l_initial );
+
+				return $f_and_l_initial;
+
+			break;
 
 			case 'display_name':
 
@@ -1385,13 +1402,22 @@ function um_fetch_user( $user_id ) {
 					}
 				}
 
+
 				if ( $op == 'field' && um_get_option('display_name_field') != '' ) {
 					$fields = array_filter(preg_split('/[,\s]+/', um_get_option('display_name_field') ));
 					$name = '';
+
 					foreach( $fields as $field ) {
-						$name .= um_profile( $field ) . ' ';
+						if( um_profile( $field ) ){
+							$name .= um_profile( $field ) . ' ';
+						}else if(  um_user( $field ) ){
+							$name .= um_user( $field ) . ' ';
+						}
+						
 					}
 				}
+
+
 
 				return apply_filters('um_user_display_name_filter', $name, um_user('ID'), ( $attrs == 'html' ) ? 1 : 0 );
 
