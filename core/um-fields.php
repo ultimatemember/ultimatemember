@@ -1587,7 +1587,7 @@ class UM_Fields {
 							if ( $this->is_selected($form_key, $option_value, $data) ) {
 								$output.= 'selected';
 							}
-							$output .= '>'.$v.'</option>';
+							$output .= '>'.__($v, UM_TEXTDOMAIN).'</option>';
 
 						}
 
@@ -1657,7 +1657,7 @@ class UM_Fields {
 							if ( $this->is_selected($key, $opt_value, $data) ) {
 								$output.= 'selected';
 							}
-							$output .= '>'.$v.'</option>';
+							$output .= '>'.__($v,UM_TEXTDOMAIN).'</option>';
 
 						}
 
@@ -1743,7 +1743,7 @@ class UM_Fields {
 
 							$output .= ' />';
 							$output .= '<span class="um-field-radio-state"><i class="'.$class.'"></i></span>';
-							$output .= '<span class="um-field-radio-option">'.$v.'</span>';
+							$output .= '<span class="um-field-radio-option">'.__($v,UM_TEXTDOMAIN).'</span>';
 							$output .= '</label>';
 
 							if ($i % 2 == 0) {
@@ -1811,7 +1811,7 @@ class UM_Fields {
 							$output .= ' />';
 
 							$output .= '<span class="um-field-checkbox-state"><i class="'.$class.'"></i></span>';
-							$output .= '<span class="um-field-checkbox-option">'. $v .'</span>';
+							$output .= '<span class="um-field-checkbox-option">'. __($v,UM_TEXTDOMAIN) .'</span>';
 							$output .= '</label>';
 
 							if ($i % 2 == 0) {
@@ -1855,7 +1855,7 @@ class UM_Fields {
 				if ( !empty( $fields ) ) {
 
 				$output .= '<div class="um-field-group" data-max_entries="'.$max_entries.'">
-								<div class="um-field-group-head"><i class="um-icon-plus"></i>'.$label.'</div>';
+								<div class="um-field-group-head"><i class="um-icon-plus"></i>'.__($label,UM_TEXTDOMAIN).'</div>';
 					$output .= '<div class="um-field-group-body"><a href="#" class="um-field-group-cancel"><i class="um-icon-close"></i></a>';
 
 									foreach($fields as $subkey => $subdata) {
