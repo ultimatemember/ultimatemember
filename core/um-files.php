@@ -545,6 +545,7 @@ class UM_Files {
 			
 		if( in_array( $key , array('profile_photo','cover_photo') ) ){
 			$filename = $key . $ext;
+			$name = $key;
 		}else{
 			$filename = basename( $source );
 		}
@@ -638,8 +639,6 @@ class UM_Files {
 				}
 
 			}
-
-		}else{
 
 		}
 
