@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.4
 
-Stable Tag: 1.3.46
+Stable Tag: 1.3.48
 
 License: GNU Version 2 or Any Later Version
 
@@ -148,6 +148,20 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+= 1.3.48: April 11, 2016 =
+* New: advanced option to disable profile object caching
+* Added: ssl media uri function
+* Added: first and last name initial as meta key
+* Fixed: order by random and pagination
+* Fixed: user sort by random
+* Fixed: status message encoding
+* Fixed: image upload and file name
+* Fixed: user login with other provider
+* Fixed: translation strings
+* Fixed: dependencies fatal errors
+* Fixed: remove notices
+
+
 
 = 1.3.47: April 6, 2016 =
 * Fixed: Fatal errors with language filter file
