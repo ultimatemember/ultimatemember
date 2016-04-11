@@ -116,6 +116,12 @@ class UM_User {
 	}
 
 	function get_cached_data( $user_id ) {
+
+		$disallow_cache = get_option('um_profile_object_cache_stop');
+		if( $disallow_cache ){
+			return '';
+		}
+
 		if ( is_numeric( $user_id ) && $user_id > 0 ) {
 			$find_user = get_option("um_cache_userdata_{$user_id}");
 			if ( $find_user ) {
