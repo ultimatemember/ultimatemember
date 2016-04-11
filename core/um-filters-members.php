@@ -240,9 +240,34 @@
 	***/
 	add_filter('pre_user_query','um_modify_sortby_randomly');
 	function um_modify_sortby_randomly( $query ){
+
+		if( um_is_session_started() === FALSE ){
+				session_start();
+		}
+		
+		// Reset seed on load of initial 
+        if( ! isset( $_REQUEST['members_page'] ) || $_REQUEST['members_page'] == 0 ||  $_REQUEST['members_page'] == 1 ) {
+            if( isset( $_SESSION['seed'] ) ) {
+                unset( $_SESSION['seed'] );
+            }
+        }
+        
+        // Get seed from session variable if it exists
+        $seed = false;
+        if( isset( $_SESSION['seed'] ) ) {
+            $seed = $_SESSION['seed'];
+        }
+        
+        // Set new seed if none exists
+        if ( ! $seed ) {
+            $seed = rand();
+            $_SESSION['seed'] = $seed;
+        }
+
  		if($query->query_vars["orderby"] == 'random') {
-	       $query->query_orderby = 'ORDER by RAND()';
+	       $query->query_orderby = 'ORDER by RAND('. $seed.')';
 	   	}
+
 		return $query;
 	}
 
