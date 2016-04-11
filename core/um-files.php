@@ -528,6 +528,8 @@ class UM_Files {
 	***/
 	function new_user_upload( $user_id, $source, $key ) {
 
+		$user_id = trim( $user_id );
+		
 		// if he does not have uploads dir yet
 		$this->new_user( $user_id );
 
@@ -550,6 +552,8 @@ class UM_Files {
 			$filename = basename( $source );
 		}
 		
+
+
 		if ( file_exists( $this->upload_basedir . $user_id . '/' . $filename ) ) {
 			unlink( $this->upload_basedir . $user_id . '/' . $filename );
 		}
