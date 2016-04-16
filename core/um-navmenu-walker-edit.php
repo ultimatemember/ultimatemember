@@ -28,19 +28,24 @@ class UM_Menu_Item_Custom_Fields_Editor {
 		}
 
 		foreach ( self::$fields as $_key => $label ) {
-			$key = sprintf( 'menu-item-%s', $_key );
+			
 			if( $_key == 'um_nav_roles' ){
-				$key = sprintf( 'menu-item-%s%d', $_key, $menu_item_db_id );
+
+				$role_key = sprintf( 'menu-item-%s%d', $_key, $menu_item_db_id );
+				$key = sprintf( 'menu-item-%s', $_key );
 				// Sanitize
-				if ( ! empty( $_POST[ $key ] ) ) {
+				if ( ! empty( $_POST[ $role_key ] ) ) {
 					// Do some checks here...
-					$value = $_POST[ $key ];
+					$value = $_POST[ $role_key ];
 				}
 				else {
 					$value = null;
 				}
 
 			}else{
+				
+				$key = sprintf( 'menu-item-%s', $_key );
+				
 				// Sanitize
 				if ( ! empty( $_POST[ $key ][ $menu_item_db_id ] ) ) {
 					// Do some checks here...
@@ -50,6 +55,7 @@ class UM_Menu_Item_Custom_Fields_Editor {
 					$value = null;
 				}
 			}
+
 			// Update
 			if ( ! is_null( $value ) ) {
 				update_post_meta( $menu_item_db_id, $key, $value );
@@ -58,7 +64,6 @@ class UM_Menu_Item_Custom_Fields_Editor {
 				delete_post_meta( $menu_item_db_id, $key );
 			}
 		}
-		
 	}
 
 	public static function _fields( $id, $item, $depth, $args ) {
@@ -77,11 +82,8 @@ class UM_Menu_Item_Custom_Fields_Editor {
 			$key   = sprintf( 'menu-item-%s', $_key );
 			$id    = sprintf( 'edit-%s-%s', $key, $item->ID );
 			$name  = sprintf( '%s[%s]', $key, $item->ID );
-			$value = get_post_meta( $item->ID, $key, true );
-			
-			$role_key = sprintf( 'menu-item-%s%d', $_key,$item->ID );
 			$role_name  = sprintf( '%s%s[]', $key, $item->ID );
-			$role_value = get_post_meta( $item->ID, $role_key, true );
+			$value = get_post_meta( $item->ID, $key, true );
 			$class = sprintf( 'field-%s', $_key );
 			?>
 			
@@ -114,7 +116,7 @@ class UM_Menu_Item_Custom_Fields_Editor {
 					<p class="description">
 					
 					<?php  foreach($ultimatemember->query->get_roles() as $role_id => $role) { ?>
-					<label><input type="checkbox" data-raw="<?php echo $role_id.'='.$role.'='.$value; ?>" name="<?php echo $role_name; ?>" value="<?php echo $role_id; ?>" <?php if (  ( is_array( $role_value) && in_array($role_id,  $role_value ) ) || ( isset( $role_value) && $role_id ==  $role_value ) ) echo 'checked="checked"'; ?> /> <?php echo $role; ?></label>&nbsp;&nbsp;
+					<label><input type="checkbox" name="<?php echo $role_name; ?>" value="<?php echo $role_id; ?>" <?php if (  ( is_array($value) && in_array($role_id, $value ) ) || ( isset($value) && $role_id == $value ) ) echo 'checked="checked"'; ?> /> <?php echo $role; ?></label>&nbsp;&nbsp;
 					<?php } ?>
 					
 					</p>
@@ -139,4 +141,3 @@ class UM_Menu_Item_Custom_Fields_Editor {
 	}
 }
 UM_Menu_Item_Custom_Fields_Editor::init();
-
