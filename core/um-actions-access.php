@@ -144,6 +144,11 @@
 			$post_id = get_option('woocommerce_shop_page_id');
 
 		} else if ( is_archive() || is_front_page() || is_home() || is_search() || in_the_loop()  || is_feed() ) {
+			
+			$current_page_type = um_get_current_page_type();
+			
+			do_action("um_access_post_type",$current_page_type);
+			do_action("um_access_post_type_{$current_page_type}");
 
 			return;
 
