@@ -125,7 +125,7 @@ class UM_Members {
 
 				?>
 
-				<input type="text" name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" placeholder="<?php echo isset( $attrs['label'] ) ? $attrs['label'] : ''; ?>" value="<?php um_queried_search_value( $filter ); ?>" />
+				<input type="text"  name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" placeholder="<?php echo isset( $attrs['label'] ) ? $attrs['label'] : ''; ?>" value='<?php echo esc_attr( um_queried_search_value(  $filter, false ) ); ?>' />
 
 				<?php
 
@@ -140,14 +140,14 @@ class UM_Members {
 	***/
 	function get_members($args){
 
-		global $ultimatemember;
+		global $ultimatemember, $wpdb;
 
 		extract($args);
 
 		$query_args = array();
 		$query_args = apply_filters( 'um_prepare_user_query_args', $query_args, $args );
 		$users = new WP_User_Query( $query_args );
-
+		
 		// number of profiles for mobile
 		if ( $ultimatemember->mobile->isMobile() && isset( $profiles_per_page_mobile ) )
 			$profiles_per_page = $profiles_per_page_mobile;

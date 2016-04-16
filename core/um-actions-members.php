@@ -35,7 +35,7 @@
 				
 					<?php if ( isset( $_REQUEST['page_id'] ) && get_option('permalink_structure') == 0 ) { ?>
 					
-					<input type="hidden" name="page_id" id="page_id" value="<?php echo $_REQUEST['page_id']; ?>" />
+					<input type="hidden" name="page_id" id="page_id" value="<?php echo esc_attr( $_REQUEST['page_id']); ?>" />
 					
 					<?php }
 

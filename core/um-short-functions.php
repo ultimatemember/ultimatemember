@@ -626,15 +626,22 @@ function um_profile_id() {
 	/***
 	***	@Check value of queried search in text input
 	***/
-	function um_queried_search_value( $filter ) {
+	function um_queried_search_value( $filter, $echo = true ) {
 		global $ultimatemember;
+		$value = '';
 		if ( isset($_REQUEST['um_search']) ) {
 			$query = $ultimatemember->permalinks->get_query_array();
-			if ( $query[$filter] != '' ) {
-				echo stripslashes_deep( $query[$filter] );
+			if ( $query[ $filter ] != '' ) {
+				$value = stripslashes_deep( $query[ $filter ] );
 			}
 		}
-		echo '';
+		
+		if( $echo ){
+			echo $value;
+		}else{
+			return $value;
+		}
+
 	}
 
 	/***
