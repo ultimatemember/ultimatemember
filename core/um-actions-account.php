@@ -132,6 +132,11 @@
 			}
 		}
 
+		if ( ! empty( $_POST['user_login'] ) && ! validate_username( $_POST['user_login'] ) ) {
+			$ultimatemember->form->add_error('user_login', __('Your username is invalid','ultimatemember') );
+			return;
+		}
+
 		// delete account
 		if ( isset($_POST['um_account_submit']) && $_POST['um_account_submit'] == __('Delete Account','ultimatemember') ) {
 			if ( strlen(trim( $_POST['single_user_password'] ) ) == 0 ) {
