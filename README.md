@@ -25,6 +25,7 @@ Ultimate Member is a powerful and flexible WordPress plugin that makes it a bree
 - SEO optimized
 - Developer friendly with dozens of actions and filters
 - Multi-site compatibility
+- Multilingual compatability
 - Mandrill compatibility
 
 Read about all of the plugin's features at [Ultimate Member](https://ultimatemember.com/)
@@ -47,7 +48,7 @@ GNU Version 2 or Any Later Version
 
 Releases
 ====================
-[Latest Release: Ultimate Member v1.3.45](https://github.com/ultimatemember/ultimatemember/releases).
+[Latest Release: Ultimate Member v1.3.49](https://github.com/ultimatemember/ultimatemember/releases).
 
 Changelog
 ====================
