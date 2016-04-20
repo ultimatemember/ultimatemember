@@ -110,21 +110,21 @@
 	- upload progress
 */
 
-.upload-statusbar {
+div.um-modal .upload-statusbar {
 	margin: 20px 0 0 0;
 }
 
-.upload-filename {
+div.um-modal .upload-filename {
 	display: none !important;
 }
 
-.upload-progress {
+div.um-modal .upload-progress {
 	position: relative;
 	width: 100%;
 	box-sizing: border-box;
 }
 
-.upload-bar {
+div.um-modal .upload-bar {
 	width: 0;
 	height: 10px;
 	color: #666;
@@ -138,7 +138,7 @@
 	- drag and drop area
 */
 
-.ajax-upload-dragdrop {
+div.um-modal .ajax-upload-dragdrop {
 	width: 100%;
 	text-align: center;
 	vertical-align:middle;
@@ -152,12 +152,12 @@
 	line-height: 1em;
 }
 
-.ajax-upload-dragdrop span.str {
+div.um-modal .ajax-upload-dragdrop span.str {
 	display: block;
 	margin: 0 0 15px 0;
 }
 
-.ajax-upload-dragdrop span.icon {
+div.um-modal .ajax-upload-dragdrop span.icon {
 	display: block;
 	font-size: 80px;
 	line-height: 80px;
@@ -165,7 +165,7 @@
 	margin-bottom: 10px;
 }
 
-.ajax-upload-dragdrop span.help {
+div.um-modal .ajax-upload-dragdrop span.help {
 	display: block;
 	font-size: 14px;
 	color: #aaa;
@@ -176,7 +176,7 @@
 	- upload button
 */
 
-.upload {
+div.um-modal .upload {
 	cursor: pointer !important;
 	line-height: 34px !important;
 	height: 34px;
@@ -193,7 +193,7 @@
 	transition: 0.2s;
 }
   
-.upload:hover {
+div.um-modal .upload:hover {
 	background: #44b0ec;
 }
 
