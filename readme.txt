@@ -5,9 +5,9 @@ Contributors: ultimatemember, champsupertramp
 Donate link: 
 Tags: access control, author, authors, author profile, comments, community, communities, conditional fields, conditional logic, conditional menus, content protection, custom fields, file uploads, form builder, front-end login, front-end registration, gravatar, hide wp-admin, login, login page, logged-in users, mandrill, member, members, membership, member directory, online users, profile, profiles, profile builder, registration, restriction, restrict content, role creation, role menus, search filters, sign in, sign up, social network, star ratings, toolbar, user, users, user fields, user profile, user-profile, user profiles, user roles
 Requires at least: 4.1
-Tested up to: 4.4
+Tested up to: 4.5
 
-Stable Tag: 1.3.49
+Stable Tag: 1.3.50
 
 License: GNU Version 2 or Any Later Version
 
@@ -148,6 +148,15 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.50: April 21, 2016 =
+* Fixed: menu incompatibility issue
+* Fixed: username validation
+* Fixed: admin css conflict
+* Fixed: display name capitalization
+* Fixed: search member filter and fields
+* Fixed: member directory big SELECT query
+* Added: action hook 'um_access_post_type' & 'um_access_post_type_{current_page_type}' for current page type in access settings
 
 = 1.3.49: April 14, 2016 =
 * Fixed: remove core notices from ajax requests
