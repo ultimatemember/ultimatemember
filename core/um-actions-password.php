@@ -108,16 +108,29 @@
 		if ( ( !is_email( $user ) && !username_exists( $user ) ) || ( is_email( $user ) && !email_exists( $user ) ) ) {
 			$ultimatemember->form->add_error('username_b', __('We can\'t find an account registered with that address or username','ultimatemember') );
 		} else {
+
 			if ( is_email( $user ) ) {
 				$user_id = email_exists( $user );
 			} else {
 				$user_id = username_exists( $user );
 			}
+
 			$attempts = (int)get_user_meta( $user_id, 'password_rst_attempts', true );
-			if ( $attempts >= 3 ) {
-				$ultimatemember->form->add_error('username_b', __('You have reached the limit for requesting password change for this user already. Contact support if you cannot open the email','ultimatemember') );
-			} else {
-				update_user_meta( $user_id, 'password_rst_attempts', $attempts + 1 );
+			$is_admin = user_can( intval( $user_id ),'manage_options' );
+
+			if( um_get_option('enable_reset_password_limit') ){ // if reset password limit is set
+
+				if(  um_get_option('disable_admin_reset_password_limit') &&  $is_admin ){
+					// Triggers this when a user has admin capabilities and when reset password limit is disabled for admins
+				}else{
+					$limit = um_get_option('reset_password_limit_number');
+					if ( $attempts >= $limit ) {
+						$ultimatemember->form->add_error('username_b', __('You have reached the limit for requesting password change for this user already. Contact support if you cannot open the email','ultimatemember') );
+					} else {
+						update_user_meta( $user_id, 'password_rst_attempts', $attempts + 1 );
+					}
+				}
+
 			}
 		}
 

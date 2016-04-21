@@ -477,6 +477,36 @@ $this->sections[] = array(
         ),
 
         array(
+                'id'       		=> 'enable_reset_password_limit',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Enable the Reset Password Limit?','ultimatemember' ),
+				'default' 		=> 1,
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
+        ),
+
+		array(
+                'id'       		=> 'reset_password_limit_number',
+                'type'     		=> 'text',
+                'title'   		=> __( 'Reset Password Limit','ultimatemember' ),
+				'desc' 	   		=> __('Set the maximum reset password limit. If reached the maximum limit, user will be locked from using this.','ultimatemember'),
+				'default'		=> 3,
+				'validate'		=> 'numeric',
+				'required'		=> array('enable_reset_password_limit','=',1),
+			
+        ),
+
+        array(
+                'id'       		=> 'disable_admin_reset_password_limit',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Disable the Reset Password Limit for Admins only?','ultimatemember' ),
+				'default' 		=> 0,
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
+				'required'		=> array('enable_reset_password_limit','=',1),
+        ),
+
+        array(
 				'id'       		=> 'wpadmin_allow_ips',
                 'type'     		=> 'textarea',
                 'title'    		=> __( 'Whitelisted Backend IPs','ultimatemember' ),
