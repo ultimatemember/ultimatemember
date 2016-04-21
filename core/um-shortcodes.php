@@ -420,25 +420,29 @@ class UM_Shortcodes {
 			
 			foreach ($paths as $k => $files) {
 
-				foreach ($files as $file) {
+				if( isset( $files ) && ! empty( $files ) ){
+					
+					foreach ($files as $file) {
 
-					$clean_filename = $this->get_template_name($file);
+						$clean_filename = $this->get_template_name( $file );
 
-					if (0 === strpos($clean_filename, $excluded)) {
+						if ( 0 === strpos( $clean_filename, $excluded ) ) {
 
-						$source = file_get_contents($file);
-						$tokens = token_get_all($source);
-						$comment = array(
-							T_COMMENT, // All comments since PHP5
-							T_DOC_COMMENT, // PHPDoc comments
-						);
-						foreach ($tokens as $token) {
-							if (in_array($token[0], $comment) && strstr($token[1], '/* Template:') && $clean_filename != $excluded) {
-								$txt = $token[1];
-								$txt = str_replace('/* Template: ', '', $txt);
-								$txt = str_replace(' */', '', $txt);
-								$array[$clean_filename] = $txt;
-							}
+							$source = file_get_contents( $file );
+							$tokens = token_get_all( $source );
+							$comment = array(
+								T_COMMENT, // All comments since PHP5
+								T_DOC_COMMENT, // PHPDoc comments
+							);
+								foreach ( $tokens as $token ) {
+									if ( in_array( $token[0], $comment ) && strstr( $token[1], '/* Template:' ) && $clean_filename != $excluded ) {
+										$txt = $token[1];
+										$txt = str_replace('/* Template: ', '', $txt );
+										$txt = str_replace(' */', '', $txt );
+										$array[ $clean_filename ] = $txt;
+									}
+								}
+
 						}
 
 					}
