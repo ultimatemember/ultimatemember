@@ -152,6 +152,15 @@ $this->sections[] = array(
         ),
 
         array(
+                'id'       		=> 'force_display_name_capitlized',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Force display name to be capitalized?','ultimatemember'),
+				'default' 		=> 1,
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
+        ),
+
+        array(
                 'id'       		=> 'author_redirect',
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Automatically redirect author page to their profile?','ultimatemember'),
