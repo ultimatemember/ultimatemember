@@ -195,7 +195,7 @@
 			case 1:
 
 				if ( is_user_logged_in() )
-					$redirect_to = $access_redirect2;
+					$redirect_to = esc_url( $access_redirect2 );
 
 				if ( !is_user_logged_in() )
 					$ultimatemember->access->allow_access = true;
@@ -206,7 +206,7 @@
 
 				if ( !is_user_logged_in() ){
 					if ( !$access_redirect ) $access_redirect = um_get_core_page('login');
-					$redirect_to = $access_redirect;
+					$redirect_to = esc_url( $access_redirect );
 				}
 
 				if ( is_user_logged_in() && isset( $access_roles ) && !empty( $access_roles ) ){
@@ -216,12 +216,12 @@
 					if ( !empty( $access_roles ) && !in_array( um_user('role'), $access_roles ) ) {
 						if ( !$access_redirect ) {
 							if ( is_user_logged_in() ) {
-								$access_redirect = site_url();
+								$access_redirect = esc_url( site_url() );
 							} else {
-								$access_redirect = um_get_core_page('login');
+								$access_redirect = esc_url( um_get_core_page('login') );
 							}
 						}
-						$redirect_to = $access_redirect;
+						$redirect_to = esc_url( $access_redirect );
 					}
 				}
 
@@ -234,7 +234,7 @@
 
 			} else {
 				$ultimatemember->access->allow_access = false;
-				$ultimatemember->access->redirect_handler = $redirect_to;
+				$ultimatemember->access->redirect_handler = esc_url( $redirect_to );
 			}
 		}
 
