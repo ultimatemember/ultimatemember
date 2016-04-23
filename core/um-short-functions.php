@@ -1550,7 +1550,11 @@ function um_fetch_user( $user_id ) {
 	 * @return integer
 	 */
 	function um_is_meta_value_exists( $key, $value, $return_user_id = false ){
-		global $wpdb;
+		global $wpdb, $ultimatemember;
+
+		if( isset( $ultimatemember->profile->arr_user_slugs[ 'is_'.$return_user_id ][ $key ] ) ){
+			return $ultimatemember->profile->arr_user_slugs[ 'is_'.$return_user_id ][ $key ];
+		}
 
 		if( ! $return_user_id ){
 			$count = $wpdb->get_var( $wpdb->prepare(
@@ -1559,14 +1563,18 @@ function um_fetch_user( $user_id ) {
 					$value
 			) );
 
+			$ultimatemember->profile->arr_user_slugs[ 'is_'.$return_user_id ][ $key ] = $count;
+
 			return $count;
 		}
-
+			
 			$user_id = $wpdb->get_var( $wpdb->prepare(
 					"SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key = %s AND meta_value = %s ",
 					$key,
 					$value
 			) );
+			
+			$ultimatemember->profile->arr_user_slugs[ 'is_'.$return_user_id ][ $key ] = $user_id;
 
 			return $user_id;
 

@@ -642,6 +642,8 @@ class UM_User {
 	 *
 	 */
 	function get_role() {
+		global $ultimatemember;
+
 		if (isset($this->profile['role']) && !empty( $this->profile['role'] ) ) {
 			return $this->profile['role'];
 		} else {
@@ -653,10 +655,40 @@ class UM_User {
 		}
 	}
 
-	function get_role_name( $slug ) {
-		global $wpdb;
-		$post_id = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND post_name = '$slug'");
-		return get_the_title( $post_id );
+	function get_role_name( $slug, $return_role_id = false ) {
+		global $wpdb, $ultimatemember;
+
+		if( isset( $ultimatemember->profile->arr_user_roles[ 'is_'.$return_role_id ][ $slug ] ) ){
+			return $ultimatemember->profile->arr_user_roles[ 'is_'.$return_role_id ][ $slug ];
+		}
+
+		$args = array(
+		    	'posts_per_page' => 1,
+		    	'post_type' => 'um_role',
+		    	'name'	=> $slug,
+		    	'post_status' => array('publish'),
+		);
+
+		$roles = new WP_Query( $args );
+		$role_id = 0;
+		$role_title = '';
+
+		if ( $roles->have_posts() ) {
+			while ( $roles->have_posts() ) {
+				$roles->the_post();
+				$role_id = get_the_ID();
+				$role_title = get_the_title();
+			}
+		}
+
+		$ultimatemember->profile->arr_user_roles[ 'is_1' ][ $slug ] = $role_id;
+		$ultimatemember->profile->arr_user_roles[ 'is_'  ][ $slug ] = $role_title;
+
+		if( $return_role_id ){
+			return $role_id;
+		}
+		
+		return $role_title;
 	}
 
 	/***

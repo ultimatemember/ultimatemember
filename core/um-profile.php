@@ -2,6 +2,9 @@
 
 class UM_Profile {
 
+	public $arr_user_slugs = array();
+	public $arr_user_roles = array();
+
 	function __construct() {
 
 		add_action('template_redirect', array(&$this, 'active_tab'), 10002);
