@@ -277,30 +277,30 @@ class UM_Members {
 						
 						if( strpos( $where  , "'".$key."'" ) > -1 ){
 
-											// find usermeta key
-											preg_match("#mt[0-9]+.#",  $where, $meta_key );
+								// find usermeta key
+								preg_match("#mt[0-9]+.#",  $where, $meta_key );
 
-											// remove period from found meta_key
-											$meta_key = str_replace(".","", current( $meta_key ) );
+								// remove period from found meta_key
+								$meta_key = str_replace(".","", current( $meta_key ) );
 
-											// remove matched LEFT JOIN clause
-											$vars->query_from = str_replace('LEFT JOIN wp_usermeta AS '.$meta_key.' ON ( wp_users.ID = '.$meta_key.'.user_id )', '',  $vars->query_from );
+								// remove matched LEFT JOIN clause
+								$vars->query_from = str_replace('LEFT JOIN wp_usermeta AS '.$meta_key.' ON ( wp_users.ID = '.$meta_key.'.user_id )', '',  $vars->query_from );
 
-											// prepare EXISTS replacement for LEFT JOIN clauses
-										 	$where_exists = 'um_exist EXISTS( SELECT '.$wpdb->usermeta.'.umeta_id FROM '.$wpdb->usermeta.' WHERE '.$wpdb->usermeta.'.user_id = '.$wpdb->users.'.ID AND '.$wpdb->usermeta.'.meta_key IN("'.implode('","',  $arr_user_photo_key ).'") AND '.$wpdb->usermeta.'.meta_value != "" )';
+								// prepare EXISTS replacement for LEFT JOIN clauses
+								$where_exists = 'um_exist EXISTS( SELECT '.$wpdb->usermeta.'.umeta_id FROM '.$wpdb->usermeta.' WHERE '.$wpdb->usermeta.'.user_id = '.$wpdb->users.'.ID AND '.$wpdb->usermeta.'.meta_key IN("'.implode('","',  $arr_user_photo_key ).'") AND '.$wpdb->usermeta.'.meta_value != "" )';
 
-										 	// Replace LEFT JOIN clauses with EXISTS and remove duplicates
-										 	if( strpos( $vars->query_where, 'um_exist' ) === FALSE ){
-											 	$vars->query_where = str_replace( $where , $where_exists,  $vars->query_where );
-											}else{
-											   	$vars->query_where = str_replace( $where , '1=0',  $vars->query_where );
-											}
+								// Replace LEFT JOIN clauses with EXISTS and remove duplicates
+								if( strpos( $vars->query_where, 'um_exist' ) === FALSE ){
+									$vars->query_where = str_replace( $where , $where_exists,  $vars->query_where );
+								}else{
+									$vars->query_where = str_replace( $where , '1=0',  $vars->query_where );
+								}
 						}
 
 					}
 			
 			}	
-				  
+
 			$vars->query_where = str_replace("\n", "", $vars->query_where );
 			$vars->query_where = str_replace("um_exist", "", $vars->query_where );
 
