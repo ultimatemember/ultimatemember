@@ -140,15 +140,21 @@ class UM_Members {
 	***/
 	function get_members($args){
 
-		global $ultimatemember, $wpdb;
+		global $ultimatemember, $wpdb, $post;
 
 		extract($args);
 
 		$query_args = array();
 		$query_args = apply_filters( 'um_prepare_user_query_args', $query_args, $args );
+		
+		// Prepare for BIG SELECT query
 		$wpdb->query('SET SQL_BIG_SELECTS=1');
+		// Add filter to optimize BIG Select with multiple LEFT JOINs
+		add_filter( 'pre_user_query', array( $this, 'um_optimize_member_query' ) );
+
 		$users = new WP_User_Query( $query_args );
 
+		remove_filter( 'pre_user_query', array( $this, 'um_optimize_member_query' ) );
 		
 		// number of profiles for mobile
 		if ( $ultimatemember->mobile->isMobile() && isset( $profiles_per_page_mobile ) )
@@ -250,5 +256,57 @@ class UM_Members {
 
 		return apply_filters('um_prepare_user_results_array', $array );
 	}
+
+
+	/**
+	 * Optimizes Member directory with multiple LEFT JOINs
+	 * @param  object $vars 
+	 * @return object $var
+	 */
+	public function um_optimize_member_query( $vars ) {
+		 	
+			global $wpdb;
+
+			$arr_where = explode("\n", $vars->query_where );
+			$arr_left_join = explode("LEFT JOIN", $vars->query_from );
+			$arr_user_photo_key = array('synced_profile_photo','profile_photo','synced_gravatar_hashed_id');
+						
+			foreach ( $arr_where as $where ) {
+					
+					foreach( $arr_user_photo_key as $key ){
+						
+						if( strpos( $where  , "'".$key."'" ) > -1 ){
+
+											// find usermeta key
+											preg_match("#mt[0-9]+.#",  $where, $meta_key );
+
+											// remove period from found meta_key
+											$meta_key = str_replace(".","", current( $meta_key ) );
+
+											// remove matched LEFT JOIN clause
+											$vars->query_from = str_replace('LEFT JOIN wp_usermeta AS '.$meta_key.' ON ( wp_users.ID = '.$meta_key.'.user_id )', '',  $vars->query_from );
+
+											// prepare EXISTS replacement for LEFT JOIN clauses
+										 	$where_exists = 'um_exist EXISTS( SELECT '.$wpdb->usermeta.'.umeta_id FROM '.$wpdb->usermeta.' WHERE '.$wpdb->usermeta.'.user_id = '.$wpdb->users.'.ID AND '.$wpdb->usermeta.'.meta_key IN("'.implode('","',  $arr_user_photo_key ).'") AND '.$wpdb->usermeta.'.meta_value != "" )';
+
+										 	// Replace LEFT JOIN clauses with EXISTS and remove duplicates
+										 	if( strpos( $vars->query_where, 'um_exist' ) === FALSE ){
+											 	$vars->query_where = str_replace( $where , $where_exists,  $vars->query_where );
+											}else{
+											   	$vars->query_where = str_replace( $where , '1=0',  $vars->query_where );
+											}
+						}
+
+					}
+			
+			}	
+				  
+			$vars->query_where = str_replace("\n", "", $vars->query_where );
+			$vars->query_where = str_replace("um_exist", "", $vars->query_where );
+
+		return $vars;
+	
+	}
+
 
 }
