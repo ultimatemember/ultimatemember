@@ -163,29 +163,30 @@ class UM_Profile {
 		global $ultimatemember;
 		$output = '';
 
-		foreach( $array as $key ) {
-			$data = '';
-			if ( $key && um_filtered_value( $key ) ) {
+		if( isset( $array ) ){
+				foreach( $array as $key ) {
+					$data = '';
+					if ( $key && um_filtered_value( $key ) ) {
 
-				if ( isset( $ultimatemember->builtin->all_user_fields[$key]['icon'] ) ) {
-					$icon = $ultimatemember->builtin->all_user_fields[$key]['icon'];
-				} else {
-					$icon = '';
+						if ( isset( $ultimatemember->builtin->all_user_fields[$key]['icon'] ) ) {
+							$icon = $ultimatemember->builtin->all_user_fields[$key]['icon'];
+						} else {
+							$icon = '';
+						}
+
+						$icon = ( isset( $icon ) && !empty( $icon ) ) ? '<i class="'.$icon.'"></i>' : '';
+
+						if ( !um_get_option('profile_show_metaicon') )
+							$icon = '';
+
+						$value = um_filtered_value( $key );
+
+						$items[] = '<span>' . $icon . $value . '</span>';
+						$items[] = '<span class="b">&bull;</span>';
+
+					}
 				}
-
-				$icon = ( isset( $icon ) && !empty( $icon ) ) ? '<i class="'.$icon.'"></i>' : '';
-
-				if ( !um_get_option('profile_show_metaicon') )
-					$icon = '';
-
-				$value = um_filtered_value( $key );
-
-				$items[] = '<span>' . $icon . $value . '</span>';
-				$items[] = '<span class="b">&bull;</span>';
-
-			}
 		}
-
 		if ( isset( $items ) ) {
 			array_pop($items);
 			foreach( $items as $item ) {
