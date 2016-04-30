@@ -1284,6 +1284,8 @@ class UM_Fields {
 								)
 							);
 
+							$textarea_settings = apply_filters('um_form_fields_textarea_settings', $textarea_settings );
+
 							// turn on the output buffer
 							ob_start();
 
