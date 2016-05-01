@@ -84,7 +84,7 @@ class UM_Rewrite {
 									'top'
 				);
 
-				if( !apply_filters('up_rewrite_flush_rewrite_rules', um_get_option('um_flush_stop') ) )
+				if( !apply_filters('um_rewrite_flush_rewrite_rules', um_get_option('um_flush_stop') ) )
 					flush_rewrite_rules( true );
 
 			}
