@@ -1240,7 +1240,7 @@ class UM_Admin_Metabox {
 			case '_max_words':
 				?>
 				
-					<p><label for="_max_words">Maximum allowed words <?php $this->tooltip('If you want to enable only a maximum number of words to be input in this textarea. Leave empty to disable this setting'); ?></label>
+					<p><label for="_max_words">Maximum allowed words <?php $this->tooltip('If you want to enable a maximum number of words to be input in this textarea. Leave empty to disable this setting'); ?></label>
 						<input type="text" name="_max_words" id="_max_words" value="<?php echo $this->edit_mode_value; ?>" />
 					</p>
 				
@@ -1270,7 +1270,7 @@ class UM_Admin_Metabox {
 			case '_min_chars':
 				?>
 				
-					<p><label for="_min_chars">Minimum length <?php $this->tooltip('If you want to enable only a maximum number of characters to be input in this field. Leave empty to disable this setting'); ?></label>
+					<p><label for="_min_chars">Minimum length <?php $this->tooltip('If you want to enable a minimum number of characters to be input in this field. Leave empty to disable this setting'); ?></label>
 						<input type="text" name="_min_chars" id="_min_chars" value="<?php echo $this->edit_mode_value; ?>" />
 					</p>
 				
@@ -1280,7 +1280,7 @@ class UM_Admin_Metabox {
 			case '_max_chars':
 				?>
 				
-					<p><label for="_max_chars">Maximum length <?php $this->tooltip('If you want to enable only a maximum number of characters to be input in this field. Leave empty to disable this setting'); ?></label>
+					<p><label for="_max_chars">Maximum length <?php $this->tooltip('If you want to enable a maximum number of characters to be input in this field. Leave empty to disable this setting'); ?></label>
 						<input type="text" name="_max_chars" id="_max_chars" value="<?php echo $this->edit_mode_value; ?>" />
 					</p>
 				
