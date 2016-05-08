@@ -6,6 +6,8 @@ Description: The easiest way to create powerful online communities and beautiful
 Version: 1.3.50
 Author: Ultimate Member
 Author URI: http://ultimatemember.com/
+Text Domain: ultimatemember
+Domain Path: /languages
 */
 	defined('ABSPATH') || exit;
 	require_once(ABSPATH.'wp-admin/includes/plugin.php');
