@@ -44,10 +44,14 @@
 	***/
 	add_filter('um_profile_field_filter_hook__youtube_video', 'um_profile_field_filter_hook__youtube_video', 99, 2);
 	function um_profile_field_filter_hook__youtube_video( $value, $data ) {
+		if( empty( $value ) ){
+			return '';
+		}
 		$value = ( strstr( $value, 'http') || strstr( $value, '://' ) ) ? um_youtube_id_from_url( $value ) : $value;
 		$value = '<div class="um-youtube">
 					<iframe width="600" height="450" src="https://www.youtube.com/embed/' . $value . '" frameborder="0" allowfullscreen></iframe>
 					</div>';
+
 		return $value;
 	}
 
@@ -56,6 +60,10 @@
 	***/
 	add_filter('um_profile_field_filter_hook__vimeo_video', 'um_profile_field_filter_hook__vimeo_video', 99, 2);
 	function um_profile_field_filter_hook__vimeo_video( $value, $data ) {
+		if( empty( $value ) ){
+			return '';
+		}
+
 		$value = ( !is_numeric( $value ) ) ? (int) substr(parse_url($value, PHP_URL_PATH), 1) : $value;
 		$value = '<div class="um-vimeo">
 					<iframe src="https://player.vimeo.com/video/'. $value . '" width="600" height="450" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
