@@ -35,6 +35,7 @@ class UM_Admin_Access {
 	***/
 	function core_post_type( $post_type ){
 		
+
 		if ( strstr($post_type, 'um_') )
 			return true;
 		
@@ -99,8 +100,12 @@ class UM_Admin_Access {
 		foreach($types as $post_type) {
 			
 			if ( !$this->core_post_type( $post_type ) ) {
-			
-				add_meta_box('um-admin-access-settings', __('Ultimate Member'), array(&$this, 'load_metabox_form'), $post_type, 'side', 'default');
+
+				$current_screen = get_current_screen();
+
+	    		if( ! in_array( $current_screen->id, array("upload","media","attachment") )  ) {
+					add_meta_box('um-admin-access-settings', __('Ultimate Member'), array(&$this, 'load_metabox_form'), $post_type, 'side', 'default');
+				}
 
 			}
 		
