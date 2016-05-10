@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.5
 
-Stable Tag: 1.3.50
+Stable Tag: 1.3.51
 
 License: GNU Version 2 or Any Later Version
 
@@ -148,6 +148,19 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.51: May 10, 2016 =
+* Added: 'um_form_fields_textarea_settings' filter
+* Added: reset password limit options
+* Added: option to force display name to be capitlized
+* Fixed: remove notices
+* Fixed: redirect url on login
+* Fixed: optimize query and object caching 
+* Fixed: profile photo as required field
+* Fixed: admin access in front-end login
+* Fixed: typos in tooltips
+* Fixed: embedding video fields
+* Fixed: Flush rewrite rules
 
 = 1.3.50: April 21, 2016 =
 * Fixed: menu incompatibility issue
