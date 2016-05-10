@@ -204,7 +204,7 @@
 
 		$replace = apply_filters('um_template_tags_replaces_hook', $replace);
 
-		$content = str_replace($search, $replace, $content);
+		$content = wp_kses_decode_entities( str_replace($search, $replace, $content) );
 
 		if ( isset( $args['tags'] ) && isset( $args['tags_replace'] ) ) {
 			$content = str_replace($args['tags'], $args['tags_replace'], $content);
