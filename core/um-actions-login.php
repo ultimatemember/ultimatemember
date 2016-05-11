@@ -9,8 +9,10 @@
 
 		$is_email = false;
 
-		$form_id = $args['form_id'];
-		$mode = $args['mode'];
+			  $form_id = $args['form_id'];
+				 $mode = $args['mode'];
+		$user_password = $args['user_password'];
+
 
 		if ( isset( $args['username'] ) && $args['username'] == '' ) {
 			$ultimatemember->form->add_error( 'username',  __('Please enter your username or email','ultimatemember') );
