@@ -80,12 +80,11 @@
                 //*****************************************************************
                 // Select2 CSS
                 //*****************************************************************
-                Redux_CDN::register_style(
+                wp_enqueue_style(     
                     'select2-css',
-                    /*'//cdn.jsdelivr.net/select2/3.5.2/select2.css',*/
                     ReduxFramework::$_url . 'assets/css/select2.css',
                     array(),
-                    '3.5.2',//$this->timestamp,
+                    '3.5.2',
                     'all'
                 );
 
