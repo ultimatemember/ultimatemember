@@ -50,7 +50,7 @@ class UM_Rewrite {
 
 					if( function_exists('icl_get_current_language') ){
 						$language_code = icl_get_current_language();
-					}else if( function_exists('icl_object_id') ){
+					}else if( function_exists('icl_object_id') && defined('ICL_LANGUAGE_CODE') ){
 						$language_code = ICL_LANGUAGE_CODE;
 					}
 
