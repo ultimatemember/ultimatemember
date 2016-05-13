@@ -66,7 +66,7 @@
 	add_filter('authenticate', 'um_wp_form_errors_hook_logincheck', 999, 3);
 	function um_wp_form_errors_hook_logincheck( $user, $username, $password ) {
 		
-		remove_filter( 'authenticate', 'wp_authenticate_username_password', 20, 3 );
+		do_action('wp_authenticate_username_password_before', $user, $username, $password );
 		
 		if ( isset( $user->ID ) ) {
 		

@@ -286,3 +286,13 @@
 		echo $ultimatemember->fields->display( 'login', $args );
 
 	}
+
+	/**
+	 * Remove authenticate filter
+	 * @uses 'wp_authenticate_username_password_before'
+	 */
+	add_action('wp_authenticate_username_password_before','um_auth_username_password_before',10,3);
+	function um_auth_username_password_before( $user, $username, $password ){
+		remove_filter( 'authenticate', 'wp_authenticate_username_password', 20, 3 );
+	}
+
