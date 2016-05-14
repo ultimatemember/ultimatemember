@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.5
 
-Stable Tag: 1.3.51
+Stable Tag: 1.3.52
 
 License: GNU Version 2 or Any Later Version
 
@@ -148,6 +148,13 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.52: May 14, 2016 =
+* Added: 'wp_authenticate_username_password_before' action hook
+* Tweak: remove access settings in media screens
+* Fixed: convert tags format
+* Fixed: ReduxFramework notice
+* Fixed: remove PHP notice
 
 = 1.3.51: May 10, 2016 =
 * Added: 'um_form_fields_textarea_settings' filter
