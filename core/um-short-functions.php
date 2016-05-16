@@ -997,7 +997,13 @@ function um_reset_user() {
 	***/
 	function um_edit_profile_url(){
 		global $ultimatemember;
-		$url = um_user_profile_url();
+
+		if( um_is_core_page('user') ){
+			$url = $ultimatemember->permalinks->get_current_url();
+		}else{ 
+			$url = um_user_profile_url();
+		}
+		
 		$url = remove_query_arg('profiletab', $url);
 		$url = remove_query_arg('subnav', $url);
 		$url = add_query_arg( 'profiletab', 'main', $url );
