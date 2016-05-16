@@ -19,7 +19,7 @@
 				$redirect = um_get_core_page('logout');
 
 				if ( isset( $_REQUEST['redirect_to'] ) && !empty( $_REQUEST['redirect_to'] ) ) {
-					$redirect = add_query_arg( 'redirect_to', $_REQUEST['redirect_to'], $redirect );
+					$redirect = add_query_arg( 'redirect_to', esc_url( $_REQUEST['redirect_to'] ), $redirect );
 				}
 				
 				
