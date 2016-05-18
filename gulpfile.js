@@ -1,9 +1,10 @@
 /*
   Ultimate Member dependencies
 */
-  var gulp = require('gulp');
-var uglify = require('gulp-uglify');
-var concat = require('gulp-concat');
+       var gulp = require('gulp');
+    var uglify = require('gulp-uglify');
+    var concat = require('gulp-concat');
+ var minifyCSS = require('gulp-minify-css');
 
 gulp.task('scripts', function() {
 	
@@ -37,7 +38,35 @@ gulp.task('scripts', function() {
    
 });
 
+gulp.task('css', function() {
+
+    gulp.src([
+        'assets/css/um-fonticons-ii.css',
+        'assets/css/um-fonticons-fa.css',
+        'assets/css/um-select.css',
+        'assets/css/um-modal.css',
+        'assets/css/um-styles.css',
+        'assets/css/um-members.css',
+        'assets/css/um-profile.css',
+        'assets/css/um-account.css',
+        'assets/css/um-misc.css',
+        'assets/css/um-fileupload.css',
+        'assets/css/pickadate/default.css',
+        'assets/css/pickadate/default.date.css',
+        'assets/css/pickadate/default.time.css',
+        'assets/css/um-raty.css',
+        'assets/css/um-scrollbar.css',
+        'assets/css/um-crop.css',
+        'assets/css/um-tipsy.css',
+        'assets/css/um-responsive.css',
+        ])
+        .pipe(minifyCSS())
+        .pipe(concat("um.min.css"))
+        .pipe(gulp.dest("assets/css"));
+});
+
 // The default task (called when you run `gulp`)
 gulp.task('default', function() {
   gulp.start('scripts');
+  gulp.start('css');
 });

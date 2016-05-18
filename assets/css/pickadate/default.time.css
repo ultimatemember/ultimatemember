@@ -4,7 +4,7 @@
 /**
  * The list of times.
  */
-.picker__list {
+.um .picker__list {
   list-style: none;
   list-style: none !important;
   padding: 5px !important;
@@ -14,7 +14,7 @@
 /**
  * The times on the clock.
  */
-.picker__list-item {
+.um .picker__list-item {
   position: relative;
   border-radius: 2px;
   display: inline-block;
@@ -26,38 +26,38 @@
 } 
 
 @media (min-height: 46.75em) {
-  .picker__list-item {
+  .um .picker__list-item {
 
   }
 }
 
 /* Hovered time */
-.picker__list-item:hover {
+.um .picker__list-item:hover {
   cursor: pointer;
   z-index: 10;
 }
 /* Highlighted and hovered/focused time */
-.picker__list-item--highlighted {
+.um .picker__list-item--highlighted {
   z-index: 10;
 }
 
-.picker__list-item--highlighted:hover,
-.picker--focused .picker__list-item--highlighted {
+.um .picker__list-item--highlighted:hover,
+.um .picker--focused .picker__list-item--highlighted {
   cursor: pointer;
    font-weight: bold;
 }
 
 /* Selected and hovered/focused time */
-.picker__list-item--selected,
-.picker__list-item--selected:hover,
-.picker--focused .picker__list-item--selected {
+.um .picker__list-item--selected,
+.um .picker__list-item--selected:hover,
+.um .picker--focused .picker__list-item--selected {
   z-index: 10;
 }
 
 /* Disabled time */
-.picker__list-item--disabled,
-.picker__list-item--disabled:hover,
-.picker--focused .picker__list-item--disabled {
+.um .picker__list-item--disabled,
+.um .picker__list-item--disabled:hover,
+.um .picker--focused .picker__list-item--disabled {
   color: #a9e792;
   cursor: default;
   background: transparent;
@@ -67,7 +67,7 @@
 /**
  * The clear button
  */
-.picker--time .picker__button--clear {
+.um .picker--time .picker__button--clear {
   width: 100%;
   display: inline-block;
   background: none;
@@ -78,8 +78,8 @@
   border-radius: 0 0 2px 2px;
   color: #fff !important;
 }
-.picker--time .picker__button--clear:hover,
-.picker--time .picker__button--clear:focus {
+.um .picker--time .picker__button--clear:hover,
+.um .picker--time .picker__button--clear:focus {
 	cursor: pointer;
 }
 
@@ -89,20 +89,20 @@
 /**
  * The frame the bounds the time picker.
  */
-.picker--time .picker__frame {
+.um .picker--time .picker__frame {
   min-width: 256px;
   max-width: 400px;
 }
 /**
  * The picker box.
  */
-.picker--time .picker__box {
+.um .picker--time .picker__box {
   font-size: 15px;
   padding: 0;
   border-radius: 2px !important;
 }
 @media (min-height: 40.125em) {
-	.picker--time .picker__frame {
+	.um .picker--time .picker__frame {
 		margin-bottom: 10% !important;
 	}
 }
