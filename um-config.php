@@ -612,7 +612,7 @@ $this->sections[] = array(
 										  '{login_url}'  . "\r\n\r\n" .
 										  'Your account e-mail: {email}' . "\r\n" .
 										  'Your account username: {username}' . "\r\n" .
-										  'Your account password: {password}' . "\r\n\r\n" .
+										  'Set your account passowrd: {password_reset_link}' . "\r\n\r\n" .
 										  'If you have any problems, please contact us at {admin_email}'  . "\r\n\r\n" .
 										  'Thanks,' . "\r\n" .
 										  '{site_name}',
@@ -712,7 +712,7 @@ $this->sections[] = array(
 										  '{login_url}'  . "\r\n\r\n" .
 										  'Your account e-mail: {email}' . "\r\n" .
 										  'Your account username: {username}' . "\r\n" .
-										  'Your account password: {password}' . "\r\n\r\n" .
+										  'Set your account passowrd: {password_reset_link}' . "\r\n\r\n" .
 										  'If you have any problems, please contact us at {admin_email}'  . "\r\n\r\n" .
 										  'Thanks,' . "\r\n" .
 										  '{site_name}',

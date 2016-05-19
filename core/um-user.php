@@ -467,14 +467,15 @@ class UM_User {
 		delete_option( "um_cache_userdata_{$user_id}" );
 
 		if ( um_user('account_status') == 'awaiting_admin_review' ) {
-			$email_tpl = 'approved_email';
+			$this->password_reset_hash();
+			$ultimatemember->mail->send( um_user('user_email'), 'approved_email' );
+
 		} else {
-			$email_tpl = 'welcome_email';
+			$this->password_reset_hash();
+			$ultimatemember->mail->send( um_user('user_email'), 'welcome_email');
 		}
 
 		$this->set_status('approved');
-		$ultimatemember->mail->send( um_user('user_email'), $email_tpl );
-
 		$this->delete_meta('account_secret_hash');
 		$this->delete_meta('_um_cool_but_hard_to_guess_plain_pw');
 
