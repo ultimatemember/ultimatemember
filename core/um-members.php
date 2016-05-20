@@ -65,8 +65,8 @@ class UM_Members {
 
 		$fields = $ultimatemember->builtin->all_user_fields;
 
-		if ( isset( $fields[$filter] ) ) {
-			$attrs = $fields[$filter];
+		if ( isset( $fields[ $filter ] ) ) {
+			$attrs = $fields[ $filter ];
 		} else {
 			$attrs = apply_filters("um_custom_search_field_{$filter}", array() );
 		}
@@ -77,9 +77,9 @@ class UM_Members {
 		if ( $ultimatemember->builtin->is_dropdown_field( $filter, $attrs ) ) {
 			$type = 'select';
 		} else if ( 'user_tags' == $attrs['type'] ) {
-			$attrs['options'] = apply_filters('um_multiselect_options_user_tags', array(), $attrs);
-			$attrs['custom']  = 1;
-			$type = 'select';
+				$attrs['options'] = apply_filters('um_multiselect_options_user_tags', array(), $attrs);
+				$attrs['custom']  = 1;
+				$type = 'select';
 		} else {
 			$type = 'text';
 		}
