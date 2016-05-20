@@ -3,32 +3,33 @@
 class UM_API {
 
 	public $is_filtering;
-	
+
 	public $addons = null;
-	
+
 	function __construct() {
-	
+
 		$this->is_filtering = 0;
 
 		require_once um_path . 'core/um-short-functions.php';
-		
-		if (is_admin()){
+
+		if (is_admin()) {
+			require_once um_path . 'admin/core/um-admin-upgrade.php';
 			require_once um_path . 'admin/um-admin-init.php';
 		}
 
-		add_action('init',  array(&$this, 'init'), 0);
+		add_action('init', array(&$this, 'init'), 0);
 
-		add_action('init',  array(&$this, 'load_addons') );
+		add_action('init', array(&$this, 'load_addons'));
 
 		$this->honeypot = 'request';
-		
+
 		$this->available_languages = array(
 			'en_US' => 'English (US)',
 			'es_ES' => 'Español',
 			'es_MX' => 'Español (México)',
 			'fr_FR' => 'Français',
 			'it_IT' => 'Italiano',
-			'de_DE'	=> 'Deutsch',
+			'de_DE' => 'Deutsch',
 			'nl_NL' => 'Nederlands',
 			'pt_BR' => 'Português do Brasil',
 			'fi_FI' => 'Suomi',
@@ -37,43 +38,55 @@ class UM_API {
 			'sv_SE' => 'Svenska',
 			'pl_PL' => 'Polski',
 			'cs_CZ' => 'Czech',
-			'el'	=> 'Greek',
-			'zh_CN'	=> 'Simplified Chinese',
+			'el' => 'Greek',
+			'id_ID' => 'Indonesian',
+			'zh_CN' => '简体中文',
 			'ru_RU' => 'Русский',
 			'tr_TR' => 'Türkçe',
 			'fa_IR' => 'Farsi',
 			'he_IL' => 'Hebrew',
-			'ar' 	=> 'العربية'
+			'ar' => 'العربية',
 		);
-		
+
 		$this->addons['bp_avatar_transfer'] = array(
-				__( 'BuddyPress Avatar Transfer','ultimatemember' ),
-				__('This add-on enables you to migrate your custom user photos from BuddyPress to use with Ultimate Member.','ultimatemember')
+			__('BuddyPress Avatar Transfer', 'ultimatemember'),
+			__('This add-on enables you to migrate your custom user photos from BuddyPress to use with Ultimate Member.', 'ultimatemember'),
 		);
-		
+
+		$this->addons['gravatar_transfer'] = array(
+			__('Gravatar Transfer', 'ultimatemember'),
+			__('This add-on enables you to link gravatar photos to user accounts with their email address.', 'ultimatemember'),
+		);
+
+		// include widgets
+		require_once um_path . 'core/widgets/um-search-widget.php';
+
+		// init widgets
+		add_action( 'widgets_init', array(&$this, 'widgets_init' ) );
+
 	}
-	
+
 	/***
-	***	@Load add-ons
-	***/
+		***	@Load add-ons
+	*/
 	function load_addons() {
 		global $ultimatemember;
-		if ( isset( $ultimatemember->addons ) && is_array( $ultimatemember->addons ) ) {
-			foreach( $ultimatemember->addons as $addon => $name ) {
-				if ( um_get_option('addon_' . $addon ) == 1 ) {
-					include_once um_path . 'addons/'.$addon.'.php';
+		if (isset($ultimatemember->addons) && is_array($ultimatemember->addons)) {
+			foreach ($ultimatemember->addons as $addon => $name) {
+				if (um_get_option('addon_' . $addon) == 1) {
+					include_once um_path . 'addons/' . $addon . '.php';
 				}
 			}
 		}
 	}
-	
+
 	/***
-	***	@Init
-	***/
-	function init(){
+		***	@Init
+	*/
+	function init() {
 
 		ob_start();
-		
+
 		require_once um_path . 'core/um-api.php';
 		require_once um_path . 'core/um-rewrite.php';
 		require_once um_path . 'core/um-setup.php';
@@ -107,11 +120,11 @@ class UM_API {
 		require_once um_path . 'core/um-modal.php';
 		require_once um_path . 'core/um-cron.php';
 		require_once um_path . 'core/um-tracking.php';
-		
-		if ( !class_exists( 'Mobile_Detect' ) ) {
+
+		if (!class_exists('Mobile_Detect')) {
 			require_once um_path . 'core/lib/mobiledetect/Mobile_Detect.php';
 		}
-		
+
 		require_once um_path . 'core/um-actions-form.php';
 		require_once um_path . 'core/um-actions-access.php';
 		require_once um_path . 'core/um-actions-wpadmin.php';
@@ -129,6 +142,7 @@ class UM_API {
 		require_once um_path . 'core/um-actions-modal.php';
 		require_once um_path . 'core/um-actions-misc.php';
 
+		require_once um_path . 'core/um-filters-language.php';
 		require_once um_path . 'core/um-filters-login.php';
 		require_once um_path . 'core/um-filters-fields.php';
 		require_once um_path . 'core/um-filters-files.php';
@@ -142,7 +156,7 @@ class UM_API {
 		require_once um_path . 'core/um-filters-misc.php';
 		require_once um_path . 'core/um-filters-addons.php';
 		require_once um_path . 'core/um-filters-commenting.php';
-		
+
 		/* initialize UM */
 		$this->api = new UM_REST_API();
 		$this->rewrite = new UM_Rewrite();
@@ -176,20 +190,25 @@ class UM_API {
 		$this->modal = new UM_Modal();
 		$this->cron = new UM_Cron();
 		$this->tracking = new UM_Tracking();
-		
+
 		$this->mobile = new Mobile_Detect;
 
 		$this->options = get_option('um_options');
-		
+
 		$domain = 'ultimatemember';
-		$locale = ( get_locale() != '' ) ? get_locale() : 'en_US';
-		load_textdomain($domain, WP_LANG_DIR . '/plugins/' .$domain.'-'.$locale.'.mo');
-		
-		if ( !get_option('show_avatars') )
-			update_option('show_avatars', 1 );
+		$locale = (get_locale() != '') ? get_locale() : 'en_US';
+		load_textdomain($domain, WP_LANG_DIR . '/plugins/' . $domain . '-' . $locale . '.mo');
+
+		if (!get_option('show_avatars')) {
+			update_option('show_avatars', 1);
+		}
 
 	}
-	
+
+	function widgets_init() {
+		register_widget( 'um_search_widget' );
+	}
+
 }
 
 $ultimatemember = new UM_API();

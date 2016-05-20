@@ -41,64 +41,67 @@ class UM_Admin_Notices {
 		global $ultimatemember;
 		$hide_register_notice = get_option('um_can_register_notice');
 
-		if ( !get_option('users_can_register') && !$hide_register_notice ) {
+		if ( ! defined('DOING_AJAX') ) {
 
-			echo '<div class="updated" style="border-color: #3ba1da;"><p>';
+			if ( !get_option('users_can_register') && !$hide_register_notice ) {
 
-			echo sprintf(__( 'Registration is disabled. Please go to the <a href="%s">general settings</a> page in the WordPress admin and select anyone can register. <a href="%s">Hide this notice</a>', 'ultimatemember' ), admin_url('options-general.php'), add_query_arg('um_adm_action', 'um_can_register_notice') );
+				echo '<div class="updated" style="border-color: #3ba1da;"><p>';
 
-			echo '</p></div>';
+				echo sprintf(__( 'Registration is disabled. Please go to the <a href="%s">general settings</a> page in the WordPress admin and select anyone can register. <a href="%s">Hide this notice</a>', 'ultimatemember' ), admin_url('options-general.php'), add_query_arg('um_adm_action', 'um_can_register_notice') );
 
-		}
+				echo '</p></div>';
 
-		$hide_exif_notice = get_option('um_hide_exif_notice');
+			}
 
-		if ( !extension_loaded('exif') && !$hide_exif_notice ) {
+			$hide_exif_notice = get_option('um_hide_exif_notice');
 
-			echo '<div class="updated" style="border-color: #3ba1da;"><p>';
+			if ( !extension_loaded('exif') && !$hide_exif_notice ) {
 
-			echo sprintf(__( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension. <a href="%s">Hide this notice</a>', 'ultimatemember' ), add_query_arg('um_adm_action', 'um_hide_exif_notice') );
+				echo '<div class="updated" style="border-color: #3ba1da;"><p>';
 
-			echo '</p></div>';
+				echo sprintf(__( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension. <a href="%s">Hide this notice</a>', 'ultimatemember' ), add_query_arg('um_adm_action', 'um_hide_exif_notice') );
 
-		}
+				echo '</p></div>';
 
-		// Regarding page setup
-		$pages = $ultimatemember->permalinks->core;
-		if ( $pages && is_array( $pages ) ) {
+			}
 
-			$err = false;
+			// Regarding page setup
+			$pages = $ultimatemember->permalinks->core;
+			if ( $pages && is_array( $pages ) ) {
 
-			foreach( $pages as $slug => $page_id ) {
+				$err = false;
 
-				$page = get_post( $page_id );
-				if ( !isset( $page->ID ) && in_array( $slug, array( 'user','account','members','register','login','logout','password-reset' ) ) ) {
-					$err = true;
+				foreach( $pages as $slug => $page_id ) {
+
+					$page = get_post( $page_id );
+					if ( !isset( $page->ID ) && in_array( $slug, array( 'user','account','members','register','login','logout','password-reset' ) ) ) {
+						$err = true;
+					}
+
+				}
+
+				if ( $err ) {
+					echo '<div class="updated" style="border-color: #3ba1da;"><p>' . __('One or more of your Ultimate Member pages are not correctly setup. Please visit <strong>Ultimate Member > Settings</strong> to re-assign your missing pages.','ultimatemember') . '</p></div>';
+				}
+
+				if ( isset( $pages['user'] ) ) {
+					$test = get_post( $pages['user'] );
+					if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
+						echo '<div class="updated" style="border-color: #3ba1da;"><p>' . __('Ultimate Member Setup Error: User page can not be a child page.','ultimatemember') . '</p></div>';
+					}
+				}
+
+				if ( isset( $pages['account'] ) ) {
+					$test = get_post( $pages['account'] );
+					if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
+						echo '<div class="updated" style="border-color: #3ba1da;"><p>' . __('Ultimate Member Setup Error: Account page can not be a child page.','ultimatemember') . '</p></div>';
+					}
 				}
 
 			}
 
-			if ( $err ) {
-				echo '<div class="updated" style="border-color: #3ba1da;"><p>' . __('One or more of your Ultimate Member pages are not correctly setup. Please visit <strong>Ultimate Member > Settings</strong> to re-assign your missing pages.','ultimatemember') . '</p></div>';
-			}
-
-			if ( isset( $pages['user'] ) ) {
-				$test = get_post( $pages['user'] );
-				if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
-					echo '<div class="updated" style="border-color: #3ba1da;"><p>' . __('Ultimate Member Setup Error: User page can not be a child page.','ultimatemember') . '</p></div>';
-				}
-			}
-
-			if ( isset( $pages['account'] ) ) {
-				$test = get_post( $pages['account'] );
-				if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
-					echo '<div class="updated" style="border-color: #3ba1da;"><p>' . __('Ultimate Member Setup Error: Account page can not be a child page.','ultimatemember') . '</p></div>';
-				}
-			}
-
+			do_action('um_admin_after_main_notices');
 		}
-
-		do_action('um_admin_after_main_notices');
 
 	}
 

@@ -9,8 +9,8 @@
 		global $ultimatemember;
 		
 		if ( isset( $_REQUEST['redirect_to'] ) && !empty( $_REQUEST['redirect_to'] ) ) {
-		
-			echo '<input type="hidden" name="redirect_to" id="redirect_to" value="'.$_REQUEST['redirect_to'].'" />';
+			$url = $_REQUEST['redirect_to'];
+			echo '<input type="hidden" name="redirect_to" id="redirect_to" value="'.esc_url( $url ).'" />';
 
 		} else if ( isset( $args['after_login'] ) && !empty( $args['after_login'] ) ) {
 			
@@ -33,8 +33,9 @@
 					break;
 					
 			}
+			
 
-			echo '<input type="hidden" name="redirect_to" id="redirect_to" value="' . $url . '" />';
+			echo '<input type="hidden" name="redirect_to" id="redirect_to" value="' . esc_url( $url ) . '" />';
 			
 		}
 		

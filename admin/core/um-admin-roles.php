@@ -27,7 +27,7 @@ class UM_Admin_Roles {
 	}
 
 	/***
-	***	@Display cusom columns for Role
+	***	@Display custom columns for Role
 	***/
 	function manage_um_role_posts_custom_column($column_name, $id) {
 		global $wpdb, $ultimatemember;
@@ -42,7 +42,7 @@ class UM_Admin_Roles {
 					$role = $post->post_name;
 				}
 				$data = $ultimatemember->query->role_data($role);
-				if ( $data['can_access_wpadmin'] ){
+				if ( isset( $data['can_access_wpadmin'] ) && $data['can_access_wpadmin'] == 1 ){
 					echo '<span class="um-adm-ico um-admin-tipsy-n" title="'.__('This role can access the WordPress backend','ultimatemember').'"><i class="um-faicon-check"></i></span>';
 				} else {
 					echo __('No','ultimatemember');

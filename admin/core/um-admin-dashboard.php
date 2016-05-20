@@ -102,15 +102,19 @@ class UM_Admin_Dashboard {
 		if ( !current_user_can( 'list_users' ) ) return;
 		
 		$count = $this->get_pending_users_count();
-		
-		foreach( $menu as $key => $menu_item ) {
-			if ( 0 === strpos( $menu_item[0], _x( 'Users', 'Admin menu name' ) ) ) {
-				$menu[ $key ][0] .= ' <span class="update-plugins count-'.$count.'"><span class="processing-count">'.$count.'</span></span>';
+		if(is_array($menu)){
+			foreach( $menu as $key => $menu_item ) {
+				if ( 0 === strpos( $menu_item[0], _x( 'Users', 'Admin menu name' ) ) ) {
+					$menu[ $key ][0] .= ' <span class="update-plugins count-'.$count.'"><span class="processing-count">'.$count.'</span></span>';
+				}
 			}
+			
 		}
-		foreach ( $submenu['users.php'] as $key => $menu_item ) {
-			if ( 0 === strpos( $menu_item[0], _x( 'All Users', 'Admin menu name' ) ) ) {
-				$submenu['users.php'][ $key ][0] .= ' <span class="update-plugins count-'.$count.'"><span class="processing-count">'.$count.'</span></span>';
+		if(is_array($submenu)){
+			foreach ( $submenu['users.php'] as $key => $menu_item ) {
+				if ( 0 === strpos( $menu_item[0], _x( 'All Users', 'Admin menu name' ) ) ) {
+					$submenu['users.php'][ $key ][0] .= ' <span class="update-plugins count-'.$count.'"><span class="processing-count">'.$count.'</span></span>';
+				}
 			}
 		}
 	}

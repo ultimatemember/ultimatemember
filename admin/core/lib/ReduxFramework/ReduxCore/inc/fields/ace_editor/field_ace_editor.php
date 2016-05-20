@@ -110,7 +110,8 @@
                 if ( ! wp_script_is( 'ace-editor-js' ) ) {
                     Redux_CDN::enqueue_script(
                         'ace-editor-js',
-                        '//cdn.jsdelivr.net/ace/1.1.9/min/ace.js',
+                        //'//cdn.jsdelivr.net/ace/1.1.9/min/ace.js',
+                        ReduxFramework::$_url . 'assets/js/ace.min.js',
                         array( 'jquery' ),
                         '1.1.9',
                         true

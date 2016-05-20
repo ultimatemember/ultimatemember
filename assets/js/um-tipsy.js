@@ -178,14 +178,16 @@
         };
         
         if (!options.live) this.each(function() { get(this); });
-        
+
         if (options.trigger != 'manual') {
-            var binder   = options.live ? 'live' : 'bind',
-                eventIn  = options.trigger == 'hover' ? 'mouseenter' : 'focus',
+            var eventIn = options.trigger == 'hover' ? 'mouseenter' : 'focus',
                 eventOut = options.trigger == 'hover' ? 'mouseleave' : 'blur';
-            this[binder](eventIn, enter)[binder](eventOut, leave);
+            if (options.live)
+                $(document).on(eventIn, this.selector, enter).on(eventOut, this.selector, leave);
+            else
+                this.bind(eventIn, enter).bind(eventOut, leave);
         }
-        
+
         return this;
         
     };

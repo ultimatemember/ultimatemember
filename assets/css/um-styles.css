@@ -381,6 +381,7 @@ p.um-notice.warning {
 }
 
 .um-form input[type=text],
+.um-form input[type=tel],
 .um-form input[type=number],
 .um-form input[type=password] {
 	padding: 0 12px !important;
@@ -407,6 +408,7 @@ p.um-notice.warning {
 }
 
 .um-form input[type=text]:focus,
+.um-form input[type=tel]:focus,
 .um-form input[type=number]:focus,
 .um-form input[type=password]:focus,
 .um-form textarea:focus {
@@ -415,9 +417,11 @@ p.um-notice.warning {
 }
 
 .um-form input[type=text].um-iconed,
+.um-form input[type=tel].um-iconed,
 .um-form input[type=password].um-iconed { padding-left: 44px !important }
 
 .um-form input[type=text].um-error,
+.um-form input[type=tel].um-error,
 .um-form input[type=password].um-error { border-color: #C74A4A !important }
 
 .um-form textarea {
@@ -737,4 +741,42 @@ span.um-req {
 	margin: 0 0 0 8px;
 	font-size: 14px;
 	display: inline-block;
+}
+
+small.um-max-filesize {
+    display: block;
+    color: #999999;
+    padding-top: 5px;
+}
+small.um-max-filesize span{
+	font-size: 12px;
+}
+
+.um-form .um-field .um-field-area input.um-form-field.um-validate-not-matched,
+.um-form .um-field .um-field-area input.um-form-field.um-validate-not-matched:focus,
+.um-form .um-field .um-field-area input.um-form-field.um-validate-username-exists,
+.um-form .um-field .um-field-area input.um-form-field.um-validate-username-exists:focus {
+	border-color: #DB2929 !important;
+}
+
+.um-form .um-field .um-field-area input.um-searching-username {
+	background-image: url('../img/loading.gif');
+	background-position: right center;
+	background-repeat: no-repeat;
+	background-size: 24px 24px;
+}
+
+.um-search-area {
+	position: relative;
+	max-width: 300px;
+}
+
+.um-search-area .um-search-field {
+	width: 100%;
+}
+
+.um-search-area .um-search-icon {
+	position: absolute;
+	top: 7px;
+	right: 10px;
 }

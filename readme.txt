@@ -1,13 +1,13 @@
-=== Ultimate Member ===
+﻿=== Ultimate Member ===
 Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember, champsupertramp
 Donate link: 
 Tags: access control, author, authors, author profile, comments, community, communities, conditional fields, conditional logic, conditional menus, content protection, custom fields, file uploads, form builder, front-end login, front-end registration, gravatar, hide wp-admin, login, login page, logged-in users, mandrill, member, members, membership, member directory, online users, profile, profiles, profile builder, registration, restriction, restrict content, role creation, role menus, search filters, sign in, sign up, social network, star ratings, toolbar, user, users, user fields, user profile, user-profile, user profiles, user roles
 Requires at least: 4.1
-Tested up to: 4.4
+Tested up to: 4.5
 
-Stable Tag: 1.3.36
+Stable Tag: 1.3.52
 
 License: GNU Version 2 or Any Later Version
 
@@ -44,6 +44,7 @@ Read about all of the plugin's features at [Ultimate Member](https://ultimatemem
 
 Ultimate Member has a range of extensions that allow you to extend the power of the plugin
 
+* [Instagram](https://ultimatemember.com/extensions/instagram/) - Allow users to show their Instagram photos on their profile
 * [User Tags](https://ultimatemember.com/extensions/user-tags/) - Lets you add a user tag system to your website
 * [Social Activity](https://ultimatemember.com/extensions/social-activity/) - Let users create public wall posts & see the activity of other users
 * [WooCommerce](https://ultimatemember.com/extensions/woocommerce/) - Allow you to integrate WooCommerce with Ultimate Member
@@ -91,6 +92,7 @@ Ultimate Member has been translated into the following languages:
 * Polish - Polski
 * Czech
 * Greek
+* Indonesian
 * Simplified Chinese
 * Russian - Русский
 * Turkish - Türkçe
@@ -146,6 +148,221 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.52: May 14, 2016 =
+* Added: 'wp_authenticate_username_password_before' action hook
+* Tweak: remove access settings in media screens
+* Fixed: convert tags format
+* Fixed: ReduxFramework notice
+* Fixed: remove PHP notice
+
+= 1.3.51: May 10, 2016 =
+* Added: 'um_form_fields_textarea_settings' filter
+* Added: reset password limit options
+* Added: option to force display name to be capitlized
+* Fixed: remove notices
+* Fixed: redirect url on login
+* Fixed: optimize query and object caching 
+* Fixed: profile photo as required field
+* Fixed: admin access in front-end login
+* Fixed: typos in tooltips
+* Fixed: embedding video fields
+* Fixed: Flush rewrite rules
+
+= 1.3.50: April 21, 2016 =
+* Fixed: menu incompatibility issue
+* Fixed: username validation
+* Fixed: admin css conflict
+* Fixed: display name capitalization
+* Fixed: search member filter and fields
+* Fixed: member directory big SELECT query
+* Added: action hook 'um_access_post_type' & 'um_access_post_type_{current_page_type}' for current page type in access settings
+
+= 1.3.49: April 14, 2016 =
+* Fixed: remove core notices from ajax requests
+* Fixed: upload form and media path
+
+= 1.3.48: April 11, 2016 =
+* New: advanced option to disable profile object caching
+* Added: ssl media uri function
+* Added: first and last name initial as meta key
+* Fixed: order by random and pagination
+* Fixed: user sort by random
+* Fixed: status message encoding
+* Fixed: image upload and file name
+* Fixed: user login with other provider
+* Fixed: translation strings
+* Fixed: dependencies fatal errors
+* Fixed: remove notices
+
+= 1.3.47: April 6, 2016 =
+* Fixed: Fatal errors with language filter file
+
+= 1.3.46: April 6, 2016 =
+* Fixed: Search widget fatal error
+* Fixed: image jpeg upload sizes
+
+= 1.3.45: April 6, 2016 =
+* New: support for wordfence and limit login
+* New: search widget
+* New: secondary email address
+* Added: hook to password reset form fields
+* Added: privacy options for profile menu tabs
+* Added: option to allow primary email editable in profile view
+* Added: member directory sort randomly
+* Fixed: user page redirection
+* Fixed: admin script error
+* Fixed: invalid image path
+* Fixed: upload image png with transparency
+* Fixed: permalink basename fallback
+* Fixed: casting variable and add new filter
+* Fixed: remove notices
+* Fixed: search users by tag
+* Fixed: force UT8 encoding option
+* Fixed: email content type
+* Fixed: WPML compatibility
+* Fixed: permalink base name format and redirect loop in profile page
+* Fixed: form labels textdomain
+* Fixed: edit profile redirect
+* Tweak: accept period in profile url
+
+= 1.3.44: March 11, 2016 =
+* New: an option to force Strings to use UTF-8 encoding
+* New: an option to change Gravatar default image
+* New: South Sudan to the list of countries.
+* Fixed: update profile edit
+* Fixed: remove feed from content restriction
+* Fixed: search username query
+* Fixed: support for server query string data after user login
+* Fixed: matching fields values
+* Fixed: email template path
+* Fixed: shortcode within [um_show_content] shortcode
+* Tweak: remove notices
+
+= 1.3.43: March 5, 2016 =
+* Fixed: redirect URL after login
+* Fixed: security check in registration form
+* Fixed: email template path string
+* Fixed: member directory query
+
+= 1.3.42: March 3, 2016 =
+* Fixed: email template and localization
+* Fixed: redirect URL
+
+= 1.3.41: March 3, 2016 =
+* Fixed: Registration form redirect url
+
+= 1.3.40: March 3, 2016 =
+
+* New: filter `um_<field_type>_form_show_field` for display field
+* New: shortcode: show custom content to specific role [um_show_content roles='member'][/um_show_content]
+* New: 'not' attribute to [um_show_content not='member,contributor'][/um_show_content] shortcode
+* Tweak: update masonry script
+* Tweak: sql concatenate with prepare statement
+* Fixed: remove notices
+* Fixed: missing mCSB_buttons.png
+* Fixed: set Gravatar default image as UM default image
+* Fixed: fix default gravatar image
+* Fixed: select2 multi dropdown for wc orders
+* Fixed: show admin bar option
+* Fixed: session issue with logout
+* Fixed: register using email address if it exists
+* Fixed: duplicate full_name permalinks
+* Fixed: duplicate profile
+* Fixed: show admin bar for non-logged in users
+* Fixed: honorifics in full name
+* Fixed: unsynced wp role
+* Fixed: display wp user role filters
+* Fixed: select and radio invalid value
+* Fixed: email template path
+* Fixed: user profile url with single dash in the last name
+* Fixed: function to check meta value existence by meta key
+* Fixed: um-admin-dashboard warnings
+* Fixed: community role field in profile edit screen
+* Fixed: mismatched roles
+* Fixed: admin access in profiles
+* Fixed: allow multiple member directory shortcode in a page
+* Fixed: datepicker for ios and safari
+* Fixed: adding of members in wp-admin
+* Fixed: Fix redirection and XSS issue in login form
+
+= 1.3.39: February 24, 2016 =
+
+* New: add gravatar transfer tool
+* New: show users with gravatar photo in member directory
+* New: add upgrade class for data migration
+* Tweak: Set last login for new users to show in member directory
+* Tweak: validate roles for forms without fields
+* Tweak: cropper js update
+* Tweak: update minified script
+* Tweak: tooltip and comment
+* Fixed: member search query
+* Fixed: Registration process with pending and show message enabled
+* Fixed: Fix form security validation
+* Fixed: email content type, template and localization
+* Fixed: remove php notices
+* Fixed: custom columns for roles
+* Fixed: admin bar visibility per user role
+* Fixed: community role editing
+
+= 1.3.38: February 19, 2016 =
+
+* Tweak: remove username validation
+* Tweak: update minified scripts
+* Fixed: Fix email and user submitted data encoding
+* Fixed: role validation on register submission
+* Fixed: form role and validation
+* Fixed: search form pagination visibility
+
+= 1.3.37: February 17, 2016 =
+
+* New: Add password confirmation validation
+* New: Add VK url validation
+* New: Add Vkontakte as predefined url field
+* New: Add additional file types
+* New: Add file size limit label in image field
+* New: Added password reset limit
+* New: Allow redirect_to param after registration
+* New: Indonesian language support added
+* New: Add bio characters limit
+* Tweak: Use native WP masonry script instead of duplicating it
+* Tweak: Add image upload notice
+* Tweak: Add option to allow users to hide profiles from member page
+* Tweak: Add filters to modify output field
+* Tweak: Add filter hook for email template path
+* Tweak: Tweak upload form styles
+* Tweak: Remove masonry from core and gulp
+* Tweak: Add admin assets and apply minification
+* Tweak: Update pickadate assets
+* Tweak: Allowing usertags in search filters
+* Tweak: Allow members template to be customized/overridden
+* Tweak: Option to login user after clicking the activation link
+* Tweak: Remove bio count strings
+* Fixed: bio limit javascript error
+* Fixed: ssl checker for load balancers
+* Fixed: redirect loop with wpml permalink
+* Fixed: WPML permalink and form compatibility
+* Fixed: blocked words
+* Fixed: searching with space
+* Fixed: change password
+* Fixed: members grid override
+* Fixed: tipsy.js error
+* Fixed: Plugin conflict causing account page displaying wrong info
+* Fixed: email locale tempalte path
+* Fixed: invalid role
+* Fixed: validation for change password
+* Fixed: unchecked access roles
+* Fixed: telno input styles
+* Fixed: escape display name in title attributes
+* Fixed: datepicker css issue with some themes
+* Fixed: make sure the hash parameter is a string
+* Fixed: loading core assets
+* Fixed: title tags not updated
+* Fixed: empty uneditable fields
+* Fixed: account deletion on one submission
+* Fixed: Fixed indentation
+* Fixed: user_login fallbacks and remove email address
+* Fixed: password changed email template
 
 = 1.3.36: January 6, 2016 =
 

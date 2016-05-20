@@ -19,8 +19,11 @@
 				$redirect = um_get_core_page('logout');
 
 				if ( isset( $_REQUEST['redirect_to'] ) && !empty( $_REQUEST['redirect_to'] ) ) {
-					$redirect = add_query_arg( 'redirect_to', $_REQUEST['redirect_to'], $redirect );
+					$redirect = add_query_arg( 'redirect_to', esc_url( $_REQUEST['redirect_to'] ), $redirect );
 				}
+				
+				
+				
 				exit( wp_redirect( $redirect ) );
 			}
 				
@@ -40,6 +43,14 @@
 					} else {
 						$redirect = $custom_url;
 					}
+					
+					/* ---------- */
+					//Add support query string data after user login
+					if($_SERVER['QUERY_STRING']) {
+						$redirect .= '?'.$_SERVER['QUERY_STRING'];
+					}
+					/* ---------- */
+					
 					exit( wp_redirect( $redirect ) );
 				}
 			}
@@ -99,19 +110,21 @@
 	/***
 	***	@hide admin bar appropriately
 	***/
-	function um_control_admin_bar(){
-		if ( um_user('can_not_see_adminbar') )
-			return false;
+	function um_control_admin_bar( $content ){
+		
+		if( is_user_logged_in() ){
+			
+			if ( um_user('can_not_see_adminbar') ){
+				return false;
+			}
 
-		if( !is_admin() && !um_user('can_access_wpadmin') ) {
-			return false;
-		} else {
-			um_fetch_user( get_current_user_id() );
 			return true;
 		}
+
+		return $content;
 	}
 	add_filter( 'show_admin_bar' , 'um_control_admin_bar');
-	
+		
 	/***
 	***	@fix permission for admin bar
 	***/

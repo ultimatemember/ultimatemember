@@ -144,7 +144,7 @@ class UM_Tracking {
 
 		echo '<div class="updated um-admin-notice"><p>';
 		
-		echo __( 'Allow Ultimate Member to track plugin usage? Opt-in to tracking and our newsletter and we will immediately e-mail you a 20% discount which you can use on any of our extensions. No sensitive data is tracked.', 'ultimatemember' );
+		echo __( 'Allow Ultimate Member to track plugin usage? Opt-in to tracking and our newsletter and we will immediately e-mail you a 20% discount which you can use to purchase our core extensions bundle. No sensitive data is tracked.', 'ultimatemember' );
 		
 		echo '</p>';
 		

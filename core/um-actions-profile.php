@@ -69,6 +69,8 @@
 		if ( isset( $fields ) && is_array( $fields ) ) {
 			foreach( $fields as $key => $array ) {
 
+				if( !um_user_can( 'can_edit_everyone' ) && isset($fields[$key]['editable']) && !$fields[$key]['editable'] ) continue;
+
 				if ( $fields[$key]['type'] == 'multiselect' ||  $fields[$key]['type'] == 'checkbox' && !isset($args['submitted'][$key]) ) {
 					delete_user_meta( um_user('ID'), $key );
 				}
@@ -118,7 +120,8 @@
 		do_action('um_user_after_updating_profile', $to_update );
 
 		if ( !isset( $args['is_signup'] ) ) {
-			exit( wp_redirect( um_edit_my_profile_cancel_uri() ) );
+			$url = $ultimatemember->permalinks->profile_url();
+			exit( wp_redirect( um_edit_my_profile_cancel_uri( $url ) ) );
 		}
 
 	}
@@ -377,18 +380,31 @@
 					<?php if ( $ultimatemember->fields->viewing == true && um_user('description') && $args['show_bio'] ) { ?>
 
 					<div class="um-meta-text">
-						<?php if( um_get_option( 'profile_show_html_bio' ) ) : ?>
-							<?php echo um_clickable_links( strip_tags( um_filtered_value('description'), '<p><a><img><br><strong><b><em><i><quote><sub><sup>') ); ?>
+						<?php 
+						$allowed_tags = array(
+							    'a' => array(
+							        'href' => array(),
+							        'title' => array()
+							    ),
+							    'br' => array(),
+							    'em' => array(),
+							    'strong' => array(),
+						);
+						
+						$description = get_user_meta( um_user('ID') , 'description', true);
+						
+						if( um_get_option( 'profile_show_html_bio' ) ) : ?>
+							<?php echo make_clickable( wp_kses( $description, $allowed_tags) ); ?>
 						<?php else : ?>
-							<?php echo um_clickable_links( wp_strip_all_tags( um_filtered_value('description') ) ); ?>
+							<?php echo esc_html( $description ); ?>
 						<?php endif; ?>
 					</div>
 
 					<?php } else if ( $ultimatemember->fields->editing == true  && $args['show_bio'] ) { ?>
 
 					<div class="um-meta-text">
-						<textarea placeholder="<?php _e('Tell us a bit about yourself...','ultimatemember'); ?>" name="<?php echo 'description-' . $args['form_id']; ?>" id="<?php echo 'description-' . $args['form_id']; ?>"><?php if ( um_user('description') ) { echo um_user('description'); } ?></textarea>
-
+						<textarea id="um-meta-bio" data-character-limit="<?php echo um_get_option('profile_bio_maxchars'); ?>" placeholder="<?php _e('Tell us a bit about yourself...','ultimatemember'); ?>" name="<?php echo 'description-' . $args['form_id']; ?>" id="<?php echo 'description-' . $args['form_id']; ?>"><?php if ( um_user('description') ) { echo um_user('description'); } ?></textarea>
+						<span class="um-meta-bio-character um-right"><span class="um-bio-limit"><?php echo um_get_option('profile_bio_maxchars'); ?></span></span>
 						<?php if ( $ultimatemember->fields->is_error('description') ) {
 						echo $ultimatemember->fields->field_error( $ultimatemember->fields->show_error('description'), true ); }
 						?>
@@ -404,6 +420,12 @@
 					<?php do_action('um_after_header_meta', um_user('ID'), $args ); ?>
 
 				</div><div class="um-clear"></div>
+   
+		        <?php
+		        if ( $ultimatemember->fields->is_error( 'profile_photo' ) ) {
+		            echo $ultimatemember->fields->field_error( $ultimatemember->fields->show_error('profile_photo'), 'force_show' );
+		        }
+		        ?>
 
 				<?php do_action('um_after_header_info', um_user('ID'), $args); ?>
 

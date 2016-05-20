@@ -649,6 +649,16 @@ class UM_Builtin {
 				'label' => __('E-mail Address','ultimatemember'),
 				'required' => 0,
 				'public' => 1,
+				'validate' => 'unique_email',
+			),
+
+			'secondary_user_email' => array(
+				'title' => __('Secondary E-mail Address','ultimatemember'),
+				'metakey' => 'secondary_user_email',
+				'type' => 'text',
+				'label' => __('Secondary E-mail Address','ultimatemember'),
+				'required' => 0,
+				'public' => 1,
 				'editable' => 1,
 				'validate' => 'unique_email',
 			),
@@ -842,6 +852,24 @@ class UM_Builtin {
 				'advanced' => 'social',
 				'color' => '#f50',
 				'match' => 'https://soundcloud.com/',
+			),
+
+			'vk' => array(
+				'title' => __('VKontakte','ultimatemember'),
+				'metakey' => 'vkontakte',
+				'type' => 'url',
+				'label' => __('VKontakte','ultimatemember'),
+				'required' => 0,
+				'public' => 1,
+				'editable' => 1,
+				'url_target' => '_blank',
+				'url_rel' => 'nofollow',
+				'icon' => 'um-faicon-vk',
+				'validate' => 'vk_url',
+				'url_text' => 'VKontakte',
+				'advanced' => 'social',
+				'color' => '#2B587A',
+				'match' => 'https://vk.com/',
 			),
 			
 			'role_select' => array(
@@ -1050,6 +1078,7 @@ class UM_Builtin {
 		global $ultimatemember;
 		
 		$fields_without_metakey = array('block','shortcode','spacing','divider','group');
+		remove_filter('um_fields_without_metakey', 'um_user_tags_requires_no_metakey');
 		$fields_without_metakey = apply_filters('um_fields_without_metakey', $fields_without_metakey );
 		
 		if ( !$show_all ) {
@@ -1117,6 +1146,7 @@ class UM_Builtin {
 		$array['google_url'] = __('Google+ URL','ultimatemember');
 		$array['instagram_url'] = __('Instagram URL','ultimatemember');
 		$array['linkedin_url'] = __('LinkedIn URL','ultimatemember');
+		$array['vk_url'] = __('VKontakte URL','ultimatemember');
 		$array['lowercase'] = __('Lowercase only','ultimatemember');
 		$array['numeric'] = __('Numeric value only','ultimatemember');
 		$array['phone_number'] = __('Phone Number','ultimatemember');
@@ -1537,6 +1567,7 @@ class UM_Builtin {
 							'SO' => __('Somalia',"ultimatemember"),
 							'ZA' => __('South Africa',"ultimatemember"),
 							'GS' => __('South Georgia and the South Sandwich Islands',"ultimatemember"),
+							'SS' => __('South Sudan',"ultimatemember"),
 							'ES' => __('Spain',"ultimatemember"),
 							'LK' => __('Sri Lanka',"ultimatemember"),
 							'SD' => __('Sudan',"ultimatemember"),

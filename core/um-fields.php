@@ -298,18 +298,18 @@ class UM_Fields {
 			$label = apply_filters("um_edit_label_all_fields", $label, $data );
 		}
 
-		$output .= '<label for="'.$key.$ultimatemember->form->form_suffix.'">'.$label.'</label>';
+		$output .= '<label for="'.$key.$ultimatemember->form->form_suffix.'">'.__( $label, UM_TEXTDOMAIN ).'</label>';
 
 		if ( isset( $data['help'] ) && !empty( $data['help'] ) && $this->viewing == false && !strstr($key, 'confirm_user_pass') ) {
 
 			if ( !$ultimatemember->mobile->isMobile() ) {
 				if ( !isset( $this->disable_tooltips ) ) {
-					$output .= '<span class="um-tip um-tip-w" title="'.$data['help'].'"><i class="um-icon-help-circled"></i></span>';
+					$output .= '<span class="um-tip um-tip-w" title="'.__( $data['help'], UM_TEXTDOMAIN ).'"><i class="um-icon-help-circled"></i></span>';
 				}
 			}
 
 			if ( $ultimatemember->mobile->isMobile() || isset( $this->disable_tooltips ) ) {
-				$output .= '<span class="um-tip-text">'. $data['help'] . '</span>';
+				$output .= '<span class="um-tip-text">'.__( $data['help'], UM_TEXTDOMAIN ). '</span>';
 			}
 
 		}
@@ -414,9 +414,11 @@ class UM_Fields {
 	function is_selected($key, $value, $data){
 		global $ultimatemember;
 
-		if ( isset( $ultimatemember->form->post_form[$key] ) && is_array( $ultimatemember->form->post_form[$key] ) ) {
+		$key = apply_filters('um_is_selected_filter_key', $key );
 
-			if ( in_array( $value, $ultimatemember->form->post_form[$key] ) ){
+		if ( isset( $ultimatemember->form->post_form[ $key ] ) && is_array( $ultimatemember->form->post_form[ $key ] ) ) {
+
+			if ( in_array( $value, $ultimatemember->form->post_form[ $key ] ) ){
 				return true;
 			}
 
@@ -424,11 +426,18 @@ class UM_Fields {
 
 			if ( !isset( $ultimatemember->form->post_form ) ) {
 
-				if ( um_user( $key ) && $this->editing == true && is_array( um_user( $key ) ) && in_array($value, um_user( $key ) ) ) {
+				$field_value = um_user( $key );
+				$field_value= apply_filters('um_is_selected_filter_value', $field_value);
+
+				if ( $field_value && $this->editing == true && is_array( $field_value ) && in_array( $value, $field_value ) ) {
 					return true;
 				}
 
-				if ( um_user( $key ) && $this->editing == true && !is_array( um_user( $key ) ) && um_user( $key ) == $value ) {
+				if ( $field_value && $this->editing == true && !is_array( $field_value ) && $field_value == $value ) {
+					return true;
+				}
+
+				if ( $field_value && $this->editing == true && !is_array( $field_value ) && html_entity_decode( $field_value ) == html_entity_decode( $value ) ) {
 					return true;
 				}
 
@@ -449,6 +458,8 @@ class UM_Fields {
 				if ( isset( $ultimatemember->form->post_form[$key] ) && $value == $ultimatemember->form->post_form[$key] ) {
 					return true;
 				}
+
+
 
 			}
 
@@ -615,7 +626,7 @@ class UM_Fields {
 
 				$array['disabled'] = '';
 
-				if ( $key == 'user_login' && $this->set_mode == 'account' ) {
+				if ( $key == 'user_login' && isset(  $this->set_mode ) && $this->set_mode == 'account' ) {
 					$array['disabled'] = 'disabled="disabled"';
 				}
 
@@ -904,7 +915,13 @@ class UM_Fields {
 		if ( !um_can_edit_field( $data ) ) return;
 
 		// fields that need to be disabled in edit mode (profile)
-		if ( in_array( $key, array('user_email','username','user_login','user_password') ) && $this->editing == true && $this->set_mode == 'profile' ) {
+		$arr_restricted_fields = array('user_email','username','user_login','user_password');
+		
+		if( um_get_option('editable_primary_email_in_profile') == 1 ){
+			unset( $arr_restricted_fields[0] ); // remove user_email
+		}
+
+		if ( in_array( $key, $arr_restricted_fields ) && $this->editing == true && $this->set_mode == 'profile' ) {
 			return;
 		}
 
@@ -1273,6 +1290,8 @@ class UM_Fields {
 								)
 							);
 
+							$textarea_settings = apply_filters('um_form_fields_textarea_settings', $textarea_settings );
+
 							// turn on the output buffer
 							ob_start();
 
@@ -1541,9 +1560,11 @@ class UM_Fields {
 							foreach($options as $key => $val ) {
 								$val = (string) $val;
 								$val = trim( $val );
-								$post_id = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND post_title = '$val'");
-								$_role = get_post($post_id);
-								$new_roles[$_role->post_name] = $_role->post_title;
+								$post_id = $wpdb->get_var( 
+									$wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND post_title = %s", $val)
+								);
+								$_role = get_post( $post_id );
+								$new_roles[ $_role->post_name ] = $_role->post_title;
 								wp_reset_postdata();
 							}
 
@@ -1568,12 +1589,16 @@ class UM_Fields {
 							if ( isset( $options_pair ) ) {
 								$option_value = $k;
 							}
+							
+							$option_value = htmlentities($option_value);
+							$option_value = apply_filters('um_select_dropdown_dynamic_option_value', $option_value);
 
-							$output .= '<option value="'.$option_value.'" ';
-							if ( $this->is_selected($form_key, $option_value, $data) ) {
+							$output .= '<option value="' . $option_value . '" ';
+							
+							if ( $this->is_selected( $form_key, $option_value, $data ) ) {
 								$output.= 'selected';
 							}
-							$output .= '>'.$v.'</option>';
+							$output .= '>'.__($v, UM_TEXTDOMAIN).'</option>';
 
 						}
 
@@ -1639,11 +1664,11 @@ class UM_Fields {
 								$opt_value = $v;
 							}
 
-							$output .= '<option value="'.$opt_value.'" ';
+							$output .= '<option value="'.htmlentities($opt_value).'" ';
 							if ( $this->is_selected($key, $opt_value, $data) ) {
 								$output.= 'selected';
 							}
-							$output .= '>'.$v.'</option>';
+							$output .= '>'.__($v,UM_TEXTDOMAIN).'</option>';
 
 						}
 
@@ -1721,7 +1746,7 @@ class UM_Fields {
 							}
 
 							$output .= '<label class="um-field-radio '.$active.' um-field-half '.$col_class.'">';
-							$output .= '<input type="radio" name="'.$form_key.'" value="'.$option_value.'" ';
+							$output .= '<input type="radio" name="'.$form_key.'" value="'.htmlentities($option_value).'" ';
 
 							if ( $this->is_radio_checked($key, $option_value, $data) ) {
 								$output.= 'checked';
@@ -1729,7 +1754,7 @@ class UM_Fields {
 
 							$output .= ' />';
 							$output .= '<span class="um-field-radio-state"><i class="'.$class.'"></i></span>';
-							$output .= '<span class="um-field-radio-option">'.$v.'</span>';
+							$output .= '<span class="um-field-radio-option">'.__($v,UM_TEXTDOMAIN).'</span>';
 							$output .= '</label>';
 
 							if ($i % 2 == 0) {
@@ -1797,7 +1822,7 @@ class UM_Fields {
 							$output .= ' />';
 
 							$output .= '<span class="um-field-checkbox-state"><i class="'.$class.'"></i></span>';
-							$output .= '<span class="um-field-checkbox-option">'. $v .'</span>';
+							$output .= '<span class="um-field-checkbox-option">'. __($v,UM_TEXTDOMAIN) .'</span>';
 							$output .= '</label>';
 
 							if ($i % 2 == 0) {
@@ -1841,7 +1866,7 @@ class UM_Fields {
 				if ( !empty( $fields ) ) {
 
 				$output .= '<div class="um-field-group" data-max_entries="'.$max_entries.'">
-								<div class="um-field-group-head"><i class="um-icon-plus"></i>'.$label.'</div>';
+								<div class="um-field-group-head"><i class="um-icon-plus"></i>'.__($label,UM_TEXTDOMAIN).'</div>';
 					$output .= '<div class="um-field-group-body"><a href="#" class="um-field-group-cancel"><i class="um-icon-close"></i></a>';
 
 									foreach($fields as $subkey => $subdata) {
@@ -2110,6 +2135,8 @@ class UM_Fields {
 
 						$res = stripslashes( $this->field_value( $key, $default, $data ) );
 
+						$res = apply_filters("um_view_field_value_{$type}", $res, $data );
+
 						$output .= '<div class="um-field-area">';
 						$output .= '<div class="um-field-value">' . $res . '</div>';
 						$output .= '</div>';
@@ -2173,6 +2200,8 @@ class UM_Fields {
 		// Custom filter for field output
 		if ( isset( $this->set_mode ) ) {
 			$output = apply_filters("um_{$key}_form_show_field", $output, $this->set_mode);
+			$output = apply_filters("um_{$type}_form_show_field", $output, $this->set_mode);
+
 		}
 
 		return $output;
@@ -2267,7 +2296,14 @@ class UM_Fields {
 							$output .= '<div class="um-col-1">';
 							$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
 							if ( $col1_fields ) {
-							foreach( $col1_fields as $key => $data ) {$output .= $this->view_field( $key, $data );}
+								foreach( $col1_fields as $key => $data ) {
+
+									$data  = apply_filters("um_view_field_output_".$data['type'],  $data);
+
+									$output .= $this->view_field( $key, $data );
+
+
+								}
 							}
 							$output .= '</div>';
 
@@ -2276,14 +2312,26 @@ class UM_Fields {
 							$output .= '<div class="um-col-121">';
 							$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
 							if ( $col1_fields ) {
-							foreach( $col1_fields as $key => $data ) {$output .= $this->view_field( $key, $data );}
+								foreach( $col1_fields as $key => $data ) {
+
+									$data  = apply_filters("um_view_field_output_".$data['type'],  $data);
+
+									$output .= $this->view_field( $key, $data );
+
+								}
 							}
 							$output .= '</div>';
 
 							$output .= '<div class="um-col-122">';
 							$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
 							if ( $col2_fields ) {
-							foreach( $col2_fields as $key => $data ) {$output .= $this->view_field( $key, $data );}
+								foreach( $col2_fields as $key => $data ) {
+
+									$data  = apply_filters("um_view_field_output_".$data['type'],  $data);
+
+									$output .= $this->view_field( $key, $data );
+
+								}
 							}
 							$output .= '</div><div class="um-clear"></div>';
 
@@ -2292,21 +2340,39 @@ class UM_Fields {
 							$output .= '<div class="um-col-131">';
 							$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
 							if ( $col1_fields ) {
-							foreach( $col1_fields as $key => $data ) {$output .= $this->view_field( $key, $data );}
+								foreach( $col1_fields as $key => $data ) {
+
+									$data  = apply_filters("um_view_field_output_".$data['type'],  $data);
+
+									$output .= $this->view_field( $key, $data );
+
+								}
 							}
 							$output .= '</div>';
 
 							$output .= '<div class="um-col-132">';
 							$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
 							if ( $col2_fields ) {
-							foreach( $col2_fields as $key => $data ) {$output .= $this->view_field( $key, $data );}
+								foreach( $col2_fields as $key => $data ) {
+
+									$data  = apply_filters("um_view_field_output_".$data['type'],  $data);
+
+									$output .= $this->view_field( $key, $data );
+
+								}
 							}
 							$output .= '</div>';
 
 							$output .= '<div class="um-col-133">';
 							$col3_fields = $this->get_fields_in_column( $subrow_fields, 3 );
 							if ( $col3_fields ) {
-							foreach( $col3_fields as $key => $data ) {$output .= $this->view_field( $key, $data );}
+								foreach( $col3_fields as $key => $data ) {
+
+									$data  = apply_filters("um_view_field_output_".$data['type'],  $data);
+
+									$output .= $this->view_field( $key, $data );
+
+								}
 							}
 							$output .= '</div><div class="um-clear"></div>';
 
@@ -2385,8 +2451,12 @@ class UM_Fields {
 			if ( $borderradius ) $css_heading_borderradius = 'border-radius: ' . $borderradius . ' ' . $borderradius . ' 0px 0px;';
 
 			$output .= '<div class="um-row-heading" style="' . $css_heading_background_color . $css_heading_padding . $css_heading_text_color . $css_heading_borderradius . '">';
-			if ( isset($icon) ) $output .= '<span class="um-row-heading-icon"><i class="' . $icon . '"></i></span>';
-			$output .= $heading_text .'</div>';
+			
+			if ( isset( $icon ) ) {
+				$output .= '<span class="um-row-heading-icon"><i class="' . $icon . '"></i></span>';
+			}
+			
+			$output .= ( ! empty( $heading_text ) ? $heading_text: '') .'</div>';
 
 		} else {
 

@@ -251,3 +251,9 @@ p.disabled-on-off .um-admin-yesno *{
 	border-radius: 0 3px 3px 0;
 	border: 1px solid #ddd;
 }
+
+.um-admin.users-php .subsubsub li.subsep {
+	display: block;
+	visibility: hidden;
+	height: 0;
+}
