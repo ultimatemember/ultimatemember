@@ -437,6 +437,10 @@ class UM_Fields {
 					return true;
 				}
 
+				if ( $field_value && $this->editing == true && !is_array( $field_value ) && html_entity_decode( $field_value ) == html_entity_decode( $value ) ) {
+					return true;
+				}
+
 				if ( strstr( $data['default'], ', ') ) {
 					$data['default'] = explode(', ', $data['default']);
 				}
@@ -454,6 +458,8 @@ class UM_Fields {
 				if ( isset( $ultimatemember->form->post_form[$key] ) && $value == $ultimatemember->form->post_form[$key] ) {
 					return true;
 				}
+
+
 
 			}
 
@@ -1554,9 +1560,11 @@ class UM_Fields {
 							foreach($options as $key => $val ) {
 								$val = (string) $val;
 								$val = trim( $val );
-								$post_id = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND post_title = '$val'");
-								$_role = get_post($post_id);
-								$new_roles[$_role->post_name] = $_role->post_title;
+								$post_id = $wpdb->get_var( 
+									$wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND post_title = %s", $val)
+								);
+								$_role = get_post( $post_id );
+								$new_roles[ $_role->post_name ] = $_role->post_title;
 								wp_reset_postdata();
 							}
 
@@ -1586,7 +1594,8 @@ class UM_Fields {
 							$option_value = apply_filters('um_select_dropdown_dynamic_option_value', $option_value);
 
 							$output .= '<option value="' . $option_value . '" ';
-							if ( $this->is_selected($form_key, $option_value, $data) ) {
+							
+							if ( $this->is_selected( $form_key, $option_value, $data ) ) {
 								$output.= 'selected';
 							}
 							$output .= '>'.__($v, UM_TEXTDOMAIN).'</option>';
