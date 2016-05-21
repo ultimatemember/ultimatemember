@@ -40,7 +40,7 @@ class UM_Form {
 	function add_error( $key, $error ) {
 		if ( ! isset( $this->errors[ $key ] ) ){
 
-			$error = apply_filters('um_submit_form_error', $key, $error );
+			$error = apply_filters('um_submit_form_error', $error , $key );
 
 			$this->errors[ $key ] = $error;
 		}
