@@ -130,6 +130,8 @@ class UM_Form {
 
 				}
 
+				$this->post_form = apply_filters('um_submit_form_data', $this->post_form, $this->post_form['mode'] );
+
 				/* Continue based on form mode - pre-validation */
 
 				do_action('um_submit_form_errors_hook', $this->post_form );
@@ -153,11 +155,11 @@ class UM_Form {
 
 			$this->processing = $form['form_id'];
 
-			foreach($form as $key => $value){
-				if (strstr($key, $this->form_suffix) ) {
-					$a_key = str_replace( $this->form_suffix, '', $key);
-					$form[$a_key] = $value;
-					unset($form[$key]);
+			foreach( $form as $key => $value ){
+				if ( strstr( $key, $this->form_suffix ) ) {
+					$a_key = str_replace( $this->form_suffix, '', $key );
+					$form[ $a_key ] = $value;
+					unset( $form[ $key ] );
 				}
 			}
 
