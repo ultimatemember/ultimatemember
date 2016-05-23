@@ -133,6 +133,12 @@ class UM_User {
 	}
 
 	function setup_cache( $user_id, $profile ) {
+		
+		$disallow_cache = get_option('um_profile_object_cache_stop');
+		if( $disallow_cache ){
+			return '';
+		}
+
 		update_option( "um_cache_userdata_{$user_id}", $profile );
 	}
 
