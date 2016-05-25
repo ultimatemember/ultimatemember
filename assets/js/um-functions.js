@@ -526,7 +526,7 @@ function initImageUpload_UM( trigger ) {
 				try{
 				data = jQuery.parseJSON(data);
 				} catch (e) {
-				   console.log( e );
+				   console.log( e, data );
 				    return;
 				}
 
