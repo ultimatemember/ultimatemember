@@ -7,7 +7,7 @@
 
 			<p>We'd like to thank you for installing Ultimate Member and we hope you enjoy using the plugin on your site. We created Ultimate Member with the aim of building a lightweight and powerful plugin that makes it extremely easy to make community and membership sites with WordPress.</p>
 				
-			<p>We have big plans for Ultimate Member and we hope you will join us on our journey to creating the most popular community/membership plugin. The plugin has been built to be extremely easy to use but if you run into any issues you can search our <a href="http://docs.ultimatemember.com/" target="_blank">documentation</a> and if you can’t find an answer to your issue in our docs, then you can create a <a href="https://ultimatemember.com/support-contact/" target="_blank">support ticket</a>. We also have an official GitHub repository where you can contribute directly to the plugin.</p>
+			<p>We have big plans for Ultimate Member and we hope you will join us on our journey to creating the most popular community/membership plugin. The plugin has been built to be extremely easy to use but if you run into any issues you can search our <a href="http://docs.ultimatemember.com/" target="_blank">documentation</a> and if you can’t find an answer to your issue in our docs, then you can create a topic on the <a href="https://wordpress.org/support/plugin/ultimate-member" target="_blank">support forum</a>. We also have an official <a href="https://github.com/ultimatemember/ultimatemember" target="_blank">GitHub repository</a> where you can contribute directly to the plugin.</p>
 			
 		</div>
 	</div>
