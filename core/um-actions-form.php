@@ -92,7 +92,7 @@
 		if ( $words != '' ) {
 
 			$words = array_map("rtrim", explode("\n", $words));
-			if( isset( $fields ) ){
+			if( isset( $fields ) && ! empty( $fields ) && is_array( $fields ) ){
 				foreach( $fields as $key => $array ) {
 					if ( isset($array['validate']) && in_array( $array['validate'], array('unique_username','unique_email','unique_username_or_email') ) ) {
 						if ( !$ultimatemember->form->has_error( $key ) && isset( $args[$key] ) && in_array( $args[$key], $words ) ) {
