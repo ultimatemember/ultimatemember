@@ -220,9 +220,9 @@
                 
                 Redux_CDN::register_script(
                     'select2-js',
-                    '//cdn.jsdelivr.net/select2/3.5.2/select2' . $this->min . '.js',
+                    '//cdn.jsdelivr.net/select2/4.0.2/select2' . $this->min . '.js',
                     array( 'jquery', 'redux-select2-sortable-js' ),
-                    '3.5.2',
+                    '4.0.2',
                     true
                 );
 
