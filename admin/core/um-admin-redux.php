@@ -15,8 +15,20 @@
                 }
 
 				add_action( 'wp_loaded', array( $this, 'initSettings' ), 10 );
+				add_action( 'redux/construct', array( $this, 'redux_disable_dev_mode_plugin' ) );
 
             }
+
+
+			public function redux_disable_dev_mode_plugin( $redux ) {
+	            if ( $redux->args['opt_name'] == 'um_options' ) {
+	                $redux->args['dev_mode'] = false;
+	                $redux->args['dev_mode_forced'] = false;
+	                $redux->args['update_notice'] = false;
+	            }
+	           
+	        }
+
 
             public function initSettings() {
 
