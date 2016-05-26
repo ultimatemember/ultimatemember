@@ -15,11 +15,24 @@
 
 		}
 
-		foreach( $_POST as $k => $v ) {
-			if ( !strstr( $k, 'password' ) && !strstr( $k, 'um_account' ) ) {
-				$changes[ $k ] = $v;
+		$arr_fields = array();
+		$secure_fields = get_user_meta( um_user('ID'), 'um_account_secure_fields', true );
+		if( isset( $secure_fields  ) ){
+			foreach ( $secure_fields as $tab_key => $fields ) {
+				if( isset( $fields ) ){
+					foreach ($fields as $key => $value) {
+						$arr_fields[ ] = $key;
+					}
+				}
 			}
 		}
+
+		$changes = array();
+		foreach( $_POST as $k => $v ) {
+			if ( !strstr( $k, 'password' ) && !strstr( $k, 'um_account' ) && in_array(  $k, $arr_fields ) ) {
+				$changes[ $k ] = $v;
+			}
+		} 
 
 		if ( isset( $changes['hide_in_members'] ) && $changes['hide_in_members'] == __('No','ultimatemember') ) {
 			delete_user_meta( um_user('ID'), 'hide_in_members' );
