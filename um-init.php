@@ -58,6 +58,11 @@ class UM_API {
 			__('This add-on enables you to link gravatar photos to user accounts with their email address.', 'ultimatemember'),
 		);
 
+		$this->addons['generate_random_users'] = array(
+			__('Generate Dummies', 'ultimatemember'),
+			__('This add-on enables you to generate dummies.', 'ultimatemember'),
+		);
+
 		// include widgets
 		require_once um_path . 'core/widgets/um-search-widget.php';
 
@@ -74,7 +79,9 @@ class UM_API {
 		if (isset($ultimatemember->addons) && is_array($ultimatemember->addons)) {
 			foreach ($ultimatemember->addons as $addon => $name) {
 				if (um_get_option('addon_' . $addon) == 1) {
-					include_once um_path . 'addons/' . $addon . '.php';
+					if( file_exists( um_path . 'addons/' . $addon . '.php' ) ){
+						include_once um_path . 'addons/' . $addon . '.php';
+					}
 				}
 			}
 		}
