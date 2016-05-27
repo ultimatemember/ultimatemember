@@ -1480,7 +1480,8 @@ function um_fetch_user( $user_id ) {
 				if ( $avatar_uri )
 
 					if( um_get_option('use_gravatars') && ! um_user('synced_profile_photo') && ! $has_profile_photo ){
-						$avatar_uri  = um_get_domain_protocol().'gravatar.com/avatar/'.um_user('synced_gravatar_hashed_id');
+						$avatar_hash_id = get_user_meta( um_user('ID'),'synced_gravatar_hashed_id', true);
+						$avatar_uri  = um_get_domain_protocol().'gravatar.com/avatar/'.$avatar_hash_id;
 						$avatar_uri = add_query_arg('s',400, $avatar_uri);
 						$gravatar_type = um_get_option('use_um_gravatar_default_builtin_image');
 

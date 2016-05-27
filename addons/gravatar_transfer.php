@@ -17,8 +17,7 @@ class UM_ADDON_gravatar_transfer {
    		$wpdb->query('DELETE FROM '.$wpdb->usermeta.' WHERE meta_key = "synced_gravatar_hashed_id" ');
 
    		$wpdb->query('INSERT INTO '.$wpdb->usermeta.'(user_id, meta_key, meta_value) 
-   		SELECT ID, "synced_gravatar_hashed_id", MD5( LOWER( TRIM(user_email) ) )
-   		FROM '.$wpdb->users.' '); 
+   		SELECT ID, "synced_gravatar_hashed_id", MD5( LOWER( TRIM(user_email) ) ) FROM '.$wpdb->users.' '); 
 
    		return true;
    }
