@@ -194,16 +194,20 @@ class UM_Permalinks {
 
 		$profile_url = apply_filters('um_localize_permalink_filter', $this->core, $page_id, $profile_url );
 
-
+		// Username
 		if ( um_get_option('permalink_base') == 'user_login' ) {
 			$user_in_url = um_user('user_login');
 
-			if ( is_email($user_in_url) ) {
+			if ( is_email( $user_in_url ) ) {
+				$user_email = $user_in_url;
 				$user_in_url = str_replace('@','',$user_in_url);
+				
 				if( ( $pos = strrpos( $user_in_url , '.' ) ) !== false ) {
 					$search_length  = strlen( '.' );
 					$user_in_url    = substr_replace( $user_in_url , '-' , $pos , $search_length );
 				}
+				update_user_meta( um_user('ID') , 'um_email_as_username_'.$user_in_url , $user_email );
+
 			} else {
 
 				$user_in_url = sanitize_title( $user_in_url );
@@ -212,10 +216,12 @@ class UM_Permalinks {
 
 		}
 
+		// User ID
 		if ( um_get_option('permalink_base') == 'user_id' ) {
 			$user_in_url = um_user('ID');
 		}
 
+		// Fisrt and Last name
 		$full_name_permalinks = array( 'name', 'name_dash', 'name_plus' );
 		if( in_array( um_get_option( 'permalink_base'),  $full_name_permalinks ) )
 		{
@@ -344,8 +350,6 @@ class UM_Permalinks {
 					
 					break;
 			}
-
-
 		}
 
 		if ( get_option('permalink_structure') ) {

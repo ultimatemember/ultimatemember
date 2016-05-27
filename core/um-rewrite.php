@@ -124,6 +124,11 @@ class UM_Rewrite {
 					if ( isset( $the_user->ID ) ){
 						$user_id = $the_user->ID;
 					}
+					
+					if( !$user_id ){
+						$user_id = $ultimatemember->user->user_exists_by_email_as_username( $slug );
+					}
+
 				}
 
 			}
