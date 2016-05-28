@@ -81,7 +81,7 @@ class UM_ADDON_generate_random_users {
 							$usermeta = array(
 								'synced_profile_photo' 		=> $dummy->picture->large,
 								'gender' 					=> ucfirst($dummy->gender),
-								'birth_date' 				=> $dummy->dob,
+								'birth_date' 				=> date("Y/m/d", $dummy->dob),
 								'_um_last_login'			=> date("Y/m/d", $dummy->registered),
 								'mobile_number'				=> $dummy->cell,
 								'phone_number'				=> $dummy->phone,
