@@ -124,8 +124,6 @@
 
 		$ultimatemember->user->set_registration_details( $args['submitted'] );
 
-		$ultimatemember->user->set_plain_password( $args['user_password'] );
-
 		$ultimatemember->user->set_last_login();
 
 		do_action('um_new_user_registration_plain');
