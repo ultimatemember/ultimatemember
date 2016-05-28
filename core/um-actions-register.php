@@ -76,7 +76,7 @@
 		}
 
 		if ( ! isset( $user_password ) ){
-			$user_password = $ultimatemember->validation->generate();
+			$user_password = $ultimatemember->validation->generate( 8 );
 		}
 
 
