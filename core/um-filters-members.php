@@ -204,8 +204,16 @@
 
 			} else {
 
-				if ( strstr( $sortby, '_desc' ) ) {$sortby = str_replace('_desc','',$sortby);$order = 'DESC';}
-				if ( strstr( $sortby, '_asc' ) ) {$sortby = str_replace('_asc','',$sortby);$order = 'ASC';}
+				if ( strstr( $sortby, '_desc' ) ) {
+					$sortby = str_replace('_desc','',$sortby);
+					$order = 'DESC';
+				}
+
+				if ( strstr( $sortby, '_asc' ) ) {
+					$sortby = str_replace('_asc','',$sortby);
+					$order = 'ASC';
+				}
+				
 				$query_args['orderby'] = $sortby;
 
 			}
