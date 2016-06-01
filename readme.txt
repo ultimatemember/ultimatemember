@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.5
 
-Stable Tag: 1.3.52
+Stable Tag: 1.3.53
 
 License: GNU Version 2 or Any Later Version
 
@@ -148,6 +148,24 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.53: June 01, 2016 =
+* New: generate dummy users tool
+* Added: filter 'um_submit_form_error' for custom error messages
+* Tweak: update compressed CSS
+* Tweak: update select2.js to version 4.0.2
+* Fixed: gravatar and transfer tool
+* Fixed: permalink base for username
+* Fixed: saving account fields
+* Fixed: remove notice
+* Fixed: upload form error logging
+* Fixed: cache option
+* Fixed: edit profile url
+* Fixed: login redirection
+* Fixed: remove account information from welcome email
+* Fixed: form error with users tags
+* Fixed: select fields with accented characters
+* Fixed: image upload
 
 = 1.3.52: May 14, 2016 =
 * Added: 'wp_authenticate_username_password_before' action hook
