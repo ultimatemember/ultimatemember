@@ -6,9 +6,21 @@ class UM_Admin_Roles {
 		
 		add_filter('manage_edit-um_role_columns', array(&$this, 'manage_edit_um_role_columns') );
 		add_action('manage_um_role_posts_custom_column', array(&$this, 'manage_um_role_posts_custom_column'), 10, 3);
+		add_filter( 'post_row_actions',  array(&$this,'remove_row_actions' ), 10, 2 );
 
 	}
 
+	function remove_row_actions( $actions, $post ){
+	  global $current_screen, $ultimatemember;
+		if( $current_screen->post_type != 'um_role' ) return $actions;
+		
+		if( $ultimatemember->query->is_core( $post->ID ) ){
+			unset( $actions['trash'] );
+			unset( $actions['inline hide-if-no-js'] );
+		}
+		
+		return $actions;
+	}
 	/***
 	***	@Custom columns for Role
 	***/
