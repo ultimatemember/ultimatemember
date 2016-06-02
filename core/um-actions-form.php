@@ -70,8 +70,8 @@
 		$user_ip = um_user_ip();
 
 		foreach($ips as $ip) {
-			$ip = str_replace('*','',$ip);
-			if (strpos($user_ip, $ip) === 0) {
+			$ip = str_replace('*','',$ip); 
+			if ( !empty( $ip ) && strpos($user_ip, $ip) === 0) {
 				exit( wp_redirect(  esc_url(  add_query_arg('err', 'blocked_ip') ) ) );
 			}
 		}
