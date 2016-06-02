@@ -71,14 +71,14 @@ body.um-admin .select2-search {
 /* Select2 4.0*/
 body.um-admin .select2.select2-container .select2-selection{
     display: block !important;
-    height: 36px !important;
+    height: 28px !important;
     padding: 0 0 0 12px !important;
     overflow: hidden !important;
     position: relative !important;
     white-space: nowrap !important;
-    line-height: 35px !important;
+    line-height: 25px !important;
     color: #666 !important;
-    font-size: 15px !important;
+    font-size: 13px !important;
     text-align: left !important;
     text-decoration: none !important;
     -moz-border-radius: 2px !important;
@@ -104,7 +104,7 @@ body.um-admin .select2.select2-container .select2-selection .select2-selection__
     width: 100% !important;
     display: block;
     height: 100%;
-    line-height: 35px;
+    line-height: 28px;
     color: #aaaaaa;
 }
 body.um-admin .select2.select2-container .select2-selection .select2-selection__arrow {
@@ -129,7 +129,7 @@ body.um-admin .select2-results li{
 	list-style: none;
     display: list-item;
     background-image: none;
-    font-size: 15px;
+    font-size: 13px;
     margin: 5px !important;
     padding: 3px 0 !important;
     color: #666 !important;
@@ -141,7 +141,7 @@ body.um-admin .select2-results li {
  }
 
 body.um-admin .select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: 32px;
+    line-height: 25px;
 }
 body.um-admin .select2-results li.select2-results__option.select2-results__option--highlighted{
     background: none !important;
