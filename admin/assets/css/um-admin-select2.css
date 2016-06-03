@@ -151,10 +151,11 @@ body.um-admin .select2-results li.select2-results__option.select2-results__optio
 body.um-admin .select2-container--default .select2-results__option[aria-selected=true] {
 	background: transparent !important;
 }
-body.um-admin .select2-selection__clear{
-	right: 10px;
-	font-size: 35px;
-	color: #aaaaaa !important;
+body.um-admin .select2-selection__clear {
+    right: 10px;
+    font-size: 25px;
+    color: #aaaaaa !important;
+    font-weight: 300 !important;
 }
 
 body.um-admin .select2-container--default .select2-selection--multiple .select2-selection__rendered {
@@ -165,4 +166,24 @@ body.um-admin .select2-container--default .select2-selection--multiple .select2-
     width: 100%;
     line-height: 20px;
     font-size: 13px;
+}
+
+body.um-admin .select2.select2-container .select2-selection.select2-selection--multiple {
+    height: auto !important;
+}
+
+body.um-admin .select2-container--default .select2-selection--multiple .select2-selection__clear {
+    cursor: pointer;
+    float: right;
+    margin-top: 0px;
+    margin-right: 5px;
+    font-size: 25px;
+}
+
+body.um-admin .select2-container--default .select2-results__option[aria-selected=true] {
+    background-color: #ddd  !important;
+}
+
+body.um-admin .select2-container .select2-search--inline {
+   line-height: 37px !important;
 }
