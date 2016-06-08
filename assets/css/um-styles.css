@@ -784,7 +784,7 @@ small.um-max-filesize span{
 /* Select2 4.0*/
 .select2-container.select2-container--open {
     z-index: 9999999;
-}
+ }
 .select2.select2-container .select2-selection{
     display: block !important;
     height: 40px;
