@@ -21,12 +21,14 @@ class UM_Query {
 			return $this->wp_pages;
 		}
 
-		$pages = $wpdb->get_results('SELECT * FROM '.$wpdb->posts.' WHERE post_type = "page" AND post_status = "publish" ', OBJECT);
-		$count_pages = $wpdb->num_rows;
-		
-		if ( $count_pages > 300 )
+		$count_pages = wp_count_posts('page');
+		if ( $count_pages > 300 ){
 			return 'reached_maximum_limit';
+		}
 		
+
+		$pages = $wpdb->get_results('SELECT * FROM '.$wpdb->posts.' WHERE post_type = "page" AND post_status = "publish" ', OBJECT);
+
 		$array = '';
 		if( $wpdb->num_rows > 0 ){
 			foreach ($pages as $page_data) {
