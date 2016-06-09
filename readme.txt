@@ -149,6 +149,9 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 == Changelog ==
 
+= 1.3.56: June 09, 2016 =
+* Fixed: query of pages
+
 = 1.3.55: June 09, 2016 =
 * Fixed: select fields styles
 * Fixed: select fields with accented characters
