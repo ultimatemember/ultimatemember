@@ -22,7 +22,8 @@ class UM_Query {
 		}
 
 		$count_pages = wp_count_posts('page');
-		if ( $count_pages > 300 ){
+		
+		if ( $count_pages->publish > 300 ){
 			return 'reached_maximum_limit';
 		}
 		
