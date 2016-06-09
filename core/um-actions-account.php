@@ -11,8 +11,12 @@
 
 		if ( $_POST['user_password'] && $_POST['confirm_user_password'] ) {
 			$changes['user_pass'] = $_POST['user_password'];
+			
 			add_filter('send_password_change_email','um_send_password_change_email');
-
+			
+			wp_set_password( $changes['user_pass'], um_user('ID') );
+			
+			wp_signon( array('user_login' => um_user('user_login'), 'user_password' =>  $changes['user_pass']) );
 		}
 
 		$arr_fields = array();
