@@ -149,6 +149,14 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 == Changelog ==
 
+= 1.3.55: June 09, 2016 =
+* Fixed: select fields styles
+* Fixed: select fields with accented characters
+* Fixed: select fields with accented text values
+* Fixed: select fields in overlay
+* Fixed: admin front-end access restriction 
+* Fixed: pages query
+
 = 1.3.54: June 02, 2016 =
 * Fixed: remove quick edit from Built-in roles row actions
 * Fixed: remove notices
