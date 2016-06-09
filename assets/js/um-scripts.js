@@ -176,16 +176,6 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
-	if ( jQuery.ui && jQuery.ui.dialog && jQuery.ui.dialog.prototype._allowInteraction ) {
-	    var ui_dialog_interaction = jQuery.ui.dialog.prototype._allowInteraction;
-	    jQuery.ui.dialog.prototype._allowInteraction = function(e) {
-	        if ( jQuery(e.target).closest('.select2-dropdown').length ) return true;
-	        return ui_dialog_interaction.apply(this, arguments);
-	    };
-	}
-
-
-
 	jQuery('.um-s1,.um-s2').css({'display':'block'});
 	
 	jQuery(".um-s1").select2({
