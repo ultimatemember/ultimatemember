@@ -647,7 +647,7 @@ function initFileUpload_UM( trigger ) {
 
 function initCrop_UM() {
 
-	var target_img = jQuery('.um-modal:visible .um-single-image-preview img');
+	var target_img = jQuery('.um-modal:visible .um-single-image-preview img').first();
 	var target_img_parent = jQuery('.um-modal:visible .um-single-image-preview');
 
 	var crop_data = target_img.parent().attr('data-crop');
@@ -725,6 +725,9 @@ function initCrop_UM() {
 
 			if ( crop_data != 0 ) {
 				target_img.cropper( opts );
+				jQuery('.um-single-image-preview img.cropper-hidden').cropper('destroy');
+				jQuery('.um-single-image-preview img.lazyloaded').addClass('cropper-hidden');
+				jQuery('.um-single-image-preview img.lazyloaded').removeClass('lazyloaded');
 			}
 
 		}
