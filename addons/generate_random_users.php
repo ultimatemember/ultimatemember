@@ -110,11 +110,13 @@ class UM_ADDON_generate_random_users {
 				
 				$json = get_option('um_generated_dumies');
 				
-				foreach ( $json->results as $dummy ) {
-					$user = get_user_by( 'email', $dummy->email );
-					wp_delete_user( $user->ID );
+				if( isset( $json->results ) ){
+					foreach ( $json->results as $dummy ) {
+						$user = get_user_by( 'email', $dummy->email );
+						wp_delete_user( $user->ID );
+					}
 				}
-
+				
 				delete_option('um_generated_dumies');
 			break;
 			
