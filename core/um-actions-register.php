@@ -259,6 +259,7 @@
 			$role = um_get_option('default_role');
 		}
 
+		$role = apply_filters('um_register_hidden_role_field', $role );
 		echo '<input type="hidden" name="role" id="role" value="' . $role . '" />';
 
 	}
