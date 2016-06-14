@@ -79,8 +79,10 @@ class UM_Form {
 			$http_post = 'POST';
 		}
 
-
+		
 		if ( $http_post && !is_admin() && isset( $_POST['form_id'] ) && is_numeric($_POST['form_id']) ) {
+			
+			do_action("um_before_submit_form_post", $_POST );
 
 			$this->form_id = $_POST['form_id'];
 			$this->form_status = get_post_status( $this->form_id );
@@ -89,7 +91,7 @@ class UM_Form {
 			if ( $this->form_status == 'publish' ) {
 
 				/* save entire form as global */
-				$this->post_form = $_POST;
+				$this->post_form = apply_filters('um_submit_post_form' ,$_POST );
 
 				$this->post_form = $this->beautify( $this->post_form );
 
@@ -101,7 +103,9 @@ class UM_Form {
 
 				$role = $this->assigned_role( $this->form_id );
 
-				if( $role && isset( $this->form_data['custom_fields'] ) && ! strstr( $this->form_data['custom_fields'], 'role_' ) ){ // has assigned role.  Validate non-global forms
+				$secure_form_post = apply_filters('um_secure_form_post', true );
+
+				if( $role && isset( $this->form_data['custom_fields'] ) && ! strstr( $this->form_data['custom_fields'], 'role_' ) && $secure_form_post ){ // has assigned role.  Validate non-global forms
 					if ( isset( $this->form_data['role'] ) && ( (boolean) $this->form_data['role'] ) && isset(  $_POST['role']  ) && $_POST['role'] != $role ) {
 						wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
 					} else {
