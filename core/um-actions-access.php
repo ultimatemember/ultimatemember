@@ -204,8 +204,12 @@
 
 			case 2:
 
-				if ( !is_user_logged_in() ){
-					if ( !$access_redirect ) $access_redirect = um_get_core_page('login');
+				if ( ! is_user_logged_in() ){
+
+					if ( empty( $access_redirect ) ) {
+						$access_redirect = um_get_core_page('login');
+					}
+					
 					$redirect_to = esc_url( $access_redirect );
 				}
 
@@ -230,10 +234,8 @@
 		}
 
 		if ( $redirect_to ) {
-			if ( is_feed() ) {
-
-			} else {
-				$ultimatemember->access->allow_access = false;
+			if ( ! is_feed() ) {
+		  		$ultimatemember->access->allow_access = false;
 				$ultimatemember->access->redirect_handler = esc_url( $redirect_to );
 			}
 		}
