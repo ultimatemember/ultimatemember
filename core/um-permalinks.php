@@ -61,39 +61,67 @@ class UM_Permalinks {
 		global $post;
 
 			$um_get_option = get_option('um_options');
+
 			$server_name_method = ( $um_get_option['current_url_method'] ) ? $um_get_option['current_url_method'] : 'SERVER_NAME';
+			
 			$um_port_forwarding_url = ( isset( $um_get_option['um_port_forwarding_url'] ) ) ? $um_get_option['um_port_forwarding_url']: '';
 
-		if ( !isset( $_SERVER['SERVER_NAME'] ) )
-			return '';
+		if ( is_multisite() ) {
 
-		if ( is_front_page() ) {
-			$page_url = home_url();
+				$blog_id = get_current_blog_id();
+				$siteurl = get_site_url( $blog_id );
 
-			if( isset( $_SERVER['QUERY_STRING'] ) && trim( $_SERVER['QUERY_STRING'] ) ) {
-				$page_url .= '?' . $_SERVER['QUERY_STRING'];
-			}
-		} else {
-			$page_url = 'http';
+				if ( is_front_page() ) {
+						$page_url = $siteurl;
 
-			if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) {
-				$page_url .= "s";
-			}
-			$page_url .= "://";
+						if( isset( $_SERVER['QUERY_STRING'] ) && trim( $_SERVER['QUERY_STRING'] ) ) {
+							$page_url .= '?' . $_SERVER['QUERY_STRING'];
+						}
+				}else {
+						$page_url = $siteurl;
 
-			if ( $um_port_forwarding_url == 1 && isset( $_SERVER["SERVER_PORT"] ) ) {
-				$page_url .= $_SERVER[ $server_name_method ].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+						if ( $um_port_forwarding_url == 1 && isset( $_SERVER["SERVER_PORT"] ) ) {
+							$page_url .= ":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
 
-			} else {
-				$page_url .= $_SERVER[ $server_name_method ].$_SERVER["REQUEST_URI"];
-			}
+						} else {
+							$page_url .= $_SERVER["REQUEST_URI"];
+						}
 
+				}
+
+		}else{
+				if ( !isset( $_SERVER['SERVER_NAME'] ) )
+					return '';
+
+				if ( is_front_page() ) {
+					$page_url = home_url();
+
+					if( isset( $_SERVER['QUERY_STRING'] ) && trim( $_SERVER['QUERY_STRING'] ) ) {
+						$page_url .= '?' . $_SERVER['QUERY_STRING'];
+					}
+				} else {
+					$page_url = 'http';
+
+					if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) {
+						$page_url .= "s";
+					}
+					$page_url .= "://";
+
+					if ( $um_port_forwarding_url == 1 && isset( $_SERVER["SERVER_PORT"] ) ) {
+						$page_url .= $_SERVER[ $server_name_method ].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+
+					} else {
+						$page_url .= $_SERVER[ $server_name_method ].$_SERVER["REQUEST_URI"];
+					}
+
+				}
+
+			
 		}
 
 		if ( $no_query_params == true ) {
-			$page_url = strtok($page_url, '?');
+			$page_url = strtok( $page_url, '?' );
 		}
-
 
 		return apply_filters( 'um_get_current_page_url', $page_url );
 	}
