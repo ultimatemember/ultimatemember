@@ -185,7 +185,7 @@ class UM_Admin_Users {
 					foreach($users as $user_id){
 						$ultimatemember->user->set( $user_id );
 						// change role for non-wp admins or non-community admins only
-						if ( !um_user('super_admin') || um_user('role') != 'admin' ) {
+						if ( current_user_can('manage_options') || ( !um_user('super_admin') || um_user('role') != 'admin' ) ) {
 							$ultimatemember->user->set_role( $new_role );
 						} else {
 							$admin_err = 1;
