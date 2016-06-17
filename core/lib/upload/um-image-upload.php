@@ -20,7 +20,7 @@ $nonce = $_POST['_wpnonce'];
 $ultimatemember->fields->set_id = $_POST['set_id'];
 $ultimatemember->fields->set_mode = $_POST['set_mode'];
 
-if ( ! wp_verify_nonce( $nonce, 'um_upload_nonce-'.$timestamp ) ) {
+if ( ! wp_verify_nonce( $nonce, 'um_upload_nonce-'.$timestamp ) && is_user_logged_in() ) {
     // This nonce is not valid.
     $ret['error'] = 'Invalid nonce';
     die( json_encode( $ret ) );
