@@ -1389,7 +1389,7 @@ class UM_Fields {
 						$output .= '<div class="um-single-image-preview '. $crop_class .'" data-crop="'.$crop_data.'" data-key="'.$key.'">
 								<a href="#" class="cancel"><i class="um-icon-close"></i></a>
 								<img src="" alt="" />
-							</div><a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. $button_text . '</a>';
+							<div class="um-clear"></div></div><a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. $button_text . '</a>';
 
 					}
 
@@ -1412,7 +1412,7 @@ class UM_Fields {
 
 					$nonce = wp_create_nonce( 'um_upload_nonce-'.$this->timestamp );
 
-					$output .= '<div class="um-single-image-preview '. $crop_class .'"  data-crop="'.$crop_data.'" data-ratio="'.$ratio.'" data-min_width="'.$min_width.'" data-min_height="'.$min_height.'" data-coord=""><a href="#" class="cancel"><i class="um-icon-close"></i></a><img src="" alt="" /></div>';
+					$output .= '<div class="um-single-image-preview '. $crop_class .'"  data-crop="'.$crop_data.'" data-ratio="'.$ratio.'" data-min_width="'.$min_width.'" data-min_height="'.$min_height.'" data-coord=""><a href="#" class="cancel"><i class="um-icon-close"></i></a><img src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
 					$output .= '<div class="um-single-image-upload" data-nonce="'.$nonce.'" data-timestamp="'.$this->timestamp.'" data-icon="'.$icon.'" data-set_id="'.$set_id.'" data-set_mode="'.$set_mode.'" data-type="'.$type.'" data-key="'.$key.'" data-max_size="'.$max_size.'" data-max_size_error="'.$max_size_error.'" data-min_size_error="'.$min_size_error.'" data-extension_error="'.$extension_error.'"  data-allowed_types="'.$allowed_types.'" data-upload_text="'.$upload_text.'" data-max_files_error="'.$max_files_error.'" data-upload_help_text="'.$upload_help_text.'">'.$button_text.'</div>';
 
 					$output .= '<div class="um-modal-footer">
