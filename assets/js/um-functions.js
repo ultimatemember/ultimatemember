@@ -500,7 +500,13 @@ function initImageUpload_UM( trigger ) {
 			url: um_scripts.imageupload,
 			method: "POST",
 			multiple: false,
-			formData: {key: trigger.data('key'), set_id: trigger.data('set_id'), set_mode: trigger.data('set_mode') },
+			formData: {
+				key: trigger.data('key'), 
+				set_id: trigger.data('set_id'), 
+				set_mode: trigger.data('set_mode'),
+				_wpnonce: trigger.data('nonce'),
+				timestamp: trigger.data('timestamp')
+			 },
 			fileName: trigger.data('key'),
 			allowedTypes: trigger.data('allowed_types'),
 			maxFileSize: trigger.data('max_size'),
@@ -586,7 +592,13 @@ function initFileUpload_UM( trigger ) {
 			url: um_scripts.fileupload,
 			method: "POST",
 			multiple: false,
-			formData: {key: trigger.data('key'), set_id: trigger.data('set_id'), set_mode: trigger.data('set_mode') },
+			formData: {
+				key: trigger.data('key'), 
+				set_id: trigger.data('set_id'), 
+				set_mode: trigger.data('set_mode'),
+				_wpnonce: trigger.data('nonce'),
+				timestamp: trigger.data('timestamp')
+			},
 			fileName: trigger.data('key'),
 			allowedTypes: trigger.data('allowed_types'),
 			maxFileSize: trigger.data('max_size'),

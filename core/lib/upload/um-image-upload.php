@@ -10,12 +10,21 @@ while( ++$i < 10 && !file_exists( $wp_load ) );
 require_once( $wp_load );
 global $ultimatemember;
 
+$ret['error'] = null;
+$ret = array();
+
 $id = $_POST['key'];
+$timestamp = $_POST['timestamp'];
+$nonce = $_POST['_wpnonce'];
+
 $ultimatemember->fields->set_id = $_POST['set_id'];
 $ultimatemember->fields->set_mode = $_POST['set_mode'];
 
-$ret['error'] = null;
-$ret = array();
+if ( ! wp_verify_nonce( $nonce, 'um_upload_nonce-'.$timestamp ) ) {
+    // This nonce is not valid.
+    $ret['error'] = 'Invalid nonce';
+    die( json_encode( $ret ) );
+}
 
 if(isset($_FILES[$id]['name'])) {
 
