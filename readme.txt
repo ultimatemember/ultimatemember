@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.5
 
-Stable Tag: 1.3.58
+Stable Tag: 1.3.59
 
 License: GNU Version 2 or Any Later Version
 
@@ -148,6 +148,18 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.59: June 17, 2016 =
+* Added: filter 'um_register_hidden_role_field'
+* Added: filters and action hooks in form post
+* Added: cache time filter in avatar url
+* Fixed: Nonces added to file uploads
+* Fixed: remove notices
+* Fixed: upload image cropper
+* Fixed: select field multiple select
+* Fixed: changing community role by admin
+* Fixed: current url method in multisite setup
+* Fixed: access settings
 
 = 1.3.58: June 09, 2016 =
 * Fixed: change password
