@@ -743,11 +743,11 @@ function initCrop_UM() {
 			}
 
 			if ( crop_data != 0 ) {
-				target_img.cropper( opts );
-				jQuery('.um-single-image-preview img.cropper-hidden').cropper('destroy');
-				jQuery('.um-single-image-preview img.lazyloaded').addClass('cropper-hidden');
-				jQuery('.um-single-image-preview img.lazyloaded').removeClass('lazyloaded');
-				jQuery('.um-single-image-preview .cropper-container').append('<div class="um-clear"></div>');
+					target_img.cropper( opts );
+					jQuery('.um-single-image-preview img.cropper-hidden').cropper('destroy');
+					jQuery('.um-single-image-preview img.lazyloaded').addClass('cropper-hidden');
+					jQuery('.um-single-image-preview img.lazyloaded').removeClass('lazyloaded');
+					jQuery('.um-single-image-preview .cropper-container').append('<div class="um-clear"></div>');
 			}
 
 		}
