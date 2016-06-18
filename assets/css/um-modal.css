@@ -53,7 +53,7 @@
 	position: fixed;
 	top: 0;
 	left: 0;
-	z-index: 1999992;
+	z-index: 999999;
 }
 
 /*
@@ -193,4 +193,8 @@
 
 .um-modal-btn.alt:hover {
 	background: #e5e5e5;
+}
+
+.um-modal .um-single-image-preview.crop img{
+	float:left;
 }

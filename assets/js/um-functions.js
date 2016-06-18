@@ -626,7 +626,10 @@ function initFileUpload_UM( trigger ) {
 
 					trigger.parents('.um-modal-body').append('<div class="um-error-block">'+data.error+'</div>');
 					trigger.parents('.um-modal-body').find('.upload-statusbar').hide(0);
-					um_modal_responsive();
+					
+					setTimeout(function(){
+						um_modal_responsive();
+					},1000);
 
 				} else {
 
@@ -648,7 +651,9 @@ function initFileUpload_UM( trigger ) {
 
 					});
 
-					um_modal_responsive();
+					setTimeout(function(){
+						um_modal_responsive();
+					},1000);
 
 				}
 
@@ -704,10 +709,12 @@ function initCrop_UM() {
 				};
 
 			} else if ( crop_data == 'cover' ) {
-
+				if( Math.round( min_width / ratio ) > 0 ){
+					min_height = Math.round( min_width / ratio )
+				}
 				var opts = {
 					minWidth: min_width,
-					minHeight: Math.round( min_width / ratio ),
+					minHeight: min_height,
 					dragCrop: false,
 					aspectRatio: ratio,
 					zoomable: false,
@@ -740,6 +747,7 @@ function initCrop_UM() {
 				jQuery('.um-single-image-preview img.cropper-hidden').cropper('destroy');
 				jQuery('.um-single-image-preview img.lazyloaded').addClass('cropper-hidden');
 				jQuery('.um-single-image-preview img.lazyloaded').removeClass('lazyloaded');
+				jQuery('.um-single-image-preview .cropper-container').append('<div class="um-clear"></div>');
 			}
 
 		}
@@ -763,9 +771,9 @@ function um_new_modal( id, size, isPhoto, source ){
 	jQuery('.um-modal').on('touchmove', function(e){e.stopPropagation();});
 
 	if ( isPhoto ) {
-	jQuery('body').append('<div class="um-modal-overlay" /><div class="um-modal is-photo" />');
+	jQuery('body').append('<div class="um-modal-overlay"></div><div class="um-modal is-photo"></div>');
 	} else {
-	jQuery('body').append('<div class="um-modal-overlay" /><div class="um-modal no-photo" />');
+	jQuery('body').append('<div class="um-modal-overlay"></div><div class="um-modal no-photo"></div>');
 	}
 
 	jQuery('#' + id).prependTo('.um-modal');
@@ -885,6 +893,7 @@ function um_modal_responsive() {
 		}
 
 	}
+
 }
 
 function um_remove_modal(){
