@@ -664,8 +664,8 @@ function initFileUpload_UM( trigger ) {
 
 function initCrop_UM() {
 
-	var target_img = jQuery('.um-modal:visible .um-single-image-preview img').first();
-	var target_img_parent = jQuery('.um-modal:visible .um-single-image-preview');
+	var target_img = jQuery('.um-modal .um-single-image-preview img').first();
+	var target_img_parent = jQuery('.um-modal .um-single-image-preview');
 
 	var crop_data = target_img.parent().attr('data-crop');
 	var min_width = target_img.parent().attr('data-min_width');
