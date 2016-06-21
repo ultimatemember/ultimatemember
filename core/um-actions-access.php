@@ -55,6 +55,7 @@
 
 		}
 
+
 	}
 
 	/***
@@ -137,7 +138,7 @@
 	add_action('um_access_post_settings','um_access_post_settings');
 	function um_access_post_settings() {
 		global $post, $ultimatemember;
-
+		
 		// woo commerce shop ID
 		if( function_exists('is_shop') && is_shop() ) {
 
@@ -231,6 +232,13 @@
 
 				break;
 
+		}
+
+		if( um_is_core_page('user') && ! is_user_logged_in() ){
+		  		$ultimatemember->access->allow_access = false;
+				$ultimatemember->access->redirect_handler = esc_url( $access_redirect );
+				wp_redirect( $ultimatemember->access->redirect_handler );
+				exit;
 		}
 
 		if ( $redirect_to ) {
