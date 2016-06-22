@@ -26,7 +26,7 @@
 
 		$access = um_get_option('accessible');
 
-		if ( $access == 2 && !is_user_logged_in() ) {
+		if ( $access == 2 && ! is_user_logged_in() ) {
 
 			$redirect = um_get_option('access_redirect');
 			if ( !$redirect )
@@ -49,12 +49,26 @@
 
 			if ( ( isset( $post->ID ) || is_home() ) && ( in_array( $current_url, $redirects ) || in_array( $current_url_slash, $redirects ) ) ) {
 				// allow
+			} else if( is_archive() ){
+
+				$ultimatemember->access->allow_access = false;
+				$ultimatemember->access->redirect_handler = $redirect;
+
 			} else {
 				$ultimatemember->access->redirect_handler = $redirect;
 			}
 
+
+
 		}
 
+
+		$current_page_type = um_get_current_page_type();
+			
+		do_action("um_access_post_type",$current_page_type);
+		do_action("um_access_post_type_{$current_page_type}");
+
+		
 
 	}
 
@@ -65,8 +79,16 @@
 	function um_access_category_settings() {
 		global $post, $wp_query, $ultimatemember;
 
-		if( is_front_page() || is_home() || is_feed() ){
+		$access = um_get_option('accessible');
+
+		if( $access == 2 ){
 			return;
+		}
+
+		if ( is_front_page() || is_home()  || is_feed() ) {
+			
+			return;
+
 		}
 
 		if ( is_single() || get_post_taxonomies( $post ) ) {
@@ -139,18 +161,19 @@
 	function um_access_post_settings() {
 		global $post, $ultimatemember;
 		
+		$access = um_get_option('accessible');
+		if( $access == 2 ){
+			return;
+		}
+
 		// woo commerce shop ID
 		if( function_exists('is_shop') && is_shop() ) {
 
 			$post_id = get_option('woocommerce_shop_page_id');
 
-		} else if ( is_archive() || is_front_page() || is_home() || is_search() || in_the_loop()  || is_feed() ) {
+		} else if (  is_category() || is_archive() || is_front_page() || is_home() || is_search() || in_the_loop()  || is_feed() ) {
 			
-			$current_page_type = um_get_current_page_type();
 			
-			do_action("um_access_post_type",$current_page_type);
-			do_action("um_access_post_type_{$current_page_type}");
-
 			return;
 
 		} else {
