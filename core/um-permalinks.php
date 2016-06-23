@@ -70,7 +70,6 @@ class UM_Permalinks {
 
 				$blog_id = get_current_blog_id();
 				$siteurl = get_site_url( $blog_id );
-
 				if ( is_front_page() ) {
 						$page_url = $siteurl;
 
@@ -78,7 +77,21 @@ class UM_Permalinks {
 							$page_url .= '?' . $_SERVER['QUERY_STRING'];
 						}
 				}else {
-						$page_url = $siteurl;
+
+						if( $_SERVER[ $server_name_method ] == "localhost" ){
+						
+							$page_url = 'http';
+
+							if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) {
+								$page_url .= "s";
+							}
+
+							$page_url .= "://";
+
+							$page_url .= $_SERVER[ $server_name_method ];
+						}else{
+							$page_url .= $siteurl;
+						}
 
 						if ( $um_port_forwarding_url == 1 && isset( $_SERVER["SERVER_PORT"] ) ) {
 							$page_url .= ":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
@@ -88,6 +101,7 @@ class UM_Permalinks {
 						}
 
 				}
+
 
 		}else{
 				if ( !isset( $_SERVER['SERVER_NAME'] ) )
