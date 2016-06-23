@@ -93,25 +93,29 @@
 
 		// errors on general tab
 		if ( isset($_POST['um_account_submit']) && $_POST['um_account_submit'] != __('Delete Account','ultimatemember') ) {
+			
+			$current_tab = isset( $_POST['_um_account_tab'] ) ? $_POST['_um_account_tab']: '';
+			
+			if( $current_tab != 'password' ){
+				if ( isset($_POST['first_name']) && strlen(trim( $_POST['first_name'] ) ) == 0 ) {
+					$ultimatemember->form->add_error('first_name', __('You must provide your first name','ultimatemember') );
+				}
 
-			if ( isset($_POST['first_name']) && strlen(trim( $_POST['first_name'] ) ) == 0 ) {
-				$ultimatemember->form->add_error('first_name', __('You must provide your first name','ultimatemember') );
-			}
+				if ( isset($_POST['last_name']) && strlen(trim( $_POST['last_name'] ) ) == 0 ) {
+					$ultimatemember->form->add_error('last_name', __('You must provide your last name','ultimatemember') );
+				}
 
-			if ( isset($_POST['last_name']) && strlen(trim( $_POST['last_name'] ) ) == 0 ) {
-				$ultimatemember->form->add_error('last_name', __('You must provide your last name','ultimatemember') );
-			}
+				if ( isset($_POST['user_email']) && strlen(trim( $_POST['user_email'] ) ) == 0 ) {
+					$ultimatemember->form->add_error('user_email', __('You must provide your e-mail','ultimatemember') );
+				}
 
-			if ( isset($_POST['user_email']) && strlen(trim( $_POST['user_email'] ) ) == 0 ) {
-				$ultimatemember->form->add_error('user_email', __('You must provide your e-mail','ultimatemember') );
-			}
+				if ( isset($_POST['user_email']) && !is_email( $_POST['user_email'] ) ) {
+					$ultimatemember->form->add_error('user_email', __('Please provide a valid e-mail','ultimatemember') );
+				}
 
-			if ( isset($_POST['user_email']) && !is_email( $_POST['user_email'] ) ) {
-				$ultimatemember->form->add_error('user_email', __('Please provide a valid e-mail','ultimatemember') );
-			}
-
-			if ( email_exists( $_POST['user_email'] ) && email_exists( $_POST['user_email'] ) != get_current_user_id() ) {
-				$ultimatemember->form->add_error('user_email', __('Email already linked to another account','ultimatemember') );
+				if ( email_exists( $_POST['user_email'] ) && email_exists( $_POST['user_email'] ) != get_current_user_id() ) {
+					$ultimatemember->form->add_error('user_email', __('Email already linked to another account','ultimatemember') );
+				}
 			}
 
 		}
@@ -175,10 +179,14 @@
 	***/
 	add_action('um_account_page_hidden_fields','um_account_page_hidden_fields');
 	function um_account_page_hidden_fields( $args ) {
-
+		global $ultimatemember;
 		?>
 
 		<input type="hidden" name="_um_account" id="_um_account" value="1" />
+
+		<?php $current_tab = $ultimatemember->account->current_tab; ?>
+
+		<input type="hidden" name="_um_account_tab" id="_um_account_tab" value="<?php echo $current_tab;?>" />
 
 		<?php
 
