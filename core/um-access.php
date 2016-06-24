@@ -24,15 +24,14 @@ class UM_Access {
 		do_action('um_access_category_settings');
 		
 		do_action('um_access_post_settings');
-		
-		if ( $this->redirect_handler && !$this->allow_access &&  ! um_is_core_page('login') ) {
+
+		if ( $this->redirect_handler && $this->allow_access == false &&  ! um_is_core_page('login') ) {
 			
 			// login page add protected page automatically
 
 			if ( strstr( $this->redirect_handler, um_get_core_page('login') ) ){
 				$curr = $ultimatemember->permalinks->get_current_url();
-				$this->redirect_handler = add_query_arg('redirect_to', urlencode_deep($curr), $this->redirect_handler);
-				$this->redirect_handler = esc_url( $this->redirect_handler );
+				$this->redirect_handler = esc_url(  add_query_arg('redirect_to', urlencode_deep($curr), $this->redirect_handler) );
 			}
 			
 			wp_redirect( $this->redirect_handler );

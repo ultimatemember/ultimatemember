@@ -1,7 +1,7 @@
 <?php
 
 	/***
-	***	@
+	***	@Home/Frontpage access settings
 	***/
 	add_action('um_access_homepage_per_role','um_access_homepage_per_role');
 	function um_access_homepage_per_role() {
@@ -18,7 +18,7 @@
 	}
 
 	/***
-	***	@
+	***	@Global Access Settings
 	***/
 	add_action('um_access_global_settings','um_access_global_settings');
 	function um_access_global_settings() {
@@ -29,8 +29,9 @@
 		if ( $access == 2 && ! is_user_logged_in() ) {
 
 			$redirect = um_get_option('access_redirect');
-			if ( !$redirect )
+			if ( !$redirect ){
 				$redirect = um_get_core_page('login');
+			}
 
 			$redirects[] = untrailingslashit( um_get_core_page('login') );
 			$redirects[] = untrailingslashit( um_get_option('access_redirect') );
@@ -47,14 +48,9 @@
 			$current_url = untrailingslashit( $current_url );
 			$current_url_slash = trailingslashit( $current_url );
 
-			if ( ( isset( $post->ID ) || is_home() ) && ( in_array( $current_url, $redirects ) || in_array( $current_url_slash, $redirects ) ) ) {
+			if ( ( isset( $post->ID ) || is_home() || is_front_page() ) && ( in_array( $current_url, $redirects ) || in_array( $current_url_slash, $redirects ) ) ) {
 				// allow
-			} else if( is_archive() ){
-
-				$ultimatemember->access->allow_access = false;
-				$ultimatemember->access->redirect_handler = $redirect;
-
-			} else {
+			}else {
 				$ultimatemember->access->redirect_handler = $redirect;
 			}
 
@@ -68,31 +64,108 @@
 		do_action("um_access_post_type",$current_page_type);
 		do_action("um_access_post_type_{$current_page_type}");
 
-		
-
 	}
 
 	/***
-	***	@
+	***	@Archieves/Taxonomies/Categories access settings
 	***/
 	add_action('um_access_category_settings','um_access_category_settings');
 	function um_access_category_settings() {
 		global $post, $wp_query, $ultimatemember;
 
-		$access = um_get_option('accessible');
-
-		if( $access == 2 ){
-			return;
-		}
-
-		if ( is_front_page() || is_home()  || is_feed() ) {
+		if ( is_front_page() || 
+				   is_home() || 
+				   is_feed() || 
+				   is_page() 
+		) {
 			
 			return;
 
 		}
 
-		if ( is_single() || get_post_taxonomies( $post ) ) {
+		$access = um_get_option('accessible');
+		$current_page_type = um_get_current_page_type();
+		
 
+		if( is_category()  && ! in_array( $current_page_type , array( 'day','month','year','author','archive' ) ) ){
+			
+			$um_category = get_the_category(); 
+			$um_category = current( $um_category );
+			$term_id = $um_category->term_id;
+			
+			if( isset( $term_id ) ){
+				
+				$opt = get_option("category_$term_id");
+				
+				if ( isset( $opt['_um_accessible'] ) ) {
+
+					$redirect = false;
+						
+					switch( $opt['_um_accessible'] ) {
+
+						case 0:
+							
+							$ultimatemember->access->allow_access = true;
+							$ultimatemember->access->redirect_handler = ''; // open to everyone
+							
+							break;
+
+						case 1:
+
+							if ( is_user_logged_in() ){
+
+								if( isset( $opt['_um_redirect'] ) ) {
+									$redirect = esc_url( $opt['_um_redirect'] );
+								}else{  
+									$redirect = site_url();
+								}
+							}
+							
+							$ultimatemember->access->redirect_handler = $redirect;
+							
+							if ( !is_user_logged_in() ){
+								$ultimatemember->access->allow_access = true;
+							}
+
+							break;
+
+						case 2:
+
+							if ( ! is_user_logged_in() ){
+
+								if( isset( $opt['_um_redirect'] ) && ! empty( $opt['_um_redirect']  ) ){
+									$redirect = esc_url( $opt['_um_redirect'] );
+								}else{
+								 	$redirect = um_get_core_page('login');
+								}
+								$ultimatemember->access->allow_access = false;
+								$ultimatemember->access->redirect_handler = $redirect;
+							}
+
+							if ( is_user_logged_in() && isset( $opt['_um_roles'] ) && !empty( $opt['_um_roles'] ) ){
+								if ( ! in_array( um_user('role'), $opt['_um_roles'] ) ) {
+
+								
+										if( isset( $opt['_um_redirect'] ) ){
+											$redirect = esc_url( $opt['_um_redirect'] );
+										}
+									
+										$ultimatemember->access->redirect_handler = $redirect;
+								
+								}
+							}
+
+					}
+				}
+			}
+
+		} else if ( $access == 2 && ! is_user_logged_in() &&  is_archive() ) {
+
+			$ultimatemember->access->allow_access =  false;
+			$redirect = um_get_core_page('login');
+			$ultimatemember->access->redirect_handler = $redirect;
+		
+		} else if ( is_tax() && get_post_taxonomies( $post ) ) {
 
 			$taxonomies = get_post_taxonomies( $post );
 			$categories_ids = array();
@@ -103,7 +176,6 @@
 					array_push( $categories_ids , $term_id);
 				}
 			}
-
 
 			foreach( $categories_ids as $term => $term_id ) {
 
@@ -146,57 +218,54 @@
 					}
 				}
 
-				if( is_archive() ){
-					$ultimatemember->access->allow_access = true;
-					$ultimatemember->access->redirect_handler = false; // open to everyone
-				}
 			}
 		}
+
+
 	}
 
 	/***
-	***	@
+	***	@Posts/Page access settings
 	***/
 	add_action('um_access_post_settings','um_access_post_settings');
 	function um_access_post_settings() {
 		global $post, $ultimatemember;
-		
-		$access = um_get_option('accessible');
-		if( $access == 2 ){
-			return;
-		}
 
 		// woo commerce shop ID
 		if( function_exists('is_shop') && is_shop() ) {
 
-			$post_id = get_option('woocommerce_shop_page_id');
+			$um_post_id = get_option('woocommerce_shop_page_id');
 
-		} else if (  is_category() || is_archive() || is_front_page() || is_home() || is_search() || in_the_loop()  || is_feed() ) {
-			
+		} else if (  
+			is_category() 	|| 
+			is_archive() 	|| 
+			is_front_page() || 
+			is_home() 		|| 
+			is_search() 	|| 
+			in_the_loop()  	|| 
+			is_feed() 		|| 
+			is_tax() 		||
+			! get_post_type() ||
+			! isset( $post->ID )
+		) {
 			
 			return;
 
-		} else {
+		} 
 
-			if ( !get_post_type() || !isset($post->ID) ) return;
-
+		if ( !isset( $um_post_id ) ){
+			$um_post_id = $post->ID;
 		}
 
-
-
-		if ( !isset( $post_id ) )
-			$post_id = $post->ID;
-
-		$args = $ultimatemember->access->get_meta( $post_id );
-
-		extract($args);
+		$args = $ultimatemember->access->get_meta( $um_post_id );
+		extract( $args );
 
 		if ( !isset( $args['custom_access_settings'] ) || $args['custom_access_settings'] == 0 ) {
 
-			$post_id = apply_filters('um_access_control_for_parent_posts', $post_id );
+			$um_post_id = apply_filters('um_access_control_for_parent_posts', $um_post_id );
 
-			$args = $ultimatemember->access->get_meta( $post_id );
-			extract($args);
+			$args = $ultimatemember->access->get_meta( $um_post_id );
+			extract( $args );
 
 			if ( !isset( $args['custom_access_settings'] ) || $args['custom_access_settings'] == 0 ) {
 				return;
@@ -218,11 +287,16 @@
 
 			case 1:
 
-				if ( is_user_logged_in() )
+				if ( is_user_logged_in() ){
 					$redirect_to = esc_url( $access_redirect2 );
+				}
 
-				if ( !is_user_logged_in() )
+				$ultimatemember->access->redirect_handler = esc_url( $redirect_to );
+				
+
+				if ( !is_user_logged_in() ){
 					$ultimatemember->access->allow_access = true;
+				}
 
 				break;
 
@@ -252,7 +326,9 @@
 						$redirect_to = esc_url( $access_redirect );
 					}
 				}
-
+				
+				$ultimatemember->access->redirect_handler = esc_url( $redirect_to );
+				
 				break;
 
 		}
@@ -262,13 +338,6 @@
 				$ultimatemember->access->redirect_handler = esc_url( $access_redirect );
 				wp_redirect( $ultimatemember->access->redirect_handler );
 				exit;
-		}
-
-		if ( $redirect_to ) {
-			if ( ! is_feed() ) {
-		  		$ultimatemember->access->allow_access = false;
-				$ultimatemember->access->redirect_handler = esc_url( $redirect_to );
-			}
 		}
 
 	}
