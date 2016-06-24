@@ -60,16 +60,18 @@ class UM_Permalinks {
 	function get_current_url( $no_query_params = false ) {
 		global $post;
 
-			$um_get_option = get_option('um_options');
+		$um_get_option = get_option('um_options');
 
-			$server_name_method = ( $um_get_option['current_url_method'] ) ? $um_get_option['current_url_method'] : 'SERVER_NAME';
+		$server_name_method = ( $um_get_option['current_url_method'] ) ? $um_get_option['current_url_method'] : 'SERVER_NAME';
 			
-			$um_port_forwarding_url = ( isset( $um_get_option['um_port_forwarding_url'] ) ) ? $um_get_option['um_port_forwarding_url']: '';
+		$um_port_forwarding_url = ( isset( $um_get_option['um_port_forwarding_url'] ) ) ? $um_get_option['um_port_forwarding_url']: '';
 
 		if ( is_multisite() ) {
 
-				$blog_id = get_current_blog_id();
-				$siteurl = get_site_url( $blog_id );
+				$page_url 	= '';
+				$blog_id 	= get_current_blog_id();
+				$siteurl 	= get_site_url( $blog_id );
+				
 				if ( is_front_page() ) {
 						$page_url = $siteurl;
 
