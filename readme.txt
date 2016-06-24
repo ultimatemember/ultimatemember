@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.5.3
 
-Stable Tag: 1.3.60
+Stable Tag: 1.3.61
 
 License: GNU Version 2 or Any Later Version
 
@@ -149,7 +149,11 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 == Changelog ==
 
-= 1.3.60: June 22, 2016 =
+= 1.3.61: June 24, 2016 =
+* Fixed: edit profile url in multi-site setup
+* Fixed: global access settings
+
+= 1.3.60: June 23, 2016 =
 * Fixed: change password
 * Fixed: menu settings and roles
 * Fixed: cropper issue with Avada theme
