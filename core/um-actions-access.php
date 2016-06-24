@@ -120,10 +120,10 @@
 									$redirect = site_url();
 								}
 							}
-							
+							$ultimatemember->access->allow_access = false;
 							$ultimatemember->access->redirect_handler = $redirect;
 							
-							if ( !is_user_logged_in() ){
+							if ( ! is_user_logged_in() && ! empty( $redirect ) ){
 								$ultimatemember->access->allow_access = true;
 							}
 
@@ -289,12 +289,13 @@
 
 				if ( is_user_logged_in() ){
 					$redirect_to = esc_url( $access_redirect2 );
+					$ultimatemember->access->allow_access = false;
 				}
 
 				$ultimatemember->access->redirect_handler = esc_url( $redirect_to );
 				
 
-				if ( !is_user_logged_in() ){
+				if ( ! is_user_logged_in()  ){
 					$ultimatemember->access->allow_access = true;
 				}
 
