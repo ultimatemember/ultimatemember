@@ -298,7 +298,11 @@
 				if( ! empty( $redirect_to  ) ){
 					$ultimatemember->access->redirect_handler = esc_url( $redirect_to );
 				}else{
-					$ultimatemember->access->redirect_handler = um_get_core_page("login");
+					if ( ! is_user_logged_in() ){
+						$ultimatemember->access->redirect_handler = um_get_core_page("login");
+					}else{
+						$ultimatemember->access->redirect_handler = um_get_core_page("user");
+					}
 				}
 
 
