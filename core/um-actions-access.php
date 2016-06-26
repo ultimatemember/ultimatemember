@@ -239,8 +239,6 @@
 		} else if (  
 			is_category() 	|| 
 			is_archive() 	|| 
-			is_front_page() || 
-			is_home() 		|| 
 			is_search() 	|| 
 			in_the_loop()  	|| 
 			is_feed() 		|| 
@@ -287,17 +285,22 @@
 
 			case 1:
 
+				$redirect_to = esc_url( $access_redirect2 );
+					
 				if ( is_user_logged_in() ){
-					$redirect_to = esc_url( $access_redirect2 );
 					$ultimatemember->access->allow_access = false;
 				}
-
-				$ultimatemember->access->redirect_handler = esc_url( $redirect_to );
-				
 
 				if ( ! is_user_logged_in()  ){
 					$ultimatemember->access->allow_access = true;
 				}
+
+				if( ! empty( $redirect_to  ) ){
+					$ultimatemember->access->redirect_handler = esc_url( $redirect_to );
+				}else{
+					$ultimatemember->access->redirect_handler = um_get_core_page("login");
+				}
+
 
 				break;
 
