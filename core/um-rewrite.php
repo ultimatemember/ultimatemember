@@ -149,6 +149,8 @@ class UM_Rewrite {
 
 				um_set_requested_user( $user_id );
 
+				do_action('um_access_profile', $user_id );
+
 			} else {
 
 				exit( wp_redirect( um_get_core_page('user') ) );
