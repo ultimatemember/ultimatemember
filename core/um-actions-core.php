@@ -17,7 +17,7 @@
 				wp_die('Super administrators can not be modified.');
 		}
 
-		if ( isset( $_REQUEST['um_action'] ) && ! current_user_can( 'edit_users' ) ){
+		if ( isset( $_REQUEST['um_action'] ) && $_REQUEST['um_action'] != "edit" && ! current_user_can( 'edit_users' ) ){
 						wp_die( __( 'You do not have enough permissions to do that.','ultimatemember') );
 		}
 		
