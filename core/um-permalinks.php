@@ -79,8 +79,8 @@ class UM_Permalinks {
 							$page_url .= '?' . $_SERVER['QUERY_STRING'];
 						}
 				}else {
-
-						if( $_SERVER[ $server_name_method ] == "localhost" ){
+						
+						if(  um_core_is_local() ){
 						
 							$page_url = 'http';
 

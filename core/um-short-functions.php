@@ -1727,3 +1727,14 @@ function um_fetch_user( $user_id ) {
 
 	    return $loop;
 	}
+
+	/**
+	 * Check if running local
+	 * @return boolean
+	 */
+	function um_core_is_local() {
+	    if( $_SERVER['HTTP_HOST'] == 'localhost'
+	        || substr($_SERVER['HTTP_HOST'],0,3) == '10.'
+	        || substr($_SERVER['HTTP_HOST'],0,7) == '192.168') return true;
+	    return false;
+	}
