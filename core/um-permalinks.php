@@ -80,7 +80,9 @@ class UM_Permalinks {
 						}
 				}else {
 						
-						if(  um_core_is_local() ){
+						$network_permalink_structure = um_get_option("network_permalink_structure");
+      					
+      					if(  $network_permalink_structure == "sub-directory" ){
 						
 							$page_url = 'http';
 
