@@ -237,14 +237,15 @@
 			$um_post_id = get_option('woocommerce_shop_page_id');
 
 		} else if (  
-			is_category() 	|| 
-			is_archive() 	|| 
-			is_search() 	|| 
-			in_the_loop()  	|| 
-			is_feed() 		|| 
-			is_tax() 		||
-			! get_post_type() ||
-			! isset( $post->ID )
+				is_category() 	|| 
+				is_archive() 	|| 
+				is_search() 	|| 
+				in_the_loop()  	|| 
+				is_feed() 		|| 
+				is_tax() 		||
+				! get_post_type() ||
+				! isset( $post->ID ) ||
+				is_home()
 		) {
 			
 			return;
