@@ -33,6 +33,7 @@
 	add_action('um_add_user_frontend', 'um_add_user_frontend', 10);
 	function um_add_user_frontend($args){
 		global $ultimatemember;
+		unset( $args['user_id'] );
 		extract($args);
 
 
@@ -106,9 +107,9 @@
 	***	@after adding a new user
 	***/
 	add_action('um_after_new_user_register', 'um_after_new_user_register', 10, 2);
-	function um_after_new_user_register($user_id, $args){
+	function um_after_new_user_register( $user_id, $args ){
 		global $ultimatemember, $pagenow;
-		extract($args);
+		extract( $args );
 
 		um_fetch_user( $user_id );
 
@@ -140,7 +141,7 @@
 	***	@Update user's profile after registration
 	***/
 	add_action('um_post_registration_save', 'um_post_registration_save', 10, 2);
-	function um_post_registration_save($user_id, $args){
+	function um_post_registration_save( $user_id, $args ){
 		global $ultimatemember;
 
 		unset( $args['user_id'] );
@@ -155,7 +156,7 @@
 	***	@post-registration admin listender
 	***/
 	add_action('um_post_registration_listener', 'um_post_registration_listener', 10, 2);
-	function um_post_registration_listener($user_id, $args){
+	function um_post_registration_listener( $user_id, $args ){
 		global $ultimatemember;
 
 		if ( um_user('status') != 'pending' ) {
@@ -170,8 +171,9 @@
 	***	@post-registration procedure
 	***/
 	add_action('um_post_registration', 'um_post_registration', 10, 2);
-	function um_post_registration($user_id, $args){
+	function um_post_registration( $user_id, $args ){
 		global $ultimatemember;
+		unset(  $args['user_id'] );
 		extract($args);
 
 		$status = um_user('status');
@@ -223,7 +225,8 @@
 	add_action('um_user_registration', 'um_user_registration', 10);
 	function um_user_registration($args){
 		global $ultimatemember;
-
+         
+        unset( $args['user_id'] );
 		do_action('um_add_user_frontend', $args);
 
 	}
