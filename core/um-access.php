@@ -17,9 +17,11 @@ class UM_Access {
 	function template_redirect() {
 		global $post, $ultimatemember;
 
-		do_action('um_access_homepage_per_role');
-		
 		do_action('um_access_global_settings');
+		
+		do_action('um_access_frontpage_per_role');
+		
+		do_action('um_access_homepage_per_role');
 		
 		do_action('um_access_category_settings');
 		
