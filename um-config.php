@@ -317,6 +317,16 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
+        array(
+                'id'       		=> 'account_name_require',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Require First & Last Name','ultimatemember' ),
+				'default' 		=> 1,
+				'desc' 	   		=> __('Require first and laste name?','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+				'required'		=> array( 'account_name', '=', '1' ),
+        ),
 
         array(
                 'id'       		=> 'account_email',

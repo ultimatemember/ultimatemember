@@ -92,76 +92,80 @@
 	add_action('um_submit_account_errors_hook','um_submit_account_errors_hook');
 	function um_submit_account_errors_hook( $args ) {
 		global $ultimatemember;
-
-		// errors on general tab
-		if ( isset($_POST['um_account_submit']) && $_POST['um_account_submit'] != __('Delete Account','ultimatemember') ) {
-			
-			$current_tab = isset( $_POST['_um_account_tab'] ) ? $_POST['_um_account_tab']: '';
-			
-			if( $current_tab != 'password' ){
-				if ( isset($_POST['first_name']) && strlen(trim( $_POST['first_name'] ) ) == 0 ) {
-					$ultimatemember->form->add_error('first_name', __('You must provide your first name','ultimatemember') );
-				}
-
-				if ( isset($_POST['last_name']) && strlen(trim( $_POST['last_name'] ) ) == 0 ) {
-					$ultimatemember->form->add_error('last_name', __('You must provide your last name','ultimatemember') );
-				}
-
-				if ( isset($_POST['user_email']) && strlen(trim( $_POST['user_email'] ) ) == 0 ) {
-					$ultimatemember->form->add_error('user_email', __('You must provide your e-mail','ultimatemember') );
-				}
-
-				if ( isset($_POST['user_email']) && !is_email( $_POST['user_email'] ) ) {
-					$ultimatemember->form->add_error('user_email', __('Please provide a valid e-mail','ultimatemember') );
-				}
-
-				if ( email_exists( $_POST['user_email'] ) && email_exists( $_POST['user_email'] ) != get_current_user_id() ) {
-					$ultimatemember->form->add_error('user_email', __('Email already linked to another account','ultimatemember') );
-				}
-			}
-
-		}
-		$ultimatemember->account->current_tab = 'general';
-
+		
+		$current_tab = isset( $_POST['_um_account_tab'] ) ? $_POST['_um_account_tab']: '';
 		$user = get_user_by('login', um_user('user_login') );
-		// change password
-		if ( $_POST['current_user_password'] != '' || $_POST['user_password'] != '' || $_POST['confirm_user_password'] != '') {
-			if ( $_POST['current_user_password'] == '' || ! wp_check_password( $_POST['current_user_password'], $user->data->user_pass, $user->data->ID ) ) {
+					
+		if( isset( $_POST['_um_account_tab'] ) && $current_tab != "delete"  ){
+			// errors on general tab
+			if ( isset($_POST['um_account_submit'])   ) {
+				
+				if( $current_tab != 'password' ){
+					
+					$account_name_require = um_get_option("account_name_require");
 
-				$ultimatemember->form->add_error('current_user_password', __('This is not your password','ultimatemember') );
-				$ultimatemember->account->current_tab = 'password';
-			} else { // correct password
+					if ( isset($_POST['first_name']) && ( strlen(trim( $_POST['first_name'] ) ) == 0 && $account_name_require ) ) {
+						$ultimatemember->form->add_error('first_name', __('You must provide your first name','ultimatemember') );
+					}
 
-				if ( $_POST['user_password'] != $_POST['confirm_user_password'] && $_POST['user_password'] ) {
-					$ultimatemember->form->add_error('user_password', __('Your new password does not match','ultimatemember') );
-					$ultimatemember->account->current_tab = 'password';
+					if ( isset($_POST['last_name']) && ( strlen(trim( $_POST['last_name'] ) ) == 0 && $account_name_require ) ) {
+						$ultimatemember->form->add_error('last_name', __('You must provide your last name','ultimatemember') );
+					}
+
+					if ( isset($_POST['user_email']) && strlen(trim( $_POST['user_email'] ) ) == 0 ) {
+						$ultimatemember->form->add_error('user_email', __('You must provide your e-mail','ultimatemember') );
+					}
+
+					if ( isset($_POST['user_email']) && !is_email( $_POST['user_email'] ) ) {
+						$ultimatemember->form->add_error('user_email', __('Please provide a valid e-mail','ultimatemember') );
+					}
+
+					if ( email_exists( $_POST['user_email'] ) && email_exists( $_POST['user_email'] ) != get_current_user_id() ) {
+						$ultimatemember->form->add_error('user_email', __('Email already linked to another account','ultimatemember') );
+					}
 				}
 
-				if ( um_get_option('account_require_strongpass') ) {
+			}
+			$ultimatemember->account->current_tab = 'general';
 
-					if ( strlen( utf8_decode( $_POST['user_password'] ) ) < 8 ) {
-						$ultimatemember->form->add_error('user_password', __('Your password must contain at least 8 characters','ultimatemember') );
-					}
+			// change password
+			if ( $_POST['current_user_password'] != '' || $_POST['user_password'] != '' || $_POST['confirm_user_password'] != '') {
+				if ( $_POST['current_user_password'] == '' || ! wp_check_password( $_POST['current_user_password'], $user->data->user_pass, $user->data->ID ) ) {
 
-					if ( strlen( utf8_decode( $_POST['user_password'] ) ) > 30 ) {
-						$ultimatemember->form->add_error('user_password', __('Your password must contain less than 30 characters','ultimatemember') );
-					}
+					$ultimatemember->form->add_error('current_user_password', __('This is not your password','ultimatemember') );
+					$ultimatemember->account->current_tab = 'password';
+				} else { // correct password
 
-					if ( !$ultimatemember->validation->strong_pass( $_POST['user_password'] ) ) {
-						$ultimatemember->form->add_error('user_password', __('Your password must contain at least one lowercase letter, one capital letter and one number','ultimatemember') );
+					if ( $_POST['user_password'] != $_POST['confirm_user_password'] && $_POST['user_password'] ) {
+						$ultimatemember->form->add_error('user_password', __('Your new password does not match','ultimatemember') );
 						$ultimatemember->account->current_tab = 'password';
 					}
 
-				}
+					if ( um_get_option('account_require_strongpass') ) {
 
+						if ( strlen( utf8_decode( $_POST['user_password'] ) ) < 8 ) {
+							$ultimatemember->form->add_error('user_password', __('Your password must contain at least 8 characters','ultimatemember') );
+						}
+
+						if ( strlen( utf8_decode( $_POST['user_password'] ) ) > 30 ) {
+							$ultimatemember->form->add_error('user_password', __('Your password must contain less than 30 characters','ultimatemember') );
+						}
+
+						if ( !$ultimatemember->validation->strong_pass( $_POST['user_password'] ) ) {
+							$ultimatemember->form->add_error('user_password', __('Your password must contain at least one lowercase letter, one capital letter and one number','ultimatemember') );
+							$ultimatemember->account->current_tab = 'password';
+						}
+
+					}
+
+				}
+			}
+
+			if ( ! empty( $_POST['user_login'] ) && ! validate_username( $_POST['user_login'] ) ) {
+				$ultimatemember->form->add_error('user_login', __('Your username is invalid','ultimatemember') );
+				return;
 			}
 		}
-
-		if ( ! empty( $_POST['user_login'] ) && ! validate_username( $_POST['user_login'] ) ) {
-			$ultimatemember->form->add_error('user_login', __('Your username is invalid','ultimatemember') );
-			return;
-		}
-
 		// delete account
 		if ( isset( $_POST['um_account_submit'] ) && $_POST['_um_account_tab'] == "delete" ) {
 			if ( strlen(trim( $_POST['single_user_password'] ) ) == 0 ) {
