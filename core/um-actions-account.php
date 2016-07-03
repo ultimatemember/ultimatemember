@@ -47,9 +47,11 @@
 		do_action('um_account_pre_update_profile', $changes, um_user('ID') );
 
 		$ultimatemember->user->update_profile( $changes );
-
-		// delete account
-		if ( $_POST['single_user_password'] && $tab == 'delete' ) {
+       	
+       	// delete account
+       	$user = get_user_by('login', um_user('user_login') );
+      		
+		if (  isset( $_POST['single_user_password'] ) && wp_check_password( $_POST['single_user_password'], $user->data->user_pass, $user->data->ID )  && $tab == 'delete' ) {
 			if ( current_user_can('delete_users') || um_user('can_delete_profile') ) {
 				if ( !um_user('super_admin') ) {
 					$ultimatemember->user->delete();
@@ -161,11 +163,11 @@
 		}
 
 		// delete account
-		if ( isset($_POST['um_account_submit']) && $_POST['um_account_submit'] == __('Delete Account','ultimatemember') ) {
+		if ( isset( $_POST['um_account_submit'] ) && $_POST['_um_account_tab'] == "delete" ) {
 			if ( strlen(trim( $_POST['single_user_password'] ) ) == 0 ) {
 					$ultimatemember->form->add_error('single_user_password', __('You must enter your password','ultimatemember') );
 			} else {
-				if ( !wp_check_password( $_POST['single_user_password'], um_user('user_pass'), um_user('ID') ) ) {
+				if (  ! wp_check_password( $_POST['single_user_password'], $user->data->user_pass, $user->data->ID ) ) {
 					$ultimatemember->form->add_error('single_user_password', __('This is not your password','ultimatemember') );
 				}
 			}
