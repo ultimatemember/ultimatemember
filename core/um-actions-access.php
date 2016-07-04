@@ -61,8 +61,12 @@
 		if ( is_admin() ) return;
 		if ( ! is_front_page()  ) return;
 		
-		if ( ! isset( $um_post_id ) ){
+		if ( ! isset( $um_post_id ) && isset( $post->ID ) ){
 			$um_post_id = $post->ID;
+		}
+
+		if( ! isset( $um_post_id ) ){
+			return;
 		}
 
 		$args = $ultimatemember->access->get_meta( $um_post_id );
@@ -163,18 +167,25 @@
 		if ( is_admin() ) return;
 		if ( ! is_home()  ) return;
 		
-		$show_on_front = get_option( 'show_on_front' );
-		if( $show_on_front == "page" ){
-			$um_post_id = get_option( 'page_for_posts' );
-		}
-
 		$access = um_get_option('accessible');
 
-		if ( $access == 2 && ! is_user_logged_in() ) {
-			$ultimatemember->access->allow_access = false;
-		}else{
-			$ultimatemember->access->allow_access = true;
+		$show_on_front = get_option( 'show_on_front' );
+
+		if( $show_on_front == "page" ){
+
+			$um_post_id = get_option( 'page_for_posts' );
+			
+			if ( $access == 2 && ! is_user_logged_in() ) {
+				$ultimatemember->access->allow_access = false;
+			}else{
+				$ultimatemember->access->allow_access = true;
+			}
+		
+		}else if( $show_on_front == "posts" ){
+				$ultimatemember->access->allow_access = true;
 		}
+
+
 
 		if ( isset( $um_post_id ) ){
 		
