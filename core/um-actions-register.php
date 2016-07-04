@@ -190,12 +190,19 @@
 			if ( isset( $args['redirect_to'] ) ) {
 				exit( wp_redirect(  urldecode( $args['redirect_to'] ) ) );
 			}
+            
+            if ( $status == 'approved' ) {
 
-			if ( $status == 'approved' ) {
+				$ultimatemember->user->auto_login( $user_id );
 
-				$ultimatemember->user->auto_login($user_id);
-				if ( um_user('auto_approve_act') == 'redirect_url' && um_user('auto_approve_url') !== '' ) exit( wp_redirect( um_user('auto_approve_url') ) );
-				if ( um_user('auto_approve_act') == 'redirect_profile' ) exit( wp_redirect( um_user_profile_url() ) );
+				do_action('um_registration_after_auto_login', $user_id );
+
+				if ( um_user('auto_approve_act') == 'redirect_url' && um_user('auto_approve_url') !== '' ){
+					exit( wp_redirect( um_user('auto_approve_url') ) );
+				}
+				if ( um_user('auto_approve_act') == 'redirect_profile' ){
+				    exit( wp_redirect( um_user_profile_url() ) );
+				}
 
 			}
 
