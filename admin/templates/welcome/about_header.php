@@ -28,7 +28,7 @@
 	
 		<?php foreach( $this->about_tabs as $k => $tab ) {
 		
-			if ( $k == $template ) {
+			if ( isset( $_REQUEST['page'] ) && 'ultimatemember-'.$k == $_REQUEST['page']  ) {
 				$active = 'nav-tab-active';
 			} else {
 				$active = '';
