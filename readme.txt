@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.5.3
 
-Stable Tag: 1.3.64
+Stable Tag: 1.3.65
 
 License: GNU Version 2 or Any Later Version
 
@@ -148,6 +148,17 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.65: July 06, 2016 =
+
+* Tweak: update ReduxFramework to version 3.6.0.1
+* Added: new action hook 'um_registration_after_auto_login'
+* Added: new option for Network Permalink Structure
+* Added: an account option to require first and last name
+* Fixed: account deletion and password confirmation
+* Fixed: post registration form
+* Fixed: access settings in home page and posts conflict
+* Fixed: encoding non UTF8 strings
 
 = 1.3.64: June 29, 2016 =
 * Fixed: edit profile permission
