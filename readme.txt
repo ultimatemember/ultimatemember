@@ -156,7 +156,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * Added: new option for Network Permalink Structure
 * Added: an account option to require first and last name
 * Fixed: account deletion and password confirmation
-* Fixed: post registration form
+* Fixed: registration form submission process
 * Fixed: access settings in home page and posts conflict
 * Fixed: encoding non UTF8 strings
 
