@@ -80,13 +80,13 @@
                 //*****************************************************************
                 // Select2 CSS
                 //*****************************************************************
-                wp_enqueue_style(     
+                /*Redux_CDN::register_style(
                     'select2-css',
-                    ReduxFramework::$_url . 'assets/css/select2.css',
+                    '//cdn.jsdelivr.net/select2/3.5.2/select2.css',
                     array(),
-                    '3.5.2',
+                    '3.5.2',//$this->timestamp,
                     'all'
-                );
+                );*/
 
                 //*****************************************************************
                 // Spectrum CSS

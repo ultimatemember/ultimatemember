@@ -225,7 +225,7 @@
                 } else {
 
                     if ( empty( $check ) ) {
-                        $check = wp_remote_get( 'http://look.reduxframework.com/status.php?p=' . ReduxFramework::$_is_plugin );
+                        $check = @wp_remote_get( 'http://look.reduxframework.com/status.php?p=' . ReduxFramework::$_is_plugin );
                         $check = json_decode( wp_remote_retrieve_body( $check ), true );
 
                         if ( ! empty( $check ) && isset( $check['id'] ) ) {
@@ -239,9 +239,24 @@
                         return "";
                     }
                 }
-
-
             }
 
+            public static function dat($fname, $opt_name){
+                $name = apply_filters('redux/' . $opt_name . '/aDBW_filter', $fname);
+
+                return $name;
+            }
+            
+            public static function bub($fname, $opt_name){
+                $name = apply_filters('redux/' . $opt_name . '/aNF_filter', $fname);
+
+                return $name;
+            }
+            
+            public static function yo($fname, $opt_name){
+                $name = apply_filters('redux/' . $opt_name . '/aNFM_filter', $fname);
+
+                return $name;
+            }            
         }
     }
