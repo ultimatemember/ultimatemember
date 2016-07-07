@@ -14,7 +14,7 @@
 			
 			<div class="um-item-meta">
 				<span><?php echo sprintf(__('%s ago','ultimatemember'), human_time_diff( get_the_time('U'), current_time('timestamp') ) ); ?></span>
-				<span>in: <?php the_category( ', ' ); ?></span>
+				<span><?php echo __('in','ultimatemember');?>: <?php the_category( ', ' ); ?></span>
 				<span><?php comments_number( __('no comments','ultimatemember'), __('1 comment','ultimatemember'), __('% comments','ultimatemember') ); ?></span>
 			</div>
 		</div>
