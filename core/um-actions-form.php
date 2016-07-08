@@ -410,6 +410,27 @@
 									}
 								}
 							break;
+							
+							case 'alphabetic':
+
+								if ( $args[$key] != '' ) {
+
+									if( ! ctype_alpha( str_replace(' ', '', $args[$key] ) ) ){
+									   $ultimatemember->form->add_error( $key , __('You must provide alphabetic letters','ultimatemember') );
+									}
+								}
+							break;
+
+							case 'lowercase':
+
+								if ( $args[$key] != '' ) {
+
+									if( ! ctype_lower( str_replace(' ', '',$args[$key] ) ) ){
+									   $ultimatemember->form->add_error( $key , __('You must provide lowercase letters.','ultimatemember') );
+									}
+								}
+
+							break;
 
 						}
 
