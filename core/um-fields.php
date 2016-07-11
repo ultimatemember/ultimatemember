@@ -1596,6 +1596,8 @@ class UM_Fields {
 								$option_value = $k;
 							}
 							
+							$um_field_checkbox_item_title = $option_value;
+
 							$option_value = apply_filters('um_field_non_utf8_value',$option_value );
     
 							$output .= '<option value="' . $option_value . '" ';
@@ -1605,7 +1607,7 @@ class UM_Fields {
 							}
 
 
-							$output .= '>'.__($v, UM_TEXTDOMAIN).'</option>';
+							$output .= '>'.__( $um_field_checkbox_item_title, UM_TEXTDOMAIN).'</option>';
 
 						}
 
@@ -1671,13 +1673,15 @@ class UM_Fields {
 								$opt_value = $v;
 							}
 
+							$um_field_checkbox_item_title = $opt_value;
+
 							$opt_value = apply_filters('um_field_non_utf8_value',$opt_value );
     
 							$output .= '<option value="'.$opt_value.'" ';
 							if ( $this->is_selected( $key, $opt_value, $data ) ) {
 								$output .= 'selected';
 							}
-							$output .= '>'.__( $v ,UM_TEXTDOMAIN).'</option>';
+							$output .= '>'.__( $um_field_checkbox_item_title ,UM_TEXTDOMAIN).'</option>';
 
 						}
 
@@ -1756,6 +1760,8 @@ class UM_Fields {
 
 							$output .= '<label class="um-field-radio '.$active.' um-field-half '.$col_class.'">';
 
+							$um_field_checkbox_item_title = $option_value;
+
 							$option_value = apply_filters('um_field_non_utf8_value',$option_value );
     
 							$output .= '<input type="radio" name="'.$form_key.'" value="'.$option_value.'" ';
@@ -1766,7 +1772,7 @@ class UM_Fields {
 
 							$output .= ' />';
 							$output .= '<span class="um-field-radio-state"><i class="'.$class.'"></i></span>';
-							$output .= '<span class="um-field-radio-option">'.__($v,UM_TEXTDOMAIN).'</span>';
+							$output .= '<span class="um-field-radio-option">'.__( $um_field_checkbox_item_title,UM_TEXTDOMAIN).'</span>';
 							$output .= '</label>';
 
 							if ($i % 2 == 0) {
@@ -1825,6 +1831,8 @@ class UM_Fields {
 							}
 
 							$output .= '<label class="um-field-checkbox '.$active.' um-field-half '.$col_class.'">';
+                            
+                            $um_field_checkbox_item_title = $v;
 
 							$v = apply_filters('um_field_non_utf8_value', $v );
     
@@ -1837,7 +1845,7 @@ class UM_Fields {
 							$output .= ' />';
 
 							$output .= '<span class="um-field-checkbox-state"><i class="'.$class.'"></i></span>';
-							$output .= '<span class="um-field-checkbox-option">'. __($v,UM_TEXTDOMAIN) .'</span>';
+							$output .= '<span class="um-field-checkbox-option">'. __( $um_field_checkbox_item_title ,UM_TEXTDOMAIN) .'</span>';
 							$output .= '</label>';
 
 							if ($i % 2 == 0) {
