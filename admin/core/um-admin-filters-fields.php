@@ -116,3 +116,18 @@
 		return $errors;
 		
 	}
+
+    /***
+    *** @Filter validation types on loop
+    ****/
+	add_filter('um_builtin_validation_types_continue_loop', 'um_builtin_validation_types_continue_loop', 1, 4);
+	function um_builtin_validation_types_continue_loop( $break, $key, $form_id, $field_array ){
+        
+
+        // show unique username validation only for user_login field
+		if( $field_array['metakey'] == 'user_login' && $key !== 'unique_username' ){
+               return false;
+		}
+
+		return $break;
+	}
