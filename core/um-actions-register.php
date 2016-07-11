@@ -33,6 +33,9 @@
 	add_action('um_add_user_frontend', 'um_add_user_frontend', 10);
 	function um_add_user_frontend($args){
 		global $ultimatemember;
+
+		unset( $args['user_id'] );
+		
 		extract($args);
 
 
