@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.5.3
 
-Stable Tag: 1.3.65
+Stable Tag: 1.3.66
 
 License: GNU Version 2 or Any Later Version
 
@@ -148,6 +148,15 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.66: July 14, 2016 =
+
+* Tweak: update translation strings and English translation file.
+* Fixed: alphabetic and lowercase validations
+* Fixed: checkbox and radio label encoding
+* Fixed: user_login field validation type
+* Fixed: registration form process
+* Fixed: remove comments with hidden/private posts from comment tab
 
 = 1.3.65: July 06, 2016 =
 
