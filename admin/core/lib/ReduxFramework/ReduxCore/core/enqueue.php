@@ -218,13 +218,13 @@
                 }
                 
                 
-                Redux_CDN::register_script(
+                /*Redux_CDN::register_script(
                     'select2-js',
                     '//cdn.jsdelivr.net/select2/4.0.2/js/select2.full.min.js',
                     array( 'jquery', 'redux-select2-sortable-js' ),
                     '4.0.2',
                     true
-                );
+                );*/
 
                 //*****************************************************************
                 // QTip JS
