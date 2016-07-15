@@ -1580,8 +1580,8 @@ class UM_Fields {
 
 						// add an empty option!
 						$output .= '<option value=""></option>';
-
-						// add options
+                       
+                       // add options
 						foreach($options as $k => $v) {
 
 							$v = rtrim($v);
@@ -1592,12 +1592,13 @@ class UM_Fields {
 								$option_value = $v;
 							}
 
-							if ( isset( $options_pair ) ) {
-								$option_value = $k;
-							}
-							
 							$um_field_checkbox_item_title = $option_value;
 
+							if ( isset( $options_pair ) ) {
+								$option_value = $k;
+								$um_field_checkbox_item_title = $v;
+							}
+							
 							$option_value = apply_filters('um_field_non_utf8_value',$option_value );
     
 							$output .= '<option value="' . $option_value . '" ';
