@@ -30,8 +30,8 @@
 				}
 			}
 		}
-
-		$changes = array();
+ 
+        $changes = array();
 		foreach( $_POST as $k => $v ) {
 			if ( !strstr( $k, 'password' ) && !strstr( $k, 'um_account' ) && in_array(  $k, $arr_fields ) ) {
 				$changes[ $k ] = $v;
@@ -42,8 +42,8 @@
 			delete_user_meta( um_user('ID'), 'hide_in_members' );
 			unset( $changes['hide_in_members'] );
 		}
-
-		// fired on account page, just before updating profile
+       
+       // fired on account page, just before updating profile
 		do_action('um_account_pre_update_profile', $changes, um_user('ID') );
 
 		$ultimatemember->user->update_profile( $changes );

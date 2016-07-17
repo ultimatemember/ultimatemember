@@ -1603,7 +1603,7 @@ class UM_Fields {
     
 							$output .= '<option value="' . $option_value . '" ';
 							
-							if ( $this->is_selected( $form_key, $option_value, $data ) ||  $this->is_selected( $form_key, $v, $data )  ) {
+							if ( $this->is_selected( $form_key, $option_value, $data ) ||  ( !  isset( $options_pair ) && $this->is_selected( $form_key, $v, $data ) ) ) {
 								$output.= 'selected';
 							}
 
