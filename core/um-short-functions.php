@@ -1291,8 +1291,10 @@ function um_fetch_user( $user_id ) {
 	function um_get_default_cover_uri() {
 		$uri = um_get_option('default_cover');
 		$uri = $uri['url'];
-		if ( $uri )
+		if ( $uri ){
+			$uri = apply_filters('um_get_default_cover_uri_filter', $uri );
 			return $uri;
+		}
 		return '';
 	}
 
