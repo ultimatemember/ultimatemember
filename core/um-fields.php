@@ -6,6 +6,7 @@ class UM_Fields {
 
 		$this->editing = false;
 		$this->viewing = false;
+		$this->timestamp = current_time('timestamp');
 
 	}
 
@@ -1388,7 +1389,7 @@ class UM_Fields {
 						$output .= '<div class="um-single-image-preview '. $crop_class .'" data-crop="'.$crop_data.'" data-key="'.$key.'">
 								<a href="#" class="cancel"><i class="um-icon-close"></i></a>
 								<img src="" alt="" />
-							</div><a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. $button_text . '</a>';
+							<div class="um-clear"></div></div><a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. $button_text . '</a>';
 
 					}
 
@@ -1409,8 +1410,10 @@ class UM_Fields {
 						$set_mode = '';
 					}
 
-					$output .= '<div class="um-single-image-preview '. $crop_class .'" data-crop="'.$crop_data.'" data-ratio="'.$ratio.'" data-min_width="'.$min_width.'" data-min_height="'.$min_height.'" data-coord=""><a href="#" class="cancel"><i class="um-icon-close"></i></a><img src="" alt="" /></div>';
-					$output .= '<div class="um-single-image-upload" data-icon="'.$icon.'" data-set_id="'.$set_id.'" data-set_mode="'.$set_mode.'" data-type="'.$type.'" data-key="'.$key.'" data-max_size="'.$max_size.'" data-max_size_error="'.$max_size_error.'" data-min_size_error="'.$min_size_error.'" data-extension_error="'.$extension_error.'"  data-allowed_types="'.$allowed_types.'" data-upload_text="'.$upload_text.'" data-max_files_error="'.$max_files_error.'" data-upload_help_text="'.$upload_help_text.'">'.$button_text.'</div>';
+					$nonce = wp_create_nonce( 'um_upload_nonce-'.$this->timestamp );
+
+					$output .= '<div class="um-single-image-preview '. $crop_class .'"  data-crop="'.$crop_data.'" data-ratio="'.$ratio.'" data-min_width="'.$min_width.'" data-min_height="'.$min_height.'" data-coord=""><a href="#" class="cancel"><i class="um-icon-close"></i></a><img src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
+					$output .= '<div class="um-single-image-upload" data-nonce="'.$nonce.'" data-timestamp="'.$this->timestamp.'" data-icon="'.$icon.'" data-set_id="'.$set_id.'" data-set_mode="'.$set_mode.'" data-type="'.$type.'" data-key="'.$key.'" data-max_size="'.$max_size.'" data-max_size_error="'.$max_size_error.'" data-min_size_error="'.$min_size_error.'" data-extension_error="'.$extension_error.'"  data-allowed_types="'.$allowed_types.'" data-upload_text="'.$upload_text.'" data-max_files_error="'.$max_files_error.'" data-upload_help_text="'.$upload_help_text.'">'.$button_text.'</div>';
 
 					$output .= '<div class="um-modal-footer">
 									<div class="um-modal-right">
@@ -1495,7 +1498,10 @@ class UM_Fields {
 											</a>
 										</div>
 								</div>';
-					$output .= '<div class="um-single-file-upload" data-icon="'.$icon.'" data-set_id="'.$set_id.'" data-set_mode="'.$set_mode.'" data-type="'.$type.'" data-key="'.$key.'" data-max_size="'.$max_size.'" data-max_size_error="'.$max_size_error.'" data-min_size_error="'.$min_size_error.'" data-extension_error="'.$extension_error.'"  data-allowed_types="'.$allowed_types.'" data-upload_text="'.$upload_text.'" data-max_files_error="'.$max_files_error.'" data-upload_help_text="'.$upload_help_text.'">'.$button_text.'</div>';
+
+					$nonce = wp_create_nonce( 'um_upload_nonce-'.$this->timestamp );
+
+					$output .= '<div class="um-single-file-upload" data-timestamp="'.$this->timestamp.'" data-nonce="'.$nonce.'" data-icon="'.$icon.'" data-set_id="'.$set_id.'" data-set_mode="'.$set_mode.'" data-type="'.$type.'" data-key="'.$key.'" data-max_size="'.$max_size.'" data-max_size_error="'.$max_size_error.'" data-min_size_error="'.$min_size_error.'" data-extension_error="'.$extension_error.'"  data-allowed_types="'.$allowed_types.'" data-upload_text="'.$upload_text.'" data-max_files_error="'.$max_files_error.'" data-upload_help_text="'.$upload_help_text.'">'.$button_text.'</div>';
 
 					$output .= '<div class="um-modal-footer">
 									<div class="um-modal-right">
@@ -1574,8 +1580,8 @@ class UM_Fields {
 
 						// add an empty option!
 						$output .= '<option value=""></option>';
-
-						// add options
+                       
+                       // add options
 						foreach($options as $k => $v) {
 
 							$v = rtrim($v);
@@ -1586,19 +1592,23 @@ class UM_Fields {
 								$option_value = $v;
 							}
 
+							$um_field_checkbox_item_title = $option_value;
+
 							if ( isset( $options_pair ) ) {
 								$option_value = $k;
+								$um_field_checkbox_item_title = $v;
 							}
 							
-							$option_value = htmlentities($option_value);
-							$option_value = apply_filters('um_select_dropdown_dynamic_option_value', $option_value);
-
+							$option_value = apply_filters('um_field_non_utf8_value',$option_value );
+    
 							$output .= '<option value="' . $option_value . '" ';
 							
-							if ( $this->is_selected( $form_key, $option_value, $data ) ) {
+							if ( $this->is_selected( $form_key, $option_value, $data ) ||  ( !  isset( $options_pair ) && $this->is_selected( $form_key, $v, $data ) ) ) {
 								$output.= 'selected';
 							}
-							$output .= '>'.__($v, UM_TEXTDOMAIN).'</option>';
+
+
+							$output .= '>'.__( $um_field_checkbox_item_title, UM_TEXTDOMAIN).'</option>';
 
 						}
 
@@ -1652,9 +1662,9 @@ class UM_Fields {
 						$output .= '<option value=""></option>';
 
 						// add options
-						foreach($options as $k => $v) {
+						foreach( $options as $k => $v ) {
 
-							$v = rtrim($v);
+							$v = rtrim( $v );
 
 							$use_keyword = apply_filters('um_multiselect_option_value', 0, $data['type'] );
 
@@ -1664,11 +1674,15 @@ class UM_Fields {
 								$opt_value = $v;
 							}
 
-							$output .= '<option value="'.htmlentities($opt_value).'" ';
-							if ( $this->is_selected($key, $opt_value, $data) ) {
-								$output.= 'selected';
+							$um_field_checkbox_item_title = $opt_value;
+
+							$opt_value = apply_filters('um_field_non_utf8_value',$opt_value );
+    
+							$output .= '<option value="'.$opt_value.'" ';
+							if ( $this->is_selected( $key, $opt_value, $data ) ) {
+								$output .= 'selected';
 							}
-							$output .= '>'.__($v,UM_TEXTDOMAIN).'</option>';
+							$output .= '>'.__( $um_field_checkbox_item_title ,UM_TEXTDOMAIN).'</option>';
 
 						}
 
@@ -1677,7 +1691,7 @@ class UM_Fields {
 						$output .= '</div>';
 
 						if ( $this->is_error($key) ) {
-							$output .= $this->field_error( $this->show_error($key) );
+							$output .= $this->field_error( $this->show_error( $key ) );
 						}
 
 						$output .= '</div>';
@@ -1746,7 +1760,12 @@ class UM_Fields {
 							}
 
 							$output .= '<label class="um-field-radio '.$active.' um-field-half '.$col_class.'">';
-							$output .= '<input type="radio" name="'.$form_key.'" value="'.htmlentities($option_value).'" ';
+
+							$um_field_checkbox_item_title = $option_value;
+
+							$option_value = apply_filters('um_field_non_utf8_value',$option_value );
+    
+							$output .= '<input type="radio" name="'.$form_key.'" value="'.$option_value.'" ';
 
 							if ( $this->is_radio_checked($key, $option_value, $data) ) {
 								$output.= 'checked';
@@ -1754,7 +1773,7 @@ class UM_Fields {
 
 							$output .= ' />';
 							$output .= '<span class="um-field-radio-state"><i class="'.$class.'"></i></span>';
-							$output .= '<span class="um-field-radio-option">'.__($v,UM_TEXTDOMAIN).'</span>';
+							$output .= '<span class="um-field-radio-option">'.__( $um_field_checkbox_item_title,UM_TEXTDOMAIN).'</span>';
 							$output .= '</label>';
 
 							if ($i % 2 == 0) {
@@ -1813,6 +1832,11 @@ class UM_Fields {
 							}
 
 							$output .= '<label class="um-field-checkbox '.$active.' um-field-half '.$col_class.'">';
+                            
+                            $um_field_checkbox_item_title = $v;
+
+							$v = apply_filters('um_field_non_utf8_value', $v );
+    
 							$output .= '<input type="checkbox" name="'.$key.'[]" value="'.strip_tags( $v ).'" ';
 
 							if ( $this->is_selected($key, $v, $data) ) {
@@ -1822,7 +1846,7 @@ class UM_Fields {
 							$output .= ' />';
 
 							$output .= '<span class="um-field-checkbox-state"><i class="'.$class.'"></i></span>';
-							$output .= '<span class="um-field-checkbox-option">'. __($v,UM_TEXTDOMAIN) .'</span>';
+							$output .= '<span class="um-field-checkbox-option">'. __( $um_field_checkbox_item_title ,UM_TEXTDOMAIN) .'</span>';
 							$output .= '</label>';
 
 							if ($i % 2 == 0) {

@@ -150,7 +150,7 @@ class UM_Account {
 		global $ultimatemember;
 
 		$output = null;
-
+        
 		switch( $id ) {
 
 			case 'notifications':
@@ -166,6 +166,9 @@ class UM_Account {
 				$args = apply_filters('um_account_tab_privacy_fields', $args );
 
 				$fields = $ultimatemember->builtin->get_specific_fields( $args );
+
+				$fields = apply_filters('um_account_secure_fields', $fields, $id );
+
 				foreach( $fields as $key => $data ){
 					$output .= $ultimatemember->fields->edit_field( $key, $data );
 				}
@@ -179,6 +182,9 @@ class UM_Account {
 				$args = 'single_user_password';
 
 				$fields = $ultimatemember->builtin->get_specific_fields( $args );
+
+				$fields = apply_filters('um_account_secure_fields', $fields, $id );
+
 				foreach( $fields as $key => $data ){
 					$output .= $ultimatemember->fields->edit_field( $key, $data );
 				}
@@ -200,6 +206,9 @@ class UM_Account {
 				}
 
 				$fields = $ultimatemember->builtin->get_specific_fields( $args );
+
+				$fields = apply_filters('um_account_secure_fields', $fields, $id );
+
 				foreach( $fields as $key => $data ){
 					$output .= $ultimatemember->fields->edit_field( $key, $data );
 				}
@@ -213,6 +222,9 @@ class UM_Account {
 				$args = 'user_password';
 
 				$fields = $ultimatemember->builtin->get_specific_fields( $args );
+
+				$fields = apply_filters('um_account_secure_fields', $fields, $id );
+
 				foreach( $fields as $key => $data ){
 					$output .= $ultimatemember->fields->edit_field( $key, $data );
 				}

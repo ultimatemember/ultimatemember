@@ -1231,9 +1231,12 @@ function um_fetch_user( $user_id ) {
 		$uri = false;
 		$find = false;
 		$ext = '.' . pathinfo($image, PATHINFO_EXTENSION);
+
+		$cache_time = apply_filters('um_filter_avatar_cache_time', current_time( 'timestamp' ), um_user('ID') );
+
 		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo-' . $attrs. $ext ) ) {
 
-			$uri = um_user_uploads_uri() . 'profile_photo-'.$attrs.$ext.'?' . current_time( 'timestamp' );
+			$uri = um_user_uploads_uri() . 'profile_photo-'.$attrs.$ext.'?' . $cache_time;
 
 		} else {
 
@@ -1242,16 +1245,16 @@ function um_fetch_user( $user_id ) {
 
 			if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo-' . $find.$ext ) ) {
 
-				$uri = um_user_uploads_uri() . 'profile_photo-'.$find.$ext.'?' . current_time( 'timestamp' );
+				$uri = um_user_uploads_uri() . 'profile_photo-'.$find.$ext.'?' . $cache_time;
 
 			} else if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo'.$ext ) ) {
 
-				$uri = um_user_uploads_uri() . 'profile_photo'.$ext.'?' . current_time( 'timestamp' );
+				$uri = um_user_uploads_uri() . 'profile_photo'.$ext.'?' . $cache_time;
 
 			}
 
 			if ( $attrs == 'original' ) {
-				$uri = um_user_uploads_uri() . 'profile_photo'.$ext.'?' . current_time( 'timestamp' );
+				$uri = um_user_uploads_uri() . 'profile_photo'.$ext.'?' . $cache_time;
 			}
 
 		}
@@ -1288,8 +1291,10 @@ function um_fetch_user( $user_id ) {
 	function um_get_default_cover_uri() {
 		$uri = um_get_option('default_cover');
 		$uri = $uri['url'];
-		if ( $uri )
+		if ( $uri ){
+			$uri = apply_filters('um_get_default_cover_uri_filter', $uri );
 			return $uri;
+		}
 		return '';
 	}
 
@@ -1467,10 +1472,14 @@ function um_fetch_user( $user_id ) {
 			case 'profile_photo':
 
 				$has_profile_photo = false;
+				$photo_type = 'um-avatar-default';
 
 				if ( um_profile('profile_photo') ) {
 						$avatar_uri = um_get_avatar_uri( um_profile('profile_photo'), $attrs );
 						$has_profile_photo = true;
+						$photo_type = 'um-avatar-uploaded';
+				} elseif( um_user('synced_profile_photo') ){
+						$avatar_uri = um_user('synced_profile_photo');
 				} else {
 						$avatar_uri = um_get_default_avatar_uri( um_user('ID') );
 				}
@@ -1480,10 +1489,11 @@ function um_fetch_user( $user_id ) {
 				if ( $avatar_uri )
 
 					if( um_get_option('use_gravatars') && ! um_user('synced_profile_photo') && ! $has_profile_photo ){
-						$avatar_uri  = um_get_domain_protocol().'gravatar.com/avatar/'.um_user('synced_gravatar_hashed_id');
+						$avatar_hash_id = get_user_meta( um_user('ID'),'synced_gravatar_hashed_id', true);
+						$avatar_uri  = um_get_domain_protocol().'gravatar.com/avatar/'.$avatar_hash_id;
 						$avatar_uri = add_query_arg('s',400, $avatar_uri);
 						$gravatar_type = um_get_option('use_um_gravatar_default_builtin_image');
-
+						$photo_type = 'um-avatar-gravatar';
 						if( $gravatar_type == 'default' ){
 							if( um_get_option('use_um_gravatar_default_image') ){
 								$avatar_uri = add_query_arg('d', um_get_default_avatar_uri(), $avatar_uri  );
@@ -1494,7 +1504,7 @@ function um_fetch_user( $user_id ) {
 						
 					}
 
-					return '<img src="' . $avatar_uri . '" class="func-um_user gravatar avatar avatar-'.$attrs.' um-avatar" width="'.$attrs.'" height="'.$attrs.'" alt="" />';
+					return '<img src="' . $avatar_uri . '" class="func-um_user gravatar avatar avatar-'.$attrs.' um-avatar '.$photo_type.'" width="'.$attrs.'" height="'.$attrs.'" alt="" />';
 
 				if ( !$avatar_uri )
 					return '';
@@ -1504,10 +1514,12 @@ function um_fetch_user( $user_id ) {
 			case 'cover_photo':
 				if ( um_profile('cover_photo') ) {
 					$cover_uri = um_get_cover_uri( um_profile('cover_photo'), $attrs );
-				} else {
+				} else if( um_profile('synced_cover_photo') ) {
+					$cover_uri = um_profile('synced_cover_photo');
+				}else{
 					$cover_uri = um_get_default_cover_uri();
 				}
-
+				
 				if ( $cover_uri )
 					return '<img src="'. $cover_uri .'" alt="" />';
 
@@ -1716,4 +1728,15 @@ function um_fetch_user( $user_id ) {
 	    }
 
 	    return $loop;
+	}
+
+	/**
+	 * Check if running local
+	 * @return boolean
+	 */
+	function um_core_is_local() {
+	    if( $_SERVER['HTTP_HOST'] == 'localhost'
+	        || substr($_SERVER['HTTP_HOST'],0,3) == '10.'
+	        || substr($_SERVER['HTTP_HOST'],0,7) == '192.168') return true;
+	    return false;
 	}

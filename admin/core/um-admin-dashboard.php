@@ -283,62 +283,61 @@ class UM_Admin_Dashboard {
 	function admin_page() {
 		
 		$page = $_REQUEST['page'];
-		if ( $page == 'ultimatemember' && !isset($_REQUEST['um-addon']) ) {
+		if ( $page == 'ultimatemember' && ! isset( $_REQUEST['um-addon'] ) ) {
 
-		?>
-		
-		<div id="um-metaboxes-general" class="wrap">
-		
-			<h2>Ultimate Member <sup><?php echo ultimatemember_version; ?></sup></h2>
+			?>
+			
+			<div id="um-metaboxes-general" class="wrap">
+			
+				<h2>Ultimate Member <sup><?php echo ultimatemember_version; ?></sup></h2>
 
-				<?php wp_nonce_field('um-metaboxes-general'); ?>
-				<?php wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false ); ?>
-				<?php wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false ); ?>
-				
-				<input type="hidden" name="action" value="save_um_metaboxes_general" />
-				
-				<div id="dashboard-widgets-wrap">
-		
-					 <div id="dashboard-widgets" class="metabox-holder um-metabox-holder"> 
+					<?php wp_nonce_field('um-metaboxes-general'); ?>
+					<?php wp_nonce_field('closedpostboxes', 'closedpostboxesnonce', false ); ?>
+					<?php wp_nonce_field('meta-box-order', 'meta-box-order-nonce', false ); ?>
+					
+					<input type="hidden" name="action" value="save_um_metaboxes_general" />
+					
+					<div id="dashboard-widgets-wrap">
+			
+						 <div id="dashboard-widgets" class="metabox-holder um-metabox-holder"> 
 
-							<div id="postbox-container-1" class="postbox-container"><?php do_meta_boxes($this->pagehook,'core',null);  ?></div>
-							<div id="postbox-container-2" class="postbox-container"><?php do_meta_boxes($this->pagehook,'normal',null); ?></div>
-							<div id="postbox-container-3" class="postbox-container"><?php do_meta_boxes($this->pagehook,'side',null); ?></div>
+								<div id="postbox-container-1" class="postbox-container"><?php do_meta_boxes($this->pagehook,'core',null);  ?></div>
+								<div id="postbox-container-2" class="postbox-container"><?php do_meta_boxes($this->pagehook,'normal',null); ?></div>
+								<div id="postbox-container-3" class="postbox-container"><?php do_meta_boxes($this->pagehook,'side',null); ?></div>
 
-					 </div>
+						 </div>
 
-				</div>
+					</div>
 
-		</div><div class="um-admin-clear"></div>
-		
-		<div class="um-admin-dash-share"><?php global $reduxConfig; foreach ( $reduxConfig->args['share_icons'] as $k => $arr ) { ?><a href="<?php echo $arr['url']; ?>" class="um-about-icon um-admin-tipsy-n" title="<?php echo $arr['title']; ?>" target="_blank"><i class="<?php echo $arr['icon']; ?>"></i></a><?php } ?>	
-		</div><div class="um-admin-clear"></div>
-		
-		<script type="text/javascript">
-			//<![CDATA[
-			jQuery(document).ready( function($) {
-				// postboxes setup
-				postboxes.add_postbox_toggles('<?php echo $this->pagehook; ?>');
-			});
-			//]]>
-		</script>
-		
-		<?php
+			</div><div class="um-admin-clear"></div>
+			
+			<div class="um-admin-dash-share"><?php global $reduxConfig; foreach ( $reduxConfig->args['share_icons'] as $k => $arr ) { ?><a href="<?php echo $arr['url']; ?>" class="um-about-icon um-admin-tipsy-n" title="<?php echo $arr['title']; ?>" target="_blank"><i class="<?php echo $arr['icon']; ?>"></i></a><?php } ?>	
+			</div><div class="um-admin-clear"></div>
+			
+			<script type="text/javascript">
+				//<![CDATA[
+				jQuery(document).ready( function($) {
+					// postboxes setup
+					postboxes.add_postbox_toggles('<?php echo $this->pagehook; ?>');
+				});
+				//]]>
+			</script>
+			
+			<?php
 			
 		} else if ( $page == 'ultimatemember-extensions' ) {
 			
 			include_once um_path . 'admin/templates/extensions.php';
 			
-		} else if ( strstr( $page, 'ultimatemember-' ) ) {
+		} else if (  $page == 'ultimatemember-about' ) {
 
-			$template = str_replace('ultimatemember-','',$page);
-			$file = um_path . 'admin/templates/welcome/'. $template . '.php';
+				include_once um_path . 'admin/templates/welcome/about.php';
+		
+		} else if (  $page == 'ultimatemember-start' ) {
 
-			if ( file_exists( $file ) ){
-				include_once um_path . 'admin/templates/welcome/'. $template . '.php';
-			}
-
-		}
+				include_once um_path . 'admin/templates/welcome/start.php';
+		
+		} 
 	
 	}
 

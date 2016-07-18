@@ -40,7 +40,7 @@ class UM_Form {
 	function add_error( $key, $error ) {
 		if ( ! isset( $this->errors[ $key ] ) ){
 
-			$error = apply_filters('um_submit_form_error', $key, $error );
+			$error = apply_filters('um_submit_form_error', $error , $key );
 
 			$this->errors[ $key ] = $error;
 		}
@@ -79,8 +79,10 @@ class UM_Form {
 			$http_post = 'POST';
 		}
 
-
+		
 		if ( $http_post && !is_admin() && isset( $_POST['form_id'] ) && is_numeric($_POST['form_id']) ) {
+			
+			do_action("um_before_submit_form_post", $_POST );
 
 			$this->form_id = $_POST['form_id'];
 			$this->form_status = get_post_status( $this->form_id );
@@ -89,7 +91,7 @@ class UM_Form {
 			if ( $this->form_status == 'publish' ) {
 
 				/* save entire form as global */
-				$this->post_form = $_POST;
+				$this->post_form = apply_filters('um_submit_post_form' ,$_POST );
 
 				$this->post_form = $this->beautify( $this->post_form );
 
@@ -101,7 +103,9 @@ class UM_Form {
 
 				$role = $this->assigned_role( $this->form_id );
 
-				if( $role && isset( $this->form_data['custom_fields'] ) && ! strstr( $this->form_data['custom_fields'], 'role_' ) ){ // has assigned role.  Validate non-global forms
+				$secure_form_post = apply_filters('um_secure_form_post', true );
+
+				if( $role && isset( $this->form_data['custom_fields'] ) && ! strstr( $this->form_data['custom_fields'], 'role_' ) && $secure_form_post ){ // has assigned role.  Validate non-global forms
 					if ( isset( $this->form_data['role'] ) && ( (boolean) $this->form_data['role'] ) && isset(  $_POST['role']  ) && $_POST['role'] != $role ) {
 						wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
 					} else {
@@ -130,6 +134,8 @@ class UM_Form {
 
 				}
 
+				$this->post_form = apply_filters('um_submit_form_data', $this->post_form, $this->post_form['mode'] );
+
 				/* Continue based on form mode - pre-validation */
 
 				do_action('um_submit_form_errors_hook', $this->post_form );
@@ -153,11 +159,11 @@ class UM_Form {
 
 			$this->processing = $form['form_id'];
 
-			foreach($form as $key => $value){
-				if (strstr($key, $this->form_suffix) ) {
-					$a_key = str_replace( $this->form_suffix, '', $key);
-					$form[$a_key] = $value;
-					unset($form[$key]);
+			foreach( $form as $key => $value ){
+				if ( strstr( $key, $this->form_suffix ) ) {
+					$a_key = str_replace( $this->form_suffix, '', $key );
+					$form[ $a_key ] = $value;
+					unset( $form[ $key ] );
 				}
 			}
 

@@ -158,8 +158,8 @@
 		extract( $args );
 
 		$rememberme = ( isset($args['rememberme']) ) ? 1 : 0;
-
-		if ( ( um_get_option('deny_admin_frontend_login')   && ! isset( $_GET['provider'] ) ) && ! strstr( um_user('wp_roles' ), 'administrator' ) > -1 ){
+		
+		if ( ( um_get_option('deny_admin_frontend_login')   && ! isset( $_GET['provider'] ) ) && strrpos( um_user('wp_roles' ), 'administrator' ) !== FALSE ){
 			wp_die( __('This action has been prevented for security measures.','ultimatemember') );
 		}
 

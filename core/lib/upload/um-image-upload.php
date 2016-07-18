@@ -10,12 +10,21 @@ while( ++$i < 10 && !file_exists( $wp_load ) );
 require_once( $wp_load );
 global $ultimatemember;
 
+$ret['error'] = null;
+$ret = array();
+
 $id = $_POST['key'];
+$timestamp = $_POST['timestamp'];
+$nonce = $_POST['_wpnonce'];
+
 $ultimatemember->fields->set_id = $_POST['set_id'];
 $ultimatemember->fields->set_mode = $_POST['set_mode'];
 
-$ret['error'] = null;
-$ret = array();
+if ( ! wp_verify_nonce( $nonce, 'um_upload_nonce-'.$timestamp ) && is_user_logged_in() ) {
+    // This nonce is not valid.
+    $ret['error'] = 'Invalid nonce';
+    die( json_encode( $ret ) );
+}
 
 if(isset($_FILES[$id]['name'])) {
 
@@ -24,7 +33,7 @@ if(isset($_FILES[$id]['name'])) {
 		$temp = $_FILES[$id]["tmp_name"];
 		$file = $_FILES[$id]["name"];
 		$file = sanitize_file_name($file);
-		 $ext = pathinfo($file, PATHINFO_EXTENSION);
+		 $ext = strtolower( pathinfo($file, PATHINFO_EXTENSION) );
 
 		$error = $ultimatemember->files->check_image_upload( $temp, $id );
 		if ( $error ){

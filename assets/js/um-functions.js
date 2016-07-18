@@ -500,7 +500,13 @@ function initImageUpload_UM( trigger ) {
 			url: um_scripts.imageupload,
 			method: "POST",
 			multiple: false,
-			formData: {key: trigger.data('key'), set_id: trigger.data('set_id'), set_mode: trigger.data('set_mode') },
+			formData: {
+				key: trigger.data('key'), 
+				set_id: trigger.data('set_id'), 
+				set_mode: trigger.data('set_mode'),
+				_wpnonce: trigger.data('nonce'),
+				timestamp: trigger.data('timestamp')
+			 },
 			fileName: trigger.data('key'),
 			allowedTypes: trigger.data('allowed_types'),
 			maxFileSize: trigger.data('max_size'),
@@ -523,7 +529,13 @@ function initImageUpload_UM( trigger ) {
 
 				trigger.selectedFiles = 0;
 
+				try{
 				data = jQuery.parseJSON(data);
+				} catch (e) {
+				   console.log( e, data );
+				    return;
+				}
+
 				if (data.error && data.error != '') {
 
 					trigger.parents('.um-modal-body').append('<div class="um-error-block">'+data.error+'</div>');
@@ -580,7 +592,13 @@ function initFileUpload_UM( trigger ) {
 			url: um_scripts.fileupload,
 			method: "POST",
 			multiple: false,
-			formData: {key: trigger.data('key'), set_id: trigger.data('set_id'), set_mode: trigger.data('set_mode') },
+			formData: {
+				key: trigger.data('key'), 
+				set_id: trigger.data('set_id'), 
+				set_mode: trigger.data('set_mode'),
+				_wpnonce: trigger.data('nonce'),
+				timestamp: trigger.data('timestamp')
+			},
 			fileName: trigger.data('key'),
 			allowedTypes: trigger.data('allowed_types'),
 			maxFileSize: trigger.data('max_size'),
@@ -608,7 +626,10 @@ function initFileUpload_UM( trigger ) {
 
 					trigger.parents('.um-modal-body').append('<div class="um-error-block">'+data.error+'</div>');
 					trigger.parents('.um-modal-body').find('.upload-statusbar').hide(0);
-					um_modal_responsive();
+					
+					setTimeout(function(){
+						um_modal_responsive();
+					},1000);
 
 				} else {
 
@@ -630,7 +651,9 @@ function initFileUpload_UM( trigger ) {
 
 					});
 
-					um_modal_responsive();
+					setTimeout(function(){
+						um_modal_responsive();
+					},1000);
 
 				}
 
@@ -641,8 +664,8 @@ function initFileUpload_UM( trigger ) {
 
 function initCrop_UM() {
 
-	var target_img = jQuery('.um-modal:visible .um-single-image-preview img');
-	var target_img_parent = jQuery('.um-modal:visible .um-single-image-preview');
+	var target_img = jQuery('.um-modal .um-single-image-preview img').first();
+	var target_img_parent = jQuery('.um-modal .um-single-image-preview');
 
 	var crop_data = target_img.parent().attr('data-crop');
 	var min_width = target_img.parent().attr('data-min_width');
@@ -686,10 +709,12 @@ function initCrop_UM() {
 				};
 
 			} else if ( crop_data == 'cover' ) {
-
+				if( Math.round( min_width / ratio ) > 0 ){
+					min_height = Math.round( min_width / ratio )
+				}
 				var opts = {
 					minWidth: min_width,
-					minHeight: Math.round( min_width / ratio ),
+					minHeight: min_height,
 					dragCrop: false,
 					aspectRatio: ratio,
 					zoomable: false,
@@ -718,7 +743,11 @@ function initCrop_UM() {
 			}
 
 			if ( crop_data != 0 ) {
-				target_img.cropper( opts );
+					target_img.cropper( opts );
+					jQuery('.um-single-image-preview img.cropper-hidden').cropper('destroy');
+					jQuery('.um-single-image-preview img.lazyloaded').addClass('cropper-hidden');
+					jQuery('.um-single-image-preview img.lazyloaded').removeClass('lazyloaded');
+					jQuery('.um-single-image-preview .cropper-container').append('<div class="um-clear"></div>');
 			}
 
 		}
@@ -742,9 +771,9 @@ function um_new_modal( id, size, isPhoto, source ){
 	jQuery('.um-modal').on('touchmove', function(e){e.stopPropagation();});
 
 	if ( isPhoto ) {
-	jQuery('body').append('<div class="um-modal-overlay" /><div class="um-modal is-photo" />');
+	jQuery('body').append('<div class="um-modal-overlay"></div><div class="um-modal is-photo"></div>');
 	} else {
-	jQuery('body').append('<div class="um-modal-overlay" /><div class="um-modal no-photo" />');
+	jQuery('body').append('<div class="um-modal-overlay"></div><div class="um-modal no-photo"></div>');
 	}
 
 	jQuery('#' + id).prependTo('.um-modal');
@@ -864,6 +893,7 @@ function um_modal_responsive() {
 		}
 
 	}
+
 }
 
 function um_remove_modal(){

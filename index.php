@@ -3,7 +3,7 @@
 Plugin Name: Ultimate Member
 Plugin URI: http://ultimatemember.com/
 Description: The easiest way to create powerful online communities and beautiful user profiles with WordPress
-Version: 1.3.52
+Version: 1.3.66
 Author: Ultimate Member
 Author URI: http://ultimatemember.com/
 Text Domain: ultimatemember
@@ -50,7 +50,7 @@ Domain Path: /languages
 	function ultimatemember_plugin_links( $links ) {
 	
 		$more_links[] = '<a href="http://docs.ultimatemember.com/">' . __('Docs','ultimatemember') . '</a>';
-		$more_links[] = '<a href="https://ultimatemember.com/support-contact/">' . __('Support','ultimatemember') . '</a>';
+		
 		$more_links[] = '<a href="'.admin_url().'admin.php?page=um_options">' . __('Settings','ultimatemember') . '</a>';
 		
 		$links = $more_links + $links;

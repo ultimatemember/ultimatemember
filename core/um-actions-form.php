@@ -70,8 +70,8 @@
 		$user_ip = um_user_ip();
 
 		foreach($ips as $ip) {
-			$ip = str_replace('*','',$ip);
-			if (strpos($user_ip, $ip) === 0) {
+			$ip = str_replace('*','',$ip); 
+			if ( !empty( $ip ) && strpos($user_ip, $ip) === 0) {
 				exit( wp_redirect(  esc_url(  add_query_arg('err', 'blocked_ip') ) ) );
 			}
 		}
@@ -92,7 +92,7 @@
 		if ( $words != '' ) {
 
 			$words = array_map("rtrim", explode("\n", $words));
-			if( isset( $fields ) ){
+			if( isset( $fields ) && ! empty( $fields ) && is_array( $fields ) ){
 				foreach( $fields as $key => $array ) {
 					if ( isset($array['validate']) && in_array( $array['validate'], array('unique_username','unique_email','unique_username_or_email') ) ) {
 						if ( !$ultimatemember->form->has_error( $key ) && isset( $args[$key] ) && in_array( $args[$key], $words ) ) {
@@ -409,6 +409,27 @@
 									   $ultimatemember->form->add_error( $key , __('You must provide a unique value','ultimatemember') );
 									}
 								}
+							break;
+							
+							case 'alphabetic':
+
+								if ( $args[$key] != '' ) {
+
+									if( ! ctype_alpha( str_replace(' ', '', $args[$key] ) ) ){
+									   $ultimatemember->form->add_error( $key , __('You must provide alphabetic letters','ultimatemember') );
+									}
+								}
+							break;
+
+							case 'lowercase':
+
+								if ( $args[$key] != '' ) {
+
+									if( ! ctype_lower( str_replace(' ', '',$args[$key] ) ) ){
+									   $ultimatemember->form->add_error( $key , __('You must provide lowercase letters.','ultimatemember') );
+									}
+								}
+
 							break;
 
 						}

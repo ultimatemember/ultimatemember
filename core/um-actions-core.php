@@ -8,12 +8,17 @@
 		global $ultimatemember;
 		
 		if ( is_admin() ) return false;
-		if ( !isset( $_REQUEST['um_action'] ) ) return false;
+		if ( ! is_user_logged_in() ) return false;
+		if ( ! isset( $_REQUEST['um_action'] ) ) return false;
 		if ( isset( $_REQUEST['uid'] ) && !$ultimatemember->user->user_exists_by_id( $_REQUEST['uid'] ) ) return false;
 		
 		if ( isset( $_REQUEST['uid'] ) ) {
 			if ( is_super_admin( $_REQUEST['uid'] ) )
 				wp_die('Super administrators can not be modified.');
+		}
+
+		if ( isset( $_REQUEST['um_action'] ) && $_REQUEST['um_action'] != "edit" && ! current_user_can( 'edit_users' ) ){
+						wp_die( __( 'You do not have enough permissions to do that.','ultimatemember') );
 		}
 		
 		if ( isset($_REQUEST['uid'])){

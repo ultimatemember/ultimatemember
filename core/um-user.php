@@ -133,6 +133,12 @@ class UM_User {
 	}
 
 	function setup_cache( $user_id, $profile ) {
+		
+		$disallow_cache = get_option('um_profile_object_cache_stop');
+		if( $disallow_cache ){
+			return '';
+		}
+
 		update_option( "um_cache_userdata_{$user_id}", $profile );
 	}
 
@@ -938,6 +944,7 @@ class UM_User {
 			return $ids[0];
 		}
 
+
 		$value = str_replace(".", "_", $value );
 		$value = str_replace(" ", "", $value );
 		
@@ -982,6 +989,42 @@ class UM_User {
 		} else {
 			return $user_id;
 		}
+	}
+	/**
+	 * @function user_exists_by_email_as_username()
+	 *
+	 * @description This method checks if a user exists or not in your site based on the user email as username
+	 *
+	 * @usage <?php $ultimatemember->user->user_exists_by_email_as_username( $slug ); ?>
+	 *
+	 * @param $slug (string) (required) A user slug must be passed to check if the user exists
+	 *
+	 * @returns Returns true if user exists and false if user does not exist.
+	 *
+	 * @example Basic Usage
+
+		<?php
+
+			$boolean = $ultimatemember->user->user_exists_by_email_as_username( 'calumgmail-com' );
+			if ( $boolean ) {
+				// That user exists
+			}
+
+		?>
+
+	 *
+	 *
+	 */
+	function user_exists_by_email_as_username( $slug ){
+
+		$user_id = false;
+
+		$ids = get_users( array( 'fields' => 'ID', 'meta_key' => 'um_email_as_username_'.$slug ) );
+		if ( isset( $ids[0] ) && ! empty( $ids[0] ) ){
+			$user_id = $ids[0];
+		}
+
+		return $user_id;
 	}
 
 }

@@ -10,7 +10,7 @@ gulp.task('scripts', function() {
 	
     // Concat and Minify
     gulp.src([
-        'assets/js/um-select.js',
+        'assets/js/select2/select2.full.min.js',
         'assets/js/um-modal.js',
         'assets/js/um-jquery-form.js',
         'assets/js/um-fileupload.js',
@@ -43,7 +43,7 @@ gulp.task('css', function() {
     gulp.src([
         'assets/css/um-fonticons-ii.css',
         'assets/css/um-fonticons-fa.css',
-        'assets/css/um-select.css',
+        'assets/css/select2/select2.min.css',
         'assets/css/um-modal.css',
         'assets/css/um-styles.css',
         'assets/css/um-members.css',

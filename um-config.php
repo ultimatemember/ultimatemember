@@ -317,6 +317,16 @@ $this->sections[] = array(
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
         ),
+        array(
+                'id'       		=> 'account_name_require',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Require First & Last Name','ultimatemember' ),
+				'default' 		=> 1,
+				'desc' 	   		=> __('Require first and last name?','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+				'required'		=> array( 'account_name', '=', '1' ),
+        ),
 
         array(
                 'id'       		=> 'account_email',
@@ -611,8 +621,7 @@ $this->sections[] = array(
 										  'To login please visit the following url:'  . "\r\n\r\n" .
 										  '{login_url}'  . "\r\n\r\n" .
 										  'Your account e-mail: {email}' . "\r\n" .
-										  'Your account username: {username}' . "\r\n" .
-										  'Set your account passowrd: {password_reset_link}' . "\r\n\r\n" .
+										  'Your account username: {username}' . "\r\n\r\n" .
 										  'If you have any problems, please contact us at {admin_email}'  . "\r\n\r\n" .
 										  'Thanks,' . "\r\n" .
 										  '{site_name}',
@@ -1960,12 +1969,8 @@ $this->sections[] = array(
 ***	@
 ***/
 
-$this->sections[] = array(
-
-    'icon'       => 'um-faicon-wrench',
-    'title'      => __('Advanced','ultimatemember'),
-    'fields'     => array(
-
+$arr_advanced_fields = array(
+		
 		array(
 				'id'            	=> 'import_export',
 				'type'          	=> 'import_export',
@@ -2102,6 +2107,27 @@ $this->sections[] = array(
 				'off'			=> __('Off','ultimatemember'),
         ),
 
-	)
+);
+
+if( is_multisite() ){
+	$arr_advanced_fields[] = array(
+					'id'       		=> 'network_permalink_structure',
+	                'type'     		=> 'select',
+					'select2'		=> array( 'allowClear' => 0, 'minimumResultsForSearch' => -1 ),
+	                'title'    		=> __( 'Network Permalink Structure','ultimatemember' ),
+	                'desc' 	   		=> __( 'Change this If you are having conflicts with profile links or redirections in a multisite setup.','ultimatemember' ),
+	                'default'  		=> 'sub-domain',
+					'options' 		=> array(
+										'sub-domain' 			=> __('Sub-Domain','ultimatemember'),
+										'sub-directory' 		=> __('Sub-Directory','ultimatemember'),
+					)
+	);
+}
+
+$this->sections[] = array(
+
+    'icon'       => 'um-faicon-wrench',
+    'title'      => __('Advanced','ultimatemember'),
+    'fields'     => $arr_advanced_fields
 
 );

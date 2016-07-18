@@ -176,17 +176,16 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
+	jQuery('.um-s1,.um-s2').css({'display':'block'});
+	
 	jQuery(".um-s1").select2({
 		allowClear: true,
-		minimumResultsForSearch: 10
 	});
 
 	jQuery(".um-s2").select2({
 		allowClear: false,
 		minimumResultsForSearch: 10
 	});
-
-	jQuery('.um-s1,.um-s2').css({'display':'block'});
 
 	jQuery(document).on('click', '.um-field-group-head:not(.disabled)', function(){
 		var field = jQuery(this).parents('.um-field-group');

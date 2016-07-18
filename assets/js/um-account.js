@@ -16,6 +16,8 @@ jQuery(document).ready(function() {
 		var url_ = jQuery(this).attr('href');
 		var tab_ = jQuery(this).attr('data-tab');
 		
+		jQuery("#_um_account_tab").val( tab_ );
+		
 		window.history.pushState("", "", url_);
 		
 		jQuery('.um-account-tab').hide();
@@ -33,7 +35,7 @@ jQuery(document).ready(function() {
 		var tab_ = jQuery(this).attr('data-tab');
 		var div = jQuery(this).parents('div');
 		var link = jQuery(this);
-		
+
 		jQuery('.um-account-tab').hide();
 		
 		if ( link.hasClass('current') ) {

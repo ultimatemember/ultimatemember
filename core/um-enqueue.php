@@ -200,11 +200,19 @@ class UM_Enqueue {
 	***/
 	function load_selectjs(){
 
-		wp_register_script('um_select', um_url . 'assets/js/um-select.js', array('jquery', 'jquery-masonry') );
-		wp_enqueue_script('um_select');
+		if ( class_exists( 'WooCommerce' ) ) {
+				wp_dequeue_style( 'select2' );
+		        wp_deregister_style( 'select2' );
 
-		wp_register_style('um_select', um_url . 'assets/css/um-select.css' );
-		wp_enqueue_style('um_select');
+		        wp_dequeue_script( 'select2');
+		        wp_deregister_script('select2');
+		}
+
+		wp_register_script('select2', um_url . 'assets/js/select2/select2.full.min.js', array('jquery', 'jquery-masonry') );
+		wp_enqueue_script('select2');
+
+		wp_register_style('select2', um_url . 'assets/css/select2/select2.min.css' );
+		wp_enqueue_style('select2');
 
 	}
 

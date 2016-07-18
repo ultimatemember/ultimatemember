@@ -1,1 +1,0 @@
-To save on effort, the following code styles have been provided. They are named by the program they correspond to. Please run code formatting through this formats before submitting a pull request.

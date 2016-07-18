@@ -52,7 +52,7 @@
 		<h2>Need more help?</h2>
 		<div class="feature-section">
 
-			<p>If you have run into an issue with Ultimate Member, you should first have a look at our documentation and perform a search of the docs. If, after performing a search of the docs you can not find anything related to your issue/question then you can submit a <a href="https://ultimatemember.com/support-contact/" target="_blank">support ticket</a>.</p>
+			<p>If you have run into an issue with Ultimate Member, you should first have a look at our documentation and perform a search of the docs. If, after performing a search of the docs you can not find anything related to your issue/question then you can submit a <a href="https://wordpress.org/support/plugin/ultimate-member" target="_blank">support ticket</a>.</p>
 			
 			<p class="um-admin-notice" style="text-align:center"><a href="http://docs.ultimatemember.com/" target="_blank" class="button button-primary">View Documentation</a></p>
 			

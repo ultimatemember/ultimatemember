@@ -21,12 +21,15 @@ class UM_Query {
 			return $this->wp_pages;
 		}
 
-		$pages = $wpdb->get_results('SELECT * FROM '.$wpdb->posts.' WHERE post_type = "page" AND post_status = "publish" ', OBJECT);
-		$count_pages = $wpdb->num_rows;
+		$count_pages = wp_count_posts('page');
 		
-		if ( $count_pages > 300 )
+		if ( $count_pages->publish > 300 ){
 			return 'reached_maximum_limit';
+		}
 		
+
+		$pages = $wpdb->get_results('SELECT * FROM '.$wpdb->posts.' WHERE post_type = "page" AND post_status = "publish" ', OBJECT);
+
 		$array = '';
 		if( $wpdb->num_rows > 0 ){
 			foreach ($pages as $page_data) {
@@ -88,7 +91,7 @@ class UM_Query {
 		if ( $post_type == 'comment' ) { // comments
 
 			unset( $args['post_type'] );
-			unset( $args['post_status'] );
+			
 			$args['type__not_in'] = apply_filters( 'um_excluded_comment_types', array('') );
 			
 			$comments = get_comments($args);

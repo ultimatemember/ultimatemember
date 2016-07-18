@@ -60,40 +60,86 @@ class UM_Permalinks {
 	function get_current_url( $no_query_params = false ) {
 		global $post;
 
-			$um_get_option = get_option('um_options');
-			$server_name_method = ( $um_get_option['current_url_method'] ) ? $um_get_option['current_url_method'] : 'SERVER_NAME';
-			$um_port_forwarding_url = ( isset( $um_get_option['um_port_forwarding_url'] ) ) ? $um_get_option['um_port_forwarding_url']: '';
+		$um_get_option = get_option('um_options');
 
-		if ( !isset( $_SERVER['SERVER_NAME'] ) )
-			return '';
+		$server_name_method = ( $um_get_option['current_url_method'] ) ? $um_get_option['current_url_method'] : 'SERVER_NAME';
+			
+		$um_port_forwarding_url = ( isset( $um_get_option['um_port_forwarding_url'] ) ) ? $um_get_option['um_port_forwarding_url']: '';
 
-		if ( is_front_page() ) {
-			$page_url = home_url();
+		if ( is_multisite() ) {
 
-			if( isset( $_SERVER['QUERY_STRING'] ) && trim( $_SERVER['QUERY_STRING'] ) ) {
-				$page_url .= '?' . $_SERVER['QUERY_STRING'];
-			}
-		} else {
-			$page_url = 'http';
+				$page_url 	= '';
+				$blog_id 	= get_current_blog_id();
+				$siteurl 	= get_site_url( $blog_id );
+				
+				if ( is_front_page() ) {
+						$page_url = $siteurl;
 
-			if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) {
-				$page_url .= "s";
-			}
-			$page_url .= "://";
+						if( isset( $_SERVER['QUERY_STRING'] ) && trim( $_SERVER['QUERY_STRING'] ) ) {
+							$page_url .= '?' . $_SERVER['QUERY_STRING'];
+						}
+				}else {
+						
+						$network_permalink_structure = um_get_option("network_permalink_structure");
+      					
+      					if(  $network_permalink_structure == "sub-directory" ){
+						
+							$page_url = 'http';
 
-			if ( $um_port_forwarding_url == 1 && isset( $_SERVER["SERVER_PORT"] ) ) {
-				$page_url .= $_SERVER[ $server_name_method ].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+							if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) {
+								$page_url .= "s";
+							}
 
-			} else {
-				$page_url .= $_SERVER[ $server_name_method ].$_SERVER["REQUEST_URI"];
-			}
+							$page_url .= "://";
 
+							$page_url .= $_SERVER[ $server_name_method ];
+						}else{
+							$page_url .= $siteurl;
+						}
+
+						if ( $um_port_forwarding_url == 1 && isset( $_SERVER["SERVER_PORT"] ) ) {
+							$page_url .= ":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+
+						} else {
+							$page_url .= $_SERVER["REQUEST_URI"];
+						}
+
+				}
+
+
+		}else{
+				if ( !isset( $_SERVER['SERVER_NAME'] ) )
+					return '';
+
+				if ( is_front_page() ) {
+					$page_url = home_url();
+
+					if( isset( $_SERVER['QUERY_STRING'] ) && trim( $_SERVER['QUERY_STRING'] ) ) {
+						$page_url .= '?' . $_SERVER['QUERY_STRING'];
+					}
+				} else {
+					$page_url = 'http';
+
+					if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) {
+						$page_url .= "s";
+					}
+					$page_url .= "://";
+
+					if ( $um_port_forwarding_url == 1 && isset( $_SERVER["SERVER_PORT"] ) ) {
+						$page_url .= $_SERVER[ $server_name_method ].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+
+					} else {
+						$page_url .= $_SERVER[ $server_name_method ].$_SERVER["REQUEST_URI"];
+					}
+
+				}
+
+			
 		}
 
 		if ( $no_query_params == true ) {
-			$page_url = strtok($page_url, '?');
+			$page_url = strtok( $page_url, '?' );
 		}
-
 
 		return apply_filters( 'um_get_current_page_url', $page_url );
 	}
@@ -194,16 +240,20 @@ class UM_Permalinks {
 
 		$profile_url = apply_filters('um_localize_permalink_filter', $this->core, $page_id, $profile_url );
 
-
+		// Username
 		if ( um_get_option('permalink_base') == 'user_login' ) {
 			$user_in_url = um_user('user_login');
 
-			if ( is_email($user_in_url) ) {
+			if ( is_email( $user_in_url ) ) {
+				$user_email = $user_in_url;
 				$user_in_url = str_replace('@','',$user_in_url);
+				
 				if( ( $pos = strrpos( $user_in_url , '.' ) ) !== false ) {
 					$search_length  = strlen( '.' );
 					$user_in_url    = substr_replace( $user_in_url , '-' , $pos , $search_length );
 				}
+				update_user_meta( um_user('ID') , 'um_email_as_username_'.$user_in_url , $user_email );
+
 			} else {
 
 				$user_in_url = sanitize_title( $user_in_url );
@@ -212,10 +262,12 @@ class UM_Permalinks {
 
 		}
 
+		// User ID
 		if ( um_get_option('permalink_base') == 'user_id' ) {
 			$user_in_url = um_user('ID');
 		}
 
+		// Fisrt and Last name
 		$full_name_permalinks = array( 'name', 'name_dash', 'name_plus' );
 		if( in_array( um_get_option( 'permalink_base'),  $full_name_permalinks ) )
 		{
@@ -344,8 +396,6 @@ class UM_Permalinks {
 					
 					break;
 			}
-
-
 		}
 
 		if ( get_option('permalink_structure') ) {

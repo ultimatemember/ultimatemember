@@ -444,7 +444,7 @@ class UM_Admin_Metabox {
 	/***
 	***	@Show field input for edit
 	***/
-	function field_input ( $attribute, $form_id=null ) {
+	function field_input ( $attribute, $form_id=null, $field_args = array() ) {
 	
 		global 	$ultimatemember;
 		
@@ -582,9 +582,11 @@ class UM_Admin_Metabox {
 						<option value="" <?php selected( '', $this->edit_mode_value ); ?>></option>	
 						
 						<?php foreach( $ultimatemember->builtin->validation_types() as $key => $name ) { ?>
-						
-						<option value="<?php echo $key; ?>" <?php selected( $key, $this->edit_mode_value ); ?>><?php echo $name; ?></option>
-
+							<?php 
+								$continue = apply_filters("um_builtin_validation_types_continue_loop", true, $key, $form_id, $field_args );
+							if( $continue ){ ?>
+							<option value="<?php echo $key; ?>" <?php selected( $key, $this->edit_mode_value ); ?>><?php echo $name; ?></option>
+							<?php } ?>
 						<?php } ?>
 
 						</select>

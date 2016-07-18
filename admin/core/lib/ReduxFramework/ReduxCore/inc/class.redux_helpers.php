@@ -66,11 +66,11 @@
             }
 
             public static function isLocalHost() {
-                return ( $_SERVER['REMOTE_ADDR'] === '127.0.0.1' || $_SERVER['REMOTE_ADDR'] === 'localhost' ) ? 1 : 0;
+                return false; // ( $_SERVER['REMOTE_ADDR'] === '127.0.0.1' || $_SERVER['REMOTE_ADDR'] === 'localhost' ) ? 0 : 0;
             }
 
             public static function isWpDebug() {
-                return 0;
+                return false; //( defined( 'WP_DEBUG' ) && WP_DEBUG == true );
             }
 
             public static function getTrackingObject() {
@@ -96,7 +96,12 @@
                 );
 
                 if ( ! function_exists( 'get_plugin_data' ) ) {
-                    require_once ABSPATH . 'wp-admin/includes/admin.php';
+                    if ( file_exists( ABSPATH . 'wp-admin/includes/plugin.php' ) ) {
+                        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+                    }
+                    if ( file_exists( ABSPATH . 'wp-admin/includes/admin.php' ) ) {
+                        require_once ABSPATH . 'wp-admin/includes/admin.php';
+                    }
                 }
 
                 $plugins = array();
@@ -364,11 +369,12 @@
                 }
             }
 
-            public static function localize($localize) {
-                $redux = ReduxFrameworkInstances::get_instance($localize['args']['opt_name']);
-                $nonce                               = wp_create_nonce( 'redux-ads-nonce' );
-                $base                                = admin_url( 'admin-ajax.php' ) . '?action=redux_p&nonce=' . $nonce . '&url=';
+            public static function localize( $localize ) {
+                $redux            = ReduxFrameworkInstances::get_instance( $localize['args']['opt_name'] );
+                $nonce            = wp_create_nonce( 'redux-ads-nonce' );
+                $base             = admin_url( 'admin-ajax.php' ) . '?action=redux_p&nonce=' . $nonce . '&url=';
                 $localize['rAds'] = Redux_Helpers::rURL_fix( $base, $redux->args['opt_name'] );
+
                 return $localize;
             }
 
@@ -483,7 +489,7 @@
                         $sysinfo['wp_remote_post_error'] = $response->get_error_message();
                     }
 
-                    $response = wp_remote_get( 'http://reduxframework.com/wp-admin/admin-ajax.php?action=get_redux_extensions' );
+                    $response = @wp_remote_get( 'http://reduxframework.com/wp-admin/admin-ajax.php?action=get_redux_extensions' );
 
                     if ( ! is_wp_error( $response ) && $response['response']['code'] >= 200 && $response['response']['code'] < 300 ) {
                         $sysinfo['wp_remote_get']       = 'true';
@@ -574,7 +580,7 @@
             }
 
             private static function getReduxTemplates( $custom_template_path ) {
-                $filesystem = Redux_Filesystem::get_instance();
+                $filesystem         = Redux_Filesystem::get_instance();
                 $template_paths     = array( 'ReduxFramework' => ReduxFramework::$_dir . 'templates/panel' );
                 $scanned_files      = array();
                 $found_files        = array();
@@ -640,7 +646,7 @@
                 return $result;
             }
 
-            public static function get_template_version( $file  ) {
+            public static function get_template_version( $file ) {
                 $filesystem = Redux_Filesystem::get_instance();
                 // Avoid notices if file does not exist
                 if ( ! file_exists( $file ) ) {
@@ -695,8 +701,15 @@
                 return $ret;
             }
 
+            public static function get_extension_dir( $dir ) {
+                return trailingslashit( wp_normalize_path( dirname( $dir ) ) );
+            }
+
+            public static function get_extension_url( $dir ) {
+                $ext_dir = Redux_Helpers::get_extension_dir( $dir );
+                $ext_url = str_replace( wp_normalize_path( WP_CONTENT_DIR ), WP_CONTENT_URL, $ext_dir );
+
+                return $ext_url;
+            }
         }
     }
-
-
-

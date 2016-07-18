@@ -71,7 +71,7 @@ jQuery(document).ready(function() {
 		Select Dropdowns
 	**/
 	
-	jQuery(".umaf-selectjs").select2({
+	jQuery(".umaf-selectjs, .ultimate-member_page_um_options .redux-select-item ").select2({
 		allowClear: false,
 		minimumResultsForSearch: 10
 	});

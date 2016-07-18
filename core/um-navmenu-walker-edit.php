@@ -31,12 +31,12 @@ class UM_Menu_Item_Custom_Fields_Editor {
 			
 			if( $_key == 'um_nav_roles' ){
 
-				$role_key = sprintf( 'menu-item-%s%d', $_key, $menu_item_db_id );
 				$key = sprintf( 'menu-item-%s', $_key );
+                
 				// Sanitize
-				if ( ! empty( $_POST[ $role_key ] ) ) {
+				if ( ! empty( $_POST[ $key ][ $menu_item_db_id ] ) ) {
 					// Do some checks here...
-					$value = $_POST[ $role_key ];
+					$value = $_POST[ $key ][ $menu_item_db_id ];
 				}
 				else {
 					$value = null;
@@ -82,8 +82,8 @@ class UM_Menu_Item_Custom_Fields_Editor {
 			$key   = sprintf( 'menu-item-%s', $_key );
 			$id    = sprintf( 'edit-%s-%s', $key, $item->ID );
 			$name  = sprintf( '%s[%s]', $key, $item->ID );
-			$role_name  = sprintf( '%s%s[]', $key, $item->ID );
 			$value = get_post_meta( $item->ID, $key, true );
+			$role_name  = sprintf( '%s[%s][]', $key, $item->ID );
 			$class = sprintf( 'field-%s', $_key );
 			?>
 			
@@ -108,7 +108,7 @@ class UM_Menu_Item_Custom_Fields_Editor {
 				<?php } ?>
 				
 				<?php if ( $_key == 'um_nav_roles' ) { ?>
-
+				 <?php $role_value = get_post_meta( $item->ID, $_key , true ); ?>
 				<div class="description-wide um-nav-roles">
 				
 					<span class="description"><?php _e( "Select the member roles that can see this link"); ?></span><br />

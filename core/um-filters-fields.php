@@ -373,3 +373,20 @@
 
 		return $options;
 	}
+    
+
+    /**
+     * Filter non-UTF8 strings
+     * @param  string $value 
+     * @return string
+     * @uses hook filter: um_field_non_utf8_value
+     */
+    add_filter('um_field_non_utf8_value','um_field_non_utf8_value');
+    function um_field_non_utf8_value( $value ){
+    	
+    	if( ! preg_match('/[^\\p{Common}\\p{Latin}]/u', $value ) ){
+								$value = htmlentities( $value );
+		}
+
+		return $value;
+    }

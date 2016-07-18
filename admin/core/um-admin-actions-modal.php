@@ -249,21 +249,21 @@
 
 				<div class="um-admin-half">
 				
-					<?php if ( isset( $col1 ) ) {  foreach( $col1 as $opt ) $metabox->field_input ( $opt ); } ?>
+					<?php if ( isset( $col1 ) ) {  foreach( $col1 as $opt ) $metabox->field_input ( $opt, null, $metabox->edit_array ); } ?>
 					
 				</div>
 				
 				<div class="um-admin-half um-admin-right">
 				
-					<?php if ( isset( $col2 ) ) {  foreach( $col2 as $opt ) $metabox->field_input ( $opt ); } ?>
+					<?php if ( isset( $col2 ) ) {  foreach( $col2 as $opt ) $metabox->field_input ( $opt, null, $metabox->edit_array ); } ?>
 					
 				</div><div class="um-admin-clear"></div>
 				
-				<?php if ( isset( $col3 ) ) { foreach( $col3 as $opt ) $metabox->field_input ( $opt ); } ?>
+				<?php if ( isset( $col3 ) ) { foreach( $col3 as $opt ) $metabox->field_input ( $opt, null, $metabox->edit_array ); } ?>
 				
 				<div class="um-admin-clear"></div>
 				
-				<?php if ( isset( $col_full ) ) {foreach( $col_full as $opt ) $metabox->field_input ( $opt ); } ?>
+				<?php if ( isset( $col_full ) ) {foreach( $col_full as $opt ) $metabox->field_input ( $opt, null, $metabox->edit_array ); } ?>
 				
 				<?php do_action('um_admin_field_modal_footer', $arg2, $args, $metabox->in_edit, (isset( $metabox->edit_array ) ) ? $metabox->edit_array : '' ); ?>
 	
