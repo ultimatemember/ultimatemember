@@ -381,20 +381,10 @@
 
 					<div class="um-meta-text">
 						<?php 
-						$allowed_tags = array(
-							    'a' => array(
-							        'href' => array(),
-							        'title' => array()
-							    ),
-							    'br' => array(),
-							    'em' => array(),
-							    'strong' => array(),
-						);
 						
 						$description = get_user_meta( um_user('ID') , 'description', true);
-						
-						if( um_get_option( 'profile_show_html_bio' ) ) : ?>
-							<?php echo make_clickable( wp_kses( $description, $allowed_tags) ); ?>
+					    if( um_get_option( 'profile_show_html_bio' ) ) : ?>
+							<?php echo make_clickable( wpautop( wp_kses_post( $description ) ) ); ?>
 						<?php else : ?>
 							<?php echo esc_html( $description ); ?>
 						<?php endif; ?>
@@ -405,8 +395,10 @@
 					<div class="um-meta-text">
 						<textarea id="um-meta-bio" data-character-limit="<?php echo um_get_option('profile_bio_maxchars'); ?>" placeholder="<?php _e('Tell us a bit about yourself...','ultimatemember'); ?>" name="<?php echo 'description-' . $args['form_id']; ?>" id="<?php echo 'description-' . $args['form_id']; ?>"><?php if ( um_user('description') ) { echo um_user('description'); } ?></textarea>
 						<span class="um-meta-bio-character um-right"><span class="um-bio-limit"><?php echo um_get_option('profile_bio_maxchars'); ?></span></span>
-						<?php if ( $ultimatemember->fields->is_error('description') ) {
-						echo $ultimatemember->fields->field_error( $ultimatemember->fields->show_error('description'), true ); }
+						<?php 
+							if ( $ultimatemember->fields->is_error('description') ) {
+								echo $ultimatemember->fields->field_error( $ultimatemember->fields->show_error('description'), true ); 
+							}
 						?>
 
 					</div>
@@ -683,25 +675,25 @@
 
 		</div>
 
-	<?php foreach( $tabs as $id => $tab ) {
+		<?php foreach( $tabs as $id => $tab ) {
 
-			if ( isset( $tab['subnav'] ) && $active_tab == $id ) {
+				if ( isset( $tab['subnav'] ) && $active_tab == $id ) {
 
-				$active_subnav = ( $ultimatemember->profile->active_subnav() ) ? $ultimatemember->profile->active_subnav() : $tab['subnav_default'];
+					$active_subnav = ( $ultimatemember->profile->active_subnav() ) ? $ultimatemember->profile->active_subnav() : $tab['subnav_default'];
 
-				echo '<div class="um-profile-subnav">';
-				foreach( $tab['subnav'] as $id => $subtab ) {
+					echo '<div class="um-profile-subnav">';
+					foreach( $tab['subnav'] as $id => $subtab ) {
 
-				?>
+					?>
 
-					<a href="<?php echo add_query_arg('subnav', $id ); ?>" class="<?php if ( $active_subnav == $id ) echo 'active'; ?>"><?php echo $subtab; ?></a>
+						<a href="<?php echo add_query_arg('subnav', $id ); ?>" class="<?php if ( $active_subnav == $id ) echo 'active'; ?>"><?php echo $subtab; ?></a>
 
-					<?php
+						<?php
 
+					}
+					echo '</div>';
 				}
-				echo '</div>';
-			}
 
-		}
+			}
 
 	}
