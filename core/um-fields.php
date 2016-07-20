@@ -1660,22 +1660,20 @@ class UM_Fields {
 
 						// add an empty option!
 						$output .= '<option value=""></option>';
+						
+						$use_keyword = apply_filters('um_multiselect_option_value', 0, $data['type'] );
 
-						// add options
+                        // add options
 						foreach( $options as $k => $v ) {
 
 							$v = rtrim( $v );
 
-							$use_keyword = apply_filters('um_multiselect_option_value', 0, $data['type'] );
-
-							if ( $use_keyword ) {
 								$opt_value = $k;
 							} else {
 								$opt_value = $v;
 							}
 
-							$um_field_checkbox_item_title = $opt_value;
-
+							
 							$opt_value = apply_filters('um_field_non_utf8_value',$opt_value );
     
 							$output .= '<option value="'.$opt_value.'" ';
