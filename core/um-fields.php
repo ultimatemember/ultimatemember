@@ -1668,9 +1668,12 @@ class UM_Fields {
 
 							$v = rtrim( $v );
 
+							$um_field_checkbox_item_title = $v;
+							$opt_value = $v;
+							
+							if ( $use_keyword  ) {
+								$um_field_checkbox_item_title = $v;
 								$opt_value = $k;
-							} else {
-								$opt_value = $v;
 							}
 
 							
