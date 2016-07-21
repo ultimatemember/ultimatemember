@@ -1641,10 +1641,13 @@ class UM_Fields {
 						$output .= $this->field_label($label, $key, $data);
 						}
 
+						$use_keyword = apply_filters('um_multiselect_option_value', 0, $data['type'] );
+
 						$output .= '<div class="um-field-area">';
 
-						$output .= '<select multiple="multiple" name="'.$key.'[]" id="'.$key.'" data-maxsize="'. $max_selections . '" data-validate="'.$validate.'" data-key="'.$key.'" class="'.$this->get_class($key, $data, $class).'" style="width: 100%" data-placeholder="'.$placeholder.'">';
+						$output .= '<select multiple="multiple" name="'.$key.'[]" id="'.$key.'" data-maxsize="'. $max_selections . '" data-validate="'.$validate.'" data-key="'.$key.'" class="'.$this->get_class($key, $data, $class).' um-user-keyword_'.$use_keyword.'" style="width: 100%" data-placeholder="'.$placeholder.'">';
 
+						
 						if ( isset($options) && $options == 'builtin'){
 							$options = $ultimatemember->builtin->get ( $filter );
 						}
@@ -1662,8 +1665,7 @@ class UM_Fields {
 						// add an empty option!
 						$output .= '<option value=""></option>';
 						
-						$use_keyword = apply_filters('um_multiselect_option_value', 0, $data['type'] );
-
+						
                         // add options
 						foreach( $options as $k => $v ) {
 
