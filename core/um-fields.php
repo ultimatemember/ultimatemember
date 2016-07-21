@@ -484,7 +484,7 @@ class UM_Fields {
 		} else {
 
 			if ( !isset( $ultimatemember->form->post_form ) ) {
-
+				
 				if ( um_user( $key ) && $this->editing == true ) {
 
 					if ( strstr($key, 'role_') ) {
@@ -1586,14 +1586,15 @@ class UM_Fields {
 
 							$v = rtrim($v);
 
-							if ( !is_numeric( $k ) && in_array($form_key, array('role') ) ) {
+							$option_value = $v;
+							$um_field_checkbox_item_title = $v;
+							
+
+							if ( ! is_numeric( $k ) && in_array($form_key, array('role') ) ) {
 								$option_value = $k;
-							} else {
-								$option_value = $v;
+								$um_field_checkbox_item_title = $v;
 							}
-
-							$um_field_checkbox_item_title = $option_value;
-
+							
 							if ( isset( $options_pair ) ) {
 								$option_value = $k;
 								$um_field_checkbox_item_title = $v;
@@ -1720,7 +1721,7 @@ class UM_Fields {
 						if ( $form_key == 'role' ) {
 
 							global $wpdb;
-							foreach($options as $key => $val ) {
+							foreach($options as $rkey => $val ) {
 								$val = (string) $val;
 								$val = trim( $val );
 								$post_id = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND post_title = '$val'");
@@ -1739,10 +1740,12 @@ class UM_Fields {
 
 							$v = rtrim($v);
 
+							$um_field_checkbox_item_title = $v;
+							$option_value = $v;
+
 							if ( !is_numeric( $k ) && in_array($form_key, array('role') ) ) {
+								$um_field_checkbox_item_title = $v;
 								$option_value = $k;
-							} else {
-								$option_value = $v;
 							}
 
 							$i++;
@@ -1761,8 +1764,6 @@ class UM_Fields {
 							}
 
 							$output .= '<label class="um-field-radio '.$active.' um-field-half '.$col_class.'">';
-
-							$um_field_checkbox_item_title = $option_value;
 
 							$option_value = apply_filters('um_field_non_utf8_value',$option_value );
     
