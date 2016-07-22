@@ -14,7 +14,13 @@ class UM_Register {
 
 	public function verify_nonce( $args ){
 		global $ultimatemember;
+        
+		$allow_nonce_verification = apply_filters("um_register_allow_nonce_verification", true );
 
+		if( ! $allow_nonce_verification  ){
+			return $args;
+		}
+		
 		if ( ! wp_verify_nonce( $args['_wpnonce'], 'um_register_form' ) || empty( $args['_wpnonce'] ) || ! isset( $args['_wpnonce'] ) ) {
 			wp_die('Invalid Nonce.');
 		}
