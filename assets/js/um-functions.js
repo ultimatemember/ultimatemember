@@ -990,7 +990,7 @@ jQuery(function(){
 
 	// Fixed touchscreen sensitivity
 	jQuery(document).on('touchend', function(){
-		jQuery(".select2-search, .select2-focusser").remove();
+		//jQuery(".select2-search, .select2-focusser").remove();
 	})
 
 });
