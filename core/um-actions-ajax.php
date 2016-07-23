@@ -5,8 +5,12 @@
 	***/
 	add_action('wp_head','ultimatemember_ajax_urls');
 	add_action('admin_head','ultimatemember_ajax_urls');
-	function ultimatemember_ajax_urls() { ?>
+	function ultimatemember_ajax_urls() { 
 
+		$enable_ajax_urls = apply_filters("um_enable_ajax_urls", true );
+		if( $enable_ajax_urls ){
+	?>
+ 
 		<script type="text/javascript">
 
 		var ultimatemember_image_upload_url = '<?php echo um_url . 'core/lib/upload/um-image-upload.php'; ?>';
@@ -16,7 +20,7 @@
 		</script>
 
 	<?php
-
+		}
 	}
 
 	/***
