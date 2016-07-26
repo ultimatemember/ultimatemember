@@ -364,7 +364,7 @@ function um_user_ip() {
 					$v = um_user_uploads_uri() . $file;
 				}
 
-				if ( !strstr( $k, 'user_pass' ) && $k != 'g-recaptcha-response' && $k != 'request' ) {
+				if ( !strstr( $k, 'user_pass' ) && ! in_array( $k, array('g-recaptcha-response','request','_wpnonce','_wp_http_referer') ) ) {
 
 					if ( is_array($v) ) {
 						$v = implode(',', $v );
