@@ -1850,6 +1850,7 @@ class UM_Fields {
 							$output .= ' />';
 
 							$output .= '<span class="um-field-checkbox-state"><i class="'.$class.'"></i></span>';
+							$um_field_checkbox_item_title = apply_filters("um_field_checkbox_item_title", $um_field_checkbox_item_title , $key, $v, $data );
 							$output .= '<span class="um-field-checkbox-option">'. __( $um_field_checkbox_item_title ,UM_TEXTDOMAIN) .'</span>';
 							$output .= '</label>';
 
