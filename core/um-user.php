@@ -873,15 +873,16 @@ class UM_User {
 		global $ultimatemember;
 
 		$args['ID'] = $this->id;
-
 		$changes = apply_filters('um_before_update_profile', $changes, $this->id);
+
+	    // hook for name changes
+		do_action('um_update_profile_full_name', $changes );
 
 		// save or update profile meta
 		foreach( $changes as $key => $value ) {
-
-			if ( !in_array( $key, $this->update_user_keys ) ) {
-
-				update_user_meta( $this->id, $key, $value );
+            if ( !in_array( $key, $this->update_user_keys ) ) {
+            	
+            	update_user_meta( $this->id, $key, $value );
 
 			} else {
 
@@ -890,10 +891,8 @@ class UM_User {
 			}
 
 		}
-
-		// hook for name changes
-		do_action('um_update_profile_full_name', $changes );
-
+        
+       
 		// update user
 		if ( count( $args ) > 1 ) {
 			wp_update_user( $args );
