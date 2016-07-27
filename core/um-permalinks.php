@@ -217,7 +217,7 @@ class UM_Permalinks {
 	***	@add a query param to url
 	***/
 	function add_query( $key, $value ) {
-		$this->current_url =  add_query_arg( $key, $value, $this->current_url );
+		$this->current_url =  add_query_arg( $key, $value, $this->get_current_url() );
 		return $this->current_url;
 	}
 	/***
