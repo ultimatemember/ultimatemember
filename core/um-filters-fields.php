@@ -14,15 +14,6 @@
 	}
 
 	/***
-	***	@change birth date label in view
-	***/
-	add_filter('um_view_label_birth_date', 'um_view_label_birth_date');
-	function um_view_label_birth_date( $label ) {
-		$label = __('Age','ultimatemember');
-		return $label;
-	}
-
-	/***
 	***	@outputs a soundcloud track
 	***/
 	add_filter('um_profile_field_filter_hook__soundcloud_track', 'um_profile_field_filter_hook__soundcloud_track', 99, 2);
