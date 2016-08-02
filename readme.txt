@@ -149,6 +149,30 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 == Changelog ==
 
+= 1.3.67: August 02, 2016 =
+
+* New: allow non-editable fields in registration form
+* Fixed: member directory mobile pagination
+* Fixed: biography field validation in profile header and forms
+* Fixed: remove override 'birth date' label
+* Fixed: html support in biography field
+* Fixed: select options search
+* Fixed: select field's search query
+* Fixed: search filters and multi-select fields
+* Fixed: select, radio and checkbox field options
+* Fixed: multiple select in UM settings
+* Fixed: member directory's pagination links
+* Fixed: remove nonce and http referer from submitted user details
+* Fixed: disallow direct access link to posts with enabled category access restriction
+* Added: new filter hook: `um_get_default_cover_uri_filter`
+* Added: new filter hook: `um_register_allow_nonce_verification`
+* Added: new filter hook: `um_get_option_filter__{$option_id}`
+* Added: new filter hook: ` um_profile_{$key}__filter`
+* Added: new filter hook: `um_profile_{$key}_empty__filter`
+* Added: new filter hook `um_enable_ajax_urls`
+* Added: new filter hook `um_field_checkbox_item_title`
+
+
 = 1.3.66: July 14, 2016 =
 
 * Tweak: update translation strings and English translation file.
