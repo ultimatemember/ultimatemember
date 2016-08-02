@@ -495,10 +495,17 @@ class UM_Fields {
 						$key = 'role';
 					}
 
-					if ( um_user( $key ) == $value ) {
+					$um_user_value = um_user( $key );
+
+					if ( $um_user_value == $value ) {
 						return true;
 					}
 
+					if ( is_array( $um_user_value ) && in_array( $value, $um_user_value ) ) {
+						return true;
+					}
+
+					
 				} else {
 
 					if ( isset($data['default']) && $data['default'] == $value ) {
