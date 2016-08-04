@@ -62,7 +62,7 @@ class UM_Permalinks {
 
 		$um_get_option = get_option('um_options');
 
-		$server_name_method = ( $um_get_option['current_url_method'] ) ? $um_get_option['current_url_method'] : 'SERVER_NAME';
+		$server_name_method = isset( $um_get_option['current_url_method'] ) ? $um_get_option['current_url_method'] : 'SERVER_NAME';
 			
 		$um_port_forwarding_url = ( isset( $um_get_option['um_port_forwarding_url'] ) ) ? $um_get_option['um_port_forwarding_url']: '';
 
