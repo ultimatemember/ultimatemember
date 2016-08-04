@@ -17,7 +17,7 @@ class UM_ADDON_system_info {
 		
 		global $ultimatemember;
 		$this->addon = $ultimatemember->addons['system_info'];
-		add_submenu_page('ultimatemember', "System Info","System Info", 'manage_options', 'system_info', array(&$this, 'content') );
+		add_submenu_page('ultimatemember', "System Info","System Info", 'manage_options', 'um_system_info', array(&$this, 'content') );
 		
 	}
 
@@ -28,8 +28,14 @@ class UM_ADDON_system_info {
 			
 			case 'download_system_info':
 				
-				// do something 
-				
+					nocache_headers();
+
+					header( "Content-type: text/plain" );
+					header( 'Content-Disposition: attachment; filename="ultimatemember-system-info.txt"' );
+
+					echo wp_strip_all_tags( $_POST['um-sysinfo'] );
+					exit;
+
 			break;
 			
 			default:
@@ -74,8 +80,8 @@ class UM_ADDON_system_info {
 				echo $this->content;
 			} else { ?>
 
-		<form action="<?php echo esc_url( admin_url( 'admin.php?page=system_info' ) ); ?>" method="post" dir="ltr">
-			<textarea style="width:100%; height:400px;" readonly="readonly" onclick="this.focus();this.select()" id="system-info-textarea" name="edd-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'edd' ); ?>">
+		<form action="<?php echo esc_url( admin_url( 'admin.php?page=um_system_info' ) ); ?>" method="post" dir="ltr">
+			<textarea style="width:100%; height:400px;" readonly="readonly" onclick="this.focus();this.select()" id="system-info-textarea" name="um-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'edd' ); ?>">
 ### Begin System Info ###
 
 ## Please include this information when posting support requests ##
@@ -106,12 +112,14 @@ Permalink Structure:			<?php echo get_option( 'permalink_structure' ) . "\n"; ?>
 Active Theme:				<?php echo $theme . "\n"; ?>
 <?php $show_on_front = get_option( 'show_on_front' ); ?>
 <?php if( $show_on_front == "posts" ): ?>
-Show On Front:				<?php echo get_option( 'show_on_front' ) . "\n" ?>
+Show On Front:				<?php echo get_option( 'show_on_front' ) . "/static\n" ?>
 <?php elseif( $show_on_front == "page" ): ?>
 Page On Front:				<?php $id = get_option( 'page_on_front' ); echo get_the_title( $id ) . ' (#' . $id . ')' . "\n" ?>
 Page For Posts:				<?php $id = get_option( 'page_for_posts' ); echo get_the_title( $id ) . ' (#' . $id . ')' . "\n" ?>
 <?php endif; ?>
 ABSPATH:					<?php echo ABSPATH."\n"; ?>
+<?php $wp_count_posts = wp_count_posts(); ?>
+All Posts/Pages:				<?php echo array_sum((array)$wp_count_posts)."\n";?>
 <?php
 $request['cmd'] = '_notify-validate';
 
@@ -223,7 +231,7 @@ if ( ! empty( $dir ) ){
 --- Web Server Configurations ---
 
 PHP Version:              			<?php echo PHP_VERSION . "\n"; ?>
-MySQL Version:            		<?php echo mysql_get_server_info() . "\n"; ?>
+MySQL Version:            		<?php echo wp_check_php_mysql_versions() . "\n"; ?>
 Web Server Info:          			<?php echo $_SERVER['SERVER_SOFTWARE'] . "\n"; ?>
 
 --- PHP Configurations --
@@ -305,7 +313,7 @@ do_action( 'um_system_info_after' );
 
 ### End System Info ###</textarea>
 			<p class="submit">
-				<input type="hidden" name="um-addon-hook" value="download_sysinfo" />
+				<input type="hidden" name="um-addon-hook" value="download_system_info" />
 				<?php submit_button( 'Download System Info File', 'primary', 'download_system_info', false ); ?>
 			</p>
 		</form>		
