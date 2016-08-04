@@ -63,6 +63,11 @@ class UM_API {
 			__('This add-on enables you to generate dummies.', 'ultimatemember'),
 		);
 
+		$this->addons['system_info'] = array(
+			__('System Info', 'ultimatemember'),
+			__('This add-on enables you to download system information file.', 'ultimatemember'),
+		);
+
 		// include widgets
 		require_once um_path . 'core/widgets/um-search-widget.php';
 
