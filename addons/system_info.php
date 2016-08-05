@@ -160,7 +160,7 @@ Nav Menu Settings: 			<?php if( um_get_option( 'disable_menu' ) == 0 ){ echo "Ye
 Port Forwarding in URL: 		<?php if( um_get_option( 'um_port_forwarding_url' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
 Exclude CSS/JS on Home: 		<?php if( um_get_option( 'js_css_exlcude_home' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
 
---- UM Page Configurations ---
+--- UM Pages Configuration ---
 
 <?php do_action("um_system_info_before_page_config") ?>
 User:						<?php echo get_permalink( um_get_option('core_user') ) . "\n"; ?>
@@ -171,6 +171,50 @@ Login:						<?php echo get_permalink( um_get_option('core_login') ) . "\n"; ?>
 Logout:						<?php echo get_permalink( um_get_option('core_logout') ) . "\n"; ?>
 Password Reset:				<?php echo get_permalink( um_get_option('core_password-reset') ) . "\n"; ?>
 <?php do_action("um_system_info_after_page_config") ?>
+
+-- UM Users Configuration ---
+
+Default New User Role: 		<?php  echo um_get_option('default_role') . "\n"; ?>
+Profile Permalink Base:		<?php  echo um_get_option('permalink_base') . "\n"; ?>
+User Display Name:			<?php  echo um_get_option('display_name') . "\n"; ?>
+Force Name to Uppercase:		<?php echo $this->value( um_get_option('force_display_name_capitlized'), 'yesno', true ); ?>
+Redirect author to profile: 		<?php echo $this->value( um_get_option('author_redirect'), 'yesno', true ); ?>
+Enable Members Directory:	<?php echo $this->value( um_get_option('members_page'), 'yesno', true ); ?>
+Use Gravatars: 				<?php echo $this->value( um_get_option('use_gravatars'), 'yesno', true ); ?>
+<?php if( um_get_option('use_gravatars') ): ?>Gravatar builtin image:		<?php  echo um_get_option('use_um_gravatar_default_builtin_image') . "\n"; ?>
+UM Avatar as blank Gravatar: 	<?php echo $this->value( um_get_option('use_um_gravatar_default_image'), 'yesno', true ); ?><?php endif; ?>
+Require a strong password: 	<?php echo $this->value( um_get_option('reset_require_strongpass'), 'onoff', true ); ?>
+Editable primary email field in profile view:	<?php echo $this->value( um_get_option('editable_primary_email_in_profile'), 'onoff', true ); ?>  
+
+-- UM Access Configuration ---
+
+Panic Key: 								<?php  echo um_get_option('panic_key') . "\n"; ?>
+Global Site Access:						<?php  $arr = array('Site accessible to Everyone','','Site accessible to Logged In Users'); echo $arr[ intval( um_get_option('accessible') ) ] . "\n"; ?>
+<?php if( um_get_option('accessible') == 2 ):?>
+Custom Redirect URL:						<?php echo um_get_option('access_redirect')."\n";?>
+Exclude the following URLs:<?php echo "\t\t\t\t".implode("\t\n\t\t\t\t\t\t\t\t\t\t",um_get_option('access_exclude_uris') )."\n";?><?php endif;?>
+Backend Login Screen for Guests:			<?php echo $this->value( um_get_option('wpadmin_login'), 'yesno', true ); ?>
+<?php if( ! um_get_option('wpadmin_login') ):?>Redirect to alternative login page:			<?php if( um_get_option('wpadmin_login_redirect') == 'um_login_page' ){ echo um_get_core_page('login')."\n"; }else{ echo um_get_option('wpadmin_login_redirect_url')."\n"; }?><?php endif; ?>
+Backend Register Screen for Guests:		<?php echo $this->value( um_get_option('wpadmin_register'), 'yesno', true ); ?>
+<?php if( ! um_get_option('wpadmin_register') ):?>Redirect to alternative register page:		<?php if( um_get_option('wpadmin_register_redirect') == 'um_register_page' ){ echo um_get_core_page('register')."\n"; }else{ echo um_get_option('wpadmin_register_redirect_url')."\n"; }?><?php endif; ?>
+Access Control widget for Admins only: 		<?php echo $this->value( um_get_option('access_widget_admin_only'), 'yesno', true ); ?>
+Enable the Reset Password Limit:			<?php echo $this->value( um_get_option('enable_reset_password_limit'), 'yesno', true ); ?>
+<?php if( um_get_option('enable_reset_password_limit') ) { 
+	echo "Reset Password Limit:\t\t\t\t\t\t".um_get_option('reset_password_limit_number')."\n"; 
+	echo "Disable Reset Password Limit for Admins:\t".$this->value( um_get_option('disable_admin_reset_password_limit'), 'yesno', true ); 
+} ?>
+<?php if( ! empty( um_get_option('wpadmin_allow_ips') ) ){ ?>
+Whitelisted Backend IPs: 					<?php echo count( explode("\n",trim(um_get_option('wpadmin_allow_ips') ) ) )."\n"; ?>
+<?php }?>
+<?php if( ! empty( um_get_option('blocked_ips') ) ){ ?>
+Blocked IP Addresses: 					<?php echo  count( explode("\n",um_get_option('blocked_ips') ) )."\n"; ?>
+<?php }?>
+<?php if( ! empty( um_get_option('blocked_emails') ) ){ ?>
+Blocked Email Addresses: 					<?php echo  count( explode("\n",um_get_option('blocked_emails') ) )."\n"; ?>
+<?php }?>
+<?php if( ! empty( um_get_option('blocked_words') ) ){ ?>
+Blacklist Words: 							<?php echo  count( explode("\n",um_get_option('blocked_words') ) )."\n"; ?>
+<?php }?>
 
 --- UM Total Users ---
 
@@ -201,25 +245,26 @@ foreach($result['avail_roles'] as $role => $count){
 // Show templates that have been copied to the theme's edd_templates dir
 
 $dir = get_stylesheet_directory() . '/ultimate-member/templates/*.php';
-echo "--Templates Directory: 		".$dir."\n";
 if ( ! empty( $dir ) ){
 	$found =  glob( $dir );
 	if( ! empty( $found ) ){
 		foreach ( glob( $dir ) as $file ) {
-			echo "Filename: " . basename( $file ) . "\n";
+			echo "File: " . $file  . "\n";
 		}
 	}else {
 		echo 'N/A'."\n";
 	}
 }
 echo "\n\n";
+
 $dir = get_stylesheet_directory() . '/ultimate-member/templates/emails/*.html';
-echo "-- Email Templates Directory: 		".$dir."\n";
+echo "-- UM Email HTML Templates -- \n\n";
+
 if ( ! empty( $dir ) ){
 	$found =  glob( $dir );
 	if( ! empty( $found ) ){
 		foreach ( glob( $dir ) as $file ) {
-			echo "Filename: " . basename( $file ) . "\n";
+			echo "File: ". $file  . "\n";
 		}
 	}else {
 		echo 'N/A'."\n";
@@ -231,12 +276,12 @@ if ( ! empty( $dir ) ){
 --- Web Server Configurations ---
 
 PHP Version:              			<?php echo PHP_VERSION . "\n"; ?>
-MySQL Version:            		<?php echo wp_check_php_mysql_versions() . "\n"; ?>
+MySQL Version:            		<?php echo $wpdb->db_version() . "\n"; ?>
 Web Server Info:          			<?php echo $_SERVER['SERVER_SOFTWARE'] . "\n"; ?>
 
 --- PHP Configurations --
 
-PHP Safe Mode:            		<?php echo ini_get( 'safe_mode' ) ? "Yes" : "No\n"; ?>
+PHP Safe Mode:            		<?php echo $this->value( ini_get( 'safe_mode' ), 'yesno', true ); ?>
 PHP Memory Limit:         		<?php echo ini_get( 'memory_limit' ) . "\n"; ?>
 PHP Upload Max Size:      		<?php echo ini_get( 'upload_max_filesize' ) . "\n"; ?>
 PHP Post Max Size:        		<?php echo ini_get( 'post_max_size' ) . "\n"; ?>
@@ -323,6 +368,26 @@ do_action( 'um_system_info_after' );
 		<?php
 		    
 	}
+
+	function value( $raw_value = '', $type = 'yesno', $default = '', $default_negate = '' ){
+
+		if( $type == 'yesno' ){
+			if( $default == $raw_value ){
+				$raw_value = "Yes";
+			}else{
+				$raw_value = "No";
+			}
+		}else if( $type == 'onoff' ){
+			if( $default == $raw_value ){
+				$raw_value = "On";
+			}else{
+				$raw_value = "Off";
+			}
+		}
+
+		return $raw_value."\n";
+	}
+
 }
 
 $UM_ADDON_system_info = new UM_ADDON_system_info();
