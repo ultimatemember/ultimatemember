@@ -216,6 +216,23 @@ Blocked Email Addresses: 					<?php echo  count( explode("\n",um_get_option('blo
 Blacklist Words: 							<?php echo  count( explode("\n",um_get_option('blocked_words') ) )."\n"; ?>
 <?php }?>
 
+
+--- UM Email Configurations --
+
+Mail appears from:			<?php if( ! empty( um_get_option('mail_from') ) ){echo um_get_option('mail_from');}else{echo "-";}; echo "\n";?>
+Mail appears from address:	<?php if( ! empty( um_get_option('mail_from_addr') ) ){echo um_get_option('mail_from_addr');}else{echo "-";}; echo "\n";?>
+Use HTML for E-mails:			<?php echo $this->value( um_get_option('email_html'), 'yesno', true ); ?>
+Account Welcome Email:		<?php echo $this->value( um_get_option('welcome_email_on'), 'yesno', true ); ?>
+Account Activation Email:		<?php echo $this->value( um_get_option('checkmail_email_on'), 'yesno', true ); ?>
+Pending Review Email:		<?php echo $this->value( um_get_option('pending_email_on'), 'yesno', true ); ?>
+Account Approved Email:		<?php echo $this->value( um_get_option('approved_email_on'), 'yesno', true ); ?>
+Account Rejected Email:		<?php echo $this->value( um_get_option('rejected_email_on'), 'yesno', true ); ?>
+Account Deactivated Email:	<?php echo $this->value( um_get_option('inactive_email_on'), 'yesno', true ); ?>
+Account Deleted Email:		<?php echo $this->value( um_get_option('deletion_email_on'), 'yesno', true ); ?>
+Password Reset Email:		<?php echo $this->value( um_get_option('resetpw_email_on'), 'yesno', true ); ?>
+Password Changed Email:		<?php echo $this->value( um_get_option('changedpw_email_on'), 'yesno', true ); ?>
+
+
 --- UM Total Users ---
 
 <?php 
