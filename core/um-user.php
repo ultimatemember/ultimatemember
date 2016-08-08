@@ -117,7 +117,7 @@ class UM_User {
 
 	function get_cached_data( $user_id ) {
 
-		$disallow_cache = get_option('um_profile_object_cache_stop');
+		$disallow_cache = um_get_option('um_profile_object_cache_stop');
 		if( $disallow_cache ){
 			return '';
 		}
@@ -134,7 +134,7 @@ class UM_User {
 
 	function setup_cache( $user_id, $profile ) {
 		
-		$disallow_cache = get_option('um_profile_object_cache_stop');
+		$disallow_cache = um_get_option('um_profile_object_cache_stop');
 		if( $disallow_cache ){
 			return '';
 		}
