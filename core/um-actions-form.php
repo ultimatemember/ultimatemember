@@ -443,10 +443,16 @@
 				}
 
 				if ( isset( $args['description'] ) ) {
+					
 					$max_chars = um_get_option('profile_bio_maxchars');
-					if ( strlen( utf8_decode( $args['description'] ) ) > $max_chars && $max_chars  ) {
-							$ultimatemember->form->add_error('description', sprintf(__('Your user description must contain less than %s characters','ultimatemember'), $max_chars ) );
+					$profile_show_bio = um_get_option('profile_show_bio');
+
+					if( $profile_show_bio ){
+						if ( strlen( utf8_decode( $args['description'] ) ) > $max_chars && $max_chars  ) {
+								$ultimatemember->form->add_error('description', sprintf(__('Your user description must contain less than %s characters','ultimatemember'), $max_chars ) );
+						}
 					}
+
 				}
 
 			} // end if ( isset in args array )
