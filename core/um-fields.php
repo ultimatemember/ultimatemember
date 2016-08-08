@@ -910,7 +910,8 @@ class UM_Fields {
 		global $ultimatemember;
 
 		$output = null;
-
+		$disabled = '';
+		
 		// get whole field data
 		if ( isset( $data ) && is_array( $data ) ) {
 			$data = $this->get_field($key);
