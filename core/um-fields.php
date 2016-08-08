@@ -351,7 +351,7 @@ class UM_Fields {
 		}
 
 		if ( isset($data['icon']) && $data['icon'] && isset( $this->field_icons ) && $this->field_icons == 'field' ) {
-			$classes .= 'um-iconed';
+			$classes .= 'um-iconed ';
 		}
 
 		if ($add) {
