@@ -163,24 +163,25 @@
 	add_action('um_admin_do_action__mass_role_sync', 'um_admin_do_action__mass_role_sync');
 	function um_admin_do_action__mass_role_sync( $action ){
 		global $ultimatemember;
-		if ( !is_admin() || !current_user_can( 'edit_user' ) ) die();
+		if ( !is_admin() || !current_user_can( 'edit_user' ) ) wp_die('You don\'t have permissions to access this page.');
 		
-		if ( !isset($_REQUEST['post']) || !is_numeric( $_REQUEST['post'] ) ) die();
+		if ( !isset($_REQUEST['post']) || !is_numeric( $_REQUEST['post'] ) )  wp_die('You\'re not allowed to do this.');
 
 		$post_id = (int) $_REQUEST['post'];
 		
 		$post = get_post( $post_id );
 		$slug = $post->post_name;
-		
+
 		if ( $slug != $_REQUEST['um_role'] )
-			die();
+			wp_die('Invalid community role.');
 		
-		if ( get_post_meta( $post_id, '_um_synced_role', true ) != $_REQUEST['wp_role'] )
-			die();
-		
+		$um_synced_role = get_post_meta( $post_id, '_um_synced_role', true );
+
 		if ( $slug == 'admin' ) {
 			$_REQUEST['wp_role'] = 'administrator';
 			update_post_meta( $post_id, '_um_synced_role', 'administrator' );
+		}else{
+			update_post_meta( $post_id, '_um_synced_role', $_REQUEST['wp_role'] );
 		}
 		
 		$wp_role = ( $_REQUEST['wp_role'] ) ? $_REQUEST['wp_role'] : 'subscriber';

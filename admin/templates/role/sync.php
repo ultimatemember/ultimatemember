@@ -25,7 +25,7 @@ $url = add_query_arg('wp_role', $saved_r, $url);
 			</span>
 		</p><div class="um-admin-clear"></div>
 		
-		<p><a href="<?php echo $url; ?>" class="button"><?php _e('Sync / update all existing users','ultimatemember'); ?></a></p>
+		<p><a href="<?php echo $url; ?>"  id="_um_button_sync_update_button" class="button"><?php _e('Sync / update all existing users','ultimatemember'); ?></a></p>
 
 	</div>
 	
