@@ -366,6 +366,7 @@ class UM_Fields {
 	***/
 	function field_value( $key, $default = false, $data = null ) {
 		global $ultimatemember;
+ 		
 
 		if ( isset($_SESSION) && isset($_SESSION['um_social_profile'][$key]) && isset( $this->set_mode ) && $this->set_mode == 'register' )
 			return $_SESSION['um_social_profile'][$key];

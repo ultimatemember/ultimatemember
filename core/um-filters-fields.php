@@ -87,8 +87,11 @@
 	***	@last login date
 	***/
 	add_filter('um_profile_field_filter_hook__last_login', 'um_profile_field_filter_hook__last_login', 99, 2);
+	add_filter('um_profile_field_filter_hook___um_last_login', 'um_profile_field_filter_hook__last_login', 99, 2);
 	function um_profile_field_filter_hook__last_login( $value, $data ) {
+
 		$value = sprintf( __('Last login: %s','ultimatemember'), um_user_last_login( um_user('ID') ) );
+		
 		return $value;
 	}
 

@@ -633,7 +633,7 @@ class UM_Builtin {
 			
 			'last_login' => array(
 				'title' => __('Last Login','ultimatemember'),
-				'metakey' => 'last_login',
+				'metakey' => '_um_last_login',
 				'type' => 'text',
 				'label' => __('Last Login','ultimatemember'),
 				'required' => 0,
