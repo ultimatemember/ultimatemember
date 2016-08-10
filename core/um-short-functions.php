@@ -276,10 +276,32 @@ function um_user_ip() {
 				$val = $arr[3];
 				$op = $arr[2];
 				$field = um_profile($arr[1]);
-
+				
 				switch( $op ) {
-					case 'equals to': if ( $field != $val ) $state = 0; break;
-					case 'not equals': if ( $field == $val ) $state = 0; break;
+					case 'equals to': 
+
+						if( is_serialized( $field ) ){
+							if ( ! in_array( $val , unserialize( $field ) ) ) {
+								$state = 0; 
+							}
+						}else{
+							if ( $field != $val ) {
+								$state = 0; 
+							}
+						}
+						
+					break;
+					case 'not equals': 
+						if( is_serialized( $field ) ){
+							if ( in_array( $val , unserialize( $field ) ) ) {
+								$state = 0; 
+							}
+						}else{
+							if ( $field == $val ) {
+								$state = 0; 
+							}
+						}
+					break;
 					case 'empty': if ( $field ) $state = 0; break;
 					case 'not empty': if ( !$field ) $state = 0; break;
 					case 'greater than': if ( $field <= $val ) $state = 0; break;
@@ -296,8 +318,28 @@ function um_user_ip() {
 				$field = um_profile($arr[1]);
 
 				switch( $op ) {
-					case 'equals to': if ( $field != $val ) $state = 1; break;
-					case 'not equals': if ( $field == $val ) $state = 1; break;
+					case 'equals to': 
+						if( is_serialized( $field ) ){
+							if ( ! in_array( $val , unserialize( $field ) ) ) {
+								$state = 1; 
+							}
+						}else{
+							if ( $field != $val ) {
+								$state = 1; 
+							}
+						}
+					break;
+					case 'not equals': 
+						if( is_serialized( $field ) ){
+							if ( in_array( $val , unserialize( $field ) ) ) {
+								$state = 1; 
+							}
+						}else{
+							if ( $field == $val ) {
+								$state = 1; 
+							}
+						}
+					break;
 					case 'empty': if ( $field ) $state = 1; break;
 					case 'not empty': if ( !$field ) $state = 1; break;
 					case 'greater than': if ( $field <= $val ) $state = 1; break;
