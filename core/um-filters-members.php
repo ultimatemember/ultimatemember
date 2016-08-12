@@ -30,7 +30,7 @@
 			}
 		}
 
-		if( ! empty( $query_args ) ){
+		if( ! empty( $arr_columns ) ){
 			$query_args['search_columns'] = $arr_columns;
 		}
 		return $query_args;
@@ -60,7 +60,7 @@
 			'value' => '',
 			'compare' => 'NOT EXISTS'
 		);
-
+						
 		return $query_args;
 	}
 
@@ -86,40 +86,27 @@
 
 					if(in_array($field, array('members_page'))) continue;
 
-					if ( in_array( $field, array('gender') ) ) {
-						$operator = '=';
-					} else {
-						$operator = 'LIKE';
-					}
-
-					$arr_filter_field_types = array('checkbox','multiselect');
-					$arr_field_types = apply_filters('um_search_filter_field_types', $arr_filter_field_types );
+					$serialize_value = serialize( strval( $value ) );
 					
-					if ( in_array( $ultimatemember->fields->get_field_type( $field ), $arr_field_types ) ) {
-						$operator = 'LIKE';
-						if( ! empty(  $value ) ){
-							$value = serialize( strval( $value ) );
-						}
-					}
-
-					if( in_array( $ultimatemember->fields->get_field_type( $field ) ,  array('select') ) ){
-						$operator = '=';
-					}
-
 					if ( $value && $field != 'um_search' && $field != 'page_id' ) {
 
 						if ( !in_array( $field, $ultimatemember->members->core_search_fields ) ) {
 
-							if ( strstr($field, 'role_' ) ) {
-								$field = 'role';
-								$operator = '=';
-							}
-
 							$query_args['meta_query'][] = array(
-								'key' => $field,
-								'value' => trim($value),
-								'compare' => $operator,
+									array(
+										'key' => $field,
+										'value' => trim( $value ),
+										'compare' => '=',
+									), 
+									array(
+											'key' => $field,
+											'value' => trim( $serialize_value ),
+											'compare' => 'LIKE',
+									), 
+									'relation' => 'OR',
 							);
+							
+							
 
 						}
 
@@ -129,6 +116,8 @@
 			}
 
 		}
+
+
 
 		// allow filtering
 		$query_args = apply_filters('um_query_args_filter', $query_args );
@@ -270,7 +259,7 @@
 	function um_modify_sortby_randomly( $query ){
 
 		if( um_is_session_started() === FALSE ){
-				session_start();
+				@session_start();
 		}
 		
 		// Reset seed on load of initial 
