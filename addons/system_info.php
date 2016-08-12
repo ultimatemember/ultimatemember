@@ -203,24 +203,24 @@ Enable the Reset Password Limit:			<?php echo $this->value( um_get_option('enabl
 	echo "Reset Password Limit:\t\t\t\t\t\t".um_get_option('reset_password_limit_number')."\n"; 
 	echo "Disable Reset Password Limit for Admins:\t".$this->value( um_get_option('disable_admin_reset_password_limit'), 'yesno', true ); 
 } ?>
-<?php if( ! empty( um_get_option('wpadmin_allow_ips') ) ){ ?>
+<?php  $wpadmin_allow_ips = um_get_option('wpadmin_allow_ips'); if( ! empty( $wpadmin_allow_ips ) ){ ?>
 Whitelisted Backend IPs: 					<?php echo count( explode("\n",trim(um_get_option('wpadmin_allow_ips') ) ) )."\n"; ?>
 <?php }?>
-<?php if( ! empty( um_get_option('blocked_ips') ) ){ ?>
+<?php $blocked_ips = um_get_option('blocked_ips'); if( ! empty( $blocked_ips ) ){ ?>
 Blocked IP Addresses: 					<?php echo  count( explode("\n",um_get_option('blocked_ips') ) )."\n"; ?>
 <?php }?>
-<?php if( ! empty( um_get_option('blocked_emails') ) ){ ?>
+<?php $blocked_emails = um_get_option('blocked_emails'); if( ! empty( $blocked_emails ) ){ ?>
 Blocked Email Addresses: 					<?php echo  count( explode("\n",um_get_option('blocked_emails') ) )."\n"; ?>
 <?php }?>
-<?php if( ! empty( um_get_option('blocked_words') ) ){ ?>
+<?php $blocked_words =  um_get_option('blocked_words'); if( ! empty( $blocked_words ) ){ ?>
 Blacklist Words: 							<?php echo  count( explode("\n",um_get_option('blocked_words') ) )."\n"; ?>
 <?php }?>
 
 
 --- UM Email Configurations --
 
-Mail appears from:			<?php if( ! empty( um_get_option('mail_from') ) ){echo um_get_option('mail_from');}else{echo "-";}; echo "\n";?>
-Mail appears from address:	<?php if( ! empty( um_get_option('mail_from_addr') ) ){echo um_get_option('mail_from_addr');}else{echo "-";}; echo "\n";?>
+Mail appears from:			<?php $mail_from = um_get_option('mail_from'); if( ! empty( $mail_from ) ){echo um_get_option('mail_from');}else{echo "-";}; echo "\n";?>
+Mail appears from address:	<?php $mail_from_addr = um_get_option('mail_from_addr'); if( ! empty( $mail_from_addr ) ){echo um_get_option('mail_from_addr');}else{echo "-";}; echo "\n";?>
 Use HTML for E-mails:			<?php echo $this->value( um_get_option('email_html'), 'yesno', true ); ?>
 Account Welcome Email:		<?php echo $this->value( um_get_option('welcome_email_on'), 'yesno', true ); ?>
 Account Activation Email:		<?php echo $this->value( um_get_option('checkmail_email_on'), 'yesno', true ); ?>
