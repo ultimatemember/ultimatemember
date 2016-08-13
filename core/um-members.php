@@ -149,9 +149,7 @@ class UM_Members {
 		
 		// Prepare for BIG SELECT query
 		$wpdb->query('SET SQL_BIG_SELECTS=1');
-		// Add filter to optimize BIG Select with multiple LEFT JOINs
-		add_filter( 'pre_user_query', array( $this, 'um_optimize_member_query' ) );
-
+		
 		// number of profiles for mobile
 		if ( $ultimatemember->mobile->isMobile() && isset( $profiles_per_page_mobile ) ){
 			$profiles_per_page = $profiles_per_page_mobile;
@@ -164,8 +162,6 @@ class UM_Members {
 		$query_args['paged'] = $members_page;
 		
 		$users = new WP_User_Query( $query_args );
-		
-		remove_filter( 'pre_user_query', array( $this, 'um_optimize_member_query' ) );
 		
 		$array['users'] = array_unique( $users->results );
 
@@ -262,7 +258,7 @@ class UM_Members {
 		}
 
 		return apply_filters('um_prepare_user_results_array', $array );
-		
+
 	}
 
 
