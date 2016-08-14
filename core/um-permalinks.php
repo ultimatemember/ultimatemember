@@ -13,6 +13,7 @@ class UM_Permalinks {
 		add_action('init',  array(&$this, 'activate_account_via_email_link'), 1);
 
 		remove_action( 'wp_head', 'rel_canonical' );
+		
 		add_action('wp_head',  array(&$this, 'um_rel_canonical_'), 9 );
 
 		$this->current_url = $this->get_current_url();
