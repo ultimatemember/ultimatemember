@@ -328,7 +328,7 @@
 
 							if ( is_user_logged_in() ){
 
-								if( isset( $opt['_um_redirect'] ) ) {
+								if( isset( $opt['_um_redirect'] ) && ! empty(  $opt['_um_redirect']  ) ) {
 									$redirect = esc_url( $opt['_um_redirect'] );
 								}else{  
 									$redirect = site_url();
@@ -406,7 +406,7 @@
 						case 1:
 
 							if ( is_user_logged_in() )
-								$ultimatemember->access->redirect_handler = ( isset( $opt['_um_redirect'] ) ) ? $opt['_um_redirect'] : site_url();
+								$ultimatemember->access->redirect_handler = ( isset( $opt['_um_redirect'] ) && !empty( $opt['_um_redirect'] )  ) ? $opt['_um_redirect'] : site_url();
 
 							if ( !is_user_logged_in() )
 								$ultimatemember->access->allow_access = true;
@@ -487,11 +487,10 @@
 	    if ( !isset( $args['custom_access_settings'] ) || $args['custom_access_settings'] == 0 ) {
 
 			$categories = get_the_category( $post->ID );
-
-	   		foreach( $categories as $cat ){
+			foreach( $categories as $cat ){
 
 	   				$opt = get_option("category_{$cat->term_id}");
-
+	   		
 					if ( isset( $opt['_um_accessible'] )  ) {
 						switch( $opt['_um_accessible'] ) {
 
@@ -502,8 +501,10 @@
 
 							case 1: // Logged out users only
 								
-								if ( is_user_logged_in() )
-									$ultimatemember->access->redirect_handler = ( isset( $opt['_um_redirect'] ) ) ? $opt['_um_redirect'] : site_url();
+								if ( is_user_logged_in() ){
+									$ultimatemember->access->redirect_handler = ( isset( $opt['_um_redirect'] ) && ! empty( $opt['_um_redirect'] ) ) ? $opt['_um_redirect'] : site_url();
+									$ultimatemember->access->allow_access = false;
+								}
 
 								if ( !is_user_logged_in() )
 									$ultimatemember->access->allow_access = true;
@@ -549,7 +550,6 @@
 					}
 
 			} // end foreach
-	   		
 	   	}
 
 	   	// post restriction
