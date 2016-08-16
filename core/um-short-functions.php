@@ -268,14 +268,19 @@ function um_user_ip() {
 		if ( !isset( $data['conditions'] ) ) return true;
 
 		$state = 1;
-
+	
 		foreach( $data['conditions'] as $k => $arr ) {
 			if ( $arr[0] == 'show' ) {
 
 				$state = 1;
 				$val = $arr[3];
 				$op = $arr[2];
-				$field = um_profile($arr[1]);
+
+				if( strstr( $arr[1] , 'role_') ){
+					$arr[1] = 'role';
+				}
+
+				$field = um_profile( $arr[1] );
 				
 				switch( $op ) {
 					case 'equals to': 
