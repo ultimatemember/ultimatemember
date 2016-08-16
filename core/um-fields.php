@@ -482,6 +482,8 @@ class UM_Fields {
 
 		if ( isset( $ultimatemember->form->post_form[$key] ) && is_array( $ultimatemember->form->post_form[$key] ) ) {
 
+			echo "<script>console.log(".json_encode( array( "post",  $value, $ultimatemember->form->post_form[$key] ) ).");</script>";
+					
 			if ( in_array( $value, $ultimatemember->form->post_form[$key] ) ){
 				return true;
 			}
@@ -497,7 +499,7 @@ class UM_Fields {
 					}
 
 					$um_user_value = um_user( $key );
-
+					
 					if ( $um_user_value == $value ) {
 						return true;
 					}
@@ -506,7 +508,15 @@ class UM_Fields {
 						return true;
 					}
 
-					
+					if ( is_array( $um_user_value ) ){
+					    foreach( $um_user_value as $u) {
+							if( $u == html_entity_decode( $value ) ){
+								return true;
+							}
+						}
+					}
+
+
 				} else {
 
 					if ( isset($data['default']) && $data['default'] == $value ) {
