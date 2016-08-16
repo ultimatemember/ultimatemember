@@ -37,9 +37,6 @@
 			}else {
 				$ultimatemember->access->redirect_handler = $redirect;
 			}
-
-
-
 		}
 
 
@@ -48,6 +45,31 @@
 		do_action("um_access_post_type",$current_page_type);
 		do_action("um_access_post_type_{$current_page_type}");
 
+
+	}
+
+	/***
+	*** @Custom User homepage redirection
+	***/
+	add_action("um_access_user_custom_homepage","um_access_user_custom_homepage");
+	function um_access_user_custom_homepage(){
+		global $ultimatemember;
+
+		if( ! is_user_logged_in() ) return;
+		if( ! is_front_page() )  return;
+		
+		$role_meta = $ultimatemember->query->role_data( um_user('role') );
+		
+		if( isset( $role_meta['default_homepage'] ) && $role_meta['default_homepage'] == 0 ){
+
+			if( ! empty( $role_meta['redirect_homepage'] ) ){
+				wp_redirect( $role_meta['redirect_homepage'] ); exit;
+			}else{
+				wp_redirect( um_get_core_page('user') ); exit;
+			}
+
+		}
+		
 
 	}
 
@@ -277,8 +299,6 @@
 
 			}
 		}
-
-
 	}
 
 
