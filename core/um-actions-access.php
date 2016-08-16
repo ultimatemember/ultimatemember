@@ -60,6 +60,7 @@
 
 		if ( is_admin() ) return;
 		if ( ! is_front_page()  ) return;
+		if(  is_404() ) return;
 		
 		if ( ! isset( $um_post_id ) && isset( $post->ID ) ){
 			$um_post_id = $post->ID;
@@ -138,7 +139,7 @@
 					$access_roles = array_filter($access_roles);
 
 					if ( !empty( $access_roles ) && !in_array( um_user('role'), $access_roles ) ) {
-						if ( !$access_redirect ) {
+						if ( empty( $access_redirect ) ) {
 							if ( is_user_logged_in() ) {
 								$access_redirect = esc_url( site_url() );
 							} else {
@@ -165,7 +166,8 @@
 		global $ultimatemember, $post;
 
 		if ( is_admin() ) return;
-		if ( ! is_home()  ) return;
+		if ( ! is_home() ) return;
+		if ( is_404() ) return;
 		
 		$access = um_get_option('accessible');
 
@@ -290,7 +292,8 @@
 		if ( is_front_page() || 
 				   is_home() || 
 				   is_feed() || 
-				   is_page() 
+				   is_page() ||
+				   is_404() 
 		) {
 			
 			return;
@@ -459,7 +462,8 @@
 				! get_post_type() ||
 				! isset( $post->ID ) ||
 				is_home()		||
-				is_front_page()
+				is_front_page() ||
+				is_404() 
 		) {
 			
 			return;
