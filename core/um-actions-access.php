@@ -577,7 +577,7 @@
 	   	}
 
 	   	// post restriction
-		if ( isset( $args['custom_access_settings'] ) || $args['custom_access_settings'] == 1 ) {
+		if ( isset( $args['custom_access_settings'] ) && $args['custom_access_settings'] == 1 ) {
 					
 			$redirect_to = null;
 
