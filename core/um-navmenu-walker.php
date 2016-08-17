@@ -16,6 +16,8 @@ class UM_Menu_Item_Custom_Fields_Walker extends Walker_Nav_Menu_Edit {
 	protected function get_fields( $item, $depth, $args = array(), $id = 0 ) {
 		ob_start();
 
+		$id = esc_attr( $item->ID );
+
 		do_action( 'wp_nav_menu_item_custom_fields', $id, $item, $depth, $args );
 
 		return ob_get_clean();
