@@ -1379,6 +1379,8 @@ function um_fetch_user( $user_id ) {
 					$name = implode('-', array_map('ucfirst', explode('-', $name ) ) );
 				}
 
+				$name = apply_filters("um_user_{$data}_case", $name );
+
 				return $name;
 
 				break;
