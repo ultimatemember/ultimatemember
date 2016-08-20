@@ -99,7 +99,7 @@
 		if ( $live_timestamp - $form_timestamp < 3 && um_get_option('enable_timebot') == 1 )
 			wp_die( __('Whoa, slow down! You\'re seeing this message because you tried to submit a form too fast and we think you might be a spam bot. If you are a real human being please wait a few seconds before submitting the form. Thanks!') );
 
-		if ( strlen(trim( $_POST['username_b'] ) ) == 0 ) {
+		if ( empty( trim( $_POST['username_b'] ) ) ) {
 			$ultimatemember->form->add_error('username_b', __('Please provide your username or email','ultimatemember') );
 		}
 
