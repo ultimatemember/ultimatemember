@@ -135,6 +135,8 @@
 		do_action('um_post_registration_save', $user_id, $args);
 
 		do_action('um_post_registration_listener', $user_id, $args);
+		
+		do_action('um_update_profile_full_name', $args );
 
 		do_action('um_post_registration', $user_id, $args);
 
