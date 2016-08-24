@@ -1358,12 +1358,15 @@ function um_fetch_user( $user_id ) {
 			default:
 
 				$value = um_profile($data);
-
+				
 				if ( $ultimatemember->validation->is_serialized( $value ) ) {
 					$value = unserialize( $value );
 				}
 
 				if( $data == 'role' ){
+					if( is_array( $value ) ){
+						$value = implode(",", $value );
+					}
 					return strtolower($value);
 				}
 
