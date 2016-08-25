@@ -103,10 +103,11 @@
 
         foreach ( $_POST as $key => $val ) {
         	if( strstr( $key, "username_b") ){
-        		$user = $val;
+        		$user = trim( $val );
         	}
         }
-		if ( empty( trim( $user ) ) ) {
+
+		if ( empty( $user ) ) {
 			$ultimatemember->form->add_error('username_b', __('Please provide your username or email','ultimatemember') );
 		}
 
