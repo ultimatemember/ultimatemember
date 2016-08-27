@@ -7,6 +7,7 @@ class UM_User {
 		$this->id = 0;
 		$this->usermeta = null;
 		$this->data = null;
+		$this->profile = null;
 
 		$this->banned_keys = array(
 			'metabox','postbox','meta-box',
@@ -373,9 +374,10 @@ class UM_User {
 
 		do_action('um_before_user_role_is_changed');
 
+		$this->profile['role'] = $role;
+		
 		do_action('um_member_role_upgrade', $role, $this->profile['role'] );
 
-		$this->profile['role'] = $role;
 		$this->update_usermeta_info('role');
 
 		do_action('um_after_user_role_is_changed');
@@ -875,10 +877,7 @@ class UM_User {
 		$args['ID'] = $this->id;
 		$changes = apply_filters('um_before_update_profile', $changes, $this->id);
 
-	    // hook for name changes
-		do_action('um_update_profile_full_name', $changes );
-
-		// save or update profile meta
+	   	// save or update profile meta
 		foreach( $changes as $key => $value ) {
             if ( !in_array( $key, $this->update_user_keys ) ) {
             	
@@ -929,27 +928,69 @@ class UM_User {
 	function user_exists_by_name( $value ) {
 
 		global $ultimatemember;
+		
+		// Permalink base
+		$permalink_base = um_get_option('permalink_base');
+
+		$raw_value = $value;
 		$value = $ultimatemember->validation->safe_name_in_url( $value );
 		$value = um_clean_user_basename( $value );
 
-		// if duplicate full name, return the user id
-		if( preg_match( '/( |\.|\-)\d+$/', $value, $matches ) )
-		{
-			return $matches[0];
-		}
+		// Search by Profile Slug
+		$args = array(
+				"fields" => array("ID"),
+				'meta_query' => array(
+			        'relation' => 'OR',
+			        array(
+			        	'key'		=>  'um_user_profile_url_slug_'.$permalink_base,
+			        	'value'		=> strtolower( $raw_value ),
+			        	'compare'	=> '='
+
+			        )
+			       
+			    )
+		);
 		
-		$ids = get_users(array( 'fields' => 'ID', 'meta_key' => 'full_name','meta_value' => $value ,'meta_compare' => '=') );
-		if ( isset( $ids[0] ) && ! empty( $ids[0] ) ){
-			return $ids[0];
+		
+		$ids = new WP_User_Query( $args );
+
+		if( $ids->total_users > 0 ){
+			$um_user_query = current( $ids->get_results() );
+			return $um_user_query->ID;
+		}
+
+		// Search by Display Name or ID
+		$args = array(
+				"fields" => array("ID"),
+				"search" => $value,
+				'search_columns' => array( 'display_name','ID' )
+		);	
+		
+		$ids = new WP_User_Query( $args );
+		
+		if( $ids->total_users > 0 ){
+			$um_user_query = current( $ids->get_results() );
+			return $um_user_query->ID;
 		}
 
 
+		// Search By User Login
 		$value = str_replace(".", "_", $value );
 		$value = str_replace(" ", "", $value );
 		
-		$user = get_user_by( 'login', $value );
-		if ( isset( $user->ID ) &&  $user->ID > 0 ){
-			return $user->ID;
+		$args = array(
+				"fields" => array("ID"),
+				"search" => $value,
+				'search_columns' => array(
+			        'user_login',
+			    )
+		);
+
+		$ids = new WP_User_Query( $args );
+		
+		if( $ids->total_users > 0 ){
+			$um_user_query = current( $ids->get_results() );
+			return $um_user_query->ID;
 		}
 
 		return false;

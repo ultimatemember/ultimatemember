@@ -118,6 +118,7 @@
 		do_action('um_after_user_updated', um_user('ID') );
 		do_action('um_after_user_upload', um_user('ID') );
 		do_action('um_user_after_updating_profile', $to_update );
+		do_action('um_update_profile_full_name', $to_update );
 
 		if ( !isset( $args['is_signup'] ) ) {
 			$url = $ultimatemember->permalinks->profile_url();

@@ -83,29 +83,33 @@
 		global $wpdb;
 
 		$permalink_base = um_get_option('permalink_base');
-			$user_query = new WP_User_Query( 
+		
+		$user_query = new WP_User_Query( 
 				array(
 					 'meta_query'    => array(
 			            'relation'  => 'AND',
 			            array( 
-			                'key'     => 'um_user_profile_url_slug_name_'.$raw,
-			            ),
-			            array(
-			                'key'     => 'account_status',
-			                'value'   => 'awaiting_admin_review',
-			                'compare' => '!='
+			                'key'     => 'um_user_profile_url_slug_'.$permalink_base,
+			                'value'   => $raw,
+			                'compare' => '='
 			            )
-			        )
-				)
+			        ),
+					'fields' => array('ID')
+			    )
 
-			);
-				$result = current( $user_query->get_results() );
-			  $slugname =  '';
+		);
 
-		if( isset( $result->data->ID ) ){
-			  $slugname =  get_user_meta( $result->data->ID, 'um_user_profile_url_slug_name_'.$raw, true );
-			  $value = $slugname;
+		if( $user_query->total_users > 0 ){	
+			 
+			 $result = current( $user_query->get_results() );
+			 $slugname =  '';
+
+			if( isset( $result->ID ) ){
+				  $slugname =  get_user_meta( $result->ID, 'um_user_profile_url_slug_'.$permalink_base, true );
+				  $value = $slugname;
+			}
 		}
+
 
 		$value = apply_filters("um_permalink_base_before_filter", $value );
 		$raw_value = $value;
