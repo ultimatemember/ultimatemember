@@ -55,9 +55,12 @@ class UM_ADDON_generate_random_users {
 				$response = file_get_contents( $json_url );
 				$json = json_decode( $response  );
 				
-				if( ! empty( $json ) && ! get_option('um_generated_dumies') ){
+				if( ! empty( $json )  ){
 					
-					update_option('um_generated_dumies', $json );
+					remove_action('um_after_new_user_register', 'um_after_new_user_register', 10, 2);
+
+					$failed_dummies = 0;
+					$default_role = um_get_option("default_role");
 
 					foreach( $json->results as $dummy ){
 							
@@ -66,27 +69,46 @@ class UM_ADDON_generate_random_users {
 							}else{
 								$password = wp_generate_password( 8, false );
 							}
+							
+							$site_url = @$_SERVER['SERVER_NAME'];
+							$random_generate = wp_generate_password( 4, false );
+
+							if( username_exists( $dummy->login->username ) ){
+								$dummy->login->username = $dummy->login->username.'_'. $random_generate;
+							}
+
+							$dummy->login->email = $dummy->login->username."_dummy@{$site_url}";
+
+							if( email_exists( $dummy->login->email ) ){
+								$dummy->login->email = $dummy->login->username."_dummy_{$random_generate}@{$site_url}";
+							}
 
 							$userdata = array(
 								'display_name' 	=> ucfirst( $dummy->name->first )." ".ucfirst( $dummy->name->last ),
 								'first_name' 	=> ucfirst( $dummy->name->first ),
 							    'last_name' 	=> ucfirst( $dummy->name->last ),
-							    'user_email' 	=> $dummy->email,
+							    'user_email' 	=> $dummy->login->email,
 							    'user_login'  	=> $dummy->login->username,
 							    'user_pass'   	=> $password,
 							);
 
 							$user_id = wp_insert_user( $userdata );
 							
+							if( is_wp_error( $user_id ) ){
+								$failed_dummies++;
+							}
+
 							$usermeta = array(
 								'synced_profile_photo' 		=> $dummy->picture->large,
 								'gender' 					=> ucfirst($dummy->gender),
-								'birth_date' 				=> date("Y/m/d", $dummy->dob),
-								'_um_last_login'			=> date("Y/m/d", $dummy->registered),
+								'birth_date' 				=> date("Y/m/d", strtotime( $dummy->dob) ),
+								'_um_last_login'			=> date("Y/m/d", strtotime( $dummy->registered ) ),
 								'mobile_number'				=> $dummy->cell,
 								'phone_number'				=> $dummy->phone,
 								'synced_gravatar_hashed_id' => md5( strtolower( trim( $dummy->email ) ) ),
 								'account_status'			=> 'approved',
+								'_um_profile_dummy'			=> true,
+								'role'						=> isset( $default_role ) ? $default_role: 'member'
 							);
 
 							if( isset( $_GET['add_cover_photo'] ) && $_GET['add_cover_photo'] == 1 ){
@@ -101,23 +123,39 @@ class UM_ADDON_generate_random_users {
 							foreach ( $usermeta as $key => $value ) {
 								update_user_meta( $user_id, $key, $value );
 							}
+
+							
 					}
+					wp_redirect( admin_url("admin.php?page=generate_random_users") ); exit;
 				}
 
 			break;
 
 			case 'remove_random_users':
 				
-				$json = get_option('um_generated_dumies');
-				
-				if( isset( $json->results ) ){
-					foreach ( $json->results as $dummy ) {
-						$user = get_user_by( 'email', $dummy->email );
-						wp_delete_user( $user->ID );
+				$dummies = new WP_User_Query(
+					array(
+							'fields' => array('ID'),
+							'meta_key' => '_um_profile_dummy',
+							'meta_value' => true,
+							'meta_compare' => '='
+					)
+				);
+
+				if( $dummies->total_users > 0 ){
+					foreach ( $dummies->get_results() as $dummy ) {
+						
+							if( isset( $dummy->ID ) ){
+								wp_delete_user( $dummy->ID );
+							}
+
 					}
 				}
-				
+
 				delete_option('um_generated_dumies');
+				wp_redirect( admin_url("admin.php?page=generate_random_users") );
+				exit;
+
 			break;
 			
 			default:
@@ -149,9 +187,27 @@ class UM_ADDON_generate_random_users {
 			} else { ?>
 			
 			<p>This tool allows you to add dummies as Ultimate Member users. </p>
-			<form method="get">
-			<?php if( ! get_option('um_generated_dumies') ):?>
-				<label for="total_users">How many dummies? <br/><input type="text" name="total_users" value="30" /> <br/><br/>
+		<?php 
+				$dummies = new WP_User_Query(
+					array(
+							'fields' => array('ID'),
+							'meta_key' => '_um_profile_dummy',
+							'meta_value' => true,
+							'meta_compare' => '='
+					)
+				);
+		?>
+		<?php if( $dummies->total_users > 0 ): ?>
+		<form method="get">
+				<p>
+				&nbsp;<input type="submit" class="button button-secondary" value="Remove Generated Dummies (<?php echo $dummies->total_users;?>)"/>
+					<input type="hidden" name="um-addon-hook" value="remove_random_users"/>
+					<input type="hidden" name="page" value="generate_random_users"/>
+		</form>
+		<br/>
+		<?php endif; ?>				
+		<form method="get">
+			<label for="total_users">How many dummies? <br/><input type="text" name="total_users" value="30" /> <br/><br/>
 				<label for="gender">Gender:</label>	<br/>
 				<label><input type='radio' name="gender" value="male"/> Male</label>	<br/>	
 				<label><input type='radio' name="gender" value="female"/> Female</label>	<br/>	
@@ -178,23 +234,12 @@ class UM_ADDON_generate_random_users {
 				<br/><small>if you leave this blank, it will generate random strings password</small>
 				</label>
 				<br/>
-		<?php endif; ?>		
-				<p>
-				<?php if( ! get_option('um_generated_dumies') ):?>
-					<input type="submit" class="button button-primary" value="Start Generating Dummies"/>
-					<input type="hidden" name="um-addon-hook" value="generate_random_users"/>
-				<?php endif; ?>
+				<input type="submit" class="button button-primary" value="Start Generating Dummies"/>
+				<input type="hidden" name="um-addon-hook" value="generate_random_users"/>
+				
+			<?php } ?>
+		</form>
 
-				<?php if( get_option('um_generated_dumies') ):?>
-				<?php $dummies = get_option('um_generated_dumies'); ?>
-				&nbsp;<input type="submit" class="button button-secondary" value="Remove Generated Dummies (<?php echo $dummies->info->results;?>)"/>
-					<input type="hidden" name="um-addon-hook" value="remove_random_users"/>
-				<?php endif; ?>
-
-				<?php } ?>
-				<input type="hidden" name="page" value="generate_random_users"/>
-			</form>
-			
 		</div><div class="clear"></div>
 		
 		<?php
