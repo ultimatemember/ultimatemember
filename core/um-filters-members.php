@@ -22,11 +22,8 @@
 
 			if ( isset( $query[$key] ) && ! empty( $query[$key]  ) ) {
 				$arr_columns[] = $key;
-				if( $key == 'user_login' ){
-					$query_args['search'] = trim($query[$key]);
-				}else{ 
-					$query_args['search'] = '*' . trim($query[$key]) . '*';
-				}
+				$query_args['search'] = '*' . $query[$key] .'*';
+				
 			}
 		}
 
@@ -109,6 +106,11 @@
 										'key' => $field,
 										'value' => trim( $value ),
 										'compare' => '=',
+									), 
+									array(
+										'key' => $field,
+										'value' => trim( $value ),
+										'compare' => 'LIKE',
 									), 
 									array(
 										'key' => $field,
