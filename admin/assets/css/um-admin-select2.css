@@ -187,3 +187,7 @@ body.um-admin .select2-container--default .select2-results__option[aria-selected
 body.um-admin .select2-container .select2-search--inline {
    line-height: 37px !important;
 }
+
+body.um-admin .select2-drop-active {
+     z-index: 99999 !important;
+}
