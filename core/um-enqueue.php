@@ -52,7 +52,7 @@ class UM_Enqueue {
 			$c_url = $ultimatemember->permalinks->get_current_url( get_option('permalink_structure') );
 
 			foreach( $exclude as $match ) {
-				if ( strstr( $c_url, untrailingslashit( $match ) ) ) {
+				if ( ! empty( $c_url ) && strstr( $c_url, untrailingslashit( $match ) ) ) {
 					return;
 				}
 			}
