@@ -20,9 +20,10 @@
 
 		foreach( $ultimatemember->members->core_search_fields as $key ) {
 
-			if ( isset( $query[$key] ) && ! empty( $query[$key]  ) ) {
+			if ( isset( $query[ $key ] ) && ! empty( $query[ $key ]  ) ) {
 				$arr_columns[] = $key;
-				$query_args['search'] = '*' . $query[$key] .'*';
+				$query_args['search'] = '*' . $query[ $key ] .'*';
+				
 				
 			}
 		}
@@ -65,6 +66,7 @@
 				'compare' => 'NOT LIKE'
 			)
 		);
+						
 						
 		return $query_args;
 	}
@@ -265,8 +267,7 @@
 
 		}
 
-
-		return $query_args;
+        return $query_args;
 	}
 
 	/***

@@ -23,8 +23,6 @@ class UM_Members {
 	function user_search_columns( $search_columns ){
 		if ( is_admin() ) {
 			$search_columns[] = 'display_name';
-		} else {
-			$search_columns = array('display_name','user_email','user_login');
 		}
 		return $search_columns;
 	}
