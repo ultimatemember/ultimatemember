@@ -105,7 +105,7 @@ class UM_Form {
 
 				$secure_form_post = apply_filters('um_secure_form_post', true );
 
-				if( $role && isset( $this->form_data['custom_fields'] ) && ! strstr( $this->form_data['custom_fields'], 'role_' ) && $secure_form_post ){ // has assigned role.  Validate non-global forms
+				if( $role && isset( $this->form_data['custom_fields'] ) && ! strstr( $this->form_data['custom_fields'], 'role_' ) && $secure_form_post && $this->form_data['use_global'] == 1 ){ // has assigned role.  Validate non-global forms
 					if ( isset( $this->form_data['role'] ) && ( (boolean) $this->form_data['role'] ) && isset(  $_POST['role']  ) && $_POST['role'] != $role ) {
 						wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
 					} else {
@@ -115,6 +115,9 @@ class UM_Form {
 							}
 						}
 					}
+				}else{
+					$this->post_form['role'] = $role;
+					$this->post_form['submitted']['role'] = $role;
 				}
 
 				if ( isset( $_POST[ $ultimatemember->honeypot ] ) && $_POST[ $ultimatemember->honeypot ] != '' ){
