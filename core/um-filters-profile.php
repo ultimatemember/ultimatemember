@@ -49,7 +49,7 @@
 		if( is_admin() )
 			return $title;
 
-		if (  $id == $ultimatemember->permalinks->core['user'] ) {
+		if (  $id == $ultimatemember->permalinks->core['user'] && in_the_loop() ) {
 			if ( um_is_core_page('user') && um_get_requested_user() ) {
 				$title = um_get_display_name( um_get_requested_user() );
 			} else if ( um_is_core_page('user') && is_user_logged_in() ) {
