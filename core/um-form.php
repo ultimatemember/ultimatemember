@@ -34,9 +34,12 @@ class UM_Form {
 		return 0;
 	}
 
-	/***
-	***	@add errors
-	***/
+
+	/**
+	 * Appends field errors
+	 * @param string $key 
+	 * @param string $error 
+	 */
 	function add_error( $key, $error ) {
 		if ( ! isset( $this->errors[ $key ] ) ){
 
@@ -46,18 +49,22 @@ class UM_Form {
 		}
 	}
 
-	/***
-	***	@has error
-	***/
+	
+	/**
+	 * If a form has errors
+	 * @param  string  $key 
+	 * @return boolean     
+	 */
 	function has_error( $key ) {
 		if ( isset($this->errors[$key]) )
 			return true;
 		return false;
 	}
 
-	/***
-	***	@declare all fields
-	***/
+	
+	/**
+	 * Declare all fields
+	 */
 	function field_declare(){
 		global $ultimatemember;
 		if ( isset( $ultimatemember->builtin->custom_fields ) ) {
@@ -67,9 +74,10 @@ class UM_Form {
 		}
 	}
 
-	/***
-	***	@Checks that we've a form
-	***/
+
+	/**
+	 * Validate form
+	 */
 	function form_init(){
 		global $ultimatemember;
 
@@ -101,25 +109,26 @@ class UM_Form {
 
 				$this->post_form = array_merge( $this->form_data, $this->post_form );
 
-				$role = $this->assigned_role( $this->form_id );
-
+				
 				$secure_form_post = apply_filters('um_secure_form_post', true );
+ 				
+ 				if( isset( $this->form_data['custom_fields'] ) 
+ 					&& strstr( $this->form_data['custom_fields'], 'role_' )
+ 					&& $secure_form_post  ){  // Secure selected role
+					
+					$custom_field_roles = $this->custom_field_roles( $this->form_data['custom_fields'] );
 
-				if( $role && isset( $this->form_data['custom_fields'] ) && ! strstr( $this->form_data['custom_fields'], 'role_' ) && $secure_form_post && $this->form_data['use_global'] == 1 ){ // has assigned role.  Validate non-global forms
-					if ( isset( $this->form_data['role'] ) && ( (boolean) $this->form_data['role'] ) && isset(  $_POST['role']  ) && $_POST['role'] != $role ) {
+					if ( isset( $custom_field_roles ) && ! in_array( $_POST['role'] ,$custom_field_roles ) ) {
 						wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
-					} else {
-						if ( isset( $_POST['role'] ) ) {
-							if ( $role != $_POST['role'] ) {
-									wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
-							}
-						}
-					}
+					} 
+
 				}else{
+					$role = $this->assigned_role( $this->form_id );
 					$this->post_form['role'] = $role;
 					$this->post_form['submitted']['role'] = $role;
 				}
-
+                
+               
 				if ( isset( $_POST[ $ultimatemember->honeypot ] ) && $_POST[ $ultimatemember->honeypot ] != '' ){
 					wp_die('Hello, spam bot!');
 				}
@@ -151,9 +160,12 @@ class UM_Form {
 
 	}
 
-	/***
-	***	@Beautify form data
-	***/
+
+	/**
+	 * Beautify form data
+	 * @param  array $form 
+	 * @return array $form
+	 */
 	function beautify( $form ){
 
 		if (isset($form['form_id'])){
@@ -175,12 +187,16 @@ class UM_Form {
 		return $form;
 	}
 
-	/***
-	***	@Display Form Type as Text
-	***/
-	function display_form_type($mode, $post_id){
+
+	/**
+	 * Display form type as Title
+	 * @param  string $mode  
+	 * @param  integer $post_id
+	 * @return string $output
+	 */
+	function display_form_type( $mode, $post_id ){
 		$output = null;
-		switch($mode){
+		switch( $mode ){
 			case 'login':
 				$output = 'Login';
 				break;
@@ -194,19 +210,66 @@ class UM_Form {
 		return $output;
 	}
 
+	/**
+	 * Assigned roles to a form
+	 * @param  integer $post_id
+	 * @return string $role
+	 */
 	function assigned_role( $post_id ){
 
-		$register_use_globals = get_post_meta( $post_id, '_um_register_use_globals', true);
+		$mode = $this->form_type( $post_id );
+		$use_globals = get_post_meta( $post_id, "_um_{mode}_use_globals", true);
+       
+        $global_role = um_get_option('default_role'); // Form Global settings
 
-		if( $register_use_globals == 1 ){
-			$role = um_get_option('default_role');
-		}else if( $register_use_globals == 0 ){
-			$role = get_post_meta( $post_id, '_um_register_role', true );
+		if( $use_globals == 0 ){ // Non-Global settings
+			$role = get_post_meta( $post_id, "_um_{mode}_role", true );
 		}
 
-		if( ! $role ){
-			$role = false;
+		if( ! $role || $role == 0 ){ // custom role is default, return default role's slug
+			$role = $global_role;
 		}
+
 		return $role;
+	
 	}
+
+	/**
+	 * Get form type
+	 * @param  integer $post_id 
+	 * @return string
+	 */
+	function form_type( $post_id ){
+		
+		$mode = get_post_meta( $post_id, '_um_mode', true );
+		
+		return $mode;
+	} 
+    
+    /**
+     * Get custom field roles
+     * @param  string $custom_fields serialized 
+     * @return array  roles
+     */
+    function custom_field_roles( $custom_fields ){
+        
+        if( is_serialized( $custom_fields ) ){
+        	$fields = unserialize( $custom_fields );
+
+        	if( ! is_array( $fields )  ) return false;
+
+        	foreach ( $fields  as $field_key => $field_settings ) {
+
+        		 if( strstr( $field_key , 'role_') ){
+        		 		if( is_array( $field_settings['options'] ) ){
+                        	return array_keys( $field_settings['options'] );
+        		 		}
+        		 }
+
+        	}
+
+        }
+
+    	return false;
+    }
 }
