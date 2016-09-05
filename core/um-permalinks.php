@@ -280,25 +280,30 @@ class UM_Permalinks {
 			$last_name = um_user( 'last_name' );
 			$full_name = um_user( 'display_name' );
 
-			if( in_array( $permalink_base, array( 'user_login' ) ) ){
-				$search = um_user( 'display_name' );
-			}else{
-				$search = "{$first_name} {$last_name}";
+			$arr_search_keywords = array( um_user( 'display_name' ), "{$first_name} {$last_name}");
+			
+			foreach ( $arr_search_keywords as $keyword ) {
+
+				$search = preg_replace('/\s+/', ' ', $keyword ); 
+
+				// Check for duplicate names
+				$args = array(
+				    'search' =>  $search,
+				    'search_columns' => array( 'display_name' ),
+				    'orderby' => 'registered', 
+				    'order' => 'ASC',
+				    'fields' => array('user_registered','ID')
+				);
+
+				$user_query = new WP_User_Query( $args );
+				if( $user_query->total_users > 1 ){
+					break;
+				}
+				
 			}
+			
 			// Remove double spaces
 			$full_name = preg_replace('/\s+/', ' ', $full_name); 
-			$search = preg_replace('/\s+/', ' ', $search ); 
-
-			// Check for duplicate names
-			$args = array(
-			    'search' =>  $search,
-			    'search_columns' => array( 'display_name' ),
-			    'orderby' => 'registered', 
-			    'order' => 'ASC',
-			    'fields' => array('user_registered','ID')
-			);
-
-			$user_query = new WP_User_Query( $args );
 			
 			$duplicate_hash_name = md5( $full_name );
 
