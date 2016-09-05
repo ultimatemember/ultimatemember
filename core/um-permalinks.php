@@ -279,31 +279,26 @@ class UM_Permalinks {
 			$first_name = um_user( 'first_name' );
 			$last_name = um_user( 'last_name' );
 			$full_name = um_user( 'display_name' );
+			$full_name = preg_replace('/\s+/', ' ', $full_name); // Remove double spaces
 
-			$arr_search_keywords = array( um_user( 'display_name' ), "{$first_name} {$last_name}");
+			$profile_slug = $this->profile_slug( $full_name, $first_name, $last_name );
 			
-			foreach ( $arr_search_keywords as $keyword ) {
-
-				$search = preg_replace('/\s+/', ' ', $keyword ); 
-
-				// Check for duplicate names
-				$args = array(
-				    'search' =>  $search,
-				    'search_columns' => array( 'display_name' ),
-				    'orderby' => 'registered', 
-				    'order' => 'ASC',
-				    'fields' => array('user_registered','ID')
-				);
-
-				$user_query = new WP_User_Query( $args );
-				if( $user_query->total_users > 1 ){
-					break;
-				}
-				
-			}
+			$args = array(
+				'meta_query' => array(
+					'relation' => 'AND',
+						array(
+							'key'     => 'um_user_profile_url_slug_'.$permalink_base,
+							'value'   => $profile_slug,
+				 			'compare' => '='
+						),
+				),
+				'orderby' => 'registered', 
+				'order' => 'ASC',
+				'fields' => array('user_registered','ID'),
+				'exclude' => array( um_user("ID") ),
+			 );
 			
-			// Remove double spaces
-			$full_name = preg_replace('/\s+/', ' ', $full_name); 
+			$user_query = new WP_User_Query( $args );
 			
 			$duplicate_hash_name = md5( $full_name );
 
@@ -322,7 +317,39 @@ class UM_Permalinks {
 			if( ! empty( $duplicate_id ) && $duplicate_id != um_user('ID') ){
 				$full_name = $full_name.' ' . um_user( 'ID' );
 			}
+
+        	$user_in_url = $this->profile_slug( $full_name, $first_name, $last_name );
+
+			update_user_meta( um_user('ID'), 'um_user_profile_url_slug_'.$permalink_base, strtolower( $user_in_url ) );
+        }
+
+		if ( get_option('permalink_structure') ) {
+
+			$profile_url = trailingslashit( untrailingslashit( $profile_url ) );
+			$profile_url = $profile_url . strtolower( $user_in_url ). '/';
+
+		} else {
+
+			$profile_url =  add_query_arg( 'um_user', $user_in_url, $profile_url );
+
+		}
+
+		return $profile_url;
+	}
+
+	/**
+	 * Generate profile slug
+	 * @param string $full_name  
+	 * @param string $first_name 
+	 * @param string $last_name  
+	 * @return string             
+	 */
+	function profile_slug( $full_name, $first_name, $last_name ){
 			
+			$permalink_base = um_get_option('permalink_base');
+
+			$user_in_url = '';
+
 			switch( $permalink_base )
 			{
 				case 'name': // dotted
@@ -422,22 +449,9 @@ class UM_Permalinks {
 					
 					break;
 			}
-		}
 
-		update_user_meta( um_user('ID'), 'um_user_profile_url_slug_'.$permalink_base, strtolower( $user_in_url ) );
-
-		if ( get_option('permalink_structure') ) {
-
-			$profile_url = trailingslashit( untrailingslashit( $profile_url ) );
-			$profile_url = $profile_url . strtolower( $user_in_url ). '/';
-
-		} else {
-
-			$profile_url =  add_query_arg( 'um_user', $user_in_url, $profile_url );
-
-		}
-
-		return $profile_url;
+			return $user_in_url ;
+	
 	}
 
 	/***
