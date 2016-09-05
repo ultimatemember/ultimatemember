@@ -1613,22 +1613,22 @@ class UM_Fields {
 
 						// role field
 						if ( $form_key == 'role' ) {
-
 							global $wpdb;
 							foreach($options as $key => $val ) {
 								$val = (string) $val;
 								$val = trim( $val );
 								$post_id = $wpdb->get_var( 
-									$wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND post_title = %s", $val)
+									$wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND post_name = %s OR post_title = %s", $key, $val )
 								);
 								$_role = get_post( $post_id );
-								$new_roles[ $_role->post_name ] = $_role->post_title;
+								if( isset( $_role->post_title ) ){
+									$new_roles[ $_role->post_name ] = $_role->post_title;
+								}
 								wp_reset_postdata();
 							}
 
 							$options = $new_roles;
 						}
-
 
 						// add an empty option!
 						$output .= '<option value=""></option>';
