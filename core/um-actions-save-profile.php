@@ -57,6 +57,9 @@
 
 			
 		}
+		
+		// regenerate slug
+		$ultimatemember->permalinks->profile_url( true );
 
 
 

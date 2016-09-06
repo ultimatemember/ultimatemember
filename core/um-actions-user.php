@@ -59,6 +59,9 @@
 
 			do_action('um_update_profile_full_name', $_POST);
 
+			// generate profile slug 
+			$ultimatemember->permalinks->profile_url( true );
+
 		}
 
 	}

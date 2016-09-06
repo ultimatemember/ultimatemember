@@ -234,16 +234,23 @@ class UM_Permalinks {
 	/***
 	***	@get profile url for set user
 	***/
-	function profile_url( $to_updated = null ) {
+	function profile_url( $update_slug = false ) {
 		global $ultimatemember, $wpdb;
 
-		$page_id = $this->core['user'];
-		$profile_url = get_permalink( $page_id );
+		// Permalink base
+		$permalink_base = um_get_option('permalink_base');
 
-		$profile_url = apply_filters('um_localize_permalink_filter', $this->core, $page_id, $profile_url );
-
+		// Get user slug
+		$profile_slug = get_user_meta( um_user('ID'), "um_user_profile_url_slug_{$permalink_base}", true );
+		$generate_slug = um_get_option('um_generate_slug_in_directory');
+		
+		// Return existing profile slug
+		if( $generate_slug && $update_slug == false && $profile_slug  ){
+				return $this->profile_permalink( $profile_slug );
+		}
+	
 		// Username
-		if ( um_get_option('permalink_base') == 'user_login' ) {
+		if ( $permalink_base == 'user_login' ) {
 			$user_in_url = um_user('user_login');
 
 			if ( is_email( $user_in_url ) ) {
@@ -254,7 +261,7 @@ class UM_Permalinks {
 					$search_length  = strlen( '.' );
 					$user_in_url    = substr_replace( $user_in_url , '-' , $pos , $search_length );
 				}
-				update_user_meta( um_user('ID') , 'um_email_as_username_'.$user_in_url , $user_email );
+				update_user_meta( um_user('ID') , "um_email_as_username_{$user_in_url}" , $user_email );
 
 			} else {
 
@@ -263,9 +270,7 @@ class UM_Permalinks {
 			}
 
 		}
-		// Permalink base
-		$permalink_base = um_get_option('permalink_base');
-
+		
 		// User ID
 		if ( $permalink_base == 'user_id' ) {
 			$user_in_url = um_user('ID');
@@ -280,14 +285,16 @@ class UM_Permalinks {
 			$last_name = um_user( 'last_name' );
 			$full_name = um_user( 'display_name' );
 			$full_name = preg_replace('/\s+/', ' ', $full_name); // Remove double spaces
-
+			
 			$profile_slug = $this->profile_slug( $full_name, $first_name, $last_name );
 			
+			$duplicate_slug_hash = md5( $profile_slug );
+
 			$args = array(
 				'meta_query' => array(
 					'relation' => 'AND',
 						array(
-							'key'     => 'um_user_profile_url_slug_'.$permalink_base,
+							'key'     => "um_user_profile_url_slug_{$permalink_base}",
 							'value'   => $profile_slug,
 				 			'compare' => '='
 						),
@@ -295,46 +302,62 @@ class UM_Permalinks {
 				'orderby' => 'registered', 
 				'order' => 'ASC',
 				'fields' => array('user_registered','ID'),
-				'exclude' => array( um_user("ID") ),
-			 );
+			);
 			
 			$user_query = new WP_User_Query( $args );
 			
-			$duplicate_hash_name = md5( $full_name );
-
 			if(  $user_query->total_users > 1 ){
 					
 					$duplicate_names = $user_query->get_results();
-			
-					$current = current( $duplicate_names );
 					
-					update_option("um_duplicate_name_{$duplicate_hash_name}", $current->ID );
+					$current = end( $duplicate_names );
+					
+					update_option("um_duplicate_name_{$duplicate_slug_hash}", $current->ID );
 			
 			}
 
-			$duplicate_id = get_option("um_duplicate_name_{$duplicate_hash_name}");
+			$duplicate_id = get_option("um_duplicate_name_{$duplicate_slug_hash}");
 			
 			if( ! empty( $duplicate_id ) && $duplicate_id != um_user('ID') ){
 				$full_name = $full_name.' ' . um_user( 'ID' );
 			}
+			
+			$user_in_url = $this->profile_slug( $full_name, $first_name, $last_name );
 
-        	$user_in_url = $this->profile_slug( $full_name, $first_name, $last_name );
+		}
 
-			update_user_meta( um_user('ID'), 'um_user_profile_url_slug_'.$permalink_base, strtolower( $user_in_url ) );
-        }
+		update_user_meta( um_user('ID'), "um_user_profile_url_slug_{$permalink_base}", $user_in_url  );
+        
+		$profile_url = $this->profile_permalink( $user_in_url );
+
+		return $profile_url;
+	}
+
+	/**
+	 * Get Profile Permalink
+	 * @param  string $slug
+	 * @return string $profile_url
+	 */
+	function profile_permalink( $slug ){
+
+		$page_id = $this->core['user'];
+		$profile_url = get_permalink( $page_id );
+
+		$profile_url = apply_filters('um_localize_permalink_filter', $this->core, $page_id, $profile_url );
 
 		if ( get_option('permalink_structure') ) {
 
 			$profile_url = trailingslashit( untrailingslashit( $profile_url ) );
-			$profile_url = $profile_url . strtolower( $user_in_url ). '/';
+			$profile_url = $profile_url . strtolower( $slug ). '/';
 
 		} else {
 
-			$profile_url =  add_query_arg( 'um_user', $user_in_url, $profile_url );
+			$profile_url =  add_query_arg( 'um_user', $slug, $profile_url );
 
 		}
 
-		return $profile_url;
+		return ! empty( $profile_url ) ? strtolower( $profile_url ) : '';
+
 	}
 
 	/**

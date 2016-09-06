@@ -199,6 +199,7 @@
             if ( $status == 'approved' ) {
 
 				$ultimatemember->user->auto_login( $user_id );
+				$ultimatemember->permalinks->profile_url( true );
 
 				do_action('um_registration_after_auto_login', $user_id );
 
