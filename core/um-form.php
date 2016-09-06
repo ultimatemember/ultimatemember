@@ -117,10 +117,19 @@ class UM_Form {
  					&& $secure_form_post  ){  // Secure selected role
 					
 					$custom_field_roles = $this->custom_field_roles( $this->form_data['custom_fields'] );
+                    
+                    $role = $_POST['role'];
 
-					if ( isset( $custom_field_roles ) && ! in_array( $_POST['role'] ,$custom_field_roles ) ) {
+                    if( is_array( $_POST['role'] ) ){
+                    	$role = current( $_POST['role'] );
+                    }
+
+					if ( isset( $custom_field_roles ) && ! in_array( $role , $custom_field_roles ) ) {
 						wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
 					} 
+
+					$this->post_form['role'] = $role;
+					$this->post_form['submitted']['role'] = $role;
 
 				}else{
 					$role = $this->assigned_role( $this->form_id );
