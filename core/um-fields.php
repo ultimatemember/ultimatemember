@@ -1801,7 +1801,9 @@ class UM_Fields {
 							foreach($options as $rkey => $val ) {
 								$val = (string) $val;
 								$val = trim( $val );
-								$post_id = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND post_title = '$val'");
+								$post_id = $wpdb->get_var(
+									$wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND post_name = %s OR post_title = %s", $rkey, $val )
+								);
 								$_role = get_post($post_id);
 								$new_roles[$_role->post_name] = $_role->post_title;
 								wp_reset_postdata();
