@@ -1998,6 +1998,16 @@ $arr_advanced_fields = array(
 				'off'			=> __('Off','ultimatemember'),
         ),
 
+        array(
+                'id'       		=> 'um_generate_slug_in_directory',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Stop generating profile slugs in member directory','ultimatemember' ),
+				'default' 		=> 0,
+				'desc' 	   		=> __('Turn on If you have performance issue in member directory.','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+        ),
+
 		array(
 				'id'       		=> 'current_url_method',
                 'type'     		=> 'select',
