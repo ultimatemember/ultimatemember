@@ -129,7 +129,10 @@
 			$ultimatemember->account->current_tab = 'general';
 
 			// change password
-			if ( $_POST['current_user_password'] != '' || $_POST['user_password'] != '' || $_POST['confirm_user_password'] != '') {
+			if ( ( isset( $_POST['current_user_password'] ) && $_POST['current_user_password'] != '' ) ||
+				 ( isset( $_POST['user_password'] ) && $_POST['user_password'] != '' ) || 
+				 ( isset( $_POST['confirm_user_password'] ) && $_POST['confirm_user_password'] != '') ) {
+
 				if ( $_POST['current_user_password'] == '' || ! wp_check_password( $_POST['current_user_password'], $user->data->user_pass, $user->data->ID ) ) {
 
 					$ultimatemember->form->add_error('current_user_password', __('This is not your password','ultimatemember') );
