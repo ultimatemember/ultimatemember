@@ -32,13 +32,8 @@
 			$args['template'] = 'message';
 			um_fetch_user( $_REQUEST['uid'] );
 
-			$message = get_post_meta( $_REQUEST['um_form_id'], "_um_pending_message", true );
+			$ultimatemember->shortcodes->custom_message = um_user( um_user('status')  . '_message' );
 			
-			if( empty( $message ) ){
-				$message = um_user( um_user('status')  . '_message' );
-			}
-			
-			$ultimatemember->shortcodes->custom_message = $message;
 			um_reset_user();
 		}
 		
