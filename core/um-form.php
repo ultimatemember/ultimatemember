@@ -131,7 +131,7 @@ class UM_Form {
 					$this->post_form['role'] = $role;
 					$this->post_form['submitted']['role'] = $role;
 
-				}else{
+				}else if( isset( $this->post_form['mode'] ) && $this->post_form['mode'] == 'register' ) {
 					$role = $this->assigned_role( $this->form_id );
 					$this->post_form['role'] = $role;
 					$this->post_form['submitted']['role'] = $role;
