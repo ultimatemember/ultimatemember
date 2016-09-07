@@ -482,8 +482,6 @@ class UM_Fields {
 
 		if ( isset( $ultimatemember->form->post_form[$key] ) && is_array( $ultimatemember->form->post_form[$key] ) ) {
 
-			echo "<script>console.log(".json_encode( array( "post",  $value, $ultimatemember->form->post_form[$key] ) ).");</script>";
-					
 			if ( in_array( $value, $ultimatemember->form->post_form[$key] ) ){
 				return true;
 			}
@@ -500,6 +498,10 @@ class UM_Fields {
 
 					$um_user_value = um_user( $key );
 					
+					if( $key == 'role' ){
+						$um_user_value = strtolower( $um_user_value );
+					}
+
 					if ( $um_user_value == $value ) {
 						return true;
 					}

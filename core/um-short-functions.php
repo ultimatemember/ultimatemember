@@ -203,8 +203,8 @@
 		);
 
 		$replace = apply_filters('um_template_tags_replaces_hook', $replace);
-
-		$content = wp_kses_decode_entities( str_replace($search, $replace, $content) );
+        
+        $content = wp_kses_decode_entities( str_replace($search, $replace, $content) );
 
 		if ( isset( $args['tags'] ) && isset( $args['tags_replace'] ) ) {
 			$content = str_replace($args['tags'], $args['tags_replace'], $content);
@@ -1363,11 +1363,11 @@ function um_fetch_user( $user_id ) {
 					$value = unserialize( $value );
 				}
 
-				if( $data == 'role' ){
+				if( in_array( $data, array('role','gender') ) ){
 					if( is_array( $value ) ){
 						$value = implode(",", $value );
 					}
-					return strtolower($value);
+					return $value;
 				}
 
 				return $value;
@@ -1596,6 +1596,7 @@ function um_fetch_user( $user_id ) {
 					return '';
 
 				break;
+
 
 		}
 
