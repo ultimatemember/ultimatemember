@@ -84,7 +84,8 @@
 
 
 		if( ! isset( $user_email ) ) {
-			$user_email = 'nobody' . $unique_userID . '@' . get_bloginfo('name');
+			$site_url = @$_SERVER['SERVER_NAME'];
+			$user_email = 'nobody' . $unique_userID . '@' . $site_url;
 		}
 
 
