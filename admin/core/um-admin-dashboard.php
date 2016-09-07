@@ -41,7 +41,7 @@ class UM_Admin_Dashboard {
 			// Change the footer text
 			if ( ! get_option( 'um_admin_footer_text_rated' ) ) {
 				
-			$footer_text = sprintf( __( 'If you like Ultimate Member please consider leaving a %s&#9733;&#9733;&#9733;&#9733;&#9733;%s review. It will help us to grow the plugin and make it more popular. Thank you.', 'ultimatemember' ), '<a href="https://wordpress.org/support/view/plugin-reviews/ultimate-member?filter=5#postform" target="_blank" class="um-admin-rating-link" data-rated="' . __( 'Thanks :)', 'ultimatemember' ) . '">', '</a>' );
+			$footer_text = sprintf( __( 'If you like Ultimate Member please consider leaving a %s&#9733;&#9733;&#9733;&#9733;&#9733;%s review. It will help us to grow the plugin and make it more popular. Thank you.', 'ultimatemember' ), '<a href="https://wordpress.org/support/plugin/ultimate-member/reviews/?filter=5" target="_blank" class="um-admin-rating-link" data-rated="' . __( 'Thanks :)', 'ultimatemember' ) . '">', '</a>' );
 			
 			$footer_text .= "<script type='text/javascript'>
 					jQuery('a.um-admin-rating-link').click(function() {
