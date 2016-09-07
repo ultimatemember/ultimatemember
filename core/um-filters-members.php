@@ -43,7 +43,7 @@
 
 		$query_args['meta_query']['relation'] = 'AND';
 
-		if ( !um_user_can('can_edit_everyone')  ) {
+		if ( ! um_user_can('can_edit_everyone')  ) {
 
 			$query_args['meta_query'][] = array(
 				'key' => 'account_status',
@@ -53,20 +53,21 @@
 
 		}
 
-		$query_args['meta_query'][] = array(
-			"relation"	=> "OR",
-			array(
+		if ( ! um_user_can('can_edit_everyone')  ) {
+			$query_args['meta_query'][] = array(
+				"relation"	=> "OR",
+				array(
+						'key' => 'hide_in_members',
+						'value' => '',
+						'compare' => 'NOT EXISTS'
+			    ),
+			    array(
 					'key' => 'hide_in_members',
-					'value' => '',
-					'compare' => 'NOT EXISTS'
-		    ),
-		    array(
-				'key' => 'hide_in_members',
-				'value' => 'Yes',
-				'compare' => 'NOT LIKE'
-			)
-		);
-						
+					'value' => 'Yes',
+					'compare' => 'NOT LIKE'
+				)
+			);
+		}				
 						
 		return $query_args;
 	}
