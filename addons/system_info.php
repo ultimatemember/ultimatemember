@@ -149,6 +149,7 @@ Version:						<?php echo ultimatemember_version . "\n"; ?>
 Upgraded From:            		<?php echo get_option( 'um_version_upgraded_from', 'None' ) . "\n"; ?>
 Current URL Method:			<?php echo um_get_option( 'current_url_method' ). "\n"; ?>
 Cache User Profile:			<?php if( um_get_option( 'um_profile_object_cache_stop' ) == 1 ){ echo "No"; }else{ echo "Yes"; } echo "\n"; ?>
+Generate Slugs on Directories:	<?php if( um_get_option( 'um_generate_slug_in_directory' ) == 1 ){ echo "No"; }else{ echo "Yes"; } echo "\n"; ?>
 Rewrite Rules: 				<?php if( um_get_option( 'um_flush_stop' ) == 1 ){ echo "No"; }else{ echo "Yes"; } echo "\n"; ?>
 Force UTF-8 Encoding: 		<?php if( um_get_option( 'um_force_utf8_strings' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
 Time Check Security: 			<?php if( um_get_option( 'enable_timebot' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
