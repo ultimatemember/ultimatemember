@@ -5,9 +5,9 @@ Contributors: ultimatemember, champsupertramp
 Donate link: 
 Tags: access control, author, authors, author profile, comments, community, communities, conditional fields, conditional logic, conditional menus, content protection, custom fields, file uploads, form builder, front-end login, front-end registration, gravatar, hide wp-admin, login, login page, logged-in users, mandrill, member, members, membership, member directory, online users, profile, profiles, profile builder, registration, restriction, restrict content, role creation, role menus, search filters, sign in, sign up, social network, star ratings, toolbar, user, users, user fields, user profile, user-profile, user profiles, user roles
 Requires at least: 4.1
-Tested up to: 4.5.3
+Tested up to: 4.6.1
 
-Stable Tag: 1.3.68
+Stable Tag: 1.3.69
 
 License: GNU Version 2 or Any Later Version
 
@@ -148,6 +148,45 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.69: September 08, 2016 =
+
+* Enhancements:
+    * Adds a system information tool for support purposes
+    * Adds a new option to disable generating profile slugs on every load of member directory pages.
+         * Located in UM > Settings > Advanced > Stop generating profile slugs in member directory.
+         * This improves the performance when loading profiles in directories. It generates profile slug on Profile Update ( front and back-end ), Registration Process and viewing the Users in the back-end.
+    * Adds new filter hook `um_activate_url` to modify the account activation url.
+    * Adds new filter hooks to modify first and last name cases
+        * `um_user_first_name_case` 
+        * `um_user_last_name_case`
+    * Adds new filter hooks to modify nonces of image and file uploads
+        * `um_file_upload_nonce` 
+        * `um_image_upload_nonce`
+    * Improves search member filters and keyword sensitivity
+    * Improves generation of profile slugs
+    * Improves force capitalization of display names with dash
+    * Improves the pagination and loading of profiles in member directory
+
+* Bugfixes:
+    * Fixes a bug where users in member directory are missing after updating their profile
+    * Fixes a bug to generate random email when email field is not added in a form.
+    * Fixes a bug to show hidden members in member directory for admins
+    * Fixes a bug to validate username length on registration process
+    * Fixes a bug to display profile name in dynamic menu and profile page title
+    * Fixes a bug where frequent security notices show on registration process
+    * Fixes a bug to assign correct role to a user on registration process
+    * Fixes a bug to display correct roles in radio and dropdown fields
+    * Fixes a bug to validate the reset password
+    * Fixes a bug to change the assign of role in navigation menu items
+    * Fixes a bug to select radio field in profile form
+    * Fixes a bug to allow frontpage and posts page to handle custom access settings
+    * Fixes a bug where profile role field's conditional logic doesn't show/hide the second field.
+    * Fixes a bug to show 'Last Login' field in profile edit and view mode.
+    * Fixes a bug to sync roles with users in Edit Roles.
+    * Fixes a bug to disable/enable UM profile cache
+    * Fixes a bug to disable biography field's character limit when added in form
+
 
 = 1.3.68: August 02, 2016 =
 
