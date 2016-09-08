@@ -1581,13 +1581,19 @@ function um_fetch_user( $user_id ) {
 				break;
 
 			case 'cover_photo':
+				
+				$is_default = false;
+
 				if ( um_profile('cover_photo') ) {
 					$cover_uri = um_get_cover_uri( um_profile('cover_photo'), $attrs );
 				} else if( um_profile('synced_cover_photo') ) {
 					$cover_uri = um_profile('synced_cover_photo');
 				}else{
 					$cover_uri = um_get_default_cover_uri();
+					$is_default = true;
 				}
+
+				$cover_uri = apply_filters('um_user_cover_photo_uri__filter', $cover_uri, $is_default, $attrs );
 				
 				if ( $cover_uri )
 					return '<img src="'. $cover_uri .'" alt="" />';
