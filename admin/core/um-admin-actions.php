@@ -4,14 +4,14 @@
 	***	@Add community role to user creatino page
 	***/
 	add_action('admin_footer_text', 'um_add_custom_user_profile_fields');
-	function um_add_custom_user_profile_fields() {
+	function um_add_custom_user_profile_fields($footer_text) {
 		global $ultimatemember, $pagenow;
 
 		if( $pagenow !== 'user-new.php' )
-			return;
+			return $footer_text;
 
 		if( !current_user_can('manage_options') )
-			return false;
+			return $footer_text;
 
 	?>
 	<table id="table_my_custom_field" style="display:none;">
