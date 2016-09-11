@@ -155,7 +155,7 @@ class UM_Members {
 
 		$query_args['number'] = $profiles_per_page;
 		
-		$members_page = isset($_REQUEST['members_page']) ? $_REQUEST['members_page'] : 1;
+		$members_page = isset( $_REQUEST['members_page'] ) ? $_REQUEST['members_page'] : 1;
 		
 		$query_args['paged'] = $members_page;
 		
@@ -165,7 +165,7 @@ class UM_Members {
 
 		$array['total_users'] = (isset( $max_users ) && $max_users && $max_users <= $users->total_users ) ? $max_users : $users->total_users;
 
-		$array['page'] = $members_page;
+		$array['page'] = ! isset( $_REQUEST['members_page'] ) ? $args['page'] : $members_page;
 
 		$array['total_pages'] = ceil( $array['total_users'] / $profiles_per_page );
 
