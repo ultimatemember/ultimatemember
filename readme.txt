@@ -156,7 +156,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
         * `um_user_cover_photo_uri__filter`
 * Bugfixes:
     *  Fixes a bug to allow users change their password in account form
-
+    *  Fixes a bug to reset passwords
 
 = 1.3.69: September 08, 2016 =
 
