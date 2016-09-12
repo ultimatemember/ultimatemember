@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.6.1
 
-Stable Tag: 1.3.70
+Stable Tag: 1.3.71
 
 License: GNU Version 2 or Any Later Version
 
@@ -148,6 +148,16 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.71: September 12, 2016 =
+
+* Enhancements: 
+  * Adds a new filter hook to modify the `cover photo` uri.
+      * `um_user_cover_photo_uri__filter`
+* Bugfixes:
+  *  Fixes a bug to allow users change their password in account form
+  *  Fixes a bug to allow role validation and assigning of roles to users on registration process 
+  *  Fixes a bug to avoid blank admin footer text all around WordPress
 
 = 1.3.70: September 09, 2016 =
 
