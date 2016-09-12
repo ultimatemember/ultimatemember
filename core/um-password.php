@@ -29,7 +29,9 @@ class UM_Password {
 				
 				um_fetch_user( $user_id );
 				
-				if ( $_REQUEST['hash'] != um_user('reset_pass_hash') ) wp_die( __('This is not a valid hash, or it has expired.','ultimatemember') );
+				if ( $_REQUEST['hash'] != um_user('reset_pass_hash') ){
+					wp_die( __('This is not a valid hash, or it has expired.','ultimatemember') );
+				}
 
 				$ultimatemember->user->profile['reset_pass_hash_token'] = current_time( 'timestamp' );
 				$ultimatemember->user->update_usermeta_info('reset_pass_hash_token');
@@ -50,6 +52,10 @@ class UM_Password {
 		
 		if ( !um_user('reset_pass_hash') ) return false;
 		
+		$user_id = um_user('ID');
+		
+		delete_option( "um_cache_userdata_{$user_id}" );
+				
 		$url =  add_query_arg( 'act', 'reset_password', um_get_core_page('password-reset') );
 		$url =  add_query_arg( 'hash', esc_attr( um_user('reset_pass_hash') ), $url );
 		$url =  add_query_arg( 'user_id', esc_attr( um_user('ID') ), $url );

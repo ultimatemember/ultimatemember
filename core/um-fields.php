@@ -2255,8 +2255,12 @@ class UM_Fields {
 						if ( isset( $data['label'] ) ) {
 							$output .= $this->field_label($label, $key, $data);
 						}
+						
+						$res = $this->field_value( $key, $default, $data );
 
-						$res = stripslashes( $this->field_value( $key, $default, $data ) );
+						if( ! empty( $res ) ){
+							$res = stripslashes( $res );
+						}
 
 						$res = apply_filters("um_view_field_value_{$type}", $res, $data );
 
