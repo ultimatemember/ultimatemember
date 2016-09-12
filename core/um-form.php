@@ -136,7 +136,7 @@ class UM_Form {
 					$this->post_form['role'] = $role;
 					$this->post_form['submitted']['role'] = $role;
 				}
-                
+				
                
 				if ( isset( $_POST[ $ultimatemember->honeypot ] ) && $_POST[ $ultimatemember->honeypot ] != '' ){
 					wp_die('Hello, spam bot!');
@@ -227,19 +227,19 @@ class UM_Form {
 	function assigned_role( $post_id ){
 
 		$mode = $this->form_type( $post_id );
-		$use_globals = get_post_meta( $post_id, "_um_{mode}_use_globals", true);
+		$use_globals = get_post_meta( $post_id, "_um_{$mode}_use_globals", true);
        
         $global_role = um_get_option('default_role'); // Form Global settings
 
 		if( $use_globals == 0 ){ // Non-Global settings
-			$role = get_post_meta( $post_id, "_um_{mode}_role", true );
+			$role = get_post_meta( $post_id, "_um_{$mode}_role", true );
 		}
 
-		if( ! $role || $role == 0 ){ // custom role is default, return default role's slug
+		if( empty( $role ) ){ // custom role is default, return default role's slug
 			$role = $global_role;
 		}
-
-		return $role;
+        
+    	return $role;
 	
 	}
 
