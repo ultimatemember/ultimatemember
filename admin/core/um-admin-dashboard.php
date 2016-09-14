@@ -68,7 +68,7 @@ class UM_Admin_Dashboard {
 	 */
 	function get_pending_users_count() {
 		
-		if ( get_option('um_cached_users_queue') > 0 ) {
+		if ( get_option('um_cached_users_queue') > 0 && ! isset( $_REQUEST['delete_count'] ) ) {
 			return get_option('um_cached_users_queue');
 		}
 		
