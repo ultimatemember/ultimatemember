@@ -1620,7 +1620,7 @@ class UM_Fields {
 								$val = (string) $val;
 								$val = trim( $val );
 								$post_id = $wpdb->get_var( 
-									$wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND post_name = %s OR post_title = %s", $key, $val )
+									$wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND ( post_name = %s OR post_title = %s )", $key, $val )
 								);
 								$_role = get_post( $post_id );
 								if( isset( $_role->post_title ) ){
@@ -1804,7 +1804,7 @@ class UM_Fields {
 								$val = (string) $val;
 								$val = trim( $val );
 								$post_id = $wpdb->get_var(
-									$wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND post_name = %s OR post_title = %s", $rkey, $val )
+									$wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND ( post_name = %s OR post_title = %s )", $rkey, $val )
 								);
 								$_role = get_post($post_id);
 								$new_roles[$_role->post_name] = $_role->post_title;
