@@ -7,7 +7,13 @@
 	function um_reset_password_process_hook( $args ) {
 		global $ultimatemember;
 
-		$user = $_POST['username_b'];
+		$user = null;
+		
+		foreach ( $_POST as $key => $val ) {
+        	if( strstr( $key, "username_b") ){
+        		$user = trim( $val );
+        	}
+        }
 
 		if ( !is_email( $user ) ) {
 			$data = get_user_by( 'login', $user );
