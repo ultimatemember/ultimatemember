@@ -200,6 +200,10 @@ class UM_Admin_Notices {
 				$messages[0]['content'] = __('Users have been updated.','ultimatemember');
 				break;
 
+			case 'users_role_updated':
+				$messages[0]['content'] = __('Changed roles.','ultimatemember');
+				break;
+
 			case 'err_users_updated':
 				$messages[0]['err_content'] = __('Super administrators cannot be modified.','ultimatemember');
 				$messages[1]['content'] = __('Other users have been updated.','ultimatemember');

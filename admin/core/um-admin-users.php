@@ -193,16 +193,38 @@ class UM_Admin_Users {
 					}
 
 					if ( $admin_err == 0 ){
-						wp_redirect( admin_url('users.php?update=promote') );
+						
+						$uri = admin_url('users.php');
+						
+						$uri = $this->set_redirect_uri( $uri );
+				
+						$uri = add_query_arg( 'update', 'users_role_updated', $uri );
+						
+						wp_redirect( $uri );
+
 						exit;
+
 					} else {
-						wp_redirect( admin_url('users.php?update=err_admin_role') );
+
+						$uri = admin_url('users.php');
+						
+						$uri = $this->set_redirect_uri( $uri );
+				
+						$uri = add_query_arg( 'update', 'err_admin_role', $uri );
+
+						wp_redirect( $uri );
+
 						exit;
 					}
 
 			} else if ( isset($_REQUEST['um_changeit']) && $_REQUEST['um_changeit'] != '' ) {
 
-				wp_redirect( admin_url('users.php') );
+				$uri = admin_url('users.php');
+				
+				$uri = $this->set_redirect_uri( $uri );
+				
+				wp_redirect( $uri );
+				
 				exit;
 
 			}
@@ -233,7 +255,15 @@ class UM_Admin_Users {
 
 					// Finished. redirect now
 					if ( $admin_err == 0 ){
-						wp_redirect( admin_url('users.php?update=users_updated') );
+
+						$uri = admin_url('users.php');
+						
+						$uri = $this->set_redirect_uri( $uri );
+
+						$uri = add_query_arg( 'update', 'users_updated', $uri );
+
+						wp_redirect( $uri );
+
 						exit;
 					} else {
 						wp_redirect( admin_url('users.php?update=err_users_updated') );
@@ -242,7 +272,12 @@ class UM_Admin_Users {
 
 			} else if ( isset($_REQUEST['um_bulkedit']) && $_REQUEST['um_bulkedit'] != '' ) {
 
-				wp_redirect( admin_url('users.php') );
+				$uri = admin_url('users.php');
+
+				$uri = $this->set_redirect_uri( $uri );
+
+				wp_redirect( $uri );
+
 				exit;
 
 			}
@@ -309,6 +344,10 @@ class UM_Admin_Users {
 
 			</div>
 
+			<?php if( isset( $_REQUEST['status'] ) && ! empty( $_REQUEST['status'] ) ){ ?>
+				<input type="hidden" name="status" id="um_status" value="<?php echo esc_attr( $_REQUEST['status'] );?>"/>
+			<?php } ?>
+
 		<?php
 
 	}
@@ -342,6 +381,30 @@ class UM_Admin_Users {
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Sets redirect URI 
+	 * @param string $uri 
+	 */
+	function set_redirect_uri( $uri ){
+
+		if( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ){
+			$uri = add_query_arg( 's', $_REQUEST['s'], $uri );
+		}
+
+		if( isset( $_REQUEST['status'] ) && ! empty( $_REQUEST['status'] ) ){
+			$uri = add_query_arg( 'status', $_REQUEST['status'], $uri );
+		}
+
+		if( isset( $_REQUEST['um_filter_role'] ) && ! empty( $_REQUEST['um_filter_role'] ) ){
+			foreach ( $_REQUEST['um_filter_role'] as $key => $value) {
+				$uri = add_query_arg( 'um_filter_role', $value, $uri );
+			}
+		}
+
+		return $uri;
+
 	}
 
 }
