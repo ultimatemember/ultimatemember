@@ -435,7 +435,8 @@ class UM_Fields {
 				$field_value = um_user( $key );
 				$field_value= apply_filters('um_is_selected_filter_value', $field_value);
 
-				if ( $field_value && $this->editing == true && is_array( $field_value ) && in_array( $value, $field_value ) ) {
+
+				if ( $field_value && $this->editing == true && is_array( $field_value ) && ( in_array( $value, $field_value ) || in_array( html_entity_decode( $value ), $field_value ) )  ) {
 					return true;
 				}
 
