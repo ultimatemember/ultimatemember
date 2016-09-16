@@ -411,7 +411,24 @@ $this->sections[] = array(
 				'add_text'		=> __('Add New URL','ultimatemember'),
 				'required'		=> array( 'accessible', '=', 2 ),
 		),
-
+ 		array(
+                'id'       		=> 'home_page_accessible',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Allow Homepage to be accessible','ultimatemember' ),
+				'default' 		=> 1,
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
+				'required'		=> array( 'accessible', '=', 2 ),
+        ),
+ 		array(
+                'id'       		=> 'category_page_accessible',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Allow Category pages to be accessible','ultimatemember' ),
+				'default' 		=> 1,
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
+				'required'		=> array( 'accessible', '=', 2 ),
+        ),
         array(
                 'id'       		=> 'wpadmin_login',
                 'type'     		=> 'switch',

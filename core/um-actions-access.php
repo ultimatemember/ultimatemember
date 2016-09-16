@@ -37,6 +37,26 @@
 			}else {
 				$ultimatemember->access->redirect_handler = $ultimatemember->access->set_referer( $redirect, "global" );
 			}
+
+			// Disallow access in homepage
+			if( is_front_page() || is_home() ){
+				$home_page_accessible = um_get_option("home_page_accessible");
+				if( $home_page_accessible == 0 ){
+					$ultimatemember->access->redirect_handler = $ultimatemember->access->set_referer( $redirect, "global" );
+
+					wp_redirect( $ultimatemember->access->redirect_handler ); exit;
+				}
+				
+			}
+
+			// Disallow access in category pages
+			if( is_category() ){
+				$category_page_accessible = um_get_option("category_page_accessible");
+				if( $category_page_accessible == 0 ){
+					$ultimatemember->access->redirect_handler = $ultimatemember->access->set_referer( $redirect, "global" );
+					wp_redirect( $ultimatemember->access->redirect_handler ); exit;
+				}
+			}
 		}
 
 
