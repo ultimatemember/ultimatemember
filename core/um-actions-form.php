@@ -158,10 +158,34 @@
 	        $ultimatemember->form->add_error('profile_photo', sprintf(__('%s is required.','ultimatemember'), 'Profile Photo' ) );
 	    }
 
-		if( isset(  $fields ) && ! empty(  $fields ) ){
+	   
+	   if( isset(  $fields ) && ! empty(  $fields ) ){
 			foreach( $fields as $key => $array ) {
 
 				$array = apply_filters('um_get_custom_field_array', $array, $fields );
+				
+				if( isset( $array ['conditions'] ) && ! empty(  $array ['conditions'] )  ){ 
+					
+					foreach( $array ['conditions'] as $condition ){
+						
+						$visibility = $condition[0];
+						$parent_key = $condition[1];
+						$op = $condition[2];
+						$parent_value = $condition[3];
+						
+						if( $visibility == 'hide' ){
+							if( $op == 'equals to' ){
+
+								if( $args[ $parent_key ] == $parent_value ){
+										continue 2; 
+								}
+							
+							}
+						}
+
+					}
+					
+				}
 
 				if ( isset( $array['type'] ) && $array['type'] == 'checkbox' && isset( $array['required'] ) && $array['required'] == 1 && !isset( $args[$key] ) ) {
 					$ultimatemember->form->add_error($key, sprintf(__('%s is required.','ultimatemember'), $array['title'] ) );
