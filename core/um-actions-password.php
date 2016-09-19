@@ -61,12 +61,7 @@
 
 		global $ultimatemember;
 
-		um_fetch_user( $user_id );
-
 		$ultimatemember->user->password_changed();
-
-		um_reset_user();
-
 
 		return false;
 	}
