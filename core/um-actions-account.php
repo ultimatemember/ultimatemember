@@ -369,7 +369,8 @@
 	function um_account_user_photo_hook__mobile( $args ) {
 		global $ultimatemember;
 		extract( $args );
-
+        if (um_get_option('account_show_profile') == 0)
+            return;
 		?>
 
 		<div class="um-account-meta radius-<?php echo um_get_option('profile_photocorner'); ?> uimob340-show uimob500-show">
@@ -394,7 +395,8 @@
 	function um_account_user_photo_hook( $args ) {
 		global $ultimatemember;
 		extract( $args );
-
+        if (um_get_option('account_show_profile') == 0)
+            return;
 		?>
 
 		<div class="um-account-meta radius-<?php echo um_get_option('profile_photocorner'); ?>">

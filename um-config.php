@@ -256,6 +256,16 @@ $this->sections[] = array(
     'fields'     => array(
 
         array(
+                'id'       		=> 'account_show_profile',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Show info','ultimatemember' ),
+				'default' 		=> 1,
+				'desc' 	   		=> 'Show profile info in account page',
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+        ),
+
+        array(
                 'id'       		=> 'account_tab_password',
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Password Account Tab','ultimatemember' ),
