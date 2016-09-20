@@ -873,7 +873,7 @@ $this->sections[] = array(
                 'type'     => 'switch',
                 'title'    => __( 'Password Changed Email','ultimatemember' ),
 				'default'  => 1,
-				'desc' 	   => __('Whether to send the user an email when he request to reset password (Recommended, please keep on)','ultimatemember'),
+				'desc' 	   => __('Whether to send the user an email when he changed password (Recommended, please keep on)','ultimatemember'),
         ),
 
         array(
