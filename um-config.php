@@ -595,9 +595,9 @@ $this->sections[] = array(
         array(
                 'id'       => 'bcc_user_emails',
                 'type'     => 'switch',
-                'title'    => __( 'BCC user email to Admin','ultimatemember' ),
+                'title'    => __( 'BCC user emails to Admin','ultimatemember' ),
 				'default'  => 0,
-				'desc' 	   => __('Whether to BCC all user email to admin address set in Notifocation page.','ultimatemember'),
+				'desc' 	   => __('Whether to BCC all user emails to admin address set in Notifocation page.','ultimatemember'),
         ),
 
         array(
