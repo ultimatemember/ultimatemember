@@ -77,6 +77,8 @@ class UM_Mail {
 
 		$this->attachments = null;
 		$this->headers = 'From: '. um_get_option('mail_from') .' <'. um_get_option('mail_from_addr') .'>' . "\r\n";
+        if (um_get_option('bcc_user_emails'))
+            $this->headers .= 'Bcc: '.um_get_option('admin_email'). "\r\n";
 
 		$this->subject = um_get_option( $template . '_sub' );
 		$this->subject = um_convert_tags( $this->subject, $args );
