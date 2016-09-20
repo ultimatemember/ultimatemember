@@ -121,6 +121,19 @@
 	}
 
 
+    function um_get_user_ip()
+    {
+        $ip = $_SERVER['REMOTE_ADDR'];
+
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $for_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+
+            if (filter_var($for_ip,FILTER_VALIDATE_IP))
+                $ip .= ' ('.$_SERVER['HTTP_X_FORWARDED_FOR'].')';
+        }
+        return $ip;
+    }
+
 	/**
 	 * Checks if session has been started
 	 * @return bool
@@ -177,6 +190,7 @@
 			'{user_account_link}',
 			'{submitted_registration}',
 			'{user_avatar_url}',
+            '{user_ip}'
 		);
 
 		$search = apply_filters('um_template_tags_patterns_hook', $search);
@@ -200,6 +214,7 @@
 			um_get_core_page('account'),
 			um_user_submitted_registration(),
 			um_get_user_avatar_url(),
+            um_get_user_ip()
 		);
 
 		$replace = apply_filters('um_template_tags_replaces_hook', $replace);
