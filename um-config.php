@@ -568,6 +568,14 @@ $this->sections[] = array(
     'title'      => __( 'Emails','ultimatemember'),
     'fields'     => array(
 
+        array(
+                'id'       => 'emails_off',
+                'type'     => 'switch',
+                'title'    => __( 'Disable all emails.','ultimatemember' ),
+				'default'  => 0,
+				'desc' 	   => __('Disable actual send, write to debug.log file. Useful for tests.','ultimatemember'),
+        ),
+
 		array(
 				'id'       => 'mail_from',
                 'type'     => 'text',
