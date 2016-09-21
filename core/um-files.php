@@ -537,7 +537,9 @@ class UM_Files {
 			wp_die( __('Unauthorized to do this attempt.','ultimatemember') );
 		}
 
-		if ( !is_user_logged_in() && ( $key == 'profile_photo' || $key == 'cover_photo' ) ) {
+		$allow_frontend_image_uploads = apply_filters('um_allow_frontend_image_uploads', false, $user_id, $key );
+
+		if ( $allow_frontend_image_uploads == false && !is_user_logged_in() && ( $key == 'profile_photo' || $key == 'cover_photo' ) ) {
 			wp_die( __('Unauthorized to do this attempt.','ultimatemember') );
 		}
 
