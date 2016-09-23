@@ -378,6 +378,9 @@ class UM_Files {
 			}
 		}
 
+		$data = apply_filters("um_image_handle_global__option", $data );
+		$data = apply_filters("um_image_handle_{$field}__option", $data );
+
 		if ( $fileinfo['invalid_image'] == true ) {
 			$error = sprintf(__('Your image is invalid or too large!','ultimatemember') );
 		} elseif ( isset( $data['allowed_types'] ) && !$this->in_array( $fileinfo['extension'], $data['allowed_types'] ) ) {
