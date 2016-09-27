@@ -51,10 +51,21 @@ class UM_ADDON_generate_random_users {
 						$json_url = add_query_arg('results', $total_users, $json_url );
 						$arr_post_header['results'] = $total_users;
 					}
+
+
+				$response = wp_remote_get(  $json_url, array('timeout' =>  120 ) );
+				$json = '';
 				
-				$response = file_get_contents( $json_url );
-				$json = json_decode( $response  );
-				
+				if( is_array($response) ) {
+				  	if( isset( $response['body'] ) && ! empty( $response['body'] ) ){
+					  $json = json_decode(  $response['body'] );
+					}
+				}
+
+				if( is_wp_error( $response ) ){
+					wp_die( $response->get_error_message() );
+				}
+
 				if( ! empty( $json )  ){
 					
 					remove_action('um_after_new_user_register', 'um_after_new_user_register', 10, 2);
