@@ -479,16 +479,16 @@ function um_user_ip() {
 	}
 
 
-function um_profile_id() {
+	function um_profile_id() {
 
-	if ( um_get_requested_user() ) {
-		return um_get_requested_user();
-	} else if ( is_user_logged_in() && get_current_user_id() ) {
-		return get_current_user_id();
+		if ( um_get_requested_user() ) {
+			return um_get_requested_user();
+		} else if ( is_user_logged_in() && get_current_user_id() ) {
+			return get_current_user_id();
+		}
+
+		return 0;
 	}
-
-	return 0;
-}
 
 	/***
 	***	@Check that temp upload is valid
