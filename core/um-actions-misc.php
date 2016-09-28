@@ -29,7 +29,13 @@
 					break;
 					
 				case 'refresh':
+
 					$url = $ultimatemember->permalinks->get_current_url();
+
+					if ( defined('DOING_AJAX') && DOING_AJAX ) { 
+						$url = apply_filters('um_browser_url_redirect_to__filter', $url );
+					}
+
 					break;
 					
 			}
