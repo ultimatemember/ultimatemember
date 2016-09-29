@@ -42,7 +42,7 @@
 	***	@update user's profile
 	***/
 	add_action('um_user_edit_profile', 'um_user_edit_profile', 10);
-	function um_user_edit_profile($args){
+	function um_user_edit_profile( $args ){
 
 		global $ultimatemember;
 
@@ -121,7 +121,9 @@
 		}
 
 		do_action('um_user_after_updating_profile', $to_update );
+
 		do_action('um_update_profile_full_name', $to_update );
+
 
 		if ( !isset( $args['is_signup'] ) ) {
 			$url = $ultimatemember->permalinks->profile_url( true );
