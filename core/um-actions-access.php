@@ -557,6 +557,8 @@
 		}
 
 		$args = $ultimatemember->access->get_meta( $um_post_id );
+
+
 		extract( $args );
 
 		// Check for parent page's custom access settings
@@ -732,7 +734,7 @@
 			}
 		}
 
-		if( um_is_core_page('user') && ! is_user_logged_in() && ! empty( $access_redirect ) ){
+		if( um_is_core_page('user') && ! is_user_logged_in() && ! empty( $access_redirect ) && isset( $args['custom_access_settings'] ) && $args['custom_access_settings'] != 0  ){
 		  		$ultimatemember->access->allow_access = false;
 		  		$access_redirect = $ultimatemember->access->set_referer( $access_redirect, "user_page" );
 				$ultimatemember->access->redirect_handler = esc_url( $access_redirect );
