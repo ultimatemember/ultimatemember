@@ -206,6 +206,8 @@
 
 			<div class="um-cover <?php if ( um_profile('cover_photo') || ( $default_cover && $default_cover['url'] ) ) echo 'has-cover'; ?>" data-user_id="<?php echo um_profile_id(); ?>" data-ratio="<?php echo $args['cover_ratio']; ?>">
 
+				<?php do_action('um_cover_area_content', um_profile_id() ); ?>
+
 				<?php
 
 					if ( $ultimatemember->fields->editing ) {
