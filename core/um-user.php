@@ -690,6 +690,8 @@ class UM_User {
 			}
 		}
 
+		wp_reset_query();  
+
 		$ultimatemember->profile->arr_user_roles[ 'is_1' ][ $slug ] = $role_id;
 		$ultimatemember->profile->arr_user_roles[ 'is_'  ][ $slug ] = $role_title;
 
