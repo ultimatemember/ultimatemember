@@ -574,6 +574,8 @@ $this->sections[] = array(
                 'title'    => __( 'Disable all emails.','ultimatemember' ),
 				'default'  => 0,
 				'desc' 	   => __('Disable actual send, write to debug.log file. Useful for tests.','ultimatemember'),
+				'on'			=> __('Yes','ultimatemember'),
+				'off'			=> __('No','ultimatemember'),
         ),
 
 		array(
