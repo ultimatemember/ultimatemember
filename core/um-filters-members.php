@@ -104,7 +104,7 @@
 
 						if ( !in_array( $field, $ultimatemember->members->core_search_fields ) ) {
 
-							$query_args['meta_query'][] = array(
+							$field_query = array(
 									array(
 										'key' => $field,
 										'value' => trim( $value ),
@@ -123,7 +123,9 @@
 									'relation' => 'OR',
 							);
 							
-							
+
+							$field_query = apply_filters("um_query_args_{$field}__filter", $field_query );
+							$query_args['meta_query'][] = $field_query;
 
 						}
 
@@ -134,9 +136,7 @@
 
 		}
 
-
-
-		// allow filtering
+        // allow filtering
 		$query_args = apply_filters('um_query_args_filter', $query_args );
 
 		if ( count ($query_args['meta_query']) == 1 ) {
