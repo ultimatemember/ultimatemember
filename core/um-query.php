@@ -6,11 +6,11 @@ class UM_Query {
 	public $roles = array();
 
 	function __construct() {
-		
+
 		add_action('wp_loaded', array(&$this, 'get_post_types'), 100 );
-		
+
 	}
-	
+
 	/***
 	***	@get wp pages
 	***/
@@ -22,11 +22,11 @@ class UM_Query {
 		}
 
 		$count_pages = wp_count_posts('page');
-		
+
 		if ( $count_pages->publish > 300 ){
 			return 'reached_maximum_limit';
 		}
-		
+
 
 		$pages = $wpdb->get_results('SELECT * FROM '.$wpdb->posts.' WHERE post_type = "page" AND post_status = "publish" ', OBJECT);
 
@@ -41,27 +41,27 @@ class UM_Query {
 
 		return $array;
 	}
-	
+
 	/***
 	***	@get all forms
 	***/
 	function forms() {
-	
+
 		$args = array(
 			'post_type' => 'um_form',
 			'posts_per_page' => 200,
 			'post_status' => array('publish')
 		);
-		
+
 		$query = new WP_Query( $args );
 		foreach( $query->posts as $post ) {
 			setup_postdata( $post );
 			$results[ $post->ID ] = $post->post_title;
 		}
 		return $results;
-		
+
 	}
-	
+
 	/***
 	***	@get all post types
 	***/
@@ -71,18 +71,18 @@ class UM_Query {
 			$this->get_post_types[] = $k;
 		}
 	}
-	
+
 	/***
 	***	@Do custom queries
 	***/
 	function make( $args ) {
-		
+
 		$defaults = array(
 			'post_type' => 'post',
 			'post_status' => array('publish')
 		);
 		$args = wp_parse_args( $args, $defaults );
-		
+
 		if ( isset( $args['post__in'] ) && empty( $args['post__in'] ) )
 			return false;
 
@@ -91,34 +91,34 @@ class UM_Query {
 		if ( $post_type == 'comment' ) { // comments
 
 			unset( $args['post_type'] );
-			
+
 			$args['type__not_in'] = apply_filters( 'um_excluded_comment_types', array('') );
-			
+
 			$comments = get_comments($args);
 			return $comments;
-			
+
 		} else {
 
 			$custom_posts = new WP_Query();
 			$custom_posts->query( $args );
 			return $custom_posts;
-			
+
 		}
-		
+
 	}
-	
+
 	/***
 	***	@Get last users
 	***/
 	function get_recent_users($number = 5){
 		global $wpdb;
-		
+
 		$args = array( 'fields' => 'ID', 'number' => $number, 'orderby' => 'user_registered', 'order' => 'desc' );
-		
+
 		$users = new WP_User_Query( $args );
 		return $users->results;
 	}
-	
+
 	/***
 	***	@Count users by status
 	***/
@@ -136,13 +136,13 @@ class UM_Query {
 		$users = new WP_User_Query( $args );
 		return count($users->results);
 	}
-	
+
 	/***
 	***	@Get users by status
 	***/
 	function get_users_by_status($status, $number = 5){
 		global $wpdb;
-		
+
 		$args = array( 'fields' => 'ID', 'number' => $number, 'orderby' => 'user_registered', 'order' => 'desc' );
 
 		$args['meta_query'][] = array(
@@ -152,11 +152,11 @@ class UM_Query {
 				'compare' => '='
 			)
 		);
-		
+
 		$users = new WP_User_Query( $args );
 		return $users->results;
 	}
-	
+
 	/***
 	***	@get user's role
 	***/
@@ -171,7 +171,7 @@ class UM_Query {
 		}
 		return $role;
 	}
-	
+
 	/***
 	***	@Count all users
 	***/
@@ -179,13 +179,13 @@ class UM_Query {
 		$result = count_users();
 		return $result['total_users'];
 	}
-	
+
 	/***
 	***	@Count users of specific role
 	***/
 	function count_users_by_role($role){
 		global $wpdb;
-		
+
 		$args['fields'] = 'ID';
 		$args['meta_query'] = array(
 			array(
@@ -194,19 +194,19 @@ class UM_Query {
 				'compare' => '='
 			)
 		);
-		
+
 		$users = new WP_User_Query( $args );
-		
+
 		return count($users->results);
 	}
-	
+
 	/***
 	***	@Using wpdb instead of update_post_meta
 	***/
 	function update_attr( $key, $post_id, $new_value ){
 		update_post_meta( $post_id, '_um_' . $key, $new_value );
 	}
-	
+
 	/***
 	***	@get data
 	***/
@@ -214,7 +214,7 @@ class UM_Query {
 		$meta = get_post_meta( $post_id, '_um_' . $key, true );
 		return $meta;
 	}
-	
+
 	/***
 	***	@delete data
 	***/
@@ -222,7 +222,7 @@ class UM_Query {
 		$meta = delete_post_meta( $post_id, '_um_' . $key );
 		return $meta;
 	}
-	
+
 	/***
 	***	@Checks if post has a specific meta key
 	***/
@@ -240,7 +240,7 @@ class UM_Query {
 		}
 		return false;
 	}
-	
+
 	/***
 	***	@Get posts with specific meta key/value
 	***/
@@ -250,7 +250,7 @@ class UM_Query {
 			return $posts[0]->ID;
 		return false;
 	}
-	
+
 	/***
 	***	@Get role data
 	***/
@@ -260,7 +260,7 @@ class UM_Query {
 		if ( get_option("um_cached_role_{$role_slug}") ) {
 			return get_option("um_cached_role_{$role_slug}");
 		}
-		
+
 		if ($role_slug == 'admin' || $role_slug == 'member'){
 			$try = $this->find_post_id('um_role','_um_core',$role_slug);
 			if ( isset( $try ) ){
@@ -271,7 +271,7 @@ class UM_Query {
 			$post_id = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND post_name = '$role_slug'");
 			$real_role_slug = $role_slug;
 		}
-		
+
 		if ( isset($post_id) && $post_id != '' ){
 			$meta = get_post_custom( $post_id );
 			$array['role'] = $real_role_slug;
@@ -280,22 +280,22 @@ class UM_Query {
 					$k = str_replace('_um_', '', $k);
 					$array[$k] = $v[0];
 				}
-				
+
 			}
 		} else {
-			
+
 			// no permissions, something wrong
 			$array = $ultimatemember->setup->get_initial_permissions( $role_slug );
 
 		}
-		
+
 		if ( !get_option("um_cached_role_{$role_slug}") ) {
 			update_option("um_cached_role_{$role_slug}", $array );
 		}
 
 		return $array;
 	}
-	
+
 	/***
 	***	@Get post data
 	***/
@@ -314,9 +314,9 @@ class UM_Query {
 				$k = str_replace('_um_', '', $k);
 				$array[$k] = $v[0];
 			}
-			
+
 		}
-		
+
 		foreach( $array as $k => $v ) {
 			if ( strstr( $k, 'login_') || strstr( $k, 'register_' ) || strstr( $k, 'profile_' ) ){
 				if ( $mode != 'directory' ) {
@@ -326,7 +326,7 @@ class UM_Query {
 		}
 		return $array;
 	}
-	
+
 	/***
 	***	@Capture selected value
 	***/
@@ -334,7 +334,7 @@ class UM_Query {
 		global $post;
 		$post_id = get_the_ID();
 		$try = get_post_meta( $post_id, $key, true);
-		
+
 		if (isset($try) && !empty($try))
 			if (is_array($try) && in_array($array_key, $try) ){
 			return $array_key;
@@ -343,7 +343,7 @@ class UM_Query {
 			} else {
 			return $try;
 			}
-			
+
 		if ($fallback == 'na') {
 			$fallback = 0;
 			$none = '';
@@ -352,7 +352,7 @@ class UM_Query {
 		}
 		return (!empty($fallback)) ? $fallback : $none;
 	}
-	
+
 	/***
 	***	@Checks if its a core page of UM
 	***/
@@ -364,12 +364,12 @@ class UM_Query {
 			return false;
 		}
 	}
-	
+
 	/***
 	***	@Query for UM roles
 	***/
 	function get_roles( $add_default = false, $exclude = null ){
-		
+
 		$exclude_str = '';
 
 		if( ! is_null( $exclude ) && is_array( $exclude ) ){
@@ -381,48 +381,48 @@ class UM_Query {
 		}
 
 		$roles = array();
-		
+
 		if ( $add_default ) {
 			$roles[0] = $add_default;
 		}
-		
+
 		$args = array(
 			'post_type' => 'um_role',
 			'posts_per_page' => -1,
 			'post_status' => array('publish')
 		);
-		
-		$results = new WP_Query($args);
 
-		if ( $results->posts ){
+		$posts = get_posts($args);
 
-			foreach($results->posts as $post) { setup_postdata( $post );
-			
+		if ( $posts ){
+
+			foreach($posts as $post) {
+
 				if ( $this->is_core( $post->ID ) ){
 					$roles[ $this->is_core( $post->ID ) ] = $post->post_title;
 				} else {
 					$roles[ $post->post_name ] = $post->post_title;
 				}
-				
+
 			}
 
 		} else {
-		
+
 			$roles['member'] = 'Member';
 			$roles['admin'] = 'Admin';
-			
+
 		}
-		
+
 		if ( $exclude ) {
 			foreach( $exclude as $role ) {
 				unset($roles[$role]);
 			}
 		}
-		
+
 		$this->roles['is_add_default_'.$add_default ][ 'is_exclude_'.$exclude_str ] = $roles;
 
 		return $roles;
-		
+
 	}
 
 }
