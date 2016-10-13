@@ -751,7 +751,7 @@ function um_user_ip() {
 	function um_requesting_password_change() {
 		global $post, $ultimatemember;
 
-		if (  um_is_core_page('account') && isset( $_POST['_um_account'] ) == 1 )
+		if (  um_is_core_page('account') && isset( $_POST['_um_account'] ) == 1 && isset( $_POST['_um_account_tab'] ) && $_POST['_um_account_tab'] == 'password' )
 			return true;
 		elseif ( isset( $_POST['_um_password_change'] ) && $_POST['_um_password_change'] == 1)
 			return true;
