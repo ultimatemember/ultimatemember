@@ -929,7 +929,9 @@ class UM_Fields {
 		// get whole field data
 		if ( isset( $data ) && is_array( $data ) ) {
 			$data = $this->get_field($key);
-			extract($data);
+			if( is_array( $data ) ){
+				extract($data);
+			}
 		}
 
 		if ( !isset( $data['type'] ) ) return;
@@ -1083,7 +1085,17 @@ class UM_Fields {
 
 						}
 
-						$output .= '<input '.$disabled.' class="'.$this->get_class($key, $data).'" type="number" name="'.$key.$ultimatemember->form->form_suffix.'" id="'.$key.$ultimatemember->form->form_suffix.'" value="'. htmlspecialchars( $this->field_value( $key, $default, $data ) ) .'" placeholder="'.$placeholder.'" data-validate="'.$validate.'" data-key="'.$key.'" min="' . $min . '" max="' . $max . '" />
+						$number_limit = '';
+
+						if( isset( $min ) ){
+							$number_limit .= " min=\"{$min}\" ";
+						}
+
+						if( isset( $max ) ){
+							$number_limit .= " max=\"{$max}\" ";
+						}
+
+						$output .= '<input '.$disabled.' class="'.$this->get_class($key, $data).'" type="number" name="'.$key.$ultimatemember->form->form_suffix.'" id="'.$key.$ultimatemember->form->form_suffix.'" value="'. htmlspecialchars( $this->field_value( $key, $default, $data ) ) .'" placeholder="'.$placeholder.'" data-validate="'.$validate.'" data-key="'.$key.'" {$number_limit} />
 
 						</div>';
 

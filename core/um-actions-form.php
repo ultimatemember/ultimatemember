@@ -385,6 +385,10 @@
 
 								if ( in_array( $key, array('user_email') ) ) {
 
+									if( ! isset( $args['user_id'] ) ){
+										$args['user_id'] = um_get_requested_user();
+									}
+
 									if ( $args[$key] == '' && in_array( $key, array('user_email') ) ) {
 										$ultimatemember->form->add_error($key, __('You must provide your email','ultimatemember') );
 									} else if ( in_array( $mode, array('register') )  && email_exists( $args[$key] )  ) {
