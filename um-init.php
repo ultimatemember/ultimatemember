@@ -223,4 +223,6 @@ class UM_API {
 
 }
 
+global $ultimatemember;
+
 $ultimatemember = new UM_API();
