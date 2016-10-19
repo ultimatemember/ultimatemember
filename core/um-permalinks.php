@@ -26,10 +26,16 @@ class UM_Permalinks {
 	***	@SEO canonical href bugfix
 	***/
 	function um_rel_canonical_() {
+		global $ultimatemember, $wp_the_query;
+		
 		if ( !is_singular() )
 			return;
 
-		global $ultimatemember, $wp_the_query;
+		$enable_canonical = apply_filters("um_allow_canonical__filter", true );
+
+		if( ! $enable_canonical )
+			return;
+
 		if ( !$id = $wp_the_query->get_queried_object_id() )
 			return;
 
@@ -40,10 +46,11 @@ class UM_Permalinks {
 		}
 
 		$link = get_permalink( $id );
-		if ( $page = get_query_var('cpage') )
+		if ( $page = get_query_var('cpage') ){
 			$link = get_comments_pagenum_link( $page );
-		echo "<link rel='canonical' href='$link' />\n";
-
+			echo "<link rel='canonical' href='$link' />\n";
+		}
+		
 	}
 
 	/***
