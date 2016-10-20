@@ -86,6 +86,7 @@
 		if( ! isset( $user_email ) ) {
 			$site_url = @$_SERVER['SERVER_NAME'];
 			$user_email = 'nobody' . $unique_userID . '@' . $site_url;
+			$user_email = apply_filters("um_user_register_submitted__email", $user_email );
 		}
 
 
