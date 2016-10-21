@@ -109,7 +109,7 @@ class UM_Members {
 
 					?>
 
-					<option value="<?php echo $opt; ?>" <?php um_select_if_in_query_params( $filter, $opt ); ?>><?php echo $v; ?></option>
+					<option value="<?php echo $opt; ?>" <?php um_select_if_in_query_params( $filter, $opt ); ?>><?php echo __( $v, 'ultimatemember'); ?></option>
 
 					<?php } ?>
 
@@ -123,7 +123,7 @@ class UM_Members {
 
 				?>
 
-				<input type="text"  name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" placeholder="<?php echo isset( $attrs['label'] ) ? $attrs['label'] : ''; ?>" value='<?php echo esc_attr( um_queried_search_value(  $filter, false ) ); ?>' />
+				<input type="text"  name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" placeholder="<?php echo isset( $attrs['label'] ) ? __( $attrs['label'], 'ultimatemember') : ''; ?>" value='<?php echo esc_attr( um_queried_search_value(  $filter, false ) ); ?>' />
 
 				<?php
 
