@@ -45,6 +45,7 @@ class UM_Rewrite {
 				$account_slug = $account->post_name;
 
 				$add_lang_code = '';
+				$language_code = '';
 
 				if ( function_exists('icl_object_id') || function_exists('icl_get_current_language')  ) {
 
