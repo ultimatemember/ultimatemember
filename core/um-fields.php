@@ -423,8 +423,12 @@ class UM_Fields {
 		$key = apply_filters('um_is_selected_filter_key', $key );
 
 		if ( isset( $ultimatemember->form->post_form[ $key ] ) && is_array( $ultimatemember->form->post_form[ $key ] ) ) {
+           
+            if ( in_array( $value, $ultimatemember->form->post_form[ $key ] ) ){
+				return true;
+			}
 
-			if ( in_array( $value, $ultimatemember->form->post_form[ $key ] ) ){
+			if ( in_array( html_entity_decode( $value ), $ultimatemember->form->post_form[ $key ] ) ){
 				return true;
 			}
 
