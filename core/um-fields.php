@@ -436,9 +436,9 @@ class UM_Fields {
 
 			if ( !isset( $ultimatemember->form->post_form ) ) {
 
-				$field_value = um_user( $key );
-				$field_value= apply_filters('um_is_selected_filter_value', $field_value);
-
+				$field_value 	= um_user( $key );
+				$field_value 	= apply_filters('um_is_selected_filter_value', $field_value, $key );
+					   $data	= apply_filters('um_is_selected_filter_data', $data, $key, $field_value );
 
 				if ( $field_value && $this->editing == true && is_array( $field_value ) && ( in_array( $value, $field_value ) || in_array( html_entity_decode( $value ), $field_value ) )  ) {
 					return true;
@@ -456,17 +456,17 @@ class UM_Fields {
 					$data['default'] = explode(', ', $data['default']);
 				}
 
-				if ( isset($data['default']) && !is_array($data['default']) && $data['default'] == $value ) {
+				if ( isset( $data['default'] ) && !is_array( $data['default'] ) && $data['default'] == $value ) {
 					return true;
 				}
 
-				if ( isset($data['default']) && is_array($data['default']) && in_array($value, $data['default'] ) ){
+				if ( isset( $data['default'] ) && is_array( $data['default'] ) && in_array( $value, $data['default'] ) ){
 					return true;
 				}
 
 			} else {
 
-				if ( isset( $ultimatemember->form->post_form[$key] ) && $value == $ultimatemember->form->post_form[$key] ) {
+				if ( isset( $ultimatemember->form->post_form[ $key ] ) && $value == $ultimatemember->form->post_form[ $key ] ) {
 					return true;
 				}
 
