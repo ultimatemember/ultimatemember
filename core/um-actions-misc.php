@@ -55,12 +55,12 @@
 	function um_add_update_notice($args){
 		global $ultimatemember;
 		extract($args);
-		$output = '';
 		
-		$err = '';
-		$success = '';
+		$output 	= '';
+		$err 		= '';
+		$success 	= '';
 
-		if ( !get_option('users_can_register') && $mode == 'register' ) {
+		if ( ! get_option('users_can_register') && $mode == 'register' ) {
 			$err = __('Registration is currently disabled','ultimatemember');
 		}
 		
