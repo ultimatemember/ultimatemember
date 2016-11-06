@@ -1505,6 +1505,17 @@ class UM_Admin_Metabox {
 					
 				<?php
 				break;
+
+			case '_custom_dropdown_options_source':
+				?>
+					
+					<p><label for="_placeholder">Options Callback<?php $this->tooltip('Add a callback source to retrieve options.'); ?></label>
+						<input type="text" name="_custom_dropdown_options_source" id="_custom_dropdown_options_source" value="<?php echo htmlspecialchars($this->edit_mode_value, ENT_QUOTES); ?>" />
+					</p>
+		
+				<?php
+				break;
+
 				
 		}
 		

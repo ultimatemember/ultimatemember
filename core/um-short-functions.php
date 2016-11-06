@@ -471,7 +471,7 @@ function um_user_ip() {
 
 		$type = ( isset($data['type']) ) ? $data['type'] : '';
 
-		$value = apply_filters("um_profile_field_filter_hook__", $value, $data );
+		$value = apply_filters("um_profile_field_filter_hook__", $value, $data, $type );
 		$value = apply_filters("um_profile_field_filter_hook__{$key}", $value, $data );
 		$value = apply_filters("um_profile_field_filter_hook__{$type}", $value, $data );
 

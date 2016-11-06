@@ -335,3 +335,21 @@
 		return $result;
 	}
 
+	/**
+	 * Retrieves search filter options from a callback
+	 * @param  $atts array
+	 * @return $atts array
+	 */
+	add_filter('um_search_select_fields','um_search_select_fields');
+	function um_search_select_fields( $atts ){
+
+		global $ultimatemember;
+
+		if( isset( $atts['custom_dropdown_options_source'] ) && ! empty( $atts['custom_dropdown_options_source'] ) ){
+              $atts['custom'] = true;
+              $atts['options'] = $ultimatemember->fields->get_options_from_callback( $atts, $atts['type'] );
+        }
+
+    	return $atts;
+	}
+

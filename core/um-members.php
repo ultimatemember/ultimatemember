@@ -84,6 +84,10 @@ class UM_Members {
 
 		// filter all search fields
 		$attrs = apply_filters( 'um_search_fields', $attrs );
+		
+		if( $type == 'select' ){
+		    $attrs = apply_filters( 'um_search_select_fields', $attrs );
+		}
 
 		switch( $type ) {
 
