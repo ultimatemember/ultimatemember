@@ -328,4 +328,37 @@ jQuery(document).ready(function() {
 		um_admin_modal_responsive();
 	});
 
-});
+	
+	/**
+	 * Retrieve options from a callback function
+	 */
+	jQuery(document).on('blur',"#_custom_dropdown_options_source", function(){
+        var me = jQuery(this);
+        var _options = jQuery('textarea[id=_options]');
+        
+        if( me.val() != '' ){
+        	var um_option_callback = me.val();
+          	jQuery.ajax({
+				url: ultimatemember_ajax_url,
+				type: 'POST',
+				data: {action: 'ultimatemember_populate_dropdown_options', um_option_callback: um_option_callback },
+				complete: function(){
+					
+				},
+				success: function( response ){
+					var arr_opts = [];
+					
+					for (var key in response.data ){
+                         arr_opts.push( response.data[ key ] );
+					}
+
+					_options.val( arr_opts.join('\n') );
+					
+		        }
+			});
+		}
+
+	});
+
+}); // end jQuery(document).ready
+

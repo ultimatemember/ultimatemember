@@ -45,6 +45,7 @@ class UM_Rewrite {
 				$account_slug = $account->post_name;
 
 				$add_lang_code = '';
+				$language_code = '';
 
 				if ( function_exists('icl_object_id') || function_exists('icl_get_current_language')  ) {
 
@@ -173,11 +174,17 @@ class UM_Rewrite {
 
 				exit( wp_redirect( $url ) );
 			}else{
-				exit( wp_redirect( home_url() ) );
+
+				$redirect_to = apply_filters('um_locate_user_profile_not_loggedin__redirect', home_url() );
+				if( ! empty( $redirect_to ) ){
+					exit( wp_redirect( $redirect_to ) );
+				}
+
 			}
 
 		}
 
 	}
+
 
 }

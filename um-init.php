@@ -81,9 +81,9 @@ class UM_API {
 	*/
 	function load_addons() {
 		global $ultimatemember;
-		if (isset($ultimatemember->addons) && is_array($ultimatemember->addons)) {
-			foreach ($ultimatemember->addons as $addon => $name) {
-				if (um_get_option('addon_' . $addon) == 1) {
+		if ( isset( $ultimatemember->addons ) && is_array( $ultimatemember->addons ) ) {
+			foreach ( $ultimatemember->addons as $addon => $name ) {
+				if ( um_get_option('addon_' . $addon) == 1 ) {
 					if( file_exists( um_path . 'addons/' . $addon . '.php' ) ){
 						include_once um_path . 'addons/' . $addon . '.php';
 					}
@@ -133,7 +133,7 @@ class UM_API {
 		require_once um_path . 'core/um-cron.php';
 		require_once um_path . 'core/um-tracking.php';
 
-		if (!class_exists('Mobile_Detect')) {
+		if ( ! class_exists('Mobile_Detect') ) {
 			require_once um_path . 'core/lib/mobiledetect/Mobile_Detect.php';
 		}
 
@@ -207,11 +207,18 @@ class UM_API {
 
 		$this->options = get_option('um_options');
 
-		$domain = 'ultimatemember';
-		$locale = (get_locale() != '') ? get_locale() : 'en_US';
-		load_textdomain($domain, WP_LANG_DIR . '/plugins/' . $domain . '-' . $locale . '.mo');
+		$language_domain = 'ultimatemember';
+		$language_domain = apply_filters("um_language_textdomain", $language_domain );
 
-		if (!get_option('show_avatars')) {
+		$language_locale = ( get_locale() != '' ) ? get_locale() : 'en_US';
+		$language_locale = apply_filters("um_language_locale", $language_locale );
+
+		$language_file = WP_LANG_DIR . '/plugins/' . $language_domain . '-' . $language_locale . '.mo';
+		$language_file = apply_filters("um_language_file", $language_file );
+
+		load_textdomain( $language_domain, $language_file );
+
+		if ( ! get_option('show_avatars') ) {
 			update_option('show_avatars', 1);
 		}
 
@@ -222,5 +229,7 @@ class UM_API {
 	}
 
 }
+
+global $ultimatemember;
 
 $ultimatemember = new UM_API();

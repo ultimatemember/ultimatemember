@@ -42,7 +42,7 @@
 	***	@update user's profile
 	***/
 	add_action('um_user_edit_profile', 'um_user_edit_profile', 10);
-	function um_user_edit_profile($args){
+	function um_user_edit_profile( $args ){
 
 		global $ultimatemember;
 
@@ -109,16 +109,21 @@
 
 		if ( is_array( $to_update ) ) {
 			$ultimatemember->user->update_profile( $to_update );
+			do_action('um_after_user_updated', um_user('ID') );
+		
 		}
 
+		$files = apply_filters('um_user_pre_updating_files_array', $files);
+		
 		if ( is_array( $files ) ) {
 			$ultimatemember->user->update_files( $files );
+			do_action('um_after_user_upload', um_user('ID'), $files );
 		}
 
-		do_action('um_after_user_updated', um_user('ID') );
-		do_action('um_after_user_upload', um_user('ID') );
 		do_action('um_user_after_updating_profile', $to_update );
+
 		do_action('um_update_profile_full_name', $to_update );
+
 
 		if ( !isset( $args['is_signup'] ) ) {
 			$url = $ultimatemember->permalinks->profile_url( true );
@@ -200,6 +205,8 @@
 		?>
 
 			<div class="um-cover <?php if ( um_profile('cover_photo') || ( $default_cover && $default_cover['url'] ) ) echo 'has-cover'; ?>" data-user_id="<?php echo um_profile_id(); ?>" data-ratio="<?php echo $args['cover_ratio']; ?>">
+
+				<?php do_action('um_cover_area_content', um_profile_id() ); ?>
 
 				<?php
 

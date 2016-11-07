@@ -3,7 +3,7 @@
 Plugin Name: Ultimate Member
 Plugin URI: http://ultimatemember.com/
 Description: The easiest way to create powerful online communities and beautiful user profiles with WordPress
-Version: 1.3.71
+Version: 1.3.72
 Author: Ultimate Member
 Author URI: http://ultimatemember.com/
 Text Domain: ultimatemember
@@ -55,7 +55,7 @@ Domain Path: /languages
 		
 		$links = $more_links + $links;
 		
-		$links[] = '<a href="'.admin_url().'?um_adm_action=uninstall_ultimatemember" class="delete" title="'.__('Remove this plugin','ultimatemember').'">' . __( 'Uninstall','ultimatemember' ) . '</a>';
+		$links[] = '<a href="'.admin_url().'?um_adm_action=uninstall_ultimatemember" class="um-delete" title="'.__('Remove this plugin','ultimatemember').'">' . __( 'Uninstall','ultimatemember' ) . '</a>';
 
 		return $links;
 		

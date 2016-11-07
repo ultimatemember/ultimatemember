@@ -6,6 +6,9 @@
 	add_action('um_post_registration_approved_hook', 'um_post_registration_approved_hook', 10, 2);
 	function um_post_registration_approved_hook($user_id, $args){
 		global $ultimatemember;
+
+		um_fetch_user( $user_id );
+
 		$ultimatemember->user->approve();
 	}
 
@@ -15,6 +18,9 @@
 	add_action('um_post_registration_checkmail_hook', 'um_post_registration_checkmail_hook', 10, 2);
 	function um_post_registration_checkmail_hook($user_id, $args){
 		global $ultimatemember;
+
+		um_fetch_user( $user_id );
+
 		$ultimatemember->user->email_pending();
 	}
 
@@ -24,7 +30,11 @@
 	add_action('um_post_registration_pending_hook', 'um_post_registration_pending_hook', 10, 2);
 	function um_post_registration_pending_hook($user_id, $args){
 		global $ultimatemember;
+
+		um_fetch_user( $user_id );
+
 		$ultimatemember->user->pending();
+		
 	}
 
 	/***
@@ -86,6 +96,7 @@
 		if( ! isset( $user_email ) ) {
 			$site_url = @$_SERVER['SERVER_NAME'];
 			$user_email = 'nobody' . $unique_userID . '@' . $site_url;
+			$user_email = apply_filters("um_user_register_submitted__email", $user_email );
 		}
 
 
@@ -164,8 +175,8 @@
 	add_action('um_post_registration_listener', 'um_post_registration_listener', 10, 2);
 	function um_post_registration_listener( $user_id, $args ){
 		global $ultimatemember;
-
-		if ( um_user('status') != 'pending' ) {
+        
+        if ( um_user('status') != 'pending' ) {
 			$ultimatemember->mail->send( um_admin_email(), 'notification_new_user', array('admin' => true ) );
 		} else {
 			$ultimatemember->mail->send( um_admin_email(), 'notification_review', array('admin' => true ) );
@@ -181,9 +192,9 @@
 		global $ultimatemember;
 		unset(  $args['user_id'] );
 		extract($args);
-
-		$status = um_user('status');
-
+        
+        $status = um_user('status');
+         
 		do_action("um_post_registration_global_hook", $user_id, $args);
 
 		do_action("um_post_registration_{$status}_hook", $user_id, $args);

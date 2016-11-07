@@ -346,6 +346,8 @@ class UM_User {
 			unset( $submitted['confirm_user_password'] );
 		}
 
+		$submitted = apply_filters('um_before_save_filter_submitted', $submitted );
+
 		do_action('um_before_save_registration_details', $this->id, $submitted );
 
 		update_user_meta( $this->id, 'submitted', $submitted );
@@ -689,6 +691,8 @@ class UM_User {
 				$role_title = get_the_title();
 			}
 		}
+
+		wp_reset_query();  
 
 		$ultimatemember->profile->arr_user_roles[ 'is_1' ][ $slug ] = $role_id;
 		$ultimatemember->profile->arr_user_roles[ 'is_'  ][ $slug ] = $role_title;

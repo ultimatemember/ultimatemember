@@ -378,6 +378,9 @@ class UM_Files {
 			}
 		}
 
+		$data = apply_filters("um_image_handle_global__option", $data );
+		$data = apply_filters("um_image_handle_{$field}__option", $data );
+
 		if ( $fileinfo['invalid_image'] == true ) {
 			$error = sprintf(__('Your image is invalid or too large!','ultimatemember') );
 		} elseif ( isset( $data['allowed_types'] ) && !$this->in_array( $fileinfo['extension'], $data['allowed_types'] ) ) {
@@ -537,7 +540,9 @@ class UM_Files {
 			wp_die( __('Unauthorized to do this attempt.','ultimatemember') );
 		}
 
-		if ( !is_user_logged_in() && ( $key == 'profile_photo' || $key == 'cover_photo' ) ) {
+		$allow_frontend_image_uploads = apply_filters('um_allow_frontend_image_uploads', false, $user_id, $key );
+
+		if ( $allow_frontend_image_uploads == false && !is_user_logged_in() && ( $key == 'profile_photo' || $key == 'cover_photo' ) ) {
 			wp_die( __('Unauthorized to do this attempt.','ultimatemember') );
 		}
 

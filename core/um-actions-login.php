@@ -173,8 +173,11 @@
 			exit( wp_redirect(  $args['redirect_to']  ) );
 		}
 
+		$role = um_user('role');
+		$role_data = $ultimatemember->query->role_data( $role );
+		
 		// Role redirect
-		$after = um_user('after_login');
+		$after = $role_data['after_login'];
 		switch( $after ) {
 
 			case 'redirect_admin':
@@ -186,7 +189,7 @@
 				break;
 
 			case 'redirect_url':
-				exit( wp_redirect( um_user('login_redirect_url') ) );
+				exit( wp_redirect( $role_data['login_redirect_url'] ) );
 				break;
 
 			case 'refresh':

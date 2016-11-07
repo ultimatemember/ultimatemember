@@ -182,11 +182,11 @@ class UM_Builtin {
 			'select' => array(
 				'name' => 'Dropdown',
 				'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-				'col2' => array('_label','_placeholder','_public','_roles'),
+				'col2' => array('_label','_placeholder','_public','_roles','_custom_dropdown_options_source','_parent_dropdown_relationship'),
 				'col3' => array('_required','_editable','_icon'),
 				'validate' => array(
 					'_title' => array(
-						'mode' => 'required',
+						'mode' => 'required', 
 						'error' => __('You must provide a title','ultimatemember')
 					),
 					'_metakey' => array(
@@ -202,7 +202,7 @@ class UM_Builtin {
 			'multiselect' => array(
 				'name' => 'Multi-Select',
 				'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-				'col2' => array('_label','_placeholder','_public','_roles','_min_selections','_max_selections'),
+				'col2' => array('_label','_placeholder','_public','_roles','_min_selections','_max_selections','_custom_dropdown_options_source','_parent_dropdown_relationship'),
 				'col3' => array('_required','_editable','_icon'),
 				'validate' => array(
 					'_title' => array(
@@ -1082,7 +1082,7 @@ class UM_Builtin {
 		$fields_without_metakey = apply_filters('um_fields_without_metakey', $fields_without_metakey );
 		
 		if ( !$show_all ) {
-			$this->fields_dropdown = array('image','file','password','textarea','rating');
+			$this->fields_dropdown = array('image','file','password','rating');
 			$this->fields_dropdown = array_merge( $this->fields_dropdown, $fields_without_metakey );
 		} else {
 			$this->fields_dropdown = $fields_without_metakey;

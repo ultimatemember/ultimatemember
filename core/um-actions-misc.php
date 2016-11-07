@@ -4,10 +4,12 @@
 	***	@add a force redirect to from $_get
 	***/
 	add_action('um_after_form_fields', 'um_browser_url_redirect_to');
-	function um_browser_url_redirect_to($args) {
+	function um_browser_url_redirect_to( $args ) {
 	
 		global $ultimatemember;
 		
+		$url = '';
+
 		if ( isset( $_REQUEST['redirect_to'] ) && !empty( $_REQUEST['redirect_to'] ) ) {
 			$url = $_REQUEST['redirect_to'];
 			echo '<input type="hidden" name="redirect_to" id="redirect_to" value="'.esc_url( $url ).'" />';
@@ -29,14 +31,19 @@
 					break;
 					
 				case 'refresh':
+
 					$url = $ultimatemember->permalinks->get_current_url();
+
 					break;
 					
 			}
 			
+		}
 
+
+		$url = apply_filters('um_browser_url_redirect_to__filter', $url );
+		if( ! empty( $url ) ){
 			echo '<input type="hidden" name="redirect_to" id="redirect_to" value="' . esc_url( $url ) . '" />';
-			
 		}
 		
 	}
@@ -48,12 +55,12 @@
 	function um_add_update_notice($args){
 		global $ultimatemember;
 		extract($args);
-		$output = '';
 		
-		$err = '';
-		$success = '';
+		$output 	= '';
+		$err 		= '';
+		$success 	= '';
 
-		if ( !get_option('users_can_register') && $mode == 'register' ) {
+		if ( ! get_option('users_can_register') && $mode == 'register' ) {
 			$err = __('Registration is currently disabled','ultimatemember');
 		}
 		

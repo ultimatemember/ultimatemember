@@ -53,7 +53,7 @@
 
 		}
 
-		if ( ! um_user_can('can_edit_everyone')  ) {
+		if ( ! um_user_can('can_edit_everyone') && um_get_option('account_hide_in_directory') ) {
 			$query_args['meta_query'][] = array(
 				"relation"	=> "OR",
 				array(
@@ -104,7 +104,7 @@
 
 						if ( !in_array( $field, $ultimatemember->members->core_search_fields ) ) {
 
-							$query_args['meta_query'][] = array(
+							$field_query = array(
 									array(
 										'key' => $field,
 										'value' => trim( $value ),
@@ -123,7 +123,9 @@
 									'relation' => 'OR',
 							);
 							
-							
+
+							$field_query = apply_filters("um_query_args_{$field}__filter", $field_query );
+							$query_args['meta_query'][] = $field_query;
 
 						}
 
@@ -134,9 +136,7 @@
 
 		}
 
-
-
-		// allow filtering
+        // allow filtering
 		$query_args = apply_filters('um_query_args_filter', $query_args );
 
 		if ( count ($query_args['meta_query']) == 1 ) {
@@ -333,5 +333,23 @@
 		}
    
 		return $result;
+	}
+
+	/**
+	 * Retrieves search filter options from a callback
+	 * @param  $atts array
+	 * @return $atts array
+	 */
+	add_filter('um_search_select_fields','um_search_select_fields');
+	function um_search_select_fields( $atts ){
+
+		global $ultimatemember;
+
+		if( isset( $atts['custom_dropdown_options_source'] ) && ! empty( $atts['custom_dropdown_options_source'] ) ){
+              $atts['custom'] = true;
+              $atts['options'] = $ultimatemember->fields->get_options_from_callback( $atts, $atts['type'] );
+        }
+
+    	return $atts;
 	}
 

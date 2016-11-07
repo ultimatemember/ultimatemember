@@ -547,9 +547,16 @@ class UM_Shortcodes {
 	    $a = shortcode_atts( array(
 	        'roles' => '',
 	        'not' => '',
+	        'is_profile' => false,
 	    ), $atts );
 
-	    um_fetch_user( $user_ID );
+	    if( $a['is_profile'] ){
+	    	um_fetch_user( um_profile_id() );
+	    }else{
+	    	um_fetch_user( $user_ID );
+	    }
+
+	    
 
 	    $current_user_role = um_user('role');
 

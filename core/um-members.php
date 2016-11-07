@@ -84,6 +84,10 @@ class UM_Members {
 
 		// filter all search fields
 		$attrs = apply_filters( 'um_search_fields', $attrs );
+		
+		if( $type == 'select' ){
+		    $attrs = apply_filters( 'um_search_select_fields', $attrs );
+		}
 
 		switch( $type ) {
 
@@ -91,7 +95,7 @@ class UM_Members {
 
 				?>
 
-				<select name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" class="um-s1" style="width: 100%" data-placeholder="<?php echo stripslashes( $attrs['label'] ); ?>">
+				<select name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" class="um-s1" style="width: 100%" data-placeholder="<?php echo __( stripslashes( $attrs['label'] ), 'ultimatemember'); ?>">
 
 					<option></option>
 
@@ -109,7 +113,7 @@ class UM_Members {
 
 					?>
 
-					<option value="<?php echo $opt; ?>" <?php um_select_if_in_query_params( $filter, $opt ); ?>><?php echo $v; ?></option>
+					<option value="<?php echo $opt; ?>" <?php um_select_if_in_query_params( $filter, $opt ); ?>><?php echo __( $v, 'ultimatemember'); ?></option>
 
 					<?php } ?>
 
@@ -123,7 +127,7 @@ class UM_Members {
 
 				?>
 
-				<input type="text"  name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" placeholder="<?php echo isset( $attrs['label'] ) ? $attrs['label'] : ''; ?>" value='<?php echo esc_attr( um_queried_search_value(  $filter, false ) ); ?>' />
+				<input type="text" autocomplete="off" name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" placeholder="<?php echo isset( $attrs['label'] ) ? __( $attrs['label'], 'ultimatemember') : ''; ?>" value='<?php echo esc_attr( um_queried_search_value(  $filter, false ) ); ?>' />
 
 				<?php
 
@@ -136,7 +140,7 @@ class UM_Members {
 	/***
 	***	@Generate a loop of results
 	***/
-	function get_members($args){
+	function get_members( $args ){
 
 		global $ultimatemember, $wpdb, $post;
 
@@ -154,9 +158,17 @@ class UM_Members {
 		}
 
 		$query_args['number'] = $profiles_per_page;
-		
-		$members_page = isset( $_REQUEST['members_page'] ) ? $_REQUEST['members_page'] : 1;
-		
+
+		if( isset( $args['number'] ) ){
+			$query_args['number'] = $args['number'];
+		}
+
+		if(  isset( $args['page'] ) ){
+			$members_page = $args['page'];
+		}else{
+			$members_page = isset( $_REQUEST['members_page'] ) ? $_REQUEST['members_page'] : 1;
+		}
+
 		$query_args['paged'] = $members_page;
 		
 		$users = new WP_User_Query( $query_args );
@@ -165,7 +177,7 @@ class UM_Members {
 
 		$array['total_users'] = (isset( $max_users ) && $max_users && $max_users <= $users->total_users ) ? $max_users : $users->total_users;
 
-		$array['page'] = ! isset( $_REQUEST['members_page'] ) && isset( $args['page'] ) ? $args['page'] : $members_page;
+		$array['page'] = $members_page;
 
 		$array['total_pages'] = ceil( $array['total_users'] / $profiles_per_page );
 

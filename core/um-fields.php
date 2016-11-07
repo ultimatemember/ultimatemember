@@ -368,27 +368,27 @@ class UM_Fields {
 		global $ultimatemember;
  		
 
-		if ( isset($_SESSION) && isset($_SESSION['um_social_profile'][$key]) && isset( $this->set_mode ) && $this->set_mode == 'register' )
-			return $_SESSION['um_social_profile'][$key];
+		if ( isset( $_SESSION ) && isset( $_SESSION['um_social_profile'][ $key ] ) && isset( $this->set_mode ) && $this->set_mode == 'register' )
+			return $_SESSION['um_social_profile'][ $key ];
 
-		$type = (isset($data['type']))?$data['type']:'';
+		$type = ( isset( $data['type'] ) ) ? $data['type'] : '';
 
 		// preview in backend
 		if ( isset( $ultimatemember->user->preview ) && $ultimatemember->user->preview ) {
 			$submitted = um_user('submitted');
-			if ( isset( $submitted[$key] ) && !empty( $submitted[$key] ) ) {
-				return $submitted[$key];
+			if ( isset( $submitted[ $key ] ) && ! empty( $submitted[ $key ] ) ) {
+				return $submitted[ $key ];
 			} else {
 				return 'Undefined';
 			}
 		}
 
 		// normal state
-		if ( isset($ultimatemember->form->post_form[$key]) ) {
+		if ( isset( $ultimatemember->form->post_form[ $key ] ) ) {
 
 			if ( strstr( $key, 'user_pass' ) && $this->set_mode != 'password' ) return '';
 
-			return $ultimatemember->form->post_form[$key];
+			return $ultimatemember->form->post_form[ $key ];
 
 		} else if ( um_user( $key ) && $this->editing == true ) {
 
@@ -396,7 +396,7 @@ class UM_Fields {
 
 			return apply_filters( "um_edit_{$key}_field_value", um_user( $key ), $key );
 
-		} else if ( ( um_user( $key ) || isset($data['show_anyway']) ) && $this->viewing == true ) {
+		} else if ( ( um_user( $key ) || isset( $data['show_anyway'] ) ) && $this->viewing == true ) {
 
 			$value = um_filtered_value( $key, $data );
 			return $value;
@@ -423,8 +423,12 @@ class UM_Fields {
 		$key = apply_filters('um_is_selected_filter_key', $key );
 
 		if ( isset( $ultimatemember->form->post_form[ $key ] ) && is_array( $ultimatemember->form->post_form[ $key ] ) ) {
+           
+            if ( in_array( $value, $ultimatemember->form->post_form[ $key ] ) ){
+				return true;
+			}
 
-			if ( in_array( $value, $ultimatemember->form->post_form[ $key ] ) ){
+			if ( in_array( html_entity_decode( $value ), $ultimatemember->form->post_form[ $key ] ) ){
 				return true;
 			}
 
@@ -432,9 +436,9 @@ class UM_Fields {
 
 			if ( !isset( $ultimatemember->form->post_form ) ) {
 
-				$field_value = um_user( $key );
-				$field_value= apply_filters('um_is_selected_filter_value', $field_value);
-
+				$field_value 	= um_user( $key );
+				$field_value 	= apply_filters('um_is_selected_filter_value', $field_value, $key );
+					   $data	= apply_filters('um_is_selected_filter_data', $data, $key, $field_value );
 
 				if ( $field_value && $this->editing == true && is_array( $field_value ) && ( in_array( $value, $field_value ) || in_array( html_entity_decode( $value ), $field_value ) )  ) {
 					return true;
@@ -452,17 +456,17 @@ class UM_Fields {
 					$data['default'] = explode(', ', $data['default']);
 				}
 
-				if ( isset($data['default']) && !is_array($data['default']) && $data['default'] == $value ) {
+				if ( isset( $data['default'] ) && !is_array( $data['default'] ) && $data['default'] == $value ) {
 					return true;
 				}
 
-				if ( isset($data['default']) && is_array($data['default']) && in_array($value, $data['default'] ) ){
+				if ( isset( $data['default'] ) && is_array( $data['default'] ) && in_array( $value, $data['default'] ) ){
 					return true;
 				}
 
 			} else {
 
-				if ( isset( $ultimatemember->form->post_form[$key] ) && $value == $ultimatemember->form->post_form[$key] ) {
+				if ( isset( $ultimatemember->form->post_form[ $key ] ) && $value == $ultimatemember->form->post_form[ $key ] ) {
 					return true;
 				}
 
@@ -550,6 +554,67 @@ class UM_Fields {
 		if ( isset( $fields[$key]['icon'] ) )
 			return $fields[$key]['icon'];
 		return '';
+	}
+
+	/**
+	 * Get selected option from a callback function
+	 */
+	function get_option_value_from_callback( $value, $data, $type ){
+
+
+    	if( in_array( $type , array('select','multiselect') ) && isset( $data['custom_dropdown_options_source'] ) && ! empty( $data['custom_dropdown_options_source'] ) ){
+             
+             if( function_exists( $data['custom_dropdown_options_source'] ) ){
+                
+                $arr_options = call_user_func( $data['custom_dropdown_options_source'] );
+                
+                if( $type == 'select' ){
+                	return isset( $arr_options[ $value ] ) ? $arr_options[ $value ]: '' ;
+                }
+
+                if( $type == 'multiselect' ){
+                	
+                	if( is_array( $value ) ){
+                		$values = $value;
+                	}else{
+	                	$values = explode(', ', $value );
+	                }
+	                
+                    $arr_paired_options = array();
+                    
+                    foreach ( $values as $option ) {
+                       $arr_paired_options[] = $arr_options[ $option ];
+                    } 
+
+                    return implode( ', ' , $arr_paired_options );
+                }
+
+             }
+
+            
+    	}
+
+    	return $value;
+	}
+
+	/**
+	 * Get select options from a callback function
+	 */
+	function get_options_from_callback( $data, $type ){
+
+
+    	if( in_array( $type , array('select','multiselect') ) && isset( $data['custom_dropdown_options_source'] ) && ! empty( $data['custom_dropdown_options_source'] ) ){
+             
+            if( function_exists( $data['custom_dropdown_options_source'] ) ){
+                
+                $arr_options = call_user_func( $data['custom_dropdown_options_source'] );
+                 
+			}
+
+            
+    	}
+
+    	return $arr_options;
 	}
 
 	/***
@@ -929,7 +994,9 @@ class UM_Fields {
 		// get whole field data
 		if ( isset( $data ) && is_array( $data ) ) {
 			$data = $this->get_field($key);
-			extract($data);
+			if( is_array( $data ) ){
+				extract($data);
+			}
 		}
 
 		if ( !isset( $data['type'] ) ) return;
@@ -1083,7 +1150,17 @@ class UM_Fields {
 
 						}
 
-						$output .= '<input '.$disabled.' class="'.$this->get_class($key, $data).'" type="number" name="'.$key.$ultimatemember->form->form_suffix.'" id="'.$key.$ultimatemember->form->form_suffix.'" value="'. htmlspecialchars( $this->field_value( $key, $default, $data ) ) .'" placeholder="'.$placeholder.'" data-validate="'.$validate.'" data-key="'.$key.'" min="' . $min . '" max="' . $max . '" />
+						$number_limit = '';
+
+						if( isset( $min ) ){
+							$number_limit .= " min=\"{$min}\" ";
+						}
+
+						if( isset( $max ) ){
+							$number_limit .= " max=\"{$max}\" ";
+						}
+
+						$output .= '<input '.$disabled.' class="'.$this->get_class($key, $data).'" type="number" name="'.$key.$ultimatemember->form->form_suffix.'" id="'.$key.$ultimatemember->form->form_suffix.'" value="'. htmlspecialchars( $this->field_value( $key, $default, $data ) ) .'" placeholder="'.$placeholder.'" data-validate="'.$validate.'" data-key="'.$key.'" {$number_limit} />
 
 						</div>';
 
@@ -1637,6 +1714,11 @@ class UM_Fields {
 						$output .= '<option value=""></option>';
                         
                         $field_value = '';
+                        
+                        // switch options pair for custom options from a callback function
+                        if( isset( $data['custom_dropdown_options_source'] ) && ! empty( $data['custom_dropdown_options_source'] ) ){
+							$options_pair = true;
+						}
 
                        // add options
 						foreach($options as $k => $v) {
@@ -1726,6 +1808,11 @@ class UM_Fields {
 							$options = apply_filters('um_multiselect_options', $options, $data );
 							$options = apply_filters("um_multiselect_options_{$key}", $options );
 							$options = apply_filters("um_multiselect_options_{$data['type']}", $options, $data );
+						}
+						
+						// switch options pair for custom options from a callback function
+                        if( isset( $data['custom_dropdown_options_source'] ) && ! empty( $data['custom_dropdown_options_source'] ) ){
+							$use_keyword = true;
 						}
 
 						// add an empty option!
@@ -2263,6 +2350,7 @@ class UM_Fields {
 							$res = stripslashes( $res );
 						}
 
+						$res = apply_filters("um_view_field", $res, $data, $type );
 						$res = apply_filters("um_view_field_value_{$type}", $res, $data );
 
 						$output .= '<div class="um-field-area">';

@@ -384,3 +384,49 @@
 
 		return $value;
     }
+    
+
+    /**
+     * Returns dropdown/multi-select options from a callback function
+     * @param  $options array
+     * @param  $data array
+     * @return $options array
+     * @uses   hook filter: um_select_dropdown_dynamic_options, um_multiselect_options
+     */
+    add_filter('um_select_dropdown_dynamic_options','um_select_dropdown_dynamic_callback_options', 10, 2);
+    add_filter('um_multiselect_options','um_select_dropdown_dynamic_callback_options', 10, 2);
+    function um_select_dropdown_dynamic_callback_options( $options, $data ){
+        
+        if( isset( $data['custom_dropdown_options_source'] ) && ! empty( $data['custom_dropdown_options_source'] ) ){
+
+        	if( function_exists( $data['custom_dropdown_options_source'] ) ){
+        		$options = call_user_func( $data['custom_dropdown_options_source'] );
+        	}
+        }
+
+    	return $options;
+    }
+
+    /**
+     *
+     * Pair dropdown/multi-select options from a callback function
+     * @param  $value string
+     * @param  $type  string
+     * @param  $data  array
+     * @return $value string
+     * @uses   hook filter: um_view_field
+     */
+    add_filter('um_profile_field_filter_hook__','um_select_dropdown_callback_view_field', 10, 3);
+    function um_select_dropdown_callback_view_field( $value, $data, $type ){
+    	global $ultimatemember;
+    	
+    	if( in_array( $type , array('select','multiselect') ) && isset( $data['custom_dropdown_options_source'] ) && ! empty( $data['custom_dropdown_options_source'] ) ){
+             
+              return $ultimatemember->fields->get_option_value_from_callback( $value, $data, $type );
+
+            
+    	}
+
+    	return $value;
+    }
+

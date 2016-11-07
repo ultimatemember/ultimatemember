@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.6.1
 
-Stable Tag: 1.3.71
+Stable Tag: 1.3.72
 
 License: GNU Version 2 or Any Later Version
 
@@ -149,6 +149,42 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 == Changelog ==
 
+= 1.3.72: October 10, 2016 =
+
+* Enhancements:
+  *  Improves the bulk filters, actions and redirection in `User Screens`
+  *  Adds new access options to disallow access on homepage and category pages. 
+  *  Adds Textarea to show in profile tagline on Member Directory
+  * Adds a filter hook `um_allow_frontend_image_uploads` to allow profile and cover photo uploads on front-end pages.
+  * Adds new filter hooks to modify image field data on upload: 
+      * `um_image_handle_global__option`
+      * `um_image_handle_{$field}__option`
+  * Adds a new filter hook to modify the redirection of non logged in users who visit the parent user page.
+     * `um_locate_user_profile_not_loggedin__redirect`
+  * Improves generate dummies tool with `wp_remote_get`
+  * Adds a new action hook for a new section in cover area:
+     * `um_cover_area_content`
+  * Updates the English translation .po and .mo files.
+  * Improves the shortcode `um_show_content` to swap the `user_id` with the current profile.
+
+* Bugfixes:
+  *  Fixes a bug where multi-select field options doesn't match the user selected options that contain html entities.
+  *  Fixes a bug to display correct role slugs in radio and select fields.
+  *  Fixes a bug where reset password form is conflicting with register and login form on a page.
+  *  Fixes a bug where Users queue count in the Admin > `All Users / Users` menu doesn't update when a user account is in `pending user review` and gets deleted.
+  * Fixes a typo in Password Reset Email option's description
+  * Fixes a bug where conditional fields 'equals to' validation on registration process
+  * Fixes a bug to disable the query with hiding account on member directory
+  * Fixes a bug to retrieve specific number of members 
+  * Fixes a bug to retrieve all members with `get_members` new parameter `number`
+  * Fixes a typo in Welcome Email template.
+  * Fixes a bug where login form redirection is set to `wp-admin/admin-ajax.php` instead of the current page when loaded via ajax.
+  * Fixes a bug where uninstall link doesn't load.
+  * Fixes a bug to redirect users to correct URL after login based from login options.
+  * Fixes a bug where non-logged in users are not able to access the profile page when `Global Site Access` is set to `Site accessible to Logged In Users`.
+  * Fixes a bug to modify the login redirection url especially when DOING_AJAX is defined.
+  * Fixes a bug to retrieve correct community roles per site in a Multisite Network setup.
+  
 = 1.3.71: September 12, 2016 =
 
 * Enhancements: 
