@@ -403,6 +403,10 @@ class UM_Fields {
 
 		} else if ( $default ) {
 
+			$default = apply_filters( "um_field_default_value", $default, $data, $type );
+			$default = apply_filters( "um_field_{$key}_default_value", $default, $data );
+			$default = apply_filters( "um_field_{$type}_default_value", $default, $data );
+
 			return $default;
 
 		} else if ( $this->editing == true ) {
@@ -560,16 +564,23 @@ class UM_Fields {
 	 * Get selected option from a callback function
 	 */
 	function get_option_value_from_callback( $value, $data, $type ){
-
+        
+        global $ultimatemember;
 
     	if( in_array( $type , array('select','multiselect') ) && isset( $data['custom_dropdown_options_source'] ) && ! empty( $data['custom_dropdown_options_source'] ) ){
              
              if( function_exists( $data['custom_dropdown_options_source'] ) ){
                 
                 $arr_options = call_user_func( $data['custom_dropdown_options_source'] );
-                
+               
                 if( $type == 'select' ){
-                	return isset( $arr_options[ $value ] ) ? $arr_options[ $value ]: '' ;
+                	if( isset( $arr_options[ $value ] ) && ! empty( $arr_options[ $value ] ) ) {
+                	   return $arr_options[ $value ];
+                	}else if( isset( $data['default'] ) && ! empty( $data['default'] ) && empty( $arr_options[ $value ] ) ) {
+                		return $arr_options[ $data['default'] ];
+                	}else{
+                		return '';
+                	}
                 }
 
                 if( $type == 'multiselect' ){
@@ -579,11 +590,13 @@ class UM_Fields {
                 	}else{
 	                	$values = explode(', ', $value );
 	                }
-	                
+
                     $arr_paired_options = array();
                     
                     foreach ( $values as $option ) {
-                       $arr_paired_options[] = $arr_options[ $option ];
+                    	if( isset( $arr_options[ $option ] ) ){
+	                       $arr_paired_options[] = $arr_options[ $option ];
+	                    }
                     } 
 
                     return implode( ', ' , $arr_paired_options );
@@ -1664,6 +1677,7 @@ class UM_Fields {
 
 				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">';
 
+
 						if ( isset( $data['allowclear'] ) && $data['allowclear'] == 0 ) {
 							$class = 'um-s2';
 						} else {
@@ -1675,20 +1689,59 @@ class UM_Fields {
 						}
 
 						$output .= '<div class="um-field-area">';
+						
+						$has_parent_option = false;
+						$disabled_by_parent_option = '';
+						$atts_ajax = '';
+						$select_original_option_value = '';
+						
+						if( isset( $data['parent_dropdown_relationship'] ) && ! empty( $data['parent_dropdown_relationship'] ) && ! $ultimatemember->user->preview ){
+								
+								$disabled_by_parent_option = 'disabled = disabled';
+								
+								$has_parent_option = true;
+								
+								$parent_dropdown_relationship = apply_filters("um_custom_dropdown_options_parent__{$form_key}", $data['parent_dropdown_relationship'], $data );
+								$atts_ajax .= " data-um-parent='{$parent_dropdown_relationship}' ";
 
-						$output .= '<select  '.$disabled.' name="'.$form_key.'" id="'.$form_key.'" data-validate="'.$validate.'" data-key="'.$key.'" class="'.$this->get_class($key, $data, $class).'" style="width: 100%" data-placeholder="'.$placeholder.'">';
+								if( isset( $data['custom_dropdown_options_source'] ) && ! empty( $data['custom_dropdown_options_source'] ) &&
+									$has_parent_option &&  function_exists( $data['custom_dropdown_options_source'] ) &&
+									um_user( $data['parent_dropdown_relationship'] ) ){
+									$options = call_user_func( $data['custom_dropdown_options_source'] );
+									$disabled_by_parent_option = '';
+									if( um_user( $form_key ) ){
+										$select_original_option_value = " data-um-original-value='".um_user( $form_key )."' ";
+									}
+								}
 
-						if ( isset($options) && $options == 'builtin'){
-							$options = $ultimatemember->builtin->get ( $filter );
 						}
 
-						if (!isset($options)){
-							$options = $ultimatemember->builtin->get ( 'countries' );
+						if( isset( $data['custom_dropdown_options_source'] ) && ! empty( $data['custom_dropdown_options_source'] ) ){
+							
+							$ajax_source = apply_filters("um_custom_dropdown_options_source__{$form_key}", $data['custom_dropdown_options_source'], $data );
+							$atts_ajax .= " data-um-ajax-source='{$ajax_source}' ";
+
+							$ajax_source_url = apply_filters("um_custom_dropdown_options_source_url__{$form_key}", admin_url('admin-ajax.php'), $data );
+							$atts_ajax .= " data-um-ajax-url='{$ajax_source_url}' ";
+
+
 						}
 
-						if ( isset( $options ) ) {
-							$options = apply_filters('um_select_dropdown_dynamic_options', $options, $data );
-							$options = apply_filters("um_select_dropdown_dynamic_options_{$key}", $options );
+						$output .= '<select  '.$disabled.' '.$select_original_option_value.' '.$disabled_by_parent_option.'  name="'.$form_key.'" id="'.$form_key.'" data-validate="'.$validate.'" data-key="'.$key.'" class="'.$this->get_class($key, $data, $class).'" style="width: 100%" data-placeholder="'.$placeholder.'" '.$atts_ajax.'>';
+
+						if( ! $has_parent_option ){
+							if ( isset($options) && $options == 'builtin'){
+								$options = $ultimatemember->builtin->get ( $filter );
+							}
+
+							if (!isset($options)){
+								$options = $ultimatemember->builtin->get ( 'countries' );
+							}
+
+							if ( isset( $options ) ) {
+								$options = apply_filters('um_select_dropdown_dynamic_options', $options, $data );
+								$options = apply_filters("um_select_dropdown_dynamic_options_{$key}", $options );
+							}
 						}
 
 						// role field
@@ -2350,6 +2403,7 @@ class UM_Fields {
 							$res = stripslashes( $res );
 						}
 
+						$data['is_view_field'] = true;
 						$res = apply_filters("um_view_field", $res, $data, $type );
 						$res = apply_filters("um_view_field_value_{$type}", $res, $data );
 
@@ -2685,5 +2739,7 @@ class UM_Fields {
 
 		return $output;
 	}
+
+	
 
 }

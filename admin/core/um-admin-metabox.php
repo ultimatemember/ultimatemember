@@ -1509,8 +1509,32 @@ class UM_Admin_Metabox {
 			case '_custom_dropdown_options_source':
 				?>
 					
-					<p><label for="_placeholder">Options Callback<?php $this->tooltip('Add a callback source to retrieve options.'); ?></label>
+					<p><label for="_custom_dropdown_options_source">Choices Callback<?php $this->tooltip('Add a callback source to retrieve choices.'); ?></label>
 						<input type="text" name="_custom_dropdown_options_source" id="_custom_dropdown_options_source" value="<?php echo htmlspecialchars($this->edit_mode_value, ENT_QUOTES); ?>" />
+					</p>
+		
+				<?php
+				break;
+
+
+			case '_parent_dropdown_relationship':
+				?>
+					
+					<p><label for="_parent_dropdown_relationship">Parent Option<?php $this->tooltip('Dynamically populates the option based from selected parent option.'); ?></label>
+						<select name="_parent_dropdown_relationship" id="_parent_dropdown_relationship" class="umaf-selectjs" style="width: 100%">
+							<option value="">No Selected</option>
+							<?php 
+							if ( $ultimatemember->builtin->custom_fields ) {
+								foreach ($ultimatemember->builtin->custom_fields as $field_key => $array) {
+									if( in_array( $array['type'], array( 'select' ) )
+										&& $field_args['metakey'] != $array['metakey'] ){
+	                                    echo "<option value='".$array['metakey']."' ".selected( $array['metakey'], $this->edit_mode_value  ).">".$array['title']."</option>";
+	                                }
+								}
+							}
+							
+							?>
+						</select>
 					</p>
 		
 				<?php

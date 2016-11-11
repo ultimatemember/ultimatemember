@@ -202,7 +202,7 @@ class UM_Builtin {
 			'multiselect' => array(
 				'name' => 'Multi-Select',
 				'col1' => array('_title','_metakey','_help','_default','_options','_visibility'),
-				'col2' => array('_label','_placeholder','_public','_roles','_min_selections','_max_selections','_custom_dropdown_options_source','_parent_dropdown_relationship'),
+				'col2' => array('_label','_placeholder','_public','_roles','_min_selections','_max_selections','_custom_dropdown_options_source'),
 				'col3' => array('_required','_editable','_icon'),
 				'validate' => array(
 					'_title' => array(

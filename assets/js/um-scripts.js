@@ -1,10 +1,12 @@
 jQuery(document).ready(function() {
 
 	jQuery(document).on('click', '.um-dropdown a', function(e){
+		
 		return false;
 	});
 
 	jQuery(document).on('click', '.um-dropdown a.real_url', function(e){
+		
 		window.location = jQuery(this).attr('href');
 	});
 
@@ -16,7 +18,8 @@ jQuery(document).ready(function() {
 	});
 
 	jQuery(document).on('click', '.um-dropdown-hide', function(e){
-		UM_hide_menus();
+		
+			UM_hide_menus();
 	});
 
 	jQuery(document).on('click', 'a.um-manual-trigger', function(){
@@ -50,7 +53,6 @@ jQuery(document).ready(function() {
 		this_field.addClass('active');
 		this_field.find('i').removeClass().addClass('um-icon-android-checkbox-outline');
 		}
-
 	});
 
 	jQuery('.um-datepicker').each(function(){
@@ -179,6 +181,7 @@ jQuery(document).ready(function() {
 	jQuery('.um-s1,.um-s2').css({'display':'block'});
 	
 	jQuery(".um-s1").select2({
+		
 		allowClear: true,
 	});
 
@@ -213,7 +216,6 @@ jQuery(document).ready(function() {
 			jQuery(this).addClass('disabled');
 
 		}
-
 	});
 
 	jQuery(document).on('click', '.um-field-group-cancel', function(e){
@@ -288,7 +290,122 @@ jQuery(document).ready(function() {
 	});
 
 	jQuery(document).on('click', '#um-search-button', function() {
-		jQuery(this).parents('form').submit();
+
+			jQuery(this).parents('form').submit();
 	});
+
+	
+	var um_select_options_cache = {};
+
+	/**
+	 * Find all select fields with parent select fields
+	 */
+	jQuery('select[data-um-parent]').each(function(){
+		
+		var me = jQuery(this);
+		var parent_option = me.data('um-parent');
+		var um_ajax_url = me.data('um-ajax-url');
+		var um_ajax_source = me.data('um-ajax-source');
+		var original_value = me.val();
+
+		me.attr('data-um-init-field', true );
+				
+		jQuery(document).on('change','select[name="'+parent_option+'"]',function(){
+			var parent  = jQuery(this);
+			var form_id = parent.closest('form').find('input[type=hidden][name=form_id]').val();
+			var arr_key = me.attr('name');
+
+			if( parent.val() != '' && typeof um_select_options_cache[ arr_key ] != 'object' ){
+							
+				jQuery.ajax({
+					url: um_ajax_url,
+					type: 'post',
+					data: {
+						action: 'ultimatemember_ajax_select_options',
+						parent_option: parent.val(),
+						child_callback: um_ajax_source,
+						child_name:  me.attr('name'),
+						form_id: form_id,
+					},
+					success: function( data ){
+						
+						if( data.status == 'success' && parent.val() != '' ){
+							um_field_populate_child_options( me, data, arr_key);
+						}
+
+						if( typeof data.debug !== 'undefined' ){
+							console.log( data );
+						}
+					},
+					error: function( e ){
+						console.log( e );
+					}
+				});
+
+							
+			}
+				
+			if( parent.val() != '' && typeof um_select_options_cache[ arr_key ] == 'object' ){
+					var data = um_select_options_cache[ arr_key ];
+					um_field_populate_child_options( me, data, arr_key );
+			}
+
+			if( parent.val() == '' ){
+				me.find('option[value!=""]').remove();
+				me.val('').trigger('change');
+			}
+	
+		});
+
+		jQuery('select[name="'+parent_option+'"]').trigger('change');
+		
+	});
+
+	/**
+	 * Populates child options and cache ajax response
+	 * @param  DOM me     child option elem
+	 * @param  array data
+	 * @param  string key
+	 */
+	function um_field_populate_child_options( me, data, arr_key, arr_items ){
+
+
+		var parent_option = me.data('um-parent');
+		var child_name = me.attr('name');
+		var parent_dom = jQuery('select[name="'+parent_option+'"]');
+		me.find('option[value!=""]').remove();
+		
+		if( ! me.hasClass('um-child-option-disabled') ){
+			me.removeAttr('disabled');
+		}
+
+		var arr_items = [];
+							
+		jQuery.each( data.items, function(k,v){
+				arr_items.push({id: k, text: v});
+		});
+
+		me.select2('destroy');
+		me.select2({ 
+			data: arr_items,
+			allowClear: true,
+			minimumResultsForSearch: 10,
+		});
+
+		if( typeof data.field.default !== 'undefined' && ! me.data('um-original-value') ){
+			me.val( data.field.default ).trigger('change');
+		}else if( me.data('um-original-value') != '' ){
+			me.val( me.data('um-original-value') ).trigger('change');
+		}
+
+		if( data.field.editable == 0 ){
+			me.addClass('um-child-option-disabled');
+			me.attr('disabled','disabled');
+		}
+							
+		um_select_options_cache[ arr_key ] = data;
+
+
+	}
 
 });

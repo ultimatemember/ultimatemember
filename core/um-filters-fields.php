@@ -414,19 +414,21 @@
      * @param  $type  string
      * @param  $data  array
      * @return $value string
-     * @uses   hook filter: um_view_field
+     * @uses   hook filter: um_profile_field_filter_hook__
      */
-    add_filter('um_profile_field_filter_hook__','um_select_dropdown_callback_view_field', 10, 3);
-    function um_select_dropdown_callback_view_field( $value, $data, $type ){
+    add_filter('um_profile_field_filter_hook__select','um_option_match_callback_view_field', 10, 2);
+    add_filter('um_profile_field_filter_hook__multiselect','um_option_match_callback_view_field', 10, 2);
+    add_filter('um_field_select_default_value','um_option_match_callback_view_field', 10, 2);
+    add_filter('um_field_multiselect_default_value','um_option_match_callback_view_field', 10, 2);
+    function um_option_match_callback_view_field( $value, $data ){
     	global $ultimatemember;
-    	
-    	if( in_array( $type , array('select','multiselect') ) && isset( $data['custom_dropdown_options_source'] ) && ! empty( $data['custom_dropdown_options_source'] ) ){
-             
-              return $ultimatemember->fields->get_option_value_from_callback( $value, $data, $type );
-
-            
-    	}
+		
+		if( ! empty( $data['custom_dropdown_options_source'] ) ){
+			return $ultimatemember->fields->get_option_value_from_callback( $value, $data, $data['type'] );
+		}
 
     	return $value;
     }
+
+
 

@@ -23,6 +23,7 @@
 		}
 	}
 
+	
 	/***
 	***	@remove any file silently
 	***/
@@ -157,4 +158,54 @@
 		}
 
 		die();
+	}
+
+	/***
+	***	@run an ajax to retrieve select options from a callback function
+	***/
+	add_action('wp_ajax_nopriv_ultimatemember_ajax_select_options', 'ultimatemember_ajax_select_options');
+	add_action('wp_ajax_ultimatemember_ajax_select_options', 'ultimatemember_ajax_select_options');
+	function ultimatemember_ajax_select_options() {
+
+		global $ultimatemember;
+		
+		$arr_options = array();
+		$arr_options['status'] = 'success';
+		$arr_options['post'] = $_POST;
+
+		$ultimatemember->fields->set_id = intval( $_POST['form_id'] );
+		$ultimatemember->fields->set_mode  = 'profile';
+		$form_fields = $ultimatemember->fields->get_fields();
+		$arr_options['fields'] = $form_fields;
+
+		$debug = apply_filters('um_ajax_select_options__debug_mode', false );
+		if( $debug ){
+			$arr_options['debug'] = array(
+				$_POST,
+				$form_fields,
+			);
+		}
+
+		if( isset( $_POST['child_callback'] ) && ! empty( $_POST['child_callback'] ) && isset( $form_fields[ $_POST['child_name'] ] )  ){
+			
+			$ajax_source_func = $_POST['child_callback'];
+			
+			// If the requested callback function is added in the form or added in the field option, execute it with call_user_func.
+			if( isset( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) && 
+				! empty( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
+				$form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] == $ajax_source_func ){
+
+				$arr_options['field'] = $form_fields[ $_POST['child_name'] ];
+				if( function_exists( $ajax_source_func ) ){
+					$arr_options['items'] = call_user_func( $ajax_source_func );
+				}
+
+			}else{
+				$arr_options['status'] = 'error';
+				$arr_options['message'] = __( 'This is not possible for security reasons.','ultimatemember');
+			}
+
+		}
+
+		wp_send_json( $arr_options );
 	}

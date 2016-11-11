@@ -168,18 +168,25 @@ class UM_Profile {
 					$data = '';
 					if ( $key && um_filtered_value( $key ) ) {
 
-						if ( isset( $ultimatemember->builtin->all_user_fields[$key]['icon'] ) ) {
-							$icon = $ultimatemember->builtin->all_user_fields[$key]['icon'];
+						if ( isset( $ultimatemember->builtin->all_user_fields[ $key ] ) ){
+							$data = $ultimatemember->builtin->all_user_fields[ $key ];
+						}
+
+						if ( isset( $data['icon'] ) ) {
+							$icon = $data['icon'];
 						} else {
 							$icon = '';
 						}
 
+						$data['in_profile_meta'] = true;
+
 						$icon = ( isset( $icon ) && !empty( $icon ) ) ? '<i class="'.$icon.'"></i>' : '';
 
-						if ( !um_get_option('profile_show_metaicon') )
+						if ( !um_get_option('profile_show_metaicon') ){
 							$icon = '';
-
-						$value = um_filtered_value( $key );
+						}
+						
+						$value = um_filtered_value( $key, $data );
 
 						$items[] = '<span>' . $icon . $value . '</span>';
 						$items[] = '<span class="b">&bull;</span>';

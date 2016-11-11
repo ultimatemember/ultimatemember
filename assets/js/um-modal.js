@@ -1,10 +1,12 @@
 jQuery(document).ready(function() {
 	
 	jQuery(document).on('click', '.um-popup-overlay', function(){
+
 		remove_Modal();
 	});
 	
 	jQuery(document).on('click', '.um-modal-overlay, a[data-action="um_remove_modal"]', function(){
+
 		um_remove_modal();
 	});
 
@@ -81,7 +83,6 @@ jQuery(document).ready(function() {
 		jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( jQuery(this).attr('data-change') );
 		
 		jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('input[type=hidden]').val( jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('.um-single-fileinfo a').attr('href') );
-		
 	});
 
 	jQuery(document).on('click', '.um-finish-upload.image', function(){
@@ -147,7 +148,6 @@ jQuery(document).ready(function() {
 
 			
 		}
-		
 	});
 	
 	jQuery(document).on('click', 'a[data-modal^="um_"], span[data-modal^="um_"]', function(e){
@@ -182,7 +182,6 @@ jQuery(document).ready(function() {
 			um_new_modal( modal_id, size );
 			
 		}
-		
 	});
 
 });
