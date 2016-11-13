@@ -313,7 +313,7 @@ jQuery(document).ready(function() {
 		jQuery(document).on('change','select[name="'+parent_option+'"]',function(){
 			var parent  = jQuery(this);
 			var form_id = parent.closest('form').find('input[type=hidden][name=form_id]').val();
-			var arr_key = me.val();
+			var arr_key = parent.val();
 
 			if( parent.val() != '' && typeof um_select_options_cache[ arr_key ] != 'object' ){
 							
