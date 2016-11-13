@@ -10,9 +10,11 @@ class UM_Fields {
 
 	}
 
-	/***
-	***	@standard checkbox field
-	***/
+	/**
+	 * Standard checkbox field
+	 * @param  integer $id   
+	 * @param  string $title
+	 */
 	function checkbox( $id, $title ) {
 		?>
 
@@ -28,9 +30,10 @@ class UM_Fields {
 		<?php
 	}
 
-	/***
-	***	@show user social links
-	***/
+
+	/**
+	 * Shows social links
+	 */
 	function show_social_urls(){
 		global $ultimatemember;
 		$fields = $ultimatemember->builtin->all_user_fields;
@@ -49,9 +52,11 @@ class UM_Fields {
 		}
 	}
 
-	/***
-	***	@hidden fields inside shortcode
-	***/
+	
+	/**
+	 * Hidden field insaide a shortcode
+	 * @param string $field 
+	 */
 	function add_hidden_field( $field ) {
 		global $ultimatemember;
 		echo '<div style="display: none !important;">';
@@ -69,14 +74,23 @@ class UM_Fields {
 		echo '</div>';
 	}
 
+	/**
+	 * Get hidden field
+	 * @param  string $key  
+	 * @param  string $value
+	 * @return string      
+	 */
 	function disabled_hidden_field( $key, $value ){
 		return '<input type="hidden" name="'.$key.'" value="'.esc_attr( $value ).'"/>';
 	}
 
-	/***
-	***	@update a field globally
-	***/
-	function globally_update_field($id, $args){
+	
+	/**
+	 * Updates a field globally
+	 * @param  integer $id  
+	 * @param  array $args
+	 */
+	function globally_update_field( $id, $args ){
 		global $ultimatemember;
 		$fields = $ultimatemember->builtin->saved_fields;
 
@@ -91,9 +105,13 @@ class UM_Fields {
 		update_option('um_fields', $fields );
 	}
 
-	/***
-	***	@update a field in form only
-	***/
+	
+	/**
+	 * Updates a field in form only
+	 * @param  integer $id     
+	 * @param  array $args   
+	 * @param  integer $form_id
+	 */
 	function update_field($id, $args, $form_id){
 		global $ultimatemember;
 		$fields = $ultimatemember->query->get_attr( 'custom_fields', $form_id );
@@ -125,9 +143,12 @@ class UM_Fields {
 		$ultimatemember->query->update_attr( 'custom_fields', $form_id, $fields );
 	}
 
-	/***
-	***	@delete a field in form only
-	***/
+	
+	/**
+	 * Deletes a field in form only
+	 * @param  integer $id      
+	 * @param  integer $form_id 
+	 */
 	function delete_field_from_form( $id, $form_id ) {
 		global $ultimatemember;
 		$fields = $ultimatemember->query->get_attr( 'custom_fields', $form_id );
@@ -137,9 +158,11 @@ class UM_Fields {
 		}
 	}
 
-	/***
-	***	@delete the field from custom fields
-	***/
+	
+	/**
+	 * Deletes a field from custom fields
+	 * @param  integer $id 
+	 */
 	function delete_field_from_db( $id ) {
 		global $ultimatemember;
 		$fields = $ultimatemember->builtin->saved_fields;
@@ -149,9 +172,12 @@ class UM_Fields {
 		}
 	}
 
-	/***
-	***	@quickly add field from custom fields
-	***/
+	/**
+	 * Quickly adds a field from custom fields
+	 * @param integer $global_id 
+	 * @param integer $form_id   
+	 * @param array  $position  
+	 */
 	function add_field_from_list( $global_id, $form_id, $position = array() ) {
 		global $ultimatemember;
 		$fields = $ultimatemember->query->get_attr( 'custom_fields', $form_id );
@@ -178,9 +204,12 @@ class UM_Fields {
 		}
 	}
 
-	/***
-	***	@quickly add field from predefined fields
-	***/
+	/**
+	 * Quickly adds a field from pre-defined fields
+	 * @param integer $global_id 
+	 * @param integer $form_id   
+	 * @param array  $position  
+	 */
 	function add_field_from_predefined( $global_id, $form_id, $position = array() ) {
 		global $ultimatemember;
 
@@ -211,10 +240,11 @@ class UM_Fields {
 		}
 	}
 
-	/***
-	***	@Duplicates a field by meta key
-	*** @requires form id and meta key
-	***/
+	/**
+	 * Duplicates a frield by meta key
+	 * @param  integer $id      
+	 * @param  integer $form_id 
+	 */
 	function duplicate_field( $id, $form_id ) {
 		global $ultimatemember;
 		$fields = $ultimatemember->query->get_attr( 'custom_fields', $form_id );
@@ -247,9 +277,11 @@ class UM_Fields {
 
 	}
 
-	/***
-	***	@Print field error
-	***/
+	/**
+	 *  Print field error
+	 * @param  string $text       
+	 * @param  boolean $force_show 
+	 */
 	function field_error($text, $force_show = false ) {
 		global $ultimatemember;
 		if ( $force_show ) {
@@ -268,25 +300,33 @@ class UM_Fields {
 		return $output;
 	}
 
-	/***
-	***	@Check if field has a server side error
-	***/
+	/**
+	 * Checks if field has a server-side error
+	 * @param  string  $key 
+	 * @return boolean      
+	 */
 	function is_error($key) {
 		global $ultimatemember;
 		return $ultimatemember->form->has_error($key);
 	}
 
-	/***
-	***	@Return field error
-	***/
+	/**
+	 * Returns field error
+	 * @param  string $key 
+	 * @return string
+	 */
 	function show_error($key) {
 		global $ultimatemember;
 		return $ultimatemember->form->errors[$key];
 	}
 
-	/***
-	***	@Display field label
-	***/
+	/**
+	 *  Display field label
+	 * @param  string $label 
+	 * @param  string $key   
+	 * @param  data $data  
+	 * @return  string    
+	 */
 	function field_label( $label, $key, $data ) {
 		global $ultimatemember;
 		$output = null;
@@ -324,9 +364,14 @@ class UM_Fields {
 		return $output;
 	}
 
-	/***
-	***	@Output field classes
-	***/
+	
+	/**
+	 * Output field classes
+	 * @param  string $key  
+	 * @param  array $data 
+	 * @param  string $add  
+	 * @return string
+	 */
 	function get_class($key, $data, $add = null) {
 		$classes = null;
 
@@ -361,9 +406,14 @@ class UM_Fields {
 		return $classes;
 	}
 
-	/***
-	***	@Get field value
-	***/
+	
+	/**
+	 * Gets field value
+	 * @param  string  $key     
+	 * @param  boolean $default 
+	 * @param  array $data    
+	 * @return mixed
+	 */
 	function field_value( $key, $default = false, $data = null ) {
 		global $ultimatemember;
  		
@@ -418,9 +468,14 @@ class UM_Fields {
 		return '';
 	}
 
-	/***
-	***	@Check if option is selected
-	***/
+	
+	/**
+	 * Checks if an option is selected
+	 * @param  string  $key   
+	 * @param  string  $value 
+	 * @param  array  $data  
+	 * @return boolean        
+	 */
 	function is_selected($key, $value, $data){
 		global $ultimatemember;
 
@@ -483,9 +538,14 @@ class UM_Fields {
 		return false;
 	}
 
-	/***
-	***	@Check if radio button is checked
-	***/
+	
+	/**
+	 * Checks if a radio button is selected
+	 * @param  string  $key   
+	 * @param  string $value 
+	 * @param  array $data  
+	 * @return boolean        
+	 */
 	function is_radio_checked($key, $value, $data){
 		global $ultimatemember;
 
@@ -549,9 +609,12 @@ class UM_Fields {
 		return false;
 	}
 
-	/***
-	***	@Get Field Icon
-	***/
+	
+	/**
+	 * Get field icon
+	 * @param  string $key 
+	 * @return string
+	 */
 	function get_field_icon( $key ) {
 		global $ultimatemember;
 		$fields = $ultimatemember->builtin->all_user_fields;
@@ -560,8 +623,13 @@ class UM_Fields {
 		return '';
 	}
 
+	
 	/**
-	 * Get selected option from a callback function
+	 * Gets selected option value from a callback function
+	 * @param  string $value 
+	 * @param  array $data  
+	 * @param  string $type  
+	 * @return json
 	 */
 	function get_option_value_from_callback( $value, $data, $type ){
         
@@ -612,6 +680,9 @@ class UM_Fields {
 
 	/**
 	 * Get select options from a callback function
+	 * @param  array $data 
+	 * @param  string $type 
+	 * @return array $arr_options
 	 */
 	function get_options_from_callback( $data, $type ){
 
@@ -630,9 +701,11 @@ class UM_Fields {
     	return $arr_options;
 	}
 
-	/***
-	***	@Get Field Type
-	***/
+	/**
+	 * Get field type
+	 * @param  string $key 
+	 * @return string
+	 */
 	function get_field_type( $key ) {
 		global $ultimatemember;
 		$fields = $ultimatemember->builtin->all_user_fields;
@@ -641,9 +714,11 @@ class UM_Fields {
 		return '';
 	}
 
-	/***
-	***	@Get Field Label
-	***/
+	/**
+	 * Get field label
+	 * @param  string $key 
+	 * @return string      
+	 */
 	function get_label( $key ) {
 		global $ultimatemember;
 		$fields = $ultimatemember->builtin->all_user_fields;
@@ -654,9 +729,12 @@ class UM_Fields {
 		return '';
 	}
 
-	/***
-	***	@Get Field Title
-	***/
+	
+	/**
+	 * Get field title
+	 * @param  string $key 
+	 * @return string     
+	 */
 	function get_field_title( $key ) {
 		global $ultimatemember;
 		$fields = $ultimatemember->builtin->all_user_fields;
@@ -667,18 +745,22 @@ class UM_Fields {
 		return __('Custom Field','ultimatemember');
 	}
 
-	/***
-	***	@Get form fields
-	***/
+	/**
+	 * Get form fields
+	 * @return array
+	 */
 	function get_fields() {
 		$this->fields = array();
 		$this->fields = apply_filters("um_get_form_fields", $this->fields );
 		return $this->fields;
 	}
 
-	/***
-	***	@Get Field
-	***/
+	
+	/**
+	 * Get specific field
+	 * @param  string $key 
+	 * @return array
+	 */
 	function get_field( $key ) {
 		global $ultimatemember;
 
@@ -995,9 +1077,13 @@ class UM_Fields {
 		return $array;
 	}
 
-	/***
-	***	@a field in input mode
-	***/
+	/**
+	 * Gets a field in 'input mode'
+	 * @param  string $key  
+	 * @param  array  $data 
+	 * @param  boolean $rule 
+	 * @return string
+	 */
 	function edit_field( $key, $data, $rule=false ) {
 		global $ultimatemember;
 
@@ -2154,9 +2240,13 @@ class UM_Fields {
 		return $output;
 	}
 
-	/***
-	***	@sort array function
-	***/
+	/**
+	 * Sorts columns array
+	 * @param  array $arr 
+	 * @param  string $col 
+	 * @param  string $dir 
+	 * @return array $arr
+	 */
 	function array_sort_by_column($arr, $col, $dir = SORT_ASC) {
 		$sort_col = array();
 		foreach ($arr as $key=> $row) {
@@ -2169,9 +2259,12 @@ class UM_Fields {
 		return $arr;
 	}
 
-	/***
-	***	@get fields in row
-	***/
+	
+	/**
+	 * Get fields in row
+	 * @param  integer $row_id 
+	 * @return string     
+	 */
 	function get_fields_by_row( $row_id ) {
 		foreach( $this->get_fields as $key => $array ) {
 			if ( !isset( $array['in_row'] ) || ( isset( $array['in_row'] ) && $array['in_row'] == $row_id ) ) {
@@ -2181,9 +2274,13 @@ class UM_Fields {
 		return ( isset ( $results ) ) ? $results : '';
 	}
 
-	/***
-	***	@get fields by sub row
-	***/
+	
+	/**
+	 * Get fields by sub row
+	 * @param  string $row_fields 
+	 * @param  integer $subrow_id  
+	 * @return mixed
+	 */
 	function get_fields_in_subrow( $row_fields, $subrow_id ) {
 		if ( !is_array( $row_fields ) ) return '';
 		foreach( $row_fields as $key => $array ) {
@@ -2194,9 +2291,11 @@ class UM_Fields {
 		return ( isset ( $results ) ) ? $results : '';
 	}
 
-	/***
-	***	@get fields in group
-	***/
+	/**
+	 * Get fields in group
+	 * @param  integer $group_id 
+	 * @return mixed         
+	 */
 	function get_fields_in_group( $group_id ) {
 		foreach( $this->get_fields as $key => $array ) {
 			if ( isset( $array['in_group'] ) && $array['in_group'] == $group_id ) {
@@ -2206,9 +2305,13 @@ class UM_Fields {
 		return ( isset ( $results ) ) ? $results : '';
 	}
 
-	/***
-	***	@get fields in column
-	***/
+	
+	/**
+	 * Get fields in column
+	 * @param  array $fields     
+	 * @param  integer $col_number 
+	 * @return mixed           
+	 */
 	function get_fields_in_column( $fields, $col_number ) {
 		foreach( $fields as $key => $array ) {
 			if ( isset( $array['in_column'] ) && $array['in_column'] == $col_number ) {
@@ -2218,9 +2321,13 @@ class UM_Fields {
 		return ( isset ( $results ) ) ? $results : '';
 	}
 
-	/***
-	***	@display fields
-	***/
+	
+	/**
+	 * Display fields
+	 * @param  string $mode 
+	 * @param  array $args 
+	 * @return string      
+	 */
 	function display( $mode, $args ) {
 		global $ultimatemember;
 		$output = null;
@@ -2351,9 +2458,13 @@ class UM_Fields {
 		return $output;
 	}
 
-	/***
-	***	@a field in view mode
-	***/
+	/**
+	 * Gets a field in `view mode`
+	 * @param  string  $key  
+	 * @param  array  $data 
+	 * @param  boolean $rule 
+	 * @return string       
+	 */
 	function view_field( $key, $data, $rule=false ) {
 		global $ultimatemember;
 
@@ -2477,9 +2588,12 @@ class UM_Fields {
 		return $output;
 	}
 
-	/***
-	***	@display fields (view mode)
-	***/
+	/**
+	 * Display fields ( view mode )
+	 * @param  string $mode 
+	 * @param  array $args 
+	 * @return string       
+	 */
 	function display_view( $mode, $args ) {
 		global $ultimatemember;
 		$output = null;
@@ -2663,9 +2777,12 @@ class UM_Fields {
 		return $output;
 	}
 
-	/***
-	***	@begin new row in form
-	***/
+	/**
+	 * Get new row in form
+	 * @param  string $row_id    
+	 * @param  array $row_array 
+	 * @return array         
+	 */
 	function new_row_output( $row_id, $row_array ) {
 		$output = null;
 		extract($row_array);

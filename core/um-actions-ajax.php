@@ -1,8 +1,9 @@
 <?php
 
-	/***
-	***	@fallback for ajax urls
-	***/
+	/**
+	 * Fallback for ajax urls
+	 * @uses action hooks: wp_head, admin_head
+	 */
 	add_action('wp_head','ultimatemember_ajax_urls');
 	add_action('admin_head','ultimatemember_ajax_urls');
 	function ultimatemember_ajax_urls() { 
@@ -23,10 +24,11 @@
 		}
 	}
 
-	
-	/***
-	***	@remove any file silently
-	***/
+	/**
+	 * Remove any files silently
+	 * @uses action hooks: wp_ajax_nopriv_ultimatemember_remove_file, wp_ajax_ultimatemember_remove_file
+	 * 
+	 */
 	add_action('wp_ajax_nopriv_ultimatemember_remove_file', 'ultimatemember_remove_file');
 	add_action('wp_ajax_ultimatemember_remove_file', 'ultimatemember_remove_file');
 	function ultimatemember_remove_file(){
