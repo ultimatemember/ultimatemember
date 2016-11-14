@@ -110,11 +110,7 @@ class UM_Form {
 				$this->post_form = array_merge( $this->form_data, $this->post_form );
 
 				
-				$secure_form_post = apply_filters('um_secure_form_post', true );
- 				
- 				if( isset( $this->form_data['custom_fields'] ) 
- 					&& strstr( $this->form_data['custom_fields'], 'role_' )
- 					&& $secure_form_post  ){  // Secure selected role
+				if( isset( $this->form_data['custom_fields'] )  && strstr( $this->form_data['custom_fields'], 'role_' )  ){  // Secure selected role
 					
 					$custom_field_roles = $this->custom_field_roles( $this->form_data['custom_fields'] );
                     
@@ -137,7 +133,6 @@ class UM_Form {
 					$this->post_form['submitted']['role'] = $role;
 				}
 				
-               
 				if ( isset( $_POST[ $ultimatemember->honeypot ] ) && $_POST[ $ultimatemember->honeypot ] != '' ){
 					wp_die('Hello, spam bot!');
 				}
