@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.6.1
 
-Stable Tag: 1.3.72
+Stable Tag: 1.3.73
 
 License: GNU Version 2 or Any Later Version
 
@@ -148,6 +148,37 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.73: November 17, 2016 =
+
+* Enhancements:
+  * Adds a filter hook to modify the submitted details on registration process
+      * `um_before_save_filter_submitted`
+  * Adds a filter hook to disable canonical link in header
+      * `um_allow_canonical__filter`
+  * Adds a filter hook to modify the auto-generated email address on registration process
+      * `um_user_register_submitted__email`
+  * Adds filter hooks to modify locale, language file path and textdomain
+      * `um_language_textdomain`
+      * `um_language_locale`
+      * `um_language_file`
+* Adds filter hook to modify the data of selected value:
+  * `um_is_selected_filter_data`
+* Adds new select/multi-select options to retrieve options from a callback.
+  * In the form builder, edit or add a select/multi-select field and add your callback function in `Choices callback` field to get populated.
+* Adds parent select field option to dynamically populate another select field.
+  * If `Choices Callback` option is set in the field settings,  the `Parent Option` triggers an Ajax request to populate the child options on `change` event.
+* Updates `um.min.js` file.
+* Updates `en_US` translation file.
+
+* Bugfixes:
+  *  Removes notices from WPCLI console.
+  *  Removes notices from edit profile mode
+  *  Removes autocomplete from search filter fields
+  *  Fix translation strings of search filters on a member directory
+  *  Fix email notifications not sending on registration process
+  *  Fix field selection with special characters on form submission
+  *  Fix assigning of role on register submission process
 
 = 1.3.72: October 10, 2016 =
 
