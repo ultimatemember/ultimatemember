@@ -162,14 +162,14 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
       * `um_language_textdomain`
       * `um_language_locale`
       * `um_language_file`
-* Adds filter hook to modify the data of selected value:
-  * `um_is_selected_filter_data`
-* Adds new select/multi-select options to retrieve options from a callback.
-  * In the form builder, edit or add a select/multi-select field and add your callback function in `Choices callback` field to get populated.
-* Adds parent select field option to dynamically populate another select field.
-  * If `Choices Callback` option is set in the field settings,  the `Parent Option` triggers an Ajax request to populate the child options on `change` event.
-* Updates `um.min.js` file.
-* Updates `en_US` translation file.
+  * Adds filter hook to modify the data of selected value:
+      * `um_is_selected_filter_data`
+  * Adds new select/multi-select options to retrieve options from a callback.
+      * In the form builder, edit or add a select/multi-select field and add your callback function in `Choices callback` field to get populated.
+  * Adds parent select field option to dynamically populate another select field.
+      * If `Choices Callback` option is set in the field settings,  the `Parent Option` triggers an Ajax request to populate the child options on `change` event.
+  * Updates `um.min.js` file.
+  * Updates `en_US` translation file.
 
 * Bugfixes:
   *  Removes notices from WPCLI console.
