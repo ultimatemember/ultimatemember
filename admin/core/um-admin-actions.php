@@ -254,15 +254,12 @@
 	***/
 	add_action('um_admin_do_action__user_cache', 'um_admin_do_action__user_cache');
 	function um_admin_do_action__user_cache( $action ){
-		global $ultimatemember;
+		global $ultimatemember, $wpdb;
 		if ( !is_admin() || !current_user_can('manage_options') ) die();
 		
-		$all_options = wp_load_alloptions();
-		foreach( $all_options as $k => $v ) {
-			if ( strstr( $k, 'um_cache_userdata_' ) ) {
-				delete_option( $k );
-			}
-		}
+
+		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'um_cache_userdata_%'" );
+
 		
 		$url = admin_url('admin.php?page=ultimatemember');
 		$url = add_query_arg('update','cleared_cache',$url);
