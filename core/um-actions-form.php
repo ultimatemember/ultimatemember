@@ -389,11 +389,13 @@
 										$args['user_id'] = um_get_requested_user();
 									}
 
+									$email_exists =  email_exists( $args[$key] );
+
 									if ( $args[$key] == '' && in_array( $key, array('user_email') ) ) {
 										$ultimatemember->form->add_error($key, __('You must provide your email','ultimatemember') );
-									} else if ( in_array( $mode, array('register') )  && email_exists( $args[$key] )  ) {
+									} else if ( in_array( $mode, array('register') )  && $email_exists  ) {
 										$ultimatemember->form->add_error($key, __('This email is already linked to an existing account','ultimatemember') );
-									} else if ( in_array( $mode, array('profile') )  && email_exists( $args[$key] ) != $args['user_id']  ) {
+									} else if ( in_array( $mode, array('profile') )  && $email_exists && $email_exists != $args['user_id']  ) {
 										$ultimatemember->form->add_error($key, __('This email is already linked to an existing account','ultimatemember') );
 									} else if ( !is_email( $args[$key] ) ) {
 										$ultimatemember->form->add_error($key, __('This is not a valid email','ultimatemember') );
