@@ -114,18 +114,22 @@ class UM_Form {
 					
 					$custom_field_roles = $this->custom_field_roles( $this->form_data['custom_fields'] );
                     
-                    $role = $_POST['role'];
+                    if( isset( $_POST['role'] ) ){
+	                    $role = $_POST['role'];
 
-                    if( is_array( $_POST['role'] ) ){
-                    	$role = current( $_POST['role'] );
-                    }
+	                    if( is_array( $_POST['role'] ) ){
+	                    	$role = current( $_POST['role'] );
+	                    }
 
-					if ( isset( $custom_field_roles ) && is_array(  $custom_field_roles ) && ! in_array( $role , $custom_field_roles ) ) {
-						wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
-					} 
+						if ( isset( $custom_field_roles ) && is_array(  $custom_field_roles ) && ! in_array( $role , $custom_field_roles ) ) {
+							wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
+						} 
 
-					$this->post_form['role'] = $role;
-					$this->post_form['submitted']['role'] = $role;
+						$this->post_form['role'] = $role;
+						$this->post_form['submitted']['role'] = $role;
+					}
+
+					
 
 				}else if( isset( $this->post_form['mode'] ) && $this->post_form['mode'] == 'register' ) {
 					$role = $this->assigned_role( $this->form_id );
