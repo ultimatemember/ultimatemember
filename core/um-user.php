@@ -704,6 +704,34 @@ class UM_User {
 		return $role_title;
 	}
 
+	/**
+	 * Get role slug by ID
+	 * @param  integer $id 
+	 * @return string
+	 */
+	function get_role_slug_by_id( $id ) {
+		global $wpdb, $ultimatemember;
+
+
+		$args = array(
+		    	'posts_per_page' => 1,
+		    	'post_type' => 'um_role',
+		    	'page_id'	=> $id,
+		    	'post_status' => array('publish'),
+		);
+
+		$roles = new WP_Query( $args );
+		$role_slug = '';
+		
+		if ( $roles->have_posts() ) {
+			$role_slug = $roles->post->post_name;
+		}
+
+		wp_reset_query();  
+
+		return $role_slug;
+	}
+
 	/***
 	***	@Update one key in user meta
 	***/

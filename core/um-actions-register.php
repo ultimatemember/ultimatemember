@@ -231,10 +231,12 @@
 				}
 
 				if ( um_user( $status . '_action' ) == 'show_message' && um_user( $status . '_message' ) != '' ) {
-					$url = $ultimatemember->permalinks->get_current_url();
-					$url =  add_query_arg( 'message', esc_attr( $status ), $url );
-					$url =  add_query_arg( 'uid', esc_attr( um_user('ID') ), $url );
-					$url =  add_query_arg( 'um_form_id', esc_attr( $form_id ), $url );
+
+					$role_id = $ultimatemember->user->get_role_name( um_user('role'), true );
+					$url  = $ultimatemember->permalinks->get_current_url();
+					$url  = add_query_arg( 'message', esc_attr( $status ), $url );
+					$url  = add_query_arg( 'um_role', esc_attr( $role_id ), $url );
+					$url  = add_query_arg( 'um_form_id', esc_attr( $form_id ), $url );
 
 					exit( wp_redirect( $url ) );
 				}
