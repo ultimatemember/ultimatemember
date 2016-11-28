@@ -10,7 +10,13 @@
 		
 		// Sync display name changes
 		$option = um_get_option('display_name');
-		$user_id = $ultimatemember->user->id;
+		
+		$user = get_user_by( 'email', $changes['user_email'] );
+
+		um_fetch_user( $user->ID );
+
+		$user_id = $user->ID;
+		
 		switch ( $option ) {
 			default:
 				break;
@@ -39,10 +45,11 @@
 
 		if ( isset( $update_name ) ) {
 			
-			$return = wp_update_user( array( 'ID' => $user_id, 'display_name' => $update_name ) );
+			$arr_user =  array( 'ID' => $user_id, 'display_name' => $update_name );
+			$return = wp_update_user( $arr_user );
 
 			if( is_wp_error( $return ) ) {
-				wp_die( $return->get_error_message() );
+				wp_die(  '<pre>' . var_export( array( 'message' => $return->get_error_message(), 'dump' => $arr_user, 'changes' => $changes ), true ) . '</pre>'  );
 			}
 			
 
