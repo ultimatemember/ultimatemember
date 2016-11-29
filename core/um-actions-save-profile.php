@@ -11,11 +11,13 @@
 		// Sync display name changes
 		$option = um_get_option('display_name');
 		
-		$user = get_user_by( 'email', $changes['user_email'] );
+		$user_id = $ultimatemember->user->id;
 
-		um_fetch_user( $user->ID );
-
-		$user_id = $user->ID;
+		if( ! isset( $user_id ) || empty( $user_id ) ){
+			$user = get_user_by( 'email', $changes['user_email'] );
+			um_fetch_user( $user->ID );
+			$user_id = $user->ID;
+		}
 		
 		switch ( $option ) {
 			default:
