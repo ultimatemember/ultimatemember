@@ -43,6 +43,9 @@
 						
 						<?php
 						if ( $show_tagline && is_array( $tagline_fields ) ) {
+							
+							um_fetch_user( $member );
+
 							foreach( $tagline_fields as $key ) {
 								if ( $key && um_filtered_value( $key ) ) {
 									$value = um_filtered_value( $key );
