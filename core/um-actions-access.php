@@ -571,88 +571,90 @@
 
 		}
 
-		$post_type = get_post_type( $post->ID );
-		
-		// post's category restriction
-	    if ( $post_type != 'page' && isset( $args['custom_access_settings'] ) && $args['custom_access_settings'] == 0 ) {
-            
-			$categories = get_the_category( $post->ID );
-			foreach( $categories as $cat ){
+		if( isset( $post->ID ) ){
+			$post_type = get_post_type( $post->ID );
+			
+			// post's category restriction
+		    if ( $post_type != 'page' && isset( $args['custom_access_settings'] ) && $args['custom_access_settings'] == 0 ) {
+	            
+				$categories = get_the_category( $post->ID );
+				foreach( $categories as $cat ){
 
-	   				$opt = get_option("category_{$cat->term_id}");
-	   		
-					if ( isset( $opt['_um_accessible'] )  ) {
-						switch( $opt['_um_accessible'] ) {
+		   				$opt = get_option("category_{$cat->term_id}");
+		   		
+						if ( isset( $opt['_um_accessible'] )  ) {
+							switch( $opt['_um_accessible'] ) {
 
-							case 0: // Open to everyone
-								$ultimatemember->access->allow_access = true;
-								$ultimatemember->access->redirect_handler = false; // open to everyone
-								break;
-
-							case 1: // Logged out users only
-								
-								if ( is_user_logged_in() ){
-									$redirect = ( isset( $opt['_um_redirect'] ) && ! empty( $opt['_um_redirect'] ) ) ? $opt['_um_redirect'] : site_url();
-									$redirect = $ultimatemember->access->set_referer( $redirect, "page_cat_1a_t{$cat->term_id}_pt{$post_type}" );
-									$ultimatemember->access->redirect_handler = $redirect;
-									$ultimatemember->access->allow_access = false;
-								}
-
-								if ( !is_user_logged_in() ){
+								case 0: // Open to everyone
 									$ultimatemember->access->allow_access = true;
-								}
+									$ultimatemember->access->redirect_handler = false; // open to everyone
+									break;
 
-								break;
-
-							case 2: // Logged in users only
-
-								if ( ! is_user_logged_in() ){
-
-									$redirect = ( isset( $opt['_um_redirect'] ) && ! empty( $opt['_um_redirect']  ) ) ? $opt['_um_redirect'] : um_get_core_page('login');
-
-									$redirect = $ultimatemember->access->set_referer( $redirect, "page_cat_2a_t{$cat->term_id}_pt{$post_type}" );
-									$ultimatemember->access->redirect_handler = $redirect;
+								case 1: // Logged out users only
 									
-								    $ultimatemember->access->allow_access = false;
-								}
-
-								if ( is_user_logged_in() ){
-									
-									if(  isset( $opt['_um_roles'] ) && !empty( $opt['_um_roles'] ) ){
-
-										if (  in_array( um_user('role'), $opt['_um_roles'] ) ) {
-
-											 $ultimatemember->access->allow_access = true;
-									
-										}else{
-
-											$redirect = ( isset( $opt['_um_redirect'] ) && ! empty( $opt['_um_redirect'] ) ) ? $opt['_um_redirect'] : site_url();
-											$redirect = $ultimatemember->access->set_referer( $redirect, "page_cat_2b_t{$cat->term_id}_pt{$post_type}" );
-											$ultimatemember->access->redirect_handler = $redirect;
-									
-											$ultimatemember->access->allow_access = false;
-									
-										}
-
-									}else{ // if allowed all roles
-										 $ultimatemember->access->allow_access = true;
+									if ( is_user_logged_in() ){
+										$redirect = ( isset( $opt['_um_redirect'] ) && ! empty( $opt['_um_redirect'] ) ) ? $opt['_um_redirect'] : site_url();
+										$redirect = $ultimatemember->access->set_referer( $redirect, "page_cat_1a_t{$cat->term_id}_pt{$post_type}" );
+										$ultimatemember->access->redirect_handler = $redirect;
+										$ultimatemember->access->allow_access = false;
 									}
 
-								}
-							
+									if ( !is_user_logged_in() ){
+										$ultimatemember->access->allow_access = true;
+									}
+
+									break;
+
+								case 2: // Logged in users only
+
+									if ( ! is_user_logged_in() ){
+
+										$redirect = ( isset( $opt['_um_redirect'] ) && ! empty( $opt['_um_redirect']  ) ) ? $opt['_um_redirect'] : um_get_core_page('login');
+
+										$redirect = $ultimatemember->access->set_referer( $redirect, "page_cat_2a_t{$cat->term_id}_pt{$post_type}" );
+										$ultimatemember->access->redirect_handler = $redirect;
+										
+									    $ultimatemember->access->allow_access = false;
+									}
+
+									if ( is_user_logged_in() ){
+										
+										if(  isset( $opt['_um_roles'] ) && !empty( $opt['_um_roles'] ) ){
+
+											if (  in_array( um_user('role'), $opt['_um_roles'] ) ) {
+
+												 $ultimatemember->access->allow_access = true;
+										
+											}else{
+
+												$redirect = ( isset( $opt['_um_redirect'] ) && ! empty( $opt['_um_redirect'] ) ) ? $opt['_um_redirect'] : site_url();
+												$redirect = $ultimatemember->access->set_referer( $redirect, "page_cat_2b_t{$cat->term_id}_pt{$post_type}" );
+												$ultimatemember->access->redirect_handler = $redirect;
+										
+												$ultimatemember->access->allow_access = false;
+										
+											}
+
+										}else{ // if allowed all roles
+											 $ultimatemember->access->allow_access = true;
+										}
+
+									}
+								
+							}
+
+
+						} // end if isset( $opt['_um_accessible'] )
+
+						// if one of the categories has enabled restriction, apply its settings to the current post
+						if( $ultimatemember->access->allow_access == false ){
+							return;
 						}
 
-
-					} // end if isset( $opt['_um_accessible'] )
-
-					// if one of the categories has enabled restriction, apply its settings to the current post
-					if( $ultimatemember->access->allow_access == false ){
-						return;
-					}
-
-			} // end foreach
-	   	}
-
+				} // end foreach
+		   	}
+		}
+		
 	   	// post restriction
 		if ( isset( $args['custom_access_settings'] ) && $args['custom_access_settings'] == 1 ) {
 					
