@@ -170,7 +170,9 @@
 			wp_die( __('Whoa, slow down! You\'re seeing this message because you tried to submit a form too fast and we think you might be a spam bot. If you are a real human being please wait a few seconds before submitting the form. Thanks!') );
 		}
 
-		if( ! is_user_logged_in() && isset( $args ) ||  is_user_logged_in() && isset( $args['user_id'] ) && $args['user_id'] != get_current_user_id() ){
+		if( !is_user_logged_in() && isset( $args ) && ! um_is_core_page('password-reset') ||  
+			 is_user_logged_in() && isset( $args['user_id'] ) && $args['user_id'] != get_current_user_id()
+		){
 			wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
 		}
 
