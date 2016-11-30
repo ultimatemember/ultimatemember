@@ -154,6 +154,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * Bugfixes:
   * Fix set and reset password validation.
+  * Remove notices
 
 = 1.3.76: November 30, 2016 =
 
