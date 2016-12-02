@@ -213,7 +213,7 @@
 
 		if ( $output ) { ?>
 
-		<div class="um-account-heading uimob300-hide uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
+		<div class="um-account-heading uimob340-hide uimob500-hide"><i class="<?php echo $icon; ?>"></i><?php echo $title; ?></div>
 
 		<?php echo wpautop( um_get_option('delete_account_text') ); ?>
 
