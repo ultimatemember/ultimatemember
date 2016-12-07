@@ -9,7 +9,7 @@ class UM_Menu_Item_Custom_Fields_Editor {
 	 * Initialize plugin
 	 */
 	public static function init() {
-		add_action( 'wp_nav_menu_item_custom_fields', array( __CLASS__, '_fields' ), 10, 4 );
+		add_action( 'wp_nav_menu_item_custom_fields', array( __CLASS__, '_fields' ), 1, 4 );
 		add_action( 'wp_update_nav_menu_item', array( __CLASS__, '_save' ), 10, 3 );
 		add_filter( 'manage_nav-menus_columns', array( __CLASS__, '_columns' ), 99 );
 
