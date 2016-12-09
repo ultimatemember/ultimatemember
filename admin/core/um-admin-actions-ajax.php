@@ -59,6 +59,10 @@
 
 		$arr_options = array();
 
+		if( ! current_user_can('manage_options') ){
+			wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
+		}
+		
         $um_callback_func = $_POST['um_option_callback'];
         if( empty( $um_callback_func ) ){
         	$arr_options['status'] = 'empty';
