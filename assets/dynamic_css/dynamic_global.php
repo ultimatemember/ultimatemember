@@ -171,6 +171,8 @@ print "
 .um-$form_id.um .um-form input[type=tel]:focus,
 .um-$form_id.um .um-form input[type=number]:focus,
 .um-$form_id.um .um-form input[type=password]:focus,
+.um-$form_id.um .um-form .um-datepicker.picker__input.picker__input--active,
+.um-$form_id.um .um-form .um-datepicker.picker__input.picker__input--target,
 .um-$form_id.um .um-form textarea:focus {
 	border: $form_border_hover !important;
 }
