@@ -519,7 +519,7 @@ class UM_Admin_Metabox {
 							<?php
 							$fields = $ultimatemember->query->get_attr( 'custom_fields', $form_id );
 							foreach( $fields as $key => $array ) {
-								if ( isset( $array['title'] ) && $key != $this->edit_array['metakey'] ) {
+								if ( isset( $array['title'] ) && isset( $this->edit_array['metakey'] ) && $key != $this->edit_array['metakey'] ) {
 							?>
 							
 							<option value="<?php echo $key; ?>" <?php selected( $key, $this->edit_mode_value ); ?>><?php echo $array['title']; ?></option>
