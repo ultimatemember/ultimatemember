@@ -143,6 +143,8 @@
 			unset( $query_args['meta_query'] );
 		}
 
+		js_dump( $query_args );
+
 		return $query_args;
 
 	}
@@ -351,5 +353,18 @@
         }
 
     	return $atts;
+	}
+
+	/**
+	 * Filter gender query argument
+	 * @param  array $field_query 
+	 * @return array
+	 */
+	add_filter('um_query_args_gender__filter','um_query_args_gender__filter');
+	function um_query_args_gender__filter( $field_query ){
+
+		unset( $field_query[1] );
+
+		return $field_query;
 	}
 
