@@ -368,9 +368,13 @@
 			
 			$um_category = get_the_category(); 
 			$um_category = current( $um_category );
-			$term_id = $um_category->term_id;
+			$term_id = '';
+
+			if( isset( $um_category->term_id ) ){
+				$term_id = $um_category->term_id;
+			}
 			
-			if( isset( $term_id ) ){
+			if( isset( $term_id ) && ! empty( $term_id ) ){
 				
 				$opt = get_option("category_$term_id");
 				
