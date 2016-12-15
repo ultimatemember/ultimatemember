@@ -325,8 +325,15 @@ class UM_User {
 	 *
 	 */
 	function auto_login( $user_id, $rememberme = 0 ) {
-		wp_set_current_user($user_id);
-		wp_set_auth_cookie($user_id, $rememberme );
+		
+		wp_set_current_user( $user_id );
+		
+		wp_set_auth_cookie( $user_id, $rememberme );
+		
+		$user = get_user_by('ID', $user_id );
+		
+		do_action( 'wp_login', $user->user_login, $user );
+
 	}
 
 	/***
