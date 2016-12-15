@@ -143,8 +143,6 @@
 			unset( $query_args['meta_query'] );
 		}
 
-		js_dump( $query_args );
-
 		return $query_args;
 
 	}
