@@ -14,7 +14,7 @@ class UM_Form {
 
 		$this->processing = null;
 
-		add_action('init', array(&$this, 'form_init'), 2);
+		add_action('template_redirect', array(&$this, 'form_init'), 2);
 
 		add_action('init', array(&$this, 'field_declare'), 10);
 
