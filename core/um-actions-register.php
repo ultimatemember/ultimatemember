@@ -152,6 +152,8 @@
 
 		do_action('um_post_registration', $user_id, $args);
 
+		do_action('user_register', $user_id );
+
 	}
 
 	/***
