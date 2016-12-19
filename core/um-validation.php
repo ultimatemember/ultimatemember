@@ -53,9 +53,12 @@ class UM_Validation {
 	***	@space, dash, underscore
 	***/
 	function safe_username( $string ) {
+
+		$regex_safe_username = apply_filter('um_validation_safe_username_regex',$this->regex_safe );
+		
 		if ( is_email( $string ) )
 			return true;
-		if ( !is_email( $string) && !preg_match( $this->regex_safe, $string ) )
+		if ( !is_email( $string) && !preg_match( $regex_safe_username, $string ) )
 			return false;
 		return true;
 	}
@@ -64,8 +67,12 @@ class UM_Validation {
 	***	@dash and underscore (metakey)
 	***/
 	function safe_string($string){
-		if ( !preg_match( $this->regex_safe, $string) )
+		
+		$regex_safe_string = apply_filter('um_validation_safe_string_regex',$this->regex_safe );
+		
+		if ( !preg_match( $regex_safe_string, $string) ){
 			return false;
+		}
 		return true;
 	}
 	
