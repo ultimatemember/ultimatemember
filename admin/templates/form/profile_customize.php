@@ -107,6 +107,10 @@
 	<p><label for="_um_profile_main_bg"><?php _e('Base Background Color','ultimatemember'); ?></label>
 		<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_profile_main_bg', null, um_get_option('profile_main_bg') ); ?>" class="um-admin-colorpicker" name="_um_profile_main_bg" id="_um_profile_main_bg" data-default-color="<?php echo um_get_option('profile_main_bg'); ?>" />
 	</p>
+
+	<p><label for="_um_profile_main_text_color"><?php _e('Base Text Color','ultimatemember'); ?> <?php $this->tooltip('Override the default form text color', 'e'); ?></label>
+		<input type="text" value="<?php echo $ultimatemember->query->get_meta_value('_um_profile_main_text_color', null, um_get_option('profile_main_text_color') ); ?>" class="um-admin-colorpicker" name="_um_profile_main_text_color" id="_um_profile_main_text_color" data-default-color="<?php echo um_get_option('profile_main_text_color'); ?>" />
+	</p>
 	
 	<p><label for="_um_profile_cover_enabled"><?php _e('Enable Cover Photos','ultimatemember'); ?></label>
 		<span>

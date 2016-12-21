@@ -128,6 +128,7 @@ class UM_Setup {
 			'_um_profile_secondary_btn_hover' => '#e5e5e5',
 			'_um_profile_secondary_btn_text' => '#666',
 			'_um_profile_main_bg' => '',
+			'_um_profile_main_text_color' => '#555555',
 			'_um_register_role' => '0',
 			'_um_register_template' => 'register',
 			'_um_register_max_width' => '450px',

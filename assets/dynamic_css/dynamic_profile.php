@@ -113,5 +113,13 @@ print "
 ";
 }
 
+if( $main_text_color ){
+print "
+.um-$form_id.um .um-profile-body.main *{
+	color: $main_text_color;
+}
+";
+}
+
 ?>
 </style>
