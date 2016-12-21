@@ -2790,6 +2790,7 @@ class UM_Fields {
 		$padding = (isset($padding))?$padding:'';
 		$margin = (isset($margin))?$margin:'';
 		$background = (isset($background))?$background:'';
+		$text_color = (isset($text_color))?$text_color:'';
 		$borderradius = (isset($borderradius))?$borderradius:'';
 		$border = (isset($border))?$border:'';
 		$bordercolor = (isset($bordercolor))?$bordercolor:'';
@@ -2808,6 +2809,7 @@ class UM_Fields {
 		$css_heading_padding = '';
 		$css_heading_text_color = '';
 		$css_heading_borderradius = '';
+		$css_text_color = '';
 
 		// row css rules
 		if ( $padding ) $css_padding = 'padding: ' . $padding .';';
@@ -2822,6 +2824,7 @@ class UM_Fields {
 		if ( $border ) $css_border = 'border-width: ' . $border . ';';
 		if ( $bordercolor ) $css_bordercolor = 'border-color: ' . $bordercolor . ';';
 		if ( $borderstyle ) $css_borderstyle = 'border-style: ' . $borderstyle . ';';
+		if ( $text_color ) $css_text_color = 'color: ' . $text_color . ' !important;';
 
 		// show the heading
 		if ( $heading ) {
@@ -2852,7 +2855,7 @@ class UM_Fields {
 
 		}
 
-		$output .= '<div class="um-row ' . $row_id . ' ' . $css_class . '" style="'. $css_padding . $css_background . $css_margin . $css_border . $css_borderstyle . $css_bordercolor . $css_borderradius . '">';
+		$output .= '<div class="um-row ' . $row_id . ' ' . $css_class . '" style="'. $css_padding . $css_background . $css_margin . $css_border . $css_borderstyle . $css_bordercolor . $css_borderradius . $css_text_color.'">';
 
 		return $output;
 	}
