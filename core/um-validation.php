@@ -54,7 +54,7 @@ class UM_Validation {
 	***/
 	function safe_username( $string ) {
 
-		$regex_safe_username = apply_filter('um_validation_safe_username_regex',$this->regex_safe );
+		$regex_safe_username = apply_filters('um_validation_safe_username_regex',$this->regex_safe );
 		
 		if ( is_email( $string ) )
 			return true;
@@ -68,7 +68,7 @@ class UM_Validation {
 	***/
 	function safe_string($string){
 		
-		$regex_safe_string = apply_filter('um_validation_safe_string_regex',$this->regex_safe );
+		$regex_safe_string = apply_filters('um_validation_safe_string_regex',$this->regex_safe );
 		
 		if ( !preg_match( $regex_safe_string, $string) ){
 			return false;
