@@ -72,7 +72,7 @@ class UM_Admin_Dashboard {
 			return get_option('um_cached_users_queue');
 		}
 		
-		$args = array( 'fields' => 'ID', 'number' => 20 );
+		$args = array( 'fields' => 'ID', 'number' => 100 );
 		$args['meta_query']['relation'] = 'OR';
 		$args['meta_query'][] = array(
 				'key' => 'account_status',
