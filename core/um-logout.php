@@ -13,37 +13,41 @@ class UM_Logout {
 	***/
 	function logout_page() {
 
+		global $sitepress, $ultimatemember, $post;
 
-		$has_translation 	= false;
 		$language_code 		= '';
+		$current_page_ID    = get_the_ID();
+		$logout_page_id 	= $ultimatemember->permalinks->core['logout'];
+		$has_translation    = false;
+		$trid 				= 0;
+		$not_default_lang 	= false;
+				
+		if( is_home() || is_front_page() ){
+			return;
+		}
 
 		if ( function_exists('icl_object_id') || function_exists('icl_get_current_language')  ) {
 
-				$logout_page_id = $ultimatemember->permalinks->core['logout'];
-				$logout = get_post( $logout_page_id );
-				
-				if ( isset( $logout->post_name ) ) {
-
-					$logout_slug = $logout->post_name;
-					
-					if( function_exists('icl_get_current_language') ){
-							$language_code = icl_get_current_language();
-					}else if( function_exists('icl_object_id') && defined('ICL_LANGUAGE_CODE') ){
-							$language_code = ICL_LANGUAGE_CODE;
-					}
-
-					// Logout page translated slug
-					$lang_post_id = icl_object_id( $logout->ID, 'post', FALSE, $language_code );
-					$lang_post_obj = get_post( $lang_post_id );
-					if( isset( $lang_post_obj->post_name ) ){
-						$has_translation = true;
-					}
-
-
+				if( function_exists('icl_get_current_language') ){
+					$language_code = icl_get_current_language();
+				}else if( function_exists('icl_object_id') && defined('ICL_LANGUAGE_CODE') ){
+					$language_code = ICL_LANGUAGE_CODE;
 				}
+
+				$has_translation = true;
+				$trid = $sitepress->get_element_trid(  $current_page_ID  );
+
+				if( icl_get_default_language() !== $language_code ){
+					$not_default_lang = true;
+				}else{
+					$language_code = '';
+				}
+		
 		}
-	
-		if ( um_is_core_page('logout') || $has_translation ) {
+		
+		
+
+		if ( um_is_core_page('logout') || ( $trid > 0 && $has_translation && $trid == $logout_page_id && $not_default_lang )  ) {
 			
 			if ( is_user_logged_in() ) {
 				
