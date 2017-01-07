@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 16:37+0800\n"
-"PO-Revision-Date: 2016-11-14 16:37+0800\n"
+"POT-Creation-Date: 2017-01-07 21:38+0800\n"
+"PO-Revision-Date: 2017-01-07 21:38+0800\n"
 "Last-Translator: Calum Allison <umplugin@gmail.com>\n"
 "Language-Team: Ultimate Member <umplugin@gmail.com>\n"
 "Language: en_US\n"
@@ -36,6 +36,11 @@ msgstr ""
 #: admin/core/um-admin-actions-fields.php:11
 #: admin/core/um-admin-actions-modal.php:98
 msgid "Please login as administrator"
+msgstr ""
+
+#: admin/core/um-admin-actions-ajax.php:63 core/um-actions-ajax.php:216
+#: core/um-actions-password.php:184 core/um-form.php:125
+msgid "This is not possible for security reasons."
 msgstr ""
 
 #: admin/core/um-admin-actions-modal.php:23
@@ -130,7 +135,7 @@ msgstr ""
 msgid "This is a translation of UM account page?"
 msgstr ""
 
-#: admin/core/um-admin-actions.php:300
+#: admin/core/um-admin-actions.php:297
 #, php-format
 msgid "Duplicate of %s"
 msgstr ""
@@ -902,7 +907,7 @@ msgid ""
 msgstr ""
 
 #: admin/templates/directory/search.php:92 core/um-setup.php:49
-#: core/um-setup.php:163
+#: core/um-setup.php:164
 msgid "{total_users} Members"
 msgstr ""
 
@@ -915,7 +920,7 @@ msgid "Same as above but in case of 1 user found only"
 msgstr ""
 
 #: admin/templates/directory/search.php:101 core/um-setup.php:50
-#: core/um-setup.php:164
+#: core/um-setup.php:165
 msgid "{total_users} Member"
 msgstr ""
 
@@ -1071,70 +1076,74 @@ msgid "Base Background Color"
 msgstr ""
 
 #: admin/templates/form/profile_customize.php:111
+msgid "Base Text Color"
+msgstr ""
+
+#: admin/templates/form/profile_customize.php:115
 msgid "Enable Cover Photos"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:119
+#: admin/templates/form/profile_customize.php:123
 msgid "Cover photo ratio"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:129 um-config.php:1487
+#: admin/templates/form/profile_customize.php:133 um-config.php:1487
 msgid "Profile Photo Size"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:133 um-config.php:1496
+#: admin/templates/form/profile_customize.php:137 um-config.php:1496
 msgid "Profile Photo Style"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:136 um-config.php:1500
+#: admin/templates/form/profile_customize.php:140 um-config.php:1500
 msgid "Circle"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:137 um-config.php:1501
+#: admin/templates/form/profile_customize.php:141 um-config.php:1501
 msgid "Rounded Corners"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:138 um-config.php:1502
+#: admin/templates/form/profile_customize.php:142 um-config.php:1502
 msgid "Square"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:143
+#: admin/templates/form/profile_customize.php:147
 msgid "Make Profile Photo Required"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:151
+#: admin/templates/form/profile_customize.php:155
 msgid "Header Background Color"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:155
+#: admin/templates/form/profile_customize.php:159
 msgid "Header Meta Text Color"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:159
+#: admin/templates/form/profile_customize.php:163
 msgid "Header Link Color"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:163
+#: admin/templates/form/profile_customize.php:167
 msgid "Header Link Hover"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:167
+#: admin/templates/form/profile_customize.php:171
 msgid "Header Icon Link Color"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:171
+#: admin/templates/form/profile_customize.php:175
 msgid "Header Icon Link Hover"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:176
+#: admin/templates/form/profile_customize.php:180
 msgid "Show display name in profile header?"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:185
+#: admin/templates/form/profile_customize.php:189
 msgid "Show social links in profile header?"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:194
+#: admin/templates/form/profile_customize.php:198
 msgid "Show user description in profile header?"
 msgstr ""
 
@@ -1601,16 +1610,16 @@ msgstr ""
 msgid "Your new password does not match"
 msgstr ""
 
-#: core/um-actions-account.php:150 core/um-actions-password.php:180
+#: core/um-actions-account.php:150 core/um-actions-password.php:194
 msgid "Your password must contain at least 8 characters"
 msgstr ""
 
-#: core/um-actions-account.php:154 core/um-actions-password.php:184
+#: core/um-actions-account.php:154 core/um-actions-password.php:198
 msgid "Your password must contain less than 30 characters"
 msgstr ""
 
 #: core/um-actions-account.php:158 core/um-actions-form.php:250
-#: core/um-actions-password.php:188
+#: core/um-actions-password.php:202
 msgid ""
 "Your password must contain at least one lowercase letter, one capital letter "
 "and one number"
@@ -1661,10 +1670,6 @@ msgstr ""
 msgid "Invalid Image file"
 msgstr ""
 
-#: core/um-actions-ajax.php:216 core/um-form.php:124
-msgid "This is not possible for security reasons."
-msgstr ""
-
 #: core/um-actions-core.php:81
 msgid "You do not have permission to delete this user."
 msgstr ""
@@ -1712,7 +1717,7 @@ msgstr ""
 msgid "Please confirm your password"
 msgstr ""
 
-#: core/um-actions-form.php:259 core/um-actions-password.php:198
+#: core/um-actions-form.php:259 core/um-actions-password.php:212
 msgid "Your passwords do not match"
 msgstr ""
 
@@ -1763,37 +1768,37 @@ msgstr ""
 msgid "Your username contains invalid characters"
 msgstr ""
 
-#: core/um-actions-form.php:377 core/um-actions-form.php:395
-#: core/um-actions-form.php:397 core/um-actions-form.php:409
-#: core/um-actions-form.php:416
+#: core/um-actions-form.php:377 core/um-actions-form.php:397
+#: core/um-actions-form.php:399 core/um-actions-form.php:411
+#: core/um-actions-form.php:418
 msgid "This email is already linked to an existing account"
 msgstr ""
 
-#: core/um-actions-form.php:393
+#: core/um-actions-form.php:395
 msgid "You must provide your email"
 msgstr ""
 
-#: core/um-actions-form.php:399 core/um-actions-form.php:407
+#: core/um-actions-form.php:401 core/um-actions-form.php:409
 msgid "This is not a valid email"
 msgstr ""
 
-#: core/um-actions-form.php:401
+#: core/um-actions-form.php:403
 msgid "Your email contains invalid characters"
 msgstr ""
 
-#: core/um-actions-form.php:441
+#: core/um-actions-form.php:443
 msgid "You must provide a unique value"
 msgstr ""
 
-#: core/um-actions-form.php:451
+#: core/um-actions-form.php:453
 msgid "You must provide alphabetic letters"
 msgstr ""
 
-#: core/um-actions-form.php:461
+#: core/um-actions-form.php:463
 msgid "You must provide lowercase letters."
 msgstr ""
 
-#: core/um-actions-form.php:480
+#: core/um-actions-form.php:482
 #, php-format
 msgid "Your user description must contain less than %s characters"
 msgstr ""
@@ -1923,13 +1928,13 @@ msgstr ""
 msgid "Your membership request has been rejected."
 msgstr ""
 
-#: core/um-actions-password.php:104 core/um-actions-password.php:166
-#: core/um-form.php:146
+#: core/um-actions-password.php:104 core/um-actions-password.php:167
+#: core/um-form.php:150
 msgid "Hello, spam bot!"
 msgstr ""
 
-#: core/um-actions-password.php:107 core/um-actions-password.php:169
-#: core/um-form.php:149
+#: core/um-actions-password.php:107 core/um-actions-password.php:170
+#: core/um-form.php:153
 msgid ""
 "Whoa, slow down! You're seeing this message because you tried to submit a "
 "form too fast and we think you might be a spam bot. If you are a real human "
@@ -1950,19 +1955,19 @@ msgid ""
 "already. Contact support if you cannot open the email"
 msgstr ""
 
-#: core/um-actions-password.php:174
+#: core/um-actions-password.php:188
 msgid "You must enter a new password"
 msgstr ""
 
-#: core/um-actions-password.php:194
+#: core/um-actions-password.php:208
 msgid "You must confirm your new password"
 msgstr ""
 
-#: core/um-actions-password.php:252
+#: core/um-actions-password.php:266
 msgid "Reset my password"
 msgstr ""
 
-#: core/um-actions-password.php:279
+#: core/um-actions-password.php:293
 msgid "Change my password"
 msgstr ""
 
@@ -2173,7 +2178,7 @@ msgstr ""
 msgid "Everyone"
 msgstr ""
 
-#: core/um-builtin.php:551 core/um-user.php:806
+#: core/um-builtin.php:551 core/um-user.php:841
 msgid "Only me"
 msgstr ""
 
@@ -4411,11 +4416,11 @@ msgstr ""
 msgid "This activation link is expired or have already been used."
 msgstr ""
 
-#: core/um-setup.php:136 core/um-setup.php:157
+#: core/um-setup.php:137 core/um-setup.php:158
 msgid "Register"
 msgstr ""
 
-#: core/um-setup.php:141 core/um-setup.php:150
+#: core/um-setup.php:142 core/um-setup.php:151
 msgid "Login"
 msgstr ""
 
