@@ -67,7 +67,8 @@ class UM_ADDON_system_info {
 		
 		// Identify Hosting Provider
 		 	$host 		= um_get_host();
-
+           
+           um_fetch_user( get_current_user_id() );
 		?>
 		
 		<div class="wrap">
@@ -103,6 +104,12 @@ Host:						<?php echo $host . "\n"; ?>
 --- User Browser ---
 
 <?php echo $browser ; ?>
+
+---- Current User Details --
+
+<?php $user = wp_get_current_user(); ?>
+UM Role: <?php echo um_user('role'). "\n"; ?>
+WP Role: <?php echo $user->roles ? $user->roles[0] : false; echo  "\n"; ?>
 
 --- WordPress Configurations ---
 
