@@ -1104,7 +1104,8 @@ class UM_Fields {
 		
 		if ( $visibility == 'view' && $this->set_mode != 'register' ) return;
 
-		if ( $visibility == 'view' && $this->set_mode == 'register' ){
+		if ( ( $visibility == 'view' && $this->set_mode == 'register' ) || 
+			( isset( $data['editable'] ) && $data['editable'] == 0 && $this->set_mode == 'profile' ) ){
 			$disabled = ' disabled="disabled" ';
 		}
 

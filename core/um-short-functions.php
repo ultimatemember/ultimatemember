@@ -270,11 +270,10 @@
 		if ( !isset( $data['conditions'] ) ) return true;
 
 		$state = 1;
-	
+	   
 		foreach( $data['conditions'] as $k => $arr ) {
 			if ( $arr[0] == 'show' ) {
 
-				$state = 1;
 				$val = $arr[3];
 				$op = $arr[2];
 
@@ -288,70 +287,160 @@
 					case 'equals to': 
 
 						if( is_serialized( $field ) ){
-							if ( ! in_array( $val , unserialize( $field ) ) ) {
-								$state = 0; 
+							
+							if ( in_array( $val , unserialize( $field ) ) ) {
+								$state = 1; 
+							}else{
+								$state = 0;
 							}
+
 						}else{
-							if ( $field != $val ) {
-								$state = 0; 
+
+							if ( $field == $val ) {
+								$state = 1; 
+							}else{
+								$state = 0;
 							}
+
 						}
 						
 					break;
 					case 'not equals': 
+
 						if( is_serialized( $field ) ){
-							if ( in_array( $val , unserialize( $field ) ) ) {
-								$state = 0; 
+							
+							if ( ! in_array( $val , unserialize( $field ) ) ) {
+								$state = 1; 
+							}else{
+								$state = 0;
 							}
+
 						}else{
-							if ( $field == $val ) {
-								$state = 0; 
+							
+							if ( $field != $val ) {
+								$state = 1; 
+							}else{
+								$state = 0;
 							}
+
 						}
 					break;
-					case 'empty': if ( $field ) $state = 0; break;
-					case 'not empty': if ( !$field ) $state = 0; break;
-					case 'greater than': if ( $field <= $val ) $state = 0; break;
-					case 'less than': if ( $field >= $val ) $state = 0; break;
-					case 'contains': if ( !strstr( $field, $val ) ) $state = 0; break;
+					case 'empty': 
+						if ( $field ){
+							$state = 1;
+						}else{
+							$state = 0;
+						} 
+					break;
+					case 'not empty': 
+						if ( ! $field ){
+							$state = 1;
+						}else{
+							$state = 0;
+						}  
+					break;
+					case 'greater than':
+						if ( $field <= $val ){
+							$state = 1;
+						}else{
+							$state = 0;
+						} 
+					break; 
+					case 'less than': 
+						if ( $field >= $val ){
+							$state = 1;
+						}else{
+							$state = 0;
+						} 
+					break;
+					case 'contains': 
+						if ( !strstr( $field, $val ) ){
+							$state = 1; 
+						}else{
+							$state = 0;
+						} 
+					break;
 				}
 			}
 
 			if ( $arr[0] == 'hide' ) {
 
-				$state = 0;
+				$state = 1;
 				$val = $arr[3];
 				$op = $arr[2];
-				$field = um_profile($arr[1]);
 
+				if( strstr( $arr[1] , 'role_') ){
+					$arr[1] = 'role';
+				}
+
+				$field = um_profile( $arr[1] );
+				
 				switch( $op ) {
 					case 'equals to': 
 						if( is_serialized( $field ) ){
-							if ( ! in_array( $val , unserialize( $field ) ) ) {
-								$state = 1; 
+							if ( in_array( $val , unserialize( $field ) ) ) {
+								$state = 0; 
+							}else{
+								$state = 1;
 							}
 						}else{
-							if ( $field != $val ) {
-								$state = 1; 
+							if ( $field == $val ) {
+								$state = 0; 
+							}else{
+								$state = 1;
 							}
 						}
 					break;
 					case 'not equals': 
 						if( is_serialized( $field ) ){
-							if ( in_array( $val , unserialize( $field ) ) ) {
-								$state = 1; 
+							if ( ! in_array( $val , unserialize( $field ) ) ) {
+								$state = 0; 
+							}else{
+								$state = 1;
 							}
 						}else{
-							if ( $field == $val ) {
-								$state = 1; 
+							if ( $field != $val ) {
+								$state = 0; 
+							}else{
+								$state = 1;
 							}
 						}
 					break;
-					case 'empty': if ( $field ) $state = 1; break;
-					case 'not empty': if ( !$field ) $state = 1; break;
-					case 'greater than': if ( $field <= $val ) $state = 1; break;
-					case 'less than': if ( $field >= $val ) $state = 1; break;
-					case 'contains': if ( !strstr( $field, $val ) ) $state = 1; break;
+					case 'empty': 
+						if ( $field ){
+						 	$state = 0; 
+						}else{
+								$state = 1;
+						}
+					break;
+					case 'not empty': 
+						if ( !$field ){
+						 	$state = 0; 
+						}else{
+								$state = 1;
+						}
+					break;
+					case 'greater than': 
+						if ( $field <= $val ){
+							$state = 0; 
+						}else{
+							$state = 1;
+						}
+					break;
+					case 'less than': 
+						if ( $field >= $val ){
+							$state = 0; 
+						}else{
+							$state = 1;
+						}
+					break;
+					case 'contains': 
+						if ( !strstr( $field, $val ) ){
+							$state = 0; 
+						}else{
+							$state = 1;
+						}
+					break;
 				}
 			}
 
@@ -968,7 +1057,7 @@
 			if ( is_user_logged_in() && isset( $data['editable'] ) && $data['editable'] == 0 ) {
 
 				if ( um_is_user_himself() && !um_user('can_edit_everyone') )
-					return false;
+					return true;
 
 				if ( !um_is_user_himself() && !um_user_can('can_edit_everyone') )
 					return false;
