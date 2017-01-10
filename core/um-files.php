@@ -531,6 +531,10 @@ class UM_Files {
 	***/
 	function new_user_upload( $user_id, $source, $key ) {
 
+		if( ! is_numeric( $user_id ) ){
+			wp_die( __("Invalid user ID: ".json_encode( $user_id )." ",'ultimatemember') );
+		}
+
 		$user_id = trim( $user_id );
 		
 		// if he does not have uploads dir yet
