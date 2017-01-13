@@ -81,7 +81,8 @@ class UM_Fields {
 	 * @return string      
 	 */
 	function disabled_hidden_field( $key, $value ){
-		return '<input type="hidden" name="'.$key.'" value="'.esc_attr( $value ).'"/>';
+
+			return '<input type="hidden" name="'.$key.'" value="'.esc_attr( $value ).'"/>';
 	}
 
 	
@@ -1089,7 +1090,7 @@ class UM_Fields {
 
 		$output = null;
 		$disabled = '';
-		
+
 		// get whole field data
 		if ( isset( $data ) && is_array( $data ) ) {
 			$data = $this->get_field($key);
@@ -1107,6 +1108,10 @@ class UM_Fields {
 		if ( ( $visibility == 'view' && $this->set_mode == 'register' ) || 
 			( isset( $data['editable'] ) && $data['editable'] == 0 && $this->set_mode == 'profile' ) ){
 			$disabled = ' disabled="disabled" ';
+		}
+
+		if( ! isset( $data['autocomplete'] ) ){
+			$autocomplete = 'off';
 		}
 
 		if ( !um_can_view_field( $data ) ) return;
@@ -1218,7 +1223,7 @@ class UM_Fields {
 						$field_name = $key.$ultimatemember->form->form_suffix;
 						$field_value = htmlspecialchars( $this->field_value( $key, $default, $data ) );
 
-						$output .= '<input '.$disabled.' class="'.$this->get_class($key, $data).'" type="'.$input.'" name="'.$field_name.'" id="'.$field_name.'" value="'. $field_value .'" placeholder="'.$placeholder.'" data-validate="'.$validate.'" data-key="'.$key.'" />
+						$output .= '<input '.$disabled.' autocomplete="'.$autocomplete.'" class="'.$this->get_class($key, $data).'" type="'.$input.'" name="'.$field_name.'" id="'.$field_name.'" value="'. $field_value .'" placeholder="'.$placeholder.'" data-validate="'.$validate.'" data-key="'.$key.'" />
 
 						</div>';
                  		
@@ -1398,7 +1403,7 @@ class UM_Fields {
 
 					}
 
-				break;
+					break;
 
 			/* URL */
 			case 'url':

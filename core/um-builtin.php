@@ -4,7 +4,7 @@ class UM_Builtin {
 
 	public $predefined_fields = array();
 
-	function __construct() {
+	function __construct() { 
 
 		add_action('init',  array(&$this, 'set_core_fields'), 1);
 		
@@ -650,6 +650,7 @@ class UM_Builtin {
 				'required' => 0,
 				'public' => 1,
 				'validate' => 'unique_email',
+				'autocomplete' => 'off'
 			),
 
 			'secondary_user_email' => array(
@@ -661,6 +662,7 @@ class UM_Builtin {
 				'public' => 1,
 				'editable' => 1,
 				'validate' => 'unique_email',
+				'autocomplete' => 'off'
 			),
 			
 			'description' => array(
