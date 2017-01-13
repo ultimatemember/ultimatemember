@@ -97,4 +97,14 @@ jQuery(document).ready(function() {
      jQuery('textarea[id=um-meta-bio]').change(um_update_bio_countdown);
      jQuery('textarea[id=um-meta-bio]').keyup(um_update_bio_countdown);
 
+     jQuery('.um-profile-edit a.um_delete-item').click(function(e){
+     	e.preventDefault();
+     	var a = confirm('Are you sure that you want to delete this user?');
+     	if( ! a ){
+     		return false;
+     	}
+     	
+     });
+
+
 });

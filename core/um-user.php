@@ -805,7 +805,7 @@ class UM_User {
 		foreach($actions as $id => $arr ) {
 			$url = add_query_arg('um_action', $id );
 			$url = add_query_arg('uid', um_profile_id(), $url );
-			$items[] = '<a href="' . $url .'" class="real_url">' . $arr['label'] . '</a>';
+			$items[] = '<a href="' . $url .'" class="real_url '.$id.'-item">' . $arr['label'] . '</a>';
 		}
 		return $items;
 	}
