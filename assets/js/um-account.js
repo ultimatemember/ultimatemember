@@ -6,7 +6,7 @@ jQuery(document).ready(function() {
 		jQuery('.um-account-tab[data-tab='+current_tab+']').show();
 	}
 
-	jQuery(document).on('click','.um-account-side li a',function(e){
+	jQuery(document).on('touchstart click','.um-account-side li a',function(e){
 		e.preventDefault();
 		var link = jQuery(this);
 		
@@ -16,7 +16,7 @@ jQuery(document).ready(function() {
 		var url_ = jQuery(this).attr('href');
 		var tab_ = jQuery(this).attr('data-tab');
 		
-		jQuery("#_um_account_tab").val( tab_ );
+		jQuery("input[id=_um_account_tab]:hidden").val( tab_ );
 		
 		window.history.pushState("", "", url_);
 		
@@ -28,14 +28,18 @@ jQuery(document).ready(function() {
 
 		return false;
 	});
+});
 
-	jQuery(document).on('click','.um-account-nav a',function(e){
+	jQuery(document).on('touchstart click','.um-account-nav a',function(e){
 		e.preventDefault();
-		
+       
 		var tab_ = jQuery(this).attr('data-tab');
 		var div = jQuery(this).parents('div');
 		var link = jQuery(this);
 
+		
+		jQuery("input[id=_um_account_tab]:hidden").val( tab_ );
+		
 		jQuery('.um-account-tab').hide();
 		
 		if ( link.hasClass('current') ) {
@@ -53,4 +57,3 @@ jQuery(document).ready(function() {
 		return false;
 	});
 	
-});
