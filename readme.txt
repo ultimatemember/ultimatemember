@@ -5,9 +5,9 @@ Contributors: ultimatemember, champsupertramp
 Donate link: 
 Tags: access control, author, authors, author profile, comments, community, communities, conditional fields, conditional logic, conditional menus, content protection, custom fields, file uploads, form builder, front-end login, front-end registration, gravatar, hide wp-admin, login, login page, logged-in users, mandrill, member, members, membership, member directory, online users, profile, profiles, profile builder, registration, restriction, restrict content, role creation, role menus, search filters, sign in, sign up, social network, star ratings, toolbar, user, users, user fields, user profile, user-profile, user profiles, user roles
 Requires at least: 4.1
-Tested up to: 4.7
+Tested up to: 4.7.1
 
-Stable Tag: 1.3.78
+Stable Tag: 1.3.79
 
 License: GNU Version 2 or Any Later Version
 
@@ -149,6 +149,29 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.79: January 17, 2017 =
+
+* Enhancements:
+   * Adds new username and string validation filter hooks:
+      * um_validation_safe_username_regex
+      * um_validation_safe_string_regex
+   * Adds new filter hook to modify conditional fields
+      * um_get_field__{$field_key}
+   * Change max limit of users queue's count in cache
+   * Adds current logged in users WP and Community roles in the System Info
+   * Adds confirmation on user deletion
+
+* Bugfixes:
+   * Fix conditional fields
+   * Fix logout compatibility issues with WPML
+   * Fix select option's custom callback validation
+   * Fix translation strings of primary and secondary buttons on Login and Register forms.
+   * Fix gender filter and results
+   * Fix user deletion in account page for mobile browsers
+   * Fix form rows CSS options
+   * Fix default text autocomplete
+   * Remove notices
 
 = 1.3.78: December 08, 2016 =
 
