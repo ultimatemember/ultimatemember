@@ -1075,6 +1075,9 @@ class UM_Fields {
 
 		if ( !isset( $array['visibility'] ) ) $array['visibility'] = 'all';
 
+		$array = apply_filters("um_get_field__{$key}", $array );
+		
+
 		return $array;
 	}
 
