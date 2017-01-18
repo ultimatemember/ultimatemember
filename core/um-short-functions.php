@@ -354,7 +354,7 @@
 						} 
 					break;
 					case 'contains': 
-						if ( !strstr( $field, $val ) ){
+						if ( strstr( $field, $val ) ){
 							$state = 1; 
 						}else{
 							$state = 0;
@@ -435,7 +435,7 @@
 						}
 					break;
 					case 'contains': 
-						if ( !strstr( $field, $val ) ){
+						if ( strstr( $field, $val ) ){
 							$state = 0; 
 						}else{
 							$state = 1;
