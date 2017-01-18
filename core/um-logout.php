@@ -35,7 +35,10 @@ class UM_Logout {
 				}
 
 				$has_translation = true;
-				$trid = $sitepress->get_element_trid(  $current_page_ID  );
+
+				if( function_exists('icl_object_id') ){
+					$trid = $sitepress->get_element_trid(  $current_page_ID  );
+				}
 
 				if( icl_get_default_language() !== $language_code ){
 					$not_default_lang = true;
