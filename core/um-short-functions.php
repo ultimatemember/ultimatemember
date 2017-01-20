@@ -1056,11 +1056,18 @@
 
 			if ( is_user_logged_in() && isset( $data['editable'] ) && $data['editable'] == 0 ) {
 
-				if ( um_is_user_himself() && !um_user('can_edit_everyone') )
+				if( $data['public'] == "-2"){
 					return true;
+				}
 
-				if ( !um_is_user_himself() && !um_user_can('can_edit_everyone') )
+				if ( um_is_user_himself() && !um_user('can_edit_everyone') ){
+					return true;
+				}
+
+
+				if ( !um_is_user_himself() && !um_user_can('can_edit_everyone') ){
 					return false;
+				}
 
 			}
 

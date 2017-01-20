@@ -1110,12 +1110,21 @@ class UM_Fields {
 
 		if ( ( $visibility == 'view' && $this->set_mode == 'register' ) || 
 			( isset( $data['editable'] ) && $data['editable'] == 0 && $this->set_mode == 'profile' ) ){
-			$disabled = ' disabled="disabled" ';
+				
+				$disabled = ' disabled="disabled" ';
+
+				if ( $data['public'] == '-2' && $data['roles'] ){
+					if ( in_array( $ultimatemember->query->get_role_by_userid( get_current_user_id() ), $data['roles'] ) ){
+						$disabled = '';
+					}
+				}
+
 		}
 
 		if( ! isset( $data['autocomplete'] ) ){
 			$autocomplete = 'off';
 		}
+
 
 		if ( !um_can_view_field( $data ) ) return;
 		if ( !um_can_edit_field( $data ) ) return;
