@@ -46,8 +46,10 @@
 	function um_dynamic_user_profile_title( $title, $id = '' ) {
 		global $ultimatemember;
 
-		if( is_admin() )
+
+		if( is_admin() ){
 			return $title;
+		}
 
 		if (  $id == $ultimatemember->permalinks->core['user'] && in_the_loop() ) {
 			if ( um_is_core_page('user') && um_get_requested_user() ) {
@@ -55,6 +57,11 @@
 			} else if ( um_is_core_page('user') && is_user_logged_in() ) {
 				$title = um_get_display_name( get_current_user_id() );
 			}
+		}
+
+
+		if( ! function_exists('utf8_decode') ){
+			return $title;
 		}
 
 		return (strlen($title)!==strlen(utf8_decode($title))) ? $title : utf8_encode($title);
