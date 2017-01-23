@@ -36,7 +36,7 @@ class UM_Logout {
 
 				$has_translation = true;
 
-				if( function_exists('icl_object_id')  && defined('ICL_LANGUAGE_CODE') ){ // checks if WPML exists
+				if( function_exists('icl_object_id')  && defined('ICL_LANGUAGE_CODE') && isset( $sitepress ) ){ // checks if WPML exists
 					$trid = $sitepress->get_element_trid(  $current_page_ID  );
 				}
 
