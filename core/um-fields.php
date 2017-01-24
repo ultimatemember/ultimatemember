@@ -1113,7 +1113,7 @@ class UM_Fields {
 				
 				$disabled = ' disabled="disabled" ';
 
-				if ( $data['public'] == '-2' && $data['roles'] ){
+				if ( isset( $data['public'] ) && $data['public'] == '-2' && $data['roles'] ){
 					if ( in_array( $ultimatemember->query->get_role_by_userid( get_current_user_id() ), $data['roles'] ) ){
 						$disabled = '';
 					}

@@ -1056,7 +1056,7 @@
 
 			if ( is_user_logged_in() && isset( $data['editable'] ) && $data['editable'] == 0 ) {
 
-				if( $data['public'] == "-2"){
+				if( isset( $data['public'] ) && $data['public'] == "-2"){
 					return true;
 				}
 
