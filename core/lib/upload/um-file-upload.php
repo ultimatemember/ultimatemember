@@ -38,7 +38,7 @@ if(isset($_FILES[$id]['name'])) {
     if(!is_array($_FILES[$id]['name'])) {
 	
 		$temp = $_FILES[$id]["tmp_name"];
-		$file = $_FILES[$id]["name"];
+		$file = $id."-".$_FILES[$id]["name"];
 		$file = sanitize_file_name($file);
 		$extension = strtolower( pathinfo($file, PATHINFO_EXTENSION) );
 		
