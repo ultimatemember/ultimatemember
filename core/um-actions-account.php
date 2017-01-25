@@ -50,8 +50,9 @@
        	
        	// delete account
        	$user = get_user_by('login', um_user('user_login') );
-      		
-		if (  isset( $_POST['single_user_password'] ) && wp_check_password( $_POST['single_user_password'], $user->data->user_pass, $user->data->ID )  && $tab == 'delete' ) {
+      	$current_tab = isset( $_POST['_um_account_tab'] ) ? $_POST['_um_account_tab']: '';
+			
+		if (  isset( $_POST['single_user_password'] ) && wp_check_password( $_POST['single_user_password'], $user->data->user_pass, $user->data->ID )  && $current_tab == 'delete' ) {
 			if ( current_user_can('delete_users') || um_user('can_delete_profile') ) {
 				if ( !um_user('super_admin') ) {
 					$ultimatemember->user->delete();
@@ -178,6 +179,7 @@
 					$ultimatemember->form->add_error('single_user_password', __('This is not your password','ultimatemember') );
 				}
 			}
+				
 			$ultimatemember->account->current_tab = 'delete';
 		}
 
