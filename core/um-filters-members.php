@@ -67,6 +67,28 @@
 					'compare' => 'NOT LIKE'
 				)
 			);
+		}
+
+		if( um_user_can('can_view_all') && um_user_can('can_view_roles')  ){
+			
+			$role = um_user('role');
+			
+			$permissions = $ultimatemember->query->role_data( $role );
+			
+			if ( isset( $permissions['can_view_roles'] ) && is_serialized( $permissions['can_view_roles'] ) ){
+				$roles = unserialize( $permissions['can_view_roles'] );
+			}else{
+				$roles = $permissions['can_view_roles'];
+			}
+
+			if( $roles && is_array( $roles )  ){ 
+				$query_args['meta_query'][] = array(
+					'key' => 'role',
+					'value' => $roles,
+					'compare' => 'IN'
+				);
+			}
+
 		}				
 						
 		return $query_args;
