@@ -69,7 +69,7 @@
             // Please update the build number with each push, no matter how small.
             // This will make for easier support when we ask users what version they are using.
 
-            public static $_version = '3.6.0.1';
+            public static $_version = '3.6.2';
             public static $_dir;
             public static $_url;
             public static $_upload_dir;
@@ -1739,7 +1739,7 @@
                     $hint_status = get_user_meta( $current_user->ID, 'ignore_hints' ) ? get_user_meta( $current_user->ID, 'ignore_hints', true ) : 'true';
 
                     // current page parameters
-                    $curPage = $_GET['page'];
+                    $curPage = esc_attr( $_GET['page'] );
 
                     $curTab = '0';
                     if ( isset ( $_GET['tab'] ) ) {
@@ -2950,6 +2950,16 @@
                                 }
                             }
 
+//                            if ( isset ( $field['type'] ) && $field['type'] == 'typography' ) {
+//                                if ( ! is_array( $plugin_options[ $field['id'] ] ) && ! empty( $plugin_options[ $field['id'] ] ) ) {
+//                                    $plugin_options[ $field['id'] ] = json_decode( $plugin_options[ $field['id'] ], true );
+//                                }
+//                            }
+
+                            if ( isset( $this->extensions[ $field['type'] ] ) && method_exists( $this->extensions[ $field['type'] ], '_validate_values' ) ) {
+                                $plugin_options = $this->extensions[ $field['type'] ]->_validate_values( $plugin_options, $field );
+                            }
+
                             // Default 'not_empty 'flag to false.
                             $isNotEmpty = false;
 
@@ -2974,7 +2984,10 @@
                                 if ( ! $isNotEmpty ) {
 
                                     // Empty id and not checking for 'not_empty.  Bail out...
-                                    continue;
+                                    if (!isset($field['validate_callback'])) {
+                                        continue;
+                                    }
+                                    //continue;
                                 }
                             }
 
@@ -3054,10 +3067,14 @@
                                             }
                                         }
                                     } else {
-                                        if ( is_array( $plugin_options[ $field['id'] ] ) ) {
-                                            $pofi = $plugin_options[ $field['id'] ];
+                                        if ( isset( $plugin_options[ $field['id'] ] ) ) {
+                                            if ( is_array( $plugin_options[ $field['id'] ] ) ) {
+                                                $pofi = $plugin_options[ $field['id'] ];
+                                            } else {
+                                                $pofi = trim( $plugin_options[ $field['id'] ] );
+                                            }
                                         } else {
-                                            $pofi = trim( $plugin_options[ $field['id'] ] );
+                                            $pofi = null;
                                         }
 
                                         $validation                     = new $validate ( $this, $field, $pofi, $options[ $field['id'] ] );
@@ -3086,6 +3103,7 @@
                                     $this->errors[] = $callbackvalues['error'];
                                 }
                                 // TODO - This warning message is failing. Hmm.
+                                // No it isn't.  Problem was in the sample-config - kp
                                 if ( isset ( $callbackvalues['warning'] ) ) {
                                     $this->warnings[] = $callbackvalues['warning'];
                                 }
@@ -3211,7 +3229,8 @@
                                     $icon = str_replace( 'el-icon-', 'el el-', $icon );
                                 }
 
-                                $section[ $nextK ]['class'] = isset ( $section[ $nextK ]['class'] ) ? $section[ $nextK ]['class'] : '';
+                                $sections[ $nextK ]['class'] = isset($sections[ $nextK ]['class']) ? $sections[ $nextK ]['class'] : '';
+                                $section[ $nextK ]['class'] = isset ( $section[ $nextK ]['class'] ) ? $section[ $nextK ]['class'] : $sections[ $nextK ]['class'];
                                 $string .= '<li id="' . esc_attr( $nextK . $suffix ) . '_section_group_li" class="redux-group-tab-link-li ' . esc_attr( $hide_sub ) . esc_attr( $section[ $nextK ]['class'] ) . ( $icon ? ' hasIcon' : '' ) . '">';
                                 $string .= '<a href="javascript:void(0);" id="' . esc_attr( $nextK . $suffix ) . '_section_group_li_a" class="redux-group-tab-link-a" data-key="' . esc_attr( $nextK ) . '" data-rel="' . esc_attr( $nextK . $suffix ) . '">' . $icon . '<span class="group_title">' . wp_kses_post( $sections[ $nextK ]['title'] ) . '</span></a>';
                                 $string .= '</li>';
@@ -3253,7 +3272,8 @@
              * @return      void
              */
             public function _section_desc( $section ) {
-                $id = trim( rtrim( $section['id'], '_section' ), $this->args['opt_name'] );
+                $id = rtrim( $section['id'], '_section' );
+                $id = str_replace($this->args['opt_name'], '', $id);
 
                 if ( isset ( $this->sections[ $id ]['desc'] ) && ! empty ( $this->sections[ $id ]['desc'] ) ) {
                     echo '<div class="redux-section-desc">' . $this->sections[ $id ]['desc'] . '</div>';
@@ -3958,7 +3978,7 @@
                         foreach ( $this->args['admin_bar_links'] as $idx => $arr ) {
                             if ( is_array( $arr ) && ! empty( $arr ) ) {
                                 foreach ( $arr as $x => $y ) {
-                                    if ( strpos( strtolower( $y ), 'redux' ) >= 0 ) {
+                                    if ( strpos( strtolower( $y ), 'redux' ) !== false ) {
                                         $msg = __( '<strong>Redux Framework Notice: </strong>There are references to the Redux Framework support site in your config\'s <code>admin_bar_links</code> argument.  This is sample data.  Please change or remove this data before shipping your product.', 'redux-framework' );
                                         $this->display_arg_change_notice( 'admin', $msg );
                                         $this->omit_admin_items = true;
@@ -3973,7 +3993,7 @@
                         foreach ( $this->args['share_icons'] as $idx => $arr ) {
                             if ( is_array( $arr ) && ! empty( $arr ) ) {
                                 foreach ( $arr as $x => $y ) {
-                                    if ( strpos( strtolower( $y ), 'redux' ) >= 0 ) {
+                                    if ( strpos( strtolower( $y ), 'redux' ) !== false ) {
                                         $msg = __( '<strong>Redux Framework Notice: </strong>There are references to the Redux Framework support site in your config\'s <code>share_icons</code> argument.  This is sample data.  Please change or remove this data before shipping your product.', 'redux-framework' );
                                         $this->display_arg_change_notice( 'share', $msg );
                                         $this->omit_share_icons = true;

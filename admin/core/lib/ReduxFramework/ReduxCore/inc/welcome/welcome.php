@@ -121,6 +121,7 @@
             if ( $newHash == $data['check'] ) {
                 unset( $generate_hash );
             }
+
             $post_data = array(
                 'hash'          => md5( network_site_url() . '-' . $_SERVER['REMOTE_ADDR'] ),
                 'site'          => esc_url( home_url( '/' ) ),
@@ -131,6 +132,7 @@
             $post_data = serialize( $post_data );
 
             if ( isset( $generate_hash ) && $generate_hash ) {
+                
                 $data['check']      = $newHash;
                 $data['identifier'] = "";
                 $response           = wp_remote_post( 'http://support.redux.io/v1/', array(
@@ -334,7 +336,7 @@
          * @return void
          */
         public function tabs() {
-            $selected = isset ( $_GET['page'] ) ? $_GET['page'] : 'redux-about';
+            $selected = isset ( $_GET['page'] ) ? esc_attr( $_GET['page'] ) : 'redux-about';
             $nonce    = wp_create_nonce( 'redux-support-hash' );
             ?>
             <input type="hidden" id="redux_support_nonce" value="<?php echo esc_attr( $nonce ); ?>"/>

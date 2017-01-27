@@ -1537,8 +1537,15 @@ function redux_change( variable ) {
         jQuery( '#redux-compiler-hook' ).val( 1 );
     }
 
+//    var test = jQuery( variable ).parents( '.redux-field-container:first' );
+//    if ( test.hasClass( 'redux-container-typography' ) && redux.field_objects.typography ) {
+//        redux.field_objects.typography.change( test );
+//    }
+
     var rContainer = jQuery( variable ).parents( '.redux-container:first' );
+
     var parentID = jQuery( variable ).closest( '.redux-group-tab' ).attr( 'id' );
+
     // Let's count down the errors now. Fancy.  ;)
     var id = parentID.split( '_' );
     id = id[0];
@@ -1793,3 +1800,19 @@ function colorNameToHex( colour ) {
     return colour;
 }
 
+function redux_hook( object, functionName, callback, before ) {
+    (function( originalFunction ) {
+        object[functionName] = function() {
+
+            if ( before === true ) {
+                callback.apply( this, [returnValue, originalFunction, arguments] );
+            }
+            var returnValue = originalFunction.apply( this, arguments );
+            if ( before !== true ) {
+                callback.apply( this, [returnValue, originalFunction, arguments] );
+            }
+
+            return returnValue;
+        };
+    }( object[functionName] ));
+}
