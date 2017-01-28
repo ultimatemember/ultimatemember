@@ -430,5 +430,32 @@
     	return $value;
     }
 
+    /**
+     * Apply textdomain in select/multi-select options
+     * @param  $value string
+     * @param  $type  string
+     * @param  $data  array
+     * @return $value string
+     * @uses   hook filters: um_profile_field_filter_hook__select, um_profile_field_filter_hook__multiselect
+     */
+    add_filter('um_profile_field_filter_hook__select','um_profile_field__select_translate', 10, 2);
+    add_filter('um_profile_field_filter_hook__multiselect','um_profile_field__select_translate', 10, 2);
+    function um_profile_field__select_translate( $value, $data ){
+
+    	if( empty( $value  ) ) return $value;
+
+    	$options = explode(", ", $value );
+    	$arr_options = array();
+    	if( is_array( $options ) ){
+    		foreach ( $options as $item ) {
+    			$arr_options[] = __( $item, 'ultimatemember' );
+    		}
+    	}
+
+    	$value = implode(", ", $arr_options);
+
+    	return $value;
+    }
+
 
 
