@@ -118,6 +118,10 @@ class UM_Shortcodes {
 			}
 		}
 
+		if( um_is_core_page('user') && um_is_user_himself() ){
+			$classes[] = 'um-own-profile';
+		}
+
 		return $classes;
 	}
 
