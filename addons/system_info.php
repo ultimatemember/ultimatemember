@@ -306,7 +306,6 @@ Web Server Info:          			<?php echo $_SERVER['SERVER_SOFTWARE'] . "\n"; ?>
 
 --- PHP Configurations --
 
-PHP Safe Mode:            		<?php echo $this->value( ini_get( 'safe_mode' ), 'yesno', true ); ?>
 PHP Memory Limit:         		<?php echo ini_get( 'memory_limit' ) . "\n"; ?>
 PHP Upload Max Size:      		<?php echo ini_get( 'upload_max_filesize' ) . "\n"; ?>
 PHP Post Max Size:        		<?php echo ini_get( 'post_max_size' ) . "\n"; ?>
