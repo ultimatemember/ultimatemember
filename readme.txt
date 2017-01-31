@@ -5,9 +5,9 @@ Contributors: ultimatemember, champsupertramp
 Donate link: 
 Tags: access control, author, authors, author profile, comments, community, communities, conditional fields, conditional logic, conditional menus, content protection, custom fields, file uploads, form builder, front-end login, front-end registration, gravatar, hide wp-admin, login, login page, logged-in users, mandrill, member, members, membership, member directory, online users, profile, profiles, profile builder, registration, restriction, restrict content, role creation, role menus, search filters, sign in, sign up, social network, star ratings, toolbar, user, users, user fields, user profile, user-profile, user profiles, user roles
 Requires at least: 4.1
-Tested up to: 4.7.1
+Tested up to: 4.7.2
 
-Stable Tag: 1.3.81
+Stable Tag: 1.3.82
 
 License: GNU Version 2 or Any Later Version
 
@@ -149,6 +149,25 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.82: January 31, 2017 =
+
+* Enhancements:
+   * Add filter hook to disable secure account fields
+      * `um_account_secure_fields__enabled`
+   * Updates ReduxFramework to version 3.6.2
+   * Adds a body class in profile/user page for the current loggedin user
+      * `um-own-profile`
+
+* Bugfixes
+   *  Fix select/multi-select field options translation
+   *  Fix profiles visibility and access permissions in member directories
+   *  Fix User deletion in mobile browsers
+   *  Fix WPML & PolyLang compatibility issues
+   *  Fix field view and edit restriction
+   *  Fix author name in recent comments widget
+   *  Fix overwrite of multiple image and file uploads with the same filename
+   *  Remove notices
 
 = 1.3.81: January 19, 2017 =
 
