@@ -199,7 +199,7 @@
 
 		if ( ( isset( $data['validate'] ) && $data['validate'] != '' && strstr( $data['validate'], 'url' ) ) || ( isset( $data['type'] ) && $data['type'] == 'url' ) ) {
 			$alt = ( isset( $data['url_text'] ) && !empty( $data['url_text'] ) ) ? $data['url_text'] : $value;
-			$url_rel = ( isset( $data['url_rel'] ) ) ? 'rel="nofollow"' : '';
+			$url_rel = ( isset( $data['url_rel'] ) && $data['url_rel'] == 'nofollow' ) ? 'rel="nofollow"' : '';
 			if( !strstr( $value, 'http' )
 				&& !strstr( $value, '://' )
 				&& !strstr( $value, 'www.' )
