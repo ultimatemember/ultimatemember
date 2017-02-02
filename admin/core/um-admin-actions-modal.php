@@ -11,9 +11,9 @@
 	***/
 	add_action('um_admin_field_modal_footer', 'um_admin_add_conditional_support', 10, 4);
 	function um_admin_add_conditional_support( $form_id, $field_args, $in_edit, $edit_array ){
-			$metabox = new UM_Admin_Metabox();
+		$metabox = new UM_Admin_Metabox();
 		
-			if ( isset($field_args['conditional_support'])  && $field_args['conditional_support'] == 0 ) return;
+		if ( isset($field_args['conditional_support'])  && $field_args['conditional_support'] == 0 ) return;
 		
 		?>
 		
