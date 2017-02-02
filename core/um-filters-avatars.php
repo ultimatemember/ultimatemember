@@ -28,6 +28,8 @@
 
 		$avatar = um_user('profile_photo', $size);
 
+		$image_alt = apply_filters("um_avatar_image_alternate_text",  um_user("display_name") );
+
 		if ( ! $avatar && um_get_option('use_gravatars') ) {
 			
 			$default = get_option( 'avatar_default', 'mystery' );
@@ -55,12 +57,12 @@
 						
 			}
 			
-			$avatar = '<img src="' .$avatar_url .'?d='. $default . '&amp;s=' . $size . $rating .'" class="func-um_get_avatar gravatar avatar avatar-'.$size.' um-avatar" width="'.$size.'" height="'.$size.'" alt="" />';
+			$avatar = '<img src="' .$avatar_url .'?d='. $default . '&amp;s=' . $size . $rating .'" class="func-um_get_avatar gravatar avatar avatar-'.$size.' um-avatar" width="'.$size.'" height="'.$size.'" alt="'.$image_alt.'" />';
 			
 		}else if( empty( $avatar ) ){
 			$default_avatar_uri = um_get_default_avatar_uri();
 
-			$avatar = '<img src="' .$default_avatar_uri  .'" class="gravatar avatar avatar-'.$size.' um-avatar" width="'.$size.'" height="'.$size.'" alt="" />';
+			$avatar = '<img src="' .$default_avatar_uri  .'" class="gravatar avatar avatar-'.$size.' um-avatar" width="'.$size.'" height="'.$size.'" alt="'.$image_alt.'" />';
 		}
 
 		return $avatar;

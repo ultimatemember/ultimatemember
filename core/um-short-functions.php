@@ -1641,6 +1641,7 @@
 
 				$has_profile_photo = false;
 				$photo_type = 'um-avatar-default';
+				$image_alt = apply_filters("um_avatar_image_alternate_text",  um_user("display_name") );
 
 				if ( um_profile('profile_photo') ) {
 						$avatar_uri = um_get_avatar_uri( um_profile('profile_photo'), $attrs );
@@ -1672,7 +1673,7 @@
 						
 					}
 
-					return '<img src="' . $avatar_uri . '" class="func-um_user gravatar avatar avatar-'.$attrs.' um-avatar '.$photo_type.'" width="'.$attrs.'" height="'.$attrs.'" alt="" />';
+					return '<img src="' . $avatar_uri . '" class="func-um_user gravatar avatar avatar-'.$attrs.' um-avatar '.$photo_type.'" width="'.$attrs.'" height="'.$attrs.'" alt="'.$image_alt.'" />';
 
 				if ( !$avatar_uri )
 					return '';
