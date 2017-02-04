@@ -2521,8 +2521,8 @@ class UM_Fields {
 			default:
 
 				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">';
-
-						if ( isset( $data['label'] ) ) {
+					
+						if ( isset( $data['label'] ) || isset( $data['icon'] ) && ! empty( $data['icon'] ) ) {
 							$output .= $this->field_label($label, $key, $data);
 						}
 						
@@ -2580,7 +2580,7 @@ class UM_Fields {
 
 				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">';
 
-						if ( isset( $data['label'] ) ) {
+						if ( isset( $data['label'] ) || isset( $data['icon'] ) && ! empty( $data['icon'] ) ) {
 							$output .= $this->field_label($label, $key, $data);
 						}
 
