@@ -9,9 +9,17 @@
         return $avatar_defaults;
     }
 	
-	/***
-	***	@Override avatars with a high priority
-	***/
+	/**
+	 * Get user UM avatars
+	 * @param  string $avatar       
+	 * @param  string $id_or_email  
+	 * @param  string $size         
+	 * @param  string $avatar_class 
+	 * @param  string $default      
+	 * @param  string $alt          
+	 * @hooks  filter `get_avatar`
+	 * @return string returns avatar in image html elements
+	 */
 	add_filter('get_avatar', 'um_get_avatar', 99999, 5); 
 	function um_get_avatar($avatar = '', $id_or_email='', $size = '96', $avatar_class = '', $default = '', $alt = '') {
 
