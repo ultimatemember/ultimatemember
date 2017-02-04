@@ -170,6 +170,10 @@ class UM_Members {
 		}
 
 		$query_args['paged'] = $members_page;
+
+		if( ! um_user('can_view_all') && is_user_logged_in() ){
+			unset( $query_args );
+		}
 		
 		$users = new WP_User_Query( $query_args );
 		
