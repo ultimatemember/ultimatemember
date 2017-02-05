@@ -39,7 +39,7 @@ Installation
 
 Documentation & Support
 ======================
-Got a problem or need help with Ultimate Member? Head over to our [documentation](http://docs.ultimatemember.com/) and perform a search of the knowledge base. If you can’t find a solution to your issue then you can create a [support ticket](https://ultimatemember.com/support-contact/).
+Got a problem or need help with Ultimate Member? Head over to our [documentation](http://docs.ultimatemember.com/) and perform a search of the knowledge base. If you can’t find a solution to your issue then you can create a [paid support ticket](https://ultimatemember.com/support-contact/) or [free support ticket](https://wordpress.org/support/plugin/ultimate-member)
 
 
 License
@@ -48,7 +48,7 @@ GNU Version 2 or Any Later Version
 
 Releases
 ====================
-[Latest Release: Ultimate Member v1.3.82](https://github.com/ultimatemember/ultimatemember/releases).
+[Latest Release: Ultimate Member v1.3.83](https://github.com/ultimatemember/ultimatemember/releases).
 
 Changelog
 ====================
