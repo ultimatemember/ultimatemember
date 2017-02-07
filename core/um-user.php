@@ -798,7 +798,7 @@ class UM_User {
 	***	@Get admin actions for individual user
 	***/
 	function get_admin_actions() {
-		$items = '';
+		$items = array();
 		$actions = array();
 		$actions = apply_filters('um_admin_user_actions_hook', $actions );
 		if ( !isset( $actions ) || empty( $actions ) ) return false;
