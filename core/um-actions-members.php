@@ -1,8 +1,7 @@
 <?php
-
-	/***
-	***	@member directory search
-	***/
+	/**
+	 * Member Directory Search
+	 */
 	add_action('um_members_directory_search', 'um_members_directory_search');
 	function um_members_directory_search( $args ) {
 		global $ultimatemember;
@@ -74,9 +73,9 @@
 		}
 	}
 	
-	/***
-	***	@pre-display members directory
-	***/
+	/**
+	 * Pre-display Member Directory
+	 */
 	add_action('um_pre_directory_shortcode', 'um_pre_directory_shortcode');
 	function um_pre_directory_shortcode($args) {
 		global $ultimatemember;
@@ -86,9 +85,9 @@
 
 	}
 	
-	/***
-	***	@member directory header
-	***/
+	/**
+	 * Member Directory Header
+	 */
 	add_action('um_members_directory_head', 'um_members_directory_head');
 	function um_members_directory_head( $args ) {
 		global $ultimatemember;
@@ -114,9 +113,9 @@
 		
 	}
 	
-	/***
-	***	@member directory pagination
-	***/
+	/**
+	 * Member Directory Pagination
+	 */
 	add_action('um_members_directory_footer', 'um_members_directory_pagination');
 	function um_members_directory_pagination( $args ) {
 		global $ultimatemember;
@@ -192,9 +191,9 @@
 		
 	}
 		
-	/***
-	***	@member directory display
-	***/
+	/**
+	 * Member Directory Display
+	 */
 	add_action('um_members_directory_display', 'um_members_directory_display');
 	function um_members_directory_display( $args ) {
 		global $ultimatemember;
