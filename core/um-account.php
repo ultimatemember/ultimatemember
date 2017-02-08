@@ -2,7 +2,10 @@
 
 class UM_Account {
 
+
 	function __construct() {
+
+		$this->register_fields = array(); 
 
 		add_shortcode('ultimatemember_account', array(&$this, 'ultimatemember_account'), 1);
 
@@ -18,9 +21,10 @@ class UM_Account {
 
 	}
 
-	/***
-	***	@get core account tabs
-	***/
+	/**
+	 * Get Core account tabs
+	 * @return array
+	 */
 	function core_tabs() {
 
 		$tabs[100]['general']['icon'] = 'um-faicon-user';
@@ -41,9 +45,9 @@ class UM_Account {
 		return $tabs;
 	}
 
-	/***
-	***	@account page form
-	***/
+	/**
+	 * Account page form
+	 */
 	function form_init() {
 		global $ultimatemember;
 
@@ -67,9 +71,9 @@ class UM_Account {
 
 	}
 
-	/***
-	***	@can access account page
-	***/
+	/**
+	 * Can access account page
+	 */
 	function account(){
 		global $ultimatemember;
 
@@ -99,9 +103,11 @@ class UM_Account {
 
 	}
 
-	/***
-	***	@get tab link
-	***/
+	/**
+	 * Get Tab Link
+	 * @param  integer $id 
+	 * @return string
+	 */
 	function tab_link( $id ) {
 
 		if ( get_option('permalink_structure') ) {
@@ -118,9 +124,11 @@ class UM_Account {
 		return $url;
 	}
 
-	/***
-	***	@Add class based on shortcode
-	***/
+	/**
+	 * Add class based on shortcode
+	 * @param  string $mode
+	 * @return string     
+	 */
 	function get_class( $mode ){
 
 		global $ultimatemember;
@@ -143,9 +151,11 @@ class UM_Account {
 		return $classes;
 	}
 
-	/***
-	***	@get tab output
-	***/
+	/**
+	 * Get Tab Output
+	 * @param  integer $id 
+	 * @return string 
+	 */
 	function get_tab_output( $id ) {
 		global $ultimatemember;
 
@@ -243,16 +253,20 @@ class UM_Account {
 		}
 	}
 
-	/***
-	***	@Shortcode
-	***/
+	/**
+	 * Shortcode
+	 * @param  array  $args 
+	 * @return string      
+	 */
 	function ultimatemember_account( $args = array() ) {
 		return $this->load( $args );
 	}
 
-	/***
-	***	@Load a module with global function
-	***/
+	/**
+	 * Load module with global function
+	 * @param  array $args 
+	 * @return string       
+	 */
 	function load( $args ) {
 
 		global $ultimatemember;
@@ -296,18 +310,21 @@ class UM_Account {
 
 	}
 
-	/***
-	***	@Get dynamic css args
-	***/
+	/**
+	 * Get dynamic css args
+	 * @param  array $args 
+	 * @return array      
+	 */
 	function get_css_args( $args ) {
 		$arr = um_styling_defaults( $args['mode'] );
 		$arr = array_merge( $arr, array( 'form_id' => $args['form_id'], 'mode' => $args['mode'] ) );
 		return $arr;
 	}
 
-	/***
-	***	@Load dynamic css
-	***/
+	/**
+	 * Load dynamic css
+	 * @param  array  $args 
+	 */
 	function dynamic_css( $args=array() ) {
 		extract($args);
 		$global = um_path . 'assets/dynamic_css/dynamic_global.php';
@@ -317,9 +334,11 @@ class UM_Account {
 			include $file;
 	}
 
-	/***
-	***	@Loads a template file
-	***/
+	/**
+	 * Loads a template file
+	 * @param  string $template 
+	 * @param  array  $args     
+	 */
 	function template_load( $template, $args=array() ) {
 		global $ultimatemember;
 		if ( is_array( $args ) ) {
@@ -328,9 +347,11 @@ class UM_Account {
 		$ultimatemember->shortcodes->load_template( $template );
 	}
 
-	/***
-	** @filter account fields
-	****/
+	/**
+	 * Filter account fields
+	 * @param  array $predefined_fields 
+	 * @return array               
+	 */
 	function predefined_fields_hook( $predefined_fields ){
 
 		$account_hide_in_directory =  um_get_option('account_hide_in_directory');
