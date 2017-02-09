@@ -383,39 +383,41 @@
 
 							case 'unique_email':
 
+								$args[ $key ] = trim( $args[ $key ] );
+
 								if ( in_array( $key, array('user_email') ) ) {
 
 									if( ! isset( $args['user_id'] ) ){
 										$args['user_id'] = um_get_requested_user();
 									}
 
-									$email_exists =  email_exists( $args[$key] );
+									$email_exists =  email_exists( $args[ $key ] );
 
-									if ( $args[$key] == '' && in_array( $key, array('user_email') ) ) {
-										$ultimatemember->form->add_error($key, __('You must provide your email','ultimatemember') );
+									if ( $args[ $key ] == '' && in_array( $key, array('user_email') ) ) {
+										$ultimatemember->form->add_error( $key, __('You must provide your email','ultimatemember') );
 									} else if ( in_array( $mode, array('register') )  && $email_exists  ) {
 										$ultimatemember->form->add_error($key, __('This email is already linked to an existing account','ultimatemember') );
 									} else if ( in_array( $mode, array('profile') )  && $email_exists && $email_exists != $args['user_id']  ) {
-										$ultimatemember->form->add_error($key, __('This email is already linked to an existing account','ultimatemember') );
-									} else if ( !is_email( $args[$key] ) ) {
-										$ultimatemember->form->add_error($key, __('This is not a valid email','ultimatemember') );
-									} else if ( !$ultimatemember->validation->safe_username( $args[$key] ) ) {
-										$ultimatemember->form->add_error($key,  __('Your email contains invalid characters','ultimatemember') );
+										$ultimatemember->form->add_error( $key, __('This email is already linked to an existing account','ultimatemember') );
+									} else if ( !is_email( $args[ $key ] ) ) {
+										$ultimatemember->form->add_error( $key, __('This is not a valid email','ultimatemember') );
+									} else if ( !$ultimatemember->validation->safe_username( $args[ $key ] ) ) {
+										$ultimatemember->form->add_error( $key,  __('Your email contains invalid characters','ultimatemember') );
 									}
 
 								} else {
 
-									if ( $args[$key] != '' && !is_email($args[$key]) ) {
-										$ultimatemember->form->add_error($key, __('This is not a valid email','ultimatemember') );
-									} else if ( $args[$key] != '' && email_exists( $args[$key] ) ) {
+									if ( $args[ $key ] != '' && !is_email( $args[ $key ] ) ) {
+										$ultimatemember->form->add_error( $key, __('This is not a valid email','ultimatemember') );
+									} else if ( $args[ $key ] != '' && email_exists( $args[ $key ] ) ) {
 										$ultimatemember->form->add_error($key, __('This email is already linked to an existing account','ultimatemember') );
-									} else if ( $args[$key] != '' ) {
+									} else if ( $args[ $key ] != '' ) {
 										
 										$users = get_users('meta_value='.$args[ $key ]);
 
 										foreach ( $users as $user ) {
 											if( $user->ID != $args['user_id'] ){
-												$ultimatemember->form->add_error($key, __('This email is already linked to an existing account','ultimatemember') );
+												$ultimatemember->form->add_error( $key, __('This email is already linked to an existing account','ultimatemember') );
 											}		
 										}
 
