@@ -20,7 +20,9 @@
 		}
 
 		$arr_fields = array();
-		$secure_fields = get_user_meta( um_user('ID'), 'um_account_secure_fields', true );
+		$account_fields =  get_user_meta( um_user('ID'), 'um_account_secure_fields', true );
+		$secure_fields = apply_filters('um_secure_account_fields', $account_fields , um_user('ID') );
+		
 		if( isset( $secure_fields  ) ){
 			foreach ( $secure_fields as $tab_key => $fields ) {
 				if( isset( $fields ) ){
@@ -30,6 +32,7 @@
 				}
 			}
 		}
+
  
         $changes = array();
 		foreach( $_POST as $k => $v ) {
@@ -472,5 +475,14 @@
 			</ul>
 
 		<?php
+
+	}
+
+	add_action('wp_footer','um_account_secure_registered_fields');
+	function um_account_secure_registered_fields(){
+		global $ultimatemember;
+
+		$secure_fields = $ultimatemember->account->register_fields;
+		update_user_meta( um_user('ID'), 'um_account_secure_fields', $secure_fields );
 
 	}
