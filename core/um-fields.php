@@ -1111,7 +1111,9 @@ class UM_Fields {
 		if ( ( $visibility == 'view' && $this->set_mode == 'register' ) || 
 			( isset( $data['editable'] ) && $data['editable'] == 0 && $this->set_mode == 'profile' ) ){
 				
-				$disabled = ' disabled="disabled" ';
+				if( ! current_user_can('manage_options') ){
+					$disabled = ' disabled="disabled" ';
+				}
 
 				if ( isset( $data['public'] ) && $data['public'] == '-2' && $data['roles'] ){
 					if ( in_array( $ultimatemember->query->get_role_by_userid( get_current_user_id() ), $data['roles'] ) ){
