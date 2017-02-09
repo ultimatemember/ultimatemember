@@ -102,7 +102,7 @@
 
 		$creds['user_login'] = $user_login;
 		$creds['user_password'] = $user_password;
-		$creds['user_email'] = $user_email;
+		$creds['user_email'] = trim( $user_email );
 
 		$args['submitted'] = array_merge( $args['submitted'], $creds);
 		$args = array_merge($args, $creds);
