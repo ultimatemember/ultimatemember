@@ -95,16 +95,16 @@
 		global $ultimatemember;
 
 		if ( $_POST[ $ultimatemember->honeypot ] != '' )
-			wp_die('Hello, spam bot!');
+			wp_die('Hello, spam bot!','ultimatemember');
 
 		$form_timestamp  = trim($_POST['timestamp']);
 		$live_timestamp  = current_time( 'timestamp' );
 
 		if ( $form_timestamp == '' && um_get_option('enable_timebot') == 1 )
-			wp_die( __('Hello, spam bot!') );
+			wp_die( __('Hello, spam bot!','ultimatemember') );
 
 		if ( $live_timestamp - $form_timestamp < 3 && um_get_option('enable_timebot') == 1 )
-			wp_die( __('Whoa, slow down! You\'re seeing this message because you tried to submit a form too fast and we think you might be a spam bot. If you are a real human being please wait a few seconds before submitting the form. Thanks!') );
+			wp_die( __('Whoa, slow down! You\'re seeing this message because you tried to submit a form too fast and we think you might be a spam bot. If you are a real human being please wait a few seconds before submitting the form. Thanks!','ultimatemember') );
         
         $user = "";
 
@@ -157,17 +157,17 @@
 		global $ultimatemember;
 
 		if ( isset(  $_POST[ $ultimatemember->honeypot ]  ) && $_POST[ $ultimatemember->honeypot ] != '' ){
-			wp_die('Hello, spam bot!');
+			wp_die('Hello, spam bot!','ultimatemember');
 		}
 
 		$form_timestamp  = trim($_POST['timestamp']);
 		$live_timestamp  = current_time( 'timestamp' );
 
 		if ( $form_timestamp == '' && um_get_option('enable_timebot') == 1 )
-			wp_die( __('Hello, spam bot!') );
+			wp_die( __('Hello, spam bot!','ultimatemember') );
 
 		if ( $live_timestamp - $form_timestamp < 3 && um_get_option('enable_timebot') == 1 ){
-			wp_die( __('Whoa, slow down! You\'re seeing this message because you tried to submit a form too fast and we think you might be a spam bot. If you are a real human being please wait a few seconds before submitting the form. Thanks!') );
+			wp_die( __('Whoa, slow down! You\'re seeing this message because you tried to submit a form too fast and we think you might be a spam bot. If you are a real human being please wait a few seconds before submitting the form. Thanks!','ultimatemember') );
 		}
 
 		$reset_pass_hash = '';
