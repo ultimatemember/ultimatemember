@@ -80,7 +80,7 @@
 
 		$unique_userID = $ultimatemember->query->count_users() + 1;
 
-		if ( ! isset( $user_login ) ||  strlen( $user_login ) > 30 ) {
+		if ( ! isset( $user_login ) ||  strlen( $user_login ) > 30 && ! is_email( $user_login ) ) {
 			$user_login = 'user' . $unique_userID;
 		}
 
