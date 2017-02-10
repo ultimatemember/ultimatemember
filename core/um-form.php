@@ -138,7 +138,7 @@ class UM_Form {
 				}
 				
 				if ( isset( $_POST[ $ultimatemember->honeypot ] ) && $_POST[ $ultimatemember->honeypot ] != '' ){
-					wp_die('Hello, spam bot!');
+					wp_die('Hello, spam bot!','ultimatemember');
 				}
 
 				if ( !in_array( $this->form_data['mode'], array('login') ) ) {
@@ -147,10 +147,10 @@ class UM_Form {
 					$live_timestamp  = current_time( 'timestamp' );
 
 					if ( $form_timestamp == '' && um_get_option('enable_timebot') == 1 )
-						wp_die( __('Hello, spam bot!') );
+						wp_die( __('Hello, spam bot!','ultimatemember') );
 
 					if ( !current_user_can('manage_options') && $live_timestamp - $form_timestamp < 6 && um_get_option('enable_timebot') == 1  )
-						wp_die( __('Whoa, slow down! You\'re seeing this message because you tried to submit a form too fast and we think you might be a spam bot. If you are a real human being please wait a few seconds before submitting the form. Thanks!') );
+						wp_die( __('Whoa, slow down! You\'re seeing this message because you tried to submit a form too fast and we think you might be a spam bot. If you are a real human being please wait a few seconds before submitting the form. Thanks!','ultimatemember') );
 
 				}
 
