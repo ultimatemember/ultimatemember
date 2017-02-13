@@ -41,6 +41,9 @@
 			}
 		} 
 
+		if (isset($_POST['user_password']))
+			$changes['user_pass'] = $_POST['user_password'];
+
 		if ( isset( $changes['hide_in_members'] ) && $changes['hide_in_members'] == __('No','ultimatemember') ) {
 			delete_user_meta( um_user('ID'), 'hide_in_members' );
 			unset( $changes['hide_in_members'] );
@@ -371,7 +374,8 @@
 	function um_account_user_photo_hook__mobile( $args ) {
 		global $ultimatemember;
 		extract( $args );
-
+        if (um_get_option('account_show_profile') == 0)
+            return;
 		?>
 
 		<div class="um-account-meta radius-<?php echo um_get_option('profile_photocorner'); ?> uimob340-show uimob500-show">
@@ -396,7 +400,8 @@
 	function um_account_user_photo_hook( $args ) {
 		global $ultimatemember;
 		extract( $args );
-
+        if (um_get_option('account_show_profile') == 0)
+            return;
 		?>
 
 		<div class="um-account-meta radius-<?php echo um_get_option('profile_photocorner'); ?>">

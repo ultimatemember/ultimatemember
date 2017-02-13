@@ -77,6 +77,8 @@ class UM_Mail {
 
 		$this->attachments = null;
 		$this->headers = 'From: '. um_get_option('mail_from') .' <'. um_get_option('mail_from_addr') .'>' . "\r\n";
+        if (um_get_option('bcc_user_emails'))
+            $this->headers .= 'Bcc: '.um_get_option('admin_email'). "\r\n";
 
 		$this->subject = um_get_option( $template . '_sub' );
 		$this->subject = um_convert_tags( $this->subject, $args );
@@ -98,7 +100,8 @@ class UM_Mail {
 		$this->message = um_convert_tags( $this->message, $args );
 		
 		// Send mail
-		wp_mail( $email, $this->subject, $this->message, $this->headers, $this->attachments );
+         if (um_get_option('emails_off') != 1)
+            wp_mail( $email, $this->subject, $this->message, $this->headers, $this->attachments );
 		remove_filter( 'wp_mail_content_type', array(&$this, 'set_content_type')  );
 
 		// reset globals

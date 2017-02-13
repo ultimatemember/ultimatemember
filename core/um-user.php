@@ -49,7 +49,7 @@ class UM_User {
 		add_action( 'edit_user_profile',        array( $this, 'community_role_edit' ) );
 		add_action( 'personal_options_update',  array( $this, 'community_role_save' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'community_role_save' ) );
-
+        add_action( 'delete_user', array($this,'um_delete_user_hook') );
 	}
 
 	/**
@@ -906,6 +906,18 @@ class UM_User {
 
 	}
 
+   	/**
+	 * Overrides email changed notification
+	 *
+	 */
+    function um_send_email_change_email($send, $user, $user_data) {
+        global $ultimatemember;
+
+        $ultimatemember->mail->send( um_user('user_email'), 'changedem_email', ['tags' => ['{new_email}'], 'tags_replace' => [$user_data['user_email']]] );
+
+        return false;
+    }
+
 	/***
 	***	@update profile
 	***/
@@ -933,6 +945,7 @@ class UM_User {
        
 		// update user
 		if ( count( $args ) > 1 ) {
+            add_filter('send_email_change_email', [&$this, 'um_send_email_change_email'], 10 ,3);
 			wp_update_user( $args );
 		}
 
@@ -1106,4 +1119,13 @@ class UM_User {
 		return $user_id;
 	}
 
+
+    /*
+     * Cleanup wp_options table upon user deletion in Wordpress
+     */
+    function um_delete_user_hook($id)
+    {
+        delete_option("um_cache_userdata_$id");
+    }
 }
+

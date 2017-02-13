@@ -256,6 +256,16 @@ $this->sections[] = array(
     'fields'     => array(
 
         array(
+                'id'       		=> 'account_show_profile',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Show info','ultimatemember' ),
+				'default' 		=> 1,
+				'desc' 	   		=> 'Show profile info in account page',
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+        ),
+
+        array(
                 'id'       		=> 'account_tab_password',
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Password Account Tab','ultimatemember' ),
@@ -585,6 +595,14 @@ $this->sections[] = array(
     'title'      => __( 'Emails','ultimatemember'),
     'fields'     => array(
 
+        array(
+                'id'       => 'emails_off',
+                'type'     => 'switch',
+                'title'    => __( 'Disable all emails.','ultimatemember' ),
+				'default'  => 0,
+				'desc' 	   => __('Disable actual send, write to debug.log file. Useful for tests.','ultimatemember'),
+        ),
+
 		array(
 				'id'       => 'mail_from',
                 'type'     => 'text',
@@ -607,6 +625,14 @@ $this->sections[] = array(
                 'title'    => __( 'Use HTML for E-mails?','ultimatemember' ),
 				'default'  => 0,
 				'desc' 	   => __('If you enable HTML for e-mails, you can customize the HTML e-mail templates found in <strong>templates/email</strong> folder.','ultimatemember'),
+        ),
+
+        array(
+                'id'       => 'bcc_user_emails',
+                'type'     => 'switch',
+                'title'    => __( 'BCC user emails to Admin','ultimatemember' ),
+				'default'  => 0,
+				'desc' 	   => __('Whether to BCC all user emails to admin address set in Notifocation page.','ultimatemember'),
         ),
 
         array(
@@ -874,7 +900,7 @@ $this->sections[] = array(
                 'type'     => 'switch',
                 'title'    => __( 'Password Changed Email','ultimatemember' ),
 				'default'  => 1,
-				'desc' 	   => __('Whether to send the user an email when he request to reset password (Recommended, please keep on)','ultimatemember'),
+				'desc' 	   => __('Whether to send the user an email when he changed password (Recommended, please keep on)','ultimatemember'),
         ),
 
         array(
@@ -900,6 +926,36 @@ $this->sections[] = array(
 										'{site_name}',
         ),
 
+        array(
+                'id'       => 'changedem_email_on',
+                'type'     => 'switch',
+                'title'    => __( 'Email Changed Email','ultimatemember' ),
+				'default'  => 1,
+				'desc' 	   => __('Whether to send the user an email when he changed email (Recommended, please keep on)','ultimatemember'),
+        ),
+
+        array(
+                'id'       => 'changedem_email_sub',
+                'type'     => 'text',
+                'title'    => __( 'Email Changed Email','ultimatemember' ),
+                'subtitle' => __( 'Subject Line','ultimatemember' ),
+                'default'  => 'Your {site_name} email has been changed',
+				'required' => array( 'changedem_email_on', '=', 1 ),
+				'desc' 	   => __('This is the subject line of the e-mail','ultimatemember'),
+        ),
+
+        array(
+                'id'       => 'changedem_email',
+                'type'     => 'textarea',
+                'title'    => __( 'Email Changed Email','ultimatemember' ),
+                'subtitle' => __( 'Message Body','ultimatemember' ),
+				'required' => array( 'changedem_email_on', '=', 1 ),
+                'default'  => 'Hi {display_name},' . "\r\n\r\n" .
+										'You recently changed the email address associated with your {site_name} account.'  . "\r\n\r\n" .
+										'If you did not make this change and believe your {site_name} account has been compromised, please contact us at the following email address: {admin_email}'  . "\r\n\r\n" .
+										'Thanks,' . "\r\n" .
+										'{site_name}',
+        ),
 	)
 
 );
