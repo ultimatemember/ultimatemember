@@ -49,7 +49,7 @@ class UM_User {
 		add_action( 'edit_user_profile',        array( $this, 'community_role_edit' ) );
 		add_action( 'personal_options_update',  array( $this, 'community_role_save' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'community_role_save' ) );
-
+        add_action( 'delete_user',              array( $this, 'um_delete_user_hook' ) );
 	}
 
 	/**
@@ -1105,5 +1105,14 @@ class UM_User {
 
 		return $user_id;
 	}
+
+
+    /*
+     * Cleanup wp_options table upon user deletion in Wordpress
+     */
+    function um_delete_user_hook($id)
+    {
+        delete_option("um_cache_userdata_$id");
+    }
 
 }
