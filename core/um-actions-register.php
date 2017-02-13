@@ -354,3 +354,11 @@
 		echo $ultimatemember->fields->display( 'register', $args );
 
 	}
+
+	add_action('user_register','um_user_register_generate_gravatar');
+	function um_user_register_generate_gravatar( $user_id ){
+		global $ultimatemember;
+
+		$ultimatemember->user->set_gravatar( $user_id );
+
+	}

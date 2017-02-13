@@ -1106,4 +1106,22 @@ class UM_User {
 		return $user_id;
 	}
 
+	/**
+	 * Set gravatar hash id
+	 */
+	function set_gravatar( $user_id ){
+
+		um_fetch_user( $user_id );
+		$email_address = um_user('user_email');
+		$hash_email_address = '';
+
+		if( $email_address ){
+			$hash_email_address = md5( $email_address );
+			$this->profile['synced_gravatar_hashed_id'] = $hash_email_address;
+			$this->update_usermeta_info('synced_gravatar_hashed_id');
+		}
+
+		return $hash_email_address;
+	}
+
 }
