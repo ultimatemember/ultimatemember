@@ -1,8 +1,8 @@
 <?php
 
-	/***
-	***	@account automatically approved
-	***/
+	/**
+	 * Account automatically approved
+	 */
 	add_action('um_post_registration_approved_hook', 'um_post_registration_approved_hook', 10, 2);
 	function um_post_registration_approved_hook($user_id, $args){
 		global $ultimatemember;
@@ -12,9 +12,9 @@
 		$ultimatemember->user->approve();
 	}
 
-	/***
-	***	@account needs email validation
-	***/
+	/**
+	 * Account needs email validation
+	 */
 	add_action('um_post_registration_checkmail_hook', 'um_post_registration_checkmail_hook', 10, 2);
 	function um_post_registration_checkmail_hook($user_id, $args){
 		global $ultimatemember;
@@ -24,9 +24,9 @@
 		$ultimatemember->user->email_pending();
 	}
 
-	/***
-	***	@account needs admin review
-	***/
+	/**
+	 * Account needs admin review
+	 */
 	add_action('um_post_registration_pending_hook', 'um_post_registration_pending_hook', 10, 2);
 	function um_post_registration_pending_hook($user_id, $args){
 		global $ultimatemember;
@@ -37,9 +37,9 @@
 		
 	}
 
-	/***
-	***	@add user to wordpress
-	***/
+	/**
+	 * Add user to wordpress
+	 */
 	add_action('um_add_user_frontend', 'um_add_user_frontend', 10);
 	function um_add_user_frontend($args){
 		global $ultimatemember;
@@ -118,9 +118,9 @@
 		return $user_id;
 	}
 
-	/***
-	***	@after adding a new user
-	***/
+	/**
+	 * After adding a new user
+	 */
 	add_action('um_after_new_user_register', 'um_after_new_user_register', 10, 2);
 	function um_after_new_user_register( $user_id, $args ){
 		global $ultimatemember, $pagenow;
@@ -158,9 +158,9 @@
 
 	}
 
-	/***
-	***	@Update user's profile after registration
-	***/
+	/**
+	 * Update user's profile after registration
+	 */
 	add_action('um_post_registration_save', 'um_post_registration_save', 10, 2);
 	function um_post_registration_save( $user_id, $args ){
 		global $ultimatemember;
@@ -173,9 +173,9 @@
 
 	}
 
-	/***
-	***	@post-registration admin listender
-	***/
+	/**
+	 * Post-registration admin listener
+	 */
 	add_action('um_post_registration_listener', 'um_post_registration_listener', 10, 2);
 	function um_post_registration_listener( $user_id, $args ){
 		global $ultimatemember;
@@ -188,9 +188,9 @@
 
 	}
 
-	/***
-	***	@post-registration procedure
-	***/
+	/**
+	 * Post-registration procedure
+	 */
 	add_action('um_post_registration', 'um_post_registration', 10, 2);
 	function um_post_registration( $user_id, $args ){
 		global $ultimatemember;
@@ -251,9 +251,9 @@
 
 	}
 
-	/***
-	***	@new user registration
-	***/
+	/**
+	 * New user registration
+	 */
 	add_action('um_user_registration', 'um_user_registration', 10);
 	function um_user_registration($args){
 		global $ultimatemember;
@@ -263,9 +263,9 @@
 
 	}
 
-	/***
-	***	@form processing
-	***/
+	/**
+	 * Form Processing
+	 */
 	add_action('um_submit_form_register', 'um_submit_form_register', 10);
 	function um_submit_form_register($args){
 		global $ultimatemember;
@@ -276,9 +276,9 @@
 
 	}
 
-	/***
-	***	@Register user with predefined role in options
-	***/
+	/**
+	 * Register user with predefined role in options
+	 */
 	add_action('um_after_register_fields', 'um_add_user_role');
 	function um_add_user_role( $args ){
 
@@ -303,9 +303,9 @@
 
 	}
 
-	/***
-	***	@Show the submit button (highest priority)
-	***/
+	/**
+	 * Show the submit button 
+	 */
 	add_action('um_after_register_fields', 'um_add_submit_button_to_register', 1000);
 	function um_add_submit_button_to_register($args){
 		global $ultimatemember;
@@ -344,9 +344,9 @@
 		<?php
 	}
 
-	/***
-	***	@Show Fields
-	***/
+	/**
+	 * Show Fields
+	 */
 	add_action('um_main_register_fields', 'um_add_register_fields', 100);
 	function um_add_register_fields($args){
 		global $ultimatemember;
@@ -355,6 +355,9 @@
 
 	}
 
+	/**
+	 * Set user gravatar with user_email
+	 */
 	add_action('user_register','um_user_register_generate_gravatar');
 	function um_user_register_generate_gravatar( $user_id ){
 		global $ultimatemember;
