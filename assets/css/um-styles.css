@@ -906,3 +906,14 @@ small.um-max-filesize span{
 .select2-container .select2-search--inline {
    line-height: 38px;
 }
+
+.um-field-select .um-field-area .um-field-icon,
+.um-field-multiselect .um-field-area .um-field-icon{
+	z-index: 99999999;
+}
+.um-field-select .um-field-area.um-field-area-has-icon .select2-selection__rendered{
+	text-indent: 20px;
+}
+.um-field-multiselect .um-field-area.um-field-area-has-icon ul:first-child{
+	margin-left: 30px !important;
+}

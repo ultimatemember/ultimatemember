@@ -1794,7 +1794,10 @@ class UM_Fields {
 						$output .= $this->field_label($label, $key, $data);
 						}
 
-						$output .= '<div class="um-field-area">';
+						$output .= '<div class="um-field-area '.( $this->field_icons == 'field' ? 'um-field-area-has-icon':'' ).' ">';
+						if ( isset( $icon ) && $icon && isset( $this->field_icons ) && $this->field_icons == 'field' ) {
+							$output .= '<div class="um-field-icon"><i class="'.$icon.'"></i></div>';
+						}
 						
 						$has_parent_option = false;
 						$disabled_by_parent_option = '';
@@ -1948,10 +1951,16 @@ class UM_Fields {
 						$output .= $this->field_label($label, $key, $data);
 						}
 
+						$field_icon = false;
+						$field_icon_output = '';
+
 						$use_keyword = apply_filters('um_multiselect_option_value', 0, $data['type'] );
 
-						$output .= '<div class="um-field-area">';
-
+						$output .= '<div class="um-field-area '.( $this->field_icons == 'field' ? 'um-field-area-has-icon':'' ).' ">';
+						if ( isset( $icon ) && $icon && isset( $this->field_icons ) && $this->field_icons == 'field' ) {
+							$output .= '<div class="um-field-icon"><i class="'.$icon.'"></i></div>';
+						}
+						
 						$output .= '<select  '.$disabled.' multiple="multiple" name="'.$key.'[]" id="'.$key.'" data-maxsize="'. $max_selections . '" data-validate="'.$validate.'" data-key="'.$key.'" class="'.$this->get_class($key, $data, $class).' um-user-keyword_'.$use_keyword.'" style="width: 100%" data-placeholder="'.$placeholder.'">';
 
 						
