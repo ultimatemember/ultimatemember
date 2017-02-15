@@ -27,7 +27,9 @@ class UM_Access {
 		do_action('um_access_homepage_per_role');
 		
 		do_action('um_access_category_settings');
-		
+
+		do_action('um_access_tags_settings');
+	
 		do_action('um_access_post_settings');
 
 		if ( $this->redirect_handler && $this->allow_access == false &&  ! um_is_core_page('login') ) {
