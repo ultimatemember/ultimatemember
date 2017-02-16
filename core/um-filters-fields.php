@@ -207,14 +207,15 @@
 				&& !strstr( $value, '.net' )
 				&& !strstr( $value, '.org' )
 			) {
-				if ( $data['validate'] == 'soundcloud_url' ) $value = 'https://soundcloud.com/' . $value;
-				if ( $data['validate'] == 'youtube_url' ) $value = 'https://youtube.com/user/' . $value;
-				if ( $data['validate'] == 'facebook_url' ) $value = 'https://facebook.com/' . $value;
-				if ( $data['validate'] == 'twitter_url' ) $value = 'https://twitter.com/' . $value;
-				if ( $data['validate'] == 'linkedin_url' ) $value = 'https://linkedin.com/' . $value;
-				if ( $data['validate'] == 'skype' ) $value = $value;
-				if ( $data['validate'] == 'googleplus_url' ) $value = 'https://plus.google.com/' . $value;
-				if ( $data['validate'] == 'instagram_url' ) $value = 'https://instagram.com/' . $value;
+				if ( $data['validate'] == 'soundcloud_url' ) 	$value = 'https://soundcloud.com/' . $value;
+				if ( $data['validate'] == 'youtube_url' ) 		$value = 'https://youtube.com/user/' . $value;
+				if ( $data['validate'] == 'facebook_url' ) 		$value = 'https://facebook.com/' . $value;
+				if ( $data['validate'] == 'twitter_url' ) 		$value = 'https://twitter.com/' . $value;
+				if ( $data['validate'] == 'linkedin_url' ) 		$value = 'https://linkedin.com/' . $value;
+				if ( $data['validate'] == 'skype' ) 			$value = $value;
+				if ( $data['validate'] == 'googleplus_url' ) 	$value = 'https://plus.google.com/' . $value;
+				if ( $data['validate'] == 'instagram_url' ) 	$value = 'https://instagram.com/' . $value;
+				if ( $data['validate'] == 'vk_url' ) 			$value = 'https://vk.com/' . $value;
 			}
 
 			if ( isset( $data['validate'] ) && $data['validate'] == 'skype' ) {
