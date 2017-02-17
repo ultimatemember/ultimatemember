@@ -391,6 +391,10 @@ class UM_Permalinks {
 
 			$user_in_url = '';
 
+			$full_name = str_replace("'", "", $full_name );
+			$full_name = str_replace("&", "", $full_name );
+			$full_name = str_replace("/", "", $full_name );
+
 			switch( $permalink_base )
 			{
 				case 'name': // dotted
