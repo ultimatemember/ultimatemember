@@ -1794,7 +1794,7 @@ class UM_Fields {
 						$output .= $this->field_label($label, $key, $data);
 						}
 
-						$output .= '<div class="um-field-area '.( $this->field_icons == 'field' ? 'um-field-area-has-icon':'' ).' ">';
+						$output .= '<div class="um-field-area '.( isset(  $this->field_icons ) && $this->field_icons == 'field' ? 'um-field-area-has-icon':'' ).' ">';
 						if ( isset( $icon ) && $icon && isset( $this->field_icons ) && $this->field_icons == 'field' ) {
 							$output .= '<div class="um-field-icon"><i class="'.$icon.'"></i></div>';
 						}
@@ -1956,7 +1956,7 @@ class UM_Fields {
 
 						$use_keyword = apply_filters('um_multiselect_option_value', 0, $data['type'] );
 
-						$output .= '<div class="um-field-area '.( $this->field_icons == 'field' ? 'um-field-area-has-icon':'' ).' ">';
+						$output .= '<div class="um-field-area '.( isset(  $this->field_icons ) && $this->field_icons == 'field' ? 'um-field-area-has-icon':'' ).' ">';
 						if ( isset( $icon ) && $icon && isset( $this->field_icons ) && $this->field_icons == 'field' ) {
 							$output .= '<div class="um-field-icon"><i class="'.$icon.'"></i></div>';
 						}
@@ -2534,7 +2534,10 @@ class UM_Fields {
 				$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">';
 					
 						if ( isset( $data['label'] ) || isset( $data['icon'] ) && ! empty( $data['icon'] ) ) {
-							$output .= $this->field_label($label, $key, $data);
+
+							if( ! isset( $data['label'] ) ) $data['label'] = '';
+
+							$output .= $this->field_label( $data['label'], $key, $data);
 						}
 						
 						$res = $this->field_value( $key, $default, $data );
