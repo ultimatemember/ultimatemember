@@ -1,8 +1,8 @@
 <?php
 
-	/***
-	***	@the um_action
-	***/
+	/**
+	 * Processes the requests of UM actions
+	 */
 	add_action('init','um_action_request_process', 10);
 	function um_action_request_process(){
 		global $ultimatemember;
