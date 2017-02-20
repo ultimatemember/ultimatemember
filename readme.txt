@@ -7,7 +7,7 @@ Tags: access control, author, authors, author profile, comments, community, comm
 Requires at least: 4.1
 Tested up to: 4.7.2
 
-Stable Tag: 1.3.82
+Stable Tag: 1.3.83
 
 License: GNU Version 2 or Any Later Version
 
@@ -149,6 +149,31 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.83: February 20, 2017 =
+
+* Enhancements:
+   * Adds user avatar's alternate text.  The default text is set to `display_name`
+   * Adds new filter hook to modif the user avatar's alternate text. 
+       * `um_avatar_image_alternate_text`
+   * Set gravatar for newly registered users
+   * Adds Tag archive page access settings
+
+* Bugfixes
+   * Remove pointer cursor from field areas in profile view mode
+   * Fix profile slug in permalinks
+   * Fix URL field 'nofollow' issue
+   * Fix field icons display
+   * Fix an issue with admin roles in editing fields
+   * Fix whitepspace issue with Email Address validation
+   * Fix profile visibility option in member directories
+   * Fix icon display as label in profile view
+   * Fix PHP 7.1.1 compatibility
+   * Fix redirection on update profile slug
+   * Fix dynamic CSS options in member directory
+   * Fix edit profile option by specific role
+   * Fix Vkontakte view
+   * Remove notices
 
 = 1.3.82: January 31, 2017 =
 
