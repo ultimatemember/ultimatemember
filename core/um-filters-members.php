@@ -53,7 +53,7 @@
 
 		}
 
-		if ( ! um_user_can('can_edit_everyone') && um_get_option('account_hide_in_directory') ) {
+		if ( ! um_user_can('can_edit_everyone') || um_get_option('account_hide_in_directory') ) {
 			$query_args['meta_query'][] = array(
 				"relation"	=> "OR",
 				array(
@@ -68,6 +68,7 @@
 				)
 			);
 		}
+
 
 		if( um_user_can('can_view_all') && um_user_can('can_view_roles')  ){
 			
