@@ -48,7 +48,8 @@ GNU Version 2 or Any Later Version
 
 Releases
 ====================
-[Latest Release: Ultimate Member v1.3.83](https://github.com/ultimatemember/ultimatemember/releases).
+[Pre-Release Version: 1.3.84](https://github.com/ultimatemember/ultimatemember/releases).
+[Official Release Version: 1.3.83](https://github.com/ultimatemember/ultimatemember/releases).
 
 Changelog
 ====================
