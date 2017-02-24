@@ -340,14 +340,14 @@
 						}  
 					break;
 					case 'greater than':
-						if ( $field <= $val ){
+						if ( $field > $val ){
 							$state = 1;
 						}else{
 							$state = 0;
 						} 
 					break; 
 					case 'less than': 
-						if ( $field >= $val ){
+						if ( $field < $val ){
 							$state = 1;
 						}else{
 							$state = 0;
