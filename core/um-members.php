@@ -175,7 +175,12 @@ class UM_Members {
 			unset( $query_args );
 		}
 		
+		do_action('um_user_before_query', $query_args );
+		
 		$users = new WP_User_Query( $query_args );
+
+		do_action('um_user_after_query', $query_args, $users );
+		
 		
 		$array['users'] = isset( $users->results ) && ! empty( $users->results ) ? array_unique( $users->results ) : array();
 
