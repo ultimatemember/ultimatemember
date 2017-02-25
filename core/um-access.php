@@ -32,7 +32,7 @@ class UM_Access {
 	
 		do_action('um_access_post_settings');
 
-		if ( $this->redirect_handler && $this->allow_access == false &&  ! um_is_core_page('login') ) {
+		if ( $this->redirect_handler && $this->allow_access == false &&  ( ! um_is_core_page('login') || um_is_core_page('login') && is_user_logged_in() ) ) {
 			
 			// login page add protected page automatically
 
