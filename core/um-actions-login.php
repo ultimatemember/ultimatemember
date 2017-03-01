@@ -66,7 +66,7 @@
 
 		// add a way for other plugins like wp limit login
 		// to limit the login attempts
-		$user = apply_filters( 'authenticate', null, $user_name, $args['user_password'] );
+		$user = apply_filters( 'authenticate', $user, $user_name, $args['user_password'] );
 
 		// if there is an error notify wp
 		if( $ultimatemember->form->has_error( $field ) || $ultimatemember->form->has_error( $user_password ) ) {
