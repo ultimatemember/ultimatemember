@@ -37,8 +37,6 @@ class UM_Admin_Enqueue {
 	***	@Runs on admin head
 	***/
 	function admin_head(){
-		global $current_screen, $post;
-		$screen_id = $current_screen->id;
 		
 		if ( $this->is_plugin_post_type() ){
 
