@@ -1451,8 +1451,8 @@
 	function um_user( $data, $attrs = null ) {
 
 		global $ultimatemember;
-
-		switch($data){
+       
+       switch($data){
 
 			default:
 
@@ -1469,6 +1469,18 @@
 					return $value;
 				}
 
+				return $value;
+				break;
+
+			case 'user_email':
+
+				$user_email_in_meta = get_user_meta( um_user('ID'), 'user_email', true );
+				if( $user_email_in_meta ){
+					delete_user_meta( um_user('ID'), 'user_email' );
+				}
+
+				$value = um_profile( $data );
+				
 				return $value;
 				break;
 
