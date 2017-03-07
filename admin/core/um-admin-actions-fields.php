@@ -25,7 +25,7 @@
 		extract( $array['post'] );
 		if ( empty( $output['error'] ) ){
 		
-			$save = '';
+			$save = array();
 			$save[ $_metakey ] = null;
 			foreach( $array['post'] as $key => $val){
 				
