@@ -379,9 +379,10 @@
     add_filter('um_field_non_utf8_value','um_field_non_utf8_value');
     function um_field_non_utf8_value( $value ){
     	
-    	if( ! preg_match('/[^\\p{Common}\\p{Latin}]/u', $value ) ){
-								$value = htmlentities( $value );
-		}
+    	$encoding = mb_detect_encoding( $value, 'utf-8, iso-8859-1, ascii', true);
+	    if (strcasecmp($encoding, 'UTF-8') !== 0) {
+	      	$value = iconv($encoding, 'utf-8', $value);
+	    }
 
 		return $value;
     }
