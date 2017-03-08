@@ -11,8 +11,8 @@ if ( $active_color ) {
 print "
 
 .um-$form_id.um .um-tip:hover,
-.um-$form_id.um .um-field-radio.active i,
-.um-$form_id.um .um-field-checkbox.active i,
+.um-$form_id.um .um-field-radio.active:not(.um-field-radio-state-disabled) i,
+.um-$form_id.um .um-field-checkbox.active:not(.um-field-radio-state-disabled) i,
 .um-$form_id.um .um-member-name a:hover,
 .um-$form_id.um .um-member-more a:hover,
 .um-$form_id.um .um-member-less a:hover,

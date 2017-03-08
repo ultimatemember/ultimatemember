@@ -2101,6 +2101,10 @@ class UM_Fields {
 								$class = "um-icon-android-radio-button-off";
 							}
 
+							if( ! empty( $disabled ) ){
+								$col_class .= " um-field-radio-state-disabled";
+							}
+
 							$output .= '<label class="um-field-radio '.$active.' um-field-half '.$col_class.'">';
 
 							$option_value = apply_filters('um_field_non_utf8_value',$option_value );
@@ -2177,6 +2181,10 @@ class UM_Fields {
 							} else {
 								$active = '';
 								$class = "um-icon-android-checkbox-outline-blank";
+							}
+
+							if( ! empty( $disabled ) ){
+								$col_class .= " um-field-radio-state-disabled";
 							}
 
 							$output .= '<label class="um-field-checkbox '.$active.' um-field-half '.$col_class.'">';
