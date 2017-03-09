@@ -117,15 +117,19 @@ class UM_Admin_Notices {
 		if ( strstr( $locale, 'en_' ) ) return; // really, english!
 		if ( file_exists( WP_LANG_DIR . '/plugins/ultimatemember-' . $locale . '.mo' ) ) return;
 
-		if ( isset( $ultimatemember->available_languages[$locale] ) ) {
+		if ( isset( $ultimatemember->available_languages[ $locale ] ) ) {
 
 			$download_uri = add_query_arg('um_adm_action', 'um_language_downloader');
+			
+			$hide_locale_notice = get_option('um_hide_locale_notice');
+			if ( !$hide_locale_notice ) {
+				echo '<div class="updated" style="border-color: #3ba1da;"><p>';
 
-			echo '<div class="updated" style="border-color: #3ba1da;"><p>';
+				echo sprintf(__('Your site language is <strong>%1$s</strong>. Good news! Ultimate Member is already available in <strong>%2$s language</strong>. <a href="%3$s">Download the translation</a> files and start using the plugin in your language now. <a href="%4$s">Hide this notice</a>','ultimatemember'), $locale, $ultimatemember->available_languages[$locale], $download_uri, add_query_arg('um_adm_action', 'um_hide_locale_notice')  );
 
-			echo sprintf(__('Your site language is <strong>%1$s</strong>. Good news! Ultimate Member is already available in <strong>%2$s language</strong>. <a href="%3$s">Download the translation</a> files and start using the plugin in your language now.','ultimatemember'), $locale, $ultimatemember->available_languages[$locale], $download_uri );
+				echo '</p></div>';
+			}
 
-			echo '</p></div>';
 
 		} else {
 
