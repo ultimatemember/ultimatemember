@@ -1111,7 +1111,7 @@ class UM_Fields {
 		if ( ( $visibility == 'view' && $this->set_mode == 'register' ) || 
 			( isset( $data['editable'] ) && $data['editable'] == 0 && $this->set_mode == 'profile' ) ){
 				
-				if( ! current_user_can('manage_options') ){
+				if( ! um_user_can('can_edit_everyone') ){
 					$disabled = ' disabled="disabled" ';
 				}
 
@@ -2101,10 +2101,12 @@ class UM_Fields {
 								$class = "um-icon-android-radio-button-off";
 							}
 
-							if( ! empty( $disabled ) ){
+							if( isset( $data['editable'] ) &&  $data['editable'] == 0 ){
 								$col_class .= " um-field-radio-state-disabled";
 							}
 
+
+				
 							$output .= '<label class="um-field-radio '.$active.' um-field-half '.$col_class.'">';
 
 							$option_value = apply_filters('um_field_non_utf8_value',$option_value );
@@ -2183,7 +2185,7 @@ class UM_Fields {
 								$class = "um-icon-android-checkbox-outline-blank";
 							}
 
-							if( ! empty( $disabled ) ){
+							if( isset( $data['editable'] ) &&  $data['editable'] == 0 ){
 								$col_class .= " um-field-radio-state-disabled";
 							}
 
