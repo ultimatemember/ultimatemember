@@ -74,7 +74,7 @@
 	    }
 
 		// if there is an error notify wp
-		if( $ultimatemember->form->has_error( $field ) || $ultimatemember->form->has_error( $user_password ) || is_wp_error( $user ) ) {
+		if( $ultimatemember->form->has_error( $field ) || $ultimatemember->form->has_error( $user_password ) ) {
 			do_action( 'wp_login_failed', $user_name );
 		}
 	}
