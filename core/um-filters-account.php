@@ -55,3 +55,23 @@
 
 		return $fields;
 	}
+
+	/**
+	 * Disables first and last name fields in account page
+	 * @param  array $fields 
+	 * @return array     
+	 * @uses  um_get_field__first_name, um_get_field__last_name  
+	 */
+	add_filter("um_get_field__first_name","um_account_disable_name_fields", 10 ,1 );
+	add_filter("um_get_field__last_name","um_account_disable_name_fields", 10 ,1 );
+	function um_account_disable_name_fields( $fields ){
+		global $ultimatemember;
+		
+		if( ! um_get_option("account_name_disable") ) return $fields;
+
+		if( um_is_core_page("account") ){
+			$fields['disabled'] = 'disabled="disabled"';
+		}
+
+		return $fields;
+	}

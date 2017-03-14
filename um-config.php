@@ -318,6 +318,16 @@ $this->sections[] = array(
 				'off'			=> __('Off','ultimatemember'),
         ),
         array(
+                'id'       		=> 'account_name_disable',
+                'type'     		=> 'switch',
+                'title'   		=> __( 'Disable First & Last Name fields','ultimatemember' ),
+				'default' 		=> 0,
+				'desc' 	   		=> __('Whether to allow users changing their first and last name in account page.','ultimatemember'),
+				'on'			=> __('On','ultimatemember'),
+				'off'			=> __('Off','ultimatemember'),
+				'required'		=> array( 'account_name', '=', '1' ),
+        ),
+        array(
                 'id'       		=> 'account_name_require',
                 'type'     		=> 'switch',
                 'title'   		=> __( 'Require First & Last Name','ultimatemember' ),
