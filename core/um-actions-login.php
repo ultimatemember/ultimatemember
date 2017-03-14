@@ -66,10 +66,15 @@
 
 		// add a way for other plugins like wp limit login
 		// to limit the login attempts
-		$user = apply_filters( 'authenticate', $user, $user_name, $args['user_password'] );
+		$user = apply_filters( 'authenticate', null, $user_name, $args['user_password'] );
+
+		if ( $user == null ) {
+
+	        $ultimatemember->form->add_error( $field,   __( '<strong>ERROR</strong>: Invalid username, email address or incorrect password.','ultimatemember' ) );
+	    }
 
 		// if there is an error notify wp
-		if( $ultimatemember->form->has_error( $field ) || $ultimatemember->form->has_error( $user_password ) ) {
+		if( $ultimatemember->form->has_error( $field ) || $ultimatemember->form->has_error( $user_password ) || is_wp_error( $user ) ) {
 			do_action( 'wp_login_failed', $user_name );
 		}
 	}
@@ -270,7 +275,7 @@
 
 		if ( $args['forgot_pass_link'] == 0 ) return;
 
-	?>
+		?>
 
 		<div class="um-col-alt-b">
 			<a href="<?php echo um_get_core_page('password-reset'); ?>" class="um-link-alt"><?php _e('Forgot your password?','ultimatemember'); ?></a>
