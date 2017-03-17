@@ -183,19 +183,19 @@ class UM_Fields {
 		global $ultimatemember;
 		$fields = $ultimatemember->query->get_attr( 'custom_fields', $form_id );
 		$field_scope = $ultimatemember->builtin->saved_fields;
-
-		if ( !isset( $fields[$global_id] ) ) {
+		$global_id = intval( $global_id );
+		if ( !isset( $fields[ $global_id ] ) ) {
 
 			$count = 1;
-			if ( isset( $fields ) && !empty( $fields) ) $count = count($fields)+1;
+			if ( isset( $fields ) && !empty( $fields ) ) $count = count( $fields ) + 1;
 
-			$fields[$global_id] = $field_scope[$global_id];
-			$fields[$global_id]['position'] = $count;
+			$fields[ $global_id ] = $field_scope[ $global_id ];
+			$fields[ $global_id ]['position'] = $count;
 
 			// set position
 			if ( $position ) {
 				foreach( $position as $key => $val ) {
-					$fields[$global_id][$key] = $val;
+					$fields[ $global_id ][ $key ] = $val;
 				}
 			}
 
@@ -216,19 +216,19 @@ class UM_Fields {
 
 		$fields = $ultimatemember->query->get_attr( 'custom_fields', $form_id );
 		$field_scope = $ultimatemember->builtin->predefined_fields;
-
-		if ( !isset( $fields[$global_id] ) ) {
+		$global_id = intval( $global_id );
+		if ( !isset( $fields[ $global_id ] ) ) {
 
 			$count = 1;
-			if ( isset( $fields ) && !empty( $fields) ) $count = count($fields)+1;
+			if ( isset( $fields ) && !empty( $fields) ) $count = count( $fields ) + 1;
 
-			$fields[$global_id] = $field_scope[$global_id];
-			$fields[$global_id]['position'] = $count;
+			$fields[ $global_id ] = $field_scope[ $global_id ];
+			$fields[ $global_id ]['position'] = $count;
 
 			// set position
 			if ( $position ) {
 				foreach( $position as $key => $val ) {
-					$fields[$global_id][$key] = $val;
+					$fields[ $global_id ][ $key ] = $val;
 				}
 			}
 

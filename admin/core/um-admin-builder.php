@@ -50,6 +50,11 @@ class UM_Admin_Builder {
 	***	@get fields in row
 	***/
 	function get_fields_by_row( $row_id ) {
+
+		if( empty( $this->global_fields) || ! is_array( $this->global_fields ) ){
+			$this->global_fields = array();
+		}
+		
 		foreach( $this->global_fields as $key => $array ) {
 			if ( !isset( $array['in_row'] ) || ( isset( $array['in_row'] ) && $array['in_row'] == $row_id ) ) {
 				$results[$key] = $array;
@@ -127,8 +132,12 @@ class UM_Admin_Builder {
 		
 		} else {
 		
-		$this->global_fields = $fields;
-
+		if( empty( $fields) || ! is_array( $fields ) ){
+			$this->global_fields = array();
+		}else{
+		 	$this->global_fields = $fields;
+		}
+		
 		foreach( $this->global_fields as $key => $array ) {
 			if ( $array['type'] == 'row' ) {
 				$rows[$key] = $array;
