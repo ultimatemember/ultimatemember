@@ -67,14 +67,26 @@
 		// add a way for other plugins like wp limit login
 		// to limit the login attempts
 		$user = apply_filters( 'authenticate', null, $user_name, $args['user_password'] );
+		
+		$authenticate_user = apply_filters( 'wp_authenticate_user', $user_name, $args['user_password'] );
+		
+		// @since 4.18 replacement for 'wp_login_failed' action hook
+		// see WP function wp_authenticate()
+		$ignore_codes = array('empty_username', 'empty_password');
 
-		if ( $user == null ) {
+		if ( is_wp_error( $user ) && ! in_array( $user->get_error_code(), $ignore_codes ) ) {
+			
+				$ultimatemember->form->add_error( $user->get_error_code(),  __( $user->get_error_message() ,'ultimatemember') );
+		}
 
-	        $ultimatemember->form->add_error( $field,   __( '<strong>ERROR</strong>: Invalid username, email address or incorrect password.','ultimatemember' ) );
-	    }
+		if( is_wp_error( $authenticate_user ) && ! in_array( $authenticate_user->get_error_code(), $ignore_codes ) ){
+
+				$ultimatemember->form->add_error( $authenticate_user->get_error_code(),  __( $authenticate_user->get_error_message() ,'ultimatemember') );
+		
+		}
 
 		// if there is an error notify wp
-		if( $ultimatemember->form->has_error( $field ) || $ultimatemember->form->has_error( $user_password ) ) {
+		if( $ultimatemember->form->has_error( $field ) || $ultimatemember->form->has_error( $user_password ) || $ultimatemember->form->count_errors() > 0 ) {
 			do_action( 'wp_login_failed', $user_name );
 		}
 	}
@@ -89,16 +101,23 @@
 		$error = '';
 	
 		if( $ultimatemember->form->count_errors() > 0 ) {
-			$error = array_values( $ultimatemember->form->errors );
-			$error = array_shift( $error );
+			$errors = $ultimatemember->form->errors;
+			// hook for other plugins to display error
+			$error_keys = array_keys( $errors );
 		}
 
-		// hook for other plugins to display error
-		$errors = trim( apply_filters( 'login_errors', $error ) );
+		if( isset( $args['custom_fields'] ) ){
+			$custom_fields = $args['custom_fields'];
+		}
 
-		if( trim( $errors ) )
-		{
-			echo '<p class="um-notice err"><i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i>' . $errors . '</p>';
+		if( ! empty( $error_keys ) && ! empty( $custom_fields ) ){
+			foreach( $error_keys as $error ){
+
+				if( trim( $error ) && ! isset( $custom_fields[ $error ] ) ){
+					$error = apply_filters( 'login_errors', $errors[ $error ]  );
+					echo '<p class="um-notice err"><i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i>' . $error  . '</p>';
+				}
+			}
 		}
 	}
 
@@ -202,7 +221,6 @@
 				break;
 
 		}
-
 	}
 
 	/***
@@ -211,13 +229,12 @@
 	add_action('um_submit_form_login', 'um_submit_form_login', 10);
 	function um_submit_form_login($args){
 		global $ultimatemember;
-
+		
 		if ( !isset($ultimatemember->form->errors) ) {
 			do_action( 'um_user_login', $args );
 		}
 
 		do_action('um_user_login_extra_hook', $args );
-
 	}
 
 	/***
@@ -290,9 +307,8 @@
 	add_action('um_main_login_fields', 'um_add_login_fields', 100);
 	function um_add_login_fields($args){
 		global $ultimatemember;
-
+		
 		echo $ultimatemember->fields->display( 'login', $args );
-
 	}
 
 	/**
