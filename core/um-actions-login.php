@@ -112,10 +112,9 @@
 
 		if( ! empty( $error_keys ) && ! empty( $custom_fields ) ){
 			foreach( $error_keys as $error ){
-
-				if( trim( $error ) && ! isset( $custom_fields[ $error ] ) ){
-					$error = apply_filters( 'login_errors', $errors[ $error ]  );
-					echo '<p class="um-notice err"><i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i>' . $error  . '</p>';
+				if( trim( $error ) && ! isset( $custom_fields[ $error ] )  && ! empty(  $errors[ $error ] ) ){
+					$error_message = apply_filters( 'login_errors', $errors[ $error ]  );
+					echo '<p class="um-notice err um-error-code-'.$error.'"><i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i>' . $error_message  . '</p>';
 				}
 			}
 		}
