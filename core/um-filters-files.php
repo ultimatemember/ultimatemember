@@ -11,8 +11,9 @@
 		
 			if ( get_current_blog_id() == '1' ) return $dir;
 			
-			$split = explode('sites/',$dir);
-			$um_dir = 'ultimatemember/';
+			$sites_dir = apply_filters('um_multisite_upload_sites_directory', 'sites/' );
+			$split = explode( $sites_dir, $dir );
+			$um_dir = apply_filters('um_multisite_upload_directory','ultimatemember/');
 			$dir = $split[0] . $um_dir;
 
 		}
