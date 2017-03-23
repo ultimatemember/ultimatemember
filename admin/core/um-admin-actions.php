@@ -71,10 +71,10 @@
 	}
 
 	
-	function um_category_access_fields_create( $term ){
+	function um_category_access_fields_create( $term ) {
 		global $ultimatemember;
 		
-		echo '<div class="form-field term-access-wrap">';
+		echo '<div class="form-field term-access-wrap um-conditional-radio-group" data-cond1="2" data-cond1-show="term-roles-wrap" data-cond2="1" data-cond2-show="term-redirect-wrap">';
 		echo '<label>' . __('Content Availability','ultimatemember') . '</label>';
 		echo '<label><input type="radio" name="_um_accessible" value="0" checked /> '. __('Content accessible to Everyone','ultimatemember') . '</label>
 			<label><input type="radio" name="_um_accessible" value="1" /> ' . __('Content accessible to Logged Out Users','ultimatemember') . '</label>
@@ -98,7 +98,8 @@
 	
 	}
 
-	function um_category_access_fields_edit( $term ){
+
+	function um_category_access_fields_edit( $term ) {
 		global $ultimatemember;
 		
 		$termID = $term->term_id;
@@ -107,7 +108,7 @@
 		$_um_redirect=  (isset( $termMeta['_um_redirect'] ) )? $termMeta['_um_redirect'] : '';
 		$_um_roles=  (isset( $termMeta['_um_roles'] ) )? $termMeta['_um_roles'] : '';
 
-		echo "<tr class='form-field form-required term-access-wrap'>";
+		echo '<tr class="form-field form-required term-access-wrap um-conditional-radio-group" data-cond1="2" data-cond1-show="term-roles-wrap" data-cond2="1" data-cond2-show="term-redirect-wrap" >';
 		echo "<th scope='row'><label>" . __('Content Availability','ultimatemember') . "</label></th>";
 		echo '<td><label><input type="radio" name="_um_accessible" value="0"  ' . checked( 0, $_um_accessible, 0 ) . ' /> '. __('Content accessible to Everyone','ultimatemember') . '</label><br />
 			<label><input type="radio" name="_um_accessible" value="1" ' . checked( 1, $_um_accessible, 0 ) . ' /> ' . __('Content accessible to Logged Out Users','ultimatemember') . '</label><br />
@@ -135,8 +136,8 @@
 		echo '<input type="text" name="_um_redirect" id="_um_redirect" value="' . $_um_redirect . '" />';
 		echo '<p class="description">' . __('Users who cannot see content will get redirected to that URL.','ultimatemember') . '</p>';
 		echo "</td></tr>";
-		
 	}
+
 
 	function um_category_access_fields_save( $termID ){
 
