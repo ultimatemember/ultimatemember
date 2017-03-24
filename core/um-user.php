@@ -80,6 +80,8 @@ class UM_User {
 				</tbody>
 			</table>
 		<?php }
+
+		do_action( 'um_user_profile_section' );
 	}
 
 	/**
