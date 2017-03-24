@@ -108,6 +108,7 @@
 		$termMeta = get_option( "category_$termID" );    
 		$_um_accessible= (isset( $termMeta['_um_accessible'] ) )? $termMeta['_um_accessible'] : '';
 		$_um_redirect=  (isset( $termMeta['_um_redirect'] ) )? $termMeta['_um_redirect'] : '';
+		$_um_redirect2=  (isset( $termMeta['_um_redirect2'] ) )? $termMeta['_um_redirect2'] : '';
 		$_um_roles=  (isset( $termMeta['_um_roles'] ) )? $termMeta['_um_roles'] : '';
 
 		echo '<tr class="form-field form-required term-access-wrap um-conditional-radio-group" data-cond1="2" data-cond1-show="term-roles-wrap" data-cond2="1" data-cond2-show="term-redirect-wrap" >';
@@ -141,7 +142,7 @@
 		echo "<tr class='form-field form-required term-redirect-wrap'>";
 		echo "<th scope='row'><label>" . __('Content Restriction Redirect URL','ultimatemember') . "</label></th>";
 		echo '<td>';
-		echo '<input type="text" name="_um_redirect2" id="_um_redirect2" value="' . $_um_redirect . '" />';
+		echo '<input type="text" name="_um_redirect2" id="_um_redirect2" value="' . $_um_redirect2 . '" />';
 		echo '<p class="description">' . __('Users who cannot see content will get redirected to that URL.','ultimatemember') . '</p>';
 		echo "</td></tr>";
 		
