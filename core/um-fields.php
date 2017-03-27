@@ -183,7 +183,7 @@ class UM_Fields {
 		global $ultimatemember;
 		$fields = $ultimatemember->query->get_attr( 'custom_fields', $form_id );
 		$field_scope = $ultimatemember->builtin->saved_fields;
-		$global_id = intval( $global_id );
+		
 		if ( !isset( $fields[ $global_id ] ) ) {
 
 			$count = 1;
@@ -216,7 +216,7 @@ class UM_Fields {
 
 		$fields = $ultimatemember->query->get_attr( 'custom_fields', $form_id );
 		$field_scope = $ultimatemember->builtin->predefined_fields;
-		$global_id = intval( $global_id );
+		
 		if ( !isset( $fields[ $global_id ] ) ) {
 
 			$count = 1;
