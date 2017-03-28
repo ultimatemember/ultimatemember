@@ -61,6 +61,7 @@ class UM_User {
 			
 			$um_user_role = get_user_meta($user->ID,'role',true);
 			?>
+			<h2><?php _e('Ultimate Member','ultimatemember') ?></h2>
 			<table class="form-table">
 				<tbody>
 					<tr>
@@ -79,6 +80,8 @@ class UM_User {
 				</tbody>
 			</table>
 		<?php }
+
+		do_action( 'um_user_profile_section' );
 	}
 
 	/**

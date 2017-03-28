@@ -389,8 +389,8 @@
 
 							if ( is_user_logged_in() ){
 
-								if( isset( $opt['_um_redirect'] ) && ! empty(  $opt['_um_redirect']  ) ) {
-									$redirect = $opt['_um_redirect'];
+								if( isset( $opt['_um_redirect2'] ) && ! empty(  $opt['_um_redirect2']  ) ) {
+									$redirect = $opt['_um_redirect2'];
 								}else{  
 									$redirect = site_url();
 								}
@@ -478,7 +478,7 @@
 						case 1:
 
 							if ( is_user_logged_in() )
-								$redirect = ( isset( $opt['_um_redirect'] ) && !empty( $opt['_um_redirect'] )  ) ? $opt['_um_redirect'] : site_url();
+								$redirect = ( isset( $opt['_um_redirect2'] ) && !empty( $opt['_um_redirect2'] )  ) ? $opt['_um_redirect2'] : site_url();
 								$redirect = $ultimatemember->access->set_referer( $redirect, "categories_1" );
 								$ultimatemember->access->redirect_handler = $redirect;
 							if ( !is_user_logged_in() )
@@ -566,8 +566,8 @@
 
 							if ( is_user_logged_in() ){
 
-								if( isset( $opt['_um_redirect'] ) && ! empty(  $opt['_um_redirect']  ) ) {
-									$redirect = $opt['_um_redirect'];
+								if( isset( $opt['_um_redirect2'] ) && ! empty(  $opt['_um_redirect2']  ) ) {
+									$redirect = $opt['_um_redirect2'];
 								}else{  
 									$redirect = site_url();
 								}
@@ -703,7 +703,7 @@
 								case 1: // Logged out users only
 									
 									if ( is_user_logged_in() ){
-										$redirect = ( isset( $opt['_um_redirect'] ) && ! empty( $opt['_um_redirect'] ) ) ? $opt['_um_redirect'] : site_url();
+										$redirect = ( isset( $opt['_um_redirect2'] ) && ! empty( $opt['_um_redirect2'] ) ) ? $opt['_um_redirect2'] : site_url();
 										$redirect = $ultimatemember->access->set_referer( $redirect, "page_cat_1a_t{$cat->term_id}_pt{$post_type}" );
 										$ultimatemember->access->redirect_handler = $redirect;
 										$ultimatemember->access->allow_access = false;
