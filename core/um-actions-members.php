@@ -6,7 +6,7 @@
 	function um_members_directory_search( $args ) {
 		global $ultimatemember;
 		
-		$search_filters = '';
+		$search_filters = array();
 		
 		if ( isset($args['search_fields']) ) {
 			foreach( $args['search_fields'] as $k => $testfilter ){

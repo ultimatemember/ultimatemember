@@ -3,7 +3,7 @@ Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember, champsupertramp
 Donate link: 
-Tags: access control, author, authors, author profile, comments, community, communities, conditional fields, conditional logic, conditional menus, content protection, custom fields, file uploads, form builder, front-end login, front-end registration, gravatar, hide wp-admin, login, login page, logged-in users, mandrill, member, members, membership, member directory, online users, profile, profiles, profile builder, registration, restriction, restrict content, role creation, role menus, search filters, sign in, sign up, social network, star ratings, toolbar, user, users, user fields, user profile, user-profile, user profiles, user roles
+Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.1
 Tested up to: 4.7.2
 
