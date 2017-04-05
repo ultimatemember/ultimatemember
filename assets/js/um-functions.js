@@ -3,17 +3,25 @@ var live_value;
 
 function um_conditional(){
 
+	var um_fields_conditions = 1;
+		
 	jQuery('.um-field.um-is-conditional').each(function(){
-		//console.log('-----');
 		var found = 0;
 		var um_field_key = jQuery(this).data('key');
+		//console.log('-----'+ ( um_fields_conditions++ ) +'----');
+		
 		for (var i = 0; i < 5; i++) {
 
 			var action0 = jQuery(this).data('cond-'+i+'-action');
 			var field0 = jQuery(this).data('cond-'+i+'-field');
 			var operator0 = jQuery(this).data('cond-'+i+'-operator');
 			var value0 = jQuery(this).data('cond-'+i+'-value');
-
+			
+			if( ( action0 == 'show'  && field0 == live_field &&  typeof value0 !== 'undefined' ) || jQuery('div.um-field[data-key='+field0+']').is(':hidden') ){
+				jQuery(this).hide();
+				um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
+				jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
+			}
 
 			if (  action0 == 'show' && field0 == live_field && typeof value0 !== 'undefined' ) {
 
@@ -21,11 +29,6 @@ function um_conditional(){
 					if ( !live_value || live_value == '' || found > 0 ) {
 						jQuery(this).fadeIn();
 						found++;
-					} else {
-						jQuery(this).hide();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
-						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
-
 					}
 				}
 
@@ -33,24 +36,14 @@ function um_conditional(){
 					if ( live_value && live_value != '' || found > 0 ) {
 						jQuery(this).fadeIn();
 						found++;
-					} else {
-						jQuery(this).hide();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
-						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
-
-					}
+					} 
 				}
 
 				if ( operator0 == 'equals to' ) {
 					if ( value0 == live_value  || found > 0 ) {
 						jQuery(this).fadeIn();
 						found++;
-					} else {
-						jQuery(this).hide();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
-						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
-
-					}
+					} 
 				}
 
 				if ( operator0 == 'not equals' ) {
@@ -60,11 +53,6 @@ function um_conditional(){
 					} else if ( !jQuery.isNumeric( value0 ) && value0 != live_value  || found > 0 ) {
 						jQuery(this).fadeIn();
 						found++;
-					} else {
-						jQuery(this).hide();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
-						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
-
 					}
 				}
 
@@ -72,11 +60,6 @@ function um_conditional(){
 					if ( jQuery.isNumeric( value0 ) && parseInt( live_value ) > parseInt( value0 )   || found > 0) {
 						jQuery(this).fadeIn();
 						found++;
-					} else {
-						jQuery(this).hide();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
-						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
-
 					}
 				}
 
@@ -84,24 +67,14 @@ function um_conditional(){
 					if ( jQuery.isNumeric( value0 ) && parseInt( live_value ) < parseInt( value0 ) && live_value   || found > 0) {
 						jQuery(this).fadeIn();
 						found++;
-					} else {
-						jQuery(this).hide();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
-						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
-
-					}
+					} 
 				}
 
 				if ( operator0 == 'contains' ) {
 					if ( live_value && live_value.indexOf( value0 ) >= 0  || found > 0 ) {
 						jQuery(this).fadeIn();
 						found++;
-					} else {
-						jQuery(this).hide();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
-						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
-
-					}
+					} 
 				}
 
 			}
@@ -212,69 +185,10 @@ function UM_check_password_matched() {
 	});
 }
 
-var xhrValidateUsername = false;
-function UM_check_username() {
-	jQuery(document).on('keyup', 'input[data-key=user_login]:not([disabled=disabled])', function() {
-		var field = jQuery('input[data-key=user_login]');
-		var value = field.val();
-
-		if(field.parents('.um-field').find('.um-field-error').length) {
-			var error = field.parents('.um-field').find('.um-field-error');
-		} else {
-			var error = jQuery('<div class="um-field-error"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>Your username is already taken</div>');
-		}
-
-		// abort previous xhr request
-		if(xhrValidateUsername) {
-			xhrValidateUsername.abort();
-		}
-
-		if(!value) {
-			field.removeClass('um-searching-username');
-
-			return;
-		}
-
-		field.addClass('um-searching-username');
-
-		xhrValidateUsername = jQuery.ajax({
-			url  : um_scripts.ajaxurl,
-			type : 'post',
-			data : {
-				action   : 'ultimatemember_check_username_exists',
-				username : value
-			},
-			complete: function(){
-				field.removeClass('um-searching-username');
-			},
-			success: function(exists){
-				if(parseInt(exists) > 0) {
-					field.removeClass('um-validate-username-unique').addClass('um-validate-username-exists');
-
-					if(!field.parents('.um-field').find('.um-field-error').length) {
-						field.parents('.um-field').append(error);
-					}
-
-					error.show();
-				} else {
-					field.removeClass('um-validate-username-exists').addClass('um-validate-username-unique');
-					error.hide();
-				}
-			}
-		});
-	});
-}
-
 jQuery(document).ready(function(){
 	if(jQuery('input[data-key=user_password],input[data-key=confirm_user_password]').length == 2) {
 		UM_check_password_matched();
 	}
-
-	/* 
-	if(jQuery('input[data-key=user_login]').length) {
-		UM_check_username();
-	}
-	*/
 });
 
 function UM_hide_menus() {
