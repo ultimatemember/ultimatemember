@@ -1383,28 +1383,32 @@
 		$ext = '.' . pathinfo($image, PATHINFO_EXTENSION);
 
 		$cache_time = apply_filters('um_filter_avatar_cache_time', current_time( 'timestamp' ), um_user('ID') );
+		
+		if( ! empty( $cache_time ) ){
+				$cache_time = "?{$cache_time}";
+		}
 
-		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo-' . $attrs. $ext ) ) {
-
-			$uri = um_user_uploads_uri() . 'profile_photo-'.$attrs.$ext.'?' . $cache_time;
+		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . "/profile_photo-{$attrs}{$ext}" ) ) {
+			
+			$uri = um_user_uploads_uri() . "profile_photo-{$attrs}{$ext}{$cache_time}";
 
 		} else {
 
 			$sizes = um_get_option('photo_thumb_sizes');
 			if ( is_array( $sizes ) ) $find = um_closest_num( $sizes, $attrs );
 
-			if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo-' . $find.$ext ) ) {
+			if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . "/profile_photo-{$find}{$ext}" ) ) {
 
-				$uri = um_user_uploads_uri() . 'profile_photo-'.$find.$ext.'?' . $cache_time;
+				$uri = um_user_uploads_uri() . "profile_photo-{$find}{$ext}{$cache_time}";
 
-			} else if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/profile_photo'.$ext ) ) {
+			} else if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . "/profile_photo{$ext}" ) ) {
 
-				$uri = um_user_uploads_uri() . 'profile_photo'.$ext.'?' . $cache_time;
+				$uri = um_user_uploads_uri() . "profile_photo{$ext}{$cache_time}";
 
 			}
 
 			if ( $attrs == 'original' ) {
-				$uri = um_user_uploads_uri() . 'profile_photo'.$ext.'?' . $cache_time;
+				$uri = um_user_uploads_uri() . "profile_photo{$ext}{$cache_time}";
 			}
 
 		}
