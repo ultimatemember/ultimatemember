@@ -138,7 +138,7 @@
 			case 'um_admin_show_fields':
 				
 				ob_start();
-				
+				$form_fields = $ultimatemember->query->get_attr( 'custom_fields', $arg2 );
 				?>
 					
 					<h4><?php _e('Setup New Field','ultimatemember'); ?></h4>
@@ -167,7 +167,7 @@
 								if ( !isset( $array['account_only'] ) && !isset( $array['private_use'] ) ) {
 						?>
 						
-						<a href="#" class="button" data-silent_action="um_admin_add_field_from_predefined" data-arg1="<?php echo $field_key; ?>" data-arg2="<?php echo $arg2; ?>"><?php echo um_trim_string( stripslashes( $array['title'] ), 20 ); ?></a>
+						<a href="#" class="button" <?php disabled( in_array( $field_key, array_keys( $form_fields ) ) ) ?> data-silent_action="um_admin_add_field_from_predefined" data-arg1="<?php echo $field_key; ?>" data-arg2="<?php echo $arg2; ?>"><?php echo um_trim_string( stripslashes( $array['title'] ), 20 ); ?></a>
 
 						<?php } } } else { echo '<p>' . __('None','ultimatemember') . '</p>'; } ?>
 						
