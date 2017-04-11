@@ -5,7 +5,10 @@ jQuery(document).ready(function() {
 	});
 	
 	jQuery(document).on('click', 'a[data-silent_action^="um_"]',function(){
-	
+		
+		if ( typeof jQuery(this).attr('disabled') !== 'undefined' )
+			return false;
+		
 		in_row = '';
 		in_sub_row = '';
 		in_column = '';
