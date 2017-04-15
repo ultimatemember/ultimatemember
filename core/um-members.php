@@ -14,6 +14,8 @@ class UM_Members {
 			'display_name',
 			'user_email',
 		);
+		
+		add_filter( 'um_search_select_fields', array(&$this, 'um_search_select_fields'), 10, 1 );
 
 	}
 
@@ -136,6 +138,24 @@ class UM_Members {
 		}
 
 	}
+	
+	
+	function um_search_select_fields( $attrs ) {
+		global $ultimatemember;
+		$shortcode_roles = get_post_meta( $ultimatemember->shortcodes->form_id, '_um_roles' );
+
+		$um_roles = $ultimatemember->query->get_roles( false );
+		$attrs['options'] = array();
+
+		foreach ( $um_roles as $key=>$value ) {
+		    if ( in_array( $key, $shortcode_roles[0] ) ) {
+			$attrs['options'][$key] = $value;
+		    }
+		}
+
+		return $attrs;
+ 	}
+	
 
 	/***
 	***	@Generate a loop of results
