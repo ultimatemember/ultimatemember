@@ -142,15 +142,27 @@ class UM_Members {
 	
 	function um_search_select_fields( $attrs ) {
 		global $ultimatemember;
-		$shortcode_roles = get_post_meta( $ultimatemember->shortcodes->form_id, '_um_roles' );
 
-		$um_roles = $ultimatemember->query->get_roles( false );
-		$attrs['options'] = array();
+		if( strstr( $attrs['metakey'], 'role_') ){
 
-		foreach ( $um_roles as $key=>$value ) {
-		    if ( in_array( $key, $shortcode_roles[0] ) ) {
-			$attrs['options'][$key] = $value;
-		    }
+			$shortcode_roles = get_post_meta( $ultimatemember->shortcodes->form_id, '_um_roles', true );
+			$um_roles = $ultimatemember->query->get_roles( false );
+			
+			if( ! empty( $shortcode_roles ) ){ // if no roles are selected or page is accessible by everyone
+
+				$attrs['options'] = array();
+
+				if( ! is_array( $shortcode_roles ) ) {
+					$shortcode_roles = array();
+				}
+
+				foreach ( $um_roles as $key => $value ) {
+				    if ( in_array( $key, $shortcode_roles ) ) {
+						$attrs['options'][ $key ] = $value;
+				    }
+				}
+			}
+			
 		}
 
 		return $attrs;
