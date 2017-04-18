@@ -1,198 +1,335 @@
-var live_field;
-var live_value;
+var um_live_field;
+var um_live_value;
+var um_field_conditions_array = {};
+var um_field_relations = {};
+var um_field_added = [];
+var um_field_loaded = false;
+var um_field_do_init = false;
 
-function um_conditional(){
+function um_field_init(){
 
-	jQuery('.um-field.um-is-conditional').each(function(){
-		//console.log('-----');
-		var found = 0;
-		var um_field_key = jQuery(this).data('key');
-		for (var i = 0; i < 5; i++) {
+	jQuery('.um-field[data-key]').each(function(){
+		um_field_set_conditions( jQuery(this), true );
+	});
 
-			var action0 = jQuery(this).data('cond-'+i+'-action');
-			var field0 = jQuery(this).data('cond-'+i+'-field');
-			var operator0 = jQuery(this).data('cond-'+i+'-operator');
-			var value0 = jQuery(this).data('cond-'+i+'-value');
+	um_field_relationship();
 
+	um_field_apply_conditions();
+    um_field_loaded = true;
+	
+	
+				
+}
 
-			if (  action0 == 'show' && field0 == live_field && typeof value0 !== 'undefined' ) {
+function um_field_set_conditions( um_field_dom, add_fade ){
+	var um_field_key = um_field_dom.data('key');
+	var arr_field = [];
+	for (var i = 0; i < 5; i++) {
 
-				if ( operator0 == 'empty' ) {
-					if ( !live_value || live_value == '' || found > 0 ) {
-						jQuery(this).fadeIn();
-						found++;
-					} else {
-						jQuery(this).hide();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
-						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
+			var action0 	= um_field_dom.data('cond-'+i+'-action');
+			var field0 		= um_field_dom.data('cond-'+i+'-field');
+			var operator0 	= um_field_dom.data('cond-'+i+'-operator');
+			var value0 		= um_field_dom.data('cond-'+i+'-value');
 
-					}
-				}
-
-				if ( operator0 == 'not empty' ) {
-					if ( live_value && live_value != '' || found > 0 ) {
-						jQuery(this).fadeIn();
-						found++;
-					} else {
-						jQuery(this).hide();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
-						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
-
-					}
-				}
-
-				if ( operator0 == 'equals to' ) {
-					if ( value0 == live_value  || found > 0 ) {
-						jQuery(this).fadeIn();
-						found++;
-					} else {
-						jQuery(this).hide();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
-						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
-
-					}
-				}
-
-				if ( operator0 == 'not equals' ) {
-					if ( jQuery.isNumeric( value0 ) && parseInt( live_value ) != parseInt( value0 ) && live_value  || found > 0 ) {
-						jQuery(this).fadeIn();
-						found++;
-					} else if ( !jQuery.isNumeric( value0 ) && value0 != live_value  || found > 0 ) {
-						jQuery(this).fadeIn();
-						found++;
-					} else {
-						jQuery(this).hide();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
-						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
-
-					}
-				}
-
-				if ( operator0 == 'greater than' ) {
-					if ( jQuery.isNumeric( value0 ) && parseInt( live_value ) > parseInt( value0 )   || found > 0) {
-						jQuery(this).fadeIn();
-						found++;
-					} else {
-						jQuery(this).hide();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
-						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
-
-					}
-				}
-
-				if ( operator0 == 'less than' ) {
-					if ( jQuery.isNumeric( value0 ) && parseInt( live_value ) < parseInt( value0 ) && live_value   || found > 0) {
-						jQuery(this).fadeIn();
-						found++;
-					} else {
-						jQuery(this).hide();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
-						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
-
-					}
-				}
-
-				if ( operator0 == 'contains' ) {
-					if ( live_value && live_value.indexOf( value0 ) >= 0  || found > 0 ) {
-						jQuery(this).fadeIn();
-						found++;
-					} else {
-						jQuery(this).hide();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').hide();
-						um_reset_field('div.um-field[data-cond-'+i+'-field='+um_field_key+']');
-
-					}
-				}
+			if( typeof value0 !== 'undefined' && um_field_loaded == false ){
+				arr_field.push({
+					child: um_field_key,
+					action: action0,
+					field: field0,
+					operator: operator0,
+					value: value0
+				});
 
 			}
+		
+	} // end for
 
-			if (  action0 == 'hide' && field0 == live_field && typeof value0 !== 'undefined'  ) {
+	if( jQuery.inArray( um_field_key, um_field_added ) <= -1 && um_field_loaded == false ){
+			um_field_added.push( um_field_key );
+			um_field_conditions_array[ um_field_key ] = arr_field;
+	}
+	
+}
 
-				if ( operator0 == 'empty' ) {
-					if ( !live_value || live_value == '' ) {
-						jQuery(this).hide();
-						found++;
-					} else {
-						jQuery(this).fadeIn();
+function um_field_apply_conditions(){
+		
+		var field_results = {};
 
-					}
-				}
-
-				if ( operator0 == 'not empty' ) {
-					if ( live_value && live_value != '' ) {
-						jQuery(this).hide();
-						found++;
-					} else {
-						jQuery(this).fadeIn();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').show();
-
-					}
-				}
-
-				if ( operator0 == 'equals to' ) {
-					if ( value0 == live_value ) {
-						jQuery(this).hide();
-						found++;
-					} else {
-						jQuery(this).fadeIn();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').show();
-
-					}
-				}
-
-				if ( operator0 == 'not equals' ) {
-					if ( jQuery.isNumeric( value0 ) && parseInt( live_value ) != parseInt( value0 ) && live_value ) {
-						jQuery(this).hide();
-						found++;
-					} else if ( !jQuery.isNumeric( value0 ) && value0 != live_value ) {
-						jQuery(this).hide();
-						found++;
-					} else {
-						jQuery(this).fadeIn();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').show();
-
-					}
-				}
-
-				if ( operator0 == 'greater than' ) {
-					if ( jQuery.isNumeric( value0 ) && parseInt( live_value ) > parseInt( value0 ) ) {
-						jQuery(this).hide();
-						found++;
-					} else {
-						jQuery(this).fadeIn();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').show();
-
-					}
-				}
-
-				if ( operator0 == 'less than' ) {
-					if ( jQuery.isNumeric( value0 ) && parseInt( live_value ) < parseInt( value0 ) && live_value ) {
-						jQuery(this).hide();
-						found++;
-					} else {
-						jQuery(this).fadeIn();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').show();
-
-					}
-				}
-
-				if ( operator0 == 'contains' ) {
-					if ( live_value && live_value.indexOf( value0 ) >= 0 ) {
-						jQuery(this).hide();
-						found++;
-					} else {
-						jQuery(this).fadeIn();
-						jQuery('div.um-field[data-cond-'+i+'-field='+um_field_key+']').show();
-
-					}
-				}
-				//console.log( 'hide',i,value0, live_value );
-
+		jQuery.each( um_field_added, function( i, field_key ){
+			
+			if( um_field_relations[ field_key ].length <= 0 ){
+				um_field_relations[ field_key ] = [{
+					child: field_key,
+					action:'child',
+					field: '',
+					operator: '',
+				}];
 			}
+			
+			jQuery.each( um_field_relations[ field_key ], function( ii, conditions ){
+				
+				var add_fade = true;
+				var action0	 = conditions.action;
+				var value0 = conditions.value;
+				var operator0 = conditions.operator;
+				var field0 = conditions.field;
+				var um_field_parent_dom = '';
 
+				if(  action0 == 'show' ||  action0 == 'hide'  ){
+					//console.log( um_field_do_init  );
+				}
+				um_field_parent_dom = jQuery('.um-field[data-key="'+field_key+'"]:visible').find('input[type=text],textarea,input[type=checkbox],input[type=radio],select');
+				
+				var um_field_data = um_get_field_data( um_field_parent_dom );
+				var um_live_field = um_field_data.key;
+				var um_live_value = um_field_data.value;
+				
+				var um_field_child_dom = jQuery('.um-field[data-key="'+conditions.child+'"]').find('input[type=text],textarea,input[type=checkbox],input[type=radio],select');
+				var um_field_child_dom_hide = jQuery('.um-field[data-key="'+conditions.child+'"]');
+				
+				if (  action0 == 'show'  && typeof value0 !== 'undefined' ) {
+
+					if ( operator0 == 'empty' ) {
+						if ( !um_live_value || um_live_value == '' ) {
+							um_field_show( um_field_child_dom, add_fade, operator0, um_live_field );
+							field_results[ conditions.child ] = [ action0, true, operator0 ];
+						}else{
+							um_field_child_dom_hide.hide();
+						}
+					}
+
+					if ( operator0 == 'not empty' ) {
+						if ( um_live_value && um_live_value != '' ) {
+							um_field_show( um_field_child_dom, add_fade, operator0, um_live_field );
+							field_results[ conditions.child ] = [ action0, true, operator0 ];
+						}else{
+							um_field_child_dom_hide.hide();
+						} 
+					}
+
+					if ( operator0 == 'equals to' ) {
+						if ( value0 == um_live_value  ) {
+							um_field_show( um_field_child_dom, add_fade, operator0, um_live_field );
+							field_results[ conditions.child ] = [ action0, true, operator0 ];
+						}else{
+							um_field_child_dom_hide.hide();
+						} 
+					}
+
+					if ( operator0 == 'not equals' ) {
+						if ( jQuery.isNumeric( value0 ) && parseInt( um_live_value ) != parseInt( value0 ) && um_live_value  ) {
+							um_field_show( um_field_child_dom, add_fade, operator0, um_live_field );
+							field_results[ conditions.child ] = [ action0, true, operator0 ];
+						} else if ( !jQuery.isNumeric( value0 ) && value0 != um_live_value  ) {
+							um_field_show( um_field_child_dom, add_fade, operator0, um_live_field );
+							field_results[ conditions.child ] = [ action0, true, operator0 ];
+						}else{
+							um_field_child_dom_hide.hide();
+						}
+					}
+
+					if ( operator0 == 'greater than' ) {
+						if ( jQuery.isNumeric( value0 ) && parseInt( um_live_value ) > parseInt( value0 )  ) {
+							um_field_show( um_field_child_dom, add_fade, operator0, um_live_field );
+							field_results[ conditions.child ] = [ action0, true, operator0 ];
+						}else{
+							um_field_child_dom_hide.hide();
+						}
+					}
+
+					if ( operator0 == 'less than' ) {
+						if ( jQuery.isNumeric( value0 ) && parseInt( um_live_value ) < parseInt( value0 ) && um_live_value  ) {
+							um_field_show( um_field_child_dom, add_fade, operator0, um_live_field );
+							field_results[ conditions.child ] = [ action0, true, operator0 ];
+						}else{
+							um_field_child_dom_hide.hide();
+						} 
+					}
+
+					if ( operator0 == 'contains' ) {
+						if ( um_live_value && um_live_value.indexOf( value0 ) >= 0  ) {
+							um_field_show( um_field_child_dom, add_fade, operator0, um_live_field );
+							field_results[ conditions.child ] = [ action0, true, operator0 ];
+						}else{
+							um_field_child_dom_hide.hide();
+						} 
+					}
+
+				}
+
+				if (  action0 == 'hide' && typeof value0 !== 'undefined'  ) {
+
+					if ( operator0 == 'empty' ) {
+						if ( !um_live_value || um_live_value == '' ) {
+							um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field );
+							field_results[ conditions.child ] = [ action0, true, operator0 ];
+						}else{
+							um_field_child_dom_hide.show();
+						} 
+					}
+
+					if ( operator0 == 'not empty' ) {
+						if ( um_live_value && um_live_value != '' ) {
+							um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field );
+							field_results[ conditions.child ] = [ action0, true, operator0 ];
+						}else{
+							um_field_child_dom_hide.show();
+						} 
+					}
+
+					if ( operator0 == 'equals to' ) {
+						if ( value0 == um_live_value ) {
+							um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field );
+							field_results[ conditions.child ] = [ action0, true, operator0 ];
+						}else{
+							um_field_child_dom_hide.show();
+						} 
+					}
+
+					if ( operator0 == 'not equals' ) {
+						if ( jQuery.isNumeric( value0 ) && parseInt( um_live_value ) != parseInt( value0 ) && um_live_value ) {
+							um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field );
+							field_results[ conditions.child ] = [ action0, true, operator0 ];
+						} else if ( !jQuery.isNumeric( value0 ) && value0 != um_live_value ) {
+							um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field );
+							field_results[ conditions.child ] = [ action0, true, operator0 ];
+						}else{
+							um_field_child_dom_hide.show();
+						} 
+					}
+
+					if ( operator0 == 'greater than' ) {
+						if ( jQuery.isNumeric( value0 ) && parseInt( um_live_value ) > parseInt( value0 ) ) {
+							um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field );
+							field_results[ conditions.child ] = [ action0, true, operator0 ];
+						}else{
+							um_field_child_dom_hide.show();
+						} 
+					}
+
+					if ( operator0 == 'less than' ) {
+						if ( jQuery.isNumeric( value0 ) && parseInt( um_live_value ) < parseInt( value0 ) && um_live_value ) {
+							um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field );
+							field_results[ conditions.child ] = [ action0, true, operator0 ];
+						}else{
+							um_field_child_dom_hide.show();
+						} 
+					}
+
+					if ( operator0 == 'contains' ) {
+						if ( um_live_value && um_live_value.indexOf( value0 ) >= 0 ) {
+							um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field );
+							field_results[ conditions.child ] = [ action0, true, operator0 ];
+						}else{
+							um_field_child_dom_hide.show();
+						} 
+					}
+				
+				}
+			});
+
+		});
+		
+		
+		// jQuery.each( field_results, function( k, options  ){
+
+		// 		var field = jQuery('.um-field[data-key='+k+']');
+
+		// 		if( options[0] == "show" && options[1] == true ){
+		// 			field.fadeIn();
+		// 		}
+
+		// 		if( options[0] == "hide" && options[1] == true ){
+		// 			 field.hide();
+		// 		}
+
+		// });
+		
+		// console.log( field_results );
+
+		
+}
+
+function um_field_show( field, add_fade, optr, k ){
+
+	field = field.parents('.um-field');
+
+	if( field.is(':hidden') ){
+		if( add_fade ){
+			field.fadeIn();
+		}else{
+			field.show();
+		}
+	}
+	//console.log('show um field "'+k+'" operator:'+optr );
+}
+
+function um_field_hide( field, add_fade, optr, k ){
+
+	field = field.parents('.um-field');
+	
+	if( field.is(':visible') ){
+		if( add_fade ){
+			field.fadeOut();
+		}else{
+			field.hide();
+		}
+	}
+	//console.log('hide um field "'+k+'" operator:'+optr );
+}
+
+function um_get_field_data( um_field_dom ){
+	um_live_field = um_field_dom.parents('.um-field').data('key');
+	um_live_value = um_field_dom.val();
+
+	if ( um_field_dom.is(':checkbox') ) {
+			if ( um_field_dom.parents('.um-field').find('input:checked').length > 1 ) {
+				um_live_value = '';
+				um_field_dom.parents('.um-field').find('input:checked').each(function(){
+					um_live_value = um_live_value + um_field_dom.val() + ' ';
+				});
+			} else {
+				um_live_value = um_field_dom.parents('.um-field').find('input:checked').val();
+			}
+	}
+
+	if ( um_field_dom.is(':radio') ) {
+			um_live_value = um_field_dom.parents('.um-field').find('input[type=radio]:checked').val();
+	}
+
+	return {
+		key: um_live_field,
+		value: um_live_value
+	};
+
+}
+
+function um_field_relationship(){
+		var arr_fields  = um_field_conditions_array;
+		if( um_field_loaded == false ){
+			jQuery.each( arr_fields, function(k, f) { 
+
+				var new_arr_field = [];
+				var arr_um_field_exists = [];
+
+				jQuery.each( arr_fields, function(ii,field) { 
+						for (var i = 0; i <= field.length; i++ ){
+
+							if( typeof field[ i ]  !== 'undefined' ){
+								if(  k == field[ i ].field  ){
+									new_arr_field.push(  field[ i ] );
+									arr_um_field_exists.push( field[ i ].child );
+								}
+							}
+							
+
+						}
+				});
+
+				um_field_relations[ k ] = new_arr_field;
+			});
 		}
 
-	});
 
 }
 
@@ -211,71 +348,6 @@ function UM_check_password_matched() {
 		}
 	});
 }
-
-var xhrValidateUsername = false;
-function UM_check_username() {
-	jQuery(document).on('keyup', 'input[data-key=user_login]:not([disabled=disabled])', function() {
-		var field = jQuery('input[data-key=user_login]');
-		var value = field.val();
-
-		if(field.parents('.um-field').find('.um-field-error').length) {
-			var error = field.parents('.um-field').find('.um-field-error');
-		} else {
-			var error = jQuery('<div class="um-field-error"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>Your username is already taken</div>');
-		}
-
-		// abort previous xhr request
-		if(xhrValidateUsername) {
-			xhrValidateUsername.abort();
-		}
-
-		if(!value) {
-			field.removeClass('um-searching-username');
-
-			return;
-		}
-
-		field.addClass('um-searching-username');
-
-		xhrValidateUsername = jQuery.ajax({
-			url  : um_scripts.ajaxurl,
-			type : 'post',
-			data : {
-				action   : 'ultimatemember_check_username_exists',
-				username : value
-			},
-			complete: function(){
-				field.removeClass('um-searching-username');
-			},
-			success: function(exists){
-				if(parseInt(exists) > 0) {
-					field.removeClass('um-validate-username-unique').addClass('um-validate-username-exists');
-
-					if(!field.parents('.um-field').find('.um-field-error').length) {
-						field.parents('.um-field').append(error);
-					}
-
-					error.show();
-				} else {
-					field.removeClass('um-validate-username-exists').addClass('um-validate-username-unique');
-					error.hide();
-				}
-			}
-		});
-	});
-}
-
-jQuery(document).ready(function(){
-	if(jQuery('input[data-key=user_password],input[data-key=confirm_user_password]').length == 2) {
-		UM_check_password_matched();
-	}
-
-	/* 
-	if(jQuery('input[data-key=user_login]').length) {
-		UM_check_username();
-	}
-	*/
-});
 
 function UM_hide_menus() {
 
@@ -910,11 +982,15 @@ function um_remove_modal(){
 }
 
 function um_modal_size( aclass ) {
+	
 	jQuery('.um-modal:visible').addClass(aclass);
+
 }
 
 function um_modal_add_attr( id, value ) {
+	
 	jQuery('.um-modal:visible').data( id, value );
+
 }
 
 function prepare_Modal() {
@@ -988,10 +1064,9 @@ jQuery(function(){
 			  }
 	});
 
-	// Fixed touchscreen sensitivity
-	jQuery(document).on('touchend', function(){
-		//jQuery(".select2-search, .select2-focusser").remove();
-	})
+	if( jQuery('input[data-key=user_password],input[data-key=confirm_user_password]').length == 2 ) {
+		UM_check_password_matched();
+	}
 
 });
 

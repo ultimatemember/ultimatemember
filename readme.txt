@@ -5,9 +5,9 @@ Contributors: ultimatemember, champsupertramp
 Donate link: 
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.1
-Tested up to: 4.7.2
+Tested up to: 4.7.3
 
-Stable Tag: 1.3.83
+Stable Tag: 1.3.84
 
 License: GNU Version 2 or Any Later Version
 
@@ -149,6 +149,36 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= 1.3.84: April 18, 2017 =
+
+* Enhancements:
+  * Adds new action hooks before and after WP_User_Query. 
+    * `um_user_before_query`
+    * `um_user_after_query`
+  * Adds a dismiss link in locale / language translation notices
+  * Adds correct user profile url in WPML language switcher
+  * Adds new option to disable name fields in account page
+    * `UM > Settings > Account > Disable First & Last Name fields`
+  * Add new filters to modify upload base directories
+    * `um_multisite_upload_sites_directory`
+    * `um_multisite_upload_directory`
+  * Adds new action hook in admin > user edit > Ultimate Member to append any customisation
+    * `um_user_profile_section`
+  * Adds H2 for UltimateMember section to Add/Edit User Form
+
+* Bugfixes
+  * Fix image url cache filter
+  * Fix PHP 7.1+ compatibility issues 
+  * Fix UTF8 encoding in form fields
+  * Fix hide member directory option.
+  * Fix conditional logic fields.
+  * Fix login access settings for logged-in users.
+  * Fix WP role synchronisation on UM role update
+  * Fix WP authenticate filter hook
+  * Fix radio and checbox field active state colors when disabled.
+  * Fix Content Availability conditional fields in edit/add category screens
+  * Remove notices
 
 = 1.3.83: February 20, 2017 =
 
