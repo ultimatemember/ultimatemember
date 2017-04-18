@@ -150,7 +150,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 == Changelog ==
 
-= 1.3.84: April 17, 2017 =
+= 1.3.84: April 18, 2017 =
 
 * Enhancements:
   * Adds new action hooks before and after WP_User_Query. 
