@@ -1987,33 +1987,33 @@ class UM_Fields {
 						$output .= '<option value=""></option>';
 						
 						$arr_selected = array();
-                        // add options
-						foreach( $options as $k => $v ) {
 
-							$v = rtrim( $v );
+						// add options
+						if( ! empty( $options ) ){
+                        	foreach( $options as $k => $v ) {
 
-							$um_field_checkbox_item_title = $v;
-							$opt_value = $v;
-							
-							if ( $use_keyword  ) {
+								$v = rtrim( $v );
+
 								$um_field_checkbox_item_title = $v;
-								$opt_value = $k;
-							}
-
-							
-							$opt_value = apply_filters('um_field_non_utf8_value',$opt_value );
-    
-							$output .= '<option value="'.$opt_value.'" ';
-							if ( $this->is_selected( $key, $opt_value, $data ) ) {
+								$opt_value = $v;
 								
-								$output .= 'selected';
-								$arr_selected[ $opt_value ] = $opt_value;	
-							}
+								if ( $use_keyword  ) {
+									$um_field_checkbox_item_title = $v;
+									$opt_value = $k;
+								}
 
-							$output .= '>'.__( $um_field_checkbox_item_title ,UM_TEXTDOMAIN).'</option>';
-							
-						
-			               
+								$opt_value = apply_filters('um_field_non_utf8_value',$opt_value );
+	    
+								$output .= '<option value="'.$opt_value.'" ';
+								if ( $this->is_selected( $key, $opt_value, $data ) ) {
+									
+									$output .= 'selected';
+									$arr_selected[ $opt_value ] = $opt_value;	
+								}
+
+								$output .= '>'.__( $um_field_checkbox_item_title ,UM_TEXTDOMAIN).'</option>';
+								
+							}
 						}
 
 						$output .= '</select>';
