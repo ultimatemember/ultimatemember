@@ -1,6 +1,6 @@
 Ultimate Member 
 ==============
-Ultimate Member is a powerful and flexible WordPress plugin that makes it a breeze for users to sign-up and become members. The plugin allows you to add beautiful user profiles to your site and is perfect for creating advanced online communities. Lightweight and highly extendible, Ultimate Member will enable you to create almost any type of site where users can join and become members with absolute ease.
+Ultimate Member is a powerful and flexible WordPress plugin that makes it a breeze for users to sign-up and become members. The plugin allows you to add beautiful user profiles to your site and is perfect for creating advanced online communities. Lightweight and highly extensible, Ultimate Member will enable you to create almost any type of site where users can join and become members with absolute ease.
 
 | Latest Version |Requires at least|Stable Tag|
 | :------------: |:------------:|:------------:|
@@ -25,17 +25,18 @@ Ultimate Member is a powerful and flexible WordPress plugin that makes it a bree
 - SEO optimized
 - Developer friendly with dozens of actions and filters
 - Multi-site compatibility
-- Multilingual compatability
+- Multilingual compatibility
 - Mandrill compatibility
 
-Read about all of the plugin's features at [Ultimate Member](https://ultimatemember.com/)
+Read about all of the plugin's features at [Ultimate Member](https://ultimatemember.com/).
 
 Installation
 ======================
-1. Download and extract the plugin, and copy the plugin folder into your wp-content/plugins directory.
-2. Activate the plugin
-3. That's it. Go to Ultimate Member > Settings to customize plugin options
-4. For more details, please visit the official [Documentation](https://ultimatemember.com/docs/) page.
+1. Download and extract the plugin.
+2. Copy the plugin folder into your wp-content/plugins directory.
+3. Activate the plugin.
+4. That's it. Go to Ultimate Member > Settings to customize plugin options.
+5. For more details, please visit the official [Documentation](https://ultimatemember.com/docs/) page.
 
 Documentation & Support
 ======================
