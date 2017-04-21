@@ -736,6 +736,9 @@ class UM_REST_API {
 	 * Modify User Profile
 	 */
 	function user_key_field( $user ) {
+		
+		if( ! isset( $user->ID ) ) return;
+
 		if ( current_user_can( 'edit_users' ) && current_user_can( 'edit_user', $user->ID ) ) {
 			$user = get_userdata( $user->ID );
 			?>
