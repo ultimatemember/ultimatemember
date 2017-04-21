@@ -78,13 +78,13 @@ function um_field_apply_conditions(){
 				if(  action0 == 'show' ||  action0 == 'hide'  ){
 					//console.log( um_field_do_init  );
 				}
-				um_field_parent_dom = jQuery('.um-field[data-key="'+field_key+'"]:visible').find('input[type=text],textarea,input[type=checkbox],input[type=radio],select');
+				um_field_parent_dom = jQuery('.um-field[data-key="'+field_key+'"]:visible').find('input[type=text],textarea,input[type=checkbox],input[type=radio],select,[class=um-field-block]');
 				
 				var um_field_data = um_get_field_data( um_field_parent_dom );
 				var um_live_field = um_field_data.key;
 				var um_live_value = um_field_data.value;
 				
-				var um_field_child_dom = jQuery('.um-field[data-key="'+conditions.child+'"]').find('input[type=text],textarea,input[type=checkbox],input[type=radio],select');
+				var um_field_child_dom = jQuery('.um-field[data-key="'+conditions.child+'"]').find('input[type=text],textarea,input[type=checkbox],input[type=radio],select,[class=um-field-block]');
 				var um_field_child_dom_hide = jQuery('.um-field[data-key="'+conditions.child+'"]');
 				
 				if (  action0 == 'show'  && typeof value0 !== 'undefined' ) {
