@@ -1987,9 +1987,8 @@ class UM_Fields {
 						$output .= '<option value=""></option>';
 						
 						$arr_selected = array();
-
 						// add options
-						if( ! empty( $options ) ){
+						if( ! empty( $options ) && is_array( $options ) ){
                         	foreach( $options as $k => $v ) {
 
 								$v = rtrim( $v );
