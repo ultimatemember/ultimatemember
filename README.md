@@ -7,7 +7,8 @@ Ultimate Member is a powerful and flexible WordPress plugin that makes it a bree
 | 1.3.84 | WordPress 4.5 or higher| 1.3.78 |
 
 
-##Features of the plugin include:
+Features of the plugin include:
+======================
 - Front-end user registration
 - Front-end user login
 - Front-end user profiles
@@ -49,7 +50,7 @@ GNU Version 2 or Any Later Version
 
 Releases
 ====================
-[Pre-Release Version: 1.3.84](https://github.com/ultimatemember/ultimatemember/releases).
+[Pre-Release Version: 1.3.85](https://github.com/ultimatemember/ultimatemember/releases).
 
 [Official Release Version: 1.3.83](https://github.com/ultimatemember/ultimatemember/releases).
 
