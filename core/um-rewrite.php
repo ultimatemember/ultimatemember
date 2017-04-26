@@ -127,6 +127,10 @@ class UM_Rewrite {
 					}
 					
 					if( !$user_id ){
+						$user_id = $ultimatemember->user->user_exists_by_email_as_username( um_queried_user() );
+					}
+
+					if( !$user_id ){
 						$user_id = $ultimatemember->user->user_exists_by_email_as_username( $slug );
 					}
 
