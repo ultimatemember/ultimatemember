@@ -106,6 +106,7 @@
 		if ( isset( $data ) && isset( $data['html'] ) && $data['html'] == 1 )
 			return $value;
 
+		$value = esc_textarea( $value );
 		$value = preg_replace('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', ' <a href="$1" target="_blank">$1</a> ', $value." ");
 		$value = preg_replace('$(www\.[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', '<a target="_blank" href="http://$1">$1</a> ', $value." ");
 		$value = wpautop($value);
