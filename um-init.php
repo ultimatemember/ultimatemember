@@ -63,7 +63,7 @@ class UM_API {
 			__('This add-on enables you to generate dummies.', 'ultimatemember'),
 		);
 
-		$this->addons['system_info'] = array(
+		$this->addons['install_info'] = array(
 			__('System Info', 'ultimatemember'),
 			__('This add-on enables you to download system information file.', 'ultimatemember'),
 		);
