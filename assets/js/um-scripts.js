@@ -294,6 +294,14 @@ jQuery(document).ready(function() {
 			jQuery(this).parents('form').submit();
 	});
 
+	jQuery('.um-form input[class=um-button][type=submit]').removeAttr('disabled');
+
+	jQuery(document).one('click', '.um-form input[class=um-button][type=submit]', function() {
+			jQuery(this).attr('disabled','disabled');
+			jQuery(this).parents('form').submit();
+			
+	});
+
 	
 	var um_select_options_cache = {};
 
