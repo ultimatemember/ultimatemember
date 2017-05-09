@@ -958,6 +958,8 @@
 			$url = add_query_arg('profiletab', 'main', $url );
 		}
 
+		$url = apply_filters('um_edit_profile_cancel_uri', $url );
+
 		return $url;
 	}
 
