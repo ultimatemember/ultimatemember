@@ -54,7 +54,7 @@ class UM_Fields {
 
 	
 	/**
-	 * Hidden field insaide a shortcode
+	 * Hidden field inside a shortcode
 	 * @param string $field 
 	 */
 	function add_hidden_field( $field ) {
@@ -444,8 +444,11 @@ class UM_Fields {
 		} else if ( um_user( $key ) && $this->editing == true ) {
 
 			if ( strstr( $key, 'user_pass' ) ) return '';
+			$value = um_user( $key );
+			$value = apply_filters( "um_edit_{$key}_field_value",  $value,  $key );
+			$value = apply_filters( "um_edit_{$type}_field_value", $value,  $key );
 
-			return apply_filters( "um_edit_{$key}_field_value", um_user( $key ), $key );
+			return $value;
 
 		} else if ( ( um_user( $key ) || isset( $data['show_anyway'] ) ) && $this->viewing == true ) {
 
