@@ -272,6 +272,18 @@
 						}
 					}
 
+					if ( isset( $array['min'] ) && is_numeric( $args[ $key ] ) ) {
+								if ( isset( $args[ $key ] )  && $args[ $key ] < $array['min'] ) {
+									$ultimatemember->form->add_error( $key, sprintf(__('Minimum number limit is %s','ultimatemember'), $array['min'] ) );
+									}
+								}
+
+					if ( isset( $array['max'] ) && is_numeric( $args[ $key ] )  ) {
+								if ( isset( $args[ $key ] ) && $args[ $key ] > $array['max'] ) {
+									$ultimatemember->form->add_error( $key, sprintf(__('Maximum number limit is %s','ultimatemember'), $array['max'] ) );
+								}
+					}
+
 					if ( isset( $array['validate'] ) && !empty( $array['validate'] ) ) {
 
 						switch( $array['validate'] ) {
@@ -282,9 +294,11 @@
 								break;
 
 							case 'numeric':
+								
 								if ( $args[$key] && !is_numeric( $args[$key] ) ) {
 									$ultimatemember->form->add_error($key, __('Please enter numbers only in this field','ultimatemember') );
 								}
+
 								break;
 
 							case 'phone_number':
@@ -489,4 +503,5 @@
 
 			} // end if ( isset in args array )
 		}
+
 	}
