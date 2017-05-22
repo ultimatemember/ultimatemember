@@ -181,11 +181,11 @@ class UM_Permalinks {
 					$user_id = $user->ID;
 
 					// update wp user
-					wp_set_current_user( $user_id, $user_login );
+					wp_set_current_user( $user_id, $user->user_login );
 					wp_set_auth_cookie( $user_id );
 
 					ob_start();
-					do_action( 'wp_login', $user_login );
+					do_action( 'wp_login', $user->user_login, $user );
 					ob_end_clean();
 				}
 
