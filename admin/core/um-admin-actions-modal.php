@@ -139,6 +139,7 @@
 				
 				ob_start();
 				$form_fields = $ultimatemember->query->get_attr( 'custom_fields', $arg2 );
+				$form_fields = array_values( array_filter( array_keys( $form_fields ) ) );
 				?>
 					
 					<h4><?php _e('Setup New Field','ultimatemember'); ?></h4>
@@ -167,7 +168,7 @@
 								if ( !isset( $array['account_only'] ) && !isset( $array['private_use'] ) ) {
 						?>
 						
-						<a href="#" class="button" <?php disabled( in_array( $field_key, array_keys( $form_fields ) ) ) ?> data-silent_action="um_admin_add_field_from_predefined" data-arg1="<?php echo $field_key; ?>" data-arg2="<?php echo $arg2; ?>"><?php echo um_trim_string( stripslashes( $array['title'] ), 20 ); ?></a>
+						<a href="#" class="button" <?php disabled( in_array( $field_key,  $form_fields  ) ) ?> data-silent_action="um_admin_add_field_from_predefined" data-arg1="<?php echo $field_key; ?>" data-arg2="<?php echo $arg2; ?>"><?php echo um_trim_string( stripslashes( $array['title'] ), 20 ); ?></a>
 
 						<?php } } } else { echo '<p>' . __('None','ultimatemember') . '</p>'; } ?>
 						
@@ -179,10 +180,9 @@
 						<?php
 						if ( $ultimatemember->builtin->custom_fields ) {
 							foreach ($ultimatemember->builtin->custom_fields as $field_key => $array) {
-
 						?>
 						
-						<a href="#" class="button with-icon" data-silent_action="um_admin_add_field_from_list" data-arg1="<?php echo $field_key; ?>" data-arg2="<?php echo $arg2; ?>"><?php echo um_trim_string( stripslashes( $array['title'] ), 20 ); ?><span class="remove"></span></a>
+						<a href="#" class="button with-icon" data-silent_action="um_admin_add_field_from_list" data-arg1="<?php echo $field_key; ?>" data-arg2="<?php echo $arg2; ?>"><?php echo um_trim_string( stripslashes( $array['title'] ), 20 ); ?> <small>(<?php echo ucfirst( $array['type']); ?>)</small><span class="remove"></span></a>
 						
 						<?php } } else { echo '<p>' . __('You did not create any custom fields', 'ultimatemember') . '</p>'; } ?>
 						
