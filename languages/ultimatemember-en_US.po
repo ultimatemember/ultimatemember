@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-07 21:38+0800\n"
-"PO-Revision-Date: 2017-01-07 21:38+0800\n"
+"POT-Creation-Date: 2017-05-30 01:36+0800\n"
+"PO-Revision-Date: 2017-05-30 01:37+0800\n"
 "Last-Translator: Calum Allison <umplugin@gmail.com>\n"
 "Language-Team: Ultimate Member <umplugin@gmail.com>\n"
 "Language: en_US\n"
@@ -21,14 +21,14 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-2: admin/core/lib/ReduxFramework\n"
 "X-Poedit-SearchPathExcluded-3: assets/vendor\n"
 
-#: addons/system_info.php:84
+#: addons/install_info.php:85
 msgid ""
-"To copy the system info, click below then press Ctrl + C (PC) or Cmd + C "
+"To copy the Install info, click below then press Ctrl + C (PC) or Cmd + C "
 "(Mac)."
 msgstr ""
 
 #: admin/core/um-admin-access.php:107 admin/core/um-admin-dashboard.php:127
-#: admin/core/um-admin-redux.php:55
+#: admin/core/um-admin-redux.php:55 core/um-user.php:64
 msgid "Ultimate Member"
 msgstr ""
 
@@ -59,20 +59,20 @@ msgstr ""
 msgid "Search Icons..."
 msgstr ""
 
-#: admin/core/um-admin-actions-modal.php:144
+#: admin/core/um-admin-actions-modal.php:145
 msgid "Setup New Field"
 msgstr ""
 
-#: admin/core/um-admin-actions-modal.php:160
+#: admin/core/um-admin-actions-modal.php:161
 msgid "Predefined Fields"
 msgstr ""
 
-#: admin/core/um-admin-actions-modal.php:172 admin/templates/role/sync.php:22
-#: core/um-builtin.php:1141
+#: admin/core/um-admin-actions-modal.php:173 admin/templates/role/sync.php:22
+#: core/um-builtin.php:1143
 msgid "None"
 msgstr ""
 
-#: admin/core/um-admin-actions-modal.php:176
+#: admin/core/um-admin-actions-modal.php:177
 msgid "Custom Fields"
 msgstr ""
 
@@ -85,73 +85,74 @@ msgstr ""
 msgid "This field type is not setup correcty."
 msgstr ""
 
-#: admin/core/um-admin-actions.php:19 admin/core/um-admin-users.php:362
-#: core/um-user.php:68
+#: admin/core/um-admin-actions.php:19 admin/core/um-admin-users.php:366
+#: core/um-user.php:69
 msgid "Community Role"
 msgstr ""
 
-#: admin/core/um-admin-actions.php:79 admin/core/um-admin-actions.php:112
+#: admin/core/um-admin-actions.php:78 admin/core/um-admin-actions.php:115
 #: admin/templates/access/settings.php:17
 msgid "Content Availability"
 msgstr ""
 
-#: admin/core/um-admin-actions.php:80 admin/core/um-admin-actions.php:113
+#: admin/core/um-admin-actions.php:79 admin/core/um-admin-actions.php:116
 #: admin/templates/access/settings.php:23
 msgid "Content accessible to Everyone"
 msgstr ""
 
-#: admin/core/um-admin-actions.php:81 admin/core/um-admin-actions.php:114
+#: admin/core/um-admin-actions.php:80 admin/core/um-admin-actions.php:117
 #: admin/templates/access/settings.php:24
 msgid "Content accessible to Logged Out Users"
 msgstr ""
 
-#: admin/core/um-admin-actions.php:82 admin/core/um-admin-actions.php:115
+#: admin/core/um-admin-actions.php:81 admin/core/um-admin-actions.php:118
 #: admin/templates/access/settings.php:25
 msgid "Content accessible to Logged In Users"
 msgstr ""
 
-#: admin/core/um-admin-actions.php:87 admin/core/um-admin-actions.php:120
+#: admin/core/um-admin-actions.php:86 admin/core/um-admin-actions.php:123
 msgid "Roles who can see the content"
 msgstr ""
 
-#: admin/core/um-admin-actions.php:91
+#: admin/core/um-admin-actions.php:90 admin/core/um-admin-actions.php:133
 msgid "This is applicable only if you restrict the content to logged-in users."
 msgstr ""
 
-#: admin/core/um-admin-actions.php:95 admin/core/um-admin-actions.php:134
+#: admin/core/um-admin-actions.php:91 admin/core/um-admin-actions.php:97
+#: admin/core/um-admin-actions.php:136 admin/core/um-admin-actions.php:143
 msgid "Content Restriction Redirect URL"
 msgstr ""
 
-#: admin/core/um-admin-actions.php:97 admin/core/um-admin-actions.php:130
-#: admin/core/um-admin-actions.php:137
+#: admin/core/um-admin-actions.php:93 admin/core/um-admin-actions.php:99
+#: admin/core/um-admin-actions.php:139 admin/core/um-admin-actions.php:146
 msgid "Users who cannot see content will get redirected to that URL."
 msgstr ""
 
-#: admin/core/um-admin-actions.php:210
+#: admin/core/um-admin-actions.php:220
 msgid "This is a translation of UM profile page?"
 msgstr ""
 
-#: admin/core/um-admin-actions.php:216
+#: admin/core/um-admin-actions.php:226
 msgid "This is a translation of UM account page?"
 msgstr ""
 
-#: admin/core/um-admin-actions.php:297
+#: admin/core/um-admin-actions.php:307
 #, php-format
 msgid "Duplicate of %s"
 msgstr ""
 
-#: admin/core/um-admin-builder.php:92 admin/core/um-admin-builder.php:158
-#: admin/core/um-admin-dragdrop.php:146
+#: admin/core/um-admin-builder.php:97 admin/core/um-admin-builder.php:167
+#: admin/core/um-admin-dragdrop.php:149
 msgid "Add Row"
 msgstr ""
 
-#: admin/core/um-admin-builder.php:93 admin/core/um-admin-builder.php:159
-#: admin/core/um-admin-dragdrop.php:147
+#: admin/core/um-admin-builder.php:98 admin/core/um-admin-builder.php:168
+#: admin/core/um-admin-dragdrop.php:150
 msgid "Edit Row"
 msgstr ""
 
-#: admin/core/um-admin-builder.php:162 admin/core/um-admin-dragdrop.php:149
-#: admin/core/um-admin-dragdrop.php:163 admin/core/um-admin-dragdrop.php:188
+#: admin/core/um-admin-builder.php:171 admin/core/um-admin-dragdrop.php:152
+#: admin/core/um-admin-dragdrop.php:166 admin/core/um-admin-dragdrop.php:191
 msgid "Delete Row"
 msgstr ""
 
@@ -302,21 +303,21 @@ msgstr ""
 msgid "Role draft updated."
 msgstr ""
 
-#: admin/core/um-admin-metabox.php:115 core/um-builtin.php:1011
-#: core/um-builtin.php:1026 um-config.php:159 um-config.php:169
-#: um-config.php:179 um-config.php:189 um-config.php:219 um-config.php:419
-#: um-config.php:428 um-config.php:438 um-config.php:448 um-config.php:480
-#: um-config.php:511 um-config.php:520 um-config.php:540 um-config.php:1332
+#: admin/core/um-admin-metabox.php:115 core/um-builtin.php:1013
+#: core/um-builtin.php:1028 um-config.php:159 um-config.php:169
+#: um-config.php:179 um-config.php:189 um-config.php:219 um-config.php:429
+#: um-config.php:438 um-config.php:448 um-config.php:458 um-config.php:490
+#: um-config.php:521 um-config.php:530 um-config.php:550 um-config.php:1342
 msgid "Yes"
 msgstr ""
 
 #: admin/core/um-admin-metabox.php:116 admin/core/um-admin-roles.php:60
-#: core/um-actions-account.php:41 core/um-builtin.php:1010
-#: core/um-builtin.php:1011 core/um-builtin.php:1025 core/um-builtin.php:1026
+#: core/um-actions-account.php:44 core/um-builtin.php:1012
+#: core/um-builtin.php:1013 core/um-builtin.php:1027 core/um-builtin.php:1028
 #: um-config.php:160 um-config.php:170 um-config.php:180 um-config.php:190
-#: um-config.php:220 um-config.php:420 um-config.php:429 um-config.php:439
-#: um-config.php:449 um-config.php:481 um-config.php:512 um-config.php:521
-#: um-config.php:541 um-config.php:1333
+#: um-config.php:220 um-config.php:430 um-config.php:439 um-config.php:449
+#: um-config.php:459 um-config.php:491 um-config.php:522 um-config.php:531
+#: um-config.php:551 um-config.php:1343
 msgid "No"
 msgstr ""
 
@@ -396,8 +397,8 @@ msgstr ""
 #: admin/core/um-admin-metabox.php:286 admin/core/um-admin-metabox.php:292
 #: admin/core/um-admin-metabox.php:298 admin/templates/form/login_css.php:4
 #: admin/templates/form/profile_css.php:4
-#: admin/templates/form/register_css.php:4 um-config.php:1969
-#: um-config.php:1975
+#: admin/templates/form/register_css.php:4 um-config.php:1979
+#: um-config.php:1985
 msgid "Custom CSS"
 msgstr ""
 
@@ -480,16 +481,16 @@ msgstr ""
 msgid "Ultimate Member Setup Error: Account page can not be a child page."
 msgstr ""
 
-#: admin/core/um-admin-notices.php:126
+#: admin/core/um-admin-notices.php:128
 #, php-format
 msgid ""
 "Your site language is <strong>%1$s</strong>. Good news! Ultimate Member is "
 "already available in <strong>%2$s language</strong>. <a href=\"%3$s"
 "\">Download the translation</a> files and start using the plugin in your "
-"language now."
+"language now. <a href=\"%4$s\">Hide this notice</a>"
 msgstr ""
 
-#: admin/core/um-admin-notices.php:137
+#: admin/core/um-admin-notices.php:141
 #, php-format
 msgid ""
 "Ultimate Member has not yet been translated to your langeuage: <strong>%1$s</"
@@ -499,54 +500,54 @@ msgid ""
 "your language. <a href=\"%2$s\">Hide this notice</a>"
 msgstr ""
 
-#: admin/core/um-admin-notices.php:174
+#: admin/core/um-admin-notices.php:178
 #, php-format
 msgid ""
 "Are you sure you want to delete the selected user(s)? The following users "
 "will be deleted: <p>%s</p> <strong>This cannot be undone!</strong>"
 msgstr ""
 
-#: admin/core/um-admin-notices.php:175 core/um-actions-profile.php:217
+#: admin/core/um-admin-notices.php:179 core/um-actions-profile.php:217
 msgid "Remove"
 msgstr ""
 
-#: admin/core/um-admin-notices.php:175
+#: admin/core/um-admin-notices.php:179
 msgid "Undo"
 msgstr ""
 
-#: admin/core/um-admin-notices.php:180
+#: admin/core/um-admin-notices.php:184
 msgid "Your translation files have been updated successfully."
 msgstr ""
 
-#: admin/core/um-admin-notices.php:184
+#: admin/core/um-admin-notices.php:188
 msgid "Your temp uploads directory is now clean."
 msgstr ""
 
-#: admin/core/um-admin-notices.php:188
+#: admin/core/um-admin-notices.php:192
 msgid "Your user cache is now removed."
 msgstr ""
 
-#: admin/core/um-admin-notices.php:192
+#: admin/core/um-admin-notices.php:196
 msgid "The form has been duplicated successfully."
 msgstr ""
 
-#: admin/core/um-admin-notices.php:196
+#: admin/core/um-admin-notices.php:200
 msgid "User has been updated."
 msgstr ""
 
-#: admin/core/um-admin-notices.php:200
+#: admin/core/um-admin-notices.php:204
 msgid "Users have been updated."
 msgstr ""
 
-#: admin/core/um-admin-notices.php:204
+#: admin/core/um-admin-notices.php:208
 msgid "Changed roles."
 msgstr ""
 
-#: admin/core/um-admin-notices.php:208
+#: admin/core/um-admin-notices.php:212
 msgid "Super administrators cannot be modified."
 msgstr ""
 
-#: admin/core/um-admin-notices.php:209
+#: admin/core/um-admin-notices.php:213
 msgid "Other users have been updated."
 msgstr ""
 
@@ -592,8 +593,8 @@ msgstr ""
 msgid "Core"
 msgstr ""
 
-#: admin/core/um-admin-users.php:35 core/um-actions-account.php:378
-#: core/um-actions-account.php:413
+#: admin/core/um-admin-users.php:35 core/um-actions-account.php:383
+#: core/um-actions-account.php:418
 msgid "View profile"
 msgstr ""
 
@@ -602,7 +603,7 @@ msgid "Info"
 msgstr ""
 
 #: admin/core/um-admin-users.php:129 admin/templates/dashboard/users.php:12
-#: core/um-user.php:237
+#: core/um-user.php:240
 msgid "Approved"
 msgstr ""
 
@@ -631,27 +632,27 @@ msgstr ""
 msgid "Filter by"
 msgstr ""
 
-#: admin/core/um-admin-users.php:318
+#: admin/core/um-admin-users.php:322
 msgid "Filter"
 msgstr ""
 
-#: admin/core/um-admin-users.php:324 admin/core/um-admin-users.php:326
+#: admin/core/um-admin-users.php:328 admin/core/um-admin-users.php:330
 msgid "UM Action"
 msgstr ""
 
-#: admin/core/um-admin-users.php:330 core/um-fields.php:1651
+#: admin/core/um-admin-users.php:334 core/um-fields.php:1674
 msgid "Apply"
 msgstr ""
 
-#: admin/core/um-admin-users.php:336
+#: admin/core/um-admin-users.php:340
 msgid "Community role&hellip;"
 msgstr ""
 
-#: admin/core/um-admin-users.php:343
+#: admin/core/um-admin-users.php:347
 msgid "Change"
 msgstr ""
 
-#: admin/core/um-admin-users.php:362
+#: admin/core/um-admin-users.php:366
 msgid "This is the membership role set by Ultimate Member plugin"
 msgstr ""
 
@@ -725,11 +726,11 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: admin/templates/dashboard/users.php:30 core/um-user.php:245
+#: admin/templates/dashboard/users.php:30 core/um-user.php:248
 msgid "Pending Review"
 msgstr ""
 
-#: admin/templates/dashboard/users.php:35 core/um-user.php:241
+#: admin/templates/dashboard/users.php:35 core/um-user.php:244
 msgid "Awaiting E-mail Confirmation"
 msgstr ""
 
@@ -1051,7 +1052,7 @@ msgid ""
 "<strong>Note:</strong> Form type cannot be changed for the default forms."
 msgstr ""
 
-#: admin/templates/form/mode.php:9 um-config.php:1754
+#: admin/templates/form/mode.php:9 um-config.php:1764
 msgid "Registration Form"
 msgstr ""
 
@@ -1059,7 +1060,7 @@ msgstr ""
 msgid "Profile Form"
 msgstr ""
 
-#: admin/templates/form/mode.php:13 um-config.php:1856
+#: admin/templates/form/mode.php:13 um-config.php:1866
 msgid "Login Form"
 msgstr ""
 
@@ -1087,23 +1088,23 @@ msgstr ""
 msgid "Cover photo ratio"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:133 um-config.php:1487
+#: admin/templates/form/profile_customize.php:133 um-config.php:1497
 msgid "Profile Photo Size"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:137 um-config.php:1496
+#: admin/templates/form/profile_customize.php:137 um-config.php:1506
 msgid "Profile Photo Style"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:140 um-config.php:1500
+#: admin/templates/form/profile_customize.php:140 um-config.php:1510
 msgid "Circle"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:141 um-config.php:1501
+#: admin/templates/form/profile_customize.php:141 um-config.php:1511
 msgid "Rounded Corners"
 msgstr ""
 
-#: admin/templates/form/profile_customize.php:142 um-config.php:1502
+#: admin/templates/form/profile_customize.php:142 um-config.php:1512
 msgid "Square"
 msgstr ""
 
@@ -1161,8 +1162,8 @@ msgstr ""
 msgid "Assign role to form"
 msgstr ""
 
-#: admin/templates/form/register_customize.php:42 um-config.php:1387
-#: um-config.php:1780 um-config.php:1882
+#: admin/templates/form/register_customize.php:42 um-config.php:1397
+#: um-config.php:1790 um-config.php:1892
 msgid "The shortcode is centered by default unless you specify otherwise here"
 msgstr ""
 
@@ -1216,7 +1217,7 @@ msgstr ""
 #: admin/templates/modal/dynamic_new_group.php:15
 #: core/um-actions-profile.php:218 core/um-actions-profile.php:332
 #: core/um-actions-profile.php:344 core/um-actions-profile.php:505
-#: core/um-fields.php:1652 core/um-fields.php:1740
+#: core/um-fields.php:1675 core/um-fields.php:1763
 msgid "Cancel"
 msgstr ""
 
@@ -1561,95 +1562,95 @@ msgstr ""
 msgid "A theme or plugin compatibility issue"
 msgstr ""
 
-#: core/um-account.php:27 um-config.php:255
+#: core/um-account.php:31 um-config.php:255
 msgid "Account"
 msgstr ""
 
-#: core/um-account.php:30
+#: core/um-account.php:34
 msgid "Change Password"
 msgstr ""
 
-#: core/um-account.php:33
+#: core/um-account.php:37
 msgid "Privacy"
 msgstr ""
 
-#: core/um-account.php:36 um-config.php:914
+#: core/um-account.php:40 um-config.php:924
 msgid "Notifications"
 msgstr ""
 
-#: core/um-account.php:39 core/um-actions-account.php:225
-#: core/um-builtin.php:1017 core/um-builtin.php:1020
+#: core/um-account.php:43 core/um-actions-account.php:230
+#: core/um-builtin.php:1019 core/um-builtin.php:1022
 msgid "Delete Account"
 msgstr ""
 
-#: core/um-actions-account.php:108
+#: core/um-actions-account.php:112
 msgid "You must provide your first name"
 msgstr ""
 
-#: core/um-actions-account.php:112
+#: core/um-actions-account.php:116
 msgid "You must provide your last name"
 msgstr ""
 
-#: core/um-actions-account.php:116
+#: core/um-actions-account.php:120
 msgid "You must provide your e-mail"
 msgstr ""
 
-#: core/um-actions-account.php:120
+#: core/um-actions-account.php:124
 msgid "Please provide a valid e-mail"
 msgstr ""
 
-#: core/um-actions-account.php:124
+#: core/um-actions-account.php:128
 msgid "Email already linked to another account"
 msgstr ""
 
-#: core/um-actions-account.php:138 core/um-actions-account.php:178
+#: core/um-actions-account.php:142 core/um-actions-account.php:182
 msgid "This is not your password"
 msgstr ""
 
-#: core/um-actions-account.php:143
+#: core/um-actions-account.php:147
 msgid "Your new password does not match"
 msgstr ""
 
-#: core/um-actions-account.php:150 core/um-actions-password.php:194
+#: core/um-actions-account.php:154 core/um-actions-password.php:194
 msgid "Your password must contain at least 8 characters"
 msgstr ""
 
-#: core/um-actions-account.php:154 core/um-actions-password.php:198
+#: core/um-actions-account.php:158 core/um-actions-password.php:198
 msgid "Your password must contain less than 30 characters"
 msgstr ""
 
-#: core/um-actions-account.php:158 core/um-actions-form.php:250
+#: core/um-actions-account.php:162 core/um-actions-form.php:250
 #: core/um-actions-password.php:202
 msgid ""
 "Your password must contain at least one lowercase letter, one capital letter "
 "and one number"
 msgstr ""
 
-#: core/um-actions-account.php:168
+#: core/um-actions-account.php:172
 msgid "Your username is invalid"
 msgstr ""
 
-#: core/um-actions-account.php:175
+#: core/um-actions-account.php:179
 msgid "You must enter your password"
 msgstr ""
 
-#: core/um-actions-account.php:255
+#: core/um-actions-account.php:260
 msgid "Update Privacy"
 msgstr ""
 
-#: core/um-actions-account.php:285
+#: core/um-actions-account.php:290
 msgid "Update Account"
 msgstr ""
 
-#: core/um-actions-account.php:315
+#: core/um-actions-account.php:320
 msgid "Update Password"
 msgstr ""
 
-#: core/um-actions-account.php:342
+#: core/um-actions-account.php:347
 msgid "Email me when"
 msgstr ""
 
-#: core/um-actions-account.php:351
+#: core/um-actions-account.php:356
 msgid "Update Notifications"
 msgstr ""
 
@@ -1668,6 +1669,10 @@ msgstr ""
 
 #: core/um-actions-ajax.php:90
 msgid "Invalid Image file"
+msgstr ""
+
+#: core/um-actions-core.php:17
+msgid "Super administrators can not be modified."
 msgstr ""
 
 #: core/um-actions-core.php:81
@@ -1731,74 +1736,84 @@ msgstr ""
 msgid "You can only select up to %s choices"
 msgstr ""
 
-#: core/um-actions-form.php:286
+#: core/um-actions-form.php:277
+#, php-format
+msgid "Minimum number limit is %s"
+msgstr ""
+
+#: core/um-actions-form.php:283
+#, php-format
+msgid "Maximum number limit is %s"
+msgstr ""
+
+#: core/um-actions-form.php:299
 msgid "Please enter numbers only in this field"
 msgstr ""
 
-#: core/um-actions-form.php:292
+#: core/um-actions-form.php:306
 msgid "Please enter a valid phone number"
 msgstr ""
 
-#: core/um-actions-form.php:298 core/um-actions-form.php:304
-#: core/um-actions-form.php:310 core/um-actions-form.php:316
-#: core/um-actions-form.php:322 core/um-actions-form.php:328
-#: core/um-actions-form.php:334 core/um-actions-form.php:340
-#: core/um-actions-form.php:352
+#: core/um-actions-form.php:312 core/um-actions-form.php:318
+#: core/um-actions-form.php:324 core/um-actions-form.php:330
+#: core/um-actions-form.php:336 core/um-actions-form.php:342
+#: core/um-actions-form.php:348 core/um-actions-form.php:354
+#: core/um-actions-form.php:366
 #, php-format
 msgid "Please enter a valid %s username or profile URL"
 msgstr ""
 
-#: core/um-actions-form.php:346
+#: core/um-actions-form.php:360
 msgid "Please enter a valid URL"
 msgstr ""
 
-#: core/um-actions-form.php:359 core/um-actions-form.php:373
+#: core/um-actions-form.php:373 core/um-actions-form.php:387
 msgid "You must provide a username"
 msgstr ""
 
-#: core/um-actions-form.php:361 core/um-actions-form.php:375
+#: core/um-actions-form.php:375 core/um-actions-form.php:389
 msgid "Your username is already taken"
 msgstr ""
 
-#: core/um-actions-form.php:363
+#: core/um-actions-form.php:377
 msgid "Username cannot be an email"
 msgstr ""
 
-#: core/um-actions-form.php:365 core/um-actions-form.php:379
+#: core/um-actions-form.php:379 core/um-actions-form.php:393
 msgid "Your username contains invalid characters"
 msgstr ""
 
-#: core/um-actions-form.php:377 core/um-actions-form.php:397
-#: core/um-actions-form.php:399 core/um-actions-form.php:411
-#: core/um-actions-form.php:418
+#: core/um-actions-form.php:391 core/um-actions-form.php:413
+#: core/um-actions-form.php:415 core/um-actions-form.php:427
+#: core/um-actions-form.php:434
 msgid "This email is already linked to an existing account"
 msgstr ""
 
-#: core/um-actions-form.php:395
+#: core/um-actions-form.php:411
 msgid "You must provide your email"
 msgstr ""
 
-#: core/um-actions-form.php:401 core/um-actions-form.php:409
+#: core/um-actions-form.php:417 core/um-actions-form.php:425
 msgid "This is not a valid email"
 msgstr ""
 
-#: core/um-actions-form.php:403
+#: core/um-actions-form.php:419
 msgid "Your email contains invalid characters"
 msgstr ""
 
-#: core/um-actions-form.php:443
+#: core/um-actions-form.php:459
 msgid "You must provide a unique value"
 msgstr ""
 
-#: core/um-actions-form.php:453
+#: core/um-actions-form.php:469
 msgid "You must provide alphabetic letters"
 msgstr ""
 
-#: core/um-actions-form.php:463
+#: core/um-actions-form.php:479
 msgid "You must provide lowercase letters."
 msgstr ""
 
-#: core/um-actions-form.php:482
+#: core/um-actions-form.php:498
 #, php-format
 msgid "Your user description must contain less than %s characters"
 msgstr ""
@@ -1835,48 +1850,48 @@ msgstr ""
 msgid "Password is incorrect. Please try again."
 msgstr ""
 
-#: core/um-actions-login.php:163
+#: core/um-actions-login.php:186
 msgid "This action has been prevented for security measures."
 msgstr ""
 
-#: core/um-actions-login.php:242
+#: core/um-actions-login.php:263
 msgid "Keep me signed in"
 msgstr ""
 
-#: core/um-actions-login.php:276
+#: core/um-actions-login.php:297
 msgid "Forgot your password?"
 msgstr ""
 
-#: core/um-actions-members.php:64
+#: core/um-actions-members.php:63
 msgid "Search"
 msgstr ""
 
-#: core/um-actions-members.php:64
+#: core/um-actions-members.php:63
 msgid "Reset"
 msgstr ""
 
-#: core/um-actions-members.php:135
+#: core/um-actions-members.php:134
 msgid "Jump to page:"
 msgstr ""
 
-#: core/um-actions-members.php:140
+#: core/um-actions-members.php:139
 #, php-format
 msgid "%s of %d"
 msgstr ""
 
-#: core/um-actions-members.php:150
+#: core/um-actions-members.php:149
 msgid "First Page"
 msgstr ""
 
-#: core/um-actions-members.php:156
+#: core/um-actions-members.php:155
 msgid "Previous"
 msgstr ""
 
-#: core/um-actions-members.php:176
+#: core/um-actions-members.php:175
 msgid "Next"
 msgstr ""
 
-#: core/um-actions-members.php:182
+#: core/um-actions-members.php:181
 msgid "Last Page"
 msgstr ""
 
@@ -1975,7 +1990,7 @@ msgstr ""
 msgid "You are not allowed to edit this user."
 msgstr ""
 
-#: core/um-actions-profile.php:200 core/um-builtin.php:954
+#: core/um-actions-profile.php:200 core/um-builtin.php:956
 msgid "Change your cover photo"
 msgstr ""
 
@@ -1991,8 +2006,8 @@ msgstr ""
 msgid "Upload photo"
 msgstr ""
 
-#: core/um-actions-profile.php:342 core/um-fields.php:1616
-#: core/um-fields.php:1651
+#: core/um-actions-profile.php:342 core/um-fields.php:1639
+#: core/um-fields.php:1674
 msgid "Change photo"
 msgstr ""
 
@@ -2017,92 +2032,92 @@ msgstr ""
 msgid "My Account"
 msgstr ""
 
-#: core/um-actions-profile.php:504 core/um-actions-user.php:79
+#: core/um-actions-profile.php:504 core/um-actions-user.php:100
 msgid "Logout"
 msgstr ""
 
-#: core/um-actions-user.php:78
+#: core/um-actions-user.php:99
 msgid "Your account"
 msgstr ""
 
-#: core/um-api.php:133
+#: core/um-api.php:134
 msgid "You must specify both a token and API key!"
 msgstr ""
 
-#: core/um-api.php:144
+#: core/um-api.php:145
 msgid "Your request could not be authenticated"
 msgstr ""
 
-#: core/um-api.php:155
+#: core/um-api.php:156
 msgid "Invalid API key"
 msgstr ""
 
-#: core/um-api.php:293 core/um-api.php:338 core/um-api.php:375
-#: core/um-api.php:482 core/um-api.php:511
+#: core/um-api.php:294 core/um-api.php:339 core/um-api.php:376
+#: core/um-api.php:483 core/um-api.php:512
 msgid "You must provide a user ID"
 msgstr ""
 
-#: core/um-api.php:298
+#: core/um-api.php:299
 msgid "You need to provide data to update"
 msgstr ""
 
-#: core/um-api.php:307
+#: core/um-api.php:308
 msgid "User status has been changed."
 msgstr ""
 
-#: core/um-api.php:311
+#: core/um-api.php:312
 msgid "User level has been changed."
 msgstr ""
 
-#: core/um-api.php:316
+#: core/um-api.php:317
 msgid "User WordPress role has been changed."
 msgstr ""
 
-#: core/um-api.php:320
+#: core/um-api.php:321
 msgid "User meta has been changed."
 msgstr ""
 
-#: core/um-api.php:346 core/um-api.php:383
+#: core/um-api.php:347 core/um-api.php:384
 msgid "No users were found"
 msgstr ""
 
-#: core/um-api.php:357 core/um-api.php:394
+#: core/um-api.php:358 core/um-api.php:395
 msgid "Invalid request"
 msgstr ""
 
-#: core/um-api.php:488 core/um-api.php:517
+#: core/um-api.php:489 core/um-api.php:518
 msgid "Invalid user specified"
 msgstr ""
 
-#: core/um-api.php:495
+#: core/um-api.php:496
 msgid "User has been successfully deleted."
 msgstr ""
 
-#: core/um-api.php:639
+#: core/um-api.php:640
 msgid "Invalid query!"
 msgstr ""
 
-#: core/um-api.php:745
+#: core/um-api.php:749
 msgid "Ultimate Member REST API"
 msgstr ""
 
-#: core/um-api.php:750
+#: core/um-api.php:754
 msgid "Generate API Key"
 msgstr ""
 
-#: core/um-api.php:753
+#: core/um-api.php:757
 msgid "Public key:"
 msgstr ""
 
-#: core/um-api.php:754
+#: core/um-api.php:758
 msgid "Secret key:"
 msgstr ""
 
-#: core/um-api.php:755
+#: core/um-api.php:759
 msgid "Token:"
 msgstr ""
 
-#: core/um-api.php:758
+#: core/um-api.php:762
 msgid "Revoke API Keys"
 msgstr ""
 
@@ -2174,11 +2189,11 @@ msgstr ""
 msgid "You must add a shortcode to the content area"
 msgstr ""
 
-#: core/um-builtin.php:551 core/um-builtin.php:994
+#: core/um-builtin.php:551 core/um-builtin.php:996
 msgid "Everyone"
 msgstr ""
 
-#: core/um-builtin.php:551 core/um-user.php:841
+#: core/um-builtin.php:551 core/um-user.php:844
 msgid "Only me"
 msgstr ""
 
@@ -2187,12 +2202,12 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: core/um-builtin.php:569 core/um-builtin.php:572 core/um-builtin.php:973
+#: core/um-builtin.php:569 core/um-builtin.php:572 core/um-builtin.php:975
 msgid "Username or E-mail"
 msgstr ""
 
-#: core/um-builtin.php:580 core/um-builtin.php:583 core/um-builtin.php:1031
-#: core/um-builtin.php:1034
+#: core/um-builtin.php:580 core/um-builtin.php:583 core/um-builtin.php:1033
+#: core/um-builtin.php:1036
 msgid "Password"
 msgstr ""
 
@@ -2212,1950 +2227,1950 @@ msgstr ""
 msgid "E-mail Address"
 msgstr ""
 
-#: core/um-builtin.php:656 core/um-builtin.php:659
+#: core/um-builtin.php:657 core/um-builtin.php:660
 msgid "Secondary E-mail Address"
 msgstr ""
 
-#: core/um-builtin.php:667 core/um-builtin.php:670
+#: core/um-builtin.php:669 core/um-builtin.php:672
 msgid "Biography"
 msgstr ""
 
-#: core/um-builtin.php:680 core/um-builtin.php:683
+#: core/um-builtin.php:682 core/um-builtin.php:685
 msgid "Birth Date"
 msgstr ""
 
-#: core/um-builtin.php:694 core/um-builtin.php:697
+#: core/um-builtin.php:696 core/um-builtin.php:699
 msgid "Gender"
 msgstr ""
 
-#: core/um-builtin.php:701
+#: core/um-builtin.php:703
 msgid "Male"
 msgstr ""
 
-#: core/um-builtin.php:701
+#: core/um-builtin.php:703
 msgid "Female"
 msgstr ""
 
-#: core/um-builtin.php:705 core/um-builtin.php:708
+#: core/um-builtin.php:707 core/um-builtin.php:710
 msgid "Country"
 msgstr ""
 
-#: core/um-builtin.php:709
+#: core/um-builtin.php:711
 msgid "Choose a Country"
 msgstr ""
 
-#: core/um-builtin.php:717 core/um-builtin.php:720
+#: core/um-builtin.php:719 core/um-builtin.php:722
 msgid "Facebook"
 msgstr ""
 
-#: core/um-builtin.php:735 core/um-builtin.php:738
+#: core/um-builtin.php:737 core/um-builtin.php:740
 msgid "Twitter"
 msgstr ""
 
-#: core/um-builtin.php:753 core/um-builtin.php:756
+#: core/um-builtin.php:755 core/um-builtin.php:758
 msgid "LinkedIn"
 msgstr ""
 
-#: core/um-builtin.php:771 core/um-builtin.php:774
+#: core/um-builtin.php:773 core/um-builtin.php:776
 msgid "Google+"
 msgstr ""
 
-#: core/um-builtin.php:789 core/um-builtin.php:792
+#: core/um-builtin.php:791 core/um-builtin.php:794
 msgid "Instagram"
 msgstr ""
 
-#: core/um-builtin.php:807 core/um-builtin.php:810 core/um-builtin.php:1153
+#: core/um-builtin.php:809 core/um-builtin.php:812 core/um-builtin.php:1155
 msgid "Skype ID"
 msgstr ""
 
-#: core/um-builtin.php:822 core/um-builtin.php:825
+#: core/um-builtin.php:824 core/um-builtin.php:827
 msgid "YouTube"
 msgstr ""
 
-#: core/um-builtin.php:840 core/um-builtin.php:843
+#: core/um-builtin.php:842 core/um-builtin.php:845
 msgid "SoundCloud"
 msgstr ""
 
-#: core/um-builtin.php:858 core/um-builtin.php:861
+#: core/um-builtin.php:860 core/um-builtin.php:863
 msgid "VKontakte"
 msgstr ""
 
-#: core/um-builtin.php:876
+#: core/um-builtin.php:878
 msgid "Roles (Dropdown)"
 msgstr ""
 
-#: core/um-builtin.php:879 core/um-builtin.php:891
+#: core/um-builtin.php:881 core/um-builtin.php:893
 msgid "Account Type"
 msgstr ""
 
-#: core/um-builtin.php:888
+#: core/um-builtin.php:890
 msgid "Roles (Radio)"
 msgstr ""
 
-#: core/um-builtin.php:899
+#: core/um-builtin.php:901
 msgid "Languages"
 msgstr ""
 
-#: core/um-builtin.php:902
+#: core/um-builtin.php:904
 msgid "Languages Spoken"
 msgstr ""
 
-#: core/um-builtin.php:903
+#: core/um-builtin.php:905
 msgid "Select languages"
 msgstr ""
 
-#: core/um-builtin.php:911 core/um-builtin.php:914 core/um-builtin.php:1152
+#: core/um-builtin.php:913 core/um-builtin.php:916 core/um-builtin.php:1154
 msgid "Phone Number"
 msgstr ""
 
-#: core/um-builtin.php:923 core/um-builtin.php:926
+#: core/um-builtin.php:925 core/um-builtin.php:928
 msgid "Mobile Number"
 msgstr ""
 
-#: core/um-builtin.php:937
+#: core/um-builtin.php:939
 msgid "Profile Photo"
 msgstr ""
 
-#: core/um-builtin.php:940
+#: core/um-builtin.php:942
 msgid "Change your profile photo"
 msgstr ""
 
-#: core/um-builtin.php:941
+#: core/um-builtin.php:943
 msgid "Upload your photo here"
 msgstr ""
 
-#: core/um-builtin.php:951
+#: core/um-builtin.php:953
 msgid "Cover Photo"
 msgstr ""
 
-#: core/um-builtin.php:955
+#: core/um-builtin.php:957
 msgid "Upload profile cover here"
 msgstr ""
 
-#: core/um-builtin.php:966
+#: core/um-builtin.php:968
 msgid "Password Reset"
 msgstr ""
 
-#: core/um-builtin.php:968
+#: core/um-builtin.php:970
 msgid ""
 "To reset your password, please enter your email address or username below"
 msgstr ""
 
-#: core/um-builtin.php:976
+#: core/um-builtin.php:978
 msgid "Enter your username or email"
 msgstr ""
 
-#: core/um-builtin.php:986 core/um-builtin.php:989
+#: core/um-builtin.php:988 core/um-builtin.php:991
 msgid "Profile Privacy"
 msgstr ""
 
-#: core/um-builtin.php:990
+#: core/um-builtin.php:992
 msgid "Who can see your public profile?"
 msgstr ""
 
-#: core/um-builtin.php:1002 core/um-builtin.php:1005
+#: core/um-builtin.php:1004 core/um-builtin.php:1007
 msgid "Hide my profile from directory"
 msgstr ""
 
-#: core/um-builtin.php:1006
+#: core/um-builtin.php:1008
 msgid "Here you can hide yourself from appearing in public directory"
 msgstr ""
 
-#: core/um-builtin.php:1021
+#: core/um-builtin.php:1023
 msgid ""
 "If you confirm, everything related to your profile will be deleted "
 "permanently from the site"
 msgstr ""
 
-#: core/um-builtin.php:1142
+#: core/um-builtin.php:1144
 msgid "Alphabetic value only"
 msgstr ""
 
-#: core/um-builtin.php:1143
+#: core/um-builtin.php:1145
 msgid "Alpha-numeric value"
 msgstr ""
 
-#: core/um-builtin.php:1144
+#: core/um-builtin.php:1146
 msgid "English letters only"
 msgstr ""
 
-#: core/um-builtin.php:1145
+#: core/um-builtin.php:1147
 msgid "Facebook URL"
 msgstr ""
 
-#: core/um-builtin.php:1146
+#: core/um-builtin.php:1148
 msgid "Google+ URL"
 msgstr ""
 
-#: core/um-builtin.php:1147
+#: core/um-builtin.php:1149
 msgid "Instagram URL"
 msgstr ""
 
-#: core/um-builtin.php:1148
+#: core/um-builtin.php:1150
 msgid "LinkedIn URL"
 msgstr ""
 
-#: core/um-builtin.php:1149
+#: core/um-builtin.php:1151
 msgid "VKontakte URL"
 msgstr ""
 
-#: core/um-builtin.php:1150
+#: core/um-builtin.php:1152
 msgid "Lowercase only"
 msgstr ""
 
-#: core/um-builtin.php:1151
+#: core/um-builtin.php:1153
 msgid "Numeric value only"
 msgstr ""
 
-#: core/um-builtin.php:1154
+#: core/um-builtin.php:1156
 msgid "SoundCloud Profile"
 msgstr ""
 
-#: core/um-builtin.php:1155
+#: core/um-builtin.php:1157
 msgid "Twitter URL"
 msgstr ""
 
-#: core/um-builtin.php:1156
+#: core/um-builtin.php:1158
 msgid "Unique E-mail"
 msgstr ""
 
-#: core/um-builtin.php:1157
+#: core/um-builtin.php:1159
 msgid "Unique Metakey value"
 msgstr ""
 
-#: core/um-builtin.php:1158
+#: core/um-builtin.php:1160
 msgid "Unique Username"
 msgstr ""
 
-#: core/um-builtin.php:1159
+#: core/um-builtin.php:1161
 msgid "Unique Username/E-mail"
 msgstr ""
 
-#: core/um-builtin.php:1160
+#: core/um-builtin.php:1162
 msgid "Website URL"
 msgstr ""
 
-#: core/um-builtin.php:1161
+#: core/um-builtin.php:1163
 msgid "YouTube Profile"
 msgstr ""
 
-#: core/um-builtin.php:1162
+#: core/um-builtin.php:1164
 msgid "Custom Validation"
 msgstr ""
 
-#: core/um-builtin.php:1176
+#: core/um-builtin.php:1178
 msgid "Afar"
 msgstr ""
 
-#: core/um-builtin.php:1177
+#: core/um-builtin.php:1179
 msgid "Abkhazian"
 msgstr ""
 
-#: core/um-builtin.php:1178
+#: core/um-builtin.php:1180
 msgid "Avestan"
 msgstr ""
 
-#: core/um-builtin.php:1179
+#: core/um-builtin.php:1181
 msgid "Afrikaans"
 msgstr ""
 
-#: core/um-builtin.php:1180
+#: core/um-builtin.php:1182
 msgid "Akan"
 msgstr ""
 
-#: core/um-builtin.php:1181
+#: core/um-builtin.php:1183
 msgid "Amharic"
 msgstr ""
 
-#: core/um-builtin.php:1182
+#: core/um-builtin.php:1184
 msgid "Aragonese"
 msgstr ""
 
-#: core/um-builtin.php:1183
+#: core/um-builtin.php:1185
 msgid "Arabic"
 msgstr ""
 
-#: core/um-builtin.php:1184
+#: core/um-builtin.php:1186
 msgid "Assamese"
 msgstr ""
 
-#: core/um-builtin.php:1185
+#: core/um-builtin.php:1187
 msgid "Avaric"
 msgstr ""
 
-#: core/um-builtin.php:1186
+#: core/um-builtin.php:1188
 msgid "Aymara"
 msgstr ""
 
-#: core/um-builtin.php:1187
+#: core/um-builtin.php:1189
 msgid "Azerbaijani"
 msgstr ""
 
-#: core/um-builtin.php:1188
+#: core/um-builtin.php:1190
 msgid "Bashkir"
 msgstr ""
 
-#: core/um-builtin.php:1189
+#: core/um-builtin.php:1191
 msgid "Belarusian"
 msgstr ""
 
-#: core/um-builtin.php:1190
+#: core/um-builtin.php:1192
 msgid "Bulgarian"
 msgstr ""
 
-#: core/um-builtin.php:1191
+#: core/um-builtin.php:1193
 msgid "Bihari"
 msgstr ""
 
-#: core/um-builtin.php:1192
+#: core/um-builtin.php:1194
 msgid "Bislama"
 msgstr ""
 
-#: core/um-builtin.php:1193
+#: core/um-builtin.php:1195
 msgid "Bambara"
 msgstr ""
 
-#: core/um-builtin.php:1194
+#: core/um-builtin.php:1196
 msgid "Bengali"
 msgstr ""
 
-#: core/um-builtin.php:1195
+#: core/um-builtin.php:1197
 msgid "Tibetan"
 msgstr ""
 
-#: core/um-builtin.php:1196
+#: core/um-builtin.php:1198
 msgid "Breton"
 msgstr ""
 
-#: core/um-builtin.php:1197
+#: core/um-builtin.php:1199
 msgid "Bosnian"
 msgstr ""
 
-#: core/um-builtin.php:1198
+#: core/um-builtin.php:1200
 msgid "Catalan"
 msgstr ""
 
-#: core/um-builtin.php:1199
+#: core/um-builtin.php:1201
 msgid "Chechen"
 msgstr ""
 
-#: core/um-builtin.php:1200
+#: core/um-builtin.php:1202
 msgid "Chamorro"
 msgstr ""
 
-#: core/um-builtin.php:1201
+#: core/um-builtin.php:1203
 msgid "Corsican"
 msgstr ""
 
-#: core/um-builtin.php:1202
+#: core/um-builtin.php:1204
 msgid "Cree"
 msgstr ""
 
-#: core/um-builtin.php:1203
+#: core/um-builtin.php:1205
 msgid "Czech"
 msgstr ""
 
-#: core/um-builtin.php:1204
+#: core/um-builtin.php:1206
 msgid "Church Slavic"
 msgstr ""
 
-#: core/um-builtin.php:1205
+#: core/um-builtin.php:1207
 msgid "Chuvash"
 msgstr ""
 
-#: core/um-builtin.php:1206
+#: core/um-builtin.php:1208
 msgid "Welsh"
 msgstr ""
 
-#: core/um-builtin.php:1207
+#: core/um-builtin.php:1209
 msgid "Danish"
 msgstr ""
 
-#: core/um-builtin.php:1208
+#: core/um-builtin.php:1210
 msgid "German"
 msgstr ""
 
-#: core/um-builtin.php:1209
+#: core/um-builtin.php:1211
 msgid "Divehi"
 msgstr ""
 
-#: core/um-builtin.php:1210
+#: core/um-builtin.php:1212
 msgid "Dzongkha"
 msgstr ""
 
-#: core/um-builtin.php:1211
+#: core/um-builtin.php:1213
 msgid "Ewe"
 msgstr ""
 
-#: core/um-builtin.php:1212
+#: core/um-builtin.php:1214
 msgid "Greek"
 msgstr ""
 
-#: core/um-builtin.php:1213
+#: core/um-builtin.php:1215
 msgid "English"
 msgstr ""
 
-#: core/um-builtin.php:1214
+#: core/um-builtin.php:1216
 msgid "Esperanto"
 msgstr ""
 
-#: core/um-builtin.php:1215
+#: core/um-builtin.php:1217
 msgid "Spanish"
 msgstr ""
 
-#: core/um-builtin.php:1216
+#: core/um-builtin.php:1218
 msgid "Estonian"
 msgstr ""
 
-#: core/um-builtin.php:1217
+#: core/um-builtin.php:1219
 msgid "Basque"
 msgstr ""
 
-#: core/um-builtin.php:1218
+#: core/um-builtin.php:1220
 msgid "Persian"
 msgstr ""
 
-#: core/um-builtin.php:1219
+#: core/um-builtin.php:1221
 msgid "Fulah"
 msgstr ""
 
-#: core/um-builtin.php:1220
+#: core/um-builtin.php:1222
 msgid "Finnish"
 msgstr ""
 
-#: core/um-builtin.php:1221
+#: core/um-builtin.php:1223
 msgid "Fijian"
 msgstr ""
 
-#: core/um-builtin.php:1222
+#: core/um-builtin.php:1224
 msgid "Faroese"
 msgstr ""
 
-#: core/um-builtin.php:1223
+#: core/um-builtin.php:1225
 msgid "French"
 msgstr ""
 
-#: core/um-builtin.php:1224
+#: core/um-builtin.php:1226
 msgid "Western Frisian"
 msgstr ""
 
-#: core/um-builtin.php:1225
+#: core/um-builtin.php:1227
 msgid "Irish"
 msgstr ""
 
-#: core/um-builtin.php:1226
+#: core/um-builtin.php:1228
 msgid "Scottish Gaelic"
 msgstr ""
 
-#: core/um-builtin.php:1227
+#: core/um-builtin.php:1229
 msgid "Galician"
 msgstr ""
 
-#: core/um-builtin.php:1228
+#: core/um-builtin.php:1230
 msgid "Guarani"
 msgstr ""
 
-#: core/um-builtin.php:1229
+#: core/um-builtin.php:1231
 msgid "Gujarati"
 msgstr ""
 
-#: core/um-builtin.php:1230
+#: core/um-builtin.php:1232
 msgid "Manx"
 msgstr ""
 
-#: core/um-builtin.php:1231
+#: core/um-builtin.php:1233
 msgid "Hausa"
 msgstr ""
 
-#: core/um-builtin.php:1232
+#: core/um-builtin.php:1234
 msgid "Hebrew"
 msgstr ""
 
-#: core/um-builtin.php:1233
+#: core/um-builtin.php:1235
 msgid "Hindi"
 msgstr ""
 
-#: core/um-builtin.php:1234
+#: core/um-builtin.php:1236
 msgid "Hiri Motu"
 msgstr ""
 
-#: core/um-builtin.php:1235
+#: core/um-builtin.php:1237
 msgid "Croatian"
 msgstr ""
 
-#: core/um-builtin.php:1236
+#: core/um-builtin.php:1238
 msgid "Haitian"
 msgstr ""
 
-#: core/um-builtin.php:1237
+#: core/um-builtin.php:1239
 msgid "Hungarian"
 msgstr ""
 
-#: core/um-builtin.php:1238
+#: core/um-builtin.php:1240
 msgid "Armenian"
 msgstr ""
 
-#: core/um-builtin.php:1239
+#: core/um-builtin.php:1241
 msgid "Herero"
 msgstr ""
 
-#: core/um-builtin.php:1240
+#: core/um-builtin.php:1242
 msgid "Interlingua (International Auxiliary Language Association)"
 msgstr ""
 
-#: core/um-builtin.php:1241
+#: core/um-builtin.php:1243
 msgid "Indonesian"
 msgstr ""
 
-#: core/um-builtin.php:1242
+#: core/um-builtin.php:1244
 msgid "Interlingue"
 msgstr ""
 
-#: core/um-builtin.php:1243
+#: core/um-builtin.php:1245
 msgid "Igbo"
 msgstr ""
 
-#: core/um-builtin.php:1244
+#: core/um-builtin.php:1246
 msgid "Sichuan Yi"
 msgstr ""
 
-#: core/um-builtin.php:1245
+#: core/um-builtin.php:1247
 msgid "Inupiaq"
 msgstr ""
 
-#: core/um-builtin.php:1246
+#: core/um-builtin.php:1248
 msgid "Ido"
 msgstr ""
 
-#: core/um-builtin.php:1247
+#: core/um-builtin.php:1249
 msgid "Icelandic"
 msgstr ""
 
-#: core/um-builtin.php:1248
+#: core/um-builtin.php:1250
 msgid "Italian"
 msgstr ""
 
-#: core/um-builtin.php:1249
+#: core/um-builtin.php:1251
 msgid "Inuktitut"
 msgstr ""
 
-#: core/um-builtin.php:1250
+#: core/um-builtin.php:1252
 msgid "Japanese"
 msgstr ""
 
-#: core/um-builtin.php:1251
+#: core/um-builtin.php:1253
 msgid "Javanese"
 msgstr ""
 
-#: core/um-builtin.php:1252
+#: core/um-builtin.php:1254
 msgid "Georgian"
 msgstr ""
 
-#: core/um-builtin.php:1253
+#: core/um-builtin.php:1255
 msgid "Kongo"
 msgstr ""
 
-#: core/um-builtin.php:1254
+#: core/um-builtin.php:1256
 msgid "Kikuyu"
 msgstr ""
 
-#: core/um-builtin.php:1255
+#: core/um-builtin.php:1257
 msgid "Kwanyama"
 msgstr ""
 
-#: core/um-builtin.php:1256
+#: core/um-builtin.php:1258
 msgid "Kazakh"
 msgstr ""
 
-#: core/um-builtin.php:1257
+#: core/um-builtin.php:1259
 msgid "Kalaallisut"
 msgstr ""
 
-#: core/um-builtin.php:1258
+#: core/um-builtin.php:1260
 msgid "Khmer"
 msgstr ""
 
-#: core/um-builtin.php:1259
+#: core/um-builtin.php:1261
 msgid "Kannada"
 msgstr ""
 
-#: core/um-builtin.php:1260
+#: core/um-builtin.php:1262
 msgid "Korean"
 msgstr ""
 
-#: core/um-builtin.php:1261
+#: core/um-builtin.php:1263
 msgid "Kanuri"
 msgstr ""
 
-#: core/um-builtin.php:1262
+#: core/um-builtin.php:1264
 msgid "Kashmiri"
 msgstr ""
 
-#: core/um-builtin.php:1263
+#: core/um-builtin.php:1265
 msgid "Kurdish"
 msgstr ""
 
-#: core/um-builtin.php:1264
+#: core/um-builtin.php:1266
 msgid "Komi"
 msgstr ""
 
-#: core/um-builtin.php:1265
+#: core/um-builtin.php:1267
 msgid "Cornish"
 msgstr ""
 
-#: core/um-builtin.php:1266
+#: core/um-builtin.php:1268
 msgid "Kirghiz"
 msgstr ""
 
-#: core/um-builtin.php:1267
+#: core/um-builtin.php:1269
 msgid "Latin"
 msgstr ""
 
-#: core/um-builtin.php:1268
+#: core/um-builtin.php:1270
 msgid "Luxembourgish"
 msgstr ""
 
-#: core/um-builtin.php:1269
+#: core/um-builtin.php:1271
 msgid "Ganda"
 msgstr ""
 
-#: core/um-builtin.php:1270
+#: core/um-builtin.php:1272
 msgid "Limburgish"
 msgstr ""
 
-#: core/um-builtin.php:1271
+#: core/um-builtin.php:1273
 msgid "Lingala"
 msgstr ""
 
-#: core/um-builtin.php:1272
+#: core/um-builtin.php:1274
 msgid "Lao"
 msgstr ""
 
-#: core/um-builtin.php:1273
+#: core/um-builtin.php:1275
 msgid "Lithuanian"
 msgstr ""
 
-#: core/um-builtin.php:1274
+#: core/um-builtin.php:1276
 msgid "Luba-Katanga"
 msgstr ""
 
-#: core/um-builtin.php:1275
+#: core/um-builtin.php:1277
 msgid "Latvian"
 msgstr ""
 
-#: core/um-builtin.php:1276
+#: core/um-builtin.php:1278
 msgid "Malagasy"
 msgstr ""
 
-#: core/um-builtin.php:1277
+#: core/um-builtin.php:1279
 msgid "Marshallese"
 msgstr ""
 
-#: core/um-builtin.php:1278
+#: core/um-builtin.php:1280
 msgid "Maori"
 msgstr ""
 
-#: core/um-builtin.php:1279
+#: core/um-builtin.php:1281
 msgid "Macedonian"
 msgstr ""
 
-#: core/um-builtin.php:1280
+#: core/um-builtin.php:1282
 msgid "Malayalam"
 msgstr ""
 
-#: core/um-builtin.php:1281
+#: core/um-builtin.php:1283
 msgid "Mongolian"
 msgstr ""
 
-#: core/um-builtin.php:1282
+#: core/um-builtin.php:1284
 msgid "Marathi"
 msgstr ""
 
-#: core/um-builtin.php:1283
+#: core/um-builtin.php:1285
 msgid "Malay"
 msgstr ""
 
-#: core/um-builtin.php:1284
+#: core/um-builtin.php:1286
 msgid "Maltese"
 msgstr ""
 
-#: core/um-builtin.php:1285
+#: core/um-builtin.php:1287
 msgid "Burmese"
 msgstr ""
 
-#: core/um-builtin.php:1286 core/um-builtin.php:1517
+#: core/um-builtin.php:1288 core/um-builtin.php:1519
 msgid "Nauru"
 msgstr ""
 
-#: core/um-builtin.php:1287
+#: core/um-builtin.php:1289
 msgid "Norwegian Bokmal"
 msgstr ""
 
-#: core/um-builtin.php:1288
+#: core/um-builtin.php:1290
 msgid "North Ndebele"
 msgstr ""
 
-#: core/um-builtin.php:1289
+#: core/um-builtin.php:1291
 msgid "Nepali"
 msgstr ""
 
-#: core/um-builtin.php:1290
+#: core/um-builtin.php:1292
 msgid "Ndonga"
 msgstr ""
 
-#: core/um-builtin.php:1291
+#: core/um-builtin.php:1293
 msgid "Dutch"
 msgstr ""
 
-#: core/um-builtin.php:1292
+#: core/um-builtin.php:1294
 msgid "Norwegian Nynorsk"
 msgstr ""
 
-#: core/um-builtin.php:1293
+#: core/um-builtin.php:1295
 msgid "Norwegian"
 msgstr ""
 
-#: core/um-builtin.php:1294
+#: core/um-builtin.php:1296
 msgid "South Ndebele"
 msgstr ""
 
-#: core/um-builtin.php:1295
+#: core/um-builtin.php:1297
 msgid "Navajo"
 msgstr ""
 
-#: core/um-builtin.php:1296
+#: core/um-builtin.php:1298
 msgid "Chichewa"
 msgstr ""
 
-#: core/um-builtin.php:1297
+#: core/um-builtin.php:1299
 msgid "Occitan"
 msgstr ""
 
-#: core/um-builtin.php:1298
+#: core/um-builtin.php:1300
 msgid "Ojibwa"
 msgstr ""
 
-#: core/um-builtin.php:1299
+#: core/um-builtin.php:1301
 msgid "Oromo"
 msgstr ""
 
-#: core/um-builtin.php:1300
+#: core/um-builtin.php:1302
 msgid "Oriya"
 msgstr ""
 
-#: core/um-builtin.php:1301
+#: core/um-builtin.php:1303
 msgid "Ossetian"
 msgstr ""
 
-#: core/um-builtin.php:1302
+#: core/um-builtin.php:1304
 msgid "Panjabi"
 msgstr ""
 
-#: core/um-builtin.php:1303
+#: core/um-builtin.php:1305
 msgid "Pali"
 msgstr ""
 
-#: core/um-builtin.php:1304
+#: core/um-builtin.php:1306
 msgid "Polish"
 msgstr ""
 
-#: core/um-builtin.php:1305
+#: core/um-builtin.php:1307
 msgid "Pashto"
 msgstr ""
 
-#: core/um-builtin.php:1306
+#: core/um-builtin.php:1308
 msgid "Portuguese"
 msgstr ""
 
-#: core/um-builtin.php:1307
+#: core/um-builtin.php:1309
 msgid "Quechua"
 msgstr ""
 
-#: core/um-builtin.php:1308
+#: core/um-builtin.php:1310
 msgid "Raeto-Romance"
 msgstr ""
 
-#: core/um-builtin.php:1309
+#: core/um-builtin.php:1311
 msgid "Kirundi"
 msgstr ""
 
-#: core/um-builtin.php:1310
+#: core/um-builtin.php:1312
 msgid "Romanian"
 msgstr ""
 
-#: core/um-builtin.php:1311
+#: core/um-builtin.php:1313
 msgid "Russian"
 msgstr ""
 
-#: core/um-builtin.php:1312
+#: core/um-builtin.php:1314
 msgid "Kinyarwanda"
 msgstr ""
 
-#: core/um-builtin.php:1313
+#: core/um-builtin.php:1315
 msgid "Sanskrit"
 msgstr ""
 
-#: core/um-builtin.php:1314
+#: core/um-builtin.php:1316
 msgid "Sardinian"
 msgstr ""
 
-#: core/um-builtin.php:1315
+#: core/um-builtin.php:1317
 msgid "Sindhi"
 msgstr ""
 
-#: core/um-builtin.php:1316
+#: core/um-builtin.php:1318
 msgid "Northern Sami"
 msgstr ""
 
-#: core/um-builtin.php:1317
+#: core/um-builtin.php:1319
 msgid "Sango"
 msgstr ""
 
-#: core/um-builtin.php:1318
+#: core/um-builtin.php:1320
 msgid "Sinhala"
 msgstr ""
 
-#: core/um-builtin.php:1319
+#: core/um-builtin.php:1321
 msgid "Slovak"
 msgstr ""
 
-#: core/um-builtin.php:1320
+#: core/um-builtin.php:1322
 msgid "Slovenian"
 msgstr ""
 
-#: core/um-builtin.php:1321
+#: core/um-builtin.php:1323
 msgid "Samoan"
 msgstr ""
 
-#: core/um-builtin.php:1322
+#: core/um-builtin.php:1324
 msgid "Shona"
 msgstr ""
 
-#: core/um-builtin.php:1323
+#: core/um-builtin.php:1325
 msgid "Somali"
 msgstr ""
 
-#: core/um-builtin.php:1324
+#: core/um-builtin.php:1326
 msgid "Albanian"
 msgstr ""
 
-#: core/um-builtin.php:1325
+#: core/um-builtin.php:1327
 msgid "Serbian"
 msgstr ""
 
-#: core/um-builtin.php:1326
+#: core/um-builtin.php:1328
 msgid "Swati"
 msgstr ""
 
-#: core/um-builtin.php:1327
+#: core/um-builtin.php:1329
 msgid "Southern Sotho"
 msgstr ""
 
-#: core/um-builtin.php:1328
+#: core/um-builtin.php:1330
 msgid "Sundanese"
 msgstr ""
 
-#: core/um-builtin.php:1329
+#: core/um-builtin.php:1331
 msgid "Swedish"
 msgstr ""
 
-#: core/um-builtin.php:1330
+#: core/um-builtin.php:1332
 msgid "Swahili"
 msgstr ""
 
-#: core/um-builtin.php:1331
+#: core/um-builtin.php:1333
 msgid "Tamil"
 msgstr ""
 
-#: core/um-builtin.php:1332
+#: core/um-builtin.php:1334
 msgid "Telugu"
 msgstr ""
 
-#: core/um-builtin.php:1333
+#: core/um-builtin.php:1335
 msgid "Tajik"
 msgstr ""
 
-#: core/um-builtin.php:1334
+#: core/um-builtin.php:1336
 msgid "Thai"
 msgstr ""
 
-#: core/um-builtin.php:1335
+#: core/um-builtin.php:1337
 msgid "Tigrinya"
 msgstr ""
 
-#: core/um-builtin.php:1336
+#: core/um-builtin.php:1338
 msgid "Turkmen"
 msgstr ""
 
-#: core/um-builtin.php:1337
+#: core/um-builtin.php:1339
 msgid "Tagalog"
 msgstr ""
 
-#: core/um-builtin.php:1338
+#: core/um-builtin.php:1340
 msgid "Tswana"
 msgstr ""
 
-#: core/um-builtin.php:1339 core/um-builtin.php:1587
+#: core/um-builtin.php:1341 core/um-builtin.php:1589
 msgid "Tonga"
 msgstr ""
 
-#: core/um-builtin.php:1340
+#: core/um-builtin.php:1342
 msgid "Turkish"
 msgstr ""
 
-#: core/um-builtin.php:1341
+#: core/um-builtin.php:1343
 msgid "Tsonga"
 msgstr ""
 
-#: core/um-builtin.php:1342
+#: core/um-builtin.php:1344
 msgid "Tatar"
 msgstr ""
 
-#: core/um-builtin.php:1343
+#: core/um-builtin.php:1345
 msgid "Twi"
 msgstr ""
 
-#: core/um-builtin.php:1344
+#: core/um-builtin.php:1346
 msgid "Tahitian"
 msgstr ""
 
-#: core/um-builtin.php:1345
+#: core/um-builtin.php:1347
 msgid "Uighur"
 msgstr ""
 
-#: core/um-builtin.php:1346
+#: core/um-builtin.php:1348
 msgid "Ukrainian"
 msgstr ""
 
-#: core/um-builtin.php:1347
+#: core/um-builtin.php:1349
 msgid "Urdu"
 msgstr ""
 
-#: core/um-builtin.php:1348
+#: core/um-builtin.php:1350
 msgid "Uzbek"
 msgstr ""
 
-#: core/um-builtin.php:1349
+#: core/um-builtin.php:1351
 msgid "Venda"
 msgstr ""
 
-#: core/um-builtin.php:1350
+#: core/um-builtin.php:1352
 msgid "Vietnamese"
 msgstr ""
 
-#: core/um-builtin.php:1351
+#: core/um-builtin.php:1353
 msgid "Volapuk"
 msgstr ""
 
-#: core/um-builtin.php:1352
+#: core/um-builtin.php:1354
 msgid "Walloon"
 msgstr ""
 
-#: core/um-builtin.php:1353
+#: core/um-builtin.php:1355
 msgid "Wolof"
 msgstr ""
 
-#: core/um-builtin.php:1354
+#: core/um-builtin.php:1356
 msgid "Xhosa"
 msgstr ""
 
-#: core/um-builtin.php:1355
+#: core/um-builtin.php:1357
 msgid "Yiddish"
 msgstr ""
 
-#: core/um-builtin.php:1356
+#: core/um-builtin.php:1358
 msgid "Yoruba"
 msgstr ""
 
-#: core/um-builtin.php:1357
+#: core/um-builtin.php:1359
 msgid "Zhuang"
 msgstr ""
 
-#: core/um-builtin.php:1358
+#: core/um-builtin.php:1360
 msgid "Chinese"
 msgstr ""
 
-#: core/um-builtin.php:1359
+#: core/um-builtin.php:1361
 msgid "Zulu"
 msgstr ""
 
-#: core/um-builtin.php:1365
+#: core/um-builtin.php:1367
 msgid "Afghanistan"
 msgstr ""
 
-#: core/um-builtin.php:1366
+#: core/um-builtin.php:1368
 msgid "Åland Islands"
 msgstr ""
 
-#: core/um-builtin.php:1367
+#: core/um-builtin.php:1369
 msgid "Albania"
 msgstr ""
 
-#: core/um-builtin.php:1368
+#: core/um-builtin.php:1370
 msgid "Algeria"
 msgstr ""
 
-#: core/um-builtin.php:1369
+#: core/um-builtin.php:1371
 msgid "American Samoa"
 msgstr ""
 
-#: core/um-builtin.php:1370
+#: core/um-builtin.php:1372
 msgid "Andorra"
 msgstr ""
 
-#: core/um-builtin.php:1371
+#: core/um-builtin.php:1373
 msgid "Angola"
 msgstr ""
 
-#: core/um-builtin.php:1372
+#: core/um-builtin.php:1374
 msgid "Anguilla"
 msgstr ""
 
-#: core/um-builtin.php:1373
+#: core/um-builtin.php:1375
 msgid "Antarctica"
 msgstr ""
 
-#: core/um-builtin.php:1374
+#: core/um-builtin.php:1376
 msgid "Antigua and Barbuda"
 msgstr ""
 
-#: core/um-builtin.php:1375
+#: core/um-builtin.php:1377
 msgid "Argentina"
 msgstr ""
 
-#: core/um-builtin.php:1376
+#: core/um-builtin.php:1378
 msgid "Armenia"
 msgstr ""
 
-#: core/um-builtin.php:1377
+#: core/um-builtin.php:1379
 msgid "Aruba"
 msgstr ""
 
-#: core/um-builtin.php:1378
+#: core/um-builtin.php:1380
 msgid "Australia"
 msgstr ""
 
-#: core/um-builtin.php:1379
+#: core/um-builtin.php:1381
 msgid "Austria"
 msgstr ""
 
-#: core/um-builtin.php:1380
+#: core/um-builtin.php:1382
 msgid "Azerbaijan"
 msgstr ""
 
-#: core/um-builtin.php:1381
+#: core/um-builtin.php:1383
 msgid "Bahamas"
 msgstr ""
 
-#: core/um-builtin.php:1382
+#: core/um-builtin.php:1384
 msgid "Bahrain"
 msgstr ""
 
-#: core/um-builtin.php:1383
+#: core/um-builtin.php:1385
 msgid "Bangladesh"
 msgstr ""
 
-#: core/um-builtin.php:1384
+#: core/um-builtin.php:1386
 msgid "Barbados"
 msgstr ""
 
-#: core/um-builtin.php:1385
+#: core/um-builtin.php:1387
 msgid "Belarus"
 msgstr ""
 
-#: core/um-builtin.php:1386
+#: core/um-builtin.php:1388
 msgid "Belgium"
 msgstr ""
 
-#: core/um-builtin.php:1387
+#: core/um-builtin.php:1389
 msgid "Belize"
 msgstr ""
 
-#: core/um-builtin.php:1388
+#: core/um-builtin.php:1390
 msgid "Benin"
 msgstr ""
 
-#: core/um-builtin.php:1389
+#: core/um-builtin.php:1391
 msgid "Bermuda"
 msgstr ""
 
-#: core/um-builtin.php:1390
+#: core/um-builtin.php:1392
 msgid "Bhutan"
 msgstr ""
 
-#: core/um-builtin.php:1391
+#: core/um-builtin.php:1393
 msgid "Bolivia, Plurinational State of"
 msgstr ""
 
-#: core/um-builtin.php:1392
+#: core/um-builtin.php:1394
 msgid "Bosnia and Herzegovina"
 msgstr ""
 
-#: core/um-builtin.php:1393
+#: core/um-builtin.php:1395
 msgid "Botswana"
 msgstr ""
 
-#: core/um-builtin.php:1394
+#: core/um-builtin.php:1396
 msgid "Bouvet Island"
 msgstr ""
 
-#: core/um-builtin.php:1395
+#: core/um-builtin.php:1397
 msgid "Brazil"
 msgstr ""
 
-#: core/um-builtin.php:1396
+#: core/um-builtin.php:1398
 msgid "British Indian Ocean Territory"
 msgstr ""
 
-#: core/um-builtin.php:1397
+#: core/um-builtin.php:1399
 msgid "Brunei Darussalam"
 msgstr ""
 
-#: core/um-builtin.php:1398
+#: core/um-builtin.php:1400
 msgid "Bulgaria"
 msgstr ""
 
-#: core/um-builtin.php:1399
+#: core/um-builtin.php:1401
 msgid "Burkina Faso"
 msgstr ""
 
-#: core/um-builtin.php:1400
+#: core/um-builtin.php:1402
 msgid "Burundi"
 msgstr ""
 
-#: core/um-builtin.php:1401
+#: core/um-builtin.php:1403
 msgid "Cambodia"
 msgstr ""
 
-#: core/um-builtin.php:1402
+#: core/um-builtin.php:1404
 msgid "Cameroon"
 msgstr ""
 
-#: core/um-builtin.php:1403
+#: core/um-builtin.php:1405
 msgid "Canada"
 msgstr ""
 
-#: core/um-builtin.php:1404
+#: core/um-builtin.php:1406
 msgid "Cape Verde"
 msgstr ""
 
-#: core/um-builtin.php:1405
+#: core/um-builtin.php:1407
 msgid "Cayman Islands"
 msgstr ""
 
-#: core/um-builtin.php:1406
+#: core/um-builtin.php:1408
 msgid "Central African Republic"
 msgstr ""
 
-#: core/um-builtin.php:1407
+#: core/um-builtin.php:1409
 msgid "Chad"
 msgstr ""
 
-#: core/um-builtin.php:1408
+#: core/um-builtin.php:1410
 msgid "Chile"
 msgstr ""
 
-#: core/um-builtin.php:1409
+#: core/um-builtin.php:1411
 msgid "China"
 msgstr ""
 
-#: core/um-builtin.php:1410
+#: core/um-builtin.php:1412
 msgid "Christmas Island"
 msgstr ""
 
-#: core/um-builtin.php:1411
+#: core/um-builtin.php:1413
 msgid "Cocos (Keeling) Islands"
 msgstr ""
 
-#: core/um-builtin.php:1412
+#: core/um-builtin.php:1414
 msgid "Colombia"
 msgstr ""
 
-#: core/um-builtin.php:1413
+#: core/um-builtin.php:1415
 msgid "Comoros"
 msgstr ""
 
-#: core/um-builtin.php:1414
+#: core/um-builtin.php:1416
 msgid "Congo"
 msgstr ""
 
-#: core/um-builtin.php:1415
+#: core/um-builtin.php:1417
 msgid "Congo, the Democratic Republic of the"
 msgstr ""
 
-#: core/um-builtin.php:1416
+#: core/um-builtin.php:1418
 msgid "Cook Islands"
 msgstr ""
 
-#: core/um-builtin.php:1417
+#: core/um-builtin.php:1419
 msgid "Costa Rica"
 msgstr ""
 
-#: core/um-builtin.php:1418
+#: core/um-builtin.php:1420
 msgid "Côte d'Ivoire"
 msgstr ""
 
-#: core/um-builtin.php:1419
+#: core/um-builtin.php:1421
 msgid "Croatia"
 msgstr ""
 
-#: core/um-builtin.php:1420
+#: core/um-builtin.php:1422
 msgid "Cuba"
 msgstr ""
 
-#: core/um-builtin.php:1421
+#: core/um-builtin.php:1423
 msgid "Cyprus"
 msgstr ""
 
-#: core/um-builtin.php:1422
+#: core/um-builtin.php:1424
 msgid "Czech Republic"
 msgstr ""
 
-#: core/um-builtin.php:1423
+#: core/um-builtin.php:1425
 msgid "Denmark"
 msgstr ""
 
-#: core/um-builtin.php:1424
+#: core/um-builtin.php:1426
 msgid "Djibouti"
 msgstr ""
 
-#: core/um-builtin.php:1425
+#: core/um-builtin.php:1427
 msgid "Dominica"
 msgstr ""
 
-#: core/um-builtin.php:1426
+#: core/um-builtin.php:1428
 msgid "Dominican Republic"
 msgstr ""
 
-#: core/um-builtin.php:1427
+#: core/um-builtin.php:1429
 msgid "Ecuador"
 msgstr ""
 
-#: core/um-builtin.php:1428
+#: core/um-builtin.php:1430
 msgid "Egypt"
 msgstr ""
 
-#: core/um-builtin.php:1429
+#: core/um-builtin.php:1431
 msgid "El Salvador"
 msgstr ""
 
-#: core/um-builtin.php:1430
+#: core/um-builtin.php:1432
 msgid "Equatorial Guinea"
 msgstr ""
 
-#: core/um-builtin.php:1431
+#: core/um-builtin.php:1433
 msgid "Eritrea"
 msgstr ""
 
-#: core/um-builtin.php:1432
+#: core/um-builtin.php:1434
 msgid "Estonia"
 msgstr ""
 
-#: core/um-builtin.php:1433
+#: core/um-builtin.php:1435
 msgid "Ethiopia"
 msgstr ""
 
-#: core/um-builtin.php:1434
+#: core/um-builtin.php:1436
 msgid "Falkland Islands (Malvinas)"
 msgstr ""
 
-#: core/um-builtin.php:1435
+#: core/um-builtin.php:1437
 msgid "Faroe Islands"
 msgstr ""
 
-#: core/um-builtin.php:1436
+#: core/um-builtin.php:1438
 msgid "Fiji"
 msgstr ""
 
-#: core/um-builtin.php:1437
+#: core/um-builtin.php:1439
 msgid "Finland"
 msgstr ""
 
-#: core/um-builtin.php:1438
+#: core/um-builtin.php:1440
 msgid "France"
 msgstr ""
 
-#: core/um-builtin.php:1439
+#: core/um-builtin.php:1441
 msgid "French Guiana"
 msgstr ""
 
-#: core/um-builtin.php:1440
+#: core/um-builtin.php:1442
 msgid "French Polynesia"
 msgstr ""
 
-#: core/um-builtin.php:1441
+#: core/um-builtin.php:1443
 msgid "French Southern Territories"
 msgstr ""
 
-#: core/um-builtin.php:1442
+#: core/um-builtin.php:1444
 msgid "Gabon"
 msgstr ""
 
-#: core/um-builtin.php:1443
+#: core/um-builtin.php:1445
 msgid "Gambia"
 msgstr ""
 
-#: core/um-builtin.php:1444
+#: core/um-builtin.php:1446
 msgid "Georgia"
 msgstr ""
 
-#: core/um-builtin.php:1445
+#: core/um-builtin.php:1447
 msgid "Germany"
 msgstr ""
 
-#: core/um-builtin.php:1446
+#: core/um-builtin.php:1448
 msgid "Ghana"
 msgstr ""
 
-#: core/um-builtin.php:1447
+#: core/um-builtin.php:1449
 msgid "Gibraltar"
 msgstr ""
 
-#: core/um-builtin.php:1448
+#: core/um-builtin.php:1450
 msgid "Greece"
 msgstr ""
 
-#: core/um-builtin.php:1449
+#: core/um-builtin.php:1451
 msgid "Greenland"
 msgstr ""
 
-#: core/um-builtin.php:1450
+#: core/um-builtin.php:1452
 msgid "Grenada"
 msgstr ""
 
-#: core/um-builtin.php:1451
+#: core/um-builtin.php:1453
 msgid "Guadeloupe"
 msgstr ""
 
-#: core/um-builtin.php:1452
+#: core/um-builtin.php:1454
 msgid "Guam"
 msgstr ""
 
-#: core/um-builtin.php:1453
+#: core/um-builtin.php:1455
 msgid "Guatemala"
 msgstr ""
 
-#: core/um-builtin.php:1454
+#: core/um-builtin.php:1456
 msgid "Guernsey"
 msgstr ""
 
-#: core/um-builtin.php:1455
+#: core/um-builtin.php:1457
 msgid "Guinea"
 msgstr ""
 
-#: core/um-builtin.php:1456
+#: core/um-builtin.php:1458
 msgid "Guinea-Bissau"
 msgstr ""
 
-#: core/um-builtin.php:1457
+#: core/um-builtin.php:1459
 msgid "Guyana"
 msgstr ""
 
-#: core/um-builtin.php:1458
+#: core/um-builtin.php:1460
 msgid "Haiti"
 msgstr ""
 
-#: core/um-builtin.php:1459
+#: core/um-builtin.php:1461
 msgid "Heard Island and McDonald Islands"
 msgstr ""
 
-#: core/um-builtin.php:1460
+#: core/um-builtin.php:1462
 msgid "Holy See (Vatican City State)"
 msgstr ""
 
-#: core/um-builtin.php:1461
+#: core/um-builtin.php:1463
 msgid "Honduras"
 msgstr ""
 
-#: core/um-builtin.php:1462
+#: core/um-builtin.php:1464
 msgid "Hong Kong"
 msgstr ""
 
-#: core/um-builtin.php:1463
+#: core/um-builtin.php:1465
 msgid "Hungary"
 msgstr ""
 
-#: core/um-builtin.php:1464
+#: core/um-builtin.php:1466
 msgid "Iceland"
 msgstr ""
 
-#: core/um-builtin.php:1465
+#: core/um-builtin.php:1467
 msgid "India"
 msgstr ""
 
-#: core/um-builtin.php:1466
+#: core/um-builtin.php:1468
 msgid "Indonesia"
 msgstr ""
 
-#: core/um-builtin.php:1467
+#: core/um-builtin.php:1469
 msgid "Iran, Islamic Republic of"
 msgstr ""
 
-#: core/um-builtin.php:1468
+#: core/um-builtin.php:1470
 msgid "Iraq"
 msgstr ""
 
-#: core/um-builtin.php:1469
+#: core/um-builtin.php:1471
 msgid "Ireland"
 msgstr ""
 
-#: core/um-builtin.php:1470
+#: core/um-builtin.php:1472
 msgid "Isle of Man"
 msgstr ""
 
-#: core/um-builtin.php:1471
+#: core/um-builtin.php:1473
 msgid "Israel"
 msgstr ""
 
-#: core/um-builtin.php:1472
+#: core/um-builtin.php:1474
 msgid "Italy"
 msgstr ""
 
-#: core/um-builtin.php:1473
+#: core/um-builtin.php:1475
 msgid "Jamaica"
 msgstr ""
 
-#: core/um-builtin.php:1474
+#: core/um-builtin.php:1476
 msgid "Japan"
 msgstr ""
 
-#: core/um-builtin.php:1475
+#: core/um-builtin.php:1477
 msgid "Jersey"
 msgstr ""
 
-#: core/um-builtin.php:1476
+#: core/um-builtin.php:1478
 msgid "Jordan"
 msgstr ""
 
-#: core/um-builtin.php:1477
+#: core/um-builtin.php:1479
 msgid "Kazakhstan"
 msgstr ""
 
-#: core/um-builtin.php:1478
+#: core/um-builtin.php:1480
 msgid "Kenya"
 msgstr ""
 
-#: core/um-builtin.php:1479
+#: core/um-builtin.php:1481
 msgid "Kiribati"
 msgstr ""
 
-#: core/um-builtin.php:1480
+#: core/um-builtin.php:1482
 msgid "Korea, Democratic People's Republic of"
 msgstr ""
 
-#: core/um-builtin.php:1481
+#: core/um-builtin.php:1483
 msgid "Korea, Republic of"
 msgstr ""
 
-#: core/um-builtin.php:1482
+#: core/um-builtin.php:1484
 msgid "Kuwait"
 msgstr ""
 
-#: core/um-builtin.php:1483
+#: core/um-builtin.php:1485
 msgid "Kyrgyzstan"
 msgstr ""
 
-#: core/um-builtin.php:1484
+#: core/um-builtin.php:1486
 msgid "Lao People's Democratic Republic"
 msgstr ""
 
-#: core/um-builtin.php:1485
+#: core/um-builtin.php:1487
 msgid "Latvia"
 msgstr ""
 
-#: core/um-builtin.php:1486
+#: core/um-builtin.php:1488
 msgid "Lebanon"
 msgstr ""
 
-#: core/um-builtin.php:1487
+#: core/um-builtin.php:1489
 msgid "Lesotho"
 msgstr ""
 
-#: core/um-builtin.php:1488
+#: core/um-builtin.php:1490
 msgid "Liberia"
 msgstr ""
 
-#: core/um-builtin.php:1489
+#: core/um-builtin.php:1491
 msgid "Libyan Arab Jamahiriya"
 msgstr ""
 
-#: core/um-builtin.php:1490
+#: core/um-builtin.php:1492
 msgid "Liechtenstein"
 msgstr ""
 
-#: core/um-builtin.php:1491
+#: core/um-builtin.php:1493
 msgid "Lithuania"
 msgstr ""
 
-#: core/um-builtin.php:1492
+#: core/um-builtin.php:1494
 msgid "Luxembourg"
 msgstr ""
 
-#: core/um-builtin.php:1493
+#: core/um-builtin.php:1495
 msgid "Macao"
 msgstr ""
 
-#: core/um-builtin.php:1494
+#: core/um-builtin.php:1496
 msgid "Macedonia, the former Yugoslav Republic of"
 msgstr ""
 
-#: core/um-builtin.php:1495
+#: core/um-builtin.php:1497
 msgid "Madagascar"
 msgstr ""
 
-#: core/um-builtin.php:1496
+#: core/um-builtin.php:1498
 msgid "Malawi"
 msgstr ""
 
-#: core/um-builtin.php:1497
+#: core/um-builtin.php:1499
 msgid "Malaysia"
 msgstr ""
 
-#: core/um-builtin.php:1498
+#: core/um-builtin.php:1500
 msgid "Maldives"
 msgstr ""
 
-#: core/um-builtin.php:1499
+#: core/um-builtin.php:1501
 msgid "Mali"
 msgstr ""
 
-#: core/um-builtin.php:1500
+#: core/um-builtin.php:1502
 msgid "Malta"
 msgstr ""
 
-#: core/um-builtin.php:1501
+#: core/um-builtin.php:1503
 msgid "Marshall Islands"
 msgstr ""
 
-#: core/um-builtin.php:1502
+#: core/um-builtin.php:1504
 msgid "Martinique"
 msgstr ""
 
-#: core/um-builtin.php:1503
+#: core/um-builtin.php:1505
 msgid "Mauritania"
 msgstr ""
 
-#: core/um-builtin.php:1504
+#: core/um-builtin.php:1506
 msgid "Mauritius"
 msgstr ""
 
-#: core/um-builtin.php:1505
+#: core/um-builtin.php:1507
 msgid "Mayotte"
 msgstr ""
 
-#: core/um-builtin.php:1506
+#: core/um-builtin.php:1508
 msgid "Mexico"
 msgstr ""
 
-#: core/um-builtin.php:1507
+#: core/um-builtin.php:1509
 msgid "Micronesia, Federated States of"
 msgstr ""
 
-#: core/um-builtin.php:1508
+#: core/um-builtin.php:1510
 msgid "Moldova, Republic of"
 msgstr ""
 
-#: core/um-builtin.php:1509
+#: core/um-builtin.php:1511
 msgid "Monaco"
 msgstr ""
 
-#: core/um-builtin.php:1510
+#: core/um-builtin.php:1512
 msgid "Mongolia"
 msgstr ""
 
-#: core/um-builtin.php:1511
+#: core/um-builtin.php:1513
 msgid "Montenegro"
 msgstr ""
 
-#: core/um-builtin.php:1512
+#: core/um-builtin.php:1514
 msgid "Montserrat"
 msgstr ""
 
-#: core/um-builtin.php:1513
+#: core/um-builtin.php:1515
 msgid "Morocco"
 msgstr ""
 
-#: core/um-builtin.php:1514
+#: core/um-builtin.php:1516
 msgid "Mozambique"
 msgstr ""
 
-#: core/um-builtin.php:1515
+#: core/um-builtin.php:1517
 msgid "Myanmar"
 msgstr ""
 
-#: core/um-builtin.php:1516
+#: core/um-builtin.php:1518
 msgid "Namibia"
 msgstr ""
 
-#: core/um-builtin.php:1518
+#: core/um-builtin.php:1520
 msgid "Nepal"
 msgstr ""
 
-#: core/um-builtin.php:1519
+#: core/um-builtin.php:1521
 msgid "Netherlands"
 msgstr ""
 
-#: core/um-builtin.php:1520
+#: core/um-builtin.php:1522
 msgid "Netherlands Antilles"
 msgstr ""
 
-#: core/um-builtin.php:1521
+#: core/um-builtin.php:1523
 msgid "New Caledonia"
 msgstr ""
 
-#: core/um-builtin.php:1522
+#: core/um-builtin.php:1524
 msgid "New Zealand"
 msgstr ""
 
-#: core/um-builtin.php:1523
+#: core/um-builtin.php:1525
 msgid "Nicaragua"
 msgstr ""
 
-#: core/um-builtin.php:1524
+#: core/um-builtin.php:1526
 msgid "Niger"
 msgstr ""
 
-#: core/um-builtin.php:1525
+#: core/um-builtin.php:1527
 msgid "Nigeria"
 msgstr ""
 
-#: core/um-builtin.php:1526
+#: core/um-builtin.php:1528
 msgid "Niue"
 msgstr ""
 
-#: core/um-builtin.php:1527
+#: core/um-builtin.php:1529
 msgid "Norfolk Island"
 msgstr ""
 
-#: core/um-builtin.php:1528
+#: core/um-builtin.php:1530
 msgid "Northern Mariana Islands"
 msgstr ""
 
-#: core/um-builtin.php:1529
+#: core/um-builtin.php:1531
 msgid "Norway"
 msgstr ""
 
-#: core/um-builtin.php:1530
+#: core/um-builtin.php:1532
 msgid "Oman"
 msgstr ""
 
-#: core/um-builtin.php:1531
+#: core/um-builtin.php:1533
 msgid "Pakistan"
 msgstr ""
 
-#: core/um-builtin.php:1532
+#: core/um-builtin.php:1534
 msgid "Palau"
 msgstr ""
 
-#: core/um-builtin.php:1533
+#: core/um-builtin.php:1535
 msgid "Palestine"
 msgstr ""
 
-#: core/um-builtin.php:1534
+#: core/um-builtin.php:1536
 msgid "Panama"
 msgstr ""
 
-#: core/um-builtin.php:1535
+#: core/um-builtin.php:1537
 msgid "Papua New Guinea"
 msgstr ""
 
-#: core/um-builtin.php:1536
+#: core/um-builtin.php:1538
 msgid "Paraguay"
 msgstr ""
 
-#: core/um-builtin.php:1537
+#: core/um-builtin.php:1539
 msgid "Peru"
 msgstr ""
 
-#: core/um-builtin.php:1538
+#: core/um-builtin.php:1540
 msgid "Philippines"
 msgstr ""
 
-#: core/um-builtin.php:1539
+#: core/um-builtin.php:1541
 msgid "Pitcairn"
 msgstr ""
 
-#: core/um-builtin.php:1540
+#: core/um-builtin.php:1542
 msgid "Poland"
 msgstr ""
 
-#: core/um-builtin.php:1541
+#: core/um-builtin.php:1543
 msgid "Portugal"
 msgstr ""
 
-#: core/um-builtin.php:1542
+#: core/um-builtin.php:1544
 msgid "Puerto Rico"
 msgstr ""
 
-#: core/um-builtin.php:1543
+#: core/um-builtin.php:1545
 msgid "Qatar"
 msgstr ""
 
-#: core/um-builtin.php:1544
+#: core/um-builtin.php:1546
 msgid "Réunion"
 msgstr ""
 
-#: core/um-builtin.php:1545
+#: core/um-builtin.php:1547
 msgid "Romania"
 msgstr ""
 
-#: core/um-builtin.php:1546
+#: core/um-builtin.php:1548
 msgid "Russian Federation"
 msgstr ""
 
-#: core/um-builtin.php:1547
+#: core/um-builtin.php:1549
 msgid "Rwanda"
 msgstr ""
 
-#: core/um-builtin.php:1548
+#: core/um-builtin.php:1550
 msgid "Saint Barthélemy"
 msgstr ""
 
-#: core/um-builtin.php:1549
+#: core/um-builtin.php:1551
 msgid "Saint Helena"
 msgstr ""
 
-#: core/um-builtin.php:1550
+#: core/um-builtin.php:1552
 msgid "Saint Kitts and Nevis"
 msgstr ""
 
-#: core/um-builtin.php:1551
+#: core/um-builtin.php:1553
 msgid "Saint Lucia"
 msgstr ""
 
-#: core/um-builtin.php:1552
+#: core/um-builtin.php:1554
 msgid "Saint Martin (French part)"
 msgstr ""
 
-#: core/um-builtin.php:1553
+#: core/um-builtin.php:1555
 msgid "Saint Pierre and Miquelon"
 msgstr ""
 
-#: core/um-builtin.php:1554
+#: core/um-builtin.php:1556
 msgid "Saint Vincent and the Grenadines"
 msgstr ""
 
-#: core/um-builtin.php:1555
+#: core/um-builtin.php:1557
 msgid "Samoa"
 msgstr ""
 
-#: core/um-builtin.php:1556
+#: core/um-builtin.php:1558
 msgid "San Marino"
 msgstr ""
 
-#: core/um-builtin.php:1557
+#: core/um-builtin.php:1559
 msgid "Sao Tome and Principe"
 msgstr ""
 
-#: core/um-builtin.php:1558
+#: core/um-builtin.php:1560
 msgid "Saudi Arabia"
 msgstr ""
 
-#: core/um-builtin.php:1559
+#: core/um-builtin.php:1561
 msgid "Senegal"
 msgstr ""
 
-#: core/um-builtin.php:1560
+#: core/um-builtin.php:1562
 msgid "Serbia"
 msgstr ""
 
-#: core/um-builtin.php:1561
+#: core/um-builtin.php:1563
 msgid "Seychelles"
 msgstr ""
 
-#: core/um-builtin.php:1562
+#: core/um-builtin.php:1564
 msgid "Sierra Leone"
 msgstr ""
 
-#: core/um-builtin.php:1563
+#: core/um-builtin.php:1565
 msgid "Singapore"
 msgstr ""
 
-#: core/um-builtin.php:1564
+#: core/um-builtin.php:1566
 msgid "Slovakia"
 msgstr ""
 
-#: core/um-builtin.php:1565
+#: core/um-builtin.php:1567
 msgid "Slovenia"
 msgstr ""
 
-#: core/um-builtin.php:1566
+#: core/um-builtin.php:1568
 msgid "Solomon Islands"
 msgstr ""
 
-#: core/um-builtin.php:1567
+#: core/um-builtin.php:1569
 msgid "Somalia"
 msgstr ""
 
-#: core/um-builtin.php:1568
+#: core/um-builtin.php:1570
 msgid "South Africa"
 msgstr ""
 
-#: core/um-builtin.php:1569
+#: core/um-builtin.php:1571
 msgid "South Georgia and the South Sandwich Islands"
 msgstr ""
 
-#: core/um-builtin.php:1570
+#: core/um-builtin.php:1572
 msgid "South Sudan"
 msgstr ""
 
-#: core/um-builtin.php:1571
+#: core/um-builtin.php:1573
 msgid "Spain"
 msgstr ""
 
-#: core/um-builtin.php:1572
+#: core/um-builtin.php:1574
 msgid "Sri Lanka"
 msgstr ""
 
-#: core/um-builtin.php:1573
+#: core/um-builtin.php:1575
 msgid "Sudan"
 msgstr ""
 
-#: core/um-builtin.php:1574
+#: core/um-builtin.php:1576
 msgid "Suriname"
 msgstr ""
 
-#: core/um-builtin.php:1575
+#: core/um-builtin.php:1577
 msgid "Svalbard and Jan Mayen"
 msgstr ""
 
-#: core/um-builtin.php:1576
+#: core/um-builtin.php:1578
 msgid "Swaziland"
 msgstr ""
 
-#: core/um-builtin.php:1577
+#: core/um-builtin.php:1579
 msgid "Sweden"
 msgstr ""
 
-#: core/um-builtin.php:1578
+#: core/um-builtin.php:1580
 msgid "Switzerland"
 msgstr ""
 
-#: core/um-builtin.php:1579
+#: core/um-builtin.php:1581
 msgid "Syrian Arab Republic"
 msgstr ""
 
-#: core/um-builtin.php:1580
+#: core/um-builtin.php:1582
 msgid "Taiwan, Province of China"
 msgstr ""
 
-#: core/um-builtin.php:1581
+#: core/um-builtin.php:1583
 msgid "Tajikistan"
 msgstr ""
 
-#: core/um-builtin.php:1582
+#: core/um-builtin.php:1584
 msgid "Tanzania, United Republic of"
 msgstr ""
 
-#: core/um-builtin.php:1583
+#: core/um-builtin.php:1585
 msgid "Thailand"
 msgstr ""
 
-#: core/um-builtin.php:1584
+#: core/um-builtin.php:1586
 msgid "Timor-Leste"
 msgstr ""
 
-#: core/um-builtin.php:1585
+#: core/um-builtin.php:1587
 msgid "Togo"
 msgstr ""
 
-#: core/um-builtin.php:1586
+#: core/um-builtin.php:1588
 msgid "Tokelau"
 msgstr ""
 
-#: core/um-builtin.php:1588
+#: core/um-builtin.php:1590
 msgid "Trinidad and Tobago"
 msgstr ""
 
-#: core/um-builtin.php:1589
+#: core/um-builtin.php:1591
 msgid "Tunisia"
 msgstr ""
 
-#: core/um-builtin.php:1590
+#: core/um-builtin.php:1592
 msgid "Turkey"
 msgstr ""
 
-#: core/um-builtin.php:1591
+#: core/um-builtin.php:1593
 msgid "Turkmenistan"
 msgstr ""
 
-#: core/um-builtin.php:1592
+#: core/um-builtin.php:1594
 msgid "Turks and Caicos Islands"
 msgstr ""
 
-#: core/um-builtin.php:1593
+#: core/um-builtin.php:1595
 msgid "Tuvalu"
 msgstr ""
 
-#: core/um-builtin.php:1594
+#: core/um-builtin.php:1596
 msgid "Uganda"
 msgstr ""
 
-#: core/um-builtin.php:1595
+#: core/um-builtin.php:1597
 msgid "Ukraine"
 msgstr ""
 
-#: core/um-builtin.php:1596
+#: core/um-builtin.php:1598
 msgid "United Arab Emirates"
 msgstr ""
 
-#: core/um-builtin.php:1597
+#: core/um-builtin.php:1599
 msgid "United Kingdom"
 msgstr ""
 
-#: core/um-builtin.php:1598
+#: core/um-builtin.php:1600
 msgid "United States"
 msgstr ""
 
-#: core/um-builtin.php:1599
+#: core/um-builtin.php:1601
 msgid "United States Minor Outlying Islands"
 msgstr ""
 
-#: core/um-builtin.php:1600
+#: core/um-builtin.php:1602
 msgid "Uruguay"
 msgstr ""
 
-#: core/um-builtin.php:1601
+#: core/um-builtin.php:1603
 msgid "Uzbekistan"
 msgstr ""
 
-#: core/um-builtin.php:1602
+#: core/um-builtin.php:1604
 msgid "Vanuatu"
 msgstr ""
 
-#: core/um-builtin.php:1603
+#: core/um-builtin.php:1605
 msgid "Venezuela, Bolivarian Republic of"
 msgstr ""
 
-#: core/um-builtin.php:1604
+#: core/um-builtin.php:1606
 msgid "Viet Nam"
 msgstr ""
 
-#: core/um-builtin.php:1605
+#: core/um-builtin.php:1607
 msgid "Virgin Islands, British"
 msgstr ""
 
-#: core/um-builtin.php:1606
+#: core/um-builtin.php:1608
 msgid "Virgin Islands, U.S."
 msgstr ""
 
-#: core/um-builtin.php:1607
+#: core/um-builtin.php:1609
 msgid "Wallis and Futuna"
 msgstr ""
 
-#: core/um-builtin.php:1608
+#: core/um-builtin.php:1610
 msgid "Western Sahara"
 msgstr ""
 
-#: core/um-builtin.php:1609
+#: core/um-builtin.php:1611
 msgid "Yemen"
 msgstr ""
 
-#: core/um-builtin.php:1610
+#: core/um-builtin.php:1612
 msgid "Zambia"
 msgstr ""
 
-#: core/um-builtin.php:1611
+#: core/um-builtin.php:1613
 msgid "Zimbabwe"
 msgstr ""
 
@@ -4212,71 +4227,87 @@ msgstr ""
 msgid "Less than 1 year old"
 msgstr ""
 
-#: core/um-fields.php:745
+#: core/um-fields.php:749
 msgid "Custom Field"
 msgstr ""
 
-#: core/um-fields.php:1020
+#: core/um-fields.php:1024
 msgid "Please upload a valid image!"
 msgstr ""
 
-#: core/um-fields.php:1027 core/um-fields.php:1048
+#: core/um-fields.php:1031 core/um-fields.php:1052
 msgid "Upload"
 msgstr ""
 
-#: core/um-fields.php:1028
+#: core/um-fields.php:1032
 msgid "Sorry this is not a valid image."
 msgstr ""
 
-#: core/um-fields.php:1029
+#: core/um-fields.php:1033
 msgid "This image is too large!"
 msgstr ""
 
-#: core/um-fields.php:1030
+#: core/um-fields.php:1034
 msgid "This image is too small!"
 msgstr ""
 
-#: core/um-fields.php:1031
+#: core/um-fields.php:1035
 msgid "You can only upload one image"
 msgstr ""
 
-#: core/um-fields.php:1314
+#: core/um-fields.php:1053
+msgid "Sorry this is not a valid file."
+msgstr ""
+
+#: core/um-fields.php:1054
+msgid "This file is too large!"
+msgstr ""
+
+#: core/um-fields.php:1055
+msgid "This file is too small!"
+msgstr ""
+
+#: core/um-fields.php:1056
+msgid "You can only upload one file"
+msgstr ""
+
+#: core/um-fields.php:1337
 msgid "Current Password"
 msgstr ""
 
-#: core/um-fields.php:1343
+#: core/um-fields.php:1366
 msgid "New Password"
 msgstr ""
 
-#: core/um-fields.php:1375
+#: core/um-fields.php:1398
 #, php-format
 msgid "Confirm %s"
 msgstr ""
 
-#: core/um-fields.php:1597 core/um-fields.php:1681
+#: core/um-fields.php:1620 core/um-fields.php:1704
 msgid "Upload Photo"
 msgstr ""
 
-#: core/um-fields.php:1651 core/um-fields.php:1739
+#: core/um-fields.php:1674 core/um-fields.php:1762
 msgid "Processing..."
 msgstr ""
 
-#: core/um-fields.php:1697 core/um-fields.php:1739
+#: core/um-fields.php:1720 core/um-fields.php:1762
 msgid "Change file"
 msgstr ""
 
-#: core/um-fields.php:1739
+#: core/um-fields.php:1762
 msgid "Save"
 msgstr ""
 
-#: core/um-fields.php:2623
+#: core/um-fields.php:2667
 #, php-format
 msgid ""
 "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some "
 "information!"
 msgstr ""
 
-#: core/um-fields.php:2625
+#: core/um-fields.php:2669
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
@@ -4297,7 +4328,11 @@ msgstr ""
 msgid "Ultimate Member: Not a valid temp file"
 msgstr ""
 
-#: core/um-files.php:540 core/um-files.php:546
+#: core/um-files.php:535
+msgid "Invalid user ID: "
+msgstr ""
+
+#: core/um-files.php:544 core/um-files.php:550
 msgid "Unauthorized to do this attempt."
 msgstr ""
 
@@ -4335,11 +4370,11 @@ msgstr ""
 msgid "Last login: %s"
 msgstr ""
 
-#: core/um-filters-fields.php:156
+#: core/um-filters-fields.php:157
 msgid "This file has been removed."
 msgstr ""
 
-#: core/um-filters-fields.php:177
+#: core/um-filters-fields.php:178
 msgid "Untitled photo"
 msgstr ""
 
@@ -4347,7 +4382,7 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: core/um-filters-profile.php:77 core/um-filters-profile.php:95
+#: core/um-filters-profile.php:84 core/um-filters-profile.php:102
 msgid "max"
 msgstr ""
 
@@ -4424,21 +4459,21 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-#: core/um-short-functions.php:424
+#: core/um-short-functions.php:513
 msgid "date submitted"
 msgstr ""
 
-#: core/um-short-functions.php:429
+#: core/um-short-functions.php:518
 msgid "(empty)"
 msgstr ""
 
-#: core/um-shortcodes.php:201
+#: core/um-shortcodes.php:205
 msgid ""
 "This content has been restricted to logged in users only. Please <a href="
 "\"{login_referrer}\">login</a> to view this content."
 msgstr ""
 
-#: core/um-shortcodes.php:410
+#: core/um-shortcodes.php:414
 msgid "Default Template"
 msgstr ""
 
@@ -4536,15 +4571,15 @@ msgstr ""
 msgid "Comments"
 msgstr ""
 
-#: core/um-user.php:76
+#: core/um-user.php:77
 msgid "Assign or change the community role for this user"
 msgstr ""
 
-#: core/um-user.php:249
+#: core/um-user.php:252
 msgid "Membership Rejected"
 msgstr ""
 
-#: core/um-user.php:253
+#: core/um-user.php:256
 msgid "Membership Inactive"
 msgstr ""
 
@@ -4851,29 +4886,29 @@ msgstr ""
 
 #: um-config.php:230 um-config.php:240 um-config.php:264 um-config.php:274
 #: um-config.php:284 um-config.php:294 um-config.php:317 um-config.php:326
-#: um-config.php:337 um-config.php:347 um-config.php:357 um-config.php:931
-#: um-config.php:964 um-config.php:998 um-config.php:1424 um-config.php:1512
-#: um-config.php:1538 um-config.php:1593 um-config.php:1603 um-config.php:1613
-#: um-config.php:1623 um-config.php:1655 um-config.php:1665 um-config.php:1680
-#: um-config.php:1692 um-config.php:1739 um-config.php:1817 um-config.php:1919
-#: um-config.php:1947 um-config.php:1957 um-config.php:2004 um-config.php:2014
-#: um-config.php:2024 um-config.php:2047 um-config.php:2057 um-config.php:2067
-#: um-config.php:2077 um-config.php:2087 um-config.php:2097 um-config.php:2124
-#: um-config.php:2133
+#: um-config.php:336 um-config.php:347 um-config.php:357 um-config.php:367
+#: um-config.php:941 um-config.php:974 um-config.php:1008 um-config.php:1434
+#: um-config.php:1522 um-config.php:1548 um-config.php:1603 um-config.php:1613
+#: um-config.php:1623 um-config.php:1633 um-config.php:1665 um-config.php:1675
+#: um-config.php:1690 um-config.php:1702 um-config.php:1749 um-config.php:1827
+#: um-config.php:1929 um-config.php:1957 um-config.php:1967 um-config.php:2014
+#: um-config.php:2024 um-config.php:2034 um-config.php:2057 um-config.php:2067
+#: um-config.php:2077 um-config.php:2087 um-config.php:2097 um-config.php:2107
+#: um-config.php:2134 um-config.php:2143
 msgid "On"
 msgstr ""
 
 #: um-config.php:231 um-config.php:241 um-config.php:265 um-config.php:275
 #: um-config.php:285 um-config.php:295 um-config.php:318 um-config.php:327
-#: um-config.php:338 um-config.php:348 um-config.php:358 um-config.php:932
-#: um-config.php:965 um-config.php:999 um-config.php:1425 um-config.php:1513
-#: um-config.php:1539 um-config.php:1594 um-config.php:1604 um-config.php:1614
-#: um-config.php:1624 um-config.php:1656 um-config.php:1666 um-config.php:1681
-#: um-config.php:1693 um-config.php:1740 um-config.php:1818 um-config.php:1920
-#: um-config.php:1948 um-config.php:1958 um-config.php:2005 um-config.php:2015
-#: um-config.php:2025 um-config.php:2048 um-config.php:2058 um-config.php:2068
-#: um-config.php:2078 um-config.php:2088 um-config.php:2098 um-config.php:2125
-#: um-config.php:2134
+#: um-config.php:337 um-config.php:348 um-config.php:358 um-config.php:368
+#: um-config.php:942 um-config.php:975 um-config.php:1009 um-config.php:1435
+#: um-config.php:1523 um-config.php:1549 um-config.php:1604 um-config.php:1614
+#: um-config.php:1624 um-config.php:1634 um-config.php:1666 um-config.php:1676
+#: um-config.php:1691 um-config.php:1703 um-config.php:1750 um-config.php:1828
+#: um-config.php:1930 um-config.php:1958 um-config.php:1968 um-config.php:2015
+#: um-config.php:2025 um-config.php:2035 um-config.php:2058 um-config.php:2068
+#: um-config.php:2078 um-config.php:2088 um-config.php:2098 um-config.php:2108
+#: um-config.php:2135 um-config.php:2144
 msgid "Off"
 msgstr ""
 
@@ -4942,1166 +4977,1175 @@ msgid ""
 msgstr ""
 
 #: um-config.php:323
-msgid "Require First & Last Name"
+msgid "Disable First & Last Name fields"
 msgstr ""
 
 #: um-config.php:325
+msgid ""
+"Whether to allow users changing their first and last name in account page."
+msgstr ""
+
+#: um-config.php:333
+msgid "Require First & Last Name"
+msgstr ""
+
+#: um-config.php:335
 msgid "Require first and last name?"
 msgstr ""
 
-#: um-config.php:334
+#: um-config.php:344
 msgid "Allow users to change e-mail"
 msgstr ""
 
-#: um-config.php:336
+#: um-config.php:346
 msgid "Whether to allow users changing their email in account page."
 msgstr ""
 
-#: um-config.php:344
+#: um-config.php:354
 msgid "Allow users to hide their profiles from directory"
 msgstr ""
 
-#: um-config.php:346
+#: um-config.php:356
 msgid ""
 "Whether to allow users changing their profile visibility from member "
 "directory in account page."
 msgstr ""
 
-#: um-config.php:354
+#: um-config.php:364
 msgid "Require a strong password?"
 msgstr ""
 
-#: um-config.php:356
+#: um-config.php:366
 msgid ""
 "Enable or disable a strong password rules on account page / change password "
 "tab"
 msgstr ""
 
-#: um-config.php:372
+#: um-config.php:382
 msgid "Access"
 msgstr ""
 
-#: um-config.php:378
+#: um-config.php:388
 msgid "Panic Key"
 msgstr ""
 
-#: um-config.php:379
+#: um-config.php:389
 msgid ""
 "Panic Key is a random generated key that allow you to access the WordPress "
 "backend always regardless of backend settings."
 msgstr ""
 
-#: um-config.php:388
+#: um-config.php:398
 msgid "Global Site Access"
 msgstr ""
 
-#: um-config.php:390
+#: um-config.php:400
 msgid ""
 "Globally control the access of your site, you can have seperate restrict "
 "options per post/page by editing the desired item."
 msgstr ""
 
-#: um-config.php:400
+#: um-config.php:410
 msgid "Custom Redirect URL"
 msgstr ""
 
-#: um-config.php:401
+#: um-config.php:411
 msgid ""
 "A logged out user will be redirected to this url If he is not permitted to "
 "access the site"
 msgstr ""
 
-#: um-config.php:409
+#: um-config.php:419
 msgid "Exclude the following URLs"
 msgstr ""
 
-#: um-config.php:410
+#: um-config.php:420
 msgid ""
 "Here you can exclude URLs beside the redirect URI to be accessible to "
 "everyone"
 msgstr ""
 
-#: um-config.php:411
+#: um-config.php:421
 msgid "Add New URL"
 msgstr ""
 
-#: um-config.php:417
+#: um-config.php:427
 msgid "Allow Homepage to be accessible"
 msgstr ""
 
-#: um-config.php:426
+#: um-config.php:436
 msgid "Allow Category pages to be accessible"
 msgstr ""
 
-#: um-config.php:435
+#: um-config.php:445
 msgid "Allow Backend Login Screen for Guests"
 msgstr ""
 
-#: um-config.php:437
+#: um-config.php:447
 msgid ""
 "Control whether guests are able to access the WP-admin login screen or not"
 msgstr ""
 
-#: um-config.php:445
+#: um-config.php:455
 msgid "Disable Admin Login via Frontend"
 msgstr ""
 
-#: um-config.php:447
+#: um-config.php:457
 msgid ""
 "DO NOT turn this option on if you have set the option  \"Allow Backend Login "
 "Screen for Guests\" to NO. This will result in being locked out of admin."
 msgstr ""
 
-#: um-config.php:456
+#: um-config.php:466
 msgid "Redirect to alternative login page"
 msgstr ""
 
-#: um-config.php:457
+#: um-config.php:467
 msgid ""
 "If you disable backend access to login screen, specify here where a user "
 "will be redirected"
 msgstr ""
 
-#: um-config.php:469 um-config.php:501
+#: um-config.php:479 um-config.php:511
 msgid "Custom URL"
 msgstr ""
 
-#: um-config.php:470 um-config.php:502
+#: um-config.php:480 um-config.php:512
 msgid ""
 "Enter an alternate url here to redirect a user If they try to access the "
 "backend register screen"
 msgstr ""
 
-#: um-config.php:477
+#: um-config.php:487
 msgid "Allow Backend Register Screen for Guests"
 msgstr ""
 
-#: um-config.php:479
+#: um-config.php:489
 msgid ""
 "Control whether guests are able to access the WP-admin register screen or not"
 msgstr ""
 
-#: um-config.php:488
+#: um-config.php:498
 msgid "Redirect to alternative register page"
 msgstr ""
 
-#: um-config.php:489
+#: um-config.php:499
 msgid ""
 "If you disable backend access to register screen, specify here where a user "
 "will be redirected"
 msgstr ""
 
-#: um-config.php:509
+#: um-config.php:519
 msgid "Enable the Access Control widget for Admins only?"
 msgstr ""
 
-#: um-config.php:518
+#: um-config.php:528
 msgid "Enable the Reset Password Limit?"
 msgstr ""
 
-#: um-config.php:527
+#: um-config.php:537
 msgid "Reset Password Limit"
 msgstr ""
 
-#: um-config.php:528
+#: um-config.php:538
 msgid ""
 "Set the maximum reset password limit. If reached the maximum limit, user "
 "will be locked from using this."
 msgstr ""
 
-#: um-config.php:538
+#: um-config.php:548
 msgid "Disable the Reset Password Limit for Admins only?"
 msgstr ""
 
-#: um-config.php:548
+#: um-config.php:558
 msgid "Whitelisted Backend IPs"
 msgstr ""
 
-#: um-config.php:549
+#: um-config.php:559
 msgid ""
 "Always allow the specified IP addresses to access the backend login screen "
 "and WP-admin to avoid being locked from site backend."
 msgstr ""
 
-#: um-config.php:555
+#: um-config.php:565
 msgid "Blocked IP Addresses"
 msgstr ""
 
-#: um-config.php:556
+#: um-config.php:566
 msgid ""
 "This will block the listed IPs from signing up or signing in to the site, "
 "you can use full IP numbers or target specific range with a wildcard"
 msgstr ""
 
-#: um-config.php:562
+#: um-config.php:572
 msgid "Blocked Email Addresses"
 msgstr ""
 
-#: um-config.php:563
+#: um-config.php:573
 msgid ""
 "This will block the specified e-mail addresses from being able to sign up or "
 "sign in to your site. To block an entire domain, use something like *@domain."
 "com"
 msgstr ""
 
-#: um-config.php:569
+#: um-config.php:579
 msgid "Blacklist Words"
 msgstr ""
 
-#: um-config.php:570
+#: um-config.php:580
 msgid ""
 "This option lets you specify blacklist of words to prevent anyone from "
 "signing up with such a word as their username"
 msgstr ""
 
-#: um-config.php:585
+#: um-config.php:595
 msgid "Emails"
 msgstr ""
 
-#: um-config.php:591
+#: um-config.php:601
 msgid "Mail appears from"
 msgstr ""
 
-#: um-config.php:592
+#: um-config.php:602
 msgid "e.g. Site Name"
 msgstr ""
 
-#: um-config.php:599
+#: um-config.php:609
 msgid "Mail appears from address"
 msgstr ""
 
-#: um-config.php:600 um-config.php:922
+#: um-config.php:610 um-config.php:932
 msgid "e.g. admin@companyname.com"
 msgstr ""
 
-#: um-config.php:607
+#: um-config.php:617
 msgid "Use HTML for E-mails?"
 msgstr ""
 
-#: um-config.php:609
+#: um-config.php:619
 msgid ""
 "If you enable HTML for e-mails, you can customize the HTML e-mail templates "
 "found in <strong>templates/email</strong> folder."
 msgstr ""
 
-#: um-config.php:615 um-config.php:623 um-config.php:633
+#: um-config.php:625 um-config.php:633 um-config.php:643
 msgid "Account Welcome Email"
 msgstr ""
 
-#: um-config.php:617
+#: um-config.php:627
 msgid ""
 "Whether to send the user an email when his account is automatically approved"
-msgstr ""
-
-#: um-config.php:624 um-config.php:659 um-config.php:691 um-config.php:723
-#: um-config.php:759 um-config.php:790 um-config.php:821 um-config.php:852
-#: um-config.php:884 um-config.php:939 um-config.php:972 um-config.php:1006
-msgid "Subject Line"
-msgstr ""
-
-#: um-config.php:627 um-config.php:662 um-config.php:694 um-config.php:726
-#: um-config.php:762 um-config.php:793 um-config.php:824 um-config.php:855
-#: um-config.php:887 um-config.php:942 um-config.php:975 um-config.php:1009
-msgid "This is the subject line of the e-mail"
 msgstr ""
 
 #: um-config.php:634 um-config.php:669 um-config.php:701 um-config.php:733
 #: um-config.php:769 um-config.php:800 um-config.php:831 um-config.php:862
 #: um-config.php:894 um-config.php:949 um-config.php:982 um-config.php:1016
+msgid "Subject Line"
+msgstr ""
+
+#: um-config.php:637 um-config.php:672 um-config.php:704 um-config.php:736
+#: um-config.php:772 um-config.php:803 um-config.php:834 um-config.php:865
+#: um-config.php:897 um-config.php:952 um-config.php:985 um-config.php:1019
+msgid "This is the subject line of the e-mail"
+msgstr ""
+
+#: um-config.php:644 um-config.php:679 um-config.php:711 um-config.php:743
+#: um-config.php:779 um-config.php:810 um-config.php:841 um-config.php:872
+#: um-config.php:904 um-config.php:959 um-config.php:992 um-config.php:1026
 msgid "Message Body"
 msgstr ""
 
-#: um-config.php:650 um-config.php:658 um-config.php:668
+#: um-config.php:660 um-config.php:668 um-config.php:678
 msgid "Account Activation Email"
 msgstr ""
 
-#: um-config.php:652
+#: um-config.php:662
 msgid ""
 "Whether to send the user an email when his account needs e-mail activation"
 msgstr ""
 
-#: um-config.php:682 um-config.php:690 um-config.php:700
+#: um-config.php:692 um-config.php:700 um-config.php:710
 msgid "Pending Review Email"
 msgstr ""
 
-#: um-config.php:684
+#: um-config.php:694
 msgid "Whether to send the user an email when his account needs admin review"
 msgstr ""
 
-#: um-config.php:714 um-config.php:722 um-config.php:732
+#: um-config.php:724 um-config.php:732 um-config.php:742
 msgid "Account Approved Email"
 msgstr ""
 
-#: um-config.php:716
+#: um-config.php:726
 msgid "Whether to send the user an email when his account is approved"
 msgstr ""
 
-#: um-config.php:750 um-config.php:758 um-config.php:768
+#: um-config.php:760 um-config.php:768 um-config.php:778
 msgid "Account Rejected Email"
 msgstr ""
 
-#: um-config.php:752
+#: um-config.php:762
 msgid "Whether to send the user an email when his account is rejected"
 msgstr ""
 
-#: um-config.php:781 um-config.php:789 um-config.php:799
+#: um-config.php:791 um-config.php:799 um-config.php:809
 msgid "Account Deactivated Email"
 msgstr ""
 
-#: um-config.php:783
+#: um-config.php:793
 msgid "Whether to send the user an email when his account is deactivated"
 msgstr ""
 
-#: um-config.php:812 um-config.php:820 um-config.php:830
+#: um-config.php:822 um-config.php:830 um-config.php:840
 msgid "Account Deleted Email"
 msgstr ""
 
-#: um-config.php:814
+#: um-config.php:824
 msgid "Whether to send the user an email when his account is deleted"
 msgstr ""
 
-#: um-config.php:843 um-config.php:851 um-config.php:861
+#: um-config.php:853 um-config.php:861 um-config.php:871
 msgid "Password Reset Email"
 msgstr ""
 
-#: um-config.php:845
+#: um-config.php:855
 msgid ""
 "Whether to send an email when users changed their password (Recommended, "
 "please keep on)"
 msgstr ""
 
-#: um-config.php:875 um-config.php:883 um-config.php:893
+#: um-config.php:885 um-config.php:893 um-config.php:903
 msgid "Password Changed Email"
 msgstr ""
 
-#: um-config.php:877
+#: um-config.php:887
 msgid ""
 "Whether to send the user an email when he request to reset password "
 "(Recommended, please keep on)"
 msgstr ""
 
-#: um-config.php:920
+#: um-config.php:930
 msgid "Admin E-mail Address"
 msgstr ""
 
-#: um-config.php:928 um-config.php:938 um-config.php:948
+#: um-config.php:938 um-config.php:948 um-config.php:958
 msgid "New User Notification"
 msgstr ""
 
-#: um-config.php:930
+#: um-config.php:940
 msgid "Whether to receive notification when a new user account is approved"
 msgstr ""
 
-#: um-config.php:955 um-config.php:989 um-config.php:1019
+#: um-config.php:965 um-config.php:999 um-config.php:1029
 msgid "This is the content of the e-mail"
 msgstr ""
 
-#: um-config.php:961 um-config.php:971 um-config.php:981
+#: um-config.php:971 um-config.php:981 um-config.php:991
 msgid "Account Needs Review Notification"
 msgstr ""
 
-#: um-config.php:963
+#: um-config.php:973
 msgid "Whether to receive notification when an account needs admin review"
 msgstr ""
 
-#: um-config.php:995 um-config.php:1005 um-config.php:1015
+#: um-config.php:1005 um-config.php:1015 um-config.php:1025
 msgid "Account Deletion Notification"
 msgstr ""
 
-#: um-config.php:997
+#: um-config.php:1007
 msgid "Whether to receive notification when an account is deleted"
 msgstr ""
 
-#: um-config.php:1033
+#: um-config.php:1043
 msgid "Uploads"
 msgstr ""
 
-#: um-config.php:1039
+#: um-config.php:1049
 msgid "Profile Photo Maximum File Size (bytes)"
 msgstr ""
 
-#: um-config.php:1040
+#: um-config.php:1050
 msgid "Sets a maximum size for the uploaded photo"
 msgstr ""
 
-#: um-config.php:1047
+#: um-config.php:1057
 msgid "Cover Photo Maximum File Size (bytes)"
 msgstr ""
 
-#: um-config.php:1048
+#: um-config.php:1058
 msgid "Sets a maximum size for the uploaded cover"
 msgstr ""
 
-#: um-config.php:1055
+#: um-config.php:1065
 msgid "Profile Photo Thumbnail Sizes (px)"
 msgstr ""
 
-#: um-config.php:1056
+#: um-config.php:1066
 msgid ""
 "Here you can define which thumbnail sizes will be created for each profile "
 "photo upload."
 msgstr ""
 
-#: um-config.php:1059 um-config.php:1069
+#: um-config.php:1069 um-config.php:1079
 msgid "Add New Size"
 msgstr ""
 
-#: um-config.php:1065
+#: um-config.php:1075
 msgid "Cover Photo Thumbnail Sizes (px)"
 msgstr ""
 
-#: um-config.php:1066
+#: um-config.php:1076
 msgid ""
 "Here you can define which thumbnail sizes will be created for each cover "
 "photo upload."
 msgstr ""
 
-#: um-config.php:1075
+#: um-config.php:1085
 msgid "Image Quality"
 msgstr ""
 
-#: um-config.php:1076
+#: um-config.php:1086
 msgid ""
 "Quality is used to determine quality of image uploads, and ranges from 0 "
 "(worst quality, smaller file) to 100 (best quality, biggest file). The "
 "default range is 60."
 msgstr ""
 
-#: um-config.php:1084
+#: um-config.php:1094
 msgid "Image Upload Maximum Width (px)"
 msgstr ""
 
-#: um-config.php:1085
+#: um-config.php:1095
 msgid ""
 "Any image upload above this width will be resized to this limit "
 "automatically."
 msgstr ""
 
-#: um-config.php:1093
+#: um-config.php:1103
 msgid "Cover Photo Minimum Width (px)"
 msgstr ""
 
-#: um-config.php:1094
+#: um-config.php:1104
 msgid "This will be the minimum width for cover photo uploads"
 msgstr ""
 
-#: um-config.php:1110
+#: um-config.php:1120
 msgid "SEO"
 msgstr ""
 
-#: um-config.php:1116
+#: um-config.php:1126
 msgid "User Profile Title"
 msgstr ""
 
-#: um-config.php:1118
+#: um-config.php:1128
 msgid "This is the title that is displayed on a specific user profile"
 msgstr ""
 
-#: um-config.php:1125
+#: um-config.php:1135
 msgid "User Profile Dynamic Meta Description"
 msgstr ""
 
-#: um-config.php:1126
+#: um-config.php:1136
 msgid ""
 "This will be used in the meta description that is available for search-"
 "engines."
 msgstr ""
 
-#: um-config.php:1140
+#: um-config.php:1150
 msgid "Appearance"
 msgstr ""
 
-#: um-config.php:1150
+#: um-config.php:1160
 msgid "General"
 msgstr ""
 
-#: um-config.php:1157
+#: um-config.php:1167
 msgid "Members Default Template"
 msgstr ""
 
-#: um-config.php:1158
+#: um-config.php:1168
 msgid "This will be the default template to output member directory"
 msgstr ""
 
-#: um-config.php:1168
+#: um-config.php:1178
 msgid "General Active Color"
 msgstr ""
 
-#: um-config.php:1170
+#: um-config.php:1180
 msgid ""
 "Active color is used commonly with many plugin elements as highlighted color "
 "or active selection for example. This color demonstrates the primary active "
 "color of the plugin"
 msgstr ""
 
-#: um-config.php:1178
+#: um-config.php:1188
 msgid "General Secondary Color"
 msgstr ""
 
-#: um-config.php:1180
+#: um-config.php:1190
 msgid ""
 "Secondary color is used for hovers, or active state for some elements of the "
 "plugin"
 msgstr ""
 
-#: um-config.php:1188
+#: um-config.php:1198
 msgid "Default Primary Button Color"
 msgstr ""
 
-#: um-config.php:1197
+#: um-config.php:1207
 msgid "Default Primary Button Hover Color"
 msgstr ""
 
-#: um-config.php:1206
+#: um-config.php:1216
 msgid "Default Primary Button Text Color"
 msgstr ""
 
-#: um-config.php:1215
+#: um-config.php:1225
 msgid "Default Secondary Button Color"
 msgstr ""
 
-#: um-config.php:1224
+#: um-config.php:1234
 msgid "Default Secondary Button Hover Color"
 msgstr ""
 
-#: um-config.php:1233
+#: um-config.php:1243
 msgid "Default Secondary Button Text Color"
 msgstr ""
 
-#: um-config.php:1242
+#: um-config.php:1252
 msgid "Default Help Icon Color"
 msgstr ""
 
-#: um-config.php:1254
+#: um-config.php:1264
 msgid "Form Inputs"
 msgstr ""
 
-#: um-config.php:1261
+#: um-config.php:1271
 msgid "Field Label Color"
 msgstr ""
 
-#: um-config.php:1269
+#: um-config.php:1279
 msgid "Field Border"
 msgstr ""
 
-#: um-config.php:1271
+#: um-config.php:1281
 msgid "The default border-style for input/fields in UM forms"
 msgstr ""
 
-#: um-config.php:1277
+#: um-config.php:1287
 msgid "Field Border on Focus"
 msgstr ""
 
-#: um-config.php:1279
+#: um-config.php:1289
 msgid "The default border style for fields on hover state"
 msgstr ""
 
-#: um-config.php:1286
+#: um-config.php:1296
 msgid "Field Background Color"
 msgstr ""
 
-#: um-config.php:1295
+#: um-config.php:1305
 msgid "Field Background Color on Focus"
 msgstr ""
 
-#: um-config.php:1304
+#: um-config.php:1314
 msgid "Field Text Color"
 msgstr ""
 
-#: um-config.php:1313
+#: um-config.php:1323
 msgid "Field Placeholder Color"
 msgstr ""
 
-#: um-config.php:1322
+#: um-config.php:1332
 msgid "Field Font Icon Color"
 msgstr ""
 
-#: um-config.php:1330
+#: um-config.php:1340
 msgid "Show an asterisk for required fields"
 msgstr ""
 
-#: um-config.php:1340
+#: um-config.php:1350
 msgid "Field Required Asterisk Color"
 msgstr ""
 
-#: um-config.php:1353
+#: um-config.php:1363
 msgid "Profile"
 msgstr ""
 
-#: um-config.php:1360
+#: um-config.php:1370
 msgid "Profile Default Template"
 msgstr ""
 
-#: um-config.php:1361
+#: um-config.php:1371
 msgid "This will be the default template to output profile"
 msgstr ""
 
-#: um-config.php:1369
+#: um-config.php:1379
 msgid "Profile Maximum Width"
 msgstr ""
 
-#: um-config.php:1377
+#: um-config.php:1387
 msgid "Profile Area Maximum Width"
 msgstr ""
 
-#: um-config.php:1379
+#: um-config.php:1389
 msgid ""
 "The maximum width of the profile area inside profile (below profile header)"
 msgstr ""
 
-#: um-config.php:1386
+#: um-config.php:1396
 msgid "Profile Shortcode Alignment"
 msgstr ""
 
-#: um-config.php:1390 um-config.php:1783 um-config.php:1885
+#: um-config.php:1400 um-config.php:1793 um-config.php:1895
 msgid "Centered"
 msgstr ""
 
-#: um-config.php:1391 um-config.php:1784 um-config.php:1886
+#: um-config.php:1401 um-config.php:1794 um-config.php:1896
 msgid "Left aligned"
 msgstr ""
 
-#: um-config.php:1392 um-config.php:1785 um-config.php:1887
+#: um-config.php:1402 um-config.php:1795 um-config.php:1897
 msgid "Right aligned"
 msgstr ""
 
-#: um-config.php:1400
+#: um-config.php:1410
 msgid "Profile Field Icons"
 msgstr ""
 
-#: um-config.php:1401
+#: um-config.php:1411
 msgid "This is applicable for edit mode only"
 msgstr ""
 
-#: um-config.php:1404 um-config.php:1797 um-config.php:1899
+#: um-config.php:1414 um-config.php:1807 um-config.php:1909
 msgid "Show inside text field"
 msgstr ""
 
-#: um-config.php:1405 um-config.php:1798 um-config.php:1900
+#: um-config.php:1415 um-config.php:1808 um-config.php:1910
 msgid "Show with label"
 msgstr ""
 
-#: um-config.php:1406 um-config.php:1799 um-config.php:1901
+#: um-config.php:1416 um-config.php:1809 um-config.php:1911
 msgid "Turn off"
 msgstr ""
 
-#: um-config.php:1413
+#: um-config.php:1423
 msgid "Profile Primary Button Text"
 msgstr ""
 
-#: um-config.php:1415
+#: um-config.php:1425
 msgid "The text that is used for updating profile button"
 msgstr ""
 
-#: um-config.php:1421
+#: um-config.php:1431
 msgid "Profile Secondary Button"
 msgstr ""
 
-#: um-config.php:1423 um-config.php:1816 um-config.php:1918
+#: um-config.php:1433 um-config.php:1826 um-config.php:1928
 msgid "Switch on/off the secondary button display in the form"
 msgstr ""
 
-#: um-config.php:1431
+#: um-config.php:1441
 msgid "Profile Secondary Button Text"
 msgstr ""
 
-#: um-config.php:1433
+#: um-config.php:1443
 msgid "The text that is used for cancelling update profile button"
 msgstr ""
 
-#: um-config.php:1441
+#: um-config.php:1451
 msgid "Profile Associated Role"
 msgstr ""
 
-#: um-config.php:1442
+#: um-config.php:1452
 msgid ""
 "Normally, you can leave this to default as this restricts the profile per "
 "specified role only"
 msgstr ""
 
-#: um-config.php:1451
+#: um-config.php:1461
 msgid "Profile Base Background Color"
 msgstr ""
 
-#: um-config.php:1460
+#: um-config.php:1470
 msgid "Profile Header Background Color"
 msgstr ""
 
-#: um-config.php:1468
+#: um-config.php:1478
 msgid "Default Profile Photo"
 msgstr ""
 
-#: um-config.php:1469
+#: um-config.php:1479
 msgid ""
 "You can change the default profile picture globally here. Please make sure "
 "that the photo is 300x300px."
 msgstr ""
 
-#: um-config.php:1480
+#: um-config.php:1490
 msgid "Default Cover Photo"
 msgstr ""
 
-#: um-config.php:1481
+#: um-config.php:1491
 msgid ""
 "You can change the default cover photo globally here. Please make sure that "
 "the default cover is large enough and respects the ratio you are using for "
 "cover photos."
 msgstr ""
 
-#: um-config.php:1489
+#: um-config.php:1499
 msgid ""
 "The global default of profile photo size. This can be overridden by "
 "individual form settings"
 msgstr ""
 
-#: um-config.php:1497
+#: um-config.php:1507
 msgid ""
 "Whether to have rounded profile images, rounded corners, or none for the "
 "profile photo"
 msgstr ""
 
-#: um-config.php:1509
+#: um-config.php:1519
 msgid "Profile Cover Photos"
 msgstr ""
 
-#: um-config.php:1511
+#: um-config.php:1521
 msgid "Switch on/off the profile cover photos"
 msgstr ""
 
-#: um-config.php:1520
+#: um-config.php:1530
 msgid "Profile Cover Ratio"
 msgstr ""
 
-#: um-config.php:1521
+#: um-config.php:1531
 msgid "Choose global ratio for cover photos of profiles"
 msgstr ""
 
-#: um-config.php:1535
+#: um-config.php:1545
 msgid "Profile Header Meta Text Icon"
 msgstr ""
 
-#: um-config.php:1537
+#: um-config.php:1547
 msgid "Display field icons for related user meta fields in header or not"
 msgstr ""
 
-#: um-config.php:1546
+#: um-config.php:1556
 msgid "Profile Header Meta Text Color"
 msgstr ""
 
-#: um-config.php:1555
+#: um-config.php:1565
 msgid "Profile Header Link Color"
 msgstr ""
 
-#: um-config.php:1564
+#: um-config.php:1574
 msgid "Profile Header Link Hover"
 msgstr ""
 
-#: um-config.php:1573
+#: um-config.php:1583
 msgid "Profile Header Icon Link Color"
 msgstr ""
 
-#: um-config.php:1582
+#: um-config.php:1592
 msgid "Profile Header Icon Link Hover"
 msgstr ""
 
-#: um-config.php:1590
+#: um-config.php:1600
 msgid "Show display name in profile header"
 msgstr ""
 
-#: um-config.php:1592
+#: um-config.php:1602
 msgid "Switch on/off the user name on profile header"
 msgstr ""
 
-#: um-config.php:1600
+#: um-config.php:1610
 msgid "Show social links in profile header"
 msgstr ""
 
-#: um-config.php:1602
+#: um-config.php:1612
 msgid "Switch on/off the social links on profile header"
 msgstr ""
 
-#: um-config.php:1610
+#: um-config.php:1620
 msgid "Show user description in header"
 msgstr ""
 
-#: um-config.php:1612
+#: um-config.php:1622
 msgid "Switch on/off the user description on profile header"
 msgstr ""
 
-#: um-config.php:1620
-msgid "Enable html support for user description"
-msgstr ""
-
-#: um-config.php:1622
-msgid ""
-"Switch on/off to enable/disable support for html tags on user description."
-msgstr ""
-
 #: um-config.php:1630
-msgid "User description maximum chars"
+msgid "Enable html support for user description"
 msgstr ""
 
 #: um-config.php:1632
 msgid ""
+"Switch on/off to enable/disable support for html tags on user description."
+msgstr ""
+
+#: um-config.php:1640
+msgid "User description maximum chars"
+msgstr ""
+
+#: um-config.php:1642
+msgid ""
 "Maximum number of characters to allow in user description field in header."
 msgstr ""
 
-#: um-config.php:1639
+#: um-config.php:1649
 msgid "Profile Header Menu Position"
 msgstr ""
 
-#: um-config.php:1641
+#: um-config.php:1651
 msgid ""
 "For incompatible themes, please make the menu open from left instead of "
 "bottom by default."
 msgstr ""
 
-#: um-config.php:1652
+#: um-config.php:1662
 msgid "Show a custom message if profile is empty"
 msgstr ""
 
-#: um-config.php:1654
+#: um-config.php:1664
 msgid "Switch on/off the custom message that appears when the profile is empty"
 msgstr ""
 
-#: um-config.php:1662
+#: um-config.php:1672
 msgid "Show the emoticon"
 msgstr ""
 
-#: um-config.php:1664
+#: um-config.php:1674
 msgid "Switch on/off the emoticon (sad face) that appears above the message"
 msgstr ""
 
-#: um-config.php:1678
+#: um-config.php:1688
 msgid "Enable profile menu"
 msgstr ""
 
-#: um-config.php:1689
+#: um-config.php:1699
 #, php-format
 msgid "%s Tab"
 msgstr ""
 
-#: um-config.php:1700
+#: um-config.php:1710
 #, php-format
 msgid "Who can see %s Tab?"
 msgstr ""
 
-#: um-config.php:1701
+#: um-config.php:1711
 msgid "Select which users can view this tab."
 msgstr ""
 
-#: um-config.php:1712
+#: um-config.php:1722
 msgid "Allowed roles"
 msgstr ""
 
-#: um-config.php:1713
+#: um-config.php:1723
 msgid "Select the the user roles allowed to view this tab."
 msgstr ""
 
-#: um-config.php:1716
+#: um-config.php:1726
 msgid "Choose user roles..."
 msgstr ""
 
-#: um-config.php:1726
+#: um-config.php:1736
 msgid "Profile menu default tab"
 msgstr ""
 
-#: um-config.php:1727
+#: um-config.php:1737
 msgid "This will be the default tab on user profile page"
 msgstr ""
 
-#: um-config.php:1736
+#: um-config.php:1746
 msgid "Enable menu icons in desktop view"
 msgstr ""
 
-#: um-config.php:1746
+#: um-config.php:1756
 msgid "Profile Menu"
 msgstr ""
 
-#: um-config.php:1761
+#: um-config.php:1771
 msgid "Registration Default Template"
 msgstr ""
 
-#: um-config.php:1762
+#: um-config.php:1772
 msgid "This will be the default template to output registration"
 msgstr ""
 
-#: um-config.php:1770
+#: um-config.php:1780
 msgid "Registration Maximum Width"
 msgstr ""
 
-#: um-config.php:1772 um-config.php:1874
+#: um-config.php:1782 um-config.php:1884
 msgid "The maximum width this shortcode can take from the page width"
 msgstr ""
 
-#: um-config.php:1779
+#: um-config.php:1789
 msgid "Registration Shortcode Alignment"
 msgstr ""
 
-#: um-config.php:1793
+#: um-config.php:1803
 msgid "Registration Field Icons"
 msgstr ""
 
-#: um-config.php:1794
+#: um-config.php:1804
 msgid "This controls the display of field icons in the registration form"
 msgstr ""
 
-#: um-config.php:1806
+#: um-config.php:1816
 msgid "Registration Primary Button Text"
 msgstr ""
 
-#: um-config.php:1808 um-config.php:1910
+#: um-config.php:1818 um-config.php:1920
 msgid "The text that is used for primary button text"
 msgstr ""
 
-#: um-config.php:1814
+#: um-config.php:1824
 msgid "Registration Secondary Button"
 msgstr ""
 
-#: um-config.php:1824
+#: um-config.php:1834
 msgid "Registration Secondary Button Text"
 msgstr ""
 
-#: um-config.php:1826 um-config.php:1928
+#: um-config.php:1836 um-config.php:1938
 msgid "The text that is used for the secondary button text"
 msgstr ""
 
-#: um-config.php:1833
+#: um-config.php:1843
 msgid "Registration Secondary Button URL"
 msgstr ""
 
-#: um-config.php:1835 um-config.php:1937
+#: um-config.php:1845 um-config.php:1947
 msgid "You can replace default link for this button by entering custom URL"
 msgstr ""
 
-#: um-config.php:1843
+#: um-config.php:1853
 msgid "Registration Default Role"
 msgstr ""
 
-#: um-config.php:1844
+#: um-config.php:1854
 msgid ""
 "This will be the default role assigned to users registering thru "
 "registration form"
 msgstr ""
 
-#: um-config.php:1863
+#: um-config.php:1873
 msgid "Login Default Template"
 msgstr ""
 
-#: um-config.php:1864
+#: um-config.php:1874
 msgid "This will be the default template to output login"
 msgstr ""
 
-#: um-config.php:1872
+#: um-config.php:1882
 msgid "Login Maximum Width"
 msgstr ""
 
-#: um-config.php:1881
+#: um-config.php:1891
 msgid "Login Shortcode Alignment"
 msgstr ""
 
-#: um-config.php:1895
+#: um-config.php:1905
 msgid "Login Field Icons"
 msgstr ""
 
-#: um-config.php:1896
+#: um-config.php:1906
 msgid "This controls the display of field icons in the login form"
 msgstr ""
 
-#: um-config.php:1908
+#: um-config.php:1918
 msgid "Login Primary Button Text"
 msgstr ""
 
-#: um-config.php:1916
+#: um-config.php:1926
 msgid "Login Secondary Button"
 msgstr ""
 
-#: um-config.php:1926
+#: um-config.php:1936
 msgid "Login Secondary Button Text"
 msgstr ""
 
-#: um-config.php:1935
+#: um-config.php:1945
 msgid "Login Secondary Button URL"
 msgstr ""
 
-#: um-config.php:1944
+#: um-config.php:1954
 msgid "Login Forgot Password Link"
 msgstr ""
 
-#: um-config.php:1946
+#: um-config.php:1956
 msgid "Switch on/off the forgot password link in login form"
 msgstr ""
 
-#: um-config.php:1954
+#: um-config.php:1964
 msgid "Show \"Remember Me\""
 msgstr ""
 
-#: um-config.php:1956
+#: um-config.php:1966
 msgid ""
 "Allow users to choose If they want to stay signed in even after closing the "
 "browser. If you do not show this option, the default will be to not remember "
 "login session."
 msgstr ""
 
-#: um-config.php:1976
+#: um-config.php:1986
 msgid ""
 "Any custom css rules that you specify here will be applied globally to the "
 "plugin."
 msgstr ""
 
-#: um-config.php:1994
+#: um-config.php:2004
 msgid "Import & Export Settings"
 msgstr ""
 
-#: um-config.php:2001
+#: um-config.php:2011
 msgid "Stop caching user's profile data"
 msgstr ""
 
-#: um-config.php:2003
+#: um-config.php:2013
 msgid "Turn off If you have performance issue."
 msgstr ""
 
-#: um-config.php:2011
+#: um-config.php:2021
 msgid "Stop rewriting rules on every load"
 msgstr ""
 
-#: um-config.php:2013
+#: um-config.php:2023
 msgid ""
 "Turn on If you have performance issue and are not getting 404 error/"
 "conflicts with other plugins/themes."
 msgstr ""
 
-#: um-config.php:2021
+#: um-config.php:2031
 msgid "Stop generating profile slugs in member directory"
 msgstr ""
 
-#: um-config.php:2023
+#: um-config.php:2033
 msgid "Turn on If you have performance issue in member directory."
 msgstr ""
 
-#: um-config.php:2032
+#: um-config.php:2042
 msgid "Current URL Method"
 msgstr ""
 
-#: um-config.php:2033
+#: um-config.php:2043
 msgid ""
 "Change this If you are having conflicts with profile links or redirections."
 msgstr ""
 
-#: um-config.php:2036
+#: um-config.php:2046
 msgid "Use SERVER_NAME"
 msgstr ""
 
-#: um-config.php:2037
+#: um-config.php:2047
 msgid "Use HTTP_HOST"
 msgstr ""
 
-#: um-config.php:2044
+#: um-config.php:2054
 msgid "Allow Port forwarding in URL"
 msgstr ""
 
-#: um-config.php:2046
+#: um-config.php:2056
 msgid "Turn on If you want to include port number in URLs"
 msgstr ""
 
-#: um-config.php:2054
+#: um-config.php:2064
 msgid "Force Strings to UTF-8 Encoding"
 msgstr ""
 
-#: um-config.php:2056
+#: um-config.php:2066
 msgid "Turn on If you want to force labels and fields to use UTF-8 encoding"
 msgstr ""
 
-#: um-config.php:2064
+#: um-config.php:2074
 msgid "Enable Time Check Security"
 msgstr ""
 
-#: um-config.php:2066
+#: um-config.php:2076
 msgid ""
 "Turn this option off if you have a conflict with other plugins causing a "
 "spam bot message to appear unexpectedly."
 msgstr ""
 
-#: um-config.php:2074
+#: um-config.php:2084
 msgid "Disable JS/CSS Compression"
 msgstr ""
 
-#: um-config.php:2076
+#: um-config.php:2086
 msgid ""
 "Not recommended. This will load all plugin js and css files separately and "
 "may slow down your website. Use this setting for development or debugging "
 "purposes only."
 msgstr ""
 
-#: um-config.php:2084
+#: um-config.php:2094
 msgid "Disable Nav Menu Settings"
 msgstr ""
 
-#: um-config.php:2086
+#: um-config.php:2096
 msgid ""
 "This can disable the settings that appear in nav menus to apply custom "
 "access settings to nav items."
 msgstr ""
 
-#: um-config.php:2094
+#: um-config.php:2104
 msgid "Never load plugin JS and CSS on homepage"
 msgstr ""
 
-#: um-config.php:2096
+#: um-config.php:2106
 msgid "This can disable loading plugin js and css files on home page."
 msgstr ""
 
-#: um-config.php:2105
+#: um-config.php:2115
 msgid "Never load plugin JS and CSS on the following pages"
 msgstr ""
 
-#: um-config.php:2106
+#: um-config.php:2116
 msgid ""
 "Enter a url or page slug (e.g /about/) to disable loading the plugin's css "
 "and js on that page."
 msgstr ""
 
-#: um-config.php:2107 um-config.php:2116
+#: um-config.php:2117 um-config.php:2126
 msgid "Add New Page"
 msgstr ""
 
-#: um-config.php:2114
+#: um-config.php:2124
 msgid "Only load plugin JS and CSS on the following pages"
 msgstr ""
 
-#: um-config.php:2115
+#: um-config.php:2125
 msgid ""
 "Enter a url or page slug (e.g /about/) to enable loading the plugin's css "
 "and js on that page."
 msgstr ""
 
-#: um-config.php:2122
+#: um-config.php:2132
 msgid "Enable custom css tab?"
 msgstr ""
 
-#: um-config.php:2131
+#: um-config.php:2141
 msgid "Allow Tracking"
 msgstr ""
 
-#: um-config.php:2144
+#: um-config.php:2154
 msgid "Network Permalink Structure"
 msgstr ""
 
-#: um-config.php:2145
+#: um-config.php:2155
 msgid ""
 "Change this If you are having conflicts with profile links or redirections "
 "in a multisite setup."
 msgstr ""
 
-#: um-config.php:2148
+#: um-config.php:2158
 msgid "Sub-Domain"
 msgstr ""
 
-#: um-config.php:2149
+#: um-config.php:2159
 msgid "Sub-Directory"
 msgstr ""
 
-#: um-config.php:2157
+#: um-config.php:2167
 msgid "Advanced"
 msgstr ""
 

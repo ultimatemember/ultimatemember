@@ -1050,10 +1050,10 @@ class UM_Fields {
 				}
 				if (!isset($array['upload_text'])) $array['upload_text'] = '';
 				if (!isset($array['button_text'])) $array['button_text'] = __('Upload','ultimatemember');
-				if (!isset($array['extension_error'])) $array['extension_error'] =  "Sorry this is not a valid file.";
-				if (!isset($array['max_size_error'])) $array['max_size_error'] = "This file is too large!";
-				if (!isset($array['min_size_error'])) $array['min_size_error'] = "This file is too small!";
-				if (!isset($array['max_files_error'])) $array['max_files_error'] = "You can only upload one file";
+				if (!isset($array['extension_error'])) $array['extension_error'] =  __("Sorry this is not a valid file.",'ultimatemember');
+				if (!isset($array['max_size_error'])) $array['max_size_error'] = __("This file is too large!",'ultimatemember');
+				if (!isset($array['min_size_error'])) $array['min_size_error'] = __("This file is too small!",'ultimatemember');
+				if (!isset($array['max_files_error'])) $array['max_files_error'] = __("You can only upload one file",'ultimatemember');
 				if (!isset($array['max_size'])) $array['max_size'] = 999999999;
 				if (!isset($array['upload_help_text'])) $array['upload_help_text'] = '';
 				if (!isset($array['icon']) ) $array['icon'] = '';
