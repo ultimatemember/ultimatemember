@@ -2008,8 +2008,8 @@ $arr_advanced_fields = array(
         array(
                 'id'       		=> 'um_profile_object_cache_stop',
                 'type'     		=> 'switch',
-                'title'   		=> __( 'Stop caching user\'s profile data','ultimatemember' ),
-				'default' 		=> 0,
+                'title'   		=> __( 'Cache user\'s profile data','ultimatemember' ),
+				'default' 		=> 1,
 				'desc' 	   		=> __('Turn off If you have performance issue.','ultimatemember'),
 				'on'			=> __('On','ultimatemember'),
 				'off'			=> __('Off','ultimatemember'),
