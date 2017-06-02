@@ -56,7 +56,7 @@ jQuery(document).ready(function() {
 	function um_field_apply_conditions(){
 			
 			var field_results = {};
-
+			
 			jQuery.each( um_field_added, function( i, field_key ){
 				
 				if( um_field_relations[ field_key ].length <= 0 ){
@@ -76,12 +76,9 @@ jQuery(document).ready(function() {
 					var operator0 = conditions.operator;
 					var field0 = conditions.field;
 					var um_field_parent_dom = '';
-
-					if(  action0 == 'show' ||  action0 == 'hide'  ){
-						//console.log( um_field_do_init  );
-					}
-					um_field_parent_dom = jQuery('.um-field[data-key="'+field_key+'"]:visible').find('input[type=text],textarea,input[type=checkbox],input[type=radio],select,[class=um-field-block]');
 					
+					um_field_parent_dom = jQuery('.um-field[data-key="'+field_key+'"]:visible').find('input[type=text],textarea,input[type=checkbox],input[type=radio],select,[class=um-field-block]');
+
 					var um_field_data = um_get_field_data( um_field_parent_dom );
 					var um_live_field = um_field_data.key;
 					var um_live_value = um_field_data.value;
@@ -89,71 +86,89 @@ jQuery(document).ready(function() {
 					var um_field_child_dom = jQuery('.um-field[data-key="'+conditions.child+'"]').find('input[type=text],textarea,input[type=checkbox],input[type=radio],select,[class=um-field-block]');
 					var um_field_child_dom_hide = jQuery('.um-field[data-key="'+conditions.child+'"]');
 					
+					var c_child = field_results[ conditions.child ];
+						
+					if( action0 == 'child' && typeof c_child !== 'undefined' ){
+						if( c_child.act == 'hide' ){
+							jQuery('.um-field[data-key="'+field_key+'"]').hide();
+						}else if( c_child.act == 'show' ){
+							jQuery('.um-field[data-key="'+field_key+'"]').show();
+						}
+
+					}
+
 					if (  action0 == 'show'  && typeof value0 !== 'undefined' ) {
 
 						if ( operator0 == 'empty' ) {
 							if ( !um_live_value || um_live_value == '' ) {
-								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field );
-								field_results[ conditions.child ] = [ action0, true, operator0 ];
+								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
+								field_results[ conditions.child ] = { act: action0, op: operator0 };
 							}else{
 								um_field_child_dom_hide.hide();
+								field_results[ conditions.child ] = { act: 'hide', op: operator0 };
 							}
 						}
 
 						if ( operator0 == 'not empty' ) {
 							if ( um_live_value && um_live_value != '' ) {
-								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field );
-								field_results[ conditions.child ] = [ action0, true, operator0 ];
+								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
+								field_results[ conditions.child ] = { act: action0, op: operator0 };
 							}else{
 								um_field_child_dom_hide.hide();
+								field_results[ conditions.child ] = { act: 'hide', op: operator0 };
 							} 
 						}
 
 						if ( operator0 == 'equals to' ) {
 							if ( value0 == um_live_value  ) {
-								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field );
-								field_results[ conditions.child ] = [ action0, true, operator0 ];
+								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
+								field_results[ conditions.child ] = { act: action0, op: operator0 };
 							}else{
 								um_field_child_dom_hide.hide();
+								field_results[ conditions.child ] = { act: 'hide', op: operator0 };
 							} 
 						}
 
 						if ( operator0 == 'not equals' ) {
 							if ( jQuery.isNumeric( value0 ) && parseInt( um_live_value ) != parseInt( value0 ) && um_live_value  ) {
-								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field );
-								field_results[ conditions.child ] = [ action0, true, operator0 ];
+								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
+								field_results[ conditions.child ] = { act: action0, op: operator0 };
 							} else if ( !jQuery.isNumeric( value0 ) && value0 != um_live_value  ) {
-								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field );
-								field_results[ conditions.child ] = [ action0, true, operator0 ];
+								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
+								field_results[ conditions.child ] = { act: action0, op: operator0 };
 							}else{
 								um_field_child_dom_hide.hide();
+								field_results[ conditions.child ] = { act: 'hide', op: operator0 };
 							}
 						}
 
 						if ( operator0 == 'greater than' ) {
 							if ( jQuery.isNumeric( value0 ) && parseInt( um_live_value ) > parseInt( value0 )  ) {
-								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field );
-								field_results[ conditions.child ] = [ action0, true, operator0 ];
+								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
+								field_results[ conditions.child ] = { act: action0, op: operator0 };
 							}else{
 								um_field_child_dom_hide.hide();
+								field_results[ conditions.child ] = { act: 'hide', op: operator0 };
 							}
 						}
 
 						if ( operator0 == 'less than' ) {
 							if ( jQuery.isNumeric( value0 ) && parseInt( um_live_value ) < parseInt( value0 ) && um_live_value  ) {
-								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field );
-								field_results[ conditions.child ] = [ action0, true, operator0 ];
+								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
+								field_results[ conditions.child ] = { act: action0, op: operator0 };
 							}else{
 								um_field_child_dom_hide.hide();
+								field_results[ conditions.child ] = { act: 'hide', op: operator0 };
 							} 
 						}
 
 						if ( operator0 == 'contains' ) {
 							if ( um_live_value && um_live_value.indexOf( value0 ) >= 0  ) {
-								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field );
-								field_results[ conditions.child ] = [ action0, true, operator0 ];
+								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
+								field_results[ conditions.child ] = { act: action0, op: operator0 };
 							}else{
 								um_field_child_dom_hide.hide();
+								field_results[ conditions.child ] = { act: 'hide', op: operator0 };
 							} 
 						}
 
@@ -163,67 +178,74 @@ jQuery(document).ready(function() {
 
 						if ( operator0 == 'empty' ) {
 							if ( !um_live_value || um_live_value == '' ) {
-								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field );
-								field_results[ conditions.child ] = [ action0, true, operator0 ];
+								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
+								field_results[ conditions.child ] = { act: action0, op: operator0 };
 							}else{
 								um_field_child_dom_hide.show();
+								field_results[ conditions.child ] = { act: 'show', op: operator0 };
 							} 
 						}
 
 						if ( operator0 == 'not empty' ) {
 							if ( um_live_value && um_live_value != '' ) {
-								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field );
-								field_results[ conditions.child ] = [ action0, true, operator0 ];
+								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
+								field_results[ conditions.child ] = { act: action0, op: operator0 };
 							}else{
 								um_field_child_dom_hide.show();
+								field_results[ conditions.child ] = { act: 'show', op: operator0 };
 							} 
 						}
 
 						if ( operator0 == 'equals to' ) {
 							if ( value0 == um_live_value ) {
-								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field );
-								field_results[ conditions.child ] = [ action0, true, operator0 ];
+								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
+								field_results[ conditions.child ] = { act: action0, op: operator0 };
 							}else{
 								um_field_child_dom_hide.show();
+								field_results[ conditions.child ] = { act: 'show', op: operator0 };
 							} 
 						}
 
 						if ( operator0 == 'not equals' ) {
 							if ( jQuery.isNumeric( value0 ) && parseInt( um_live_value ) != parseInt( value0 ) && um_live_value ) {
-								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field );
-								field_results[ conditions.child ] = [ action0, true, operator0 ];
+								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
+								field_results[ conditions.child ] = { act: action0, op: operator0 };
 							} else if ( !jQuery.isNumeric( value0 ) && value0 != um_live_value ) {
-								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field );
-								field_results[ conditions.child ] = [ action0, true, operator0 ];
+								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
+								field_results[ conditions.child ] = { act: action0, op: operator0 };
 							}else{
 								um_field_child_dom_hide.show();
+								field_results[ conditions.child ] = { act: 'show', op: operator0 };
 							} 
 						}
 
 						if ( operator0 == 'greater than' ) {
 							if ( jQuery.isNumeric( value0 ) && parseInt( um_live_value ) > parseInt( value0 ) ) {
-								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field );
-								field_results[ conditions.child ] = [ action0, true, operator0 ];
+								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
+								field_results[ conditions.child ] = { act: action0, op: operator0 };
 							}else{
 								um_field_child_dom_hide.show();
+								field_results[ conditions.child ] = { act: 'show', op: operator0 };
 							} 
 						}
 
 						if ( operator0 == 'less than' ) {
 							if ( jQuery.isNumeric( value0 ) && parseInt( um_live_value ) < parseInt( value0 ) && um_live_value ) {
-								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field );
-								field_results[ conditions.child ] = [ action0, true, operator0 ];
+								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
+								field_results[ conditions.child ] = { act: action0, op: operator0 };
 							}else{
 								um_field_child_dom_hide.show();
+								field_results[ conditions.child ] = { act: 'show', op: operator0 };
 							} 
 						}
 
 						if ( operator0 == 'contains' ) {
 							if ( um_live_value && um_live_value.indexOf( value0 ) >= 0 ) {
-								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field );
-								field_results[ conditions.child ] = [ action0, true, operator0 ];
+								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
+								field_results[ conditions.child ] = { act: action0, op: operator0 };
 							}else{
 								um_field_child_dom_hide.show();
+								field_results[ conditions.child ] = { act: 'show', op: operator0 };
 							} 
 						}
 					
@@ -232,9 +254,11 @@ jQuery(document).ready(function() {
 
 			});
 			
+
+			
 	}
 
-	function um_field_show( field, add_fade, optr, k ){
+	function um_field_show( field, add_fade, optr, k, field_key ){
 
 		field = field.parents('.um-field');
 
@@ -244,11 +268,12 @@ jQuery(document).ready(function() {
 			}else{
 				field.show();
 			}
+			//console.log( field_key );
 		}
-		//console.log('show um field "'+k+'" operator:'+optr );
+	
 	}
 
-	function um_field_hide( field, add_fade, optr, k ){
+	function um_field_hide( field, add_fade, optr, k, field_key ){
 
 		field = field.parents('.um-field');
 		
@@ -258,8 +283,8 @@ jQuery(document).ready(function() {
 			}else{
 				field.hide();
 			}
+			//console.log( field_key );
 		}
-		//console.log('hide um field "'+k+'" operator:'+optr );
 	}
 
 	function um_get_field_data( um_field_dom ){
