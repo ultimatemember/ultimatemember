@@ -1,4 +1,4 @@
-﻿=== Ultimate Member ===
+﻿=== Ultimate Member - User Profile & Membership Plugin ===
 Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember, champsupertramp
