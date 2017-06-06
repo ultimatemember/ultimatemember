@@ -8,11 +8,13 @@
 		global $ultimatemember;
 
 		$tab = ( get_query_var('um_tab') ) ? get_query_var('um_tab') : 'general';
-
+		
 		if ( $_POST['user_password'] && $_POST['confirm_user_password'] ) {
 			$changes['user_pass'] = $_POST['user_password'];
+
+			$args['id'] = um_user('ID');
 			
-			add_filter('send_password_change_email','um_send_password_change_email');
+			do_action('send_password_change_email', $args );
 			
 			wp_set_password( $changes['user_pass'], um_user('ID') );
 			
