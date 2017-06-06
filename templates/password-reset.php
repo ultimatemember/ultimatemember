@@ -18,7 +18,7 @@
 			
 				echo '<div class="um-field-block">';
 				
-				echo '<p>' . __('We have sent you a password reset link to your e-mail. Please check your inbox.','ultimatemember') . '</p>';
+				echo '<p>' . __('We have sent you a password reset link to your e-mail. Please check your inbox.','ultimate-member') . '</p>';
 				
 				echo '</div>';
 				

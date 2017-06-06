@@ -30,7 +30,7 @@ class UM_Password {
 				um_fetch_user( $user_id );
 				
 				if ( $_REQUEST['hash'] != um_user('reset_pass_hash') ){
-					wp_die( __('This is not a valid hash, or it has expired.','ultimatemember') );
+					wp_die( __('This is not a valid hash, or it has expired.','ultimate-member') );
 				}
 
 				$ultimatemember->user->profile['reset_pass_hash_token'] = current_time( 'timestamp' );

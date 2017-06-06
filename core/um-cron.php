@@ -12,7 +12,7 @@ class UM_Cron {
 		// Adds once weekly to the existing schedules.
 		$schedules['weekly'] = array(
 			'interval' => 604800,
-			'display'  => __( 'Once Weekly', 'ultimatemember' )
+			'display'  => __( 'Once Weekly', 'ultimate-member')
 		);
 
 		return $schedules;

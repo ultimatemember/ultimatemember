@@ -8,7 +8,7 @@
 	function ultimatemember_admin_update_field(){
 		global $ultimatemember;
 		
-		if ( !is_user_logged_in() || !current_user_can('manage_options') ) die( __('Please login as administrator','ultimatemember') );
+		if ( !is_user_logged_in() || !current_user_can('manage_options') ) die( __('Please login as administrator','ultimate-member') );
 		
 		$output['error'] = null;
 

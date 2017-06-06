@@ -49,23 +49,23 @@ class UM_API {
 		);
 
 		$this->addons['bp_avatar_transfer'] = array(
-			__('BuddyPress Avatar Transfer', 'ultimatemember'),
-			__('This add-on enables you to migrate your custom user photos from BuddyPress to use with Ultimate Member.', 'ultimatemember'),
+			__('BuddyPress Avatar Transfer', 'ultimate-member'),
+			__('This add-on enables you to migrate your custom user photos from BuddyPress to use with Ultimate Member.', 'ultimate-member'),
 		);
 
 		$this->addons['gravatar_transfer'] = array(
-			__('Gravatar Transfer', 'ultimatemember'),
-			__('This add-on enables you to link gravatar photos to user accounts with their email address.', 'ultimatemember'),
+			__('Gravatar Transfer', 'ultimate-member'),
+			__('This add-on enables you to link gravatar photos to user accounts with their email address.', 'ultimate-member'),
 		);
 
 		$this->addons['generate_random_users'] = array(
-			__('Generate Dummies', 'ultimatemember'),
-			__('This add-on enables you to generate dummies.', 'ultimatemember'),
+			__('Generate Dummies', 'ultimate-member'),
+			__('This add-on enables you to generate dummies.', 'ultimate-member'),
 		);
 
 		$this->addons['install_info'] = array(
-			__('System Info', 'ultimatemember'),
-			__('This add-on enables you to download system information file.', 'ultimatemember'),
+			__('System Info', 'ultimate-member'),
+			__('This add-on enables you to download system information file.', 'ultimate-member'),
 		);
 
 		// include widgets

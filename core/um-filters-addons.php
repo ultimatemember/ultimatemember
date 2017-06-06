@@ -13,8 +13,8 @@
 				'type'     		=> 'switch',
 				'title'   		=> $addon[0],
 				'desc' 	   		=> $addon[1],
-				'on'			=> __('Activated','ultimatemember'),
-				'off'			=> __('Deactivated','ultimatemember'),
+				'on'			=> __('Activated','ultimate-member'),
+				'off'			=> __('Deactivated','ultimate-member'),
 			);
 		}
 		
@@ -23,14 +23,14 @@
 		$sections[] = array(
 
 			'icon'       => 'um-faicon-plug',
-			'title'      => __( 'Extensions','ultimatemember'),
+			'title'      => __( 'Extensions','ultimate-member'),
 
 		);
 		
 		$sections[] = array(
 
 			'subsection' => true,
-			'title'      => __( 'Tools','ultimatemember'),
+			'title'      => __( 'Tools','ultimate-member'),
 			'fields'	 => $array,
 
 		);
@@ -54,7 +54,7 @@
 		$sections[] = array(
 
 			'icon'       => 'um-faicon-key',
-			'title'      => __( 'Licenses','ultimatemember'),
+			'title'      => __( 'Licenses','ultimate-member'),
 			'fields'	 => $fields,
 			'subsection' => false,
 

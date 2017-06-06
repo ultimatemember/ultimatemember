@@ -96,16 +96,16 @@
 		global $ultimatemember;
 
 		if ( $_POST[ $ultimatemember->honeypot ] != '' )
-			wp_die('Hello, spam bot!','ultimatemember');
+			wp_die('Hello, spam bot!','ultimate-member');
 
 		$form_timestamp  = trim($_POST['timestamp']);
 		$live_timestamp  = current_time( 'timestamp' );
 
 		if ( $form_timestamp == '' && um_get_option('enable_timebot') == 1 )
-			wp_die( __('Hello, spam bot!','ultimatemember') );
+			wp_die( __('Hello, spam bot!','ultimate-member') );
 
 		if ( $live_timestamp - $form_timestamp < 3 && um_get_option('enable_timebot') == 1 )
-			wp_die( __('Whoa, slow down! You\'re seeing this message because you tried to submit a form too fast and we think you might be a spam bot. If you are a real human being please wait a few seconds before submitting the form. Thanks!','ultimatemember') );
+			wp_die( __('Whoa, slow down! You\'re seeing this message because you tried to submit a form too fast and we think you might be a spam bot. If you are a real human being please wait a few seconds before submitting the form. Thanks!','ultimate-member') );
         
         $user = "";
 
@@ -116,11 +116,11 @@
         }
 
 		if ( empty( $user ) ) {
-			$ultimatemember->form->add_error('username_b', __('Please provide your username or email','ultimatemember') );
+			$ultimatemember->form->add_error('username_b', __('Please provide your username or email','ultimate-member') );
 		}
 
 		if ( ( !is_email( $user ) && !username_exists( $user ) ) || ( is_email( $user ) && !email_exists( $user ) ) ) {
-			$ultimatemember->form->add_error('username_b', __('We can\'t find an account registered with that address or username','ultimatemember') );
+			$ultimatemember->form->add_error('username_b', __('We can\'t find an account registered with that address or username','ultimate-member') );
 		} else {
 
 			if ( is_email( $user ) ) {
@@ -139,7 +139,7 @@
 				}else{
 					$limit = um_get_option('reset_password_limit_number');
 					if ( $attempts >= $limit ) {
-						$ultimatemember->form->add_error('username_b', __('You have reached the limit for requesting password change for this user already. Contact support if you cannot open the email','ultimatemember') );
+						$ultimatemember->form->add_error('username_b', __('You have reached the limit for requesting password change for this user already. Contact support if you cannot open the email','ultimate-member') );
 					} else {
 						update_user_meta( $user_id, 'password_rst_attempts', $attempts + 1 );
 					}
@@ -158,17 +158,17 @@
 		global $ultimatemember;
 
 		if ( isset(  $_POST[ $ultimatemember->honeypot ]  ) && $_POST[ $ultimatemember->honeypot ] != '' ){
-			wp_die('Hello, spam bot!','ultimatemember');
+			wp_die('Hello, spam bot!','ultimate-member');
 		}
 
 		$form_timestamp  = trim($_POST['timestamp']);
 		$live_timestamp  = current_time( 'timestamp' );
 
 		if ( $form_timestamp == '' && um_get_option('enable_timebot') == 1 )
-			wp_die( __('Hello, spam bot!','ultimatemember') );
+			wp_die( __('Hello, spam bot!','ultimate-member') );
 
 		if ( $live_timestamp - $form_timestamp < 3 && um_get_option('enable_timebot') == 1 ){
-			wp_die( __('Whoa, slow down! You\'re seeing this message because you tried to submit a form too fast and we think you might be a spam bot. If you are a real human being please wait a few seconds before submitting the form. Thanks!','ultimatemember') );
+			wp_die( __('Whoa, slow down! You\'re seeing this message because you tried to submit a form too fast and we think you might be a spam bot. If you are a real human being please wait a few seconds before submitting the form. Thanks!','ultimate-member') );
 		}
 
 		$reset_pass_hash = '';
@@ -182,35 +182,35 @@
 			 is_user_logged_in() && isset( $args['user_id'] ) && $args['user_id'] != get_current_user_id() ||
 			!is_user_logged_in() && isset( $_REQUEST['hash'] ) && $reset_pass_hash != $_REQUEST['hash'] && um_is_core_page('password-reset')   
 		){
-			wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
+			wp_die( __( 'This is not possible for security reasons.','ultimate-member') );
 		}
 
 		if ( isset( $args['user_password'] ) && empty( $args['user_password'] ) ) {
-			$ultimatemember->form->add_error('user_password', __('You must enter a new password','ultimatemember') );
+			$ultimatemember->form->add_error('user_password', __('You must enter a new password','ultimate-member') );
 		}
 
 		if ( um_get_option('reset_require_strongpass') ) {
 
 			if ( strlen( utf8_decode( $args['user_password'] ) ) < 8 ) {
-				$ultimatemember->form->add_error('user_password', __('Your password must contain at least 8 characters','ultimatemember') );
+				$ultimatemember->form->add_error('user_password', __('Your password must contain at least 8 characters','ultimate-member') );
 			}
 
 			if ( strlen( utf8_decode( $args['user_password'] ) ) > 30 ) {
-				$ultimatemember->form->add_error('user_password', __('Your password must contain less than 30 characters','ultimatemember') );
+				$ultimatemember->form->add_error('user_password', __('Your password must contain less than 30 characters','ultimate-member') );
 			}
 
 			if ( !$ultimatemember->validation->strong_pass( $args['user_password'] ) ) {
-				$ultimatemember->form->add_error('user_password', __('Your password must contain at least one lowercase letter, one capital letter and one number','ultimatemember') );
+				$ultimatemember->form->add_error('user_password', __('Your password must contain at least one lowercase letter, one capital letter and one number','ultimate-member') );
 			}
 
 		}
 
 		if ( isset( $args['confirm_user_password'] ) && empty( $args['confirm_user_password'] ) ) {
-			$ultimatemember->form->add_error('confirm_user_password', __('You must confirm your new password','ultimatemember') );
+			$ultimatemember->form->add_error('confirm_user_password', __('You must confirm your new password','ultimate-member') );
 		}
 
 		if ( isset( $args['user_password'] ) && isset( $args['confirm_user_password'] ) && $args['user_password'] != $args['confirm_user_password'] ) {
-			$ultimatemember->form->add_error('confirm_user_password', __('Your passwords do not match','ultimatemember') );
+			$ultimatemember->form->add_error('confirm_user_password', __('Your passwords do not match','ultimate-member') );
 		}
 
 	}
@@ -264,7 +264,7 @@
 
 		<div class="um-col-alt um-col-alt-b">
 
-			<div class="um-center"><input type="submit" value="<?php _e('Reset my password','ultimatemember'); ?>" class="um-button" /></div>
+			<div class="um-center"><input type="submit" value="<?php _e('Reset my password','ultimate-member'); ?>" class="um-button" /></div>
 
 			<div class="um-clear"></div>
 
@@ -291,7 +291,7 @@
 
 		<div class="um-col-alt um-col-alt-b">
 
-			<div class="um-center"><input type="submit" value="<?php _e('Change my password','ultimatemember'); ?>" class="um-button" /></div>
+			<div class="um-center"><input type="submit" value="<?php _e('Change my password','ultimate-member'); ?>" class="um-button" /></div>
 
 			<div class="um-clear"></div>
 

@@ -32,10 +32,10 @@ class UM_Admin_Users {
 		$user_id = $user_object->ID;
 		um_fetch_user( $user_id );
 
-		$actions['frontend_profile'] = "<a class='' href='" . um_user_profile_url() . "'>" . __( 'View profile','ultimatemember') . "</a>";
+		$actions['frontend_profile'] = "<a class='' href='" . um_user_profile_url() . "'>" . __( 'View profile','ultimate-member') . "</a>";
 
 		if ( um_user('submitted') ) {
-			$actions['view_info'] = '<a href="#" data-modal="UM_preview_registration" data-modal-size="smaller" data-dynamic-content="um_admin_review_registration" data-arg1="'.$user_id.'" data-arg2="edit_registration">' . __('Info','ultimatemember') . '</a>';
+			$actions['view_info'] = '<a href="#" data-modal="UM_preview_registration" data-modal-size="smaller" data-dynamic-content="um_admin_review_registration" data-arg1="'.$user_id.'" data-arg2="edit_registration">' . __('Info','ultimate-member') . '</a>';
 		}
 
 		$actions = apply_filters('um_admin_user_row_actions', $actions, $user_id );
@@ -126,11 +126,11 @@ class UM_Admin_Users {
 		}
 
 		$status = array(
-			'approved' => __('Approved','ultimatemember'),
-			'awaiting_admin_review' => __('Pending review','ultimatemember'),
-			'awaiting_email_confirmation' => __('Waiting e-mail confirmation','ultimatemember'),
-			'inactive' => __('Inactive','ultimatemember'),
-			'rejected' => __('Rejected','ultimatemember')
+			'approved' => __('Approved','ultimate-member'),
+			'awaiting_admin_review' => __('Pending review','ultimate-member'),
+			'awaiting_email_confirmation' => __('Waiting e-mail confirmation','ultimate-member'),
+			'inactive' => __('Inactive','ultimate-member'),
+			'rejected' => __('Rejected','ultimate-member')
 		);
 
 		$ultimatemember->query->count_users_by_status( 'unassigned' );
@@ -175,7 +175,7 @@ class UM_Admin_Users {
 			if (isset($_REQUEST['users']) && is_array($_REQUEST['users']) && isset($_REQUEST['um_changeit']) && $_REQUEST['um_changeit'] != '' && isset($_REQUEST['um_change_role']) && !empty($_REQUEST['um_change_role']) ){
 
 					if ( ! current_user_can( 'edit_users' ) )
-						wp_die( __( 'You do not have enough permissions to do that.','ultimatemember') );
+						wp_die( __( 'You do not have enough permissions to do that.','ultimate-member') );
 
 					check_admin_referer('bulk-users');
 
@@ -233,7 +233,7 @@ class UM_Admin_Users {
 			if ( isset($_REQUEST['users']) && is_array($_REQUEST['users']) && isset($_REQUEST['um_bulkedit']) && $_REQUEST['um_bulkedit'] != '' && isset($_REQUEST['um_bulk_action']) && !empty($_REQUEST['um_bulk_action']) ){
 
 					if ( ! current_user_can( 'edit_users' ) )
-						wp_die( __( 'You do not have enough permissions to do that.','ultimatemember') );
+						wp_die( __( 'You do not have enough permissions to do that.','ultimate-member') );
 
 					check_admin_referer('bulk-users');
 
@@ -304,9 +304,9 @@ class UM_Admin_Users {
 
 			<div style="float:right;margin:0 4px">
 
-				<label class="screen-reader-text" for="um_filter_role"><?php _e('Filter by','ultimatemember'); ?></label>
+				<label class="screen-reader-text" for="um_filter_role"><?php _e('Filter by','ultimate-member'); ?></label>
 				<select name="um_filter_role[]" id="um_filter_role" class="" style="width: 120px">
-					<option value="0"><?php _e('Filter by','ultimatemember'); ?></option>
+					<option value="0"><?php _e('Filter by','ultimate-member'); ?></option>
 					<?php
 						$roles = $ultimatemember->query->get_roles();
 						$um_filter_role =  '';
@@ -325,9 +325,9 @@ class UM_Admin_Users {
 
 			<div style="float:right;margin:0 4px">
 
-				<label class="screen-reader-text" for="um_bulk_action"><?php _e('UM Action','ultimatemember'); ?></label>
+				<label class="screen-reader-text" for="um_bulk_action"><?php _e('UM Action','ultimate-member'); ?></label>
 				<select name="um_bulk_action[]" id="um_bulk_action" class="" style="width: 200px">
-					<option value="0"><?php _e('UM Action','ultimatemember'); ?></option>
+					<option value="0"><?php _e('UM Action','ultimate-member'); ?></option>
 					<?php echo $ultimatemember->user->get_bulk_admin_actions(); ?>
 				</select>
 
@@ -337,14 +337,14 @@ class UM_Admin_Users {
 
 			<div style="float:right;margin:0 4px">
 
-				<label class="screen-reader-text" for="um_change_role"><?php _e('Community role&hellip;','ultimatemember'); ?></label>
+				<label class="screen-reader-text" for="um_change_role"><?php _e('Community role&hellip;','ultimate-member'); ?></label>
 				<select name="um_change_role[]" id="um_change_role" class="" style="width: 160px">
 					<?php foreach($ultimatemember->query->get_roles( $add_default = 'Community role&hellip;' ) as $key => $value) { ?>
 					<option value="<?php echo $key; ?>"><?php echo $value; ?></option>
 					<?php } ?>
 				</select>
 
-				<input name="um_changeit" id="um_changeit" class="button" value="<?php _e('Change','ultimatemember'); ?>" type="submit" />
+				<input name="um_changeit" id="um_changeit" class="button" value="<?php _e('Change','ultimate-member'); ?>" type="submit" />
 
 			</div>
 
@@ -363,7 +363,7 @@ class UM_Admin_Users {
 
 		$admin = new UM_Admin_Metabox();
 
-		$columns['um_role'] = __('Community Role','ultimatemember') . $admin->_tooltip( __('This is the membership role set by Ultimate Member plugin','ultimatemember') );
+		$columns['um_role'] = __('Community Role','ultimate-member') . $admin->_tooltip( __('This is the membership role set by Ultimate Member plugin','ultimate-member') );
 
 		return $columns;
 	}

@@ -16,7 +16,7 @@
 	?>
 	<table id="table_my_custom_field" style="display:none;">
 		<tr>
-			<th><label for="um_role"><?php _e( 'Community Role', 'ultimatemember' ); ?></label></th>
+			<th><label for="um_role"><?php _e( 'Community Role', 'ultimate-member'); ?></label></th>
 			<td>
 				<select name="um_role" id="um_role">
 				<?php foreach( $ultimatemember->query->get_roles() as $key => $value ) { ?>
@@ -75,28 +75,28 @@
 		global $ultimatemember;
 
 		echo '<div class="form-field term-access-wrap um-conditional-radio-group" data-cond1="2" data-cond1-show="term-roles-wrap" data-cond2="1" data-cond2-show="term-redirect-wrap">';
-		echo '<label>' . __('Content Availability','ultimatemember') . '</label>';
-		echo '<label><input type="radio" name="_um_accessible" value="0" checked /> '. __('Content accessible to Everyone','ultimatemember') . '</label>
-			<label><input type="radio" name="_um_accessible" value="1" /> ' . __('Content accessible to Logged Out Users','ultimatemember') . '</label>
-			<label><input type="radio" name="_um_accessible" value="2" /> ' . __('Content accessible to Logged In Users','ultimatemember') . '</label>';
+		echo '<label>' . __('Content Availability','ultimate-member') . '</label>';
+		echo '<label><input type="radio" name="_um_accessible" value="0" checked /> '. __('Content accessible to Everyone','ultimate-member') . '</label>
+			<label><input type="radio" name="_um_accessible" value="1" /> ' . __('Content accessible to Logged Out Users','ultimate-member') . '</label>
+			<label><input type="radio" name="_um_accessible" value="2" /> ' . __('Content accessible to Logged In Users','ultimate-member') . '</label>';
 		echo '<p class="description">Who can see content/posts in this category.</p>';
 		echo '</div>';
 		
 		echo '<div class="form-field term-roles-wrap">';
-		echo '<label>' . __('Roles who can see the content','ultimatemember') . '</label>';
+		echo '<label>' . __('Roles who can see the content','ultimate-member') . '</label>';
 		foreach($ultimatemember->query->get_roles() as $role_id => $role) {
 		echo '<label><input type="checkbox" name="_um_roles[]" value="' . $role_id . '" /> ' . $role . '</label>';
 		}
-		echo '<p class="description">' . __('This is applicable only if you restrict the content to logged-in users.','ultimatemember') . '</p>';
-		echo '<label>' . __('Content Restriction Redirect URL','ultimatemember') . '</label>';
+		echo '<p class="description">' . __('This is applicable only if you restrict the content to logged-in users.','ultimate-member') . '</p>';
+		echo '<label>' . __('Content Restriction Redirect URL','ultimate-member') . '</label>';
 		echo '<input type="text" name="_um_redirect" id="_um_redirect" value="" />';
-		echo '<p class="description">' . __('Users who cannot see content will get redirected to that URL.','ultimatemember') . '</p>';
+		echo '<p class="description">' . __('Users who cannot see content will get redirected to that URL.','ultimate-member') . '</p>';
 		echo '</div>';
 		
 		echo '<div class="form-field term-redirect-wrap">';
-		echo '<label>' . __('Content Restriction Redirect URL','ultimatemember') . '</label>';
+		echo '<label>' . __('Content Restriction Redirect URL','ultimate-member') . '</label>';
 		echo '<input type="text" name="_um_redirect2" id="_um_redirect2" value="" />';
-		echo '<p class="description">' . __('Users who cannot see content will get redirected to that URL.','ultimatemember') . '</p>';
+		echo '<p class="description">' . __('Users who cannot see content will get redirected to that URL.','ultimate-member') . '</p>';
 		echo '</div>';
 	
 	}
@@ -112,15 +112,15 @@
 		$_um_roles=  (isset( $termMeta['_um_roles'] ) )? $termMeta['_um_roles'] : '';
 
 		echo '<tr class="form-field form-required term-access-wrap um-conditional-radio-group" data-cond1="2" data-cond1-show="term-roles-wrap" data-cond2="1" data-cond2-show="term-redirect-wrap" >';
-		echo "<th scope='row'><label>" . __('Content Availability','ultimatemember') . "</label></th>";
-		echo '<td><label><input type="radio" name="_um_accessible" value="0"  ' . checked( 0, $_um_accessible, 0 ) . ' /> '. __('Content accessible to Everyone','ultimatemember') . '</label><br />
-			<label><input type="radio" name="_um_accessible" value="1" ' . checked( 1, $_um_accessible, 0 ) . ' /> ' . __('Content accessible to Logged Out Users','ultimatemember') . '</label><br />
-			<label><input type="radio" name="_um_accessible" value="2" ' . checked( 2, $_um_accessible, 0 ) . ' /> ' . __('Content accessible to Logged In Users','ultimatemember') . '</label>';
+		echo "<th scope='row'><label>" . __('Content Availability','ultimate-member') . "</label></th>";
+		echo '<td><label><input type="radio" name="_um_accessible" value="0"  ' . checked( 0, $_um_accessible, 0 ) . ' /> '. __('Content accessible to Everyone','ultimate-member') . '</label><br />
+			<label><input type="radio" name="_um_accessible" value="1" ' . checked( 1, $_um_accessible, 0 ) . ' /> ' . __('Content accessible to Logged Out Users','ultimate-member') . '</label><br />
+			<label><input type="radio" name="_um_accessible" value="2" ' . checked( 2, $_um_accessible, 0 ) . ' /> ' . __('Content accessible to Logged In Users','ultimate-member') . '</label>';
 		echo '<p class="description">Who can see content/posts in this category.</p>';
 		echo "</td></tr>";
 		
 		echo "<tr class='form-field form-required term-roles-wrap'>";
-		echo "<th scope='row'><label>" .  __('Roles who can see the content','ultimatemember') . "</label></th>";
+		echo "<th scope='row'><label>" .  __('Roles who can see the content','ultimate-member') . "</label></th>";
 		echo '<td>';
 		foreach($ultimatemember->query->get_roles() as $role_id => $role) {
 			if (  ( isset( $_um_roles ) && is_array( $_um_roles ) && in_array($role_id, $_um_roles ) ) || ( isset( $_um_roles ) && $role_id == $_um_roles ) ) {
@@ -130,20 +130,20 @@
 			}
 		echo '<label><input type="checkbox" name="_um_roles[]" value="' . $role_id . '" ' .  $checked . ' /> ' . $role . '</label>&nbsp;&nbsp;';
 		}
-		echo '<p class="description">' . __('This is applicable only if you restrict the content to logged-in users.','ultimatemember') . '</p>';
+		echo '<p class="description">' . __('This is applicable only if you restrict the content to logged-in users.','ultimate-member') . '</p>';
 		echo "</td></tr>";
 		echo "<tr class='form-field form-required term-roles-wrap'>";
-		echo "<th scope='row'><label>" . __('Content Restriction Redirect URL','ultimatemember') . "</label></th>";
+		echo "<th scope='row'><label>" . __('Content Restriction Redirect URL','ultimate-member') . "</label></th>";
 		echo '<td>';
 		echo '<input type="text" name="_um_redirect" id="_um_redirect" value="' . $_um_redirect . '" />';
-		echo '<p class="description">' . __('Users who cannot see content will get redirected to that URL.','ultimatemember') . '</p>';
+		echo '<p class="description">' . __('Users who cannot see content will get redirected to that URL.','ultimate-member') . '</p>';
 		echo "</td></tr>";
 		
 		echo "<tr class='form-field form-required term-redirect-wrap'>";
-		echo "<th scope='row'><label>" . __('Content Restriction Redirect URL','ultimatemember') . "</label></th>";
+		echo "<th scope='row'><label>" . __('Content Restriction Redirect URL','ultimate-member') . "</label></th>";
 		echo '<td>';
 		echo '<input type="text" name="_um_redirect2" id="_um_redirect2" value="' . $_um_redirect2 . '" />';
-		echo '<p class="description">' . __('Users who cannot see content will get redirected to that URL.','ultimatemember') . '</p>';
+		echo '<p class="description">' . __('Users who cannot see content will get redirected to that URL.','ultimate-member') . '</p>';
 		echo "</td></tr>";
 		
 	}
@@ -217,13 +217,13 @@
 		
 		?>
 		
-		<h4><?php _e('This is a translation of UM profile page?','ultimatemember'); ?></h4>
+		<h4><?php _e('This is a translation of UM profile page?','ultimate-member'); ?></h4>
 		
 		<p>
 			<span><?php $instance->ui_on_off( '_um_wpml_user', 0 ); ?></span>
 		</p>
 		
-		<h4><?php _e('This is a translation of UM account page?','ultimatemember'); ?></h4>
+		<h4><?php _e('This is a translation of UM account page?','ultimate-member'); ?></h4>
 		
 		<p>
 			<span><?php $instance->ui_on_off( '_um_wpml_account', 0 ); ?></span>
@@ -304,7 +304,7 @@
 		
 		$n = array(
 			'post_type' 	  	=> 'um_form',
-			'post_title'		=> sprintf(__('Duplicate of %s','ultimatemember'), get_the_title($post_id) ),
+			'post_title'		=> sprintf(__('Duplicate of %s','ultimate-member'), get_the_title($post_id) ),
 			'post_status'		=> 'publish',
 			'post_author'   	=> um_user('ID'),
 		);

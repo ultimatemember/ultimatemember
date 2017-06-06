@@ -28,19 +28,19 @@ class UM_Account {
 	function core_tabs() {
 
 		$tabs[100]['general']['icon'] = 'um-faicon-user';
-		$tabs[100]['general']['title'] = __('Account','ultimatemember');
+		$tabs[100]['general']['title'] = __('Account','ultimate-member');
 
 		$tabs[200]['password']['icon'] = 'um-faicon-asterisk';
-		$tabs[200]['password']['title'] = __('Change Password','ultimatemember');
+		$tabs[200]['password']['title'] = __('Change Password','ultimate-member');
 
 		$tabs[300]['privacy']['icon'] = 'um-faicon-lock';
-		$tabs[300]['privacy']['title'] = __('Privacy','ultimatemember');
+		$tabs[300]['privacy']['title'] = __('Privacy','ultimate-member');
 
 		$tabs[400]['notifications']['icon'] = 'um-faicon-envelope';
-		$tabs[400]['notifications']['title'] = __('Notifications','ultimatemember');
+		$tabs[400]['notifications']['title'] = __('Notifications','ultimate-member');
 
 		$tabs[9999]['delete']['icon'] = 'um-faicon-trash-o';
-		$tabs[9999]['delete']['title'] = __('Delete Account','ultimatemember');
+		$tabs[9999]['delete']['title'] = __('Delete Account','ultimate-member');
 
 		return $tabs;
 	}

@@ -232,7 +232,7 @@ class UM_Admin_Enqueue {
 
 		if ( !is_admin() ) return false;
 		
-		if ( strstr( $screen_id, 'ultimatemember') || strstr( $screen_id, 'um_') || strstr($screen_id, 'user') || strstr($screen_id, 'profile') )return true;
+		if ( strstr( $screen_id, 'ultimatemember'  ) || strstr( $screen_id, 'um_') || strstr($screen_id, 'user') || strstr($screen_id, 'profile') )return true;
 		
 		if ( $screen_id == 'nav-menus' ) return true;
 		

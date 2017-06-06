@@ -1,6 +1,6 @@
 <div class="um-admin-metabox">
 
-	<p><label for="_um_directory_template"><?php _e('Template','ultimatemember'); ?></label>
+	<p><label for="_um_directory_template"><?php _e('Template','ultimate-member'); ?></label>
 		<select name="_um_directory_template" id="_um_directory_template" class="umaf-selectjs" style="width: 100%">
 
 			<?php foreach($ultimatemember->shortcodes->get_templates( 'members' ) as $key => $value) { ?>

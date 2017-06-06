@@ -22,7 +22,7 @@ class UM_Admin_Columns {
 	function post_row_actions($actions, $post){
 		//check for your post type
 		if ($post->post_type =="um_form"){
-			$actions['um_duplicate'] = '<a href="' . $this->duplicate_uri( $post->ID ) . '">' . __('Duplicate','ultimatemember') . '</a>';
+			$actions['um_duplicate'] = '<a href="' . $this->duplicate_uri( $post->ID ) . '">' . __('Duplicate','ultimate-member') . '</a>';
 		}
 		return $actions;
 	}

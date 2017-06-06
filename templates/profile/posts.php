@@ -13,7 +13,7 @@
 		<?php if ( $ultimatemember->shortcodes->loop->found_posts >= 10 ) { ?>
 		
 		<div class="um-load-items">
-			<a href="#" class="um-ajax-paginate um-button" data-hook="um_load_posts" data-args="post,10,10,<?php echo um_user('ID'); ?>"><?php _e('load more posts','ultimatemember'); ?></a>
+			<a href="#" class="um-ajax-paginate um-button" data-hook="um_load_posts" data-args="post,10,10,<?php echo um_user('ID'); ?>"><?php _e('load more posts','ultimate-member'); ?></a>
 		</div>
 		
 		<?php } ?>
@@ -22,6 +22,6 @@
 		
 <?php } else { ?>
 
-	<div class="um-profile-note"><span><?php echo ( um_profile_id() == get_current_user_id() ) ? __('You have not created any posts.','ultimatemember') : __('This user has not created any posts.','ultimatemember'); ?></span></div>
+	<div class="um-profile-note"><span><?php echo ( um_profile_id() == get_current_user_id() ) ? __('You have not created any posts.','ultimate-member') : __('This user has not created any posts.','ultimate-member'); ?></span></div>
 	
 <?php } wp_reset_postdata(); ?>

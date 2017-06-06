@@ -510,12 +510,12 @@
 					}
 
 					if ( $k == 'timestamp' ) {
-						$k = __('date submitted','ultimatemember');
+						$k = __('date submitted','ultimate-member');
 						$v = date("d M Y H:i", $v);
 					}
 
 					if ( $style ) {
-						if ( !$v ) $v = __('(empty)','ultimatemember');
+						if ( !$v ) $v = __('(empty)','ultimate-member');
 						$output .= "<p><label>$k</label><span>$v</span></p>";
 					} else {
 						$output .= "$k: $v" . "\r\n";

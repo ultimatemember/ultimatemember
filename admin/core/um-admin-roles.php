@@ -29,10 +29,10 @@ class UM_Admin_Roles {
 		$admin = new UM_Admin_Metabox();
 		
 		$new_columns['cb'] = '<input type="checkbox" />';
-		$new_columns['title'] = __('Role Title','ultimatemember');
-		$new_columns['count'] = __('No. of Members','ultimatemember') . $admin->_tooltip( __('The total number of members who have this role on your site','ultimatemember') );
-		$new_columns['core'] = __('Core / Built-in','ultimatemember') . $admin->_tooltip( __('A core role is installed by default and may not be removed','ultimatemember') );
-		$new_columns['has_wpadmin_perm'] = __('WP-Admin Access','ultimatemember') . $admin->_tooltip( __('Let you know If users of this role can view the WordPress backend or not','ultimatemember') );
+		$new_columns['title'] = __('Role Title','ultimate-member');
+		$new_columns['count'] = __('No. of Members','ultimate-member') . $admin->_tooltip( __('The total number of members who have this role on your site','ultimate-member') );
+		$new_columns['core'] = __('Core / Built-in','ultimate-member') . $admin->_tooltip( __('A core role is installed by default and may not be removed','ultimate-member') );
+		$new_columns['has_wpadmin_perm'] = __('WP-Admin Access','ultimate-member') . $admin->_tooltip( __('Let you know If users of this role can view the WordPress backend or not','ultimate-member') );
 		
 		return $new_columns;
 		
@@ -55,9 +55,9 @@ class UM_Admin_Roles {
 				}
 				$data = $ultimatemember->query->role_data($role);
 				if ( isset( $data['can_access_wpadmin'] ) && $data['can_access_wpadmin'] == 1 ){
-					echo '<span class="um-adm-ico um-admin-tipsy-n" title="'.__('This role can access the WordPress backend','ultimatemember').'"><i class="um-faicon-check"></i></span>';
+					echo '<span class="um-adm-ico um-admin-tipsy-n" title="'.__('This role can access the WordPress backend','ultimate-member').'"><i class="um-faicon-check"></i></span>';
 				} else {
-					echo __('No','ultimatemember');
+					echo __('No','ultimate-member');
 				}
 				break;
 				
@@ -73,7 +73,7 @@ class UM_Admin_Roles {
 			
 			case 'core':
 				if ( $ultimatemember->query->is_core( $id ) ) {
-					echo '<span class="um-adm-ico um-admin-tipsy-n" title="'.__('Core','ultimatemember').'"><i class="um-faicon-check"></i></span>';
+					echo '<span class="um-adm-ico um-admin-tipsy-n" title="'.__('Core','ultimate-member').'"><i class="um-faicon-check"></i></span>';
 				} else {
 					echo '&mdash;';
 				}

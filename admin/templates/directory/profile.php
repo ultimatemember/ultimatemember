@@ -3,7 +3,7 @@
 	<div class="">
 		
 		<p>
-			<label class="um-admin-half"><?php _e('Enable Profile Photo','ultimatemember'); ?></label>
+			<label class="um-admin-half"><?php _e('Enable Profile Photo','ultimate-member'); ?></label>
 			<span class="um-admin-half">
 			
 				<?php $this->ui_on_off('_um_profile_photo', 1); ?>
@@ -12,7 +12,7 @@
 		</p><div class="um-admin-clear"></div>
 		
 		<p>
-			<label class="um-admin-half"><?php _e('Enable Cover Photo','ultimatemember'); ?> <?php $this->tooltip('If turned on, the users cover photo will appear in the directory'); ?></label>
+			<label class="um-admin-half"><?php _e('Enable Cover Photo','ultimate-member'); ?> <?php $this->tooltip('If turned on, the users cover photo will appear in the directory'); ?></label>
 			<span class="um-admin-half">
 			
 				<?php $this->ui_on_off('_um_cover_photos', 1); ?>
@@ -21,7 +21,7 @@
 		</p><div class="um-admin-clear"></div>
 		
 		<p>
-			<label class="um-admin-half"><?php _e('Show display name','ultimatemember'); ?></label>
+			<label class="um-admin-half"><?php _e('Show display name','ultimate-member'); ?></label>
 			<span class="um-admin-half">
 			
 				<?php $this->ui_on_off('_um_show_name', 1, true, 1, 'name-options', 'xxx'); ?>
@@ -30,7 +30,7 @@
 		</p><div class="um-admin-clear"></div>
 		
 		<p>
-			<label class="um-admin-half"><?php _e('Show tagline below profile name','ultimatemember'); ?></label>
+			<label class="um-admin-half"><?php _e('Show tagline below profile name','ultimate-member'); ?></label>
 			<span class="um-admin-half">
 			
 				<?php $this->ui_on_off('_um_show_tagline', 0, true, 1, 'tagline-options', 'xxx'); ?>
@@ -39,7 +39,7 @@
 		</p><div class="um-admin-clear"></div>
 		
 		<p class="tagline-options">
-			<label class=""><?php _e('Choose field(s) to display in tagline','ultimatemember'); ?></label>
+			<label class=""><?php _e('Choose field(s) to display in tagline','ultimate-member'); ?></label>
 				
 				<?php
 				
@@ -87,7 +87,7 @@
 		</p><div class="um-admin-clear"></div>
 		
 		<p>
-			<label class="um-admin-half"><?php _e('Show extra user information below tagline?','ultimatemember'); ?></label>
+			<label class="um-admin-half"><?php _e('Show extra user information below tagline?','ultimate-member'); ?></label>
 			<span class="um-admin-half">
 			
 				<?php $this->ui_on_off('_um_show_userinfo', 0, true, 1, 'reveal-options', 'xxx'); ?>
@@ -96,7 +96,7 @@
 		</p><div class="um-admin-clear"></div>
 		
 		<p class="reveal-options">
-			<label class="um-admin-half"><?php _e('Enable reveal section transition by default','ultimatemember'); ?></label>
+			<label class="um-admin-half"><?php _e('Enable reveal section transition by default','ultimate-member'); ?></label>
 			<span class="um-admin-half">
 			
 				<?php $this->ui_on_off('_um_userinfo_animate', 1); ?>
@@ -105,7 +105,7 @@
 		</p><div class="um-admin-clear"></div>
 		
 		<p class="reveal-options">
-			<label class=""><?php _e('Choose field(s) to display in reveal section','ultimatemember'); ?></label>
+			<label class=""><?php _e('Choose field(s) to display in reveal section','ultimate-member'); ?></label>
 				
 				<?php
 				
@@ -153,7 +153,7 @@
 		</p><div class="um-admin-clear"></div>
 		
 		<p class="reveal-options">
-			<label class="um-admin-half"><?php _e('Show social connect icons','ultimatemember'); ?></label>
+			<label class="um-admin-half"><?php _e('Show social connect icons','ultimate-member'); ?></label>
 			<span class="um-admin-half">
 			
 				<?php $this->ui_on_off('_um_show_social', 0); ?>
