@@ -45,23 +45,16 @@
 				$user_name = $args['user_login'];
 		}
 
-		if ( !username_exists( $user_name ) ) {
-			if ( $is_email ) {
-				$ultimatemember->form->add_error( $field,  __(' Sorry, we can\'t find an account with that email address','ultimatemember') );
-			} else {
-				$ultimatemember->form->add_error( $field,  __(' Sorry, we can\'t find an account with that username','ultimatemember') );
-			}
-		} else {
-			if ( $args['user_password'] == '' ) {
-				$ultimatemember->form->add_error( 'user_password',  __('Please enter your password','ultimatemember') );
-			}
-		}
+        if ( $args['user_password'] == '' ) {
+            $ultimatemember->form->add_error( 'user_password',  __('Please enter your password','ultimatemember') );
+        }
 
 		$user = get_user_by( 'login', $user_name );
 		if ( $user && wp_check_password( $args['user_password'], $user->data->user_pass, $user->ID) ) {
 			$ultimatemember->login->auth_id = username_exists( $user_name );
 		} else {
-			$ultimatemember->form->add_error( 'user_password',  __('Password is incorrect. Please try again.','ultimatemember') );
+            $ultimatemember->form->add_error( 'username',  __(' Invalid user name/E-mail and/or password.','ultimatemember') );
+            $ultimatemember->form->add_error( 'user_password',  __(' Invalid user name/E-mail and/or password.','ultimatemember') );
 		}
 
 		// add a way for other plugins like wp limit login
