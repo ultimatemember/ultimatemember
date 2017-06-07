@@ -909,6 +909,18 @@ class UM_User {
 
 	}
 
+   	/**
+	 * Overrides email changed notification
+	 *
+	 */
+    function um_send_email_change_email($send, $user, $user_data) {
+        global $ultimatemember;
+
+        $ultimatemember->mail->send( um_user('user_email'), 'changedem_email', ['tags' => ['{new_email}'], 'tags_replace' => [$user_data['user_email']]] );
+
+        return false;
+    }
+
 	/***
 	***	@update profile
 	***/
@@ -936,6 +948,7 @@ class UM_User {
        
 		// update user
 		if ( count( $args ) > 1 ) {
+            add_filter('send_email_change_email', [&$this, 'um_send_email_change_email'], 10 ,3);
 			wp_update_user( $args );
 		}
 

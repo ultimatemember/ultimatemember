@@ -910,6 +910,36 @@ $this->sections[] = array(
 										'{site_name}',
         ),
 
+        array(
+                'id'       => 'changedem_email_on',
+                'type'     => 'switch',
+                'title'    => __( 'Email Changed Email','ultimatemember' ),
+				'default'  => 1,
+				'desc' 	   => __('Whether to send the user an email when he changed email (Recommended, please keep on)','ultimatemember'),
+        ),
+
+        array(
+                'id'       => 'changedem_email_sub',
+                'type'     => 'text',
+                'title'    => __( 'Email Changed Email','ultimatemember' ),
+                'subtitle' => __( 'Subject Line','ultimatemember' ),
+                'default'  => 'Your {site_name} email has been changed',
+				'required' => array( 'changedem_email_on', '=', 1 ),
+				'desc' 	   => __('This is the subject line of the e-mail','ultimatemember'),
+        ),
+
+        array(
+                'id'       => 'changedem_email',
+                'type'     => 'textarea',
+                'title'    => __( 'Email Changed Email','ultimatemember' ),
+                'subtitle' => __( 'Message Body','ultimatemember' ),
+				'required' => array( 'changedem_email_on', '=', 1 ),
+                'default'  => 'Hi {display_name},' . "\r\n\r\n" .
+										'You recently changed the email address associated with your {site_name} account.'  . "\r\n\r\n" .
+										'If you did not make this change and believe your {site_name} account has been compromised, please contact us at the following email address: {admin_email}'  . "\r\n\r\n" .
+										'Thanks,' . "\r\n" .
+										'{site_name}',
+        ),
 	)
 
 );
