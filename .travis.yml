@@ -63,6 +63,7 @@ before_script:
         fi 
     - nvm install 6
     - nvm use 6
+    - chmod +x ./tests/prepare-wordpress.sh
     - ./tests/prepare-wordpress.sh
     - mysql -e "set global wait_timeout = 3600;"
 
