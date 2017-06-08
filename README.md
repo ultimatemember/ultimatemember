@@ -1,5 +1,7 @@
 Ultimate Member 
 ==============
+
+[![Travic-CI](https://travis-ci.org/ultimatemember/ultimatemember.svg?branch=master)](https://travis-ci.org/ultimatemember/ultimatemember)
 Ultimate Member is a powerful and flexible WordPress plugin that makes it a breeze for users to sign-up and become members. The plugin allows you to add beautiful user profiles to your site and is perfect for creating advanced online communities. Lightweight and highly extensible, Ultimate Member will enable you to create almost any type of site where users can join and become members with absolute ease.
 
 | Latest Version |Requires at least|Stable Tag|
