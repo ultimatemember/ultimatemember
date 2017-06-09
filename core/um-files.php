@@ -201,6 +201,8 @@ class UM_Files {
 		} else if ($info['mime'] == 'image/png'){
 
 			$image = imagecreatefrompng( $source );
+			imagealphablending( $image, false );
+			imagesavealpha( $image, true );
 
 		}
 
