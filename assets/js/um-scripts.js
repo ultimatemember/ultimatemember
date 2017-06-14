@@ -144,7 +144,7 @@ jQuery(document).ready(function() {
 		parent.find('.um-single-image-preview img').attr('src','');
 		parent.find('.um-single-image-preview').hide();
 		parent.find('.um-btn-auto-width').html('Upload');
-		parent.find('input[type=hidden]').val('');
+		parent.find('input[type=hidden]').val('empty_file');
 
 		jQuery.ajax({
 			url: um_scripts.ajaxurl,
@@ -164,7 +164,7 @@ jQuery(document).ready(function() {
 		var src = jQuery(this).parents('.um-field').find('.um-single-fileinfo a').attr('href');
 		parent.find('.um-single-file-preview').hide();
 		parent.find('.um-btn-auto-width').html('Upload');
-		parent.find('input[type=hidden]').val('');
+		parent.find('input[type=hidden]').val('empty_file');
 
 		jQuery.ajax({
 			url: um_scripts.ajaxurl,
