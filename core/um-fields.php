@@ -439,7 +439,7 @@ class UM_Fields {
 
 			if ( strstr( $key, 'user_pass' ) && $this->set_mode != 'password' ) return '';
 
-			return $ultimatemember->form->post_form[ $key ];
+			return stripslashes_deep( $ultimatemember->form->post_form[ $key ] );
 
 		} else if ( um_user( $key ) && $this->editing == true ) {
 
