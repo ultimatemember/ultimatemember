@@ -1,12 +1,24 @@
 <?php
 
-$i = 0;
 $dirname = dirname( __FILE__ );
 do {
 	$dirname = dirname( $dirname );
+	$wp_config = "{$dirname}/wp-config.php";
 	$wp_load = "{$dirname}/wp-load.php";
 }
-while( ++$i < 10 && !file_exists( $wp_load ) );
+while( !file_exists( $wp_config ) );
+
+if ( !file_exists( $wp_load ) ) {
+	$dirs = glob( $dirname . '/*' , GLOB_ONLYDIR );
+
+	foreach ( $dirs as $key => $value ) {
+		$wp_load = "{$value}/wp-load.php";
+		if ( file_exists( $wp_load ) ) {
+			break;
+		}
+	}
+}
+
 require_once( $wp_load );
 global $ultimatemember;
 
