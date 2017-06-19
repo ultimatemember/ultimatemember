@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.1
 Tested up to: 4.8
 
-Stable Tag: 1.3.85
+Stable Tag: 1.3.84
 
 License: GNU Version 2 or Any Later Version
 
