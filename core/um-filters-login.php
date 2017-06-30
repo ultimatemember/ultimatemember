@@ -63,7 +63,7 @@
 	/***
 	***	@login checks thru the wordpress admin login
 	***/
-	add_filter('authenticate', 'um_wp_form_errors_hook_logincheck', 999, 3);
+	add_filter('authenticate', 'um_wp_form_errors_hook_logincheck', 50, 3);
 	function um_wp_form_errors_hook_logincheck( $user, $username, $password ) {
 		
 		do_action('wp_authenticate_username_password_before', $user, $username, $password );
