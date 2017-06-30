@@ -47,7 +47,7 @@ class UM_Admin_Notices {
 
 				echo '<div class="updated" style="border-color: #3ba1da;"><p>';
 
-				echo sprintf(__( 'Registration is disabled. Please go to the <a href="%s">general settings</a> page in the WordPress admin and select anyone can register. <a href="%s">Hide this notice</a>', 'ultimatemember' ), admin_url('options-general.php'), add_query_arg('um_adm_action', 'um_can_register_notice') );
+				echo sprintf(__( 'Registration is disabled. Please go to the <a href="%s">general settings</a> page in the WordPress admin and select anyone can register. <a href="%s">Hide this notice</a>', 'ultimate-member'), admin_url('options-general.php'), add_query_arg('um_adm_action', 'um_can_register_notice') );
 
 				echo '</p></div>';
 
@@ -59,7 +59,7 @@ class UM_Admin_Notices {
 
 				echo '<div class="updated" style="border-color: #3ba1da;"><p>';
 
-				echo sprintf(__( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension. <a href="%s">Hide this notice</a>', 'ultimatemember' ), add_query_arg('um_adm_action', 'um_hide_exif_notice') );
+				echo sprintf(__( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension. <a href="%s">Hide this notice</a>', 'ultimate-member'), add_query_arg('um_adm_action', 'um_hide_exif_notice') );
 
 				echo '</p></div>';
 
@@ -81,20 +81,20 @@ class UM_Admin_Notices {
 				}
 
 				if ( $err ) {
-					echo '<div class="updated" style="border-color: #3ba1da;"><p>' . __('One or more of your Ultimate Member pages are not correctly setup. Please visit <strong>Ultimate Member > Settings</strong> to re-assign your missing pages.','ultimatemember') . '</p></div>';
+					echo '<div class="updated" style="border-color: #3ba1da;"><p>' . __('One or more of your Ultimate Member pages are not correctly setup. Please visit <strong>Ultimate Member > Settings</strong> to re-assign your missing pages.','ultimate-member') . '</p></div>';
 				}
 
 				if ( isset( $pages['user'] ) ) {
 					$test = get_post( $pages['user'] );
 					if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
-						echo '<div class="updated" style="border-color: #3ba1da;"><p>' . __('Ultimate Member Setup Error: User page can not be a child page.','ultimatemember') . '</p></div>';
+						echo '<div class="updated" style="border-color: #3ba1da;"><p>' . __('Ultimate Member Setup Error: User page can not be a child page.','ultimate-member') . '</p></div>';
 					}
 				}
 
 				if ( isset( $pages['account'] ) ) {
 					$test = get_post( $pages['account'] );
 					if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
-						echo '<div class="updated" style="border-color: #3ba1da;"><p>' . __('Ultimate Member Setup Error: Account page can not be a child page.','ultimatemember') . '</p></div>';
+						echo '<div class="updated" style="border-color: #3ba1da;"><p>' . __('Ultimate Member Setup Error: Account page can not be a child page.','ultimate-member') . '</p></div>';
 					}
 				}
 
@@ -125,7 +125,7 @@ class UM_Admin_Notices {
 			if ( !$hide_locale_notice ) {
 				echo '<div class="updated" style="border-color: #3ba1da;"><p>';
 
-				echo sprintf(__('Your site language is <strong>%1$s</strong>. Good news! Ultimate Member is already available in <strong>%2$s language</strong>. <a href="%3$s">Download the translation</a> files and start using the plugin in your language now. <a href="%4$s">Hide this notice</a>','ultimatemember'), $locale, $ultimatemember->available_languages[$locale], $download_uri, add_query_arg('um_adm_action', 'um_hide_locale_notice')  );
+				echo sprintf(__('Your site language is <strong>%1$s</strong>. Good news! Ultimate Member is already available in <strong>%2$s language</strong>. <a href="%3$s">Download the translation</a> files and start using the plugin in your language now. <a href="%4$s">Hide this notice</a>','ultimate-member'), $locale, $ultimatemember->available_languages[$locale], $download_uri, add_query_arg('um_adm_action', 'um_hide_locale_notice')  );
 
 				echo '</p></div>';
 			}
@@ -138,7 +138,7 @@ class UM_Admin_Notices {
 
 			echo '<div class="updated" style="border-color: #3ba1da;"><p>';
 
-			echo sprintf(__('Ultimate Member has not yet been translated to your langeuage: <strong>%1$s</strong>. If you have translated the plugin you need put these files <code>ultimatemember-%1$s.po and ultimatemember-%1$s.mo</code> in <strong>/wp-content/languages/plugins/</strong> for the plugin to be translated in your language. <a href="%2$s">Hide this notice</a>','ultimatemember'), $locale, add_query_arg('um_adm_action', 'um_hide_locale_notice') );
+			echo sprintf(__('Ultimate Member has not yet been translated to your langeuage: <strong>%1$s</strong>. If you have translated the plugin you need put these files <code>ultimatemember-%1$s.po and ultimatemember-%1$s.mo</code> in <strong>/wp-content/languages/plugins/</strong> for the plugin to be translated in your language. <a href="%2$s">Hide this notice</a>','ultimate-member'), $locale, add_query_arg('um_adm_action', 'um_hide_locale_notice') );
 
 			echo '</p></div>';
 
@@ -175,42 +175,42 @@ class UM_Admin_Notices {
 
 				$ignore = admin_url('users.php');
 
-				$messages[0]['err_content'] = sprintf(__('Are you sure you want to delete the selected user(s)? The following users will be deleted: <p>%s</p> <strong>This cannot be undone!</strong>','ultimatemember'), $users);
-				$messages[0]['err_content'] .= '<p><a href="'. esc_html( $confirm_uri ) .'" class="button-primary">' . __('Remove','ultimatemember') . '</a>&nbsp;&nbsp;<a href="'.$ignore.'" class="button">' . __('Undo','ultimatemember') . '</a></p>';
+				$messages[0]['err_content'] = sprintf(__('Are you sure you want to delete the selected user(s)? The following users will be deleted: <p>%s</p> <strong>This cannot be undone!</strong>','ultimate-member'), $users);
+				$messages[0]['err_content'] .= '<p><a href="'. esc_html( $confirm_uri ) .'" class="button-primary">' . __('Remove','ultimate-member') . '</a>&nbsp;&nbsp;<a href="'.$ignore.'" class="button">' . __('Undo','ultimate-member') . '</a></p>';
 
 				break;
 
 			case 'language_updated':
-				$messages[0]['content'] = __('Your translation files have been updated successfully.','ultimatemember');
+				$messages[0]['content'] = __('Your translation files have been updated successfully.','ultimate-member');
 				break;
 
 			case 'purged_temp':
-				$messages[0]['content'] = __('Your temp uploads directory is now clean.','ultimatemember');
+				$messages[0]['content'] = __('Your temp uploads directory is now clean.','ultimate-member');
 				break;
 
 			case 'cleared_cache':
-				$messages[0]['content'] = __('Your user cache is now removed.','ultimatemember');
+				$messages[0]['content'] = __('Your user cache is now removed.','ultimate-member');
 				break;
 
 			case 'form_duplicated':
-				$messages[0]['content'] = __('The form has been duplicated successfully.','ultimatemember');
+				$messages[0]['content'] = __('The form has been duplicated successfully.','ultimate-member');
 				break;
 
 			case 'user_updated':
-				$messages[0]['content'] = __('User has been updated.','ultimatemember');
+				$messages[0]['content'] = __('User has been updated.','ultimate-member');
 				break;
 
 			case 'users_updated':
-				$messages[0]['content'] = __('Users have been updated.','ultimatemember');
+				$messages[0]['content'] = __('Users have been updated.','ultimate-member');
 				break;
 
 			case 'users_role_updated':
-				$messages[0]['content'] = __('Changed roles.','ultimatemember');
+				$messages[0]['content'] = __('Changed roles.','ultimate-member');
 				break;
 
 			case 'err_users_updated':
-				$messages[0]['err_content'] = __('Super administrators cannot be modified.','ultimatemember');
-				$messages[1]['content'] = __('Other users have been updated.','ultimatemember');
+				$messages[0]['err_content'] = __('Super administrators cannot be modified.','ultimate-member');
+				$messages[1]['content'] = __('Other users have been updated.','ultimate-member');
 
 		}
 

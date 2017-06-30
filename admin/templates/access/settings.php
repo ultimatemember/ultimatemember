@@ -6,7 +6,7 @@
 
 	?>
 
-	<h4><?php _e('Apply custom access settings?','ultimatemember'); ?> <?php $this->tooltip( __('Switch to yes to override global access settings','ultimatemember'), 'e'); ?></h4>
+	<h4><?php _e('Apply custom access settings?','ultimate-member'); ?> <?php $this->tooltip( __('Switch to yes to override global access settings','ultimate-member'), 'e'); ?></h4>
 
 	<p>
 		<span><?php $metabox->ui_on_off('_um_custom_access_settings', 0, true, 1, '_um_custom_access_settings', 'xxx'); ?>	</span>
@@ -14,15 +14,15 @@
 
 	<div class="_um_custom_access_settings">
 
-		<h4><?php _e('Content Availability','ultimatemember'); ?> <?php $this->tooltip( __('Who can access this content?','ultimatemember'), 'e'); ?></h4>
+		<h4><?php _e('Content Availability','ultimate-member'); ?> <?php $this->tooltip( __('Who can access this content?','ultimate-member'), 'e'); ?></h4>
 
 		<p class="um-conditional-radio-group description" data-cond1="2" data-cond1-show="um-admin-access-roles" data-cond2="1" data-cond2-show="um-admin-access-loggedout">
 
 			<?php $value = get_post_meta($post->ID, '_um_accessible', true); ?>
 
-			<label><input type="radio" name="_um_accessible" value="0" <?php if (!isset($value) || $value == 0 ) echo 'checked="checked"'; ?> /> <?php _e('Content accessible to Everyone','ultimatemember'); ?></label><br />
-			<label><input type="radio" name="_um_accessible" value="1" <?php if (isset($value)) checked(1, $value); ?> /> <?php _e('Content accessible to Logged Out Users','ultimatemember'); ?></label><br />
-			<label><input type="radio" name="_um_accessible" value="2" <?php if (isset($value)) checked(2, $value); ?> /> <?php _e('Content accessible to Logged In Users','ultimatemember'); ?></label>
+			<label><input type="radio" name="_um_accessible" value="0" <?php if (!isset($value) || $value == 0 ) echo 'checked="checked"'; ?> /> <?php _e('Content accessible to Everyone','ultimate-member'); ?></label><br />
+			<label><input type="radio" name="_um_accessible" value="1" <?php if (isset($value)) checked(1, $value); ?> /> <?php _e('Content accessible to Logged Out Users','ultimate-member'); ?></label><br />
+			<label><input type="radio" name="_um_accessible" value="2" <?php if (isset($value)) checked(2, $value); ?> /> <?php _e('Content accessible to Logged In Users','ultimate-member'); ?></label>
 
 			<?php do_action( 'um_admin_extend_access_settings' ); ?>
 
@@ -30,7 +30,7 @@
 
 		<div class="um-admin-access-loggedout">
 
-			<h4><label for="_um_access_redirect2"><?php _e('Redirect URL','ultimatemember'); ?></label> <?php $this->tooltip( __('This is the URL that user is redirected to If he is not permitted to view this content','ultimatemember'), 'e'); ?></h4>
+			<h4><label for="_um_access_redirect2"><?php _e('Redirect URL','ultimate-member'); ?></label> <?php $this->tooltip( __('This is the URL that user is redirected to If he is not permitted to view this content','ultimate-member'), 'e'); ?></h4>
 
 			<p class="description">
 
@@ -44,7 +44,7 @@
 
 		<div class="um-admin-access-roles">
 
-			<h4><?php _e('Select the member roles that can see this content?','ultimatemember'); ?> <?php $this->tooltip( __('If you do not select any role, all members will be able to view this content','ultimatemember'), 'e'); ?></h4>
+			<h4><?php _e('Select the member roles that can see this content?','ultimate-member'); ?> <?php $this->tooltip( __('If you do not select any role, all members will be able to view this content','ultimate-member'), 'e'); ?></h4>
 
 			<p class="description">
 
@@ -57,7 +57,7 @@
 
 			</p>
 
-			<h4><label for="_um_access_redirect"><?php _e('Redirect URL','ultimatemember'); ?></label> <?php $this->tooltip( __('This is the URL that user is redirected to If he is not permitted to view this content','ultimatemember'), 'e'); ?></h4>
+			<h4><label for="_um_access_redirect"><?php _e('Redirect URL','ultimate-member'); ?></label> <?php $this->tooltip( __('This is the URL that user is redirected to If he is not permitted to view this content','ultimate-member'), 'e'); ?></h4>
 
 			<p class="description">
 

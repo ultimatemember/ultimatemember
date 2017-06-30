@@ -1,15 +1,14 @@
-﻿=== Ultimate Member - User Profile & Membership Plugin ===
+=== Ultimate Member - User Profile & Membership Plugin ===
 Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember, champsupertramp
 Donate link: 
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.1
-Tested up to: 4.7.3
-
-Stable Tag: 1.3.84
-
+Tested up to: 4.8
+Stable tag: 1.3.87
 License: GNU Version 2 or Any Later Version
+License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
 The easiest way to create powerful online communities and beautiful user profiles with WordPress
 
@@ -150,6 +149,48 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 == Changelog ==
 
+
+= 1.3.87: June 24, 2017 =
+
+* Bugfixes
+  - Fix system info
+
+= 1.3.86: June 19, 2017 =
+
+* Enhancements:
+  - Update readme.txt
+  
+
+= 1.3.85: June 19, 2017 =
+
+* Enhancements:
+  * Add new filter hook to modify the profile cancel uri for redirection
+    * `um_edit_profile_cancel_uri`
+  * Add new filter hook to modify the specific field type's value
+    * `um_edit_{$type}_field_value`
+  * Add new filter hook that modies the file name
+    * `um_upload_file_name`
+  * Update en_US translation files
+
+* Bugfixes:
+  * Fix file clean up with image/file fields on profile update
+  * Fix text domain slug for wp.org translation compatibility
+  * Fix change password email notification
+  * Fix double click submission in registration forms
+  * Fix custom field role validation
+  * Fix conditional logic 'content block' field
+  * Fix conditional logic field operators and visibility
+  * Fix textarea field sanitation
+  * Fix system info false positive virus scan results
+  * Fix field validation for minimum and maximum numeric values
+  * Fix used custom fields visibility in form builders
+  * Fix cache user's profile option description
+  * Fix double click for android device
+  * Fix png image upload with transparency
+  * Fix extra slashes in form edit view when invalid input fields occur
+  * Remove notices
+  
+  
 = 1.3.84: April 18, 2017 =
 
 * Enhancements:

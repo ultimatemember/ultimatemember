@@ -1,7 +1,7 @@
 <div class="um-admin-metabox">
 
 	<p>
-			<label class=""><?php _e('Field(s) to show in user meta','ultimatemember'); ?></label>
+			<label class=""><?php _e('Field(s) to show in user meta','ultimate-member'); ?></label>
 				
 				<?php
 				

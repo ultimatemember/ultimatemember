@@ -213,7 +213,7 @@
 
 			}else{
 				$arr_options['status'] = 'error';
-				$arr_options['message'] = __( 'This is not possible for security reasons.','ultimatemember');
+				$arr_options['message'] = __( 'This is not possible for security reasons.','ultimate-member');
 			}
 
 		}

@@ -144,12 +144,12 @@ class UM_Tracking {
 
 		echo '<div class="updated um-admin-notice"><p>';
 		
-		echo __( 'Allow Ultimate Member to track plugin usage? Opt-in to tracking and our newsletter and we will immediately e-mail you a 20% discount which you can use to purchase our core extensions bundle. No sensitive data is tracked.', 'ultimatemember' );
+		echo __( 'Allow Ultimate Member to track plugin usage? Opt-in to tracking and our newsletter and we will immediately e-mail you a 20% discount which you can use to purchase our core extensions bundle. No sensitive data is tracked.', 'ultimate-member');
 		
 		echo '</p>';
 		
-		echo '<p><a href="' . esc_url( $optin_url ) . '" class="button button-primary">' . __( 'Allow tracking', 'ultimatemember' ) . '</a>';
-		echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow tracking', 'ultimatemember' ) . '</a></p></div>';
+		echo '<p><a href="' . esc_url( $optin_url ) . '" class="button button-primary">' . __( 'Allow tracking', 'ultimate-member') . '</a>';
+		echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow tracking', 'ultimate-member') . '</a></p></div>';
 		
 	}
 

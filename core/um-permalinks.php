@@ -169,7 +169,7 @@ class UM_Permalinks {
 				um_fetch_user( $user_id );
 
 				if (  strtolower($_REQUEST['hash']) !== strtolower( um_user('account_secret_hash') )  )
-					wp_die( __( 'This activation link is expired or have already been used.','ultimatemember' ) );
+					wp_die( __( 'This activation link is expired or have already been used.','ultimate-member') );
 
 				$ultimatemember->user->approve();
 				$redirect = ( um_user('url_email_activate') ) ? um_user('url_email_activate') : um_get_core_page('login', 'account_active');

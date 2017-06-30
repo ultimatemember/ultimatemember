@@ -64,12 +64,12 @@ class UM_User_posts {
 	function add_tab( $tabs ){
 		
 		$tabs['posts'] = array(
-			'name' => __('Posts','ultimatemember'),
+			'name' => __('Posts','ultimate-member'),
 			'icon' => 'um-faicon-pencil',
 		);
 		
 		$tabs['comments'] = array(
-			'name' => __('Comments','ultimatemember'),
+			'name' => __('Comments','ultimate-member'),
 			'icon' => 'um-faicon-comment',
 		);
 		

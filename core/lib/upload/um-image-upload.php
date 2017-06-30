@@ -53,6 +53,6 @@ if(isset($_FILES[$id]['name'])) {
     }
 	
 } else {
-	$ret['error'] = __('A theme or plugin compatibility issue','ultimatemember');
+	$ret['error'] = __('A theme or plugin compatibility issue','ultimate-member');
 }
 echo json_encode($ret);

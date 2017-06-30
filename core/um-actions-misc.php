@@ -61,7 +61,7 @@
 		$success 	= '';
 
 		if ( ! get_option('users_can_register') && $mode == 'register' ) {
-			$err = __('Registration is currently disabled','ultimatemember');
+			$err = __('Registration is currently disabled','ultimate-member');
 		}
 		
 		if ( isset( $_REQUEST['updated'] ) && !empty( $_REQUEST['updated'] ) && !$ultimatemember->form->errors ) {
@@ -72,15 +72,15 @@
 					break;
 					
 				case 'account':
-					$success = __('Your account was updated successfully.','ultimatemember');
+					$success = __('Your account was updated successfully.','ultimate-member');
 					break;
 					
 				case 'password_changed':
-					$success = __('You have successfully changed your password.','ultimatemember');
+					$success = __('You have successfully changed your password.','ultimate-member');
 					break;
 					
 				case 'account_active':
-					$success = __('Your account is now active! You can login.','ultimatemember');
+					$success = __('Your account is now active! You can login.','ultimate-member');
 					break;
 					
 			}
@@ -92,39 +92,39 @@
 				default:
 					$err = apply_filters("um_custom_error_message_handler", $err, $_REQUEST['err']);
 					if ( !$err )
-						$err = __('An error has been encountered','ultimatemember');
+						$err = __('An error has been encountered','ultimate-member');
 					break;
 					
 				case 'registration_disabled':
-					$err = __('Registration is currently disabled','ultimatemember');
+					$err = __('Registration is currently disabled','ultimate-member');
 					break;
 					
 				case 'blocked_email':
-					$err = __('This email address has been blocked.','ultimatemember');
+					$err = __('This email address has been blocked.','ultimate-member');
 					break;
 					
 				case 'blocked_domain':
-					$err = __('We do not accept registrations from that domain.','ultimatemember');
+					$err = __('We do not accept registrations from that domain.','ultimate-member');
 					break;
 					
 				case 'blocked_ip':
-					$err = __('Your IP address has been blocked.','ultimatemember');
+					$err = __('Your IP address has been blocked.','ultimate-member');
 					break;
 					
 				case 'inactive':
-					$err = __('Your account has been disabled.','ultimatemember');
+					$err = __('Your account has been disabled.','ultimate-member');
 					break;
 					
 				case 'awaiting_admin_review':
-					$err = __('Your account has not been approved yet.','ultimatemember');
+					$err = __('Your account has not been approved yet.','ultimate-member');
 					break;
 					
 				case 'awaiting_email_confirmation':
-					$err = __('Your account is awaiting e-mail verification.','ultimatemember');
+					$err = __('Your account is awaiting e-mail verification.','ultimate-member');
 					break;
 					
 				case 'rejected':
-					$err = __('Your membership request has been rejected.','ultimatemember');
+					$err = __('Your membership request has been rejected.','ultimate-member');
 					break;
 					
 			}

@@ -8,7 +8,7 @@
 	function ultimatemember_do_ajax_action(){
 		global $ultimatemember;
 
-		if ( !is_user_logged_in() || !current_user_can('manage_options') ) die( __('Please login as administrator','ultimatemember') );
+		if ( !is_user_logged_in() || !current_user_can('manage_options') ) die( __('Please login as administrator','ultimate-member') );
 		
 		extract($_POST);
 		
@@ -60,7 +60,7 @@
 		$arr_options = array();
 
 		if( ! current_user_can('manage_options') ){
-			wp_die( __( 'This is not possible for security reasons.','ultimatemember') );
+			wp_die( __( 'This is not possible for security reasons.','ultimate-member') );
 		}
 		
         $um_callback_func = $_POST['um_option_callback'];

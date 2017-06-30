@@ -16,16 +16,16 @@ $url = add_query_arg('wp_role', $saved_r, $url);
 	<div class="">
 		
 		<p>
-			<label class="um-admin-half"><?php _e('Link to WordPress role','ultimatemember'); ?> <?php $this->tooltip( __('Users who get this community role will be assigned this WordPress role automatically','ultimatemember') ); ?></label>
+			<label class="um-admin-half"><?php _e('Link to WordPress role','ultimate-member'); ?> <?php $this->tooltip( __('Users who get this community role will be assigned this WordPress role automatically','ultimate-member') ); ?></label>
 			<span class="um-admin-half">
 				<select name="_um_synced_role" id="_um_synced_role">
-					<option value="0"><?php _e('None','ultimatemember'); ?></option>
+					<option value="0"><?php _e('None','ultimate-member'); ?></option>
 					<?php wp_dropdown_roles( $saved_r ); ?>
 				</select>
 			</span>
 		</p><div class="um-admin-clear"></div>
 		
-		<p><a href="<?php echo $url; ?>"  id="_um_button_sync_update_button" class="button"><?php _e('Sync / update all existing users','ultimatemember'); ?></a></p>
+		<p><a href="<?php echo $url; ?>"  id="_um_button_sync_update_button" class="button"><?php _e('Sync / update all existing users','ultimate-member'); ?></a></p>
 
 	</div>
 	

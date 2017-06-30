@@ -41,7 +41,7 @@ class UM_Admin_Dashboard {
 			// Change the footer text
 			if ( ! get_option( 'um_admin_footer_text_rated' ) ) {
 				
-			$footer_text = sprintf( __( 'If you like Ultimate Member please consider leaving a %s&#9733;&#9733;&#9733;&#9733;&#9733;%s review. It will help us to grow the plugin and make it more popular. Thank you.', 'ultimatemember' ), '<a href="https://wordpress.org/support/plugin/ultimate-member/reviews/?filter=5" target="_blank" class="um-admin-rating-link" data-rated="' . __( 'Thanks :)', 'ultimatemember' ) . '">', '</a>' );
+			$footer_text = sprintf( __( 'If you like Ultimate Member please consider leaving a %s&#9733;&#9733;&#9733;&#9733;&#9733;%s review. It will help us to grow the plugin and make it more popular. Thank you.', 'ultimate-member'), '<a href="https://wordpress.org/support/plugin/ultimate-member/reviews/?filter=5" target="_blank" class="um-admin-rating-link" data-rated="' . __( 'Thanks :)', 'ultimate-member') . '">', '</a>' );
 			
 			$footer_text .= "<script type='text/javascript'>
 					jQuery('a.um-admin-rating-link').click(function() {
@@ -174,19 +174,19 @@ class UM_Admin_Dashboard {
 
 		/** custom metaboxes for dashboard defined here **/
 		
-		add_meta_box('um-metaboxes-contentbox-1', __('Users Overview','ultimatemember'), array(&$this, 'users_overview'), $this->pagehook, 'core', 'core');
+		add_meta_box('um-metaboxes-contentbox-1', __('Users Overview','ultimate-member'), array(&$this, 'users_overview'), $this->pagehook, 'core', 'core');
 		
-		add_meta_box('um-metaboxes-mainbox-1', __('Latest from our blog','ultimatemember'), array(&$this, 'um_news'), $this->pagehook, 'normal', 'core');
+		add_meta_box('um-metaboxes-mainbox-1', __('Latest from our blog','ultimate-member'), array(&$this, 'um_news'), $this->pagehook, 'normal', 'core');
 		
-		add_meta_box('um-metaboxes-sidebox-1', __('Purge Temp Files','ultimatemember'), array(&$this, 'purge_temp'), $this->pagehook, 'side', 'core');
-		add_meta_box('um-metaboxes-sidebox-2', __('User Cache','ultimatemember'), array(&$this, 'user_cache'), $this->pagehook, 'side', 'core');
+		add_meta_box('um-metaboxes-sidebox-1', __('Purge Temp Files','ultimate-member'), array(&$this, 'purge_temp'), $this->pagehook, 'side', 'core');
+		add_meta_box('um-metaboxes-sidebox-2', __('User Cache','ultimate-member'), array(&$this, 'user_cache'), $this->pagehook, 'side', 'core');
 		
 		if ( $this->language_avaialable_not_installed() ) {
-			add_meta_box('um-metaboxes-sidebox-2', __('Language','ultimatemember'), array(&$this, 'dl_language'), $this->pagehook, 'side', 'core');
+			add_meta_box('um-metaboxes-sidebox-2', __('Language','ultimate-member'), array(&$this, 'dl_language'), $this->pagehook, 'side', 'core');
 		} else if ( $this->language_avaialable_installed() ) {
-			add_meta_box('um-metaboxes-sidebox-2', __('Language','ultimatemember'), array(&$this, 'up_language'), $this->pagehook, 'side', 'core');
+			add_meta_box('um-metaboxes-sidebox-2', __('Language','ultimate-member'), array(&$this, 'up_language'), $this->pagehook, 'side', 'core');
 		} else if ( $this->language_not_available() ) {
-			add_meta_box('um-metaboxes-sidebox-2', __('Language','ultimatemember'), array(&$this, 'ct_language'), $this->pagehook, 'side', 'core');
+			add_meta_box('um-metaboxes-sidebox-2', __('Language','ultimate-member'), array(&$this, 'ct_language'), $this->pagehook, 'side', 'core');
 		}
 		
 	}

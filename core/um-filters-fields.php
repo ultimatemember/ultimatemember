@@ -8,7 +8,7 @@
 
 		$asterisk = um_get_option('form_asterisk');
 		if ( $asterisk && isset( $data['required'] ) && $data['required'] == 1 )
-			$label = $label . '<span class="um-req" title="'.__('Required','ultimatemember').'">*</span>';
+			$label = $label . '<span class="um-req" title="'.__('Required','ultimate-member').'">*</span>';
 
 		return $label;
 	}
@@ -20,7 +20,7 @@
 	function um_profile_field_filter_hook__soundcloud_track( $value, $data ) {
 
 		if ( !is_numeric( $value ) ) {
-			return __('Invalid soundcloud track ID','ultimatemember');
+			return __('Invalid soundcloud track ID','ultimate-member');
 		}
 
 		$value = '<div class="um-soundcloud">
@@ -79,7 +79,7 @@
 	add_filter('um_profile_field_filter_hook__user_registered', 'um_profile_field_filter_hook__user_registered', 99, 2);
 	function um_profile_field_filter_hook__user_registered( $value, $data ) {
 		$value = strtotime($value);
-		$value = sprintf(__('Joined %s','ultimatemember'), date_i18n('F d, Y', $value) );
+		$value = sprintf(__('Joined %s','ultimate-member'), date_i18n('F d, Y', $value) );
 		return $value;
 	}
 
@@ -90,7 +90,7 @@
 	add_filter('um_profile_field_filter_hook___um_last_login', 'um_profile_field_filter_hook__last_login', 99, 2);
 	function um_profile_field_filter_hook__last_login( $value, $data ) {
 
-		$value = sprintf( __('Last login: %s','ultimatemember'), um_user_last_login( um_user('ID') ) );
+		$value = sprintf( __('Last login: %s','ultimate-member'), um_user_last_login( um_user('ID') ) );
 		
 		return $value;
 	}
@@ -451,7 +451,7 @@
     	$arr_options = array();
     	if( is_array( $options ) ){
     		foreach ( $options as $item ) {
-    			$arr_options[] = __( $item, 'ultimatemember' );
+    			$arr_options[] = __( $item, 'ultimate-member');
     		}
     	}
 

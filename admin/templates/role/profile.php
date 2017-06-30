@@ -3,12 +3,12 @@
 	<div class="">
 		
 		<p>
-			<label class="um-admin-half"><?php _e('Can view other member profiles?','ultimatemember'); ?> <?php $this->tooltip( __('Can this role view all member profiles?', 'ultimatemember') ); ?></label>
+			<label class="um-admin-half"><?php _e('Can view other member profiles?','ultimate-member'); ?> <?php $this->tooltip( __('Can this role view all member profiles?', 'ultimate-member') ); ?></label>
 			<span class="um-admin-half"><?php $this->ui_on_off('_um_can_view_all', 1, true, 1, 'view-roles', 'xxx'); ?></span>
 		</p><div class="um-admin-clear"></div>
 		
 		<p class="view-roles">
-			<label class="um-admin-half"><?php _e('Can view these user roles only','ultimatemember'); ?> <?php $this->tooltip( __('Which roles that role can view, choose none to allow role to view all member roles', 'ultimatemember') ); ?></label>
+			<label class="um-admin-half"><?php _e('Can view these user roles only','ultimate-member'); ?> <?php $this->tooltip( __('Which roles that role can view, choose none to allow role to view all member roles', 'ultimate-member') ); ?></label>
 			<span class="um-admin-half">
 		
 				<select multiple="multiple" name="_um_can_view_roles[]" id="_um_can_view_roles" class="umaf-selectjs" style="width: 300px">
@@ -21,12 +21,12 @@
 		</p><div class="um-admin-clear"></div>
 	
 		<p>
-			<label class="um-admin-half"><?php _e('Can make their profile private?','ultimatemember'); ?> <?php $this->tooltip( __('Can this role make their profile private?','ultimatemember') ); ?></label>
+			<label class="um-admin-half"><?php _e('Can make their profile private?','ultimate-member'); ?> <?php $this->tooltip( __('Can this role make their profile private?','ultimate-member') ); ?></label>
 			<span class="um-admin-half"><?php $this->ui_on_off('_um_can_make_private_profile'); ?></span>
 		</p><div class="um-admin-clear"></div>
 		
 		<p>
-			<label class="um-admin-half"><?php _e('Can view/access private profiles?','ultimatemember'); ?> <?php $this->tooltip( __('Can this role view private profiles?','ultimatemember') ); ?></label>
+			<label class="um-admin-half"><?php _e('Can view/access private profiles?','ultimate-member'); ?> <?php $this->tooltip( __('Can this role view private profiles?','ultimate-member') ); ?></label>
 			<span class="um-admin-half"><?php $this->ui_on_off('_um_can_access_private_profile'); ?></span>
 		</p><div class="um-admin-clear"></div>
 		

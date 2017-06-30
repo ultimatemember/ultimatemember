@@ -23,7 +23,7 @@ class UM_DateTime {
 		$diff = (int) abs( $to - $from );
 		if ( $diff < 60 ) {
 			
-			$since = __('just now','ultimatemember');
+			$since = __('just now','ultimate-member');
 			
 		} elseif ( $diff < HOUR_IN_SECONDS ) {
 			
@@ -31,9 +31,9 @@ class UM_DateTime {
 			if ( $mins <= 1 )
 				$mins = 1;
 			if ( $mins == 1 ) {
-				$since = sprintf( __('%s min','ultimatemember'), $mins );
+				$since = sprintf( __('%s min','ultimate-member'), $mins );
 			} else {
-				$since = sprintf( __('%s mins','ultimatemember'), $mins );
+				$since = sprintf( __('%s mins','ultimate-member'), $mins );
 			}
 			
 		} elseif ( $diff < DAY_IN_SECONDS && $diff >= HOUR_IN_SECONDS ) {
@@ -42,9 +42,9 @@ class UM_DateTime {
 			if ( $hours <= 1 )
 				$hours = 1;
 			if ( $hours == 1 ) {
-				$since = sprintf( __('%s hr','ultimatemember'), $hours );
+				$since = sprintf( __('%s hr','ultimate-member'), $hours );
 			} else {
-				$since = sprintf( __('%s hrs','ultimatemember'), $hours );
+				$since = sprintf( __('%s hrs','ultimate-member'), $hours );
 			}
 			
 		} elseif ( $diff < WEEK_IN_SECONDS && $diff >= DAY_IN_SECONDS ) {
@@ -53,22 +53,22 @@ class UM_DateTime {
 			if ( $days <= 1 )
 				$days = 1;
 			if ( $days == 1 ) {
-				$since = sprintf( __('Yesterday at %s','ultimatemember'), date('g:ia', $from ) );
+				$since = sprintf( __('Yesterday at %s','ultimate-member'), date('g:ia', $from ) );
 			} else {
-				$since = sprintf(__('%s at %s','ultimatemember'), date('F d', $from ), date('g:ia', $from ) ); 
+				$since = sprintf(__('%s at %s','ultimate-member'), date('F d', $from ), date('g:ia', $from ) ); 
 			}
 			
 		} elseif ( $diff < 30 * DAY_IN_SECONDS && $diff >= WEEK_IN_SECONDS ) {
 			
-			$since = sprintf(__('%s at %s','ultimatemember'), date('F d', $from ), date('g:ia', $from ) ); 
+			$since = sprintf(__('%s at %s','ultimate-member'), date('F d', $from ), date('g:ia', $from ) ); 
 			
 		} elseif ( $diff < YEAR_IN_SECONDS && $diff >= 30 * DAY_IN_SECONDS ) {
 
-			$since = sprintf(__('%s at %s','ultimatemember'), date('F d', $from ), date('g:ia', $from ) );
+			$since = sprintf(__('%s at %s','ultimate-member'), date('F d', $from ), date('g:ia', $from ) );
 			
 		} elseif ( $diff >= YEAR_IN_SECONDS ) {
 			
-			$since = sprintf(__('%s at %s','ultimatemember'), date( 'F d, Y', $from ), date('g:ia', $from ) );
+			$since = sprintf(__('%s at %s','ultimate-member'), date( 'F d, Y', $from ), date('g:ia', $from ) );
 			
 		}
 
@@ -85,11 +85,11 @@ class UM_DateTime {
 		$age = date('Y') - $then_year;
 		if( strtotime('+' . $age . ' years', $then_ts) > current_time( 'timestamp' ) ) $age--;
 		if ( $age == 1 )
-			return sprintf(__('%s year old','ultimatemember'), $age );
+			return sprintf(__('%s year old','ultimate-member'), $age );
 		if ( $age > 1 )
-			return sprintf(__('%s years old','ultimatemember'), $age );
+			return sprintf(__('%s years old','ultimate-member'), $age );
 		if ( $age == 0 )
-			return __('Less than 1 year old','ultimatemember');
+			return __('Less than 1 year old','ultimate-member');
 	}
 	
 	/***
