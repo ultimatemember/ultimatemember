@@ -98,9 +98,8 @@
 	/***
 	***	@urls in description
 	***/
-	add_filter('um_profile_field_filter_hook__description', 'um_profile_field_filter_hook__description', 99, 2);
-	add_filter('um_profile_field_filter_hook__textarea', 'um_profile_field_filter_hook__description', 99, 2);
-	function um_profile_field_filter_hook__description( $value, $data ) {
+	add_filter('um_profile_field_filter_hook__textarea', 'um_profile_field_filter_hook__textarea', 99, 2);
+	function um_profile_field_filter_hook__textarea( $value, $data ) {
 		global $ultimatemember;
 
 		if ( isset( $data ) && isset( $data['html'] ) && $data['html'] == 1 )
@@ -111,6 +110,20 @@
 		$value = preg_replace('$(www\.[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', '<a target="_blank" href="http://$1">$1</a> ', $value." ");
 		$value = wpautop($value);
 
+		return $value;
+	}
+
+	add_filter('um_profile_field_filter_hook__description', 'um_profile_field_filter_hook__description', 99, 2);
+	function um_profile_field_filter_hook__description( $value, $data ) {
+		global $ultimatemember;
+
+		if ( isset( $data ) && isset( $data['html'] ) && $data['html'] == 1 )
+			return $value;
+
+		$value = esc_textarea( $value );
+		$value = preg_replace('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', ' <a href="$1" target="_blank">$1</a> ', $value." ");
+		$value = preg_replace('$(www\.[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', '<a target="_blank" href="http://$1">$1</a> ', $value." ");
+		
 		return $value;
 	}
 
