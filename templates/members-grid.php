@@ -50,14 +50,15 @@
 								if ( $key && um_filtered_value( $key ) ) {
 									$value = um_filtered_value( $key );
 
+
 						?>
 						
-						<div class="um-member-tagline"><?php echo $value; ?></div>
+						<div class="um-member-tagline um-member-tagline-<?php echo $key;?>"><?php echo $value; ?></div>
 						
 						<?php
-								}
-							}
-						}
+								} // end if
+							} // end foreach
+						} // end if $show_tagline
 						?>
 						
 						<?php if ( $show_userinfo ) { ?>
