@@ -264,7 +264,7 @@
 
 		<div class="um-col-alt um-col-alt-b">
 
-			<div class="um-center"><input type="submit" value="<?php _e('Reset my password','ultimate-member'); ?>" class="um-button" /></div>
+			<div class="um-center"><input type="submit" value="<?php _e('Reset my password','ultimate-member'); ?>" class="um-button" id="um-submit-btn" /></div>
 
 			<div class="um-clear"></div>
 
@@ -291,7 +291,7 @@
 
 		<div class="um-col-alt um-col-alt-b">
 
-			<div class="um-center"><input type="submit" value="<?php _e('Change my password','ultimate-member'); ?>" class="um-button" /></div>
+			<div class="um-center"><input type="submit" value="<?php _e('Change my password','ultimate-member'); ?>" class="um-button" id="um-submit-btn"  /></div>
 
 			<div class="um-clear"></div>
 
