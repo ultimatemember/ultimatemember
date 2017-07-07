@@ -10,32 +10,30 @@ Stable tag: 1.3.87
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
-The easiest way to create powerful online communities and beautiful user profiles with WordPress
+The #1 user profile & membership plugin for WordPress.
 
 == Description ==
 
-Ultimate Member is a powerful and flexible plugin that makes it a breeze for users to sign-up and become members. The plugin allows you to add beautiful user profiles to your site and is perfect for creating advanced online communities. Lightweight and highly extendible, Ultimate Member will enable you to create almost any type of site where users can join and become members with absolute ease.
+= Best User Profile & Membership Plugin for WordPress =
+
+Ultimate Member is the #1 user profile & membership plugin for WordPress. The plugin makes it a breeze for users to sign-up and become members of your website. The plugin allows you to add beautiful user profiles to your site and is perfect for creating advanced online communities and membership sites. Lightweight and highly extendible, Ultimate Member will enable you to create almost any type of site where users can join and become members with absolute ease.
 
 = Features of the plugin include: =
 
+* Front-end user profiles
 * Front-end user registration
 * Front-end user login
-* Front-end user profiles
 * Custom form fields
 * Conditional logic for form fields
 * Drag and drop form builder
 * User account page
 * Custom user roles
-* Searchable member directories
-* Custom e-mail templates
+* Member directories
+* User emails
 * Content restriction
-* Conditional menus
+* Conditional nav menus
 * Show author posts & comments on user profiles
-* Mobile adaptive & responsive
-* SEO optimized
 * Developer friendly with dozens of actions and filters
-* Multi-site compatibility
-* Mandrill compatibility
 
 Read about all of the plugin's features at [Ultimate Member](https://ultimatemember.com)
 
@@ -65,40 +63,16 @@ Ultimate Member has a range of extensions that allow you to extend the power of 
 * [Google reCAPTCHA](https://ultimatemember.com/extensions/google-recaptcha/) - Stop bots on your registration & login forms with Google reCAPTCHA
 * [Online Users](https://ultimatemember.com/extensions/online-users/) - Display what users are online with this extension
 
-= Development =
+= Development * Translations =
 
 If you're a developer and would like to contribute to the source code of the plugin you can do so via our [GitHub Repository](https://github.com/ultimatemember/ultimatemember).
 
+Want to add a new language to Ultimate Member? Great! You can contribute via [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/ultimate-member).
+
 = Documentation & Support =
 
-Got a problem or need help with Ultimate Member? Head over to our [documentation](http://docs.ultimatemember.com/) and perform a search of the knowledge base. If you can’t find a solution to your issue then you can create a [support ticket](https://ultimatemember.com/support-contact/).
+Got a problem or need help with Ultimate Member? Head over to our [documentation](http://docs.ultimatemember.com/) and perform a search of the knowledge base. If you can’t find a solution to your issue then you can create a topic on the [support forum](https://wordpress.org/support/plugin/ultimate-member).
 
-= Languages =
-
-Ultimate Member has been translated into the following languages:
-
-* English (US)
-* Spanish - Español
-* Spanish (Mexico) - Español (México)
-* French - Français
-* Italian - Italiano
-* German - Deutsch
-* Dutch - Nederlands
-* Brazilian Portuguese - Português do Brasil
-* Finnish - Suomi
-* Romanian - Română
-* Danish - Dansk
-* Swedish - Svenska
-* Polish - Polski
-* Czech
-* Greek
-* Indonesian
-* Simplified Chinese
-* Russian - Русский
-* Turkish - Türkçe
-* Farsi - فارسى
-* Hebrew
-* العربية
 
 == Installation ==
 
