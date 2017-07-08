@@ -158,9 +158,15 @@
 	        $ultimatemember->form->add_error('profile_photo', sprintf(__('%s is required.','ultimate-member'), 'Profile Photo' ) );
 	    }
 
-	   
 	   if( isset(  $fields ) && ! empty(  $fields ) ){
 			foreach( $fields as $key => $array ) {
+
+				if( -2 == $array['public'] && isset(  $array['roles'] ) && ! empty( $array['roles'] ) && is_user_logged_in() ){
+				
+					 if( ! in_array( um_user('role') ,  $array['roles'] ) ){
+					 	continue;
+					 }
+				}
 
 				$array = apply_filters('um_get_custom_field_array', $array, $fields );
 				
