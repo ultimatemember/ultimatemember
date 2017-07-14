@@ -104,11 +104,14 @@
 		$creds['user_password'] = $user_password;
 		$creds['user_email'] = trim( $user_email );
 
+		$args = apply_filters('um_add_user_frontend_submitted', $args );
+		
 		$args['submitted'] = array_merge( $args['submitted'], $creds);
 		$args = array_merge($args, $creds);
 		
 		unset( $args['user_id'] );
 		
+
 		do_action('um_before_new_user_register', $args);
 
 		$user_id = wp_create_user( $user_login, $user_password, $user_email );
