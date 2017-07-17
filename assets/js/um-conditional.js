@@ -1,361 +1,511 @@
+
 jQuery(document).ready(function() {
 
-	var um_live_field;
-	var um_live_value;
-	var um_field_conditions_array = {};
-	var um_field_relations = {};
-	var um_field_added = [];
-	var um_field_loaded = false;
-	var um_field_do_init = false;
+	var arr_fields = [];
+	var arr_field_keys = [];
+	var arr_all_conditions = []; //raw 
+	var um_field_conditions = {}; // filtered
+	var um_field_default_values = {};
+	
+	/**
+	 * Get all conditional fields
+	 * @param  object $dom 
+	 * @return object field condition settings
+	 */
+	function um_get_field_conditional_attrs( $dom ) {
+	    var attrs = [];
+	    var field_atts = ['action','field','operator','value'];
+	    var key =  $dom.data('key');
+	    
+	    arr_field_keys.push( key );
 
-	function um_field_init(){
+	    jQuery.each( $dom[0].attributes, function ( index, attribute ) {
+	    	if( attribute.name.indexOf('data-cond') != -1 ){
+	    		attrs.push( attribute.value );
+	    	}
+	    });
+
+	    var i = attrs.length / 4;
+
+	    var splitlength = ( i <= 0 ) ? 4: i;
+	    var attr = {}
+	    attr[ key ] = um_splitup_array( attrs, splitlength );
+
+	    jQuery.each( attr[ key ], function( ii,dd ){
+	    	var obj = {}
+	    	obj['field'] = {
+	    	 	owner: 		 key,
+	    	 	action: 	 dd.action,
+	    	 	parent: 	 dd.if_field,
+	    	 	operator: 	 dd.operator,
+	    	 	value: 		 dd.value,
+	    	 	condition: {
+	    	 		owner: 		 key,
+		    	 	action: 	 dd.action,
+		    	 	operator: 	 dd.operator,
+		    	 	value: 		 dd.value
+		    	 }
+	    	 };
+
+	    	 arr_all_conditions.push( obj );
+	    });
+
+	    return attr;
+	}
+
+	/**
+	 * UM Conditional fields Init
+	 */
+	function um_init_field_conditions(){
 
 		jQuery('.um-field[data-key]').each(function(){
-			um_field_set_conditions( jQuery(this), true );
+			var me = jQuery(this);
+			arr_fields.push( um_get_field_conditional_attrs( me ) );
+			um_field_default_values[ me.data('key') ] = um_get_field_default_value( me );
 		});
 
-		um_field_relationship();
+		jQuery.each( arr_field_keys, function( i,field_key ){
+			um_field_conditions[ field_key ] = um_get_field_children( field_key );
+		});
 
-		um_field_apply_conditions();
-	    um_field_loaded = true;
-		
-		
-					
+		jQuery('.um-field[data-key]:visible').each(function(){
+			var $wrap_dom = jQuery(this);
+			var me = um_get_field_element( $wrap_dom );
+			me.trigger('change');
+		});
+
 	}
 
-	function um_field_set_conditions( um_field_dom, add_fade ){
-		var um_field_key = um_field_dom.data('key');
-		var arr_field = [];
-		for (var i = 0; i < 5; i++) {
+	/**
+	 * Get field default value
+	 * @param object $dom 
+	 * @return string
+	 */
+	function um_get_field_default_value( $dom ){
+		var default_value = '';
+		var type = um_get_field_type( $dom );
 
-				var action0 	= um_field_dom.data('cond-'+i+'-action');
-				var field0 		= um_field_dom.data('cond-'+i+'-field');
-				var operator0 	= um_field_dom.data('cond-'+i+'-operator');
-				var value0 		= um_field_dom.data('cond-'+i+'-value');
+		switch( type ){
 
-				if( typeof value0 !== 'undefined' && um_field_loaded == false ){
-					arr_field.push({
-						child: um_field_key,
-						action: action0,
-						field: field0,
-						operator: operator0,
-						value: value0
-					});
+		 	case 'text':
+		 	case 'number':
+		 	case 'date':
+		 	case 'textarea':
+		 	case 'select':
+		 		default_value = $dom.find('input:text,input[type=number],textarea,select').val();
+		 	break;
+
+		 	case 'multiselect':
+					default_value = $dom.find('select').val();
+		 	
+			break;
+
+		 	case 'radio':
+		 	case 'checkbox':
+
+		 		if ( $dom.find('input[type=checkbox]:checked').length >= 1 ) {
+
+						if ( $dom.find('input[type=checkbox]:checked').length > 1 ) {
+							$dom.find('input[type=checkbox]:checked').each(function(){
+								default_value = default_value + jQuery(this).val() + ' ';
+							});
+						} else {
+							default_value = $dom.find('input[type=checkbox]:checked').val();
+						}
 
 				}
-			
-		} // end for
 
-		if( jQuery.inArray( um_field_key, um_field_added ) <= -1 && um_field_loaded == false ){
-				um_field_added.push( um_field_key );
-				um_field_conditions_array[ um_field_key ] = arr_field;
+				if ( $dom.find('input[type=radio]:checked').length >= 1 ) {
+						default_value =  $dom.find('input[type=radio]:checked').val();
+				}
+
+		 	break;
+
+		 	
 		}
-		
+    		
+	    return {type: type, value: default_value};
 	}
 
-	function um_field_apply_conditions(){
-			
-			var field_results = {};
-			
-			jQuery.each( um_field_added, function( i, field_key ){
-				
-				if( um_field_relations[ field_key ].length <= 0 ){
-					um_field_relations[ field_key ] = [{
-						child: field_key,
-						action:'child',
-						field: '',
-						operator: '',
-					}];
-				}
-				
-				jQuery.each( um_field_relations[ field_key ], function( ii, conditions ){
-					
-					var add_fade = true;
-					var action0	 = conditions.action;
-					var value0 = conditions.value;
-					var operator0 = conditions.operator;
-					var field0 = conditions.field;
-					var um_field_parent_dom = '';
-					
-					um_field_parent_dom = jQuery('.um-field[data-key="'+field_key+'"]:visible').find('input[type=text],textarea,input[type=checkbox],input[type=radio],select,[class=um-field-block]');
+	/**
+	 * Get field element by field wrapper
+	 * @param  object $dom 
+	 * @return object
+	 */
+	function um_get_field_element( $dom ){
+		var default_value = '';
+		var type = um_get_field_type( $dom );
 
-					var um_field_data = um_get_field_data( um_field_parent_dom );
-					var um_live_field = um_field_data.key;
-					var um_live_value = um_field_data.value;
-					
-					var um_field_child_dom = jQuery('.um-field[data-key="'+conditions.child+'"]').find('input[type=text],textarea,input[type=checkbox],input[type=radio],select,[class=um-field-block]');
-					var um_field_child_dom_hide = jQuery('.um-field[data-key="'+conditions.child+'"]');
-					
-					
+		switch( type ){
 
-					if (  action0 == 'show'  && typeof value0 !== 'undefined' ) {
+		 	case 'text':
+		 	case 'number':
+		 	case 'date':
+		 	case 'textarea':
+		 	case 'select':
+		 	case 'multiselect':
+			case 'radio':
+		 	case 'checkbox':
+				return $dom.find('input,textarea,select');
+		 	break;
 
-						if ( operator0 == 'empty' ) {
-							if ( !um_live_value || um_live_value == '' ) {
-								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
-								field_results[ conditions.child ] = { act: action0, op: operator0 };
-							}else{
-								um_field_child_dom_hide.hide();
-								field_results[ conditions.child ] = { act: 'hide', op: operator0 };
-							}
-						}
 
-						if ( operator0 == 'not empty' ) {
-							if ( um_live_value && um_live_value != '' ) {
-								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
-								field_results[ conditions.child ] = { act: action0, op: operator0 };
-							}else{
-								um_field_child_dom_hide.hide();
-								field_results[ conditions.child ] = { act: 'hide', op: operator0 };
-							} 
-						}
-
-						if ( operator0 == 'equals to' ) {
-							if ( value0 == um_live_value  ) {
-								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
-								field_results[ conditions.child ] = { act: action0, op: operator0 };
-							}else{
-								um_field_child_dom_hide.hide();
-								field_results[ conditions.child ] = { act: 'hide', op: operator0 };
-							} 
-						}
-
-						if ( operator0 == 'not equals' ) {
-							if ( jQuery.isNumeric( value0 ) && parseInt( um_live_value ) != parseInt( value0 ) && um_live_value  ) {
-								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
-								field_results[ conditions.child ] = { act: action0, op: operator0 };
-							} else if ( !jQuery.isNumeric( value0 ) && value0 != um_live_value  ) {
-								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
-								field_results[ conditions.child ] = { act: action0, op: operator0 };
-							}else{
-								um_field_child_dom_hide.hide();
-								field_results[ conditions.child ] = { act: 'hide', op: operator0 };
-							}
-						}
-
-						if ( operator0 == 'greater than' ) {
-							if ( jQuery.isNumeric( value0 ) && parseInt( um_live_value ) > parseInt( value0 )  ) {
-								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
-								field_results[ conditions.child ] = { act: action0, op: operator0 };
-							}else{
-								um_field_child_dom_hide.hide();
-								field_results[ conditions.child ] = { act: 'hide', op: operator0 };
-							}
-						}
-
-						if ( operator0 == 'less than' ) {
-							if ( jQuery.isNumeric( value0 ) && parseInt( um_live_value ) < parseInt( value0 ) && um_live_value  ) {
-								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
-								field_results[ conditions.child ] = { act: action0, op: operator0 };
-							}else{
-								um_field_child_dom_hide.hide();
-								field_results[ conditions.child ] = { act: 'hide', op: operator0 };
-							} 
-						}
-
-						if ( operator0 == 'contains' ) {
-							if ( um_live_value && um_live_value.indexOf( value0 ) >= 0  ) {
-								um_field_show( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
-								field_results[ conditions.child ] = { act: action0, op: operator0 };
-							}else{
-								um_field_child_dom_hide.hide();
-								field_results[ conditions.child ] = { act: 'hide', op: operator0 };
-							} 
-						}
-
-					}
-
-					if (  action0 == 'hide' && typeof value0 !== 'undefined'  ) {
-
-						if ( operator0 == 'empty' ) {
-							if ( !um_live_value || um_live_value == '' ) {
-								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
-								field_results[ conditions.child ] = { act: action0, op: operator0 };
-							}else{
-								field_results[ conditions.child ] = { act: 'show', op: operator0 };
-							} 
-						}
-
-						if ( operator0 == 'not empty' ) {
-							if ( um_live_value && um_live_value != '' ) {
-								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
-								field_results[ conditions.child ] = { act: action0, op: operator0 };
-							}else{
-								field_results[ conditions.child ] = { act: 'show', op: operator0 };
-							} 
-						}
-
-						if ( operator0 == 'equals to' ) {
-							if ( value0 == um_live_value ) {
-								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
-								field_results[ conditions.child ] = { act: action0, op: operator0 };
-							}else{
-								field_results[ conditions.child ] = { act: 'show', op: operator0 };
-							} 
-						}
-
-						if ( operator0 == 'not equals' ) {
-							if ( jQuery.isNumeric( value0 ) && parseInt( um_live_value ) != parseInt( value0 ) && um_live_value ) {
-								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
-								field_results[ conditions.child ] = { act: action0, op: operator0 };
-							} else if ( !jQuery.isNumeric( value0 ) && value0 != um_live_value ) {
-								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
-								field_results[ conditions.child ] = { act: action0, op: operator0 };
-							}else{
-								um_field_child_dom_hide.show();
-								field_results[ conditions.child ] = { act: 'show', op: operator0 };
-							} 
-						}
-
-						if ( operator0 == 'greater than' ) {
-							if ( jQuery.isNumeric( value0 ) && parseInt( um_live_value ) > parseInt( value0 ) ) {
-								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
-								field_results[ conditions.child ] = { act: action0, op: operator0 };
-							}else{
-								um_field_child_dom_hide.show();
-								field_results[ conditions.child ] = { act: 'show', op: operator0 };
-							} 
-						}
-
-						if ( operator0 == 'less than' ) {
-							if ( jQuery.isNumeric( value0 ) && parseInt( um_live_value ) < parseInt( value0 ) && um_live_value ) {
-								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
-								field_results[ conditions.child ] = { act: action0, op: operator0 };
-							}else{
-								field_results[ conditions.child ] = { act: 'show', op: operator0 };
-							} 
-						}
-
-						if ( operator0 == 'contains' ) {
-							if ( um_live_value && um_live_value.indexOf( value0 ) >= 0 ) {
-								um_field_hide( um_field_child_dom, add_fade, operator0, um_live_field , field_key );
-								field_results[ conditions.child ] = { act: action0, op: operator0 };
-							}else{
-								field_results[ conditions.child ] = { act: 'show', op: operator0 };
-							} 
-						}
-					
-					}
-
-					var c_child = field_results[ conditions.child ];
-					
-					if( action0 == 'child' && typeof c_child !== 'undefined' ){
-						if( c_child.act == 'hide' ){
-							jQuery('.um-field[data-key="'+field_key+'"]').hide();
-						}else if( c_child.act == 'show' ){
-							jQuery('.um-field[data-key="'+field_key+'"]').show();
-						}
-					}
-
-				});
-
-			});
-			
-
-			
+		 	
+		}
+    		
+	    return '';
 	}
 
-	function um_field_show( field, add_fade, optr, k, field_key ){
-
-		field = field.parents('.um-field');
-
-		if( field.is(':hidden') ){
-			if( add_fade ){
-				field.fadeIn(1);
-			}else{
-				field.show();
+	/**
+	 * Get field type 
+	 * @param  object $dom 
+	 * @return string
+	 */
+	function um_get_field_type( $dom ){
+		var type = '';
+		var classes = $dom.attr('class');
+		jQuery.each( classes.split(' '), function(i,d){
+		 	if( d.indexOf('um-field-type') != -1 ){
+		 		type = d.split('_')[1];
 			}
-			//console.log( field_key );
-		}
+		});
+
+		return type;
+
+	}
+
+	/**
+	 * Get field siblings/chidren conditions
+	 * @param  string field_key 
+	 * @return array
+	 */
+	function um_get_field_children( field_key ){
+		var arr_conditions = [];
+		jQuery.each( arr_all_conditions, function( ii, condition ){
+			if( condition.field.parent == field_key ){
+				arr_conditions.push( condition.field.condition );
+			}
+		});
+
+		return arr_conditions;
+
+	}
 	
+	/**
+	 * Split single array to multi-dimensional array
+	 * @param  array arr 
+	 * @param  integer n   
+	 * @return array
+	 */
+	function um_splitup_array(arr, n) {
+	    var rest = arr.length % n,
+	        restUsed = rest,
+	        partLength = Math.floor(arr.length / n),
+	        result = [];
+	    
+	    for(var i = 0; i < arr.length; i += partLength) {
+	        var end = partLength + i,
+	            add = false;
+	        
+	        if(rest !== 0 && restUsed) {
+	            end++;
+	            restUsed--;
+	            add = true;
+	        }
+	        
+	        result.push(arr.slice(i, end));
+	        
+	        if(add) {
+	            i++;
+	        }
+	    }
+
+	    var obj_result = [];
+	    jQuery.each( result, function(ii,dd ){
+	    	 obj_result.push({
+	    	 	action: 	dd[0],
+	    	 	if_field: 	dd[1],
+	    	 	operator: 	dd[2],
+	    	 	value: 		dd[3]
+	    	 })
+	    });
+
+	    return obj_result;
 	}
 
-	function um_field_hide( field, add_fade, optr, k, field_key ){
+	/**
+	 * Get field live value
+	 * @param  object $dom 
+	 * @return mixed
+	 */
+	function um_get_field_data( $dom ){
+		um_live_field = $dom.parents('.um-field').data('key');
+		um_live_value = $dom.val();
 
-		field = field.parents('.um-field');
-		
-		if( field.is(':visible') ){
-			if( add_fade ){
-				field.fadeOut(1);
-			}else{
-				field.hide();
-			}
-			//console.log( field_key );
-		}
-	}
+		if ( $dom.is(':checkbox') ) {
 
-	function um_get_field_data( um_field_dom ){
-		um_live_field = um_field_dom.parents('.um-field').data('key');
-		um_live_value = um_field_dom.val();
-
-		if ( um_field_dom.is(':checkbox') ) {
-
-				if ( um_field_dom.parents('.um-field').find('input:checked').length > 1 ) {
-					um_live_value = '';
-					um_field_dom.parents('.um-field').find('input:checked').each(function(){
+				um_live_value = '';
+					
+				if ( $dom.parents('.um-field').find('input:checked').length > 1 ) {
+					$dom.parents('.um-field').find('input:checked').each(function(){
 						um_live_value = um_live_value + jQuery(this).val() + ' ';
 					});
 				} else {
-					um_live_value = um_field_dom.parents('.um-field').find('input:checked').val();
+					if( $dom.parents('.um-field').find('input:checked').length >= 1 ){
+						um_live_value = $dom.parents('.um-field').find('input:checked').val();
+					}
 				}
 
 		}
 
-		if ( um_field_dom.is(':radio') ) {
-				um_live_value = um_field_dom.parents('.um-field').find('input[type=radio]:checked').val();
+		if ( $dom.is(':radio') ) {
+				um_live_value = $dom.parents('.um-field').find('input[type=radio]:checked').val();
 		}
 
-		return {
-			key: um_live_field,
-			value: um_live_value
-		};
-
+		return um_live_value;
+		
 	}
 
-	function um_field_relationship(){
-			var arr_fields  = um_field_conditions_array;
-			if( um_field_loaded == false ){
-				jQuery.each( arr_fields, function(k, f) { 
+	/**
+	 * Apply field conditions
+	 * @param  object  $dom             
+	 * @param  boolean is_single_update 
+	 */
+	function um_apply_conditions( $dom, is_single_update ){
+		
+		var operators = ['empty','not empty','equals to','not equals','greater than','less than','contains'];
+		
+		var key = $dom.parents('.um-field[data-key]').data('key');
+		
+		var conditions = um_field_conditions[ key ];
+		
+		var live_field_value = um_get_field_data( $dom );
+		
+		jQuery.each( conditions, function( index, condition ){
+			
+			if ( condition.operator == 'empty' ) {
+				if ( !live_field_value || live_field_value == '' ) {
+					 	um_field_apply_action( $dom, condition, true );
+				}else{
+					 	um_field_apply_action( $dom, condition, false );
+				}
+			}
 
-					var new_arr_field = [];
-					var arr_um_field_exists = [];
+			if ( condition.operator == 'not empty' ) {
+				if ( live_field_value && live_field_value != '' ) {
+					 	um_field_apply_action( $dom, condition, true );
+				}else{
+					 	um_field_apply_action( $dom, condition, false );
+				} 
+			}
 
-					jQuery.each( arr_fields, function(ii,field) { 
-							for (var i = 0; i <= field.length; i++ ){
+			if ( condition.operator == 'equals to' ) {
+				if ( condition.value == live_field_value  ) {
+					 	um_field_apply_action( $dom, condition, true );
+				}else{
+					 	um_field_apply_action( $dom, condition, false );
+				} 
+			}
 
-								if( typeof field[ i ]  !== 'undefined' ){
-									if(  k == field[ i ].field  ){
-										new_arr_field.push(  field[ i ] );
-										arr_um_field_exists.push( field[ i ].child );
-									}
-								}
-								
+			if ( condition.operator == 'not equals' ) {
+				if ( jQuery.isNumeric( condition.value ) && parseInt( live_field_value ) != parseInt( condition.value ) && live_field_value  ) {
+					 	um_field_apply_action( $dom, condition, true );
+				} else if ( !jQuery.isNumeric( condition.value ) && condition.value != live_field_value  ) {
+					 	um_field_apply_action( $dom, condition, true );
+				}else{
+					 	um_field_apply_action( $dom, condition, false );
+				}
+			}
 
-							}
-					});
+			if ( condition.operator == 'greater than' ) {
+				if ( jQuery.isNumeric( condition.value ) && parseInt( live_field_value ) > parseInt( condition.value )  ) {
+					 	um_field_apply_action( $dom, condition, true );
+				}else{
+					 	um_field_apply_action( $dom, condition, false );
+				}
+			}
 
-					um_field_relations[ k ] = new_arr_field;
+			if ( condition.operator == 'less than' ) {
+				if ( jQuery.isNumeric( condition.value ) && parseInt( live_field_value ) < parseInt( condition.value ) && live_field_value  ) {
+					 	um_field_apply_action( $dom, condition, true );
+				}else{
+					 	um_field_apply_action( $dom, condition, false );
+				} 
+			}
+
+			if ( condition.operator == 'contains' ) {
+				if ( live_field_value && live_field_value.indexOf( condition.value ) >= 0  ) {
+					 	um_field_apply_action( $dom, condition, true );
+				}else{
+					 	um_field_apply_action( $dom, condition, false );
+				} 
+			}
+
+		}); // end foreach `conditions`
+
+		$dom.trigger('um_fields_change');
+	
+	}
+
+	/**
+	 * Apply condition's action
+	 * @param  object  $dom      
+	 * @param  string  condition 
+	 * @param  boolean is_true   
+	 */
+	function um_field_apply_action( $dom, condition, is_true ){
+		var child_dom = jQuery('div.um-field[data-key="'+condition.owner+'"]');
+
+		if( condition.action == 'show' && is_true /*&& child_dom.is(':hidden')*/ ){
+			child_dom.show();
+			um_field_restore_default_value( child_dom );
+		}
+
+		if( condition.action == 'show' && ! is_true /*&& child_dom.is(':visible') */  ){
+			child_dom.hide();
+		}
+
+		if( condition.action == 'hide' && is_true  /*&& child_dom.is(':visible')*/  ){
+			child_dom.hide();
+		}
+
+		if( condition.action == 'hide' && !is_true /*&& child_dom.is(':hidden')*/   ){
+			child_dom.show();
+			um_field_restore_default_value( child_dom );
+			
+		}
+		$dom.removeClass('um-field-has-changed');
+	}
+
+	/**
+	 * Restores default field value
+	 * @param  object $dom 
+	 */
+	function um_field_restore_default_value( $dom ){
+		um_field_default_values
+
+		var type = um_get_field_type( $dom );
+		var key = $dom.data('key');
+		var field = um_field_default_values[ key ];
+		switch( type ){
+
+		 	case 'text':
+		 	case 'number':
+		 	case 'date':
+		 	case 'textarea':
+		 		$dom.find('input:text,input[type=number],textarea,select').val( field.value );
+		 	break;
+
+		 	case 'select':
+		 		$dom.find('select').find('option').prop('selected',false);
+				$dom.find('select').val( field.value );
+				$dom.find('select').trigger('change');
+			break;
+		 	
+		 	case 'multiselect':
+				$dom.find('select').find('option').prop('selected',false);
+				jQuery.each( field.value, function(i,value){
+					$dom.find('select').find('option[value="'+value+'"]').attr('selected',true);
+				});
+				$dom.find('select').trigger('change');
+			break;
+
+		 	case 'radio':
+		 	case 'checkbox':
+		 				
+		 		if ( $dom.find('input[type=checkbox]:checked').length >= 1 ) {
+		 				
+		 				$dom.find('input[type=checkbox]:checked').removeAttr('checked');
+						$dom.find('span.um-field-checkbox-state i').removeClass('um-icon-android-checkbox-outline');
+				 		$dom.find('span.um-field-checkbox-state i').addClass('um-icon-android-checkbox-outline-blank');
+				 		$dom.find('.um-field-checkbox.active').removeClass('active');		
+				 		
+				 		if ( jQuery.isArray( field.value ) ) {
+							jQuery.each(field.value, function(i, value ){
+								var cbox_elem = $dom.find('input[type=checkbox][value="'+value+'"]');
+								cbox_elem.attr('checked', true);
+								cbox_elem.closest('.um-field-checkbox').find('i').removeClass('um-icon-android-checkbox-outline-blank');
+							 	cbox_elem.closest('.um-field-checkbox').find('i').addClass('um-icon-android-checkbox-outline');
+							 	cbox_elem.closest('.um-field-checkbox').addClass('active');
+							});
+						}else{
+							var cbox_elem = $dom.find('input[type=checkbox][value="'+field.value+'"]');
+								cbox_elem.attr('checked', true);
+								cbox_elem.closest('.um-field-checkbox').find('i').removeClass('um-icon-android-checkbox-outline-blank');
+							 	cbox_elem.closest('.um-field-checkbox').find('i').addClass('um-icon-android-checkbox-outline');
+							 	cbox_elem.closest('.um-field-checkbox').addClass('active');
+						}
+
+				}
+
+				if ( $dom.find('input[type=radio]:checked').length >= 1 ) {
+
+					setTimeout(function(){
+					
+						$dom.find('input[type=radio]:checked').removeAttr('checked');
+					 		
+						$dom.find('span.um-field-radio-state i').removeClass('um-icon-android-radio-button-on');
+					 	$dom.find('span.um-field-radio-state i').addClass('um-icon-android-radio-button-off');
+					 	$dom.find('.um-field-radio.active').removeClass('active');
+					 	
+					 	var radio_elem = $dom.find("input[type=radio][value='"+field.value+"']");	
+						radio_elem.attr('checked', true);
+						radio_elem.closest('.um-field-radio').find('i').removeClass('um-icon-android-radio-button-off');
+					 	radio_elem.closest('.um-field-radio').find('i').addClass('um-icon-android-radio-button-on');
+					 	radio_elem.closest('.um-field-radio').addClass('active');
+
+				 	},100);
+				}
+
+				
+
+		 	break;
+
+		 	
+		} // end switch type
+
+		if( ! $dom.hasClass('um-field-has-changed') ){
+			var me = um_get_field_element( $dom );
+			if( me ){
+				me.trigger('change');
+				$dom.addClass('um-field-has-changed');
+			}
+		}
+	}
+
+	/**
+	 * Hides sibling/child field when parent field is hidden
+	 */
+	function um_field_hide_siblings(){
+		
+		jQuery.each( um_field_conditions, function(index, conditions ){
+			if( jQuery('.um-field[data-key="'+index+'"]:hidden').length >= 1 || jQuery('.um-field[data-key="'+index+'"]').css('display') == 'none' ){
+				jQuery.each( conditions,function( key,condition ){
+					jQuery('.um-field[data-key="'+condition.owner+'"]').hide();
+
 				});
 			}
 
-
+		});
+		
 	}
-	
+
+	jQuery(document).on('change','.um-field select, .um-field input[type=radio], .um-field input[type=checkbox]', function(){
+		var me = jQuery(this);
+		um_apply_conditions( me, false );
+	});
+
 	jQuery(document).on('input change', '.um-field input[type=text]', function(){
-		if( um_field_do_init  ){
-			um_field_init();
-		}
-	});
-
-	jQuery(document).on('change', '.um-field select, .um-field input[type=radio], .um-field input[type=checkbox]', function(){
-		if( um_field_do_init  ){
-			um_field_init();
-		}
-
+		var me = jQuery(this);
+		um_apply_conditions( me, false );
 	});
 	
-	um_field_init();
-	um_field_do_init = true;
-	
+	jQuery(document).on('um_fields_change',function(){
+		um_field_hide_siblings();
+		um_field_hide_siblings(); // dupes, issue with false field wrapper's visiblity validations. requires optimization.
+	});
+
+	um_init_field_conditions();
+
 	
 });

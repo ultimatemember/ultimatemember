@@ -801,6 +801,7 @@ class UM_Fields {
 
 		$array['classes'] .= ' um-field-' . $key;
 		$array['classes'] .= ' um-field-' . $array['type'];
+		$array['classes'] .= ' um-field-type_' . $array['type'];
 
 		switch( $array['type'] ) {
 
