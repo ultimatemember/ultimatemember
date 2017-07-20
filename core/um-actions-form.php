@@ -161,7 +161,7 @@
 	   if( isset(  $fields ) && ! empty(  $fields ) ){
 			foreach( $fields as $key => $array ) {
 
-				if( -2 == $array['public'] && isset(  $array['roles'] ) && ! empty( $array['roles'] ) && is_user_logged_in() ){
+				if( isset( $array['public']  ) &&  -2 == $array['public'] && isset(  $array['roles'] ) && ! empty( $array['roles'] ) && is_user_logged_in() ){
 				
 					 if( ! in_array( um_user('role') ,  $array['roles'] ) ){
 					 	continue;
