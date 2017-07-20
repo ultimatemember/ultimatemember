@@ -71,7 +71,9 @@ jQuery(document).ready(function() {
 		jQuery('.um-field[data-key]:visible').each(function(){
 			var $wrap_dom = jQuery(this);
 			var me = um_get_field_element( $wrap_dom );
-			me.trigger('change');
+			if( typeof me.trigger !== 'undefined' ){
+				me.trigger('change');
+			}
 		});
 
 	}
