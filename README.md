@@ -48,7 +48,7 @@ GNU Version 2 or Any Later Version
 
 Releases
 ====================
-[Pre-Release Version: 1.3.88.4](https://github.com/ultimatemember/ultimatemember/releases).
+[Pre-Release Version: 1.3.88.6](https://github.com/ultimatemember/ultimatemember/releases).
 
 [Official Release Version: 1.3.87](https://github.com/ultimatemember/ultimatemember/releases).
 
