@@ -54,15 +54,17 @@
 		} else {
 			if ( $args['user_password'] == '' ) {
 				$ultimatemember->form->add_error( 'user_password',  __('Please enter your password','ultimate-member') );
+			}else{
+				$user = get_user_by( 'login', $user_name );
+				if ( $user && wp_check_password( $args['user_password'], $user->data->user_pass, $user->ID) ) {
+					$ultimatemember->login->auth_id = username_exists( $user_name );
+				} else {
+					$ultimatemember->form->add_error( 'user_password',  __('Password is incorrect. Please try again.','ultimate-member') );
+				}
 			}
 		}
 
-		$user = get_user_by( 'login', $user_name );
-		if ( $user && wp_check_password( $args['user_password'], $user->data->user_pass, $user->ID) ) {
-			$ultimatemember->login->auth_id = username_exists( $user_name );
-		} else {
-			$ultimatemember->form->add_error( 'user_password',  __('Password is incorrect. Please try again.','ultimate-member') );
-		}
+		
 
 		// add a way for other plugins like wp limit login
 		// to limit the login attempts
