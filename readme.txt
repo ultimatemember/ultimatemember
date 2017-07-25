@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.1
 Tested up to: 4.8
-Stable tag: 1.3.87
+Stable tag: 1.3.88
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -60,6 +60,7 @@ Ultimate Member has a range of extensions that allow you to extend the power of 
 
 = Free Extensions =
 
+* [Terms & Conditions](https://ultimatemember.com/extensions/terms-conditions/) - Add a terms and condition checkbox to your registration forms & require users to agree to your T&Cs before registering on your site.
 * [Google reCAPTCHA](https://ultimatemember.com/extensions/google-recaptcha/) - Stop bots on your registration & login forms with Google reCAPTCHA
 * [Online Users](https://ultimatemember.com/extensions/online-users/) - Display what users are online with this extension
 
@@ -123,6 +124,20 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 == Changelog ==
 
+
+= 1.3.88: July 25, 2017 =
+
+* Enhancements:
+  - Add new filter hook `um_add_user_frontend_submitted`
+  - Add class for member tagline in directory grid `um-member-tagline-<field key>`
+  - Add recaptcha support and submit button id
+  - Update extensions page layout
+ 
+* Bugfixes:
+  - Fix Conditional Logic fields
+  - Fix required field with specific roles in privacy
+  - Remove wpautop from biography
+  - Remove notices
 
 = 1.3.87: June 24, 2017 =
 
