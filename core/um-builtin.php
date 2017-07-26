@@ -1010,7 +1010,7 @@ class UM_Builtin {
 				'public' => 1,
 				'editable' => 1,
 				'default' => __('No','ultimate-member'),
-				'options' => array( __('No','ultimate-member'), __('Yes','ultimate-member') ),
+				'options' => array( array(__('No','ultimate-member'), 'false'), array(__('Yes','ultimate-member'), 'true') ),
 				'account_only' => true,
 				'required_opt' => array( 'members_page', 1 ),
 			),

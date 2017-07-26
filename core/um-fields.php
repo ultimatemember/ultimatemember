@@ -2079,10 +2079,16 @@ class UM_Fields {
 
 						foreach($options as $k => $v) {
 
-							$v = rtrim($v);
+						    if(is_array($v) && count($v) == 2) {
+							    $option_value = $v[1];
+						        $v = $v[0];
+                            } else {
+						        $option_value = $v;
+                            }
+
+						    $v = rtrim($v);
 
 							$um_field_checkbox_item_title = $v;
-							$option_value = $v;
 
 							if ( !is_numeric( $k ) && in_array($form_key, array('role') ) ) {
 								$um_field_checkbox_item_title = $v;

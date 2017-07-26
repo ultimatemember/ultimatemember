@@ -62,6 +62,8 @@
 		$userinfo = $ultimatemember->user->profile;
 
 		$fields = unserialize( $args['custom_fields'] );
+        $fields['profile_privacy'] = $args['profile_privacy'];
+        $fields['hide_in_members'] = $args['hide_in_members'];
 
 		do_action('um_user_before_updating_profile', $userinfo );
 

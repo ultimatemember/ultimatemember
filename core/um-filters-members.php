@@ -63,7 +63,7 @@
 			    ),
 			    array(
 					'key' => 'hide_in_members',
-					'value' => 'Yes',
+					'value' => 'true',
 					'compare' => 'NOT LIKE'
 				)
 			);
