@@ -43,10 +43,9 @@ jQuery(document).ready(function() {
 		metakey = 'profile_photo';
 		
 		jQuery.ajax({
-			url: um_scripts.ajaxurl,
+			url: um_scripts.delete_profile_photo,
 			type: 'post',
 			data: {
-				action: 'ultimatemember_delete_profile_photo',
 				metakey: metakey,
 				user_id: user_id
 			}
@@ -68,10 +67,9 @@ jQuery(document).ready(function() {
 		metakey = 'cover_photo';
 		
 		jQuery.ajax({
-			url: um_scripts.ajaxurl,
+			url: um_scripts.delete_cover_photo,
 			type: 'post',
 			data: {
-				action: 'ultimatemember_delete_cover_photo',
 				metakey: metakey,
 				user_id: user_id
 			}

@@ -1,5 +1,4 @@
 
-
 function UM_check_password_matched() {
 	jQuery(document).on('keyup', 'input[data-key=user_password],input[data-key=confirm_user_password]', function(e) {
 		var value = jQuery('input[data-key=user_password]').val();

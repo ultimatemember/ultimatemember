@@ -6,7 +6,7 @@
 		
 			<?php
 			
-			if ( !isset( $ultimatemember->password->reset_request ) ) {
+			if ( ! isset( UM()->password()->reset_request ) ) {
 			
 				do_action('um_reset_password_page_hidden_fields', $args );
 				
@@ -18,7 +18,7 @@
 			
 				echo '<div class="um-field-block">';
 				
-				echo '<p>' . __('We have sent you a password reset link to your e-mail. Please check your inbox.','ultimate-member') . '</p>';
+				echo '<p>' . __('We have sent you a password reset link to your e-mail. Please check your inbox.', 'ultimate-member' ) . '</p>';
 				
 				echo '</div>';
 				

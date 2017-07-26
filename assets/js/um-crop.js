@@ -410,12 +410,14 @@
         cropper.left = (container.width - cropper.width) / 2;
       }
 
-      this.$cropper.css({
-        width: cropper.width,
-        height: cropper.height,
-        left: cropper.left,
-        top: cropper.top
-      });
+      if ( this.$cropper ) {
+        this.$cropper.css({
+          width: cropper.width,
+          height: cropper.height,
+          left: cropper.left,
+          top: cropper.top
+        });
+      }
 
       this.cropper = cropper;
     },

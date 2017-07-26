@@ -16,17 +16,17 @@
 
 			</div>
 			
-			<div class="um-account-main" data-current_tab="<?php echo $ultimatemember->account->current_tab; ?>">
+			<div class="um-account-main" data-current_tab="<?php echo UM()->account()->current_tab; ?>">
 			
 				<?php
 				
 				do_action('um_before_form', $args);
 				
-				foreach( $ultimatemember->account->tabs as $k => $arr ) {
+				foreach( UM()->account()->tabs as $k => $arr ) {
 
 					foreach( $arr as $id => $info ) { extract( $info );
 					
-						$current_tab = $ultimatemember->account->current_tab;
+						$current_tab = UM()->account()->current_tab;
 
 						if ( isset($info['custom']) || um_get_option('account_tab_'.$id ) == 1 || $id == 'general' ) {
 

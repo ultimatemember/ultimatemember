@@ -4,14 +4,14 @@
 	
 	<?php $i = 0; foreach( um_members('users_per_page') as $member) { $i++; um_fetch_user( $member ); ?>
 			
-	<div class="um-member um-role-<?php echo um_user('role'); ?> <?php echo um_user('account_status'); ?> <?php if ($cover_photos) { echo 'with-cover'; } ?>">
+	<div class="um-member um-role-<?php echo um_user( 'role' ); ?> <?php echo um_user('account_status'); ?> <?php if ($cover_photos) { echo 'with-cover'; } ?>">
 				
 		<span class="um-member-status <?php echo um_user('account_status'); ?>"><?php echo um_user('account_status_name'); ?></span>
 					
 		<?php
 		if ($cover_photos) {
 			$sizes = um_get_option('cover_thumb_sizes');
-			if ( $ultimatemember->mobile->isTablet() ) {
+			if ( UM()->mobile()->isTablet() ) {
 				$cover_size = $sizes[1];
 			} else {
 				$cover_size = $sizes[0];
@@ -50,7 +50,6 @@
 								if ( $key && um_filtered_value( $key ) ) {
 									$value = um_filtered_value( $key );
 
-
 						?>
 						
 						<div class="um-member-tagline um-member-tagline-<?php echo $key;?>"><?php echo $value; ?></div>
@@ -77,7 +76,7 @@
 											
 								?>
 								
-								<div class="um-member-metaline um-member-metaline-<?php echo $key; ?>"><span><strong><?php echo $ultimatemember->fields->get_label( $key ); ?>:</strong> <?php echo $value; ?></span></div>
+								<div class="um-member-metaline um-member-metaline-<?php echo $key; ?>"><span><strong><?php echo UM()->fields()->get_label( $key ); ?>:</strong> <?php echo $value; ?></span></div>
 								
 								<?php 
 									}
@@ -87,7 +86,7 @@
 								<?php if ( $show_social ) { ?>
 								<div class="um-member-connect">
 								
-									<?php $ultimatemember->fields->show_social_urls(); ?>
+									<?php UM()->fields()->show_social_urls(); ?>
 
 								</div>
 								<?php } ?>

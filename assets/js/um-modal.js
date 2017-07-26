@@ -30,10 +30,9 @@ jQuery(document).ready(function() {
 		um_modal_responsive();
 		
 		jQuery.ajax({
-			url: um_scripts.ajaxurl,
+			url: um_scripts.remove_file,
 			type: 'post',
 			data: {
-				action: 'ultimatemember_remove_file',
 				src: src
 			}
 		});
@@ -60,10 +59,9 @@ jQuery(document).ready(function() {
 		um_modal_responsive();
 		
 		jQuery.ajax({
-			url: um_scripts.ajaxurl,
+			url: um_scripts.remove_file,
 			type: 'post',
 			data: {
-				action: 'ultimatemember_remove_file',
 				src: src
 			}
 		});
@@ -104,10 +102,9 @@ jQuery(document).ready(function() {
 			jQuery(this).html( jQuery(this).attr('data-processing') ).addClass('disabled');
 
 			jQuery.ajax({
-				url: um_scripts.ajaxurl,
+				url: um_scripts.resize_image,
 				type: 'POST',
 				data: {
-					action: 'ultimatemember_resize_image',
 					src : src,
 					coord : coord,
 					user_id : user_id,

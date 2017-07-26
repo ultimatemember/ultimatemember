@@ -1,4 +1,4 @@
-<div class="um <?php echo $this->get_class( $mode ); ?> um-<?php echo $form_id; ?> um-role-<?php echo um_user('role'); ?> ">
+<div class="um <?php echo $this->get_class( $mode ); ?> um-<?php echo $form_id; ?> um-role-<?php echo um_user( 'role' ); ?> ">
 
 	<div class="um-form">
 	
@@ -14,7 +14,7 @@
 			
 			<?php
 				
-			$nav = $ultimatemember->profile->active_tab;
+			$nav = UM()->profile()->active_tab;
 			$subnav = ( get_query_var('subnav') ) ? get_query_var('subnav') : 'default';
 				
 			print "<div class='um-profile-body $nav $nav-$subnav'>";
