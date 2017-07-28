@@ -211,6 +211,10 @@ if ( ! class_exists( 'Setup' ) ) {
          * Set UM roles meta to Default WP roles
          */
         function set_default_role_meta() {
+
+			//for set accounts without account status approved status
+            UM()->query()->count_users_by_status( 'unassigned' );
+
             foreach ( UM()->config()->default_roles_metadata as $role => $meta ) {
                 update_option( "um_role_{$role}_meta", $meta );
             }
