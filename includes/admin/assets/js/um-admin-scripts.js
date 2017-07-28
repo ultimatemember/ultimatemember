@@ -1,3 +1,15 @@
+function um_init_tooltips() {
+	if ( jQuery( '.um_tooltip' ).length > 0 ) {
+		jQuery( '.um_tooltip' ).tooltip({
+			tooltipClass: "um_tooltip",
+			content: function () {
+				return jQuery( this ).attr( 'title' );
+			}
+		});
+	}
+}
+
+
 jQuery(document).ready(function() {
 
 	/**
@@ -84,14 +96,7 @@ jQuery(document).ready(function() {
 	/**
 		Tooltips
 	**/
-	if ( jQuery( '.um_tooltip' ).length > 0 ) {
-        jQuery( '.um_tooltip' ).tooltip({
-            tooltipClass: "um_tooltip",
-            content: function () {
-                return jQuery( this ).attr( 'title' );
-            }
-        });
-	}
+	um_init_tooltips();
 	
 	if( typeof tipsy !== 'undefined' ){
 		jQuery('.um-admin-tipsy-n').tipsy({gravity: 'n', opacity: 1, live: 'a.live' });
