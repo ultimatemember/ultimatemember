@@ -31,7 +31,6 @@ class UM_ADDON_gravatar_transfer {
 	}
 
 	function um_admin_addon_hook( $hook ) {
-		global $ultimatemember;
 		switch( $hook ) {
 			case 'gravatar_transfer':
 					if( $this->gravatar_hash() ){

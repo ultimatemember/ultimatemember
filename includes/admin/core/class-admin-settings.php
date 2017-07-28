@@ -1170,6 +1170,8 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                     um_js_redirect( add_query_arg( array( 'page' => 'um_options', 'tab' => $current_tab ), admin_url( 'admin.php' ) ) );
             }
 
+            echo '<div id="um-settings-wrap" class="wrap"><h2>Ultimate Member - Settings</h2>';
+
             echo $this->generate_tabs_menu() . $this->generate_subtabs_menu( $current_tab );
 
             do_action( "um_settings_page_before_" . $current_tab . "_" . $current_subtab . "_content" );
@@ -1181,6 +1183,14 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                 echo apply_filters( 'um_settings_section_' . $current_tab . '_' . $current_subtab . '_content', $this->render_settings_section( $section_fields, $current_tab, $current_subtab ), $section_fields );
 
             } else { ?>
+
+<!--                <?php /*if ( empty( $settings_struct['sections'][$current_subtab] ) )
+                    $title = $this->settings_structure[$current_tab]['title'];
+                else
+                    $title = $this->settings_structure[$current_tab]['sections'][$current_subtab]['title'];
+                */?>
+
+                <h3><?php /*echo $title */?></h3>-->
 
                 <form method="post" action="" name="um-settings-form" id="um-settings-form">
                     <input type="hidden" value="save" name="um-settings-action" />
@@ -1197,6 +1207,8 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                 </form>
 
             <?php }
+
+            /*echo '</div>';*/
         }
 
 

@@ -651,7 +651,7 @@
 				?>
 
 			<div class="um-profile-nav-item um-profile-nav-<?php echo $id; ?> <?php if ( !um_get_option('profile_menu_icons') ) { echo 'without-icon'; } ?> <?php if ( $id == $active_tab ) { echo 'active'; } ?>">
-				<a href="<?php echo $nav_link; ?>" title="<?php echo $tab['name']; ?>">
+				<a href="<?php echo $nav_link; ?>" class="um-tip-n" title="<?php echo $tab['name']; ?>" original-title="<?php echo $tab['name']; ?>">
 
 					<i class="<?php echo $tab['icon']; ?>"></i>
 

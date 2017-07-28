@@ -28,6 +28,7 @@ if ( ! class_exists( 'UM' ) ) {
      * @method UM_User_Tags_API User_Tags_API()
      * @method UM_Verified_Users_API Verified_Users_API()
      * @method UM_WooCommerce_API WooCommerce_API()
+     * @method UM_Terms_Conditions_API Terms_Conditions_API()
      *
      */
     final class UM extends UM_Functions {
@@ -184,8 +185,6 @@ if ( ! class_exists( 'UM' ) ) {
                 add_action( 'plugins_loaded', array( &$this, 'init' ), 0 );
                 // init widgets
                 add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
-
-                add_action( 'admin_init', array( &$this, 'redirect_to_about' ) );
             }
         }
 
@@ -230,19 +229,6 @@ if ( ! class_exists( 'UM' ) ) {
 
             //run setup
             $this->setup()->run_setup();
-
-            if ( $version != ultimatemember_version ) {
-                update_option( 'um_need_show_about', true );
-            }
-        }
-
-
-        function redirect_to_about() {
-            if ( get_option( 'um_need_show_about' ) ) {
-                delete_option( 'um_need_show_about' );
-                wp_redirect( admin_url( 'admin.php?page=ultimatemember-about' ) );
-                exit;
-            }
         }
 
 

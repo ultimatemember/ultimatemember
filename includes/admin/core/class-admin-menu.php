@@ -8,14 +8,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'Admin_Menu' ) ) {
     class Admin_Menu {
-        var $about_tabs = array();
 
         function __construct() {
-
             $this->slug = 'ultimatemember';
-
-            $this->about_tabs['about'] = 'About';
-            $this->about_tabs['start'] = 'Getting Started';
 
             add_action('admin_menu', array(&$this, 'primary_admin_menu'), 0);
             add_action('admin_menu', array(&$this, 'secondary_menu_items'), 1000);
@@ -34,7 +29,6 @@ if ( ! class_exists( 'Admin_Menu' ) ) {
 
             // Add the dashboard pages
             $um_pages[] = 'toplevel_page_ultimatemember';
-            $um_pages[] = 'admin_page_ultimatemember-about';
             $um_pages[] = 'ultimate-member_page_um_options';
             $um_pages[] = 'edit-um_form';
             $um_pages[] = 'edit-um_role';
@@ -104,11 +98,6 @@ if ( ! class_exists( 'Admin_Menu' ) ) {
             add_action( 'load-' . $this->pagehook, array( &$this, 'on_load_page' ) );
 
             add_submenu_page( $this->slug, __('Dashboard', $this->slug), __('Dashboard', $this->slug), 'manage_options', $this->slug, array(&$this, 'admin_page') );
-
-            foreach( $this->about_tabs as $k => $tab ) {
-                add_submenu_page( '_'. $k . '_um', sprintf(__('%s | Ultimate Member', $this->slug), $tab), sprintf(__('%s | Ultimate Member', $this->slug), $tab), 'manage_options', $this->slug . '-' . $k, array(&$this, 'admin_page') );
-            }
-
         }
 
 
@@ -301,17 +290,9 @@ if ( ! class_exists( 'Admin_Menu' ) ) {
 
                 <?php
 
-            } else if ( $page == 'ultimatemember-extensions' ) {
+            } elseif ( $page == 'ultimatemember-extensions' ) {
 
                 include_once UM()->admin()->templates_path . 'extensions.php';
-
-            } else if (  $page == 'ultimatemember-about' ) {
-
-                include_once UM()->admin()->templates_path . 'welcome/about.php';
-
-            } else if (  $page == 'ultimatemember-start' ) {
-
-                include_once UM()->admin()->templates_path . 'welcome/start.php';
 
             }
 

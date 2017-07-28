@@ -22,8 +22,6 @@ class UM_ADDON_install_info {
 	}
 
 	function um_admin_addon_hook( $hook ) {
-		global $ultimatemember;
-
 		switch ( $hook ) {
 			
 			case 'download_install_info':
@@ -53,7 +51,7 @@ class UM_ADDON_install_info {
 	}
 	
 	function content() {
-		global $wpdb, $ultimatemember;
+		global $wpdb;
 		
 		if( !class_exists( 'Browser' ) )
 			require_once um_path . 'core/lib/browser.php';
@@ -257,7 +255,7 @@ foreach($result['avail_roles'] as $role => $count){
 
 <?php 
 
-	foreach( $ultimatemember->query->get_roles() as $role_id => $role ) {
+	foreach( UM()->roles()->get_roles() as $role_id => $role ) {
 		echo $role." ({$role_id})\n";
 	}
 

@@ -22,8 +22,6 @@ class UM_ADDON_generate_random_users {
 	}
 
 	function um_admin_addon_hook( $hook ) {
-		global $ultimatemember;
-
 		switch ( $hook ) {
 			case 'generate_random_users':
 				$json_url = "https://randomuser.me/api/";
