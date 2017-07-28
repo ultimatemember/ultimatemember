@@ -63,6 +63,19 @@
 			    ),
 			    array(
 					'key' => 'hide_in_members',
+					'value' => 'Yes',
+					'compare' => 'NOT LIKE'
+				)
+			);
+			$query_args['meta_query'][] = array(
+				"relation"	=> "OR",
+				array(
+						'key' => 'hide_in_members',
+						'value' => '',
+						'compare' => 'NOT EXISTS'
+			    ),
+			    array(
+					'key' => 'hide_in_members',
 					'value' => 'true',
 					'compare' => 'NOT LIKE'
 				)
