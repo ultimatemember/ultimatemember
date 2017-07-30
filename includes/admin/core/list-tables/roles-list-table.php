@@ -229,7 +229,7 @@ class UM_Roles_List_Table extends WP_List_Table {
 
 
 
-        return sprintf('%1$s %2$s', '<strong><a class="row-title" href="admin.php?page=um_roles&tab=edit&id=' . $item['key'] . '">'. ( ! empty( $item['_um_is_custom'] ) ? 'UM ' : '' ) . $item['name'] . '</a></strong>', $this->row_actions( $actions ) );
+        return sprintf('%1$s %2$s', '<strong><a class="row-title" href="admin.php?page=um_roles&tab=edit&id=' . $item['key'] . '">' . $item['name'] . '</a></strong>', $this->row_actions( $actions ) );
     }
 
     function column_roleid( $item ) {
@@ -325,16 +325,16 @@ foreach ( $wp_roles->roles as $roleID => $role_data ) {
 switch( strtolower( $order ) ) {
     case 'asc':
         uasort( $roles, function( $a, $b ) {
-            $a['name'] = ! empty( $a['_um_is_custom'] ) ? 'UM ' . $a['name'] : $a['name'];
-            $b['name'] = ! empty( $b['_um_is_custom'] ) ? 'UM ' . $b['name'] : $b['name'];
+            //$a['name'] = ! empty( $a['_um_is_custom'] ) ? 'UM ' . $a['name'] : $a['name'];
+            //$b['name'] = ! empty( $b['_um_is_custom'] ) ? 'UM ' . $b['name'] : $b['name'];
 
             return strnatcmp( $a['name'], $b['name'] );
         } );
         break;
     case 'desc':
         uasort( $roles, function( $a, $b ) {
-            $a['name'] = ! empty( $a['_um_is_custom'] ) ? 'UM ' . $a['name'] : $a['name'];
-            $b['name'] = ! empty( $b['_um_is_custom'] ) ? 'UM ' . $b['name'] : $b['name'];
+            //$a['name'] = ! empty( $a['_um_is_custom'] ) ? 'UM ' . $a['name'] : $a['name'];
+            //$b['name'] = ! empty( $b['_um_is_custom'] ) ? 'UM ' . $b['name'] : $b['name'];
 
             return strnatcmp( $a['name'], $b['name'] ) * -1;
         } );

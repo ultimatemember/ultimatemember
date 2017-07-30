@@ -47,7 +47,7 @@ if ( ! empty( $_POST['role'] ) ) {
 
     $all_roles = array_keys( get_editable_roles() );
     if ( 'add' == $_GET['tab'] ) {
-        if ( in_array( 'um_' . $id, $all_roles ) )
+        if ( in_array( 'um_' . $id, $all_roles ) || in_array( $id, $all_roles ) )
             $error .= __( 'Role already exists!', 'ultimate-member' ) . '<br />';
     }
 
@@ -118,10 +118,10 @@ $screen_id = $current_screen->id; ?>
                         <div id="titlewrap">
                             <?php if ( 'add' == $_GET['tab'] ) { ?>
                                 <label for="title" class="screen-reader-text"><?php _e( 'Title', 'ultimate-member' ) ?></label>
-                                <span>UM&nbsp;</span><input type="text" name="role[name]" placeholder="<?php _e( 'Enter Title Here', 'ultimate-member' ) ?>" id="title" value="<?php echo isset( $data['name'] ) ? $data['name'] : '' ?>" />
+                                <input type="text" name="role[name]" placeholder="<?php _e( 'Enter Title Here', 'ultimate-member' ) ?>" id="title" value="<?php echo isset( $data['name'] ) ? $data['name'] : '' ?>" />
                             <?php } else { ?>
                                 <input type="hidden" name="role[name]" value="<?php echo isset( $data['name'] ) ? $data['name'] : '' ?>" />
-                                <span style="float: left;width:100%;"><?php if ( ! empty( $data['_um_is_custom'] ) ) { ?>UM&nbsp;<?php } ?><?php echo isset( $data['name'] ) ? $data['name'] : '' ?></span>
+                                <span style="float: left;width:100%;"><?php echo isset( $data['name'] ) ? $data['name'] : '' ?></span>
                             <?php } ?>
                         </div>
                     </div>

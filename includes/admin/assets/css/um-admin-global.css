@@ -131,11 +131,6 @@ a.um-delete{ color: #a00; }
 	line-height: 37px;
 }
 
-#um_edit_role #title {
-	width: calc( 100% - 40px );
-	float:left;
-}
-
 #um-roles .row-actions .reset a {
 	color:#a00;
 }

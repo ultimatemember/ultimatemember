@@ -249,7 +249,7 @@ if ( ! class_exists( 'User' ) ) {
                     $role_meta = get_option( "um_role_{$role_key}_meta" );
 
                     if ( $role_meta ) {
-                        $role_meta['name'] = 'UM ' . $role_meta['name'];
+                        //$role_meta['name'] = 'UM ' . $role_meta['name'];
                         $roles['um_' . $role_key] = $role_meta;
                     }
                 }
