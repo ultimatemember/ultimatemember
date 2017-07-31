@@ -1391,8 +1391,17 @@
 	function um_get_default_avatar_uri( $user_id = '' ) {
 		$uri = um_get_option( 'default_avatar' );
 		$uri = ! empty( $uri['url'] ) ? $uri['url'] : '';
-		if ( ! $uri )
+		if ( ! $uri ) {
 			$uri = um_url . 'assets/img/default_avatar.jpg';
+		} else {
+
+			//http <-> https compatibility default avatar option of SSL was changed
+			$url_array = parse_url( $uri );
+			$setting_url = $url_array['scheme'] . '://' . $url_array['host'];
+			if ( $setting_url != site_url() )
+				$uri = str_replace( $setting_url, site_url(), $uri );
+		}
+
 
 		return $uri;
 	}
