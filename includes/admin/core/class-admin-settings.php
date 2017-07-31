@@ -44,6 +44,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
             add_action( 'um_settings_before_save', array( $this, 'before_licenses_save' ) );
             add_action( 'um_settings_save', array( $this, 'licenses_save' ) );
 
+            add_filter( 'um_change_settings_before_save', array( $this, 'remove_empty_values' ), 10, 1 );
 
             //invalid licenses notice
             add_action( 'admin_notices', array( $this, 'check_wrong_licenses' ) );
@@ -1303,12 +1304,13 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
             if ( isset( $_POST['um-settings-action'] ) && 'save' == $_POST['um-settings-action'] && ! empty( $_POST['um_options'] ) ) {
                 do_action( "um_settings_before_save" );
 
-                foreach ( $_POST['um_options'] as $key=>$value ) {
+                $settings = apply_filters( 'um_change_settings_before_save', $_POST['um_options'] );
+
+                foreach ( $settings as $key=>$value ) {
                     um_update_option( $key, $value );
                 }
 
                 do_action( "um_settings_save" );
-
 
                 //redirect after save settings
                 $arg = array(
@@ -1323,6 +1325,46 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 
                 um_js_redirect( add_query_arg( $arg, admin_url( 'admin.php' ) ) );
             }
+        }
+
+
+        /**
+         * Remove empty values from multi text fields
+         *
+         * @param $settings
+         * @return array
+         */
+        function remove_empty_values( $settings ) {
+            $tab = '';
+            if ( ! empty( $_GET['tab'] ) )
+                $tab = $_GET['tab'];
+
+            $section = '';
+            if ( ! empty( $_GET['section'] ) )
+                $section = $_GET['section'];
+
+            if ( isset( $this->settings_structure[$tab]['sections'][$section]['fields'] ) )
+                $fields = $this->settings_structure[$tab]['sections'][$section]['fields'];
+            else
+                $fields = $this->settings_structure[$tab]['fields'];
+
+            if ( empty( $fields ) )
+                return $settings;
+
+
+            $filtered_settings = array();
+            foreach ( $settings as $key=>$value ) {
+
+                $filtered_settings[$key] = $value;
+
+                foreach( $fields as $field ) {
+                    if ( $field['id'] == $key && $field['type'] == 'multi_text' ) {
+                        $filtered_settings[$key] = array_filter( $settings[$key] );
+                    }
+                }
+            }
+
+            return $filtered_settings;
         }
 
 
