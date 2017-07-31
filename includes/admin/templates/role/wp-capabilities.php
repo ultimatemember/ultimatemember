@@ -1,7 +1,7 @@
 <div class="um-admin-metabox">
     <?php
     $role = $object['data'];
-    $role_capabilities = ! empty( $role['wp_capabilities'] ) ? array_keys( $role['wp_capabilities'] ) : array();
+    $role_capabilities = ! empty( $role['wp_capabilities'] ) ? array_keys( $role['wp_capabilities'] ) : array( 'read' );
 
     if ( ! empty( $_GET['id'] ) ) {
         $role = get_role( $_GET['id'] );
