@@ -238,20 +238,12 @@ class UM_Roles_List_Table extends WP_List_Table {
 
 
     function column_core( $item ) {
-        if ( ! empty( $item['_um_is_custom'] ) ) {
-            echo '<span class="um-adm-ico um-admin-tipsy-n" title="' . __( 'UM Custom Role', 'ultimate-member' ) . '"><i class="um-faicon-check"></i></span>';
-        } else {
-            echo '&mdash;';
-        }
+        echo ! empty( $item['_um_is_custom'] ) ? __( 'Yes', 'ultimate-member' ) : __( 'No', 'ultimate-member' );
     }
 
 
     function column_admin_access( $item ) {
-        if ( ! empty( $item['_um_can_access_wpadmin'] ) ) {
-            echo '<span class="um-adm-ico um-admin-tipsy-n" title="' . __( 'This role can access the WordPress backend', 'ultimate-member' ).'"><i class="um-faicon-check"></i></span>';
-        } else {
-            echo __( 'No', 'ultimate-member' );
-        }
+        echo ! empty( $item['_um_can_access_wpadmin'] ) ? __( 'Yes', 'ultimate-member' ) : __( 'No', 'ultimate-member' );
     }
 
 

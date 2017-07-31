@@ -169,6 +169,7 @@ if ( ! class_exists( 'Admin_Enqueue' ) ) {
             wp_enqueue_script( 'um_admin_settings' );
 
             $localize_data = array(
+                'onbeforeunload_text' => __( 'Are sure, maybe some settings not saved', 'ultimate-member' ),
                 'texts' => array(
                     'remove' => __( 'Remove', 'ultimate-member' ),
                     'select' => __( 'Select', 'ultimate-member' )

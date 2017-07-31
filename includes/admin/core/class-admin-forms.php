@@ -80,6 +80,8 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             $conditional = ! empty( $data['conditional'] ) ? 'data-conditional="' . esc_attr( json_encode( $data['conditional'] ) ) . '"' : '';
             $prefix_attr = ! empty( $this->form_data['prefix_id'] ) ? ' data-prefix="' . $this->form_data['prefix_id'] . '" ' : '';
 
+            $type_attr = ' data-field_type="' . $data['type'] . '" ';
+
             $html = '';
             if ( $data['type'] != 'hidden' ) {
 
@@ -87,7 +89,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
 
                     if ( strpos( $this->form_data['class'], 'um-top-label' ) !== false ) {
 
-                        $html .= '<div class="form-field um-forms-line" ' . $conditional . $prefix_attr . '>' . $this->render_field_label( $data );
+                        $html .= '<div class="form-field um-forms-line" ' . $conditional . $prefix_attr . $type_attr . '>' . $this->render_field_label( $data );
 
                         if ( method_exists( $this, 'render_' . $data['type'] ) ) {
 
@@ -108,7 +110,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
 
                         if ( ! empty( $data['without_label'] ) ) {
 
-                            $html .= '<div class="form-field um-forms-line" ' . $conditional . $prefix_attr . '>';
+                            $html .= '<div class="form-field um-forms-line" ' . $conditional . $prefix_attr . $type_attr . '>';
 
                             if ( method_exists( $this, 'render_' . $data['type'] ) ) {
 
@@ -127,7 +129,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
 
                         } else {
 
-                            $html .= '<div class="form-field um-forms-line" ' . $conditional . $prefix_attr . '>' . $this->render_field_label( $data );
+                            $html .= '<div class="form-field um-forms-line" ' . $conditional . $prefix_attr . $type_attr . '>' . $this->render_field_label( $data );
 
                             if ( method_exists( $this, 'render_' . $data['type'] ) ) {
 
@@ -150,7 +152,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
                 } else {
                     if ( strpos( $this->form_data['class'], 'um-top-label' ) !== false ) {
 
-                        $html .= '<tr class="um-forms-line" ' . $conditional . $prefix_attr . '>
+                        $html .= '<tr class="um-forms-line" ' . $conditional . $prefix_attr . $type_attr . '>
                         <td>' . $this->render_field_label( $data );
 
                         if ( method_exists( $this, 'render_' . $data['type'] ) ) {
@@ -172,7 +174,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
 
                         if ( ! empty( $data['without_label'] ) ) {
 
-                            $html .= '<tr class="um-forms-line" ' . $conditional . $prefix_attr . '>
+                            $html .= '<tr class="um-forms-line" ' . $conditional . $prefix_attr . $type_attr . '>
                             <td colspan="2">';
 
                             if ( method_exists( $this, 'render_' . $data['type'] ) ) {
@@ -192,7 +194,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
 
                         } else {
 
-                            $html .= '<tr class="um-forms-line" ' . $conditional . $prefix_attr . '>
+                            $html .= '<tr class="um-forms-line" ' . $conditional . $prefix_attr . $type_attr . '>
                             <th>' . $this->render_field_label( $data ) . '</th>
                             <td>';
 
