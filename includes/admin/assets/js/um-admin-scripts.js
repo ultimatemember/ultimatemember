@@ -187,29 +187,33 @@ jQuery(document).ready(function() {
 		
 	});jQuery('.um-conditional-radio-group input[type=radio]:checked').each(function(){jQuery(this).trigger('click');});
 	
+
+
+
+
+
+
+
 	/**
 		Conditional fields for
 		nav-menu editor options
 	**/
 	
-	jQuery('.um-nav-mode').each(function(){
-		
-		if ( jQuery(this).find('input[type=radio]:checked').val() ) {
-			if ( jQuery(this).find('input[type=radio]:checked').val() == 2 ) {
-				jQuery(this).parents('.um-nav-edit').find('.um-nav-roles').show();
-			} else {
-				jQuery(this).parents('.um-nav-edit').find('.um-nav-roles').hide();
-			}
-		}
-		
+	jQuery('.um-nav-mode').each( function() {
+        if ( jQuery(this).find('select').val() == 2 ) {
+            jQuery(this).parents('.um-nav-edit').find('.um-nav-roles').show();
+        } else {
+            jQuery(this).parents('.um-nav-edit').find('.um-nav-roles').hide();
+        }
 	});
-	
-	jQuery(document).on('click', '.um-nav-mode input[type=radio]', function(){
-		if ( jQuery(this).val() == 2 ) {
-			jQuery(this).parents('.um-nav-edit').find('.um-nav-roles').show();
-		} else {
-			jQuery(this).parents('.um-nav-edit').find('.um-nav-roles').hide();
-		}
+
+
+	jQuery(document).on('change', '.um-nav-mode select', function(){
+        if ( jQuery(this).val() == 2 ) {
+            jQuery(this).parents('.um-nav-edit').find('.um-nav-roles').show();
+        } else {
+            jQuery(this).parents('.um-nav-edit').find('.um-nav-roles').hide();
+        }
 	});
 
 });

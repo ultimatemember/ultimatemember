@@ -73,59 +73,70 @@ class UM_Menu_Item_Custom_Fields_Editor {
 		
 			<div class="clear"></div>
 			
-			<div class="um-nav-edit-h2">UltimateMember Menu Settings</div>
+			<div class="um-nav-edit-h2"><?php _e( "UltimateMember Menu Settings", 'ultimate-member' ) ?></div>
 		
-		<?php
-		foreach ( self::$fields as $_key => $label ) :
-			$key   = sprintf( 'menu-item-%s', $_key );
-			$id    = sprintf( 'edit-%s-%s', $key, $item->ID );
-			$name  = sprintf( '%s[%s]', $key, $item->ID );
-			$value = get_post_meta( $item->ID, $key, true );
-			$role_name  = sprintf( '%s[%s][]', $key, $item->ID );
-			$class = sprintf( 'field-%s', $_key );
-			?>
-			
-				<?php if ( $_key == 'um_nav_public' ) { ?>
-				
-				<div class="description-wide um-nav-mode">
-				
-					<span class="description"><?php _e( "Who can see this menu link?"); ?></span><br />
-					
-					<p class="description">
-					
-					<label><input type="radio" name="<?php echo $name; ?>" value="0" <?php if (!isset($value) || $value == '') echo 'checked="checked"'; ?> /> Everyone</label>&nbsp;&nbsp;
-					
-					<label><input type="radio" name="<?php echo $name; ?>" value="1" <?php checked(1, $value); ?> /> Logged Out Users</label>&nbsp;&nbsp;
-					
-					<label><input type="radio" name="<?php echo $name; ?>" value="2" <?php checked(2, $value); ?> /> Logged In Users</label>&nbsp;&nbsp;
-					
-					</p>
-				
-				</div>
-				
-				<?php } ?>
-				
-				<?php if ( $_key == 'um_nav_roles' ) { ?>
-				 <?php $role_value = get_post_meta( $item->ID, $_key , true ); ?>
-				<div class="description-wide um-nav-roles">
-				
-					<span class="description"><?php _e( "Select the member roles that can see this link"); ?></span><br />
-					
-					<p class="description">
-					
-					<?php  foreach( UM()->roles()->get_roles() as $role_id => $role) { ?>
-					<label><input type="checkbox" name="<?php echo $role_name; ?>" value="<?php echo $role_id; ?>" <?php if (  ( is_array($value) && in_array($role_id, $value ) ) || ( isset($value) && $role_id == $value ) ) echo 'checked="checked"'; ?> /> <?php echo $role; ?></label>&nbsp;&nbsp;
-					<?php } ?>
-					
-					</p>
-				
-				</div>
-				
-				<?php } ?>
-				
-			<?php
-		endforeach;
-		?>
+		<?php foreach ( self::$fields as $_key => $label ) {
+			$key = sprintf('menu-item-%s', $_key);
+			$id = sprintf('edit-%s-%s', $key, $item->ID);
+			$name = sprintf('%s[%s]', $key, $item->ID);
+			$value = get_post_meta($item->ID, $key, true);
+			$role_name = sprintf('%s[%s][]', $key, $item->ID);
+			$class = sprintf('field-%s', $_key); ?>
+
+			<?php if ( $_key == 'um_nav_public' ) { ?>
+
+				<p class="description description-wide um-nav-mode">
+					<label for="<?php echo $id ?>">
+						<?php _e( "Who can see this menu link?", 'ultimate-member' ); ?><br/>
+						<select id="<?php echo $id ?>" name="<?php echo $name ?>" style="width:100%;">
+							<option value="0" <?php selected(!isset($value) || $value == ''); ?>>
+								<?php _e( 'Everyone', 'ultimate-member' ) ?>
+							</option>
+							<option value="1" <?php selected(1, $value); ?>>
+								<?php _e( 'Logged Out Users', 'ultimate-member' ) ?>
+							</option>
+							<option value="2" <?php selected(2, $value); ?>>
+								<?php _e( 'Logged In Users', 'ultimate-member' ) ?>
+							</option>
+						</select>
+					</label>
+				</p>
+
+			<?php }
+
+			if ( $_key == 'um_nav_roles' ) { ?>
+
+                <p class="description description-wide um-nav-roles">
+                    <?php _e( "Select the member roles that can see this link", 'ultimate-member' ) ?><br />
+
+                    <?php $options = UM()->roles()->get_roles();
+                    $i = 0;
+                    $html = '';
+                    $columns = 2;
+                    while ( $i < $columns ) {
+                        $per_page = ceil( count( $options ) / $columns );
+                        $section_fields_per_page = array_slice( $options, $i*$per_page, $per_page );
+                        $html .= '<span class="um-form-fields-section" style="width:' . floor( 100 / $columns ) . '% !important;">';
+
+                        foreach ( $section_fields_per_page as $k => $title ) {
+                            $id_attr = ' id="' . $id . '_' . $k . '" ';
+                            $for_attr = ' for="' . $id . '_' . $k . '" ';
+                            $name_attr = ' name="' . $role_name . '" ';
+
+                            $html .= "<label $for_attr>
+                                <input type=\"checkbox\" " . checked( ( is_array( $value ) && in_array( $k, $value ) ) || ( isset( $value ) && $k == $value ), true, false ) . "$id_attr $name_attr value=\"" . $k . "\">
+                                <span>$title</span>
+                            </label>";
+                        }
+
+                        $html .= '</span>';
+                        $i++;
+                    }
+
+                    echo $html; ?>
+                </p>
+			<?php }
+		} ?>
 		
 		</div>
 		

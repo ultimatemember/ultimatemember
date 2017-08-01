@@ -574,88 +574,84 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
          ***	@add role metabox
          ***/
         function add_metabox_role() {
-            add_meta_box(
-                'um-admin-form-admin',
-                __( 'Administrative Permissions', 'ultimate-member' ),
-                array( &$this, 'load_metabox_role' ),
-                'um_role_meta',
-                'normal',
-                'default'
+            $callback = array( &$this, 'load_metabox_role' );
+
+            $roles_metaboxes = array(
+                array(
+                    'id'        => 'um-admin-form-admin',
+                    'title'     => __( 'Administrative Permissions', 'ultimate-member' ),
+                    'callback'  => $callback,
+                    'screen'    => 'um_role_meta',
+                    'context'   => 'normal',
+                    'priority'  => 'default'
+                ),
+                array(
+                    'id'        => 'um-admin-form-general',
+                    'title'     => __( 'General Permissions', 'ultimate-member' ),
+                    'callback'  => $callback,
+                    'screen'    => 'um_role_meta',
+                    'context'   => 'normal',
+                    'priority'  => 'default'
+                ),
+                array(
+                    'id'        => 'um-admin-form-profile',
+                    'title'     => __( 'Profile Access', 'ultimate-member' ),
+                    'callback'  => $callback,
+                    'screen'    => 'um_role_meta',
+                    'context'   => 'normal',
+                    'priority'  => 'default'
+                ),
+                array(
+                    'id'        => 'um-admin-form-home',
+                    'title'     => __( 'Homepage Options', 'ultimate-member' ),
+                    'callback'  => $callback,
+                    'screen'    => 'um_role_meta',
+                    'context'   => 'normal',
+                    'priority'  => 'default'
+                ),
+                array(
+                    'id'        => 'um-admin-form-register',
+                    'title'     => __( 'Registration Options', 'ultimate-member' ),
+                    'callback'  => $callback,
+                    'screen'    => 'um_role_meta',
+                    'context'   => 'normal',
+                    'priority'  => 'default'
+                ),
+                array(
+                    'id'        => 'um-admin-form-login',
+                    'title'     => __( 'Login Options', 'ultimate-member' ),
+                    'callback'  => $callback,
+                    'screen'    => 'um_role_meta',
+                    'context'   => 'normal',
+                    'priority'  => 'default'
+                ),
+                array(
+                    'id'        => 'um-admin-form-logout',
+                    'title'     => __( 'Logout Options', 'ultimate-member' ),
+                    'callback'  => $callback,
+                    'screen'    => 'um_role_meta',
+                    'context'   => 'normal',
+                    'priority'  => 'default'
+                ),
+                array(
+                    'id'        => 'um-admin-form-delete',
+                    'title'     => __( 'Delete Options', 'ultimate-member' ),
+                    'callback'  => $callback,
+                    'screen'    => 'um_role_meta',
+                    'context'   => 'normal',
+                    'priority'  => 'default'
+                ),
+                array(
+                    'id'        => 'um-admin-form-publish',
+                    'title'     => __( 'Publish', 'ultimate-member' ),
+                    'callback'  => $callback,
+                    'screen'    => 'um_role_meta',
+                    'context'   => 'side',
+                    'priority'  => 'default'
+                )
             );
 
-            add_meta_box(
-                'um-admin-form-general',
-                __( 'General Permissions', 'ultimate-member' ),
-                array( &$this, 'load_metabox_role' ),
-                'um_role_meta',
-                'normal',
-                'default'
-            );
-
-            add_meta_box(
-                'um-admin-form-profile',
-                __( 'Profile Access', 'ultimate-member' ),
-                array( &$this, 'load_metabox_role' ),
-                'um_role_meta',
-                'normal',
-                'default'
-            );
-
-            add_meta_box(
-                'um-admin-form-home',
-                __( 'Homepage Options', 'ultimate-member' ),
-                array( &$this, 'load_metabox_role' ),
-                'um_role_meta',
-                'normal',
-                'default'
-            );
-
-            add_meta_box(
-                'um-admin-form-register',
-                __( 'Registration Options', 'ultimate-member' ),
-                array( &$this, 'load_metabox_role' ),
-                'um_role_meta',
-                'normal',
-                'default'
-            );
-
-            add_meta_box(
-                'um-admin-form-login',
-                __( 'Login Options', 'ultimate-member' ),
-                array( &$this, 'load_metabox_role' ),
-                'um_role_meta',
-                'normal',
-                'default'
-            );
-
-            add_meta_box(
-                'um-admin-form-logout',
-                __( 'Logout Options', 'ultimate-member' ),
-                array( &$this, 'load_metabox_role' ),
-                'um_role_meta',
-                'normal',
-                'default'
-            );
-
-            add_meta_box(
-                'um-admin-form-delete',
-                __( 'Delete Options', 'ultimate-member' ),
-                array( &$this, 'load_metabox_role' ),
-                'um_role_meta',
-                'normal',
-                'default'
-            );
-
-            add_meta_box(
-                'um-admin-form-publish',
-                __( 'Publish', 'ultimate-member' ),
-                array( &$this, 'load_metabox_role' ),
-                'um_role_meta',
-                'side',
-                'default'
-            );
-
-            do_action( 'um_admin_custom_role_metaboxes' );
+            $roles_metaboxes = apply_filters( 'um_admin_role_metaboxes', $roles_metaboxes );
 
             $wp_caps_metabox = false;
             if ( ! empty( $_GET['id'] ) ) {
@@ -663,15 +659,26 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                 if ( ! empty( $data['_um_is_custom'] ) )
                     $wp_caps_metabox = true;
             }
-
             if ( 'add' == $_GET['tab'] || $wp_caps_metabox ) {
+                $roles_metaboxes[] = array(
+                    'id'        => 'um-admin-form-wp-capabilities',
+                    'title'     => __( 'WP Capabilities', 'ultimate-member' ),
+                    'callback'  => $callback,
+                    'screen'    => 'um_role_meta',
+                    'context'   => 'normal',
+                    'priority'  => 'default'
+                );
+            }
+
+
+            foreach ( $roles_metaboxes as $metabox ) {
                 add_meta_box(
-                    'um-admin-form-wp-capabilities',
-                    __( 'WP Capabilities', 'ultimate-member' ),
-                    array( &$this, 'load_metabox_role' ),
-                    'um_role_meta',
-                    'normal',
-                    'default'
+                    $metabox['id'],
+                    $metabox['title'],
+                    $metabox['callback'],
+                    $metabox['screen'],
+                    $metabox['context'],
+                    $metabox['priority']
                 );
             }
         }

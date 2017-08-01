@@ -26,30 +26,26 @@
 			
 			$hide_children_of = array();
 			
-			foreach($items as $key => $item){
+			foreach( $items as $key => $item ) {
 			
-				$mode = get_post_meta($item->ID, 'menu-item-um_nav_public', true);
-				$roles = get_post_meta($item->ID, 'menu-item-um_nav_roles', true);
+				$mode = get_post_meta( $item->ID, 'menu-item-um_nav_public', true );
+				$roles = get_post_meta( $item->ID, 'menu-item-um_nav_roles', true );
 				
 				$visible = true;
 				
 				// hide any item that is the child of a hidden item
-				if( in_array( $item->menu_item_parent, $hide_children_of ) ){
+				if ( in_array( $item->menu_item_parent, $hide_children_of ) ) {
 					$visible = false;
 					$hide_children_of[] = $item->ID; // for nested menus
 				}
 				
-				if ( isset( $mode ) && $visible ){
+				if ( isset( $mode ) && $visible ) {
 				
 					switch( $mode ) {
 					
 						case 2: 
-							if ( is_user_logged_in() && isset($roles) && !empty($roles)) {
-								if ( in_array( um_user('role'), (array)$roles) ) {
-									$visible = true;
-								} else {
-									$visible = false;
-								}
+							if ( is_user_logged_in() && ! empty( $roles ) ) {
+                                $visible = in_array( um_user('role'), (array)$roles ) ? true : false;
 							} else {
 								$visible = is_user_logged_in() ? true : false;
 							}
