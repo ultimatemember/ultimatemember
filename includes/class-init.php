@@ -221,8 +221,13 @@ if ( ! class_exists( 'UM' ) ) {
         function activation() {
             //first install
             $version = get_option( 'um_version' );
-            if ( ! $version )
+            if ( ! $version ) {
                 update_option( 'um_last_version_upgrade', ultimatemember_version );
+
+                //show avatars on first install
+                if ( ! get_option( 'show_avatars' ) )
+                    update_option( 'show_avatars', 1 );
+            }
 
             if ( $version != ultimatemember_version )
                 update_option( 'um_version', ultimatemember_version );
@@ -891,9 +896,6 @@ if ( ! class_exists( 'UM' ) ) {
             require_once 'core/um-filters-account.php';
             require_once 'core/um-filters-misc.php';
             require_once 'core/um-filters-commenting.php';
-
-            if ( ! get_option( 'show_avatars' ) )
-                update_option( 'show_avatars', 1 );
 
         }
 
