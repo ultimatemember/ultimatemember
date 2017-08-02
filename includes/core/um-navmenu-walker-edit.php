@@ -72,9 +72,9 @@ class UM_Menu_Item_Custom_Fields_Editor {
 		<div class="um-nav-edit">
 		
 			<div class="clear"></div>
-			
-			<div class="um-nav-edit-h2"><?php _e( "UltimateMember Menu Settings", 'ultimate-member' ) ?></div>
-		
+
+			<h4 style="margin-bottom: 0.6em;"><?php _e( "Ultimate Member Menu Settings", 'ultimate-member' ) ?></h4>
+
 		<?php foreach ( self::$fields as $_key => $label ) {
 			$key = sprintf('menu-item-%s', $_key);
 			$id = sprintf('edit-%s-%s', $key, $item->ID);
