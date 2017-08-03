@@ -267,8 +267,7 @@ if ( ! class_exists( 'REST_API' ) ) {
             }
 
             if ( class_exists( 'UM_Online_API') ) {
-                global $um_online;
-                $total_online = count( $um_online->get_users() );
+                $total_online = count( UM()->Online_API()->get_users() );
                 $response['stats']['total_online'] = $total_online;
             }
 
@@ -336,13 +335,12 @@ if ( ! class_exists( 'REST_API' ) ) {
             }
 
             if ( class_exists( 'UM_Followers_API' ) ) {
-                global $um_followers;
-                $results = $um_followers->api->followers( $id );
+                $results = UM()->Followers_API()->api()->followers( $id );
                 if ( !$results ) {
                     $error['error'] = __('No users were found','ultimate-member');
                     return $error;
                 }
-                $response['followers']['count'] = $um_followers->api->count_followers_plain( $id );
+                $response['followers']['count'] = UM()->Followers_API()->api()->count_followers_plain( $id );
                 foreach( $results as $k => $v ) {
                     $user = get_userdata( $v['user_id2'] );
                     $response['followers']['users'][$k]['ID'] = $v['user_id2'];
@@ -372,13 +370,12 @@ if ( ! class_exists( 'REST_API' ) ) {
             }
 
             if ( class_exists( 'UM_Followers_API' ) ) {
-                global $um_followers;
-                $results = $um_followers->api->following( $id );
+                $results = UM()->Followers_API()->api()->following( $id );
                 if ( !$results ) {
                     $error['error'] = __('No users were found','ultimate-member');
                     return $error;
                 }
-                $response['following']['count'] = $um_followers->api->count_following_plain( $id );
+                $response['following']['count'] = UM()->Followers_API()->api()->count_following_plain( $id );
                 foreach( $results as $k => $v ) {
                     $user = get_userdata( $v['user_id1'] );
                     $response['following']['users'][$k]['ID'] = $v['user_id1'];
@@ -447,9 +444,8 @@ if ( ! class_exists( 'REST_API' ) ) {
                         $val->cover_photo = $this->getsrc( um_user('cover_photo', 1000) );
 
                         if ( class_exists('UM_Followers_API') ) {
-                            global $um_followers;
-                            $val->followers_count = $um_followers->api->count_followers_plain( $user->ID );
-                            $val->following_count = $um_followers->api->count_following_plain( $user->ID );
+                            $val->followers_count = UM()->Followers_API()->api()->count_followers_plain( $user->ID );
+                            $val->following_count = UM()->Followers_API()->api()->count_following_plain( $user->ID );
                         }
 
                     }
@@ -556,9 +552,8 @@ if ( ! class_exists( 'REST_API' ) ) {
 
                         case 'followers':
                             if ( class_exists('UM_Followers_API') ) {
-                                global $um_followers;
-                                $response['followers_count'] = $um_followers->api->count_followers_plain( $user->ID );
-                                $response['following_count'] = $um_followers->api->count_following_plain( $user->ID );
+                                $response['followers_count'] = UM()->Followers_API()->api()->count_followers_plain( $user->ID );
+                                $response['following_count'] = UM()->Followers_API()->api()->count_following_plain( $user->ID );
                             }
                             break;
 
@@ -581,9 +576,8 @@ if ( ! class_exists( 'REST_API' ) ) {
                         $val->cover_photo = $this->getsrc( um_user('cover_photo', 1000) );
 
                         if ( class_exists('UM_Followers_API') ) {
-                            global $um_followers;
-                            $val->followers_count = $um_followers->api->count_followers_plain( $user->ID );
-                            $val->following_count = $um_followers->api->count_following_plain( $user->ID );
+                            $val->followers_count = UM()->Followers_API()->api()->count_followers_plain( $user->ID );
+                            $val->following_count = UM()->Followers_API()->api()->count_following_plain( $user->ID );
                         }
 
                     }

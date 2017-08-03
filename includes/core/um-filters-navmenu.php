@@ -25,7 +25,9 @@
 		function um_conditional_nav_menu( $items, $menu, $args ) {
 			
 			$hide_children_of = array();
-			
+
+            um_fetch_user( get_current_user_id() );
+
 			foreach( $items as $key => $item ) {
 			
 				$mode = get_post_meta( $item->ID, 'menu-item-um_nav_public', true );
@@ -69,6 +71,8 @@
 				}
 				
 			}
+
+			um_reset_user();
 			
 			return $items;
 		}
