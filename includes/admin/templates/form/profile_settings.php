@@ -15,6 +15,7 @@
 				'id'		    => '_um_profile_metafields',
 				'type'		    => 'multi_selects',
 				'label'    		=> __( 'Field(s) to show in user meta', 'ultimate-member' ),
+				'tooltip'    	=> __( 'Fields selected here will appear in the profile header area below the user\'s display name', 'ultimate-member' ),
 				'value'		=> $_um_search_fields,
 				'options'   => $user_fields,
 				'add_text'		=> __( 'Add New Field', 'ultimate-member' ),

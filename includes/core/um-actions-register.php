@@ -275,16 +275,16 @@
 	/**
 	 * Register user with predefined role in options
 	 */
-	add_action('um_after_register_fields', 'um_add_user_role');
-	function um_add_user_role( $args ){
+	add_action( 'um_after_register_fields', 'um_add_user_role' );
+	function um_add_user_role( $args ) {
 
 		if ( isset( $args['custom_fields']['role_select'] ) || isset( $args['custom_fields']['role_radio'] ) ) return;
 
-		$use_global_settings = get_post_meta( $args['form_id'], '_um_register_use_globals', true);
+        $use_custom_settings = get_post_meta( $args['form_id'], '_um_register_use_custom_settings', true );
 		
-		if (isset($args['role']) && !empty($args['role']) && $use_global_settings == 0 ) {
+		if ( ! empty( $args['role'] ) && $use_custom_settings ) {
 			$role = $args['role'];
-		} else if( $use_global_settings == 1 ) {
+		} else if( ! $use_custom_settings ) {
 			//$role = um_get_option('default_role');
 			$role = get_option( 'default_role' );
 		}

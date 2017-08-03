@@ -292,10 +292,10 @@ if ( ! class_exists( 'Shortcodes' ) ) {
 
             $args = array_merge($post_data, $args);
 
-            if (isset($args['use_globals']) && $args['use_globals'] == 1) {
-                $args = array_merge($args, $this->get_css_args($args));
+            if ( empty( $args['use_custom_settings'] ) ) {
+                $args = array_merge( $args, $this->get_css_args( $args ) );
             } else {
-                $args = array_merge($this->get_css_args($args), $args);
+                $args = array_merge( $this->get_css_args( $args ), $args );
             }
 
             // filter for arguments

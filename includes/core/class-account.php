@@ -277,12 +277,6 @@ if ( ! class_exists( 'Account' ) ) {
             );
             $args = wp_parse_args( $args, $defaults );
 
-            /*if ( isset( $args['use_globals'] ) && $args['use_globals'] == 1 ) {
-                $args = array_merge( $args, $this->get_css_args( $args ) );
-            } else {
-                $args = array_merge( $this->get_css_args( $args ), $args );
-            }*/
-
             $args = apply_filters('um_account_shortcode_args_filter', $args);
 
             extract( $args, EXTR_SKIP );

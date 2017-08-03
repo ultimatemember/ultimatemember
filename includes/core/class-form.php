@@ -283,14 +283,14 @@ if ( ! class_exists( 'Form' ) ) {
          * @param  integer $post_id
          * @return string $role
          */
-        function assigned_role( $post_id ){
+        function assigned_role( $post_id ) {
 
             $mode = $this->form_type( $post_id );
-            $use_globals = get_post_meta( $post_id, "_um_{$mode}_use_globals", true);
+            $use_custom = get_post_meta( $post_id, "_um_{$mode}_use_custom_settings", true );
 
             $global_role = get_option('default_role'); // Form Global settings
 
-            if ( $use_globals == 0 ) { // Non-Global settings
+            if ( $use_custom ) { // Non-Global settings
                 $role = get_post_meta( $post_id, "_um_{$mode}_role", true );
             }
 

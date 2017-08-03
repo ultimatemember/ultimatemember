@@ -272,7 +272,7 @@
 	***/
 	add_action('um_after_profile_header_name_args','um_social_links_icons', 50 );
 	function um_social_links_icons( $args ) {
-		if ( isset($args['show_social_links']) && $args['show_social_links'] ) {
+		if ( ! empty( $args['show_social_links'] ) ) {
 
 			echo '<div class="um-profile-connect um-member-connect">';
 			UM()->fields()->show_social_urls();

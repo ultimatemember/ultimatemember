@@ -159,7 +159,7 @@ if ( ! class_exists( 'Password' ) ) {
             );
             $args = wp_parse_args( $args, $defaults );
 
-            if ( isset( $args['use_globals'] ) && $args['use_globals'] == 1 ) {
+            if ( empty( $args['use_custom_settings'] ) ) {
                 $args = array_merge( $args, $this->get_css_args( $args ) );
             } else {
                 $args = array_merge( $this->get_css_args( $args ), $args );
