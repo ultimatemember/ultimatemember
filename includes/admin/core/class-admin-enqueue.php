@@ -286,6 +286,31 @@ if ( ! class_exists( 'Admin_Enqueue' ) ) {
 
 
         /***
+         ***	@Load functions js
+         ***/
+        function load_functions() {
+
+            wp_register_script('um_functions', um_url . 'assets/js/um-functions' . '.js' );
+            wp_enqueue_script('um_functions');
+
+        }
+
+
+        /***
+         ***	@Load Fonticons
+         ***/
+        function load_fonticons() {
+
+            wp_register_style('um_fonticons_ii', um_url . 'assets/css/um-fonticons-ii.css' );
+            wp_enqueue_style('um_fonticons_ii');
+
+            wp_register_style('um_fonticons_fa', um_url . 'assets/css/um-fonticons-fa.css' );
+            wp_enqueue_style('um_fonticons_fa');
+
+        }
+
+
+        /***
          ***	@Load global css
          ***/
         function load_global_css() {
@@ -361,6 +386,7 @@ if ( ! class_exists( 'Admin_Enqueue' ) ) {
                     UM()->enqueue()->wp_enqueue_scripts();
                 }*/
 
+                $this->load_functions();
                 $this->load_global_css();
                 $this->load_form();
                 $this->load_forms();
@@ -373,6 +399,7 @@ if ( ! class_exists( 'Admin_Enqueue' ) ) {
                 $this->load_core_wp();
                 $this->load_ajax_js();
                 $this->load_custom_scripts();
+                $this->load_fonticons();
 
                 if ( is_rtl() ) {
                     wp_register_style( 'um_admin_rtl', $this->css_url . 'um-admin-rtl.css' );
