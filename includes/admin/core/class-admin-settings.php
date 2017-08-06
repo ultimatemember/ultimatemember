@@ -426,6 +426,25 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                             'title'     => __( 'Uploads', 'ultimate-member' ),
                             'fields'    => array(
                                 array(
+                                    'id'       		=> 'profile_photo_max_size',
+                                    'type'     		=> 'text',
+                                    'size'     		=> 'small',
+                                    'label'    		=> __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
+                                    'tooltip' 	   	=> __( 'Sets a maximum size for the uploaded photo', 'ultimate-member' ),
+                                    'value' 		=> UM()->um_get_option( 'profile_photo_max_size' ),
+                                    'default' 		=> UM()->um_get_default( 'profile_photo_max_size' ),
+                                ),
+
+                                array(
+                                    'id'       		=> 'cover_photo_max_size',
+                                    'type'     		=> 'text',
+                                    'size'     		=> 'small',
+                                    'label'    		=> __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
+                                    'tooltip' 	   	=> __( 'Sets a maximum size for the uploaded cover', 'ultimate-member' ),
+                                    'value' 		=> UM()->um_get_option( 'cover_photo_max_size' ),
+                                    'default' 		=> UM()->um_get_default( 'cover_photo_max_size' ),
+                                ),
+                                array(
                                     'id'       		=> 'photo_thumb_sizes',
                                     'type'     		=> 'multi_text',
                                     'size'     		=> 'small',
@@ -448,7 +467,37 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'show_default_number' => 1,
                                     'value' 		=> UM()->um_get_option( 'cover_thumb_sizes' ),
                                     'default' 		=> UM()->um_get_default( 'cover_thumb_sizes' ),
-                                )
+                                ),
+
+                                array(
+                                    'id'       		=> 'image_compression',
+                                    'type'     		=> 'text',
+                                    'size'     		=> 'small',
+                                    'label'    		=> __( 'Image Quality','ultimate-member'),
+                                    'tooltip' 	   	=> __( 'Quality is used to determine quality of image uploads, and ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file). The default range is 60.', 'ultimate-member' ),
+                                    'value' 		=> UM()->um_get_option( 'image_compression' ),
+                                    'default' 		=> UM()->um_get_default( 'image_compression' ),
+                                ),
+
+                                array(
+                                    'id'       		=> 'image_max_width',
+                                    'type'     		=> 'text',
+                                    'size'     		=> 'small',
+                                    'label'    		=> __( 'Image Upload Maximum Width (px)', 'ultimate-member' ),
+                                    'tooltip' 	   	=> __( 'Any image upload above this width will be resized to this limit automatically.', 'ultimate-member' ),
+                                    'value' 		=> UM()->um_get_option( 'image_max_width' ),
+                                    'default' 		=> UM()->um_get_default( 'image_max_width' ),
+                                ),
+
+                                array(
+                                    'id'       		=> 'cover_min_width',
+                                    'type'     		=> 'text',
+                                    'size'     		=> 'small',
+                                    'label'    		=> __( 'Cover Photo Minimum Width (px)', 'ultimate-member' ),
+                                    'tooltip' 	   	=> __( 'This will be the minimum width for cover photo uploads', 'ultimate-member' ),
+                                    'value' 		=> UM()->um_get_option( 'cover_min_width' ),
+                                    'default' 		=> UM()->um_get_default( 'cover_min_width' ),
+                                ),
                             )
                         )
                     )
@@ -1946,7 +1995,7 @@ Generate Slugs on Directories:	<?php if( um_get_option( 'um_generate_slug_in_dir
 Rewrite Rules: 				<?php if( um_get_option( 'um_flush_stop' ) == 1 ){ echo "No"; }else{ echo "Yes"; } echo "\n"; ?>
 Force UTF-8 Encoding: 		<?php if( um_get_option( 'um_force_utf8_strings' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
 Time Check Security: 			<?php if( um_get_option( 'enable_timebot' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
-JS/CSS Compression: 			<?php if( um_get_option( 'disable_minify' ) == 0 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
+JS/CSS Compression: 			<?php if ( defined('SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) { echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
 <?php if( is_multisite() ): ?>
     Network Structure:			<?php echo um_get_option( 'network_permalink_structure' ). "\n"; ?>
 <?php endif; ?>

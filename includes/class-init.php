@@ -263,6 +263,7 @@ if ( ! class_exists( 'UM' ) ) {
                 $this->users();
                 $this->dragdrop();
             } elseif ( $this->is_request( 'frontend' ) ) {
+                $this->enqueue();
                 $this->rewrite();
                 $this->account();
                 $this->password();
@@ -277,7 +278,6 @@ if ( ! class_exists( 'UM' ) ) {
 
             //common includes
             $this->rest_api();
-            $this->enqueue();
             $this->shortcodes();
             $this->roles();
             $this->user();

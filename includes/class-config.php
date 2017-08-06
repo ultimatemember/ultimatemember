@@ -362,6 +362,11 @@ if ( ! class_exists( 'um\Config' ) ) {
                 'mail_from'                             => get_bloginfo('name'),
                 'mail_from_addr'                        => get_bloginfo('admin_email'),
                 'email_html'                            => 0,
+                'image_compression'                     => 60,
+                'image_max_width'                       => 1000,
+                'cover_min_width'                       => 1000,
+                'profile_photo_max_size'                => 999999999,
+                'cover_photo_max_size'                  => 999999999,
             );
 
             $tabs = UM()->profile()->tabs_primary();

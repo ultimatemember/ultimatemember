@@ -7,6 +7,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 if ( ! class_exists( 'Enqueue' ) ) {
     class Enqueue {
 
+        var $suffix = '';
+
         function __construct() {
 
             add_action('wp_head',  array(&$this, 'wp_head'), 999); // high-priority
@@ -42,6 +44,8 @@ if ( ! class_exists( 'Enqueue' ) ) {
          ***/
         function wp_enqueue_scripts() {
             global $post;
+
+            $this->suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
             $exclude = um_get_option('js_css_exclude');
             if ( is_array( $exclude ) ) {
@@ -95,23 +99,9 @@ if ( ! class_exists( 'Enqueue' ) ) {
                 'ajax_select_options' => UM()->get_ajax_route( 'um\core\Form', 'ajax_select_options' ),
             ) );
 
-            if ( um_get_option( 'disable_minify' ) ) {
 
-                $this->load_original();
-
-                wp_localize_script( 'um_scripts', 'um_scripts', $localize_data );
-
-            } else {
-
-                wp_register_script( 'um_minified', um_url . 'assets/js/um.min.js', array('jquery', 'jquery-masonry'), ultimatemember_version, true );
-                wp_enqueue_script( 'um_minified' );
-
-                wp_localize_script( 'um_minified', 'um_scripts', $localize_data );
-
-                wp_register_style( 'um_minified', um_url . 'assets/css/um.min.css', '', ultimatemember_version, 'all' );
-                wp_enqueue_style( 'um_minified' );
-
-            }
+            $this->load_original();
+            wp_localize_script( 'um_scripts', 'um_scripts', $localize_data );
 
             // rtl style
             if ( is_rtl() ) {
@@ -182,7 +172,7 @@ if ( ! class_exists( 'Enqueue' ) ) {
         /***
          ***	@Include Google charts
          ***/
-        function load_google_charts(){
+        function load_google_charts() {
 
             wp_register_script('um_gchart', 'https://www.google.com/jsapi' );
             wp_enqueue_script('um_gchart');
@@ -214,7 +204,7 @@ if ( ! class_exists( 'Enqueue' ) ) {
         /***
          ***	@Load select-dropdowns JS
          ***/
-        function load_selectjs(){
+        function load_selectjs() {
 
             if ( class_exists( 'WooCommerce' ) ) {
                 wp_dequeue_style( 'select2' );
@@ -250,10 +240,10 @@ if ( ! class_exists( 'Enqueue' ) ) {
          ***/
         function load_fileupload() {
 
-            wp_register_script('um_jquery_form', um_url . 'assets/js/um-jquery-form.js' );
+            wp_register_script('um_jquery_form', um_url . 'assets/js/um-jquery-form' . $this->suffix . '.js' );
             wp_enqueue_script('um_jquery_form');
 
-            wp_register_script('um_fileupload', um_url . 'assets/js/um-fileupload.js' );
+            wp_register_script('um_fileupload', um_url . 'assets/js/um-fileupload' . $this->suffix . '.js' );
             wp_enqueue_script('um_fileupload');
 
             wp_register_style('um_fileupload', um_url . 'assets/css/um-fileupload.css' );
@@ -264,9 +254,9 @@ if ( ! class_exists( 'Enqueue' ) ) {
         /***
          ***	@Load JS functions
          ***/
-        function load_functions(){
+        function load_functions() {
 
-            wp_register_script('um_functions', um_url . 'assets/js/um-functions.js' );
+            wp_register_script('um_functions', um_url . 'assets/js/um-functions' . $this->suffix . '.js' );
             wp_enqueue_script('um_functions');
 
         }
@@ -274,21 +264,21 @@ if ( ! class_exists( 'Enqueue' ) ) {
         /***
          ***	@Load custom JS
          ***/
-        function load_customjs(){
+        function load_customjs() {
 
-            wp_register_script('um_conditional', um_url . 'assets/js/um-conditional.js' );
+            wp_register_script('um_conditional', um_url . 'assets/js/um-conditional' . $this->suffix . '.js' );
             wp_enqueue_script('um_conditional');
 
-            wp_register_script('um_scripts', um_url . 'assets/js/um-scripts.js' );
+            wp_register_script('um_scripts', um_url . 'assets/js/um-scripts' . $this->suffix . '.js' );
             wp_enqueue_script('um_scripts');
 
-            wp_register_script('um_members', um_url . 'assets/js/um-members.js' );
+            wp_register_script('um_members', um_url . 'assets/js/um-members' . $this->suffix . '.js' );
             wp_enqueue_script('um_members');
 
-            wp_register_script('um_profile', um_url . 'assets/js/um-profile.js' );
+            wp_register_script('um_profile', um_url . 'assets/js/um-profile' . $this->suffix . '.js' );
             wp_enqueue_script('um_profile');
 
-            wp_register_script('um_account', um_url . 'assets/js/um-account.js' );
+            wp_register_script('um_account', um_url . 'assets/js/um-account' . $this->suffix . '.js' );
             wp_enqueue_script('um_account');
 
         }
@@ -296,7 +286,7 @@ if ( ! class_exists( 'Enqueue' ) ) {
         /***
          ***	@Load date & time picker
          ***/
-        function load_datetimepicker(){
+        function load_datetimepicker() {
 
             wp_register_script('um_datetime', um_url . 'assets/js/pickadate/picker.js' );
             wp_enqueue_script('um_datetime');
@@ -326,7 +316,7 @@ if ( ! class_exists( 'Enqueue' ) ) {
          ***/
         function load_scrollto(){
 
-            wp_register_script('um_scrollto', um_url . 'assets/js/um-scrollto.js' );
+            wp_register_script('um_scrollto', um_url . 'assets/js/um-scrollto' . $this->suffix . '.js' );
             wp_enqueue_script('um_scrollto');
 
         }
@@ -336,7 +326,7 @@ if ( ! class_exists( 'Enqueue' ) ) {
          ***/
         function load_scrollbar(){
 
-            wp_register_script('um_scrollbar', um_url . 'assets/js/um-scrollbar.js' );
+            wp_register_script('um_scrollbar', um_url . 'assets/js/um-scrollbar' . $this->suffix . '.js' );
             wp_enqueue_script('um_scrollbar');
 
             wp_register_style('um_scrollbar', um_url . 'assets/css/um-scrollbar.css' );
@@ -349,7 +339,7 @@ if ( ! class_exists( 'Enqueue' ) ) {
          ***/
         function load_raty(){
 
-            wp_register_script('um_raty', um_url . 'assets/js/um-raty.js' );
+            wp_register_script('um_raty', um_url . 'assets/js/um-raty' . $this->suffix . '.js' );
             wp_enqueue_script('um_raty');
 
             wp_register_style('um_raty', um_url . 'assets/css/um-raty.css' );
@@ -362,7 +352,7 @@ if ( ! class_exists( 'Enqueue' ) ) {
          ***/
         function load_imagecrop(){
 
-            wp_register_script('um_crop', um_url . 'assets/js/um-crop.js' );
+            wp_register_script('um_crop', um_url . 'assets/js/um-crop' . $this->suffix . '.js' );
             wp_enqueue_script('um_crop');
 
             wp_register_style('um_crop', um_url . 'assets/css/um-crop.css' );
@@ -375,7 +365,7 @@ if ( ! class_exists( 'Enqueue' ) ) {
          ***/
         function load_tipsy(){
 
-            wp_register_script('um_tipsy', um_url . 'assets/js/um-tipsy.js' );
+            wp_register_script('um_tipsy', um_url . 'assets/js/um-tipsy' . $this->suffix . '.js' );
             wp_enqueue_script('um_tipsy');
 
             wp_register_style('um_tipsy', um_url . 'assets/css/um-tipsy.css' );
@@ -391,7 +381,7 @@ if ( ! class_exists( 'Enqueue' ) ) {
             wp_register_style('um_modal', um_url . 'assets/css/um-modal.css' );
             wp_enqueue_style('um_modal');
 
-            wp_register_script('um_modal', um_url . 'assets/js/um-modal.js' );
+            wp_register_script('um_modal', um_url . 'assets/js/um-modal' . $this->suffix . '.js' );
             wp_enqueue_script('um_modal');
 
         }
@@ -401,7 +391,7 @@ if ( ! class_exists( 'Enqueue' ) ) {
          ***/
         function load_responsive(){
 
-            wp_register_script('um_responsive', um_url . 'assets/js/um-responsive.js' );
+            wp_register_script('um_responsive', um_url . 'assets/js/um-responsive' . $this->suffix . '.js' );
             wp_enqueue_script('um_responsive');
 
             wp_register_style('um_responsive', um_url . 'assets/css/um-responsive.css' );

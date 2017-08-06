@@ -357,9 +357,9 @@ if ( ! class_exists( 'Admin_Enqueue' ) ) {
         function admin_enqueue_scripts() {
             if ( $this->is_UM_admin() ) {
 
-                if ( get_post_type() != 'shop_order' ) {
+                /*if ( get_post_type() != 'shop_order' ) {
                     UM()->enqueue()->wp_enqueue_scripts();
-                }
+                }*/
 
                 $this->load_global_css();
                 $this->load_form();

@@ -1,13 +1,26 @@
 /*
   Ultimate Member dependencies
 */
+
+var gulp = require('gulp')
+, uglify = require('gulp-uglify');
+
+// task
+gulp.task( 'minify-js', function () {
+    gulp.src('assets/js/*.js') // path to your files
+        .pipe( uglify() )
+        .pipe( rename({ suffix: '.min' }) )
+        .pipe( gulp.dest( 'assets/js/*' ) );
+});
+
+/*
        var gulp = require('gulp');
     var uglify = require('gulp-uglify');
     var concat = require('gulp-concat');
  var minifyCSS = require('gulp-minify-css');
 
 gulp.task('scripts', function() {
-	
+
     // Concat and Minify
     gulp.src([
         'assets/js/select2/select2.full.min.js',
@@ -35,7 +48,7 @@ gulp.task('scripts', function() {
         .pipe(uglify())
         .pipe(gulp.dest("assets/js"));
 
-   
+
 });
 
 gulp.task('css', function() {
@@ -69,4 +82,4 @@ gulp.task('css', function() {
 gulp.task('default', function() {
   gulp.start('scripts');
   gulp.start('css');
-});
+});*/
