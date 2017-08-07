@@ -61,9 +61,9 @@
 	 *
 	 */
 	add_action('send_password_change_email','um_send_password_change_email');
-	function um_send_password_change_email( $args ){
+	function um_send_password_change_email( $args ) {
 
-		extract(  $args );
+		extract( $args );
 
 		um_fetch_user( $user_id );
 

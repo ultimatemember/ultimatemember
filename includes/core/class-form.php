@@ -181,7 +181,7 @@ if ( ! class_exists( 'Form' ) ) {
                                 $role = current( $_POST['role'] );
                             }
 
-                            if ( isset( $custom_field_roles ) && is_array(  $custom_field_roles ) && ! empty( $role ) && ! in_array( $role , $custom_field_roles ) ) {
+                            if ( /*isset( $custom_field_roles ) && is_array(  $custom_field_roles ) &&*/ ! empty( $role ) && ! in_array( $role , $custom_field_roles ) ) {
                                 wp_die( __( 'This is not possible for security reasons.','ultimate-member') );
                             }
 

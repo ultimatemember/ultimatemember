@@ -567,17 +567,22 @@
 	***	@Check that temp upload is valid
 	***/
 	function um_is_temp_upload( $url ) {
-		$url = explode('/ultimatemember/temp/', $url);
+
+		$url = realpath( $url );
+
+		if ( ! $url )
+			return false;
+
+		$url = explode( '/ultimatemember/temp/', $url );
 		if ( isset( $url[1] ) ) {
 
-			if ( strstr( $url[1], '../' ) || strstr( $url[1], '%' ) ) {
+			if ( strstr( $url[1], '../' ) || strstr( $url[1], '%' ) )
 				return false;
-			}
 
 			$src = UM()->files()->upload_temp . $url[1];
-			if ( !file_exists( $src ) ) {
+			if ( ! file_exists( $src ) )
 				return false;
-			}
+
 			return $src;
 		}
 		return false;

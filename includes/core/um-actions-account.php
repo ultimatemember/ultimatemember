@@ -10,7 +10,7 @@
 		if ( $_POST['user_password'] && $_POST['confirm_user_password'] ) {
 			$changes['user_pass'] = $_POST['user_password'];
 
-			$args['id'] = um_user('ID');
+			$args['user_id'] = um_user('ID');
 
 			do_action('send_password_change_email', $args );
 

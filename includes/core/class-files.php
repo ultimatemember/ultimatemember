@@ -476,8 +476,8 @@ if ( ! class_exists( 'Files' ) ) {
          ***/
         function delete_file( $src ) {
 
-            if ( strstr( $src, '?' ) ){
-                $splitted = explode('?', $src );
+            if ( strstr( $src, '?' ) ) {
+                $splitted = explode( '?', $src );
                 $src = $splitted[0];
             }
 

@@ -24,6 +24,11 @@ require_once( $wp_load );
 $ret['error'] = null;
 $ret = array();
 
+if ( ! is_user_logged_in() ) {
+    $ret['error'] = 'Invalid user';
+    die( json_encode( $ret ) );
+}
+
 $nonce = $_POST['_wpnonce'];
 $id = $_POST['key'];
 $timestamp = $_POST['timestamp'];

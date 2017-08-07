@@ -3,7 +3,7 @@
 	/***
 	***	@redirect wp-admin for non guests
 	***/
-	add_action( 'init', 'um_block_wpadmin_for_guests' );
+/*	add_action( 'init', 'um_block_wpadmin_for_guests' );
 	function um_block_wpadmin_for_guests() {
 		global $pagenow;
 		
@@ -44,13 +44,11 @@
 						$redirect = $custom_url;
 					}
 					
-					/* ---------- */
 					//Add support query string data after user login
 					if($_SERVER['QUERY_STRING']) {
 						$redirect .= '?'.$_SERVER['QUERY_STRING'];
 					}
-					/* ---------- */
-					
+
 					exit( wp_redirect( $redirect ) );
 				}
 			}
@@ -94,13 +92,15 @@
 		}
 
 		
-	}
+	}*/
 	
 	/***
 	***	@checks if user can access the backend
 	***/
 	function um_block_wpadmin_by_user_role() {
-		if ( is_admin() && ! defined('DOING_AJAX') && um_user( 'ID' ) && ! um_user( 'can_access_wpadmin' ) && ! is_super_admin( um_user('ID') ) ) {
+		/*var_dump( is_admin() && ! defined('DOING_AJAX') && um_user( 'ID' ) && ! um_user( 'can_access_wpadmin' ) && ! is_super_admin( um_user('ID') ) );
+        exit;*/
+        if ( is_admin() && ! defined('DOING_AJAX') && um_user( 'ID' ) && ! um_user( 'can_access_wpadmin' ) && ! is_super_admin( um_user('ID') ) ) {
 			um_redirect_home();
 		}
 	}

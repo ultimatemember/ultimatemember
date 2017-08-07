@@ -33,6 +33,16 @@ if ( ! class_exists( 'Common' ) ) {
                     'not_found_in_trash' => __('Nothing found in Trash'),
                     'search_items' => __('Search Forms')
                 ),
+                'capabilities' => array(
+                    'edit_post'          => 'update_core',
+                    'read_post'          => 'update_core',
+                    'delete_post'        => 'update_core',
+                    'edit_posts'         => 'update_core',
+                    'edit_others_posts'  => 'update_core',
+                    'delete_posts'       => 'update_core',
+                    'publish_posts'      => 'update_core',
+                    'read_private_posts' => 'update_core'
+                ),
                 'show_ui' => true,
                 'show_in_menu' => false,
                 'public' => false,
@@ -51,6 +61,16 @@ if ( ! class_exists( 'Common' ) ) {
                         'not_found' => __('You did not create any member directories yet'),
                         'not_found_in_trash' => __('Nothing found in Trash'),
                         'search_items' => __('Search Member Directories')
+                    ),
+                    'capabilities' => array(
+                        'edit_post'          => 'update_core',
+                        'read_post'          => 'update_core',
+                        'delete_post'        => 'update_core',
+                        'edit_posts'         => 'update_core',
+                        'edit_others_posts'  => 'update_core',
+                        'delete_posts'       => 'update_core',
+                        'publish_posts'      => 'update_core',
+                        'read_private_posts' => 'update_core'
                     ),
                     'show_ui' => true,
                     'show_in_menu' => false,

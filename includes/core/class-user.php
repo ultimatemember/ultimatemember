@@ -119,6 +119,9 @@ if ( ! class_exists( 'User' ) ) {
 
             $userdata = get_userdata( $user_id );
 
+            if ( empty( $userdata ) )
+                return UM()->permalinks()->profile_permalink( $profile_slug );
+
             $user_in_url = '';
             // Username
             if ( $permalink_base == 'user_login' ) {
