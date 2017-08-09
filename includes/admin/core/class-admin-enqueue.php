@@ -41,9 +41,9 @@ if ( ! class_exists( 'Admin_Enqueue' ) ) {
             wp_register_script( 'um_admin_role_wrapper', $this->js_url . 'um-admin-role-wrapper.js', '', '', true );
             wp_enqueue_script( 'um_admin_role_wrapper' );
 
-            $localize_data = get_option( 'um_roles' );
+            $localize_roles_data =  get_option( 'um_roles' );
 
-            wp_localize_script( 'um_admin_settings', 'um_roles', $localize_data );
+            wp_localize_script( 'um_admin_settings', 'um_roles', $localize_roles_data );
 
         }
 
@@ -347,6 +347,19 @@ if ( ! class_exists( 'Admin_Enqueue' ) ) {
 
         }
 
+        /**
+         * Load localize scripts
+         */
+        function load_localize_scripts(){
+
+            $localize_data = apply_filters('um_admin_enqueue_localize_data', array( 
+                    'ajaxurl' => admin_url( 'admin-ajax.php' ) 
+                ) 
+            );
+
+            wp_localize_script( 'um_admin_scripts', 'um_admin_scripts', $localize_data );
+        }
+
 
         /***
          ***	@Boolean check if we're viewing UM backend
@@ -400,12 +413,13 @@ if ( ! class_exists( 'Admin_Enqueue' ) ) {
                 $this->load_ajax_js();
                 $this->load_custom_scripts();
                 $this->load_fonticons();
+                $this->load_localize_scripts();
 
                 if ( is_rtl() ) {
                     wp_register_style( 'um_admin_rtl', $this->css_url . 'um-admin-rtl.css' );
                     wp_enqueue_style( 'um_admin_rtl' );
                 }
-
+            
             } else {
 
                 $this->load_global_css();
