@@ -3,10 +3,11 @@
 */
 
 var gulp = require('gulp')
-, uglify = require('gulp-uglify');
+, uglify = require('gulp-uglify'),
+  rename = require("gulp-rename");
 
 // task
-gulp.task( 'minify-js', function () {
+gulp.task( 'default', function () {
     gulp.src('assets/js/*.js') // path to your files
         .pipe( uglify() )
         .pipe( rename({ suffix: '.min' }) )
