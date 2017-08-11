@@ -11,20 +11,11 @@ if ( ! class_exists( 'Enqueue' ) ) {
 
         function __construct() {
 
-            add_action('wp_head',  array(&$this, 'wp_head'), 999); // high-priority
-
             $priority = apply_filters( 'um_core_enqueue_priority', 100 );
             add_action('wp_enqueue_scripts',  array(&$this, 'wp_enqueue_scripts'), $priority );
 
         }
 
-        /***
-         ***	@Enqueue inline css globally
-         ***/
-        function wp_head() {
-            $css = um_get_option('custom_css');
-            if ( !$css ) return; ?><!-- ULTIMATE MEMBER INLINE CSS BEGIN --><style type="text/css"><?php print $this->minify( $css ); ?></style><!-- ULTIMATE MEMBER INLINE CSS END --><?php
-        }
 
         /***
          ***	@Minify css string

@@ -180,11 +180,11 @@ if ( ! class_exists( 'UM' ) ) {
 
                 load_textdomain( $language_domain, $language_file );
 
-                require_once 'um-short-functions.php';
-
                 add_action( 'plugins_loaded', array( &$this, 'init' ), 0 );
                 // init widgets
                 add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
+
+                require_once 'um-short-functions.php';
             }
         }
 

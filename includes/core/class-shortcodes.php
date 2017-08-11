@@ -331,49 +331,49 @@ if ( ! class_exists( 'Shortcodes' ) ) {
             return $output;
         }
 
-        /***
-         ***	@Get dynamic css args
+
+        /**
+         * Get dynamic CSS args
+         *
+         * @param $args
+         * @return array
          */
-        function get_css_args($args) {
-            $arr = um_styling_defaults($args['mode']);
-            $arr = array_merge($arr, array('form_id' => $args['form_id'], 'mode' => $args['mode']));
+        function get_css_args( $args ) {
+            $arr = um_styling_defaults( $args['mode'] );
+            $arr = array_merge( $arr, array( 'form_id' => $args['form_id'], 'mode' => $args['mode'] ) );
             return $arr;
         }
 
-        /***
-         ***	@Load dynamic css
+
+        /**
+         * Load dynamic css
+         *
+         * @param array $args
          */
-        function dynamic_css($args = array()) {
-        extract($args);
+        function dynamic_css( $args = array() ) {
+            extract( $args );
 
-        $global = um_path . 'assets/dynamic_css/dynamic_global.php';
+            include_once um_path . 'assets/dynamic_css/dynamic_global.php';
 
-        if (isset($mode)) {
-            $file = um_path . 'assets/dynamic_css/dynamic_' . $mode . '.php';
+            if ( isset( $mode ) ) {
+                $file = um_path . 'assets/dynamic_css/dynamic_' . $mode . '.php';
+
+                if ( file_exists( $file ) )
+                    include_once $file;
+            }
         }
 
-        include $global;
-
-        if (isset($file) && file_exists($file)) {
-            include $file;
-        }
-
-        if (isset($args['custom_css'])) {
-        $css = $args['custom_css'];
-        ?><!-- ULTIMATE MEMBER FORM INLINE CSS BEGIN --><style type="text/css"><?php print UM()->enqueue()->minify($css);?></style><!-- ULTIMATE MEMBER FORM INLINE CSS END --><?php
-        }
-
-        }
 
         /***
          ***	@Loads a template file
          */
-        function template_load($template, $args = array()) {
-            if (is_array($args)) {
+        function template_load( $template, $args = array() ) {
+            if ( is_array( $args ) ) {
                 UM()->shortcodes()->set_args = $args;
             }
-            UM()->shortcodes()->load_template($template);
+            UM()->shortcodes()->load_template( $template );
         }
+
 
         /***
          ***	@Checks if a template file exists

@@ -485,7 +485,7 @@ if ( ! class_exists( 'Fields' ) ) {
 
             } else {
 
-                if ( !isset( UM()->form()->post_form ) ) {
+                if ( ! isset( UM()->form()->post_form[$key] ) ) {
 
                     $field_value 	= um_user( $key );
 
@@ -530,7 +530,7 @@ if ( ! class_exists( 'Fields' ) ) {
 
                 } else {
 
-                    if ( isset( UM()->form()->post_form[ $key ] ) && $value == UM()->form()->post_form[ $key ] ) {
+                    if ( $value == UM()->form()->post_form[ $key ] ) {
                         return true;
                     }
 
@@ -560,7 +560,7 @@ if ( ! class_exists( 'Fields' ) ) {
 
             } else {
 
-                if ( ! isset( UM()->form()->post_form ) ) {
+                if ( ! isset( UM()->form()->post_form[$key] ) ) {
 
                     if ( um_user( $key ) && $this->editing == true ) {
 
@@ -609,7 +609,7 @@ if ( ! class_exists( 'Fields' ) ) {
 
                 } else {
 
-                    if ( isset( UM()->form()->post_form[$key] ) && $value == UM()->form()->post_form[$key] ) {
+                    if ( $value == UM()->form()->post_form[$key] ) {
                         return true;
                     }
 
@@ -1325,7 +1325,7 @@ if ( ! class_exists( 'Fields' ) ) {
 
                     } else {
 
-                        if ( $this->set_mode == 'account' && um_is_core_page('account') ) {
+                        if ( $this->set_mode == 'account' || um_is_core_page( 'account' ) ) {
 
                             $key = 'current_' . $original_key;
                             $output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="'.$key.'">';

@@ -116,7 +116,7 @@ if ( ! class_exists( 'Password' ) ) {
         /***
          ***	@Add class based on shortcode
          ***/
-        function get_class( $mode ){
+        function get_class( $mode ) {
 
             $classes = 'um-'.$mode;
 
@@ -160,9 +160,9 @@ if ( ! class_exists( 'Password' ) ) {
             $args = wp_parse_args( $args, $defaults );
 
             if ( empty( $args['use_custom_settings'] ) ) {
-                $args = array_merge( $args, $this->get_css_args( $args ) );
+                $args = array_merge( $args, UM()->shortcodes()->get_css_args( $args ) );
             } else {
-                $args = array_merge( $this->get_css_args( $args ), $args );
+                $args = array_merge( UM()->shortcodes()->get_css_args( $args ), $args );
             }
 
             $args = apply_filters('um_reset_password_shortcode_args_filter', $args);
@@ -180,49 +180,18 @@ if ( ! class_exists( 'Password' ) ) {
 
             do_action("um_before_form_is_loaded", $args);
 
-            do_action("um_before_{$mode}_form_is_loaded", $args);
+            do_action( "um_before_{$mode}_form_is_loaded", $args );
 
-            $this->template_load( $template, $args );
+            UM()->shortcodes()->template_load( $template, $args );
 
-            if ( !is_admin() && !defined( 'DOING_AJAX' ) ) {
-                $this->dynamic_css( $args );
+            if ( ! is_admin() && ! defined( 'DOING_AJAX' ) ) {
+                UM()->shortcodes()->dynamic_css( $args );
             }
 
             $output = ob_get_contents();
             ob_end_clean();
             return $output;
 
-        }
-
-        /***
-         ***	@Get dynamic css args
-         ***/
-        function get_css_args( $args ) {
-            $arr = um_styling_defaults( $args['mode'] );
-            $arr = array_merge( $arr, array( 'form_id' => $args['form_id'], 'mode' => $args['mode'] ) );
-            return $arr;
-        }
-
-        /***
-         ***	@Load dynamic css
-         ***/
-        function dynamic_css( $args=array() ) {
-            extract($args);
-            $global = um_path . 'assets/dynamic_css/dynamic_global.php';
-            $file = um_path . 'assets/dynamic_css/dynamic_'.$mode.'.php';
-            include $global;
-            if ( file_exists( $file ) )
-                include $file;
-        }
-
-        /***
-         ***	@Loads a template file
-         ***/
-        function template_load( $template, $args=array() ) {
-            if ( is_array( $args ) ) {
-                UM()->shortcodes()->set_args = $args;
-            }
-            UM()->shortcodes()->load_template( $template );
         }
 
     }
