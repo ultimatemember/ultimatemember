@@ -291,7 +291,7 @@ if ( ! class_exists( 'Account' ) ) {
                 case 'privacy':
 
                     $args = 'profile_privacy,hide_in_members';
-                    $args = apply_filters( 'um_account_tab_privacy_fields', $args );
+                    $args = apply_filters( 'um_account_tab_privacy_fields', $args, $shortcode_args );
 
                     $fields = UM()->builtin()->get_specific_fields( $args );
 
@@ -392,11 +392,11 @@ if ( ! class_exists( 'Account' ) ) {
 
                 <?php }
 
-                do_action( "um_before_account_{$tab_id}" );
+                do_action( "um_before_account_{$tab_id}", $args );
 
                 echo $output;
 
-                do_action( "um_after_account_{$tab_id}" );
+                do_action( "um_after_account_{$tab_id}", $args );
 
                 if ( ! isset( $tab_data['show_button'] ) || false !== $tab_data['show_button'] ) { ?>
 

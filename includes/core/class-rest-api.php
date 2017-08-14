@@ -191,7 +191,7 @@ if ( ! class_exists( 'REST_API' ) ) {
 
             $data = array();
 
-            switch( $query_mode ) :
+            switch( $query_mode ) {
 
                 case 'get.stats':
                     $data = $this->get_stats( $args );
@@ -213,15 +213,11 @@ if ( ! class_exists( 'REST_API' ) ) {
                     $data = $this->delete_user( $args );
                     break;
 
-                case 'get.following':
-                    $data = $this->get_following( $args );
-                    break;
+                default:
+                    $data = apply_filters( 'um_rest_query_mode', $data , $query_mode, $args );
+            }
 
-                case 'get.followers':
-                    $data = $this->get_followers( $args );
-                    break;
 
-            endswitch;
 
             // Allow extensions to setup their own return data
             $this->data = apply_filters( 'um_api_output_data', $data, $query_mode, $this );
@@ -241,7 +237,6 @@ if ( ! class_exists( 'REST_API' ) ) {
             extract( $args );
 
             $response = array();
-            $error = array();
 
             $query = "SELECT COUNT(*) FROM {$wpdb->prefix}users";
             $count = absint( $wpdb->get_var($query) );
@@ -250,32 +245,7 @@ if ( ! class_exists( 'REST_API' ) ) {
             $pending = UM()->user()->get_pending_users_count();
             $response['stats']['pending_users'] = absint( $pending );
 
-            if ( class_exists( 'UM_Notifications_API') ) {
-                $query = "SELECT COUNT(*) FROM {$wpdb->prefix}um_notifications";
-                $total_notifications = absint( $wpdb->get_var( $query ) );
-                $response['stats']['total_notifications'] = $total_notifications;
-            }
-
-            if ( class_exists( 'UM_Messaging_API') ) {
-                $query = "SELECT COUNT(*) FROM {$wpdb->prefix}um_conversations";
-                $total_conversations = absint( $wpdb->get_var( $query ) );
-                $response['stats']['total_conversations'] = $total_conversations;
-
-                $query = "SELECT COUNT(*) FROM {$wpdb->prefix}um_messages";
-                $total_messages = absint( $wpdb->get_var( $query ) );
-                $response['stats']['total_messages'] = $total_messages;
-            }
-
-            if ( class_exists( 'UM_Online_API') ) {
-                $total_online = count( UM()->Online_API()->get_users() );
-                $response['stats']['total_online'] = $total_online;
-            }
-
-            if ( class_exists( 'UM_Reviews_API') ) {
-                $query = "SELECT COUNT(*) FROM {$wpdb->prefix}posts WHERE post_status='publish' AND post_type='um_review'";
-                $total_reviews = absint( $wpdb->get_var( $query ) );
-                $response['stats']['total_reviews'] = $total_reviews;
-            }
+            $response = apply_filters( 'um_rest_api_get_stats', $response );
 
             return $response;
         }
@@ -320,75 +290,6 @@ if ( ! class_exists( 'REST_API' ) ) {
             return $response;
         }
 
-        /**
-         * Process Get followers users API Request
-         */
-        public function get_followers( $args ) {
-            extract( $args );
-
-            $response = array();
-            $error = array();
-
-            if ( !$id ) {
-                $error['error'] = __('You must provide a user ID','ultimate-member');
-                return $error;
-            }
-
-            if ( class_exists( 'UM_Followers_API' ) ) {
-                $results = UM()->Followers_API()->api()->followers( $id );
-                if ( !$results ) {
-                    $error['error'] = __('No users were found','ultimate-member');
-                    return $error;
-                }
-                $response['followers']['count'] = UM()->Followers_API()->api()->count_followers_plain( $id );
-                foreach( $results as $k => $v ) {
-                    $user = get_userdata( $v['user_id2'] );
-                    $response['followers']['users'][$k]['ID'] = $v['user_id2'];
-                    $response['followers']['users'][$k]['username'] = $user->user_login;
-                    $response['followers']['users'][$k]['display_name'] = $user->display_name;
-                }
-            } else {
-                $error['error'] = __('Invalid request','ultimate-member');
-                return $error;
-            }
-
-            return $response;
-        }
-
-        /**
-         * Process Get following users API Request
-         */
-        public function get_following( $args ) {
-            extract( $args );
-
-            $response = array();
-            $error = array();
-
-            if ( !$id ) {
-                $error['error'] = __('You must provide a user ID','ultimate-member');
-                return $error;
-            }
-
-            if ( class_exists( 'UM_Followers_API' ) ) {
-                $results = UM()->Followers_API()->api()->following( $id );
-                if ( !$results ) {
-                    $error['error'] = __('No users were found','ultimate-member');
-                    return $error;
-                }
-                $response['following']['count'] = UM()->Followers_API()->api()->count_following_plain( $id );
-                foreach( $results as $k => $v ) {
-                    $user = get_userdata( $v['user_id1'] );
-                    $response['following']['users'][$k]['ID'] = $v['user_id1'];
-                    $response['following']['users'][$k]['username'] = $user->user_login;
-                    $response['following']['users'][$k]['display_name'] = $user->display_name;
-                }
-            } else {
-                $error['error'] = __('Invalid request','ultimate-member');
-                return $error;
-            }
-
-            return $response;
-        }
 
         /**
          * Process Get users API Request
@@ -442,12 +343,7 @@ if ( ! class_exists( 'REST_API' ) ) {
                         $val->profile_pic_normal = $this->getsrc( um_user('profile_photo', 200) );
                         $val->profile_pic_small = $this->getsrc( um_user('profile_photo', 40) );
                         $val->cover_photo = $this->getsrc( um_user('cover_photo', 1000) );
-
-                        if ( class_exists('UM_Followers_API') ) {
-                            $val->followers_count = UM()->Followers_API()->api()->count_followers_plain( $user->ID );
-                            $val->following_count = UM()->Followers_API()->api()->count_following_plain( $user->ID );
-                        }
-
+                        $val = apply_filters( 'um_rest_userdata', $val, $user->ID );
                     }
                     $response[ $user->ID ] = $val;
                 }
@@ -500,7 +396,7 @@ if ( ! class_exists( 'REST_API' ) ) {
             }
 
             $user = get_userdata( $id );
-            if ( !$user ) {
+            if ( ! $user ) {
                 $error['error'] = __('Invalid user specified','ultimate-member');
                 return $error;
             }
@@ -515,16 +411,15 @@ if ( ! class_exists( 'REST_API' ) ) {
                 $fields = explode(',', $fields );
                 $response['ID'] = $user->ID;
                 $response['username'] = $user->user_login;
-                foreach( $fields as $field ) {
+                foreach ( $fields as $field ) {
 
                     switch( $field ) {
 
                         default:
                             $response[$field] = (  um_profile( $field ) ) ? um_profile( $field ) : '';
-                            break;
 
-                        case 'mycred_points':
-                            $response['mycred_points'] = number_format( (int)get_user_meta( $user->ID, 'mycred_default', true ), 2 );
+                            $response = apply_filters( 'um_rest_get_auser', $response, $field, $user->ID );
+
                             break;
 
                         case 'cover_photo':
@@ -550,13 +445,6 @@ if ( ! class_exists( 'REST_API' ) ) {
                             $response['email'] = um_user('user_email');
                             break;
 
-                        case 'followers':
-                            if ( class_exists('UM_Followers_API') ) {
-                                $response['followers_count'] = UM()->Followers_API()->api()->count_followers_plain( $user->ID );
-                                $response['following_count'] = UM()->Followers_API()->api()->count_following_plain( $user->ID );
-                            }
-                            break;
-
                     }
 
                 }
@@ -574,12 +462,7 @@ if ( ! class_exists( 'REST_API' ) ) {
                         $val->profile_pic_normal = $this->getsrc( um_user('profile_photo', 200) );
                         $val->profile_pic_small = $this->getsrc( um_user('profile_photo', 40) );
                         $val->cover_photo = $this->getsrc( um_user('cover_photo', 1000) );
-
-                        if ( class_exists('UM_Followers_API') ) {
-                            $val->followers_count = UM()->Followers_API()->api()->count_followers_plain( $user->ID );
-                            $val->following_count = UM()->Followers_API()->api()->count_following_plain( $user->ID );
-                        }
-
+                        $val = apply_filters( 'um_rest_userdata', $val, $user->ID );
                     }
                     $response = $val;
                 }

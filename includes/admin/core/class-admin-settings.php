@@ -110,6 +110,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
             );
 
             $tabs = UM()->profile()->tabs_primary();
+
             foreach( $tabs as $id => $tab ) {
                 $appearances_profile_menu_fields = array_merge( $appearances_profile_menu_fields, array(
                     array(
@@ -168,7 +169,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                     'default' 		=> UM()->um_get_default( 'profile_menu_icons' ),
                 )
             ) );
-
 
             $all_post_types = get_post_types( array( 'public' => true ) );
 
