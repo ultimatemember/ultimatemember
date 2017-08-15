@@ -9,10 +9,13 @@
 			<?php do_action('um_profile_header_cover_area', $args ); ?>
 			
 			<?php do_action('um_profile_header', $args ); ?>
-			
-			<?php do_action('um_profile_navbar', $args ); ?>
-			
-			<?php
+
+			<div class="um-profile-navbar <?php echo apply_filters( 'um_profile_navbar_classes', '' ) ?>">
+				<?php do_action( 'um_profile_navbar', $args ); ?>
+				<div class="um-clear"></div>
+			</div>
+
+			<?php do_action( 'um_profile_menu', $args );
 				
 			$nav = UM()->profile()->active_tab;
 			$subnav = ( get_query_var('subnav') ) ? get_query_var('subnav') : 'default';

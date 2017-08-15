@@ -601,8 +601,8 @@
 	/***
 	***	@display the available profile tabs
 	***/
-	add_action('um_profile_navbar', 'um_profile_navbar', 9 );
-	function um_profile_navbar( $args ) {
+	add_action('um_profile_menu', 'um_profile_menu', 9 );
+	function um_profile_menu( $args ) {
 		if ( !um_get_option('profile_menu') )
 			return;
 
