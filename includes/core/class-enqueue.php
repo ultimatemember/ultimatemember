@@ -12,7 +12,7 @@ if ( ! class_exists( 'Enqueue' ) ) {
         function __construct() {
 
             $priority = apply_filters( 'um_core_enqueue_priority', 100 );
-            add_action('wp_enqueue_scripts',  array(&$this, 'wp_enqueue_scripts'), $priority );
+            add_action( 'wp_enqueue_scripts',  array( &$this, 'wp_enqueue_scripts' ), $priority );
 
         }
 
@@ -173,7 +173,7 @@ if ( ! class_exists( 'Enqueue' ) ) {
         /***
          ***	@Load plugin css
          ***/
-        function load_css(){
+        function load_css() {
 
             wp_register_style('um_styles', um_url . 'assets/css/um-styles.css' );
             wp_enqueue_style('um_styles');

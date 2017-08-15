@@ -415,6 +415,17 @@ if ( ! class_exists( 'Admin_Enqueue' ) ) {
                 $this->load_fonticons();
                 $this->load_localize_scripts();
 
+
+                //scripts for frontend preview
+                UM()->enqueue()->load_imagecrop();
+                UM()->enqueue()->load_css();
+                UM()->enqueue()->load_tipsy();
+                UM()->enqueue()->load_modal();
+                UM()->enqueue()->load_responsive();
+
+                wp_register_style('um_default_css', um_url . 'assets/css/um-old-default.css', '', ultimatemember_version, 'all' );
+                wp_enqueue_style('um_default_css');
+
                 if ( is_rtl() ) {
                     wp_register_style( 'um_admin_rtl', $this->css_url . 'um-admin-rtl.css' );
                     wp_enqueue_style( 'um_admin_rtl' );
