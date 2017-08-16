@@ -330,11 +330,44 @@
 	height: 34px;
 	line-height: 34px;
 	transition: all .2s linear;
-	padding: 0px 14px;
+	padding: 0 14px;
 	color: #666 !important;
 	font-weight: normal;
 }
 
 .um-members-pagi a:hover {
 	text-decoration: none !important;
+}
+
+.um-members-edit-btn {
+	margin: 2px 0;
+	height: 40px;
+}
+
+a.um-edit-profile-btn {
+	padding: 10px 15px !important;
+	transition: none !important;
+	display: inline-block !important;
+	margin: 0 auto !important;
+	min-width: 110px;
+	width: auto;
+	text-align: center;
+}
+
+a.um-edit-profile-btn:before {
+	font-family: "FontAwesome";
+	margin-right: 8px;
+	width: 14px;
+	text-align: left;
+	display: inline-block;
+	font-size: 16px;
+	position: relative;
+	left: 0;
+	top: 1px;
+}
+
+a.um-edit-profile-btn:before {content: "\f013"}
+
+a.um-edit-profile-btn {
+	font-size: 13px;
 }

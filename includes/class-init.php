@@ -99,7 +99,9 @@ if ( ! class_exists( 'UM' ) ) {
          * Function for add classes to $this->classes
          * for run using UM()
          *
-         * @param $class_name
+         * @since 2.0
+         *
+         * @param string $class_name
          * @param bool $instance
          */
         public function set_class( $class_name, $instance = false ) {
@@ -130,10 +132,13 @@ if ( ! class_exists( 'UM' ) ) {
 
         /**
          * UM constructor.
+         *
+         * @since 1.0
          */
         function __construct() {
             parent::__construct();
 
+            //register autoloader for include UM classes
             spl_autoload_register( array( $this, 'um__autoloader' ) );
 
             if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
@@ -165,12 +170,7 @@ if ( ! class_exists( 'UM' ) ) {
                     'ar' => 'العربية',
                 );
 
-                $this->includes();
-
-                register_activation_hook( um_plugin, array( &$this, 'activation' ) );
-
-                $language_domain = 'ultimate-member';
-                $language_domain = apply_filters( 'um_language_textdomain', $language_domain );
+                $language_domain = apply_filters( 'um_language_textdomain', 'ultimate-member' );
 
                 $language_locale = ( get_locale() != '' ) ? get_locale() : 'en_US';
                 $language_locale = apply_filters( 'um_language_locale', $language_locale );
@@ -180,15 +180,33 @@ if ( ! class_exists( 'UM' ) ) {
 
                 load_textdomain( $language_domain, $language_file );
 
+
+                // include UM classes
+                $this->includes();
+
+                // include hook files
                 add_action( 'plugins_loaded', array( &$this, 'init' ), 0 );
+
+                //run activation
+                register_activation_hook( um_plugin, array( &$this, 'activation' ) );
+
                 // init widgets
                 add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
 
+
+                //include short non class functions
                 require_once 'um-short-functions.php';
             }
         }
 
 
+        /**
+         * Autoload UM classes handler
+         *
+         * @since 2.0
+         *
+         * @param $class
+         */
         function um__autoloader( $class ) {
             if ( strpos( $class, 'um' ) === 0 ) {
 
@@ -217,6 +235,8 @@ if ( ! class_exists( 'UM' ) ) {
 
         /**
          * Plugin Activation
+         *
+         * @since 2.0
          */
         function activation() {
             //first install
@@ -239,6 +259,8 @@ if ( ! class_exists( 'UM' ) ) {
 
         /**
          * Include required core files used in admin and on the frontend.
+         *
+         * @since 2.0
          *
          * @return void
          */
@@ -292,6 +314,11 @@ if ( ! class_exists( 'UM' ) ) {
         }
 
 
+        /**
+         * @since 2.0
+         *
+         * @return um\core\Common()
+         */
         function common() {
             if ( empty( $this->classes['common'] ) ) {
                 $this->classes['common'] = new um\core\Common();
@@ -300,12 +327,17 @@ if ( ! class_exists( 'UM' ) ) {
         }
 
 
+        /**
+         * @since 2.0
+         */
         function ajax_init() {
             new um\core\AJAX_Common();
         }
 
 
         /**
+         * @since 2.0
+         *
          * @return um\admin\Admin()
          */
         function admin() {
@@ -317,6 +349,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\admin\core\Admin_Menu()
          */
         function admin_menu() {
@@ -328,6 +362,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\admin\core\Admin_Settings()
          */
         function admin_settings() {
@@ -339,6 +375,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\admin\core\Admin_Upgrade()
          */
         function admin_upgrade() {
@@ -350,6 +388,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\admin\core\Admin_Columns()
          */
         function columns() {
@@ -361,6 +401,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\admin\core\Admin_Enqueue()
          */
         function admin_enqueue() {
@@ -372,6 +414,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\admin\core\Admin_Functions()
          */
         function functions() {
@@ -383,6 +427,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\admin\core\Admin_Metabox()
          */
         function metabox() {
@@ -394,6 +440,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\admin\core\Admin_Notices()
          */
         function notices() {
@@ -405,6 +453,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\admin\core\Admin_Users()
          */
         function users() {
@@ -416,6 +466,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\admin\core\Admin_Builder()
          */
         function builder() {
@@ -427,6 +479,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\admin\core\Admin_DragDrop()
          */
         function dragdrop() {
@@ -438,6 +492,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @param $data array
          * @return um\admin\core\Admin_Forms()
          */
@@ -451,6 +507,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\Dependencies
          */
         function dependencies() {
@@ -463,6 +521,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\Config
          */
         function config() {
@@ -475,6 +535,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\REST_API
          */
         function rest_api() {
@@ -487,6 +549,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Rewrite
          */
         function rewrite() {
@@ -499,6 +563,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Setup
          */
         function setup() {
@@ -511,6 +577,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\FontIcons
          */
         function fonticons() {
@@ -523,6 +591,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Login
          */
         function login() {
@@ -535,6 +605,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Register
          */
         function register() {
@@ -547,6 +619,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Enqueue
          */
         function enqueue() {
@@ -559,6 +633,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Shortcodes
          */
         function shortcodes() {
@@ -571,6 +647,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Account
          */
         function account() {
@@ -583,6 +661,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Password
          */
         function password() {
@@ -595,6 +675,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Form
          */
         function form() {
@@ -607,6 +689,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Fields
          */
         function fields() {
@@ -619,6 +703,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\User
          */
         function user() {
@@ -631,6 +717,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Roles_Capabilities
          */
         function roles() {
@@ -643,6 +731,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\User_posts
          */
         function user_posts() {
@@ -655,6 +745,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Profile
          */
         function profile() {
@@ -667,6 +759,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Query
          */
         function query() {
@@ -679,6 +773,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Date_Time
          */
         function datetime() {
@@ -691,6 +787,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Chart
          */
         function chart() {
@@ -703,6 +801,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Builtin
          */
         function builtin() {
@@ -715,6 +815,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Files
          */
         function files() {
@@ -727,6 +829,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Validation
          */
         function validation() {
@@ -739,6 +843,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Menu
          */
         function menu() {
@@ -751,6 +857,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Access
          */
         function access() {
@@ -763,6 +871,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Permalinks
          */
         function permalinks() {
@@ -775,6 +885,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Mail
          */
         function mail() {
@@ -787,6 +899,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Members
          */
         function members() {
@@ -799,6 +913,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Logout
          */
         function logout() {
@@ -811,6 +927,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Modal
          */
         function modal() {
@@ -823,6 +941,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Cron
          */
         function cron() {
@@ -835,6 +955,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\core\Tracking
          */
         function tracking() {
@@ -847,6 +969,8 @@ if ( ! class_exists( 'UM' ) ) {
 
 
         /**
+         * @since 2.0
+         *
          * @return um\lib\mobiledetect\Mobile_Detect
          */
         function mobile() {
@@ -858,8 +982,10 @@ if ( ! class_exists( 'UM' ) ) {
         }
 
 
-        /***
-         ***	@Init
+        /**
+         * Include files with hooked filters/actions
+         *
+         * @since 2.0
          */
         function init() {
 
@@ -899,6 +1025,12 @@ if ( ! class_exists( 'UM' ) ) {
 
         }
 
+
+        /**
+         * Init UM widgets
+         *
+         * @since 2.0
+         */
         function widgets_init() {
             register_widget( 'um\widgets\UM_Search_Widget' );
         }
@@ -907,6 +1039,13 @@ if ( ! class_exists( 'UM' ) ) {
 }
 
 
+/**
+ * Function for calling UM methods and variables
+ *
+ * @since 2.0
+ *
+ * @return UM
+ */
 function UM() {
     return UM::instance();
 }

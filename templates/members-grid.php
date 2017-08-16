@@ -37,9 +37,15 @@
 						<div class="um-member-name"><a href="<?php echo um_user_profile_url(); ?>" title="<?php echo esc_attr(um_user('display_name')); ?>"><?php echo um_user('display_name', 'html'); ?></a></div>
 						<?php } ?>
 						
-						<?php do_action('um_members_just_after_name', um_user('ID'), $args); ?>
-						
-						<?php do_action('um_members_after_user_name', um_user('ID'), $args); ?>
+						<?php do_action('um_members_just_after_name', um_user('ID'), $args ); ?>
+
+						<?php if ( UM()->roles()->um_current_user_can( 'edit', um_user('ID') ) || UM()->roles()->um_user_can( 'can_edit_everyone' ) ) { ?>
+							<div class="um-members-edit-btn">
+								<a href="<?php echo um_edit_profile_url() ?>" class="um-edit-profile-btn um-button um-alt"><?php _e( 'Edit profile','ultimate-member' ) ?></a>
+							</div>
+						<?php }
+
+						do_action('um_members_after_user_name', um_user('ID'), $args); ?>
 						
 						<?php
 						if ( $show_tagline && is_array( $tagline_fields ) ) {
