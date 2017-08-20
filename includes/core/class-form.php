@@ -285,12 +285,16 @@ if ( ! class_exists( 'Form' ) ) {
          */
         function assigned_role( $post_id ) {
 
+            $global_role = get_option( 'default_role' ); // WP Global settings
+
+            $um_global_role = um_get_option( 'register_role' ); // UM Settings Global settings
+            if ( ! empty( $um_global_role ) )
+                $global_role = $um_global_role; // Form Global settings
+
+
             $mode = $this->form_type( $post_id );
             $use_custom = get_post_meta( $post_id, "_um_{$mode}_use_custom_settings", true );
-
-            $global_role = get_option('default_role'); // Form Global settings
-
-            if ( $use_custom ) { // Non-Global settings
+            if ( $use_custom ) { // Custom Form settings
                 $role = get_post_meta( $post_id, "_um_{$mode}_role", true );
             }
 
@@ -299,7 +303,6 @@ if ( ! class_exists( 'Form' ) ) {
             }
 
             return $role;
-
         }
 
         /**

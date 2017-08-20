@@ -12,6 +12,6 @@
 
 	<a href="#" data-role="login"><?php _e('Login Form','ultimate-member'); ?></a>
 	
-	<input type="hidden" name="_um_mode" id="_um_mode" value="<?php echo UM()->query()->get_meta_value('_um_mode', null, 'register' ); ?>" />
+	<input type="hidden" name="form[_um_mode]" id="form__um_mode" value="<?php echo UM()->query()->get_meta_value( '_um_mode', null, 'register' ); ?>" />
 	
 </div><div class="um-admin-clear"></div>

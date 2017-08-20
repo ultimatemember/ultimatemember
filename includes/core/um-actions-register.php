@@ -245,7 +245,7 @@
 
 		do_action( 'um_before_new_user_register', $args );
 
-		$default_role = get_option( 'default_role', true );
+		$user_role = UM()->form()->assigned_role( UM()->form()->form_id );
 /*		if ( empty( $default_role ) )
 			$default_role = get_option( 'default_role' );*/
 
@@ -253,7 +253,7 @@
 			'user_login'	=> $user_login,
 			'user_pass'		=> $user_password,
 			'user_email'	=> $user_email,
-			'role'			=> $default_role,
+			'role'			=> $user_role,
 		);
 		$user_id = wp_insert_user( $userdata );
 

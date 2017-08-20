@@ -3,7 +3,7 @@ jQuery(document).ready(function() {
 	/* Default form tab */
 	if ( jQuery('.um-admin-boxed-links').length > 0 ) {
 
-		var tab = jQuery('.um-admin-boxed-links a[data-role="'+jQuery('input#_um_mode').val()+'"]');
+		var tab = jQuery('.um-admin-boxed-links a[data-role="'+jQuery('input#form__um_mode').val()+'"]');
 			
 		tab.parents('.um-admin-boxed-links').find('a').removeClass('um-admin-activebg');
 		tab.addClass('um-admin-activebg');
@@ -13,7 +13,7 @@ jQuery(document).ready(function() {
 		jQuery('div#um-admin-form-mode,div#um-admin-form-title,div#um-admin-form-builder,div#um-admin-form-shortcode').show();
 		jQuery('div[id^="um-admin-form-'+tab.data('role')+'"]').show();
 		jQuery('.empty-container').css({'border' : 'none'});
-		jQuery('.um-admin-builder').removeClass().addClass( 'um-admin-builder ' + jQuery('input#_um_mode').val() );
+		jQuery('.um-admin-builder').removeClass().addClass( 'um-admin-builder ' + jQuery('input#form__um_mode').val() );
 		
 	}
 	
@@ -29,9 +29,9 @@ jQuery(document).ready(function() {
 		jQuery('#submitdiv').show();
 		jQuery('div#um-admin-form-mode,div#um-admin-form-title,div#um-admin-form-builder,div#um-admin-form-shortcode').show();
 		jQuery('div[id^="um-admin-form-'+tab.data('role')+'"]').show();
-		jQuery('input#_um_mode').val( tab.data('role') );
+		jQuery('input#form__um_mode').val( tab.data('role') );
 		jQuery('.empty-container').css({'border' : 'none'});
-		jQuery('.um-admin-builder').removeClass().addClass( 'um-admin-builder ' + jQuery('input#_um_mode').val() );
+		jQuery('.um-admin-builder').removeClass().addClass( 'um-admin-builder ' + jQuery('input#form__um_mode').val() );
 
 	});
 
