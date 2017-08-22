@@ -737,8 +737,8 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             $name = $field_data['id'];
             $name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
 
-            $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
-            $values = ( '' !== $field_data['value'] ) ? $field_data['value'] : $default;
+            $default = isset( $field_data['default'] ) ? $field_data['default'] : array();
+            $values = ( isset( $field_data['value'] ) && '' !== $field_data['value'] ) ? $field_data['value'] : $default;
 
             $i = 0;
             $html = '';
