@@ -557,6 +557,10 @@ class UM_Files {
 		// copy & overwrite file
 			
 		if( in_array( $key , array('profile_photo','cover_photo') ) ){
+			// Add a salted hash to the file extension so that the profile photo URLs are not guessable (salt is added inside wp_hash)
+			// This hash is later extracted by um_get_avatar_extension($filename) from the filename stored in the database under profile_photo.
+			// We could also use a random string instead of the hash, but then old images would not be deleted.
+			$ext = '.' . wp_hash('ultimate-member-photo-' . $user_id . '-' . $key) . $ext;
 			$filename = $key . $ext;
 			$name = $key;
 		}else{

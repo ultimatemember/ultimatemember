@@ -1357,7 +1357,7 @@
 	function um_get_cover_uri( $image, $attrs ) {
 		global $ultimatemember;
 		$uri = false;
-		$ext = '.' . pathinfo($image, PATHINFO_EXTENSION);
+		$ext = um_get_avatar_extension($image);
 		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/cover_photo'.$ext ) ) {
 			$uri = um_user_uploads_uri() . 'cover_photo'.$ext.'?' . current_time( 'timestamp' );
 		}
@@ -1375,6 +1375,30 @@
 		return $matches[1];
 	}
 
+	/**
+	* @function um_get_avatar_extension()
+	*
+	* @description get file extension of avatar or cover photo
+	*
+	* @param $image (string) Image filename, path or URI, e.g., "/somewhere/something.extension.jpg"
+	*
+	* @returns File extension including dot prefixes, e.g., ".extension.jpg", or ".unknown" if it cannot be determined.
+	* Dot prefixes are included to allow for a secret hash against URL guessing (e.g., profile_photo.4242af1234.jpg).
+	*
+	* @note For backward compatibility with 1.3, this function must also work with plain filenames such as profile_photo.jpg without any prefixes.
+	**/
+	function um_get_avatar_extension($image) {
+		$last_slash = strrpos($image, "/"); // get start position of filename (/profile_photo.hash1234.jpg)
+		$first_dot_in_filename = strpos($image, ".", $last_slash); // get everything starting from the first dot (.hash1234.jpg)
+		if ($first_dot_in_filename === FALSE) {
+			// filename contains no dots -- empty string or invalid
+			$ext = ".unknown";
+		} else {
+			$ext = substr($image, $first_dot_in_filename);
+		}
+		return $ext;
+	}
+	
 	/***
 	***	@get avatar uri
 	***/
@@ -1382,7 +1406,7 @@
 		global $ultimatemember;
 		$uri = false;
 		$find = false;
-		$ext = '.' . pathinfo($image, PATHINFO_EXTENSION);
+		$ext = um_get_avatar_extension($image);
 
 		$cache_time = apply_filters('um_filter_avatar_cache_time', current_time( 'timestamp' ), um_user('ID') );
 		
