@@ -1134,3 +1134,36 @@ foreach ( $forms as $form_id ) {
         }
     }
 }
+
+
+/**
+ * Transferring email templates to new logic
+ */
+$emails = UM()->config()->email_notifications;
+foreach ( $emails as $email_key => $value ) {
+
+    $in_theme = UM()->mail()->template_in_theme( $email_key, true );
+    $theme_template_path = UM()->mail()->get_template_file( 'theme', $email_key );
+
+    if ( ! $in_theme ) {
+        $setting_value = um_get_option( $email_key );
+
+        UM()->mail()->copy_email_template( $email_key );
+
+        $fp = fopen( $theme_template_path, "w" );
+        $result = fputs( $fp, $setting_value );
+        fclose( $fp );
+    } else {
+        $theme_template_path_html = UM()->mail()->get_template_file( 'theme', $email_key, true );
+
+        $setting_value = preg_replace( '/<\/body>|<\/head>|<html>|<\/html>|<body.*?>|<head.*?>/' , '', file_get_contents( $theme_template_path_html ) );
+
+        if ( file_exists( $theme_template_path_html ) ) {
+            if ( copy( $theme_template_path_html, $theme_template_path ) ) {
+                $fp = fopen( $theme_template_path, "w" );
+                $result = fputs( $fp, $setting_value );
+                fclose( $fp );
+            }
+        }
+    }
+}
