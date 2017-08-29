@@ -1,6 +1,6 @@
-<html>
-<body style="background: #f2f2f2;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;">
+<?php
 
+?>
 <div style="max-width: 560px;padding: 20px;background: #ffffff;border-radius: 5px;margin:40px auto;font-family: Open Sans,Helvetica,Arial;font-size: 15px;color: #666;">
 
 	<div style="color: #444444;font-weight: normal;">
@@ -35,6 +35,3 @@
 	</div>
 
 </div>
-
-</body>
-</html>

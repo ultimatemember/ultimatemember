@@ -139,6 +139,21 @@ textarea.um-forms-field.um-small-field {
     .um-form-table.um-third-column .um-forms-line th,
     .um-form-table.um-half-column .um-forms-line th,
     .um-form-table.um-two-thirds-column .um-forms-line th {
+        float:left;
+        width: 100%;
+    }
+
+    .um-form-table.um-third-column .um-forms-line td,
+    .um-form-table.um-half-column .um-forms-line td,
+    .um-form-table.um-two-thirds-column .um-forms-line td {
+        float:left;
+        width: 100%;
+    }
+
+    .um-form-table.um-third-column .um-forms-line th label,
+    .um-form-table.um-half-column .um-forms-line th label,
+    .um-form-table.um-two-thirds-column .um-forms-line th label {
+        float:left;
         width: 100%;
     }
 }

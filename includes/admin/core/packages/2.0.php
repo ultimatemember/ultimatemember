@@ -910,7 +910,7 @@ um_remove_option( 'profile_header_icon_hcolor' );
 //remove duplicates for UM Pages settings
 delete_option( 'um_core_pages' );
 
-
+global $wpdb;
 
 //UM Roles to WP Roles
 //all UM Roles from post type
@@ -1109,6 +1109,9 @@ foreach ( $all_taxonomies as $key => $taxonomy ) {
 
 
 //for metadata for all UM forms
+//"use_global" meta  change to "_use_custom_settings"
+
+//also update for forms metadata where "member" or "admin"
 $forms = get_posts( array(
     'post_type'     => 'um_form',
     'numberposts'   => -1,
@@ -1124,5 +1127,10 @@ foreach ( $forms as $form_id ) {
 
         update_post_meta( $form_id, "_um_{$form_type}_use_custom_settings", $use_custom_settings );
         delete_post_meta( $form_id, "_um_{$form_type}_use_globals" );
+
+        $role = get_post_meta( $form_id, "_um_{$form_type}_role", true );
+        if ( $role ) {
+            update_post_meta( $form_id, "_um_{$form_type}_role", 'um_' . $role );
+        }
     }
 }

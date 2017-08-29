@@ -84,7 +84,9 @@
 	 */
 	add_action('um_post_registration_listener', 'um_post_registration_listener', 10, 2);
 	function um_post_registration_listener( $user_id, $args ) {
-        if ( um_user('status') != 'pending' ) {
+		um_fetch_user( $user_id );
+
+		if ( um_user( 'status' ) != 'pending' ) {
 			UM()->mail()->send( um_admin_email(), 'notification_new_user', array( 'admin' => true ) );
 		} else {
 			UM()->mail()->send( um_admin_email(), 'notification_review', array( 'admin' => true ) );

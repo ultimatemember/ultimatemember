@@ -5,37 +5,6 @@
 		return 'text/html';
 	}
 
-	function UM_Mail( $user_id_or_email = 1, $subject_line = 'Email Subject', $template, $path = null, $args = array() ) {
-
-		if ( absint( $user_id_or_email ) ) {
-			$user = get_userdata( $user_id_or_email );
-			$email = $user->user_email;
-		} else {
-			$email = $user_id_or_email;
-		}
-
-		$headers = 'From: '. um_get_option('mail_from') .' <'. um_get_option('mail_from_addr') .'>' . "\r\n";
-		$attachments = null;
-
-		if ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/email/' . get_locale() . '/' . $template . '.html' ) ) {
-			$path_to_email = get_stylesheet_directory() . '/ultimate-member/templates/email/' . get_locale() . '/' . $template . '.html';
-		} else if ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/email/' . $template . '.html' ) ) {
-			$path_to_email = get_stylesheet_directory() . '/ultimate-member/templates/email/' . $template . '.html';
-		} else {
-			$path_to_email = $path . $template . '.html';
-		}
-
-		if ( um_get_option('email_html') ) {
-			$message = file_get_contents( $path_to_email );
-			add_filter( 'wp_mail_content_type', 'um_mail_content_type' );
-		} else {
-			$message = ( um_get_option('email-' . $template ) ) ? um_get_option('email-' . $template ) : 'Untitled';
-		}
-
-		$message = um_convert_tags( $message, $args );
-		wp_mail( $email, $subject_line, $message, $headers, $attachments );
-	}
-
 	/***
 	***	@Trim string by char length
 	***/
@@ -568,7 +537,8 @@
 	***/
 	function um_is_temp_upload( $url ) {
 
-		$url = realpath( $url );
+		if ( filter_var( $url, FILTER_VALIDATE_URL ) === false )
+			$url = realpath( $url );
 
 		if ( ! $url )
 			return false;

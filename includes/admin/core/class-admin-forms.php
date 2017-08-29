@@ -888,5 +888,58 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             return $html;
         }
 
+
+        function render_email_template( $field_data ) {
+            if ( empty( $field_data['id'] ) )
+                return false;
+
+            $id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+
+            $class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
+            $class .= ! empty( $field_data['size'] ) ? $field_data['size'] : 'um-long-field';
+
+            $data = array(
+                'field_id' => $field_data['id']
+            );
+
+            $data_attr = '';
+            foreach ( $data as $key => $value ) {
+                $data_attr .= " data-{$key}=\"{$value}\" ";
+            }
+
+            $name = $field_data['id'];
+            $name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+
+            $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
+            $value = isset( $field_data['value'] ) ? $field_data['value'] : $default;
+
+            ob_start(); ?>
+
+            <div class="email_template_wrapper <?php echo $field_data['in_theme'] ? 'in_theme' : '' ?>" data-key="<?php echo $field_data['id'] ?>" style="position: relative;">
+<!--                <input type="button" class="reset_email_template button" value="--><?php //_e( 'Reset Template to Default', 'ultimate-member' ) ?><!--" />-->
+                <!--<div class="copy_button_overlay">
+                    <span><?php /*_e( 'Currently UM use default Email Template, you can edit this template after then you copy in to theme', 'ultimate-member' ) */?></span>
+                    <input type="button" class="copy_email_template button" value="<?php /*_e( 'Copy Template to Theme', 'ultimate-member' ) */?>" />
+                </div>-->
+
+                <?php wp_editor( $value,
+                    $id,
+                    array(
+                        'textarea_name' => $name,
+                        'textarea_rows' => 20,
+                        'editor_height' => 425,
+                        'wpautop'       => false,
+                        'media_buttons' => false,
+                        'editor_class'  => $class
+                    )
+                ); ?>
+
+            </div>
+
+            <?php $html = ob_get_clean();
+
+            return $html;
+        }
+
     }
 }

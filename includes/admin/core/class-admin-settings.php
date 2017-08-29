@@ -40,6 +40,9 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
             add_action( 'um_settings_save', array( $this, 'on_settings_save' ) );
 
 
+            add_filter( 'um_change_settings_before_save', array( $this, 'save_email_templates' ) );
+
+
             //save licenses options
             add_action( 'um_settings_before_save', array( $this, 'before_licenses_save' ) );
             add_action( 'um_settings_save', array( $this, 'licenses_save' ) );
@@ -1466,7 +1469,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
             foreach ( $_POST['um_options'] as $key => $value ) {
                 $edd_action = '';
                 $license_key = '';
-                if ( empty( $this->previous_licenses[$key] ) && ! empty( $value ) ) {
+                if ( empty( $this->previous_licenses[$key] ) && ! empty( $value ) || ( ! empty( $this->previous_licenses[$key] ) && ! empty( $value ) && $this->previous_licenses[$key] != $value ) ) {
                     $edd_action = 'activate_license';
                     $license_key = $value;
                 } elseif ( ! empty( $this->previous_licenses[$key] ) && empty( $value ) ) {
@@ -1567,12 +1570,19 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
             if ( empty( $email_key ) || empty( $emails[$email_key] ) )
                 return $section;
 
+            $in_theme = UM()->mail()->template_in_theme( $email_key );
+
             $section_fields = array(
+                array(
+                    'id'            => 'um_email_template',
+                    'type'          => 'hidden',
+                    'value' 		=> $email_key,
+                ),
                 array(
                     'id'            => $email_key . '_on',
                     'type'          => 'checkbox',
                     'label'         => $emails[$email_key]['title'],
-                    'tooltip'   => $emails[$email_key]['description'],
+                    'tooltip'       => $emails[$email_key]['description'],
                     'value' 		=> UM()->um_get_option( $email_key . '_on' ),
                     'default' 		=> UM()->um_get_default( $email_key . '_on' ),
                 ),
@@ -1586,13 +1596,14 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                     'default' 		=> UM()->um_get_default( $email_key . '_sub' ),
                 ),
                 array(
-                    'id'       => $email_key,
-                    'type'     => 'wp_editor',
-                    'label'    => __( 'Message Body','ultimate-member' ),
-                    'conditional' => array( $email_key . '_on', '=', 1 ),
-                    'tooltip' 	   => __('This is the content of the e-mail','ultimate-member'),
-                    'value' 		=> UM()->um_get_option( $email_key ),
+                    'id'            => $email_key,
+                    'type'          => 'email_template',
+                    'label'         => __( 'Message Body','ultimate-member' ),
+                    'conditional'   => array( $email_key . '_on', '=', 1 ),
+                    'tooltip' 	    => __('This is the content of the e-mail','ultimate-member'),
+                    'value' 		=> UM()->mail()->get_email_template( $email_key ),
                     'default' 		=> UM()->um_get_default( $email_key ),
+                    'in_theme'      => $in_theme
                 ),
             );
 
@@ -2267,168 +2278,31 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
         }
 
 
-        /**
-         * Render HTML for settings field
-         *
-         * @param $data
-         * @return string
-         */
-        function render_setting_field( $data ) {
-            if ( empty( $data['type'] ) )
-                return '';
+        function save_email_templates( $settings ) {
 
-            $conditional = ! empty( $data['conditional'] ) ? 'data-conditional="' . esc_attr( json_encode( $data['conditional'] ) ) . '"' : '';
+            if ( empty( $settings['um_email_template'] ) )
+                return $settings;
 
-            $html = '';
-            if ( $data['type'] != 'hidden' )
-                $html .= '<tr class="um-settings-line" ' . $conditional . '><th><label for="um_options_' . $data['id'] . '">' . $data['label'] . '</label></th><td>';
+            $template = $settings['um_email_template'];
+            $content = stripslashes( $settings[$template] );
 
+            $theme_template_path = UM()->mail()->get_template_file( 'theme', $template );
 
-            $option_value = UM()->um_get_option( $data['id'] );
-            $default = ! empty( $data['default'] ) ? $data['default'] : UM()->um_get_default( $data['id'] );
-
-            switch ( $data['type'] ) {
-                case 'hidden':
-                    $value = ! empty( $option_value ) ? $option_value : $default;
-
-                    if ( empty( $data['is_option'] ) )
-                        $html .= '<input type="hidden" id="' . $data['id'] . '" name="' . $data['id'] . '" value="' . $value . '" />';
-                    else
-                        $html .= '<input type="hidden" id="um_options_' . $data['id'] . '" name="um_options[' . $data['id'] . ']" value="' . $value . '" class="um-option-field" data-field_id="' . $data['id'] . '" />';
-
-                    break;
-                case 'text':
-                    $value = ! empty( $option_value ) ? $option_value : $default;
-                    $field_length = ! empty( $data['size'] ) ? $data['size'] : 'um-long-field';
-
-                    $html .= '<input type="text" id="um_options_' . $data['id'] . '" name="um_options[' . $data['id'] . ']" value="' . $value . '" class="um-option-field ' . $field_length . '" data-field_id="' . $data['id'] . '" />';
-                    break;
-                case 'multi-text':
-                    $values = ! empty( $option_value ) ? $option_value : $default;
-
-                    $html .= '<ul class="um-multi-text-list" data-field_id="' . $data['id'] . '">';
-
-                    if ( ! empty( $values ) ) {
-                        foreach ( $values as $k=>$value ) {
-                            $html .= '<li class="um-multi-text-option-line"><input type="text" id="um_options_' . $data['id'] . '-' . $k . '" name="um_options[' . $data['id'] . '][]" value="' . $value . '" class="um-option-field" data-field_id="' . $data['id'] . '" />
-                                    <a href="javascript:void(0);" class="um-option-delete">' . __( 'Remove', 'ultimate-member' ) . '</a></li>';
-                        }
-                    }
-
-                    $html .= '</ul><a href="javascript:void(0);" class="button button-primary um-multi-text-add-option" data-name="um_options[' . $data['id'] . '][]">' . $data['add_text'] . '</a>';
-                    break;
-                case 'textarea':
-                    $value = ! empty( $option_value ) ? $option_value : $default;
-                    $field_length = ! empty( $data['size'] ) ? $data['size'] : 'um-long-field';
-
-                    $html .= '<textarea id="um_options_' . $data['id'] . '" name="um_options[' . $data['id'] . ']" rows="6" class="um-option-field ' . $field_length . '" data-field_id="' . $data['id'] . '">' . $value . '</textarea>';
-                    break;
-                case 'wp_editor':
-                    $value = ! empty( $option_value ) ? $option_value : $default;
-
-                    ob_start();
-                    wp_editor( $value,
-                        'um_options_' . $data['id'],
-                        array(
-                            'textarea_name' => 'um_options[' . $data['id'] . ']',
-                            'textarea_rows' => 20,
-                            'editor_height' => 425,
-                            'wpautop'       => false,
-                            'media_buttons' => false,
-                            'editor_class'  => 'um-option-field'
-                        )
-                    );
-
-                    $html .= ob_get_clean();
-                    break;
-                case 'checkbox':
-                    $value = ( '' !== $option_value ) ? $option_value : $default;
-
-                    $html .= '<input type="hidden" id="um_options_' . $data['id'] . '_hidden" name="um_options[' . $data['id'] . ']" value="0" /><input type="checkbox" ' . checked( $value, true, false ) . ' id="um_options_' . $data['id'] . '" name="um_options[' . $data['id'] . ']" value="1" class="um-option-field" data-field_id="' . $data['id'] . '" />';
-                    break;
-                case 'multi-checkbox':
-                    $value = ( '' !== $option_value ) ? $option_value : $default;
-                    $columns = ! empty( $data['columns'] ) ? $data['columns'] : 1;
-
-                    $per_column = ceil( count( $data['options'] ) / $columns );
-
-                    $html .= '<div class="multi-checkbox-line">';
-
-                    $current_option = 1;
-                    $iter = 1;
-                    foreach ( $data['options'] as $key=>$option ) {
-                        if ( $current_option == 1 )
-                            $html .= '<div class="multi-checkbox-column" style="width:' . floor( 100/$columns ) . '%;">';
-
-                        $html .= '<input type="hidden" id="um_options_' . $data['id'] . '_' . $key . '_hidden" name="um_options[' . $data['id'] . '][' . $key . ']" value="0" />
-                        <label><input type="checkbox" ' . checked( $value[$key], true, false ) . ' id="um_options_' . $data['id'] . '" name="um_options[' . $data['id'] . '][' . $key . ']" value="1" class="um-option-field" data-field_id="' . $data['id'] . '" />' . $option . '</label>';
-
-                        if ( $current_option == $per_column || $iter == count( $data['options'] ) ) {
-                            $current_option = 1;
-                            $html .= '</div>';
-                        } else {
-                            $current_option++;
-                        }
-
-                        $iter++;
-                    }
-
-                    $html .= '</div>';
-
-                    break;
-                case 'selectbox':
-                    $value = ! empty( $option_value ) ? $option_value : $default;
-
-                    $html .= '<select ' . ( ! empty( $data['multi'] ) ? 'multiple' : '' ) . ' id="um_options_' . $data['id'] . '" name="um_options[' . $data['id'] . ']' . ( ! empty( $data['multi'] ) ? '[]' : '' ) . '" class="um-option-field" data-field_id="' . $data['id'] . '">';
-                    foreach ( $data['options'] as $key=>$option ) {
-                        if ( ! empty( $data['multi'] ) ) {
-                            $html .= '<option value="' . $key . '" ' . selected( in_array( $key, $value ), true, false ) . '>' . $option . '</option>';
-                        } else {
-                            $html .= '<option value="' . $key . '" ' . selected( $key == $value, true, false ) . '>' . $option . '</option>';
-                        }
-                    }
-                    $html .= '</select>';
-
-                    break;
-                case 'media':
-                    $upload_frame_title = ! empty( $data['upload_frame_title'] ) ? $data['upload_frame_title'] : __( 'Select media', 'ultimate-member' );
-                    $value = ! empty( $option_value ) ? $option_value : $default;
-
-                    $image_id = ! empty( $value['id'] ) ? $value['id'] : '';
-                    $image_width = ! empty( $value['width'] ) ? $value['width'] : '';
-                    $image_height = ! empty( $value['height'] ) ? $value['height'] : '';
-                    $image_thumbnail = ! empty( $value['thumbnail'] ) ? $value['thumbnail'] : '';
-                    $image_url = ! empty( $value['url'] ) ? $value['url'] : '';
-
-                    $data_default = ! empty( $default ) ? 'data-default="' .  esc_attr( $default['url'] ) .'"' : '';
-
-                    $html .= '<div class="um-media-upload">' .
-                        '<input type="hidden" class="um-media-upload-data-id" name="um_options[' . $data['id'] . '][id]" id="um_options_' . $data['id'] . '_id" value="' . $image_id . '">' .
-                        '<input type="hidden" class="um-media-upload-data-width" name="um_options[' . $data['id'] . '][width]" id="um_options_' . $data['id'] . '_width" value="' . $image_width . '">' .
-                        '<input type="hidden" class="um-media-upload-data-height" name="um_options[' . $data['id'] . '][height]" id="um_options_' . $data['id'] . '_height" value="' . $image_height . '">' .
-                        '<input type="hidden" class="um-media-upload-data-thumbnail" name="um_options[' . $data['id'] . '][thumbnail]" id="um_options_' . $data['id'] . '_thumbnail" value="' . $image_thumbnail . '">' .
-                        '<input type="hidden" class="um-option-field um-media-upload-data-url" name="um_options[' . $data['id'] . '][url]" id="um_options_' . $data['id'] . '_url" value="' . $image_url . '" data-field_id="' . $data['id'] . '" ' .  $data_default . '>';
-
-                    if ( ! isset( $data['preview'] ) || $data['preview'] !== false ) {
-                        $html .= '<img src="' . ( ! empty( $value['url'] ) ? $value['url'] : '' ) . '" alt="" class="icon_preview"><div style="clear:both;"></div>';
-                    }
-
-                    if ( ! empty( $data['url'] ) ) {
-                        $html .= '<input type="text" class="um-media-upload-url" readonly value="' . $image_url . '" /><div style="clear:both;"></div>';
-                    }
-
-                    $html .= '<input type="button" class="um-set-image button button-primary" value="' . __( 'Select', 'ultimate-member' ) . '" data-upload_frame="' . $upload_frame_title . '" />
-                    <input type="button" class="um-clear-image button" value="' . __( 'Clear', 'ultimate-member' ) . '" /></div>';
-                    break;
+            $in_theme = UM()->mail()->template_in_theme( $template );
+            if ( ! $in_theme ) {
+                UM()->mail()->copy_email_template( $template );
             }
 
-            if ( ! empty( $data['description'] ) )
-                $html .= '<div class="description">' . $data['description'] . '</div>';
+            $fp = fopen( $theme_template_path, "w" );
+            $result = fputs( $fp, $content );
+            fclose( $fp );
 
-            $html .= '</td></tr>';
+            if ( $result !== false ) {
+                unset( $settings['um_email_template'] );
+                unset( $settings[$template] );
+            }
 
-            return $html;
+            return $settings;
         }
-
     }
 }

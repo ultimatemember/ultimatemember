@@ -1,6 +1,6 @@
-<html>
-<body style="background: #f2f2f2;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;">
+<?php
 
+?>
 <div style="max-width: 560px;padding: 20px;background: #ffffff;border-radius: 5px;margin:40px auto;font-family: Open Sans,Helvetica,Arial;font-size: 15px;color: #666;">
 
 	<div style="color: #444444;font-weight: normal;">
@@ -11,9 +11,9 @@
 	
 	<div style="padding: 0 30px 30px 30px;border-bottom: 3px solid #eeeeee;">
 
-		<div style="padding: 30px 0;font-size: 24px;text-align: center;line-height: 40px;">Your account has been deleted.<span style="display: block;">All your personal details and any uploads have been permanently removed.</span></div>
+		<div style="padding: 30px 0;font-size: 24px;text-align: center;line-height: 40px;">Thank you for signing up!<span style="display: block;">Your account has to be manually reviewed.</span></div>
 		
-		<div style="padding: 15px;background: #eee;border-radius: 3px;text-align: center;">If your account has been deleted by accident please <a href="mailto:{admin_email}" style="color: #3ba1da;text-decoration: none">contact us</a>.</div>
+		<div style="padding: 15px;background: #eee;border-radius: 3px;text-align: center;">Please allow us some time to process your request and review your information.</div>
 		
 	</div>
 	
@@ -25,6 +25,3 @@
 	</div>
 
 </div>
-
-</body>
-</html>

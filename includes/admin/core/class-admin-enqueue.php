@@ -169,6 +169,7 @@ if ( ! class_exists( 'Admin_Enqueue' ) ) {
             wp_enqueue_script( 'um_admin_settings' );
 
             $localize_data = array(
+                'delete_email_template' => UM()->get_ajax_route( 'um\core\Mail', 'delete_email_template' ),
                 'onbeforeunload_text' => __( 'Are sure, maybe some settings not saved', 'ultimate-member' ),
                 'texts' => array(
                     'remove' => __( 'Remove', 'ultimate-member' ),

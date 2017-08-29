@@ -746,9 +746,9 @@ if ( ! class_exists( 'User' ) ) {
          *
          *
          */
-        function pending(){
-            $this->set_status('awaiting_admin_review');
-            UM()->mail()->send( um_user('user_email'), 'pending_email' );
+        function pending() {
+            $this->set_status( 'awaiting_admin_review' );
+            UM()->mail()->send( um_user( 'user_email' ), 'pending_email' );
         }
 
         /**

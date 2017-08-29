@@ -66,7 +66,7 @@
                 'type'		=> 'textarea',
                 'name'		=> '_um_checkmail_message',
                 'label'    		=> __( 'Personalize the custom message', 'ultimate-member' ),
-                'value' 		=> ! empty( $role['_um_checkmail_message'] ) ? $role['_um_checkmail_message'] : '',
+                'value' 		=> ! empty( $role['_um_checkmail_message'] ) ? $role['_um_checkmail_message'] : __('Thank you for registering. Before you can login we need you to activate your account by clicking the activation link in the email we just sent you.','ultimate-member'),
                 'conditional'	=> array( '_um_checkmail_action', '=', 'show_message' )
             ),
             array(
@@ -104,7 +104,7 @@
                 'type'		=> 'textarea',
                 'name'		=> '_um_pending_message',
                 'label'    		=> __( 'Personalize the custom message', 'ultimate-member' ),
-                'value' 		=> ! empty( $role['_um_pending_message'] ) ? $role['_um_pending_message'] : '',
+                'value' 		=> ! empty( $role['_um_pending_message'] ) ? $role['_um_pending_message'] : __('Thank you for applying for membership to our site. We will review your details and send you an email letting you know whether your application has been successful or not.','ultimate-member'),
                 'conditional'	=> array( '_um_pending_action', '=', 'show_message' )
             ),
             array(
