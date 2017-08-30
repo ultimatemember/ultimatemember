@@ -187,3 +187,8 @@ textarea.um-forms-field.um-small-field {
     height: auto;
     width: auto !important;
 }
+
+
+.um-forms-line[data-conditional] {
+    display: none;
+}

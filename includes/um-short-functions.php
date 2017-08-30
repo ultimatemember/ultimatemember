@@ -272,12 +272,12 @@
 					break;
 					case 'empty':
 
-						$state = ( $field ) ? 1 : 0;
+						$state = ( ! $field ) ? 1 : 0;
 
 					break;
 					case 'not empty':
 
-						$state = ( ! $field ) ? 1 : 0;
+						$state = ( $field ) ? 1 : 0;
 
 					break;
 					case 'greater than':
@@ -336,12 +336,12 @@
 					break;
 					case 'empty':
 
-						$state = ( $field ) ? 0 : 1;
+						$state = ( ! $field ) ? 0 : 1;
 
 					break;
 					case 'not empty':
 
-						$state = ( ! $field ) ? 0 : 1;
+						$state = ( $field ) ? 0 : 1;
 
 					break;
 					case 'greater than': 
