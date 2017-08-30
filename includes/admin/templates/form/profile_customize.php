@@ -77,12 +77,16 @@
 			),
 			array(
 				'id'		    => '_um_profile_secondary_btn',
-				'type'		    => 'checkbox',
+				'type'		    => 'select',
 				'label'    		=> __( 'Show Secondary Button', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_profile_secondary_btn', null, 1 ),
-				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 )
+				'value' 		=> UM()->query()->get_meta_value( '_um_profile_secondary_btn', null, um_get_option( 'profile_secondary_btn' ) ),
+				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 ),
+                'options'		=> array(
+                    0	=> __( 'No', 'ultimate-member' ),
+                    1	=> __( 'Yes', 'ultimate-member' ),
+                ),
 			),
-			array(
+            array(
 				'id'		    => '_um_profile_secondary_btn_word',
 				'type'		    => 'text',
 				'label'    		=> __( 'Primary Button Text', 'ultimate-member' ),

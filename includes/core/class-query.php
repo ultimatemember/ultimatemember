@@ -258,15 +258,21 @@ if ( ! class_exists( 'Query' ) ) {
             return $array;
         }
 
-        /***
-         ***	@Capture selected value
-         ***/
+        /**
+         * Capture selected value
+         *
+         * @param $key
+         * @param null $array_key
+         * @param null $fallback
+         * @return int|mixed|null|string
+         */
         function get_meta_value( $key, $array_key = null, $fallback = null ) {
             global $post;
             $post_id = get_the_ID();
             $try = get_post_meta( $post_id, $key, true );
 
-            if ( ! empty( $try ) )
+            //old version if ( ! empty( $try ) )
+            if ( false !== $try )
                 if ( is_array( $try ) && in_array( $array_key, $try ) ) {
                     return $array_key;
                 } else if ( is_array( $try ) ) {
@@ -275,13 +281,13 @@ if ( ! class_exists( 'Query' ) ) {
                     return $try;
                 }
 
-            if ($fallback == 'na') {
+            if ( $fallback == 'na' ) {
                 $fallback = 0;
                 $none = '';
             } else {
                 $none = 0;
             }
-            return (!empty($fallback)) ? $fallback : $none;
+            return ! empty( $fallback ) ? $fallback : $none;
         }
 
         /***

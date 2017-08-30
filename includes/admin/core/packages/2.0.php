@@ -1167,3 +1167,31 @@ foreach ( $emails as $email_key => $value ) {
         }
     }
 }
+
+
+/**
+ * Transferring menu restriction data
+ */
+$menus = get_posts( array(
+    'post_type' => 'nav_menu_item',
+    'meta_query' => array(
+        array(
+            'key' => 'menu-item-um_nav_roles',
+            'compare' => 'EXISTS',
+        )
+    )
+) );
+
+foreach ( $menus as $menu ) {
+    $menu_roles = get_post_meta( $menu->ID, 'menu-item-um_nav_roles', true );
+
+    $menu_roles = array_map( function( $item ) {
+        if ( strpos( $item, 'um_' ) === 0 )
+            return $item;
+
+        return 'um_' . $item;
+    }, $menu_roles );
+
+    update_post_meta( $menu->ID, 'menu-item-um_nav_roles', $menu_roles );
+}
+
