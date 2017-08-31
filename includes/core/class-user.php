@@ -64,6 +64,8 @@ if ( ! class_exists( 'User' ) ) {
 
             add_action( 'user_register', array( &$this, 'user_register_via_admin' ), 10, 1 );
 
+            add_action( 'user_register', array( &$this, 'set_gravatar' ), 11, 1 );
+
         }
 
 
@@ -212,11 +214,16 @@ if ( ! class_exists( 'User' ) ) {
             if ( empty( $user_id ) )
                 return;
 
-
             if ( is_admin() ) {
+                //if there custom 2 role not empty
+                if ( ! empty( $_POST['um-role'] ) ) {
+                    $user = get_userdata( $user_id );
+                    $user->add_role( $_POST['um-role'] );
+                    UM()->user()->profile['role'] = $_POST['um-role'];
+                    UM()->user()->update_usermeta_info( 'role' );
+                }
 
-                do_action( 'um_after_new_user_register', $user_id, $_POST );
-
+                do_action( 'um_user_register', $user_id, $_POST );
             }
 
         }
@@ -230,7 +237,7 @@ if ( ! class_exists( 'User' ) ) {
 
             if ( ! empty( $_POST['um-role'] ) ) {
                 if ( ! user_can( $user_id, $_POST['um-role'] ) )
-                    UM()->roles()->set_um_user_role( $user_id, $_POST['um-role'] );
+                    UM()->roles()->set_role( $user_id, $_POST['um-role'] );
             }
 
             $this->remove_cache( $user_id );
@@ -311,7 +318,7 @@ if ( ! class_exists( 'User' ) ) {
          ***	@Remove cached queue from Users backend
          ***/
         function remove_cached_queue() {
-            delete_option('um_cached_users_queue');
+            delete_option( 'um_cached_users_queue' );
         }
 
         /***
@@ -1029,6 +1036,7 @@ if ( ! class_exists( 'User' ) ) {
 
         }
 
+
         /***
          ***	@update profile
          ***/
@@ -1187,6 +1195,8 @@ if ( ! class_exists( 'User' ) ) {
                 return $user_id;
             }
         }
+
+
         /**
          * @function user_exists_by_email_as_username()
          *
@@ -1224,19 +1234,23 @@ if ( ! class_exists( 'User' ) ) {
             return $user_id;
         }
 
+
         /**
          * Set gravatar hash id
+         *
+         * @param $user_id
+         * @return string
          */
-        function set_gravatar( $user_id ){
+        function set_gravatar( $user_id ) {
 
             um_fetch_user( $user_id );
-            $email_address = um_user('user_email');
+            $email_address = um_user( 'user_email' );
             $hash_email_address = '';
 
-            if( $email_address ){
+            if ( $email_address ) {
                 $hash_email_address = md5( $email_address );
                 $this->profile['synced_gravatar_hashed_id'] = $hash_email_address;
-                $this->update_usermeta_info('synced_gravatar_hashed_id');
+                $this->update_usermeta_info( 'synced_gravatar_hashed_id' );
             }
 
             return $hash_email_address;

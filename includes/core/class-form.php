@@ -8,6 +8,7 @@ if ( ! class_exists( 'Form' ) ) {
     class Form {
 
         public $form_suffix;
+        var $form_id;
 
         function __construct() {
 

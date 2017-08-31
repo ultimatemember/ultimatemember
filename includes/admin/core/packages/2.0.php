@@ -990,11 +990,11 @@ if ( ! empty( $um_roles ) ) {
     $all_users = get_users( $args );
     //update roles for users
     foreach ( $all_users as $k => $user ) {
-        $user_roleID = get_user_meta( $user->ID, 'role', true );
+        $role_slug = get_user_meta( $user->ID, 'role', true );
 
-        if ( ! empty( $user_roleID ) ) {
-            $userdata = get_userdata( $user->ID );
-            $userdata->add_role( 'um_' . $user_roleID );
+        if ( ! empty( $role_slug ) ) {
+            $user_object = get_userdata( $user->ID );
+            $user_object->add_role( 'um_' . $role_slug );
         }
     }
 }

@@ -98,8 +98,6 @@
 	***	@checks if user can access the backend
 	***/
 	function um_block_wpadmin_by_user_role() {
-		/*var_dump( is_admin() && ! defined('DOING_AJAX') && um_user( 'ID' ) && ! um_user( 'can_access_wpadmin' ) && ! is_super_admin( um_user('ID') ) );
-        exit;*/
         if ( is_admin() && ! defined('DOING_AJAX') && um_user( 'ID' ) && ! um_user( 'can_access_wpadmin' ) && ! is_super_admin( um_user('ID') ) ) {
 			um_redirect_home();
 		}

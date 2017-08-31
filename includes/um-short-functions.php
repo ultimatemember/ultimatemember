@@ -1360,10 +1360,13 @@
 		return $uri;
 	}
 
-	/***
-	***	@default avatar
-	***/
-	function um_get_default_avatar_uri( $user_id = '' ) {
+
+	/**
+	 * Default avatar URL
+	 *
+	 * @return string
+	 */
+	function um_get_default_avatar_uri() {
 		$uri = um_get_option( 'default_avatar' );
 		$uri = ! empty( $uri['url'] ) ? $uri['url'] : '';
 		if ( ! $uri ) {
@@ -1372,14 +1375,17 @@
 
 			//http <-> https compatibility default avatar option of SSL was changed
 			$url_array = parse_url( $uri );
-			$setting_url = $url_array['scheme'] . '://' . $url_array['host'];
-			if ( $setting_url != site_url() )
-				$uri = str_replace( $setting_url, site_url(), $uri );
-		}
 
+			if ( is_ssl() && $url_array['scheme'] == 'http' ) {
+				$uri = str_replace( 'http://', 'https://', $uri );
+			} elseif ( ! is_ssl() && $url_array['scheme'] == 'https' ) {
+				$uri = str_replace( 'https://', 'http://', $uri );
+			}
+		}
 
 		return $uri;
 	}
+
 
 	/***
 	***	@get user avatar url
@@ -1616,7 +1622,7 @@
 				} elseif( um_user('synced_profile_photo') ){
 						$avatar_uri = um_user('synced_profile_photo');
 				} else {
-						$avatar_uri = um_get_default_avatar_uri( um_user('ID') );
+						$avatar_uri = um_get_default_avatar_uri();
 				}
 
 				$avatar_uri = apply_filters('um_user_avatar_url_filter', $avatar_uri, um_user('ID') );

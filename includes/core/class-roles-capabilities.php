@@ -72,7 +72,7 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
          * @uses apply_filters() Calls 'um_set_user_role' with the role and user id
          * @return string
          */
-        function set_um_user_role( $user_id = 0, $new_role = '' ) {
+        function set_role( $user_id, $new_role = '' ) {
             // Validate user id
             $user = get_userdata( $user_id );
 
@@ -103,9 +103,9 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
 
                     UM()->user()->profile['role'] = $new_role;
 
-                    do_action('um_member_role_upgrade', $role,  UM()->user()->profile['role'] );
+                    do_action( 'um_member_role_upgrade', $role, UM()->user()->profile['role'] );
 
-                    UM()->user()->update_usermeta_info('role');
+                    UM()->user()->update_usermeta_info( 'role' );
 
                     do_action('um_after_user_role_is_changed');
 
@@ -281,64 +281,5 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
                 return true;
             return false;
         }
-
-/*
-        /**
-         * @param $cap
-         * @param bool $value
-         * @param string $struct
-         * @return bool
-         *
-        function current_user_can( $cap, $value = true, $struct = 'string' ) {
-            if ( ! is_user_logged_in() )
-                return false;
-
-            $user_id = get_current_user_id();
-            return $this->user_can( $user_id, $cap, $value, $struct );
-        }
-
-
-        /**
-         * @param $user_id
-         * @param $cap
-         * @param bool $value
-         * @param string $struct
-         * @return bool
-         *
-        function user_can( $user_id, $cap, $value = true, $struct = 'string' ) {
-
-
-            $role = $this->um_get_user_role( $user_id );
-            $role_meta = $this->role_data( $role );
-            $role_meta = apply_filters( 'um_user_permissions_filter', $role_meta, $user_id );
-
-            /*            $um_roles = get_option( 'um_roles' );
-                        $um_roles = array_map( function( $item ) {
-                            return 'um_' . $item;
-                        }, $um_roles );
-
-                        $user_meta = get_userdata( $user_id );
-                        $user_roles = $user_meta->roles;
-
-                        $user_um_role = array_intersect( $um_roles, $user_roles );
-                        if ( ! count( $user_um_role ) )
-                            return false;
-
-                        $user_um_role = $user_um_role[0];
-                        $role_meta = get_option( "um_role_" . substr( $user_um_role, 3 ) . "_meta" );*
-
-            if ( empty( $role_meta[$cap] ) )
-                return false;
-
-            if ( $struct == 'array' ) {
-                if ( is_array( $role_meta[$cap] ) && ! in_array( $value, $role_meta[$cap] ) )
-                    return false;
-            } else {
-                if ( $role_meta[$cap] != $value )
-                    return false;
-            }
-
-            return true;
-        }*/
     }
 }

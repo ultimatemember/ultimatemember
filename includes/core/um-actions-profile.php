@@ -556,13 +556,13 @@
 	/***
 	***	@form processing
 	***/
-	add_action('um_submit_form_profile', 'um_submit_form_profile', 10);
-	function um_submit_form_profile($args){
+	add_action( 'um_submit_form_profile', 'um_submit_form_profile', 10 );
+	function um_submit_form_profile( $args ) {
 
-		if ( !isset( UM()->form()->errors) ) do_action('um_user_edit_profile', $args);
+		if ( isset( UM()->form()->errors ) )
+		    return false;
 
-		do_action('um_user_profile_extra_hook', $args );
-
+        do_action( 'um_user_edit_profile', $args );
 	}
 
 	/***

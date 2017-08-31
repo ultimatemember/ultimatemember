@@ -28,62 +28,41 @@
 		um_fetch_user( $user_id );
 
 		UM()->user()->pending();
-		
 	}
 
 
 	/**
-	 * After adding a new user
+	 * After insert a new user
+	 * run at frontend and backend
+	 *
+	 * @param $user_id
+	 * @param $args
 	 */
-	add_action( 'um_after_new_user_register', 'um_after_new_user_register', 10, 2 );
-	function um_after_new_user_register( $user_id, $args ) {
-		global $pagenow;
+	function um_after_insert_user( $user_id, $args ) {
+        //clear Users cached queue
+        UM()->user()->remove_cached_queue();
 
-		um_fetch_user( $user_id );
-
-		if ( ! isset( $args['role'] ) )
-			$args['role'] = get_option( 'default_role', true );
-
-		if ( $pagenow != 'user-new.php' && ! array_key_exists( $args['role'], UM()->roles()->get_roles( false, array( 'admin' ) ) ) )
-			$args['role'] = get_option( 'default_role', true );
-
-		if ( ! user_can( $user_id, $args['role'] ) )
-			UM()->roles()->set_um_user_role( $user_id, $args['role'] );
-
-		if ( ! empty( $args['submitted'] ) )
+        if ( ! empty( $args['submitted'] ) ) {
+            um_fetch_user( $user_id );
 			UM()->user()->set_registration_details( $args['submitted'] );
+		}
 
-		//UM()->user()->set_last_login();
+		do_action( 'um_registration_set_extra_data', $user_id, $args );
 
-		UM()->user()->remove_cached_queue();
-
-		do_action( 'um_post_registration_save', $user_id, $args );
-
-		//send notification about registration
-		do_action( 'um_post_registration_listener', $user_id, $args );
-
-		do_action( 'um_post_registration', $user_id, $args );
-
+		//redirects handlers at 100 priority, you can add some info before redirects
+        //after complete UM user registration
+        do_action( 'um_registration_complete', $user_id, $args );
 	}
-
-	/**
-	 * Update user's profile after registration
-	 */
-	add_action( 'um_post_registration_save', 'um_post_registration_save', 10, 2 );
-	function um_post_registration_save( $user_id, $args ) {
-		unset( $args['user_id'] );
-		$args['_user_id'] = $user_id;
-		$args['is_signup'] = 1;
-
-		do_action( 'um_user_edit_profile', $args );
-	}
+	add_action( 'um_user_register', 'um_after_insert_user', 10, 2 );
 
 
-	/**
-	 * Post-registration admin listener
-	 */
-	add_action('um_post_registration_listener', 'um_post_registration_listener', 10, 2);
-	function um_post_registration_listener( $user_id, $args ) {
+    /**
+     * Send notification about registration
+     *
+     * @param $user_id
+     * @param $args
+     */
+	function um_send_registration_notification( $user_id, $args ) {
 		um_fetch_user( $user_id );
 
 		if ( um_user( 'status' ) != 'pending' ) {
@@ -91,39 +70,18 @@
 		} else {
 			UM()->mail()->send( um_admin_email(), 'notification_review', array( 'admin' => true ) );
 		}
-
 	}
+    add_action( 'um_registration_complete', 'um_send_registration_notification', 10, 2 );
 
 
-	/**
-	 * Post-registration procedure
-	 */
-	add_action('um_post_registration', 'um_post_registration', 10, 2);
-	function um_post_registration( $user_id, $args ) {
-		unset( $args['user_id'] );
-		extract( $args );
-
+    /**
+     * Check user status and redirect it after registration
+     *
+     * @param $user_id
+     * @param $args
+     */
+	function um_check_user_status( $user_id, $args ) {
         $status = um_user( 'status' );
-
-        /*
-         * maybe in future
-         * if ( ! is_admin() ) {
-            um_fetch_user( $user_id );
-
-            $user_roles = UM()->roles()->um_get_user_role( $user_id );
-            var_dump(  $user_roles );
-            $role_meta = UM()->roles()->role_data( $user_roles );
-            var_dump( $role_meta );
-            if ( $role_meta['_um_status'] == 'approved' ) {
-                UM()->user()->approve();
-            } elseif ( $role_meta['_um_status'] == 'checkmail' ) {
-                UM()->user()->email_pending();
-            } elseif ( $role_meta['_um_status'] == 'pending' ) {
-                UM()->user()->pending();
-            }
-
-            $status = um_user( 'status' );
-        }*/
 
         do_action( "um_post_registration_{$status}_hook", $user_id, $args );
 
@@ -164,7 +122,7 @@
 					$url  = UM()->permalinks()->get_current_url();
 					$url  = add_query_arg( 'message', esc_attr( $status ), $url );
 					$url  = add_query_arg( 'um_role', esc_attr( um_user( 'role' ) ), $url );
-					$url  = add_query_arg( 'um_form_id', esc_attr( $form_id ), $url );
+					$url  = add_query_arg( 'um_form_id', esc_attr( $args['form_id'] ), $url );
 
 					exit( wp_redirect( $url ) );
 				}
@@ -174,18 +132,24 @@
 		}
 
 	}
+    add_action( 'um_registration_complete', 'um_check_user_status', 100, 2 );
 
 
 	/**
-	 * New user registration
+	 * Registration form submit handler
+	 *
+	 * @param $args
+	 * @return bool|int|WP_Error
 	 */
-	add_action( 'um_user_registration', 'um_user_registration', 10 );
-	function um_user_registration( $args ) {
-        unset( $args['user_id'] );
+	function um_submit_form_register( $args ) {
+		if ( isset( UM()->form()->errors ) )
+			return false;
+
+        $args = apply_filters( 'um_add_user_frontend_submitted', $args );
 
 		extract( $args );
 
-		if ( isset( $username ) && ! isset( $args['user_login'] ) ) {
+		if ( isset( $username ) && ! isset( $user_login ) ) {
 			$user_login = $username;
 		}
 
@@ -227,29 +191,22 @@
 			$user_password = UM()->validation()->generate( 8 );
 		}
 
-
 		if ( ! isset( $user_email ) ) {
 			$site_url = @$_SERVER['SERVER_NAME'];
 			$user_email = 'nobody' . $unique_userID . '@' . $site_url;
-			$user_email = apply_filters( "um_user_register_submitted__email", $user_email );
+			$user_email = apply_filters( 'um_user_register_submitted__email', $user_email );
 		}
 
-		$creds['user_login'] = $user_login;
-		$creds['user_password'] = $user_password;
-		$creds['user_email'] = trim( $user_email );
+		$credentials = array(
+			'user_login'	=> $user_login,
+			'user_password'	=> $user_password,
+			'user_email'	=> trim( $user_email ),
+		);
 
-		$args = apply_filters('um_add_user_frontend_submitted', $args );
-
-		$args['submitted'] = array_merge( $args['submitted'], $creds );
-		$args = array_merge( $args, $creds );
-
-		unset( $args['user_id'] );
-
-		do_action( 'um_before_new_user_register', $args );
+		$args['submitted'] = array_merge( $args['submitted'], $credentials );
+		$args = array_merge( $args, $credentials );
 
 		$user_role = UM()->form()->assigned_role( UM()->form()->form_id );
-/*		if ( empty( $default_role ) )
-			$default_role = get_option( 'default_role' );*/
 
 		$userdata = array(
 			'user_login'	=> $user_login,
@@ -259,20 +216,12 @@
 		);
 		$user_id = wp_insert_user( $userdata );
 
-		do_action( 'um_after_new_user_register', $user_id, $args );
+		do_action( 'um_user_register', $user_id, $args );
 
 		return $user_id;
-
 	}
-
-	/**
-	 * Form Processing
-	 */
 	add_action( 'um_submit_form_register', 'um_submit_form_register', 10 );
-	function um_submit_form_register( $args ) {
-		if ( ! isset( UM()->form()->errors ) )
-		    do_action( 'um_user_registration', $args );
-	}
+
 
 	/**
 	 * Register user with predefined role in options
@@ -346,12 +295,4 @@
 	function um_add_register_fields($args){
 		echo UM()->fields()->display( 'register', $args );
 
-	}
-
-	/**
-	 * Set user gravatar with user_email
-	 */
-	add_action('user_register','um_user_register_generate_gravatar');
-	function um_user_register_generate_gravatar( $user_id ){
-		UM()->user()->set_gravatar( $user_id );
 	}

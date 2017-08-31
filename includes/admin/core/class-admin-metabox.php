@@ -1896,7 +1896,7 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                     <div class="um-admin-tri">
 
                         <p><label for="_editable">Can user edit this field? <?php UM()->tooltip( __( 'This option allows you to set whether or not the user can edit the information in this field.', 'ultimate-member' ) ); ?></label>
-                            <input type="checkbox" name="_editable" id="_editable" value="1" <?php checked( isset( $this->edit_mode_value ) ? $this->edit_mode_value : 0 ) ?> />
+                            <input type="checkbox" name="_editable" id="_editable" value="1" <?php checked( null === $this->edit_mode_value || $this->edit_mode_value ) ?> />
                         </p>
 
                     </div>
