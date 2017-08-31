@@ -22,8 +22,7 @@
 	add_action('um_when_role_is_set', 'um_remove_prev_synced_wp_role');
 	function um_remove_prev_synced_wp_role( $user_id ) {
 		um_fetch_user( $user_id );
-		$role = um_user('role');
-		$meta = UM()->roles()->role_data( $role );
+		$meta = UM()->roles()->role_data( um_user( 'role' ) );
 		if ( isset( $meta['synced_role'] ) && $meta['synced_role'] ) {
 			$wp_user_object = new WP_User( $user_id );
 			$wp_user_object->remove_role( $meta['synced_role'] );

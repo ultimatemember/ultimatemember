@@ -278,11 +278,6 @@ if ( ! class_exists( 'Admin_Enqueue' ) ) {
             wp_register_style( 'um_admin_misc', $this->css_url . 'um-admin-misc.css' );
             wp_enqueue_style( 'um_admin_misc' );
 
-            if ( get_post_type() != 'shop_order' ) {
-                wp_register_style( 'um_admin_select2', $this->css_url . 'um-admin-select2.css' );
-                wp_enqueue_style( 'um_admin_select2' );
-            }
-
         }
 
 

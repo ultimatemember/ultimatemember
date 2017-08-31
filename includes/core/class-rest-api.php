@@ -437,7 +437,7 @@ if ( ! class_exists( 'REST_API' ) ) {
                             break;
 
                         case 'role':
-                            $response['role'] = um_user('role');
+                            $response['role'] = um_user( 'role' );
                             break;
 
                         case 'email':

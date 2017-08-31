@@ -556,7 +556,7 @@ if ( ! class_exists( 'Shortcodes' ) ) {
 
 
 
-            $current_user_role = um_user('role');
+            $current_user_role = um_user( 'role' );
 
             if( isset( $a['not'] ) && ! empty( $a['not'] ) && isset( $a['roles'] ) && ! empty( $a['roles'] ) ){
                 return do_shortcode( $content );

@@ -189,8 +189,7 @@
 			exit( wp_redirect(  $args['redirect_to']  ) );
 		}
 
-		$role = um_user( 'role' );
-		$role_data = UM()->roles()->role_data( $role );
+		$role_data = UM()->roles()->role_data( um_user( 'role' ) );
 		
 		// Role redirect
 		if ( empty( $role_data['after_login'] ) )

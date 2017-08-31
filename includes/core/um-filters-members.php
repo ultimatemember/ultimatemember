@@ -67,9 +67,7 @@
 
 		if ( UM()->roles()->um_user_can( 'can_view_all' ) && UM()->roles()->um_user_can( 'can_view_roles' ) ) {
 			
-			$role = um_user( 'role' );
-			
-			$permissions = UM()->roles()->role_data( $role );
+			$permissions = UM()->roles()->role_data( um_user( 'role' ) );
 
             if ( ! empty( $permissions['can_view_roles'] ) )
                 $roles = maybe_unserialize( $permissions['can_view_roles'] );

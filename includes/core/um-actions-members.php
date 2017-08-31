@@ -18,7 +18,7 @@
 			
 		if ( $args['search'] == 1 && is_array( $search_filters ) ) { // search on
 			
-			if ( isset( $args['roles_can_search'] ) && !empty( $args['roles_can_search'] ) && !in_array( um_user('role'), $args['roles_can_search'] ) ){
+			if ( isset( $args['roles_can_search'] ) && ! empty( $args['roles_can_search'] ) && ! in_array( um_user( 'role' ), $args['roles_can_search'] ) ) {
 				return;
 			}
 			

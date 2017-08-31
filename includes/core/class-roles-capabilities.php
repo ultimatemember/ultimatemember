@@ -64,6 +64,27 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
 
 
         /**
+         * Check if role is custom
+         *
+         * @param $role
+         * @return bool
+         */
+        function is_role_custom( $role ) {
+            // User has roles so look for a UM Role one
+            $role_keys = get_option( 'um_roles' );
+
+            if ( empty( $role_keys ) )
+                return false;
+
+            $role_keys = array_map( function( $item ) {
+                return 'um_' . $item;
+            }, $role_keys );
+
+            return in_array( $role, $role_keys );
+        }
+
+
+        /**
          * Return a user's main role
          *
          * @param int $user_id
@@ -78,7 +99,6 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
 
             // User exists
             if ( ! empty( $user ) ) {
-
                 // Get users old UM role
                 $role = $this->um_get_user_role( $user_id );
 
@@ -89,7 +109,7 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
                     // Users role is different than the new role
 
                     // Remove the old UM role
-                    if ( ! empty( $role ) )
+                    if ( ! empty( $role ) && $this->is_role_custom( $role ) )
                         $user->remove_role( $role );
 
                     // Add the new role
@@ -126,30 +146,28 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
          * @param int $user_id
          * @return bool|mixed
          */
-        function um_get_user_role( $user_id = 0 ) {
+        function um_get_user_role( $user_id ) {
             $user    = get_userdata( $user_id );
-            $role    = false;
+
+            if ( empty( $user->roles ) )
+                return false;
 
             // User has roles so look for a UM Role one
-            if ( ! empty( $user->roles ) ) {
-                $role_keys = get_option( 'um_roles' );
+            $role_keys = get_option( 'um_roles' );
 
-                if ( empty( $role_keys ) )
-                    return array_shift( $user->roles );
+            if ( empty( $role_keys ) )
+                return array_shift( $user->roles );
 
-                $role_keys = array_map( function( $item ) {
-                    return 'um_' . $item;
-                }, $role_keys );
+            $role_keys = array_map( function( $item ) {
+                return 'um_' . $item;
+            }, $role_keys );
 
-                $roles = array_intersect( array_values( $user->roles ), $role_keys );
-                if ( ! empty( $roles ) ) {
-                    $role = array_shift( $roles );
-                } else {
-                    return array_shift( $user->roles );
-                }
+            $roles = array_intersect( array_values( $user->roles ), $role_keys );
+            if ( ! empty( $roles ) ) {
+                return array_shift( $roles );
+            } else {
+                return array_shift( $user->roles );
             }
-
-            return $role;
         }
 
 

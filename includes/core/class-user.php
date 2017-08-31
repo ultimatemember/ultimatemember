@@ -62,10 +62,9 @@ if ( ! class_exists( 'User' ) ) {
             add_action( 'profile_update', array( &$this, 'profile_update' ), 10, 2 ); // user_id and old_user_data
             add_action( 'edit_user_profile_update', array( &$this, 'profile_update' ), 10, 1 );
 
+
             add_action( 'user_register', array( &$this, 'user_register_via_admin' ), 10, 1 );
-
             add_action( 'user_register', array( &$this, 'set_gravatar' ), 11, 1 );
-
         }
 
 
@@ -231,13 +230,13 @@ if ( ! class_exists( 'User' ) ) {
 
         function profile_update( $user_id ) {
             // Bail if no user ID was passed
-
             if ( empty( $user_id ) )
                 return;
 
             if ( ! empty( $_POST['um-role'] ) ) {
-                if ( ! user_can( $user_id, $_POST['um-role'] ) )
+                if ( ! user_can( $user_id, $_POST['um-role'] ) ) {
                     UM()->roles()->set_role( $user_id, $_POST['um-role'] );
+                }
             }
 
             $this->remove_cache( $user_id );
@@ -482,7 +481,8 @@ if ( ! class_exists( 'User' ) ) {
 
                     // add permissions
                     $user_role = UM()->roles()->um_get_user_role( $this->id );
-                    $this->profile['role'] = ( strpos( $user_role, 'um_' ) === 0 ) ? str_replace( 'um_', '', $user_role ) : $user_role;
+                    //$this->profile['role'] = ( strpos( $user_role, 'um_' ) === 0 ) ? str_replace( 'um_', '', $user_role ) : $user_role;
+                    $this->profile['role'] = $user_role;
 
                     $role_meta = UM()->roles()->role_data( $user_role );
                     $role_meta = apply_filters( 'um_user_permissions_filter', $role_meta, $this->id );

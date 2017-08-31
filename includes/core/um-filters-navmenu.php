@@ -47,7 +47,7 @@
 					
 						case 2: 
 							if ( is_user_logged_in() && ! empty( $roles ) ) {
-                                $visible = in_array( um_user('role'), (array)$roles ) ? true : false;
+                                $visible = in_array( um_user( 'role' ), (array)$roles ) ? true : false;
 							} else {
 								$visible = is_user_logged_in() ? true : false;
 							}

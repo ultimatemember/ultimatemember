@@ -178,7 +178,7 @@
 					$access_roles = unserialize( $access_roles );
 					$access_roles = array_filter($access_roles);
 
-					if ( !empty( $access_roles ) && !in_array( um_user('role'), $access_roles ) ) {
+					if ( ! empty( $access_roles ) && ! in_array( um_user( 'role' ), $access_roles ) ) {
 						if ( empty( $access_redirect ) ) {
 							if ( is_user_logged_in() ) {
 								$access_redirect = site_url();
@@ -307,8 +307,8 @@
 						$access_roles = unserialize( $access_roles );
 						$access_roles = array_filter($access_roles);
 
-						if ( !empty( $access_roles ) && !in_array( um_user('role'), $access_roles ) ) {
-							if ( !$access_redirect ) {
+						if ( ! empty( $access_roles ) && ! in_array( um_user( 'role' ), $access_roles ) ) {
+							if ( ! $access_redirect ) {
 								if ( is_user_logged_in() ) {
 									$access_redirect = site_url();
 								} else {

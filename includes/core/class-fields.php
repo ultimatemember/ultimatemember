@@ -2562,14 +2562,6 @@ if ( ! class_exists( 'Fields' ) ) {
                     $res = apply_filters("um_view_field", $res, $data, $type );
                     $res = apply_filters("um_view_field_value_{$type}", $res, $data );
 
-
-/*                    if ( $key == 'role_radio' || $key == 'role_select' ) {
-                        $role_meta = UM()->roles()->role_data( um_user( 'role' ) );
-                        if ( ! empty( $role_meta['is_custom'] ) ) {
-                            $res = 'UM ' . $res;
-                        }
-                    }*/
-
                     $output .= '<div class="um-field-area">';
                     $output .= '<div class="um-field-value">' . $res . '</div>';
                     $output .= '</div>';
