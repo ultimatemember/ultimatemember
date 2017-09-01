@@ -139,35 +139,81 @@
 			foreach ( $fields as $key => $array ) {
 
                 if ( isset( $array['public']  ) && -2 == $array['public'] && ! empty( $array['roles'] ) && is_user_logged_in() ) {
-
-                    if( ! in_array( um_user( 'role' ) ,  $array['roles'] ) ){
+                    if ( ! in_array( um_user( 'role' ), $array['roles'] ) ) {
                         continue;
                     }
                 }
 
-				$array = apply_filters('um_get_custom_field_array', $array, $fields );
-				
-				if( isset( $array ['conditions'] ) && ! empty(  $array ['conditions'] )  ){ 
-					
-					foreach( $array ['conditions'] as $condition ){
-						
-						$visibility = $condition[0];
-						$parent_key = $condition[1];
-						$op = $condition[2];
-						$parent_value = $condition[3];
-						
-						if( $visibility == 'hide' ){
-							if( $op == 'equals to' ){
+				$array = apply_filters( 'um_get_custom_field_array', $array, $fields );
 
-								if( $args[ $parent_key ] == $parent_value ){
-										continue 2; 
-								}
-							
-							}
+				if ( ! empty( $array['conditions'] ) ) {
+					foreach ( $array['conditions'] as $condition ) {
+                        list( $visibility, $parent_key, $op, $parent_value ) = $condition;
+
+                        $cond_value = ( $fields[ $parent_key ]['type'] == 'radio' ) ? $args[ $parent_key ][0] : $args[ $parent_key ];
+
+						if ( $visibility == 'hide' ) {
+							if ( $op == 'empty' ) {
+                                if ( empty( $cond_value ) ) {
+                                    continue 2;
+                                }
+                            } elseif ( $op == 'not empty' ) {
+                                if ( ! empty( $cond_value ) ) {
+                                    continue 2;
+                                }
+                            } elseif ( $op == 'equals to' ) {
+                                if ( $cond_value == $parent_value ) {
+                                    continue 2;
+                                }
+                            } elseif ( $op == 'not equals' ) {
+                                if ( $cond_value != $parent_value ) {
+                                    continue 2;
+                                }
+                            } elseif ( $op == 'greater than' ) {
+                                if ( $cond_value > $op ) {
+                                    continue 2;
+                                }
+                            } elseif ( $op == 'less than' ) {
+                                if ( $cond_value < $op ) {
+                                    continue 2;
+                                }
+                            } elseif ( $op == 'contains' ) {
+                                if ( strstr( $cond_value, $parent_value ) ) {
+                                    continue 2;
+                                }
+                            }
+						} elseif ( $visibility == 'show' ) {
+                            if ( $op == 'empty' ) {
+                                if ( ! empty( $cond_value ) ) {
+                                    continue 2;
+                                }
+                            } elseif ( $op == 'not empty' ) {
+                                if ( empty( $cond_value ) ) {
+                                    continue 2;
+                                }
+                            } elseif ( $op == 'equals to' ) {
+                                if ( $cond_value != $parent_value ) {
+                                    continue 2;
+                                }
+                            } elseif ( $op == 'not equals' ) {
+                                if ( $cond_value == $parent_value ) {
+                                    continue 2;
+                                }
+                            } elseif ( $op == 'greater than' ) {
+                                if ( $cond_value <= $op ) {
+                                    continue 2;
+                                }
+                            } elseif ( $op == 'less than' ) {
+                                if ( $cond_value >= $op ) {
+                                    continue 2;
+                                }
+                            } elseif ( $op == 'contains' ) {
+                                if ( ! strstr( $cond_value, $parent_value ) ) {
+                                    continue 2;
+                                }
+                            }
 						}
-
 					}
-					
 				}
 
 				if ( isset( $array['type'] ) && $array['type'] == 'checkbox' && isset( $array['required'] ) && $array['required'] == 1 && !isset( $args[$key] ) ) {
@@ -195,7 +241,7 @@
 				if ( isset( $args[$key] ) ) {
 
 					if ( isset( $array['required'] ) && $array['required'] == 1 ) {
-						if ( !isset($args[$key]) || $args[$key] == '' ) {
+                        if ( ! isset( $args[$key] ) || $args[$key] == '' ) {
 							UM()->form()->add_error($key, sprintf( __('%s is required','ultimate-member'), $array['label'] ) );
 						}
 					}

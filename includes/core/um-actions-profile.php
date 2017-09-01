@@ -558,7 +558,6 @@
 	***/
 	add_action( 'um_submit_form_profile', 'um_submit_form_profile', 10 );
 	function um_submit_form_profile( $args ) {
-
 		if ( isset( UM()->form()->errors ) )
 		    return false;
 

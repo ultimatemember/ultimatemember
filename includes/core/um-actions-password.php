@@ -60,7 +60,7 @@
 	 * Overrides password changed notification
 	 *
 	 */
-	add_action('send_password_change_email','um_send_password_change_email');
+	add_action( 'send_password_change_email','um_send_password_change_email', 10, 1 );
 	function um_send_password_change_email( $args ) {
 
 		extract( $args );

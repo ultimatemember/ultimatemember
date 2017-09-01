@@ -277,45 +277,39 @@
 
 	}
 
-	/***
-	*** @validate conditional logic
-	***/
-	add_filter('um_get_custom_field_array', 'um_get_custom_field_array',99,2);
 
-	function um_get_custom_field_array( $array, $fields ){
+    /**
+     * Validate conditional logic
+     *
+     * @param $array
+     * @param $fields
+     * @return mixed
+     */
+	function um_get_custom_field_array( $array, $fields ) {
 
-		if( isset( $array['conditions'] ) ){
-				$found = 0;
-				for( $a = 0; $a < count( $array['conditions'] ); $a++ ){
-					    if(  isset( $array['conditional_value'] ) || isset( $array['conditional_value'.$a] ) ){
+		if ( isset( $array['conditions'] ) ) {
+            for ( $a = 0; $a < count( $array['conditions'] ); $a++ ) {
+                if ( isset( $array['conditional_value'] ) || isset( $array['conditional_value' . $a] ) ) {
+                    foreach ( $array['conditions'] as $key => $value ) {
+                        $condition_metakey = $fields[ $value[1] ]['metakey'];
 
-							if( isset( $array['conditions'] ) && ! empty( $array['conditions'] ) ){
+                        if ( isset( $_POST[ $condition_metakey ] ) ) {
+                            $cond_value = ( $fields[ $value[1] ]['type'] == 'radio' ) ? $_POST[ $condition_metakey ][0] : $_POST[ $condition_metakey ];
 
-								$arr_conditions = array();
-
-								foreach ($array['conditions'] as $key => $value) {
-									$metakey = $fields[ $value[1] ]['metakey'] ;
-									$arr_conditions[ $metakey ] = isset( $_POST[ $metakey ] )? $_POST[ $metakey ]: '';
-								}
-
-								foreach ($array['conditions'] as $key => $value) {
-									$metakey = $fields[ $value[1] ]['metakey'] ;
-									$arr_conditions[ $metakey ] = isset( $_POST[ $metakey ] )? $_POST[ $metakey ]: '';
-									 if( isset( $_POST[ $metakey ] ) &&   isset( $array['conditional_value'] )  && $_POST[ $metakey ] !== $array['conditional_value'] ){
-									 		$array['required'] = 0;
-									 }
-									 if( isset( $_POST[ $metakey ] ) && isset( $array['conditional_value'.$a] ) &&  $_POST[ $metakey ] !== $array['conditional_value'.$a] ){
-									 		$array['required'] = 0;
-									 }
-								}
-
-							}
-						}
-				}
+                            if ( isset( $array['conditional_value'] ) && $cond_value !== $array['conditional_value'] ) {
+                                $array['required'] = 0;
+                            } elseif ( isset( $array['conditional_value'.$a] ) && $cond_value !== $array['conditional_value'.$a] ) {
+                                $array['required'] = 0;
+                            }
+                        }
+                    }
+                }
+            }
 		}
 
-		 return $array;
+        return $array;
 	}
+    add_filter( 'um_get_custom_field_array', 'um_get_custom_field_array', 99, 2 );
 
 
 	/**

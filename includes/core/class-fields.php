@@ -275,11 +275,13 @@ if ( ! class_exists( 'Fields' ) ) {
         }
 
         /**
-         *  Print field error
-         * @param  string $text
-         * @param  boolean $force_show
+         * Print field error
+         *
+         * @param string $text
+         * @param bool $force_show
+         * @return string
          */
-        function field_error($text, $force_show = false ) {
+        function field_error( $text, $force_show = false ) {
             if ( $force_show ) {
                 $output = '<div class="um-field-error"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>'.$text.'</div>';
                 return $output;

@@ -121,7 +121,7 @@ if ( ! class_exists( 'Form' ) ) {
          * @return boolean
          */
         function has_error( $key ) {
-            if ( isset($this->errors[$key]) )
+            if ( isset( $this->errors[$key] ) )
                 return true;
             return false;
         }
