@@ -606,25 +606,7 @@ if ( ! class_exists( 'User' ) ) {
         function set_last_login() {
             update_user_meta(  $this->id, '_um_last_login', current_time( 'timestamp' ) );
         }
-
-
-        function set_role( $role ){
-
-            do_action('um_when_role_is_set', um_user('ID') );
-
-            do_action('um_before_user_role_is_changed');
-
-            $this->profile['role'] = $role;
-
-            do_action('um_member_role_upgrade', $role, $this->profile['role'] );
-
-            $this->update_usermeta_info('role');
-
-            do_action('um_after_user_role_is_changed');
-
-            do_action('um_after_user_role_is_updated', um_user('ID'), $role );
-
-        }
+        
 
         /***
          ***	@Set user's account status
