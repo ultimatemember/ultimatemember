@@ -72,17 +72,25 @@
 			),
 			array(
 				'id'		    => '_um_login_forgot_pass_link',
-				'type'		    => 'checkbox',
+				'type'		    => 'select',
 				'label'    		=> __( 'Show Forgot Password Link?', 'ultimate-member' ),
 				'value' 		=> UM()->query()->get_meta_value( '_um_login_forgot_pass_link', null, um_get_option('login_forgot_pass_link') ),
-				'conditional'	=> array( '_um_login_use_custom_settings', '=', 1 )
+				'conditional'	=> array( '_um_login_use_custom_settings', '=', 1 ),
+				'options'		=> array(
+					0	=> __( 'No', 'ultimate-member' ),
+					1	=> __( 'Yes', 'ultimate-member' ),
+				),
 			),
 			array(
 				'id'		    => '_um_login_show_rememberme',
-				'type'		    => 'checkbox',
+				'type'		    => 'select',
 				'label'    		=> __( 'Show "Remember Me"?', 'ultimate-member' ),
 				'value' 		=> UM()->query()->get_meta_value( '_um_login_show_rememberme', null, um_get_option('login_show_rememberme') ),
-				'conditional'	=> array( '_um_login_use_custom_settings', '=', 1 )
+				'conditional'	=> array( '_um_login_use_custom_settings', '=', 1 ),
+				'options'		=> array(
+					0	=> __( 'No', 'ultimate-member' ),
+					1	=> __( 'Yes', 'ultimate-member' ),
+				),
 			),
 		)
 	) )->render_form(); ?>

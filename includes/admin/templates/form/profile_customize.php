@@ -96,10 +96,14 @@
 			),
 			array(
 				'id'		    => '_um_profile_cover_enabled',
-				'type'		    => 'checkbox',
+				'type'		    => 'select',
 				'label'    		=> __( 'Enable Cover Photos', 'ultimate-member' ),
 				'value' 		=> UM()->query()->get_meta_value( '_um_profile_cover_enabled', null, 1 ),
-				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 )
+				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 ),
+                'options'		=> array(
+                    0	=> __( 'No', 'ultimate-member' ),
+                    1	=> __( 'Yes', 'ultimate-member' ),
+                ),
 			),
 			array(
 				'id'		    => '_um_profile_cover_ratio',
@@ -124,32 +128,48 @@
 			),
 			array(
 				'id'		    => '_um_profile_photo_required',
-				'type'		    => 'checkbox',
+				'type'		    => 'select',
 				'label'    		=> __( 'Make Profile Photo Required', 'ultimate-member' ),
 				'tooltip'    		=> __( 'Require user to update a profile photo when updating their profile', 'ultimate-member' ),
 				'value' 		=> UM()->query()->get_meta_value( '_um_profile_photo_required' ),
-				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 )
+				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 ),
+				'options'		=> array(
+					0	=> __( 'No', 'ultimate-member' ),
+					1	=> __( 'Yes', 'ultimate-member' ),
+				),
 			),
 			array(
 				'id'		    => '_um_profile_show_name',
-				'type'		    => 'checkbox',
+				'type'		    => 'select',
 				'label'    		=> __( 'Show display name in profile header?', 'ultimate-member' ),
 				'value' 		=> UM()->query()->get_meta_value( '_um_profile_show_name', null, 1 ),
-				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 )
+				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 ),
+				'options'		=> array(
+					0	=> __( 'No', 'ultimate-member' ),
+					1	=> __( 'Yes', 'ultimate-member' ),
+				),
 			),
 			array(
 				'id'		    => '_um_profile_show_social_links',
-				'type'		    => 'checkbox',
+				'type'		    => 'select',
 				'label'    		=> __( 'Show social links in profile header?', 'ultimate-member' ),
 				'value' 		=> UM()->query()->get_meta_value( '_um_profile_show_social_links', null, UM()->um_get_option( 'profile_show_social_links' ) ),
-				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 )
+				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 ),
+				'options'		=> array(
+					0	=> __( 'No', 'ultimate-member' ),
+					1	=> __( 'Yes', 'ultimate-member' ),
+				),
 			),
 			array(
 				'id'		    => '_um_profile_show_bio',
-				'type'		    => 'checkbox',
+				'type'		    => 'select',
 				'label'    		=> __( 'Show user description in profile header?', 'ultimate-member' ),
 				'value' 		=> UM()->query()->get_meta_value( '_um_profile_show_bio', null, 1 ),
-				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 )
+				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 ),
+				'options'		=> array(
+					0	=> __( 'No', 'ultimate-member' ),
+					1	=> __( 'Yes', 'ultimate-member' ),
+				),
 			),
 
 		)
