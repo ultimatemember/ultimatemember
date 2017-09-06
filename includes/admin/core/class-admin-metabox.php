@@ -105,6 +105,11 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
             if ( ! empty( $post_types[ $current_screen->id ] ) ) {
                 add_action( 'add_meta_boxes', array(&$this, 'add_metabox_restrict_content'), 1 );
                 add_action( 'save_post', array( &$this, 'save_metabox_restrict_content' ), 10, 2 );
+
+                if ( $current_screen->id == 'attachment' ) {
+                    add_action( 'add_attachment', array( &$this, 'save_attachment_metabox_restrict_content' ), 10, 2 );
+                    add_action( 'edit_attachment', array( &$this, 'save_attachment_metabox_restrict_content' ), 10, 2 );
+                }
             }
 
 
@@ -165,6 +170,27 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
             // validate nonce
             if ( ! isset( $_POST['um_admin_save_metabox_restrict_content_nonce'] ) || !wp_verify_nonce( $_POST['um_admin_save_metabox_restrict_content_nonce'], basename( __FILE__ ) ) )
                 return $post_id;
+
+            // validate user
+            $post_type = get_post_type_object( $post->post_type );
+            if ( ! current_user_can( $post_type->cap->edit_post, $post_id ) )
+                return $post_id;
+
+            if ( ! empty( $_POST['um_content_restriction'] ) )
+                update_post_meta( $post_id, 'um_content_restriction', $_POST['um_content_restriction'] );
+            else
+                delete_post_meta( $post_id, 'um_content_restriction' );
+
+            return $post_id;
+        }
+
+
+        function save_attachment_metabox_restrict_content( $post_id ) {
+            // validate nonce
+            if ( ! isset( $_POST['um_admin_save_metabox_restrict_content_nonce'] ) || !wp_verify_nonce( $_POST['um_admin_save_metabox_restrict_content_nonce'], basename( __FILE__ ) ) )
+                return $post_id;
+
+            $post = get_post( $post_id );
 
             // validate user
             $post_type = get_post_type_object( $post->post_type );

@@ -318,8 +318,16 @@ if ( ! class_exists( 'Access' ) ) {
 
                                 if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
                                     $post->post_content = $restricted_global_message;
+
+                                    if ( 'attachment' == $post->post_type ) {
+                                        remove_filter( 'the_content', 'prepend_attachment' );
+                                    }
                                 } elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
                                     $post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? $restriction['_um_restrict_custom_message'] : '';
+
+                                    if ( 'attachment' == $post->post_type ) {
+                                        remove_filter( 'the_content', 'prepend_attachment' );
+                                    }
                                 }
 
                                 $filtered_posts[] = $post;
@@ -369,8 +377,16 @@ if ( ! class_exists( 'Access' ) ) {
 
                                 if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
                                     $post->post_content = $restricted_global_message;
+
+                                    if ( 'attachment' == $post->post_type ) {
+                                        remove_filter( 'the_content', 'prepend_attachment' );
+                                    }
                                 } elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
                                     $post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? $restriction['_um_restrict_custom_message'] : '';
+
+                                    if ( 'attachment' == $post->post_type ) {
+                                        remove_filter( 'the_content', 'prepend_attachment' );
+                                    }
                                 }
 
                                 $filtered_posts[] = $post;
