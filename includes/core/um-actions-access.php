@@ -4,7 +4,7 @@
 	 */
 	add_action('um_access_global_settings','um_access_global_settings');
 	function um_access_global_settings() {
-		global $post;
+		global $post, $wp_query;
 
 		$access = um_get_option('accessible');
 
@@ -45,13 +45,135 @@
 			}
 
 			// Disallow access in category pages
-			if ( is_category() ){
-				$category_page_accessible = um_get_option("category_page_accessible");
-				if ( $category_page_accessible == 0 ) {
-					UM()->access()->redirect_handler = UM()->access()->set_referer( $redirect, "global" );
-					wp_redirect( UM()->access()->redirect_handler ); exit;
-				} else {
-                    UM()->access()->allow_access = true;
+			if ( is_category() ) {
+                $cat_obj = $wp_query->get_queried_object();
+                $restriction = get_term_meta( $cat_obj->term_id, 'um_content_restriction', true );
+
+                if ( ! empty( $restriction['_um_custom_access_settings'] ) ) {
+
+                    if ( ! isset( $restriction['_um_accessible'] ) || '0' == $restriction['_um_accessible'] ) {
+
+                        UM()->access()->allow_access = true;
+
+                    } else {
+                        //post is private
+                        if ( '1' == $restriction['_um_accessible'] ) {
+                            //if post for not logged in users and user is not logged in
+                            if ( ! is_user_logged_in() || current_user_can( 'administrator' ) ) {
+                                UM()->access()->allow_access = true;
+                            } else {
+                                if ( ! isset( $restriction['_um_noaccess_action'] ) || '0' == $restriction['_um_noaccess_action'] ) {
+                                    UM()->access()->redirect_handler = UM()->access()->set_referer( $redirect, "global" );
+                                    wp_redirect( UM()->access()->redirect_handler ); exit;
+                                } elseif ( '1' == $restriction['_um_noaccess_action'] ) {
+                                    $curr = UM()->permalinks()->get_current_url();
+
+                                    if ( ! isset( $restriction['_um_access_redirect'] ) || '0' == $restriction['_um_access_redirect'] ) {
+
+                                        UM()->access()->redirect_handler = UM()->access()->set_referer( $redirect, "global" );
+                                        wp_redirect( UM()->access()->redirect_handler ); exit;
+
+                                    } elseif ( '1' == $restriction['_um_access_redirect'] ) {
+
+                                        if ( ! empty( $restriction['_um_access_redirect_url'] ) ) {
+                                            $redirect = $restriction['_um_access_redirect_url'];
+                                        } else {
+                                            $redirect = esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
+                                        }
+
+                                        UM()->access()->redirect_handler = UM()->access()->set_referer( $redirect, "global" );
+                                        wp_redirect( UM()->access()->redirect_handler ); exit;
+                                    }
+
+                                }
+                            }
+                        } elseif ( '2' == $restriction['_um_accessible'] ) {
+                            //if post for logged in users and user is not logged in
+                            if ( is_user_logged_in() ) {
+
+                                if ( current_user_can( 'administrator' ) ) {
+                                    UM()->access()->allow_access = true;
+                                }
+
+                                $user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
+
+                                if ( $user_can ) {
+                                    UM()->access()->allow_access = true;
+                                }
+
+
+                                //if single post query
+                                if ( ! isset( $restriction['_um_noaccess_action'] ) || '0' == $restriction['_um_noaccess_action'] ) {
+                                    UM()->access()->redirect_handler = UM()->access()->set_referer( $redirect, "global" );
+                                    wp_redirect( UM()->access()->redirect_handler ); exit;
+                                } elseif ( '1' == $restriction['_um_noaccess_action'] ) {
+
+                                    $curr = UM()->permalinks()->get_current_url();
+
+                                    if ( ! isset( $restriction['_um_access_redirect'] ) || '0' == $restriction['_um_access_redirect'] ) {
+
+                                        UM()->access()->redirect_handler = UM()->access()->set_referer( $redirect, "global" );
+                                        wp_redirect( UM()->access()->redirect_handler ); exit;
+
+                                    } elseif ( '1' == $restriction['_um_access_redirect'] ) {
+
+                                        if ( ! empty( $restriction['_um_access_redirect_url'] ) ) {
+                                            $redirect = $restriction['_um_access_redirect_url'];
+                                        } else {
+                                            $redirect = esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
+                                        }
+
+                                        UM()->access()->redirect_handler = UM()->access()->set_referer( $redirect, "global" );
+                                        wp_redirect( UM()->access()->redirect_handler ); exit;
+                                    }
+
+                                }
+                            } else {
+
+                                //if single post query
+                                if ( ! isset( $restriction['_um_noaccess_action'] ) || '0' == $restriction['_um_noaccess_action'] ) {
+                                    UM()->access()->redirect_handler = UM()->access()->set_referer( $redirect, "global" );
+                                    wp_redirect( UM()->access()->redirect_handler ); exit;
+                                } elseif ( '1' == $restriction['_um_noaccess_action'] ) {
+
+                                    $curr = UM()->permalinks()->get_current_url();
+
+                                    if ( ! isset( $restriction['_um_access_redirect'] ) || '0' == $restriction['_um_access_redirect'] ) {
+                                        UM()->access()->redirect_handler = UM()->access()->set_referer( $redirect, "global" );
+                                        wp_redirect( UM()->access()->redirect_handler ); exit;
+                                    } elseif ( '1' == $restriction['_um_access_redirect'] ) {
+
+                                        if ( ! empty( $restriction['_um_access_redirect_url'] ) ) {
+                                            $redirect = $restriction['_um_access_redirect_url'];
+                                        } else {
+                                            $redirect = esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
+                                        }
+
+                                        UM()->access()->redirect_handler = UM()->access()->set_referer( $redirect, "global" );
+                                        wp_redirect( UM()->access()->redirect_handler ); exit;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+
+                    if ( is_user_logged_in() && current_user_can( 'administrator' ) ) {
+                        UM()->access()->allow_access = true;
+                    } else {
+                        $category_page_accessible = um_get_option( "category_page_accessible" );
+                        if ( $category_page_accessible == 0 ) {
+
+                            UM()->access()->redirect_handler = UM()->access()->set_referer( $redirect, "global" );
+                            wp_redirect( UM()->access()->redirect_handler ); exit;
+
+                        } else {
+
+                            UM()->access()->allow_access = true;
+
+                        }
+                    }
+
                 }
 			}
 		}

@@ -1168,7 +1168,7 @@ foreach ( $member_directories as $directory_id ) {
             return 'um_' . $item;
         }, $um_roles_can_search );
 
-        update_post_meta( $directory_id, '_um_roles', $um_roles_can_search );
+        update_post_meta( $directory_id, '_um_roles_can_search', $um_roles_can_search );
     }
 }
 
