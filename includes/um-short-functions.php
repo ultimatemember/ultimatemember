@@ -754,39 +754,18 @@
 	***	@Check whether item in dropdown is selected in query-url
 	***/
 	function um_select_if_in_query_params( $filter, $val ) {
-		/*if ( isset( $_REQUEST['um_search'] ) ) {
-			$query = UM()->permalinks()->get_query_array();
-			if ( isset( $query[$filter] ) && $val == $query[$filter] )
-				echo 'selected="selected"';
-		}*/
+		$selected = false;
 
 		if ( isset( $_REQUEST['um_search'] ) ) {
 			$query = UM()->permalinks()->get_query_array();
 
-			if ( ! is_numeric( $query[$filter] ) ) {
-				$tags = get_option( 'um_user_tags_filters' );
+			if ( isset( $query[ $filter ] ) && $val == $query[ $filter ] )
+				$selected = true;
 
-				if ( $tags ) {
-					$tags = array_unique( array_values( $tags ) );
-					if ( in_array( $filter, $tags ) ) {
-						$term = get_term_by( 'slug', $query[$filter], 'um_user_tag' );
-						if ( ! is_wp_error( $term ) ) {
-							if ( isset( $query[$filter] ) && $val == $term->term_id ) {
-								echo 'selected="selected"';
-							}
-						}
-					}
-				} else {
-					if ( isset( $query[$filter] ) && $val == $query[$filter] )
-						echo 'selected="selected"';
-				}
-			} else {
-				if ( isset( $query[$filter] ) && $val == $query[$filter] )
-					echo 'selected="selected"';
-			}
+			$selected = apply_filters( 'um_selected_if_in_query_params', $selected, $filter, $val );
 		}
 
-		echo '';
+		echo $selected ? 'selected="selected"' : '';
 	}
 
 	/***

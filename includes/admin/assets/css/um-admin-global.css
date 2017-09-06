@@ -150,6 +150,8 @@ a.um-delete{ color: #a00; }
     max-width: 300px;
     font-size: 12px;
     border-radius: 5px;
+	border: none !important;
+	text-shadow: none !important;
 }
 
 .um_tooltip.dashicons,

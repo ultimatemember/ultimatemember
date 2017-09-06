@@ -177,45 +177,14 @@ if ( ! class_exists( 'UM_Functions' ) ) {
         }
 
 
+        function excluded_taxonomies() {
+            $taxes = array(
+                'nav_menu',
+                'link_category',
+                'post_format',
+            );
 
-        /*
-        * redirect
-        */
-        function redirect( $url ) {
-            if ( headers_sent() || empty( $url ) ) {
-                $this->cc_js_redirect( $url );
-            } else {
-                wp_redirect( $url );
-            }
-            exit;
-        }
-
-
-        /*
-        * JS redirect
-        */
-        function cc_js_redirect( $url ) {
-
-            //for blank redirects
-            if ( '' == $url ) {
-                $url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-            }
-
-            $funtext="echo \"<script data-cfasync='false' type='text/javascript'>window.location = '" . $url . "'</script>\";";
-            register_shutdown_function( create_function( '', $funtext ) );
-
-            if ( 1 < ob_get_level() ) {
-                while ( ob_get_level() > 1 ) {
-                    ob_end_clean();
-                }
-            }
-
-            ?>
-            <script data-cfasync="false" type="text/javascript">
-                window.location = '<?php echo $url; ?>';
-            </script>
-            <?php
-            exit;
+            return apply_filters( 'um_excluded_taxonomies', $taxes );
         }
 
     }

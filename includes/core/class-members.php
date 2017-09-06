@@ -79,15 +79,8 @@ if ( ! class_exists( 'Members' ) ) {
             // additional filter for search field attributes
             $attrs = apply_filters("um_search_field_{$filter}", $attrs);
 
-            if ( UM()->builtin()->is_dropdown_field( $filter, $attrs ) ) {
-                $type = 'select';
-            } else if ( 'user_tags' == $attrs['type'] ) {
-                $attrs['options'] = apply_filters('um_multiselect_options_user_tags', array(), $attrs);
-                $attrs['custom']  = 1;
-                $type = 'select';
-            } else {
-                $type = 'text';
-            }
+            $type = UM()->builtin()->is_dropdown_field( $filter, $attrs ) ? 'select' : 'text';
+            $type = apply_filters( 'um_search_field_type', $type, $attrs );
 
             // filter all search fields
             $attrs = apply_filters( 'um_search_fields', $attrs );

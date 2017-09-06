@@ -203,14 +203,12 @@ function um_submit_account_errors_hook( $args ) {
 					$url = UM()->permalinks()->get_current_url( true );
 					$url = add_query_arg( 'updated', 'account', $url );
 
-					UM()->redirect( $url );
-					exit;
+                    um_js_redirect( $url );
 				}
 			}
 		}
 
-		UM()->redirect( $url );
-		exit;
+		um_js_redirect( $url );
 	}
 
 

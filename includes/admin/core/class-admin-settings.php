@@ -176,13 +176,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
             $all_post_types = get_post_types( array( 'public' => true ) );
 
             $all_taxonomies = get_taxonomies( array( 'public' => true ) );
-            $exclude_taxonomies = array(
-                'nav_menu',
-                'link_category',
-                'post_format',
-                'um_user_tag',
-                'um_hashtag',
-            );
+            $exclude_taxonomies = UM()->excluded_taxonomies();
 
             foreach ( $all_taxonomies as $key => $taxonomy ) {
                 if( in_array( $key , $exclude_taxonomies ) )

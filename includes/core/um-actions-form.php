@@ -220,10 +220,6 @@
 					UM()->form()->add_error($key, sprintf(__('%s is required.','ultimate-member'), $array['title'] ) );
 				}
 
-                if ( defined('um_user_tags_path') && isset( $array['type'] ) && $array['type'] == 'user_tags' && isset( $array['required'] ) && $array['required'] == 1 && !isset( $args[$key] ) ) {
-                    UM()->form()->add_error($key, sprintf(__('%s is required.','ultimate-member'), $array['title'] ) );
-                }
-
 				if ( isset( $array['type'] ) && $array['type'] == 'radio' && isset( $array['required'] ) && $array['required'] == 1 && !isset( $args[$key] ) && !in_array($key, array('role_radio','role_select') ) ) {
 					UM()->form()->add_error($key, sprintf(__('%s is required.','ultimate-member'), $array['title'] ) );
 				}
@@ -237,6 +233,9 @@
 						UM()->form()->add_error('role', __('Please specify account type.','ultimate-member') );
 					}
 				}
+
+
+				do_action( 'um_add_error_on_form_submit_validation', $array, $key, $args );
 
 				if ( isset( $args[$key] ) ) {
 

@@ -960,6 +960,19 @@ if ( ! empty( $um_roles ) ) {
         $role_metadata = array();
         if ( ! empty( $all_role_metadata ) ) {
             foreach( $all_role_metadata as $metadata ) {
+
+                if ( '_um_can_edit_roles' == $metadata['meta_key'] || '_um_can_delete_roles' == $metadata['meta_key']
+                    || '_um_can_view_roles' == $metadata['meta_key'] || '_um_can_follow_roles' == $metadata['meta_key']
+                    || '_um_can_friend_roles' == $metadata['meta_key'] || '_um_can_review_roles' == $metadata['meta_key'] ) {
+                    $metadata['meta_value'] = maybe_unserialize( $metadata['meta_value'] );
+
+                    $metadata['meta_value'] = array_map( function( $item ) {
+                        return 'um_' . $item;
+                    }, $metadata['meta_value'] );
+                } elseif ( '_um_profilec_upgrade_role' == $metadata['meta_key'] ) {
+                    $metadata['meta_value'] = 'um_' . $metadata['meta_value'];
+                }
+
                 $role_metadata[$metadata['meta_key']] = $metadata['meta_value'];
             }
         }
@@ -1048,13 +1061,7 @@ if ( ! empty( $posts ) ) {
 
 
 $all_taxonomies = get_taxonomies( array( 'public' => true ) );
-$exclude_taxonomies = array(
-    'nav_menu',
-    'link_category',
-    'post_format',
-    'um_user_tag',
-    'um_hashtag',
-);
+$exclude_taxonomies = UM()->excluded_taxonomies();
 
 foreach ( $all_taxonomies as $key => $taxonomy ) {
     if ( in_array( $key , $exclude_taxonomies ) )
@@ -1135,6 +1142,36 @@ foreach ( $forms as $form_id ) {
     }
 }
 
+//for metadata for all UM Member Directories
+//also update for forms metadata where "member" or "admin"
+$member_directories = get_posts( array(
+    'post_type'     => 'um_directory',
+    'numberposts'   => -1,
+    'fields'        => 'ids'
+) );
+
+foreach ( $member_directories as $directory_id ) {
+    $directory_roles = get_post_meta( $directory_id, '_um_roles', true );
+
+    if ( ! empty( $directory_roles ) ) {
+        $directory_roles = array_map( function( $item ) {
+            return 'um_' . $item;
+        }, $directory_roles );
+
+        update_post_meta( $directory_id, '_um_roles', $directory_roles );
+    }
+
+    $um_roles_can_search = get_post_meta( $directory_id, '_um_roles_can_search', true );
+
+    if ( ! empty( $um_roles_can_search ) ) {
+        $um_roles_can_search = array_map( function( $item ) {
+            return 'um_' . $item;
+        }, $um_roles_can_search );
+
+        update_post_meta( $directory_id, '_um_roles', $um_roles_can_search );
+    }
+}
+
 
 /**
  * Transferring email templates to new logic
@@ -1195,3 +1232,245 @@ foreach ( $menus as $menu ) {
     update_post_meta( $menu->ID, 'menu-item-um_nav_roles', $menu_roles );
 }
 
+
+$profile_tab_main_roles = um_get_option( 'profile_tab_main_roles' );
+$profile_tab_main_roles = ! $profile_tab_main_roles ? array() : $profile_tab_main_roles;
+if ( ! empty( $profile_tab_main_roles ) ) {
+    $profile_tab_main_roles = array_map( function( $item ) {
+        return 'um_' . $item;
+    }, $profile_tab_main_roles );
+
+    um_update_option( 'profile_tab_main_roles', $profile_tab_main_roles );
+}
+
+$profile_tab_posts_roles = um_get_option( 'profile_tab_posts_roles' );
+$profile_tab_posts_roles = ! $profile_tab_posts_roles ? array() : $profile_tab_posts_roles;
+if ( ! empty( $profile_tab_posts_roles ) ) {
+    $profile_tab_posts_roles = array_map( function( $item ) {
+        return 'um_' . $item;
+    }, $profile_tab_posts_roles );
+
+    um_update_option( 'profile_tab_posts_roles', $profile_tab_posts_roles );
+}
+
+$profile_tab_comments_roles = um_get_option( 'profile_tab_comments_roles' );
+$profile_tab_comments_roles = ! $profile_tab_comments_roles ? array() : $profile_tab_comments_roles;
+if ( ! empty( $profile_tab_comments_roles ) ) {
+    $profile_tab_comments_roles = array_map( function( $item ) {
+        return 'um_' . $item;
+    }, $profile_tab_comments_roles );
+
+    um_update_option( 'profile_tab_comments_roles', $profile_tab_comments_roles );
+}
+
+$profile_tab_activity_roles = um_get_option( 'profile_tab_activity_roles' );
+$profile_tab_activity_roles = ! $profile_tab_activity_roles ? array() : $profile_tab_activity_roles;
+if ( ! empty( $profile_tab_activity_roles ) ) {
+    $profile_tab_activity_roles = array_map( function( $item ) {
+        return 'um_' . $item;
+    }, $profile_tab_activity_roles );
+
+    um_update_option( 'profile_tab_activity_roles', $profile_tab_activity_roles );
+}
+
+$profile_tab_messages_roles = um_get_option( 'profile_tab_messages_roles' );
+$profile_tab_messages_roles = ! $profile_tab_messages_roles ? array() : $profile_tab_messages_roles;
+if ( ! empty( $profile_tab_messages_roles ) ) {
+    $profile_tab_messages_roles = array_map( function( $item ) {
+        return 'um_' . $item;
+    }, $profile_tab_messages_roles );
+
+    um_update_option( 'profile_tab_messages_roles', $profile_tab_messages_roles );
+}
+
+$profile_tab_reviews_roles = um_get_option( 'profile_tab_reviews_roles' );
+$profile_tab_reviews_roles = ! $profile_tab_reviews_roles ? array() : $profile_tab_reviews_roles;
+if ( ! empty( $profile_tab_reviews_roles ) ) {
+    $profile_tab_reviews_roles = array_map( function( $item ) {
+        return 'um_' . $item;
+    }, $profile_tab_reviews_roles );
+
+    um_update_option( 'profile_tab_reviews_roles', $profile_tab_reviews_roles );
+}
+
+$profile_tab_purchases_roles = um_get_option( 'profile_tab_purchases_roles' );
+$profile_tab_purchases_roles = ! $profile_tab_purchases_roles ? array() : $profile_tab_purchases_roles;
+if ( ! empty( $profile_tab_purchases_roles ) ) {
+    $profile_tab_purchases_roles = array_map( function( $item ) {
+        return 'um_' . $item;
+    }, $profile_tab_purchases_roles );
+
+    um_update_option( 'profile_tab_purchases_roles', $profile_tab_purchases_roles );
+}
+
+$profile_tab_product_reviews = um_get_option( 'profile_tab_product-reviews_roles' );
+$profile_tab_product_reviews = ! $profile_tab_product_reviews ? array() : $profile_tab_product_reviews;
+if ( ! empty( $profile_tab_product_reviews ) ) {
+    $profile_tab_product_reviews = array_map( function( $item ) {
+        return 'um_' . $item;
+    }, $profile_tab_product_reviews );
+
+    um_update_option( 'profile_tab_product-reviews_roles', $profile_tab_product_reviews );
+}
+
+
+$profile_tab_forums_roles = um_get_option( 'profile_tab_forums_roles' );
+$profile_tab_forums_roles = ! $profile_tab_forums_roles ? array() : $profile_tab_forums_roles;
+if ( ! empty( $profile_tab_forums_roles ) ) {
+    $profile_tab_forums_roles = array_map( function( $item ) {
+        return 'um_' . $item;
+    }, $profile_tab_forums_roles );
+
+    um_update_option( 'profile_tab_forums_roles', $profile_tab_forums_roles );
+}
+
+$profile_tab_friends_roles = um_get_option( 'profile_tab_friends_roles' );
+$profile_tab_friends_roles = ! $profile_tab_friends_roles ? array() : $profile_tab_friends_roles;
+if ( ! empty( $profile_tab_friends_roles ) ) {
+    $profile_tab_friends_roles = array_map( function( $item ) {
+        return 'um_' . $item;
+    }, $profile_tab_friends_roles );
+
+    um_update_option( 'profile_tab_friends_roles', $profile_tab_friends_roles );
+}
+
+
+$register_role = um_get_option( 'register_role' );
+if ( ! empty( $register_role ) ) {
+    $register_role = 'um_' . $register_role;
+    um_update_option( 'register_role', $register_role );
+}
+
+$woo_oncomplete_role = um_get_option( 'woo_oncomplete_role' );
+if ( ! empty( $woo_oncomplete_role ) ) {
+    $woo_oncomplete_role = 'um_' . $woo_oncomplete_role;
+    um_update_option( 'woo_oncomplete_role', $woo_oncomplete_role );
+}
+
+$woo_oncomplete_except_roles = um_get_option( 'woo_oncomplete_except_roles' );
+$woo_oncomplete_except_roles = ! $woo_oncomplete_except_roles ? array() : $woo_oncomplete_except_roles;
+if ( ! empty( $woo_oncomplete_except_roles ) ) {
+    $woo_oncomplete_except_roles = array_map( function( $item ) {
+        return 'um_' . $item;
+    }, $woo_oncomplete_except_roles );
+
+    um_update_option( 'woo_oncomplete_except_roles', $woo_oncomplete_except_roles );
+}
+
+//for metadata for all bbPress forums
+//also update for forms metadata where "member" or "admin"
+$wc_products = get_posts( array(
+    'post_type'     => 'product',
+    'numberposts'   => -1,
+    'fields'        => 'ids'
+) );
+
+foreach ( $wc_products as $product_id ) {
+    $woo_product_role = get_post_meta( $product_id, '_um_woo_product_role', true );
+
+    if ( ! empty( $woo_product_role ) ) {
+        $woo_product_role = 'um_' . $woo_product_role;
+        update_post_meta( $product_id, '_um_woo_product_role', $woo_product_role );
+    }
+
+    $woo_product_activated_role = get_post_meta( $product_id, '_um_woo_product_activated_role', true );
+
+    if ( ! empty( $woo_product_activated_role ) ) {
+        $woo_product_activated_role = 'um_' . $woo_product_activated_role;
+        update_post_meta( $product_id, '_um_woo_product_activated_role', $woo_product_activated_role );
+    }
+
+    $woo_product_downgrade_pending_role = get_post_meta( $product_id, '_um_woo_product_downgrade_pending_role', true );
+
+    if ( ! empty( $woo_product_downgrade_pending_role ) ) {
+        $woo_product_downgrade_pending_role = 'um_' . $woo_product_downgrade_pending_role;
+        update_post_meta( $product_id, '_um_woo_product_downgrade_pending_role', $woo_product_downgrade_pending_role );
+    }
+
+    $woo_product_downgrade_onhold_role = get_post_meta( $product_id, '_um_woo_product_downgrade_onhold_role', true );
+
+    if ( ! empty( $woo_product_downgrade_onhold_role ) ) {
+        $woo_product_downgrade_onhold_role = 'um_' . $woo_product_downgrade_onhold_role;
+        update_post_meta( $product_id, '_um_woo_product_downgrade_onhold_role', $woo_product_downgrade_onhold_role );
+    }
+
+    $woo_product_downgrade_expired_role = get_post_meta( $product_id, '_um_woo_product_downgrade_expired_role', true );
+
+    if ( ! empty( $woo_product_downgrade_expired_role ) ) {
+        $woo_product_downgrade_expired_role = 'um_' . $woo_product_downgrade_expired_role;
+        update_post_meta( $product_id, '_um_woo_product_downgrade_expired_role', $woo_product_downgrade_expired_role );
+    }
+
+    $woo_product_downgrade_cancelled_role = get_post_meta( $product_id, '_um_woo_product_downgrade_cancelled_role', true );
+
+    if ( ! empty( $woo_product_downgrade_cancelled_role ) ) {
+        $woo_product_downgrade_cancelled_role = 'um_' . $woo_product_downgrade_cancelled_role;
+        update_post_meta( $product_id, '_um_woo_product_downgrade_cancelled_role', $woo_product_downgrade_cancelled_role );
+    }
+}
+
+
+$bb_forums = get_posts( array(
+    'post_type'     => 'forum',
+    'numberposts'   => -1,
+    'fields'        => 'ids'
+) );
+
+foreach ( $bb_forums as $forum_id ) {
+    $bbpress_can_topic = get_post_meta( $forum_id, '_um_bbpress_can_topic', true );
+    $bbpress_can_topic = ! $bbpress_can_topic ? array() : $bbpress_can_topic;
+    if ( ! empty( $bbpress_can_topic ) ) {
+        $bbpress_can_topic = array_map( function( $item ) {
+            return 'um_' . $item;
+        }, $bbpress_can_topic );
+
+        update_post_meta( $forum_id, '_um_bbpress_can_topic', $bbpress_can_topic );
+    }
+
+
+    $bbpress_can_reply = get_post_meta( $forum_id, '_um_bbpress_can_reply', true );
+    $bbpress_can_reply = ! $bbpress_can_reply ? array() : $bbpress_can_reply;
+    if ( ! empty( $bbpress_can_reply ) ) {
+        $bbpress_can_reply = array_map( function( $item ) {
+            return 'um_' . $item;
+        }, $bbpress_can_reply );
+
+        update_post_meta( $forum_id, '_um_bbpress_can_reply', $bbpress_can_reply );
+    }
+}
+
+
+
+$mc_lists = get_posts( array(
+    'post_type'     => 'um_mailchimp',
+    'numberposts'   => -1,
+    'fields'        => 'ids'
+) );
+
+foreach ( $mc_lists as $list_id ) {
+    $um_roles = get_post_meta( $list_id, '_um_roles', true );
+    $um_roles = ! $um_roles ? array() : $um_roles;
+    if ( ! empty( $um_roles ) ) {
+        $um_roles = array_map( function( $item ) {
+            return 'um_' . $item;
+        }, $um_roles );
+
+        update_post_meta( $list_id, '_um_roles', $um_roles );
+    }
+}
+
+
+$um_social_login = get_posts( array(
+    'post_type'     => 'um_social_login',
+    'numberposts'   => -1,
+    'fields'        => 'ids'
+) );
+
+foreach ( $um_social_login as $social_login_id ) {
+    $assigned_role = get_post_meta( $social_login_id, '_um_assigned_role', true );
+
+    if ( ! empty( $assigned_role ) ) {
+        $assigned_role = 'um_' . $assigned_role;
+        update_post_meta( $social_login_id, '_um_assigned_role', $assigned_role );
+    }
+}
