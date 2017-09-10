@@ -103,14 +103,15 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
                 $role = $this->um_get_user_role( $user_id );
 
                 // User already has this role so no new role is set
-                if ( $new_role === $role ) {
+                if ( $new_role === $role || ( ! $this->is_role_custom( $new_role ) && user_can( $user, $new_role ) ) ) {
                     $new_role = false;
                 } else {
                     // Users role is different than the new role
 
                     // Remove the old UM role
-                    if ( ! empty( $role ) && $this->is_role_custom( $role ) )
+                    if ( ! empty( $role ) && $this->is_role_custom( $role ) ) {
                         $user->remove_role( $role );
+                    }
 
                     // Add the new role
                     if ( ! empty( $new_role ) ) {

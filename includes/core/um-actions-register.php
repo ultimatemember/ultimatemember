@@ -206,7 +206,7 @@
 		$args['submitted'] = array_merge( $args['submitted'], $credentials );
 		$args = array_merge( $args, $credentials );
 
-		$user_role = UM()->form()->assigned_role( UM()->form()->form_id );
+		$user_role = apply_filters( 'um_registration_user_role', UM()->form()->assigned_role( UM()->form()->form_id ), $args );
 
 		$userdata = array(
 			'user_login'	=> $user_login,

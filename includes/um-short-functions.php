@@ -674,9 +674,16 @@
 		return false;
 	}
 
-	/***
-	***	@boolean check if we are on a core page or not
-	***/
+
+	/**
+	 * Check if we are on a UM Core Page or not
+	 *
+	 * Default um core pages slugs
+	 * 'user', 'login', 'register', 'members', 'logout', 'account', 'password-reset'
+	 *
+	 * @param string $page UM core page slug
+	 * @return bool
+	 */
 	function um_is_core_page( $page ) {
 		global $post;
 
