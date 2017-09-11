@@ -284,6 +284,7 @@ if ( ! class_exists( 'UM' ) ) {
                 $this->notices();
                 $this->users();
                 $this->dragdrop();
+                $this->plugin_updater();
             } elseif ( $this->is_request( 'frontend' ) ) {
                 $this->enqueue();
                 $this->rewrite();
@@ -324,6 +325,19 @@ if ( ! class_exists( 'UM' ) ) {
                 $this->classes['common'] = new um\core\Common();
             }
             return $this->classes['common'];
+        }
+
+
+        /**
+         * @since 2.0
+         *
+         * @return um\core\Plugin_Updater()
+         */
+        function plugin_updater() {
+            if ( empty( $this->classes['plugin_updater'] ) ) {
+                $this->classes['plugin_updater'] = new um\core\Plugin_Updater();
+            }
+            return $this->classes['plugin_updater'];
         }
 
 
