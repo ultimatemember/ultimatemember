@@ -29,6 +29,11 @@ jQuery(document).ready( function (){
                 break;
 
             case 'radio':
+                if ($dom.find('input[type=radio]:checked').length >= 1) {
+                    default_value = $dom.find('input[type=radio]:checked').val();
+                }
+
+                break;
             case 'checkbox':
 
                 if ($dom.find('input[type=checkbox]:checked').length >= 1) {
@@ -42,14 +47,7 @@ jQuery(document).ready( function (){
                     }
 
                 }
-
-                if ($dom.find('input[type=radio]:checked').length >= 1) {
-                    default_value = $dom.find('input[type=radio]:checked').val();
-                }
-
                 break;
-
-
         }
 
         return {type: type, value: default_value};
@@ -200,7 +198,6 @@ jQuery(document).ready( function (){
      */
     function um_apply_conditions($dom, is_single_update) {
         var operators = ['empty', 'not empty', 'equals to', 'not equals', 'greater than', 'less than', 'contains'];
-
         var key = $dom.parents('.um-field[data-key]').data('key');
 
         var conditions = um_field_conditions[key];
@@ -306,13 +303,13 @@ jQuery(document).ready( function (){
      * Restores default field value
      * @param  object $dom
      */
-    function um_field_restore_default_value($dom) {
-        um_field_default_values
+    function um_field_restore_default_value( $dom ) {
+        //um_field_default_values
 
-        var type = um_get_field_type($dom);
+        var type = um_get_field_type( $dom );
         var key = $dom.data('key');
         var field = um_field_default_values[key];
-        switch (type) {
+        switch ( type ) {
 
             case 'text':
             case 'number':
@@ -335,10 +332,9 @@ jQuery(document).ready( function (){
                 $dom.find('select').trigger('change');
                 break;
 
-            case 'radio':
             case 'checkbox':
 
-                if ($dom.find('input[type=checkbox]:checked').length >= 1) {
+                if ( $dom.find('input[type=checkbox]:checked').length >= 1 ) {
 
                     $dom.find('input[type=checkbox]:checked').removeAttr('checked');
                     $dom.find('span.um-field-checkbox-state i').removeClass('um-icon-android-checkbox-outline');
@@ -363,7 +359,10 @@ jQuery(document).ready( function (){
 
                 }
 
-                if ($dom.find('input[type=radio]:checked').length >= 1) {
+                break;
+            case 'radio':
+
+                if ( $dom.find('input[type=radio]:checked').length >= 1 ) {
 
                     setTimeout(function () {
 
@@ -382,17 +381,22 @@ jQuery(document).ready( function (){
                     }, 100);
                 }
 
-
                 break;
 
 
         } // end switch type
 
-        if (!$dom.hasClass('um-field-has-changed')) {
-            var me = um_get_field_element($dom);
-            if (me) {
-                me.trigger('change');
-                $dom.addClass('um-field-has-changed');
+
+        if ( ! $dom.hasClass( 'um-field-has-changed' ) ) {
+            var me = um_get_field_element( $dom );
+
+            if ( type == 'radio' ) {
+                me = me.find( ':checked' );
+            }
+
+            if ( me ) {
+                me.trigger( 'change' );
+                $dom.addClass( 'um-field-has-changed' );
             }
         }
     }

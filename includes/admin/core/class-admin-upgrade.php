@@ -64,9 +64,20 @@ if ( ! class_exists( 'Admin_Upgrade' ) ) {
             }
             closedir( $handle );
 
-            sort( $update_versions );
+            usort( $update_versions, array( &$this, 'version_compare_sort' ) );
 
             $this->update_versions = $update_versions;
+        }
+
+
+        /**
+         * Sort versions by version compare function
+         * @param $a
+         * @param $b
+         * @return mixed
+         */
+        function version_compare_sort( $a, $b ) {
+            return version_compare( $a, $b );
         }
 
     }

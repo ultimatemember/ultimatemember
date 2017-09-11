@@ -553,70 +553,54 @@ if ( ! class_exists( 'Fields' ) ) {
          * @param  array $data
          * @return boolean
          */
-        function is_radio_checked($key, $value, $data){
-            if ( isset( UM()->form()->post_form[$key] ) && is_array( UM()->form()->post_form[$key] ) ) {
-
-                if ( in_array( $value, UM()->form()->post_form[$key] ) ){
+        function is_radio_checked( $key, $value, $data ) {
+            if ( isset( UM()->form()->post_form[$key] ) ) {
+                if ( is_array( UM()->form()->post_form[$key] ) && in_array( $value, UM()->form()->post_form[$key] ) ) {
+                    return true;
+                } elseif ( $value == UM()->form()->post_form[$key] ) {
                     return true;
                 }
-
             } else {
+                if ( um_user( $key ) && $this->editing == true ) {
 
-                if ( ! isset( UM()->form()->post_form[$key] ) ) {
-
-                    if ( um_user( $key ) && $this->editing == true ) {
-
-                        if ( strstr( $key, 'role_' ) ) {
-                            $key = 'role';
-                        }
-
-                        $um_user_value = um_user( $key );
-
-                        if ( $key == 'role' ) {
-                            $um_user_value = strtolower( $um_user_value );
-
-                            $role_keys = get_option( 'um_roles' );
-
-                            if ( ! empty( $role_keys ) ) {
-                                if ( in_array( $um_user_value, $role_keys ) ) {
-                                    $um_user_value = 'um_' . $um_user_value;
-                                }
-                            }
-                        }
-
-                        if ( $um_user_value == $value ) {
-                            return true;
-                        }
-
-                        if ( is_array( $um_user_value ) && in_array( $value, $um_user_value ) ) {
-                            return true;
-                        }
-
-                        if ( is_array( $um_user_value ) ){
-                            foreach( $um_user_value as $u) {
-                                if( $u == html_entity_decode( $value ) ){
-                                    return true;
-                                }
-                            }
-                        }
-
-
-                    } else {
-
-                        if ( isset($data['default']) && $data['default'] == $value ) {
-                            return true;
-                        }
-
+                    if ( strstr( $key, 'role_' ) ) {
+                        $key = 'role';
                     }
 
-                } else {
+                    $um_user_value = um_user( $key );
 
-                    if ( $value == UM()->form()->post_form[$key] ) {
+                    if ( $key == 'role' ) {
+                        $um_user_value = strtolower( $um_user_value );
+
+                        $role_keys = get_option( 'um_roles' );
+
+                        if ( ! empty( $role_keys ) ) {
+                            if ( in_array( $um_user_value, $role_keys ) ) {
+                                $um_user_value = 'um_' . $um_user_value;
+                            }
+                        }
+                    }
+
+                    if ( $um_user_value == $value ) {
                         return true;
                     }
 
-                }
+                    if ( is_array( $um_user_value ) && in_array( $value, $um_user_value ) ) {
+                        return true;
+                    }
 
+                    if ( is_array( $um_user_value ) ) {
+                        foreach ( $um_user_value as $u ) {
+                            if ( $u == html_entity_decode( $value ) ) {
+                                return true;
+                            }
+                        }
+                    }
+
+
+                } elseif ( isset( $data['default'] ) && $data['default'] == $value ) {
+                    return true;
+                }
             }
 
             return false;
@@ -2099,7 +2083,7 @@ if ( ! class_exists( 'Fields' ) ) {
                                 $col_class = '';
                             }
 
-                            if ( $this->is_radio_checked($key, $option_value, $data) ) {
+                            if ( $this->is_radio_checked( $key, $option_value, $data ) ) {
                                 $active = 'active';
                                 $class = "um-icon-android-radio-button-on";
                             } else {
@@ -2110,8 +2094,6 @@ if ( ! class_exists( 'Fields' ) ) {
                             if( isset( $data['editable'] ) &&  $data['editable'] == 0 ){
                                 $col_class .= " um-field-radio-state-disabled";
                             }
-
-
 
                             $output .= '<label class="um-field-radio '.$active.' um-field-half '.$col_class.'">';
 
