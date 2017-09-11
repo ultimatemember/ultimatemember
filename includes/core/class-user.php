@@ -362,7 +362,7 @@ if ( ! class_exists( 'User' ) ) {
                 return '';
             }
 
-            update_option( "um_cache_userdata_{$user_id}", $profile );
+            update_option( "um_cache_userdata_{$user_id}", $profile, false );
         }
 
         function remove_cache( $user_id ) {
