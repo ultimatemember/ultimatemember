@@ -29,6 +29,7 @@ if ( ! class_exists( 'UM' ) ) {
      * @method UM_Verified_Users_API Verified_Users_API()
      * @method UM_WooCommerce_API WooCommerce_API()
      * @method UM_Terms_Conditions_API Terms_Conditions_API()
+     * @method UM_Private_Content_API Private_Content_API()
      *
      */
     final class UM extends UM_Functions {

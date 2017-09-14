@@ -113,6 +113,13 @@
 		'desc' => 'Add a notifications system to your site so users can receive real-time notifications',
 	);
 
+	$premium['private-content'] = array(
+		'url' => 'https://ultimatemember.com/extensions/private-content/',
+		'image' => 'https://ultimatemember.com/wp-content/uploads/bb-plugin/cache/private-content-page-circle.png',
+		'name' => 'Private Content',
+		'desc' => 'With the private content extension you can provide logged in users with content that only they can access and view',
+	);
+
 	
 	$free['online-users'] = array(
 		'url' => 'https://ultimatemember.com/extensions/online-users/',

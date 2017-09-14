@@ -941,5 +941,39 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             return $html;
         }
 
+
+        function render_ajax_button( $field_data ) {
+
+            if ( empty( $field_data['id'] ) )
+                return false;
+
+            $id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+            $id_attr = ' id="' . $id . '" ';
+
+            $class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
+            $class_attr = ' class="um-forms-field button ' . $class . '" ';
+
+            $data = array(
+                'field_id' => $field_data['id']
+            );
+
+            $data_attr = '';
+            foreach ( $data as $key => $value ) {
+                $data_attr .= " data-{$key}=\"{$value}\" ";
+            }
+
+            $name = $field_data['id'];
+            $name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+            $name_attr = ' name="' . $name . '" ';
+
+            $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
+            $value = isset( $field_data['value'] ) ? $field_data['value'] : $default;
+            $value_attr = ' value="' . $value . '" ';
+
+            $html = "<input type=\"button\" $id_attr $class_attr $name_attr $data_attr $value_attr /><div class='clear'></div><div class='um_setting_ajax_button_response'></div>";
+
+            return $html;
+        }
+
     }
 }

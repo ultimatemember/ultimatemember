@@ -32,6 +32,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
             'notices'               => '2.0-beta1',
             'notifications'         => '2.0-beta1',
             'online'                => '2.0-beta1',
+            'private-content'       => '2.0-beta1',
             'profile-completeness'  => '2.0-beta1',
             'recaptcha'             => '2.0-beta1',
             'reviews'               => '2.0-beta1',
