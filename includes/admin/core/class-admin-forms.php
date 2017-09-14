@@ -585,7 +585,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             $name_attr = ' name="' . $name . '" ';
 
             $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
-            $value = ( '' !== $field_data['value'] ) ? $field_data['value'] : $default;
+            $value = ( isset( $field_data['value'] ) && '' !== $field_data['value'] ) ? $field_data['value'] : $default;
             /*$value = isset( $field_data['value'] ) ? $field_data['value'] : $default;
             $value = ! empty( $field_data['value'] ) ? $field_data['value'] : 0;
             */

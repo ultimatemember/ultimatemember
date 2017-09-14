@@ -72,8 +72,6 @@ if ( ! class_exists( 'Permalinks' ) ) {
          ***	@Get current URL anywhere
          ***/
         function get_current_url( $no_query_params = false ) {
-            global $post;
-
             $um_get_option = get_option('um_options');
 
             $server_name_method = isset( $um_get_option['current_url_method'] ) ? $um_get_option['current_url_method'] : 'SERVER_NAME';
@@ -94,7 +92,7 @@ if ( ! class_exists( 'Permalinks' ) ) {
                     }
                 } else {*/
 
-                    $network_permalink_structure = um_get_option("network_permalink_structure");
+                    $network_permalink_structure = UM()->um_get_option("network_permalink_structure");
 
                     if(  $network_permalink_structure == "sub-directory" ){
 
