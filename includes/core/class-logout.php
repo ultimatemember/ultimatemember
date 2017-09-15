@@ -9,7 +9,7 @@ if ( ! class_exists( 'Logout' ) ) {
 
         function __construct() {
 
-            add_action('template_redirect', array(&$this, 'logout_page'), 10000 );
+            add_action('template_redirect', array( &$this, 'logout_page' ), 10000 );
 
         }
 
@@ -55,7 +55,7 @@ if ( ! class_exists( 'Logout' ) ) {
 
 
 
-            if ( um_is_core_page('logout') || ( $trid > 0 && $has_translation && $trid == $logout_page_id && $not_default_lang )  ) {
+            if ( um_is_core_page('logout') || ( $trid > 0 && $has_translation && $trid == $logout_page_id && $not_default_lang ) ) {
 
                 if ( is_user_logged_in() ) {
 
@@ -63,7 +63,7 @@ if ( ! class_exists( 'Logout' ) ) {
                         wp_logout();
                         session_unset();
                         exit( wp_redirect( $_REQUEST['redirect_to'] ) );
-                    } else if ( um_user('after_logout') == 'redirect_home' ) {
+                    } else if ( um_user( 'after_logout' ) == 'redirect_home' ) {
                         wp_logout();
                         session_unset();
                         exit( wp_redirect( home_url( $language_code ) ) );

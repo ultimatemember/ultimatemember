@@ -189,32 +189,29 @@
 	/**
 	 * Member Directory Display
 	 */
-	add_action('um_members_directory_display', 'um_members_directory_display');
+	add_action( 'um_members_directory_display', 'um_members_directory_display' );
 	function um_members_directory_display( $args ) {
 		extract( $args );
 		
 		if ( isset( $args['search'] ) && $args['search'] == 1 && isset( $args['must_search'] ) && $args['must_search'] == 1 && !isset( $_REQUEST['um_search'] ) )
 			return;
 		
-		if ( um_members('no_users') ) {
+		if ( um_members('no_users') ) { ?>
 		
-		?>
-		
-		<div class="um-members-none">
-			<p><?php echo $args['no_users']; ?></p>
-		</div>
+			<div class="um-members-none">
+				<p><?php echo $args['no_users']; ?></p>
+			</div>
 			
-		<?php
+		<?php }
 
-		}
+		$view_type = ( ! empty( $args['view_type'] ) && 'list' == $args['view_type'] ) ? 'list' : 'grid';
 		
-		$file = um_path . 'templates/members-grid.php';
-		$theme_file = get_stylesheet_directory() . '/ultimate-member/templates/members-grid.php';
+		$file = um_path . "templates/members-{$view_type}.php";
+		$theme_file = get_stylesheet_directory() . "/ultimate-member/templates/members-{$view_type}.php";
 		
-		if ( file_exists( $theme_file )  ){
+		if ( file_exists( $theme_file ) ) {
 			$file = $theme_file;
 		}
 
 		include $file;
-
 	}
