@@ -1841,21 +1841,11 @@ if ( ! class_exists( 'Fields' ) ) {
 
                     // role field
                     if ( $form_key == 'role' ) {
-/*                        global $wpdb;
-                        foreach($options as $key => $val ) {
-                            $val = (string) $val;
-                            $val = trim( $val );
-                            $post_id = $wpdb->get_var(
-                                $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND ( post_name = %s OR post_title = %s )", $key, $val )
-                            );
-                            $_role = get_post( $post_id );
-                            if( isset( $_role->post_title ) ){
-                                $new_roles[ $_role->post_name ] = $_role->post_title;
-                            }
-                            wp_reset_postdata();
-                        }*/
-
-                        $options = UM()->roles()->get_roles( false, array( 'administrator' ) );
+                        $roles = UM()->roles()->get_roles( false, array( 'administrator' ) );
+                        if ( isset( $options ) )
+                            $options = array_intersect( $options, $roles );
+                        else
+                            $options = $roles;
                     }
 
                     // add an empty option!
