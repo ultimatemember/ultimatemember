@@ -589,6 +589,8 @@ if ( ! class_exists( 'User' ) ) {
 
             update_user_meta( $this->id, 'submitted', $submitted );
 
+            $this->update_profile( $submitted );
+
             do_action('um_after_save_registration_details', $this->id, $submitted );
 
         }

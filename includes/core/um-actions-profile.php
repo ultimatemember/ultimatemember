@@ -650,17 +650,40 @@
 				?>
 
 			<div class="um-profile-nav-item um-profile-nav-<?php echo $id; ?> <?php if ( ! um_get_option( 'profile_menu_icons' ) ) { echo 'without-icon'; } ?> <?php if ( $id == $active_tab ) { echo 'active'; } ?>">
-				<a href="<?php echo $nav_link; ?>" <?php if ( um_get_option( 'profile_menu_icons' ) ) { ?>class="um-tip-n"<?php } ?> title="<?php echo $tab['name']; ?>" original-title="<?php echo $tab['name']; ?>">
+				<?php if ( um_get_option( 'profile_menu_icons' ) ) { ?>
+					<a href="<?php echo $nav_link; ?>" class="um-tip-n uimob500-show uimob340-show uimob800-show" title="<?php echo $tab['name']; ?>" original-title="<?php echo $tab['name']; ?>">
 
-					<i class="<?php echo $tab['icon']; ?>"></i>
+						<i class="<?php echo $tab['icon']; ?>"></i>
 
-					<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?>
-					<span class="um-tab-notifier uimob500-show uimob340-show uimob800-show"><?php echo $tab['notifier']; ?></span>
-					<?php } ?>
+						<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?>
+							<span class="um-tab-notifier uimob500-show uimob340-show uimob800-show"><?php echo $tab['notifier']; ?></span>
+						<?php } ?>
 
-					<span class="uimob500-hide uimob340-hide uimob800-hide title"><?php echo $tab['name']; ?></span>
+						<span class="uimob500-hide uimob340-hide uimob800-hide title"><?php echo $tab['name']; ?></span>
 
-				</a>
+					</a>
+					<a href="<?php echo $nav_link; ?>" class="uimob500-hide uimob340-hide uimob800-hide" title="<?php echo $tab['name']; ?>" original-title="<?php echo $tab['name']; ?>">
+
+						<i class="<?php echo $tab['icon']; ?>"></i>
+
+						<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?>
+							<span class="um-tab-notifier uimob500-show uimob340-show uimob800-show"><?php echo $tab['notifier']; ?></span>
+						<?php } ?>
+
+						<span class="uimob500-hide uimob340-hide uimob800-hide title"><?php echo $tab['name']; ?></span>
+
+					</a>
+				<?php } else { ?>
+					<a href="<?php echo $nav_link; ?>" title="<?php echo $tab['name']; ?>" original-title="<?php echo $tab['name']; ?>">
+
+						<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?>
+						<span class="um-tab-notifier uimob500-show uimob340-show uimob800-show"><?php echo $tab['notifier']; ?></span>
+						<?php } ?>
+
+						<span class="uimob500-hide uimob340-hide uimob800-hide title"><?php echo $tab['name']; ?></span>
+
+					</a>
+				<?php } ?>
 			</div>
 
 			<?php } ?>
