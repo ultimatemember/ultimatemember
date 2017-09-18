@@ -375,3 +375,79 @@ a.um-edit-profile-btn {
 
 
 /* NEW STYLES FOR VIEW TYPE LIST*/
+.um-member-directory-header {
+	padding: 20px 0 !important;
+	width: 100% !important;
+	box-sizing: border-box;
+}
+
+.um-member-directory-view-type {
+	float: right;
+	padding: 10px;
+	position: relative;
+	vertical-align: middle;
+	font-size: 30px;
+	height: 30px;
+	line-height: 30px;
+	z-index: 66;
+}
+
+.um-members-list .um-member {
+	width:100% !important;
+	padding: 40px 0 15px 0;
+	margin-bottom: 20px;
+}
+
+.um-members-list .um-member .um-member-photo {
+	float: left;
+	padding: 0;
+	margin: 0 10px;
+}
+
+.um-members-list .um-member .um-member-card {
+	float: left;
+	padding: 0;
+	width: 100%;
+	margin-top: -90px;
+}
+
+.um-members-list .um-member-card-info {
+	width: calc( 75% - 10px );
+	margin-right: 10px;
+	float:left;
+	text-align: left;
+	padding-left: 115px;
+	box-sizing: border-box;
+}
+
+.um-members-list .um-member-card-actions {
+	min-width: 110px;
+	width: 25%;
+	float:right;
+}
+
+.um-members-list .um-member-meta-main {
+	width: 100%;
+	float:left;
+	text-align: left;
+	padding: 0 10px;
+	box-sizing: border-box;
+}
+
+
+.um-members-list .um-member-meta-main .um-member-more,
+.um-members-list .um-member-meta-main .um-member-meta,
+.um-members-list .um-member-meta-main .um-member-less {
+	float: left;
+	width: 100%;
+}
+
+.um-members-list .um-member-metaline {
+	text-align: left;
+}
+
+
+.um-members-list .um-member-metaline span strong,
+.um-members-list .um-member-metaline span span {
+	float: left;
+}

@@ -204,6 +204,8 @@
 			
 		<?php }
 
+		$args['view_type'] = ! empty( $_GET['view_type'] ) ? $_GET['view_type'] : $args['view_type'];
+
 		$view_type = ( ! empty( $args['view_type'] ) && 'list' == $args['view_type'] ) ? 'list' : 'grid';
 		
 		$file = um_path . "templates/members-{$view_type}.php";
