@@ -39,13 +39,17 @@ if ( ! class_exists( 'Setup' ) ) {
          ***/
         function install_default_forms() {
 
+            $options = get_option( 'um_options' );
+            $options = empty( $options ) ? array() : $options;
+
             if ( current_user_can( 'manage_options' ) && ! get_option( 'um_is_installed' ) ) {
 
                 update_option( 'um_is_installed', 1 );
 
                 //Install default options
                 foreach ( UM()->config()->settings_defaults as $key => $value ) {
-                    UM()->um_update_option( $key, $value );
+                    $options[$key] = $value;
+                    //UM()->um_update_option( $key, $value );
                 }
 
                 // Install Core Forms
@@ -93,7 +97,8 @@ if ( ! class_exists( 'Setup' ) ) {
 
                 }
 
-                if ( isset( $core_forms ) ) update_option( 'um_core_forms', $core_forms );
+                if ( isset( $core_forms ) )
+                    update_option( 'um_core_forms', $core_forms );
 
                 // Install Core Directories
                 foreach ( UM()->config()->core_directories as $id ) {
@@ -184,10 +189,13 @@ if ( ! class_exists( 'Setup' ) ) {
                 }
 
                 foreach ( $core_pages as $slug => $page_id ) {
-                    UM()->um_update_option( apply_filters( 'um_core_page_id_filter', 'core_' . $slug ), $page_id );
+                    $key = apply_filters( 'um_core_page_id_filter', 'core_' . $slug );
+                    $options[$key] = $page_id;
+                    //UM()->um_update_option( apply_filters( 'um_core_page_id_filter', 'core_' . $slug ), $page_id );
                 }
             }
 
+            update_option( 'um_options', $options );
         }
 
 
@@ -201,9 +209,10 @@ if ( ! class_exists( 'Setup' ) ) {
             foreach ( UM()->config()->settings_defaults as $key => $value ) {
                 //set new options to default
                 if ( ! isset( $options[$key] ) )
-                    UM()->um_update_option( $key, $value );
-
+                    $options[$key] = $value;
             }
+
+            update_option( 'um_options', $options );
         }
 
 
