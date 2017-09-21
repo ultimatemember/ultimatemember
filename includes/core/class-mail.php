@@ -100,19 +100,27 @@ if ( ! class_exists( 'Mail' ) ) {
          * @return mixed|string
          */
         function prepare_template( $slug, $args = array() ) {
-            ob_start(); ?>
+            ob_start();
 
-            <html>
-                <?php do_action( 'um_before_email_template_body', $slug, $args ); ?>
+            if ( um_get_option( 'email_html' ) ) { ?>
 
-                <body <?php echo apply_filters( 'um_email_template_body_attrs', 'style="background: #f2f2f2;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;"', $slug ) ?>>
+                <html>
+                    <?php do_action( 'um_before_email_template_body', $slug, $args ); ?>
 
-                    <?php echo $this->get_email_template( $slug, $args ); ?>
+                    <body <?php echo apply_filters( 'um_email_template_body_attrs', 'style="background: #f2f2f2;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;"', $slug ) ?>>
 
-                </body>
-            </html>
+                        <?php echo $this->get_email_template( $slug, $args ); ?>
 
-            <?php $message = ob_get_clean();
+                    </body>
+                </html>
+
+            <?php } else {
+
+                echo $this->get_email_template( $slug, $args );
+
+            }
+
+            $message = ob_get_clean();
 
             // Convert tags in email template
             return um_convert_tags( $message, $args );
