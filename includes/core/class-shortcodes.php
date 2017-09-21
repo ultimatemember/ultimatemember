@@ -249,10 +249,13 @@ if ( ! class_exists( 'Shortcodes' ) ) {
             return $this->load($args);
         }
 
-        /***
-         ***	@Load a module with global function
+        /**
+         * Load a module with global function
+         *
+         * @param $args
+         * @return string|void
          */
-        function load($args) {
+        function load( $args ) {
             ob_start();
 
             $defaults = array();
@@ -260,7 +263,7 @@ if ( ! class_exists( 'Shortcodes' ) ) {
 
             // when to not continue
             $this->form_id = (isset($args['form_id'])) ? $args['form_id'] : null;
-            if (!$this->form_id) {
+            if ( ! $this->form_id ) {
                 return;
             }
 

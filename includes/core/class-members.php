@@ -11,10 +11,6 @@ if ( ! class_exists( 'Members' ) ) {
 
         function __construct() {
 
-            add_filter('user_search_columns', array(&$this, 'user_search_columns'), 99 );
-
-            add_action('template_redirect', array(&$this, 'access_members'), 555);
-
             $this->core_search_fields = array(
                 'user_login',
                 'username',
@@ -22,34 +18,75 @@ if ( ! class_exists( 'Members' ) ) {
                 'user_email',
             );
 
-            add_filter( 'um_search_select_fields', array(&$this, 'um_search_select_fields'), 10, 1 );
+            add_action( 'template_redirect', array( &$this, 'access_members' ), 555 );
+            add_action( 'um_pre_directory_shortcode', array( &$this, 'pre_directory_shortcode' ) );
 
+            add_filter( 'um_search_select_fields', array( &$this, 'search_select_fields' ), 10, 1 );
         }
 
-        /***
-         ***	@user_search_columns
-         ***/
-        function user_search_columns( $search_columns ){
-            if ( is_admin() ) {
-                $search_columns[] = 'display_name';
-            }
-            return $search_columns;
-        }
 
-        /***
-         ***	@Members page allowed?
-         ***/
+        /**
+         * Check Members page allowed
+         */
         function access_members() {
 
-            if ( um_get_option('members_page') == 0 && um_is_core_page('members') ) {
+            if ( um_get_option( 'members_page' ) == 0 && um_is_core_page( 'members' ) ) {
                 um_redirect_home();
             }
 
         }
 
-        /***
-         ***	@tag conversion for member directory
-         ***/
+
+        /**
+         * Pre-display Member Directory
+         *
+         * @param $args
+         */
+        function pre_directory_shortcode( $args ) {
+            wp_localize_script( 'um_members', 'um_members_args', $args );
+
+            $this->results = $this->get_members( $args );
+        }
+
+
+        /**
+         * Display assigned roles in search filter 'role' field
+         * @param  	array $attrs
+         * @return 	array
+         * @uses  	add_filter 'um_search_select_fields'
+         * @since 	1.3.83
+         */
+        function search_select_fields( $attrs ) {
+            if ( strstr( $attrs['metakey'], 'role_' ) ) {
+
+                $shortcode_roles = get_post_meta( UM()->shortcodes()->form_id, '_um_roles', true );
+                $um_roles = UM()->roles()->get_roles( false );
+
+                if( ! empty( $shortcode_roles ) && is_array( $shortcode_roles ) ){
+
+                    $attrs['options'] = array();
+
+                    foreach ( $um_roles as $key => $value ) {
+                        if ( in_array( $key, $shortcode_roles ) ) {
+                            $attrs['options'][ $key ] = $value;
+                        }
+                    }
+
+                }
+
+            }
+
+            return $attrs;
+        }
+
+
+        /**
+         * tag conversion for member directory
+         *
+         * @param $string
+         * @param $array
+         * @return mixed
+         */
         function convert_tags( $string, $array ) {
 
             $search = array(
@@ -60,9 +97,9 @@ if ( ! class_exists( 'Members' ) ) {
                 $array['total_users'],
             );
 
-            $string = str_replace($search, $replace, $string);
-            return $string;
+            return str_replace( $search, $replace, $string );
         }
+
 
         /***
          ***	@show filter
@@ -136,42 +173,13 @@ if ( ! class_exists( 'Members' ) ) {
 
         }
 
+
         /**
-         * Display assigned roles in search filter 'role' field
-         * @param  	array $attrs
-         * @return 	array
-         * @uses  	add_filter 'um_search_select_fields'
-         * @since 	1.3.83
+         * Generate a loop of results
+         *
+         * @param $args
+         * @return mixed|void
          */
-        function um_search_select_fields( $attrs ) {
-            if( strstr( $attrs['metakey'], 'role_' ) ){
-
-                $shortcode_roles = get_post_meta( UM()->shortcodes()->form_id, '_um_roles', true );
-                $um_roles = UM()->roles()->get_roles( false );
-
-                if( ! empty( $shortcode_roles ) && is_array( $shortcode_roles ) ){
-
-                    $attrs['options'] = array();
-
-                    foreach ( $um_roles as $key => $value ) {
-                        if ( in_array( $key, $shortcode_roles ) ) {
-                            $attrs['options'][ $key ] = $value;
-                        }
-                    }
-
-                }
-
-            }
-
-            return $attrs;
-        }
-
-
-
-
-        /***
-         ***	@Generate a loop of results
-         ***/
         function get_members( $args ) {
 
             global $wpdb, $post;
@@ -364,6 +372,64 @@ if ( ! class_exists( 'Members' ) ) {
 
         }
 
+
+        /**
+         * get AJAX results members
+         */
+        function ajax_get_members() {
+            $args = ! empty( $_POST['args'] ) ? $_POST['args'] : array();
+            $args['page'] = ! empty( $_POST['page'] ) ? $_POST['page'] : ( isset( $args['page'] ) ? $args['page'] : 1 );
+
+            $sizes = um_get_option( 'cover_thumb_sizes' );
+            $cover_size = UM()->mobile()->isTablet() ? $sizes[1] : $sizes[0];
+
+            $users = $this->get_members( $args );
+
+            $users_data = array();
+            foreach ( $users['users'] as $user_id ) {
+                um_fetch_user( $user_id );
+
+                $data_array = array(
+                    'id'                    => $user_id,
+                    'role'                  => um_user('role'),
+                    'account_status'        => um_user('account_status'),
+                    'account_status_name'   => um_user('account_status_name'),
+                    'cover_photo'           => um_user('cover_photo', $cover_size),
+                    'display_name'          => um_user('display_name'),
+                    'profile_url'           => um_user_profile_url(),
+                    'edit_profile_url'      => um_edit_profile_url(),
+                    'avatar'                => get_avatar( $user_id, str_replace( 'px', '', um_get_option( 'profile_photosize' ) ) ),
+                    'display_name_html'     => um_user('display_name', 'html'),
+                );
+
+
+                if ( $args['show_tagline'] && is_array( $args['tagline_fields'] ) ) {
+                    foreach ( $args['tagline_fields'] as $key ) {
+                        if ( $key && um_filtered_value( $key ) ) {
+                            $data_array[$key] = um_filtered_value( $key );
+                        }
+                    }
+                }
+
+                if ( $args['show_userinfo'] ) {
+                    foreach ( $args['reveal_fields'] as $key ) {
+                        if ( $key && um_filtered_value( $key ) ) {
+                            $data_array["label_{$key}"] = UM()->fields()->get_label( $key );
+                            $data_array[$key] = um_filtered_value( $key );
+                        }
+                    }
+                }
+
+
+                $users_data[] = $data_array;
+
+                um_reset_user_clean();
+            }
+
+            um_reset_user();
+
+            wp_send_json_success( array( 'users' => $users_data ) );
+        }
 
     }
 }

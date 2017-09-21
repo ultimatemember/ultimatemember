@@ -88,6 +88,7 @@ if ( ! class_exists( 'Enqueue' ) ) {
                 'muted_action' => UM()->get_ajax_route( 'um\core\Form', 'ajax_muted_action' ),
                 'ajax_paginate' => UM()->get_ajax_route( 'um\core\Query', 'ajax_paginate' ),
                 'ajax_select_options' => UM()->get_ajax_route( 'um\core\Form', 'ajax_select_options' ),
+                'ajax_get_members' => UM()->get_ajax_route( 'um\core\Members', 'ajax_get_members' ),
             ) );
 
 
@@ -263,8 +264,10 @@ if ( ! class_exists( 'Enqueue' ) ) {
             wp_register_script('um_scripts', um_url . 'assets/js/um-scripts' . $this->suffix . '.js' );
             wp_enqueue_script('um_scripts');
 
-            wp_register_script('um_members', um_url . 'assets/js/um-members' . $this->suffix . '.js' );
-            wp_enqueue_script('um_members');
+            //wp_register_script('um_members', um_url . 'assets/js/um-members' . $this->suffix . '.js', array('jquery'), ultimatemember_version, true );
+            wp_enqueue_script('um_members', um_url . 'assets/js/um-members' . $this->suffix . '.js', array('jquery'), ultimatemember_version, true );
+            wp_enqueue_script('wp-util');
+            //wp_enqueue_script('um_members');
 
             wp_register_script('um_profile', um_url . 'assets/js/um-profile' . $this->suffix . '.js' );
             wp_enqueue_script('um_profile');

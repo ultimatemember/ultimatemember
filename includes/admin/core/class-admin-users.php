@@ -22,6 +22,20 @@ if ( ! class_exists( 'Admin_Users' ) ) {
             add_filter( 'views_users', array( &$this, 'add_status_links' ) );
 
             add_action( 'admin_init',  array( &$this, 'um_bulk_users_edit' ), 9 );
+
+            add_filter( 'user_search_columns', array( &$this, 'user_search_columns' ), 99 );
+        }
+
+
+        /**
+         * Add user search columns
+         *
+         * @param $search_columns
+         * @return array
+         */
+        function user_search_columns( $search_columns ) {
+            $search_columns[] = 'display_name';
+            return $search_columns;
         }
 
 

@@ -1095,9 +1095,6 @@
 	 *
 	 * @param $option_id (string) (required) The option or setting that you want to retrieve
 	 *
-	 * @returns Returns the value of the setting you requested, or a blank value if the setting
-		does not exist.
-	 *
 	 * @example Get default user role set in global options
 
 		<?php $default_role = um_get_option('default_role'); ?>
@@ -1107,7 +1104,8 @@
 
 		<?php $blocked_ips = um_get_option('blocked_ips'); ?>
 
-	 * @return mixed
+	 * @return mixed Returns the value of the setting you requested, or a blank value if the setting
+	does not exist.
 	 */
 	function um_get_option( $option_id ) {
 		if ( ! isset( UM()->options ) )
