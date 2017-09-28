@@ -55,7 +55,7 @@ if ( ! class_exists( 'Logout' ) ) {
 
 
 
-            if ( um_is_core_page('logout') || ( $trid > 0 && $has_translation && $trid == $logout_page_id && $not_default_lang )  ) {
+            if ( um_is_core_page('logout') || ( $trid > 0 && $has_translation && $trid == $sitepress->get_element_trid( $logout_page_id ) && $not_default_lang )  ) {
 
                 if ( is_user_logged_in() ) {
 
