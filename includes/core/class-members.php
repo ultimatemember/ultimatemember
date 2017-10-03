@@ -26,6 +26,41 @@ if ( ! class_exists( 'Members' ) ) {
 
 
         /**
+         * Get prepared search text for sql request
+         *
+         * @global object $wpdb
+         * @param string $text
+         * @param array $sql_fields
+         * @return string
+         */
+        function prepare_search( $text, $sql_fields ) {
+            $text = strtolower( trim( $text ) );
+
+            $string = '';
+            foreach ( $sql_fields as $field ) {
+                if ( ! is_array( $field ) ) {
+                    $string .= 'LOWER(' . $field . ') LIKE %s OR ';
+                } else {
+                    if ( strpos( $field['meta_key'], '%' ) !== false ) {
+                        $field['meta_key'] = str_replace( '%', '%%', $field['meta_key'] );
+                        $string .= '( ' . $field['table'] . '.meta_key LIKE \'' . $field['meta_key'] . '\' AND LOWER(' . $field['meta_value'] . ') LIKE %s ) OR ';
+                    } else {
+                        $string .= '( ' . $field['table'] . '.meta_key = \'' . $field['meta_key'] . '\' AND LOWER(' . $field['meta_value'] . ') LIKE %s ) OR ';
+                    }
+                }
+            }
+
+            $string = substr( $string, 0, -4 );
+
+            if ( empty( $string ) )
+                return '';
+
+            global $wpdb;
+            return $wpdb->prepare( ' AND ( ' . $string . ' )', array_fill( 0, count( $sql_fields ), '%' . $text . '%' ) );
+        }
+
+
+        /**
          * Check Members page allowed
          */
         function access_members() {
@@ -44,8 +79,6 @@ if ( ! class_exists( 'Members' ) ) {
          */
         function pre_directory_shortcode( $args ) {
             wp_localize_script( 'um_members', 'um_members_args', $args );
-
-            $this->results = $this->get_members( $args );
         }
 
 
@@ -186,14 +219,13 @@ if ( ! class_exists( 'Members' ) ) {
 
             extract($args);
 
-            $query_args = array();
-            $query_args = apply_filters( 'um_prepare_user_query_args', $query_args, $args );
+            $query_args = apply_filters( 'um_prepare_user_query_args', array(), $args );
 
             // Prepare for BIG SELECT query
             $wpdb->query('SET SQL_BIG_SELECTS=1');
 
             // number of profiles for mobile
-            if ( UM()->mobile()->isMobile() && isset( $profiles_per_page_mobile ) ){
+            if ( UM()->mobile()->isMobile() && isset( $profiles_per_page_mobile ) ) {
                 $profiles_per_page = $profiles_per_page_mobile;
             }
 
@@ -212,13 +244,16 @@ if ( ! class_exists( 'Members' ) ) {
             $query_args['paged'] = $members_page;
 
             if ( ! um_user( 'can_view_all' ) && is_user_logged_in() ) {
-                //unset( $query_args );
                 $query_args = array();
             }
 
             do_action('um_user_before_query', $query_args );
 
+            add_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10 );
+
             $users = new \WP_User_Query( $query_args );
+
+            remove_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10 );
 
             do_action('um_user_after_query', $query_args, $users );
 
@@ -317,17 +352,52 @@ if ( ! class_exists( 'Members' ) ) {
 
             }
 
-            return apply_filters('um_prepare_user_results_array', $array );
+            $array['pages_to_show'] = ! empty( $array['pages_to_show'] ) ? array_values( $array['pages_to_show'] ) : array();
 
+            return apply_filters( 'um_prepare_user_results_array', $array );
         }
 
 
         /**
+         * Change mySQL meta query join attribute
+         * for search only by UM user meta fields
+         *
+         * @param array  $sql               Array containing the query's JOIN and WHERE clauses.
+         * @return mixed
+         */
+        function change_meta_sql( $sql ) {
+
+            if ( ! empty( $_POST['general_search'] ) ) {
+                global $wpdb;
+
+                preg_match(
+                    '/^(.*).meta_value LIKE \'%' . esc_attr( $_POST['general_search'] ) . '%\' [^\)]/im',
+                    $sql['where'],
+                    $join_matches
+                );
+
+                $meta_join_for_search = trim( $join_matches[1] );
+
+                $sql['join'] = preg_replace(
+                    '/(' . $meta_join_for_search . ' ON \( ' . $wpdb->users . '\.ID = ' . $meta_join_for_search . '\.user_id )(\))/im',
+                    "$1 AND " . $meta_join_for_search . ".meta_key IN( '" . implode( "','", array_keys( UM()->builtin()->all_user_fields ) ) . "' ) $2",
+                    $sql['join']
+                );
+            }
+
+            return $sql;
+        }
+
+
+        /**
+         * maybe deprecated
+         *
+         * 
          * Optimizes Member directory with multiple LEFT JOINs
          * @param  object $vars
          * @return object $var
          */
-        public function um_optimize_member_query( $vars ) {
+        /*public function um_optimize_member_query( $vars ) {
 
             global $wpdb;
 
@@ -370,7 +440,7 @@ if ( ! class_exists( 'Members' ) ) {
 
             return $vars;
 
-        }
+        }*/
 
 
         /**
@@ -397,11 +467,12 @@ if ( ! class_exists( 'Members' ) ) {
                     'cover_photo'           => um_user('cover_photo', $cover_size),
                     'display_name'          => um_user('display_name'),
                     'profile_url'           => um_user_profile_url(),
+                    'can_edit'              => ( UM()->roles()->um_current_user_can( 'edit', $user_id ) || UM()->roles()->um_user_can( 'can_edit_everyone' ) ) ? true : false,
                     'edit_profile_url'      => um_edit_profile_url(),
                     'avatar'                => get_avatar( $user_id, str_replace( 'px', '', um_get_option( 'profile_photosize' ) ) ),
                     'display_name_html'     => um_user('display_name', 'html'),
+                    'social_urls'           => UM()->fields()->show_social_urls( false ),
                 );
-
 
                 if ( $args['show_tagline'] && is_array( $args['tagline_fields'] ) ) {
                     foreach ( $args['tagline_fields'] as $key ) {
@@ -420,6 +491,7 @@ if ( ! class_exists( 'Members' ) ) {
                     }
                 }
 
+                $data_array = apply_filters( 'um_ajax_get_members_data', $data_array, $user_id );
 
                 $users_data[] = $data_array;
 
@@ -428,7 +500,14 @@ if ( ! class_exists( 'Members' ) ) {
 
             um_reset_user();
 
-            wp_send_json_success( array( 'users' => $users_data ) );
+
+            $pagination_data = array(
+                'pages_to_show' => $users['pages_to_show'],
+                'current_page' => $args['page'],
+                'total_pages' => $users['total_pages']
+            );
+
+            wp_send_json_success( array( 'users' => $users_data, 'pagi' => $pagination_data ) );
         }
 
     }

@@ -39,22 +39,34 @@ if ( ! class_exists( 'Fields' ) ) {
 
         /**
          * Shows social links
+         *
+         * @param bool $echo
+         * @return string
          */
-        function show_social_urls(){
+        function show_social_urls( $echo = true ) {
+            $social = array();
+
             $fields = UM()->builtin()->all_user_fields;
-            foreach( $fields as $field => $args ) {
+            foreach ( $fields as $field => $args ) {
                 if ( isset( $args['advanced'] ) && $args['advanced'] == 'social' ) {
-                    $social[$field] = $args;
+                    $social[ $field ] = $args;
                 }
             }
-            foreach( $social as $k => $arr ) {
+
+            ob_start();
+
+            foreach ( $social as $k => $arr ) {
                 if ( um_profile( $k ) ) { ?>
-
                     <a href="<?php echo um_filtered_social_link( $k , $arr['match'] ); ?>" style="background: <?php echo $arr['color']; ?>;" target="_blank" class="um-tip-n" title="<?php echo $arr['title']; ?>"><i class="<?php echo $arr['icon']; ?>"></i></a>
-
-                    <?php
-                }
+                <?php }
             }
+
+            $content = ob_get_clean();
+
+            if ( $echo )
+                echo $content;
+            else
+                return $content;
         }
 
 
@@ -2030,23 +2042,6 @@ if ( ! class_exists( 'Fields' ) ) {
                     // role field
                     if ( $form_key == 'role' ) {
                         $options = UM()->roles()->get_roles( false, array( 'administrator' ) );
-
-                        /*var_dump( UM()->roles()->get_roles() );
-                        global $wpdb;
-                        if ( ! empty( $options ) ) {
-                            foreach ( $options as $rkey => $val ) {
-                                $val = (string) $val;
-                                $val = trim( $val );
-                                $post_id = $wpdb->get_var(
-                                    $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND ( post_name = %s OR post_title = %s )", $rkey, $val )
-                                );
-                                $_role = get_post( $post_id );
-                                $new_roles[$_role->post_name] = $_role->post_title;
-                                wp_reset_postdata();
-                            }
-
-                            $options = $new_roles;
-                        }*/
                     }
 
                     // add options

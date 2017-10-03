@@ -5,7 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'Router' ) ) {
     class Router {
-
         /**
          *
          */

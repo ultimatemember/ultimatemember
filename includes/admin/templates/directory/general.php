@@ -85,7 +85,19 @@ if ( $show_these_users ) {
 			'name'		    => '_um_show_these_users',
 			'label'		    => __( 'Only show specific users (Enter one username per line)', 'ultimate-member' ),
 			'value'		    => $show_these_users,
-		)
+		),
+		array(
+			'id'		=> '_um_view_type',
+			'type'		=> 'select',
+			'name'		=> '_um_view_type',
+			'label'		=> __( 'View type', 'ultimate-member' ),
+			'tooltip'	=> __( 'View type a specific parameter in the directory', 'ultimate-member' ),
+			'options'	=> array(
+				'grid'	=> __( 'Grid', 'ultimate-member' ),
+				'list'	=> __( 'List', 'ultimate-member' ),
+			),
+			'value'		=> UM()->query()->get_meta_value( '_um_view_type' ),
+		),
 	);
 
 	$fields = apply_filters( 'um_admin_extend_directory_options_general', $fields );

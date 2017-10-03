@@ -522,7 +522,6 @@
 
 
 	function um_profile_id() {
-
 		if ( um_get_requested_user() ) {
 			return um_get_requested_user();
 		} else if ( is_user_logged_in() && get_current_user_id() ) {
@@ -1010,6 +1009,9 @@
 	***	@boolean check for not same user
 	***/
 	function um_is_user_himself() {
+		if ( ! get_current_user_id() )
+			return false;
+
 		if ( um_get_requested_user() && um_get_requested_user() != get_current_user_id() )
 			return false;
 		return true;
