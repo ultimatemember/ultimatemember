@@ -67,7 +67,7 @@ $view_type = ( ! empty( $args['view_type'] ) && 'list' == $args['view_type'] ) ?
 
             if ( isset( $args['search_fields'] ) ) {
                 foreach( $args['search_fields'] as $k => $testfilter ) {
-                    if ( $testfilter && !in_array( $testfilter, (array)$search_filters ) ) {
+                    if ( $testfilter && ! in_array( $testfilter, (array) $search_filters ) ) {
                         $search_filters[] = $testfilter;
                     }
                 }
@@ -116,16 +116,12 @@ $view_type = ( ! empty( $args['view_type'] ) && 'list' == $args['view_type'] ) ?
 
                         <div class="um-search-submit">
                             <a href="javascript:void(0);" class="um-button um-alt um-close-filter"><?php _e( 'Close Filters', 'ultimate-member' ); ?></a>
-                            <!--<a href="javascript:void(0);" class="um-button um-do-filter"><?php /*_e( 'Filter', 'ultimate-member' ); */?></a>-->
                         </div>
                         <div class="um-clear"></div>
-
                     </form>
-
                 </div>
 
-                <?php
-            }
+            <?php }
 
             if ( isset($_REQUEST['um_search']) ) {
                 $is_filtering = 1;

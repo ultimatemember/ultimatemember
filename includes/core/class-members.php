@@ -149,7 +149,8 @@ if ( ! class_exists( 'Members' ) ) {
             // additional filter for search field attributes
             $attrs = apply_filters("um_search_field_{$filter}", $attrs);
 
-            $type = UM()->builtin()->is_dropdown_field( $filter, $attrs ) ? 'select' : 'text';
+            //$type = UM()->builtin()->is_dropdown_field( $filter, $attrs ) ? 'select' : 'text';
+            $type = UM()->builtin()->is_dropdown_field( $filter, $attrs ) ? 'radio' : 'text';
             $type = apply_filters( 'um_search_field_type', $type, $attrs );
 
             // filter all search fields
@@ -160,9 +161,7 @@ if ( ! class_exists( 'Members' ) ) {
 
             switch ( $type ) {
 
-                case 'select':
-
-                    ?>
+                case 'select': ?>
 
                     <select name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" class="um-s1" style="width: 100%" data-placeholder="<?php echo __( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>" <?php if ( ! empty( $attrs['custom_dropdown_options_source'] ) ) { ?> data-um-ajax-source="<?php echo $attrs['custom_dropdown_options_source'] ?>"<?php } ?>>
 
@@ -178,9 +177,7 @@ if ( ! class_exists( 'Members' ) ) {
                                 $opt = $k;
 
                             if ( isset( $attrs['custom'] ) )
-                                $opt = $k;
-
-                            ?>
+                                $opt = $k; ?>
 
                             <option value="<?php echo $opt; ?>" <?php um_select_if_in_query_params( $filter, $opt ); ?>><?php echo __( $v, 'ultimate-member'); ?></option>
 
@@ -192,9 +189,52 @@ if ( ! class_exists( 'Members' ) ) {
 
                     break;
 
-                case 'text':
+                case 'radio': ?>
 
-                    ?>
+                    <?php foreach ( $attrs['options'] as $k => $v ) {
+                        $v = stripslashes( $v );
+
+                        $opt = $v;
+
+                        if ( strstr( $filter, 'role_' ) )
+                            $opt = $k;
+
+                        if ( isset( $attrs['custom'] ) )
+                            $opt = $k; ?>
+
+                        <label>
+                            <?php echo __( $v, 'ultimate-member'); ?>
+                            <input type="radio" name="<?php echo $filter; ?>" id="<?php echo $filter . '_' . $k; ?>" value="<?php echo $opt; ?>" <?php um_select_if_in_query_params( $filter, $opt ); ?>/>
+                        </label>
+                    <?php } ?>
+
+<!--                    <select name="<?php /*echo $filter; */?>" id="<?php /*echo $filter; */?>" class="um-s1" style="width: 100%" data-placeholder="<?php /*echo __( stripslashes( $attrs['label'] ), 'ultimate-member' ); */?>" <?php /*if ( ! empty( $attrs['custom_dropdown_options_source'] ) ) { */?> data-um-ajax-source="<?php /*echo $attrs['custom_dropdown_options_source'] */?>"<?php /*} */?>>
+
+                        <option></option>
+
+                        <?php /*foreach ( $attrs['options'] as $k => $v ) {
+
+                            $v = stripslashes( $v );
+
+                            $opt = $v;
+
+                            if ( strstr( $filter, 'role_' ) )
+                                $opt = $k;
+
+                            if ( isset( $attrs['custom'] ) )
+                                $opt = $k;
+
+                            */?>
+
+                            <option value="<?php /*echo $opt; */?>" <?php /*um_select_if_in_query_params( $filter, $opt ); */?>><?php /*echo __( $v, 'ultimate-member'); */?></option>
+
+                        <?php /*} */?>
+
+                    </select>-->
+
+                    <?php break;
+
+                case 'text': ?>
 
                     <input type="text" autocomplete="off" name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" placeholder="<?php echo isset( $attrs['label'] ) ? __( $attrs['label'], 'ultimate-member') : ''; ?>" value='<?php echo esc_attr( um_queried_search_value(  $filter, false ) ); ?>' />
 
