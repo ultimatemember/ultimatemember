@@ -77,6 +77,15 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             if ( empty( $data['type'] ) )
                 return '';
 
+            if ( !empty( $data['value'] ) && $data['type'] != 'email_template' ) {
+		        $data['value'] = wp_unslash( $data['value'] );
+
+		        /*for multi_text*/
+		        if ( !is_array( $data['value'] ) ) {
+			        $data['value'] = esc_attr( $data['value'] );
+		        }
+	        }
+
             $conditional = ! empty( $data['conditional'] ) ? 'data-conditional="' . esc_attr( json_encode( $data['conditional'] ) ) . '"' : '';
             $prefix_attr = ! empty( $this->form_data['prefix_id'] ) ? ' data-prefix="' . $this->form_data['prefix_id'] . '" ' : '';
 
@@ -805,7 +814,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
 
             if ( ! empty( $values ) ) {
                 foreach ( $values as $k=>$value ) {
-
+	                $value = esc_attr($value);
                     $id_attr = ' id="' . $id . '-' . $k . '" ';
 
                     $html .= "<li class=\"um-multi-text-option-line {$size}\"><span class=\"um-field-wrapper\">

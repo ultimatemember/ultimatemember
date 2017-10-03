@@ -191,6 +191,18 @@ jQuery(document).ready( function (){
 
     }
 
+    function um_in_array(needle, haystack, strict){
+        var found = false, key, strict = !!strict;
+        for (key in haystack) {
+            if ((strict && haystack[key] === needle) || (!strict && haystack[key] == needle)) {
+                found = true;
+                break;
+            }
+        }
+
+        return found;
+    }
+
     /**
      * Apply field conditions
      * @param  object  $dom
@@ -204,67 +216,90 @@ jQuery(document).ready( function (){
 
         var live_field_value = um_get_field_data($dom);
 
+        var $owners = {};
+        var $owners_values = {};
+        var $owner_conditions = {};
+
         jQuery.each(conditions, function (index, condition) {
+            if (typeof $owners_values[condition.owner] == 'undefined') {
+                $owners_values[condition.owner] = [];
+                $owner_conditions[condition.owner] = {}
+            }
+            $owners_values[condition.owner].push(condition.value);
+            $owner_conditions[condition.owner] = condition;
+        });
+
+        jQuery.each(conditions, function (index, condition) {
+            if (typeof $owners[condition.owner] == 'undefined') {
+                $owners[condition.owner] = {};
+            }
             if (condition.operator == 'empty') {
-                if (!live_field_value || live_field_value == '') {
-                    um_field_apply_action($dom, condition, true);
+                if (!live_field_value || live_field_value == '' && um_in_array(live_field_value, $owners_values[condition.owner])) {
+                    $owners[condition.owner][index] = true;
                 } else {
-                    um_field_apply_action($dom, condition, false);
+                    $owners[condition.owner][index] = false;
                 }
             }
 
             if (condition.operator == 'not empty') {
-                if (live_field_value && live_field_value != '') {
-                    um_field_apply_action($dom, condition, true);
+                if (live_field_value && live_field_value != '' && !um_in_array(live_field_value, $owners_values[condition.owner])) {
+                    $owners[condition.owner][index] = true;
                 } else {
-                    um_field_apply_action($dom, condition, false);
+                    $owners[condition.owner][index] = false;
                 }
             }
 
             if (condition.operator == 'equals to') {
-                if (condition.value == live_field_value) {
-                    um_field_apply_action($dom, condition, true);
+
+                if (condition.value == live_field_value && um_in_array(live_field_value, $owners_values[condition.owner])) {
+                    $owners[condition.owner][index] = true;
                 } else {
-                    um_field_apply_action($dom, condition, false);
+                    $owners[condition.owner][index] = false;
                 }
             }
 
             if (condition.operator == 'not equals') {
-                if (jQuery.isNumeric(condition.value) && parseInt(live_field_value) != parseInt(condition.value) && live_field_value) {
-                    um_field_apply_action($dom, condition, true);
-                } else if (!jQuery.isNumeric(condition.value) && condition.value != live_field_value) {
-                    um_field_apply_action($dom, condition, true);
+                if (jQuery.isNumeric(condition.value) && parseInt(live_field_value) != parseInt(condition.value) && live_field_value && !um_in_array(live_field_value, $owners_values[condition.owner])) {
+                    $owners[condition.owner][index] = true;
+                } else if (condition.value != live_field_value && !um_in_array(live_field_value, $owners_values[condition.owner])) {
+                    $owners[condition.owner][index] = true;
                 } else {
-                    um_field_apply_action($dom, condition, false);
+                    $owners[condition.owner][index] = false;
                 }
             }
 
             if (condition.operator == 'greater than') {
                 if (jQuery.isNumeric(condition.value) && parseInt(live_field_value) > parseInt(condition.value)) {
-                    um_field_apply_action($dom, condition, true);
+                    $owners[condition.owner][index] = true;
                 } else {
-                    um_field_apply_action($dom, condition, false);
+                    $owners[condition.owner][index] = false;
                 }
             }
 
             if (condition.operator == 'less than') {
-                if (jQuery.isNumeric(condition.value) && parseInt(live_field_value) < parseInt(condition.value) && live_field_value) {
-                    um_field_apply_action($dom, condition, true);
+                if (jQuery.isNumeric(condition.value) && parseInt(live_field_value) < parseInt(condition.value)) {
+                    $owners[condition.owner][index] = true;
                 } else {
-                    um_field_apply_action($dom, condition, false);
+                    $owners[condition.owner][index] = false;
                 }
             }
 
             if (condition.operator == 'contains') {
-                if (live_field_value && live_field_value.indexOf(condition.value) >= 0) {
-                    um_field_apply_action($dom, condition, true);
+                if (live_field_value && live_field_value.indexOf(condition.value) >= 0 && um_in_array(live_field_value, $owners_values[condition.owner])) {
+                    $owners[condition.owner][index] = true;
                 } else {
-                    um_field_apply_action($dom, condition, false);
+                    $owners[condition.owner][index] = false;
                 }
             }
 
         }); // end foreach `conditions`
-
+        jQuery.each($owners, function (index, field) {
+            if (um_in_array(true, field)) {
+                um_field_apply_action($dom, $owner_conditions[index], true);
+            } else {
+                um_field_apply_action($dom, $owner_conditions[index], false);
+            }
+        });
         $dom.trigger('um_fields_change');
 
     }
