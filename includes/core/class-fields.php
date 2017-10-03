@@ -1885,6 +1885,8 @@
 
 						$output .= '<select  ' . $disabled . ' ' . $select_original_option_value . ' ' . $disabled_by_parent_option . '  name="' . $form_key . '" id="' . $form_key . '" data-validate="' . $validate . '" data-key="' . $key . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . $placeholder . '" ' . $atts_ajax . '>';
 
+                       $enable_options_pair = apply_filters("um_fields_options_enable_pairs__{$key}", false );
+                         
                     if( ! $has_parent_option ){
                         if ( isset($options) && $options == 'builtin'){
                             $options = UM()->builtin()->get ( $filter );
