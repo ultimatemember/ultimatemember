@@ -192,6 +192,299 @@
     add_action( 'um_access_global_settings', 'um_access_global_settings' );
 
 
+    /**
+     * Archives/Taxonomies/Categories access settings
+     */
+    add_action( 'um_access_category_settings', 'um_access_category_settings' );
+    function um_access_category_settings() {
+        global $post;
+        if ( is_front_page() ||
+            is_home() ||
+            is_feed() ||
+            is_page() ||
+            is_404()
+        ) {
+            return;
+        }
+
+        $access = um_get_option( 'accessible' );
+        $current_page_type = um_get_current_page_type();
+
+
+        if ( is_category() && !in_array( $current_page_type, array( 'day', 'month', 'year', 'author', 'archive' ) ) ) {
+
+            $um_category = get_the_category();
+            $um_category = current( $um_category );
+            $term_id = '';
+
+            if (isset( $um_category->term_id )) {
+                $term_id = $um_category->term_id;
+            }
+
+            if (isset( $term_id ) && !empty( $term_id )) {
+
+                $opt = get_term_meta($term_id,'um_content_restriction',true);
+
+                if (isset( $opt['_um_accessible'] )) {
+
+                    $redirect = false;
+
+                    switch ($opt['_um_accessible']) {
+
+                        case 0:
+
+                            UM()->access()->allow_access = true;
+                            UM()->access()->redirect_handler = ''; // open to everyone
+
+                            break;
+
+                        case 1:
+
+                            if (is_user_logged_in()) {
+
+                                if (isset( $opt['_um_redirect2'] ) && !empty( $opt['_um_redirect2'] )) {
+                                    $redirect = $opt['_um_redirect2'];
+                                } else {
+                                    $redirect = site_url();
+                                }
+                            }
+
+                            UM()->access()->allow_access = false;
+
+                            $redirect = UM()->access()->set_referer( $redirect, "category_1" );
+
+                            UM()->access()->redirect_handler = esc_url( $redirect );
+
+                            if (!is_user_logged_in() && !empty( $redirect )) {
+                                UM()->access()->allow_access = true;
+                            }
+
+                            break;
+
+                        case 2:
+
+                            if (!is_user_logged_in()) {
+
+                                if (isset( $opt['_um_redirect'] ) && !empty( $opt['_um_redirect'] )) {
+                                    $redirect = $opt['_um_redirect'];
+                                } else {
+                                    $redirect = um_get_core_page( 'login' );
+                                }
+
+                                UM()->access()->allow_access = false;
+
+                                $redirect = UM()->access()->set_referer( $redirect, "category_2a" );
+
+                                UM()->access()->redirect_handler = esc_url( $redirect );
+                            }
+
+                            if (is_user_logged_in() && isset( $opt['_um_roles'] ) && !empty( $opt['_um_roles'] )) {
+                                if (!in_array( um_user( 'role' ), $opt['_um_roles'] )) {
+
+
+                                    if (isset( $opt['_um_redirect'] )) {
+                                        $redirect = $opt['_um_redirect'];
+                                    }
+                                    $redirect = UM()->access()->set_referer( $redirect, "category_2b" );
+
+                                    UM()->access()->redirect_handler = esc_url( $redirect );
+
+                                }
+                            }
+
+                    }
+                }
+            }
+
+        } else if ($access == 2 && !is_user_logged_in() && is_archive()) {
+
+            UM()->access()->allow_access = false;
+            $redirect = um_get_core_page( 'login' );
+            $redirect = UM()->access()->set_referer( $redirect, "category_archive" );
+
+            UM()->access()->redirect_handler = $redirect;
+
+        } else if (is_tax() && get_post_taxonomies( $post )) {
+
+            $taxonomies = get_post_taxonomies( $post );
+            $categories_ids = array();
+
+            foreach ($taxonomies as $key => $value) {
+                $term_list = wp_get_post_terms( $post->ID, $value, array( "fields" => "ids" ) );
+                foreach ($term_list as $term_id) {
+                    array_push( $categories_ids, $term_id );
+                }
+            }
+
+            foreach ($categories_ids as $term => $term_id) {
+
+                $opt = get_term_meta($term_id,'um_content_restriction',true);
+
+                if (isset( $opt['_um_accessible'] )) {
+                    switch ($opt['_um_accessible']) {
+
+                        case 0:
+                            UM()->access()->allow_access = true;
+                            UM()->access()->redirect_handler = false; // open to everyone
+                            break;
+
+                        case 1:
+
+                            if (is_user_logged_in())
+                                $redirect = ( isset( $opt['_um_redirect2'] ) && !empty( $opt['_um_redirect2'] ) ) ? $opt['_um_redirect2'] : site_url();
+                            $redirect = UM()->access()->set_referer( $redirect, "categories_1" );
+                            UM()->access()->redirect_handler = $redirect;
+                            if (!is_user_logged_in())
+                                UM()->access()->allow_access = true;
+
+                            break;
+
+                        case 2:
+
+                            if (!is_user_logged_in()) {
+
+                                $redirect = ( isset( $opt['_um_redirect'] ) && !empty( $opt['_um_redirect'] ) ) ? $opt['_um_redirect'] : um_get_core_page( 'login' );
+                                $redirect = UM()->access()->set_referer( $redirect, "categories_2a" );
+
+                                UM()->access()->redirect_handler = $redirect;
+                            }
+
+                            if (is_user_logged_in() && isset( $opt['_um_roles'] ) && !empty( $opt['_um_roles'] )) {
+                                if (!in_array( um_user( 'role' ), $opt['_um_roles'] )) {
+                                    $redirect = null;
+                                    if (is_user_logged_in()) {
+                                        $redirect = ( isset( $opt['_um_redirect'] ) ) ? $opt['_um_redirect'] : site_url();
+                                    }
+
+                                    if (!is_user_logged_in()) {
+                                        $redirect = um_get_core_page( 'login' );
+                                    }
+
+                                    $redirect = UM()->access()->set_referer( $redirect, "categories_2b" );
+                                    UM()->access()->redirect_handler = $redirect;
+                                }
+                            }
+
+                    }
+                }
+
+            }
+        }
+
+    }
+
+    /**
+     * Tags access settings
+     */
+    add_action( 'um_access_tags_settings', 'um_access_tags_settings' );
+    function um_access_tags_settings() {
+
+        if ( is_front_page() ||
+            is_home() ||
+            is_feed() ||
+            is_page() ||
+            is_404()
+        ) {
+
+            return;
+
+        }
+
+        $access = um_get_option( 'accessible' );
+        $current_page_type = um_get_current_page_type();
+
+        $tag_id = get_query_var( 'tag_id' );
+
+        if (is_tag() && $current_page_type == 'tag' && $tag_id) {
+
+            if (isset( $tag_id ) && !empty( $tag_id )) {
+
+                $opt = get_term_meta($tag_id,'um_content_restriction',true);
+
+                if (isset( $opt['_um_accessible'] )) {
+
+                    $redirect = false;
+
+                    switch ($opt['_um_accessible']) {
+
+                        case 0:
+
+                            UM()->access()->allow_access = true;
+                            UM()->access()->redirect_handler = ''; // open to everyone
+
+                            break;
+
+                        case 1:
+
+                            if (is_user_logged_in()) {
+
+                                if (isset( $opt['_um_redirect2'] ) && !empty( $opt['_um_redirect2'] )) {
+                                    $redirect = $opt['_um_redirect2'];
+                                } else {
+                                    $redirect = site_url();
+                                }
+                            }
+
+                            UM()->access()->allow_access = false;
+
+                            $redirect = UM()->access()->set_referer( $redirect, "tag_1" );
+
+                            UM()->access()->redirect_handler = esc_url( $redirect );
+
+                            if (!is_user_logged_in() && !empty( $redirect )) {
+                                UM()->access()->allow_access = true;
+                            }
+
+                            break;
+
+                        case 2:
+
+                            if (!is_user_logged_in()) {
+
+                                if (isset( $opt['_um_redirect'] ) && !empty( $opt['_um_redirect'] )) {
+                                    $redirect = $opt['_um_redirect'];
+                                } else {
+                                    $redirect = um_get_core_page( 'login' );
+                                }
+
+                                UM()->access()->allow_access = false;
+
+                                $redirect = UM()->access()->set_referer( $redirect, "tag_2" );
+
+                                UM()->access()->redirect_handler = esc_url( $redirect );
+                            }
+
+                            if (is_user_logged_in() && isset( $opt['_um_roles'] ) && !empty( $opt['_um_roles'] )) {
+                                if (!in_array( um_user( 'role' ), $opt['_um_roles'] )) {
+
+
+                                    if (isset( $opt['_um_redirect'] )) {
+                                        $redirect = $opt['_um_redirect'];
+                                    }
+                                    $redirect = UM()->access()->set_referer( $redirect, "tag_2b" );
+
+                                    UM()->access()->redirect_handler = esc_url( $redirect );
+
+                                }
+                            }
+
+                    }
+                }
+            }
+
+        } else if ($access == 2 && !is_user_logged_in() && is_tag()) {
+
+            UM()->access()->allow_access = false;
+            $redirect = um_get_core_page( 'login' );
+            $redirect = UM()->access()->set_referer( $redirect, "tag" );
+
+            UM()->access()->redirect_handler = $redirect;
+
+        }
+
+    }
+
+
 	/**
 	 * Custom User homepage redirection
 	 */
