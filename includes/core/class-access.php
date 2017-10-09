@@ -35,6 +35,10 @@ if ( ! class_exists( 'Access' ) ) {
 
             do_action('um_access_global_settings');
 
+            do_action('um_access_category_settings');
+
+            do_action('um_access_tags_settings');
+
             do_action('um_access_user_custom_homepage');
 
             do_action('um_access_frontpage_per_role');
