@@ -577,14 +577,14 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
          ***/
         function add_metabox_directory() {
 
-            add_meta_box('um-admin-form-general', __('General Options'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
-            add_meta_box('um-admin-form-profile', __('Profile Card'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
-            add_meta_box('um-admin-form-search', __('Search Options'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
-            add_meta_box('um-admin-form-pagination', __('Results &amp; Pagination'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
+            add_meta_box('um-admin-form-general', __('General Options', 'ultimate-member'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
+            add_meta_box('um-admin-form-profile', __('Profile Card', 'ultimate-member'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
+            add_meta_box('um-admin-form-search', __('Search &amp; Filters Options', 'ultimate-member'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
+            add_meta_box('um-admin-form-pagination', __('Results &amp; Pagination', 'ultimate-member'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
 
-            add_meta_box('um-admin-form-shortcode', __('Shortcode'), array(&$this, 'load_metabox_directory'), 'um_directory', 'side', 'default');
+            add_meta_box('um-admin-form-shortcode', __('Shortcode', 'ultimate-member'), array(&$this, 'load_metabox_directory'), 'um_directory', 'side', 'default');
 
-            add_meta_box('um-admin-form-appearance', __('Styling: General'), array(&$this, 'load_metabox_directory'), 'um_directory', 'side', 'default');
+            add_meta_box('um-admin-form-appearance', __('Styling: General', 'ultimate-member'), array(&$this, 'load_metabox_directory'), 'um_directory', 'side', 'default');
 
             //add_meta_box('um-admin-form-profile_card', __('Styling: Profile Card'), array(&$this, 'load_metabox_directory'), 'um_directory', 'side', 'default');
 

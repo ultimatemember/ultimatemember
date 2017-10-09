@@ -179,8 +179,7 @@ jQuery(document).ready(function() {
 	jQuery('.um-s1,.um-s2').css({'display':'block'});
 	
 	jQuery(".um-s1").select2({
-		
-		allowClear: true,
+		allowClear: true
 	});
 
 	jQuery(".um-s2").select2({
@@ -191,6 +190,12 @@ jQuery(document).ready(function() {
     jQuery(".um-s3").select2({
 		allowClear: false,
 		minimumResultsForSearch: -1
+	});
+
+	jQuery(".um-multiselect").select2({
+		allowClear: false,
+		minimumResultsForSearch: -1,
+		multiple: true
 	});
 
 	jQuery(document).on('click', '.um-field-group-head:not(.disabled)', function(){

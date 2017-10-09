@@ -163,7 +163,7 @@ jQuery(document).ready(function() {
 
 
 	//filtration process
-	jQuery( document ).on( 'change', '.um-search-filter input, .um-search-filter select', function(e){
+	jQuery( document ).on( 'change', '.um-search-filter select', function(e){
 		e.preventDefault();
 
 		var directory = jQuery(this).parents('.um-directory');
@@ -171,20 +171,29 @@ jQuery(document).ready(function() {
 		if ( is_directory_busy( directory ) )
 			return false;
 
-		directory.find('.um-members-filter-tag').remove();
-
-		var serialized_form = directory.find( '.filters_form' ).serializeArray();
 		var unique = um_members_get_unique_id( directory );
 
-		jQuery.each( serialized_form, function(e){
-			um_members_hash_data[ unique ][ serialized_form[ e ].name ] = serialized_form[ e ].value;
-		});
+		var global_hash = um_members_hash_data[ unique ][ jQuery(this).prop('name') ];
+
+		if ( typeof global_hash == 'undefined' ) {
+			global_hash = [];
+		} else if( typeof global_hash == 'string' ) {
+			global_hash = [global_hash];
+		}
+
+		if ( -1 == jQuery.inArray( jQuery(this).val(), global_hash ) ) {
+			global_hash.push( jQuery(this).val() );
+		}
+
+		um_members_hash_data[ unique ][ jQuery(this).prop('name') ] = global_hash;
 
 		um_members_hash_data[ unique ].page = 1;
-
 		um_members_clear_hash();
 
 		window.location.hash = um_members_create_hash_string();
+
+		jQuery(this).val('').trigger('change');
+
 		return false;
 	});
 
@@ -198,12 +207,18 @@ jQuery(document).ready(function() {
 
 		var unique = um_members_get_unique_id( directory );
 
-		delete um_members_hash_data[ unique ][ jQuery(this).data('name') ];
+		var removeItem = jQuery(this).data('value');
+		if ( typeof um_members_hash_data[ unique ][ jQuery(this).data('name') ] == 'string' ) {
+			um_members_hash_data[ unique ][ jQuery(this).data('name') ] = [um_members_hash_data[ unique ][ jQuery(this).data('name') ]];
+		}
+
+		um_members_hash_data[ unique ][ jQuery(this).data('name') ] = jQuery.grep( um_members_hash_data[ unique ][ jQuery(this).data('name') ], function(value) {
+			return value != removeItem;
+		});
+
 		um_members_hash_data[ unique ].page = 1;
 
 		um_members_clear_hash();
-
-		//jQuery(this).parent().remove();
 
 		directory.find('.um-members-filter-tag').remove();
 
@@ -222,8 +237,14 @@ jQuery(document).ready(function() {
 		var unique = um_members_get_unique_id( directory );
 
 		directory.find( '.um-members-filter-remove' ).each( function() {
-			delete um_members_hash_data[ unique ][jQuery(this).data('name')];
-			//jQuery(this).parent().remove();
+			var removeItem = jQuery(this).data('value');
+			if ( typeof um_members_hash_data[ unique ][ jQuery(this).data('name') ] == 'string' ) {
+				um_members_hash_data[ unique ][ jQuery(this).data('name') ] = [um_members_hash_data[ unique ][ jQuery(this).data('name') ]];
+			}
+
+			um_members_hash_data[ unique ][ jQuery(this).data('name') ] = jQuery.grep( um_members_hash_data[ unique ][ jQuery(this).data('name') ], function(value) {
+				return value != removeItem;
+			});
 		});
 
 		um_members_hash_data[ unique ].page = 1;
@@ -343,27 +364,28 @@ function um_members_set_sorting( directory ) {
 
 function um_members_set_filters( directory ) {
 
+	if ( ! jQuery('#tmpl-um-members-filtered-line').length )
+		return false;
+
 	var unique_id = um_members_get_unique_id( directory );
 	var filters_data = [];
 
 	directory.find('.um-search-filter').each( function() {
-		if ( jQuery(this).find('input').length > 0 ) {
-			var query_value = um_members_hash_data[ unique_id ][ jQuery(this).find('input').attr('name') ];
-			jQuery(this).find('input').val( query_value ).trigger('change');
+		var filter_name = jQuery(this).find('select').attr('name');
+		var query_value = um_members_hash_data[ unique_id ][ filter_name ];
 
-			if ( typeof( query_value ) != 'undefined' ) {
-				filters_data.push( {'name':jQuery(this).find('input').attr('name'), 'value':query_value, 'unique_id':unique_id} );
-			}
-
-		} else if ( jQuery(this).find('select').length > 0 ) {
-			var query_value = um_members_hash_data[ unique_id ][ jQuery(this).find('select').attr('name') ];
-			jQuery(this).find('select').val( query_value ).trigger('change');
-
-			if ( typeof( query_value ) != 'undefined' ) {
-				filters_data.push( {'name':jQuery(this).find('select').attr('name'), 'value':query_value, 'unique_id':unique_id} );
+		if ( typeof( query_value ) != 'undefined' ) {
+			if ( typeof( query_value ) == 'string' ) {
+				filters_data.push( {'name':filter_name, 'value':query_value, 'unique_id':unique_id} );
+			} else {
+				jQuery.each( query_value, function(e) {
+					filters_data.push( {'name': filter_name, 'value':query_value[e], 'unique_id':unique_id} );
+				});
 			}
 		}
 	});
+
+	directory.find('.um-members-filter-tag').remove();
 
 	var filters_template = wp.template( 'um-members-filtered-line' );
 	directory.find('.um-filtered-line').prepend( filters_template( {'filters': filters_data} ) );
@@ -468,7 +490,12 @@ function um_members_parse_hash( directory ) {
 		var temp = hash_array[index].split('=');
 		if( temp[0].search( new RegExp( "_" + unique + "$", "g" ) ) !== -1 ) {
 			temp[0] = temp[0].replace( new RegExp( "_" + unique + "$", "g" ), '' );
-			hash_obj[temp[0]] = temp[1];
+
+			if ( temp[1].search( new RegExp( ",", "g" ) ) !== -1 ) {
+				hash_obj[temp[0]] = temp[1].split(",");
+			} else {
+				hash_obj[temp[0]] = temp[1];
+			}
 		}
 	}
 
@@ -527,6 +554,13 @@ function um_members_directory_loop() {
 		um_members_set_sorting( jQuery(this) );
 
 		um_members_set_filters( jQuery(this) );
+
+		//show results after search
+		if ( jQuery(this).data('only_search') == '1' && ! um_members_hash_data[ um_members_get_unique_id( jQuery(this) ) ].hasOwnProperty('general_search') ) {
+			um_members_hide_preloader( jQuery(this) );
+			um_members_directory_busy[ um_members_get_unique_id( jQuery(this) ) ] = false;
+			return false;
+		}
 
 		um_members_show_preloader( jQuery(this) );
 

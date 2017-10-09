@@ -148,8 +148,6 @@
 
                 if ( in_array( $field, array( 'members_page', 'general_search' ) ) ) continue;
 
-                $serialize_value = serialize( strval( $value ) );
-
                 if ( $value && $field != 'um_search' && $field != 'page_id' ) {
 
                     if ( strstr( $field, 'role_' ) )
@@ -160,24 +158,53 @@
                         if ( 'role' == $field ) {
                             $query_args['role__in'] = trim( $value );
                         } else {
-                            $field_query = array(
-                                array(
-                                    'key' => $field,
-                                    'value' => trim( $value ),
-                                    'compare' => '=',
-                                ),
-                                array(
-                                    'key' => $field,
-                                    'value' => trim( $value ),
-                                    'compare' => 'LIKE',
-                                ),
-                                array(
-                                    'key' => $field,
-                                    'value' => trim( $serialize_value ),
-                                    'compare' => 'LIKE',
-                                ),
-                                'relation' => 'OR',
-                            );
+
+                            if ( is_array( $value ) ) {
+                                $field_query = array( 'relation' => 'OR' );
+
+                                foreach ( $value as $single_val ) {
+                                    $serialize_value = serialize( strval( $single_val ) );
+
+                                    $field_query = array_merge( $field_query, array(
+                                        array(
+                                            'key' => $field,
+                                            'value' => trim( $single_val ),
+                                            'compare' => '=',
+                                        ),
+                                        array(
+                                            'key' => $field,
+                                            'value' => trim( $single_val ),
+                                            'compare' => 'LIKE',
+                                        ),
+                                        array(
+                                            'key' => $field,
+                                            'value' => trim( $serialize_value ),
+                                            'compare' => 'LIKE',
+                                        ),
+                                    ) );
+                                }
+                            } else {
+                                $serialize_value = serialize( strval( $value ) );
+
+                                $field_query = array(
+                                    array(
+                                        'key' => $field,
+                                        'value' => trim( $value ),
+                                        'compare' => '=',
+                                    ),
+                                    array(
+                                        'key' => $field,
+                                        'value' => trim( $value ),
+                                        'compare' => 'LIKE',
+                                    ),
+                                    array(
+                                        'key' => $field,
+                                        'value' => trim( $serialize_value ),
+                                        'compare' => 'LIKE',
+                                    ),
+                                    'relation' => 'OR',
+                                );
+                            }
 
                             $field_query = apply_filters( "um_query_args_{$field}__filter", $field_query );
                             $query_args['meta_query'][] = $field_query;

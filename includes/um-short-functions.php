@@ -516,7 +516,7 @@
 	function um_filtered_value( $key, $data = false ) {
 		$value = um_user( $key );
 
-		if (!$data) {
+		if ( ! $data ) {
 			$data = UM()->builtin()->get_specific_field( $key );
 		}
 

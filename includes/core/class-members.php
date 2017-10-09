@@ -149,8 +149,8 @@ if ( ! class_exists( 'Members' ) ) {
             // additional filter for search field attributes
             $attrs = apply_filters("um_search_field_{$filter}", $attrs);
 
-            //$type = UM()->builtin()->is_dropdown_field( $filter, $attrs ) ? 'select' : 'text';
-            $type = UM()->builtin()->is_dropdown_field( $filter, $attrs ) ? 'radio' : 'text';
+            $type = UM()->builtin()->is_dropdown_field( $filter, $attrs ) ? 'select' : 'text';
+            //$type = UM()->builtin()->is_dropdown_field( $filter, $attrs ) ? 'radio' : 'text';
             $type = apply_filters( 'um_search_field_type', $type, $attrs );
 
             // filter all search fields
@@ -189,58 +189,13 @@ if ( ! class_exists( 'Members' ) ) {
 
                     break;
 
-                case 'radio': ?>
+                /*case 'text': */?><!--
 
-                    <?php foreach ( $attrs['options'] as $k => $v ) {
-                        $v = stripslashes( $v );
+                    <input type="text" autocomplete="off" name="<?php /*echo $filter; */?>" id="<?php /*echo $filter; */?>" placeholder="<?php /*echo isset( $attrs['label'] ) ? __( $attrs['label'], 'ultimate-member') : ''; */?>" value='<?php /*echo esc_attr( um_queried_search_value(  $filter, false ) ); */?>' />
 
-                        $opt = $v;
-
-                        if ( strstr( $filter, 'role_' ) )
-                            $opt = $k;
-
-                        if ( isset( $attrs['custom'] ) )
-                            $opt = $k; ?>
-
-                        <label>
-                            <?php echo __( $v, 'ultimate-member'); ?>
-                            <input type="radio" name="<?php echo $filter; ?>" id="<?php echo $filter . '_' . $k; ?>" value="<?php echo $opt; ?>" <?php um_select_if_in_query_params( $filter, $opt ); ?>/>
-                        </label>
-                    <?php } ?>
-
-<!--                    <select name="<?php /*echo $filter; */?>" id="<?php /*echo $filter; */?>" class="um-s1" style="width: 100%" data-placeholder="<?php /*echo __( stripslashes( $attrs['label'] ), 'ultimate-member' ); */?>" <?php /*if ( ! empty( $attrs['custom_dropdown_options_source'] ) ) { */?> data-um-ajax-source="<?php /*echo $attrs['custom_dropdown_options_source'] */?>"<?php /*} */?>>
-
-                        <option></option>
-
-                        <?php /*foreach ( $attrs['options'] as $k => $v ) {
-
-                            $v = stripslashes( $v );
-
-                            $opt = $v;
-
-                            if ( strstr( $filter, 'role_' ) )
-                                $opt = $k;
-
-                            if ( isset( $attrs['custom'] ) )
-                                $opt = $k;
-
-                            */?>
-
-                            <option value="<?php /*echo $opt; */?>" <?php /*um_select_if_in_query_params( $filter, $opt ); */?>><?php /*echo __( $v, 'ultimate-member'); */?></option>
-
-                        <?php /*} */?>
-
-                    </select>-->
-
-                    <?php break;
-
-                case 'text': ?>
-
-                    <input type="text" autocomplete="off" name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" placeholder="<?php echo isset( $attrs['label'] ) ? __( $attrs['label'], 'ultimate-member') : ''; ?>" value='<?php echo esc_attr( um_queried_search_value(  $filter, false ) ); ?>' />
-
-                    <?php
-
-                    break;
+                    --><?php
+/*
+                    break;*/
 
             }
 
@@ -292,7 +247,8 @@ if ( ! class_exists( 'Members' ) ) {
             add_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10 );
 
             $users = new \WP_User_Query( $query_args );
-
+            //var_dump( $users->query_vars );
+            //var_dump( $users->request );
             remove_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10 );
 
             do_action('um_user_after_query', $query_args, $users );
@@ -548,6 +504,32 @@ if ( ! class_exists( 'Members' ) ) {
             );
 
             wp_send_json_success( array( 'users' => $users_data, 'pagi' => $pagination_data ) );
+        }
+
+
+        function get_sorting_fields() {
+
+            return apply_filters( 'um_members_directory_sort_dropdown_options', array(
+                'user_registered_desc'	=> __( 'Newest Members', 'ultimate-member' ),
+                'user_registered_asc'	=> __( 'Oldest Members', 'ultimate-member' ),
+                'username_asc'			=> __( 'Username', 'ultimate-member' ),
+                'first_name'			=> __( 'First Name', 'ultimate-member' ),
+                'last_name'				=> __( 'Last Name', 'ultimate-member' ),
+            ) );
+
+        }
+
+
+        function get_filters_fields() {
+
+            return apply_filters( 'um_members_directory_filter_dropdown_options', array(
+                'country'       => __( 'Country', 'ultimate-member' ),
+                'gender'        => __( 'Gender', 'ultimate-member' ),
+                'languages'     => __( 'Languages', 'ultimate-member' ),
+                'role'          => __( 'Roles', 'ultimate-member' ),
+                'mycred_rank'   => __( 'myCRED Rank', 'ultimate-member' ),
+            ) );
+
         }
 
     }

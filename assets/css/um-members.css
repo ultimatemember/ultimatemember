@@ -424,7 +424,7 @@ a.um-edit-profile-btn {
 }
 
 .um-member-directory-actions {
-	float:left;
+	float:right;
 	width:300px;
 }
 
@@ -711,8 +711,8 @@ div.uimob500 .um-members-list .um-member-card-actions {
 	transform: translateZ(0);
 	border-radius: 50%;
 	display: block;
-	width: 3.5em;
-	height: 3.5em;
+	width: 2.5em;
+	height: 2.5em;
 	margin: 0;
 	outline: 0;
 	padding: 0;
@@ -774,7 +774,7 @@ div.uimob500 .um-members-list .um-member-card-actions {
 }
 
 .um-directory .um-search-submit {
-	text-align: left;
+	text-align: center;
 }
 
 .um-directory .um-search-submit .um-close-filter {
