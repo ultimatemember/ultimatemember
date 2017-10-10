@@ -278,7 +278,8 @@ if ( ! class_exists( 'Plugin_Updater' ) ) {
                 $_data = json_decode( $api_request_transient );
             }
 
-            $_data->sections = (array)$_data->sections;
+            if ( isset( $_data->sections ) )
+                $_data->sections = (array)$_data->sections;
 
             return $_data;
         }
