@@ -1,5 +1,16 @@
 <script type="text/template" id="tmpl-um-member-list">
     <div class="um-members-list">
+        <div class="um-clear"></div>
+
+        <div class="um-members-intro">
+            <div class="um-members-total">
+                <# if ( data.users.length == 1 ) { #>
+                    {{{data.pagi.header_single}}}
+                <# } else if ( data.users.length > 1 ) { #>
+                    {{{data.pagi.header}}}
+                <# } #>
+            </div>
+        </div>
 
         <div class="um-clear"></div>
 

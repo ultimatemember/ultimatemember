@@ -33,7 +33,7 @@ if ( ! empty( $args['roles_can_search'] ) && ! in_array( um_user( 'role' ), $arg
             <?php } ?>
 
             <div class="um-member-directory-actions">
-                <div class="um-member-directory-sorting">
+                <div class="um-member-directory-sorting <?php if ( ! $filters ) { ?>hidden_filter<?php } ?>">
                     <select class="um-s3 um-member-directory-sorting-options" id="um-member-directory-sorting-select-<?php echo esc_attr( $form_id ) ?>" data-placeholder="<?php _e( 'Sort By', 'ultimate-member' ); ?>">
                         <option value=""></option>
                         <?php foreach ( $sorting_options as $value => $title ) { ?>
@@ -78,7 +78,7 @@ if ( ! empty( $args['roles_can_search'] ) && ! in_array( um_user( 'role' ), $arg
                 <script type="text/template" id="tmpl-um-members-filtered-line">
                     <# if ( data.filters.length > 0 ) { #>
                         <# _.each( data.filters, function( filter, key, list ) { #>
-                            <div class="um-members-filter-tag"><strong>{{{filter.name}}}</strong>: {{{filter.value}}}<div class="um-members-filter-remove" data-name="{{{filter.name}}}" data-value="{{{filter.value}}}">&times;</div></div>
+                            <div class="um-members-filter-tag"><strong>{{{filter.label}}}</strong>: {{{filter.value_label}}}<div class="um-members-filter-remove" data-name="{{{filter.name}}}" data-value="{{{filter.value}}}">&times;</div></div>
                         <# }); #>
                     <# } #>
                 </script>
@@ -87,13 +87,7 @@ if ( ! empty( $args['roles_can_search'] ) && ! in_array( um_user( 'role' ), $arg
 
                     <form method="post" action="" class="filters_form">
 
-                        <?php if ( isset( $_REQUEST['page_id'] ) && get_option('permalink_structure') == 0 ) { ?>
-
-                            <input type="hidden" name="page_id" id="page_id" value="<?php echo esc_attr( $_REQUEST['page_id']); ?>" />
-
-                        <?php }
-
-                        $i = 0;
+                        <?php $i = 0;
                         foreach ( $search_filters as $filter ) {
                             $i++;
 
@@ -101,11 +95,11 @@ if ( ! empty( $args['roles_can_search'] ) && ! in_array( um_user( 'role' ), $arg
                                 $add_class = 'um-search-filter-2';
                             } else {
                                 $add_class = '';
-                            }
+                            } ?>
 
-                            echo '<div class="um-search-filter '. $add_class .'">'; UM()->members()->show_filter( $filter ); echo '</div>';
+                            <div class="um-search-filter <?php echo $add_class ?>"><?php echo UM()->members()->show_filter( $filter ); ?></div>
 
-                        } ?>
+                        <?php } ?>
 
                         <div class="um-clear"></div>
 
@@ -114,14 +108,6 @@ if ( ! empty( $args['roles_can_search'] ) && ! in_array( um_user( 'role' ), $arg
                         </div>
                         <div class="um-clear"></div>
                     </form>
-                </div>
-
-            <?php }
-
-            if ( um_members( 'header' ) && um_members( 'users_per_page' ) ) { ?>
-
-                <div class="um-members-intro">
-                    <div class="um-members-total"><?php echo ( um_members('total_users') > 1 ) ? um_members( 'header' ) : um_members( 'header_single' ); ?></div>
                 </div>
 
             <?php }
@@ -141,22 +127,8 @@ if ( ! empty( $args['roles_can_search'] ) && ! in_array( um_user( 'role' ), $arg
 
             $args['view_type'] = ! empty( $_GET['view_type'] ) ? $_GET['view_type'] : $args['view_type'];
 
-            $file_grid = um_path . "templates/members-grid.php";
-            $theme_file = get_stylesheet_directory() . "/ultimate-member/templates/members-grid.php";
-
-            if ( file_exists( $theme_file ) ) {
-                $file_grid = $theme_file;
-            }
-
-            $file_list = um_path . "templates/members-list.php";
-            $theme_file = get_stylesheet_directory() . "/ultimate-member/templates/members-list.php";
-
-            if ( file_exists( $theme_file ) ) {
-                $file_list = $theme_file;
-            }
-
-            include $file_grid;
-            include $file_list; ?>
+            include UM()->templates()->get_template( 'members-grid' );
+            include UM()->templates()->get_template( 'members-list' ); ?>
 
             <div class="um-members-overlay"><div class="um-ajax-loading"></div></div>
         </div>

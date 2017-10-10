@@ -179,7 +179,7 @@ if ( ! class_exists( 'Members' ) ) {
                             if ( isset( $attrs['custom'] ) )
                                 $opt = $k; ?>
 
-                            <option value="<?php echo $opt; ?>" <?php um_select_if_in_query_params( $filter, $opt ); ?>><?php echo __( $v, 'ultimate-member'); ?></option>
+                            <option value="<?php echo $opt; ?>" data-value_label="<?php echo $opt; ?>" <?php um_select_if_in_query_params( $filter, $opt ); ?>><?php echo __( $v, 'ultimate-member'); ?></option>
 
                         <?php } ?>
 
@@ -499,8 +499,10 @@ if ( ! class_exists( 'Members' ) ) {
 
             $pagination_data = array(
                 'pages_to_show' => $users['pages_to_show'],
-                'current_page' => $args['page'],
-                'total_pages' => $users['total_pages']
+                'current_page'  => $args['page'],
+                'total_pages'   => $users['total_pages'],
+                'header_single' => $users['header_single'],
+                'header'        => $users['header'],
             );
 
             wp_send_json_success( array( 'users' => $users_data, 'pagi' => $pagination_data ) );

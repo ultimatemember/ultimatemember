@@ -166,6 +166,9 @@ jQuery(document).ready(function() {
 	jQuery( document ).on( 'change', '.um-search-filter select', function(e){
 		e.preventDefault();
 
+		if ( jQuery(this).val() == '' )
+			return false;
+
 		var directory = jQuery(this).parents('.um-directory');
 
 		if ( is_directory_busy( directory ) )
@@ -178,19 +181,19 @@ jQuery(document).ready(function() {
 		if ( typeof global_hash == 'undefined' ) {
 			global_hash = [];
 		} else if( typeof global_hash == 'string' ) {
-			global_hash = [global_hash];
+			global_hash = [ global_hash ];
 		}
 
 		if ( -1 == jQuery.inArray( jQuery(this).val(), global_hash ) ) {
 			global_hash.push( jQuery(this).val() );
+
+			um_members_hash_data[ unique ][ jQuery(this).prop('name') ] = global_hash;
+
+			um_members_hash_data[ unique ].page = 1;
+			um_members_clear_hash();
+
+			window.location.hash = um_members_create_hash_string();
 		}
-
-		um_members_hash_data[ unique ][ jQuery(this).prop('name') ] = global_hash;
-
-		um_members_hash_data[ unique ].page = 1;
-		um_members_clear_hash();
-
-		window.location.hash = um_members_create_hash_string();
 
 		jQuery(this).val('').trigger('change');
 
@@ -374,12 +377,15 @@ function um_members_set_filters( directory ) {
 		var filter_name = jQuery(this).find('select').attr('name');
 		var query_value = um_members_hash_data[ unique_id ][ filter_name ];
 
+		var filter_title = jQuery(this).find('select').data('placeholder');
+		var filter_value_title = jQuery(this).find('select option[value="' + query_value + '"]').data('value_label');
+
 		if ( typeof( query_value ) != 'undefined' ) {
 			if ( typeof( query_value ) == 'string' ) {
-				filters_data.push( {'name':filter_name, 'value':query_value, 'unique_id':unique_id} );
+				filters_data.push( {'name':filter_name, 'label':filter_title, 'value_label':filter_value_title, 'value':query_value, 'unique_id':unique_id} );
 			} else {
 				jQuery.each( query_value, function(e) {
-					filters_data.push( {'name': filter_name, 'value':query_value[e], 'unique_id':unique_id} );
+					filters_data.push( {'name': filter_name, 'label':filter_title, 'value_label':filter_value_title, 'value':query_value[e], 'unique_id':unique_id} );
 				});
 			}
 		}

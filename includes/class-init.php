@@ -986,6 +986,20 @@ if ( ! class_exists( 'UM' ) ) {
         /**
          * @since 2.0
          *
+         * @return um\core\Templates
+         */
+        function templates() {
+            if ( empty( $this->classes['templates'] ) ) {
+                $this->classes['templates'] = new um\core\Templates();
+            }
+
+            return $this->classes['templates'];
+        }
+
+
+        /**
+         * @since 2.0
+         *
          * @return um\lib\mobiledetect\Mobile_Detect
          */
         function mobile() {

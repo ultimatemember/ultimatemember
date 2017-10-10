@@ -1,5 +1,14 @@
 <script type="text/template" id="tmpl-um-member-grid">
 	<div class="um-members">
+        <div class="um-members-intro">
+            <div class="um-members-total">
+                <# if ( data.users.length == 1 ) { #>
+                    {{{data.pagi.header_single}}}
+                <# } else if ( data.users.length > 1 ) { #>
+                    {{{data.pagi.header}}}
+                <# } #>
+            </div>
+        </div>
 
 		<div class="um-gutter-sizer"></div>
 		<# if ( data.users.length > 0 ) { #>

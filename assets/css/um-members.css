@@ -21,11 +21,11 @@
 
 .um-members-intro {
 	text-align: center;
-	margin: 0 0 20px 0;
+	margin: 0 0 10px 0;
 }
 
 .um-members-total {
-	font-size: 30px;
+	font-size: 24px;
 	font-weight: 300;
 }
 
@@ -486,7 +486,6 @@ div.uimob500 .um-member-directory-search-line .um-do-search {
 .um-member-directory-sorting {
 	float:left;
 	width: calc( 100% - 70px );
-	padding: 0 0 5px 0;
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
@@ -494,17 +493,14 @@ div.uimob500 .um-member-directory-search-line .um-do-search {
 	line-height: 30px;
 	font-size: 30px;
 	height: 30px;
-}
-
-.um-member-directory-sorting {
-	float: left;
 	padding: 0 10px 5px 0;
-	vertical-align: middle;
-	line-height: 30px;
-	font-size: 30px;
-	height: 30px;
 	position: relative;
 }
+
+.um-member-directory-sorting.hidden_filter {
+	width: calc( 100% - 35px );
+}
+
 
 .um-member-directory-sorting .select2-container {
 	float:left;
@@ -540,7 +536,8 @@ div.uimob500 .um-member-directory-search-line .um-do-search {
 }
 
 .um-member-directory-view-type {
-	float: left;
+	/*float: left;*/
+	float: right;
 	padding: 5px 0;
 	position: relative;
 	vertical-align: middle;
