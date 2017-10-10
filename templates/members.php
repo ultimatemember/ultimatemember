@@ -91,11 +91,7 @@ if ( ! empty( $args['roles_can_search'] ) && ! in_array( um_user( 'role' ), $arg
                         foreach ( $search_filters as $filter ) {
                             $i++;
 
-                            if ( $i % 2 == 0 ) {
-                                $add_class = 'um-search-filter-2';
-                            } else {
-                                $add_class = '';
-                            } ?>
+                            $add_class = ( $i % 2 == 0 ) ? 'um-search-filter-2' : ''; ?>
 
                             <div class="um-search-filter <?php echo $add_class ?>"><?php echo UM()->members()->show_filter( $filter ); ?></div>
 
@@ -112,7 +108,7 @@ if ( ! empty( $args['roles_can_search'] ) && ! in_array( um_user( 'role' ), $arg
 
             <?php }
 
-            do_action('um_members_directory_head', $args );
+            do_action( 'um_members_directory_head', $args );
         } ?>
 
         <div class="um-members-wrapper">

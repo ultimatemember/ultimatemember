@@ -378,13 +378,17 @@ function um_members_set_filters( directory ) {
 		var query_value = um_members_hash_data[ unique_id ][ filter_name ];
 
 		var filter_title = jQuery(this).find('select').data('placeholder');
-		var filter_value_title = jQuery(this).find('select option[value="' + query_value + '"]').data('value_label');
+		var filter_value_title;
+
+        var filter = jQuery(this);
 
 		if ( typeof( query_value ) != 'undefined' ) {
 			if ( typeof( query_value ) == 'string' ) {
+                filter_value_title = filter.find('select option[value="' + query_value + '"]').data('value_label');
 				filters_data.push( {'name':filter_name, 'label':filter_title, 'value_label':filter_value_title, 'value':query_value, 'unique_id':unique_id} );
 			} else {
 				jQuery.each( query_value, function(e) {
+                    filter_value_title = filter.find('select option[value="' + query_value[e] + '"]').data('value_label');
 					filters_data.push( {'name': filter_name, 'label':filter_title, 'value_label':filter_value_title, 'value':query_value[e], 'unique_id':unique_id} );
 				});
 			}

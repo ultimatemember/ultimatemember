@@ -179,7 +179,7 @@ if ( ! class_exists( 'Members' ) ) {
                             if ( isset( $attrs['custom'] ) )
                                 $opt = $k; ?>
 
-                            <option value="<?php echo $opt; ?>" data-value_label="<?php echo $opt; ?>" <?php um_select_if_in_query_params( $filter, $opt ); ?>><?php echo __( $v, 'ultimate-member'); ?></option>
+                            <option value="<?php echo $opt; ?>" data-value_label="<?php echo __( $v, 'ultimate-member'); ?>" <?php um_select_if_in_query_params( $filter, $opt ); ?>><?php echo __( $v, 'ultimate-member'); ?></option>
 
                         <?php } ?>
 
