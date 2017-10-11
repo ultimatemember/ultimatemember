@@ -30,28 +30,29 @@
 	}
 
 
-	/***
-	***	@after user uploads, clean up uploads dir
-	***/
-	add_action('um_after_user_upload','um_remove_unused_uploads', 10);
-	function um_remove_unused_uploads( $user_id ) {
+	/**
+	 * Clean user temp uploads
+	 *
+	 * @param $user_id
+	 * @param $array
+	 */
+	function um_remove_unused_uploads( $user_id, $array ) {
 		um_fetch_user( $user_id );
 
-		$array = UM()->user()->profile;
-
-		$files = glob( um_user_uploads_dir() . '*', GLOB_BRACE);
+		$files = glob( um_user_uploads_dir() . '*', GLOB_BRACE );
 
 		if ( file_exists( um_user_uploads_dir() ) && $files && isset( $array ) && is_array( $array ) ) {
+			foreach ( $files as $file ) {
+				$str = basename( $file );
 
-			foreach($files as $file) {
-				$str = basename($file);
-				if ( !strstr( $str, 'profile_photo') && !strstr( $str, 'cover_photo') && !strstr( $str, 'stream_photo') && !preg_grep('/' . $str . '/', $array ) )
+				if ( ! strstr( $str, 'profile_photo' ) && ! strstr( $str, 'cover_photo' ) &&
+					! strstr( $str, 'stream_photo' ) && ! preg_grep( '/' . $str . '/', array_values( $array ) ) )
 					unlink( $file );
 			}
-
 		}
-
 	}
+
+	add_action( 'um_after_user_upload','um_remove_unused_uploads', 10, 2 );
 
 
 	/***
