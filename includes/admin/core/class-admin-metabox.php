@@ -480,8 +480,23 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
          ***	@load a directory metabox
          ***/
         function load_metabox_directory( $object, $box ) {
+            global $post;
+
             $box['id'] = str_replace( 'um-admin-form-', '', $box['id'] );
-            include_once UM()->admin()->templates_path . 'directory/'. $box['id'] . '.php';
+
+            preg_match('#\{.*?\}#s', $box['id'], $matches);
+
+            if ( isset($matches[0]) ){
+                $path = $matches[0];
+                $box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
+            } else {
+                $path = um_path;
+            }
+
+            $path = str_replace('{','', $path );
+            $path = str_replace('}','', $path );
+
+            include_once $path . 'includes/admin/templates/directory/'. $box['id'] . '.php';
             wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_directory_nonce' );
         }
 
@@ -577,16 +592,73 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
          ***/
         function add_metabox_directory() {
 
-            add_meta_box('um-admin-form-general', __('General Options', 'ultimate-member'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
-            add_meta_box('um-admin-form-profile', __('Profile Card', 'ultimate-member'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
-            add_meta_box('um-admin-form-search', __('Search &amp; Filters Options', 'ultimate-member'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
-            add_meta_box('um-admin-form-pagination', __('Results &amp; Pagination', 'ultimate-member'), array(&$this, 'load_metabox_directory'), 'um_directory', 'normal', 'default');
+            $callback = array( &$this, 'load_metabox_directory' );
 
-            add_meta_box('um-admin-form-shortcode', __('Shortcode', 'ultimate-member'), array(&$this, 'load_metabox_directory'), 'um_directory', 'side', 'default');
+            $directory_metaboxes = array(
+                array(
+                    'id'        => 'um-admin-form-general',
+                    'title'     => __( 'General Options', 'ultimate-member' ),
+                    'callback'  => $callback,
+                    'screen'    => 'um_directory',
+                    'context'   => 'normal',
+                    'priority'  => 'default'
+                ),
+                array(
+                    'id'        => 'um-admin-form-profile',
+                    'title'     => __( 'Profile Card', 'ultimate-member' ),
+                    'callback'  => $callback,
+                    'screen'    => 'um_directory',
+                    'context'   => 'normal',
+                    'priority'  => 'default'
+                ),
+                array(
+                    'id'        => 'um-admin-form-search',
+                    'title'     => __( 'Search &amp; Filters Options', 'ultimate-member' ),
+                    'callback'  => $callback,
+                    'screen'    => 'um_directory',
+                    'context'   => 'normal',
+                    'priority'  => 'default'
+                ),
+                array(
+                    'id'        => 'um-admin-form-pagination',
+                    'title'     => __( 'Results &amp; Pagination', 'ultimate-member' ),
+                    'callback'  => $callback,
+                    'screen'    => 'um_directory',
+                    'context'   => 'normal',
+                    'priority'  => 'default'
+                ),
+                array(
+                    'id'        => 'um-admin-form-shortcode',
+                    'title'     => __( 'Shortcode', 'ultimate-member' ),
+                    'callback'  => $callback,
+                    'screen'    => 'um_directory',
+                    'context'   => 'side',
+                    'priority'  => 'default'
+                ),
+                array(
+                    'id'        => 'um-admin-form-appearance',
+                    'title'     => __( 'Styling: General', 'ultimate-member' ),
+                    'callback'  => $callback,
+                    'screen'    => 'um_directory',
+                    'context'   => 'side',
+                    'priority'  => 'default'
+                ),
 
-            add_meta_box('um-admin-form-appearance', __('Styling: General', 'ultimate-member'), array(&$this, 'load_metabox_directory'), 'um_directory', 'side', 'default');
 
-            //add_meta_box('um-admin-form-profile_card', __('Styling: Profile Card'), array(&$this, 'load_metabox_directory'), 'um_directory', 'side', 'default');
+            );
+
+            $directory_metaboxes = apply_filters( 'um_admin_directory_metaboxes', $directory_metaboxes );
+
+            foreach ( $directory_metaboxes as $metabox ) {
+                add_meta_box(
+                    $metabox['id'],
+                    $metabox['title'],
+                    $metabox['callback'],
+                    $metabox['screen'],
+                    $metabox['context'],
+                    $metabox['priority']
+                );
+            }
 
         }
 

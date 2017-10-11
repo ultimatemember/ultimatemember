@@ -632,8 +632,11 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
 
             $name = $field_data['id'];
             $name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+            $hidden_name = $name;
             $name = $name . ( ! empty( $field_data['multi'] ) ? '[]' : '' );
+
             $name_attr = ' name="' . $name . '" ';
+            $hidden_name_attr = ' name="' . $hidden_name . '" ';
 
             $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
             $value = isset( $field_data['value'] ) ? $field_data['value'] : $default;
@@ -651,7 +654,12 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
                 }
             }
 
-            $html = "<select $multiple $id_attr $name_attr $class_attr $data_attr>$options</select>";
+            $html = '';
+            if ( ! empty( $field_data['multi'] ) ) {
+                $html .= "<input type='hidden' $hidden_name_attr value=''/>";
+            }
+
+            $html .= "<select $multiple $id_attr $name_attr $class_attr $data_attr>$options</select>";
 
             return $html;
         }
