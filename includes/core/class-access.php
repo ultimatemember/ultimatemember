@@ -292,12 +292,15 @@ if ( ! class_exists( 'Access' ) ) {
                             continue;
                         }
 
-                        $user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
 
-                        if ( $user_can ) {
+                        if ( ! empty( $restriction['_um_access_roles'] ) )
+                            $user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
+
+                        if ( isset( $user_can ) && $user_can ) {
                             $filtered_posts[] = $post;
                             continue;
                         }
+
 
                         if ( ! $query->is_singular ) {
                             //if not single query when exclude if set _um_access_hide_from_queries
