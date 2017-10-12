@@ -233,7 +233,7 @@ if ( ! class_exists( 'Access' ) ) {
                             continue;
                         }
 
-                        if ( ! $query->is_singular ) {
+                        if ( empty( $query->is_singular ) ) {
                             //if not single query when exclude if set _um_access_hide_from_queries
                             if ( empty( $restriction['_um_access_hide_from_queries'] ) ) {
 
@@ -302,7 +302,7 @@ if ( ! class_exists( 'Access' ) ) {
                         }
 
 
-                        if ( ! $query->is_singular ) {
+                        if ( empty( $query->is_singular ) ) {
                             //if not single query when exclude if set _um_access_hide_from_queries
                             if ( empty( $restriction['_um_access_hide_from_queries'] ) ) {
 
@@ -362,7 +362,7 @@ if ( ! class_exists( 'Access' ) ) {
                         }
 
                     } else {
-                        if ( ! $query->is_singular ) {
+                        if ( empty( $query->is_singular ) ) {
                             if ( empty( $restriction['_um_access_hide_from_queries'] ) ) {
 
                                 if ( ! isset( $restriction['_um_noaccess_action'] ) || '0' == $restriction['_um_noaccess_action'] ) {
