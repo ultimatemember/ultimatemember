@@ -651,7 +651,7 @@
 	function um_get_core_page( $slug, $updated = false ) {
 		$url = '';
 
-		if (isset( UM()->config()->permalinks[$slug] )) {
+		if ( isset( UM()->config()->permalinks[$slug] ) ) {
 			$url = get_permalink( UM()->config()->permalinks[$slug] );
 			if ($updated)
 				$url = add_query_arg( 'updated', esc_attr( $updated ), $url );
@@ -775,23 +775,6 @@
 
 	}
 
-	/***
-	 ***    @Check whether item in dropdown is selected in query-url
-	 ***/
-	function um_select_if_in_query_params( $filter, $val ) {
-		$selected = false;
-
-		if (isset( $_REQUEST['um_search'] )) {
-			$query = UM()->permalinks()->get_query_array();
-
-			if (isset( $query[$filter] ) && $val == $query[$filter])
-				$selected = true;
-
-			$selected = apply_filters( 'um_selected_if_in_query_params', $selected, $filter, $val );
-		}
-
-		echo $selected ? 'selected="selected"' : '';
-	}
 
 	/***
 	 ***    @get styling defaults
@@ -872,9 +855,9 @@
 	/***
 	 ***    @get members to show in directory
 	 ***/
-	function um_members( $argument ) {
+/*	function um_members( $argument ) {
 		return UM()->members()->results[$argument];
-	}
+	}*/
 
 	/**
 	 * @function um_reset_user_clean()

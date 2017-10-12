@@ -406,20 +406,6 @@
 		return $query;
 	}
 
-	/***
-	***	@hook in the member results array
-	***/
-	add_filter('um_prepare_user_results_array', 'um_prepare_user_results_array', 50, 2);
-	function um_prepare_user_results_array($result){
-
-		if ( empty( $result['users_per_page'] ) ) {
-			$result['no_users'] = 1;
-		} else {
-			$result['no_users'] = 0;
-		}
-   
-		return $result;
-	}
 
 	/**
 	 * Retrieves search filter options from a callback

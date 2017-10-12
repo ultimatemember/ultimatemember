@@ -630,6 +630,32 @@ div.uimob500 .um-members-list .um-member-card-actions {
 	float: left;
 }
 
+
+.um-members-list .um-members-friend-stats div {
+	margin-left: 0;
+}
+
+.um-members-list .um-member-tagline {
+	padding-left: 0;
+}
+
+.um-members-list .um-member-meta-main {
+	padding-left: 0;
+}
+
+.um-members-list .um-member-meta.no-animate {
+	padding-top: 0;
+	margin-top: 0;
+}
+
+.um-members-list .um-member-connect {
+	padding-top: 10px;
+}
+
+.um-members-list .um-member-metaline span {
+	text-align: left;
+}
+
 .um-members-wrapper {
 	width: 100%;
 	float:left;

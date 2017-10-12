@@ -112,16 +112,7 @@ if ( ! empty( $args['roles_can_search'] ) && ! in_array( um_user( 'role' ), $arg
         } ?>
 
         <div class="um-members-wrapper">
-
-            <?php if ( um_members( 'no_users' ) ) { ?>
-
-                <div class="um-members-none">
-                    <p><?php echo $args['no_users']; ?></p>
-                </div>
-
-            <?php }
-
-            $args['view_type'] = ! empty( $_GET['view_type'] ) ? $_GET['view_type'] : $args['view_type'];
+            <?php $args['view_type'] = ! empty( $_GET['view_type'] ) ? $_GET['view_type'] : $args['view_type'];
 
             include UM()->templates()->get_template( 'members-grid' );
             include UM()->templates()->get_template( 'members-list' ); ?>

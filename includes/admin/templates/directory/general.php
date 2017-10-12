@@ -56,6 +56,13 @@ $_um_sorting_fields = get_post_meta( $post_id, '_um_sorting_fields', true );
 			'value'		=> $roles_array,
 		),
 		array(
+			'id'		    => '_um_show_these_users',
+			'type'		    => 'textarea',
+			'name'		    => '_um_show_these_users',
+			'label'		    => __( 'Only show specific users (Enter one username per line)', 'ultimate-member' ),
+			'value'		    => $show_these_users,
+		),
+		array(
 			'id'		=> '_um_has_profile_photo',
 			'type'		=> 'checkbox',
 			'name'		=> '_um_has_profile_photo',
@@ -71,11 +78,21 @@ $_um_sorting_fields = get_post_meta( $post_id, '_um_sorting_fields', true );
 			'value'		=> UM()->query()->get_meta_value( '_um_has_cover_photo' ),
 		),
 		array(
+			'id'		=> '_um_sorting_fields',
+			'type'		=> 'multi_selects',
+			'name'		=> '_um_sorting_fields',
+			'label'		=> __( 'Choose field(s) to enable in sorting', 'ultimate-member' ),
+			'value'		=> $_um_sorting_fields,
+			'options'   => $sorting_fields,
+			'add_text'		=> __( 'Add New Field','ultimate-member' ),
+			'show_default_number'	=> 1,
+		),
+		array(
 			'id'		=> '_um_sortby',
 			'type'		=> 'select',
 			'name'		=> '_um_sortby',
-			'label'		=> __( 'Sort users by', 'ultimate-member' ),
-			'tooltip'	=> __( 'Sort users by a specific parameter in the directory', 'ultimate-member' ),
+			'label'		=> __( 'Default sort users by', 'ultimate-member' ),
+			'tooltip'	=> __( 'Default sorting users by a specific parameter in the directory', 'ultimate-member' ),
 			'options'	=> apply_filters( 'um_admin_directory_sort_users_select', array(
 				'user_registered_desc'	=> __( 'New users first', 'ultimate-member' ),
 				'user_registered_asc'	=> __( 'Old users first', 'ultimate-member' ),
@@ -96,23 +113,6 @@ $_um_sorting_fields = get_post_meta( $post_id, '_um_sorting_fields', true );
 			'tooltip'	    => __( 'To sort by a custom field, enter the meta key of field here', 'ultimate-member' ),
 			'value'		    => UM()->query()->get_meta_value( '_um_sortby_custom', null, 'na' ),
 			'conditional'   => array( '_um_sortby', '=', 'other' )
-		),
-		array(
-			'id'		    => '_um_show_these_users',
-			'type'		    => 'textarea',
-			'name'		    => '_um_show_these_users',
-			'label'		    => __( 'Only show specific users (Enter one username per line)', 'ultimate-member' ),
-			'value'		    => $show_these_users,
-		),
-		array(
-			'id'		=> '_um_sorting_fields',
-			'type'		=> 'multi_selects',
-			'name'		=> '_um_sorting_fields',
-			'label'		=> __( 'Choose field(s) to enable in sorting', 'ultimate-member' ),
-			'value'		=> $_um_sorting_fields,
-			'options'   => $sorting_fields,
-			'add_text'		=> __( 'Add New Field','ultimate-member' ),
-			'show_default_number'	=> 1,
 		),
 	);
 
