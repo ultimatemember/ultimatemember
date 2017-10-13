@@ -81,7 +81,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
 		        $data['value'] = wp_unslash( $data['value'] );
 
 		        /*for multi_text*/
-		        if ( !is_array( $data['value'] ) ) {
+		        if ( ! is_array( $data['value'] ) && $data['type'] != 'wp_editor' ) {
 			        $data['value'] = esc_attr( $data['value'] );
 		        }
 	        }
