@@ -118,7 +118,7 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
                         $user->add_role( $new_role );
                     }
 
-                    do_action( 'um_when_role_is_set', um_user('ID') );
+                    do_action( 'um_when_role_is_set', $user_id );
 
                     do_action('um_before_user_role_is_changed');
 
@@ -130,7 +130,7 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
 
                     do_action('um_after_user_role_is_changed');
 
-                    do_action('um_after_user_role_is_updated', um_user('ID'), $role );
+                    do_action('um_after_user_role_is_updated', $user_id, $role );
                 }
             } else {
                 // User does don exist so return false
