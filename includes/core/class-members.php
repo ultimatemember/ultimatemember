@@ -185,6 +185,21 @@ if ( ! class_exists( 'Members' ) ) {
 			</select>
 
 			<?php
+
+			$this->show_slider( $filter );
+		}
+
+
+		function show_slider( $filter ) { ?>
+
+			<script>
+				jQuery( function() {
+					jQuery( ".slider" ).slider();
+				} );
+			</script>
+			<div class="slider"></div>
+
+		<?php
 		}
 
 

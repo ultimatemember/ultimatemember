@@ -122,6 +122,9 @@ if ( ! class_exists( 'Enqueue' ) ) {
                 wp_register_style('um_old_css', $uploads['baseurl'] . '/ultimatemember/um_old_settings.css' );
                 wp_enqueue_style('um_old_css');
             }
+
+            //ui slider for filters
+	        wp_enqueue_script( 'jquery-ui-slider' );
         }
 
         /***
