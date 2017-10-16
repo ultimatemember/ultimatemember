@@ -90,7 +90,7 @@ if ( ! class_exists( 'Members' ) ) {
 		 * @since 	1.3.83
 		 */
 		function search_select_fields( $attrs ) {
-			if ( strstr( $attrs['metakey'], 'role_' ) ) {
+			if ( isset( $attrs['metakey'] ) && strstr( $attrs['metakey'], 'role_' ) ) {
 
 				$shortcode_roles = get_post_meta( UM()->shortcodes()->form_id, '_um_roles', true );
 				$um_roles = UM()->roles()->get_roles( false );
@@ -160,33 +160,37 @@ if ( ! class_exists( 'Members' ) ) {
 			$attrs = apply_filters( 'um_search_fields', $attrs );
 
 			//if ( $type == 'select' )
-			$attrs = apply_filters( 'um_search_select_fields', $attrs ); ?>
+			$attrs = apply_filters( 'um_search_select_fields', $attrs );
 
-			<select name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" class="um-s1" style="width: 100%" data-placeholder="<?php echo __( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>" <?php if ( ! empty( $attrs['custom_dropdown_options_source'] ) ) { ?> data-um-ajax-source="<?php echo $attrs['custom_dropdown_options_source'] ?>"<?php } ?>>
+			if ( $filter == 'age' ) {
 
-				<option></option>
+				$this->show_slider( $filter );
 
-				<?php foreach ( $attrs['options'] as $k => $v ) {
+			} else { ?>
 
-					$v = stripslashes( $v );
+				<select name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" class="um-s1" style="width: 100%" data-placeholder="<?php echo __( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>" <?php if ( ! empty( $attrs['custom_dropdown_options_source'] ) ) { ?> data-um-ajax-source="<?php echo $attrs['custom_dropdown_options_source'] ?>"<?php } ?>>
 
-					$opt = $v;
+					<option></option>
 
-					if ( strstr( $filter, 'role_' ) )
-						$opt = $k;
+					<?php foreach ( $attrs['options'] as $k => $v ) {
 
-					if ( isset( $attrs['custom'] ) )
-						$opt = $k; ?>
+						$v = stripslashes( $v );
 
-					<option value="<?php echo $opt; ?>" data-value_label="<?php echo __( $v, 'ultimate-member'); ?>"><?php echo __( $v, 'ultimate-member'); ?></option>
+						$opt = $v;
 
-				<?php } ?>
+						if ( strstr( $filter, 'role_' ) )
+							$opt = $k;
 
-			</select>
+						if ( isset( $attrs['custom'] ) )
+							$opt = $k; ?>
 
-			<?php
+						<option value="<?php echo $opt; ?>" data-value_label="<?php echo __( $v, 'ultimate-member'); ?>"><?php echo __( $v, 'ultimate-member'); ?></option>
 
-			$this->show_slider( $filter );
+					<?php } ?>
+
+				</select>
+
+			<?php }
 		}
 
 
@@ -194,10 +198,26 @@ if ( ! class_exists( 'Members' ) ) {
 
 			<script>
 				jQuery( function() {
-					jQuery( ".slider" ).slider();
-				} );
+					jQuery( ".slider" ).slider({
+						range: true,
+						min: 0,
+						max: 100,
+						values: [ 18, 25 ],
+						slide: function( event, ui ) {
+							jQuery( this ).siblings('.slider-range').html( ui.values[ 0 ] + ' - ' + ui.values[ 1 ] + ' y.o' );
+						}
+					});
+
+					jQuery( ".slider-range" ).each( function() {
+						jQuery( this ).html( jQuery( this ).siblings( ".slider" ).slider( "values", 0 ) + ' - ' +
+							jQuery( this ).siblings( ".slider" ).slider( "values", 1 ) + ' y.o' );
+					});
+
+				});
 			</script>
-			<div class="slider"></div>
+
+			<div class="slider" style="float: left;width:100%;"></div>
+			<div class="slider-range" style="float:left;width:100%;text-align: left;padding-top: 5px;box-sizing: border-box;"></div>
 
 		<?php
 		}
@@ -457,6 +477,7 @@ if ( ! class_exists( 'Members' ) ) {
 				'gender'        => __( 'Gender', 'ultimate-member' ),
 				'languages'     => __( 'Languages', 'ultimate-member' ),
 				'role'          => __( 'Roles', 'ultimate-member' ),
+				'age'           => __( 'Age', 'ultimate-member' ),
 				'mycred_rank'   => __( 'myCRED Rank', 'ultimate-member' ),
 			) );
 
