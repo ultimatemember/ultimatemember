@@ -194,30 +194,30 @@ if ( ! class_exists( 'Members' ) ) {
 		}
 
 
-		function show_slider( $filter ) { ?>
+		function borndate( $borndate ) {
+			if ( date('m', $borndate) > date('m') || date('m', $borndate) == date('m') && date('d', $borndate ) > date('d')) {
+				return (date('Y') - date('Y', $borndate ) - 1);
+			}
+			return (date('Y') - date('Y', $borndate));
+		}
 
-			<script>
-				jQuery( function() {
-					jQuery( ".slider" ).slider({
-						range: true,
-						min: 0,
-						max: 100,
-						values: [ 18, 25 ],
-						slide: function( event, ui ) {
-							jQuery( this ).siblings('.slider-range').html( ui.values[ 0 ] + ' - ' + ui.values[ 1 ] + ' y.o' );
-						}
-					});
+		function show_slider( $filter ) {
 
-					jQuery( ".slider-range" ).each( function() {
-						jQuery( this ).html( jQuery( this ).siblings( ".slider" ).slider( "values", 0 ) + ' - ' +
-							jQuery( this ).siblings( ".slider" ).slider( "values", 1 ) + ' y.o' );
-					});
+			global $wpdb;
+			$meta = $wpdb->get_col( "SELECT meta_value FROM {$wpdb->usermeta} WHERE meta_key='birth_date' ORDER BY meta_value DESC" );
 
-				});
-			</script>
+			if ( ! empty( $meta ) ) {
+				$range = array( $this->borndate( strtotime( $meta[0] ) ), $this->borndate( strtotime( $meta[ count( $meta ) - 1 ] ) ) );
+			} else {
+				$range = array( 0, 100 );
+			}
 
-			<div class="slider" style="float: left;width:100%;"></div>
-			<div class="slider-range" style="float:left;width:100%;text-align: left;padding-top: 5px;box-sizing: border-box;"></div>
+			$range = apply_filters( 'um_member_directory_filter_slider', $range ); ?>
+
+			<div class="um-slider" data-field_name="birth_date" data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>" style="float: left;width:100%;"></div>
+			<div class="um-slider-range" style="float:left;width:100%;text-align: left;padding-top: 5px;box-sizing: border-box;"></div>
+			<input type="hidden" name="birth_date[]" class="um_range_min" />
+			<input type="hidden" name="birth_date[]" class="um_range_max" />
 
 		<?php
 		}

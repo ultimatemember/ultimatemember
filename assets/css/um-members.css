@@ -852,3 +852,12 @@ div.uimob500 .um-members-list .um-member-card-actions {
 	color:#a00;
 }
 
+.um-slider .ui-slider-range.ui-widget-header {
+	background: #44b0ec;
+	border: 2px solid #44b0ec !important;
+	margin-top: -2px;
+}
+
+.um-slider.ui-slider.ui-slider-horizontal {
+	border: 2px solid #ddd !important;
+}

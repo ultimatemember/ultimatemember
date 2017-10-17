@@ -206,7 +206,7 @@
                                 );
                             }
 
-                            $field_query = apply_filters( "um_query_args_{$field}__filter", $field_query );
+                            $field_query = apply_filters( "um_query_args_{$field}__filter", $field_query, $query );
                             $query_args['meta_query'][] = $field_query;
                         }
 
@@ -228,6 +228,30 @@
 
 	}
 
+
+	/**
+	 * @param $field_query
+	 * @param $query
+	 * @return mixed|void
+	 */
+	function um_add_slider_filter_to_query( $field_query, $query ) {
+
+		$from_date = date( 'Y-m-d', mktime( 0,0,0, date('m'), date('d'), date('Y', time() - $query['birth_date'][0]*YEAR_IN_SECONDS ) ) );
+		$to_date = date( 'Y-m-d', mktime( 0,0,0, date('m'), date('d'), date('Y', time() - $query['birth_date'][1]*YEAR_IN_SECONDS ) ) );
+
+		$field_query = array(
+			array(
+				'key'       => 'birth_date',
+				'value'     => array( $to_date, $from_date ),
+				'compare'   => 'BETWEEN',
+				'type'      => 'DATE',
+			),
+			'relation' => 'OR'
+		);
+
+		return $field_query;
+	}
+	add_filter( 'um_query_args_birth_date__filter', 'um_add_slider_filter_to_query', 98, 2 );
 
 	/***
 	***	@adds main parameters

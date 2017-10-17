@@ -5,6 +5,7 @@ var um_members_hash_data = {};
 
 var um_members_directory_busy = [];
 
+
 jQuery(document).ready(function() {
 
 	//change layout
@@ -261,6 +262,49 @@ jQuery(document).ready(function() {
 	});
 
 
+	//slider filter
+	var slider = jQuery( ".um-slider" );
+	jQuery( ".um-slider" ).slider({
+		range: true,
+		min: parseInt( slider.data('min') ),
+		max: parseInt( slider.data('max') ),
+		values: [parseInt( slider.data('min') ), parseInt( slider.data('max') )],
+		create: function( event, ui ) {
+			console.log( ui );
+		},
+		slide: function( event, ui ) {
+			jQuery( this ).siblings('.um-slider-range').html( ui.values[ 0 ] + ' - ' + ui.values[ 1 ] + ' y.o' );
+			jQuery( this ).siblings('.um_range_min').val( ui.values[ 0 ] );
+			jQuery( this ).siblings('.um_range_max').val( ui.values[ 1 ] );
+		},
+		stop: function( event, ui ) {
+
+			var directory = jQuery(this).parents('.um-directory');
+			var unique = um_members_get_unique_id( directory );
+
+			if ( ! is_directory_busy( directory ) ) {
+
+				um_members_hash_data[ unique ][ jQuery(this).data('field_name') ] = ui.values;
+
+				um_members_hash_data[ unique ].page = 1;
+				um_members_clear_hash();
+
+				window.location.hash = um_members_create_hash_string();
+			}
+		}
+	});
+
+	jQuery( ".um-slider-range" ).each( function() {
+		jQuery( this ).html( jQuery( this ).siblings( ".um-slider" ).slider( "values", 0 ) + ' - ' +
+			jQuery( this ).siblings( ".um-slider" ).slider( "values", 1 ) + ' y.o' );
+
+
+		jQuery( this ).siblings( ".um_range_min" ).val( jQuery( this ).siblings( ".um-slider" ).slider( "values", 0 ) );
+		jQuery( this ).siblings( ".um_range_max" ).val( jQuery( this ).siblings( ".um-slider" ).slider( "values", 1 ) );
+	});
+
+
+
 	//sorting
 	jQuery( document ).on( 'change', '.um-member-directory-sorting-options', function(e){
 		var directory = jQuery(this).parents('.um-directory');
@@ -391,6 +435,21 @@ function um_members_set_filters( directory ) {
                     filter_value_title = filter.find('select option[value="' + query_value[e] + '"]').data('value_label');
 					filters_data.push( {'name': filter_name, 'label':filter_title, 'value_label':filter_value_title, 'value':query_value[e], 'unique_id':unique_id} );
 				});
+			}
+		}
+
+		if ( jQuery(this).find( '.um-slider' ) ) {
+			var age_query_value = um_members_hash_data[ unique_id ][ 'birth_date' ];
+
+			if ( typeof age_query_value != 'undefined' ) {
+
+				jQuery( this ).find( ".um-slider" ).slider( "option", "values", age_query_value );
+
+				jQuery( this ).find( ".um_range_min" ).val( age_query_value[0] );
+				jQuery( this ).find( ".um_range_max" ).val( age_query_value[1] );
+
+				jQuery(this).find( ".um-slider-range" ).html( jQuery( this ).find( ".um-slider" ).slider( "values", 0 ) + ' - ' +
+					jQuery( this ).find( ".um-slider" ).slider( "values", 1 ) + ' y.o' );
 			}
 		}
 	});
