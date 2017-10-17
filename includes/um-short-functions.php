@@ -1670,7 +1670,9 @@
 
 				}
 
-				return '<img src="' . $avatar_uri . '" class="func-um_user gravatar avatar avatar-' . $attrs . ' um-avatar ' . $photo_type . '" width="' . $attrs . '" height="' . $attrs . '" alt="' . $image_alt . '" />';
+				$default_avatar = um_get_default_avatar_uri();
+
+				return '<img onerror="this.src=\''.esc_attr($default_avatar).'\';"  src="' . $avatar_uri . '" class="func-um_user gravatar avatar avatar-' . $attrs . ' um-avatar ' . $photo_type . '" width="' . $attrs . '"  height="' . $attrs . '" alt="' . $image_alt . '" />';
 
 				break;
 
