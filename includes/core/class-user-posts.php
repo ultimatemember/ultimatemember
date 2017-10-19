@@ -10,8 +10,6 @@ if ( ! class_exists( 'User_posts' ) ) {
 
         function __construct() {
 
-            //add_filter('um_profile_tabs', array(&$this, 'add_tab'), 100);
-
             add_action('um_profile_content_posts', array(&$this, 'add_posts') );
             add_action('um_profile_content_comments', array(&$this, 'add_comments') );
 

@@ -351,6 +351,14 @@ if ( ! class_exists( 'Shortcodes' ) ) {
          * @param array $args
          */
         function dynamic_css( $args = array() ) {
+
+	        /*
+	         * for fix the issue #306
+	         */
+			$disable_css = apply_filters( 'um_disable_dynamic_global_css', false );
+	        if ( $disable_css )
+	        	return '';
+
             extract( $args );
 
             include_once um_path . 'assets/dynamic_css/dynamic_global.php';
