@@ -298,7 +298,7 @@
 	}
 	
 	
-	**
+	/**
 	 * Saving files to register a new user, if there are fields with files
 	 */
 	add_action( 'um_registration_set_extra_data', 'um_registration_save_files', 10, 2 );
