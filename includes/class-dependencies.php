@@ -39,6 +39,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
             'social-activity'       => '2.0-beta1',
             'social-login'          => '2.0-beta1',
             'terms-conditions'      => '2.0-beta1',
+            'user-location'         => '2.0-beta1',
             'user-tags'             => '2.0-beta1',
             'verified-users'        => '2.0-beta1',
             'woocommerce'           => '2.0-beta1',
