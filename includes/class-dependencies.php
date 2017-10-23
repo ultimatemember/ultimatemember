@@ -139,6 +139,17 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
                 }
 
                 return $message;
+            } else {
+	            //check correct folder name for extensions
+	            if ( ! self::$active_plugins ) self::init();
+
+	            if ( ! in_array( "um-{$ext_key}/um-{$ext_key}.php", self::$active_plugins ) && ! array_key_exists( "um-{$ext_key}/um-{$ext_key}.php", self::$active_plugins ) ) {
+		            $message = sprintf( __( 'Please check <strong>"%s" %s</strong> extension\'s folder name.', 'ultimate-member' ), $ext_title, $ext_ver ) .
+			            '<br />' .
+			            sprintf( __( 'Correct folder name is <strong>"%s"</strong>', 'ultimate-member' ), "um-{$ext_key}" );
+
+		            return $message;
+	            }
             }
 
             return true;

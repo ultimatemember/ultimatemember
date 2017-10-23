@@ -7,7 +7,8 @@ class UM_Menu_Item_Custom_Fields_Walker extends Walker_Nav_Menu_Edit {
 		parent::start_el( $item_output, $item, $depth, $args, $id );
 		
 		if( $new_fields =  $this->get_fields( $item, $depth, $args, $id ) ){
-			$item_output = preg_replace('/(?=<div[^>]+class="[^"]*submitbox)/', $new_fields, $item_output);
+			//$item_output = preg_replace('/(?=<div[^>]+class="[^"]*submitbox)/', $new_fields, $item_output);
+			$item_output = preg_replace('/(?=<(fieldset|p)[^>]+class="[^"]*field-move)/', $new_fields, $item_output);
 		}
 
 		$output .= $item_output;
