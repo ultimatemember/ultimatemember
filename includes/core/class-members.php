@@ -144,7 +144,8 @@ if ( ! class_exists( 'Members' ) ) {
          * @since 	1.3.83
          */
         function um_search_select_fields( $attrs ) {
-            if( strstr( $attrs['metakey'], 'role_' ) ){
+
+            if( !empty($attrs['metakey']) && strstr( $attrs['metakey'], 'role_' ) ){
 
                 $shortcode_roles = get_post_meta( UM()->shortcodes()->form_id, '_um_roles', true );
                 $um_roles = UM()->roles()->get_roles( false );
