@@ -210,7 +210,6 @@ if ( ! class_exists( 'UM_Functions' ) ) {
             }
 
             $located = $this->locate_template( $template_name, $path );
-var_dump($located);
             if ( ! file_exists( $located ) ) {
                 _doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', $located ), '2.1' );
                 return;
