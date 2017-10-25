@@ -248,10 +248,11 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
             if( !$template ) {
                 if( $path ) {
-                    $template = trailingslashit( trailingslashit( WP_PLUGIN_DIR ) . $path ) . $template_name;
+                    $template = trailingslashit( trailingslashit( WP_PLUGIN_DIR ) . $path );
                 } else {
-                    $template = trailingslashit( um_path . 'templates' ) . $template_name;
+                    $template = trailingslashit( um_path );
                 }
+                $template .= 'templates/' . $template_name;
             }
             // Return what we found.
             return apply_filters( 'um_locate_template', $template, $template_name, $path );
