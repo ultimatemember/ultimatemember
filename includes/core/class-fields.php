@@ -1326,7 +1326,7 @@
 							$number_limit .= " max=\"{$max}\" ";
 						}
 
-						$output .= '<input ' . $disabled . ' class="' . $this->get_class( $key, $data ) . '" type="number" name="' . $key . UM()->form()->form_suffix . '" id="' . $key . UM()->form()->form_suffix . '" value="' . htmlspecialchars( $this->field_value( $key, $default, $data ) ) . '" placeholder="' . $placeholder . '" data-validate="' . $validate . '" data-key="' . $key . '" {$number_limit} />
+						$output .= '<input ' . $disabled . ' class="' . $this->get_class( $key, $data ) . '" type="number" name="' . $key . UM()->form()->form_suffix . '" id="' . $key . UM()->form()->form_suffix . '" value="' . htmlspecialchars( $this->field_value( $key, $default, $data ) ) . '" placeholder="' . $placeholder . '" data-validate="' . $validate . '" data-key="' . $key . '" '.$number_limit.' />
     
                             </div>';
 
