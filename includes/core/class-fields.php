@@ -477,6 +477,12 @@
 
 					return $value;
 
+				} else if( isset( UM()->user()->profile[$key] ) ){
+
+					$value = UM()->user()->profile[$key];
+					$value = apply_filters( "um_edit_{$key}_field_value", $value, $key );
+					return $value;
+
 				} else if ($default) {
 
 					$default = apply_filters( "um_field_default_value", $default, $data, $type );
@@ -2594,7 +2600,10 @@
 				if (in_array( $type, array( 'block', 'shortcode', 'spacing', 'divider', 'group' ) )) {
 
 				} else {
-					if (!$this->field_value( $key, $default, $data )) return;
+
+					$_field_value = $this->field_value( $key, $default, $data );
+
+					if ( ! isset($_field_value) || $_field_value == '') return;
 				}
 
 				if (!um_can_view_field( $data )) return;
