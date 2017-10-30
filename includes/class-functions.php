@@ -187,6 +187,76 @@ if ( ! class_exists( 'UM_Functions' ) ) {
             return apply_filters( 'um_excluded_taxonomies', $taxes );
         }
 
+        /**
+         * Output templates
+         *
+         * @access public
+         * @param string $template_name
+         * @param string $path (default: '')
+         * @param array $t_args (default: array())
+         * @param bool $echo
+         *
+         * @return string|void
+         */
+        function get_template( $template_name, $basename = '', $t_args = array(), $echo = false ) {
+            if ( ! empty( $t_args ) && is_array( $t_args ) ) {
+                extract( $t_args );
+            }
+
+            $path = '';
+            if( $basename ) {
+	            $array = explode( '/', trim( $basename, '/' ) );
+	            $path  = $array[0];
+            }
+
+            $located = $this->locate_template( $template_name, $path );
+            if ( ! file_exists( $located ) ) {
+                _doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', $located ), '2.1' );
+                return;
+            }
+
+            $located = apply_filters( 'um_get_template', $located, $template_name, $path, $t_args );
+
+            ob_start();
+            do_action( 'um_before_template_part', $template_name, $path, $located, $t_args );
+            include( $located );
+            do_action( 'um_after_template_part', $template_name, $path, $located, $t_args );
+            $html = ob_get_clean();
+
+            if ( ! $echo ) {
+                return $html;
+            } else {
+                echo $html;
+            }
+        }
+
+
+        /**
+         * Locate a template and return the path for inclusion.
+         *
+         * @access public
+         * @param string $template_name
+         * @param string $path (default: '')
+         * @return string
+         */
+        function locate_template( $template_name, $path = '' ) {
+            // check if there is template at theme folder
+            $template = locate_template( array(
+                trailingslashit( 'ultimate-member/' . $path ) . $template_name
+            ) );
+
+            if( !$template ) {
+                if( $path ) {
+                    $template = trailingslashit( trailingslashit( WP_PLUGIN_DIR ) . $path );
+                } else {
+                    $template = trailingslashit( um_path );
+                }
+                $template .= 'templates/' . $template_name;
+            }
+            // Return what we found.
+            return apply_filters( 'um_locate_template', $template, $template_name, $path );
+        }
+
     }
 
 }
