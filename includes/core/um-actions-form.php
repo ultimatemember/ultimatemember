@@ -150,6 +150,9 @@
 					foreach ( $array['conditions'] as $condition ) {
                         list( $visibility, $parent_key, $op, $parent_value ) = $condition;
 
+						if ( ! isset( $args[ $parent_key ] ) )
+							continue;
+
                         $cond_value = ( $fields[ $parent_key ]['type'] == 'radio' ) ? $args[ $parent_key ][0] : $args[ $parent_key ];
 
 						if ( $visibility == 'hide' ) {
