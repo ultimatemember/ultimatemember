@@ -192,7 +192,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
          *
          * @access public
          * @param string $template_name
-         * @param string $path (default: '')
+         * @param string $basename (default: '')
          * @param array $t_args (default: array())
          * @param bool $echo
          *
