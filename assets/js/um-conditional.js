@@ -315,20 +315,24 @@ jQuery(document).ready( function (){
 
         if (condition.action == 'show' && is_true /*&& child_dom.is(':hidden')*/) {
             child_dom.show();
+            _show_in_ie( child_dom );
             um_field_restore_default_value(child_dom);
         }
 
         if (condition.action == 'show' && !is_true /*&& child_dom.is(':visible') */) {
             child_dom.hide();
+            _hide_in_ie( child_dom );
         }
 
         if (condition.action == 'hide' && is_true  /*&& child_dom.is(':visible')*/) {
             child_dom.hide();
-        }
+             _hide_in_ie( child_dom );
+       }
 
         if (condition.action == 'hide' && !is_true /*&& child_dom.is(':hidden')*/) {
             child_dom.show();
-            um_field_restore_default_value(child_dom);
+            _show_in_ie( child_dom );
+            um_field_restore_default_value( child_dom );
 
         }
         $dom.removeClass('um-field-has-changed');
@@ -450,6 +454,26 @@ jQuery(document).ready( function (){
 
         });
 
+    }
+
+    /**
+     * Hides div for IE browser
+     * @param  object $dom
+     */
+    function _hide_in_ie( $dom ){
+        if( jQuery.browser.msie ){
+           $dom.css({"visibility":"hidden"});
+        }
+    }
+
+    /**
+     * Shows div for IE browser
+     * @param  object $dom
+     */
+    function _show_in_ie( $dom ){
+        if( jQuery.browser.msie ){
+           $dom.css({"visibility":"visible"});
+        }
     }
 
     jQuery(document).on('change', '.um-field select, .um-field input[type=radio], .um-field input[type=checkbox]', function () {
