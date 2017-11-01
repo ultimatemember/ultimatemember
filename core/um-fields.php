@@ -418,7 +418,6 @@ class UM_Fields {
 	function field_value( $key, $default = false, $data = null ) {
 		global $ultimatemember;
  		
-
 		if ( isset( $_SESSION ) && isset( $_SESSION['um_social_profile'][ $key ] ) && isset( $this->set_mode ) && $this->set_mode == 'register' )
 			return $_SESSION['um_social_profile'][ $key ];
 
@@ -434,6 +433,8 @@ class UM_Fields {
 			}
 		}
 
+		um_fetch_user( um_profile_id() );
+		
 		// normal state
 		if ( isset( $ultimatemember->form->post_form[ $key ] ) ) {
 
@@ -499,10 +500,13 @@ class UM_Fields {
 
 			if ( !isset( $ultimatemember->form->post_form ) ) {
 
+				um_fetch_user( um_profile_id() );
+				
+
 				$field_value 	= um_user( $key );
 				$field_value 	= apply_filters('um_is_selected_filter_value', $field_value, $key );
 					   $data	= apply_filters('um_is_selected_filter_data', $data, $key, $field_value );
-
+				
 				if ( $field_value && $this->editing == true && is_array( $field_value ) && ( in_array( $value, $field_value ) || in_array( html_entity_decode( $value ), $field_value ) )  ) {
 					return true;
 				}
