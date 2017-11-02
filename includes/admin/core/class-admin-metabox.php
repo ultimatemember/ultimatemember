@@ -856,7 +856,7 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
             }
 
             // needed on forms only
-            if ( !isset( $this->is_loaded ) && isset( $screen->id ) && strstr( $screen->id, 'um_form' ) ) {
+            if ( ! isset( $this->is_loaded ) && isset( $screen->id ) && strstr( $screen->id, 'um_form' ) ) {
 
                 $settings['textarea_rows'] = 8;
 
@@ -868,6 +868,7 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                 wp_editor( '', 'um_editor_new', $settings );
                 echo '</div>';
 
+                $this->is_loaded = true;
             }
 
         }
