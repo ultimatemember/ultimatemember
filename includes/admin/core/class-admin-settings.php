@@ -1121,11 +1121,11 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                             )
                         ),
                         array(
-                            'id'       		=> 'allow_tracking',
+                            'id'       		=> 'um_allow_tracking',
                             'type'     		=> 'checkbox',
                             'label'   		=> __( 'Allow Tracking','ultimate-member' ),
-                            'value' 		=> UM()->um_get_option( 'allow_tracking' ),
-                            'default' 		=> UM()->um_get_default( 'allow_tracking' ),
+                            'value' 		=> UM()->um_get_option( 'um_allow_tracking' ),
+                            'default' 		=> UM()->um_get_default( 'um_allow_tracking' ),
                         ),
                         array(
                             'id'       		=> 'uninstall_on_delete',

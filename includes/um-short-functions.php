@@ -1388,7 +1388,7 @@
 	function um_get_default_avatar_uri() {
 		$uri = um_get_option( 'default_avatar' );
 		$uri = !empty( $uri['url'] ) ? $uri['url'] : '';
-		if (!$uri) {
+		if ( ! $uri ) {
 			$uri = um_url . 'assets/img/default_avatar.jpg';
 		} else {
 
