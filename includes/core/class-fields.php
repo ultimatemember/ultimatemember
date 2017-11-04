@@ -675,10 +675,11 @@
 
 				if (in_array( $type, array( 'select', 'multiselect' ) ) && isset( $data['custom_dropdown_options_source'] ) && !empty( $data['custom_dropdown_options_source'] )) {
 
-					if (function_exists( $data['custom_dropdown_options_source'] )) {
-
-						$arr_options = call_user_func( $data['custom_dropdown_options_source'] );
-
+					if ( function_exists( $data['custom_dropdown_options_source'] ) ) {
+						
+             			$arr_options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+             		    
+						
 						if ($type == 'select') {
 							if (isset( $arr_options[$value] ) && !empty( $arr_options[$value] )) {
 								return $arr_options[$value];
@@ -726,15 +727,10 @@
 			 */
 			function get_options_from_callback( $data, $type ) {
 
+				if ( in_array( $type, array( 'select', 'multiselect' ) ) && isset( $data['custom_dropdown_options_source'] ) && ! empty( $data['custom_dropdown_options_source'] ) ) {
 
-				if (in_array( $type, array( 'select', 'multiselect' ) ) && isset( $data['custom_dropdown_options_source'] ) && !empty( $data['custom_dropdown_options_source'] )) {
-
-					if (function_exists( $data['custom_dropdown_options_source'] )) {
-
-						$arr_options = call_user_func( $data['custom_dropdown_options_source'] );
-
-					}
-
+					$arr_options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+             		
 
 				}
 
@@ -1869,7 +1865,7 @@
 								$has_parent_option && function_exists( $data['custom_dropdown_options_source'] ) &&
 								um_user( $data['parent_dropdown_relationship'] )
 							) {
-								$options = call_user_func( $data['custom_dropdown_options_source'] );
+								$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
 								$disabled_by_parent_option = '';
 								if (um_user( $form_key )) {
 									$select_original_option_value = " data-um-original-value='" . um_user( $form_key ) . "' ";
