@@ -71,7 +71,7 @@ if ( ! class_exists( 'Form' ) ) {
 
                     $arr_options['field'] = $form_fields[ $_POST['child_name'] ];
                     if( function_exists( $ajax_source_func ) ){
-                        $arr_options['items'] = call_user_func( $ajax_source_func );
+                        $arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship']  );
                     }
 
                 }else{
