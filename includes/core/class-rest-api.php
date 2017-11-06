@@ -23,7 +23,7 @@ if ( ! class_exists( 'REST_API' ) ) {
             add_action( 'template_redirect',        array( $this, 'process_query'    ), -1 );
             add_filter( 'query_vars',               array( $this, 'query_vars'       ) );
 
-            add_action( 'um_user_profile_section',  array( $this, 'user_key_field'   ), 2 );
+	        add_filter( 'um_user_profile_additional_fields', array( $this, 'user_key_field' ), 3, 2 );
 
             add_action( 'personal_options_update',  array( $this, 'update_key'       ) );
             add_action( 'edit_user_profile_update', array( $this, 'update_key'       ) );
@@ -278,7 +278,11 @@ if ( ! class_exists( 'REST_API' ) ) {
                     break;
                 case 'role':
                     $wp_user_object = new \WP_User( $id );
-                    $wp_user_object->set_role( $value );
+	                $old_roles = $wp_user_object->roles;
+	                $wp_user_object->set_role( $value );
+
+	                do_action( 'um_after_member_role_upgrade', array( $value ), $old_roles );
+
                     $response['success'] = __('User role has been changed.','ultimate-member');
                     break;
                 default:
@@ -598,21 +602,26 @@ if ( ! class_exists( 'REST_API' ) ) {
             die();
         }
 
-        /**
-         * Modify User Profile
-         */
-        function user_key_field( $user ) {
-
+	    /**
+	     * Modify User Profile Page fields
+	     *
+	     * @param $content
+	     * @param $user
+	     * @return string
+	     */
+        function user_key_field( $content, $user ) {
             if ( empty( $user ) )
-                return;
+                return $content;
 
             if( ! isset( $user->ID ) )
-                return;
+                return $content;
 
             if ( current_user_can( 'edit_users' ) && current_user_can( 'edit_user', $user->ID ) ) {
                 $user = get_userdata( $user->ID );
-                ?>
-                <table class="form-table">
+
+	            ob_start(); ?>
+
+	            <table class="form-table">
                     <tbody>
                     <tr>
                         <th>
@@ -636,6 +645,9 @@ if ( ! class_exists( 'REST_API' ) ) {
                     </tbody>
                 </table>
             <?php }
+
+	        $content .= ob_get_clean();
+	        return $content;
         }
 
         /**

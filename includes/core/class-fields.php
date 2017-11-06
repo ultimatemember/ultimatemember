@@ -1909,9 +1909,15 @@
 						}
 
 						// role field
-						if ($form_key == 'role') {
-							$roles = UM()->roles()->get_roles( false, array( 'administrator' ) );
-							if (isset( $options ))
+						if ( $form_key == 'role' ) {
+							global $wp_roles;
+							$role_keys = array_map( function( $item ) {
+								return 'um_' . $item;
+							}, get_option( 'um_roles' ) );
+							$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+
+							$roles = UM()->roles()->get_roles( false, $exclude_roles );
+							if ( isset( $options ) )
 								$options = array_intersect( $options, $roles );
 							else
 								$options = $roles;
@@ -2098,7 +2104,13 @@
 
 						// role field
 						if ($form_key == 'role') {
-							$options = UM()->roles()->get_roles( false, array( 'administrator' ) );
+							global $wp_roles;
+							$role_keys = array_map( function( $item ) {
+								return 'um_' . $item;
+							}, get_option( 'um_roles' ) );
+							$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+
+							$options = UM()->roles()->get_roles( false, $exclude_roles );
 
 							/*var_dump( UM()->roles()->get_roles() );
                         global $wpdb;
@@ -2158,7 +2170,7 @@
 
 								$option_value = apply_filters( 'um_field_non_utf8_value', $option_value );
 
-								$output .= '<input  ' . $disabled . ' type="radio" name="' . $form_key . '[]" value="' . $option_value . '" ';
+								$output .= '<input  ' . $disabled . ' type="radio" name="' . ( ( $form_key == 'role' ) ? $form_key : $form_key . '[]' ) . '" value="' . $option_value . '" ';
 
 								if ($this->is_radio_checked( $key, $option_value, $data )) {
 									$output .= 'checked';

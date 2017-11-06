@@ -170,27 +170,31 @@ if ( ! class_exists( 'Form' ) ) {
 
                     $this->post_form = array_merge( $this->form_data, $this->post_form );
 
-
-                    if( isset( $this->form_data['custom_fields'] )  && strstr( $this->form_data['custom_fields'], 'role_' )  ){  // Secure selected role
+                    if ( isset( $this->form_data['custom_fields'] )  && strstr( $this->form_data['custom_fields'], 'role_' )  ) {  // Secure selected role
 
                         $custom_field_roles = $this->custom_field_roles( $this->form_data['custom_fields'] );
 
-                        if( ! empty( $_POST['role'] ) ){
+                        if ( ! empty( $_POST['role'] ) ) {
                             $role = $_POST['role'];
 
                             if( is_array( $_POST['role'] ) ){
                                 $role = current( $_POST['role'] );
                             }
 
-                            if ( /*isset( $custom_field_roles ) && is_array(  $custom_field_roles ) &&*/ ! empty( $role ) && ! in_array( $role , $custom_field_roles ) ) {
+	                        global $wp_roles;
+	                        $role_keys = array_map( function( $item ) {
+		                        return 'um_' . $item;
+	                        }, get_option( 'um_roles' ) );
+	                        $exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+
+                            if ( ! empty( $role ) &&
+	                             ( ! in_array( $role , $custom_field_roles ) || in_array( $role , $exclude_roles ) ) ) {
                                 wp_die( __( 'This is not possible for security reasons.','ultimate-member') );
                             }
 
                             $this->post_form['role'] = $role;
                             $this->post_form['submitted']['role'] = $role;
                         }
-
-
 
                     } elseif ( isset( $this->post_form['mode'] ) && $this->post_form['mode'] == 'register' ) {
                         $role = $this->assigned_role( $this->form_id );

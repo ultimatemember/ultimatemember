@@ -36,6 +36,7 @@ if ( ! class_exists( 'User' ) ) {
                 'user_pass',
                 'user_password',
                 'display_name',
+                'role',
             );
 
             $this->target_id = null;
@@ -52,16 +53,16 @@ if ( ! class_exists( 'User' ) ) {
             add_action('um_when_role_is_set', array(&$this, 'remove_cache') );
             add_action('um_when_status_is_set', array(&$this, 'remove_cache') );
 
-            add_action( 'show_user_profile',        array( $this, 'community_role_edit' ) );
-            add_action( 'edit_user_profile',        array( $this, 'community_role_edit' ) );
+	        add_action( 'show_user_profile', array( $this, 'profile_form_additional_section' ), 10 );
+	        add_action( 'user_new_form', array( $this, 'profile_form_additional_section' ), 10 );
+	        add_action( 'edit_user_profile', array( $this, 'profile_form_additional_section' ), 10 );
+	        add_filter( 'um_user_profile_additional_fields', array( $this, 'secondary_role_field' ), 1, 2 );
 
-            add_action( 'user_new_form', array( $this, 'secondary_role_display' ) );
-            add_action( 'edit_user_profile', array( $this, 'secondary_role_display' ) );
-            add_action( 'show_user_profile', array( $this, 'secondary_role_display' ) );
-
+			//on every update of user profile (hook from wp_update_user)
             add_action( 'profile_update', array( &$this, 'profile_update' ), 10, 2 ); // user_id and old_user_data
-            add_action( 'edit_user_profile_update', array( &$this, 'profile_update' ), 10, 1 );
 
+            //on user update profile page
+            //add_action( 'edit_user_profile_update', array( &$this, 'profile_update' ), 10, 1 );
 
             add_action( 'user_register', array( &$this, 'user_register_via_admin' ), 10, 1 );
             add_action( 'user_register', array( &$this, 'set_gravatar' ), 11, 1 );
@@ -228,28 +229,63 @@ if ( ! class_exists( 'User' ) ) {
         }
 
 
-        function profile_update( $user_id ) {
-            // Bail if no user ID was passed
-            if ( empty( $user_id ) )
-                return;
+		/**
+		* On wp_update_user function complete
+		*
+		* @param int $user_id
+		* @param \WP_User $old_data
+		*/
+		function profile_update( $user_id, $old_data ) {
+			// Bail if no user ID was passed
+			if ( empty( $user_id ) )
+				return;
 
-            if ( ! empty( $_POST['um-role'] ) ) {
-                if ( ! user_can( $user_id, $_POST['um-role'] ) ) {
-                    UM()->roles()->set_role( $user_id, $_POST['um-role'] );
-                }
-            }
+			$old_roles = $old_data->roles;
+			$userdata = get_userdata( $user_id );
+			$new_roles = $userdata->roles;
 
-            $this->remove_cache( $user_id );
-        }
+			if ( ! empty( $_POST['um-role'] ) ) {
+				$new_roles = array_merge( $new_roles, array( $_POST['um-role'] ) );
+				if ( ! user_can( $user_id, $_POST['um-role'] ) ) {
+					UM()->roles()->set_role( $user_id, $_POST['um-role'] );
+				}
+			}
+
+			do_action( 'um_after_member_role_upgrade', $new_roles, $old_roles );
+
+			$this->remove_cache( $user_id );
+		}
+
+
+		/**
+		 * Additional section for WP Profile page with UM data fields
+		 *
+		 * @param \WP_User $userdata User data
+		 * @return void
+		 */
+		function profile_form_additional_section( $userdata ) {
+
+			$section_content = apply_filters( 'um_user_profile_additional_fields', '', $userdata );
+
+			if ( ! empty( $section_content ) ) {
+
+				if ( $userdata !== 'add-new-user' ) { ?>
+					<h3><?php esc_html_e( 'Ultimate Member', 'ultimate-member' ); ?></h3>
+				<?php }
+
+				echo $section_content;
+			}
+		}
 
 
         /**
          * Default interface for setting a ultimatemember role
          *
+         * @param string $content Section HTML
          * @param \WP_User $userdata User data
-         * @return void
+         * @return string
          */
-        public static function secondary_role_display( $userdata ) {
+        public function secondary_role_field( $content, $userdata ) {
             $roles = array();
 
             $role_keys = get_option( 'um_roles' );
@@ -265,26 +301,28 @@ if ( ! class_exists( 'User' ) ) {
             }
 
             if ( empty( $roles ) )
-                return;
+                return $content;
 
+	        global $pagenow;
+	        if ( 'profile.php' == $pagenow )
+                return $content;
 
             $style = '';
             $user_role = false;
             if ( $userdata !== 'add-new-user' ) {
                 // Bail if current user cannot edit users
                 if ( ! current_user_can( 'edit_user', $userdata->ID ) )
-                    return;
+                    return $content;
 
                 $user_role = UM()->roles()->um_get_user_role( $userdata->ID );
                 if ( $user_role && ! empty( $userdata->roles ) && count( $userdata->roles ) == 1 )
                     $style = 'style="display:none;"';
 
-            } ?>
+            }
+
+            ob_start(); ?>
 
             <div id="um_role_selector_wrapper" <?php echo $style ?>>
-                <?php if ( $userdata !== 'add-new-user' ) { ?>
-                    <h3><?php esc_html_e( 'Ultimate Member', 'ultimate-member' ); ?></h3>
-                <?php } ?>
                 <table class="form-table">
                     <tbody>
                     <tr>
@@ -301,15 +339,10 @@ if ( ! class_exists( 'User' ) ) {
                     </tbody>
                 </table>
             </div>
-            <?php
-        }
 
+			<?php $content .= ob_get_clean();
 
-        /**
-         * Allow changing user
-         */
-        function community_role_edit( $user ) {
-            do_action( 'um_user_profile_section' );
+	        return $content;
         }
 
 
@@ -1029,9 +1062,9 @@ if ( ! class_exists( 'User' ) ) {
             $args['ID'] = $this->id;
             $changes = apply_filters('um_before_update_profile', $changes, $this->id);
 
-            // save or update profile meta
-            foreach( $changes as $key => $value ) {
-                if ( !in_array( $key, $this->update_user_keys ) ) {
+	        // save or update profile meta
+            foreach ( $changes as $key => $value ) {
+                if ( ! in_array( $key, $this->update_user_keys ) ) {
 
                     update_user_meta( $this->id, $key, $value );
 
@@ -1042,7 +1075,6 @@ if ( ! class_exists( 'User' ) ) {
                 }
 
             }
-
 
             // update user
             if ( count( $args ) > 1 ) {
