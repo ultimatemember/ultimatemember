@@ -103,8 +103,13 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
             //restrict content metabox
             $post_types = um_get_option( 'restricted_access_post_metabox' );
             if ( ! empty( $post_types[ $current_screen->id ] ) ) {
-                add_action( 'add_meta_boxes', array(&$this, 'add_metabox_restrict_content'), 1 );
-                add_action( 'save_post', array( &$this, 'save_metabox_restrict_content' ), 10, 2 );
+
+                $hide_metabox = apply_filters( 'um_restrict_content_hide_metabox', false );
+
+                if ( ! $hide_metabox ) {
+                    add_action( 'add_meta_boxes', array(&$this, 'add_metabox_restrict_content'), 1 );
+                    add_action( 'save_post', array( &$this, 'save_metabox_restrict_content' ), 10, 2 );
+                }
 
                 if ( $current_screen->id == 'attachment' ) {
                     add_action( 'add_attachment', array( &$this, 'save_attachment_metabox_restrict_content' ), 10, 2 );

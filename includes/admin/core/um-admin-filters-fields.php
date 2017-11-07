@@ -131,3 +131,15 @@
 
         return $break;
     }
+
+
+
+    add_filter( 'um_restrict_content_hide_metabox', 'um_hide_metabox_restrict_content_shop', 10, 1 );
+	function um_hide_metabox_restrict_content_shop( $hide ) {
+		if ( function_exists( 'wc_get_page_id' ) && ! empty( $_GET['post'] ) &&
+			 $_GET['post'] == wc_get_page_id( 'shop' ) ) {
+			return true;
+		}
+
+		return $hide;
+	}

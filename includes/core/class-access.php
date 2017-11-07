@@ -203,7 +203,7 @@ if ( ! class_exists( 'Access' ) ) {
          * @return array
          */
         function filter_protected_posts( $posts, $query ) {
-            $filtered_posts = array();
+	        $filtered_posts = array();
 
             //if empty
             if ( empty( $posts ) )
@@ -213,7 +213,6 @@ if ( ! class_exists( 'Access' ) ) {
 
             //other filter
             foreach ( $posts as $post ) {
-
                 $restriction = $this->get_post_privacy_settings( $post );
                 if ( ! $restriction ) {
                     $filtered_posts[] = $post;
