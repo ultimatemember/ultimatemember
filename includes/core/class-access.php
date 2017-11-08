@@ -148,7 +148,7 @@ if ( ! class_exists( 'Access' ) ) {
 
             $restricted_posts = um_get_option( 'restricted_access_post_metabox' );
 
-            if ( ! empty( $restricted_posts[$post->post_type] ) ) {
+            if ( ! empty( $restricted_posts[ $post->post_type ] ) ) {
                 $restriction = get_post_meta( $post->ID, 'um_content_restriction', true );
 
                 if ( ! empty( $restriction['_um_custom_access_settings'] ) ) {
@@ -291,15 +291,15 @@ if ( ! class_exists( 'Access' ) ) {
                             continue;
                         }
 
+	                    $custom_restrict = apply_filters( 'um_custom_restriction', true, $restriction );
 
                         if ( ! empty( $restriction['_um_access_roles'] ) )
                             $user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
 
-                        if ( isset( $user_can ) && $user_can ) {
+                        if ( isset( $user_can ) && $user_can && $custom_restrict ) {
                             $filtered_posts[] = $post;
                             continue;
                         }
-
 
                         if ( empty( $query->is_singular ) ) {
                             //if not single query when exclude if set _um_access_hide_from_queries
@@ -467,9 +467,12 @@ if ( ! class_exists( 'Access' ) ) {
                         //if post for logged in users and user is not logged in
                         if ( is_user_logged_in() ) {
 
-                            $user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
+	                        $custom_restrict = apply_filters( 'um_custom_restriction', true, $restriction );
 
-                            if ( $user_can ) {
+	                        if ( ! empty( $restriction['_um_access_roles'] ) )
+                                $user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
+
+                            if ( isset( $user_can ) && $user_can && $custom_restrict ) {
                                 $filtered_items[] = $menu_item;
                                 continue;
                             }
