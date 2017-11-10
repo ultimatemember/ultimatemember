@@ -1022,7 +1022,8 @@ $roles_array = UM()->roles()->get_roles( false, array( 'administrator' ) );
 $posts = get_posts( array(
     'meta_key'      => '_um_custom_access_settings',
     'meta_value'    => '1',
-    'fields'        => 'ids'
+    'fields'        => 'ids',
+	'numberposts'   => -1
 ) );
 if ( ! empty( $posts ) ) {
     foreach ( $posts as $post_id ) {
