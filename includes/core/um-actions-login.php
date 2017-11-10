@@ -154,16 +154,13 @@
 	***/
 	add_action('um_on_login_before_redirect', 'um_store_lastlogin_timestamp', 10);
 	function um_store_lastlogin_timestamp( $user_id ) {
-		delete_user_meta( $user_id, '_um_last_login' );
 		update_user_meta( $user_id, '_um_last_login', current_time( 'timestamp' ) );
 	}
 
 	add_action( 'wp_login', 'um_store_lastlogin_timestamp_' );
 	function um_store_lastlogin_timestamp_( $login ) {
 		$user = get_user_by('login',$login);
-		$user_id = $user->ID;
-		delete_user_meta( $user_id, '_um_last_login' );
-		update_user_meta( $user_id, '_um_last_login', current_time( 'timestamp' ) );
+        um_store_lastlogin_timestamp( $user->ID );
 	}
 
 	/***
