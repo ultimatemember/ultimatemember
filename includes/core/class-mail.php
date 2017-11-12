@@ -275,7 +275,7 @@ if ( ! class_exists( 'Mail' ) ) {
 				}
 			}
 
-			if ( copy( $plugin_template_path, $theme_template_path ) ) {
+			if ( file_exists( $plugin_template_path ) && copy( $plugin_template_path, $theme_template_path ) ) {
 				return true;
 			} else {
 				return false;
