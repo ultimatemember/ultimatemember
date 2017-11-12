@@ -1020,11 +1020,13 @@ update_option( 'um_roles', $role_keys );
 $roles_array = UM()->roles()->get_roles( false, array( 'administrator' ) );
 
 $posts = get_posts( array(
-    'meta_key'      => '_um_custom_access_settings',
-    'meta_value'    => '1',
-    'fields'        => 'ids',
+	'post_type'     => 'any',
+	'meta_key'      => '_um_custom_access_settings',
+	'meta_value'    => '1',
+	'fields'        => 'ids',
 	'numberposts'   => -1
 ) );
+
 if ( ! empty( $posts ) ) {
     foreach ( $posts as $post_id ) {
         $um_accessible = get_post_meta( $post_id, '_um_accessible', true );
@@ -1217,7 +1219,8 @@ $menus = get_posts( array(
             'key' => 'menu-item-um_nav_roles',
             'compare' => 'EXISTS',
         )
-    )
+    ),
+	'numberposts' => -1,
 ) );
 
 foreach ( $menus as $menu ) {
