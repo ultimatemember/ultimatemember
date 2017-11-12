@@ -296,12 +296,12 @@ if ( ! class_exists( 'UM' ) ) {
                 $this->register();
                 $this->user_posts();
                 $this->access();
-                $this->mail();
                 $this->members();
                 $this->logout();
             }
 
             //common includes
+	        $this->mail();
             $this->rest_api();
             $this->shortcodes();
             $this->roles();

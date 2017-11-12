@@ -148,7 +148,7 @@ if ( ! class_exists( 'Access' ) ) {
 
             $restricted_posts = um_get_option( 'restricted_access_post_metabox' );
 
-            if ( ! empty( $restricted_posts[ $post->post_type ] ) ) {
+            if ( ! empty( $post->post_type ) && ! empty( $restricted_posts[ $post->post_type ] ) ) {
                 $restriction = get_post_meta( $post->ID, 'um_content_restriction', true );
 
                 if ( ! empty( $restriction['_um_custom_access_settings'] ) ) {
