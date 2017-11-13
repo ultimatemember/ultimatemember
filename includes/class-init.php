@@ -220,7 +220,7 @@ if ( ! class_exists( 'UM' ) ) {
                     $path = implode( DIRECTORY_SEPARATOR, $array );
                     $path = str_replace( '_', '-', $path );
                     $full_path .= $path . '.php';
-                } else {
+                } else if ( strpos( $class, 'um\\' ) === 0 ) {
                     $class = implode( '\\', $array );
                     $slash = DIRECTORY_SEPARATOR;
                     $path = str_replace(
@@ -230,7 +230,9 @@ if ( ! class_exists( 'UM' ) ) {
                     $full_path =  um_path . 'includes' . $path . '.php';
                 }
 
-                include_once $full_path;
+                if( isset( $full_path ) && file_exists( $full_path ) ) {
+	                include_once $full_path;
+                }
             }
         }
 
