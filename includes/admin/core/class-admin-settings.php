@@ -1404,7 +1404,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                 $filtered_settings[$key] = $value;
 
                 foreach( $fields as $field ) {
-                    if ( $field['id'] == $key && $field['type'] == 'multi_text' ) {
+                    if ( $field['id'] == $key && isset( $field['type'] ) && $field['type'] == 'multi_text' ) {
                         $filtered_settings[$key] = array_filter( $settings[$key] );
                     }
                 }

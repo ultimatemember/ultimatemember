@@ -585,14 +585,21 @@
 		return false;
 	}
 
-	/***
-	 ***    @Get a translated core page URL
-	 ***/
+
+	/**
+	 * Get a translated core page URL
+	 *
+	 * @param $post_id
+	 * @param $language
+	 * @return bool|false|string
+	 */
 	function um_get_url_for_language( $post_id, $language ) {
+		if ( ! um_is_wpml_active() )
+			return '';
+
 		$lang_post_id = icl_object_id( $post_id, 'page', true, $language );
 
-		$url = "";
-		if ($lang_post_id != 0) {
+		if ( $lang_post_id != 0 ) {
 			$url = get_permalink( $lang_post_id );
 		} else {
 			// No page found, it's most likely the homepage
@@ -601,6 +608,22 @@
 		}
 
 		return $url;
+	}
+
+
+	/**
+	 * Check if WPML is active
+	 *
+	 * @return bool|mixed
+	 */
+	function um_is_wpml_active() {
+		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+			global $sitepress;
+
+			return $sitepress->get_setting( 'setup_complete' );
+		}
+
+		return false;
 	}
 
 	/***
