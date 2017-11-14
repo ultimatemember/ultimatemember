@@ -11,7 +11,7 @@ if ( ! class_exists( 'Permalinks' ) ) {
 
         function __construct() {
 
-            $this->current_url = $this->get_current_url();
+            add_action( 'init',  array( &$this, 'set_current_url' ), 0 );
 
             add_action( 'init',  array( &$this, 'check_for_querystrings' ), 1 );
 
@@ -24,6 +24,13 @@ if ( ! class_exists( 'Permalinks' ) ) {
             add_action( 'wp_head',  array( &$this, 'um_rel_canonical_' ), 9 );
         }
 
+
+	    /**
+	     * Set current URL variable
+	     */
+        function set_current_url() {
+	        $this->current_url = $this->get_current_url();
+        }
 
 
         /***
