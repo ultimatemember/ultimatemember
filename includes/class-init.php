@@ -989,11 +989,11 @@ if ( ! class_exists( 'UM' ) ) {
         /**
          * @since 2.0
          *
-         * @return um\lib\mobiledetect\Mobile_Detect
+         * @return um\lib\mobiledetect\Um_Mobile_Detect
          */
         function mobile() {
             if ( empty( $this->classes['mobile'] ) ) {
-                $this->classes['mobile'] = new um\lib\mobiledetect\Mobile_Detect();
+                $this->classes['mobile'] = new um\lib\mobiledetect\Um_Mobile_Detect();
             }
 
             return $this->classes['mobile'];
