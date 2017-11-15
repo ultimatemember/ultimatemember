@@ -115,6 +115,9 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
             $tabs = UM()->profile()->tabs_primary();
 
             foreach( $tabs as $id => $tab ) {
+
+                $profile_tab_roles = UM()->um_get_option( 'profile_tab_' . $id . '_roles' );
+
                 $appearances_profile_menu_fields = array_merge( $appearances_profile_menu_fields, array(
                     array(
                         'id'       		=> 'profile_tab_' . $id,
@@ -144,7 +147,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                         'options' 		=> UM()->roles()->get_roles(),
                         'placeholder' 	=> __( 'Choose user roles...','ultimate-member' ),
                         'conditional'		=> array( 'profile_tab_' . $id . '_privacy', '=', 4 ),
-                        'value' 		=> ! empty( UM()->um_get_option( 'profile_tab_' . $id . '_roles' ) ) ? UM()->um_get_option( 'profile_tab_' . $id . '_roles' ) : array(),
+                        'value' 		=> ! empty( $profile_tab_roles ) ? $profile_tab_roles : array(),
                         'default' 		=> UM()->um_get_default( 'profile_tab_' . $id . '_roles' ),
                         'size'          => 'small'
                     )
