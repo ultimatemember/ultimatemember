@@ -303,6 +303,10 @@ if ( ! class_exists( 'Shortcodes' ) ) {
 
             extract($args, EXTR_SKIP);
 
+	        if ( 'register' == $mode && is_user_logged_in() ) {
+		        return __( 'You are already registered', 'ultimate-member' );
+	        }
+
             // for profiles only
             if ($mode == 'profile' && um_profile_id() && isset($args['role']) && $args['role'] &&
                 $args['role'] != UM()->roles()->um_get_user_role( um_profile_id() ) ) {
