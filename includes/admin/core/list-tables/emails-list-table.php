@@ -135,8 +135,7 @@ class UM_Emails_List_Table extends WP_List_Table {
 
     function column_email( $item ) {
         $active = um_get_option( $item['key'] . '_on' );
-        if ( $active === '' )
-            $active = ! empty( $item['default_active'] );
+
         return '<span class="dashicons um-notification-status ' . ( ! empty( $active ) ? 'um-notification-is-active dashicons-yes' : 'dashicons-no-alt' ) . '"></span><a href="' . add_query_arg( array( 'email' => $item['key'] ) ) . '"><strong>'. $item['title'] . '</strong></a>';
     }
 
