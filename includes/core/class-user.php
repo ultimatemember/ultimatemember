@@ -269,7 +269,7 @@ if ( ! class_exists( 'User' ) ) {
 
 			if ( ! empty( $section_content ) ) {
 
-				if ( $userdata !== 'add-new-user' ) { ?>
+				if ( $userdata !== 'add-new-user' && $userdata !== 'add-existing-user' ) { ?>
 					<h3><?php esc_html_e( 'Ultimate Member', 'ultimate-member' ); ?></h3>
 				<?php }
 
@@ -309,7 +309,7 @@ if ( ! class_exists( 'User' ) ) {
 
             $style = '';
             $user_role = false;
-            if ( $userdata !== 'add-new-user' ) {
+            if ( $userdata !== 'add-new-user' && $userdata !== 'add-existing-user' ) {
                 // Bail if current user cannot edit users
                 if ( ! current_user_can( 'edit_user', $userdata->ID ) )
                     return $content;
@@ -320,9 +320,11 @@ if ( ! class_exists( 'User' ) ) {
 
             }
 
+	        $class = ( $userdata == 'add-existing-user' ) ? 'um_role_existing_selector_wrapper' : 'um_role_selector_wrapper';
+
             ob_start(); ?>
 
-            <div id="um_role_selector_wrapper" <?php echo $style ?>>
+            <div id="<?php echo $class ?>" <?php echo $style ?>>
                 <table class="form-table">
                     <tbody>
                     <tr>

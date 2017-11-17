@@ -1014,7 +1014,12 @@ if ( ! empty( $um_roles ) ) {
 
 update_option( 'um_roles', $role_keys );
 
-
+global $wp_roles, $wp_version;
+if ( version_compare( $wp_version, '4.9.0', '<' ) && method_exists( $wp_roles, '_init' ) ) {
+	wp_roles()->_init();
+} elseif ( method_exists( $wp_roles, 'for_site' ) ) {
+	wp_roles()->for_site( get_current_blog_id() );
+}
 
 //Content Restriction transfer
 $roles_array = UM()->roles()->get_roles( false, array( 'administrator' ) );
@@ -1035,17 +1040,18 @@ if ( ! empty( $posts ) ) {
 
         $access_roles = array();
         if ( ! empty( $um_access_roles ) ) {
-            foreach ( $roles_array as $role ) {
+            foreach ( $roles_array as $role => $role_label ) {
                 if ( in_array( substr( $role, 3 ), $um_access_roles ) )
-                    $access_roles[$role] = '1';
+                    $access_roles[ $role ] = '1';
                 else
-                    $access_roles[$role] = '0';
+                    $access_roles[ $role ] = '0';
             }
         } else {
             foreach ( $roles_array as $role ) {
-                $access_roles[$role] = '0';
+                $access_roles[ $role ] = '0';
             }
         }
+
         $restrict_options = array(
             '_um_custom_access_settings'        => '1',
             '_um_accessible'                    => $um_accessible,
