@@ -303,6 +303,10 @@
 	 */
 	add_action( 'um_registration_set_extra_data', 'um_registration_save_files', 10, 2 );
 	function um_registration_save_files( $user_id, $args ) {
+
+		if ( empty( $args['custom_fields'] ) )
+			return;
+
 		$files = array();
 
 		$fields = unserialize( $args['custom_fields'] );
