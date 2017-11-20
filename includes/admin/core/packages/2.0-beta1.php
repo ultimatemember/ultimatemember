@@ -1017,6 +1017,10 @@ update_option( 'um_roles', $role_keys );
 
 
 //Content Restriction transfer
+global $wp_roles;
+if( method_exists($wp_roles,'_init') ){
+	$wp_roles->_init();
+}
 $roles_array = UM()->roles()->get_roles( false, array( 'administrator' ) );
 
 $posts = get_posts( array(
@@ -1035,14 +1039,14 @@ if ( ! empty( $posts ) ) {
 
         $access_roles = array();
         if ( ! empty( $um_access_roles ) ) {
-            foreach ( $roles_array as $role ) {
+	        foreach ( $roles_array as $role => $role_label ) {
                 if ( in_array( substr( $role, 3 ), $um_access_roles ) )
                     $access_roles[$role] = '1';
                 else
                     $access_roles[$role] = '0';
             }
         } else {
-            foreach ( $roles_array as $role ) {
+	        foreach ( $roles_array as $role => $role_label ) {
                 $access_roles[$role] = '0';
             }
         }
