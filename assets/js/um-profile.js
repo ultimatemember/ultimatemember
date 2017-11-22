@@ -23,7 +23,7 @@ jQuery(document).ready(function() {
 		jQuery(this).addClass('active');
 	});
 
-	jQuery(document).on('click', '.um-cover a, .um-photo a', function(e){
+    jQuery(document).on('click', '.um-cover a.um-cover-add, .um-photo a', function(e){
 		e.preventDefault();
 		return false;
 	});

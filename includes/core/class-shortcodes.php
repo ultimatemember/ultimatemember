@@ -290,14 +290,16 @@ if ( ! class_exists( 'Shortcodes' ) ) {
                 $post_data['template'] = $post_data['mode'];
             }
 
-            $args = array_merge($post_data, $args);
+	        if( 'directory' != $args['mode'] ) {
 
-            if ( empty( $args['use_custom_settings'] ) ) {
-                $args = array_merge( $args, $this->get_css_args( $args ) );
-            } else {
-                $args = array_merge( $this->get_css_args( $args ), $args );
-            }
+		        $args = array_merge( $post_data, $args );
 
+		        if (empty( $args['use_custom_settings'] )) {
+			        $args = array_merge( $args, $this->get_css_args( $args ) );
+		        } else {
+			        $args = array_merge( $this->get_css_args( $args ), $args );
+		        }
+	        }
             // filter for arguments
             $args = apply_filters('um_shortcode_args_filter', $args);
 
