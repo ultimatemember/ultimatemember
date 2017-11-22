@@ -1887,37 +1887,24 @@
 
 						$output .= '<select  ' . $disabled . ' ' . $select_original_option_value . ' ' . $disabled_by_parent_option . '  name="' . $form_key . '" id="' . $form_key . '" data-validate="' . $validate . '" data-key="' . $key . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . $placeholder . '" ' . $atts_ajax . '>';
 
-                       $enable_options_pair = apply_filters("um_fields_options_enable_pairs__{$key}", false );
-                         
-                    if( ! $has_parent_option ){
-                        if ( isset($options) && $options == 'builtin'){
-                            $options = UM()->builtin()->get ( $filter );
-                        }
+						$enable_options_pair = apply_filters("um_fields_options_enable_pairs__{$key}", false );
 
-							if (!isset( $options )) {
+						if( ! $has_parent_option ) {
+							if ( isset($options) && $options == 'builtin'){
+								$options = UM()->builtin()->get ( $filter );
+							}
+
+							if ( ! isset( $options )) {
 								$options = UM()->builtin()->get( 'countries' );
 							}
 
-							if (isset( $options )) {
+							if ( isset( $options ) ) {
 								$options = apply_filters( 'um_select_dropdown_dynamic_options', $options, $data );
 								$options = apply_filters( "um_select_dropdown_dynamic_options_{$key}", $options );
 							}
 						}
 
-						// role field
-						if ( $form_key == 'role' ) {
-							global $wp_roles;
-							$role_keys = array_map( function( $item ) {
-								return 'um_' . $item;
-							}, get_option( 'um_roles' ) );
-							$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
-
-							$roles = UM()->roles()->get_roles( false, $exclude_roles );
-							if ( isset( $options ) )
-								$options = array_intersect( $options, $roles );
-							else
-								$options = $roles;
-						}
+						$options = $this->get_available_roles( $form_key, $options );
 
 						// add an empty option!
 						$output .= '<option value=""></option>';
@@ -1930,42 +1917,44 @@
 						}
 
 						// add options
-						foreach ($options as $k => $v) {
+						if ( ! empty( $options ) ) {
+							foreach ( $options as $k => $v ) {
 
-							$v = rtrim( $v );
+								$v = rtrim( $v );
 
-							$option_value = $v;
-							$um_field_checkbox_item_title = $v;
-
-
-							if (!is_numeric( $k ) && in_array( $form_key, array( 'role' ) )) {
-								$option_value = $k;
+								$option_value = $v;
 								$um_field_checkbox_item_title = $v;
+
+
+								if (!is_numeric( $k ) && in_array( $form_key, array( 'role' ) )) {
+									$option_value = $k;
+									$um_field_checkbox_item_title = $v;
+								}
+
+								if (isset( $options_pair )) {
+									$option_value = $k;
+									$um_field_checkbox_item_title = $v;
+								}
+
+								$option_value = apply_filters( 'um_field_non_utf8_value', $option_value );
+
+								$output .= '<option value="' . $option_value . '" ';
+
+								if ($this->is_selected( $form_key, $option_value, $data )) {
+									$output .= 'selected';
+									$field_value = $option_value;
+								} else if (!isset( $options_pair ) && $this->is_selected( $form_key, $v, $data )) {
+									$output .= 'selected';
+									$field_value = $v;
+								}
+
+								$output .= '>' . __( $um_field_checkbox_item_title, UM_TEXTDOMAIN ) . '</option>';
+
+
 							}
-
-							if (isset( $options_pair )) {
-								$option_value = $k;
-								$um_field_checkbox_item_title = $v;
-							}
-
-							$option_value = apply_filters( 'um_field_non_utf8_value', $option_value );
-
-							$output .= '<option value="' . $option_value . '" ';
-
-							if ($this->is_selected( $form_key, $option_value, $data )) {
-								$output .= 'selected';
-								$field_value = $option_value;
-							} else if (!isset( $options_pair ) && $this->is_selected( $form_key, $v, $data )) {
-								$output .= 'selected';
-								$field_value = $v;
-							}
-
-							$output .= '>' . __( $um_field_checkbox_item_title, UM_TEXTDOMAIN ) . '</option>';
-
-
 						}
 
-						if (!empty( $disabled )) {
+						if ( ! empty( $disabled ) ) {
 							$output .= $this->disabled_hidden_field( $form_key, $field_value );
 						}
 
@@ -2098,39 +2087,13 @@
 
 						$output .= '<div class="um-field-area">';
 
-						// role field
-						if ($form_key == 'role') {
-							global $wp_roles;
-							$role_keys = array_map( function( $item ) {
-								return 'um_' . $item;
-							}, get_option( 'um_roles' ) );
-							$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
-
-							$options = UM()->roles()->get_roles( false, $exclude_roles );
-
-							/*var_dump( UM()->roles()->get_roles() );
-                        global $wpdb;
-                        if ( ! empty( $options ) ) {
-                            foreach ( $options as $rkey => $val ) {
-                                $val = (string) $val;
-                                $val = trim( $val );
-                                $post_id = $wpdb->get_var(
-                                    $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'um_role' AND ( post_name = %s OR post_title = %s )", $rkey, $val )
-                                );
-                                $_role = get_post( $post_id );
-                                $new_roles[$_role->post_name] = $_role->post_title;
-                                wp_reset_postdata();
-                            }
-
-                            $options = $new_roles;
-                        }*/
-						}
+						$options = $this->get_available_roles( $form_key, $options );
 
 						// add options
 						$i = 0;
 						$field_value = array();
 
-						if (!empty( $options )) {
+						if ( ! empty( $options ) ) {
 							foreach ($options as $k => $v) {
 
 								$v = rtrim( $v );
@@ -2334,6 +2297,36 @@
 
 				return $output;
 			}
+
+
+			/**
+			 * Filter for user roles
+			 *
+			 * @param $form_key
+			 * @param array $options
+			 * @return array
+			 */
+			function get_available_roles( $form_key, $options = array() ) {
+				if ( $form_key != 'role' ) {
+					return $options;
+				}
+
+				// role field
+				global $wp_roles;
+				$role_keys = array_map( function( $item ) {
+					return 'um_' . $item;
+				}, get_option( 'um_roles' ) );
+				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+
+				$roles = UM()->roles()->get_roles( false, $exclude_roles );
+				if ( ! empty( $options ) )
+					$options = array_intersect( $options, $roles );
+				else
+					$options = $roles;
+
+				return $options;
+			}
+
 
 			/**
 			 * Sorts columns array
