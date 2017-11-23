@@ -22,9 +22,7 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
             add_action( 'load-post.php', array(&$this, 'add_metabox'), 9 );
             add_action( 'load-post-new.php', array(&$this, 'add_metabox'), 9 );
 
-
-            add_action( 'plugins_loaded', array(&$this, 'add_taxonomy_metabox'), 9 );
-
+            add_action( 'admin_init', array(&$this, 'add_taxonomy_metabox'), 9 );
 
             //roles metaboxes
             add_action( 'um_roles_add_meta_boxes', array( &$this, 'add_metabox_role' ) );
@@ -629,15 +627,21 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                     'screen'    => 'um_role_meta',
                     'context'   => 'normal',
                     'priority'  => 'default'
-                ),
-                array(
+                )
+            );
+
+            if ( ! isset( $_GET['id'] ) || 'administrator' != $_GET['id'] ) {
+                $roles_metaboxes[] = array(
                     'id'        => 'um-admin-form-home',
                     'title'     => __( 'Homepage Options', 'ultimate-member' ),
                     'callback'  => $callback,
                     'screen'    => 'um_role_meta',
                     'context'   => 'normal',
                     'priority'  => 'default'
-                ),
+                );
+            }
+
+            $roles_metaboxes = array_merge( $roles_metaboxes, array(
                 array(
                     'id'        => 'um-admin-form-register',
                     'title'     => __( 'Registration Options', 'ultimate-member' ),
@@ -678,7 +682,7 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                     'context'   => 'side',
                     'priority'  => 'default'
                 )
-            );
+            ) );
 
             $roles_metaboxes = apply_filters( 'um_admin_role_metaboxes', $roles_metaboxes );
 

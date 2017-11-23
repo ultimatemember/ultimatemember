@@ -161,7 +161,7 @@ if ( ! class_exists( 'Access' ) ) {
 		function um_access_check_global_settings() {
 			global $post;
 
-			if ( is_home() ) {
+			if ( is_front_page() ) {
 				if ( is_user_logged_in() ) {
 
 					$role_meta = UM()->roles()->role_data( um_user( 'role' ) );
