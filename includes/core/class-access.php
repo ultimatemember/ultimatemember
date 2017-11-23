@@ -110,7 +110,10 @@ if ( ! class_exists( 'Access' ) ) {
 				return;
 
 			//post is private
-			if ( '1' == $restriction['_um_accessible'] ) {
+			if ( '0' == $restriction['_um_accessible'] ) {
+				$this->allow_access = true;
+				return;
+			} elseif ( '1' == $restriction['_um_accessible'] ) {
 				//if post for not logged in users and user is not logged in
 				if ( ! is_user_logged_in() ) {
 					$this->allow_access = true;
@@ -172,8 +175,6 @@ if ( ! class_exists( 'Access' ) ) {
 					$redirect_to = ! empty( $role_meta['redirect_homepage'] ) ? $role_meta['redirect_homepage'] : um_get_core_page( 'user' );
 					$this->redirect_handler = $this->set_referer( $redirect_to, "custom_homepage" );
 
-					wp_redirect( $this->redirect_handler ); exit;
-
 				} else {
 					$access = um_get_option( 'accessible' );
 
@@ -187,7 +188,6 @@ if ( ! class_exists( 'Access' ) ) {
 								$redirect = um_get_core_page( 'login' );
 
 							$this->redirect_handler = $this->set_referer( $redirect, 'global' );
-							wp_redirect( $this->redirect_handler ); exit;
 						}
 					}
 				}
@@ -206,39 +206,39 @@ if ( ! class_exists( 'Access' ) ) {
 								$redirect = um_get_core_page( 'login' );
 
 							$this->redirect_handler = $this->set_referer( $redirect, 'global' );
-							wp_redirect( $this->redirect_handler ); exit;
 						}
 					}
 				}
-			} else {
-				$access = um_get_option( 'accessible' );
+			}
 
-				if ( $access == 2 && ! is_user_logged_in() ) {
+			$access = um_get_option( 'accessible' );
 
-					//build exclude URLs pages
-					$redirects = array();
-					$redirects[] = untrailingslashit( um_get_option( 'access_redirect' ) );
+			if ( $access == 2 && ! is_user_logged_in() ) {
 
-					$exclude_uris = um_get_option( 'access_exclude_uris' );
-					if ( ! empty( $exclude_uris ) )
-						$redirects = array_merge( $redirects, $exclude_uris );
+				//build exclude URLs pages
+				$redirects = array();
+				$redirects[] = untrailingslashit( um_get_option( 'access_redirect' ) );
 
-					$redirects = array_unique( $redirects );
+				$exclude_uris = um_get_option( 'access_exclude_uris' );
+				if ( ! empty( $exclude_uris ) )
+					$redirects = array_merge( $redirects, $exclude_uris );
 
-					$current_url = UM()->permalinks()->get_current_url( get_option( 'permalink_structure' ) );
-					$current_url = untrailingslashit( $current_url );
-					$current_url_slash = trailingslashit( $current_url );
+				$redirects = array_unique( $redirects );
 
-					//get redirect URL if not set get login page by default
-					$redirect = um_get_option( 'access_redirect' );
-					if ( ! $redirect )
-						$redirect = um_get_core_page( 'login' );
+				$current_url = UM()->permalinks()->get_current_url( get_option( 'permalink_structure' ) );
+				$current_url = untrailingslashit( $current_url );
+				$current_url_slash = trailingslashit( $current_url );
 
-					if ( ! isset( $post->ID ) || ! ( in_array( $current_url, $redirects ) || in_array( $current_url_slash, $redirects ) ) ) {
-						//if current page not in exclude URLs
-						$this->redirect_handler = $this->set_referer( $redirect, 'global' );
-						wp_redirect( $this->redirect_handler ); exit;
-					}
+				//get redirect URL if not set get login page by default
+				$redirect = um_get_option( 'access_redirect' );
+				if ( ! $redirect )
+					$redirect = um_get_core_page( 'login' );
+
+				if ( ! isset( $post->ID ) || ! ( in_array( $current_url, $redirects ) || in_array( $current_url_slash, $redirects ) ) ) {
+					//if current page not in exclude URLs
+					$this->redirect_handler = $this->set_referer( $redirect, 'global' );
+				} else {
+					$this->redirect_handler = false;
 				}
 			}
 		}
@@ -278,6 +278,8 @@ if ( ! class_exists( 'Access' ) ) {
 
 			//check global restrict content options
 			do_action( 'um_access_check_global_settings' );
+
+			$this->check_access();
 		}
 
 
@@ -442,7 +444,10 @@ if ( ! class_exists( 'Access' ) ) {
                 }
 
                 //post is private
-                if ( '1' == $restriction['_um_accessible'] ) {
+                if ( '0' == $restriction['_um_accessible'] ) {
+					$filtered_posts[] = $post;
+					continue;
+                } elseif ( '1' == $restriction['_um_accessible'] ) {
                     //if post for not logged in users and user is not logged in
                     if ( ! is_user_logged_in() ) {
                         $filtered_posts[] = $post;
