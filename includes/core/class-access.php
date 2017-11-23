@@ -106,7 +106,7 @@ if ( ! class_exists( 'Access' ) ) {
 				}
 			}
 
-			if ( ! isset( $restriction ) )
+			if ( ! isset( $restriction ) || empty( $restriction['_um_custom_access_settings'] ) )
 				return;
 
 			//post is private
