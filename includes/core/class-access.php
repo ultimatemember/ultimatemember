@@ -132,6 +132,12 @@ if ( ! class_exists( 'Access' ) ) {
 					if ( isset( $user_can ) && $user_can && $custom_restrict ) {
 						$this->allow_access = true;
 						return;
+					} else {
+						//restrict terms page by 404 for logged in users with wrong role
+						global $wp_query;
+						$wp_query->set_404();
+						status_header( 404 );
+						nocache_headers();
 					}
 				}
 			}
