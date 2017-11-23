@@ -227,9 +227,16 @@ if ( ! class_exists( 'Plugin_Updater' ) ) {
 
             $exts = $this->um_get_active_plugins();
             foreach ( $exts as $slug => $data ) {
+				// Checks if global dirs are defined
+				if ( defined( 'WPMU_PLUGIN_DIR' ) && file_exists( trailingslashit( WPMU_PLUGIN_DIR ) . $slug ) ) {
+					$pluginFile = trailingslashit( WPMU_PLUGIN_DIR ) . $slug;
+				} elseif ( defined( 'WP_PLUGIN_DIR' ) && file_exists( trailingslashit( WP_PLUGIN_DIR ) . $slug ) ) {
+					$pluginFile = trailingslashit( WP_PLUGIN_DIR ) . $slug;
+				} else {
+					$pluginFile = ABSPATH . "wp-content/plugins/{$slug}";
+				}
 
-                $plugin_data = get_plugin_data( ABSPATH . "wp-content/plugins/{$slug}" );
-
+				$plugin_data = get_plugin_data( $pluginFile );
                 //if response for current product isn't empty check for override
                 if ( ! empty( $_transient_data->response ) && ! empty( $_transient_data->response[ $slug ] ) )
                     continue;
