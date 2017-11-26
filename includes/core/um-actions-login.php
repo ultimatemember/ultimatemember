@@ -1,8 +1,8 @@
 <?php
 
-	/***
-	***	@Error processing hook : login
-	***/
+	/**
+	 * Error procesing hook for login
+	 */
 	add_action('um_submit_form_errors_hook_login', 'um_submit_form_errors_hook_login', 10);
 	function um_submit_form_errors_hook_login( $args ){
 		$is_email = false;
