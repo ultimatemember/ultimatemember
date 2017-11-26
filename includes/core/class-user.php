@@ -66,7 +66,52 @@ if ( ! class_exists( 'User' ) ) {
 
             add_action( 'user_register', array( &$this, 'user_register_via_admin' ), 10, 1 );
             add_action( 'user_register', array( &$this, 'set_gravatar' ), 11, 1 );
+
+
+	        add_action( 'added_existing_user', array( &$this, 'add_um_role_existing_user' ), 10, 2 );
+	        add_action( 'wpmu_activate_user', array( &$this, 'add_um_role_wpmu_new_user' ), 10, 1 );
         }
+
+
+		/**
+		 * Multisite add existing user
+		 *
+		 * @param $user_id
+		 * @param $result
+		 */
+		function add_um_role_existing_user( $user_id, $result ) {
+			// Bail if no user ID was passed
+			if ( empty( $user_id ) )
+				return;
+
+			if ( ! empty( $_POST['um-role'] ) ) {
+				if ( ! user_can( $user_id, $_POST['um-role'] ) ) {
+					UM()->roles()->set_role( $user_id, $_POST['um-role'] );
+				}
+			}
+
+			$this->remove_cache( $user_id );
+		}
+
+
+		/**
+		 * Multisite add existing user
+		 *
+		 * @param $user_id
+		 */
+		function add_um_role_wpmu_new_user( $user_id ) {
+			// Bail if no user ID was passed
+			if ( empty( $user_id ) )
+				return;
+
+			if ( ! empty( $_POST['um-role'] ) ) {
+				if ( ! user_can( $user_id, $_POST['um-role'] ) ) {
+					UM()->roles()->set_role( $user_id, $_POST['um-role'] );
+				}
+			}
+
+			$this->remove_cache( $user_id );
+		}
 
 
         /**
@@ -267,7 +312,7 @@ if ( ! class_exists( 'User' ) ) {
 
 			$section_content = apply_filters( 'um_user_profile_additional_fields', '', $userdata );
 
-			if ( ! empty( $section_content ) ) {
+			if ( ! empty( $section_content ) && ! ( is_multisite() && is_network_admin() ) ) {
 
 				if ( $userdata !== 'add-new-user' && $userdata !== 'add-existing-user' ) { ?>
 					<h3><?php esc_html_e( 'Ultimate Member', 'ultimate-member' ); ?></h3>
