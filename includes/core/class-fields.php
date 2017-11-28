@@ -2094,7 +2094,7 @@
 						$field_value = array();
 
 						if ( ! empty( $options ) ) {
-							foreach ($options as $k => $v) {
+							foreach ( $options as $k => $v ) {
 
 								$v = rtrim( $v );
 
@@ -2319,10 +2319,21 @@
 				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
 
 				$roles = UM()->roles()->get_roles( false, $exclude_roles );
-				if ( ! empty( $options ) )
+
+				if ( ! empty( $options ) ) {
+					//fix when customers change options for role (radio/dropdown) fields
+					foreach ( $roles as $role_key => $role_title ) {
+						if ( false !== $search_key = array_search( $role_title, $options ) ) {
+							if ( $role_key != $search_key ) {
+								$options[ $role_key ] = $role_title;
+								unset( $options[ $search_key ] );
+							}
+						}
+					}
 					$options = array_intersect( $options, $roles );
-				else
+				} else {
 					$options = $roles;
+				}
 
 				return $options;
 			}
