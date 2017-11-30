@@ -337,3 +337,17 @@
 			do_action( 'um_after_user_upload', $user_id, $files );
 		}
 	}
+
+	/**
+	 * Update user Full Name
+	 *
+	 * @profile name update
+	 *
+	 * @param $user_id
+	 * @param $args
+	 */
+	function um_registration_set_profile_full_name( $user_id, $args ) {
+		do_action( 'um_update_profile_full_name', $args );
+	}
+
+	add_action( 'um_registration_set_extra_data', 'um_registration_set_profile_full_name', 10, 2 );

@@ -391,8 +391,6 @@ if ( ! class_exists( 'Permalinks' ) ) {
 
             $permalink_base = um_get_option('permalink_base');
 
-	        $full_name = preg_replace( '/\s+/', ' ', $first_name .' '. $last_name); // Remove double spaces
-
             $user_in_url = '';
 
             $full_name = str_replace("'", "", $full_name );
