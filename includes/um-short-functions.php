@@ -133,7 +133,6 @@
 	 ***    @convert template tags
 	 ***/
 	function um_convert_tags( $content, $args = array() ) {
-
 		$search = array(
 			'{display_name}',
 			'{first_name}',
@@ -186,12 +185,12 @@
 			$content = str_replace( $args['tags'], $args['tags_replace'], $content );
 		}
 
-		$regex = '~\{([^}]*)\}~';
+		$regex = '~\{(usermeta:[^}]*)\}~';
 		preg_match_all( $regex, $content, $matches );
 
 		// Support for all usermeta keys
-		if (isset( $matches[1] ) && is_array( $matches[1] ) && !empty( $matches[1] )) {
-			foreach ($matches[1] as $match) {
+		if ( ! empty( $matches[1] ) && is_array( $matches[1] ) ) {
+			foreach ( $matches[1] as $match ) {
 				$strip_key = str_replace( 'usermeta:', '', $match );
 				$content = str_replace( '{' . $match . '}', um_user( $strip_key ), $content );
 			}
