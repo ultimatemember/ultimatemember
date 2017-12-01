@@ -371,10 +371,12 @@ if ( ! class_exists( 'Access' ) ) {
                 return false;
 
             //exlude from privacy UM default pages (except Members list and User(Profile) page)
-            if ( um_is_core_post( $post, 'login' ) || um_is_core_post( $post, 'register' ) ||
-                 um_is_core_post( $post, 'account' ) || um_is_core_post( $post, 'logout' ) ||
-                 um_is_core_post( $post, 'password-reset' ) )
-                return false;
+	        if ( ! empty( $post->post_type ) && $post->post_type == 'page' ) {
+		        if ( um_is_core_post( $post, 'login' ) || um_is_core_post( $post, 'register' ) ||
+	                 um_is_core_post( $post, 'account' ) || um_is_core_post( $post, 'logout' ) ||
+	                 um_is_core_post( $post, 'password-reset' ) )
+	                return false;
+	        }
 
             $restricted_posts = um_get_option( 'restricted_access_post_metabox' );
 
@@ -444,7 +446,8 @@ if ( ! class_exists( 'Access' ) ) {
             //other filter
             foreach ( $posts as $post ) {
                 $restriction = $this->get_post_privacy_settings( $post );
-                if ( ! $restriction ) {
+
+	            if ( ! $restriction ) {
                     $filtered_posts[] = $post;
                     continue;
                 }

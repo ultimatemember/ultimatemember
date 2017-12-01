@@ -108,13 +108,13 @@ if ( ! class_exists( 'Query' ) ) {
                 return $comments;
 
             } else {
-
                 $custom_posts = new \WP_Query();
+	            $args['post_status'] = explode( ',', $args['post_status'] );
+
                 $custom_posts->query( $args );
-                return $custom_posts;
 
+	            return $custom_posts;
             }
-
         }
 
         /***
