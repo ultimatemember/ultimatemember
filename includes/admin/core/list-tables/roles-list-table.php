@@ -39,6 +39,8 @@ if ( isset( $_GET['action'] ) ) {
 
                 delete_option( "um_role_{$role_key}_meta" );
 
+                $um_roles = array_diff( $um_roles, array( $role_key ) );
+
                 $role_keys[$k] = 'um_' . $role_key;
             }
 
@@ -66,6 +68,8 @@ if ( isset( $_GET['action'] ) ) {
                         wp_update_user( array( 'ID' => $user_id, 'role' => 'subscriber' ) );
                 }
             }
+
+            update_option( 'um_roles', $um_roles );
 
             um_js_redirect( add_query_arg( 'msg', 'd', $redirect ) );
             break;

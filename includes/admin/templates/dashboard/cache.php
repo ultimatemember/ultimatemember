@@ -3,9 +3,9 @@
 $all_options = wp_load_alloptions();
 
 $count = 0;
-foreach( $all_options as $k => $v ) {
+foreach ( $all_options as $k => $v ) {
 	
-	if ( strstr( $k, 'um_cache_userdata_' ) ) {
+	if ( strstr( $k, 'um_cache_userdata_' ) !== false ) {
 		$count++;
 	}
 	

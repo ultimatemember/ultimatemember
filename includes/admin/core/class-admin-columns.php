@@ -19,6 +19,8 @@ if ( ! class_exists( 'Admin_Columns' ) ) {
 
             add_filter('post_row_actions', array(&$this, 'post_row_actions'), 99, 2);
 
+            // Add a post display state for special UM pages.
+	        add_filter( 'display_post_states', array( &$this, 'add_display_post_states' ), 10, 2 );
         }
 
         /***
@@ -116,6 +118,26 @@ if ( ! class_exists( 'Admin_Columns' ) ) {
             }
 
         }
+
+		/**
+		* Add a post display state for special UM pages in the page list table.
+		*
+		* @param array   $post_states An array of post display states.
+		* @param WP_Post $post The current post object.
+		*/
+
+	    public function add_display_post_states( $post_states, $post ) {
+
+		    foreach ( UM()->config()->core_pages as $page_key => $page_value ) {
+
+			    $page_id = UM()->um_get_option( apply_filters( 'um_core_page_id_filter', 'core_' . $page_key ) );
+
+			    if ( $page_id == $post->ID )
+				    $post_states['um_core_page_' . $page_key] = sprintf('UM %s', $page_value['title'] ) ;
+		    }
+
+		    return $post_states;
+	    }
 
     }
 }

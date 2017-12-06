@@ -7,22 +7,27 @@
 	function um_admin_pre_save_field_to_form( $array ){
 		unset( $array['conditions'] );
 		if ( isset($array['conditional_field']) && !empty( $array['conditional_action'] ) && !empty( $array['conditional_operator'] ) ) {
+			$array['conditional_value'] = ! empty( $array['conditional_value'] ) ? $array['conditional_value'] : '';
 			$array['conditions'][] = array( $array['conditional_action'], $array['conditional_field'], $array['conditional_operator'], $array['conditional_value'] );
 		}
 
 		if ( isset($array['conditional_field1']) && !empty( $array['conditional_action1'] ) && !empty( $array['conditional_operator1'] ) ) {
+			$array['conditional_value1'] = ! empty( $array['conditional_value1'] ) ? $array['conditional_value1'] : '';
 			$array['conditions'][] = array( $array['conditional_action1'], $array['conditional_field1'], $array['conditional_operator1'], $array['conditional_value1'] );
 		}
 
 		if ( isset($array['conditional_field2']) && !empty( $array['conditional_action2'] ) && !empty( $array['conditional_operator2'] ) ) {
+			$array['conditional_value2'] = ! empty( $array['conditional_value2'] ) ? $array['conditional_value2'] : '';
 			$array['conditions'][] = array( $array['conditional_action2'], $array['conditional_field2'], $array['conditional_operator2'], $array['conditional_value2'] );
 		}
 
 		if ( isset($array['conditional_field3']) && !empty( $array['conditional_action3'] ) && !empty( $array['conditional_operator3'] ) ) {
+			$array['conditional_value3'] = ! empty( $array['conditional_value3'] ) ? $array['conditional_value3'] : '';
 			$array['conditions'][] = array( $array['conditional_action3'], $array['conditional_field3'], $array['conditional_operator3'], $array['conditional_value3'] );
 		}
 
 		if ( isset($array['conditional_field4']) && !empty( $array['conditional_action4'] ) && !empty( $array['conditional_operator4'] ) ) {
+			$array['conditional_value4'] = ! empty( $array['conditional_value4'] ) ? $array['conditional_value4'] : '';
 			$array['conditions'][] = array( $array['conditional_action4'], $array['conditional_field4'], $array['conditional_operator4'], $array['conditional_value4'] );
 		}
 
@@ -126,3 +131,15 @@
 
         return $break;
     }
+
+
+
+    add_filter( 'um_restrict_content_hide_metabox', 'um_hide_metabox_restrict_content_shop', 10, 1 );
+	function um_hide_metabox_restrict_content_shop( $hide ) {
+		if ( function_exists( 'wc_get_page_id' ) && ! empty( $_GET['post'] ) &&
+			 $_GET['post'] == wc_get_page_id( 'shop' ) ) {
+			return true;
+		}
+
+		return $hide;
+	}

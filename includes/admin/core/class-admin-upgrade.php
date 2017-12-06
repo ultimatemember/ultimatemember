@@ -56,17 +56,17 @@ if ( ! class_exists( 'Admin_Upgrade' ) ) {
         function set_update_versions() {
             $update_versions = array();
             $handle = opendir( $this->packages_dir );
-            while ( false !== ( $filename = readdir( $handle ) ) ) {
+	        if ( $handle ) {
+	            while ( false !== ( $filename = readdir( $handle ) ) ) {
+	                if ( $filename != '.' && $filename != '..' )
+	                    $update_versions[] = preg_replace( '/(.*?)\.php/i', '$1', $filename );
+	            }
+	            closedir( $handle );
 
-                if ( $filename != '.' && $filename != '..' )
-                    $update_versions[] = preg_replace( '/(.*?)\.php/i', '$1', $filename );
+	            usort( $update_versions, array( &$this, 'version_compare_sort' ) );
 
-            }
-            closedir( $handle );
-
-            usort( $update_versions, array( &$this, 'version_compare_sort' ) );
-
-            $this->update_versions = $update_versions;
+	            $this->update_versions = $update_versions;
+	        }
         }
 
 

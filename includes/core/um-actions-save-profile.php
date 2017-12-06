@@ -30,12 +30,12 @@
 			case 'initial_name':
 				$fname = get_user_meta( $user_id, 'first_name', true );
 				$lname = get_user_meta( $user_id, 'last_name', true );
-				$update_name = $fname . ' ' . $lname[0];
+				$update_name = $fname . ' ' . ( !empty( $lname ) ? $lname[0] : '' );
 				break;
 			case 'initial_name_f':
 				$fname = get_user_meta( $user_id, 'first_name', true );
 				$lname = get_user_meta( $user_id, 'last_name', true );
-				$update_name = $fname[0] . ' ' . $lname;
+				$update_name = ( !empty($fname) ? $fname[0] : '' ) . ' ' . $lname;
 				break;
 			case 'nickname':
 				$update_name = get_user_meta( $user_id, 'nickname', true );

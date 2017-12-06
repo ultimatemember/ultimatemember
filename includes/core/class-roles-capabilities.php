@@ -160,8 +160,8 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
                 return array_shift( $user->roles );
 
             $role_keys = array_map( function( $item ) {
-                return 'um_' . $item;
-            }, $role_keys );
+		        return 'um_' . $item;
+	        }, $role_keys );
 
             $roles = array_intersect( array_values( $user->roles ), $role_keys );
             if ( ! empty( $roles ) ) {

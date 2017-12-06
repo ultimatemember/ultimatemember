@@ -133,7 +133,6 @@
 	 ***    @convert template tags
 	 ***/
 	function um_convert_tags( $content, $args = array() ) {
-
 		$search = array(
 			'{display_name}',
 			'{first_name}',
@@ -186,12 +185,12 @@
 			$content = str_replace( $args['tags'], $args['tags_replace'], $content );
 		}
 
-		$regex = '~\{([^}]*)\}~';
+		$regex = '~\{(usermeta:[^}]*)\}~';
 		preg_match_all( $regex, $content, $matches );
 
 		// Support for all usermeta keys
-		if (isset( $matches[1] ) && is_array( $matches[1] ) && !empty( $matches[1] )) {
-			foreach ($matches[1] as $match) {
+		if ( ! empty( $matches[1] ) && is_array( $matches[1] ) ) {
+			foreach ( $matches[1] as $match ) {
 				$strip_key = str_replace( 'usermeta:', '', $match );
 				$content = str_replace( '{' . $match . '}', um_user( $strip_key ), $content );
 			}
@@ -585,14 +584,21 @@
 		return false;
 	}
 
-	/***
-	 ***    @Get a translated core page URL
-	 ***/
+
+	/**
+	 * Get a translated core page URL
+	 *
+	 * @param $post_id
+	 * @param $language
+	 * @return bool|false|string
+	 */
 	function um_get_url_for_language( $post_id, $language ) {
+		if ( ! um_is_wpml_active() )
+			return '';
+
 		$lang_post_id = icl_object_id( $post_id, 'page', true, $language );
 
-		$url = "";
-		if ($lang_post_id != 0) {
+		if ( $lang_post_id != 0 ) {
 			$url = get_permalink( $lang_post_id );
 		} else {
 			// No page found, it's most likely the homepage
@@ -601,6 +607,22 @@
 		}
 
 		return $url;
+	}
+
+
+	/**
+	 * Check if WPML is active
+	 *
+	 * @return bool|mixed
+	 */
+	function um_is_wpml_active() {
+		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+			global $sitepress;
+
+			return $sitepress->get_setting( 'setup_complete' );
+		}
+
+		return false;
 	}
 
 	/***
@@ -1388,7 +1410,7 @@
 	function um_get_default_avatar_uri() {
 		$uri = um_get_option( 'default_avatar' );
 		$uri = !empty( $uri['url'] ) ? $uri['url'] : '';
-		if (!$uri) {
+		if ( ! $uri ) {
 			$uri = um_url . 'assets/img/default_avatar.jpg';
 		} else {
 
