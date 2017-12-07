@@ -1524,26 +1524,41 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 
 
         function check_wrong_licenses() {
-            $invalid_license = false;
+            $invalid_license = 0;
+            $arr_inactive_license_keys = array();
 
             if ( empty( $this->settings_structure['licenses']['fields'] ) )
                 return;
 
             foreach ( $this->settings_structure['licenses']['fields'] as $field_data ) {
                 $license = get_option( "{$field_data['id']}_edd_answer" );
-
+                
                 if ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license )
                     continue;
 
-                $invalid_license = true;
-                break;
+                if ( ( is_object( $license ) && 'inactive' == $license->license ) || 'inactive' == $license ){
+                   $arr_inactive_license_keys[ ] = $license->item_name;
+                }
+
+                $invalid_license++;
+           
             }
+
+            if ( ! empty(  $arr_inactive_license_keys ) ) { ?>
+
+                <div class="error">
+                    <p>
+                        <?php printf( __( 'There are %d inactive %s license keys for this site. This site is not authorized to get plugin updates. You can active this site on <a href="%s">www.UltimateMember.com</a>.', 'ultimate-member' ), count( $arr_inactive_license_keys ) , ultimatemember_plugin_name, 'https://ultimatemember.com' ) ; ?>
+                    </p>
+                </div>
+
+            <?php }
 
             if ( $invalid_license ) { ?>
 
                 <div class="error">
                     <p>
-                        <?php printf( __( 'You have invalid or expired license keys for %s. Please go to the <a href="%s">Licenses page</a> to correct this issue.', 'ultimate-member' ), ultimatemember_plugin_name, add_query_arg( array('page'=>'um_options', 'tab' => 'licenses'), admin_url( 'admin.php' ) ) ) ?>
+                        <?php printf( __( 'You have %d invalid or expired license keys for %s. Please go to the <a href="%s">Licenses page</a> to correct this issue.', 'ultimate-member' ), $invalid_license, ultimatemember_plugin_name, add_query_arg( array('page'=>'um_options', 'tab' => 'licenses'), admin_url( 'admin.php' ) ) ) ?>
                     </p>
                 </div>
 
