@@ -53,9 +53,10 @@
 							um_fetch_user( $member );
 
 							foreach( $tagline_fields as $key ) {
-								if ( $key && um_filtered_value( $key ) ) {
+								if ( $key /*&& um_filtered_value( $key )*/ ) {
 									$value = um_filtered_value( $key );
-
+									if ( ! $value )
+										continue;
 						?>
 						
 						<div class="um-member-tagline um-member-tagline-<?php echo $key;?>"><?php echo $value; ?></div>
@@ -77,9 +78,10 @@
 							<div class="um-member-meta <?php if ( !$userinfo_animate ) { echo 'no-animate'; } ?>">
 							
 								<?php foreach( $reveal_fields as $key ) {
-										if ( $key && um_filtered_value( $key ) ) {
+										if ( $key /*&& um_filtered_value( $key )*/ ) {
 											$value = um_filtered_value( $key );
-											
+											if ( ! $value )
+												continue;
 								?>
 								
 								<div class="um-member-metaline um-member-metaline-<?php echo $key; ?>"><span><strong><?php echo UM()->fields()->get_label( $key ); ?>:</strong> <?php echo $value; ?></span></div>
