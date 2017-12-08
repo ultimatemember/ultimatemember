@@ -282,23 +282,29 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
         }
 
 
-        /***
-         ***	@User can (role settings )
-         ***/
-        function um_user_can( $permission ) {
-            if ( ! is_user_logged_in() )
-                return false;
+		/**
+		* User can ( role settings )
+		*
+		* @param $permission
+		* @return bool|mixed
+		*/
+		function um_user_can( $permission ) {
+			if ( ! is_user_logged_in() )
+				return false;
 
-            $user_id = get_current_user_id();
-            $role = get_user_meta( $user_id, 'role', true );
-            $permissions = $this->role_data( $role );
+			$user_id = get_current_user_id();
+			$role = $this->um_get_user_role( $user_id );
 
-            $permissions = apply_filters( 'um_user_permissions_filter', $permissions, $user_id );
-            if ( isset( $permissions[ $permission ] ) && is_serialized( $permissions[ $permission ] ) )
-                return unserialize( $permissions[ $permission ] );
-            if ( isset( $permissions[ $permission ] ) && $permissions[ $permission ] == 1 )
-                return true;
-            return false;
-        }
+			$permissions = $this->role_data( $role );
+			$permissions = apply_filters( 'um_user_permissions_filter', $permissions, $user_id );
+
+			if ( isset( $permissions[ $permission ] ) && is_serialized( $permissions[ $permission ] ) )
+				return unserialize( $permissions[ $permission ] );
+
+			if ( isset( $permissions[ $permission ] ) && $permissions[ $permission ] == 1 )
+				return true;
+
+			return false;
+		}
     }
 }
