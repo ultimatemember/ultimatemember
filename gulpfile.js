@@ -8,7 +8,7 @@ var gulp = require('gulp')
 
 // task
 gulp.task( 'default', function () {
-    gulp.src('assets/js/*.js') // path to your files
+    gulp.src(['assets/js/*.js', '!assets/js/*.min.js', ]) // path to your files
         .pipe( uglify() )
         .pipe( rename({ suffix: '.min' }) )
         .pipe( gulp.dest( 'assets/js/*' ) );

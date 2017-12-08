@@ -489,6 +489,12 @@
 
 					return $value;
 
+				} else if( isset( UM()->user()->profile[$key] ) ){
+
+					$value = UM()->user()->profile[$key];
+					$value = apply_filters( "um_edit_{$key}_field_value", $value, $key );
+					return $value;
+
 				} else if ($default) {
 
 					$default = apply_filters( "um_field_default_value", $default, $data, $type );
@@ -681,10 +687,11 @@
 
 				if (in_array( $type, array( 'select', 'multiselect' ) ) && isset( $data['custom_dropdown_options_source'] ) && !empty( $data['custom_dropdown_options_source'] )) {
 
-					if (function_exists( $data['custom_dropdown_options_source'] )) {
-
-						$arr_options = call_user_func( $data['custom_dropdown_options_source'] );
-
+					if ( function_exists( $data['custom_dropdown_options_source'] ) ) {
+						
+             			$arr_options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+             		    
+						
 						if ($type == 'select') {
 							if (isset( $arr_options[$value] ) && !empty( $arr_options[$value] )) {
 								return $arr_options[$value];
@@ -732,15 +739,10 @@
 			 */
 			function get_options_from_callback( $data, $type ) {
 
+				if ( in_array( $type, array( 'select', 'multiselect' ) ) && isset( $data['custom_dropdown_options_source'] ) && ! empty( $data['custom_dropdown_options_source'] ) ) {
 
-				if (in_array( $type, array( 'select', 'multiselect' ) ) && isset( $data['custom_dropdown_options_source'] ) && !empty( $data['custom_dropdown_options_source'] )) {
-
-					if (function_exists( $data['custom_dropdown_options_source'] )) {
-
-						$arr_options = call_user_func( $data['custom_dropdown_options_source'] );
-
-					}
-
+					$arr_options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+             		
 
 				}
 
@@ -1338,7 +1340,7 @@
 							$number_limit .= " max=\"{$max}\" ";
 						}
 
-						$output .= '<input ' . $disabled . ' class="' . $this->get_class( $key, $data ) . '" type="number" name="' . $key . UM()->form()->form_suffix . '" id="' . $key . UM()->form()->form_suffix . '" value="' . htmlspecialchars( $this->field_value( $key, $default, $data ) ) . '" placeholder="' . $placeholder . '" data-validate="' . $validate . '" data-key="' . $key . '" {$number_limit} />
+						$output .= '<input ' . $disabled . ' class="' . $this->get_class( $key, $data ) . '" type="number" name="' . $key . UM()->form()->form_suffix . '" id="' . $key . UM()->form()->form_suffix . '" value="' . htmlspecialchars( $this->field_value( $key, $default, $data ) ) . '" placeholder="' . $placeholder . '" data-validate="' . $validate . '" data-key="' . $key . '" '.$number_limit.' />
     
                             </div>';
 
@@ -1875,7 +1877,7 @@
 								$has_parent_option && function_exists( $data['custom_dropdown_options_source'] ) &&
 								um_user( $data['parent_dropdown_relationship'] )
 							) {
-								$options = call_user_func( $data['custom_dropdown_options_source'] );
+								$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
 								$disabled_by_parent_option = '';
 								if (um_user( $form_key )) {
 									$select_original_option_value = " data-um-original-value='" . um_user( $form_key ) . "' ";
@@ -1897,31 +1899,24 @@
 
 						$output .= '<select  ' . $disabled . ' ' . $select_original_option_value . ' ' . $disabled_by_parent_option . '  name="' . $form_key . '" id="' . $form_key . '" data-validate="' . $validate . '" data-key="' . $key . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . $placeholder . '" ' . $atts_ajax . '>';
 
-                       $enable_options_pair = apply_filters("um_fields_options_enable_pairs__{$key}", false );
-                         
-                    if( ! $has_parent_option ){
-                        if ( isset($options) && $options == 'builtin'){
-                            $options = UM()->builtin()->get ( $filter );
-                        }
+						$enable_options_pair = apply_filters("um_fields_options_enable_pairs__{$key}", false );
 
-							if (!isset( $options )) {
+						if( ! $has_parent_option ) {
+							if ( isset($options) && $options == 'builtin'){
+								$options = UM()->builtin()->get ( $filter );
+							}
+
+							if ( ! isset( $options )) {
 								$options = UM()->builtin()->get( 'countries' );
 							}
 
-							if (isset( $options )) {
+							if ( isset( $options ) ) {
 								$options = apply_filters( 'um_select_dropdown_dynamic_options', $options, $data );
 								$options = apply_filters( "um_select_dropdown_dynamic_options_{$key}", $options );
 							}
 						}
 
-						// role field
-						if ($form_key == 'role') {
-							$roles = UM()->roles()->get_roles( false, array( 'administrator' ) );
-							if (isset( $options ))
-								$options = array_intersect( $options, $roles );
-							else
-								$options = $roles;
-						}
+						$options = $this->get_available_roles( $form_key, $options );
 
 						// add an empty option!
 						$output .= '<option value=""></option>';
@@ -1934,42 +1929,44 @@
 						}
 
 						// add options
-						foreach ($options as $k => $v) {
+						if ( ! empty( $options ) ) {
+							foreach ( $options as $k => $v ) {
 
-							$v = rtrim( $v );
+								$v = rtrim( $v );
 
-							$option_value = $v;
-							$um_field_checkbox_item_title = $v;
-
-
-							if (!is_numeric( $k ) && in_array( $form_key, array( 'role' ) )) {
-								$option_value = $k;
+								$option_value = $v;
 								$um_field_checkbox_item_title = $v;
+
+
+								if (!is_numeric( $k ) && in_array( $form_key, array( 'role' ) )) {
+									$option_value = $k;
+									$um_field_checkbox_item_title = $v;
+								}
+
+								if (isset( $options_pair )) {
+									$option_value = $k;
+									$um_field_checkbox_item_title = $v;
+								}
+
+								$option_value = apply_filters( 'um_field_non_utf8_value', $option_value );
+
+								$output .= '<option value="' . $option_value . '" ';
+
+								if ($this->is_selected( $form_key, $option_value, $data )) {
+									$output .= 'selected';
+									$field_value = $option_value;
+								} else if (!isset( $options_pair ) && $this->is_selected( $form_key, $v, $data )) {
+									$output .= 'selected';
+									$field_value = $v;
+								}
+
+								$output .= '>' . __( $um_field_checkbox_item_title, UM_TEXTDOMAIN ) . '</option>';
+
+
 							}
-
-							if (isset( $options_pair )) {
-								$option_value = $k;
-								$um_field_checkbox_item_title = $v;
-							}
-
-							$option_value = apply_filters( 'um_field_non_utf8_value', $option_value );
-
-							$output .= '<option value="' . $option_value . '" ';
-
-							if ($this->is_selected( $form_key, $option_value, $data )) {
-								$output .= 'selected';
-								$field_value = $option_value;
-							} else if (!isset( $options_pair ) && $this->is_selected( $form_key, $v, $data )) {
-								$output .= 'selected';
-								$field_value = $v;
-							}
-
-							$output .= '>' . __( $um_field_checkbox_item_title, UM_TEXTDOMAIN ) . '</option>';
-
-
 						}
 
-						if (!empty( $disabled )) {
+						if ( ! empty( $disabled ) ) {
 							$output .= $this->disabled_hidden_field( $form_key, $field_value );
 						}
 
@@ -2102,17 +2099,14 @@
 
 						$output .= '<div class="um-field-area">';
 
-						// role field
-						if ($form_key == 'role') {
-							$options = UM()->roles()->get_roles( false, array( 'administrator' ) );
-						}
+						$options = $this->get_available_roles( $form_key, $options );
 
 						// add options
 						$i = 0;
 						$field_value = array();
 
-						if (!empty( $options )) {
-							foreach ($options as $k => $v) {
+						if ( ! empty( $options ) ) {
+							foreach ( $options as $k => $v ) {
 
 								$v = rtrim( $v );
 
@@ -2147,7 +2141,7 @@
 
 								$option_value = apply_filters( 'um_field_non_utf8_value', $option_value );
 
-								$output .= '<input  ' . $disabled . ' type="radio" name="' . $form_key . '[]" value="' . $option_value . '" ';
+								$output .= '<input  ' . $disabled . ' type="radio" name="' . ( ( $form_key == 'role' ) ? $form_key : $form_key . '[]' ) . '" value="' . $option_value . '" ';
 
 								if ($this->is_radio_checked( $key, $option_value, $data )) {
 									$output .= 'checked';
@@ -2315,6 +2309,47 @@
 
 				return $output;
 			}
+
+
+			/**
+			 * Filter for user roles
+			 *
+			 * @param $form_key
+			 * @param array $options
+			 * @return array
+			 */
+			function get_available_roles( $form_key, $options = array() ) {
+				if ( $form_key != 'role' ) {
+					return $options;
+				}
+
+				// role field
+				global $wp_roles;
+				$role_keys = array_map( function( $item ) {
+					return 'um_' . $item;
+				}, get_option( 'um_roles' ) );
+				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+
+				$roles = UM()->roles()->get_roles( false, $exclude_roles );
+
+				if ( ! empty( $options ) ) {
+					//fix when customers change options for role (radio/dropdown) fields
+					foreach ( $roles as $role_key => $role_title ) {
+						if ( false !== $search_key = array_search( $role_title, $options ) ) {
+							if ( $role_key != $search_key ) {
+								$options[ $role_key ] = $role_title;
+								unset( $options[ $search_key ] );
+							}
+						}
+					}
+					$options = array_intersect( $options, $roles );
+				} else {
+					$options = $roles;
+				}
+
+				return $options;
+			}
+
 
 			/**
 			 * Sorts columns array
@@ -2589,7 +2624,10 @@
 				if (in_array( $type, array( 'block', 'shortcode', 'spacing', 'divider', 'group' ) )) {
 
 				} else {
-					if (!$this->field_value( $key, $default, $data )) return;
+
+					$_field_value = $this->field_value( $key, $default, $data );
+
+					if ( ! isset($_field_value) || $_field_value == '') return;
 				}
 
 				if (!um_can_view_field( $data )) return;

@@ -227,8 +227,20 @@ if ( ! class_exists( 'Admin_Enqueue' ) ) {
             wp_register_script( 'um_admin_builder', $this->js_url . 'um-admin-builder.js', '', '', true );
             wp_enqueue_script( 'um_admin_builder' );
 
+            //hide footer text on add/edit UM Forms
+            //layouts crashed because we load and hide metaboxes
+            //and WP calculate page height
+            $hide_footer = false;
+            global $pagenow, $post;
+            if ( ( 'post.php' == $pagenow || 'post-new.php' == $pagenow ) &&
+                 ( ( isset( $_GET['post_type'] ) && 'um_form' == $_GET['post_type'] ) ||
+                   ( isset( $post->post_type ) && 'um_form' == $post->post_type ) ) ) {
+                $hide_footer = true;
+            }
+
             $localize_data = array(
                 'ajax_url' => UM()->get_ajax_route( 'um\admin\core\Admin_Builder', 'update_builder' ),
+                'hide_footer' => $hide_footer,
             );
             wp_localize_script( 'um_admin_builder', 'um_admin_builder_data', $localize_data );
 

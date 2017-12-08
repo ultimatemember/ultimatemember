@@ -197,46 +197,46 @@ if ( ! class_exists( 'Profile' ) ) {
             return $this->active_subnav;
         }
 
-        /***
-         ***	@Show meta in profile
-         ***/
+	    /**
+	     * Show meta in profile
+	     *
+	     * @param array $array Meta Array
+	     * @return string
+	     */
         function show_meta( $array ) {
             $output = '';
 
-            if( isset( $array ) ){
-                foreach( $array as $key ) {
+            if ( ! empty( $array ) ) {
+                foreach ( $array as $key ) {
                     $data = '';
-                    if ( $key && um_filtered_value( $key ) ) {
+
+                    if ( $key ) {
 
                         if ( isset( UM()->builtin()->all_user_fields[ $key ] ) ){
                             $data = UM()->builtin()->all_user_fields[ $key ];
                         }
 
-                        if ( isset( $data['icon'] ) ) {
-                            $icon = $data['icon'];
+	                    $data['in_profile_meta'] = true;
+
+	                    $value = um_filtered_value( $key, $data );
+	                    if ( ! $value )
+		                    continue;
+
+                        if ( ! um_get_option( 'profile_show_metaicon' ) ) {
+                            $icon = '';
                         } else {
-                            $icon = '';
+	                        $icon = ! empty( $data['icon'] ) ? '<i class="' . $data['icon'] . '"></i>' : '';
                         }
-
-                        $data['in_profile_meta'] = true;
-
-                        $icon = ( isset( $icon ) && !empty( $icon ) ) ? '<i class="'.$icon.'"></i>' : '';
-
-                        if ( !um_get_option('profile_show_metaicon') ){
-                            $icon = '';
-                        }
-
-                        $value = um_filtered_value( $key, $data );
 
                         $items[] = '<span>' . $icon . $value . '</span>';
                         $items[] = '<span class="b">&bull;</span>';
-
                     }
                 }
             }
+
             if ( isset( $items ) ) {
-                array_pop($items);
-                foreach( $items as $item ) {
+                array_pop( $items );
+                foreach ( $items as $item ) {
                     $output .= $item;
                 }
             }

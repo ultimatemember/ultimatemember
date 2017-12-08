@@ -335,6 +335,7 @@ jQuery(document).ready(function() {
 					url: um_scripts.ajax_select_options,
 					type: 'post',
 					data: {
+						parent_option_name: parent_option,
 						parent_option: parent.val(),
 						child_callback: um_ajax_source,
 						child_name:  me.attr('name'),

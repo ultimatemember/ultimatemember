@@ -30,6 +30,7 @@ if ( ! class_exists( 'UM' ) ) {
      * @method UM_WooCommerce_API WooCommerce_API()
      * @method UM_Terms_Conditions_API Terms_Conditions_API()
      * @method UM_Private_Content_API Private_Content_API()
+     * @method UM_User_Location_API User_Location_API()
      *
      */
     final class UM extends UM_Functions {
@@ -219,7 +220,7 @@ if ( ! class_exists( 'UM' ) ) {
                     $path = implode( DIRECTORY_SEPARATOR, $array );
                     $path = str_replace( '_', '-', $path );
                     $full_path .= $path . '.php';
-                } else {
+                } else if ( strpos( $class, 'um\\' ) === 0 ) {
                     $class = implode( '\\', $array );
                     $slash = DIRECTORY_SEPARATOR;
                     $path = str_replace(
@@ -229,7 +230,9 @@ if ( ! class_exists( 'UM' ) ) {
                     $full_path =  um_path . 'includes' . $path . '.php';
                 }
 
-                include_once $full_path;
+                if( isset( $full_path ) && file_exists( $full_path ) ) {
+	                include_once $full_path;
+                }
             }
         }
 
@@ -295,12 +298,12 @@ if ( ! class_exists( 'UM' ) ) {
                 $this->register();
                 $this->user_posts();
                 $this->access();
-                $this->mail();
                 $this->members();
                 $this->logout();
             }
 
             //common includes
+	        $this->mail();
             $this->rest_api();
             $this->shortcodes();
             $this->roles();
@@ -1000,11 +1003,11 @@ if ( ! class_exists( 'UM' ) ) {
         /**
          * @since 2.0
          *
-         * @return um\lib\mobiledetect\Mobile_Detect
+         * @return um\lib\mobiledetect\Um_Mobile_Detect
          */
         function mobile() {
             if ( empty( $this->classes['mobile'] ) ) {
-                $this->classes['mobile'] = new um\lib\mobiledetect\Mobile_Detect();
+                $this->classes['mobile'] = new um\lib\mobiledetect\Um_Mobile_Detect();
             }
 
             return $this->classes['mobile'];

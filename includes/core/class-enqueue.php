@@ -36,8 +36,8 @@ if ( ! class_exists( 'Enqueue' ) ) {
         function wp_enqueue_scripts() {
             global $post;
 
-            $this->suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
+            $this->suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG || defined('UM_SCRIPT_DEBUG') ) ? '' : '.min';
+            
             $exclude = um_get_option('js_css_exclude');
             if ( is_array( $exclude ) ) {
                 array_filter( $exclude );

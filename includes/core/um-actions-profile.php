@@ -748,14 +748,17 @@
 	 * @param  integer $user_id
 	 * @param  array   $arr_files
 	 */
-	add_action( "um_before_user_upload", "um_before_user_upload", 10, 2 );
 	function um_before_user_upload( $user_id, $arr_files ) {
 		um_fetch_user( $user_id );
 
-		foreach ($arr_files as $key => $filename) {
-			if (um_user( $key )) {
-				if (basename( $filename ) != basename( um_user( $key ) ) || in_array( $old_filename, array( basename( um_user( $key ) ), basename( $filename ) ) ) || $filename == 'empty_file') {
-					$old_filename = um_user( $key );
+		foreach ( $arr_files as $key => $filename ) {
+			if ( um_user( $key ) ) {
+				$old_filename = um_user( $key );
+
+				if ( basename( $filename ) != basename( um_user( $key ) ) ||
+					in_array( $old_filename, array( basename( um_user( $key ) ), basename( $filename ) ) ) ||
+					$filename == 'empty_file' ) {
+
 					$path = UM()->files()->upload_basedir;
 					delete_user_meta( $user_id, $old_filename );
 					if (file_exists( $path . $user_id . '/' . $old_filename )) {
@@ -765,3 +768,4 @@
 			}
 		}
 	}
+	add_action( "um_before_user_upload", "um_before_user_upload", 10, 2 );

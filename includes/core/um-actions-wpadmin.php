@@ -120,7 +120,7 @@
 
 		return $content;
 	}
-	add_filter( 'show_admin_bar' , 'um_control_admin_bar');
+	add_filter( 'show_admin_bar' , 'um_control_admin_bar', 9999, 1 );
 		
 	/***
 	***	@fix permission for admin bar

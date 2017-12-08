@@ -1014,16 +1014,48 @@ if ( ! empty( $um_roles ) ) {
 
 update_option( 'um_roles', $role_keys );
 
-
+global $wp_roles, $wp_version;
+if ( version_compare( $wp_version, '4.9', '<' ) ) {
+	$wp_roles->_init();
+} elseif ( method_exists( $wp_roles, 'for_site' ) ) {
+	$wp_roles->for_site( get_current_blog_id() );
+}
 
 //Content Restriction transfer
+
+//for check all post types and taxonomies
+$all_post_types = get_post_types( array( 'public' => true ) );
+
+$all_taxonomies = get_taxonomies( array( 'public' => true ) );
+$exclude_taxonomies = UM()->excluded_taxonomies();
+
+foreach ( $all_taxonomies as $key => $taxonomy ) {
+	if( in_array( $key, $exclude_taxonomies ) )
+		unset( $all_taxonomies[ $key ] );
+}
+
+foreach ( $all_post_types as $key => $value ) {
+	$all_post_types[ $key ] = true;
+}
+
+foreach ( $all_taxonomies as $key => $value ) {
+	$all_taxonomies[ $key ] = true;
+}
+
+um_update_option( 'restricted_access_post_metabox', $all_post_types );
+um_update_option( 'restricted_access_taxonomy_metabox', $all_taxonomies );
+
+
 $roles_array = UM()->roles()->get_roles( false, array( 'administrator' ) );
 
 $posts = get_posts( array(
-    'meta_key'      => '_um_custom_access_settings',
-    'meta_value'    => '1',
-    'fields'        => 'ids'
+	'post_type'     => 'any',
+	'meta_key'      => '_um_custom_access_settings',
+	'meta_value'    => '1',
+	'fields'        => 'ids',
+	'numberposts'   => -1
 ) );
+
 if ( ! empty( $posts ) ) {
     foreach ( $posts as $post_id ) {
         $um_accessible = get_post_meta( $post_id, '_um_accessible', true );
@@ -1032,17 +1064,18 @@ if ( ! empty( $posts ) ) {
 
         $access_roles = array();
         if ( ! empty( $um_access_roles ) ) {
-            foreach ( $roles_array as $role ) {
+	        foreach ( $roles_array as $role => $role_label ) {
                 if ( in_array( substr( $role, 3 ), $um_access_roles ) )
-                    $access_roles[$role] = '1';
+                    $access_roles[ $role ] = '1';
                 else
-                    $access_roles[$role] = '0';
+                    $access_roles[ $role ] = '0';
             }
         } else {
-            foreach ( $roles_array as $role ) {
-                $access_roles[$role] = '0';
+	        foreach ( $roles_array as $role => $role_label ) {
+                $access_roles[ $role ] = '0';
             }
         }
+
         $restrict_options = array(
             '_um_custom_access_settings'        => '1',
             '_um_accessible'                    => $um_accessible,
@@ -1073,31 +1106,36 @@ foreach ( $all_taxonomies as $key => $taxonomy ) {
         'fields'        => 'ids'
     ) );
 
+	if ( empty( $terms ) )
+		continue;
+
     foreach ( $terms as $term_id ) {
-        $term_meta = get_option( "{$taxonomy}_{$term_id}" );
+        $term_meta = get_option( "category_{$term_id}" );
 
         if ( empty( $term_meta ) )
             continue;
 
-        $um_accessible = $term_meta['_um_accessible'];
-        $um_access_roles = $term_meta['_um_access_roles'];
-        $um_access_redirect = ( $um_accessible == '2' ) ? $term_meta['_um_access_redirect'] : $term_meta['_um_access_redirect2'];
+        $um_accessible = ! empty( $term_meta['_um_accessible'] ) ? $term_meta['_um_accessible'] : false;
+        $um_access_roles = ! empty( $term_meta['_um_roles'] ) ? $term_meta['_um_roles'] : array();
+	    $redirect = ! empty( $term_meta['_um_redirect'] ) ? $term_meta['_um_redirect'] : '';
+	    $redirect2 = ! empty( $term_meta['_um_redirect2'] ) ? $term_meta['_um_redirect2'] : '';
+        $um_access_redirect = ( $um_accessible == '2' ) ? $redirect : $redirect2;
 
-        $access_roles = array();
-        if ( ! empty( $um_access_roles ) ) {
-            foreach ( $roles_array as $role ) {
-                if ( in_array( substr( $role, 3 ), $um_access_roles ) )
-                    $access_roles[$role] = '1';
-                else
-                    $access_roles[$role] = '0';
-            }
-        } else {
-            foreach ( $roles_array as $role ) {
-                $access_roles[$role] = '0';
-            }
-        }
+	    $access_roles = array();
+	    if ( ! empty( $um_access_roles ) ) {
+		    foreach ( $roles_array as $role => $role_label ) {
+			    if ( in_array( substr( $role, 3 ), $um_access_roles ) )
+				    $access_roles[ $role ] = '1';
+			    else
+				    $access_roles[ $role ] = '0';
+		    }
+	    } else {
+		    foreach ( $roles_array as $role => $role_label ) {
+			    $access_roles[ $role ] = '0';
+		    }
+	    }
 
-        $restrict_options = array(
+	    $restrict_options = array(
             '_um_custom_access_settings'        => '1',
             '_um_accessible'                    => $um_accessible,
             '_um_access_roles'                  => $access_roles,
@@ -1216,7 +1254,8 @@ $menus = get_posts( array(
             'key' => 'menu-item-um_nav_roles',
             'compare' => 'EXISTS',
         )
-    )
+    ),
+	'numberposts' => -1,
 ) );
 
 foreach ( $menus as $menu ) {

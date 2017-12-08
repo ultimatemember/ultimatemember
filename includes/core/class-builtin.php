@@ -542,7 +542,19 @@ if ( ! class_exists( 'Builtin' ) ) {
          ***/
         function set_predefined_fields() {
 
-            $um_roles = UM()->roles()->get_roles( false, array( 'admin' ) );
+	        global $wp_roles;
+	        $role_keys = get_option( 'um_roles' );
+	        if ( ! empty( $role_keys ) && is_array( $role_keys ) ) {
+		        $role_keys = array_map( function( $item ) {
+			        return 'um_' . $item;
+		        }, $role_keys );
+	        } else {
+		        $role_keys = array();
+	        }
+
+			$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+
+            $um_roles = UM()->roles()->get_roles( false, $exclude_roles );
 
             $profile_privacy = apply_filters('um_profile_privacy_options', array( __('Everyone','ultimate-member'), __('Only me','ultimate-member') ) );
 

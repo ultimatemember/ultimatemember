@@ -115,6 +115,9 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
             $tabs = UM()->profile()->tabs_primary();
 
             foreach( $tabs as $id => $tab ) {
+
+                $profile_tab_roles = UM()->um_get_option( 'profile_tab_' . $id . '_roles' );
+
                 $appearances_profile_menu_fields = array_merge( $appearances_profile_menu_fields, array(
                     array(
                         'id'       		=> 'profile_tab_' . $id,
@@ -144,7 +147,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                         'options' 		=> UM()->roles()->get_roles(),
                         'placeholder' 	=> __( 'Choose user roles...','ultimate-member' ),
                         'conditional'		=> array( 'profile_tab_' . $id . '_privacy', '=', 4 ),
-                        'value' 		=> ! empty( UM()->um_get_option( 'profile_tab_' . $id . '_roles' ) ) ? UM()->um_get_option( 'profile_tab_' . $id . '_roles' ) : array(),
+                        'value' 		=> ! empty( $profile_tab_roles ) ? $profile_tab_roles : array(),
                         'default' 		=> UM()->um_get_default( 'profile_tab_' . $id . '_roles' ),
                         'size'          => 'small'
                     )
@@ -1121,11 +1124,11 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                             )
                         ),
                         array(
-                            'id'       		=> 'allow_tracking',
+                            'id'       		=> 'um_allow_tracking',
                             'type'     		=> 'checkbox',
                             'label'   		=> __( 'Allow Tracking','ultimate-member' ),
-                            'value' 		=> UM()->um_get_option( 'allow_tracking' ),
-                            'default' 		=> UM()->um_get_default( 'allow_tracking' ),
+                            'value' 		=> UM()->um_get_option( 'um_allow_tracking' ),
+                            'default' 		=> UM()->um_get_default( 'um_allow_tracking' ),
                         ),
                         array(
                             'id'       		=> 'uninstall_on_delete',
@@ -1404,7 +1407,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                 $filtered_settings[$key] = $value;
 
                 foreach( $fields as $field ) {
-                    if ( $field['id'] == $key && $field['type'] == 'multi_text' ) {
+                    if ( $field['id'] == $key && isset( $field['type'] ) && $field['type'] == 'multi_text' ) {
                         $filtered_settings[$key] = array_filter( $settings[$key] );
                     }
                 }
@@ -1521,26 +1524,41 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 
 
         function check_wrong_licenses() {
-            $invalid_license = false;
+            $invalid_license = 0;
+            $arr_inactive_license_keys = array();
 
             if ( empty( $this->settings_structure['licenses']['fields'] ) )
                 return;
 
             foreach ( $this->settings_structure['licenses']['fields'] as $field_data ) {
                 $license = get_option( "{$field_data['id']}_edd_answer" );
-
+                
                 if ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license )
                     continue;
 
-                $invalid_license = true;
-                break;
+                if ( ( is_object( $license ) && 'inactive' == $license->license ) || 'inactive' == $license ){
+                   $arr_inactive_license_keys[ ] = $license->item_name;
+                }
+
+                $invalid_license++;
+           
             }
+
+            if ( ! empty(  $arr_inactive_license_keys ) ) { ?>
+
+                <div class="error">
+                    <p>
+                        <?php printf( __( 'There are %d inactive %s license keys for this site. This site is not authorized to get plugin updates. You can active this site on <a href="%s">www.UltimateMember.com</a>.', 'ultimate-member' ), count( $arr_inactive_license_keys ) , ultimatemember_plugin_name, 'https://ultimatemember.com' ) ; ?>
+                    </p>
+                </div>
+
+            <?php }
 
             if ( $invalid_license ) { ?>
 
                 <div class="error">
                     <p>
-                        <?php printf( __( 'You have invalid or expired license keys for %s. Please go to the <a href="%s">Licenses page</a> to correct this issue.', 'ultimate-member' ), ultimatemember_plugin_name, add_query_arg( array('page'=>'um_options', 'tab' => 'licenses'), admin_url( 'admin.php' ) ) ) ?>
+                        <?php printf( __( 'You have %d invalid or expired license keys for %s. Please go to the <a href="%s">Licenses page</a> to correct this issue.', 'ultimate-member' ), $invalid_license, ultimatemember_plugin_name, add_query_arg( array('page'=>'um_options', 'tab' => 'licenses'), admin_url( 'admin.php' ) ) ) ?>
                     </p>
                 </div>
 

@@ -40,5 +40,6 @@ function um_admin_update_builder() {
 }
 
 jQuery(document).ready(function() {
-
+	if ( um_admin_builder_data.hide_footer )
+		jQuery('#wpfooter').hide();
 });

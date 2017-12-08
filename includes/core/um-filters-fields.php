@@ -115,7 +115,7 @@
     /***
      ***	@urls in description
      ***/
-    add_filter('um_profile_field_filter_hook__description', 'um_profile_field_filter_hook__description', 99, 2);
+/*    add_filter('um_profile_field_filter_hook__description', 'um_profile_field_filter_hook__description', 99, 2);
     function um_profile_field_filter_hook__description( $value, $data ) {
 
         if ( isset( $data ) && isset( $data['html'] ) && $data['html'] == 1 )
@@ -126,7 +126,7 @@
         $value = preg_replace('$(www\.[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', '<a target="_blank" href="http://$1">$1</a> ', $value." ");
 
         return $value;
-    }
+    }*/
 
 
 	/***
@@ -483,3 +483,24 @@
 	    return $value;
     }
 
+	/**
+	 * add role_select and role_radio to the $post_form
+	 * It is necessary for that if on these fields the conditional logic
+	 * @param $post_form array
+	 * @param $mode
+	 *
+	 * @return $post_form
+	 * @uses   hook filters: um_submit_form_data
+	 */
+	function um_submit_form_data_role_fields( $post_form, $mode ) {
+		$custom_fields = unserialize( $post_form['custom_fields'] );
+		if ( ! empty( $post_form['role'] ) && array_key_exists( 'role_select', $custom_fields ) ) {
+			$post_form['role_select'] = $post_form['role'];
+		}
+		if (! empty( $post_form['role'] ) && array_key_exists( 'role_radio', $custom_fields ) ) {
+			$post_form['role_radio'] = $post_form['role'];
+		}
+
+		return $post_form;
+	}
+	add_filter( 'um_submit_form_data', 'um_submit_form_data_role_fields', 10, 2 );
