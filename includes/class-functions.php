@@ -68,7 +68,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
                     'um_verify'     => $nonce
                 ), get_admin_url( null, 'admin-ajax.php' ) );
             } else if ( get_option( 'permalink_structure' ) ) {
-                $url = get_site_url( null, 'um-api/route/' . $route . '/' . $method . '/' . $nonce );
+                $url = get_home_url( null, 'um-api/route/' . $route . '/' . $method . '/' . $nonce );
             } else {
                 $url = add_query_arg( array(
                     'um_page'       => 'api',
@@ -76,7 +76,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
                     'um_resource'   => $route,
                     'um_method'     => $method,
                     'um_verify'     => $nonce
-                ), get_site_url() );
+                ), get_home_url() );
             }
             return $url;
         }
