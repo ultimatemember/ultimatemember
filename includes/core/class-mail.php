@@ -107,10 +107,11 @@ if ( ! class_exists( 'Mail' ) ) {
 		function prepare_template( $slug, $args = array() ) {
 			ob_start();
 
-			if ( um_get_option( 'email_html' ) ) { ?>
+			if ( um_get_option( 'email_html' ) ) {
 
-				<html>
-				<?php do_action( 'um_before_email_template_body', $slug, $args ); ?>
+				echo apply_filters( 'um_email_template_html_formatting', '<html>', $slug, $args );
+
+				do_action( 'um_before_email_template_body', $slug, $args ); ?>
 
 				<body <?php echo apply_filters( 'um_email_template_body_attrs', 'style="background: #f2f2f2;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;"', $slug ) ?>>
 
