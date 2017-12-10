@@ -2324,7 +2324,7 @@
 					//fix when customers change options for role (radio/dropdown) fields
 					foreach ( $roles as $role_key => $role_title ) {
 						if ( false !== $search_key = array_search( $role_title, $options ) ) {
-							if ( $role_key != $search_key ) {
+							if ( $role_key !== $search_key ) {
 								$options[ $role_key ] = $role_title;
 								unset( $options[ $search_key ] );
 							}
