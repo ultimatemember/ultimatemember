@@ -338,7 +338,7 @@ switch( strtolower( $order ) ) {
 }
 
 $ListTable->prepare_items();
-$ListTable->items = $roles;
+$ListTable->items = array_slice( $roles, ( $paged - 1 ) * $per_page, $per_page );
 $ListTable->um_set_pagination_args( array( 'total_items' => count( $roles ), 'per_page' => $per_page ) ); ?>
 
 <div class="wrap">
