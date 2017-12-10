@@ -136,7 +136,8 @@ if ( ! class_exists( 'Enqueue' ) ) {
          ***/
         function load_original() {
 
-            $this->load_google_charts();
+	        //maybe deprecated
+            //$this->load_google_charts();
 
             $this->load_fonticons();
 
