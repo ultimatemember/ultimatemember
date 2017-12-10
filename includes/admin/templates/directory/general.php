@@ -24,13 +24,11 @@ if ( $show_these_users ) {
 		array(
 			'id'		=> '_um_mode',
 			'type'		=> 'hidden',
-			'name'		=> '_um_mode',
 			'value'		=> 'directory',
 		),
 		array(
 			'id'		=> '_um_roles',
 			'type'		=> 'select',
-			'name'		=> '_um_roles',
 			'label'		=> __( 'User Roles to Display', 'ultimate-member' ),
 			'tooltip'	=> __( 'If you do not want to show all members, select only user roles to appear in this directory', 'ultimate-member' ),
 			'options'	=> UM()->roles()->get_roles(),
@@ -40,7 +38,6 @@ if ( $show_these_users ) {
 		array(
 			'id'		=> '_um_has_profile_photo',
 			'type'		=> 'checkbox',
-			'name'		=> '_um_has_profile_photo',
 			'label'		=> __( 'Only show members who have uploaded a profile photo', 'ultimate-member' ),
 			'tooltip'	=> __( 'If \'Use Gravatars\' as profile photo is enabled, this option is ignored', 'ultimate-member' ),
 			'value'		=> UM()->query()->get_meta_value( '_um_has_profile_photo' ),
@@ -48,14 +45,12 @@ if ( $show_these_users ) {
 		array(
 			'id'		=> '_um_has_cover_photo',
 			'type'		=> 'checkbox',
-			'name'		=> '_um_has_cover_photo',
 			'label'		=> __( 'Only show members who have uploaded a cover photo', 'ultimate-member' ),
 			'value'		=> UM()->query()->get_meta_value( '_um_has_cover_photo' ),
 		),
 		array(
 			'id'		=> '_um_sortby',
 			'type'		=> 'select',
-			'name'		=> '_um_sortby',
 			'label'		=> __( 'Sort users by', 'ultimate-member' ),
 			'tooltip'	=> __( 'Sort users by a specific parameter in the directory', 'ultimate-member' ),
 			'options'	=> apply_filters( 'um_admin_directory_sort_users_select', array(
@@ -73,7 +68,6 @@ if ( $show_these_users ) {
 		array(
 			'id'		    => '_um_sortby_custom',
 			'type'		    => 'text',
-			'name'		    => '_um_sortby_custom',
 			'label'		    => __( 'Meta key', 'ultimate-member' ),
 			'tooltip'	    => __( 'To sort by a custom field, enter the meta key of field here', 'ultimate-member' ),
 			'value'		    => UM()->query()->get_meta_value( '_um_sortby_custom', null, 'na' ),
@@ -82,7 +76,6 @@ if ( $show_these_users ) {
 		array(
 			'id'		    => '_um_show_these_users',
 			'type'		    => 'textarea',
-			'name'		    => '_um_show_these_users',
 			'label'		    => __( 'Only show specific users (Enter one username per line)', 'ultimate-member' ),
 			'value'		    => $show_these_users,
 		)

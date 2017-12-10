@@ -8,7 +8,6 @@
             array(
                 'id'		    => '_um_can_access_wpadmin',
                 'type'		    => 'checkbox',
-                'name'		    => '_um_can_access_wpadmin',
                 'label'		    => __( 'Can access wp-admin?', 'ultimate-member' ),
                 'tooltip'	=> __( 'The core admin role must always have access to wp-admin / WordPress backend', 'ultimate-member' ),
                 'value'		    => ! empty( $role['_um_can_access_wpadmin'] ) ? $role['_um_can_access_wpadmin'] : 0,
@@ -16,7 +15,6 @@
             array(
                 'id'		    => '_um_can_not_see_adminbar',
                 'type'		    => 'checkbox',
-                'name'		    => '_um_can_not_see_adminbar',
                 'label'		    => __( 'Force hiding adminbar in frontend?', 'ultimate-member' ),
                 'tooltip'	=> __( 'Show/hide the adminbar on frontend', 'ultimate-member' ),
                 'value'		    => ! empty( $role['_um_can_not_see_adminbar'] ) ? $role['_um_can_not_see_adminbar'] : 0,
@@ -24,7 +22,6 @@
             array(
                 'id'		    => '_um_can_edit_everyone',
                 'type'		    => 'checkbox',
-                'name'		    => '_um_can_edit_everyone',
                 'label'    		=> __( 'Can edit other member accounts?', 'ultimate-member' ),
                 'tooltip' 	=> __( 'Allow this role to edit accounts of other members', 'ultimate-member' ),
                 'value'		    => ! empty( $role['_um_can_edit_everyone'] ) ? $role['_um_can_edit_everyone'] : 0,
@@ -32,7 +29,6 @@
             array(
                 'id'		=> '_um_can_edit_roles',
                 'type'		=> 'select',
-                'name'		=> '_um_can_edit_roles',
                 'label'    		=> __( 'Can edit these user roles only', 'ultimate-member' ),
                 'tooltip' 	=> __( 'Which roles that role can edit, choose none to allow role to edit all member roles', 'ultimate-member' ),
                 'options'	=> UM()->roles()->get_roles(),
@@ -43,7 +39,6 @@
             array(
                 'id'		    => '_um_can_delete_everyone',
                 'type'		    => 'checkbox',
-                'name'		    => '_um_can_delete_everyone',
                 'label'    		=> __( 'Can delete other member accounts?', 'ultimate-member' ),
                 'tooltip' 	=> __( 'Allow this role to edit accounts of other members', 'ultimate-member' ),
                 'value'		    => ! empty( $role['_um_can_delete_everyone'] ) ? $role['_um_can_delete_everyone'] : 0,
@@ -51,7 +46,6 @@
             array(
                 'id'		=> '_um_can_delete_roles',
                 'type'		=> 'select',
-                'name'		=> '_um_can_delete_roles',
                 'label'    		=> __( 'Can delete these user roles only', 'ultimate-member' ),
                 'tooltip' 	=> __( 'Which roles that role can edit, choose none to allow role to edit all member roles', 'ultimate-member' ),
                 'options'	=> UM()->roles()->get_roles(),

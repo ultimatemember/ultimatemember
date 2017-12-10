@@ -9,7 +9,6 @@
             array(
                 'id'		    => '_um_after_login',
                 'type'		    => 'select',
-                'name'		    => '_um_after_login',
                 'label'    		=> __( 'Action to be taken after login', 'ultimate-member' ),
                 'tooltip' 	=> __( 'Select what happens when a user with this role logins to your site', 'ultimate-member' ),
                 'value' 		=> ! empty( $role['_um_after_login'] ) ? $role['_um_after_login'] : array(),
@@ -23,7 +22,6 @@
             array(
                 'id'		=> '_um_login_redirect_url',
                 'type'		=> 'text',
-                'name'		=> '_um_login_redirect_url',
                 'label'    		=> __( 'Set Custom Redirect URL', 'ultimate-member' ),
                 'tooltip' 	=> __( 'Set a url to redirect this user role to after they login with their account', 'ultimate-member' ),
                 'value' 		=> ! empty( $role['_um_login_redirect_url'] ) ? $role['_um_login_redirect_url'] : '',

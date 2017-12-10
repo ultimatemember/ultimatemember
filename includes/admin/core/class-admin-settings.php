@@ -2281,7 +2281,7 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
             UM()->admin_forms( array(
                 'class'		=> 'um_options-' . $current_tab . '-' . $current_subtab . ' um-third-column',
                 'prefix_id'	=> 'um_options',
-                'fields' => $section_fields
+                'fields'    => $section_fields
             ) )->render_form(); ?>
 
             <?php $section = ob_get_clean();

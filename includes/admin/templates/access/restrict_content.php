@@ -22,7 +22,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         array(
             'id'		    => '_um_custom_access_settings',
             'type'		    => 'checkbox',
-            'name'		    => '_um_custom_access_settings',
             'label'    		=> __( 'Restrict access to this content?', 'ultimate-member' ),
             'tooltip' 	=> __( 'Activate content restriction for this post', 'ultimate-member' ),
             'value' 		=> ! empty( $data['_um_custom_access_settings'] ) ? $data['_um_custom_access_settings'] : 0,
@@ -30,7 +29,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         array(
             'id'		=> '_um_accessible',
             'type'		=> 'select',
-            'name'		=> '_um_accessible',
             'label'    		=> __( 'Who can access this content?', 'ultimate-member' ),
             'tooltip' 	=> __( 'Activate content restriction for this post', 'ultimate-member' ),
             'value' 		=> ! empty( $data['_um_accessible'] ) ? $data['_um_accessible'] : 0,
@@ -44,7 +42,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         array(
             'id'       		=> '_um_access_roles',
             'type'     		=> 'multi_checkbox',
-            'name'		    => '_um_access_roles',
             'label'    		=> __( 'Select which roles can access this content', 'ultimate-member' ),
             'tooltip' 	    => __( 'Activate content restriction for this post', 'ultimate-member' ),
             'value' 		=> $_um_access_roles_value,
@@ -55,7 +52,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         array(
             'id'       		=> '_um_noaccess_action',
             'type'     		=> 'select',
-            'name'		    => '_um_noaccess_action',
             'label'    		=> __( 'What happens when users without access tries to view the content?', 'ultimate-member' ),
             'tooltip' 	=> __( 'Action when users without access tries to view the content', 'ultimate-member' ),
             'value' 		=> ! empty( $data['_um_noaccess_action'] ) ? $data['_um_noaccess_action'] : 0,
@@ -68,7 +64,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         array(
             'id'       		=> '_um_restrict_by_custom_message',
             'type'     		=> 'select',
-            'name'		    => '_um_restrict_by_custom_message',
             'label'    		=> __( 'Would you like to use the global default message or apply a custom message to this content?', 'ultimate-member' ),
             'tooltip' 	=> __( 'Action when users without access tries to view the content', 'ultimate-member' ),
             'value' 		=> ! empty( $data['_um_restrict_by_custom_message'] ) ? $data['_um_restrict_by_custom_message'] : '0',
@@ -81,7 +76,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         array(
             'id'       		=> '_um_restrict_custom_message',
             'type'     		=> 'wp_editor',
-            'name'		    => '_um_restrict_custom_message',
             'label'    		=> __( 'Custom Restrict Content message', 'ultimate-member' ),
             'tooltip' 	=> __( 'Changed global restrict message', 'ultimate-member' ),
             'value' 		=> ! empty( $data['_um_restrict_custom_message'] ) ? $data['_um_restrict_custom_message'] : '',
@@ -90,7 +84,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         array(
             'id'       		=> '_um_access_redirect',
             'type'     		=> 'select',
-            'name'		    => '_um_access_redirect',
             'label'    		=> __( 'Where should users be redirected to?', 'ultimate-member' ),
             'tooltip' 	=> __( 'Select redirect to page when user hasn\'t access to content', 'ultimate-member' ),
             'value' 		=> ! empty( $data['_um_access_redirect'] ) ? $data['_um_access_redirect'] : '0',
@@ -103,7 +96,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         array(
             'id'       		=> '_um_access_redirect_url',
             'type'     		=> 'text',
-            'name'		    => '_um_access_redirect_url',
             'label'    		=> __( 'Redirect URL', 'ultimate-member' ),
             'tooltip' 	=> __( 'Changed global restrict message', 'ultimate-member' ),
             'value' 		=> ! empty( $data['_um_access_redirect_url'] ) ? $data['_um_access_redirect_url'] : '',
@@ -112,7 +104,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         array(
             'id'       		=> '_um_access_hide_from_queries',
             'type'     		=> 'checkbox',
-            'name'		    => '_um_access_hide_from_queries',
             'label'    		=> __( 'Hide from queries', 'ultimate-member' ),
             'tooltip' 	=> __( 'Hide this content from archives, RSS feeds etc for users who do not have permission to view this content', 'ultimate-member' ),
             'value' 		=> ! empty( $data['_um_access_hide_from_queries'] ) ? $data['_um_access_hide_from_queries'] : '',
@@ -123,7 +114,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
     UM()->admin_forms( array(
         'class'		=> 'um-restrict-content um-third-column',
         'prefix_id'	=> 'um_content_restriction',
-        'fields' => $fields
+        'fields'    => $fields
     ) )->render_form(); ?>
 
 </div>
