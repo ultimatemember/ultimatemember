@@ -6,7 +6,7 @@
 	add_action('um_after_form_fields', 'um_add_form_identifier');
 	function um_add_form_identifier($args){ ?>
 
-		<input type="hidden" name="form_id" id="form_id" value="<?php echo $args['form_id']; ?>" />
+		<input type="hidden" name="form_id" id="form_id_<?php echo $args['form_id']; ?>" value="<?php echo $args['form_id']; ?>" />
 
 		<?php
 	}
@@ -19,13 +19,13 @@
 	function um_add_security_checks($args){
 		if ( is_admin() ) return;
 
-		echo '<input type="hidden" name="timestamp" id="timestamp" value="'. current_time( 'timestamp' ) .'" />';
+		echo '<input type="hidden" name="timestamp" class="um_timestamp" value="'. current_time( 'timestamp' ) .'" />';
 
 		?>
 
 		<p class="<?php echo UM()->honeypot; ?>_name">
-			<label for="<?php echo UM()->honeypot; ?>"><?php _e( 'Only fill in if you are not human' ); ?></label>
-			<input type="text" name="<?php echo UM()->honeypot; ?>" id="<?php echo UM()->honeypot; ?>" class="input" value="" size="25" autocomplete="off" />
+			<label for="<?php echo UM()->honeypot . '_' . $args['form_id']; ?>"><?php _e( 'Only fill in if you are not human' ); ?></label>
+			<input type="text" name="<?php echo UM()->honeypot; ?>" id="<?php echo UM()->honeypot . '_' . $args['form_id']; ?>" class="input" value="" size="25" autocomplete="off" />
 		</p>
 
 		<?php
