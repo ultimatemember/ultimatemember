@@ -281,8 +281,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             $name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
             $name_attr = ' name="' . $name . '" ';
 
-            $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
-            $value = isset( $field_data['value'] ) ? $field_data['value'] : $default;
+            $value = $this->get_field_value( $field_data );
             $value_attr = ' value="' . $value . '" ';
 
             $html = "<input type=\"hidden\" $id_attr $class_attr $name_attr $data_attr $value_attr />";
@@ -318,8 +317,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             $name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
             $name_attr = ' name="' . $name . '" ';
 
-            $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
-            $value = isset( $field_data['value'] ) ? $field_data['value'] : $default;
+            $value = $this->get_field_value( $field_data );
             $value_attr = ' value="' . $value . '" ';
 
             $html = "<input type=\"text\" $id_attr $class_attr $name_attr $data_attr $value_attr $placeholder_attr />";
@@ -356,8 +354,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             $name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
             $name_attr = ' name="' . $name . '" ';
 
-            $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
-            $value = isset( $field_data['value'] ) ? $field_data['value'] : $default;
+            $value = $this->get_field_value( $field_data );
             $value_attr = ' value="' . $value . '" ';
 
             $html = "<input type=\"text\" $id_attr $class_attr $name_attr $data_attr $value_attr $placeholder_attr />";
@@ -378,8 +375,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             $name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
             $name_attr = ' name="' . $name . '" ';
 
-            $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
-            $value = isset( $field_data['value'] ) ? $field_data['value'] : $default;
+            $value = $this->get_field_value( $field_data );
             $value_attr = ' value="' . $value . '" ';
 
             $html = '<a href="#" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="">' . __( 'Choose Icon', 'ultimate-member' ) . '</a>
@@ -432,8 +428,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             $name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
             $name_attr = ' name="' . $name . '" ';
 
-            $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
-            $value = isset( $field_data['value'] ) ? $field_data['value'] : $default;
+            $value = $this->get_field_value( $field_data );
             $value_attr = ' value="' . $value . '" ';
 
             $html = "<input type=\"date\" $id_attr $class_attr $name_attr $data_attr $value_attr $placeholder_attr />";
@@ -515,8 +510,8 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             $name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
             $name_attr = ' name="' . $name . '" ';
 
-            $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
-            $value = isset( $field_data['value'] ) ? $field_data['value'] : $default;
+            $value = $this->get_field_value( $field_data );
+
             $html = "<textarea $id_attr $class_attr $name_attr $data_attr $rows>$value</textarea>";
 
             return $html;
@@ -545,8 +540,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             $name = $field_data['id'];
             $name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
 
-            $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
-            $value = isset( $field_data['value'] ) ? $field_data['value'] : $default;
+            $value = $this->get_field_value( $field_data );
 
             ob_start();
             wp_editor( $value,
@@ -593,11 +587,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             $name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
             $name_attr = ' name="' . $name . '" ';
 
-            $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
-            $value = ( isset( $field_data['value'] ) && '' !== $field_data['value'] ) ? $field_data['value'] : $default;
-            /*$value = isset( $field_data['value'] ) ? $field_data['value'] : $default;
-            $value = ! empty( $field_data['value'] ) ? $field_data['value'] : 0;
-            */
+            $value = $this->get_field_value( $field_data );
 
             $html = "<input type=\"hidden\" $id_attr_hidden $name_attr value=\"0\" />
             <input type=\"checkbox\" $id_attr $class_attr $name_attr $data_attr " . checked( $value, true, false ) . " value=\"1\" />";
@@ -632,11 +622,11 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
 
             $name = $field_data['id'];
             $name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+            $hidden_name_attr = ' name="' . $name . '" ';
             $name = $name . ( ! empty( $field_data['multi'] ) ? '[]' : '' );
             $name_attr = ' name="' . $name . '" ';
 
-            $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
-            $value = isset( $field_data['value'] ) ? $field_data['value'] : $default;
+            $value = $this->get_field_value( $field_data );
 
             $options = '';
             foreach ( $field_data['options'] as $key=>$option ) {
@@ -651,7 +641,11 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
                 }
             }
 
-            $html = "<select $multiple $id_attr $name_attr $class_attr $data_attr>$options</select>";
+            $hidden = '';
+            if ( ! empty( $multiple ) ) {
+                $hidden = "<input type=\"hidden\" $hidden_name_attr value=\"\" />";
+            }
+            $html = "$hidden<select $multiple $id_attr $name_attr $class_attr $data_attr>$options</select>";
 
             return $html;
         }
@@ -683,8 +677,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             $name = "{$name}[]";
             $name_attr = ' name="' . $name . '" ';
 
-            $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
-            $values = isset( $field_data['value'] ) ? $field_data['value'] : $default;
+            $values = $this->get_field_value( $field_data );
 
             $options = '';
             foreach ( $field_data['options'] as $key=>$option ) {
@@ -746,8 +739,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             $name = $field_data['id'];
             $name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
 
-            $default = isset( $field_data['default'] ) ? $field_data['default'] : array();
-            $values = ( isset( $field_data['value'] ) && '' !== $field_data['value'] ) ? $field_data['value'] : $default;
+            $values = $this->get_field_value( $field_data );
 
             $i = 0;
             $html = '';
@@ -804,10 +796,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             $name = "{$name}[]";
             $name_attr = ' name="' . $name . '" ';
 
-            //$values = ! empty( $field_data['value'] ) ? $field_data['value'] : ( ! empty( $field_data['default'] ) ? $field_data['default'] : '' );
-
-            $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
-            $values = isset( $field_data['value'] ) ? $field_data['value'] : $default;
+            $values = $this->get_field_value( $field_data );
 
             $html = "<input type=\"text\" class=\"um-hidden-multi-text\" $data_attr />";
             $html .= "<ul class=\"um-multi-text-list\" $data_attr>";
@@ -865,8 +854,8 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
 
             $name = $field_data['id'];
             $name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
-            $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
-            $value = ! empty( $field_data['value'] ) ? $field_data['value'] : $default;
+
+            $value = $this->get_field_value( $field_data );
 
             $upload_frame_title = ! empty( $field_data['upload_frame_title'] ) ? $field_data['upload_frame_title'] : __( 'Select media', 'ultimate-member' );
 
@@ -919,8 +908,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             $name = $field_data['id'];
             $name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
 
-            $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
-            $value = isset( $field_data['value'] ) ? $field_data['value'] : $default;
+            $value = $this->get_field_value( $field_data );
 
             ob_start(); ?>
 
@@ -975,8 +963,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             $name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
             $name_attr = ' name="' . $name . '" ';
 
-            $default = isset( $field_data['default'] ) ? $field_data['default'] : '';
-            $value = isset( $field_data['value'] ) ? $field_data['value'] : $default;
+            $value = $this->get_field_value( $field_data );
             $value_attr = ' value="' . $value . '" ';
 
             $html = "<input type=\"button\" $id_attr $class_attr $name_attr $data_attr $value_attr /><div class='clear'></div><div class='um_setting_ajax_button_response'></div>";
@@ -984,5 +971,22 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             return $html;
         }
 
+
+        /**
+         * Get field value
+         *
+         * @param array $field_data
+         * @return string|array
+         */
+        function get_field_value( $field_data ) {
+            $default = ( $field_data['type'] == 'multi_checkbox' ) ? array() : '';
+            $default = isset( $field_data['default'] ) ? $field_data['default'] : $default;
+
+            if ( $field_data['type'] == 'checkbox' || $field_data['type'] == 'multi_checkbox' ) {
+                return ( isset( $field_data['value'] ) && '' !== $field_data['value'] ) ? $field_data['value'] : $default;
+            } else {
+                return isset( $field_data['value'] ) ? $field_data['value'] : $default;
+            }
+        }
     }
 }

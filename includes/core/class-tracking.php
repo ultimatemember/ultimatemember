@@ -73,7 +73,7 @@ if ( ! class_exists( 'Tracking' ) ) {
          ***	@check if tracking is allowed
          ***/
         private function tracking_allowed() {
-            if ( !um_get_option('allow_tracking') )
+            if ( ! UM()->options()->get( 'allow_tracking' ) )
                 return 0;
             return 1;
         }

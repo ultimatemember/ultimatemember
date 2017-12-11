@@ -32,7 +32,7 @@
 	add_filter("um_get_field__first_name","um_account_disable_name_fields", 10 ,1 );
 	add_filter("um_get_field__last_name","um_account_disable_name_fields", 10 ,1 );
 	function um_account_disable_name_fields( $fields ){
-		if( ! um_get_option("account_name_disable") ) return $fields;
+		if( ! UM()->options()->get( "account_name_disable" ) ) return $fields;
 
 		if( um_is_core_page("account") ){
 			$fields['disabled'] = 'disabled="disabled"';

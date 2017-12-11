@@ -99,7 +99,7 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
             }
 
             //restrict content metabox
-            $post_types = um_get_option( 'restricted_access_post_metabox' );
+            $post_types = UM()->options()->get( 'restricted_access_post_metabox' );
             if ( ! empty( $post_types[ $current_screen->id ] ) ) {
 
                 $hide_metabox = apply_filters( 'um_restrict_content_hide_metabox', false );
@@ -154,7 +154,7 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
         function add_taxonomy_metabox() {
             //restrict content metabox
             $all_taxonomies = get_taxonomies( array( 'public' => true ) );
-            $tax_types = um_get_option( 'restricted_access_taxonomy_metabox' );
+            $tax_types = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
             $exclude_taxonomies = UM()->excluded_taxonomies();
 
             foreach ( $all_taxonomies as $key => $taxonomy ) {

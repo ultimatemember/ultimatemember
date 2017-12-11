@@ -48,7 +48,7 @@
 
 		}
 
-		if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) || um_get_option('account_hide_in_directory') ) {
+		if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) || UM()->options()->get( 'account_hide_in_directory' ) ) {
 			$query_args['meta_query'][] = array(
 				"relation"	=> "OR",
 				array(
@@ -174,7 +174,7 @@
 
 		// must have a profile photo
 		if ( $has_profile_photo == 1 ) {
-			if ( um_get_option( 'use_gravatars' ) ) {
+			if ( UM()->options()->get( 'use_gravatars' ) ) {
 				$query_args['meta_query'][] = array(
 					'relation' => 'OR',
 					array(

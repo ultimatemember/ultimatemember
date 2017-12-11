@@ -90,25 +90,6 @@ if ( ! class_exists( 'UM_Functions' ) ) {
         }
 
 
-        function um_get_option( $option_id ) {
-            if ( isset( $this->options[ $option_id ] ) )
-                return apply_filters( "um_get_option_filter__{$option_id}", $this->options[ $option_id ] );
-
-            switch ( $option_id ) {
-                case 'site_name':
-                    return get_bloginfo( 'name' );
-                    break;
-                case 'admin_email':
-                    return get_bloginfo( 'admin_email' );
-                    break;
-                default:
-                    return '';
-                    break;
-
-            }
-        }
-
-
         function um_update_option( $option_id, $value ) {
             $this->options[ $option_id ] = $value;
             update_option( 'um_options', $this->options );
@@ -187,6 +168,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
             return apply_filters( 'um_excluded_taxonomies', $taxes );
         }
 
+
         /**
          * Output templates
          *
@@ -227,6 +209,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
                 return $html;
             } else {
                 echo $html;
+                return;
             }
         }
 

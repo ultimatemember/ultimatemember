@@ -49,7 +49,7 @@ if ( ! class_exists( 'Common' ) ) {
                 'supports' => array('title')
             ) );
 
-            if ( um_get_option( 'members_page' ) || ! get_option( 'um_options' ) ) {
+            if ( UM()->options()->get( 'members_page' ) || ! get_option( 'um_options' ) ) {
 
                 register_post_type( 'um_directory', array(
                     'labels' => array(

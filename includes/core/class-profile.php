@@ -78,7 +78,7 @@ if ( ! class_exists( 'Profile' ) ) {
         function tabs_active(){
             $tabs = $this->tabs();
             foreach( $tabs as $id => $info ) {
-                if ( !um_get_option('profile_tab_'.$id) && !isset( $info['_builtin'] ) && !isset( $info['custom'] ) )
+                if ( ! UM()->options()->get('profile_tab_'.$id) && !isset( $info['_builtin'] ) && !isset( $info['custom'] ) )
                     unset( $tabs[$id] );
             }
             return $tabs;
@@ -105,7 +105,7 @@ if ( ! class_exists( 'Profile' ) ) {
             $tabs = $this->tabs();
             foreach( $tabs as $id => $info ){
                 if ( isset( $info['name'] ) ) {
-                    if ( um_get_option('profile_tab_'.$id) || isset( $info['_builtin'] ) ) {
+                    if ( UM()->options()->get('profile_tab_'.$id) || isset( $info['_builtin'] ) ) {
                         $primary[$id] = $info['name'];
                     }
                 }
@@ -132,7 +132,7 @@ if ( ! class_exists( 'Profile' ) ) {
          ***	@Check if the user can view the current tab
          ***/
         function can_view_tab( $tab ) {
-            $privacy  = intval( um_get_option( 'profile_tab_' . $tab . '_privacy' ) );
+            $privacy  = intval( UM()->options()->get( 'profile_tab_' . $tab . '_privacy' ) );
             $can_view = false;
 
             switch( $privacy ) {
@@ -151,7 +151,7 @@ if ( ! class_exists( 'Profile' ) ) {
                 case 4:
                     $can_view = false;
                     if( is_user_logged_in() ) {
-                        $roles = um_get_option( 'profile_tab_' . $tab . '_roles' );
+                        $roles = UM()->options()->get( 'profile_tab_' . $tab . '_roles' );
                         if( is_array( $roles )
                             && in_array( UM()->user()->get_role(), $roles ) ) {
                             $can_view = true;
@@ -172,7 +172,7 @@ if ( ! class_exists( 'Profile' ) ) {
          ***/
         function active_tab() {
 
-            $this->active_tab = um_get_option('profile_menu_default_tab');
+            $this->active_tab = UM()->options()->get('profile_menu_default_tab');
 
             if ( get_query_var('profiletab') ) {
                 $this->active_tab = get_query_var('profiletab');
@@ -222,7 +222,7 @@ if ( ! class_exists( 'Profile' ) ) {
 	                    if ( ! $value )
 		                    continue;
 
-                        if ( ! um_get_option( 'profile_show_metaicon' ) ) {
+                        if ( ! UM()->options()->get( 'profile_show_metaicon' ) ) {
                             $icon = '';
                         } else {
 	                        $icon = ! empty( $data['icon'] ) ? '<i class="' . $data['icon'] . '"></i>' : '';

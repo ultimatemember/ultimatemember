@@ -6,7 +6,7 @@
 	add_filter('um_edit_label_all_fields', 'um_edit_label_all_fields', 10, 2);
 	function um_edit_label_all_fields( $label, $data ) {
 
-		$asterisk = um_get_option('form_asterisk');
+		$asterisk = UM()->options()->get( 'form_asterisk' );
 		if ( $asterisk && isset( $data['required'] ) && $data['required'] == 1 )
 			$label = $label . '<span class="um-req" title="'.__('Required','ultimate-member').'">*</span>';
 
@@ -321,7 +321,7 @@
 	add_filter('um_profile_field_filter_hook__','um_force_utf8_fields',1,10);
 	function um_force_utf8_fields( $value ){
 
-		if( ! um_get_option('um_force_utf8_strings') )
+		if( ! UM()->options()->get('um_force_utf8_strings') )
 			return $value;
 
 		$value = um_force_utf8_string( $value );
@@ -339,7 +339,7 @@
 	add_filter('um_is_selected_filter_value','um_is_selected_filter_value',1,9);
 	add_filter('um_select_dropdown_dynamic_option_value','um_is_selected_filter_value',1,10);
 	function um_is_selected_filter_value( $value ){
-		if( ! um_get_option('um_force_utf8_strings') )
+		if ( ! UM()->options()->get('um_force_utf8_strings') )
 			return $value;
 
 		$value = um_force_utf8_string( $value );
@@ -356,7 +356,7 @@
 	 */
 	add_filter('um_select_dropdown_dynamic_options','um_select_dropdown_dynamic_options_to_utf8',2,10);
 	function um_select_dropdown_dynamic_options_to_utf8( $options, $data ){
-		if( ! um_get_option('um_force_utf8_strings') )
+		if ( ! UM()->options()->get( 'um_force_utf8_strings' ) )
 			return $options;
 
 		foreach ( $options as $key => $value ) {

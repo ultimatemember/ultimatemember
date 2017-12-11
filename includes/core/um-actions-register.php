@@ -155,11 +155,11 @@
 
 		if ( ! empty( $first_name ) && ! empty( $last_name ) && ! isset( $user_login ) ) {
 
-			if ( um_get_option( 'permalink_base' ) == 'name' ) {
+			if ( UM()->options()->get( 'permalink_base' ) == 'name' ) {
 				$user_login = rawurlencode( strtolower( str_replace( " ", ".", $first_name . " " . $last_name ) ) );
-			} elseif ( um_get_option( 'permalink_base' ) == 'name_dash' ) {
+			} elseif ( UM()->options()->get( 'permalink_base' ) == 'name_dash' ) {
 				$user_login = rawurlencode( strtolower( str_replace( " ", "-", $first_name . " " . $last_name ) ) );
-			} elseif ( um_get_option( 'permalink_base' ) == 'name_plus' ) {
+			} elseif ( UM()->options()->get( 'permalink_base' ) == 'name_plus' ) {
 				$user_login = strtolower( str_replace( " ", "+", $first_name . " " . $last_name ) );
 			} else {
 				$user_login = strtolower( str_replace( " ", "", $first_name . " " . $last_name ) );
@@ -236,7 +236,6 @@
 		if ( ! empty( $args['role'] ) && $use_custom_settings ) {
 			$role = $args['role'];
 		} else if( ! $use_custom_settings ) {
-			//$role = um_get_option('default_role');
 			$role = get_option( 'default_role' );
 		}
 

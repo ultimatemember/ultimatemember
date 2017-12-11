@@ -38,7 +38,7 @@
 
 		$image_alt = apply_filters("um_avatar_image_alternate_text",  um_user("display_name") );
 
-		if ( ! $avatar && um_get_option('use_gravatars') ) {
+		if ( ! $avatar && UM()->options()->get( 'use_gravatars' ) ) {
 			
 			$default = get_option( 'avatar_default', 'mystery' );
 			if ( $default == 'gravatar_default' ) {
@@ -50,17 +50,17 @@
 				$rating = "&amp;r={$rating}";
 			}
 			
-			if( um_get_option('use_gravatars') && ! um_user('synced_profile_photo') && ! $has_profile_photo ){
+			if ( UM()->options()->get('use_gravatars') && ! um_user('synced_profile_photo') && ! $has_profile_photo ){
 						$avatar_url  = um_get_domain_protocol().'gravatar.com/avatar/'.um_user('synced_gravatar_hashed_id');
 						$avatar_url = add_query_arg('s',400, $avatar_url);
-						$gravatar_type = um_get_option('use_um_gravatar_default_builtin_image');
+						$gravatar_type = UM()->options()->get( 'use_um_gravatar_default_builtin_image' );
 						
-						if( $gravatar_type == 'default' ){
-							if( um_get_option('use_um_gravatar_default_image') ){
+						if ( $gravatar_type == 'default' ) {
+							if ( UM()->options()->get( 'use_um_gravatar_default_image' ) ) {
 								$avatar_url = add_query_arg('d', um_get_default_avatar_uri(), $avatar_url  );
 							}
-						}else{
-								$avatar_url = add_query_arg('d', $gravatar_type, $avatar_url  );
+						} else {
+							$avatar_url = add_query_arg('d', $gravatar_type, $avatar_url  );
 						}
 						
 			}

@@ -1184,7 +1184,7 @@
 				// fields that need to be disabled in edit mode (profile)
 				$arr_restricted_fields = array( 'user_email', 'username', 'user_login', 'user_password' );
 
-				if (um_get_option( 'editable_primary_email_in_profile' ) == 1) {
+				if ( UM()->options()->get( 'editable_primary_email_in_profile' ) == 1 ) {
 					unset( $arr_restricted_fields[0] ); // remove user_email
 				}
 
@@ -1198,7 +1198,7 @@
 				// required option
 				if (isset( $data['required_opt'] )) {
 					$opt = $data['required_opt'];
-					if (um_get_option( $opt[0] ) != $opt[1]) {
+					if ( UM()->options()->get( $opt[0] ) != $opt[1]) {
 						return;
 					}
 				}
@@ -2744,9 +2744,9 @@
 				// start output here
 				$this->get_fields = $this->get_fields();
 
-				if (um_get_option( 'profile_empty_text' )) {
+				if ( UM()->options()->get( 'profile_empty_text' ) ) {
 
-					$emo = um_get_option( 'profile_empty_text_emo' );
+					$emo = UM()->options()->get( 'profile_empty_text_emo' );
 					if ($emo) {
 						$emo = '<i class="um-faicon-frown-o"></i>';
 					} else {

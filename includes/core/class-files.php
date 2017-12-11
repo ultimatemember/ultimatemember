@@ -251,10 +251,10 @@ if ( ! class_exists( 'Files' ) ) {
             }
 
             list($w, $h) = @getimagesize( $source );
-            if ( $w > um_get_option('image_max_width') ) {
+            if ( $w > UM()->options()->get('image_max_width') ) {
 
                 $ratio = round( $w / $h, 2 );
-                $new_w = um_get_option('image_max_width');
+                $new_w = UM()->options()->get('image_max_width');
                 $new_h = round( $new_w / $ratio, 2 );
 
                 if ( $info['mime'] == 'image/jpeg' ||  $info['mime'] == 'image/gif' ){
@@ -620,7 +620,7 @@ if ( ! class_exists( 'Files' ) ) {
                 list($w, $h) = @getimagesize( $source );
 
 
-                $sizes = um_get_option('photo_thumb_sizes');
+                $sizes = UM()->options()->get( 'photo_thumb_sizes' );
                 foreach( $sizes as $size ) {
 
                     $ratio = round( $w / $h, 2 );
@@ -663,7 +663,7 @@ if ( ! class_exists( 'Files' ) ) {
 
                 list($w, $h) = @getimagesize( $source );
 
-                $sizes = um_get_option('cover_thumb_sizes');
+                $sizes = UM()->options()->get( 'cover_thumb_sizes' );
                 foreach( $sizes as $size ) {
 
                     $ratio = round( $w / $h, 2 );

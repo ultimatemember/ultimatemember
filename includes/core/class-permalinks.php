@@ -79,11 +79,11 @@ if ( ! class_exists( 'Permalinks' ) ) {
          ***	@Get current URL anywhere
          ***/
         function get_current_url( $no_query_params = false ) {
-            $um_get_option = get_option('um_options');
+	        $server_name_method = UM()->options()->get( 'current_url_method' );
+	        $server_name_method = ! empty( $server_name_method ) ? $server_name_method : 'SERVER_NAME';
 
-            $server_name_method = isset( $um_get_option['current_url_method'] ) ? $um_get_option['current_url_method'] : 'SERVER_NAME';
-
-            $um_port_forwarding_url = ( isset( $um_get_option['um_port_forwarding_url'] ) ) ? $um_get_option['um_port_forwarding_url']: '';
+	        $um_port_forwarding_url = UM()->options()->get( 'um_port_forwarding_url' );
+	        $um_port_forwarding_url = ! empty( $um_port_forwarding_url ) ? $um_port_forwarding_url : '';
 
             if ( is_multisite() ) {
 
@@ -99,7 +99,7 @@ if ( ! class_exists( 'Permalinks' ) ) {
                     }
                 } else {*/
 
-                    $network_permalink_structure = UM()->um_get_option("network_permalink_structure");
+                    $network_permalink_structure = UM()->options()->get( 'network_permalink_structure' );
 
                     if(  $network_permalink_structure == "sub-directory" ){
 
@@ -247,11 +247,11 @@ if ( ! class_exists( 'Permalinks' ) ) {
          ***/
         function profile_url( $update_slug = false ) {
             // Permalink base
-            $permalink_base = um_get_option('permalink_base');
+            $permalink_base = UM()->options()->get( 'permalink_base' );
 
             // Get user slug
             $profile_slug = get_user_meta( um_user('ID'), "um_user_profile_url_slug_{$permalink_base}", true );
-            $generate_slug = um_get_option('um_generate_slug_in_directory');
+            $generate_slug = UM()->options()->get( 'um_generate_slug_in_directory' );
 
             // Return existing profile slug
             if( $generate_slug && $update_slug == false && $profile_slug  ){
@@ -300,7 +300,7 @@ if ( ! class_exists( 'Permalinks' ) ) {
             $full_name_permalinks = array( 'name', 'name_dash', 'name_plus' );
             if( in_array( $permalink_base,  $full_name_permalinks ) )
             {
-                $opt_display_name = um_get_option('display_name');
+                $opt_display_name = UM()->options()->get( 'display_name' );
                 $first_name = um_user( 'first_name' );
                 $last_name = um_user( 'last_name' );
                 $full_name = um_user( 'display_name' );
@@ -389,7 +389,7 @@ if ( ! class_exists( 'Permalinks' ) ) {
          */
         function profile_slug( $full_name, $first_name, $last_name ){
 
-            $permalink_base = um_get_option('permalink_base');
+            $permalink_base = UM()->options()->get( 'permalink_base' );
 
             $user_in_url = '';
 

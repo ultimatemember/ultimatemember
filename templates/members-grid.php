@@ -10,7 +10,7 @@
 					
 		<?php
 		if ($cover_photos) {
-			$sizes = um_get_option('cover_thumb_sizes');
+			$sizes = UM()->options()->get('cover_thumb_sizes');
 			if ( UM()->mobile()->isTablet() ) {
 				$cover_size = $sizes[1];
 			} else {
@@ -18,15 +18,15 @@
 			}
 		?>
 
-		<div class="um-member-cover" data-ratio="<?php echo um_get_option('profile_cover_ratio'); ?>">
+		<div class="um-member-cover" data-ratio="<?php echo UM()->options()->get('profile_cover_ratio'); ?>">
 			<div class="um-member-cover-e"><a href="<?php echo um_user_profile_url(); ?>" title="<?php echo esc_attr(um_user('display_name')); ?>"><?php echo um_user('cover_photo', $cover_size); ?></a></div>
 		</div>
 
 		<?php } ?>
 		
 		<?php if ($profile_photo) {
-			$default_size = str_replace( 'px', '', um_get_option('profile_photosize') );
-			$corner = um_get_option('profile_photocorner');
+			$default_size = str_replace( 'px', '', UM()->options()->get('profile_photosize') );
+			$corner = UM()->options()->get('profile_photocorner');
 		?>
 		<div class="um-member-photo radius-<?php echo $corner; ?>"><a href="<?php echo um_user_profile_url(); ?>" title="<?php echo esc_attr(um_user('display_name')); ?>"><?php echo get_avatar( um_user('ID'), $default_size ); ?></a></div>
 		<?php } ?>

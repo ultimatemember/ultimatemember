@@ -46,7 +46,7 @@ function um_submit_account_errors_hook( $args ) {
 							UM()->account()->current_tab = 'password';
 						}
 
-						if ( um_get_option('account_require_strongpass') ) {
+						if ( UM()->options()->get( 'account_require_strongpass' ) ) {
 
 							if ( strlen( utf8_decode( $_POST['user_password'] ) ) < 8 ) {
 								UM()->form()->add_error('user_password', __('Your password must contain at least 8 characters','ultimate-member') );
@@ -72,7 +72,7 @@ function um_submit_account_errors_hook( $args ) {
 			case 'general': {
 				// errors on general tab
 
-				$account_name_require = um_get_option( "account_name_require" );
+				$account_name_require = UM()->options()->get( 'account_name_require' );
 
 				if ( ! empty( $_POST['user_login'] ) && ! validate_username( $_POST['user_login'] ) ) {
 					UM()->form()->add_error('user_login', __( 'Your username is invalid', 'ultimate-member' ) );
@@ -233,7 +233,7 @@ function um_submit_account_errors_hook( $args ) {
 	 */
 	add_action( 'um_before_account_delete', 'um_before_account_delete' );
 	function um_before_account_delete() {
-		echo wpautop( um_get_option( 'delete_account_text' ) );
+		echo wpautop( UM()->options()->get( 'delete_account_text' ) );
 	}
 
 

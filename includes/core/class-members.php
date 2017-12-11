@@ -41,7 +41,7 @@ if ( ! class_exists( 'Members' ) ) {
          ***/
         function access_members() {
 
-            if ( um_get_option('members_page') == 0 && um_is_core_page('members') ) {
+            if ( UM()->options()->get('members_page') == 0 && um_is_core_page( 'members' ) ) {
                 um_redirect_home();
             }
 

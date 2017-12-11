@@ -73,7 +73,7 @@ if ( ! class_exists( 'Access' ) ) {
 			}
 
 			if ( is_tag() ) {
-				$restricted_taxonomies = um_get_option( 'restricted_access_taxonomy_metabox' );
+				$restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
 				if ( empty( $restricted_taxonomies['post_tag'] ) )
 					return;
 
@@ -85,7 +85,7 @@ if ( ! class_exists( 'Access' ) ) {
 				$um_category = get_the_category();
 				$um_category = current( $um_category );
 
-				$restricted_taxonomies = um_get_option( 'restricted_access_taxonomy_metabox' );
+				$restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
 				if ( empty( $restricted_taxonomies[ $um_category->taxonomy ] ) )
 					return;
 
@@ -95,7 +95,7 @@ if ( ! class_exists( 'Access' ) ) {
 			} elseif ( is_tax() ) {
 				$tax_name = get_query_var( 'taxonomy' );
 
-				$restricted_taxonomies = um_get_option( 'restricted_access_taxonomy_metabox' );
+				$restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
 				if ( empty( $restricted_taxonomies[ $tax_name ] ) )
 					return;
 
@@ -182,14 +182,14 @@ if ( ! class_exists( 'Access' ) ) {
 					$this->redirect_handler = $this->set_referer( $redirect_to, "custom_homepage" );
 
 				} else {
-					$access = um_get_option( 'accessible' );
+					$access = UM()->options()->get( 'accessible' );
 
 					if ( $access == 2 ) {
 						//global settings for accessible home page
-						$home_page_accessible = um_get_option( 'home_page_accessible' );
+						$home_page_accessible = UM()->options()->get( 'home_page_accessible' );
 						if ( $home_page_accessible == 0 ) {
 							//get redirect URL if not set get login page by default
-							$redirect = um_get_option( 'access_redirect' );
+							$redirect = UM()->options()->get( 'access_redirect' );
 							if ( ! $redirect )
 								$redirect = um_get_core_page( 'login' );
 
@@ -200,14 +200,14 @@ if ( ! class_exists( 'Access' ) ) {
 			} elseif ( is_category() ) {
 				if ( ! is_user_logged_in() ) {
 
-					$access = um_get_option( 'accessible' );
+					$access = UM()->options()->get( 'accessible' );
 
 					if ( $access == 2 ) {
 						//global settings for accessible home page
-						$category_page_accessible = um_get_option( 'category_page_accessible' );
+						$category_page_accessible = UM()->options()->get( 'category_page_accessible' );
 						if ( $category_page_accessible == 0 ) {
 							//get redirect URL if not set get login page by default
-							$redirect = um_get_option( 'access_redirect' );
+							$redirect = UM()->options()->get( 'access_redirect' );
 							if ( ! $redirect )
 								$redirect = um_get_core_page( 'login' );
 
@@ -217,15 +217,15 @@ if ( ! class_exists( 'Access' ) ) {
 				}
 			}
 
-			$access = um_get_option( 'accessible' );
+			$access = UM()->options()->get( 'accessible' );
 
 			if ( $access == 2 && ! is_user_logged_in() ) {
 
 				//build exclude URLs pages
 				$redirects = array();
-				$redirects[] = untrailingslashit( um_get_option( 'access_redirect' ) );
+				$redirects[] = untrailingslashit( UM()->options()->get( 'access_redirect' ) );
 
-				$exclude_uris = um_get_option( 'access_exclude_uris' );
+				$exclude_uris = UM()->options()->get( 'access_exclude_uris' );
 				if ( ! empty( $exclude_uris ) )
 					$redirects = array_merge( $redirects, $exclude_uris );
 
@@ -236,7 +236,7 @@ if ( ! class_exists( 'Access' ) ) {
 				$current_url_slash = trailingslashit( $current_url );
 
 				//get redirect URL if not set get login page by default
-				$redirect = um_get_option( 'access_redirect' );
+				$redirect = UM()->options()->get( 'access_redirect' );
 				if ( ! $redirect )
 					$redirect = um_get_core_page( 'login' );
 
@@ -378,7 +378,7 @@ if ( ! class_exists( 'Access' ) ) {
 	                return false;
 	        }
 
-            $restricted_posts = um_get_option( 'restricted_access_post_metabox' );
+            $restricted_posts = UM()->options()->get( 'restricted_access_post_metabox' );
 
             if ( ! empty( $post->post_type ) && ! empty( $restricted_posts[ $post->post_type ] ) ) {
                 $restriction = get_post_meta( $post->ID, 'um_content_restriction', true );
@@ -392,7 +392,7 @@ if ( ! class_exists( 'Access' ) ) {
             }
 
             //post hasn't privacy settings....check all terms of this post
-            $restricted_taxonomies = um_get_option( 'restricted_access_taxonomy_metabox' );
+            $restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
 
             //get all taxonomies for current post type
             $taxonomies = get_object_taxonomies( $post );
@@ -441,7 +441,7 @@ if ( ! class_exists( 'Access' ) ) {
             if ( empty( $posts ) )
                 return $posts;
 
-            $restricted_global_message = um_get_option( 'restricted_access_message' );
+            $restricted_global_message = UM()->options()->get( 'restricted_access_message' );
 
             //other filter
             foreach ( $posts as $post ) {

@@ -81,8 +81,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                         'label'    		=> sprintf( __( '%s page', 'ultimate-member' ), $page_title ),
                         'placeholder' 	=> __('Add page ID','ultimate-member'),
                         'compiler' 		=> true,
-                        'value' 		=> UM()->um_get_option( $page_id ),
-                        'default' 		=> UM()->um_get_default( $page_id ),
                         'size'          => 'small'
                     );
                 } else {
@@ -93,8 +91,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                         'options' 		=> UM()->query()->wp_pages(),
                         'placeholder' 	=> __('Choose a page...','ultimate-member'),
                         'compiler' 		=> true,
-                        'value' 		=> UM()->um_get_option( $page_id ),
-                        'default' 		=> UM()->um_get_default( $page_id ),
                         'size'          => 'small'
                     );
                 }
@@ -107,8 +103,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                     'id'       		=> 'profile_menu',
                     'type'     		=> 'checkbox',
                     'label'    		=> __('Enable profile menu','ultimate-member'),
-                    'value' 		=> UM()->um_get_option( 'profile_menu' ),
-                    'default' 		=> UM()->um_get_default( 'profile_menu' ),
                 )
             );
 
@@ -116,16 +110,12 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 
             foreach( $tabs as $id => $tab ) {
 
-                $profile_tab_roles = UM()->um_get_option( 'profile_tab_' . $id . '_roles' );
-
                 $appearances_profile_menu_fields = array_merge( $appearances_profile_menu_fields, array(
                     array(
                         'id'       		=> 'profile_tab_' . $id,
                         'type'     		=> 'checkbox',
                         'label'    		=> sprintf(__('%s Tab','ultimate-member'), $tab ),
                         'conditional'		=> array( 'profile_menu', '=', 1 ),
-                        'value' 		=> UM()->um_get_option( 'profile_tab_' . $id ),
-                        'default' 		=> UM()->um_get_default( 'profile_tab_' . $id ),
                     ),
                     array(
                         'id'       		=> 'profile_tab_' . $id . '_privacy',
@@ -134,8 +124,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                         'tooltip' 	=> __( 'Select which users can view this tab.','ultimate-member' ),
                         'options' 		=> UM()->profile()->tabs_privacy(),
                         'conditional'		=> array( 'profile_tab_' . $id, '=', 1 ),
-                        'value' 		=> UM()->um_get_option( 'profile_tab_' . $id . '_privacy' ),
-                        'default' 		=> UM()->um_get_default( 'profile_tab_' . $id . '_privacy' ),
                         'size'          => 'small'
                     ),
                     array(
@@ -147,8 +135,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                         'options' 		=> UM()->roles()->get_roles(),
                         'placeholder' 	=> __( 'Choose user roles...','ultimate-member' ),
                         'conditional'		=> array( 'profile_tab_' . $id . '_privacy', '=', 4 ),
-                        'value' 		=> ! empty( $profile_tab_roles ) ? $profile_tab_roles : array(),
-                        'default' 		=> UM()->um_get_default( 'profile_tab_' . $id . '_roles' ),
                         'size'          => 'small'
                     )
                 ) );
@@ -162,8 +148,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                     'tooltip' 	=> __( 'This will be the default tab on user profile page','ultimate-member' ),
                     'options' 		=> UM()->profile()->tabs_enabled(),
                     'conditional'	=> array( 'profile_menu', '=', 1 ),
-                    'value' 		=> UM()->um_get_option( 'profile_menu_default_tab' ),
-                    'default' 		=> UM()->um_get_default( 'profile_menu_default_tab' ),
                     'size'          => 'small'
                 ),
                 array(
@@ -171,8 +155,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                     'type'     		=> 'checkbox',
                     'label'    		=> __('Enable menu icons in desktop view','ultimate-member'),
                     'conditional'		=> array( 'profile_menu', '=', 1 ),
-                    'value' 		=> UM()->um_get_option( 'profile_menu_icons' ),
-                    'default' 		=> UM()->um_get_default( 'profile_menu_icons' ),
                 )
             ) );
 
@@ -187,7 +169,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
             }
 
             $restricted_access_post_metabox_value = array();
-            if ( $restricted_access_post_metabox = UM()->um_get_option( 'restricted_access_post_metabox' ) ) {
+            if ( $restricted_access_post_metabox = UM()->options()->get( 'restricted_access_post_metabox' ) ) {
                 foreach ( $restricted_access_post_metabox as $key => $value ) {
                     if ( $value )
                         $restricted_access_post_metabox_value[] = $key;
@@ -196,7 +178,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 
 
             $restricted_access_taxonomy_metabox_value = array();
-            if ( $restricted_access_taxonomy_metabox = UM()->um_get_option( 'restricted_access_taxonomy_metabox' ) ) {
+            if ( $restricted_access_taxonomy_metabox = UM()->options()->get( 'restricted_access_taxonomy_metabox' ) ) {
                 foreach ( $restricted_access_taxonomy_metabox as $key => $value ) {
                     if ( $value )
                         $restricted_access_taxonomy_metabox_value[] = $key;
@@ -228,8 +210,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                         'user_id' 			=> __('User ID','ultimate-member'),
                                     ),
                                     'placeholder' 	=> __('Select...','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'permalink_base' ),
-                                    'default' 		=> UM()->um_get_default( 'permalink_base' ),
                                 ),
                                 array(
                                     'id'       		=> 'display_name',
@@ -249,8 +229,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                         'field' 			=> __('Custom field(s)','ultimate-member'),
                                     ),
                                     'placeholder' 	=> __('Select...'),
-                                    'value' 		=> UM()->um_get_option( 'display_name' ),
-                                    'default' 		=> UM()->um_get_default( 'display_name' ),
                                 ),
                                 array(
                                     'id'       		=> 'display_name_field',
@@ -258,32 +236,24 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'   		=> __( 'Display Name Custom Field(s)','ultimate-member' ),
                                     'tooltip' 	=> __('Specify the custom field meta key or custom fields seperated by comma that you want to use to display users name on the frontend of your site','ultimate-member'),
                                     'conditional'   => array( 'display_name', '=', 'field' ),
-                                    'value' 		=> UM()->um_get_option( 'display_name_field' ),
-                                    'default' 		=> UM()->um_get_default( 'display_name_field' ),
                                 ),
                                 array(
                                     'id'       		=> 'author_redirect',
                                     'type'     		=> 'checkbox',
                                     'label'   		=> __( 'Automatically redirect author page to their profile?','ultimate-member'),
                                     'tooltip' 	=> __('If enabled, author pages will automatically redirect to the user\'s profile page','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'author_redirect' ),
-                                    'default' 		=> UM()->um_get_default( 'author_redirect' ),
                                 ),
                                 array(
                                     'id'       		=> 'members_page',
                                     'type'     		=> 'checkbox',
                                     'label'   		=> __( 'Enable Members Directory','ultimate-member' ),
                                     'tooltip' 	=> __('Control whether to enable or disable member directories on this site','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'members_page' ),
-                                    'default' 		=> UM()->um_get_default( 'members_page' ),
                                 ),
                                 array(
                                     'id'       		=> 'use_gravatars',
                                     'type'     		=> 'checkbox',
                                     'label'   		=> __( 'Use Gravatars?','ultimate-member' ),
                                     'tooltip' 	=> __('Do you want to use gravatars instead of the default plugin profile photo (If the user did not upload a custom profile photo / avatar)','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'use_gravatars' ),
-                                    'default' 		=> UM()->um_get_default( 'use_gravatars' ),
                                 ),
                                 array(
                                     'id'       		=> 'use_um_gravatar_default_builtin_image',
@@ -301,8 +271,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                         'blank'			=> __('Blank ( a transparent PNG image )','ultimate-member'),
                                     ),
                                     'conditional'		=> array( 'use_gravatars', '=', 1 ),
-                                    'value' 		=> UM()->um_get_option( 'use_um_gravatar_default_builtin_image' ),
-                                    'default' 		=> UM()->um_get_default( 'use_um_gravatar_default_builtin_image' ),
                                     'size'          => 'medium'
                                 ),
                                 array(
@@ -311,16 +279,12 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'   		=> __( 'Use Default plugin avatar as Gravatar\'s Default avatar','ultimate-member' ),
                                     'tooltip' 	=> __('Do you want to use the plugin default avatar instead of the gravatar default photo (If the user did not upload a custom profile photo / avatar)','ultimate-member'),
                                     'conditional'		=> array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
-                                    'value' 		=> UM()->um_get_option( 'use_um_gravatar_default_image' ),
-                                    'default' 		=> UM()->um_get_default( 'use_um_gravatar_default_image' ),
                                 ),
                                 array(
                                     'id'       		=> 'reset_require_strongpass',
                                     'type'     		=> 'checkbox',
                                     'label'   		=> __( 'Require a strong password? (when user resets password only)','ultimate-member' ),
                                     'tooltip' 	=> __('Enable or disable a strong password rules on password reset and change procedure','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'reset_require_strongpass' ),
-                                    'default' 		=> UM()->um_get_default( 'reset_require_strongpass' ),
                                 )
                             )
                         ),
@@ -332,32 +296,24 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'type'     		=> 'checkbox',
                                     'label'   		=> __( 'Password Account Tab','ultimate-member' ),
                                     'tooltip' 	=> 'Enable/disable the Password account tab in account page',
-                                    'value' 		=> UM()->um_get_option( 'account_tab_password' ),
-                                    'default' 		=> UM()->um_get_default( 'account_tab_password' ),
                                 ),
                                 array(
                                     'id'       		=> 'account_tab_privacy',
                                     'type'     		=> 'checkbox',
                                     'label'   		=> __( 'Privacy Account Tab','ultimate-member' ),
                                     'tooltip' 	=> __('Enable/disable the Privacy account tab in account page','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'account_tab_privacy' ),
-                                    'default' 		=> UM()->um_get_default( 'account_tab_privacy' ),
                                 ),
                                 array(
                                     'id'       		=> 'account_tab_notifications',
                                     'type'     		=> 'checkbox',
                                     'label'   		=> __( 'Notifications Account Tab','ultimate-member' ),
                                     'tooltip' 	=> __('Enable/disable the Notifications account tab in account page','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'account_tab_notifications' ),
-                                    'default' 		=> UM()->um_get_default( 'account_tab_notifications' ),
                                 ),
                                 array(
                                     'id'       		=> 'account_tab_delete',
                                     'type'     		=> 'checkbox',
                                     'label'   		=> __( 'Delete Account Tab','ultimate-member' ),
                                     'tooltip' 	=> __('Enable/disable the Delete account tab in account page','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'account_tab_delete' ),
-                                    'default' 		=> UM()->um_get_default( 'account_tab_delete' ),
                                 ),
                                 array(
                                     'id'       		=> 'delete_account_text',
@@ -367,16 +323,12 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'args'     		=> array(
                                         'textarea_rows'    => 6
                                     ),
-                                    'value' 		=> UM()->um_get_option( 'delete_account_text' ),
-                                    'default' 		=> UM()->um_get_default( 'delete_account_text' ),
                                 ),
                                 array(
                                     'id'       		=> 'account_name',
                                     'type'     		=> 'checkbox',
                                     'label'   		=> __( 'Add a First & Last Name fields','ultimate-member' ),
                                     'tooltip' 	=> __('Whether to enable these fields on the user account page by default or hide them.','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'account_name' ),
-                                    'default' 		=> UM()->um_get_default( 'account_name' ),
                                 ),
                                 array(
                                     'id'       		=> 'account_name_disable',
@@ -384,8 +336,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'   		=> __( 'Disable First & Last Name fields','ultimate-member' ),
                                     'tooltip' 	=> __('Whether to allow users changing their first and last name in account page.','ultimate-member'),
                                     'conditional'		=> array( 'account_name', '=', '1' ),
-                                    'value' 		=> UM()->um_get_option( 'account_name_disable' ),
-                                    'default' 		=> UM()->um_get_default( 'account_name_disable' ),
                                 ),
                                 array(
                                     'id'       		=> 'account_name_require',
@@ -393,32 +343,24 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'   		=> __( 'Require First & Last Name','ultimate-member' ),
                                     'tooltip' 	=> __('Require first and last name?','ultimate-member'),
                                     'conditional'		=> array( 'account_name', '=', '1' ),
-                                    'value' 		=> UM()->um_get_option( 'account_name_require' ),
-                                    'default' 		=> UM()->um_get_default( 'account_name_require' ),
                                 ),
                                 array(
                                     'id'       		=> 'account_email',
                                     'type'     		=> 'checkbox',
                                     'label'   		=> __( 'Allow users to change e-mail','ultimate-member' ),
                                     'tooltip' 	=> __('Whether to allow users changing their email in account page.','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'account_email' ),
-                                    'default' 		=> UM()->um_get_default( 'account_email' ),
                                 ),
                                 array(
                                     'id'       		=> 'account_hide_in_directory',
                                     'type'     		=> 'checkbox',
                                     'label'   		=> __( 'Allow users to hide their profiles from directory','ultimate-member' ),
                                     'tooltip' 	=> __('Whether to allow users changing their profile visibility from member directory in account page.','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'account_hide_in_directory' ),
-                                    'default' 		=> UM()->um_get_default( 'account_hide_in_directory' ),
                                 ),
                                 array(
                                     'id'       		=> 'account_require_strongpass',
                                     'type'     		=> 'checkbox',
                                     'label'   		=> __( 'Require a strong password?','ultimate-member' ),
                                     'tooltip' 	=> __('Enable or disable a strong password rules on account page / change password tab','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'account_require_strongpass' ),
-                                    'default' 		=> UM()->um_get_default( 'account_require_strongpass' ),
                                 )
                             )
                         ),
@@ -431,8 +373,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'size'     		=> 'small',
                                     'label'    		=> __( 'Profile Photo Maximum File Size (bytes)', 'ultimate-member' ),
                                     'tooltip' 	   	=> __( 'Sets a maximum size for the uploaded photo', 'ultimate-member' ),
-                                    'value' 		=> UM()->um_get_option( 'profile_photo_max_size' ),
-                                    'default' 		=> UM()->um_get_default( 'profile_photo_max_size' ),
                                 ),
 
                                 array(
@@ -441,8 +381,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'size'     		=> 'small',
                                     'label'    		=> __( 'Cover Photo Maximum File Size (bytes)', 'ultimate-member' ),
                                     'tooltip' 	   	=> __( 'Sets a maximum size for the uploaded cover', 'ultimate-member' ),
-                                    'value' 		=> UM()->um_get_option( 'cover_photo_max_size' ),
-                                    'default' 		=> UM()->um_get_default( 'cover_photo_max_size' ),
                                 ),
                                 array(
                                     'id'       		=> 'photo_thumb_sizes',
@@ -453,8 +391,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'validate' 		=> 'numeric',
                                     'add_text'		=> __('Add New Size','ultimate-member'),
                                     'show_default_number' => 1,
-                                    'value' 		=> UM()->um_get_option( 'photo_thumb_sizes' ),
-                                    'default' 		=> UM()->um_get_default( 'photo_thumb_sizes' ),
                                 ),
                                 array(
                                     'id'       		=> 'cover_thumb_sizes',
@@ -465,8 +401,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'validate' 		=> 'numeric',
                                     'add_text'		=> __('Add New Size','ultimate-member'),
                                     'show_default_number' => 1,
-                                    'value' 		=> UM()->um_get_option( 'cover_thumb_sizes' ),
-                                    'default' 		=> UM()->um_get_default( 'cover_thumb_sizes' ),
                                 ),
 
                                 array(
@@ -475,8 +409,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'size'     		=> 'small',
                                     'label'    		=> __( 'Image Quality','ultimate-member'),
                                     'tooltip' 	   	=> __( 'Quality is used to determine quality of image uploads, and ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file). The default range is 60.', 'ultimate-member' ),
-                                    'value' 		=> UM()->um_get_option( 'image_compression' ),
-                                    'default' 		=> UM()->um_get_default( 'image_compression' ),
                                 ),
 
                                 array(
@@ -485,8 +417,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'size'     		=> 'small',
                                     'label'    		=> __( 'Image Upload Maximum Width (px)', 'ultimate-member' ),
                                     'tooltip' 	   	=> __( 'Any image upload above this width will be resized to this limit automatically.', 'ultimate-member' ),
-                                    'value' 		=> UM()->um_get_option( 'image_max_width' ),
-                                    'default' 		=> UM()->um_get_default( 'image_max_width' ),
                                 ),
 
                                 array(
@@ -495,8 +425,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'size'     		=> 'small',
                                     'label'    		=> __( 'Cover Photo Minimum Width (px)', 'ultimate-member' ),
                                     'tooltip' 	   	=> __( 'This will be the minimum width for cover photo uploads', 'ultimate-member' ),
-                                    'value' 		=> UM()->um_get_option( 'cover_min_width' ),
-                                    'default' 		=> UM()->um_get_default( 'cover_min_width' ),
                                 ),
                             )
                         )
@@ -517,8 +445,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                         0 		=> 'Site accessible to Everyone',
                                         2 		=> 'Site accessible to Logged In Users'
                                     ),
-                                    'value' 		=> UM()->um_get_option( 'accessible' ),
-                                    'default' 		=> UM()->um_get_default( 'accessible' ),
                                     'size'          => 'medium'
                                 ),
                                 array(
@@ -527,8 +453,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'   		=> __( 'Custom Redirect URL','ultimate-member' ),
                                     'tooltip' 	=> __('A logged out user will be redirected to this url If he is not permitted to access the site','ultimate-member'),
                                     'conditional'		=> array( 'accessible', '=', 2 ),
-                                    'value' 		=> UM()->um_get_option( 'access_redirect' ),
-                                    'default' 		=> UM()->um_get_default( 'access_redirect' ),
                                 ),
                                 array(
                                     'id'       		=> 'access_exclude_uris',
@@ -538,32 +462,24 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'add_text'		=> __('Add New URL','ultimate-member'),
                                     'conditional'		=> array( 'accessible', '=', 2 ),
                                     'show_default_number' => 1,
-                                    'value' 		=> UM()->um_get_option( 'access_exclude_uris' ),
-                                    'default' 		=> UM()->um_get_default( 'access_exclude_uris' ),
                                 ),
                                 array(
                                     'id'       		=> 'home_page_accessible',
                                     'type'     		=> 'checkbox',
                                     'label'   		=> __( 'Allow Homepage to be accessible','ultimate-member' ),
                                     'conditional'		=> array( 'accessible', '=', 2 ),
-                                    'value' 		=> UM()->um_get_option( 'home_page_accessible' ),
-                                    'default' 		=> UM()->um_get_default( 'home_page_accessible' ),
                                 ),
                                 array(
                                     'id'       		=> 'category_page_accessible',
                                     'type'     		=> 'checkbox',
                                     'label'   		=> __( 'Allow Category pages to be accessible','ultimate-member' ),
                                     'conditional'		=> array( 'accessible', '=', 2 ),
-                                    'value' 		=> UM()->um_get_option( 'category_page_accessible' ),
-                                    'default' 		=> UM()->um_get_default( 'category_page_accessible' ),
                                 ),
                                 array(
                                     'id'       		=> 'restricted_access_message',
                                     'type'     		=> 'wp_editor',
                                     'label'   		=> __( 'Restricted Access Message','ultimate-member' ),
                                     'tooltip'   => __( 'This is the message shown to users that do not have permission to view the content','ultimate-member' ),
-                                    'value' 		=> UM()->um_get_option( 'restricted_access_message' ),
-                                    'default' 		=> UM()->um_get_default( 'restricted_access_message' ),
                                 ),
                                 array(
                                     'id'       		=> 'restricted_access_post_metabox',
@@ -594,8 +510,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'id'       		=> 'enable_reset_password_limit',
                                     'type'     		=> 'checkbox',
                                     'label'   		=> __( 'Enable the Reset Password Limit?','ultimate-member' ),
-                                    'value' 		=> UM()->um_get_option( 'enable_reset_password_limit' ),
-                                    'default' 		=> UM()->um_get_default( 'enable_reset_password_limit' ),
                                 ),
                                 array(
                                     'id'       		=> 'reset_password_limit_number',
@@ -605,24 +519,18 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'validate'		=> 'numeric',
                                     'conditional'   => array('enable_reset_password_limit','=',1),
                                     'size'          => 'um-small-field',
-                                    'value' 		=> UM()->um_get_option( 'reset_password_limit_number' ),
-                                    'default' 		=> UM()->um_get_default( 'reset_password_limit_number' ),
                                 ),
                                 array(
                                     'id'       		=> 'blocked_emails',
                                     'type'     		=> 'textarea',
                                     'label'    		=> __( 'Blocked Email Addresses','ultimate-member' ),
                                     'tooltip'	=> __('This will block the specified e-mail addresses from being able to sign up or sign in to your site. To block an entire domain, use something like *@domain.com','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'blocked_emails' ),
-                                    'default' 		=> UM()->um_get_default( 'blocked_emails' ),
                                 ),
                                 array(
                                     'id'       		=> 'blocked_words',
                                     'type'     		=> 'textarea',
                                     'label'    		=> __( 'Blacklist Words','ultimate-member' ),
                                     'tooltip'	=> __('This option lets you specify blacklist of words to prevent anyone from signing up with such a word as their username','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'blocked_words' ),
-                                    'default' 		=> UM()->um_get_default( 'blocked_words' ),
                                 )
                             )
                         ),
@@ -636,32 +544,24 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                             'type'          => 'text',
                             'label'         => __( 'Admin E-mail Address', 'ultimate-member' ),
                             'tooltip'   => __( 'e.g. admin@companyname.com','ultimate-member' ),
-                            'value' 		=> UM()->um_get_option( 'admin_email' ),
-                            'default' 		=> UM()->um_get_default( 'admin_email' ),
                         ),
                         array(
                             'id'            => 'mail_from',
                             'type'          => 'text',
                             'label'         => __( 'Mail appears from','ultimate-member' ),
                             'tooltip' 	=> __( 'e.g. Site Name','ultimate-member' ),
-                            'value' 		=> UM()->um_get_option( 'mail_from' ),
-                            'default' 		=> UM()->um_get_default( 'mail_from' ),
                         ),
                         array(
                             'id'            => 'mail_from_addr',
                             'type'          => 'text',
                             'label'         => __( 'Mail appears from address','ultimate-member' ),
                             'tooltip'   => __( 'e.g. admin@companyname.com','ultimate-member' ),
-                            'value' 		=> UM()->um_get_option( 'mail_from_addr' ),
-                            'default' 		=> UM()->um_get_default( 'mail_from_addr' ),
                         ),
                         array(
                             'id'            => 'email_html',
                             'type'          => 'checkbox',
                             'label'         => __( 'Use HTML for E-mails?','ultimate-member' ),
                             'tooltip'   => __('If you enable HTML for e-mails, you can customize the HTML e-mail templates found in <strong>templates/email</strong> folder.','ultimate-member'),
-                            'value' 		=> UM()->um_get_option( 'email_html' ),
-                            'default' 		=> UM()->um_get_default( 'email_html' ),
                         )
                     )
                 ),
@@ -678,7 +578,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'tooltip' 	=> __( 'This will be the default template to output profile','ultimate-member' ),
                                     'default'  		=> um_get_metadefault('profile_template'),
                                     'options' 		=> UM()->shortcodes()->get_templates( 'profile' ),
-                                    'value' 		=> UM()->um_get_option( 'profile_template' ),
                                     'size'          => 'small'
                                 ),
                                 array(
@@ -687,7 +586,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Profile Maximum Width','ultimate-member' ),
                                     'default'  		=> um_get_metadefault('profile_max_width'),
                                     'tooltip' 	=> 'The maximum width this shortcode can take from the page width',
-                                    'value' 		=> UM()->um_get_option( 'profile_max_width' ),
                                     'size'          => 'small'
                                 ),
 
@@ -697,7 +595,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Profile Area Maximum Width','ultimate-member' ),
                                     'default'  		=> um_get_metadefault('profile_area_max_width'),
                                     'tooltip' 	=> __('The maximum width of the profile area inside profile (below profile header)','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'profile_area_max_width' ),
                                     'size'          => 'small'
                                 ),
                                 array(
@@ -711,7 +608,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                         'label' 			=> __('Show with label','ultimate-member'),
                                         'off' 				=> __('Turn off','ultimate-member'),
                                     ),
-                                    'value' 		=> UM()->um_get_option( 'profile_icons' ),
                                     'size'          => 'small'
                                 ),
                                 array(
@@ -720,7 +616,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Profile Primary Button Text','ultimate-member' ),
                                     'default'  		=> um_get_metadefault('profile_primary_btn_word'),
                                     'tooltip' 	=> __('The text that is used for updating profile button','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'profile_primary_btn_word' ),
                                     'size'          => 'medium'
                                 ),
                                 array(
@@ -729,7 +624,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Profile Secondary Button','ultimate-member' ),
                                     'default' 		=> um_get_metadefault('profile_secondary_btn'),
                                     'tooltip' 	=> __('Switch on/off the secondary button display in the form','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'profile_secondary_btn' ),
                                 ),
                                 array(
                                     'id'      		=> 'profile_secondary_btn_word',
@@ -738,7 +632,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'default'  		=> um_get_metadefault('profile_secondary_btn_word'),
                                     'tooltip' 	=> __('The text that is used for cancelling update profile button','ultimate-member'),
                                     'conditional'		=> array( 'profile_secondary_btn', '=', 1 ),
-                                    'value' 		=> UM()->um_get_option( 'profile_secondary_btn_word' ),
                                     'size'          => 'medium'
                                 ),
                                 array(
@@ -750,7 +643,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'default'  			=> array(
                                         'url'		=> um_url . 'assets/img/default_avatar.jpg',
                                     ),
-                                    'value' 		=> UM()->um_get_option( 'default_avatar' ),
                                 ),
                                 array(
                                     'id'      			=> 'default_cover',
@@ -760,7 +652,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    			=> __('Default Cover Photo', 'ultimate-member'),
                                     'tooltip'     	=> __('You can change the default cover photo globally here. Please make sure that the default cover is large enough and respects the ratio you are using for cover photos.', 'ultimate-member'),
                                     'upload_frame_title'=> __('Select Default Cover Photo', 'ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'default_cover' ),
                                 ),
                                 array(
                                     'id'      		=> 'profile_photosize',
@@ -768,7 +659,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Profile Photo Size','ultimate-member' ),
                                     'default'  		=> um_get_metadefault('profile_photosize'),
                                     'tooltip' 	=> __('The global default of profile photo size. This can be overridden by individual form settings','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'profile_photosize' ),
                                     'size'          => 'small'
                                 ),
                                 array(
@@ -777,7 +667,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Profile Cover Photos','ultimate-member' ),
                                     'default' 		=> 1,
                                     'tooltip' 	=> __('Switch on/off the profile cover photos','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'profile_cover_enabled' ),
                                 ),
                                 array(
                                     'id'       		=> 'profile_cover_ratio',
@@ -792,7 +681,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                         '3.2:1' 			=> '3.2:1',
                                     ),
                                     'conditional'		=> array( 'profile_cover_enabled', '=', 1 ),
-                                    'value' 		=> UM()->um_get_option( 'profile_cover_ratio' ),
                                     'size'          => 'small'
                                 ),
                                 array(
@@ -801,7 +689,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Profile Header Meta Text Icon','ultimate-member' ),
                                     'default' 		=> 0,
                                     'tooltip' 	=> __('Display field icons for related user meta fields in header or not','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'profile_show_metaicon' ),
                                 ),
                                 array(
                                     'id'       		=> 'profile_show_name',
@@ -809,7 +696,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Show display name in profile header','ultimate-member' ),
                                     'default' 		=> um_get_metadefault('profile_show_name'),
                                     'tooltip' 	=> __('Switch on/off the user name on profile header','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'profile_show_name' ),
                                 ),
                                 array(
                                     'id'       		=> 'profile_show_social_links',
@@ -817,7 +703,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Show social links in profile header','ultimate-member' ),
                                     'default' 		=> um_get_metadefault('profile_show_social_links'),
                                     'tooltip' 	=> __('Switch on/off the social links on profile header','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'profile_show_social_links' ),
                                 ),
                                 array(
                                     'id'       		=> 'profile_show_bio',
@@ -825,7 +710,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Show user description in header','ultimate-member' ),
                                     'default' 		=> um_get_metadefault('profile_show_bio'),
                                     'tooltip' 	=> __('Switch on/off the user description on profile header','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'profile_show_bio' ),
                                 ),
                                 array(
                                     'id'       		=> 'profile_show_html_bio',
@@ -833,7 +717,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Enable html support for user description','ultimate-member' ),
                                     'default' 		=> um_get_metadefault('profile_show_html_bio'),
                                     'tooltip' 	=> __('Switch on/off to enable/disable support for html tags on user description.','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'profile_show_html_bio' ),
                                 ),
                                 array(
                                     'id'       		=> 'profile_bio_maxchars',
@@ -842,7 +725,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'default'  		=> um_get_metadefault('profile_bio_maxchars'),
                                     'tooltip' 	=> __('Maximum number of characters to allow in user description field in header.','ultimate-member'),
                                     'conditional'		=> array( 'profile_show_bio', '=', 1 ),
-                                    'value' 		=> UM()->um_get_option( 'profile_bio_maxchars' ),
                                     'size'          => 'small'
                                 ),
                                 array(
@@ -855,7 +737,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                         'bc' 		=> 'Bottom of Icon',
                                         'lc' 		=> 'Left of Icon',
                                     ),
-                                    'value' 		=> UM()->um_get_option( 'profile_header_menu' ),
                                     'size'          => 'small'
                                 ),
                                 array(
@@ -864,7 +745,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Show a custom message if profile is empty','ultimate-member' ),
                                     'default' 		=> um_get_metadefault('profile_empty_text'),
                                     'tooltip' 	=> __('Switch on/off the custom message that appears when the profile is empty','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'profile_empty_text' ),
                                 ),
                                 array(
                                     'id'       		=> 'profile_empty_text_emo',
@@ -873,7 +753,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'default' 		=> um_get_metadefault('profile_empty_text_emo'),
                                     'tooltip' 	=> __('Switch on/off the emoticon (sad face) that appears above the message','ultimate-member'),
                                     'conditional'		=> array( 'profile_empty_text', '=', 1 ),
-                                    'value' 		=> UM()->um_get_option( 'profile_empty_text_emo' ),
                                 )
                             )
                         ),
@@ -891,7 +770,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'tooltip' 	=> __( 'This will be the default template to output registration' ),
                                     'default'  		=> um_get_metadefault('register_template'),
                                     'options' 		=> UM()->shortcodes()->get_templates( 'register' ),
-                                    'value' 		=> UM()->um_get_option( 'register_template' ),
                                     'size'          => 'small'
                                 ),
                                 array(
@@ -900,7 +778,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Registration Maximum Width','ultimate-member' ),
                                     'default'  		=> um_get_metadefault('register_max_width'),
                                     'tooltip' 	=> __('The maximum width this shortcode can take from the page width','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'register_max_width' ),
                                     'size'          => 'small'
                                 ),
                                 array(
@@ -914,7 +791,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                         'left' 				=> __('Left aligned'),
                                         'right' 			=> __('Right aligned'),
                                     ),
-                                    'value' 		=> UM()->um_get_option( 'register_align' ),
                                     'size'          => 'small'
                                 ),
                                 array(
@@ -928,7 +804,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                         'label' 			=> __('Show with label'),
                                         'off' 				=> __('Turn off'),
                                     ),
-                                    'value' 		=> UM()->um_get_option( 'register_icons' ),
                                     'size'          => 'small'
                                 ),
                                 array(
@@ -937,7 +812,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Registration Primary Button Text','ultimate-member' ),
                                     'default'  		=> um_get_metadefault('register_primary_btn_word'),
                                     'tooltip' 	   		=> __('The text that is used for primary button text','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'register_primary_btn_word' ),
                                     'size'          => 'medium'
                                 ),
                                 array(
@@ -946,7 +820,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Registration Secondary Button','ultimate-member' ),
                                     'default' 		=> 1,
                                     'tooltip' 	=> __('Switch on/off the secondary button display in the form','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'register_secondary_btn' ),
                                 ),
                                 array(
                                     'id'      		=> 'register_secondary_btn_word',
@@ -955,7 +828,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'default'  		=> um_get_metadefault('register_secondary_btn_word'),
                                     'tooltip' 	=> __('The text that is used for the secondary button text','ultimate-member'),
                                     'conditional'		=> array( 'register_secondary_btn', '=', 1 ),
-                                    'value' 		=> UM()->um_get_option( 'register_secondary_btn_word' ),
                                     'size'          => 'medium'
                                 ),
                                 array(
@@ -965,7 +837,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'default'  		=> um_get_metadefault('register_secondary_btn_url'),
                                     'tooltip' 	=> __('You can replace default link for this button by entering custom URL','ultimate-member'),
                                     'conditional'		=> array( 'register_secondary_btn', '=', 1 ),
-                                    'value' 		=> UM()->um_get_option( 'register_secondary_btn_url' ),
                                     'size'          => 'medium'
                                 ),
                                 array(
@@ -975,7 +846,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'tooltip' 	=> __( 'This will be the default role assigned to users registering thru registration form','ultimate-member' ),
                                     'default'  		=> um_get_metadefault('register_role'),
                                     'options' 		=> UM()->roles()->get_roles( $add_default = 'Default' ),
-                                    'value' 		=> UM()->um_get_option( 'register_role' ),
                                     'size'          => 'small'
                                 )
                             )
@@ -990,7 +860,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'tooltip' 	=> __( 'This will be the default template to output login','ultimate-member' ),
                                     'default'  		=> um_get_metadefault('login_template'),
                                     'options' 		=> UM()->shortcodes()->get_templates( 'login' ),
-                                    'value' 		=> UM()->um_get_option( 'login_template' ),
                                     'size'          => 'small'
                                 ),
                                 array(
@@ -999,7 +868,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Login Maximum Width','ultimate-member' ),
                                     'default'  		=> um_get_metadefault('login_max_width'),
                                     'tooltip' 	=> __('The maximum width this shortcode can take from the page width','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'login_max_width' ),
                                     'size'          => 'small'
                                 ),
                                 array(
@@ -1013,7 +881,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                         'left' 				=> __('Left aligned','ultimate-member'),
                                         'right' 			=> __('Right aligned','ultimate-member'),
                                     ),
-                                    'value' 		=> UM()->um_get_option( 'login_align' ),
                                     'size'          => 'small'
                                 ),
                                 array(
@@ -1027,7 +894,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                         'label' 			=> __('Show with label','ultimate-member'),
                                         'off' 				=> __('Turn off','ultimate-member'),
                                     ),
-                                    'value' 		=> UM()->um_get_option( 'login_icons' ),
                                     'size'          => 'small'
                                 ),
                                 array(
@@ -1036,7 +902,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Login Primary Button Text','ultimate-member' ),
                                     'default'  		=> um_get_metadefault('login_primary_btn_word'),
                                     'tooltip' 	=> __('The text that is used for primary button text','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'login_primary_btn_word' ),
                                     'size'          => 'medium'
                                 ),
                                 array(
@@ -1045,7 +910,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Login Secondary Button','ultimate-member' ),
                                     'default' 		=> 1,
                                     'tooltip' 	=> __('Switch on/off the secondary button display in the form','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'login_secondary_btn' ),
                                 ),
                                 array(
                                     'id'      		=> 'login_secondary_btn_word',
@@ -1054,7 +918,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'default'  		=> um_get_metadefault('login_secondary_btn_word'),
                                     'tooltip' 	=> __('The text that is used for the secondary button text','ultimate-member'),
                                     'conditional'		=> array( 'login_secondary_btn', '=', 1 ),
-                                    'value' 		=> UM()->um_get_option( 'login_secondary_btn_word' ),
                                     'size'          => 'medium'
                                 ),
                                 array(
@@ -1064,7 +927,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'default'  		=> um_get_metadefault('login_secondary_btn_url'),
                                     'tooltip' 	=> __('You can replace default link for this button by entering custom URL','ultimate-member'),
                                     'conditional'		=> array( 'login_secondary_btn', '=', 1 ),
-                                    'value' 		=> UM()->um_get_option( 'login_secondary_btn_url' ),
                                     'size'          => 'medium'
                                 ),
                                 array(
@@ -1073,7 +935,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Login Forgot Password Link','ultimate-member' ),
                                     'default' 		=> 1,
                                     'tooltip' 	=> __('Switch on/off the forgot password link in login form','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'login_forgot_pass_link' ),
                                 ),
                                 array(
                                     'id'       		=> 'login_show_rememberme',
@@ -1081,7 +942,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'    		=> __( 'Show "Remember Me"','ultimate-member' ),
                                     'default' 		=> 1,
                                     'tooltip' 	=> __('Allow users to choose If they want to stay signed in even after closing the browser. If you do not show this option, the default will be to not remember login session.','ultimate-member'),
-                                    'value' 		=> UM()->um_get_option( 'login_show_rememberme' ),
                                 )
                             )
                         )
@@ -1100,16 +960,12 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                             'id'       		=> 'form_asterisk',
                             'type'     		=> 'checkbox',
                             'label'    		=> __( 'Show an asterisk for required fields','ultimate-member' ),
-                            'value' 		=> UM()->um_get_option( 'form_asterisk' ),
-                            'default' 		=> UM()->um_get_default( 'form_asterisk' ),
                         ),
                         array(
                             'id'      		=> 'profile_title',
                             'type'     		=> 'text',
                             'label'    		=> __('User Profile Title','ultimate-member'),
                             'tooltip' 	=> __('This is the title that is displayed on a specific user profile','ultimate-member'),
-                            'value' 		=> UM()->um_get_option( 'profile_title' ),
-                            'default' 		=> UM()->um_get_default( 'profile_title' ),
                             'size'          => 'medium'
                         ),
                         array(
@@ -1117,8 +973,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                             'type'     		=> 'textarea',
                             'label'    		=> __( 'User Profile Dynamic Meta Description','ultimate-member' ),
                             'tooltip'	=> __('This will be used in the meta description that is available for search-engines.','ultimate-member'),
-                            'value' 		=> UM()->um_get_option( 'profile_desc' ),
-                            'default' 		=> UM()->um_get_default( 'profile_desc' ),
                             'args'          => array(
                                 'textarea_rows' => 6
                             )
@@ -1127,16 +981,12 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                             'id'       		=> 'um_allow_tracking',
                             'type'     		=> 'checkbox',
                             'label'   		=> __( 'Allow Tracking','ultimate-member' ),
-                            'value' 		=> UM()->um_get_option( 'um_allow_tracking' ),
-                            'default' 		=> UM()->um_get_default( 'um_allow_tracking' ),
                         ),
                         array(
                             'id'       		=> 'uninstall_on_delete',
                             'type'     		=> 'checkbox',
                             'label'   		=> __( 'Remove Data on Uninstall?', 'ultimate-member' ),
                             'tooltip'	=> __( 'Check this box if you would like Ultimate Member to completely remove all of its data when the plugin/extensions are deleted.', 'ultimate-member' ),
-                            'value' 		=> UM()->um_get_option( 'uninstall_on_delete' ),
-                            'default' 		=> UM()->um_get_default( 'uninstall_on_delete' ),
                         )
                     )
                 ),
@@ -1355,7 +1205,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 
                 $settings = apply_filters( 'um_change_settings_before_save', $_POST['um_options'] );
 
-                foreach ( $settings as $key=>$value ) {
+                foreach ( $settings as $key => $value ) {
                     um_update_option( $key, $value );
                 }
 
@@ -1454,7 +1304,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                 return;
 
             foreach ( $_POST['um_options'] as $key => $value ) {
-                $this->previous_licenses[$key] = um_get_option( $key );
+                $this->previous_licenses[$key] = UM()->options()->get( $key );
             }
         }
 
@@ -1595,8 +1445,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                     'type'          => 'checkbox',
                     'label'         => $emails[$email_key]['title'],
                     'tooltip'       => $emails[$email_key]['description'],
-                    'value' 		=> UM()->um_get_option( $email_key . '_on' ),
-                    'default' 		=> UM()->um_get_default( $email_key . '_on' ),
                 ),
                 array(
                     'id'       => $email_key . '_sub',
@@ -1604,8 +1452,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                     'label'    => __( 'Subject Line','ultimate-member' ),
                     'conditional' => array( $email_key . '_on', '=', 1 ),
                     'tooltip' => __('This is the subject line of the e-mail','ultimate-member'),
-                    'value' 		=> UM()->um_get_option( $email_key . '_sub' ),
-                    'default' 		=> UM()->um_get_default( $email_key . '_sub' ),
                 ),
                 array(
                     'id'            => $email_key,
@@ -1614,7 +1460,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                     'conditional'   => array( $email_key . '_on', '=', 1 ),
                     'tooltip' 	    => __('This is the content of the e-mail','ultimate-member'),
                     'value' 		=> UM()->mail()->get_email_template( $email_key ),
-                    'default' 		=> UM()->um_get_default( $email_key ),
                     'in_theme'      => $in_theme
                 ),
             );
@@ -1636,7 +1481,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                 <table class="form-table um-settings-section">
                     <tbody>
                     <?php foreach ( $section_fields as $field_data ) {
-                        $option_value = um_get_option( $field_data['id'] );
+                        $option_value = UM()->options()->get( $field_data['id'] );
                         $value = ! empty( $option_value ) ? $option_value : ( ! empty( $field_data['default'] ) ? $field_data['default'] : '' );
 
                         $license = get_option( "{$field_data['id']}_edd_answer" );
@@ -2012,99 +1857,99 @@ Memory Limit:   				<?php echo ( um_let_to_num( WP_MEMORY_LIMIT )/( 1024 ) )."MB
 
 Version:						<?php echo ultimatemember_version . "\n"; ?>
 Upgraded From:            		<?php echo get_option( 'um_version_upgraded_from', 'None' ) . "\n"; ?>
-Current URL Method:			<?php echo um_get_option( 'current_url_method' ). "\n"; ?>
-Cache User Profile:			<?php if( um_get_option( 'um_profile_object_cache_stop' ) == 1 ){ echo "No"; }else{ echo "Yes"; } echo "\n"; ?>
-Generate Slugs on Directories:	<?php if( um_get_option( 'um_generate_slug_in_directory' ) == 1 ){ echo "No"; }else{ echo "Yes"; } echo "\n"; ?>
-Rewrite Rules: 				<?php if( um_get_option( 'um_flush_stop' ) == 1 ){ echo "No"; }else{ echo "Yes"; } echo "\n"; ?>
-Force UTF-8 Encoding: 		<?php if( um_get_option( 'um_force_utf8_strings' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
-Time Check Security: 			<?php if( um_get_option( 'enable_timebot' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
+Current URL Method:			<?php echo UM()->options()->get( 'current_url_method' ). "\n"; ?>
+Cache User Profile:			<?php if( UM()->options()->get( 'um_profile_object_cache_stop' ) == 1 ){ echo "No"; }else{ echo "Yes"; } echo "\n"; ?>
+Generate Slugs on Directories:	<?php if( UM()->options()->get( 'um_generate_slug_in_directory' ) == 1 ){ echo "No"; }else{ echo "Yes"; } echo "\n"; ?>
+Rewrite Rules: 				<?php if( UM()->options()->get( 'um_flush_stop' ) == 1 ){ echo "No"; }else{ echo "Yes"; } echo "\n"; ?>
+Force UTF-8 Encoding: 		<?php if( UM()->options()->get( 'um_force_utf8_strings' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
+Time Check Security: 			<?php if( UM()->options()->get( 'enable_timebot' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
 JS/CSS Compression: 			<?php if ( defined('SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) { echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
 <?php if( is_multisite() ): ?>
-    Network Structure:			<?php echo um_get_option( 'network_permalink_structure' ). "\n"; ?>
+    Network Structure:			<?php echo UM()->options()->get( 'network_permalink_structure' ). "\n"; ?>
 <?php endif; ?>
-Nav Menu Settings: 			<?php if( um_get_option( 'disable_menu' ) == 0 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
-Port Forwarding in URL: 		<?php if( um_get_option( 'um_port_forwarding_url' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
-Exclude CSS/JS on Home: 		<?php if( um_get_option( 'js_css_exlcude_home' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
+Nav Menu Settings: 			<?php if( UM()->options()->get( 'disable_menu' ) == 0 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
+Port Forwarding in URL: 		<?php if( UM()->options()->get( 'um_port_forwarding_url' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
+Exclude CSS/JS on Home: 		<?php if( UM()->options()->get( 'js_css_exlcude_home' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
 
 
 --- UM Pages Configuration ---
 
 <?php do_action("um_install_info_before_page_config") ?>
-User:						<?php echo get_permalink( um_get_option('core_user') ) . "\n"; ?>
-Account:						<?php echo get_permalink( um_get_option('core_account') ) . "\n"; ?>
-Members:					<?php echo get_permalink( um_get_option('core_members') ) . "\n"; ?>
-Register:						<?php echo get_permalink( um_get_option('core_register') ) . "\n"; ?>
-Login:						<?php echo get_permalink( um_get_option('core_login') ) . "\n"; ?>
-Logout:						<?php echo get_permalink( um_get_option('core_logout') ) . "\n"; ?>
-Password Reset:				<?php echo get_permalink( um_get_option('core_password-reset') ) . "\n"; ?>
+User:						<?php echo get_permalink( UM()->options()->get('core_user') ) . "\n"; ?>
+Account:						<?php echo get_permalink( UM()->options()->get('core_account') ) . "\n"; ?>
+Members:					<?php echo get_permalink( UM()->options()->get('core_members') ) . "\n"; ?>
+Register:						<?php echo get_permalink( UM()->options()->get('core_register') ) . "\n"; ?>
+Login:						<?php echo get_permalink( UM()->options()->get('core_login') ) . "\n"; ?>
+Logout:						<?php echo get_permalink( UM()->options()->get('core_logout') ) . "\n"; ?>
+Password Reset:				<?php echo get_permalink( UM()->options()->get('core_password-reset') ) . "\n"; ?>
 <?php do_action("um_install_info_after_page_config") ?>
 
 
 --- UM Users Configuration ---
 
-Default New User Role: 		<?php  echo um_get_option('default_role') . "\n"; ?>
-Profile Permalink Base:		<?php  echo um_get_option('permalink_base') . "\n"; ?>
-User Display Name:			<?php  echo um_get_option('display_name') . "\n"; ?>
-Force Name to Uppercase:		<?php echo $this->info_value( um_get_option('force_display_name_capitlized'), 'yesno', true ); ?>
-Redirect author to profile: 		<?php echo $this->info_value( um_get_option('author_redirect'), 'yesno', true ); ?>
-Enable Members Directory:	<?php echo $this->info_value( um_get_option('members_page'), 'yesno', true ); ?>
-Use Gravatars: 				<?php echo $this->info_value( um_get_option('use_gravatars'), 'yesno', true ); ?>
-<?php if( um_get_option('use_gravatars') ): ?>Gravatar builtin image:		<?php  echo um_get_option('use_um_gravatar_default_builtin_image') . "\n"; ?>
-    UM Avatar as blank Gravatar: 	<?php echo $this->info_value( um_get_option('use_um_gravatar_default_image'), 'yesno', true ); ?><?php endif; ?>
-Require a strong password: 	<?php echo $this->info_value( um_get_option('reset_require_strongpass'), 'onoff', true ); ?>
-Editable primary email field in profile view:	<?php echo $this->info_value( um_get_option('editable_primary_email_in_profile'), 'onoff', true ); ?>
+Default New User Role: 		<?php  echo UM()->options()->get('default_role') . "\n"; ?>
+Profile Permalink Base:		<?php  echo UM()->options()->get('permalink_base') . "\n"; ?>
+User Display Name:			<?php  echo UM()->options()->get('display_name') . "\n"; ?>
+Force Name to Uppercase:		<?php echo $this->info_value( UM()->options()->get('force_display_name_capitlized'), 'yesno', true ); ?>
+Redirect author to profile: 		<?php echo $this->info_value( UM()->options()->get('author_redirect'), 'yesno', true ); ?>
+Enable Members Directory:	<?php echo $this->info_value( UM()->options()->get('members_page'), 'yesno', true ); ?>
+Use Gravatars: 				<?php echo $this->info_value( UM()->options()->get('use_gravatars'), 'yesno', true ); ?>
+<?php if( UM()->options()->get('use_gravatars') ): ?>Gravatar builtin image:		<?php  echo UM()->options()->get('use_um_gravatar_default_builtin_image') . "\n"; ?>
+    UM Avatar as blank Gravatar: 	<?php echo $this->info_value( UM()->options()->get('use_um_gravatar_default_image'), 'yesno', true ); ?><?php endif; ?>
+Require a strong password: 	<?php echo $this->info_value( UM()->options()->get('reset_require_strongpass'), 'onoff', true ); ?>
+Editable primary email field in profile view:	<?php echo $this->info_value( UM()->options()->get('editable_primary_email_in_profile'), 'onoff', true ); ?>
 
 
 --- UM Access Configuration ---
 
-Panic Key: 								<?php  echo um_get_option('panic_key') . "\n"; ?>
-Global Site Access:						<?php  $arr = array('Site accessible to Everyone','','Site accessible to Logged In Users'); echo $arr[ intval( um_get_option('accessible') ) ] . "\n"; ?>
-<?php if( um_get_option('accessible') == 2 ) { ?>
-Custom Redirect URL:						<?php echo um_get_option('access_redirect')."\n";?>
-Exclude the following URLs:<?php echo "\t\t\t\t".implode("\t\n\t\t\t\t\t\t\t\t\t\t",um_get_option('access_exclude_uris') )."\n";?>
+Panic Key: 								<?php  echo UM()->options()->get('panic_key') . "\n"; ?>
+Global Site Access:						<?php  $arr = array('Site accessible to Everyone','','Site accessible to Logged In Users'); echo $arr[ intval( UM()->options()->get('accessible') ) ] . "\n"; ?>
+<?php if( UM()->options()->get('accessible') == 2 ) { ?>
+Custom Redirect URL:						<?php echo UM()->options()->get('access_redirect')."\n";?>
+Exclude the following URLs:<?php echo "\t\t\t\t".implode("\t\n\t\t\t\t\t\t\t\t\t\t",UM()->options()->get('access_exclude_uris') )."\n";?>
 <?php } ?>
-Backend Login Screen for Guests:			<?php echo $this->info_value( um_get_option('wpadmin_login'), 'yesno', true ); ?>
-<?php if( ! um_get_option('wpadmin_login') ) { ?>
-Redirect to alternative login page:			<?php if( um_get_option('wpadmin_login_redirect') == 'um_login_page' ){ echo um_get_core_page('login')."\n"; }else{ echo um_get_option('wpadmin_login_redirect_url')."\n"; }?>
+Backend Login Screen for Guests:			<?php echo $this->info_value( UM()->options()->get('wpadmin_login'), 'yesno', true ); ?>
+<?php if( ! UM()->options()->get('wpadmin_login') ) { ?>
+Redirect to alternative login page:			<?php if( UM()->options()->get('wpadmin_login_redirect') == 'um_login_page' ){ echo um_get_core_page('login')."\n"; }else{ echo UM()->options()->get('wpadmin_login_redirect_url')."\n"; }?>
 <?php } ?>
-Backend Register Screen for Guests:		<?php echo $this->info_value( um_get_option('wpadmin_register'), 'yesno', true ); ?>
-<?php if( ! um_get_option('wpadmin_register') ) { ?>
-Redirect to alternative register page:		<?php if( um_get_option('wpadmin_register_redirect') == 'um_register_page' ){ echo um_get_core_page('register')."\n"; }else{ echo um_get_option('wpadmin_register_redirect_url')."\n"; }?>
+Backend Register Screen for Guests:		<?php echo $this->info_value( UM()->options()->get('wpadmin_register'), 'yesno', true ); ?>
+<?php if( ! UM()->options()->get('wpadmin_register') ) { ?>
+Redirect to alternative register page:		<?php if( UM()->options()->get('wpadmin_register_redirect') == 'um_register_page' ){ echo um_get_core_page('register')."\n"; }else{ echo UM()->options()->get('wpadmin_register_redirect_url')."\n"; }?>
 <?php } ?>
-Access Control widget for Admins only: 		<?php echo $this->info_value( um_get_option('access_widget_admin_only'), 'yesno', true ); ?>
-Enable the Reset Password Limit:			<?php echo $this->info_value( um_get_option('enable_reset_password_limit'), 'yesno', true ); ?>
-<?php if( um_get_option('enable_reset_password_limit') ) { ?>
-Reset Password Limit: <?php echo um_get_option('reset_password_limit_number') ?>
-Disable Reset Password Limit for Admins: <?php echo $this->info_value( um_get_option('disable_admin_reset_password_limit'), 'yesno', true ) ?>
+Access Control widget for Admins only: 		<?php echo $this->info_value( UM()->options()->get('access_widget_admin_only'), 'yesno', true ); ?>
+Enable the Reset Password Limit:			<?php echo $this->info_value( UM()->options()->get('enable_reset_password_limit'), 'yesno', true ); ?>
+<?php if( UM()->options()->get('enable_reset_password_limit') ) { ?>
+Reset Password Limit: <?php echo UM()->options()->get('reset_password_limit_number') ?>
+Disable Reset Password Limit for Admins: <?php echo $this->info_value( UM()->options()->get('disable_admin_reset_password_limit'), 'yesno', true ) ?>
 <?php } ?>
-<?php $wpadmin_allow_ips = um_get_option( 'wpadmin_allow_ips' ); if( ! empty( $wpadmin_allow_ips ) ) { ?>
-Whitelisted Backend IPs: 					<?php echo count( explode("\n",trim(um_get_option('wpadmin_allow_ips') ) ) )."\n"; ?>
+<?php $wpadmin_allow_ips = UM()->options()->get( 'wpadmin_allow_ips' ); if( ! empty( $wpadmin_allow_ips ) ) { ?>
+Whitelisted Backend IPs: 					<?php echo count( explode("\n",trim(UM()->options()->get('wpadmin_allow_ips') ) ) )."\n"; ?>
 <?php } ?>
-<?php $blocked_ips = um_get_option('blocked_ips'); if( ! empty( $blocked_ips ) ){ ?>
-Blocked IP Addresses: 					<?php echo  count( explode("\n",um_get_option('blocked_ips') ) )."\n"; ?>
+<?php $blocked_ips = UM()->options()->get('blocked_ips'); if( ! empty( $blocked_ips ) ){ ?>
+Blocked IP Addresses: 					<?php echo  count( explode("\n",UM()->options()->get('blocked_ips') ) )."\n"; ?>
 <?php } ?>
-<?php $blocked_emails = um_get_option('blocked_emails'); if( ! empty( $blocked_emails ) ){ ?>
-Blocked Email Addresses: 					<?php echo  count( explode("\n",um_get_option('blocked_emails') ) )."\n"; ?>
+<?php $blocked_emails = UM()->options()->get('blocked_emails'); if( ! empty( $blocked_emails ) ){ ?>
+Blocked Email Addresses: 					<?php echo  count( explode("\n",UM()->options()->get('blocked_emails') ) )."\n"; ?>
 <?php } ?>
-<?php $blocked_words =  um_get_option('blocked_words'); if( ! empty( $blocked_words ) ){ ?>
-Blacklist Words: 							<?php echo  count( explode("\n",um_get_option('blocked_words') ) )."\n"; ?>
+<?php $blocked_words =  UM()->options()->get('blocked_words'); if( ! empty( $blocked_words ) ){ ?>
+Blacklist Words: 							<?php echo  count( explode("\n",UM()->options()->get('blocked_words') ) )."\n"; ?>
 <?php } ?>
 
 
 --- UM Email Configurations ---
 
-Mail appears from:  			<?php $mail_from = um_get_option('mail_from'); if( ! empty( $mail_from ) ){echo um_get_option('mail_from');}else{echo "-";}; echo "\n";?>
-Mail appears from address:  	<?php $mail_from_addr = um_get_option('mail_from_addr'); if( ! empty( $mail_from_addr ) ){echo um_get_option('mail_from_addr');}else{echo "-";}; echo "\n";?>
-Use HTML for E-mails:   		<?php echo $this->info_value( um_get_option('email_html'), 'yesno', true ); ?>
-Account Welcome Email:  		<?php echo $this->info_value( um_get_option('welcome_email_on'), 'yesno', true ); ?>
-Account Activation Email:   	<?php echo $this->info_value( um_get_option('checkmail_email_on'), 'yesno', true ); ?>
-Pending Review Email:   		<?php echo $this->info_value( um_get_option('pending_email_on'), 'yesno', true ); ?>
-Account Approved Email: 		<?php echo $this->info_value( um_get_option('approved_email_on'), 'yesno', true ); ?>
-Account Rejected Email: 		<?php echo $this->info_value( um_get_option('rejected_email_on'), 'yesno', true ); ?>
-Account Deactivated Email:  	<?php echo $this->info_value( um_get_option('inactive_email_on'), 'yesno', true ); ?>
-Account Deleted Email:  		<?php echo $this->info_value( um_get_option('deletion_email_on'), 'yesno', true ); ?>
-Password Reset Email:   		<?php echo $this->info_value( um_get_option('resetpw_email_on'), 'yesno', true ); ?>
-Password Changed Email: 		<?php echo $this->info_value( um_get_option('changedpw_email_on'), 'yesno', true ); ?>
+Mail appears from:  			<?php $mail_from = UM()->options()->get('mail_from'); if( ! empty( $mail_from ) ){echo UM()->options()->get('mail_from');}else{echo "-";}; echo "\n";?>
+Mail appears from address:  	<?php $mail_from_addr = UM()->options()->get('mail_from_addr'); if( ! empty( $mail_from_addr ) ){echo UM()->options()->get('mail_from_addr');}else{echo "-";}; echo "\n";?>
+Use HTML for E-mails:   		<?php echo $this->info_value( UM()->options()->get('email_html'), 'yesno', true ); ?>
+Account Welcome Email:  		<?php echo $this->info_value( UM()->options()->get('welcome_email_on'), 'yesno', true ); ?>
+Account Activation Email:   	<?php echo $this->info_value( UM()->options()->get('checkmail_email_on'), 'yesno', true ); ?>
+Pending Review Email:   		<?php echo $this->info_value( UM()->options()->get('pending_email_on'), 'yesno', true ); ?>
+Account Approved Email: 		<?php echo $this->info_value( UM()->options()->get('approved_email_on'), 'yesno', true ); ?>
+Account Rejected Email: 		<?php echo $this->info_value( UM()->options()->get('rejected_email_on'), 'yesno', true ); ?>
+Account Deactivated Email:  	<?php echo $this->info_value( UM()->options()->get('inactive_email_on'), 'yesno', true ); ?>
+Account Deleted Email:  		<?php echo $this->info_value( UM()->options()->get('deletion_email_on'), 'yesno', true ); ?>
+Password Reset Email:   		<?php echo $this->info_value( UM()->options()->get('resetpw_email_on'), 'yesno', true ); ?>
+Password Changed Email: 		<?php echo $this->info_value( UM()->options()->get('changedpw_email_on'), 'yesno', true ); ?>
 
 
 --- UM Total Users ---
@@ -2278,7 +2123,7 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
         function render_settings_section( $section_fields, $current_tab, $current_subtab ) {
             ob_start();
 
-            UM()->admin_forms( array(
+            UM()->admin_forms_settings( array(
                 'class'		=> 'um_options-' . $current_tab . '-' . $current_subtab . ' um-third-column',
                 'prefix_id'	=> 'um_options',
                 'fields'    => $section_fields

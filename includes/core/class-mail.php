@@ -34,7 +34,7 @@ if ( ! class_exists( 'Mail' ) ) {
 		function mandrill_nl2br( $nl2br, $message = '' ) {
 
 			// text emails
-			if ( ! um_get_option( 'email_html' ) ) {
+			if ( ! UM()->options()->get( 'email_html' ) ) {
 				$nl2br = true;
 			}
 
@@ -53,12 +53,12 @@ if ( ! class_exists( 'Mail' ) ) {
 		function send( $email, $template, $args = array() ) {
 
 			if ( ! is_email( $email ) ) return;
-			if ( um_get_option( $template . '_on' ) != 1 ) return;
+			if ( UM()->options()->get( $template . '_on' ) != 1 ) return;
 
 			$this->attachments = null;
-			$this->headers = 'From: '. um_get_option('mail_from') .' <'. um_get_option('mail_from_addr') .'>' . "\r\n";
+			$this->headers = 'From: '. UM()->options()->get('mail_from') .' <'. UM()->options()->get('mail_from_addr') .'>' . "\r\n";
 
-			$this->subject = um_convert_tags( um_get_option( $template . '_sub' ), $args );
+			$this->subject = um_convert_tags( UM()->options()->get( $template . '_sub' ), $args );
 
 			$this->message = $this->prepare_template( $template, $args );
 
@@ -107,7 +107,7 @@ if ( ! class_exists( 'Mail' ) ) {
 		function prepare_template( $slug, $args = array() ) {
 			ob_start();
 
-			if ( um_get_option( 'email_html' ) ) {
+			if ( UM()->options()->get( 'email_html' ) ) {
 
 				echo apply_filters( 'um_email_template_html_formatting', '<html>', $slug, $args );
 
@@ -236,7 +236,7 @@ if ( ! class_exists( 'Mail' ) ) {
 		 */
 		function set_content_type( $content_type ) {
 
-			if ( um_get_option( 'email_html' ) ) {
+			if ( UM()->options()->get( 'email_html' ) ) {
 				return 'text/html';
 			} else {
 				return 'text/plain';

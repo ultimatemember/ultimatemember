@@ -112,7 +112,7 @@ if ( ! class_exists( 'Plugin_Updater' ) ) {
             foreach ( $the_plugs as $key => $value ) {
 
                 if ( in_array( $value, array_keys( $paid_extensions ) ) ) {
-                    $license = um_get_option( "um_{$paid_extensions[ $value ]['key']}_license_key" );
+                    $license = UM()->options()->get( "um_{$paid_extensions[ $value ]['key']}_license_key" );
 
                     if ( empty( $license ) )
                         continue;

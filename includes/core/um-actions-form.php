@@ -5,7 +5,7 @@
 	***/
 	add_action('um_submit_form_errors_hook__blockedemails', 'um_submit_form_errors_hook__blockedemails', 10);
 	function um_submit_form_errors_hook__blockedemails($args){
-		$emails = um_get_option('blocked_emails');
+		$emails = UM()->options()->get('blocked_emails');
 		if ( !$emails )
 			return;
 
@@ -44,7 +44,7 @@
 	***/
 	add_action('um_submit_form_errors_hook__blockedips', 'um_submit_form_errors_hook__blockedips', 10);
 	function um_submit_form_errors_hook__blockedips($args){
-		$ips = um_get_option('blocked_ips');
+		$ips = UM()->options()->get('blocked_ips');
 		if ( !$ips )
 			return;
 
@@ -68,7 +68,7 @@
 		$mode = $args['mode'];
 		$fields = unserialize( $args['custom_fields'] );
 
-		$words = um_get_option('blocked_words');
+		$words = UM()->options()->get('blocked_words');
 		if ( $words != '' ) {
 
 			$words = array_map("rtrim", explode("\n", $words));
@@ -266,7 +266,7 @@
 						}
 					}
                      
-                    $profile_show_html_bio = um_get_option('profile_show_html_bio');
+                    $profile_show_html_bio = UM()->options()->get('profile_show_html_bio');
 					
 					if(  $profile_show_html_bio == 1 && $key !== "description" ){
 						if ( isset( $array['html'] ) && $array['html'] == 0 ) {
@@ -519,8 +519,8 @@
 
 				if ( isset( $args['description'] ) ) {
 					
-					$max_chars = um_get_option('profile_bio_maxchars');
-					$profile_show_bio = um_get_option('profile_show_bio');
+					$max_chars = UM()->options()->get('profile_bio_maxchars');
+					$profile_show_bio = UM()->options()->get('profile_show_bio');
 
 					if( $profile_show_bio ){
 						if ( strlen( utf8_decode( $args['description'] ) ) > $max_chars && $max_chars  ) {

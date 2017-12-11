@@ -134,7 +134,7 @@ class UM_Emails_List_Table extends WP_List_Table {
     }
 
     function column_email( $item ) {
-        $active = um_get_option( $item['key'] . '_on' );
+        $active = UM()->options()->get( $item['key'] . '_on' );
 
         return '<span class="dashicons um-notification-status ' . ( ! empty( $active ) ? 'um-notification-is-active dashicons-yes' : 'dashicons-no-alt' ) . '"></span><a href="' . add_query_arg( array( 'email' => $item['key'] ) ) . '"><strong>'. $item['title'] . '</strong></a>';
     }
@@ -142,7 +142,7 @@ class UM_Emails_List_Table extends WP_List_Table {
 
     function column_recipients( $item ) {
         if ( $item['recipient'] == 'admin' )
-            return um_get_option( 'admin_email' );
+            return UM()->options()->get( 'admin_email' );
         else
             return __( 'Member', 'ultimate-member' );
     }

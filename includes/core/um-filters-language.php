@@ -45,7 +45,7 @@ function um_core_page_wpml_permalink( $array ){
 	if( ! function_exists('icl_object_id') ) return $array;
 
 	// Permalink base
-	$permalink_base = um_get_option('permalink_base');
+	$permalink_base = UM()->options()->get( 'permalink_base' );
 
 	// Get user slug
 	$profile_slug = get_user_meta( um_profile_id(), "um_user_profile_url_slug_{$permalink_base}", true );

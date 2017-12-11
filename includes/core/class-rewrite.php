@@ -108,7 +108,7 @@ if ( ! class_exists( 'Rewrite' ) ) {
                         'top'
                     );
 
-                    if( ! apply_filters('um_rewrite_flush_rewrite_rules', um_get_option('um_flush_stop') ) )
+                    if( ! apply_filters( 'um_rewrite_flush_rewrite_rules', UM()->options()->get( 'um_flush_stop' ) ) )
                         flush_rewrite_rules( true );
 
                 }
@@ -121,7 +121,7 @@ if ( ! class_exists( 'Rewrite' ) ) {
          ***	@author page to user profile redirect
          ***/
         function redirect_author_page() {
-            if ( um_get_option('author_redirect') && is_author() ) {
+            if ( UM()->options()->get( 'author_redirect' ) && is_author() ) {
                 $id = get_query_var( 'author' );
                 um_fetch_user( $id );
                 exit( wp_redirect( um_user_profile_url() ) );
@@ -136,7 +136,7 @@ if ( ! class_exists( 'Rewrite' ) ) {
 
             if ( um_queried_user() && um_is_core_page('user') ) {
 
-                if ( um_get_option('permalink_base') == 'user_login' ) {
+                if ( UM()->options()->get( 'permalink_base' ) == 'user_login' ) {
 
                     $user_id = username_exists( um_queried_user() );
 
@@ -159,12 +159,12 @@ if ( ! class_exists( 'Rewrite' ) ) {
 
                 }
 
-                if ( um_get_option('permalink_base') == 'user_id' ) {
+                if ( UM()->options()->get( 'permalink_base' ) == 'user_id' ) {
                     $user_id = UM()->user()->user_exists_by_id( um_queried_user() );
 
                 }
 
-                if ( in_array( um_get_option('permalink_base'), array('name','name_dash','name_dot','name_plus') ) ) {
+                if ( in_array( UM()->options()->get( 'permalink_base' ), array('name','name_dash','name_dot','name_plus') ) ) {
                     $user_id = UM()->user()->user_exists_by_name( um_queried_user() );
 
                 }

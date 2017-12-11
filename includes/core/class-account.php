@@ -221,7 +221,7 @@ if ( ! class_exists( 'Account' ) ) {
          */
         function predefined_fields_hook( $predefined_fields ) {
 
-            $account_hide_in_directory =  um_get_option( 'account_hide_in_directory' );
+            $account_hide_in_directory =  UM()->options()->get( 'account_hide_in_directory' );
 
             if ( ! $account_hide_in_directory )
                 unset( $predefined_fields['hide_in_members'] );
@@ -325,11 +325,11 @@ if ( ! class_exists( 'Account' ) ) {
 
                     $args = 'user_login,first_name,last_name,user_email';
 
-                    if ( ! um_get_option( 'account_name' ) ) {
+                    if ( ! UM()->options()->get( 'account_name' ) ) {
                         $args = 'user_login,user_email';
                     }
 
-                    if ( ! um_get_option( 'account_email' ) && ! um_user( 'can_edit_everyone' ) ) {
+                    if ( ! UM()->options()->get( 'account_email' ) && ! um_user( 'can_edit_everyone' ) ) {
                         $args = str_replace(',user_email','', $args );
                     }
 
