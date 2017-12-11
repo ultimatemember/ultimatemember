@@ -1637,11 +1637,11 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                     <tbody>
                     <?php foreach ( $section_fields as $field_data ) {
                         $option_value = um_get_option( $field_data['id'] );
-                        $value = ! empty( $option_value ) ? $option_value : ( ! empty( $field_data['default'] ) ? $field_data['default'] : '' );
+                        $value = isset( $option_value )  && ! empty( $option_value ) ? $option_value : ( isset( $field_data['default'] ) ? $field_data['default'] : '' );
 
                         $license = get_option( "{$field_data['id']}_edd_answer" );
 
-                        if ( is_object( $license ) ) {
+                        if ( is_object( $license ) && ! empty( $value ) ) {
                             // activate_license 'invalid' on anything other than valid, so if there was an error capture it
                             if ( false === $license->success ) {
 
@@ -1873,7 +1873,10 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                             );
 
                             $license_status = null;
-                        } ?>
+
+                        } 
+                           
+                        ?>
 
                         <tr class="um-settings-line">
                             <th><label for="um_options_<?php echo $field_data['id'] ?>"><?php echo $field_data['label'] ?></label></th>
@@ -1886,7 +1889,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                         <div class="description"><?php echo $field_data['description'] ?></div>
                                     <?php } ?>
 
-                                    <?php if ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license ) { ?>
+                                    <?php if ( ! empty( $value ) && ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license ) ) { ?>
                                         <input type="button" class="button um_license_deactivate" id="<?php echo $field_data['id'] ?>_deactivate" value="<?php _e( 'Clear License',  'ultimate-member' ) ?>"/>
                                     <?php } elseif ( empty( $value ) ) { ?>
                                         <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( 'Activate', 'ultimate-member' ) ?>" />
