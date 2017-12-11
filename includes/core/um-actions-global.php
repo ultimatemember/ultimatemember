@@ -6,7 +6,7 @@
 	add_action('um_after_form_fields', 'um_add_form_identifier');
 	function um_add_form_identifier($args){ ?>
 
-		<input type="hidden" name="form_id" id="form_id" value="<?php echo $args['form_id']; ?>" />
+		<input type="hidden" name="form_id" id="form_id_<?php echo $args['form_id']; ?>" value="<?php echo $args['form_id']; ?>" />
 
 		<?php
 	}
