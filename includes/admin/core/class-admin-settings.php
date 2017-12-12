@@ -489,7 +489,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'options'       => $all_post_types,
                                     'columns'       => 3,
                                     'value' 		=> $restricted_access_post_metabox_value,
-                                    'default' 		=> UM()->um_get_default( 'restricted_access_post_metabox' ),
+                                    'default' 		=> UM()->options()->get_default( 'restricted_access_post_metabox' ),
                                 ),
                                 array(
                                     'id'       		=> 'restricted_access_taxonomy_metabox',
@@ -499,7 +499,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'options'       => $all_taxonomies,
                                     'columns'       => 3,
                                     'value' 		=> $restricted_access_taxonomy_metabox_value,
-                                    'default' 		=> UM()->um_get_default( 'restricted_access_taxonomy_metabox' ),
+                                    'default' 		=> UM()->options()->get_default( 'restricted_access_taxonomy_metabox' ),
                                 ),
                             )
                         ),
@@ -1206,7 +1206,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                 $settings = apply_filters( 'um_change_settings_before_save', $_POST['um_options'] );
 
                 foreach ( $settings as $key => $value ) {
-                    um_update_option( $key, $value );
+                    UM()->options()->update( $key, $value );
                 }
 
                 do_action( "um_settings_save" );

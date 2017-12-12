@@ -22,23 +22,24 @@ if ( ! class_exists( 'Admin_Forms_Settings' ) ) {
 		 * Get field value
 		 *
 		 * @param array $field_data
+		 * @param string $i
 		 * @return string|array
 		 */
-		function get_field_value( $field_data ) {
-			$default = isset( $field_data['default'] ) ? $field_data['default'] : UM()->options()->get_default( $field_data['id'] );
+		function get_field_value( $field_data, $i = '' ) {
+			$default = isset( $field_data['default' . $i] ) ? $field_data['default' . $i] : UM()->options()->get_default( $field_data['id' . $i] );
 
 			if ( $field_data['type'] == 'checkbox' || $field_data['type'] == 'multi_checkbox' ) {
-				if ( isset( $field_data['value'] ) ) {
-					return $field_data['value'];
+				if ( isset( $field_data['value' . $i] ) ) {
+					return $field_data['value' . $i];
 				} else {
-					$value = UM()->options()->get( $field_data['id'] );
+					$value = UM()->options()->get( $field_data['id' . $i] );
 					return '' !== $value ? $value : $default;
 				}
 			} else {
-				if ( isset( $field_data['value'] ) ) {
-					return $field_data['value'];
+				if ( isset( $field_data['value' . $i] ) ) {
+					return $field_data['value'. $i];
 				} else {
-					$value = UM()->options()->get( $field_data['id'] );
+					$value = UM()->options()->get( $field_data['id' . $i] );
 					return isset( $value ) ? $value : $default;
 				}
 			}

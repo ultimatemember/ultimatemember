@@ -33,7 +33,7 @@
 				'id'		    => '_um_register_template',
 				'type'		    => 'select',
 				'label'    		=> __( 'Template', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_register_template', null, um_get_option( 'register_template' ) ),
+				'value' 		=> UM()->query()->get_meta_value( '_um_register_template', null, UM()->options()->get( 'register_template' ) ),
 				'options'		=> UM()->shortcodes()->get_templates( 'register' ),
 				'conditional'	=> array( '_um_register_use_custom_settings', '=', 1 )
 			),
@@ -42,7 +42,7 @@
 				'type'		    => 'text',
 				'label'    		=> __( 'Max. Width (px)', 'ultimate-member' ),
 				'tooltip'    	=> __( 'The maximum width of shortcode in pixels e.g. 600px', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value('_um_register_max_width', null, um_get_option( 'register_max_width' ) ),
+				'value' 		=> UM()->query()->get_meta_value('_um_register_max_width', null, UM()->options()->get( 'register_max_width' ) ),
 				'conditional'	=> array( '_um_register_use_custom_settings', '=', 1 )
 			),
 			array(
@@ -50,7 +50,7 @@
 				'type'		    => 'select',
 				'label'    		=> __( 'Field Icons', 'ultimate-member' ),
 				'tooltip'    	=> __( 'Whether to show field icons and where to show them relative to the field', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_register_icons', null, um_get_option( 'register_icons' ) ) ,
+				'value' 		=> UM()->query()->get_meta_value( '_um_register_icons', null, UM()->options()->get( 'register_icons' ) ) ,
 				'options'		=> array(
 					'field' => __( 'Show inside text field', 'ultimate-member' ),
 					'label' => __( 'Show with label', 'ultimate-member' ),
@@ -63,14 +63,14 @@
 				'type'		    => 'text',
 				'label'    		=> __( 'Primary Button Text', 'ultimate-member' ),
 				'tooltip'    	=> __( 'Customize the button text', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_register_primary_btn_word', null, um_get_option( 'register_primary_btn_word' ) ),
+				'value' 		=> UM()->query()->get_meta_value( '_um_register_primary_btn_word', null, UM()->options()->get( 'register_primary_btn_word' ) ),
 				'conditional'	=> array( '_um_register_use_custom_settings', '=', 1 )
 			),
 			array(
 				'id'		    => '_um_register_secondary_btn',
 				'type'		    => 'select',
 				'label'    		=> __( 'Show Secondary Button', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_register_secondary_btn', null, um_get_option( 'register_secondary_btn' ) ),
+				'value' 		=> UM()->query()->get_meta_value( '_um_register_secondary_btn', null, UM()->options()->get( 'register_secondary_btn' ) ),
 				'conditional'	=> array( '_um_register_use_custom_settings', '=', 1 ),
                 'options'		=> array(
                     0	=> __( 'No', 'ultimate-member' ),
@@ -82,7 +82,7 @@
 				'type'		    => 'text',
 				'label'    		=> __( 'Primary Button Text', 'ultimate-member' ),
 				'tooltip'    	=> __( 'Customize the button text', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_register_secondary_btn_word', null, um_get_option( 'register_secondary_btn_word' ) ),
+				'value' 		=> UM()->query()->get_meta_value( '_um_register_secondary_btn_word', null, UM()->options()->get( 'register_secondary_btn_word' ) ),
 				'conditional'	=> array( '_um_register_secondary_btn', '=', 1 )
 			)
 		)

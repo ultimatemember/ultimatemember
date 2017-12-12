@@ -198,6 +198,7 @@ if ( ! class_exists( 'UM' ) ) {
 
                 //include short non class functions
                 require_once 'um-short-functions.php';
+                require_once 'um-deprecated-functions.php';
             }
         }
 

@@ -90,29 +90,6 @@ if ( ! class_exists( 'UM_Functions' ) ) {
         }
 
 
-        function um_update_option( $option_id, $value ) {
-            $this->options[ $option_id ] = $value;
-            update_option( 'um_options', $this->options );
-        }
-
-
-        function um_remove_option( $option_id ) {
-            if ( ! empty( $this->options[ $option_id ] ) )
-                unset( $this->options[ $option_id ] );
-
-            update_option( 'um_options', $this->options );
-        }
-
-
-        function um_get_default( $option_id ) {
-            $settings_defaults = UM()->config()->settings_defaults;
-            if ( ! isset( $settings_defaults[$option_id] ) )
-                return false;
-
-            return $settings_defaults[$option_id];
-        }
-
-
         /**
          * Help Tip displaying
          *

@@ -468,8 +468,8 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
                 $name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
                 $name_attr = ' name="' . $name . '" ';
 
-                $default = isset( $field_data['default'. $i] ) ? $field_data['default'. $i] : '';
-                $value = isset( $field_data['value'. $i] ) ? $field_data['value'. $i] : $default;
+                $value = $this->get_field_value( $field_data, $i );
+
                 $value_attr = ' value="' . $value . '" ';
 
                 $fields[$i] = "<input type=\"text\" $id_attr $class_attr $name_attr $data_attr $value_attr $placeholder_attr style=\"display:inline;\"/>";
@@ -976,16 +976,17 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
          * Get field value
          *
          * @param array $field_data
+         * @param string $i
          * @return string|array
          */
-        function get_field_value( $field_data ) {
+        function get_field_value( $field_data, $i = '' ) {
             $default = ( $field_data['type'] == 'multi_checkbox' ) ? array() : '';
-            $default = isset( $field_data['default'] ) ? $field_data['default'] : $default;
+            $default = isset( $field_data['default' . $i] ) ? $field_data['default' . $i] : $default;
 
             if ( $field_data['type'] == 'checkbox' || $field_data['type'] == 'multi_checkbox' ) {
-                return ( isset( $field_data['value'] ) && '' !== $field_data['value'] ) ? $field_data['value'] : $default;
+                return ( isset( $field_data['value' . $i] ) && '' !== $field_data['value' . $i] ) ? $field_data['value' . $i] : $default;
             } else {
-                return isset( $field_data['value'] ) ? $field_data['value'] : $default;
+                return isset( $field_data['value' . $i] ) ? $field_data['value' . $i] : $default;
             }
         }
     }

@@ -877,35 +877,35 @@ fwrite( $css_doc_file, $css );
 fclose( $css_doc_file );
 
 //remove old options
-um_remove_option( 'active_color' );
-um_remove_option( 'secondary_color' );
-um_remove_option( 'profile_align' );
-um_remove_option( 'register_align' );
-um_remove_option( 'login_align' );
-um_remove_option( 'primary_btn_color' );
-um_remove_option( 'primary_btn_hover' );
-um_remove_option( 'primary_btn_text' );
-um_remove_option( 'secondary_btn_color' );
-um_remove_option( 'secondary_btn_hover' );
-um_remove_option( 'secondary_btn_text' );
-um_remove_option( 'help_tip_color' );
-um_remove_option( 'form_field_label' );
-um_remove_option( 'form_border' );
-um_remove_option( 'form_border_hover' );
-um_remove_option( 'form_bg_color' );
-um_remove_option( 'form_bg_color_focus' );
-um_remove_option( 'form_text_color' );
-um_remove_option( 'form_placeholder' );
-um_remove_option( 'form_icon_color' );
-um_remove_option( 'form_asterisk_color' );
-um_remove_option( 'profile_photocorner' );
-um_remove_option( 'profile_main_bg' );
-um_remove_option( 'profile_header_bg' );
-um_remove_option( 'profile_header_text' );
-um_remove_option( 'profile_header_link_color' );
-um_remove_option( 'profile_header_link_hcolor' );
-um_remove_option( 'profile_header_icon_color' );
-um_remove_option( 'profile_header_icon_hcolor' );
+UM()->options()->remove( 'active_color' );
+UM()->options()->remove( 'secondary_color' );
+UM()->options()->remove( 'profile_align' );
+UM()->options()->remove( 'register_align' );
+UM()->options()->remove( 'login_align' );
+UM()->options()->remove( 'primary_btn_color' );
+UM()->options()->remove( 'primary_btn_hover' );
+UM()->options()->remove( 'primary_btn_text' );
+UM()->options()->remove( 'secondary_btn_color' );
+UM()->options()->remove( 'secondary_btn_hover' );
+UM()->options()->remove( 'secondary_btn_text' );
+UM()->options()->remove( 'help_tip_color' );
+UM()->options()->remove( 'form_field_label' );
+UM()->options()->remove( 'form_border' );
+UM()->options()->remove( 'form_border_hover' );
+UM()->options()->remove( 'form_bg_color' );
+UM()->options()->remove( 'form_bg_color_focus' );
+UM()->options()->remove( 'form_text_color' );
+UM()->options()->remove( 'form_placeholder' );
+UM()->options()->remove( 'form_icon_color' );
+UM()->options()->remove( 'form_asterisk_color' );
+UM()->options()->remove( 'profile_photocorner' );
+UM()->options()->remove( 'profile_main_bg' );
+UM()->options()->remove( 'profile_header_bg' );
+UM()->options()->remove( 'profile_header_text' );
+UM()->options()->remove( 'profile_header_link_color' );
+UM()->options()->remove( 'profile_header_link_hcolor' );
+UM()->options()->remove( 'profile_header_icon_color' );
+UM()->options()->remove( 'profile_header_icon_hcolor' );
 
 //remove duplicates for UM Pages settings
 delete_option( 'um_core_pages' );
@@ -1042,8 +1042,8 @@ foreach ( $all_taxonomies as $key => $value ) {
 	$all_taxonomies[ $key ] = true;
 }
 
-um_update_option( 'restricted_access_post_metabox', $all_post_types );
-um_update_option( 'restricted_access_taxonomy_metabox', $all_taxonomies );
+UM()->options()->update( 'restricted_access_post_metabox', $all_post_types );
+UM()->options()->update( 'restricted_access_taxonomy_metabox', $all_taxonomies );
 
 
 $roles_array = UM()->roles()->get_roles( false, array( 'administrator' ) );
@@ -1279,7 +1279,7 @@ if ( ! empty( $profile_tab_main_roles ) ) {
         return 'um_' . $item;
     }, $profile_tab_main_roles );
 
-    um_update_option( 'profile_tab_main_roles', $profile_tab_main_roles );
+	UM()->options()->update( 'profile_tab_main_roles', $profile_tab_main_roles );
 }
 
 $profile_tab_posts_roles = UM()->options()->get( 'profile_tab_posts_roles' );
@@ -1289,7 +1289,7 @@ if ( ! empty( $profile_tab_posts_roles ) ) {
         return 'um_' . $item;
     }, $profile_tab_posts_roles );
 
-    um_update_option( 'profile_tab_posts_roles', $profile_tab_posts_roles );
+	UM()->options()->update( 'profile_tab_posts_roles', $profile_tab_posts_roles );
 }
 
 $profile_tab_comments_roles = UM()->options()->get( 'profile_tab_comments_roles' );
@@ -1299,7 +1299,7 @@ if ( ! empty( $profile_tab_comments_roles ) ) {
         return 'um_' . $item;
     }, $profile_tab_comments_roles );
 
-    um_update_option( 'profile_tab_comments_roles', $profile_tab_comments_roles );
+	UM()->options()->update( 'profile_tab_comments_roles', $profile_tab_comments_roles );
 }
 
 $profile_tab_activity_roles = UM()->options()->get( 'profile_tab_activity_roles' );
@@ -1309,7 +1309,7 @@ if ( ! empty( $profile_tab_activity_roles ) ) {
         return 'um_' . $item;
     }, $profile_tab_activity_roles );
 
-    um_update_option( 'profile_tab_activity_roles', $profile_tab_activity_roles );
+	UM()->options()->update( 'profile_tab_activity_roles', $profile_tab_activity_roles );
 }
 
 $profile_tab_messages_roles = UM()->options()->get( 'profile_tab_messages_roles' );
@@ -1319,7 +1319,7 @@ if ( ! empty( $profile_tab_messages_roles ) ) {
         return 'um_' . $item;
     }, $profile_tab_messages_roles );
 
-    um_update_option( 'profile_tab_messages_roles', $profile_tab_messages_roles );
+	UM()->options()->update( 'profile_tab_messages_roles', $profile_tab_messages_roles );
 }
 
 $profile_tab_reviews_roles = UM()->options()->get( 'profile_tab_reviews_roles' );
@@ -1329,7 +1329,7 @@ if ( ! empty( $profile_tab_reviews_roles ) ) {
         return 'um_' . $item;
     }, $profile_tab_reviews_roles );
 
-    um_update_option( 'profile_tab_reviews_roles', $profile_tab_reviews_roles );
+	UM()->options()->update( 'profile_tab_reviews_roles', $profile_tab_reviews_roles );
 }
 
 $profile_tab_purchases_roles = UM()->options()->get( 'profile_tab_purchases_roles' );
@@ -1339,7 +1339,7 @@ if ( ! empty( $profile_tab_purchases_roles ) ) {
         return 'um_' . $item;
     }, $profile_tab_purchases_roles );
 
-    um_update_option( 'profile_tab_purchases_roles', $profile_tab_purchases_roles );
+	UM()->options()->update( 'profile_tab_purchases_roles', $profile_tab_purchases_roles );
 }
 
 $profile_tab_product_reviews = UM()->options()->get( 'profile_tab_product-reviews_roles' );
@@ -1349,7 +1349,7 @@ if ( ! empty( $profile_tab_product_reviews ) ) {
         return 'um_' . $item;
     }, $profile_tab_product_reviews );
 
-    um_update_option( 'profile_tab_product-reviews_roles', $profile_tab_product_reviews );
+	UM()->options()->update( 'profile_tab_product-reviews_roles', $profile_tab_product_reviews );
 }
 
 
@@ -1360,7 +1360,7 @@ if ( ! empty( $profile_tab_forums_roles ) ) {
         return 'um_' . $item;
     }, $profile_tab_forums_roles );
 
-    um_update_option( 'profile_tab_forums_roles', $profile_tab_forums_roles );
+	UM()->options()->update( 'profile_tab_forums_roles', $profile_tab_forums_roles );
 }
 
 $profile_tab_friends_roles = UM()->options()->get( 'profile_tab_friends_roles' );
@@ -1370,20 +1370,20 @@ if ( ! empty( $profile_tab_friends_roles ) ) {
         return 'um_' . $item;
     }, $profile_tab_friends_roles );
 
-    um_update_option( 'profile_tab_friends_roles', $profile_tab_friends_roles );
+	UM()->options()->update( 'profile_tab_friends_roles', $profile_tab_friends_roles );
 }
 
 
 $register_role = UM()->options()->get( 'register_role' );
 if ( ! empty( $register_role ) ) {
     $register_role = 'um_' . $register_role;
-    um_update_option( 'register_role', $register_role );
+	UM()->options()->update( 'register_role', $register_role );
 }
 
 $woo_oncomplete_role = UM()->options()->get( 'woo_oncomplete_role' );
 if ( ! empty( $woo_oncomplete_role ) ) {
     $woo_oncomplete_role = 'um_' . $woo_oncomplete_role;
-    um_update_option( 'woo_oncomplete_role', $woo_oncomplete_role );
+	UM()->options()->update( 'woo_oncomplete_role', $woo_oncomplete_role );
 }
 
 $woo_oncomplete_except_roles = UM()->options()->get( 'woo_oncomplete_except_roles' );
@@ -1393,7 +1393,7 @@ if ( ! empty( $woo_oncomplete_except_roles ) ) {
         return 'um_' . $item;
     }, $woo_oncomplete_except_roles );
 
-    um_update_option( 'woo_oncomplete_except_roles', $woo_oncomplete_except_roles );
+	UM()->options()->update( 'woo_oncomplete_except_roles', $woo_oncomplete_except_roles );
 }
 
 //for metadata for all bbPress forums

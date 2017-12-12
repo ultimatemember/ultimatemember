@@ -49,7 +49,6 @@ if ( ! class_exists( 'Setup' ) ) {
                 //Install default options
                 foreach ( UM()->config()->settings_defaults as $key => $value ) {
                     $options[$key] = $value;
-                    //UM()->um_update_option( $key, $value );
                 }
 
                 // Install Core Forms
@@ -191,7 +190,6 @@ if ( ! class_exists( 'Setup' ) ) {
                 foreach ( $core_pages as $slug => $page_id ) {
                     $key = apply_filters( 'um_core_page_id_filter', 'core_' . $slug );
                     $options[$key] = $page_id;
-                    //UM()->um_update_option( apply_filters( 'um_core_page_id_filter', 'core_' . $slug ), $page_id );
                 }
             }
 

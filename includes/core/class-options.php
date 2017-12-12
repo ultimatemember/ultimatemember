@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 if ( ! class_exists( 'Options' ) ) {
 	class Options {
 
-		var $options;
+		var $options = array();
 
 		/**
 		 * Access constructor.
@@ -66,7 +66,7 @@ if ( ! class_exists( 'Options' ) ) {
 		 *
 		 * @param $option_id
 		 */
-		function delete( $option_id ) {
+		function remove( $option_id ) {
 			if ( ! empty( $this->options[ $option_id ] ) )
 				unset( $this->options[ $option_id ] );
 

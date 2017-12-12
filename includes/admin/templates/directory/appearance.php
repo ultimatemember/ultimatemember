@@ -8,7 +8,7 @@
 				'id'		=> '_um_directory_template',
 				'type'		=> 'select',
 				'label'		=> __( 'Template', 'ultimate-member' ),
-				'value'		=> UM()->query()->get_meta_value( '_um_directory_template', null, um_get_option( 'directory_template' ) ),
+				'value'		=> UM()->query()->get_meta_value( '_um_directory_template', null, UM()->options()->get( 'directory_template' ) ),
 				'options'	=> UM()->shortcodes()->get_templates( 'members' ),
 			)
 		)

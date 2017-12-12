@@ -37,7 +37,7 @@ if ( ! empty( $delete_options ) ) {
     //remove core settings
     $settings_defaults = UM()->config()->settings_defaults;
     foreach ( $settings_defaults as $k => $v ) {
-        UM()->um_remove_option( $k );
+        UM()->options()->remove( $k );
     }
 
     //delete UM Custom Post Types posts

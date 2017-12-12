@@ -34,7 +34,7 @@
 				'id'		    => '_um_profile_template',
 				'type'		    => 'select',
 				'label'    		=> __( 'Template', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_profile_template', null, um_get_option( 'profile_template' ) ),
+				'value' 		=> UM()->query()->get_meta_value( '_um_profile_template', null, UM()->options()->get( 'profile_template' ) ),
 				'options'		=> UM()->shortcodes()->get_templates( 'profile' ),
 				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 )
 			),
@@ -43,7 +43,7 @@
 				'type'		    => 'text',
 				'label'    		=> __( 'Max. Width (px)', 'ultimate-member' ),
 				'tooltip'    	=> __( 'The maximum width of shortcode in pixels e.g. 600px', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value('_um_profile_max_width', null, um_get_option( 'profile_max_width' ) ),
+				'value' 		=> UM()->query()->get_meta_value('_um_profile_max_width', null, UM()->options()->get( 'profile_max_width' ) ),
 				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 )
 			),
 			array(
@@ -51,7 +51,7 @@
 				'type'		    => 'text',
 				'label'    		=> __( 'Profile Area Max. Width (px)', 'ultimate-member' ),
 				'tooltip'    	=> __( 'The maximum width of the profile area inside profile (below profile header)', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value('_um_profile_area_max_width', null, um_get_option( 'profile_area_max_width' ) ),
+				'value' 		=> UM()->query()->get_meta_value('_um_profile_area_max_width', null, UM()->options()->get( 'profile_area_max_width' ) ),
 				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 )
 			),
 			array(
@@ -59,7 +59,7 @@
 				'type'		    => 'select',
 				'label'    		=> __( 'Field Icons', 'ultimate-member' ),
 				'tooltip'    	=> __( 'Whether to show field icons and where to show them relative to the field', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_profile_icons', null, um_get_option( 'profile_icons' ) ) ,
+				'value' 		=> UM()->query()->get_meta_value( '_um_profile_icons', null, UM()->options()->get( 'profile_icons' ) ) ,
 				'options'		=> array(
 					'field' => __( 'Show inside text field', 'ultimate-member' ),
 					'label' => __( 'Show with label', 'ultimate-member' ),
@@ -72,14 +72,14 @@
 				'type'		    => 'text',
 				'label'    		=> __( 'Primary Button Text', 'ultimate-member' ),
 				'tooltip'    	=> __( 'Customize the button text', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_profile_primary_btn_word', null, um_get_option( 'profile_primary_btn_word' ) ),
+				'value' 		=> UM()->query()->get_meta_value( '_um_profile_primary_btn_word', null, UM()->options()->get( 'profile_primary_btn_word' ) ),
 				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 )
 			),
 			array(
 				'id'		    => '_um_profile_secondary_btn',
 				'type'		    => 'select',
 				'label'    		=> __( 'Show Secondary Button', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_profile_secondary_btn', null, um_get_option( 'profile_secondary_btn' ) ),
+				'value' 		=> UM()->query()->get_meta_value( '_um_profile_secondary_btn', null, UM()->options()->get( 'profile_secondary_btn' ) ),
 				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 ),
                 'options'		=> array(
                     0	=> __( 'No', 'ultimate-member' ),
@@ -91,7 +91,7 @@
 				'type'		    => 'text',
 				'label'    		=> __( 'Primary Button Text', 'ultimate-member' ),
 				'tooltip'    	=> __( 'Customize the button text', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_profile_secondary_btn_word', null, um_get_option( 'profile_secondary_btn_word' ) ),
+				'value' 		=> UM()->query()->get_meta_value( '_um_profile_secondary_btn_word', null, UM()->options()->get( 'profile_secondary_btn_word' ) ),
 				'conditional'	=> array( '_um_profile_secondary_btn', '=', 1 )
 			),
 			array(
@@ -110,7 +110,7 @@
 				'type'		    => 'select',
 				'label'    		=> __( 'Cover photo ratio', 'ultimate-member' ),
 				'tooltip'    		=> __( 'The shortcode is centered by default unless you specify otherwise here', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_profile_cover_ratio', null, um_get_option( 'profile_cover_ratio' ) ),
+				'value' 		=> UM()->query()->get_meta_value( '_um_profile_cover_ratio', null, UM()->options()->get( 'profile_cover_ratio' ) ),
 				'options'		=> array(
 					'2.7:1'	=>	'2.7:1',
 					'2.2:1'	=>	'2.2:1',
@@ -123,7 +123,7 @@
 				'type'		    => 'text',
 				'label'    		=> __( 'Profile Photo Size', 'ultimate-member' ),
 				'tooltip'    	=> __( 'Set the profile photo size in pixels here', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_profile_photosize', null, um_get_option( 'profile_photosize' ) ),
+				'value' 		=> UM()->query()->get_meta_value( '_um_profile_photosize', null, UM()->options()->get( 'profile_photosize' ) ),
 				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 )
 			),
 			array(
@@ -153,7 +153,7 @@
 				'id'		    => '_um_profile_show_social_links',
 				'type'		    => 'select',
 				'label'    		=> __( 'Show social links in profile header?', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_profile_show_social_links', null, UM()->um_get_option( 'profile_show_social_links' ) ),
+				'value' 		=> UM()->query()->get_meta_value( '_um_profile_show_social_links', null, UM()->options()->get( 'profile_show_social_links' ) ),
 				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 ),
 				'options'		=> array(
 					0	=> __( 'No', 'ultimate-member' ),
