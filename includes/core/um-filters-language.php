@@ -48,7 +48,7 @@ function um_core_page_wpml_permalink( $array ){
 	$permalink_base = um_get_option('permalink_base');
 
 	// Get user slug
-	$profile_slug = get_user_meta( um_profile_id(), "um_user_profile_url_slug_{$permalink_base}", true );
+	$profile_slug = strtolower( get_user_meta( um_profile_id(), "um_user_profile_url_slug_{$permalink_base}", true ) );
 	$current_language = ICL_LANGUAGE_CODE;		
 	foreach ( $array as $lang_code => $arr ) {
 		$sitepress->switch_lang( $lang_code );
