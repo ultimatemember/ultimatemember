@@ -65,7 +65,7 @@ $profile_forms = $forms_query->query( array(
 
 $css = '';
 
-$active_color = um_get_option( 'active_color' );
+$active_color = UM()->options()->get( 'active_color' );
 if ( $active_color ) {
     $css .= "
 .um .um-tip:hover,
@@ -110,7 +110,7 @@ div.uimob800 .um-account-side li a.current:hover
 ";
 }
 
-$secondary_color = um_get_option( 'secondary_color' );
+$secondary_color = UM()->options()->get( 'secondary_color' );
 if ( $secondary_color ) {
     $css .= "
 .um .um-field-group-head:hover,
@@ -137,7 +137,7 @@ $css .= "
 	margin-right: auto!important;
 }";
 
-$primary_btn_color = um_get_option( 'primary_btn_color' );
+$primary_btn_color = UM()->options()->get( 'primary_btn_color' );
 if ( $primary_btn_color ) {
     $css .= "
 .um input[type=submit]:disabled:hover {
@@ -159,7 +159,7 @@ if ( $primary_btn_color ) {
 ";
 }
 
-$primary_btn_hover = um_get_option( 'primary_btn_hover' );
+$primary_btn_hover = UM()->options()->get( 'primary_btn_hover' );
 if ( $primary_btn_hover ) {
     $css .= "
 .um input[type=submit].um-button:hover,
@@ -174,7 +174,7 @@ if ( $primary_btn_hover ) {
 ";
 }
 
-$primary_btn_text = um_get_option( 'primary_btn_text' );
+$primary_btn_text = UM()->options()->get( 'primary_btn_text' );
 if ( $primary_btn_text ) {
     $css .= "
 .um .um-button {
@@ -183,7 +183,7 @@ if ( $primary_btn_text ) {
 ";
 }
 
-$secondary_btn_color = um_get_option( 'secondary_btn_color' );
+$secondary_btn_color = UM()->options()->get( 'secondary_btn_color' );
 if ( $secondary_btn_color ) {
     $css .= "
 .um .um-button.um-alt,
@@ -193,7 +193,7 @@ if ( $secondary_btn_color ) {
 ";
 }
 
-$secondary_btn_hover = um_get_option( 'secondary_btn_hover' );
+$secondary_btn_hover = UM()->options()->get( 'secondary_btn_hover' );
 if ( $secondary_btn_hover ) {
     $css .= "
 .um .um-button.um-alt:hover,
@@ -203,7 +203,7 @@ if ( $secondary_btn_hover ) {
 ";
 }
 
-$secondary_btn_text = um_get_option( 'secondary_btn_text' );
+$secondary_btn_text = UM()->options()->get( 'secondary_btn_text' );
 if ( $secondary_btn_text ) {
     $css .= "
 .um .um-button.um-alt,
@@ -213,7 +213,7 @@ if ( $secondary_btn_text ) {
 ";
 }
 
-$help_tip_color = um_get_option( 'help_tip_color' );
+$help_tip_color = UM()->options()->get( 'help_tip_color' );
 if ( $help_tip_color ) {
     $css .= "
 .um .um-tip {
@@ -222,7 +222,7 @@ if ( $help_tip_color ) {
 ";
 }
 
-$form_field_label = um_get_option( 'form_field_label' );
+$form_field_label = UM()->options()->get( 'form_field_label' );
 if ( $form_field_label ) {
     $css .= "
 .um .um-field-label {
@@ -231,7 +231,7 @@ if ( $form_field_label ) {
 ";
 }
 
-$form_border = um_get_option( 'form_border' );
+$form_border = UM()->options()->get( 'form_border' );
 if ( $form_border ) {
     $css .= "
 .um .um-form input[type=text],
@@ -255,7 +255,7 @@ if ( $form_border ) {
 ";
 }
 
-$form_border_hover = um_get_option( 'form_border_hover' );
+$form_border_hover = UM()->options()->get( 'form_border_hover' );
 if ( $form_border_hover ) {
     $css .= "
 .um .um-form input[type=text]:focus,
@@ -270,7 +270,7 @@ if ( $form_border_hover ) {
 ";
 }
 
-$form_bg_color = um_get_option( 'form_bg_color' );
+$form_bg_color = UM()->options()->get( 'form_bg_color' );
 if ( $form_bg_color ) {
     $css .= "
 .um .um-form input[type=text],
@@ -286,7 +286,7 @@ if ( $form_bg_color ) {
 ";
 }
 
-$form_bg_color_focus = um_get_option( 'form_bg_color_focus' );
+$form_bg_color_focus = UM()->options()->get( 'form_bg_color_focus' );
 if ( $form_bg_color_focus ) {
     $css .= "
 .um .um-form input[type=text]:focus,
@@ -299,7 +299,7 @@ if ( $form_bg_color_focus ) {
 ";
 }
 
-$form_text_color = um_get_option( 'form_text_color' );
+$form_text_color = UM()->options()->get( 'form_text_color' );
 if ( $form_text_color ) {
     $css .= "
 .um .um-form input[type=text],
@@ -322,7 +322,7 @@ if ( $form_text_color ) {
 ";
 }
 
-$form_placeholder = um_get_option( 'form_placeholder' );
+$form_placeholder = UM()->options()->get( 'form_placeholder' );
 if ( $form_placeholder ) {
     $css .= "
 .um .um-form ::-webkit-input-placeholder
@@ -358,7 +358,7 @@ if ( $form_placeholder ) {
 ";
 }
 
-$form_icon_color = um_get_option( 'form_icon_color' );
+$form_icon_color = UM()->options()->get( 'form_icon_color' );
 if ( $form_icon_color ) {
     $css .= "
 .um .um-field-icon i,
@@ -371,7 +371,7 @@ if ( $form_icon_color ) {
 ";
 }
 
-$form_asterisk_color = um_get_option( 'form_asterisk_color' );
+$form_asterisk_color = UM()->options()->get( 'form_asterisk_color' );
 if ( $form_asterisk_color ) {
     $css .= "
 .um span.um-req
@@ -382,7 +382,7 @@ if ( $form_asterisk_color ) {
 }
 
 
-$profile_photocorner = um_get_option( 'profile_photocorner' );
+$profile_photocorner = UM()->options()->get( 'profile_photocorner' );
 if ( $profile_photocorner == 1 ) {
     $css .= "
 .um .um-profile-photo a.um-profile-photo-img,
@@ -418,7 +418,7 @@ if ( $profile_photocorner == 1 ) {
 ";
 }
 
-$profile_main_bg = um_get_option( 'profile_main_bg' );
+$profile_main_bg = UM()->options()->get( 'profile_main_bg' );
 if ( $profile_main_bg ) {
     $css .= "
 .um-profile {
@@ -427,7 +427,7 @@ if ( $profile_main_bg ) {
 ";
 }
 
-$profile_header_bg = um_get_option( 'profile_header_bg' );
+$profile_header_bg = UM()->options()->get( 'profile_header_bg' );
 if ( $profile_header_bg ) {
     $css .= "
 .um-profile.um .um-header {
@@ -436,7 +436,7 @@ if ( $profile_header_bg ) {
 ";
 }
 
-$profile_header_text = um_get_option( 'profile_header_text' );
+$profile_header_text = UM()->options()->get( 'profile_header_text' );
 if ( $profile_header_text ) {
     $css .= "
 .um-profile.um .um-profile-meta {
@@ -445,7 +445,7 @@ if ( $profile_header_text ) {
 ";
 }
 
-$profile_header_link_color = um_get_option( 'profile_header_link_color' );
+$profile_header_link_color = UM()->options()->get( 'profile_header_link_color' );
 if ( $profile_header_link_color ) {
     $css .= "
 .um-profile.um .um-name a {
@@ -454,7 +454,7 @@ if ( $profile_header_link_color ) {
 ";
 }
 
-$profile_header_link_hcolor = um_get_option( 'profile_header_link_hcolor' );
+$profile_header_link_hcolor = UM()->options()->get( 'profile_header_link_hcolor' );
 if ( $profile_header_link_hcolor ) {
     $css .= "
 .um-profile.um .um-name a:hover {
@@ -463,7 +463,7 @@ if ( $profile_header_link_hcolor ) {
 ";
 }
 
-$profile_header_icon_color = um_get_option( 'profile_header_icon_color' );
+$profile_header_icon_color = UM()->options()->get( 'profile_header_icon_color' );
 if ( $profile_header_icon_color ) {
     $css .= "
 .um-profile.um .um-profile-headericon a {
@@ -472,7 +472,7 @@ if ( $profile_header_icon_color ) {
 ";
 }
 
-$profile_header_icon_hcolor = um_get_option( 'profile_header_icon_hcolor' );
+$profile_header_icon_hcolor = UM()->options()->get( 'profile_header_icon_hcolor' );
 if ( $profile_header_icon_hcolor ) {
     $css .= "
 .um-profile.um .um-profile-headericon a:hover,
@@ -877,35 +877,35 @@ fwrite( $css_doc_file, $css );
 fclose( $css_doc_file );
 
 //remove old options
-um_remove_option( 'active_color' );
-um_remove_option( 'secondary_color' );
-um_remove_option( 'profile_align' );
-um_remove_option( 'register_align' );
-um_remove_option( 'login_align' );
-um_remove_option( 'primary_btn_color' );
-um_remove_option( 'primary_btn_hover' );
-um_remove_option( 'primary_btn_text' );
-um_remove_option( 'secondary_btn_color' );
-um_remove_option( 'secondary_btn_hover' );
-um_remove_option( 'secondary_btn_text' );
-um_remove_option( 'help_tip_color' );
-um_remove_option( 'form_field_label' );
-um_remove_option( 'form_border' );
-um_remove_option( 'form_border_hover' );
-um_remove_option( 'form_bg_color' );
-um_remove_option( 'form_bg_color_focus' );
-um_remove_option( 'form_text_color' );
-um_remove_option( 'form_placeholder' );
-um_remove_option( 'form_icon_color' );
-um_remove_option( 'form_asterisk_color' );
-um_remove_option( 'profile_photocorner' );
-um_remove_option( 'profile_main_bg' );
-um_remove_option( 'profile_header_bg' );
-um_remove_option( 'profile_header_text' );
-um_remove_option( 'profile_header_link_color' );
-um_remove_option( 'profile_header_link_hcolor' );
-um_remove_option( 'profile_header_icon_color' );
-um_remove_option( 'profile_header_icon_hcolor' );
+UM()->options()->remove( 'active_color' );
+UM()->options()->remove( 'secondary_color' );
+UM()->options()->remove( 'profile_align' );
+UM()->options()->remove( 'register_align' );
+UM()->options()->remove( 'login_align' );
+UM()->options()->remove( 'primary_btn_color' );
+UM()->options()->remove( 'primary_btn_hover' );
+UM()->options()->remove( 'primary_btn_text' );
+UM()->options()->remove( 'secondary_btn_color' );
+UM()->options()->remove( 'secondary_btn_hover' );
+UM()->options()->remove( 'secondary_btn_text' );
+UM()->options()->remove( 'help_tip_color' );
+UM()->options()->remove( 'form_field_label' );
+UM()->options()->remove( 'form_border' );
+UM()->options()->remove( 'form_border_hover' );
+UM()->options()->remove( 'form_bg_color' );
+UM()->options()->remove( 'form_bg_color_focus' );
+UM()->options()->remove( 'form_text_color' );
+UM()->options()->remove( 'form_placeholder' );
+UM()->options()->remove( 'form_icon_color' );
+UM()->options()->remove( 'form_asterisk_color' );
+UM()->options()->remove( 'profile_photocorner' );
+UM()->options()->remove( 'profile_main_bg' );
+UM()->options()->remove( 'profile_header_bg' );
+UM()->options()->remove( 'profile_header_text' );
+UM()->options()->remove( 'profile_header_link_color' );
+UM()->options()->remove( 'profile_header_link_hcolor' );
+UM()->options()->remove( 'profile_header_icon_color' );
+UM()->options()->remove( 'profile_header_icon_hcolor' );
 
 //remove duplicates for UM Pages settings
 delete_option( 'um_core_pages' );
@@ -1042,8 +1042,8 @@ foreach ( $all_taxonomies as $key => $value ) {
 	$all_taxonomies[ $key ] = true;
 }
 
-um_update_option( 'restricted_access_post_metabox', $all_post_types );
-um_update_option( 'restricted_access_taxonomy_metabox', $all_taxonomies );
+UM()->options()->update( 'restricted_access_post_metabox', $all_post_types );
+UM()->options()->update( 'restricted_access_taxonomy_metabox', $all_taxonomies );
 
 
 $roles_array = UM()->roles()->get_roles( false, array( 'administrator' ) );
@@ -1221,7 +1221,7 @@ foreach ( $emails as $email_key => $value ) {
     $theme_template_path = UM()->mail()->get_template_file( 'theme', $email_key );
 
     if ( ! $in_theme ) {
-        $setting_value = um_get_option( $email_key );
+        $setting_value = UM()->options()->get( $email_key );
 
         UM()->mail()->copy_email_template( $email_key );
 
@@ -1272,128 +1272,128 @@ foreach ( $menus as $menu ) {
 }
 
 
-$profile_tab_main_roles = um_get_option( 'profile_tab_main_roles' );
+$profile_tab_main_roles = UM()->options()->get( 'profile_tab_main_roles' );
 $profile_tab_main_roles = ! $profile_tab_main_roles ? array() : $profile_tab_main_roles;
 if ( ! empty( $profile_tab_main_roles ) ) {
     $profile_tab_main_roles = array_map( function( $item ) {
         return 'um_' . $item;
     }, $profile_tab_main_roles );
 
-    um_update_option( 'profile_tab_main_roles', $profile_tab_main_roles );
+	UM()->options()->update( 'profile_tab_main_roles', $profile_tab_main_roles );
 }
 
-$profile_tab_posts_roles = um_get_option( 'profile_tab_posts_roles' );
+$profile_tab_posts_roles = UM()->options()->get( 'profile_tab_posts_roles' );
 $profile_tab_posts_roles = ! $profile_tab_posts_roles ? array() : $profile_tab_posts_roles;
 if ( ! empty( $profile_tab_posts_roles ) ) {
     $profile_tab_posts_roles = array_map( function( $item ) {
         return 'um_' . $item;
     }, $profile_tab_posts_roles );
 
-    um_update_option( 'profile_tab_posts_roles', $profile_tab_posts_roles );
+	UM()->options()->update( 'profile_tab_posts_roles', $profile_tab_posts_roles );
 }
 
-$profile_tab_comments_roles = um_get_option( 'profile_tab_comments_roles' );
+$profile_tab_comments_roles = UM()->options()->get( 'profile_tab_comments_roles' );
 $profile_tab_comments_roles = ! $profile_tab_comments_roles ? array() : $profile_tab_comments_roles;
 if ( ! empty( $profile_tab_comments_roles ) ) {
     $profile_tab_comments_roles = array_map( function( $item ) {
         return 'um_' . $item;
     }, $profile_tab_comments_roles );
 
-    um_update_option( 'profile_tab_comments_roles', $profile_tab_comments_roles );
+	UM()->options()->update( 'profile_tab_comments_roles', $profile_tab_comments_roles );
 }
 
-$profile_tab_activity_roles = um_get_option( 'profile_tab_activity_roles' );
+$profile_tab_activity_roles = UM()->options()->get( 'profile_tab_activity_roles' );
 $profile_tab_activity_roles = ! $profile_tab_activity_roles ? array() : $profile_tab_activity_roles;
 if ( ! empty( $profile_tab_activity_roles ) ) {
     $profile_tab_activity_roles = array_map( function( $item ) {
         return 'um_' . $item;
     }, $profile_tab_activity_roles );
 
-    um_update_option( 'profile_tab_activity_roles', $profile_tab_activity_roles );
+	UM()->options()->update( 'profile_tab_activity_roles', $profile_tab_activity_roles );
 }
 
-$profile_tab_messages_roles = um_get_option( 'profile_tab_messages_roles' );
+$profile_tab_messages_roles = UM()->options()->get( 'profile_tab_messages_roles' );
 $profile_tab_messages_roles = ! $profile_tab_messages_roles ? array() : $profile_tab_messages_roles;
 if ( ! empty( $profile_tab_messages_roles ) ) {
     $profile_tab_messages_roles = array_map( function( $item ) {
         return 'um_' . $item;
     }, $profile_tab_messages_roles );
 
-    um_update_option( 'profile_tab_messages_roles', $profile_tab_messages_roles );
+	UM()->options()->update( 'profile_tab_messages_roles', $profile_tab_messages_roles );
 }
 
-$profile_tab_reviews_roles = um_get_option( 'profile_tab_reviews_roles' );
+$profile_tab_reviews_roles = UM()->options()->get( 'profile_tab_reviews_roles' );
 $profile_tab_reviews_roles = ! $profile_tab_reviews_roles ? array() : $profile_tab_reviews_roles;
 if ( ! empty( $profile_tab_reviews_roles ) ) {
     $profile_tab_reviews_roles = array_map( function( $item ) {
         return 'um_' . $item;
     }, $profile_tab_reviews_roles );
 
-    um_update_option( 'profile_tab_reviews_roles', $profile_tab_reviews_roles );
+	UM()->options()->update( 'profile_tab_reviews_roles', $profile_tab_reviews_roles );
 }
 
-$profile_tab_purchases_roles = um_get_option( 'profile_tab_purchases_roles' );
+$profile_tab_purchases_roles = UM()->options()->get( 'profile_tab_purchases_roles' );
 $profile_tab_purchases_roles = ! $profile_tab_purchases_roles ? array() : $profile_tab_purchases_roles;
 if ( ! empty( $profile_tab_purchases_roles ) ) {
     $profile_tab_purchases_roles = array_map( function( $item ) {
         return 'um_' . $item;
     }, $profile_tab_purchases_roles );
 
-    um_update_option( 'profile_tab_purchases_roles', $profile_tab_purchases_roles );
+	UM()->options()->update( 'profile_tab_purchases_roles', $profile_tab_purchases_roles );
 }
 
-$profile_tab_product_reviews = um_get_option( 'profile_tab_product-reviews_roles' );
+$profile_tab_product_reviews = UM()->options()->get( 'profile_tab_product-reviews_roles' );
 $profile_tab_product_reviews = ! $profile_tab_product_reviews ? array() : $profile_tab_product_reviews;
 if ( ! empty( $profile_tab_product_reviews ) ) {
     $profile_tab_product_reviews = array_map( function( $item ) {
         return 'um_' . $item;
     }, $profile_tab_product_reviews );
 
-    um_update_option( 'profile_tab_product-reviews_roles', $profile_tab_product_reviews );
+	UM()->options()->update( 'profile_tab_product-reviews_roles', $profile_tab_product_reviews );
 }
 
 
-$profile_tab_forums_roles = um_get_option( 'profile_tab_forums_roles' );
+$profile_tab_forums_roles = UM()->options()->get( 'profile_tab_forums_roles' );
 $profile_tab_forums_roles = ! $profile_tab_forums_roles ? array() : $profile_tab_forums_roles;
 if ( ! empty( $profile_tab_forums_roles ) ) {
     $profile_tab_forums_roles = array_map( function( $item ) {
         return 'um_' . $item;
     }, $profile_tab_forums_roles );
 
-    um_update_option( 'profile_tab_forums_roles', $profile_tab_forums_roles );
+	UM()->options()->update( 'profile_tab_forums_roles', $profile_tab_forums_roles );
 }
 
-$profile_tab_friends_roles = um_get_option( 'profile_tab_friends_roles' );
+$profile_tab_friends_roles = UM()->options()->get( 'profile_tab_friends_roles' );
 $profile_tab_friends_roles = ! $profile_tab_friends_roles ? array() : $profile_tab_friends_roles;
 if ( ! empty( $profile_tab_friends_roles ) ) {
     $profile_tab_friends_roles = array_map( function( $item ) {
         return 'um_' . $item;
     }, $profile_tab_friends_roles );
 
-    um_update_option( 'profile_tab_friends_roles', $profile_tab_friends_roles );
+	UM()->options()->update( 'profile_tab_friends_roles', $profile_tab_friends_roles );
 }
 
 
-$register_role = um_get_option( 'register_role' );
+$register_role = UM()->options()->get( 'register_role' );
 if ( ! empty( $register_role ) ) {
     $register_role = 'um_' . $register_role;
-    um_update_option( 'register_role', $register_role );
+	UM()->options()->update( 'register_role', $register_role );
 }
 
-$woo_oncomplete_role = um_get_option( 'woo_oncomplete_role' );
+$woo_oncomplete_role = UM()->options()->get( 'woo_oncomplete_role' );
 if ( ! empty( $woo_oncomplete_role ) ) {
     $woo_oncomplete_role = 'um_' . $woo_oncomplete_role;
-    um_update_option( 'woo_oncomplete_role', $woo_oncomplete_role );
+	UM()->options()->update( 'woo_oncomplete_role', $woo_oncomplete_role );
 }
 
-$woo_oncomplete_except_roles = um_get_option( 'woo_oncomplete_except_roles' );
+$woo_oncomplete_except_roles = UM()->options()->get( 'woo_oncomplete_except_roles' );
 $woo_oncomplete_except_roles = ! $woo_oncomplete_except_roles ? array() : $woo_oncomplete_except_roles;
 if ( ! empty( $woo_oncomplete_except_roles ) ) {
     $woo_oncomplete_except_roles = array_map( function( $item ) {
         return 'um_' . $item;
     }, $woo_oncomplete_except_roles );
 
-    um_update_option( 'woo_oncomplete_except_roles', $woo_oncomplete_except_roles );
+	UM()->options()->update( 'woo_oncomplete_except_roles', $woo_oncomplete_except_roles );
 }
 
 //for metadata for all bbPress forums

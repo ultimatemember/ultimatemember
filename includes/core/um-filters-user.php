@@ -62,7 +62,7 @@
 	 */
 	add_filter('um_clean_user_basename_filter','um_clean_user_basename_filter',2,10);
 	function um_clean_user_basename_filter( $value, $raw ){
-		$permalink_base = um_get_option('permalink_base');
+		$permalink_base = UM()->options()->get( 'permalink_base' );
 		
 		$user_query = new WP_User_Query(
 				array(
@@ -173,7 +173,7 @@
 	 */
 	add_filter('um_before_update_profile','um_before_update_profile',2,10);
 	function um_before_update_profile( $changes, $user_id ){
-		if( ! um_get_option('um_force_utf8_strings') )
+		if( ! UM()->options()->get( 'um_force_utf8_strings' ) )
 			return $changes;
 
 		foreach( $changes as $key => $value ) {

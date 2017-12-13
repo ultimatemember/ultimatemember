@@ -7,7 +7,7 @@
 	add_filter('pre_get_document_title', 'um_dynamic_user_profile_pagetitle', 100000, 2 );
 	function um_dynamic_user_profile_pagetitle( $title, $sep = '' ) {
 
-		$profile_title = um_get_option('profile_title');
+		$profile_title = UM()->options()->get( 'profile_title' );
 
 		if ( um_is_core_page('user') && um_get_requested_user() ) {
 

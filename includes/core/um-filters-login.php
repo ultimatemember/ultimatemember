@@ -6,7 +6,7 @@
 	add_filter('um_whitelisted_wpadmin_access', 'um_whitelisted_wpadmin_access');
 	function um_whitelisted_wpadmin_access( $allowed ) {
 
-		$ips = um_get_option('wpadmin_allow_ips');
+		$ips = UM()->options()->get( 'wpadmin_allow_ips' );
 		
 		if ( !$ips )
 			return $allowed;

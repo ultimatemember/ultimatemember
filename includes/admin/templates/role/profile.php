@@ -8,7 +8,6 @@
             array(
                 'id'		    => '_um_can_view_all',
                 'type'		    => 'checkbox',
-                'name'		    => '_um_can_view_all',
                 'label'    		=> __( 'Can view other member profiles?', 'ultimate-member' ),
                 'tooltip' 	=> __( 'Can this role view all member profiles?', 'ultimate-member' ),
                 'value'		    => ! empty( $role['_um_can_view_all'] ) ? $role['_um_can_view_all'] : 0,
@@ -16,7 +15,6 @@
             array(
                 'id'		=> '_um_can_view_roles',
                 'type'		=> 'select',
-                'name'		=> '_um_can_view_roles',
                 'label'    		=> __( 'Can view these user roles only', 'ultimate-member' ),
                 'tooltip' 	=> __( 'Which roles that role can view, choose none to allow role to view all member roles', 'ultimate-member' ),
                 'options'	=> UM()->roles()->get_roles(),

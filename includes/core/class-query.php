@@ -109,7 +109,7 @@ if ( ! class_exists( 'Query' ) ) {
 
             } else {
                 $custom_posts = new \WP_Query();
-	            $args['post_status'] = explode( ',', $args['post_status'] );
+	            $args['post_status'] = is_array( $args['post_status'] ) ? $args['post_status'] : explode( ',', $args['post_status'] );
 
                 $custom_posts->query( $args );
 

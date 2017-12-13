@@ -38,7 +38,7 @@ if ( ! class_exists( 'Enqueue' ) ) {
 
             $this->suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG || defined('UM_SCRIPT_DEBUG') ) ? '' : '.min';
             
-            $exclude = um_get_option('js_css_exclude');
+            $exclude = UM()->options()->get('js_css_exclude');
             if ( is_array( $exclude ) ) {
                 array_filter( $exclude );
             }
@@ -54,7 +54,7 @@ if ( ! class_exists( 'Enqueue' ) ) {
 
             }
 
-            $include = um_get_option('js_css_include');
+            $include = UM()->options()->get('js_css_include');
             if ( is_array( $include ) ) {
                 array_filter( $include );
             }

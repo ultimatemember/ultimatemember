@@ -99,7 +99,7 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
             }
 
             //restrict content metabox
-            $post_types = um_get_option( 'restricted_access_post_metabox' );
+            $post_types = UM()->options()->get( 'restricted_access_post_metabox' );
             if ( ! empty( $post_types[ $current_screen->id ] ) ) {
 
                 $hide_metabox = apply_filters( 'um_restrict_content_hide_metabox', false );
@@ -154,7 +154,7 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
         function add_taxonomy_metabox() {
             //restrict content metabox
             $all_taxonomies = get_taxonomies( array( 'public' => true ) );
-            $tax_types = um_get_option( 'restricted_access_taxonomy_metabox' );
+            $tax_types = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
             $exclude_taxonomies = UM()->excluded_taxonomies();
 
             foreach ( $all_taxonomies as $key => $taxonomy ) {
@@ -216,7 +216,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                 array(
                     'id'		    => '_um_custom_access_settings',
                     'type'		    => 'checkbox',
-                    'name'		    => '_um_custom_access_settings',
                     'label'    		=> __( 'Restrict access to this content?', 'ultimate-member' ),
                     'description' 	=> __( 'Activate content restriction for this post', 'ultimate-member' ),
                     'value' 		=> ! empty( $data['_um_custom_access_settings'] ) ? $data['_um_custom_access_settings'] : 0,
@@ -224,7 +223,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                 array(
                     'id'		=> '_um_accessible',
                     'type'		=> 'select',
-                    'name'		=> '_um_accessible',
                     'label'    		=> __( 'Who can access this content?', 'ultimate-member' ),
                     'description' 	=> __( 'Activate content restriction for this post', 'ultimate-member' ),
                     'value' 		=> ! empty( $data['_um_accessible'] ) ? $data['_um_accessible'] : 0,
@@ -238,7 +236,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                 array(
                     'id'       		=> '_um_access_roles',
                     'type'     		=> 'multi_checkbox',
-                    'name'		    => '_um_access_roles',
                     'label'    		=> __( 'Select which roles can access this content', 'ultimate-member' ),
                     'description' 	=> __( 'Activate content restriction for this post', 'ultimate-member' ),
                     'options'		=> UM()->roles()->get_roles( false, array( 'administrator' ) ),
@@ -248,7 +245,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                 array(
                     'id'       		=> '_um_noaccess_action',
                     'type'     		=> 'select',
-                    'name'		    => '_um_noaccess_action',
                     'label'    		=> __( 'What happens when users without access tries to view the content?', 'ultimate-member' ),
                     'description' 	=> __( 'Action when users without access tries to view the content', 'ultimate-member' ),
                     'value' 		=> ! empty( $data['_um_noaccess_action'] ) ? $data['_um_noaccess_action'] : 0,
@@ -261,7 +257,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                 array(
                     'id'       		=> '_um_restrict_by_custom_message',
                     'type'     		=> 'select',
-                    'name'		    => '_um_restrict_by_custom_message',
                     'label'    		=> __( 'Would you like to use the global default message or apply a custom message to this content?', 'ultimate-member' ),
                     'description' 	=> __( 'Action when users without access tries to view the content', 'ultimate-member' ),
                     'value' 		=> ! empty( $data['_um_restrict_by_custom_message'] ) ? $data['_um_restrict_by_custom_message'] : '0',
@@ -274,7 +269,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                 array(
                     'id'       		=> '_um_restrict_custom_message',
                     'type'     		=> 'wp_editor',
-                    'name'		    => '_um_restrict_custom_message',
                     'label'    		=> __( 'Custom Restrict Content message', 'ultimate-member' ),
                     'description' 	=> __( 'Changed global restrict message', 'ultimate-member' ),
                     'value' 		=> ! empty( $data['_um_restrict_custom_message'] ) ? $data['_um_restrict_custom_message'] : '',
@@ -283,7 +277,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                 array(
                     'id'       		=> '_um_access_redirect',
                     'type'     		=> 'select',
-                    'name'		    => '_um_access_redirect',
                     'label'    		=> __( 'Where should users be redirected to?', 'ultimate-member' ),
                     'description' 	=> __( 'Select redirect to page when user hasn\'t access to content', 'ultimate-member' ),
                     'value' 		=> ! empty( $data['_um_access_redirect'] ) ? $data['_um_access_redirect'] : '0',
@@ -296,7 +289,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                 array(
                     'id'       		=> '_um_access_redirect_url',
                     'type'     		=> 'text',
-                    'name'		    => '_um_access_redirect_url',
                     'label'    		=> __( 'Redirect URL', 'ultimate-member' ),
                     'description' 	=> __( 'Changed global restrict message', 'ultimate-member' ),
                     'value' 		=> ! empty( $data['_um_access_redirect_url'] ) ? $data['_um_access_redirect_url'] : '',
@@ -305,7 +297,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                 array(
                     'id'       		=> '_um_access_hide_from_queries',
                     'type'     		=> 'checkbox',
-                    'name'		    => '_um_access_hide_from_queries',
                     'label'    		=> __( 'Hide from queries', 'ultimate-member' ),
                     'description' 	=> __( 'Hide this content from archives, RSS feeds etc for users who do not have permission to view this content', 'ultimate-member' ),
                     'value' 		=> ! empty( $data['_um_access_hide_from_queries'] ) ? $data['_um_access_hide_from_queries'] : '',
@@ -344,7 +335,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                     'id'		    => '_um_custom_access_settings',
                     'type'		    => 'checkbox',
                     'class'		    => 'form-field',
-                    'name'		    => '_um_custom_access_settings',
                     'label'    		=> __( 'Restrict access to this content?', 'ultimate-member' ),
                     'description' 	=> __( 'Activate content restriction for this post', 'ultimate-member' ),
                     'value' 		=> ! empty( $data['_um_custom_access_settings'] ) ? $data['_um_custom_access_settings'] : 0,
@@ -353,7 +343,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                     'id'		=> '_um_accessible',
                     'type'		=> 'select',
                     'class'		=> 'form-field',
-                    'name'		=> '_um_accessible',
                     'label'    		=> __( 'Who can access this content?', 'ultimate-member' ),
                     'description' 	=> __( 'Activate content restriction for this post', 'ultimate-member' ),
                     'value' 		=> ! empty( $data['_um_accessible'] ) ? $data['_um_accessible'] : 0,
@@ -368,7 +357,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                     'id'       		=> '_um_access_roles',
                     'type'     		=> 'multi_checkbox',
                     'class'		    => 'form-field',
-                    'name'		    => '_um_access_roles',
                     'label'    		=> __( 'Select which roles can access this content', 'ultimate-member' ),
                     'description' 	=> __( 'Activate content restriction for this post', 'ultimate-member' ),
                     'value' 		=> $_um_access_roles_value,
@@ -380,7 +368,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                     'id'       		=> '_um_noaccess_action',
                     'type'     		=> 'select',
                     'class'		    => 'form-field',
-                    'name'		    => '_um_noaccess_action',
                     'label'    		=> __( 'What happens when users without access tries to view the content?', 'ultimate-member' ),
                     'description' 	=> __( 'Action when users without access tries to view the content', 'ultimate-member' ),
                     'value' 		=> ! empty( $data['_um_noaccess_action'] ) ? $data['_um_noaccess_action'] : 0,
@@ -394,7 +381,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                     'id'       		=> '_um_restrict_by_custom_message',
                     'type'     		=> 'select',
                     'class'		    => 'form-field',
-                    'name'		    => '_um_restrict_by_custom_message',
                     'label'    		=> __( 'Would you like to use the global default message or apply a custom message to this content?', 'ultimate-member' ),
                     'description' 	=> __( 'Action when users without access tries to view the content', 'ultimate-member' ),
                     'value' 		=> ! empty( $data['_um_restrict_by_custom_message'] ) ? $data['_um_restrict_by_custom_message'] : '0',
@@ -408,7 +394,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                     'id'       		=> '_um_restrict_custom_message',
                     'type'     		=> 'wp_editor',
                     'class'		    => 'form-field',
-                    'name'		    => '_um_restrict_custom_message',
                     'label'    		=> __( 'Custom Restrict Content message', 'ultimate-member' ),
                     'description' 	=> __( 'Changed global restrict message', 'ultimate-member' ),
                     'value' 		=> ! empty( $data['_um_restrict_custom_message'] ) ? $data['_um_restrict_custom_message'] : '',
@@ -418,7 +403,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                     'id'       		=> '_um_access_redirect',
                     'type'     		=> 'select',
                     'class'		    => 'form-field',
-                    'name'		    => '_um_access_redirect',
                     'label'    		=> __( 'Where should users be redirected to?', 'ultimate-member' ),
                     'description' 	=> __( 'Select redirect to page when user hasn\'t access to content', 'ultimate-member' ),
                     'value' 		=> ! empty( $data['_um_access_redirect'] ) ? $data['_um_access_redirect'] : '0',
@@ -432,7 +416,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                     'id'       		=> '_um_access_redirect_url',
                     'type'     		=> 'text',
                     'class'		    => 'form-field',
-                    'name'		    => '_um_access_redirect_url',
                     'label'    		=> __( 'Redirect URL', 'ultimate-member' ),
                     'description' 	=> __( 'Changed global restrict message', 'ultimate-member' ),
                     'value' 		=> ! empty( $data['_um_access_redirect_url'] ) ? $data['_um_access_redirect_url'] : '',
@@ -442,7 +425,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                     'id'       		=> '_um_access_hide_from_queries',
                     'type'     		=> 'checkbox',
                     'class'		    => 'form-field',
-                    'name'		    => '_um_access_hide_from_queries',
                     'label'    		=> __( 'Hide from queries', 'ultimate-member' ),
                     'description' 	=> __( 'Hide this content from archives, RSS feeds etc for users who do not have permission to view this content', 'ultimate-member' ),
                     'value' 		=> ! empty( $data['_um_access_hide_from_queries'] ) ? $data['_um_access_hide_from_queries'] : '',
@@ -454,7 +436,7 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                 'class'		        => 'um-restrict-content um-third-column',
                 'prefix_id'	        => 'um_content_restriction',
                 'without_wrapper'	=> true,
-                'fields' => $fields
+                'fields'            => $fields
             ) )->render_form();
 
             wp_nonce_field( basename( __FILE__ ), 'um_admin_save_taxonomy_restrict_content_nonce' );

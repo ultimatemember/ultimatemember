@@ -25,7 +25,6 @@
             array(
                 'id'       		=> 'wp_capabilities',
                 'type'     		=> 'multi_checkbox',
-                'name'          => 'wp_capabilities',
                 'options'       => $fields,
                 'value'         => ! empty( $role_capabilities ) ? $role_capabilities : array(),
                 'columns'	    => 3,

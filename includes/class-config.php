@@ -529,7 +529,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 
             foreach ( $core_pages as $page_key ) {
                 $page_option_key = apply_filters( 'um_core_page_id_filter', 'core_' . $page_key );
-                $permalink[$page_key] = UM()->um_get_option( $page_option_key );
+                $permalink[$page_key] = UM()->options()->get( $page_option_key );
             }
 
             return $permalink;

@@ -7,7 +7,7 @@
 	function um_profile_content_main( $args ) {
 		extract( $args );
 
-		if (!um_get_option( 'profile_tab_main' ) && !isset( $_REQUEST['um_action'] ))
+		if ( ! UM()->options()->get( 'profile_tab_main' ) && ! isset( $_REQUEST['um_action'] ) )
 			return;
 
 		$can_view = apply_filters( 'um_profile_can_view_main', -1, um_profile_id() );
@@ -157,7 +157,7 @@
 
 			um_fetch_user( um_get_requested_user() );
 
-			$content = um_convert_tags( um_get_option( 'profile_desc' ) );
+			$content = um_convert_tags( UM()->options()->get( 'profile_desc' ) );
 			$user_id = um_user( 'ID' );
 			$url = um_user_profile_url();
 
@@ -188,7 +188,7 @@
 	function um_profile_header_cover_area( $args ) {
 		if ($args['cover_enabled'] == 1) {
 
-			$default_cover = um_get_option( 'default_cover' );
+			$default_cover = UM()->options()->get( 'default_cover' );
 
 			$overlay = '<span class="um-cover-overlay">
 				<span class="um-cover-overlay-s">
@@ -391,7 +391,7 @@
 						<?php
 
 							$description = get_user_meta( um_user( 'ID' ), 'description', true );
-							if (um_get_option( 'profile_show_html_bio' )) : ?>
+							if ( UM()->options()->get( 'profile_show_html_bio' ) ) : ?>
 								<?php echo make_clickable( wpautop( wp_kses_post( $description ) ) ); ?>
 							<?php else : ?>
 								<?php echo esc_html( $description ); ?>
@@ -402,14 +402,14 @@
 
                     <div class="um-meta-text">
                         <textarea id="um-meta-bio"
-                                  data-character-limit="<?php echo um_get_option( 'profile_bio_maxchars' ); ?>"
+                                  data-character-limit="<?php echo UM()->options()->get( 'profile_bio_maxchars' ); ?>"
                                   placeholder="<?php _e( 'Tell us a bit about yourself...', 'ultimate-member' ); ?>"
                                   name="<?php echo 'description-' . $args['form_id']; ?>"
                                   id="<?php echo 'description-' . $args['form_id']; ?>"><?php if (um_user( 'description' )) {
 								echo um_user( 'description' );
 							} ?></textarea>
                         <span class="um-meta-bio-character um-right"><span
-                                    class="um-bio-limit"><?php echo um_get_option( 'profile_bio_maxchars' ); ?></span></span>
+                                    class="um-bio-limit"><?php echo UM()->options()->get( 'profile_bio_maxchars' ); ?></span></span>
 						<?php
 							if (UM()->fields()->is_error( 'description' )) {
 								echo UM()->fields()->field_error( UM()->fields()->show_error( 'description' ), true );
@@ -621,7 +621,7 @@
 	 ***/
 	add_action( 'um_profile_menu', 'um_profile_menu', 9 );
 	function um_profile_menu( $args ) {
-		if (!um_get_option( 'profile_menu' ))
+		if ( ! UM()->options()->get( 'profile_menu' ) )
 			return;
 
 		// get active tabs
@@ -643,7 +643,7 @@
 		}
 
 		// Move default tab priority
-		$default_tab = um_get_option( 'profile_menu_default_tab' );
+		$default_tab = UM()->options()->get( 'profile_menu_default_tab' );
 		$dtab = ( isset( $tabs[$default_tab] ) ) ? $tabs[$default_tab] : 'main';
 		if (isset( $tabs[$default_tab] )) {
 			unset( $tabs[$default_tab] );
@@ -668,12 +668,12 @@
 
 				?>
 
-                <div class="um-profile-nav-item um-profile-nav-<?php echo $id; ?> <?php if (!um_get_option( 'profile_menu_icons' )) {
+                <div class="um-profile-nav-item um-profile-nav-<?php echo $id; ?> <?php if ( ! UM()->options()->get( 'profile_menu_icons' ) ) {
 					echo 'without-icon';
 				} ?> <?php if ($id == $active_tab) {
 					echo 'active';
 				} ?>">
-					<?php if (um_get_option( 'profile_menu_icons' )) { ?>
+					<?php if ( UM()->options()->get( 'profile_menu_icons' ) ) { ?>
                         <a href="<?php echo $nav_link; ?>" class="um-tip-n uimob500-show uimob340-show uimob800-show"
                            title="<?php echo $tab['name']; ?>" original-title="<?php echo $tab['name']; ?>">
 

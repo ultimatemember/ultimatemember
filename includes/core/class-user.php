@@ -147,11 +147,11 @@ if ( ! class_exists( 'User' ) ) {
         function get_profile_url( $user_id, $update_slug = false ) {
 
             // Permalink base
-            $permalink_base = um_get_option( 'permalink_base' );
+            $permalink_base = UM()->options()->get( 'permalink_base' );
 
             // Get user slug
             $profile_slug = get_user_meta( $user_id, "um_user_profile_url_slug_{$permalink_base}", true );
-            $generate_slug = um_get_option( 'um_generate_slug_in_directory' );
+            $generate_slug = UM()->options()->get( 'um_generate_slug_in_directory' );
 
             // Return existing profile slug
             if ( $generate_slug && $update_slug == false && $profile_slug )
@@ -420,7 +420,7 @@ if ( ! class_exists( 'User' ) ) {
 
         function get_cached_data( $user_id ) {
 
-            $disallow_cache = um_get_option('um_profile_object_cache_stop');
+            $disallow_cache = UM()->options()->get( 'um_profile_object_cache_stop' );
             if( $disallow_cache ){
                 return '';
             }
@@ -437,7 +437,7 @@ if ( ! class_exists( 'User' ) ) {
 
         function setup_cache( $user_id, $profile ) {
 
-            $disallow_cache = um_get_option('um_profile_object_cache_stop');
+            $disallow_cache = UM()->options()->get( 'um_profile_object_cache_stop' );
             if( $disallow_cache ){
                 return '';
             }
@@ -1158,7 +1158,7 @@ if ( ! class_exists( 'User' ) ) {
         function user_exists_by_name( $value ) {
 
             // Permalink base
-            $permalink_base = um_get_option('permalink_base');
+            $permalink_base = UM()->options()->get( 'permalink_base' );
 
             $raw_value = $value;
             $value = UM()->validation()->safe_name_in_url( $value );

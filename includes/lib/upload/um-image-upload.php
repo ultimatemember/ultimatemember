@@ -56,7 +56,7 @@ if(isset($_FILES[$id]['name'])) {
 		
 		} else {
 			$file = "stream_photo_".md5($file)."_".uniqid().".".$ext;
-			$ret[ ] = UM()->files()->new_image_upload_temp( $temp, $file, um_get_option('image_compression') );
+			$ret[ ] = UM()->files()->new_image_upload_temp( $temp, $file, UM()->options()->get('image_compression') );
 			
 		}
 

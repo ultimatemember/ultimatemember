@@ -24,12 +24,12 @@ remove_all_filters( 'um_core_pages' );
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-functions.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-init.php';
 
-$delete_options = UM()->um_get_option( 'uninstall_on_delete' );
+$delete_options = UM()->options()->get( 'uninstall_on_delete' );
 if ( ! empty( $delete_options ) ) {
 
     //remove core pages
     foreach ( UM()->config()->core_pages as $page_key => $page_value ) {
-        $page_id = UM()->um_get_option( apply_filters( 'um_core_page_id_filter', 'core_' . $page_key ) );
+        $page_id = UM()->options()->get( apply_filters( 'um_core_page_id_filter', 'core_' . $page_key ) );
         if ( ! empty( $page_id ) )
             wp_delete_post( $page_id, true );
     }
@@ -37,7 +37,7 @@ if ( ! empty( $delete_options ) ) {
     //remove core settings
     $settings_defaults = UM()->config()->settings_defaults;
     foreach ( $settings_defaults as $k => $v ) {
-        UM()->um_remove_option( $k );
+        UM()->options()->remove( $k );
     }
 
     //delete UM Custom Post Types posts

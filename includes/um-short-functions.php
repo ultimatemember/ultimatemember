@@ -166,7 +166,7 @@
 			um_user( '_um_cool_but_hard_to_guess_plain_pw' ),
 			um_get_core_page( 'login' ),
 			um_dynamic_login_page_redirect(),
-			um_get_option( 'site_name' ),
+			UM()->options()->get( 'site_name' ),
 			get_bloginfo( 'url' ),
 			um_user( 'account_activation_link' ),
 			um_user( 'password_reset_link' ),
@@ -811,15 +811,15 @@
 		$core_form_meta_all = UM()->config()->core_form_meta_all;
 		$core_global_meta_all = UM()->config()->core_global_meta_all;
 
-		foreach ($core_form_meta_all as $k => $v) {
+		foreach ( $core_form_meta_all as $k => $v ) {
 			$s = str_replace( $mode . '_', '', $k );
 			if (strstr( $k, '_um_' . $mode . '_' ) && !in_array( $s, $core_global_meta_all )) {
 				$a = str_replace( '_um_' . $mode . '_', '', $k );
 				$b = str_replace( '_um_', '', $k );
-				$new_arr[$a] = um_get_option( $b );
+				$new_arr[$a] = UM()->options()->get( $b );
 			} else if (in_array( $k, $core_global_meta_all )) {
 				$a = str_replace( '_um_', '', $k );
-				$new_arr[$a] = um_get_option( $a );
+				$new_arr[$a] = UM()->options()->get( $a );
 			}
 		}
 
@@ -1125,80 +1125,9 @@
 	 ***    @short for admin e-mail
 	 ***/
 	function um_admin_email() {
-		return um_get_option( 'admin_email' );
+		return UM()->options()->get( 'admin_email' );
 	}
 
-	/**
-	 * @function um_get_option()
-	 *
-	 * @description This function returns the value of an option or setting.
-	 *
-	 * @usage <?php $value = um_get_option( $setting ); ?>
-	 *
-	 * @param $option_id (string) (required) The option or setting that you want to retrieve
-	 *
-	 * @returns Returns the value of the setting you requested, or a blank value if the setting
-	 * does not exist.
-	 *
-	 * @example Get default user role set in global options
-	 *
-	 * <?php $default_role = um_get_option('default_role'); ?>
-	 *
-	 * @example Get blocked IP addresses set in backend
-	 *
-	 * <?php $blocked_ips = um_get_option('blocked_ips'); ?>
-	 * @return mixed Returns the value of the setting you requested, or a blank value if the setting
-	does not exist.
-	 */
-	function um_get_option( $option_id ) {
-		if (!isset( UM()->options ))
-			return '';
-
-		$um_options = UM()->options;
-		if (!empty( $um_options[$option_id] ))
-			return apply_filters( "um_get_option_filter__{$option_id}", $um_options[$option_id] );
-
-		switch ($option_id) {
-
-			case 'site_name':
-				return get_bloginfo( 'name' );
-				break;
-
-			case 'admin_email':
-				return get_bloginfo( 'admin_email' );
-				break;
-			default:
-				return '';
-				break;
-
-		}
-	}
-
-
-	function um_update_option( $option_id, $value ) {
-		if (!isset( UM()->options ))
-			UM()->options = array();
-
-		$um_options = UM()->options;
-		$um_options[$option_id] = $value;
-		UM()->options = $um_options;
-
-		update_option( 'um_options', $um_options );
-	}
-
-
-	function um_remove_option( $option_id ) {
-		if (!isset( UM()->options ))
-			UM()->options = array();
-
-		$um_options = UM()->options;
-		if (!empty( $um_options[$option_id] ))
-			unset( $um_options[$option_id] );
-
-		UM()->options = $um_options;
-
-		update_option( 'um_options', $um_options );
-	}
 
 	/***
 	 ***    @Display a link to profile page
@@ -1369,7 +1298,7 @@
 
 		} else {
 
-			$sizes = um_get_option( 'photo_thumb_sizes' );
+			$sizes = UM()->options()->get( 'photo_thumb_sizes' );
 			if (is_array( $sizes )) $find = um_closest_num( $sizes, $attrs );
 
 			if (file_exists( UM()->files()->upload_basedir . um_user( 'ID' ) . "/profile_photo-{$find}{$ext}" )) {
@@ -1398,7 +1327,7 @@
 	 * @return string
 	 */
 	function um_get_default_avatar_uri() {
-		$uri = um_get_option( 'default_avatar' );
+		$uri = UM()->options()->get( 'default_avatar' );
 		$uri = !empty( $uri['url'] ) ? $uri['url'] : '';
 		if ( ! $uri ) {
 			$uri = um_url . 'assets/img/default_avatar.jpg';
@@ -1435,7 +1364,7 @@
 	 ***    @default cover
 	 ***/
 	function um_get_default_cover_uri() {
-		$uri = um_get_option( 'default_cover' );
+		$uri = UM()->options()->get( 'default_cover' );
 		$uri = !empty( $uri['url'] ) ? $uri['url'] : '';
 		if ($uri) {
 			$uri = apply_filters( 'um_get_default_cover_uri_filter', $uri );
@@ -1484,7 +1413,7 @@
 
 				$name = um_profile( $data );
 
-				if (um_get_option( 'force_display_name_capitlized' )) {
+				if ( UM()->options()->get( 'force_display_name_capitlized' ) ) {
 					$name = implode( '-', array_map( 'ucfirst', explode( '-', $name ) ) );
 				}
 
@@ -1526,7 +1455,7 @@
 
 				$f_and_l_initial = UM()->validation()->safe_name_in_url( $f_and_l_initial );
 
-				if (um_get_option( 'force_display_name_capitlized' )) {
+				if ( UM()->options()->get( 'force_display_name_capitlized' ) ) {
 					$name = implode( '-', array_map( 'ucfirst', explode( '-', $f_and_l_initial ) ) );
 				} else {
 					$name = $f_and_l_initial;
@@ -1538,7 +1467,7 @@
 
 			case 'display_name':
 
-				$op = um_get_option( 'display_name' );
+				$op = UM()->options()->get( 'display_name' );
 
 				$name = '';
 
@@ -1601,8 +1530,8 @@
 				}
 
 
-				if ($op == 'field' && um_get_option( 'display_name_field' ) != '') {
-					$fields = array_filter( preg_split( '/[,\s]+/', um_get_option( 'display_name_field' ) ) );
+				if ($op == 'field' && UM()->options()->get( 'display_name_field' ) != '') {
+					$fields = array_filter( preg_split( '/[,\s]+/', UM()->options()->get( 'display_name_field' ) ) );
 					$name = '';
 
 					foreach ($fields as $field) {
@@ -1615,7 +1544,7 @@
 					}
 				}
 
-				if (um_get_option( 'force_display_name_capitlized' )) {
+				if ( UM()->options()->get( 'force_display_name_capitlized' ) ) {
 					$name = implode( '-', array_map( 'ucfirst', explode( '-', $name ) ) );
 				}
 
@@ -1666,14 +1595,14 @@
 				if (!$avatar_uri)
 					return '';
 
-				if (um_get_option( 'use_gravatars' ) && !um_user( 'synced_profile_photo' ) && !$has_profile_photo) {
+				if ( UM()->options()->get( 'use_gravatars' ) && !um_user( 'synced_profile_photo' ) && !$has_profile_photo) {
 					$avatar_hash_id = get_user_meta( um_user( 'ID' ), 'synced_gravatar_hashed_id', true );
 					$avatar_uri = um_get_domain_protocol() . 'gravatar.com/avatar/' . $avatar_hash_id;
 					$avatar_uri = add_query_arg( 's', 400, $avatar_uri );
-					$gravatar_type = um_get_option( 'use_um_gravatar_default_builtin_image' );
+					$gravatar_type = UM()->options()->get( 'use_um_gravatar_default_builtin_image' );
 					$photo_type = 'um-avatar-gravatar';
-					if ($gravatar_type == 'default') {
-						if (um_get_option( 'use_um_gravatar_default_image' )) {
+					if ( $gravatar_type == 'default' ) {
+						if ( UM()->options()->get( 'use_um_gravatar_default_image' ) ) {
 							$avatar_uri = add_query_arg( 'd', um_get_default_avatar_uri(), $avatar_uri );
 						}
 					} else {

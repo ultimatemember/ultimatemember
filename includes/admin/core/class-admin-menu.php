@@ -106,15 +106,15 @@ if ( ! class_exists( 'Admin_Menu' ) ) {
          ***/
         function secondary_menu_items() {
 
-            add_submenu_page( $this->slug, __('Forms', $this->slug), __('Forms', $this->slug), 'manage_options', 'edit.php?post_type=um_form', '', '' );
+            add_submenu_page( $this->slug, __( 'Forms', 'ultimate-member' ), __( 'Forms', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_form', '' );
 
             add_submenu_page( $this->slug, __( 'User Roles', 'ultimate-member' ), __( 'User Roles', 'ultimate-member' ), 'manage_options', 'um_roles', array( &$this, 'um_roles_pages' ) );
 
-            if ( um_get_option('members_page' ) || !get_option('um_options') ){
-                add_submenu_page( $this->slug, __('Member Directories', $this->slug), __('Member Directories', $this->slug), 'manage_options', 'edit.php?post_type=um_directory', '', '' );
+            if ( UM()->options()->get( 'members_page' ) ) {
+                add_submenu_page( $this->slug, __( 'Member Directories', 'ultimate-member' ), __( 'Member Directories', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_directory', '' );
             }
 
-            do_action('um_extend_admin_menu');
+            do_action( 'um_extend_admin_menu' );
 
         }
 

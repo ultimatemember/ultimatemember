@@ -52,6 +52,9 @@ if ( ! class_exists( 'Members' ) ) {
 
 			$string = substr( $string, 0, -4 );
 
+            if ( UM()->options()->get('members_page') == 0 && um_is_core_page( 'members' ) ) {
+                um_redirect_home();
+            }
 			if ( empty( $string ) )
 				return '';
 

@@ -198,6 +198,7 @@ if ( ! class_exists( 'UM' ) ) {
 
                 //include short non class functions
                 require_once 'um-short-functions.php';
+                require_once 'um-deprecated-functions.php';
             }
         }
 
@@ -330,6 +331,19 @@ if ( ! class_exists( 'UM' ) ) {
             }
             return $this->classes['common'];
         }
+
+
+		/**
+		* @since 2.0
+		*
+		* @return um\core\Options()
+		*/
+		function options() {
+			if ( empty( $this->classes['options'] ) ) {
+				$this->classes['options'] = new um\core\Options();
+			}
+			return $this->classes['options'];
+		}
 
 
         /**
@@ -520,6 +534,20 @@ if ( ! class_exists( 'UM' ) ) {
                 $this->classes['admin_forms_' . $data['class']] = new um\admin\core\Admin_Forms( $data );
             }
             return $this->classes['admin_forms_' . $data['class']];
+        }
+
+
+        /**
+         * @since 2.0
+         *
+         * @param $data array
+         * @return um\admin\core\Admin_Forms_Settings()
+         */
+        function admin_forms_settings( $data ) {
+            if ( empty( $this->classes['admin_forms_settings_' . $data['class']] ) ) {
+                $this->classes['admin_forms_settings_' . $data['class']] = new um\admin\core\Admin_Forms_Settings( $data );
+            }
+            return $this->classes['admin_forms_settings_' . $data['class']];
         }
 
 

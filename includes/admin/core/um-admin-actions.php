@@ -160,8 +160,8 @@
 	add_action('um_admin_do_action__opt_into_tracking', 'um_admin_do_action__opt_into_tracking');
 	function um_admin_do_action__opt_into_tracking( $action ) {
 		if ( !is_admin() || !current_user_can('manage_options') ) die();
-		
-		um_update_option( 'um_allow_tracking', 1 );
+
+		UM()->options()->update( 'um_allow_tracking', 1 );
 		update_option( 'um_tracking_notice', 1 );
 
 		$tracking = new um\core\Tracking();
@@ -176,8 +176,8 @@
 	add_action('um_admin_do_action__opt_out_of_tracking', 'um_admin_do_action__opt_out_of_tracking');
 	function um_admin_do_action__opt_out_of_tracking( $action ){
 		if ( !is_admin() || !current_user_can('manage_options') ) die();
-		
-		um_update_option( 'um_allow_tracking', 0 );
+
+		UM()->options()->update( 'um_allow_tracking', 0 );
 		update_option('um_tracking_notice', 1 );
 		
 		exit( wp_redirect( remove_query_arg('um_adm_action') ) );
