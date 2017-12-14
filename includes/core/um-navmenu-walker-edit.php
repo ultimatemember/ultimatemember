@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+if ( ! class_exists( 'UM_Menu_Item_Custom_Fields_Editor' ) ) :
 
 class UM_Menu_Item_Custom_Fields_Editor {
 
@@ -137,6 +140,8 @@ class UM_Menu_Item_Custom_Fields_Editor {
                 </p>
 			<?php }
 		} ?>
+
+			<div class="clear"></div>
 		
 		</div>
 		
@@ -149,4 +154,7 @@ class UM_Menu_Item_Custom_Fields_Editor {
 		return $columns;
 	}
 }
+
+endif;
+
 UM_Menu_Item_Custom_Fields_Editor::init();

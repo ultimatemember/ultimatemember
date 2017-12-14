@@ -1037,7 +1037,9 @@ if ( ! class_exists( 'UM' ) ) {
 
             ob_start();
 
-            require_once 'core/um-navmenu.php';
+			if ( $this->options()->get( 'disable_menu' ) == 0 ) {
+				require_once 'core/um-navmenu.php';
+			}
 
             require_once 'core/um-actions-form.php';
             require_once 'core/um-actions-access.php';
