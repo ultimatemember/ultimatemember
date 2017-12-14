@@ -1,9 +1,12 @@
 <?php
+/**
+ * This is template for NavMenu Walker Class which extends from latest parents
+ */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'UM_Menu_Item_Custom_Fields_Walker' ) ) :
+if ( ! class_exists( '{{{%um_navmenu_walker%}}}' ) ) :
 
-class UM_Menu_Item_Custom_Fields_Walker extends Walker_Nav_Menu_Edit {
+class {{{%um_navmenu_walker%}}} extends {{{%parent_walker%}}} {
 
 	function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ) {
 		$item_output = '';
