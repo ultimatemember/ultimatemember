@@ -13,10 +13,10 @@
         	}
         }
 
-		if ( !is_email( $user ) ) {
+		if ( username_exists( $user ) ) {
 			$data = get_user_by( 'login', $user );
 			$user_email = $data->user_email;
-		} else {
+		} else if( email_exists( $user ) ) {
 			$data = get_user_by( 'email', $user );
 			$user_email = $user;
 		}
