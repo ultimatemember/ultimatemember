@@ -1695,6 +1695,8 @@
 	/**
 	 * Check if meta_value exists
 	 *
+	 * UNUSED
+	 *
 	 * @param  string $key
 	 * @param  mixed  $value
 	 *
