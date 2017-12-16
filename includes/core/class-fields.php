@@ -2322,15 +2322,16 @@
 
 				if ( ! empty( $options ) ) {
 					//fix when customers change options for role (radio/dropdown) fields
-					foreach ( $roles as $role_key => $role_title ) {
-						if ( false !== $search_key = array_search( $role_title, $options ) ) {
-							if ( $role_key !== $search_key ) {
-								$options[ $role_key ] = $role_title;
-								unset( $options[ $search_key ] );
-							}
+					$fixed_options = array();
+					foreach ( $options as $option ) {
+						$search_key = array_search( $option, $roles );
+						if ( false !== $search_key ) {
+							$fixed_options[$search_key] = $option;
+						} else {
+							$fixed_options[] = $option;
 						}
 					}
-					$options = array_intersect( $options, $roles );
+					$options = $fixed_options;
 				} else {
 					$options = $roles;
 				}
