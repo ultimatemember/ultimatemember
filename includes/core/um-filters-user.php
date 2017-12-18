@@ -1,6 +1,8 @@
 <?php
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
-	
+
 	/***
 	***	@Main admin user actions
 	***/

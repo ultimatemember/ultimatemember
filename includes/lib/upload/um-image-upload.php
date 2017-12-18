@@ -11,6 +11,7 @@ while( !file_exists( $wp_config ) );
 if ( !file_exists( $wp_load ) ) {
     $dirs = glob( $dirname . '/*' , GLOB_ONLYDIR );
 
+
     foreach ( $dirs as $key => $value ) {
         $wp_load = "{$value}/wp-load.php";
         if ( file_exists( $wp_load ) ) {

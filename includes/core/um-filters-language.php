@@ -1,4 +1,7 @@
-<?php 
+<?php
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 add_filter("um_localize_permalink_filter","um_localize_permalink_filter",10,3);
 function um_localize_permalink_filter( $core_pages,  $page_id, $profile_url ){
