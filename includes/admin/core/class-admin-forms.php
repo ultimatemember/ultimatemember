@@ -972,6 +972,11 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
         }
 
 
+        function render_info_text( $field_data ) {
+            return $field_data['value'];
+        }
+
+
         /**
          * Get field value
          *
