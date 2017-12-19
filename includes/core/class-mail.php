@@ -16,6 +16,8 @@ if ( ! class_exists( 'Mail' ) ) {
 			add_filter( 'mandrill_nl2br', array( &$this, 'mandrill_nl2br' ) );
 			add_action( 'plugins_loaded', array( &$this, 'init_paths' ), 99 );
 
+			//wpml translations
+            add_filter( 'um_email_send_subject', array( &$this , 'um_email_send_subject'), 10 , 2 );
 		}
 
 
@@ -58,7 +60,8 @@ if ( ! class_exists( 'Mail' ) ) {
 			$this->attachments = null;
 			$this->headers = 'From: '. UM()->options()->get('mail_from') .' <'. UM()->options()->get('mail_from_addr') .'>' . "\r\n";
 
-			$this->subject = um_convert_tags( UM()->options()->get( $template . '_sub' ), $args );
+			$subject = apply_filters( 'um_email_send_subject', UM()->options()->get( $template . '_sub' ), $template );
+			$this->subject = um_convert_tags( $subject , $args );
 
 			$this->message = $this->prepare_template( $template, $args );
 
@@ -318,6 +321,35 @@ if ( ! class_exists( 'Mail' ) ) {
 				wp_send_json_error( new \WP_Error( 'template_not_exists', __( 'Can not remove template from theme', 'ultimate-member' ) ) );
 			}
 		}
+
+		/**
+         * Adding endings to the "Subject Line" field, depending on the language.
+         *
+		 * @param $subject
+		 * @param $template
+		 *
+		 * @return string
+		 */
+		function um_email_send_subject( $subject, $template ){
+			if( um_is_wpml_active() ){
+				global $sitepress;
+
+				$default_language_code = $sitepress->get_locale_from_language_code( $sitepress->get_default_language() );
+				$current_language_code = $sitepress->get_locale_from_language_code( $sitepress->get_current_language() );
+
+				$lang = '';
+
+				if ( $default_language_code != $current_language_code ) {
+					$lang = '_' . $current_language_code;
+				}
+
+				$value_default = UM()->options()->get( $template . '_sub'  );
+				$value = UM()->options()->get( $template . '_sub' . $lang );
+
+				$subject = ! empty( $value ) ? $value : $value_default;
+			}
+		    return $subject;
+        }
 
 	}
 }
