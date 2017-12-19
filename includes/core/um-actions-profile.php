@@ -104,8 +104,16 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			$to_update['description'] = $args['submitted']['description'];
 		}
 
-		if (!empty( $args['submitted']['role'] )) {
-			$to_update['role'] = $args['submitted']['role'];
+		if ( ! empty( $args['submitted']['role'] ) ) {
+			global $wp_roles;
+			$role_keys = array_map( function( $item ) {
+				return 'um_' . $item;
+			}, get_option( 'um_roles' ) );
+			$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+
+			if ( ! in_array( $args['submitted']['role'], $exclude_roles ) ) {
+				$to_update['role'] = $args['submitted']['role'];
+			}
 		}
 
 		do_action( 'um_user_pre_updating_profile', $to_update );

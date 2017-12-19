@@ -989,10 +989,14 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
             $default = isset( $field_data['default' . $i] ) ? $field_data['default' . $i] : $default;
 
             if ( $field_data['type'] == 'checkbox' || $field_data['type'] == 'multi_checkbox' ) {
-                return ( isset( $field_data['value' . $i] ) && '' !== $field_data['value' . $i] ) ? $field_data['value' . $i] : $default;
+                $value = ( isset( $field_data['value' . $i] ) && '' !== $field_data['value' . $i] ) ? $field_data['value' . $i] : $default;
             } else {
-                return isset( $field_data['value' . $i] ) ? $field_data['value' . $i] : $default;
+                $value = isset( $field_data['value' . $i] ) ? $field_data['value' . $i] : $default;
             }
+
+            $value = is_string( $value ) ? stripslashes( $value ) : $value;
+
+            return $value;
         }
     }
 }

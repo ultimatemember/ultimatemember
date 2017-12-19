@@ -126,18 +126,30 @@ if ( ! class_exists( 'Access' ) ) {
 
 					$custom_restrict = apply_filters( 'um_custom_restriction', true, $restriction );
 
-					if ( ! empty( $restriction['_um_access_roles'] ) )
+					if ( empty( $restriction['_um_access_roles'] ) ) {
+						if ( $custom_restrict ) {
+							$this->allow_access = true;
+							return;
+						} else {
+							//restrict terms page by 404 for logged in users with wrong role
+							global $wp_query;
+							$wp_query->set_404();
+							status_header( 404 );
+							nocache_headers();
+						}
+					} else {
 						$user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
 
-					if ( isset( $user_can ) && $user_can && $custom_restrict ) {
-						$this->allow_access = true;
-						return;
-					} else {
-						//restrict terms page by 404 for logged in users with wrong role
-						global $wp_query;
-						$wp_query->set_404();
-						status_header( 404 );
-						nocache_headers();
+						if ( isset( $user_can ) && $user_can && $custom_restrict ) {
+							$this->allow_access = true;
+							return;
+						} else {
+							//restrict terms page by 404 for logged in users with wrong role
+							global $wp_query;
+							$wp_query->set_404();
+							status_header( 404 );
+							nocache_headers();
+						}
 					}
 				}
 			}
@@ -187,6 +199,7 @@ if ( ! class_exists( 'Access' ) ) {
 					if ( $access == 2 ) {
 						//global settings for accessible home page
 						$home_page_accessible = UM()->options()->get( 'home_page_accessible' );
+
 						if ( $home_page_accessible == 0 ) {
 							//get redirect URL if not set get login page by default
 							$redirect = UM()->options()->get( 'access_redirect' );
@@ -194,6 +207,9 @@ if ( ! class_exists( 'Access' ) ) {
 								$redirect = um_get_core_page( 'login' );
 
 							$this->redirect_handler = $this->set_referer( $redirect, 'global' );
+						} else {
+							$this->allow_access = true;
+							return;
 						}
 					}
 				}
@@ -212,6 +228,9 @@ if ( ! class_exists( 'Access' ) ) {
 								$redirect = um_get_core_page( 'login' );
 
 							$this->redirect_handler = $this->set_referer( $redirect, 'global' );
+						} else {
+							$this->allow_access = true;
+							return;
 						}
 					}
 				}
@@ -223,11 +242,13 @@ if ( ! class_exists( 'Access' ) ) {
 
 				//build exclude URLs pages
 				$redirects = array();
-				$redirects[] = untrailingslashit( UM()->options()->get( 'access_redirect' ) );
+				$redirects[] = trim( untrailingslashit( UM()->options()->get( 'access_redirect' ) ) );
 
 				$exclude_uris = UM()->options()->get( 'access_exclude_uris' );
-				if ( ! empty( $exclude_uris ) )
+				if ( ! empty( $exclude_uris ) ) {
+					$exclude_uris = array_map( 'trim', $exclude_uris );
 					$redirects = array_merge( $redirects, $exclude_uris );
+				}
 
 				$redirects = array_unique( $redirects );
 
@@ -235,16 +256,17 @@ if ( ! class_exists( 'Access' ) ) {
 				$current_url = untrailingslashit( $current_url );
 				$current_url_slash = trailingslashit( $current_url );
 
-				//get redirect URL if not set get login page by default
-				$redirect = UM()->options()->get( 'access_redirect' );
-				if ( ! $redirect )
-					$redirect = um_get_core_page( 'login' );
-
-				if ( ! isset( $post->ID ) || ! ( in_array( $current_url, $redirects ) || in_array( $current_url_slash, $redirects ) ) ) {
+				if ( ! ( isset( $post->ID ) && ( in_array( $current_url, $redirects ) || in_array( $current_url_slash, $redirects ) ) ) ) {
 					//if current page not in exclude URLs
+					//get redirect URL if not set get login page by default
+					$redirect = UM()->options()->get( 'access_redirect' );
+					if ( ! $redirect )
+						$redirect = um_get_core_page( 'login' );
+
 					$this->redirect_handler = $this->set_referer( $redirect, 'global' );
 				} else {
 					$this->redirect_handler = false;
+					$this->allow_access = true;
 				}
 			}
 		}
@@ -284,6 +306,11 @@ if ( ! class_exists( 'Access' ) ) {
 
 			//check global restrict content options
 			do_action( 'um_access_check_global_settings' );
+
+			/*var_dump($this->allow_access);
+			var_dump($this->redirect_handler);
+			var_dump('12345678');
+			exit;*/
 
 			$this->check_access();
 		}
@@ -475,9 +502,9 @@ if ( ! class_exists( 'Access' ) ) {
                                 if ( ! isset( $restriction['_um_noaccess_action'] ) || '0' == $restriction['_um_noaccess_action'] ) {
 
                                     if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
-                                        $post->post_content = $restricted_global_message;
+                                        $post->post_content = stripslashes( $restricted_global_message );
                                     } elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
-                                        $post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? $restriction['_um_restrict_custom_message'] : '';
+                                        $post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
                                     }
 
                                 }
@@ -492,9 +519,9 @@ if ( ! class_exists( 'Access' ) ) {
                             if ( ! isset( $restriction['_um_noaccess_action'] ) || '0' == $restriction['_um_noaccess_action'] ) {
 
                                 if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
-                                    $post->post_content = $restricted_global_message;
+                                    $post->post_content = stripslashes( $restricted_global_message );
                                 } elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
-                                    $post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? $restriction['_um_restrict_custom_message'] : '';
+                                    $post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
                                 }
 
                                 $filtered_posts[] = $post;
@@ -531,13 +558,19 @@ if ( ! class_exists( 'Access' ) ) {
 
 	                    $custom_restrict = apply_filters( 'um_custom_restriction', true, $restriction );
 
-                        if ( ! empty( $restriction['_um_access_roles'] ) )
-                            $user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
+	                    if ( empty( $restriction['_um_access_roles'] ) ) {
+		                    if ( $custom_restrict ) {
+		                        $filtered_posts[] = $post;
+		                        continue;
+		                    }
+	                    } else {
+		                    $user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
 
-                        if ( isset( $user_can ) && $user_can && $custom_restrict ) {
-                            $filtered_posts[] = $post;
-                            continue;
-                        }
+		                    if ( isset( $user_can ) && $user_can && $custom_restrict ) {
+			                    $filtered_posts[] = $post;
+			                    continue;
+		                    }
+	                    }
 
                         if ( empty( $query->is_singular ) ) {
                             //if not single query when exclude if set _um_access_hide_from_queries
@@ -546,9 +579,9 @@ if ( ! class_exists( 'Access' ) ) {
                                 if ( ! isset( $restriction['_um_noaccess_action'] ) || '0' == $restriction['_um_noaccess_action'] ) {
 
                                     if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
-                                        $post->post_content = $restricted_global_message;
+                                        $post->post_content = stripslashes( $restricted_global_message );
                                     } elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
-                                        $post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? $restriction['_um_restrict_custom_message'] : '';
+                                        $post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
                                     }
 
                                 }
@@ -563,13 +596,13 @@ if ( ! class_exists( 'Access' ) ) {
                             if ( ! isset( $restriction['_um_noaccess_action'] ) || '0' == $restriction['_um_noaccess_action'] ) {
 
                                 if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
-                                    $post->post_content = $restricted_global_message;
+                                    $post->post_content = stripslashes( $restricted_global_message );
 
                                     if ( 'attachment' == $post->post_type ) {
                                         remove_filter( 'the_content', 'prepend_attachment' );
                                     }
                                 } elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
-                                    $post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? $restriction['_um_restrict_custom_message'] : '';
+                                    $post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
 
                                     if ( 'attachment' == $post->post_type ) {
                                         remove_filter( 'the_content', 'prepend_attachment' );
@@ -607,9 +640,9 @@ if ( ! class_exists( 'Access' ) ) {
                                 if ( ! isset( $restriction['_um_noaccess_action'] ) || '0' == $restriction['_um_noaccess_action'] ) {
 
                                     if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
-                                        $post->post_content = $restricted_global_message;
+                                        $post->post_content = stripslashes( $restricted_global_message );
                                     } elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
-                                        $post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? $restriction['_um_restrict_custom_message'] : '';
+                                        $post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
                                     }
 
                                 }
@@ -624,13 +657,13 @@ if ( ! class_exists( 'Access' ) ) {
                             if ( ! isset( $restriction['_um_noaccess_action'] ) || '0' == $restriction['_um_noaccess_action'] ) {
 
                                 if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
-                                    $post->post_content = $restricted_global_message;
+                                    $post->post_content = stripslashes( $restricted_global_message );
 
                                     if ( 'attachment' == $post->post_type ) {
                                         remove_filter( 'the_content', 'prepend_attachment' );
                                     }
                                 } elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
-                                    $post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? $restriction['_um_restrict_custom_message'] : '';
+                                    $post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
 
                                     if ( 'attachment' == $post->post_type ) {
                                         remove_filter( 'the_content', 'prepend_attachment' );
@@ -711,13 +744,19 @@ if ( ! class_exists( 'Access' ) ) {
 
 	                        $custom_restrict = apply_filters( 'um_custom_restriction', true, $restriction );
 
-	                        if ( ! empty( $restriction['_um_access_roles'] ) )
-                                $user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
+	                        if ( empty( $restriction['_um_access_roles'] ) ) {
+		                        if ( $custom_restrict ) {
+		                            $filtered_items[] = $menu_item;
+		                            continue;
+		                        }
+	                        } else {
+		                        $user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
 
-                            if ( isset( $user_can ) && $user_can && $custom_restrict ) {
-                                $filtered_items[] = $menu_item;
-                                continue;
-                            }
+		                        if ( isset( $user_can ) && $user_can && $custom_restrict ) {
+			                        $filtered_items[] = $menu_item;
+			                        continue;
+		                        }
+	                        }
 
                             //if not single query when exclude if set _um_access_hide_from_queries
                             if ( empty( $restriction['_um_access_hide_from_queries'] ) ) {
