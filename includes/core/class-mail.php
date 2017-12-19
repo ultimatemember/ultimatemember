@@ -331,7 +331,7 @@ if ( ! class_exists( 'Mail' ) ) {
 		 * @return string
 		 */
 		function um_email_send_subject( $subject, $template ){
-			if( um_is_wpml_active() ){
+			if ( UM()->external_integrations()->is_wpml_active() ) {
 				global $sitepress;
 
 				$default_language_code = $sitepress->get_locale_from_language_code( $sitepress->get_default_language() );

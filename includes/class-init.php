@@ -317,6 +317,7 @@ if ( ! class_exists( 'UM' ) ) {
             $this->cron();
             $this->tracking();
             $this->mobile();
+            $this->external_integrations();
         }
 
 
@@ -330,6 +331,19 @@ if ( ! class_exists( 'UM' ) ) {
                 $this->classes['common'] = new um\core\Common();
             }
             return $this->classes['common'];
+        }
+
+
+        /**
+         * @since 2.0
+         *
+         * @return um\core\External_Integrations()
+         */
+        function external_integrations() {
+            if ( empty( $this->classes['external_integrations'] ) ) {
+                $this->classes['external_integrations'] = new um\core\External_Integrations();
+            }
+            return $this->classes['external_integrations'];
         }
 
 

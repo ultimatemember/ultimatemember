@@ -589,46 +589,6 @@
 	}
 
 
-	/**
-	 * Get a translated core page URL
-	 *
-	 * @param $post_id
-	 * @param $language
-	 * @return bool|false|string
-	 */
-	function um_get_url_for_language( $post_id, $language ) {
-		if ( ! um_is_wpml_active() )
-			return '';
-
-		$lang_post_id = icl_object_id( $post_id, 'page', true, $language );
-
-		if ( $lang_post_id != 0 ) {
-			$url = get_permalink( $lang_post_id );
-		} else {
-			// No page found, it's most likely the homepage
-			global $sitepress;
-			$url = $sitepress->language_url( $language );
-		}
-
-		return $url;
-	}
-
-
-	/**
-	 * Check if WPML is active
-	 *
-	 * @return bool|mixed
-	 */
-	function um_is_wpml_active() {
-		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
-			global $sitepress;
-
-			return $sitepress->get_setting( 'setup_complete' );
-		}
-
-		return false;
-	}
-
 	/***
 	 ***    @Get core page url
 	 ***/
@@ -672,37 +632,26 @@
 		return $value;
 	}
 
-	/***
-	 ***    @Get core page url
-	 ***/
+
+	/**
+	 * Get core page url
+	 *
+	 *
+	 * @param $slug
+	 * @param bool $updated
+	 *
+	 * @return bool|false|mixed|string|void
+	 */
 	function um_get_core_page( $slug, $updated = false ) {
 		$url = '';
 
-		if (isset( UM()->config()->permalinks[$slug] )) {
-			$url = get_permalink( UM()->config()->permalinks[$slug] );
-			if ($updated)
+		if ( isset( UM()->config()->permalinks[ $slug ] ) ) {
+			$url = get_permalink( UM()->config()->permalinks[ $slug ] );
+			if ( $updated )
 				$url = add_query_arg( 'updated', esc_attr( $updated ), $url );
 		}
 
-		if (function_exists( 'icl_get_current_language' ) && icl_get_current_language() != icl_get_default_language()) {
-
-			$url = um_get_url_for_language( UM()->config()->permalinks[$slug], icl_get_current_language() );
-
-			if (get_post_meta( get_the_ID(), '_um_wpml_account', true ) == 1) {
-				$url = get_permalink( get_the_ID() );
-			}
-			if (get_post_meta( get_the_ID(), '_um_wpml_user', true ) == 1) {
-				$url = um_get_url_for_language( UM()->config()->permalinks[$slug], icl_get_current_language() );
-			}
-		}
-
-		if ($url) {
-			$url = apply_filters( 'um_get_core_page_filter', $url, $slug, $updated );
-
-			return $url;
-		}
-
-		return '';
+		return apply_filters( 'um_get_core_page_filter', $url, $slug, $updated );
 	}
 
 	/***

@@ -188,13 +188,13 @@ class UM_Emails_List_Table extends WP_List_Table {
     }
 
     function set_columns( $args = array() ) {
-        if( count( $this->bulk_actions ) ) {
+        if ( count( $this->bulk_actions ) ) {
             $args = array_merge( array( 'cb' => '<input type="checkbox" />' ), $args );
         }
         $this->columns = $args;
 
-        if( um_is_wpml_active() ){
-	        $this->columns = UM_WPML_Column_Extends::add_management_column($this->columns);
+        if ( UM()->external_integrations()->is_wpml_active() ) {
+	        $this->columns = UM_WPML_Column_Extends::add_management_column( $this->columns );
         }
         return $this;
     }
@@ -240,10 +240,12 @@ class UM_Emails_List_Table extends WP_List_Table {
         return '<a class="button um-email-configure" href="' . add_query_arg( array( 'email' => $item['key'] ) ) . '"><span class="dashicons dashicons-admin-generic"></span></a>';
     }
 
-    function column_icl_translations( $item ){
-        if( um_is_wpml_active() ){
+    function column_icl_translations( $item ) {
+        if ( UM()->external_integrations()->is_wpml_active() ) {
             return UM_WPML_Column_Extends::add_content_for_management_column( $item );
         }
+
+        return '';
     }
 
 

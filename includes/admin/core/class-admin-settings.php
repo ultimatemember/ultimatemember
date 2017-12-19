@@ -2183,8 +2183,8 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
          *
 	     * @return array
 	     */
-        function um_admin_settings_email_section_fields( $section_fields, $email_key ){
-            if( um_is_wpml_active() ){
+        function um_admin_settings_email_section_fields( $section_fields, $email_key ) {
+            if ( UM()->external_integrations()->is_wpml_active() ) {
 	            global $sitepress;
 
 	            $default_language_code = $sitepress->get_locale_from_language_code( $sitepress->get_default_language() );
