@@ -53,6 +53,9 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
             add_action( 'admin_notices', array( $this, 'check_wrong_licenses' ) );
 
             add_action( 'admin_init', array( &$this, 'um_download_install_info' ) );
+
+            // wpml translations
+            add_filter( 'um_admin_settings_email_section_fields', array( &$this, 'um_admin_settings_email_section_fields' ), 10, 2 );
         }
 
 
@@ -1440,7 +1443,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 
             $in_theme = UM()->mail()->template_in_theme( $email_key );
 
-            $section_fields = array(
+            $section_fields = apply_filters( 'um_admin_settings_email_section_fields', array(
                 array(
                     'id'            => 'um_email_template',
                     'type'          => 'hidden',
@@ -1468,7 +1471,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                     'value' 		=> UM()->mail()->get_email_template( $email_key ),
                     'in_theme'      => $in_theme
                 ),
-            );
+            ), $email_key );
 
             return $this->render_settings_section( $section_fields, 'email', $email_key );
         }
@@ -2169,6 +2172,38 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
             }
 
             return $settings;
+        }
+
+	    /**
+         * Adding endings to the "Subject Line" field, depending on the language.
+         * @exaple welcome_email_sub_de_DE
+         *
+	     * @param $section_fields
+	     * @param $email_key
+         *
+	     * @return array
+	     */
+        function um_admin_settings_email_section_fields( $section_fields, $email_key ){
+            if( um_is_wpml_active() ){
+	            global $sitepress;
+
+	            $default_language_code = $sitepress->get_locale_from_language_code( $sitepress->get_default_language() );
+	            $current_language_code = $sitepress->get_locale_from_language_code( $sitepress->get_current_language() );
+
+	            $lang = '';
+
+	            if ( $default_language_code != $current_language_code ) {
+		            $lang = '_' . $current_language_code;
+	            }
+
+	            $value_default = UM()->options()->get( $email_key . '_sub'  );
+	            $value = UM()->options()->get( $email_key . '_sub' . $lang );
+
+	            $section_fields[2]['id'] = $email_key . '_sub' . $lang;
+	            $section_fields[2]['value'] = ! empty( $value ) ? $value : $value_default;
+            }
+
+            return $section_fields;
         }
     }
 }
