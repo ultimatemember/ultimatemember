@@ -1,5 +1,8 @@
 <?php
-	
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+
 	/***
 	***	@checks if user can access the backend
 	***/

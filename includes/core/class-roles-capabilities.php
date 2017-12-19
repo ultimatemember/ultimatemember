@@ -141,6 +141,18 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
         }
 
 
+		/**
+		 * Set roles to user (remove all previous roles)
+		 * make user only with $roles roles
+		 *
+		 * @param int $user_id
+		 * @param string|array $roles
+		 */
+		function set_roles( $user_id, $roles ) {
+
+		}
+
+
         /**
          * Get user one of UM roles if it has it
          *

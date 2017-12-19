@@ -1,4 +1,7 @@
 <?php
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 	/***
 	***	@process a new request

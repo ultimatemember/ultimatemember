@@ -1,4 +1,7 @@
 <?php
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 	/***
 	***	@modify field args just before it is saved into form

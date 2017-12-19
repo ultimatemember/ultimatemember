@@ -1,4 +1,7 @@
 <?php
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 	/***
 	***	@Members Filter Hooks
@@ -305,7 +308,7 @@
 	add_filter('pre_user_query','um_modify_sortby_randomly');
 	function um_modify_sortby_randomly( $query ){
 
-		if( um_is_session_started() === FALSE ){
+		if( um_is_session_started() === false ){
 				@session_start();
 		}
 		

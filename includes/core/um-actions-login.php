@@ -1,4 +1,7 @@
 <?php
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 	/**
 	 * Error procesing hook for login

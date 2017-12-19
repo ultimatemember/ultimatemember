@@ -33,6 +33,7 @@ if ( ! class_exists( 'Admin_Forms_Settings' ) ) {
 					return $field_data['value' . $i];
 				} else {
 					$value = UM()->options()->get( $field_data['id' . $i] );
+					$value = is_string( $value ) ? stripslashes( $value ) : $value;
 					return '' !== $value ? $value : $default;
 				}
 			} else {
@@ -40,6 +41,7 @@ if ( ! class_exists( 'Admin_Forms_Settings' ) ) {
 					return $field_data['value'. $i];
 				} else {
 					$value = UM()->options()->get( $field_data['id' . $i] );
+					$value = is_string( $value ) ? stripslashes( $value ) : $value;
 					return isset( $value ) ? $value : $default;
 				}
 			}
