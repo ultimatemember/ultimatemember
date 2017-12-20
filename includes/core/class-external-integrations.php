@@ -290,7 +290,7 @@ if ( ! class_exists( 'External_Integrations' ) ) {
 				)
 			);
 
-			$language_codes = $this->get_languages_codes();
+			$language_codes = $this->get_languages_codes($code);
 
 			$lang = '';
 			if ( $language_codes['default'] != $language_codes['current'] ) {
