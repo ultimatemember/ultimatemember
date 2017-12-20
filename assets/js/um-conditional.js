@@ -211,7 +211,6 @@ jQuery(document).ready( function (){
     function um_apply_conditions($dom, is_single_update) {
         var operators = ['empty', 'not empty', 'equals to', 'not equals', 'greater than', 'less than', 'contains'];
         var key = $dom.parents('.um-field[data-key]').data('key');
-
         var conditions = um_field_conditions[key];
 
         var live_field_value = um_get_field_data($dom);
@@ -284,11 +283,19 @@ jQuery(document).ready( function (){
                 }
             }
 
-            if (condition.operator == 'contains') {
-                if (live_field_value && live_field_value.indexOf(condition.value) >= 0 && um_in_array(live_field_value, $owners_values[condition.owner])) {
-                    $owners[condition.owner][index] = true;
+            if ( condition.operator == 'contains' ) {
+                if ( 'multiselect' == um_get_field_type( $dom.parents('.um-field[data-key]') ) ) {
+                    if ( live_field_value && live_field_value.indexOf( condition.value ) >= 0 && um_in_array( condition.value, live_field_value ) ) {
+                        $owners[condition.owner][index] = true;
+                    } else {
+                        $owners[condition.owner][index] = false;
+                    }
                 } else {
-                    $owners[condition.owner][index] = false;
+                    if ( live_field_value && live_field_value.indexOf( condition.value ) >= 0 && um_in_array( live_field_value, $owners_values[ condition.owner ] ) ) {
+                        $owners[condition.owner][index] = true;
+                    } else {
+                        $owners[condition.owner][index] = false;
+                    }
                 }
             }
 
