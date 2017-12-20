@@ -18,7 +18,7 @@ class UM_Menu_Item_Custom_Fields_Walker extends Walker_Nav_Menu_Edit {
 
 	}
 
-	protected function get_fields( $item, $depth, $args = array(), $id = 0 ) {
+	public function get_fields( $item, $depth, $args = array(), $id = 0 ) {
 		ob_start();
 
 		if( isset(  $item->ID ) ){

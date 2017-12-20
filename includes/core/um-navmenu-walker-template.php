@@ -21,7 +21,7 @@ class {{{%um_navmenu_walker%}}} extends {{{%parent_walker%}}} {
 
 	}
 
-	protected function get_fields( $item, $depth, $args = array(), $id = 0 ) {
+	public function get_fields( $item, $depth, $args = array(), $id = 0 ) {
 		ob_start();
 
 		if( isset(  $item->ID ) ){
