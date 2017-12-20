@@ -79,8 +79,8 @@ if ( ! class_exists( 'Enqueue' ) ) {
             // enqueue styles
             $localize_data = apply_filters( 'um_enqueue_localize_data', array(
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
-                'fileupload' => um_url . 'includes/lib/upload/um-file-upload.php',
-                'imageupload' => um_url . 'includes/lib/upload/um-image-upload.php',
+                'fileupload' => UM()->get_ajax_route( 'um\core\Files', 'ajax_file_upload' ),
+                'imageupload' => UM()->get_ajax_route( 'um\core\Files', 'ajax_image_upload' ),
                 'remove_file' => UM()->get_ajax_route( 'um\core\Files', 'ajax_remove_file' ),
                 'delete_profile_photo' => UM()->get_ajax_route( 'um\core\Profile', 'ajax_delete_profile_photo' ),
                 'delete_cover_photo' => UM()->get_ajax_route( 'um\core\Profile', 'ajax_delete_cover_photo' ),
