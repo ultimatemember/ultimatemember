@@ -37,91 +37,6 @@ $order = ( isset( $_GET['order'] ) && 'asc' ==  strtolower( $_GET['order'] ) ) ?
 if( ! class_exists( 'WP_List_Table' ) )
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 
-	class UM_WPML_Column_Extends{
-        static function add_management_column($columns){
-            global $sitepress;
-	        $new_columns = $columns;
-	        $active_languages = $sitepress->get_active_languages();
-	        $current_language = $sitepress->get_current_language();
-	        unset( $active_languages[ $current_language ] );
-
-	        if ( count( $active_languages ) > 0 ) {
-		        $flags_column = '';
-		        foreach ( $active_languages as $language_data ) {
-			        $flags_column .= '<img src="' . $sitepress->get_flag_url( $language_data['code'] ). '" width="18" height="12" alt="' . $language_data['display_name'] . '" title="' . $language_data['display_name'] . '" style="margin:2px" />';
-		        }
-
-		        $new_columns = array();
-		        foreach ( $columns as $column_key => $column_content ) {
-			        $new_columns[ $column_key ] = $column_content;
-			        if ( 'email' === $column_key && ! isset( $new_columns['icl_translations'] ) )  {
-				        $new_columns['icl_translations'] = $flags_column;
-			        }
-		        }
-	        }
-
-	        return $new_columns;
-        }
-
-		static function add_content_for_management_column( $item ) {
-			global $sitepress;
-			$html = '';
-
-			$active_languages = $sitepress->get_active_languages();
-			$current_language = $sitepress->get_current_language();
-			unset( $active_languages[ $current_language ] );
-			foreach ( $active_languages as $language_data ) {
-				$html .= self::get_status_html( $item['key'], $language_data['code'] );
-			}
-			return $html;
-		}
-
-		static function get_status_html( $template, $code ) {
-			global $sitepress;
-			$status = 'add';
-			$lang = '';
-			$active_languages = $sitepress->get_active_languages();
-			$translation = array(
-				'edit' => array( 'icon' => 'edit_translation.png', 'text' => sprintf(
-					__( 'Edit the %s translation', 'sitepress' ),
-					$active_languages[$code]['display_name'] ) ),
-				'add'  => array( 'icon' => 'add_translation.png', 'text' => sprintf(
-					__( 'Add translation to %s', 'sitepress' ),
-					$active_languages[$code]['display_name']
-				)
-				)
-			);
-
-			$default_language_code = $sitepress->get_locale_from_language_code($sitepress->get_default_language());
-			$current_language_code = $sitepress->get_locale_from_language_code($code);
-
-			if ( $default_language_code != $current_language_code ) {
-				$lang = $current_language_code.'/';
-			}
-			$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' ) . $lang . $template . '.php';
-
-			if ( file_exists( $template_path ) ) {
-				$status = 'edit';
-			}
-
-			$link = add_query_arg( array( 'email' => $template, 'lang' => $code ) );
-
-			return self::render_status_icon( $link, $translation[$status]['text'], $translation[$status]['icon'] );
-		}
-
-		static function render_status_icon( $link, $text, $img ) {
-
-			$icon_html = '<a href="' . $link . '" title="' . $text . '">';
-			$icon_html .= '<img style="padding:1px;margin:2px;" border="0" src="'
-				. ICL_PLUGIN_URL . '/res/img/'
-				. $img . '" alt="'
-				. $text . '" width="16" height="16"/>';
-			$icon_html .= '</a>';
-
-			return $icon_html;
-		}
-	}
-
 class UM_Emails_List_Table extends WP_List_Table {
 
     var $no_items_message = '';
@@ -193,9 +108,6 @@ class UM_Emails_List_Table extends WP_List_Table {
         }
         $this->columns = $args;
 
-        if ( UM()->external_integrations()->is_wpml_active() ) {
-	        $this->columns = UM_WPML_Column_Extends::add_management_column( $this->columns );
-        }
         return $this;
     }
 
@@ -241,11 +153,7 @@ class UM_Emails_List_Table extends WP_List_Table {
     }
 
     function column_icl_translations( $item ) {
-        if ( UM()->external_integrations()->is_wpml_active() ) {
-            return UM_WPML_Column_Extends::add_content_for_management_column( $item );
-        }
-
-        return '';
+	    return UM()->external_integrations()->wpml_column_content( $item );
     }
 
 
@@ -264,11 +172,13 @@ $ListTable = new UM_Emails_List_Table( array(
 $per_page   = 20;
 $paged      = $ListTable->get_pagenum();
 
-$ListTable->set_columns( array(
-    'email'         => __( 'Email', 'ultimate-member' ),
-    'recipients'    => __( 'Recipient(s)', 'ultimate-member' ),
-    'configure'     => '',
+$columns = apply_filters( 'um_email_templates_columns', array(
+	'email'         => __( 'Email', 'ultimate-member' ),
+	'recipients'    => __( 'Recipient(s)', 'ultimate-member' ),
+	'configure'     => '',
 ) );
+
+$ListTable->set_columns( $columns );
 
 $emails = UM()->config()->email_notifications;
 

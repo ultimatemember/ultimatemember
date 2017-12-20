@@ -54,8 +54,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 
             add_action( 'admin_init', array( &$this, 'um_download_install_info' ) );
 
-            // wpml translations
-            add_filter( 'um_admin_settings_email_section_fields', array( &$this, 'um_admin_settings_email_section_fields' ), 10, 2 );
         }
 
 
@@ -2172,38 +2170,6 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
             }
 
             return $settings;
-        }
-
-	    /**
-         * Adding endings to the "Subject Line" field, depending on the language.
-         * @exaple welcome_email_sub_de_DE
-         *
-	     * @param $section_fields
-	     * @param $email_key
-         *
-	     * @return array
-	     */
-        function um_admin_settings_email_section_fields( $section_fields, $email_key ) {
-            if ( UM()->external_integrations()->is_wpml_active() ) {
-	            global $sitepress;
-
-	            $default_language_code = $sitepress->get_locale_from_language_code( $sitepress->get_default_language() );
-	            $current_language_code = $sitepress->get_locale_from_language_code( $sitepress->get_current_language() );
-
-	            $lang = '';
-
-	            if ( $default_language_code != $current_language_code ) {
-		            $lang = '_' . $current_language_code;
-	            }
-
-	            $value_default = UM()->options()->get( $email_key . '_sub'  );
-	            $value = UM()->options()->get( $email_key . '_sub' . $lang );
-
-	            $section_fields[2]['id'] = $email_key . '_sub' . $lang;
-	            $section_fields[2]['value'] = ! empty( $value ) ? $value : $value_default;
-            }
-
-            return $section_fields;
         }
     }
 }

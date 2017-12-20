@@ -16,8 +16,6 @@ if ( ! class_exists( 'Mail' ) ) {
 			add_filter( 'mandrill_nl2br', array( &$this, 'mandrill_nl2br' ) );
 			add_action( 'plugins_loaded', array( &$this, 'init_paths' ), 99 );
 
-			//wpml translations
-            add_filter( 'um_email_send_subject', array( &$this , 'um_email_send_subject'), 10 , 2 );
 		}
 
 
@@ -143,31 +141,15 @@ if ( ! class_exists( 'Mail' ) ) {
 		 * @return string
 		 */
 		function locate_template( $template_name ) {
-			//WPML compatibility and multilingual email templates
-
-			global $sitepress;
-
-			$default_language_code = $sitepress->get_locale_from_language_code($sitepress->get_default_language());
-			$current_language_code = $sitepress->get_locale_from_language_code($sitepress->get_current_language());
-
-			$lang = '';
-
-			if ( $default_language_code != $current_language_code &&
-                UM()->config()->email_notifications[$template_name]['recipient'] != 'admin' ) {
-				$lang = $current_language_code.'/';
-			}
-
-
 			// check if there is template at theme folder
 			$template = locate_template( array(
-				trailingslashit( 'ultimate-member/email' ) . $lang . $template_name . '.php',
 				trailingslashit( 'ultimate-member/email' ) . $template_name . '.php'
 			) );
 
 			//if there isn't template at theme folder get template file from plugin dir
 			if ( ! $template ) {
 				$path = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : um_path . 'templates/email';
-				$template = trailingslashit( $path ) . $lang . $template_name . '.php';
+				$template = trailingslashit( $path ) . $template_name . '.php';
 			}
 
 			// Return what we found.
@@ -184,24 +166,12 @@ if ( ! class_exists( 'Mail' ) ) {
 		 * @return string
 		 */
 		function template_in_theme( $template_name, $html = false ) {
-			//WPML compatibility and multilingual email templates
-			global $sitepress;
-
-			$default_language_code = $sitepress->get_locale_from_language_code($sitepress->get_default_language());
-			$current_language_code = $sitepress->get_locale_from_language_code($sitepress->get_current_language());
-
-			$lang = '';
-
-			if ( $default_language_code != $current_language_code ) {
-				$lang = $current_language_code.'/';
-			}
-
-
+			$template_name_file = apply_filters( 'um_change_email_template_file', $template_name );
 			$ext = ! $html ? '.php' : '.html';
 
 			// check if there is template at theme folder
 			$template = locate_template( array(
-				trailingslashit( 'ultimate-member/email' ) . $lang . $template_name . $ext
+				trailingslashit( 'ultimate-member/email' ) . $template_name_file . $ext
 			) );
 
 			// Return what we found.
@@ -219,23 +189,14 @@ if ( ! class_exists( 'Mail' ) ) {
 		 * @return string
 		 */
 		function get_template_file( $location, $template_name, $html = false ) {
-			global $sitepress;
 			$template_path = '';
-
-			$default_language_code = $sitepress->get_locale_from_language_code($sitepress->get_default_language());
-			$current_language_code = $sitepress->get_locale_from_language_code($sitepress->get_current_language());
-
-			$lang = '';
-
-			if ( $default_language_code != $current_language_code ) {
-				$lang = $current_language_code.'/';
-			}
+			$template_name_file = apply_filters( 'um_change_email_template_file', $template_name );
 
 			$ext = ! $html ? '.php' : '.html';
 
 			switch( $location ) {
 				case 'theme':
-					$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' ). $lang . $template_name . $ext;
+					$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' ). $template_name_file . $ext;
 					break;
 				case 'plugin':
 					$path = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : um_path . 'templates/email';
@@ -243,7 +204,6 @@ if ( ! class_exists( 'Mail' ) ) {
 					break;
 			}
 
-			//return apply_filters( 'wpc_client_template_location', $template_path, $location, $template_name, $path );
 			return $template_path;
 		}
 
@@ -321,35 +281,5 @@ if ( ! class_exists( 'Mail' ) ) {
 				wp_send_json_error( new \WP_Error( 'template_not_exists', __( 'Can not remove template from theme', 'ultimate-member' ) ) );
 			}
 		}
-
-		/**
-         * Adding endings to the "Subject Line" field, depending on the language.
-         *
-		 * @param $subject
-		 * @param $template
-		 *
-		 * @return string
-		 */
-		function um_email_send_subject( $subject, $template ){
-			if ( UM()->external_integrations()->is_wpml_active() ) {
-				global $sitepress;
-
-				$default_language_code = $sitepress->get_locale_from_language_code( $sitepress->get_default_language() );
-				$current_language_code = $sitepress->get_locale_from_language_code( $sitepress->get_current_language() );
-
-				$lang = '';
-
-				if ( $default_language_code != $current_language_code ) {
-					$lang = '_' . $current_language_code;
-				}
-
-				$value_default = UM()->options()->get( $template . '_sub'  );
-				$value = UM()->options()->get( $template . '_sub' . $lang );
-
-				$subject = ! empty( $value ) ? $value : $value_default;
-			}
-		    return $subject;
-        }
-
 	}
 }

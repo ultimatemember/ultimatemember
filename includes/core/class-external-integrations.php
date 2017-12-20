@@ -11,11 +11,16 @@ if ( ! class_exists( 'External_Integrations' ) ) {
 		 * Access constructor.
 		 */
 		function __construct() {
+			//WPML translations
 			add_filter( 'um_get_core_page_filter', array( &$this, 'get_core_page_url' ), 10, 3 );
+			add_filter( 'um_admin_settings_email_section_fields', array( &$this, 'um_admin_settings_email_section_fields' ), 10, 2 );
+			add_filter( 'um_email_send_subject', array( &$this , 'um_email_send_subject' ), 10, 2 );
+			add_filter( 'um_locate_email_template', array( &$this , 'locate_email_template' ), 10, 2 );
+			add_filter( 'um_change_email_template_file', array( &$this , 'change_email_template_file' ), 10, 1 );
+			add_filter( 'um_email_templates_columns', array( &$this , 'add_email_templates_wpml_column' ), 10, 1 );
 
 
-			//check the site's accessible more priority have Individual Post/Term Restriction settings
-			add_action( 'template_redirect', array( &$this, 'template_redirect' ), 1000 );
+
 		}
 
 
@@ -61,6 +66,27 @@ if ( ! class_exists( 'External_Integrations' ) ) {
 
 
 		/**
+		 * @param bool|string $current_code
+		 *
+		 * @return array
+		 */
+		function get_languages_codes( $current_code = false ) {
+			global $sitepress;
+
+			$current_code = ! empty( $current_code ) ? $current_code : $sitepress->get_current_language();
+
+			$default = $sitepress->get_locale_from_language_code( $sitepress->get_default_language() );
+			$current = $sitepress->get_locale_from_language_code( $current_code );
+
+
+			return array(
+				'default' => $default,
+				'current' => $current
+			);
+		}
+
+
+		/**
 		 * @param $url
 		 * @param $slug
 		 * @param $updated
@@ -84,6 +110,213 @@ if ( ! class_exists( 'External_Integrations' ) ) {
 			}
 
 			return $url;
+		}
+
+
+		/**
+		 * Adding endings to the "Subject Line" field, depending on the language.
+		 * @exaple welcome_email_sub_de_DE
+		 *
+		 * @param $section_fields
+		 * @param $email_key
+		 *
+		 * @return array
+		 */
+		function um_admin_settings_email_section_fields( $section_fields, $email_key ) {
+			if ( ! $this->is_wpml_active() ) {
+				return $section_fields;
+			}
+
+			$language_codes = $this->get_languages_codes();
+
+			$lang = '';
+			if ( $language_codes['default'] != $language_codes['current'] ) {
+				$lang = '_' . $language_codes['current'];
+			}
+
+			$value_default = UM()->options()->get( $email_key . '_sub'  );
+			$value = UM()->options()->get( $email_key . '_sub' . $lang );
+
+			$section_fields[2]['id'] = $email_key . '_sub' . $lang;
+			$section_fields[2]['value'] = ! empty( $value ) ? $value : $value_default;
+
+			return $section_fields;
+		}
+
+
+		/**
+		 * Adding endings to the "Subject Line" field, depending on the language.
+		 *
+		 * @param $subject
+		 * @param $template
+		 *
+		 * @return string
+		 */
+		function um_email_send_subject( $subject, $template ) {
+			if ( ! $this->is_wpml_active() ) {
+				return $subject;
+			}
+
+			$language_codes = $this->get_languages_codes();
+
+			$lang = '';
+			if ( $language_codes['default'] != $language_codes['current'] ) {
+				$lang = '_' . $language_codes['current'];
+			}
+
+			$value_default = UM()->options()->get( $template . '_sub'  );
+			$value = UM()->options()->get( $template . '_sub' . $lang );
+
+			$subject = ! empty( $value ) ? $value : $value_default;
+
+			return $subject;
+		}
+
+
+		function locate_email_template( $template, $template_name ) {
+			if ( ! $this->is_wpml_active() ) {
+				return $template;
+			}
+
+			//WPML compatibility and multilingual email templates
+			$language_codes = $this->get_languages_codes();
+
+			$lang = '';
+			if ( $language_codes['default'] != $language_codes['current'] &&
+			     UM()->config()->email_notifications[ $template_name ]['recipient'] != 'admin' ) {
+				$lang = $language_codes['current'] . '/';
+			}
+
+			// check if there is template at theme folder
+			$template = locate_template( array(
+				trailingslashit( 'ultimate-member/email' ) . $lang . $template_name . '.php',
+				trailingslashit( 'ultimate-member/email' ) . $template_name . '.php'
+			) );
+
+			//if there isn't template at theme folder get template file from plugin dir
+			if ( ! $template ) {
+				$path = ! empty( UM()->mail()->path_by_slug[ $template_name ] ) ? UM()->mail()->path_by_slug[ $template_name ] : um_path . 'templates/email';
+				$template = trailingslashit( $path ) . $lang . $template_name . '.php';
+			}
+
+			return $template;
+		}
+
+
+		function change_email_template_file( $template ) {
+			if ( ! $this->is_wpml_active() ) {
+				return $template;
+			}
+
+			$language_codes = $this->get_languages_codes();
+
+			$lang = '';
+			if ( $language_codes['default'] != $language_codes['current'] ) {
+				$lang = $language_codes['current'] . '/';
+			}
+
+			return $lang . $template;
+		}
+
+
+
+		function add_email_templates_wpml_column( $columns ) {
+			if ( ! $this->is_wpml_active() ) {
+				return $columns;
+			}
+
+			global $sitepress;
+			$new_columns = $columns;
+			$active_languages = $sitepress->get_active_languages();
+			$current_language = $sitepress->get_current_language();
+			unset( $active_languages[ $current_language ] );
+
+			if ( count( $active_languages ) > 0 ) {
+				$flags_column = '';
+				foreach ( $active_languages as $language_data ) {
+					$flags_column .= '<img src="' . $sitepress->get_flag_url( $language_data['code'] ). '" width="18" height="12" alt="' . $language_data['display_name'] . '" title="' . $language_data['display_name'] . '" style="margin:2px" />';
+				}
+
+				$new_columns = array();
+				foreach ( $columns as $column_key => $column_content ) {
+					$new_columns[ $column_key ] = $column_content;
+					if ( 'email' === $column_key && ! isset( $new_columns['icl_translations'] ) )  {
+						$new_columns['icl_translations'] = $flags_column;
+					}
+				}
+			}
+
+			return $new_columns;
+		}
+
+
+		function wpml_column_content( $item ) {
+			if ( ! $this->is_wpml_active() ) {
+				return '';
+			}
+
+			global $sitepress;
+			$html = '';
+
+			$active_languages = $sitepress->get_active_languages();
+			$current_language = $sitepress->get_current_language();
+			unset( $active_languages[ $current_language ] );
+			foreach ( $active_languages as $language_data ) {
+				$html .= $this->get_status_html( $item['key'], $language_data['code'] );
+			}
+			return $html;
+		}
+
+
+		function get_status_html( $template, $code ) {
+			global $sitepress;
+			$status = 'add';
+
+			$active_languages = $sitepress->get_active_languages();
+			$translation = array(
+				'edit' => array(
+					'icon' => 'edit_translation.png',
+					'text' => sprintf(
+						__( 'Edit the %s translation', 'sitepress' ),
+						$active_languages[$code]['display_name']
+					)
+				),
+				'add'  => array(
+					'icon' => 'add_translation.png',
+					'text' => sprintf(
+						__( 'Add translation to %s', 'sitepress' ),
+						$active_languages[$code]['display_name']
+					)
+				)
+			);
+
+			$language_codes = $this->get_languages_codes();
+
+			$lang = '';
+			if ( $language_codes['default'] != $language_codes['current'] ) {
+				$lang = $language_codes['current'] . '/';
+			}
+
+			$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' ) . $lang . $template . '.php';
+			if ( file_exists( $template_path ) ) {
+				$status = 'edit';
+			}
+
+			$link = add_query_arg( array( 'email' => $template, 'lang' => $code ) );
+
+			return $this->render_status_icon( $link, $translation[ $status ]['text'], $translation[ $status ]['icon'] );
+		}
+
+		function render_status_icon( $link, $text, $img ) {
+
+			$icon_html = '<a href="' . $link . '" title="' . $text . '">';
+			$icon_html .= '<img style="padding:1px;margin:2px;" border="0" src="'
+			              . ICL_PLUGIN_URL . '/res/img/'
+			              . $img . '" alt="'
+			              . $text . '" width="16" height="16" />';
+			$icon_html .= '</a>';
+
+			return $icon_html;
 		}
 
 
