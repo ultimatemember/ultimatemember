@@ -29,25 +29,30 @@ if ( isset( $_GET['action'] ) ) {
 
             $um_roles = get_option( 'um_roles' );
 
-            foreach ( $role_keys as $k=>$role_key ) {
+	        $um_custom_roles = array();
+            foreach ( $role_keys as $k => $role_key ) {
                 $role_meta = get_option( "um_role_{$role_key}_meta" );
 
                 if ( empty( $role_meta['_um_is_custom'] ) ) {
-                    unset( $role_keys[array_search( $role_key, $role_keys )] );
                     continue;
                 }
 
                 delete_option( "um_role_{$role_key}_meta" );
-
                 $um_roles = array_diff( $um_roles, array( $role_key ) );
 
-                $role_keys[$k] = 'um_' . $role_key;
+	            $roleID = 'um_' . $role_key;
+	            $um_custom_roles[] = $roleID;
+
+	            //check if role exist before removing it
+	            if ( get_role( $roleID ) ) {
+		            remove_role( $roleID );
+	            }
             }
 
             //set for users with deleted roles role "Subscriber"
             $args = array(
                 'blog_id'      => get_current_blog_id(),
-                'role__in'     => $role_keys,
+                'role__in'     => $um_custom_roles,
                 'number'       => -1,
                 'count_total'  => false,
                 'fields'       => 'ids',
@@ -58,7 +63,7 @@ if ( isset( $_GET['action'] ) ) {
                     $object_user = get_userdata( $user_id );
 
                     if ( ! empty( $object_user ) ) {
-                        foreach ( $role_keys as $roleID ) {
+                        foreach ( $um_custom_roles as $roleID ) {
                             $object_user->remove_role( $roleID );
                         }
                     }
