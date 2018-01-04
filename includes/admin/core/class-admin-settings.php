@@ -482,6 +482,16 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                                     'label'   		=> __( 'Restricted Access Message','ultimate-member' ),
                                     'tooltip'   => __( 'This is the message shown to users that do not have permission to view the content','ultimate-member' ),
                                 ),
+	                            array(
+		                            'id'       		=> 'restricted_access_post_metabox',
+		                            'type'     		=> 'hidden',
+                                    'value' => '',
+	                            ),
+                                array(
+		                            'id'       		=> 'restricted_access_taxonomy_metabox',
+		                            'type'     		=> 'hidden',
+                                    'value' => '',
+	                            ),
                                 array(
                                     'id'       		=> 'restricted_access_post_metabox',
                                     'type'     		=> 'multi_checkbox',
