@@ -119,10 +119,12 @@ if ( ! class_exists( 'User' ) ) {
          */
         function get_pending_users_count() {
 
-            if ( get_option( 'um_cached_users_queue' ) > 0 && ! isset( $_REQUEST['delete_count'] ) )
-                return get_option( 'um_cached_users_queue' );
+            $cached_users_queue = get_option( 'um_cached_users_queue' );
+            if ( $cached_users_queue > 0 && ! isset( $_REQUEST['delete_count'] ) ){
+                return $cached_users_queue;
+            }
 
-            $args = array( 'fields' => 'ID', 'number' => 100 );
+            $args = array( 'fields' => 'ID', 'number' => 1 );
             $args['meta_query']['relation'] = 'OR';
             $args['meta_query'][] = array(
                 'key' => 'account_status',
@@ -136,7 +138,7 @@ if ( ! class_exists( 'User' ) ) {
             );
             $args = apply_filters( 'um_admin_pending_queue_filter', $args );
             $users = new \WP_User_Query( $args );
-
+          
             delete_option( 'um_cached_users_queue' );
             add_option( 'um_cached_users_queue', $users->get_total(), '', 'no' );
 
