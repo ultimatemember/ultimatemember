@@ -141,6 +141,24 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
         }
 
 
+	    /**
+	     * Remove user role
+	     *
+	     * @param $user_id
+	     * @param $role
+	     */
+        function remove_role( $user_id, $role ) {
+	        // Validate user id
+	        $user = get_userdata( $user_id );
+
+	        // User exists
+	        if ( ! empty( $user ) ) {
+		        // Remove role
+		        $user->remove_role( $role );
+	        }
+        }
+
+
 		/**
 		 * Set roles to user (remove all previous roles)
 		 * make user only with $roles roles
