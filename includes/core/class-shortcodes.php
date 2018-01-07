@@ -351,13 +351,14 @@ if ( ! class_exists( 'Shortcodes' ) ) {
         }
 
 
-        /**
-         * Load dynamic css
-         *
-         * @param array $args
-         */
+	    /**
+	     * Load dynamic css
+	     *
+	     * @param array $args
+	     *
+	     * @return string
+	     */
         function dynamic_css( $args = array() ) {
-
 	        /*
 	         * for fix the issue #306
 	         */
@@ -365,16 +366,21 @@ if ( ! class_exists( 'Shortcodes' ) ) {
 	        if ( $disable_css )
 	        	return '';
 
+	        /**
+	         * @var $mode
+	         */
             extract( $args );
 
             include_once um_path . 'assets/dynamic_css/dynamic_global.php';
 
-            if ( isset( $mode ) ) {
+            if ( isset( $mode ) && in_array( $mode, array( 'profile', 'directory' ) ) ) {
                 $file = um_path . 'assets/dynamic_css/dynamic_' . $mode . '.php';
 
                 if ( file_exists( $file ) )
                     include_once $file;
             }
+
+	        return '';
         }
 
 

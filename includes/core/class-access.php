@@ -54,9 +54,6 @@ if ( ! class_exists( 'Access' ) ) {
 
 			//check the site's accessible more priority have Individual Post/Term Restriction settings
 			add_action( 'template_redirect', array( &$this, 'template_redirect' ), 1000 );
-			//add_action( 'um_access_global_settings', array( &$this, 'um_access_global_settings' ) );
-			//add_action( 'um_access_home_page', array( &$this, 'um_access_home_page' ) );
-			//add_action( 'um_access_taxonomy_settings', array( &$this, 'um_access_taxonomy_settings' ) );
 			add_action( 'um_access_check_individual_term_settings', array( &$this, 'um_access_check_individual_term_settings' ) );
 			add_action( 'um_access_check_global_settings', array( &$this, 'um_access_check_global_settings' ) );
 		}
@@ -182,6 +179,8 @@ if ( ! class_exists( 'Access' ) ) {
 		function um_access_check_global_settings() {
 			global $post;
 
+			$curr = UM()->permalinks()->get_current_url();
+
 			if ( is_front_page() ) {
 				if ( is_user_logged_in() ) {
 
@@ -191,7 +190,7 @@ if ( ! class_exists( 'Access' ) ) {
 						return;
 
 					$redirect_to = ! empty( $role_meta['redirect_homepage'] ) ? $role_meta['redirect_homepage'] : um_get_core_page( 'user' );
-					$this->redirect_handler = $this->set_referer( $redirect_to, "custom_homepage" );
+					$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect_to ) ), "custom_homepage" );
 
 				} else {
 					$access = UM()->options()->get( 'accessible' );
@@ -206,7 +205,7 @@ if ( ! class_exists( 'Access' ) ) {
 							if ( ! $redirect )
 								$redirect = um_get_core_page( 'login' );
 
-							$this->redirect_handler = $this->set_referer( $redirect, 'global' );
+							$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect ) ), 'global' );
 						} else {
 							$this->allow_access = true;
 							return;
@@ -227,7 +226,7 @@ if ( ! class_exists( 'Access' ) ) {
 							if ( ! $redirect )
 								$redirect = um_get_core_page( 'login' );
 
-							$this->redirect_handler = $this->set_referer( $redirect, 'global' );
+							$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect ) ), 'global' );
 						} else {
 							$this->allow_access = true;
 							return;
@@ -263,7 +262,7 @@ if ( ! class_exists( 'Access' ) ) {
 					if ( ! $redirect )
 						$redirect = um_get_core_page( 'login' );
 
-					$this->redirect_handler = $this->set_referer( $redirect, 'global' );
+					$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect ) ), 'global' );
 				} else {
 					$this->redirect_handler = false;
 					$this->allow_access = true;
@@ -306,11 +305,6 @@ if ( ! class_exists( 'Access' ) ) {
 
 			//check global restrict content options
 			do_action( 'um_access_check_global_settings' );
-
-			/*var_dump($this->allow_access);
-			var_dump($this->redirect_handler);
-			var_dump('12345678');
-			exit;*/
 
 			$this->check_access();
 		}
