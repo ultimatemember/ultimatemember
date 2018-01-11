@@ -177,6 +177,10 @@ if ( ! class_exists( 'Members' ) ) {
 
             global $wpdb, $post;
 
+	        /**
+	         * @var $profiles_per_page
+	         * @var $profiles_per_page_mobile
+	         */
             extract($args);
 
             $query_args = array();
