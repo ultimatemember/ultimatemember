@@ -226,7 +226,11 @@ if ( ! class_exists( 'Members' ) ) {
 
             $array['page'] = $members_page;
 
-            $array['total_pages'] = ceil( $array['total_users'] / $profiles_per_page );
+            if ( isset( $profiles_per_page ) && $profiles_per_page > 0 ) {
+                $array['total_pages'] = ceil( $array['total_users'] / $profiles_per_page );
+            } else {
+	            $array['total_pages'] = 1;
+            }
 
             $array['header'] = $this->convert_tags( $header, $array );
             $array['header_single'] = $this->convert_tags( $header_single, $array );
