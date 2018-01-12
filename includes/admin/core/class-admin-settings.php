@@ -485,12 +485,12 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 	                            array(
 		                            'id'       		=> 'restricted_access_post_metabox',
 		                            'type'     		=> 'hidden',
-                                    'value' => '',
+                                    'value'         => '',
 	                            ),
                                 array(
 		                            'id'       		=> 'restricted_access_taxonomy_metabox',
 		                            'type'     		=> 'hidden',
-                                    'value' => '',
+                                    'value'         => '',
 	                            ),
                                 array(
                                     'id'       		=> 'restricted_access_post_metabox',

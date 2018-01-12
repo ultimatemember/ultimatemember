@@ -656,6 +656,16 @@ div.uimob960 .um-search .um-search-submit .um-button.um-alt {float: right}
 div.uimob960 .um-member {width: 48%}
 div.uimob960 .um-gutter-sizer {width: 4%}
 
+div.uimob960 .um-profile-photo {
+	width: 200px !important;
+}
+
+div.uimob960 .um-profile-photo a.um-profile-photo-img {
+	width: 140px !important;
+	height: 140px !important;
+	top: -70px !important;
+}
+
 /************************************************/
 
 @media screen and (max-height: 400px) {
