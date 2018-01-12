@@ -2,8 +2,9 @@
 
 	<?php
 	foreach ( UM()->roles()->get_roles( __( 'All roles', 'ultimate-member' ) ) as $key => $value ) {
-		if ( ! empty( UM()->query()->get_meta_value( '_um_profile_role', $key ) ) )
-			$profile_role = UM()->query()->get_meta_value( '_um_profile_role', $key );
+	    $_um_profile_role = UM()->query()->get_meta_value( '_um_profile_role', $key );
+		if ( ! empty( $_um_profile_role ) )
+			$profile_role = $_um_profile_role;
 	}
 
 	UM()->admin_forms( array(
