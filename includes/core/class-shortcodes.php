@@ -141,22 +141,26 @@ if ( ! class_exists( 'Shortcodes' ) ) {
         /***
          ***	@load a compatible template
          */
-        function load_template($tpl) {
-            $loop = ($this->loop) ? $this->loop : array();
+        function load_template( $tpl ) {
+            $loop = ( $this->loop ) ? $this->loop : array();
 
-            if (isset($this->set_args) && is_array($this->set_args)) {
+            if ( isset( $this->set_args ) && is_array( $this->set_args ) ) {
                 $args = $this->set_args;
-                extract($args);
+                
+                unset( $args['file'] );
+                unset( $args['theme-file'] );
+
+                extract( $args );
             }
 
-            $file = um_path . 'templates/' . $tpl . '.php';
-            $theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $tpl . '.php';
+            $file = um_path . "templates/{$tpl}.php";
+            $theme_file = get_stylesheet_directory() . "/ultimate-member/templates/{$tpl}.php";
 
-            if (file_exists($theme_file)) {
+            if ( file_exists( $theme_file ) ) {
                 $file = $theme_file;
             }
 
-            if (file_exists($file)) {
+            if ( file_exists( $file ) ) {
                 include $file;
             }
 
