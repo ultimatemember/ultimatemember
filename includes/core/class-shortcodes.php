@@ -138,6 +138,7 @@ if ( ! class_exists( 'Shortcodes' ) ) {
             return $form_id;
         }
 
+<<<<<<< HEAD
         /***
          ***	@load a compatible template
          */
@@ -156,15 +157,44 @@ if ( ! class_exists( 'Shortcodes' ) ) {
             $file = um_path . "templates/{$tpl}.php";
             $theme_file = get_stylesheet_directory() . "/ultimate-member/templates/{$tpl}.php";
 
+=======
+
+	    /**
+	     * load a compatible template
+	     *
+	     * @param $tpl
+	     */
+        function load_template( $tpl ) {
+            $file = um_path . 'templates/' . $tpl . '.php';
+
+            $theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $tpl . '.php';
+>>>>>>> origin/master
             if ( file_exists( $theme_file ) ) {
                 $file = $theme_file;
             }
 
             if ( file_exists( $file ) ) {
+<<<<<<< HEAD
                 include $file;
             }
+=======
 
+	            $loop = ( $this->loop ) ? $this->loop : array();
+>>>>>>> origin/master
+
+	            if ( isset( $this->set_args ) && is_array( $this->set_args ) ) {
+		            $args = $this->set_args;
+
+		            /**
+		             * @var $tpl
+		             */
+		            extract( $args );
+	            }
+
+	            include $file;
+            }
         }
+
 
         /***
          ***	@Add class based on shortcode
@@ -208,19 +238,19 @@ if ( ! class_exists( 'Shortcodes' ) ) {
                 'show_lock' => 'yes',
             );
 
-            $args = wp_parse_args($args, $defaults);
+            $args = wp_parse_args( $args, $defaults );
 
-            $args['lock_text'] = $this->convert_locker_tags($args['lock_text']);
+            $args['lock_text'] = $this->convert_locker_tags( $args['lock_text'] );
 
-            if (!is_user_logged_in()) {
-                if ($args['show_lock'] == 'no') {
+            if ( ! is_user_logged_in() ) {
+                if ( $args['show_lock'] == 'no' ) {
                     echo '';
                 } else {
-                    UM()->shortcodes()->set_args = $args;
-                    UM()->shortcodes()->load_template('login-to-view');
+                    $this->set_args = $args;
+                    $this->load_template( 'login-to-view' );
                 }
             } else {
-                echo do_shortcode($this->convert_locker_tags(wpautop($content)));
+                echo do_shortcode( $this->convert_locker_tags( wpautop( $content ) ) );
             }
 
             $output = ob_get_contents();
@@ -388,14 +418,17 @@ if ( ! class_exists( 'Shortcodes' ) ) {
         }
 
 
-        /***
-         ***	@Loads a template file
-         */
+	    /**
+	     * Loads a template file
+	     *
+	     * @param $template
+	     * @param array $args
+	     */
         function template_load( $template, $args = array() ) {
             if ( is_array( $args ) ) {
-                UM()->shortcodes()->set_args = $args;
+                $this->set_args = $args;
             }
-            UM()->shortcodes()->load_template( $template );
+            $this->load_template( $template );
         }
 
 

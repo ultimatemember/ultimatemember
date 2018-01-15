@@ -9,8 +9,9 @@ foreach( $meta as $k => $v ) {
 $roles_array = array();
 
 foreach ( UM()->roles()->get_roles() as $key => $value ) {
-	if ( ! empty( UM()->query()->get_meta_value( '_um_roles', $key ) ) )
-		$roles_array[] = UM()->query()->get_meta_value( '_um_roles', $key );
+    $_um_roles = UM()->query()->get_meta_value( '_um_roles', $key );
+	if ( ! empty( $_um_roles ) )
+		$roles_array[] = $_um_roles;
 }
 
 $show_these_users = get_post_meta( get_the_ID(), '_um_show_these_users', true );
