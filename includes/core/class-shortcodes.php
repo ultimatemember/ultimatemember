@@ -138,7 +138,7 @@ if ( ! class_exists( 'Shortcodes' ) ) {
             return $form_id;
         }
 
-<<<<<<< HEAD
+
         /***
          ***	@load a compatible template
          */
@@ -149,7 +149,7 @@ if ( ! class_exists( 'Shortcodes' ) ) {
                 $args = $this->set_args;
                 
                 unset( $args['file'] );
-                unset( $args['theme-file'] );
+                unset( $args['theme_file'] );
 
                 extract( $args );
             }
@@ -157,41 +157,14 @@ if ( ! class_exists( 'Shortcodes' ) ) {
             $file = um_path . "templates/{$tpl}.php";
             $theme_file = get_stylesheet_directory() . "/ultimate-member/templates/{$tpl}.php";
 
-=======
 
-	    /**
-	     * load a compatible template
-	     *
-	     * @param $tpl
-	     */
-        function load_template( $tpl ) {
-            $file = um_path . 'templates/' . $tpl . '.php';
-
-            $theme_file = get_stylesheet_directory() . '/ultimate-member/templates/' . $tpl . '.php';
->>>>>>> origin/master
             if ( file_exists( $theme_file ) ) {
                 $file = $theme_file;
             }
 
             if ( file_exists( $file ) ) {
-<<<<<<< HEAD
+
                 include $file;
-            }
-=======
-
-	            $loop = ( $this->loop ) ? $this->loop : array();
->>>>>>> origin/master
-
-	            if ( isset( $this->set_args ) && is_array( $this->set_args ) ) {
-		            $args = $this->set_args;
-
-		            /**
-		             * @var $tpl
-		             */
-		            extract( $args );
-	            }
-
-	            include $file;
             }
         }
 
