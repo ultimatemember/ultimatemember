@@ -123,7 +123,7 @@ if ( ! class_exists( 'Access' ) ) {
 
 					$custom_restrict = apply_filters( 'um_custom_restriction', true, $restriction );
 
-					if ( empty( $restriction['_um_access_roles'] ) ) {
+					if ( empty( $restriction['_um_access_roles'] ) || false === array_search( '1', $restriction['_um_access_roles'] ) ) {
 						if ( $custom_restrict ) {
 							$this->allow_access = true;
 							return;
@@ -552,7 +552,7 @@ if ( ! class_exists( 'Access' ) ) {
 
 	                    $custom_restrict = apply_filters( 'um_custom_restriction', true, $restriction );
 
-	                    if ( empty( $restriction['_um_access_roles'] ) ) {
+	                    if ( empty( $restriction['_um_access_roles'] ) || false === array_search( '1', $restriction['_um_access_roles'] ) ) {
 		                    if ( $custom_restrict ) {
 		                        $filtered_posts[] = $post;
 		                        continue;
@@ -738,7 +738,7 @@ if ( ! class_exists( 'Access' ) ) {
 
 	                        $custom_restrict = apply_filters( 'um_custom_restriction', true, $restriction );
 
-	                        if ( empty( $restriction['_um_access_roles'] ) ) {
+	                        if ( empty( $restriction['_um_access_roles'] ) || false === array_search( '1', $restriction['_um_access_roles'] ) ) {
 		                        if ( $custom_restrict ) {
 		                            $filtered_items[] = $menu_item;
 		                            continue;
