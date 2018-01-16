@@ -468,7 +468,7 @@ jQuery(document).ready( function (){
      * @param  object $dom
      */
     function _hide_in_ie( $dom ){
-        if( jQuery.browser.msie ){
+        if( jQuery.browser && jQuery.browser.msie ){
            $dom.css({"visibility":"hidden"});
         }
     }
@@ -478,7 +478,7 @@ jQuery(document).ready( function (){
      * @param  object $dom
      */
     function _show_in_ie( $dom ){
-        if( jQuery.browser.msie ){
+        if( jQuery.browser && jQuery.browser.msie ){
            $dom.css({"visibility":"visible"});
         }
     }
