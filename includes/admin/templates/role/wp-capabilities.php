@@ -1,4 +1,53 @@
 <div class="um-admin-metabox">
+
+	<script type="text/javascript">
+		jQuery(document).ready( function() {
+			jQuery('#um_wp_capabilities_select_all').click( function() {
+				if ( jQuery(this).is(':checked') ) {
+					jQuery('.um-role-wp-capabilities').find('input[type="checkbox"]').prop( 'checked', true );
+				} else {
+					jQuery('.um-role-wp-capabilities').find('input[type="checkbox"]').prop( 'checked', false );
+				}
+
+				um_change_check_all_label( jQuery(this) );
+			});
+
+			jQuery('.um-role-wp-capabilities input[type="checkbox"]').click( function() {
+				um_check_all_trigger();
+			});
+
+			um_check_all_trigger();
+		});
+
+		function um_check_all_trigger() {
+			var checkbox = jQuery('#um_wp_capabilities_select_all');
+
+			if ( jQuery('.um-role-wp-capabilities input[type="checkbox"]:checked').length == jQuery('.um-role-wp-capabilities input[type="checkbox"]').length ) {
+				checkbox.prop( 'checked', true );
+			} else {
+				checkbox.prop( 'checked', false );
+			}
+
+			um_change_check_all_label( checkbox );
+		}
+
+		function um_change_check_all_label( $checkbox ) {
+			if ( $checkbox.is(':checked') ) {
+				jQuery('#um_wp_capabilities_select_all_label').html( '<?php _e( 'Uncheck All', 'ultimate-member' ) ?>' );
+			} else {
+				jQuery('#um_wp_capabilities_select_all_label').html( '<?php _e( 'Check All', 'ultimate-member' ) ?>' );
+			}
+		}
+	</script>
+
+	<span style="padding: 10px 0 0 10px; float:left;">
+		<label style="float:left;">
+			<input type="checkbox" id="um_wp_capabilities_select_all" />
+			<span id="um_wp_capabilities_select_all_label"><?php _e( 'Check All', 'ultimate-member' ) ?></span>
+		</label>
+	</span>
+
+
     <?php
     $role = $object['data'];
     $role_capabilities = ! empty( $role['wp_capabilities'] ) ? array_keys( $role['wp_capabilities'] ) : array( 'read' );
