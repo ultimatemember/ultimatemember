@@ -37,9 +37,10 @@ if ( ! class_exists( 'Admin_Notices' ) ) {
 
         }
 
-        /***
-         ***	@show main notices
-         ***/
+
+		/**
+		* Show main notices
+		*/
         function main_notices() {
 
             if ( ! defined( 'DOING_AJAX' ) ) {

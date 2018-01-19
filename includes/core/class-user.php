@@ -70,7 +70,25 @@ if ( ! class_exists( 'User' ) ) {
 
 	        add_action( 'added_existing_user', array( &$this, 'add_um_role_existing_user' ), 10, 2 );
 	        add_action( 'wpmu_activate_user', array( &$this, 'add_um_role_wpmu_new_user' ), 10, 1 );
+
+	        add_action( 'init', array( &$this, 'check_membership' ), 10 );
         }
+
+
+	    function check_membership() {
+		    if ( ! is_user_logged_in() )
+			    return;
+
+		    um_fetch_user( get_current_user_id() );
+		    $status = um_user( 'account_status' );
+
+		    if ( 'rejected' == $status ) {
+			    wp_logout();
+			    exit( wp_redirect( um_get_core_page( 'login' ) ) );
+		    }
+
+		    um_reset_user();
+	    }
 
 
 		/**
