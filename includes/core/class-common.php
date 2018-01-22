@@ -94,7 +94,7 @@ if ( ! class_exists( 'Common' ) ) {
             global $wp_query;
 
             //We need main query
-            if ( $q == $wp_query->request ) {
+            if ( isset( $wp_query->request ) && $q == $wp_query->request ) {
 
                 if ( ! empty( $wp_query->query_vars['um_page'] ) ) {
 

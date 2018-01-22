@@ -139,9 +139,11 @@ if ( ! class_exists( 'Shortcodes' ) ) {
         }
 
 
-        /***
-         ***	@load a compatible template
-         */
+	    /**
+	     * Load a compatible template
+	     *
+	     * @param $tpl
+	     */
         function load_template( $tpl ) {
             $loop = ( $this->loop ) ? $this->loop : array();
 
@@ -150,6 +152,7 @@ if ( ! class_exists( 'Shortcodes' ) ) {
                 
                 unset( $args['file'] );
                 unset( $args['theme_file'] );
+                unset( $args['tpl'] );
 
                 extract( $args );
             }
