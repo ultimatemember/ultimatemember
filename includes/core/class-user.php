@@ -259,12 +259,16 @@ if ( ! class_exists( 'User' ) ) {
                 $duplicate_id = get_option( "um_duplicate_name_{$duplicate_slug_hash}" );
 
                 if ( ! empty( $duplicate_id ) && $duplicate_id != $user_id )
-                    $full_name = $full_name . ' ' . $user_id;
+                    $full_name = trim( $full_name . ' ' . $user_id );
 
                 $user_in_url = UM()->permalinks()->profile_slug( $full_name, $first_name, $last_name );
             }
 
             update_user_meta( $user_id, "um_user_profile_url_slug_{$permalink_base}", $user_in_url );
+
+	        if ( empty ( $user_in_url )) {
+		        $user_in_url = $user_id;
+	        }
 
             return UM()->permalinks()->profile_permalink( $user_in_url );
         }
