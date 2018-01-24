@@ -52,7 +52,7 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
                     $details['capabilities'] = array_fill_keys( array_values( $capabilities ), true );
                     unset( $details['wp_capabilities'] );
                     $wp_roles->roles[$role_id]        = $details;
-                    $wp_roles->role_objects[$role_id] = new \WP_Role( $role_id, $capabilities );
+                    $wp_roles->role_objects[$role_id] = new \WP_Role( $role_id, $details['capabilities'] );
                     $wp_roles->role_names[$role_id]   = $details['name'];
                 }
 

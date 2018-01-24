@@ -84,6 +84,7 @@ if ( ! class_exists( 'User' ) ) {
 
 		    if ( 'rejected' == $status ) {
 			    wp_logout();
+			    session_unset();
 			    exit( wp_redirect( um_get_core_page( 'login' ) ) );
 		    }
 
