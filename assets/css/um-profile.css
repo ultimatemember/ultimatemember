@@ -192,6 +192,7 @@
 .um-profile-photo {
 	float: left;
 	position: relative;
+	width:200px;
 }
 
 .um-profile-photo a.um-profile-photo-img {

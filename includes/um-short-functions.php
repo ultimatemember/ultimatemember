@@ -509,7 +509,7 @@ function um_filtered_value( $key, $data = false ) {
 	$value = apply_filters( "um_profile_field_filter_hook__", $value, $data, $type );
 	$value = apply_filters( "um_profile_field_filter_hook__{$key}", $value, $data );
 	$value = apply_filters( "um_profile_field_filter_hook__{$type}", $value, $data );
-
+	$value = UM()->shortcodes()->emotize( $value );
 	return $value;
 }
 
