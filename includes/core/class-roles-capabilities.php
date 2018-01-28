@@ -170,35 +170,50 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
 		}
 
 
-        /**
-         * Get user one of UM roles if it has it
-         *
-         * @param int $user_id
-         * @return bool|mixed
-         */
-        function um_get_user_role( $user_id ) {
-            $user    = get_userdata( $user_id );
+		/**
+		* Get user one of UM roles if it has it
+		*
+		* @param int $user_id
+		* @return bool|mixed
+		*/
+		function um_get_user_role( $user_id ) {
+			$user = get_userdata( $user_id );
 
-            if ( empty( $user->roles ) )
-                return false;
+			if ( empty( $user->roles ) )
+				return false;
 
-            // User has roles so look for a UM Role one
-            $role_keys = get_option( 'um_roles' );
+			// User has roles so look for a UM Role one
+			$um_roles_keys = get_option( 'um_roles' );
 
-            if ( empty( $role_keys ) )
-                return array_shift( $user->roles );
+			if ( ! empty( $um_roles_keys ) ) {
+				$um_roles_keys = array_map( function( $item ) {
+					return 'um_' . $item;
+				}, $um_roles_keys );
+			}
 
-            $role_keys = array_map( function( $item ) {
-		        return 'um_' . $item;
-	        }, $role_keys );
+			$orders = array();
+			foreach ( array_values( $user->roles ) as $userrole ) {
+				if ( ! empty( $um_roles_keys ) && in_array( $userrole, $um_roles_keys ) ) {
+					$userrole_metakey = substr( $userrole, 3 );
+				} else {
+					$userrole_metakey = $userrole;
+				}
 
-            $roles = array_intersect( array_values( $user->roles ), $role_keys );
-            if ( ! empty( $roles ) ) {
-                return array_shift( $roles );
-            } else {
-                return array_shift( $user->roles );
-            }
-        }
+				$rolemeta = get_option( "um_role_{$userrole_metakey}_meta", false );
+
+				if ( ! $rolemeta ) {
+					$orders[ $userrole ] = 0;
+					continue;
+				}
+
+				$orders[ $userrole ] = ! empty( $rolemeta['_um_priority'] ) ? $rolemeta['_um_priority'] : 0;
+			}
+
+			arsort( $orders );
+			$roles_in_priority = array_keys( $orders );
+
+			return array_shift( $roles_in_priority );
+		}
 
 
         /**

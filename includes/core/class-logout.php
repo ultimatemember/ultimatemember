@@ -18,44 +18,32 @@ if ( ! class_exists( 'Logout' ) ) {
          ***/
         function logout_page() {
 
-            global $sitepress;
-
             $language_code 		= '';
             $current_page_ID    = get_the_ID();
             $logout_page_id 	= UM()->config()->permalinks['logout'];
-            $has_translation    = false;
             $trid 				= 0;
-            $not_default_lang 	= false;
 
             if ( is_home() /*|| is_front_page()*/ ) {
                 return;
             }
 
-            if ( function_exists('icl_object_id') || function_exists('icl_get_current_language')  ) {
+	        if ( UM()->external_integrations()->is_wpml_active() ) {
+		        global $sitepress;
+		        $default_lang = $sitepress->get_default_language();
+		        $language_code = $sitepress->get_current_language();
 
-                if( function_exists('icl_get_current_language') ){
-                    $language_code = icl_get_current_language();
-                }else if( function_exists('icl_object_id') && defined('ICL_LANGUAGE_CODE') ){ // checks if WPML exists
-                    $language_code = ICL_LANGUAGE_CODE;
-                }
+		        if ( function_exists( 'icl_object_id' ) ) {
+			        $trid = icl_object_id( $current_page_ID, 'page', true, $default_lang );
+		        } else {
+			        $trid = wpml_object_id_filter( $current_page_ID, 'page', true, $default_lang );
+		        }
 
-                $has_translation = true;
+		        if ( $language_code == $default_lang ) {
+			        $language_code = '';
+		        }
+	        }
 
-                if( function_exists('icl_object_id')  && defined('ICL_LANGUAGE_CODE') && isset( $sitepress ) ){ // checks if WPML exists
-                    $trid = $sitepress->get_element_trid(  $current_page_ID  );
-                }
-
-                if( icl_get_default_language() !== $language_code ){
-                    $not_default_lang = true;
-                }else{
-                    $language_code = '';
-                }
-
-            }
-
-
-
-            if ( um_is_core_page('logout') || ( $trid > 0 && $has_translation && $trid == $logout_page_id && $not_default_lang )  ) {
+            if ( um_is_core_page( 'logout' ) || ( $trid > 0 && $trid == $logout_page_id )  ) {
 
                 if ( is_user_logged_in() ) {
 

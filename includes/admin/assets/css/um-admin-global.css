@@ -102,7 +102,8 @@ a.um-delete{ color: #a00; }
 
 .wp-list-table.roles .column-core,
 .wp-list-table.roles .column-users,
-.wp-list-table.roles .column-admin_access {
+.wp-list-table.roles .column-admin_access,
+.wp-list-table.roles .column-priority {
 	width:15%;
 	text-align: center !important;
 }
@@ -110,7 +111,8 @@ a.um-delete{ color: #a00; }
 @media screen and (max-width: 782px) {
 	.wp-list-table.roles .column-core,
 	.wp-list-table.roles .column-users,
-	.wp-list-table.roles .column-admin_access {
+	.wp-list-table.roles .column-admin_access,
+	.wp-list-table.roles .column-priority {
 		text-align: left !important;
 	}
 }
