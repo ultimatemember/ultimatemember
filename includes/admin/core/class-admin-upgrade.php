@@ -23,31 +23,35 @@ if ( ! class_exists( 'Admin_Upgrade' ) ) {
         }
 
 
-        /**
-         * Load packages
-         */
-        public function packages() {
-            $this->set_update_versions();
+		/**
+		 * Load packages
+		 */
+		public function packages() {
+			if ( ! ini_get( 'safe_mode' ) ) {
+				@set_time_limit(0);
+			}
 
-            $um_last_version_upgrade = get_option( 'um_last_version_upgrade' );
-            $um_last_version_upgrade = ! $um_last_version_upgrade ? '0.0.0' : $um_last_version_upgrade;
+			$this->set_update_versions();
 
-            foreach ( $this->update_versions as $update_version ) {
+			$um_last_version_upgrade = get_option( 'um_last_version_upgrade' );
+			$um_last_version_upgrade = ! $um_last_version_upgrade ? '0.0.0' : $um_last_version_upgrade;
 
-                if ( version_compare( $update_version, $um_last_version_upgrade, '<=' ) )
-                    continue;
+			foreach ( $this->update_versions as $update_version ) {
 
-                if ( version_compare( $update_version, ultimatemember_version, '>' ) )
-                    continue;
+				if ( version_compare( $update_version, $um_last_version_upgrade, '<=' ) )
+					continue;
 
-                $file_path = $this->packages_dir . $update_version . '.php';
+				if ( version_compare( $update_version, ultimatemember_version, '>' ) )
+					continue;
 
-                if ( file_exists( $file_path ) ) {
-                    include_once( $file_path );
-                    update_option( 'um_last_version_upgrade', $update_version );
-                }
-            }
-        }
+				$file_path = $this->packages_dir . $update_version . '.php';
+
+				if ( file_exists( $file_path ) ) {
+					include_once( $file_path );
+					update_option( 'um_last_version_upgrade', $update_version );
+				}
+			}
+		}
 
 
         /**
