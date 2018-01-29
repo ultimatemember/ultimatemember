@@ -65,38 +65,33 @@
 								} // end if
 							} // end foreach
 						} // end if $show_tagline
-						?>
-						
-						<?php if ( $show_userinfo ) { ?>
-						
-						<div class="um-member-meta-main">
+
+						if ( ! empty( $show_userinfo ) ) { ?>
+
+							<div class="um-member-meta-main">
 						
 							<?php if ( $userinfo_animate ) { ?>
-							<div class="um-member-more"><a href="#"><i class="um-faicon-angle-down"></i></a></div>
+								<div class="um-member-more"><a href="#"><i class="um-faicon-angle-down"></i></a></div>
 							<?php } ?>
 							
-							<div class="um-member-meta <?php if ( !$userinfo_animate ) { echo 'no-animate'; } ?>">
+							<div class="um-member-meta <?php if ( ! $userinfo_animate ) { echo 'no-animate'; } ?>">
 							
-								<?php foreach( $reveal_fields as $key ) {
-										if ( $key /*&& um_filtered_value( $key )*/ ) {
-											$value = um_filtered_value( $key );
-											if ( ! $value )
-												continue;
-								?>
+								<?php um_fetch_user( $member );
+								foreach ( $reveal_fields as $key ) {
+									if ( $key ) {
+										$value = um_filtered_value( $key );
+										if ( ! $value )
+											continue; ?>
 								
-								<div class="um-member-metaline um-member-metaline-<?php echo $key; ?>"><span><strong><?php echo UM()->fields()->get_label( $key ); ?>:</strong> <?php echo $value; ?></span></div>
-								
-								<?php 
-									}
-								} 
-								?>
-								
-								<?php if ( $show_social ) { ?>
-								<div class="um-member-connect">
-								
-									<?php UM()->fields()->show_social_urls(); ?>
+										<div class="um-member-metaline um-member-metaline-<?php echo $key; ?>"><span><strong><?php echo UM()->fields()->get_label( $key ); ?>:</strong> <?php echo $value; ?></span></div>
 
-								</div>
+									<?php }
+								} 
+
+								if ( $show_social ) { ?>
+									<div class="um-member-connect">
+										<?php UM()->fields()->show_social_urls(); ?>
+									</div>
 								<?php } ?>
 								
 							</div>
