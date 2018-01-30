@@ -290,6 +290,7 @@ if ( ! class_exists( 'UM' ) ) {
                 update_option( 'um_version', ultimatemember_version );
 
             //run setup
+	        $this->common()->create_post_types();
             $this->setup()->run_setup();
         }
 
