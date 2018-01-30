@@ -189,6 +189,8 @@ if ( ! class_exists( 'UM' ) ) {
                 // include hook files
                 add_action( 'plugins_loaded', array( &$this, 'init' ), 0 );
 
+                //add_action( 'init', array( &$this, 'old_extensions_notice' ), 0 );
+
                 //run activation
                 register_activation_hook( um_plugin, array( &$this, 'activation' ) );
 
@@ -201,6 +203,36 @@ if ( ! class_exists( 'UM' ) ) {
                 require_once 'um-deprecated-functions.php';
             }
         }
+
+
+		function old_extensions_notice() {
+			if ( ! is_admin() ) return;
+
+			$show = false;
+
+			$slugs = array_map( function( $item ) {
+				return 'um-' . $item . '/um-' . $item . '.php';
+			}, array_keys( $this->dependencies()->ext_required_version ) );
+
+			$active_plugins = $this->dependencies()->get_active_plugins();
+			foreach ( $slugs as $slug ) {
+				if ( in_array( $slug, $active_plugins ) ) {
+					$plugin_data = get_plugin_data( um_path . '..' . DIRECTORY_SEPARATOR . $slug );
+					if ( version_compare( '2.0', $plugin_data['Version'], '>' ) ) {
+						$show = true;
+						break;
+					}
+				}
+			}
+
+			if ( ! $show ) return;
+
+			/*global $um_woocommerce;
+			remove_action( 'init', array( $um_woocommerce, 'plugin_check' ), 1 );
+			$um_woocommerce->plugin_inactive = true;*/
+
+			echo '<div class="error"><p>' . sprintf( __( '<strong>ATTENTION!</strong> You have pre-2.0 version activated <strong>%s</strong> extensions. Please install the latest versions.', 'ultimate-member' ), ultimatemember_plugin_name ) . '</p></div>';
+		}
 
 
         /**
@@ -1077,7 +1109,6 @@ if ( ! class_exists( 'UM' ) ) {
             require_once 'core/um-filters-files.php';
             require_once 'core/um-filters-navmenu.php';
             require_once 'core/um-filters-avatars.php';
-            require_once 'core/um-filters-arguments.php';
             require_once 'core/um-filters-user.php';
             require_once 'core/um-filters-members.php';
             require_once 'core/um-filters-profile.php';

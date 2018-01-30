@@ -10,23 +10,27 @@ if ( ! class_exists( 'Shortcodes' ) ) {
         function __construct() {
 
             $this->message_mode = false;
+            $this->custom_message = '';
 
             $this->loop = array();
 
             add_shortcode( 'ultimatemember', array( &$this, 'ultimatemember' ) );
 
-            add_shortcode('um_loggedin', array(&$this, 'um_loggedin'));
-            add_shortcode('um_loggedout', array(&$this, 'um_loggedout'));
-            add_shortcode('um_show_content', array(&$this, 'um_shortcode_show_content_for_role') );
-            add_shortcode('ultimatemember_searchform', array(&$this, 'ultimatemember_searchform') );
+            add_shortcode( 'um_loggedin', array( &$this, 'um_loggedin' ) );
+            add_shortcode( 'um_loggedout', array( &$this, 'um_loggedout' ) );
+            add_shortcode( 'um_show_content', array( &$this, 'um_shortcode_show_content_for_role' ) );
+            add_shortcode( 'ultimatemember_searchform', array( &$this, 'ultimatemember_searchform' ) );
 
 
-            add_filter('body_class', array(&$this, 'body_class'), 0);
+            add_filter( 'body_class', array( &$this, 'body_class' ), 0 );
 
-            $base_uri = apply_filters('um_emoji_base_uri', 'https://s.w.org/images/core/emoji/');
+	        add_filter( 'um_shortcode_args_filter', array( &$this, 'display_logout_form' ), 99 );
+	        add_filter( 'um_shortcode_args_filter', array( &$this, 'parse_shortcode_args' ), 99 );
 
-            $this->emoji[':)'] = $base_uri . '72x72/1f604.png';
-            $this->emoji[':smiley:'] = $base_uri . '72x72/1f603.png';
+	        $base_uri = apply_filters( 'um_emoji_base_uri', 'https://s.w.org/images/core/emoji/' );
+
+	        $this->emoji[':)'] = $base_uri . '72x72/1f604.png';
+	        $this->emoji[':smiley:'] = $base_uri . '72x72/1f603.png';
             $this->emoji[':D'] = $base_uri . '72x72/1f600.png';
             $this->emoji[':$'] = $base_uri . '72x72/1f60a.png';
             $this->emoji[':relaxed:'] = $base_uri . '72x72/263a.png';
@@ -85,6 +89,59 @@ if ( ! class_exists( 'Shortcodes' ) ) {
             $this->emoji[':expressionless:'] = $base_uri . '72x72/1f611.png';
 
         }
+
+
+	    /**
+	     * Conditional logout form
+	     *
+	     * @param array $args
+	     *
+	     * @return array
+	     */
+	    function display_logout_form( $args ) {
+		    if ( is_user_logged_in() && isset( $args['mode'] ) && $args['mode'] == 'login' ) {
+
+			    if ( get_current_user_id() != um_user( 'ID' ) ) {
+				    um_fetch_user( get_current_user_id() );
+			    }
+
+			    $args['template'] = 'logout';
+		    }
+
+		    return $args;
+	    }
+
+
+	    /**
+	     * Filter shortcode args
+	     *
+	     * @param array $args
+	     *
+	     * @return array
+	     */
+	    function parse_shortcode_args( $args ) {
+		    if ( $this->message_mode == true ) {
+
+			    if ( ! empty( $_REQUEST['um_role'] ) ) {
+				    $args['template'] = 'message';
+				    $roleID = esc_attr( $_REQUEST['um_role'] );
+				    $role = UM()->roles()->role_data( $roleID );
+
+				    if ( ! empty( $role ) && ! empty( $role["status"] ) ) {
+					    $message_key = $role["status"] . '_message';
+					    $this->custom_message = ! empty( $role[ $message_key ] ) ? $role[ $message_key ] : '';
+				    }
+			    }
+
+		    }
+
+		    foreach ( $args as $k => $v ) {
+			    $args[ $k ] = maybe_unserialize( $args[ $k ] );
+		    }
+
+		    return $args;
+	    }
+
 
         /***
          ***	@emoji support
