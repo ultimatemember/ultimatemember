@@ -673,26 +673,29 @@ if ( ! class_exists( 'Fields' ) ) {
 		 */
 		function get_option_value_from_callback( $value, $data, $type ) {
 
-			if (in_array( $type, array( 'select', 'multiselect' ) ) && isset( $data['custom_dropdown_options_source'] ) && !empty( $data['custom_dropdown_options_source'] )) {
+			if ( in_array( $type, array( 'select', 'multiselect' ) ) && ! empty( $data['custom_dropdown_options_source'] ) ) {
 
 				if ( function_exists( $data['custom_dropdown_options_source'] ) ) {
 
-                    $arr_options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+					$arr_options = call_user_func(
+						$data['custom_dropdown_options_source'],
+						( ! empty( $data['parent_dropdown_relationship'] ) ? $data['parent_dropdown_relationship'] : '' )
+					);
 
 
-					if ($type == 'select') {
-						if (isset( $arr_options[$value] ) && !empty( $arr_options[$value] )) {
-							return $arr_options[$value];
-						} else if (isset( $data['default'] ) && !empty( $data['default'] ) && empty( $arr_options[$value] )) {
-							return $arr_options[$data['default']];
+					if ( $type == 'select' ) {
+						if ( ! empty( $arr_options[ $value ] ) ) {
+							return $arr_options[ $value ];
+						} elseif ( ! empty( $data['default'] ) && empty( $arr_options[ $value ] ) ) {
+							return $arr_options[ $data['default'] ];
 						} else {
 							return '';
 						}
 					}
 
-					if ($type == 'multiselect') {
+					if ( $type == 'multiselect' ) {
 
-						if (is_array( $value )) {
+						if ( is_array( $value ) ) {
 							$values = $value;
 						} else {
 							$values = explode( ', ', $value );
@@ -700,9 +703,9 @@ if ( ! class_exists( 'Fields' ) ) {
 
 						$arr_paired_options = array();
 
-						foreach ($values as $option) {
-							if (isset( $arr_options[$option] )) {
-								$arr_paired_options[] = $arr_options[$option];
+						foreach ( $values as $option ) {
+							if ( isset( $arr_options[ $option ] ) ) {
+								$arr_paired_options[] = $arr_options[ $option ];
 							}
 						}
 
