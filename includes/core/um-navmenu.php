@@ -8,7 +8,7 @@ class UM_Menu_Item_Custom_Fields {
 	 *
 	 */
 	public static function load() {
-		add_filter( 'wp_edit_nav_menu_walker', array( __CLASS__, '_filter_walker' ), 999 );
+		//add_filter( 'wp_edit_nav_menu_walker', array( __CLASS__, '_filter_walker' ), 999 );
 	}
 
 
@@ -51,7 +51,7 @@ class UM_Menu_Item_Custom_Fields {
 		return $um_walker;
 	}
 }
-add_action( 'wp_loaded', array( 'UM_Menu_Item_Custom_Fields', 'load' ), 9 );
+//add_action( 'wp_loaded', array( 'UM_Menu_Item_Custom_Fields', 'load' ), 9 );
 
 endif;
 
