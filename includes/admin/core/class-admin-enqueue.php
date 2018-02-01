@@ -339,6 +339,15 @@ if ( ! class_exists( 'Admin_Enqueue' ) ) {
 
         }
 
+	    /***
+	     ***	@Load jQuery custom code
+	     ***/
+	    function load_nav_manus_scripts() {
+
+		    wp_register_script( 'um_admin_nav_manus', $this->js_url . 'um-admin-nav-menu.js', array('jquery','wp-util'), '', true );
+		    wp_enqueue_script( 'um_admin_nav_manus' );
+
+	    }
 
         /***
          ***	@Load AJAX
