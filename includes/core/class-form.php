@@ -199,7 +199,8 @@ if ( ! class_exists( 'Form' ) ) {
                     } elseif ( isset( $this->post_form['mode'] ) && $this->post_form['mode'] == 'register' ) {
                         $role = $this->assigned_role( $this->form_id );
                         $this->post_form['role'] = $role;
-                        $this->post_form['submitted']['role'] = $role;
+                        //fix for social login
+	                    //$this->post_form['submitted']['role'] = $role;
                     }
 
                     if ( isset( $_POST[ UM()->honeypot ] ) && $_POST[ UM()->honeypot ] != '' ){
