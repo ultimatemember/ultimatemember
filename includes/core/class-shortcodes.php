@@ -260,14 +260,19 @@ if ( ! class_exists( 'Shortcodes' ) ) {
             return $classes;
         }
 
-        /***
-         ***	@Logged-in only content
-         */
-        function um_loggedin($args = array(), $content = "") {
+	    /**
+	     * Logged-in only content
+	     *
+	     * @param array $args
+	     * @param string $content
+	     *
+	     * @return string
+	     */
+        function um_loggedin( $args = array(), $content = "" ) {
             ob_start();
 
             $defaults = array(
-                'lock_text' => __('This content has been restricted to logged in users only. Please <a href="{login_referrer}">login</a> to view this content.', 'ultimate-member'),
+                'lock_text' => __( 'This content has been restricted to logged in users only. Please <a href="{login_referrer}">login</a> to view this content.', 'ultimate-member' ),
                 'show_lock' => 'yes',
             );
 
@@ -286,8 +291,7 @@ if ( ! class_exists( 'Shortcodes' ) ) {
                 echo do_shortcode( $this->convert_locker_tags( wpautop( $content ) ) );
             }
 
-            $output = ob_get_contents();
-            ob_end_clean();
+            $output = ob_get_clean();
             return $output;
         }
 
@@ -545,69 +549,83 @@ if ( ! class_exists( 'Shortcodes' ) ) {
 
         }
 
-        /***
-         ***	@Get Shortcode for given form ID
-         */
-        function get_shortcode($post_id) {
-            $shortcode = '[ultimatemember form_id=' . $post_id . ']';
-            return $shortcode;
-        }
 
-        /***
-         ***	@convert access lock tags
-         */
-        function convert_locker_tags($str) {
-            $str = um_convert_tags($str);
-            return $str;
-        }
+		/**
+		* Get Shortcode for given form ID
+		*
+		* @param $post_id
+		*
+		* @return string
+		*/
+		function get_shortcode( $post_id ) {
+			$shortcode = '[ultimatemember form_id=' . $post_id . ']';
+			return $shortcode;
+		}
 
-        /***
-         ***	@convert user tags in a string
-         */
-        function convert_user_tags($str) {
 
-            $value = '';
+		/**
+		* Convert access lock tags
+		*
+		* @param $str
+		*
+		* @return mixed|string
+		*/
+		function convert_locker_tags( $str ) {
+			return um_convert_tags( $str, array(), false );
+		}
 
-            $pattern_array = array(
-                '{first_name}',
-                '{last_name}',
-                '{display_name}',
-                '{user_avatar_small}',
-                '{username}',
-            );
 
-            $pattern_array = apply_filters('um_allowed_user_tags_patterns', $pattern_array);
+		/**
+		* Convert user tags in a string
+		*
+		* @param $str
+		*
+		* @return mixed
+		*/
+		function convert_user_tags( $str ) {
 
-            $matches = false;
-            foreach ($pattern_array as $pattern) {
+			$pattern_array = array(
+				'{first_name}',
+				'{last_name}',
+				'{display_name}',
+				'{user_avatar_small}',
+				'{username}',
+			);
 
-                if (preg_match($pattern, $str)) {
+			$pattern_array = apply_filters( 'um_allowed_user_tags_patterns', $pattern_array );
 
-                    $usermeta = str_replace('{', '', $pattern);
-                    $usermeta = str_replace('}', '', $usermeta);
+			//$matches = false;
+			foreach ( $pattern_array as $pattern ) {
+				$value = '';
 
-                    if ($usermeta == 'user_avatar_small') {
-                        $value = get_avatar(um_user('ID'), 40);
-                    } elseif (um_user($usermeta)) {
-                        $value = um_user($usermeta);
-                    }
+				if ( preg_match( $pattern, $str ) ) {
 
-                    if ($usermeta == 'username') {
-                        $value = um_user('user_login');
-                    }
+					$usermeta = str_replace( '{', '', $pattern );
+					$usermeta = str_replace( '}', '', $usermeta );
 
-                    $value = apply_filters("um_profile_tag_hook__{$usermeta}", $value, um_user('ID'));
+					if ( $usermeta == 'user_avatar_small' ) {
+						$value = get_avatar( um_user( 'ID' ), 40 );
+					} elseif ( um_user( $usermeta ) ) {
+						$value = um_user( $usermeta );
+					}
 
-                    if ($value) {
-                        $str = preg_replace('/' . $pattern . '/', $value, $str);
-                    }
+					if ( $usermeta == 'username' ) {
+						$value = um_user( 'user_login' );
+					}
 
-                }
+					$value = apply_filters( "um_profile_tag_hook__{$usermeta}", $value, um_user( 'ID' ) );
 
-            }
+					if ( $value ) {
+						$str = preg_replace( '/' . $pattern . '/', $value, $str );
+					}
 
-            return $str;
-        }
+				}
+
+			}
+
+			return $str;
+		}
+
 
         /**
          * Shortcode: Show custom content to specific role

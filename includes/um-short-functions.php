@@ -87,10 +87,11 @@ function um_clean_user_basename( $value ) {
  *
  * @param $content
  * @param array $args
+ * @param bool $with_kses
  *
  * @return mixed|string
  */
-function um_convert_tags( $content, $args = array() ) {
+function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 	$search = array(
 		'{display_name}',
 		'{first_name}',
@@ -137,9 +138,12 @@ function um_convert_tags( $content, $args = array() ) {
 
 	$replace = apply_filters( 'um_template_tags_replaces_hook', $replace );
 
-	$content = wp_kses_decode_entities( str_replace( $search, $replace, $content ) );
+	$content = str_replace( $search, $replace, $content );
+	if ( $with_kses ) {
+		$content = wp_kses_decode_entities( $content );
+	}
 
-	if (isset( $args['tags'] ) && isset( $args['tags_replace'] )) {
+	if ( isset( $args['tags'] ) && isset( $args['tags_replace'] ) ) {
 		$content = str_replace( $args['tags'], $args['tags_replace'], $content );
 	}
 
