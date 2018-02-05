@@ -29,12 +29,17 @@ if ( ! class_exists( 'Access' ) ) {
 
 
 		/**
+		 * @var \WP_Post
+		 */
+		private $current_single_post;
+
+
+		/**
 		 * Access constructor.
 		 */
 		function __construct() {
 
 			$this->singular_page = false;
-
 
 			$this->redirect_handler = false;
 			$this->allow_access = false;
@@ -592,13 +597,19 @@ if ( ! class_exists( 'Access' ) ) {
                                 if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
                                     $post->post_content = stripslashes( $restricted_global_message );
 
+	                                $this->current_single_post = $post;
+	                                add_filter( 'the_content', array( &$this, 'replace_post_content' ), 9999, 1 );
+
                                     if ( 'attachment' == $post->post_type ) {
                                         remove_filter( 'the_content', 'prepend_attachment' );
                                     }
                                 } elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
                                     $post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
 
-                                    if ( 'attachment' == $post->post_type ) {
+	                                $this->current_single_post = $post;
+	                                add_filter( 'the_content', array( &$this, 'replace_post_content' ), 9999, 1 );
+
+	                                if ( 'attachment' == $post->post_type ) {
                                         remove_filter( 'the_content', 'prepend_attachment' );
                                     }
                                 }
@@ -692,6 +703,18 @@ if ( ! class_exists( 'Access' ) ) {
 
             return $filtered_posts;
         }
+
+
+		/**
+		 * @param $content
+		 *
+		 * @return string
+		 */
+		function replace_post_content( $content ) {
+			$content = $this->current_single_post->post_content;
+
+			return $content;
+		}
 
 
         /**
