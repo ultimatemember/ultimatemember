@@ -124,6 +124,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 					$url  = UM()->permalinks()->get_current_url();
 					$url  = add_query_arg( 'message', esc_attr( $status ), $url );
+					//add only priority role to URL
 					$url  = add_query_arg( 'um_role', esc_attr( um_user( 'role' ) ), $url );
 					$url  = add_query_arg( 'um_form_id', esc_attr( $args['form_id'] ), $url );
 

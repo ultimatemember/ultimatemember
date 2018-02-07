@@ -15,7 +15,33 @@ if ( ! class_exists( 'Tracking' ) ) {
 
             add_action( 'admin_notices', array( $this, 'admin_notices' ), 10 );
 
+	        add_action( 'um_admin_do_action__opt_into_tracking', array( $this, 'um_admin_do_action__opt_into_tracking' ) );
+	        add_action( 'um_admin_do_action__opt_out_of_tracking', array( $this, 'um_admin_do_action__opt_out_of_tracking' ) );
         }
+
+
+	    /***
+	     ***	@Opt-in tracking
+	     ***/
+	    function um_admin_do_action__opt_into_tracking( $action ) {
+		    UM()->options()->update( 'um_allow_tracking', 1 );
+		    update_option( 'um_tracking_notice', 1 );
+
+		    $this->send_checkin(true);
+
+		    exit( wp_redirect( remove_query_arg('um_adm_action') ) );
+	    }
+
+
+	    /***
+	     ***	@Opt-out of tracking
+	     ***/
+	    function um_admin_do_action__opt_out_of_tracking( $action ) {
+		    UM()->options()->update( 'um_allow_tracking', 0 );
+		    update_option('um_tracking_notice', 1 );
+
+		    exit( wp_redirect( remove_query_arg('um_adm_action') ) );
+	    }
 
         /***
          ***	@setup info array
@@ -145,12 +171,12 @@ if ( ! class_exists( 'Tracking' ) ) {
 
             echo '<div class="updated um-admin-notice"><p>';
 
-            echo __( 'Allow Ultimate Member to track plugin usage? Opt-in to tracking and our newsletter and we will immediately e-mail you a 20% discount which you can use to purchase our core extensions bundle. No sensitive data is tracked.', 'ultimate-member' );
+	        printf( __( 'Thanks for installing <strong>%s</strong>! The core plugin is free but we also sell extensions which allow us to continue developing and supporting the plugin full time. If you subscribe to our mailing list (no spam) we will email you a 20%% discount code which you can use to purchase the <a href="%s" target="_blank">extensions bundle</a>.', 'ultimate-member' ), ultimatemember_plugin_name, 'https://ultimatemember.com/core-extensions-bundle/' );
 
             echo '</p>';
 
-            echo '<p><a href="' . esc_url( $optin_url ) . '" class="button button-primary">' . __( 'Allow tracking', 'ultimate-member' ) . '</a>';
-            echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow tracking', 'ultimate-member' ) . '</a></p></div>';
+            echo '<p><a href="' . esc_url( $optin_url ) . '" class="button button-primary">' . __( 'Subscribe to mailing list', 'ultimate-member' ) . '</a>';
+            echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'No thanks', 'ultimate-member' ) . '</a></p></div>';
 
         }
 

@@ -1165,18 +1165,21 @@ if ( ! class_exists( 'Fields' ) ) {
 			) {
 
 				um_fetch_user( get_current_user_id() );
-				if (!um_user( 'can_edit_everyone' ))
+				if ( ! um_user( 'can_edit_everyone' ) ) {
 					$disabled = ' disabled="disabled" ';
+				}
+
 				um_fetch_user( $_um_profile_id );
-				if (isset( $data['public'] ) && $data['public'] == '-2' && $data['roles']) {
-					if (in_array( UM()->roles()->um_get_user_role( get_current_user_id() ), $data['roles'] )) {
+				if ( isset( $data['public'] ) && $data['public'] == '-2' && $data['roles'] ) {
+					$current_user_roles = um_user( 'roles' );
+					if ( count( array_intersect( $current_user_roles, $data['roles'] ) ) > 0 ) {
 						$disabled = '';
 					}
 				}
 
 			}
 
-			if (!isset( $data['autocomplete'] )) {
+			if ( ! isset( $data['autocomplete'] ) ) {
 				$autocomplete = 'off';
 			}
 			um_fetch_user( get_current_user_id() );

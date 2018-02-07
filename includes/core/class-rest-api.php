@@ -441,6 +441,7 @@ if ( ! class_exists( 'REST_API' ) ) {
                             break;
 
                         case 'role':
+                            //get priority role here
                             $response['role'] = um_user( 'role' );
                             break;
 

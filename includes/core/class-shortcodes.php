@@ -381,9 +381,11 @@ if ( ! class_exists( 'Shortcodes' ) ) {
 	        }
 
             // for profiles only
-            if ($mode == 'profile' && um_profile_id() && isset($args['role']) && $args['role'] &&
-                $args['role'] != UM()->roles()->um_get_user_role( um_profile_id() ) ) {
-                return;
+            if ( $mode == 'profile' && um_profile_id() ) {
+	            $current_user_roles = UM()->roles()->get_all_user_roles( um_profile_id() );
+	            if ( ! empty( $args['role'] ) && ! in_array( $args['role'], $current_user_roles ) ) {
+		            return '';
+	            }
             }
 
             // start loading the template here
@@ -627,72 +629,71 @@ if ( ! class_exists( 'Shortcodes' ) ) {
 		}
 
 
-        /**
-         * Shortcode: Show custom content to specific role
-         *
-         * Show content to specific roles
-         * [um_show_content roles='member'] <!-- insert content here -->  [/um_show_content]
-         * You can add multiple target roles, just use ',' e.g.  [um_show_content roles='member,candidates,pets']
-         *
-         * Hide content from specific roles
-         * [um_show_content not='contributors'] <!-- insert content here -->  [/um_show_content]
-         * You can add multiple target roles, just use ',' e.g.  [um_show_content roles='member,candidates,pets']
-         *
-         * @param  array $atts
-         * @param  string $content
-         * @return string
-         */
-        function um_shortcode_show_content_for_role( $atts = array() , $content = '' ) {
+	    /**
+	     * Shortcode: Show custom content to specific role
+	     *
+	     * Show content to specific roles
+	     * [um_show_content roles='member'] <!-- insert content here -->  [/um_show_content]
+	     * You can add multiple target roles, just use ',' e.g.  [um_show_content roles='member,candidates,pets']
+	     *
+	     * Hide content from specific roles
+	     * [um_show_content not='contributors'] <!-- insert content here -->  [/um_show_content]
+	     * You can add multiple target roles, just use ',' e.g.  [um_show_content roles='member,candidates,pets']
+	     *
+	     * @param  array $atts
+	     * @param  string $content
+	     * @return string
+	     */
+	    function um_shortcode_show_content_for_role( $atts = array() , $content = '' ) {
+		    global $user_ID;
 
-            global $user_ID;
+		    if ( ! is_user_logged_in() ) {
+			    return;
+		    }
 
-            if( ! is_user_logged_in() ) {
-                return;
-            }
+		    $a = shortcode_atts( array(
+			    'roles' => '',
+			    'not' => '',
+			    'is_profile' => false,
+		    ), $atts );
 
-            $a = shortcode_atts( array(
-                'roles' => '',
-                'not' => '',
-                'is_profile' => false,
-            ), $atts );
+		    if ( $a['is_profile'] ) {
+			    um_fetch_user( um_profile_id() );
+		    } else {
+			    um_fetch_user( $user_ID );
+		    }
 
-            if( $a['is_profile'] ){
-                um_fetch_user( um_profile_id() );
-            }else{
-                um_fetch_user( $user_ID );
-            }
+		    $current_user_roles = um_user( 'roles' );
 
+		    if ( ! empty( $a['not'] ) && ! empty( $a['roles'] ) ) {
+			    return do_shortcode( $content );
+		    }
 
+		    if ( ! empty( $a['not'] ) ) {
+			    $not_in_roles = explode( ",", $a['not'] );
 
-            $current_user_role = um_user( 'role' );
+			    if ( is_array( $not_in_roles ) && count( array_intersect( $current_user_roles, $not_in_roles ) ) <= 0 ) {
+				    return do_shortcode( $content );
+			    }
+		    } else {
+			    $roles = explode( ",", $a['roles'] );
 
-            if( isset( $a['not'] ) && ! empty( $a['not'] ) && isset( $a['roles'] ) && ! empty( $a['roles'] ) ){
-                return do_shortcode( $content );
-            }
+			    if ( is_array( $roles ) && count( array_intersect( $current_user_roles, $roles ) ) > 0 ) {
+				    return do_shortcode( $content );
+			    }
+		    }
 
-            if( isset( $a['not'] ) && ! empty( $a['not'] ) ){
-
-                $not_in_roles = explode(",", $a['not'] );
-
-                if( is_array( $not_in_roles ) &&  ! in_array( $current_user_role, $not_in_roles ) ){
-                    return do_shortcode( $content );
-                }
-
-            }else{
-
-                $roles = explode(",", $a['roles'] );
-
-                if(is_array( $roles ) && in_array( $current_user_role, $roles )  ){
-                    return do_shortcode( $content );
-                }
+		    return '';
+	    }
 
 
-            }
-
-            return '';
-        }
-
-        public function ultimatemember_searchform($args = array(), $content = "") {
+	    /**
+	     * @param array $args
+	     * @param string $content
+	     *
+	     * @return string
+	     */
+        public function ultimatemember_searchform( $args = array(), $content = "" ) {
             // turn off buffer
             ob_start();
 

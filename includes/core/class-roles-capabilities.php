@@ -100,7 +100,7 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
             // User exists
             if ( ! empty( $user ) ) {
                 // Get users old UM role
-                $role = $this->um_get_user_role( $user_id );
+                $role = UM()->roles()->get_um_user_role( $user_id );
 
                 // User already has this role so no new role is set
                 if ( $new_role === $role || ( ! $this->is_role_custom( $new_role ) && user_can( $user, $new_role ) ) ) {
@@ -173,47 +173,104 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
 		/**
 		* Get user one of UM roles if it has it
 		*
+		* @deprecated since 2.0
 		* @param int $user_id
 		* @return bool|mixed
 		*/
 		function um_get_user_role( $user_id ) {
-			$user = get_userdata( $user_id );
-
-			if ( empty( $user->roles ) )
-				return false;
-
-			// User has roles so look for a UM Role one
-			$um_roles_keys = get_option( 'um_roles' );
-
-			if ( ! empty( $um_roles_keys ) ) {
-				$um_roles_keys = array_map( function( $item ) {
-					return 'um_' . $item;
-				}, $um_roles_keys );
-			}
-
-			$orders = array();
-			foreach ( array_values( $user->roles ) as $userrole ) {
-				if ( ! empty( $um_roles_keys ) && in_array( $userrole, $um_roles_keys ) ) {
-					$userrole_metakey = substr( $userrole, 3 );
-				} else {
-					$userrole_metakey = $userrole;
-				}
-
-				$rolemeta = get_option( "um_role_{$userrole_metakey}_meta", false );
-
-				if ( ! $rolemeta ) {
-					$orders[ $userrole ] = 0;
-					continue;
-				}
-
-				$orders[ $userrole ] = ! empty( $rolemeta['_um_priority'] ) ? $rolemeta['_um_priority'] : 0;
-			}
-
-			arsort( $orders );
-			$roles_in_priority = array_keys( $orders );
-
-			return array_shift( $roles_in_priority );
+			return $this->get_um_user_role( $user_id );
 		}
+
+
+	    /**
+	     * @param $user_id
+	     *
+	     * @return array|bool
+	     */
+	    function get_all_user_roles( $user_id ) {
+		    $user = get_userdata( $user_id );
+
+		    if ( empty( $user->roles ) ) {
+			    return false;
+		    }
+
+		    return array_values( $user->roles );
+	    }
+
+
+	    /**
+	     * @param $user_id
+	     *
+	     * @return bool|mixed
+	     */
+	    function get_priority_user_role( $user_id ) {
+		    $user = get_userdata( $user_id );
+
+		    if ( empty( $user->roles ) )
+			    return false;
+
+		    // User has roles so look for a UM Role one
+		    $um_roles_keys = get_option( 'um_roles' );
+
+		    if ( ! empty( $um_roles_keys ) ) {
+			    $um_roles_keys = array_map( function( $item ) {
+				    return 'um_' . $item;
+			    }, $um_roles_keys );
+		    }
+
+		    $orders = array();
+		    foreach ( array_values( $user->roles ) as $userrole ) {
+			    if ( ! empty( $um_roles_keys ) && in_array( $userrole, $um_roles_keys ) ) {
+				    $userrole_metakey = substr( $userrole, 3 );
+			    } else {
+				    $userrole_metakey = $userrole;
+			    }
+
+			    $rolemeta = get_option( "um_role_{$userrole_metakey}_meta", false );
+
+			    if ( ! $rolemeta ) {
+				    $orders[ $userrole ] = 0;
+				    continue;
+			    }
+
+			    $orders[ $userrole ] = ! empty( $rolemeta['_um_priority'] ) ? $rolemeta['_um_priority'] : 0;
+		    }
+
+		    arsort( $orders );
+		    $roles_in_priority = array_keys( $orders );
+
+		    return array_shift( $roles_in_priority );
+	    }
+
+
+	    /**
+	     * @param $user_id
+	     *
+	     * @return bool|mixed
+	     */
+	    function get_um_user_role( $user_id ) {
+		    // User has roles so look for a UM Role one
+		    $um_roles_keys = get_option( 'um_roles' );
+
+		    if ( empty( $um_roles_keys ) )
+			    return false;
+
+		    $user = get_userdata( $user_id );
+
+		    if ( empty( $user->roles ) )
+			    return false;
+
+		    $um_roles_keys = array_map( function( $item ) {
+			    return 'um_' . $item;
+		    }, $um_roles_keys );
+
+		    $user_um_roles_array = array_intersect( $um_roles_keys, array_values( $user->roles ) );
+
+		    if ( empty( $user_um_roles_array ) )
+			    return false;
+
+		    return array_shift( $user_um_roles_array );
+	    }
 
 
         /**
@@ -264,9 +321,14 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
         }
 
 
-        /***
-         ***	@Query for UM roles
-         ***/
+	    /**
+	     * Query for UM roles
+	     *
+	     * @param bool $add_default
+	     * @param null $exclude
+	     *
+	     * @return array
+	     */
         function get_roles( $add_default = false, $exclude = null ){
             global $wp_roles;
 
@@ -290,9 +352,14 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
         }
 
 
-        /***
-         ***	@Current user can
-         ***/
+	    /**
+	     * Current user can
+	     *
+	     * @param $cap
+	     * @param $user_id
+	     *
+	     * @return bool|int
+	     */
         function um_current_user_can( $cap, $user_id ) {
             if ( ! is_user_logged_in() )
                 return false;
@@ -301,7 +368,8 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
 
             um_fetch_user( get_current_user_id() );
 
-            switch( $cap ) {
+	        $current_user_roles = UM()->roles()->get_all_user_roles( $user_id );
+	        switch( $cap ) {
                 case 'edit':
                     if ( get_current_user_id() == $user_id && um_user( 'can_edit_profile' ) )
                         $return = 1;
@@ -309,13 +377,15 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
                         $return = 0;
                     elseif ( get_current_user_id() == $user_id && ! um_user( 'can_edit_profile') )
                         $return = 0;
-                    elseif ( um_user( 'can_edit_roles' ) && ! in_array( UM()->roles()->um_get_user_role( $user_id ), um_user( 'can_edit_roles' ) ) )
+                    elseif ( um_user( 'can_edit_roles' ) && count( array_intersect( $current_user_roles, um_user( 'can_edit_roles' ) ) ) <= 0 )
                         $return = 0;
                     break;
 
                 case 'delete':
-                    if ( ! um_user( 'can_delete_everyone' ) ) $return = 0;
-                    elseif ( um_user( 'can_delete_roles' ) && ! in_array( UM()->roles()->um_get_user_role( $user_id ), um_user( 'can_delete_roles' ) ) ) $return = 0;
+                    if ( ! um_user( 'can_delete_everyone' ) )
+                    	$return = 0;
+                    elseif ( um_user( 'can_delete_roles' ) && count( array_intersect( $current_user_roles, um_user( 'can_delete_roles' ) ) ) <= 0 )
+	                    $return = 0;
                     break;
 
             }
@@ -337,8 +407,7 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
 				return false;
 
 			$user_id = get_current_user_id();
-			$role = $this->um_get_user_role( $user_id );
-
+			$role = UM()->roles()->get_priority_user_role( $user_id );
 			$permissions = $this->role_data( $role );
 			$permissions = apply_filters( 'um_user_permissions_filter', $permissions, $user_id );
 

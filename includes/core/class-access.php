@@ -189,12 +189,11 @@ if ( ! class_exists( 'Access' ) ) {
 			if ( is_front_page() ) {
 				if ( is_user_logged_in() ) {
 
-					$role_meta = UM()->roles()->role_data( um_user( 'role' ) );
-
-					if ( ! empty( $role_meta['default_homepage'] ) )
+					if ( ! empty( um_user( 'default_homepage' ) ) )
 						return;
 
-					$redirect_to = ! empty( $role_meta['redirect_homepage'] ) ? $role_meta['redirect_homepage'] : um_get_core_page( 'user' );
+					$redirect_homepage = um_user( 'redirect_homepage' );
+					$redirect_to = ! empty( $redirect_homepage ) ? $redirect_homepage : um_get_core_page( 'user' );
 					$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect_to ) ), "custom_homepage" );
 
 				} else {

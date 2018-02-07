@@ -1830,7 +1830,7 @@ Host:						<?php echo $host . "\n"; ?>
 ---- Current User Details --
 
 <?php $user = wp_get_current_user(); ?>
-Role: <?php echo um_user( 'role' ). "\n"; ?>
+Role: <?php echo implode( ', ', um_user( 'roles' ) ). "\n"; ?>
 
 
 --- WordPress Configurations ---

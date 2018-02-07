@@ -57,6 +57,16 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
         }
 
 
+	    /**
+	     * @return mixed
+	     */
+        public function get_active_plugins() {
+	        if ( ! self::$active_plugins ) self::init();
+
+	        return self::$active_plugins;
+        }
+
+
         /**
          * Check if UltimateMember core plugin is active
          *

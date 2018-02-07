@@ -674,6 +674,11 @@ function um_is_core_page( $page ) {
 	if (isset( $post->ID ) && get_post_meta( $post->ID, '_um_wpml_' . $page, true ) == 1)
 		return true;
 
+	global $sitepress;
+	if ( UM()->config()->permalinks[$page] == wpml_object_id_filter( $post->ID, 'page', true, $sitepress->get_default_language() ) ) {
+		return true;
+	}
+
 	if (isset( $post->ID )) {
 		$_icl_lang_duplicate_of = get_post_meta( $post->ID, '_icl_lang_duplicate_of', true );
 
@@ -988,23 +993,27 @@ function um_is_on_edit_profile() {
  */
 function um_can_view_field( $data ) {
 
-	if (!isset( UM()->fields()->set_mode ))
+	if ( ! isset( UM()->fields()->set_mode ) ) {
 		UM()->fields()->set_mode = '';
+	}
 
-	if (isset( $data['public'] ) && UM()->fields()->set_mode != 'register') {
+	if ( isset( $data['public'] ) && UM()->fields()->set_mode != 'register' ) {
 
-		if (!is_user_logged_in() && $data['public'] != '1') return false;
+		if ( ! is_user_logged_in() && $data['public'] != '1' ) {
+			return false;
+		}
 
-		if (is_user_logged_in()) {
+		if ( is_user_logged_in() ) {
+			$current_user_roles = um_user( 'roles' );
 
-			if ($data['public'] == '-3' && !um_is_user_himself() && !in_array( UM()->roles()->um_get_user_role( get_current_user_id() ), $data['roles'] ))
+			if ( $data['public'] == '-3' && ! um_is_user_himself() && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 )
 				return false;
 
-			if (!um_is_user_himself() && $data['public'] == '-1' && !UM()->roles()->um_user_can( 'can_edit_everyone' ))
+			if ( ! um_is_user_himself() && $data['public'] == '-1' && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) )
 				return false;
 
-			if ($data['public'] == '-2' && $data['roles'])
-				if (!in_array( UM()->roles()->um_get_user_role( get_current_user_id() ), $data['roles'] ))
+			if ( $data['public'] == '-2' && $data['roles'] )
+				if ( count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 )
 					return false;
 		}
 
@@ -1022,30 +1031,29 @@ function um_can_view_field( $data ) {
  * @return bool
  */
 function um_can_view_profile( $user_id ) {
-	if (!um_user( 'can_view_all' ) && $user_id != get_current_user_id() && is_user_logged_in()) return false;
+	if ( ! um_user( 'can_view_all' ) && $user_id != get_current_user_id() && is_user_logged_in() ) {
+		return false;
+	}
 
-	if (UM()->roles()->um_current_user_can( 'edit', $user_id )) {
+	if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 		return true;
 	}
 
-	if (!is_user_logged_in()) {
-		if (UM()->user()->is_private_profile( $user_id )) {
-			return false;
-		} else {
-			return true;
-		}
+	if ( ! is_user_logged_in() ) {
+		return ! UM()->user()->is_private_profile( $user_id );
 	}
 
-	if (!um_user( 'can_access_private_profile' ) && UM()->user()->is_private_profile( $user_id )) return false;
+	if ( ! um_user( 'can_access_private_profile' ) && UM()->user()->is_private_profile( $user_id ) ) {
+		return false;
+	}
 
-	if (UM()->roles()->um_user_can( 'can_view_roles' ) && $user_id != get_current_user_id()) {
-		if (!in_array( UM()->roles()->um_get_user_role( $user_id ), UM()->roles()->um_user_can( 'can_view_roles' ) )) {
+	if ( UM()->roles()->um_user_can( 'can_view_roles' ) && $user_id != get_current_user_id() ) {
+		if ( count( array_intersect( UM()->roles()->get_all_user_roles( $user_id ), UM()->roles()->um_user_can( 'can_view_roles' ) ) ) <= 0 ) {
 			return false;
 		}
 	}
 
 	return true;
-
 }
 
 

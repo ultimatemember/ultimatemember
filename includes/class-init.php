@@ -189,7 +189,7 @@ if ( ! class_exists( 'UM' ) ) {
                 // include hook files
                 add_action( 'plugins_loaded', array( &$this, 'init' ), 0 );
 
-                //add_action( 'init', array( &$this, 'old_extensions_notice' ), 0 );
+                add_action( 'init', array( &$this, 'old_extensions_notice' ), 0 );
 
                 //run activation
                 register_activation_hook( um_plugin, array( &$this, 'activation' ) );
@@ -205,8 +205,17 @@ if ( ! class_exists( 'UM' ) ) {
         }
 
 
-		function old_extensions_notice() {
-			if ( ! is_admin() ) return;
+	    /**
+	     * Show notice for customers with old extension's versions
+	     */
+	    function old_extensions_notice() {
+			if ( ! is_admin() ) {
+				return;
+			}
+
+			if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+				return;
+			}
 
 			$show = false;
 
@@ -225,13 +234,15 @@ if ( ! class_exists( 'UM' ) ) {
 				}
 			}
 
-			if ( ! $show ) return;
+			if ( ! $show ) {
+				return;
+			}
 
 			/*global $um_woocommerce;
 			remove_action( 'init', array( $um_woocommerce, 'plugin_check' ), 1 );
 			$um_woocommerce->plugin_inactive = true;*/
 
-			echo '<div class="error"><p>' . sprintf( __( '<strong>ATTENTION!</strong> You have pre-2.0 version activated <strong>%s</strong> extensions. Please install the latest versions.', 'ultimate-member' ), ultimatemember_plugin_name ) . '</p></div>';
+			echo '<div class="error"><p>' . sprintf( __( '<strong>ATTENTION!</strong> %s %s requires 2.0 extensions. You have pre 2.0 extensions installed on your site. <br /> Please update %s extensions to latest versions. For more info see this <a href="%s" target="_blank">doc</a>.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, 'http://docs.ultimatemember.com/article/266-updating-to-2-0-versions-of-extensions' ) . '</p></div>';
 		}
 
 
