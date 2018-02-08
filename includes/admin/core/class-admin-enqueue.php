@@ -51,13 +51,10 @@ if ( ! class_exists( 'Admin_Enqueue' ) ) {
         /***
          ***	@enter title placeholder
          ***/
-        function enter_title_here( $title ){
+        function enter_title_here( $title ) {
             $screen = get_current_screen();
             if ( 'um_directory' == $screen->post_type ){
                 $title = 'e.g. Member Directory';
-            }
-            if ( 'um_role' == $screen->post_type ){
-                $title = 'e.g. Community Member';
             }
             if ( 'um_form' == $screen->post_type ){
                 $title = 'e.g. New Registration Form';
@@ -65,12 +62,13 @@ if ( ! class_exists( 'Admin_Enqueue' ) ) {
             return $title;
         }
 
+
         /***
          ***	@Runs on admin head
          ***/
         function admin_head(){
 
-            if ( $this->is_plugin_post_type() ){
+            if ( UM()->admin()->is_plugin_post_type() ){
 
                 ?>
 
@@ -84,25 +82,6 @@ if ( ! class_exists( 'Admin_Enqueue' ) ) {
                 <?php
             }
 
-        }
-
-
-        /***
-         ***	@check that we're on a custom post type supported by UM
-         ***/
-        function is_plugin_post_type(){
-            if (isset($_REQUEST['post_type'])){
-                $post_type = $_REQUEST['post_type'];
-                if ( in_array($post_type, array('um_form','um_role','um_directory'))){
-                    return true;
-                }
-            } else if ( isset($_REQUEST['action'] ) && $_REQUEST['action'] == 'edit') {
-                $post_type = get_post_type();
-                if ( in_array($post_type, array('um_form','um_role','um_directory'))){
-                    return true;
-                }
-            }
-            return false;
         }
 
 

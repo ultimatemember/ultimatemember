@@ -22,6 +22,29 @@ if ( ! class_exists( 'Admin' ) ) {
 
 
 		/**
+		 * Check if current page load UM post type
+		 *
+		 *
+		 * @return bool
+		 */
+		function is_plugin_post_type() {
+			if ( isset( $_REQUEST['post_type'] ) ) {
+				$post_type = $_REQUEST['post_type'];
+				if ( in_array( $post_type, array( 'um_form','um_directory' ) ) ) {
+					return true;
+				}
+			} elseif ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'edit' ) {
+				$post_type = get_post_type();
+				if ( in_array( $post_type, array( 'um_form', 'um_directory' ) ) ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		/**
 		 * Check if plugin is installed with correct folder
 		 */
 		function check_wrong_install_folder() {
