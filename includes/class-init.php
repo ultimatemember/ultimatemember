@@ -242,7 +242,7 @@ if ( ! class_exists( 'UM' ) ) {
 			remove_action( 'init', array( $um_woocommerce, 'plugin_check' ), 1 );
 			$um_woocommerce->plugin_inactive = true;*/
 
-			echo '<div class="error"><p>' . sprintf( __( '<strong>ATTENTION!</strong> %s %s requires 2.0 extensions. You have pre 2.0 extensions installed on your site. <br /> Please update %s extensions to latest versions. For more info see this <a href="%s" target="_blank">doc</a>.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, 'http://docs.ultimatemember.com/article/266-updating-to-2-0-versions-of-extensions' ) . '</p></div>';
+			echo '<div class="error"><p>' . sprintf( __( '<strong>%s %s</strong> requires 2.0 extensions. You have pre 2.0 extensions installed on your site. <br /> Please update %s extensions to latest versions. For more info see this <a href="%s" target="_blank">doc</a>.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, 'http://docs.ultimatemember.com/article/266-updating-to-2-0-versions-of-extensions' ) . '</p></div>';
 		}
 
 
