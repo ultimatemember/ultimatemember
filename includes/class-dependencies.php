@@ -44,6 +44,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
             'verified-users'        => '2.0',
             'woocommerce'           => '2.0',
 	        'restrict-content'      => '2.0',
+	        'beaver-builder'        => '2.0',
         );
 
         /**
