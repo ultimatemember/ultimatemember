@@ -118,7 +118,10 @@ if ( ! class_exists( 'Enqueue' ) ) {
             $uploads        = wp_upload_dir();
             $upload_dir     = $uploads['basedir'] . DIRECTORY_SEPARATOR . 'ultimatemember' . DIRECTORY_SEPARATOR;
             if ( file_exists( $upload_dir . 'um_old_settings.css' ) ) {
-                wp_register_style('um_old_css', $uploads['baseurl'] . '/ultimatemember/um_old_settings.css' );
+                //was the issues with HTTPS
+	            //wp_register_style('um_old_css', $uploads['baseurl'] . '/ultimatemember/um_old_settings.css' );
+                //fixed using "../../"
+	            wp_register_style('um_old_css', um_url . '../../uploads/ultimatemember/um_old_settings.css' );
                 wp_enqueue_style('um_old_css');
             }
         }

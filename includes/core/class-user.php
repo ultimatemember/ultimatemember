@@ -84,6 +84,7 @@ if ( ! class_exists( 'User' ) ) {
 
 		    if ( 'rejected' == $status ) {
 			    wp_logout();
+			    session_unset();
 			    exit( wp_redirect( um_get_core_page( 'login' ) ) );
 		    }
 
@@ -258,12 +259,16 @@ if ( ! class_exists( 'User' ) ) {
                 $duplicate_id = get_option( "um_duplicate_name_{$duplicate_slug_hash}" );
 
                 if ( ! empty( $duplicate_id ) && $duplicate_id != $user_id )
-                    $full_name = $full_name . ' ' . $user_id;
+                    $full_name = trim( $full_name . ' ' . $user_id );
 
                 $user_in_url = UM()->permalinks()->profile_slug( $full_name, $first_name, $last_name );
             }
 
             update_user_meta( $user_id, "um_user_profile_url_slug_{$permalink_base}", $user_in_url );
+
+	        if ( empty ( $user_in_url )) {
+		        $user_in_url = $user_id;
+	        }
 
             return UM()->permalinks()->profile_permalink( $user_in_url );
         }
@@ -379,7 +384,8 @@ if ( ! class_exists( 'User' ) ) {
                 if ( ! current_user_can( 'edit_user', $userdata->ID ) )
                     return $content;
 
-                $user_role = UM()->roles()->um_get_user_role( $userdata->ID );
+                //$user_role = UM()->roles()->um_get_user_role( $userdata->ID );
+                $user_role = UM()->roles()->get_um_user_role( $userdata->ID );
                 if ( $user_role && ! empty( $userdata->roles ) && count( $userdata->roles ) == 1 )
                     $style = 'style="display:none;"';
 
@@ -468,6 +474,7 @@ if ( ! class_exists( 'User' ) ) {
         function remove_cache( $user_id ) {
             delete_option( "um_cache_userdata_{$user_id}" );
         }
+
 
         /**
          * @function set()
@@ -580,9 +587,11 @@ if ( ! class_exists( 'User' ) ) {
                     }
 
                     // add permissions
-                    $user_role = UM()->roles()->um_get_user_role( $this->id );
+                    //$user_role = UM()->roles()->um_get_user_role( $this->id );
+                    $user_role = UM()->roles()->get_priority_user_role( $this->id );
                     //$this->profile['role'] = ( strpos( $user_role, 'um_' ) === 0 ) ? str_replace( 'um_', '', $user_role ) : $user_role;
                     $this->profile['role'] = $user_role;
+                    $this->profile['roles'] = UM()->roles()->get_all_user_roles( $this->id );
 
                     $role_meta = UM()->roles()->role_data( $user_role );
                     $role_meta = apply_filters( 'um_user_permissions_filter', $role_meta, $this->id );

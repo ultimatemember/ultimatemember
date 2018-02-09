@@ -309,6 +309,8 @@ if ( ! class_exists( 'Account' ) ) {
 
                     $args = 'single_user_password';
 
+	                $args = apply_filters( 'um_account_tab_delete_fields', $args, $shortcode_args );
+
                     $fields = UM()->builtin()->get_specific_fields( $args );
 
                     $fields = apply_filters( 'um_account_secure_fields', $fields, $id );
@@ -333,6 +335,8 @@ if ( ! class_exists( 'Account' ) ) {
                         $args = str_replace(',user_email','', $args );
                     }
 
+	                $args = apply_filters( 'um_account_tab_general_fields', $args, $shortcode_args );
+
                     $fields = UM()->builtin()->get_specific_fields( $args );
 
                     $fields = apply_filters( 'um_account_secure_fields', $fields, $id );
@@ -348,6 +352,8 @@ if ( ! class_exists( 'Account' ) ) {
                 case 'password':
 
                     $args = 'user_password';
+
+	                $args = apply_filters( 'um_account_tab_password_fields', $args, $shortcode_args );
 
                     $fields = UM()->builtin()->get_specific_fields( $args );
 

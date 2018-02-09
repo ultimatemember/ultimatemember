@@ -20,7 +20,7 @@
 
         methods.destroy.call(this.self);
 
-        this.opt = $.extend(true, {}, $.fn.raty.defaults, options);
+        this.opt = $.extend(true, {}, $.fn.um_raty.defaults, options);
 
         methods._adjustCallback.call(this);
 
@@ -125,7 +125,7 @@
     _bindClick: function() {
       var that = this;
 
-      that.stars.on('click.raty', function(evt) {
+      that.stars.on('click.um_raty', function(evt) {
         var star = $(this);
 
         that.score.val((that.opt.half || that.opt.precision) ? that.self.data('score') : (this.alt || star.data('alt')));
@@ -139,7 +139,7 @@
     _bindClickCancel: function() {
       var that = this;
 
-      that.cancel.on('click.raty', function(evt) {
+      that.cancel.on('click.um_raty', function(evt) {
         that.score.removeAttr('value');
 
         if (that.opt.click) {
@@ -151,7 +151,7 @@
     _bindOut: function() {
       var that = this;
 
-      that.self.on('mouseleave.raty', function(evt) {
+      that.self.on('mouseleave.um_raty', function(evt) {
         var score = +that.score.val() || undefined;
 
         methods._apply.call(that, score);
@@ -166,7 +166,7 @@
     _bindOutCancel: function() {
       var that = this;
 
-      that.cancel.on('mouseleave.raty', function(evt) {
+      that.cancel.on('mouseleave.um_raty', function(evt) {
         var icon = that.opt.cancelOff;
 
         if (that.opt.starType !== 'img') {
@@ -185,7 +185,7 @@
 
     _bindOver: function() {
       var that   = this,
-          action = that.opt.half ? 'mousemove.raty' : 'mouseover.raty';
+          action = that.opt.half ? 'mousemove.um_raty' : 'mouseover.um_raty';
 
       that.stars.on(action, function(evt) {
         var score = methods._getScoreByPosition.call(that, evt, this);
@@ -209,7 +209,7 @@
     _bindOverCancel: function() {
       var that = this;
 
-      that.cancel.on('mouseover.raty', function(evt) {
+      that.cancel.on('mouseover.um_raty', function(evt) {
         var
           starOff = that.opt.path + that.opt.starOff,
           icon    = that.opt.cancelOn;
@@ -504,7 +504,7 @@
             raw  = self.data('raw');
 
         if (raw) {
-          self.off('.raty').empty().css({ cursor: raw.style.cursor }).removeData('readonly');
+          self.off('.um_raty').empty().css({ cursor: raw.style.cursor }).removeData('readonly');
         } else {
           self.data('raw', self.clone()[0]);
         }
@@ -553,7 +553,7 @@
 
         if (self.data('readonly') !== readonly) {
           if (readonly) {
-            self.off('.raty').children('img').off('.raty');
+            self.off('.um_raty').children('img').off('.um_raty');
 
             methods._lock.call(this);
           } else {
@@ -582,7 +582,7 @@
             actual = self.data('options'),
             news   = $.extend({}, actual, options);
 
-        self.raty(news);
+        self.um_raty(news);
       });
     },
 
@@ -596,7 +596,7 @@
     }
   };
 
-  $.fn.raty = function(method) {
+  $.fn.um_raty = function(method) {
     if (methods[method]) {
       return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
     } else if (typeof method === 'object' || !method) {
@@ -606,7 +606,7 @@
     }
   };
 
-  $.fn.raty.defaults = {
+  $.fn.um_raty.defaults = {
     cancel       : false,
     cancelClass  : 'raty-cancel',
     cancelHint   : 'Cancel this rating!',

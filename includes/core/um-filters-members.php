@@ -33,9 +33,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		return $query_args;
 	}
 
-	/***
-	***	@Remove users we do not need to show in directory
-	***/
+	/**
+	 * Remove users we do not need to show in directory
+	 *
+	 * @param $query_args
+	 * @param $args
+	 *
+	 * @return mixed
+	 */
 	function um_remove_special_users_from_list( $query_args, $args ) {
 		extract( $args );
 
@@ -69,13 +74,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 
 		if ( UM()->roles()->um_user_can( 'can_view_all' ) && UM()->roles()->um_user_can( 'can_view_roles' ) ) {
-			
-			$permissions = UM()->roles()->role_data( um_user( 'role' ) );
 
-            if ( ! empty( $permissions['can_view_roles'] ) )
-                $roles = maybe_unserialize( $permissions['can_view_roles'] );
+			$roles = um_user( 'can_view_roles' );
+			$roles = maybe_unserialize( $roles );
 
-			if ( isset( $roles ) && is_array( $roles ) ) {
+			if ( ! empty( $roles ) ) {
 				$query_args['meta_query'][] = array(
 					'key' => 'role',
 					'value' => $roles,
@@ -83,8 +86,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				);
 			}
 
-		}				
-						
+		}
+
 		return $query_args;
 	}
 

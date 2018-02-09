@@ -44,44 +44,9 @@ if ( ! class_exists( 'Admin_Functions' ) ) {
 
             }
 
-            if ($post_type == 'um_role') {
-
-                $messages['um_role'] = array(
-                    0 => '',
-                    1 => __('Role updated.'),
-                    2 => __('Custom field updated.'),
-                    3 => __('Custom field deleted.'),
-                    4 => __('Role updated.'),
-                    5 => isset($_GET['revision']) ? __('Role restored to revision.') : false,
-                    6 => __('Role created.'),
-                    7 => __('Role saved.'),
-                    8 => __('Role submitted.'),
-                    9 => __('Role scheduled.'),
-                    10=> __('Role draft updated.'),
-                );
-
-            }
-
             return $messages;
         }
 
-        /***
-         ***	@check that we're on a custom post type supported by UM
-         ***/
-        function is_plugin_post_type(){
-            if (isset($_REQUEST['post_type'])){
-                $post_type = $_REQUEST['post_type'];
-                if ( in_array($post_type, array('um_form','um_role','um_directory'))){
-                    return true;
-                }
-            } else if ( isset($_REQUEST['action'] ) && $_REQUEST['action'] == 'edit') {
-                $post_type = get_post_type();
-                if ( in_array($post_type, array('um_form','um_role','um_directory'))){
-                    return true;
-                }
-            }
-            return false;
-        }
 
         /***
          ***	@gettext filters
@@ -89,7 +54,7 @@ if ( ! class_exists( 'Admin_Functions' ) ) {
         function gettext($translation, $text, $domain) {
             global $post;
             //$screen = get_current_screen();
-            if ( isset( $post->post_type ) && $this->is_plugin_post_type() ) {
+            if ( isset( $post->post_type ) && UM()->admin()->is_plugin_post_type() ) {
                 $translations = get_translations_for_domain( $domain);
                 if ( $text == 'Publish') {
                     return $translations->translate( 'Create' );

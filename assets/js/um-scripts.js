@@ -113,7 +113,7 @@ jQuery(document).ready(function() {
 		});
 	});
 
-	jQuery('.um-rating').raty({
+	jQuery('.um-rating').um_raty({
 		half: 		false,
 		starType: 	'i',
 		number: 	function() {return jQuery(this).attr('data-number');},
@@ -127,7 +127,7 @@ jQuery(document).ready(function() {
 		}
 	});
 
-	jQuery('.um-rating-readonly').raty({
+	jQuery('.um-rating-readonly').um_raty({
 		half: 		false,
 		starType: 	'i',
 		number: 	function() {return jQuery(this).attr('data-number');},

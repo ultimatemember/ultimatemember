@@ -66,14 +66,22 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	add_action( 'send_password_change_email','um_send_password_change_email', 10, 1 );
 	function um_send_password_change_email( $args ) {
 
+		if ( ! is_array( $args ) )
+			return false;
+
+		/**
+		 * @var $user_id
+		 */
 		extract( $args );
+
+		if ( ! isset( $user_id ) )
+			return false;
 
 		um_fetch_user( $user_id );
 
 		UM()->user()->password_changed();
 
 		um_reset_user();
-
 
 		return false;
 	}

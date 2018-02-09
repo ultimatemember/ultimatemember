@@ -142,7 +142,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			foreach ( $fields as $key => $array ) {
 
                 if ( isset( $array['public']  ) && -2 == $array['public'] && ! empty( $array['roles'] ) && is_user_logged_in() ) {
-                    if ( ! in_array( um_user( 'role' ), $array['roles'] ) ) {
+	                $current_user_roles = um_user( 'roles' );
+	                if ( count( array_intersect( $current_user_roles, $array['roles'] ) ) <= 0 ) {
                         continue;
                     }
                 }

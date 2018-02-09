@@ -189,6 +189,8 @@ if ( ! class_exists( 'UM' ) ) {
                 // include hook files
                 add_action( 'plugins_loaded', array( &$this, 'init' ), 0 );
 
+                add_action( 'init', array( &$this, 'old_extensions_notice' ), 0 );
+
                 //run activation
                 register_activation_hook( um_plugin, array( &$this, 'activation' ) );
 
@@ -201,6 +203,47 @@ if ( ! class_exists( 'UM' ) ) {
                 require_once 'um-deprecated-functions.php';
             }
         }
+
+
+	    /**
+	     * Show notice for customers with old extension's versions
+	     */
+	    function old_extensions_notice() {
+			if ( ! is_admin() ) {
+				return;
+			}
+
+			if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+				return;
+			}
+
+			$show = false;
+
+			$slugs = array_map( function( $item ) {
+				return 'um-' . $item . '/um-' . $item . '.php';
+			}, array_keys( $this->dependencies()->ext_required_version ) );
+
+			$active_plugins = $this->dependencies()->get_active_plugins();
+			foreach ( $slugs as $slug ) {
+				if ( in_array( $slug, $active_plugins ) ) {
+					$plugin_data = get_plugin_data( um_path . '..' . DIRECTORY_SEPARATOR . $slug );
+					if ( version_compare( '2.0', $plugin_data['Version'], '>' ) ) {
+						$show = true;
+						break;
+					}
+				}
+			}
+
+			if ( ! $show ) {
+				return;
+			}
+
+			/*global $um_woocommerce;
+			remove_action( 'init', array( $um_woocommerce, 'plugin_check' ), 1 );
+			$um_woocommerce->plugin_inactive = true;*/
+
+			echo '<div class="error"><p>' . sprintf( __( '<strong>%s %s</strong> requires 2.0 extensions. You have pre 2.0 extensions installed on your site. <br /> Please update %s extensions to latest versions. For more info see this <a href="%s" target="_blank">doc</a>.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, 'http://docs.ultimatemember.com/article/266-updating-to-2-0-versions-of-extensions' ) . '</p></div>';
+		}
 
 
         /**
@@ -258,6 +301,7 @@ if ( ! class_exists( 'UM' ) ) {
                 update_option( 'um_version', ultimatemember_version );
 
             //run setup
+	        $this->common()->create_post_types();
             $this->setup()->run_setup();
         }
 
@@ -1077,7 +1121,6 @@ if ( ! class_exists( 'UM' ) ) {
             require_once 'core/um-filters-files.php';
             require_once 'core/um-filters-navmenu.php';
             require_once 'core/um-filters-avatars.php';
-            require_once 'core/um-filters-arguments.php';
             require_once 'core/um-filters-user.php';
             require_once 'core/um-filters-members.php';
             require_once 'core/um-filters-profile.php';

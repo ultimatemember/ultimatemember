@@ -29,12 +29,17 @@ if ( ! class_exists( 'Access' ) ) {
 
 
 		/**
+		 * @var \WP_Post
+		 */
+		private $current_single_post;
+
+
+		/**
 		 * Access constructor.
 		 */
 		function __construct() {
 
 			$this->singular_page = false;
-
 
 			$this->redirect_handler = false;
 			$this->allow_access = false;
@@ -184,12 +189,11 @@ if ( ! class_exists( 'Access' ) ) {
 			if ( is_front_page() ) {
 				if ( is_user_logged_in() ) {
 
-					$role_meta = UM()->roles()->role_data( um_user( 'role' ) );
-
-					if ( ! empty( $role_meta['default_homepage'] ) )
+					if ( ! empty( um_user( 'default_homepage' ) ) )
 						return;
 
-					$redirect_to = ! empty( $role_meta['redirect_homepage'] ) ? $role_meta['redirect_homepage'] : um_get_core_page( 'user' );
+					$redirect_homepage = um_user( 'redirect_homepage' );
+					$redirect_to = ! empty( $redirect_homepage ) ? $redirect_homepage : um_get_core_page( 'user' );
 					$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect_to ) ), "custom_homepage" );
 
 				} else {
@@ -592,13 +596,19 @@ if ( ! class_exists( 'Access' ) ) {
                                 if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
                                     $post->post_content = stripslashes( $restricted_global_message );
 
+	                                $this->current_single_post = $post;
+	                                add_filter( 'the_content', array( &$this, 'replace_post_content' ), 9999, 1 );
+
                                     if ( 'attachment' == $post->post_type ) {
                                         remove_filter( 'the_content', 'prepend_attachment' );
                                     }
                                 } elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
                                     $post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
 
-                                    if ( 'attachment' == $post->post_type ) {
+	                                $this->current_single_post = $post;
+	                                add_filter( 'the_content', array( &$this, 'replace_post_content' ), 9999, 1 );
+
+	                                if ( 'attachment' == $post->post_type ) {
                                         remove_filter( 'the_content', 'prepend_attachment' );
                                     }
                                 }
@@ -692,6 +702,18 @@ if ( ! class_exists( 'Access' ) ) {
 
             return $filtered_posts;
         }
+
+
+		/**
+		 * @param $content
+		 *
+		 * @return string
+		 */
+		function replace_post_content( $content ) {
+			$content = $this->current_single_post->post_content;
+
+			return $content;
+		}
 
 
         /**

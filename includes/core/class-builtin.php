@@ -683,7 +683,7 @@ if ( ! class_exists( 'Builtin' ) ) {
                     'public' => 1,
                     'editable' => 1,
                     'max_words' => 40,
-                    'placeholder' => 'Enter a bit about yourself...',
+                    'placeholder' => __('Enter a bit about yourself...','ultimate-member'),
                 ),
 
                 'birth_date' => array(

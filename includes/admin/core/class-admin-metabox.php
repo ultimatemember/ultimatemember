@@ -39,23 +39,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
             return false;
         }
 
-        /***
-         ***	@check that we're on a custom post type supported by UM
-         ***/
-        function is_plugin_post_type() {
-            if (isset($_REQUEST['post_type'])){
-                $post_type = $_REQUEST['post_type'];
-                if ( in_array($post_type, array('um_form','um_role','um_directory'))){
-                    return true;
-                }
-            } else if ( isset($_REQUEST['action'] ) && $_REQUEST['action'] == 'edit') {
-                $post_type = get_post_type();
-                if ( in_array($post_type, array('um_form','um_role','um_directory'))){
-                    return true;
-                }
-            }
-            return false;
-        }
 
         /***
          ***	@Gets the role meta
@@ -76,7 +59,7 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
          ***/
         function admin_head(){
             global $post;
-            if ( $this->is_plugin_post_type() && isset($post->ID) ){
+            if ( UM()->admin()->is_plugin_post_type() && isset($post->ID) ){
                 $this->postmeta = $this->get_custom_post_meta($post->ID);
             }
         }
@@ -767,46 +750,6 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
 
         }
 
-        /***
-         ***	@save role metabox
-         ***/
-       /* function save_metabox_role( $post_id, $post ) {
-            global $wpdb;
-
-            // validate nonce
-            if ( !isset( $_POST['um_admin_save_metabox_role_nonce'] ) || !wp_verify_nonce( $_POST['um_admin_save_metabox_role_nonce'], basename( __FILE__ ) ) ) return $post_id;
-
-            // validate post type
-            if ( $post->post_type != 'um_role' ) return $post_id;
-
-            // validate user
-            $post_type = get_post_type_object( $post->post_type );
-            if ( !current_user_can( $post_type->cap->edit_post, $post_id ) ) return $post_id;
-
-            $where = array( 'ID' => $post_id );
-            if (empty($_POST['post_title'])) $_POST['post_title'] = 'Role #'.$post_id;
-            $wpdb->update( $wpdb->posts, array( 'post_title' => $_POST['post_title'], 'post_name' => sanitize_title( $_POST['post_title'] ) ), $where );
-
-            // save
-            delete_post_meta( $post_id, '_um_can_view_roles' );
-            delete_post_meta( $post_id, '_um_can_edit_roles' );
-            delete_post_meta( $post_id, '_um_can_delete_roles' );
-
-            do_action('um_admin_before_saving_role_meta', $post_id );
-
-            do_action('um_admin_before_save_role', $post_id, $post );
-
-            foreach( $_POST as $k => $v ) {
-                if (strstr($k, '_um_')){
-                    update_post_meta( $post_id, $k, $v);
-                }
-            }
-
-            do_action('um_admin_after_editing_role', $post_id, $post);
-
-            do_action('um_admin_after_save_role', $post_id, $post );
-
-        }*/
 
         /***
          ***	@save form metabox

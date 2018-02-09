@@ -157,36 +157,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		exit( wp_redirect( remove_query_arg('um_adm_action') ) );
 	}
 	
-	/***
-	***	@Opt-in tracking
-	***/
-	add_action('um_admin_do_action__opt_into_tracking', 'um_admin_do_action__opt_into_tracking');
-	function um_admin_do_action__opt_into_tracking( $action ) {
-		if ( !is_admin() || !current_user_can('manage_options') ) die();
 
-		UM()->options()->update( 'um_allow_tracking', 1 );
-		update_option( 'um_tracking_notice', 1 );
-
-		$tracking = new um\core\Tracking();
-		$tracking->send_checkin(true);
-		
-		exit( wp_redirect( remove_query_arg('um_adm_action') ) );
-	}
-	
-	/***
-	***	@Opt-out of tracking
-	***/
-	add_action('um_admin_do_action__opt_out_of_tracking', 'um_admin_do_action__opt_out_of_tracking');
-	function um_admin_do_action__opt_out_of_tracking( $action ){
-		if ( !is_admin() || !current_user_can('manage_options') ) die();
-
-		UM()->options()->update( 'um_allow_tracking', 0 );
-		update_option('um_tracking_notice', 1 );
-		
-		exit( wp_redirect( remove_query_arg('um_adm_action') ) );
-	}
-
-	
 	/***
 	***	@various user actions
 	***/

@@ -166,11 +166,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         um_store_lastlogin_timestamp( $user->ID );
 	}
 
-	/***
-	***	@login user
-	***/
-	add_action('um_user_login', 'um_user_login', 10);
-	function um_user_login($args){
+	/**
+	 * Login user process
+	 *
+	 * @param array $args
+	 */
+	function um_user_login( $args ) {
 		extract( $args );
 
 		$rememberme = ( isset( $args['rememberme'] ) && 1 ==  $args['rememberme']  && isset( $_REQUEST['rememberme'] ) ) ? 1 : 0;
@@ -179,30 +180,29 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			wp_die( __('This action has been prevented for security measures.','ultimate-member') );
 		}
 
-		UM()->user()->auto_login( um_user('ID'), $rememberme );
+		UM()->user()->auto_login( um_user( 'ID' ), $rememberme );
 
 		// Hook that runs after successful login and before user is redirected
-		do_action('um_on_login_before_redirect', um_user('ID') );
+		do_action( 'um_on_login_before_redirect', um_user( 'ID' ) );
 
 		// Priority redirect
-		if ( isset( $args['redirect_to'] ) && ! empty( $args['redirect_to']  ) ) {
-			exit( wp_redirect(  $args['redirect_to']  ) );
+		if ( ! empty( $args['redirect_to']  ) ) {
+			exit( wp_redirect( $args['redirect_to'] ) );
 		}
 
-		$role_data = UM()->roles()->role_data( um_user( 'role' ) );
-		
 		// Role redirect
-		if ( empty( $role_data['after_login'] ) )
+		$after_login = um_user( 'after_login' );
+		if ( empty( $after_login ) )
 			exit( wp_redirect( um_user_profile_url() ) );
 
-		switch( $role_data['after_login'] ) {
+		switch( $after_login ) {
 
 			case 'redirect_admin':
 				exit( wp_redirect( admin_url() ) );
 				break;
 
 			case 'redirect_url':
-				exit( wp_redirect( $role_data['login_redirect_url'] ) );
+				exit( wp_redirect( um_user( 'login_redirect_url' ) ) );
 				break;
 
 			case 'refresh':
@@ -216,6 +216,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 		}
 	}
+	add_action( 'um_user_login', 'um_user_login', 10 );
+
 
 	/***
 	***	@form processing

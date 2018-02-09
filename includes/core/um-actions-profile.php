@@ -114,16 +114,18 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			if ( ! in_array( $args['submitted']['role'], $exclude_roles ) ) {
 				$to_update['role'] = $args['submitted']['role'];
 			}
+
+			$args['roles_before_upgrade'] = UM()->roles()->get_all_user_roles( um_user( 'ID' ) );
 		}
 
 		do_action( 'um_user_pre_updating_profile', $to_update );
 
 		$to_update = apply_filters( 'um_user_pre_updating_profile_array', $to_update );
 
-		if (is_array( $to_update )) {
-			UM()->user()->update_profile( $to_update );
-			do_action( 'um_after_user_updated', um_user( 'ID' ) );
 
+		if ( is_array( $to_update ) ) {
+			UM()->user()->update_profile( $to_update );
+			do_action( 'um_after_user_updated', um_user( 'ID' ), $args, $to_update );
 		}
 
 		$files = apply_filters( 'um_user_pre_updating_files_array', $files );
@@ -144,6 +146,39 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		}
 
 	}
+
+
+	/**
+	 * Leave roles for User, which are not in the list of update profile (are default WP or 3rd plugins roles)
+	 *
+	 * @param $user_id
+	 * @param $args
+	 * @param $to_update
+	 */
+	function um_restore_default_roles( $user_id, $args, $to_update ) {
+		if ( ! empty( $args['submitted']['role'] ) ) {
+			$wp_user = new WP_User( $user_id );
+
+			$role_keys = array_map( function( $item ) {
+				return 'um_' . $item;
+			}, get_option( 'um_roles' ) );
+
+			$leave_roles = array_diff( $args['roles_before_upgrade'], array_merge( $role_keys, array( 'subscriber' ) ) );
+
+			if ( UM()->roles()->is_role_custom( $to_update['role'] ) ) {
+				$wp_user->remove_role( $to_update['role'] );
+				$roles = array_merge( $leave_roles, array( $to_update['role'] ) );
+			} else {
+				$roles = array_merge( array( $to_update['role'] ), $leave_roles );
+			}
+
+			foreach ( $roles as $role_k ) {
+				$wp_user->add_role( $role_k );
+			}
+		}
+	}
+	add_action( 'um_after_user_updated', 'um_restore_default_roles', 10, 3 );
+
 
 	/***
 	 ***    @if editing another user
