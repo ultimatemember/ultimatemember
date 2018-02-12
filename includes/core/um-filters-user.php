@@ -185,3 +185,22 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		
 		return $changes;
 	}
+
+	add_filter('insert_user_meta','um_user_edit_after_updating_profile_array',10,3);
+	function um_user_edit_after_updating_profile_array($meta, $user, $update){
+		if (!empty($_POST['user_id'])){
+			if(get_user_meta( $_POST['user_id'],'first_name',true ) != $meta['first_name'] ||
+			   get_user_meta( $_POST['user_id'],'last_name',true ) != $meta['last_name']){
+				add_filter( 'um_user_edit_after_updating_profile_array','um_user_edit_after_updating_profile_array_1' );
+			}
+		}
+
+
+		return $meta;
+	}
+
+	function um_user_edit_after_updating_profile_array_1( $to_update ) {
+		$to_update['need_change_permalink'] = true;
+
+		return $to_update;
+	}
