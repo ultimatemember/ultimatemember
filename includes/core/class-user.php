@@ -165,129 +165,133 @@ if ( ! class_exists( 'User' ) ) {
         }
 
 
-        function get_profile_url( $user_id, $update_slug = false ) {
-	    // Permalink base
-	    $permalink_base = UM()->options()->get( 'permalink_base' );
+		/**
+		* @param $user_id
+		* @param bool $update_slug
+		*
+		* @return string
+		*/
+		function get_profile_url( $user_id, $update_slug = false ) {
+			// Permalink base
+			$permalink_base = UM()->options()->get( 'permalink_base' );
 
-	    // Get user slug
-	    $profile_slug  = get_user_meta( $user_id, "um_user_profile_url_slug_{$permalink_base}", true );
-	    $generate_slug = UM()->options()->get( 'um_generate_slug_in_directory' );
+			// Get user slug
+			$profile_slug  = get_user_meta( $user_id, "um_user_profile_url_slug_{$permalink_base}", true );
+			$generate_slug = UM()->options()->get( 'um_generate_slug_in_directory' );
 
-	    // Return existing profile slug
-	    if ( $generate_slug && $update_slug == false && $profile_slug ) {
-		    return UM()->permalinks()->profile_permalink( $profile_slug );
-	    }
-
-
-	    // Reset cache
-	    if ( $update_slug == true ) {
-		    delete_option( "um_cache_userdata_{$user_id}" );
-		    um_fetch_user( $user_id );
-	    }
-
-	    $userdata = get_userdata( $user_id );
-
-	    if ( empty( $userdata ) ) {
-		    return UM()->permalinks()->profile_permalink( $profile_slug );
-	    }
-
-	    $user_in_url = '';
-	    // Username
-	    if ( $permalink_base == 'user_login' ) {
-		    $user_in_url = $userdata->user_login;
-
-		    if ( is_email( $user_in_url ) ) {
-			    $user_email  = $user_in_url;
-			    $user_in_url = str_replace( '@', '', $user_in_url );
-
-			    if ( ( $pos = strrpos( $user_in_url, '.' ) ) !== false ) {
-				    $search_length = strlen( '.' );
-				    $user_in_url   = substr_replace( $user_in_url, '-', $pos, $search_length );
-			    }
-			    update_user_meta( $user_id, "um_email_as_username_{$user_in_url}", $user_email );
-
-		    } else {
-
-			    $user_in_url = sanitize_title( $user_in_url );
-
-		    }
-	    }
-
-	    // User ID
-	    if ( $permalink_base == 'user_id' ) {
-		    $user_in_url = $user_id;
-	    }
-
-	    // Fisrt and Last name
-	    $full_name_permalinks = array( 'name', 'name_dash', 'name_plus' );
-	    if ( in_array( $permalink_base, $full_name_permalinks ) ) {
-		    $separated = array('name' => '.','name_dash' =>'-','name_plus'=>'+');
-		    $separate = $separated[$permalink_base];
-		    $first_name = $userdata->first_name;
-		    $last_name  = $userdata->last_name;
-		    $full_name  = sprintf('%s %s',$first_name,$last_name);
-
-		    $full_name = preg_replace( '/\s+/', ' ', $full_name ); // Remove double spaces
-
-		    $profile_slug = UM()->permalinks()->profile_slug( $full_name, $first_name, $last_name );
-
-		    $current_slug = get_user_meta( $user_id, "um_user_profile_url_slug_{$permalink_base}", true );
-		    if ( $current_slug ) {
-			    $username = $current_slug;
-		    } else {
-
-			    $append     = 0;
-			    $username   = $full_name;
-			    $_username   = $full_name;
-
-			    while ( 1 ) {
-
-				    $username = $_username .(empty($append)?'':" $append" );
-				    if(!UM()->permalinks()->exist_url_slug_permalink_base( $permalink_base, $profile_slug . (empty($append)?'':"{$separate}{$append}" ) )){
-					    break;
-				    }
-				    $append++;
-
-			    }
-		    }
-		    $user_in_url = UM()->permalinks()->profile_slug( $username, $first_name, $last_name );
-	    }
-
-	    update_user_meta( $user_id, "um_user_profile_url_slug_{$permalink_base}", $user_in_url );
-
-	    if ( empty ( $user_in_url ) ) {
-		    $user_in_url = $user_id;
-	    }
-
-	    return UM()->permalinks()->profile_permalink( $user_in_url );
-    }
+			// Return existing profile slug
+			if ( $generate_slug && $update_slug == false && $profile_slug ) {
+				return UM()->permalinks()->profile_permalink( $profile_slug );
+			}
 
 
+			// Reset cache
+			if ( $update_slug == true ) {
+				delete_option( "um_cache_userdata_{$user_id}" );
+				um_fetch_user( $user_id );
+			}
+
+			$userdata = get_userdata( $user_id );
+
+			if ( empty( $userdata ) ) {
+				return UM()->permalinks()->profile_permalink( $profile_slug );
+			}
+
+			$user_in_url = '';
+			// Username
+			if ( $permalink_base == 'user_login' ) {
+
+				$user_in_url = $userdata->user_login;
+
+				if ( is_email( $user_in_url ) ) {
+
+					$user_email  = $user_in_url;
+					$user_in_url = str_replace( '@', '', $user_in_url );
+
+					if ( ( $pos = strrpos( $user_in_url, '.' ) ) !== false ) {
+						$search_length = strlen( '.' );
+						$user_in_url   = substr_replace( $user_in_url, '-', $pos, $search_length );
+					}
+					update_user_meta( $user_id, "um_email_as_username_{$user_in_url}", $user_email );
+
+				} else {
+
+					$user_in_url = sanitize_title( $user_in_url );
+
+				}
+			}
+
+			// User ID
+			if ( $permalink_base == 'user_id' ) {
+				$user_in_url = $user_id;
+			}
+
+			// Fisrt and Last name
+			$full_name_permalinks = array( 'name', 'name_dash', 'name_plus' );
+			if ( in_array( $permalink_base, $full_name_permalinks ) ) {
+				$separated = array( 'name' => '.', 'name_dash' => '-', 'name_plus' => '+' );
+				$separate = $separated[ $permalink_base ];
+				$first_name = $userdata->first_name;
+				$last_name  = $userdata->last_name;
+				$full_name  = sprintf( '%s %s', $first_name, $last_name );
+
+				$full_name = preg_replace( '/\s+/', ' ', $full_name ); // Remove double spaces
+
+				$profile_slug = UM()->permalinks()->profile_slug( $full_name, $first_name, $last_name );
+
+				$current_slug = get_user_meta( $user_id, "um_user_profile_url_slug_{$permalink_base}", true );
+				if ( $current_slug ) {
+					$username = $current_slug;
+				} else {
+
+					$append     = 0;
+					$username   = $full_name;
+					$_username   = $full_name;
+
+					while ( 1 ) {
+						$username = $_username . ( empty( $append ) ? '': " $append" );
+						if ( ! UM()->permalinks()->exist_url_slug_permalink_base( $permalink_base, $profile_slug . ( empty( $append ) ? '' : "{$separate}{$append}" ) ) ) {
+							break;
+						}
+						$append++;
+					}
+				}
+				$user_in_url = UM()->permalinks()->profile_slug( $username, $first_name, $last_name );
+			}
+
+			update_user_meta( $user_id, "um_user_profile_url_slug_{$permalink_base}", $user_in_url );
+
+			if ( empty ( $user_in_url ) ) {
+				$user_in_url = $user_id;
+			}
+
+			return UM()->permalinks()->profile_permalink( $user_in_url );
+		}
 
 
-        /**
-         * Backend user creation
-         *
-         * @param $user_id
-         */
-        function user_register_via_admin( $user_id ) {
+		/**
+		* Backend user creation
+		*
+		* @param $user_id
+		*/
+		function user_register_via_admin( $user_id ) {
 
-            if ( empty( $user_id ) )
-                return;
+			if ( empty( $user_id ) )
+				return;
 
-            if ( is_admin() ) {
-                //if there custom 2 role not empty
-                if ( ! empty( $_POST['um-role'] ) ) {
-                    $user = get_userdata( $user_id );
-                    $user->add_role( $_POST['um-role'] );
-                    UM()->user()->profile['role'] = $_POST['um-role'];
-                    UM()->user()->update_usermeta_info( 'role' );
-                }
+			if ( is_admin() ) {
+				//if there custom 2 role not empty
+				if ( ! empty( $_POST['um-role'] ) ) {
+					$user = get_userdata( $user_id );
+					$user->add_role( $_POST['um-role'] );
+					UM()->user()->profile['role'] = $_POST['um-role'];
+					UM()->user()->update_usermeta_info( 'role' );
+				}
 
-                do_action( 'um_user_register', $user_id, $_POST );
-            }
+				do_action( 'um_user_register', $user_id, $_POST );
+			}
 
-        }
+		}
 
 
 		/**
@@ -296,37 +300,36 @@ if ( ! class_exists( 'User' ) ) {
 		* @param int $user_id
 		* @param \WP_User $old_data
 		*/
-	    function profile_update( $user_id, $old_data ) {
-		    // Bail if no user ID was passed
-		    if ( empty( $user_id ) ) {
-			    return;
-		    }
+		function profile_update( $user_id, $old_data ) {
+			// Bail if no user ID was passed
+			if ( empty( $user_id ) ) {
+				return;
+			}
 
-		    $old_roles = $old_data->roles;
-		    $userdata  = get_userdata( $user_id );
-		    $new_roles = $userdata->roles;
+			$old_roles = $old_data->roles;
+			$userdata  = get_userdata( $user_id );
+			$new_roles = $userdata->roles;
 
-		    if ( ! empty( $_POST['um-role'] ) ) {
-			    $new_roles = array_merge( $new_roles, array( $_POST['um-role'] ) );
-			    if ( ! user_can( $user_id, $_POST['um-role'] ) ) {
-				    UM()->roles()->set_role( $user_id, $_POST['um-role'] );
-			    }
-		    }
+			if ( ! empty( $_POST['um-role'] ) ) {
+				$new_roles = array_merge( $new_roles, array( $_POST['um-role'] ) );
+				if ( ! user_can( $user_id, $_POST['um-role'] ) ) {
+					UM()->roles()->set_role( $user_id, $_POST['um-role'] );
+				}
+			}
 
-		    do_action( 'um_after_member_role_upgrade', $new_roles, $old_roles );
+			do_action( 'um_after_member_role_upgrade', $new_roles, $old_roles );
 
-		    //Update permalink
-		    $changes = apply_filters( 'um_user_edit_after_updating_profile_array', $_POST );
-		    if ( isset( $changes['need_change_permalink'] ) && $changes['need_change_permalink'] == true ) {
+			//Update permalink
+			$changes = apply_filters( 'um_user_edit_after_updating_profile_array', $_POST );
+			if ( isset( $changes['need_change_permalink'] ) && $changes['need_change_permalink'] == true ) {
+				$pre_user_id = um_user( 'ID' );
+				um_fetch_user( $user_id );
+				UM()->permalinks()->profile_url( $changes );
+				um_fetch_user( $pre_user_id );
+			}
 
-			    $pre_user_id = um_user( 'ID' );
-			    um_fetch_user( $user_id );
-			    UM()->permalinks()->profile_url( $changes );
-			    um_fetch_user( $pre_user_id );
-		    }
-
-		    $this->remove_cache( $user_id );
-	    }
+			$this->remove_cache( $user_id );
+		}
 
 
 		/**

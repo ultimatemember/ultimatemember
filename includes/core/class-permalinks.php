@@ -23,7 +23,7 @@ if ( ! class_exists( 'Permalinks' ) ) {
 
             add_action( 'wp_head',  array( &$this, 'um_rel_canonical_' ), 9 );
 
-            add_filter( 'um_user_pre_updating_profile_array', array( &$this, 'um_user_updating_profile_need_change_permalink') );
+            add_filter( 'um_user_pre_updating_profile_array', array( &$this, 'um_user_updating_profile_need_change_permalink' ) );
         }
 
 
@@ -506,18 +506,21 @@ if ( ! class_exists( 'Permalinks' ) ) {
             return $url;
         }
 
-	    /**
-	     * Adds the "need_change_permalink" parameter to recreate the user's permanent link
-	     * @param array $to_update
-	     * @return array $to_update
-	     */
-        function um_user_updating_profile_need_change_permalink( $to_update ) {
 
-	        if ( um_user( 'first_name' ) != $to_update['first_name'] ||
-	             um_user( 'last_name' ) != $to_update['last_name'] ) {
-		        $to_update['need_change_permalink'] = true;
-	        }
-	        return $to_update;
-        }
+		/**
+		* Adds the "need_change_permalink" parameter to recreate the user's permanent link*
+		*
+		* @param array $to_update
+		* @return array $to_update
+		*/
+		function um_user_updating_profile_need_change_permalink( $to_update ) {
+
+			if ( um_user( 'first_name' ) != $to_update['first_name'] ||
+				 um_user( 'last_name' ) != $to_update['last_name'] ) {
+				$to_update['need_change_permalink'] = true;
+			}
+
+			return $to_update;
+		}
     }
 }

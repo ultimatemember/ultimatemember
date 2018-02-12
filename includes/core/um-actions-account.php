@@ -215,7 +215,7 @@ function um_submit_account_errors_hook( $args ) {
        	
 		do_action('um_post_account_update');
 
-		do_action('um_after_user_account_updated', get_current_user_id(), $changes);
+		do_action( 'um_after_user_account_updated', get_current_user_id(), $changes );
 
 		$url = '';
 		if ( um_is_core_page( 'account' ) ) {
@@ -287,30 +287,32 @@ function um_submit_account_errors_hook( $args ) {
 	}
 
 
-	/**
-	 * Adds the "need_change_permalink" parameter to recreate the user's permanent link
-	 * @param array $to_update
-	 * @return array $to_update
-	 */
-	function um_account_pre_updating_profile_need_change_permalink( $to_update ) {
+/**
+* Adds the "need_change_permalink" parameter to recreate the user's permanent link
+ *
+* @param array $to_update
+* @return array $to_update
+*/
+function um_account_pre_updating_profile_need_change_permalink( $to_update ) {
 
-		if ( um_user( 'first_name' ) != $to_update['first_name'] ||
-		     um_user( 'last_name' ) != $to_update['last_name'] ) {
-			$to_update['need_change_permalink'] = true;
-		}
-
-		return $to_update;
+	if ( um_user( 'first_name' ) != $to_update['first_name'] ||
+		 um_user( 'last_name' ) != $to_update['last_name'] ) {
+		$to_update['need_change_permalink'] = true;
 	}
 
-	add_filter( 'um_account_pre_updating_profile_array', 'um_account_pre_updating_profile_need_change_permalink' );
+	return $to_update;
+}
 
-	/**
-     *
-	 * @param $user_id
-	 * @param $changed
-     *
-	 */
-    function um_after_user_account_updated_permalink($user_id,$changed){
-       UM()->permalinks()->profile_url($changed);
-    }
-    add_action('um_after_user_account_updated','um_after_user_account_updated_permalink',10,2);
+add_filter( 'um_account_pre_updating_profile_array', 'um_account_pre_updating_profile_need_change_permalink' );
+
+
+/**
+ * Update Profile URL
+ *
+ * @param $user_id
+ * @param $changed
+ */
+function um_after_user_account_updated_permalink( $user_id, $changed ) {
+	UM()->permalinks()->profile_url( $changed );
+}
+add_action( 'um_after_user_account_updated', 'um_after_user_account_updated_permalink', 10, 2 );
