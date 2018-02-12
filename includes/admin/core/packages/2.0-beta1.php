@@ -945,7 +945,20 @@ $roles_associations = array();
 $all_wp_roles = array_keys( get_editable_roles() );
 if ( ! empty( $um_roles ) ) {
 	foreach ( $um_roles as $um_role ) {
-		$role_key = sanitize_title( $um_role->post_title );
+
+		//old role key which inserted for each user to usermeta "role"
+		$key_in_meta = $um_role->post_name;
+
+		if ( preg_match( "/[a-z0-9]+$/i", $um_role->post_title ) ) {
+			$role_key = sanitize_title( $um_role->post_title );
+		} else {
+			$auto_increment = UM()->options()->get( 'custom_roles_increment' );
+			$auto_increment = ! empty( $auto_increment ) ? $auto_increment : 1;
+			$role_key = 'custom_role_' . $auto_increment;
+
+			$auto_increment++;
+			UM()->options()->update( 'custom_roles_increment', $auto_increment );
+		}
 
 		if ( ! in_array( $role_key, $all_wp_roles ) ) {
 			$role_keys[] = $role_key;
@@ -963,7 +976,7 @@ if ( ! empty( $um_roles ) ) {
 
 		$role_metadata = array();
 		if ( ! empty( $all_role_metadata ) ) {
-			foreach( $all_role_metadata as $metadata ) {
+			foreach ( $all_role_metadata as $metadata ) {
 
 				if ( '_um_can_edit_roles' == $metadata['meta_key'] || '_um_can_delete_roles' == $metadata['meta_key']
 				     || '_um_can_view_roles' == $metadata['meta_key'] || '_um_can_follow_roles' == $metadata['meta_key']
@@ -985,20 +998,21 @@ if ( ! empty( $um_roles ) ) {
 			$role_meta = $role_metadata;
 		}
 
-		$old_key = ! empty( $role_meta['_um_core'] ) ? $role_meta['_um_core'] : $role_key;
+		//$old_key = ! empty( $role_meta['_um_core'] ) ? $role_meta['_um_core'] : $role_key;
 		if ( ! in_array( $role_key, $all_wp_roles ) ) {
-			$roles_associations[ $old_key ] = 'um_' . $role_key;
+			$roles_associations[ $key_in_meta ] = 'um_' . $role_key;
 		} else {
-			$roles_associations[ $old_key ] = $role_key;
+			$roles_associations[ $key_in_meta ] = $role_key;
 		}
 
-		$r_key = ! empty( $role_meta['_um_core'] ) ? $role_meta['_um_core'] : $role_key;
+
+		//$r_key = ! empty( $role_meta['_um_core'] ) ? $role_meta['_um_core'] : $role_key;
 		//get all users with UM role
 		$args = array(
 			'meta_query'   => array(
 				array(
 					'key'       => 'role',
-					'value'     => $r_key
+					'value'     => $key_in_meta
 				)
 			),
 			'number'       => '',
@@ -1025,8 +1039,14 @@ if ( ! empty( $um_roles ) ) {
 		update_option( "um_role_{$role_key}_meta", $role_meta );
 	}
 
+	//update user role meta where role keys stored
 	foreach ( $um_roles as $um_role ) {
-		$role_key = sanitize_title( $um_role->post_title );
+
+		$key_in_meta = $um_role->post_name;
+
+		$role_key = $roles_associations[ $key_in_meta ];
+		if ( strpos( $role_key, 'um_' ) === 0 )
+			$role_key = substr( $role_key, 3 );
 
 		$role_meta = get_option( "um_role_{$role_key}_meta" );
 

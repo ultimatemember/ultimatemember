@@ -368,6 +368,7 @@ if ( ! class_exists( 'um\Config' ) ) {
                 'profile_photo_max_size'                => 999999999,
                 'cover_photo_max_size'                  => 999999999,
                 'menu_item_workaround'                  => 0,
+	            'custom_roles_increment'                => 1,
             );
 
             $tabs = UM()->profile()->tabs_primary();

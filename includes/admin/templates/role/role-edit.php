@@ -36,7 +36,15 @@ if ( ! empty( $_POST['role'] ) ) {
     } else {
 
         if ( 'add' == $_GET['tab'] ) {
-            $id = sanitize_title( $data['name'] );
+
+	        if ( preg_match( "/[a-z0-9]+$/i", $data['name'] ) ) {
+	            $id = sanitize_title( $data['name'] );
+            } else {
+		        $auto_increment = UM()->options()->get( 'custom_roles_increment' );
+		        $auto_increment = ! empty( $auto_increment ) ? $auto_increment : 1;
+		        $id = 'custom_role_' . $auto_increment;
+	        }
+
             $redirect = add_query_arg( array( 'page'=>'um_roles', 'tab'=>'edit', 'id'=>$id, 'msg'=>'a' ), admin_url( 'admin.php' ) );
         } elseif ( 'edit' == $_GET['tab'] && ! empty( $_GET['id'] ) ) {
             $id = $_GET['id'];
@@ -58,6 +66,11 @@ if ( ! empty( $_POST['role'] ) ) {
             $roles[] = $id;
 
             update_option( 'um_roles', $roles );
+
+	        if ( isset( $auto_increment ) ) {
+		        $auto_increment++;
+		        UM()->options()->update( 'custom_roles_increment', $auto_increment );
+	        }
         }
 
         $role_meta = $data;
