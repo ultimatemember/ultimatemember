@@ -183,7 +183,31 @@ function um_submit_account_errors_hook( $args ) {
 			delete_user_meta( um_user('ID'), 'hide_in_members' );
 			unset( $changes['hide_in_members'] );
 		}
+
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_account_pre_updating_profile_array
+		 * @description Contains all data from which are transmitted when updating information page "account". This filter is used before changing data in the database
+		 * @inpust_vars {
+         *      "(array) $changes": 'Contains all data from which are transmitted when updating information page "account"'
+         * }
+		 *
+		 * @example
+		 * add_filter( 'um_account_pre_updating_profile_array', 'um_account_pre_updating_profile_need_change_permalink' );
+		 * function um_account_pre_updating_profile_need_change_permalink( $to_update ) {
+         *
+         *  if ( um_user( 'first_name' ) != $to_update['first_name'] ||
+         *   um_user( 'last_name' ) != $to_update['last_name'] ) {
+         *   $to_update['need_change_permalink'] = true;
+         *   }
+         *
+         *  return $to_update;
+         *  }
+		 */
 		$changes = apply_filters( 'um_account_pre_updating_profile_array', $changes );
+
        // fired on account page, just before updating profile
 		do_action('um_account_pre_update_profile', $changes, um_user('ID') );
 
@@ -262,17 +286,31 @@ function um_submit_account_errors_hook( $args ) {
 		update_user_meta( um_user('ID'), 'um_account_secure_fields', $secure_fields );
 	}
 
-    add_filter( 'um_account_pre_updating_profile_array','um_account_pre_updating_profile_array_1' );
-    function um_account_pre_updating_profile_array_1( $to_update ) {
-    
-	        if ( um_user( 'first_name' ) != $to_update['first_name'] ||
-	             um_user( 'last_name' ) != $to_update['last_name'] ) {
-		        $to_update['need_change_permalink'] = true;
-	        }
-	        return $to_update;
-        }
-    
-    add_action('um_after_user_account_updated','um_after_user_account_updated_1',10,2);
-    function um_after_user_account_updated_1($user_id,$changed){
+
+	/**
+	 * Adds the "need_change_permalink" parameter to recreate the user's permanent link
+	 * @param array $to_update
+	 * @return array $to_update
+	 */
+	function um_account_pre_updating_profile_need_change_permalink( $to_update ) {
+
+		if ( um_user( 'first_name' ) != $to_update['first_name'] ||
+		     um_user( 'last_name' ) != $to_update['last_name'] ) {
+			$to_update['need_change_permalink'] = true;
+		}
+
+		return $to_update;
+	}
+
+	add_filter( 'um_account_pre_updating_profile_array', 'um_account_pre_updating_profile_need_change_permalink' );
+
+	/**
+     *
+	 * @param $user_id
+	 * @param $changed
+     *
+	 */
+    function um_after_user_account_updated_permalink($user_id,$changed){
        UM()->permalinks()->profile_url($changed);
     }
+    add_action('um_after_user_account_updated','um_after_user_account_updated_permalink',10,2);

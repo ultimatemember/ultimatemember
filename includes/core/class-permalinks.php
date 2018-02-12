@@ -23,7 +23,7 @@ if ( ! class_exists( 'Permalinks' ) ) {
 
             add_action( 'wp_head',  array( &$this, 'um_rel_canonical_' ), 9 );
 
-            add_filter( 'um_user_pre_updating_profile_array', array( &$this, 'um_user_pre_updating_profile_array') );
+            add_filter( 'um_user_pre_updating_profile_array', array( &$this, 'um_user_updating_profile_need_change_permalink') );
         }
 
 
@@ -305,7 +305,6 @@ if ( ! class_exists( 'Permalinks' ) ) {
 	        if ( in_array( $permalink_base, $full_name_permalinks ) ) {
 		        $separated = array('name' => '.','name_dash' =>'-','name_plus'=>'+');
 		        $separate = $separated[$permalink_base];
-		        $opt_display_name = UM()->options()->get( 'display_name' );
 		        $first_name       = um_user( 'first_name' );
 		        $last_name        = um_user( 'last_name' );
 		        $full_name  = sprintf('%s %s',$first_name,$last_name);
@@ -329,7 +328,6 @@ if ( ! class_exists( 'Permalinks' ) ) {
 		        }
 
 		        $user_in_url = $this->profile_slug( $username, $first_name, $last_name );
-error_log('<pre>'.print_r($user_in_url,true).'</pre>');
 	        }
 
             update_user_meta( um_user('ID'), "um_user_profile_url_slug_{$permalink_base}", $user_in_url  );
@@ -509,9 +507,11 @@ error_log('<pre>'.print_r($user_in_url,true).'</pre>');
         }
 
 	    /**
-	     * @param $to_update
+	     * Adds the "need_change_permalink" parameter to recreate the user's permanent link
+	     * @param array $to_update
+	     * @return array $to_update
 	     */
-        function um_user_pre_updating_profile_array( $to_update ) {
+        function um_user_updating_profile_need_change_permalink( $to_update ) {
 
 	        if ( um_user( 'first_name' ) != $to_update['first_name'] ||
 	             um_user( 'last_name' ) != $to_update['last_name'] ) {
