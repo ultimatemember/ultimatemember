@@ -1646,7 +1646,8 @@ function um_user( $data, $attrs = null ) {
 
 		case 'role_select':
 		case 'role_radio':
-			return UM()->roles()->get_role_name( um_user( 'role' ) );
+
+			return UM()->roles()->get_role_name( UM()->roles()->get_editable_priority_user_role( um_user( 'ID' ) ) );
 			break;
 
 		case 'submitted':

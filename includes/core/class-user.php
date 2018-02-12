@@ -386,7 +386,6 @@ if ( ! class_exists( 'User' ) ) {
                 if ( ! current_user_can( 'edit_user', $userdata->ID ) )
                     return $content;
 
-                //$user_role = UM()->roles()->um_get_user_role( $userdata->ID );
                 $user_role = UM()->roles()->get_um_user_role( $userdata->ID );
                 if ( $user_role && ! empty( $userdata->roles ) && count( $userdata->roles ) == 1 )
                     $style = 'style="display:none;"';
@@ -589,9 +588,7 @@ if ( ! class_exists( 'User' ) ) {
                     }
 
                     // add permissions
-                    //$user_role = UM()->roles()->um_get_user_role( $this->id );
                     $user_role = UM()->roles()->get_priority_user_role( $this->id );
-                    //$this->profile['role'] = ( strpos( $user_role, 'um_' ) === 0 ) ? str_replace( 'um_', '', $user_role ) : $user_role;
                     $this->profile['role'] = $user_role;
                     $this->profile['roles'] = UM()->roles()->get_all_user_roles( $this->id );
 
