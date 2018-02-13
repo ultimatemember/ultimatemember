@@ -233,7 +233,7 @@ if ( ! class_exists( 'User' ) ) {
 				$separate = $separated[ $permalink_base ];
 				$first_name = $userdata->first_name;
 				$last_name  = $userdata->last_name;
-				$full_name  = trim(sprintf( '%s %s', $first_name, $last_name ));
+				$full_name  = trim( sprintf( '%s %s', $first_name, $last_name ) );
 
 				$full_name = preg_replace( '/\s+/', ' ', $full_name ); // Remove double spaces
 
@@ -258,10 +258,10 @@ if ( ! class_exists( 'User' ) ) {
 				}
 
 				$user_in_url = UM()->permalinks()->profile_slug( $username, $first_name, $last_name );
-				if(empty($user_in_url)){
+				if( empty( $user_in_url ) ) {
 					$user_in_url = $userdata->user_login;
                 }
-				$user_in_url = trim($user_in_url,$separate);
+				$user_in_url = trim( $user_in_url, $separate );
 			}
 
 			update_user_meta( $user_id, "um_user_profile_url_slug_{$permalink_base}", $user_in_url );

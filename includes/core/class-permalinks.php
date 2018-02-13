@@ -303,13 +303,13 @@ if ( ! class_exists( 'Permalinks' ) ) {
             $full_name_permalinks = array( 'name', 'name_dash', 'name_plus' );
 
 	        if ( in_array( $permalink_base, $full_name_permalinks ) ) {
-		        $separated = array('name' => '.','name_dash' =>'-','name_plus'=>'+');
-		        $separate = $separated[$permalink_base];
+		        $separated        = array( 'name' => '.', 'name_dash' => '-', 'name_plus'=> '+' );
+		        $separate         = $separated[ $permalink_base ];
 		        $first_name       = um_user( 'first_name' );
 		        $last_name        = um_user( 'last_name' );
-		        $full_name  = trim(sprintf('%s %s',$first_name,$last_name));
+		        $full_name        = trim( sprintf('%s %s', $first_name, $last_name ) );
 		        $full_name        = preg_replace( '/\s+/', ' ', $full_name ); // Remove double spaces
-		        $profile_slug = UM()->permalinks()->profile_slug( $full_name, $first_name, $last_name );
+		        $profile_slug     = UM()->permalinks()->profile_slug( $full_name, $first_name, $last_name );
 
 		        if ( isset($update_slug['need_change_permalink']) && $update_slug['need_change_permalink'] == true ) {
 
@@ -327,10 +327,10 @@ if ( ! class_exists( 'Permalinks' ) ) {
 			        }
 
 		        $user_in_url = $this->profile_slug( $username, $first_name, $last_name );
-			        if(empty($user_in_url)){
+			        if( empty( $user_in_url ) ) {
 				        $user_in_url = um_user('user_login');
 			        }
-			        $user_in_url = trim($user_in_url,$separate);
+			        $user_in_url = trim( $user_in_url, $separate );
 		        }
 
 	        }
@@ -344,7 +344,7 @@ if ( ! class_exists( 'Permalinks' ) ) {
 
 	    function exist_url_slug_permalink_base( $permalink_base, $slug ) {
 		    global $wpdb;
-		    
+
 		    if ( $user_id = $wpdb->get_var( "SELECT `user_id`  FROM `{$wpdb->usermeta}` WHERE `meta_key` = 'um_user_profile_url_slug_{$permalink_base}' AND `meta_value` = '{$slug}'" ) ) {
 			    return $user_id;
 		    }
