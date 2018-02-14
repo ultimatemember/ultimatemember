@@ -60,15 +60,23 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			$query_args['meta_query'][] = array(
 				"relation"	=> "OR",
 				array(
-                    'key' => 'hide_in_members',
-                    'value' => '',
-                    'compare' => 'NOT EXISTS'
-			    ),
-			    array(
 					'key' => 'hide_in_members',
-					'value' => 'Yes',
-					'compare' => 'NOT LIKE'
-				)
+					'value' => '',
+					'compare' => 'NOT EXISTS'
+				),
+				array(
+					"relation"	=> "AND",
+					array(
+						'key' => 'hide_in_members',
+						'value' => __('Yes','ultimate-member'),
+						'compare' => 'NOT LIKE'
+					),
+					array(
+						'key' => 'hide_in_members',
+						'value' => 'Yes',
+						'compare' => 'NOT LIKE'
+					),
+				),
 			);
 		}
 
