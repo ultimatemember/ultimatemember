@@ -913,6 +913,7 @@ if ( ! class_exists( 'User' ) ) {
             UM()->mail()->send( um_user('user_email'), 'inactive_email' );
         }
 
+
         /***
          ***	@delete user
          ***/
@@ -1173,8 +1174,8 @@ if ( ! class_exists( 'User' ) ) {
 
 	            $exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
 
-	            if ( in_array( $args['role'], $exclude_roles ) ) {
-		            unset($args['role']);
+	            if ( isset( $args['role'] ) && in_array( $args['role'], $exclude_roles ) ) {
+		            unset( $args['role'] );
 	            }
 
                 wp_update_user( $args );

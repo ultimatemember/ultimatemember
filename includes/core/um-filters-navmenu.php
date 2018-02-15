@@ -12,9 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return mixed
  */
 function um_add_custom_message_to_menu( $items, $args ) {
-	// this feature required logged in user
-	if ( ! is_user_logged_in() )
+	if ( ! is_user_logged_in() ) {
+		$items = UM()->shortcodes()->convert_user_tags( $items );
 		return $items;
+	}
 
 	um_fetch_user( get_current_user_id() );
 	$items = UM()->shortcodes()->convert_user_tags( $items );

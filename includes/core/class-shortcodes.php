@@ -598,29 +598,28 @@ if ( ! class_exists( 'Shortcodes' ) ) {
 
 			//$matches = false;
 			foreach ( $pattern_array as $pattern ) {
-				$value = '';
 
 				if ( preg_match( $pattern, $str ) ) {
 
-					$usermeta = str_replace( '{', '', $pattern );
-					$usermeta = str_replace( '}', '', $usermeta );
+					$value = '';
+					if ( is_user_logged_in() ) {
+						$usermeta = str_replace( '{', '', $pattern );
+						$usermeta = str_replace( '}', '', $usermeta );
 
-					if ( $usermeta == 'user_avatar_small' ) {
-						$value = get_avatar( um_user( 'ID' ), 40 );
-					} elseif ( um_user( $usermeta ) ) {
-						$value = um_user( $usermeta );
+						if ( $usermeta == 'user_avatar_small' ) {
+							$value = get_avatar( um_user( 'ID' ), 40 );
+						} elseif ( um_user( $usermeta ) ) {
+							$value = um_user( $usermeta );
+						}
+
+						if ( $usermeta == 'username' ) {
+							$value = um_user( 'user_login' );
+						}
+
+						$value = apply_filters( "um_profile_tag_hook__{$usermeta}", $value, um_user( 'ID' ) );
 					}
 
-					if ( $usermeta == 'username' ) {
-						$value = um_user( 'user_login' );
-					}
-
-					$value = apply_filters( "um_profile_tag_hook__{$usermeta}", $value, um_user( 'ID' ) );
-
-					if ( $value ) {
-						$str = preg_replace( '/' . $pattern . '/', $value, $str );
-					}
-
+					$str = preg_replace( '/' . $pattern . '/', $value, $str );
 				}
 
 			}
