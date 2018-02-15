@@ -8,6 +8,10 @@ if ( ! class_exists( 'Cron' ) ) {
     class Cron {
 
         public function __construct() {
+
+            $um_cron = apply_filters('um_cron_disable', false );
+            if( $um_cron ) return;
+            
             add_filter( 'cron_schedules', array( $this, 'add_schedules'   ) );
             add_action( 'wp',             array( $this, 'schedule_Events' ) );
         }
