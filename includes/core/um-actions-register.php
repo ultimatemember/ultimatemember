@@ -100,7 +100,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
             if ( $status == 'approved' ) {
 
 				UM()->user()->auto_login( $user_id );
-				UM()->user()->get_profile_url( $user_id, true );
+				UM()->user()->generate_profile_slug( $user_id );
 
 				do_action( 'um_registration_after_auto_login', $user_id );
 
@@ -350,7 +350,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	 * @param $args
 	 */
 	function um_registration_set_profile_full_name( $user_id, $args ) {
-		do_action( 'um_update_profile_full_name', $args );
+		do_action( 'um_update_profile_full_name', $user_id, $args );
 	}
 
 	add_action( 'um_registration_set_extra_data', 'um_registration_set_profile_full_name', 10, 2 );

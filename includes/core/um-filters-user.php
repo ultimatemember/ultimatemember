@@ -187,33 +187,3 @@ function um_before_update_profile( $changes, $user_id ) {
 	return $changes;
 }
 add_filter( 'um_before_update_profile','um_before_update_profile', 10, 2 );
-
-
-/**
- * @param $meta
- *
- * @return mixed
- */
-function um_user_edit_check_change_first_name_and_last_name( $meta ) {
-	if ( ! empty( $_POST['user_id'] ) ) {
-		if ( get_user_meta( $_POST['user_id'], 'first_name', true ) != $meta['first_name'] ||
-		    get_user_meta( $_POST['user_id'], 'last_name', true ) != $meta['last_name'] ) {
-			add_filter( 'um_user_edit_after_updating_profile_array', 'um_user_edit_after_updating_profile_need_change_permalink' );
-		}
-	}
-
-
-	return $meta;
-}
-add_filter( 'insert_user_meta','um_user_edit_check_change_first_name_and_last_name', 10, 1 );
-
-
-/**
- * @param $to_update
- *
- * @return mixed
- */
-function um_user_edit_after_updating_profile_need_change_permalink( $to_update ) {
-	$to_update['need_change_permalink'] = true;
-	return $to_update;
-}

@@ -20,7 +20,15 @@ if ( ! class_exists( 'External_Integrations' ) ) {
 			add_filter( 'um_email_templates_columns', array( &$this , 'add_email_templates_wpml_column' ), 10, 1 );
 
 
+			add_action( 'um_access_fix_external_post_content', array( &$this , 'bbpress_no_access_message_fix' ), 10 );
+		}
 
+
+		/**
+		 * Fixed bbPress access to Forums message
+		 */
+		function bbpress_no_access_message_fix() {
+			remove_filter( 'template_include', 'bbp_template_include' );
 		}
 
 

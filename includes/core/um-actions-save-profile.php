@@ -6,14 +6,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	/***
 	***	@profile name update
 	***/
-	add_action( 'um_update_profile_full_name', 'um_update_profile_full_name' );
-	function um_update_profile_full_name( $changes ) {
+	add_action( 'um_update_profile_full_name', 'um_update_profile_full_name', 10, 2 );
+	function um_update_profile_full_name( $user_id, $changes ) {
 		// Sync display name changes
 		$option = UM()->options()->get( 'display_name' );
 		
-		$user_id = UM()->user()->id;
-
-		if( ! isset( $user_id ) || empty( $user_id ) ){
+		if ( ! isset( $user_id ) || empty( $user_id ) ) {
 			$user = get_user_by( 'email', $changes['user_email'] );
 			um_fetch_user( $user->ID );
 			$user_id = $user->ID;
@@ -68,6 +66,5 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		}
 		
 		// regenerate slug
-        UM()->user()->get_profile_url( $user_id, true );
-
+		UM()->user()->generate_profile_slug( $user_id );
 	}

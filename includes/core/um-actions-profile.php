@@ -138,10 +138,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 		do_action( 'um_user_after_updating_profile', $to_update );
 
-		do_action( 'um_update_profile_full_name', $to_update );
+		do_action( 'um_update_profile_full_name', um_user( 'ID' ), $to_update );
 
-		if (!isset( $args['is_signup'] )) {
-			$url = UM()->user()->get_profile_url( um_user( 'ID' ), true );
+		if ( ! isset( $args['is_signup'] ) ) {
+			$url = UM()->user()->get_profile_link( um_user( 'ID' ) );
 			exit( wp_redirect( um_edit_my_profile_cancel_uri( $url ) ) );
 		}
 

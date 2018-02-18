@@ -9,6 +9,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 
         var $settings_structure;
         var $previous_licenses;
+        var $need_change_permalinks;
 
         function __construct() {
             //init settings structure
@@ -37,6 +38,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
             add_action( 'admin_init', array( $this, 'save_settings_handler' ), 10 );
 
             //save pages options
+	        add_action( 'um_settings_before_save', array( $this, 'check_permalinks_changes' ) );
             add_action( 'um_settings_save', array( $this, 'on_settings_save' ) );
 
 
@@ -1284,9 +1286,18 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
         }
 
 
+        function check_permalinks_changes() {
+	        if ( ! empty( $_POST['um_options']['permalink_base'] ) ) {
+		        if ( UM()->options()->get( 'permalink_base' ) != $_POST['um_options']['permalink_base'] ) {
+			        $this->need_change_permalinks = true;
+		        }
+	        }
+        }
+
+
         function on_settings_save() {
             if ( ! empty( $_POST['um_options'] ) ) {
-                if ( ! empty( $_POST['pages_settings'] ) ) {
+                if ( ! empty( $_POST['um_options']['pages_settings'] ) ) {
                     $post_ids = new \WP_Query( array(
                         'post_type' => 'page',
                         'meta_query' => array(
@@ -1310,6 +1321,17 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                     foreach ( $_POST['um_options'] as $option_slug => $post_id ) {
                         $slug = str_replace( 'core_', '', $option_slug );
                         update_post_meta( $post_id, '_um_core', $slug );
+                    }
+                } elseif ( ! empty( $_POST['um_options']['permalink_base'] ) ) {
+	                if ( ! empty( $this->need_change_permalinks ) ) {
+		                $users = get_users( array(
+							'fields' => 'ids',
+	                    ) );
+		                if ( ! empty( $users ) ) {
+			                foreach ( $users as $user_id ) {
+				                UM()->user()->generate_profile_slug( $user_id );
+			                }
+		                }
                     }
                 }
             }

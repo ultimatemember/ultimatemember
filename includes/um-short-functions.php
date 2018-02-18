@@ -1169,7 +1169,7 @@ function um_admin_email() {
  * @return string
  */
 function um_user_profile_url() {
-	return UM()->user()->get_profile_url( um_user( 'ID' ) );
+	return UM()->user()->get_profile_link( um_user( 'ID' ) );
 }
 
 

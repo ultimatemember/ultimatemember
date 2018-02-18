@@ -3,8 +3,8 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-add_filter("um_localize_permalink_filter","um_localize_permalink_filter",10,3);
-function um_localize_permalink_filter( $core_pages,  $page_id, $profile_url ){
+add_filter( "um_localize_permalink_filter", "um_localize_permalink_filter", 10, 2 );
+function um_localize_permalink_filter( $profile_url, $page_id ) {
 
     if ( function_exists('icl_get_current_language') && icl_get_current_language() != icl_get_default_language() ) {
         if ( get_the_ID() > 0 && get_post_meta( get_the_ID(), '_um_wpml_user', true ) == 1 ) {
