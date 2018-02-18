@@ -8,6 +8,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	***/
 	add_filter('wp_title', 'um_dynamic_user_profile_pagetitle', 100000, 2 );
 	add_filter('pre_get_document_title', 'um_dynamic_user_profile_pagetitle', 100000, 2 );
+	/**
+	 * fix for plugin "The SEO Framework"
+	 * @link https://ru.wordpress.org/plugins/autodescription/
+	 */
+	add_filter('the_seo_framework_pro_add_title', 'um_dynamic_user_profile_pagetitle', 100000, 2 );
 	function um_dynamic_user_profile_pagetitle( $title, $sep = '' ) {
 
 		$profile_title = UM()->options()->get( 'profile_title' );
