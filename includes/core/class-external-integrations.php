@@ -14,13 +14,16 @@ if ( ! class_exists( 'External_Integrations' ) ) {
 			//WPML translations
 			add_filter( 'um_get_core_page_filter', array( &$this, 'get_core_page_url' ), 10, 3 );
 			add_filter( 'um_admin_settings_email_section_fields', array( &$this, 'um_admin_settings_email_section_fields' ), 10, 2 );
-			add_filter( 'um_email_send_subject', array( &$this , 'um_email_send_subject' ), 10, 2 );
-			add_filter( 'um_locate_email_template', array( &$this , 'locate_email_template' ), 10, 2 );
-			add_filter( 'um_change_email_template_file', array( &$this , 'change_email_template_file' ), 10, 1 );
-			add_filter( 'um_email_templates_columns', array( &$this , 'add_email_templates_wpml_column' ), 10, 1 );
+			add_filter( 'um_email_send_subject', array( &$this, 'um_email_send_subject' ), 10, 2 );
+			add_filter( 'um_locate_email_template', array( &$this, 'locate_email_template' ), 10, 2 );
+			add_filter( 'um_change_email_template_file', array( &$this, 'change_email_template_file' ), 10, 1 );
+			add_filter( 'um_email_templates_columns', array( &$this, 'add_email_templates_wpml_column' ), 10, 1 );
 
 
-			add_action( 'um_access_fix_external_post_content', array( &$this , 'bbpress_no_access_message_fix' ), 10 );
+			add_action( 'um_access_fix_external_post_content', array( &$this, 'bbpress_no_access_message_fix' ), 10 );
+
+			add_filter( 'um_localize_permalink_filter', array( &$this, 'um_localize_permalink_filter' ), 10, 2 );
+			add_filter( 'icl_ls_languages', array( &$this, 'um_core_page_wpml_permalink' ), 10, 1 );
 		}
 
 
@@ -29,6 +32,75 @@ if ( ! class_exists( 'External_Integrations' ) ) {
 		 */
 		function bbpress_no_access_message_fix() {
 			remove_filter( 'template_include', 'bbp_template_include' );
+		}
+
+
+		/**
+		 * @param $profile_url
+		 * @param $page_id
+		 *
+		 * @return bool|false|string
+		 */
+		function um_localize_permalink_filter( $profile_url, $page_id ) {
+
+			if ( ! $this->is_wpml_active() )
+				return $profile_url;
+
+			if ( function_exists( 'icl_get_current_language' ) && icl_get_current_language() != icl_get_default_language() ) {
+				if ( get_the_ID() > 0 && get_post_meta( get_the_ID(), '_um_wpml_user', true ) == 1 ) {
+					$profile_url = get_permalink( get_the_ID() );
+				}
+			}
+
+			// WPML compatibility
+			if ( function_exists( 'icl_object_id' ) ) {
+				$language_code = ICL_LANGUAGE_CODE;
+				$lang_post_id = icl_object_id( $page_id , 'page', true, $language_code );
+
+				if ( $lang_post_id != 0 ) {
+					$profile_url = get_permalink( $lang_post_id );
+				} else {
+					// No page found, it's most likely the homepage
+					global $sitepress;
+					$profile_url = $sitepress->language_url( $language_code );
+				}
+			}
+
+			return $profile_url;
+		}
+
+
+		/**
+		 * @param $array
+		 *
+		 * @return mixed
+		 */
+		function um_core_page_wpml_permalink( $array ) {
+
+			if ( ! $this->is_wpml_active() )
+				return $array;
+
+			global $sitepress;
+			if( ! um_is_core_page("user") ) return $array;
+			if( ! defined("ICL_LANGUAGE_CODE") ) return $array;
+			if( ! function_exists('icl_object_id') ) return $array;
+
+			// Permalink base
+			$permalink_base = UM()->options()->get( 'permalink_base' );
+
+			// Get user slug
+			$profile_slug = strtolower( get_user_meta( um_profile_id(), "um_user_profile_url_slug_{$permalink_base}", true ) );
+			$current_language = ICL_LANGUAGE_CODE;
+			foreach ( $array as $lang_code => $arr ) {
+				$sitepress->switch_lang( $lang_code );
+				$user_page = um_get_core_page( "user" );
+
+				$array[ $lang_code ]['url'] = "{$user_page}{$profile_slug}/";
+			}
+
+			$sitepress->switch_lang( $current_language );
+
+			return $array;
 		}
 
 

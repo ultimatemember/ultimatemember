@@ -1115,7 +1115,6 @@ if ( ! class_exists( 'UM' ) ) {
             require_once 'core/um-actions-save-profile.php';
             require_once 'core/um-actions-misc.php';
 
-            require_once 'core/um-filters-language.php';
             require_once 'core/um-filters-login.php';
             require_once 'core/um-filters-fields.php';
             require_once 'core/um-filters-files.php';
