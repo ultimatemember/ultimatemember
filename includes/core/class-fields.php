@@ -1172,7 +1172,7 @@ if ( ! class_exists( 'Fields' ) ) {
 				um_fetch_user( $_um_profile_id );
 				if ( isset( $data['public'] ) && $data['public'] == '-2' && $data['roles'] ) {
 					$current_user_roles = um_user( 'roles' );
-					if ( count( array_intersect( $current_user_roles, $data['roles'] ) ) > 0 ) {
+					if ( ! empty( $current_user_roles ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) > 0 ) {
 						$disabled = '';
 					}
 				}

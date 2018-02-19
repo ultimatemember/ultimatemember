@@ -1009,14 +1009,14 @@ function um_can_view_field( $data ) {
 		if ( is_user_logged_in() ) {
 			$current_user_roles = um_user( 'roles' );
 
-			if ( $data['public'] == '-3' && ! um_is_user_himself() && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 )
+			if ( $data['public'] == '-3' && ! um_is_user_himself() && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) )
 				return false;
 
 			if ( ! um_is_user_himself() && $data['public'] == '-1' && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) )
 				return false;
 
 			if ( $data['public'] == '-2' && $data['roles'] )
-				if ( count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 )
+				if ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 )
 					return false;
 		}
 

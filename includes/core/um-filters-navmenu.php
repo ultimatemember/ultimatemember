@@ -58,6 +58,9 @@ if ( ! is_admin() ) {
 					case 2:
 						if ( is_user_logged_in() && ! empty( $roles ) ) {
 							$current_user_roles = um_user( 'roles' );
+							if ( empty( $current_user_roles ) ) {
+								return false;
+							}
                             $visible = ( count( array_intersect( $current_user_roles, (array)$roles ) ) > 0 ) ? true : false;
 						} else {
 							$visible = is_user_logged_in() ? true : false;

@@ -671,13 +671,13 @@ if ( ! class_exists( 'Shortcodes' ) ) {
 		    if ( ! empty( $a['not'] ) ) {
 			    $not_in_roles = explode( ",", $a['not'] );
 
-			    if ( is_array( $not_in_roles ) && count( array_intersect( $current_user_roles, $not_in_roles ) ) <= 0 ) {
+			    if ( is_array( $not_in_roles ) && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $not_in_roles ) ) <= 0 ) ) {
 				    return do_shortcode( $this->convert_locker_tags( $content ) );
 			    }
 		    } else {
 			    $roles = explode( ",", $a['roles'] );
 
-			    if ( is_array( $roles ) && count( array_intersect( $current_user_roles, $roles ) ) > 0 ) {
+			    if ( ! empty( $current_user_roles ) && is_array( $roles ) && count( array_intersect( $current_user_roles, $roles ) ) > 0 ) {
 				    return do_shortcode( $this->convert_locker_tags( $content ) );
 			    }
 		    }

@@ -440,14 +440,14 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
                         $return = 0;
                     elseif ( get_current_user_id() == $user_id && ! um_user( 'can_edit_profile') )
                         $return = 0;
-                    elseif ( um_user( 'can_edit_roles' ) && count( array_intersect( $current_user_roles, um_user( 'can_edit_roles' ) ) ) <= 0 )
+                    elseif ( um_user( 'can_edit_roles' ) && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, um_user( 'can_edit_roles' ) ) ) <= 0 ) )
                         $return = 0;
                     break;
 
                 case 'delete':
                     if ( ! um_user( 'can_delete_everyone' ) )
                     	$return = 0;
-                    elseif ( um_user( 'can_delete_roles' ) && count( array_intersect( $current_user_roles, um_user( 'can_delete_roles' ) ) ) <= 0 )
+                    elseif ( um_user( 'can_delete_roles' ) && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, um_user( 'can_delete_roles' ) ) ) <= 0 ) )
 	                    $return = 0;
                     break;
 

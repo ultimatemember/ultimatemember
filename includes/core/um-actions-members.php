@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		if ( $args['search'] == 1 && is_array( $search_filters ) ) { // search on
 
 			$current_user_roles = um_user( 'roles' );
-			if ( ! empty( $args['roles_can_search'] ) && count( array_intersect( $current_user_roles, $args['roles_can_search'] ) ) <= 0 ) {
+			if ( ! empty( $args['roles_can_search'] ) && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $args['roles_can_search'] ) ) <= 0 ) ) {
 				return;
 			}
 

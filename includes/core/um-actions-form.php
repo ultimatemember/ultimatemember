@@ -143,7 +143,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
                 if ( isset( $array['public']  ) && -2 == $array['public'] && ! empty( $array['roles'] ) && is_user_logged_in() ) {
 	                $current_user_roles = um_user( 'roles' );
-	                if ( count( array_intersect( $current_user_roles, $array['roles'] ) ) <= 0 ) {
+	                if ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $array['roles'] ) ) <= 0 ) {
                         continue;
                     }
                 }
