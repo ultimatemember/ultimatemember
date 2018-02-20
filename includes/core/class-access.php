@@ -189,7 +189,8 @@ if ( ! class_exists( 'Access' ) ) {
 			if ( is_front_page() ) {
 				if ( is_user_logged_in() ) {
 
-					if ( ! empty( um_user( 'default_homepage' ) ) )
+					$user_default_homepage = um_user( 'default_homepage' );
+					if ( ! empty( $user_default_homepage ) )
 						return;
 
 					$redirect_homepage = um_user( 'redirect_homepage' );

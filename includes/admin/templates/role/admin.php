@@ -17,7 +17,7 @@
                 'type'		    => 'checkbox',
                 'label'		    => __( 'Force hiding adminbar in frontend?', 'ultimate-member' ),
                 'tooltip'	=> __( 'Show/hide the adminbar on frontend', 'ultimate-member' ),
-                'value'		    => ! empty( $role['_um_can_not_see_adminbar'] ) ? $role['_um_can_not_see_adminbar'] : 0,
+                'value'		    => ! empty( $role['_um_can_not_see_adminbar'] ) ? $role['_um_can_not_see_adminbar'] : 1,
             ),
             array(
                 'id'		    => '_um_can_edit_everyone',

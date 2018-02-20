@@ -14,7 +14,8 @@ function um_access_profile( $user_id ) {
 
 		um_fetch_user( $user_id );
 
-		if ( ! in_array( um_user( 'account_status' ), array( 'approved' ) ) ) {
+		$account_status = um_user( 'account_status' );
+		if ( ! in_array( $account_status, array( 'approved' ) ) ) {
 			um_redirect_home();
 		}
 
