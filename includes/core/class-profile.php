@@ -208,10 +208,8 @@ if ( ! class_exists( 'Profile' ) ) {
 
             if ( ! empty( $array ) ) {
                 foreach ( $array as $key ) {
-                    $data = '';
-
                     if ( $key ) {
-
+	                    $data = array();
                         if ( isset( UM()->builtin()->all_user_fields[ $key ] ) ){
                             $data = UM()->builtin()->all_user_fields[ $key ];
                         }

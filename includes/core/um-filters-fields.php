@@ -318,11 +318,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	/**
 	 * Force fields to use UTF-8 encoding
 	 * @param  mixed $value
+	 * @param  array $data
 	 * @return mixed
 	 * @uses  hook filter: um_profile_field_filter_hook__
 	 */
-	add_filter('um_profile_field_filter_hook__','um_force_utf8_fields',1,10);
-	function um_force_utf8_fields( $value ){
+	add_filter('um_profile_field_filter_hook__','um_force_utf8_fields', 10, 2 );
+	function um_force_utf8_fields( $value, $data ) {
 
 		if( ! UM()->options()->get('um_force_utf8_strings') )
 			return $value;
@@ -468,9 +469,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	 * @return $value string
 	 * @uses   hook filters: um_profile_field_filter_hook__
 	 */
-    add_filter('um_profile_field_filter_hook__','um_profile_field_filter_xss_validation',10,2);
-    function um_profile_field_filter_xss_validation( $value, $data ){
-	    if( ! empty( $value ) && is_string($value)){
+    add_filter('um_profile_field_filter_hook__','um_profile_field_filter_xss_validation', 10, 2 );
+    function um_profile_field_filter_xss_validation( $value, $data ) {
+	    if ( ! empty( $value ) && is_string( $value ) ) {
 		    $value = stripslashes( $value );
 		    $data['validate'] = isset( $data['validate'] ) ? $data['validate'] : '';
 

@@ -155,7 +155,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	/***
 	***	@store last login timestamp
 	***/
-	add_action('um_on_login_before_redirect', 'um_store_lastlogin_timestamp', 10);
+	add_action('um_on_login_before_redirect', 'um_store_lastlogin_timestamp', 10, 1);
 	function um_store_lastlogin_timestamp( $user_id ) {
 		update_user_meta( $user_id, '_um_last_login', current_time( 'timestamp' ) );
 	}
