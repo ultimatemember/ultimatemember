@@ -721,7 +721,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				} ?>">
 					<?php if ( UM()->options()->get( 'profile_menu_icons' ) ) { ?>
                         <a href="<?php echo $nav_link; ?>" class="um-tip-n uimob500-show uimob340-show uimob800-show"
-                           title="<?php echo $tab['name']; ?>" original-title="<?php echo $tab['name']; ?>">
+                           title="<?php esc_attr_e( $tab['name'] ); ?>" original-title="<?php esc_attr_e( $tab['name'] ); ?>">
 
                             <i class="<?php echo $tab['icon']; ?>"></i>
 
@@ -733,7 +733,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
                         </a>
                         <a href="<?php echo $nav_link; ?>" class="uimob500-hide uimob340-hide uimob800-hide"
-                           title="<?php echo $tab['name']; ?>" original-title="<?php echo $tab['name']; ?>">
+                           title="<?php esc_attr_e( $tab['name'] ); ?>" original-title="<?php esc_attr_e( $tab['name'] ); ?>">
 
                             <i class="<?php echo $tab['icon']; ?>"></i>
 
