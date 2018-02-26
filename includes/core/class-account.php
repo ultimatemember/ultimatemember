@@ -32,7 +32,33 @@ if ( ! class_exists( 'Account' ) ) {
          * @param $args
          */
         function init_tabs( $args ) {
+            $this->tabs = $this->get_tabs();
 
+            ksort( $this->tabs );
+
+            $tabs_structed = array();
+            foreach ( $this->tabs as $k => $arr ) {
+
+                foreach ( $arr as $id => $info ) {
+
+                    if ( ! empty( $args['tab'] ) && $id != $args['tab'] )
+                        continue;
+
+                    $output = $this->get_tab_fields( $id, $args );
+
+                    if ( ! empty( $output ) )
+                        $tabs_structed[$id] = $info;
+
+                }
+
+            }
+
+            $this->tabs = $tabs_structed;
+        }
+
+
+        function get_tabs() {
+            $tabs = array();
             $tabs[100]['general'] = array(
                 'icon'          => 'um-faicon-user',
                 'title'         => __( 'Account', 'ultimate-member' ),
@@ -68,28 +94,7 @@ if ( ! class_exists( 'Account' ) ) {
 
             }
 
-            $this->tabs = apply_filters( 'um_account_page_default_tabs_hook', $tabs );
-
-            ksort( $this->tabs );
-
-            $tabs_structed = array();
-            foreach ( $this->tabs as $k => $arr ) {
-
-                foreach ( $arr as $id => $info ) {
-
-                    if ( ! empty( $args['tab'] ) && $id != $args['tab'] )
-                        continue;
-
-                    $output = $this->get_tab_fields( $id, $args );
-
-                    if ( ! empty( $output ) )
-                        $tabs_structed[$id] = $info;
-
-                }
-
-            }
-
-            $this->tabs = $tabs_structed;
+            return apply_filters( 'um_account_page_default_tabs_hook', $tabs );
         }
 
 
