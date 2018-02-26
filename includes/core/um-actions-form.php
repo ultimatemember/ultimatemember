@@ -248,7 +248,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 					if ( isset( $array['required'] ) && $array['required'] == 1 ) {
                         if ( ! isset( $args[$key] ) || $args[$key] == '' ) {
-							UM()->form()->add_error($key, sprintf( __('%s is required','ultimate-member'), $array['label'] ) );
+                        	if( empty( $array['label'] ) ) {
+		                        UM()->form()->add_error($key, __('This field is required','ultimate-member') );
+	                        } else {
+		                        UM()->form()->add_error($key, sprintf( __('%s is required','ultimate-member'), $array['label'] ) );
+	                        }
 						}
 					}
 
