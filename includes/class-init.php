@@ -89,8 +89,30 @@ if ( ! class_exists( 'UM' ) ) {
          */
         public function __call( $name, array $params ) {
 
-            if ( empty( $this->classes[ $name ] ) )
-                $this->classes[ $name ] = apply_filters( 'um_call_object_' . $name, false );
+            if ( empty( $this->classes[ $name ] ) ) {
+
+	            /**
+	             * UM hook
+	             *
+	             * @type filter
+	             * @title um_call_object_{$class_name}
+	             * @description Extend call classes of Extensions for use UM()->class_name()->method|function
+	             * @input_vars
+	             * [{"var":"$class","type":"object","desc":"Class Instance"}]
+	             * @change_log
+	             * ["Since: 2.0"]
+	             * @usage add_filter( 'um_call_object_{$class_name}', 'function_name', 10, 1 );
+	             * @example
+	             * <?php
+	             * add_filter( 'um_call_object_{$class_name}', 'my_extension_class', 10, 1 );
+	             * function my_extension_class( $class ) {
+	             *     // your code here
+	             *     return $class;
+	             * }
+	             * ?>
+	             */
+	            $this->classes[ $name ] = apply_filters( 'um_call_object_' . $name, false );
+            }
 
             return $this->classes[ $name ];
 
@@ -172,13 +194,75 @@ if ( ! class_exists( 'UM' ) ) {
                     'ar' => 'العربية',
                 );
 
+	            /**
+	             * UM hook
+	             *
+	             * @type filter
+	             * @title um_language_textdomain
+	             * @description Change UM textdomain
+	             * @input_vars
+	             * [{"var":"$domain","type":"string","desc":"UM Textdomain"}]
+	             * @change_log
+	             * ["Since: 2.0"]
+	             * @usage add_filter( 'um_language_textdomain', 'function_name', 10, 1 );
+	             * @example
+	             * <?php
+	             * add_filter( 'um_language_textdomain', 'my_textdomain', 10, 1 );
+	             * function my_textdomain( $domain ) {
+	             *     // your code here
+	             *     return $domain;
+	             * }
+	             * ?>
+	             */
                 $language_domain = apply_filters( 'um_language_textdomain', 'ultimate-member' );
 
                 $language_locale = ( get_locale() != '' ) ? get_locale() : 'en_US';
+
+	            /**
+	             * UM hook
+	             *
+	             * @type filter
+	             * @title um_language_locale
+	             * @description Change UM language locale
+	             * @input_vars
+	             * [{"var":"$locale","type":"string","desc":"UM language locale"}]
+	             * @change_log
+	             * ["Since: 2.0"]
+	             * @usage add_filter( 'um_language_locale', 'function_name', 10, 1 );
+	             * @example
+	             * <?php
+	             * add_filter( 'um_language_locale', 'my_language_locale', 10, 1 );
+	             * function my_language_locale( $locale ) {
+	             *     // your code here
+	             *     return $locale;
+	             * }
+	             * ?>
+	             */
                 $language_locale = apply_filters( 'um_language_locale', $language_locale );
 
                 $language_file = WP_LANG_DIR . '/plugins/' . $language_domain . '-' . $language_locale . '.mo';
-                $language_file = apply_filters( 'um_language_file', $language_file );
+
+	            /**
+	             * UM hook
+	             *
+	             * @type filter
+	             * @title um_language_file
+	             * @description Change UM language file path
+	             * @input_vars
+	             * [{"var":"$language_file","type":"string","desc":"UM language file path"}]
+	             * @change_log
+	             * ["Since: 2.0"]
+	             * @usage add_filter( 'um_language_file', 'function_name', 10, 1 );
+	             * @example
+	             * <?php
+	             * add_filter( 'um_language_file', 'my_language_file', 10, 1 );
+	             * function my_language_file( $language_file ) {
+	             *     // your code here
+	             *     return $language_file;
+	             * }
+	             * ?>
+	             */
+	            $language_file = apply_filters( 'um_language_file', $language_file );
 
                 load_textdomain( $language_domain, $language_file );
 

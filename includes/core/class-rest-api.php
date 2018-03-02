@@ -31,9 +31,28 @@ if ( ! class_exists( 'REST_API' ) ) {
             // Determine if JSON_PRETTY_PRINT is available
             $this->pretty_print = defined( 'JSON_PRETTY_PRINT' ) ? JSON_PRETTY_PRINT : null;
 
-            // Allow API request logging to be turned off
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_api_log_requests
+             * @description Allow API request logging to be turned off
+             * @input_vars
+             * [{"var":"$allow_log","type":"bool","desc":"Enable api logs"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage
+             * <?php add_filter( 'um_api_log_requests', 'function_name', 10, 1 ); ?>
+             * @example
+             * <?php
+             * add_filter( 'um_api_log_requests', 'my_api_log_requests', 10, 1 );
+             * function my_api_log_requests( $allow_log ) {
+             *     // your code here
+             *     return $allow_log;
+             * }
+             * ?>
+             */
             $this->log_requests = apply_filters( 'um_api_log_requests', $this->log_requests );
-
         }
 
         /**
@@ -184,6 +203,7 @@ if ( ! class_exists( 'REST_API' ) ) {
             }
 
             // Determine the kind of query
+            $args = array();
             $query_mode = $this->get_query_mode();
             foreach( $this->vars as $k ) {
                 $args[ $k ] = isset( $wp_query->query_vars[ $k ] ) ? $wp_query->query_vars[ $k ] : null;
@@ -214,12 +234,55 @@ if ( ! class_exists( 'REST_API' ) ) {
                     break;
 
                 default:
-                    $data = apply_filters( 'um_rest_query_mode', $data , $query_mode, $args );
+                    /**
+                     * UM hook
+                     *
+                     * @type filter
+                     * @title um_rest_query_mode
+                     * @description Change query attributes
+                     * @input_vars
+                     * [{"var":"$data","type":"array","desc":"Query Data"},
+                     * {"var":"$query_mode","type":"string","desc":"Query Mode"},
+                     * {"var":"$args","type":"array","desc":"Query Arguments"}]
+                     * @change_log
+                     * ["Since: 2.0"]
+                     * @usage
+                     * <?php add_filter( 'um_rest_query_mode', 'function_name', 10, 3 ); ?>
+                     * @example
+                     * <?php
+                     * add_filter( 'um_rest_query_mode', 'my_rest_query_mode', 10, 3 );
+                     * function um_rest_query_mode( $data, $query_mode, $args ) {
+                     *     // your code here
+                     *     return $data;
+                     * }
+                     * ?>
+                     */
+                    $data = apply_filters( 'um_rest_query_mode', $data, $query_mode, $args );
             }
 
-
-
-            // Allow extensions to setup their own return data
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_api_output_data
+             * @description Change output data for Rest API call
+             * @input_vars
+             * [{"var":"$data","type":"array","desc":"Output Data"},
+             * {"var":"$query_mode","type":"string","desc":"Query Mode"},
+             * {"var":"$api_class","type":"REST_API","desc":"REST_API instance"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage
+             * <?php add_filter( 'um_api_output_data', 'function_name', 10, 3 ); ?>
+             * @example
+             * <?php
+             * add_filter( 'um_api_output_data', 'my_api_output_data', 10, 3 );
+             * function my_api_output_data( $data, $query_mode, $api_class ) {
+             *     // your code here
+             *     return $data;
+             * }
+             * ?>
+             */
             $this->data = apply_filters( 'um_api_output_data', $data, $query_mode, $this );
 
             // Log this API request, if enabled. We log it here because we have access to errors.
@@ -245,8 +308,28 @@ if ( ! class_exists( 'REST_API' ) ) {
             $pending = UM()->user()->get_pending_users_count();
             $response['stats']['pending_users'] = absint( $pending );
 
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_rest_api_get_stats
+             * @description Change output data for Rest API get stats call
+             * @input_vars
+             * [{"var":"$response","type":"array","desc":"Output Data"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage
+             * <?php add_filter( 'um_rest_api_get_stats', 'function_name', 10, 1 ); ?>
+             * @example
+             * <?php
+             * add_filter( 'um_rest_api_get_stats', 'my_rest_api_get_stats', 10, 1 );
+             * function my_rest_api_get_stats( $response ) {
+             *     // your code here
+             *     return $response;
+             * }
+             * ?>
+             */
             $response = apply_filters( 'um_rest_api_get_stats', $response );
-
             return $response;
         }
 
@@ -347,6 +430,29 @@ if ( ! class_exists( 'REST_API' ) ) {
                         $val->profile_pic_normal = $this->getsrc( um_user('profile_photo', 200) );
                         $val->profile_pic_small = $this->getsrc( um_user('profile_photo', 40) );
                         $val->cover_photo = $this->getsrc( um_user('cover_photo', 1000) );
+
+                        /**
+                         * UM hook
+                         *
+                         * @type filter
+                         * @title um_rest_userdata
+                         * @description Change output data for Rest API userdata call
+                         * @input_vars
+                         * [{"var":"$value","type":"array","desc":"Output Data"},
+                         * {"var":"$user_id","type":"string","desc":"User ID"}]
+                         * @change_log
+                         * ["Since: 2.0"]
+                         * @usage
+                         * <?php add_filter( 'um_rest_userdata', 'function_name', 10, 2 ); ?>
+                         * @example
+                         * <?php
+                         * add_filter( 'um_rest_userdata', 'my_rest_userdata', 10, 2 );
+                         * function my_rest_userdata( $value, $user_id ) {
+                         *     // your code here
+                         *     return $value;
+                         * }
+                         * ?>
+                         */
                         $val = apply_filters( 'um_rest_userdata', $val, $user->ID );
                     }
                     $response[ $user->ID ] = $val;
@@ -420,10 +526,32 @@ if ( ! class_exists( 'REST_API' ) ) {
                     switch( $field ) {
 
                         default:
-                            $response[$field] = (  um_profile( $field ) ) ? um_profile( $field ) : '';
+                            $response[ $field ] = ( um_profile( $field ) ) ? um_profile( $field ) : '';
 
+                            /**
+                             * UM hook
+                             *
+                             * @type filter
+                             * @title um_rest_get_auser
+                             * @description Change output data for Rest API user authentification call
+                             * @input_vars
+                             * [{"var":"$response","type":"array","desc":"Output Data"},
+                             * {"var":"$field","type":"string","desc":"Field Key"},
+                             * {"var":"$user_id","type":"int","desc":"User ID"}]
+                             * @change_log
+                             * ["Since: 2.0"]
+                             * @usage
+                             * <?php add_filter( 'um_rest_get_auser', 'function_name', 10, 3 ); ?>
+                             * @example
+                             * <?php
+                             * add_filter( 'um_rest_get_auser', 'my_rest_get_auser', 10, 3 );
+                             * function my_rest_get_auser( $response, $field, $user_id ) {
+                             *     // your code here
+                             *     return $response;
+                             * }
+                             * ?>
+                             */
                             $response = apply_filters( 'um_rest_get_auser', $response, $field, $user->ID );
-
                             break;
 
                         case 'cover_photo':
@@ -467,6 +595,29 @@ if ( ! class_exists( 'REST_API' ) ) {
                         $val->profile_pic_normal = $this->getsrc( um_user('profile_photo', 200) );
                         $val->profile_pic_small = $this->getsrc( um_user('profile_photo', 40) );
                         $val->cover_photo = $this->getsrc( um_user('cover_photo', 1000) );
+
+                        /**
+                         * UM hook
+                         *
+                         * @type filter
+                         * @title um_rest_userdata
+                         * @description Change output data for Rest API userdata call
+                         * @input_vars
+                         * [{"var":"$value","type":"array","desc":"Output Data"},
+                         * {"var":"$user_id","type":"string","desc":"User ID"}]
+                         * @change_log
+                         * ["Since: 2.0"]
+                         * @usage
+                         * <?php add_filter( 'um_rest_userdata', 'function_name', 10, 2 ); ?>
+                         * @example
+                         * <?php
+                         * add_filter( 'um_rest_userdata', 'my_rest_userdata', 10, 2 );
+                         * function my_rest_userdata( $value, $user_id ) {
+                         *     // your code here
+                         *     return $value;
+                         * }
+                         * ?>
+                         */
                         $val = apply_filters( 'um_rest_userdata', $val, $user->ID );
                     }
                     $response = $val;
@@ -493,7 +644,27 @@ if ( ! class_exists( 'REST_API' ) ) {
         public function get_query_mode() {
             global $wp_query;
 
-            // Whitelist our query options
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_api_valid_query_modes
+             * @description Whitelist UM query options
+             * @input_vars
+             * [{"var":"$list","type":"array","desc":"Whitelist"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage
+             * <?php add_filter( 'um_api_valid_query_modes', 'function_name', 10, 1 ); ?>
+             * @example
+             * <?php
+             * add_filter( 'um_api_valid_query_modes', 'my_api_valid_query_modes', 10, 1 );
+             * function my_api_valid_query_modes( $list ) {
+             *     // your code here
+             *     return $list;
+             * }
+             * ?>
+             */
             $accepted = apply_filters( 'um_api_valid_query_modes', array(
                 'get.users',
                 'get.user',
@@ -534,6 +705,27 @@ if ( ! class_exists( 'REST_API' ) ) {
 
             $format = isset( $wp_query->query_vars['format'] ) ? $wp_query->query_vars['format'] : 'json';
 
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_api_output_format
+             * @description UM Rest API output format
+             * @input_vars
+             * [{"var":"$format","type":"string","desc":"Format"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage
+             * <?php add_filter( 'um_api_output_format', 'function_name', 10, 1 ); ?>
+             * @example
+             * <?php
+             * add_filter( 'um_api_output_format', 'my_api_output_format', 10, 1 );
+             * function my_api_output_format( $format ) {
+             *     // your code here
+             *     return $format;
+             * }
+             * ?>
+             */
             return apply_filters( 'um_api_output_format', $format );
         }
 

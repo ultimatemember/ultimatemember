@@ -75,7 +75,28 @@ if ( ! is_admin() ) {
 
 			}
 
-			// add filter to work with plugins that don't use traditional roles
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_nav_menu_roles_item_visibility
+			 * @description Add filter to work with plugins that don't use traditional roles
+			 * @input_vars
+			 * [{"var":"$visible","type":"bool","desc":"Visible?"},
+			 * {"var":"$item","type":"object","desc":"Menu Item"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_nav_menu_roles_item_visibility', 'function_name', 10, 2 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_nav_menu_roles_item_visibility', 'my_nav_menu_roles_item_visibility', 10, 2 );
+			 * function my_nav_menu_roles_item_visibility( $visible, $item ) {
+			 *     // your code here
+			 *     return $visible;
+			 * }
+			 * ?>
+			 */
 			$visible = apply_filters( 'um_nav_menu_roles_item_visibility', $visible, $item );
 
 			// unset non-visible item

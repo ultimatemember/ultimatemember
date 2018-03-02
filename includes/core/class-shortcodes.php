@@ -27,6 +27,27 @@ if ( ! class_exists( 'Shortcodes' ) ) {
 	        add_filter( 'um_shortcode_args_filter', array( &$this, 'display_logout_form' ), 99 );
 	        add_filter( 'um_shortcode_args_filter', array( &$this, 'parse_shortcode_args' ), 99 );
 
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_emoji_base_uri
+	         * @description Change Emoji base URL
+	         * @input_vars
+	         * [{"var":"$url","type":"string","desc":"Base URL"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_emoji_base_uri', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_emoji_base_uri', 'my_emoji_base_uri', 10, 1 );
+	         * function my_emoji_base_uri( $url ) {
+	         *     // your code here
+	         *     return $url;
+	         * }
+	         * ?>
+	         */
 	        $base_uri = apply_filters( 'um_emoji_base_uri', 'https://s.w.org/images/core/emoji/' );
 
 	        $this->emoji[':)'] = $base_uri . '72x72/1f604.png';
@@ -256,7 +277,28 @@ if ( ! class_exists( 'Shortcodes' ) ) {
                 $classes .= ' um-' . $args['template'];
             }
 
-            $classes = apply_filters('um_form_official_classes__hook', $classes);
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_form_official_classes__hook
+	         * @description Change official form classes
+	         * @input_vars
+	         * [{"var":"$classes","type":"string","desc":"Classes string"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_form_official_classes__hook', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_form_official_classes__hook', 'my_form_official_classes', 10, 1 );
+	         * function my_form_official_classes( $classes ) {
+	         *     // your code here
+	         *     return $classes;
+	         * }
+	         * ?>
+	         */
+            $classes = apply_filters( 'um_form_official_classes__hook', $classes );
             return $classes;
         }
 
@@ -343,7 +385,28 @@ if ( ! class_exists( 'Shortcodes' ) ) {
             // get data into one global array
             $post_data = UM()->query()->post_data($this->form_id);
 
-            $args = apply_filters('um_pre_args_setup', $post_data);
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_pre_args_setup
+	         * @description Change arguments on load shortcode
+	         * @input_vars
+	         * [{"var":"$post_data","type":"string","desc":"$_POST data"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_pre_args_setup', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_pre_args_setup', 'my_pre_args_setup', 10, 1 );
+	         * function my_pre_args_setup( $post_data ) {
+	         *     // your code here
+	         *     return $post_data;
+	         * }
+	         * ?>
+	         */
+            $args = apply_filters( 'um_pre_args_setup', $post_data );
 
             if (!isset($args['template'])) {
                 $args['template'] = '';
@@ -372,7 +435,29 @@ if ( ! class_exists( 'Shortcodes' ) ) {
 		        }
 	        }
             // filter for arguments
-            $args = apply_filters('um_shortcode_args_filter', $args);
+
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_shortcode_args_filter
+	         * @description Change arguments on load shortcode
+	         * @input_vars
+	         * [{"var":"$args","type":"string","desc":"Shortcode arguments"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_shortcode_args_filter', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_shortcode_args_filter', 'my_shortcode_args', 10, 1 );
+	         * function my_shortcode_args( $args ) {
+	         *     // your code here
+	         *     return $args;
+	         * }
+	         * ?>
+	         */
+            $args = apply_filters( 'um_shortcode_args_filter', $args );
 
             extract($args, EXTR_SKIP);
 
@@ -432,8 +517,26 @@ if ( ! class_exists( 'Shortcodes' ) ) {
 	     * @return string
 	     */
         function dynamic_css( $args = array() ) {
-	        /*
-	         * for fix the issue #306
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_disable_dynamic_global_css
+	         * @description Turn on for disable global dynamic CSS for fix the issue #306
+	         * @input_vars
+	         * [{"var":"$disable","type":"bool","desc":"Disable global CSS"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_disable_dynamic_global_css', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_disable_dynamic_global_css', 'my_disable_dynamic_global_css', 10, 1 );
+	         * function my_disable_dynamic_global_css( $disable ) {
+	         *     // your code here
+	         *     return $disable;
+	         * }
+	         * ?>
 	         */
 			$disable_css = apply_filters( 'um_disable_dynamic_global_css', false );
 	        if ( $disable_css )
@@ -594,6 +697,27 @@ if ( ! class_exists( 'Shortcodes' ) ) {
 				'{username}',
 			);
 
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_allowed_user_tags_patterns
+			 * @description Extend user placeholders patterns
+			 * @input_vars
+			 * [{"var":"$patterns","type":"array","desc":"Placeholders"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_allowed_user_tags_patterns', 'function_name', 10, 1 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_allowed_user_tags_patterns', 'my_allowed_user_tags', 10, 1 );
+			 * function my_allowed_user_tags( $patterns ) {
+			 *     // your code here
+			 *     return $patterns;
+			 * }
+			 * ?>
+			 */
 			$pattern_array = apply_filters( 'um_allowed_user_tags_patterns', $pattern_array );
 
 			//$matches = false;
@@ -616,6 +740,28 @@ if ( ! class_exists( 'Shortcodes' ) ) {
 							$value = um_user( 'user_login' );
 						}
 
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_profile_tag_hook__{$usermeta}
+						 * @description Change usermeta field value
+						 * @input_vars
+						 * [{"var":"$value","type":"array","desc":"Meta field value"},
+						 * {"var":"$user_id","type":"array","desc":"User ID"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage
+						 * <?php add_filter( 'um_profile_tag_hook__{$usermeta}', 'function_name', 10, 2 ); ?>
+						 * @example
+						 * <?php
+						 * add_filter( 'um_profile_tag_hook__{$usermeta}', 'my_profile_tag', 10, 2 );
+						 * function my_profile_tag( $value, $user_id ) {
+						 *     // your code here
+						 *     return $value;
+						 * }
+						 * ?>
+						 */
 						$value = apply_filters( "um_profile_tag_hook__{$usermeta}", $value, um_user( 'ID' ) );
 					}
 

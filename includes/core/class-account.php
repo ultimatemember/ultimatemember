@@ -94,6 +94,26 @@ if ( ! class_exists( 'Account' ) ) {
 
             }
 
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_account_page_default_tabs_hook
+             * @description Account Page Tabs
+             * @input_vars
+             * [{"var":"$tabs","type":"array","desc":"Account Page Tabs"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_filter( 'um_account_page_default_tabs_hook', 'function_name', 10, 1 );
+             * @example
+             * <?php
+             * add_filter( 'um_account_page_default_tabs_hook', 'my_account_page_default_tabs', 10, 1 );
+             * function my_account_page_default_tabs( $tabs ) {
+             *     // your code here
+             *     return $tabs;
+             * }
+             * ?>
+             */
             return apply_filters( 'um_account_page_default_tabs_hook', $tabs );
         }
 
@@ -116,6 +136,26 @@ if ( ! class_exists( 'Account' ) ) {
             );
             $args = wp_parse_args( $args, $defaults );
 
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_account_shortcode_args_filter
+             * @description Account Shortcode Arguments
+             * @input_vars
+             * [{"var":"$args","type":"array","desc":"Shortcode Arguments"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_filter( 'um_account_shortcode_args_filter', 'function_name', 10, 1 );
+             * @example
+             * <?php
+             * add_filter( 'um_account_shortcode_args_filter', 'my_account_shortcode_args', 10, 1 );
+             * function my_account_shortcode_args( $args ) {
+             *     // your code here
+             *     return $args;
+             * }
+             * ?>
+             */
             $args = apply_filters( 'um_account_shortcode_args_filter', $args );
 
             if ( ! empty( $args['tab'] ) ) {
@@ -265,12 +305,39 @@ if ( ! class_exists( 'Account' ) ) {
         function filter_fields_by_attrs( $fields, $shortcode_args ) {
 
             foreach ( $fields as $k => $field ) {
-                if ( isset( $shortcode_args[$field['metakey']] ) && 0 == $shortcode_args[$field['metakey']] )
-                    unset( $fields[$k] );
+                if ( isset( $shortcode_args[ $field['metakey'] ] ) && 0 == $shortcode_args[ $field['metakey'] ] )
+                    unset( $fields[ $k ] );
             }
 
             return $fields;
 
+        }
+
+
+        function account_secure_fields( $fields, $id ) {
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_account_secure_fields
+             * @description Change Account secure fields
+             * @input_vars
+             * [{"var":"$fields","type":"array","desc":"Account Fields"},
+             * {"var":"$id","type":"int","desc":"User ID"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_filter( 'um_account_secure_fields', 'function_name', 10, 2 );
+             * @example
+             * <?php
+             * add_filter( 'um_account_secure_fields', 'my_account_secure_fields', 10, 2 );
+             * function my_account_secure_fields( $fields, $id ) {
+             *     // your code here
+             *     return $fields;
+             * }
+             * ?>
+             */
+            $fields = apply_filters( 'um_account_secure_fields', $fields, $id );
+            return $fields;
         }
 
 
@@ -296,12 +363,31 @@ if ( ! class_exists( 'Account' ) ) {
                 case 'privacy':
 
                     $args = 'profile_privacy,hide_in_members';
+                    /**
+                     * UM hook
+                     *
+                     * @type filter
+                     * @title um_account_tab_privacy_fields
+                     * @description Extend Account Tab Privacy
+                     * @input_vars
+                     * [{"var":"$args","type":"array","desc":"Account Arguments"},
+                     * {"var":"$shortcode_args","type":"array","desc":"Account Shortcode Arguments"}]
+                     * @change_log
+                     * ["Since: 2.0"]
+                     * @usage add_filter( 'um_account_tab_privacy_fields', 'function_name', 10, 2 );
+                     * @example
+                     * <?php
+                     * add_filter( 'um_account_tab_privacy_fields', 'my_account_tab_privacy_fields', 10, 2 );
+                     * function my_account_tab_privacy_fields( $args, $shortcode_args ) {
+                     *     // your code here
+                     *     return $args;
+                     * }
+                     * ?>
+                     */
                     $args = apply_filters( 'um_account_tab_privacy_fields', $args, $shortcode_args );
 
                     $fields = UM()->builtin()->get_specific_fields( $args );
-
-                    $fields = apply_filters( 'um_account_secure_fields', $fields, $id );
-
+                    $fields = $this->account_secure_fields( $fields, $id );
                     $fields = $this->filter_fields_by_attrs( $fields, $shortcode_args );
 
                     foreach ( $fields as $key => $data ){
@@ -314,12 +400,31 @@ if ( ! class_exists( 'Account' ) ) {
 
                     $args = 'single_user_password';
 
+                    /**
+                     * UM hook
+                     *
+                     * @type filter
+                     * @title um_account_tab_delete_fields
+                     * @description Extend Account Tab Delete
+                     * @input_vars
+                     * [{"var":"$args","type":"array","desc":"Account Arguments"},
+                     * {"var":"$shortcode_args","type":"array","desc":"Account Shortcode Arguments"}]
+                     * @change_log
+                     * ["Since: 2.0"]
+                     * @usage add_filter( 'um_account_tab_delete_fields', 'function_name', 10, 2 );
+                     * @example
+                     * <?php
+                     * add_filter( 'um_account_tab_delete_fields', 'my_account_tab_delete_fields', 10, 2 );
+                     * function my_account_tab_delete_fields( $args, $shortcode_args ) {
+                     *     // your code here
+                     *     return $args;
+                     * }
+                     * ?>
+                     */
 	                $args = apply_filters( 'um_account_tab_delete_fields', $args, $shortcode_args );
 
                     $fields = UM()->builtin()->get_specific_fields( $args );
-
-                    $fields = apply_filters( 'um_account_secure_fields', $fields, $id );
-
+                    $fields = $this->account_secure_fields( $fields, $id );
                     $fields = $this->filter_fields_by_attrs( $fields, $shortcode_args );
 
                     foreach ( $fields as $key => $data ) {
@@ -340,12 +445,31 @@ if ( ! class_exists( 'Account' ) ) {
                         $args = str_replace(',user_email','', $args );
                     }
 
+                    /**
+                     * UM hook
+                     *
+                     * @type filter
+                     * @title um_account_tab_general_fields
+                     * @description Extend Account Tab General
+                     * @input_vars
+                     * [{"var":"$args","type":"array","desc":"Account Arguments"},
+                     * {"var":"$shortcode_args","type":"array","desc":"Account Shortcode Arguments"}]
+                     * @change_log
+                     * ["Since: 2.0"]
+                     * @usage add_filter( 'um_account_tab_general_fields', 'function_name', 10, 2 );
+                     * @example
+                     * <?php
+                     * add_filter( 'um_account_tab_general_fields', 'my_account_tab_general_fields', 10, 2 );
+                     * function my_account_tab_general_fields( $args, $shortcode_args ) {
+                     *     // your code here
+                     *     return $args;
+                     * }
+                     * ?>
+                     */
 	                $args = apply_filters( 'um_account_tab_general_fields', $args, $shortcode_args );
 
                     $fields = UM()->builtin()->get_specific_fields( $args );
-
-                    $fields = apply_filters( 'um_account_secure_fields', $fields, $id );
-
+                    $fields = $this->account_secure_fields( $fields, $id );
                     $fields = $this->filter_fields_by_attrs( $fields, $shortcode_args );
 
                     foreach ( $fields as $key => $data ) {
@@ -358,12 +482,31 @@ if ( ! class_exists( 'Account' ) ) {
 
                     $args = 'user_password';
 
+                    /**
+                     * UM hook
+                     *
+                     * @type filter
+                     * @title um_account_tab_password_fields
+                     * @description Extend Account Tab Password
+                     * @input_vars
+                     * [{"var":"$args","type":"array","desc":"Account Arguments"},
+                     * {"var":"$shortcode_args","type":"array","desc":"Account Shortcode Arguments"}]
+                     * @change_log
+                     * ["Since: 2.0"]
+                     * @usage add_filter( 'um_account_tab_password_fields', 'function_name', 10, 2 );
+                     * @example
+                     * <?php
+                     * add_filter( 'um_account_tab_password_fields', 'my_account_tab_password_fields', 10, 2 );
+                     * function my_account_tab_password_fields( $args, $shortcode_args ) {
+                     *     // your code here
+                     *     return $args;
+                     * }
+                     * ?>
+                     */
 	                $args = apply_filters( 'um_account_tab_password_fields', $args, $shortcode_args );
 
                     $fields = UM()->builtin()->get_specific_fields( $args );
-
-                    $fields = apply_filters( 'um_account_secure_fields', $fields, $id );
-
+                    $fields = $this->account_secure_fields( $fields, $id );
                     $fields = $this->filter_fields_by_attrs( $fields, $shortcode_args );
 
                     foreach ( $fields as $key => $data ) {
@@ -374,6 +517,27 @@ if ( ! class_exists( 'Account' ) ) {
 
                 default :
 
+                    /**
+                     * UM hook
+                     *
+                     * @type filter
+                     * @title um_account_content_hook_{$id}
+                     * @description Change not default Account tabs content
+                     * @input_vars
+                     * [{"var":"$output","type":"string","desc":"Account Tab Output"},
+                     * {"var":"$shortcode_args","type":"array","desc":"Account Shortcode Arguments"}]
+                     * @change_log
+                     * ["Since: 2.0"]
+                     * @usage add_filter( 'um_account_content_hook_{$id}', 'function_name', 10, 2 );
+                     * @example
+                     * <?php
+                     * add_filter( 'um_account_content_hook_{$id}', 'my_account_content', 10, 2 );
+                     * function my_account_tab_password_fields( $args, $shortcode_args ) {
+                     *     // your code here
+                     *     return $args;
+                     * }
+                     * ?>
+                     */
                     $output = apply_filters( "um_account_content_hook_{$id}", $output, $shortcode_args );
                     break;
 
@@ -448,7 +612,27 @@ if ( ! class_exists( 'Account' ) ) {
                 $classes .= ' um-viewing';
             }
 
-            $classes = apply_filters('um_form_official_classes__hook', $classes);
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_form_official_classes__hook
+             * @description Change not default Account tabs content
+             * @input_vars
+             * [{"var":"$classes","type":"string","desc":"Form Classes"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_filter( 'um_form_official_classes__hook', 'function_name', 10, 1 );
+             * @example
+             * <?php
+             * add_filter( 'um_form_official_classes__hook', 'my_form_official_classes', 10, 1 );
+             * function my_form_official_classes( $classes ) {
+             *     // your code here
+             *     return $classes;
+             * }
+             * ?>
+             */
+            $classes = apply_filters( 'um_form_official_classes__hook', $classes );
             return $classes;
         }
     }

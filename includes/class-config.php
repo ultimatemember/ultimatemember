@@ -31,6 +31,29 @@ if ( ! class_exists( 'um\Config' ) ) {
                 'members',
             );
 
+
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_core_pages
+	         * @description Extend UM core pages
+	         * @input_vars
+	         * [{"var":"$pages","type":"array","desc":"UM core pages"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_core_pages', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_core_pages', 'my_core_pages', 10, 1 );
+	         * function my_core_pages( $pages ) {
+	         *     // your code here
+	         *     $pages['my_page_key'] = array( 'title' => __( 'My Page Title', 'my-translate-key' ) );
+	         *     return $pages;
+	         * }
+	         * ?>
+	         */
             $this->core_pages = apply_filters( 'um_core_pages', array(
                 'user'              => array( 'title' => __( 'User', 'ultimate-member' ) ),
                 'login'             => array( 'title' => __( 'Login', 'ultimate-member' ) ),
@@ -84,6 +107,29 @@ if ( ! class_exists( 'um\Config' ) ) {
                 '_um_secondary_color',
             );
 
+
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_core_form_meta_all
+	         * @description Extend UM forms meta keys
+	         * @input_vars
+	         * [{"var":"$meta","type":"array","desc":"UM forms meta"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_core_form_meta_all', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_core_form_meta_all', 'my_core_form_meta', 10, 1 );
+	         * function my_core_form_meta( $meta ) {
+	         *     // your code here
+	         *     $meta['my_meta_key'] = 'my_meta_value';
+	         *     return $meta;
+	         * }
+	         * ?>
+	         */
             $this->core_form_meta_all = apply_filters( 'um_core_form_meta_all', array(
                 '_um_profile_show_name' => 1,
                 '_um_profile_show_social_links' => 0,
@@ -152,6 +198,38 @@ if ( ! class_exists( 'um\Config' ) ) {
                 '_um_profile_use_custom_settings' => 0,
             );
 
+
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_email_notifications
+	         * @description Extend UM email notifications
+	         * @input_vars
+	         * [{"var":"$emails","type":"array","desc":"UM email notifications"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_email_notifications', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_email_notifications', 'my_email_notifications', 10, 1 );
+	         * function my_email_notifications( $emails ) {
+	         *     // your code here
+	         *    $emails['my_email'] = array(
+	         *        'key'           => 'my_email',
+	         *        'title'         => __( 'my_email_title','ultimate-member' ),
+	         *        'subject'       => 'my_email_subject',
+	         *        'body'          => 'my_email_body',
+	         *        'description'   => 'my_email_description',
+	         *        'recipient'     => 'user', // set 'admin' for make administrator as recipient
+	         *        'default_active' => true // can be false for make disabled by default
+	         *     );
+	         *
+	         *     return $emails;
+	         * }
+	         * ?>
+	         */
             $this->email_notifications = apply_filters( 'um_email_notifications', array(
                 'welcome_email' => array(
                     'key'           => 'welcome_email',
@@ -384,16 +462,37 @@ if ( ! class_exists( 'um\Config' ) ) {
                 $this->settings_defaults[$key] = $notification['body'];
             }
 
-            foreach ( $this->core_pages as $page_s => $page ) {
-                $page_id = apply_filters( 'um_core_page_id_filter', 'core_' . $page_s );
-                $this->settings_defaults[$page_id] = '';
-            }
+	        foreach ( $this->core_pages as $page_s => $page ) {
+		        $page_id = UM()->options()->get_core_page_id( $page_s );
+		        $this->settings_defaults[ $page_id ] = '';
+	        }
 
             foreach( $this->core_form_meta_all as $key => $value ) {
                 $this->settings_defaults[ str_replace( '_um_', '', $key ) ] = $value;
             }
 
 
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_default_settings_values
+	         * @description Extend UM default settings
+	         * @input_vars
+	         * [{"var":"$settings","type":"array","desc":"UM default settings"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_default_settings_values', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_default_settings_values', 'my_default_settings_values', 10, 1 );
+	         * function my_default_settings_values( $settings ) {
+	         *     // your code here
+	         *     return $settings;
+	         * }
+	         * ?>
+	         */
             $this->settings_defaults = apply_filters( 'um_default_settings_values', $this->settings_defaults );
 
             $this->permalinks = $this->get_core_pages();
@@ -523,19 +622,19 @@ if ( ! class_exists( 'um\Config' ) ) {
         }
 
 
-        function get_core_pages() {
-            $permalink = array();
-            $core_pages = array_keys( $this->core_pages );
-            if ( empty( $core_pages ) )
-                return $permalink;
+	    function get_core_pages() {
+		    $permalink = array();
+		    $core_pages = array_keys( $this->core_pages );
+		    if ( empty( $core_pages ) )
+			    return $permalink;
 
-            foreach ( $core_pages as $page_key ) {
-                $page_option_key = apply_filters( 'um_core_page_id_filter', 'core_' . $page_key );
-                $permalink[$page_key] = UM()->options()->get( $page_option_key );
-            }
+		    foreach ( $core_pages as $page_key ) {
+			    $page_option_key = UM()->options()->get_core_page_id( $page_key );
+			    $permalink[ $page_key ] = UM()->options()->get( $page_option_key );
+		    }
 
-            return $permalink;
-        }
+		    return $permalink;
+	    }
         //end class
     }
 }

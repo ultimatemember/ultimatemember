@@ -132,7 +132,28 @@ if ( ! class_exists( 'Password' ) ) {
                 $classes .= ' um-viewing';
             }
 
-            $classes = apply_filters('um_form_official_classes__hook', $classes);
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_form_official_classes__hook
+	         * @description Change form additional classes
+	         * @input_vars
+	         * [{"var":"$classes","type":"string","desc":"Form additional classes"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_form_official_classes__hook', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_form_official_classes__hook', 'my_form_official_classes', 10, 1 );
+	         * function my_form_official_classes( $classes ) {
+	         *     // your code here
+	         *     return $classes;
+	         * }
+	         * ?>
+	         */
+            $classes = apply_filters( 'um_form_official_classes__hook', $classes );
             return $classes;
         }
 
@@ -165,7 +186,28 @@ if ( ! class_exists( 'Password' ) ) {
                 $args = array_merge( UM()->shortcodes()->get_css_args( $args ), $args );
             }
 
-            $args = apply_filters('um_reset_password_shortcode_args_filter', $args);
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_reset_password_shortcode_args_filter
+	         * @description Extend Reset Password Arguments
+	         * @input_vars
+	         * [{"var":"$args","type":"array","desc":"Shortcode arguments"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_reset_password_shortcode_args_filter', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_reset_password_shortcode_args_filter', 'my_reset_password_shortcode_args', 10, 1 );
+	         * function my_reset_password_shortcode_args( $args ) {
+	         *     // your code here
+	         *     return $args;
+	         * }
+	         * ?>
+	         */
+            $args = apply_filters( 'um_reset_password_shortcode_args_filter', $args );
 
             if ( isset( $this->change_password ) ) {
 

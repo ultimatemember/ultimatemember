@@ -65,6 +65,37 @@ if ( ! class_exists( 'Access' ) ) {
 
 
 		/**
+		 * @param array $restriction
+		 *
+		 * @return bool
+		 */
+		function um_custom_restriction( $restriction ) {
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_custom_restriction
+			 * @description Extend Sort Types for Member Directory
+			 * @input_vars
+			 * [{"var":"$custom_restriction","type":"bool","desc":"Custom Restriction"},
+			 * {"var":"$restriction","type":"array","desc":"Restriction settings"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_custom_restriction', 'function_name', 10, 2 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_custom_restriction', 'my_custom_restriction', 10, 2 );
+			 * function my_directory_sort_users_select( $custom_restriction, $restriction ) {
+			 *     // your code here
+			 *     return $custom_restriction;
+			 * }
+			 * ?>
+			 */
+			return apply_filters( 'um_custom_restriction', true, $restriction );
+		}
+
+
+		/**
 		 * Check individual term Content Restriction settings
 		 */
 		function um_access_check_individual_term_settings() {
@@ -126,7 +157,7 @@ if ( ! class_exists( 'Access' ) ) {
 				//if post for logged in users and user is not logged in
 				if ( is_user_logged_in() ) {
 
-					$custom_restrict = apply_filters( 'um_custom_restriction', true, $restriction );
+					$custom_restrict = $this->um_custom_restriction( $restriction );
 
 					if ( empty( $restriction['_um_access_roles'] ) || false === array_search( '1', $restriction['_um_access_roles'] ) ) {
 						if ( $custom_restrict ) {
@@ -351,8 +382,29 @@ if ( ! class_exists( 'Access' ) ) {
 		 */
 		function set_referer( $url, $referer ) {
 
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_access_enable_referer
+			 * @description Access Referrer Enable/Disable
+			 * @input_vars
+			 * [{"var":"$referrer","type":"bool","desc":"Access referrer"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_access_enable_referer', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_access_enable_referer', 'my_access_enable_referer', 10, 1 );
+			 * function my_access_enable_referer( $referrer ) {
+			 *     // your code here
+			 *     return $referrer;
+			 * }
+			 * ?>
+			 */
 			$enable_referer = apply_filters( "um_access_enable_referer", false );
-			if( ! $enable_referer ) return $url;
+			if ( ! $enable_referer )
+				return $url;
 
 			$url = add_query_arg( 'um_ref', $referer, $url );
 			return $url;
@@ -560,7 +612,7 @@ if ( ! class_exists( 'Access' ) ) {
                             continue;
                         }
 
-	                    $custom_restrict = apply_filters( 'um_custom_restriction', true, $restriction );
+	                    $custom_restrict = $this->um_custom_restriction( $restriction );
 
 	                    if ( empty( $restriction['_um_access_roles'] ) || false === array_search( '1', $restriction['_um_access_roles'] ) ) {
 		                    if ( $custom_restrict ) {
@@ -774,7 +826,7 @@ if ( ! class_exists( 'Access' ) ) {
                         //if post for logged in users and user is not logged in
                         if ( is_user_logged_in() ) {
 
-	                        $custom_restrict = apply_filters( 'um_custom_restriction', true, $restriction );
+	                        $custom_restrict = $this->um_custom_restriction( $restriction );
 
 	                        if ( empty( $restriction['_um_access_roles'] ) || false === array_search( '1', $restriction['_um_access_roles'] ) ) {
 		                        if ( $custom_restrict ) {

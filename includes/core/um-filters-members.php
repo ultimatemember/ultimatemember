@@ -151,6 +151,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
                                     'relation' => 'OR',
                                 );
 
+	                            /**
+	                             * UM hook
+	                             *
+	                             * @type filter
+	                             * @title um_query_args_{$field}__filter
+	                             * @description Change field's query for search at Members Directory
+	                             * @input_vars
+	                             * [{"var":"$field_query","type":"array","desc":"Field query"}]
+	                             * @change_log
+	                             * ["Since: 2.0"]
+	                             * @usage
+	                             * <?php add_filter( 'um_query_args_{$field}__filter', 'function_name', 10, 1 ); ?>
+	                             * @example
+	                             * <?php
+	                             * add_filter( 'um_query_args_{$field}__filter', 'my_query_args_filter', 10, 1 );
+	                             * function my_query_args_filter( $field_query ) {
+	                             *     // your code here
+	                             *     return $field_query;
+	                             * }
+	                             * ?>
+	                             */
                                 $field_query = apply_filters( "um_query_args_{$field}__filter", $field_query );
                                 $query_args['meta_query'][] = $field_query;
                             }
@@ -164,7 +185,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 		}
 
-        // allow filtering
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_query_args_filter
+		 * @description Change query for search at Members Directory
+		 * @input_vars
+		 * [{"var":"$query_args","type":"array","desc":"Query Arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_query_args_filter', 'function_name', 10, 1 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_query_args_filter', 'my_query_args_filter', 10, 1 );
+		 * function my_query_args_filter( $query_args ) {
+		 *     // your code here
+		 *     return $query_args;
+		 * }
+		 * ?>
+		 */
 		$query_args = apply_filters( 'um_query_args_filter', $query_args );
 
 		if ( count( $query_args['meta_query'] ) == 1 )
@@ -293,6 +334,28 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				$query_args['order'] = $order;
 			}
 
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_modify_sortby_parameter
+			 * @description Change query sort by attributes for search at Members Directory
+			 * @input_vars
+			 * [{"var":"$query_args","type":"array","desc":"Query Arguments"},
+			 * {"var":"$sortby","type":"string","desc":"Sort by"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_modify_sortby_parameter', 'function_name', 10, 2 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_modify_sortby_parameter', 'my_modify_sortby_parameter', 10, 2 );
+			 * function my_modify_sortby_parameter( $query_args, $sortby ) {
+			 *     // your code here
+			 *     return $query_args;
+			 * }
+			 * ?>
+			 */
 			$query_args = apply_filters('um_modify_sortby_parameter', $query_args, $sortby);
 
 		}

@@ -65,8 +65,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			UM()->form()->add_error( 'user_password',  __('Password is incorrect. Please try again.','ultimate-member') );
 		}
 
-		// add a way for other plugins like wp limit login
-		// to limit the login attempts
 		$user = apply_filters( 'authenticate', null, $user_name, $args['user_password'] );
 		
 		$authenticate_user = apply_filters( 'wp_authenticate_user', $user_name, $args['user_password'] );
@@ -240,12 +238,78 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		if ( UM()->user()->preview == true && is_admin() ) return;
 
 		$primary_btn_word = $args['primary_btn_word'];
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_login_form_button_one
+		 * @description Change Login Form Primary button
+		 * @input_vars
+		 * [{"var":"$primary_btn_word","type":"string","desc":"Button text"},
+		 * {"var":"$args","type":"array","desc":"Login Form arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_login_form_button_one', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_login_form_button_one', 'my_login_form_button_one', 10, 2 );
+		 * function my_login_form_button_one( $primary_btn_word, $args ) {
+		 *     // your code here
+		 *     return $primary_btn_word;
+		 * }
+		 * ?>
+		 */
 		$primary_btn_word = apply_filters('um_login_form_button_one', $primary_btn_word, $args );
 
 		$secondary_btn_word = $args['secondary_btn_word'];
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_login_form_button_two
+		 * @description Change Login Form Secondary button
+		 * @input_vars
+		 * [{"var":"$secondary_btn_word","type":"string","desc":"Button text"},
+		 * {"var":"$args","type":"array","desc":"Login Form arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_login_form_button_two', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_login_form_button_two', 'my_login_form_button_two', 10, 2 );
+		 * function my_login_form_button_two( $secondary_btn_word, $args ) {
+		 *     // your code here
+		 *     return $secondary_btn_word;
+		 * }
+		 * ?>
+		 */
 		$secondary_btn_word = apply_filters('um_login_form_button_two', $secondary_btn_word, $args );
 
 		$secondary_btn_url = ( isset( $args['secondary_btn_url'] ) && $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page('register');
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_login_form_button_two_url
+		 * @description Change Login Form Secondary button URL
+		 * @input_vars
+		 * [{"var":"$secondary_btn_url","type":"string","desc":"Button URL"},
+		 * {"var":"$args","type":"array","desc":"Login Form arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_login_form_button_two_url', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_login_form_button_two_url', 'my_login_form_button_two_url', 10, 2 );
+		 * function my_login_form_button_two_url( $secondary_btn_url, $args ) {
+		 *     // your code here
+		 *     return $secondary_btn_url;
+		 * }
+		 * ?>
+		 */
 		$secondary_btn_url = apply_filters('um_login_form_button_two_url', $secondary_btn_url, $args );
 
 		?>

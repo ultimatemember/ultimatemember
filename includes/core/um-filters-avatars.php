@@ -39,7 +39,28 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 		$avatar = um_user('profile_photo', $size);
 
-		$image_alt = apply_filters("um_avatar_image_alternate_text",  um_user("display_name") );
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_avatar_image_alternate_text
+		 * @description Change avatar image alt
+		 * @input_vars
+		 * [{"var":"$avatar_alt","type":"string","desc":"Image alternate text. Display name by default"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_avatar_image_alternate_text', 'function_name', 10, 1 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_avatar_image_alternate_text', 'my_avatar_image_alternate_text', 10, 1 );
+		 * function my_avatar_image_alternate_text( $avatar_alt ) {
+		 *     // your code here
+		 *     return $avatar_alt;
+		 * }
+		 * ?>
+		 */
+		$image_alt = apply_filters( "um_avatar_image_alternate_text",  um_user("display_name") );
 
 		if ( ! $avatar && UM()->options()->get( 'use_gravatars' ) ) {
 			

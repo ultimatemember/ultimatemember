@@ -12,7 +12,28 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	 */
 	add_filter('um_account_secure_fields','um_account_secure_fields', 10, 2);
 	function um_account_secure_fields( $fields, $tab_key ){
-		$secure = apply_filters('um_account_secure_fields__enabled', true );
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_account_secure_fields__enabled
+		 * @description Active account secure fields
+		 * @input_vars
+		 * [{"var":"$enabled","type":"string","desc":"Enable secure account fields"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_account_secure_fields__enabled', 'function_name', 10, 1 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_account_secure_fields__enabled', 'my_account_secure_fields', 10, 1 );
+		 * function my_account_secure_fields( $enabled ) {
+		 *     // your code here
+		 *     return $enabled;
+		 * }
+		 * ?>
+		 */
+		$secure = apply_filters( 'um_account_secure_fields__enabled', true );
 
 		if( ! $secure ) return $fields;
 

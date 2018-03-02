@@ -348,6 +348,26 @@ if ( ! class_exists( 'Admin_Enqueue' ) ) {
          */
         function load_localize_scripts(){
 
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_admin_enqueue_localize_data
+             * @description Extend localize data at wp-admin side
+             * @input_vars
+             * [{"var":"$localize_data","type":"array","desc":"Localize Data"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_filter( 'um_admin_enqueue_localize_data', 'function_name', 10, 1 );
+             * @example
+             * <?php
+             * add_filter( 'um_admin_enqueue_localize_data', 'my_admin_enqueue_localize_data', 10, 1 );
+             * function my_admin_enqueue_localize_data( $localize_data ) {
+             *     // your code here
+             *     return $localize_data;
+             * }
+             * ?>
+             */
             $localize_data = apply_filters('um_admin_enqueue_localize_data', array( 
                     'ajaxurl' => admin_url( 'admin-ajax.php' ) 
                 ) 

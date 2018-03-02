@@ -85,6 +85,26 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
             $post_types = UM()->options()->get( 'restricted_access_post_metabox' );
             if ( ! empty( $post_types[ $current_screen->id ] ) ) {
 
+                /**
+                 * UM hook
+                 *
+                 * @type filter
+                 * @title um_restrict_content_hide_metabox
+                 * @description Show/Hide Restrict content metabox
+                 * @input_vars
+                 * [{"var":"$show","type":"bool","desc":"Show Metabox"}]
+                 * @change_log
+                 * ["Since: 2.0"]
+                 * @usage add_filter( 'um_restrict_content_hide_metabox', 'function_name', 10, 1 );
+                 * @example
+                 * <?php
+                 * add_filter( 'um_restrict_content_hide_metabox', 'my_restrict_content_hide_metabox', 10, 1 );
+                 * function my_restrict_content_hide_metabox( $show ) {
+                 *     // your code here
+                 *     return $show;
+                 * }
+                 * ?>
+                 */
                 $hide_metabox = apply_filters( 'um_restrict_content_hide_metabox', false );
 
                 if ( ! $hide_metabox ) {
@@ -195,6 +215,35 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
         function um_category_access_fields_create() {
             $data = array();
 
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_admin_category_access_settings_fields
+             * @description Settings fields for terms
+             * @input_vars
+             * [{"var":"$access_settings_fields","type":"array","desc":"Settings Fields"},
+             * {"var":"$data","type":"array","desc":"Settings Data"},
+             * {"var":"$screen","type":"string","desc":"Category Screen"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_filter( 'um_admin_category_access_settings_fields', 'function_name', 10, 3 );
+             * @example
+             * <?php
+             * add_filter( 'um_admin_category_access_settings_fields', 'my_admin_category_access_settings_fields', 10, 3 );
+             * function my_admin_category_access_settings_fields( $access_settings_fields, $data, $screen ) {
+             *     // your code here
+             *     $access_settings_fields[] = array(
+             *         'id'          => 'my-field-key',
+             *         'type'        => 'my-field-type',
+             *         'label'       => __( 'My field Label', 'ultimate-member' ),
+             *         'description' => __( 'My Field Description', 'ultimate-member' ),
+             *         'value'       => ! empty( $data['_um_custom_access_settings'] ) ? $data['_um_custom_access_settings'] : 0,
+             *     );
+             *     return $access_settings_fields;
+             * }
+             * ?>
+             */
             $fields = apply_filters( 'um_admin_category_access_settings_fields', array(
                 array(
                     'id'		    => '_um_custom_access_settings',
@@ -312,7 +361,35 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                 }
             }
 
-
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_admin_category_access_settings_fields
+             * @description Settings fields for terms
+             * @input_vars
+             * [{"var":"$access_settings_fields","type":"array","desc":"Settings Fields"},
+             * {"var":"$data","type":"array","desc":"Settings Data"},
+             * {"var":"$screen","type":"string","desc":"Category Screen"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_filter( 'um_admin_category_access_settings_fields', 'function_name', 10, 3 );
+             * @example
+             * <?php
+             * add_filter( 'um_admin_category_access_settings_fields', 'my_admin_category_access_settings_fields', 10, 3 );
+             * function my_admin_category_access_settings_fields( $access_settings_fields, $data, $screen ) {
+             *     // your code here
+             *     $access_settings_fields[] = array(
+             *         'id'          => 'my-field-key',
+             *         'type'        => 'my-field-type',
+             *         'label'       => __( 'My field Label', 'ultimate-member' ),
+             *         'description' => __( 'My Field Description', 'ultimate-member' ),
+             *         'value'       => ! empty( $data['_um_custom_access_settings'] ) ? $data['_um_custom_access_settings'] : 0,
+             *     );
+             *     return $access_settings_fields;
+             * }
+             * ?>
+             */
             $fields = apply_filters( 'um_admin_category_access_settings_fields', array(
                 array(
                     'id'		    => '_um_custom_access_settings',
@@ -649,6 +726,35 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
                 )
             ) );
 
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_admin_role_metaboxes
+             * @description Extend metaboxes at Add/Edit User Role
+             * @input_vars
+             * [{"var":"$roles_metaboxes","type":"array","desc":"Metaboxes at Add/Edit UM Role"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_filter( 'um_admin_role_metaboxes', 'function_name', 10, 1 );
+             * @example
+             * <?php
+             * add_filter( 'um_admin_role_metaboxes', 'my_admin_role_metaboxes', 10, 1 );
+             * function my_admin_role_metaboxes( $roles_metaboxes ) {
+             *     // your code here
+             *     $roles_metaboxes[] = array(
+             *         'id'        => 'um-admin-form-your-custom',
+             *         'title'     => __( 'My Roles Metabox', 'ultimate-member' ),
+             *         'callback'  => 'my-metabox-callback',
+             *         'screen'    => 'um_role_meta',
+             *         'context'   => 'side',
+             *         'priority'  => 'default'
+             *     );
+             *
+             *     return $roles_metaboxes;
+             * }
+             * ?>
+             */
             $roles_metaboxes = apply_filters( 'um_admin_role_metaboxes', $roles_metaboxes );
 
             $wp_caps_metabox = false;
@@ -959,8 +1065,31 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
 
                             <?php foreach( UM()->builtin()->validation_types() as $key => $name ) { ?>
                                 <?php
-                                $continue = apply_filters("um_builtin_validation_types_continue_loop", true, $key, $form_id, $field_args );
-                                if( $continue ){ ?>
+                                /**
+                                 * UM hook
+                                 *
+                                 * @type filter
+                                 * @title um_builtin_validation_types_continue_loop
+                                 * @description Builtin Validation Types
+                                 * @input_vars
+                                 * [{"var":"$continue","type":"bool","desc":"Validate?"},
+                                 * {"var":"$key","type":"string","desc":"Field Key"},
+                                 * {"var":"$form_id","type":"int","desc":"Form ID"},
+                                 * {"var":"$field_args","type":"array","desc":"Field Settings"}]
+                                 * @change_log
+                                 * ["Since: 2.0"]
+                                 * @usage add_filter( 'um_builtin_validation_types_continue_loop', 'function_name', 10, 4 );
+                                 * @example
+                                 * <?php
+                                 * add_filter( 'um_builtin_validation_types_continue_loop', 'my_builtin_validation_types', 10, 4 );
+                                 * function my_builtin_validation_types( $continue, $key, $form_id, $field_args ) {
+                                 *     // your code here
+                                 *     return $continue;
+                                 * }
+                                 * ?>
+                                 */
+                                $continue = apply_filters( "um_builtin_validation_types_continue_loop", true, $key, $form_id, $field_args );
+                                if ( $continue ) { ?>
                                     <option value="<?php echo $key; ?>" <?php selected( $key, $this->edit_mode_value ); ?>><?php echo $name; ?></option>
                                 <?php } ?>
                             <?php } ?>

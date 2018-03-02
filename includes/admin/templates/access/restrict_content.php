@@ -18,6 +18,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         }
     }
 
+    /**
+     * UM hook
+     *
+     * @type filter
+     * @title um_admin_access_settings_fields
+     * @description Extend Admin Access Settings Fields
+     * @input_vars
+     * [{"var":"$fields","type":"array","desc":"Access Settings Fields"},
+     * {"var":"$data","type":"array","desc":"Form Data"}]
+     * @change_log
+     * ["Since: 2.0"]
+     * @usage add_filter( 'um_admin_access_settings_fields', 'function_name', 10, 2 );
+     * @example
+     * <?php
+     * add_filter( 'um_admin_access_settings_fields', 'my_admin_access_settings_fields', 10, 2 );
+     * function my_admin_access_settings_fields( $fields, $data ) {
+     *     // your code here
+     *     return $fields;
+     * }
+     * ?>
+     */
     $fields = apply_filters( 'um_admin_access_settings_fields', array(
         array(
             'id'		    => '_um_custom_access_settings',

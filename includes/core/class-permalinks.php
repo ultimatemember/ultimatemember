@@ -42,7 +42,28 @@ if ( ! class_exists( 'Permalinks' ) ) {
             if ( !is_singular() )
                 return;
 
-            $enable_canonical = apply_filters("um_allow_canonical__filter", true );
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_allow_canonical__filter
+	         * @description Allow canonical
+	         * @input_vars
+	         * [{"var":"$allow_canonical","type":"bool","desc":"Allow?"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_allow_canonical__filter', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_allow_canonical__filter', 'my_allow_canonical', 10, 1 );
+	         * function my_allow_canonical( $allow_canonical ) {
+	         *     // your code here
+	         *     return $allow_canonical;
+	         * }
+	         * ?>
+	         */
+            $enable_canonical = apply_filters( "um_allow_canonical__filter", true );
 
             if( ! $enable_canonical )
                 return;
@@ -160,6 +181,27 @@ if ( ! class_exists( 'Permalinks' ) ) {
                 $page_url = strtok( $page_url, '?' );
             }
 
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_get_current_page_url
+	         * @description Change current page URL
+	         * @input_vars
+	         * [{"var":"$page_url","type":"string","desc":"Page URL"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_get_current_page_url', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_get_current_page_url', 'my_get_current_page_url', 10, 1 );
+	         * function my_get_current_page_url( $page_url ) {
+	         *     // your code here
+	         *     return $page_url;
+	         * }
+	         * ?>
+	         */
             return apply_filters( 'um_get_current_page_url', $page_url );
         }
 
@@ -209,9 +251,33 @@ if ( ! class_exists( 'Permalinks' ) ) {
         /***
          ***	@makes an activate link for any user
          ***/
-        function activate_url(){
-            if ( !um_user('account_secret_hash') ) return false;
-            $url =  apply_filters( 'um_activate_url', home_url() );
+        function activate_url() {
+            if ( !um_user('account_secret_hash') ) {
+	            return false;
+            }
+
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_activate_url
+	         * @description Change activate user URL
+	         * @input_vars
+	         * [{"var":"$url","type":"string","desc":"Activate URL"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_activate_url', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_activate_url', 'my_activate_url', 10, 1 );
+	         * function my_activate_url( $url ) {
+	         *     // your code here
+	         *     return $url;
+	         * }
+	         * ?>
+	         */
+	        $url =  apply_filters( 'um_activate_url', home_url() );
             $url =  add_query_arg( 'act', 'activate_via_email', $url );
             $url =  add_query_arg( 'hash', um_user('account_secret_hash'), $url );
             $url =  add_query_arg( 'user_id', um_user('ID'), $url );
@@ -282,6 +348,28 @@ if ( ! class_exists( 'Permalinks' ) ) {
             $page_id = UM()->config()->permalinks['user'];
             $profile_url = get_permalink( $page_id );
 
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_localize_permalink_filter
+	         * @description Change user profile URL
+	         * @input_vars
+	         * [{"var":"$profile_url","type":"string","desc":"Profile URL"},
+	         * {"var":"$page_id","type":"int","desc":"Profile Page ID"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_localize_permalink_filter', 'function_name', 10, 2 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_localize_permalink_filter', 'my_localize_permalink', 10, 2 );
+	         * function my_localize_permalink( $profile_url, $page_id ) {
+	         *     // your code here
+	         *     return $profile_url;
+	         * }
+	         * ?>
+	         */
             $profile_url = apply_filters( 'um_localize_permalink_filter', $profile_url, $page_id );
 
             if ( get_option('permalink_structure') ) {

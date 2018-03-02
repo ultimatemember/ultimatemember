@@ -108,7 +108,28 @@ if ( ! class_exists( 'Rewrite' ) ) {
                         'top'
                     );
 
-                    if( ! apply_filters( 'um_rewrite_flush_rewrite_rules', UM()->options()->get( 'um_flush_stop' ) ) )
+	                /**
+	                 * UM hook
+	                 *
+	                 * @type filter
+	                 * @title um_rewrite_flush_rewrite_rules
+	                 * @description Enable flushing rewrite rules
+	                 * @input_vars
+	                 * [{"var":"$stop_flush","type":"bool","desc":"Stop flushing rewrite rules"}]
+	                 * @change_log
+	                 * ["Since: 2.0"]
+	                 * @usage
+	                 * <?php add_filter( 'um_rewrite_flush_rewrite_rules', 'function_name', 10, 1 ); ?>
+	                 * @example
+	                 * <?php
+	                 * add_filter( 'um_rewrite_flush_rewrite_rules', 'my_rewrite_flush_rewrite_rules', 10, 1 );
+	                 * function my_rewrite_flush_rewrite_rules( $stop_flush ) {
+	                 *     // your code here
+	                 *     return $stop_flush;
+	                 * }
+	                 * ?>
+	                 */
+                    if ( ! apply_filters( 'um_rewrite_flush_rewrite_rules', UM()->options()->get( 'um_flush_stop' ) ) )
                         flush_rewrite_rules( true );
 
                 }
@@ -200,6 +221,27 @@ if ( ! class_exists( 'Rewrite' ) ) {
                     exit( wp_redirect( $url ) );
                 } else {
 
+	                /**
+	                 * UM hook
+	                 *
+	                 * @type filter
+	                 * @title um_locate_user_profile_not_loggedin__redirect
+	                 * @description Change redirect URL from user profile for not logged in user
+	                 * @input_vars
+	                 * [{"var":"$url","type":"string","desc":"Redirect URL"}]
+	                 * @change_log
+	                 * ["Since: 2.0"]
+	                 * @usage
+	                 * <?php add_filter( 'um_locate_user_profile_not_loggedin__redirect', 'function_name', 10, 1 ); ?>
+	                 * @example
+	                 * <?php
+	                 * add_filter( 'um_locate_user_profile_not_loggedin__redirect', 'my_user_profile_not_loggedin__redirect', 10, 1 );
+	                 * function my_user_profile_not_loggedin__redirect( $url ) {
+	                 *     // your code here
+	                 *     return $url;
+	                 * }
+	                 * ?>
+	                 */
                     $redirect_to = apply_filters( 'um_locate_user_profile_not_loggedin__redirect', home_url() );
                     if ( ! empty( $redirect_to ) ){
                         exit( wp_redirect( $redirect_to ) );

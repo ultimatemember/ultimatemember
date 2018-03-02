@@ -142,6 +142,27 @@ if ( ! class_exists( 'UM_Functions' ) ) {
                 'post_format',
             );
 
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_excluded_taxonomies
+             * @description Exclude taxonomies for UM
+             * @input_vars
+             * [{"var":"$taxes","type":"array","desc":"Taxonomies keys"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage
+             * <?php add_filter( 'um_excluded_taxonomies', 'function_name', 10, 1 ); ?>
+             * @example
+             * <?php
+             * add_filter( 'um_excluded_taxonomies', 'my_excluded_taxonomies', 10, 1 );
+             * function my_excluded_taxonomies( $taxes ) {
+             *     // your code here
+             *     return $taxes;
+             * }
+             * ?>
+             */
             return apply_filters( 'um_excluded_taxonomies', $taxes );
         }
 
@@ -174,11 +195,81 @@ if ( ! class_exists( 'UM_Functions' ) ) {
                 return;
             }
 
+
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_get_template
+             * @description Change template location
+             * @input_vars
+             * [{"var":"$located","type":"string","desc":"template Located"},
+             * {"var":"$template_name","type":"string","desc":"Template Name"},
+             * {"var":"$path","type":"string","desc":"Template Path at server"},
+             * {"var":"$t_args","type":"array","desc":"Template Arguments"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_filter( 'um_get_template', 'function_name', 10, 4 );
+             * @example
+             * <?php
+             * add_filter( 'um_get_template', 'my_get_template', 10, 4 );
+             * function my_get_template( $located, $template_name, $path, $t_args ) {
+             *     // your code here
+             *     return $located;
+             * }
+             * ?>
+             */
             $located = apply_filters( 'um_get_template', $located, $template_name, $path, $t_args );
 
             ob_start();
+
+            /**
+             * UM hook
+             *
+             * @type action
+             * @title um_before_template_part
+             * @description Make some action before include template file
+             * @input_vars
+             * [{"var":"$template_name","type":"string","desc":"Template Name"},
+             * {"var":"$path","type":"string","desc":"Template Path at server"},
+             * {"var":"$located","type":"string","desc":"template Located"},
+             * {"var":"$t_args","type":"array","desc":"Template Arguments"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_action( 'um_before_template_part', 'function_name', 10, 4 );
+             * @example
+             * <?php
+             * add_action( 'um_before_template_part', 'my_before_template_part', 10, 4 );
+             * function my_before_template_part( $template_name, $path, $located, $t_args ) {
+             *     // your code here
+             * }
+             * ?>
+             */
             do_action( 'um_before_template_part', $template_name, $path, $located, $t_args );
             include( $located );
+
+            /**
+             * UM hook
+             *
+             * @type action
+             * @title my_after_template_part
+             * @description Make some action after include template file
+             * @input_vars
+             * [{"var":"$template_name","type":"string","desc":"Template Name"},
+             * {"var":"$path","type":"string","desc":"Template Path at server"},
+             * {"var":"$located","type":"string","desc":"template Located"},
+             * {"var":"$t_args","type":"array","desc":"Template Arguments"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_action( 'um_after_template_part', 'function_name', 10, 4 );
+             * @example
+             * <?php
+             * add_action( 'um_after_template_part', 'my_after_template_part', 10, 4 );
+             * function my_after_template_part( $template_name, $path, $located, $t_args ) {
+             *     // your code here
+             * }
+             * ?>
+             */
             do_action( 'um_after_template_part', $template_name, $path, $located, $t_args );
             $html = ob_get_clean();
 
@@ -213,7 +304,30 @@ if ( ! class_exists( 'UM_Functions' ) ) {
                 }
                 $template .= 'templates/' . $template_name;
             }
-            // Return what we found.
+
+
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_locate_template
+             * @description Change template locate
+             * @input_vars
+             * [{"var":"$template","type":"string","desc":"Template locate"},
+             * {"var":"$template_name","type":"string","desc":"Template Name"},
+             * {"var":"$path","type":"string","desc":"Template Path at server"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_filter( 'um_locate_template', 'function_name', 10, 3 );
+             * @example
+             * <?php
+             * add_filter( 'um_locate_template', 'my_locate_template', 10, 3 );
+             * function my_locate_template( $template, $template_name, $path ) {
+             *     // your code here
+             *     return $template;
+             * }
+             * ?>
+             */
             return apply_filters( 'um_locate_template', $template, $template_name, $path );
         }
 

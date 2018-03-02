@@ -160,7 +160,30 @@ function um_submit_account_errors_hook( $args ) {
 
 		$arr_fields = array();
 		$account_fields = get_user_meta( um_user('ID'), 'um_account_secure_fields', true );
-		$secure_fields = apply_filters( 'um_secure_account_fields', $account_fields , um_user( 'ID' ) );
+
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_secure_account_fields
+		 * @description Change secure account fields
+		 * @input_vars
+		 * [{"var":"$fields","type":"array","desc":"Secure account fields"},
+		 * {"var":"$user_id","type":"int","desc":"User ID"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_secure_account_fields', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_secure_account_fields', 'my_secure_account_fields', 10, 2 );
+		 * function my_secure_account_fields( $fields, $user_id ) {
+		 *     // your code here
+		 *     return $fields;
+		 * }
+		 * ?>
+		 */
+		$secure_fields = apply_filters( 'um_secure_account_fields', $account_fields, um_user( 'ID' ) );
 		
 		if ( is_array( $secure_fields  ) ) {
 			foreach ( $secure_fields as $tab_key => $fields ) {
@@ -184,6 +207,27 @@ function um_submit_account_errors_hook( $args ) {
 			unset( $changes['hide_in_members'] );
 		}
 
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_account_pre_updating_profile_array
+		 * @description Change update profile data before saving
+		 * @input_vars
+		 * [{"var":"$changes","type":"array","desc":"Profile changes array"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_account_pre_updating_profile_array', 'function_name', 10, 1 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_account_pre_updating_profile_array', 'my_account_pre_updating_profile', 10, 1 );
+		 * function my_account_pre_updating_profile( $changes ) {
+		 *     // your code here
+		 *     return $changes;
+		 * }
+		 * ?>
+		 */
 		$changes = apply_filters( 'um_account_pre_updating_profile_array', $changes );
 
 		// fired on account page, just before updating profile

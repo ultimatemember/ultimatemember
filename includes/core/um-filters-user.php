@@ -92,11 +92,31 @@ function um_clean_user_basename_filter( $value, $raw ){
 		}
 	}
 
-
-	$value = apply_filters("um_permalink_base_before_filter", $value );
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_permalink_base_before_filter
+	 * @description Base permalink before
+	 * @input_vars
+	 * [{"var":"$permalink","type":"string","desc":"User Permalink"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage
+	 * <?php add_filter( 'um_permalink_base_before_filter', 'function_name', 10, 1 ); ?>
+	 * @example
+	 * <?php
+	 * add_filter( 'um_permalink_base_before_filter', 'my_permalink_base_before', 10, 1 );
+	 * function my_permalink_base_before( $permalink ) {
+	 *     // your code here
+	 *     return $permalink;
+	 * }
+	 * ?>
+	 */
+	$value = apply_filters( "um_permalink_base_before_filter", $value );
 	$raw_value = $value;
 
-	switch( $permalink_base ){
+	switch( $permalink_base ) {
 			case 'name':
 
 
@@ -112,6 +132,28 @@ function um_clean_user_basename_filter( $value, $raw ){
 					$value = str_replace( '.', ' ', $value );
 				}
 
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_permalink_base_after_filter_name
+				 * @description Base permalink after if permalink is username
+				 * @input_vars
+				 * [{"var":"$permalink","type":"string","desc":"User Permalink"},
+				 * {"var":"$raw_permalink","type":"string","desc":"RAW User Permalink"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage
+				 * <?php add_filter( 'um_permalink_base_after_filter_name', 'function_name', 10, 2 ); ?>
+				 * @example
+				 * <?php
+				 * add_filter( 'um_permalink_base_after_filter_name', 'my_permalink_base_after_filter_name', 10, 2 );
+				 * function my_permalink_base_after_filter_name( $permalink, $raw_permalink ) {
+				 *     // your code here
+				 *     return $permalink;
+				 * }
+				 * ?>
+				 */
 				$value = apply_filters("um_permalink_base_after_filter_name", $value, $raw_value );
 
 			break;
@@ -131,6 +173,28 @@ function um_clean_user_basename_filter( $value, $raw ){
 					$value = str_replace( '_', '-', $value );
 				}
 
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_permalink_base_after_filter_name_dash
+				 * @description Base permalink after if permalink is first name - last name
+				 * @input_vars
+				 * [{"var":"$permalink","type":"string","desc":"User Permalink"},
+				 * {"var":"$raw_permalink","type":"string","desc":"RAW User Permalink"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage
+				 * <?php add_filter( 'um_permalink_base_after_filter_name_dash', 'function_name', 10, 2 ); ?>
+				 * @example
+				 * <?php
+				 * add_filter( 'um_permalink_base_after_filter_name_dash', 'my_permalink_base_after_filter_name_dash', 10, 2 );
+				 * function my_permalink_base_after_filter_name_dash( $permalink, $raw_permalink ) {
+				 *     // your code here
+				 *     return $permalink;
+				 * }
+				 * ?>
+				 */
 				$value = apply_filters("um_permalink_base_after_filter_name_dash", $value, $raw_value );
 
 			break;
@@ -146,6 +210,28 @@ function um_clean_user_basename_filter( $value, $raw ){
 					$value = str_replace( '_', '+', $value );
 				}
 
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_permalink_base_after_filter_name_plus
+				 * @description Base permalink after if permalink is first name + last name
+				 * @input_vars
+				 * [{"var":"$permalink","type":"string","desc":"User Permalink"},
+				 * {"var":"$raw_permalink","type":"string","desc":"RAW User Permalink"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage
+				 * <?php add_filter( 'um_permalink_base_after_filter_name_plus', 'function_name', 10, 2 ); ?>
+				 * @example
+				 * <?php
+				 * add_filter( 'um_permalink_base_after_filter_name_plus', 'my_permalink_base_after_filter_name_plus', 10, 2 );
+				 * function my_permalink_base_after_filter_name_plus( $permalink, $raw_permalink ) {
+				 *     // your code here
+				 *     return $permalink;
+				 * }
+				 * ?>
+				 */
 				$value = apply_filters("um_permalink_base_after_filter_name_plus", $value, $raw_value );
 
 			break;
@@ -157,6 +243,28 @@ function um_clean_user_basename_filter( $value, $raw ){
 					$value = str_replace( '_', '-', $value );
 				}
 
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_permalink_base_after_filter
+				 * @description Base permalink after for default permalink
+				 * @input_vars
+				 * [{"var":"$permalink","type":"string","desc":"User Permalink"},
+				 * {"var":"$raw_permalink","type":"string","desc":"RAW User Permalink"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage
+				 * <?php add_filter( 'um_permalink_base_after_filter', 'function_name', 10, 2 ); ?>
+				 * @example
+				 * <?php
+				 * add_filter( 'um_permalink_base_after_filter', 'my_permalink_base_after', 10, 2 );
+				 * function my_permalink_base_after( $permalink, $raw_permalink ) {
+				 *     // your code here
+				 *     return $permalink;
+				 * }
+				 * ?>
+				 */
 				$value = apply_filters("um_permalink_base_after_filter", $value, $raw_value );
 
 			break;

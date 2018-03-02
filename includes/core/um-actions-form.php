@@ -148,6 +148,28 @@ if ( ! defined( 'ABSPATH' ) ) exit;
                     }
                 }
 
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_get_custom_field_array
+				 * @description Extend custom field data on submit form error
+				 * @input_vars
+				 * [{"var":"$array","type":"array","desc":"Field data"},
+				 * {"var":"$fields","type":"array","desc":"All fields"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage
+				 * <?php add_filter( 'um_get_custom_field_array', 'function_name', 10, 2 ); ?>
+				 * @example
+				 * <?php
+				 * add_filter( 'um_get_custom_field_array', 'my_get_custom_field_array', 10, 2 );
+				 * function my_get_custom_field_array( $array, $fields ) {
+				 *     // your code here
+				 *     return $array;
+				 * }
+				 * ?>
+				 */
 				$array = apply_filters( 'um_get_custom_field_array', $array, $fields );
 
 				if ( ! empty( $array['conditions'] ) ) {

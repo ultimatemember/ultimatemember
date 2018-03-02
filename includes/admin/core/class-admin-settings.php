@@ -73,7 +73,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 
             foreach ( $core_pages as $page_s => $page ) {
                 $have_pages = UM()->query()->wp_pages();
-                $page_id = apply_filters( 'um_core_page_id_filter', 'core_' . $page_s );
+                $page_id = UM()->options()->get_core_page_id( $page_s );
 
                 $page_title = ! empty( $page['title'] ) ? $page['title'] : '';
 
@@ -188,6 +188,26 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                 }
             }
 
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_settings_structure
+             * @description Extend UM Settings
+             * @input_vars
+             * [{"var":"$settings","type":"array","desc":"UM Settings"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_filter( 'um_settings_structure', 'function_name', 10, 1 );
+             * @example
+             * <?php
+             * add_filter( 'um_settings_structure', 'my_settings_structure', 10, 1 );
+             * function my_settings_structure( $settings ) {
+             *     // your code here
+             *     return $settings;
+             * }
+             * ?>
+             */
             $this->settings_structure = apply_filters( 'um_settings_structure', array(
                 ''              => array(
                     'title'       => __( 'General', 'ultimate-member' ),
@@ -1101,7 +1121,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                     um_js_redirect( add_query_arg( array( 'page' => 'um_options', 'tab' => $current_tab ), admin_url( 'admin.php' ) ) );
             }
 
-            echo '<div id="um-settings-wrap" class="wrap"><h2>Ultimate Member - Settings</h2>';
+            echo '<div id="um-settings-wrap" class="wrap"><h2>' .  __( 'Ultimate Member - Settings', 'ultimate-member' ) . '</h2>';
 
             echo $this->generate_tabs_menu() . $this->generate_subtabs_menu( $current_tab );
 
@@ -1111,7 +1131,32 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                 do_action( "um_settings_page_" . $current_tab . "_" . $current_subtab . "_before_section" );
 
                 $section_fields = $this->get_section_fields( $current_tab, $current_subtab );
-                echo apply_filters( 'um_settings_section_' . $current_tab . '_' . $current_subtab . '_content', $this->render_settings_section( $section_fields, $current_tab, $current_subtab ), $section_fields );
+
+                /**
+                 * UM hook
+                 *
+                 * @type filter
+                 * @title um_settings_section_{$current_tab}_{$current_subtab}_content
+                 * @description Render settings section
+                 * @input_vars
+                 * [{"var":"$content","type":"string","desc":"Section content"},
+                 * {"var":"$section_fields","type":"array","desc":"Section Fields"}]
+                 * @change_log
+                 * ["Since: 2.0"]
+                 * @usage add_filter( 'um_settings_section_{$current_tab}_{$current_subtab}_content', 'function_name', 10, 2 );
+                 * @example
+                 * <?php
+                 * add_filter( 'um_settings_section_{$current_tab}_{$current_subtab}_content', 'my_settings_section', 10, 2 );
+                 * function my_settings_section( $content ) {
+                 *     // your code here
+                 *     return $content;
+                 * }
+                 * ?>
+                 */
+                echo apply_filters( 'um_settings_section_' . $current_tab . '_' . $current_subtab . '_content',
+                    $this->render_settings_section( $section_fields, $current_tab, $current_subtab ),
+                    $section_fields
+                );
 
             } else { ?>
 
@@ -1129,7 +1174,32 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                     <?php do_action( "um_settings_page_" . $current_tab . "_" . $current_subtab . "_before_section" );
 
                     $section_fields = $this->get_section_fields( $current_tab, $current_subtab );
-                    echo apply_filters( 'um_settings_section_' . $current_tab . '_' . $current_subtab . '_content', $this->render_settings_section( $section_fields, $current_tab, $current_subtab ), $section_fields );
+
+                    /**
+                     * UM hook
+                     *
+                     * @type filter
+                     * @title um_settings_section_{$current_tab}_{$current_subtab}_content
+                     * @description Render settings section
+                     * @input_vars
+                     * [{"var":"$content","type":"string","desc":"Section content"},
+                     * {"var":"$section_fields","type":"array","desc":"Section Fields"}]
+                     * @change_log
+                     * ["Since: 2.0"]
+                     * @usage add_filter( 'um_settings_section_{$current_tab}_{$current_subtab}_content', 'function_name', 10, 2 );
+                     * @example
+                     * <?php
+                     * add_filter( 'um_settings_section_{$current_tab}_{$current_subtab}_content', 'my_settings_section', 10, 2 );
+                     * function my_settings_section( $content ) {
+                     *     // your code here
+                     *     return $content;
+                     * }
+                     * ?>
+                     */
+                    echo apply_filters( 'um_settings_section_' . $current_tab . '_' . $current_subtab . '_content',
+                        $this->render_settings_section( $section_fields, $current_tab, $current_subtab ),
+                        $section_fields
+                    );
                     ?>
 
                     <p class="submit">
@@ -1180,6 +1250,26 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 
                     break;
                 default:
+                    /**
+                     * UM hook
+                     *
+                     * @type filter
+                     * @title um_generate_tabs_menu_{$page}
+                     * @description Generate tabs menu
+                     * @input_vars
+                     * [{"var":"$tabs","type":"array","desc":"UM menu tabs"}]
+                     * @change_log
+                     * ["Since: 2.0"]
+                     * @usage add_filter( 'um_generate_tabs_menu_{$page}', 'function_name', 10, 1 );
+                     * @example
+                     * <?php
+                     * add_filter( 'um_generate_tabs_menu_{$page}', 'my_tabs_menu', 10, 1 );
+                     * function my_tabs_menu( $tabs ) {
+                     *     // your code here
+                     *     return $tabs;
+                     * }
+                     * ?>
+                     */
                     $tabs = apply_filters( 'um_generate_tabs_menu_' . $page, $tabs );
                     break;
             }
@@ -1222,6 +1312,26 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
             if ( isset( $_POST['um-settings-action'] ) && 'save' == $_POST['um-settings-action'] && ! empty( $_POST['um_options'] ) ) {
                 do_action( "um_settings_before_save" );
 
+                /**
+                 * UM hook
+                 *
+                 * @type filter
+                 * @title um_change_settings_before_save
+                 * @description Change settings before save
+                 * @input_vars
+                 * [{"var":"$settings","type":"array","desc":"UM Settings on save"}]
+                 * @change_log
+                 * ["Since: 2.0"]
+                 * @usage add_filter( 'um_change_settings_before_save', 'function_name', 10, 1 );
+                 * @example
+                 * <?php
+                 * add_filter( 'um_change_settings_before_save', 'my_change_settings_before_save', 10, 1 );
+                 * function my_change_settings_before_save( $settings ) {
+                 *     // your code here
+                 *     return $settings;
+                 * }
+                 * ?>
+                 */
                 $settings = apply_filters( 'um_change_settings_before_save', $_POST['um_options'] );
 
                 foreach ( $settings as $key => $value ) {
@@ -1473,6 +1583,27 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 
             $in_theme = UM()->mail()->template_in_theme( $email_key );
 
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_admin_settings_email_section_fields
+             * @description Extend UM Email Settings
+             * @input_vars
+             * [{"var":"$settings","type":"array","desc":"UM Email Settings"},
+             * {"var":"$email_key","type":"string","desc":"Email Key"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_filter( 'um_admin_settings_email_section_fields', 'function_name', 10, 2 );
+             * @example
+             * <?php
+             * add_filter( 'um_admin_settings_email_section_fields', 'my_admin_settings_email_section', 10, 2 );
+             * function my_admin_settings_email_section( $settings, $email_key ) {
+             *     // your code here
+             *     return $settings;
+             * }
+             * ?>
+             */
             $section_fields = apply_filters( 'um_admin_settings_email_section_fields', array(
                 array(
                     'id'            => 'um_email_template',

@@ -17,8 +17,29 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				}
 			}
 		}
-		
-		$search_filters = apply_filters('um_frontend_member_search_filters',$search_filters);
+
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_frontend_member_search_filters
+		 * @description Extend Member Directory Search filter
+		 * @input_vars
+		 * [{"var":"$search_filters","type":"array","desc":"Search Filters"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_frontend_member_search_filters', 'function_name', 10, 1 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_frontend_member_search_filters', 'my_frontend_member_search_filters', 10, 1 );
+		 * function my_frontend_member_search_filters( $search_filters ) {
+		 *     // your code here
+		 *     return $search_filters;
+		 * }
+		 * ?>
+		 */
+		$search_filters = apply_filters( 'um_frontend_member_search_filters', $search_filters );
 
 		if ( $args['search'] == 1 && is_array( $search_filters ) ) { // search on
 

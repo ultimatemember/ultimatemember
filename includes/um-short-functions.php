@@ -76,6 +76,27 @@ function um_clean_user_basename( $value ) {
 	$value = str_replace( '-', ' ', $value );
 	$value = str_replace( '+', ' ', $value );
 
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_clean_user_basename_filter
+	 * @description Change clean user basename
+	 * @input_vars
+	 * [{"var":"$basename","type":"string","desc":"User basename"},
+	 * {"var":"$raw_basename","type":"string","desc":"RAW user basename"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_filter( 'um_clean_user_basename_filter', 'function_name', 10, 2 );
+	 * @example
+	 * <?php
+	 * add_filter( 'um_clean_user_basename_filter', 'my_clean_user_basename', 10, 2 );
+	 * function my_clean_user_basename( $basename, $raw_basename ) {
+	 *     // your code here
+	 *     return $basename;
+	 * }
+	 * ?>
+	 */
 	$value = apply_filters( 'um_clean_user_basename_filter', $value, $raw_value );
 
 	return $value;
@@ -113,6 +134,27 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 		'{user_avatar_url}',
 	);
 
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_template_tags_patterns_hook
+	 * @description Extend UM placeholders
+	 * @input_vars
+	 * [{"var":"$placeholders","type":"array","desc":"UM Placeholders"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_filter( 'um_template_tags_patterns_hook', 'function_name', 10, 1 );
+	 * @example
+	 * <?php
+	 * add_filter( 'um_template_tags_patterns_hook', 'my_template_tags_patterns', 10, 1 );
+	 * function my_template_tags_patterns( $placeholders ) {
+	 *     // your code here
+	 *     $placeholders[] = '{my_custom_placeholder}';
+	 *     return $placeholders;
+	 * }
+	 * ?>
+	 */
 	$search = apply_filters( 'um_template_tags_patterns_hook', $search );
 
 	$replace = array(
@@ -136,6 +178,27 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 		um_get_user_avatar_url(),
 	);
 
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_template_tags_replaces_hook
+	 * @description Extend UM replace placeholders
+	 * @input_vars
+	 * [{"var":"$replace_placeholders","type":"array","desc":"UM Replace Placeholders"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_filter( 'um_template_tags_replaces_hook', 'function_name', 10, 1 );
+	 * @example
+	 * <?php
+	 * add_filter( 'um_template_tags_replaces_hook', 'my_template_tags_replaces', 10, 1 );
+	 * function my_template_tags_replaces( $replace_placeholders ) {
+	 *     // your code here
+	 *     $replace_placeholders[] = 'my_replace_value';
+	 *     return $replace_placeholders;
+	 * }
+	 * ?>
+	 */
 	$replace = apply_filters( 'um_template_tags_replaces_hook', $replace );
 
 	$content = str_replace( $search, $replace, $content );
@@ -193,6 +256,26 @@ function um_user_ip() {
 		$ip = $_SERVER['REMOTE_ADDR'];
 	}
 
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_user_ip
+	 * @description Change User IP
+	 * @input_vars
+	 * [{"var":"$ip","type":"string","desc":"User IP"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_filter( 'um_user_ip', 'function_name', 10, 1 );
+	 * @example
+	 * <?php
+	 * add_filter( 'um_user_ip', 'my_user_ip', 10, 1 );
+	 * function my_user_ip( $ip ) {
+	 *     // your code here
+	 *     return $ip;
+	 * }
+	 * ?>
+	 */
 	return apply_filters( 'um_user_ip', $ip );
 }
 
@@ -430,6 +513,26 @@ function um_user_submitted_registration( $style = false ) {
 
 	if (isset( $data ) && is_array( $data )) {
 
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_email_registration_data
+		 * @description Prepare Registration data to email
+		 * @input_vars
+		 * [{"var":"$data","type":"array","desc":"Registration Data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_filter( 'um_email_registration_data', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_filter( 'um_email_registration_data', 'my_email_registration_data', 10, 1 );
+		 * function my_email_registration_data( $data ) {
+		 *     // your code here
+		 *     return $data;
+		 * }
+		 * ?>
+		 */
 		$data = apply_filters( 'um_email_registration_data', $data );
 
 		foreach ($data as $k => $v) {
@@ -510,8 +613,74 @@ function um_filtered_value( $key, $data = false ) {
 
 	$type = ( isset( $data['type'] ) ) ? $data['type'] : '';
 
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_profile_field_filter_hook__
+	 * @description Change or filter field value
+	 * @input_vars
+	 * [{"var":"$value","type":"string","desc":"Field Value"},
+	 * {"var":"$data","type":"array","desc":"Field Data"},
+	 * {"var":"$type","type":"string","desc":"Field Type"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_filter( 'um_profile_field_filter_hook__', 'function_name', 10, 3 );
+	 * @example
+	 * <?php
+	 * add_filter( 'um_profile_field_filter_hook__', 'my_profile_field', 10, 3 );
+	 * function my_profile_field( $value, $data, $type ) {
+	 *     // your code here
+	 *     return $value;
+	 * }
+	 * ?>
+	 */
 	$value = apply_filters( "um_profile_field_filter_hook__", $value, $data, $type );
+
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_profile_field_filter_hook__{$key}
+	 * @description Change or filter field value by field key ($key)
+	 * @input_vars
+	 * [{"var":"$value","type":"string","desc":"Field Value"},
+	 * {"var":"$data","type":"array","desc":"Field Data"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_filter( 'um_profile_field_filter_hook__{$key}', 'function_name', 10, 2 );
+	 * @example
+	 * <?php
+	 * add_filter( 'um_profile_field_filter_hook__{$key}', 'my_profile_field', 10, 2 );
+	 * function my_profile_field( $value, $data ) {
+	 *     // your code here
+	 *     return $value;
+	 * }
+	 * ?>
+	 */
 	$value = apply_filters( "um_profile_field_filter_hook__{$key}", $value, $data );
+
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_profile_field_filter_hook__{$type}
+	 * @description Change or filter field value by field type ($type)
+	 * @input_vars
+	 * [{"var":"$value","type":"string","desc":"Field Value"},
+	 * {"var":"$data","type":"array","desc":"Field Data"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_filter( 'um_profile_field_filter_hook__{$type}', 'function_name', 10, 2 );
+	 * @example
+	 * <?php
+	 * add_filter( 'um_profile_field_filter_hook__{$type}', 'my_profile_field', 10, 2 );
+	 * function my_profile_field( $value, $data ) {
+	 *     // your code here
+	 *     return $value;
+	 * }
+	 * ?>
+	 */
 	$value = apply_filters( "um_profile_field_filter_hook__{$type}", $value, $data );
 	$value = UM()->shortcodes()->emotize( $value );
 	return $value;
@@ -652,6 +821,28 @@ function um_get_core_page( $slug, $updated = false ) {
 			$url = add_query_arg( 'updated', esc_attr( $updated ), $url );
 	}
 
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_get_core_page_filter
+	 * @description Change UM core page URL
+	 * @input_vars
+	 * [{"var":"$url","type":"string","desc":"UM Page URL"},
+	 * {"var":"$slug","type":"string","desc":"UM Page slug"},
+	 * {"var":"$updated","type":"bool","desc":"Additional parameter"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_filter( 'um_get_core_page_filter', 'function_name', 10, 3 );
+	 * @example
+	 * <?php
+	 * add_filter( 'um_get_core_page_filter', 'my_core_page_url', 10, 3 );
+	 * function my_core_page_url( $url, $slug, $updated ) {
+	 *     // your code here
+	 *     return $url;
+	 * }
+	 * ?>
+	 */
 	return apply_filters( 'um_get_core_page_filter', $url, $slug, $updated );
 }
 
@@ -759,6 +950,28 @@ function um_select_if_in_query_params( $filter, $val ) {
 		if (isset( $query[$filter] ) && $val == $query[$filter])
 			$selected = true;
 
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_selected_if_in_query_params
+		 * @description Make selected or unselected from query attribute
+		 * @input_vars
+		 * [{"var":"$selected","type":"bool","desc":"Selected or not"},
+		 * {"var":"$filter","type":"string","desc":"Check by this filter in query"},
+		 * {"var":"$val","type":"string","desc":"Field Value"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_filter( 'um_selected_if_in_query_params', 'function_name', 10, 3 );
+		 * @example
+		 * <?php
+		 * add_filter( 'um_selected_if_in_query_params', 'my_selected_if_in_query_params', 10, 3 );
+		 * function my_selected_if_in_query_params( $selected, $filter, $val ) {
+		 *     // your code here
+		 *     return $selected;
+		 * }
+		 * ?>
+		 */
 		$selected = apply_filters( 'um_selected_if_in_query_params', $selected, $filter, $val );
 	}
 
@@ -965,6 +1178,26 @@ function um_edit_my_profile_cancel_uri( $url = '' ) {
 		$url = add_query_arg( 'profiletab', 'main', $url );
 	}
 
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_edit_profile_cancel_uri
+	 * @description Change Edit Profile Cancel URL
+	 * @input_vars
+	 * [{"var":"$url","type":"string","desc":"Cancel URL"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_filter( 'um_edit_profile_cancel_uri', 'function_name', 10, 1 );
+	 * @example
+	 * <?php
+	 * add_filter( 'um_edit_profile_cancel_uri', 'my_edit_profile_cancel_uri', 10, 1 );
+	 * function my_edit_profile_cancel_uri( $url ) {
+	 *     // your code here
+	 *     return $url;
+	 * }
+	 * ?>
+	 */
 	$url = apply_filters( 'um_edit_profile_cancel_uri', $url );
 
 	return $url;
@@ -1228,14 +1461,53 @@ function um_fetch_user( $user_id ) {
  */
 function um_profile( $key ) {
 
-	if (!empty( UM()->user()->profile[$key] )) {
-		$value = apply_filters( "um_profile_{$key}__filter", UM()->user()->profile[$key] );
+	if ( ! empty( UM()->user()->profile[ $key ] ) ) {
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_profile_{$key}__filter
+		 * @description Change not empty profile field value
+		 * @input_vars
+		 * [{"var":"$value","type":"mixed","desc":"Profile Value"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_filter( 'um_profile_{$key}__filter', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_filter( 'um_profile_{$key}__filter', 'my_profile_value', 10, 1 );
+		 * function my_profile_value( $value ) {
+		 *     // your code here
+		 *     return $value;
+		 * }
+		 * ?>
+		 */
+		$value = apply_filters( "um_profile_{$key}__filter", UM()->user()->profile[ $key ] );
 	} else {
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_profile_{$key}_empty__filter
+		 * @description Change Profile field value if it's empty
+		 * @input_vars
+		 * [{"var":"$value","type":"mixed","desc":"Profile Value"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_filter( 'um_profile_{$key}_empty__filter', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_filter( 'um_profile_{$key}_empty__filter', 'my_profile_value', 10, 1 );
+		 * function my_profile_value( $value ) {
+		 *     // your code here
+		 *     return $value;
+		 * }
+		 * ?>
+		 */
 		$value = apply_filters( "um_profile_{$key}_empty__filter", false );
 	}
 
 	return $value;
-
 }
 
 
@@ -1366,6 +1638,27 @@ function um_get_avatar_uri( $image, $attrs ) {
 	$find = false;
 	$ext = '.' . pathinfo( $image, PATHINFO_EXTENSION );
 
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_filter_avatar_cache_time
+	 * @description Change Profile field value if it's empty
+	 * @input_vars
+	 * [{"var":"$timestamp","type":"timestamp","desc":"Avatar cache time"},
+	 * {"var":"$user_id","type":"int","desc":"User ID"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_filter( 'um_filter_avatar_cache_time', 'function_name', 10, 2 );
+	 * @example
+	 * <?php
+	 * add_filter( 'um_filter_avatar_cache_time', 'my_avatar_cache_time', 10, 2 );
+	 * function my_avatar_cache_time( $timestamp, $user_id ) {
+	 *     // your code here
+	 *     return $timestamp;
+	 * }
+	 * ?>
+	 */
 	$cache_time = apply_filters( 'um_filter_avatar_cache_time', current_time( 'timestamp' ), um_user( 'ID' ) );
 
 	if (!empty( $cache_time )) {
@@ -1450,11 +1743,30 @@ function um_get_user_avatar_url() {
  */
 function um_get_default_cover_uri() {
 	$uri = UM()->options()->get( 'default_cover' );
-	$uri = !empty( $uri['url'] ) ? $uri['url'] : '';
-	if ($uri) {
-		$uri = apply_filters( 'um_get_default_cover_uri_filter', $uri );
+	$uri = ! empty( $uri['url'] ) ? $uri['url'] : '';
+	if ( $uri ) {
 
-		return $uri;
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_get_default_cover_uri_filter
+		 * @description Change Default Cover URL
+		 * @input_vars
+		 * [{"var":"$uri","type":"string","desc":"Default Cover URL"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_filter( 'um_get_default_cover_uri_filter', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_filter( 'um_get_default_cover_uri_filter', 'my_default_cover_uri', 10, 1 );
+		 * function my_default_cover_uri( $uri ) {
+		 *     // your code here
+		 *     return $uri;
+		 * }
+		 * ?>
+		 */
+		return apply_filters( 'um_get_default_cover_uri_filter', $uri );
 	}
 
 	return '';
@@ -1509,6 +1821,26 @@ function um_user( $data, $attrs = null ) {
 				$name = implode( '-', array_map( 'ucfirst', explode( '-', $name ) ) );
 			}
 
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_user_{$data}_case
+			 * @description Change user name on um_user function
+			 * @input_vars
+			 * [{"var":"$name","type":"string","desc":"User Name"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_user_{$data}_case', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_user_{$data}_case', 'my_user_case', 10, 1 );
+			 * function my_user_case( $name ) {
+			 *     // your code here
+			 *     return $name;
+			 * }
+			 * ?>
+			 */
 			$name = apply_filters( "um_user_{$data}_case", $name );
 
 			return $name;
@@ -1640,6 +1972,28 @@ function um_user( $data, $attrs = null ) {
 				$name = implode( '-', array_map( 'ucfirst', explode( '-', $name ) ) );
 			}
 
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_user_display_name_filter
+			 * @description Change user display name on um_user function
+			 * @input_vars
+			 * [{"var":"$name","type":"string","desc":"User Name"},
+			 * {"var":"$user_id","type":"int","desc":"User ID"},
+			 * {"var":"$html","type":"bool","desc":"Is HTML"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_user_display_name_filter', 'function_name', 10, 3 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_user_display_name_filter', 'my_user_display_name', 10, 3 );
+			 * function my_user_display_name( $name, $user_id, $html ) {
+			 *     // your code here
+			 *     return $name;
+			 * }
+			 * ?>
+			 */
 			return apply_filters( 'um_user_display_name_filter', $name, um_user( 'ID' ), ( $attrs == 'html' ) ? 1 : 0 );
 
 			break;
@@ -1670,6 +2024,27 @@ function um_user( $data, $attrs = null ) {
 
 			$has_profile_photo = false;
 			$photo_type = 'um-avatar-default';
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_avatar_image_alternate_text
+			 * @description Change user display name on um_user function profile photo
+			 * @input_vars
+			 * [{"var":"$display_name","type":"string","desc":"User Display Name"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_avatar_image_alternate_text', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_avatar_image_alternate_text', 'my_avatar_image_alternate_text', 10, 1 );
+			 * function my_avatar_image_alternate_text( $display_name ) {
+			 *     // your code here
+			 *     return $display_name;
+			 * }
+			 * ?>
+			 */
 			$image_alt = apply_filters( "um_avatar_image_alternate_text", um_user( "display_name" ) );
 
 			if (um_profile( 'profile_photo' )) {
@@ -1682,6 +2057,27 @@ function um_user( $data, $attrs = null ) {
 				$avatar_uri = um_get_default_avatar_uri();
 			}
 
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_user_avatar_url_filter
+			 * @description Change user avatar URL
+			 * @input_vars
+			 * [{"var":"$avatar_uri","type":"string","desc":"Avatar URL"},
+			 * {"var":"$user_id","type":"int","desc":"User ID"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_user_avatar_url_filter', 'function_name', 10, 2 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_user_avatar_url_filter', 'my_user_avatar_url', 10, 2 );
+			 * function my_user_avatar_url( $avatar_uri ) {
+			 *     // your code here
+			 *     return $avatar_uri;
+			 * }
+			 * ?>
+			 */
 			$avatar_uri = apply_filters( 'um_user_avatar_url_filter', $avatar_uri, um_user( 'ID' ) );
 
 
@@ -1723,12 +2119,34 @@ function um_user( $data, $attrs = null ) {
 				$is_default = true;
 			}
 
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_user_cover_photo_uri__filter
+			 * @description Change user avatar URL
+			 * @input_vars
+			 * [{"var":"$cover_uri","type":"string","desc":"Cover URL"},
+			 * {"var":"$is_default","type":"bool","desc":"Default or not"},
+			 * {"var":"$attrs","type":"array","desc":"Attributes"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_user_cover_photo_uri__filter', 'function_name', 10, 3 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_user_cover_photo_uri__filter', 'my_user_cover_photo_uri', 10, 3 );
+			 * function my_user_cover_photo_uri( $cover_uri, $is_default, $attrs ) {
+			 *     // your code here
+			 *     return $cover_uri;
+			 * }
+			 * ?>
+			 */
 			$cover_uri = apply_filters( 'um_user_cover_photo_uri__filter', $cover_uri, $is_default, $attrs );
 
-			if ($cover_uri)
+			if ( $cover_uri )
 				return '<img src="' . $cover_uri . '" alt="" />';
 
-			if (!$cover_uri)
+			if ( ! $cover_uri )
 				return '';
 
 			break;

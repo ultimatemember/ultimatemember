@@ -7,6 +7,27 @@
 			$can_search_array[] = $_um_roles_can_search;
 	}
 
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_admin_custom_search_filters
+	 * @description Custom Search Filters
+	 * @input_vars
+	 * [{"var":"$custom_search","type":"array","desc":"Filters"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage
+	 * <?php add_filter( 'um_admin_custom_search_filters', 'function_name', 10, 1 ); ?>
+	 * @example
+	 * <?php
+	 * add_filter( 'um_admin_custom_search_filters', 'my_admin_custom_search_filters', 10, 1 );
+	 * function my_upload_file_name( $custom_search ) {
+	 *     // your code here
+	 *     return $custom_search;
+	 * }
+	 * ?>
+	 */
 	$custom_search = apply_filters( 'um_admin_custom_search_filters', array() );
 	$searchable_fields = UM()->builtin()->all_user_fields('date,time,url');
 	$searchable_fields = $searchable_fields + $custom_search;

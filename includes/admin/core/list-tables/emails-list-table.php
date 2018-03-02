@@ -172,6 +172,27 @@ $ListTable = new UM_Emails_List_Table( array(
 $per_page   = 20;
 $paged      = $ListTable->get_pagenum();
 
+/**
+ * UM hook
+ *
+ * @type filter
+ * @title um_email_templates_columns
+ * @description Email Notifications List Table columns
+ * @input_vars
+ * [{"var":"$columns","type":"array","desc":"Columns"}]
+ * @change_log
+ * ["Since: 2.0"]
+ * @usage add_filter( 'um_email_templates_columns', 'function_name', 10, 1 );
+ * @example
+ * <?php
+ * add_filter( 'um_email_templates_columns', 'my_email_templates_columns', 10, 1 );
+ * function my_email_templates_columns( $columns ) {
+ *     // your code here
+ *     $columns['my-custom-column'] = 'My Custom Column';
+ *     return $columns;
+ * }
+ * ?>
+ */
 $columns = apply_filters( 'um_email_templates_columns', array(
 	'email'         => __( 'Email', 'ultimate-member' ),
 	'recipients'    => __( 'Recipient(s)', 'ultimate-member' ),

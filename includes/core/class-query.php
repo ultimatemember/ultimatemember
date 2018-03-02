@@ -102,6 +102,27 @@ if ( ! class_exists( 'Query' ) ) {
 
                 unset( $args['post_type'] );
 
+	            /**
+	             * UM hook
+	             *
+	             * @type filter
+	             * @title um_excluded_comment_types
+	             * @description Extend excluded comment types
+	             * @input_vars
+	             * [{"var":"$types","type":"array","desc":"Comment Types"}]
+	             * @change_log
+	             * ["Since: 2.0"]
+	             * @usage
+	             * <?php add_filter( 'um_excluded_comment_types', 'function_name', 10, 1 ); ?>
+	             * @example
+	             * <?php
+	             * add_filter( 'um_excluded_comment_types', 'my_excluded_comment_types', 10, 1 );
+	             * function my_profile_active_tab( $types ) {
+	             *     // your code here
+	             *     return $types;
+	             * }
+	             * ?>
+	             */
                 $args['type__not_in'] = apply_filters( 'um_excluded_comment_types', array('') );
 
                 $comments = get_comments($args);

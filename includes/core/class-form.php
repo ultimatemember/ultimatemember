@@ -52,6 +52,27 @@ if ( ! class_exists( 'Form' ) ) {
             $form_fields = UM()->fields()->get_fields();
             $arr_options['fields'] = $form_fields;
 
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_ajax_select_options__debug_mode
+	         * @description Activate debug mode for AJAX select options
+	         * @input_vars
+	         * [{"var":"$debug_mode","type":"bool","desc":"Enable Debug mode"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_ajax_select_options__debug_mode', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_ajax_select_options__debug_mode', 'my_ajax_select_options__debug_mode', 10, 1 );
+	         * function my_ajax_select_options__debug_mode( $debug_mode ) {
+	         *     // your code here
+	         *     return $debug_mode;
+	         * }
+	         * ?>
+	         */
             $debug = apply_filters('um_ajax_select_options__debug_mode', false );
             if( $debug ){
                 $arr_options['debug'] = array(
@@ -100,16 +121,36 @@ if ( ! class_exists( 'Form' ) ) {
         }
 
 
-        /**
+	    /**
          * Appends field errors
          * @param string $key
          * @param string $error
          */
         function add_error( $key, $error ) {
             if ( ! isset( $this->errors[ $key ] ) ){
-
-                $error = apply_filters('um_submit_form_error', $error , $key );
-
+	            /**
+	             * UM hook
+	             *
+	             * @type filter
+	             * @title um_submit_form_error
+	             * @description Change error text on submit form
+	             * @input_vars
+	             * [{"var":"$error","type":"string","desc":"Error String"},
+	             * {"var":"$key","type":"string","desc":"Error Key"}]
+	             * @change_log
+	             * ["Since: 2.0"]
+	             * @usage
+	             * <?php add_filter( 'um_submit_form_error', 'function_name', 10, 2 ); ?>
+	             * @example
+	             * <?php
+	             * add_filter( 'um_submit_form_error', 'my_submit_form_error', 10, 2 );
+	             * function my_submit_form_error( $error, $key ) {
+	             *     // your code here
+	             *     return $error;
+	             * }
+	             * ?>
+	             */
+                $error = apply_filters( 'um_submit_form_error', $error, $key );
                 $this->errors[ $key ] = $error;
             }
         }
@@ -158,9 +199,29 @@ if ( ! class_exists( 'Form' ) ) {
 
 
                 if ( $this->form_status == 'publish' ) {
-
                     /* save entire form as global */
-                    $this->post_form = apply_filters('um_submit_post_form' ,$_POST );
+	                /**
+	                 * UM hook
+	                 *
+	                 * @type filter
+	                 * @title um_submit_post_form
+	                 * @description Change submitted data on form submit
+	                 * @input_vars
+	                 * [{"var":"$data","type":"array","desc":"Submitted data"}]
+	                 * @change_log
+	                 * ["Since: 2.0"]
+	                 * @usage
+	                 * <?php add_filter( 'um_submit_post_form', 'function_name', 10, 1 ); ?>
+	                 * @example
+	                 * <?php
+	                 * add_filter( 'um_submit_post_form', 'my_submit_post_form', 10, 1 );
+	                 * function my_submit_post_form( $data ) {
+	                 *     // your code here
+	                 *     return $data;
+	                 * }
+	                 * ?>
+	                 */
+                    $this->post_form = apply_filters( 'um_submit_post_form', $_POST );
 
                     $this->post_form = $this->beautify( $this->post_form );
 
@@ -220,6 +281,28 @@ if ( ! class_exists( 'Form' ) ) {
 
                     }
 
+	                /**
+	                 * UM hook
+	                 *
+	                 * @type filter
+	                 * @title um_submit_form_data
+	                 * @description Change submitted data on form submit
+	                 * @input_vars
+	                 * [{"var":"$data","type":"array","desc":"Submitted data"},
+	                 * {"var":"$mode","type":"string","desc":"Form mode"}]
+	                 * @change_log
+	                 * ["Since: 2.0"]
+	                 * @usage
+	                 * <?php add_filter( 'um_submit_form_data', 'function_name', 10, 2 ); ?>
+	                 * @example
+	                 * <?php
+	                 * add_filter( 'um_submit_form_data', 'my_submit_form_data', 10, 2 );
+	                 * function my_submit_form_data( $data ) {
+	                 *     // your code here
+	                 *     return $data;
+	                 * }
+	                 * ?>
+	                 */
                     $this->post_form = apply_filters( 'um_submit_form_data', $this->post_form, $this->post_form['mode'] );
 
                     /* Continue based on form mode - pre-validation */

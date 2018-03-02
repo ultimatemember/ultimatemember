@@ -13,9 +13,31 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		if ( ! UM()->options()->get( 'profile_tab_main' ) && ! isset( $_REQUEST['um_action'] ) )
 			return;
 
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_profile_can_view_main
+		 * @description Check user can view profile
+		 * @input_vars
+		 * [{"var":"$view","type":"bool","desc":"Can view?"},
+		 * {"var":"$user_id","type":"int","desc":"User profile ID"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_profile_can_view_main', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_profile_can_view_main', 'my_profile_can_view_main', 10, 2 );
+		 * function my_profile_can_view_main( $view, $user_id ) {
+		 *     // your code here
+		 *     return $view;
+		 * }
+		 * ?>
+		 */
 		$can_view = apply_filters( 'um_profile_can_view_main', -1, um_profile_id() );
 
-		if ($can_view == -1) {
+		if ( $can_view == -1 ) {
 
 			do_action( "um_before_form", $args );
 
@@ -120,6 +142,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 		do_action( 'um_user_pre_updating_profile', $to_update );
 
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_user_pre_updating_profile_array
+		 * @description Change submitted data before update profile
+		 * @input_vars
+		 * [{"var":"$to_update","type":"array","desc":"Profile data upgrade"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_user_pre_updating_profile_array', 'function_name', 10, 1 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_user_pre_updating_profile_array', 'my_user_pre_updating_profile', 10, 1 );
+		 * function my_user_pre_updating_profile( $to_update ) {
+		 *     // your code here
+		 *     return $to_update;
+		 * }
+		 * ?>
+		 */
 		$to_update = apply_filters( 'um_user_pre_updating_profile_array', $to_update );
 
 
@@ -128,6 +171,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			do_action( 'um_after_user_updated', um_user( 'ID' ), $args, $to_update );
 		}
 
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_user_pre_updating_files_array
+		 * @description Change submitted files before update profile
+		 * @input_vars
+		 * [{"var":"$files","type":"array","desc":"Profile data files"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_user_pre_updating_files_array', 'function_name', 10, 1 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_user_pre_updating_files_array', 'my_user_pre_updating_files', 10, 1 );
+		 * function my_user_pre_updating_files( $files ) {
+		 *     // your code here
+		 *     return $files;
+		 * }
+		 * ?>
+		 */
 		$files = apply_filters( 'um_user_pre_updating_files_array', $files );
 
 		if (is_array( $files )) {
@@ -377,6 +441,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 								'<a href="#" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
 							);
 
+							/**
+							 * UM hook
+							 *
+							 * @type filter
+							 * @title um_user_photo_menu_view
+							 * @description Change user photo on menu view
+							 * @input_vars
+							 * [{"var":"$items","type":"array","desc":"User Photos"}]
+							 * @change_log
+							 * ["Since: 2.0"]
+							 * @usage
+							 * <?php add_filter( 'um_user_photo_menu_view', 'function_name', 10, 1 ); ?>
+							 * @example
+							 * <?php
+							 * add_filter( 'um_user_photo_menu_view', 'my_user_photo_menu_view', 10, 1 );
+							 * function my_user_photo_menu_view( $items ) {
+							 *     // your code here
+							 *     return $items;
+							 * }
+							 * ?>
+							 */
 							$items = apply_filters( 'um_user_photo_menu_view', $items );
 
 							echo UM()->menu()->new_ui( 'bc', 'div.um-profile-photo', 'click', $items );
@@ -389,6 +474,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 								'<a href="#" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
 							);
 
+							/**
+							 * UM hook
+							 *
+							 * @type filter
+							 * @title um_user_photo_menu_edit
+							 * @description Change user photo on menu edit
+							 * @input_vars
+							 * [{"var":"$items","type":"array","desc":"User Photos"}]
+							 * @change_log
+							 * ["Since: 2.0"]
+							 * @usage
+							 * <?php add_filter( 'um_user_photo_menu_edit', 'function_name', 10, 1 ); ?>
+							 * @example
+							 * <?php
+							 * add_filter( 'um_user_photo_menu_edit', 'my_user_photo_menu_edit', 10, 1 );
+							 * function my_user_photo_menu_edit( $items ) {
+							 *     // your code here
+							 *     return $items;
+							 * }
+							 * ?>
+							 */
 							$items = apply_filters( 'um_user_photo_menu_edit', $items );
 
 							echo UM()->menu()->new_ui( 'bc', 'div.um-profile-photo', 'click', $items );
@@ -574,12 +680,55 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 							$items = array_merge( $items, $actions );
 						}
 
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_profile_edit_menu_items
+						 * @description Edit menu items on profile page
+						 * @input_vars
+						 * [{"var":"$items","type":"array","desc":"User Menu"},
+						 * {"var":"$user_id","type":"int","desc":"Profile ID"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage
+						 * <?php add_filter( 'um_profile_edit_menu_items', 'function_name', 10, 2 ); ?>
+						 * @example
+						 * <?php
+						 * add_filter( 'um_profile_edit_menu_items', 'my_profile_edit_menu_items', 10, 2 );
+						 * function my_profile_edit_menu_items( $items, $user_id ) {
+						 *     // your code here
+						 *     return $items;
+						 * }
+						 * ?>
+						 */
 						$items = apply_filters( 'um_profile_edit_menu_items', $items, um_profile_id() );
 
 						$items['cancel'] = $cancel;
 
 					} else {
 
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_myprofile_edit_menu_items
+						 * @description Edit menu items on my profile page
+						 * @input_vars
+						 * [{"var":"$items","type":"array","desc":"User Menu"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage
+						 * <?php add_filter( 'um_myprofile_edit_menu_items', 'function_name', 10, 1 ); ?>
+						 * @example
+						 * <?php
+						 * add_filter( 'um_myprofile_edit_menu_items', 'my_myprofile_edit_menu_items', 10, 1 );
+						 * function my_myprofile_edit_menu_items( $items ) {
+						 *     // your code here
+						 *     return $items;
+						 * }
+						 * ?>
+						 */
 						$items = apply_filters( 'um_myprofile_edit_menu_items', $items );
 
 					}
@@ -673,6 +822,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		// get active tabs
 		$tabs = UM()->profile()->tabs_active();
 
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_user_profile_tabs
+		 * @description Extend profile tabs
+		 * @input_vars
+		 * [{"var":"$tabs","type":"array","desc":"Profile Tabs"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_user_profile_tabs', 'function_name', 10, 1 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_user_profile_tabs', 'my_user_profile_tabs', 10, 1 );
+		 * function my_user_profile_tabs( $tabs ) {
+		 *     // your code here
+		 *     return $tabs;
+		 * }
+		 * ?>
+		 */
 		$tabs = apply_filters( 'um_user_profile_tabs', $tabs );
 
 		UM()->user()->tabs = $tabs;
@@ -710,6 +880,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				$nav_link = remove_query_arg( 'subnav', $nav_link );
 				$nav_link = add_query_arg( 'profiletab', $id, $nav_link );
 
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_profile_menu_link_{$id}
+				 * @description Change profile menu link by tab $id
+				 * @input_vars
+				 * [{"var":"$nav_link","type":"string","desc":"Profile Tab Link"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage
+				 * <?php add_filter( 'um_profile_menu_link_{$id}', 'function_name', 10, 1 ); ?>
+				 * @example
+				 * <?php
+				 * add_filter( 'um_profile_menu_link_{$id}', 'my_profile_menu_link', 10, 1 );
+				 * function my_profile_menu_link( $nav_link ) {
+				 *     // your code here
+				 *     return $nav_link;
+				 * }
+				 * ?>
+				 */
 				$nav_link = apply_filters( "um_profile_menu_link_{$id}", $nav_link );
 
 				?>

@@ -318,7 +318,49 @@ if ( ! class_exists( 'Admin_Builder' ) ) {
                 'post' => $_POST
             );
 
-            $array = apply_filters("um_admin_pre_save_fields_hook", $array );
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_admin_pre_save_fields_hook
+             * @description Filter field data before save
+             * @input_vars
+             * [{"var":"$array","type":"array","desc":"Save Field data"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_filter( 'um_admin_pre_save_fields_hook', 'function_name', 10, 1 );
+             * @example
+             * <?php
+             * add_filter( 'um_admin_pre_save_fields_hook', 'my_admin_pre_save_fields', 10, 1 );
+             * function my_admin_pre_save_fields( $array ) {
+             *     // your code here
+             *     return $array;
+             * }
+             * ?>
+             */
+            $array = apply_filters( "um_admin_pre_save_fields_hook", $array );
+
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_admin_field_update_error_handling
+             * @description Change error string on save field
+             * @input_vars
+             * [{"var":"$error","type":"string","desc":"Error String"},
+             * {"var":"$array","type":"array","desc":"Save Field data"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_filter( 'um_admin_field_update_error_handling', 'function_name', 10, 2 );
+             * @example
+             * <?php
+             * add_filter( 'um_admin_field_update_error_handling', 'my_admin_field_update_error', 10, 2 );
+             * function my_admin_field_update_error( $error, $array ) {
+             *     // your code here
+             *     return $error;
+             * }
+             * ?>
+             */
             $output['error'] = apply_filters( 'um_admin_field_update_error_handling', $output['error'], $array );
 
             extract( $array['post'] );
@@ -347,10 +389,50 @@ if ( ! class_exists( 'Admin_Builder' ) ) {
                 $field_ID = $_metakey;
                 $field_args = $save[ $_metakey ];
 
+                /**
+                 * UM hook
+                 *
+                 * @type filter
+                 * @title um_admin_pre_save_field_to_form
+                 * @description Change field options before save to form
+                 * @input_vars
+                 * [{"var":"$field_args","type":"array","desc":"Field Options"}]
+                 * @change_log
+                 * ["Since: 2.0"]
+                 * @usage add_filter( 'um_admin_pre_save_field_to_form', 'function_name', 10, 1 );
+                 * @example
+                 * <?php
+                 * add_filter( 'um_admin_pre_save_field_to_form', 'my_admin_pre_save_field_to_form', 10, 1 );
+                 * function my_admin_pre_save_field_to_form( $field_args ) {
+                 *     // your code here
+                 *     return $field_args;
+                 * }
+                 * ?>
+                 */
                 $field_args = apply_filters("um_admin_pre_save_field_to_form", $field_args );
 
                 UM()->fields()->update_field( $field_ID, $field_args, $post_id );
 
+                /**
+                 * UM hook
+                 *
+                 * @type filter
+                 * @title um_admin_pre_save_field_to_db
+                 * @description Change field options before save to DB
+                 * @input_vars
+                 * [{"var":"$field_args","type":"array","desc":"Field Options"}]
+                 * @change_log
+                 * ["Since: 2.0"]
+                 * @usage add_filter( 'um_admin_pre_save_field_to_db', 'function_name', 10, 1 );
+                 * @example
+                 * <?php
+                 * add_filter( 'um_admin_pre_save_field_to_db', 'my_admin_pre_save_field_to_db', 10, 1 );
+                 * function my_admin_pre_save_field_to_form( $field_args ) {
+                 *     // your code here
+                 *     return $field_args;
+                 * }
+                 * ?>
+                 */
                 $field_args = apply_filters("um_admin_pre_save_field_to_db", $field_args );
 
                 if ( ! isset( $array['args']['form_only'] ) ) {

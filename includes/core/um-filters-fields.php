@@ -206,8 +206,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	/***
 	***	@global
 	***/
-	add_filter('um_profile_field_filter_hook__', 'um_profile_field_filter_hook__', 99, 2);
-	function um_profile_field_filter_hook__( $value, $data ) {
+	add_filter('um_profile_field_filter_hook__', 'um_profile_field_filter_hook__', 99, 3 );
+	function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 		if ( !$value ) return '';
 
 		if ( ( isset( $data['validate'] ) && $data['validate'] != '' && strstr( $data['validate'], 'url' ) ) || ( isset( $data['type'] ) && $data['type'] == 'url' ) ) {
@@ -322,8 +322,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	 * @return mixed
 	 * @uses  hook filter: um_profile_field_filter_hook__
 	 */
-	add_filter('um_profile_field_filter_hook__','um_force_utf8_fields', 10, 2 );
-	function um_force_utf8_fields( $value, $data ) {
+	add_filter('um_profile_field_filter_hook__','um_force_utf8_fields', 9, 3 );
+	function um_force_utf8_fields( $value, $data, $type = '' ) {
 
 		if( ! UM()->options()->get('um_force_utf8_strings') )
 			return $value;
@@ -470,7 +470,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return string $value
  * @uses   hook filters: um_profile_field_filter_hook__
  */
-function um_profile_field_filter_xss_validation( $value, $data, $type ) {
+function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 	if ( ! empty( $value ) && is_string( $value ) ) {
 		$value = stripslashes( $value );
 		$data['validate'] = isset( $data['validate'] ) ? $data['validate'] : '';

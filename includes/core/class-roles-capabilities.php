@@ -137,6 +137,29 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
                 $new_role = false;
             }
 
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_set_user_role
+	         * @description User role was changed
+	         * @input_vars
+	         * [{"var":"$new_role","type":"string","desc":"New role"},
+	         * {"var":"$user_id","type":"int","desc":"User ID"},
+	         * {"var":"$user","type":"array","desc":"Userdata"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_set_user_role', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_set_user_role', 'my_set_user_role', 10, 1 );
+	         * function my_set_user_role( $new_role ) {
+	         *     // your code here
+	         *     return $new_role;
+	         * }
+	         * ?>
+	         */
             return apply_filters( 'um_set_user_role', $new_role, $user_id, $user );
         }
 
@@ -472,6 +495,29 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
 			$user_id = get_current_user_id();
 			$role = UM()->roles()->get_priority_user_role( $user_id );
 			$permissions = $this->role_data( $role );
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_user_permissions_filter
+			 * @description Change User Permissions
+			 * @input_vars
+			 * [{"var":"$permissions","type":"array","desc":"User Permissions"},
+			 * {"var":"$user_id","type":"int","desc":"User ID"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_user_permissions_filter', 'function_name', 10, 2 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_user_permissions_filter', 'my_user_permissions', 10, 2 );
+			 * function my_user_permissions( $permissions, $user_id ) {
+			 *     // your code here
+			 *     return $permissions;
+			 * }
+			 * ?>
+			 */
 			$permissions = apply_filters( 'um_user_permissions_filter', $permissions, $user_id );
 
 			if ( isset( $permissions[ $permission ] ) && is_serialized( $permissions[ $permission ] ) )

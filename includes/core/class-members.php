@@ -73,20 +73,127 @@ if ( ! class_exists( 'Members' ) ) {
             if ( isset( $fields[ $filter ] ) ) {
                 $attrs = $fields[ $filter ];
             } else {
-                $attrs = apply_filters("um_custom_search_field_{$filter}", array() );
+                /**
+                 * UM hook
+                 *
+                 * @type filter
+                 * @title um_custom_search_field_{$filter}
+                 * @description Custom search settings by $filter
+                 * @input_vars
+                 * [{"var":"$settings","type":"array","desc":"Search Settings"}]
+                 * @change_log
+                 * ["Since: 2.0"]
+                 * @usage
+                 * <?php add_filter( 'um_custom_search_field_{$filter}', 'function_name', 10, 1 ); ?>
+                 * @example
+                 * <?php
+                 * add_filter( 'um_custom_search_field_{$filter}', 'my_custom_search_field', 10, 1 );
+                 * function my_change_email_template_file( $settings ) {
+                 *     // your code here
+                 *     return $settings;
+                 * }
+                 * ?>
+                 */
+                $attrs = apply_filters( "um_custom_search_field_{$filter}", array() );
             }
 
             // additional filter for search field attributes
-            $attrs = apply_filters("um_search_field_{$filter}", $attrs);
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_search_field_{$filter}
+             * @description Extend search settings by $filter
+             * @input_vars
+             * [{"var":"$settings","type":"array","desc":"Search Settings"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage
+             * <?php add_filter( 'um_search_field_{$filter}', 'function_name', 10, 1 ); ?>
+             * @example
+             * <?php
+             * add_filter( 'um_search_field_{$filter}', 'my_search_field', 10, 1 );
+             * function my_change_email_template_file( $settings ) {
+             *     // your code here
+             *     return $settings;
+             * }
+             * ?>
+             */
+            $attrs = apply_filters( "um_search_field_{$filter}", $attrs );
 
             $type = UM()->builtin()->is_dropdown_field( $filter, $attrs ) ? 'select' : 'text';
+
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_search_field_type
+             * @description Change search field type
+             * @input_vars
+             * [{"var":"$type","type":"string","desc":"Search field type"},
+             * {"var":"$settings","type":"array","desc":"Search Settings"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage
+             * <?php add_filter( 'um_search_field_type', 'function_name', 10, 2 ); ?>
+             * @example
+             * <?php
+             * add_filter( 'um_search_field_type', 'my_search_field_type', 10, 2 );
+             * function my_search_field_type( $type, $settings ) {
+             *     // your code here
+             *     return $type;
+             * }
+             * ?>
+             */
             $type = apply_filters( 'um_search_field_type', $type, $attrs );
 
-            // filter all search fields
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_search_fields
+             * @description Filter all search fields
+             * @input_vars
+             * [{"var":"$settings","type":"array","desc":"Search Fields"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage
+             * <?php add_filter( 'um_search_fields', 'function_name', 10, 1 ); ?>
+             * @example
+             * <?php
+             * add_filter( 'um_search_fields', 'my_search_fields', 10, 1 );
+             * function my_search_fields( $settings ) {
+             *     // your code here
+             *     return $settings;
+             * }
+             * ?>
+             */
             $attrs = apply_filters( 'um_search_fields', $attrs );
 
-            if ( $type == 'select' )
+            if ( $type == 'select' ) {
+                /**
+                 * UM hook
+                 *
+                 * @type filter
+                 * @title um_search_select_fields
+                 * @description Filter all search fields for select field type
+                 * @input_vars
+                 * [{"var":"$settings","type":"array","desc":"Search Fields"}]
+                 * @change_log
+                 * ["Since: 2.0"]
+                 * @usage
+                 * <?php add_filter( 'um_search_select_fields', 'function_name', 10, 1 ); ?>
+                 * @example
+                 * <?php
+                 * add_filter( 'um_search_select_fields', 'my_search_select_fields', 10, 1 );
+                 * function my_search_select_fields( $settings ) {
+                 *     // your code here
+                 *     return $settings;
+                 * }
+                 * ?>
+                 */
                 $attrs = apply_filters( 'um_search_select_fields', $attrs );
+            }
 
             switch ( $type ) {
 
@@ -181,10 +288,31 @@ if ( ! class_exists( 'Members' ) ) {
 	         * @var $profiles_per_page
 	         * @var $profiles_per_page_mobile
 	         */
-            extract($args);
+            extract( $args );
 
-            $query_args = array();
-            $query_args = apply_filters( 'um_prepare_user_query_args', $query_args, $args );
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_prepare_user_query_args
+             * @description Extend member directory query arguments
+             * @input_vars
+             * [{"var":"$query_args","type":"array","desc":"Members Query Arguments"},
+             * {"var":"$directory_settings","type":"array","desc":"Member Directory Settings"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage
+             * <?php add_filter( 'um_prepare_user_query_args', 'function_name', 10, 2 ); ?>
+             * @example
+             * <?php
+             * add_filter( 'um_prepare_user_query_args', 'my_prepare_user_query_args', 10, 2 );
+             * function my_prepare_user_query_args( $query_args, $directory_settings ) {
+             *     // your code here
+             *     return $query_args;
+             * }
+             * ?>
+             */
+            $query_args = apply_filters( 'um_prepare_user_query_args', array(), $args );
 
             // Prepare for BIG SELECT query
             $wpdb->query('SET SQL_BIG_SELECTS=1');
@@ -318,8 +446,28 @@ if ( ! class_exists( 'Members' ) ) {
 
             }
 
-            return apply_filters('um_prepare_user_results_array', $array );
-
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_prepare_user_results_array
+             * @description Extend member directory query result
+             * @input_vars
+             * [{"var":"$result","type":"array","desc":"Members Query Result"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage
+             * <?php add_filter( 'um_prepare_user_results_array', 'function_name', 10, 1 ); ?>
+             * @example
+             * <?php
+             * add_filter( 'um_prepare_user_results_array', 'my_prepare_user_results', 10, 1 );
+             * function my_prepare_user_results( $result ) {
+             *     // your code here
+             *     return $result;
+             * }
+             * ?>
+             */
+            return apply_filters( 'um_prepare_user_results_array', $array );
         }
 
 

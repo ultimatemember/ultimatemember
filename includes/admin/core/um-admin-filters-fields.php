@@ -41,11 +41,36 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	***	@Some fields may require extra fields before saving
 	***/
 	add_filter('um_admin_pre_save_fields_hook', 'um_admin_pre_save_fields_hook', 1 );
-	function um_admin_pre_save_fields_hook( $array ){
+	function um_admin_pre_save_fields_hook( $array ) {
 		extract( $array );
 
-		$fields_without_metakey = array('block','shortcode','spacing','divider','group');
-		$fields_without_metakey = apply_filters('um_fields_without_metakey', $fields_without_metakey );
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_fields_without_metakey
+		 * @description Field Types without meta key
+		 * @input_vars
+		 * [{"var":"$types","type":"array","desc":"Field Types"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_filter( 'um_fields_without_metakey', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_filter( 'um_fields_without_metakey', 'my_fields_without_metakey', 10, 1 );
+		 * function my_fields_without_metakey( $types ) {
+		 *     // your code here
+		 *     return $types;
+		 * }
+		 * ?>
+		 */
+		$fields_without_metakey = apply_filters( 'um_fields_without_metakey', array(
+			'block',
+			'shortcode',
+			'spacing',
+			'divider',
+			'group'
+		) );
 
 		$fields = UM()->query()->get_attr('custom_fields', $form_id);
 		$count = 1;

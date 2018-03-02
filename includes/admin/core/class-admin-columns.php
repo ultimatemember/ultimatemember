@@ -131,7 +131,7 @@ if ( ! class_exists( 'Admin_Columns' ) ) {
 		public function add_display_post_states( $post_states, $post ) {
 
 			foreach ( UM()->config()->core_pages as $page_key => $page_value ) {
-				$page_id = UM()->options()->get( apply_filters( 'um_core_page_id_filter', 'core_' . $page_key ) );
+				$page_id = UM()->options()->get( UM()->options()->get_core_page_id( $page_key ) );
 
 				if ( $page_id == $post->ID ) {
 					$post_states['um_core_page_' . $page_key] = sprintf( 'UM %s', $page_value['title'] );

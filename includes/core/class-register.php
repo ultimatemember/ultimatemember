@@ -18,7 +18,28 @@ if ( ! class_exists( 'Register' ) ) {
         }
 
         public function verify_nonce( $args ){
-            $allow_nonce_verification = apply_filters("um_register_allow_nonce_verification", true );
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_register_allow_nonce_verification
+	         * @description Enable/DIsable nonce verification of registration
+	         * @input_vars
+	         * [{"var":"$allow_nonce","type":"bool","desc":"Enable nonce"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_register_allow_nonce_verification', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_register_allow_nonce_verification', 'my_register_allow_nonce_verification', 10, 1 );
+	         * function my_register_allow_nonce_verification( $allow_nonce ) {
+	         *     // your code here
+	         *     return $allow_nonce;
+	         * }
+	         * ?>
+	         */
+	        $allow_nonce_verification = apply_filters( "um_register_allow_nonce_verification", true );
 
             if( ! $allow_nonce_verification  ){
                 return $args;

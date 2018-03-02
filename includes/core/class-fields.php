@@ -356,11 +356,72 @@ if ( ! class_exists( 'Fields' ) ) {
 				$output .= '<div class="um-field-label-icon"><i class="' . $data['icon'] . '"></i></div>';
 			}
 
-			if ($this->viewing == true) {
+			if ( $this->viewing == true ) {
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_view_label_{$key}
+				 * @description Change field label on view by field $key
+				 * @input_vars
+				 * [{"var":"$label","type":"string","desc":"Field Label"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_filter( 'um_view_label_{$key}', 'function_name', 10, 1 );
+				 * @example
+				 * <?php
+				 * add_filter( 'um_view_label_{$key}', 'my_view_label', 10, 1 );
+				 * function my_view_label( $label ) {
+				 *     // your code here
+				 *     return $label;
+				 * }
+				 * ?>
+				 */
 				$label = apply_filters( "um_view_label_{$key}", $label );
 			} else {
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_edit_label_{$key}
+				 * @description Change field label on edit by field $key
+				 * @input_vars
+				 * [{"var":"$label","type":"string","desc":"Field Label"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_filter( 'um_edit_label_{$key}', 'function_name', 10, 1 );
+				 * @example
+				 * <?php
+				 * add_filter( 'um_edit_label_{$key}', 'my_edit_label', 10, 1 );
+				 * function my_edit_label( $label ) {
+				 *     // your code here
+				 *     return $label;
+				 * }
+				 * ?>
+				 */
 				$label = apply_filters( "um_edit_label_{$key}", $label );
-				$label = apply_filters( "um_edit_label_all_fields", $label, $data );
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_edit_label_all_fields
+				 * @description Change field label on view by field $key
+				 * @input_vars
+				 * [{"var":"$label","type":"string","desc":"Field Label"},
+				 * {"var":"$data","type":"array","desc":"Field Data"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_filter( 'um_edit_label_all_fields', 'function_name', 10, 2 );
+				 * @example
+				 * <?php
+				 * add_filter( 'um_edit_label_all_fields', 'my_edit_label_all_fields', 10, 2 );
+				 * function my_edit_label_all_fields( $label, $data ) {
+				 *     // your code here
+				 *     return $label;
+				 * }
+				 * ?>
+				 */
+				$label = apply_filters( 'um_edit_label_all_fields', $label, $data );
 			}
 
 			$output .= '<label for="' . $key . UM()->form()->form_suffix . '">' . __( $label, UM_TEXTDOMAIN ) . '</label>';
@@ -455,44 +516,195 @@ if ( ! class_exists( 'Fields' ) ) {
 			}
 
 			// normal state
-			if (isset( UM()->form()->post_form[$key] )) {
+			if ( isset( UM()->form()->post_form[ $key ] ) ) {
 
-				if (strstr( $key, 'user_pass' ) && $this->set_mode != 'password') return '';
+				if ( strstr( $key, 'user_pass' ) && $this->set_mode != 'password' ) {
+					return '';
+				}
 
 				return stripslashes_deep( UM()->form()->post_form[$key] );
 
-			} else if (um_user( $key ) && $this->editing == true) {
+			} elseif ( um_user( $key ) && $this->editing == true ) {
 
-				if (strstr( $key, 'user_pass' )) return '';
+				if ( strstr( $key, 'user_pass' ) ) {
+					return '';
+				}
 
 				$value = um_user( $key );
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_edit_{$key}_field_value
+				 * @description Change field value on edit by field $key
+				 * @input_vars
+				 * [{"var":"$value","type":"string","desc":"Field Value"},
+				 * {"var":"$key","type":"string","desc":"Field Key"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_filter( 'um_edit_{$key}_field_value', 'function_name', 10, 2 );
+				 * @example
+				 * <?php
+				 * add_filter( 'um_edit_{$key}_field_value', 'my_edit_field_value', 10, 2 );
+				 * function my_edit_field_value( $value, $key ) {
+				 *     // your code here
+				 *     return $value;
+				 * }
+				 * ?>
+				 */
 				$value = apply_filters( "um_edit_{$key}_field_value", $value, $key );
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_edit_{$type}_field_value
+				 * @description Change field value on edit by field $type
+				 * @input_vars
+				 * [{"var":"$value","type":"string","desc":"Field Value"},
+				 * {"var":"$key","type":"string","desc":"Field Key"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_filter( 'um_edit_{$type}_field_value', 'function_name', 10, 2 );
+				 * @example
+				 * <?php
+				 * add_filter( 'um_edit_{$type}_field_value', 'my_edit_field_value', 10, 2 );
+				 * function my_edit_field_value( $value, $key ) {
+				 *     // your code here
+				 *     return $value;
+				 * }
+				 * ?>
+				 */
 				$value = apply_filters( "um_edit_{$type}_field_value", $value, $key );
 
 				return $value;
 
-			} else if (( um_user( $key ) || isset( $data['show_anyway'] ) ) && $this->viewing == true) {
+			} elseif ( ( um_user( $key ) || isset( $data['show_anyway'] ) ) && $this->viewing == true ) {
 
 				$value = um_filtered_value( $key, $data );
 
 				return $value;
 
-			} else if( isset( UM()->user()->profile[$key] ) ){
+			} elseif ( isset( UM()->user()->profile[ $key ] ) ) {
 
-				$value = UM()->user()->profile[$key];
+				$value = UM()->user()->profile[ $key ];
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_edit_{$key}_field_value
+				 * @description Change field value on edit by field $key
+				 * @input_vars
+				 * [{"var":"$value","type":"string","desc":"Field Value"},
+				 * {"var":"$key","type":"string","desc":"Field Key"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_filter( 'um_edit_{$key}_field_value', 'function_name', 10, 2 );
+				 * @example
+				 * <?php
+				 * add_filter( 'um_edit_{$key}_field_value', 'my_edit_field_value', 10, 2 );
+				 * function my_edit_field_value( $value, $key ) {
+				 *     // your code here
+				 *     return $value;
+				 * }
+				 * ?>
+				 */
 				$value = apply_filters( "um_edit_{$key}_field_value", $value, $key );
 				return $value;
 
-			} else if ($default) {
+			} elseif ( $default ) {
 
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_field_default_value
+				 * @description Change field default value
+				 * @input_vars
+				 * [{"var":"$default","type":"string","desc":"Field Default Value"},
+				 * {"var":"$data","type":"array","desc":"Field Data"},
+				 * {"var":"$type","type":"string","desc":"Field Type"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_filter( 'um_field_default_value', 'function_name', 10, 2 );
+				 * @example
+				 * <?php
+				 * add_filter( 'um_field_default_value', 'my_field_default_value', 10, 2 );
+				 * function my_field_default_value( $default, $data, $type ) {
+				 *     // your code here
+				 *     return $default;
+				 * }
+				 * ?>
+				 */
 				$default = apply_filters( "um_field_default_value", $default, $data, $type );
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_field_{$key}_default_value
+				 * @description Change field default value by $key
+				 * @input_vars
+				 * [{"var":"$default","type":"string","desc":"Field Default Value"},
+				 * {"var":"$data","type":"array","desc":"Field Data"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_filter( 'um_field_{$key}_default_value', 'function_name', 10, 2 );
+				 * @example
+				 * <?php
+				 * add_filter( 'um_field_{$key}_default_value', 'my_field_default_value', 10, 2 );
+				 * function my_field_default_value( $default, $data ) {
+				 *     // your code here
+				 *     return $default;
+				 * }
+				 * ?>
+				 */
 				$default = apply_filters( "um_field_{$key}_default_value", $default, $data );
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_field_{$type}_default_value
+				 * @description Change field default value by $type
+				 * @input_vars
+				 * [{"var":"$default","type":"string","desc":"Field Default Value"},
+				 * {"var":"$data","type":"array","desc":"Field Data"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_filter( 'um_field_{$type}_default_value', 'function_name', 10, 2 );
+				 * @example
+				 * <?php
+				 * add_filter( 'um_field_{$type}_default_value', 'my_field_default_value', 10, 2 );
+				 * function my_field_default_value( $default, $data ) {
+				 *     // your code here
+				 *     return $default;
+				 * }
+				 * ?>
+				 */
 				$default = apply_filters( "um_field_{$type}_default_value", $default, $data );
-
 				return $default;
 
-			} else if ($this->editing == true) {
+			} elseif ( $this->editing == true ) {
 
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_edit_{$key}_field_value
+				 * @description Change field value on edit by field $key
+				 * @input_vars
+				 * [{"var":"$value","type":"string","desc":"Field Value"},
+				 * {"var":"$key","type":"string","desc":"Field Key"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_filter( 'um_edit_{$key}_field_value', 'function_name', 10, 2 );
+				 * @example
+				 * <?php
+				 * add_filter( 'um_edit_{$key}_field_value', 'my_edit_field_value', 10, 2 );
+				 * function my_edit_field_value( $value, $key ) {
+				 *     // your code here
+				 *     return $value;
+				 * }
+				 * ?>
+				 */
 				return apply_filters( "um_edit_{$key}_field_value", '', $key );
 
 			}
@@ -511,15 +723,35 @@ if ( ! class_exists( 'Fields' ) ) {
 		 * @return boolean
 		 */
 		function is_selected( $key, $value, $data ) {
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_is_selected_filter_key
+			 * @description Change is selected filter key
+			 * @input_vars
+			 * [{"var":"$key","type":"string","desc":"Selected filter key"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_is_selected_filter_key', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_is_selected_filter_key', 'my_selected_filter_key', 10, 1 );
+			 * function my_selected_filter_key( $key ) {
+			 *     // your code here
+			 *     return $key;
+			 * }
+			 * ?>
+			 */
 			$key = apply_filters( 'um_is_selected_filter_key', $key );
 
-			if (isset( UM()->form()->post_form[$key] ) && is_array( UM()->form()->post_form[$key] )) {
+			if ( isset( UM()->form()->post_form[ $key ] ) && is_array( UM()->form()->post_form[ $key ] ) ) {
 
-				if (in_array( $value, UM()->form()->post_form[$key] )) {
+				if ( in_array( $value, UM()->form()->post_form[ $key ] ) ) {
 					return true;
 				}
 
-				if (in_array( html_entity_decode( $value ), UM()->form()->post_form[$key] )) {
+				if ( in_array( html_entity_decode( $value ), UM()->form()->post_form[ $key ] ) ) {
 					return true;
 				}
 
@@ -541,7 +773,50 @@ if ( ! class_exists( 'Fields' ) ) {
 
 					}
 
+					/**
+					 * UM hook
+					 *
+					 * @type filter
+					 * @title um_is_selected_filter_value
+					 * @description Change is selected filter value
+					 * @input_vars
+					 * [{"var":"$value","type":"string","desc":"Selected filter value"},
+					 * {"var":"$key","type":"string","desc":"Selected filter key"}]
+					 * @change_log
+					 * ["Since: 2.0"]
+					 * @usage add_filter( 'um_is_selected_filter_value', 'function_name', 10, 2 );
+					 * @example
+					 * <?php
+					 * add_filter( 'um_is_selected_filter_value', 'my_selected_filter_value', 10, 2 );
+					 * function my_selected_filter_value( $value, $key ) {
+					 *     // your code here
+					 *     return $field_value;
+					 * }
+					 * ?>
+					 */
 					$field_value = apply_filters( 'um_is_selected_filter_value', $field_value, $key );
+					/**
+					 * UM hook
+					 *
+					 * @type filter
+					 * @title um_is_selected_filter_data
+					 * @description Change is selected filter data
+					 * @input_vars
+					 * [{"var":"$data","type":"array","desc":"Selected filter value"},
+					 * {"var":"$key","type":"string","desc":"Selected filter key"},
+					 * {"var":"$value","type":"string","desc":"Selected filter value"}]
+					 * @change_log
+					 * ["Since: 2.0"]
+					 * @usage add_filter( 'um_is_selected_filter_data', 'function_name', 10, 3 );
+					 * @example
+					 * <?php
+					 * add_filter( 'um_is_selected_filter_data', 'my_selected_filter_data', 10, 3 );
+					 * function my_selected_filter_data( $data, $key, $value ) {
+					 *     // your code here
+					 *     return $data;
+					 * }
+					 * ?>
+					 */
 					$data = apply_filters( 'um_is_selected_filter_data', $data, $key, $field_value );
 
 					if ($field_value && $this->editing == true && is_array( $field_value ) && ( in_array( $value, $field_value ) || in_array( html_entity_decode( $value ), $field_value ) )) {
@@ -796,9 +1071,27 @@ if ( ! class_exists( 'Fields' ) ) {
 		 * @return array
 		 */
 		function get_fields() {
-			$this->fields = array();
-			$this->fields = apply_filters( "um_get_form_fields", $this->fields );
-
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_get_form_fields
+			 * @description Extend form fields
+			 * @input_vars
+			 * [{"var":"$fields","type":"array","desc":"Selected filter value"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_get_form_fields', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_get_form_fields', 'my_form_fields', 10, 1 );
+			 * function my_form_fields( $fields ) {
+			 *     // your code here
+			 *     return $fields;
+			 * }
+			 * ?>
+			 */
+			$this->fields = apply_filters( 'um_get_form_fields', array() );
 			return $this->fields;
 		}
 
@@ -1122,11 +1415,56 @@ if ( ! class_exists( 'Fields' ) ) {
 
 			if (!isset( $array['visibility'] )) $array['visibility'] = 'all';
 
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_get_field__{$key}
+			 * @description Extend field data by field $key
+			 * @input_vars
+			 * [{"var":"$data","type":"array","desc":"Field Data"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_get_field__{$key}', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_get_field__{$key}', 'my_get_field', 10, 1 );
+			 * function my_get_field( $data ) {
+			 *     // your code here
+			 *     return $data;
+			 * }
+			 * ?>
+			 */
 			$array = apply_filters( "um_get_field__{$key}", $array );
-
 
 			return $array;
 		}
+
+
+		function filter_field_non_utf8_value( $option_value ) {
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_field_non_utf8_value
+			 * @description Change dropdown option text
+			 * @input_vars
+			 * [{"var":"$value","type":"string","desc":"Option Value"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_field_non_utf8_value', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_field_non_utf8_value', 'my_field_non_utf8_value', 10, 1 );
+			 * function my_field_non_utf8_value( $value ) {
+			 *     // your code here
+			 *     return $value;
+			 * }
+			 * ?>
+			 */
+			return apply_filters( 'um_field_non_utf8_value', $option_value );
+		}
+
 
 		/**
 		 * Gets a field in 'input mode'
@@ -1223,14 +1561,56 @@ if ( ! class_exists( 'Fields' ) ) {
 				}
 			}
 
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_hook_for_field_{$type}
+			 * @description Change field type
+			 * @input_vars
+			 * [{"var":"$type","type":"string","desc":"Field Type"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_hook_for_field_{$type}', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_hook_for_field_{$type}', 'my_field_type', 10, 1 );
+			 * function my_get_field( $type ) {
+			 *     // your code here
+			 *     return $type;
+			 * }
+			 * ?>
+			 */
 			$type = apply_filters( "um_hook_for_field_{$type}", $type );
 
 			/* Begin by field type */
-			switch ($type) {
+			switch ( $type ) {
 
 				/* Default: Integration */
 				default:
 					$mode = ( isset( $this->set_mode ) ) ? $this->set_mode : 'no_mode';
+
+					/**
+					 * UM hook
+					 *
+					 * @type filter
+					 * @title um_edit_field_{$mode}_{$type}
+					 * @description Change field html by $mode and field $type
+					 * @input_vars
+					 * [{"var":"$output","type":"string","desc":"Field HTML"},
+					 * {"var":"$data","type":"array","desc":"Field Data"}]
+					 * @change_log
+					 * ["Since: 2.0"]
+					 * @usage add_filter( 'um_edit_field_{$mode}_{$type}', 'function_name', 10, 2 );
+					 * @example
+					 * <?php
+					 * add_filter( 'um_edit_field_{$mode}_{$type}', 'my_edit_field_html', 10, 2 );
+					 * function my_edit_field_html( $output, $data ) {
+					 *     // your code here
+					 *     return $output;
+					 * }
+					 * ?>
+					 */
 					$output .= apply_filters( "um_edit_field_{$mode}_{$type}", $output, $data );
 					break;
 
@@ -1593,6 +1973,26 @@ if ( ! class_exists( 'Fields' ) ) {
 							$textarea_settings['tinymce']['readonly'] = true;
 						}
 
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_form_fields_textarea_settings
+						 * @description Change WP Editor options for textarea init
+						 * @input_vars
+						 * [{"var":"$textarea_settings","type":"array","desc":"WP Editor settings"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage add_filter( 'um_form_fields_textarea_settings', 'function_name', 10, 1 );
+						 * @example
+						 * <?php
+						 * add_filter( 'um_form_fields_textarea_settings', 'my_textarea_settings', 10, 1 );
+						 * function my_edit_field_html( $textarea_settings ) {
+						 *     // your code here
+						 *     return $textarea_settings;
+						 * }
+						 * ?>
+						 */
 						$textarea_settings = apply_filters( 'um_form_fields_textarea_settings', $textarea_settings );
 
 						// turn on the output buffer
@@ -1864,6 +2264,27 @@ if ( ! class_exists( 'Fields' ) ) {
 
 						$has_parent_option = true;
 
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_custom_dropdown_options_parent__{$form_key}
+						 * @description Change parent dropdown relationship by $form_key
+						 * @input_vars
+						 * [{"var":"$parent","type":"string","desc":"Parent dropdown relationship"},
+						 * {"var":"$data","type":"array","desc":"Field Data"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage add_filter( 'um_custom_dropdown_options_parent__{$form_key}', 'function_name', 10, 2 );
+						 * @example
+						 * <?php
+						 * add_filter( 'um_custom_dropdown_options_parent__{$form_key}', 'my_custom_dropdown_options_parent', 10, 2 );
+						 * function my_custom_dropdown_options_parent( $parent, $data ) {
+						 *     // your code here
+						 *     return $parent;
+						 * }
+						 * ?>
+						 */
 						$parent_dropdown_relationship = apply_filters( "um_custom_dropdown_options_parent__{$form_key}", $data['parent_dropdown_relationship'], $data );
 						$atts_ajax .= " data-um-parent='{$parent_dropdown_relationship}' ";
 
@@ -1882,18 +2303,79 @@ if ( ! class_exists( 'Fields' ) ) {
 
 					if (!empty( $data['custom_dropdown_options_source'] )) {
 
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_custom_dropdown_options_source__{$form_key}
+						 * @description Change custom dropdown options source by $form_key
+						 * @input_vars
+						 * [{"var":"$source","type":"string","desc":"Dropdown options source"},
+						 * {"var":"$data","type":"array","desc":"Field Data"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage add_filter( 'um_custom_dropdown_options_source__{$form_key}', 'function_name', 10, 2 );
+						 * @example
+						 * <?php
+						 * add_filter( 'um_custom_dropdown_options_source__{$form_key}', 'my_custom_dropdown_options_source', 10, 2 );
+						 * function my_custom_dropdown_options_source( $source, $data ) {
+						 *     // your code here
+						 *     return $source;
+						 * }
+						 * ?>
+						 */
 						$ajax_source = apply_filters( "um_custom_dropdown_options_source__{$form_key}", $data['custom_dropdown_options_source'], $data );
 						$atts_ajax .= " data-um-ajax-source='{$ajax_source}' ";
 
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_custom_dropdown_options_source_url__{$form_key}
+						 * @description Change custom dropdown options source URL by $form_key
+						 * @input_vars
+						 * [{"var":"$url","type":"string","desc":"Dropdown options source URL"},
+						 * {"var":"$data","type":"array","desc":"Field Data"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage add_filter( 'um_custom_dropdown_options_source_url__{$form_key}', 'function_name', 10, 2 );
+						 * @example
+						 * <?php
+						 * add_filter( 'um_custom_dropdown_options_source_url__{$form_key}', 'my_custom_dropdown_options_source_url', 10, 2 );
+						 * function my_custom_dropdown_options_source( $url, $data ) {
+						 *     // your code here
+						 *     return $url;
+						 * }
+						 * ?>
+						 */
 						$ajax_source_url = apply_filters( "um_custom_dropdown_options_source_url__{$form_key}", admin_url( 'admin-ajax.php' ), $data );
 						$atts_ajax .= " data-um-ajax-url='{$ajax_source_url}' ";
-
 
 					}
 
 					$output .= '<select  ' . $disabled . ' ' . $select_original_option_value . ' ' . $disabled_by_parent_option . '  name="' . $form_key . '" id="' . $form_key . '" data-validate="' . $validate . '" data-key="' . $key . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . $placeholder . '" ' . $atts_ajax . '>';
 
-					$enable_options_pair = apply_filters("um_fields_options_enable_pairs__{$key}", false );
+					/**
+					 * UM hook
+					 *
+					 * @type filter
+					 * @title um_fields_options_enable_pairs__{$key}
+					 * @description Enable options pairs by field $key
+					 * @input_vars
+					 * [{"var":"$options_pairs","type":"string","desc":"Enable pairs"}]
+					 * @change_log
+					 * ["Since: 2.0"]
+					 * @usage add_filter( 'um_fields_options_enable_pairs__{$key}', 'function_name', 10, 1 );
+					 * @example
+					 * <?php
+					 * add_filter( 'um_fields_options_enable_pairs__{$key}', 'my_fields_options_enable_pairs', 10, 1 );
+					 * function my_fields_options_enable_pairs( $options_pairs ) {
+					 *     // your code here
+					 *     return $options_pairs;
+					 * }
+					 * ?>
+					 */
+					$enable_options_pair = apply_filters( "um_fields_options_enable_pairs__{$key}", false );
 
 					if( ! $has_parent_option ) {
 						if ( isset($options) && $options == 'builtin'){
@@ -1905,7 +2387,48 @@ if ( ! class_exists( 'Fields' ) ) {
 						}
 
 						if ( isset( $options ) ) {
+							/**
+							 * UM hook
+							 *
+							 * @type filter
+							 * @title um_select_dropdown_dynamic_options
+							 * @description Extend dropdown dynamic options
+							 * @input_vars
+							 * [{"var":"$options","type":"array","desc":"Dynamic options"},
+							 * {"var":"$data","type":"array","desc":"Field Data"}]
+							 * @change_log
+							 * ["Since: 2.0"]
+							 * @usage add_filter( 'um_select_dropdown_dynamic_options', 'function_name', 10, 2 );
+							 * @example
+							 * <?php
+							 * add_filter( 'um_select_dropdown_dynamic_options', 'my_select_dropdown_dynamic_options', 10, 2 );
+							 * function my_select_dropdown_dynamic_options( $options, $data ) {
+							 *     // your code here
+							 *     return $options;
+							 * }
+							 * ?>
+							 */
 							$options = apply_filters( 'um_select_dropdown_dynamic_options', $options, $data );
+							/**
+							 * UM hook
+							 *
+							 * @type filter
+							 * @title um_select_dropdown_dynamic_options_{$key}
+							 * @description Extend dropdown dynamic options by field $key
+							 * @input_vars
+							 * [{"var":"$options","type":"array","desc":"Dynamic options"}]
+							 * @change_log
+							 * ["Since: 2.0"]
+							 * @usage add_filter( 'um_select_dropdown_dynamic_options_{$key}', 'function_name', 10, 1 );
+							 * @example
+							 * <?php
+							 * add_filter( 'um_select_dropdown_dynamic_options_{$key}', 'my_select_dropdown_dynamic_options', 10, 1 );
+							 * function my_select_dropdown_dynamic_options( $options ) {
+							 *     // your code here
+							 *     return $options;
+							 * }
+							 * ?>
+							 */
 							$options = apply_filters( "um_select_dropdown_dynamic_options_{$key}", $options );
 						}
 					}
@@ -1918,7 +2441,7 @@ if ( ! class_exists( 'Fields' ) ) {
 					$field_value = '';
 
 					// switch options pair for custom options from a callback function
-					if (isset( $data['custom_dropdown_options_source'] ) && !empty( $data['custom_dropdown_options_source'] )) {
+					if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
 						$options_pair = true;
 					}
 
@@ -1942,7 +2465,7 @@ if ( ! class_exists( 'Fields' ) ) {
 								$um_field_checkbox_item_title = $v;
 							}
 
-							$option_value = apply_filters( 'um_field_non_utf8_value', $option_value );
+							$option_value = $this->filter_field_non_utf8_value( $option_value );
 
 							$output .= '<option value="' . $option_value . '" ';
 
@@ -1996,6 +2519,27 @@ if ( ! class_exists( 'Fields' ) ) {
 					$field_icon = false;
 					$field_icon_output = '';
 
+					/**
+					 * UM hook
+					 *
+					 * @type filter
+					 * @title um_multiselect_option_value
+					 * @description Change multiselect keyword data
+					 * @input_vars
+					 * [{"var":"$keyword","type":"int","desc":"Option Value"},
+					 * {"var":"$type","type":"string","desc":"Field Type"}]
+					 * @change_log
+					 * ["Since: 2.0"]
+					 * @usage add_filter( 'um_multiselect_option_value', 'function_name', 10, 2 );
+					 * @example
+					 * <?php
+					 * add_filter( 'um_multiselect_option_value', 'my_multiselect_option_value', 10, 2 );
+					 * function my_multiselect_option_value( $keyword, $type ) {
+					 *     // your code here
+					 *     return $keyword;
+					 * }
+					 * ?>
+					 */
 					$use_keyword = apply_filters( 'um_multiselect_option_value', 0, $data['type'] );
 
 					$output .= '<div class="um-field-area ' . ( isset( $this->field_icons ) && $this->field_icons == 'field' ? 'um-field-area-has-icon' : '' ) . ' ">';
@@ -2006,22 +2550,84 @@ if ( ! class_exists( 'Fields' ) ) {
 					$output .= '<select  ' . $disabled . ' multiple="multiple" name="' . $key . '[]" id="' . $key . '" data-maxsize="' . $max_selections . '" data-validate="' . $validate . '" data-key="' . $key . '" class="' . $this->get_class( $key, $data, $class ) . ' um-user-keyword_' . $use_keyword . '" style="width: 100%" data-placeholder="' . $placeholder . '">';
 
 
-					if (isset( $options ) && $options == 'builtin') {
+					if ( isset( $options ) && $options == 'builtin' ) {
 						$options = UM()->builtin()->get( $filter );
 					}
 
-					if (!isset( $options )) {
+					if ( ! isset( $options ) ) {
 						$options = UM()->builtin()->get( 'countries' );
 					}
 
-					if (isset( $options )) {
+					if ( isset( $options ) ) {
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_multiselect_options
+						 * @description Extend multiselect options
+						 * @input_vars
+						 * [{"var":"$options","type":"array","desc":"Multiselect Options"},
+						 * {"var":"$data","type":"array","desc":"Field Data"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage add_filter( 'um_multiselect_options', 'function_name', 10, 2 );
+						 * @example
+						 * <?php
+						 * add_filter( 'um_multiselect_options', 'my_multiselect_options', 10, 2 );
+						 * function my_multiselect_options( $options, $data ) {
+						 *     // your code here
+						 *     return $options;
+						 * }
+						 * ?>
+						 */
 						$options = apply_filters( 'um_multiselect_options', $options, $data );
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_multiselect_options_{$key}
+						 * @description Extend multiselect options by field $key
+						 * @input_vars
+						 * [{"var":"$options","type":"array","desc":"Multiselect Options"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage add_filter( 'um_multiselect_options_{$key}', 'function_name', 10, 1 );
+						 * @example
+						 * <?php
+						 * add_filter( 'um_multiselect_options_{$key}', 'my_multiselect_options', 10, 1 );
+						 * function my_multiselect_options( $options ) {
+						 *     // your code here
+						 *     return $options;
+						 * }
+						 * ?>
+						 */
 						$options = apply_filters( "um_multiselect_options_{$key}", $options );
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_multiselect_options_{$type}
+						 * @description Extend multiselect options by field $type
+						 * @input_vars
+						 * [{"var":"$options","type":"array","desc":"Multiselect Options"},
+						 * {"var":"$data","type":"array","desc":"Field Data"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage add_filter( 'um_multiselect_options_{$type}', 'function_name', 10, 2 );
+						 * @example
+						 * <?php
+						 * add_filter( 'um_multiselect_options_{$type}', 'my_multiselect_options', 10, 2 );
+						 * function my_multiselect_option_value( $options, $data ) {
+						 *     // your code here
+						 *     return $options;
+						 * }
+						 * ?>
+						 */
 						$options = apply_filters( "um_multiselect_options_{$data['type']}", $options, $data );
 					}
 
 					// switch options pair for custom options from a callback function
-					if (isset( $data['custom_dropdown_options_source'] ) && !empty( $data['custom_dropdown_options_source'] )) {
+					if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
 						$use_keyword = true;
 					}
 
@@ -2043,7 +2649,7 @@ if ( ! class_exists( 'Fields' ) ) {
 								$opt_value = $k;
 							}
 
-							$opt_value = apply_filters( 'um_field_non_utf8_value', $opt_value );
+							$opt_value = $this->filter_field_non_utf8_value( $opt_value );
 
 							$output .= '<option value="' . $opt_value . '" ';
 							if ($this->is_selected( $key, $opt_value, $data )) {
@@ -2080,8 +2686,49 @@ if ( ! class_exists( 'Fields' ) ) {
 
 					$form_key = str_replace( 'role_radio', 'role', $key );
 
-					if (isset( $options )) {
+					if ( isset( $options ) ) {
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_radio_field_options
+						 * @description Extend radio field options
+						 * @input_vars
+						 * [{"var":"$options","type":"array","desc":"Radio Field Options"},
+						 * {"var":"$data","type":"array","desc":"Field Data"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage add_filter( 'um_radio_field_options', 'function_name', 10, 2 );
+						 * @example
+						 * <?php
+						 * add_filter( 'um_radio_field_options', 'my_radio_field_options', 10, 2 );
+						 * function my_radio_field_options( $options, $data ) {
+						 *     // your code here
+						 *     return $options;
+						 * }
+						 * ?>
+						 */
 						$options = apply_filters( 'um_radio_field_options', $options, $data );
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_radio_field_options_{$key}
+						 * @description Extend radio field options by field $key
+						 * @input_vars
+						 * [{"var":"$options","type":"array","desc":"Radio field Options"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage add_filter( 'um_radio_field_options_{$key}', 'function_name', 10, 1 );
+						 * @example
+						 * <?php
+						 * add_filter( 'um_radio_field_options_{$key}', 'my_radio_field_options', 10, 1 );
+						 * function my_radio_field_options( $options ) {
+						 *     // your code here
+						 *     return $options;
+						 * }
+						 * ?>
+						 */
 						$options = apply_filters( "um_radio_field_options_{$key}", $options );
 					}
 
@@ -2133,7 +2780,7 @@ if ( ! class_exists( 'Fields' ) ) {
 
 							$output .= '<label class="um-field-radio ' . $active . ' um-field-half ' . $col_class . '">';
 
-							$option_value = apply_filters( 'um_field_non_utf8_value', $option_value );
+							$option_value = $this->filter_field_non_utf8_value( $option_value );
 
 							$output .= '<input  ' . $disabled . ' type="radio" name="' . ( ( $form_key == 'role' ) ? $form_key : $form_key . '[]' ) . '" value="' . $option_value . '" ';
 
@@ -2175,8 +2822,49 @@ if ( ! class_exists( 'Fields' ) ) {
 				/* Checkbox */
 				case 'checkbox':
 
-					if (isset( $options )) {
+					if ( isset( $options ) ) {
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_checkbox_field_options
+						 * @description Extend checkbox options
+						 * @input_vars
+						 * [{"var":"$options","type":"array","desc":"Checkbox Options"},
+						 * {"var":"$data","type":"array","desc":"Field Data"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage add_filter( 'um_checkbox_field_options', 'function_name', 10, 2 );
+						 * @example
+						 * <?php
+						 * add_filter( 'um_checkbox_field_options', 'my_checkbox_options', 10, 2 );
+						 * function my_checkbox_options( $options, $data ) {
+						 *     // your code here
+						 *     return $options;
+						 * }
+						 * ?>
+						 */
 						$options = apply_filters( 'um_checkbox_field_options', $options, $data );
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_checkbox_field_options_{$key}
+						 * @description Extend checkbox options by field $key
+						 * @input_vars
+						 * [{"var":"$options","type":"array","desc":"Checkbox Options"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage add_filter( 'um_checkbox_field_options_{$key}', 'function_name', 10, 1 );
+						 * @example
+						 * <?php
+						 * add_filter( 'um_checkbox_field_options_{$key}', 'my_checkbox_options', 10, 1 );
+						 * function my_checkbox_options( $options ) {
+						 *     // your code here
+						 *     return $options;
+						 * }
+						 * ?>
+						 */
 						$options = apply_filters( "um_checkbox_field_options_{$key}", $options );
 					}
 
@@ -2218,7 +2906,7 @@ if ( ! class_exists( 'Fields' ) ) {
 
 						$um_field_checkbox_item_title = $v;
 
-						$v = apply_filters( 'um_field_non_utf8_value', $v );
+						$v = $this->filter_field_non_utf8_value( $v );
 
 						$output .= '<input  ' . $disabled . ' type="checkbox" name="' . $key . '[]" value="' . strip_tags( $v ) . '" ';
 
@@ -2234,6 +2922,29 @@ if ( ! class_exists( 'Fields' ) ) {
 
 
 						$output .= '<span class="um-field-checkbox-state"><i class="' . $class . '"></i></span>';
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_field_checkbox_item_title
+						 * @description Change Checkbox item title
+						 * @input_vars
+						 * [{"var":"$checkbox_item_title","type":"array","desc":"Item Title"},
+						 * {"var":"$key","type":"string","desc":"Field Key"},
+						 * {"var":"$value","type":"string","desc":"Field Value"},
+						 * {"var":"$data","type":"array","desc":"Field Data"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage add_filter( 'um_field_checkbox_item_title', 'function_name', 10, 4 );
+						 * @example
+						 * <?php
+						 * add_filter( 'um_field_checkbox_item_title', 'my_checkbox_item_title', 10, 4 );
+						 * function my_checkbox_item_title( $checkbox_item_title, $key, $value, $data ) {
+						 *     // your code here
+						 *     return $checkbox_item_title;
+						 * }
+						 * ?>
+						 */
 						$um_field_checkbox_item_title = apply_filters( "um_field_checkbox_item_title", $um_field_checkbox_item_title, $key, $v, $data );
 						$output .= '<span class="um-field-checkbox-option">' . __( $um_field_checkbox_item_title, UM_TEXTDOMAIN ) . '</span>';
 						$output .= '</label>';
@@ -2297,7 +3008,28 @@ if ( ! class_exists( 'Fields' ) ) {
 			}
 
 			// Custom filter for field output
-			if (isset( $this->set_mode )) {
+			if ( isset( $this->set_mode ) ) {
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_{$key}_form_edit_field
+				 * @description Change field HTML on edit mode by field $key
+				 * @input_vars
+				 * [{"var":"$output","type":"string","desc":"Field HTML"},
+				 * {"var":"$mode","type":"string","desc":"Fields Mode"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_filter( 'um_{$key}_form_edit_field', 'function_name', 10, 2 );
+				 * @example
+				 * <?php
+				 * add_filter( 'um_{$key}_form_edit_field', 'my_form_edit_field', 10, 2 );
+				 * function my_form_edit_field( $output, $mode ) {
+				 *     // your code here
+				 *     return $output;
+				 * }
+				 * ?>
+				 */
 				$output = apply_filters( "um_{$key}_form_edit_field", $output, $this->set_mode );
 			}
 
@@ -2655,7 +3387,50 @@ if ( ! class_exists( 'Fields' ) ) {
 					}
 
 					$data['is_view_field'] = true;
+					/**
+					 * UM hook
+					 *
+					 * @type filter
+					 * @title um_view_field
+					 * @description Change field HTML on view mode
+					 * @input_vars
+					 * [{"var":"$output","type":"string","desc":"Field HTML"},
+					 * {"var":"$data","type":"string","desc":"Field Data"},
+					 * {"var":"$type","type":"string","desc":"Field Type"}]
+					 * @change_log
+					 * ["Since: 2.0"]
+					 * @usage add_filter( 'um_view_field', 'function_name', 10, 3 );
+					 * @example
+					 * <?php
+					 * add_filter( 'um_view_field', 'my_view_field', 10, 3 );
+					 * function my_form_edit_field( $output, $data, $type ) {
+					 *     // your code here
+					 *     return $output;
+					 * }
+					 * ?>
+					 */
 					$res = apply_filters( "um_view_field", $res, $data, $type );
+					/**
+					 * UM hook
+					 *
+					 * @type filter
+					 * @title um_view_field_value_{$type}
+					 * @description Change field HTML on view mode by field type
+					 * @input_vars
+					 * [{"var":"$output","type":"string","desc":"Field HTML"},
+					 * {"var":"$data","type":"string","desc":"Field Data"}]
+					 * @change_log
+					 * ["Since: 2.0"]
+					 * @usage add_filter( 'um_view_field_value_{$type}', 'function_name', 10, 2 );
+					 * @example
+					 * <?php
+					 * add_filter( 'um_view_field_value_{$type}', 'my_view_field', 10, 2 );
+					 * function my_form_edit_field( $output, $data ) {
+					 *     // your code here
+					 *     return $output;
+					 * }
+					 * ?>
+					 */
 					$res = apply_filters( "um_view_field_value_{$type}", $res, $data );
 
 					$output .= '<div class="um-field-area">';
@@ -2719,14 +3494,88 @@ if ( ! class_exists( 'Fields' ) ) {
 			}
 
 			// Custom filter for field output
-			if (isset( $this->set_mode )) {
+			if ( isset( $this->set_mode ) ) {
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_{$key}_form_show_field
+				 * @description Change field HTML by field $key
+				 * @input_vars
+				 * [{"var":"$output","type":"string","desc":"Field HTML"},
+				 * {"var":"$mode","type":"string","desc":"Form Mode"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_filter( 'um_{$key}_form_show_field', 'function_name', 10, 2 );
+				 * @example
+				 * <?php
+				 * add_filter( 'um_{$key}_form_show_field', 'my_form_show_field', 10, 2 );
+				 * function my_form_show_field( $output, $mode ) {
+				 *     // your code here
+				 *     return $output;
+				 * }
+				 * ?>
+				 */
 				$output = apply_filters( "um_{$key}_form_show_field", $output, $this->set_mode );
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_{$type}_form_show_field
+				 * @description Change field HTML by field $type
+				 * @input_vars
+				 * [{"var":"$output","type":"string","desc":"Field HTML"},
+				 * {"var":"$mode","type":"string","desc":"Form Mode"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_filter( 'um_{$type}_form_show_field', 'function_name', 10, 2 );
+				 * @example
+				 * <?php
+				 * add_filter( 'um_{$type}_form_show_field', 'my_form_show_field', 10, 2 );
+				 * function my_form_show_field( $output, $mode ) {
+				 *     // your code here
+				 *     return $output;
+				 * }
+				 * ?>
+				 */
 				$output = apply_filters( "um_{$type}_form_show_field", $output, $this->set_mode );
-
 			}
 
 			return $output;
 		}
+
+
+		/**
+		 * Filter field data
+		 *
+		 * @param array $data
+		 *
+		 * @return array
+		 */
+		function view_field_output( $data ) {
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_view_field_output_{$type}
+			 * @description Change field data output by $type
+			 * @input_vars
+			 * [{"var":"$data","type":"array","desc":"Field Data"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_view_field_output_{$type}', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_view_field_output_{$type}', 'my_view_field_output', 10, 1 );
+			 * function my_view_field_output( $data ) {
+			 *     // your code here
+			 *     return $data;
+			 * }
+			 * ?>
+			 */
+			return apply_filters( "um_view_field_output_" . $data['type'], $data );
+		}
+
 
 		/**
 		 * Display fields ( view mode )
@@ -2821,27 +3670,24 @@ if ( ! class_exists( 'Fields' ) ) {
 
 									$output .= '<div class="um-col-1">';
 									$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
-									if ($col1_fields) {
-										foreach ($col1_fields as $key => $data) {
+									if ( $col1_fields ) {
+										foreach ( $col1_fields as $key => $data ) {
 
-											$data = apply_filters( "um_view_field_output_" . $data['type'], $data );
-
+											$data = $this->view_field_output( $data );
 											$output .= $this->view_field( $key, $data );
-
 
 										}
 									}
 									$output .= '</div>';
 
-								} else if ($cols_num == 2) {
+								} elseif ( $cols_num == 2 ) {
 
 									$output .= '<div class="um-col-121">';
 									$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
-									if ($col1_fields) {
-										foreach ($col1_fields as $key => $data) {
+									if ( $col1_fields ) {
+										foreach ( $col1_fields as $key => $data ) {
 
-											$data = apply_filters( "um_view_field_output_" . $data['type'], $data );
-
+											$data = $this->view_field_output( $data );
 											$output .= $this->view_field( $key, $data );
 
 										}
@@ -2850,11 +3696,10 @@ if ( ! class_exists( 'Fields' ) ) {
 
 									$output .= '<div class="um-col-122">';
 									$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
-									if ($col2_fields) {
-										foreach ($col2_fields as $key => $data) {
+									if ( $col2_fields ) {
+										foreach ( $col2_fields as $key => $data ) {
 
-											$data = apply_filters( "um_view_field_output_" . $data['type'], $data );
-
+											$data = $this->view_field_output( $data );
 											$output .= $this->view_field( $key, $data );
 
 										}
@@ -2865,11 +3710,10 @@ if ( ! class_exists( 'Fields' ) ) {
 
 									$output .= '<div class="um-col-131">';
 									$col1_fields = $this->get_fields_in_column( $subrow_fields, 1 );
-									if ($col1_fields) {
-										foreach ($col1_fields as $key => $data) {
+									if ( $col1_fields ) {
+										foreach ( $col1_fields as $key => $data ) {
 
-											$data = apply_filters( "um_view_field_output_" . $data['type'], $data );
-
+											$data = $this->view_field_output( $data );
 											$output .= $this->view_field( $key, $data );
 
 										}
@@ -2878,11 +3722,10 @@ if ( ! class_exists( 'Fields' ) ) {
 
 									$output .= '<div class="um-col-132">';
 									$col2_fields = $this->get_fields_in_column( $subrow_fields, 2 );
-									if ($col2_fields) {
-										foreach ($col2_fields as $key => $data) {
+									if ( $col2_fields ) {
+										foreach ( $col2_fields as $key => $data ) {
 
-											$data = apply_filters( "um_view_field_output_" . $data['type'], $data );
-
+											$data = $this->view_field_output( $data );
 											$output .= $this->view_field( $key, $data );
 
 										}
@@ -2891,11 +3734,10 @@ if ( ! class_exists( 'Fields' ) ) {
 
 									$output .= '<div class="um-col-133">';
 									$col3_fields = $this->get_fields_in_column( $subrow_fields, 3 );
-									if ($col3_fields) {
-										foreach ($col3_fields as $key => $data) {
+									if ( $col3_fields ) {
+										foreach ( $col3_fields as $key => $data ) {
 
-											$data = apply_filters( "um_view_field_output_" . $data['type'], $data );
-
+											$data = $this->view_field_output( $data );
 											$output .= $this->view_field( $key, $data );
 
 										}

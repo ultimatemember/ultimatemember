@@ -20,6 +20,27 @@ if ( ! class_exists( 'Mail' ) ) {
 
 
 		function init_paths() {
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_email_templates_path_by_slug
+			 * @description Extend email templates path
+			 * @input_vars
+			 * [{"var":"$paths","type":"array","desc":"Email slug -> Template Path"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_email_templates_path_by_slug', 'function_name', 10, 1 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_email_templates_path_by_slug', 'my_email_templates_path_by_slug', 10, 1 );
+			 * function my_email_templates_path_by_slug( $paths ) {
+			 *     // your code here
+			 *     return $paths;
+			 * }
+			 * ?>
+			 */
 			$this->path_by_slug = apply_filters( 'um_email_templates_path_by_slug', $this->path_by_slug );
 		}
 
@@ -58,6 +79,28 @@ if ( ! class_exists( 'Mail' ) ) {
 			$this->attachments = null;
 			$this->headers = 'From: '. UM()->options()->get('mail_from') .' <'. UM()->options()->get('mail_from_addr') .'>' . "\r\n";
 
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_email_send_subject
+			 * @description Change email notification subject
+			 * @input_vars
+			 * [{"var":"$subject","type":"string","desc":"Subject"},
+			 * {"var":"$key","type":"string","desc":"Template Key"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_email_send_subject', 'function_name', 10, 2 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_email_send_subject', 'my_email_send_subject', 10, 2 );
+			 * function my_email_send_subject( $subject, $key ) {
+			 *     // your code here
+			 *     return $paths;
+			 * }
+			 * ?>
+			 */
 			$subject = apply_filters( 'um_email_send_subject', UM()->options()->get( $template . '_sub' ), $template );
 			$this->subject = um_convert_tags( $subject , $args );
 
@@ -78,6 +121,29 @@ if ( ! class_exists( 'Mail' ) ) {
 		function get_email_template( $slug, $args = array() ) {
 			$located = $this->locate_template( $slug );
 
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_email_template_path
+			 * @description Change email template location
+			 * @input_vars
+			 * [{"var":"$located","type":"string","desc":"Template Location"},
+			 * {"var":"$slug","type":"string","desc":"Template Key"},
+			 * {"var":"$args","type":"array","desc":"Template settings"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_email_template_path', 'function_name', 10, 3 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_email_template_path', 'my_email_send_subject', 10, 3 );
+			 * function my_email_send_subject( $located, $slug, $args ) {
+			 *     // your code here
+			 *     return $located;
+			 * }
+			 * ?>
+			 */
 			$located = apply_filters( 'um_email_template_path', $located, $slug, $args );
 
 			if ( ! file_exists( $located ) ) {
@@ -109,13 +175,63 @@ if ( ! class_exists( 'Mail' ) ) {
 
 			if ( UM()->options()->get( 'email_html' ) ) {
 
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_email_template_html_formatting
+				 * @description Change email notification template header
+				 * @input_vars
+				 * [{"var":"$header","type":"string","desc":"Email notification header. '<html>' by default"},
+				 * {"var":"$slug","type":"string","desc":"Template Key"},
+				 * {"var":"$args","type":"array","desc":"Template settings"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage
+				 * <?php add_filter( 'um_email_template_html_formatting', 'function_name', 10, 3 ); ?>
+				 * @example
+				 * <?php
+				 * add_filter( 'um_email_template_html_formatting', 'my_email_template_html_formatting', 10, 3 );
+				 * function my_email_template_html_formatting( $header, $slug, $args ) {
+				 *     // your code here
+				 *     return $header;
+				 * }
+				 * ?>
+				 */
 				echo apply_filters( 'um_email_template_html_formatting', '<html>', $slug, $args );
 
-				do_action( 'um_before_email_template_body', $slug, $args ); ?>
+				do_action( 'um_before_email_template_body', $slug, $args );
 
-				<body <?php echo apply_filters( 'um_email_template_body_attrs', 'style="background: #f2f2f2;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;"', $slug ) ?>>
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_email_template_body_attrs
+				 * @description Change email notification template body additional attributes
+				 * @input_vars
+				 * [{"var":"$body_atts","type":"string","desc":"Email notification body attributes"},
+				 * {"var":"$slug","type":"string","desc":"Template Key"},
+				 * {"var":"$args","type":"array","desc":"Template settings"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage
+				 * <?php add_filter( 'um_email_template_body_attrs', 'function_name', 10, 3 ); ?>
+				 * @example
+				 * <?php
+				 * add_filter( 'um_email_template_body_attrs', 'my_email_template_body_attrs', 10, 3 );
+				 * function my_email_template_body_attrs( $body_atts, $slug, $args ) {
+				 *     // your code here
+				 *     return $body_atts;
+				 * }
+				 * ?>
+				 */
+				$body_attrs = apply_filters( 'um_email_template_body_attrs', 'style="background: #f2f2f2;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;"', $slug, $args );
+				?>
 
-				<?php echo $this->get_email_template( $slug, $args ); ?>
+
+				<body <?php echo $body_attrs ?>>
+
+					<?php echo $this->get_email_template( $slug, $args ); ?>
 
 				</body>
 				</html>
@@ -153,9 +269,56 @@ if ( ! class_exists( 'Mail' ) ) {
 			}
 
 			// Return what we found.
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_locate_email_template
+			 * @description Change email notification template path
+			 * @input_vars
+			 * [{"var":"$template","type":"string","desc":"Template Path"},
+			 * {"var":"$template_name","type":"string","desc":"Template Name"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_locate_email_template', 'function_name', 10, 2 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_locate_email_template', 'my_locate_email_template', 10, 2 );
+			 * function my_email_template_body_attrs( $template, $template_name ) {
+			 *     // your code here
+			 *     return $template;
+			 * }
+			 * ?>
+			 */
 			return apply_filters( 'um_locate_email_template', $template, $template_name );
 		}
 
+
+		function get_template_filename( $template_name ) {
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_change_email_template_file
+			 * @description Change email notification template path
+			 * @input_vars
+			 * [{"var":"$template_name","type":"string","desc":"Template Name"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_change_email_template_file', 'function_name', 10, 1 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_change_email_template_file', 'my_change_email_template_file', 10, 1 );
+			 * function my_change_email_template_file( $template, $template_name ) {
+			 *     // your code here
+			 *     return $template;
+			 * }
+			 * ?>
+			 */
+			return apply_filters( 'um_change_email_template_file', $template_name );
+		}
 
 		/**
 		 * Locate a template and return the path for inclusion.
@@ -166,7 +329,7 @@ if ( ! class_exists( 'Mail' ) ) {
 		 * @return string
 		 */
 		function template_in_theme( $template_name, $html = false ) {
-			$template_name_file = apply_filters( 'um_change_email_template_file', $template_name );
+			$template_name_file = $this->get_template_filename( $template_name );
 			$ext = ! $html ? '.php' : '.html';
 
 			// check if there is template at theme folder
@@ -190,7 +353,7 @@ if ( ! class_exists( 'Mail' ) ) {
 		 */
 		function get_template_file( $location, $template_name, $html = false ) {
 			$template_path = '';
-			$template_name_file = apply_filters( 'um_change_email_template_file', $template_name );
+			$template_name_file = $this->get_template_filename( $template_name );
 
 			$ext = ! $html ? '.php' : '.html';
 

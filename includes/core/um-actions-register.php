@@ -149,6 +149,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		if ( isset( UM()->form()->errors ) )
 			return false;
 
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_add_user_frontend_submitted
+		 * @description Extend user data on registration form submit
+		 * @input_vars
+		 * [{"var":"$submitted","type":"array","desc":"Registration data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_add_user_frontend_submitted', 'function_name', 10, 1 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_add_user_frontend_submitted', 'my_add_user_frontend_submitted', 10, 1 );
+		 * function my_add_user_frontend_submitted( $submitted ) {
+		 *     // your code here
+		 *     return $submitted;
+		 * }
+		 * ?>
+		 */
         $args = apply_filters( 'um_add_user_frontend_submitted', $args );
 
 		extract( $args );
@@ -198,6 +219,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		if ( ! isset( $user_email ) ) {
 			$site_url = @$_SERVER['SERVER_NAME'];
 			$user_email = 'nobody' . $unique_userID . '@' . $site_url;
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_user_register_submitted__email
+			 * @description Change user default email if it's empty on registration
+			 * @input_vars
+			 * [{"var":"$user_email","type":"string","desc":"Default email"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_user_register_submitted__email', 'function_name', 10, 1 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_user_register_submitted__email', 'my_user_register_submitted__email', 10, 1 );
+			 * function my_user_register_submitted__email( $user_email ) {
+			 *     // your code here
+			 *     return $user_email;
+			 * }
+			 * ?>
+			 */
 			$user_email = apply_filters( 'um_user_register_submitted__email', $user_email );
 		}
 
@@ -210,6 +252,28 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		$args['submitted'] = array_merge( $args['submitted'], $credentials );
 		$args = array_merge( $args, $credentials );
 
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_registration_user_role
+		 * @description Change user role on registration process
+		 * @input_vars
+		 * [{"var":"$role","type":"string","desc":"User role"},
+		 * {"var":"$submitted","type":"array","desc":"Registration data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_registration_user_role', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_registration_user_role', 'my_registration_user_role', 10, 2 );
+		 * function my_user_register_submitted__email( $role, $submitted ) {
+		 *     // your code here
+		 *     return $role;
+		 * }
+		 * ?>
+		 */
 		$user_role = apply_filters( 'um_registration_user_role', UM()->form()->assigned_role( UM()->form()->form_id ), $args );
 
 		$userdata = array(
@@ -245,6 +309,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 		if( empty( $role ) ) return;
 
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_register_hidden_role_field
+		 * @description Display hidden role field
+		 * @input_vars
+		 * [{"var":"$role","type":"string","desc":"Hidden user role"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_register_hidden_role_field', 'function_name', 10, 1 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_register_hidden_role_field', 'my_register_hidden_role_field', 10, 1 );
+		 * function my_register_hidden_role_field( $role ) {
+		 *     // your code here
+		 *     return $role;
+		 * }
+		 * ?>
+		 */
 		$role = apply_filters('um_register_hidden_role_field', $role );
 		if( $role ){
 			echo '<input type="hidden" name="role" id="role" value="' . $role . '" />';
@@ -261,12 +346,78 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		if ( isset( UM()->user()->preview ) && UM()->user()->preview == true && is_admin() ) return;
 
 		$primary_btn_word = $args['primary_btn_word'];
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_register_form_button_one
+		 * @description Change Register Form Primary button
+		 * @input_vars
+		 * [{"var":"$primary_btn_word","type":"string","desc":"Button text"},
+		 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_register_form_button_one', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_register_form_button_one', 'my_register_form_button_one', 10, 2 );
+		 * function my_register_form_button_one( $primary_btn_word, $args ) {
+		 *     // your code here
+		 *     return $primary_btn_word;
+		 * }
+		 * ?>
+		 */
 		$primary_btn_word = apply_filters('um_register_form_button_one', $primary_btn_word, $args );
 
 		$secondary_btn_word = $args['secondary_btn_word'];
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_register_form_button_two
+		 * @description Change Registration Form Secondary button
+		 * @input_vars
+		 * [{"var":"$secondary_btn_word","type":"string","desc":"Button text"},
+		 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_register_form_button_two', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_register_form_button_two', 'my_register_form_button_two', 10, 2 );
+		 * function my_register_form_button_two( $secondary_btn_word, $args ) {
+		 *     // your code here
+		 *     return $secondary_btn_word;
+		 * }
+		 * ?>
+		 */
 		$secondary_btn_word = apply_filters('um_register_form_button_two', $secondary_btn_word, $args );
 
 		$secondary_btn_url = ( isset( $args['secondary_btn_url'] ) && $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page('login');
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_register_form_button_two_url
+		 * @description Change Registration Form Secondary button URL
+		 * @input_vars
+		 * [{"var":"$secondary_btn_url","type":"string","desc":"Button URL"},
+		 * {"var":"$args","type":"array","desc":"Registration Form arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_register_form_button_two_url', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_register_form_button_two_url', 'my_register_form_button_two_url', 10, 2 );
+		 * function my_register_form_button_two_url( $secondary_btn_url, $args ) {
+		 *     // your code here
+		 *     return $secondary_btn_url;
+		 * }
+		 * ?>
+		 */
 		$secondary_btn_url = apply_filters('um_register_form_button_two_url', $secondary_btn_url, $args );
 
 		?>
@@ -332,6 +483,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			}
 		}
 
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_user_pre_updating_files_array
+		 * @description Change submitted files before register new user
+		 * @input_vars
+		 * [{"var":"$files","type":"array","desc":"Profile data files"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_user_pre_updating_files_array', 'function_name', 10, 1 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_user_pre_updating_files_array', 'my_user_pre_updating_files', 10, 1 );
+		 * function my_user_pre_updating_files( $files ) {
+		 *     // your code here
+		 *     return $files;
+		 * }
+		 * ?>
+		 */
 		$files = apply_filters( 'um_user_pre_updating_files_array', $files );
 
 		if ( !empty( $files ) ) {

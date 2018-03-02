@@ -106,7 +106,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
 
                         } else {
 
-                            $html .= apply_filters( 'um_render_field_type_' . $data['type'], '', $data, $this->form_data );
+                            $html .= $this->render_field_by_hook( $data );
 
                         }
 
@@ -127,7 +127,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
 
                             } else {
 
-                                $html .= apply_filters( 'um_render_field_type_' . $data['type'], '', $data, $this->form_data );
+                                $html .= $this->render_field_by_hook( $data );
 
                             }
 
@@ -146,7 +146,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
 
                             } else {
 
-                                $html .= apply_filters( 'um_render_field_type_' . $data['type'], '', $data, $this->form_data );
+                                $html .= $this->render_field_by_hook( $data );
 
                             }
 
@@ -170,7 +170,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
 
                         } else {
 
-                            $html .= apply_filters( 'um_render_field_type_' . $data['type'], '', $data, $this->form_data );
+                            $html .= $this->render_field_by_hook( $data );
 
                         }
 
@@ -192,7 +192,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
 
                             } else {
 
-                                $html .= apply_filters( 'um_render_field_type_' . $data['type'], '', $data, $this->form_data );
+                                $html .= $this->render_field_by_hook( $data );
 
                             }
 
@@ -213,7 +213,7 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
 
                             } else {
 
-                                $html .= apply_filters( 'um_render_field_type_' . $data['type'], '', $data, $this->form_data );
+                                $html .= $this->render_field_by_hook( $data );
 
                             }
 
@@ -233,12 +233,39 @@ if ( ! class_exists( 'Admin_Forms' ) ) {
 
                 } else {
 
-                    $html .= apply_filters( 'um_render_field_type_' . $data['type'], '', $data, $this->form_data );
+                    $html .= $this->render_field_by_hook( $data );
 
                 }
             }
 
             return $html;
+        }
+
+
+        function render_field_by_hook( $data ) {
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_render_field_type_{$type}
+             * @description Render admin form field by hook
+             * @input_vars
+             * [{"var":"$html","type":"string","desc":"Field's HTML"},
+             * {"var":"$data","type":"array","desc":"Field's data"},
+             * {"var":"$form_data","type":"array","desc":"Form data"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_filter( 'um_render_field_type_{$type}', 'function_name', 10, 3 );
+             * @example
+             * <?php
+             * add_filter( 'um_render_field_type_{$type}', 'my_render_field_type', 10, 3 );
+             * function my_render_field_type( $html, $data, $form_data ) {
+             *     // your code here
+             *     return $html;
+             * }
+             * ?>
+             */
+            return apply_filters( 'um_render_field_type_' . $data['type'], '', $data, $this->form_data );
         }
 
 

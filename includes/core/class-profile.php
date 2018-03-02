@@ -45,6 +45,27 @@ if ( ! class_exists( 'Profile' ) ) {
          ***/
         function tabs() {
 
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_profile_tabs
+	         * @description Extend user profile tabs
+	         * @input_vars
+	         * [{"var":"$tabs","type":"array","desc":"Profile tabs"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_profile_tabs', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_profile_tabs', 'my_profile_tabs', 10, 1 );
+	         * function my_profile_tabs( $tabs ) {
+	         *     // your code here
+	         *     return $tabs;
+	         * }
+	         * ?>
+	         */
             $tabs = apply_filters( 'um_profile_tabs', array(
                 'main' => array(
                     'name' => __( 'About', 'ultimate-member' ),
@@ -178,6 +199,27 @@ if ( ! class_exists( 'Profile' ) ) {
                 $this->active_tab = get_query_var('profiletab');
             }
 
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_profile_active_tab
+	         * @description Change active profile tab
+	         * @input_vars
+	         * [{"var":"$tab","type":"string","desc":"Active Profile tab"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_profile_active_tab', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_profile_active_tab', 'my_profile_active_tab', 10, 1 );
+	         * function my_profile_active_tab( $tab ) {
+	         *     // your code here
+	         *     return $tab;
+	         * }
+	         * ?>
+	         */
             $this->active_tab = apply_filters( 'um_profile_active_tab', $this->active_tab );
 
             return $this->active_tab;

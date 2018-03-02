@@ -155,6 +155,28 @@ if ( ! class_exists( 'User' ) ) {
                 'value' => 'awaiting_admin_review',
                 'compare' => '='
             );
+
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_admin_pending_queue_filter
+	         * @description Change user query arguments when get pending users
+	         * @input_vars
+	         * [{"var":"$args","type":"array","desc":"WP_Users query arguments"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_admin_pending_queue_filter', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_admin_pending_queue_filter', 'my_admin_pending_queue', 10, 1 );
+	         * function my_admin_pending_queue( $args ) {
+	         *     // your code here
+	         *     return $args;
+	         * }
+	         * ?>
+	         */
             $args = apply_filters( 'um_admin_pending_queue_filter', $args );
             $users = new \WP_User_Query( $args );
 
@@ -371,6 +393,28 @@ if ( ! class_exists( 'User' ) ) {
 		 */
 		function profile_form_additional_section( $userdata ) {
 
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_user_profile_additional_fields
+			 * @description Make additional content section
+			 * @input_vars
+			 * [{"var":"$content","type":"array","desc":"Additional section content"},
+			 * {"var":"$userdata","type":"array","desc":"Userdata"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_user_profile_additional_fields', 'function_name', 10, 2 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_user_profile_additional_fields', 'my_admin_pending_queue', 10, 2 );
+			 * function my_admin_pending_queue( $content, $userdata ) {
+			 *     // your code here
+			 *     return $content;
+			 * }
+			 * ?>
+			 */
 			$section_content = apply_filters( 'um_user_profile_additional_fields', '', $userdata );
 
 			if ( ! empty( $section_content ) && ! ( is_multisite() && is_network_admin() ) ) {
@@ -489,7 +533,29 @@ if ( ! class_exists( 'User' ) ) {
             if ( is_numeric( $user_id ) && $user_id > 0 ) {
                 $find_user = get_option("um_cache_userdata_{$user_id}");
                 if ( $find_user ) {
-                    $find_user = apply_filters('um_user_permissions_filter', $find_user, $user_id);
+	                /**
+	                 * UM hook
+	                 *
+	                 * @type filter
+	                 * @title um_user_permissions_filter
+	                 * @description Change User Permissions
+	                 * @input_vars
+	                 * [{"var":"$permissions","type":"array","desc":"User Permissions"},
+	                 * {"var":"$user_id","type":"int","desc":"User ID"}]
+	                 * @change_log
+	                 * ["Since: 2.0"]
+	                 * @usage
+	                 * <?php add_filter( 'um_user_permissions_filter', 'function_name', 10, 2 ); ?>
+	                 * @example
+	                 * <?php
+	                 * add_filter( 'um_user_permissions_filter', 'my_user_permissions', 10, 2 );
+	                 * function my_user_permissions( $permissions, $user_id ) {
+	                 *     // your code here
+	                 *     return $permissions;
+	                 * }
+	                 * ?>
+	                 */
+                    $find_user = apply_filters( 'um_user_permissions_filter', $find_user, $user_id );
                     return $find_user;
                 }
             }
@@ -627,6 +693,28 @@ if ( ! class_exists( 'User' ) ) {
                     $this->profile['roles'] = UM()->roles()->get_all_user_roles( $this->id );
 
                     $role_meta = UM()->roles()->role_data( $user_role );
+	                /**
+	                 * UM hook
+	                 *
+	                 * @type filter
+	                 * @title um_user_permissions_filter
+	                 * @description Change User Permissions
+	                 * @input_vars
+	                 * [{"var":"$permissions","type":"array","desc":"User Permissions"},
+	                 * {"var":"$user_id","type":"int","desc":"User ID"}]
+	                 * @change_log
+	                 * ["Since: 2.0"]
+	                 * @usage
+	                 * <?php add_filter( 'um_user_permissions_filter', 'function_name', 10, 2 ); ?>
+	                 * @example
+	                 * <?php
+	                 * add_filter( 'um_user_permissions_filter', 'my_user_permissions', 10, 2 );
+	                 * function my_user_permissions( $permissions, $user_id ) {
+	                 *     // your code here
+	                 *     return $permissions;
+	                 * }
+	                 * ?>
+	                 */
                     $role_meta = apply_filters( 'um_user_permissions_filter', $role_meta, $this->id );
 
                     /*$role_meta = array_map( function( $key, $item ) {
@@ -725,7 +813,28 @@ if ( ! class_exists( 'User' ) ) {
                 unset( $submitted['confirm_user_password'] );
             }
 
-            $submitted = apply_filters('um_before_save_filter_submitted', $submitted );
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_before_save_filter_submitted
+	         * @description Change submitted data before save usermeta "submitted" on registration process
+	         * @input_vars
+	         * [{"var":"$submitted","type":"array","desc":"Submitted data"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_before_save_filter_submitted', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_before_save_filter_submitted', 'my_before_save_filter_submitted', 10, 1 );
+	         * function my_before_save_filter_submitted( $submitted ) {
+	         *     // your code here
+	         *     return $submitted;
+	         * }
+	         * ?>
+	         */
+            $submitted = apply_filters( 'um_before_save_filter_submitted', $submitted );
 
             do_action('um_before_save_registration_details', $this->id, $submitted );
 
@@ -1059,6 +1168,27 @@ if ( ! class_exists( 'User' ) ) {
         function get_admin_actions() {
             $items = array();
             $actions = array();
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_admin_user_actions_hook
+	         * @description Extend admin actions for each user
+	         * @input_vars
+	         * [{"var":"$actions","type":"array","desc":"Actions for user"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_admin_user_actions_hook', 'function_name', 10, 1 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_admin_user_actions_hook', 'my_admin_user_actions', 10, 1 );
+	         * function my_admin_user_actions( $actions ) {
+	         *     // your code here
+	         *     return $actions;
+	         * }
+	         * ?>
+	         */
             $actions = apply_filters('um_admin_user_actions_hook', $actions );
             if ( !isset( $actions ) || empty( $actions ) ) return false;
             foreach($actions as $id => $arr ) {
@@ -1144,7 +1274,30 @@ if ( ! class_exists( 'User' ) ) {
             $privacy = get_user_meta( $user_id, 'profile_privacy', true );
 
             if ( $privacy == $case ) {
-                $bool = apply_filters('um_is_private_filter_hook', false, $privacy, $user_id );
+	            /**
+	             * UM hook
+	             *
+	             * @type filter
+	             * @title um_is_private_filter_hook
+	             * @description Change user privacy
+	             * @input_vars
+	             * [{"var":"$is_private","type":"bool","desc":"Is user private"},
+	             * {"var":"$privacy","type":"bool","desc":"Profile Privacy"},
+	             * {"var":"$user_id","type":"int","desc":"User ID"}]
+	             * @change_log
+	             * ["Since: 2.0"]
+	             * @usage
+	             * <?php add_filter( 'um_is_private_filter_hook', 'function_name', 10, 3 ); ?>
+	             * @example
+	             * <?php
+	             * add_filter( 'um_is_private_filter_hook', 'my_is_private_filter', 10, 3 );
+	             * function my_is_private_filter( $is_private ) {
+	             *     // your code here
+	             *     return $is_private;
+	             * }
+	             * ?>
+	             */
+                $bool = apply_filters( 'um_is_private_filter_hook', false, $privacy, $user_id );
                 return $bool;
             }
 
@@ -1170,7 +1323,30 @@ if ( ! class_exists( 'User' ) ) {
         function update_profile( $changes ) {
 
             $args['ID'] = $this->id;
-            $changes = apply_filters('um_before_update_profile', $changes, $this->id);
+
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_before_update_profile
+	         * @description Change update profile changes data
+	         * @input_vars
+	         * [{"var":"$changes","type":"array","desc":"User Profile Changes"},
+	         * {"var":"$user_id","type":"int","desc":"User ID"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage
+	         * <?php add_filter( 'um_before_update_profile', 'function_name', 10, 2 ); ?>
+	         * @example
+	         * <?php
+	         * add_filter( 'um_before_update_profile', 'my_before_update_profile', 10, 2 );
+	         * function my_before_update_profile( $changes, $user_id ) {
+	         *     // your code here
+	         *     return $changes;
+	         * }
+	         * ?>
+	         */
+            $changes = apply_filters('um_before_update_profile', $changes, $this->id );
 
 	        // save or update profile meta
             foreach ( $changes as $key => $value ) {

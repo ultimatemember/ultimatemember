@@ -533,8 +533,27 @@ if ( ! class_exists( 'Builtin' ) ) {
 
             );
 
-            $this->core_fields = apply_filters('um_core_fields_hook', $this->core_fields );
-
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_core_fields_hook
+	         * @description UM Core Fields
+	         * @input_vars
+	         * [{"var":"$core_fields","type":"array","desc":"Core Fields"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_filter( 'um_core_fields_hook', 'function_name', 10, 1 );
+	         * @example
+	         * <?php
+	         * add_filter( 'um_core_fields_hook', 'my_core_fields', 10, 1 );
+	         * function my_core_fields( $core_fields ) {
+	         *     // your code here
+	         *     return $core_fields;
+	         * }
+	         * ?>
+	         */
+            $this->core_fields = apply_filters( 'um_core_fields_hook', $this->core_fields );
         }
 
         /***
@@ -556,7 +575,30 @@ if ( ! class_exists( 'Builtin' ) ) {
 
             $um_roles = UM()->roles()->get_roles( false, $exclude_roles );
 
-            $profile_privacy = apply_filters('um_profile_privacy_options', array( __('Everyone','ultimate-member'), __('Only me','ultimate-member') ) );
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_profile_privacy_options
+	         * @description Profile Privacy Options
+	         * @input_vars
+	         * [{"var":"$privacy_options","type":"array","desc":"Privacy Options"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_filter( 'um_profile_privacy_options', 'function_name', 10, 1 );
+	         * @example
+	         * <?php
+	         * add_filter( 'um_profile_privacy_options', 'my_profile_privacy_options', 10, 1 );
+	         * function my_profile_privacy_options( $privacy_options ) {
+	         *     // your code here
+	         *     return $privacy_options;
+	         * }
+	         * ?>
+	         */
+            $profile_privacy = apply_filters( 'um_profile_privacy_options', array(
+            	__( 'Everyone', 'ultimate-member' ),
+	            __( 'Only me', 'ultimate-member' )
+            ) );
 
             $this->predefined_fields = array(
 
@@ -1050,8 +1092,27 @@ if ( ! class_exists( 'Builtin' ) ) {
 
             );
 
-            $this->predefined_fields = apply_filters('um_predefined_fields_hook', $this->predefined_fields );
-
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_predefined_fields_hook
+	         * @description Extend Predefined Fields
+	         * @input_vars
+	         * [{"var":"$predefined_fields","type":"array","desc":"Predefined Fields"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_filter( 'um_predefined_fields_hook', 'function_name', 10, 1 );
+	         * @example
+	         * <?php
+	         * add_filter( 'um_predefined_fields_hook', 'my_predefined_fields', 10, 1 );
+	         * function my_predefined_fields( $predefined_fields ) {
+	         *     // your code here
+	         *     return $predefined_fields;
+	         * }
+	         * ?>
+	         */
+            $this->predefined_fields = apply_filters( 'um_predefined_fields_hook', $this->predefined_fields );
         }
 
         /***
@@ -1087,7 +1148,28 @@ if ( ! class_exists( 'Builtin' ) ) {
 
             $fields_without_metakey = array('block','shortcode','spacing','divider','group');
             remove_filter('um_fields_without_metakey', 'um_user_tags_requires_no_metakey');
-            $fields_without_metakey = apply_filters('um_fields_without_metakey', $fields_without_metakey );
+
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_fields_without_metakey
+	         * @description Extend Fields without metakey
+	         * @input_vars
+	         * [{"var":"$fields","type":"array","desc":"Fields without metakey"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_filter( 'um_fields_without_metakey', 'function_name', 10, 1 );
+	         * @example
+	         * <?php
+	         * add_filter( 'um_fields_without_metakey', 'my_fields_without_metakey', 10, 1 );
+	         * function my_fields_without_metakey( $fields ) {
+	         *     // your code here
+	         *     return $fields;
+	         * }
+	         * ?>
+	         */
+	        $fields_without_metakey = apply_filters( 'um_fields_without_metakey', $fields_without_metakey );
 
             if ( !$show_all ) {
                 $this->fields_dropdown = array('image','file','password','rating');
@@ -1169,7 +1251,27 @@ if ( ! class_exists( 'Builtin' ) ) {
             $array['youtube_url'] = __('YouTube Profile','ultimate-member');
             $array['custom'] = __('Custom Validation','ultimate-member');
 
-            $array = apply_filters('um_admin_field_validation_hook', $array );
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_admin_field_validation_hook
+	         * @description Extend validation types
+	         * @input_vars
+	         * [{"var":"$types","type":"array","desc":"Validation Types"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_filter( 'um_admin_field_validation_hook', 'function_name', 10, 1 );
+	         * @example
+	         * <?php
+	         * add_filter( 'um_admin_field_validation_hook', 'my_admin_field_validation', 10, 1 );
+	         * function my_admin_field_validation( $types ) {
+	         *     // your code here
+	         *     return $types;
+	         * }
+	         * ?>
+	         */
+            $array = apply_filters( 'um_admin_field_validation_hook', $array );
             return $array;
         }
 
@@ -1622,10 +1724,28 @@ if ( ! class_exists( 'Builtin' ) ) {
 
             }
 
-            $array = apply_filters("um_{$data}_predefined_field_options", $array);
-
+	        /**
+	         * UM hook
+	         *
+	         * @type filter
+	         * @title um_{$data}_predefined_field_options
+	         * @description Extend Predefined Fields options. Where $data - field key.
+	         * @input_vars
+	         * [{"var":"$options","type":"array","desc":"Field's Options"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_filter( 'um_{$data}_predefined_field_options', 'function_name', 10, 1 );
+	         * @example
+	         * <?php
+	         * add_filter( 'um_{$data}_predefined_field_options', 'my_predefined_field', 10, 1 );
+	         * function my_predefined_field( $options ) {
+	         *     // your code here
+	         *     return $options;
+	         * }
+	         * ?>
+	         */
+            $array = apply_filters( "um_{$data}_predefined_field_options", $array );
             return $array;
-
         }
 
     }

@@ -188,8 +188,8 @@ if ( ! class_exists( 'Setup' ) ) {
                 }
 
                 foreach ( $core_pages as $slug => $page_id ) {
-                    $key = apply_filters( 'um_core_page_id_filter', 'core_' . $slug );
-                    $options[$key] = $page_id;
+	                $key = UM()->options()->get_core_page_id( $slug );
+                    $options[ $key ] = $page_id;
                 }
             }
 

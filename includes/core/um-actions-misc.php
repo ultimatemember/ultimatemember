@@ -41,9 +41,29 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			
 		}
 
-
-		$url = apply_filters('um_browser_url_redirect_to__filter', $url );
-		if( ! empty( $url ) ){
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_browser_url_redirect_to__filter
+		 * @description Add redirect to field to form and change URL for it
+		 * @input_vars
+		 * [{"var":"$url","type":"string","desc":"Redirect to URL"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_browser_url_redirect_to__filter', 'function_name', 10, 1 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_browser_url_redirect_to__filter', 'my_browser_url_redirect_to', 10, 1 );
+		 * function my_browser_url_redirect_to( $url ) {
+		 *     // your code here
+		 *     return $url;
+		 * }
+		 * ?>
+		 */
+		$url = apply_filters( 'um_browser_url_redirect_to__filter', $url );
+		if ( ! empty( $url ) ) {
 			echo '<input type="hidden" name="redirect_to" id="redirect_to" value="' . esc_url( $url ) . '" />';
 		}
 		
@@ -64,7 +84,29 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			switch( $_REQUEST['updated'] ) {
 				
 				default:
-					$success = apply_filters("um_custom_success_message_handler", $success, $_REQUEST['updated']);
+					/**
+					 * UM hook
+					 *
+					 * @type filter
+					 * @title um_custom_success_message_handler
+					 * @description Add custom success message
+					 * @input_vars
+					 * [{"var":"$success","type":"string","desc":"Message"},
+					 * {"var":"$updated","type":"array","desc":"Updated data"}]
+					 * @change_log
+					 * ["Since: 2.0"]
+					 * @usage
+					 * <?php add_filter( 'um_custom_success_message_handler', 'function_name', 10, 2 ); ?>
+					 * @example
+					 * <?php
+					 * add_filter( 'um_custom_success_message_handler', 'my_custom_success_message', 10, 2 );
+					 * function my_custom_success_message( $success, $updated ) {
+					 *     // your code here
+					 *     return $success;
+					 * }
+					 * ?>
+					 */
+					$success = apply_filters( "um_custom_success_message_handler", $success, $_REQUEST['updated'] );
 					break;
 					
 				case 'account':
@@ -86,9 +128,31 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			switch( $_REQUEST['err'] ) {
 				
 				default:
-					$err = apply_filters("um_custom_error_message_handler", $err, $_REQUEST['err']);
+					/**
+					 * UM hook
+					 *
+					 * @type filter
+					 * @title um_custom_error_message_handler
+					 * @description Add custom error message
+					 * @input_vars
+					 * [{"var":"$error","type":"string","desc":"Error message"},
+					 * {"var":"$request_error","type":"array","desc":"Error data"}]
+					 * @change_log
+					 * ["Since: 2.0"]
+					 * @usage
+					 * <?php add_filter( 'um_custom_error_message_handler', 'function_name', 10, 2 ); ?>
+					 * @example
+					 * <?php
+					 * add_filter( 'um_custom_error_message_handler', 'my_custom_error_message', 10, 2 );
+					 * function my_custom_error_message( $error, $request_error ) {
+					 *     // your code here
+					 *     return $error;
+					 * }
+					 * ?>
+					 */
+					$err = apply_filters( "um_custom_error_message_handler", $err, $_REQUEST['err'] );
 					if ( !$err )
-						$err = __('An error has been encountered','ultimate-member');
+						$err = __( 'An error has been encountered', 'ultimate-member' );
 					break;
 					
 				case 'registration_disabled':

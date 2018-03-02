@@ -56,6 +56,29 @@ if ( ! class_exists( 'Admin_Users' ) ) {
          */
         function get_bulk_admin_actions() {
 
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_admin_bulk_user_actions_hook
+             * @description Admin Users List Table bulk actions
+             * @input_vars
+             * [{"var":"$actions","type":"array","desc":"User List Table bulk actions"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_filter( 'um_admin_bulk_user_actions_hook', 'function_name', 10, 1 );
+             * @example
+             * <?php
+             * add_filter( 'um_admin_bulk_user_actions_hook', 'my_admin_bulk_user_actions', 10, 1 );
+             * function my_admin_bulk_user_actions( $actions ) {
+             *     // your code here
+             *     $actions['my-custom-bulk'] = array(
+             *         'label' => 'My Custom Bulk Action'
+             *     );
+             *     return $actions;
+             * }
+             * ?>
+             */
             $actions = apply_filters( 'um_admin_bulk_user_actions_hook', array(
                 'um_approve_membership' => array(
                     'label' => __( 'Approve Membership', 'ultimate-member' )
@@ -101,6 +124,27 @@ if ( ! class_exists( 'Admin_Users' ) ) {
             if ( ! empty( $submitted ) )
                 $actions['view_info'] = '<a href="#" data-modal="UM_preview_registration" data-modal-size="smaller" data-dynamic-content="um_admin_review_registration" data-arg1="' . $user_id . '" data-arg2="edit_registration">' . __( 'Info', 'ultimate-member' ) . '</a>';
 
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_admin_user_row_actions
+             * @description Admin views array
+             * @input_vars
+             * [{"var":"$actions","type":"array","desc":"User List Table actions"},
+             * {"var":"$user_id","type":"int","desc":"User ID"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_filter( 'um_admin_user_row_actions', 'function_name', 10, 2 );
+             * @example
+             * <?php
+             * add_filter( 'um_admin_user_row_actions', 'my_admin_user_row_actions', 10, 2 );
+             * function my_admin_user_row_actions( $actions, $user_id ) {
+             *     // your code here
+             *     return $actions;
+             * }
+             * ?>
+             */
             $actions = apply_filters( 'um_admin_user_row_actions', $actions, $user_id );
 
             return $actions;
@@ -202,6 +246,26 @@ if ( ! class_exists( 'Admin_Users' ) ) {
                 $views[$k] = '<a href="' . admin_url( 'users.php' ) . '?status=' . $k . '" ' . $current . '>'. $v . ' <span class="count">('.UM()->query()->count_users_by_status( $k ).')</span></a>';
             }
 
+            /**
+             * UM hook
+             *
+             * @type filter
+             * @title um_admin_views_users
+             * @description Admin views array
+             * @input_vars
+             * [{"var":"$views","type":"array","desc":"User Views"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_filter( 'um_admin_views_users', 'function_name', 10, 1 );
+             * @example
+             * <?php
+             * add_filter( 'um_admin_views_users', 'my_admin_views_users', 10, 1 );
+             * function my_admin_views_users( $views ) {
+             *     // your code here
+             *     return $views;
+             * }
+             * ?>
+             */
             $views = apply_filters( 'um_admin_views_users', $views );
 
             // remove all filters
