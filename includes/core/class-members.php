@@ -341,11 +341,50 @@ if ( ! class_exists( 'Members' ) ) {
                 $query_args = array();
             }
 
-            do_action('um_user_before_query', $query_args );
+            /**
+             * UM hook
+             *
+             * @type action
+             * @title um_user_before_query
+             * @description Action before users query on member directory
+             * @input_vars
+             * [{"var":"$query_args","type":"array","desc":"Query arguments"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_action( 'um_user_before_query', 'function_name', 10, 1 );
+             * @example
+             * <?php
+             * add_action( 'um_user_before_query', 'my_user_before_query', 10, 1 );
+             * function my_user_before_query( $query_args ) {
+             *     // your code here
+             * }
+             * ?>
+             */
+            do_action( 'um_user_before_query', $query_args );
 
             $users = new \WP_User_Query( $query_args );
 
-            do_action('um_user_after_query', $query_args, $users );
+            /**
+             * UM hook
+             *
+             * @type action
+             * @title um_user_after_query
+             * @description Action before users query on member directory
+             * @input_vars
+             * [{"var":"$query_args","type":"array","desc":"Query arguments"},
+             * {"var":"$users","type":"array","desc":"Users"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_action( 'um_user_after_query', 'function_name', 10, 2 );
+             * @example
+             * <?php
+             * add_action( 'um_user_after_query', 'my_user_after_query', 10, 2 );
+             * function my_user_after_query( $query_args, $users ) {
+             *     // your code here
+             * }
+             * ?>
+             */
+            do_action( 'um_user_after_query', $query_args, $users );
 
 
             $array['users'] = isset( $users->results ) && ! empty( $users->results ) ? array_unique( $users->results ) : array();

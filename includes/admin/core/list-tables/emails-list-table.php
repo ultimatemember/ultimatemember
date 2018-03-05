@@ -12,8 +12,7 @@ if ( isset($_REQUEST['_wp_http_referer']) ) {
 
 //remove extra query arg
 if ( !empty( $_GET['_wp_http_referer'] ) ) {
-    do_action( 'wp_client_redirect', remove_query_arg( array( '_wp_http_referer', '_wpnonce'), wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
-    exit;
+    um_js_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce'), wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
 }
 
 $order_by = 'u.user_registered';

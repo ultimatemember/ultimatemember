@@ -152,11 +152,51 @@ if ( ! class_exists( 'Mail' ) ) {
 			}
 
 			ob_start();
-
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_before_email_template_part
+			 * @description Action before email template loading
+			 * @input_vars
+			 * [{"var":"$slug","type":"string","desc":"Email template slug"},
+			 * {"var":"$located","type":"string","desc":"Email template location"},
+			 * {"var":"$args","type":"array","desc":"Email template arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_before_email_template_part', 'function_name', 10, 3 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_before_email_template_part', 'my_before_email_template_part', 10, 3 );
+			 * function my_before_email_template_part( $slug, $located, $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( 'um_before_email_template_part', $slug, $located, $args );
 
 			include( $located );
-
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_after_email_template_part
+			 * @description Action after email template loading
+			 * @input_vars
+			 * [{"var":"$slug","type":"string","desc":"Email template slug"},
+			 * {"var":"$located","type":"string","desc":"Email template location"},
+			 * {"var":"$args","type":"array","desc":"Email template arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_after_email_template_part', 'function_name', 10, 3 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_after_email_template_part', 'my_after_email_template_part', 10, 3 );
+			 * function my_after_email_template_part( $slug, $located, $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( 'um_after_email_template_part', $slug, $located, $args );
 
 			return ob_get_clean();
@@ -200,6 +240,26 @@ if ( ! class_exists( 'Mail' ) ) {
 				 */
 				echo apply_filters( 'um_email_template_html_formatting', '<html>', $slug, $args );
 
+				/**
+				 * UM hook
+				 *
+				 * @type action
+				 * @title um_before_email_template_body
+				 * @description Action before email template body display
+				 * @input_vars
+				 * [{"var":"$slug","type":"string","desc":"Email template slug"},
+				 * {"var":"$args","type":"array","desc":"Email template arguments"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_action( 'um_before_email_template_body', 'function_name', 10, 2 );
+				 * @example
+				 * <?php
+				 * add_action( 'um_before_email_template_body', 'my_before_email_template_body', 10, 2 );
+				 * function my_before_email_template_body( $slug, $args ) {
+				 *     // your code here
+				 * }
+				 * ?>
+				 */
 				do_action( 'um_before_email_template_body', $slug, $args );
 
 				/**

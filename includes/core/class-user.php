@@ -347,6 +347,26 @@ if ( ! class_exists( 'User' ) ) {
 					UM()->user()->update_usermeta_info( 'role' );
 				}
 
+				/**
+				 * UM hook
+				 *
+				 * @type action
+				 * @title um_user_register
+				 * @description Action on user registration
+				 * @input_vars
+				 * [{"var":"$user_id","type":"int","desc":"User ID"},
+				 * {"var":"$submitted","type":"array","desc":"Registration form submitted"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_action( 'um_user_register', 'function_name', 10, 2 );
+				 * @example
+				 * <?php
+				 * add_action( 'um_user_register', 'my_user_register', 10, 2 );
+				 * function my_user_register( $user_id, $submitted ) {
+				 *     // your code here
+				 * }
+				 * ?>
+				 */
 				do_action( 'um_user_register', $user_id, $_POST );
 			}
 
@@ -376,6 +396,26 @@ if ( ! class_exists( 'User' ) ) {
 				}
 			}
 
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_after_member_role_upgrade
+			 * @description Action on user registration
+			 * @input_vars
+			 * [{"var":"$new_roles","type":"array","desc":"User new roles"},
+			 * {"var":"$old_roles","type":"array","desc":"Old roles"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_after_member_role_upgrade', 'function_name', 10, 2 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_after_member_role_upgrade', 'my_after_member_role_upgrade', 10, 2 );
+			 * function my_after_member_role_upgrade( $new_roles, $old_roles ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( 'um_after_member_role_upgrade', $new_roles, $old_roles );
 
 			//Update permalink
@@ -836,22 +876,65 @@ if ( ! class_exists( 'User' ) ) {
 	         */
             $submitted = apply_filters( 'um_before_save_filter_submitted', $submitted );
 
-            do_action('um_before_save_registration_details', $this->id, $submitted );
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_before_save_registration_details
+	         * @description Action on user registration before save details
+	         * @input_vars
+	         * [{"var":"$user_id","type":"int","desc":"User ID"},
+	         * {"var":"$submitted","type":"array","desc":"Registration form submitted"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_before_save_registration_details', 'function_name', 10, 2 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_before_save_registration_details', 'my_before_save_registration_details', 10, 2 );
+	         * function my_before_save_registration_details( $user_id, $submitted ) {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
+            do_action( 'um_before_save_registration_details', $this->id, $submitted );
 
             update_user_meta( $this->id, 'submitted', $submitted );
 
             $this->update_profile( $submitted );
-
-            do_action('um_after_save_registration_details', $this->id, $submitted );
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_after_save_registration_details
+	         * @description Action on user registration after save details
+	         * @input_vars
+	         * [{"var":"$user_id","type":"int","desc":"User ID"},
+	         * {"var":"$submitted","type":"array","desc":"Registration form submitted"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_after_save_registration_details', 'function_name', 10, 2 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_after_save_registration_details', 'my_after_save_registration_details', 10, 2 );
+	         * function my_after_save_registration_details( $user_id, $submitted ) {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
+            do_action( 'um_after_save_registration_details', $this->id, $submitted );
 
         }
 
-        /***
-         ***	@A plain version of password
-         ***/
+
+	    /**
+	     * A plain version of password
+	     *
+	     * @param $plain
+	     */
         function set_plain_password( $plain ) {
             update_user_meta( $this->id, '_um_cool_but_hard_to_guess_plain_pw', $plain );
         }
+
 
         /**
          * Set last login for new registered users
@@ -861,20 +944,77 @@ if ( ! class_exists( 'User' ) ) {
         }
 
 
-        /***
-         ***	@Set user's account status
-         ***/
-        function set_status( $status ){
+	    /**
+	     * Set user's account status
+	     *
+	     * @param $status
+	     */
+        function set_status( $status ) {
 
-            do_action( 'um_when_status_is_set', um_user('ID') );
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_when_status_is_set
+	         * @description Action on user status changed
+	         * @input_vars
+	         * [{"var":"$user_id","type":"int","desc":"User ID"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_when_status_is_set', 'function_name', 10, 1 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_when_status_is_set', 'my_when_status_is_set', 10, 1 );
+	         * function my_when_status_is_set( $user_id ) {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
+            do_action( 'um_when_status_is_set', um_user( 'ID' ) );
 
             $this->profile['account_status'] = $status;
 
-            $this->update_usermeta_info('account_status');
+            $this->update_usermeta_info( 'account_status' );
 
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_after_user_status_is_changed_hook
+	         * @description Action after user status changed
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_after_user_status_is_changed_hook', 'function_name', 10 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_after_user_status_is_changed_hook', 'my_after_user_status_is_changed', 10 );
+	         * function my_after_user_status_is_changed() {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
             do_action( 'um_after_user_status_is_changed_hook' );
 
-            do_action( 'um_after_user_status_is_changed', $status);
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_after_user_status_is_changed
+	         * @description Action after user status changed
+	         * @input_vars
+	         * [{"var":"$status","type":"string","desc":"User Status"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_after_user_status_is_changed', 'function_name', 10, 1 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_after_user_status_is_changed', 'my_after_user_status_is_changed', 10, 1 );
+	         * function my_after_user_status_is_changed( $status ) {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
+            do_action( 'um_after_user_status_is_changed', $status );
 
         }
 
@@ -890,13 +1030,46 @@ if ( ! class_exists( 'User' ) ) {
         /***
          ***	@Set user's hash
          ***/
-        function assign_secretkey(){
-            do_action('um_before_user_hash_is_changed');
+        function assign_secretkey() {
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_before_user_hash_is_changed
+	         * @description Action before user hash is changed
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_before_user_hash_is_changed', 'function_name', 10 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_before_user_hash_is_changed', 'my_before_user_hash_is_changed', 10 );
+	         * function my_before_user_hash_is_changed() {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
+            do_action( 'um_before_user_hash_is_changed' );
 
             $this->profile['account_secret_hash'] = UM()->validation()->generate();
-            $this->update_usermeta_info('account_secret_hash');
-
-            do_action('um_after_user_hash_is_changed');
+            $this->update_usermeta_info( 'account_secret_hash' );
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_after_user_hash_is_changed
+	         * @description Action after user hash is changed
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_after_user_hash_is_changed', 'function_name', 10 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_after_user_hash_is_changed', 'my_after_user_hash_is_changed', 10 );
+	         * function my_after_user_hash_is_changed() {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
+            do_action( 'um_after_user_hash_is_changed' );
 
         }
 
@@ -954,8 +1127,26 @@ if ( ! class_exists( 'User' ) ) {
             $this->delete_meta('account_secret_hash');
             $this->delete_meta('_um_cool_but_hard_to_guess_plain_pw');
 
-            do_action('um_after_user_is_approved', um_user('ID') );
-
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_after_user_is_approved
+	         * @description Action after user was approved
+	         * @input_vars
+	         * [{"var":"$user_id","type":"int","desc":"User ID"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_after_user_is_approved', 'function_name', 10, 1 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_after_user_is_approved', 'my_after_user_is_approved', 10, 1 );
+	         * function my_after_user_hash_is_changed( $user_id ) {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
+            do_action( 'um_after_user_is_approved', um_user( 'ID' ) );
         }
 
         /***
@@ -1041,11 +1232,29 @@ if ( ! class_exists( 'User' ) ) {
          *
          */
         function deactivate(){
-            $this->set_status('inactive');
+            $this->set_status( 'inactive' );
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_after_user_is_inactive
+	         * @description Action after user was inactive
+	         * @input_vars
+	         * [{"var":"$user_id","type":"int","desc":"User ID"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_after_user_is_inactive', 'function_name', 10, 1 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_after_user_is_inactive', 'my_after_user_is_inactive', 10, 1 );
+	         * function my_after_user_is_inactive( $user_id ) {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
+            do_action( 'um_after_user_is_inactive', um_user( 'ID' ) );
 
-            do_action('um_after_user_is_inactive', um_user('ID') );
-
-            UM()->mail()->send( um_user('user_email'), 'inactive_email' );
+            UM()->mail()->send( um_user( 'user_email' ), 'inactive_email' );
         }
 
 
@@ -1053,8 +1262,44 @@ if ( ! class_exists( 'User' ) ) {
          ***	@delete user
          ***/
         function delete( $send_mail = true ) {
-            do_action( 'um_delete_user_hook' );
-            do_action( 'um_delete_user', um_user('ID') );
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_delete_user_hook
+	         * @description On delete user
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_delete_user_hook', 'function_name', 10 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_delete_user_hook', 'my_delete_user', 10 );
+	         * function my_delete_user() {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
+	        do_action( 'um_delete_user_hook' );
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_delete_user
+	         * @description On delete user
+	         * @input_vars
+	         * [{"var":"$user_id","type":"int","desc":"User ID"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_delete_user', 'function_name', 10, 1 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_delete_user', 'my_delete_user', 10, 1 );
+	         * function my_delete_user( $user_id ) {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
+            do_action( 'um_delete_user', um_user( 'ID' ) );
 
             // send email notifications
             if ( $send_mail ) {

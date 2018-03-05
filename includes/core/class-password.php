@@ -79,19 +79,57 @@ if ( ! class_exists( 'Password' ) ) {
 
         }
 
-        /***
-         ***	@password page form
-         ***/
+	    /**
+	     * Password page form
+	     */
         function form_init() {
             if ( um_requesting_password_reset() ) {
 
                 UM()->form()->post_form = $_POST;
 
-                do_action('um_reset_password_errors_hook', UM()->form()->post_form );
+	            /**
+	             * UM hook
+	             *
+	             * @type action
+	             * @title um_reset_password_errors_hook
+	             * @description Action on reset password submit form
+	             * @input_vars
+	             * [{"var":"$post","type":"array","desc":"Form submitted"}]
+	             * @change_log
+	             * ["Since: 2.0"]
+	             * @usage add_action( 'um_reset_password_errors_hook', 'function_name', 10, 1 );
+	             * @example
+	             * <?php
+	             * add_action( 'um_reset_password_errors_hook', 'my_reset_password_errors', 10, 1 );
+	             * function my_reset_password_errors( $post ) {
+	             *     // your code here
+	             * }
+	             * ?>
+	             */
+                do_action( 'um_reset_password_errors_hook', UM()->form()->post_form );
 
-                if ( !isset( UM()->form()->errors) ) {
+                if ( ! isset( UM()->form()->errors ) ) {
 
-                    do_action('um_reset_password_process_hook', UM()->form()->post_form );
+	                /**
+	                 * UM hook
+	                 *
+	                 * @type action
+	                 * @title um_reset_password_process_hook
+	                 * @description Action on reset password success submit form
+	                 * @input_vars
+	                 * [{"var":"$post","type":"array","desc":"Form submitted"}]
+	                 * @change_log
+	                 * ["Since: 2.0"]
+	                 * @usage add_action( 'um_reset_password_process_hook', 'function_name', 10, 1 );
+	                 * @example
+	                 * <?php
+	                 * add_action( 'um_reset_password_process_hook', 'my_reset_password_process', 10, 1 );
+	                 * function my_reset_password_process( $post ) {
+	                 *     // your code here
+	                 * }
+	                 * ?>
+	                 */
+                    do_action( 'um_reset_password_process_hook', UM()->form()->post_form );
 
                 }
 
@@ -101,11 +139,49 @@ if ( ! class_exists( 'Password' ) ) {
 
                 UM()->form()->post_form = $_POST;
 
-                do_action('um_change_password_errors_hook', UM()->form()->post_form );
+	            /**
+	             * UM hook
+	             *
+	             * @type action
+	             * @title um_change_password_errors_hook
+	             * @description Action on change password submit form
+	             * @input_vars
+	             * [{"var":"$post","type":"array","desc":"Form submitted"}]
+	             * @change_log
+	             * ["Since: 2.0"]
+	             * @usage add_action( 'um_change_password_errors_hook', 'function_name', 10, 1 );
+	             * @example
+	             * <?php
+	             * add_action( 'um_change_password_errors_hook', 'my_change_password_errors', 10, 1 );
+	             * function my_change_password_errors( $post ) {
+	             *     // your code here
+	             * }
+	             * ?>
+	             */
+                do_action( 'um_change_password_errors_hook', UM()->form()->post_form );
 
-                if ( !isset( UM()->form()->errors ) ) {
+                if ( ! isset( UM()->form()->errors ) ) {
 
-                    do_action('um_change_password_process_hook', UM()->form()->post_form );
+	                /**
+	                 * UM hook
+	                 *
+	                 * @type action
+	                 * @title um_change_password_process_hook
+	                 * @description Action on change password success submit form
+	                 * @input_vars
+	                 * [{"var":"$post","type":"array","desc":"Form submitted"}]
+	                 * @change_log
+	                 * ["Since: 2.0"]
+	                 * @usage add_action( 'um_change_password_process_hook', 'function_name', 10, 1 );
+	                 * @example
+	                 * <?php
+	                 * add_action( 'um_change_password_process_hook', 'my_change_password_process', 10, 1 );
+	                 * function my_change_password_process( $post ) {
+	                 *     // your code here
+	                 * }
+	                 * ?>
+	                 */
+                    do_action( 'um_change_password_process_hook', UM()->form()->post_form );
 
                 }
 
@@ -218,10 +294,65 @@ if ( ! class_exists( 'Password' ) ) {
 
             extract( $args, EXTR_SKIP );
 
-            do_action("um_pre_{$mode}_shortcode", $args);
-
-            do_action("um_before_form_is_loaded", $args);
-
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_pre_{$mode}_shortcode
+	         * @description Action pre-load password form shortcode
+	         * @input_vars
+	         * [{"var":"$args","type":"array","desc":"Form shortcode pre-loading"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_pre_{$mode}_shortcode', 'function_name', 10, 1 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_pre_{$mode}_shortcode', 'my_pre_password_shortcode', 10, 1 );
+	         * function my_pre_password_shortcode( $args ) {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
+            do_action( "um_pre_{$mode}_shortcode", $args );
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_before_form_is_loaded
+	         * @description Action pre-load password form shortcode
+	         * @input_vars
+	         * [{"var":"$args","type":"array","desc":"Form shortcode pre-loading"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_before_form_is_loaded', 'function_name', 10, 1 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_before_form_is_loaded', 'my_before_form_is_loaded', 10, 1 );
+	         * function my_before_form_is_loaded( $args ) {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
+            do_action( "um_before_form_is_loaded", $args );
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_before_{$mode}_form_is_loaded
+	         * @description Action pre-load password form shortcode
+	         * @input_vars
+	         * [{"var":"$args","type":"array","desc":"Form shortcode pre-loading"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_before_{$mode}_form_is_loaded', 'function_name', 10, 1 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_before_{$mode}_form_is_loaded', 'my_before_form_is_loaded', 10, 1 );
+	         * function my_before_form_is_loaded( $args ) {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
             do_action( "um_before_{$mode}_form_is_loaded", $args );
 
             UM()->shortcodes()->template_load( $template, $args );

@@ -93,7 +93,24 @@ if ( ! class_exists( 'Admin_Notices' ) ) {
 
                 }
 
-                do_action('um_admin_after_main_notices');
+	            /**
+	             * UM hook
+	             *
+	             * @type action
+	             * @title um_admin_after_main_notices
+	             * @description Insert some content after main admin notices
+	             * @change_log
+	             * ["Since: 2.0"]
+	             * @usage add_action( 'um_admin_after_main_notices', 'function_name', 10 );
+	             * @example
+	             * <?php
+	             * add_action( 'um_admin_after_main_notices', 'my_admin_after_main_notices', 10 );
+	             * function my_admin_after_main_notices() {
+	             *     // your code here
+	             * }
+	             * ?>
+	             */
+                do_action( 'um_admin_after_main_notices' );
             }
 
         }

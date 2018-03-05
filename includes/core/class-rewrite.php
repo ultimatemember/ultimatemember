@@ -196,15 +196,34 @@ if ( ! class_exists( 'Rewrite' ) ) {
 
                     um_set_requested_user( $user_id );
 
-                    do_action('um_access_profile', $user_id );
+	                /**
+	                 * UM hook
+	                 *
+	                 * @type action
+	                 * @title um_access_profile
+	                 * @description Action on user access profile
+	                 * @input_vars
+	                 * [{"var":"$user_id","type":"int","desc":"User ID"}]
+	                 * @change_log
+	                 * ["Since: 2.0"]
+	                 * @usage add_action( 'um_access_profile', 'function_name', 10, 1 );
+	                 * @example
+	                 * <?php
+	                 * add_action( 'um_access_profile', 'my_access_profile', 10, 1 );
+	                 * function my_access_profile( $user_id ) {
+	                 *     // your code here
+	                 * }
+	                 * ?>
+	                 */
+                    do_action( 'um_access_profile', $user_id );
 
                 } else {
 
-                    exit( wp_redirect( um_get_core_page('user') ) );
+                    exit( wp_redirect( um_get_core_page( 'user' ) ) );
 
                 }
 
-            } else if ( um_is_core_page('user') ) {
+            } else if ( um_is_core_page( 'user' ) ) {
 
                 if ( is_user_logged_in() ) { // just redirect to their profile
 

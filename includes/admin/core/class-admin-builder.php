@@ -458,7 +458,10 @@ if ( ! class_exists( 'Admin_Builder' ) ) {
 
             if ( !is_user_logged_in() || !current_user_can('manage_options') ) die( __('Please login as administrator','ultimate-member') );
 
-            extract($_POST);
+            /**
+             * @var $act_id
+             */
+            extract( $_POST );
 
             switch ( $act_id ) {
 
@@ -466,8 +469,44 @@ if ( ! class_exists( 'Admin_Builder' ) ) {
 
                     ob_start();
 
-                    do_action('um_admin_ajax_modal_content__hook', $act_id );
-                    do_action("um_admin_ajax_modal_content__hook_{$act_id}");
+                    /**
+                     * UM hook
+                     *
+                     * @type action
+                     * @title um_admin_ajax_modal_content__hook
+                     * @description Integration hook on ajax popup admin builder modal content
+                     * @input_vars
+                     * [{"var":"$act_id","type":"string","desc":"Ajax Action"}]
+                     * @change_log
+                     * ["Since: 2.0"]
+                     * @usage add_action( 'um_admin_ajax_modal_content__hook', 'function_name', 10, 1 );
+                     * @example
+                     * <?php
+                     * add_action( 'um_admin_ajax_modal_content__hook', 'my_admin_custom_hook', 10, 1 );
+                     * function um_admin_ajax_modal_content__hook( $act_id ) {
+                     *     // your code here
+                     * }
+                     * ?>
+                     */
+                    do_action( 'um_admin_ajax_modal_content__hook', $act_id );
+                    /**
+                     * UM hook
+                     *
+                     * @type action
+                     * @title um_admin_ajax_modal_content__hook_{$act_id}
+                     * @description Integration hook on ajax popup admin builder modal content
+                     * @change_log
+                     * ["Since: 2.0"]
+                     * @usage add_action( 'um_admin_ajax_modal_content__hook_{$act_id}', 'function_name', 10 );
+                     * @example
+                     * <?php
+                     * add_action( 'um_admin_ajax_modal_content__hook_{$act_id}', 'my_admin_ajax_modal_content', 10 );
+                     * function my_admin_ajax_modal_content() {
+                     *     // your code here
+                     * }
+                     * ?>
+                     */
+                    do_action( "um_admin_ajax_modal_content__hook_{$act_id}" );
 
                     $output = ob_get_contents();
                     ob_end_clean();
@@ -605,7 +644,7 @@ if ( ! class_exists( 'Admin_Builder' ) ) {
 
                         <?php if ( isset( $args['mce_content'] ) ) { ?><div class="dynamic-mce-content"><?php echo $metabox->edit_array['content']; ?></div><?php } ?>
 
-                        <?php do_action('um_admin_field_modal_header'); ?>
+                        <?php $this->modal_header(); ?>
 
                         <div class="um-admin-half">
 
@@ -625,7 +664,7 @@ if ( ! class_exists( 'Admin_Builder' ) ) {
 
                         <?php if ( isset( $col_full ) ) {foreach( $col_full as $opt ) $metabox->field_input ( $opt, null, $metabox->edit_array ); } ?>
 
-                        <?php do_action('um_admin_field_modal_footer', $arg2, $args, $metabox->in_edit, (isset( $metabox->edit_array ) ) ? $metabox->edit_array : '' ); ?>
+                        <?php $this->modal_footer( $arg2, $args, $metabox ); ?>
 
                         <?php
 
@@ -665,7 +704,7 @@ if ( ! class_exists( 'Admin_Builder' ) ) {
 
                         <input type="hidden" name="post_id" id="post_id" value="<?php echo $arg2; ?>" />
 
-                        <?php do_action('um_admin_field_modal_header'); ?>
+                        <?php $this->modal_header(); ?>
 
                         <div class="um-admin-half">
 
@@ -685,7 +724,7 @@ if ( ! class_exists( 'Admin_Builder' ) ) {
 
                         <?php if ( isset( $col_full ) ) {foreach( $col_full as $opt ) $metabox->field_input ( $opt ); } ?>
 
-                        <?php do_action('um_admin_field_modal_footer', $arg2, $args, $metabox->in_edit, (isset( $metabox->edit_array ) ) ? $metabox->edit_array : '' ); ?>
+                        <?php $this->modal_footer( $arg2, $args, $metabox ); ?>
 
                         <?php
 
@@ -729,6 +768,63 @@ if ( ! class_exists( 'Admin_Builder' ) ) {
             }
             die;
 
+        }
+
+
+        /**
+         *
+         */
+        function modal_header() {
+            /**
+             * UM hook
+             *
+             * @type action
+             * @title um_admin_field_modal_header
+             * @description Modal Window Header
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_action( 'um_admin_field_modal_header', 'function_name', 10 );
+             * @example
+             * <?php
+             * add_action( 'um_admin_field_modal_header', 'my_admin_field_modal_header', 10 );
+             * function my_admin_field_modal_header() {
+             *     // your code here
+             * }
+             * ?>
+             */
+            do_action( 'um_admin_field_modal_header' );
+        }
+
+
+        /**
+         * @param $arg2
+         * @param $args
+         * @param $metabox
+         */
+        function modal_footer( $arg2, $args, $metabox ) {
+            /**
+             * UM hook
+             *
+             * @type action
+             * @title um_admin_field_modal_footer
+             * @description Modal Window Footer
+             * @input_vars
+             * [{"var":"$arg2","type":"string","desc":"Ajax Action"},
+             * {"var":"$args","type":"array","desc":"Modal window arguments"},
+             * {"var":"$in_edit","type":"bool","desc":"Is edit mode?"},
+             * {"var":"$edit_array","type":"array","desc":"Edit Array"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_action( 'um_admin_field_modal_footer', 'function_name', 10, 4 );
+             * @example
+             * <?php
+             * add_action( 'um_admin_field_modal_footer', 'my_admin_field_modal_footer', 10, 4 );
+             * function my_admin_field_modal_footer( $arg2, $args, $in_edit, $edit_array ) {
+             *     // your code here
+             * }
+             * ?>
+             */
+            do_action( 'um_admin_field_modal_footer', $arg2, $args, $metabox->in_edit, ( isset( $metabox->edit_array ) ) ? $metabox->edit_array : '' );
         }
 
 

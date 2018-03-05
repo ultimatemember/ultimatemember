@@ -333,13 +333,45 @@ if ( ! class_exists( 'Access' ) ) {
 				 um_is_core_post( $post, 'login' ) )
 				return;
 
-			//check terms individual restrict options
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_roles_add_meta_boxes_um_role_meta
+			 * @description Check terms individual restrict options
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_access_check_individual_term_settings', 'function_name', 10 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_access_check_individual_term_settings', 'my_access_check_individual_term_settings', 10 );
+			 * function my_access_check_individual_term_settings() {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( 'um_access_check_individual_term_settings' );
 			//exit from function if term page is accessible
 			if ( $this->check_access() )
 				return;
 
-			//check global restrict content options
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_access_check_global_settings
+			 * @description Check global restrict content options
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_access_check_global_settings', 'function_name', 10 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_access_check_global_settings', 'my_access_check_global_settings', 10 );
+			 * function my_access_check_global_settings() {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( 'um_access_check_global_settings' );
 
 			$this->check_access();
@@ -578,6 +610,23 @@ if ( ! class_exists( 'Access' ) ) {
 	                            $this->current_single_post = $post;
 	                            add_filter( 'the_content', array( &$this, 'replace_post_content' ), 9999, 1 );
 
+	                            /**
+	                             * UM hook
+	                             *
+	                             * @type action
+	                             * @title um_access_fix_external_post_content
+	                             * @description Hook for 3-d party content filtration
+	                             * @change_log
+	                             * ["Since: 2.0"]
+	                             * @usage add_action( 'um_access_fix_external_post_content', 'function_name', 10 );
+	                             * @example
+	                             * <?php
+	                             * add_action( 'um_access_fix_external_post_content', 'my_access_fix_external_post_content', 10 );
+	                             * function my_access_fix_external_post_content() {
+	                             *     // your code here
+	                             * }
+	                             * ?>
+	                             */
 	                            do_action( 'um_access_fix_external_post_content' );
 
                                 $filtered_posts[] = $post;
@@ -671,6 +720,23 @@ if ( ! class_exists( 'Access' ) ) {
                                     }
                                 }
 
+	                            /**
+	                             * UM hook
+	                             *
+	                             * @type action
+	                             * @title um_access_fix_external_post_content
+	                             * @description Hook for 3-d party content filtration
+	                             * @change_log
+	                             * ["Since: 2.0"]
+	                             * @usage add_action( 'um_access_fix_external_post_content', 'function_name', 10 );
+	                             * @example
+	                             * <?php
+	                             * add_action( 'um_access_fix_external_post_content', 'my_access_fix_external_post_content', 10 );
+	                             * function my_access_fix_external_post_content() {
+	                             *     // your code here
+	                             * }
+	                             * ?>
+	                             */
 	                            do_action( 'um_access_fix_external_post_content' );
 
                                 $filtered_posts[] = $post;
@@ -740,6 +806,23 @@ if ( ! class_exists( 'Access' ) ) {
                                     }
                                 }
 
+	                            /**
+	                             * UM hook
+	                             *
+	                             * @type action
+	                             * @title um_access_fix_external_post_content
+	                             * @description Hook for 3-d party content filtration
+	                             * @change_log
+	                             * ["Since: 2.0"]
+	                             * @usage add_action( 'um_access_fix_external_post_content', 'function_name', 10 );
+	                             * @example
+	                             * <?php
+	                             * add_action( 'um_access_fix_external_post_content', 'my_access_fix_external_post_content', 10 );
+	                             * function my_access_fix_external_post_content() {
+	                             *     // your code here
+	                             * }
+	                             * ?>
+	                             */
                                 do_action( 'um_access_fix_external_post_content' );
 
                                 $filtered_posts[] = $post;

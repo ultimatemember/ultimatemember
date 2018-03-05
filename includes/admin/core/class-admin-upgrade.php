@@ -14,7 +14,7 @@ if ( ! class_exists( 'Admin_Upgrade' ) ) {
 
 
         function __construct() {
-            $this->packages_dir = plugin_dir_path( __FILE__ ).'packages/';
+            $this->packages_dir = plugin_dir_path( __FILE__ ) . 'packages' . DIRECTORY_SEPARATOR;
 
             $um_last_version_upgrade = get_option( 'um_last_version_upgrade' );
 

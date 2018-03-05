@@ -53,10 +53,47 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	***/
 	add_filter('authenticate', 'um_wp_form_errors_hook_ip_test', 10, 3);
 	function um_wp_form_errors_hook_ip_test( $user, $username, $password ) {
-		if (!empty($username)) {
-
-			do_action("um_submit_form_errors_hook__blockedips", $args=array() );
-			do_action("um_submit_form_errors_hook__blockedemails", $args=array('username' => $username ) );
+		if ( ! empty( $username ) ) {
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_submit_form_errors_hook__blockedips
+			 * @description Hook that runs after user reset their password
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Form data"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_submit_form_errors_hook__blockedips', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_submit_form_errors_hook__blockedips', 'my_submit_form_errors_hook__blockedips', 10, 1 );
+			 * function my_submit_form_errors_hook__blockedips( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( "um_submit_form_errors_hook__blockedips", $args = array() );
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_submit_form_errors_hook__blockedemails
+			 * @description Hook that runs after user reset their password
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Form data"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_submit_form_errors_hook__blockedemails', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_submit_form_errors_hook__blockedemails', 'my_submit_form_errors_hook__blockedemails', 10, 1 );
+			 * function my_submit_form_errors_hook__blockedemails( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( "um_submit_form_errors_hook__blockedemails", $args = array( 'username' => $username ) );
 			
 		}
 

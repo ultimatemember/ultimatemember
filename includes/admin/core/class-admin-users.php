@@ -304,8 +304,44 @@ if ( ! class_exists( 'Admin_Users' ) ) {
                     UM()->user()->set( $user_id );
                     if ( ! um_user( 'super_admin' ) ) {
 
+                        /**
+                         * UM hook
+                         *
+                         * @type action
+                         * @title um_admin_user_action_hook
+                         * @description Action on bulk user action
+                         * @input_vars
+                         * [{"var":"$bulk_action","type":"string","desc":"Bulk Action"}]
+                         * @change_log
+                         * ["Since: 2.0"]
+                         * @usage add_action( 'um_admin_user_action_hook{$action}', 'function_name', 10, 1 );
+                         * @example
+                         * <?php
+                         * add_action( 'um_admin_user_action_hook', 'my_admin_user_action', 10, 1 );
+                         * function my_admin_user_action( $bulk_action ) {
+                         *     // your code here
+                         * }
+                         * ?>
+                         */
                         do_action( "um_admin_user_action_hook", $bulk_action );
 
+                        /**
+                         * UM hook
+                         *
+                         * @type action
+                         * @title um_admin_user_action_{$bulk_action}_hook
+                         * @description Action on bulk user action
+                         * @change_log
+                         * ["Since: 2.0"]
+                         * @usage add_action( 'um_admin_user_action_{$bulk_action}_hook', 'function_name', 10 );
+                         * @example
+                         * <?php
+                         * add_action( 'um_admin_user_action_{$bulk_action}_hook', 'my_admin_user_action', 10 );
+                         * function my_admin_user_action() {
+                         *     // your code here
+                         * }
+                         * ?>
+                         */
                         do_action( "um_admin_user_action_{$bulk_action}_hook" );
 
                     } else {

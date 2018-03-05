@@ -4,10 +4,46 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 wp_enqueue_script( 'postbox' );
-wp_enqueue_media ();
+wp_enqueue_media();
 
-do_action( 'um_roles_add_meta_boxes', 'um_role_meta', '' );
-do_action( 'um_roles_add_meta_boxes_um_role_meta' , '' );
+/**
+ * UM hook
+ *
+ * @type action
+ * @title um_roles_add_meta_boxes
+ * @description Add meta boxes on add/edit UM Role
+ * @input_vars
+ * [{"var":"$meta","type":"string","desc":"Meta Box Key"}]
+ * @change_log
+ * ["Since: 2.0"]
+ * @usage add_action( 'um_roles_add_meta_boxes', 'function_name', 10, 1 );
+ * @example
+ * <?php
+ * add_action( 'um_roles_add_meta_boxes', 'my_roles_add_meta_boxes', 10, 1 );
+ * function my_roles_add_meta_boxes( $meta ) {
+ *     // your code here
+ * }
+ * ?>
+ */
+do_action( 'um_roles_add_meta_boxes', 'um_role_meta' );
+/**
+ * UM hook
+ *
+ * @type action
+ * @title um_roles_add_meta_boxes_um_role_meta
+ * @description Make add meta boxes on add/edit UM Role
+ * @change_log
+ * ["Since: 2.0"]
+ * @usage add_action( 'um_roles_add_meta_boxes_um_role_meta', 'function_name', 10 );
+ * @example
+ * <?php
+ * add_action( 'um_roles_add_meta_boxes_um_role_meta', 'my_roles_add_meta_boxes', 10 );
+ * function my_roles_add_meta_boxes() {
+ *     // your code here
+ * }
+ * ?>
+ */
+do_action( 'um_roles_add_meta_boxes_um_role_meta' );
 
 $data = array();
 $option = array();

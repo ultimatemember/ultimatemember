@@ -753,7 +753,26 @@ if ( ! class_exists( 'Files' ) ) {
 
 			delete_user_meta( $user_id, $type );
 
-			do_action("um_after_remove_{$type}", $user_id);
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_after_remove_{$type}
+			 * @description Make some actions after remove file
+			 * @input_vars
+			 * [{"var":"$user_id","type":"int","desc":"User ID"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_after_remove_{$type}', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_after_remove_{$type}', 'my_after_remove_file', 10, 1 );
+			 * function my_after_remove_file( $user_id ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( "um_after_remove_{$type}", $user_id );
 
 			$dir = $this->upload_basedir . $user_id . '/';
 			$prefix = $type;
@@ -951,12 +970,12 @@ if ( ! class_exists( 'Files' ) ) {
 				// removes a synced profile photo
 				delete_user_meta( $user_id, 'synced_profile_photo' );
 
-			}else if ( $key == 'cover_photo' ) {
+			} else if ( $key == 'cover_photo' ) {
 
 				list($w, $h) = @getimagesize( $source );
 
 				$sizes = UM()->options()->get( 'cover_thumb_sizes' );
-				foreach( $sizes as $size ) {
+				foreach ( $sizes as $size ) {
 
 					$ratio = round( $w / $h, 2 );
 					$height = round( $size / $ratio, 2 );
@@ -996,14 +1015,91 @@ if ( ! class_exists( 'Files' ) ) {
 			unlink( $source );
 			rmdir( $dir );
 
-			// update user's meta
-			do_action('um_before_upload_db_meta', $user_id, $key );
-			do_action("um_before_upload_db_meta_{$key}", $user_id );
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_before_upload_db_meta
+			 * @description Update user's meta before upload
+			 * @input_vars
+			 * [{"var":"$user_id","type":"int","desc":"User ID"},
+			 * {"var":"$key","type":"string","desc":"Meta key"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_before_upload_db_meta', 'function_name', 10, 2 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_before_upload_db_meta', 'my_before_upload_db_meta', 10, 2 );
+			 * function my_before_upload_db_meta( $user_id, $key ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( 'um_before_upload_db_meta', $user_id, $key );
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_before_upload_db_meta_{$key}
+			 * @description Update user's meta before upload
+			 * @input_vars
+			 * [{"var":"$user_id","type":"int","desc":"User ID"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_before_upload_db_meta_{$key}', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_before_upload_db_meta_{$key}', 'my_before_upload_db_meta', 10, 1 );
+			 * function my_before_upload_db_meta( $user_id ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( "um_before_upload_db_meta_{$key}", $user_id );
 
 			update_user_meta( $user_id, $key, $filename );
 
-			do_action('um_after_upload_db_meta', $user_id, $key );
-			do_action("um_after_upload_db_meta_{$key}", $user_id );
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_after_upload_db_meta
+			 * @description Update user's meta before upload
+			 * @input_vars
+			 * [{"var":"$user_id","type":"int","desc":"User ID"},
+			 * {"var":"$key","type":"string","desc":"Meta key"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_after_upload_db_meta', 'function_name', 10, 2 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_after_upload_db_meta', 'my_after_upload_db_meta', 10, 2 );
+			 * function my_after_upload_db_meta( $user_id, $key ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( 'um_after_upload_db_meta', $user_id, $key );
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_after_upload_db_meta_{$key}
+			 * @description Update user's meta after upload
+			 * @input_vars
+			 * [{"var":"$user_id","type":"int","desc":"User ID"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_after_upload_db_meta_{$key}', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_after_upload_db_meta_{$key}', 'my_after_upload_db_meta', 10, 1 );
+			 * function my_after_upload_db_meta( $user_id ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( "um_after_upload_db_meta_{$key}", $user_id );
 
 			// the url of upload
 			return $this->upload_baseurl . $user_id . '/' . $filename;

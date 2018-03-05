@@ -104,6 +104,23 @@ function um_submit_account_errors_hook( $args ) {
 			}
 
 			default:
+				/**
+				 * UM hook
+				 *
+				 * @type action
+				 * @title um_submit_account_{$tab}_tab_errors_hook
+				 * @description On submit account current $tab validation
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_action( 'um_submit_account_{$tab}_tab_errors_hook', 'function_name', 10 );
+				 * @example
+				 * <?php
+				 * add_action( 'um_submit_account_{$tab}_tab_errors_hook', 'my_submit_account_tab_errors', 10 );
+				 * function my_submit_account_tab_errors() {
+				 *     // your code here
+				 * }
+				 * ?>
+				 */
 				do_action( 'um_submit_account_' . $_POST['_um_account_tab'] . '_tab_errors_hook' );
                 break;
 		}
@@ -230,13 +247,68 @@ function um_submit_account_errors_hook( $args ) {
 		 */
 		$changes = apply_filters( 'um_account_pre_updating_profile_array', $changes );
 
-		// fired on account page, just before updating profile
-		do_action('um_account_pre_update_profile', $changes, um_user('ID') );
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_account_pre_update_profile
+		 * @description Fired on account page, just before updating profile
+		 * @input_vars
+		 * [{"var":"$changes","type":"array","desc":"Submitted data"},
+		 * {"var":"$user_id","type":"int","desc":"User ID"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_account_pre_update_profile', 'function_name', 10, 2 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_account_pre_update_profile', 'my_account_pre_update_profile', 10, 2 );
+		 * function my_account_pre_update_profile( $changes, $user_id ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( 'um_account_pre_update_profile', $changes, um_user( 'ID' ) );
 
 		UM()->user()->update_profile( $changes );
-       	
-		do_action('um_post_account_update');
 
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_post_account_update
+		 * @description Fired on account page, after updating profile
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_post_account_update', 'function_name', 10 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_post_account_update', 'my_post_account_update', 10 );
+		 * function my_account_pre_update_profile() {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( 'um_post_account_update' );
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_after_user_account_updated
+		 * @description Fired on account page, after updating profile
+		 * @input_vars
+		 * [{"var":"$user_id","type":"int","desc":"User ID"},
+		 * {"var":"$changes","type":"array","desc":"Submitted data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_after_user_account_updated', 'function_name', 10, 2 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_after_user_account_updated', 'my_after_user_account_updated', 10, 2 );
+		 * function my_after_user_account_updated( $user_id, $changes ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
 		do_action( 'um_after_user_account_updated', get_current_user_id(), $changes );
 
 		$url = '';

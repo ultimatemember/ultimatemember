@@ -38,17 +38,130 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		$can_view = apply_filters( 'um_profile_can_view_main', -1, um_profile_id() );
 
 		if ( $can_view == -1 ) {
-
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_before_form
+			 * @description Some actions before profile form
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_before_form', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_before_form', 'my_before_form', 10, 1 );
+			 * function my_before_form( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( "um_before_form", $args );
 
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_before_{$mode}_fields
+			 * @description Some actions before profile form fields
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"{Profile} form shortcode arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_before_{$mode}_fields', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_before_{$mode}_fields', 'my_before_fields', 10, 1 );
+			 * function my_before_form( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( "um_before_{$mode}_fields", $args );
 
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_main_{$mode}_fields
+			 * @description Some actions before login form fields
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Login form shortcode arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_before_{$mode}_fields', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_before_{$mode}_fields', 'my_before_fields', 10, 1 );
+			 * function my_before_form( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( "um_main_{$mode}_fields", $args );
 
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_after_form_fields
+			 * @description Some actions after login form fields
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Login form shortcode arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_after_form_fields', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_after_form_fields', 'my_after_form_fields', 10, 1 );
+			 * function my_after_form_fields( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( "um_after_form_fields", $args );
 
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_after_{$mode}_fields
+			 * @description Some actions after profile form fields
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_after_{$mode}_fields', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_after_{$mode}_fields', 'my_after_form_fields', 10, 1 );
+			 * function my_after_form_fields( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( "um_after_{$mode}_fields", $args );
 
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_after_form
+			 * @description Some actions after profile form fields
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_after_form', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_after_form', 'my_after_form', 10, 1 );
+			 * function my_after_form( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( "um_after_form", $args );
 
 		} else {
@@ -84,6 +197,25 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 		$userinfo = UM()->user()->profile;
 
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_user_before_updating_profile
+		 * @description Some actions before profile submit
+		 * @input_vars
+		 * [{"var":"$userinfo","type":"array","desc":"User Data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_user_before_updating_profile', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_user_before_updating_profile', 'my_user_before_updating_profile', 10, 1 );
+		 * function my_user_before_updating_profile( $userinfo ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
 		do_action( 'um_user_before_updating_profile', $userinfo );
 
 		if (!empty( $args['custom_fields'] ))
@@ -140,6 +272,25 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			$args['roles_before_upgrade'] = UM()->roles()->get_all_user_roles( um_user( 'ID' ) );
 		}
 
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_user_pre_updating_profile
+		 * @description Some actions before profile submit
+		 * @input_vars
+		 * [{"var":"$userinfo","type":"array","desc":"Submitted User Data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_user_pre_updating_profile', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_user_pre_updating_profile', 'my_user_pre_updating_profile', 10, 1 );
+		 * function my_user_pre_updating_profile( $userinfo ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
 		do_action( 'um_user_pre_updating_profile', $to_update );
 
 		/**
@@ -168,6 +319,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 		if ( is_array( $to_update ) ) {
 			UM()->user()->update_profile( $to_update );
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_after_user_updated
+			 * @description Some actions after user profile updated
+			 * @input_vars
+			 * [{"var":"$user_id","type":"int","desc":"User ID"},
+			 * {"var":"$args","type":"array","desc":"Form Data"},
+			 * {"var":"$userinfo","type":"array","desc":"Submitted User Data"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_after_user_updated', 'function_name', 10, 33 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_after_user_updated', 'my_after_user_updated', 10, 3 );
+			 * function my_after_user_updated( $user_id, $args, $userinfo ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( 'um_after_user_updated', um_user( 'ID' ), $args, $to_update );
 		}
 
@@ -195,13 +367,92 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		$files = apply_filters( 'um_user_pre_updating_files_array', $files );
 
 		if (is_array( $files )) {
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_before_user_upload
+			 * @description Before file uploaded on complete UM user profile.
+			 * @input_vars
+			 * [{"var":"$user_id","type":"int","desc":"User ID"},
+			 * {"var":"$files","type":"array","desc":"Files data"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_before_user_upload', 'function_name', 10, 2 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_before_user_upload', 'my_before_user_upload', 10, 2 );
+			 * function my_before_user_upload( $user_id, $files ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( 'um_before_user_upload', um_user( 'ID' ), $files );
 			UM()->user()->update_files( $files );
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_after_user_upload
+			 * @description After complete UM user profile edit and file uploaded.
+			 * @input_vars
+			 * [{"var":"$user_id","type":"int","desc":"User ID"},
+			 * {"var":"$files","type":"array","desc":"Files data"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_after_user_upload', 'function_name', 10, 2 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_after_user_upload', 'my_after_user_upload', 10, 2 );
+			 * function my_after_user_upload( $user_id, $files ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( 'um_after_user_upload', um_user( 'ID' ), $files );
 		}
 
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_user_after_updating_profile
+		 * @description After upgrade user's profile
+		 * @input_vars
+		 * [{"var":"$submitted","type":"array","desc":"Form data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_user_after_updating_profile', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_user_after_updating_profile', 'my_user_after_updating_profile'', 10, 1 );
+		 * function my_user_after_updating_profile( $submitted ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
 		do_action( 'um_user_after_updating_profile', $to_update );
 
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_update_profile_full_name
+		 * @description On update user profile change full name
+		 * @input_vars
+		 * [{"var":"$user_id","type":"int","desc":"User ID"},
+		 * {"var":"$args","type":"array","desc":"Form data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_update_profile_full_name', 'function_name', 10, 2 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_update_profile_full_name', 'my_update_profile_full_name', 10, 2 );
+		 * function my_update_profile_full_name( $user_id, $args ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
 		do_action( 'um_update_profile_full_name', um_user( 'ID' ), $to_update );
 
 		if ( ! isset( $args['is_signup'] ) ) {
@@ -314,26 +565,42 @@ if ( ! defined( 'ABSPATH' ) ) exit;
             <div class="um-cover <?php if (um_profile( 'cover_photo' ) || ( $default_cover && $default_cover['url'] )) echo 'has-cover'; ?>"
                  data-user_id="<?php echo um_profile_id(); ?>" data-ratio="<?php echo $args['cover_ratio']; ?>">
 
-				<?php do_action( 'um_cover_area_content', um_profile_id() ); ?>
-
 				<?php
+				/**
+				 * UM hook
+				 *
+				 * @type action
+				 * @title um_cover_area_content
+				 * @description Cover area content change
+				 * @input_vars
+				 * [{"var":"$user_id","type":"int","desc":"User ID"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_action( 'um_cover_area_content', 'function_name', 10, 1 );
+				 * @example
+				 * <?php
+				 * add_action( 'um_cover_area_content', 'my_cover_area_content', 10, 1 );
+				 * function my_cover_area_content( $user_id ) {
+				 *     // your code here
+				 * }
+				 * ?>
+				 */
+				do_action( 'um_cover_area_content', um_profile_id() );
+				if ( UM()->fields()->editing ) {
 
-					if (UM()->fields()->editing) {
+					$items = array(
+						'<a href="#" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . __( 'Change cover photo', 'ultimate-member' ) . '</a>',
+						'<a href="#" class="um-reset-cover-photo" data-user_id="' . um_profile_id() . '">' . __( 'Remove', 'ultimate-member' ) . '</a>',
+						'<a href="#" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
+					);
 
-						$items = array(
-							'<a href="#" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . __( 'Change cover photo', 'ultimate-member' ) . '</a>',
-							'<a href="#" class="um-reset-cover-photo" data-user_id="' . um_profile_id() . '">' . __( 'Remove', 'ultimate-member' ) . '</a>',
-							'<a href="#" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
-						);
+					echo UM()->menu()->new_ui( 'bc', 'div.um-cover', 'click', $items );
 
-						echo UM()->menu()->new_ui( 'bc', 'div.um-cover', 'click', $items );
+				}
 
-					}
-				?>
+				UM()->fields()->add_hidden_field( 'cover_photo' );
 
-				<?php UM()->fields()->add_hidden_field( 'cover_photo' ); ?>
-
-				<?php echo $overlay; ?>
+				echo $overlay; ?>
 
                 <div class="um-cover-e">
 
@@ -421,7 +688,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
         <div class="um-header<?php echo $classes; ?>">
 
-			<?php do_action( 'um_pre_header_editprofile', $args ); ?>
+			<?php
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_pre_header_editprofile
+			 * @description Insert some content before edit profile header
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
+				 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_pre_header_editprofile', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_pre_header_editprofile', 'my_pre_header_editprofile', 10, 1 );
+			 * function my_pre_header_editprofile( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( 'um_pre_header_editprofile', $args ); ?>
 
             <div class="um-profile-photo" data-user_id="<?php echo um_profile_id(); ?>">
 
@@ -511,21 +798,78 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
                 <div class="um-main-meta">
 
-					<?php if ($args['show_name']) { ?>
+					<?php if ( $args['show_name'] ) { ?>
                         <div class="um-name">
 
                             <a href="<?php echo um_user_profile_url(); ?>"
                                title="<?php echo um_user( 'display_name' ); ?>"><?php echo um_user( 'display_name', 'html' ); ?></a>
 
-							<?php do_action( 'um_after_profile_name_inline', $args ); ?>
+							<?php
+							/**
+							 * UM hook
+							 *
+							 * @type action
+							 * @title um_after_profile_name_inline
+							 * @description Insert after profile name some content
+							 * @input_vars
+							 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
+							 * @change_log
+							 * ["Since: 2.0"]
+							 * @usage add_action( 'um_after_profile_name_inline', 'function_name', 10, 1 );
+							 * @example
+							 * <?php
+							 * add_action( 'um_after_profile_name_inline', 'my_after_profile_name_inline', 10, 1 );
+							 * function my_after_profile_name_inline( $args ) {
+							 *     // your code here
+							 * }
+							 * ?>
+							 */
+							do_action( 'um_after_profile_name_inline', $args ); ?>
 
                         </div>
 					<?php } ?>
 
                     <div class="um-clear"></div>
 
-					<?php do_action( 'um_after_profile_header_name_args', $args ); ?>
-					<?php do_action( 'um_after_profile_header_name' ); ?>
+					<?php
+					/**
+					 * UM hook
+					 *
+					 * @type action
+					 * @title um_after_profile_header_name_args
+					 * @description Insert after profile header name some content
+					 * @input_vars
+					 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
+					 * @change_log
+					 * ["Since: 2.0"]
+					 * @usage add_action( 'um_after_profile_header_name_args', 'function_name', 10, 1 );
+					 * @example
+					 * <?php
+					 * add_action( 'um_after_profile_header_name_args', 'my_after_profile_header_name_args', 10, 1 );
+					 * function my_after_profile_header_name_args( $args ) {
+					 *     // your code here
+					 * }
+					 * ?>
+					 */
+					do_action( 'um_after_profile_header_name_args', $args );
+					/**
+					 * UM hook
+					 *
+					 * @type action
+					 * @title um_after_profile_name_inline
+					 * @description Insert after profile name some content
+					 * @change_log
+					 * ["Since: 2.0"]
+					 * @usage add_action( 'um_after_profile_name_inline', 'function_name', 10 );
+					 * @example
+					 * <?php
+					 * add_action( 'um_after_profile_name_inline', 'my_after_profile_name_inline', 10 );
+					 * function my_after_profile_name_inline() {
+					 *     // your code here
+					 * }
+					 * ?>
+					 */
+					do_action( 'um_after_profile_header_name' ); ?>
 
                 </div>
 
@@ -576,18 +920,57 @@ if ( ! defined( 'ABSPATH' ) ) exit;
                     <span><?php printf( __( 'This user account status is %s', 'ultimate-member' ), um_user( 'account_status_name' ) ); ?></span>
                 </div>
 
-				<?php do_action( 'um_after_header_meta', um_user( 'ID' ), $args ); ?>
+				<?php
+				/**
+				 * UM hook
+				 *
+				 * @type action
+				 * @title um_after_header_meta
+				 * @description Insert after header meta some content
+				 * @input_vars
+				 * [{"var":"$user_id","type":"int","desc":"User ID"},
+				 * {"var":"$args","type":"array","desc":"Form Arguments"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_action( 'um_after_header_meta', 'function_name', 10, 2 );
+				 * @example
+				 * <?php
+				 * add_action( 'um_after_header_meta', 'my_after_header_meta', 10, 2 );
+				 * function my_after_header_meta( $user_id, $args ) {
+				 *     // your code here
+				 * }
+				 * ?>
+				 */
+				do_action( 'um_after_header_meta', um_user( 'ID' ), $args ); ?>
 
             </div>
             <div class="um-clear"></div>
 
-			<?php
-				if (UM()->fields()->is_error( 'profile_photo' )) {
-					echo UM()->fields()->field_error( UM()->fields()->show_error( 'profile_photo' ), 'force_show' );
-				}
-			?>
+			<?php if ( UM()->fields()->is_error( 'profile_photo' ) ) {
+				echo UM()->fields()->field_error( UM()->fields()->show_error( 'profile_photo' ), 'force_show' );
+			}
 
-			<?php do_action( 'um_after_header_info', um_user( 'ID' ), $args ); ?>
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_after_header_info
+			 * @description Insert after header info some content
+			 * @input_vars
+			 * [{"var":"$user_id","type":"int","desc":"User ID"},
+			 * {"var":"$args","type":"array","desc":"Form Arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_after_header_info', 'function_name', 10, 2 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_after_header_info', 'my_after_header_info', 10, 2 );
+			 * function my_after_header_info( $user_id, $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( 'um_after_header_info', um_user( 'ID' ), $args ); ?>
 
         </div>
 
@@ -768,9 +1151,28 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	 ***/
 	add_action( 'um_submit_form_profile', 'um_submit_form_profile', 10 );
 	function um_submit_form_profile( $args ) {
-		if (isset( UM()->form()->errors ))
+		if ( isset( UM()->form()->errors ) )
 			return false;
 
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_user_edit_profile
+		 * @description Run on successful submit profile form
+		 * @input_vars
+		 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_user_edit_profile', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_user_edit_profile', 'my_user_edit_profile', 10, 1 );
+		 * function my_user_edit_profile( $args ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
 		do_action( 'um_user_edit_profile', $args );
 	}
 

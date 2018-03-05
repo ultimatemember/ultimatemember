@@ -473,22 +473,93 @@ if ( ! class_exists( 'Shortcodes' ) ) {
 	            }
             }
 
-            // start loading the template here
-            do_action("um_pre_{$mode}_shortcode", $args);
-
-            do_action("um_before_form_is_loaded", $args);
-
-            do_action("um_before_{$mode}_form_is_loaded", $args);
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_pre_{$mode}_shortcode
+	         * @description Action pre-load form shortcode
+	         * @input_vars
+	         * [{"var":"$args","type":"array","desc":"Form shortcode pre-loading"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_pre_{$mode}_shortcode', 'function_name', 10, 1 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_pre_{$mode}_shortcode', 'my_pre_shortcode', 10, 1 );
+	         * function my_pre_shortcode( $args ) {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
+            do_action( "um_pre_{$mode}_shortcode", $args );
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_before_form_is_loaded
+	         * @description Action pre-load form shortcode
+	         * @input_vars
+	         * [{"var":"$args","type":"array","desc":"Form shortcode pre-loading"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_before_form_is_loaded', 'function_name', 10, 1 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_before_form_is_loaded', 'my_pre_shortcode', 10, 1 );
+	         * function my_pre_shortcode( $args ) {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
+            do_action( "um_before_form_is_loaded", $args );
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_before_{$mode}_form_is_loaded
+	         * @description Action pre-load form shortcode
+	         * @input_vars
+	         * [{"var":"$args","type":"array","desc":"Form shortcode pre-loading"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_before_{$mode}_form_is_loaded', 'function_name', 10, 1 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_before_{$mode}_form_is_loaded', 'my_pre_shortcode', 10, 1 );
+	         * function my_pre_shortcode( $args ) {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
+            do_action( "um_before_{$mode}_form_is_loaded", $args );
 
             $this->template_load( $template, $args );
 
             $this->dynamic_css( $args );
 
-            if (um_get_requested_user() || $mode == 'logout') {
+            if ( um_get_requested_user() || $mode == 'logout' ) {
                 um_reset_user();
             }
 
-            do_action('um_after_everything_output');
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_after_everything_output
+	         * @description Action after load shortcode content
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_after_everything_output', 'function_name', 10 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_after_everything_output', 'my_after_everything_output', 10 );
+	         * function my_after_everything_output() {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
+            do_action( 'um_after_everything_output' );
 
             $output = ob_get_contents();
             ob_end_clean();

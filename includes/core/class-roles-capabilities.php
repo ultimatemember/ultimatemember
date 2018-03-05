@@ -118,19 +118,109 @@ if ( ! class_exists( 'Roles_Capabilities' ) ) {
                         $user->add_role( $new_role );
                     }
 
+	                /**
+	                 * UM hook
+	                 *
+	                 * @type action
+	                 * @title um_when_role_is_set
+	                 * @description Action before user role changed
+	                 * @input_vars
+	                 * [{"var":"$user_id","type":"int","desc":"User ID"}]
+	                 * @change_log
+	                 * ["Since: 2.0"]
+	                 * @usage add_action( 'um_when_role_is_set', 'function_name', 10, 1 );
+	                 * @example
+	                 * <?php
+	                 * add_action( 'um_when_role_is_set', 'my_when_role_is_set', 10, 1 );
+	                 * function my_when_role_is_set( $user_id ) {
+	                 *     // your code here
+	                 * }
+	                 * ?>
+	                 */
                     do_action( 'um_when_role_is_set', $user_id );
-
-                    do_action('um_before_user_role_is_changed');
+	                /**
+	                 * UM hook
+	                 *
+	                 * @type action
+	                 * @title um_before_user_role_is_changed
+	                 * @description Action before user role changed
+	                 * @change_log
+	                 * ["Since: 2.0"]
+	                 * @usage add_action( 'um_before_user_role_is_changed', 'function_name', 10 );
+	                 * @example
+	                 * <?php
+	                 * add_action( 'um_before_user_role_is_changed', 'my_before_user_role_is_changed', 10 );
+	                 * function my_before_user_role_is_changed() {
+	                 *     // your code here
+	                 * }
+	                 * ?>
+	                 */
+                    do_action( 'um_before_user_role_is_changed' );
 
                     UM()->user()->profile['role'] = $new_role;
 
+	                /**
+	                 * UM hook
+	                 *
+	                 * @type action
+	                 * @title um_member_role_upgrade
+	                 * @description Action on user role changed
+	                 * @input_vars
+	                 * [{"var":"$user_id","type":"int","desc":"User ID"},
+	                 * {"var":"$role","type":"string","desc":"User role"}]
+	                 * @change_log
+	                 * ["Since: 2.0"]
+	                 * @usage add_action( 'um_member_role_upgrade', 'function_name', 10, 2 );
+	                 * @example
+	                 * <?php
+	                 * add_action( 'um_member_role_upgrade', 'my_member_role_upgrade', 10, 2 );
+	                 * function my_member_role_upgrade( $old_role, $new_role ) {
+	                 *     // your code here
+	                 * }
+	                 * ?>
+	                 */
                     do_action( 'um_member_role_upgrade', $role, UM()->user()->profile['role'] );
 
                     UM()->user()->update_usermeta_info( 'role' );
-
-                    do_action('um_after_user_role_is_changed');
-
-                    do_action('um_after_user_role_is_updated', $user_id, $role );
+	                /**
+	                 * UM hook
+	                 *
+	                 * @type action
+	                 * @title um_after_user_role_is_changed
+	                 * @description Action after user role changed
+	                 * @change_log
+	                 * ["Since: 2.0"]
+	                 * @usage add_action( 'um_after_user_role_is_changed', 'function_name', 10 );
+	                 * @example
+	                 * <?php
+	                 * add_action( 'um_after_user_role_is_changed', 'my_after_user_role_is_changed', 10 );
+	                 * function my_after_user_role_is_changed() {
+	                 *     // your code here
+	                 * }
+	                 * ?>
+	                 */
+                    do_action( 'um_after_user_role_is_changed' );
+	                /**
+	                 * UM hook
+	                 *
+	                 * @type action
+	                 * @title um_after_user_role_is_updated
+	                 * @description Action after user role changed
+	                 * @input_vars
+	                 * [{"var":"$user_id","type":"int","desc":"User ID"},
+	                 * {"var":"$role","type":"string","desc":"User role"}]
+	                 * @change_log
+	                 * ["Since: 2.0"]
+	                 * @usage add_action( 'um_after_user_role_is_updated', 'function_name', 10, 2 );
+	                 * @example
+	                 * <?php
+	                 * add_action( 'um_after_user_role_is_updated', 'my_after_user_role_is_updated', 10, 2 );
+	                 * function my_after_user_role_is_updated( $user_id, $role ) {
+	                 *     // your code here
+	                 * }
+	                 * ?>
+	                 */
+                    do_action( 'um_after_user_role_is_updated', $user_id, $role );
                 }
             } else {
                 // User does don exist so return false

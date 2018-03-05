@@ -50,10 +50,48 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			UM()->user()->set_registration_details( $args['submitted'] );
 		}
 
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_registration_set_extra_data
+		 * @description Hook that runs after insert user to DB and there you can set any extra details
+		 * @input_vars
+		 * [{"var":"$user_id","type":"int","desc":"User ID"},
+		 * {"var":"$args","type":"array","desc":"Form data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_registration_set_extra_data', 'function_name', 10, 2 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_registration_set_extra_data', 'my_registration_set_extra_data', 10, 2 );
+		 * function my_registration_set_extra_data( $user_id, $args ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
 		do_action( 'um_registration_set_extra_data', $user_id, $args );
 
-		//redirects handlers at 100 priority, you can add some info before redirects
-        //after complete UM user registration
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_registration_complete
+		 * @description After complete UM user registration. Redirects handlers at 100 priority, you can add some info before redirects
+		 * @input_vars
+		 * [{"var":"$user_id","type":"int","desc":"User ID"},
+		 * {"var":"$args","type":"array","desc":"Form data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_registration_complete', 'function_name', 10, 2 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_registration_complete', 'my_registration_complete', 10, 2 );
+		 * function my_registration_complete( $user_id, $args ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
         do_action( 'um_registration_complete', $user_id, $args );
 	}
 	add_action( 'um_user_register', 'um_after_insert_user', 10, 2 );
@@ -86,7 +124,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	function um_check_user_status( $user_id, $args ) {
         $status = um_user( 'status' );
 
-        do_action( "um_post_registration_{$status}_hook", $user_id, $args );
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_post_registration_{$status}_hook
+		 * @description After complete UM user registration.
+		 * @input_vars
+		 * [{"var":"$user_id","type":"int","desc":"User ID"},
+		 * {"var":"$args","type":"array","desc":"Form data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_post_registration_{$status}_hook', 'function_name', 10, 2 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_post_registration_{$status}_hook', 'my_post_registration', 10, 2 );
+		 * function my_post_registration( $user_id, $args ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( "um_post_registration_{$status}_hook", $user_id, $args );
 
 		if ( ! is_admin() ) {
 
@@ -102,7 +160,26 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				UM()->user()->auto_login( $user_id );
 				UM()->user()->generate_profile_slug( $user_id );
 
-				do_action( 'um_registration_after_auto_login', $user_id );
+	            /**
+	             * UM hook
+	             *
+	             * @type action
+	             * @title um_registration_after_auto_login
+	             * @description After complete UM user registration and autologin.
+	             * @input_vars
+	             * [{"var":"$user_id","type":"int","desc":"User ID"}]
+	             * @change_log
+	             * ["Since: 2.0"]
+	             * @usage add_action( 'um_registration_after_auto_login', 'function_name', 10, 1 );
+	             * @example
+	             * <?php
+	             * add_action( 'um_registration_after_auto_login', 'my_registration_after_auto_login', 10, 1 );
+	             * function my_registration_after_auto_login( $user_id ) {
+	             *     // your code here
+	             * }
+	             * ?>
+	             */
+	            do_action( 'um_registration_after_auto_login', $user_id );
 
 				if ( um_user( 'auto_approve_act' ) == 'redirect_url' && um_user( 'auto_approve_url' ) !== '' ) {
 					exit( wp_redirect( um_user( 'auto_approve_url' ) ) );
@@ -284,6 +361,26 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		);
 		$user_id = wp_insert_user( $userdata );
 
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_user_register
+		 * @description After complete UM user registration.
+		 * @input_vars
+		 * [{"var":"$user_id","type":"int","desc":"User ID"},
+		 * {"var":"$args","type":"array","desc":"Form data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_user_register', 'function_name', 10, 2 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_user_register', 'my_user_register', 10, 2 );
+		 * function my_user_register( $user_id, $args ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
 		do_action( 'um_user_register', $user_id, $args );
 
 		return $user_id;
@@ -507,8 +604,48 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		$files = apply_filters( 'um_user_pre_updating_files_array', $files );
 
 		if ( !empty( $files ) ) {
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_before_user_upload
+			 * @description Before file uploaded on complete UM user registration.
+			 * @input_vars
+			 * [{"var":"$user_id","type":"int","desc":"User ID"},
+			 * {"var":"$files","type":"array","desc":"Files data"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_before_user_upload', 'function_name', 10, 2 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_before_user_upload', 'my_before_user_upload', 10, 2 );
+			 * function my_before_user_upload( $user_id, $files ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( 'um_before_user_upload', $user_id, $files );
 			UM()->user()->update_files( $files );
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_after_user_upload
+			 * @description After complete UM user registration and file uploaded.
+			 * @input_vars
+			 * [{"var":"$user_id","type":"int","desc":"User ID"},
+			 * {"var":"$files","type":"array","desc":"Files data"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_after_user_upload', 'function_name', 10, 2 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_after_user_upload', 'my_after_user_upload', 10, 2 );
+			 * function my_after_user_upload( $user_id, $files ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( 'um_after_user_upload', $user_id, $files );
 		}
 	}
@@ -522,6 +659,26 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	 * @param $args
 	 */
 	function um_registration_set_profile_full_name( $user_id, $args ) {
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_update_profile_full_name
+		 * @description On update user profile change full name
+		 * @input_vars
+		 * [{"var":"$user_id","type":"int","desc":"User ID"},
+		 * {"var":"$args","type":"array","desc":"Form data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_update_profile_full_name', 'function_name', 10, 2 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_update_profile_full_name', 'my_update_profile_full_name', 10, 2 );
+		 * function my_update_profile_full_name( $user_id, $args ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
 		do_action( 'um_update_profile_full_name', $user_id, $args );
 	}
 

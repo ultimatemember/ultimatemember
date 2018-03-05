@@ -167,10 +167,30 @@ if ( ! class_exists( 'Account' ) ) {
 
                 $this->current_tab = $args['tab'];
 
-                if ( ! empty( $this->tabs[$args['tab']] ) ) { ?>
+                if ( ! empty( $this->tabs[ $args['tab'] ] ) ) { ?>
                     <div class="um-form">
                         <form method="post" action="">
-                            <?php do_action( 'um_account_page_hidden_fields', $args );
+                            <?php
+                            /**
+                             * UM hook
+                             *
+                             * @type action
+                             * @title um_account_page_hidden_fields
+                             * @description Make some action before account tab loading
+                             * @input_vars
+                             * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
+                             * @change_log
+                             * ["Since: 2.0"]
+                             * @usage add_action( 'um_before_template_part', 'function_name', 10, 1 );
+                             * @example
+                             * <?php
+                             * add_action( 'um_account_page_hidden_fields', 'my_account_page_hidden_fields', 10, 1 );
+                             * function my_account_page_hidden_fields( $args ) {
+                             *     // your code here
+                             * }
+                             * ?>
+                             */
+                            do_action( 'um_account_page_hidden_fields', $args );
                             $this->render_account_tab( $args['tab'], $this->tabs[$args['tab']], $args );  ?>
                         </form>
                     </div>
@@ -180,10 +200,65 @@ if ( ! class_exists( 'Account' ) ) {
 
                 $this->init_tabs( $args );
 
+                /**
+                 * UM hook
+                 *
+                 * @type action
+                 * @title um_pre_{$mode}_shortcode
+                 * @description Make some action before account tabs loading
+                 * @input_vars
+                 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
+                 * @change_log
+                 * ["Since: 2.0"]
+                 * @usage add_action( 'um_pre_{$mode}_shortcode', 'function_name', 10, 1 );
+                 * @example
+                 * <?php
+                 * add_action( 'um_pre_{$mode}_shortcode', 'my_pre_account_shortcode', 10, 1 );
+                 * function my_pre_account_shortcode( $args ) {
+                 *     // your code here
+                 * }
+                 * ?>
+                 */
                 do_action( "um_pre_{$args['mode']}_shortcode", $args );
-
+                /**
+                 * UM hook
+                 *
+                 * @type action
+                 * @title um_before_form_is_loaded
+                 * @description Make some action before account tabs loading
+                 * @input_vars
+                 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
+                 * @change_log
+                 * ["Since: 2.0"]
+                 * @usage add_action( 'um_before_form_is_loaded', 'function_name', 10, 1 );
+                 * @example
+                 * <?php
+                 * add_action( 'um_before_form_is_loaded', 'my_before_form_is_loaded', 10, 1 );
+                 * function my_before_form_is_loaded( $args ) {
+                 *     // your code here
+                 * }
+                 * ?>
+                 */
                 do_action( "um_before_form_is_loaded", $args );
-
+                /**
+                 * UM hook
+                 *
+                 * @type action
+                 * @title um_before_{$mode}_form_is_loaded
+                 * @description Make some action before account tabs loading
+                 * @input_vars
+                 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
+                 * @change_log
+                 * ["Since: 2.0"]
+                 * @usage add_action( 'um_before_{$mode}_form_is_loaded', 'function_name', 10, 1 );
+                 * @example
+                 * <?php
+                 * add_action( 'um_before_{$mode}_form_is_loaded', 'my_before_account_form_is_loaded', 10, 1 );
+                 * function my_before_account_form_is_loaded( $args ) {
+                 *     // your code here
+                 * }
+                 * ?>
+                 */
                 do_action( "um_before_{$args['mode']}_form_is_loaded", $args );
 
                 UM()->shortcodes()->template_load( $args['template'], $args );
@@ -239,7 +314,25 @@ if ( ! class_exists( 'Account' ) ) {
 
                 UM()->form()->post_form = $_POST;
 
-                //validate process
+                /**
+                 * UM hook
+                 *
+                 * @type action
+                 * @title um_submit_account_errors_hook
+                 * @description Validate process on account submit
+                 * @input_vars
+                 * [{"var":"$submitted","type":"array","desc":"Account Page Submitted data"}]
+                 * @change_log
+                 * ["Since: 2.0"]
+                 * @usage add_action( 'um_submit_account_errors_hook', 'function_name', 10, 1 );
+                 * @example
+                 * <?php
+                 * add_action( 'um_submit_account_errors_hook', 'my_submit_account_errors', 10, 1 );
+                 * function my_submit_account_errors( $submitted ) {
+                 *     // your code here
+                 * }
+                 * ?>
+                 */
                 do_action( 'um_submit_account_errors_hook', UM()->form()->post_form );
 
                 if ( ! isset( UM()->form()->errors ) ) {
@@ -250,6 +343,25 @@ if ( ! class_exists( 'Account' ) ) {
                         $this->current_tab = UM()->form()->post_form['_um_account_tab'];
                     }
 
+                    /**
+                     * UM hook
+                     *
+                     * @type action
+                     * @title um_submit_account_details
+                     * @description On success account submit
+                     * @input_vars
+                     * [{"var":"$submitted","type":"array","desc":"Account Page Submitted data"}]
+                     * @change_log
+                     * ["Since: 2.0"]
+                     * @usage add_action( 'um_submit_account_details', 'function_name', 10, 1 );
+                     * @example
+                     * <?php
+                     * add_action( 'um_submit_account_details', 'my_submit_account_details', 10, 1 );
+                     * function my_submit_account_details( $submitted ) {
+                     *     // your code here
+                     * }
+                     * ?>
+                     */
                     do_action( 'um_submit_account_details', UM()->form()->post_form );
 
                 }
@@ -567,10 +679,48 @@ if ( ! class_exists( 'Account' ) ) {
 
                 <?php }
 
+                /**
+                 * UM hook
+                 *
+                 * @type action
+                 * @title um_before_account_{$tab_id}
+                 * @description Make some action before show account tab
+                 * @input_vars
+                 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
+                 * @change_log
+                 * ["Since: 2.0"]
+                 * @usage add_action( 'um_before_account_{$tab_id}', 'function_name', 10, 1 );
+                 * @example
+                 * <?php
+                 * add_action( 'um_before_account_{$tab_id}', 'my_before_account_tab', 10, 1 );
+                 * function my_before_account_tab( $args ) {
+                 *     // your code here
+                 * }
+                 * ?>
+                 */
                 do_action( "um_before_account_{$tab_id}", $args );
 
                 echo $output;
 
+                /**
+                 * UM hook
+                 *
+                 * @type action
+                 * @title um_after_account_{$tab_id}
+                 * @description Make some action after show account tab
+                 * @input_vars
+                 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
+                 * @change_log
+                 * ["Since: 2.0"]
+                 * @usage add_action( 'um_after_account_{$tab_id}', 'function_name', 10, 1 );
+                 * @example
+                 * <?php
+                 * add_action( 'um_after_account_{$tab_id}', 'my_after_account_tab', 10, 1 );
+                 * function my_after_account_tab( $args ) {
+                 *     // your code here
+                 * }
+                 * ?>
+                 */
                 do_action( "um_after_account_{$tab_id}", $args );
 
                 if ( ! isset( $tab_data['show_button'] ) || false !== $tab_data['show_button'] ) { ?>
@@ -580,7 +730,25 @@ if ( ! class_exists( 'Account' ) ) {
                             <input type="submit" name="um_account_submit" id="um_account_submit"  class="um-button" value="<?php echo ! empty( $tab_data['submit_title'] ) ? $tab_data['submit_title'] : $tab_data['title']; ?>" />
                         </div>
 
-                        <?php do_action( "um_after_account_{$tab_id}_button" ); ?>
+                        <?php
+                        /**
+                         * UM hook
+                         *
+                         * @type action
+                         * @title um_after_account_{$tab_id}_button
+                         * @description Make some action after show account tab button
+                         * @change_log
+                         * ["Since: 2.0"]
+                         * @usage add_action( 'um_after_account_{$tab_id}_button', 'function_name', 10 );
+                         * @example
+                         * <?php
+                         * add_action( 'um_after_account_{$tab_id}_button', 'my_after_account_tab_button', 10 );
+                         * function my_after_account_tab_button() {
+                         *     // your code here
+                         * }
+                         * ?>
+                         */
+                        do_action( "um_after_account_{$tab_id}_button" ); ?>
 
                         <div class="um-clear"></div>
                     </div>

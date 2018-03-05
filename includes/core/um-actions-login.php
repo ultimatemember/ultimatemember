@@ -180,7 +180,25 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 		UM()->user()->auto_login( um_user( 'ID' ), $rememberme );
 
-		// Hook that runs after successful login and before user is redirected
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_on_login_before_redirect
+		 * @description Hook that runs after successful login and before user is redirected
+		 * @input_vars
+		 * [{"var":"$user_id","type":"int","desc":"User ID"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_on_login_before_redirect', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_on_login_before_redirect', 'my_on_login_before_redirect', 10, 1 );
+		 * function my_on_login_before_redirect( $user_id ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
 		do_action( 'um_on_login_before_redirect', um_user( 'ID' ) );
 
 		// Priority redirect
@@ -220,13 +238,51 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	/***
 	***	@form processing
 	***/
-	add_action('um_submit_form_login', 'um_submit_form_login', 10);
-	function um_submit_form_login($args){
-		if ( !isset( UM()->form()->errors) ) {
+	add_action( 'um_submit_form_login', 'um_submit_form_login', 10 );
+	function um_submit_form_login( $args ) {
+		if ( ! isset( UM()->form()->errors ) ) {
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_user_login
+			 * @description Hook that runs after successful submit login form
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Form data"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_user_login', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_user_login', 'my_user_login', 10, 1 );
+			 * function my_user_login( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( 'um_user_login', $args );
 		}
 
-		do_action('um_user_login_extra_hook', $args );
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_user_login_extra_hook
+		 * @description Hook that runs after successful submit login form
+		 * @input_vars
+		 * [{"var":"$args","type":"array","desc":"Form data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_user_login_extra_hook', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_user_login_extra_hook', 'my_user_login_extra', 10, 1 );
+		 * function my_user_login_extra( $args ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( 'um_user_login_extra_hook', $args );
 	}
 
 	/***

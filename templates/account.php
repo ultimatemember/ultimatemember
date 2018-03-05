@@ -4,7 +4,27 @@
 	
 		<form method="post" action="">
 			
-			<?php do_action( 'um_account_page_hidden_fields', $args ); ?>
+			<?php
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_account_page_hidden_fields
+			 * @description Show hidden fields on account form
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Account shortcode arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_account_page_hidden_fields', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_account_page_hidden_fields', 'my_account_page_hidden_fields', 10, 1 );
+			 * function my_account_page_hidden_fields( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( 'um_account_page_hidden_fields', $args ); ?>
 
             <div class="um-account-meta radius-<?php echo UM()->options()->get( 'profile_photocorner' ); ?> uimob340-show uimob500-show">
 
@@ -71,7 +91,27 @@
 			
 			<div class="um-account-main" data-current_tab="<?php echo UM()->account()->current_tab; ?>">
 			
-				<?php do_action( 'um_before_form', $args );
+				<?php
+				/**
+				 * UM hook
+				 *
+				 * @type action
+				 * @title um_before_form
+				 * @description Show some content before account form
+				 * @input_vars
+				 * [{"var":"$args","type":"array","desc":"Account shortcode arguments"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_action( 'um_before_form', 'function_name', 10, 1 );
+				 * @example
+				 * <?php
+				 * add_action( 'um_before_form', 'my_before_form', 10, 1 );
+				 * function my_before_form( $args ) {
+				 *     // your code here
+				 * }
+				 * ?>
+				 */
+				do_action( 'um_before_form', $args );
 				
 				foreach ( UM()->account()->tabs as $id => $info ) {
 
@@ -100,7 +140,25 @@
 			<div class="um-clear"></div>
 		</form>
 		
-		<?php do_action( 'um_after_account_page_load' ); ?>
+		<?php
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_after_account_page_load
+		 * @description After account form
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_after_account_page_load', 'function_name', 10 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_after_account_page_load', 'my_after_account_page_load', 10 );
+		 * function my_after_account_page_load() {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( 'um_after_account_page_load' ); ?>
 	
 	</div>
 	

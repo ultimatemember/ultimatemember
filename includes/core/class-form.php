@@ -35,6 +35,25 @@ if ( ! class_exists( 'Form' ) ) {
 
             switch( $hook ) {
                 default:
+	                /**
+	                 * UM hook
+	                 *
+	                 * @type action
+	                 * @title um_run_ajax_function__{$hook}
+	                 * @description Action on AJAX muted action
+	                 * @input_vars
+	                 * [{"var":"$request","type":"int","desc":"Request"}]
+	                 * @change_log
+	                 * ["Since: 2.0"]
+	                 * @usage add_action( 'um_run_ajax_function__{$hook}', 'function_name', 10, 1 );
+	                 * @example
+	                 * <?php
+	                 * add_action( 'um_run_ajax_function__{$hook}', 'my_run_ajax_function', 10, 1 );
+	                 * function my_run_ajax_function( $request ) {
+	                 *     // your code here
+	                 * }
+	                 * ?>
+	                 */
                     do_action( "um_run_ajax_function__{$hook}", $_REQUEST );
                     break;
             }
@@ -192,6 +211,25 @@ if ( ! class_exists( 'Form' ) ) {
 
             if ( $http_post && ! is_admin() && isset( $_POST['form_id'] ) && is_numeric( $_POST['form_id'] ) ) {
 
+	            /**
+	             * UM hook
+	             *
+	             * @type action
+	             * @title um_before_submit_form_post
+	             * @description Before submit form
+	             * @input_vars
+	             * [{"var":"$post","type":"int","desc":"Post data"}]
+	             * @change_log
+	             * ["Since: 2.0"]
+	             * @usage add_action( 'um_before_submit_form_post', 'function_name', 10, 1 );
+	             * @example
+	             * <?php
+	             * add_action( 'um_before_submit_form_post', 'my_before_submit_form_post', 10, 1 );
+	             * function my_run_ajax_function( $post ) {
+	             *     // your code here
+	             * }
+	             * ?>
+	             */
                 do_action( "um_before_submit_form_post", $_POST );
 
                 $this->form_id = $_POST['form_id'];
@@ -307,8 +345,45 @@ if ( ! class_exists( 'Form' ) ) {
 
                     /* Continue based on form mode - pre-validation */
 
+	                /**
+	                 * UM hook
+	                 *
+	                 * @type action
+	                 * @title um_submit_form_errors_hook
+	                 * @description Action on submit form
+	                 * @input_vars
+	                 * [{"var":"$post","type":"int","desc":"Post data"}]
+	                 * @change_log
+	                 * ["Since: 2.0"]
+	                 * @usage add_action( 'um_submit_form_errors_hook', 'function_name', 10, 1 );
+	                 * @example
+	                 * <?php
+	                 * add_action( 'um_submit_form_errors_hook', 'my_submit_form_errors', 10, 1 );
+	                 * function my_submit_form_errors( $post ) {
+	                 *     // your code here
+	                 * }
+	                 * ?>
+	                 */
                     do_action( 'um_submit_form_errors_hook', $this->post_form );
-
+	                /**
+	                 * UM hook
+	                 *
+	                 * @type action
+	                 * @title um_submit_form_{$mode}
+	                 * @description Action on submit form
+	                 * @input_vars
+	                 * [{"var":"$post","type":"int","desc":"Post data"}]
+	                 * @change_log
+	                 * ["Since: 2.0"]
+	                 * @usage add_action( 'um_submit_form_{$mode}', 'function_name', 10, 1 );
+	                 * @example
+	                 * <?php
+	                 * add_action( 'um_submit_form_{$mode}', 'my_submit_form', 10, 1 );
+	                 * function my_submit_form( $post ) {
+	                 *     // your code here
+	                 * }
+	                 * ?>
+	                 */
                     do_action( "um_submit_form_{$this->post_form['mode']}", $this->post_form );
 
                 }

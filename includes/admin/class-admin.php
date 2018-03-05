@@ -76,9 +76,46 @@ if ( ! class_exists( 'Admin' ) ) {
 
 			require_once 'core/um-admin-filters-fields.php';
 
-			if ( is_admin() && current_user_can('manage_options') &&
-				! empty( $_REQUEST['um_adm_action'] ) ) {
+			if ( is_admin() && current_user_can( 'manage_options' ) && ! empty( $_REQUEST['um_adm_action'] ) ) {
+				/**
+				 * UM hook
+				 *
+				 * @type action
+				 * @title um_admin_do_action__
+				 * @description Make some action on custom admin action
+				 * @input_vars
+				 * [{"var":"$action","type":"string","desc":"Admin Action"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_action( 'um_admin_do_action__', 'function_name', 10, 1 );
+				 * @example
+				 * <?php
+				 * add_action( 'um_admin_do_action__', 'my_admin_do_action', 10, 1 );
+				 * function my_admin_do_action( $action ) {
+				 *     // your code here
+				 * }
+				 * ?>
+				 */
 				do_action( "um_admin_do_action__", $_REQUEST['um_adm_action'] );
+				/**
+				 * UM hook
+				 *
+				 * @type action
+				 * @title um_admin_do_action__{$action}
+				 * @description Make some action on custom admin $action
+				 * @input_vars
+				 * [{"var":"$action","type":"string","desc":"Admin Action"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_action( 'um_admin_do_action__{$action}', 'function_name', 10, 1 );
+				 * @example
+				 * <?php
+				 * add_action( 'um_admin_do_action__{$action}', 'my_admin_do_action', 10, 1 );
+				 * function my_admin_do_action( $action ) {
+				 *     // your code here
+				 * }
+				 * ?>
+				 */
 				do_action( "um_admin_do_action__{$_REQUEST['um_adm_action']}", $_REQUEST['um_adm_action'] );
 			}
 		}

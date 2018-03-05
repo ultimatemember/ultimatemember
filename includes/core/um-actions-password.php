@@ -48,7 +48,26 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		delete_user_meta( $args['user_id'], 'reset_pass_hash_token');
 		delete_user_meta( $args['user_id'], 'password_rst_attempts');
 
-		do_action('um_after_changing_user_password', $args['user_id'] );
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_after_changing_user_password
+		 * @description Hook that runs after user change their password
+		 * @input_vars
+		 * [{"var":"$user_id","type":"int","desc":"User ID"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_after_changing_user_password', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_after_changing_user_password', 'my_after_changing_user_password', 10, 1 );
+		 * function my_user_login_extra( $user_id ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( 'um_after_changing_user_password', $args['user_id'] );
 
 
 		if ( is_user_logged_in() ) {
@@ -259,9 +278,29 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		<?php $output = null;
 		foreach( $fields as $key => $data ) {
 			$output .= UM()->fields()->edit_field( $key, $data );
-		}echo $output; ?>
+		} echo $output; ?>
 
-		<?php do_action( 'um_after_password_reset_fields', $args ); ?>
+		<?php
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_after_password_reset_fields
+		 * @description Hook that runs after user reset their password
+		 * @input_vars
+		 * [{"var":"$args","type":"array","desc":"Form data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_after_password_reset_fields', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_after_password_reset_fields', 'my_after_password_reset_fields', 10, 1 );
+		 * function my_after_password_reset_fields( $args ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( 'um_after_password_reset_fields', $args ); ?>
 
 		<div class="um-col-alt um-col-alt-b">
 

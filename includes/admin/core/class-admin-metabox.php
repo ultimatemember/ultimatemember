@@ -125,8 +125,31 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
 
         function save_metabox_custom( $post_id, $post ) {
             // validate nonce
-            if ( ! isset( $_POST['um_admin_save_metabox_custom_nonce'] ) || ! wp_verify_nonce( $_POST['um_admin_save_metabox_custom_nonce'], basename( __FILE__ ) ) ) return $post_id;
+            if ( ! isset( $_POST['um_admin_save_metabox_custom_nonce'] ) ||
+                 ! wp_verify_nonce( $_POST['um_admin_save_metabox_custom_nonce'], basename( __FILE__ ) ) ) {
+                return $post_id;
+            }
 
+            /**
+             * UM hook
+             *
+             * @type action
+             * @title um_admin_custom_restrict_content_metaboxes
+             * @description Save metabox custom with restrict content
+             * @input_vars
+             * [{"var":"$post_id","type":"int","desc":"Post ID"},
+             * {"var":"$post","type":"array","desc":"Post data"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_action( 'um_admin_custom_restrict_content_metaboxes', 'function_name', 10, 2 );
+             * @example
+             * <?php
+             * add_action( 'um_admin_custom_restrict_content_metaboxes', 'my_admin_custom_restrict_content', 10, 2 );
+             * function my_admin_custom_restrict_content( $post_id, $post ) {
+             *     // your code here
+             * }
+             * ?>
+             */
             do_action( 'um_admin_custom_restrict_content_metaboxes', $post_id, $post );
         }
 
@@ -134,7 +157,32 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
         function add_metabox_restrict_content() {
             global $current_screen;
 
-            add_meta_box( 'um-admin-restrict-content', __( 'UM Content Restriction', 'ultimate-member' ), array( &$this, 'restrict_content_cb' ), $current_screen->id, 'normal', 'default' );
+            add_meta_box(
+                'um-admin-restrict-content',
+                __( 'UM Content Restriction', 'ultimate-member' ),
+                array( &$this, 'restrict_content_cb' ),
+                $current_screen->id,
+                'normal',
+                'default'
+            );
+
+            /**
+             * UM hook
+             *
+             * @type action
+             * @title um_admin_custom_restrict_content_metaboxes
+             * @description Add restrict content custom metabox
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_action( 'um_admin_custom_restrict_content_metaboxes', 'function_name', 10 );
+             * @example
+             * <?php
+             * add_action( 'um_admin_custom_restrict_content_metaboxes', 'my_admin_custom_restrict_content', 10 );
+             * function my_admin_custom_restrict_content() {
+             *     // your code here
+             * }
+             * ?>
+             */
             do_action( 'um_admin_custom_restrict_content_metaboxes' );
         }
 
@@ -799,18 +847,68 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
 
             add_meta_box('um-admin-form-register_customize', __( 'Customize this form' ), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
 
+            /**
+             * UM hook
+             *
+             * @type action
+             * @title um_admin_custom_register_metaboxes
+             * @description Add custom metaboxes for register form
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_action( 'um_admin_custom_register_metaboxes', 'function_name', 10 );
+             * @example
+             * <?php
+             * add_action( 'um_admin_custom_register_metaboxes', 'my_admin_custom_register_metaboxes', 10 );
+             * function my_admin_custom_register_metaboxes() {
+             *     // your code here
+             * }
+             * ?>
+             */
             do_action( 'um_admin_custom_register_metaboxes' );
 
             add_meta_box('um-admin-form-profile_customize', __('Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
             add_meta_box('um-admin-form-profile_settings', __('User Meta'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
 
+            /**
+             * UM hook
+             *
+             * @type action
+             * @title um_admin_custom_profile_metaboxes
+             * @description Add custom metaboxes for profile form
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_action( 'um_admin_custom_profile_metaboxes', 'function_name', 10 );
+             * @example
+             * <?php
+             * add_action( 'um_admin_custom_profile_metaboxes', 'my_admin_custom_profile_metaboxes', 10 );
+             * function my_admin_custom_profile_metaboxes() {
+             *     // your code here
+             * }
+             * ?>
+             */
             do_action( 'um_admin_custom_profile_metaboxes' );
 
             add_meta_box('um-admin-form-login_customize', __('Customize this form'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
             add_meta_box('um-admin-form-login_settings', __('Options'), array(&$this, 'load_metabox_form'), 'um_form', 'side', 'default');
 
+            /**
+             * UM hook
+             *
+             * @type action
+             * @title um_admin_custom_login_metaboxes
+             * @description Add custom metaboxes for login form
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_action( 'um_admin_custom_login_metaboxes', 'function_name', 10 );
+             * @example
+             * <?php
+             * add_action( 'um_admin_custom_login_metaboxes', 'my_admin_custom_login_metaboxes', 10 );
+             * function my_admin_custom_login_metaboxes() {
+             *     // your code here
+             * }
+             * ?>
+             */
             do_action( 'um_admin_custom_login_metaboxes' );
-
         }
 
         /***
@@ -931,6 +1029,25 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
 
                 default:
 
+                    /**
+                     * UM hook
+                     *
+                     * @type action
+                     * @title um_admin_field_edit_hook{$attribute}
+                     * @description Integration for 3-d party fields at wp-admin
+                     * @input_vars
+                     * [{"var":"$edit_mode_value","type":"string","desc":"Post ID"}]
+                     * @change_log
+                     * ["Since: 2.0"]
+                     * @usage add_action( 'um_admin_field_edit_hook{$attribute}', 'function_name', 10, 1 );
+                     * @example
+                     * <?php
+                     * add_action( 'um_admin_field_edit_hook{$attribute}', 'my_admin_field_edit', 10, 1 );
+                     * function my_admin_field_edit( $edit_mode_value ) {
+                     *     // your code here
+                     * }
+                     * ?>
+                     */
                     do_action( "um_admin_field_edit_hook{$attribute}", $this->edit_mode_value );
 
                     break;

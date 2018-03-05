@@ -364,9 +364,29 @@ if ( ! class_exists( 'REST_API' ) ) {
 	                $old_roles = $wp_user_object->roles;
 	                $wp_user_object->set_role( $value );
 
+                    /**
+                     * UM hook
+                     *
+                     * @type action
+                     * @title um_after_member_role_upgrade
+                     * @description Action after user role was changed
+                     * @input_vars
+                     * [{"var":"$new_roles","type":"array","desc":"New User Roles"},
+                     * {"var":"$old_roles","type":"array","desc":"Old roles"}]
+                     * @change_log
+                     * ["Since: 2.0"]
+                     * @usage add_action( 'um_after_member_role_upgrade', 'function_name', 10, 2 );
+                     * @example
+                     * <?php
+                     * add_action( 'um_after_member_role_upgrade', 'my_after_member_role_upgrade', 10, 2 );
+                     * function my_after_member_role_upgrade( $new_roles, $old_roles ) {
+                     *     // your code here
+                     * }
+                     * ?>
+                     */
 	                do_action( 'um_after_member_role_upgrade', array( $value ), $old_roles );
 
-                    $response['success'] = __('User role has been changed.','ultimate-member');
+                    $response['success'] = __( 'User role has been changed.', 'ultimate-member' );
                     break;
                 default:
                     update_user_meta( $id, $data, esc_attr( $value ) );
@@ -757,6 +777,27 @@ if ( ! class_exists( 'REST_API' ) ) {
 
             status_header( $status_code );
 
+            /**
+             * UM hook
+             *
+             * @type action
+             * @title um_api_output_before
+             * @description Action before API output
+             * @input_vars
+             * [{"var":"$data","type":"array","desc":"API data"},
+             * {"var":"$rest_api","type":"object","desc":"REST API class"},
+             * {"var":"$format","type":"string","desc":"Format"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_action( 'um_api_output_before', 'function_name', 10, 3 );
+             * @example
+             * <?php
+             * add_action( 'um_api_output_before', 'my_api_output_before', 10, 3 );
+             * function my_api_output_before( $data, $rest_api, $format ) {
+             *     // your code here
+             * }
+             * ?>
+             */
             do_action( 'um_api_output_before', $this->data, $this, $format );
 
             switch ( $format ) :
@@ -784,12 +825,53 @@ if ( ! class_exists( 'REST_API' ) ) {
                 default :
 
                     // Allow other formats to be added via extensions
+                    /**
+                     * UM hook
+                     *
+                     * @type action
+                     * @title um_api_output_{$format}
+                     * @description Action before API output
+                     * @input_vars
+                     * [{"var":"$data","type":"array","desc":"API data"},
+                     * {"var":"$rest_api","type":"object","desc":"REST API class"}]
+                     * @change_log
+                     * ["Since: 2.0"]
+                     * @usage add_action( 'um_api_output_{$format}', 'function_name', 10, 2 );
+                     * @example
+                     * <?php
+                     * add_action( 'um_api_output_{$format}', 'my_api_output', 10, 2 );
+                     * function my_api_output( $data, $rest_api ) {
+                     *     // your code here
+                     * }
+                     * ?>
+                     */
                     do_action( 'um_api_output_' . $format, $this->data, $this );
 
                     break;
 
             endswitch;
 
+            /**
+             * UM hook
+             *
+             * @type action
+             * @title um_api_output_after
+             * @description Action after API output
+             * @input_vars
+             * [{"var":"$data","type":"array","desc":"API data"},
+             * {"var":"$rest_api","type":"object","desc":"REST API class"},
+             * {"var":"$format","type":"string","desc":"Format"}]
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_action( 'um_api_output_after', 'function_name', 10, 3 );
+             * @example
+             * <?php
+             * add_action( 'um_api_output_after', 'my_api_output_after', 10, 3 );
+             * function my_api_output_after( $data, $rest_api, $format ) {
+             *     // your code here
+             * }
+             * ?>
+             */
             do_action( 'um_api_output_after', $this->data, $this, $format );
 
             die();

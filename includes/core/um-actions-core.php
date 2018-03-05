@@ -17,19 +17,39 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				wp_die( __( 'Super administrators can not be modified.','ultimate-member' ) );
 		}
 
-		if ( isset( $_REQUEST['um_action'] ) && $_REQUEST['um_action'] != "edit" && ! current_user_can( 'edit_users' ) ){
-						wp_die( __( 'You do not have enough permissions to do that.','ultimate-member') );
+		if ( isset( $_REQUEST['um_action'] ) && $_REQUEST['um_action'] != "edit" && ! current_user_can( 'edit_users' ) ) {
+			wp_die( __( 'You do not have enough permissions to do that.','ultimate-member') );
 		}
-		
-		if ( isset($_REQUEST['uid'])){
+
+		if ( isset( $_REQUEST['uid'] ) ) {
 			$uid = $_REQUEST['uid'];
 		}
 		
-		switch( $_REQUEST['um_action'] ) {
+		switch ( $_REQUEST['um_action'] ) {
 		
 			default:
-				$uid = ( isset( $_REQUEST['uid'] ) ) ? $_REQUEST['uid'] : 0;
-				do_action('um_action_user_request_hook', $_REQUEST['um_action'], $uid);
+				$uid = isset( $_REQUEST['uid'] ) ? $_REQUEST['uid'] : 0;
+				/**
+				 * UM hook
+				 *
+				 * @type action
+				 * @title um_action_user_request_hook
+				 * @description Integration for user actions
+				 * @input_vars
+				 * [{"var":"$action","type":"string","desc":"Action for user"},
+				 * {"var":"$user_id","type":"int","desc":"User ID"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_action( 'um_action_user_request_hook', 'function_name', 10, 2 );
+				 * @example
+				 * <?php
+				 * add_action( 'um_action_user_request_hook', 'my_action_user_request', 10, 2 );
+				 * function my_action_user_request( $action, $user_id ) {
+				 *     // your code here
+				 * }
+				 * ?>
+				 */
+				do_action( 'um_action_user_request_hook', $_REQUEST['um_action'], $uid );
 				break;
 		
 			case 'edit':

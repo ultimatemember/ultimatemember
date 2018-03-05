@@ -16,11 +16,37 @@ if ( ! class_exists( 'Query' ) ) {
         }
 
 
+	    /**
+	     * Ajax pagination for posts
+	     */
         function ajax_paginate() {
-            extract( $_REQUEST );
+	        /**
+	         * @var $hook
+	         * @var $args
+	         */
+	        extract( $_REQUEST );
 
             ob_start();
 
+	        /**
+	         * UM hook
+	         *
+	         * @type action
+	         * @title um_ajax_load_posts__{$hook}
+	         * @description Action on posts loading by AJAX
+	         * @input_vars
+	         * [{"var":"$args","type":"array","desc":"Query arguments"}]
+	         * @change_log
+	         * ["Since: 2.0"]
+	         * @usage add_action( 'um_ajax_load_posts__{$hook}', 'function_name', 10, 1 );
+	         * @example
+	         * <?php
+	         * add_action( 'um_ajax_load_posts__{$hook}', 'my_ajax_load_posts', 10, 1 );
+	         * function my_ajax_load_posts( $args ) {
+	         *     // your code here
+	         * }
+	         * ?>
+	         */
             do_action( "um_ajax_load_posts__{$hook}", $args );
 
             $output = ob_get_contents();

@@ -114,8 +114,24 @@ if ( ! class_exists( 'Admin_Menu' ) ) {
                 add_submenu_page( $this->slug, __( 'Member Directories', 'ultimate-member' ), __( 'Member Directories', 'ultimate-member' ), 'manage_options', 'edit.php?post_type=um_directory', '' );
             }
 
+            /**
+             * UM hook
+             *
+             * @type action
+             * @title um_extend_admin_menu
+             * @description Extend UM menu
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_action( 'um_extend_admin_menu', 'function_name', 10 );
+             * @example
+             * <?php
+             * add_action( 'um_extend_admin_menu', 'my_extend_admin_menu', 10 );
+             * function my_extend_admin_menu() {
+             *     // your code here
+             * }
+             * ?>
+             */
             do_action( 'um_extend_admin_menu' );
-
         }
 
 

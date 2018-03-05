@@ -171,8 +171,44 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	
 		$subaction = $_REQUEST['sub'];
 
-		do_action("um_admin_user_action_hook", $subaction);
-		do_action("um_admin_user_action_{$subaction}_hook");
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_admin_user_action_hook
+		 * @description Action on bulk user subaction
+		 * @input_vars
+		 * [{"var":"$subaction","type":"string","desc":"Bulk Subaction"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_admin_user_action_hook', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_admin_user_action_hook', 'my_admin_user_action', 10, 1 );
+		 * function my_admin_user_action( $subaction ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( "um_admin_user_action_hook", $subaction );
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_admin_user_action_{$subaction}_hook
+		 * @description Action on bulk user subaction
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_admin_user_action_{$subaction}_hook', 'function_name', 10 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_admin_user_action_{$subaction}_hook', 'my_admin_user_action', 10 );
+		 * function my_admin_user_action() {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( "um_admin_user_action_{$subaction}_hook" );
 		
 		um_reset_user();
 		

@@ -37,7 +37,28 @@
 						<div class="um-member-name"><a href="<?php echo um_user_profile_url(); ?>" title="<?php echo esc_attr(um_user('display_name')); ?>"><?php echo um_user('display_name', 'html'); ?></a></div>
 						<?php } ?>
 						
-						<?php do_action('um_members_just_after_name', um_user('ID'), $args ); ?>
+						<?php
+						/**
+						 * UM hook
+						 *
+						 * @type action
+						 * @title um_members_just_after_name
+						 * @description Show content just after user name
+						 * @input_vars
+						 * [{"var":"$user_id","type":"int","desc":"User ID"},
+						 * {"var":"$args","type":"array","desc":"Member directory shortcode arguments"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage add_action( 'um_members_just_after_name', 'function_name', 10, 2 );
+						 * @example
+						 * <?php
+						 * add_action( 'um_members_just_after_name', 'my_members_just_after_name', 10, 2 );
+						 * function my_members_just_after_name( $user_id, $args ) {
+						 *     // your code here
+						 * }
+						 * ?>
+						 */
+						do_action( 'um_members_just_after_name', um_user('ID'), $args ); ?>
 
 						<?php if ( UM()->roles()->um_current_user_can( 'edit', um_user('ID') ) || UM()->roles()->um_user_can( 'can_edit_everyone' ) ) { ?>
 							<div class="um-members-edit-btn">
@@ -45,7 +66,27 @@
 							</div>
 						<?php }
 
-						do_action('um_members_after_user_name', um_user('ID'), $args); ?>
+						/**
+						 * UM hook
+						 *
+						 * @type action
+						 * @title um_members_after_user_name
+						 * @description Show content just after user name
+						 * @input_vars
+						 * [{"var":"$user_id","type":"int","desc":"User ID"},
+						 * {"var":"$args","type":"array","desc":"Member directory shortcode arguments"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage add_action( 'um_members_after_user_name', 'function_name', 10, 2 );
+						 * @example
+						 * <?php
+						 * add_action( 'um_members_after_user_name', 'my_members_after_user_name', 10, 2 );
+						 * function my_members_after_user_name( $user_id, $args ) {
+						 *     // your code here
+						 * }
+						 * ?>
+						 */
+						do_action( 'um_members_after_user_name', um_user('ID'), $args ); ?>
 						
 						<?php
 						if ( $show_tagline && is_array( $tagline_fields ) ) {

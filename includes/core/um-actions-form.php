@@ -100,24 +100,154 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 		$fields = unserialize( $args['custom_fields'] );
 
-		if ( $mode == 'register' ){
+		if ( $mode == 'register' ) {
 
-			do_action("um_submit_form_errors_hook__registration", $args );
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_submit_form_errors_hook__registration
+			 * @description Submit registration form validation
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_submit_form_errors_hook__registration', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_submit_form_errors_hook__registration', 'my_submit_form_errors_registration', 10, 1 );
+			 * function my_submit_form_errors_registration( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( "um_submit_form_errors_hook__registration", $args );
 
 		}
-
-		do_action("um_submit_form_errors_hook__blockedips", $args );
-		do_action("um_submit_form_errors_hook__blockedemails", $args );
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_submit_form_errors_hook__blockedips
+		 * @description Submit form validation
+		 * @input_vars
+		 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_submit_form_errors_hook__blockedips', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_submit_form_errors_hook__blockedips', 'my_submit_form_errors_hook__blockedips', 10, 1 );
+		 * function my_submit_form_errors_hook__blockedips( $args ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( "um_submit_form_errors_hook__blockedips", $args );
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_submit_form_errors_hook__blockedemails
+		 * @description Submit form validation
+		 * @input_vars
+		 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_submit_form_errors_hook__blockedemails', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_submit_form_errors_hook__blockedemails', 'my_submit_form_errors_hook__blockedemails', 10, 1 );
+		 * function my_submit_form_errors_hook__blockedemails( $args ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( "um_submit_form_errors_hook__blockedemails", $args );
 
 		if ( $mode == 'login' ) {
-
-			do_action('um_submit_form_errors_hook_login', $args );
-			do_action('um_submit_form_errors_hook_logincheck', $args );
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_submit_form_errors_hook_login
+			 * @description Submit login form validation
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_submit_form_errors_hook_login', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_submit_form_errors_hook_login', 'my_submit_form_errors_hook_login', 10, 1 );
+			 * function my_submit_form_errors_hook_login( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( 'um_submit_form_errors_hook_login', $args );
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_submit_form_errors_hook_logincheck
+			 * @description Submit login form validation
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_submit_form_errors_hook_logincheck', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_submit_form_errors_hook_logincheck', 'my_submit_form_errors_hook_logincheck', 10, 1 );
+			 * function my_submit_form_errors_hook_logincheck( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( 'um_submit_form_errors_hook_logincheck', $args );
 
 		} else {
-
-			do_action('um_submit_form_errors_hook_', $args );
-			do_action("um_submit_form_errors_hook__blockedwords", $args );
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_submit_form_errors_hook_
+			 * @description Submit form validation
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_submit_form_errors_hook_', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_submit_form_errors_hook_', 'my_submit_form_errors_hook', 10, 1 );
+			 * function my_submit_form_errors_hook( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( 'um_submit_form_errors_hook_', $args );
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_submit_form_errors_hook__blockedwords
+			 * @description Submit form validation
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_submit_form_errors_hook__blockedwords', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_submit_form_errors_hook__blockedwords', 'my_submit_form_errors_hook__blockedwords', 10, 1 );
+			 * function my_submit_form_errors_hook__blockedwords( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( "um_submit_form_errors_hook__blockedwords", $args );
 
 		}
 
@@ -263,7 +393,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					}
 				}
 
-
+				/**
+				 * UM hook
+				 *
+				 * @type action
+				 * @title um_add_error_on_form_submit_validation
+				 * @description Submit form validation
+				 * @input_vars
+				 * [{"var":"$field","type":"array","desc":"Field Data"},
+				 * {"var":"$key","type":"string","desc":"Field Key"},
+				 * {"var":"$args","type":"array","desc":"Form Arguments"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_action( 'um_add_error_on_form_submit_validation', 'function_name', 10, 3 );
+				 * @example
+				 * <?php
+				 * add_action( 'um_add_error_on_form_submit_validation', 'my_add_error_on_form_submit_validation', 10, 3 );
+				 * function my_add_error_on_form_submit_validation( $field, $key, $args ) {
+				 *     // your code here
+				 * }
+				 * ?>
+				 */
 				do_action( 'um_add_error_on_form_submit_validation', $array, $key, $args );
 
 				if ( isset( $args[$key] ) ) {
@@ -351,7 +501,28 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 							case 'custom':
 								$custom = $array['custom_validate'];
-								do_action("um_custom_field_validation_{$custom}", $key, $array, $args );
+								/**
+								 * UM hook
+								 *
+								 * @type action
+								 * @title um_custom_field_validation_{$custom}
+								 * @description Submit form validation for custom field
+								 * @input_vars
+								 * [{"var":"$key","type":"string","desc":"Field Key"},
+								 * {"var":"$field","type":"array","desc":"Field Data"},
+								 * {"var":"$args","type":"array","desc":"Form Arguments"}]
+								 * @change_log
+								 * ["Since: 2.0"]
+								 * @usage add_action( 'um_custom_field_validation_{$custom}', 'function_name', 10, 3 );
+								 * @example
+								 * <?php
+								 * add_action( 'um_custom_field_validation_{$custom}', 'my_custom_field_validation', 10, 3 );
+								 * function my_custom_field_validation( $key, $field, $args ) {
+								 *     // your code here
+								 * }
+								 * ?>
+								 */
+								do_action( "um_custom_field_validation_{$custom}", $key, $array, $args );
 								break;
 
 							case 'numeric':

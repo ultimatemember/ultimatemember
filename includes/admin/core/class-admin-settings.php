@@ -1125,9 +1125,44 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 
             echo $this->generate_tabs_menu() . $this->generate_subtabs_menu( $current_tab );
 
+            /**
+             * UM hook
+             *
+             * @type action
+             * @title um_settings_page_before_{$current_tab}_{$current_subtab}_content
+             * @description Show some content before settings page content
+             * @change_log
+             * ["Since: 2.0"]
+             * @usage add_action( 'um_settings_page_before_{$current_tab}_{$current_subtab}_content', 'function_name', 10 );
+             * @example
+             * <?php
+             * add_action( 'um_settings_page_before_{$current_tab}_{$current_subtab}_content', 'my_settings_page_before', 10 );
+             * function my_settings_page_before() {
+             *     // your code here
+             * }
+             * ?>
+             */
             do_action( "um_settings_page_before_" . $current_tab . "_" . $current_subtab . "_content" );
 
             if ( 'licenses' == $current_tab || 'install_info' == $current_tab ) {
+
+                /**
+                 * UM hook
+                 *
+                 * @type action
+                 * @title um_settings_page_{$current_tab}_{$current_subtab}_before_section
+                 * @description Show some content before section content at settings page
+                 * @change_log
+                 * ["Since: 2.0"]
+                 * @usage add_action( 'um_settings_page_{$current_tab}_{$current_subtab}_before_section', 'function_name', 10 );
+                 * @example
+                 * <?php
+                 * add_action( 'um_settings_page_{$current_tab}_{$current_subtab}_before_section', 'my_settings_page_before_section', 10 );
+                 * function my_settings_page_before_section() {
+                 *     // your code here
+                 * }
+                 * ?>
+                 */
                 do_action( "um_settings_page_" . $current_tab . "_" . $current_subtab . "_before_section" );
 
                 $section_fields = $this->get_section_fields( $current_tab, $current_subtab );
@@ -1171,7 +1206,25 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                 <form method="post" action="" name="um-settings-form" id="um-settings-form">
                     <input type="hidden" value="save" name="um-settings-action" />
 
-                    <?php do_action( "um_settings_page_" . $current_tab . "_" . $current_subtab . "_before_section" );
+                    <?php
+                    /**
+                     * UM hook
+                     *
+                     * @type action
+                     * @title um_settings_page_{$current_tab}_{$current_subtab}_before_section
+                     * @description Show some content before section content at settings page
+                     * @change_log
+                     * ["Since: 2.0"]
+                     * @usage add_action( 'um_settings_page_{$current_tab}_{$current_subtab}_before_section', 'function_name', 10 );
+                     * @example
+                     * <?php
+                     * add_action( 'um_settings_page_{$current_tab}_{$current_subtab}_before_section', 'my_settings_page_before_section', 10 );
+                     * function my_settings_page_before_section() {
+                     *     // your code here
+                     * }
+                     * ?>
+                     */
+                    do_action( "um_settings_page_" . $current_tab . "_" . $current_subtab . "_before_section" );
 
                     $section_fields = $this->get_section_fields( $current_tab, $current_subtab );
 
@@ -1310,6 +1363,23 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
          */
         function save_settings_handler() {
             if ( isset( $_POST['um-settings-action'] ) && 'save' == $_POST['um-settings-action'] && ! empty( $_POST['um_options'] ) ) {
+                /**
+                 * UM hook
+                 *
+                 * @type action
+                 * @title um_settings_before_save
+                 * @description Before settings save action
+                 * @change_log
+                 * ["Since: 2.0"]
+                 * @usage add_action( 'um_settings_before_save', 'function_name', 10 );
+                 * @example
+                 * <?php
+                 * add_action( 'um_settings_before_save', 'my_settings_before_save', 10 );
+                 * function my_settings_before_save() {
+                 *     // your code here
+                 * }
+                 * ?>
+                 */
                 do_action( "um_settings_before_save" );
 
                 /**
@@ -1338,6 +1408,23 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
                     UM()->options()->update( $key, $value );
                 }
 
+                /**
+                 * UM hook
+                 *
+                 * @type action
+                 * @title um_settings_save
+                 * @description After settings save action
+                 * @change_log
+                 * ["Since: 2.0"]
+                 * @usage add_action( 'um_settings_save', 'function_name', 10 );
+                 * @example
+                 * <?php
+                 * add_action( 'um_settings_save', 'my_settings_save', 10 );
+                 * function my_settings_save() {
+                 *     // your code here
+                 * }
+                 * ?>
+                 */
                 do_action( "um_settings_save" );
 
                 //redirect after save settings
@@ -1962,7 +2049,25 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 
 ## Please include this information when posting support requests ##
 
-<?php do_action( 'um_install_info_before' ); ?>
+<?php
+/**
+ * UM hook
+ *
+ * @type action
+ * @title um_install_info_before
+ * @description Before install info settings
+ * @change_log
+ * ["Since: 2.0"]
+ * @usage add_action( 'um_install_info_before', 'function_name', 10 );
+ * @example
+ * <?php
+ * add_action( 'um_install_info_before', 'my_install_info_before', 10 );
+ * function my_install_info_before() {
+ *     // your code here
+ * }
+ * ?>
+ */
+do_action( 'um_install_info_before' ); ?>
 
 --- Site Info ---
 
@@ -2047,7 +2152,25 @@ Exclude CSS/JS on Home: 		<?php if( UM()->options()->get( 'js_css_exlcude_home' 
 
 --- UM Pages Configuration ---
 
-<?php do_action("um_install_info_before_page_config") ?>
+<?php
+/**
+ * UM hook
+ *
+ * @type action
+ * @title um_install_info_before_page_config
+ * @description Before page config install info
+ * @change_log
+ * ["Since: 2.0"]
+ * @usage add_action( 'um_install_info_before_page_config', 'function_name', 10 );
+ * @example
+ * <?php
+ * add_action( 'um_install_info_before_page_config', 'my_install_info_before_page_config', 10 );
+ * function my_install_info_before_page_config() {
+ *     // your code here
+ * }
+ * ?>
+ */
+do_action( "um_install_info_before_page_config" ); ?>
 User:						<?php echo get_permalink( UM()->options()->get('core_user') ) . "\n"; ?>
 Account:						<?php echo get_permalink( UM()->options()->get('core_account') ) . "\n"; ?>
 Members:					<?php echo get_permalink( UM()->options()->get('core_members') ) . "\n"; ?>
@@ -2055,7 +2178,25 @@ Register:						<?php echo get_permalink( UM()->options()->get('core_register') )
 Login:						<?php echo get_permalink( UM()->options()->get('core_login') ) . "\n"; ?>
 Logout:						<?php echo get_permalink( UM()->options()->get('core_logout') ) . "\n"; ?>
 Password Reset:				<?php echo get_permalink( UM()->options()->get('core_password-reset') ) . "\n"; ?>
-<?php do_action("um_install_info_after_page_config") ?>
+<?php
+/**
+ * UM hook
+ *
+ * @type action
+ * @title um_install_info_after_page_config
+ * @description After page config install info
+ * @change_log
+ * ["Since: 2.0"]
+ * @usage add_action( 'um_install_info_after_page_config', 'function_name', 10 );
+ * @example
+ * <?php
+ * add_action( 'um_install_info_after_page_config', 'my_install_info_after_page_config', 10 );
+ * function my_install_info_after_page_config() {
+ *     // your code here
+ * }
+ * ?>
+ */
+do_action( "um_install_info_after_page_config" ); ?>
 
 
 --- UM Users Configuration ---
@@ -2247,6 +2388,23 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 
                 }
 
+                /**
+                 * UM hook
+                 *
+                 * @type action
+                 * @title um_install_info_after
+                 * @description After install info
+                 * @change_log
+                 * ["Since: 2.0"]
+                 * @usage add_action( 'um_install_info_after', 'function_name', 10 );
+                 * @example
+                 * <?php
+                 * add_action( 'um_install_info_after', 'my_install_info_after', 10 );
+                 * function my_install_info_after() {
+                 *     // your code here
+                 * }
+                 * ?>
+                 */
                 do_action( 'um_install_info_after' ); ?>
 
 ### End Install Info ###

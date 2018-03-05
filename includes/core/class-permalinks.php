@@ -208,7 +208,7 @@ if ( ! class_exists( 'Permalinks' ) ) {
         /***
          ***	@activates an account via email
          ***/
-        function activate_account_via_email_link(){
+        function activate_account_via_email_link() {
             if ( isset($_REQUEST['act']) && $_REQUEST['act'] == 'activate_via_email' && isset($_REQUEST['hash']) && is_string($_REQUEST['hash']) && strlen($_REQUEST['hash']) == 40 &&
                 isset($_REQUEST['user_id']) && is_numeric($_REQUEST['user_id']) ) { // valid token
 
@@ -225,7 +225,7 @@ if ( ! class_exists( 'Permalinks' ) ) {
                 $login    = (bool) um_user('login_email_activate');
 
                 // log in automatically
-                if ( !is_user_logged_in() && $login ) {
+                if ( ! is_user_logged_in() && $login ) {
                     $user = get_userdata($user_id);
                     $user_id = $user->ID;
 
@@ -239,8 +239,26 @@ if ( ! class_exists( 'Permalinks' ) ) {
                 }
 
                 um_reset_user();
-
-                do_action('um_after_email_confirmation', $user_id );
+	            /**
+	             * UM hook
+	             *
+	             * @type action
+	             * @title um_after_email_confirmation
+	             * @description Action on user activation
+	             * @input_vars
+	             * [{"var":"$user_id","type":"int","desc":"User ID"}]
+	             * @change_log
+	             * ["Since: 2.0"]
+	             * @usage add_action( 'um_after_email_confirmation', 'function_name', 10, 1 );
+	             * @example
+	             * <?php
+	             * add_action( 'um_after_email_confirmation', 'my_after_email_confirmation', 10, 1 );
+	             * function my_after_email_confirmation( $user_id ) {
+	             *     // your code here
+	             * }
+	             * ?>
+	             */
+                do_action( 'um_after_email_confirmation', $user_id );
 
                 exit( wp_redirect( $redirect ) );
 
