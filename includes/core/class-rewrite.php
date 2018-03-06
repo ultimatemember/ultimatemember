@@ -230,10 +230,15 @@ if ( ! class_exists( 'Rewrite' ) ) {
                     $query = UM()->permalinks()->get_query_array();
 
                     $url = um_user_profile_url();
+					if ( empty( $url ) ) {
+						//if empty profile slug - generate it and re-get profile URL
+						UM()->user()->generate_profile_slug( um_user( 'ID' ) );
+						$url = um_user_profile_url();
+					}
 
                     if ( $query ) {
                         foreach ( $query as $key => $val ) {
-                            $url =  add_query_arg( $key, $val, $url );
+                            $url = add_query_arg( $key, $val, $url );
                         }
                     }
 
