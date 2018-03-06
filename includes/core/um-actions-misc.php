@@ -11,13 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	
 		$url = '';
 
-		if ( isset( $_REQUEST['redirect_to'] ) && !empty( $_REQUEST['redirect_to'] ) ) {
+		if ( ! empty( $_REQUEST['redirect_to'] ) ) {
 			$url = $_REQUEST['redirect_to'];
 			echo '<input type="hidden" name="redirect_to" id="redirect_to" value="'.esc_url( $url ).'" />';
 
-		} else if ( isset( $args['after_login'] ) && !empty( $args['after_login'] ) ) {
+		} elseif ( ! empty( $args['after_login'] ) ) {
 			
-			switch( $args['after_login'] ) {
+			switch ( $args['after_login'] ) {
 				
 				case 'redirect_admin':
 					$url = admin_url();
