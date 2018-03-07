@@ -53,6 +53,7 @@
 	background-color: #eee;
 	box-sizing: border-box;
 	position: relative;
+	overflow: hidden;
 }
 
 .um-cover-add {
