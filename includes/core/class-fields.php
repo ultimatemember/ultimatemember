@@ -486,6 +486,30 @@ if ( ! class_exists( 'Fields' ) ) {
 				$classes .= $add . ' ';
 			}
 
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_extend_field_classes
+			 * @description Change field classes
+			 * @input_vars
+			 * [{"var":"$classes","type":"string","desc":"Field Classes"},
+			 * {"var":"$key","type":"string","desc":"Field Key"},
+			 * {"var":"$data","type":"array","desc":"Field Data"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_extend_field_classes', 'function_name', 10, 3 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_extend_field_classes', 'my_extend_field_classes', 10, 3 );
+			 * function my_extend_field_classes( $classes, $key, $data ) {
+			 *     // your code here
+			 *     return $classes;
+			 * }
+			 * ?>
+			 */
+			$classes = apply_filters( 'um_extend_field_classes', $classes, $key, $data );
+
 			return $classes;
 		}
 
