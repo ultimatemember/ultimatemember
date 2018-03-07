@@ -1399,10 +1399,23 @@ function um_admin_email() {
 /**
  * Display a link to profile page
  *
- * @return string
+ * @param int|bool $user_id
+ *
+ * @return bool|string
  */
-function um_user_profile_url() {
-	return UM()->user()->get_profile_link( um_user( 'ID' ) );
+function um_user_profile_url( $user_id = false ) {
+	if ( ! $user_id ) {
+		$user_id = um_user( 'ID' );
+	}
+
+	$url = UM()->user()->get_profile_link( $user_id );
+	if ( empty( $url ) ) {
+		//if empty profile slug - generate it and re-get profile URL
+		UM()->user()->generate_profile_slug( $user_id );
+		$url = UM()->user()->get_profile_link( $user_id );
+	}
+
+	return $url;
 }
 
 
