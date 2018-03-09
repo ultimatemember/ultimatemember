@@ -252,7 +252,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
              * UM hook
              *
              * @type action
-             * @title my_after_template_part
+             * @title um_after_template_part
              * @description Make some action after include template file
              * @input_vars
              * [{"var":"$template_name","type":"string","desc":"Template Name"},
