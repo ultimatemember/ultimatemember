@@ -314,7 +314,7 @@ if ( ! class_exists( 'Enqueue' ) ) {
 		 */
 		function load_functions() {
 
-			wp_register_script('um_functions', um_url . 'assets/js/um-functions' . $this->suffix . '.js' );
+			wp_register_script('um_functions', um_url . 'assets/js/um-functions' . $this->suffix . '.js', array('jquery', 'jquery-masonry') );
 			wp_enqueue_script('um_functions');
 
 		}
