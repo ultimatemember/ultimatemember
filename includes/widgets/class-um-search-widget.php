@@ -25,27 +25,6 @@ class UM_Search_Widget extends \WP_Widget {
 	// Creating widget front-end
 	public function widget( $args, $instance ) {
 
-		/**
-		 * UM hook
-		 *
-		 * @type filter
-		 * @title widget_title
-		 * @description UM Search Widget Title
-		 * @input_vars
-		 * [{"var":"$title","type":"string","desc":"UM Search Widget Title"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage
-		 * <?php add_filter( 'widget_title', 'function_name', 10, 1 ); ?>
-		 * @example
-		 * <?php
-		 * add_filter( 'widget_title', 'my_widget_title', 10, 1 );
-		 * function my_widget_title( $title ) {
-		 *     // your code here
-		 *     return $title;
-		 * }
-		 * ?>
-		 */
 		$title = apply_filters( 'widget_title', $instance['title'] );
 
 		// before and after widget arguments are defined by themes
