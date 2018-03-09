@@ -87,7 +87,7 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 					editor.setContent( jQuery('.um-admin-modal:visible .dynamic-mce-content').html() );
 
 				} else {
-				
+                    tinyMCE.get('um_editor_new').setContent('');
 					tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_new');
 					jQuery('.um-admin-editor:visible').html( jQuery('.um-hidden-editor-new').contents() );
 					tinyMCE.execCommand('mceAddEditor', true, 'um_editor_new');
