@@ -80,18 +80,17 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			);
 		}
 
+		$roles = um_user( 'can_view_roles' );
+		if ( UM()->roles()->um_user_can( 'can_view_all' ) && ! empty( $roles ) ) {
 
-		if ( UM()->roles()->um_user_can( 'can_view_all' ) && UM()->roles()->um_user_can( 'can_view_roles' ) ) {
-
-			$roles = um_user( 'can_view_roles' );
 			$roles = maybe_unserialize( $roles );
 
 			if ( ! empty( $roles ) ) {
-				$query_args['meta_query'][] = array(
-					'key' => 'role',
-					'value' => $roles,
-					'compare' => 'IN'
-				);
+				if ( ! empty( $query_args['role__in'] ) ) {
+					$query_args['role__in'] = array_intersect( $query_args['role__in'], $roles );
+				} else {
+					$query_args['role__in'] = $roles;
+				}
 			}
 
 		}
