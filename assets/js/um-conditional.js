@@ -436,7 +436,7 @@ jQuery(document).ready( function (){
         if ( ! $dom.hasClass( 'um-field-has-changed' ) ) {
             var me = um_get_field_element( $dom );
 
-            if ( type == 'radio' ) {
+            if ( type == 'radio' || type == 'checkbox' ) {
                 me = me.find( ':checked' );
             }
 
@@ -489,6 +489,11 @@ jQuery(document).ready( function (){
     });
 
     jQuery(document).on('input change', '.um-field input[type=text]', function () {
+        var me = jQuery(this);
+        um_apply_conditions(me, false);
+    });
+
+    jQuery(document).on('input change', '.um-field input[type=password]', function () {
         var me = jQuery(this);
         um_apply_conditions(me, false);
     });

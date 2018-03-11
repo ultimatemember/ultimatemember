@@ -3,497 +3,494 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-	/***
-	 ***    @um_profile_content_{main_tab}
-	 ***/
-	add_action( 'um_profile_content_main', 'um_profile_content_main' );
-	function um_profile_content_main( $args ) {
-		extract( $args );
+/**
+ * Um_profile_content_{main_tab}
+ *
+ * @param $args
+ */
+function um_profile_content_main( $args ) {
+	extract( $args );
 
-		if ( ! UM()->options()->get( 'profile_tab_main' ) && ! isset( $_REQUEST['um_action'] ) )
-			return;
+	if ( ! UM()->options()->get( 'profile_tab_main' ) && ! isset( $_REQUEST['um_action'] ) )
+		return;
 
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_profile_can_view_main
+	 * @description Check user can view profile
+	 * @input_vars
+	 * [{"var":"$view","type":"bool","desc":"Can view?"},
+	 * {"var":"$user_id","type":"int","desc":"User profile ID"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage
+	 * <?php add_filter( 'um_profile_can_view_main', 'function_name', 10, 2 ); ?>
+	 * @example
+	 * <?php
+	 * add_filter( 'um_profile_can_view_main', 'my_profile_can_view_main', 10, 2 );
+	 * function my_profile_can_view_main( $view, $user_id ) {
+	 *     // your code here
+	 *     return $view;
+	 * }
+	 * ?>
+	 */
+	$can_view = apply_filters( 'um_profile_can_view_main', -1, um_profile_id() );
+
+	if ( $can_view == -1 ) {
 		/**
 		 * UM hook
 		 *
-		 * @type filter
-		 * @title um_profile_can_view_main
-		 * @description Check user can view profile
+		 * @type action
+		 * @title um_before_form
+		 * @description Some actions before profile form
 		 * @input_vars
-		 * [{"var":"$view","type":"bool","desc":"Can view?"},
-		 * {"var":"$user_id","type":"int","desc":"User profile ID"}]
+		 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
 		 * @change_log
 		 * ["Since: 2.0"]
-		 * @usage
-		 * <?php add_filter( 'um_profile_can_view_main', 'function_name', 10, 2 ); ?>
+		 * @usage add_action( 'um_before_form', 'function_name', 10, 1 );
 		 * @example
 		 * <?php
-		 * add_filter( 'um_profile_can_view_main', 'my_profile_can_view_main', 10, 2 );
-		 * function my_profile_can_view_main( $view, $user_id ) {
+		 * add_action( 'um_before_form', 'my_before_form', 10, 1 );
+		 * function my_before_form( $args ) {
 		 *     // your code here
-		 *     return $view;
 		 * }
 		 * ?>
 		 */
-		$can_view = apply_filters( 'um_profile_can_view_main', -1, um_profile_id() );
-
-		if ( $can_view == -1 ) {
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_before_form
-			 * @description Some actions before profile form
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_before_form', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_before_form', 'my_before_form', 10, 1 );
-			 * function my_before_form( $args ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( "um_before_form", $args );
-
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_before_{$mode}_fields
-			 * @description Some actions before profile form fields
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"{Profile} form shortcode arguments"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_before_{$mode}_fields', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_before_{$mode}_fields', 'my_before_fields', 10, 1 );
-			 * function my_before_form( $args ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( "um_before_{$mode}_fields", $args );
-
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_main_{$mode}_fields
-			 * @description Some actions before login form fields
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Login form shortcode arguments"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_before_{$mode}_fields', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_before_{$mode}_fields', 'my_before_fields', 10, 1 );
-			 * function my_before_form( $args ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( "um_main_{$mode}_fields", $args );
-
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_after_form_fields
-			 * @description Some actions after login form fields
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Login form shortcode arguments"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_after_form_fields', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_after_form_fields', 'my_after_form_fields', 10, 1 );
-			 * function my_after_form_fields( $args ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( "um_after_form_fields", $args );
-
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_after_{$mode}_fields
-			 * @description Some actions after profile form fields
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_after_{$mode}_fields', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_after_{$mode}_fields', 'my_after_form_fields', 10, 1 );
-			 * function my_after_form_fields( $args ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( "um_after_{$mode}_fields", $args );
-
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_after_form
-			 * @description Some actions after profile form fields
-			 * @input_vars
-			 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_after_form', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_after_form', 'my_after_form', 10, 1 );
-			 * function my_after_form( $args ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( "um_after_form", $args );
-
-		} else {
-
-			?>
-
-            <div class="um-profile-note"><span><i class="um-faicon-lock"></i><?php echo $can_view; ?></span></div>
-
-			<?php
-
-		}
-
-	}
-
-	/***
-	 ***    @update user's profile
-	 ***/
-	add_action( 'um_user_edit_profile', 'um_user_edit_profile', 10 );
-	function um_user_edit_profile( $args ) {
-
-		$to_update = null;
-		$files = null;
-
-		if (isset( $args['user_id'] )) {
-			if (UM()->roles()->um_current_user_can( 'edit', $args['user_id'] )) {
-				UM()->user()->set( $args['user_id'] );
-			} else {
-				wp_die( __( 'You are not allowed to edit this user.', 'ultimate-member' ) );
-			}
-		} else if (isset( $args['_user_id'] )) {
-			UM()->user()->set( $args['_user_id'] );
-		}
-
-		$userinfo = UM()->user()->profile;
+		do_action( "um_before_form", $args );
 
 		/**
 		 * UM hook
 		 *
 		 * @type action
-		 * @title um_user_before_updating_profile
-		 * @description Some actions before profile submit
+		 * @title um_before_{$mode}_fields
+		 * @description Some actions before profile form fields
 		 * @input_vars
-		 * [{"var":"$userinfo","type":"array","desc":"User Data"}]
+		 * [{"var":"$args","type":"array","desc":"{Profile} form shortcode arguments"}]
 		 * @change_log
 		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_user_before_updating_profile', 'function_name', 10, 1 );
+		 * @usage add_action( 'um_before_{$mode}_fields', 'function_name', 10, 1 );
 		 * @example
 		 * <?php
-		 * add_action( 'um_user_before_updating_profile', 'my_user_before_updating_profile', 10, 1 );
-		 * function my_user_before_updating_profile( $userinfo ) {
+		 * add_action( 'um_before_{$mode}_fields', 'my_before_fields', 10, 1 );
+		 * function my_before_form( $args ) {
 		 *     // your code here
 		 * }
 		 * ?>
 		 */
-		do_action( 'um_user_before_updating_profile', $userinfo );
+		do_action( "um_before_{$mode}_fields", $args );
 
-		if (!empty( $args['custom_fields'] ))
-			$fields = unserialize( $args['custom_fields'] );
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_main_{$mode}_fields
+		 * @description Some actions before login form fields
+		 * @input_vars
+		 * [{"var":"$args","type":"array","desc":"Login form shortcode arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_before_{$mode}_fields', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_before_{$mode}_fields', 'my_before_fields', 10, 1 );
+		 * function my_before_form( $args ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( "um_main_{$mode}_fields", $args );
 
-		// loop through fields
-		if (!empty( $fields )) {
-			foreach ($fields as $key => $array) {
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_after_form_fields
+		 * @description Some actions after login form fields
+		 * @input_vars
+		 * [{"var":"$args","type":"array","desc":"Login form shortcode arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_after_form_fields', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_after_form_fields', 'my_after_form_fields', 10, 1 );
+		 * function my_after_form_fields( $args ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( "um_after_form_fields", $args );
 
-				if (!um_can_edit_field( $fields[$key] ) && isset( $fields[$key]['editable'] ) && !$fields[$key]['editable'])
-					continue;
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_after_{$mode}_fields
+		 * @description Some actions after profile form fields
+		 * @input_vars
+		 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_after_{$mode}_fields', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_after_{$mode}_fields', 'my_after_form_fields', 10, 1 );
+		 * function my_after_form_fields( $args ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( "um_after_{$mode}_fields", $args );
 
-				if ($fields[$key]['type'] == 'multiselect' || $fields[$key]['type'] == 'checkbox' && !isset( $args['submitted'][$key] )) {
-					delete_user_meta( um_user( 'ID' ), $key );
-				}
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_after_form
+		 * @description Some actions after profile form fields
+		 * @input_vars
+		 * [{"var":"$args","type":"array","desc":"Profile form shortcode arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_after_form', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_after_form', 'my_after_form', 10, 1 );
+		 * function my_after_form( $args ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( "um_after_form", $args );
 
-				if (isset( $args['submitted'][$key] )) {
+	} else { ?>
+		<div class="um-profile-note"><span><i class="um-faicon-lock"></i><?php echo $can_view; ?></span></div>
+	<?php }
+}
+add_action( 'um_profile_content_main', 'um_profile_content_main' );
 
-					if (isset( $fields[$key]['type'] ) && in_array( $fields[$key]['type'], array( 'image', 'file' ) ) &&
-						( um_is_temp_upload( $args['submitted'][$key] ) || $args['submitted'][$key] == 'empty_file' )
-					) {
 
-						$files[$key] = $args['submitted'][$key];
+/**
+ * Update user's profile
+ *
+ * @param array $args
+ */
+function um_user_edit_profile( $args ) {
+	$to_update = null;
+	$files = null;
 
-					} else {
+	if ( isset( $args['user_id'] ) ) {
+		if ( UM()->roles()->um_current_user_can( 'edit', $args['user_id'] ) ) {
+			UM()->user()->set( $args['user_id'] );
+		} else {
+			wp_die( __( 'You are not allowed to edit this user.', 'ultimate-member' ) );
+		}
+	} elseif ( isset( $args['_user_id'] ) ) {
+		UM()->user()->set( $args['_user_id'] );
+	}
 
-						if (isset( $userinfo[$key] ) && $args['submitted'][$key] != $userinfo[$key]) {
-							$to_update[$key] = $args['submitted'][$key];
-						} else if ($args['submitted'][$key]) {
-							$to_update[$key] = $args['submitted'][$key];
-						}
+	$userinfo = UM()->user()->profile;
 
+	/**
+	 * UM hook
+	 *
+	 * @type action
+	 * @title um_user_before_updating_profile
+	 * @description Some actions before profile submit
+	 * @input_vars
+	 * [{"var":"$userinfo","type":"array","desc":"User Data"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_action( 'um_user_before_updating_profile', 'function_name', 10, 1 );
+	 * @example
+	 * <?php
+	 * add_action( 'um_user_before_updating_profile', 'my_user_before_updating_profile', 10, 1 );
+	 * function my_user_before_updating_profile( $userinfo ) {
+	 *     // your code here
+	 * }
+	 * ?>
+	 */
+	do_action( 'um_user_before_updating_profile', $userinfo );
+
+	if ( ! empty( $args['custom_fields'] ) ) {
+		$fields = unserialize( $args['custom_fields'] );
+	}
+
+	// loop through fields
+	if ( ! empty( $fields ) ) {
+		foreach ( $fields as $key => $array ) {
+
+			if ( ! um_can_edit_field( $fields[ $key ] ) && isset( $fields[ $key ]['editable'] ) && ! $fields[ $key ]['editable'] )
+				continue;
+
+			if ( $fields[$key]['type'] == 'multiselect' || $fields[$key]['type'] == 'checkbox' && ! isset( $args['submitted'][ $key ] ) ) {
+				delete_user_meta( um_user( 'ID' ), $key );
+			}
+
+			if ( isset( $args['submitted'][ $key ] ) ) {
+
+				if ( isset( $fields[ $key ]['type'] ) && in_array( $fields[ $key ]['type'], array( 'image', 'file' ) ) &&
+					( um_is_temp_upload( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' ) ) {
+
+					$files[ $key ] = $args['submitted'][ $key ];
+
+				} else {
+
+					if ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ] != $userinfo[ $key ] ) {
+						$to_update[ $key ] = $args['submitted'][ $key ];
+					} elseif ( $args['submitted'][ $key ] ) {
+						$to_update[ $key ] = $args['submitted'][ $key ];
 					}
 
 				}
+
 			}
 		}
-
-		if (isset( $args['submitted']['description'] )) {
-			$to_update['description'] = $args['submitted']['description'];
-		}
-
-		if ( ! empty( $args['submitted']['role'] ) ) {
-			global $wp_roles;
-			$role_keys = array_map( function( $item ) {
-				return 'um_' . $item;
-			}, get_option( 'um_roles' ) );
-			$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
-
-			if ( ! in_array( $args['submitted']['role'], $exclude_roles ) ) {
-				$to_update['role'] = $args['submitted']['role'];
-			}
-
-			$args['roles_before_upgrade'] = UM()->roles()->get_all_user_roles( um_user( 'ID' ) );
-		}
-
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_user_pre_updating_profile
-		 * @description Some actions before profile submit
-		 * @input_vars
-		 * [{"var":"$userinfo","type":"array","desc":"Submitted User Data"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_user_pre_updating_profile', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_user_pre_updating_profile', 'my_user_pre_updating_profile', 10, 1 );
-		 * function my_user_pre_updating_profile( $userinfo ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_user_pre_updating_profile', $to_update );
-
-		/**
-		 * UM hook
-		 *
-		 * @type filter
-		 * @title um_user_pre_updating_profile_array
-		 * @description Change submitted data before update profile
-		 * @input_vars
-		 * [{"var":"$to_update","type":"array","desc":"Profile data upgrade"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage
-		 * <?php add_filter( 'um_user_pre_updating_profile_array', 'function_name', 10, 1 ); ?>
-		 * @example
-		 * <?php
-		 * add_filter( 'um_user_pre_updating_profile_array', 'my_user_pre_updating_profile', 10, 1 );
-		 * function my_user_pre_updating_profile( $to_update ) {
-		 *     // your code here
-		 *     return $to_update;
-		 * }
-		 * ?>
-		 */
-		$to_update = apply_filters( 'um_user_pre_updating_profile_array', $to_update );
-
-
-		if ( is_array( $to_update ) ) {
-			UM()->user()->update_profile( $to_update );
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_after_user_updated
-			 * @description Some actions after user profile updated
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"},
-			 * {"var":"$args","type":"array","desc":"Form Data"},
-			 * {"var":"$userinfo","type":"array","desc":"Submitted User Data"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_after_user_updated', 'function_name', 10, 33 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_after_user_updated', 'my_after_user_updated', 10, 3 );
-			 * function my_after_user_updated( $user_id, $args, $userinfo ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_after_user_updated', um_user( 'ID' ), $args, $to_update );
-		}
-
-		/**
-		 * UM hook
-		 *
-		 * @type filter
-		 * @title um_user_pre_updating_files_array
-		 * @description Change submitted files before update profile
-		 * @input_vars
-		 * [{"var":"$files","type":"array","desc":"Profile data files"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage
-		 * <?php add_filter( 'um_user_pre_updating_files_array', 'function_name', 10, 1 ); ?>
-		 * @example
-		 * <?php
-		 * add_filter( 'um_user_pre_updating_files_array', 'my_user_pre_updating_files', 10, 1 );
-		 * function my_user_pre_updating_files( $files ) {
-		 *     // your code here
-		 *     return $files;
-		 * }
-		 * ?>
-		 */
-		$files = apply_filters( 'um_user_pre_updating_files_array', $files );
-
-		if (is_array( $files )) {
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_before_user_upload
-			 * @description Before file uploaded on complete UM user profile.
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"},
-			 * {"var":"$files","type":"array","desc":"Files data"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_before_user_upload', 'function_name', 10, 2 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_before_user_upload', 'my_before_user_upload', 10, 2 );
-			 * function my_before_user_upload( $user_id, $files ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_before_user_upload', um_user( 'ID' ), $files );
-			UM()->user()->update_files( $files );
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_after_user_upload
-			 * @description After complete UM user profile edit and file uploaded.
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"},
-			 * {"var":"$files","type":"array","desc":"Files data"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_after_user_upload', 'function_name', 10, 2 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_after_user_upload', 'my_after_user_upload', 10, 2 );
-			 * function my_after_user_upload( $user_id, $files ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_after_user_upload', um_user( 'ID' ), $files );
-		}
-
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_user_after_updating_profile
-		 * @description After upgrade user's profile
-		 * @input_vars
-		 * [{"var":"$submitted","type":"array","desc":"Form data"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_user_after_updating_profile', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_user_after_updating_profile', 'my_user_after_updating_profile'', 10, 1 );
-		 * function my_user_after_updating_profile( $submitted ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_user_after_updating_profile', $to_update );
-
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_update_profile_full_name
-		 * @description On update user profile change full name
-		 * @input_vars
-		 * [{"var":"$user_id","type":"int","desc":"User ID"},
-		 * {"var":"$args","type":"array","desc":"Form data"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_update_profile_full_name', 'function_name', 10, 2 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_update_profile_full_name', 'my_update_profile_full_name', 10, 2 );
-		 * function my_update_profile_full_name( $user_id, $args ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_update_profile_full_name', um_user( 'ID' ), $to_update );
-
-		if ( ! isset( $args['is_signup'] ) ) {
-
-			$url = um_user_profile_url( um_user( 'ID' ) );
-			exit( wp_redirect( um_edit_my_profile_cancel_uri( $url ) ) );
-		}
-
 	}
 
+	if ( isset( $args['submitted']['description'] ) ) {
+		$to_update['description'] = $args['submitted']['description'];
+	}
+
+	if ( ! empty( $args['submitted']['role'] ) ) {
+		global $wp_roles;
+		$role_keys = array_map( function( $item ) {
+			return 'um_' . $item;
+		}, get_option( 'um_roles' ) );
+		$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+
+		if ( ! in_array( $args['submitted']['role'], $exclude_roles ) ) {
+			$to_update['role'] = $args['submitted']['role'];
+		}
+
+		$args['roles_before_upgrade'] = UM()->roles()->get_all_user_roles( um_user( 'ID' ) );
+	}
 
 	/**
-	 * Leave roles for User, which are not in the list of update profile (are default WP or 3rd plugins roles)
+	 * UM hook
 	 *
-	 * @param $user_id
-	 * @param $args
-	 * @param $to_update
+	 * @type action
+	 * @title um_user_pre_updating_profile
+	 * @description Some actions before profile submit
+	 * @input_vars
+	 * [{"var":"$userinfo","type":"array","desc":"Submitted User Data"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_action( 'um_user_pre_updating_profile', 'function_name', 10, 1 );
+	 * @example
+	 * <?php
+	 * add_action( 'um_user_pre_updating_profile', 'my_user_pre_updating_profile', 10, 1 );
+	 * function my_user_pre_updating_profile( $userinfo ) {
+	 *     // your code here
+	 * }
+	 * ?>
 	 */
-	function um_restore_default_roles( $user_id, $args, $to_update ) {
-		if ( ! empty( $args['submitted']['role'] ) ) {
-			$wp_user = new WP_User( $user_id );
+	do_action( 'um_user_pre_updating_profile', $to_update );
 
-			$role_keys = array_map( function( $item ) {
-				return 'um_' . $item;
-			}, get_option( 'um_roles' ) );
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_user_pre_updating_profile_array
+	 * @description Change submitted data before update profile
+	 * @input_vars
+	 * [{"var":"$to_update","type":"array","desc":"Profile data upgrade"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage
+	 * <?php add_filter( 'um_user_pre_updating_profile_array', 'function_name', 10, 1 ); ?>
+	 * @example
+	 * <?php
+	 * add_filter( 'um_user_pre_updating_profile_array', 'my_user_pre_updating_profile', 10, 1 );
+	 * function my_user_pre_updating_profile( $to_update ) {
+	 *     // your code here
+	 *     return $to_update;
+	 * }
+	 * ?>
+	 */
+	$to_update = apply_filters( 'um_user_pre_updating_profile_array', $to_update );
 
-			$leave_roles = array_diff( $args['roles_before_upgrade'], array_merge( $role_keys, array( 'subscriber' ) ) );
 
-			if ( UM()->roles()->is_role_custom( $to_update['role'] ) ) {
-				$wp_user->remove_role( $to_update['role'] );
-				$roles = array_merge( $leave_roles, array( $to_update['role'] ) );
-			} else {
-				$roles = array_merge( array( $to_update['role'] ), $leave_roles );
-			}
+	if ( is_array( $to_update ) ) {
+		UM()->user()->update_profile( $to_update );
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_after_user_updated
+		 * @description Some actions after user profile updated
+		 * @input_vars
+		 * [{"var":"$user_id","type":"int","desc":"User ID"},
+		 * {"var":"$args","type":"array","desc":"Form Data"},
+		 * {"var":"$userinfo","type":"array","desc":"Submitted User Data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_after_user_updated', 'function_name', 10, 33 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_after_user_updated', 'my_after_user_updated', 10, 3 );
+		 * function my_after_user_updated( $user_id, $args, $userinfo ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( 'um_after_user_updated', um_user( 'ID' ), $args, $to_update );
+	}
 
-			foreach ( $roles as $role_k ) {
-				$wp_user->add_role( $role_k );
-			}
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_user_pre_updating_files_array
+	 * @description Change submitted files before update profile
+	 * @input_vars
+	 * [{"var":"$files","type":"array","desc":"Profile data files"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage
+	 * <?php add_filter( 'um_user_pre_updating_files_array', 'function_name', 10, 1 ); ?>
+	 * @example
+	 * <?php
+	 * add_filter( 'um_user_pre_updating_files_array', 'my_user_pre_updating_files', 10, 1 );
+	 * function my_user_pre_updating_files( $files ) {
+	 *     // your code here
+	 *     return $files;
+	 * }
+	 * ?>
+	 */
+	$files = apply_filters( 'um_user_pre_updating_files_array', $files );
+
+	if ( is_array( $files ) ) {
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_before_user_upload
+		 * @description Before file uploaded on complete UM user profile.
+		 * @input_vars
+		 * [{"var":"$user_id","type":"int","desc":"User ID"},
+		 * {"var":"$files","type":"array","desc":"Files data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_before_user_upload', 'function_name', 10, 2 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_before_user_upload', 'my_before_user_upload', 10, 2 );
+		 * function my_before_user_upload( $user_id, $files ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( 'um_before_user_upload', um_user( 'ID' ), $files );
+		UM()->user()->update_files( $files );
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_after_user_upload
+		 * @description After complete UM user profile edit and file uploaded.
+		 * @input_vars
+		 * [{"var":"$user_id","type":"int","desc":"User ID"},
+		 * {"var":"$files","type":"array","desc":"Files data"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_after_user_upload', 'function_name', 10, 2 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_after_user_upload', 'my_after_user_upload', 10, 2 );
+		 * function my_after_user_upload( $user_id, $files ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( 'um_after_user_upload', um_user( 'ID' ), $files );
+	}
+
+	/**
+	 * UM hook
+	 *
+	 * @type action
+	 * @title um_user_after_updating_profile
+	 * @description After upgrade user's profile
+	 * @input_vars
+	 * [{"var":"$submitted","type":"array","desc":"Form data"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_action( 'um_user_after_updating_profile', 'function_name', 10, 1 );
+	 * @example
+	 * <?php
+	 * add_action( 'um_user_after_updating_profile', 'my_user_after_updating_profile'', 10, 1 );
+	 * function my_user_after_updating_profile( $submitted ) {
+	 *     // your code here
+	 * }
+	 * ?>
+	 */
+	do_action( 'um_user_after_updating_profile', $to_update );
+
+	/**
+	 * UM hook
+	 *
+	 * @type action
+	 * @title um_update_profile_full_name
+	 * @description On update user profile change full name
+	 * @input_vars
+	 * [{"var":"$user_id","type":"int","desc":"User ID"},
+	 * {"var":"$args","type":"array","desc":"Form data"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_action( 'um_update_profile_full_name', 'function_name', 10, 2 );
+	 * @example
+	 * <?php
+	 * add_action( 'um_update_profile_full_name', 'my_update_profile_full_name', 10, 2 );
+	 * function my_update_profile_full_name( $user_id, $args ) {
+	 *     // your code here
+	 * }
+	 * ?>
+	 */
+	do_action( 'um_update_profile_full_name', um_user( 'ID' ), $to_update );
+
+	if ( ! isset( $args['is_signup'] ) ) {
+
+		$url = um_user_profile_url( um_user( 'ID' ) );
+		exit( wp_redirect( um_edit_my_profile_cancel_uri( $url ) ) );
+	}
+
+}
+add_action( 'um_user_edit_profile', 'um_user_edit_profile', 10 );
+
+
+/**
+ * Leave roles for User, which are not in the list of update profile (are default WP or 3rd plugins roles)
+ *
+ * @param $user_id
+ * @param $args
+ * @param $to_update
+ */
+function um_restore_default_roles( $user_id, $args, $to_update ) {
+	if ( ! empty( $args['submitted']['role'] ) ) {
+		$wp_user = new WP_User( $user_id );
+
+		$role_keys = array_map( function( $item ) {
+			return 'um_' . $item;
+		}, get_option( 'um_roles' ) );
+
+		$leave_roles = array_diff( $args['roles_before_upgrade'], array_merge( $role_keys, array( 'subscriber' ) ) );
+
+		if ( UM()->roles()->is_role_custom( $to_update['role'] ) ) {
+			$wp_user->remove_role( $to_update['role'] );
+			$roles = array_merge( $leave_roles, array( $to_update['role'] ) );
+		} else {
+			$roles = array_merge( array( $to_update['role'] ), $leave_roles );
+		}
+
+		foreach ( $roles as $role_k ) {
+			$wp_user->add_role( $role_k );
 		}
 	}
-	add_action( 'um_after_user_updated', 'um_restore_default_roles', 10, 3 );
+}
+add_action( 'um_after_user_updated', 'um_restore_default_roles', 10, 3 );
 
 
 	/***
