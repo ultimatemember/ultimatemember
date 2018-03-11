@@ -1315,7 +1315,7 @@ add_action( 'um_after_user_updated', 'um_restore_default_roles', 10, 3 );
 				} ?>">
 					<?php if ( UM()->options()->get( 'profile_menu_icons' ) ) { ?>
                         <a href="<?php echo $nav_link; ?>" class="um-tip-n uimob500-show uimob340-show uimob800-show"
-                           title="<?php echo $tab['name']; ?>" original-title="<?php echo $tab['name']; ?>">
+                           title="<?php esc_attr_e( $tab['name'] ); ?>" original-title="<?php esc_attr_e( $tab['name'] ); ?>">
 
                             <i class="<?php echo $tab['icon']; ?>"></i>
 
@@ -1327,7 +1327,7 @@ add_action( 'um_after_user_updated', 'um_restore_default_roles', 10, 3 );
 
                         </a>
                         <a href="<?php echo $nav_link; ?>" class="uimob500-hide uimob340-hide uimob800-hide"
-                           title="<?php echo $tab['name']; ?>" original-title="<?php echo $tab['name']; ?>">
+                           title="<?php esc_attr_e( $tab['name'] ); ?>" original-title="<?php esc_attr_e( $tab['name'] ); ?>">
 
                             <i class="<?php echo $tab['icon']; ?>"></i>
 
