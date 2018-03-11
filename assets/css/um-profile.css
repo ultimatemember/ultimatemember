@@ -53,6 +53,7 @@
 	background-color: #eee;
 	box-sizing: border-box;
 	position: relative;
+	overflow: hidden;
 }
 
 .um-cover-add {
@@ -506,7 +507,7 @@ font-weight: normal;
 
 .um-item-meta span:not(:last-child):after {
     position: relative;
-    padding: 0px 4px 0px 7px;
+    padding: 0 4px 0 7px;
     content: "•";
 }
 
@@ -532,8 +533,6 @@ font-weight: normal;
 .um-tab-notifier {
     position: absolute;
     background: none repeat scroll 0% 0% rgb(198, 81, 81);
-    right: 0px;
-    top: 0px;
     width: 18px;
     height: 18px;
     border-radius: 999px;
