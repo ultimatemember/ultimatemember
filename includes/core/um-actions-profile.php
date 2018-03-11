@@ -1214,198 +1214,204 @@ add_action( 'um_after_user_updated', 'um_restore_default_roles', 10, 3 );
 		<?php
 	}
 
-	/***
-	 ***    @display the available profile tabs
-	 ***/
-	add_action( 'um_profile_menu', 'um_profile_menu', 9 );
-	function um_profile_menu( $args ) {
-		if ( ! UM()->options()->get( 'profile_menu' ) )
-			return;
 
-		// get active tabs
-		$tabs = UM()->profile()->tabs_active();
+/**
+ * Display the available profile tabs
+ *
+ * @param array $args
+ */
+function um_profile_menu( $args ) {
+	if ( ! UM()->options()->get( 'profile_menu' ) )
+		return;
 
-		/**
-		 * UM hook
-		 *
-		 * @type filter
-		 * @title um_user_profile_tabs
-		 * @description Extend profile tabs
-		 * @input_vars
-		 * [{"var":"$tabs","type":"array","desc":"Profile Tabs"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage
-		 * <?php add_filter( 'um_user_profile_tabs', 'function_name', 10, 1 ); ?>
-		 * @example
-		 * <?php
-		 * add_filter( 'um_user_profile_tabs', 'my_user_profile_tabs', 10, 1 );
-		 * function my_user_profile_tabs( $tabs ) {
-		 *     // your code here
-		 *     return $tabs;
-		 * }
-		 * ?>
-		 */
-		$tabs = apply_filters( 'um_user_profile_tabs', $tabs );
-
-		UM()->user()->tabs = $tabs;
-
-		// need enough tabs to continue
-		if (count( $tabs ) <= 1) return;
-
-		$active_tab = UM()->profile()->active_tab();
-
-		if (!isset( $tabs[$active_tab] )) {
-			$active_tab = 'main';
-			UM()->profile()->active_tab = $active_tab;
-			UM()->profile()->active_subnav = null;
-		}
-
-		// Move default tab priority
-		$default_tab = UM()->options()->get( 'profile_menu_default_tab' );
-		$dtab = ( isset( $tabs[$default_tab] ) ) ? $tabs[$default_tab] : 'main';
-		if (isset( $tabs[$default_tab] )) {
-			unset( $tabs[$default_tab] );
-			$dtabs[$default_tab] = $dtab;
-			$tabs = $dtabs + $tabs;
-		}
-
-		?>
-
-        <div class="um-profile-nav">
-
-			<?php foreach ($tabs as $id => $tab) {
-
-				if (isset( $tab['hidden'] )) continue;
-
-				$nav_link = UM()->permalinks()->get_current_url( get_option( 'permalink_structure' ) );
-				$nav_link = remove_query_arg( 'um_action', $nav_link );
-				$nav_link = remove_query_arg( 'subnav', $nav_link );
-				$nav_link = add_query_arg( 'profiletab', $id, $nav_link );
-
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_profile_menu_link_{$id}
-				 * @description Change profile menu link by tab $id
-				 * @input_vars
-				 * [{"var":"$nav_link","type":"string","desc":"Profile Tab Link"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_profile_menu_link_{$id}', 'function_name', 10, 1 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_profile_menu_link_{$id}', 'my_profile_menu_link', 10, 1 );
-				 * function my_profile_menu_link( $nav_link ) {
-				 *     // your code here
-				 *     return $nav_link;
-				 * }
-				 * ?>
-				 */
-				$nav_link = apply_filters( "um_profile_menu_link_{$id}", $nav_link );
-
-				?>
-
-                <div class="um-profile-nav-item um-profile-nav-<?php echo $id; ?> <?php if ( ! UM()->options()->get( 'profile_menu_icons' ) ) {
-					echo 'without-icon';
-				} ?> <?php if ($id == $active_tab) {
-					echo 'active';
-				} ?>">
-					<?php if ( UM()->options()->get( 'profile_menu_icons' ) ) { ?>
-                        <a href="<?php echo $nav_link; ?>" class="um-tip-n uimob500-show uimob340-show uimob800-show"
-                           title="<?php echo $tab['name']; ?>" original-title="<?php echo $tab['name']; ?>">
-
-                            <i class="<?php echo $tab['icon']; ?>"></i>
-
-							<?php if (isset( $tab['notifier'] ) && $tab['notifier'] > 0) { ?>
-                                <span class="um-tab-notifier uimob500-show uimob340-show uimob800-show"><?php echo $tab['notifier']; ?></span>
-							<?php } ?>
-
-                            <span class="uimob500-hide uimob340-hide uimob800-hide title"><?php echo $tab['name']; ?></span>
-
-                        </a>
-                        <a href="<?php echo $nav_link; ?>" class="uimob500-hide uimob340-hide uimob800-hide"
-                           title="<?php echo $tab['name']; ?>" original-title="<?php echo $tab['name']; ?>">
-
-                            <i class="<?php echo $tab['icon']; ?>"></i>
-
-							<?php if (isset( $tab['notifier'] ) && $tab['notifier'] > 0) { ?>
-                                <span class="um-tab-notifier uimob500-show uimob340-show uimob800-show"><?php echo $tab['notifier']; ?></span>
-							<?php } ?>
-
-                            <span class="uimob500-hide uimob340-hide uimob800-hide title"><?php echo $tab['name']; ?></span>
-
-                        </a>
-					<?php } else { ?>
-                        <a href="<?php echo $nav_link; ?>" title="<?php echo $tab['name']; ?>"
-                           original-title="<?php echo $tab['name']; ?>">
-
-							<?php if (isset( $tab['notifier'] ) && $tab['notifier'] > 0) { ?>
-                                <span class="um-tab-notifier uimob500-show uimob340-show uimob800-show"><?php echo $tab['notifier']; ?></span>
-							<?php } ?>
-
-                            <span class="uimob500-hide uimob340-hide uimob800-hide title"><?php echo $tab['name']; ?></span>
-
-                        </a>
-					<?php } ?>
-                </div>
-
-			<?php } ?>
-
-            <div class="um-clear"></div>
-
-        </div>
-
-		<?php foreach ($tabs as $id => $tab) {
-
-			if (isset( $tab['subnav'] ) && $active_tab == $id) {
-
-				$active_subnav = ( UM()->profile()->active_subnav() ) ? UM()->profile()->active_subnav() : $tab['subnav_default'];
-
-				echo '<div class="um-profile-subnav">';
-				foreach ($tab['subnav'] as $id => $subtab) {
-
-					?>
-
-                    <a href="<?php echo add_query_arg( 'subnav', $id ); ?>"
-                       class="<?php if ($active_subnav == $id) echo 'active'; ?>"><?php echo $subtab; ?></a>
-
-					<?php
-
-				}
-				echo '</div>';
-			}
-
-		}
-
-	}
+	// get active tabs
+	$tabs = UM()->profile()->tabs_active();
 
 	/**
-	 * Clean up file for new uploaded files
+	 * UM hook
 	 *
-	 * @param  integer $user_id
-	 * @param  array   $arr_files
+	 * @type filter
+	 * @title um_user_profile_tabs
+	 * @description Extend profile tabs
+	 * @input_vars
+	 * [{"var":"$tabs","type":"array","desc":"Profile Tabs"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage
+	 * <?php add_filter( 'um_user_profile_tabs', 'function_name', 10, 1 ); ?>
+	 * @example
+	 * <?php
+	 * add_filter( 'um_user_profile_tabs', 'my_user_profile_tabs', 10, 1 );
+	 * function my_user_profile_tabs( $tabs ) {
+	 *     // your code here
+	 *     return $tabs;
+	 * }
+	 * ?>
 	 */
-	function um_before_user_upload( $user_id, $arr_files ) {
-		um_fetch_user( $user_id );
+	$tabs = apply_filters( 'um_user_profile_tabs', $tabs );
 
-		foreach ( $arr_files as $key => $filename ) {
-			if ( um_user( $key ) ) {
-				$old_filename = um_user( $key );
+	UM()->user()->tabs = $tabs;
 
-				if ( basename( $filename ) != basename( um_user( $key ) ) ||
-					in_array( $old_filename, array( basename( um_user( $key ) ), basename( $filename ) ) ) ||
-					$filename == 'empty_file' ) {
+	// need enough tabs to continue
+	if ( count( $tabs ) <= 1 ) {
+		return;
+	}
 
-					$path = UM()->files()->upload_basedir;
-					delete_user_meta( $user_id, $old_filename );
-					if (file_exists( $path . $user_id . '/' . $old_filename )) {
-						unlink( $path . $user_id . '/' . $old_filename );
-					}
+	$active_tab = UM()->profile()->active_tab();
+
+	if ( ! isset( $tabs[ $active_tab ] ) ) {
+		$active_tab = 'main';
+		UM()->profile()->active_tab = $active_tab;
+		UM()->profile()->active_subnav = null;
+	}
+
+	// Move default tab priority
+	$default_tab = UM()->options()->get( 'profile_menu_default_tab' );
+	$dtab = ( isset( $tabs[ $default_tab ] ) ) ? $tabs[ $default_tab ] : 'main';
+	if ( isset( $tabs[ $default_tab] ) ) {
+		unset( $tabs[ $default_tab ] );
+		$dtabs[ $default_tab ] = $dtab;
+		$tabs = $dtabs + $tabs;
+	} ?>
+
+    <div class="um-profile-nav">
+
+		<?php foreach ( $tabs as $id => $tab ) {
+
+			if ( isset( $tab['hidden'] ) ) {
+				continue;
+			}
+
+			$nav_link = UM()->permalinks()->get_current_url( get_option( 'permalink_structure' ) );
+			$nav_link = remove_query_arg( 'um_action', $nav_link );
+			$nav_link = remove_query_arg( 'subnav', $nav_link );
+			$nav_link = add_query_arg( 'profiletab', $id, $nav_link );
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_profile_menu_link_{$id}
+			 * @description Change profile menu link by tab $id
+			 * @input_vars
+			 * [{"var":"$nav_link","type":"string","desc":"Profile Tab Link"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_profile_menu_link_{$id}', 'function_name', 10, 1 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_profile_menu_link_{$id}', 'my_profile_menu_link', 10, 1 );
+			 * function my_profile_menu_link( $nav_link ) {
+			 *     // your code here
+			 *     return $nav_link;
+			 * }
+			 * ?>
+			 */
+			$nav_link = apply_filters( "um_profile_menu_link_{$id}", $nav_link );
+
+			$profile_nav_class = '';
+			if ( ! UM()->options()->get( 'profile_menu_icons' ) ) {
+				$profile_nav_class .= ' without-icon';
+			}
+
+			if ( $id == $active_tab ) {
+				$profile_nav_class .= ' active';
+			} ?>
+
+			<div class="um-profile-nav-item um-profile-nav-<?php echo $id . ' ' . $profile_nav_class; ?>">
+				<?php if ( UM()->options()->get( 'profile_menu_icons' ) ) { ?>
+					<a href="<?php echo $nav_link; ?>" class="um-tip-n uimob500-show uimob340-show uimob800-show"
+					   title="<?php echo esc_attr( $tab['name'] ); ?>" original-title="<?php echo esc_attr( $tab['name'] ); ?>">
+
+						<i class="<?php echo $tab['icon']; ?>"></i>
+
+						<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?>
+							<span class="um-tab-notifier uimob500-show uimob340-show uimob800-show"><?php echo $tab['notifier']; ?></span>
+						<?php } ?>
+
+						<span class="uimob500-hide uimob340-hide uimob800-hide title"><?php echo $tab['name']; ?></span>
+
+					</a>
+					<a href="<?php echo $nav_link; ?>" class="uimob500-hide uimob340-hide uimob800-hide"
+					   title="<?php echo esc_attr( $tab['name'] ); ?>" original-title="<?php echo esc_attr( $tab['name'] ); ?>">
+
+						<i class="<?php echo $tab['icon']; ?>"></i>
+
+						<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?>
+							<span class="um-tab-notifier uimob500-show uimob340-show uimob800-show"><?php echo $tab['notifier']; ?></span>
+						<?php } ?>
+
+						<span class="uimob500-hide uimob340-hide uimob800-hide title"><?php echo $tab['name']; ?></span>
+
+					</a>
+				<?php } else { ?>
+					<a href="<?php echo $nav_link; ?>" title="<?php echo esc_attr( $tab['name'] ); ?>"
+					   original-title="<?php echo esc_attr( $tab['name'] ); ?>">
+
+						<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0) { ?>
+							<span class="um-tab-notifier uimob500-show uimob340-show uimob800-show"><?php echo $tab['notifier']; ?></span>
+						<?php } ?>
+
+						<span class="uimob500-hide uimob340-hide uimob800-hide title"><?php echo $tab['name']; ?></span>
+
+					</a>
+				<?php } ?>
+			</div>
+
+		<?php } ?>
+
+		<div class="um-clear"></div>
+
+	</div>
+
+	<?php foreach ( $tabs as $id => $tab ) {
+
+		if ( isset( $tab['subnav'] ) && $active_tab == $id ) {
+
+			$active_subnav = ( UM()->profile()->active_subnav() ) ? UM()->profile()->active_subnav() : $tab['subnav_default']; ?>
+
+			<div class="um-profile-subnav">
+				<?php foreach ( $tab['subnav'] as $id_s => $subtab ) { ?>
+
+					<a href="<?php echo add_query_arg( 'subnav', $id_s ); ?>" class="<?php if ( $active_subnav == $id_s ) echo 'active'; ?>">
+						<?php echo $subtab; ?>
+					</a>
+
+				<?php } ?>
+			</div>
+		<?php }
+
+	}
+
+}
+add_action( 'um_profile_menu', 'um_profile_menu', 9 );
+
+
+/**
+ * Clean up file for new uploaded files
+ *
+ * @param  integer $user_id
+ * @param  array   $arr_files
+ */
+function um_before_user_upload( $user_id, $arr_files ) {
+	um_fetch_user( $user_id );
+
+	foreach ( $arr_files as $key => $filename ) {
+		if ( um_user( $key ) ) {
+			$old_filename = um_user( $key );
+
+			if ( basename( $filename ) != basename( um_user( $key ) ) ||
+				in_array( $old_filename, array( basename( um_user( $key ) ), basename( $filename ) ) ) ||
+				$filename == 'empty_file' ) {
+
+				$path = UM()->files()->upload_basedir;
+				delete_user_meta( $user_id, $old_filename );
+				if (file_exists( $path . $user_id . '/' . $old_filename )) {
+					unlink( $path . $user_id . '/' . $old_filename );
 				}
 			}
 		}
 	}
-	add_action( "um_before_user_upload", "um_before_user_upload", 10, 2 );
+}
+add_action( "um_before_user_upload", "um_before_user_upload", 10, 2 );
