@@ -175,22 +175,6 @@ function um_user_last_login_date( $user_id ) {
 
 
 /**
- * Check if we are on UM page
- *
- * @deprecated 2.0
- *
- * @return bool
- */
-function is_ultimatemember() {
-	global $post;
-	if ( isset( $post->ID ) && in_array( $post->ID, UM()->config()->permalinks ) )
-		return true;
-
-	return false;
-}
-
-
-/**
  * Is core URL
  *
  * @deprecated 2.0

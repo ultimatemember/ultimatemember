@@ -2363,3 +2363,18 @@ function um_let_to_num( $v ) {
 
 	return $ret;
 }
+
+
+/**
+ * Check if we are on UM page
+ *
+ * @return bool
+ */
+function is_ultimatemember() {
+	global $post;
+
+	if ( isset( $post->ID ) && in_array( $post->ID, UM()->config()->permalinks ) )
+		return true;
+
+	return false;
+}

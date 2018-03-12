@@ -23,6 +23,7 @@ if ( ! class_exists( 'Shortcodes' ) ) {
 
 
             add_filter( 'body_class', array( &$this, 'body_class' ), 0 );
+            add_action( 'template_redirect', array( &$this, 'is_um_page' ) );
 
 	        add_filter( 'um_shortcode_args_filter', array( &$this, 'display_logout_form' ), 99 );
 	        add_filter( 'um_shortcode_args_filter', array( &$this, 'parse_shortcode_args' ), 99 );
@@ -175,6 +176,17 @@ if ( ! class_exists( 'Shortcodes' ) ) {
             }
             return $content;
         }
+
+
+	    /**
+	     * Remove wpautop filter for post content if it's UM core page
+	     */
+        function is_um_page() {
+	        if ( is_ultimatemember() ) {
+		        remove_filter( 'the_content', 'wpautop' );
+	        }
+        }
+
 
         /***
          ***	@extend body classes
