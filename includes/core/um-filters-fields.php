@@ -477,7 +477,9 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 
 		if( 'text' == $type && ! in_array( $data['validate'], array( 'unique_email' ) ) || 'password' == $type ) {
 			$value = esc_attr( $value );
-		} elseif ( 'textarea' == $type ){
+		}elseif( $type == 'url' ) {
+			$value = esc_url( $value );
+		}  elseif ( 'textarea' == $type ){
 			$value =  wp_kses_post( $value );
 		}
 	}
@@ -507,3 +509,18 @@ add_filter( 'um_profile_field_filter_hook__','um_profile_field_filter_xss_valida
 		return $post_form;
 	}
 	add_filter( 'um_submit_form_data', 'um_submit_form_data_role_fields', 10, 2 );
+
+
+	/**
+	 * Cleaning on XSS injection for url editing field
+	 * @param  $value string
+	 * @param  $key   string
+	 *
+	 * @return string $value
+	 * @uses   hook filters: um_edit_url_field_value
+	 */
+	function um_edit_url_field_value( $value, $key ) {
+		$value = esc_attr($value);
+		return $value;
+	}
+	add_filter( 'um_edit_url_field_value', 'um_edit_url_field_value', 10, 2 );
