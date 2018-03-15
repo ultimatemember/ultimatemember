@@ -520,7 +520,7 @@ add_filter( 'um_profile_field_filter_hook__','um_profile_field_filter_xss_valida
 	 * @uses   hook filters: um_edit_url_field_value
 	 */
 	function um_edit_url_field_value( $value, $key ) {
-		$value = esc_attr($value);
+		$value = esc_attr( $value );
 		return $value;
 	}
 	add_filter( 'um_edit_url_field_value', 'um_edit_url_field_value', 10, 2 );

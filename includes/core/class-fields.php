@@ -1512,6 +1512,29 @@ if ( ! class_exists( 'Fields' ) ) {
 			if (isset( $data ) && is_array( $data )) {
 				$data = $this->get_field( $key );
 				if (is_array( $data )) {
+					/**
+					 * @var string      $in_row
+					 * @var boolean     $in_sub_row
+					 * @var boolean     $in_column
+					 * @var string      $type
+					 * @var string      $metakey
+					 * @var int         $position
+					 * @var string      $title
+					 * @var string      $help
+					 * @var array       $options
+					 * @var string      $visibility
+					 * @var string      $label
+					 * @var string      $placeholder
+					 * @var boolean     $public
+					 * @var boolean     $editable
+					 * @var string      $icon
+					 * @var boolean     $in_group
+					 * @var string      $classes
+					 * @var boolean     $required
+					 * @var string      $validate
+					 * @var string      $default
+                     * @var string      $conditional
+					 */
 					extract( $data );
 				}
 			}
@@ -2376,6 +2399,10 @@ if ( ! class_exists( 'Fields' ) ) {
 						$atts_ajax .= " data-um-ajax-url='{$ajax_source_url}' ";
 
 					}
+
+					if( ! empty( $placeholder ) ) {
+					    $placeholder = strip_tags( $placeholder );
+                    }
 
 					$output .= '<select  ' . $disabled . ' ' . $select_original_option_value . ' ' . $disabled_by_parent_option . '  name="' . $form_key . '" id="' . $form_key . '" data-validate="' . $validate . '" data-key="' . $key . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . $placeholder . '" ' . $atts_ajax . '>';
 

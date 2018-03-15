@@ -439,6 +439,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
             $atts['options'] = UM()->fields()->get_options_from_callback( $atts, $atts['type'] );
         }
 
+        if( isset( $atts['label'] ) ){
+	        $atts['label'] = strip_tags( $atts['label'] );
+        }
+
+
         return $atts;
 	}
 
