@@ -21,7 +21,10 @@ if ( ! class_exists( 'Profile' ) ) {
 
 
         function ajax_delete_profile_photo() {
-            extract( $_REQUEST );
+	        /**
+	         * @var $user_id
+	         */
+	        extract( $_REQUEST );
 
             if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) )
                 die( __( 'You can not edit this user' ) );
@@ -31,7 +34,10 @@ if ( ! class_exists( 'Profile' ) ) {
 
 
         function ajax_delete_cover_photo() {
-            extract($_REQUEST);
+	        /**
+	         * @var $user_id
+	         */
+	        extract( $_REQUEST );
 
             if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) )
                 die( __( 'You can not edit this user' ) );
@@ -284,5 +290,30 @@ if ( ! class_exists( 'Profile' ) ) {
             return $output;
         }
 
+
+	    /**
+	     * New menu
+	     *
+	     * @param string $position
+	     * @param string $element
+	     * @param string $trigger
+	     * @param array $items
+	     */
+	    function new_ui( $position, $element, $trigger, $items ) {
+		    ?>
+
+		    <div class="um-dropdown" data-element="<?php echo $element; ?>" data-position="<?php echo $position; ?>" data-trigger="<?php echo $trigger; ?>">
+			    <div class="um-dropdown-b">
+				    <div class="um-dropdown-arr"><i class=""></i></div>
+				    <ul>
+					    <?php foreach ( $items as $k => $v ) { ?>
+						    <li><?php echo $v; ?></li>
+					    <?php } ?>
+				    </ul>
+			    </div>
+		    </div>
+
+		    <?php
+	    }
     }
 }

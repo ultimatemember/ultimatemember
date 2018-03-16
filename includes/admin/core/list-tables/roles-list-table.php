@@ -120,15 +120,53 @@ if( ! class_exists( 'WP_List_Table' ) )
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 
 
+/**
+ * Class UM_Roles_List_Table
+ */
 class UM_Roles_List_Table extends WP_List_Table {
 
+
+	/**
+	 * @var string
+	 */
 	var $no_items_message = '';
+
+
+	/**
+	 * @var array
+	 */
 	var $sortable_columns = array();
+
+
+	/**
+	 * @var string
+	 */
 	var $default_sorting_field = '';
+
+
+	/**
+	 * @var array
+	 */
 	var $actions = array();
+
+
+	/**
+	 * @var array
+	 */
 	var $bulk_actions = array();
+
+
+	/**
+	 * @var array
+	 */
 	var $columns = array();
 
+
+	/**
+	 * UM_Roles_List_Table constructor.
+	 *
+	 * @param array $args
+	 */
 	function __construct( $args = array() ){
 		$args = wp_parse_args( $args, array(
 			'singular'  => __( 'item', 'ultimate-member' ),
@@ -139,14 +177,23 @@ class UM_Roles_List_Table extends WP_List_Table {
 		$this->no_items_message = $args['plural'] . ' ' . __( 'not found.', 'ultimate-member' );
 
 		parent::__construct( $args );
-
-
 	}
 
+
+	/**
+	 * @param callable $name
+	 * @param array $arguments
+	 *
+	 * @return mixed
+	 */
 	function __call( $name, $arguments ) {
 		return call_user_func_array( array( $this, $name ), $arguments );
 	}
 
+
+	/**
+	 *
+	 */
 	function prepare_items() {
 		$columns  = $this->get_columns();
 		$hidden   = array();
@@ -154,6 +201,13 @@ class UM_Roles_List_Table extends WP_List_Table {
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 	}
 
+
+	/**
+	 * @param object $item
+	 * @param string $column_name
+	 *
+	 * @return string
+	 */
 	function column_default( $item, $column_name ) {
 		if( isset( $item[ $column_name ] ) ) {
 			return $item[ $column_name ];
@@ -162,10 +216,20 @@ class UM_Roles_List_Table extends WP_List_Table {
 		}
 	}
 
+
+	/**
+	 *
+	 */
 	function no_items() {
 		echo $this->no_items_message;
 	}
 
+
+	/**
+	 * @param array $args
+	 *
+	 * @return $this
+	 */
 	function set_sortable_columns( $args = array() ) {
 		$return_args = array();
 		foreach( $args as $k=>$val ) {
@@ -181,10 +245,20 @@ class UM_Roles_List_Table extends WP_List_Table {
 		return $this;
 	}
 
+
+	/**
+	 * @return array
+	 */
 	function get_sortable_columns() {
 		return $this->sortable_columns;
 	}
 
+
+	/**
+	 * @param array $args
+	 *
+	 * @return $this
+	 */
 	function set_columns( $args = array() ) {
 		if( count( $this->bulk_actions ) ) {
 			$args = array_merge( array( 'cb' => '<input type="checkbox" />' ), $args );
@@ -193,34 +267,68 @@ class UM_Roles_List_Table extends WP_List_Table {
 		return $this;
 	}
 
+
+	/**
+	 * @return array
+	 */
 	function get_columns() {
 		return $this->columns;
 	}
 
+
+	/**
+	 * @param array $args
+	 *
+	 * @return $this
+	 */
 	function set_actions( $args = array() ) {
 		$this->actions = $args;
 		return $this;
 	}
 
+
+	/**
+	 * @return array
+	 */
 	function get_actions() {
 		return $this->actions;
 	}
 
+
+	/**
+	 * @param array $args
+	 *
+	 * @return $this
+	 */
 	function set_bulk_actions( $args = array() ) {
 		$this->bulk_actions = $args;
 		return $this;
 	}
 
+
+	/**
+	 * @return array
+	 */
 	function get_bulk_actions() {
 		return $this->bulk_actions;
 	}
 
 
+	/**
+	 * @param object $item
+	 *
+	 * @return string
+	 */
 	function column_cb( $item ) {
 		return sprintf( '<input type="checkbox" name="item[]" value="%s" />', $item['key'] );
 	}
 
 
+	/**
+	 * @param $item
+	 *
+	 * @return string
+	 */
 	function column_title( $item ) {
 		$actions = array();
 
@@ -241,26 +349,44 @@ class UM_Roles_List_Table extends WP_List_Table {
 		return sprintf('%1$s %2$s', '<strong><a class="row-title" href="admin.php?page=um_roles&tab=edit&id=' . $item['key'] . '">' . $item['name'] . '</a></strong>', $this->row_actions( $actions ) );
 	}
 
+
+	/**
+	 * @param $item
+	 *
+	 * @return string
+	 */
 	function column_roleid( $item ) {
 		return ! empty( $item['_um_is_custom'] ) ? 'um_' . $item['key'] : $item['key'];
 	}
 
 
+	/**
+	 * @param $item
+	 */
 	function column_core( $item ) {
 		echo ! empty( $item['_um_is_custom'] ) ? __( 'Yes', 'ultimate-member' ) : __( 'No', 'ultimate-member' );
 	}
 
 
+	/**
+	 * @param $item
+	 */
 	function column_admin_access( $item ) {
 		echo ! empty( $item['_um_can_access_wpadmin'] ) ? __( 'Yes', 'ultimate-member' ) : __( 'No', 'ultimate-member' );
 	}
 
 
+	/**
+	 * @param $item
+	 */
 	function column_priority( $item ) {
 		echo ! empty( $item['_um_priority'] ) ? $item['_um_priority'] : '-';
 	}
 
 
+	/**
+	 * @param array $attr
+	 */
 	function um_set_pagination_args( $attr = array() ) {
 		$this->set_pagination_args( $attr );
 	}
@@ -332,17 +458,11 @@ foreach ( $wp_roles->roles as $roleID => $role_data ) {
 switch( strtolower( $order ) ) {
 	case 'asc':
 		uasort( $roles, function( $a, $b ) {
-			//$a['name'] = ! empty( $a['_um_is_custom'] ) ? 'UM ' . $a['name'] : $a['name'];
-			//$b['name'] = ! empty( $b['_um_is_custom'] ) ? 'UM ' . $b['name'] : $b['name'];
-
 			return strnatcmp( $a['name'], $b['name'] );
 		} );
 		break;
 	case 'desc':
 		uasort( $roles, function( $a, $b ) {
-			//$a['name'] = ! empty( $a['_um_is_custom'] ) ? 'UM ' . $a['name'] : $a['name'];
-			//$b['name'] = ! empty( $b['_um_is_custom'] ) ? 'UM ' . $b['name'] : $b['name'];
-
 			return strnatcmp( $a['name'], $b['name'] ) * -1;
 		} );
 		break;
@@ -355,7 +475,9 @@ $ListTable->um_set_pagination_args( array( 'total_items' => count( $roles ), 'pe
 <div class="wrap">
 	<h2>
 		<?php _e( 'User Roles', 'ultimate-member' ) ?>
-		<a class="add-new-h2" href="<?php echo add_query_arg( array( 'page' => 'um_roles', 'tab' => 'add' ), admin_url( 'admin.php' ) ) ?>"><?php _e( 'Add New', 'ultimate-member' ) ?></a>
+		<a class="add-new-h2" href="<?php echo add_query_arg( array( 'page' => 'um_roles', 'tab' => 'add' ), admin_url( 'admin.php' ) ) ?>">
+			<?php _e( 'Add New', 'ultimate-member' ) ?>
+		</a>
 	</h2>
 
 	<?php if ( ! empty( $_GET['msg'] ) ) {

@@ -592,7 +592,7 @@ add_action( 'um_after_user_updated', 'um_restore_default_roles', 10, 3 );
 						'<a href="#" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
 					);
 
-					echo UM()->menu()->new_ui( 'bc', 'div.um-cover', 'click', $items );
+					echo UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
 
 				}
 
@@ -749,7 +749,7 @@ add_action( 'um_after_user_updated', 'um_restore_default_roles', 10, 3 );
 							 */
 							$items = apply_filters( 'um_user_photo_menu_view', $items );
 
-							echo UM()->menu()->new_ui( 'bc', 'div.um-profile-photo', 'click', $items );
+							echo UM()->profile()->new_ui( 'bc', 'div.um-profile-photo', 'click', $items );
 
 						} else if (UM()->fields()->editing == true) {
 
@@ -782,7 +782,7 @@ add_action( 'um_after_user_updated', 'um_restore_default_roles', 10, 3 );
 							 */
 							$items = apply_filters( 'um_user_photo_menu_edit', $items );
 
-							echo UM()->menu()->new_ui( 'bc', 'div.um-profile-photo', 'click', $items );
+							echo UM()->profile()->new_ui( 'bc', 'div.um-profile-photo', 'click', $items );
 
 						}
 
@@ -1117,7 +1117,7 @@ add_action( 'um_after_user_updated', 'um_restore_default_roles', 10, 3 );
 
 					}
 
-					UM()->menu()->new_ui( $args['header_menu'], 'div.um-profile-edit', 'click', $items );
+					UM()->profile()->new_ui( $args['header_menu'], 'div.um-profile-edit', 'click', $items );
 
 				?>
 

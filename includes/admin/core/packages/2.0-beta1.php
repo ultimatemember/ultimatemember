@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) )
 
 /**
  * This populates all existing UM users with meta_key `last_login` as `user_registered` if the meta key doesn't exist.
- * Target Version: 1.3.39
+ * Target Version: 2.0
  */
 
 global $wpdb;

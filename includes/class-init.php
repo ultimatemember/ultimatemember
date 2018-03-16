@@ -1033,20 +1033,6 @@ if ( ! class_exists( 'UM' ) ) {
         /**
          * @since 2.0
          *
-         * @return um\core\Menu
-         */
-        function menu() {
-            if ( empty( $this->classes['menu'] ) ) {
-                $this->classes['menu'] = new um\core\Menu();
-            }
-
-            return $this->classes['menu'];
-        }
-
-
-        /**
-         * @since 2.0
-         *
          * @return um\core\Access
          */
         function access() {

@@ -695,7 +695,7 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
 
             $roles_metaboxes = array(
                 array(
-                    'id'        => 'um-admin-form-admin',
+                    'id'        => 'um-admin-form-admin-permissions',
                     'title'     => __( 'Administrative Permissions', 'ultimate-member' ),
                     'callback'  => $callback,
                     'screen'    => 'um_role_meta',
