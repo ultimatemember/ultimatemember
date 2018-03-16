@@ -225,6 +225,29 @@ if ( ! class_exists( 'Access' ) ) {
 						return;
 
 					$redirect_homepage = um_user( 'redirect_homepage' );
+					/**
+					 * UM hook
+					 *
+					 * @type filter
+					 * @title um_custom_homepage_redirect_url
+					 * @description Change custom homepage redirect
+					 * @input_vars
+					 * [{"var":"$url","type":"string","desc":"Redirect URL"},
+					 * {"var":"$id","type":"int","desc":"User ID"}]
+					 * @change_log
+					 * ["Since: 2.0"]
+					 * @usage
+					 * <?php add_filter( 'um_custom_homepage_redirect_url', 'function_name', 10, 2 ); ?>
+					 * @example
+					 * <?php
+					 * add_filter( 'um_custom_homepage_redirect_url', 'my_custom_homepage_redirect_url', 10, 2 );
+					 * function my_custom_homepage_redirect_url( $url, $id ) {
+					 *     // your code here
+					 *     return $url;
+					 * }
+					 * ?>
+					 */
+					$redirect_homepage = apply_filters( 'um_custom_homepage_redirect_url', $redirect_homepage, um_user( 'ID' ) );
 					$redirect_to = ! empty( $redirect_homepage ) ? $redirect_homepage : um_get_core_page( 'user' );
 					$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect_to ) ), "custom_homepage" );
 

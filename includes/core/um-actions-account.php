@@ -166,7 +166,30 @@ function um_submit_account_errors_hook( $args ) {
 					if ( um_user( 'after_delete' ) && um_user( 'after_delete' ) == 'redirect_home' ) {
 						um_redirect_home();
 					} elseif ( um_user( 'delete_redirect_url' ) ) {
-						exit( wp_redirect( um_user( 'delete_redirect_url' ) ) );
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_delete_account_redirect_url
+						 * @description Change redirect URL after delete account
+						 * @input_vars
+						 * [{"var":"$url","type":"string","desc":"Redirect URL"},
+						 * {"var":"$id","type":"int","desc":"User ID"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage
+						 * <?php add_filter( 'um_delete_account_redirect_url', 'function_name', 10, 2 ); ?>
+						 * @example
+						 * <?php
+						 * add_filter( 'um_delete_account_redirect_url', 'my_delete_account_redirect_url', 10, 2 );
+						 * function my_delete_account_redirect_url( $url, $id ) {
+						 *     // your code here
+						 *     return $url;
+						 * }
+						 * ?>
+						 */
+						$redirect_url = apply_filters( 'um_delete_account_redirect_url', um_user( 'delete_redirect_url' ), um_user( 'ID' ) );
+						exit( wp_redirect( $redirect_url ) );
 					} else {
 						um_redirect_home();
 					}

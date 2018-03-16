@@ -194,7 +194,32 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			if ( $status != 'approved' ) {
 
 				if ( um_user( $status . '_action' ) == 'redirect_url' && um_user( $status . '_url' ) != '' ) {
-					exit( wp_redirect( um_user( $status . '_url' ) ) );
+					/**
+					 * UM hook
+					 *
+					 * @type filter
+					 * @title um_registration_pending_user_redirect
+					 * @description Change redirect URL for pending user after registration
+					 * @input_vars
+					 * [{"var":"$url","type":"string","desc":"Redirect URL"},
+					 * {"var":"$status","type":"string","desc":"User status"},
+					 * {"var":"$user_id","type":"int","desc":"User ID"}]
+					 * @change_log
+					 * ["Since: 2.0"]
+					 * @usage
+					 * <?php add_filter( 'um_registration_pending_user_redirect', 'function_name', 10, 3 ); ?>
+					 * @example
+					 * <?php
+					 * add_filter( 'um_registration_pending_user_redirect', 'my_registration_pending_user_redirect', 10, 3 );
+					 * function my_registration_pending_user_redirect( $url, $status, $user_id ) {
+					 *     // your code here
+					 *     return $url;
+					 * }
+					 * ?>
+					 */
+					$redirect_url = apply_filters( 'um_registration_pending_user_redirect', um_user( $status . '_url' ), $status, um_user( 'ID' ) );
+
+					exit( wp_redirect( $redirect_url ) );
 				}
 
 				if ( um_user( $status . '_action' ) == 'show_message' && um_user( $status . '_message' ) != '' ) {

@@ -10,8 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	function um_submit_form_errors_hook_login( $args ){
 		$is_email = false;
 
-			  $form_id = $args['form_id'];
-				 $mode = $args['mode'];
+		$form_id = $args['form_id'];
+		$mode = $args['mode'];
 		$user_password = $args['user_password'];
 
 
@@ -218,7 +218,30 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				break;
 
 			case 'redirect_url':
-				exit( wp_redirect( um_user( 'login_redirect_url' ) ) );
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_login_redirect_url
+				 * @description Change redirect URL after successful login
+				 * @input_vars
+				 * [{"var":"$url","type":"string","desc":"Redirect URL"},
+				 * {"var":"$id","type":"int","desc":"User ID"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage
+				 * <?php add_filter( 'um_login_redirect_url', 'function_name', 10, 2 ); ?>
+				 * @example
+				 * <?php
+				 * add_filter( 'um_login_redirect_url', 'my_login_redirect_url', 10, 2 );
+				 * function my_login_redirect_url( $url, $id ) {
+				 *     // your code here
+				 *     return $url;
+				 * }
+				 * ?>
+				 */
+				$redirect_url = apply_filters( 'um_login_redirect_url', um_user( 'login_redirect_url' ), um_user( 'ID' ) );
+				exit( wp_redirect( $redirect_url ) );
 				break;
 
 			case 'refresh':
@@ -240,6 +263,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	***/
 	add_action( 'um_submit_form_login', 'um_submit_form_login', 10 );
 	function um_submit_form_login( $args ) {
+
 		if ( ! isset( UM()->form()->errors ) ) {
 			/**
 			 * UM hook

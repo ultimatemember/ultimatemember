@@ -56,9 +56,32 @@ if ( ! class_exists( 'Logout' ) ) {
                         session_unset();
                         exit( wp_redirect( home_url( $language_code ) ) );
                     } else {
+	                    /**
+	                     * UM hook
+	                     *
+	                     * @type filter
+	                     * @title um_logout_redirect_url
+	                     * @description Change redirect URL after logout
+	                     * @input_vars
+	                     * [{"var":"$url","type":"string","desc":"Redirect URL"},
+	                     * {"var":"$id","type":"int","desc":"User ID"}]
+	                     * @change_log
+	                     * ["Since: 2.0"]
+	                     * @usage
+	                     * <?php add_filter( 'um_logout_redirect_url', 'function_name', 10, 2 ); ?>
+	                     * @example
+	                     * <?php
+	                     * add_filter( 'um_logout_redirect_url', 'my_logout_redirect_url', 10, 2 );
+	                     * function my_logout_redirect_url( $url, $id ) {
+	                     *     // your code here
+	                     *     return $url;
+	                     * }
+	                     * ?>
+	                     */
+	                    $redirect_url = apply_filters( 'um_logout_redirect_url', um_user( 'logout_redirect_url' ), um_user( 'ID' ) );
                         wp_logout();
                         session_unset();
-                        exit( wp_redirect( um_user('logout_redirect_url') ) );
+                        exit( wp_redirect( $redirect_url ) );
 
                     }
 
