@@ -39,31 +39,20 @@ if ( ! class_exists( 'UM_Menu_Item_Custom_Fields_Editor' ) ) {
 				return;
 			}
 
+			if ( empty( $_POST['menu-item-db-id'] ) || ! in_array( $menu_item_db_id, $_POST['menu-item-db-id'] ) ) {
+				return;
+			}
+
 			foreach ( self::$fields as $_key => $label ) {
 
-				if ( $_key == 'um_nav_roles' ) {
+				$key = sprintf( 'menu-item-%s', $_key );
 
-					$key = sprintf( 'menu-item-%s', $_key );
-
-					// Sanitize
-					if ( ! empty( $_POST[ $key ][ $menu_item_db_id ] ) ) {
-						// Do some checks here...
-						$value = $_POST[ $key ][ $menu_item_db_id ];
-					} else {
-						$value = null;
-					}
-
+				// Sanitize
+				if ( ! empty( $_POST[ $key ][ $menu_item_db_id ] ) ) {
+					// Do some checks here...
+					$value = $_POST[ $key ][ $menu_item_db_id ];
 				} else {
-
-					$key = sprintf( 'menu-item-%s', $_key );
-
-					// Sanitize
-					if ( ! empty( $_POST[ $key ][ $menu_item_db_id ] ) ) {
-						// Do some checks here...
-						$value = $_POST[ $key ][ $menu_item_db_id ];
-					} else {
-						$value = null;
-					}
+					$value = null;
 				}
 
 				// Update
