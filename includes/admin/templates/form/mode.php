@@ -3,7 +3,7 @@
 <div class="um-admin-boxed-links um-admin-ajaxlink <?php if ( $is_core ) echo 'is-core-form'; ?>">
 
 	<?php if ( $is_core ) { ?>
-	<p><?php _e('<strong>Note:</strong> Form type cannot be changed for the default forms.','ultimate-member'); ?></p>
+		<p><?php _e( '<strong>Note:</strong> Form type cannot be changed for the default forms.', 'ultimate-member' ); ?></p>
 	<?php } ?>
 	
 	<a href="#" data-role="register"><?php _e('Registration Form','ultimate-member'); ?></a>

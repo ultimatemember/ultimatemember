@@ -4,9 +4,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Validate for errors in account form
+ *
+ * @param $args
  */
-add_action( 'um_submit_account_errors_hook', 'um_submit_account_errors_hook' );
-
 function um_submit_account_errors_hook( $args ) {
 
 	if ( ! isset( $_POST['um_account_submit'] ) )
@@ -129,279 +129,282 @@ function um_submit_account_errors_hook( $args ) {
 	}
 
 }
+add_action( 'um_submit_account_errors_hook', 'um_submit_account_errors_hook' );
 
+
+/**
+ * Submit account page changes
+ *
+ * @param $args
+ */
+function um_submit_account_details( $args ) {
+	$tab = ( get_query_var('um_tab') ) ? get_query_var('um_tab') : 'general';
+
+	$current_tab = isset( $_POST['_um_account_tab'] ) ? $_POST['_um_account_tab']: '';
+
+	//change password account's tab
+	if ( 'password' == $current_tab && $_POST['user_password'] && $_POST['confirm_user_password'] ) {
+
+		$changes['user_pass'] = $_POST['user_password'];
+
+		$args['user_id'] = um_user('ID');
+
+		do_action( 'send_password_change_email', $args );
+
+		wp_set_password( $changes['user_pass'], um_user( 'ID' ) );
+			
+		wp_signon( array( 'user_login' => um_user( 'user_login' ), 'user_password' =>  $changes['user_pass'] ) );
+	}
+
+
+	// delete account
+	$user = get_user_by( 'login', um_user( 'user_login' ) );
+
+	if ( 'delete' == $current_tab && isset( $_POST['single_user_password'] ) && wp_check_password( $_POST['single_user_password'], $user->data->user_pass, $user->data->ID ) ) {
+		if ( current_user_can( 'delete_users' ) || um_user( 'can_delete_profile' ) ) {
+			if ( ! um_user( 'super_admin' ) ) {
+				UM()->user()->delete();
+
+				if ( um_user( 'after_delete' ) && um_user( 'after_delete' ) == 'redirect_home' ) {
+					um_redirect_home();
+				} elseif ( um_user( 'delete_redirect_url' ) ) {
+					/**
+					 * UM hook
+					 *
+					 * @type filter
+					 * @title um_delete_account_redirect_url
+					 * @description Change redirect URL after delete account
+					 * @input_vars
+					 * [{"var":"$url","type":"string","desc":"Redirect URL"},
+					 * {"var":"$id","type":"int","desc":"User ID"}]
+					 * @change_log
+					 * ["Since: 2.0"]
+					 * @usage
+					 * <?php add_filter( 'um_delete_account_redirect_url', 'function_name', 10, 2 ); ?>
+					 * @example
+					 * <?php
+					 * add_filter( 'um_delete_account_redirect_url', 'my_delete_account_redirect_url', 10, 2 );
+					 * function my_delete_account_redirect_url( $url, $id ) {
+					 *     // your code here
+					 *     return $url;
+					 * }
+					 * ?>
+					 */
+					$redirect_url = apply_filters( 'um_delete_account_redirect_url', um_user( 'delete_redirect_url' ), um_user( 'ID' ) );
+					exit( wp_redirect( $redirect_url ) );
+				} else {
+					um_redirect_home();
+				}
+			}
+		}
+	}
+
+
+	$arr_fields = array();
+	$account_fields = get_user_meta( um_user('ID'), 'um_account_secure_fields', true );
 
 	/**
-	 * Submit account page changes
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_secure_account_fields
+	 * @description Change secure account fields
+	 * @input_vars
+	 * [{"var":"$fields","type":"array","desc":"Secure account fields"},
+	 * {"var":"$user_id","type":"int","desc":"User ID"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage
+	 * <?php add_filter( 'um_secure_account_fields', 'function_name', 10, 2 ); ?>
+	 * @example
+	 * <?php
+	 * add_filter( 'um_secure_account_fields', 'my_secure_account_fields', 10, 2 );
+	 * function my_secure_account_fields( $fields, $user_id ) {
+	 *     // your code here
+	 *     return $fields;
+	 * }
+	 * ?>
 	 */
-	add_action('um_submit_account_details','um_submit_account_details');
-	function um_submit_account_details( $args ) {
-		$tab = ( get_query_var('um_tab') ) ? get_query_var('um_tab') : 'general';
-
-		$current_tab = isset( $_POST['_um_account_tab'] ) ? $_POST['_um_account_tab']: '';
-
-		//change password account's tab
-		if ( 'password' == $current_tab && $_POST['user_password'] && $_POST['confirm_user_password'] ) {
-
-			$changes['user_pass'] = $_POST['user_password'];
-
-			$args['user_id'] = um_user('ID');
-
-			do_action( 'send_password_change_email', $args );
-
-			wp_set_password( $changes['user_pass'], um_user( 'ID' ) );
-			
-			wp_signon( array( 'user_login' => um_user( 'user_login' ), 'user_password' =>  $changes['user_pass'] ) );
-		}
-
-
-		// delete account
-		$user = get_user_by( 'login', um_user( 'user_login' ) );
-
-		if ( 'delete' == $current_tab && isset( $_POST['single_user_password'] ) && wp_check_password( $_POST['single_user_password'], $user->data->user_pass, $user->data->ID ) ) {
-			if ( current_user_can( 'delete_users' ) || um_user( 'can_delete_profile' ) ) {
-				if ( ! um_user( 'super_admin' ) ) {
-					UM()->user()->delete();
-
-					if ( um_user( 'after_delete' ) && um_user( 'after_delete' ) == 'redirect_home' ) {
-						um_redirect_home();
-					} elseif ( um_user( 'delete_redirect_url' ) ) {
-						/**
-						 * UM hook
-						 *
-						 * @type filter
-						 * @title um_delete_account_redirect_url
-						 * @description Change redirect URL after delete account
-						 * @input_vars
-						 * [{"var":"$url","type":"string","desc":"Redirect URL"},
-						 * {"var":"$id","type":"int","desc":"User ID"}]
-						 * @change_log
-						 * ["Since: 2.0"]
-						 * @usage
-						 * <?php add_filter( 'um_delete_account_redirect_url', 'function_name', 10, 2 ); ?>
-						 * @example
-						 * <?php
-						 * add_filter( 'um_delete_account_redirect_url', 'my_delete_account_redirect_url', 10, 2 );
-						 * function my_delete_account_redirect_url( $url, $id ) {
-						 *     // your code here
-						 *     return $url;
-						 * }
-						 * ?>
-						 */
-						$redirect_url = apply_filters( 'um_delete_account_redirect_url', um_user( 'delete_redirect_url' ), um_user( 'ID' ) );
-						exit( wp_redirect( $redirect_url ) );
-					} else {
-						um_redirect_home();
-					}
-				}
-			}
-		}
-
-
-		$arr_fields = array();
-		$account_fields = get_user_meta( um_user('ID'), 'um_account_secure_fields', true );
-
-		/**
-		 * UM hook
-		 *
-		 * @type filter
-		 * @title um_secure_account_fields
-		 * @description Change secure account fields
-		 * @input_vars
-		 * [{"var":"$fields","type":"array","desc":"Secure account fields"},
-		 * {"var":"$user_id","type":"int","desc":"User ID"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage
-		 * <?php add_filter( 'um_secure_account_fields', 'function_name', 10, 2 ); ?>
-		 * @example
-		 * <?php
-		 * add_filter( 'um_secure_account_fields', 'my_secure_account_fields', 10, 2 );
-		 * function my_secure_account_fields( $fields, $user_id ) {
-		 *     // your code here
-		 *     return $fields;
-		 * }
-		 * ?>
-		 */
-		$secure_fields = apply_filters( 'um_secure_account_fields', $account_fields, um_user( 'ID' ) );
+	$secure_fields = apply_filters( 'um_secure_account_fields', $account_fields, um_user( 'ID' ) );
 		
-		if ( is_array( $secure_fields  ) ) {
-			foreach ( $secure_fields as $tab_key => $fields ) {
-				foreach ( $fields as $key => $value ) {
-					$arr_fields[ ] = $key;
-				}
+	if ( is_array( $secure_fields  ) ) {
+		foreach ( $secure_fields as $tab_key => $fields ) {
+			foreach ( $fields as $key => $value ) {
+				$arr_fields[ ] = $key;
 			}
 		}
+	}
 
  
-        $changes = array();
-		foreach ( $_POST as $k => $v ) {
-			if ( strstr( $k, 'password' ) || strstr( $k, 'um_account' ) || ! in_array( $k, $arr_fields ) )
-				continue;
+	$changes = array();
+	foreach ( $_POST as $k => $v ) {
+		if ( strstr( $k, 'password' ) || strstr( $k, 'um_account' ) || ! in_array( $k, $arr_fields ) )
+			continue;
 
-			$changes[ $k ] = $v;
-		}
+		$changes[ $k ] = $v;
+	}
 
-		if ( isset( $changes['hide_in_members'] ) && ( $changes['hide_in_members'] == __('No','ultimate-member') || $changes['hide_in_members'] == 'No' ) ) {
-			delete_user_meta( um_user('ID'), 'hide_in_members' );
-			unset( $changes['hide_in_members'] );
-		}
+	if ( isset( $changes['hide_in_members'] ) && ( $changes['hide_in_members'] == __('No','ultimate-member') || $changes['hide_in_members'] == 'No' ) ) {
+		delete_user_meta( um_user('ID'), 'hide_in_members' );
+		unset( $changes['hide_in_members'] );
+	}
 
-		/**
-		 * UM hook
-		 *
-		 * @type filter
-		 * @title um_account_pre_updating_profile_array
-		 * @description Change update profile data before saving
-		 * @input_vars
-		 * [{"var":"$changes","type":"array","desc":"Profile changes array"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage
-		 * <?php add_filter( 'um_account_pre_updating_profile_array', 'function_name', 10, 1 ); ?>
-		 * @example
-		 * <?php
-		 * add_filter( 'um_account_pre_updating_profile_array', 'my_account_pre_updating_profile', 10, 1 );
-		 * function my_account_pre_updating_profile( $changes ) {
-		 *     // your code here
-		 *     return $changes;
-		 * }
-		 * ?>
-		 */
-		$changes = apply_filters( 'um_account_pre_updating_profile_array', $changes );
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_account_pre_updating_profile_array
+	 * @description Change update profile data before saving
+	 * @input_vars
+	 * [{"var":"$changes","type":"array","desc":"Profile changes array"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage
+	 * <?php add_filter( 'um_account_pre_updating_profile_array', 'function_name', 10, 1 ); ?>
+	 * @example
+	 * <?php
+	 * add_filter( 'um_account_pre_updating_profile_array', 'my_account_pre_updating_profile', 10, 1 );
+	 * function my_account_pre_updating_profile( $changes ) {
+	 *     // your code here
+	 *     return $changes;
+	 * }
+	 * ?>
+	 */
+	$changes = apply_filters( 'um_account_pre_updating_profile_array', $changes );
 
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_account_pre_update_profile
-		 * @description Fired on account page, just before updating profile
-		 * @input_vars
-		 * [{"var":"$changes","type":"array","desc":"Submitted data"},
-		 * {"var":"$user_id","type":"int","desc":"User ID"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_account_pre_update_profile', 'function_name', 10, 2 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_account_pre_update_profile', 'my_account_pre_update_profile', 10, 2 );
-		 * function my_account_pre_update_profile( $changes, $user_id ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_account_pre_update_profile', $changes, um_user( 'ID' ) );
+	/**
+	 * UM hook
+	 *
+	 * @type action
+	 * @title um_account_pre_update_profile
+	 * @description Fired on account page, just before updating profile
+	 * @input_vars
+	 * [{"var":"$changes","type":"array","desc":"Submitted data"},
+	 * {"var":"$user_id","type":"int","desc":"User ID"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_action( 'um_account_pre_update_profile', 'function_name', 10, 2 );
+	 * @example
+	 * <?php
+	 * add_action( 'um_account_pre_update_profile', 'my_account_pre_update_profile', 10, 2 );
+	 * function my_account_pre_update_profile( $changes, $user_id ) {
+	 *     // your code here
+	 * }
+	 * ?>
+	 */
+	do_action( 'um_account_pre_update_profile', $changes, um_user( 'ID' ) );
 
-		UM()->user()->update_profile( $changes );
+	UM()->user()->update_profile( $changes );
 
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_post_account_update
-		 * @description Fired on account page, after updating profile
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_post_account_update', 'function_name', 10 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_post_account_update', 'my_post_account_update', 10 );
-		 * function my_account_pre_update_profile() {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_post_account_update' );
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_after_user_account_updated
-		 * @description Fired on account page, after updating profile
-		 * @input_vars
-		 * [{"var":"$user_id","type":"int","desc":"User ID"},
-		 * {"var":"$changes","type":"array","desc":"Submitted data"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_after_user_account_updated', 'function_name', 10, 2 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_after_user_account_updated', 'my_after_user_account_updated', 10, 2 );
-		 * function my_after_user_account_updated( $user_id, $changes ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_after_user_account_updated', get_current_user_id(), $changes );
+	/**
+	 * UM hook
+	 *
+	 * @type action
+	 * @title um_post_account_update
+	 * @description Fired on account page, after updating profile
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_action( 'um_post_account_update', 'function_name', 10 );
+	 * @example
+	 * <?php
+	 * add_action( 'um_post_account_update', 'my_post_account_update', 10 );
+	 * function my_account_pre_update_profile() {
+	 *     // your code here
+	 * }
+	 * ?>
+	 */
+	do_action( 'um_post_account_update' );
+	/**
+	 * UM hook
+	 *
+	 * @type action
+	 * @title um_after_user_account_updated
+	 * @description Fired on account page, after updating profile
+	 * @input_vars
+	 * [{"var":"$user_id","type":"int","desc":"User ID"},
+	 * {"var":"$changes","type":"array","desc":"Submitted data"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_action( 'um_after_user_account_updated', 'function_name', 10, 2 );
+	 * @example
+	 * <?php
+	 * add_action( 'um_after_user_account_updated', 'my_after_user_account_updated', 10, 2 );
+	 * function my_after_user_account_updated( $user_id, $changes ) {
+	 *     // your code here
+	 * }
+	 * ?>
+	 */
+	do_action( 'um_after_user_account_updated', get_current_user_id(), $changes );
 
-		$url = '';
-		if ( um_is_core_page( 'account' ) ) {
+	$url = '';
+	if ( um_is_core_page( 'account' ) ) {
 
-			$url = UM()->account()->tab_link( $tab );
+		$url = UM()->account()->tab_link( $tab );
 
-			$url = add_query_arg( 'updated', 'account', $url );
+		$url = add_query_arg( 'updated', 'account', $url );
 
-			if ( function_exists( 'icl_get_current_language' ) ) {
-				if ( icl_get_current_language() != icl_get_default_language() ) {
-					$url = UM()->permalinks()->get_current_url( true );
-					$url = add_query_arg( 'updated', 'account', $url );
+		if ( function_exists( 'icl_get_current_language' ) ) {
+			if ( icl_get_current_language() != icl_get_default_language() ) {
+				$url = UM()->permalinks()->get_current_url( true );
+				$url = add_query_arg( 'updated', 'account', $url );
 
-                    um_js_redirect( $url );
-				}
+				um_js_redirect( $url );
 			}
 		}
-
-		um_js_redirect( $url );
 	}
 
+	um_js_redirect( $url );
+}
+add_action( 'um_submit_account_details', 'um_submit_account_details' );
 
 
-	/**
-	 * Hidden inputs for account form
-	 */
-	add_action('um_account_page_hidden_fields','um_account_page_hidden_fields');
-	function um_account_page_hidden_fields( $args ) {
-		?>
+/**
+ * Hidden inputs for account form
+ *
+ * @param $args
+ */
+function um_account_page_hidden_fields( $args ) {
+	?>
 
-		<input type="hidden" name="_um_account" id="_um_account" value="1" />
-		<input type="hidden" name="_um_account_tab" id="_um_account_tab" value="<?php echo UM()->account()->current_tab;?>" />
+	<input type="hidden" name="_um_account" id="_um_account" value="1" />
+	<input type="hidden" name="_um_account_tab" id="_um_account_tab" value="<?php echo UM()->account()->current_tab;?>" />
 
-		<?php
-
-	}
-
-
-	/**
-	 * Before delete account tab content
-	 */
-	add_action( 'um_before_account_delete', 'um_before_account_delete' );
-	function um_before_account_delete() {
-		echo wpautop( UM()->options()->get( 'delete_account_text' ) );
-	}
+	<?php
+}
+add_action( 'um_account_page_hidden_fields', 'um_account_page_hidden_fields' );
 
 
-	/**
-	 * Before notifications account tab content
-	 */
-	add_action( 'um_before_account_notifications', 'um_before_account_notifications' );
-	function um_before_account_notifications() { ?>
-		<div class="um-field">
-			<div class="um-field-label">
-				<label for=""><?php _e( 'Email me when', 'ultimate-member' ); ?></label>
-				<div class="um-clear"></div>
-			</div>
+/**
+ * Before delete account tab content
+ */
+function um_before_account_delete() {
+	echo wpautop( UM()->options()->get( 'delete_account_text' ) );
+}
+add_action( 'um_before_account_delete', 'um_before_account_delete' );
+
+
+/**
+ * Before notifications account tab content
+ */
+function um_before_account_notifications() { ?>
+	<div class="um-field">
+		<div class="um-field-label">
+			<label for=""><?php _e( 'Email me when', 'ultimate-member' ); ?></label>
+			<div class="um-clear"></div>
 		</div>
-	<?php }
+	</div>
+<?php }
+add_action( 'um_before_account_notifications', 'um_before_account_notifications' );
 
 
-	/**
-	 *  Update account fields to secure the account submission
-	 */
-	add_action( 'wp_footer', 'um_account_secure_registered_fields' );
-	function um_account_secure_registered_fields(){
-		$secure_fields = UM()->account()->register_fields;
-		update_user_meta( um_user('ID'), 'um_account_secure_fields', $secure_fields );
-	}
+/**
+ *  Update account fields to secure the account submission
+ */
+function um_account_secure_registered_fields(){
+	$secure_fields = UM()->account()->register_fields;
+	update_user_meta( um_user('ID'), 'um_account_secure_fields', $secure_fields );
+}
+add_action( 'wp_footer', 'um_account_secure_registered_fields' );
 
 
 /**

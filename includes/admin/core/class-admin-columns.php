@@ -156,7 +156,7 @@ if ( ! class_exists( 'Admin_Columns' ) ) {
 				$page_id = UM()->options()->get( UM()->options()->get_core_page_id( $page_key ) );
 
 				if ( $page_id == $post->ID ) {
-					$post_states['um_core_page_' . $page_key] = sprintf( 'UM %s', $page_value['title'] );
+					$post_states[ 'um_core_page_' . $page_key ] = sprintf( 'UM %s', $page_value['title'] );
 				}
 			}
 

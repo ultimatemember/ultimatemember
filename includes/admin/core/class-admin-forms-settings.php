@@ -5,6 +5,12 @@ namespace um\admin\core;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'Admin_Forms_Settings' ) ) {
+
+
+	/**
+	 * Class Admin_Forms_Settings
+	 * @package um\admin\core
+	 */
 	class Admin_Forms_Settings extends Admin_Forms {
 
 		/**

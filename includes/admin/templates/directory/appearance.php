@@ -1,5 +1,4 @@
 <div class="um-admin-metabox">
-
 	<?php UM()->admin_forms( array(
 		'class'		=> 'um-member-directory-appearance um-top-label',
 		'prefix_id'	=> 'um_metadata',

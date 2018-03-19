@@ -6,8 +6,19 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'Admin' ) ) {
 
+
+	/**
+	 * Class Admin
+	 * @package um\admin
+	 */
 	class Admin {
+
+
+		/**
+		 * @var string
+		 */
 		var $templates_path;
+
 
 		/**
 		 * Admin constructor.
@@ -16,7 +27,6 @@ if ( ! class_exists( 'Admin' ) ) {
 			$this->templates_path = um_path . 'includes/admin/templates/';
 
 			add_action( 'admin_init', array( &$this, 'admin_init' ), 0 );
-
 			add_action( 'admin_notices', array( $this, 'check_wrong_install_folder' ), 3 );
 		}
 

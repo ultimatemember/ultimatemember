@@ -5,22 +5,41 @@ namespace um\admin\core;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'Admin_Upgrade' ) ) {
-    /**
-     * This class handles all functions that changes data structures and moving files
-     */
-    class Admin_Upgrade {
-        var $update_versions;
-        var $packages_dir;
 
 
-        function __construct() {
-            $this->packages_dir = plugin_dir_path( __FILE__ ) . 'packages' . DIRECTORY_SEPARATOR;
+	/**
+	 * Class Admin_Upgrade
+	 *
+	 * This class handles all functions that changes data structures and moving files
+	 *
+	 * @package um\admin\core
+	 */
+	class Admin_Upgrade {
 
-            $um_last_version_upgrade = get_option( 'um_last_version_upgrade' );
 
-            if ( ! $um_last_version_upgrade || version_compare( $um_last_version_upgrade, ultimatemember_version, '<' ) )
-                add_action( 'admin_init', array( $this, 'packages' ), 10 );
-        }
+		/**
+		 * @var
+		 */
+		var $update_versions;
+
+
+		/**
+		 * @var string
+		 */
+		var $packages_dir;
+
+
+		/**
+		 * Admin_Upgrade constructor.
+		 */
+		function __construct() {
+			$this->packages_dir = plugin_dir_path( __FILE__ ) . 'packages' . DIRECTORY_SEPARATOR;
+
+			$um_last_version_upgrade = get_option( 'um_last_version_upgrade' );
+
+			if ( ! $um_last_version_upgrade || version_compare( $um_last_version_upgrade, ultimatemember_version, '<' ) )
+				add_action( 'admin_init', array( $this, 'packages' ), 10 );
+		}
 
 
 		/**
@@ -54,35 +73,35 @@ if ( ! class_exists( 'Admin_Upgrade' ) ) {
 		}
 
 
-        /**
-         * Parse packages dir for packages files
-         */
-        function set_update_versions() {
-            $update_versions = array();
-            $handle = opendir( $this->packages_dir );
-	        if ( $handle ) {
-	            while ( false !== ( $filename = readdir( $handle ) ) ) {
-	                if ( $filename != '.' && $filename != '..' )
-	                    $update_versions[] = preg_replace( '/(.*?)\.php/i', '$1', $filename );
-	            }
-	            closedir( $handle );
+		/**
+		 * Parse packages dir for packages files
+		 */
+		function set_update_versions() {
+			$update_versions = array();
+			$handle = opendir( $this->packages_dir );
+			if ( $handle ) {
+				while ( false !== ( $filename = readdir( $handle ) ) ) {
+					if ( $filename != '.' && $filename != '..' )
+						$update_versions[] = preg_replace( '/(.*?)\.php/i', '$1', $filename );
+				}
+				closedir( $handle );
 
-	            usort( $update_versions, array( &$this, 'version_compare_sort' ) );
+				usort( $update_versions, array( &$this, 'version_compare_sort' ) );
 
-	            $this->update_versions = $update_versions;
-	        }
-        }
+				$this->update_versions = $update_versions;
+			}
+		}
 
 
-        /**
-         * Sort versions by version compare function
-         * @param $a
-         * @param $b
-         * @return mixed
-         */
-        function version_compare_sort( $a, $b ) {
-            return version_compare( $a, $b );
-        }
+		/**
+		 * Sort versions by version compare function
+		 * @param $a
+		 * @param $b
+		 * @return mixed
+		 */
+		function version_compare_sort( $a, $b ) {
+			return version_compare( $a, $b );
+		}
 
-    }
+	}
 }

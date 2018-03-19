@@ -1,7 +1,6 @@
 <div class="um-admin-metabox">
 
-	<?php
-	foreach ( UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ) as $key => $value ) {
+	<?php foreach ( UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ) as $key => $value ) {
 		$_um_register_role = UM()->query()->get_meta_value( '_um_register_role', $key );
 	    if ( ! empty( $_um_register_role ) )
 			$register_role = $_um_register_role;

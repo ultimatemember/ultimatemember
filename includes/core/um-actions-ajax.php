@@ -7,8 +7,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @uses action hooks: wp_ajax_nopriv_ultimatemember_check_username_exists, wp_ajax_ultimatemember_check_username_exists
  * @return boolean
  */
-add_action('wp_ajax_nopriv_ultimatemember_check_username_exists', 'ultimatemember_check_username_exists');
-add_action('wp_ajax_ultimatemember_check_username_exists', 'ultimatemember_check_username_exists');
 function ultimatemember_check_username_exists() {
 	$username = isset($_REQUEST['username']) ? $_REQUEST['username'] : '';
 	$exists   = username_exists( $username );
@@ -45,3 +43,5 @@ function ultimatemember_check_username_exists() {
 
 	die();
 }
+add_action('wp_ajax_nopriv_ultimatemember_check_username_exists', 'ultimatemember_check_username_exists');
+add_action('wp_ajax_ultimatemember_check_username_exists', 'ultimatemember_check_username_exists');

@@ -4,8 +4,6 @@
 		<h3><?php _e('Fields Manager','ultimate-member'); ?></h3>
 	</div>
 	
-	<div class="um-admin-modal-body">
-		
-	</div>
+	<div class="um-admin-modal-body"></div>
 	
 </div>
