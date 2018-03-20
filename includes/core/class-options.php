@@ -5,12 +5,23 @@ namespace um\core;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'Options' ) ) {
+
+
+	/**
+	 * Class Options
+	 * @package um\core
+	 */
 	class Options {
 
-		var $options = array();
 
 		/**
-		 * Access constructor.
+		 * @var array
+		 */
+		var $options = array();
+
+
+		/**
+		 * Options constructor.
 		 */
 		function __construct() {
 			$this->init_variables();

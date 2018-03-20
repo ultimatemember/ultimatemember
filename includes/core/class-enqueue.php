@@ -45,8 +45,8 @@ if ( ! class_exists( 'Enqueue' ) ) {
 			 * ?>
 			 */
 			$priority = apply_filters( 'um_core_enqueue_priority', 100 );
-            add_action( 'wp_enqueue_scripts',  array( &$this, 'wp_enqueue_scripts' ), $priority );
-        }
+			add_action( 'wp_enqueue_scripts',  array( &$this, 'wp_enqueue_scripts' ), $priority );
+		}
 
 
 		/**
@@ -74,14 +74,14 @@ if ( ! class_exists( 'Enqueue' ) ) {
 			global $post;
 
 			$this->suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG || defined('UM_SCRIPT_DEBUG') ) ? '' : '.min';
-            
-			$exclude = UM()->options()->get('js_css_exclude');
+
+			$exclude = UM()->options()->get( 'js_css_exclude' );
 			if ( is_array( $exclude ) ) {
 				array_filter( $exclude );
 			}
 			if ( $exclude && !is_admin() && is_array( $exclude ) ) {
 
-				$c_url = UM()->permalinks()->get_current_url( get_option('permalink_structure') );
+				$c_url = UM()->permalinks()->get_current_url( get_option( 'permalink_structure' ) );
 
 				foreach( $exclude as $match ) {
 					if ( ! empty( $c_url ) && strstr( $c_url, untrailingslashit( $match ) ) ) {

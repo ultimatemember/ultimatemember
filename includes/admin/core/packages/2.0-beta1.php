@@ -1289,6 +1289,7 @@ foreach ( $member_directories as $directory_id ) {
 /**
  * Transferring email templates to new logic
  */
+$templates_in_theme = 0;
 $emails = UM()->config()->email_notifications;
 foreach ( $emails as $email_key => $value ) {
 
@@ -1313,9 +1314,17 @@ foreach ( $emails as $email_key => $value ) {
 				$fp = fopen( $theme_template_path, "w" );
 				$result = fputs( $fp, $setting_value );
 				fclose( $fp );
+
+				$templates_in_theme++;
 			}
 		}
 	}
+}
+
+if ( $templates_in_theme > 0 ) {
+	UM()->options()->update( 'email_html', true );
+} else {
+	UM()->options()->update( 'email_html', false );
 }
 
 

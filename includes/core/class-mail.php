@@ -5,20 +5,40 @@ namespace um\core;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'Mail' ) ) {
+
+
+	/**
+	 * Class Mail
+	 * @package um\core
+	 */
 	class Mail {
 
+
+		/**
+		 * @var array
+		 */
 		var $email_templates = array();
+
+
+		/**
+		 * @var array
+		 */
 		var $path_by_slug = array();
 
-		function __construct() {
 
+		/**
+		 * Mail constructor.
+		 */
+		function __construct() {
 			//mandrill compatibility
 			add_filter( 'mandrill_nl2br', array( &$this, 'mandrill_nl2br' ) );
 			add_action( 'plugins_loaded', array( &$this, 'init_paths' ), 99 );
-
 		}
 
 
+		/**
+		 * Init paths for email notifications
+		 */
 		function init_paths() {
 			/**
 			 * UM hook
@@ -53,14 +73,12 @@ if ( ! class_exists( 'Mail' ) ) {
 		 * @return bool
 		 */
 		function mandrill_nl2br( $nl2br, $message = '' ) {
-
 			// text emails
 			if ( ! UM()->options()->get( 'email_html' ) ) {
 				$nl2br = true;
 			}
 
 			return $nl2br;
-
 		}
 
 
@@ -355,6 +373,11 @@ if ( ! class_exists( 'Mail' ) ) {
 		}
 
 
+		/**
+		 * @param $template_name
+		 *
+		 * @return mixed|void
+		 */
 		function get_template_filename( $template_name ) {
 			/**
 			 * UM hook
@@ -379,6 +402,7 @@ if ( ! class_exists( 'Mail' ) ) {
 			 */
 			return apply_filters( 'um_change_email_template_file', $template_name );
 		}
+
 
 		/**
 		 * Locate a template and return the path for inclusion.
@@ -439,13 +463,11 @@ if ( ! class_exists( 'Mail' ) ) {
 		 * @return string
 		 */
 		function set_content_type( $content_type ) {
-
 			if ( UM()->options()->get( 'email_html' ) ) {
 				return 'text/html';
 			} else {
 				return 'text/plain';
 			}
-
 		}
 
 
@@ -488,6 +510,9 @@ if ( ! class_exists( 'Mail' ) ) {
 		}
 
 
+		/**
+		 * Delete Email Notification Template
+		 */
 		function delete_email_template() {
 			$template = $_POST['email_key'];
 

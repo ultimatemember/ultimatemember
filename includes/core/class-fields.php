@@ -6,16 +6,30 @@ namespace um\core;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'Fields' ) ) {
+
+
+	/**
+	 * Class Fields
+	 * @package um\core
+	 */
 	class Fields {
+
+
+		/**
+		 * @var string
+		 */
 		var $set_mode = '';
 
-		function __construct() {
 
+		/**
+		 * Fields constructor.
+		 */
+		function __construct() {
 			$this->editing = false;
 			$this->viewing = false;
 			$this->timestamp = current_time( 'timestamp' );
-
 		}
+
 
 		/**
 		 * Standard checkbox field
@@ -26,16 +40,16 @@ if ( ! class_exists( 'Fields' ) ) {
 		function checkbox( $id, $title ) {
 			?>
 
-            <div class="um-field um-field-c">
-                <div class="um-field-area">
-                    <label class="um-field-checkbox active">
-                        <input type="checkbox" name="<?php echo $id; ?>" value="1" checked/><span
-                                class="um-field-checkbox-state"><i
-                                    class="um-icon-android-checkbox-outline"></i></span>
-                        <span class="um-field-checkbox-option"> <?php echo $title; ?></span>
-                    </label>
-                </div>
-            </div>
+			<div class="um-field um-field-c">
+				<div class="um-field-area">
+					<label class="um-field-checkbox active">
+						<input type="checkbox" name="<?php echo $id; ?>" value="1" checked/><span
+							class="um-field-checkbox-state"><i
+								class="um-icon-android-checkbox-outline"></i></span>
+						<span class="um-field-checkbox-option"> <?php echo $title; ?></span>
+					</label>
+				</div>
+			</div>
 
 			<?php
 		}
@@ -45,18 +59,21 @@ if ( ! class_exists( 'Fields' ) ) {
 		 * Shows social links
 		 */
 		function show_social_urls() {
+			$social = array();
+
 			$fields = UM()->builtin()->all_user_fields;
-			foreach ($fields as $field => $args) {
-				if (isset( $args['advanced'] ) && $args['advanced'] == 'social') {
-					$social[$field] = $args;
+			foreach ( $fields as $field => $args ) {
+				if ( isset( $args['advanced'] ) && $args['advanced'] == 'social' ) {
+					$social[ $field ] = $args;
 				}
 			}
-			foreach ($social as $k => $arr) {
-				if (um_profile( $k )) { ?>
 
-                    <a href="<?php echo um_filtered_social_link( $k, $arr['match'] ); ?>"
-                       style="background: <?php echo $arr['color']; ?>;" target="_blank" class="um-tip-n"
-                       title="<?php echo $arr['title']; ?>"><i class="<?php echo $arr['icon']; ?>"></i></a>
+			foreach ( $social as $k => $arr ) {
+				if ( um_profile( $k ) ) { ?>
+
+					<a href="<?php echo um_filtered_social_link( $k, $arr['match'] ); ?>"
+					   style="background: <?php echo $arr['color']; ?>;" target="_blank" class="um-tip-n"
+					   title="<?php echo $arr['title']; ?>"><i class="<?php echo $arr['icon']; ?>"></i></a>
 
 					<?php
 				}
@@ -85,6 +102,7 @@ if ( ! class_exists( 'Fields' ) ) {
 			echo '</div>';
 		}
 
+
 		/**
 		 * Get hidden field
 		 *
@@ -94,7 +112,6 @@ if ( ! class_exists( 'Fields' ) ) {
 		 * @return string
 		 */
 		function disabled_hidden_field( $key, $value ) {
-
 			return '<input type="hidden" name="' . $key . '" value="' . esc_attr( $value ) . '"/>';
 		}
 
@@ -186,6 +203,7 @@ if ( ! class_exists( 'Fields' ) ) {
 			}
 		}
 
+
 		/**
 		 * Quickly adds a field from custom fields
 		 *
@@ -217,6 +235,7 @@ if ( ! class_exists( 'Fields' ) ) {
 
 			}
 		}
+
 
 		/**
 		 * Quickly adds a field from pre-defined fields
@@ -252,6 +271,7 @@ if ( ! class_exists( 'Fields' ) ) {
 
 			}
 		}
+
 
 		/**
 		 * Duplicates a frield by meta key
@@ -290,6 +310,7 @@ if ( ! class_exists( 'Fields' ) ) {
 
 		}
 
+
 		/**
 		 * Print field error
 		 *
@@ -317,6 +338,7 @@ if ( ! class_exists( 'Fields' ) ) {
 			return $output;
 		}
 
+
 		/**
 		 * Checks if field has a server-side error
 		 *
@@ -327,6 +349,7 @@ if ( ! class_exists( 'Fields' ) ) {
 		function is_error( $key ) {
 			return UM()->form()->has_error( $key );
 		}
+
 
 		/**
 		 * Returns field error
@@ -339,12 +362,13 @@ if ( ! class_exists( 'Fields' ) ) {
 			return UM()->form()->errors[$key];
 		}
 
+
 		/**
 		 *  Display field label
 		 *
 		 * @param  string $label
 		 * @param  string $key
-		 * @param  data   $data
+		 * @param  array $data
 		 *
 		 * @return  string
 		 */
@@ -1019,6 +1043,7 @@ if ( ! class_exists( 'Fields' ) ) {
 			return $value;
 		}
 
+
 		/**
 		 * Get select options from a callback function
 		 *
@@ -1039,6 +1064,7 @@ if ( ! class_exists( 'Fields' ) ) {
 			return $arr_options;
 		}
 
+
 		/**
 		 * Get field type
 		 *
@@ -1053,6 +1079,7 @@ if ( ! class_exists( 'Fields' ) ) {
 
 			return '';
 		}
+
 
 		/**
 		 * Get field label
@@ -1088,6 +1115,7 @@ if ( ! class_exists( 'Fields' ) ) {
 
 			return __( 'Custom Field', 'ultimate-member' );
 		}
+
 
 		/**
 		 * Get form fields
@@ -1465,6 +1493,11 @@ if ( ! class_exists( 'Fields' ) ) {
 		}
 
 
+		/**
+		 * @param $option_value
+		 *
+		 * @return mixed|void
+		 */
 		function filter_field_non_utf8_value( $option_value ) {
 			/**
 			 * UM hook
@@ -1688,8 +1721,8 @@ if ( ! class_exists( 'Fields' ) ) {
 
                         </div>';
 
-					if (!empty( $disabled )) {
-						$output .= $this->disabled_hidden_field( $field_name, $field_value );
+				if (!empty( $disabled )) {
+					$output .= $this->disabled_hidden_field( $field_name, $field_value );
 					}
 
 					if ($this->is_error( $key )) {
@@ -3189,6 +3222,7 @@ if ( ! class_exists( 'Fields' ) ) {
 			return ( isset ( $results ) ) ? $results : '';
 		}
 
+
 		/**
 		 * Get fields in group
 		 *
@@ -3374,6 +3408,7 @@ if ( ! class_exists( 'Fields' ) ) {
 
 			return $output;
 		}
+
 
 		/**
 		 * Gets a field in `view mode`
@@ -3812,6 +3847,7 @@ if ( ! class_exists( 'Fields' ) ) {
 			return $output;
 		}
 
+
 		/**
 		 * Get new row in form
 		 *
@@ -3898,6 +3934,9 @@ if ( ! class_exists( 'Fields' ) ) {
 		}
 
 
+		/**
+		 *
+		 */
 		function do_ajax_action() {
 			if (!is_user_logged_in() || !current_user_can( 'manage_options' )) die( __( 'Please login as administrator', 'ultimate-member' ) );
 

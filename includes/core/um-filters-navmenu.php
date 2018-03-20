@@ -1,6 +1,4 @@
-<?php
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 
 /**
@@ -26,12 +24,16 @@ function um_add_custom_message_to_menu( $items, $args ) {
 add_filter( 'wp_nav_menu_items', 'um_add_custom_message_to_menu', 10, 2 );
 
 
-/***
-***	@conditional menu items
-***/
 if ( ! is_admin() ) {
-
-	add_filter( 'wp_get_nav_menu_items', 'um_conditional_nav_menu', 9999, 3 );
+	/**
+	 * Conditional menu items
+	 *
+	 * @param $items
+	 * @param $menu
+	 * @param $args
+	 *
+	 * @return mixed
+	 */
 	function um_conditional_nav_menu( $items, $menu, $args ) {
 
 		$hide_children_of = array();
@@ -61,7 +63,7 @@ if ( ! is_admin() ) {
 							if ( empty( $current_user_roles ) ) {
 								return false;
 							}
-                            $visible = ( count( array_intersect( $current_user_roles, (array)$roles ) ) > 0 ) ? true : false;
+							$visible = ( count( array_intersect( $current_user_roles, (array)$roles ) ) > 0 ) ? true : false;
 						} else {
 							$visible = is_user_logged_in() ? true : false;
 						}
@@ -111,5 +113,5 @@ if ( ! is_admin() ) {
 
 		return $items;
 	}
-
+	add_filter( 'wp_get_nav_menu_items', 'um_conditional_nav_menu', 9999, 3 );
 }

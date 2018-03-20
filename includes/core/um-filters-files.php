@@ -1,13 +1,13 @@
-<?php
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 
-/***
-***	@Support multisite
-***/
-add_filter('um_upload_basedir_filter','um_multisite_urls_support', 99 );
-add_filter('um_upload_baseurl_filter','um_multisite_urls_support', 99 );
+/**
+ * Support multisite
+ *
+ * @param $dir
+ *
+ * @return string
+ */
 function um_multisite_urls_support( $dir ) {
 
 	if ( is_multisite() ) { // Need to the work
@@ -67,3 +67,5 @@ function um_multisite_urls_support( $dir ) {
 
 	return $dir;
 }
+add_filter( 'um_upload_basedir_filter', 'um_multisite_urls_support', 99 );
+add_filter( 'um_upload_baseurl_filter', 'um_multisite_urls_support', 99 );

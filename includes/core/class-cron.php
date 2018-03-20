@@ -5,11 +5,14 @@ namespace um\core;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'Cron' ) ) {
+
+
 	/**
 	 * Class Cron
 	 * @package um\core
 	 */
 	class Cron {
+
 
 		/**
 		 * Cron constructor.

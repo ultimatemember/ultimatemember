@@ -1,12 +1,13 @@
-<?php
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 
-/***
-***	@Main admin user actions
-***/
-add_filter('um_admin_user_actions_hook', 'um_admin_user_actions_hook', 1);
+/**
+ * Main admin user actions
+ *
+ * @param $actions
+ *
+ * @return null
+ */
 function um_admin_user_actions_hook( $actions ) {
 
 	$actions = null;
@@ -54,6 +55,7 @@ function um_admin_user_actions_hook( $actions ) {
 
 	return $actions;
 }
+add_filter( 'um_admin_user_actions_hook', 'um_admin_user_actions_hook', 1 );
 
 
 /**
@@ -62,33 +64,32 @@ function um_admin_user_actions_hook( $actions ) {
  * @return string
  * @hook_filter: um_clean_user_basename_filter
  */
-add_filter('um_clean_user_basename_filter','um_clean_user_basename_filter',2,10);
 function um_clean_user_basename_filter( $value, $raw ){
 	$permalink_base = UM()->options()->get( 'permalink_base' );
 
 	$user_query = new WP_User_Query(
-			array(
-				 'meta_query'    => array(
-		            'relation'  => 'AND',
-		            array(
-		                'key'     => 'um_user_profile_url_slug_'.$permalink_base,
-		                'value'   => $raw,
-		                'compare' => '='
-		            )
-		        ),
-				'fields' => array('ID')
-		    )
+		array(
+			'meta_query'    => array(
+				'relation'  => 'AND',
+				array(
+					'key'     => 'um_user_profile_url_slug_'.$permalink_base,
+					'value'   => $raw,
+					'compare' => '='
+				)
+			),
+			'fields' => array('ID')
+		)
 
 	);
 
 	if( $user_query->total_users > 0 ){
 
-		 $result = current( $user_query->get_results() );
-		 $slugname =  '';
+		$result = current( $user_query->get_results() );
+		$slugname =  '';
 
 		if( isset( $result->ID ) ){
-			  $slugname =  get_user_meta( $result->ID, 'um_user_profile_url_slug_'.$permalink_base, true );
-			  $value = $slugname;
+			$slugname =  get_user_meta( $result->ID, 'um_user_profile_url_slug_'.$permalink_base, true );
+			$value = $slugname;
 		}
 	}
 
@@ -117,155 +118,155 @@ function um_clean_user_basename_filter( $value, $raw ){
 	$raw_value = $value;
 
 	switch( $permalink_base ) {
-			case 'name':
+		case 'name':
 
 
-				if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
-					$value = str_replace( '_', '. ', $value );
-				}
+			if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
+				$value = str_replace( '_', '. ', $value );
+			}
 
-				if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
-					$value = str_replace( '_', '-', $value );
-				}
+			if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
+				$value = str_replace( '_', '-', $value );
+			}
 
-				if( ! empty( $value ) && strrpos( $value ,".") > -1 && strrpos( $raw_value ,"_" ) <= -1 ){
-					$value = str_replace( '.', ' ', $value );
-				}
+			if( ! empty( $value ) && strrpos( $value ,".") > -1 && strrpos( $raw_value ,"_" ) <= -1 ){
+				$value = str_replace( '.', ' ', $value );
+			}
 
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_permalink_base_after_filter_name
-				 * @description Base permalink after if permalink is username
-				 * @input_vars
-				 * [{"var":"$permalink","type":"string","desc":"User Permalink"},
-				 * {"var":"$raw_permalink","type":"string","desc":"RAW User Permalink"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_permalink_base_after_filter_name', 'function_name', 10, 2 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_permalink_base_after_filter_name', 'my_permalink_base_after_filter_name', 10, 2 );
-				 * function my_permalink_base_after_filter_name( $permalink, $raw_permalink ) {
-				 *     // your code here
-				 *     return $permalink;
-				 * }
-				 * ?>
-				 */
-				$value = apply_filters("um_permalink_base_after_filter_name", $value, $raw_value );
-
-			break;
-
-			case 'name_dash':
-
-				if( ! empty( $value ) && strrpos( $value ,"-") > -1 ){
-					$value = str_replace( '-', ' ', $value );
-				}
-
-				if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
-					$value = str_replace( '_', '-', $value );
-				}
-
-				// Checks if last name has a dash
-				if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
-					$value = str_replace( '_', '-', $value );
-				}
-
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_permalink_base_after_filter_name_dash
-				 * @description Base permalink after if permalink is first name - last name
-				 * @input_vars
-				 * [{"var":"$permalink","type":"string","desc":"User Permalink"},
-				 * {"var":"$raw_permalink","type":"string","desc":"RAW User Permalink"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_permalink_base_after_filter_name_dash', 'function_name', 10, 2 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_permalink_base_after_filter_name_dash', 'my_permalink_base_after_filter_name_dash', 10, 2 );
-				 * function my_permalink_base_after_filter_name_dash( $permalink, $raw_permalink ) {
-				 *     // your code here
-				 *     return $permalink;
-				 * }
-				 * ?>
-				 */
-				$value = apply_filters("um_permalink_base_after_filter_name_dash", $value, $raw_value );
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_permalink_base_after_filter_name
+			 * @description Base permalink after if permalink is username
+			 * @input_vars
+			 * [{"var":"$permalink","type":"string","desc":"User Permalink"},
+			 * {"var":"$raw_permalink","type":"string","desc":"RAW User Permalink"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_permalink_base_after_filter_name', 'function_name', 10, 2 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_permalink_base_after_filter_name', 'my_permalink_base_after_filter_name', 10, 2 );
+			 * function my_permalink_base_after_filter_name( $permalink, $raw_permalink ) {
+			 *     // your code here
+			 *     return $permalink;
+			 * }
+			 * ?>
+			 */
+			$value = apply_filters("um_permalink_base_after_filter_name", $value, $raw_value );
 
 			break;
 
+		case 'name_dash':
 
-			case 'name_plus':
+			if( ! empty( $value ) && strrpos( $value ,"-") > -1 ){
+				$value = str_replace( '-', ' ', $value );
+			}
 
-				if( ! empty( $value ) && strrpos( $value ,"+") > -1 ){
-					$value = str_replace( '+', ' ', $value );
-				}
+			if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
+				$value = str_replace( '_', '-', $value );
+			}
 
-				if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
-					$value = str_replace( '_', '+', $value );
-				}
+			// Checks if last name has a dash
+			if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
+				$value = str_replace( '_', '-', $value );
+			}
 
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_permalink_base_after_filter_name_plus
-				 * @description Base permalink after if permalink is first name + last name
-				 * @input_vars
-				 * [{"var":"$permalink","type":"string","desc":"User Permalink"},
-				 * {"var":"$raw_permalink","type":"string","desc":"RAW User Permalink"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_permalink_base_after_filter_name_plus', 'function_name', 10, 2 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_permalink_base_after_filter_name_plus', 'my_permalink_base_after_filter_name_plus', 10, 2 );
-				 * function my_permalink_base_after_filter_name_plus( $permalink, $raw_permalink ) {
-				 *     // your code here
-				 *     return $permalink;
-				 * }
-				 * ?>
-				 */
-				$value = apply_filters("um_permalink_base_after_filter_name_plus", $value, $raw_value );
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_permalink_base_after_filter_name_dash
+			 * @description Base permalink after if permalink is first name - last name
+			 * @input_vars
+			 * [{"var":"$permalink","type":"string","desc":"User Permalink"},
+			 * {"var":"$raw_permalink","type":"string","desc":"RAW User Permalink"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_permalink_base_after_filter_name_dash', 'function_name', 10, 2 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_permalink_base_after_filter_name_dash', 'my_permalink_base_after_filter_name_dash', 10, 2 );
+			 * function my_permalink_base_after_filter_name_dash( $permalink, $raw_permalink ) {
+			 *     // your code here
+			 *     return $permalink;
+			 * }
+			 * ?>
+			 */
+			$value = apply_filters("um_permalink_base_after_filter_name_dash", $value, $raw_value );
 
 			break;
 
-			default:
 
-				// Checks if last name has a dash
-				if( ! empty( $value ) && strrpos( $value ,"_") > -1 && substr( $value , "_") == 1 ){
-					$value = str_replace( '_', '-', $value );
-				}
+		case 'name_plus':
 
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_permalink_base_after_filter
-				 * @description Base permalink after for default permalink
-				 * @input_vars
-				 * [{"var":"$permalink","type":"string","desc":"User Permalink"},
-				 * {"var":"$raw_permalink","type":"string","desc":"RAW User Permalink"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_permalink_base_after_filter', 'function_name', 10, 2 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_permalink_base_after_filter', 'my_permalink_base_after', 10, 2 );
-				 * function my_permalink_base_after( $permalink, $raw_permalink ) {
-				 *     // your code here
-				 *     return $permalink;
-				 * }
-				 * ?>
-				 */
-				$value = apply_filters("um_permalink_base_after_filter", $value, $raw_value );
+			if( ! empty( $value ) && strrpos( $value ,"+") > -1 ){
+				$value = str_replace( '+', ' ', $value );
+			}
+
+			if( ! empty( $value ) && strrpos( $value ,"_") > -1 ){
+				$value = str_replace( '_', '+', $value );
+			}
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_permalink_base_after_filter_name_plus
+			 * @description Base permalink after if permalink is first name + last name
+			 * @input_vars
+			 * [{"var":"$permalink","type":"string","desc":"User Permalink"},
+			 * {"var":"$raw_permalink","type":"string","desc":"RAW User Permalink"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_permalink_base_after_filter_name_plus', 'function_name', 10, 2 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_permalink_base_after_filter_name_plus', 'my_permalink_base_after_filter_name_plus', 10, 2 );
+			 * function my_permalink_base_after_filter_name_plus( $permalink, $raw_permalink ) {
+			 *     // your code here
+			 *     return $permalink;
+			 * }
+			 * ?>
+			 */
+			$value = apply_filters("um_permalink_base_after_filter_name_plus", $value, $raw_value );
+
+			break;
+
+		default:
+
+			// Checks if last name has a dash
+			if( ! empty( $value ) && strrpos( $value ,"_") > -1 && substr( $value , "_") == 1 ){
+				$value = str_replace( '_', '-', $value );
+			}
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_permalink_base_after_filter
+			 * @description Base permalink after for default permalink
+			 * @input_vars
+			 * [{"var":"$permalink","type":"string","desc":"User Permalink"},
+			 * {"var":"$raw_permalink","type":"string","desc":"RAW User Permalink"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_permalink_base_after_filter', 'function_name', 10, 2 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_permalink_base_after_filter', 'my_permalink_base_after', 10, 2 );
+			 * function my_permalink_base_after( $permalink, $raw_permalink ) {
+			 *     // your code here
+			 *     return $permalink;
+			 * }
+			 * ?>
+			 */
+			$value = apply_filters("um_permalink_base_after_filter", $value, $raw_value );
 
 			break;
 	}
@@ -273,6 +274,7 @@ function um_clean_user_basename_filter( $value, $raw ){
 	return $value;
 
 }
+add_filter( 'um_clean_user_basename_filter', 'um_clean_user_basename_filter', 2, 10 );
 
 
 /**

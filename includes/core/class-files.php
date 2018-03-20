@@ -70,6 +70,9 @@ if ( ! class_exists( 'Files' ) ) {
 		 * Remove file by AJAX
 		 */
 		function ajax_remove_file() {
+			/**
+			 * @var $src
+			 */
 			extract( $_REQUEST );
 			$this->delete_file( $src );
 		}
@@ -225,6 +228,7 @@ if ( ! class_exists( 'Files' ) ) {
 				return '#666';
 			}
 		}
+
 
 		/**
 		 * Setup upload directory
@@ -442,8 +446,6 @@ if ( ! class_exists( 'Files' ) ) {
 				$info['um_has_copied'] = $has_copied ? 'yes':'no';
 			}
 
-
-
 			return $info;
 		}
 
@@ -504,6 +506,7 @@ if ( ! class_exists( 'Files' ) ) {
 			return $url;
 
 		}
+
 
 		/**
 		 * Make a Folder
@@ -1215,6 +1218,10 @@ if ( ! class_exists( 'Files' ) ) {
 			exit;
 		}
 
+
+		/**
+		 *
+		 */
 		function ajax_file_upload(){
 			$ret['error'] = null;
 			$ret = array();

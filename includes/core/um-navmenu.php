@@ -3,7 +3,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'UM_Menu_Item_Custom_Fields_Editor' ) ) {
 
+
+	/**
+	 * Class UM_Menu_Item_Custom_Fields_Editor
+	 */
 	class UM_Menu_Item_Custom_Fields_Editor {
+
 
 		/**
 		 * @var array

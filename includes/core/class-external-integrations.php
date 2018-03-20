@@ -5,7 +5,14 @@ namespace um\core;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'External_Integrations' ) ) {
+
+
+	/**
+	 * Class External_Integrations
+	 * @package um\core
+	 */
 	class External_Integrations {
+
 
 		/**
 		 * Access constructor.
