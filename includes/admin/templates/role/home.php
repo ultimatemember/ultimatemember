@@ -11,7 +11,7 @@
 				'type'		    => 'checkbox',
 				'label'    		=> __( 'Can view default homepage?', 'ultimate-member' ),
 				'tooltip' 	=> __( 'Allow this user role to view your site\'s homepage', 'ultimate-member' ),
-				'value'		    => ! empty( $role['_um_default_homepage'] ) ? $role['_um_default_homepage'] : 1,
+				'value'		    => isset( $role['_um_default_homepage'] ) ? $role['_um_default_homepage'] : 1,
 			),
 			array(
 				'id'		=> '_um_redirect_homepage',

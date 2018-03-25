@@ -322,6 +322,32 @@ if ( ! class_exists( 'Mail' ) ) {
 
 			$message = ob_get_clean();
 
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_email_send_message_content
+			 * @description Change email notification message content
+			 * @input_vars
+			 * [{"var":"$message","type":"string","desc":"Message Content"},
+			 * {"var":"$template","type":"string","desc":"Template Key"},
+			 * {"var":"$args","type":"string","desc":"Notification Arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_email_send_message_content', 'function_name', 10, 3 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_email_send_message_content', 'my_email_send_message_content', 10, 3 );
+			 * function my_email_send_message_content( $message, $template, $args ) {
+			 *     // your code here
+			 *     return $message;
+			 * }
+			 * ?>
+			 */
+			$message = apply_filters( 'um_email_send_message_content', $message, $slug, $args );
+
 			// Convert tags in email template
 			return um_convert_tags( $message, $args );
 		}
