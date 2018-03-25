@@ -6,7 +6,7 @@ use \RecursiveDirectoryIterator;
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Admin_Menu' ) ) {
+if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 
 
 	/**

@@ -5,7 +5,7 @@ namespace um\core;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-if ( ! class_exists( 'Roles_Capabilities' ) ) {
+if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 
 
 	/**
