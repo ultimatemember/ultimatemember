@@ -860,6 +860,10 @@ function um_get_core_page( $slug, $updated = false ) {
 function um_is_core_page( $page ) {
 	global $post;
 
+	if ( empty( $post ) ) {
+		return false;
+	}
+
 	if ( isset( $post->ID ) && isset( UM()->config()->permalinks[ $page ] ) && $post->ID == UM()->config()->permalinks[ $page ] )
 		return true;
 
@@ -2377,4 +2381,14 @@ function is_ultimatemember() {
 		return true;
 
 	return false;
+}
+
+
+/**
+ * Maybe set empty time limit
+ */
+function um_maybe_unset_time_limit() {
+	if ( ! ini_get( 'safe_mode' ) ) {
+		@set_time_limit(0);
+	}
 }

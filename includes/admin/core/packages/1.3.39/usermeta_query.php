@@ -1,11 +1,5 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-
-/**
- * This populates all existing UM users with meta_key `last_login` as `user_registered` if the meta key doesn't exist.
- * Target Version: 1.3.39
- */
 global $wpdb;
 $wpdb->query(
 	'INSERT INTO '.$wpdb->usermeta.'(user_id, meta_key, meta_value) 

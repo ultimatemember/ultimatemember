@@ -407,6 +407,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->admin();
 				$this->ajax_init();
 				$this->metabox();
+				$this->admin_upgrade()->init_packages_ajax_handlers();
 			} elseif ( $this->is_request( 'admin' ) ) {
 				$this->admin();
 				$this->admin_menu();
