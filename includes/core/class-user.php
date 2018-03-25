@@ -46,6 +46,7 @@ if ( ! class_exists( 'User' ) ) {
 				'user_pass',
 				'user_password',
 				'display_name',
+				'user_url',
 				'role',
 			);
 
@@ -950,16 +951,6 @@ if ( ! class_exists( 'User' ) ) {
 			 */
 			do_action( 'um_after_save_registration_details', $this->id, $submitted );
 
-		}
-
-
-		/**
-		 * A plain version of password
-		 *
-		 * @param $plain
-		 */
-		function set_plain_password( $plain ) {
-			update_user_meta( $this->id, '_um_cool_but_hard_to_guess_plain_pw', $plain );
 		}
 
 

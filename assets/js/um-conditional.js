@@ -367,7 +367,7 @@ jQuery(document).ready( function (){
             case 'number':
             case 'date':
             case 'textarea':
-                $dom.find('input:text,input[type=number],textarea,select').val(field.value);
+                $dom.find('input:text,input[type=number],textareas').val(field.value);
                 break;
 
             case 'select':
