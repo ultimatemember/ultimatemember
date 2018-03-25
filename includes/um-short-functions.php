@@ -2169,6 +2169,15 @@ function um_user( $data, $attrs = null ) {
 			break;
 
 
+			case 'user_url':
+
+				$value = um_profile( $data );
+
+				return $value;
+
+			break;
+
+
 	}
 
 }

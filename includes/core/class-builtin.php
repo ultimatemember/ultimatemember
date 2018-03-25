@@ -733,6 +733,17 @@ if ( ! class_exists( 'Builtin' ) ) {
 					'editable' => 1,
 				),
 
+				'user_url' => array(
+                    'title' => __('Website URL','ultimate-member'),
+                    'metakey' => 'user_url',
+                    'type' => 'url',
+                    'label' => __('Website URL','ultimate-member'),
+                    'required' => 1,
+                    'public' => 1,
+                    'editable' => 1,
+                    'validate' => 'url'
+                ),
+
 				'user_registered' => array(
 					'title' => __('Registration Date','ultimate-member'),
 					'metakey' => 'user_registered',
