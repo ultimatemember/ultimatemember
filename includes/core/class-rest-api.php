@@ -4,7 +4,7 @@ namespace um\core;
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'REST_API' ) ) {
+if ( ! class_exists( 'um\core\REST_API' ) ) {
 
 
 	/**

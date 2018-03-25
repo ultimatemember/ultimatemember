@@ -4,7 +4,7 @@ namespace um\core;
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Date_Time' ) ) {
+if ( ! class_exists( 'um\core\Date_Time' ) ) {
 
 
 	/**

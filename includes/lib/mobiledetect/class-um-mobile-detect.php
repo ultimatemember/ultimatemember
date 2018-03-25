@@ -4,7 +4,7 @@ namespace um\lib\mobiledetect;
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Um_Mobile_Detect' ) ) {
+if ( ! class_exists( 'um\lib\mobiledetect\Um_Mobile_Detect' ) ) {
     class Um_Mobile_Detect {
         /**
          * Mobile detection type.
