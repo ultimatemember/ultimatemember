@@ -567,7 +567,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * Restrict content new logic
 		 *
 		 * @param $posts
-		 * @param $query
+		 * @param \WP_Query $query
 		 * @return array
 		 */
 		function filter_protected_posts( $posts, $query ) {
@@ -581,12 +581,21 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 			//other filter
 			foreach ( $posts as $post ) {
+
+				//Woocommerce AJAX fixes....remove filtration on wc-ajax which goes to Front Page
+				if ( ! empty( $_GET['wc-ajax'] ) /*&& $query->is_front_page()*/ ) {
+					$filtered_posts[] = $post;
+					continue;
+				}
+
 				$restriction = $this->get_post_privacy_settings( $post );
 
 				if ( ! $restriction ) {
 					$filtered_posts[] = $post;
 					continue;
 				}
+
+				$is_singular = $query->is_singular();
 
 				//post is private
 				if ( '0' == $restriction['_um_accessible'] ) {
@@ -604,7 +613,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							continue;
 						}
 
-						if ( empty( $query->is_singular ) ) {
+						if ( empty( $is_singular ) ) {
 							//if not single query when exclude if set _um_access_hide_from_queries
 							if ( empty( $restriction['_um_access_hide_from_queries'] ) ) {
 
@@ -703,7 +712,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							}
 						}
 
-						if ( empty( $query->is_singular ) ) {
+						if ( empty( $is_singular ) ) {
 							//if not single query when exclude if set _um_access_hide_from_queries
 							if ( empty( $restriction['_um_access_hide_from_queries'] ) ) {
 
@@ -790,7 +799,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 						}
 
 					} else {
-						if ( empty( $query->is_singular ) ) {
+						if ( empty( $is_singular ) ) {
 							if ( empty( $restriction['_um_access_hide_from_queries'] ) ) {
 
 								if ( ! isset( $restriction['_um_noaccess_action'] ) || '0' == $restriction['_um_noaccess_action'] ) {
