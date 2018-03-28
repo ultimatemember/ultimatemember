@@ -72,14 +72,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 		 * @return array
 		 */
 		function need_run_upgrades() {
-			$all_packages = $this->get_packages();
 			$um_last_version_upgrade = get_option( 'um_last_version_upgrade' );
-
+			//first install
 			if ( ! $um_last_version_upgrade ) {
-				return $all_packages;
+				return array();
 			}
 
 			$diff_packages = array();
+
+			$all_packages = $this->get_packages();
 			foreach ( $all_packages as $package ) {
 				if ( version_compare( $um_last_version_upgrade, $package, '<' ) ) {
 					$diff_packages[] = $package;
