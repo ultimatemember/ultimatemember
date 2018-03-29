@@ -54,7 +54,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 
 		function need_upgrade() {
 			?>
-				<div class="error"><p><?php printf( __( 'You need to run upgrade <a href="%s">here</a>', 'ultimate-member' ), add_query_arg( array( 'page' => 'um_upgrade' ), admin_url( 'admin.php' ) ) ) ?></p></div>
+				<div class="error"><p><?php printf( __( '<strong>%s version %s</strong> needs to be updated. Please visit to "Upgrade" page <a href="%s">here</a> and run the upgrade process.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, add_query_arg( array( 'page' => 'um_upgrade' ), admin_url( 'admin.php' ) ) ) ?></p></div>
 			<?php
 		}
 
@@ -75,7 +75,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 			$um_last_version_upgrade = get_option( 'um_last_version_upgrade' );
 			//first install
 			if ( ! $um_last_version_upgrade ) {
-				return array();
+				$um_last_version_upgrade = '1.3.88';
 			}
 
 			$diff_packages = array();

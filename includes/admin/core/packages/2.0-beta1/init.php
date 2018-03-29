@@ -68,7 +68,7 @@
 			current_page = 1;
 			if ( um_roles_data.length ) {
 				var role = um_roles_data.shift();
-				um_add_upgrade_log( '<?php echo esc_js( __( 'Getting ', 'ultimate-member' ) ) ?>"'  + role.role_key + '"<?php echo esc_js( __( 'users...', 'ultimate-member' ) ) ?>' );
+				um_add_upgrade_log( '<?php echo esc_js( __( 'Getting ', 'ultimate-member' ) ) ?>"'  + role.role_key + '"<?php echo esc_js( __( ' users...', 'ultimate-member' ) ) ?>' );
 				jQuery.ajax({
 					url: '<?php echo admin_url( 'admin-ajax.php' ) ?>',
 					type: 'POST',
@@ -79,7 +79,7 @@
 					},
 					success: function( response ) {
 						if ( typeof response.data.count != 'undefined' ) {
-							um_add_upgrade_log( '<?php echo esc_js( __( 'There are ', 'ultimate-member' ) ) ?>'  + response.data.count + '<?php echo esc_js( __( 'users...', 'ultimate-member' ) ) ?>' );
+							um_add_upgrade_log( '<?php echo esc_js( __( 'There are ', 'ultimate-member' ) ) ?>'  + response.data.count + '<?php echo esc_js( __( ' users...', 'ultimate-member' ) ) ?>' );
 							um_add_upgrade_log( '<?php echo esc_js( __( 'Start users upgrading...', 'ultimate-member' ) ) ?>');
 							users_pages = Math.ceil( response.data.count / users_per_page );
 
