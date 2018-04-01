@@ -373,18 +373,41 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @since 2.0
 		 */
 		function activation() {
+			if ( is_multisite() ) {
+				//get all blogs
+				$blogs = get_sites();
+				if ( ! empty( $blogs ) ) {
+					foreach( $blogs as $blog ) {
+						switch_to_blog( $blog->blog_id );
+						//make activation script for each sites blog
+						$this->single_site_activation();
+						restore_current_blog();
+					}
+				}
+			} else {
+				$this->single_site_activation();
+			}
+		}
+
+
+		/**
+		 * Single site plugin activation handler
+		 */
+		function single_site_activation() {
 			//first install
 			$version = get_option( 'um_version' );
 			if ( ! $version ) {
 				update_option( 'um_last_version_upgrade', ultimatemember_version );
 
 				//show avatars on first install
-				if ( ! get_option( 'show_avatars' ) )
+				if ( ! get_option( 'show_avatars' ) ) {
 					update_option( 'show_avatars', 1 );
+				}
 			}
 
-			if ( $version != ultimatemember_version )
+			if ( $version != ultimatemember_version ) {
 				update_option( 'um_version', ultimatemember_version );
+			}
 
 			//run setup
 			$this->common()->create_post_types();
