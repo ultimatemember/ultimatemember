@@ -251,3 +251,20 @@ function ultimatemember_plugin_links( $links ) {
 }
 $prefix = is_network_admin() ? 'network_admin_' : '';
 add_filter( "{$prefix}plugin_action_links_" . um_plugin, 'ultimatemember_plugin_links' );
+
+
+/**
+ * This will remove the "Edit" bulk action, which is actually quick edit.
+ *
+ * @param array $actions
+ *
+ * @return array;
+ */
+function remove_bulk_actions_um_form_inline( $actions ){
+	if ( UM()->admin()->is_plugin_post_type() ) {
+		unset( $actions['inline hide-if-no-js'] );
+		return $actions;
+	}
+	return $actions;
+}
+add_filter('post_row_actions', 'remove_bulk_actions_um_form_inline');
