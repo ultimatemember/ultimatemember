@@ -1306,8 +1306,14 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			// send email notifications
 			if ( $send_mail ) {
-				UM()->mail()->send( um_user('user_email'), 'deletion_email' );
-				UM()->mail()->send( um_admin_email(), 'notification_deletion', array('admin' => true ) );
+				UM()->mail()->send( um_user( 'user_email' ), 'deletion_email' );
+
+				$emails = um_multi_admin_email();
+				if ( ! empty( $emails ) ) {
+					foreach ( $emails as $email ) {
+						UM()->mail()->send( $email, 'notification_deletion', array( 'admin' => true ) );
+					}
+				}
 			}
 
 			// remove uploads
@@ -1316,7 +1322,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			// remove user
 			if ( is_multisite() ) {
 
-				if ( !function_exists('wpmu_delete_user') ) {
+				if ( ! function_exists( 'wpmu_delete_user' ) ) {
 					require_once( ABSPATH . 'wp-admin/includes/ms.php' );
 				}
 
@@ -1324,7 +1330,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			} else {
 
-				if ( !function_exists('wp_delete_user') ) {
+				if ( ! function_exists( 'wp_delete_user' ) ) {
 					require_once( ABSPATH . 'wp-admin/includes/user.php' );
 				}
 

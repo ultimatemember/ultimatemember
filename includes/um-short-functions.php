@@ -1405,6 +1405,23 @@ function um_admin_email() {
 
 
 /**
+ * Get admin e-mails
+ *
+ * @return array
+ */
+function um_multi_admin_email() {
+	$emails = UM()->options()->get( 'admin_email' );
+
+	$emails_array = explode( ',', $emails );
+	if ( ! empty( $emails_array ) ) {
+		$emails_array = array_map( 'trim', $emails_array );
+	}
+
+	return $emails_array;
+}
+
+
+/**
  * Display a link to profile page
  *
  * @param int|bool $user_id
