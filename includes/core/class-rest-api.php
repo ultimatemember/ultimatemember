@@ -1021,9 +1021,11 @@ if ( ! class_exists( 'um\core\REST_API' ) ) {
 					</tr>
 					</tbody>
 				</table>
-			<?php }
 
-			$content .= ob_get_clean();
+				<?php $content .= ob_get_clean();
+			}
+
+
 			return $content;
 		}
 
