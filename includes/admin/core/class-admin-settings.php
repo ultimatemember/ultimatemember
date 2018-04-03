@@ -1131,8 +1131,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 * Setup admin menu
 		 */
 		function primary_admin_menu() {
-            add_submenu_page( 'ultimatemember', __( 'Settings', 'ultimate-member' ), __( 'Settings', 'ultimate-member' ), 'manage_options', 'um_options', array( &$this, 'settings_page' ) );
-        }
+			add_submenu_page( 'ultimatemember', __( 'Settings', 'ultimate-member' ), __( 'Settings', 'ultimate-member' ), 'manage_options', 'um_options', array( &$this, 'settings_page' ) );
+		}
 
 
 		/**

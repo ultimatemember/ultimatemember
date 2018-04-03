@@ -53,7 +53,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'terms-conditions'      => '2.0',
 			'user-location'         => '2.0',
 			'user-tags'             => '2.0',
-			'verified-users'        => '2.0',
+			'verified-users'        => '2.0.1',
 			'woocommerce'           => '2.0',
 			'restrict-content'      => '2.0',
 			'beaver-builder'        => '2.0',

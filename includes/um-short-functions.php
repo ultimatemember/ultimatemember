@@ -860,6 +860,10 @@ function um_get_core_page( $slug, $updated = false ) {
 function um_is_core_page( $page ) {
 	global $post;
 
+	if ( empty( $post ) ) {
+		return false;
+	}
+
 	if ( isset( $post->ID ) && isset( UM()->config()->permalinks[ $page ] ) && $post->ID == UM()->config()->permalinks[ $page ] )
 		return true;
 
@@ -1397,6 +1401,23 @@ function um_can_edit_my_profile() {
  */
 function um_admin_email() {
 	return UM()->options()->get( 'admin_email' );
+}
+
+
+/**
+ * Get admin e-mails
+ *
+ * @return array
+ */
+function um_multi_admin_email() {
+	$emails = UM()->options()->get( 'admin_email' );
+
+	$emails_array = explode( ',', $emails );
+	if ( ! empty( $emails_array ) ) {
+		$emails_array = array_map( 'trim', $emails_array );
+	}
+
+	return $emails_array;
 }
 
 
@@ -2386,4 +2407,14 @@ function is_ultimatemember() {
 		return true;
 
 	return false;
+}
+
+
+/**
+ * Maybe set empty time limit
+ */
+function um_maybe_unset_time_limit() {
+	if ( ! ini_get( 'safe_mode' ) ) {
+		@set_time_limit(0);
+	}
 }

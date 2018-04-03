@@ -115,10 +115,15 @@ add_action( 'um_user_register', 'um_after_insert_user', 10, 2 );
 function um_send_registration_notification( $user_id, $args ) {
 	um_fetch_user( $user_id );
 
-	if ( um_user( 'status' ) != 'pending' ) {
-		UM()->mail()->send( um_admin_email(), 'notification_new_user', array( 'admin' => true ) );
-	} else {
-		UM()->mail()->send( um_admin_email(), 'notification_review', array( 'admin' => true ) );
+	$emails = um_multi_admin_email();
+	if ( ! empty( $emails ) ) {
+		foreach ( $emails as $email ) {
+			if ( um_user( 'status' ) != 'pending' ) {
+				UM()->mail()->send( $email, 'notification_new_user', array( 'admin' => true ) );
+			} else {
+				UM()->mail()->send( $email, 'notification_review', array( 'admin' => true ) );
+			}
+		}
 	}
 }
 add_action( 'um_registration_complete', 'um_send_registration_notification', 10, 2 );
