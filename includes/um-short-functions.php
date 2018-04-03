@@ -1,7 +1,7 @@
-<?php
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly.
 
-// Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) exit;
+
+//Make public functions without class creation
 
 
 /**

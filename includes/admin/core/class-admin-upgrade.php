@@ -39,16 +39,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 			$this->necessary_packages = $this->need_run_upgrades();
 
 			if ( ! empty( $this->necessary_packages ) ) {
-				add_action( 'admin_notices', array( $this, 'need_upgrade' ) );
+				//add_action( 'admin_notices', array( $this, 'need_upgrade' ) );
 
 				$this->init_packages_ajax();
 				add_action( 'admin_menu', array( $this, 'admin_menu' ), 0 );
 
 				add_action( 'wp_ajax_um_run_package', array( $this, 'ajax_run_package' ) );
 				add_action( 'wp_ajax_um_get_packages', array( $this, 'ajax_get_packages' ) );
-			} else {
-				add_action( 'admin_notices', array( $this, 'updated_successfully' ) );
-			}
+			} /*else {
+				//add_action( 'admin_notices', array( $this, 'updated_successfully' ) );
+			}*/
 		}
 
 
