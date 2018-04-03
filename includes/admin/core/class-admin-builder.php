@@ -24,7 +24,262 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 * Admin_Builder constructor.
 		 */
 		function __construct() {
+			add_action( 'um_admin_field_modal_header', array( &$this, 'add_message_handlers' ) );
+			add_action( 'um_admin_field_modal_footer', array( &$this, 'add_conditional_support' ), 10, 4 );
+			add_filter( 'um_admin_pre_save_field_to_form', array( &$this, 'um_admin_pre_save_field_to_form' ), 1 );
+			add_filter( 'um_admin_pre_save_fields_hook', array( &$this, 'um_admin_pre_save_fields_hook' ), 1 );
+			add_filter( 'um_admin_field_update_error_handling', array( &$this, 'um_admin_field_update_error_handling' ), 1, 2 );
+		}
 
+
+		/**
+		 * Apply a filter to handle errors for field updating in backend
+		 *
+		 * @param $errors
+		 * @param $array
+		 *
+		 * @return mixed
+		 */
+		function um_admin_field_update_error_handling( $errors, $array ) {
+			/**
+			 * @var $field_type
+			 */
+			extract( $array );
+
+			$field_attr = UM()->builtin()->get_core_field_attrs( $field_type );
+
+			if ( isset( $field_attr['validate'] ) ) {
+
+				$validate = $field_attr['validate'];
+				foreach ( $validate as $post_input => $arr ) {
+
+					$mode = $arr['mode'];
+
+					switch ( $mode ) {
+
+						case 'numeric':
+							if ( !empty( $array['post'][$post_input] ) && !is_numeric( $array['post'][$post_input] ) ){
+								$errors[$post_input] = $validate[$post_input]['error'];
+							}
+							break;
+
+						case 'unique':
+							if ( !isset( $array['post']['edit_mode'] ) ) {
+								if ( UM()->builtin()->unique_field_err( $array['post'][$post_input] ) ) {
+									$errors[$post_input] = UM()->builtin()->unique_field_err( $array['post'][$post_input] );
+								}
+							}
+							break;
+
+						case 'required':
+							if (  $array['post'][$post_input] == '' )
+								$errors[$post_input] = $validate[$post_input]['error'];
+							break;
+
+						case 'range-start':
+							if ( UM()->builtin()->date_range_start_err( $array['post'][$post_input] ) && $array['post']['_range'] == 'date_range' )
+								$errors[$post_input] = UM()->builtin()->date_range_start_err( $array['post'][$post_input] );
+							break;
+
+						case 'range-end':
+							if ( UM()->builtin()->date_range_end_err( $array['post'][$post_input], $array['post']['_range_start'] ) && $array['post']['_range'] == 'date_range' )
+								$errors[$post_input] = UM()->builtin()->date_range_end_err( $array['post'][$post_input], $array['post']['_range_start'] );
+							break;
+
+					}
+
+				}
+
+			}
+
+			return $errors;
+
+		}
+
+
+		/**
+		 * Some fields may require extra fields before saving
+		 *
+		 * @param $array
+		 *
+		 * @return mixed
+		 */
+		function um_admin_pre_save_fields_hook( $array ) {
+			/**
+			 * @var $form_id
+			 * @var $field_type
+			 */
+			extract( $array );
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_fields_without_metakey
+			 * @description Field Types without meta key
+			 * @input_vars
+			 * [{"var":"$types","type":"array","desc":"Field Types"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_fields_without_metakey', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_fields_without_metakey', 'my_fields_without_metakey', 10, 1 );
+			 * function my_fields_without_metakey( $types ) {
+			 *     // your code here
+			 *     return $types;
+			 * }
+			 * ?>
+			 */
+			$fields_without_metakey = apply_filters( 'um_fields_without_metakey', array(
+				'block',
+				'shortcode',
+				'spacing',
+				'divider',
+				'group'
+			) );
+
+			$fields = UM()->query()->get_attr('custom_fields', $form_id);
+			$count = 1;
+			if ( isset( $fields ) && !empty( $fields) ) $count = count($fields)+1;
+
+			// set unique meta key
+			if ( in_array( $field_type, $fields_without_metakey ) && !isset($array['post']['_metakey']) ) {
+				$array['post']['_metakey'] = "um_{$field_type}_{$form_id}_{$count}";
+			}
+
+			// set position
+			if ( !isset( $array['post']['_position'] ) ) {
+				$array['post']['_position'] = $count;
+			}
+
+			return $array;
+		}
+
+
+		/**
+		 * Modify field args just before it is saved into form
+		 *
+		 * @param $array
+		 *
+		 * @return mixed
+		 */
+		function um_admin_pre_save_field_to_form( $array ){
+			unset( $array['conditions'] );
+			if ( isset($array['conditional_field']) && !empty( $array['conditional_action'] ) && !empty( $array['conditional_operator'] ) ) {
+				$array['conditional_value'] = ! empty( $array['conditional_value'] ) ? $array['conditional_value'] : '';
+				$array['conditions'][] = array( $array['conditional_action'], $array['conditional_field'], $array['conditional_operator'], $array['conditional_value'] );
+			}
+
+			if ( isset($array['conditional_field1']) && !empty( $array['conditional_action1'] ) && !empty( $array['conditional_operator1'] ) ) {
+				$array['conditional_value1'] = ! empty( $array['conditional_value1'] ) ? $array['conditional_value1'] : '';
+				$array['conditions'][] = array( $array['conditional_action1'], $array['conditional_field1'], $array['conditional_operator1'], $array['conditional_value1'] );
+			}
+
+			if ( isset($array['conditional_field2']) && !empty( $array['conditional_action2'] ) && !empty( $array['conditional_operator2'] ) ) {
+				$array['conditional_value2'] = ! empty( $array['conditional_value2'] ) ? $array['conditional_value2'] : '';
+				$array['conditions'][] = array( $array['conditional_action2'], $array['conditional_field2'], $array['conditional_operator2'], $array['conditional_value2'] );
+			}
+
+			if ( isset($array['conditional_field3']) && !empty( $array['conditional_action3'] ) && !empty( $array['conditional_operator3'] ) ) {
+				$array['conditional_value3'] = ! empty( $array['conditional_value3'] ) ? $array['conditional_value3'] : '';
+				$array['conditions'][] = array( $array['conditional_action3'], $array['conditional_field3'], $array['conditional_operator3'], $array['conditional_value3'] );
+			}
+
+			if ( isset($array['conditional_field4']) && !empty( $array['conditional_action4'] ) && !empty( $array['conditional_operator4'] ) ) {
+				$array['conditional_value4'] = ! empty( $array['conditional_value4'] ) ? $array['conditional_value4'] : '';
+				$array['conditions'][] = array( $array['conditional_action4'], $array['conditional_field4'], $array['conditional_operator4'], $array['conditional_value4'] );
+			}
+
+			return $array;
+		}
+
+
+		/**
+		 * Put status handler in modal
+		 */
+		function add_message_handlers() {
+			?>
+			<div class="um-admin-error-block"></div>
+			<div class="um-admin-success-block"></div>
+			<?php
+		}
+
+
+		/**
+		 * Footer of modal
+		 *
+		 * @param $form_id
+		 * @param $field_args
+		 * @param $in_edit
+		 * @param $edit_array
+		 */
+		function add_conditional_support( $form_id, $field_args, $in_edit, $edit_array ) {
+			$metabox = UM()->metabox();
+
+			if ( isset( $field_args['conditional_support'] ) && $field_args['conditional_support'] == 0 ) {
+				return;
+			} ?>
+
+			<div class="um-admin-btn-toggle">
+
+				<?php if ( $in_edit ) { $metabox->in_edit = true;  $metabox->edit_array = $edit_array; ?>
+					<a href="#"><i class="um-icon-plus"></i><?php _e( 'Manage conditional fields support' ); ?></a> <?php UM()->tooltip( __( 'Here you can setup conditional logic to show/hide this field based on specific fields value or conditions', 'ultimate-member' ) ); ?>
+				<?php } else { ?>
+					<a href="#"><i class="um-icon-plus"></i><?php _e( 'Add conditional fields support' ); ?></a> <?php UM()->tooltip( __( 'Here you can setup conditional logic to show/hide this field based on specific fields value or conditions', 'ultimate-member' ) ); ?>
+				<?php } ?>
+
+				<div class="um-admin-btn-content">
+
+					<p class="um-admin-reset-conditions"><a href="#" class="button button-primary"><?php _e( 'Reset all rules', 'ultimate-member' ); ?></a></p>
+					<div class="um-admin-clear"></div>
+
+					<?php if ( isset( $edit_array['conditions'] ) ) {
+
+						foreach ( $edit_array['conditions'] as $k => $arr ) {
+
+							if ( $k == 0 ) $k = ''; ?>
+
+							<div class="um-admin-cur-condition">
+
+								<?php $metabox->field_input( '_conditional_action' . $k, $form_id ); ?>
+								<?php $metabox->field_input( '_conditional_field' . $k , $form_id ); ?>
+								<?php $metabox->field_input( '_conditional_operator' . $k, $form_id ); ?>
+								<?php $metabox->field_input( '_conditional_value' . $k, $form_id ); ?>
+
+								<?php if ( $k == '' ) { ?>
+									<p><a href="#" class="um-admin-new-condition button um-admin-tipsy-n" title="Add new condition"><i class="um-icon-plus" style="margin-right:0!important"></i></a></p>
+								<?php } else { ?>
+									<p><a href="#" class="um-admin-remove-condition button um-admin-tipsy-n" title="Remove condition"><i class="um-icon-close" style="margin-right:0!important"></i></a></p>
+								<?php } ?>
+
+								<div class="um-admin-clear"></div>
+							</div>
+
+							<?php
+						}
+
+					} else { ?>
+
+						<div class="um-admin-cur-condition">
+
+							<?php $metabox->field_input( '_conditional_action', $form_id ); ?>
+							<?php $metabox->field_input( '_conditional_field', $form_id ); ?>
+							<?php $metabox->field_input( '_conditional_operator', $form_id ); ?>
+							<?php $metabox->field_input( '_conditional_value', $form_id ); ?>
+
+							<p><a href="#" class="um-admin-new-condition button um-admin-tipsy-n" title="Add new condition"><i class="um-icon-plus" style="margin-right:0!important"></i></a></p>
+
+							<div class="um-admin-clear"></div>
+						</div>
+
+					<?php } ?>
+
+				</div>
+
+			</div>
+
+			<?php
 		}
 
 

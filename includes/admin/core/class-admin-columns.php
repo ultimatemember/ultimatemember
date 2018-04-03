@@ -29,6 +29,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Columns' ) ) {
 
 			// Add a post display state for special UM pages.
 			add_filter( 'display_post_states', array( &$this, 'add_display_post_states' ), 10, 2 );
+
+			add_filter( 'post_row_actions', array( &$this, 'remove_bulk_actions_um_form_inline' ) );
+		}
+
+
+		/**
+		 * This will remove the "Edit" bulk action, which is actually quick edit.
+		 *
+		 * @param array $actions
+		 *
+		 * @return array;
+		 */
+		function remove_bulk_actions_um_form_inline( $actions ) {
+			if ( UM()->admin()->is_plugin_post_type() ) {
+				unset( $actions['inline hide-if-no-js'] );
+				return $actions;
+			}
+			return $actions;
 		}
 
 
