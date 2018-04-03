@@ -437,7 +437,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->admin_settings();
 				$this->columns();
 				$this->admin_enqueue();
-				$this->functions();
 				$this->metabox();
 				$this->notices();
 				$this->users();
@@ -609,19 +608,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->classes['admin_enqueue'] = new um\admin\core\Admin_Enqueue();
 			}
 			return $this->classes['admin_enqueue'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * @return um\admin\core\Admin_Functions()
-		 */
-		function functions() {
-			if ( empty( $this->classes['admin_functions'] ) ) {
-				$this->classes['admin_functions'] = new um\admin\core\Admin_Functions();
-			}
-			return $this->classes['admin_functions'];
 		}
 
 
