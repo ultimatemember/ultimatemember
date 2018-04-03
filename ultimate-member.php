@@ -15,7 +15,13 @@ defined( 'ABSPATH' ) || exit;
 require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 $plugin_data = get_plugin_data( __FILE__ );
 
+/**
+ * Textdomain constant backward compatibility will be removed in future releases
+ *
+ * @todo remove in future releases
+ */
 define( 'UM_TEXTDOMAIN', 'ultimate-member' );
+
 define( 'um_url', plugin_dir_url( __FILE__ ) );
 define( 'um_path', plugin_dir_path( __FILE__ ) );
 define( 'um_plugin', plugin_basename( __FILE__ ) );

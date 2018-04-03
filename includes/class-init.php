@@ -1,6 +1,5 @@
-<?php
-// Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) exit;
+<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly.
+
 
 if ( ! class_exists( 'UM' ) ) {
 
@@ -14,7 +13,6 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Followers_API Followers_API()
 	 * @method UM_Friends_API Friends_API()
 	 * @method UM_Instagram_API Instagram_API()
-	 * @method UM_Invitations_API Invitations_API()
 	 * @method UM_Mailchimp_API Mailchimp_API()
 	 * @method UM_Messaging_API Messaging_API()
 	 * @method UM_myCRED_API myCRED_API()
@@ -72,8 +70,9 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return UM - Main instance
 		 */
 		static public function instance() {
-			if ( is_null( self::$instance ) )
+			if ( is_null( self::$instance ) ) {
 				self::$instance = new self();
+			}
 
 			return self::$instance;
 		}
@@ -186,14 +185,14 @@ if ( ! class_exists( 'UM' ) ) {
 					'sv_SE' => 'Svenska',
 					'pl_PL' => 'Polski',
 					'cs_CZ' => 'Czech',
-					'el' => 'Greek',
+					'el'    => 'Greek',
 					'id_ID' => 'Indonesian',
 					'zh_CN' => '简体中文',
 					'ru_RU' => 'Русский',
 					'tr_TR' => 'Türkçe',
 					'fa_IR' => 'Farsi',
 					'he_IL' => 'Hebrew',
-					'ar' => 'العربية',
+					'ar'    => 'العربية',
 				);
 
 				/**
@@ -275,7 +274,7 @@ if ( ! class_exists( 'UM' ) ) {
 				// include hook files
 				add_action( 'plugins_loaded', array( &$this, 'init' ), 0 );
 
-				add_action( 'init', array( &$this, 'old_extensions_notice' ), 0 );
+				//add_action( 'init', array( &$this, 'old_extensions_notice' ), 0 );
 
 				//run activation
 				register_activation_hook( um_plugin, array( &$this, 'activation' ) );
@@ -294,7 +293,7 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * Show notice for customers with old extension's versions
 		 */
-		function old_extensions_notice() {
+		/*function old_extensions_notice() {
 			if ( ! is_admin() ) {
 				return;
 			}
@@ -326,10 +325,10 @@ if ( ! class_exists( 'UM' ) ) {
 
 			/*global $um_woocommerce;
 			remove_action( 'init', array( $um_woocommerce, 'plugin_check' ), 1 );
-			$um_woocommerce->plugin_inactive = true;*/
+			$um_woocommerce->plugin_inactive = true;*
 
 			echo '<div class="error"><p>' . sprintf( __( '<strong>%s %s</strong> requires 2.0 extensions. You have pre 2.0 extensions installed on your site. <br /> Please update %s extensions to latest versions. For more info see this <a href="%s" target="_blank">doc</a>.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, 'http://docs.ultimatemember.com/article/266-updating-to-2-0-versions-of-extensions' ) . '</p></div>';
-		}
+		}*/
 
 
 		/**
@@ -1249,6 +1248,7 @@ if ( ! class_exists( 'UM' ) ) {
 function UM() {
 	return UM::instance();
 }
+
 
 // Global for backwards compatibility.
 $GLOBALS['ultimatemember'] = UM();

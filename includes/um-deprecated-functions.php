@@ -2,7 +2,8 @@
 /**
  * Deprecated functions
  *
- * Where functions come to die.
+ * Where public functions come to die.
+ *
  *
  */
 

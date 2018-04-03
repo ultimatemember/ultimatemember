@@ -27,7 +27,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$this->templates_path = um_path . 'includes/admin/templates/';
 
 			add_action( 'admin_init', array( &$this, 'admin_init' ), 0 );
-			add_action( 'admin_notices', array( $this, 'check_wrong_install_folder' ), 3 );
+
 		}
 
 
@@ -51,28 +51,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			}
 
 			return false;
-		}
-
-
-		/**
-		 * Check if plugin is installed with correct folder
-		 */
-		function check_wrong_install_folder() {
-			$invalid_folder = false;
-
-			$slug_array = explode( '/', um_plugin );
-			if ( $slug_array[0] != 'ultimate-member' )
-				$invalid_folder = true;
-
-			if ( $invalid_folder ) { ?>
-
-				<div class="error">
-					<p>
-						<?php printf( __( 'You have installed <strong>%s</strong> with wrong folder name. Correct folder name is <strong>"ultimate-member"</strong>.', 'ultimate-member' ), ultimatemember_plugin_name ) ?>
-					</p>
-				</div>
-
-			<?php }
 		}
 
 

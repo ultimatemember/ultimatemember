@@ -76,7 +76,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			add_filter( 'um_change_settings_before_save', array( $this, 'remove_empty_values' ), 10, 1 );
 
 			//invalid licenses notice
-			add_action( 'admin_notices', array( $this, 'check_wrong_licenses' ) );
+			//add_action( 'admin_notices', array( $this, 'check_wrong_licenses' ) );
 
 			add_action( 'admin_init', array( &$this, 'um_download_install_info' ) );
 
