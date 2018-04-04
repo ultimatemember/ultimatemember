@@ -39,30 +39,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 			$this->necessary_packages = $this->need_run_upgrades();
 
 			if ( ! empty( $this->necessary_packages ) ) {
-				//add_action( 'admin_notices', array( $this, 'need_upgrade' ) );
-
 				$this->init_packages_ajax();
 				add_action( 'admin_menu', array( $this, 'admin_menu' ), 0 );
 
 				add_action( 'wp_ajax_um_run_package', array( $this, 'ajax_run_package' ) );
 				add_action( 'wp_ajax_um_get_packages', array( $this, 'ajax_get_packages' ) );
-			} /*else {
-				//add_action( 'admin_notices', array( $this, 'updated_successfully' ) );
-			}*/
-		}
-
-
-		function need_upgrade() {
-			?>
-				<div class="error"><p><?php printf( __( '<strong>%s version %s</strong> needs to be updated. Please visit to "Upgrade" page <a href="%s">here</a> and run the upgrade process.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, add_query_arg( array( 'page' => 'um_upgrade' ), admin_url( 'admin.php' ) ) ) ?></p></div>
-			<?php
-		}
-
-
-		function updated_successfully() {
-			if ( isset( $_GET['msg'] ) && 'updated' == $_GET['msg'] ) { ?>
-				<div class="updated"><p><?php _e( 'Successfully Upgraded', 'ultimate-member' ) ?></p></div>
-			<?php }
+			}
 		}
 
 

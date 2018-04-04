@@ -322,8 +322,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					//if current page not in exclude URLs
 					//get redirect URL if not set get login page by default
 					$redirect = UM()->options()->get( 'access_redirect' );
-					if ( ! $redirect )
+					if ( ! $redirect ) {
 						$redirect = um_get_core_page( 'login' );
+					}
 
 					$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect ) ), 'global' );
 				} else {
@@ -604,6 +605,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				} elseif ( '1' == $restriction['_um_accessible'] ) {
 					//if post for not logged in users and user is not logged in
 					if ( ! is_user_logged_in() ) {
+						$this->singular_page = true;
+
 						$filtered_posts[] = $post;
 						continue;
 					} else {
@@ -700,6 +703,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 						if ( empty( $restriction['_um_access_roles'] ) || false === array_search( '1', $restriction['_um_access_roles'] ) ) {
 							if ( $custom_restrict ) {
+								$this->singular_page = true;
+
 								$filtered_posts[] = $post;
 								continue;
 							}
@@ -707,6 +712,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							$user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
 
 							if ( isset( $user_can ) && $user_can && $custom_restrict ) {
+								$this->singular_page = true;
+
 								$filtered_posts[] = $post;
 								continue;
 							}

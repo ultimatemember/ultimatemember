@@ -542,7 +542,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				if ( isset( $_GET['msg'] ) && 'updated' == $_GET['msg'] ) {
 					$this->add_notice( 'upgrade', array(
 						'class'     => 'updated',
-						'message'   => '<p>' . __( 'Successfully Upgraded', 'ultimate-member' ) . '</p>',
+						'message'   => '<p>' . sprintf( __( '<strong>%s %s</strong> Successfully Upgraded', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version ) . '</p>',
 					), 4 );
 				}
 			}
