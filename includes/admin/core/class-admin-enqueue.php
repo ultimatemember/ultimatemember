@@ -12,7 +12,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 	 * @package um\admin\core
 	 */
 	class Admin_Enqueue {
+
+
+		/**
+		 * @var string
+		 */
 		var $js_url;
+
+
+		/**
+		 * @var string
+		 */
 		var $css_url;
 
 
@@ -356,27 +366,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 
 
 		/**
-		 * Boolean check if we're viewing UM backend
-		 *
-		 * @return bool
-		 */
-		function is_UM_admin() {
-			global $current_screen;
-
-			$screen_id = $current_screen->id;
-			if ( strstr( $screen_id, 'ultimatemember' ) || strstr( $screen_id, 'um_' ) || strstr( $screen_id, 'user' ) || strstr( $screen_id, 'profile' ) || $screen_id == 'nav-menus' ) return true;
-
-			global $post;
-			if ( isset( $post->post_type ) ) return true;
-
-			global $tax;
-			if ( isset( $tax->name ) ) return true;
-
-			return false;
-		}
-
-
-		/**
 		 * Adds class to our admin pages
 		 *
 		 * @param $classes
@@ -384,7 +373,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 * @return string
 		 */
 		function admin_body_class( $classes ) {
-			if ( $this->is_UM_admin() ) {
+			if ( UM()->admin()->is_um_screen() ) {
 				return "$classes um-admin";
 			}
 			return $classes;
@@ -395,7 +384,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 * Enqueue scripts and styles
 		 */
 		function admin_enqueue_scripts() {
-			if ( $this->is_UM_admin() ) {
+			if ( UM()->admin()->is_um_screen() ) {
 
 				/*if ( get_post_type() != 'shop_order' ) {
                     UM()->enqueue()->wp_enqueue_scripts();

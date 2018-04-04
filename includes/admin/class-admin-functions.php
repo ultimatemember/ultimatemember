@@ -25,10 +25,9 @@ if ( ! class_exists( 'um\admin\Admin_Functions' ) ) {
 		/**
 		 * Boolean check if we're viewing UM backend
 		 *
-		 * @todo global for all admin classes
 		 * @return bool
 		 */
-		function is_UM_admin_screen() {
+		function is_um_screen() {
 			global $current_screen;
 			$screen_id = $current_screen->id;
 

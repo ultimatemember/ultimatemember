@@ -121,20 +121,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 
 		/**
-		 * Boolean check if we're viewing UM backend
-		 *
-		 * @return bool
-		 */
-		function is_UM_admin() {
-			global $current_screen;
-			$screen_id = $current_screen->id;
-			if ( is_admin() && ( strstr( $screen_id, 'ultimatemember') || strstr( $screen_id, 'um_') || strstr($screen_id, 'user') || strstr($screen_id, 'profile') ) )
-				return true;
-			return false;
-		}
-
-
-		/**
 		 * Gets the role meta
 		 *
 		 * @param $id
@@ -1149,7 +1135,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		function load_modal_content() {
 
 			$screen = get_current_screen();
-			if ( $this->is_UM_admin() ) {
+			if ( UM()->admin()->is_um_screen() ) {
 				foreach ( glob( um_path . 'includes/admin/templates/modal/*.php' ) as $modal_content ) {
 					include_once $modal_content;
 				}
