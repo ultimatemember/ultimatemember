@@ -1034,12 +1034,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							)
 						),
 						array(
-							'id'       		=> 'menu_item_workaround',
-							'type'     		=> 'checkbox',
-							'label'    		=> __( 'WP Menu Item Custom Fields Workaround','ultimate-member' ),
-							'tooltip'	    => __( 'Turn on this option if you don\'t see WP Menu Item Restriction options','ultimate-member' ),
-						),
-						array(
 							'id'       		=> 'um_allow_tracking',
 							'type'     		=> 'checkbox',
 							'label'   		=> __( 'Allow Tracking','ultimate-member' ),

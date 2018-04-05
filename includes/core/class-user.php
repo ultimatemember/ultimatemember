@@ -651,6 +651,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 
 		/**
+		 * Remove cache for all users
+		 */
+		function remove_cache_all_users() {
+			global $wpdb;
+			$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'um_cache_userdata_%'" );
+		}
+
+
+		/**
 		 * This method lets you set a user. For example, to retrieve a profile or anything related to that user.
 		 *
 		 * @usage <?php UM()->user()->set( $user_id, $clean = false ); ?>
