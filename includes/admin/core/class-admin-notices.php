@@ -534,9 +534,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 		function need_upgrade() {
 			if ( ! empty( UM()->admin_upgrade()->necessary_packages ) ) {
+
+				$url = add_query_arg( array( 'page' => 'um_upgrade' ), admin_url( 'admin.php' ) );
+
+				ob_start(); ?>
+
+				<p>
+					<?php printf( __( '<strong>%s version %s</strong> needs to be updated for correct working.<br />It is necessary to update the structure of the database and options that are associated with <strong>%s %s</strong>.<br />Please visit <a href="%s">"Upgrade"</a> page and run the upgrade process.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, ultimatemember_version, $url ); ?>
+				</p>
+
+				<p>
+					<a href="<?php echo esc_url( $url ) ?>" class="button button-primary"><?php _e( 'Upgrade Now', 'ultimate-member' ) ?></a>
+					&nbsp;
+				</p>
+
+				<?php $message = ob_get_clean();
+
 				$this->add_notice( 'upgrade', array(
 					'class'     => 'error',
-					'message'   => '<p>' . sprintf( __( '<strong>%s version %s</strong> needs to be updated. Please visit to "Upgrade" page <a href="%s">here</a> and run the upgrade process.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, add_query_arg( array( 'page' => 'um_upgrade' ), admin_url( 'admin.php' ) ) ) . '</p>',
+					'message'   => $message,
 				), 4 );
 			} else {
 				if ( isset( $_GET['msg'] ) && 'updated' == $_GET['msg'] ) {

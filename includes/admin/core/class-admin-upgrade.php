@@ -140,12 +140,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 		 * Upgrade Menu Callback Page
 		 */
 		function upgrade_page() {
-			$um_last_version_upgrade = get_option( 'um_last_version_upgrade' ); ?>
+			$um_last_version_upgrade = get_option( 'um_last_version_upgrade', __( 'empty', 'ultimate-member' ) ); ?>
 
 			<div class="wrap">
-				<h2><?php _e( 'Ultimate Member - Upgrade Process', 'ultimate-member' ) ?></h2>
-				<p>You have installed <?php echo ultimatemember_version ?> you need to upgrade your previous <?php echo $um_last_version_upgrade ?></p>
-				<h4>Upgrade Log</h4>
+				<h2><?php printf( __( '%s - Upgrade Process', 'ultimate-member' ), ultimatemember_plugin_name ) ?></h2>
+				<p><?php printf( __( 'You have installed %s version. Your latest DB version is %s. Before the click to "Run" button make sure that did the following:', 'ultimate-member' ), ultimatemember_version, $um_last_version_upgrade ) ?></p>
+				<ul style="list-style: inside;">
+					<li><?php _e( 'Create full site\'s backup.', 'ultimate-member' ) ?></li>
+					<li><?php _e( 'Set maintenance mode (if you need)', 'ultimate-member' ) ?></li>
+					<li><?php _e( 'You have nice Internet connection', 'ultimate-member' ) ?></li>
+				</ul>
+				<p><?php _e( 'After the click to "Run" button, the update process will be started. All information will be displayed in "Upgrade Log" field.', 'ultimate-member' ); ?></p>
+				<p><?php _e( 'If the update was successful, you will see a corresponding message. Otherwise, contact technical support if the update failed.', 'ultimate-member' ); ?></p>
+				<h4><?php printf( __( 'Upgrade Log' ), ultimatemember_plugin_name ) ?></h4>
 				<div id="upgrade_log" style="width: 100%;height:300px; overflow: auto;border: 1px solid #a1a1a1;margin: 0 0 10px 0;"></div>
 				<div>
 					<input type="button" id="run_upgrade" class="button button-primary" value="<?php esc_attr_e( 'Run', 'ultimate-member' ) ?>"/>
