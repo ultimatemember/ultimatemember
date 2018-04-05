@@ -15,28 +15,46 @@ $registration_forms = $forms_query->query( array(
 			'value' => 'register'
 		),
 		array(
-			'key'   => '_um_register_use_globals',
-			'value' => true
-		)
+			'relation' => 'OR',
+			array(
+				'key'   => '_um_register_use_globals',
+				'compare' => 'NOT EXISTS'
+			),
+			array(
+				'key'   => '_um_register_use_globals',
+				'value' => true,
+				'compare' => '!='
+			)
+		),
 	),
 	'fields' => 'ids'
 ) );
 
-$login_forms = $forms_query->query( array(
-	'post_type' => 'um_form',
-	'meta_query' => array(
-		'relation' => 'AND',
-		array(
-			'key'   => '_um_mode',
-			'value' => 'login'
+	$forms_query = new WP_Query;
+	$login_forms = $forms_query->query( array(
+		'post_type' => 'um_form',
+		'meta_query' => array(
+			'relation' => 'AND',
+			array(
+				'key'   => '_um_mode',
+				'value' => 'login'
+			),
+			array(
+				'relation' => 'OR',
+				array(
+					'key'   => '_um_login_use_globals',
+					'compare' => 'NOT EXISTS'
+				),
+				array(
+					'key'   => '_um_login_use_globals',
+					'value' => true,
+					'compare' => '!='
+				)
+			),
+
 		),
-		array(
-			'key'   => '_um_login_use_globals',
-			'value' => true
-		)
-	),
-	'fields' => 'ids'
-) );
+		'fields' => 'ids'
+	) );
 
 $profile_forms = $forms_query->query( array(
 	'post_type' => 'um_form',
@@ -47,9 +65,17 @@ $profile_forms = $forms_query->query( array(
 			'value' => 'profile'
 		),
 		array(
-			'key'   => '_um_profile_use_globals',
-			'value' => true
-		)
+			'relation' => 'OR',
+			array(
+				'key'   => '_um_profile_use_globals',
+				'compare' => 'NOT EXISTS'
+			),
+			array(
+				'key'   => '_um_profile_use_globals',
+				'value' => true,
+				'compare' => '!='
+			)
+		),
 	),
 	'fields' => 'ids'
 ) );
