@@ -156,7 +156,7 @@ a.um-delete{ color: #a00; }
 .ui-tooltip.um_tooltip {
 	padding: 8px;
 	color: #eeeeee !important;
-	background-color: #333 !important;
+	background: #333 !important;
 	position: absolute;
 	z-index: 1000000;
 	max-width: 300px;

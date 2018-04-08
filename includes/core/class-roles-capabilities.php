@@ -281,6 +281,24 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 
 
 		/**
+		 * Remove user role
+		 *
+		 * @param $user_id
+		 * @param $role
+		 */
+		function set_role_wp( $user_id, $role ) {
+			// Validate user id
+			$user = get_userdata( $user_id );
+
+			// User exists
+			if ( ! empty( $user ) ) {
+				// Remove role
+				$user->add_role( $role );
+			}
+		}
+
+
+		/**
 		 * Set roles to user (remove all previous roles)
 		 * make user only with $roles roles
 		 *

@@ -154,11 +154,19 @@ function um_upgrade_update_forum_per_page20beta1() {
 
 		$roles_associations = get_option( 'um_roles_associations' );
 
-		$bb_forums = get_posts( array(
+		/*$bb_forums = get_posts( array(
 			'post_type'     => 'forum',
 			'paged'         => $_POST['page'],
 			'numberposts'   => $posts_per_page,
 			'fields'        => 'ids'
+		) );*/
+
+		$p_query = new WP_Query;
+		$bb_forums = $p_query->query( array(
+			'post_type'         => 'forum',
+			'paged'             => $_POST['page'],
+			'posts_per_page'    => $posts_per_page,
+			'fields'            => 'ids'
 		) );
 
 		foreach ( $bb_forums as $forum_id ) {
@@ -215,13 +223,20 @@ function um_upgrade_update_products_per_page20beta1() {
 
 		$roles_associations = get_option( 'um_roles_associations' );
 
-		$wc_products = get_posts( array(
+		/*$wc_products = get_posts( array(
 			'post_type'     => 'product',
 			'numberposts'   => $posts_per_page,
 			'paged'         => $_POST['page'],
 			'fields'        => 'ids'
-		) );
+		) );*/
 
+		$p_query = new WP_Query;
+		$wc_products = $p_query->query( array(
+			'post_type'         => 'product',
+			'paged'             => $_POST['page'],
+			'posts_per_page'    => $posts_per_page,
+			'fields'            => 'ids'
+		) );
 
 		foreach ( $wc_products as $product_id ) {
 			$woo_product_role = get_post_meta( $product_id, '_um_woo_product_role', true );

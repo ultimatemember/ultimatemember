@@ -1,10 +1,17 @@
 <?php
 $roles_associations = get_option( 'um_roles_associations' );
 
-$mc_lists = get_posts( array(
+/*$mc_lists = get_posts( array(
 	'post_type'     => 'um_mailchimp',
 	'numberposts'   => -1,
 	'fields'        => 'ids'
+) );*/
+
+$p_query = new WP_Query;
+$mc_lists = $p_query->query( array(
+	'post_type'         => 'um_mailchimp',
+	'posts_per_page'    => -1,
+	'fields'            => 'ids'
 ) );
 
 foreach ( $mc_lists as $list_id ) {

@@ -29,12 +29,21 @@ UM()->options()->update( 'restricted_access_taxonomy_metabox', $all_taxonomies )
 
 $roles_array = UM()->roles()->get_roles( false, array( 'administrator' ) );
 
-$posts = get_posts( array(
+/*$posts = get_posts( array(
 	'post_type'     => 'any',
 	'meta_key'      => '_um_custom_access_settings',
 	'meta_value'    => '1',
 	'fields'        => 'ids',
 	'numberposts'   => -1
+) );*/
+
+$p_query = new WP_Query;
+$posts = $p_query->query( array(
+	'post_type'         => 'any',
+	'meta_key'          => '_um_custom_access_settings',
+	'meta_value'        => '1',
+	'posts_per_page'    => -1,
+	'fields'            => 'ids'
 ) );
 
 if ( ! empty( $posts ) ) {

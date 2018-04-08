@@ -5,10 +5,11 @@ $roles_associations = get_option( 'um_roles_associations' );
 //"use_global" meta  change to "_use_custom_settings"
 
 //also update for forms metadata where "member" or "admin"
-$forms = get_posts( array(
-	'post_type'     => 'um_form',
-	'numberposts'   => -1,
-	'fields'        => 'ids'
+$forms_query = new WP_Query;
+$forms = $forms_query->query( array(
+	'post_type'         => 'um_form',
+	'posts_per_page'    => -1,
+	'fields'            => 'ids'
 ) );
 
 foreach ( $forms as $form_id ) {
@@ -30,10 +31,11 @@ foreach ( $forms as $form_id ) {
 
 //for metadata for all UM Member Directories
 //also update for forms metadata where "member" or "admin"
-$member_directories = get_posts( array(
-	'post_type'     => 'um_directory',
-	'numberposts'   => -1,
-	'fields'        => 'ids'
+$forms_query = new WP_Query;
+$member_directories = $forms_query->query( array(
+	'post_type'         => 'um_directory',
+	'posts_per_page'    => -1,
+	'fields'            => 'ids'
 ) );
 
 foreach ( $member_directories as $directory_id ) {

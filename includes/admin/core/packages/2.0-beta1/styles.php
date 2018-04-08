@@ -5,7 +5,6 @@ $old_options = get_option( 'um_options' );
 add_option( 'um_options_backup20', $old_options );
 
 $forms_query = new WP_Query;
-
 $registration_forms = $forms_query->query( array(
 	'post_type' => 'um_form',
 	'meta_query' => array(
@@ -27,35 +26,38 @@ $registration_forms = $forms_query->query( array(
 			)
 		),
 	),
+	'posts_per_page' => -1,
 	'fields' => 'ids'
 ) );
 
-	$forms_query = new WP_Query;
-	$login_forms = $forms_query->query( array(
-		'post_type' => 'um_form',
-		'meta_query' => array(
-			'relation' => 'AND',
-			array(
-				'key'   => '_um_mode',
-				'value' => 'login'
-			),
-			array(
-				'relation' => 'OR',
-				array(
-					'key'   => '_um_login_use_globals',
-					'compare' => 'NOT EXISTS'
-				),
-				array(
-					'key'   => '_um_login_use_globals',
-					'value' => true,
-					'compare' => '!='
-				)
-			),
-
+$forms_query = new WP_Query;
+$login_forms = $forms_query->query( array(
+	'post_type' => 'um_form',
+	'meta_query' => array(
+		'relation' => 'AND',
+		array(
+			'key'   => '_um_mode',
+			'value' => 'login'
 		),
-		'fields' => 'ids'
-	) );
+		array(
+			'relation' => 'OR',
+			array(
+				'key'   => '_um_login_use_globals',
+				'compare' => 'NOT EXISTS'
+			),
+			array(
+				'key'   => '_um_login_use_globals',
+				'value' => true,
+				'compare' => '!='
+			)
+		),
 
+	),
+	'posts_per_page' => -1,
+	'fields' => 'ids'
+) );
+
+$forms_query = new WP_Query;
 $profile_forms = $forms_query->query( array(
 	'post_type' => 'um_form',
 	'meta_query' => array(
@@ -77,6 +79,7 @@ $profile_forms = $forms_query->query( array(
 			)
 		),
 	),
+	'posts_per_page' => -1,
 	'fields' => 'ids'
 ) );
 
