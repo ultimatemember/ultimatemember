@@ -10,13 +10,25 @@ foreach ( $emails as $email_key => $value ) {
 	$theme_template_path = UM()->mail()->get_template_file( 'theme', $email_key );
 
 	if ( ! $in_theme ) {
-		$setting_value = UM()->options()->get( $email_key );
+		$html_email = UM()->options()->get( 'email_html' );
 
-		UM()->mail()->copy_email_template( $email_key );
+		if ( $html_email ) {
+			if ( ! UM()->mail()->copy_email_template( $email_key ) ) {
+				$setting_value = UM()->options()->get( $email_key );
 
-		$fp = fopen( $theme_template_path, "w" );
-		$result = fputs( $fp, $setting_value );
-		fclose( $fp );
+				$fp = fopen( $theme_template_path, "w" );
+				$result = fputs( $fp, $setting_value );
+				fclose( $fp );
+			} else {
+				$templates_in_theme++;
+			}
+		} else {
+			$setting_value = UM()->options()->get( $email_key );
+
+			$fp = fopen( $theme_template_path, "w" );
+			$result = fputs( $fp, $setting_value );
+			fclose( $fp );
+		}
 	} else {
 		$theme_template_path_html = UM()->mail()->get_template_file( 'theme', $email_key, true );
 
