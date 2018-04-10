@@ -801,6 +801,28 @@ function um_profile_header( $args ) {
 
 		<div class="um-profile-meta">
 
+            <?php
+            /**
+             * UM hook
+             *
+             * @type action
+             * @title um_before_profile_main_meta
+             * @description Insert before profile main meta block
+             * @input_vars
+             * [{"var":"$args","type":"array","desc":"Form Arguments"}]
+             * @change_log
+             * ["Since: 2.0.1"]
+             * @usage add_action( 'um_before_profile_main_meta', 'function_name', 10, 1 );
+             * @example
+             * <?php
+             * add_action( 'um_before_profile_main_meta', 'my_before_profile_main_meta', 10, 1 );
+             * function my_before_profile_main_meta( $args ) {
+             *     // your code here
+             * }
+             * ?>
+             */
+            do_action( 'um_before_profile_main_meta', $args ); ?>
+
 			<div class="um-main-meta">
 
 				<?php if ( $args['show_name'] ) { ?>
