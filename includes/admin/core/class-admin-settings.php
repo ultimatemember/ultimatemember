@@ -4,7 +4,7 @@ namespace um\admin\core;
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Admin_Settings' ) ) {
+if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 
 	/**
@@ -75,11 +75,7 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 
 			add_filter( 'um_change_settings_before_save', array( $this, 'remove_empty_values' ), 10, 1 );
 
-			//invalid licenses notice
-			add_action( 'admin_notices', array( $this, 'check_wrong_licenses' ) );
-
 			add_action( 'admin_init', array( &$this, 'um_download_install_info' ) );
-
 		}
 
 
@@ -1038,12 +1034,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 							)
 						),
 						array(
-							'id'       		=> 'menu_item_workaround',
-							'type'     		=> 'checkbox',
-							'label'    		=> __( 'WP Menu Item Custom Fields Workaround','ultimate-member' ),
-							'tooltip'	    => __( 'Turn on this option if you don\'t see WP Menu Item Restriction options','ultimate-member' ),
-						),
-						array(
 							'id'       		=> 'um_allow_tracking',
 							'type'     		=> 'checkbox',
 							'label'   		=> __( 'Allow Tracking','ultimate-member' ),
@@ -1131,8 +1121,8 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 		 * Setup admin menu
 		 */
 		function primary_admin_menu() {
-            add_submenu_page( 'ultimatemember', __( 'Settings', 'ultimate-member' ), __( 'Settings', 'ultimate-member' ), 'manage_options', 'um_options', array( &$this, 'settings_page' ) );
-        }
+			add_submenu_page( 'ultimatemember', __( 'Settings', 'ultimate-member' ), __( 'Settings', 'ultimate-member' ), 'manage_options', 'um_options', array( &$this, 'settings_page' ) );
+		}
 
 
 		/**
@@ -1663,52 +1653,6 @@ if ( ! class_exists( 'Admin_Settings' ) ) {
 					delete_option( "{$key}_edd_answer" );
 
 			}
-		}
-
-
-		/**
-		 *
-		 */
-		function check_wrong_licenses() {
-			$invalid_license = 0;
-			$arr_inactive_license_keys = array();
-
-			if ( empty( $this->settings_structure['licenses']['fields'] ) )
-				return;
-
-			foreach ( $this->settings_structure['licenses']['fields'] as $field_data ) {
-				$license = get_option( "{$field_data['id']}_edd_answer" );
-                
-				if ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license )
-					continue;
-
-				if ( ( is_object( $license ) && 'inactive' == $license->license ) || 'inactive' == $license ){
-					$arr_inactive_license_keys[ ] = $license->item_name;
-				}
-
-				$invalid_license++;
-           
-			}
-
-			if ( ! empty(  $arr_inactive_license_keys ) ) { ?>
-
-				<div class="error">
-					<p>
-						<?php printf( __( 'There are %d inactive %s license keys for this site. This site is not authorized to get plugin updates. You can active this site on <a href="%s">www.UltimateMember.com</a>.', 'ultimate-member' ), count( $arr_inactive_license_keys ) , ultimatemember_plugin_name, 'https://ultimatemember.com' ) ; ?>
-					</p>
-				</div>
-
-			<?php }
-
-			if ( $invalid_license ) { ?>
-
-				<div class="error">
-					<p>
-						<?php printf( __( 'You have %d invalid or expired license keys for %s. Please go to the <a href="%s">Licenses page</a> to correct this issue.', 'ultimate-member' ), $invalid_license, ultimatemember_plugin_name, add_query_arg( array('page'=>'um_options', 'tab' => 'licenses'), admin_url( 'admin.php' ) ) ) ?>
-					</p>
-				</div>
-
-			<?php }
 		}
 
 

@@ -5,7 +5,7 @@ namespace um\core;
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Fields' ) ) {
+if ( ! class_exists( 'um\core\Fields' ) ) {
 
 
 	/**
@@ -448,18 +448,18 @@ if ( ! class_exists( 'Fields' ) ) {
 				$label = apply_filters( 'um_edit_label_all_fields', $label, $data );
 			}
 
-			$output .= '<label for="' . $key . UM()->form()->form_suffix . '">' . __( $label, UM_TEXTDOMAIN ) . '</label>';
+			$output .= '<label for="' . $key . UM()->form()->form_suffix . '">' . __( $label, 'ultimate-member' ) . '</label>';
 
 			if (isset( $data['help'] ) && !empty( $data['help'] ) && $this->viewing == false && !strstr( $key, 'confirm_user_pass' )) {
 
 				if (!UM()->mobile()->isMobile()) {
 					if (!isset( $this->disable_tooltips )) {
-						$output .= '<span class="um-tip um-tip-w" title="' . __( $data['help'], UM_TEXTDOMAIN ) . '"><i class="um-icon-help-circled"></i></span>';
+						$output .= '<span class="um-tip um-tip-w" title="' . __( $data['help'], 'ultimate-member' ) . '"><i class="um-icon-help-circled"></i></span>';
 					}
 				}
 
 				if (UM()->mobile()->isMobile() || isset( $this->disable_tooltips )) {
-					$output .= '<span class="um-tip-text">' . __( $data['help'], UM_TEXTDOMAIN ) . '</span>';
+					$output .= '<span class="um-tip-text">' . __( $data['help'], 'ultimate-member' ) . '</span>';
 				}
 
 			}
@@ -2561,7 +2561,7 @@ if ( ! class_exists( 'Fields' ) ) {
 								$field_value = $v;
 							}
 
-							$output .= '>' . __( $um_field_checkbox_item_title, UM_TEXTDOMAIN ) . '</option>';
+							$output .= '>' . __( $um_field_checkbox_item_title, 'ultimate-member' ) . '</option>';
 
 
 						}
@@ -2876,7 +2876,7 @@ if ( ! class_exists( 'Fields' ) ) {
 							$output .= ' />';
 
 							$output .= '<span class="um-field-radio-state"><i class="' . $class . '"></i></span>';
-							$output .= '<span class="um-field-radio-option">' . __( $um_field_checkbox_item_title, UM_TEXTDOMAIN ) . '</span>';
+							$output .= '<span class="um-field-radio-option">' . __( $um_field_checkbox_item_title, 'ultimate-member' ) . '</span>';
 							$output .= '</label>';
 
 							if ($i % 2 == 0) {
@@ -3030,7 +3030,7 @@ if ( ! class_exists( 'Fields' ) ) {
 						 * ?>
 						 */
 						$um_field_checkbox_item_title = apply_filters( "um_field_checkbox_item_title", $um_field_checkbox_item_title, $key, $v, $data );
-						$output .= '<span class="um-field-checkbox-option">' . __( $um_field_checkbox_item_title, UM_TEXTDOMAIN ) . '</span>';
+						$output .= '<span class="um-field-checkbox-option">' . __( $um_field_checkbox_item_title, 'ultimate-member' ) . '</span>';
 						$output .= '</label>';
 
 						if ($i % 2 == 0) {
@@ -3075,7 +3075,7 @@ if ( ! class_exists( 'Fields' ) ) {
 					if (!empty( $fields )) {
 
 						$output .= '<div class="um-field-group" data-max_entries="' . $max_entries . '">
-                                <div class="um-field-group-head"><i class="um-icon-plus"></i>' . __( $label, UM_TEXTDOMAIN ) . '</div>';
+                                <div class="um-field-group-head"><i class="um-icon-plus"></i>' . __( $label, 'ultimate-member' ) . '</div>';
 						$output .= '<div class="um-field-group-body"><a href="#" class="um-field-group-cancel"><i class="um-icon-close"></i></a>';
 
 						foreach ($fields as $subkey => $subdata) {
@@ -3137,7 +3137,7 @@ if ( ! class_exists( 'Fields' ) ) {
 			global $wp_roles;
 			$role_keys = array_map( function( $item ) {
 				return 'um_' . $item;
-			}, get_option( 'um_roles' ) );
+			}, get_option( 'um_roles', array() ) );
 			$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
 
 			$roles = UM()->roles()->get_roles( false, $exclude_roles );

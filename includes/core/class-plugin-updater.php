@@ -4,7 +4,7 @@ namespace um\core;
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Plugin_Updater' ) ) {
+if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 
 
 	/**

@@ -4,7 +4,7 @@ namespace um\admin\core;
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Admin_Metabox' ) ) {
+if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 
 	/**
@@ -40,20 +40,83 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
 
 			//roles metaboxes
 			add_action( 'um_roles_add_meta_boxes', array( &$this, 'add_metabox_role' ) );
+
+			add_filter( 'um_builtin_validation_types_continue_loop', array( &$this, 'validation_types_continue_loop' ), 1, 4 );
+			add_filter( 'um_restrict_content_hide_metabox', array( &$this, 'hide_metabox_restrict_content_shop' ), 10, 1 );
+			add_filter( 'um_admin_access_settings_fields', array( &$this, 'wpml_post_options' ), 10, 2 );
 		}
 
 
 		/**
-		 * Boolean check if we're viewing UM backend
+		 * Add option for WPML
+		 *
+		 * @param array $fields
+		 * @param array $data
+		 *
+		 * @return array
+		 */
+		function wpml_post_options( $fields, $data ) {
+			global $post;
+
+			if ( ! function_exists( 'icl_get_current_language' ) ) {
+				return $fields;
+			}
+
+			if ( empty( $post->post_type ) || $post->post_type != 'page' ) {
+				return $fields;
+			}
+
+			$fields[] = array(
+				'id'    => '_um_wpml_user',
+				'type'  => 'checkbox',
+				'label' => __( 'This is a translation of UM profile page?', 'ultimate-member' ),
+				'value' => ! empty( $data['_um_wpml_user'] ) ? $data['_um_wpml_user'] : 0
+			);
+
+			$fields[] = array(
+				'id'    => '_um_wpml_account',
+				'type'  => 'checkbox',
+				'label' => __( 'This is a translation of UM account page?', 'ultimate-member' ),
+				'value' => ! empty( $data['_um_wpml_account'] ) ? $data['_um_wpml_account'] : 0
+			);
+
+			return $fields;
+		}
+
+
+		/**
+		 * @param $hide
 		 *
 		 * @return bool
 		 */
-		function is_UM_admin() {
-			global $current_screen;
-			$screen_id = $current_screen->id;
-			if ( is_admin() && ( strstr( $screen_id, 'ultimatemember') || strstr( $screen_id, 'um_') || strstr($screen_id, 'user') || strstr($screen_id, 'profile') ) )
+		function hide_metabox_restrict_content_shop( $hide ) {
+			if ( function_exists( 'wc_get_page_id' ) && ! empty( $_GET['post'] ) &&
+			     $_GET['post'] == wc_get_page_id( 'shop' ) ) {
 				return true;
-			return false;
+			}
+
+			return $hide;
+		}
+
+
+		/**
+		 * Filter validation types on loop
+		 *
+		 * @param $break
+		 * @param $key
+		 * @param $form_id
+		 * @param $field_array
+		 *
+		 * @return bool
+		 */
+		function validation_types_continue_loop( $break, $key, $form_id, $field_array ) {
+
+			// show unique username validation only for user_login field
+			if ( isset( $field_array['metakey'] ) && $field_array['metakey'] == 'user_login' && $key !== 'unique_username' ) {
+				return false;
+			}
+
+			return $break;
 		}
 
 
@@ -1072,7 +1135,7 @@ if ( ! class_exists( 'Admin_Metabox' ) ) {
 		function load_modal_content() {
 
 			$screen = get_current_screen();
-			if ( $this->is_UM_admin() ) {
+			if ( UM()->admin()->is_um_screen() ) {
 				foreach ( glob( um_path . 'includes/admin/templates/modal/*.php' ) as $modal_content ) {
 					include_once $modal_content;
 				}

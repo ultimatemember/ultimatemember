@@ -4,7 +4,7 @@ namespace um\core;
 // Exit if executed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'AJAX_Common' ) ) {
+if ( ! class_exists( 'um\core\AJAX_Common' ) ) {
 
 
 	/**

@@ -4,7 +4,7 @@ namespace um\core;
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'REST_API' ) ) {
+if ( ! class_exists( 'um\core\REST_API' ) ) {
 
 
 	/**
@@ -1021,9 +1021,11 @@ if ( ! class_exists( 'REST_API' ) ) {
 					</tr>
 					</tbody>
 				</table>
-			<?php }
 
-			$content .= ob_get_clean();
+				<?php $content .= ob_get_clean();
+			}
+
+
 			return $content;
 		}
 

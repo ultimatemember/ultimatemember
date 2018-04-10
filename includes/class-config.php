@@ -427,6 +427,19 @@ if ( ! class_exists( 'um\Config' ) ) {
 					'recipient'   => 'user',
 					'default_active' => true
 				),
+				'changedaccount_email' => array(
+					'key'           => 'changedaccount_email',
+					'title'         => __( 'Account Updated Email','ultimate-member' ),
+					'subject'       => 'Your account at {site_name} was updated',
+					'body'          => 'Hi {display_name},<br /><br />' .
+					                   'You recently updated your {site_name} account.<br /><br />' .
+					                   'If you did not make this change and believe your {site_name} account has been compromised, please contact us at the following email address: {admin_email}<br /><br />' .
+					                   'Thanks,<br />' .
+					                   '{site_name}',
+					'description'   => __('Whether to send the user an email when he updated their account','ultimate-member'),
+					'recipient'     => 'user',
+					'default_active'=> true
+				),
 				'notification_new_user' => array(
 					'key'           => 'notification_new_user',
 					'title'         => __( 'New User Notification','ultimate-member' ),
@@ -516,7 +529,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'cover_min_width'                       => 1000,
 				'profile_photo_max_size'                => 999999999,
 				'cover_photo_max_size'                  => 999999999,
-				'menu_item_workaround'                  => 0,
 				'custom_roles_increment'                => 1,
 			);
 

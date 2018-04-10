@@ -4,7 +4,7 @@ namespace um\core;
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Access' ) ) {
+if ( ! class_exists( 'um\core\Access' ) ) {
 
 
 	/**
@@ -322,8 +322,9 @@ if ( ! class_exists( 'Access' ) ) {
 					//if current page not in exclude URLs
 					//get redirect URL if not set get login page by default
 					$redirect = UM()->options()->get( 'access_redirect' );
-					if ( ! $redirect )
+					if ( ! $redirect ) {
 						$redirect = um_get_core_page( 'login' );
+					}
 
 					$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect ) ), 'global' );
 				} else {
@@ -567,7 +568,7 @@ if ( ! class_exists( 'Access' ) ) {
 		 * Restrict content new logic
 		 *
 		 * @param $posts
-		 * @param $query
+		 * @param \WP_Query $query
 		 * @return array
 		 */
 		function filter_protected_posts( $posts, $query ) {
@@ -581,12 +582,21 @@ if ( ! class_exists( 'Access' ) ) {
 
 			//other filter
 			foreach ( $posts as $post ) {
+
+				//Woocommerce AJAX fixes....remove filtration on wc-ajax which goes to Front Page
+				if ( ! empty( $_GET['wc-ajax'] ) /*&& $query->is_front_page()*/ ) {
+					$filtered_posts[] = $post;
+					continue;
+				}
+
 				$restriction = $this->get_post_privacy_settings( $post );
 
 				if ( ! $restriction ) {
 					$filtered_posts[] = $post;
 					continue;
 				}
+
+				$is_singular = $query->is_singular();
 
 				//post is private
 				if ( '0' == $restriction['_um_accessible'] ) {
@@ -595,6 +605,8 @@ if ( ! class_exists( 'Access' ) ) {
 				} elseif ( '1' == $restriction['_um_accessible'] ) {
 					//if post for not logged in users and user is not logged in
 					if ( ! is_user_logged_in() ) {
+						$this->singular_page = true;
+
 						$filtered_posts[] = $post;
 						continue;
 					} else {
@@ -604,7 +616,7 @@ if ( ! class_exists( 'Access' ) ) {
 							continue;
 						}
 
-						if ( empty( $query->is_singular ) ) {
+						if ( empty( $is_singular ) ) {
 							//if not single query when exclude if set _um_access_hide_from_queries
 							if ( empty( $restriction['_um_access_hide_from_queries'] ) ) {
 
@@ -691,6 +703,8 @@ if ( ! class_exists( 'Access' ) ) {
 
 						if ( empty( $restriction['_um_access_roles'] ) || false === array_search( '1', $restriction['_um_access_roles'] ) ) {
 							if ( $custom_restrict ) {
+								$this->singular_page = true;
+
 								$filtered_posts[] = $post;
 								continue;
 							}
@@ -698,12 +712,14 @@ if ( ! class_exists( 'Access' ) ) {
 							$user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
 
 							if ( isset( $user_can ) && $user_can && $custom_restrict ) {
+								$this->singular_page = true;
+
 								$filtered_posts[] = $post;
 								continue;
 							}
 						}
 
-						if ( empty( $query->is_singular ) ) {
+						if ( empty( $is_singular ) ) {
 							//if not single query when exclude if set _um_access_hide_from_queries
 							if ( empty( $restriction['_um_access_hide_from_queries'] ) ) {
 
@@ -790,7 +806,7 @@ if ( ! class_exists( 'Access' ) ) {
 						}
 
 					} else {
-						if ( empty( $query->is_singular ) ) {
+						if ( empty( $is_singular ) ) {
 							if ( empty( $restriction['_um_access_hide_from_queries'] ) ) {
 
 								if ( ! isset( $restriction['_um_noaccess_action'] ) || '0' == $restriction['_um_noaccess_action'] ) {

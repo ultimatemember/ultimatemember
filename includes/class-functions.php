@@ -343,5 +343,32 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			return apply_filters( 'um_locate_template', $template, $template_name, $path );
 		}
 
+
+		function cpt_list() {
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_cpt_list
+			 * @description Extend UM Custom Post Types
+			 * @input_vars
+			 * [{"var":"$list","type":"array","desc":"Custom Post Types list"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_cpt_list', 'function_name', 10, 1 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_cpt_list', 'my_cpt_list', 10, 1 );
+			 * function my_admin_pending_queue( $list ) {
+			 *     // your code here
+			 *     return $list;
+			 * }
+			 * ?>
+			 */
+			$cpt = apply_filters( 'um_cpt_list', array( 'um_form', 'um_directory' ) );
+			return $cpt;
+		}
+
 	}
 }

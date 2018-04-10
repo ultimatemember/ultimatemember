@@ -3,6 +3,16 @@
 	color: #555;
 }
 
+.um-admin-notice.upgraded {
+	border-color: #0085ba !important;
+	color: #555;
+}
+
+.um-admin-notice.error {
+	border-color: #dc3232 !important;
+	color: #555;
+}
+
 .um-admin-notice a.button-primary {
 	background-color: #0085ba !important;
 	border-color: #0085ba !important;
@@ -144,39 +154,39 @@ a.um-delete{ color: #a00; }
 
 /*Tooltip*/
 .ui-tooltip.um_tooltip {
-    padding: 8px;
-    color: #eeeeee;
-    background-color: #333;
-    position: absolute;
-    z-index: 1000000;
-    max-width: 300px;
-    font-size: 12px;
-    border-radius: 5px;
+	padding: 8px;
+	color: #eeeeee !important;
+	background: #333 !important;
+	position: absolute;
+	z-index: 1000000;
+	max-width: 300px;
+	font-size: 12px;
+	border-radius: 5px;
 	border: none !important;
 	text-shadow: none !important;
 }
 
 .um_tooltip.dashicons,
 .um_tooltip.dashicons:before {
-    height:22px;
+	height:22px;
 }
 
 .um_tooltip.dashicons-editor-help::before {
-    float: left;
-    font-size: 20px;
-    line-height: 20px;
-    color: #333 !important;
+	float: left;
+	font-size: 20px;
+	line-height: 20px;
+	color: #333 !important;
 }
 .um_tooltip {
-    cursor: pointer;
-    vertical-align: middle;
+	cursor: pointer;
+	vertical-align: middle;
 }
 .um_tooltip:hover {
-    opacity: 1;
+	opacity: 1;
 }
 
 .um_tooltip:hover:before {
-    opacity: 0.8;
+	opacity: 0.8;
 }
 
 

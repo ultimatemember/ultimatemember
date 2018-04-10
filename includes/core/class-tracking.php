@@ -4,7 +4,7 @@ namespace um\core;
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Tracking' ) ) {
+if ( ! class_exists( 'um\core\Tracking' ) ) {
 
 
 	/**
@@ -26,8 +26,6 @@ if ( ! class_exists( 'Tracking' ) ) {
 		public function __construct() {
 
 			$this->schedule_send();
-
-			add_action( 'admin_notices', array( $this, 'admin_notices' ), 10 );
 
 			add_action( 'um_admin_do_action__opt_into_tracking', array( $this, 'um_admin_do_action__opt_into_tracking' ) );
 			add_action( 'um_admin_do_action__opt_out_of_tracking', array( $this, 'um_admin_do_action__opt_out_of_tracking' ) );
@@ -181,34 +179,6 @@ if ( ! class_exists( 'Tracking' ) ) {
 		 */
 		private function schedule_send() {
 			add_action( 'um_daily_scheduled_events', array( $this, 'send_checkin' ) );
-		}
-
-
-		/**
-		 * Show admin notices
-		 */
-		public function admin_notices() {
-
-			if( ! current_user_can( 'manage_options' ) )
-				return;
-
-			$hide_notice = get_option('um_tracking_notice');
-
-			if ( $hide_notice )
-				return;
-
-			$optin_url  =  esc_url( add_query_arg( 'um_adm_action', 'opt_into_tracking' ) );
-			$optout_url =  esc_url( add_query_arg( 'um_adm_action', 'opt_out_of_tracking' ) );
-
-			echo '<div class="updated um-admin-notice"><p>';
-
-			printf( __( 'Thanks for installing <strong>%s</strong>! The core plugin is free but we also sell extensions which allow us to continue developing and supporting the plugin full time. If you subscribe to our mailing list (no spam) we will email you a 20%% discount code which you can use to purchase the <a href="%s" target="_blank">extensions bundle</a>.', 'ultimate-member' ), ultimatemember_plugin_name, 'https://ultimatemember.com/core-extensions-bundle/' );
-
-			echo '</p>';
-
-			echo '<p><a href="' . esc_url( $optin_url ) . '" class="button button-primary">' . __( 'Subscribe to mailing list', 'ultimate-member' ) . '</a>';
-			echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'No thanks', 'ultimate-member' ) . '</a></p></div>';
-
 		}
 
 	}

@@ -3,7 +3,7 @@ namespace um\core;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Router' ) ) {
+if ( ! class_exists( 'um\core\Router' ) ) {
 
 
 	/**

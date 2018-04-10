@@ -4,7 +4,7 @@ namespace um\core;
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Enqueue' ) ) {
+if ( ! class_exists( 'um\core\Enqueue' ) ) {
 
 
 	/**
@@ -73,45 +73,47 @@ if ( ! class_exists( 'Enqueue' ) ) {
 		function wp_enqueue_scripts() {
 			global $post;
 
-			$this->suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG || defined('UM_SCRIPT_DEBUG') ) ? '' : '.min';
+			$this->suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG || defined( 'UM_SCRIPT_DEBUG' ) ) ? '' : '.min';
 
-			$exclude = UM()->options()->get( 'js_css_exclude' );
-			if ( is_array( $exclude ) ) {
-				array_filter( $exclude );
-			}
-			if ( $exclude && !is_admin() && is_array( $exclude ) ) {
-
+			if ( ! is_admin() ) {
 				$c_url = UM()->permalinks()->get_current_url( get_option( 'permalink_structure' ) );
 
-				foreach( $exclude as $match ) {
-					if ( ! empty( $c_url ) && strstr( $c_url, untrailingslashit( $match ) ) ) {
-						return;
-					}
+				$exclude = UM()->options()->get( 'js_css_exclude' );
+				if ( is_array( $exclude ) ) {
+					array_filter( $exclude );
 				}
 
-			}
-
-			$include = UM()->options()->get('js_css_include');
-			if ( is_array( $include ) ) {
-				array_filter( $include );
-			}
-			if ( $include && !is_admin() && is_array( $include ) ) {
-
-				$c_url = UM()->permalinks()->get_current_url( get_option('permalink_structure') );
-
-				foreach( $include as $match ) {
-					if ( strstr( $c_url, untrailingslashit( $match ) ) ) {
-						$force_load = true;
-					} else {
-						if ( !isset( $force_load ) ) {
-							$force_load = false;
+				if ( $exclude && is_array( $exclude ) ) {
+					foreach ( $exclude as $match ) {
+						$sub_match = untrailingslashit( $match );
+						if ( ! empty( $c_url ) && ! empty( $sub_match ) && strstr( $c_url, $sub_match ) ) {
+							return;
 						}
 					}
 				}
 
+				$include = UM()->options()->get( 'js_css_include' );
+				if ( is_array( $include ) ) {
+					array_filter( $include );
+				}
+
+				if ( $include && is_array( $include ) ) {
+					foreach ( $include as $match ) {
+						$sub_match = untrailingslashit( $match );
+						if ( ! empty( $c_url ) && ! empty( $sub_match ) && strstr( $c_url, $sub_match ) ) {
+							$force_load = true;
+						} else {
+							if ( ! isset( $force_load ) ) {
+								$force_load = false;
+							}
+						}
+					}
+				}
 			}
 
-			if ( isset($force_load) && $force_load == false ) return;
+			if ( isset( $force_load ) && $force_load == false ) {
+				return;
+			}
 
 			/**
 			 * UM hook

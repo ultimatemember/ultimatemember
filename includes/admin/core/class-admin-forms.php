@@ -4,7 +4,7 @@ namespace um\admin\core;
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Admin_Forms' ) ) {
+if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 
 	/**

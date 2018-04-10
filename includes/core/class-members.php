@@ -4,7 +4,7 @@ namespace um\core;
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Members' ) ) {
+if ( ! class_exists( 'um\core\Members' ) ) {
 
 
 	/**
@@ -366,7 +366,7 @@ if ( ! class_exists( 'Members' ) ) {
 
 			$query_args['paged'] = $members_page;
 
-			if ( ! um_user( 'can_view_all' ) && is_user_logged_in() ) {
+			if ( ! UM()->roles()->um_user_can( 'can_view_all' ) && is_user_logged_in() ) {
 				//unset( $query_args );
 				$query_args = array();
 			}
@@ -393,7 +393,6 @@ if ( ! class_exists( 'Members' ) ) {
 			do_action( 'um_user_before_query', $query_args );
 
 			$users = new \WP_User_Query( $query_args );
-
 			/**
 			 * UM hook
 			 *
