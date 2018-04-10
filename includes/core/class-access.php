@@ -596,7 +596,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					continue;
 				}
 
-				$is_singular = $query->is_singular();
+				if ( is_object( $query ) ) {
+					$is_singular = $query->is_singular();
+				} else {
+					$is_singular = ! empty( $query->is_singular ) ? true : false;
+				}
 
 				//post is private
 				if ( '0' == $restriction['_um_accessible'] ) {
