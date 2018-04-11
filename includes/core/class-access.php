@@ -924,6 +924,10 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			if ( empty( $menu_items ) )
 				return $menu_items;
 
+			if ( current_user_can( 'administrator' ) ) {
+				return $menu_items;
+			}
+
 			$filtered_items = array();
 
 			//other filter

@@ -36,6 +36,10 @@ if ( ! is_admin() ) {
 	 */
 	function um_conditional_nav_menu( $items, $menu, $args ) {
 
+		if ( current_user_can( 'administrator' ) ) {
+			return $items;
+		}
+
 		$hide_children_of = array();
 
 		um_fetch_user( get_current_user_id() );

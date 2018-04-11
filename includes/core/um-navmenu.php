@@ -152,7 +152,7 @@ if ( ! class_exists( 'UM_Menu_Item_Custom_Fields_Editor' ) ) {
 					<p class="description description-wide um-nav-roles" <# if( data.restriction_data.um_nav_public == '2' ){ #>style="display: block;"<# } #>>
 						<?php _e( "Select the member roles that can see this link", 'ultimate-member' ) ?><br/>
 
-						<?php $options = UM()->roles()->get_roles();
+						<?php $options = UM()->roles()->get_roles( false, array( 'administrator' ) );
 						$i = 0;
 						$html = '';
 						$columns = 2;

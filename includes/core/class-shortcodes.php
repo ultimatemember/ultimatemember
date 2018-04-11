@@ -161,7 +161,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 					if ( ! empty( $role ) && ! empty( $role["status"] ) ) {
 						$message_key = $role["status"] . '_message';
-						$this->custom_message = ! empty( $role[ $message_key ] ) ? $role[ $message_key ] : '';
+						$this->custom_message = ! empty( $role[ $message_key ] ) ? stripslashes( $role[ $message_key ] ) : '';
 					}
 				}
 
