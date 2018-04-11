@@ -130,6 +130,13 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 == Changelog ==
 
 
+= 2.0.5: April 11, 2018 =
+
+* Bugfixes:
+  - Fixed old pre2.0 extensions notices
+  - Fixed nav-menu content restriction issues
+  - Fixed lost password URL in UM Login Form
+
 = 2.0.4: April 10, 2018 =
 
 * Enhancements:
