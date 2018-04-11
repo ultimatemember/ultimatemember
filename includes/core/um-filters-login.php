@@ -152,3 +152,19 @@ function um_wp_form_errors_hook_logincheck( $user, $username, $password ) {
 
 }
 add_filter( 'authenticate', 'um_wp_form_errors_hook_logincheck', 50, 3 );
+
+/**
+ * Change lost password url in UM Login form
+ * @param  string $lostpassword_url 
+ * @return string                  
+ */
+function um_lostpassword_url( $lostpassword_url ) {
+
+	if( um_is_core_page("login") ){
+	    return um_get_core_page("password-reset");
+	}
+
+	return $lostpassword_url;
+}
+add_filter( 'lostpassword_url',  'um_lostpassword_url', 10, 1 );
+
