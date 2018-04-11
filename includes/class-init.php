@@ -293,62 +293,95 @@ if ( ! class_exists( 'UM' ) ) {
 		function old_update_patch() {
 			global $um_woocommerce, $um_bbpress, $um_followers, $um_friends, $um_mailchimp, $um_messaging, $um_mycred, $um_notices, $um_notifications, $um_online, $um_private_content, $um_profile_completeness, $um_recaptcha, $um_reviews, $um_activity, $um_social_login, $um_user_tags, $um_verified;
 
-			remove_action( 'init', array( $um_woocommerce, 'plugin_check' ), 1 );
-			$um_woocommerce->plugin_inactive = true;
+			if ( is_object( $um_woocommerce ) ) {
+				remove_action( 'init', array( $um_woocommerce, 'plugin_check' ), 1 );
+				$um_woocommerce->plugin_inactive = true;
+			}
 
-			remove_action( 'init', array( $um_bbpress, 'plugin_check' ), 4 );
-			$um_bbpress->plugin_inactive = true;
+			if ( is_object( $um_bbpress ) ) {
+				remove_action( 'init', array( $um_bbpress, 'plugin_check' ), 4 );
+				$um_bbpress->plugin_inactive = true;
+			}
 
-			remove_action( 'init', array( $um_followers, 'plugin_check' ), 1 );
-			$um_followers->plugin_inactive = true;
+			if ( is_object( $um_followers ) ) {
+				remove_action( 'init', array( $um_followers, 'plugin_check' ), 1 );
+				$um_followers->plugin_inactive = true;
+			}
 
-			remove_action( 'init', array( $um_friends, 'plugin_check' ), 1 );
-			$um_friends->plugin_inactive = true;
+			if ( is_object( $um_friends ) ) {
+				remove_action( 'init', array( $um_friends, 'plugin_check' ), 1 );
+				$um_friends->plugin_inactive = true;
+			}
 
-			remove_action( 'init', array( $um_mailchimp, 'plugin_check' ), 1 );
-			$um_mailchimp->plugin_inactive = true;
+			if ( is_object( $um_mailchimp ) ) {
+				remove_action( 'init', array( $um_mailchimp, 'plugin_check' ), 1 );
+				$um_mailchimp->plugin_inactive = true;
+			}
 
-			remove_action( 'init', array( $um_messaging, 'plugin_check' ), 1 );
-			$um_messaging->plugin_inactive = true;
+			if ( is_object( $um_messaging ) ) {
+				remove_action( 'init', array( $um_messaging, 'plugin_check' ), 1 );
+				$um_messaging->plugin_inactive = true;
+			}
 
-			remove_action( 'init', array( $um_messaging, 'plugin_check' ), 1 );
-			$um_messaging->plugin_inactive = true;
+			if ( is_object( $um_mycred ) ) {
+				remove_action( 'init', array( $um_mycred, 'plugin_check' ), 1 );
+				$um_mycred->plugin_inactive = true;
+			}
 
-			remove_action( 'init', array( $um_mycred, 'plugin_check' ), 1 );
-			$um_mycred->plugin_inactive = true;
+			if ( is_object( $um_notices ) ) {
+				remove_action( 'init', array( $um_notices, 'plugin_check' ), 1 );
+				$um_notices->plugin_inactive = true;
+			}
 
-			remove_action( 'init', array( $um_notices, 'plugin_check' ), 1 );
-			$um_notices->plugin_inactive = true;
+			if ( is_object( $um_notifications ) ) {
+				remove_action( 'init', array( $um_notifications, 'plugin_check' ), 1 );
+				$um_notifications->plugin_inactive = true;
+			}
 
-			remove_action( 'init', array( $um_notifications, 'plugin_check' ), 1 );
-			$um_notifications->plugin_inactive = true;
+			if ( is_object( $um_online ) ) {
+				remove_action( 'init', array( $um_online, 'plugin_check' ), 1 );
+				$um_online->plugin_inactive = true;
+			}
 
-			remove_action( 'init', array( $um_online, 'plugin_check' ), 1 );
-			$um_online->plugin_inactive = true;
+			if ( is_object( $um_private_content ) ) {
+				remove_action( 'init', array( $um_private_content, 'plugin_check' ), 1 );
+				$um_private_content->plugin_inactive = true;
+			}
 
-			remove_action( 'init', array( $um_private_content, 'plugin_check' ), 1 );
-			$um_private_content->plugin_inactive = true;
+			if ( is_object( $um_profile_completeness ) ) {
+				remove_action( 'init', array( $um_profile_completeness, 'plugin_check' ), 1 );
+				$um_profile_completeness->plugin_inactive = true;
+			}
 
-			remove_action( 'init', array( $um_profile_completeness, 'plugin_check' ), 1 );
-			$um_profile_completeness->plugin_inactive = true;
+			if ( is_object( $um_recaptcha ) ) {
+				remove_action( 'init', array( $um_recaptcha, 'plugin_check' ), 1 );
+				$um_recaptcha->plugin_inactive = true;
+			}
 
-			remove_action( 'init', array( $um_recaptcha, 'plugin_check' ), 1 );
-			$um_recaptcha->plugin_inactive = true;
+			if ( is_object( $um_reviews ) ) {
+				remove_action( 'init', array( $um_reviews, 'plugin_check' ), 1 );
+				$um_reviews->plugin_inactive = true;
+			}
 
-			remove_action( 'init', array( $um_reviews, 'plugin_check' ), 1 );
-			$um_reviews->plugin_inactive = true;
+			if ( is_object( $um_activity ) ) {
+				remove_action( 'init', array( $um_activity, 'plugin_check' ), 1 );
+				$um_activity->plugin_inactive = true;
+			}
 
-			remove_action( 'init', array( $um_activity, 'plugin_check' ), 1 );
-			$um_activity->plugin_inactive = true;
+			if ( is_object( $um_social_login ) ) {
+				remove_action( 'init', array( $um_social_login, 'plugin_check' ), 1 );
+				$um_social_login->plugin_inactive = true;
+			}
 
-			remove_action( 'init', array( $um_social_login, 'plugin_check' ), 1 );
-			$um_social_login->plugin_inactive = true;
+			if ( is_object( $um_user_tags ) ) {
+				remove_action( 'init', array( $um_user_tags, 'plugin_check' ), 1 );
+				$um_user_tags->plugin_inactive = true;
+			}
 
-			remove_action( 'init', array( $um_user_tags, 'plugin_check' ), 1 );
-			$um_user_tags->plugin_inactive = true;
-
-			remove_action( 'init', array( $um_verified, 'plugin_check' ), 1 );
-			$um_verified->plugin_inactive = true;
+			if ( is_object( $um_verified ) ) {
+				remove_action( 'init', array( $um_verified, 'plugin_check' ), 1 );
+				$um_verified->plugin_inactive = true;
+			}
 		}
 
 
