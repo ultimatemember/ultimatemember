@@ -39,10 +39,6 @@ if ( ! is_admin() ) {
 			return $menu_items;
 		}
 
-		if ( current_user_can( 'administrator' ) ) {
-			return $menu_items;
-		}
-
 		um_fetch_user( get_current_user_id() );
 
 		$filtered_items = array();
@@ -68,12 +64,16 @@ if ( ! is_admin() ) {
 
 					case 2:
 						if ( is_user_logged_in() && ! empty( $roles ) ) {
-							$current_user_roles = um_user( 'roles' );
-							if ( empty( $current_user_roles ) ) {
-								$visible = false;
-							} else {
-								$visible = ( count( array_intersect( $current_user_roles, (array)$roles ) ) > 0 ) ? true : false;
-							}
+                            if ( current_user_can( 'administrator' ) ) {
+                                $visible = true;
+                            } else {
+                                $current_user_roles = um_user( 'roles' );
+                                if ( empty( $current_user_roles ) ) {
+                                    $visible = false;
+                                } else {
+                                    $visible = ( count( array_intersect( $current_user_roles, (array)$roles ) ) > 0 ) ? true : false;
+                                }
+                            }
 						} else {
 							$visible = is_user_logged_in() ? true : false;
 						}

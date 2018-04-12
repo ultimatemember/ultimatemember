@@ -944,10 +944,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			if ( empty( $menu_items ) )
 				return $menu_items;
 
-			if ( current_user_can( 'administrator' ) ) {
-				return $menu_items;
-			}
-
 			$filtered_items = array();
 
 			//other filter
@@ -968,7 +964,13 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							$filtered_items[] = $menu_item;
 							continue;
 						} else {
-							//if not single query when exclude if set _um_access_hide_from_queries
+
+                            if ( current_user_can( 'administrator' ) ) {
+                                $filtered_items[] = $menu_item;
+                                continue;
+                            }
+
+						    //if not single query when exclude if set _um_access_hide_from_queries
 							if ( empty( $restriction['_um_access_hide_from_queries'] ) ) {
 								$filtered_items[] = $menu_item;
 								continue;
@@ -977,6 +979,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					} elseif ( '2' == $restriction['_um_accessible'] ) {
 						//if post for logged in users and user is not logged in
 						if ( is_user_logged_in() ) {
+
+                            if ( current_user_can( 'administrator' ) ) {
+                                $filtered_items[] = $menu_item;
+                                continue;
+                            }
 
 							$custom_restrict = $this->um_custom_restriction( $restriction );
 
