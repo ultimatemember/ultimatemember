@@ -16,7 +16,34 @@ get_header(); ?>
 		<div id="primary" class="content-area">
 			<main id="main" class="site-main" role="main">
 
-				<?php echo 'asdasdasda'; ?>
+				<?php if ( is_tag() ) {
+					$tag_id = get_query_var( 'tag_id' );
+					if ( ! empty( $tag_id ) ) {
+						$restriction = get_term_meta( $tag_id, 'um_content_restriction', true );
+					}
+				} elseif ( is_category() ) {
+					$um_category = get_category( get_query_var( 'cat' ) );
+
+					if ( ! empty( $um_category->term_id ) ) {
+						$restriction = get_term_meta( $um_category->term_id, 'um_content_restriction', true );
+					}
+				} elseif ( is_tax() ) {
+					$tax_name = get_query_var( 'taxonomy' );
+					$term_name = get_query_var( 'term' );
+					$term = get_term_by( 'slug', $term_name, $tax_name );
+					if ( ! empty( $term->term_id ) ) {
+						$restriction = get_term_meta( $term->term_id, 'um_content_restriction', true );
+					}
+				}
+
+				if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
+					$restricted_global_message = UM()->options()->get( 'restricted_access_message' );
+					$message = stripslashes( $restricted_global_message );
+				} elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
+					$message = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
+				}
+
+				echo $message; ?>
 
 			</main><!-- #main -->
 		</div><!-- #primary -->
