@@ -103,7 +103,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * Check individual term Content Restriction settings
 		 */
 		function um_access_check_individual_term_settings() {
-
 			//check only tax|tags|categories - skip archive, author, and date lists
 			if ( ! ( is_tax() || is_tag() || is_category() ) ) {
 				return;
@@ -119,8 +118,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					$restriction = get_term_meta( $tag_id, 'um_content_restriction', true );
 				}
 			} elseif ( is_category() ) {
-				$um_category = get_the_category();
-				$um_category = current( $um_category );
+				$um_category = get_category( get_query_var( 'cat' ) );
 
 				$restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
 				if ( empty( $restricted_taxonomies[ $um_category->taxonomy ] ) )
@@ -162,17 +160,21 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				if ( is_user_logged_in() ) {
 
 					$custom_restrict = $this->um_custom_restriction( $restriction );
-
 					if ( empty( $restriction['_um_access_roles'] ) || false === array_search( '1', $restriction['_um_access_roles'] ) ) {
 						if ( $custom_restrict ) {
 							$this->allow_access = true;
 							return;
 						} else {
 							//restrict terms page by 404 for logged in users with wrong role
-							global $wp_query;
+							add_filter( 'tag_template', array( &$this, 'taxonomy_message' ), 10, 3 );
+							add_filter( 'archive_template', array( &$this, 'taxonomy_message' ), 10, 3 );
+							add_filter( 'category_template', array( &$this, 'taxonomy_message' ), 10, 3 );
+							add_filter( 'taxonomy_template', array( &$this, 'taxonomy_message' ), 10, 3 );
+
+							/*global $wp_query;
 							$wp_query->set_404();
 							status_header( 404 );
-							nocache_headers();
+							nocache_headers();*/
 						}
 					} else {
 						$user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
@@ -181,11 +183,17 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							$this->allow_access = true;
 							return;
 						} else {
+
+							add_filter( 'tag_template', array( &$this, 'taxonomy_message' ), 10, 3 );
+							add_filter( 'archive_template', array( &$this, 'taxonomy_message' ), 10, 3 );
+							add_filter( 'category_template', array( &$this, 'taxonomy_message' ), 10, 3 );
+							add_filter( 'taxonomy_template', array( &$this, 'taxonomy_message' ), 10, 3 );
+
 							//restrict terms page by 404 for logged in users with wrong role
-							global $wp_query;
+							/*global $wp_query;
 							$wp_query->set_404();
 							status_header( 404 );
-							nocache_headers();
+							nocache_headers();*/
 						}
 					}
 				}
@@ -210,6 +218,18 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 				}
 			}
+		}
+
+
+		/**
+		 * @param $template
+		 * @param $type
+		 * @param $templates
+		 *
+		 * @return string
+		 */
+		function taxonomy_message( $template, $type, $templates ) {
+			return UM()->locate_template( 'restricted-taxonomy.php' );
 		}
 
 
