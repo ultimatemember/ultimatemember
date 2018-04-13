@@ -1,4 +1,4 @@
-=== Ultimate Member - User Profile & Membership Plugin ===
+﻿=== Ultimate Member - User Profile & Membership Plugin ===
 Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember, champsupertramp, nsinelnikov
@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.1
 Tested up to: 4.9
-Stable tag: 2.0.5
+Stable tag: 2.0.7
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -129,6 +129,15 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 == Changelog ==
 
+= 2.0.7: xxxx, 2018 =
+
+* Bugfixes:
+  - Fixed add rewrite rules for UM pages
+
+= 2.0.6: April 12, 2018 =
+
+* Bugfixes:
+  - Fixed nav-menu content restriction issues for Administrator role
 
 = 2.0.5: April 12, 2018 =
 

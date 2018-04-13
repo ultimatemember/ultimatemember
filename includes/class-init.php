@@ -539,7 +539,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->plugin_updater();
 			} elseif ( $this->is_request( 'frontend' ) ) {
 				$this->enqueue();
-				$this->rewrite();
 				$this->account();
 				$this->password();
 				$this->login();
@@ -551,6 +550,7 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 
 			//common includes
+			$this->rewrite();
 			$this->mail();
 			$this->rest_api();
 			$this->shortcodes();

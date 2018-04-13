@@ -45,7 +45,45 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 				add_action( 'wp_ajax_um_run_package', array( $this, 'ajax_run_package' ) );
 				add_action( 'wp_ajax_um_get_packages', array( $this, 'ajax_get_packages' ) );
 			}
+
+			//add_action( 'in_plugin_update_message-' . um_plugin, array( $this, 'in_plugin_update_message' ) );
 		}
+
+		/**
+		 * Function for major updates
+		 *
+		 */
+		/*function in_plugin_update_message( $args ) {
+
+			$lastversion = get_option( '%UNIQUE_ID%_last_version', false );
+			if ( $lastversion && version_compare( $lastversion, %UNIQUE_ID%_current_version, '>' ) )  {
+				$upgrade_notice = get_option( '%UNIQUE_ID%_major_update' . $lastversion );
+
+				echo '<style type="text/css">
+	            .%UNIQUE_ID%_plugin_upgrade_notice {
+	                font-weight: 400;
+	                color: #fff;
+	                background: #d53221;
+	                padding: 1em;
+	                margin: 9px 0;
+	                display: block;
+	                box-sizing: border-box;
+	                -webkit-box-sizing: border-box;
+	                -moz-box-sizing: border-box;
+	            }
+	            .%UNIQUE_ID%_plugin_upgrade_notice:before {
+	                content: "\f348";
+	                display: inline-block;
+	                font: 400 18px/1 dashicons;
+	                speak: none;
+	                margin: 0 8px 0 -2px;
+	                -webkit-font-smoothing: antialiased;
+	                -moz-osx-font-smoothing: grayscale;
+	                vertical-align: top;
+	            }
+	        </style>' . wp_kses_post( $upgrade_notice );
+			}
+		}*/
 
 
 		/**

@@ -18,16 +18,14 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 		 * Rewrite constructor.
 		 */
 		function __construct() {
+			//add rewrite rules
 			add_filter( 'query_vars', array(&$this, 'query_vars'), 10, 1 );
-
+			add_filter( 'rewrite_rules_array', array( &$this, '_add_rewrite_rules' ), 10, 1 );
 			add_action( 'init', array( &$this, 'rewrite_rules'), 100000000 );
 
+
 			add_action( 'template_redirect', array( &$this, 'redirect_author_page'), 9999 );
-
 			add_action( 'template_redirect', array( &$this, 'locate_user_profile'), 9999 );
-
-			//add rewrite rules
-			add_filter( 'rewrite_rules_array', array( &$this, '_add_rewrite_rules' ), 10, 1 );
 		}
 
 
@@ -66,35 +64,23 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 
 			$newrules['um-api/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$'] = 'index.php?um_page=api&um_action=$matches[1]&um_resource=$matches[2]&um_method=$matches[3]&um_verify=$matches[4]';
 
-			return $newrules + $rules;
-		}
-
-
-		/**
-		 * Setup rewrite rules
-		 */
-		function rewrite_rules() {
-
 			if ( isset( UM()->config()->permalinks['user'] ) ) {
 
 				$user_page_id = UM()->config()->permalinks['user'];
-				$account_page_id = UM()->config()->permalinks['account'];
-				$user = get_post($user_page_id);
+				$user = get_post( $user_page_id );
 
 				if ( isset( $user->post_name ) ) {
 
 					$user_slug = $user->post_name;
-					$account = get_post($account_page_id);
-					$account_slug = $account->post_name;
 
 					$add_lang_code = '';
 					$language_code = '';
 
-					if ( function_exists('icl_object_id') || function_exists('icl_get_current_language')  ) {
+					if ( function_exists('icl_object_id') || function_exists('icl_get_current_language') ) {
 
-						if( function_exists('icl_get_current_language') ){
+						if ( function_exists('icl_get_current_language') ) {
 							$language_code = icl_get_current_language();
-						}else if( function_exists('icl_object_id') && defined('ICL_LANGUAGE_CODE') ){
+						} elseif( function_exists('icl_object_id') && defined('ICL_LANGUAGE_CODE') ) {
 							$language_code = ICL_LANGUAGE_CODE;
 						}
 
@@ -105,53 +91,89 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 							$user_slug = $lang_post_obj->post_name;
 						}
 
-						// Account page translated slug
-						$lang_post_id = icl_object_id( $account->ID, 'post', FALSE, $language_code );
-						$lang_post_obj = get_post( $lang_post_id );
-						if( isset( $lang_post_obj->post_name ) ){
-							$account_slug = $lang_post_obj->post_name;
-						}
-
 						if(  $language_code != icl_get_default_language() ){
 							$add_lang_code = $language_code;
 						}
 
 					}
 
-					add_rewrite_rule( $user_slug.'/([^/]+)/?$',
-						'index.php?page_id='.$user_page_id.'&um_user=$matches[1]&lang='.$add_lang_code,
-						'top'
-					);
+					$newrules[ $user_slug.'/([^/]+)/?$' ] = 'index.php?page_id='.$user_page_id.'&um_user=$matches[1]&lang='.$add_lang_code;
+				}
+			}
 
-					add_rewrite_rule( $account_slug.'/([^/]+)?$',
-						'index.php?page_id='.$account_page_id.'&um_tab=$matches[1]&lang='.$add_lang_code,
-						'top'
-					);
+			if ( isset( UM()->config()->permalinks['account'] ) ) {
 
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_rewrite_flush_rewrite_rules
-					 * @description Enable flushing rewrite rules
-					 * @input_vars
-					 * [{"var":"$stop_flush","type":"bool","desc":"Stop flushing rewrite rules"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage
-					 * <?php add_filter( 'um_rewrite_flush_rewrite_rules', 'function_name', 10, 1 ); ?>
-					 * @example
-					 * <?php
-					 * add_filter( 'um_rewrite_flush_rewrite_rules', 'my_rewrite_flush_rewrite_rules', 10, 1 );
-					 * function my_rewrite_flush_rewrite_rules( $stop_flush ) {
-					 *     // your code here
-					 *     return $stop_flush;
-					 * }
-					 * ?>
-					 */
-					if ( ! apply_filters( 'um_rewrite_flush_rewrite_rules', UM()->options()->get( 'um_flush_stop' ) ) )
-						flush_rewrite_rules( true );
+				$account_page_id = UM()->config()->permalinks['account'];
+				$account = get_post( $account_page_id );
 
+				if ( isset( $account->post_name ) ) {
+
+					$account_slug = $account->post_name;
+
+					$add_lang_code = '';
+					$language_code = '';
+
+					if ( function_exists('icl_object_id') || function_exists('icl_get_current_language') ) {
+
+						if ( function_exists('icl_get_current_language') ){
+							$language_code = icl_get_current_language();
+						} elseif( function_exists('icl_object_id') && defined('ICL_LANGUAGE_CODE') ) {
+							$language_code = ICL_LANGUAGE_CODE;
+						}
+
+						// Account page translated slug
+						$lang_post_id = icl_object_id( $account->ID, 'post', FALSE, $language_code );
+						$lang_post_obj = get_post( $lang_post_id );
+						if ( isset( $lang_post_obj->post_name ) ){
+							$account_slug = $lang_post_obj->post_name;
+						}
+
+						if ( $language_code != icl_get_default_language() ) {
+							$add_lang_code = $language_code;
+						}
+
+					}
+
+					$newrules[ $account_slug.'/([^/]+)?$' ] = 'index.php?page_id='.$account_page_id.'&um_tab=$matches[1]&lang='.$add_lang_code;
+
+				}
+
+			}
+
+			return $newrules + $rules;
+		}
+
+
+		/**
+		 * Setup rewrite rules
+		 */
+		function rewrite_rules() {
+
+			if ( isset( UM()->config()->permalinks['user'] ) && isset( UM()->config()->permalinks['account'] ) ) {
+
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_rewrite_flush_rewrite_rules
+				 * @description Enable flushing rewrite rules
+				 * @input_vars
+				 * [{"var":"$stop_flush","type":"bool","desc":"Stop flushing rewrite rules"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage
+				 * <?php add_filter( 'um_rewrite_flush_rewrite_rules', 'function_name', 10, 1 ); ?>
+				 * @example
+				 * <?php
+				 * add_filter( 'um_rewrite_flush_rewrite_rules', 'my_rewrite_flush_rewrite_rules', 10, 1 );
+				 * function my_rewrite_flush_rewrite_rules( $stop_flush ) {
+				 *     // your code here
+				 *     return $stop_flush;
+				 * }
+				 * ?>
+				 */
+				if ( ! apply_filters( 'um_rewrite_flush_rewrite_rules', UM()->options()->get( 'um_flush_stop' ) ) ) {
+					flush_rewrite_rules( true );
 				}
 
 			}
