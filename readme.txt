@@ -129,10 +129,11 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 == Changelog ==
 
-= 2.0.7: xxxx, 2018 =
+= 2.0.7: April 13, 2018 =
 
 * Bugfixes:
   - Fixed add rewrite rules for UM pages
+  - Fixed Profile Form, Registration Form use custom settings and role
 
 = 2.0.6: April 12, 2018 =
 

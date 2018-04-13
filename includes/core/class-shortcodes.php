@@ -516,9 +516,12 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			// for profiles only
 			if ( $mode == 'profile' && um_profile_id() ) {
-				$current_user_roles = UM()->roles()->get_all_user_roles( um_profile_id() );
-				if ( ! empty( $args['role'] ) && ! in_array( $args['role'], $current_user_roles ) ) {
-					return '';
+				$use_custom = get_post_meta( $this->form_id, "_um_{$mode}_use_custom_settings", true );
+				if ( $use_custom ) { // Custom Form settings
+					$current_user_roles = UM()->roles()->get_all_user_roles( um_profile_id() );
+					if ( ! empty( $args['role'] ) && ! in_array( $args['role'], $current_user_roles ) ) {
+						return '';
+					}
 				}
 			}
 

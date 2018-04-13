@@ -440,7 +440,7 @@ function um_add_user_role( $args ) {
 
 	$role = apply_filters( 'um_registration_user_role', UM()->form()->assigned_role( UM()->form()->form_id ), $args );
 
-	if ( empty( $role ) ) return;
+	if ( empty( $use_custom_settings ) || empty( $role ) ) return;
 
 	/**
 	 * UM hook
