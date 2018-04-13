@@ -1286,8 +1286,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					);
 					?>
 
+
 					<p class="submit">
 						<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( 'Save Changes', 'ultimate-member' ) ?>" />
+						<?php $um_settings_nonce = wp_create_nonce( 'um-settings-nonce' ); ?>
+						<input type="hidden" name="__umnonce" value="<?php echo $um_settings_nonce; ?>" />
 					</p>
 				</form>
 
@@ -1397,7 +1400,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 *
 		 */
 		function save_settings_handler() {
+
+			
+
 			if ( isset( $_POST['um-settings-action'] ) && 'save' == $_POST['um-settings-action'] && ! empty( $_POST['um_options'] ) ) {
+
+				$nonce = $_POST['__umnonce'];
+
+				if ( ( ! wp_verify_nonce( $nonce, 'um-settings-nonce' ) || empty( $nonce ) ) || ! current_user_can('manage_options') ) {
+				    // This nonce is not valid.
+				    wp_die( 'Security Check' ); 
+				}
+
 				/**
 				 * UM hook
 				 *
