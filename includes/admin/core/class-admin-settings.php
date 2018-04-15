@@ -2043,8 +2043,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 											</div>
 										<?php }
 									} ?>
-									<?php $um_settings_nonce = wp_create_nonce( 'um-settings-nonce' ); ?>
-									<input type="hidden" name="__umnonce" value="<?php echo $um_settings_nonce; ?>" />
 								</form>
 							</td>
 						</tr>
