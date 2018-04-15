@@ -469,7 +469,7 @@ function um_add_user_role( $args ) {
 	}
 
 }
-add_action( 'um_after_register_fields', 'um_add_user_role', 10, 1 );
+//add_action( 'um_after_register_fields', 'um_add_user_role', 10, 1 );
 
 
 /**
