@@ -1244,7 +1244,11 @@ function um_can_view_field( $data ) {
 		}
 
 		if ( is_user_logged_in() ) {
+			$previous_user = um_user( 'ID' );
+			um_fetch_user( get_current_user_id() );
+
 			$current_user_roles = um_user( 'roles' );
+			um_fetch_user( $previous_user );
 
 			if ( $data['public'] == '-3' && ! um_is_user_himself() && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) )
 				return false;

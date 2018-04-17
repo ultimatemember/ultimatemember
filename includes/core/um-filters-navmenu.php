@@ -127,6 +127,7 @@ if ( ! is_admin() ) {
 	}
 	add_filter( 'wp_nav_menu_objects', 'um_conditional_nav_menu', 9999, 2 );
 
+
 	/**
 	 * Conditional menu items
 	 *
@@ -136,7 +137,7 @@ if ( ! is_admin() ) {
 	 *
 	 * @return mixed
 	 */
-	function um_get_nav_menu_items($items, $menu, $args) {
+	function um_get_nav_menu_items( $items, $menu, $args ) {
 		return um_conditional_nav_menu( $items, $args );
 	}
 	add_filter( 'wp_get_nav_menu_items', 'um_get_nav_menu_items', 9999, 3 );
