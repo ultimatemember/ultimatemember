@@ -53,7 +53,6 @@
 	background-color: #eee;
 	box-sizing: border-box;
 	position: relative;
-	overflow: hidden;
 }
 
 .um-cover-add {
@@ -75,6 +74,7 @@
 .um-cover-e {
 	text-align: center;
 	box-sizing: border-box;
+	overflow: hidden;
 }
 
 .um-cover-e img {width: 100% !important}

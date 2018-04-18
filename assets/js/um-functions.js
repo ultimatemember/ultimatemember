@@ -184,7 +184,7 @@ function um_responsive(){
 
 	});
 
-	jQuery('.um-cover, .um-member-cover').each(function(){
+	jQuery('.um-cover, .um-member-cover, .um-cover-e').each(function(){
 
 		var elem = jQuery(this);
 		var ratio = elem.data('ratio');
