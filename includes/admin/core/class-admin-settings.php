@@ -1403,7 +1403,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			if ( isset( $_POST['um-settings-action'] ) && 'save' == $_POST['um-settings-action'] && ! empty( $_POST['um_options'] ) ) {
 
-				$nonce = $_POST['__umnonce'];
+				$nonce = ! empty( $_POST['__umnonce'] ) ? $_POST['__umnonce'] : '';
 
 				if ( ( ! wp_verify_nonce( $nonce, 'um-settings-nonce' ) || empty( $nonce ) ) || ! current_user_can('manage_options') ) {
 					// This nonce is not valid.
