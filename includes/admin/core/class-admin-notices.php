@@ -540,7 +540,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				ob_start(); ?>
 
 				<p>
-					<?php printf( __( '<strong>%s version %s</strong> needs to be updated for correct working.<br />It is necessary to update the structure of the database and options that are associated with <strong>%s %s</strong>.<br />Please visit <a href="%s">"Upgrade"</a> page and run the upgrade process.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, ultimatemember_version, $url ); ?>
+					<?php printf( __( '<strong>%s version %s</strong> needs to be updated to work correctly.<br />It is necessary to update the structure of the database and options that are associated with <strong>%s %s</strong>.<br />Please visit <a href="%s">"Upgrade"</a> page and run the upgrade process.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, ultimatemember_version, $url ); ?>
 				</p>
 
 				<p>
