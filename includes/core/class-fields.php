@@ -574,7 +574,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			} elseif ( um_user( $key ) && $this->editing == true ) {
 
-				if ( strstr( $key, 'user_pass' ) ) {
+				//show empty value for password fields
+				if ( strstr( $key, 'user_pass' ) || $type == 'password' ) {
 					return '';
 				}
 
@@ -3432,9 +3433,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if (isset( $data['in_group'] ) && $data['in_group'] != '' && $rule != 'group') return;
 
-			if ($visibility == 'edit') return;
+			if ( $visibility == 'edit' ) return;
 
-			if (in_array( $type, array( 'block', 'shortcode', 'spacing', 'divider', 'group' ) )) {
+			//invisible on profile page
+			if ( $type == 'password' ) return;
+
+			if ( in_array( $type, array( 'block', 'shortcode', 'spacing', 'divider', 'group' ) ) ) {
 
 			} else {
 
