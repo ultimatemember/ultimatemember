@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.1
 Tested up to: 4.9
-Stable tag: 2.0.9
+Stable tag: 2.0.10
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -128,6 +128,22 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 16. Screenshot 16
 
 == Changelog ==
+
+= Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
+
+= 2.0.11: April 19, 2018 =
+
+* Bugfixes:
+  - Fixed profile form JS
+
+= 2.0.10: April 17, 2018 =
+
+* Bugfixes:
+  - Fixed Profile Form field privacy
+  - Fixed conditional menu logic for 2 different nav menu hooks
+  - Fixed registration form preview on wp-admin screen
+  - Restored old CSS settings to "um_old_settings.css"
+  - Clean user's cache
 
 = 2.0.9: April 15, 2018 =
 

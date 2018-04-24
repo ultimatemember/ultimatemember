@@ -524,8 +524,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 */
 		function get_post_privacy_settings( $post ) {
 			//if logged in administrator all pages are visible
-			if ( current_user_can( 'administrator' ) )
+			if ( current_user_can( 'administrator' ) ) {
 				return false;
+			}
 
 			//exlude from privacy UM default pages (except Members list and User(Profile) page)
 			if ( ! empty( $post->post_type ) && $post->post_type == 'page' ) {
@@ -541,7 +542,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				$restriction = get_post_meta( $post->ID, 'um_content_restriction', true );
 
 				if ( ! empty( $restriction['_um_custom_access_settings'] ) ) {
-					if ( ! isset( $restriction['_um_accessible'] ) || '0' == $restriction['_um_accessible'] )
+					if ( ! isset( $restriction['_um_accessible'] ) )
 						return false;
 					else
 						return $restriction;
@@ -624,6 +625,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 				//post is private
 				if ( '0' == $restriction['_um_accessible'] ) {
+					$this->singular_page = true;
 					$filtered_posts[] = $post;
 					continue;
 				} elseif ( '1' == $restriction['_um_accessible'] ) {

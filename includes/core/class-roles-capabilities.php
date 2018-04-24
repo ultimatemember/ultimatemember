@@ -506,13 +506,20 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 		 * @return mixed|void
 		 */
 		function role_data( $roleID ) {
-			if ( strpos( $roleID, 'um_' ) === 0 )
-				$roleID = substr( $roleID, 3 );
+			if ( strpos( $roleID, 'um_' ) === 0 ) {
+				$role_data = get_option( "um_role_{$roleID}_meta" );
 
-			$role_data = get_option( "um_role_{$roleID}_meta" );
+				if ( ! $role_data ) {
+					$roleID = substr( $roleID, 3 );
+					$role_data = get_option( "um_role_{$roleID}_meta" );
+				}
+			} else {
+				$role_data = get_option( "um_role_{$roleID}_meta" );
+			}
 
-			if ( ! $role_data )
+			if ( ! $role_data ) {
 				return array();
+			}
 
 			$temp = array();
 			foreach ( $role_data as $key=>$value ) {

@@ -601,7 +601,7 @@ function um_profile_header_cover_area( $args ) {
 
 			echo $overlay; ?>
 
-			<div class="um-cover-e">
+			<div class="um-cover-e" data-ratio="<?php echo $args['cover_ratio']; ?>">
 
 				<?php if (um_profile( 'cover_photo' )) { ?>
 
