@@ -710,6 +710,9 @@ function um_profile_id() {
  * @return bool|string
  */
 function um_is_temp_upload( $url ) {
+    if( is_string( $url ) ) {
+        $url = trim($url);
+    }
 
 	if (filter_var( $url, FILTER_VALIDATE_URL ) === false)
 		$url = realpath( $url );
