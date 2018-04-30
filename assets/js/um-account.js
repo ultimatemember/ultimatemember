@@ -1,8 +1,7 @@
-jQuery(document).ready(function() {
+jQuery( document ).ready( function(){
 
 	var current_tab = jQuery('.um-account-main').attr('data-current_tab');
-	
-	if  ( current_tab ) {
+	if ( current_tab ) {
 		jQuery('.um-account-tab[data-tab='+current_tab+']').show();
 	}
 
@@ -28,20 +27,19 @@ jQuery(document).ready(function() {
 
 		return false;
 	});
-});
 
 	jQuery(document).on('click','.um-account-nav a',function(e){
 		e.preventDefault();
-       
+
 		var tab_ = jQuery(this).attr('data-tab');
 		var div = jQuery(this).parents('div');
 		var link = jQuery(this);
 
-		
+
 		jQuery("input[id=_um_account_tab]:hidden").val( tab_ );
-		
+
 		jQuery('.um-account-tab').hide();
-		
+
 		if ( link.hasClass('current') ) {
 			div.next('.um-account-tab').slideUp();
 			link.removeClass('current');
@@ -56,4 +54,4 @@ jQuery(document).ready(function() {
 
 		return false;
 	});
-	
+});

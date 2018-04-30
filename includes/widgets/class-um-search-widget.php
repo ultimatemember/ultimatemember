@@ -49,7 +49,7 @@ class UM_Search_Widget extends \WP_Widget {
 		}
 
 		// display the search form
-		um_search_form();
+		echo um_get_search_form();
 
 		echo $args['after_widget'];
 	}
@@ -71,10 +71,7 @@ class UM_Search_Widget extends \WP_Widget {
 			$max = $instance[ 'max' ];
 		} else {
 			$max = 11;
-		}
-
-		// Widget admin form
-		?>
+		} ?>
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>

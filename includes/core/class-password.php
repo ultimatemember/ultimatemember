@@ -25,7 +25,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 */
 		function __construct() {
 
-			add_shortcode('ultimatemember_password', array(&$this, 'ultimatemember_password'));
+			add_shortcode( 'ultimatemember_password', array( &$this, 'ultimatemember_password' ) );
 
 			add_action('template_redirect', array(&$this, 'password_reset'), 10001 );
 
@@ -258,6 +258,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			return $classes;
 		}
 
+
 		/**
 		 * Shortcode
 		 *
@@ -268,6 +269,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		function ultimatemember_password( $args = array() ) {
 			return $this->load( $args );
 		}
+
 
 		/**
 		 * Load a module with global function
@@ -281,11 +283,11 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			ob_start();
 
 			$defaults = array(
-				'template' => 'password-reset',
-				'mode' => 'password',
-				'form_id' => 'um_password_id',
+				'template'  => 'password-reset',
+				'mode'      => 'password',
+				'form_id'   => 'um_password_id',
 				'max_width' => '450px',
-				'align' => 'center',
+				'align'     => 'center',
 			);
 			$args = wp_parse_args( $args, $defaults );
 
@@ -325,6 +327,10 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 			}
 
+			/**
+			 * @var $mode
+			 * @var $template
+			 */
 			extract( $args, EXTR_SKIP );
 
 			/**
@@ -394,8 +400,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				UM()->shortcodes()->dynamic_css( $args );
 			}
 
-			$output = ob_get_contents();
-			ob_end_clean();
+			$output = ob_get_clean();
 			return $output;
 
 		}

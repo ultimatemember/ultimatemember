@@ -336,3 +336,14 @@ function um_get_url_for_language( $post_id, $language ) {
 	//um_deprecated_function( 'um_get_url_for_language', '2.0', 'UM()->external_integrations()->get_url_for_language' );
 	return UM()->external_integrations()->get_url_for_language( $post_id, $language );
 }
+
+
+/**
+ * Display the search form.
+ *
+ * @deprecated 2.0.12
+ */
+function um_search_form() {
+	//um_deprecated_function( 'um_search_form', '2.0.12', 'um_get_search_form' );
+	echo um_get_search_form();
+}

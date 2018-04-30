@@ -2315,16 +2315,7 @@ function um_get_search_query() {
  * @return string
  */
 function um_get_search_form() {
-	return do_shortcode( '[ultimatemember_searchform]' );
-}
-
-
-/**
- * Display the search form.
- *
- */
-function um_search_form() {
-	echo um_get_search_form();
+	return do_shortcode( '[ultimatemember_searchform /]' );
 }
 
 

@@ -98,3 +98,9 @@ p.um-notice i {
 	right: auto;
 	left: 14px;
 }
+
+/*Search Widget*/
+.um-search-area .um-search-icon {
+	left: 10px;
+	right:auto !important;
+}

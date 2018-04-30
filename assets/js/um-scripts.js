@@ -1,37 +1,89 @@
-jQuery(document).ready(function() {
+jQuery( document ).ready( function(){
 
-	jQuery(document).on('click', '.um-dropdown a', function(e){
-		
+
+	//Profile Page
+	jQuery( document ).on( 'click', '.um-dropdown a', function(e){
 		return false;
 	});
 
-	jQuery(document).on('click', '.um-dropdown a.real_url', function(e){
-		
+
+	//Profile Page
+	jQuery( document ).on( 'click', '.um-dropdown a.real_url', function(e){
 		window.location = jQuery(this).attr('href');
 	});
 
-	jQuery(document).on('click', '.um-trigger-menu-on-click', function(e){
+
+	//Profile Page
+	jQuery( document ).on( 'click', '.um-trigger-menu-on-click', function(e){
 		jQuery('.um-dropdown').hide();
 		menu = jQuery(this).find('.um-dropdown');
 		menu.show();
 		return false;
 	});
 
-	jQuery(document).on('click', '.um-dropdown-hide', function(e){
-		
-			UM_hide_menus();
+
+	//Profile Page
+	jQuery( document ).on( 'click', '.um-dropdown-hide', function(e){
+		UM_hide_menus();
 	});
 
-	jQuery(document).on('click', 'a.um-manual-trigger', function(){
+
+	//Profile Page
+	jQuery( document ).on('click', 'a.um-manual-trigger', function(){
 		var child = jQuery(this).attr('data-child');
 		var parent = jQuery(this).attr('data-parent');
 		jQuery(this).parents( parent ).find( child ).trigger('click');
 	});
 
+
+	//Profile Page
+	jQuery(document).on('click', '.um .um-single-image-preview a.cancel', function(e){
+		e.preventDefault();
+		var parent = jQuery(this).parents('.um-field');
+		var src = jQuery(this).parents('.um-field').find('.um-single-image-preview img').attr('src');
+		parent.find('.um-single-image-preview img').attr('src','');
+		parent.find('.um-single-image-preview').hide();
+		parent.find('.um-btn-auto-width').html('Upload');
+		parent.find('input[type=hidden]').val('empty_file');
+
+		jQuery.ajax({
+			url: um_scripts.remove_file,
+			type: 'post',
+			data: {
+				src: src
+			}
+		});
+
+		return false;
+	});
+
+	//Profile Page
+	jQuery(document).on('click', '.um .um-single-file-preview a.cancel', function(e){
+		e.preventDefault();
+		var parent = jQuery(this).parents('.um-field');
+		var src = jQuery(this).parents('.um-field').find('.um-single-fileinfo a').attr('href');
+		parent.find('.um-single-file-preview').hide();
+		parent.find('.um-btn-auto-width').html('Upload');
+		parent.find('input[type=hidden]').val('empty_file');
+
+		jQuery.ajax({
+			url: um_scripts.remove_file,
+			type: 'post',
+			data: {
+				src: src
+			}
+		});
+
+		return false;
+	});
+
+
+	//Profile & Account Page
 	jQuery('.um-tip-n').tipsy({gravity: 'n', opacity: 1, live: 'a.live', offset: 3 });
 	jQuery('.um-tip-w').tipsy({gravity: 'w', opacity: 1, live: 'a.live', offset: 3 });
 	jQuery('.um-tip-e').tipsy({gravity: 'e', opacity: 1, live: 'a.live', offset: 3 });
 	jQuery('.um-tip-s').tipsy({gravity: 's', opacity: 1, live: 'a.live', offset: 3 });
+
 
 	jQuery(document).on('change', '.um-field-area input[type=radio]', function(){
 		var field = jQuery(this).parents('.um-field-area');
@@ -43,19 +95,19 @@ jQuery(document).ready(function() {
 	});
 
 	jQuery(document).on('change', '.um-field-area input[type=checkbox]', function(){
-
-		var field = jQuery(this).parents('.um-field-area');
 		var this_field = jQuery(this).parents('label');
 		if ( this_field.hasClass('active') ) {
-		this_field.removeClass('active');
-		this_field.find('i').removeClass().addClass('um-icon-android-checkbox-outline-blank');
+			this_field.removeClass('active');
+			this_field.find('i').removeClass().addClass('um-icon-android-checkbox-outline-blank');
 		} else {
-		this_field.addClass('active');
-		this_field.find('i').removeClass().addClass('um-icon-android-checkbox-outline');
+			this_field.addClass('active');
+			this_field.find('i').removeClass().addClass('um-icon-android-checkbox-outline');
 		}
 	});
 
-	jQuery('.um-datepicker').each(function(){
+
+
+	jQuery('.um-datepicker').each( function(){
 		elem = jQuery(this);
 
 		if ( elem.attr('data-disabled_weekdays') != '' ) {
@@ -100,7 +152,7 @@ jQuery(document).ready(function() {
 		});
 	});
 
-	jQuery('.um-timepicker').each(function(){
+	jQuery('.um-timepicker').each( function(){
 		elem = jQuery(this);
 
 		elem.pickatime({
@@ -137,49 +189,10 @@ jQuery(document).ready(function() {
 		readOnly: true
 	});
 
-	jQuery(document).on('click', '.um .um-single-image-preview a.cancel', function(e){
-		e.preventDefault();
-		var parent = jQuery(this).parents('.um-field');
-		var src = jQuery(this).parents('.um-field').find('.um-single-image-preview img').attr('src');
-		parent.find('.um-single-image-preview img').attr('src','');
-		parent.find('.um-single-image-preview').hide();
-		parent.find('.um-btn-auto-width').html('Upload');
-		parent.find('input[type=hidden]').val('empty_file');
-
-		jQuery.ajax({
-			url: um_scripts.remove_file,
-			type: 'post',
-			data: {
-				src: src
-			}
-		});
-
-		return false;
-	});
-
-	jQuery(document).on('click', '.um .um-single-file-preview a.cancel', function(e){
-		e.preventDefault();
-		var parent = jQuery(this).parents('.um-field');
-		var src = jQuery(this).parents('.um-field').find('.um-single-fileinfo a').attr('href');
-		parent.find('.um-single-file-preview').hide();
-		parent.find('.um-btn-auto-width').html('Upload');
-		parent.find('input[type=hidden]').val('empty_file');
-
-		jQuery.ajax({
-			url: um_scripts.remove_file,
-			type: 'post',
-			data: {
-				src: src
-			}
-		});
-
-		return false;
-	});
 
 	jQuery('.um-s1,.um-s2').css({'display':'block'});
-	
+
 	jQuery(".um-s1").select2({
-		
 		allowClear: true,
 	});
 
@@ -285,17 +298,12 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
-	jQuery(document).on('click', '#um-search-button', function() {
-
-			jQuery(this).parents('form').submit();
-	});
-
 	jQuery('.um-form input[class=um-button][type=submit]').removeAttr('disabled');
 
+	//Profile Form
 	jQuery(document).one('click', '.um:not(.um-account) .um-form input[class=um-button][type=submit]:not(.um-has-recaptcha)', function() {
 		jQuery(this).attr('disabled','disabled');
 		jQuery(this).parents('form').submit();
-
 	});
 
 	

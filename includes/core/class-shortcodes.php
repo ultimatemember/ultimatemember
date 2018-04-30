@@ -15,6 +15,12 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 
 		/**
+		 * @var array
+		 */
+		var $emoji = array();
+
+
+		/**
 		 * Shortcodes constructor.
 		 */
 		function __construct() {
@@ -24,11 +30,15 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			$this->loop = array();
 
+			//Main shortcode
 			add_shortcode( 'ultimatemember', array( &$this, 'ultimatemember' ) );
 
+			//Privacy shortcodes
 			add_shortcode( 'um_loggedin', array( &$this, 'um_loggedin' ) );
 			add_shortcode( 'um_loggedout', array( &$this, 'um_loggedout' ) );
 			add_shortcode( 'um_show_content', array( &$this, 'um_shortcode_show_content_for_role' ) );
+
+			//searchform shortcode
 			add_shortcode( 'ultimatemember_searchform', array( &$this, 'ultimatemember_searchform' ) );
 
 
@@ -38,6 +48,15 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			add_filter( 'um_shortcode_args_filter', array( &$this, 'display_logout_form' ), 99 );
 			add_filter( 'um_shortcode_args_filter', array( &$this, 'parse_shortcode_args' ), 99 );
 
+
+			$this->init_variables();
+		}
+
+
+		/**
+		 * Init Emoji variables
+		 */
+		function init_variables() {
 			/**
 			 * UM hook
 			 *
@@ -119,7 +138,6 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$this->emoji[':innocent:'] = $base_uri . '72x72/1f607.png';
 			$this->emoji[':smirk:'] = $base_uri . '72x72/1f60f.png';
 			$this->emoji[':expressionless:'] = $base_uri . '72x72/1f611.png';
-
 		}
 
 
@@ -277,7 +295,6 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			}
 
 			if ( file_exists( $file ) ) {
-
 				include $file;
 			}
 		}
@@ -376,22 +393,85 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			return $output;
 		}
 
-		/***
-		 ***	@Logged-out only content
+
+		/**
+		 * Logged-out only content
+		 *
+		 * @param array $args
+		 * @param string $content
+		 *
+		 * @return string
 		 */
-		function um_loggedout($args = array(), $content = "") {
+		function um_loggedout( $args = array(), $content = "" ) {
 			ob_start();
 
 			// Hide for logged in users
-			if (is_user_logged_in()) {
+			if ( is_user_logged_in() ) {
 				echo '';
 			} else {
-				echo do_shortcode(wpautop($content));
+				echo do_shortcode( wpautop( $content ) );
 			}
 
-			$output = ob_get_contents();
-			ob_end_clean();
+			$output = ob_get_clean();
 			return $output;
+		}
+
+
+		/**
+		 * Shortcode: Show custom content to specific role
+		 *
+		 * Show content to specific roles
+		 * [um_show_content roles='member'] <!-- insert content here -->  [/um_show_content]
+		 * You can add multiple target roles, just use ',' e.g.  [um_show_content roles='member,candidates,pets']
+		 *
+		 * Hide content from specific roles
+		 * [um_show_content not='contributors'] <!-- insert content here -->  [/um_show_content]
+		 * You can add multiple target roles, just use ',' e.g.  [um_show_content roles='member,candidates,pets']
+		 *
+		 * @param  array $atts
+		 * @param  string $content
+		 * @return string
+		 */
+		function um_shortcode_show_content_for_role( $atts = array() , $content = '' ) {
+			global $user_ID;
+
+			if ( ! is_user_logged_in() ) {
+				return '';
+			}
+
+			$a = shortcode_atts( array(
+				'roles' => '',
+				'not' => '',
+				'is_profile' => false,
+			), $atts );
+
+			if ( $a['is_profile'] ) {
+				um_fetch_user( um_profile_id() );
+			} else {
+				um_fetch_user( $user_ID );
+			}
+
+			$current_user_roles = um_user( 'roles' );
+
+			if ( ! empty( $a['not'] ) && ! empty( $a['roles'] ) ) {
+				return do_shortcode( $this->convert_locker_tags( $content ) );
+			}
+
+			if ( ! empty( $a['not'] ) ) {
+				$not_in_roles = explode( ",", $a['not'] );
+
+				if ( is_array( $not_in_roles ) && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $not_in_roles ) ) <= 0 ) ) {
+					return do_shortcode( $this->convert_locker_tags( $content ) );
+				}
+			} else {
+				$roles = explode( ",", $a['roles'] );
+
+				if ( ! empty( $current_user_roles ) && is_array( $roles ) && count( array_intersect( $current_user_roles, $roles ) ) > 0 ) {
+					return do_shortcode( $this->convert_locker_tags( $content ) );
+				}
+			}
+
+			return '';
 		}
 
 
@@ -457,6 +537,16 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			 */
 			$args = apply_filters( 'um_pre_args_setup', $post_data );
 
+			//enqueue
+			if ( 'directory' == $args['mode'] ) {
+				wp_enqueue_script( 'um-members' );
+				wp_enqueue_style( 'um-members' );
+			} else {
+				wp_enqueue_script( 'um-profile' );
+				wp_enqueue_style( 'um-profile' );
+			}
+
+
 			if (!isset($args['template'])) {
 				$args['template'] = '';
 			}
@@ -473,7 +563,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$post_data['template'] = $post_data['mode'];
 			}
 
-			if( 'directory' != $args['mode'] ) {
+			if ( 'directory' != $args['mode'] ) {
 
 				$args = array_merge( $post_data, $args );
 
@@ -915,82 +1005,20 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 
 		/**
-		 * Shortcode: Show custom content to specific role
-		 *
-		 * Show content to specific roles
-		 * [um_show_content roles='member'] <!-- insert content here -->  [/um_show_content]
-		 * You can add multiple target roles, just use ',' e.g.  [um_show_content roles='member,candidates,pets']
-		 *
-		 * Hide content from specific roles
-		 * [um_show_content not='contributors'] <!-- insert content here -->  [/um_show_content]
-		 * You can add multiple target roles, just use ',' e.g.  [um_show_content roles='member,candidates,pets']
-		 *
-		 * @param  array $atts
-		 * @param  string $content
-		 * @return string
-		 */
-		function um_shortcode_show_content_for_role( $atts = array() , $content = '' ) {
-			global $user_ID;
-
-			if ( ! is_user_logged_in() ) {
-				return;
-			}
-
-			$a = shortcode_atts( array(
-				'roles' => '',
-				'not' => '',
-				'is_profile' => false,
-			), $atts );
-
-			if ( $a['is_profile'] ) {
-				um_fetch_user( um_profile_id() );
-			} else {
-				um_fetch_user( $user_ID );
-			}
-
-			$current_user_roles = um_user( 'roles' );
-
-			if ( ! empty( $a['not'] ) && ! empty( $a['roles'] ) ) {
-				return do_shortcode( $this->convert_locker_tags( $content ) );
-			}
-
-			if ( ! empty( $a['not'] ) ) {
-				$not_in_roles = explode( ",", $a['not'] );
-
-				if ( is_array( $not_in_roles ) && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $not_in_roles ) ) <= 0 ) ) {
-					return do_shortcode( $this->convert_locker_tags( $content ) );
-				}
-			} else {
-				$roles = explode( ",", $a['roles'] );
-
-				if ( ! empty( $current_user_roles ) && is_array( $roles ) && count( array_intersect( $current_user_roles, $roles ) ) > 0 ) {
-					return do_shortcode( $this->convert_locker_tags( $content ) );
-				}
-			}
-
-			return '';
-		}
-
-
-		/**
 		 * @param array $args
 		 * @param string $content
 		 *
 		 * @return string
 		 */
 		public function ultimatemember_searchform( $args = array(), $content = "" ) {
-			// turn off buffer
+			wp_enqueue_script( 'um-searchform' );
+			wp_enqueue_style( 'um-searchform' );
+
 			ob_start();
 
-			// load template
 			$this->load_template( 'searchform' );
 
-			// get the buffer
-			$template = ob_get_contents();
-
-			// clear the buffer
-			ob_end_clean();
-
+			$template = ob_get_clean();
 			return $template;
 		}
 

@@ -1,0 +1,15 @@
+.um-search-area {
+    position: relative;
+    max-width: 300px;
+}
+
+.um-search-area .um-search-field {
+    width: 100%;
+}
+
+.um-search-area .um-search-icon {
+    position: absolute;
+    top: 50%;
+    margin-top: -11px;
+    right: 10px;
+}

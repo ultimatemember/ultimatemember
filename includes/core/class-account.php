@@ -151,14 +151,18 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 * @return string
 		 */
 		function ultimatemember_account( $args = array() ) {
+
+			wp_enqueue_script( 'um-account' );
+			wp_enqueue_style( 'um-account' );
+
 			um_fetch_user( get_current_user_id() );
 
 			ob_start();
 
 			$defaults = array(
-				'template' => 'account',
-				'mode' => 'account',
-				'form_id' => 'um_account_id',
+				'template'  => 'account',
+				'mode'      => 'account',
+				'form_id'   => 'um_account_id',
 			);
 			$args = wp_parse_args( $args, $defaults );
 
