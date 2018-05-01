@@ -1752,10 +1752,11 @@ function um_get_default_avatar_uri() {
  * @return bool|string
  */
 function um_get_user_avatar_data( $user_id = '', $size = '96' ) {
-    if( empty( $user_id ) )
-        $user_id = get_current_user_id();
-
-    um_fetch_user( $user_id );
+    if( empty( $user_id ) ) {
+	    $user_id = um_user( 'ID' );
+    } else {
+        um_fetch_user( $user_id );
+    }
 
     $data = array(
         'user_id' => $user_id,
