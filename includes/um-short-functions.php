@@ -2153,7 +2153,7 @@ function um_user( $data, $attrs = null ) {
 			    src="' . esc_attr($data['url']) . '" 
 			    class="' . esc_attr($data['class']) . '" 
 			    width="' . esc_attr($data['size']) . '"  
-			    height="' . esc_attr($data['url']) . '" 
+			    height="' . esc_attr($data['size']) . '" 
 			    alt="' . esc_attr($data['alt']) . '" />';
 
 			break;
