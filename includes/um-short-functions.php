@@ -2149,12 +2149,12 @@ function um_user( $data, $attrs = null ) {
 		case 'profile_photo':
 			$data = um_get_user_avatar_data( um_user( 'ID' ), $attrs );
 
-			return '<img onerror="this.src=\''.esc_attr($data['default']).'\';"  
-			    src="' . esc_attr($data['url']) . '" 
+			return '<img src="' . esc_attr($data['url']) . '" 
 			    class="' . esc_attr($data['class']) . '" 
 			    width="' . esc_attr($data['size']) . '"  
 			    height="' . esc_attr($data['size']) . '" 
-			    alt="' . esc_attr($data['alt']) . '" />';
+			    alt="' . esc_attr($data['alt']) . '"
+			    onerror="this.src=\''.esc_attr($data['default']).'\';" />'; //don't move attribute before src
 
 			break;
 
