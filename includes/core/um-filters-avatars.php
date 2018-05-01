@@ -76,7 +76,7 @@ function um_get_avatar( $avatar = '', $id_or_email='', $size = '96', $avatar_cla
 			$rating = "&amp;r={$rating}";
 		}
 
-		if ( UM()->options()->get('use_gravatars') && ! um_user('synced_profile_photo') && ! $has_profile_photo ){
+		if ( UM()->options()->get('use_gravatars') && ! um_user('synced_profile_photo') ){
 			$avatar_url  = um_get_domain_protocol().'gravatar.com/avatar/'.um_user('synced_gravatar_hashed_id');
 			$avatar_url = add_query_arg('s',400, $avatar_url);
 			$gravatar_type = UM()->options()->get( 'use_um_gravatar_default_builtin_image' );

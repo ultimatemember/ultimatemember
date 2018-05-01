@@ -442,7 +442,7 @@ function um_js_redirect( $url ) {
 	if (headers_sent() || empty( $url )) {
 		//for blank redirects
 		if ('' == $url) {
-			$url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+			$url = set_url_scheme( '//' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] );
 		}
 
 		$funtext = "echo \"<script data-cfasync='false' type='text/javascript'>window.location = '" . $url . "'</script>\";";
@@ -1594,9 +1594,7 @@ function um_youtube_id_from_url( $url ) {
  * @return string
  */
 function um_user_uploads_uri() {
-	if (is_ssl()) {
-		UM()->files()->upload_baseurl = str_replace( "http://", "https://", UM()->files()->upload_baseurl );
-	}
+    UM()->files()->upload_baseurl = set_url_scheme( UM()->files()->upload_baseurl );
 
 	$uri = UM()->files()->upload_baseurl . um_user( 'ID' ) . '/';
 
@@ -1706,33 +1704,23 @@ function um_get_avatar_uri( $image, $attrs ) {
 	 */
 	$cache_time = apply_filters( 'um_filter_avatar_cache_time', current_time( 'timestamp' ), um_user( 'ID' ) );
 
-	if (!empty( $cache_time )) {
-		$cache_time = "?{$cache_time}";
-	}
-
-	if (file_exists( UM()->files()->upload_basedir . um_user( 'ID' ) . "/profile_photo-{$attrs}{$ext}" )) {
-
-		$uri = um_user_uploads_uri() . "profile_photo-{$attrs}{$ext}{$cache_time}";
-
+	if( $attrs == 'original' && file_exists( um_user_uploads_dir() . "profile_photo{$ext}" ) ) {
+        $uri = um_user_uploads_uri() . "profile_photo{$ext}";
+    } else if (file_exists( um_user_uploads_dir() . "profile_photo-{$attrs}{$ext}" )) {
+		$uri = um_user_uploads_uri() . "profile_photo-{$attrs}{$ext}";
 	} else {
-
 		$sizes = UM()->options()->get( 'photo_thumb_sizes' );
 		if (is_array( $sizes )) $find = um_closest_num( $sizes, $attrs );
 
-		if (file_exists( UM()->files()->upload_basedir . um_user( 'ID' ) . "/profile_photo-{$find}{$ext}" )) {
-
-			$uri = um_user_uploads_uri() . "profile_photo-{$find}{$ext}{$cache_time}";
-
-		} else if (file_exists( UM()->files()->upload_basedir . um_user( 'ID' ) . "/profile_photo{$ext}" )) {
-
-			$uri = um_user_uploads_uri() . "profile_photo{$ext}{$cache_time}";
-
+		if (file_exists( um_user_uploads_dir() . "profile_photo-{$find}{$ext}" )) {
+			$uri = um_user_uploads_uri() . "profile_photo-{$find}{$ext}";
+		} else if (file_exists( um_user_uploads_dir() . "profile_photo{$ext}" )) {
+			$uri = um_user_uploads_uri() . "profile_photo{$ext}";
 		}
+	}
 
-		if ($attrs == 'original') {
-			$uri = um_user_uploads_uri() . "profile_photo{$ext}{$cache_time}";
-		}
-
+	if ( !empty( $cache_time ) ) {
+		$uri .= "?{$cache_time}";
 	}
 
 	return $uri;
@@ -1749,35 +1737,119 @@ function um_get_default_avatar_uri() {
 	$uri = !empty( $uri['url'] ) ? $uri['url'] : '';
 	if ( ! $uri ) {
 		$uri = um_url . 'assets/img/default_avatar.jpg';
-	} else {
-
-		//http <-> https compatibility default avatar option of SSL was changed
-		$url_array = parse_url( $uri );
-
-		if (is_ssl() && $url_array['scheme'] == 'http') {
-			$uri = str_replace( 'http://', 'https://', $uri );
-		} else if (!is_ssl() && $url_array['scheme'] == 'https') {
-			$uri = str_replace( 'https://', 'http://', $uri );
-		}
 	}
 
-	return $uri;
+	return set_url_scheme( $uri );
 }
 
 
 /**
  * get user avatar url
  *
+ * @param $user_id
+ * @param $size
+ *
  * @return bool|string
  */
-function um_get_user_avatar_url() {
-	if (um_profile( 'profile_photo' )) {
-		$avatar_uri = um_get_avatar_uri( um_profile( 'profile_photo' ), 32 );
-	} else {
-		$avatar_uri = um_get_default_avatar_uri();
-	}
+function um_get_user_avatar_data( $user_id = '', $size = '96' ) {
+    if( empty( $user_id ) )
+        $user_id = get_current_user_id();
 
-	return $avatar_uri;
+    um_fetch_user( $user_id );
+
+    $data = array(
+        'user_id' => $user_id,
+        'default' => um_get_default_avatar_uri(),
+        'class' => 'func-um_user gravatar avatar avatar-' . $size . ' um-avatar',
+        'size' => $size
+    );
+
+	if ( $profile_photo = um_profile( 'profile_photo' ) ) {
+		$data['url'] = um_get_avatar_uri( $profile_photo, $size );
+	    $data['type'] = 'upload';
+	    $data['class'] .= ' um-avatar-uploaded';
+	} else if( $synced_profile_photo = um_user( 'synced_profile_photo' ) ) {
+        $data['url'] = $synced_profile_photo;
+        $data['type'] = 'sync';
+        $data['class'] .= ' um-avatar-default';
+    } else if( UM()->options()->get( 'use_gravatars' ) ) {
+        $avatar_hash_id = get_user_meta( $user_id, 'synced_gravatar_hashed_id', true );
+        $data['url'] = set_url_scheme( '//gravatar.com/avatar/' . $avatar_hash_id );
+        $data['url'] = add_query_arg( 's', 400, $data['url'] );
+        $gravatar_type = UM()->options()->get( 'use_um_gravatar_default_builtin_image' );
+        if ( $gravatar_type == 'default' ) {
+            if ( UM()->options()->get( 'use_um_gravatar_default_image' ) ) {
+                $data['url'] = add_query_arg( 'd', $data['default'], $data['url'] );
+            }
+        } else {
+            $data['url'] = add_query_arg( 'd', $gravatar_type, $data['url'] );
+        }
+        $data['type'] = 'gravatar';
+        $data['class'] .= ' um-avatar-gravatar';
+    } else {
+        $data['url'] = $data['default'];
+        $data['type'] = 'default';
+        $data['class'] .= ' um-avatar-default';
+    }
+
+    /**
+     * UM hook
+     *
+     * @type filter
+     * @title um_user_avatar_url_filter
+     * @description Change user avatar URL
+     * @input_vars
+     * [{"var":"$avatar_uri","type":"string","desc":"Avatar URL"},
+     * {"var":"$user_id","type":"int","desc":"User ID"}]
+     * @change_log
+     * ["Since: 2.0"]
+     * @usage add_filter( 'um_user_avatar_url_filter', 'function_name', 10, 2 );
+     * @example
+     * <?php
+     * add_filter( 'um_user_avatar_url_filter', 'my_user_avatar_url', 10, 2 );
+     * function my_user_avatar_url( $avatar_uri ) {
+     *     // your code here
+     *     return $avatar_uri;
+     * }
+     * ?>
+     */
+    $data['url'] = apply_filters( 'um_user_avatar_url_filter', $data['url'], $user_id, $data );
+    /**
+     * UM hook
+     *
+     * @type filter
+     * @title um_avatar_image_alternate_text
+     * @description Change user display name on um_user function profile photo
+     * @input_vars
+     * [{"var":"$display_name","type":"string","desc":"User Display Name"}]
+     * @change_log
+     * ["Since: 2.0"]
+     * @usage add_filter( 'um_avatar_image_alternate_text', 'function_name', 10, 1 );
+     * @example
+     * <?php
+     * add_filter( 'um_avatar_image_alternate_text', 'my_avatar_image_alternate_text', 10, 1 );
+     * function my_avatar_image_alternate_text( $display_name ) {
+     *     // your code here
+     *     return $display_name;
+     * }
+     * ?>
+     */
+    $data['alt'] = apply_filters( "um_avatar_image_alternate_text", um_user( "display_name" ), $data );
+
+	return $data;
+}
+
+/**
+ * get user avatar url
+ *
+ * @param $user_id
+ * @param $size
+ *
+ * @return bool|string
+ */
+function um_get_user_avatar_url( $user_id = '', $size = '96' ) {
+    $data = um_get_user_avatar_data( $user_id, $size );
+    return $data['url'];
 }
 
 
@@ -2066,88 +2138,14 @@ function um_user( $data, $attrs = null ) {
 			break;
 
 		case 'profile_photo':
+			$data = um_get_user_avatar_data( um_user( 'ID' ), $attrs );
 
-			$has_profile_photo = false;
-			$photo_type = 'um-avatar-default';
-
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_avatar_image_alternate_text
-			 * @description Change user display name on um_user function profile photo
-			 * @input_vars
-			 * [{"var":"$display_name","type":"string","desc":"User Display Name"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_avatar_image_alternate_text', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_avatar_image_alternate_text', 'my_avatar_image_alternate_text', 10, 1 );
-			 * function my_avatar_image_alternate_text( $display_name ) {
-			 *     // your code here
-			 *     return $display_name;
-			 * }
-			 * ?>
-			 */
-			$image_alt = apply_filters( "um_avatar_image_alternate_text", um_user( "display_name" ) );
-
-			if (um_profile( 'profile_photo' )) {
-				$avatar_uri = um_get_avatar_uri( um_profile( 'profile_photo' ), $attrs );
-				$has_profile_photo = true;
-				$photo_type = 'um-avatar-uploaded';
-			} else if (um_user( 'synced_profile_photo' )) {
-				$avatar_uri = um_user( 'synced_profile_photo' );
-			} else {
-				$avatar_uri = um_get_default_avatar_uri();
-			}
-
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_user_avatar_url_filter
-			 * @description Change user avatar URL
-			 * @input_vars
-			 * [{"var":"$avatar_uri","type":"string","desc":"Avatar URL"},
-			 * {"var":"$user_id","type":"int","desc":"User ID"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_user_avatar_url_filter', 'function_name', 10, 2 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_user_avatar_url_filter', 'my_user_avatar_url', 10, 2 );
-			 * function my_user_avatar_url( $avatar_uri ) {
-			 *     // your code here
-			 *     return $avatar_uri;
-			 * }
-			 * ?>
-			 */
-			$avatar_uri = apply_filters( 'um_user_avatar_url_filter', $avatar_uri, um_user( 'ID' ) );
-
-
-			if (!$avatar_uri)
-				return '';
-
-			if ( UM()->options()->get( 'use_gravatars' ) && !um_user( 'synced_profile_photo' ) && !$has_profile_photo) {
-				$avatar_hash_id = get_user_meta( um_user( 'ID' ), 'synced_gravatar_hashed_id', true );
-				$avatar_uri = um_get_domain_protocol() . 'gravatar.com/avatar/' . $avatar_hash_id;
-				$avatar_uri = add_query_arg( 's', 400, $avatar_uri );
-				$gravatar_type = UM()->options()->get( 'use_um_gravatar_default_builtin_image' );
-				$photo_type = 'um-avatar-gravatar';
-				if ( $gravatar_type == 'default' ) {
-					if ( UM()->options()->get( 'use_um_gravatar_default_image' ) ) {
-						$avatar_uri = add_query_arg( 'd', um_get_default_avatar_uri(), $avatar_uri );
-					}
-				} else {
-					$avatar_uri = add_query_arg( 'd', $gravatar_type, $avatar_uri );
-				}
-
-			}
-
-			$default_avatar = um_get_default_avatar_uri();
-
-			return '<img onerror="this.src=\''.esc_attr($default_avatar).'\';"  src="' . $avatar_uri . '" class="func-um_user gravatar avatar avatar-' . $attrs . ' um-avatar ' . $photo_type . '" width="' . $attrs . '"  height="' . $attrs . '" alt="' . $image_alt . '" />';
+			return '<img onerror="this.src=\''.esc_attr($data['default']).'\';"  
+			    src="' . esc_attr($data['url']) . '" 
+			    class="' . esc_attr($data['class']) . '" 
+			    width="' . esc_attr($data['size']) . '"  
+			    height="' . esc_attr($data['url']) . '" 
+			    alt="' . esc_attr($data['alt']) . '" />';
 
 			break;
 

@@ -136,22 +136,15 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 			$um_port_forwarding_url = UM()->options()->get( 'um_port_forwarding_url' );
 			$um_port_forwarding_url = ! empty( $um_port_forwarding_url ) ? $um_port_forwarding_url : '';
 
+			$page_url 	= '';
 			if ( is_multisite() ) {
-
-				$page_url 	= '';
 				$blog_id 	= get_current_blog_id();
 				$siteurl 	= get_site_url( $blog_id );
 
 				$network_permalink_structure = UM()->options()->get( 'network_permalink_structure' );
 
 				if(  $network_permalink_structure == "sub-directory" ){
-					if ( is_ssl() ) {
-						$page_url = 'https';
-					} else {
-						$page_url = 'http';
-					}
-					$page_url .= "://";
-
+					$page_url .= "//";
 					$page_url .= $_SERVER[ $server_name_method ];
 				}else{
 					$page_url .= $siteurl;
@@ -159,7 +152,6 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 
 				if ( $um_port_forwarding_url == 1 && isset( $_SERVER["SERVER_PORT"] ) ) {
 					$page_url .= ":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-
 				} else {
 					$page_url .= $_SERVER["REQUEST_URI"];
 				}
@@ -168,13 +160,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 				if ( !isset( $_SERVER['SERVER_NAME'] ) )
 					return '';
 
-
-				if ( is_ssl() ) {
-					$page_url = 'https';
-				} else {
-					$page_url = 'http';
-				}
-				$page_url .= "://";
+				$page_url .= "//";
 
 				if ( $um_port_forwarding_url == 1 && isset( $_SERVER["SERVER_PORT"] ) ) {
 					$page_url .= $_SERVER[ $server_name_method ].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
@@ -210,7 +196,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 			 * }
 			 * ?>
 			 */
-			return apply_filters( 'um_get_current_page_url', $page_url );
+			return apply_filters( 'um_get_current_page_url', set_url_scheme( $page_url ) );
 		}
 
 
