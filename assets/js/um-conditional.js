@@ -6,6 +6,7 @@ jQuery(document).ready( function (){
 
     /**
      * Get field default value
+     * @used um_get_field_type
      * @param object $dom
      * @return string
      */
@@ -53,8 +54,11 @@ jQuery(document).ready( function (){
         return {type: type, value: default_value};
     }
 
+
     /**
      * Get field element by field wrapper
+     *
+     * @used um_get_field_type
      * @param  object $dom
      * @return object
      */
@@ -81,12 +85,13 @@ jQuery(document).ready( function (){
         return '';
     }
 
+
     /**
      * Get field type
      * @param  object $dom
      * @return string
      */
-    function um_get_field_type($dom) {
+    function um_get_field_type( $dom ) {
         var type = '';
         var classes = $dom.attr( 'class' );
         jQuery.each( classes.split(' '), function (i, d) {
@@ -96,74 +101,33 @@ jQuery(document).ready( function (){
         });
 
         return type;
-
     }
+
 
     /**
      * Get field siblings/chidren conditions
+     *
      * @param  string field_key
      * @return array
      */
-    function um_get_field_children(field_key) {
+    function um_get_field_children( field_key ) {
         var arr_conditions = [];
-        jQuery.each(arr_all_conditions, function (ii, condition) {
-            if (condition.field.parent == field_key) {
-                arr_conditions.push(condition.field.condition);
+        jQuery.each( arr_all_conditions, function (ii, condition) {
+            if ( condition.field.parent == field_key ) {
+                arr_conditions.push( condition.field.condition );
             }
         });
 
         return arr_conditions;
-
     }
 
-    /**
-     * Split single array to multi-dimensional array
-     * @param  array arr
-     * @param  integer n
-     * @return array
-     */
-    function um_splitup_array(arr, n) {
-        var rest = arr.length % n,
-            restUsed = rest,
-            partLength = Math.floor(arr.length / n),
-            result = [];
-
-        for (var i = 0; i < arr.length; i += partLength) {
-            var end = partLength + i,
-                add = false;
-
-            if (rest !== 0 && restUsed) {
-                end++;
-                restUsed--;
-                add = true;
-            }
-
-            result.push(arr.slice(i, end));
-
-            if (add) {
-                i++;
-            }
-        }
-
-        var obj_result = [];
-        jQuery.each(result, function (ii, dd) {
-            obj_result.push({
-                action: dd[0],
-                if_field: dd[1],
-                operator: dd[2],
-                value: dd[3]
-            })
-        });
-
-        return obj_result;
-    }
 
     /**
      * Get field live value
      * @param  object $dom
      * @return mixed
      */
-    function um_get_field_data($dom) {
+    function um_get_field_data( $dom ) {
         um_live_field = $dom.parents('.um-field').data('key');
         um_live_value = $dom.val();
 
@@ -191,10 +155,18 @@ jQuery(document).ready( function (){
 
     }
 
-    function um_in_array(needle, haystack, strict){
+
+    /**
+     *
+     * @param needle
+     * @param haystack
+     * @param strict
+     * @returns {boolean}
+     */
+    function um_in_array( needle, haystack, strict ) {
         var found = false, key, strict = !!strict;
-        for (key in haystack) {
-            if ((strict && haystack[key] === needle) || (!strict && haystack[key] == needle)) {
+        for ( key in haystack ) {
+            if ( ( strict && haystack[ key ] === needle ) || ( ! strict && haystack[ key ] == needle ) ) {
                 found = true;
                 break;
             }
@@ -203,17 +175,202 @@ jQuery(document).ready( function (){
         return found;
     }
 
+
+    /**
+     * Restores default field value
+     * @used um_get_field_element
+     * @param  object $dom
+     */
+    function um_field_restore_default_value( $dom ) {
+        //um_field_default_values
+
+        var type = um_get_field_type( $dom );
+        var key = $dom.data('key');
+        var field = um_field_default_values[key];
+        switch ( type ) {
+
+            case 'text':
+            case 'number':
+            case 'date':
+            case 'textarea':
+                $dom.find('input:text,input[type=number],textareas').val(field.value);
+                break;
+
+            case 'select':
+                $dom.find('select').find('option').prop('selected', false);
+                $dom.find('select').val(field.value);
+                $dom.find('select').trigger('change');
+                break;
+
+            case 'multiselect':
+                $dom.find('select').find('option').prop('selected', false);
+                jQuery.each(field.value, function (i, value) {
+                    $dom.find('select').find('option[value="' + value + '"]').attr('selected', true);
+                });
+                $dom.find('select').trigger('change');
+                break;
+
+            case 'checkbox':
+
+                if ( $dom.find('input[type=checkbox]:checked').length >= 1 ) {
+
+                    $dom.find('input[type=checkbox]:checked').removeAttr('checked');
+                    $dom.find('span.um-field-checkbox-state i').removeClass('um-icon-android-checkbox-outline');
+                    $dom.find('span.um-field-checkbox-state i').addClass('um-icon-android-checkbox-outline-blank');
+                    $dom.find('.um-field-checkbox.active').removeClass('active');
+
+                    if (jQuery.isArray(field.value)) {
+                        jQuery.each(field.value, function (i, value) {
+                            var cbox_elem = $dom.find('input[type=checkbox][value="' + value + '"]');
+                            cbox_elem.attr('checked', true);
+                            cbox_elem.closest('.um-field-checkbox').find('i').removeClass('um-icon-android-checkbox-outline-blank');
+                            cbox_elem.closest('.um-field-checkbox').find('i').addClass('um-icon-android-checkbox-outline');
+                            cbox_elem.closest('.um-field-checkbox').addClass('active');
+                        });
+                    } else {
+                        var cbox_elem = $dom.find('input[type=checkbox][value="' + field.value + '"]');
+                        cbox_elem.attr('checked', true);
+                        cbox_elem.closest('.um-field-checkbox').find('i').removeClass('um-icon-android-checkbox-outline-blank');
+                        cbox_elem.closest('.um-field-checkbox').find('i').addClass('um-icon-android-checkbox-outline');
+                        cbox_elem.closest('.um-field-checkbox').addClass('active');
+                    }
+
+                }
+
+                break;
+            case 'radio':
+
+                if ( $dom.find('input[type=radio]:checked').length >= 1 ) {
+
+                    setTimeout(function () {
+
+                        $dom.find('input[type=radio]:checked').removeAttr('checked');
+
+                        $dom.find('span.um-field-radio-state i').removeClass('um-icon-android-radio-button-on');
+                        $dom.find('span.um-field-radio-state i').addClass('um-icon-android-radio-button-off');
+                        $dom.find('.um-field-radio.active').removeClass('active');
+
+                        var radio_elem = $dom.find("input[type=radio][value='" + field.value + "']");
+                        radio_elem.attr('checked', true);
+                        radio_elem.closest('.um-field-radio').find('i').removeClass('um-icon-android-radio-button-off');
+                        radio_elem.closest('.um-field-radio').find('i').addClass('um-icon-android-radio-button-on');
+                        radio_elem.closest('.um-field-radio').addClass('active');
+
+                    }, 100);
+                }
+
+                break;
+
+
+        } // end switch type
+
+
+        if ( ! $dom.hasClass( 'um-field-has-changed' ) ) {
+            var me = um_get_field_element( $dom );
+
+            if ( type == 'radio' || type == 'checkbox' ) {
+                me = me.find( ':checked' );
+            }
+
+            if ( me ) {
+                me.trigger( 'change' );
+                $dom.addClass( 'um-field-has-changed' );
+            }
+
+            /*
+             maybe future fix
+             if ( me ) {
+             if ( type == 'radio' || type == 'checkbox' ) {
+             me.each( function() {
+             if ( jQuery(this).is(':checked') ) {
+             jQuery(this).trigger('change');
+             }
+             });
+             } else {
+             me.trigger( 'change' );
+             }
+
+             $dom.addClass( 'um-field-has-changed' );
+             }*/
+        }
+    }
+
+
+    /**
+     * Hides div for IE browser
+     * @param  object $dom
+     */
+    function _hide_in_ie( $dom ){
+        if ( typeof( jQuery.browser ) != 'undefined' && jQuery.browser.msie ) {
+            $dom.css({"visibility":"hidden"});
+        }
+    }
+
+    /**
+     * Shows div for IE browser
+     * @param  object $dom
+     */
+    function _show_in_ie( $dom ){
+        if ( typeof( jQuery.browser ) != 'undefined' && jQuery.browser.msie ) {
+            $dom.css({"visibility":"visible"});
+        }
+    }
+
+
+    /**
+     * Apply condition's action
+     *
+     * @used um_field_restore_default_value
+     * @used _hide_in_ie
+     * @used _show_in_ie
+     * @param  object  $dom
+     * @param  string  condition
+     * @param  boolean is_true
+     */
+    function um_field_apply_action( $dom, condition, is_true ) {
+        var child_dom = jQuery('div.um-field[data-key="' + condition.owner + '"]');
+
+        if (condition.action == 'show' && is_true /*&& child_dom.is(':hidden')*/) {
+            child_dom.show();
+            _show_in_ie( child_dom );
+            um_field_restore_default_value(child_dom);
+        }
+
+        if (condition.action == 'show' && !is_true /*&& child_dom.is(':visible') */) {
+            child_dom.hide();
+            _hide_in_ie( child_dom );
+        }
+
+        if (condition.action == 'hide' && is_true  /*&& child_dom.is(':visible')*/) {
+            child_dom.hide();
+            _hide_in_ie( child_dom );
+        }
+
+        if (condition.action == 'hide' && !is_true /*&& child_dom.is(':hidden')*/) {
+            child_dom.show();
+            _show_in_ie( child_dom );
+            um_field_restore_default_value( child_dom );
+
+        }
+        $dom.removeClass('um-field-has-changed');
+    }
+
+
     /**
      * Apply field conditions
+     *
+     * @used um_get_field_data
+     * @used um_in_array
+     * @used um_field_apply_action
      * @param  object  $dom
      * @param  boolean is_single_update
      */
-    function um_apply_conditions($dom, is_single_update) {
+    function um_apply_conditions( $dom, is_single_update ) {
         var operators = ['empty', 'not empty', 'equals to', 'not equals', 'greater than', 'less than', 'contains'];
         var key = $dom.parents('.um-field[data-key]').data('key');
         var conditions = um_field_conditions[key];
 
-        var live_field_value = um_get_field_data($dom);
+        var live_field_value = um_get_field_data( $dom );
 
         var $owners = {};
         var $owners_values = {};
@@ -317,157 +474,6 @@ jQuery(document).ready( function (){
 
     }
 
-    /**
-     * Apply condition's action
-     * @param  object  $dom
-     * @param  string  condition
-     * @param  boolean is_true
-     */
-    function um_field_apply_action($dom, condition, is_true) {
-        var child_dom = jQuery('div.um-field[data-key="' + condition.owner + '"]');
-
-        if (condition.action == 'show' && is_true /*&& child_dom.is(':hidden')*/) {
-            child_dom.show();
-            _show_in_ie( child_dom );
-            um_field_restore_default_value(child_dom);
-        }
-
-        if (condition.action == 'show' && !is_true /*&& child_dom.is(':visible') */) {
-            child_dom.hide();
-            _hide_in_ie( child_dom );
-        }
-
-        if (condition.action == 'hide' && is_true  /*&& child_dom.is(':visible')*/) {
-            child_dom.hide();
-             _hide_in_ie( child_dom );
-       }
-
-        if (condition.action == 'hide' && !is_true /*&& child_dom.is(':hidden')*/) {
-            child_dom.show();
-            _show_in_ie( child_dom );
-            um_field_restore_default_value( child_dom );
-
-        }
-        $dom.removeClass('um-field-has-changed');
-    }
-
-    /**
-     * Restores default field value
-     * @param  object $dom
-     */
-    function um_field_restore_default_value( $dom ) {
-        //um_field_default_values
-
-        var type = um_get_field_type( $dom );
-        var key = $dom.data('key');
-        var field = um_field_default_values[key];
-        switch ( type ) {
-
-            case 'text':
-            case 'number':
-            case 'date':
-            case 'textarea':
-                $dom.find('input:text,input[type=number],textareas').val(field.value);
-                break;
-
-            case 'select':
-                $dom.find('select').find('option').prop('selected', false);
-                $dom.find('select').val(field.value);
-                $dom.find('select').trigger('change');
-                break;
-
-            case 'multiselect':
-                $dom.find('select').find('option').prop('selected', false);
-                jQuery.each(field.value, function (i, value) {
-                    $dom.find('select').find('option[value="' + value + '"]').attr('selected', true);
-                });
-                $dom.find('select').trigger('change');
-                break;
-
-            case 'checkbox':
-
-                if ( $dom.find('input[type=checkbox]:checked').length >= 1 ) {
-
-                    $dom.find('input[type=checkbox]:checked').removeAttr('checked');
-                    $dom.find('span.um-field-checkbox-state i').removeClass('um-icon-android-checkbox-outline');
-                    $dom.find('span.um-field-checkbox-state i').addClass('um-icon-android-checkbox-outline-blank');
-                    $dom.find('.um-field-checkbox.active').removeClass('active');
-
-                    if (jQuery.isArray(field.value)) {
-                        jQuery.each(field.value, function (i, value) {
-                            var cbox_elem = $dom.find('input[type=checkbox][value="' + value + '"]');
-                            cbox_elem.attr('checked', true);
-                            cbox_elem.closest('.um-field-checkbox').find('i').removeClass('um-icon-android-checkbox-outline-blank');
-                            cbox_elem.closest('.um-field-checkbox').find('i').addClass('um-icon-android-checkbox-outline');
-                            cbox_elem.closest('.um-field-checkbox').addClass('active');
-                        });
-                    } else {
-                        var cbox_elem = $dom.find('input[type=checkbox][value="' + field.value + '"]');
-                        cbox_elem.attr('checked', true);
-                        cbox_elem.closest('.um-field-checkbox').find('i').removeClass('um-icon-android-checkbox-outline-blank');
-                        cbox_elem.closest('.um-field-checkbox').find('i').addClass('um-icon-android-checkbox-outline');
-                        cbox_elem.closest('.um-field-checkbox').addClass('active');
-                    }
-
-                }
-
-                break;
-            case 'radio':
-
-                if ( $dom.find('input[type=radio]:checked').length >= 1 ) {
-
-                    setTimeout(function () {
-
-                        $dom.find('input[type=radio]:checked').removeAttr('checked');
-
-                        $dom.find('span.um-field-radio-state i').removeClass('um-icon-android-radio-button-on');
-                        $dom.find('span.um-field-radio-state i').addClass('um-icon-android-radio-button-off');
-                        $dom.find('.um-field-radio.active').removeClass('active');
-
-                        var radio_elem = $dom.find("input[type=radio][value='" + field.value + "']");
-                        radio_elem.attr('checked', true);
-                        radio_elem.closest('.um-field-radio').find('i').removeClass('um-icon-android-radio-button-off');
-                        radio_elem.closest('.um-field-radio').find('i').addClass('um-icon-android-radio-button-on');
-                        radio_elem.closest('.um-field-radio').addClass('active');
-
-                    }, 100);
-                }
-
-                break;
-
-
-        } // end switch type
-
-
-        if ( ! $dom.hasClass( 'um-field-has-changed' ) ) {
-            var me = um_get_field_element( $dom );
-
-            if ( type == 'radio' || type == 'checkbox' ) {
-                me = me.find( ':checked' );
-            }
-
-            if ( me ) {
-                me.trigger( 'change' );
-                $dom.addClass( 'um-field-has-changed' );
-            }
-
-            /*
-            maybe future fix
-            if ( me ) {
-                if ( type == 'radio' || type == 'checkbox' ) {
-                    me.each( function() {
-                       if ( jQuery(this).is(':checked') ) {
-                           jQuery(this).trigger('change');
-                       }
-                    });
-                } else {
-                    me.trigger( 'change' );
-                }
-
-                $dom.addClass( 'um-field-has-changed' );
-            }*/
-        }
-    }
 
     /**
      * Hides sibling/child field when parent field is hidden
@@ -485,40 +491,24 @@ jQuery(document).ready( function (){
 
     }
 
-    /**
-     * Hides div for IE browser
-     * @param  object $dom
-     */
-    function _hide_in_ie( $dom ){
-        if ( typeof( jQuery.browser ) != 'undefined' && jQuery.browser.msie ) {
-           $dom.css({"visibility":"hidden"});
-        }
-    }
 
-    /**
-     * Shows div for IE browser
-     * @param  object $dom
-     */
-    function _show_in_ie( $dom ){
-        if ( typeof( jQuery.browser ) != 'undefined' && jQuery.browser.msie ) {
-           $dom.css({"visibility":"visible"});
-        }
-    }
-
-    jQuery(document).on('change', '.um-field select, .um-field input[type=radio], .um-field input[type=checkbox]', function () {
+    jQuery(document).on('change', '.um-field select, .um-field input[type="radio"], .um-field input[type="checkbox"]', function () {
         var me = jQuery(this);
         um_apply_conditions(me, false);
     });
 
-    jQuery(document).on('input change', '.um-field input[type=text]', function () {
+
+    jQuery(document).on('input change', '.um-field input[type="text"]', function () {
         var me = jQuery(this);
         um_apply_conditions(me, false);
     });
 
-    jQuery(document).on('input change', '.um-field input[type=password]', function () {
+
+    jQuery(document).on('input change', '.um-field input[type="password"]', function () {
         var me = jQuery(this);
         um_apply_conditions(me, false);
     });
+
 
     jQuery(document).on('um_fields_change', function () {
         um_field_hide_siblings();
@@ -528,6 +518,10 @@ jQuery(document).ready( function (){
 
     /**
      * UM Conditional fields Init
+     *
+     * @used um_get_field_default_value
+     * @used um_get_field_element
+     * @used um_get_field_children
      */
     function um_init_field_conditions() {
         var arr_field_keys = [];

@@ -1,90 +1,13 @@
 jQuery( document ).ready( function(){
 
 
-	//Profile Page
-	jQuery( document ).on( 'click', '.um-dropdown a', function(e){
-		return false;
-	});
-
-
-	//Profile Page
-	jQuery( document ).on( 'click', '.um-dropdown a.real_url', function(e){
-		window.location = jQuery(this).attr('href');
-	});
-
-
-	//Profile Page
-	jQuery( document ).on( 'click', '.um-trigger-menu-on-click', function(e){
-		jQuery('.um-dropdown').hide();
-		menu = jQuery(this).find('.um-dropdown');
-		menu.show();
-		return false;
-	});
-
-
-	//Profile Page
-	jQuery( document ).on( 'click', '.um-dropdown-hide', function(e){
-		UM_hide_menus();
-	});
-
-
-	//Profile Page
-	jQuery( document ).on('click', 'a.um-manual-trigger', function(){
-		var child = jQuery(this).attr('data-child');
-		var parent = jQuery(this).attr('data-parent');
-		jQuery(this).parents( parent ).find( child ).trigger('click');
-	});
-
-
-	//Profile Page
-	jQuery(document).on('click', '.um .um-single-image-preview a.cancel', function(e){
-		e.preventDefault();
-		var parent = jQuery(this).parents('.um-field');
-		var src = jQuery(this).parents('.um-field').find('.um-single-image-preview img').attr('src');
-		parent.find('.um-single-image-preview img').attr('src','');
-		parent.find('.um-single-image-preview').hide();
-		parent.find('.um-btn-auto-width').html('Upload');
-		parent.find('input[type=hidden]').val('empty_file');
-
-		jQuery.ajax({
-			url: um_scripts.remove_file,
-			type: 'post',
-			data: {
-				src: src
-			}
-		});
-
-		return false;
-	});
-
-	//Profile Page
-	jQuery(document).on('click', '.um .um-single-file-preview a.cancel', function(e){
-		e.preventDefault();
-		var parent = jQuery(this).parents('.um-field');
-		var src = jQuery(this).parents('.um-field').find('.um-single-fileinfo a').attr('href');
-		parent.find('.um-single-file-preview').hide();
-		parent.find('.um-btn-auto-width').html('Upload');
-		parent.find('input[type=hidden]').val('empty_file');
-
-		jQuery.ajax({
-			url: um_scripts.remove_file,
-			type: 'post',
-			data: {
-				src: src
-			}
-		});
-
-		return false;
-	});
-
-
 	//Profile & Account Page
 	jQuery('.um-tip-n').tipsy({gravity: 'n', opacity: 1, live: 'a.live', offset: 3 });
 	jQuery('.um-tip-w').tipsy({gravity: 'w', opacity: 1, live: 'a.live', offset: 3 });
 	jQuery('.um-tip-e').tipsy({gravity: 'e', opacity: 1, live: 'a.live', offset: 3 });
 	jQuery('.um-tip-s').tipsy({gravity: 's', opacity: 1, live: 'a.live', offset: 3 });
 
-
+	//Profile & Account Page
 	jQuery(document).on('change', '.um-field-area input[type=radio]', function(){
 		var field = jQuery(this).parents('.um-field-area');
 		var this_field = jQuery(this).parents('label');
@@ -94,6 +17,7 @@ jQuery( document ).ready( function(){
 		this_field.find('i').removeClass().addClass('um-icon-android-radio-button-on');
 	});
 
+	//Profile & Account Page
 	jQuery(document).on('change', '.um-field-area input[type=checkbox]', function(){
 		var this_field = jQuery(this).parents('label');
 		if ( this_field.hasClass('active') ) {
@@ -110,10 +34,9 @@ jQuery( document ).ready( function(){
 	jQuery('.um-datepicker').each( function(){
 		elem = jQuery(this);
 
+		var disable = false;
 		if ( elem.attr('data-disabled_weekdays') != '' ) {
-			var disable = JSON.parse( elem.attr('data-disabled_weekdays') );
-		} else {
-			var disable = false;
+			disable = JSON.parse( elem.attr('data-disabled_weekdays') );
 		}
 
 		var years_n = elem.attr('data-years');
@@ -189,18 +112,19 @@ jQuery( document ).ready( function(){
 		readOnly: true
 	});
 
-
+	//Profile & Account Page
 	jQuery('.um-s1,.um-s2').css({'display':'block'});
-
+	//Profile & Account Page
 	jQuery(".um-s1").select2({
-		allowClear: true,
+		allowClear: true
 	});
-
+	//Profile & Account Page
 	jQuery(".um-s2").select2({
 		allowClear: false,
 		minimumResultsForSearch: 10
 	});
 
+	//Profile Page
 	jQuery(document).on('click', '.um-field-group-head:not(.disabled)', function(){
 		var field = jQuery(this).parents('.um-field-group');
 		var limit = field.data('max_entries');
@@ -229,6 +153,7 @@ jQuery( document ).ready( function(){
 		}
 	});
 
+	//Profile Page
 	jQuery(document).on('click', '.um-field-group-cancel', function(e){
 		e.preventDefault();
 		var field = jQuery(this).parents('.um-field-group');
@@ -248,6 +173,7 @@ jQuery( document ).ready( function(){
 		return false;
 	});
 
+	//Profile Page
 	jQuery(document).on('click', '.um-ajax-paginate', function(e){
 		e.preventDefault();
 		var parent = jQuery(this).parent();
@@ -273,6 +199,7 @@ jQuery( document ).ready( function(){
 		return false;
 	});
 
+	//Profile Page (bbPress temlate) to-do: transfer to bbPress
 	jQuery(document).on('click', '.um-ajax-action', function(e){
 		e.preventDefault();
 		var hook = jQuery(this).data('hook');
@@ -298,126 +225,12 @@ jQuery( document ).ready( function(){
 		return false;
 	});
 
-	jQuery('.um-form input[class=um-button][type=submit]').removeAttr('disabled');
+	jQuery('.um-form input[class="um-button"][type="submit"]').removeAttr( 'disabled' );
 
 	//Profile Form
-	jQuery(document).one('click', '.um:not(.um-account) .um-form input[class=um-button][type=submit]:not(.um-has-recaptcha)', function() {
+	jQuery(document).one('click', '.um:not(.um-account) .um-form input[class="um-button"][type="submit"]:not(.um-has-recaptcha)', function() {
 		jQuery(this).attr('disabled','disabled');
 		jQuery(this).parents('form').submit();
 	});
-
-	
-	var um_select_options_cache = {};
-
-	/**
-	 * Find all select fields with parent select fields
-	 */
-	jQuery('select[data-um-parent]').each(function(){
-		
-		var me = jQuery(this);
-		var parent_option = me.data('um-parent');
-		var um_ajax_url = me.data('um-ajax-url');
-		var um_ajax_source = me.data('um-ajax-source');
-		var original_value = me.val();
-
-		me.attr('data-um-init-field', true );
-				
-		jQuery(document).on('change','select[name="'+parent_option+'"]',function(){
-			var parent  = jQuery(this);
-			var form_id = parent.closest('form').find('input[type=hidden][name=form_id]').val();
-			var arr_key = parent.val();
-
-			if( parent.val() != '' && typeof um_select_options_cache[ arr_key ] != 'object' ){
-							
-				jQuery.ajax({
-					url: um_scripts.ajax_select_options,
-					type: 'post',
-					data: {
-						parent_option_name: parent_option,
-						parent_option: parent.val(),
-						child_callback: um_ajax_source,
-						child_name:  me.attr('name'),
-						form_id: form_id,
-					},
-					success: function( data ){
-						
-						if( data.status == 'success' && parent.val() != '' ){
-							um_field_populate_child_options( me, data, arr_key);
-						}
-
-						if( typeof data.debug !== 'undefined' ){
-							console.log( data );
-						}
-					},
-					error: function( e ){
-						console.log( e );
-					}
-				});
-
-							
-			}
-				
-			if( parent.val() != '' && typeof um_select_options_cache[ arr_key ] == 'object' ){
-					var data = um_select_options_cache[ arr_key ];
-					um_field_populate_child_options( me, data, arr_key );
-			}
-
-			if( parent.val() == '' ){
-				me.find('option[value!=""]').remove();
-				me.val('').trigger('change');
-			}
-
-		});
-
-		jQuery('select[name="'+parent_option+'"]').trigger('change');
-		
-	});
-
-	/**
-	 * Populates child options and cache ajax response
-	 * @param  DOM me     child option elem
-	 * @param  array data
-	 * @param  string key
-	 */
-	function um_field_populate_child_options( me, data, arr_key, arr_items ){
-
-
-		var parent_option = me.data('um-parent');
-		var child_name = me.attr('name');
-		var parent_dom = jQuery('select[name="'+parent_option+'"]');
-		me.find('option[value!=""]').remove();
-		
-		if( ! me.hasClass('um-child-option-disabled') ){
-			me.removeAttr('disabled');
-		}
-
-		var arr_items = [];
-							
-		jQuery.each( data.items, function(k,v){
-				arr_items.push({id: k, text: v});
-		});
-
-		me.select2('destroy');
-		me.select2({ 
-			data: arr_items,
-			allowClear: true,
-			minimumResultsForSearch: 10,
-		});
-
-		if( typeof data.field.default !== 'undefined' && ! me.data('um-original-value') ){
-			me.val( data.field.default ).trigger('change');
-		}else if( me.data('um-original-value') != '' ){
-			me.val( me.data('um-original-value') ).trigger('change');
-		}
-
-		if( data.field.editable == 0 ){
-			me.addClass('um-child-option-disabled');
-			me.attr('disabled','disabled');
-		}
-							
-		um_select_options_cache[ arr_key ] = data;
-
-
-	}
 
 });

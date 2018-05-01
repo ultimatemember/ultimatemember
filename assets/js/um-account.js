@@ -1,5 +1,6 @@
 jQuery( document ).ready( function(){
 
+	//Account Navigation
 	var current_tab = jQuery('.um-account-main').attr('data-current_tab');
 	if ( current_tab ) {
 		jQuery('.um-account-tab[data-tab='+current_tab+']').show();
@@ -54,4 +55,8 @@ jQuery( document ).ready( function(){
 
 		return false;
 	});
+
+
+
+
 });

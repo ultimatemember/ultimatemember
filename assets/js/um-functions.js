@@ -2,138 +2,10 @@
  *
  * @constructor
  */
-function UM_check_password_matched() {
-	jQuery(document).on('keyup', 'input[data-key=user_password],input[data-key=confirm_user_password]', function(e) {
-		var value = jQuery('input[data-key=user_password]').val();
-		var match = jQuery('input[data-key=confirm_user_password]').val();
-		var field = jQuery('input[data-key=user_password],input[data-key=confirm_user_password]');
-
-		if(!value && !match) {
-			field.removeClass('um-validate-matched').removeClass('um-validate-not-matched');
-		} else if(value !== match) {
-			field.removeClass('um-validate-matched').addClass('um-validate-not-matched');
-		} else {
-			field.removeClass('um-validate-not-matched').addClass('um-validate-matched');
-		}
-	});
-}
-
-
-/**
- *
- * @constructor
- */
 function UM_hide_menus() {
 	menu = jQuery('.um-dropdown');
 	menu.parents('div').find('a').removeClass('active');
 	menu.hide();
-}
-
-
-/**
- *
- * @constructor
- */
-function UM_domenus() {
-
-	jQuery('.um-dropdown').each( function(){
-
-		var menu = jQuery(this);
-		var element = jQuery(this).attr('data-element');
-		var position = jQuery(this).attr('data-position');
-
-		jQuery( element ).addClass( 'um-trigger-menu-on-' + menu.attr( 'data-trigger' ) );
-
-		if ( jQuery(window).width() <= 1200 && element == 'div.um-profile-edit' ) {
-			position = 'lc';
-		}
-
-		if ( position == 'lc' ) {
-
-			if ( 200 > jQuery(element).find('img').width() ) {
-				left_p = ( ( jQuery(element).width() - jQuery(element).find('img').width() ) / 2 ) + ( ( jQuery(element).find('img').width() - 200 ) / 2 );
-			} else {
-				left_p = ( ( jQuery(element).width() - jQuery(element).find('img').width() ) / 2 );
-			}
-
-			top_ = parseInt( jQuery(element).find('a').css('top') );
-
-			if ( top_ ) {
-				top_p = jQuery(element).find('img').height() + 4 + top_;
-				left_gap = 4;
-			} else {
-				top_p = jQuery(element).find('img').height() + 4;
-				left_gap = 0;
-			}
-
-			if ( top_p == 4 && element == 'div.um-cover' ) {
-				top_p = jQuery(element).height() / 2 + ( menu.height() / 2 );
-			} else if ( top_p == 4 ) {
-				top_p = jQuery(element).height() + 20;
-			}
-
-			gap_right = jQuery(element).width() + 17;
-			menu.css({
-				'top' : 0,
-				'width': 200,
-				'left': 'auto',
-				'right' : gap_right + 'px',
-				'text-align' : 'center'
-			});
-
-			menu.find('.um-dropdown-arr').find('i').removeClass().addClass('um-icon-arrow-right-b');
-
-			menu.find('.um-dropdown-arr').css({
-				'top' : '4px',
-				'left' : 'auto',
-				'right' : '-17px'
-			});
-
-		}
-
-		if ( position == 'bc' ) {
-
-			if ( 200 > jQuery(element).find('img').width() ) {
-				left_p = ( ( jQuery(element).width() - jQuery(element).find('img').width() ) / 2 ) + ( ( jQuery(element).find('img').width() - 200 ) / 2 );
-			} else {
-				left_p = ( ( jQuery(element).width() - jQuery(element).find('img').width() ) / 2 );
-			}
-
-			top_ = parseInt( jQuery(element).find('a').css('top') );
-
-			if ( top_ ) {
-				top_p = jQuery(element).find('img').height() + 4 + top_;
-				left_gap = 4;
-			} else {
-				top_p = jQuery(element).find('img').height() + 4;
-				left_gap = 0;
-			}
-
-			if ( top_p == 4 && element == 'div.um-cover' ) {
-				top_p = jQuery(element).height() / 2 + ( menu.height() / 2 );
-			} else if ( top_p == 4 ) {
-				top_p = jQuery(element).height() + 20;
-			}
-
-			menu.css({
-				'top' : top_p,
-				'width': 200,
-				'left': left_p + left_gap,
-				'right' : 'auto',
-				'text-align' : 'center'
-			});
-
-			menu.find('.um-dropdown-arr').find('i').removeClass().addClass('um-icon-arrow-up-b');
-
-			menu.find('.um-dropdown-arr').css({
-				'top' : '-17px',
-				'left' : ( menu.width() / 2 ) - 12,
-				'right' : 'auto'
-			});
-
-		}
-	});
-
 }
 
 
@@ -190,28 +62,13 @@ function um_responsive() {
 
 	});
 
-	jQuery('.um-members').each( function(){
-		UM_Member_Grid( jQuery(this) );
-	});
+	jQuery( document ).trigger( 'um_responsive_event' );
 
 	UM_domenus();
-
 }
 
 
-/**
- *
- * @param container
- * @constructor
- */
-function UM_Member_Grid( container ) {
-	container.masonry({
-		itemSelector: '.um-member',
-		columnWidth: '.um-member',
-		gutter: '.um-gutter-sizer'
-	});
 
-}
 
 
 /**
@@ -271,10 +128,10 @@ function initImageUpload_UM( trigger ) {
 
 			trigger.selectedFiles = 0;
 
-			try{
-			data = jQuery.parseJSON(data);
+			try {
+				data = jQuery.parseJSON(data);
 			} catch (e) {
-			   console.log( e, data );
+				console.log( e, data );
 				return;
 			}
 
@@ -570,11 +427,14 @@ function um_new_modal( id, size, isPhoto, source ) {
 
 			jQuery('#' + id).show();
 			jQuery('.um-modal').show();
+			var visible_modal = jQuery('.um-modal:visible');
+			//um_modal_size( size );
 
-			um_modal_size( size );
+			//set modal size
+			visible_modal.addClass( size );
 
-			initImageUpload_UM( jQuery('.um-modal:visible').find('.um-single-image-upload') );
-			initFileUpload_UM( jQuery('.um-modal:visible').find('.um-single-file-upload') );
+			initImageUpload_UM( visible_modal.find('.um-single-image-upload') );
+			initFileUpload_UM( visible_modal.find('.um-single-file-upload') );
 
 			um_modal_responsive();
 
@@ -676,39 +536,6 @@ function um_remove_modal(){
 
 }
 
-
-/**
- *
- * @param aclass
- */
-function um_modal_size( aclass ) {
-	jQuery('.um-modal:visible').addClass(aclass);
-}
-
-
-/**
- *
- * @param id
- * @param value
- */
-function um_modal_add_attr( id, value ) {
-	jQuery('.um-modal:visible').data( id, value );
-}
-
-
-/**
- *
- */
-function prepare_Modal() {
-	if ( jQuery('.um-popup-overlay').length == 0 ) {
-		jQuery('body').append('<div class="um-popup-overlay"></div>');
-		jQuery('body').append('<div class="um-popup"></div>');
-		jQuery('.um-popup').addClass('loading');
-		jQuery("body,html").css({ overflow: 'hidden' });
-	}
-}
-
-
 /**
  *
  */
@@ -720,6 +547,21 @@ function remove_Modal() {
 		jQuery("body,html").css({ overflow: 'auto' });
 	}
 }
+
+
+/**
+ *
+ */
+function prepare_Modal() {
+	if ( jQuery('.um-popup-overlay').length == 0 ) {
+		jQuery('body').append('<div class="um-popup-overlay"></div><div class="um-popup"></div>');
+		jQuery('.um-popup').addClass('loading');
+		jQuery("body,html").css({ overflow: 'hidden' });
+	}
+}
+
+
+
 
 
 /**
@@ -743,7 +585,7 @@ function show_Modal( contents ) {
 function responsive_Modal() {
 	if ( jQuery('.um-popup-overlay').length ) {
 
-		ag_height = jQuery(window).height() - jQuery('.um-popup um-popup-header').outerHeight() - jQuery('.um-popup .um-popup-footer').outerHeight() - 80;
+		ag_height = jQuery(window).height() - jQuery('.um-popup .um-popup-header').outerHeight() - jQuery('.um-popup .um-popup-footer').outerHeight() - 80;
 		if ( ag_height > 350 ) {
 			ag_height = 350;
 		}
@@ -759,52 +601,5 @@ function responsive_Modal() {
 			jQuery('.um-popup-autogrow2:visible').mCustomScrollbar({ theme:"dark-3", mouseWheelPixels:500 });
 
 		}
-	}
-}
-
-
-/**
- *
- * @param dOm
- */
-function um_reset_field( dOm ){
-	//console.log(dOm);
-	jQuery(dOm)
-	 .find('div.um-field-area')
-	 .find('input,textarea,select')
-	 .not(':button, :submit, :reset, :hidden')
-	 .val('')
-	 .removeAttr('checked')
-	 .removeAttr('selected');
-}
-
-
-
-jQuery( function(){
-
-	// Submit search form on keypress 'Enter'
-	jQuery(".um-search form *").keypress(function(e){
-			 if (e.which == 13) {
-			    jQuery('.um-search form').submit();
-			    return false;
-			  }
-	});
-
-	if( jQuery('input[data-key=user_password],input[data-key=confirm_user_password]').length == 2 ) {
-		UM_check_password_matched();
-	}
-
-});
-
-
-/**
- *
- * @param selected
- * @param current
- * @returns {string}
- */
-function um_selected( selected, current ) {
-	if ( selected == current ){
-		return "selected='selected'";
 	}
 }
