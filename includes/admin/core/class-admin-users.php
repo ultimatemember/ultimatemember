@@ -44,7 +44,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		 */
 		function user_action_hook( $action ) {
 			switch ( $action ) {
-
 				default:
 					/**
 					 * UM hook
@@ -74,6 +73,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 				case 'um_approve_membership':
 				case 'um_reenable':
+
 					UM()->user()->approve();
 					break;
 
@@ -362,8 +362,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		 * Bulk user editing actions
 		 */
 		function um_bulk_users_edit() {
-			$admin_err = 0;
-
 			// bulk edit users
 			if ( ! empty( $_REQUEST['users'] ) && ! empty( $_REQUEST['um_bulkedit'] ) && ! empty( $_REQUEST['um_bulk_action'] ) ) {
 
@@ -377,66 +375,61 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 				foreach ( $users as $user_id ) {
 					UM()->user()->set( $user_id );
-					if ( ! um_user( 'super_admin' ) ) {
 
-						/**
-						 * UM hook
-						 *
-						 * @type action
-						 * @title um_admin_user_action_hook
-						 * @description Action on bulk user action
-						 * @input_vars
-						 * [{"var":"$bulk_action","type":"string","desc":"Bulk Action"}]
-						 * @change_log
-						 * ["Since: 2.0"]
-						 * @usage add_action( 'um_admin_user_action_hook{$action}', 'function_name', 10, 1 );
-						 * @example
-						 * <?php
-						 * add_action( 'um_admin_user_action_hook', 'my_admin_user_action', 10, 1 );
-						 * function my_admin_user_action( $bulk_action ) {
-						 *     // your code here
-						 * }
-						 * ?>
-						 */
-						do_action( "um_admin_user_action_hook", $bulk_action );
+					/**
+					 * UM hook
+					 *
+					 * @type action
+					 * @title um_admin_user_action_hook
+					 * @description Action on bulk user action
+					 * @input_vars
+					 * [{"var":"$bulk_action","type":"string","desc":"Bulk Action"}]
+					 * @change_log
+					 * ["Since: 2.0"]
+					 * @usage add_action( 'um_admin_user_action_hook{$action}', 'function_name', 10, 1 );
+					 * @example
+					 * <?php
+					 * add_action( 'um_admin_user_action_hook', 'my_admin_user_action', 10, 1 );
+					 * function my_admin_user_action( $bulk_action ) {
+					 *     // your code here
+					 * }
+					 * ?>
+					 */
+					do_action( "um_admin_user_action_hook", $bulk_action );
 
-						/**
-						 * UM hook
-						 *
-						 * @type action
-						 * @title um_admin_user_action_{$bulk_action}_hook
-						 * @description Action on bulk user action
-						 * @change_log
-						 * ["Since: 2.0"]
-						 * @usage add_action( 'um_admin_user_action_{$bulk_action}_hook', 'function_name', 10 );
-						 * @example
-						 * <?php
-						 * add_action( 'um_admin_user_action_{$bulk_action}_hook', 'my_admin_user_action', 10 );
-						 * function my_admin_user_action() {
-						 *     // your code here
-						 * }
-						 * ?>
-						 */
-						do_action( "um_admin_user_action_{$bulk_action}_hook" );
-
-					} else {
-						$admin_err = 1;
-					}
+					/**
+					 * UM hook
+					 *
+					 * @type action
+					 * @title um_admin_user_action_{$bulk_action}_hook
+					 * @description Action on bulk user action
+					 * @change_log
+					 * ["Since: 2.0"]
+					 * @usage add_action( 'um_admin_user_action_{$bulk_action}_hook', 'function_name', 10 );
+					 * @example
+					 * <?php
+					 * add_action( 'um_admin_user_action_{$bulk_action}_hook', 'my_admin_user_action', 10 );
+					 * function my_admin_user_action() {
+					 *     // your code here
+					 * }
+					 * ?>
+					 */
+					do_action( "um_admin_user_action_{$bulk_action}_hook" );
 				}
 
 				// Finished. redirect now
-				if ( $admin_err == 0 ) {
+				//if ( $admin_err == 0 ) {
 
-					$uri = $this->set_redirect_uri( admin_url( 'users.php' ) );
-					$uri = add_query_arg( 'update', 'users_updated', $uri );
+				$uri = $this->set_redirect_uri( admin_url( 'users.php' ) );
+				$uri = add_query_arg( 'update', 'users_updated', $uri );
 
-					wp_redirect( $uri );
+				wp_redirect( $uri );
+				exit;
 
-					exit;
-				} else {
+				/*} else {
 					wp_redirect( admin_url( 'users.php?update=err_users_updated' ) );
 					exit;
-				}
+				}*/
 
 			} else if ( ! empty( $_REQUEST['um_bulkedit'] ) ) {
 
