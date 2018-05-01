@@ -1761,7 +1761,7 @@ function um_get_user_avatar_data( $user_id = '', $size = '96' ) {
     $data = array(
         'user_id' => $user_id,
         'default' => um_get_default_avatar_uri(),
-        'class' => 'func-um_user gravatar avatar avatar-' . $size . ' um-avatar',
+        'class' => 'gravatar avatar avatar-' . $size . ' um-avatar',
         'size' => $size
     );
 
@@ -2154,7 +2154,8 @@ function um_user( $data, $attrs = null ) {
 			    width="' . esc_attr($data['size']) . '"  
 			    height="' . esc_attr($data['size']) . '" 
 			    alt="' . esc_attr($data['alt']) . '"
-			    onerror="this.src=\''.esc_attr($data['default']).'\';" />'; //don't move attribute before src
+			    data-default="' . esc_attr($data['default']) . '"
+			    onerror="if(!this.getAttribute(\'data-load-error\')){this.setAttribute(\'data-load-error\', \'1\');this.setAttribute(\'src\', this.getAttribute(\'data-default\'));}" />'; //don't move attribute before src
 
 			break;
 
