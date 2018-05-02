@@ -137,6 +137,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed and optimized user avatars
   - Fixed Profile Menu on some installs
   - Fixed fields IDs duplicates
+  - Fixed cache users count
 
 = 2.0.12: April 30, 2018 =
 
