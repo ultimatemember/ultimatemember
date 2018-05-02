@@ -40,16 +40,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		function checkbox( $id, $title ) {
 			?>
 
-            <div class="um-field um-field-c">
-                <div class="um-field-area">
-                    <label class="um-field-checkbox active">
-                        <input type="checkbox" name="<?php echo $id; ?>" value="1" checked/><span
-                                class="um-field-checkbox-state"><i
-                                    class="um-icon-android-checkbox-outline"></i></span>
-                        <span class="um-field-checkbox-option"> <?php echo $title; ?></span>
-                    </label>
-                </div>
-            </div>
+			<div class="um-field um-field-c">
+				<div class="um-field-area">
+					<label class="um-field-checkbox active">
+						<input type="checkbox" name="<?php echo $id; ?>" value="1" checked/>
+						<span class="um-field-checkbox-state"><i class="um-icon-android-checkbox-outline"></i></span>
+						<span class="um-field-checkbox-option"> <?php echo $title; ?></span>
+					</label>
+				</div>
+			</div>
 
 			<?php
 		}
@@ -71,9 +70,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			foreach ( $social as $k => $arr ) {
 				if ( um_profile( $k ) ) { ?>
 
-                    <a href="<?php echo um_filtered_social_link( $k, $arr['match'] ); ?>"
-                       style="background: <?php echo $arr['color']; ?>;" target="_blank" class="um-tip-n"
-                       title="<?php echo $arr['title']; ?>"><i class="<?php echo $arr['icon']; ?>"></i></a>
+					<a href="<?php echo um_filtered_social_link( $k, $arr['match'] ); ?>"
+					   style="background: <?php echo $arr['color']; ?>;" target="_blank" class="um-tip-n"
+					   title="<?php echo $arr['title']; ?>"><i class="<?php echo $arr['icon']; ?>"></i></a>
 
 					<?php
 				}
@@ -1689,8 +1688,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			 * {"var":"$data","type":"array","desc":"Field Data"}]
 			 * {"var":"$args","type":"array","desc":"Optional field arguments"}]
 			 * @change_log
-			 * ["Since: 2.0.12"]
-			 * @usage add_filter( 'um_edit_field_{$mode}_{$type}', 'function_name', 10, 2 );
+			 * ["Since: 2.0.13"]
 			 * @usage add_filter( 'um_completeness_field_id', 'function_name', 10, 3 );
 			 * @example
 			 * <?php
