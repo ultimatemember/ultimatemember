@@ -1,3 +1,7 @@
+/*jQuery('body').on('error', '.um-avatar', function() {
+	if( jQuery(this).data('load-error') != undefined ) return;
+	jQuery(this).data('load-error', '1').attr('src', jQuery(this).data('default'));
+});*/
 jQuery(document).ready(function() {
 
 	jQuery(document).on('click', '.um-dropdown a', function(e){

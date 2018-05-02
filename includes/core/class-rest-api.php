@@ -524,9 +524,9 @@ if ( ! class_exists( 'um\core\REST_API' ) ) {
 						$val->first_name = um_user('first_name');
 						$val->last_name = um_user('last_name');
 						$val->account_status = um_user('account_status');
-						$val->profile_pic_original = $this->getsrc( um_user('profile_photo', 'original') );
-						$val->profile_pic_normal = $this->getsrc( um_user('profile_photo', 200) );
-						$val->profile_pic_small = $this->getsrc( um_user('profile_photo', 40) );
+						$val->profile_pic_original = um_get_user_avatar_url('', 'original');
+						$val->profile_pic_normal = um_get_user_avatar_url('', 200);
+						$val->profile_pic_small = um_get_user_avatar_url('', 40);
 						$val->cover_photo = $this->getsrc( um_user('cover_photo', 1000) );
 
 						/**
@@ -667,9 +667,9 @@ if ( ! class_exists( 'um\core\REST_API' ) ) {
 							break;
 
 						case 'profile_pic':
-							$response['profile_pic_original'] = $this->getsrc( um_user('profile_photo', 'original') );
-							$response['profile_pic_normal'] = $this->getsrc( um_user('profile_photo', 200) );
-							$response['profile_pic_small'] = $this->getsrc( um_user('profile_photo', 40) );
+							$response['profile_pic_original'] = um_get_user_avatar_url('', 'original');
+							$response['profile_pic_normal'] = um_get_user_avatar_url('', 200);
+							$response['profile_pic_small'] = um_get_user_avatar_url('', 40);
 							break;
 
 						case 'status':
@@ -699,9 +699,9 @@ if ( ! class_exists( 'um\core\REST_API' ) ) {
 						$val->first_name = um_user('first_name');
 						$val->last_name = um_user('last_name');
 						$val->account_status = um_user('account_status');
-						$val->profile_pic_original = $this->getsrc( um_user('profile_photo', 'original') );
-						$val->profile_pic_normal = $this->getsrc( um_user('profile_photo', 200) );
-						$val->profile_pic_small = $this->getsrc( um_user('profile_photo', 40) );
+						$val->profile_pic_original = um_get_user_avatar_url('', 'original');
+						$val->profile_pic_normal = um_get_user_avatar_url('', 200);
+						$val->profile_pic_small = um_get_user_avatar_url('', 40);
 						$val->cover_photo = $this->getsrc( um_user('cover_photo', 1000) );
 
 						/**
