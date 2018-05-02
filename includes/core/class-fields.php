@@ -1675,6 +1675,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$form_key = str_replace( 'role_select', 'role', $key );
 					$field_id = $form_key;
 					break;
+				default:
+					$field_id = '';
+					break;
 			}
 
 			/**
@@ -2119,16 +2122,17 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						// add the contents of the buffer to the output variable
 						$output .= ob_get_clean();
 
-					} else $output .= '<textarea  ' . $disabled . '  style="height: ' . $height . ';" class="' . $this->get_class( $key, $data ) . '" name="' . $field_name . '" id="' . $field_id . '" placeholder="' . $placeholder . '">' . $field_value . '</textarea>';
+					} else {
+						$output .= '<textarea  ' . $disabled . '  style="height: ' . $height . ';" class="' . $this->get_class( $key, $data ) . '" name="' . $field_name . '" id="' . $field_id . '" placeholder="' . $placeholder . '">' . $field_value . '</textarea>';
+					}
 
-					$output .= '
-                        </div>';
+					$output .= '</div>';
 
-					if (!empty( $disabled )) {
+					if ( ! empty( $disabled ) ) {
 						$output .= $this->disabled_hidden_field( $field_name, $field_value );
 					}
 
-					if ($this->is_error( $key )) {
+					if ( $this->is_error( $key ) ) {
 						$output .= $this->field_error( $this->show_error( $key ) );
 					}
 
@@ -2145,7 +2149,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '<div class="um-field-area">';
 
-//					$output .= '<div class="um-rating um-raty" id="' . $field_id . '" data-key="' . $key . '" data-number="' . $data['number'] . '" data-score="' . $field_value . '"></div>';
 					$output .= '<div class="um-rating um-raty" id="' . $key . '" data-key="' . $key . '" data-number="' . $data['number'] . '" data-score="' . $this->field_value( $key, $default, $data ) . '"></div>';
 					$output .= '</div>';
 

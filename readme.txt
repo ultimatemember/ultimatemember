@@ -136,6 +136,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * Bugfixes:
   - Fixed and optimized user avatars
   - Fixed Profile Menu on some installs
+  - Fixed fields IDs duplicates
 
 = 2.0.12: April 30, 2018 =
 
