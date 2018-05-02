@@ -91,10 +91,10 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_script( 'um-raty', $this->js_baseurl . 'um-raty' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 			wp_register_script( 'um-crop', $this->js_baseurl . 'um-crop' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
-			wp_register_script( 'um-functions', $this->js_baseurl . 'um-functions' . $this->suffix . '.js', array( 'jquery-masonry', 'um-fileupload', 'um-crop' ), ultimatemember_version, true );
-			wp_register_script( 'um-scripts', $this->js_baseurl . 'um-scripts' . $this->suffix . '.js', array( 'um-functions', 'um-tipsy', 'um-raty', 'um-crop', 'select2', 'um-jquery-form', 'um-fileupload' ), ultimatemember_version, true );
+			//wp_register_script( 'um-functions', $this->js_baseurl . 'um-functions' . $this->suffix . '.js', array( 'jquery-masonry', 'um-fileupload', 'um-crop' ), ultimatemember_version, true );
+			wp_register_script( 'um-scripts', $this->js_baseurl . 'um-scripts' . $this->suffix . '.js', array( 'um-tipsy', 'um-raty', 'um-crop', 'select2', 'um-jquery-form', 'um-fileupload' ), ultimatemember_version, true );
 
-			wp_register_script( 'um-responsive', $this->js_baseurl . 'um-responsive' . $this->suffix . '.js', array( 'um-functions' ), ultimatemember_version, true );
+			wp_register_script( 'um-responsive', $this->js_baseurl . 'um-responsive' . $this->suffix . '.js', array( 'um-scripts' ), ultimatemember_version, true );
 			wp_register_script( 'um-modal', $this->js_baseurl . 'um-modal' . $this->suffix . '.js', array( 'um-responsive' ), ultimatemember_version, true );
 
 			//registered searchform scripts
@@ -116,7 +116,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 
 			//register profile scripts
 			//todo: Only Profile Page (Forms)
-			wp_register_script( 'um-profile', $this->js_baseurl . 'um-profile' . $this->suffix . '.js', array( 'um-modal', 'um-conditional' ), ultimatemember_version, true );
+			wp_register_script( 'um-profile', $this->js_baseurl . 'um-profile' . $this->suffix . '.js', array( 'um-responsive', 'um-modal', 'um-conditional' ), ultimatemember_version, true );
 
 
 			/**
@@ -152,7 +152,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 				'ajax_select_options'   => UM()->get_ajax_route( 'um\core\Form', 'ajax_select_options' ),
 			) );
 
-			wp_localize_script( 'um-functions', 'um_scripts', $localize_data );
+			wp_localize_script( 'um-scripts', 'um_scripts', $localize_data );
 
 
 

@@ -179,4 +179,162 @@ jQuery(document).ready(function() {
 		}
 	});
 
+	jQuery( document ).on( "um_responsive_event", um_modal_responsive );
 });
+
+
+/**
+ *
+ */
+function um_remove_modal() {
+
+    jQuery('img.cropper-hidden').cropper('destroy');
+
+    jQuery('body,html,textarea').css("overflow", "auto");
+
+    jQuery(document).unbind('touchmove');
+
+    jQuery('.um-modal div[id^="um_"]').hide().appendTo('body');
+    jQuery('.um-modal,.um-modal-overlay').remove();
+
+}
+
+
+/**
+ *
+ */
+function um_modal_responsive() {
+
+	var modal = jQuery('.um-modal:visible');
+	var photo_modal = jQuery('.um-modal-body.photo:visible');
+	var half_gap;
+
+	if ( photo_modal.length ) {
+
+		modal.removeClass('uimob340');
+		modal.removeClass('uimob500');
+
+		var photo_ = jQuery('.um-modal-photo img');
+		var photo_maxw = jQuery(window).width() - 60;
+		var photo_maxh = jQuery(window).height() - ( jQuery(window).height() * 0.25 );
+
+		photo_.css({'opacity': 0});
+		photo_.css({'max-width': photo_maxw });
+		photo_.css({'max-height': photo_maxh });
+
+		jQuery('.um-modal').css({
+			'width': photo_.width(),
+			'margin-left': '-' + photo_.width() / 2 + 'px'
+		});
+
+		photo_.animate({'opacity' : 1}, 1000);
+
+		half_gap = ( jQuery(window).height() - modal.innerHeight() ) / 2 + 'px';
+		modal.animate({ 'bottom' : half_gap }, 300);
+
+	} else if ( modal.length ) {
+
+		var element_width = jQuery(window).width();
+
+		modal.removeClass('uimob340');
+		modal.removeClass('uimob500');
+
+		if ( element_width <= 340 ) {
+			modal.addClass('uimob340');
+			half_gap = 0;
+		} else if ( element_width <= 500 ) {
+			modal.addClass('uimob500');
+			half_gap = 0;
+		} else if ( element_width <= 800 ) {
+			half_gap = ( jQuery(window).height() - modal.innerHeight() ) / 2 + 'px';
+		} else if ( element_width <= 960 ) {
+			half_gap = ( jQuery(window).height() - modal.innerHeight() ) / 2 + 'px';
+		} else if ( element_width > 960 ) {
+			half_gap = ( jQuery(window).height() - modal.innerHeight() ) / 2 + 'px';
+		}
+
+		jQuery( document ).trigger( 'um_after_modal_responsive_event' );
+		modal.animate({ 'bottom' : half_gap }, 300);
+
+	}
+
+}
+
+
+/**
+ *
+ * @param id
+ * @param size
+ * @param isPhoto
+ * @param source
+ */
+function um_new_modal( id, size, isPhoto, source ) {
+
+    var modal = jQuery('body').find('.um-modal-overlay');
+
+    if ( modal.length == 0 ) {
+
+        jQuery( document ).trigger( 'um_before_new_modal_event' );
+
+        jQuery('.tipsy').hide();
+
+        jQuery('body,html,textarea').css("overflow", "hidden");
+
+        jQuery(document).bind("touchmove", function(e){e.preventDefault();});
+        jQuery('.um-modal').on('touchmove', function(e){e.stopPropagation();});
+
+        if ( isPhoto ) {
+            jQuery('body').append('<div class="um-modal-overlay"></div><div class="um-modal is-photo"></div>');
+        } else {
+            jQuery('body').append('<div class="um-modal-overlay"></div><div class="um-modal no-photo"></div>');
+        }
+
+        jQuery('#' + id).prependTo('.um-modal');
+
+        if ( isPhoto ) {
+
+            jQuery('.um-modal').find('.um-modal-photo').html('<img />');
+
+            var photo_ = jQuery('.um-modal-photo img');
+            var photo_maxw = jQuery(window).width() - 60;
+            var photo_maxh = jQuery(window).height() - ( jQuery(window).height() * 0.25 );
+
+            photo_.attr("src", source);
+            photo_.load(function(){
+
+                jQuery('#' + id).show();
+                jQuery('.um-modal').show();
+
+                photo_.css({'opacity': 0});
+                photo_.css({'max-width': photo_maxw });
+                photo_.css({'max-height': photo_maxh });
+
+                jQuery('.um-modal').css({
+                    'width': photo_.width(),
+                    'margin-left': '-' + photo_.width() / 2 + 'px'
+                });
+
+                photo_.animate({'opacity' : 1}, 1000);
+
+                um_modal_responsive();
+
+            });
+
+        } else {
+
+            jQuery('#' + id).show();
+            jQuery('.um-modal').show();
+            var visible_modal = jQuery('.um-modal:visible');
+
+            //set modal size
+            visible_modal.addClass( size );
+
+			jQuery( document ).trigger( 'um_after_new_modal_nophoto_event', [visible_modal] );
+
+            um_modal_responsive();
+
+        }
+
+    }
+
+}
