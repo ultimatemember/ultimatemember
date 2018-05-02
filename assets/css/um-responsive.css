@@ -6,6 +6,14 @@
 	display: none;
 }
 
+.um-profile-nav-item a.uimob340-show,
+.um-profile-nav-item a.uimob500-show,
+.um-profile-nav-item a.uimob800-show,
+.um-profile-nav-item a.uimob960-show
+{
+	display: none;
+}
+
 div.uimob340 .uimob340-show,
 div.uimob500 .uimob500-show,
 div.uimob800 .uimob800-show,
