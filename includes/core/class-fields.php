@@ -798,6 +798,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					return true;
 				}
 
+				$stripslashed = array_map( 'stripslashes', UM()->form()->post_form[ $key ] );
+				if ( in_array( $value, $stripslashed ) ) {
+					return true;
+				}
+
 				if ( in_array( html_entity_decode( $value ), UM()->form()->post_form[ $key ] ) ) {
 					return true;
 				}
@@ -1578,7 +1583,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if ($visibility == 'view' && $this->set_mode != 'register') return;
 
-			if (( $visibility == 'view' && $this->set_mode == 'register' ) ||
+			if ( ( $visibility == 'view' && $this->set_mode == 'register' ) ||
 				( isset( $data['editable'] ) && $data['editable'] == 0 && $this->set_mode == 'profile' )
 			) {
 
