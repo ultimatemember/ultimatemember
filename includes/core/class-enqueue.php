@@ -162,6 +162,8 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 
 
 			//STYLES
+			//old settings before UM 2.0 CSS
+			wp_register_style( 'um-default-css', $this->css_baseurl . 'um-old-default.css', array(), ultimatemember_version, 'all' );
 
 			wp_register_style( 'um-styles', $this->css_baseurl . 'um-styles.css', array(), ultimatemember_version );
 			wp_register_style( 'um-misc', $this->css_baseurl . 'um-misc.css', array( 'um-styles' ), ultimatemember_version );
@@ -189,6 +191,20 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 				'members' => array( 'select2', 'um-misc', 'um-fonticons-ii', 'um-fonticons-fa', 'um-responsive', 'um-modal' ),
 				'profile' => array( 'select2', 'um-raty', 'um-crop', 'um-tipsy', 'um-misc', 'um-fonticons-ii', 'um-fonticons-fa', 'um-responsive', 'um-modal' ),
 			);
+
+			// until 2.0 style
+			$uploads        = wp_upload_dir();
+			$upload_dir     = $uploads['basedir'] . DIRECTORY_SEPARATOR . 'ultimatemember' . DIRECTORY_SEPARATOR;
+			if ( file_exists( $upload_dir . 'um_old_settings.css' ) ) {
+				//was the issues with HTTPS
+				//wp_register_style('um_old_css', $uploads['baseurl'] . '/ultimatemember/um_old_settings.css' );
+				//fixed using "../../"
+				wp_register_style( 'um-old-css', um_url . '../../uploads/ultimatemember/um_old_settings.css', array(), ultimatemember_version );
+
+				foreach ( $style_deps as &$deps ) {
+					$deps[] = 'um-old-css';
+				}
+			}
 
 			// rtl style
 			if ( is_rtl() ) {
