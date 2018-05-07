@@ -45,6 +45,23 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			add_action( 'parent_file', array( &$this, 'parent_file' ), 9 );
 			add_filter( 'gettext', array( &$this, 'gettext' ), 10, 4 );
 			add_filter( 'post_updated_messages', array( &$this, 'post_updated_messages' ) );
+
+			add_filter( 'admin_body_class', array( &$this, 'admin_body_class' ), 999, 1 );
+		}
+
+
+		/**
+		 * Adds class to our admin pages
+		 *
+		 * @param $classes
+		 *
+		 * @return string
+		 */
+		function admin_body_class( $classes ) {
+			if ( $this->is_um_screen() ) {
+				return "$classes um-admin";
+			}
+			return $classes;
 		}
 
 

@@ -98,7 +98,7 @@ jQuery(document).ready(function() {
 	**/
 	um_init_tooltips();
 	
-	if( typeof tipsy !== 'undefined' ){
+	if ( typeof tipsy !== 'undefined' ) {
 		jQuery('.um-admin-tipsy-n').tipsy({gravity: 'n', opacity: 1, live: 'a.live' });
 		jQuery('.um-admin-tipsy-w').tipsy({gravity: 'w', opacity: 1, live: 'a.live' });
 		jQuery('.um-admin-tipsy-e').tipsy({gravity: 'e', opacity: 1, live: 'a.live' });

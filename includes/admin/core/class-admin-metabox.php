@@ -44,6 +44,30 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			add_filter( 'um_builtin_validation_types_continue_loop', array( &$this, 'validation_types_continue_loop' ), 1, 4 );
 			add_filter( 'um_restrict_content_hide_metabox', array( &$this, 'hide_metabox_restrict_content_shop' ), 10, 1 );
 			add_filter( 'um_admin_access_settings_fields', array( &$this, 'wpml_post_options' ), 10, 2 );
+
+			add_filter( 'enter_title_here', array( &$this, 'enter_title_here' ) );
+		}
+
+
+		/**
+		 * Enter title placeholder
+		 *
+		 * @param $title
+		 *
+		 * @return string
+		 */
+		function enter_title_here( $title ) {
+			$screen = get_current_screen();
+
+			if ( 'um_directory' == $screen->post_type ) {
+				$title = __( 'e.g. Member Directory', 'ultimate-member' );
+			}
+
+			if ( 'um_form' == $screen->post_type ) {
+				$title = __( 'e.g. New Registration Form', 'ultimate-member' );
+			}
+
+			return $title;
 		}
 
 

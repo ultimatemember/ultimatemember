@@ -2,7 +2,6 @@ jQuery(document).ready(function() {
 	
 	/* Default form tab */
 	if ( jQuery('.um-admin-boxed-links').length > 0 ) {
-
 		var tab = jQuery('.um-admin-boxed-links a[data-role="'+jQuery('input#form__um_mode').val()+'"]');
 			
 		tab.parents('.um-admin-boxed-links').find('a').removeClass('um-admin-activebg');
@@ -14,12 +13,11 @@ jQuery(document).ready(function() {
 		jQuery('div[id^="um-admin-form-'+tab.data('role')+'"]').show();
 		jQuery('.empty-container').css({'border' : 'none'});
 		jQuery('.um-admin-builder').removeClass().addClass( 'um-admin-builder ' + jQuery('input#form__um_mode').val() );
-		
 	}
 	
+
 	/* Creating new form button */
 	jQuery('.um-admin-boxed-links:not(.is-core-form) a').click(function(){
-		
 		var tab = jQuery(this);
 			
 		tab.parents('.um-admin-boxed-links').find('a').removeClass('um-admin-activebg');
@@ -32,7 +30,6 @@ jQuery(document).ready(function() {
 		jQuery('input#form__um_mode').val( tab.data('role') );
 		jQuery('.empty-container').css({'border' : 'none'});
 		jQuery('.um-admin-builder').removeClass().addClass( 'um-admin-builder ' + jQuery('input#form__um_mode').val() );
-
 	});
 
 });

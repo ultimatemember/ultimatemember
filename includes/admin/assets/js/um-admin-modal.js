@@ -1,18 +1,11 @@
 function um_admin_live_update_scripts() {
-
-	/*jQuery('.um-admin-modal-body:visible select').select2({
-		allowClear: false,
-		minimumResultsForSearch: 10
-	});*/
-
-	jQuery('.um-adm-conditional').each(function(){jQuery(this).trigger('change');});
-	
+	jQuery('.um-adm-conditional').each(function(){
+		jQuery(this).trigger('change');
+	});
 	jQuery('.um-admin-colorpicker').wpColorPicker();
-	
 }
 
 function um_admin_new_modal( id, ajax, size ){
-	
 	var modal = jQuery('body').find('.um-admin-overlay');
 	
 	jQuery('.tipsy').hide();
@@ -33,11 +26,10 @@ function um_admin_new_modal( id, ajax, size ){
 	} else {
 		um_admin_modal_responsive();
 	}
-	
 }
 
 function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
-	
+
 	in_row = '';
 	in_sub_row = '';
 	in_column = '';
@@ -61,9 +53,9 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 		success: function(data){
 
 			jQuery('.um-admin-modal').find('.um-admin-modal-body').html( data );
-			
+
 			um_responsive();
-			
+
 			um_admin_live_update_scripts();
 
 			jQuery( "#_custom_dropdown_options_source" ).trigger('blur');
@@ -75,11 +67,11 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 					tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_edit');
 					jQuery('.um-admin-editor:visible').html( jQuery('.um-hidden-editor-edit').contents() );
 					tinyMCE.execCommand('mceAddEditor', true, 'um_editor_edit');
-					
+
 					jQuery('.switch-html').trigger('click');
 					jQuery('.switch-html').trigger('click');
 					jQuery('.switch-tmce').trigger('click');
-					
+
 					jQuery('#um_editor_edit_ifr').height(200);
 
 					var editor = tinyMCE.get('um_editor_edit');
@@ -91,23 +83,20 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 					tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_new');
 					jQuery('.um-admin-editor:visible').html( jQuery('.um-hidden-editor-new').contents() );
 					tinyMCE.execCommand('mceAddEditor', true, 'um_editor_new');
-					
+
 					jQuery('.switch-html').trigger('click');
 					jQuery('.switch-html').trigger('click');
 					jQuery('.switch-tmce').trigger('click');
-					
+
 					jQuery('#um_editor_new_ifr').height(200);
-					
+
 				}
-				
+
 			}
 
 			um_init_tooltips();
-			
 		},
-		error: function(data){
-
-		}
+		error: function(data){}
 	});
 	return false;
 }
@@ -117,10 +106,10 @@ function um_admin_modal_responsive() {
 	jQuery('.um-admin-modal:visible').css({'margin-top': '-' + required_margin });
 }
 
-function um_admin_remove_modal(){
+function um_admin_remove_modal() {
 
 	if ( jQuery('.um-admin-editor:visible').length > 0 ) {
-	
+
 		if ( jQuery('.um-admin-modal:visible').find('form').parent().attr('id') == 'UM_edit_field' ) {
 		
 			tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_edit');
@@ -134,9 +123,9 @@ function um_admin_remove_modal(){
 			tinyMCE.execCommand('mceAddEditor', true, 'um_editor_new');
 		
 		}
-				
+
 	}
-			
+
 	jQuery('body').removeClass('um-admin-modal-open');
 	jQuery('.um-admin-modal div[id^="UM_"]').hide().appendTo('body');
 	jQuery('.um-admin-modal,.um-admin-overlay').remove();
@@ -162,9 +151,8 @@ function um_admin_modal_add_attr( id, value ) {
 /**
 	Custom modal scripting starts
 **/
-
 jQuery(document).ready(function() {
-	
+
 	/**
 		disable link
 	**/
@@ -257,7 +245,6 @@ jQuery(document).ready(function() {
 		fire new modal
 	**/
 	jQuery(document).on('click', 'a[data-modal^="UM_"], span[data-modal^="UM_"]', function(e){
-		
 		e.preventDefault();
 
 		var modal_id = jQuery(this).attr('data-modal');
@@ -343,33 +330,30 @@ jQuery(document).ready(function() {
 		um_admin_modal_responsive();
 	});
 
-	
+
 	/**
 	 * Retrieve options from a callback function
 	 */
 	jQuery(document).on('blur',"#_custom_dropdown_options_source", function(){
-        var me = jQuery(this);
-        var _options = jQuery('textarea[id=_options]');
-        
-        if( me.val() != '' ){
-        	var um_option_callback = me.val();
-          	jQuery.ajax({
+		var me = jQuery(this);
+		var _options = jQuery('textarea[id=_options]');
+
+		if ( me.val() != '' ) {
+			var um_option_callback = me.val();
+			jQuery.ajax({
 				url: um_admin_modal_data.dropdown_ajax_url,
 				type: 'POST',
 				data: { um_option_callback: um_option_callback },
-				complete: function(){
-					
-				},
+				complete: function(){},
 				success: function( response ){
 					var arr_opts = [];
-					
+
 					for (var key in response.data ){
-                         arr_opts.push( response.data[ key ] );
+						arr_opts.push( response.data[ key ] );
 					}
 
 					_options.val( arr_opts.join('\n') );
-					
-		        }
+				}
 			});
 		}
 

@@ -2,11 +2,6 @@
     font-style: italic;
 }
 
-
-
-
-
-
 .um-notification-status {
     margin-right: 18px;
     font-size: 28px;
@@ -214,31 +209,6 @@ th.column-email.column-primary {
         width:50%;
     }
 }
-
-/*
-.email_template_wrapper .copy_button_overlay {
-    position:absolute;
-    top:0;
-    bottom:0;
-    width:calc( 100% - 30px );
-    z-index: 2;
-    background: rgba( 241, 241, 241, 0.95 );
-    text-align: center;
-    padding-top: 30%;
-    padding-right: 20px;
-    padding-left: 20px;
-}
-
-.email_template_wrapper .copy_button_overlay > span {
-    color: #444;
-    margin: 0 0 15px 0;
-    display: inline-block;
-}
-
-.email_template_wrapper.in_theme .copy_button_overlay {
-    display: none !important;
-}
-*/
 
 .email_template_wrapper .reset_email_template {
     display: none;

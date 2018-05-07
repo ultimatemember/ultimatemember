@@ -7,34 +7,30 @@ jQuery(document).ready(function() {
 		if (confirm('This will permanently delete this custom field from database')) {
 		
 			jQuery(this).parents('a').remove();
-			
-			arg1 = jQuery(this).parents('a').data('arg1');
-			
+
+			var arg1 = jQuery(this).parents('a').data('arg1');
+
 			jQuery.ajax({
 				url: um_admin_field_data.do_ajax_url,
 				type: 'POST',
-				data: {act_id : 'um_admin_remove_field_global', arg1 : arg1 },
-				success: function(data){
-					
+				data: {
+					act_id : 'um_admin_remove_field_global',
+					arg1 : arg1
 				},
-				error: function(data){
-
-				}
+				success: function(data){},
+				error: function(data){}
 			});
-		
-			
 		}
-		
+
 		return false;
 	});
-	
+
+
 	/* Add a Field */
 	jQuery(document).on('submit', 'form.um_add_field', function(e){
-		
 		e.preventDefault();
-		
-		var form = jQuery(this);
 
+		var form = jQuery(this);
 		jQuery.ajax({
 			url: um_admin_field_data.ajax_url,
 			type: 'POST',
@@ -50,40 +46,32 @@ jQuery(document).ready(function() {
 				form.css({'opacity': 1});
 			},
 			success: function(data){
-				
-				if (data.error){
-				
-					c = 0;
+				if ( data.error ) {
+
+					var c = 0;
 					jQuery.each(data.error, function(i, v){
 						c++;
 						if ( c == 1 ) {
-						form.find('#'+i).addClass('um-admin-error').focus();
-						form.find('.um-admin-error-block').show().html(v);
+							form.find('#'+i).addClass('um-admin-error').focus();
+							form.find('.um-admin-error-block').show().html(v);
 						}
 					});
-					
+
 					um_admin_modal_responsive();
-					
+
 				} else {
-				
-					jQuery('.um-col-demon-settings').data('in_row', '');
-					jQuery('.um-col-demon-settings').data('in_sub_row', '');
-					jQuery('.um-col-demon-settings').data('in_column', '');
-					jQuery('.um-col-demon-settings').data('in_group', '');
+
+					jQuery('.um-col-demon-settings').data('in_row', '').data('in_sub_row', '').data('in_column', '').data('in_group', '');
 
 					um_admin_remove_modal();
 					um_admin_update_builder();
 
 				}
-				
 			},
-			error: function(data){
-
-			}
+			error: function(data){}
 		});
 		
 		return false;
-		
 	});
 
 });
