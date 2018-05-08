@@ -30,6 +30,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Terms_Conditions_API Terms_Conditions_API()
 	 * @method UM_Private_Content_API Private_Content_API()
 	 * @method UM_User_Location_API User_Location_API()
+	 * @method UM_GDPR_API GDPR_API()
 	 *
 	 */
 	final class UM extends UM_Functions {
@@ -383,47 +384,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$um_verified->plugin_inactive = true;
 			}
 		}
-
-
-		/**
-		 * Show notice for customers with old extension's versions
-		 */
-		/*function old_extensions_notice() {
-			if ( ! is_admin() ) {
-				return;
-			}
-
-			if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-				return;
-			}
-
-			$show = false;
-
-			$slugs = array_map( function( $item ) {
-				return 'um-' . $item . '/um-' . $item . '.php';
-			}, array_keys( $this->dependencies()->ext_required_version ) );
-
-			$active_plugins = $this->dependencies()->get_active_plugins();
-			foreach ( $slugs as $slug ) {
-				if ( in_array( $slug, $active_plugins ) ) {
-					$plugin_data = get_plugin_data( um_path . '..' . DIRECTORY_SEPARATOR . $slug );
-					if ( version_compare( '2.0', $plugin_data['Version'], '>' ) ) {
-						$show = true;
-						break;
-					}
-				}
-			}
-
-			if ( ! $show ) {
-				return;
-			}
-
-			/*global $um_woocommerce;
-			remove_action( 'init', array( $um_woocommerce, 'plugin_check' ), 1 );
-			$um_woocommerce->plugin_inactive = true;*
-
-			echo '<div class="error"><p>' . sprintf( __( '<strong>%s %s</strong> requires 2.0 extensions. You have pre 2.0 extensions installed on your site. <br /> Please update %s extensions to latest versions. For more info see this <a href="%s" target="_blank">doc</a>.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, 'http://docs.ultimatemember.com/article/266-updating-to-2-0-versions-of-extensions' ) . '</p></div>';
-		}*/
 
 
 		/**
