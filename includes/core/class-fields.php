@@ -1619,6 +1619,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			// forbidden in edit mode?
 			if (isset( $data['edit_forbidden'] )) return;
 
+
 			// required option
 			if (isset( $data['required_opt'] )) {
 				$opt = $data['required_opt'];
