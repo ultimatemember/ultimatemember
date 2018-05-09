@@ -18,9 +18,15 @@ $menus = get_posts( array(
 foreach ( $menus as $menu ) {
 	$menu_roles = get_post_meta( $menu->ID, 'menu-item-um_nav_roles', true );
 
-	foreach ( $menu_roles as $i => $role_k ) {
-		$menu_roles[ $i ] = $roles_associations[ $role_k ];
+	if( !is_array( $menu_roles ) ) {
+		$menu_roles = array();
 	}
+	foreach ( $menu_roles as $i => $role_k ) {
+		if( $role_k != '' && isset( $roles_associations[ $role_k ] ) ) {
+			$menu_roles[ $i ] = $roles_associations[ $role_k ];
+		}
+	}
+
 
 	update_post_meta( $menu->ID, 'menu-item-um_nav_roles', $menu_roles );
 }
