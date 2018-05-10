@@ -38,7 +38,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->localize_note();
 			$this->show_update_messages();
 			$this->check_wrong_install_folder();
-			$this->admin_notice_tracking();
+			//$this->admin_notice_tracking();
 			$this->need_upgrade();
 			$this->check_wrong_licenses();
 
