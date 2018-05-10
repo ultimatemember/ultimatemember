@@ -124,7 +124,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		function globally_update_field( $id, $args ) {
 			$fields = UM()->builtin()->saved_fields;
 
-			$fields[$id] = $args;
+			$fields[ $id ] = $args;
 
 			unset( $fields[$id]['in_row'] );
 			unset( $fields[$id]['in_sub_row'] );

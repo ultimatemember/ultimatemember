@@ -1,28 +1,27 @@
 jQuery( document ).ready( function() {
 
-    jQuery( 'body' ).on( 'click', '.reset_email_template', function() {
+    jQuery( document ).on( 'click', '.reset_email_template', function() {
         var obj = jQuery(this);
 
-        jQuery.ajax({
-            url: php_data.delete_email_template,
-            type: 'POST',
-            data: { email_key : obj.parents('.email_template_wrapper').data('key') },
-            success: function(data){
+        wp.ajax.send( 'um_delete_email_template', {
+            data: {
+                email_key : obj.parents('.email_template_wrapper').data('key'),
+                nonce: um_admin_scripts.nonce
+            },
+            success: function( data ) {
                 obj.parents('.email_template_wrapper').removeClass('in_theme');
             },
-            error: function(data){
-                alert('Something went wrong');
+            error: function( data ) {
+                alert( data );
             }
         });
     });
 
 
-
-
     /**
      * Licenses
      */
-    jQuery( 'body' ).on( 'click', '.um_license_deactivate', function() {
+    jQuery( document ).on( 'click', '.um_license_deactivate', function() {
         jQuery(this).siblings('.um-option-field').val('');
         jQuery(this).parents('form.um-settings-form').submit();
     });
@@ -41,7 +40,7 @@ jQuery( document ).ready( function() {
         jQuery( '#um-settings-wrap .um-nav-tab-wrapper a, #um-settings-wrap .subsubsub a' ).click( function() {
             if ( changed ) {
                 window.onbeforeunload = function() {
-                    return php_data.onbeforeunload_text;
+                    return php_data.texts.beforeunload;
                 };
             } else {
                 window.onbeforeunload = '';

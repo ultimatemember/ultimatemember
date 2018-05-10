@@ -173,11 +173,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 
 			if ( UM()->admin()->is_um_screen() ) {
 				wp_enqueue_script( 'jquery' );
-				wp_enqueue_script( 'wp-util' );
 
 				wp_register_script( 'um-tipsy', $this->front_js_baseurl . 'um-tipsy' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
-				if ( class_exists( 'WooCommerce' ) ) {
+				/*if ( class_exists( 'WooCommerce' ) ) {
 					wp_dequeue_style( 'select2' );
 					wp_deregister_style( 'select2' );
 
@@ -185,8 +184,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 					wp_deregister_script( 'select2' );
 				}
 
-				wp_register_script( 'select2', $this->front_js_baseurl . 'select2/select2.full.min.js', array( 'jquery', 'jquery-masonry' ), ultimatemember_version, true );
-				wp_register_script( 'um-admin-scripts', $this->js_baseurl . 'um-admin-scripts.js', array( 'jquery', 'jquery-ui-tooltip', 'wp-color-picker', 'jquery-ui-draggable', 'jquery-ui-sortable', 'um-tipsy', 'select2' ), ultimatemember_version, true );
+				wp_register_script( 'select2', $this->front_js_baseurl . 'select2/select2.full.min.js', array( 'jquery', 'jquery-masonry' ), ultimatemember_version, true );*/
+				//wp_register_script( 'um-admin-scripts', $this->js_baseurl . 'um-admin-scripts.js', array( 'jquery', 'jquery-ui-tooltip', 'wp-color-picker', 'jquery-ui-draggable', 'jquery-ui-sortable', 'um-tipsy', 'select2' ), ultimatemember_version, true );
+				wp_register_script( 'um-admin-scripts', $this->js_baseurl . 'um-admin-scripts.js', array( 'jquery', 'wp-util', 'jquery-ui-tooltip', 'wp-color-picker', 'um-tipsy' ), ultimatemember_version, true );
 
 				/**
 				 * UM hook
@@ -208,8 +208,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 				 * }
 				 * ?>
 				 */
-				$localize_data = apply_filters('um_admin_enqueue_localize_data', array(
-						'ajaxurl' => admin_url( 'admin-ajax.php' ),
+				$localize_data = apply_filters( 'um_admin_enqueue_localize_data',
+					array(
 						'nonce' => wp_create_nonce( "um-admin-nonce" )
 					)
 				);
@@ -218,20 +218,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 
 
 				wp_register_script( 'um-admin-modal', $this->js_baseurl . 'um-admin-modal.js', array( 'um-admin-scripts' ), ultimatemember_version, true );
-				$localize_data = array(
-					'ajax_url' => UM()->get_ajax_route( 'um\admin\core\Admin_Builder', 'dynamic_modal_content' ),
-					'dropdown_ajax_url' => UM()->get_ajax_route( 'um\admin\core\Admin_Builder', 'populate_dropdown_options' ),
-				);
-				wp_localize_script( 'um-admin-modal', 'um_admin_modal_data', $localize_data );
+				wp_enqueue_script( 'um-admin-modal' );
 
-				wp_register_script( 'um-admin-ajax', $this->js_baseurl . 'um-admin-ajax.js', array( 'um-admin-modal' ), ultimatemember_version, true );
-				$localize_data = array(
-					'ajax_url' => UM()->get_ajax_route( 'um\core\Fields', 'do_ajax_action' ),
-				);
-				wp_localize_script( 'um-admin-ajax', 'um_admin_ajax_data', $localize_data );
-				wp_enqueue_script( 'um-admin-ajax' );
-
-				wp_register_script( 'um-admin-forms', $this->js_baseurl . 'um-admin-forms.js', array( 'jquery' ), ultimatemember_version, true );
+				wp_register_script( 'um-admin-forms', $this->js_baseurl . 'um-admin-forms.js', array( 'um-admin-scripts', 'media-upload' ), ultimatemember_version, true );
 				$localize_data = array(
 					'texts' => array(
 						'remove' => __( 'Remove', 'ultimate-member' ),
@@ -264,28 +253,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 
 			if ( $this->um_cpt_form_screen ) {
 
-				wp_register_script( 'um-admin-form', $this->js_baseurl . 'um-admin-form.js', array( 'jquery' ), ultimatemember_version, true );
-
-				wp_register_script( 'um-admin-dragdrop', $this->js_baseurl . 'um-admin-dragdrop.js', array( 'jquery' ), ultimatemember_version, true );
+				wp_register_script( 'um-admin-builder', $this->js_baseurl . 'um-admin-builder.js', array( 'um-admin-scripts', 'um-admin-modal' ), ultimatemember_version, true );
 				$localize_data = array(
-					'ajax_url' => UM()->get_ajax_route( 'um\admin\core\Admin_DragDrop', 'update_order' ),
-				);
-				wp_localize_script( 'um-admin-dragdrop', 'um_admin_dragdrop_data', $localize_data );
-
-				wp_register_script( 'um-admin-builder', $this->js_baseurl . 'um-admin-builder.js', array( 'jquery', 'um-admin-dragdrop', 'um-admin-form' ), ultimatemember_version, true );
-				$localize_data = array(
-					'ajax_url' => UM()->get_ajax_route( 'um\admin\core\Admin_Builder', 'update_builder' ),
 					'hide_footer' => true,
 				);
 				wp_localize_script( 'um-admin-builder', 'um_admin_builder_data', $localize_data );
-
-				wp_register_script( 'um-admin-field', $this->js_baseurl . 'um-admin-field.js', array( 'um-admin-builder', 'um-admin-modal' ), ultimatemember_version, true );
-				$localize_data = array(
-					'ajax_url' => UM()->get_ajax_route( 'um\admin\core\Admin_Builder', 'update_field' ),
-					'do_ajax_url' => UM()->get_ajax_route( 'um\core\Fields', 'do_ajax_action' ),
-				);
-				wp_localize_script( 'um-admin-field', 'um_admin_field_data', $localize_data );
-				wp_enqueue_script( 'um-admin-field' );
+				wp_enqueue_script( 'um-admin-builder' );
 
 				wp_register_style( 'um-admin-form', $this->css_baseurl . 'um-admin-form.css', array(), ultimatemember_version );
 				wp_register_style( 'um-admin-builder', $this->css_baseurl . 'um-admin-builder.css', array( 'um-admin-form' ), ultimatemember_version );
@@ -325,24 +298,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 
 			} elseif ( $this->wp_user_screen ) {
 
-				wp_register_script( 'um-admin-role-wrapper', $this->js_baseurl . 'um-admin-role-wrapper.js', array( 'jquery' ), ultimatemember_version, true );
+				wp_register_script( 'um-admin-role-wrapper', $this->js_baseurl . 'um-admin-role-wrapper.js', array( 'um-admin-scripts' ), ultimatemember_version, true );
 				wp_enqueue_script( 'um-admin-role-wrapper' );
 
-				$localize_roles_data =  get_option( 'um_roles' );
+				$localize_roles_data = get_option( 'um_roles' );
 
 				wp_localize_script( 'um-admin-role-wrapper', 'um_roles', $localize_roles_data );
 
 			} elseif ( $this->um_settings_screen ) {
 
-				wp_register_script( 'um-admin-settings', $this->js_baseurl . 'um-admin-settings.js', array( 'jquery' ), ultimatemember_version, true );
+				wp_register_script( 'um-admin-settings', $this->js_baseurl . 'um-admin-settings.js', array( 'um-admin-scripts' ), ultimatemember_version, true );
 				wp_enqueue_script( 'um-admin-settings' );
 
 				$localize_data = array(
-					'delete_email_template' => UM()->get_ajax_route( 'um\core\Mail', 'delete_email_template' ),
-					'onbeforeunload_text' => __( 'Are sure, maybe some settings not saved', 'ultimate-member' ),
 					'texts' => array(
-						'remove' => __( 'Remove', 'ultimate-member' ),
-						'select' => __( 'Select', 'ultimate-member' )
+						'remove'        => __( 'Remove', 'ultimate-member' ),
+						'select'        => __( 'Select', 'ultimate-member' ),
+						'beforeunload'  => __( 'Are sure, maybe some settings not saved', 'ultimate-member' )
 					)
 				);
 
@@ -358,7 +330,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 
 			} elseif ( $this->wp_nav_menus_screen ) {
 
-				wp_register_script( 'um-admin-nav-menus', $this->js_baseurl . 'um-admin-nav-menu.js', array( 'jquery', 'wp-util' ), ultimatemember_version, true );
+				wp_register_script( 'um-admin-nav-menus', $this->js_baseurl . 'um-admin-nav-menu.js', array( 'um-admin-scripts' ), ultimatemember_version, true );
 				wp_enqueue_script( 'um-admin-nav-menus' );
 
 				$menu_restriction_data = array();

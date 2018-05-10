@@ -26,9 +26,11 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 		 * Update order of fields
 		 */
 		function update_order() {
+			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
 
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) )
-				die( 'Please login as administrator' );
+			if ( ! wp_verify_nonce( $nonce, "um-admin-nonce" ) ) {
+				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
+			}
 
 			/**
 			 * @var $form_id
@@ -129,8 +131,9 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 			}
 
 			foreach ( $this->row_data as $k => $v ) {
-				if ( ! in_array( $k, $this->exist_rows ) )
+				if ( ! in_array( $k, $this->exist_rows ) ) {
 					unset( $this->row_data[$k] );
+				}
 			}
 
 			update_option( 'um_existing_rows_' . $form_id, $this->exist_rows );
@@ -139,6 +142,7 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 
 			UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
 
+			wp_send_json_success();
 		}
 
 

@@ -544,7 +544,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 			$in_theme = $this->template_in_theme( $template );
 			if ( ! $in_theme ) {
-				wp_send_json_error( new \WP_Error( 'template_in_theme', __( 'Template does not exists in theme', 'ultimate-member' ) ) );
+				wp_send_json_error( __( 'Template does not exists in theme', 'ultimate-member' ) );
 			}
 
 			$theme_template_path = $this->get_template_file( 'theme', $template );
@@ -552,7 +552,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			if ( unlink( $theme_template_path ) ) {
 				wp_send_json_success();
 			} else {
-				wp_send_json_error( new \WP_Error( 'template_not_exists', __( 'Can not remove template from theme', 'ultimate-member' ) ) );
+				wp_send_json_error( __( 'Can not remove template from theme', 'ultimate-member' ) );
 			}
 		}
 	}

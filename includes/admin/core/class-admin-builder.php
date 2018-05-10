@@ -293,10 +293,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
 			}
 
-			/*if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-				die( 'Please login as administrator' );
-			}*/
-
 			extract( $_POST );
 
 			$this->form_id = $_POST['form_id'];
@@ -308,8 +304,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			$output = ob_get_clean();
 
 			wp_send_json_success( $output );
-
-			//if(is_array($output)){ print_r($output); }else{ echo $output; } die;
 		}
 
 
@@ -607,16 +601,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 *
 		 */
 		function update_field() {
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) )
-				die( __('Please login as administrator','ultimate-member') );
+			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
+
+			if ( ! wp_verify_nonce( $nonce, "um-admin-nonce" ) ) {
+				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
+			}
 
 			$output['error'] = null;
 
 			$array = array(
-				'field_type' => $_POST['_type'],
-				'form_id' =>  $_POST['post_id'],
-				'args' => UM()->builtin()->get_core_field_attrs( $_POST['_type'] ),
-				'post' => $_POST
+				'field_type'    => $_POST['_type'],
+				'form_id'       => $_POST['post_id'],
+				'args'          => UM()->builtin()->get_core_field_attrs( $_POST['_type'] ),
+				'post'          => $_POST
 			);
 
 			/**
@@ -664,24 +661,29 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			 */
 			$output['error'] = apply_filters( 'um_admin_field_update_error_handling', $output['error'], $array );
 
+
+			/**
+			 * @var $_metakey
+			 */
 			extract( $array['post'] );
-			if ( empty( $output['error'] ) ){
+
+			if ( empty( $output['error'] ) ) {
 
 				$save = array();
 				$save[ $_metakey ] = null;
-				foreach( $array['post'] as $key => $val){
+				foreach ( $array['post'] as $key => $val ) {
 
-					if ( substr( $key, 0, 1) === '_' && $val != '' ) { // field attribute
-						$new_key = ltrim ($key,'_');
+					if ( substr( $key, 0, 1 ) === '_' && $val != '' ) { // field attribute
+						$new_key = ltrim ( $key, '_' );
 
 						if ( $new_key == 'options' ) {
 							//$save[ $_metakey ][$new_key] = explode(PHP_EOL, $val);
-							$save[ $_metakey ][$new_key] = preg_split('/[\r\n]+/', $val, -1, PREG_SPLIT_NO_EMPTY);
+							$save[ $_metakey ][ $new_key ] = preg_split( '/[\r\n]+/', $val, -1, PREG_SPLIT_NO_EMPTY );
 						} else {
-							$save[ $_metakey ][$new_key] = $val;
+							$save[ $_metakey ][ $new_key ] = $val;
 						}
 
-					} else if ( strstr( $key, 'um_editor' ) ) {
+					} elseif ( strstr( $key, 'um_editor' ) ) {
 						$save[ $_metakey ]['content'] = $val;
 					}
 
@@ -710,7 +712,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				 * }
 				 * ?>
 				 */
-				$field_args = apply_filters("um_admin_pre_save_field_to_form", $field_args );
+				$field_args = apply_filters( "um_admin_pre_save_field_to_form", $field_args );
 
 				UM()->fields()->update_field( $field_ID, $field_args, $post_id );
 
@@ -734,7 +736,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				 * }
 				 * ?>
 				 */
-				$field_args = apply_filters("um_admin_pre_save_field_to_db", $field_args );
+				$field_args = apply_filters( "um_admin_pre_save_field_to_db", $field_args );
 
 				if ( ! isset( $array['args']['form_only'] ) ) {
 					if ( ! isset( UM()->builtin()->predefined_fields[ $field_ID ] ) ) {
@@ -744,13 +746,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 			}
 
-			$output = json_encode( $output );
+			wp_send_json_success( $output );
+
+			/*$output = json_encode( $output );
 			if ( is_array( $output ) ) {
 				print_r( $output );
 			} else {
 				echo $output;
 			}
-			die;
+			die;*/
 		}
 
 
@@ -758,11 +762,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 *
 		 */
 		function dynamic_modal_content() {
-			$metabox = UM()->metabox();
+			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
 
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-				die( __( 'Please login as administrator', 'ultimate-member' ) );
+			if ( ! wp_verify_nonce( $nonce, "um-admin-nonce" ) ) {
+				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
 			}
+
+			$metabox = UM()->metabox();
 
 			/**
 			 * @var $act_id
@@ -817,9 +823,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					 */
 					do_action( "um_admin_ajax_modal_content__hook_{$act_id}" );
 
-					$output = ob_get_contents();
-					ob_end_clean();
-
+					$output = ob_get_clean();
 					break;
 
 				case 'um_admin_fonticon_selector':
@@ -834,68 +838,70 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						<?php foreach( UM()->fonticons()->all as $icon ) { ?>
 							<span data-code="<?php echo $icon; ?>" title="<?php echo $icon; ?>" class="um-admin-tipsy-n"><i class="<?php echo $icon; ?>"></i></span>
 						<?php } ?>
-					</div><div class="um-admin-clear"></div>
+					</div>
+					<div class="um-admin-clear"></div>
 
-					<?php $output = ob_get_contents();
-					ob_end_clean();
+					<?php $output = ob_get_clean();
 					break;
 
 				case 'um_admin_show_fields':
 
 					ob_start();
 					$form_fields = UM()->query()->get_attr( 'custom_fields', $arg2 );
-					$form_fields = array_values( array_filter( array_keys( $form_fields ) ) );
-					//$form_fields = array_keys( $form_fields );
-					?>
+					$form_fields = array_values( array_filter( array_keys( $form_fields ) ) ); ?>
 
-					<h4><?php _e('Setup New Field','ultimate-member'); ?></h4>
+					<h4><?php _e( 'Setup New Field', 'ultimate-member' ); ?></h4>
 					<div class="um-admin-btns">
 
-						<?php
-						if ( UM()->builtin()->core_fields ) {
+						<?php if ( UM()->builtin()->core_fields ) {
 							foreach ( UM()->builtin()->core_fields as $field_type => $array ) {
 
-								if ( isset( $array['in_fields'] ) && $array['in_fields'] == false ) { } else {
-									?>
+								if ( isset( $array['in_fields'] ) && $array['in_fields'] == false ) {
+
+								} else { ?>
 
 									<a href="#" class="button" data-modal="UM_add_field" data-modal-size="normal" data-dynamic-content="um_admin_new_field_popup" data-arg1="<?php echo $field_type; ?>" data-arg2="<?php echo $arg2 ?>"><?php echo $array['name']; ?></a>
 
-								<?php } } } ?>
+								<?php }
+							}
+						} ?>
 
 					</div>
 
-					<h4><?php _e('Predefined Fields','ultimate-member'); ?></h4>
+					<h4><?php _e( 'Predefined Fields', 'ultimate-member' ); ?></h4>
 					<div class="um-admin-btns">
 
-						<?php
-						if ( UM()->builtin()->predefined_fields ) {
+						<?php if ( UM()->builtin()->predefined_fields ) {
 							foreach ( UM()->builtin()->predefined_fields as $field_key => $array ) {
 
-								if ( !isset( $array['account_only'] ) && !isset( $array['private_use'] ) ) {?>
+								if ( !isset( $array['account_only'] ) && !isset( $array['private_use'] ) ) { ?>
 
 									<a href="#" class="button" <?php disabled( in_array( $field_key, $form_fields, true ) ) ?> data-silent_action="um_admin_add_field_from_predefined" data-arg1="<?php echo $field_key; ?>" data-arg2="<?php echo $arg2; ?>"><?php echo um_trim_string( stripslashes( $array['title'] ), 20 ); ?></a>
 
-								<?php } } } else { echo '<p>' . __('None','ultimate-member') . '</p>'; } ?>
+								<?php }
+							}
+						} else {
+							echo '<p>' . __('None','ultimate-member') . '</p>';
+						} ?>
 
 					</div>
 
-					<h4><?php _e('Custom Fields','ultimate-member'); ?></h4>
+					<h4><?php _e( 'Custom Fields', 'ultimate-member' ); ?></h4>
 					<div class="um-admin-btns">
 
-						<?php
-						if ( UM()->builtin()->custom_fields ) {
-							foreach ( UM()->builtin()->custom_fields as $field_key => $array ) {
-
-								?>
+						<?php if ( UM()->builtin()->custom_fields ) {
+							foreach ( UM()->builtin()->custom_fields as $field_key => $array ) { ?>
 
 								<a href="#" class="button with-icon" <?php disabled( in_array( $field_key, $form_fields, true ) ) ?> data-silent_action="um_admin_add_field_from_list" data-arg1="<?php echo $field_key; ?>" data-arg2="<?php echo $arg2; ?>"><?php echo um_trim_string( stripslashes( $array['title'] ), 20 ); ?> <small>(<?php echo ucfirst( $array['type']); ?>)</small><span class="remove"></span></a>
 
-							<?php } } else { echo '<p>' . __('You did not create any custom fields', 'ultimate-member') . '</p>'; } ?>
+							<?php }
+						} else {
+							echo '<p>' . __( 'You did not create any custom fields', 'ultimate-member' ) . '</p>';
+						} ?>
 
 					</div>
 
-					<?php $output = ob_get_contents();
-					ob_end_clean();
+					<?php $output = ob_get_clean();
 					break;
 
 				case 'um_admin_edit_field_popup':
@@ -973,9 +979,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 					}
 
-					$output = ob_get_contents();
-					ob_end_clean();
-
+					$output = ob_get_clean();
 					break;
 
 				case 'um_admin_new_field_popup':
@@ -994,11 +998,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					 */
 					extract( $args );
 
-					if ( ! isset( $col1 ) ) {
+					if ( ! isset( $col1 ) ) { ?>
 
-						echo '<p>'. __( 'This field type is not setup correcty.', 'ultimate-member' ) . '</p>';
+						<p><?php _e( 'This field type is not setup correcty.', 'ultimate-member' ) ?></p>
 
-					} else {
+					<?php } else {
 
 						if ( $in_column ) { ?>
 							<input type="hidden" name="_in_row" id="_in_row" value="_um_row_<?php echo $in_row + 1; ?>" />
@@ -1015,47 +1019,60 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 						<div class="um-admin-half">
 
-							<?php if ( isset( $col1 ) ) {  foreach( $col1 as $opt ) $metabox->field_input ( $opt ); } ?>
+							<?php if ( isset( $col1 ) ) {
+								foreach ( $col1 as $opt ) {
+									$metabox->field_input( $opt );
+								}
+							} ?>
 
 						</div>
 
 						<div class="um-admin-half um-admin-right">
 
-							<?php if ( isset( $col2 ) ) {  foreach( $col2 as $opt ) $metabox->field_input ( $opt ); } ?>
+							<?php if ( isset( $col2 ) ) {
+								foreach ( $col2 as $opt ) {
+									$metabox->field_input( $opt );
+								}
+							} ?>
 
-						</div><div class="um-admin-clear"></div>
-
-						<?php if ( isset( $col3 ) ) { foreach( $col3 as $opt ) $metabox->field_input ( $opt ); } ?>
+						</div>
 
 						<div class="um-admin-clear"></div>
 
-						<?php if ( isset( $col_full ) ) {foreach( $col_full as $opt ) $metabox->field_input ( $opt ); } ?>
+						<?php if ( isset( $col3 ) ) {
+							foreach ( $col3 as $opt ) {
+								$metabox->field_input( $opt );
+							}
+						} ?>
 
-						<?php $this->modal_footer( $arg2, $args, $metabox ); ?>
+						<div class="um-admin-clear"></div>
 
-						<?php
+						<?php if ( isset( $col_full ) ) {
+							foreach ( $col_full as $opt ) {
+								$metabox->field_input( $opt );
+							}
+						}
+
+						$this->modal_footer( $arg2, $args, $metabox );
 
 					}
 
-					$output = ob_get_contents();
-					ob_end_clean();
-
+					$output = ob_get_clean();
 					break;
 
 				case 'um_admin_preview_form':
 
-					$mode = UM()->query()->get_attr('mode', $arg1 );
+					$mode = UM()->query()->get_attr( 'mode', $arg1 );
 
 					if ( $mode == 'profile' ) {
 						UM()->fields()->editing = true;
 					}
 
-					$output = do_shortcode('[ultimatemember form_id='.$arg1.']');
+					$output = do_shortcode( '[ultimatemember form_id='.$arg1.']' );
 
 					break;
 
 				case 'um_admin_review_registration':
-					//$user_id = $arg1;
 					um_fetch_user( $arg1 );
 
 					UM()->user()->preview = true;
@@ -1068,12 +1085,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 			}
 
-			if ( is_array( $output ) ) {
-				print_r( $output );
-			} else {
-				echo $output;
-			}
-			die;
+			wp_send_json_success( $output );
 		}
 
 
@@ -1140,11 +1152,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 *  Retrieves dropdown/multi-select options from a callback function
 		 */
 		function populate_dropdown_options() {
-			$arr_options = array();
+			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
 
-			if ( ! current_user_can('manage_options') ) {
-				wp_die( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
+			if ( ! wp_verify_nonce( $nonce, "um-admin-nonce" ) ) {
+				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
 			}
+
+			$arr_options = array();
 
 			$um_callback_func = $_POST['um_option_callback'];
 			if ( empty( $um_callback_func ) ) {
@@ -1159,7 +1173,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				$arr_options['data'] = call_user_func( $um_callback_func );
 			}
 
-			wp_send_json( $arr_options );
+			wp_send_json_success( $arr_options );
 		}
 
 	}
