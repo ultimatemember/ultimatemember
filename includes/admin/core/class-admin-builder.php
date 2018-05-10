@@ -287,23 +287,29 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 * Update the builder area
 		 */
 		function update_builder() {
+			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
 
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-				die( 'Please login as administrator' );
+			if ( ! wp_verify_nonce( $nonce, "um-admin-nonce" ) ) {
+				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
 			}
+
+			/*if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+				die( 'Please login as administrator' );
+			}*/
 
 			extract( $_POST );
 
-			ob_start();
-
 			$this->form_id = $_POST['form_id'];
+
+			ob_start();
 
 			$this->show_builder();
 
-			$output = ob_get_contents();
-			ob_end_clean();
+			$output = ob_get_clean();
 
-			if(is_array($output)){ print_r($output); }else{ echo $output; } die;
+			wp_send_json_success( $output );
+
+			//if(is_array($output)){ print_r($output); }else{ echo $output; } die;
 		}
 
 

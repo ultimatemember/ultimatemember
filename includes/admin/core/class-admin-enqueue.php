@@ -172,6 +172,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			wp_enqueue_style( 'um-admin-global' );
 
 			if ( UM()->admin()->is_um_screen() ) {
+				wp_enqueue_script( 'jquery' );
+				wp_enqueue_script( 'wp-util' );
+
 				wp_register_script( 'um-tipsy', $this->front_js_baseurl . 'um-tipsy' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
 				if ( class_exists( 'WooCommerce' ) ) {
@@ -206,7 +209,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 				 * ?>
 				 */
 				$localize_data = apply_filters('um_admin_enqueue_localize_data', array(
-						'ajaxurl' => admin_url( 'admin-ajax.php' )
+						'ajaxurl' => admin_url( 'admin-ajax.php' ),
+						'nonce' => wp_create_nonce( "um-admin-nonce" )
 					)
 				);
 

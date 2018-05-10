@@ -32,9 +32,8 @@ jQuery(document).ready(function() {
 
 		um_admin_remove_modal();
 
-		jQuery.ajax({
-			url: um_admin_ajax_data.ajax_url,
-			type: 'POST',
+		// Send the form via ajax
+		wp.ajax.send( 'um_do_ajax_action', {
 			data: {
 				act_id : act_id,
 				arg1 : arg1,
@@ -42,9 +41,10 @@ jQuery(document).ready(function() {
 				in_row: in_row,
 				in_sub_row: in_sub_row,
 				in_column: in_column,
-				in_group: in_group
+				in_group: in_group,
+				nonce: um_admin_scripts.nonce
 			},
-			success: function(data){
+			success: function( data ) {
 
 				col_demon.data('in_row', '').data('in_sub_row', '').data('in_column', '').data('in_group', '');
 
@@ -52,7 +52,7 @@ jQuery(document).ready(function() {
 				um_admin_update_builder();
 
 			},
-			error: function(data){
+			error: function(data) {
 
 			}
 		});

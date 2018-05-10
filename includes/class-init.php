@@ -73,6 +73,7 @@ if ( ! class_exists( 'UM' ) ) {
 		static public function instance() {
 			if ( is_null( self::$instance ) ) {
 				self::$instance = new self();
+				self::$instance->_um_construct();
 			}
 
 			return self::$instance;
@@ -163,6 +164,14 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		function __construct() {
 			parent::__construct();
+		}
+
+
+		/**
+		 * @since 2.0.14
+		 */
+		function _um_construct() {
+			$this->init_variables();
 
 			//register autoloader for include UM classes
 			spl_autoload_register( array( $this, 'um__autoloader' ) );
@@ -483,6 +492,7 @@ if ( ! class_exists( 'UM' ) ) {
 			if ( $this->is_request( 'ajax' ) ) {
 				$this->admin();
 				$this->ajax_init();
+				$this->admin_ajax_hooks();
 				$this->metabox();
 				$this->admin_upgrade()->init_packages_ajax_handlers();
 			} elseif ( $this->is_request( 'admin' ) ) {
@@ -585,6 +595,17 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		function ajax_init() {
 			new um\core\AJAX_Common();
+		}
+
+
+		/**
+		 * @since 2.0.14
+		 */
+		function admin_ajax_hooks() {
+			if ( empty( $this->classes['admin_ajax_hooks'] ) ) {
+				$this->classes['admin_ajax_hooks'] = new um\admin\core\Admin_Ajax_Hooks();
+			}
+			return $this->classes['admin_ajax_hooks'];
 		}
 
 

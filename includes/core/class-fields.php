@@ -3977,21 +3977,34 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 */
 		function do_ajax_action() {
-			if (!is_user_logged_in() || !current_user_can( 'manage_options' )) die( __( 'Please login as administrator', 'ultimate-member' ) );
+			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
 
+			if ( ! wp_verify_nonce( $nonce, "um-admin-nonce" ) ) {
+				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
+			}
+
+			/**
+			 * @var $act_id
+			 * @var $in_row
+			 * @var $in_sub_row
+			 * @var $in_column
+			 * @var $in_group
+			 * @var $arg1
+			 * @var $arg2
+			 */
 			extract( $_POST );
 
 			$output = null;
 
 			$position = array();
-			if (!empty( $in_column )) {
+			if ( ! empty( $in_column ) ) {
 				$position['in_row'] = '_um_row_' . ( (int)$in_row + 1 );
 				$position['in_sub_row'] = $in_sub_row;
 				$position['in_column'] = $in_column;
 				$position['in_group'] = $in_group;
 			}
 
-			switch ($act_id) {
+			switch ( $act_id ) {
 
 				case 'um_admin_duplicate_field':
 					UM()->fields()->duplicate_field( $arg1, $arg2 );
@@ -4015,13 +4028,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			}
 
-			if (is_array( $output )) {
-				print_r( $output );
-			} else {
-				echo $output;
-			}
-			die;
-
+			wp_send_json_success();
 		}
 	}
 }

@@ -27,7 +27,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * UM_Functions constructor.
 		 */
 		function __construct() {
-			$this->init_variables();
+
 		}
 
 
