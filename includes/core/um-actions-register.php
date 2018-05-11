@@ -119,7 +119,7 @@ function um_send_registration_notification( $user_id, $args ) {
 	$emails = um_multi_admin_email();
 	if ( ! empty( $emails ) ) {
 		foreach ( $emails as $email ) {
-			if ( um_user( 'status' ) != 'pending' ) {
+			if ( um_user( 'account_status' ) != 'pending' ) {
 				UM()->mail()->send( $email, 'notification_new_user', array( 'admin' => true ) );
 			} else {
 				UM()->mail()->send( $email, 'notification_review', array( 'admin' => true ) );
@@ -137,7 +137,7 @@ add_action( 'um_registration_complete', 'um_send_registration_notification', 10,
  * @param $args
  */
 function um_check_user_status( $user_id, $args ) {
-	$status = um_user( 'status' );
+	$status = um_user( 'account_status' );
 
 	/**
 	 * UM hook
