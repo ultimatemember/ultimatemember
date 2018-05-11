@@ -220,6 +220,9 @@ function um_user_edit_profile( $args ) {
 	if ( ! empty( $fields ) ) {
 		foreach ( $fields as $key => $array ) {
 
+			/*if ( ! um_can_edit_field( $fields[ $key ] ) )
+				continue;*/
+
 			if ( ! um_can_edit_field( $fields[ $key ] ) && isset( $fields[ $key ]['editable'] ) && ! $fields[ $key ]['editable'] )
 				continue;
 
