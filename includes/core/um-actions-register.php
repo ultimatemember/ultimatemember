@@ -54,8 +54,9 @@ function um_after_insert_user( $user_id, $args ) {
 	//clear Users cached queue
 	UM()->user()->remove_cached_queue();
 
+	um_fetch_user( $user_id );
+	UM()->user()->set_status( um_user('status') );
 	if ( ! empty( $args['submitted'] ) ) {
-		um_fetch_user( $user_id );
 		UM()->user()->set_registration_details( $args['submitted'] );
 	}
 
@@ -103,7 +104,7 @@ function um_after_insert_user( $user_id, $args ) {
 	 */
 	do_action( 'um_registration_complete', $user_id, $args );
 }
-add_action( 'um_user_register', 'um_after_insert_user', 10, 2 );
+add_action( 'um_user_register', 'um_after_insert_user', 1, 2 );
 
 
 /**
