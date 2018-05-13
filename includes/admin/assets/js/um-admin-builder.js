@@ -1,9 +1,7 @@
 /**
-	This function updates the
-	builder area with fields
-**/
-
-function UM_Drag_and_Drop(){
+ *
+ */
+function UM_Drag_and_Drop() {
 
 	jQuery('.um-admin-drag-col,.um-admin-drag-group').sortable({
 		items: '.um-admin-drag-fld',
@@ -104,7 +102,7 @@ function UM_update_rows(){
 		c++;
 		row = jQuery(this);
 		if ( c != 1 ) {
-			row.find('.um-admin-drag-row-icons').append( '<a href="#" class="um-admin-tipsy-n" title="Delete Row" data-remove_element="um-admin-drag-row"><i class="um-faicon-trash-o"></i></a>' );
+			row.find('.um-admin-drag-row-icons').append( '<a href="#" class="um-admin-tipsy-n" title="' + um_admin_builder_data.texts.delete_row + '" data-remove_element="um-admin-drag-row"><i class="um-faicon-trash-o"></i></a>' );
 		}
 	});
 }
@@ -117,7 +115,7 @@ function UM_update_subrows(){
 			c++;
 			row = jQuery(this);
 			if ( c != 1 ) {
-				row.find('.um-admin-drag-rowsub-icons').append('<a href="#" class="um-admin-tipsy-n" title="Delete Row" data-remove_element="um-admin-drag-rowsub"><i class="um-faicon-trash-o"></i></a>');
+				row.find('.um-admin-drag-rowsub-icons').append('<a href="#" class="um-admin-tipsy-n" title="' + um_admin_builder_data.texts.delete_row + '" data-remove_element="um-admin-drag-rowsub"><i class="um-faicon-trash-o"></i></a>');
 			}
 		});
 	});
@@ -239,13 +237,10 @@ function UM_Rows_Refresh(){
 
 		sub_row = jQuery(this).parents('.um-admin-drag-rowsub').index();
 
-		jQuery('.um_update_order_fields').append('<input type="hidden" name="um_position_'+jQuery(this).data('key')+'" id="um_position_'+jQuery(this).data('key')+'" value="'+order+'" />');
-
-		jQuery('.um_update_order_fields').append('<input type="hidden" name="um_row_'+jQuery(this).data('key')+'" id="um_row_'+jQuery(this).data('key')+'" value="'+row+'" />');
-
-		jQuery('.um_update_order_fields').append('<input type="hidden" name="um_subrow_'+jQuery(this).data('key')+'" id="um_subrow_'+jQuery(this).data('key')+'" value="'+sub_row+'" />');
-
-		jQuery('.um_update_order_fields').append('<input type="hidden" name="um_col_'+jQuery(this).data('key')+'" id="um_col_'+jQuery(this).data('key')+'" value="'+saved_col+'" />');
+		jQuery('.um_update_order_fields').append('<input type="hidden" name="um_position_'+jQuery(this).data('key')+'" id="um_position_'+jQuery(this).data('key')+'" value="'+order+'" />')
+            .append('<input type="hidden" name="um_row_'+jQuery(this).data('key')+'" id="um_row_'+jQuery(this).data('key')+'" value="'+row+'" />')
+            .append('<input type="hidden" name="um_subrow_'+jQuery(this).data('key')+'" id="um_subrow_'+jQuery(this).data('key')+'" value="'+sub_row+'" />')
+            .append('<input type="hidden" name="um_col_'+jQuery(this).data('key')+'" id="um_col_'+jQuery(this).data('key')+'" value="'+saved_col+'" />');
 
 	});
 
@@ -300,7 +295,7 @@ function um_admin_update_builder() {
 
 function UM_Add_Icon(){
 
-	var add_icon_html = '<a href="#" class="um-admin-drag-add-field um-admin-tipsy-n" title="Add Field" data-modal="UM_fields" data-modal-size="normal" data-dynamic-content="um_admin_show_fields" data-arg2="'+jQuery('.um-admin-drag-ajax').data('form_id')+'" data-arg1=""><i class="um-icon-plus"></i></a>';
+	var add_icon_html = '<a href="#" class="um-admin-drag-add-field um-admin-tipsy-n" title="' + um_admin_builder_data.texts.add_field + '" data-modal="UM_fields" data-modal-size="normal" data-dynamic-content="um_admin_show_fields" data-arg2="'+jQuery('.um-admin-drag-ajax').data('form_id')+'" data-arg1=""><i class="um-icon-plus"></i></a>';
 
 	jQuery('.um-admin-drag-col').each(function(){
 		if ( jQuery(this).find('.um-admin-drag-add-field').length == 0 ) {
@@ -354,10 +349,7 @@ jQuery(document).ready(function() {
 			in_group = '';
 		}
 
-		jQuery('.um-col-demon-settings').data('in_row', in_row);
-		jQuery('.um-col-demon-settings').data('in_sub_row', in_sub_row);
-		jQuery('.um-col-demon-settings').data('in_column', in_column);
-		jQuery('.um-col-demon-settings').data('in_group', in_group);
+		jQuery('.um-col-demon-settings').data('in_row', in_row).data('in_sub_row', in_sub_row).data('in_column', in_column).data('in_group', in_group);
 	});
 
 	/* add row */
@@ -554,7 +546,7 @@ jQuery(document).ready(function() {
 	jQuery(document).on('click', '.um-admin-btns a span.remove', function(e){
 		e.preventDefault();
 
-		if ( confirm( 'This will permanently delete this custom field from database' ) ) {
+		if ( confirm( um_admin_builder_data.texts.remove_confirm ) ) {
 
 			jQuery(this).parents('a').remove();
 
@@ -703,7 +695,9 @@ jQuery(document).ready(function() {
 	});
 
 
-	jQuery('.um-conditional-radio-group input[type=radio]:checked').each(function(){jQuery(this).trigger('click');});
+	jQuery('.um-conditional-radio-group input[type=radio]:checked').each( function(){
+        jQuery(this).trigger('click');
+	});
 
 
 	/**

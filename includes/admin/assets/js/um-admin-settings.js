@@ -40,7 +40,7 @@ jQuery( document ).ready( function() {
         jQuery( '#um-settings-wrap .um-nav-tab-wrapper a, #um-settings-wrap .subsubsub a' ).click( function() {
             if ( changed ) {
                 window.onbeforeunload = function() {
-                    return php_data.texts.beforeunload;
+                    return um_admin_settings_data.texts.beforeunload;
                 };
             } else {
                 window.onbeforeunload = '';

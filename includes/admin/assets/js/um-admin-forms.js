@@ -24,7 +24,7 @@ jQuery(document).ready( function() {
 
         list.append(
             '<li class="' + classes + '"><span class="um-field-wrapper">' + selector_html +
-            '</span><span class="um-field-control"><a href="javascript:void(0);" class="um-select-delete">' + php_data.texts.remove + '</a></span></li>'
+            '</span><span class="um-field-control"><a href="javascript:void(0);" class="um-select-delete">' + um_admin_forms_data.texts.remove + '</a></span></li>'
         );
 
         list.find('li:last .um-hidden-multi-selects').attr('name', jQuery(this).data('name') ).
@@ -57,7 +57,7 @@ jQuery(document).ready( function() {
 
         list.append(
             '<li class="' + classes + '"><span class="um-field-wrapper">' + text_html +
-            '</span><span class="um-field-control"><a href="javascript:void(0);" class="um-text-delete">' + php_data.texts.remove + '</a></span></li>'
+            '</span><span class="um-field-control"><a href="javascript:void(0);" class="um-text-delete">' + um_admin_forms_data.texts.remove + '</a></span></li>'
         );
 
         list.find('li:last .um-hidden-multi-text').attr('name', jQuery(this).data('name') ).
@@ -105,7 +105,7 @@ jQuery(document).ready( function() {
             frame = wp.media({
                 title: button.data('upload_frame'),
                 button: {
-                    text: php_data.texts.select
+                    text: um_admin_forms_data.texts.select
                 },
                 multiple: false  // Set to true to allow multiple files to be selected
             });

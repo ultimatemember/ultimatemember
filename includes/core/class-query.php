@@ -39,6 +39,12 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		 * Ajax pagination for posts
 		 */
 		function ajax_paginate() {
+			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
+
+			if ( ! wp_verify_nonce( $nonce, "um-frontend-nonce" ) ) {
+				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
+			}
+
 			/**
 			 * @var $hook
 			 * @var $args
@@ -68,10 +74,9 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 			 */
 			do_action( "um_ajax_load_posts__{$hook}", $args );
 
-			$output = ob_get_contents();
-			ob_end_clean();
+			$output = ob_get_clean();
 
-			die( $output );
+			wp_send_json_success( $output );
 		}
 
 

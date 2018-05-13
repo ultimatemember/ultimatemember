@@ -70,11 +70,19 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * Remove file by AJAX
 		 */
 		function ajax_remove_file() {
+			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
+
+			if ( ! wp_verify_nonce( $nonce, "um-frontend-nonce" ) ) {
+				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
+			}
+
 			/**
 			 * @var $src
 			 */
 			extract( $_REQUEST );
 			$this->delete_file( $src );
+
+			wp_send_json_success();
 		}
 
 
@@ -82,20 +90,36 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * Resize image AJAX handler
 		 */
 		function ajax_resize_image() {
-			$output = 0;
+			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
 
+			if ( ! wp_verify_nonce( $nonce, "um-frontend-nonce" ) ) {
+				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
+			}
+
+			/**
+			 * @var $key
+			 * @var $src
+			 * @var $coord
+			 * @var $user_id
+			 */
 			extract( $_REQUEST );
 
-			if ( !isset($src) || !isset($coord) ) die( __('Invalid parameters') );
+			if ( ! isset( $src ) || ! isset( $coord ) ) {
+				wp_send_json_error( esc_js( __( 'Invalid parameters', 'ultimate-member' ) ) );
+			}
 
-			$coord_n = substr_count($coord, ",");
-			if ( $coord_n != 3 ) die( __('Invalid coordinates') );
+			$coord_n = substr_count( $coord, "," );
+			if ( $coord_n != 3 ) {
+				wp_send_json_error( esc_js( __( 'Invalid coordinates', 'ultimate-member' ) ) );
+			}
 
 			$um_is_temp_image = um_is_temp_image( $src );
-			if ( !$um_is_temp_image ) die( __('Invalid Image file') );
+			if ( ! $um_is_temp_image ) {
+				wp_send_json_error( esc_js( __( 'Invalid Image file', 'ultimate-member' ) ) );
+			}
 
-			$crop = explode(',', $coord );
-			$crop = array_map('intval', $crop);
+			$crop = explode( ',', $coord );
+			$crop = array_map( 'intval', $crop );
 
 			$uri = UM()->files()->resize_image( $um_is_temp_image, $crop );
 
@@ -108,7 +132,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			delete_option( "um_cache_userdata_{$user_id}" );
 
-			if(is_array($output)){ print_r($output); }else{ echo $output; } die;
+			wp_send_json_success( $output );
 		}
 
 

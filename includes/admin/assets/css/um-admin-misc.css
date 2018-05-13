@@ -1,8 +1,73 @@
+.um-admin td, .um-admin th {
+	-webkit-font-smoothing: antialiased !important;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.um-admin.post-type-um_form .manage-column.column-id {
+	width: 60px;
+}
+.um-admin.post-type-um_form .manage-column.column-mode {
+	width: 100px;
+}
+.um-admin.post-type-um_form .manage-column.column-title {
+	width: 200px;
+}
+.um-admin.post-type-um_form .manage-column.column-shortcode {
+	width: 200px;
+}
+.um-admin.post-type-um_form .manage-column.column-impressions {
+	width: 100px;
+}
+.um-admin.post-type-um_form .manage-column.column-conversions {
+	width: 100px;
+}
+
+.um-admin.post-type-um_directory .manage-column.column-id {
+	width: 60px;
+}
+.um-admin.post-type-um_directory .manage-column.column-title {
+	width: 250px;
+}
+
+.um-admin.post-type-um_role .manage-column.column-title {
+	width: 200px;
+}
+.um-admin.post-type-um_role .manage-column.column-count {
+	width: 150px;
+}
+.um-admin.post-type-um_role .manage-column.column-core {
+	width: 150px;
+}
+
+.um-admin.post-type-um_form td.column-shortcode,
+.um-admin.post-type-um_form td.column-id,
+.um-admin.post-type-um_directory td.column-shortcode,
+.um-admin.post-type-um_directory td.column-id,
+.um-admin.post-type-um_role td.column-count {
+	font-size: 14px;
+}
+
+.um-admin.users-php  td.column-um_actions {
+	padding-top: 12px;
+}
+
+.um-admin.users-php  td.column-um_actions a.button {
+	height: 29px !important;
+	margin: 0 0 0 2px !important;
+	position: relative;
+}
+
+.um-admin.users-php .subsubsub li.subsep {
+	display: block;
+	visibility: hidden;
+	height: 0;
+}
+
 /*
 	- Welcome
 */
 
-.um-about-wrap * {
+/*.um-about-wrap * {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
@@ -17,12 +82,6 @@
 
 .um-about-wrap a.um-about-icon:hover {color: #0085ba !important}
 
-.um-badge {
-	color: #fff;
-	background: none !important;
-	background: #0085ba url(../img/logo_small.png) no-repeat center 0px !important;
-}
-
 .um-about-wrap .ultimatemember-actions a.button-primary,
 .um-about-wrap .ultimatemember-actions a.button {
 	vertical-align: top;
@@ -34,21 +93,17 @@
 	line-height: 38px;
 }
 
-.um-about-wrap a {text-decoration: none}
+.um-about-wrap a {text-decoration: none}*/
 
 /*
 	- General
 */
 
-body.um-admin-modal-open {
-    overflow: hidden;
-}
 
-.um-admin #major-publishing-actions{background-color: #fff !important;border-top:0}
 
-.um-admin-hide {display: none}
+/*.um-admin-hide {display: none}*/
 
-.um-admin-field {
+/*.um-admin-field {
 	display: block;
 	width: 100%;
 	margin-top: 10px;
@@ -58,11 +113,11 @@ body.um-admin-modal-open {
 	position: relative;
 	top: 1px;
 	height: 30px !important;
-}
+}*/
 
-.um-admin-half {
-	float: left;
-	width: 48%;
+.um-admin #major-publishing-actions{
+	background-color: #fff !important;
+	border-top:0;
 }
 
 .um-admin-tri {
@@ -70,15 +125,14 @@ body.um-admin-modal-open {
 	width: 33%;
 }
 
-.um-admin-left{float: left}
-.um-admin-right {float: right}
-.um-admin-clear {clear: both}
-
-.um-admin a.um-admin-activebg,
-.um-admin a.um-admin-activebg:hover{
-	/*background: #3ba1da;*/
-	background: #0085ba;
-	color: #fff;
+.um-admin-left{
+	float: left;
+}
+.um-admin-right {
+	float: right;
+}
+.um-admin-clear {
+	clear: both;
 }
 
 .um-admin a.button i,
@@ -100,7 +154,6 @@ body.um-admin-modal-open {
 /*
 	- Form Inputs
 */
-
 .um-admin-metabox h3 {
 	padding-left: 0 !important;
 }
@@ -157,38 +210,3 @@ body.um-admin-modal-open {
 
 .um-admin-metabox textarea {min-height: 100px;height: 100px}
 .um-admin-metabox textarea.tall {min-height: 200px;height: 200px}
-
-.wp-picker-container input.wp-color-picker[type="text"] {
-	width: 68px !important;
-	float: left !important;
-	padding: 2px 4px !important;
-	border-width: 1px !important;
-}
-
-/*
-	- Error blocks
-*/
-
-.um-admin-error-block, .um-admin-success-block{
-	display: none;
-	width: 100%;
-	background: #C74A4A;
-	border-radius: 3px;
-	color: #fff;
-	box-sizing: border-box;
-	position: relative;
-	padding: 12px;
-	font-size: 13px;
-	line-height: 1em !important;
-	margin: 0 0 16px 0;
-}
-
-.um-admin-success-block {
-	background: #7ACF58;
-}
-
-.um-admin.users-php .subsubsub li.subsep {
-	display: block;
-	visibility: hidden;
-	height: 0;
-}

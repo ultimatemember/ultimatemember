@@ -7,8 +7,9 @@ jQuery(document).ready(function() {
 			this_row.remove();
 		}
 	});
-	
-	if ( jQuery('.um-profile.um-viewing .um-profile-body').length && jQuery('.um-profile.um-viewing .um-profile-body').find('.um-field').length == 0 ) {
+
+	var profile_body = jQuery('.um-profile.um-viewing .um-profile-body');
+	if ( profile_body.length && profile_body.find('.um-field').length == 0 ) {
 		jQuery('.um-row-heading,.um-row').remove();
 		jQuery('.um-profile-note').show();
 	}
@@ -40,13 +41,13 @@ jQuery(document).ready(function() {
 		
 		user_id = jQuery(this).attr('data-user_id');
 		metakey = 'profile_photo';
-		
-		jQuery.ajax({
-			url: um_scripts.delete_profile_photo,
-			type: 'post',
+
+
+		wp.ajax.send( 'um_delete_profile_photo', {
 			data: {
 				metakey: metakey,
-				user_id: user_id
+				user_id: user_id,
+				nonce: um_scripts.nonce
 			}
 		});
 	});
@@ -62,13 +63,12 @@ jQuery(document).ready(function() {
 		
 		user_id = jQuery(this).attr('data-user_id');
 		metakey = 'cover_photo';
-		
-		jQuery.ajax({
-			url: um_scripts.delete_cover_photo,
-			type: 'post',
+
+		wp.ajax.send( 'um_delete_cover_photo', {
 			data: {
 				metakey: metakey,
-				user_id: user_id
+				user_id: user_id,
+				nonce: um_scripts.nonce
 			}
 		});
 	});
@@ -145,11 +145,10 @@ jQuery(document).ready(function() {
 		parent.find('.um-btn-auto-width').html('Upload');
 		parent.find('input[type=hidden]').val('empty_file');
 
-		jQuery.ajax({
-			url: um_scripts.remove_file,
-			type: 'post',
+		wp.ajax.send( 'um_remove_file', {
 			data: {
-				src: src
+				src: src,
+				nonce: um_scripts.nonce
 			}
 		});
 
@@ -165,11 +164,10 @@ jQuery(document).ready(function() {
 		parent.find('.um-btn-auto-width').html('Upload');
 		parent.find('input[type=hidden]').val('empty_file');
 
-		jQuery.ajax({
-			url: um_scripts.remove_file,
-			type: 'post',
+		wp.ajax.send( 'um_remove_file', {
 			data: {
-				src: src
+				src: src,
+				nonce: um_scripts.nonce
 			}
 		});
 
@@ -199,26 +197,26 @@ jQuery(document).ready(function() {
 			var arr_key = parent.val();
 
 			if( parent.val() != '' && typeof um_select_options_cache[ arr_key ] != 'object' ){
-				jQuery.ajax({
-					url: um_scripts.ajax_select_options,
-					type: 'post',
+
+				wp.ajax.send( 'um_select_options', {
 					data: {
 						parent_option_name: parent_option,
 						parent_option: parent.val(),
 						child_callback: um_ajax_source,
-						child_name:  me.attr('name'),
-						form_id: form_id
+						child_name: me.attr('name'),
+						form_id: form_id,
+						nonce: um_scripts.nonce
 					},
-					success: function( data ){
-						if( data.status == 'success' && parent.val() != '' ){
-							um_field_populate_child_options( me, data, arr_key);
+					success: function( data ) {
+						if ( parent.val() != '' ) {
+							um_field_populate_child_options( me, data, arr_key );
 						}
 
-						if( typeof data.debug !== 'undefined' ){
+						if ( typeof data.debug !== 'undefined' ){
 							console.log( data );
 						}
 					},
-					error: function( e ){
+					error: function( e ) {
 						console.log( e );
 					}
 				});
@@ -295,7 +293,6 @@ jQuery(document).ready(function() {
 
 /**
  *
- * @constructor
  */
 function UM_hide_menus() {
 	menu = jQuery('.um-dropdown');
@@ -306,7 +303,6 @@ function UM_hide_menus() {
 
 /**
  *
- * @constructor
  */
 function um_menu_responsive() {
 
@@ -419,29 +415,27 @@ function um_init_image_upload( event, trigger ) {
 
 	trigger = trigger.find('.um-single-image-upload');
 
+	var upload_help_text = '';
 	if ( trigger.data( 'upload_help_text' ) ) {
 		upload_help_text = '<span class="help">' + trigger.data('upload_help_text') + '</span>';
-	} else {
-		upload_help_text = '';
 	}
 
+	var icon = '';
 	if ( trigger.data('icon') ) {
 		icon = '<span class="icon"><i class="'+ trigger.data('icon') + '"></i></span>';
-	} else {
-		icon = '';
 	}
 
+	var upload_text = '';
 	if ( trigger.data('upload_text') ) {
 		upload_text = '<span class="str">' + trigger.data('upload_text') + '</span>';
-	} else {
-		upload_text = '';
 	}
 
 	trigger.uploadFile({
-		url: um_scripts.imageupload,
+		url: wp.ajax.settings.url,
 		method: "POST",
 		multiple: false,
 		formData: {
+			action: 'um_imageupload',
 			key: trigger.data('key'),
 			set_id: trigger.data('set_id'),
 			set_mode: trigger.data('set_mode'),
@@ -518,29 +512,27 @@ function um_init_file_upload( event, trigger ) {
 
 	trigger = trigger.find('.um-single-file-upload');
 
-	if (trigger.data('upload_help_text')){
+	var upload_help_text = '';
+	if ( trigger.data( 'upload_help_text' ) ) {
 		upload_help_text = '<span class="help">' + trigger.data('upload_help_text') + '</span>';
-	} else {
-		upload_help_text = '';
 	}
 
-	if ( trigger.data('icon') ) {
+	var icon = '';
+	if ( trigger.data( 'icon' ) ) {
 		icon = '<span class="icon"><i class="'+ trigger.data('icon') + '"></i></span>';
-	} else {
-		icon = '';
 	}
 
+	var upload_text = '';
 	if ( trigger.data('upload_text') ) {
 		upload_text = '<span class="str">' + trigger.data('upload_text') + '</span>';
-	} else {
-		upload_text = '';
 	}
 
 	trigger.uploadFile({
-		url: um_scripts.fileupload,
+		url: wp.ajax.settings.url,
 		method: "POST",
 		multiple: false,
 		formData: {
+			action: 'um_fileupload',
 			key: trigger.data('key'),
 			set_id: trigger.data('set_id'),
 			set_mode: trigger.data('set_mode'),

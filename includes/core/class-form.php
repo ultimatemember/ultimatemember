@@ -50,10 +50,21 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 *
 		 */
 		function ajax_muted_action() {
+			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
+
+			if ( ! wp_verify_nonce( $nonce, "um-frontend-nonce" ) ) {
+				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
+			}
+
+			/**
+			 * @var $user_id
+			 * @var $hook
+			 */
 			extract( $_REQUEST );
 
-			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) )
-				die( __( 'You can not edit this user' ) );
+			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+				wp_send_json_error( esc_js( __( 'You can not edit this user', 'ultimate-member' ) ) );
+			}
 
 			switch( $hook ) {
 				default:
@@ -79,6 +90,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					do_action( "um_run_ajax_function__{$hook}", $_REQUEST );
 					break;
 			}
+
+			wp_send_json_success();
 		}
 
 
@@ -86,9 +99,14 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 *
 		 */
 		function ajax_select_options() {
+			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
+
+			if ( ! wp_verify_nonce( $nonce, "um-frontend-nonce" ) ) {
+				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
+			}
+
 
 			$arr_options = array();
-			$arr_options['status'] = 'success';
 			$arr_options['post'] = $_POST;
 
 			UM()->fields()->set_id = intval( $_POST['form_id'] );
@@ -118,35 +136,34 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			 * ?>
 			 */
 			$debug = apply_filters('um_ajax_select_options__debug_mode', false );
-			if( $debug ){
+			if ( $debug ) {
 				$arr_options['debug'] = array(
 					$_POST,
 					$form_fields,
 				);
 			}
 
-			if( isset( $_POST['child_callback'] ) && ! empty( $_POST['child_callback'] ) && isset( $form_fields[ $_POST['child_name'] ] )  ){
+			if ( isset( $_POST['child_callback'] ) && ! empty( $_POST['child_callback'] ) && isset( $form_fields[ $_POST['child_name'] ] )  ){
 
 				$ajax_source_func = $_POST['child_callback'];
 
 				// If the requested callback function is added in the form or added in the field option, execute it with call_user_func.
-				if( isset( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
+				if ( isset( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
 				    ! empty( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
-				    $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] == $ajax_source_func ){
+				    $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] == $ajax_source_func ) {
 
 					$arr_options['field'] = $form_fields[ $_POST['child_name'] ];
 					if( function_exists( $ajax_source_func ) ){
 						$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship']  );
 					}
 
-				}else{
-					$arr_options['status'] = 'error';
-					$arr_options['message'] = __( 'This is not possible for security reasons.','ultimate-member');
+				} else {
+					wp_send_json_error( __( 'This is not possible for security reasons.','ultimate-member') );
 				}
 
 			}
 
-			wp_send_json( $arr_options );
+			wp_send_json_success( $arr_options );
 		}
 
 

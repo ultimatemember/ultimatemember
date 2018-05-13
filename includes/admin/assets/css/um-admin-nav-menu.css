@@ -1,0 +1,33 @@
+/*
+	- Nav Menu
+*/
+.um-nav-edit * {
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+.um-nav-edit-h2 {
+    padding: 10px 20px 10px 60px;
+    margin: 14px 12px 0 0;
+    border-radius: 3px;
+    color: #fff;
+    background: #0085ba url(../img/logo-small.png) no-repeat 12px center;
+    font-weight: bold;
+}
+
+.um-nav-mode {
+    margin-top:10px;
+}
+.um-nav-roles {
+    display: none;
+    margin-top:5px;
+}
+
+.wp-admin p.um-nav-roles label input[type=checkbox] {
+    margin-top: 0 !important;
+}
+
+.wp-admin p.um-nav-roles label {
+    margin-top: 2px !important;
+    margin-bottom: 2px !important;
+}

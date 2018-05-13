@@ -185,21 +185,22 @@ jQuery(document).ready(function() {
 		var args = jQuery(this).data('args');
 		var hook = jQuery(this).data('hook');
 		var container = jQuery(this).parents('.um').find('.um-ajax-items');
-		jQuery.ajax({
-			url: um_scripts.ajax_paginate,
-			type: 'post',
+
+		wp.ajax.send( 'um_ajax_paginate', {
 			data: {
 				hook: hook,
-				args: args
+				args: args,
+				nonce: um_scripts.nonce
 			},
-			complete: function(){
+			complete: function() {
 				parent.removeClass('loading');
 			},
-			success: function(data){
+			success: function( data ) {
 				parent.remove();
 				container.append( data );
 			}
 		});
+
 		return false;
 	});
 
@@ -214,18 +215,18 @@ jQuery(document).ready(function() {
 			jQuery(this).parents('.'+jQuery(this).data('js-remove')).fadeOut('fast');
 		}
 
-		jQuery.ajax({
-			url: um_scripts.muted_action,
-			type: 'post',
+		wp.ajax.send( 'um_muted_action', {
 			data: {
 				hook: hook,
 				user_id: user_id,
-				arguments: arguments
+				arguments: arguments,
+				nonce: um_scripts.nonce
 			},
 			success: function(data){
 
 			}
 		});
+
 		return false;
 	});
 

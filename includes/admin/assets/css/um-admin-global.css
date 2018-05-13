@@ -1,3 +1,15 @@
+/*Admin menu*/
+ul#adminmenu a.wp-has-current-submenu:after,
+ul#adminmenu>li.current>a.current:after {
+	display: none !important;
+}
+
+ul#adminmenu li.wp-has-submenu.wp-not-current-submenu:hover:after {
+	right:-9999999px;
+}
+
+
+/* Admin Notices */
 .um-admin-notice {
 	border-color: #0085ba !important;
 	color: #555;
@@ -23,134 +35,22 @@
 	border-color: #008ec2 !important;
 }
 
-.um-admin-notice a.button-secondary {opacity: 0.7}
-.um-admin-notice a.button-secondary:hover {opacity: 0.9}
-.um-admin-notice a {text-decoration: none;color: #0085ba}
-.um-admin-notice a:hover {color: #44b0ec}
-
-.um-filter {
-	padding: 12px;
-	border-color: #ddd !important;
-	margin: 20px 0 0 0 !important;
-	font-size: 14px;
-	line-height: 24px;
+.um-admin-notice a.button-secondary {
+	opacity: 0.7;
 }
 
-/*
-	- General metabox styling
-*/
-
-#um-admin-access-settings h3 {
-	padding: 10px 20px 10px 60px;
-	color: #fff;
-	background: #0085ba url(../img/logo-small.png) no-repeat 12px center;
-	font-weight: bold;
-	font-size: 14px !important;
-	-webkit-font-smoothing: antialiased !important;
-	-moz-osx-font-smoothing: grayscale !important;
+.um-admin-notice a.button-secondary:hover {
+	opacity: 0.9;
 }
 
-#um-admin-access-settings h4 { margin: 10px 0 4px 0!important}
-
-#um-admin-access-settings div.handlediv {
-	color: #fff !important;
-	-webkit-font-smoothing: antialiased !important;
-	-moz-osx-font-smoothing: grayscale !important;
+.um-admin-notice a {
+	text-decoration: none;
+	color: #0085ba;
 }
 
-#um-admin-access-settings p {font-size: 13px}
-
-#um-admin-access-settings input[type=text] {font-size: 13px}
-
-/*
-	- Nav Menu
-*/
-
-.um-nav-edit * {
-	-webkit-font-smoothing: antialiased !important;
-	-moz-osx-font-smoothing: grayscale !important;
+.um-admin-notice a:hover {
+	color: #44b0ec;
 }
-
-.um-nav-edit-h2 {
-	padding: 10px 20px 10px 60px;
-	margin: 14px 12px 0 0;
-	border-radius: 3px;
-	color: #fff;
-	background: #0085ba url(../img/logo-small.png) no-repeat 12px center;
-	font-weight: bold;
-}
-
-.um-nav-mode {margin-top:10px}
-.um-nav-roles {display: none;margin-top:5px}
-
-/*
-	- jQuery Tooltips
-*/
-
-.um-admin-tip {
-	margin: 0 0 0 2px;
-	color: #0085ba !important;
-	vertical-align: middle;
-	position: relative;
-	top: -3px;
-	opacity: 0.8;
-}
-.um-admin-tip.n {margin-left: 5px}
-.um-admin-tip i {cursor: pointer; vertical-align: middle; font-size: 20px; line-height: 20px;color: #0085ba !important;}
-a.um-delete{ color: #a00; }
-
-
-
-/* Roles metabox + table features */
-.um-metabox-section .description {
-	font-style: italic;
-}
-
-.um-metabox-section th {
-	width: 35%;
-}
-
-.wp-list-table.roles .column-core,
-.wp-list-table.roles .column-users,
-.wp-list-table.roles .column-admin_access,
-.wp-list-table.roles .column-priority {
-	width:15%;
-	text-align: center !important;
-}
-
-@media screen and (max-width: 782px) {
-	.wp-list-table.roles .column-core,
-	.wp-list-table.roles .column-users,
-	.wp-list-table.roles .column-admin_access,
-	.wp-list-table.roles .column-priority {
-		text-align: left !important;
-	}
-}
-
-#um-admin-form-wp-capabilities .um-metadata-line th {
-	width: auto;
-}
-
-#um-admin-form-wp-capabilities .um-metadata-line td {
-	width: 20px;
-}
-
-#um_edit_role #titlewrap > span {
-	width: 40px;
-	font-size: 24px;
-	float:left;
-	display: block;
-	line-height: 37px;
-}
-
-#um-roles .row-actions .reset a {
-	color:#a00;
-}
-
-#um-roles .row-actions .reset a:hover {
-	color:red;
-}
-
 
 /*Tooltip*/
 .ui-tooltip.um_tooltip {
@@ -190,11 +90,60 @@ a.um-delete{ color: #a00; }
 }
 
 
-.wp-admin p.um-nav-roles label input[type=checkbox] {
-	margin-top: 0 !important;
+/*
+	- General metabox styling
+*/
+
+/*#um-admin-access-settings h3 {
+	padding: 10px 20px 10px 60px;
+	color: #fff;
+	background: #0085ba url(../img/logo-small.png) no-repeat 12px center;
+	font-weight: bold;
+	font-size: 14px !important;
+	-webkit-font-smoothing: antialiased !important;
+	-moz-osx-font-smoothing: grayscale !important;
 }
 
-.wp-admin p.um-nav-roles label {
-	margin-top: 2px !important;
-	margin-bottom: 2px !important;
+#um-admin-access-settings h4 { margin: 10px 0 4px 0!important}
+
+#um-admin-access-settings div.handlediv {
+	color: #fff !important;
+	-webkit-font-smoothing: antialiased !important;
+	-moz-osx-font-smoothing: grayscale !important;
 }
+
+#um-admin-access-settings p {font-size: 13px}
+
+#um-admin-access-settings input[type=text] {font-size: 13px}*/
+
+
+
+
+
+/*a.um-delete {
+    color: #a00;
+}*/
+
+/*
+	- jQuery Tooltips
+*/
+
+/*
+.um-admin-tip {
+	margin: 0 0 0 2px;
+	color: #0085ba !important;
+	vertical-align: middle;
+	position: relative;
+	top: -3px;
+	opacity: 0.8;
+}
+.um-admin-tip.n {
+	margin-left: 5px;
+}
+.um-admin-tip i {
+	cursor: pointer;
+	vertical-align: middle;
+	font-size: 20px;
+	line-height: 20px;
+	color: #0085ba !important;
+}*/

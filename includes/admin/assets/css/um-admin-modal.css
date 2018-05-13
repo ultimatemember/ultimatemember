@@ -12,6 +12,11 @@
 	z-index: 10000;
 }
 
+
+body.um-admin-modal-open {
+	overflow: hidden;
+}
+
 /*
 	- modal
 */

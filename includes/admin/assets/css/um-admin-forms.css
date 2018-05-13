@@ -192,3 +192,11 @@ textarea.um-forms-field.um-small-field {
 .um-forms-line[data-conditional] {
     display: none;
 }
+
+/*Color Picker*/
+.wp-picker-container input.wp-color-picker[type="text"] {
+    width: 68px !important;
+    float: left !important;
+    padding: 2px 4px !important;
+    border-width: 1px !important;
+}
