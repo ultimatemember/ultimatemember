@@ -139,9 +139,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			 * ?>
 			 */
 			$localize_data = apply_filters( 'um_enqueue_localize_data', array(
-//				'ajaxurl'       => admin_url( 'admin-ajax.php' ),
-				'imageupload'   => UM()->get_ajax_route( 'um\core\Files', 'ajax_image_upload' ),
-				'nonce'         => wp_create_nonce( "um-frontend-nonce" ),
+				'nonce' => wp_create_nonce( "um-frontend-nonce" ),
 			) );
 
 			wp_localize_script( 'um-scripts', 'um_scripts', $localize_data );
