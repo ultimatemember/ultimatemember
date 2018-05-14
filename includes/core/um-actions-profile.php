@@ -221,6 +221,9 @@ function um_user_edit_profile( $args ) {
 
 		foreach ( $fields as $key => $array ) {
 
+			/*if ( ! um_can_edit_field( $fields[ $key ] ) )
+				continue;*/
+
 			if ( ! um_can_edit_field( $fields[ $key ] ) && isset( $fields[ $key ]['editable'] ) && ! $fields[ $key ]['editable'] )
 				continue;
 
@@ -524,11 +527,7 @@ function um_profile_dynamic_meta_desc() {
 		$user_id = um_user( 'ID' );
 		$url = um_user_profile_url();
 
-		if (um_profile( 'profile_photo' )) {
-			$avatar = um_user_uploads_uri() . um_profile( 'profile_photo' );
-		} else {
-			$avatar = um_get_default_avatar_uri();
-		}
+        $avatar = um_get_user_avatar_url( $user_id, 'original' );
 
 		um_reset_user(); ?>
 

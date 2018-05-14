@@ -43,9 +43,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			<div class="um-field um-field-c">
 				<div class="um-field-area">
 					<label class="um-field-checkbox active">
-						<input type="checkbox" name="<?php echo $id; ?>" value="1" checked/><span
-							class="um-field-checkbox-state"><i
-								class="um-icon-android-checkbox-outline"></i></span>
+						<input type="checkbox" name="<?php echo $id; ?>" value="1" checked/>
+						<span class="um-field-checkbox-state"><i class="um-icon-android-checkbox-outline"></i></span>
 						<span class="um-field-checkbox-option"> <?php echo $title; ?></span>
 					</label>
 				</div>
@@ -800,6 +799,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					return true;
 				}
 
+				$stripslashed = array_map( 'stripslashes', UM()->form()->post_form[ $key ] );
+				if ( in_array( $value, $stripslashed ) ) {
+					return true;
+				}
+
 				if ( in_array( html_entity_decode( $value ), UM()->form()->post_form[ $key ] ) ) {
 					return true;
 				}
@@ -1530,10 +1534,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @param  string  $key
 		 * @param  array   $data
 		 * @param  boolean $rule
+		 * @param  array   $args
 		 *
 		 * @return string
 		 */
-		function edit_field( $key, $data, $rule = false ) {
+		function edit_field( $key, $data, $rule = false, $args = array() ) {
 			global $_um_profile_id;
 			$output = null;
 			$disabled = '';
@@ -1567,7 +1572,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					 * @var boolean     $required
 					 * @var string      $validate
 					 * @var string      $default
-                     * @var string      $conditional
+					 * @var string      $conditional
 					 */
 					extract( $data );
 				}
@@ -1579,7 +1584,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if ($visibility == 'view' && $this->set_mode != 'register') return;
 
-			if (( $visibility == 'view' && $this->set_mode == 'register' ) ||
+			if ( ( $visibility == 'view' && $this->set_mode == 'register' ) ||
 				( isset( $data['editable'] ) && $data['editable'] == 0 && $this->set_mode == 'profile' )
 			) {
 
@@ -1663,7 +1668,47 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			 * ?>
 			 */
 			$type = apply_filters( "um_hook_for_field_{$type}", $type );
+			switch ( $type ) {
 
+				case 'textarea':
+				case 'multiselect':
+					$field_id = $field_name = $key;
+					$field_value = $this->field_value( $key, $default, $data );
+					break;
+
+				case 'select':
+				case 'radio':
+					$form_key = str_replace( 'role_select', 'role', $key );
+					$field_id = $form_key;
+					break;
+				default:
+					$field_id = '';
+					break;
+			}
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_completeness_field_id
+			 * @description use for change core id not allowed duplicate
+			 * @input_vars
+			 * [{"var":"$field_id","type":"string","desc":"Field id"},
+			 * {"var":"$data","type":"array","desc":"Field Data"}]
+			 * {"var":"$args","type":"array","desc":"Optional field arguments"}]
+			 * @change_log
+			 * ["Since: 2.0.13"]
+			 * @usage add_filter( 'um_completeness_field_id', 'function_name', 10, 3 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_completeness_field_id', 'function_name', 10, 3 );
+			 * function function_name( $field_id, $data, $args ) {
+			 *     // your code here
+			 *     return $field_id;
+			 * }
+			 * ?>
+			 */
+			$field_id = apply_filters( 'um_completeness_field_id', $field_id, $data, $args );
 			/* Begin by field type */
 			switch ( $type ) {
 
@@ -1722,8 +1767,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
                         </div>';
 
-				if (!empty( $disabled )) {
-					$output .= $this->disabled_hidden_field( $field_name, $field_value );
+					if (!empty( $disabled )) {
+						$output .= $this->disabled_hidden_field( $field_name, $field_value );
 					}
 
 					if ($this->is_error( $key )) {
@@ -2033,8 +2078,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					}
 
 					$output .= '<div class="um-field-area">';
-					$field_name = $key;
-					$field_value = $this->field_value( $key, $default, $data );
 
 					if (isset( $data['html'] ) && $data['html'] != 0 && $key != "description") {
 
@@ -2085,16 +2128,17 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						// add the contents of the buffer to the output variable
 						$output .= ob_get_clean();
 
-					} else $output .= '<textarea  ' . $disabled . '  style="height: ' . $height . ';" class="' . $this->get_class( $key, $data ) . '" name="' . $key . '" id="' . $key . '" placeholder="' . $placeholder . '">' . $field_value . '</textarea>';
+					} else {
+						$output .= '<textarea  ' . $disabled . '  style="height: ' . $height . ';" class="' . $this->get_class( $key, $data ) . '" name="' . $field_name . '" id="' . $field_id . '" placeholder="' . $placeholder . '">' . $field_value . '</textarea>';
+					}
 
-					$output .= '
-                        </div>';
+					$output .= '</div>';
 
-					if (!empty( $disabled )) {
+					if ( ! empty( $disabled ) ) {
 						$output .= $this->disabled_hidden_field( $field_name, $field_value );
 					}
 
-					if ($this->is_error( $key )) {
+					if ( $this->is_error( $key ) ) {
 						$output .= $this->field_error( $this->show_error( $key ) );
 					}
 
@@ -2112,7 +2156,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '<div class="um-field-area">';
 
 					$output .= '<div class="um-rating um-raty" id="' . $key . '" data-key="' . $key . '" data-number="' . $data['number'] . '" data-score="' . $this->field_value( $key, $default, $data ) . '"></div>';
-
 					$output .= '</div>';
 
 					$output .= '</div>';
@@ -2314,8 +2357,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				/* Select dropdown */
 				case 'select':
 
-					$form_key = str_replace( 'role_select', 'role', $key );
-
 					$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="' . $key . '">';
 
 
@@ -2435,10 +2476,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					}
 
 					if( ! empty( $placeholder ) ) {
-					    $placeholder = strip_tags( $placeholder );
-                    }
+						$placeholder = strip_tags( $placeholder );
+					}
 
-					$output .= '<select  ' . $disabled . ' ' . $select_original_option_value . ' ' . $disabled_by_parent_option . '  name="' . $form_key . '" id="' . $form_key . '" data-validate="' . $validate . '" data-key="' . $key . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . $placeholder . '" ' . $atts_ajax . '>';
+					$output .= '<select  ' . $disabled . ' ' . $select_original_option_value . ' ' . $disabled_by_parent_option . '  name="' . $form_key . '" id="' . $field_id . '" data-validate="' . $validate . '" data-key="' . $key . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . $placeholder . '" ' . $atts_ajax . '>';
 
 					/**
 					 * UM hook
@@ -2632,7 +2673,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= '<div class="um-field-icon"><i class="' . $icon . '"></i></div>';
 					}
 
-					$output .= '<select  ' . $disabled . ' multiple="multiple" name="' . $key . '[]" id="' . $key . '" data-maxsize="' . $max_selections . '" data-validate="' . $validate . '" data-key="' . $key . '" class="' . $this->get_class( $key, $data, $class ) . ' um-user-keyword_' . $use_keyword . '" style="width: 100%" data-placeholder="' . $placeholder . '">';
+					$output .= '<select  ' . $disabled . ' multiple="multiple" name="' . $field_name . '[]" id="' . $field_id . '" data-maxsize="' . $max_selections . '" data-validate="' . $validate . '" data-key="' . $key . '" class="' . $this->get_class( $key, $data, $class ) . ' um-user-keyword_' . $use_keyword . '" style="width: 100%" data-placeholder="' . $placeholder . '">';
 
 
 					if ( isset( $options ) && $options == 'builtin' ) {
@@ -2768,8 +2809,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				/* Radio */
 				case 'radio':
-
-					$form_key = str_replace( 'role_radio', 'role', $key );
 
 					if ( isset( $options ) ) {
 						/**

@@ -4,7 +4,7 @@ jQuery(document).ready(function() {
 		UM_Member_Grid( jQuery(this) );
 	});
 
-	jQuery('.um-member-connect').each(function(){
+	jQuery('.um-directory .um-member-connect').each(function(){
 		if ( jQuery(this).find('a').length == 0 ) {
 			jQuery(this).remove();
 		}

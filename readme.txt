@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.1
 Tested up to: 4.9
-Stable tag: 2.0.10
+Stable tag: 2.0.13
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -130,6 +130,22 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 == Changelog ==
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
+
+= 2.0.13: May 2, 2018 =
+
+* Bugfixes:
+  - Fixed and optimized user avatars
+  - Fixed Profile Menu on some installs
+  - Fixed fields IDs duplicates
+  - Fixed cache users count
+
+= 2.0.12: April 30, 2018 =
+
+* Bugfixes:
+  - Fixed approving users with "Administrator" role
+  - Fixed problem with URLs for upload images
+  - Fixed not UM roles, which start from "um_" symbols
+  - Fixed content restriction logic
 
 = 2.0.11: April 19, 2018 =
 

@@ -546,9 +546,3 @@ font-weight: normal;
 .um-profile.um-viewing .um-field-checkbox, .um-profile.um-viewing .um-field-radio{
 	cursor: default !important;
 }
-
-@media (min-width: 880px) {
-	.um-profile-nav-item .um-tip-n {
-		display: none;
-	}
-}
