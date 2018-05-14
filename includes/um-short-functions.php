@@ -508,10 +508,11 @@ function um_user_submitted_registration( $style = false ) {
 
 	$data = um_user( 'submitted' );
 
-	if ($style)
+	if ( $style ) {
 		$output .= '<div class="um-admin-infobox">';
+	}
 
-	if (isset( $data ) && is_array( $data )) {
+	if ( isset( $data ) && is_array( $data ) ) {
 
 		/**
 		 * UM hook
@@ -535,38 +536,51 @@ function um_user_submitted_registration( $style = false ) {
 		 */
 		$data = apply_filters( 'um_email_registration_data', $data );
 
-		foreach ($data as $k => $v) {
+		$pw_fields = array();
+		foreach ( $data as $k => $v ) {
 
-			if (!is_array( $v ) && strstr( $v, 'ultimatemember/temp' )) {
+			if ( strstr( $k, 'user_pass' ) || in_array( $k, array( 'g-recaptcha-response', 'request', '_wpnonce', '_wp_http_referer' ) ) ) {
+				continue;
+			}
+
+			if ( UM()->fields()->get_field_type( $k ) == 'password' ) {
+				$pw_fields[] = $k;
+				$pw_fields[] = 'confirm_' . $k;
+				continue;
+			}
+
+			if ( ! empty( $pw_fields ) && in_array( $k, $pw_fields ) ) {
+				continue;
+			}
+
+			if ( ! is_array( $v ) && strstr( $v, 'ultimatemember/temp' ) ) {
 				$file = basename( $v );
 				$v = um_user_uploads_uri() . $file;
 			}
 
-			if (!strstr( $k, 'user_pass' ) && !in_array( $k, array( 'g-recaptcha-response', 'request', '_wpnonce', '_wp_http_referer' ) )) {
-
-				if (is_array( $v )) {
-					$v = implode( ',', $v );
-				}
-
-				if ($k == 'timestamp') {
-					$k = __( 'date submitted', 'ultimate-member' );
-					$v = date( "d M Y H:i", $v );
-				}
-
-				if ($style) {
-					if (!$v) $v = __( '(empty)', 'ultimate-member' );
-					$output .= "<p><label>$k</label><span>$v</span></p>";
-				} else {
-					$output .= "$k: $v" . "<br />";
-				}
-
+			if ( is_array( $v ) ) {
+				$v = implode( ',', $v );
 			}
 
+			if ( $k == 'timestamp' ) {
+				$k = __( 'date submitted', 'ultimate-member' );
+				$v = date( "d M Y H:i", $v );
+			}
+
+			if ( $style ) {
+				if ( ! $v ) {
+					$v = __( '(empty)', 'ultimate-member' );
+				}
+				$output .= "<p><label>$k</label><span>$v</span></p>";
+			} else {
+				$output .= "$k: $v" . "<br />";
+			}
 		}
 	}
 
-	if ($style)
+	if ( $style ) {
 		$output .= '</div>';
+	}
 
 	return $output;
 }
