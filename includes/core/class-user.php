@@ -890,6 +890,20 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				unset( $submitted['confirm_user_password'] );
 			}
 
+			//remove all password field values from submitted details
+			$password_fields = array();
+			foreach ( $submitted as $k => $v ) {
+				if ( UM()->fields()->get_field_type( $k ) == 'password' ) {
+					$password_fields[] = $k;
+					$password_fields[] = 'confirm_' . $k;
+				}
+			}
+
+			foreach ( $password_fields as $pw_field ) {
+				unset( $submitted[ $pw_field ] );
+			}
+
+
 			/**
 			 * UM hook
 			 *
