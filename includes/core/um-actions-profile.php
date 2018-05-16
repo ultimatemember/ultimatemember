@@ -218,6 +218,7 @@ function um_user_edit_profile( $args ) {
 
 	// loop through fields
 	if ( ! empty( $fields ) ) {
+
 		foreach ( $fields as $key => $array ) {
 
 			/*if ( ! um_can_edit_field( $fields[ $key ] ) )
@@ -239,10 +240,15 @@ function um_user_edit_profile( $args ) {
 
 				} else {
 
-					if ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ] != $userinfo[ $key ] ) {
-						$to_update[ $key ] = $args['submitted'][ $key ];
-					} elseif ( $args['submitted'][ $key ] ) {
-						$to_update[ $key ] = $args['submitted'][ $key ];
+					if ( $array['type'] == 'password' ) {
+						$to_update[ $key ] = wp_hash_password( $args['submitted'][ $key ] );
+						$args['submitted'][ $key ] = sprintf( __( 'Your choosed %s', 'ultimate-member' ), $array['title'] );
+					} else {
+						if ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ] != $userinfo[ $key ] ) {
+							$to_update[ $key ] = $args['submitted'][ $key ];
+						} elseif ( $args['submitted'][ $key ] ) {
+							$to_update[ $key ] = $args['submitted'][ $key ];
+						}
 					}
 
 				}
