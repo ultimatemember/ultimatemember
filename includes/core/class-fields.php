@@ -822,8 +822,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							if (in_array( $field_value, $role_keys )) {
 								$field_value = 'um_' . $field_value;
 							}
-						}
-
+                        }
+                        elseif( $this->set_mode == 'register' ){
+                          $data['default'] = UM()->options()->get( 'register_role' );
+                        }
+                        else{
+                          $data['default'] = get_option( 'default_role' );
+                        }
 					}
 
 					/**
@@ -946,6 +951,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$um_user_value = 'um_' . $um_user_value;
 							}
 						}
+                        elseif( $this->set_mode == 'register' ){
+                          $data['default'] = UM()->options()->get( 'register_role' );
+                        }
+                        else{
+                          $data['default'] = get_option( 'default_role' );
+                        }
 					}
 
 					if ($um_user_value == $value) {
