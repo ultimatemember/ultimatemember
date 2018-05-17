@@ -70,11 +70,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * Remove file by AJAX
 		 */
 		function ajax_remove_file() {
-			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
-
-			if ( ! wp_verify_nonce( $nonce, "um-frontend-nonce" ) ) {
-				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
-			}
+			UM()->check_frontend_ajax_nonce();
 
 			/**
 			 * @var $src
@@ -90,11 +86,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * Resize image AJAX handler
 		 */
 		function ajax_resize_image() {
-			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
-
-			if ( ! wp_verify_nonce( $nonce, "um-frontend-nonce" ) ) {
-				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
-			}
+			UM()->check_frontend_ajax_nonce();
 
 			/**
 			 * @var $key

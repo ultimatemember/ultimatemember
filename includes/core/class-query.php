@@ -39,11 +39,7 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		 * Ajax pagination for posts
 		 */
 		function ajax_paginate() {
-			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
-
-			if ( ! wp_verify_nonce( $nonce, "um-frontend-nonce" ) ) {
-				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
-			}
+			UM()->check_frontend_ajax_nonce();
 
 			/**
 			 * @var $hook

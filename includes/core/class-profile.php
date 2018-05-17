@@ -45,11 +45,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 * Delete profile avatar AJAX handler
 		 */
 		function ajax_delete_profile_photo() {
-			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
-
-			if ( ! wp_verify_nonce( $nonce, "um-frontend-nonce" ) ) {
-				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
-			}
+			UM()->check_frontend_ajax_nonce();
 
 			/**
 			 * @var $user_id
@@ -70,11 +66,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 * Delete cover photo AJAX handler
 		 */
 		function ajax_delete_cover_photo() {
-			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
-
-			if ( ! wp_verify_nonce( $nonce, "um-frontend-nonce" ) ) {
-				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
-			}
+			UM()->check_frontend_ajax_nonce();
 
 			/**
 			 * @var $user_id

@@ -50,11 +50,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 *
 		 */
 		function ajax_muted_action() {
-			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
-
-			if ( ! wp_verify_nonce( $nonce, "um-frontend-nonce" ) ) {
-				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
-			}
+			UM()->check_frontend_ajax_nonce();
 
 			/**
 			 * @var $user_id
@@ -99,12 +95,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 *
 		 */
 		function ajax_select_options() {
-			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
-
-			if ( ! wp_verify_nonce( $nonce, "um-frontend-nonce" ) ) {
-				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
-			}
-
+			UM()->check_frontend_ajax_nonce();
 
 			$arr_options = array();
 			$arr_options['post'] = $_POST;

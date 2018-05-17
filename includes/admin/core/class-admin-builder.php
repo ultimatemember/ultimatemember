@@ -287,11 +287,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 * Update the builder area
 		 */
 		function update_builder() {
-			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
-
-			if ( ! wp_verify_nonce( $nonce, "um-admin-nonce" ) ) {
-				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
-			}
+			UM()->admin()->check_admin_ajax_nonce();
 
 			extract( $_POST );
 
@@ -601,11 +597,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 *
 		 */
 		function update_field() {
-			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
-
-			if ( ! wp_verify_nonce( $nonce, "um-admin-nonce" ) ) {
-				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
-			}
+			UM()->admin()->check_admin_ajax_nonce();
 
 			$output['error'] = null;
 
@@ -762,11 +754,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 *
 		 */
 		function dynamic_modal_content() {
-			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
-
-			if ( ! wp_verify_nonce( $nonce, "um-admin-nonce" ) ) {
-				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
-			}
+			UM()->admin()->check_admin_ajax_nonce();
 
 			$metabox = UM()->metabox();
 
@@ -1152,11 +1140,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 *  Retrieves dropdown/multi-select options from a callback function
 		 */
 		function populate_dropdown_options() {
-			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
-
-			if ( ! wp_verify_nonce( $nonce, "um-admin-nonce" ) ) {
-				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
-			}
+			UM()->admin()->check_admin_ajax_nonce();
 
 			$arr_options = array();
 
