@@ -1197,12 +1197,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				do_action( "um_settings_page_" . $current_tab . "_" . $current_subtab . "_before_section" );
 
 				$section_fields = $this->get_section_fields( $current_tab, $current_subtab );
+				$settings_section = $this->render_settings_section( $section_fields, $current_tab, $current_subtab );
 
 				/**
 				 * UM hook
 				 *
 				 * @type filter
 				 * @title um_settings_section_{$current_tab}_{$current_subtab}_content
+				 *
 				 * @description Render settings section
 				 * @input_vars
 				 * [{"var":"$content","type":"string","desc":"Section content"},
@@ -1220,7 +1222,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				 * ?>
 				 */
 				echo apply_filters( 'um_settings_section_' . $current_tab . '_' . $current_subtab . '_content',
-					$this->render_settings_section( $section_fields, $current_tab, $current_subtab ),
+					$settings_section,
 					$section_fields
 				);
 
@@ -1258,6 +1260,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					do_action( "um_settings_page_" . $current_tab . "_" . $current_subtab . "_before_section" );
 
 					$section_fields = $this->get_section_fields( $current_tab, $current_subtab );
+					$settings_section = $this->render_settings_section( $section_fields, $current_tab, $current_subtab );
 
 					/**
 					 * UM hook
@@ -1281,7 +1284,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					 * ?>
 					 */
 					echo apply_filters( 'um_settings_section_' . $current_tab . '_' . $current_subtab . '_content',
-						$this->render_settings_section( $section_fields, $current_tab, $current_subtab ),
+						$settings_section,
 						$section_fields
 					);
 					?>
