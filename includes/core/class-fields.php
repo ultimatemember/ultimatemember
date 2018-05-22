@@ -814,16 +814,21 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$field_value = um_user( $key );
 
-					if ($key == 'role') {
+					if ( $key == 'role' ) {
 
 						$role_keys = get_option( 'um_roles' );
 
-						if (!empty( $role_keys )) {
-							if (in_array( $field_value, $role_keys )) {
+						if ( ! empty( $role_keys ) ) {
+							if ( in_array( $field_value, $role_keys ) ) {
 								$field_value = 'um_' . $field_value;
 							}
 						}
-
+						/*elseif( $this->set_mode == 'register' ){
+                          $data['default'] = UM()->options()->get( 'register_role' );
+                        }
+                        else{
+                          $data['default'] = get_option( 'default_role' );
+                        }*/
 					}
 
 					/**
@@ -936,19 +941,25 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$um_user_value = um_user( $key );
 
-					if ($key == 'role') {
+					if ( $key == 'role' ) {
 						$um_user_value = strtolower( $um_user_value );
 
 						$role_keys = get_option( 'um_roles' );
 
-						if (!empty( $role_keys )) {
-							if (in_array( $um_user_value, $role_keys )) {
+						if ( ! empty( $role_keys ) ) {
+							if ( in_array( $um_user_value, $role_keys ) ) {
 								$um_user_value = 'um_' . $um_user_value;
 							}
 						}
+						/*elseif( $this->set_mode == 'register' ){
+							$data['default'] = UM()->options()->get( 'register_role' );
+						}
+						else{
+							$data['default'] = get_option( 'default_role' );
+						}*/
 					}
 
-					if ($um_user_value == $value) {
+					if ( $um_user_value == $value ) {
 						return true;
 					}
 
