@@ -319,6 +319,8 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_script('um_functions', um_url . 'assets/js/um-functions' . $this->suffix . '.js', array('jquery', 'jquery-masonry') );
 			wp_enqueue_script('um_functions');
 
+			wp_enqueue_script( 'um-gdpr', um_url . 'assets/js/um-gdpr' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, false );
+
 		}
 
 
