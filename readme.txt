@@ -131,6 +131,11 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
+= 2.0.16: May 23, 2018 =
+
+* Bugfixes:
+  - Fixed Profile Tabs issues
+
 = 2.0.15: May 22, 2018 =
 
 * Bugfixes:
