@@ -115,14 +115,21 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 					'icon' => 'um-faicon-comment'
 				)
 			) );
-            um_fetch_user(get_current_user_id());
+
 			// disable private tabs
 			if ( ! is_admin() ) {
+			    if( is_user_logged_in() ) {
+                    $user_id = um_user('ID');
+                    um_fetch_user( get_current_user_id() );
+                }
 				foreach ( $tabs as $id => $tab ) {
 					if ( ! $this->can_view_tab( $id ) ) {
 						unset( $tabs[$id] );
 					}
 				}
+				if( is_user_logged_in() ) {
+                    um_fetch_user( $user_id );
+                }
 			}
 
 			return $tabs;
