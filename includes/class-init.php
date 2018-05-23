@@ -495,6 +495,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->admin_ajax_hooks();
 				$this->metabox();
 				$this->admin_upgrade()->init_packages_ajax_handlers();
+				$this->admin_gdpr();
 			} elseif ( $this->is_request( 'admin' ) ) {
 				$this->admin();
 				$this->admin_menu();
@@ -507,6 +508,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->users();
 				$this->dragdrop();
 				$this->plugin_updater();
+				$this->admin_gdpr();
 			} elseif ( $this->is_request( 'frontend' ) ) {
 				$this->enqueue();
 				$this->account();
@@ -535,6 +537,7 @@ if ( ! class_exists( 'UM' ) ) {
 			//$this->tracking();
 			$this->mobile();
 			$this->external_integrations();
+			$this->gdpr();
 		}
 
 
@@ -658,6 +661,48 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->classes['admin_upgrade'] = new um\admin\core\Admin_Upgrade();
 			}
 			return $this->classes['admin_upgrade'];
+		}
+
+
+		/**
+		 * GDPR privacy policy
+		 *
+		 * @since 2.0.14
+		 *
+		 * @return bool|um\admin\core\Admin_GDPR()
+		 */
+		function admin_gdpr() {
+			global $wp_version;
+
+			if ( version_compare( $wp_version, '4.9.6', '<' ) ) {
+				return false;
+			}
+
+			if ( empty( $this->classes['admin_gdpr'] ) ) {
+				$this->classes['admin_gdpr'] = new um\admin\core\Admin_GDPR();
+			}
+			return $this->classes['admin_gdpr'];
+		}
+
+
+		/**
+		 * GDPR privacy policy
+		 *
+		 * @since 2.0.14
+		 *
+		 * @return bool|um\core\GDPR()
+		 */
+		function gdpr() {
+			global $wp_version;
+
+			if ( version_compare( $wp_version, '4.9.6', '<' ) ) {
+				return false;
+			}
+
+			if ( empty( $this->classes['gdpr'] ) ) {
+				$this->classes['gdpr'] = new um\core\GDPR();
+			}
+			return $this->classes['gdpr'];
 		}
 
 

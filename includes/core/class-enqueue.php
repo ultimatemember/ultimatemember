@@ -114,8 +114,10 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_script( 'um-conditional', $this->js_baseurl . 'um-conditional' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
 			//register profile scripts
+			wp_register_script( 'um-gdpr', $this->js_baseurl . 'um-gdpr' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
+
 			//todo: Only Profile Page (Forms)
-			wp_register_script( 'um-profile', $this->js_baseurl . 'um-profile' . $this->suffix . '.js', array( 'um-responsive', 'um-modal', 'um-conditional' ), ultimatemember_version, true );
+			wp_register_script( 'um-profile', $this->js_baseurl . 'um-profile' . $this->suffix . '.js', array( 'um-responsive', 'um-modal', 'um-conditional', 'um-gdpr' ), ultimatemember_version, true );
 
 
 			/**
