@@ -536,7 +536,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			if ( ! empty( $post->post_type ) && $post->post_type == 'page' ) {
 				if ( um_is_core_post( $post, 'login' ) || um_is_core_post( $post, 'register' ) ||
 				     um_is_core_post( $post, 'account' ) || um_is_core_post( $post, 'logout' ) ||
-				     um_is_core_post( $post, 'password-reset' ) || um_is_core_post( $post, 'user' ) )
+				     um_is_core_post( $post, 'password-reset' ) || ( is_user_logged_in() && um_is_core_post( $post, 'user' ) ) )
 					return false;
 			}
 
