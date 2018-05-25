@@ -1661,23 +1661,29 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 
 			}
+
+
 			// update user
 			if ( count( $args ) > 1 ) {
-				global $wp_roles;
-				$um_roles = get_option( 'um_roles' );
 
-				if ( ! empty( $um_roles ) ) {
-					$role_keys = array_map( function( $item ) {
-						return 'um_' . $item;
-					}, get_option( 'um_roles' ) );
-				} else {
-					$role_keys = array();
-				}
+				//if isset roles argument validate role to properly for security reasons
+				if ( isset( $args['role'] ) ) {
+					global $wp_roles;
+					$um_roles = get_option( 'um_roles' );
 
-				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+					if ( ! empty( $um_roles ) ) {
+						$role_keys = array_map( function( $item ) {
+							return 'um_' . $item;
+						}, get_option( 'um_roles' ) );
+					} else {
+						$role_keys = array();
+					}
 
-				if ( isset( $args['role'] ) && in_array( $args['role'], $exclude_roles ) ) {
-					unset( $args['role'] );
+					$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+
+					if ( in_array( $args['role'], $exclude_roles ) ) {
+						unset( $args['role'] );
+					}
 				}
 
 				wp_update_user( $args );

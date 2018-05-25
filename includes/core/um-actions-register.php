@@ -55,7 +55,7 @@ function um_after_insert_user( $user_id, $args ) {
 	UM()->user()->remove_cached_queue();
 
 	um_fetch_user( $user_id );
-	UM()->user()->set_status( um_user('status') );
+	UM()->user()->set_status( um_user( 'status' ) );
 	if ( ! empty( $args['submitted'] ) ) {
 		UM()->user()->set_registration_details( $args['submitted'] );
 	}
@@ -369,6 +369,30 @@ function um_submit_form_register( $args ) {
 	$args['submitted'] = array_merge( $args['submitted'], $credentials );
 	$args = array_merge( $args, $credentials );
 
+	//get user role from global or form's settings
+	$user_role = UM()->form()->assigned_role( UM()->form()->form_id );
+
+	//get user role from field Role dropdown or radio
+	if ( isset( $args['role'] ) ) {
+		global $wp_roles;
+		$um_roles = get_option( 'um_roles' );
+
+		if ( ! empty( $um_roles ) ) {
+			$role_keys = array_map( function( $item ) {
+				return 'um_' . $item;
+			}, get_option( 'um_roles' ) );
+		} else {
+			$role_keys = array();
+		}
+
+		$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+
+		//if role is properly set it
+		if ( ! in_array( $args['role'], $exclude_roles ) ) {
+			$user_role = $args['role'];
+		}
+	}
+
 	/**
 	 * UM hook
 	 *
@@ -391,7 +415,7 @@ function um_submit_form_register( $args ) {
 	 * }
 	 * ?>
 	 */
-	$user_role = apply_filters( 'um_registration_user_role', UM()->form()->assigned_role( UM()->form()->form_id ), $args );
+	$user_role = apply_filters( 'um_registration_user_role', $user_role, $args );
 
 	$userdata = array(
 		'user_login'	=> $user_login,

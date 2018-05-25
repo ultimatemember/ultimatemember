@@ -465,8 +465,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			$global_role = get_option( 'default_role' ); // WP Global settings
 
 			$um_global_role = UM()->options()->get( 'register_role' ); // UM Settings Global settings
-			if ( ! empty( $um_global_role ) )
+			if ( ! empty( $um_global_role ) ) {
 				$global_role = $um_global_role; // Form Global settings
+			}
 
 
 			$mode = $this->form_type( $post_id );
