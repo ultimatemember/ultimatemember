@@ -57,6 +57,10 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$last_request = get_option( 'um_last_manual_upgrades_request', false );
 
 			if ( empty( $last_request ) || time() > $last_request + DAY_IN_SECONDS ) {
+
+				delete_transient( 'update_plugins' );
+				delete_site_transient( 'update_plugins' );
+
 				UM()->plugin_updater()->um_checklicenses();
 
 				update_option( 'um_last_manual_upgrades_request', time() );
