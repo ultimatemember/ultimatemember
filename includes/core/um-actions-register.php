@@ -727,3 +727,17 @@ function um_registration_set_profile_full_name( $user_id, $args ) {
 	do_action( 'um_update_profile_full_name', $user_id, $args );
 }
 add_action( 'um_registration_set_extra_data', 'um_registration_set_profile_full_name', 10, 2 );
+
+
+/**
+ *  Redirect from default registration to UM registration page
+ */
+function um_form_register_redirect() {
+	$page_id = UM()->options()->get( UM()->options()->get_core_page_id( 'register' ) );
+	$register_post = get_post( $page_id );
+	if ( ! empty( $register_post ) ) {
+		wp_safe_redirect( get_permalink( $page_id ) );
+		exit();
+	}
+}
+add_action( 'login_form_register', 'um_form_register_redirect', 10 );

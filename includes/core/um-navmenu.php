@@ -47,7 +47,7 @@ if ( ! class_exists( 'UM_Menu_Item_Custom_Fields_Editor' ) ) {
 			if ( empty( $_POST['menu-item-db-id'] ) || ! in_array( $menu_item_db_id, $_POST['menu-item-db-id'] ) ) {
 				return;
 			}
-            //var_dump($_POST['menu-item-um_nav_roles']); exit;
+
 			foreach ( self::$fields as $_key => $label ) {
 
 				$key = sprintf( 'menu-item-%s', $_key );

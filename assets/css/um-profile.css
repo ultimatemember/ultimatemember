@@ -394,7 +394,7 @@ font-weight: normal;
 }
 
 .um-profile-nav-item.without-icon a {padding-left: 10px}
-.um-profile-nav-item.without-icon span.title {padding-left: 0}
+.um-profile-nav-item.without-icon span.title {display: inline;padding-left: 0;}
 .um-profile-nav-item.without-icon i {display: none}
 
 .um-profile-nav-item a:hover {background: #555}
