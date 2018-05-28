@@ -637,7 +637,8 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		function admin_upgrade() {
 			if ( empty( $this->classes['admin_upgrade'] ) ) {
-				$this->classes['admin_upgrade'] = new um\admin\core\Admin_Upgrade();
+				$this->classes['admin_upgrade'] = um\admin\core\Admin_Upgrade::instance();
+				//$this->classes['admin_upgrade'] = new um\admin\core\Admin_Upgrade();
 			}
 			return $this->classes['admin_upgrade'];
 		}
