@@ -314,8 +314,9 @@ function um_submit_form_errors_hook_( $args ) {
 				foreach ( $array['conditions'] as $condition ) {
 					list( $visibility, $parent_key, $op, $parent_value ) = $condition;
 
-					if ( ! isset( $args[ $parent_key ] ) )
+					if ( ! isset( $args[ $parent_key ] ) ) {
 						continue;
+					}
 
 					$cond_value = ( $fields[ $parent_key ]['type'] == 'radio' ) ? $args[ $parent_key ][0] : $args[ $parent_key ];
 
@@ -337,11 +338,11 @@ function um_submit_form_errors_hook_( $args ) {
 								continue 2;
 							}
 						} elseif ( $op == 'greater than' ) {
-							if ( $cond_value > $op ) {
+							if ( $cond_value > $parent_value ) {
 								continue 2;
 							}
 						} elseif ( $op == 'less than' ) {
-							if ( $cond_value < $op ) {
+							if ( $cond_value < $parent_value ) {
 								continue 2;
 							}
 						} elseif ( $op == 'contains' ) {
@@ -367,11 +368,11 @@ function um_submit_form_errors_hook_( $args ) {
 								continue 2;
 							}
 						} elseif ( $op == 'greater than' ) {
-							if ( $cond_value <= $op ) {
+							if ( $cond_value <= $parent_value ) {
 								continue 2;
 							}
 						} elseif ( $op == 'less than' ) {
-							if ( $cond_value >= $op ) {
+							if ( $cond_value >= $parent_value ) {
 								continue 2;
 							}
 						} elseif ( $op == 'contains' ) {
