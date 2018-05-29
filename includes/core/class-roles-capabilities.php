@@ -618,6 +618,7 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 
 			$user_id = get_current_user_id();
 			$role = UM()->roles()->get_priority_user_role( $user_id );
+
 			$permissions = $this->role_data( $role );
 
 			/**
@@ -646,6 +647,9 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 
 			if ( isset( $permissions[ $permission ] ) && is_serialized( $permissions[ $permission ] ) )
 				return unserialize( $permissions[ $permission ] );
+
+			if ( isset( $permissions[ $permission ] ) && is_array( $permissions[ $permission ] ) )
+				return $permissions[ $permission ];
 
 			if ( isset( $permissions[ $permission ] ) && $permissions[ $permission ] == 1 )
 				return true;
