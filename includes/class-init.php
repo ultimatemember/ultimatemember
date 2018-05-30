@@ -73,6 +73,7 @@ if ( ! class_exists( 'UM' ) ) {
 		static public function instance() {
 			if ( is_null( self::$instance ) ) {
 				self::$instance = new self();
+				self::$instance->_um_construct();
 			}
 
 			return self::$instance;
@@ -163,7 +164,15 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		function __construct() {
 			parent::__construct();
+		}
 
+
+		/**
+		 * UM pseudo-constructor.
+		 *
+		 * @since 2.0.18
+		 */
+		function _um_construct() {
 			//register autoloader for include UM classes
 			spl_autoload_register( array( $this, 'um__autoloader' ) );
 
