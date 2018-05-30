@@ -1360,6 +1360,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function delete( $send_mail = true ) {
 
 			$this->send_mail_on_delete = $send_mail;
+			//don't send email notification to not approved user
+			if ( 'approved' != um_user( 'account_status' ) ) {
+				$this->send_mail_on_delete = false;
+			}
 
 			$this->delete_user_handler( um_user( 'ID' ) );
 
