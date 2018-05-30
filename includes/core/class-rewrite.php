@@ -262,9 +262,8 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 					do_action( 'um_access_profile', $user_id );
 
 				} else {
-
-					exit( wp_redirect( um_get_core_page( 'user' ) ) );
-
+					global $wp_query;
+					$wp_query->set_404();
 				}
 
 			} else if ( um_is_core_page( 'user' ) ) {
