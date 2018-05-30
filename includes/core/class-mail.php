@@ -500,6 +500,8 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		/**
 		 * Ajax copy template to the theme
 		 *
+		 * @deprecated since 2.0.17
+		 *
 		 * @param bool $template
 		 * @return bool
 		 */
@@ -538,6 +540,8 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 		/**
 		 * Delete Email Notification Template
+		 *
+		 * @deprecated since 2.0.17
 		 */
 		function delete_email_template() {
 			$template = $_POST['email_key'];
