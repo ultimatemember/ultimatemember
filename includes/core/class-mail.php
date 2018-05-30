@@ -366,8 +366,11 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 */
 		function locate_template( $template_name ) {
 			// check if there is template at theme folder
+
+			$blog_id = $this->get_blog_id();
+
 			$template = locate_template( array(
-				trailingslashit( 'ultimate-member/email' ) . $template_name . '.php'
+				trailingslashit( 'ultimate-member/email' . $blog_id ) . $template_name . '.php'
 			) );
 
 			//if there isn't template at theme folder get template file from plugin dir
@@ -446,13 +449,30 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			$template_name_file = $this->get_template_filename( $template_name );
 			$ext = ! $html ? '.php' : '.html';
 
+			$blog_id = $this->get_blog_id();
+
 			// check if there is template at theme folder
 			$template = locate_template( array(
-				trailingslashit( 'ultimate-member/email' ) . $template_name_file . $ext
+				trailingslashit( 'ultimate-member/email' . $blog_id ) . $template_name_file . $ext
 			) );
 
 			// Return what we found.
 			return ! $template ? false : true;
+		}
+
+
+		/**
+		 * Check blog ID on multisite, return '' if single site
+		 *
+		 * @return string
+		 */
+		function get_blog_id() {
+			$blog_id = '';
+			if ( is_multisite() ) {
+				$blog_id = '/' . get_current_blog_id();
+			}
+
+			return $blog_id;
 		}
 
 
@@ -473,7 +493,10 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 			switch( $location ) {
 				case 'theme':
-					$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' ). $template_name_file . $ext;
+					//save email template in blog ID folder if we use multisite
+					$blog_id = $this->get_blog_id();
+
+					$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' . $blog_id ). $template_name_file . $ext;
 					break;
 				case 'plugin':
 					$path = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : um_path . 'templates/email';
@@ -487,8 +510,6 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 		/**
 		 * Ajax copy template to the theme
-		 *
-		 * @deprecated since 2.0.17
 		 *
 		 * @param bool $template
 		 * @return bool

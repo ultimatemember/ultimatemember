@@ -2526,11 +2526,12 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 		 */
 		function save_email_templates( $settings ) {
 
-			if ( empty( $settings['um_email_template'] ) )
+			if ( empty( $settings['um_email_template'] ) ) {
 				return $settings;
+			}
 
 			$template = $settings['um_email_template'];
-			$content = stripslashes( $settings[$template] );
+			$content = stripslashes( $settings[ $template ] );
 
 			$theme_template_path = UM()->mail()->get_template_file( 'theme', $template );
 
@@ -2545,7 +2546,7 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 
 			if ( $result !== false ) {
 				unset( $settings['um_email_template'] );
-				unset( $settings[$template] );
+				unset( $settings[ $template ] );
 			}
 
 			return $settings;
