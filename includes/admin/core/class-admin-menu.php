@@ -206,6 +206,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 			add_meta_box( 'um-metaboxes-mainbox-1', __( 'Latest from our blog', 'ultimate-member' ), array( &$this, 'um_news' ), $this->pagehook, 'normal', 'core' );
 
 			add_meta_box( 'um-metaboxes-sidebox-1', __( 'Purge Temp Files', 'ultimate-member' ), array( &$this, 'purge_temp' ), $this->pagehook, 'side', 'core' );
+
 			add_meta_box( 'um-metaboxes-sidebox-2', __( 'User Cache', 'ultimate-member' ), array( &$this, 'user_cache' ), $this->pagehook, 'side', 'core' );
 
 			if ( $this->language_avaialable_not_installed() ) {
@@ -214,6 +215,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 				add_meta_box( 'um-metaboxes-sidebox-2', __( 'Language', 'ultimate-member' ), array( &$this, 'up_language' ), $this->pagehook, 'side', 'core' );
 			} else if ( $this->language_not_available() ) {
 				add_meta_box( 'um-metaboxes-sidebox-2', __( 'Language', 'ultimate-member' ), array( &$this, 'ct_language' ), $this->pagehook, 'side', 'core' );
+			}
+
+			//If there are active and licensed extensions - show metabox for upgrade it
+			$exts = UM()->plugin_updater()->um_get_active_plugins();
+			if ( 0 < count( $exts ) ) {
+				add_meta_box( 'um-metaboxes-sidebox-3', __( 'Upgrade\'s Manual Request', 'ultimate-member' ), array( &$this, 'upgrade_request' ), $this->pagehook, 'side', 'core' );
 			}
 		}
 
@@ -266,6 +273,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		 */
 		function purge_temp() {
 			include_once UM()->admin()->templates_path . 'dashboard/purge.php';
+		}
+
+
+		/**
+		 *
+		 */
+		function upgrade_request() {
+			include_once UM()->admin()->templates_path . 'dashboard/upgrade-request.php';
 		}
 
 

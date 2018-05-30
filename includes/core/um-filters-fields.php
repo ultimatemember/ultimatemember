@@ -392,11 +392,11 @@ function um_get_custom_field_array( $array, $fields ) {
 							$array['required'] = 0;
 						}
 					} elseif ( $op == 'greater than' ) {
-						if ( $cond_value > $op ) {
+						if ( $cond_value > $parent_value ) {
 							$array['required'] = 0;
 						}
 					} elseif ( $op == 'less than' ) {
-						if ( $cond_value < $op ) {
+						if ( $cond_value < $parent_value ) {
 							$array['required'] = 0;
 						}
 					} elseif ( $op == 'contains' ) {
@@ -422,11 +422,11 @@ function um_get_custom_field_array( $array, $fields ) {
 							$array['required'] = 0;
 						}
 					} elseif ( $op == 'greater than' ) {
-						if ( $cond_value <= $op ) {
+						if ( $cond_value <= $parent_value ) {
 							$array['required'] = 0;
 						}
 					} elseif ( $op == 'less than' ) {
-						if ( $cond_value >= $op ) {
+						if ( $cond_value >= $parent_value ) {
 							$array['required'] = 0;
 						}
 					} elseif ( $op == 'contains' ) {

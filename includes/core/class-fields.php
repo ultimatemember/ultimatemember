@@ -2890,7 +2890,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$um_field_checkbox_item_title = $v;
 							$option_value = $v;
 
-							if (!is_numeric( $k ) && in_array( $form_key, array( 'role' ) )) {
+							if ( ! is_numeric( $k ) && in_array( $form_key, array( 'role', 'role_radio' ) ) ) {
 								$um_field_checkbox_item_title = $v;
 								$option_value = $k;
 							}
