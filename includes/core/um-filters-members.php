@@ -211,7 +211,7 @@ function um_add_search_to_query( $query_args, $args ){
 	 */
 	$query_args = apply_filters( 'um_query_args_filter', $query_args );
 
-	if ( count( $query_args['meta_query'] ) == 1 )
+	if ( isset( $query_args['meta_query'] ) && count( $query_args['meta_query'] ) == 1 )
 		unset( $query_args['meta_query'] );
 
 	return $query_args;
