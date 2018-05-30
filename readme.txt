@@ -137,8 +137,8 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Added UM dashboard widget for getting latest extension's upgrades
 
 * Bugfixes:
-  - Fixed User Profile restriction when user isn't logged in
-  - Fixed Profile Tabs dispalying on desktop/mobile
+  - Fixed User Profile restriction when the user isn't logged in
+  - Fixed Profile Tabs displaying on desktop/mobile
   - Fixed set user status after registration on some installs
   - Fixed PHP memory limit issue on some installs with small PHP memory limit
   - Fixed PHP validation on submit UM Forms with conditional fields logic
