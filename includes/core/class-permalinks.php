@@ -130,6 +130,11 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 		 * @return mixed|void
 		 */
 		function get_current_url( $no_query_params = false ) {
+			/*
+			 * future fix
+			 * global $wp;
+			echo home_url( $wp->request );
+			*/
 			$server_name_method = UM()->options()->get( 'current_url_method' );
 			$server_name_method = ! empty( $server_name_method ) ? $server_name_method : 'SERVER_NAME';
 
