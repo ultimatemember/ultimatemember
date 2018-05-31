@@ -25,9 +25,9 @@ function um_action_request_process() {
 		}
 	}
 
-	if ( isset( $_REQUEST['um_action'] ) && $_REQUEST['um_action'] != "edit" && ! current_user_can( 'edit_users' ) ) {
-		wp_die( __( 'You do not have enough permissions to do that.','ultimate-member') );
-	}
+//	if ( isset( $_REQUEST['um_action'] ) && $_REQUEST['um_action'] != "edit" && ! current_user_can( 'edit_users' ) ) {
+//		wp_die( __( 'You do not have enough permissions to do that.','ultimate-member') );
+//	}
 
 	if ( isset( $_REQUEST['uid'] ) ) {
 		$uid = $_REQUEST['uid'];

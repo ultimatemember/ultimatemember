@@ -14,7 +14,7 @@ function um_admin_user_actions_hook( $actions ) {
 
 	um_fetch_user( um_profile_id() );
 
-	if ( current_user_can('manage_options') ) {
+	if (  UM()->roles()->um_current_user_can( 'edit', um_profile_id() ) ) {
 
 		if ( um_user('account_status') == 'awaiting_admin_review' ){
 			$actions['um_approve_membership'] = array( 'label' => __('Approve Membership','ultimate-member') );
@@ -41,10 +41,10 @@ function um_admin_user_actions_hook( $actions ) {
 			$actions['um_reenable'] = array( 'label' => __('Reactivate this account','ultimate-member') );
 		}
 
-		if ( UM()->roles()->um_current_user_can( 'delete', um_profile_id() ) ) {
-			$actions['um_delete'] = array( 'label' => __('Delete this user','ultimate-member') );
-		}
+	}
 
+	if ( UM()->roles()->um_current_user_can( 'delete', um_profile_id() ) ) {
+		$actions['um_delete'] = array( 'label' => __('Delete this user','ultimate-member') );
 	}
 
 	if ( current_user_can('delete_users') ) {
