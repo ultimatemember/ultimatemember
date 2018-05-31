@@ -244,9 +244,10 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			global $post;
 
 			$curr = UM()->permalinks()->get_current_url();
+			$ms_empty_role_access = is_multisite() && is_user_logged_in() && !UM()->roles()->get_priority_user_role( um_user('ID') );
 
 			if ( is_front_page() ) {
-				if ( is_user_logged_in() ) {
+				if ( is_user_logged_in() && !$ms_empty_role_access ) {
 
 					$user_default_homepage = um_user( 'default_homepage' );
 					if ( ! empty( $user_default_homepage ) )
@@ -300,7 +301,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					}
 				}
 			} elseif ( is_category() ) {
-				if ( ! is_user_logged_in() ) {
+				if ( ! is_user_logged_in() || $ms_empty_role_access ) {
 
 					$access = UM()->options()->get( 'accessible' );
 
@@ -324,7 +325,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 			$access = UM()->options()->get( 'accessible' );
 
-			if ( $access == 2 && ! is_user_logged_in() ) {
+			if ( $access == 2 && ( !is_user_logged_in() || $ms_empty_role_access ) ) {
 
 				//build exclude URLs pages
 				$redirects = array();
