@@ -88,14 +88,14 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 			return $string;
 		}
 
-
-		/**
-		 * Show filter
+        /**
+		 * Prepare filter data
 		 *
 		 * @param $filter
+         * @return array
 		 */
-		function show_filter( $filter ) {
-			$fields = UM()->builtin()->all_user_fields;
+		function prepare_filter( $filter ) {
+		    $fields = UM()->builtin()->all_user_fields;
 
 			if ( isset( $fields[ $filter ] ) ) {
 				$attrs = $fields[ $filter ];
@@ -221,6 +221,21 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 				 */
 				$attrs = apply_filters( 'um_search_select_fields', $attrs );
 			}
+
+			return compact( 'type', 'attrs' );
+        }
+
+		/**
+		 * Show filter
+		 *
+		 * @param $filter
+		 */
+		function show_filter( $filter ) {
+		    /**
+		     * @var $type
+		     * @var $attrs
+		     */
+            extract( $this->prepare_filter( $filter ) );
 
 			switch ( $type ) {
 
