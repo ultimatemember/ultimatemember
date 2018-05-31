@@ -367,18 +367,70 @@ add_filter( 'um_get_form_fields', 'um_get_form_fields', 99 );
  */
 function um_get_custom_field_array( $array, $fields ) {
 
-	if ( isset( $array['conditions'] ) ) {
-		for ( $a = 0; $a < count( $array['conditions'] ); $a++ ) {
-			if ( isset( $array['conditional_value'] ) || isset( $array['conditional_value' . $a] ) ) {
-				foreach ( $array['conditions'] as $key => $value ) {
-					$condition_metakey = $fields[ $value[1] ]['metakey'];
+	if ( ! empty( $array['conditions'] ) ) {
+		foreach ( $array['conditions'] as $key => $value ) {
+			$condition_metakey = $fields[ $value[1] ]['metakey'];
+			if ( isset( $_POST[ $condition_metakey ] ) ) {
+				$cond_value = ( $fields[ $value[1] ]['type'] == 'radio' ) ? $_POST[ $condition_metakey ][0] : $_POST[ $condition_metakey ];
+				list( $visibility, $parent_key, $op, $parent_value ) = $value;
 
-					if ( isset( $_POST[ $condition_metakey ] ) ) {
-						$cond_value = ( $fields[ $value[1] ]['type'] == 'radio' ) ? $_POST[ $condition_metakey ][0] : $_POST[ $condition_metakey ];
-
-						if ( isset( $array['conditional_value'] ) && $cond_value !== $array['conditional_value'] ) {
+				if ( $visibility == 'hide' ) {
+					if ( $op == 'empty' ) {
+						if ( empty( $cond_value ) ) {
 							$array['required'] = 0;
-						} elseif ( isset( $array['conditional_value'.$a] ) && $cond_value !== $array['conditional_value'.$a] ) {
+						}
+					} elseif ( $op == 'not empty' ) {
+						if ( ! empty( $cond_value ) ) {
+							$array['required'] = 0;
+						}
+					} elseif ( $op == 'equals to' ) {
+						if ( $cond_value == $parent_value ) {
+							$array['required'] = 0;
+						}
+					} elseif ( $op == 'not equals' ) {
+						if ( $cond_value != $parent_value ) {
+							$array['required'] = 0;
+						}
+					} elseif ( $op == 'greater than' ) {
+						if ( $cond_value > $parent_value ) {
+							$array['required'] = 0;
+						}
+					} elseif ( $op == 'less than' ) {
+						if ( $cond_value < $parent_value ) {
+							$array['required'] = 0;
+						}
+					} elseif ( $op == 'contains' ) {
+						if ( strstr( $cond_value, $parent_value ) ) {
+							$array['required'] = 0;
+						}
+					}
+				} elseif ( $visibility == 'show' ) {
+					if ( $op == 'empty' ) {
+						if ( ! empty( $cond_value ) ) {
+							$array['required'] = 0;
+						}
+					} elseif ( $op == 'not empty' ) {
+						if ( empty( $cond_value ) ) {
+							$array['required'] = 0;
+						}
+					} elseif ( $op == 'equals to' ) {
+						if ( $cond_value != $parent_value ) {
+							$array['required'] = 0;
+						}
+					} elseif ( $op == 'not equals' ) {
+						if ( $cond_value == $parent_value ) {
+							$array['required'] = 0;
+						}
+					} elseif ( $op == 'greater than' ) {
+						if ( $cond_value <= $parent_value ) {
+							$array['required'] = 0;
+						}
+					} elseif ( $op == 'less than' ) {
+						if ( $cond_value >= $parent_value ) {
+							$array['required'] = 0;
+						}
+					} elseif ( $op == 'contains' ) {
+						if ( ! strstr( $cond_value, $parent_value ) ) {
 							$array['required'] = 0;
 						}
 					}

@@ -55,6 +55,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 * @param $args
 		 */
 		function init_tabs( $args ) {
+
 			$this->tabs = $this->get_tabs();
 
 			ksort( $this->tabs );
@@ -75,7 +76,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				}
 
 			}
-
 			$this->tabs = $tabs_structed;
 		}
 
@@ -527,7 +527,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					 * ?>
 					 */
 					$args = apply_filters( 'um_account_tab_privacy_fields', $args, $shortcode_args );
-
+					
 					$fields = UM()->builtin()->get_specific_fields( $args );
 					$fields = $this->account_secure_fields( $fields, $id );
 					$fields = $this->filter_fields_by_attrs( $fields, $shortcode_args );
@@ -535,7 +535,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					foreach ( $fields as $key => $data ){
 						$output .= UM()->fields()->edit_field( $key, $data );
 					}
-
 					break;
 
 				case 'delete':

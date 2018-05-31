@@ -39,6 +39,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			add_action( 'init',  array( &$this, 'set' ), 1 );
 
 			$this->preview = false;
+			$this->send_mail_on_delete = true;
 
 			// a list of keys that should never be in wp_usermeta
 			$this->update_user_keys = array(
@@ -54,6 +55,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			// When the cache should be cleared
 			add_action('um_delete_user_hook', array(&$this, 'remove_cached_queue') );
+			add_action('um_delete_user', array( &$this, 'remove_cache' ), 10, 1 );
+
 			add_action('um_after_user_status_is_changed_hook', array(&$this, 'remove_cached_queue') );
 
 			// When user cache should be cleared
@@ -83,6 +86,73 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			add_action( 'wpmu_activate_user', array( &$this, 'add_um_role_wpmu_new_user' ), 10, 1 );
 
 			add_action( 'init', array( &$this, 'check_membership' ), 10 );
+
+			add_action( 'delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
+			add_action( 'wpmu_delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
+		}
+
+
+		/**
+		 * @param $user_id
+		 */
+		function delete_user_handler( $user_id ) {
+
+			um_fetch_user( $user_id );
+
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_delete_user_hook
+			 * @description On delete user
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_delete_user_hook', 'function_name', 10 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_delete_user_hook', 'my_delete_user', 10 );
+			 * function my_delete_user() {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( 'um_delete_user_hook' );
+
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_delete_user
+			 * @description On delete user
+			 * @input_vars
+			 * [{"var":"$user_id","type":"int","desc":"User ID"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_delete_user', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_delete_user', 'my_delete_user', 10, 1 );
+			 * function my_delete_user( $user_id ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( 'um_delete_user', um_user( 'ID' ) );
+
+			// send email notifications
+			if ( $this->send_mail_on_delete ) {
+				UM()->mail()->send( um_user( 'user_email' ), 'deletion_email' );
+
+				$emails = um_multi_admin_email();
+				if ( ! empty( $emails ) ) {
+					foreach ( $emails as $email ) {
+						UM()->mail()->send( $email, 'notification_deletion', array( 'admin' => true ) );
+					}
+				}
+			}
+
+			// remove uploads
+			UM()->files()->remove_dir( um_user_uploads_dir() );
 		}
 
 
@@ -890,6 +960,20 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				unset( $submitted['confirm_user_password'] );
 			}
 
+			//remove all password field values from submitted details
+			$password_fields = array();
+			foreach ( $submitted as $k => $v ) {
+				if ( UM()->fields()->get_field_type( $k ) == 'password' ) {
+					$password_fields[] = $k;
+					$password_fields[] = 'confirm_' . $k;
+				}
+			}
+
+			foreach ( $password_fields as $pw_field ) {
+				unset( $submitted[ $pw_field ] );
+			}
+
+
 			/**
 			 * UM hook
 			 *
@@ -1274,59 +1358,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param bool $send_mail
 		 */
 		function delete( $send_mail = true ) {
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_delete_user_hook
-			 * @description On delete user
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_delete_user_hook', 'function_name', 10 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_delete_user_hook', 'my_delete_user', 10 );
-			 * function my_delete_user() {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_delete_user_hook' );
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_delete_user
-			 * @description On delete user
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_delete_user', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_delete_user', 'my_delete_user', 10, 1 );
-			 * function my_delete_user( $user_id ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_delete_user', um_user( 'ID' ) );
 
-			// send email notifications
-			if ( $send_mail ) {
-				UM()->mail()->send( um_user( 'user_email' ), 'deletion_email' );
+			$this->send_mail_on_delete = $send_mail;
 
-				$emails = um_multi_admin_email();
-				if ( ! empty( $emails ) ) {
-					foreach ( $emails as $email ) {
-						UM()->mail()->send( $email, 'notification_deletion', array( 'admin' => true ) );
-					}
-				}
-			}
-
-			// remove uploads
-			UM()->files()->remove_dir( um_user_uploads_dir() );
+			$this->delete_user_handler( um_user( 'ID' ) );
 
 			// remove user
 			if ( is_multisite() ) {
@@ -1626,23 +1661,29 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				}
 
 			}
+
+
 			// update user
 			if ( count( $args ) > 1 ) {
-				global $wp_roles;
-				$um_roles = get_option( 'um_roles' );
 
-				if ( ! empty( $um_roles ) ) {
-					$role_keys = array_map( function( $item ) {
-						return 'um_' . $item;
-					}, get_option( 'um_roles' ) );
-				} else {
-					$role_keys = array();
-				}
+				//if isset roles argument validate role to properly for security reasons
+				if ( isset( $args['role'] ) ) {
+					global $wp_roles;
+					$um_roles = get_option( 'um_roles' );
 
-				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+					if ( ! empty( $um_roles ) ) {
+						$role_keys = array_map( function( $item ) {
+							return 'um_' . $item;
+						}, get_option( 'um_roles' ) );
+					} else {
+						$role_keys = array();
+					}
 
-				if ( isset( $args['role'] ) && in_array( $args['role'], $exclude_roles ) ) {
-					unset( $args['role'] );
+					$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+
+					if ( in_array( $args['role'], $exclude_roles ) ) {
+						unset( $args['role'] );
+					}
 				}
 
 				wp_update_user( $args );

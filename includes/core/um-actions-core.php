@@ -108,7 +108,9 @@ function um_action_request_process() {
 			break;
 				
 		case 'um_delete':
-			if ( ! UM()->roles()->um_current_user_can( 'delete', $uid ) ) wp_die( __('You do not have permission to delete this user.','ultimate-member') );
+			if ( ! UM()->roles()->um_current_user_can( 'delete', $uid ) ) {
+				wp_die( __('You do not have permission to delete this user.','ultimate-member') );
+			}
 			um_fetch_user( $uid );
 			UM()->user()->delete();
 			exit( wp_redirect( UM()->permalinks()->get_current_url( true ) ) );

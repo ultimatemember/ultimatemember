@@ -35,6 +35,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			add_action( 'um_admin_do_action__user_cache', array( &$this, 'user_cache' ) );
 			add_action( 'um_admin_do_action__purge_temp', array( &$this, 'purge_temp' ) );
+			add_action( 'um_admin_do_action__manual_upgrades_request', array( &$this, 'manual_upgrades_request' ) );
 			add_action( 'um_admin_do_action__duplicate_form', array( &$this, 'duplicate_form' ) );
 			add_action( 'um_admin_do_action__um_language_downloader', array( &$this, 'um_language_downloader' ) );
 			add_action( 'um_admin_do_action__um_hide_locale_notice', array( &$this, 'um_hide_notice' ) );
@@ -47,6 +48,29 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			add_filter( 'post_updated_messages', array( &$this, 'post_updated_messages' ) );
 		}
 
+
+		function manual_upgrades_request() {
+			if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
+				die();
+			}
+
+			$last_request = get_option( 'um_last_manual_upgrades_request', false );
+
+			if ( empty( $last_request ) || time() > $last_request + DAY_IN_SECONDS ) {
+
+				delete_transient( 'update_plugins' );
+				delete_site_transient( 'update_plugins' );
+
+				UM()->plugin_updater()->um_checklicenses();
+
+				update_option( 'um_last_manual_upgrades_request', time() );
+
+				$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'got_updates' ), admin_url( 'admin.php' ) );
+			} else {
+				$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'often_updates' ), admin_url( 'admin.php' ) );
+			}
+			exit( wp_redirect( $url ) );
+		}
 
 
 		/**

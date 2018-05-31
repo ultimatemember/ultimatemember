@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.1
 Tested up to: 4.9
-Stable tag: 2.0.13
+Stable tag: 2.0.17
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -130,6 +130,47 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 == Changelog ==
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
+
+= 2.0.17: May 30, 2018 =
+
+* Enhancements:
+  - Added UM dashboard widget for getting latest extension's upgrades
+
+* Bugfixes:
+  - Fixed User Profile restriction when the user isn't logged in
+  - Fixed Profile Tabs displaying on desktop/mobile
+  - Fixed set user status after registration on some installs
+  - Fixed PHP memory limit issue on some installs with small PHP memory limit
+  - Fixed PHP validation on submit UM Forms with conditional fields logic
+
+= 2.0.16: May 23, 2018 =
+
+* Bugfixes:
+  - Fixed Profile Tabs issues
+
+= 2.0.15: May 22, 2018 =
+
+* Bugfixes:
+  - Fixed GDPR min.js script
+
+= 2.0.14: May 22, 2018 =
+
+* Enhancements:
+  - Added support for GDPR Personal Data Exporter
+  - Added support for GDPR Personal Data Eraser
+  - Added new privacy field to form builder for GDPR consent collection
+  - Added GDPR privacy policy guide text
+  - Added GDPR compatibility on delete user process
+  - Added security to Restricted posts comments
+  - Added security to custom field type `Password`
+  - Deprecated time checking spam bot
+
+* Bugfixes:
+  - Fixed settings tabs for PHP7.1
+  - Fixed issues with Profile Tabs
+  - Fixed User Avatars
+  - Fixed set user status on Registration process
+  - Fixed Account Privacy tab content
 
 = 2.0.13: May 2, 2018 =
 

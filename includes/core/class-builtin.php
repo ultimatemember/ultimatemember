@@ -1252,7 +1252,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			 */
 			$fields_without_metakey = apply_filters( 'um_fields_without_metakey', $fields_without_metakey );
 
-			if ( !$show_all ) {
+			if ( ! $show_all ) {
 				$this->fields_dropdown = array('image','file','password','rating');
 				$this->fields_dropdown = array_merge( $this->fields_dropdown, $fields_without_metakey );
 			} else {

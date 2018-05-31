@@ -218,7 +218,11 @@ function um_user_edit_profile( $args ) {
 
 	// loop through fields
 	if ( ! empty( $fields ) ) {
+
 		foreach ( $fields as $key => $array ) {
+
+			/*if ( ! um_can_edit_field( $fields[ $key ] ) )
+				continue;*/
 
 			if ( ! um_can_edit_field( $fields[ $key ] ) && isset( $fields[ $key ]['editable'] ) && ! $fields[ $key ]['editable'] )
 				continue;
@@ -236,10 +240,15 @@ function um_user_edit_profile( $args ) {
 
 				} else {
 
-					if ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ] != $userinfo[ $key ] ) {
-						$to_update[ $key ] = $args['submitted'][ $key ];
-					} elseif ( $args['submitted'][ $key ] ) {
-						$to_update[ $key ] = $args['submitted'][ $key ];
+					if ( $array['type'] == 'password' ) {
+						$to_update[ $key ] = wp_hash_password( $args['submitted'][ $key ] );
+						$args['submitted'][ $key ] = sprintf( __( 'Your choosed %s', 'ultimate-member' ), $array['title'] );
+					} else {
+						if ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ] != $userinfo[ $key ] ) {
+							$to_update[ $key ] = $args['submitted'][ $key ];
+						} elseif ( $args['submitted'][ $key ] ) {
+							$to_update[ $key ] = $args['submitted'][ $key ];
+						}
 					}
 
 				}
@@ -1368,40 +1377,46 @@ function um_profile_menu( $args ) {
 
 			<div class="um-profile-nav-item um-profile-nav-<?php echo $id . ' ' . $profile_nav_class; ?>">
 				<?php if ( UM()->options()->get( 'profile_menu_icons' ) ) { ?>
-					<a href="<?php echo $nav_link; ?>" class="um-tip-n uimob500-show uimob340-show uimob800-show"
+					<a href="<?php echo $nav_link; ?>" class="uimob800-show uimob500-show uimob340-show um-tip-n"
 					   title="<?php echo esc_attr( $tab['name'] ); ?>" original-title="<?php echo esc_attr( $tab['name'] ); ?>">
 
 						<i class="<?php echo $tab['icon']; ?>"></i>
 
 						<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?>
-							<span class="um-tab-notifier uimob500-show uimob340-show uimob800-show"><?php echo $tab['notifier']; ?></span>
+							<span class="um-tab-notifier uimob800-show uimob500-show uimob340-show"><?php echo $tab['notifier']; ?></span>
 						<?php } ?>
 
-						<span class="uimob500-hide uimob340-hide uimob800-hide title"><?php echo $tab['name']; ?></span>
-
+						<span class="uimob800-hide uimob500-hide uimob340-hide title"><?php echo $tab['name']; ?></span>
 					</a>
-					<a href="<?php echo $nav_link; ?>" class="uimob500-hide uimob340-hide uimob800-hide"
-					   title="<?php echo esc_attr( $tab['name'] ); ?>" original-title="<?php echo esc_attr( $tab['name'] ); ?>">
+					<a href="<?php echo $nav_link; ?>" class="uimob800-hide uimob500-hide uimob340-hide"
+					   title="<?php echo esc_attr( $tab['name'] ); ?>">
 
 						<i class="<?php echo $tab['icon']; ?>"></i>
 
 						<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?>
-							<span class="um-tab-notifier uimob500-show uimob340-show uimob800-show"><?php echo $tab['notifier']; ?></span>
+							<span class="um-tab-notifier uimob800-show uimob500-show uimob340-show"><?php echo $tab['notifier']; ?></span>
 						<?php } ?>
 
-						<span class="uimob500-hide uimob340-hide uimob800-hide title"><?php echo $tab['name']; ?></span>
-
+						<span class="title"><?php echo $tab['name']; ?></span>
 					</a>
 				<?php } else { ?>
-					<a href="<?php echo $nav_link; ?>" title="<?php echo esc_attr( $tab['name'] ); ?>"
-					   original-title="<?php echo esc_attr( $tab['name'] ); ?>">
+					<a href="<?php echo $nav_link; ?>" class="uimob800-show uimob500-show uimob340-show um-tip-n"
+					   title="<?php echo esc_attr( $tab['name'] ); ?>" original-title="<?php echo esc_attr( $tab['name'] ); ?>">
+
+						<i class="<?php echo $tab['icon']; ?>"></i>
+
+						<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?>
+							<span class="um-tab-notifier uimob800-show uimob500-show uimob340-show"><?php echo $tab['notifier']; ?></span>
+						<?php } ?>
+					</a>
+					<a href="<?php echo $nav_link; ?>" class="uimob800-hide uimob500-hide uimob340-hide"
+					   title="<?php echo esc_attr( $tab['name'] ); ?>">
 
 						<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0) { ?>
-							<span class="um-tab-notifier uimob500-show uimob340-show uimob800-show"><?php echo $tab['notifier']; ?></span>
+							<span class="um-tab-notifier uimob800-show uimob500-show uimob340-show"><?php echo $tab['notifier']; ?></span>
 						<?php } ?>
 
-						<span class="uimob500-hide uimob340-hide uimob800-hide title"><?php echo $tab['name']; ?></span>
-
+						<span class="title"><?php echo $tab['name']; ?></span>
 					</a>
 				<?php } ?>
 			</div>

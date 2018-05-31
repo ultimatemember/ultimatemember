@@ -38,7 +38,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->localize_note();
 			$this->show_update_messages();
 			$this->check_wrong_install_folder();
-			$this->admin_notice_tracking();
+			//$this->admin_notice_tracking();
 			$this->need_upgrade();
 			$this->check_wrong_licenses();
 
@@ -225,9 +225,32 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		function old_extensions_notice() {
 			$show = false;
 
+			$old_extensions = array(
+				'bbpress',
+				'followers',
+				'friends',
+				'instagram',
+				'mailchimp',
+				'messaging',
+				'mycred',
+				'notices',
+				'notifications',
+				'online',
+				'private-content',
+				'profile-completeness',
+				'recaptcha',
+				'reviews',
+				'social-activity',
+				'social-login',
+				'terms-conditions',
+				'user-tags',
+				'verified-users',
+				'woocommerce',
+			);
+
 			$slugs = array_map( function( $item ) {
 				return 'um-' . $item . '/um-' . $item . '.php';
-			}, array_keys( UM()->dependencies()->ext_required_version ) );
+			}, $old_extensions );
 
 			$active_plugins = UM()->dependencies()->get_active_plugins();
 			foreach ( $slugs as $slug ) {
@@ -395,6 +418,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 				case 'cleared_cache':
 					$messages[0]['content'] = __( 'Your user cache is now removed.', 'ultimate-member' );
+					break;
+
+				case 'got_updates':
+					$messages[0]['content'] = __( 'You got the latest upgrades.', 'ultimate-member' );
+					break;
+
+				case 'often_updates':
+					$messages[0]['err_content'] = __( 'Try again later. You can run this action once daily.', 'ultimate-member' );
 					break;
 
 				case 'form_duplicated':

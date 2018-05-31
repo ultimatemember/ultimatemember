@@ -573,7 +573,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			} elseif ( um_user( $key ) && $this->editing == true ) {
 
-				if ( strstr( $key, 'user_pass' ) ) {
+				//show empty value for password fields
+				if ( strstr( $key, 'user_pass' ) || $type == 'password' ) {
 					return '';
 				}
 
@@ -798,6 +799,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					return true;
 				}
 
+				$stripslashed = array_map( 'stripslashes', UM()->form()->post_form[ $key ] );
+				if ( in_array( $value, $stripslashed ) ) {
+					return true;
+				}
+
 				if ( in_array( html_entity_decode( $value ), UM()->form()->post_form[ $key ] ) ) {
 					return true;
 				}
@@ -808,16 +814,21 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$field_value = um_user( $key );
 
-					if ($key == 'role') {
+					if ( $key == 'role' ) {
 
 						$role_keys = get_option( 'um_roles' );
 
-						if (!empty( $role_keys )) {
-							if (in_array( $field_value, $role_keys )) {
+						if ( ! empty( $role_keys ) ) {
+							if ( in_array( $field_value, $role_keys ) ) {
 								$field_value = 'um_' . $field_value;
 							}
 						}
-
+						/*elseif( $this->set_mode == 'register' ){
+                          $data['default'] = UM()->options()->get( 'register_role' );
+                        }
+                        else{
+                          $data['default'] = get_option( 'default_role' );
+                        }*/
 					}
 
 					/**
@@ -930,19 +941,25 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$um_user_value = um_user( $key );
 
-					if ($key == 'role') {
+					if ( $key == 'role' ) {
 						$um_user_value = strtolower( $um_user_value );
 
 						$role_keys = get_option( 'um_roles' );
 
-						if (!empty( $role_keys )) {
-							if (in_array( $um_user_value, $role_keys )) {
+						if ( ! empty( $role_keys ) ) {
+							if ( in_array( $um_user_value, $role_keys ) ) {
 								$um_user_value = 'um_' . $um_user_value;
 							}
 						}
+						/*elseif( $this->set_mode == 'register' ){
+							$data['default'] = UM()->options()->get( 'register_role' );
+						}
+						else{
+							$data['default'] = get_option( 'default_role' );
+						}*/
 					}
 
-					if ($um_user_value == $value) {
+					if ( $um_user_value == $value ) {
 						return true;
 					}
 
@@ -1578,7 +1595,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if ($visibility == 'view' && $this->set_mode != 'register') return;
 
-			if (( $visibility == 'view' && $this->set_mode == 'register' ) ||
+			if ( ( $visibility == 'view' && $this->set_mode == 'register' ) ||
 				( isset( $data['editable'] ) && $data['editable'] == 0 && $this->set_mode == 'profile' )
 			) {
 
@@ -1618,6 +1635,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			// forbidden in edit mode?
 			if (isset( $data['edit_forbidden'] )) return;
+
 
 			// required option
 			if (isset( $data['required_opt'] )) {
@@ -2872,7 +2890,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$um_field_checkbox_item_title = $v;
 							$option_value = $v;
 
-							if (!is_numeric( $k ) && in_array( $form_key, array( 'role' ) )) {
+							if ( ! is_numeric( $k ) && in_array( $form_key, array( 'role', 'role_radio' ) ) ) {
 								$um_field_checkbox_item_title = $v;
 								$option_value = $k;
 							}
@@ -3466,9 +3484,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if (isset( $data['in_group'] ) && $data['in_group'] != '' && $rule != 'group') return;
 
-			if ($visibility == 'edit') return;
+			if ( $visibility == 'edit' ) return;
 
-			if (in_array( $type, array( 'block', 'shortcode', 'spacing', 'divider', 'group' ) )) {
+			//invisible on profile page
+			if ( $type == 'password' ) return;
+
+			if ( in_array( $type, array( 'block', 'shortcode', 'spacing', 'divider', 'group' ) ) ) {
 
 			} else {
 

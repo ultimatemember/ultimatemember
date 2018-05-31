@@ -331,19 +331,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 						wp_die( 'Hello, spam bot!', 'ultimate-member' );
 					}
 
-					if ( ! in_array( $this->form_data['mode'], array( 'login' ) ) ) {
-
-						$form_timestamp  = trim($_POST['timestamp']);
-						$live_timestamp  = current_time( 'timestamp' );
-
-						if ( $form_timestamp == '' && UM()->options()->get( 'enable_timebot' ) == 1 )
-							wp_die( __('Hello, spam bot!','ultimate-member') );
-
-						if ( !current_user_can('manage_options') && $live_timestamp - $form_timestamp < 6 && UM()->options()->get( 'enable_timebot' ) == 1  )
-							wp_die( __('Whoa, slow down! You\'re seeing this message because you tried to submit a form too fast and we think you might be a spam bot. If you are a real human being please wait a few seconds before submitting the form. Thanks!','ultimate-member') );
-
-					}
-
 					/**
 					 * UM hook
 					 *
@@ -478,8 +465,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			$global_role = get_option( 'default_role' ); // WP Global settings
 
 			$um_global_role = UM()->options()->get( 'register_role' ); // UM Settings Global settings
-			if ( ! empty( $um_global_role ) )
+			if ( ! empty( $um_global_role ) ) {
 				$global_role = $um_global_role; // Form Global settings
+			}
 
 
 			$mode = $this->form_type( $post_id );

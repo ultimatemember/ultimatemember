@@ -55,7 +55,8 @@ if ( ! class_exists( 'UM_Menu_Item_Custom_Fields_Editor' ) ) {
 				// Sanitize
 				if ( ! empty( $_POST[ $key ][ $menu_item_db_id ] ) ) {
 					// Do some checks here...
-					$value = $_POST[ $key ][ $menu_item_db_id ];
+					$value = is_array( $_POST[ $key ][ $menu_item_db_id ] ) ?
+                        array_keys( $_POST[ $key ][ $menu_item_db_id ] ) : $_POST[ $key ][ $menu_item_db_id ];
 				} else {
 					$value = null;
 				}
@@ -165,7 +166,7 @@ if ( ! class_exists( 'UM_Menu_Item_Custom_Fields_Editor' ) ) {
 								$id_attr = ' id="edit-menu-item-um_nav_roles-{{data.menuItemID}}_' . $k . '" ';
 								$for_attr = ' for="edit-menu-item-um_nav_roles-{{data.menuItemID}}_' . $k . '" ';
 								$html .= "<label $for_attr>
-		                            <input type='checkbox' {$id_attr} name='menu-item-um_nav_roles[{{data.menuItemID}}][]' value='{$k}' <# if( _.contains( data.restriction_data.um_nav_roles,'{$k}' ) ){ #>checked='checked'<# } #> />
+		                            <input type='checkbox' {$id_attr} name='menu-item-um_nav_roles[{{data.menuItemID}}][{$k}]' value='1' <# if( _.contains( data.restriction_data.um_nav_roles,'{$k}' ) ){ #>checked='checked'<# } #> />
 		                            <span>{$title}</span>
 		                        </label>";
 							}

@@ -65,6 +65,10 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			add_action( 'template_redirect', array( &$this, 'template_redirect' ), 1000 );
 			add_action( 'um_access_check_individual_term_settings', array( &$this, 'um_access_check_individual_term_settings' ) );
 			add_action( 'um_access_check_global_settings', array( &$this, 'um_access_check_global_settings' ) );
+
+			/* Disable comments if user has not permission to access current post */
+			add_filter( 'comments_open', array( $this, 'disable_comments_open' ), 99, 2 );
+			add_filter( 'get_comments_number', array( $this, 'disable_comments_open' ), 99, 2 );
 		}
 
 
@@ -532,7 +536,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			if ( ! empty( $post->post_type ) && $post->post_type == 'page' ) {
 				if ( um_is_core_post( $post, 'login' ) || um_is_core_post( $post, 'register' ) ||
 				     um_is_core_post( $post, 'account' ) || um_is_core_post( $post, 'logout' ) ||
-				     um_is_core_post( $post, 'password-reset' ) )
+				     um_is_core_post( $post, 'password-reset' ) || ( is_user_logged_in() && um_is_core_post( $post, 'user' ) ) )
 					return false;
 			}
 
@@ -931,6 +935,63 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		function replace_post_content( $content ) {
 			$content = $this->current_single_post->post_content;
 			return $content;
+		}
+
+
+		/**
+		 * Disable comments if user has not permission to access this post
+		 * @param mixed $open
+		 * @param int $post_id
+		 * @return boolean
+		 */
+		public function disable_comments_open( $open, $post_id ) {
+
+			static $cache = array();
+
+			if ( isset( $cache[ $post_id ] ) ) {
+				return $cache[ $post_id ] ? $open : false;
+			}
+
+			$post = get_post( $post_id );
+			$restriction = $this->get_post_privacy_settings( $post );
+
+			if ( ! $restriction ) {
+				$cache[ $post_id ] = $open;
+				return $open;
+			}
+
+			if ( '1' == $restriction['_um_accessible'] ) {
+
+				if ( is_user_logged_in() ) {
+					if ( ! current_user_can( 'administrator' ) ) {
+						$open = false;
+					}
+				}
+
+			} elseif ( '2' == $restriction['_um_accessible'] ) {
+				if ( ! is_user_logged_in() ) {
+					$open = false;
+				} else {
+					if ( ! current_user_can( 'administrator' ) ) {
+						$custom_restrict = $this->um_custom_restriction( $restriction );
+
+						if ( empty( $restriction['_um_access_roles'] ) || false === array_search( '1', $restriction['_um_access_roles'] ) ) {
+							if ( ! $custom_restrict ) {
+								$open = false;
+							}
+						} else {
+							$user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
+
+							if ( ! isset( $user_can ) || ! $user_can || ! $custom_restrict ) {
+								$open = false;
+							}
+						}
+					}
+				}
+			}
+
+			$cache[ $post_id ] = $open;
+			return $open;
 		}
 
 

@@ -30,6 +30,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Terms_Conditions_API Terms_Conditions_API()
 	 * @method UM_Private_Content_API Private_Content_API()
 	 * @method UM_User_Location_API User_Location_API()
+	 * @method UM_GDPR_API GDPR_API()
 	 *
 	 */
 	final class UM extends UM_Functions {
@@ -386,47 +387,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 
 		/**
-		 * Show notice for customers with old extension's versions
-		 */
-		/*function old_extensions_notice() {
-			if ( ! is_admin() ) {
-				return;
-			}
-
-			if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-				return;
-			}
-
-			$show = false;
-
-			$slugs = array_map( function( $item ) {
-				return 'um-' . $item . '/um-' . $item . '.php';
-			}, array_keys( $this->dependencies()->ext_required_version ) );
-
-			$active_plugins = $this->dependencies()->get_active_plugins();
-			foreach ( $slugs as $slug ) {
-				if ( in_array( $slug, $active_plugins ) ) {
-					$plugin_data = get_plugin_data( um_path . '..' . DIRECTORY_SEPARATOR . $slug );
-					if ( version_compare( '2.0', $plugin_data['Version'], '>' ) ) {
-						$show = true;
-						break;
-					}
-				}
-			}
-
-			if ( ! $show ) {
-				return;
-			}
-
-			/*global $um_woocommerce;
-			remove_action( 'init', array( $um_woocommerce, 'plugin_check' ), 1 );
-			$um_woocommerce->plugin_inactive = true;*
-
-			echo '<div class="error"><p>' . sprintf( __( '<strong>%s %s</strong> requires 2.0 extensions. You have pre 2.0 extensions installed on your site. <br /> Please update %s extensions to latest versions. For more info see this <a href="%s" target="_blank">doc</a>.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version, ultimatemember_plugin_name, 'http://docs.ultimatemember.com/article/266-updating-to-2-0-versions-of-extensions' ) . '</p></div>';
-		}*/
-
-
-		/**
 		 * Autoload UM classes handler
 		 *
 		 * @since 2.0
@@ -525,6 +485,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->ajax_init();
 				$this->metabox();
 				$this->admin_upgrade()->init_packages_ajax_handlers();
+				$this->admin_gdpr();
 			} elseif ( $this->is_request( 'admin' ) ) {
 				$this->admin();
 				$this->admin_menu();
@@ -537,6 +498,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->users();
 				$this->dragdrop();
 				$this->plugin_updater();
+				$this->admin_gdpr();
 			} elseif ( $this->is_request( 'frontend' ) ) {
 				$this->enqueue();
 				$this->account();
@@ -562,9 +524,10 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->permalinks();
 			$this->modal();
 			$this->cron();
-			$this->tracking();
+			//$this->tracking();
 			$this->mobile();
 			$this->external_integrations();
+			$this->gdpr();
 		}
 
 
@@ -674,9 +637,52 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		function admin_upgrade() {
 			if ( empty( $this->classes['admin_upgrade'] ) ) {
-				$this->classes['admin_upgrade'] = new um\admin\core\Admin_Upgrade();
+				$this->classes['admin_upgrade'] = um\admin\core\Admin_Upgrade::instance();
+				//$this->classes['admin_upgrade'] = new um\admin\core\Admin_Upgrade();
 			}
 			return $this->classes['admin_upgrade'];
+		}
+
+
+		/**
+		 * GDPR privacy policy
+		 *
+		 * @since 2.0.14
+		 *
+		 * @return bool|um\admin\core\Admin_GDPR()
+		 */
+		function admin_gdpr() {
+			global $wp_version;
+
+			if ( version_compare( $wp_version, '4.9.6', '<' ) ) {
+				return false;
+			}
+
+			if ( empty( $this->classes['admin_gdpr'] ) ) {
+				$this->classes['admin_gdpr'] = new um\admin\core\Admin_GDPR();
+			}
+			return $this->classes['admin_gdpr'];
+		}
+
+
+		/**
+		 * GDPR privacy policy
+		 *
+		 * @since 2.0.14
+		 *
+		 * @return bool|um\core\GDPR()
+		 */
+		function gdpr() {
+			global $wp_version;
+
+			if ( version_compare( $wp_version, '4.9.6', '<' ) ) {
+				return false;
+			}
+
+			if ( empty( $this->classes['gdpr'] ) ) {
+				$this->classes['gdpr'] = new um\core\GDPR();
+			}
+			return $this->classes['gdpr'];
 		}
 
 
