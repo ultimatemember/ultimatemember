@@ -1022,19 +1022,22 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					}
 
 					//post is private
-					if ( '1' == $restriction['_um_accessible'] ) {
+					if ( '0' == $restriction['_um_accessible'] ) {
+						$filtered_items[] = $menu_item;
+						continue;
+					} elseif ( '1' == $restriction['_um_accessible'] ) {
 						//if post for not logged in users and user is not logged in
 						if ( ! is_user_logged_in() ) {
 							$filtered_items[] = $menu_item;
 							continue;
 						} else {
 
-                            if ( current_user_can( 'administrator' ) ) {
-                                $filtered_items[] = $menu_item;
-                                continue;
-                            }
+							if ( current_user_can( 'administrator' ) ) {
+								$filtered_items[] = $menu_item;
+								continue;
+							}
 
-						    //if not single query when exclude if set _um_access_hide_from_queries
+							//if not single query when exclude if set _um_access_hide_from_queries
 							if ( empty( $restriction['_um_access_hide_from_queries'] ) ) {
 								$filtered_items[] = $menu_item;
 								continue;
@@ -1044,10 +1047,10 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 						//if post for logged in users and user is not logged in
 						if ( is_user_logged_in() ) {
 
-                            if ( current_user_can( 'administrator' ) ) {
-                                $filtered_items[] = $menu_item;
-                                continue;
-                            }
+							if ( current_user_can( 'administrator' ) ) {
+								$filtered_items[] = $menu_item;
+								continue;
+							}
 
 							$custom_restrict = $this->um_custom_restriction( $restriction );
 
@@ -1078,8 +1081,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							}
 						}
 					}
-
-					continue;
 				}
 
 				//add all other posts
