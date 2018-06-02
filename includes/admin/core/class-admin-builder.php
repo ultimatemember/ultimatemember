@@ -167,27 +167,27 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		function um_admin_pre_save_field_to_form( $array ){
 			unset( $array['conditions'] );
 			if ( isset($array['conditional_field']) && !empty( $array['conditional_action'] ) && !empty( $array['conditional_operator'] ) ) {
-				$array['conditional_value'] = ! empty( $array['conditional_value'] ) ? $array['conditional_value'] : '';
+				$array['conditional_value'] = isset( $array['conditional_value'] ) ? $array['conditional_value'] : '';
 				$array['conditions'][] = array( $array['conditional_action'], $array['conditional_field'], $array['conditional_operator'], $array['conditional_value'] );
 			}
 
 			if ( isset($array['conditional_field1']) && !empty( $array['conditional_action1'] ) && !empty( $array['conditional_operator1'] ) ) {
-				$array['conditional_value1'] = ! empty( $array['conditional_value1'] ) ? $array['conditional_value1'] : '';
+				$array['conditional_value1'] = isset( $array['conditional_value1'] ) ? $array['conditional_value1'] : '';
 				$array['conditions'][] = array( $array['conditional_action1'], $array['conditional_field1'], $array['conditional_operator1'], $array['conditional_value1'] );
 			}
 
 			if ( isset($array['conditional_field2']) && !empty( $array['conditional_action2'] ) && !empty( $array['conditional_operator2'] ) ) {
-				$array['conditional_value2'] = ! empty( $array['conditional_value2'] ) ? $array['conditional_value2'] : '';
+				$array['conditional_value2'] = isset( $array['conditional_value2'] ) ? $array['conditional_value2'] : '';
 				$array['conditions'][] = array( $array['conditional_action2'], $array['conditional_field2'], $array['conditional_operator2'], $array['conditional_value2'] );
 			}
 
 			if ( isset($array['conditional_field3']) && !empty( $array['conditional_action3'] ) && !empty( $array['conditional_operator3'] ) ) {
-				$array['conditional_value3'] = ! empty( $array['conditional_value3'] ) ? $array['conditional_value3'] : '';
+				$array['conditional_value3'] = isset( $array['conditional_value3'] ) ? $array['conditional_value3'] : '';
 				$array['conditions'][] = array( $array['conditional_action3'], $array['conditional_field3'], $array['conditional_operator3'], $array['conditional_value3'] );
 			}
 
 			if ( isset($array['conditional_field4']) && !empty( $array['conditional_action4'] ) && !empty( $array['conditional_operator4'] ) ) {
-				$array['conditional_value4'] = ! empty( $array['conditional_value4'] ) ? $array['conditional_value4'] : '';
+				$array['conditional_value4'] = isset( $array['conditional_value4'] ) ? $array['conditional_value4'] : '';
 				$array['conditions'][] = array( $array['conditional_action4'], $array['conditional_field4'], $array['conditional_operator4'], $array['conditional_value4'] );
 			}
 
@@ -659,6 +659,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			$output['error'] = apply_filters( 'um_admin_field_update_error_handling', $output['error'], $array );
 
 			extract( $array['post'] );
+
 			if ( empty( $output['error'] ) ){
 
 				$save = array();

@@ -1313,7 +1313,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				?>
 
 				<p>
-					<input type="text" name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" value="<?php echo ( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" placeholder="<?php _e( 'Value', 'ultimate-member' ); ?>" style="width: 150px!important;position: relative;top: -1px;" />
+					<input type="text" name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" value="<?php echo isset( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" placeholder="<?php _e( 'Value', 'ultimate-member' ); ?>" style="width: 150px!important;position: relative;top: -1px;" />
 				</p>
 
 				<?php
