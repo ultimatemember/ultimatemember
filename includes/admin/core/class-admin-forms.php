@@ -731,7 +731,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$value = $this->get_field_value( $field_data );
 
 			$options = '';
-			foreach ( $field_data['options'] as $key=>$option ) {
+			foreach ( $field_data['options'] as $key => $option ) {
 				if ( ! empty( $field_data['multi'] ) ) {
 
 					if ( ! is_array( $value ) || empty( $value ) )

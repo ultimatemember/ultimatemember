@@ -210,7 +210,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'_um_profile_header_menu' => 'bc',
 				'_um_profile_empty_text' => 1,
 				'_um_profile_empty_text_emo' => 1,
-				'_um_profile_role' => '0',
+				'_um_profile_role' => array(),
 				'_um_profile_template' => 'profile',
 				'_um_profile_max_width' => '1000px',
 				'_um_profile_area_max_width' => '600px',
