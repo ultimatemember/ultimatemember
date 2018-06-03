@@ -1,5 +1,26 @@
 jQuery(document).ready(function() {
 
+    /* Remove deleted condition fields */
+    jQuery(document).on('click', '.um-admin-btn-toggle a', function(){
+        var fields = jQuery('.um-admin-btn-content').find('[name*="_conditional_field"]');
+
+        jQuery.each(fields, function(index, value) {
+            if ( !jQuery(value).val() ) {
+                console.log(jQuery(value).parents('.um-admin-cur-condition').find('.um-admin-remove-condition'));
+                jQuery(value).parents('.um-admin-cur-condition').remove();
+            }
+        });
+
+        var form = jQuery('form.um_add_field');
+
+        jQuery.ajax({
+            url: um_admin_field_data.ajax_url,
+            type: 'POST',
+            dataType: 'json',
+            data: form.serialize()
+        });
+    });
+
 	/* Remove field permanently */
 	jQuery(document).on('click', '.um-admin-btns a span.remove', function(e){
 		e.preventDefault();
@@ -35,8 +56,6 @@ jQuery(document).ready(function() {
 		
 		var form = jQuery(this);
 
-		console.log(um_admin_field_data.ajax_url);
-
 		jQuery.ajax({
 			url: um_admin_field_data.ajax_url,
 			type: 'POST',
@@ -52,35 +71,34 @@ jQuery(document).ready(function() {
 				form.css({'opacity': 1});
 			},
 			success: function(data){
-				console.log(data);
-				// if (data.error){
-                //
-				// 	c = 0;
-				// 	jQuery.each(data.error, function(i, v){
-				// 		c++;
-				// 		if ( c == 1 ) {
-				// 		form.find('#'+i).addClass('um-admin-error').focus();
-				// 		form.find('.um-admin-error-block').show().html(v);
-				// 		}
-				// 	});
-                //
-				// 	um_admin_modal_responsive();
-                //
-				// } else {
-                //
-				// 	jQuery('.um-col-demon-settings').data('in_row', '');
-				// 	jQuery('.um-col-demon-settings').data('in_sub_row', '');
-				// 	jQuery('.um-col-demon-settings').data('in_column', '');
-				// 	jQuery('.um-col-demon-settings').data('in_group', '');
-                //
-				// 	um_admin_remove_modal();
-				// 	um_admin_update_builder();
-                //
-				// }
+				if (data.error){
+
+					c = 0;
+					jQuery.each(data.error, function(i, v){
+						c++;
+						if ( c == 1 ) {
+						form.find('#'+i).addClass('um-admin-error').focus();
+						form.find('.um-admin-error-block').show().html(v);
+						}
+					});
+
+					um_admin_modal_responsive();
+
+				} else {
+
+					jQuery('.um-col-demon-settings').data('in_row', '');
+					jQuery('.um-col-demon-settings').data('in_sub_row', '');
+					jQuery('.um-col-demon-settings').data('in_column', '');
+					jQuery('.um-col-demon-settings').data('in_group', '');
+
+					um_admin_remove_modal();
+					um_admin_update_builder();
+
+				}
 				
 			},
 			error: function(data){
-				console.log(data);
+
 			}
 		});
 		
