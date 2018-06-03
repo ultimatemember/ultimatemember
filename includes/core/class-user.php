@@ -1467,6 +1467,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function get_admin_actions() {
 			$items = array();
 			$actions = array();
+
 			/**
 			 * UM hook
 			 *
@@ -1488,12 +1489,16 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 * }
 			 * ?>
 			 */
-			$actions = apply_filters('um_admin_user_actions_hook', $actions );
-			if ( !isset( $actions ) || empty( $actions ) ) return false;
-			foreach($actions as $id => $arr ) {
-				$url = add_query_arg('um_action', $id );
-				$url = add_query_arg('uid', um_profile_id(), $url );
-				$items[] = '<a href="' . $url .'" class="real_url '.$id.'-item">' . $arr['label'] . '</a>';
+			$actions = apply_filters( 'um_admin_user_actions_hook', $actions );
+			if ( ! isset( $actions ) || empty( $actions ) ) {
+				return false;
+			}
+
+			foreach ( $actions as $id => $arr ) {
+				$url = add_query_arg( array( 'um_action' => $id, 'uid' => um_profile_id() ) );
+				/*$url = add_query_arg( 'um_action', $id );
+				$url = add_query_arg( 'uid', um_profile_id(), $url );*/
+				$items[] = '<a href="' . $url .'" class="real_url ' . esc_attr( $id ) . '-item">' . $arr['label'] . '</a>';
 			}
 			return $items;
 		}

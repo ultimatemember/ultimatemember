@@ -705,10 +705,11 @@ function um_filtered_value( $key, $data = false ) {
  * @return bool|int|null
  */
 function um_profile_id() {
+	$requested_user = um_get_requested_user();
 
-	if ( um_get_requested_user() ) {
+	if ( $requested_user ) {
 		return um_get_requested_user();
-	} else if (is_user_logged_in() && get_current_user_id()) {
+	} elseif ( is_user_logged_in() && get_current_user_id() ) {
 		return get_current_user_id();
 	}
 
