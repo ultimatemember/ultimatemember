@@ -329,7 +329,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 		 */
 		function load_customjs() {
 
-			wp_register_script('um_conditional', um_url . 'assets/js/um-conditional.js' );
+			wp_register_script('um_conditional', um_url . 'assets/js/um-conditional' . $this->suffix . '.js' );
 			wp_enqueue_script('um_conditional');
 
 			wp_register_script('um_scripts', um_url . 'assets/js/um-scripts' . $this->suffix . '.js' );
