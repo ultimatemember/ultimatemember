@@ -1,24 +1,8 @@
 jQuery(document).ready(function() {
 
     /* Remove deleted condition fields */
-    jQuery(document).on('click', '.um-admin-btn-toggle a', function(){
-        var fields = jQuery('.um-admin-btn-content').find('[name*="_conditional_field"]');
+    jQuery(document).on('click', '', function(){
 
-        jQuery.each(fields, function(index, value) {
-            if ( !jQuery(value).val() ) {
-                console.log(jQuery(value).parents('.um-admin-cur-condition').find('.um-admin-remove-condition'));
-                jQuery(value).parents('.um-admin-cur-condition').remove();
-            }
-        });
-
-        var form = jQuery('form.um_add_field');
-
-        jQuery.ajax({
-            url: um_admin_field_data.ajax_url,
-            type: 'POST',
-            dataType: 'json',
-            data: form.serialize()
-        });
     });
 
 	/* Remove field permanently */

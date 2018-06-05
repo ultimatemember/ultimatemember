@@ -231,10 +231,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 				<div class="um-admin-btn-content">
 
-					<p class="um-admin-reset-conditions"><a href="#" class="button button-primary"><?php _e( 'Reset all rules', 'ultimate-member' ); ?></a></p>
+                    <p><a href="#" class="um-admin-new-condition button button-primary um-admin-tipsy-n" title="Add new condition"><?php _e( 'Add new rule', 'ultimate-member' ); ?></a></p>
+                    <p class="um-admin-reset-conditions"><a href="#" class="button"><?php _e( 'Reset all rules', 'ultimate-member' ); ?></a></p>
 					<div class="um-admin-clear"></div>
 
-					<?php if ( isset( $edit_array['conditions'] ) ) {
+					<?php if ( isset( $edit_array['conditions'] ) && count( $edit_array['conditions'] ) != 0 ) {
 
 						foreach ( $edit_array['conditions'] as $k => $arr ) {
 
@@ -247,11 +248,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 								<?php $metabox->field_input( '_conditional_operator' . $k, $form_id ); ?>
 								<?php $metabox->field_input( '_conditional_value' . $k, $form_id ); ?>
 
-								<?php if ( $k == '' ) { ?>
-									<p><a href="#" class="um-admin-new-condition button um-admin-tipsy-n" title="Add new condition"><i class="um-icon-plus" style="margin-right:0!important"></i></a></p>
-								<?php } else { ?>
-									<p><a href="#" class="um-admin-remove-condition button um-admin-tipsy-n" title="Remove condition"><i class="um-icon-close" style="margin-right:0!important"></i></a></p>
-								<?php } ?>
+                                <p><a href="#" class="um-admin-remove-condition button um-admin-tipsy-n" title="Remove condition"><i class="um-icon-close" style="margin-right:0!important"></i></a></p>
 
 								<div class="um-admin-clear"></div>
 							</div>
@@ -274,7 +271,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						</div>
 
 					<?php } ?>
+                    <div class="um-admin-cur-condition-template">
 
+						<?php $metabox->field_input( '_conditional_action', $form_id ); ?>
+						<?php $metabox->field_input( '_conditional_field', $form_id ); ?>
+						<?php $metabox->field_input( '_conditional_operator', $form_id ); ?>
+						<?php $metabox->field_input( '_conditional_value', $form_id ); ?>
+
+                        <p><a href="#" class="um-admin-remove-condition button um-admin-tipsy-n" title="Remove condition"><i class="um-icon-close" style="margin-right:0!important"></i></a></p>
+
+                        <div class="um-admin-clear"></div>
+                    </div>
 				</div>
 
 			</div>
