@@ -111,21 +111,6 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 				}
 			}
 
-            // enqueue styles
-            $localize_data = apply_filters( 'um_enqueue_localize_data', array(
-                'ajaxurl' => admin_url( 'admin-ajax.php' ),
-                'fileupload' => um_url . 'includes/lib/upload/um-file-upload.php',
-                'imageupload' => um_url . 'includes/lib/upload/um-image-upload.php',
-                'remove_file' => UM()->get_ajax_route( 'um\core\Files', 'ajax_remove_file' ),
-                'delete_profile_photo' => UM()->get_ajax_route( 'um\core\Profile', 'ajax_delete_profile_photo' ),
-                'delete_cover_photo' => UM()->get_ajax_route( 'um\core\Profile', 'ajax_delete_cover_photo' ),
-                'resize_image' => UM()->get_ajax_route( 'um\core\Files', 'ajax_resize_image' ),
-                'muted_action' => UM()->get_ajax_route( 'um\core\Form', 'ajax_muted_action' ),
-                'ajax_paginate' => UM()->get_ajax_route( 'um\core\Query', 'ajax_paginate' ),
-                'ajax_select_options' => UM()->get_ajax_route( 'um\core\Form', 'ajax_select_options' ),
-                'ajax_get_members' => UM()->get_ajax_route( 'um\core\Members', 'ajax_get_members' ),
-            ) );
-
 			/**
 			 * UM hook
 			 *
@@ -157,6 +142,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 				'muted_action'          => UM()->get_ajax_route( 'um\core\Form', 'ajax_muted_action' ),
 				'ajax_paginate'         => UM()->get_ajax_route( 'um\core\Query', 'ajax_paginate' ),
 				'ajax_select_options'   => UM()->get_ajax_route( 'um\core\Form', 'ajax_select_options' ),
+				'ajax_get_members' => UM()->get_ajax_route( 'um\core\Members', 'ajax_get_members' ),
 			) );
 
 
