@@ -1692,8 +1692,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$email_key = empty( $_GET['email'] ) ? '' : urldecode( $_GET['email'] );
 			$emails = UM()->config()->email_notifications;
 
-			if ( empty( $email_key ) || empty( $emails[$email_key] ) )
+			if ( empty( $email_key ) || empty( $emails[ $email_key ] ) ) {
 				return $section;
+			}
 
 			$in_theme = UM()->mail()->template_in_theme( $email_key );
 
@@ -1722,7 +1723,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				array(
 					'id'            => 'um_email_template',
 					'type'          => 'hidden',
-					'value' 		=> $email_key,
+					'value'         => $email_key,
 				),
 				array(
 					'id'            => $email_key . '_on',
@@ -2535,10 +2536,7 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 
 			$theme_template_path = UM()->mail()->get_template_file( 'theme', $template );
 
-			$in_theme = UM()->mail()->template_in_theme( $template );
-			if ( ! $in_theme ) {
-				UM()->mail()->copy_email_template( $template );
-			}
+			UM()->mail()->copy_email_template( $template );
 
 			$fp = fopen( $theme_template_path, "w" );
 			$result = fputs( $fp, $content );
