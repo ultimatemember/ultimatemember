@@ -4,11 +4,25 @@ namespace um\core;
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Members' ) ) {
+if ( ! class_exists( 'um\core\Members' ) ) {
+
+
+	/**
+	 * Class Members
+	 * @package um\core
+	 */
 	class Members {
 
+
+		/**
+		 * @var
+		 */
 		var $results;
 
+
+		/**
+		 * Members constructor.
+		 */
 		function __construct() {
 
 			$this->core_search_fields = array(
@@ -22,6 +36,81 @@ if ( ! class_exists( 'Members' ) ) {
 			add_action( 'um_pre_directory_shortcode', array( &$this, 'pre_directory_shortcode' ) );
 
 			add_filter( 'um_search_select_fields', array( &$this, 'search_select_fields' ), 10, 1 );
+		}
+
+
+		/**
+		 * Members page allowed?
+		 */
+		function access_members() {
+			if ( UM()->options()->get( 'members_page' ) == 0 && um_is_core_page( 'members' ) ) {
+				um_redirect_home();
+			}
+		}
+
+
+		/**
+		 * Pre-display Member Directory
+		 *
+		 * @param $args
+		 */
+		function pre_directory_shortcode( $args ) {
+			wp_localize_script( 'um_members', 'um_members_args', $args );
+		}
+
+
+		/**
+		 * Display assigned roles in search filter 'role' field
+		 * @param  	array $attrs
+		 * @return 	array
+		 * @uses  	add_filter 'search_select_fields'
+		 * @since 	1.3.83
+		 */
+
+		function search_select_fields( $attrs ) {
+			if ( isset( $attrs['metakey'] ) && strstr( $attrs['metakey'], 'role_' ) ) {
+
+				$shortcode_roles = get_post_meta( UM()->shortcodes()->form_id, '_um_roles', true );
+				$um_roles = UM()->roles()->get_roles( false );
+
+				if ( ! empty( $shortcode_roles ) && is_array( $shortcode_roles ) ) {
+
+					$attrs['options'] = array();
+
+					foreach ( $um_roles as $key => $value ) {
+						if ( in_array( $key, $shortcode_roles ) ) {
+							$attrs['options'][ $key ] = $value;
+						}
+					}
+
+				}
+
+			}
+
+			return $attrs;
+		}
+
+
+		/**
+		 * Tag conversion for member directory
+		 *
+		 * @param $string
+		 * @param $array
+		 *
+		 * @return mixed
+		 */
+		function convert_tags( $string, $array ) {
+
+			$search = array(
+				'{total_users}',
+			);
+
+			$replace = array(
+				$array['total_users'],
+			);
+
+			$string = str_replace($search, $replace, $string);
+			return $string;
 		}
 
 
@@ -52,88 +141,16 @@ if ( ! class_exists( 'Members' ) ) {
 
 			$string = substr( $string, 0, -4 );
 
-            if ( UM()->options()->get('members_page') == 0 && um_is_core_page( 'members' ) ) {
-                um_redirect_home();
-            }
-			if ( empty( $string ) )
-				return '';
-
-			global $wpdb;
-			return $wpdb->prepare( ' AND ( ' . $string . ' )', array_fill( 0, count( $sql_fields ), '%' . $text . '%' ) );
-		}
-
-
-		/**
-		 * Check Members page allowed
-		 */
-		function access_members() {
-
-			if ( um_get_option( 'members_page' ) == 0 && um_is_core_page( 'members' ) ) {
+			if ( UM()->options()->get( 'members_page' ) == 0 && um_is_core_page( 'members' ) ) {
 				um_redirect_home();
 			}
 
-		}
-
-
-		/**
-		 * Pre-display Member Directory
-		 *
-		 * @param $args
-		 */
-		function pre_directory_shortcode( $args ) {
-			wp_localize_script( 'um_members', 'um_members_args', $args );
-		}
-
-
-		/**
-		 * Display assigned roles in search filter 'role' field
-		 * @param  	array $attrs
-		 * @return 	array
-		 * @uses  	add_filter 'um_search_select_fields'
-		 * @since 	1.3.83
-		 */
-		function search_select_fields( $attrs ) {
-			if ( isset( $attrs['metakey'] ) && strstr( $attrs['metakey'], 'role_' ) ) {
-
-				$shortcode_roles = get_post_meta( UM()->shortcodes()->form_id, '_um_roles', true );
-				$um_roles = UM()->roles()->get_roles( false );
-
-				if ( ! empty( $shortcode_roles ) && is_array( $shortcode_roles ) ) {
-
-					$attrs['options'] = array();
-
-					foreach ( $um_roles as $key => $value ) {
-						if ( in_array( $key, $shortcode_roles ) ) {
-							$attrs['options'][ $key ] = $value;
-						}
-					}
-
-				}
-
+			if ( empty( $string ) ) {
+				return '';
 			}
 
-			return $attrs;
-		}
-
-
-		/**
-		 * tag conversion for member directory
-		 *
-		 * @param $string
-		 * @param $array
-		 * @return mixed
-		 */
-		function convert_tags( $string, $array ) {
-
-			$search = array(
-				'{total_users}',
-			);
-
-			$replace = array(
-				$array['total_users'],
-			);
-
-			return str_replace( $search, $replace, $string );
+			global $wpdb;
+			return $wpdb->prepare( ' AND ( ' . $string . ' )', array_fill( 0, count( $sql_fields ), '%' . $text . '%' ) );
 		}
 
 
@@ -155,14 +172,9 @@ if ( ! class_exists( 'Members' ) ) {
 			// additional filter for search field attributes
 			$attrs = apply_filters( "um_search_field_{$filter}", $attrs );
 
-			//$type = UM()->builtin()->is_dropdown_field( $filter, $attrs ) ? 'select' : 'text';
-			//$type = UM()->builtin()->is_dropdown_field( $filter, $attrs ) ? 'radio' : 'text';
-			//$type = apply_filters( 'um_search_field_type', $type, $attrs );
-
 			// filter all search fields
 			$attrs = apply_filters( 'um_search_fields', $attrs );
 
-			//if ( $type == 'select' )
 			$attrs = apply_filters( 'um_search_select_fields', $attrs );
 
 			if ( $filter == 'age' ) {
@@ -196,7 +208,11 @@ if ( ! class_exists( 'Members' ) ) {
 			<?php }
 		}
 
-
+		/**
+		 * @param $borndate
+		 *
+		 * @return false|string
+		 */
 		function borndate( $borndate ) {
 			if ( date('m', $borndate) > date('m') || date('m', $borndate) == date('m') && date('d', $borndate ) > date('d')) {
 				return (date('Y') - date('Y', $borndate ) - 1);
@@ -204,6 +220,10 @@ if ( ! class_exists( 'Members' ) ) {
 			return (date('Y') - date('Y', $borndate));
 		}
 
+
+		/**
+		 * @param $filter
+		 */
 		function show_slider( $filter ) {
 
 			global $wpdb;
@@ -222,7 +242,7 @@ if ( ! class_exists( 'Members' ) ) {
 			<input type="hidden" name="birth_date[]" class="um_range_min" />
 			<input type="hidden" name="birth_date[]" class="um_range_max" />
 
-		<?php
+			<?php
 		}
 
 
@@ -235,8 +255,34 @@ if ( ! class_exists( 'Members' ) ) {
 		function get_members( $args ) {
 			global $wpdb;
 
+			/**
+			 * @var $profiles_per_page
+			 * @var $profiles_per_page_mobile
+			 */
 			extract( $args );
 
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_prepare_user_query_args
+			 * @description Extend member directory query arguments
+			 * @input_vars
+			 * [{"var":"$query_args","type":"array","desc":"Members Query Arguments"},
+			 * {"var":"$directory_settings","type":"array","desc":"Member Directory Settings"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_prepare_user_query_args', 'function_name', 10, 2 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_prepare_user_query_args', 'my_prepare_user_query_args', 10, 2 );
+			 * function my_prepare_user_query_args( $query_args, $directory_settings ) {
+			 *     // your code here
+			 *     return $query_args;
+			 * }
+			 * ?>
+			 */
 			$query_args = apply_filters( 'um_prepare_user_query_args', array(), $args );
 
 			// Prepare for BIG SELECT query
@@ -258,6 +304,25 @@ if ( ! class_exists( 'Members' ) ) {
 				$query_args = array();
 			}
 
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_user_before_query
+			 * @description Action before users query on member directory
+			 * @input_vars
+			 * [{"var":"$query_args","type":"array","desc":"Query arguments"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_user_before_query', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_user_before_query', 'my_user_before_query', 10, 1 );
+			 * function my_user_before_query( $query_args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( 'um_user_before_query', $query_args );
 
 			add_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10 );
@@ -266,6 +331,26 @@ if ( ! class_exists( 'Members' ) ) {
 
 			remove_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10 );
 
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_user_after_query
+			 * @description Action before users query on member directory
+			 * @input_vars
+			 * [{"var":"$query_args","type":"array","desc":"Query arguments"},
+			 * {"var":"$users","type":"array","desc":"Users"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_action( 'um_user_after_query', 'function_name', 10, 2 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_user_after_query', 'my_user_after_query', 10, 2 );
+			 * function my_user_after_query( $query_args, $users ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
 			do_action( 'um_user_after_query', $query_args, $users );
 
 			$user_ids = ! empty( $users->results ) ? array_unique( $users->results ) : array();
@@ -301,6 +386,27 @@ if ( ! class_exists( 'Members' ) ) {
 			$response['header'] = $this->convert_tags( $header, $response );
 			$response['header_single'] = $this->convert_tags( $header_single, $response );
 
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_prepare_user_results_array
+			 * @description Extend member directory query result
+			 * @input_vars
+			 * [{"var":"$result","type":"array","desc":"Members Query Result"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_prepare_user_results_array', 'function_name', 10, 1 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_prepare_user_results_array', 'my_prepare_user_results', 10, 1 );
+			 * function my_prepare_user_results( $result ) {
+			 *     // your code here
+			 *     return $result;
+			 * }
+			 * ?>
+			 */
 			return apply_filters( 'um_prepare_user_results_array', $response );
 		}
 
@@ -337,57 +443,54 @@ if ( ! class_exists( 'Members' ) ) {
 
 
 		/**
-		 * maybe deprecated
-		 *
-		 *
 		 * Optimizes Member directory with multiple LEFT JOINs
 		 * @param  object $vars
 		 * @return object $var
 		 */
 		/*public function um_optimize_member_query( $vars ) {
 
-            global $wpdb;
+			global $wpdb;
 
-            $arr_where = explode("\n", $vars->query_where );
-            $arr_left_join = explode("LEFT JOIN", $vars->query_from );
-            $arr_user_photo_key = array('synced_profile_photo','profile_photo','synced_gravatar_hashed_id');
+			$arr_where = explode("\n", $vars->query_where );
+			$arr_left_join = explode("LEFT JOIN", $vars->query_from );
+			$arr_user_photo_key = array('synced_profile_photo','profile_photo','synced_gravatar_hashed_id');
 
-            foreach ( $arr_where as $where ) {
+			foreach ( $arr_where as $where ) {
 
-                foreach( $arr_user_photo_key as $key ){
+				foreach( $arr_user_photo_key as $key ){
 
-                    if( strpos( $where  , "'".$key."'" ) > -1 ){
+					if( strpos( $where  , "'".$key."'" ) > -1 ){
 
-                        // find usermeta key
-                        preg_match("#mt[0-9]+.#",  $where, $meta_key );
+						// find usermeta key
+						preg_match("#mt[0-9]+.#",  $where, $meta_key );
 
-                        // remove period from found meta_key
-                        $meta_key = str_replace(".","", current( $meta_key ) );
+						// remove period from found meta_key
+						$meta_key = str_replace(".","", current( $meta_key ) );
 
-                        // remove matched LEFT JOIN clause
-                        $vars->query_from = str_replace('LEFT JOIN wp_usermeta AS '.$meta_key.' ON ( wp_users.ID = '.$meta_key.'.user_id )', '',  $vars->query_from );
+						// remove matched LEFT JOIN clause
+						$vars->query_from = str_replace('LEFT JOIN wp_usermeta AS '.$meta_key.' ON ( wp_users.ID = '.$meta_key.'.user_id )', '',  $vars->query_from );
 
-                        // prepare EXISTS replacement for LEFT JOIN clauses
-                        $where_exists = 'um_exist EXISTS( SELECT '.$wpdb->usermeta.'.umeta_id FROM '.$wpdb->usermeta.' WHERE '.$wpdb->usermeta.'.user_id = '.$wpdb->users.'.ID AND '.$wpdb->usermeta.'.meta_key IN("'.implode('","',  $arr_user_photo_key ).'") AND '.$wpdb->usermeta.'.meta_value != "" )';
+						// prepare EXISTS replacement for LEFT JOIN clauses
+						$where_exists = 'um_exist EXISTS( SELECT '.$wpdb->usermeta.'.umeta_id FROM '.$wpdb->usermeta.' WHERE '.$wpdb->usermeta.'.user_id = '.$wpdb->users.'.ID AND '.$wpdb->usermeta.'.meta_key IN("'.implode('","',  $arr_user_photo_key ).'") AND '.$wpdb->usermeta.'.meta_value != "" )';
 
-                        // Replace LEFT JOIN clauses with EXISTS and remove duplicates
-                        if( strpos( $vars->query_where, 'um_exist' ) === FALSE ){
-                            $vars->query_where = str_replace( $where , $where_exists,  $vars->query_where );
-                        }else{
-                            $vars->query_where = str_replace( $where , '1=0',  $vars->query_where );
-                        }
-                    }
+						// Replace LEFT JOIN clauses with EXISTS and remove duplicates
+						if( strpos( $vars->query_where, 'um_exist' ) === FALSE ){
+							$vars->query_where = str_replace( $where , $where_exists,  $vars->query_where );
+						}else{
+							$vars->query_where = str_replace( $where , '1=0',  $vars->query_where );
+						}
+					}
 
-                }
+				}
 
-            }
+			}
 
-            $vars->query_where = str_replace("\n", "", $vars->query_where );
-            $vars->query_where = str_replace("um_exist", "", $vars->query_where );
+			$vars->query_where = str_replace("\n", "", $vars->query_where );
+			$vars->query_where = str_replace("um_exist", "", $vars->query_where );
 
-            return $vars;
+			return $vars;
 
-        }*/
+		}*/
 
 
 		/**
@@ -397,7 +500,7 @@ if ( ! class_exists( 'Members' ) ) {
 			$args = ! empty( $_POST['args'] ) ? $_POST['args'] : array();
 			$args['page'] = ! empty( $_POST['page'] ) ? $_POST['page'] : ( isset( $args['page'] ) ? $args['page'] : 1 );
 
-			$sizes = um_get_option( 'cover_thumb_sizes' );
+			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
 			$cover_size = UM()->mobile()->isTablet() ? $sizes[1] : $sizes[0];
 
 			$users = $this->get_members( $args );
@@ -416,7 +519,7 @@ if ( ! class_exists( 'Members' ) ) {
 					'profile_url'           => um_user_profile_url(),
 					'can_edit'              => ( UM()->roles()->um_current_user_can( 'edit', $user_id ) || UM()->roles()->um_user_can( 'can_edit_everyone' ) ) ? true : false,
 					'edit_profile_url'      => um_edit_profile_url(),
-					'avatar'                => get_avatar( $user_id, str_replace( 'px', '', um_get_option( 'profile_photosize' ) ) ),
+					'avatar'                => get_avatar( $user_id, str_replace( 'px', '', UM()->options()->get( 'profile_photosize' ) ) ),
 					'display_name_html'     => um_user('display_name', 'html'),
 					'social_urls'           => UM()->fields()->show_social_urls( false ),
 				);
@@ -460,6 +563,9 @@ if ( ! class_exists( 'Members' ) ) {
 		}
 
 
+		/**
+		 * @return mixed|void
+		 */
 		function get_sorting_fields() {
 
 			return apply_filters( 'um_members_directory_sort_dropdown_options', array(
@@ -473,6 +579,9 @@ if ( ! class_exists( 'Members' ) ) {
 		}
 
 
+		/**
+		 * @return mixed|void
+		 */
 		function get_filters_fields() {
 
 			return apply_filters( 'um_members_directory_filter_dropdown_options', array(
@@ -485,6 +594,7 @@ if ( ! class_exists( 'Members' ) ) {
 			) );
 
 		}
+
 
 	}
 }

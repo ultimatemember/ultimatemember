@@ -13,15 +13,20 @@
 	right: 30px;
 }
 
+div.uimob500 .um-profile-photo a.um-profile-photo-img {
+	right: auto;
+}
+
 .um-profile-edit {
 	right: auto;
 	left: 10px;
 	padding-left: 10px;
 }
 
+div.uimob960 .um-header .um-profile-meta,
 div.uimob800 .um-header .um-profile-meta {
 	padding-left: 0 !important;
-    padding-right: 200px !important;
+	padding-right: 200px !important;
 }
 
 .um-name {

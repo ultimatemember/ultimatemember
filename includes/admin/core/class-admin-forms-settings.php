@@ -4,7 +4,13 @@ namespace um\admin\core;
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Admin_Forms_Settings' ) ) {
+if ( ! class_exists( 'um\admin\core\Admin_Forms_Settings' ) ) {
+
+
+	/**
+	 * Class Admin_Forms_Settings
+	 * @package um\admin\core
+	 */
 	class Admin_Forms_Settings extends Admin_Forms {
 
 		/**
@@ -33,6 +39,7 @@ if ( ! class_exists( 'Admin_Forms_Settings' ) ) {
 					return $field_data['value' . $i];
 				} else {
 					$value = UM()->options()->get( $field_data['id' . $i] );
+					$value = is_string( $value ) ? stripslashes( $value ) : $value;
 					return '' !== $value ? $value : $default;
 				}
 			} else {
@@ -40,6 +47,7 @@ if ( ! class_exists( 'Admin_Forms_Settings' ) ) {
 					return $field_data['value'. $i];
 				} else {
 					$value = UM()->options()->get( $field_data['id' . $i] );
+					$value = is_string( $value ) ? stripslashes( $value ) : $value;
 					return isset( $value ) ? $value : $default;
 				}
 			}

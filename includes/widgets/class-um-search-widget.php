@@ -4,8 +4,17 @@ namespace um\widgets;
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+
+/**
+ * Class UM_Search_Widget
+ * @package um\widgets
+ */
 class UM_Search_Widget extends \WP_Widget {
 
+
+	/**
+	 * UM_Search_Widget constructor.
+	 */
 	function __construct() {
 
 		parent::__construct(
@@ -22,8 +31,15 @@ class UM_Search_Widget extends \WP_Widget {
 
 	}
 
-	// Creating widget front-end
+
+	/**
+	 * Creating widget front-end
+	 *
+	 * @param array $args
+	 * @param array $instance
+	 */
 	public function widget( $args, $instance ) {
+
 		$title = apply_filters( 'widget_title', $instance['title'] );
 
 		// before and after widget arguments are defined by themes
@@ -38,7 +54,12 @@ class UM_Search_Widget extends \WP_Widget {
 		echo $args['after_widget'];
 	}
 
-	// Widget Backend
+
+	/**
+	 * Widget Backend
+	 *
+	 * @param array $instance
+	 */
 	public function form( $instance ) {
 		if ( isset( $instance[ 'title' ] ) ) {
 			$title = $instance[ 'title' ];
@@ -63,7 +84,15 @@ class UM_Search_Widget extends \WP_Widget {
 		<?php
 	}
 
-	// Updating widget replacing old instances with new
+
+	/**
+	 * Updating widget replacing old instances with new
+	 *
+	 * @param array $new_instance
+	 * @param array $old_instance
+	 *
+	 * @return array
+	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance = array();
 		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';

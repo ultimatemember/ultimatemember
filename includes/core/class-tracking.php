@@ -4,155 +4,182 @@ namespace um\core;
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Tracking' ) ) {
-    class Tracking {
+if ( ! class_exists( 'um\core\Tracking' ) ) {
 
-        private $data;
 
-        public function __construct() {
+	/**
+	 * Class Tracking
+	 * @package um\core
+	 */
+	class Tracking {
 
-            $this->schedule_send();
 
-            add_action( 'admin_notices', array( $this, 'admin_notices' ), 10 );
+		/**
+		 * @var
+		 */
+		private $data;
 
-        }
 
-        /***
-         ***	@setup info array
-         ***/
-        private function setup_data() {
-            $data = array();
+		/**
+		 * Tracking constructor.
+		 */
+		public function __construct() {
 
-            // Retrieve current theme info
-            if ( get_bloginfo( 'version' ) < '3.4' ) {
-                $theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
-                $theme      = $theme_data['Name'];
-                $theme_ver  = $theme_data['Version'];
-            } else {
-                $theme_data = wp_get_theme();
-                $theme      = $theme_data->Name;
-                $theme_ver  = $theme_data->Version;
-            }
+			$this->schedule_send();
 
-            $data['url'] = home_url();
-            $data['theme'] = $theme;
-            $data['theme_version'] = $theme_ver;
-            $data['wp_version'] = get_bloginfo( 'version' );
-            $data['version'] = ultimatemember_version;
+			add_action( 'um_admin_do_action__opt_into_tracking', array( $this, 'um_admin_do_action__opt_into_tracking' ) );
+			add_action( 'um_admin_do_action__opt_out_of_tracking', array( $this, 'um_admin_do_action__opt_out_of_tracking' ) );
+		}
 
-            // Retrieve current plugin information
-            if( ! function_exists( 'get_plugins' ) ) {
-                include ABSPATH . '/wp-admin/includes/plugin.php';
-            }
 
-            $plugins        = array_keys( get_plugins() );
-            $active_plugins = get_option( 'active_plugins', array() );
+		/**
+		 * Opt-in tracking
+		 *
+		 * @param $action
+		 */
+		function um_admin_do_action__opt_into_tracking( $action ) {
+			UM()->options()->update( 'um_allow_tracking', 1 );
+			update_option( 'um_tracking_notice', 1 );
 
-            foreach ( $plugins as $key => $plugin ) {
-                if ( in_array( $plugin, $active_plugins ) ) {
-                    // Remove active plugins from list so we can show active and inactive separately
-                    unset( $plugins[ $key ] );
-                }
-            }
+			$this->send_checkin(true);
 
-            $data['active_plugins']   = $active_plugins;
-            $data['inactive_plugins'] = $plugins;
-            $data['language'] = get_bloginfo('language');
-            $data['multisite'] = ( is_multisite() ) ? 1 : 0;
+			exit( wp_redirect( remove_query_arg('um_adm_action') ) );
+		}
 
-            UM()->setup()->install_basics();
 
-            $data['email'] = get_option( 'admin_email' );
-            $data['unique_sitekey'] = get_option( '__ultimatemember_sitekey' );
+		/**
+		 * Opt-out of tracking
+		 *
+		 * @param $action
+		 */
+		function um_admin_do_action__opt_out_of_tracking( $action ) {
+			UM()->options()->update( 'um_allow_tracking', 0 );
+			update_option('um_tracking_notice', 1 );
 
-            $this->data = $data;
+			exit( wp_redirect( remove_query_arg('um_adm_action') ) );
+		}
 
-        }
 
-        /***
-         ***	@check if tracking is allowed
-         ***/
-        private function tracking_allowed() {
-            if ( ! UM()->options()->get( 'allow_tracking' ) )
-                return 0;
-            return 1;
-        }
+		/**
+		 * Setup info array
+		 *
+		 */
+		private function setup_data() {
+			$data = array();
 
-        /***
-         ***	@get last send time
-         ***/
-        private function get_last_send() {
-            return get_option( 'um_tracking_last_send' );
-        }
+			// Retrieve current theme info
+			if ( get_bloginfo( 'version' ) < '3.4' ) {
+				$theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
+				$theme      = $theme_data['Name'];
+				$theme_ver  = $theme_data['Version'];
+			} else {
+				$theme_data = wp_get_theme();
+				$theme      = $theme_data->Name;
+				$theme_ver  = $theme_data->Version;
+			}
 
-        /***
-         ***	@send a report
-         ***/
-        public function send_checkin( $override = false ) {
+			$data['url'] = home_url();
+			$data['theme'] = $theme;
+			$data['theme_version'] = $theme_ver;
+			$data['wp_version'] = get_bloginfo( 'version' );
+			$data['version'] = ultimatemember_version;
 
-            if( ! $this->tracking_allowed() && ! $override )
-                return;
+			// Retrieve current plugin information
+			if( ! function_exists( 'get_plugins' ) ) {
+				include ABSPATH . '/wp-admin/includes/plugin.php';
+			}
 
-            // Send a maximum of once per period
-            $last_send = $this->get_last_send();
-            if( $last_send && $last_send > strtotime( '-1 day' ) )
-                return;
+			$plugins        = array_keys( get_plugins() );
+			$active_plugins = get_option( 'active_plugins', array() );
 
-            $this->setup_data();
+			foreach ( $plugins as $key => $plugin ) {
+				if ( in_array( $plugin, $active_plugins ) ) {
+					// Remove active plugins from list so we can show active and inactive separately
+					unset( $plugins[ $key ] );
+				}
+			}
 
-            if ( !get_option('__ultimatemember_coupon_sent') ) {
-                $this->data['send_discount'] = 1;
-            } else {
-                $this->data['send_discount'] = 0;
-            }
+			$data['active_plugins']   = $active_plugins;
+			$data['inactive_plugins'] = $plugins;
+			$data['language'] = get_bloginfo('language');
+			$data['multisite'] = ( is_multisite() ) ? 1 : 0;
 
-            $request = wp_remote_post( 'https://ultimatemember.com/?um_action=checkin', array(
-                'method'      => 'POST',
-                'timeout'     => 20,
-                'redirection' => 5,
-                'httpversion' => '1.0',
-                'blocking'    => true,
-                'body'        => $this->data,
-                'user-agent'  => 'UM/' . ultimatemember_version . '; ' . get_bloginfo( 'url' ),
-            ) );
+			UM()->setup()->install_basics();
 
-            update_option( 'um_tracking_last_send', time() );
-            update_option( '__ultimatemember_coupon_sent', 1 );
-        }
+			$data['email'] = get_option( 'admin_email' );
+			$data['unique_sitekey'] = get_option( '__ultimatemember_sitekey' );
 
-        /***
-         ***	@run a scheduled report
-         ***/
-        private function schedule_send() {
-            add_action( 'um_daily_scheduled_events', array( $this, 'send_checkin' ) );
-        }
+			$this->data = $data;
 
-        /***
-         ***	@show admin notices
-         ***/
-        public function admin_notices() {
+		}
 
-            if( ! current_user_can( 'manage_options' ) )
-                return;
 
-            $hide_notice = get_option('um_tracking_notice');
+		/**
+		 * Check if tracking is allowed
+		 *
+		 * @return int
+		 */
+		private function tracking_allowed() {
+			if ( ! UM()->options()->get( 'allow_tracking' ) )
+				return 0;
+			return 1;
+		}
 
-            if ( $hide_notice )
-                return;
 
-            $optin_url  =  esc_url( add_query_arg( 'um_adm_action', 'opt_into_tracking' ) );
-            $optout_url =  esc_url( add_query_arg( 'um_adm_action', 'opt_out_of_tracking' ) );
+		/**
+		 * Get last send time
+		 *
+		 * @return mixed|void
+		 */
+		private function get_last_send() {
+			return get_option( 'um_tracking_last_send' );
+		}
 
-            echo '<div class="updated um-admin-notice"><p>';
 
-            echo __( 'Allow Ultimate Member to track plugin usage? Opt-in to tracking and our newsletter and we will immediately e-mail you a 20% discount which you can use to purchase our core extensions bundle. No sensitive data is tracked.', 'ultimate-member' );
+		/**
+		 * Send a report
+		 *
+		 * @param bool $override
+		 */
+		public function send_checkin( $override = false ) {
 
-            echo '</p>';
+			if( ! $this->tracking_allowed() && ! $override )
+				return;
 
-            echo '<p><a href="' . esc_url( $optin_url ) . '" class="button button-primary">' . __( 'Allow tracking', 'ultimate-member' ) . '</a>';
-            echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow tracking', 'ultimate-member' ) . '</a></p></div>';
+			// Send a maximum of once per period
+			$last_send = $this->get_last_send();
+			if( $last_send && $last_send > strtotime( '-1 day' ) )
+				return;
 
-        }
+			$this->setup_data();
 
-    }
+			if ( !get_option('__ultimatemember_coupon_sent') ) {
+				$this->data['send_discount'] = 1;
+			} else {
+				$this->data['send_discount'] = 0;
+			}
+
+			$request = wp_remote_post( 'https://ultimatemember.com/?um_action=checkin', array(
+				'method'      => 'POST',
+				'timeout'     => 20,
+				'redirection' => 5,
+				'httpversion' => '1.0',
+				'blocking'    => true,
+				'body'        => $this->data,
+				'user-agent'  => 'UM/' . ultimatemember_version . '; ' . get_bloginfo( 'url' ),
+			) );
+
+			update_option( 'um_tracking_last_send', time() );
+			update_option( '__ultimatemember_coupon_sent', 1 );
+		}
+
+
+		/**
+		 * Run a scheduled report
+		 */
+		private function schedule_send() {
+			add_action( 'um_daily_scheduled_events', array( $this, 'send_checkin' ) );
+		}
+
+	}
 }

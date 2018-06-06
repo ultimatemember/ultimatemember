@@ -65,7 +65,7 @@
 			array(
 				'id'		    => '_um_login_secondary_btn_word',
 				'type'		    => 'text',
-				'label'    		=> __( 'Primary Button Text', 'ultimate-member' ),
+				'label'    		=> __( 'Secondary Button Text', 'ultimate-member' ),
 				'tooltip'    	=> __( 'Customize the button text', 'ultimate-member' ),
 				'value' 		=> UM()->query()->get_meta_value( '_um_login_secondary_btn_word', null, UM()->options()->get( 'login_secondary_btn_word' ) ),
 				'conditional'	=> array( '_um_login_secondary_btn', '=', 1 )

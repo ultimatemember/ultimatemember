@@ -4,61 +4,51 @@ namespace um\core;
 // Exit if executed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'AJAX_Common' ) ) {
-    class AJAX_Common {
-
-        /**
-         * AJAX_Common constructor.
-         */
-        function __construct() {
-            // UM_EVENT => nopriv
-            $ajax_actions = array(
-                'router'   => false
-            );
-
-            foreach ( $ajax_actions as $action => $nopriv ) {
-
-                add_action( 'wp_ajax_um_' . $action, array( $this, $action ) );
-
-                if ( $nopriv )
-                    add_action( 'wp_ajax_nopriv_um_' . $action, array( $this, $action ) );
-
-            }
+if ( ! class_exists( 'um\core\AJAX_Common' ) ) {
 
 
-            /**
-             * Fallback for ajax urls
-             * @uses action hooks: wp_head, admin_head
-             */
-            add_action( 'wp_head', array( $this, 'ultimatemember_ajax_urls' ) );
-            add_action( 'admin_head', array( $this, 'ultimatemember_ajax_urls' ) );
-
-        }
+	/**
+	 * Class AJAX_Common
+	 * @package um\core
+	 */
+	class AJAX_Common {
 
 
-        function ultimatemember_ajax_urls() {
-            $enable_ajax_urls = apply_filters( "um_enable_ajax_urls", true );
+		/**
+		 * AJAX_Common constructor.
+		 */
+		function __construct() {
+			// UM_EVENT => nopriv
+			$ajax_actions = array(
+				'router'   => false
+			);
 
-            if ( $enable_ajax_urls ) { ?>
+			foreach ( $ajax_actions as $action => $nopriv ) {
 
-                <script type="text/javascript">
+				add_action( 'wp_ajax_um_' . $action, array( $this, $action ) );
 
-                    var ultimatemember_image_upload_url = '<?php echo um_url . 'includes/lib/upload/um-image-upload.php'; ?>';
-                    var ultimatemember_file_upload_url = '<?php echo um_url . 'includes/lib/upload/um-file-upload.php'; ?>';
-                    var ultimatemember_ajax_url = '<?php echo admin_url('admin-ajax.php'); ?>';
+				if ( $nopriv )
+					add_action( 'wp_ajax_nopriv_um_' . $action, array( $this, $action ) );
 
-                </script>
-
-            <?php }
-        }
+			}
 
 
-        /**
-         * Router method
-         */
-        function router() {
-            $router = new Router();
-            $router->backend_requests();
-        }
-    }
+			/**
+			 * Fallback for ajax urls
+			 * @uses action hooks: wp_head, admin_head
+			 */
+			//add_action( 'wp_head', array( $this, 'ultimatemember_ajax_urls' ) );
+			//add_action( 'admin_head', array( $this, 'ultimatemember_ajax_urls' ) );
+
+		}
+
+
+		/**
+		 * Router method
+		 */
+		function router() {
+			$router = new Router();
+			$router->backend_requests();
+		}
+	}
 }

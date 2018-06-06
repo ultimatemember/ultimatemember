@@ -9,8 +9,9 @@ foreach( $meta as $k => $v ) {
 $roles_array = array();
 
 foreach ( UM()->roles()->get_roles() as $key => $value ) {
-	if ( ! empty( UM()->query()->get_meta_value( '_um_roles', $key ) ) )
-		$roles_array[] = UM()->query()->get_meta_value( '_um_roles', $key );
+    $_um_roles = UM()->query()->get_meta_value( '_um_roles', $key );
+	if ( ! empty( $_um_roles ) )
+		$roles_array[] = $_um_roles;
 }
 
 $show_these_users = get_post_meta( get_the_ID(), '_um_show_these_users', true );
@@ -26,7 +27,39 @@ $_um_sorting_fields = get_post_meta( $post_id, '_um_sorting_fields', true );
 
 <div class="um-admin-metabox">
 
-	<?php $fields = array(
+	<?php
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_admin_directory_sort_users_select
+	 * @description Extend Sort Types for Member Directory
+	 * @input_vars
+	 * [{"var":"$sort_types","type":"array","desc":"Sort Types"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_filter( 'um_admin_directory_sort_users_select', 'function_name', 10, 1 );
+	 * @example
+	 * <?php
+	 * add_filter( 'um_admin_directory_sort_users_select', 'my_directory_sort_users_select', 10, 1 );
+	 * function my_directory_sort_users_select( $sort_types ) {
+	 *     // your code here
+	 *     return $sort_types;
+	 * }
+	 * ?>
+	 */
+	$sort_options = apply_filters( 'um_admin_directory_sort_users_select', array(
+		'user_registered_desc'	=> __( 'New users first', 'ultimate-member' ),
+		'user_registered_asc'	=> __( 'Old users first', 'ultimate-member' ),
+		'last_login'			=> __( 'Last login', 'ultimate-member' ),
+		'display_name'			=> __( 'Display Name', 'ultimate-member' ),
+		'first_name'			=> __( 'First Name', 'ultimate-member' ),
+		'last_name'				=> __( 'Last Name', 'ultimate-member' ),
+		'random'				=> __( 'Random', 'ultimate-member' ),
+		'other'					=> __( 'Other (custom field)', 'ultimate-member' ),
+	) );
+
+	$fields = array(
 		array(
 			'id'		=> '_um_mode',
 			'type'		=> 'hidden',
@@ -88,16 +121,7 @@ $_um_sorting_fields = get_post_meta( $post_id, '_um_sorting_fields', true );
 			'type'		=> 'select',
 			'label'		=> __( 'Default sort users by', 'ultimate-member' ),
 			'tooltip'	=> __( 'Default sorting users by a specific parameter in the directory', 'ultimate-member' ),
-			'options'	=> apply_filters( 'um_admin_directory_sort_users_select', array(
-				'user_registered_desc'	=> __( 'New users first', 'ultimate-member' ),
-				'user_registered_asc'	=> __( 'Old users first', 'ultimate-member' ),
-				'last_login'			=> __( 'Last login', 'ultimate-member' ),
-				'display_name'			=> __( 'Display Name', 'ultimate-member' ),
-				'first_name'			=> __( 'First Name', 'ultimate-member' ),
-				'last_name'				=> __( 'Last Name', 'ultimate-member' ),
-				'random'				=> __( 'Random', 'ultimate-member' ),
-				'other'					=> __( 'Other (custom field)', 'ultimate-member' ),
-			) ),
+			'options'	=> $sort_options,
 			'value'		=> UM()->query()->get_meta_value( '_um_sortby' ),
 		),
 		array(
@@ -116,6 +140,26 @@ $_um_sorting_fields = get_post_meta( $post_id, '_um_sorting_fields', true );
 		)
 	);
 
+	/**
+	 * UM hook
+	 *
+	 * @type filter
+	 * @title um_admin_extend_directory_options_general
+	 * @description Extend Directory options fields
+	 * @input_vars
+	 * [{"var":"$fields","type":"array","desc":"Directory options fields"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_filter( 'um_admin_directory_sort_users_select', 'function_name', 10, 1 );
+	 * @example
+	 * <?php
+	 * add_filter( 'um_admin_directory_sort_users_select', 'my_directory_sort_users_select', 10, 1 );
+	 * function my_directory_sort_users_select( $sort_types ) {
+	 *     // your code here
+	 *     return $sort_types;
+	 * }
+	 * ?>
+	 */
 	$fields = apply_filters( 'um_admin_extend_directory_options_general', $fields );
 
 	UM()->admin_forms( array(

@@ -1,4 +1,6 @@
 <?php
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 $dirname = dirname( __FILE__ );
 do {
@@ -10,6 +12,7 @@ while( !file_exists( $wp_config ) );
 
 if ( !file_exists( $wp_load ) ) {
     $dirs = glob( $dirname . '/*' , GLOB_ONLYDIR );
+
 
     foreach ( $dirs as $key => $value ) {
         $wp_load = "{$value}/wp-load.php";
@@ -30,7 +33,28 @@ $nonce = $_POST['_wpnonce'];
 UM()->fields()->set_id = $_POST['set_id'];
 UM()->fields()->set_mode = $_POST['set_mode'];
 
-$um_image_upload_nonce = apply_filters("um_image_upload_nonce", true );
+/**
+ * UM hook
+ *
+ * @type filter
+ * @title um_image_upload_nonce
+ * @description Change Image Upload nonce
+ * @input_vars
+ * [{"var":"$nonce","type":"bool","desc":"Nonce"}]
+ * @change_log
+ * ["Since: 2.0"]
+ * @usage
+ * <?php add_filter( 'um_image_upload_nonce', 'function_name', 10, 1 ); ?>
+ * @example
+ * <?php
+ * add_filter( 'um_image_upload_nonce', 'my_image_upload_nonce', 10, 1 );
+ * function my_image_upload_nonce( $nonce ) {
+ *     // your code here
+ *     return $nonce;
+ * }
+ * ?>
+ */
+$um_image_upload_nonce = apply_filters( "um_image_upload_nonce", true );
 
 if(  $um_image_upload_nonce ){
 	if ( ! wp_verify_nonce( $nonce, 'um_upload_nonce-'.$timestamp ) && is_user_logged_in() ) {

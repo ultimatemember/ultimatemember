@@ -62,7 +62,7 @@ jQuery(document).ready( function (){
         var default_value = '';
         var type = um_get_field_type($dom);
 
-        switch (type) {
+        switch ( type ) {
 
             case 'text':
             case 'number':
@@ -211,7 +211,6 @@ jQuery(document).ready( function (){
     function um_apply_conditions($dom, is_single_update) {
         var operators = ['empty', 'not empty', 'equals to', 'not equals', 'greater than', 'less than', 'contains'];
         var key = $dom.parents('.um-field[data-key]').data('key');
-
         var conditions = um_field_conditions[key];
 
         var live_field_value = um_get_field_data($dom);
@@ -284,11 +283,25 @@ jQuery(document).ready( function (){
                 }
             }
 
-            if (condition.operator == 'contains') {
-                if (live_field_value && live_field_value.indexOf(condition.value) >= 0 && um_in_array(live_field_value, $owners_values[condition.owner])) {
-                    $owners[condition.owner][index] = true;
+            if ( condition.operator == 'contains' ) {
+                if ( 'multiselect' == um_get_field_type( $dom.parents('.um-field[data-key]') ) ) {
+                    if ( live_field_value && live_field_value.indexOf( condition.value ) >= 0 && um_in_array( condition.value, live_field_value ) ) {
+                        $owners[condition.owner][index] = true;
+                    } else {
+                        $owners[condition.owner][index] = false;
+                    }
+                } else if ( 'checkbox' == um_get_field_type( $dom.parents('.um-field[data-key]') ) ) {
+                    if ( live_field_value && live_field_value.indexOf( condition.value ) >= 0 ) {
+                        $owners[condition.owner][index] = true;
+                    } else {
+                        $owners[condition.owner][index] = false;
+                    }
                 } else {
-                    $owners[condition.owner][index] = false;
+                    if ( live_field_value && live_field_value.indexOf( condition.value ) >= 0 && um_in_array( live_field_value, $owners_values[ condition.owner ] ) ) {
+                        $owners[condition.owner][index] = true;
+                    } else {
+                        $owners[condition.owner][index] = false;
+                    }
                 }
             }
 
@@ -354,7 +367,7 @@ jQuery(document).ready( function (){
             case 'number':
             case 'date':
             case 'textarea':
-                $dom.find('input:text,input[type=number],textarea,select').val(field.value);
+                $dom.find('input:text,input[type=number],textareas').val(field.value);
                 break;
 
             case 'select':
@@ -429,7 +442,7 @@ jQuery(document).ready( function (){
         if ( ! $dom.hasClass( 'um-field-has-changed' ) ) {
             var me = um_get_field_element( $dom );
 
-            if ( type == 'radio' ) {
+            if ( type == 'radio' || type == 'checkbox' ) {
                 me = me.find( ':checked' );
             }
 
@@ -437,6 +450,22 @@ jQuery(document).ready( function (){
                 me.trigger( 'change' );
                 $dom.addClass( 'um-field-has-changed' );
             }
+
+            /*
+            maybe future fix
+            if ( me ) {
+                if ( type == 'radio' || type == 'checkbox' ) {
+                    me.each( function() {
+                       if ( jQuery(this).is(':checked') ) {
+                           jQuery(this).trigger('change');
+                       }
+                    });
+                } else {
+                    me.trigger( 'change' );
+                }
+
+                $dom.addClass( 'um-field-has-changed' );
+            }*/
         }
     }
 
@@ -461,7 +490,7 @@ jQuery(document).ready( function (){
      * @param  object $dom
      */
     function _hide_in_ie( $dom ){
-        if( jQuery.browser.msie ){
+        if ( typeof( jQuery.browser ) != 'undefined' && jQuery.browser.msie ) {
            $dom.css({"visibility":"hidden"});
         }
     }
@@ -471,7 +500,7 @@ jQuery(document).ready( function (){
      * @param  object $dom
      */
     function _show_in_ie( $dom ){
-        if( jQuery.browser.msie ){
+        if ( typeof( jQuery.browser ) != 'undefined' && jQuery.browser.msie ) {
            $dom.css({"visibility":"visible"});
         }
     }
@@ -482,6 +511,11 @@ jQuery(document).ready( function (){
     });
 
     jQuery(document).on('input change', '.um-field input[type=text]', function () {
+        var me = jQuery(this);
+        um_apply_conditions(me, false);
+    });
+
+    jQuery(document).on('input change', '.um-field input[type=password]', function () {
         var me = jQuery(this);
         um_apply_conditions(me, false);
     });

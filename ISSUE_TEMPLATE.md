@@ -16,6 +16,11 @@ Tell us what happens instead
 ### Steps to reproduce the behavior
 Tell us how to reproduce this issue. 
 
+## PHP version
+- [x] 7.1 above
+- [ ] 5.4 
+- [ ] 5.3 below
+
 ### Do you use UM extensions? 
 - [ ] Private Content 
 - [ ] Instagram

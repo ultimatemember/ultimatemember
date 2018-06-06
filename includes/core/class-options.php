@@ -4,13 +4,24 @@ namespace um\core;
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Options' ) ) {
+if ( ! class_exists( 'um\core\Options' ) ) {
+
+
+	/**
+	 * Class Options
+	 * @package um\core
+	 */
 	class Options {
 
-		var $options = array();
 
 		/**
-		 * Access constructor.
+		 * @var array
+		 */
+		var $options = array();
+
+
+		/**
+		 * Options constructor.
 		 */
 		function __construct() {
 			$this->init_variables();
@@ -32,8 +43,30 @@ if ( ! class_exists( 'Options' ) ) {
 		 * @return mixed|string|void
 		 */
 		function get( $option_id ) {
-			if ( isset( $this->options[ $option_id ] ) )
+			if ( isset( $this->options[ $option_id ] ) ) {
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_get_option_filter__{$option_id}
+				 * @description Change UM option on get by $option_id
+				 * @input_vars
+				 * [{"var":"$option","type":"array","desc":"Option Value"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage
+				 * <?php add_filter( 'um_get_option_filter__{$option_id}', 'function_name', 10, 1 ); ?>
+				 * @example
+				 * <?php
+				 * add_filter( 'um_get_option_filter__{$option_id}', 'my_get_option_filter', 10, 1 );
+				 * function my_get_option_filter( $option ) {
+				 *     // your code here
+				 *     return $option;
+				 * }
+				 * ?>
+				 */
 				return apply_filters( "um_get_option_filter__{$option_id}", $this->options[ $option_id ] );
+			}
 
 			switch ( $option_id ) {
 				case 'site_name':
@@ -88,6 +121,39 @@ if ( ! class_exists( 'Options' ) ) {
 				return false;
 
 			return $settings_defaults[ $option_id ];
+		}
+
+
+		/**
+		 * Get core page ID
+		 *
+		 * @param string $key
+		 *
+		 * @return mixed|void
+		 */
+		function get_core_page_id( $key ) {
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_core_page_id_filter
+			 * @description Change UM page slug
+			 * @input_vars
+			 * [{"var":"$slug","type":"array","desc":"UM page slug"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_core_page_id_filter', 'function_name', 10, 1 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_core_page_id_filter', 'my_core_page_id', 10, 1 );
+			 * function my_core_page_id( $slug ) {
+			 *     // your code here
+			 *     return $slug;
+			 * }
+			 * ?>
+			 */
+			return apply_filters( 'um_core_page_id_filter', 'core_' . $key );
 		}
 
 	}

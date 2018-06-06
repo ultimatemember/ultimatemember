@@ -4,132 +4,153 @@ namespace um\core;
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Chart' ) ) {
-    class Chart {
+if ( ! class_exists( 'um\core\Chart' ) ) {
 
-        function __construct() {
 
-        }
+	/**
+	 * Class Chart
+	 * @package um\core
+	 */
+	class Chart {
 
-        /***
-         ***	@Create a new chart
-         ***/
-        function create( $args=array() ){
 
-            $defaults = array(
-                'id' => 0,
-                'type' => 'LineChart',
-                'data' => null,
-                'x_label' => null,
-                'y_label' => null,
-                'vertical_max_lines' => 6,
-                'colors' => '#0085ba',
-                'backgroundcolor' => 'transparent',
-                'basetextcolor' => '#666',
-                'basebordercolor' => '#bbb',
-                'days' => 30
-            );
+		/**
+		 * Chart constructor.
+		 */
+		function __construct() {
 
-            $args = wp_parse_args( $args, $defaults );
-            extract($args);
+		}
 
-            if ($type == 'LineChart'){
-                $this->linechart( $args );
-            }
 
-        }
+		/**
+		 * Create a new chart
+		 *
+		 * @param array $args
+		 */
+		function create( $args = array() ) {
 
-        /***
-         ***	@LineChart
-         ***/
-        function linechart(	$args ){
+			$defaults = array(
+				'id'                    => 0,
+				'type'                  => 'LineChart',
+				'data'                  => null,
+				'x_label'               => null,
+				'y_label'               => null,
+				'vertical_max_lines'    => 6,
+				'colors'                => '#0085ba',
+				'backgroundcolor'       => 'transparent',
+				'basetextcolor'         => '#666',
+				'basebordercolor'       => '#bbb',
+				'days'                  => 30
+			);
 
-            extract($args);
+			$args = wp_parse_args( $args, $defaults );
 
-            ?>
 
-            <script type="text/javascript">
+			/**
+			 * @var $type
+			 */
+			extract( $args );
 
-                google.load("visualization", "1", {packages:["corechart"]});
+			if ( $type == 'LineChart' ) {
+				$this->linechart( $args );
+			}
+		}
 
-                function draw_linechart() {
 
-                    var data = new google.visualization.DataTable();
-                    data.addColumn('string', '<?php echo $x_label; ?>');
-                    data.addColumn('number', '<?php echo $y_label; ?>');
+		/**
+		 * LineChart
+		 *
+		 * @param $args
+		 */
+		function linechart( $args ) {
+			/**
+			 * @var $x_label
+			 * @var $y_label
+			 * @var $vertical_max_lines
+			 * @var $backgroundcolor
+			 * @var $colors
+			 * @var $basebordercolor
+			 * @var $basetextcolor
+			 * @var $data
+			 * @var $id
+			 */
+			extract( $args ); ?>
 
-                    <?php
+			<script type="text/javascript">
 
-                    if (isset($data_y) && !empty($data_y)){
+				google.load( "visualization", "1", {packages:["corechart"]});
 
-                        foreach($data_y as $key => $val){
+				function draw_linechart() {
 
-                        }
+					var data = new google.visualization.DataTable();
+					data.addColumn('string', '<?php echo $x_label; ?>');
+					data.addColumn('number', '<?php echo $y_label; ?>');
 
-                    }
+					<?php /*if ( ! empty( $data_y ) ) {
 
-                    ?>
+						foreach ( $data_y as $key => $val ) {
 
-                    var min_data = 0;
-                    var max_data = data.getColumnRange(1).max;
+						}
 
-                    var vgrid_count = <?php echo $vertical_max_lines; ?>;
-                    var hgrid_count = Math.floor( data.getNumberOfRows() / 4 );
+					}*/ ?>
 
-                    /* Options */
-                    var options = {
-                        backgroundColor: '<?php echo $backgroundcolor; ?>',
-                        colors: ['<?php echo $colors; ?>'],
-                        curveType: 'function',
-                        pointSize: 8,
-                        lineWidth: 4,
-                        vAxis:{
-                            baselineColor: '<?php echo $basebordercolor; ?>',
-                            gridlineColor: '<?php echo $basebordercolor; ?>',
-                            gridlines: {color: 'transparent', count: vgrid_count},
-                            textStyle: {color: '<?php echo $basetextcolor; ?>', fontSize: 12 },
-                            format: '#',
-                            viewWindow: {min: min_data, max: max_data + 10}
-                        },
-                        hAxis:{
-                            textStyle: {color: '<?php echo $basetextcolor; ?>', fontSize: 12, italic: true },
-                            showTextEvery: hgrid_count,
-                            maxAlternation: 1,
-                            maxTextLines: 1
-                        },
-                        legend: {
-                            position: 'top',
-                            alignment: 'start',
-                            textStyle: {color: '<?php echo $basetextcolor; ?>', fontSize: 13}
-                        },
-                        tooltip: {
-                            textStyle: {color: '<?php echo $basetextcolor; ?>', fontSize: 12}
-                        },
-                        chartArea: {
-                            top:50,left:30,width: '95%', 'height' : ( vgrid_count * 50 ) - 100,
-                            backgroundColor: {
-                                stroke: '<?php echo $basebordercolor; ?>',
-                                strokeWidth: 1
-                            }
-                        },
-                        width: '100%',
-                        height: ( vgrid_count * 50 )
-                    };
+					var min_data = 0;
+					var max_data = data.getColumnRange(1).max;
 
-                    var chart = new google.visualization.LineChart(document.getElementById('chart_<?php echo $data . $id; ?>'));
-                    chart.draw(data, options);
+					var vgrid_count = <?php echo $vertical_max_lines; ?>;
+					var hgrid_count = Math.floor( data.getNumberOfRows() / 4 );
 
-                }
+					/* Options */
+					var options = {
+						backgroundColor: '<?php echo $backgroundcolor; ?>',
+						colors: ['<?php echo $colors; ?>'],
+						curveType: 'function',
+						pointSize: 8,
+						lineWidth: 4,
+						vAxis:{
+							baselineColor: '<?php echo $basebordercolor; ?>',
+							gridlineColor: '<?php echo $basebordercolor; ?>',
+							gridlines: {color: 'transparent', count: vgrid_count},
+							textStyle: {color: '<?php echo $basetextcolor; ?>', fontSize: 12 },
+							format: '#',
+							viewWindow: {min: min_data, max: max_data + 10}
+						},
+						hAxis:{
+							textStyle: {color: '<?php echo $basetextcolor; ?>', fontSize: 12, italic: true },
+							showTextEvery: hgrid_count,
+							maxAlternation: 1,
+							maxTextLines: 1
+						},
+						legend: {
+							position: 'top',
+							alignment: 'start',
+							textStyle: {color: '<?php echo $basetextcolor; ?>', fontSize: 13}
+						},
+						tooltip: {
+							textStyle: {color: '<?php echo $basetextcolor; ?>', fontSize: 12}
+						},
+						chartArea: {
+							top:50,left:30,width: '95%', 'height' : ( vgrid_count * 50 ) - 100,
+							backgroundColor: {
+								stroke: '<?php echo $basebordercolor; ?>',
+								strokeWidth: 1
+							}
+						},
+						width: '100%',
+						height: ( vgrid_count * 50 )
+					};
 
-            </script>
+					var chart = new google.visualization.LineChart( document.getElementById( 'chart_<?php echo $data . $id; ?>' ) );
+					chart.draw( data, options );
 
-            <div id="chart_<?php echo $data . $id; ?>">
+				}
 
-            </div>
+			</script>
 
-            <?php
+			<div id="chart_<?php echo $data . $id; ?>"></div>
 
-        }
+			<?php
+		}
 
-    }
+	}
 }

@@ -69,7 +69,7 @@ jQuery(document).ready(function() {
 		return false;
 	});
 	
-	jQuery(document).on('click', '.um-finish-upload.file', function(){
+	jQuery(document).on('click', '.um-finish-upload.file:not(.disabled)', function(){
 		
 		var key = jQuery(this).attr('data-key');
 		var preview = jQuery(this).parents('.um-modal-body').find('.um-single-file-preview').html();
@@ -83,7 +83,7 @@ jQuery(document).ready(function() {
 		jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('input[type=hidden]').val( jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('.um-single-fileinfo a').attr('href') );
 	});
 
-	jQuery(document).on('click', '.um-finish-upload.image', function(){
+	jQuery(document).on('click', '.um-finish-upload.image:not(.disabled)', function(){
 		
 		var elem = jQuery(this);
 		var key = jQuery(this).attr('data-key');

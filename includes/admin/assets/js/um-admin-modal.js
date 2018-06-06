@@ -87,7 +87,7 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 					editor.setContent( jQuery('.um-admin-modal:visible .dynamic-mce-content').html() );
 
 				} else {
-				
+                    tinyMCE.get('um_editor_new').setContent('');
 					tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_new');
 					jQuery('.um-admin-editor:visible').html( jQuery('.um-hidden-editor-new').contents() );
 					tinyMCE.execCommand('mceAddEditor', true, 'um_editor_new');
@@ -305,7 +305,7 @@ jQuery(document).ready(function() {
 			} else {
 				v_id = '.postbox';
 			}
-			jQuery( v_id ).find('input#_icon,input#_um_icon').val( icon_selected );
+			jQuery( v_id ).find('input#_icon,input#_um_icon,input#notice__um_icon').val( icon_selected );
 			jQuery( v_id ).find('span.um-admin-icon-value').html('<i class="'+icon_selected+'"></i>');
 			jQuery( v_id ).find('.um-admin-icon-clear').show();
 		}
@@ -321,6 +321,10 @@ jQuery(document).ready(function() {
 	jQuery(document).on('click', 'span.um-admin-icon-clear', function(){
 		var element = jQuery(this).parents('p');
 		jQuery('#UM_fonticons a.um-admin-modal-back').attr('data-code', '');
+		element.find('input[type=hidden]').val('');
+		element.find('.um-admin-icon-value').html('No Icon');
+
+		element = jQuery(this).parents('td');
 		element.find('input[type=hidden]').val('');
 		element.find('.um-admin-icon-value').html('No Icon');
 		jQuery(this).hide();

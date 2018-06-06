@@ -17,10 +17,10 @@
 					<span class="um-member-status {{{user.account_status}}}">{{{user.account_status_name}}}</span>
 
 					<?php if ( $cover_photos ) {
-						$sizes = um_get_option( 'cover_thumb_sizes' );
+						$sizes = UM()->options()->get( 'cover_thumb_sizes' );
 						$cover_size = UM()->mobile()->isTablet() ? $sizes[1] : $sizes[0]; ?>
 
-						<div class="um-member-cover" data-ratio="<?php echo um_get_option( 'profile_cover_ratio' ); ?>">
+						<div class="um-member-cover" data-ratio="<?php echo UM()->options()->get( 'profile_cover_ratio' ); ?>">
 							<div class="um-member-cover-e">
 								<a href="{{{user.profile_url}}}" title="{{{user.display_name}}}">
 									{{{user.cover_photo}}}
@@ -31,7 +31,7 @@
 					<?php }
 
 					if ( $profile_photo ) { ?>
-						<div class="um-member-photo radius-<?php echo um_get_option( 'profile_photocorner' ); ?>">
+						<div class="um-member-photo radius-<?php echo UM()->options()->get( 'profile_photocorner' ); ?>">
 							<a href="{{{user.profile_url}}}" title="{{{user.display_name}}}">
 								{{{user.avatar}}}
 							</a>

@@ -1,4 +1,4 @@
-=== Ultimate Member - User Profile & Membership Plugin ===
+﻿=== Ultimate Member - User Profile & Membership Plugin ===
 Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember, champsupertramp, nsinelnikov
@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.1
 Tested up to: 4.9
-Stable tag: 1.3.88
+Stable tag: 2.0.17
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -71,6 +71,10 @@ If you're a developer and would like to contribute to the source code of the plu
 
 Want to add a new language to Ultimate Member? Great! You can contribute via [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/ultimate-member).
 
+If you are a developer and you need to know the list of UM Hooks, make this via our [Hooks Documentation](https://docs.ultimatemember.com/article/1324-hooks-list).
+
+If you are a developer and you need to know the structure of our code, make this via our [Documentation API](https://ultimatemember.com/php-docs/).
+
 = Documentation & Support =
 
 Got a problem or need help with Ultimate Member? Head over to our [documentation](http://docs.ultimatemember.com/) and perform a search of the knowledge base. If you can’t find a solution to your issue then you can create a topic on the [support forum](https://wordpress.org/support/plugin/ultimate-member).
@@ -125,6 +129,163 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 == Changelog ==
 
+= Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
+
+= 2.0.18-alpha1: =
+
+* Enhancements:
+  - Added UM dashboard widget for getting latest extension's upgrades
+
+* Bugfixes:
+  - Fixed PHP memory limit issue on some installs. Created pseudo-constructor
+  - Disabled email notification to user, which wasn't approved about delete their account
+
+= 2.0.17: May 30, 2018 =
+
+* Enhancements:
+  - Added UM dashboard widget for getting latest extension's upgrades
+
+* Bugfixes:
+  - Fixed User Profile restriction when the user isn't logged in
+  - Fixed Profile Tabs displaying on desktop/mobile
+  - Fixed set user status after registration on some installs
+  - Fixed PHP memory limit issue on some installs with small PHP memory limit
+  - Fixed PHP validation on submit UM Forms with conditional fields logic
+
+= 2.0.16: May 23, 2018 =
+
+* Bugfixes:
+  - Fixed Profile Tabs issues
+
+= 2.0.15: May 22, 2018 =
+
+* Bugfixes:
+  - Fixed GDPR min.js script
+
+= 2.0.14: May 22, 2018 =
+
+* Enhancements:
+  - Added support for GDPR Personal Data Exporter
+  - Added support for GDPR Personal Data Eraser
+  - Added new privacy field to form builder for GDPR consent collection
+  - Added GDPR privacy policy guide text
+  - Added GDPR compatibility on delete user process
+  - Added security to Restricted posts comments
+  - Added security to custom field type `Password`
+  - Deprecated time checking spam bot
+
+* Bugfixes:
+  - Fixed settings tabs for PHP7.1
+  - Fixed issues with Profile Tabs
+  - Fixed User Avatars
+  - Fixed set user status on Registration process
+  - Fixed Account Privacy tab content
+
+= 2.0.13: May 2, 2018 =
+
+* Bugfixes:
+  - Fixed and optimized user avatars
+  - Fixed Profile Menu on some installs
+  - Fixed fields IDs duplicates
+  - Fixed cache users count
+
+= 2.0.12: April 30, 2018 =
+
+* Bugfixes:
+  - Fixed approving users with "Administrator" role
+  - Fixed problem with URLs for upload images
+  - Fixed not UM roles, which start from "um_" symbols
+  - Fixed content restriction logic
+
+= 2.0.11: April 19, 2018 =
+
+* Bugfixes:
+  - Fixed profile form JS
+
+= 2.0.10: April 17, 2018 =
+
+* Bugfixes:
+  - Fixed Profile Form field privacy
+  - Fixed conditional menu logic for 2 different nav menu hooks
+  - Fixed registration form preview on wp-admin screen
+  - Restored old CSS settings to "um_old_settings.css"
+  - Clean user's cache
+
+= 2.0.9: April 15, 2018 =
+
+* Bugfixes:
+  - Fixed registration form role
+
+= 2.0.8: April 13, 2018 =
+
+* Bugfixes:
+  - Fixed license activation
+
+= 2.0.7: April 13, 2018 =
+
+* Bugfixes:
+  - Fixed add rewrite rules for UM pages
+  - Fixed Profile Form, Registration Form use custom settings and role
+  - Fixed save settings security
+
+= 2.0.6: April 12, 2018 =
+
+* Bugfixes:
+  - Fixed nav-menu content restriction issues for Administrator role
+
+= 2.0.5: April 12, 2018 =
+
+* Bugfixes:
+  - Fixed old pre2.0 extensions notices
+  - Fixed nav-menu content restriction issues
+  - Fixed lost password URL in UM Login Form
+  - Fixed restriction message on taxonomy page, which is restricted
+
+= 2.0.4: April 10, 2018 =
+
+* Enhancements:
+  - Added activation dependencies for extensions
+  - Added Licenses checking and changed Licenses page
+  - Added uninstall.php file for delete permanently all UM settings
+  - Added ability to register users without WP Registration enabled
+  - Added visual integration WPML+UM email notifications
+  - Added Account Upgrade email notification
+  - Added ability to register users using role field on Registration Form
+  - Added Account page shortcodes for each tab content
+  - Changed UM Option View (deprecated/added options)
+  - Changed UM Roles, optimized for WP native logic
+  - Changed backend forms/fields to WP native styles
+  - Changed Content Restriction feature for posts, taxonomies, menus
+  - Changed Email Notifications settings and using templates logic
+  - Deprecated Redux Framework
+  - Deprecated old unusable options
+  - Deprecated old unusable forms metadata
+  - Deprecated old unusable member directories metadata
+  - Deprecated old unusable user roles metadata
+  - Optimized registration/upgrade profile process (some hook deprecated)
+  - Optimized some code parts, deprecated some functions
+  - Updated `FontAwesome` library
+  - Removed addons to separate extensions
+  - Created Plugin Updater for getting updates and license details from Shop
+  - Increased integration abilities, added new hooks (see new Hooks Docs + PHP documentation);
+  - Integrated plugin activation, user creation processes with multisite
+  - Make dependencies with extensions
+  - OOP structure without procedural methods for wp-admin side;
+
+* Bugfixes:
+  - Fixed avatars on some SSL installs
+  - Fixed some vulnerabilities
+  - Fixed integrations with core/extensions
+  - Fixed `Edit Profile` button at members directory
+  - Fixed conditional logic PHP validation and JS validation (for IE,Edge browsers)
+  - Fixed textdomains for translations
+  - Fixed integration with Woocommerce, SEO Framework, WPML
+  - Fixed navigation menu items custom fields (`Mega Menu`, etc. compatibility)
+  - Fixed theme conflicts with UM js libraries
+  - Fixed and optimized handlers for user permalinks
+  - Fixed replace placeholders for users
+  - Fixed conditional fields logic
+  - Fixed fields sanitize for remove XSS injections
 
 = 1.3.88: July 25, 2017 =
 

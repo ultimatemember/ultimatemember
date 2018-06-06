@@ -23,8 +23,8 @@
                     <span class="um-member-status {{{user.account_status}}}">{{{user.account_status_name}}}</span>
 
                     <?php if ( $profile_photo ) {
-                        $default_size = str_replace( 'px', '', um_get_option( 'profile_photosize' ) );
-                        $corner = um_get_option( 'profile_photocorner' ); ?>
+                        $default_size = str_replace( 'px', '', UM()->options()->get( 'profile_photosize' ) );
+                        $corner = UM()->options()->get( 'profile_photocorner' ); ?>
 
                         <div class="um-member-photo radius-<?php echo $corner; ?>">
                             <a href="{{{user.profile_url}}}" title="{{{user.display_name}}}">

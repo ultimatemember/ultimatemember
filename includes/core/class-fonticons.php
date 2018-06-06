@@ -4,40 +4,50 @@ namespace um\core;
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'FontIcons' ) ) {
-    class FontIcons {
+if ( ! class_exists( 'um\core\FontIcons' ) ) {
 
-        function __construct() {
 
-            if ( ! get_option( 'um_cache_fonticons' ) ) {
+	/**
+	 * Class FontIcons
+	 * @package um\core
+	 */
+	class FontIcons {
 
-                $files['ii'] = um_path . 'assets/css/um-fonticons-ii.css';
-                $files['fa'] = um_path . 'assets/css/um-fonticons-fa.css';
 
-                foreach ( $files as $c => $file ) {
+		/**
+		 * FontIcons constructor.
+		 */
+		function __construct() {
 
-                    $css = file_get_contents( $file );
+			if ( ! get_option( 'um_cache_fonticons' ) ) {
 
-                    if ( $c == 'fa' ) {
-                        preg_match_all('/(um-faicon-.*?)\s?\{/', $css, $matches);
-                    } else {
-                        preg_match_all('/(um-icon-.*?)\s?\{/', $css, $matches);
-                    }
+				$files['ii'] = um_path . 'assets/css/um-fonticons-ii.css';
+				$files['fa'] = um_path . 'assets/css/um-fonticons-fa.css';
 
-                    unset( $matches[1][0] );
-                    foreach ( $matches[1] as $match ) {
-                        $icon = str_replace( ':before', '', $match );
-                        $array[] = $icon;
-                    }
+				foreach ( $files as $c => $file ) {
 
-                }
+					$css = file_get_contents( $file );
 
-                update_option( 'um_cache_fonticons', $array );
-            }
+					if ( $c == 'fa' ) {
+						preg_match_all('/(um-faicon-.*?)\s?\{/', $css, $matches);
+					} else {
+						preg_match_all('/(um-icon-.*?)\s?\{/', $css, $matches);
+					}
 
-            $this->all = get_option( 'um_cache_fonticons' );
+					unset( $matches[1][0] );
+					foreach ( $matches[1] as $match ) {
+						$icon = str_replace( ':before', '', $match );
+						$array[] = $icon;
+					}
 
-        }
+				}
 
-    }
+				update_option( 'um_cache_fonticons', $array );
+			}
+
+			$this->all = get_option( 'um_cache_fonticons' );
+
+		}
+
+	}
 }

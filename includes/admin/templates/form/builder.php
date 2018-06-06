@@ -1,9 +1,6 @@
-<?php
-
-if ( empty( UM()->builder()->form_id ) ) {
+<?php if ( empty( UM()->builder()->form_id ) ) {
 	UM()->builder()->form_id = $this->form_id;
-}
-?>
+} ?>
 
 <div class="um-admin-builder" data-form_id="<?php echo UM()->builder()->form_id; ?>">
 
