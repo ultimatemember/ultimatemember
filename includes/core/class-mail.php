@@ -366,12 +366,19 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 */
 		function locate_template( $template_name ) {
 			// check if there is template at theme folder
-
 			$blog_id = $this->get_blog_id();
 
+			//get template file from current blog ID folder
 			$template = locate_template( array(
 				trailingslashit( 'ultimate-member/email' . $blog_id ) . $template_name . '.php'
 			) );
+
+			//if there isn't template at theme folder for current blog ID get template file from theme folder
+			if ( is_multisite() && ! $template ) {
+				$template = locate_template( array(
+					trailingslashit( 'ultimate-member/email' ) . $template_name . '.php'
+				) );
+			}
 
 			//if there isn't template at theme folder get template file from plugin dir
 			if ( ! $template ) {
@@ -451,10 +458,17 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 			$blog_id = $this->get_blog_id();
 
-			// check if there is template at theme folder
+			// check if there is template at theme blog ID folder
 			$template = locate_template( array(
 				trailingslashit( 'ultimate-member/email' . $blog_id ) . $template_name_file . $ext
 			) );
+
+			//if there isn't template at theme folder for current blog ID get template file from theme folder
+			if ( is_multisite() && ! $template ) {
+				$template = locate_template( array(
+					trailingslashit( 'ultimate-member/email' ) . $template_name_file . $ext
+				) );
+			}
 
 			// Return what we found.
 			return ! $template ? false : true;
