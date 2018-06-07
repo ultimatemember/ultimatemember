@@ -147,6 +147,20 @@ function um_upgrade20beta1_email_templates_process() {
 
 			if ( file_exists( $theme_template_path_html ) ) {
 
+				$temp_path = str_replace( trailingslashit( get_stylesheet_directory() ), '', $theme_template_path );
+				$temp_path = str_replace( '/', DIRECTORY_SEPARATOR, $temp_path );
+				$folders = explode( DIRECTORY_SEPARATOR, $temp_path );
+				$folders = array_splice( $folders, 0, count( $folders ) - 1 );
+				$cur_folder = '';
+				$theme_dir = trailingslashit( get_stylesheet_directory() );
+				foreach ( $folders as $folder ) {
+					$prev_dir = $cur_folder;
+					$cur_folder .= $folder . DIRECTORY_SEPARATOR;
+					if ( ! is_dir( $theme_dir . $cur_folder ) && wp_is_writable( $theme_dir . $prev_dir ) ) {
+						mkdir( $theme_dir . $cur_folder, 0777 );
+					}
+				}
+
 				if ( copy( $theme_template_path_html, $theme_template_path ) ) {
 
 					um_upgrade20beta1_insert_content( $theme_template_path, $setting_value );
