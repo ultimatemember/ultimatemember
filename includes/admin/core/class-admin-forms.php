@@ -1040,11 +1040,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			ob_start(); ?>
 
 			<div class="email_template_wrapper <?php echo $field_data['in_theme'] ? 'in_theme' : '' ?>" data-key="<?php echo $field_data['id'] ?>" style="position: relative;">
-				<!--                <input type="button" class="reset_email_template button" value="--><?php //_e( 'Reset Template to Default', 'ultimate-member' ) ?><!--" />-->
-				<!--<div class="copy_button_overlay">
-                    <span><?php /*_e( 'Currently UM use default Email Template, you can edit this template after then you copy in to theme', 'ultimate-member' ) */?></span>
-                    <input type="button" class="copy_email_template button" value="<?php /*_e( 'Copy Template to Theme', 'ultimate-member' ) */?>" />
-                </div>-->
 
 				<?php wp_editor( $value,
 					$id,
