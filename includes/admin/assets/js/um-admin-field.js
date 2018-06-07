@@ -1,20 +1,15 @@
 jQuery(document).ready(function() {
 
-    /* Remove deleted condition fields */
-    jQuery(document).on('click', '', function(){
-
-    });
-
 	/* Remove field permanently */
 	jQuery(document).on('click', '.um-admin-btns a span.remove', function(e){
 		e.preventDefault();
-		
-		if (confirm('This will permanently delete this custom field from database')) {
-		
+
+		if ( confirm( 'This will permanently delete this custom field from database' ) ) {
+
 			jQuery(this).parents('a').remove();
-			
+
 			arg1 = jQuery(this).parents('a').data('arg1');
-			
+
 			jQuery.ajax({
 				url: um_admin_field_data.do_ajax_url,
 				type: 'POST',
@@ -26,13 +21,12 @@ jQuery(document).ready(function() {
 
 				}
 			});
-		
-			
 		}
-		
+
 		return false;
 	});
-	
+
+
 	/* Add a Field */
 	jQuery(document).on('submit', 'form.um_add_field', function(e){
 		
