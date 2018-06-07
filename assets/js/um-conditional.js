@@ -502,22 +502,22 @@ jQuery(document).ready( function (){
         }
     }
 
-    jQuery(document).on('change', '.um-field select, .um-field input[type=radio], .um-field input[type=checkbox]', function () {
+    jQuery(document).on('change', '.um-field select, .um-field input[type="radio"], .um-field input[type="checkbox"]', function () {
         var me = jQuery(this);
         um_apply_conditions(me, false);
     });
 
-    jQuery(document).on('input change', '.um-field input[type=text]', function () {
+    jQuery(document).on('input change', '.um-field input[type="text"]', function () {
         var me = jQuery(this);
         um_apply_conditions(me, false);
     });
 
-    jQuery(document).on('input change', '.um-field input[type=number]', function () {
+    jQuery(document).on('input change', '.um-field input[type="number"]', function () {
         var me = jQuery(this);
         um_apply_conditions(me, false);
     });
 
-    jQuery(document).on('input change', '.um-field input[type=password]', function () {
+    jQuery(document).on('input change', '.um-field input[type="password"]', function () {
         var me = jQuery(this);
         um_apply_conditions(me, false);
     });

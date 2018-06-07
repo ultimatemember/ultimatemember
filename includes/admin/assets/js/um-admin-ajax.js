@@ -28,7 +28,6 @@ jQuery(document).ready(function() {
 		jQuery('.tipsy').hide();
 				
 		um_admin_remove_modal();
-		console.log(um_admin_ajax_data.ajax_url);
 		jQuery.ajax({
 			url: um_admin_ajax_data.ajax_url,
 			type: 'POST',
