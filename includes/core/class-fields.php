@@ -182,8 +182,38 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 */
 		function delete_field_from_form( $id, $form_id ) {
 			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
-			if (isset( $fields[$id] )) {
-				unset( $fields[$id] );
+
+			if ( isset( $fields[ $id ] ) ) {
+				$condition_fields = get_option( 'um_fields' );
+
+				foreach ( $condition_fields as $key => $value ) {
+					$deleted_field = array_search( $id, $value );
+
+					if ( $key != $id && $deleted_field != false ) {
+						$deleted_field_id = str_replace( 'conditional_field', '', $deleted_field );
+
+						if ( $deleted_field_id == '' ) {
+							$arr_id = 0;
+						} else {
+							$arr_id = $deleted_field_id;
+						}
+
+						unset( $condition_fields[ $key ][ 'conditional_action' . $deleted_field_id ] );
+						unset( $condition_fields[ $key ][ $deleted_field ] );
+						unset( $condition_fields[ $key ][ 'conditional_operator' . $deleted_field_id ] );
+						unset( $condition_fields[ $key ][ 'conditional_value' . $deleted_field_id ] );
+						unset( $condition_fields[ $key ]['conditions'][ $arr_id ] );
+
+						unset( $fields[ $key ][ 'conditional_action' . $deleted_field_id ] );
+						unset( $fields[ $key ][ $deleted_field ] );
+						unset( $fields[ $key ][ 'conditional_operator' . $deleted_field_id ] );
+						unset( $fields[ $key ][ 'conditional_value' . $deleted_field_id ] );
+						unset( $fields[ $key ]['conditions'][ $arr_id ] );
+					}
+				}
+
+				update_option( 'um_fields' , $condition_fields );
+				unset( $fields[ $id ] );
 				UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
 			}
 		}
@@ -4010,23 +4040,23 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			switch ($act_id) {
 
 				case 'um_admin_duplicate_field':
-					UM()->fields()->duplicate_field( $arg1, $arg2 );
+					$this->duplicate_field( $arg1, $arg2 );
 					break;
 
 				case 'um_admin_remove_field_global':
-					UM()->fields()->delete_field_from_db( $arg1 );
+					$this->delete_field_from_db( $arg1 );
 					break;
 
 				case 'um_admin_remove_field':
-					UM()->fields()->delete_field_from_form( $arg1, $arg2 );
+					$this->delete_field_from_form( $arg1, $arg2 );
 					break;
 
 				case 'um_admin_add_field_from_predefined':
-					UM()->fields()->add_field_from_predefined( $arg1, $arg2, $position );
+					$this->add_field_from_predefined( $arg1, $arg2, $position );
 					break;
 
 				case 'um_admin_add_field_from_list':
-					UM()->fields()->add_field_from_list( $arg1, $arg2, $position );
+					$this->add_field_from_list( $arg1, $arg2, $position );
 					break;
 
 			}

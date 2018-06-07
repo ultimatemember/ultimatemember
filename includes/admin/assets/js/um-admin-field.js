@@ -3,13 +3,13 @@ jQuery(document).ready(function() {
 	/* Remove field permanently */
 	jQuery(document).on('click', '.um-admin-btns a span.remove', function(e){
 		e.preventDefault();
-		
-		if (confirm('This will permanently delete this custom field from database')) {
-		
+
+		if ( confirm( 'This will permanently delete this custom field from database' ) ) {
+
 			jQuery(this).parents('a').remove();
-			
+
 			arg1 = jQuery(this).parents('a').data('arg1');
-			
+
 			jQuery.ajax({
 				url: um_admin_field_data.do_ajax_url,
 				type: 'POST',
@@ -21,13 +21,12 @@ jQuery(document).ready(function() {
 
 				}
 			});
-		
-			
 		}
-		
+
 		return false;
 	});
-	
+
+
 	/* Add a Field */
 	jQuery(document).on('submit', 'form.um_add_field', function(e){
 		
@@ -50,9 +49,8 @@ jQuery(document).ready(function() {
 				form.css({'opacity': 1});
 			},
 			success: function(data){
-				
 				if (data.error){
-				
+
 					c = 0;
 					jQuery.each(data.error, function(i, v){
 						c++;
@@ -61,11 +59,11 @@ jQuery(document).ready(function() {
 						form.find('.um-admin-error-block').show().html(v);
 						}
 					});
-					
+
 					um_admin_modal_responsive();
-					
+
 				} else {
-				
+
 					jQuery('.um-col-demon-settings').data('in_row', '');
 					jQuery('.um-col-demon-settings').data('in_sub_row', '');
 					jQuery('.um-col-demon-settings').data('in_column', '');

@@ -198,21 +198,26 @@ jQuery(document).ready(function() {
 		if ( jQuery(this).hasClass('disabled') )
 			return false;
 
-		var content = jQuery(this).parents('.um-admin-btn-content');
-		var length = content.find('.um-admin-cur-condition').length;
+		var content = jQuery(this).parents('.um-admin-btn-content'),
+			length = content.find('.um-admin-cur-condition').length;
+
 		if ( length < 5 ) {
 			//content.find('select').select2('destroy');
 
-			var cloned = jQuery(this).parents('.um-admin-cur-condition').clone();
-			cloned.find('input[type=text],select').each(function(){
+			var template = jQuery('.um-admin-btn-content').find('.um-admin-cur-condition-template').clone();
+
+            template.find('input[type=text],select').each(function(){
 				jQuery(this).attr('id', jQuery(this).attr('id') + length );
 				jQuery(this).attr('name', jQuery(this).attr('name') + length );
 			});
-			cloned.find('input[type=text]').val('');
-			cloned.find('.um-admin-new-condition').replaceWith('<p><a href="#" class="um-admin-remove-condition button um-admin-tipsy-n" title="Remove condition"><i class="um-icon-close" style="margin-right:0!important"></i></a></p>');
 
-			cloned.appendTo( content );
-			cloned.find('select').val('');
+            template.find('input[type=text]').val('');
+            template.find('select').val('');
+
+            template.appendTo( content );
+            jQuery(template).removeClass("um-admin-cur-condition-template");
+            jQuery(template).addClass("um-admin-cur-condition");
+
 			um_admin_live_update_scripts();
 			um_admin_modal_responsive();
 		} else {
