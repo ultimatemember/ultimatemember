@@ -1268,8 +1268,9 @@ add_action( 'um_after_profile_fields', 'um_add_submit_button_to_profile', 1000 )
  * @param array $args
  */
 function um_profile_menu( $args ) {
-	if ( ! UM()->options()->get( 'profile_menu' ) )
+	if ( ! UM()->options()->get( 'profile_menu' ) ) {
 		return;
+	}
 
 	// get active tabs
 	$tabs = UM()->profile()->tabs_active();
