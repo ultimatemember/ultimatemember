@@ -74,44 +74,64 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 				}
 			}
 
-			//add_action( 'in_plugin_update_message-' . um_plugin, array( $this, 'in_plugin_update_message' ) );
+			add_action( 'in_plugin_update_message-' . um_plugin, array( $this, 'in_plugin_update_message' ) );
 		}
 
 		/**
 		 * Function for major updates
 		 *
 		 */
-		/*function in_plugin_update_message( $args ) {
+		function in_plugin_update_message( $args ) {
+			$show_additional_notice = false;
+			if ( isset( $args['new_version'] ) ) {
+				$old_version_array = explode( '.', ultimatemember_version );
+				$new_version_array = explode( '.', $args['new_version'] );
 
-			$lastversion = get_option( '%UNIQUE_ID%_last_version', false );
-			if ( $lastversion && version_compare( $lastversion, %UNIQUE_ID%_current_version, '>' ) )  {
-				$upgrade_notice = get_option( '%UNIQUE_ID%_major_update' . $lastversion );
+				if ( $old_version_array[0] < $new_version_array[0] ) {
+					$show_additional_notice = true;
+				} else {
+					if ( $old_version_array[1] < $new_version_array[1] ) {
+						$show_additional_notice = true;
+					}
+				}
 
-				echo '<style type="text/css">
-	            .%UNIQUE_ID%_plugin_upgrade_notice {
-	                font-weight: 400;
-	                color: #fff;
-	                background: #d53221;
-	                padding: 1em;
-	                margin: 9px 0;
-	                display: block;
-	                box-sizing: border-box;
-	                -webkit-box-sizing: border-box;
-	                -moz-box-sizing: border-box;
-	            }
-	            .%UNIQUE_ID%_plugin_upgrade_notice:before {
-	                content: "\f348";
-	                display: inline-block;
-	                font: 400 18px/1 dashicons;
-	                speak: none;
-	                margin: 0 8px 0 -2px;
-	                -webkit-font-smoothing: antialiased;
-	                -moz-osx-font-smoothing: grayscale;
-	                vertical-align: top;
-	            }
-	        </style>' . wp_kses_post( $upgrade_notice );
 			}
-		}*/
+
+			if ( $show_additional_notice ) {
+				ob_start(); ?>
+
+				<style type="text/css">
+					.um_plugin_upgrade_notice {
+						font-weight: 400;
+						color: #fff;
+						background: #d53221;
+						padding: 1em;
+						margin: 9px 0;
+						display: block;
+						box-sizing: border-box;
+						-webkit-box-sizing: border-box;
+						-moz-box-sizing: border-box;
+					}
+
+					.um_plugin_upgrade_notice:before {
+						content: "\f348";
+						display: inline-block;
+						font: 400 18px/1 dashicons;
+						speak: none;
+						margin: 0 8px 0 -2px;
+						-webkit-font-smoothing: antialiased;
+						-moz-osx-font-smoothing: grayscale;
+						vertical-align: top;
+					}
+				</style>
+
+				<span class="um_plugin_upgrade_notice">
+					<?php printf( __( '%s is a major update, and we highly recommend creating a full backup of your site before updating.', 'ultimate-member' ), $args['new_version'] ); ?>
+				</span>
+
+				<?php ob_get_flush();
+			}
+		}
 
 
 		/**
