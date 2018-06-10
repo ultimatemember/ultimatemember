@@ -393,13 +393,31 @@ font-weight: normal;
 	border-bottom: 0 !important;
 }
 
-.um-profile-nav-item.without-icon a {padding-left: 10px}
-.um-profile-nav-item.without-icon span.title {padding-left: 0}
-.um-profile-nav-item.without-icon i {display: none}
+.um-profile-nav-item.without-icon a {
+    padding-left: 10px;
+}
+.um-profile-nav-item.without-icon span.title {
+    padding-left: 0;
+}
+.um-profile-nav-item.without-icon i {
+    display: none;
+}
 
-.um-profile-nav-item a:hover {background: #555}
-.um-profile-nav-item i {font-size: 18px;height: 18px;line-height: 18px;position: absolute;display: block;top: 8px;left: 10px}
-.um-profile-nav-item span.title {padding-left: 5px}
+.um-profile-nav-item a:hover {
+    background: #555;
+}
+.um-profile-nav-item i {
+    font-size: 18px;
+    height: 18px;
+    line-height: 18px;
+    position: absolute;
+    display: block;
+    top: 8px;
+    left: 10px;
+}
+.um-profile-nav-item span.title {
+    padding-left: 5px;
+}
 .um-profile-nav-item span.count {
 	font-size: 12px;
 	font-weight: 300;

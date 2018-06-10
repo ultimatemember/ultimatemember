@@ -755,7 +755,6 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				 * ?>
 				 */
 				do_action( "um_after_account_{$tab_id}", $args );
-//				var_dump($args);
 
 				if ( ! isset( $tab_data['show_button'] ) || false !== $tab_data['show_button'] ) { ?>
 

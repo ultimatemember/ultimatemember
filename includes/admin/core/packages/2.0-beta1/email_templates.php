@@ -25,8 +25,8 @@ foreach ( $emails as $email_key => $value ) {
 		} else {
 			$setting_value = UM()->options()->get( $email_key );
 
-			$fp = fopen( $theme_template_path, "w" );
-			$result = fputs( $fp, $setting_value );
+			$fp = @fopen( $theme_template_path, "w" );
+			$result = @fputs( $fp, $setting_value );
 			fclose( $fp );
 		}
 	} else {

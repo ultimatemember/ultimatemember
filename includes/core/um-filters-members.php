@@ -141,19 +141,25 @@ function um_add_search_to_query( $query_args, $args ){
 									'value' => trim( $value ),
 									'compare' => '=',
 								),
-								array(
-									'key' => $field,
-									'value' => trim( $value ),
-									'compare' => 'LIKE',
-								),
-								array(
-									'key' => $field,
-									'value' => trim( $serialize_value ),
-									'compare' => 'LIKE',
-								),
 								'relation' => 'OR',
 							);
 
+							$filter_data = UM()->members()->prepare_filter( $field );
+							if( $filter_data['type'] != 'select' ) {
+								$field_query = array_merge( $field_query, array(
+									array(
+										'key' => $field,
+										'value' => trim( $value ),
+										'compare' => 'LIKE',
+									),
+									array(
+										'key' => $field,
+										'value' => trim( $serialize_value ),
+										'compare' => 'LIKE',
+									),
+									'relation' => 'OR',
+								) );
+							}
 							/**
 							 * UM hook
 							 *
@@ -211,7 +217,7 @@ function um_add_search_to_query( $query_args, $args ){
 	 */
 	$query_args = apply_filters( 'um_query_args_filter', $query_args );
 
-	if ( count( $query_args['meta_query'] ) == 1 )
+	if ( isset( $query_args['meta_query'] ) && count( $query_args['meta_query'] ) == 1 )
 		unset( $query_args['meta_query'] );
 
 	return $query_args;

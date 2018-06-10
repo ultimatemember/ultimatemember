@@ -18,6 +18,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 
 
 		/**
+		 * @var null
+		 */
+		protected static $instance = null;
+
+
+		/**
 		 * @var
 		 */
 		var $update_versions;
@@ -32,6 +38,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 
 
 		/**
+		 * Main Admin_Upgrade Instance
+		 *
+		 * Ensures only one instance of UM is loaded or can be loaded.
+		 *
+		 * @since 1.0
+		 * @static
+		 * @see UM()
+		 * @return Admin_Upgrade - Main instance
+		 */
+		static public function instance() {
+			if ( is_null( self::$instance ) ) {
+				self::$instance = new self();
+			}
+
+			return self::$instance;
+		}
+
+
+		/**
 		 * Admin_Upgrade constructor.
 		 */
 		function __construct() {
@@ -39,11 +64,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 			$this->necessary_packages = $this->need_run_upgrades();
 
 			if ( ! empty( $this->necessary_packages ) ) {
-				$this->init_packages_ajax();
 				add_action( 'admin_menu', array( $this, 'admin_menu' ), 0 );
 
-				add_action( 'wp_ajax_um_run_package', array( $this, 'ajax_run_package' ) );
-				add_action( 'wp_ajax_um_get_packages', array( $this, 'ajax_get_packages' ) );
+				if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+					$this->init_packages_ajax();
+
+					add_action( 'wp_ajax_um_run_package', array( $this, 'ajax_run_package' ) );
+					add_action( 'wp_ajax_um_get_packages', array( $this, 'ajax_get_packages' ) );
+				}
 			}
 
 			//add_action( 'in_plugin_update_message-' . um_plugin, array( $this, 'in_plugin_update_message' ) );
@@ -143,7 +171,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 			foreach ( $this->necessary_packages as $package ) {
 				$hooks_file = $this->packages_dir . DIRECTORY_SEPARATOR . $package . DIRECTORY_SEPARATOR . 'hooks.php';
 				if ( file_exists( $hooks_file ) ) {
-					$pack_ajax_hooks = include $hooks_file;
+					$pack_ajax_hooks = include_once $hooks_file;
 
 					foreach ( $pack_ajax_hooks as $action => $function ) {
 						add_action( 'wp_ajax_um_' . $action, "um_upgrade_$function" );
@@ -160,7 +188,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 			foreach ( $this->necessary_packages as $package ) {
 				$handlers_file = $this->packages_dir . DIRECTORY_SEPARATOR . $package . DIRECTORY_SEPARATOR . 'functions.php';
 				if ( file_exists( $handlers_file ) ) {
-					include $handlers_file;
+					include_once $handlers_file;
 				}
 			}
 		}
@@ -290,7 +318,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 				exit('');
 			} else {
 				ob_start();
-				include $this->packages_dir . DIRECTORY_SEPARATOR . $_POST['pack'] . DIRECTORY_SEPARATOR . 'init.php';
+				include_once $this->packages_dir . DIRECTORY_SEPARATOR . $_POST['pack'] . DIRECTORY_SEPARATOR . 'init.php';
 				ob_get_flush();
 				exit;
 			}

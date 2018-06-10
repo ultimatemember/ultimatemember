@@ -124,10 +124,14 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 			$this->message = $this->prepare_template( $template, $args );
 
-			add_filter( 'wp_mail_content_type', array( &$this, 'set_content_type' ) );
+			if ( UM()->options()->get( 'email_html' ) ) {
+				$this->headers .= "Content-Type: text/html\r\n";
+			} else {
+				$this->headers .= "Content-Type: text/plain\r\n";
+			}
+
 			// Send mail
 			wp_mail( $email, $this->subject, $this->message, $this->headers, $this->attachments );
-			remove_filter( 'wp_mail_content_type', array( &$this, 'set_content_type' )  );
 		}
 
 
@@ -478,22 +482,6 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			}
 
 			return $template_path;
-		}
-
-
-		/**
-		 * Set email content type
-		 *
-		 *
-		 * @param $content_type
-		 * @return string
-		 */
-		function set_content_type( $content_type ) {
-			if ( UM()->options()->get( 'email_html' ) ) {
-				return 'text/html';
-			} else {
-				return 'text/plain';
-			}
 		}
 
 

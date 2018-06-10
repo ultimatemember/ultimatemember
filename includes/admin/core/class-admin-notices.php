@@ -420,6 +420,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					$messages[0]['content'] = __( 'Your user cache is now removed.', 'ultimate-member' );
 					break;
 
+				case 'got_updates':
+					$messages[0]['content'] = __( 'You got the latest upgrades.', 'ultimate-member' );
+					break;
+
+				case 'often_updates':
+					$messages[0]['err_content'] = __( 'Try again later. You can run this action once daily.', 'ultimate-member' );
+					break;
+
 				case 'form_duplicated':
 					$messages[0]['content'] = __( 'The form has been duplicated successfully.', 'ultimate-member' );
 					break;

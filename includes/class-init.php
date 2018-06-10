@@ -168,11 +168,11 @@ if ( ! class_exists( 'UM' ) ) {
 
 
 		/**
-		 * @since 2.0.14
+		 * UM pseudo-constructor.
+		 *
+		 * @since 2.0.18
 		 */
 		function _um_construct() {
-			$this->init_variables();
-
 			//register autoloader for include UM classes
 			spl_autoload_register( array( $this, 'um__autoloader' ) );
 
@@ -658,7 +658,8 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		function admin_upgrade() {
 			if ( empty( $this->classes['admin_upgrade'] ) ) {
-				$this->classes['admin_upgrade'] = new um\admin\core\Admin_Upgrade();
+				$this->classes['admin_upgrade'] = um\admin\core\Admin_Upgrade::instance();
+				//$this->classes['admin_upgrade'] = new um\admin\core\Admin_Upgrade();
 			}
 			return $this->classes['admin_upgrade'];
 		}
