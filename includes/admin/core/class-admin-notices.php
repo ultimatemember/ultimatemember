@@ -29,6 +29,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			add_action( 'admin_init', array( &$this, 'create_list' ), 10 );
 			add_action( 'admin_notices', array( &$this, 'render_notices' ), 1 );
+
+			//add_action( 'wp_ajax_um_dimiss_notice', array( &$this, 'dimiss_notice' ) );
 		}
 
 
@@ -41,6 +43,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			//$this->admin_notice_tracking();
 			$this->need_upgrade();
 			$this->check_wrong_licenses();
+
+
+			//$this->future_changed();
 
 			/**
 			 * UM hook
@@ -135,7 +140,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$admin_notices = $this->get_admin_notices();
 
-			$hidden = get_user_meta( get_current_user_id(), 'um_hidden_admin_notices' );
+			$hidden = get_user_meta( get_current_user_id(), 'um_hidden_admin_notices', true );
 			$hidden = empty( $hidden ) ? array() : $hidden;
 
 			uasort( $admin_notices, array( &$this, 'notice_priority_sort' ) );
@@ -186,9 +191,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$class = ! empty( $notice_data['class'] ) ? $notice_data['class'] : 'updated';
 
+			$dimissible = ! empty( $admin_notices[ $key ]['dimissible'] );
+
 			ob_start(); ?>
 
-			<div class="<?php echo esc_attr( $class ) ?> um-admin-notice">
+			<div class="<?php echo esc_attr( $class ) ?> um-admin-notice notice <?php echo $dimissible ? 'is-dismissible' : '' ?>" data-key="<?php echo $key ?>">
 				<?php echo ! empty( $notice_data['message'] ) ? $notice_data['message'] : '' ?>
 			</div>
 
@@ -593,6 +600,42 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					), 4 );
 				}
 			}
+		}
+
+
+		/**
+		 * Check Future Changes notice
+		 */
+		function future_changed() {
+
+			ob_start(); ?>
+
+			<p>
+				<?php printf( __( '<strong>%s</strong> future plans! Detailed future list is <a href="%s" target="_blank">here</a>', 'ultimate-member' ), ultimatemember_plugin_name, '#' ); ?>
+			</p>
+
+			<?php $message = ob_get_clean();
+
+			$this->add_notice( 'future_changes', array(
+				'class'         => 'updated',
+				'message'       => $message,
+				//'dimissible'    => true,
+			), 2 );
+		}
+
+
+		function dimiss_notice() {
+			if ( empty( $_POST['key'] ) ) {
+				wp_send_json_error( __( 'Wrong Data', 'ultimate-member' ) );
+			}
+
+			$hidden_notices = get_user_meta( get_current_user_id(), 'um_hidden_admin_notices', true );
+			$hidden_notices = empty( $hidden_notices ) ? array() : $hidden_notices;
+			$hidden_notices[] = $_POST['key'];
+
+			update_user_meta( get_current_user_id(), 'um_hidden_admin_notices', $hidden_notices );
+
+			wp_send_json_success();
 		}
 
 	}
