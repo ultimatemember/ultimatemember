@@ -737,9 +737,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					if ( ! is_array( $value ) || empty( $value ) )
 						$value = array();
 
-					$options .= '<option value="' . $key . '" ' . selected( in_array( $key, $value ), true, false ) . '>' . $option . '</option>';
+					$options .= '<option value="' . $key . '" ' . selected( in_array( $key, $value ), true, false ) . '>' . esc_html( $option ) . '</option>';
 				} else {
-					$options .= '<option value="' . $key . '" ' . selected( (string)$key == $value, true, false ) . '>' . $option . '</option>';
+					$options .= '<option value="' . $key . '" ' . selected( (string)$key == $value, true, false ) . '>' . esc_html( $option ) . '</option>';
 				}
 			}
 
