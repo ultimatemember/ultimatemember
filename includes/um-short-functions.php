@@ -1789,7 +1789,7 @@ function um_get_user_avatar_data( $user_id = '', $size = '96' ) {
 		$data['type'] = 'sync';
 		$data['class'] .= ' um-avatar-default';
 	} elseif ( UM()->options()->get( 'use_gravatars' ) ) {
-		$avatar_hash_id = get_user_meta( $user_id, 'synced_gravatar_hashed_id', true );
+		$avatar_hash_id = md5( um_user( 'user_email' ) );
 		$data['url'] = set_url_scheme( '//gravatar.com/avatar/' . $avatar_hash_id );
 		$data['url'] = add_query_arg( 's', 400, $data['url'] );
 		$rating = get_option( 'avatar_rating' );
