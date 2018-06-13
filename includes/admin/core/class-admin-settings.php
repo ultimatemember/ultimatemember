@@ -617,7 +617,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							'id'            => 'email_html',
 							'type'          => 'checkbox',
 							'label'         => __( 'Use HTML for E-mails?','ultimate-member' ),
-							'tooltip'   => __('If you enable HTML for e-mails, you can customize the HTML e-mail templates found in <strong>templates/email</strong> folder.','ultimate-member'),
+							'tooltip'       => __( 'If you plan use e-mails with HTML, please make sure that this option is enabled. Otherwise, HTML will be displayed as plain text.','ultimate-member'),
 						)
 					)
 				),

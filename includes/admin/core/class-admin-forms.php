@@ -1052,7 +1052,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						'editor_class'  => $class
 					)
 				); ?>
-
+				<span class="description">For default text for plain-text emails please see this <a href="#<?php echo $field_data['id'] ?>">doc</a></span>
 			</div>
 
 			<?php $html = ob_get_clean();
