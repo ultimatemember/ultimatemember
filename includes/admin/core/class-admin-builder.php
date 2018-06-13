@@ -739,14 +739,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			}
 
 			wp_send_json_success( $output );
-
-			/*$output = json_encode( $output );
-			if ( is_array( $output ) ) {
-				print_r( $output );
-			} else {
-				echo $output;
-			}
-			die;*/
 		}
 
 

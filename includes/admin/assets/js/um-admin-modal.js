@@ -134,9 +134,9 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
  *
  */
 function um_admin_modal_responsive() {
-	var um_admin_editor = jQuery('.um-admin-editor:visible');
-	var required_margin = um_admin_editor.innerHeight() / 2 + 'px';
-	um_admin_editor.css({'margin-top': '-' + required_margin });
+	var um_admin_modal = jQuery('.um-admin-modal:visible');
+	var required_margin = um_admin_modal.innerHeight() / 2 + 'px';
+	um_admin_modal.css({'margin-top': '-' + required_margin });
 }
 
 

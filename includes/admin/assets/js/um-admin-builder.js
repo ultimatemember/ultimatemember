@@ -576,7 +576,14 @@ jQuery(document).ready(function() {
 		wp.ajax.send({
 			data: form.serialize() + '&action=um_update_field&nonce=' + um_admin_scripts.nonce,
 			success: function( data ) {
-				if ( typeof( data.error ) != 'undefined' ) {
+				if ( typeof( data.error ) == 'undefined' || ! data.error ) {
+
+					jQuery('.um-col-demon-settings').data('in_row', '').data('in_sub_row', '').data('in_column', '').data('in_group', '');
+
+					um_admin_remove_modal();
+					um_admin_update_builder();
+
+				} else {
 					var c = 0;
 					jQuery.each( data.error, function(i, v){
 						c++;
@@ -587,11 +594,6 @@ jQuery(document).ready(function() {
 					});
 
 					um_admin_modal_responsive();
-				} else {
-					jQuery('.um-col-demon-settings').data('in_row', '').data('in_sub_row', '').data('in_column', '').data('in_group', '');
-
-					um_admin_remove_modal();
-					um_admin_update_builder();
 				}
 			},
 			beforeSend: function() {
