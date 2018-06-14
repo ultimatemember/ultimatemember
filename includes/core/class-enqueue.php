@@ -72,9 +72,20 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_script( 'um-datetime-legacy', $this->js_baseurl . 'pickadate/legacy.js', array( 'jquery' ), ultimatemember_version, true );
 
 			// load a localized version for date/time
+			$um_function_deps = array(
+				'jquery',
+				'wp-util',
+				'um-tipsy',
+				'um-scrollbar',
+				'um-datetime',
+				'um-datetime-date',
+				'um-datetime-time',
+				'um-datetime-legacy'
+			);
 			$locale = get_locale();
 			if ( $locale && file_exists( um_path . 'assets/js/pickadate/translations/' . $locale . '.js' ) ) {
 				wp_register_script( 'um-datetime-locale', $this->js_baseurl . 'pickadate/translations/' . $locale . '.js', array( 'um-datetime' ), ultimatemember_version, true );
+				$um_function_deps[] = 'um-datetime-locale';
 			}
 
 			if ( class_exists( 'WooCommerce' ) ) {
@@ -90,7 +101,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_script( 'um-raty', $this->js_baseurl . 'um-raty' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 			wp_register_script( 'um-crop', $this->js_baseurl . 'um-crop' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
-			wp_register_script( 'um-functions', $this->js_baseurl . 'um-functions' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'um-tipsy', 'um-scrollbar' ), ultimatemember_version, true );
+			wp_register_script( 'um-functions', $this->js_baseurl . 'um-functions' . $this->suffix . '.js', $um_function_deps, ultimatemember_version, true );
 			wp_register_script( 'um-scripts', $this->js_baseurl . 'um-scripts' . $this->suffix . '.js', array( 'um-functions', 'um-tipsy', 'um-raty', 'um-crop', 'select2', 'um-jquery-form', 'um-fileupload' ), ultimatemember_version, true );
 
 			wp_register_script( 'um-responsive', $this->js_baseurl . 'um-responsive' . $this->suffix . '.js', array( 'um-scripts' ), ultimatemember_version, true );
