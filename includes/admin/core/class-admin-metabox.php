@@ -1158,6 +1158,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				if ( $k == '_um_show_these_users' && trim( $_POST['um_metadata'][ $k ] ) ) {
 					$v = preg_split( '/[\r\n]+/', $v, -1, PREG_SPLIT_NO_EMPTY );
 				}
+
+				if ( $k == '_um_tagline_fields' || $k == '_um_reveal_fields' )  {
+					$remove = array_keys( $v, '0' );
+					$v = array_values( array_diff_key( $v, array_flip( $remove ) ) );
+				}
+
 				if ( strstr( $k, '_um_' ) ) {
 					update_post_meta( $post_id, $k, $v );
 				}
