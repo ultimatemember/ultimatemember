@@ -40,7 +40,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->localize_note();
 			$this->show_update_messages();
 			$this->check_wrong_install_folder();
-			//$this->admin_notice_tracking();
+			$this->admin_notice_tracking();
 			$this->need_upgrade();
 			$this->check_wrong_licenses();
 
@@ -501,13 +501,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		 */
 		public function admin_notice_tracking() {
 
-			if ( ! current_user_can( 'manage_options' ) )
+			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
+			}
 
 			$hide_notice = get_option( 'um_tracking_notice' );
 
-			if ( $hide_notice )
+			if ( $hide_notice ) {
 				return;
+			}
 
 			$optin_url  =  esc_url( add_query_arg( 'um_adm_action', 'opt_into_tracking' ) );
 			$optout_url =  esc_url( add_query_arg( 'um_adm_action', 'opt_out_of_tracking' ) );
@@ -515,7 +517,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			ob_start(); ?>
 
 			<p>
-				<?php printf( __( 'Thanks for installing <strong>%s</strong>! The core plugin is free but we also sell extensions which allow us to continue developing and supporting the plugin full time. If you subscribe to our mailing list (no spam) we will email you a 20%% discount code which you can use to purchase the <a href="%s" target="_blank">extensions bundle</a>.', 'ultimate-member' ), ultimatemember_plugin_name, 'https://ultimatemember.com/core-extensions-bundle/' ); ?>
+				<?php printf( __( 'Thanks for installing <strong>%s</strong>! We hope you like the plugin. To fund full-time development and support of the plugin we also sell extensions for %s via our website. If you subscribe to our mailing list we will immediately email you a 20%% discount code for our <a href="%s" target="_blank">extensions bundle</a> (you\'ll need to confirm your subscription via email).', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_plugin_name, 'https://ultimatemember.com/core-extensions-bundle/' ); ?>
 			</p>
 
 			<p>
@@ -524,9 +526,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				<a href="<?php echo esc_url( $optout_url ) ?>" class="button-secondary"><?php _e( 'No thanks', 'ultimate-member' ) ?></a>
 			</p>
 
+			<p class="description" style="font-size: 11px;">
+				<?php printf( __( 'By clicking the subscribe button you are agreeing to join our mailing list (managed via MailChimp). See our <a href="%s" target="_blank">privacy policy</a>', 'ultimate-member' ), 'https://ultimatemember.com/support/policy/' ); ?>
+			</p>
+
 			<?php $message = ob_get_clean();
 
-			$this->add_notice( 'invalid_dir', array(
+			$this->add_notice( 'tracking_notice', array(
 				'class'     => 'updated',
 				'message'   => $message,
 			), 2 );

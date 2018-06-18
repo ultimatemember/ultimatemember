@@ -533,7 +533,7 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->permalinks();
 			$this->modal();
 			$this->cron();
-			//$this->tracking();
+			$this->tracking();
 			$this->mobile();
 			$this->external_integrations();
 			$this->gdpr();
