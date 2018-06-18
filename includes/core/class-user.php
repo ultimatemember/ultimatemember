@@ -1661,7 +1661,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				if ( ! in_array( $key, $this->update_user_keys ) ) {
 					update_user_meta( $this->id, $key, $value );
 				} else {
-					$args[$key] = esc_attr( $changes['role_radio'] );
+					$args[ $key ] = esc_attr( $changes[ $key ] );
 				}
 			}
 

@@ -2610,6 +2610,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$options_pair = true;
 					}
 
+					$options = $this->get_available_roles( $form_key, $options );
+
 					// add options
 					if ( ! empty( $options ) ) {
 						foreach ( $options as $k => $v ) {
@@ -2927,11 +2929,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$col_class = 'right';
 							} else {
 								$col_class = '';
-							}
-
-							if ( $form_key == 'role' ) {
-								$option_value = strtolower( str_replace( ' ', '-', $option_value ) );
-								$option_value = in_array( $option_value, get_option( 'um_roles' ) ) ? 'um_' . $option_value : $option_value;
 							}
 
 							if ($this->is_radio_checked( $key, $option_value, $data )) {
