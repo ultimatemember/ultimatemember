@@ -1136,10 +1136,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 */
 		function get_label( $key ) {
 			$fields = UM()->builtin()->all_user_fields;
-			if (isset( $fields[$key]['label'] ))
-				return $fields[$key]['label'];
-			if (isset( $fields[$key]['title'] ))
-				return $fields[$key]['title'];
+			if ( isset( $fields[$key]['label'] ) )
+				return stripslashes( $fields[$key]['label'] );
+			if ( isset( $fields[$key]['title'] ) )
+				return stripslashes( $fields[$key]['title'] );
 
 			return '';
 		}
