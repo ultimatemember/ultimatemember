@@ -1720,7 +1720,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				case 'select':
 				case 'radio':
-					$form_key = str_replace( 'role_select', 'role', $key );
+					$form_key = str_replace( array( 'role_select', 'role_radio' ), 'role', $key );
 					$field_id = $form_key;
 					break;
 				default:
@@ -2601,9 +2601,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 					}
 
-					$options = $this->get_available_roles( $form_key, $options );
-
-					// add an empty option!
 					$output .= '<option value=""></option>';
 
 					$field_value = '';
@@ -2920,7 +2917,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$um_field_checkbox_item_title = $v;
 							$option_value = $v;
 
-							if ( ! is_numeric( $k ) && in_array( $form_key, array( 'role', 'role_radio' ) ) ) {
+							if ( ! is_numeric( $k ) && in_array( $form_key, array( 'role' ) ) ) {
 								$um_field_checkbox_item_title = $v;
 								$option_value = $k;
 							}
@@ -2932,6 +2929,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$col_class = '';
 							}
 
+							if ( $form_key == 'role' ) {
+								$option_value = strtolower( str_replace( ' ', '-', $option_value ) );
+								$option_value = in_array( $option_value, get_option( 'um_roles' ) ) ? 'um_' . $option_value : $option_value;
+							}
+
 							if ($this->is_radio_checked( $key, $option_value, $data )) {
 								$active = 'active';
 								$class = "um-icon-android-radio-button-on";
@@ -2939,6 +2941,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$active = '';
 								$class = "um-icon-android-radio-button-off";
 							}
+
 
 							if (isset( $data['editable'] ) && $data['editable'] == 0) {
 								$col_class .= " um-field-radio-state-disabled";

@@ -1657,18 +1657,12 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 */
 			$changes = apply_filters('um_before_update_profile', $changes, $this->id );
 
-			// save or update profile meta
 			foreach ( $changes as $key => $value ) {
 				if ( ! in_array( $key, $this->update_user_keys ) ) {
-
 					update_user_meta( $this->id, $key, $value );
-
 				} else {
-
-					$args[$key] = esc_attr( $changes[$key] );
-
+					$args[$key] = esc_attr( $changes['role_radio'] );
 				}
-
 			}
 
 

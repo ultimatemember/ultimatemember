@@ -418,6 +418,7 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 				$um_roles_keys = array_map( function( $item ) {
 					return 'um_' . $item;
 				}, $um_roles_keys );
+
 			}
 
 			$orders = array();
