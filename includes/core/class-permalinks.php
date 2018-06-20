@@ -368,7 +368,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 
 			if ( get_option('permalink_structure') ) {
 
-				$profile_url = trailingslashit( untrailingslashit( $profile_url ) );
+				$profile_url = trailingslashit( $profile_url );
 				$profile_url = $profile_url . strtolower( $slug ). '/';
 
 			} else {
