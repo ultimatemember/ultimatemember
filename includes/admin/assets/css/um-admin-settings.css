@@ -240,14 +240,6 @@ th.column-email.column-primary {
 }
 */
 
-.email_template_wrapper .reset_email_template {
-    display: none;
-}
-
-.email_template_wrapper.in_theme .reset_email_template {
-    display: block;
-}
-
 .um_setting_ajax_button_response.complete {
     color:darkgreen;
     font-style: italic;

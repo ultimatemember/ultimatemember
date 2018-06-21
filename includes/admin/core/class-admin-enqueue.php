@@ -156,7 +156,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			wp_enqueue_script( 'um_admin_settings' );
 
 			$localize_data = array(
-				'delete_email_template' => UM()->get_ajax_route( 'um\core\Mail', 'delete_email_template' ),
 				'onbeforeunload_text' => __( 'Are sure, maybe some settings not saved', 'ultimate-member' ),
 				'texts' => array(
 					'remove' => __( 'Remove', 'ultimate-member' ),
@@ -303,7 +302,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 * Load jQuery custom code
 		 */
 		function load_custom_scripts() {
-			wp_register_script( 'um_admin_scripts', $this->js_url . 'um-admin-scripts.js', '', '', true );
+			wp_register_script( 'um_admin_scripts', $this->js_url . 'um-admin-scripts.js',  array('jquery','wp-util'), '', true );
 			wp_enqueue_script( 'um_admin_scripts' );
 		}
 

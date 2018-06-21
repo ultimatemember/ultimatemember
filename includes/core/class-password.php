@@ -107,6 +107,10 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 				UM()->form()->post_form = $_POST;
 
+				if ( empty( UM()->form()->post_form['mode'] ) ) {
+					UM()->form()->post_form['mode'] = 'password';
+				}
+
 				/**
 				 * UM hook
 				 *

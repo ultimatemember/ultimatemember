@@ -1,10 +1,11 @@
 <div class="um-admin-metabox">
 
-	<?php
-	foreach ( UM()->roles()->get_roles( __( 'All roles', 'ultimate-member' ) ) as $key => $value ) {
-	    $_um_profile_role = UM()->query()->get_meta_value( '_um_profile_role', $key );
-		if ( ! empty( $_um_profile_role ) )
-			$profile_role = $_um_profile_role;
+	<?php $profile_role_array = array();
+	foreach ( UM()->roles()->get_roles() as $key => $value ) {
+		$_um_profile_role = UM()->query()->get_meta_value( '_um_profile_role', $key );
+		if ( ! empty( $_um_profile_role ) ) {
+			$profile_role_array[] = $_um_profile_role;
+		}
 	}
 
 	UM()->admin_forms( array(
@@ -14,8 +15,8 @@
 			array(
 				'id'		    => '_um_profile_use_custom_settings',
 				'type'		    => 'select',
-				'label'    		=> __( 'Apply custom settings to this form', 'ultimate-member' ),
-				'tooltip' 	=> __( 'Switch to yes if you want to customize this form settings, styling &amp; appearance', 'ultimate-member' ),
+				'label'         => __( 'Apply custom settings to this form', 'ultimate-member' ),
+				'tooltip' 	    => __( 'Switch to yes if you want to customize this form settings, styling &amp; appearance', 'ultimate-member' ),
 				'value' 		=> UM()->query()->get_meta_value( '_um_profile_use_custom_settings', null, 0 ),
 				'options'		=> array(
 					0	=> __( 'No', 'ultimate-member' ),
@@ -23,13 +24,14 @@
 				),
 			),
 			array(
-				'id'		    => '_um_profile_role',
-				'type'		    => 'select',
-				'label'    		=> __( 'Make this profile form role-specific', 'ultimate-member' ),
-				'tooltip'    	=> __( 'Please note if you make a profile form specific to a role then you must make sure that every other role is assigned a profile form', 'ultimate-member' ),
-				'value' 		=> ! empty( $profile_role ) ? $profile_role : 0,
-				'options'		=> UM()->roles()->get_roles( __( 'All roles', 'ultimate-member' ) ),
-				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 )
+				'id'            => '_um_profile_role',
+				'type'          => 'select',
+				'multi'         => true,
+				'label'         => __( 'Make this profile form role-specific', 'ultimate-member' ),
+				'tooltip'       => __( 'Please note if you make a profile form specific to a role then you must make sure that every other role is assigned a profile form', 'ultimate-member' ),
+				'value'         => $profile_role_array,
+				'options'       => UM()->roles()->get_roles(),
+				'conditional'   => array( '_um_profile_use_custom_settings', '=', 1 )
 			),
 			array(
 				'id'		    => '_um_profile_template',

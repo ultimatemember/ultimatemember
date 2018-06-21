@@ -12,7 +12,6 @@ jQuery(document).ready( function (){
     function um_get_field_default_value( $dom ) {
         var default_value = '';
         var type = um_get_field_type($dom);
-
         switch ( type ) {
 
             case 'text':
@@ -25,7 +24,6 @@ jQuery(document).ready( function (){
 
             case 'multiselect':
                 default_value = $dom.find('select').val();
-
                 break;
 
             case 'radio':
@@ -249,7 +247,6 @@ jQuery(document).ready( function (){
             }
 
             if (condition.operator == 'equals to') {
-
                 if (condition.value == live_field_value && um_in_array(live_field_value, $owners_values[condition.owner])) {
                     $owners[condition.owner][index] = true;
                 } else {
@@ -505,17 +502,22 @@ jQuery(document).ready( function (){
         }
     }
 
-    jQuery(document).on('change', '.um-field select, .um-field input[type=radio], .um-field input[type=checkbox]', function () {
+    jQuery(document).on('change', '.um-field select, .um-field input[type="radio"], .um-field input[type="checkbox"]', function () {
         var me = jQuery(this);
         um_apply_conditions(me, false);
     });
 
-    jQuery(document).on('input change', '.um-field input[type=text]', function () {
+    jQuery(document).on('input change', '.um-field input[type="text"]', function () {
         var me = jQuery(this);
         um_apply_conditions(me, false);
     });
 
-    jQuery(document).on('input change', '.um-field input[type=password]', function () {
+    jQuery(document).on('input change', '.um-field input[type="number"]', function () {
+        var me = jQuery(this);
+        um_apply_conditions(me, false);
+    });
+
+    jQuery(document).on('input change', '.um-field input[type="password"]', function () {
         var me = jQuery(this);
         um_apply_conditions(me, false);
     });

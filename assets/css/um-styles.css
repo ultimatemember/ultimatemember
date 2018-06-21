@@ -621,9 +621,38 @@ input[type=submit].um-button:hover {
 	-moz-border-radius: 4px !important;
 	-webkit-border-radius: 4px !important;
 	border-radius: 4px !important;
-	border-top: 1px solid rgba(0,0,0,0.0) !important;
-	border-bottom: 2px solid rgba(0, 0, 0, 0.1) !important;
+	-webkit-box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+	box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
 	opacity: 1;
+}
+
+a.um-button {
+	font-size: 15px;
+	border: none !important;
+	display: block;
+	width: 100%;
+	line-height: 1em !important;
+	padding: 16px 20px !important;
+	text-decoration: none !important;
+	text-align: center;
+	text-transform: none !important;
+	font-weight: normal !important;
+	overflow: hidden;
+	position: relative;
+
+	transition: 0.25s;
+	box-sizing: border-box;
+	-moz-border-radius: 4px !important;
+	-webkit-border-radius: 4px !important;
+	border-radius: 4px !important;
+	-webkit-box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+	box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+	opacity: 1;
+}
+
+a.um-button:hover {
+	-webkit-box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+	box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
 }
 
 

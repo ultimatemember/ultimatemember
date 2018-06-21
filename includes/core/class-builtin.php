@@ -925,7 +925,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'validate' => 'instagram_url',
 					'url_text' => 'Instagram',
 					'advanced' => 'social',
-					'color' => '#3f729b',
+					'color' => 'radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%)',
 					'match' => 'https://instagram.com/',
 				),
 
