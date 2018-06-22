@@ -658,9 +658,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			} elseif ( ( um_user( $key ) || isset( $data['show_anyway'] ) ) && $this->viewing == true ) {
 
-				$value = um_filtered_value( $key, $data );
-
-				return $value;
+				return um_filtered_value( $key, $data );
 
 			} elseif ( isset( UM()->user()->profile[ $key ] ) ) {
 

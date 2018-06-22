@@ -146,8 +146,9 @@ add_filter( 'um_profile_field_filter_hook___um_last_login', 'um_profile_field_fi
  * @return mixed|string|void
  */
 function um_profile_field_filter_hook__textarea( $value, $data ) {
-	if ( isset( $data ) && isset( $data['html'] ) && $data['html'] == 1 )
+	if ( isset( $data['html'] ) && $data['html'] == 1 ) {
 		return $value;
+	}
 
 	$value = esc_textarea( $value );
 	$value = preg_replace('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', ' <a href="$1" target="_blank">$1</a> ', $value." ");
