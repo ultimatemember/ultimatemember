@@ -613,10 +613,12 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 
 		if( 'text' == $type && ! in_array( $data['validate'], array( 'unique_email' ) ) || 'password' == $type ) {
 			$value = esc_attr( $value );
-		}elseif( $type == 'url' ) {
+		} elseif( $type == 'url' ) {
 			$value = esc_url( $value );
-		}  elseif ( 'textarea' == $type ){
-			$value =  wp_kses_post( $value );
+		} elseif ( 'textarea' == $type ) {
+			if ( empty( $data['html'] ) ) {
+				$value =  wp_kses_post( $value );
+			}
 		}
 	}
 
