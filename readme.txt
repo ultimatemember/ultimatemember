@@ -131,7 +131,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
-= 2.0.18: June 25, 2018 =
+= 2.0.18: July 2, 2018 =
 
 * Enhancements:
   - Added an ability to create different email templates for each site on multisites installs
@@ -153,6 +153,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed user's "user_login" permalinks
   - Fixed user's capabilities ("Edit", "Delete" user) and profile actions displaying
   - Fixed field's conditional logic
+  - Fixed issue with account button ID's duplicates
 
 * Deprecated:
   - REST API user's key option;
