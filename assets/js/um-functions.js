@@ -1,19 +1,6 @@
 /**
  *
  */
-function remove_Modal() {
-	if ( jQuery('.um-popup-overlay').length ) {
-		jQuery('.tipsy').remove();
-		jQuery('.um-popup').empty().remove();
-		jQuery('.um-popup-overlay').empty().remove();
-		jQuery("body,html").css({ overflow: 'auto' });
-	}
-}
-
-
-/**
- *
- */
 function prepare_Modal() {
 	if ( jQuery('.um-popup-overlay').length == 0 ) {
 		jQuery('body').append('<div class="um-popup-overlay"></div><div class="um-popup"></div>');
@@ -22,6 +9,22 @@ function prepare_Modal() {
 	}
 }
 
+function remove_Modal() {
+	if ( jQuery('.um-popup-overlay').length ) {
+		jQuery( document ).trigger( 'um_before_modal_removed' );
+
+		if ( jQuery('.um-popup-autogrow:visible').length ) {
+			jQuery('.um-popup-autogrow:visible').mCustomScrollbar("destroy");
+		} else if ( jQuery('.um-popup-autogrow2:visible').length ) {
+			jQuery('.um-popup-autogrow2:visible').mCustomScrollbar("destroy");
+		}
+
+		jQuery('.tipsy').remove();
+		jQuery('.um-popup').empty().remove();
+		jQuery('.um-popup-overlay').empty().remove();
+		jQuery("body,html").css({ overflow: 'auto' });
+	}
+}
 
 /**
  *

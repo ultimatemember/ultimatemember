@@ -33,4 +33,22 @@ jQuery(document).ready(function() {
 		jQuery('.um-admin-tipsy-s').tipsy({gravity: 's', opacity: 1, live: 'a.live' });
 	}
 
+
+    jQuery(document).on( 'click', '.um-admin-notice.is-dismissible .notice-dismiss', function(e) {
+        var notice_key = jQuery(this).parents('.um-admin-notice').data('key');
+
+        wp.ajax.send( 'um_dimiss_notice', {
+            data: {
+                key: notice_key,
+                nonce: um_admin_scripts.nonce
+            },
+            success: function( data ) {
+                return true;
+            },
+            error: function( data ) {
+                return false;
+            }
+        });
+    });
+
 });

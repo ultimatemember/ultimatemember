@@ -136,6 +136,8 @@ function um_upgrade_cpt20beta1() {
 function um_upgrade_get_forums20beta1() {
 	um_maybe_unset_time_limit();
 
+	remove_all_actions( 'pre_get_posts' );
+
 	$bb_forums = get_posts( array(
 		'post_type'     => 'forum',
 		'numberposts'   => -1,

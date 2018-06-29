@@ -39,14 +39,14 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'instagram'             => '2.0',
 			'invitations'           => '2.0',
 			'mailchimp'             => '2.0.1',
-			'messaging'             => '2.0.1',
+			'messaging'             => '2.0.5',
 			'mycred'                => '2.0',
 			'notices'               => '2.0.1',
 			'notifications'         => '2.0.1',
 			'online'                => '2.0',
 			'private-content'       => '2.0',
 			'profile-completeness'  => '2.0.1',
-			'recaptcha'             => '2.0',
+			'recaptcha'             => '2.0.2',
 			'reviews'               => '2.0.3',
 			'social-activity'       => '2.0.1',
 			'social-login'          => '2.0.1',
@@ -57,7 +57,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'woocommerce'           => '2.0.1',
 			'restrict-content'      => '2.0',
 			'beaver-builder'        => '2.0',
-			'gdpr'                  => '1.0.0',
+			'photos'                => '1.1',
 		);
 
 

@@ -496,6 +496,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->metabox();
 				$this->admin_upgrade()->init_packages_ajax_handlers();
 				$this->admin_gdpr();
+				$this->columns();
 			} elseif ( $this->is_request( 'admin' ) ) {
 				$this->admin();
 				$this->admin_menu();
@@ -534,7 +535,7 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->permalinks();
 			$this->modal();
 			$this->cron();
-			//$this->tracking();
+			$this->tracking();
 			$this->mobile();
 			$this->external_integrations();
 			$this->gdpr();

@@ -205,6 +205,30 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 
 					$user_id = username_exists( um_queried_user() );
 
+					//Try
+					if ( ! $user_id ) {
+						$permalink_base = UM()->options()->get( 'permalink_base' );
+
+						// Search by Profile Slug
+						$args = array(
+							"fields" => 'ids',
+							'meta_query' => array(
+								array(
+									'key'		=>  'um_user_profile_url_slug_'.$permalink_base,
+									'value'		=> strtolower( um_queried_user() ),
+									'compare'	=> '='
+								)
+							),
+							'number'    => 1
+						);
+
+
+						$ids = new \WP_User_Query( $args );
+						if ( $ids->total_users > 0 ) {
+							$user_id = current( $ids->get_results() );
+						}
+					}
+
 					// Try nice name
 					if ( !$user_id ) {
 						$slug = um_queried_user();
