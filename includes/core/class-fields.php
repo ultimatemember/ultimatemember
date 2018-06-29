@@ -182,8 +182,38 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 */
 		function delete_field_from_form( $id, $form_id ) {
 			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
-			if (isset( $fields[$id] )) {
-				unset( $fields[$id] );
+
+			if ( isset( $fields[ $id ] ) ) {
+				$condition_fields = get_option( 'um_fields' );
+
+				foreach ( $condition_fields as $key => $value ) {
+					$deleted_field = array_search( $id, $value );
+
+					if ( $key != $id && $deleted_field != false ) {
+						$deleted_field_id = str_replace( 'conditional_field', '', $deleted_field );
+
+						if ( $deleted_field_id == '' ) {
+							$arr_id = 0;
+						} else {
+							$arr_id = $deleted_field_id;
+						}
+
+						unset( $condition_fields[ $key ][ 'conditional_action' . $deleted_field_id ] );
+						unset( $condition_fields[ $key ][ $deleted_field ] );
+						unset( $condition_fields[ $key ][ 'conditional_operator' . $deleted_field_id ] );
+						unset( $condition_fields[ $key ][ 'conditional_value' . $deleted_field_id ] );
+						unset( $condition_fields[ $key ]['conditions'][ $arr_id ] );
+
+						unset( $fields[ $key ][ 'conditional_action' . $deleted_field_id ] );
+						unset( $fields[ $key ][ $deleted_field ] );
+						unset( $fields[ $key ][ 'conditional_operator' . $deleted_field_id ] );
+						unset( $fields[ $key ][ 'conditional_value' . $deleted_field_id ] );
+						unset( $fields[ $key ]['conditions'][ $arr_id ] );
+					}
+				}
+
+				update_option( 'um_fields' , $condition_fields );
+				unset( $fields[ $id ] );
 				UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
 			}
 		}
@@ -628,9 +658,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			} elseif ( ( um_user( $key ) || isset( $data['show_anyway'] ) ) && $this->viewing == true ) {
 
-				$value = um_filtered_value( $key, $data );
-
-				return $value;
+				return um_filtered_value( $key, $data );
 
 			} elseif ( isset( UM()->user()->profile[ $key ] ) ) {
 
@@ -1106,10 +1134,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 */
 		function get_label( $key ) {
 			$fields = UM()->builtin()->all_user_fields;
-			if (isset( $fields[$key]['label'] ))
-				return $fields[$key]['label'];
-			if (isset( $fields[$key]['title'] ))
-				return $fields[$key]['title'];
+			if ( isset( $fields[$key]['label'] ) )
+				return stripslashes( $fields[$key]['label'] );
+			if ( isset( $fields[$key]['title'] ) )
+				return stripslashes( $fields[$key]['title'] );
 
 			return '';
 		}
@@ -1690,7 +1718,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				case 'select':
 				case 'radio':
-					$form_key = str_replace( 'role_select', 'role', $key );
+					$form_key = str_replace( array( 'role_select', 'role_radio' ), 'role', $key );
 					$field_id = $form_key;
 					break;
 				default:
@@ -2571,9 +2599,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 					}
 
-					$options = $this->get_available_roles( $form_key, $options );
-
-					// add an empty option!
 					$output .= '<option value=""></option>';
 
 					$field_value = '';
@@ -2582,6 +2607,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
 						$options_pair = true;
 					}
+
+					$options = $this->get_available_roles( $form_key, $options );
 
 					// add options
 					if ( ! empty( $options ) ) {
@@ -2890,7 +2917,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$um_field_checkbox_item_title = $v;
 							$option_value = $v;
 
-							if ( ! is_numeric( $k ) && in_array( $form_key, array( 'role', 'role_radio' ) ) ) {
+							if ( ! is_numeric( $k ) && in_array( $form_key, array( 'role' ) ) ) {
 								$um_field_checkbox_item_title = $v;
 								$option_value = $k;
 							}
@@ -2909,6 +2936,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$active = '';
 								$class = "um-icon-android-radio-button-off";
 							}
+
 
 							if (isset( $data['editable'] ) && $data['editable'] == 0) {
 								$col_class .= " um-field-radio-state-disabled";
@@ -4010,23 +4038,23 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			switch ($act_id) {
 
 				case 'um_admin_duplicate_field':
-					UM()->fields()->duplicate_field( $arg1, $arg2 );
+					$this->duplicate_field( $arg1, $arg2 );
 					break;
 
 				case 'um_admin_remove_field_global':
-					UM()->fields()->delete_field_from_db( $arg1 );
+					$this->delete_field_from_db( $arg1 );
 					break;
 
 				case 'um_admin_remove_field':
-					UM()->fields()->delete_field_from_form( $arg1, $arg2 );
+					$this->delete_field_from_form( $arg1, $arg2 );
 					break;
 
 				case 'um_admin_add_field_from_predefined':
-					UM()->fields()->add_field_from_predefined( $arg1, $arg2, $position );
+					$this->add_field_from_predefined( $arg1, $arg2, $position );
 					break;
 
 				case 'um_admin_add_field_from_list':
-					UM()->fields()->add_field_from_list( $arg1, $arg2, $position );
+					$this->add_field_from_list( $arg1, $arg2, $position );
 					break;
 
 			}

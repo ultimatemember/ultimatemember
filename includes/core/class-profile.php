@@ -118,18 +118,20 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 
 			// disable private tabs
 			if ( ! is_admin() ) {
-			    if( is_user_logged_in() ) {
-                    $user_id = um_user('ID');
-                    um_fetch_user( get_current_user_id() );
-                }
+				if ( is_user_logged_in() ) {
+					$user_id = um_user('ID');
+					um_fetch_user( get_current_user_id() );
+				}
+
 				foreach ( $tabs as $id => $tab ) {
 					if ( ! $this->can_view_tab( $id ) ) {
-						unset( $tabs[$id] );
+						unset( $tabs[ $id ] );
 					}
 				}
-				if( is_user_logged_in() ) {
-                    um_fetch_user( $user_id );
-                }
+
+				if ( is_user_logged_in() ) {
+					um_fetch_user( $user_id );
+				}
 			}
 
 			return $tabs;
@@ -143,10 +145,13 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 */
 		function tabs_active() {
 			$tabs = $this->tabs();
-			foreach( $tabs as $id => $info ) {
-				if ( ! UM()->options()->get('profile_tab_'.$id) && !isset( $info['_builtin'] ) && !isset( $info['custom'] ) )
+
+			foreach ( $tabs as $id => $info ) {
+				if ( ! UM()->options()->get( 'profile_tab_' . $id ) && ! isset( $info['_builtin'] ) && ! isset( $info['custom'] ) ) {
 					unset( $tabs[ $id ] );
+				}
 			}
+
 			return $tabs;
 		}
 
@@ -212,28 +217,38 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 * @return bool
 		 */
 		function can_view_tab( $tab ) {
-			$privacy  = intval( UM()->options()->get( 'profile_tab_' . $tab . '_privacy' ) );
+
+			$target_id = UM()->user()->target_id;
+			if ( empty( $target_id ) ) {
+				return true;
+			}
+
 			$can_view = false;
 
-			switch( $privacy ) {
+			$privacy = intval( UM()->options()->get( 'profile_tab_' . $tab . '_privacy' ) );
+			switch ( $privacy ) {
+				case 0:
+					$can_view = true;
+					break;
+
 				case 1:
-					$can_view = is_user_logged_in() ? false : true;
+					$can_view = ! is_user_logged_in();
 					break;
 
 				case 2:
-					$can_view = is_user_logged_in() ? true : false;
+					$can_view = is_user_logged_in();
 					break;
 
 				case 3:
-					$can_view = get_current_user_id() == um_user( 'ID' ) ? true : false;
+					$can_view = is_user_logged_in() && get_current_user_id() === $target_id;
 					break;
 
 				case 4:
-					$can_view = false;
-					if( is_user_logged_in() ) {
-						$roles = UM()->options()->get( 'profile_tab_' . $tab . '_roles' );
-						if( is_array( $roles )
-						    && in_array( UM()->user()->get_role(), $roles ) ) {
+					if ( is_user_logged_in() ) {
+						$roles = (array) UM()->options()->get( 'profile_tab_' . $tab . '_roles' );
+
+						$current_user_roles = um_user( 'roles' );
+						if ( ! empty( $current_user_roles ) && count( array_intersect( $current_user_roles, $roles ) ) > 0 ) {
 							$can_view = true;
 						}
 					}

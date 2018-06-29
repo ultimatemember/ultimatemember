@@ -131,6 +131,32 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
+= 2.0.18: June 25, 2018 =
+
+* Enhancements:
+  - Added an ability to create different email templates for each site on multisites installs
+  - Added major version notice
+  - Added an ability to make Profile Form visible for 2 or more roles
+  - Redesign some parts of field's conditional logic settings
+
+* Bugfixes:
+  - Fixed PHP memory limit issue on some installs. Created pseudo-constructor
+  - Disabled email notification to user, which wasn't approved about delete their account
+  - Fixed profile tabs privacy
+  - Fixed default avatars and Gravatar displaying
+  - Fixed get current URL function
+  - Fixed admin bar displaying
+  - Fixed members directory search
+  - Fixed nav-menu items restriction handlers
+  - Fixed user displaying on multisite (added 404 error in some cases)
+  - Fixed XSS at wp-admin settings screen
+  - Fixed user's "user_login" permalinks
+  - Fixed user's capabilities ("Edit", "Delete" user) and profile actions displaying
+  - Fixed field's conditional logic
+
+* Deprecated:
+  - REST API user's key option;
+
 = 2.0.17: May 30, 2018 =
 
 * Enhancements:

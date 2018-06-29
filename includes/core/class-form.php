@@ -308,7 +308,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 							global $wp_roles;
 							$role_keys = array_map( function( $item ) {
 								return 'um_' . $item;
-							}, get_option( 'um_roles' ) );
+							}, get_option( 'um_roles', array() ) );
 							$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
 
 							if ( ! empty( $role ) &&

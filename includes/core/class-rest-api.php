@@ -70,10 +70,10 @@ if ( ! class_exists( 'um\core\REST_API' ) ) {
 			add_action( 'template_redirect',        array( $this, 'process_query'    ), -1 );
 			add_filter( 'query_vars',               array( $this, 'query_vars'       ) );
 
-			add_filter( 'um_user_profile_additional_fields', array( $this, 'user_key_field' ), 3, 2 );
+			//add_filter( 'um_user_profile_additional_fields', array( $this, 'user_key_field' ), 3, 2 );
 
-			add_action( 'personal_options_update',  array( $this, 'update_key'       ) );
-			add_action( 'edit_user_profile_update', array( $this, 'update_key'       ) );
+			//add_action( 'personal_options_update',  array( $this, 'update_key'       ) );
+			//add_action( 'edit_user_profile_update', array( $this, 'update_key'       ) );
 
 			// Determine if JSON_PRETTY_PRINT is available
 			$this->pretty_print = defined( 'JSON_PRETTY_PRINT' ) ? JSON_PRETTY_PRINT : null;
