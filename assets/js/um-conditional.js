@@ -20,7 +20,7 @@ jQuery(document).ready( function (){
             case 'date':
             case 'textarea':
             case 'select':
-                default_value = $dom.find('input:text,input[type=number],textarea,select').val();
+                default_value = $dom.find('input:text,input[type="number"],textarea,select').val();
                 break;
 
             case 'multiselect':
@@ -28,21 +28,21 @@ jQuery(document).ready( function (){
                 break;
 
             case 'radio':
-                if ($dom.find('input[type=radio]:checked').length >= 1) {
-                    default_value = $dom.find('input[type=radio]:checked').val();
+                if ($dom.find('input[type="radio"]:checked').length >= 1) {
+                    default_value = $dom.find('input[type="radio"]:checked').val();
                 }
 
                 break;
             case 'checkbox':
 
-                if ($dom.find('input[type=checkbox]:checked').length >= 1) {
+                if ($dom.find('input[type="checkbox"]:checked').length >= 1) {
 
-                    if ($dom.find('input[type=checkbox]:checked').length > 1) {
-                        $dom.find('input[type=checkbox]:checked').each(function () {
+                    if ($dom.find('input[type="checkbox"]:checked').length > 1) {
+                        $dom.find('input[type="checkbox"]:checked').each(function () {
                             default_value = default_value + jQuery(this).val() + ' ';
                         });
                     } else {
-                        default_value = $dom.find('input[type=checkbox]:checked').val();
+                        default_value = $dom.find('input[type="checkbox"]:checked').val();
                     }
 
                 }
@@ -146,7 +146,7 @@ jQuery(document).ready( function (){
         }
 
         if ($dom.is(':radio')) {
-            um_live_value = $dom.parents('.um-field').find('input[type=radio]:checked').val();
+            um_live_value = $dom.parents('.um-field').find('input[type="radio"]:checked').val();
         }
 
         return um_live_value;
@@ -191,7 +191,7 @@ jQuery(document).ready( function (){
             case 'number':
             case 'date':
             case 'textarea':
-                $dom.find('input:text,input[type=number],textareas').val(field.value);
+                $dom.find('input:text,input[type="number"],textareas').val(field.value);
                 break;
 
             case 'select':
@@ -210,23 +210,23 @@ jQuery(document).ready( function (){
 
             case 'checkbox':
 
-                if ( $dom.find('input[type=checkbox]:checked').length >= 1 ) {
+                if ( $dom.find('input[type="checkbox"]:checked').length >= 1 ) {
 
-                    $dom.find('input[type=checkbox]:checked').removeAttr('checked');
+                    $dom.find('input[type="checkbox"]:checked').removeAttr('checked');
                     $dom.find('span.um-field-checkbox-state i').removeClass('um-icon-android-checkbox-outline');
                     $dom.find('span.um-field-checkbox-state i').addClass('um-icon-android-checkbox-outline-blank');
                     $dom.find('.um-field-checkbox.active').removeClass('active');
 
                     if (jQuery.isArray(field.value)) {
                         jQuery.each(field.value, function (i, value) {
-                            var cbox_elem = $dom.find('input[type=checkbox][value="' + value + '"]');
+                            var cbox_elem = $dom.find('input[type="checkbox"][value="' + value + '"]');
                             cbox_elem.attr('checked', true);
                             cbox_elem.closest('.um-field-checkbox').find('i').removeClass('um-icon-android-checkbox-outline-blank');
                             cbox_elem.closest('.um-field-checkbox').find('i').addClass('um-icon-android-checkbox-outline');
                             cbox_elem.closest('.um-field-checkbox').addClass('active');
                         });
                     } else {
-                        var cbox_elem = $dom.find('input[type=checkbox][value="' + field.value + '"]');
+                        var cbox_elem = $dom.find('input[type="checkbox"][value="' + field.value + '"]');
                         cbox_elem.attr('checked', true);
                         cbox_elem.closest('.um-field-checkbox').find('i').removeClass('um-icon-android-checkbox-outline-blank');
                         cbox_elem.closest('.um-field-checkbox').find('i').addClass('um-icon-android-checkbox-outline');
@@ -238,17 +238,17 @@ jQuery(document).ready( function (){
                 break;
             case 'radio':
 
-                if ( $dom.find('input[type=radio]:checked').length >= 1 ) {
+                if ( $dom.find('input[type="radio"]:checked').length >= 1 ) {
 
                     setTimeout(function () {
 
-                        $dom.find('input[type=radio]:checked').removeAttr('checked');
+                        $dom.find('input[type="radio"]:checked').removeAttr('checked');
 
                         $dom.find('span.um-field-radio-state i').removeClass('um-icon-android-radio-button-on');
                         $dom.find('span.um-field-radio-state i').addClass('um-icon-android-radio-button-off');
                         $dom.find('.um-field-radio.active').removeClass('active');
 
-                        var radio_elem = $dom.find("input[type=radio][value='" + field.value + "']");
+                        var radio_elem = $dom.find('input[type="radio"][value="' + field.value + '"]');
                         radio_elem.attr('checked', true);
                         radio_elem.closest('.um-field-radio').find('i').removeClass('um-icon-android-radio-button-off');
                         radio_elem.closest('.um-field-radio').find('i').addClass('um-icon-android-radio-button-on');

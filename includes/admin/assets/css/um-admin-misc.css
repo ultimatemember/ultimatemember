@@ -176,16 +176,16 @@
 	color: #666;
 }
 
-.um-admin-metabox input[type=text]:disabled{
+.um-admin-metabox input[type="text"]:disabled{
 	opacity: 0.7 !important;
 	color: #aaa !important;
 }
 
-.um-admin-metabox input[type=text] {
+.um-admin-metabox input[type="text"] {
 	height: auto !important;
 }
 
-.um-admin-metabox input[type=text],
+.um-admin-metabox input[type="text"],
 .um-admin-metabox textarea {
 	width: 100%;
 	max-width: 100%;
@@ -202,11 +202,15 @@
 	color: #888 !important;
 }
 
-.um-admin-metabox input[type=text].um-admin-error,
+.um-admin-metabox input[type="text"].um-admin-error,
 .um-admin-metabox textarea.um-admin-error
 {border-color: #C74A4A!important}
 
-.um-admin-metabox input[type=text].small {width: 54px}
+.um-admin-metabox input[type="text"].small {width: 54px}
 
 .um-admin-metabox textarea {min-height: 100px;height: 100px}
 .um-admin-metabox textarea.tall {min-height: 200px;height: 200px}
+
+.um-admin-cur-condition-template {
+	display: none;
+}

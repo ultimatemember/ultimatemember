@@ -380,17 +380,16 @@ p.um-notice.warning {
 	line-height: 1.7em;
 }
 
-.um-form input[type=text],
-.um-form input[type=tel],
-.um-form input[type=number],
-.um-form input[type=password] {
+.um-form input[type="text"],
+.um-form input[type="tel"],
+.um-form input[type="number"],
+.um-form input[type="password"] {
 	padding: 0 12px !important;
 	width: 100%;
 	display: block !important;
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;
 	border-radius: 2px;
-	outline: none !important;
 	cursor: text !important;
 	font-size: 15px !important;
 	height: 40px !important;
@@ -401,28 +400,28 @@ p.um-notice.warning {
 	outline: none !important;
 }
 
-.um-form input[type=number] {
+.um-form input[type="number"] {
 	width: auto;
 	padding: 0 0 0 5px !important;
 	height: 30px !important;
 }
 
-.um-form input[type=text]:focus,
-.um-form input[type=tel]:focus,
-.um-form input[type=number]:focus,
-.um-form input[type=password]:focus,
+.um-form input[type="text"]:focus,
+.um-form input[type="tel"]:focus,
+.um-form input[type="number"]:focus,
+.um-form input[type="password"]:focus,
 .um-form textarea:focus {
 	box-shadow: none !important;
 	outline: none !important;
 }
 
-.um-form input[type=text].um-iconed,
-.um-form input[type=tel].um-iconed,
-.um-form input[type=password].um-iconed { padding-left: 44px !important }
+.um-form input[type="text"].um-iconed,
+.um-form input[type="tel"].um-iconed,
+.um-form input[type="password"].um-iconed { padding-left: 44px !important }
 
-.um-form input[type=text].um-error,
-.um-form input[type=tel].um-error,
-.um-form input[type=password].um-error { border-color: #C74A4A !important }
+.um-form input[type="text"].um-error,
+.um-form input[type="tel"].um-error,
+.um-form input[type="password"].um-error { border-color: #C74A4A !important }
 
 .um-form textarea {
 	width: 100%;
@@ -575,15 +574,15 @@ p.um-notice.warning {
 
 .um div.disabled,
 .um-disabled,
-.um input[type=submit]:disabled,
-.um input[type=text]:disabled,
-.um input[type=number]:disabled {
+.um input[type="submit"]:disabled,
+.um input[type="text"]:disabled,
+.um input[type="number"]:disabled {
 	opacity: 0.6 !important;
 	cursor: no-drop !important;
 }
 
-input[type=submit].um-button,
-input[type=submit].um-button:focus {
+input[type="submit"].um-button,
+input[type="submit"].um-button:focus {
 	vertical-align: middle !important;
 	height: auto !important;
 	font-size: 15px;
@@ -598,7 +597,7 @@ input[type=submit].um-button:focus {
 	-webkit-appearance: none;
 }
 
-input[type=submit].um-button:hover {
+input[type="submit"].um-button:hover {
 	opacity: 1;
 }
 

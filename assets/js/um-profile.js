@@ -143,7 +143,7 @@ jQuery(document).ready(function() {
 		parent.find('.um-single-image-preview img').attr('src','');
 		parent.find('.um-single-image-preview').hide();
 		parent.find('.um-btn-auto-width').html('Upload');
-		parent.find('input[type=hidden]').val('empty_file');
+		parent.find('input[type="hidden"]').val('empty_file');
 
 		wp.ajax.send( 'um_remove_file', {
 			data: {
@@ -162,7 +162,7 @@ jQuery(document).ready(function() {
 		var src = jQuery(this).parents('.um-field').find('.um-single-fileinfo a').attr('href');
 		parent.find('.um-single-file-preview').hide();
 		parent.find('.um-btn-auto-width').html('Upload');
-		parent.find('input[type=hidden]').val('empty_file');
+		parent.find('input[type="hidden"]').val('empty_file');
 
 		wp.ajax.send( 'um_remove_file', {
 			data: {
@@ -193,7 +193,7 @@ jQuery(document).ready(function() {
 
 		jQuery(document).on('change','select[name="'+parent_option+'"]',function(){
 			var parent  = jQuery(this);
-			var form_id = parent.closest('form').find('input[type=hidden][name=form_id]').val();
+			var form_id = parent.closest('form').find('input[type="hidden"][name="form_id"]').val();
 			var arr_key = parent.val();
 
 			if( parent.val() != '' && typeof um_select_options_cache[ arr_key ] != 'object' ){

@@ -14,19 +14,19 @@
     padding: 0 0 15px 0;
 }
 
-input[type=text].um-forms-field.um-long-field,
+input[type="text"].um-forms-field.um-long-field,
 select.um-forms-field.um-long-field,
 textarea.um-forms-field.um-long-field {
     width:100% !important;
 }
 
-input[type=text].um-forms-field.um-medium-field,
+input[type="text"].um-forms-field.um-medium-field,
 select.um-forms-field.um-medium-field,
 textarea.um-forms-field.um-medium-field {
     width:50% !important;
 }
 
-input[type=text].um-forms-field.um-small-field,
+input[type="text"].um-forms-field.um-small-field,
 select.um-forms-field.um-small-field,
 textarea.um-forms-field.um-small-field {
     width:25% !important;

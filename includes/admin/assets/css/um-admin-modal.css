@@ -26,7 +26,7 @@ body.um-admin-modal-open {
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.um-admin-modal input[type=submit].button-primary,
+.um-admin-modal input[type="submit"].button-primary,
 .um-admin-modal a.button-primary,
 .um-admin-modal a.button {
 	padding: 0 12px !important;
@@ -35,10 +35,10 @@ body.um-admin-modal-open {
 
 .um-admin .um-admin-modal a.button i:before {
 	display: block;
-	top: 0px;
+	top: 0;
 }
 
-.um-admin-modal input[type=submit].button-primary {
+.um-admin-modal input[type="submit"].button-primary {
 	line-height: 24px !important;
 }
 
@@ -260,7 +260,7 @@ p._icon_search:before {
 	font-family: "Ionicons";
 	color: #999;
 }
-p._icon_search input[type=text]{padding-right: 40px!important}
+p._icon_search input[type="text"]{padding-right: 40px!important}
 
 .um-admin-icons {
 	padding: 0 0 15px 12px;

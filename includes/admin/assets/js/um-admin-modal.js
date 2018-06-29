@@ -259,7 +259,7 @@ jQuery(document).ready(function() {
 				jQuery(this).attr('name', jQuery(this).attr('name') + length );
 			});
 
-			template.find('input[type=text]').val('');
+			template.find('input[type="text"]').val('');
 			template.find('select').val('');
 
 			template.appendTo( content );
@@ -280,7 +280,7 @@ jQuery(document).ready(function() {
 	jQuery(document).on('click', '.um-admin-reset-conditions a', function(){
 		var content = jQuery(this).parents('.um-admin-btn-content');
 		content.find('.um-admin-cur-condition').slice(1).remove();
-		content.find('input[type=text]').val('');
+		content.find('input[type="text"]').val('');
 		content.find('select').val('');
 		jQuery('.um-admin-new-condition').removeClass('disabled');
 		um_admin_live_update_scripts();
@@ -379,11 +379,11 @@ jQuery(document).ready(function() {
 	jQuery(document).on('click', 'span.um-admin-icon-clear', function(){
 		var element = jQuery(this).parents('p');
 		jQuery('#UM_fonticons a.um-admin-modal-back').attr('data-code', '');
-		element.find('input[type=hidden]').val('');
+		element.find('input[type="hidden"]').val('');
 		element.find('.um-admin-icon-value').html( um_admin_modal_data.texts.no_icon );
 
 		element = jQuery(this).parents('td');
-		element.find('input[type=hidden]').val('');
+		element.find('input[type="hidden"]').val('');
 		element.find('.um-admin-icon-value').html( um_admin_modal_data.texts.no_icon );
 		jQuery(this).hide();
 	});

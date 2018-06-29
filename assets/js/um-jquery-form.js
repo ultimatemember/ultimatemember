@@ -224,7 +224,7 @@ $.fn.ajaxSubmit = function(options) {
 
     // [value] (issue #113), also see comment:
     // https://github.com/malsup/form/commit/588306aedba1de01388032d5f42a60159eea9228#commitcomment-2180219
-    var fileInputs = $('input[type=file]:enabled', this).filter(function() { return $(this).val() !== ''; });
+    var fileInputs = $('input[type="file"]:enabled', this).filter(function() { return $(this).val() !== ''; });
 
     var hasFileInputs = fileInputs.length > 0;
     var mp = 'multipart/form-data';
@@ -895,9 +895,9 @@ function captureSubmittingElement(e) {
     /*jshint validthis:true */
     var target = e.target;
     var $el = $(target);
-    if (!($el.is("[type=submit],[type=image]"))) {
+    if (!($el.is('[type="submit"],[type="image"]'))) {
         // is this a child element of the submit el?  (ex: a span within a button)
-        var t = $el.closest('[type=submit]');
+        var t = $el.closest('[type="submit"]');
         if (t.length === 0) {
             return;
         }

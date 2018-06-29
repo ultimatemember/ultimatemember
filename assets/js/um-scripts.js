@@ -12,7 +12,7 @@ jQuery(document).ready(function() {
 	jQuery('.um-tip-s').tipsy({gravity: 's', opacity: 1, live: 'a.live', offset: 3 });
 
 	//Profile & Account Page
-	jQuery(document).on('change', '.um-field-area input[type=radio]', function(){
+	jQuery(document).on('change', '.um-field-area input[type="radio"]', function(){
 		var field = jQuery(this).parents('.um-field-area');
 		var this_field = jQuery(this).parents('label');
 		field.find('.um-field-radio').removeClass('active');
@@ -22,7 +22,7 @@ jQuery(document).ready(function() {
 	});
 
 	//Profile & Account Page
-	jQuery(document).on('change', '.um-field-area input[type=checkbox]', function(){
+	jQuery(document).on('change', '.um-field-area input[type="checkbox"]', function(){
 		var this_field = jQuery(this).parents('label');
 		if ( this_field.hasClass('active') ) {
 			this_field.removeClass('active');

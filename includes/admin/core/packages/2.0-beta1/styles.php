@@ -160,12 +160,12 @@ $css .= "
 $primary_btn_color = UM()->options()->get( 'primary_btn_color' );
 if ( $primary_btn_color ) {
 	$css .= "
-.um input[type=submit]:disabled:hover {
+.um input[type=\"submit\"]:disabled:hover {
 	background: $primary_btn_color;
 }
 
-.um input[type=submit].um-button,
-.um input[type=submit].um-button:focus,
+.um input[type=\"submit\"].um-button,
+.um input[type=\"submit\"].um-button:focus,
 .um a.um-button,
 .um a.um-button.um-disabled:hover,
 .um a.um-button.um-disabled:focus,
@@ -182,7 +182,7 @@ if ( $primary_btn_color ) {
 $primary_btn_hover = UM()->options()->get( 'primary_btn_hover' );
 if ( $primary_btn_hover ) {
 	$css .= "
-.um input[type=submit].um-button:hover,
+.um input[type=\"submit\"].um-button:hover,
 .um a.um-button:hover {
 	background-color: $primary_btn_hover;
 }
@@ -207,7 +207,7 @@ $secondary_btn_color = UM()->options()->get( 'secondary_btn_color' );
 if ( $secondary_btn_color ) {
 	$css .= "
 .um .um-button.um-alt,
-.um input[type=submit].um-button.um-alt {
+.um input[type=\"submit\"].um-button.um-alt {
 	background: $secondary_btn_color;
 }
 ";
@@ -217,7 +217,7 @@ $secondary_btn_hover = UM()->options()->get( 'secondary_btn_hover' );
 if ( $secondary_btn_hover ) {
 	$css .= "
 .um .um-button.um-alt:hover,
-.um input[type=submit].um-button.um-alt:hover{
+.um input[type=\"submit\"].um-button.um-alt:hover{
 	background: $secondary_btn_hover;
 }
 ";
@@ -227,7 +227,7 @@ $secondary_btn_text = UM()->options()->get( 'secondary_btn_text' );
 if ( $secondary_btn_text ) {
 	$css .= "
 .um .um-button.um-alt,
-.um input[type=submit].um-button.um-alt {
+.um input[type=\"submit\"].um-button.um-alt {
 	color: $secondary_btn_text;
 }
 ";
@@ -254,10 +254,10 @@ if ( $form_field_label ) {
 $form_border = UM()->options()->get( 'form_border' );
 if ( $form_border ) {
 	$css .= "
-.um .um-form input[type=text],
-.um .um-form input[type=tel],
-.um .um-form input[type=number],
-.um .um-form input[type=password],
+.um .um-form input[type=\"text\"],
+.um .um-form input[type=\"tel\"],
+.um .um-form input[type=\"number\"],
+.um .um-form input[type=\"password\"],
 .um .um-form textarea,
 .um .upload-progress,
 .select2-container .select2-choice,
@@ -269,7 +269,7 @@ if ( $form_border ) {
 	border: $form_border !important;
 }
 
-.um .um-form .select2-container-multi .select2-choices .select2-search-field input[type=text] {
+.um .um-form .select2-container-multi .select2-choices .select2-search-field input[type=\"text\"] {
     border: none !important
 }
 ";
@@ -278,10 +278,10 @@ if ( $form_border ) {
 $form_border_hover = UM()->options()->get( 'form_border_hover' );
 if ( $form_border_hover ) {
 	$css .= "
-.um .um-form input[type=text]:focus,
-.um .um-form input[type=tel]:focus,
-.um .um-form input[type=number]:focus,
-.um .um-form input[type=password]:focus,
+.um .um-form input[type=\"text\"]:focus,
+.um .um-form input[type=\"tel\"]:focus,
+.um .um-form input[type=\"number\"]:focus,
+.um .um-form input[type=\"password\"]:focus,
 .um .um-form .um-datepicker.picker__input.picker__input--active,
 .um .um-form .um-datepicker.picker__input.picker__input--target,
 .um .um-form textarea:focus {
@@ -293,10 +293,10 @@ if ( $form_border_hover ) {
 $form_bg_color = UM()->options()->get( 'form_bg_color' );
 if ( $form_bg_color ) {
 	$css .= "
-.um .um-form input[type=text],
-.um .um-form input[type=tel],
-.um .um-form input[type=number],
-.um .um-form input[type=password],
+.um .um-form input[type=\"text\"],
+.um .um-form input[type=\"tel\"],
+.um .um-form input[type=\"number\"],
+.um .um-form input[type=\"password\"],
 .um .um-form textarea,
 .select2-container .select2-choice,
 .select2-container-multi .select2-choices
@@ -309,10 +309,10 @@ if ( $form_bg_color ) {
 $form_bg_color_focus = UM()->options()->get( 'form_bg_color_focus' );
 if ( $form_bg_color_focus ) {
 	$css .= "
-.um .um-form input[type=text]:focus,
-.um .um-form input[type=tel]:focus,
-.um .um-form input[type=number]:focus,
-.um .um-form input[type=password]:focus,
+.um .um-form input[type=\"text\"]:focus,
+.um .um-form input[type=\"tel\"]:focus,
+.um .um-form input[type=\"number\"]:focus,
+.um .um-form input[type=\"password\"]:focus,
 .um .um-form textarea:focus {
 	background-color: $form_bg_color_focus;
 }
@@ -322,9 +322,9 @@ if ( $form_bg_color_focus ) {
 $form_text_color = UM()->options()->get( 'form_text_color' );
 if ( $form_text_color ) {
 	$css .= "
-.um .um-form input[type=text],
-.um .um-form input[type=tel],
-.um .um-form input[type=password],
+.um .um-form input[type=\"text\"],
+.um .um-form input[type=\"tel\"],
+.um .um-form input[type=\"password\"],
 .um .um-form textarea
 {
 	color: $form_text_color;
@@ -517,12 +517,12 @@ foreach ( $registration_forms as $form_id ) {
 	$primary_btn_color = get_post_meta( $form_id, '_um_register_primary_btn_color', true );
 	if ( $primary_btn_color ) {
 		$css .= "
-.um-$form_id.um input[type=submit]:disabled:hover {
+.um-$form_id.um input[type=\"submit\"]:disabled:hover {
 	background: $primary_btn_color;
 }
 
-.um-$form_id.um input[type=submit].um-button,
-.um-$form_id.um input[type=submit].um-button:focus,
+.um-$form_id.um input[type=\"submit\"].um-button,
+.um-$form_id.um input[type=\"submit\"].um-button:focus,
 .um-$form_id.um a.um-button,
 .um-$form_id.um a.um-button.um-disabled:hover,
 .um-$form_id.um a.um-button.um-disabled:focus,
@@ -539,7 +539,7 @@ foreach ( $registration_forms as $form_id ) {
 	$primary_btn_hover = get_post_meta( $form_id, '_um_register_primary_btn_hover', true );
 	if ( $primary_btn_hover ) {
 		$css .= "
-.um-$form_id.um input[type=submit].um-button:hover,
+.um-$form_id.um input[type=\"submit\"].um-button:hover,
 .um-$form_id.um a.um-button:hover {
 	background-color: $primary_btn_hover;
 }
@@ -567,7 +567,7 @@ foreach ( $registration_forms as $form_id ) {
 		if ( $secondary_btn_color ) {
 			$css .= "
 .um-$form_id.um .um-button.um-alt,
-.um-$form_id.um input[type=submit].um-button.um-alt {
+.um-$form_id.um input[type=\"submit\"].um-button.um-alt {
 	background: $secondary_btn_color;
 }
 ";
@@ -577,7 +577,7 @@ foreach ( $registration_forms as $form_id ) {
 		if ( $secondary_btn_hover ) {
 			$css .= "
 .um-$form_id.um .um-button.um-alt:hover,
-.um-$form_id.um input[type=submit].um-button.um-alt:hover{
+.um-$form_id.um input[type=\"submit\"].um-button.um-alt:hover{
 	background: $secondary_btn_hover;
 }
 ";
@@ -587,7 +587,7 @@ foreach ( $registration_forms as $form_id ) {
 		if ( $secondary_btn_text ) {
 			$css .= "
 .um-$form_id.um .um-button.um-alt,
-.um-$form_id.um input[type=submit].um-button.um-alt {
+.um-$form_id.um input[type=\"submit\"].um-button.um-alt {
 	color: $secondary_btn_text;
 }
 ";
@@ -610,12 +610,12 @@ foreach ( $login_forms as $form_id ) {
 	$primary_btn_color = get_post_meta( $form_id, '_um_login_primary_btn_color', true );
 	if ( $primary_btn_color ) {
 		$css .= "
-.um-$form_id.um input[type=submit]:disabled:hover {
+.um-$form_id.um input[type=\"submit\"]:disabled:hover {
 	background: $primary_btn_color;
 }
 
-.um-$form_id.um input[type=submit].um-button,
-.um-$form_id.um input[type=submit].um-button:focus,
+.um-$form_id.um input[type=\"submit\"].um-button,
+.um-$form_id.um input[type=\"submit\"].um-button:focus,
 .um-$form_id.um a.um-button,
 .um-$form_id.um a.um-button.um-disabled:hover,
 .um-$form_id.um a.um-button.um-disabled:focus,
@@ -632,7 +632,7 @@ foreach ( $login_forms as $form_id ) {
 	$primary_btn_hover = get_post_meta( $form_id, '_um_login_primary_btn_hover', true );
 	if ( $primary_btn_hover ) {
 		$css .= "
-.um-$form_id.um input[type=submit].um-button:hover,
+.um-$form_id.um input[type=\"submit\"].um-button:hover,
 .um-$form_id.um a.um-button:hover {
 	background-color: $primary_btn_hover;
 }
@@ -660,7 +660,7 @@ foreach ( $login_forms as $form_id ) {
 		if ( $secondary_btn_color ) {
 			$css .= "
 .um-$form_id.um .um-button.um-alt,
-.um-$form_id.um input[type=submit].um-button.um-alt {
+.um-$form_id.um input[type=\"submit\"].um-button.um-alt {
 	background: $secondary_btn_color;
 }
 ";
@@ -670,7 +670,7 @@ foreach ( $login_forms as $form_id ) {
 		if ( $secondary_btn_hover ) {
 			$css .= "
 .um-$form_id.um .um-button.um-alt:hover,
-.um-$form_id.um input[type=submit].um-button.um-alt:hover{
+.um-$form_id.um input[type=\"submit\"].um-button.um-alt:hover{
 	background: $secondary_btn_hover;
 }
 ";
@@ -680,7 +680,7 @@ foreach ( $login_forms as $form_id ) {
 		if ( $secondary_btn_text ) {
 			$css .= "
 .um-$form_id.um .um-button.um-alt,
-.um-$form_id.um input[type=submit].um-button.um-alt {
+.um-$form_id.um input[type=\"submit\"].um-button.um-alt {
 	color: $secondary_btn_text;
 }
 ";
@@ -702,12 +702,12 @@ foreach ( $profile_forms as $form_id ) {
 	$primary_btn_color = get_post_meta( $form_id, '_um_profile_primary_btn_color', true );
 	if ( $primary_btn_color ) {
 		$css .= "
-.um-$form_id.um input[type=submit]:disabled:hover {
+.um-$form_id.um input[type=\"submit\"]:disabled:hover {
 	background: $primary_btn_color;
 }
 
-.um-$form_id.um input[type=submit].um-button,
-.um-$form_id.um input[type=submit].um-button:focus,
+.um-$form_id.um input[type=\"submit\"].um-button,
+.um-$form_id.um input[type=\"submit\"].um-button:focus,
 .um-$form_id.um a.um-button,
 .um-$form_id.um a.um-button.um-disabled:hover,
 .um-$form_id.um a.um-button.um-disabled:focus,
@@ -724,7 +724,7 @@ foreach ( $profile_forms as $form_id ) {
 	$primary_btn_hover = get_post_meta( $form_id, '_um_profile_primary_btn_hover', true );
 	if ( $primary_btn_hover ) {
 		$css .= "
-.um-$form_id.um input[type=submit].um-button:hover,
+.um-$form_id.um input[type=\"submit\"].um-button:hover,
 .um-$form_id.um a.um-button:hover {
 	background-color: $primary_btn_hover;
 }
@@ -752,7 +752,7 @@ foreach ( $profile_forms as $form_id ) {
 		if ( $secondary_btn_color ) {
 			$css .= "
 .um-$form_id.um .um-button.um-alt,
-.um-$form_id.um input[type=submit].um-button.um-alt {
+.um-$form_id.um input[type=\"submit\"].um-button.um-alt {
 	background: $secondary_btn_color;
 }
 ";
@@ -762,7 +762,7 @@ foreach ( $profile_forms as $form_id ) {
 		if ( $secondary_btn_hover ) {
 			$css .= "
 .um-$form_id.um .um-button.um-alt:hover,
-.um-$form_id.um input[type=submit].um-button.um-alt:hover{
+.um-$form_id.um input[type=\"submit\"].um-button.um-alt:hover{
 	background: $secondary_btn_hover;
 }
 ";
@@ -772,7 +772,7 @@ foreach ( $profile_forms as $form_id ) {
 		if ( $secondary_btn_text ) {
 			$css .= "
 .um-$form_id.um .um-button.um-alt,
-.um-$form_id.um input[type=submit].um-button.um-alt {
+.um-$form_id.um input[type=\"submit\"].um-button.um-alt {
 	color: $secondary_btn_text;
 }
 ";
