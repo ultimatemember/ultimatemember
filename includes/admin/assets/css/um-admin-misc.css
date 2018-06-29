@@ -214,3 +214,9 @@
 .um-admin-cur-condition-template {
 	display: none;
 }
+
+.um-admin a.um-admin-activebg,
+.um-admin a.um-admin-activebg:hover{
+	background: #0085ba;
+	color: #fff;
+}
