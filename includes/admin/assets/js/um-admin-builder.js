@@ -613,7 +613,6 @@ jQuery(document).ready(function() {
 	/**
 	 Conditional fields
 	 **/
-
 	jQuery(document).on('change', '.um-adm-conditional', function(){
 
 		var value;
@@ -673,7 +672,7 @@ jQuery(document).ready(function() {
 	 Conditional fields for
 	 Radio Group
 	 **/
-	jQuery('.um-conditional-radio-group input[type=radio]').click(function(){
+	jQuery('.um-conditional-radio-group input[type="radio"]').click(function(){
 		var holder = jQuery('.um-conditional-radio-group');
 
 		var val = jQuery(this).val();
@@ -697,8 +696,43 @@ jQuery(document).ready(function() {
 	});
 
 
-	jQuery('.um-conditional-radio-group input[type=radio]:checked').each( function(){
-        jQuery(this).trigger('click');
+	jQuery('.um-conditional-radio-group input[type="radio"]:checked').each( function(){
+		jQuery(this).trigger('click');
+	});
+
+
+	/**
+	 clone a field dropdown
+	 **/
+	jQuery(document).on('click', '.um-admin-clone', function(e){
+		e.preventDefault();
+		var container = jQuery(this).parents('.um-admin-field');
+		var parent = jQuery(this).parents('p').find('.um-admin-field:last-child');
+		container.find('select').select2('destroy');
+		var cloned = container.clone();
+		cloned.find('.um-admin-clone').replaceWith('<a href="#" class="um-admin-clone-remove button um-admin-tipsy-n" title="Remove Field"><i class="um-icon-close" style="margin-right:0!important"></i></a>');
+		cloned.insertAfter( parent );
+		cloned.find('select').val('');
+		jQuery('.um-admin-field select').select2({
+			allowClear: true,
+			minimumResultsForSearch: 10
+		});
+		return false;
+	});
+
+	/**
+	 remove a field dropdown
+	 **/
+	jQuery(document).on('click', '.um-admin-clone-remove', function(e){
+		e.preventDefault();
+		var container = jQuery(this).parents('.um-admin-field');
+		jQuery('.tipsy').remove();
+		container.remove();
+		jQuery('.um-admin-field select').select2({
+			allowClear: true,
+			minimumResultsForSearch: 10
+		});
+		return false;
 	});
 
 
