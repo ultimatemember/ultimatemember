@@ -244,8 +244,9 @@ jQuery(document).ready(function() {
 		clone a condition
 	**/
 	jQuery(document).on('click', '.um-admin-new-condition', function(){
-		if ( jQuery(this).hasClass('disabled') )
+		if ( jQuery(this).hasClass('disabled') ) {
 			return false;
+		}
 
 		var content = jQuery(this).parents('.um-admin-btn-content'),
 			length = content.find('.um-admin-cur-condition').length;
@@ -253,12 +254,10 @@ jQuery(document).ready(function() {
 		if ( length < 5 ) {
 			var template = jQuery('.um-admin-btn-content').find('.um-admin-cur-condition-template').clone();
 
-			template.find('input[type=text],select').each(function(){
+			template.find('input[type="text"],select').each(function(){
 				jQuery(this).attr('id', jQuery(this).attr('id') + length );
 				jQuery(this).attr('name', jQuery(this).attr('name') + length );
 			});
-			cloned.find('input[type=text]').val('');
-			cloned.find('.um-admin-new-condition').replaceWith('<p><a href="#" class="um-admin-remove-condition button um-admin-tipsy-n" title="' + um_admin_modal_data.texts.remove_condition_title + '"><i class="um-icon-close" style="margin-right:0!important"></i></a></p>');
 
 			template.find('input[type=text]').val('');
 			template.find('select').val('');
