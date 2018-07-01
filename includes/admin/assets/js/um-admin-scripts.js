@@ -13,6 +13,31 @@ function um_init_tooltips() {
 jQuery(document).ready(function() {
 
 	/**
+	 clone a field dropdown
+	 **/
+	jQuery(document).on( 'click', '#um_add_review_love', function(e){
+		jQuery(this).parents('#um_start_review_notice').hide();
+		jQuery('.um_hidden_notice[data-key="love"]').show();
+	});
+
+	/**
+	 clone a field dropdown
+	 **/
+	jQuery(document).on( 'click', '#um_add_review_good', function(e){
+		jQuery(this).parents('#um_start_review_notice').hide();
+		jQuery('.um_hidden_notice[data-key="good"]').show();
+	});
+
+	/**
+	 clone a field dropdown
+	 **/
+	jQuery(document).on( 'click', '#um_add_review_bad', function(e){
+		jQuery(this).parents('#um_start_review_notice').hide();
+		jQuery('.um_hidden_notice[data-key="bad"]').show();
+	});
+
+
+	/**
 		clone a field dropdown
 	**/
 	jQuery(document).on('click', '.um-admin-clone', function(e){
@@ -215,23 +240,4 @@ jQuery(document).ready(function() {
             jQuery(this).parents('.um-nav-edit').find('.um-nav-roles').hide();
         }
 	});
-
-
-    jQuery(document).on( 'click', '.um-admin-notice.is-dismissible .notice-dismiss', function(e) {
-        var notice_key = jQuery(this).parents('.um-admin-notice').data('key');
-
-        wp.ajax.send( 'um_dimiss_notice', {
-            data: {
-                key: notice_key,
-                nonce: um_admin_scripts.nonce
-            },
-            success: function( data ) {
-                return true;
-            },
-            error: function( data ) {
-                return false;
-            }
-        });
-    });
-
 });

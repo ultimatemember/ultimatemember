@@ -30,7 +30,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			add_action( 'admin_init', array( &$this, 'create_list' ), 10 );
 			add_action( 'admin_notices', array( &$this, 'render_notices' ), 1 );
 
-			//add_action( 'wp_ajax_um_dimiss_notice', array( &$this, 'dimiss_notice' ) );
+			add_action( 'wp_ajax_um_dismiss_notice', array( &$this, 'dismiss_notice' ) );
 		}
 
 
@@ -43,6 +43,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->admin_notice_tracking();
 			$this->need_upgrade();
 			$this->check_wrong_licenses();
+
+			$this->reviews_notice();
 
 
 			//$this->future_changed();
@@ -610,6 +612,71 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 
 		/**
+		 *
+		 */
+		function reviews_notice() {
+
+			$first_activation_date = get_option( 'um_first_activation_date', false );
+
+			if ( empty( $first_activation_date ) ) {
+				return;
+			}
+
+			if ( $first_activation_date + MONTH_IN_SECONDS > time() ) {
+				return;
+			}
+
+			ob_start(); ?>
+
+			<div id="um_start_review_notice">
+				<p>
+					<?php printf( __( 'Hey there! It\'s been one month since you installed %s. Could you tell us your experience of the plugin so far?', 'ultimate-member' ), ultimatemember_plugin_name ) ?>
+				</p>
+				<p>
+					<a href="javascript:void(0);" id="um_add_review_love"><?php _e( 'I love it!', 'ultimate-member' ) ?></a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="javascript:void(0);" id="um_add_review_good"><?php _e('It\'s good but could be better', 'ultimate-member' ) ?></a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="javascript:void(0);" id="um_add_review_bad"><?php _e('I don\'t like the plugin', 'ultimate-member' ) ?></a>
+				</p>
+			</div>
+			<div class="um_hidden_notice" data-key="love">
+				<p>
+					<?php printf( __( 'Great! We\'re happy to hear that you love the plugin. It would be amazing if you could let others know why you like %s by leaving a review of the plugin. This will help %s to grow and become more popular and would be massively appreciated by us!' ), ultimatemember_plugin_name, ultimatemember_plugin_name ); ?>
+				</p>
+
+				<p>
+					<a href="https://wordpress.org/support/plugin/ultimate-member/reviews/?filter=5" target="_blank" class="button button-primary"><?php _e( 'Leave Review', 'ultimate-member' ) ?></a>
+				</p>
+			</div>
+			<div class="um_hidden_notice" data-key="good">
+				<p>
+					<?php _e( 'We\'re glad to hear that you like the plugin but we would love to get your feedback so we can make the plugin better.' ); ?>
+				</p>
+
+				<p>
+					<a href="#" class="button button-primary"><?php _e( 'Provide Feedback', 'ultimate-member' ) ?></a>
+				</p>
+			</div>
+			<div class="um_hidden_notice" data-key="bad">
+				<p>
+					<?php _e( 'We\'re sorry to hear that. If you\'re having the issue with the plugin you can create a topic on our support forum and we will try and help you out with the issue. Alternatively if you have an idea on how we can make the plugin better or want to tell us what you don\'t like about the plugin you can tell us know by giving us feedback.' ); ?>
+				</p>
+
+				<p>
+					<a href="#" class="button button-primary"><?php _e( 'Provide Feedback', 'ultimate-member' ) ?></a>
+				</p>
+			</div>
+
+			<?php $message = ob_get_clean();
+
+			$this->add_notice( 'reviews_notice', array(
+				'class'     => 'updated',
+				'message'   => $message,
+				'dimissible' => true
+			), 1 );
+		}
+
+
+		/**
 		 * Check Future Changes notice
 		 */
 		function future_changed() {
@@ -630,7 +697,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		}
 
 
-		function dimiss_notice() {
+		function dismiss_notice() {
 			if ( empty( $_POST['key'] ) ) {
 				wp_send_json_error( __( 'Wrong Data', 'ultimate-member' ) );
 			}

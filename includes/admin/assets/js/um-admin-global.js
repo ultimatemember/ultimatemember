@@ -1,0 +1,40 @@
+jQuery(document).ready(function() {
+
+
+	jQuery(document).on('click', '#um_add_review_love', function (e) {
+		jQuery(this).parents('#um_start_review_notice').hide();
+		jQuery('.um_hidden_notice[data-key="love"]').show();
+	});
+
+
+	jQuery(document).on('click', '#um_add_review_good', function (e) {
+		jQuery(this).parents('#um_start_review_notice').hide();
+		jQuery('.um_hidden_notice[data-key="good"]').show();
+	});
+
+
+	jQuery(document).on('click', '#um_add_review_bad', function (e) {
+		jQuery(this).parents('#um_start_review_notice').hide();
+		jQuery('.um_hidden_notice[data-key="bad"]').show();
+	});
+
+
+	jQuery(document).on( 'click', '.um-admin-notice.is-dismissible .notice-dismiss', function(e) {
+		var notice_key = jQuery(this).parents('.um-admin-notice').data('key');
+
+		wp.ajax.send( 'um_dismiss_notice', {
+			data: {
+				key: notice_key,
+				nonce: um_admin_scripts.nonce
+			},
+			success: function( data ) {
+				return true;
+			},
+			error: function( data ) {
+				return false;
+			}
+		});
+	});
+
+
+});

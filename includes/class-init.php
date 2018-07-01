@@ -462,6 +462,8 @@ if ( ! class_exists( 'UM' ) ) {
 			if ( ! $version ) {
 				update_option( 'um_last_version_upgrade', ultimatemember_version );
 
+				add_option( 'um_first_activation_date', time() );
+
 				//show avatars on first install
 				if ( ! get_option( 'show_avatars' ) ) {
 					update_option( 'show_avatars', 1 );
@@ -496,6 +498,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->admin_upgrade()->init_packages_ajax_handlers();
 				$this->admin_gdpr();
 				$this->columns();
+				$this->notices();
 			} elseif ( $this->is_request( 'admin' ) ) {
 				$this->admin();
 				$this->admin_menu();
