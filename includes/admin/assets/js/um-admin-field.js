@@ -35,7 +35,7 @@ jQuery(document).ready(function() {
 	
 	/* Add a Field */
 	jQuery(document).on('submit', 'form.um_add_field', function(e){
-		
+
 		e.preventDefault();
 		
 		var form = jQuery(this);
