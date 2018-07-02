@@ -30,11 +30,6 @@ jQuery(document).ready(function() {
 	/* Add a Field */
 	jQuery(document).on('submit', 'form.um_add_field', function(e){
 
-<<<<<<< HEAD
-=======
-		console.log(um_admin_field_data.ajax_url);
-
->>>>>>> 847a773d7011431827a5dd4edc3487e7ae093a37
 		e.preventDefault();
 		
 		var form = jQuery(this);
