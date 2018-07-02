@@ -272,20 +272,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			 * @input_vars
 			 * [{"var":"$html","type":"string","desc":"Field's HTML"},
 			 * {"var":"$data","type":"array","desc":"Field's data"},
-			 * {"var":"$form_data","type":"array","desc":"Form data"}]
+			 * {"var":"$form_data","type":"array","desc":"Form data"},
+			 * {"var":"$admin_form","type":"object","desc":"Admin_Forms class object"}]
 			 * @change_log
 			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_render_field_type_{$type}', 'function_name', 10, 3 );
+			 * @usage add_filter( 'um_render_field_type_{$type}', 'function_name', 10, 4 );
 			 * @example
 			 * <?php
-			 * add_filter( 'um_render_field_type_{$type}', 'my_render_field_type', 10, 3 );
-			 * function my_render_field_type( $html, $data, $form_data ) {
+			 * add_filter( 'um_render_field_type_{$type}', 'my_render_field_type', 10, 4 );
+			 * function my_render_field_type( $html, $data, $form_data, $admin_form ) {
 			 *     // your code here
 			 *     return $html;
 			 * }
 			 * ?>
 			 */
-			return apply_filters( 'um_render_field_type_' . $data['type'], '', $data, $this->form_data );
+			return apply_filters( 'um_render_field_type_' . $data['type'], '', $data, $this->form_data, $this );
 		}
 
 
