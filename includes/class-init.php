@@ -537,7 +537,6 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->permalinks();
 			$this->modal();
 			$this->cron();
-			$this->tracking();
 			$this->mobile();
 			$this->external_integrations();
 			$this->gdpr();
@@ -1250,20 +1249,6 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 
 			return $this->classes['cron'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * @return um\core\Tracking
-		 */
-		function tracking() {
-			if ( empty( $this->classes['tracking'] ) ) {
-				$this->classes['tracking'] = new um\core\Tracking();
-			}
-
-			return $this->classes['tracking'];
 		}
 
 

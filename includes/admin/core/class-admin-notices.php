@@ -31,6 +31,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			add_action( 'admin_notices', array( &$this, 'render_notices' ), 1 );
 
 			add_action( 'wp_ajax_um_dismiss_notice', array( &$this, 'dismiss_notice' ) );
+			add_action( 'wp_ajax_um_opt_in_notice', array( &$this, 'opt_in_notice' ) );
 		}
 
 
@@ -40,7 +41,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->localize_note();
 			$this->show_update_messages();
 			$this->check_wrong_install_folder();
-			$this->admin_notice_tracking();
+			$this->admin_notice_opt_in();
 			$this->need_upgrade();
 			$this->check_wrong_licenses();
 
@@ -193,11 +194,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$class = ! empty( $notice_data['class'] ) ? $notice_data['class'] : 'updated';
 
-			$dimissible = ! empty( $admin_notices[ $key ]['dimissible'] );
+			$dismissible = ! empty( $admin_notices[ $key ]['dismissible'] );
 
 			ob_start(); ?>
 
-			<div class="<?php echo esc_attr( $class ) ?> um-admin-notice notice <?php echo $dimissible ? 'is-dismissible' : '' ?>" data-key="<?php echo $key ?>">
+			<div class="<?php echo esc_attr( $class ) ?> um-admin-notice notice <?php echo $dismissible ? 'is-dismissible' : '' ?>" data-key="<?php echo $key ?>">
 				<?php echo ! empty( $notice_data['message'] ) ? $notice_data['message'] : '' ?>
 			</div>
 
@@ -501,42 +502,43 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		/**
 		 * Show admin notices
 		 */
-		public function admin_notice_tracking() {
+		public function admin_notice_opt_in() {
 
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
 
+			//backward compatibility
 			$hide_notice = get_option( 'um_tracking_notice' );
 
 			if ( $hide_notice ) {
 				return;
 			}
 
-			$optin_url  =  esc_url( add_query_arg( 'um_adm_action', 'opt_into_tracking' ) );
-			$optout_url =  esc_url( add_query_arg( 'um_adm_action', 'opt_out_of_tracking' ) );
+			$optin_url = esc_url( add_query_arg( 'um_adm_action', 'opt_in' ) );
 
 			ob_start(); ?>
 
 			<p>
-				<?php printf( __( 'Thanks for installing <strong>%s</strong>! We hope you like the plugin. To fund full-time development and support of the plugin we also sell extensions for %s via our website. If you subscribe to our mailing list we will immediately email you a 20%% discount code for our <a href="%s" target="_blank">extensions bundle</a> (you\'ll need to confirm your subscription via email).', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_plugin_name, 'https://ultimatemember.com/core-extensions-bundle/' ); ?>
+				<?php printf( __( 'Thanks for installing <strong>%s</strong>! We hope you like the plugin. To fund full-time development and support of the plugin we also sell extensions for %s via our website. If you subscribe to our mailing list we will email you a 20%% discount code for our <a href="%s" target="_blank">extensions bundle</a> (you\'ll need to confirm your opt-in via email before the discount code can be sent).', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_plugin_name, 'https://ultimatemember.com/core-extensions-bundle/' ); ?>
 			</p>
 
 			<p>
-				<a href="<?php echo esc_url( $optin_url ) ?>" class="button button-primary"><?php _e( 'Subscribe to mailing list', 'ultimate-member' ) ?></a>
+				<a href="javascript:void(0);" id="um_opt_in_start" class="button button-primary"><?php _e( 'Subscribe to mailing list', 'ultimate-member' ) ?></a>
 				&nbsp;
-				<a href="<?php echo esc_url( $optout_url ) ?>" class="button-secondary"><?php _e( 'No thanks', 'ultimate-member' ) ?></a>
+				<a href="javascript:void(0);" class="button-secondary um_opt_in_link"><?php _e( 'No thanks', 'ultimate-member' ) ?></a>
 			</p>
 
 			<p class="description" style="font-size: 11px;">
-				<?php printf( __( 'By clicking the subscribe button you are agreeing to join our mailing list (managed via MailChimp). See our <a href="%s" target="_blank">privacy policy</a>', 'ultimate-member' ), 'https://ultimatemember.com/support/policy/' ); ?>
+				<?php printf( __( 'By clicking the subscribe button you are agree to join our mailing list. See our <a href="%s" target="_blank">privacy policy</a>', 'ultimate-member' ), 'https://ultimatemember.com/privacy-policy/' ); ?>
 			</p>
 
 			<?php $message = ob_get_clean();
 
-			$this->add_notice( 'tracking_notice', array(
+			$this->add_notice( 'opt_in_notice', array(
 				'class'     => 'updated',
 				'message'   => $message,
+				'dismissible' => true
 			), 2 );
 		}
 
@@ -630,11 +632,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			<div id="um_start_review_notice">
 				<p>
-					<?php printf( __( 'Hey there! It\'s been one month since you installed %s. Could you tell us your experience of the plugin so far?', 'ultimate-member' ), ultimatemember_plugin_name ) ?>
+					<?php printf( __( 'Hey there! It\'s been one month since you installed %s. How have you found the plugin so far?', 'ultimate-member' ), ultimatemember_plugin_name ) ?>
 				</p>
 				<p>
-					<a href="javascript:void(0);" id="um_add_review_love"><?php _e( 'I love it!', 'ultimate-member' ) ?></a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
-					<a href="javascript:void(0);" id="um_add_review_good"><?php _e('It\'s good but could be better', 'ultimate-member' ) ?></a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="javascript:void(0);" id="um_add_review_love"><?php _e( 'I love it!', 'ultimate-member' ) ?></a>&nbsp;|&nbsp;
+					<a href="javascript:void(0);" id="um_add_review_good"><?php _e('It\'s good but could be better', 'ultimate-member' ) ?></a>&nbsp;|&nbsp;
 					<a href="javascript:void(0);" id="um_add_review_bad"><?php _e('I don\'t like the plugin', 'ultimate-member' ) ?></a>
 				</p>
 			</div>
@@ -644,7 +646,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				</p>
 
 				<p>
-					<a href="https://wordpress.org/support/plugin/ultimate-member/reviews/?filter=5" target="_blank" class="button button-primary"><?php _e( 'Leave Review', 'ultimate-member' ) ?></a>
+					<a href="https://wordpress.org/support/plugin/ultimate-member/reviews/?rate=5#new-post" target="_blank" class="button button-primary um_review_link"><?php _e( 'Leave Review', 'ultimate-member' ) ?></a>
 				</p>
 			</div>
 			<div class="um_hidden_notice" data-key="good">
@@ -653,16 +655,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				</p>
 
 				<p>
-					<a href="#" class="button button-primary"><?php _e( 'Provide Feedback', 'ultimate-member' ) ?></a>
+					<a href="https://ultimatemember.com/feedback/" target="_blank" class="button button-primary um_review_link"><?php _e( 'Provide Feedback', 'ultimate-member' ) ?></a>
 				</p>
 			</div>
 			<div class="um_hidden_notice" data-key="bad">
 				<p>
-					<?php _e( 'We\'re sorry to hear that. If you\'re having the issue with the plugin you can create a topic on our support forum and we will try and help you out with the issue. Alternatively if you have an idea on how we can make the plugin better or want to tell us what you don\'t like about the plugin you can tell us know by giving us feedback.' ); ?>
+					<?php printf( __( 'We\'re sorry to hear that. If you\'re having the issue with the plugin you can create a topic on our <a href="%s" target="_blank">support forum</a> and we will try and help you out with the issue. Alternatively if you have an idea on how we can make the plugin better or want to tell us what you don\'t like about the plugin you can tell us know by giving us feedback.' ), 'https://wordpress.org/support/plugin/ultimate-member' ); ?>
 				</p>
 
 				<p>
-					<a href="#" class="button button-primary"><?php _e( 'Provide Feedback', 'ultimate-member' ) ?></a>
+					<a href="https://ultimatemember.com/feedback/" target="_blank" class="button button-primary um_review_link"><?php _e( 'Provide Feedback', 'ultimate-member' ) ?></a>
 				</p>
 			</div>
 
@@ -671,7 +673,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->add_notice( 'reviews_notice', array(
 				'class'     => 'updated',
 				'message'   => $message,
-				'dimissible' => true
+				'dismissible' => true
 			), 1 );
 		}
 
@@ -692,7 +694,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->add_notice( 'future_changes', array(
 				'class'         => 'updated',
 				'message'       => $message,
-				//'dimissible'    => true,
 			), 2 );
 		}
 
@@ -707,6 +708,49 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$hidden_notices[] = $_POST['key'];
 
 			update_user_meta( get_current_user_id(), 'um_hidden_admin_notices', $hidden_notices );
+
+			wp_send_json_success();
+		}
+
+
+		function opt_in_notice() {
+			// Send a maximum of once per period
+			$last_send = get_option( 'um_opt_in_last_send', false );
+			if ( $last_send && $last_send > strtotime( '-1 day' ) ) {
+				return;
+			}
+
+			$data = array();
+
+			UM()->setup()->install_basics();
+
+			$data['email'] = get_option( 'admin_email' );
+			$data['send_discount'] = ! get_option( '__ultimatemember_coupon_sent' ) ? 1 : 0;
+			$data['unique_sitekey'] = get_option( '__ultimatemember_sitekey' );
+
+			$request = wp_remote_post( 'https://ultimatemember.com/?um_action=checkin', array(
+				'method'      => 'POST',
+				'timeout'     => 45,
+				'redirection' => 5,
+				'httpversion' => '1.0',
+				'blocking'    => true,
+				'body'        => $data,
+				'user-agent'  => 'UM/' . ultimatemember_version . '; ' . get_bloginfo( 'url' ),
+			) );
+
+			if ( ! is_wp_error( $request ) ) {
+				$request = json_decode( wp_remote_retrieve_body( $request ), true );
+			}
+
+			$request = ( $request ) ? maybe_unserialize( $request ) : false;
+
+			if ( ! empty( $request['id'] ) && ! empty( $request['list_id'] ) ) {
+				update_option( 'um_opt_in_last_send', time() );
+
+				if ( $request['discount_ready'] ) {
+					update_option( '__ultimatemember_coupon_sent', 1 );
+				}
+			}
 
 			wp_send_json_success();
 		}

@@ -19,6 +19,36 @@ jQuery(document).ready(function() {
 	});
 
 
+	jQuery(document).on('click', '.um_review_link', function (e) {
+		jQuery(this).parents('.um-admin-notice').find( '.notice-dismiss' ).trigger('click');
+	});
+
+
+	jQuery(document).on('click', '.um_opt_in_link', function (e) {
+		jQuery(this).parents('.um-admin-notice').find( '.notice-dismiss' ).trigger('click');
+	});
+
+
+	jQuery(document).on('click', '#um_opt_in_start', function (e) {
+		var dismiss = jQuery(this).parents('.um-admin-notice').find( '.notice-dismiss' );
+		jQuery(this).prop('disabled', true).attr('disabled', 'disabled');
+
+		wp.ajax.send( 'um_opt_in_notice', {
+			data: {
+				nonce: um_admin_scripts.nonce
+			},
+			success: function( data ) {
+				dismiss.trigger('click');
+				jQuery(this).prop('disabled', false);
+			},
+			error: function( data ) {
+				jQuery(this).prop('disabled', false);
+				return false;
+			}
+		});
+	});
+
+
 	jQuery(document).on( 'click', '.um-admin-notice.is-dismissible .notice-dismiss', function(e) {
 		var notice_key = jQuery(this).parents('.um-admin-notice').data('key');
 

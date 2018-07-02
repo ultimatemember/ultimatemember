@@ -1034,11 +1034,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							)
 						),
 						array(
-							'id'       		=> 'um_allow_tracking',
-							'type'     		=> 'checkbox',
-							'label'   		=> __( 'Allow Tracking','ultimate-member' ),
-						),
-						array(
 							'id'       		=> 'uninstall_on_delete',
 							'type'     		=> 'checkbox',
 							'label'   		=> __( 'Remove Data on Uninstall?', 'ultimate-member' ),
