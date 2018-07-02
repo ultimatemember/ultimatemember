@@ -1,20 +1,15 @@
 jQuery(document).ready(function() {
 
-    /* Remove deleted condition fields */
-    jQuery(document).on('click', '', function(){
-
-    });
-
 	/* Remove field permanently */
 	jQuery(document).on('click', '.um-admin-btns a span.remove', function(e){
 		e.preventDefault();
-		
-		if (confirm('This will permanently delete this custom field from database')) {
-		
+
+		if ( confirm( 'This will permanently delete this custom field from database' ) ) {
+
 			jQuery(this).parents('a').remove();
-			
+
 			arg1 = jQuery(this).parents('a').data('arg1');
-			
+
 			jQuery.ajax({
 				url: um_admin_field_data.do_ajax_url,
 				type: 'POST',
@@ -26,16 +21,20 @@ jQuery(document).ready(function() {
 
 				}
 			});
-		
-			
 		}
-		
+
 		return false;
 	});
-	
+
+
 	/* Add a Field */
 	jQuery(document).on('submit', 'form.um_add_field', function(e){
 
+<<<<<<< HEAD
+=======
+		console.log(um_admin_field_data.ajax_url);
+
+>>>>>>> 847a773d7011431827a5dd4edc3487e7ae093a37
 		e.preventDefault();
 		
 		var form = jQuery(this);
@@ -55,6 +54,7 @@ jQuery(document).ready(function() {
 				form.css({'opacity': 1});
 			},
 			success: function(data){
+                console.log(data);
 				if (data.error){
 
 					c = 0;
@@ -82,7 +82,7 @@ jQuery(document).ready(function() {
 				
 			},
 			error: function(data){
-
+				console.log(data);
 			}
 		});
 		
