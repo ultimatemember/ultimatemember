@@ -29,7 +29,7 @@ jQuery(document).ready(function() {
 
 	/* Add a Field */
 	jQuery(document).on('submit', 'form.um_add_field', function(e){
-		
+
 		e.preventDefault();
 		
 		var form = jQuery(this);
@@ -49,6 +49,7 @@ jQuery(document).ready(function() {
 				form.css({'opacity': 1});
 			},
 			success: function(data){
+                console.log(data);
 				if (data.error){
 
 					c = 0;
@@ -76,7 +77,7 @@ jQuery(document).ready(function() {
 				
 			},
 			error: function(data){
-
+				console.log(data);
 			}
 		});
 		
