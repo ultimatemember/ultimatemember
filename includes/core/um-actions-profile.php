@@ -1064,113 +1064,104 @@ add_action( 'um_pre_profile_shortcode', 'um_pre_profile_shortcode' );
  * @param $args
  */
 function um_add_edit_icon( $args ) {
-	$output = '';
-
-	if (!is_user_logged_in()) return; // not allowed for guests
-
-	if (isset( UM()->user()->cannot_edit ) && UM()->user()->cannot_edit == 1) return; // do not proceed if user cannot edit
-
-	if (UM()->fields()->editing == true) {
-
-		?>
-
-		<div class="um-profile-edit um-profile-headericon">
-
-			<a href="#" class="um-profile-edit-a um-profile-save"><i class="um-faicon-check"></i></a>
-
-		</div>
-
-	<?php } else { ?>
-
-		<div class="um-profile-edit um-profile-headericon">
-
-			<a href="#" class="um-profile-edit-a"><i class="um-faicon-cog"></i></a>
-
-			<?php
-
-			$items = array(
-				'editprofile' => '<a href="' . um_edit_profile_url() . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>',
-				'myaccount'   => '<a href="' . um_get_core_page( 'account' ) . '" class="real_url">' . __( 'My Account', 'ultimate-member' ) . '</a>',
-				'logout'      => '<a href="' . um_get_core_page( 'logout' ) . '" class="real_url">' . __( 'Logout', 'ultimate-member' ) . '</a>',
-				'cancel'      => '<a href="#" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
-			);
-
-			$cancel = $items['cancel'];
-
-			if (!um_is_myprofile()) {
-
-				$actions = UM()->user()->get_admin_actions();
-
-				unset( $items['myaccount'] );
-				unset( $items['logout'] );
-				unset( $items['cancel'] );
-
-				if (is_array( $actions )) {
-					$items = array_merge( $items, $actions );
-				}
-
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_profile_edit_menu_items
-				 * @description Edit menu items on profile page
-				 * @input_vars
-				 * [{"var":"$items","type":"array","desc":"User Menu"},
-				 * {"var":"$user_id","type":"int","desc":"Profile ID"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_profile_edit_menu_items', 'function_name', 10, 2 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_profile_edit_menu_items', 'my_profile_edit_menu_items', 10, 2 );
-				 * function my_profile_edit_menu_items( $items, $user_id ) {
-				 *     // your code here
-				 *     return $items;
-				 * }
-				 * ?>
-				 */
-				$items = apply_filters( 'um_profile_edit_menu_items', $items, um_profile_id() );
-
-				$items['cancel'] = $cancel;
-
-			} else {
-
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_myprofile_edit_menu_items
-				 * @description Edit menu items on my profile page
-				 * @input_vars
-				 * [{"var":"$items","type":"array","desc":"User Menu"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_myprofile_edit_menu_items', 'function_name', 10, 1 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_myprofile_edit_menu_items', 'my_myprofile_edit_menu_items', 10, 1 );
-				 * function my_myprofile_edit_menu_items( $items ) {
-				 *     // your code here
-				 *     return $items;
-				 * }
-				 * ?>
-				 */
-				$items = apply_filters( 'um_myprofile_edit_menu_items', $items );
-
-			}
-
-			UM()->profile()->new_ui( $args['header_menu'], 'div.um-profile-edit', 'click', $items );
-
-			?>
-
-		</div>
-
-		<?php
+	if ( ! is_user_logged_in() ) {
+		// not allowed for guests
+		return;
 	}
 
+	// do not proceed if user cannot edit
+
+	if ( UM()->fields()->editing == true ) { ?>
+
+		<div class="um-profile-edit um-profile-headericon">
+			<a href="#" class="um-profile-edit-a um-profile-save"><i class="um-faicon-check"></i></a>
+		</div>
+
+		<?php return;
+	}
+
+	if ( ! um_is_myprofile() ) {
+
+		if ( ! UM()->roles()->um_current_user_can( 'edit', um_profile_id() ) && ! UM()->roles()->um_current_user_can( 'delete', um_profile_id() ) ) {
+			return;
+		}
+
+		$items = UM()->user()->get_admin_actions();
+		if ( UM()->roles()->um_current_user_can( 'edit', um_profile_id() ) ) {
+			$items['editprofile'] = '<a href="' . um_edit_profile_url() . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>';
+		}
+
+		/**
+		* UM hook
+		*
+		* @type filter
+		* @title um_profile_edit_menu_items
+		* @description Edit menu items on profile page
+		* @input_vars
+		* [{"var":"$items","type":"array","desc":"User Menu"},
+		* {"var":"$user_id","type":"int","desc":"Profile ID"}]
+		* @change_log
+		* ["Since: 2.0"]
+		* @usage
+		* <?php add_filter( 'um_profile_edit_menu_items', 'function_name', 10, 2 ); ?>
+		* @example
+		* <?php
+		* add_filter( 'um_profile_edit_menu_items', 'my_profile_edit_menu_items', 10, 2 );
+		* function my_profile_edit_menu_items( $items, $user_id ) {
+		*     // your code here
+		*     return $items;
+		* }
+		* ?>
+		*/
+		$items = apply_filters( 'um_profile_edit_menu_items', $items, um_profile_id() );
+
+		$items['cancel'] = '<a href="#" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>';
+
+	} else {
+		$items = array(
+			'editprofile' => '<a href="' . um_edit_profile_url() . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>',
+			'myaccount'   => '<a href="' . um_get_core_page( 'account' ) . '" class="real_url">' . __( 'My Account', 'ultimate-member' ) . '</a>',
+			'logout'      => '<a href="' . um_get_core_page( 'logout' ) . '" class="real_url">' . __( 'Logout', 'ultimate-member' ) . '</a>',
+			'cancel'      => '<a href="#" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
+		);
+
+		if ( ! empty( UM()->user()->cannot_edit ) ) {
+			unset( $items['editprofile'] );
+		}
+
+		/**
+		* UM hook
+		*
+		* @type filter
+		* @title um_myprofile_edit_menu_items
+		* @description Edit menu items on my profile page
+		* @input_vars
+		* [{"var":"$items","type":"array","desc":"User Menu"}]
+		* @change_log
+		* ["Since: 2.0"]
+		* @usage
+		* <?php add_filter( 'um_myprofile_edit_menu_items', 'function_name', 10, 1 ); ?>
+		* @example
+		* <?php
+		* add_filter( 'um_myprofile_edit_menu_items', 'my_myprofile_edit_menu_items', 10, 1 );
+		* function my_myprofile_edit_menu_items( $items ) {
+		*     // your code here
+		*     return $items;
+		* }
+		* ?>
+		*/
+		$items = apply_filters( 'um_myprofile_edit_menu_items', $items );
+	} ?>
+
+	<div class="um-profile-edit um-profile-headericon">
+
+		<a href="#" class="um-profile-edit-a"><i class="um-faicon-cog"></i></a>
+
+		<?php UM()->profile()->new_ui( $args['header_menu'], 'div.um-profile-edit', 'click', $items ); ?>
+
+	</div>
+
+	<?php
 }
 add_action( 'um_pre_header_editprofile', 'um_add_edit_icon' );
 
@@ -1277,8 +1268,9 @@ add_action( 'um_after_profile_fields', 'um_add_submit_button_to_profile', 1000 )
  * @param array $args
  */
 function um_profile_menu( $args ) {
-	if ( ! UM()->options()->get( 'profile_menu' ) )
+	if ( ! UM()->options()->get( 'profile_menu' ) ) {
 		return;
+	}
 
 	// get active tabs
 	$tabs = UM()->profile()->tabs_active();

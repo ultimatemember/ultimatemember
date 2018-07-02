@@ -161,7 +161,7 @@ if ( ! class_exists( 'um\core\Tracking' ) ) {
 
 			$request = wp_remote_post( 'https://ultimatemember.com/?um_action=checkin', array(
 				'method'      => 'POST',
-				'timeout'     => 20,
+				'timeout'     => 45,
 				'redirection' => 5,
 				'httpversion' => '1.0',
 				'blocking'    => true,

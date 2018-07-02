@@ -1360,6 +1360,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function delete( $send_mail = true ) {
 
 			$this->send_mail_on_delete = $send_mail;
+			//don't send email notification to not approved user
+			if ( 'approved' != um_user( 'account_status' ) ) {
+				$this->send_mail_on_delete = false;
+			}
 
 			$this->delete_user_handler( um_user( 'ID' ) );
 
@@ -1463,6 +1467,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function get_admin_actions() {
 			$items = array();
 			$actions = array();
+
 			/**
 			 * UM hook
 			 *
@@ -1484,12 +1489,16 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 * }
 			 * ?>
 			 */
-			$actions = apply_filters('um_admin_user_actions_hook', $actions );
-			if ( !isset( $actions ) || empty( $actions ) ) return false;
-			foreach($actions as $id => $arr ) {
-				$url = add_query_arg('um_action', $id );
-				$url = add_query_arg('uid', um_profile_id(), $url );
-				$items[] = '<a href="' . $url .'" class="real_url '.$id.'-item">' . $arr['label'] . '</a>';
+			$actions = apply_filters( 'um_admin_user_actions_hook', $actions );
+			if ( ! isset( $actions ) || empty( $actions ) ) {
+				return false;
+			}
+
+			foreach ( $actions as $id => $arr ) {
+				$url = add_query_arg( array( 'um_action' => $id, 'uid' => um_profile_id() ) );
+				/*$url = add_query_arg( 'um_action', $id );
+				$url = add_query_arg( 'uid', um_profile_id(), $url );*/
+				$items[] = '<a href="' . $url .'" class="real_url ' . esc_attr( $id ) . '-item">' . $arr['label'] . '</a>';
 			}
 			return $items;
 		}
@@ -1648,18 +1657,12 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 */
 			$changes = apply_filters('um_before_update_profile', $changes, $this->id );
 
-			// save or update profile meta
 			foreach ( $changes as $key => $value ) {
 				if ( ! in_array( $key, $this->update_user_keys ) ) {
-
 					update_user_meta( $this->id, $key, $value );
-
 				} else {
-
-					$args[$key] = esc_attr( $changes[$key] );
-
+					$args[ $key ] = esc_attr( $changes[ $key ] );
 				}
-
 			}
 
 

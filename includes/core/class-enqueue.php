@@ -263,7 +263,9 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 		 */
 		function load_selectjs() {
 
-			if ( class_exists( 'WooCommerce' ) ) {
+			$dequeue_select2 = apply_filters( 'um_dequeue_select2_scripts', false );
+
+			if ( class_exists( 'WooCommerce' ) || $dequeue_select2 ) {
 				wp_dequeue_style( 'select2' );
 				wp_deregister_style( 'select2' );
 

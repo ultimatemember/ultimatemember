@@ -756,7 +756,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 					<div class="um-col-alt um-col-alt-b">
 						<div class="um-left">
-							<input type="submit" name="um_account_submit" id="um_account_submit"  class="um-button" value="<?php echo ! empty( $tab_data['submit_title'] ) ? $tab_data['submit_title'] : $tab_data['title']; ?>" />
+							<input type="submit" name="um_account_submit" id="um_account_submit_<?php echo $tab_id ?>"  class="um-button" value="<?php echo ! empty( $tab_data['submit_title'] ) ? $tab_data['submit_title'] : $tab_data['title']; ?>" />
 						</div>
 
 						<?php

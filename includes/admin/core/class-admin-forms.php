@@ -732,15 +732,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$value = $this->get_field_value( $field_data );
 
 			$options = '';
-			foreach ( $field_data['options'] as $key=>$option ) {
+			foreach ( $field_data['options'] as $key => $option ) {
 				if ( ! empty( $field_data['multi'] ) ) {
 
 					if ( ! is_array( $value ) || empty( $value ) )
 						$value = array();
 
-					$options .= '<option value="' . $key . '" ' . selected( in_array( $key, $value ), true, false ) . '>' . $option . '</option>';
+					$options .= '<option value="' . $key . '" ' . selected( in_array( $key, $value ), true, false ) . '>' . esc_html( $option ) . '</option>';
 				} else {
-					$options .= '<option value="' . $key . '" ' . selected( (string)$key == $value, true, false ) . '>' . $option . '</option>';
+					$options .= '<option value="' . $key . '" ' . selected( (string)$key == $value, true, false ) . '>' . esc_html( $option ) . '</option>';
 				}
 			}
 
@@ -1041,11 +1041,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			ob_start(); ?>
 
 			<div class="email_template_wrapper <?php echo $field_data['in_theme'] ? 'in_theme' : '' ?>" data-key="<?php echo $field_data['id'] ?>" style="position: relative;">
-				<!--                <input type="button" class="reset_email_template button" value="--><?php //_e( 'Reset Template to Default', 'ultimate-member' ) ?><!--" />-->
-				<!--<div class="copy_button_overlay">
-                    <span><?php /*_e( 'Currently UM use default Email Template, you can edit this template after then you copy in to theme', 'ultimate-member' ) */?></span>
-                    <input type="button" class="copy_email_template button" value="<?php /*_e( 'Copy Template to Theme', 'ultimate-member' ) */?>" />
-                </div>-->
 
 				<?php wp_editor( $value,
 					$id,
@@ -1058,7 +1053,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						'editor_class'  => $class
 					)
 				); ?>
-
+				<span class="description">For default text for plain-text emails please see this <a href="https://docs.ultimatemember.com/article/1342-plain-text-email-default-templates#<?php echo $field_data['id'] ?>" target="_blank">doc</a></span>
 			</div>
 
 			<?php $html = ob_get_clean();

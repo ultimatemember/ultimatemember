@@ -130,46 +130,10 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 		 * @return mixed|void
 		 */
 		function get_current_url( $no_query_params = false ) {
-			$server_name_method = UM()->options()->get( 'current_url_method' );
-			$server_name_method = ! empty( $server_name_method ) ? $server_name_method : 'SERVER_NAME';
+			//use WP native function for fill $_SERVER variables by correct values
+			wp_fix_server_vars();
 
-			$um_port_forwarding_url = UM()->options()->get( 'um_port_forwarding_url' );
-			$um_port_forwarding_url = ! empty( $um_port_forwarding_url ) ? $um_port_forwarding_url : '';
-
-			$page_url 	= '';
-			if ( is_multisite() ) {
-				$blog_id 	= get_current_blog_id();
-				$siteurl 	= get_site_url( $blog_id );
-
-				$network_permalink_structure = UM()->options()->get( 'network_permalink_structure' );
-
-				if(  $network_permalink_structure == "sub-directory" ){
-					$page_url .= "//";
-					$page_url .= $_SERVER[ $server_name_method ];
-				}else{
-					$page_url .= $siteurl;
-				}
-
-				if ( $um_port_forwarding_url == 1 && isset( $_SERVER["SERVER_PORT"] ) ) {
-					$page_url .= ":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-				} else {
-					$page_url .= $_SERVER["REQUEST_URI"];
-				}
-
-			} else {
-				if ( !isset( $_SERVER['SERVER_NAME'] ) )
-					return '';
-
-				$page_url .= "//";
-
-				if ( $um_port_forwarding_url == 1 && isset( $_SERVER["SERVER_PORT"] ) ) {
-					$page_url .= $_SERVER[ $server_name_method ].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-
-				} else {
-					$page_url .= $_SERVER[ $server_name_method ].$_SERVER["REQUEST_URI"];
-				}
-
-			}
+			$page_url = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 			if ( $no_query_params == true ) {
 				$page_url = strtok( $page_url, '?' );
@@ -196,7 +160,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 			 * }
 			 * ?>
 			 */
-			return apply_filters( 'um_get_current_page_url', set_url_scheme( $page_url ) );
+			return apply_filters( 'um_get_current_page_url', $page_url );
 		}
 
 

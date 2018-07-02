@@ -522,8 +522,18 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$use_custom = get_post_meta( $this->form_id, "_um_{$mode}_use_custom_settings", true );
 				if ( $use_custom ) { // Custom Form settings
 					$current_user_roles = UM()->roles()->get_all_user_roles( um_profile_id() );
-					if ( ! empty( $args['role'] ) && ! in_array( $args['role'], $current_user_roles ) ) {
-						return '';
+
+					//backward compatibility between single/multi role form's setting
+					if ( ! empty( $args['role'] ) ) {
+						if ( is_array( $args['role'] ) ) {
+							if ( ! count( array_intersect( $args['role'], $current_user_roles ) ) ) {
+								return '';
+							}
+						} else {
+							if ( ! in_array( $args['role'], $current_user_roles ) ) {
+								return '';
+							}
+						}
 					}
 				}
 			}

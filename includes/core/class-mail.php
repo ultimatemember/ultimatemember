@@ -37,6 +37,23 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 
 		/**
+		 * Mandrill compatibility
+		 *
+		 * @param $nl2br
+		 * @param string $message
+		 * @return bool
+		 */
+		function mandrill_nl2br( $nl2br, $message = '' ) {
+			// text emails
+			if ( ! UM()->options()->get( 'email_html' ) ) {
+				$nl2br = true;
+			}
+
+			return $nl2br;
+		}
+
+
+		/**
 		 * Init paths for email notifications
 		 */
 		function init_paths() {
@@ -66,72 +83,73 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 
 		/**
-		 * Mandrill compatibility
+		 * Check blog ID on multisite, return '' if single site
 		 *
-		 * @param $nl2br
-		 * @param string $message
-		 * @return bool
+		 * @return string
 		 */
-		function mandrill_nl2br( $nl2br, $message = '' ) {
-			// text emails
-			if ( ! UM()->options()->get( 'email_html' ) ) {
-				$nl2br = true;
+		function get_blog_id() {
+			$blog_id = '';
+			if ( is_multisite() ) {
+				$blog_id = '/' . get_current_blog_id();
 			}
 
-			return $nl2br;
+			return $blog_id;
 		}
 
 
 		/**
-		 * Send Email function
+		 * Locate a template and return the path for inclusion.
 		 *
-		 * @param string $email
-		 * @param null $template
-		 * @param array $args
+		 * @access public
+		 * @param string $template_name
+		 * @return string
 		 */
-		function send( $email, $template, $args = array() ) {
+		function locate_template( $template_name ) {
+			// check if there is template at theme folder
+			$blog_id = $this->get_blog_id();
 
-			if ( ! is_email( $email ) ) return;
-			if ( UM()->options()->get( $template . '_on' ) != 1 ) return;
+			//get template file from current blog ID folder
+			$template = locate_template( array(
+				trailingslashit( 'ultimate-member/email' . $blog_id ) . $template_name . '.php'
+			) );
 
-			$this->attachments = null;
-			$this->headers = 'From: '. UM()->options()->get('mail_from') .' <'. UM()->options()->get('mail_from_addr') .'>' . "\r\n";
+			//if there isn't template at theme folder for current blog ID get template file from theme folder
+			if ( is_multisite() && ! $template ) {
+				$template = locate_template( array(
+					trailingslashit( 'ultimate-member/email' ) . $template_name . '.php'
+				) );
+			}
 
+			//if there isn't template at theme folder get template file from plugin dir
+			if ( ! $template ) {
+				$path = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : um_path . 'templates/email';
+				$template = trailingslashit( $path ) . $template_name . '.php';
+			}
+
+			// Return what we found.
 			/**
 			 * UM hook
 			 *
 			 * @type filter
-			 * @title um_email_send_subject
-			 * @description Change email notification subject
+			 * @title um_locate_email_template
+			 * @description Change email notification template path
 			 * @input_vars
-			 * [{"var":"$subject","type":"string","desc":"Subject"},
-			 * {"var":"$key","type":"string","desc":"Template Key"}]
+			 * [{"var":"$template","type":"string","desc":"Template Path"},
+			 * {"var":"$template_name","type":"string","desc":"Template Name"}]
 			 * @change_log
 			 * ["Since: 2.0"]
 			 * @usage
-			 * <?php add_filter( 'um_email_send_subject', 'function_name', 10, 2 ); ?>
+			 * <?php add_filter( 'um_locate_email_template', 'function_name', 10, 2 ); ?>
 			 * @example
 			 * <?php
-			 * add_filter( 'um_email_send_subject', 'my_email_send_subject', 10, 2 );
-			 * function my_email_send_subject( $subject, $key ) {
+			 * add_filter( 'um_locate_email_template', 'my_locate_email_template', 10, 2 );
+			 * function my_email_template_body_attrs( $template, $template_name ) {
 			 *     // your code here
-			 *     return $paths;
+			 *     return $template;
 			 * }
 			 * ?>
 			 */
-			$subject = apply_filters( 'um_email_send_subject', UM()->options()->get( $template . '_sub' ), $template );
-			$this->subject = um_convert_tags( $subject , $args );
-
-			$this->message = $this->prepare_template( $template, $args );
-
-			if ( UM()->options()->get( 'email_html' ) ) {
-				$this->headers .= "Content-Type: text/html\r\n";
-			} else {
-				$this->headers .= "Content-Type: text/plain\r\n";
-			}
-
-			// Send mail
-			wp_mail( $email, $this->subject, $this->message, $this->headers, $this->attachments );
+			return apply_filters( 'um_locate_email_template', $template, $template_name );
 		}
 
 
@@ -313,7 +331,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 				<body <?php echo $body_attrs ?>>
 
-					<?php echo $this->get_email_template( $slug, $args ); ?>
+				<?php echo $this->get_email_template( $slug, $args ); ?>
 
 				</body>
 				</html>
@@ -358,48 +376,55 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 
 		/**
-		 * Locate a template and return the path for inclusion.
+		 * Send Email function
 		 *
-		 * @access public
-		 * @param string $template_name
-		 * @return string
+		 * @param string $email
+		 * @param null $template
+		 * @param array $args
 		 */
-		function locate_template( $template_name ) {
-			// check if there is template at theme folder
-			$template = locate_template( array(
-				trailingslashit( 'ultimate-member/email' ) . $template_name . '.php'
-			) );
+		function send( $email, $template, $args = array() ) {
 
-			//if there isn't template at theme folder get template file from plugin dir
-			if ( ! $template ) {
-				$path = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : um_path . 'templates/email';
-				$template = trailingslashit( $path ) . $template_name . '.php';
-			}
+			if ( ! is_email( $email ) ) return;
+			if ( UM()->options()->get( $template . '_on' ) != 1 ) return;
 
-			// Return what we found.
+			$this->attachments = null;
+			$this->headers = 'From: '. UM()->options()->get('mail_from') .' <'. UM()->options()->get('mail_from_addr') .'>' . "\r\n";
+
 			/**
 			 * UM hook
 			 *
 			 * @type filter
-			 * @title um_locate_email_template
-			 * @description Change email notification template path
+			 * @title um_email_send_subject
+			 * @description Change email notification subject
 			 * @input_vars
-			 * [{"var":"$template","type":"string","desc":"Template Path"},
-			 * {"var":"$template_name","type":"string","desc":"Template Name"}]
+			 * [{"var":"$subject","type":"string","desc":"Subject"},
+			 * {"var":"$key","type":"string","desc":"Template Key"}]
 			 * @change_log
 			 * ["Since: 2.0"]
 			 * @usage
-			 * <?php add_filter( 'um_locate_email_template', 'function_name', 10, 2 ); ?>
+			 * <?php add_filter( 'um_email_send_subject', 'function_name', 10, 2 ); ?>
 			 * @example
 			 * <?php
-			 * add_filter( 'um_locate_email_template', 'my_locate_email_template', 10, 2 );
-			 * function my_email_template_body_attrs( $template, $template_name ) {
+			 * add_filter( 'um_email_send_subject', 'my_email_send_subject', 10, 2 );
+			 * function my_email_send_subject( $subject, $key ) {
 			 *     // your code here
-			 *     return $template;
+			 *     return $paths;
 			 * }
 			 * ?>
 			 */
-			return apply_filters( 'um_locate_email_template', $template, $template_name );
+			$subject = apply_filters( 'um_email_send_subject', UM()->options()->get( $template . '_sub' ), $template );
+			$this->subject = um_convert_tags( $subject , $args );
+
+			$this->message = $this->prepare_template( $template, $args );
+
+			if ( UM()->options()->get( 'email_html' ) ) {
+				$this->headers .= "Content-Type: text/html\r\n";
+			} else {
+				$this->headers .= "Content-Type: text/plain\r\n";
+			}
+
+			// Send mail
+			wp_mail( $email, $this->subject, $this->message, $this->headers, $this->attachments );
 		}
 
 
@@ -439,16 +464,16 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 *
 		 * @access public
 		 * @param string $template_name
-		 * @param bool $html
 		 * @return string
 		 */
-		function template_in_theme( $template_name, $html = false ) {
+		function template_in_theme( $template_name ) {
 			$template_name_file = $this->get_template_filename( $template_name );
-			$ext = ! $html ? '.php' : '.html';
 
-			// check if there is template at theme folder
+			$blog_id = $this->get_blog_id();
+
+			// check if there is template at theme blog ID folder
 			$template = locate_template( array(
-				trailingslashit( 'ultimate-member/email' ) . $template_name_file . $ext
+				trailingslashit( 'ultimate-member/email' . $blog_id ) . $template_name_file . '.php'
 			) );
 
 			// Return what we found.
@@ -460,24 +485,26 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * Method returns expected path for template
 		 *
 		 * @access public
+		 *
 		 * @param string $location
 		 * @param string $template_name
-		 * @param bool $html
+		 *
 		 * @return string
 		 */
-		function get_template_file( $location, $template_name, $html = false ) {
+		function get_template_file( $location, $template_name ) {
 			$template_path = '';
 			$template_name_file = $this->get_template_filename( $template_name );
 
-			$ext = ! $html ? '.php' : '.html';
-
 			switch( $location ) {
 				case 'theme':
-					$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' ). $template_name_file . $ext;
+					//save email template in blog ID folder if we use multisite
+					$blog_id = $this->get_blog_id();
+
+					$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' . $blog_id ). $template_name_file . '.php';
 					break;
 				case 'plugin':
 					$path = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : um_path . 'templates/email';
-					$template_path = trailingslashit( $path ) . $template_name . $ext;
+					$template_path = trailingslashit( $path ) . $template_name . '.php';
 					break;
 			}
 
@@ -488,10 +515,10 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		/**
 		 * Ajax copy template to the theme
 		 *
-		 * @param bool $template
+		 * @param string $template
 		 * @return bool
 		 */
-		function copy_email_template( $template = false ) {
+		function copy_email_template( $template ) {
 
 			$in_theme = $this->template_in_theme( $template );
 			if ( $in_theme ) {
@@ -520,27 +547,6 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 				return true;
 			} else {
 				return false;
-			}
-		}
-
-
-		/**
-		 * Delete Email Notification Template
-		 */
-		function delete_email_template() {
-			$template = $_POST['email_key'];
-
-			$in_theme = $this->template_in_theme( $template );
-			if ( ! $in_theme ) {
-				wp_send_json_error( new \WP_Error( 'template_in_theme', __( 'Template does not exists in theme', 'ultimate-member' ) ) );
-			}
-
-			$theme_template_path = $this->get_template_file( 'theme', $template );
-
-			if ( unlink( $theme_template_path ) ) {
-				wp_send_json_success();
-			} else {
-				wp_send_json_error( new \WP_Error( 'template_not_exists', __( 'Can not remove template from theme', 'ultimate-member' ) ) );
 			}
 		}
 	}
