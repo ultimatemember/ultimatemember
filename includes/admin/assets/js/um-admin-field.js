@@ -49,7 +49,6 @@ jQuery(document).ready(function() {
 				form.css({'opacity': 1});
 			},
 			success: function(data){
-                console.log(data);
 				if (data.error){
 
 					c = 0;

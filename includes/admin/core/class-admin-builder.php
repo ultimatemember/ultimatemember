@@ -606,8 +606,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 *
 		 */
 		function update_field() {
-//            var_dump($_POST);
-//            die;
 			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) )
 				die( __('Please login as administrator','ultimate-member') );
 
