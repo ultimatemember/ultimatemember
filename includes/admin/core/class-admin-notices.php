@@ -143,8 +143,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$admin_notices = $this->get_admin_notices();
 
-			$hidden = get_user_meta( get_current_user_id(), 'um_hidden_admin_notices', true );
-			$hidden = empty( $hidden ) ? array() : $hidden;
+			$hidden = get_option( 'um_hidden_admin_notices', array() );
 
 			uasort( $admin_notices, array( &$this, 'notice_priority_sort' ) );
 
@@ -703,11 +702,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				wp_send_json_error( __( 'Wrong Data', 'ultimate-member' ) );
 			}
 
-			$hidden_notices = get_user_meta( get_current_user_id(), 'um_hidden_admin_notices', true );
-			$hidden_notices = empty( $hidden_notices ) ? array() : $hidden_notices;
+			$hidden_notices = get_option( 'um_hidden_admin_notices', array() );
 			$hidden_notices[] = $_POST['key'];
 
-			update_user_meta( get_current_user_id(), 'um_hidden_admin_notices', $hidden_notices );
+			update_option( 'um_hidden_admin_notices', $hidden_notices );
 
 			wp_send_json_success();
 		}
