@@ -4040,23 +4040,23 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			switch ($act_id) {
 
 				case 'um_admin_duplicate_field':
-					UM()->fields()->duplicate_field( $arg1, $arg2 );
+					$this->duplicate_field( $arg1, $arg2 );
 					break;
 
 				case 'um_admin_remove_field_global':
-					UM()->fields()->delete_field_from_db( $arg1 );
+					$this->delete_field_from_db( $arg1 );
 					break;
 
 				case 'um_admin_remove_field':
-					UM()->fields()->delete_field_from_form( $arg1, $arg2 );
+					$this->delete_field_from_form( $arg1, $arg2 );
 					break;
 
 				case 'um_admin_add_field_from_predefined':
-					UM()->fields()->add_field_from_predefined( $arg1, $arg2, $position );
+					$this->add_field_from_predefined( $arg1, $arg2, $position );
 					break;
 
 				case 'um_admin_add_field_from_list':
-					UM()->fields()->add_field_from_list( $arg1, $arg2, $position );
+					$this->add_field_from_list( $arg1, $arg2, $position );
 					break;
 
 			}
