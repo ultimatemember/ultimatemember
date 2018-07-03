@@ -31,7 +31,31 @@ jQuery(document).ready(function() {
 	jQuery(document).on('submit', 'form.um_add_field', function(e){
 
 		e.preventDefault();
-		
+        var conditions = $('.um-admin-cur-condition');
+        //need fields refactor
+        $(conditions).each( function ( i ) {
+
+            if ( $( this ).find('[id^="_conditional_action"]').val() === '' ||
+                $( this ).find('[id^="_conditional_field"]').val() === '' ||
+                $( this ).find('[id^="_conditional_operator"]').val() ==='' )
+            {
+                $(conditions[i]).find('.um-admin-remove-condition').click();
+            }
+        } );
+        conditions = $('.um-admin-cur-condition');
+        $(conditions).each( function ( i ) {
+            var id = i === 0 ? '' : i;
+
+			$( this ).find('[id^="_conditional_action"]').attr('name', '_conditional_action' + id);
+			$( this ).find('[id^="_conditional_action"]').attr('id', '_conditional_action' + id);
+			$( this ).find('[id^="_conditional_field"]').attr('name', '_conditional_field' + id);
+			$( this ).find('[id^="_conditional_field"]').attr('id', '_conditional_field' + id);
+			$( this ).find('[id^="_conditional_operator"]').attr('name', '_conditional_operator' + id);
+			$( this ).find('[id^="_conditional_operator"]').attr('id', '_conditional_operator' + id);
+			$( this ).find('[id^="_conditional_value"]').attr('name', '_conditional_value' + id);
+			$( this ).find('[id^="_conditional_value"]').attr('id', '_conditional_value' + id);
+
+        } );
 		var form = jQuery(this);
 
 		jQuery.ajax({
