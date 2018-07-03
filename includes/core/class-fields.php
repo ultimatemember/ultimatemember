@@ -1993,7 +1993,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="' . $key . '">';
 
 							if (isset( $data['label'] )) {
-								$output .= $this->field_label( sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] ), $key, $data );
+								$output .= $this->field_label( sprintf( __( 'Confirm %s', 'ultimate-member' ), __($data['label'], 'ultimate-member') ), $key, $data );
 							}
 
 							$output .= '<div class="um-field-area">';
