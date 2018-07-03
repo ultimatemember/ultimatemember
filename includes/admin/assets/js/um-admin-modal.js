@@ -208,22 +208,12 @@ jQuery(document).ready(function() {
 			//content.find('select').select2('destroy');
 
 			var template = jQuery('.um-admin-btn-content').find('.um-admin-cur-condition-template').clone();
-			// if ( length < 1 ) {
-			// 	id = '';
-			// } else {
-			// 	id = length;
-			// }
-            // template.find('input[type=text],select').each(function() {
-			// 	jQuery(this).attr('id', jQuery(this).attr('id') + id );
-			// 	jQuery(this).attr('name', jQuery(this).attr('name') + id );
-			// });
+			template.find('input[type=text]').val('');
+			template.find('select').val('');
 
-            template.find('input[type=text]').val('');
-            template.find('select').val('');
-
-            template.appendTo( content );
-            jQuery(template).removeClass("um-admin-cur-condition-template");
-            jQuery(template).addClass("um-admin-cur-condition");
+			template.appendTo( content );
+			jQuery(template).removeClass("um-admin-cur-condition-template");
+			jQuery(template).addClass("um-admin-cur-condition");
 
 			um_admin_live_update_scripts();
 			um_admin_modal_responsive();
