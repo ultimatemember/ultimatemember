@@ -26,7 +26,7 @@ class UM_Search_Widget extends \WP_Widget {
 		__('Ultimate Member - Search', 'ultimate-member'),
 
 		// Widget description
-		array( 'description' => __( 'Shows users they follow in a widget.', 'ultimate-member' ), )
+		array( 'description' => __( 'Shows the search member form.', 'ultimate-member' ), )
 		);
 
 	}

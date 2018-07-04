@@ -208,6 +208,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		function admin_enqueue_scripts() {
 
 			// SCRIPTS
+			wp_register_script( 'um-admin-global', $this->js_baseurl . 'um-admin-global.js', array('jquery', 'wp-util'), ultimatemember_version, true );
+			wp_enqueue_script( 'um-admin-global' );
+
 			wp_register_style( 'um-admin-global', $this->css_baseurl . 'um-admin-global.css', array(), ultimatemember_version );
 			wp_enqueue_style( 'um-admin-global' );
 

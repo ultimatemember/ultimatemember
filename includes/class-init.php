@@ -462,6 +462,8 @@ if ( ! class_exists( 'UM' ) ) {
 			if ( ! $version ) {
 				update_option( 'um_last_version_upgrade', ultimatemember_version );
 
+				add_option( 'um_first_activation_date', time() );
+
 				//show avatars on first install
 				if ( ! get_option( 'show_avatars' ) ) {
 					update_option( 'show_avatars', 1 );
@@ -497,6 +499,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->admin_upgrade()->init_packages_ajax_handlers();
 				$this->admin_gdpr();
 				$this->columns();
+				$this->notices();
 			} elseif ( $this->is_request( 'admin' ) ) {
 				$this->admin();
 				$this->admin_menu();
@@ -535,7 +538,6 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->permalinks();
 			$this->modal();
 			$this->cron();
-			$this->tracking();
 			$this->mobile();
 			$this->external_integrations();
 			$this->gdpr();
@@ -1259,20 +1261,6 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 
 			return $this->classes['cron'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * @return um\core\Tracking
-		 */
-		function tracking() {
-			if ( empty( $this->classes['tracking'] ) ) {
-				$this->classes['tracking'] = new um\core\Tracking();
-			}
-
-			return $this->classes['tracking'];
 		}
 
 
