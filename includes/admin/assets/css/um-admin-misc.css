@@ -1,3 +1,4 @@
+/*List Table Columns*/
 .um-admin td, .um-admin th {
 	-webkit-font-smoothing: antialiased !important;
 	-moz-osx-font-smoothing: grayscale;
@@ -63,78 +64,24 @@
 	height: 0;
 }
 
-/*
-	- Welcome
-*/
-
-/*.um-about-wrap * {
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-
-.um-about-wrap a.um-about-icon {
-	margin: 0 0 0 15px !important;
-	padding: 0 !important;
-	text-decoration: none !important;
-	color: #777 !important;
-	font-size: 22px !important;
-}
-
-.um-about-wrap a.um-about-icon:hover {color: #0085ba !important}
-
-.um-about-wrap .ultimatemember-actions a.button-primary,
-.um-about-wrap .ultimatemember-actions a.button {
-	vertical-align: top;
-	margin: 0 5px 0 0;
-}
-
-.changelog a.button-primary {
-	height: 40px;
-	line-height: 38px;
-}
-
-.um-about-wrap a {text-decoration: none}*/
-
-/*
-	- General
-*/
-
-
-
-/*.um-admin-hide {display: none}*/
-
-/*.um-admin-field {
-	display: block;
-	width: 100%;
-	margin-top: 10px;
-}
-
-.um-admin-field a.button {
-	position: relative;
-	top: 1px;
-	height: 30px !important;
-}*/
-
-.um-admin #major-publishing-actions{
+/*Main metabox on add/edit form*/
+.um-admin #major-publishing-actions {
 	background-color: #fff !important;
 	border-top:0;
 }
 
+
+/* Blocks layouts */
 .um-admin-tri {
 	float: left;
 	width: 33%;
 }
 
-.um-admin-left{
-	float: left;
-}
-.um-admin-right {
-	float: right;
-}
 .um-admin-clear {
 	clear: both;
 }
 
+/*Buttons*/
 .um-admin a.button i,
 .um-admin a.button-primary i {
 	font-size: 15px !important;
@@ -165,18 +112,20 @@
 	color: #333;
 }
 
-.um-admin-metabox p {margin: 10px 0 0 0}
+.um-admin-metabox p {
+	margin: 10px 0 0 0;
+}
 
-.um-admin-metabox label{
+.um-admin-metabox label {
 	display: block;
 	cursor: default;
 	margin: 0 0 8px 0 !important;
-	padding: 0!important;
+	padding: 0 !important;
 	font-size: 13px;
 	color: #666;
 }
 
-.um-admin-metabox input[type="text"]:disabled{
+.um-admin-metabox input[type="text"]:disabled {
 	opacity: 0.7 !important;
 	color: #aaa !important;
 }
@@ -203,20 +152,19 @@
 }
 
 .um-admin-metabox input[type="text"].um-admin-error,
-.um-admin-metabox textarea.um-admin-error
-{border-color: #C74A4A!important}
-
-.um-admin-metabox input[type="text"].small {width: 54px}
-
-.um-admin-metabox textarea {min-height: 100px;height: 100px}
-.um-admin-metabox textarea.tall {min-height: 200px;height: 200px}
-
-.um-admin-cur-condition-template {
-	display: none;
+.um-admin-metabox textarea.um-admin-error {
+	border-color: #c74a4a !important
 }
 
-.um-admin a.um-admin-activebg,
-.um-admin a.um-admin-activebg:hover{
-	background: #0085ba;
-	color: #fff;
+.um-admin-metabox input[type="text"].small {
+	width: 54px;
+}
+
+.um-admin-metabox textarea {
+	min-height: 100px;
+	height: 100px;
+}
+.um-admin-metabox textarea.tall {
+	min-height: 200px;
+	height: 200px;
 }

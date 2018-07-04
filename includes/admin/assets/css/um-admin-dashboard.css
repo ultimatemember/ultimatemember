@@ -15,9 +15,9 @@
 .um-metabox-holder p.sub {
 	padding: 0 4px 2px 4px;
 	margin: 0 0 8px 0;
-	color: #8F8F8F;
+	color: #8f8f8f;
 	font-size: 14px;
-	border-bottom: 1px solid #ECECEC;
+	border-bottom: 1px solid #ececec;
 }
 
 .um-metabox-holder .table {
@@ -26,7 +26,7 @@
 }
 
 .um-metabox-holder a.warning {
-	color: #C74A4A !important;
+	color: #c74a4a !important;
 	background: transparent !important;
 	border: 0;
 }
@@ -71,7 +71,7 @@
 
 .um-metabox-holder .norm .count {
 	font-size: 16px;
-	font-family: Georgia;
+	font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
 	color: #999;
 	width: 40px;
 	display: inline-block;
@@ -80,35 +80,9 @@
 }
 
 /*todo rename classes Purge Cache dashboard widget*/
-.wrap a.red, .wrap span.red {color:#C74A4A}
-.wrap span.ok {color:#7ACF58}
-
-/* Misc */
-
-/*.um-admin-dash-review {
-	text-decoration: none !important;
-	font-size: 16px;
-	position: absolute;
-	top: -2px;
-	right: 4px;
-}*/
-
-/* Share bar */
-
-/*.um-admin-dash-share {
-	margin-top: 11px !important;
-	float: left;
-	line-height: 28px;
-	font-size: 15px;
+.wrap a.red, .wrap span.red {
+	color: #c74a4a;
 }
-
-.um-admin-dash-share a {
-	margin: 0 15px 0 0 !important;
-	text-decoration: none !important;
-	color: #777 !important;
-	font-size: 22px !important;
+.wrap span.ok {
+	color: #7acf58;
 }
-.um-admin-dash-share a:hover {color: #0085ba !important}*/
-
-
-

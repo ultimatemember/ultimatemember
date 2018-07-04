@@ -51,7 +51,6 @@ body.um-admin-modal-open {
 	display: none;
 	z-index: 10001;
 	box-sizing: border-box;
-	
 	width: 730px;
 	margin-left: -365px;
 }
@@ -84,7 +83,9 @@ body.um-admin-modal-open {
 	overflow: auto;
 }
 
-.um-admin-modal-body.um-admin-metabox  label {margin: 0!important}
+.um-admin-modal-body.um-admin-metabox label {
+	margin: 0 !important
+}
 
 .um-admin-modal.loading .um-admin-modal-body {
 	height: 200px;
@@ -100,7 +101,7 @@ body.um-admin-modal-open {
 }
 
 .um-admin-modal-foot a,
-.um-admin-modal-foot input{
+.um-admin-modal-foot input {
 	margin: 0 10px !important;
 	font-size: 14px !important;
 }
@@ -214,11 +215,13 @@ body.um-admin-modal-open {
 	font-size: 15px !important;
 }
 
-.um-admin-btns a span.remove:before{
+.um-admin-btns a span.remove:before {
 	font-family: "Ionicons" !important;
 	content: "\f128";
 }
-.um-admin-btns a span:hover{color: #cb3838}
+.um-admin-btns a span:hover {
+	color: #cb3838;
+}
 
 /*
 	- WP Editor
@@ -229,8 +232,9 @@ body.um-admin-modal-open {
 }
 
 .um-admin-modal-body.um-admin-metabox  .um-admin-editor-h label,
-.um-admin-modal-body.um-admin-metabox  .wp-editor-wrap
-{margin: 0 0 4px 0 !important}
+.um-admin-modal-body.um-admin-metabox  .wp-editor-wrap {
+	margin: 0 0 4px 0 !important;
+}
 
 .um-admin-modal-body.um-admin-metabox  .wp-editor-wrap textarea {
 	border: 0 !important;

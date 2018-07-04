@@ -207,7 +207,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 */
 		function admin_enqueue_scripts() {
 
-			// SCRIPTS
 			wp_register_script( 'um-admin-global', $this->js_baseurl . 'um-admin-global.js', array('jquery', 'wp-util'), ultimatemember_version, true );
 			wp_enqueue_script( 'um-admin-global' );
 
@@ -215,7 +214,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			wp_enqueue_style( 'um-admin-global' );
 
 			if ( UM()->admin()->is_um_screen() ) {
-				wp_enqueue_script( 'jquery' );
 
 				wp_register_script( 'um-tipsy', $this->front_js_baseurl . 'um-tipsy' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 				wp_register_script( 'um-admin-scripts', $this->js_baseurl . 'um-admin-scripts.js', array( 'jquery', 'wp-util', 'jquery-ui-tooltip', 'wp-color-picker', 'um-tipsy' ), ultimatemember_version, true );
@@ -277,6 +275,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 				wp_register_style( 'um-fonticons-ii', $this->front_css_baseurl . 'um-fonticons-ii.css', array(), ultimatemember_version );
 				wp_register_style( 'um-fonticons-fa', $this->front_css_baseurl . 'um-fonticons-fa.css', array(), ultimatemember_version );
 				wp_register_style( 'um-tipsy', $this->front_css_baseurl . 'um-tipsy.css', array(), ultimatemember_version );
+
 				wp_register_style( 'um-admin-forms', $this->css_baseurl . 'um-admin-forms.css', array(), ultimatemember_version );
 				wp_register_style( 'um-admin-modal', $this->css_baseurl . 'um-admin-modal.css', array(), ultimatemember_version );
 				wp_register_style( 'um-admin-misc', $this->css_baseurl . 'um-admin-misc.css', array( 'um-fonticons-ii', 'um-fonticons-fa', 'um-tipsy', 'um-admin-forms', 'um-admin-modal' ), ultimatemember_version );

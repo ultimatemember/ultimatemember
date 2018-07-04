@@ -1,25 +1,4 @@
 /*
-	- General
-*/
-
-.um-admin-builder * {
-	-webkit-font-smoothing: antialiased !important;
-	-moz-osx-font-smoothing: grayscale;
-}
-
-.um-admin-builder i {
-	font-size: 15px !important;
-	height: 100% !important;
-	line-height: 100% !important;
-	margin: 0 5px 0 0 !important;
-}
-
-.um-admin-builder .um-admin-drag {
-	margin-top: 40px;
-}
-
-
-/*
 	Mode field
 */
 .um-admin-metabox * {
@@ -79,6 +58,26 @@
 
 .um-admin-boxed-links a:hover {
 	background: #eee;
+}
+
+/*
+	- General
+*/
+
+.um-admin-builder * {
+	-webkit-font-smoothing: antialiased !important;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.um-admin-builder i {
+	font-size: 15px !important;
+	height: 100% !important;
+	line-height: 100% !important;
+	margin: 0 5px 0 0 !important;
+}
+
+.um-admin-builder .um-admin-drag {
+	margin-top: 40px;
 }
 
 
@@ -143,7 +142,7 @@
 	color: #fff;
 }
 
-.um-admin-drag-ctrls.columns a {width: 30px !important;background-image: url(../img/1-column.gif); background-repeat: no-repeat; background-position: center;}
+.um-admin-drag-ctrls.columns a {width: 30px !important;background: url(../img/1-column.gif) no-repeat center;}
 .um-admin-drag-ctrls.columns a:nth-child(2) {background-image: url(../img/2-columns.gif);}
 .um-admin-drag-ctrls.columns a:last-child {background-image: url(../img/3-columns.gif);}
 
@@ -290,8 +289,7 @@
 .um-admin-drag-col.cols-3 .um-admin-drag-fld-type {
 	height: auto;
 	line-height: 18px;
-	margin: 10px;
-	margin-bottom: 0;
+	margin: 10px 10px 0 10px;
 }
 
 .um-admin-drag-col.cols-3 .um-admin-drag-fld-type {
@@ -326,7 +324,6 @@
 	text-align: center;
 	display: block !important;
 	float: left;
-	/*background: #44b0ec;*/
 	background: #0085ba;
 	padding: 0 4px;
 	transition: all .2s linear;
@@ -341,7 +338,7 @@
 .um-admin-drag-row-icons span:hover,
 .um-admin-drag-rowsub-icons a:hover,
 .um-admin-drag-rowsub-icons span:hover,
-.um-admin-drag-fld-icons a:hover {background: #008ec2;/*background: #3396cd;*/}
+.um-admin-drag-fld-icons a:hover {background: #008ec2;}
 
 .um-admin-drag-row-icons i,
 .um-admin-drag-rowsub-icons i,
@@ -380,7 +377,6 @@
 /*
 	- Error blocks
 */
-
 .um-admin-error-block, .um-admin-success-block {
 	display: none;
 	width: 100%;
@@ -396,5 +392,22 @@
 }
 
 .um-admin-success-block {
-	background: #7ACF58;
+	background: #7acf58;
+}
+
+/*Conditional Logic*/
+.um-admin-cur-condition-template {
+	display: none;
+}
+
+/*Form Type Buttons*/
+.um-admin a.um-admin-activebg,
+.um-admin a.um-admin-activebg:hover{
+	background: #0085ba;
+	color: #fff;
+}
+
+/*Block layouts*/
+.um-admin-right {
+	float: right;
 }

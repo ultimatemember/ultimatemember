@@ -90,68 +90,7 @@ ul#adminmenu li.wp-has-submenu.wp-not-current-submenu:hover:after {
 }
 
 
-/*
-	- General metabox styling
-*/
-
-/*#um-admin-access-settings h3 {
-	padding: 10px 20px 10px 60px;
-	color: #fff;
-	background: #0085ba url(../img/logo-small.png) no-repeat 12px center;
-	font-weight: bold;
-	font-size: 14px !important;
-	-webkit-font-smoothing: antialiased !important;
-	-moz-osx-font-smoothing: grayscale !important;
-}
-
-#um-admin-access-settings h4 { margin: 10px 0 4px 0!important}
-
-#um-admin-access-settings div.handlediv {
-	color: #fff !important;
-	-webkit-font-smoothing: antialiased !important;
-	-moz-osx-font-smoothing: grayscale !important;
-}
-
-#um-admin-access-settings p {font-size: 13px}
-
-#um-admin-access-settings input[type=text] {font-size: 13px}*/
-
-
-
-
-
-/*a.um-delete {
-    color: #a00;
-}*/
-
-/*
-	- jQuery Tooltips
-*/
-
-/*
-.um-admin-tip {
-	margin: 0 0 0 2px;
-	color: #0085ba !important;
-	vertical-align: middle;
-	position: relative;
-	top: -3px;
-	opacity: 0.8;
-}
-.um-admin-tip.n {
-	margin-left: 5px;
-}
-.um-admin-tip i {
-	cursor: pointer;
-	vertical-align: middle;
-	font-size: 20px;
-	line-height: 20px;
-	color: #0085ba !important;
-}*/
-.wp-admin p.um-nav-roles label {
-	margin-top: 2px !important;
-	margin-bottom: 2px !important;
-}
-
+/*Global Admin Notice */
 .um_hidden_notice {
 	display: none;
 }

@@ -1,202 +1,202 @@
 .um-form-table.um-third-column .um-forms-line th {
-    width: 33%;
+	width: 33%;
 }
 
 .um-form-table.um-half-column .um-forms-line th {
-    width: 50%;
+	width: 50%;
 }
 
 .um-form-table.um-two-thirds-column .um-forms-line th {
-    width: 83%;
+	width: 83%;
 }
 
 .um-form-table.um-top-label .um-forms-line td {
-    padding: 0 0 15px 0;
+	padding: 0 0 15px 0;
 }
 
 input[type="text"].um-forms-field.um-long-field,
 select.um-forms-field.um-long-field,
 textarea.um-forms-field.um-long-field {
-    width:100% !important;
+	width:100% !important;
 }
 
 input[type="text"].um-forms-field.um-medium-field,
 select.um-forms-field.um-medium-field,
 textarea.um-forms-field.um-medium-field {
-    width:50% !important;
+	width:50% !important;
 }
 
 input[type="text"].um-forms-field.um-small-field,
 select.um-forms-field.um-small-field,
 textarea.um-forms-field.um-small-field {
-    width:25% !important;
+	width:25% !important;
 }
 
 
 
 .um-multi-text-list,
 .um-multi-selects-list {
-    float: left;
-    width:100%;
-    margin: 0 0 10px 0;
+	float: left;
+	width:100%;
+	margin: 0 0 10px 0;
 }
 
 .um-hidden-multi-text,
 .um-hidden-multi-selects {
-    display: none !important;
+	display: none !important;
 }
 
 .um-multi-text-option-line,
 .um-multi-selects-option-line {
-    float:left;
-    width:100%;
-    margin: 0;
-    padding: 0;
-    clear:both;
+	float:left;
+	width:100%;
+	margin: 0;
+	padding: 0;
+	clear:both;
 }
 
 .um-multi-text-option-line .um-field-wrapper,
 .um-multi-selects-option-line .um-field-wrapper {
-    float:left;
-    width: calc( 100% - 60px );
-    line-height: 30px;
-    box-sizing: border-box;
+	float:left;
+	width: calc( 100% - 60px );
+	line-height: 30px;
+	box-sizing: border-box;
 }
 
 .um-multi-text-option-line .um-field-wrapper input,
 .um-multi-selects-option-line .um-field-wrapper select {
-    float:left;
-    width: 100%;
-    margin:0;
+	float:left;
+	width: 100%;
+	margin:0;
 }
 
 
 .um-multi-text-option-line .um-field-control,
 .um-multi-selects-option-line .um-field-control {
-    float:left;
-    width: 60px;
-    line-height: 30px;
-    padding: 0 10px;
-    box-sizing: border-box;
+	float:left;
+	width: 60px;
+	line-height: 30px;
+	padding: 0 10px;
+	box-sizing: border-box;
 }
 
 .um-form-table .description {
-    font-style: italic;
+	font-style: italic;
 }
 
 
 .um-form-fields-section {
-    float:left;
-    clear: none;
-    margin:0;
-    padding: 0 10px 0 0;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
+	float:left;
+	clear: none;
+	margin:0;
+	padding: 0 10px 0 0;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 }
 
 .um-form-fields-section label {
-    float:left;
-    width:100%;
-    margin:0;
-    padding:0;
+	float:left;
+	width:100%;
+	margin:0;
+	padding:0;
 }
 
 .um-form-fields-section label input {
-    float:left;
-    margin-top:0;
+	float:left;
+	margin-top:0;
 }
 
 .um-form-fields-section label span {
-    float:left;
-    width:calc( 100% - 20px );
+	float:left;
+	width:calc( 100% - 20px );
 }
 
 
 @media screen and (max-width: 782px) {
-    .um-form-fields-section {
-        width:100% !important;
-    }
-    .um-admin-metabox .um-form-fields-section label {
-        line-height: 22px !important;
-        margin: 0 0 12px 0 !important;
-    }
-    .um-form-fields-section label span {
-        width:calc( 100% - 30px );
-    }
+	.um-form-fields-section {
+		width:100% !important;
+	}
+	.um-admin-metabox .um-form-fields-section label {
+		line-height: 22px !important;
+		margin: 0 0 12px 0 !important;
+	}
+	.um-form-fields-section label span {
+		width:calc( 100% - 30px );
+	}
 
-    .um-multi-text-option-line,
-    .um-multi-selects-option-line {
-        margin: 0 0 6px 0;
-    }
+	.um-multi-text-option-line,
+	.um-multi-selects-option-line {
+		margin: 0 0 6px 0;
+	}
 
-    .um-forms-line label {
-        float:left;
-        width:100%;
-    }
+	.um-forms-line label {
+		float:left;
+		width:100%;
+	}
 
 
-    .um-form-table.um-third-column .um-forms-line th,
-    .um-form-table.um-half-column .um-forms-line th,
-    .um-form-table.um-two-thirds-column .um-forms-line th {
-        float:left;
-        width: 100%;
-    }
+	.um-form-table.um-third-column .um-forms-line th,
+	.um-form-table.um-half-column .um-forms-line th,
+	.um-form-table.um-two-thirds-column .um-forms-line th {
+		float:left;
+		width: 100%;
+	}
 
-    .um-form-table.um-third-column .um-forms-line td,
-    .um-form-table.um-half-column .um-forms-line td,
-    .um-form-table.um-two-thirds-column .um-forms-line td {
-        float:left;
-        width: 100%;
-    }
+	.um-form-table.um-third-column .um-forms-line td,
+	.um-form-table.um-half-column .um-forms-line td,
+	.um-form-table.um-two-thirds-column .um-forms-line td {
+		float:left;
+		width: 100%;
+	}
 
-    .um-form-table.um-third-column .um-forms-line th label,
-    .um-form-table.um-half-column .um-forms-line th label,
-    .um-form-table.um-two-thirds-column .um-forms-line th label {
-        float:left;
-        width: 100%;
-    }
+	.um-form-table.um-third-column .um-forms-line th label,
+	.um-form-table.um-half-column .um-forms-line th label,
+	.um-form-table.um-two-thirds-column .um-forms-line th label {
+		float:left;
+		width: 100%;
+	}
 }
 
 
 /*Multi text filed */
 .um-forms-line .um-text-delete {
-    color: #a00;
-    float:left;
+	color: #a00;
+	float:left;
 }
 
 .um-forms-line .um-text-delete:hover {
-    color: red;
+	color: red;
 }
 
 .um-forms-line .um-multi-text-add-option {
-    margin-bottom: 14px;
+	margin-bottom: 14px;
 }
 
 
 /* Media uploader */
 .um-forms-line .icon_preview {
-    display: none;
-    max-width: 200px;
-    max-height: 200px;
-    padding: 5px;
-    cursor: pointer;
-    border: 1px solid #e3e3e3;
-    background: #f7f7f7;
-    border-radius: 3px;
-    height: auto;
-    width: auto !important;
+	display: none;
+	max-width: 200px;
+	max-height: 200px;
+	padding: 5px;
+	cursor: pointer;
+	border: 1px solid #e3e3e3;
+	background: #f7f7f7;
+	border-radius: 3px;
+	height: auto;
+	width: auto !important;
 }
 
 
 .um-forms-line[data-conditional] {
-    display: none;
+	display: none;
 }
 
 /*Color Picker*/
 .wp-picker-container input.wp-color-picker[type="text"] {
-    width: 68px !important;
-    float: left !important;
-    padding: 2px 4px !important;
-    border-width: 1px !important;
+	width: 68px !important;
+	float: left !important;
+	padding: 2px 4px !important;
+	border-width: 1px !important;
 }
