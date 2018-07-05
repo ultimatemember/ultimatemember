@@ -135,7 +135,8 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * Bugfixes:
   - Fixed few JS file's full versions
-  - Fixed search in members directory by multiselect field
+  - Fixed search in members directory by multiselect/radio/checkbox field
+  - Fixed first activation role metadata reset
 
 = 2.0.18: July 4, 2018 =
 
