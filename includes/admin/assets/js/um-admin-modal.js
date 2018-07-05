@@ -79,11 +79,12 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 			um_admin_modal_responsive();
 		},
 		success: function( data ) {
-
 			jQuery('.um-admin-modal').find('.um-admin-modal-body').html( data );
 
 			um_admin_modal_responsive();
 			um_admin_live_update_scripts();
+
+			jQuery( document ).trigger( "um_dynamic_modal_content_loaded" );
 
 			jQuery( "#_custom_dropdown_options_source" ).trigger('blur');
 

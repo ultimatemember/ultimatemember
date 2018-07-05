@@ -142,7 +142,7 @@
 	color: #fff;
 }
 
-.um-admin-drag-ctrls.columns a {width: 30px !important;background: url(../img/1-column.gif) no-repeat center;}
+.um-admin-drag-ctrls.columns a {width: 30px !important;background-image: url(../img/1-column.gif); background-repeat: no-repeat; background-position: center;}
 .um-admin-drag-ctrls.columns a:nth-child(2) {background-image: url(../img/2-columns.gif);}
 .um-admin-drag-ctrls.columns a:last-child {background-image: url(../img/3-columns.gif);}
 

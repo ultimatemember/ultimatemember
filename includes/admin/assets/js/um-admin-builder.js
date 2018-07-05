@@ -452,6 +452,11 @@ jQuery(document).ready(function() {
 	});
 
 
+	jQuery(document).on( 'um_dynamic_modal_content_loaded', function() {
+		um_responsive();
+	});
+
+
 	/* Default form tab */
 	if ( jQuery('.um-admin-boxed-links').length > 0 ) {
 		var tab = jQuery('.um-admin-boxed-links a[data-role="'+jQuery('input#form__um_mode').val()+'"]');

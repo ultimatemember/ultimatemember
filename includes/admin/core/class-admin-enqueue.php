@@ -172,6 +172,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			//scripts for FRONTEND PREVIEW
 			wp_register_script( 'um-scrollbar', $this->front_js_baseurl . 'um-scrollbar' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
+			if ( class_exists( 'WooCommerce' ) ) {
+				wp_dequeue_style( 'select2' );
+				wp_deregister_style( 'select2' );
+
+				wp_dequeue_script( 'select2' );
+				wp_deregister_script( 'select2' );
+			}
+
+			wp_register_script( 'select2', $this->front_js_baseurl . 'select2/select2.full.min.js', array( 'jquery', 'jquery-masonry' ), ultimatemember_version, true );
+
+
 			wp_register_script( 'um-jquery-form', $this->front_js_baseurl . 'um-jquery-form' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 			wp_register_script( 'um-fileupload', $this->front_js_baseurl . 'um-fileupload' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
@@ -247,7 +258,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 				wp_localize_script( 'um-admin-scripts', 'um_admin_scripts', $localize_data );
 
 
-				wp_register_script( 'um-admin-modal', $this->js_baseurl . 'um-admin-modal.js', array( 'um-admin-scripts' ), ultimatemember_version, true );
+				$modal_deps = array( 'um-admin-scripts' );
+				if ( $this->um_cpt_form_screen ) {
+					$this->enqueue_frontend_preview_assets();
+					$modal_deps[] = 'um-responsive';
+				}
+
+				wp_register_script( 'um-admin-modal', $this->js_baseurl . 'um-admin-modal.js', $modal_deps, ultimatemember_version, true );
 				$localize_data = array(
 					'texts' => array(
 						'remove_condition_title'    => __( 'Remove condition', 'ultimate-member' ),
@@ -301,8 +318,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 
 				wp_register_style( 'um-admin-builder', $this->css_baseurl . 'um-admin-builder.css', array(), ultimatemember_version );
 				wp_enqueue_style( 'um-admin-builder' );
-
-				$this->enqueue_frontend_preview_assets();
 
 			} elseif ( $this->wp_user_screen ) {
 
