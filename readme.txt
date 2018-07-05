@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.1
 Tested up to: 4.9
-Stable tag: 2.0.17
+Stable tag: 2.0.19
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -131,7 +131,13 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
-= 2.0.18: July 3, 2018 =
+= 2.0.19: July 5, 2018 =
+
+* Bugfixes:
+  - Fixed few JS file's full versions
+  - Fixed search in members directory by multiselect field
+
+= 2.0.18: July 4, 2018 =
 
 * Enhancements:
   - Added an ability to create different email templates for each site on multisites installs
