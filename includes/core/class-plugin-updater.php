@@ -176,7 +176,7 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 			$request = wp_remote_post(
 				'https://ultimatemember.com/',
 				array(
-					'timeout'   => 15,
+					'timeout'   => 45,
 					'sslverify' => false,
 					'body'      => $api_params
 				)

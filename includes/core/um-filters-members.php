@@ -146,11 +146,11 @@ function um_add_search_to_query( $query_args, $args ){
 									'relation' => 'OR',
 								);
 
-								if ( $filter_data['attrs']['type'] == 'multiselect' ) {
+								if ( $filter_data['attrs']['type'] == 'multiselect' || $filter_data['attrs']['type'] == 'radio' || $filter_data['attrs']['type'] == 'checkbox' ) {
 									$field_query = array_merge( $field_query, array(
 										array(
 											'key' => $field,
-											'value' => '"' . trim( $value ) . '"',
+											'value' => serialize( strval( trim( $value ) ) ),
 											'compare' => 'LIKE',
 										),
 									) );
@@ -495,16 +495,3 @@ function um_search_select_fields( $atts ) {
 	return $atts;
 }
 add_filter( 'um_search_select_fields', 'um_search_select_fields' );
-
-
-/**
- * Filter gender query argument
- *
- * @param  array $field_query
- * @return array
- */
-function um_query_args_gender__filter( $field_query ) {
-	unset( $field_query[1] );
-	return $field_query;
-}
-add_filter( 'um_query_args_gender__filter', 'um_query_args_gender__filter' );
