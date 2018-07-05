@@ -285,7 +285,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			 * }
 			 * ?>
 			 */
-			return apply_filters( 'um_render_field_type_' . $data['type'], '', $data, $this->form_data );
+			return apply_filters( 'um_render_field_type_' . $data['type'], '', $data, $this->form_data, $this );
 		}
 
 
