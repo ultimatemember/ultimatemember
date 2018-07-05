@@ -146,7 +146,14 @@ function um_add_search_to_query( $query_args, $args ){
 									'relation' => 'OR',
 								);
 
-								if ( $filter_data['attrs']['type'] == 'multiselect' || $filter_data['attrs']['type'] == 'radio' || $filter_data['attrs']['type'] == 'checkbox' ) {
+
+								$types = apply_filters( 'um_search_field_types', array(
+									'multiselect',
+									'radio',
+									'checkbox'
+								) );
+
+								if ( in_array( $filter_data['attrs']['type'], $types ) ) {
 									$field_query = array_merge( $field_query, array(
 										array(
 											'key' => $field,
