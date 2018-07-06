@@ -30,6 +30,7 @@ jQuery(document).ready(function() {
 
 
 	jQuery(document).on('click', '#um_opt_in_start', function (e) {
+		var obj = jQuery(this);
 		var dismiss = jQuery(this).parents('.um-admin-notice').find( '.notice-dismiss' );
 		jQuery(this).prop('disabled', true).attr('disabled', 'disabled');
 
@@ -39,10 +40,10 @@ jQuery(document).ready(function() {
 			},
 			success: function( data ) {
 				dismiss.trigger('click');
-				jQuery(this).prop('disabled', false);
+				obj.prop('disabled', false).removeAttr( 'disabled' );
 			},
 			error: function( data ) {
-				jQuery(this).prop('disabled', false);
+				obj.prop('disabled', false).removeAttr( 'disabled' );
 				return false;
 			}
 		});
