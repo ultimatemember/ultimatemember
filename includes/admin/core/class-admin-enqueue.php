@@ -219,44 +219,43 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		function admin_enqueue_scripts() {
 
 			wp_register_script( 'um-admin-global', $this->js_baseurl . 'um-admin-global.js', array('jquery', 'wp-util'), ultimatemember_version, true );
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_admin_enqueue_localize_data
+			 * @description Extend localize data at wp-admin side
+			 * @input_vars
+			 * [{"var":"$localize_data","type":"array","desc":"Localize Data"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_admin_enqueue_localize_data', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_admin_enqueue_localize_data', 'my_admin_enqueue_localize_data', 10, 1 );
+			 * function my_admin_enqueue_localize_data( $localize_data ) {
+			 *     // your code here
+			 *     return $localize_data;
+			 * }
+			 * ?>
+			 */
+			$localize_data = apply_filters( 'um_admin_enqueue_localize_data',
+				array(
+					'nonce' => wp_create_nonce( "um-admin-nonce" )
+				)
+			);
+
+			wp_localize_script( 'um-admin-global', 'um_admin_scripts', $localize_data );
 			wp_enqueue_script( 'um-admin-global' );
 
 			wp_register_style( 'um-admin-global', $this->css_baseurl . 'um-admin-global.css', array(), ultimatemember_version );
 			wp_enqueue_style( 'um-admin-global' );
 
+
 			if ( UM()->admin()->is_um_screen() ) {
 
 				wp_register_script( 'um-tipsy', $this->front_js_baseurl . 'um-tipsy' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 				wp_register_script( 'um-admin-scripts', $this->js_baseurl . 'um-admin-scripts.js', array( 'jquery', 'wp-util', 'jquery-ui-tooltip', 'wp-color-picker', 'um-tipsy' ), ultimatemember_version, true );
-
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_admin_enqueue_localize_data
-				 * @description Extend localize data at wp-admin side
-				 * @input_vars
-				 * [{"var":"$localize_data","type":"array","desc":"Localize Data"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_filter( 'um_admin_enqueue_localize_data', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_filter( 'um_admin_enqueue_localize_data', 'my_admin_enqueue_localize_data', 10, 1 );
-				 * function my_admin_enqueue_localize_data( $localize_data ) {
-				 *     // your code here
-				 *     return $localize_data;
-				 * }
-				 * ?>
-				 */
-				$localize_data = apply_filters( 'um_admin_enqueue_localize_data',
-					array(
-						'nonce' => wp_create_nonce( "um-admin-nonce" )
-					)
-				);
-
-				wp_localize_script( 'um-admin-scripts', 'um_admin_scripts', $localize_data );
-
 
 				$modal_deps = array( 'um-admin-scripts' );
 				if ( $this->um_cpt_form_screen ) {
