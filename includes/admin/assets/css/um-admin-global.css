@@ -198,3 +198,7 @@ a.um-delete{ color: #a00; }
 	margin-top: 2px !important;
 	margin-bottom: 2px !important;
 }
+
+.um_hidden_notice {
+	display: none;
+}

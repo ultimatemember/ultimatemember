@@ -220,8 +220,8 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 
 			foreach ( UM()->config()->settings_defaults as $key => $value ) {
 				//set new options to default
-				if ( ! isset( $options[$key] ) )
-					$options[$key] = $value;
+				if ( ! isset( $options[ $key ] ) )
+					$options[ $key ] = $value;
 			}
 
 			update_option( 'um_options', $options );
@@ -236,7 +236,7 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 			UM()->query()->count_users_by_status( 'unassigned' );
 
 			foreach ( UM()->config()->default_roles_metadata as $role => $meta ) {
-				update_option( "um_role_{$role}_meta", $meta );
+				add_option( "um_role_{$role}_meta", $meta );
 			}
 		}
 	}
