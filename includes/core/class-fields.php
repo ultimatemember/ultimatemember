@@ -3503,39 +3503,51 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$output = null;
 
 			// get whole field data
-			if (is_array( $data )) {
+			if ( is_array( $data ) ) {
 				$data = $this->get_field( $key );
-				extract( $data );
+
+				if ( is_array( $data ) ) {
+					extract( $data );
+				}
 			}
 
-			if (!isset( $data['type'] )) return;
-
-			if (isset( $data['in_group'] ) && $data['in_group'] != '' && $rule != 'group') return;
-
-			if ( $visibility == 'edit' ) return;
-
-			//invisible on profile page
-			if ( $type == 'password' ) return;
-
-			if ( in_array( $type, array( 'block', 'shortcode', 'spacing', 'divider', 'group' ) ) ) {
-
-			} else {
-
-				$_field_value = $this->field_value( $key, $default, $data );
-
-				if ( ! isset($_field_value) || $_field_value == '') return;
-			}
-
-			if (!um_can_view_field( $data )) return;
-
-			// disable these fields in profile view only
-			if (in_array( $key, array( 'user_password' ) ) && $this->set_mode == 'profile') {
+			//hide if empty type
+			if ( ! isset( $data['type'] ) ) {
 				return;
 			}
 
-			if (!um_field_conditions_are_met( $data )) return;
+			if ( isset( $data['in_group'] ) && $data['in_group'] != '' && $rule != 'group' ) {
+				return;
+			}
 
-			switch ($type) {
+			//invisible on profile page
+			if ( $visibility == 'edit' || $type == 'password' ) {
+				return;
+			}
+
+			//hide if empty
+			if ( ! in_array( $type, array( 'block', 'shortcode', 'spacing', 'divider', 'group' ) ) ) {
+				$_field_value = $this->field_value( $key, $default, $data );
+
+				if ( ! isset( $_field_value ) || $_field_value == '' ) {
+					return;
+				}
+			}
+
+			if ( ! um_can_view_field( $data ) ) {
+				return;
+			}
+
+			// disable these fields in profile view only
+			if ( in_array( $key, array( 'user_password' ) ) && $this->set_mode == 'profile' ) {
+				return;
+			}
+
+			if ( ! um_field_conditions_are_met( $data ) ) {
+				return;
+			}
+
+			switch ( $type ) {
 
 				/* Default */
 				default:
