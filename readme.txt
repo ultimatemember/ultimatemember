@@ -131,6 +131,14 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
+= 2.1.0: xxxxxxx =
+
+* Deprecated:
+  - UM_TEXTDOMAIN constant please use 'ultimate-member' instead
+
+
+
+
 = 2.0.21: July 9, 2018 =
 
 * Bugfixes:
