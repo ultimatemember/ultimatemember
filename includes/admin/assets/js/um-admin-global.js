@@ -30,23 +30,7 @@ jQuery(document).ready(function() {
 
 
 	jQuery(document).on('click', '#um_opt_in_start', function (e) {
-		var obj = jQuery(this);
-		var dismiss = jQuery(this).parents('.um-admin-notice').find( '.notice-dismiss' );
-		jQuery(this).prop('disabled', true).attr('disabled', 'disabled');
-
-		wp.ajax.send( 'um_opt_in_notice', {
-			data: {
-				nonce: um_admin_scripts.nonce
-			},
-			success: function( data ) {
-				dismiss.trigger('click');
-				obj.prop('disabled', false).removeAttr( 'disabled' );
-			},
-			error: function( data ) {
-				obj.prop('disabled', false).removeAttr( 'disabled' );
-				return false;
-			}
-		});
+		jQuery(this).parents('.um-admin-notice').find( '.notice-dismiss' ).trigger('click');
 	});
 
 
