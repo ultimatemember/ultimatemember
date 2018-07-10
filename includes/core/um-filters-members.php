@@ -124,7 +124,7 @@ function um_add_search_to_query( $query_args, $args ){
 				if ( in_array( $field, array( 'members_page' ) ) ) continue;
 
 				$serialize_value = serialize( strval( $value ) );
-					
+
 				if ( $value && $field != 'um_search' && $field != 'page_id' ) {
 
 					if ( strstr( $field, 'role_' ) )
@@ -135,18 +135,45 @@ function um_add_search_to_query( $query_args, $args ){
 						if ( 'role' == $field ) {
 							$query_args['role__in'] = trim( $value );
 						} else {
-							$field_query = array(
-								array(
-									'key' => $field,
-									'value' => trim( $value ),
-									'compare' => '=',
-								),
-								'relation' => 'OR',
-							);
-
 							$filter_data = UM()->members()->prepare_filter( $field );
-							if( $filter_data['type'] != 'select' ) {
-								$field_query = array_merge( $field_query, array(
+							if ( $filter_data['type'] == 'select' ) {
+								$field_query = array(
+									array(
+										'key' => $field,
+										'value' => trim( $value ),
+										'compare' => '=',
+									),
+									'relation' => 'OR',
+								);
+
+
+								$types = apply_filters( 'um_search_field_types', array(
+									'multiselect',
+									'radio',
+									'checkbox'
+								) );
+
+								if ( in_array( $filter_data['attrs']['type'], $types ) ) {
+									$field_query = array_merge( $field_query, array(
+										array(
+											'key' => $field,
+											'value' => serialize( strval( trim( $value ) ) ),
+											'compare' => 'LIKE',
+										),
+										array(
+											'key' => $field,
+											'value' => serialize( intval( trim( $value ) ) ),
+											'compare' => 'LIKE',
+										)
+									) );
+								}
+							} else {
+								$field_query = array(
+									array(
+										'key' => $field,
+										'value' => trim( $value ),
+										'compare' => '=',
+									),
 									array(
 										'key' => $field,
 										'value' => trim( $value ),
@@ -158,8 +185,9 @@ function um_add_search_to_query( $query_args, $args ){
 										'compare' => 'LIKE',
 									),
 									'relation' => 'OR',
-								) );
+								);
 							}
+
 							/**
 							 * UM hook
 							 *
@@ -479,16 +507,3 @@ function um_search_select_fields( $atts ) {
 	return $atts;
 }
 add_filter( 'um_search_select_fields', 'um_search_select_fields' );
-
-
-/**
- * Filter gender query argument
- *
- * @param  array $field_query
- * @return array
- */
-function um_query_args_gender__filter( $field_query ) {
-	unset( $field_query[1] );
-	return $field_query;
-}
-add_filter( 'um_query_args_gender__filter', 'um_query_args_gender__filter' );

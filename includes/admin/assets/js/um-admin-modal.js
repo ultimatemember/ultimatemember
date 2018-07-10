@@ -276,17 +276,17 @@ jQuery(document).ready(function() {
 			alert( um_admin_modal_data.texts.rules_limit );
 		}
 		//need fields refactor
-        var conditions = $('.um-admin-cur-condition');
-		$(conditions).each( function ( i ) {
+        var conditions = jQuery('.um-admin-cur-condition');
+		jQuery(conditions).each( function ( i ) {
 			id = i === 0 ? '' : i;
-			$( this ).find('[id^="_conditional_action"]').attr('name', '_conditional_action' + id);
-			$( this ).find('[id^="_conditional_action"]').attr('id', '_conditional_action' + id);
-			$( this ).find('[id^="_conditional_field"]').attr('name', '_conditional_field' + id);
-			$( this ).find('[id^="_conditional_field"]').attr('id', '_conditional_field' + id);
-			$( this ).find('[id^="_conditional_operator"]').attr('name', '_conditional_operator' + id);
-			$( this ).find('[id^="_conditional_operator"]').attr('id', '_conditional_operator' + id);
-			$( this ).find('[id^="_conditional_value"]').attr('name', '_conditional_value' + id);
-			$( this ).find('[id^="_conditional_value"]').attr('id', '_conditional_value' + id);
+			jQuery( this ).find('[id^="_conditional_action"]').attr('name', '_conditional_action' + id);
+			jQuery( this ).find('[id^="_conditional_action"]').attr('id', '_conditional_action' + id);
+			jQuery( this ).find('[id^="_conditional_field"]').attr('name', '_conditional_field' + id);
+			jQuery( this ).find('[id^="_conditional_field"]').attr('id', '_conditional_field' + id);
+			jQuery( this ).find('[id^="_conditional_operator"]').attr('name', '_conditional_operator' + id);
+			jQuery( this ).find('[id^="_conditional_operator"]').attr('id', '_conditional_operator' + id);
+			jQuery( this ).find('[id^="_conditional_value"]').attr('name', '_conditional_value' + id);
+			jQuery( this ).find('[id^="_conditional_value"]').attr('id', '_conditional_value' + id);
         } );
 
 	});
@@ -315,17 +315,17 @@ jQuery(document).ready(function() {
 		jQuery('.tipsy').remove();
 		condition.remove();
         //need fields refactor
-        var conditions = $('.um-admin-cur-condition');
-        $(conditions).each( function ( i ) {
+        var conditions = jQuery('.um-admin-cur-condition');
+        jQuery(conditions).each( function ( i ) {
             id = i === 0 ? '' : i;
-            $( this ).find('[id^="_conditional_action"]').attr('name', '_conditional_action' + id);
-            $( this ).find('[id^="_conditional_action"]').attr('id', '_conditional_action' + id);
-            $( this ).find('[id^="_conditional_field"]').attr('name', '_conditional_field' + id);
-            $( this ).find('[id^="_conditional_field"]').attr('id', '_conditional_field' + id);
-            $( this ).find('[id^="_conditional_operator"]').attr('name', '_conditional_operator' + id);
-            $( this ).find('[id^="_conditional_operator"]').attr('id', '_conditional_operator' + id);
-            $( this ).find('[id^="_conditional_value"]').attr('name', '_conditional_value' + id);
-            $( this ).find('[id^="_conditional_value"]').attr('id', '_conditional_value' + id);
+            jQuery( this ).find('[id^="_conditional_action"]').attr('name', '_conditional_action' + id);
+            jQuery( this ).find('[id^="_conditional_action"]').attr('id', '_conditional_action' + id);
+            jQuery( this ).find('[id^="_conditional_field"]').attr('name', '_conditional_field' + id);
+            jQuery( this ).find('[id^="_conditional_field"]').attr('id', '_conditional_field' + id);
+            jQuery( this ).find('[id^="_conditional_operator"]').attr('name', '_conditional_operator' + id);
+            jQuery( this ).find('[id^="_conditional_operator"]').attr('id', '_conditional_operator' + id);
+            jQuery( this ).find('[id^="_conditional_value"]').attr('name', '_conditional_value' + id);
+            jQuery( this ).find('[id^="_conditional_value"]').attr('id', '_conditional_value' + id);
         } );
 		um_admin_live_update_scripts();
 		um_admin_modal_responsive();

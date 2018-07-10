@@ -115,6 +115,14 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 					'key'   => 'woocommerce',
 					'title' => 'Woocommerce',
 				),
+				'um-user-photos/um-user-photos.php'                     => array(
+					'key'   => 'user_photos',
+					'title' => 'User Photos',
+				),
+				'um-private-content/um-private-content.php'             => array(
+					'key'   => 'private_content',
+					'title' => 'Private Content',
+				),
 			);
 
 			$the_plugs = get_option( 'active_plugins' );
@@ -176,7 +184,7 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 			$request = wp_remote_post(
 				'https://ultimatemember.com/',
 				array(
-					'timeout'   => 15,
+					'timeout'   => 45,
 					'sslverify' => false,
 					'body'      => $api_params
 				)
