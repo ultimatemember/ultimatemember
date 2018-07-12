@@ -1218,6 +1218,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 */
 		function approve() {
+		    if( um_user('account_status') === 'approved' ) return true;
+
 			$user_id = um_user('ID');
 			delete_option( "um_cache_userdata_{$user_id}" );
 
