@@ -160,6 +160,11 @@ function um_add_search_to_query( $query_args, $args ){
 											'value' => serialize( strval( trim( $value ) ) ),
 											'compare' => 'LIKE',
 										),
+										array(
+											'key' => $field,
+											'value' => serialize( intval( trim( $value ) ) ),
+											'compare' => 'LIKE',
+										)
 									) );
 								}
 							} else {

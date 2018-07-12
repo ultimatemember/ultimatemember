@@ -698,6 +698,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 
 		function dismiss_notice() {
+			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
+			if ( ! wp_verify_nonce( $nonce, "um-admin-nonce" ) ) {
+				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
+			}
+
+
 			if ( empty( $_POST['key'] ) ) {
 				wp_send_json_error( __( 'Wrong Data', 'ultimate-member' ) );
 			}
@@ -712,6 +718,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 
 		function opt_in_notice() {
+			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
+			if ( ! wp_verify_nonce( $nonce, "um-admin-nonce" ) ) {
+				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
+			}
+
 			// Send a maximum of once per period
 			$last_send = get_option( 'um_opt_in_last_send', false );
 			if ( $last_send && $last_send > strtotime( '-1 day' ) ) {
