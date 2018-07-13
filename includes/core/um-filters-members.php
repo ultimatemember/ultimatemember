@@ -154,7 +154,8 @@ function um_add_search_to_query( $query_args, $args ){
 								) );
 
 								if ( in_array( $filter_data['attrs']['type'], $types ) ) {
-									$field_query = array_merge( $field_query, array(
+									
+									$arr_meta_query = array(
 										array(
 											'key' => $field,
 											'value' => serialize( strval( trim( $value ) ) ),
@@ -165,8 +166,21 @@ function um_add_search_to_query( $query_args, $args ){
 											'value' => '"' . trim( $value ) . '"',
 											'compare' => 'LIKE',
 										)
-									) );
+									);
+
+									if( is_numeric( $value ) ){
+
+										$arr_meta_query[ ] = array(
+											'key' => $field,
+											'value' => serialize( intval( trim( $value ) ) ),
+											'compare' => 'LIKE',
+										);
+
+									}
+
+									$field_query = array_merge( $field_query, $arr_meta_query );
 								}
+
 							} else {
 								$field_query = array(
 									array(
