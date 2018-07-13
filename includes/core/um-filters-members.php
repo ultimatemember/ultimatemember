@@ -162,7 +162,7 @@ function um_add_search_to_query( $query_args, $args ){
 										),
 										array(
 											'key' => $field,
-											'value' => serialize( intval( trim( $value ) ) ),
+											'value' => '"' . trim( $value ) . '"',
 											'compare' => 'LIKE',
 										)
 									) );
