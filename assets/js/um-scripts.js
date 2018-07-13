@@ -128,6 +128,17 @@ jQuery(document).ready(function() {
 		minimumResultsForSearch: 10
 	});
 
+    jQuery(".um-s3").select2({
+		allowClear: false,
+		minimumResultsForSearch: -1
+	});
+
+	jQuery(".um-multiselect").select2({
+		allowClear: false,
+		minimumResultsForSearch: -1,
+		multiple: true
+	});
+
 	//Profile Page
 	jQuery(document).on('click', '.um-field-group-head:not(.disabled)', function(){
 		var field = jQuery(this).parents('.um-field-group');

@@ -56,8 +56,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 		/**
 		 * Shows social links
+		 *
+		 * @param bool $echo
+		 * @return string
 		 */
-		function show_social_urls() {
+		function show_social_urls( $echo = true ) {
 			$social = array();
 
 			$fields = UM()->builtin()->all_user_fields;
@@ -67,15 +70,24 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 			}
 
+			ob_start();
+
 			foreach ( $social as $k => $arr ) {
 				if ( um_profile( $k ) ) { ?>
-
-					<a href="<?php echo um_filtered_social_link( $k, $arr['match'] ); ?>"
+					<a href="<?php echo um_filtered_social_link( $k , $arr['match'] ); ?>"
 					   style="background: <?php echo $arr['color']; ?>;" target="_blank" class="um-tip-n"
-					   title="<?php echo $arr['title']; ?>"><i class="<?php echo $arr['icon']; ?>"></i></a>
+					   title="<?php echo $arr['title']; ?>">
+						<i class="<?php echo $arr['icon']; ?>"></i>
+					</a>
+				<?php }
+			}
 
-					<?php
-				}
+			$content = ob_get_clean();
+
+			if ( $echo ) {
+				echo $content;
+			} else {
+				return $content;
 			}
 		}
 

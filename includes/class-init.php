@@ -1267,6 +1267,20 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
+		 * @return um\core\Templates
+		 */
+		function templates() {
+			if ( empty( $this->classes['templates'] ) ) {
+				$this->classes['templates'] = new um\core\Templates();
+			}
+
+			return $this->classes['templates'];
+		}
+
+
+		/**
+		 * @since 2.0
+		 *
 		 * @return um\lib\mobiledetect\Um_Mobile_Detect
 		 */
 		function mobile() {
@@ -1301,7 +1315,6 @@ if ( ! class_exists( 'UM' ) ) {
 			require_once 'core/um-actions-profile.php';
 			require_once 'core/um-actions-account.php';
 			require_once 'core/um-actions-password.php';
-			require_once 'core/um-actions-members.php';
 			require_once 'core/um-actions-global.php';
 			require_once 'core/um-actions-user.php';
 			require_once 'core/um-actions-save-profile.php';

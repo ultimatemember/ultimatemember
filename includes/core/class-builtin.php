@@ -734,15 +734,15 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'user_url' => array(
-                    'title' => __('Website URL','ultimate-member'),
-                    'metakey' => 'user_url',
-                    'type' => 'url',
-                    'label' => __('Website URL','ultimate-member'),
-                    'required' => 1,
-                    'public' => 1,
-                    'editable' => 1,
-                    'validate' => 'url'
-                ),
+					'title' => __('Website URL','ultimate-member'),
+					'metakey' => 'user_url',
+					'type' => 'url',
+					'label' => __('Website URL','ultimate-member'),
+					'required' => 1,
+					'public' => 1,
+					'editable' => 1,
+					'validate' => 'url'
+				),
 
 				'user_registered' => array(
 					'title' => __('Registration Date','ultimate-member'),
@@ -998,6 +998,18 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'match' => 'https://vk.com/',
 				),
 
+				'role' => array(
+					'title' => __('Role','ultimate-member'),
+					'metakey' => 'role',
+					'type' => 'select',
+					'label' => __('Account Type','ultimate-member'),
+					'placeholder' => 'Choose account type',
+					'required' => 0,
+					'public' => 1,
+					'editable' => 1,
+					'options' => $um_roles,
+				),
+
 				'role_select' => array(
 					'title' => __('Roles (Dropdown)','ultimate-member'),
 					'metakey' => 'role_select',
@@ -1032,7 +1044,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 1,
 					'options' => $this->get('languages'),
 				),
-
 				'phone_number' => array(
 					'title' => __('Phone Number','ultimate-member'),
 					'metakey' => 'phone_number',

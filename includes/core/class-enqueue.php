@@ -153,6 +153,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			 */
 			$localize_data = apply_filters( 'um_enqueue_localize_data', array(
 				'nonce' => wp_create_nonce( "um-frontend-nonce" ),
+				'ajax_get_members' => UM()->get_ajax_route( 'um\core\Members', 'ajax_get_members' ),
 			) );
 
 			wp_localize_script( 'um-scripts', 'um_scripts', $localize_data );
@@ -178,6 +179,13 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_style( 'um-datetime-date', $this->css_baseurl . 'pickadate/default.date.css', array( 'um-datetime' ), ultimatemember_version );
 			wp_register_style( 'um-datetime-time', $this->css_baseurl . 'pickadate/default.time.css', array( 'um-datetime' ), ultimatemember_version );
 			wp_register_style( 'um-scrollbar', $this->css_baseurl . 'um-scrollbar.css', array(), ultimatemember_version );
+            //ui slider for filters
+	        wp_enqueue_script( 'jquery-ui-slider' );
+
+	        $wp_scripts = wp_scripts();
+	        wp_enqueue_style('um-ui-slider-css',
+		        'http://ajax.googleapis.com/ajax/libs/jqueryui/' . $wp_scripts->registered['jquery-ui-core']->ver . '/themes/smoothness/jquery-ui.css' );
+
 
 			wp_register_style( 'um-responsive', $this->css_baseurl . 'um-responsive.css', array(), ultimatemember_version );
 			wp_register_style( 'um-modal', $this->css_baseurl . 'um-modal.css', array(), ultimatemember_version );
@@ -238,6 +246,10 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			$css = str_replace(';}','}', $css );
 			$css = str_replace(': ',':', $css );
 			return $css;
+            //wp_register_script('um_members', um_url . 'assets/js/um-members' . $this->suffix . '.js', array('jquery'), ultimatemember_version, true );
+            wp_enqueue_script('um_members', um_url . 'assets/js/um-members' . $this->suffix . '.js', array('jquery'), ultimatemember_version, true );
+            wp_enqueue_script('wp-util');
+            //wp_enqueue_script('um_members');
 		}
 	}
 }

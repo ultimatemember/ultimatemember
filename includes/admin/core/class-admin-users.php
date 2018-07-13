@@ -34,6 +34,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			add_action( 'admin_init', array( &$this, 'um_bulk_users_edit' ), 9 );
 
 			add_action( 'um_admin_user_action_hook', array( &$this, 'user_action_hook' ), 10, 1 );
+
+			add_filter( 'user_search_columns', array( &$this, 'user_search_columns' ), 99 );
+		}
+
+
+		/**
+		 * Add user search columns
+		 *
+		 * @param $search_columns
+		 * @return array
+		 */
+		function user_search_columns( $search_columns ) {
+			$search_columns[] = 'display_name';
+			return $search_columns;
 		}
 
 

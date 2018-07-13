@@ -108,119 +108,27 @@ add_filter( 'um_prepare_user_query_args', 'um_remove_special_users_from_list', 9
 function um_add_search_to_query( $query_args, $args ){
 	extract( $args );
 
-	if ( isset( $_REQUEST['um_search'] ) ) {
-
-		$query = UM()->permalinks()->get_query_array();
-
-		// if searching
-		if ( isset( $query['search'] ) ) {
-			$query_args['search'] = '*' . um_filter_search( $query['search'] ) . '*';
-			unset( $query['search'] );
-		}
-
-		if ( $query && is_array( $query ) ) {
-			foreach ( $query as $field => $value ) {
-
-				if ( in_array( $field, array( 'members_page' ) ) ) continue;
-
-				$serialize_value = serialize( strval( $value ) );
-
-				if ( $value && $field != 'um_search' && $field != 'page_id' ) {
-
-					if ( strstr( $field, 'role_' ) )
-						$field = 'role';
-
-					if ( ! in_array( $field, UM()->members()->core_search_fields ) ) {
-
-						if ( 'role' == $field ) {
-							$query_args['role__in'] = trim( $value );
-						} else {
-							$filter_data = UM()->members()->prepare_filter( $field );
-							if ( $filter_data['type'] == 'select' ) {
-								$field_query = array(
-									array(
-										'key' => $field,
-										'value' => trim( $value ),
-										'compare' => '=',
-									),
-									'relation' => 'OR',
-								);
-
-
-								$types = apply_filters( 'um_search_field_types', array(
-									'multiselect',
-									'radio',
-									'checkbox'
-								) );
-
-								if ( in_array( $filter_data['attrs']['type'], $types ) ) {
-									$field_query = array_merge( $field_query, array(
-										array(
-											'key' => $field,
-											'value' => serialize( strval( trim( $value ) ) ),
-											'compare' => 'LIKE',
-										),
-										array(
-											'key' => $field,
-											'value' => serialize( intval( trim( $value ) ) ),
-											'compare' => 'LIKE',
-										)
-									) );
-								}
-							} else {
-								$field_query = array(
-									array(
-										'key' => $field,
-										'value' => trim( $value ),
-										'compare' => '=',
-									),
-									array(
-										'key' => $field,
-										'value' => trim( $value ),
-										'compare' => 'LIKE',
-									),
-									array(
-										'key' => $field,
-										'value' => trim( $serialize_value ),
-										'compare' => 'LIKE',
-									),
-									'relation' => 'OR',
-								);
-							}
-
-							/**
-							 * UM hook
-							 *
-							 * @type filter
-							 * @title um_query_args_{$field}__filter
-							 * @description Change field's query for search at Members Directory
-							 * @input_vars
-							 * [{"var":"$field_query","type":"array","desc":"Field query"}]
-							 * @change_log
-							 * ["Since: 2.0"]
-							 * @usage
-							 * <?php add_filter( 'um_query_args_{$field}__filter', 'function_name', 10, 1 ); ?>
-							 * @example
-							 * <?php
-							 * add_filter( 'um_query_args_{$field}__filter', 'my_query_args_filter', 10, 1 );
-							 * function my_query_args_filter( $field_query ) {
-							 *     // your code here
-							 *     return $field_query;
-							 * }
-							 * ?>
-							 */
-							$field_query = apply_filters( "um_query_args_{$field}__filter", $field_query );
-							$query_args['meta_query'][] = $field_query;
-						}
-
-					}
-
-				}
-
-			}
-		}
-
+	if ( empty( $_POST['general_search'] ) ) {
+		return $query_args;
 	}
+
+	$field_query = array(
+		array(
+			'value'     => trim( $_POST['general_search'] ),
+			'compare'   => '=',
+		),
+		array(
+			'value'     => trim( $_POST['general_search'] ),
+			'compare'   => 'LIKE',
+		),
+		array(
+			'value'     => trim( serialize( strval( $_POST['general_search'] ) ) ),
+			'compare'   => 'LIKE',
+		),
+		'relation' => 'OR',
+	);
+
+	$query_args['meta_query'][] = $field_query;
 
 	/**
 	 * UM hook
@@ -245,11 +153,11 @@ function um_add_search_to_query( $query_args, $args ){
 	 */
 	$query_args = apply_filters( 'um_query_args_filter', $query_args );
 
-	if ( isset( $query_args['meta_query'] ) && count( $query_args['meta_query'] ) == 1 )
+	if ( count( $query_args['meta_query'] ) == 1 ) {
 		unset( $query_args['meta_query'] );
+	}
 
 	return $query_args;
-
 }
 add_filter( 'um_prepare_user_query_args', 'um_add_search_to_query', 50, 2 );
 
@@ -344,6 +252,7 @@ function um_prepare_user_query_args( $query_args, $args ) {
 
 	// sort members by
 	$query_args['order'] = 'ASC';
+	$sortby = ! empty( $_POST['sorting'] ) ? $_POST['sorting'] : $sortby;
 
 	if ( isset( $sortby ) ) {
 
@@ -469,25 +378,6 @@ add_filter( 'pre_user_query','um_modify_sortby_randomly' );
 
 
 /**
- * Hook in the member results array
- *
- * @param $result
- *
- * @return mixed
- */
-function um_prepare_user_results_array( $result ) {
-	if ( empty( $result['users_per_page'] ) ) {
-		$result['no_users'] = 1;
-	} else {
-		$result['no_users'] = 0;
-	}
-   
-	return $result;
-}
-add_filter( 'um_prepare_user_results_array', 'um_prepare_user_results_array', 50, 2 );
-
-
-/**
  * Retrieves search filter options from a callback
  *
  * @param  $atts array
@@ -507,3 +397,130 @@ function um_search_select_fields( $atts ) {
 	return $atts;
 }
 add_filter( 'um_search_select_fields', 'um_search_select_fields' );
+
+
+/**
+ * @param $field_query
+ * @param $query
+ * @return mixed|void
+ */
+function um_add_slider_filter_to_query( $field_query, $query ) {
+
+	$from_date = date( 'Y-m-d', mktime( 0,0,0, date('m'), date('d'), date('Y', time() - $query['birth_date'][0]*YEAR_IN_SECONDS ) ) );
+	$to_date = date( 'Y-m-d', mktime( 0,0,0, date('m'), date('d'), date('Y', time() - $query['birth_date'][1]*YEAR_IN_SECONDS ) ) );
+
+	$field_query = array(
+		array(
+			'key'       => 'birth_date',
+			'value'     => array( $to_date, $from_date ),
+			'compare'   => 'BETWEEN',
+			'type'      => 'DATE',
+		),
+		'relation' => 'OR'
+	);
+
+	return $field_query;
+}
+add_filter( 'um_query_args_birth_date__filter', 'um_add_slider_filter_to_query', 98, 2 );
+
+
+
+/**
+ * @param $query_args
+ * @param $args
+ * @return mixed|void
+ */
+function um_add_filter_to_query( $query_args, $args ) {
+	extract( $args );
+
+	$query = $_POST;
+
+	unset( $query['sorting'] );
+	unset( $query['page'] );
+	unset( $query['args'] );
+
+	if ( $query && is_array( $query ) ) {
+		foreach ( $query as $field => $value ) {
+
+			if ( in_array( $field, array( 'members_page', 'general_search' ) ) ) continue;
+
+			if ( $value && $field != 'um_search' && $field != 'page_id' ) {
+
+				if ( strstr( $field, 'role_' ) )
+					$field = 'role';
+
+				if ( ! in_array( $field, UM()->members()->core_search_fields ) ) {
+
+					if ( 'role' == $field ) {
+						$query_args['role__in'] = trim( $value );
+					} else {
+
+						if ( is_array( $value ) ) {
+							$field_query = array( 'relation' => 'OR' );
+
+							foreach ( $value as $single_val ) {
+								$serialize_value = serialize( strval( $single_val ) );
+
+								$field_query = array_merge( $field_query, array(
+									array(
+										'key' => $field,
+										'value' => trim( $single_val ),
+										'compare' => '=',
+									),
+									array(
+										'key' => $field,
+										'value' => trim( $single_val ),
+										'compare' => 'LIKE',
+									),
+									array(
+										'key' => $field,
+										'value' => trim( $serialize_value ),
+										'compare' => 'LIKE',
+									),
+								) );
+							}
+						} else {
+							$serialize_value = serialize( strval( $value ) );
+
+							$field_query = array(
+								array(
+									'key' => $field,
+									'value' => trim( $value ),
+									'compare' => '=',
+								),
+								array(
+									'key' => $field,
+									'value' => trim( $value ),
+									'compare' => 'LIKE',
+								),
+								array(
+									'key' => $field,
+									'value' => trim( $serialize_value ),
+									'compare' => 'LIKE',
+								),
+								'relation' => 'OR',
+							);
+						}
+
+						$field_query = apply_filters( "um_query_args_{$field}__filter", $field_query );
+						$query_args['meta_query'][] = $field_query;
+					}
+
+				}
+
+			}
+
+		}
+	}
+
+
+	// allow filtering
+	$query_args = apply_filters( 'um_query_args_filter', $query_args );
+
+	if ( count( $query_args['meta_query'] ) == 1 )
+		unset( $query_args['meta_query'] );
+
+	return $query_args;
+
+}
+add_filter( 'um_prepare_user_query_args', 'um_add_filter_to_query', 50, 2 );

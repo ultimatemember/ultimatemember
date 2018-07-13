@@ -17,7 +17,13 @@ foreach ( UM()->roles()->get_roles() as $key => $value ) {
 $show_these_users = get_post_meta( get_the_ID(), '_um_show_these_users', true );
 if ( $show_these_users ) {
 	$show_these_users = implode( "\n", str_replace( "\r", "", $show_these_users ) );
-} ?>
+}
+
+$sorting_fields = UM()->members()->get_sorting_fields();
+
+$post_id = get_the_ID();
+$_um_sorting_fields = get_post_meta( $post_id, '_um_sorting_fields', true );
+?>
 
 <div class="um-admin-metabox">
 
@@ -60,6 +66,18 @@ if ( $show_these_users ) {
 			'value'		=> 'directory',
 		),
 		array(
+			'id'		=> '_um_view_type',
+			'type'		=> 'select',
+			'name'		=> '_um_view_type',
+			'label'		=> __( 'View type', 'ultimate-member' ),
+			'tooltip'	=> __( 'View type a specific parameter in the directory', 'ultimate-member' ),
+			'options'	=> array(
+				'grid'	=> __( 'Grid', 'ultimate-member' ),
+				'list'	=> __( 'List', 'ultimate-member' ),
+			),
+			'value'		=> UM()->query()->get_meta_value( '_um_view_type' ),
+		),
+		array(
 			'id'		=> '_um_roles',
 			'type'		=> 'select',
 			'label'		=> __( 'User Roles to Display', 'ultimate-member' ),
@@ -67,6 +85,13 @@ if ( $show_these_users ) {
 			'options'	=> UM()->roles()->get_roles(),
 			'multi'		=> true,
 			'value'		=> $roles_array,
+		),
+		array(
+			'id'		    => '_um_show_these_users',
+			'type'		    => 'textarea',
+			'name'		    => '_um_show_these_users',
+			'label'		    => __( 'Only show specific users (Enter one username per line)', 'ultimate-member' ),
+			'value'		    => $show_these_users,
 		),
 		array(
 			'id'		=> '_um_has_profile_photo',
@@ -82,10 +107,20 @@ if ( $show_these_users ) {
 			'value'		=> UM()->query()->get_meta_value( '_um_has_cover_photo' ),
 		),
 		array(
+			'id'		=> '_um_sorting_fields',
+			'type'		=> 'multi_selects',
+			'name'		=> '_um_sorting_fields',
+			'label'		=> __( 'Choose field(s) to enable in sorting', 'ultimate-member' ),
+			'value'		=> $_um_sorting_fields,
+			'options'   => $sorting_fields,
+			'add_text'		=> __( 'Add New Field','ultimate-member' ),
+			'show_default_number'	=> 1,
+		),
+		array(
 			'id'		=> '_um_sortby',
 			'type'		=> 'select',
-			'label'		=> __( 'Sort users by', 'ultimate-member' ),
-			'tooltip'	=> __( 'Sort users by a specific parameter in the directory', 'ultimate-member' ),
+			'label'		=> __( 'Default sort users by', 'ultimate-member' ),
+			'tooltip'	=> __( 'Default sorting users by a specific parameter in the directory', 'ultimate-member' ),
 			'options'	=> $sort_options,
 			'value'		=> UM()->query()->get_meta_value( '_um_sortby' ),
 		),

@@ -5,7 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'um\core\Router' ) ) {
 
-
 	/**
 	 * Class Router
 	 * @package um\core

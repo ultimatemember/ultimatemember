@@ -258,10 +258,17 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		/**
 		 * Retrieve core login form
 		 *
+		 * @todo remove this strange function
+		 *
 		 * @return int
 		 */
 		function core_login_form() {
-			$forms = get_posts(array('post_type' => 'um_form', 'posts_per_page' => 1, 'meta_key' => '_um_core', 'meta_value' => 'login'));
+			$forms = get_posts( array(
+				'post_type'         => 'um_form',
+				'posts_per_page'    => 1,
+				'meta_key'          => '_um_core',
+				'meta_value'        => 'login'
+			) );
 			$form_id = isset( $forms[0]->ID ) ? $forms[0]->ID: 0;
 
 			return $form_id;
@@ -278,17 +285,15 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			if ( isset( $this->set_args ) && is_array( $this->set_args ) ) {
 				$args = $this->set_args;
-                
+
 				unset( $args['file'] );
 				unset( $args['theme_file'] );
 				unset( $args['tpl'] );
-
 				extract( $args );
 			}
 
 			$file = um_path . "templates/{$tpl}.php";
 			$theme_file = get_stylesheet_directory() . "/ultimate-member/templates/{$tpl}.php";
-
 
 			if ( file_exists( $theme_file ) ) {
 				$file = $theme_file;
@@ -308,19 +313,19 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 *
 		 * @return mixed|string|void
 		 */
-		function get_class($mode, $args = array()) {
+		function get_class( $mode, $args = array() ) {
 
 			$classes = 'um-' . $mode;
 
-			if (is_admin()) {
+			if ( is_admin() ) {
 				$classes .= ' um-in-admin';
 			}
 
-			if (isset(UM()->form()->errors) && UM()->form()->errors) {
+			if ( isset( UM()->form()->errors ) && UM()->form()->errors ) {
 				$classes .= ' um-err';
 			}
 
-			if (UM()->fields()->editing == true) {
+			if ( UM()->fields()->editing == true ) {
 				$classes .= ' um-editing';
 			}
 
@@ -328,7 +333,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$classes .= ' um-viewing';
 			}
 
-			if (isset($args['template']) && $args['template'] != $args['mode']) {
+			if ( isset( $args['template'] ) && $args['template'] != $args['mode'] ) {
 				$classes .= ' um-' . $args['template'];
 			}
 

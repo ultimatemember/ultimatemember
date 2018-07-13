@@ -36,7 +36,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			add_action( 'load-post.php', array(&$this, 'add_metabox'), 9 );
 			add_action( 'load-post-new.php', array(&$this, 'add_metabox'), 9 );
 
-			add_action( 'admin_init', array(&$this, 'add_taxonomy_metabox'), 9 );
+			add_action( 'admin_init', array(&$this, 'add_taxonomy_metabox' ), 9 );
 
 			//roles metaboxes
 			add_action( 'um_roles_add_meta_boxes', array( &$this, 'add_metabox_role' ) );
@@ -169,7 +169,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		/**
 		 * Runs on admin head
 		 */
-		function admin_head(){
+		function admin_head() {
 			global $post;
 			if ( UM()->admin()->is_plugin_post_type() && isset($post->ID) ){
 				$this->postmeta = $this->get_custom_post_meta($post->ID);
@@ -722,6 +722,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		}
 
 
+
 		/**
 		 * Load a directory metabox
 		 *
@@ -729,8 +730,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 * @param $box
 		 */
 		function load_metabox_directory( $object, $box ) {
+			global $post;
+
 			$box['id'] = str_replace( 'um-admin-form-', '', $box['id'] );
-			include_once UM()->admin()->templates_path . 'directory/'. $box['id'] . '.php';
+
+			preg_match('#\{.*?\}#s', $box['id'], $matches);
+
+			if ( isset($matches[0]) ){
+				$path = $matches[0];
+				$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
+			} else {
+				$path = um_path;
+			}
+
+			$path = str_replace('{','', $path );
+			$path = str_replace('}','', $path );
+
+			include_once $path . 'includes/admin/templates/directory/'. $box['id'] . '.php';
 			wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_directory_nonce' );
 		}
 
@@ -752,18 +768,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 			preg_match('#\{.*?\}#s', $box['id'], $matches);
 
-			if ( isset($matches[0]) ){
+			if ( isset( $matches[0] ) ) {
 				$path = $matches[0];
-				$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
+				$box['id'] = preg_replace( '~(\\{[^}]+\\})~', '', $box['id'] );
 			} else {
 				$path = um_path;
 			}
 
-			$path = str_replace('{','', $path );
-			$path = str_replace('}','', $path );
+			$path = str_replace( '{', '', $path );
+			$path = str_replace( '}', '', $path );
 
 			include_once $path . 'includes/admin/templates/role/'. $box['id'] . '.php';
-			//wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_role_nonce' );
 		}
 
 
@@ -835,12 +850,69 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 * Add directory metabox
 		 */
 		function add_metabox_directory() {
-			add_meta_box( 'um-admin-form-general', __( 'General Options', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
-			add_meta_box( 'um-admin-form-profile', __( 'Profile Card', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
-			add_meta_box( 'um-admin-form-search', __( 'Search Options', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
-			add_meta_box( 'um-admin-form-pagination', __( 'Results &amp; Pagination', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
-			add_meta_box( 'um-admin-form-shortcode', __( 'Shortcode', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'side', 'default' );
-			add_meta_box( 'um-admin-form-appearance', __( 'Styling: General', 'ultimate-member' ), array( &$this, 'load_metabox_directory'), 'um_directory', 'side', 'default' );
+			$callback = array( &$this, 'load_metabox_directory' );
+			$directory_metaboxes = array(
+				array(
+					'id'        => 'um-admin-form-general',
+					'title'     => __( 'General Options', 'ultimate-member' ),
+					'callback'  => $callback,
+					'screen'    => 'um_directory',
+					'context'   => 'normal',
+					'priority'  => 'default'
+				),
+				array(
+					'id'        => 'um-admin-form-profile',
+					'title'     => __( 'Profile Card', 'ultimate-member' ),
+					'callback'  => $callback,
+					'screen'    => 'um_directory',
+					'context'   => 'normal',
+					'priority'  => 'default'
+				),
+				array(
+					'id'        => 'um-admin-form-search',
+					'title'     => __( 'Search &amp; Filters Options', 'ultimate-member' ),
+					'callback'  => $callback,
+					'screen'    => 'um_directory',
+					'context'   => 'normal',
+					'priority'  => 'default'
+				),
+				array(
+					'id'        => 'um-admin-form-pagination',
+					'title'     => __( 'Results &amp; Pagination', 'ultimate-member' ),
+					'callback'  => $callback,
+					'screen'    => 'um_directory',
+					'context'   => 'normal',
+					'priority'  => 'default'
+				),
+				array(
+					'id'        => 'um-admin-form-shortcode',
+					'title'     => __( 'Shortcode', 'ultimate-member' ),
+					'callback'  => $callback,
+					'screen'    => 'um_directory',
+					'context'   => 'side',
+					'priority'  => 'default'
+				),
+				array(
+					'id'        => 'um-admin-form-appearance',
+					'title'     => __( 'Styling: General', 'ultimate-member' ),
+					'callback'  => $callback,
+					'screen'    => 'um_directory',
+					'context'   => 'side',
+					'priority'  => 'default'
+				),
+			);
+
+			$directory_metaboxes = apply_filters( 'um_admin_directory_metaboxes', $directory_metaboxes );
+			foreach ( $directory_metaboxes as $metabox ) {
+				add_meta_box(
+					$metabox['id'],
+					$metabox['title'],
+					$metabox['callback'],
+					$metabox['screen'],
+					$metabox['context'],
+					$metabox['priority']
+				);
+			}
 		}
 
 
@@ -1110,6 +1182,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				if ( $k == '_um_show_these_users' && trim( $_POST['um_metadata'][ $k ] ) ) {
 					$v = preg_split( '/[\r\n]+/', $v, -1, PREG_SPLIT_NO_EMPTY );
 				}
+
+				if ( $k == '_um_tagline_fields' || $k == '_um_reveal_fields' )  {
+					$remove = array_keys( $v, '0' );
+					$v = array_values( array_diff_key( $v, array_flip( $remove ) ) );
+				}
+
 				if ( strstr( $k, '_um_' ) ) {
 					update_post_meta( $post_id, $k, $v );
 				}
