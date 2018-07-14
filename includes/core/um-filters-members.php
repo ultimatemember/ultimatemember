@@ -345,30 +345,33 @@ add_filter( 'um_modify_sortby_parameter', 'um_sortby_last_login', 100, 2 );
  * @return mixed
  */
 function um_modify_sortby_randomly( $query ) {
-	if( um_is_session_started() === false ){
-		@session_start();
-	}
 
-	// Reset seed on load of initial
-	if( ! isset( $_REQUEST['members_page'] ) || $_REQUEST['members_page'] == 0 ||  $_REQUEST['members_page'] == 1 ) {
-		if( isset( $_SESSION['seed'] ) ) {
-			unset( $_SESSION['seed'] );
+	if( $query->query_vars["orderby"] == 'random' ) {
+
+		if( um_is_session_started() === false ){
+			@session_start();
 		}
-	}
 
-	// Get seed from session variable if it exists
-	$seed = false;
-	if( isset( $_SESSION['seed'] ) ) {
-		$seed = $_SESSION['seed'];
-	}
-        
-	// Set new seed if none exists
-	if ( ! $seed ) {
-		$seed = rand();
-		$_SESSION['seed'] = $seed;
-	}
+		// Reset seed on load of initial
+		if( ! isset( $_REQUEST['members_page'] ) || $_REQUEST['members_page'] == 0 ||  $_REQUEST['members_page'] == 1 ) {
+			if( isset( $_SESSION['seed'] ) ) {
+				unset( $_SESSION['seed'] );
+			}
+		}
 
-	if($query->query_vars["orderby"] == 'random') {
+		// Get seed from session variable if it exists
+		$seed = false;
+		if( isset( $_SESSION['seed'] ) ) {
+			$seed = $_SESSION['seed'];
+		}
+	        
+		// Set new seed if none exists
+		if ( ! $seed ) {
+			$seed = rand();
+			$_SESSION['seed'] = $seed;
+		}
+
+	
 		$query->query_orderby = 'ORDER by RAND('. $seed.')';
 	}
 
