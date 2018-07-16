@@ -1258,7 +1258,12 @@ function um_can_view_profile( $user_id ) {
 	um_fetch_user( get_current_user_id() );
 
 	if ( um_user( 'can_view_roles' ) && $user_id != get_current_user_id() ) {
-		if ( count( array_intersect( UM()->roles()->get_all_user_roles( $user_id ), um_user( 'can_view_roles' ) ) ) <= 0 ) {
+
+		$can_view_roles = um_user( 'can_view_roles' );
+		
+		if( ! is_array( $can_view_roles ) ) $can_view_roles = array();
+
+		if ( count( array_intersect( UM()->roles()->get_all_user_roles( $user_id ), $can_view_roles ) ) <= 0 ) {
 			um_fetch_user( $temp_id );
 			return false;
 		}
