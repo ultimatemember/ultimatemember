@@ -3,6 +3,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
+$role_key = $_GET['id'];
+
 wp_enqueue_script( 'postbox' );
 wp_enqueue_media();
 
@@ -49,11 +51,17 @@ $data = array();
 $option = array();
 global $wp_roles;
 
-if ( ! empty( $_GET['id'] ) ) {
-	$data = get_option( "um_role_{$_GET['id']}_meta" );
+if ( ! empty( $role_key ) ) {
+	if( $role_key == 'multisite_user' ) {
+		$data = get_option( "um_multisite_user_role_data" );
+		$data['name'] = __('Multisite user (if user doesn\'t have any role on current blog)', 'ultimate-member');
+	} else {
+		$data = get_option( "um_role_{$role_key}_meta" );
 
-	if ( empty( $data['_um_is_custom'] ) )
-		$data['name'] = $wp_roles->roles[ $_GET['id'] ]['name'];
+		if ( empty( $data['_um_is_custom'] ) ) {
+			$data['name'] = $wp_roles->roles[ $role_key ]['name'];
+		}
+	}
 }
 
 
@@ -82,8 +90,8 @@ if ( ! empty( $_POST['role'] ) ) {
 			}
 
 			$redirect = add_query_arg( array( 'page'=>'um_roles', 'tab'=>'edit', 'id'=>$id, 'msg'=>'a' ), admin_url( 'admin.php' ) );
-		} elseif ( 'edit' == $_GET['tab'] && ! empty( $_GET['id'] ) ) {
-			$id = $_GET['id'];
+		} elseif ( 'edit' == $_GET['tab'] && ! empty( $role_key ) ) {
+			$id = $role_key;
 			$redirect = add_query_arg( array( 'page' => 'um_roles', 'tab'=>'edit', 'id'=>$id, 'msg'=>'u' ), admin_url( 'admin.php' ) );
 		}
 
@@ -112,7 +120,12 @@ if ( ! empty( $_POST['role'] ) ) {
 		$role_meta = $data;
 		unset( $role_meta['id'] );
 
-		update_option( "um_role_{$id}_meta", $role_meta );
+		if( $id == 'multisite_user' ) {
+			update_option( "um_multisite_user_role_data", $role_meta );
+		} else {
+			update_option( "um_role_{$id}_meta", $role_meta );
+		}
+
 
 		UM()->user()->remove_cache_all_users();
 
@@ -155,7 +168,7 @@ $screen_id = $current_screen->id; ?>
 	<?php } ?>
 
 	<form id="um_edit_role" action="" method="post">
-		<input type="hidden" name="role[id]" value="<?php echo isset( $_GET['id'] ) ? $_GET['id'] : '' ?>" />
+		<input type="hidden" name="role[id]" value="<?php echo isset( $role_key ) ? $role_key : '' ?>" />
 		<?php if ( 'add' == $_GET['tab'] ) { ?>
 			<input type="hidden" name="role[_um_is_custom]" value="1" />
 		<?php } else { ?>

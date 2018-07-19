@@ -346,8 +346,13 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 		function get_priority_user_role( $user_id ) {
 			$user = get_userdata( $user_id );
 
-			if ( empty( $user->roles ) )
-				return false;
+			if ( empty( $user->roles ) ) {
+				if( is_super_admin( $user_id ) ) {
+					$user->roles[] = 'administrator';
+				} else {
+					return false;
+				}
+			}
 
 			// User has roles so look for a UM Role one
 			$um_roles_keys = get_option( 'um_roles' );
@@ -532,6 +537,20 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 		}
 
 
+		function get_multisite_role_data() {
+			if( !is_multisite() ) return false;
+			$role_data = get_option('um_multisite_user_role_data');
+            $role_meta = array();
+            foreach ( $role_data as $key=>$value ) {
+                if ( strpos( $key, '_um_' ) === 0 )
+                    $key = str_replace( '_um_', '', $key );
+                $role_meta[$key] = $value;
+            }
+
+            return $role_meta;
+		}
+
+
 		/**
 		 * Query for UM roles
 		 *
@@ -624,7 +643,15 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			$user_id = get_current_user_id();
 			$role = UM()->roles()->get_priority_user_role( $user_id );
 
-			$permissions = $this->role_data( $role );
+			if( !$role ) {
+				if( is_multisite() ) {
+					$permissions = UM()->roles()->get_multisite_role_data();
+				} else {
+					return false;
+				}
+			} else {
+				$permissions = $this->role_data( $role );
+			}
 
 			/**
 			 * UM hook

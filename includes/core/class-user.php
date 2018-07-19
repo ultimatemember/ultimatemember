@@ -836,9 +836,12 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					// add permissions
 					$user_role = UM()->roles()->get_priority_user_role( $this->id );
 					$this->profile['role'] = $user_role;
-					$this->profile['roles'] = UM()->roles()->get_all_user_roles( $this->id );
-
-					$role_meta = UM()->roles()->role_data( $user_role );
+					if( is_multisite() && !$user_role ) {
+                        $role_meta = UM()->roles()->get_multisite_role_data();
+                    } else {
+						$this->profile['roles'] = UM()->roles()->get_all_user_roles( $this->id );
+						$role_meta = UM()->roles()->role_data( $user_role );
+					}
 					/**
 					 * UM hook
 					 *

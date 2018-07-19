@@ -781,6 +781,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 									T_COMMENT, // All comments since PHP5
 									T_DOC_COMMENT, // PHPDoc comments
 								);
+
 								foreach ( $tokens as $token ) {
 									if ( in_array( $token[0], $comment ) && strstr( $token[1], '/* Template:' ) && $clean_filename != $excluded ) {
 										$txt = $token[1];

@@ -236,7 +236,11 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 			UM()->query()->count_users_by_status( 'unassigned' );
 
 			foreach ( UM()->config()->default_roles_metadata as $role => $meta ) {
-				update_option( "um_role_{$role}_meta", $meta );
+				add_option( "um_role_{$role}_meta", $meta );
+			}
+
+			if( is_multisite() ) {
+				add_option( "um_multisite_user_role_data", UM()->config()->default_multisite_user_role_data );
 			}
 		}
 	}

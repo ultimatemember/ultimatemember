@@ -439,12 +439,19 @@ if ( $role_keys ) {
 }
 
 global $wp_roles;
+$other_roles = $wp_roles->roles;
+if( is_multisite() && !isset( $roles['multisite_user'] ) ) {
+    $other_roles['multisite_user'] = array(
+        'name' => __('Multisite user (if user doesn\'t have any role on current blog)', 'ultimate-member')
+    );
+}
 
-foreach ( $wp_roles->roles as $roleID => $role_data ) {
-	if ( in_array( $roleID, array_keys( $roles ) ) )
+
+foreach ( $other_roles as $roleID => $role_data ) {
+	if ( isset( $roles[ $roleID ] ) )
 		continue;
 
-	$roles[$roleID] = array(
+	$roles[ $roleID ] = array(
 		'key'   => $roleID,
 		'users' => ! empty( $users_count['avail_roles'][$roleID] ) ? $users_count['avail_roles'][$roleID] : 0,
 		'name' => $role_data['name']

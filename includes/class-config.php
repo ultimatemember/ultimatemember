@@ -580,7 +580,22 @@ if ( ! class_exists( 'um\Config' ) ) {
 
 			$this->permalinks = $this->get_core_pages();
 
-
+			$this->default_multisite_user_role_data = array(
+				'_um_can_access_wpadmin'            => 0,
+				'_um_can_not_see_adminbar'          => 1,
+				'_um_can_edit_everyone'             => 0,
+				'_um_can_delete_everyone'           => 0,
+				'_um_can_edit_profile'              => 1,
+				'_um_can_delete_profile'            => 1,
+				'_um_after_login'                   => 'redirect_profile',
+				'_um_after_logout'                  => 'redirect_home',
+				'_um_default_homepage'              => 1,
+				'_um_can_view_all'                  => 1,
+				'_um_can_make_private_profile'      => 0,
+				'_um_can_access_private_profile'    => 0,
+				'_um_status'                        => 'approved',
+				'_um_auto_approve_act'              => 'redirect_profile',
+			);
 
 			$this->default_roles_metadata = array(
 				/*
