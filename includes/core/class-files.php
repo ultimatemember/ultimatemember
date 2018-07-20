@@ -570,30 +570,63 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * @return mixed
 		 */
 		function get_image_data( $file ) {
+			
 
-			$array['size'] = filesize( $file );
+			$finfo = finfo_open( FILEINFO_MIME_TYPE );
+			
+			$mime_type = finfo_file( $finfo, $file );
+				
 
-			$array['image'] = @getimagesize( $file );
+			if( function_exists('exif_imagetype') ){
+				
+				$array_exif_image_mimes = array( IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG );
+				
+				$allowed_types = apply_filters('um_image_upload_allowed_exif_mimes', $array_exif_image_mimes );
 
-			if ( $array['image'] > 0 ) {
+				if( ! in_array( @exif_imagetype( $file ), $allowed_types ) ) {
+					
+					$array['invalid_image'] = true;
 
-				$array['invalid_image'] = false;
+					return $array;
+				}
 
-				list($width, $height, $type, $attr) = @getimagesize( $file );
+			}else{
+				
+				$array_image_mimes = array('image/jpeg','image/png','image/gif');
+			
+				$allowed_types = apply_filters('um_image_upload_allowed_mimes', $array_image_mimes );
 
-				$array['width'] = $width;
-				$array['height'] = $height;
-				$array['ratio'] = $width / $height;
+				if ( ! in_array( $mime_type, $allowed_types ) ) {
 
-				$array['extension'] = $this->get_extension_by_mime_type( $array['image']['mime'] );
+					$array['invalid_image'] = true;
 
-			} else {
-
-				$array['invalid_image'] = true;
+					return $array;
+				}
 
 			}
 
+			$array['size'] = filesize( $file );
+
+			$image_data = @getimagesize( $file );
+
+			$array['image'] = $image_data; 
+
+			$array['invalid_image'] = false;
+
+			list($width, $height, $type, $attr) = $image_data;
+
+			$array['width'] = $width;
+
+			$array['height'] = $height;
+				
+			$array['ratio'] = $width / $height;
+
+			$array['extension'] = $this->get_extension_by_mime_type( $mime_type );
+
+
 			return $array;
+
+
 		}
 
 
@@ -605,7 +638,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 *
 		 * @return null|string|void
 		 */
-		function check_image_upload( $file, $field ) {
+		function check_image_upload( $file, $field, $stream_photo = false ) {
 			$error = null;
 
 			$fileinfo = $this->get_image_data( $file );
@@ -1222,9 +1255,10 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 						$ret['error'] = $error;
 
 					} else {
+						
 						$file = "stream_photo_".md5($file)."_".uniqid().".".$ext;
 						$ret[ ] = UM()->files()->new_image_upload_temp( $temp, $file, UM()->options()->get('image_compression') );
-
+				
 					}
 
 				}
