@@ -780,7 +780,7 @@ function um_is_temp_image( $url ) {
  * @param  integer $user_id 
  * @return bool      
  */
-function um_is_file_owner( $url, $user_id = null ){
+function um_is_file_owner( $url, $user_id = null, $image_path = false ){
 	
 	$parse_url = explode( "/uploads/ultimatemember/{$user_id}/", $url );
 	
@@ -793,6 +793,11 @@ function um_is_file_owner( $url, $user_id = null ){
 	$file = $user_basedir . '/' . $filename;
 
 	if( file_exists( $file ) ){
+
+		if( $image_path ){
+			return $file;
+		}
+		
 		return true;
 	}
 
