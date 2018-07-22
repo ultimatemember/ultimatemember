@@ -71,8 +71,8 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			add_filter("upload_dir", array( $this, "set_upload_directory" ), 10, 1 );
 			add_filter("wp_handle_upload_prefilter", array( $this, "validate_upload" ) );
-			add_filter("um_upload_image_process__profile_photo", array( $this, "profile_photo" ),  10, 4 );
-			add_filter("um_upload_image_process__cover_photo", array( $this, "cover_photo" ), 10, 4 );
+			add_filter("um_upload_image_process__profile_photo", array( $this, "profile_photo" ),  10, 5 );
+			add_filter("um_upload_image_process__cover_photo", array( $this, "cover_photo" ), 10, 5 );
 			add_filter("um_custom_image_handle_wall_img_upload", array( $this, "stream_photo_data"), 10, 1 );
 
 
@@ -456,23 +456,14 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 
 		/**
-		 * If a value exists in comma seperated list
+		 * Make unique filename
+		 * @param  string $filename 
+		 * @param  string $ext      
+		 * @param  string $dir      
+		 * @return string $filename
 		 *
-		 * @param $value
-		 * @param $array
-		 *
-		 * @return bool
+		 * @since  2.0.22 
 		 */
-		public function in_array( $value, $array ){
-
-			if ( in_array( $value, explode(',', $array ) ) ){
-				return true;
-			}
-
-			return false;
-		}
-
-
 		public function unique_filename( $filename, $ext, $dir ){
 
 			$image_type = wp_check_filetype( $ext );
@@ -513,18 +504,92 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 		}
 
-
-		public function profile_photo( $src, $user_id, $coord, $crop ){
+		/**
+		 * Profile photo image process
+		 * @param  string $src     
+		 * @param  integer $user_id 
+		 * @param  string $coord   
+		 * @param  array $crop  
+		 *   
+		 * @since 2.0.22
+		 */
+		public function profile_photo( $image_path, $src, $user_id, $coord, $crop ){
 
 			$sizes = UM()->options()->get( 'photo_thumb_sizes' );
-			
+		
+			$quality = UM()->options()->get( 'image_compression' );
+
+			$image = wp_get_image_editor( $image_path ); // Return an implementation that extends WP_Image_Editor
+
+			if ( ! is_wp_error( $image ) ) {
+					
+				$src_x = $crop[0];
+				$src_y = $crop[1];
+				$src_w = $crop[2];
+				$src_h = $crop[3];
+
+				$image->crop( $src_x, $src_y, $src_w, $src_h );
+
+				$image->save( $image_path );
+
+				$image->set_quality( $quality );
+
+				$sizes_array = 	array(
+					array ('width' => 100, 'height' => 100, 'crop' => true ),
+				);
+
+				$image->multi_resize( $sizes_array );
+
+			}else{
+
+				wp_send_json_error( esc_js( __( "Unable to crop image file: {$src}", 'ultimate-member' ) ) );		
+	
+			}	
 	
 		}
 
 
-		public function cover_photo( $src, $user_id, $coord, $crop ){
+		/**
+		 * Cover photo image process
+		 * @param  string $src     
+		 * @param  integer $user_id 
+		 * @param  string $coord   
+		 * @param  array $crop   
+		 *  
+		 * @since 2.0.22
+		 */
+		public function cover_photo( $image_path, $src, $user_id, $coord, $crop ){
 
 			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
+			
+			$quality = UM()->options()->get( 'image_compression' );
+
+			$image = wp_get_image_editor( $image_path ); // Return an implementation that extends WP_Image_Editor
+
+			if ( ! is_wp_error( $image ) ) {
+					
+				$src_x = $crop[0];
+				$src_y = $crop[1];
+				$src_w = $crop[2];
+				$src_h = $crop[3];
+
+				$image->crop( $src_x, $src_y, $src_w, $src_h );
+
+				$image->save( $image_path );
+				
+				$image->set_quality( $quality );
+
+				$sizes_array = 	array(
+					array ('width' => 100, 'height' => 100, 'crop' => true ),
+				);
+
+				$image->multi_resize( $sizes_array );
+
+			}else{
+
+				wp_send_json_error( esc_js( __( "Unable to crop image file: {$src}", 'ultimate-member' ) ) );		
+	
+			}
 
 		}
 
@@ -543,39 +608,26 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 		/**
 		 * Resize Image
+		 * @param  string $image_path
 		 * @param  string $src     
 		 * @param  string $key     
 		 * @param  integer $user_id 
 		 * @param  string $coord   
 		 * @return string $src          
 		 */
-		public function resize_image( $src, $key, $user_id, $coord ){
+		public function resize_image( $image_path, $src, $key, $user_id, $coord ){
 
 			$crop = explode( ',', $coord );
 			$crop = array_map( 'intval', $crop );
 
 			if( in_array( $key, array( 'profile_photo', 'cover_photo' ) ) ){
 				
-				do_action("um_upload_image_process__{$key}", $src, $user_id, $coord, $crop );
+				do_action("um_upload_image_process__{$key}", $image_path, $src, $user_id, $coord, $crop );
 
 			}else{ // stream photos
 
-				do_action("um_upload_image_process__{$key}", $src, $user_id, $coord, $crop );
+				do_action("um_upload_image_process__{$key}", $image_path, $src, $user_id, $coord, $crop );
 
-				$image = wp_get_image_editor( $src ); // Return an implementation that extends WP_Image_Editor
-
-					wp_send_json_error( esc_js( array( $crop, $src ) ) );
-			
-				if ( ! is_wp_error( $image ) ) {
-					
-					$src_y = $crop[0];
-					$src_x = $crop[1];
-					$src_w = $crop[2];
-					$src_h = $crop[3];
-
-				    $image->crop( $src_x, $src_y, $src_w, $src_h );
-				    $image->save( $src );
-				}
 			}
 
 			return $src;
