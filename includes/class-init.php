@@ -1151,6 +1151,19 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['files'];
 		}
 
+		/**
+		 * @since 2.0.21
+		 *
+		 * @return um\core\Files
+		 */
+		function uploader() {
+			if ( empty( $this->classes['uploader'] ) ) {
+				$this->classes['uploader'] = new um\core\Uploader();
+			}
+
+			return $this->classes['uploader'];
+		}
+
 
 		/**
 		 * @since 2.0

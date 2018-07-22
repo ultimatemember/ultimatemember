@@ -775,6 +775,33 @@ function um_is_temp_image( $url ) {
 
 
 /**
+ * Check user's file ownership
+ * @param  string $url     
+ * @param  integer $user_id 
+ * @return bool      
+ */
+function um_is_file_owner( $url, $user_id = null ){
+	
+	$parse_url = explode( "/uploads/ultimatemember/{$user_id}/", $url );
+	
+	$user_basedir = UM()->uploader()->get_upload_user_base_dir( $user_id );
+	
+	$filename = $parse_url[1];
+
+	$filename = substr( $filename, 0, strpos($filename,"?" ) );
+
+	$file = $user_basedir . '/' . $filename;
+
+	if( file_exists( $file ) ){
+		return true;
+	}
+
+	return false;
+
+}
+
+
+/**
  * Get core page url
  *
  * @param $time1
