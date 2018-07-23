@@ -1626,8 +1626,8 @@ function um_user_uploads_dir() {
  */
 function um_closest_num( $array, $number ) {
 	sort( $array );
-	foreach ($array as $a) {
-		if ($a >= $number) return $a;
+	foreach ( $array as $a ) {
+		if ( $a >= $number ) return $a;
 	}
 
 	return end( $array );
@@ -1645,11 +1645,14 @@ function um_closest_num( $array, $number ) {
 function um_get_cover_uri( $image, $attrs ) {
 	$uri = false;
 	$ext = '.' . pathinfo( $image, PATHINFO_EXTENSION );
-	if (file_exists( UM()->files()->upload_basedir . um_user( 'ID' ) . '/cover_photo' . $ext )) {
-		$uri = um_user_uploads_uri() . 'cover_photo' . $ext . '?' . current_time( 'timestamp' );
+	if (file_exists( UM()->files()->upload_basedir . um_user( 'ID' ) . "/cover_photo{$ext}" ) ) {
+		$uri = um_user_uploads_uri() . "/cover_photo{$ext}?" . current_time( 'timestamp' );
 	}
-	if (file_exists( UM()->files()->upload_basedir . um_user( 'ID' ) . '/cover_photo-' . $attrs . $ext )) {
-		$uri = um_user_uploads_uri() . 'cover_photo-' . $attrs . $ext . '?' . current_time( 'timestamp' );
+	
+	if ( file_exists( UM()->files()->upload_basedir . um_user( 'ID' ) . "/cover_photo-{$attrs}x{$attrs}{$ext}" ) ) {
+		$uri = um_user_uploads_uri() . "/cover_photo-{$attrs}x{$attrs}{$ext}?". current_time( 'timestamp' );
+	}else if ( file_exists( UM()->files()->upload_basedir . um_user( 'ID' ) . "/cover_photo-{$attrs}{$ext}" ) ) {
+		$uri = um_user_uploads_uri() . "/cover_photo-{$attrs}{$ext}?" . current_time( 'timestamp' );
 	}
 
 	return $uri;
@@ -1708,15 +1711,19 @@ function um_get_avatar_uri( $image, $attrs ) {
 
 	if( $attrs == 'original' && file_exists( um_user_uploads_dir() . "profile_photo{$ext}" ) ) {
         $uri = um_user_uploads_uri() . "profile_photo{$ext}";
-    } else if (file_exists( um_user_uploads_dir() . "profile_photo-{$attrs}{$ext}" )) {
+    } else if ( file_exists( um_user_uploads_dir() . "profile_photo-{$attrs}x{$attrs}{$ext}" ) ) {
+		$uri = um_user_uploads_uri() . "profile_photo-{$attrs}x{$attrs}{$ext}";
+	} else if ( file_exists( um_user_uploads_dir() . "profile_photo-{$attrs}{$ext}" ) ) {
 		$uri = um_user_uploads_uri() . "profile_photo-{$attrs}{$ext}";
 	} else {
 		$sizes = UM()->options()->get( 'photo_thumb_sizes' );
-		if (is_array( $sizes )) $find = um_closest_num( $sizes, $attrs );
+		if ( is_array( $sizes ) ) $find = um_closest_num( $sizes, $attrs );
 
-		if (file_exists( um_user_uploads_dir() . "profile_photo-{$find}{$ext}" )) {
+		if ( file_exists( um_user_uploads_dir() . "profile_photo-{$find}x{$find}{$ext}" ) ) {
+			$uri = um_user_uploads_uri() . "profile_photo-{$find}x{$find}{$ext}";
+		}else if ( file_exists( um_user_uploads_dir() . "profile_photo-{$find}{$ext}" ) ) {
 			$uri = um_user_uploads_uri() . "profile_photo-{$find}{$ext}";
-		} else if (file_exists( um_user_uploads_dir() . "profile_photo{$ext}" )) {
+		} else if ( file_exists( um_user_uploads_dir() . "profile_photo{$ext}" ) ) {
 			$uri = um_user_uploads_uri() . "profile_photo{$ext}";
 		}
 	}
