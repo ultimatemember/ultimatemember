@@ -73,6 +73,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			add_filter("wp_handle_upload_prefilter", array( $this, "validate_upload" ) );
 			add_filter("um_upload_image_process__profile_photo", array( $this, "profile_photo" ),  10, 5 );
 			add_filter("um_upload_image_process__cover_photo", array( $this, "cover_photo" ), 10, 5 );
+			add_filter("um_upload_stream_image_process", array( $this, "stream_photo" ), 10, 5 );
 			add_filter("um_custom_image_handle_wall_img_upload", array( $this, "stream_photo_data"), 10, 1 );
 
 
@@ -325,7 +326,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				 */
 				do_action( "um_after_upload_db_meta_{$field_key}", $this->user_id );
 
-				update_user_meta( $this->user_id, $field_key, $movefile['url'] );
+				update_user_meta( $this->user_id, $field_key, wp_basename( $movefile['url'] ) );
 
 			}
 
@@ -534,9 +535,11 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				$image->set_quality( $quality );
 
-				$sizes_array = 	array(
-					array ('width' => 100, 'height' => 100, 'crop' => true ),
-				);
+				$sizes_array = array();
+
+				foreach( $sizes as $size ){
+					$sizes_array[ ] = array ('width' => $size );
+				}
 
 				$image->multi_resize( $sizes_array );
 
@@ -579,11 +582,60 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				
 				$image->set_quality( $quality );
 
-				$sizes_array = 	array(
-					array ('width' => 100, 'height' => 100, 'crop' => true ),
-				);
+				$sizes_array = array();
+
+				foreach( $sizes as $size ){
+					$sizes_array[ ] = array ('width' => $size );
+				}
 
 				$image->multi_resize( $sizes_array );
+
+			}else{
+
+				wp_send_json_error( esc_js( __( "Unable to crop image file: {$src}", 'ultimate-member' ) ) );		
+	
+			}
+
+		}
+
+		/**
+		 * Stream photo image process
+		 * @param  string $src     
+		 * @param  integer $user_id 
+		 * @param  string $coord   
+		 * @param  array $crop   
+		 *  
+		 * @since 2.0.22
+		 */
+		public function stream_photo( $image_path, $src, $user_id, $coord, $crop ){
+			
+			$filename = $image_path. wp_basename( $src );
+
+			$image_path = substr( $filename , 0, strpos($filename ,"?" ) );
+
+			$image = wp_get_image_editor( $image_path ); // Return an implementation that extends WP_Image_Editor
+
+			$quality = UM()->options()->get( 'image_compression' );
+
+			if ( ! is_wp_error( $image ) ) {
+				
+				if( ! empty( $crop ) ){	
+
+					if( ! is_array( $crop ) ){
+						$crop = explode(",", $crop );
+					}
+
+					$src_x = $crop[0];
+					$src_y = $crop[1];
+					$src_w = $crop[2];
+					$src_h = $crop[3];
+
+					$image->crop( $src_x, $src_y, $src_w, $src_h );
+				}
+
+				$image->save( $image_path );
+				
+				$image->set_quality( $quality );
 
 			}else{
 
@@ -600,7 +652,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 */
 		public function stream_photo_data( $args ){
 
-			$args['max_file_size'] = 99999;
+			$args['max_file_size'] = apply_filters("um_upload_images_stream_maximum_file_size", 9999999 );
 			$args['max_file_size_error'] = sprintf(__("Maximum file size allowed: ".size_format( $args['max_file_size'] ),'ultimate-member') );
 			
 			return $args;
@@ -620,14 +672,10 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			$crop = explode( ',', $coord );
 			$crop = array_map( 'intval', $crop );
 
-			if( in_array( $key, array( 'profile_photo', 'cover_photo' ) ) ){
-				
-				do_action("um_upload_image_process__{$key}", $image_path, $src, $user_id, $coord, $crop );
+			do_action("um_upload_image_process__{$key}", $image_path, $src, $user_id, $coord, $crop );
 
-			}else{ // stream photos
-
-				do_action("um_upload_image_process__{$key}", $image_path, $src, $user_id, $coord, $crop );
-
+			if( ! in_array( $key, array('profile_photo','cover_photo') ) ){
+				do_action("um_upload_stream_image_process", $image_path, $src, $key, $user_id, $coord, $crop );
 			}
 
 			return $src;
