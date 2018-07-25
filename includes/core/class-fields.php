@@ -2250,9 +2250,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					if ($this->field_value( $key, $default, $data )) {
 
-						if (!in_array( $key, array( 'profile_photo', 'cover_photo' ) )) {
+						if ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ) ) ) {
 							if (isset( $this->set_mode ) && $this->set_mode == 'register') {
-								$imgValue = $this->field_value( $key, $default, $data );
+								$imgValue = UM()->uploader()->get_core_temp_url() . "/" . $this->field_value( $key, $default, $data );
 							} else {
 								$imgValue = um_user_uploads_uri() . $this->field_value( $key, $default, $data );
 							}
