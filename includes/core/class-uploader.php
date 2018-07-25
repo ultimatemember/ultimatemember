@@ -553,6 +553,8 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				$image->multi_resize( $sizes_array );
 
+				delete_user_meta( $user_id, 'synced_profile_photo' );
+
 			}else{
 
 				wp_send_json_error( esc_js( __( "Unable to crop image file: {$src}", 'ultimate-member' ) ) );		
