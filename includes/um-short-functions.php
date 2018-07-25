@@ -1064,10 +1064,11 @@ function um_requesting_password_reset() {
  * @return bool
  */
 function um_requesting_password_change() {
-	if (um_is_core_page( 'account' ) && isset( $_POST['_um_account'] ) == 1)
+	if ( um_is_core_page( 'account' ) && isset( $_POST['_um_account'] ) == 1 & isset( $_POST['_um_account_tab'] ) == 'password' ) {
 		return true;
-    else if (isset( $_POST['_um_password_change'] ) && $_POST['_um_password_change'] == 1)
+	} elseif ( isset( $_POST['_um_password_change'] ) && $_POST['_um_password_change'] == 1 ) {
 		return true;
+	}
 
 	return false;
 }

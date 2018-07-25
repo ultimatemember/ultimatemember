@@ -519,7 +519,6 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'form_asterisk'                         => 0,
 				'profile_title'                         => '{display_name} | {site_name}',
 				'profile_desc'                          => '{display_name} is on {site_name}. Join {site_name} to view {display_name}\'s profile',
-				'allow_tracking'                        => 0,
 				'admin_email'                           => get_bloginfo('admin_email'),
 				'mail_from'                             => get_bloginfo('name'),
 				'mail_from_addr'                        => get_bloginfo('admin_email'),

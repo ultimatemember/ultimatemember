@@ -220,8 +220,8 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 
 			foreach ( UM()->config()->settings_defaults as $key => $value ) {
 				//set new options to default
-				if ( ! isset( $options[$key] ) )
-					$options[$key] = $value;
+				if ( ! isset( $options[ $key ] ) )
+					$options[ $key ] = $value;
 			}
 
 			update_option( 'um_options', $options );

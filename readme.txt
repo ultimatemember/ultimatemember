@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.1
 Tested up to: 4.9
-Stable tag: 2.0.17
+Stable tag: 2.0.21
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -131,13 +131,50 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
-= 2.0.18: =
+= 2.0.21: July 9, 2018 =
+
+* Bugfixes:
+  - Fixed search in members directory by User Tags field (other case)
+
+= 2.0.20: July 6, 2018 =
+
+* Bugfixes:
+  - Fixed search in members directory by User Tags field
+
+= 2.0.19: July 5, 2018 =
+
+* Bugfixes:
+  - Fixed few JS file's full versions
+  - Fixed search in members directory by multiselect/radio/checkbox field
+  - Fixed first activation role metadata reset
+
+= 2.0.18: July 4, 2018 =
 
 * Enhancements:
+  - Added an ability to create different email templates for each site on multisites installs
+  - Added major version notice
+  - Added an ability to make Profile Form visible for 2 or more roles
+  - Added ability to dismiss some UM notices
+  - Redesign some parts of field's conditional logic settings
 
 * Bugfixes:
   - Fixed PHP memory limit issue on some installs. Created pseudo-constructor
   - Disabled email notification to user, which wasn't approved about delete their account
+  - Fixed profile tabs privacy
+  - Fixed default avatars and Gravatar displaying
+  - Fixed get current URL function
+  - Fixed admin bar displaying
+  - Fixed members directory search
+  - Fixed nav-menu items restriction handlers
+  - Fixed user displaying on multisite (added 404 error in some cases)
+  - Fixed XSS at wp-admin settings screen
+  - Fixed user's "user_login" permalinks
+  - Fixed user's capabilities ("Edit", "Delete" user) and profile actions displaying
+  - Fixed field's conditional logic
+  - Fixed issue with account button ID's duplicates
+
+* Deprecated:
+  - REST API user's key option;
 
 = 2.0.17: May 30, 2018 =
 

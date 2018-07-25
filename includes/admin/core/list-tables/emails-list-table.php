@@ -314,7 +314,7 @@ $ListTable->wpc_set_pagination_args( array( 'total_items' => count( $emails ), '
 	<input type="hidden" name="page" value="um_options" />
 	<input type="hidden" name="tab" value="email" />
 	<?php if ( ! empty( $_GET['section'] ) ) { ?>
-		<input type="hidden" name="section" value="<?php echo $_GET['section'] ?>" />
+		<input type="hidden" name="section" value="<?php echo esc_attr( $_GET['section'] ) ?>" />
 	<?php }
 
 	$ListTable->display(); ?>

@@ -285,7 +285,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			 * }
 			 * ?>
 			 */
-			return apply_filters( 'um_render_field_type_' . $data['type'], '', $data, $this->form_data );
+			return apply_filters( 'um_render_field_type_' . $data['type'], '', $data, $this->form_data, $this );
 		}
 
 
@@ -1052,7 +1052,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						'editor_class'  => $class
 					)
 				); ?>
-				<span class="description">For default text for plain-text emails please see this <a href="#<?php echo $field_data['id'] ?>">doc</a></span>
+				<span class="description">For default text for plain-text emails please see this <a href="https://docs.ultimatemember.com/article/1342-plain-text-email-default-templates#<?php echo $field_data['id'] ?>" target="_blank">doc</a></span>
 			</div>
 
 			<?php $html = ob_get_clean();
