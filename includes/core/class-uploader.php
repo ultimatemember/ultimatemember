@@ -14,49 +14,54 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 	class Uploader {
 
 		/**
-		 * @var 
+		 * @var string
 		 */
 		var $core_upload_dir;
 
 		/**
-		 * @var
+		 * @var string
 		 */
 		var $upload_baseurl;
 
 		/**
-		 * @var
+		 * @var string
 		 */
 		var $upload_basedir;
 
 		/**
-		 * @var
+		 * @var string
 		 */
 		var $upload_user_baseurl;
 
 		/**
-		 * @var
+		 * @var string
 		 */
 		var $upload_user_basedir;
 
 		/**
-		 * @var 
+		 * @var string
 		 */
 		var $upload_image_type;
 
 		/**
-		 * @var 
+		 * @var integer
 		 */
 		var $user_id;
 
 		/**
-		 * @var 
+		 * @var string
 		 */
 		var $field_key;
 
 		/**
-		 * @var 
+		 * @var string
 		 */
 		var $wp_upload_dir;
+
+		/**
+		 * @var string
+		 */
+		var $temp_upload_dir;
 
 
 		/**
@@ -68,6 +73,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			$this->user_id = get_current_user_id();
 			$this->upload_image_type = 'stream_photo';
 			$this->wp_upload_dir = wp_upload_dir(); 
+			$this->temp_upload_dir = "temp";
 
 			add_filter("upload_dir", array( $this, "set_upload_directory" ), 10, 1 );
 			add_filter("wp_handle_upload_prefilter", array( $this, "validate_upload" ) );
@@ -77,6 +83,28 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			add_filter("um_custom_image_handle_wall_img_upload", array( $this, "stream_photo_data"), 10, 1 );
 
 
+		}
+
+		/**
+		 * Get core temporary directory path
+		 *
+		 * @since 2.0.22 
+		 * @return string
+		 */
+		public function get_core_temp_dir(){
+
+			return  $this->get_upload_base_dir(). $this->temp_upload_dir;
+		}
+
+		/**
+		 * Get core temporary directory URL
+		 *
+		 * @since 2.0.22 
+		 * @return string
+		 */
+		public function get_core_temp_url(){
+
+			return  $this->get_upload_base_url(). $this->temp_upload_dir;
 		}
 
 		/**
@@ -185,8 +213,13 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			$this->upload_baseurl = $args['baseurl'] . $this->core_upload_dir;
 			$this->upload_basedir = $args['basedir'] . $this->core_upload_dir;
 
-			$this->upload_user_baseurl	= $this->upload_baseurl . $this->user_id;
-			$this->upload_user_basedir	= $this->upload_basedir . $this->user_id;
+			if( is_user_logged_in() ){
+				$this->upload_user_baseurl	= $this->upload_baseurl . $this->user_id;
+				$this->upload_user_basedir	= $this->upload_basedir . $this->user_id;
+			}else{
+				$this->upload_user_baseurl	= $this->upload_baseurl . 'temp';
+				$this->upload_user_basedir	= $this->upload_basedir . 'temp';
+			}
 
 			$args['path'] = $this->upload_user_basedir;
 			$args['url'] = $this->upload_user_baseurl;
@@ -212,7 +245,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			$this->upload_image_type = $upload_type;			
 
-			if( $user_id ){
+			if( $user_id && is_user_logged_in() ){
 				$this->user_id = $user_id;
 			}
 			
