@@ -9,86 +9,51 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @param $args
  */
 function um_submit_form_errors_hook_login( $args ) {
-	$is_email = false;
-
-	$form_id = $args['form_id'];
-	$mode = $args['mode'];
-	$user_password = $args['user_password'];
-
-
-	if ( isset( $args['username'] ) && $args['username'] == '' ) {
-		UM()->form()->add_error( 'username',  __('Please enter your username or email','ultimate-member') );
+	if ( ( UM()->options()->get('deny_admin_frontend_login')   && ! isset( $_GET['provider'] ) ) && strrpos( um_user('wp_roles' ), 'administrator' ) !== false ) {
+		wp_die( __('This action has been prevented for security measures.','ultimate-member') );
 	}
 
-	if ( isset( $args['user_login'] ) && $args['user_login'] == '' ) {
-		UM()->form()->add_error( 'user_login',  __('Please enter your username','ultimate-member') );
-	}
-
-	if ( isset( $args['user_email'] ) && $args['user_email'] == '' ) {
-		UM()->form()->add_error( 'user_email',  __('Please enter your email','ultimate-member') );
-	}
-
-	if ( isset( $args['username'] ) ) {
+	if( isset( $args['username'] ) ) {
+		$login_or_email = $args['username'];
 		$field = 'username';
-		if ( is_email( $args['username'] ) ) {
-			$is_email = true;
-			$data = get_user_by('email', $args['username'] );
-			$user_name = (isset ( $data->user_login ) ) ? $data->user_login : null;
-		} else {
-			$user_name  = $args['username'];
-		}
-	} else if ( isset( $args['user_email'] ) ) {
+	}
+	if( isset( $args['user_email'] ) ) {
+		$login_or_email = $args['user_email'];
 		$field = 'user_email';
-		$is_email = true;
-		$data = get_user_by('email', $args['user_email'] );
-		$user_name = (isset ( $data->user_login ) ) ? $data->user_login : null;
-	} else {
+	}
+	if( isset( $args['user_login'] ) ) {
+		$login_or_email = $args['user_login'];
 		$field = 'user_login';
-		$user_name = $args['user_login'];
 	}
 
-	if ( !username_exists( $user_name ) ) {
-		if ( $is_email ) {
-			UM()->form()->add_error( $field,  __(' Sorry, we can\'t find an account with that email address','ultimate-member') );
+	if ( empty( $login_or_email )  ) {
+		if( isset( $field ) && $field == 'user_email' ) {
+			$message = __('Please enter your email','ultimate-member');
+		} else if( isset( $field ) && $field == 'user_login' ) {
+			$message = __('Please enter your username','ultimate-member');
 		} else {
-			UM()->form()->add_error( $field,  __(' Sorry, we can\'t find an account with that username','ultimate-member') );
+			$message = __('Please enter your username or email','ultimate-member');
 		}
-	} else {
-		if ( $args['user_password'] == '' ) {
-			UM()->form()->add_error( 'user_password',  __('Please enter your password','ultimate-member') );
-		}
+		UM()->form()->add_error( $field,  $message );
+		return false;
 	}
 
-	$user = get_user_by( 'login', $user_name );
-	if ( $user && wp_check_password( $args['user_password'], $user->data->user_pass, $user->ID) ) {
-		UM()->login()->auth_id = username_exists( $user_name );
-	} else {
-		UM()->form()->add_error( 'user_password',  __('Password is incorrect. Please try again.','ultimate-member') );
+	if ( empty( $args['user_password'] ) ) {
+		UM()->form()->add_error( 'user_password',  __('Please enter your password','ultimate-member') );
+		return false;
 	}
 
-	$user = apply_filters( 'authenticate', null, $user_name, $args['user_password'] );
-		
-	$authenticate_user = apply_filters( 'wp_authenticate_user', $user_name, $args['user_password'] );
-		
-	// @since 4.18 replacement for 'wp_login_failed' action hook
-	// see WP function wp_authenticate()
-	$ignore_codes = array('empty_username', 'empty_password');
+	$user = wp_signon( array(
+		'user_login'    => $login_or_email,
+		'user_password' => $args['user_password'],
+		'remember' => !empty( $args['rememberme'] )
+	) );
 
-	if ( is_wp_error( $user ) && ! in_array( $user->get_error_code(), $ignore_codes ) ) {
-			
+	if ( is_wp_error( $user ) ) {
 		UM()->form()->add_error( $user->get_error_code(),  __( $user->get_error_message() ,'ultimate-member') );
+		return false;
 	}
-
-	if( is_wp_error( $authenticate_user ) && ! in_array( $authenticate_user->get_error_code(), $ignore_codes ) ){
-
-		UM()->form()->add_error( $authenticate_user->get_error_code(),  __( $authenticate_user->get_error_message() ,'ultimate-member') );
-		
-	}
-
-	// if there is an error notify wp
-	if( UM()->form()->has_error( $field ) || UM()->form()->has_error( $user_password ) || UM()->form()->count_errors() > 0 ) {
-		do_action( 'wp_login_failed', $user_name );
-	}
+	return true;
 }
 add_action( 'um_submit_form_errors_hook_login', 'um_submit_form_errors_hook_login', 10 );
 
@@ -124,42 +89,6 @@ add_action( 'um_before_login_fields', 'um_display_login_errors' );
 
 
 /**
- * Login checks thru the frontend login
- *
- * @param $args
- */
-function um_submit_form_errors_hook_logincheck( $args ) {
-	// Logout if logged in
-	if ( is_user_logged_in() ) {
-		wp_logout();
-	}
-
-	$user_id = ( isset( UM()->login()->auth_id ) ) ? UM()->login()->auth_id : '';
-	um_fetch_user( $user_id );
-
-	$status = um_user('account_status'); // account status
-	switch( $status ) {
-
-		// If user can't login to site...
-		case 'inactive':
-		case 'awaiting_admin_review':
-		case 'awaiting_email_confirmation':
-		case 'rejected':
-		um_reset_user();
-		exit( wp_redirect(  add_query_arg( 'err', esc_attr( $status ), UM()->permalinks()->get_current_url() ) ) );
-		break;
-
-	}
-
-	if ( isset( $args['form_id'] ) && $args['form_id'] == UM()->shortcodes()->core_login_form() &&  UM()->form()->errors && !isset( $_POST[ UM()->honeypot ] ) ) {
-		exit( wp_redirect( um_get_core_page('login') ) );
-	}
-
-}
-add_action( 'um_submit_form_errors_hook_logincheck', 'um_submit_form_errors_hook_logincheck', 9999 );
-
-
-/**
  * Store last login timestamp
  *
  * @param $user_id
@@ -187,14 +116,6 @@ add_action( 'wp_login', 'um_store_lastlogin_timestamp_' );
  */
 function um_user_login( $args ) {
 	extract( $args );
-
-	$rememberme = ( isset( $args['rememberme'] ) && 1 ==  $args['rememberme']  && isset( $_REQUEST['rememberme'] ) ) ? 1 : 0;
-
-	if ( ( UM()->options()->get('deny_admin_frontend_login')   && ! isset( $_GET['provider'] ) ) && strrpos( um_user('wp_roles' ), 'administrator' ) !== false ) {
-		wp_die( __('This action has been prevented for security measures.','ultimate-member') );
-	}
-
-	UM()->user()->auto_login( um_user( 'ID' ), $rememberme );
 
 	/**
 	 * UM hook
@@ -224,6 +145,7 @@ function um_user_login( $args ) {
 
 	// Role redirect
 	$after_login = um_user( 'after_login' );
+
 	if ( empty( $after_login ) )
 		exit( wp_redirect( um_user_profile_url() ) );
 

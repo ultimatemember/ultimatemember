@@ -168,3 +168,37 @@ function um_lostpassword_url( $lostpassword_url ) {
 }
 add_filter( 'lostpassword_url',  'um_lostpassword_url', 10, 1 );
 
+/**
+ * Login checks thru the frontend login
+ *
+ * @param $args
+ */
+function um_check_user_status( $user ) {
+	if( !isset( $user->ID ) ) {
+		return $user;
+	}
+
+	um_fetch_user( $user->ID );
+
+	$status = um_user('account_status'); // account status
+	switch( $status ) {
+
+		// If user can't login to site...
+		case 'inactive':
+		case 'awaiting_admin_review':
+		case 'awaiting_email_confirmation':
+		case 'rejected':
+		um_reset_user();
+		return new WP_Error( $status,  );
+		exit( wp_redirect(  add_query_arg( 'err', esc_attr( $status ), UM()->permalinks()->get_current_url() ) ) );
+		break;
+
+	}
+
+	if ( isset( $args['form_id'] ) && $args['form_id'] == UM()->shortcodes()->core_login_form() &&  UM()->form()->errors && !isset( $_POST[ UM()->honeypot ] ) ) {
+		exit( wp_redirect( um_get_core_page('login') ) );
+	}
+
+	return $user;
+}
+add_action( 'authenticate', 'um_check_user_status', 9999 );
