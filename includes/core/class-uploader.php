@@ -71,9 +71,9 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			add_filter("upload_dir", array( $this, "set_upload_directory" ), 10, 1 );
 			add_filter("wp_handle_upload_prefilter", array( $this, "validate_upload" ) );
-			add_filter("um_upload_image_process__profile_photo", array( $this, "profile_photo" ),  10, 5 );
-			add_filter("um_upload_image_process__cover_photo", array( $this, "cover_photo" ), 10, 5 );
-			add_filter("um_upload_stream_image_process", array( $this, "stream_photo" ), 10, 5 );
+			add_filter("um_upload_image_process__profile_photo", array( $this, "profile_photo" ),  10, 6 );
+			add_filter("um_upload_image_process__cover_photo", array( $this, "cover_photo" ), 10, 6 );
+			add_filter("um_upload_stream_image_process", array( $this, "stream_photo" ), 10, 6 );
 			add_filter("um_custom_image_handle_wall_img_upload", array( $this, "stream_photo_data"), 10, 1 );
 
 
@@ -241,6 +241,8 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			     */
 			    $response['error'] = $movefile['error'];
 			}else{
+
+				$movefile['file'] = wp_basename( $movefile['file'] );
 
 				/**
 				 * UM hook
@@ -497,6 +499,14 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			return $filename;
 		}
 
+		/**
+		 * Delete file
+		 * @param  string $filename 
+		 * @param  string $ext      
+		 * @param  string $dir      
+		 *   
+		 * @since 2.0.22
+		 */
 		public function delete_existing_file( $filename, $ext, $dir  ){
 			
 			if( file_exists( $this->upload_user_basedir."/".$filename  ) ){
@@ -514,7 +524,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 *   
 		 * @since 2.0.22
 		 */
-		public function profile_photo( $image_path, $src, $user_id, $coord, $crop ){
+		public function profile_photo( $image_path, $src, $key, $user_id, $coord, $crop ){
 
 			$sizes = UM()->options()->get( 'photo_thumb_sizes' );
 		
@@ -561,7 +571,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 *  
 		 * @since 2.0.22
 		 */
-		public function cover_photo( $image_path, $src, $user_id, $coord, $crop ){
+		public function cover_photo( $image_path, $src, $key, $user_id, $coord, $crop ){
 
 			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
 			
@@ -607,12 +617,8 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 *  
 		 * @since 2.0.22
 		 */
-		public function stream_photo( $image_path, $src, $user_id, $coord, $crop ){
+		public function stream_photo( $image_path, $src, $key, $user_id, $coord, $crop ){
 			
-			$filename = $image_path. wp_basename( $src );
-
-			$image_path = substr( $filename , 0, strpos($filename ,"?" ) );
-
 			$image = wp_get_image_editor( $image_path ); // Return an implementation that extends WP_Image_Editor
 
 			$quality = UM()->options()->get( 'image_compression' );
@@ -639,7 +645,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			}else{
 
-				wp_send_json_error( esc_js( __( "Unable to crop image file: {$src}", 'ultimate-member' ) ) );		
+				wp_send_json_error( esc_js( __( "Unable to crop stream image file: {$image_path}", 'ultimate-member' ) ) );		
 	
 			}
 
@@ -672,13 +678,18 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			$crop = explode( ',', $coord );
 			$crop = array_map( 'intval', $crop );
 
-			do_action("um_upload_image_process__{$key}", $image_path, $src, $user_id, $coord, $crop );
+			do_action("um_upload_image_process__{$key}", $image_path, $src, $key, $user_id, $coord, $crop );
 
 			if( ! in_array( $key, array('profile_photo','cover_photo') ) ){
 				do_action("um_upload_stream_image_process", $image_path, $src, $key, $user_id, $coord, $crop );
 			}
 
-			return $src;
+			$ret = array();
+			$ret['image']['source_url'] = $src;
+			$ret['image']['source_path'] = $image_path;
+			$ret['image']['filename'] = wp_basename( $image_path );
+
+			return $ret;
 
 		}
 

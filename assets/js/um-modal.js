@@ -89,6 +89,7 @@ jQuery(document).ready(function() {
 		var img_c = jQuery(this).parents('.um-modal-body').find('.um-single-image-preview');
 		var src = img_c.find('img').attr('src');
 		var coord = img_c.attr('data-coord');
+		var file = img_c.find('img').data('file');
 
 		var user_id = 0;
 		if ( jQuery(this).parents('#um_upload_single').attr('data-user_id')  ) {
@@ -112,22 +113,23 @@ jQuery(document).ready(function() {
 					d = new Date();
 
 					if ( key == 'profile_photo') {
-						jQuery('.um-profile-photo-img img').attr('src', data + "?"+d.getTime());
+						jQuery('.um-profile-photo-img img').attr('src', data.image.source_url + "?"+d.getTime());
 					}
 
 					if ( key == 'cover_photo') {
-						jQuery('.um-cover-e').empty().html('<img src="' + data + "?"+d.getTime() + '" alt="" />');
+						jQuery('.um-cover-e').empty().html('<img src="' + data.image.source_url + "?"+d.getTime() + '" alt="" />');
 						if ( jQuery('.um').hasClass('um-editing') ) {
 							jQuery('.um-cover-overlay').show();
 						}
 					}
 
-					jQuery('.um-single-image-preview[data-key='+key+']').fadeIn().find('img').attr('src', data + "?"+d.getTime());
+					jQuery('.um-single-image-preview[data-key='+key+']').fadeIn().find('img').attr('src', data.image.source_url + "?"+d.getTime());
 					um_remove_modal();
 					jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( elem.attr('data-change') );
 
-					jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type="hidden"]').val( data );
-
+					jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type="hidden"]').val( data.image.filename );
+					console.log( data );
+					
 				},
 				error: function( data ) {
 
@@ -140,7 +142,8 @@ jQuery(document).ready(function() {
 			um_remove_modal();
 			jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( elem.attr('data-change') );
 
-			jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type="hidden"]').val( src );
+			jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type="hidden"]').val( file );
+
 		}
 	});
 
@@ -169,6 +172,11 @@ jQuery(document).ready(function() {
 			if ( jQuery(this).parents('.um-cover').attr('data-user_id') ) {
 				jQuery('#' + modal_id).attr('data-user_id',  jQuery(this).parents('.um-cover').attr('data-user_id')  );
 			}
+
+			if( jQuery("input[type=hidden][name='user_id']").length > 0 ){
+				jQuery('#' + modal_id).attr('data-user_id',  jQuery("input[type=hidden][name='user_id']").val() );
+			}
+
 			um_new_modal( modal_id, size );
 			
 		} else {

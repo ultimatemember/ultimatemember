@@ -782,23 +782,22 @@ function um_is_temp_image( $url ) {
  */
 function um_is_file_owner( $url, $user_id = null, $image_path = false ){
 	
-	$parse_url = explode( "/uploads/ultimatemember/{$user_id}/", $url );
-	
-	$user_basedir = UM()->uploader()->get_upload_user_base_dir( $user_id );
-	
-	$filename = $parse_url[1];
-
-	$filename = substr( $filename, 0, strpos($filename,"?" ) );
-
-	$file = $user_basedir . '/' . $filename;
-
-	if( file_exists( $file ) ){
-
-		if( $image_path ){
-			return $file;
-		}
+	if( strpos( $url, "/uploads/ultimatemember/{$user_id}/" ) !== false ){
 		
-		return true;
+		$user_basedir = UM()->uploader()->get_upload_user_base_dir( $user_id );
+		
+		$filename = basename( parse_url( $url,  PHP_URL_PATH ) );
+		
+		$file = $user_basedir . '/' . $filename;
+
+		if( file_exists( $file ) ){
+
+			if( $image_path ){
+				return $file;
+			}
+			
+			return true;
+		}
 	}
 
 	return false;
