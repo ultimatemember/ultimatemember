@@ -823,6 +823,26 @@ function um_is_file_owner( $url, $user_id = null, $image_path = false ){
 
 
 /**
+ * Check if file is temporary
+ * @param  string $filename 
+ * @return bool       
+ */
+function um_is_temp_file( $filename ){
+
+	$user_basedir = UM()->uploader()->get_upload_user_base_dir( 'temp' );
+	
+	$file = $user_basedir . '/' . $filename;
+	
+	if( file_exists( $file ) ){
+
+		return true;
+	}	
+
+	return false;
+}
+
+
+/**
  * Get core page url
  *
  * @param $time1

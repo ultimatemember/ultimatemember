@@ -157,13 +157,17 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @since 2.0.22 
 		 * @return string
 		 */
-		public function get_upload_user_base_dir( $user_id = null ){
+		public function get_upload_user_base_dir( $user_id = null, $create_dir = false){
 
 			if( $user_id ){
 				$this->user_id = $user_id;
 			}
 
 			$this->upload_user_basedir	= $this->get_upload_base_dir() . $this->user_id;
+
+			if( $create_dir  ){
+				wp_mkdir_p( $this->upload_user_basedir );  
+			}
 
 			return $this->upload_user_basedir;
 

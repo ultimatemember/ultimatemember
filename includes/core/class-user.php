@@ -1623,6 +1623,44 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 		}
 
+		/**
+		 * Move temporary files
+		 * @param  array $changes 
+		 */
+		function move_temporary_files( $user_id, $files ){
+
+			foreach ( $files as $key => $filename ) {
+
+				$temp_file_path = UM()->uploader()->get_core_temp_dir() . "/" . $filename;
+
+				if( file_exists( $temp_file_path ) ){
+					
+					$user_basedir = UM()->uploader()->get_upload_user_base_dir( $user_id, true );
+					
+					$extra_hash = hash( 'crc32b', current_time('timestamp') );
+		
+					if ( strpos( $filename , 'stream_photo_' ) !== false ) {
+
+						$new_filename = $user_basedir. "/" . str_replace("stream_photo_","stream_photo_{$extra_hash}_", $filename );
+
+					}else{
+
+						$new_filename = $user_basedir. "/" . $extra_hash ."_". $filename;
+
+					}
+
+					if( rename( $temp_file_path, $new_filename ) ){
+
+						update_user_meta( $user_id, $key, $new_filename );
+					}
+
+				}
+
+			
+			}
+
+		}
+
 
 		/**
 		 * Update profile

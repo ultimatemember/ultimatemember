@@ -391,7 +391,11 @@ function um_user_edit_profile( $args ) {
 		 * ?>
 		 */
 		do_action( 'um_before_user_upload', um_user( 'ID' ), $files );
+
 		UM()->user()->update_files( $files );
+
+		UM()->user()->move_temporary_files( $user_id, $files );
+		
 		/**
 		 * UM hook
 		 *
