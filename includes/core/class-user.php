@@ -1625,7 +1625,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 		/**
 		 * Move temporary files
-		 * @param  array $changes 
+		 * 
+		 * @param  array $user_id
+		 * @param  array $files
 		 */
 		function move_temporary_files( $user_id, $files ){
 
