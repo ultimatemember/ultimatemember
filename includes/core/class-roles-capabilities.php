@@ -388,7 +388,7 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 		 */
 		function get_editable_user_roles() {
 			// User has roles so look for a UM Role one
-			$um_roles_keys = get_option( 'um_roles' );
+			$um_roles_keys = is_array( get_option( 'um_roles' ) ) ? get_option( 'um_roles' ) : array( get_option( 'um_roles' ) );
 
 			if ( ! empty( $um_roles_keys ) ) {
 				$um_roles_keys = array_map( function( $item ) {
