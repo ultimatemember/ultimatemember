@@ -79,7 +79,7 @@ jQuery(document).ready(function() {
 		
 		jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( jQuery(this).attr('data-change') );
 		
-		jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('input[type="hidden"]').val( jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('.um-single-fileinfo a').attr('href') );
+		jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('input[type="hidden"]').val( jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('.um-single-fileinfo a').data('file') );
 	});
 
 	jQuery(document).on('click', '.um-finish-upload.image:not(.disabled)', function(){

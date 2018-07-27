@@ -1303,62 +1303,42 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			$um_file_upload_nonce = apply_filters("um_file_upload_nonce", true );
 
 			if ( $um_file_upload_nonce  ) {
-				if ( ! wp_verify_nonce( $nonce, 'um_upload_nonce-'.$timestamp  ) && is_user_logged_in()) {
+				if ( ! wp_verify_nonce( $nonce, 'um_upload_nonce-'.$timestamp  ) && is_user_logged_in() ) {
 					// This nonce is not valid.
 					$ret['error'] = 'Invalid nonce';
 					die( json_encode( $ret ) );
 				}
 			}
 
-			if(isset($_FILES[$id]['name'])) {
 
-				if(!is_array($_FILES[$id]['name'])) {
+			if( isset( $_FILES[ $id ]['name'] ) ) {
 
-					$temp = $_FILES[$id]["tmp_name"];
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_upload_file_name
-					 * @description Change File Upload nonce
-					 * @input_vars
-					 * [{"var":"$filename","type":"string","desc":"Filename"},
-					 * {"var":"$id","type":"int","desc":"ID"},
-					 * {"var":"$name","type":"string","desc":"Name"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage
-					 * <?php add_filter( 'um_upload_file_name', 'function_name', 10, 3 ); ?>
-					 * @example
-					 * <?php
-					 * add_filter( 'um_upload_file_name', 'my_upload_file_name', 10, 3 );
-					 * function my_upload_file_name( $filename, $id, $name ) {
-					 *     // your code here
-					 *     return $filename;
-					 * }
-					 * ?>
-					 */
-					$file = apply_filters( 'um_upload_file_name', $id . "-" . $_FILES[$id]["name"], $id, $_FILES[$id]["name"] );
-					$file = sanitize_file_name($file);
-					$extension = strtolower( pathinfo($file, PATHINFO_EXTENSION) );
+				if( ! is_array( $_FILES[ $id ]['name'] ) ) {
 
-					$error = UM()->files()->check_file_upload( $temp, $extension, $id );
-					if ( $error ){
-						$ret['error'] = $error;
-					} else {
-						$ret[] = UM()->files()->new_file_upload_temp( $temp, $file );
-						$ret['icon'] = UM()->files()->get_fonticon_by_ext( $extension );
-						$ret['icon_bg'] = UM()->files()->get_fonticon_bg_by_ext( $extension );
-						$ret['filename'] = $file;
+					$uploaded = UM()->uploader()->upload_file( $_FILES[ $id ], $user_id, $id );
+					if ( isset( $uploaded['error'] ) ){
+
+						$ret['error'] = $uploaded['error'];
+
+					}else{
+						
+						$uploaded_file = $uploaded['handle_upload'];
+						$ret['url'] = $uploaded_file['file_info']['name'];
+						$ret['icon'] = UM()->files()->get_fonticon_by_ext( $uploaded_file['file_info']['ext'] );
+						$ret['icon_bg'] = UM()->files()->get_fonticon_bg_by_ext( $uploaded_file['file_info']['ext'] );
+						$ret['filename'] = $uploaded_file['file_info']['basename'];
+
 					}
 
 				}
 
 			} else {
-				$ret['error'] = __('A theme or plugin compatibility issue','ultimate-member');
+					$ret['error'] = __('A theme or plugin compatibility issue','ultimate-member');
 			}
+
 			echo json_encode($ret);
 			exit;
 		}
+
 	}
 }

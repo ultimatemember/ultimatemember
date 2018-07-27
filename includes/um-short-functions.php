@@ -841,6 +841,28 @@ function um_is_temp_file( $filename ){
 	return false;
 }
 
+/**
+ * Check if file is uploaded
+ * @param  string $filename 
+ * @return bool       
+ */
+function um_is_user_file( $filename, $user_id ){
+
+	$user_basedir = UM()->uploader()->get_upload_user_base_dir( $user_id );
+	
+	$file = $user_basedir . '/' . $filename;
+	
+	echo $file;
+	echo "<br/>";
+	
+	if( file_exists( $file ) ){
+
+		return true;
+	}	
+
+	return false;
+}
+
 
 /**
  * Get core page url

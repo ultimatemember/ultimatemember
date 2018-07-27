@@ -567,7 +567,7 @@ function um_init_file_upload( event, trigger ) {
 			trigger.parents('.um-modal-body').find('.um-error-block').remove();
 
 		},
-		onSuccess:function(files,data,xhr){
+		onSuccess:function( files,data,xhr ){
 
 			trigger.selectedFiles = 0;
 
@@ -590,13 +590,24 @@ function um_init_file_upload( event, trigger ) {
 					trigger.parents('.um-modal-body').find('.um-single-file-preview').show(0);
 
 					if (key == 'icon') {
-						trigger.parents('.um-modal-body').find('.um-single-fileinfo i').removeClass().addClass(value);
+					
+						trigger.parents('.um-modal-body').find('.um-single-fileinfo i').removeClass().addClass( value );
+					
 					} else if ( key == 'icon_bg' ) {
+						
 						trigger.parents('.um-modal-body').find('.um-single-fileinfo span.icon').css({'background-color' : value } );
+					
 					} else if ( key == 'filename' ) {
-						trigger.parents('.um-modal-body').find('.um-single-fileinfo span.filename').html(value);
-					} else {
+						
+						trigger.parents('.um-modal-body').find('.um-single-fileinfo span.filename').html( value );
+						trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('data-file', value );
+						trigger.parents('.um-modal-body').find('.um-single-fileinfo input[type=hidden]').attr('data-file', value );
+						
+						
+					} else if ( key == 'url' ) {
+						
 						trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('href', value);
+					
 					}
 
 				});
