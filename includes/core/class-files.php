@@ -166,7 +166,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					die( json_encode( $ret ) );
 				}
 			}
-
+			
 			if( isset( $_FILES[ $id ]['name'] ) ) {
 
 				if( ! is_array( $_FILES[ $id ]['name'] ) ) {
@@ -780,8 +780,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			if ( $fileinfo['invalid_image'] == true ) {
 				$error = sprintf(__('Your image is invalid or too large!','ultimate-member') );
-			} elseif ( isset( $data['allowed_types'] ) && !$this->in_array( $fileinfo['extension'], $data['allowed_types'] ) ) {
-				$error = ( isset( $data['extension_error'] ) && !empty( $data['extension_error'] ) ) ? $data['extension_error'] : 'not allowed';
 			} elseif ( isset($data['min_size']) && ( $fileinfo['size'] < $data['min_size'] ) ) {
 				$error = $data['min_size_error'];
 			} elseif ( isset($data['min_width']) && ( $fileinfo['width'] < $data['min_width'] ) ) {
@@ -809,9 +807,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			$fileinfo = $this->get_file_data( $file );
 			$data = UM()->fields()->get_field( $field );
 
-			if ( !$this->in_array( $extension, $data['allowed_types'] ) ) {
-				$error = ( isset( $data['extension_error'] ) && !empty( $data['extension_error'] ) ) ? $data['extension_error'] : 'not allowed';
-			} elseif ( isset($data['min_size']) && ( $fileinfo['size'] < $data['min_size'] ) ) {
+			if ( isset($data['min_size']) && ( $fileinfo['size'] < $data['min_size'] ) ) {
 				$error = $data['min_size_error'];
 			}
 

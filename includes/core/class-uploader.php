@@ -277,9 +277,18 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			if( in_array( $field_key, array( 'profile_photo','cover_photo' ) ) ){
 				$this->upload_image_type = $field_key;
 			} 
+			
+			$field_data = UM()->fields()->get_field( $field_key );
+			
+			$field_allowed_file_types = explode(",", $field_data['allowed_types'] );
 
-			$allowed_image_mimes = array('jpg' =>'image/jpg','jpeg' =>'image/jpeg', 'gif' => 'image/gif', 'png' => 'image/png');
-  			
+			$allowed_image_mimes = array();
+			
+			foreach( $field_allowed_file_types as $a ){
+				$atype = wp_check_filetype( "test.{$a}" );
+				$allowed_image_mimes[ $atype['ext'] ] = $atype['type']; 
+			}
+
   			$image_compression = UM()->options()->get('image_compression');
 
 			$upload_overrides = array(
@@ -440,10 +449,12 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			
 			$field_allowed_file_types = explode(",", $field_data['allowed_types'] );
 
-			$allowed_file_mimes = array(
-				// 'jpeg' => 'image/jpeg',
-				// 'jpg' => 'image/jpg',
-			);
+			$allowed_file_mimes = array();
+			
+			foreach( $field_allowed_file_types as $a ){
+				$atype = wp_check_filetype( "test.{$a}" );
+				$allowed_file_mimes[ $atype['ext'] ] = $atype['type']; 
+			}
 
 			$upload_overrides = array(
 			    'test_form' => false,

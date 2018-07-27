@@ -83,7 +83,6 @@ jQuery(document).ready(function() {
 		
 		jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('input[type="hidden"]').val( file );
 
-		console.log( key+'=='+file);
 	});
 
 	jQuery(document).on('click', '.um-finish-upload.image:not(.disabled)', function(){
@@ -96,8 +95,8 @@ jQuery(document).ready(function() {
 		var file = img_c.find('img').data('file');
 
 		var user_id = 0;
-		if ( jQuery(this).parents('#um_upload_single').attr('data-user_id')  ) {
-			user_id = jQuery(this).parents('#um_upload_single').attr('data-user_id');
+		if ( jQuery(this).parents('#um_upload_single').data('user_id')  ) {
+			user_id = jQuery(this).parents('#um_upload_single').data('user_id');
 		}
 		
 		if ( coord ) {
