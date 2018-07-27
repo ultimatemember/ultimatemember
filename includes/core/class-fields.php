@@ -2334,14 +2334,21 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					if ($this->field_value( $key, $default, $data )) {
 
-						$extension = pathinfo( $this->field_value( $key, $default, $data ), PATHINFO_EXTENSION );
+						$file_field_value = $this->field_value( $key, $default, $data );
+
+						$file_type = wp_check_filetype( $file_field_value );
+
+						$file_info = um_user( $data['metakey']."_metadata" );
+						if( isset( $file_info['original_name'] ) && ! empty( $file_info['original_name'] ) ){
+							$file_field_value = $file_info['original_name'];
+						}
 
 						$output .= '<div class="um-single-file-preview show" data-key="' . $key . '">
                                         <a href="#" class="cancel"><i class="um-icon-close"></i></a>
                                         <div class="um-single-fileinfo">
                                             <a href="' . um_user_uploads_uri() . $this->field_value( $key, $default, $data ) . '" target="_blank">
-                                                <span class="icon" style="background:' . UM()->files()->get_fonticon_bg_by_ext( $extension ) . '"><i class="' . UM()->files()->get_fonticon_by_ext( $extension ) . '"></i></span>
-                                                <span class="filename">' . $this->field_value( $key, $default, $data ) . '</span>
+                                                <span class="icon" style="background:' . UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] ) . '"><i class="' . UM()->files()->get_fonticon_by_ext( $file_type['ext'] ) . '"></i></span>
+                                                <span class="filename">' . $file_field_value . '</span>
                                             </a>
                                         </div>
                             </div><a href="#" data-modal="um_upload_single" data-modal-size="' . $modal_size . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . __( 'Change file', 'ultimate-member' ) . '</a>';

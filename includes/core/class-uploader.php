@@ -302,6 +302,16 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				$movefile['file'] = wp_basename( $movefile['file'] );
 
+				$file_type = wp_check_filetype( $movefile['file'] );
+				
+				$movefile['file_info']['name'] = $movefile['url'];
+				$movefile['file_info']['original_name'] = $uploadedfile['name'];
+				$movefile['file_info']['basename'] = wp_basename( $movefile['file'] );
+				$movefile['file_info']['ext'] = $file_type['ext'];
+				$movefile['file_info']['type'] = $file_type['type'];
+				$movefile['file_info']['size'] = filesize( $movefile['file'] );
+				$movefile['file_info']['size_format'] = size_format( $movefile['file_info']['size'] );
+				
 				/**
 				 * UM hook
 				 *
@@ -388,6 +398,11 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				update_user_meta( $this->user_id, $field_key, wp_basename( $movefile['url'] ) );
 
+				$filename = wp_basename( $movefile['url'] );
+				
+				set_transient( "um_{$filename}", $movefile['file_info'], 2 * HOUR_IN_SECONDS );
+				
+
 			}
 
 			$response['handle_upload'] = $movefile;
@@ -451,11 +466,12 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				$file_type = wp_check_filetype( $movefile['file'] );
 
 				$movefile['file_info']['name'] = $movefile['url'];
+				$movefile['file_info']['original_name'] = $uploadedfile['name'];
 				$movefile['file_info']['basename'] = wp_basename( $movefile['file'] );
 				$movefile['file_info']['ext'] = $file_type['ext'];
 				$movefile['file_info']['type'] = $file_type['type'];
 				$movefile['file_info']['size'] = filesize( $movefile['file'] );
-				$movefile['file_info']['size_format'] = size_format( filesize( $movefile['file'] ) );
+				$movefile['file_info']['size_format'] = size_format( $movefile['file_info']['size'] );
 				
 
 				/**
@@ -543,6 +559,11 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				do_action( "um_after_upload_db_meta_{$field_key}", $this->user_id );
 
 				update_user_meta( $this->user_id, $field_key, wp_basename( $movefile['url'] ) );
+
+				$filename = wp_basename( $movefile['url'] );
+
+				set_transient( "um_{$filename}", $movefile['file_info'], 2 * HOUR_IN_SECONDS );
+				
 
 			}
 
@@ -832,7 +853,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 */
 		public function delete_existing_file( $filename, $ext, $dir  ){
 			
-			if( file_exists( $this->upload_user_basedir."/".$filename  ) ){
+			if( file_exists( $this->upload_user_basedir."/".$filename  ) && ! empty( $filename ) ){
 				unlink( $this->upload_user_basedir."/".$filename  );
 			}
 

@@ -1327,6 +1327,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 						$ret['icon'] = UM()->files()->get_fonticon_by_ext( $uploaded_file['file_info']['ext'] );
 						$ret['icon_bg'] = UM()->files()->get_fonticon_bg_by_ext( $uploaded_file['file_info']['ext'] );
 						$ret['filename'] = $uploaded_file['file_info']['basename'];
+						$ret['original_name'] = $uploaded_file['file_info']['original_name'];
+						
 
 					}
 

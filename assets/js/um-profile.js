@@ -599,9 +599,12 @@ function um_init_file_upload( event, trigger ) {
 					
 					} else if ( key == 'filename' ) {
 						
-						trigger.parents('.um-modal-body').find('.um-single-fileinfo span.filename').html( value );
 						trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('data-file', value );
-						trigger.parents('.um-modal-body').find('.um-single-fileinfo input[type=hidden]').attr('data-file', value );
+						
+					}else if( key == 'original_name' ){
+
+						trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('data-orignal-name', value );
+						trigger.parents('.um-modal-body').find('.um-single-fileinfo span.filename').html( value );
 						
 						
 					} else if ( key == 'url' ) {

@@ -1633,10 +1633,12 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			foreach ( $files as $key => $filename ) {
 
+				if( empty( $filename ) ) continue;
+
 				$user_basedir = UM()->uploader()->get_upload_user_base_dir( $user_id, true );
 				
 				$temp_file_path = UM()->uploader()->get_core_temp_dir() . "/" . $filename;
-
+				
 				if( file_exists( $temp_file_path ) ){
 					
 					
@@ -1655,7 +1657,13 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					$file = $user_basedir. "/" . $new_filename;
 
 					if( rename( $temp_file_path, $file ) ){
+
+						$file_info = get_transient("um_{$filename}");
+
 						update_user_meta( $user_id, $key, $new_filename );
+						update_user_meta( $user_id, "{$key}_metadata", $file_info );
+
+						delete_transient("um_{$filename}");
 					}
 
 				}
