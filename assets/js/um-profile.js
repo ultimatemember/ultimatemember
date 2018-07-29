@@ -431,8 +431,8 @@ function um_init_image_upload( event, trigger ) {
 	}
 
 	var user_id = null;
-	if( jQuery('input[name="user_id"][type="hidden"]').length > 0 ){
-		user_id = jQuery('input[name="user_id"][type="hidden"]').val();
+	if( jQuery('#um_upload_single:visible').data('user_id') ){
+		user_id = jQuery('#um_upload_single:visible').data('user_id');
 	}
 
 	trigger.uploadFile({
