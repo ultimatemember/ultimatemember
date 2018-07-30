@@ -1572,7 +1572,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param $user_id
 		 * @param $case
 		 *
-		 * @return bool|mixed|void
+		 * @return bool
 		 */
 		function is_private_case( $user_id, $case ) {
 			$privacy = get_user_meta( $user_id, 'profile_privacy', true );

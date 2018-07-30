@@ -659,8 +659,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			 * ?>
 			 */
 			$profile_privacy = apply_filters( 'um_profile_privacy_options', array(
-				__( 'Everyone', 'ultimate-member' ),
-				__( 'Only me', 'ultimate-member' )
+				'Everyone'  => __( 'Everyone', 'ultimate-member' ),
+				'Only me'   => __( 'Only me', 'ultimate-member' )
 			) );
 
 			$this->predefined_fields = array(
@@ -1117,7 +1117,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required' => 0,
 					'public' => 1,
 					'editable' => 1,
-					'default' => __('Everyone','ultimate-member'),
+					'default' => 'Everyone',
 					'options' => $profile_privacy,
 					'allowclear' => 0,
 					'account_only' => true,
