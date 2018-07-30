@@ -571,21 +571,24 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				}
 			}
 
-			//get restriction options for first term with privacy settigns
+			//get first matching restriction matching with user roles
 			foreach ( $terms as $term_id ) {
 				$restriction = get_term_meta( $term_id, 'um_content_restriction', true );
-
 				if ( ! empty( $restriction['_um_custom_access_settings'] ) ) {
-					if ( ! isset( $restriction['_um_accessible'] ) || '0' == $restriction['_um_accessible'] )
+					if ( ! isset( $restriction['_um_accessible'] ) || '0' == $restriction['_um_accessible'] ){
 						continue;
-					else
-						return $restriction;
+					}
+					elseif('2' == $restriction['_um_accessible']) { // for logged in user that have more than one role, must check all roles or until one matches
+						if( $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] ) ){
+							break;
+						}
+					}
 				}
 			}
-
-
-			//post is public
-			return false;
+			if( isset($restriction) ) // post has restrictions
+				return $restriction;
+			else //post is public
+				return false;
 		}
 
 
