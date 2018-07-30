@@ -540,6 +540,8 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->mobile();
 			$this->external_integrations();
 			$this->gdpr();
+			$this->uploader();
+			
 		}
 
 
@@ -1137,6 +1139,19 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 
 			return $this->classes['files'];
+		}
+
+		
+		/**
+		 * @since 2.0.21
+		 *
+		 * @return um\core\Files
+		 */
+		function uploader() {
+			if ( empty( $this->classes['uploader'] ) ) {
+				$this->classes['uploader'] = new um\core\Uploader();
+			}
+			return $this->classes['uploader'];
 		}
 
 

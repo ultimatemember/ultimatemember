@@ -72,15 +72,19 @@ jQuery(document).ready(function() {
 	jQuery(document).on('click', '.um-finish-upload.file:not(.disabled)', function(){
 		
 		var key = jQuery(this).attr('data-key');
+	
 		var preview = jQuery(this).parents('.um-modal-body').find('.um-single-file-preview').html();
 		
 		um_remove_modal();
 		
 		jQuery('.um-single-file-preview[data-key='+key+']').fadeIn().html( preview );
+
+		var file = jQuery('.um-field[data-key='+key+']').find('.um-single-fileinfo a').data('file');
 		
 		jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( jQuery(this).attr('data-change') );
 		
-		jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('input[type=hidden]').val( jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('.um-single-fileinfo a').attr('href') );
+		jQuery('.um-single-file-preview[data-key='+key+']').parents('.um-field').find('input[type="hidden"]').val( file );
+	
 	});
 
 	jQuery(document).on('click', '.um-finish-upload.image:not(.disabled)', function(){
@@ -110,26 +114,29 @@ jQuery(document).ready(function() {
 					user_id : user_id,
 					key: key
 				},
-				success: function(data){
-				
+				success: function( data ){
+
 					d = new Date();
-					
+
 					if ( key == 'profile_photo') {
-						jQuery('.um-profile-photo-img img').attr('src', data + "?"+d.getTime());
+						jQuery('.um-profile-photo-img img').attr('src', data.data.image.source_url + "?"+d.getTime());
 					}
-					
+
 					if ( key == 'cover_photo') {
-						jQuery('.um-cover-e').empty().html('<img src="' + data + "?"+d.getTime() + '" alt="" />');
+						jQuery('.um-cover-e').empty().html('<img src="' + data.data.image.source_url + "?"+d.getTime() + '" alt="" />');
 						if ( jQuery('.um').hasClass('um-editing') ) {
 							jQuery('.um-cover-overlay').show();
 						}
 					}
+
+					jQuery('.um-single-image-preview[data-key='+key+']').fadeIn().find('img').attr('src', data.data.image.source_url + "?"+d.getTime());
 					
-					jQuery('.um-single-image-preview[data-key='+key+']').fadeIn().find('img').attr('src', data + "?"+d.getTime());
 					um_remove_modal();
-					jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( elem.attr('data-change') );
 					
-					jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type=hidden]').val( data );
+					jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( elem.attr('data-change') );
+
+					jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type="hidden"]').val( data.data.image.filename );
+					
 
 				}
 			});

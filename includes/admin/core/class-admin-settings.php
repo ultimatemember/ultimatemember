@@ -2381,6 +2381,7 @@ SOAP Client:              			<?php echo ( class_exists( 'SoapClient' ) ) ? 'Your
 SUHOSIN:                  			<?php echo ( extension_loaded( 'suhosin' ) ) ? 'Your server has SUHOSIN installed.' : 'Your server does not have SUHOSIN installed.'; ?><?php echo "\n"; ?>
 GD Library:               			<?php echo ( extension_loaded( 'gd' ) && function_exists('gd_info') ) ? 'PHP GD library is installed on your web server.' : 'PHP GD library is NOT installed on your web server.'; ?><?php echo "\n"; ?>
 Mail:                     			<?php echo ( function_exists('mail') ) ? 'PHP mail function exist on your web server.' : 'PHP mail function doesn\'t exist on your web server.'; ?><?php echo "\n"; ?>
+Exif:				          <?php echo ( extension_loaded( 'exif' ) && function_exists('exif_imagetype') ) ? 'PHP Exif library is installed on your web server.' : 'PHP Exif library is NOT installed on your web server.'; ?><?php echo "\n"; ?>
 
 
 --- Session Configurations ---

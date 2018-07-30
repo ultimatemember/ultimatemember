@@ -1885,5 +1885,42 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			return $hash_email_address;
 		}
 
+
+		/**
+		 * Move temporary files
+		 * 
+		 * @param  array $user_id
+		 * @param  array $files
+		 */
+		function move_temporary_files( $user_id, $files ){
+			foreach ( $files as $key => $filename ) {
+				if( empty( $filename ) ) continue;
+				$user_basedir = UM()->uploader()->get_upload_user_base_dir( $user_id, true );
+				
+				$temp_file_path = UM()->uploader()->get_core_temp_dir() . "/" . $filename;
+				
+				if( file_exists( $temp_file_path ) ){
+					
+					
+					$extra_hash = hash( 'crc32b', current_time('timestamp') );
+		
+					if ( strpos( $filename , 'stream_photo_' ) !== false ) {
+						$new_filename = str_replace("stream_photo_","stream_photo_{$extra_hash}_", $filename );
+					}else{
+						$new_filename = str_replace("file_","file_{$extra_hash}_", $filename );
+					}
+					$file = $user_basedir. "/" . $new_filename;
+					if( rename( $temp_file_path, $file ) ){
+						$file_info = get_transient("um_{$filename}");
+						update_user_meta( $user_id, $key, $new_filename );
+						update_user_meta( $user_id, "{$key}_metadata", $file_info );
+						delete_transient("um_{$filename}");
+					}
+				}
+			
+			}
+		}
+
+
 	}
 }
