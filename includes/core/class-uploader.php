@@ -239,7 +239,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			$this->upload_baseurl = $args['baseurl'] . $this->core_upload_dir;
 			$this->upload_basedir = $args['basedir'] . $this->core_upload_dir;
 
-			if( 'image' == $this->upload_type && is_user_logged_in() ){
+			if( 'image' == $this->upload_type && 'wall_img_upload' != $this->field_key && is_user_logged_in() ){
 				$this->upload_user_baseurl	= $this->upload_baseurl . $this->user_id;
 				$this->upload_user_basedir	= $this->upload_basedir . $this->user_id;
 			}else{
@@ -271,6 +271,10 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			    require_once( ABSPATH . 'wp-admin/includes/file.php' );
 			}
 
+			if( empty( $field_key ) ){
+				$field_key = "custom_field";
+			}
+
 			$this->field_key = $field_key;
 
 			$this->upload_type = 'image';
@@ -284,10 +288,14 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			if( in_array( $field_key, array( 'profile_photo','cover_photo' ) ) ){
 				$this->upload_image_type = $field_key;
 			} 
-			
+
 			$field_data = UM()->fields()->get_field( $field_key );
 			
-			$field_allowed_file_types = explode(",", $field_data['allowed_types'] );
+			if( isset( $field_data['allowed_types'] ) && ! empty( $field_data['allowed_types'] ) ){
+				$field_allowed_file_types = explode(",", $field_data['allowed_types'] );
+			}else{
+				$field_allowed_file_types = apply_filters("um_uploader_image_default_filetypes", array('JPG','JPEG','PNG','GIF') );
+			}
 
 			$allowed_image_mimes = array();
 			
@@ -870,7 +878,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 *   
 		 * @since 2.0.22
 		 */
-		public function delete_existing_file( $filename, $ext, $dir  ){
+		public function delete_existing_file( $filename, $ext = '', $dir = ''  ){
 			
 			if( file_exists( $this->upload_user_basedir."/".$filename  ) && ! empty( $filename ) ){
 				unlink( $this->upload_user_basedir."/".$filename  );
