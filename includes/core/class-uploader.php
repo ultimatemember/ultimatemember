@@ -71,12 +71,11 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 
 		/**
-		 * Files constructor.
+		 * Uploader constructor.
 		 */
 		function __construct() {
 
 			$this->core_upload_dir = "/ultimatemember/";
-			$this->user_id = get_current_user_id();
 			$this->upload_image_type = 'stream_photo';
 			$this->wp_upload_dir = wp_upload_dir(); 
 			$this->temp_upload_dir = "temp";
@@ -88,7 +87,15 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			add_filter("um_upload_stream_image_process", array( $this, "stream_photo" ), 10, 6 );
 			add_filter("um_custom_image_handle_wall_img_upload", array( $this, "stream_photo_data"), 10, 1 );
 
+			add_action("init", array( $this, "init" ) );
 
+		}
+
+		/**
+		 * Init
+		 */
+		function init(){
+			$this->user_id = get_current_user_id();	
 		}
 
 		/**
@@ -309,17 +316,18 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			    $response['error'] = $movefile['error'];
 			}else{
 
-				$movefile['file'] = wp_basename( $movefile['file'] );
-
-				$file_type = wp_check_filetype( $movefile['file'] );
+				$movefile['file_info']['basename'] = wp_basename( $movefile['file'] );
+				
+				$file_type = wp_check_filetype( $movefile['file_info']['basename'] );
 				
 				$movefile['file_info']['name'] = $movefile['url'];
 				$movefile['file_info']['original_name'] = $uploadedfile['name'];
-				$movefile['file_info']['basename'] = wp_basename( $movefile['file'] );
 				$movefile['file_info']['ext'] = $file_type['ext'];
 				$movefile['file_info']['type'] = $file_type['type'];
 				$movefile['file_info']['size'] = filesize( $movefile['file'] );
 				$movefile['file_info']['size_format'] = size_format( $movefile['file_info']['size'] );
+				$movefile['file'] = $movefile['file_info']['basename'];
+
 				
 				/**
 				 * UM hook

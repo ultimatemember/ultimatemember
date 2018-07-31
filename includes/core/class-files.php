@@ -104,8 +104,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			if ( $coord_n != 3 ) {
 				wp_send_json_error( esc_js( __( 'Invalid coordinates', 'ultimate-member' ) ) );
 			}
-
-
+ 
 			$image_path = um_is_file_owner( $src, $user_id, true );
 			if ( ! $image_path ) {
 				wp_send_json_error( esc_js( __( 'Invalid file ownership', 'ultimate-member' ) ) );
@@ -163,7 +162,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				if ( ! wp_verify_nonce( $nonce, "um_upload_nonce-{$timestamp}" ) && is_user_logged_in() ) {
 					// This nonce is not valid.
 					$ret['error'] = 'Invalid nonce';
-					die( json_encode( $ret ) );
+					wp_send_json_error( $ret );
 				}
 			}
 			
@@ -186,11 +185,94 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			} else {
 				$ret['error'] = __('A theme or plugin compatibility issue','ultimate-member');
 			}
+			wp_send_json_success( $ret ); 
+		}
+
+
+		/**
+		 * File upload by AJAX
+		 */
+		function ajax_file_upload(){
+			$ret['error'] = null;
+			$ret = array();
+
+			/* commented for enable download files on registration form
+			 * if ( ! is_user_logged_in() ) {
+				$ret['error'] = 'Invalid user';
+				die( json_encode( $ret ) );
+			}*/
+
+			$nonce = $_POST['_wpnonce'];
+			$id = $_POST['key'];
+			$timestamp = $_POST['timestamp'];
+
+			UM()->fields()->set_id = $_POST['set_id'];
+			UM()->fields()->set_mode = $_POST['set_mode'];
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_file_upload_nonce
+			 * @description Change File Upload nonce
+			 * @input_vars
+			 * [{"var":"$nonce","type":"bool","desc":"Nonce"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_file_upload_nonce', 'function_name', 10, 1 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_file_upload_nonce', 'my_file_upload_nonce', 10, 1 );
+			 * function my_file_upload_nonce( $nonce ) {
+			 *     // your code here
+			 *     return $nonce;
+			 * }
+			 * ?>
+			 */
+			$um_file_upload_nonce = apply_filters("um_file_upload_nonce", true );
+
+			if ( $um_file_upload_nonce  ) {
+				if ( ! wp_verify_nonce( $nonce, 'um_upload_nonce-'.$timestamp  ) && is_user_logged_in() ) {
+					// This nonce is not valid.
+					$ret['error'] = 'Invalid nonce';
+					wp_send_json_error( $ret ); 
+
+				}
+			}
+
+
+			if( isset( $_FILES[ $id ]['name'] ) ) {
+
+				if( ! is_array( $_FILES[ $id ]['name'] ) ) {
+
+					$uploaded = UM()->uploader()->upload_file( $_FILES[ $id ], $user_id, $id );
+					if ( isset( $uploaded['error'] ) ){
+
+						$ret['error'] = $uploaded['error'];
+
+					}else{
+						
+						$uploaded_file = $uploaded['handle_upload'];
+						$ret['url'] = $uploaded_file['file_info']['name'];
+						$ret['icon'] = UM()->files()->get_fonticon_by_ext( $uploaded_file['file_info']['ext'] );
+						$ret['icon_bg'] = UM()->files()->get_fonticon_bg_by_ext( $uploaded_file['file_info']['ext'] );
+						$ret['filename'] = $uploaded_file['file_info']['basename'];
+						$ret['original_name'] = $uploaded_file['file_info']['original_name'];
+						
+
+					}
+
+				}
+
+			} else {
+					$ret['error'] = __('A theme or plugin compatibility issue','ultimate-member');
+			}
 
 			
-			echo json_encode($ret);
-			exit;
+			wp_send_json_success( $ret ); 
 		}
+
 
 		/**
 		 * Allowed image types
@@ -1254,89 +1336,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			return '';
 		}
 
-
-		/**
-		 *
-		 */
-		function ajax_file_upload(){
-			$ret['error'] = null;
-			$ret = array();
-
-			/* commented for enable download files on registration form
-			 * if ( ! is_user_logged_in() ) {
-				$ret['error'] = 'Invalid user';
-				die( json_encode( $ret ) );
-			}*/
-
-			$nonce = $_POST['_wpnonce'];
-			$id = $_POST['key'];
-			$timestamp = $_POST['timestamp'];
-
-			UM()->fields()->set_id = $_POST['set_id'];
-			UM()->fields()->set_mode = $_POST['set_mode'];
-
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_file_upload_nonce
-			 * @description Change File Upload nonce
-			 * @input_vars
-			 * [{"var":"$nonce","type":"bool","desc":"Nonce"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_file_upload_nonce', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_file_upload_nonce', 'my_file_upload_nonce', 10, 1 );
-			 * function my_file_upload_nonce( $nonce ) {
-			 *     // your code here
-			 *     return $nonce;
-			 * }
-			 * ?>
-			 */
-			$um_file_upload_nonce = apply_filters("um_file_upload_nonce", true );
-
-			if ( $um_file_upload_nonce  ) {
-				if ( ! wp_verify_nonce( $nonce, 'um_upload_nonce-'.$timestamp  ) && is_user_logged_in() ) {
-					// This nonce is not valid.
-					$ret['error'] = 'Invalid nonce';
-					die( json_encode( $ret ) );
-				}
-			}
-
-
-			if( isset( $_FILES[ $id ]['name'] ) ) {
-
-				if( ! is_array( $_FILES[ $id ]['name'] ) ) {
-
-					$uploaded = UM()->uploader()->upload_file( $_FILES[ $id ], $user_id, $id );
-					if ( isset( $uploaded['error'] ) ){
-
-						$ret['error'] = $uploaded['error'];
-
-					}else{
-						
-						$uploaded_file = $uploaded['handle_upload'];
-						$ret['url'] = $uploaded_file['file_info']['name'];
-						$ret['icon'] = UM()->files()->get_fonticon_by_ext( $uploaded_file['file_info']['ext'] );
-						$ret['icon_bg'] = UM()->files()->get_fonticon_bg_by_ext( $uploaded_file['file_info']['ext'] );
-						$ret['filename'] = $uploaded_file['file_info']['basename'];
-						$ret['original_name'] = $uploaded_file['file_info']['original_name'];
-						
-
-					}
-
-				}
-
-			} else {
-					$ret['error'] = __('A theme or plugin compatibility issue','ultimate-member');
-			}
-
-			echo json_encode($ret);
-			exit;
-		}
 
 	}
 }

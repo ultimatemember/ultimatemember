@@ -234,6 +234,8 @@ function initImageUpload_UM( trigger ) {
 			upload_text = '';
 		}
 
+		var user_id = 0;
+
 		if( jQuery('#um_upload_single:visible').data('user_id') ){
 	 		user_id = jQuery('#um_upload_single:visible').data('user_id');
 	 	}
@@ -263,31 +265,25 @@ function initImageUpload_UM( trigger ) {
 			showDone: false,
 			showFileCounter: false,
 			showStatusAfterSuccess: true,
+			returnType: 'json',
 			onSubmit:function(files){
 
 				trigger.parents('.um-modal-body').find('.um-error-block').remove();
 
 			},
-			onSuccess:function(files,data,xhr){
+			onSuccess:function( files, response, xhr ){
 
 				trigger.selectedFiles = 0;
 
-				try{
-				data = jQuery.parseJSON(data);
-				} catch (e) {
-				   console.log( e, data );
-				    return;
-				}
+				if ( response.status && response.status == false ) {
 
-				if (data.error && data.error != '') {
-
-					trigger.parents('.um-modal-body').append('<div class="um-error-block">'+data.error+'</div>');
+					trigger.parents('.um-modal-body').append('<div class="um-error-block">'+response.data.error+'</div>');
 					trigger.parents('.um-modal-body').find('.upload-statusbar').hide(0);
 					um_modal_responsive();
 
 				} else {
-					console.log( data );
-					jQuery.each( data, function( i, d ) {
+					
+					jQuery.each( response.data, function( i, d ) {
 					
 						var img_id = trigger.parents('.um-modal-body').find('.um-single-image-preview img');
 						var img_id_h = trigger.parents('.um-modal-body').find('.um-single-image-preview');
@@ -371,14 +367,13 @@ function initFileUpload_UM( trigger ) {
 				trigger.parents('.um-modal-body').find('.um-error-block').remove();
 
 			},
-			onSuccess:function(files,data,xhr){
+			onSuccess:function( files, response ,xhr ){
 
 				trigger.selectedFiles = 0;
 
-				data = jQuery.parseJSON(data);
-				if (data.error && data.error != '') {
+				if ( response.status &&  response.status == false ) {
 
-					trigger.parents('.um-modal-body').append('<div class="um-error-block">'+data.error+'</div>');
+					trigger.parents('.um-modal-body').append('<div class="um-error-block">'+ response.data.error+'</div>');
 					trigger.parents('.um-modal-body').find('.upload-statusbar').hide(0);
 					
 					setTimeout(function(){
@@ -387,7 +382,7 @@ function initFileUpload_UM( trigger ) {
 
 				} else {
 
-					jQuery.each( data, function(key, value) {
+					jQuery.each(  response.data , function(key, value) {
 
 						trigger.parents('.um-modal-body').find('.um-modal-btn.um-finish-upload.disabled').removeClass('disabled');
 						trigger.parents('.um-modal-body').find('.ajax-upload-dragdrop,.upload-statusbar').hide(0);
