@@ -1,7 +1,7 @@
 ### Ultimate Member Version
 Tell us what UM core version you use. 
-- [x] 1.3.88 ( latest )
-- [ ] 2.0 ( beta )
+- [ ] 1.3.x
+- [x] 2.x ( latest )
 
 
 ### Subject of the issue
@@ -42,3 +42,5 @@ Tell us how to reproduce this issue.
 - [ ] Terms & Conditions
 - [ ] Google reCAPTCHA 
 - [ ] Online Users
+- [ ] Groups
+- [ ] Gallery

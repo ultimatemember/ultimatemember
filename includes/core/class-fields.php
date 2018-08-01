@@ -2219,28 +2219,21 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				/* Single Image Upload */
 				case 'image':
 					$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="' . $key . '">';
-
 					if (in_array( $key, array( 'profile_photo', 'cover_photo' ) )) {
 						$field_value = '';
 					} else {
 						$field_value = $this->field_value( $key, $default, $data );
 					}
-
 					$output .= '<input type="hidden" name="' . $key . UM()->form()->form_suffix . '" id="' . $key . UM()->form()->form_suffix . '" value="' . $field_value . '" />';
-
 					if (isset( $data['label'] )) {
 						$output .= $this->field_label( $label, $key, $data );
 					}
-
 					$modal_label = ( isset( $data['label'] ) ) ? $data['label'] : __( 'Upload Photo', 'ultimate-member' );
-
 					$output .= '<div class="um-field-area" style="text-align: center">';
-
 					if ($this->field_value( $key, $default, $data )) {
-
-						if (!in_array( $key, array( 'profile_photo', 'cover_photo' ) )) {
+						if ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ) ) ) {
 							if (isset( $this->set_mode ) && $this->set_mode == 'register') {
-								$imgValue = $this->field_value( $key, $default, $data );
+								$imgValue = UM()->uploader()->get_core_temp_url() . "/" . $this->field_value( $key, $default, $data );
 							} else {
 								$imgValue = um_user_uploads_uri() . $this->field_value( $key, $default, $data );
 							}
@@ -2248,29 +2241,20 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						} else {
 							$img = '';
 						}
-
 						$output .= '<div class="um-single-image-preview show ' . $crop_class . '" data-crop="' . $crop_data . '" data-key="' . $key . '">
                                 <a href="#" class="cancel"><i class="um-icon-close"></i></a>' . $img . '
                             </div><a href="#" data-modal="um_upload_single" data-modal-size="' . $modal_size . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>';
-
 					} else {
-
 						$output .= '<div class="um-single-image-preview ' . $crop_class . '" data-crop="' . $crop_data . '" data-key="' . $key . '">
                                 <a href="#" class="cancel"><i class="um-icon-close"></i></a>
                                 <img src="" alt="" />
                             <div class="um-clear"></div></div><a href="#" data-modal="um_upload_single" data-modal-size="' . $modal_size . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . $button_text . '</a>';
-
 					}
-
 					$output .= '</div>';
-
 					/* modal hidden */
 					$output .= '<div class="um-modal-hidden-content">';
-
 					$output .= '<div class="um-modal-header"> ' . $modal_label . '</div>';
-
 					$output .= '<div class="um-modal-body">';
-
 					if (isset( $this->set_id )) {
 						$set_id = $this->set_id;
 						$set_mode = $this->set_mode;
@@ -2278,12 +2262,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$set_id = 0;
 						$set_mode = '';
 					}
-
 					$nonce = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
-
 					$output .= '<div class="um-single-image-preview ' . $crop_class . '"  data-crop="' . $crop_data . '" data-ratio="' . $ratio . '" data-min_width="' . $min_width . '" data-min_height="' . $min_height . '" data-coord=""><a href="#" class="cancel"><i class="um-icon-close"></i></a><img src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
 					$output .= '<div class="um-single-image-upload" data-nonce="' . $nonce . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" data-icon="' . esc_attr( $icon ) . '" data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $max_size ) . '" data-max_size_error="' . esc_attr( $max_size_error ) . '" data-min_size_error="' . esc_attr( $min_size_error ) . '" data-extension_error="' . esc_attr( $extension_error ) . '"  data-allowed_types="' . esc_attr( $allowed_types ) . '" data-upload_text="' . esc_attr( $upload_text ) . '" data-max_files_error="' . esc_attr( $max_files_error ) . '" data-upload_help_text="' . esc_attr( $upload_help_text ) . '">' . $button_text . '</div>';
-
 					$output .= '<div class="um-modal-footer">
                                     <div class="um-modal-right">
                                         <a href="#" class="um-modal-btn um-finish-upload image disabled" data-key="' . $key . '" data-change="' . __( 'Change photo', 'ultimate-member' ) . '" data-processing="' . __( 'Processing...', 'ultimate-member' ) . '"> ' . __( 'Apply', 'ultimate-member' ) . '</a>
@@ -2291,65 +2272,55 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
                                     </div>
                                     <div class="um-clear"></div>
                                 </div>';
-
 					$output .= '</div>';
-
 					$output .= '</div>';
-
 					/* end */
-
 					if ($this->is_error( $key )) {
 						$output .= $this->field_error( $this->show_error( $key ) );
 					}
-
 					$output .= '</div>';
 
-					break;
+				break;
 
 				/* Single File Upload */
 				case 'file':
 					$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="' . $key . '">';
-
 					$output .= '<input type="hidden" name="' . $key . UM()->form()->form_suffix . '" id="' . $key . UM()->form()->form_suffix . '" value="' . $this->field_value( $key, $default, $data ) . '" />';
-
 					if (isset( $data['label'] )) {
 						$output .= $this->field_label( $label, $key, $data );
 					}
-
 					$modal_label = ( isset( $data['label'] ) ) ? $data['label'] : __( 'Upload Photo', 'ultimate-member' );
-
 					$output .= '<div class="um-field-area" style="text-align: center">';
-
 					if ($this->field_value( $key, $default, $data )) {
-
-						$extension = pathinfo( $this->field_value( $key, $default, $data ), PATHINFO_EXTENSION );
-
-						$output .= '<div class="um-single-file-preview show" data-key="' . $key . '">
-                                        <a href="#" class="cancel"><i class="um-icon-close"></i></a>
-                                        <div class="um-single-fileinfo">
-                                            <a href="' . um_user_uploads_uri() . $this->field_value( $key, $default, $data ) . '" target="_blank">
-                                                <span class="icon" style="background:' . UM()->files()->get_fonticon_bg_by_ext( $extension ) . '"><i class="' . UM()->files()->get_fonticon_by_ext( $extension ) . '"></i></span>
-                                                <span class="filename">' . $this->field_value( $key, $default, $data ) . '</span>
+						$file_field_value = $this->field_value( $key, $default, $data );
+						$file_type = wp_check_filetype( $file_field_value );
+						$file_info = um_user( $data['metakey']."_metadata" );
+						if( isset( $file_info['original_name'] ) && ! empty( $file_info['original_name'] ) ){
+							$file_field_value = $file_info['original_name'];
+						}
+						if( 'register' == $this->set_mode ){
+							$file_url = UM()->uploader()->get_core_temp_dir() . "/" . $this->field_value( $key, $default, $data );
+						}else{
+							$file_url = um_user_uploads_uri() . $this->field_value( $key, $default, $data );
+						}
+						$output .= "<div class=\"um-single-file-preview show\" data-key=\"{$key}\">
+                                        <a href=\"#\" class=\"cancel\"><i class=\"um-icon-close\"></i></a>
+                                        <div class=\"um-single-fileinfo\">
+                                            <a href=\"{$file_url}\" target=\"_blank\">
+                                                <span class=\"icon\" style=\"background:" . UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] ) . "\"><i class=\"" . UM()->files()->get_fonticon_by_ext( $file_type['ext'] ) . "\"></i></span>
+                                                <span class=\"filename\">{$file_field_value}</span>
                                             </a>
                                         </div>
-                            </div><a href="#" data-modal="um_upload_single" data-modal-size="' . $modal_size . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . __( 'Change file', 'ultimate-member' ) . '</a>';
-
+                            </div><a href=\"#\" data-modal=\"um_upload_single\" data-modal-size=\"{$modal_size}\" data-modal-copy=\"1\" class=\"um-button um-btn-auto-width\">" . __( 'Change file', 'ultimate-member' ) . "</a>";
 					} else {
-
-						$output .= '<div class="um-single-file-preview" data-key="' . $key . '">
-                            </div><a href="#" data-modal="um_upload_single" data-modal-size="' . $modal_size . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . $button_text . '</a>';
-
+						$output .= '<div class="um-single-file-preview" data-key="{$key}">
+                            </div><a href="#" data-modal="um_upload_single" data-modal-size="{$modal_size}" data-modal-copy="1" class="um-button um-btn-auto-width">{$button_text}</a>';
 					}
-
 					$output .= '</div>';
-
 					/* modal hidden */
 					$output .= '<div class="um-modal-hidden-content">';
-
 					$output .= '<div class="um-modal-header"> ' . $modal_label . '</div>';
-
 					$output .= '<div class="um-modal-body">';
-
 					if (isset( $this->set_id )) {
 						$set_id = $this->set_id;
 						$set_mode = $this->set_mode;
@@ -2357,7 +2328,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$set_id = 0;
 						$set_mode = '';
 					}
-
 					$output .= '<div class="um-single-file-preview">
                                         <a href="#" class="cancel"><i class="um-icon-close"></i></a>
                                         <div class="um-single-fileinfo">
@@ -2367,11 +2337,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
                                             </a>
                                         </div>
                                 </div>';
-
 					$nonce = wp_create_nonce( 'um_upload_nonce-' . $this->timestamp );
-
 					$output .= '<div class="um-single-file-upload" data-timestamp="' . esc_attr( $this->timestamp ) . '" data-nonce="' . $nonce . '" data-icon="' . esc_attr( $icon ) . '" data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $max_size ) . '" data-max_size_error="' . esc_attr( $max_size_error ) . '" data-min_size_error="' . esc_attr( $min_size_error ) . '" data-extension_error="' . esc_attr( $extension_error ) . '"  data-allowed_types="' . esc_attr( $allowed_types ) . '" data-upload_text="' . esc_attr( $upload_text ) . '" data-max_files_error="' . esc_attr( $max_files_error ) . '" data-upload_help_text="' . esc_attr( $upload_help_text ) . '">' . $button_text . '</div>';
-
 					$output .= '<div class="um-modal-footer">
                                     <div class="um-modal-right">
                                         <a href="#" class="um-modal-btn um-finish-upload file disabled" data-key="' . $key . '" data-change="' . __( 'Change file' ) . '" data-processing="' . __( 'Processing...', 'ultimate-member' ) . '"> ' . __( 'Save', 'ultimate-member' ) . '</a>
@@ -2379,20 +2346,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
                                     </div>
                                     <div class="um-clear"></div>
                                 </div>';
-
 					$output .= '</div>';
-
 					$output .= '</div>';
-
 					/* end */
-
 					if ($this->is_error( $key )) {
 						$output .= $this->field_error( $this->show_error( $key ) );
 					}
-
 					$output .= '</div>';
-
-					break;
+					
+				break;
 
 				/* Select dropdown */
 				case 'select':

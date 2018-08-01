@@ -637,7 +637,7 @@ function um_registration_save_files( $user_id, $args ) {
 			if ( isset( $args['submitted'][$key] ) ) {
 
 				if ( isset( $fields[$key]['type'] ) && in_array( $fields[$key]['type'], array( 'image', 'file' ) ) &&
-				     ( um_is_temp_upload( $args['submitted'][$key] ) || $args['submitted'][$key] == 'empty_file' )
+				     ( um_is_temp_file( $args['submitted'][$key] ) || $args['submitted'][$key] == 'empty_file' )
 				) {
 
 					$files[$key] = $args['submitted'][$key];
@@ -692,7 +692,11 @@ function um_registration_save_files( $user_id, $args ) {
 		 * ?>
 		 */
 		do_action( 'um_before_user_upload', $user_id, $files );
-		UM()->user()->update_files( $files );
+	
+		//UM()->user()->update_files( $files );
+
+		UM()->user()->move_temporary_files( $user_id, $files );
+
 		/**
 		 * UM hook
 		 *

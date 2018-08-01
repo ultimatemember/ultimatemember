@@ -234,7 +234,7 @@ function um_user_edit_profile( $args ) {
 			if ( isset( $args['submitted'][ $key ] ) ) {
 
 				if ( isset( $fields[ $key ]['type'] ) && in_array( $fields[ $key ]['type'], array( 'image', 'file' ) ) &&
-				     ( um_is_temp_upload( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' ) ) {
+				     ( um_is_temp_file( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' ) ) {
 
 					$files[ $key ] = $args['submitted'][ $key ];
 
@@ -391,7 +391,11 @@ function um_user_edit_profile( $args ) {
 		 * ?>
 		 */
 		do_action( 'um_before_user_upload', um_user( 'ID' ), $files );
-		UM()->user()->update_files( $files );
+		
+		//UM()->user()->update_files( $files );
+
+		UM()->user()->move_temporary_files( um_user( 'ID' ), $files );
+
 		/**
 		 * UM hook
 		 *
