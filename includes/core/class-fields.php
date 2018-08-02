@@ -2582,7 +2582,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$um_field_checkbox_item_title = $v;
 
 
-							if (!is_numeric( $k ) && in_array( $form_key, array( 'role' ) )) {
+							if ( ! is_numeric( $k ) && in_array( $form_key, array( 'role' ) ) ||
+							     ( $this->set_mode == 'account' || um_is_core_page( 'account' ) ) ) {
 								$option_value = $k;
 								$um_field_checkbox_item_title = $v;
 							}
