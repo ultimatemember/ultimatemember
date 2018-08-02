@@ -80,12 +80,18 @@ function um_upgrade_usermeta2022() {
 			foreach ( $values as $meta ) {
 				if ( in_array( $field_data['type'], array( 'radio', 'multiselect', 'select', 'checkbox' ) ) ) {
 					if ( ! is_serialized( $meta['val'] ) ) {
+						$backup = get_user_meta( $meta['user_id'], $field_data['metakey'], true );
+						update_user_meta( $meta['user_id'], $field_data['metakey'] . '_backup', $backup );
+
 						$array = array( $meta['val'] );
 						$metavalue = serialize( $array );
 						update_user_meta( $meta['user_id'], $field_data['metakey'], $metavalue );
 					}
 				} else {
 					if ( is_serialized( $meta['val'] ) ) {
+						$backup = get_user_meta( $meta['user_id'], $field_data['metakey'], true );
+						update_user_meta( $meta['user_id'], $field_data['metakey'] . '_backup', $backup );
+
 						$maybe_array = maybe_unserialize( $meta['val'] );
 						$metavalue = $maybe_array[0];
 						update_user_meta( $meta['user_id'], $field_data['metakey'], $metavalue );
