@@ -51,39 +51,42 @@ function um_members_directory_search( $args ) {
 
 		<div class="um-search um-search-<?php echo $count; ?>">
 			
-			<form method="get" action="" />
-				
-			<?php if ( isset( $_REQUEST['page_id'] ) && get_option('permalink_structure') == 0 ) { ?>
-					
-				<input type="hidden" name="page_id" id="page_id" value="<?php echo esc_attr( $_REQUEST['page_id']); ?>" />
-					
-			<?php }
+			<form method="get" action="">
 
-			$i = 0;
-			foreach( $search_filters as $filter ) {
-				$i++;
-						
-				if ( $i % 2 == 0 ) {
-					$add_class = 'um-search-filter-2';
-				} else {
-					$add_class = '';
-				}
-						
-				echo '<div class="um-search-filter '. $add_class .'">'; UM()->members()->show_filter( $filter ); echo '</div>';
-					
-			}
-					
-			?>
-				
-			<div class="um-clear"></div>
-					
-			<div class="um-search-submit">
+				<?php if ( isset( $_REQUEST['page_id'] ) && get_option('permalink_structure') == 0 ) { ?>
 
-				<input type="hidden" name="um_search" id="um_search" value="1" />
-						
-				<a href="#" class="um-button um-do-search"><?php _e('Search','ultimate-member'); ?></a><a href="<?php echo UM()->permalinks()->get_current_url( true ); ?>" class="um-button um-alt"><?php _e('Reset','ultimate-member'); ?></a>
-						
-			</div><div class="um-clear"></div>
+					<input type="hidden" name="page_id" id="page_id" value="<?php echo esc_attr( $_REQUEST['page_id']); ?>" />
+
+				<?php }
+
+				$i = 0;
+				foreach ( $search_filters as $filter ) {
+					$i++;
+
+					if ( $i % 2 == 0 ) {
+						$add_class = 'um-search-filter-2';
+					} else {
+						$add_class = '';
+					} ?>
+
+					<div class="um-search-filter <?php echo $add_class ?>">
+						<?php UM()->members()->show_filter( $filter ); ?>
+					</div>
+
+				<?php } ?>
+
+				<div class="um-clear"></div>
+
+				<div class="um-search-submit">
+
+					<input type="hidden" name="um_search" id="um_search" value="1" />
+
+					<a href="#" class="um-button um-do-search"><?php _e('Search','ultimate-member'); ?></a>
+					<a href="<?php echo UM()->permalinks()->get_current_url( true ); ?>" class="um-button um-alt"><?php _e('Reset','ultimate-member'); ?></a>
+
+				</div>
+
+				<div class="um-clear"></div>
 				
 			</form>
 			

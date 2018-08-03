@@ -16,7 +16,7 @@ jQuery(document).ready(function() {
 		}
 	});
 
-	jQuery(document).on('click', '.um-member-more a', function(e){
+	jQuery(document.body).on('click', '.um-member-more a', function(e){
 		e.preventDefault();
 
 		var block = jQuery(this).parents('.um-member');
@@ -30,7 +30,7 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
-	jQuery(document).on('click', '.um-member-less a', function(e){
+	jQuery(document.body).on('click', '.um-member-less a', function(e){
 		e.preventDefault();
 
 		var block = jQuery(this).parents('.um-member');
@@ -44,7 +44,7 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
-	jQuery(document).on('click', '.um-do-search', function(e){
+	jQuery(document.body).on('click', '.um-do-search', function(e){
 		e.preventDefault();
 
 		jQuery(this).parents('form').find('input').filter(function(e){
