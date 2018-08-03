@@ -1225,6 +1225,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$array['conditional'] .= ' data-cond-' . $cond_id . '-action="' . $cond[0] . '" data-cond-' . $cond_id . '-field="' . $cond[1] . '" data-cond-' . $cond_id . '-operator="' . $cond[2] . '" data-cond-' . $cond_id . '-value="' . $cond[3] . '"';
 				}
 
+				$array['classes'] .= ' um-is-conditional';
+
 			} else {
 				$array['conditional'] = null;
 			}
