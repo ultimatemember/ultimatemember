@@ -11,7 +11,7 @@ function um_upgrade_get_users2022() {
 function um_upgrade_usermeta2022() {
 	um_maybe_unset_time_limit();
 
-	if ( ! empty( $_POST['page'] ) ) {
+	if ( ! empty( $_POST['page'] ) && ! empty( $_POST['pages'] ) ) {
 		$users_per_page = 50;
 
 		$from = ( $_POST['page'] * $users_per_page ) - $users_per_page + 1;
@@ -98,6 +98,10 @@ function um_upgrade_usermeta2022() {
 					}
 				}
 			}
+		}
+
+		if ( $_POST['page'] == $_POST['pages'] ) {
+			update_option( 'um_last_version_upgrade', '2.0.22-alpha1' );
 		}
 
 		wp_send_json_success( array( 'message' => sprintf( __( 'Users from %s to %s was upgraded successfully...', 'ultimate-member' ), $from, $to ) ) );

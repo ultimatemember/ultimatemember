@@ -43,7 +43,8 @@
 					dataType: 'json',
 					data: {
 						action: 'um_usermeta2022',
-						page: current_page
+						page: current_page,
+						pages: users
 					},
 					success: function( response ) {
 						if ( typeof response.data != 'undefined' ) {
