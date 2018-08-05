@@ -590,16 +590,25 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 
 			switch( $cap ) {
 				case 'edit':
-					if ( get_current_user_id() == $user_id && um_user( 'can_edit_profile' ) )
-						$return = 1;
-					elseif ( get_current_user_id() == $user_id && ! um_user( 'can_edit_profile' ) )
-						$return = 0;
-					elseif ( um_user( 'can_edit_everyone' ) )
-						$return = 1;
-					elseif ( ! um_user( 'can_edit_everyone' ) )
-						$return = 0;
-					elseif ( um_user( 'can_edit_roles' ) && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, um_user( 'can_edit_roles' ) ) ) <= 0 ) )
-						$return = 0;
+
+					if ( get_current_user_id() == $user_id ) {
+						if ( um_user( 'can_edit_profile' ) ) {
+							$return = 1;
+						} else {
+							$return = 0;
+						}
+					} else {
+						if ( ! um_user( 'can_edit_everyone' ) ) {
+							$return = 0;
+						} else {
+							if ( um_user( 'can_edit_roles' ) && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, um_user( 'can_edit_roles' ) ) ) <= 0 ) ) {
+								$return = 0;
+							} else {
+								$return = 1;
+							}
+						}
+					}
+
 					break;
 
 				case 'delete':

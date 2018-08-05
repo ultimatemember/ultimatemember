@@ -280,6 +280,7 @@ if ( ! class_exists( 'UM' ) ) {
 
 				// include UM classes
 				$this->includes();
+				$this->plugins_loaded();
 
 				// include hook files
 				add_action( 'plugins_loaded', array( &$this, 'init' ), 0 );
@@ -296,6 +297,18 @@ if ( ! class_exists( 'UM' ) ) {
 				//include short non class functions
 				require_once 'um-short-functions.php';
 				require_once 'um-deprecated-functions.php';
+			}
+		}
+
+
+		public function plugins_loaded() {
+			//gravity forms
+			if ( ! function_exists('members_get_capabilities' ) ) {
+
+				function members_get_capabilities() {
+
+				}
+
 			}
 		}
 
