@@ -1090,15 +1090,27 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		function move_temporary_files( $user_id, $files, $move_only = false ) {
 			$new_files = array();
 
+			$user_basedir = UM()->uploader()->get_upload_user_base_dir( $user_id, true );
+
 			foreach ( $files as $key => $filename ) {
 
-				if ( empty( $filename ) ) {
+				if ( empty( $filename ) || 'empty_file' == $filename ) {
+					//clear empty filename values
+					$old_filename = get_user_meta( $user_id, $key, true );
+					$file = $user_basedir . DIRECTORY_SEPARATOR . $old_filename;
+					if ( file_exists( $file ) ) {
+						unlink( $file );
+					}
+
+					delete_user_meta( $user_id, $key );
+					delete_user_meta( $user_id, "{$key}_metadata" );
+					delete_transient("um_{$filename}");
+
 					continue;
 				}
 
-				$user_basedir = UM()->uploader()->get_upload_user_base_dir( $user_id, true );
+				//move temporary file from temp directory to the correct user directory
 				$temp_file_path = UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $filename;
-
 				if ( file_exists( $temp_file_path ) ) {
 					$extra_hash = hash( 'crc32b', current_time('timestamp') );
 
@@ -1131,6 +1143,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			}
 
+			//remove user old files
 			$this->remove_unused_uploads( $user_id, $new_files );
 		}
 
@@ -1167,8 +1180,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				}
 			}
 		}
-
-
 	}
 
 }
