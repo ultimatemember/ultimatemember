@@ -220,7 +220,7 @@ add_filter( 'um_profile_field_filter_hook__date', 'um_profile_field_filter_hook_
  * @param $value
  * @param $data
  *
- * @return string|void
+ * @return string
  */
 function um_profile_field_filter_hook__file( $value, $data ) {
 	$uri = um_user_uploads_uri() . $value;

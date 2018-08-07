@@ -2303,15 +2303,24 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}else{
 							$file_url = um_user_uploads_uri() . $this->field_value( $key, $default, $data );
 						}
-						$output .= "<div class=\"um-single-file-preview show\" data-key=\"{$key}\">
+
+
+
+
+						if ( file_exists( um_user_uploads_dir() . $file_field_value ) ) {
+							$output .= "<div class=\"um-single-file-preview show\" data-key=\"{$key}\">
                                         <a href=\"#\" class=\"cancel\"><i class=\"um-icon-close\"></i></a>
                                         <div class=\"um-single-fileinfo\">
                                             <a href=\"{$file_url}\" target=\"_blank\">
                                                 <span class=\"icon\" style=\"background:" . UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] ) . "\"><i class=\"" . UM()->files()->get_fonticon_by_ext( $file_type['ext'] ) . "\"></i></span>
                                                 <span class=\"filename\">{$file_field_value}</span>
                                             </a>
-                                        </div>
-                            </div><a href=\"#\" data-modal=\"um_upload_single\" data-modal-size=\"{$modal_size}\" data-modal-copy=\"1\" class=\"um-button um-btn-auto-width\">" . __( 'Change file', 'ultimate-member' ) . "</a>";
+                                        </div></div>";
+						} else {
+							$output .= "<div class=\"um-single-file-preview show\" data-key=\"{$key}\">" . __('This file has been removed.','ultimate-member') . "</div>";
+						}
+
+						$output .= "<a href=\"#\" data-modal=\"um_upload_single\" data-modal-size=\"{$modal_size}\" data-modal-copy=\"1\" class=\"um-button um-btn-auto-width\">" . __( 'Change file', 'ultimate-member' ) . "</a>";
 					} else {
 						$output .= '<div class="um-single-file-preview" data-key="{$key}">
                             </div><a href="#" data-modal="um_upload_single" data-modal-size="{$modal_size}" data-modal-copy="1" class="um-button um-btn-auto-width">{$button_text}</a>';

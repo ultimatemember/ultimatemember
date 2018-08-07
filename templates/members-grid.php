@@ -100,7 +100,7 @@
 										continue;
 						?>
 						
-						<div class="um-member-tagline um-member-tagline-<?php echo $key;?>"><?php _e( $value, 'ultimate-member'); ?></div>
+						<div class="um-member-tagline um-member-tagline-<?php echo esc_attr( $key );?>"><?php _e( $value, 'ultimate-member'); ?></div>
 						
 						<?php
 								} // end if
@@ -124,7 +124,7 @@
 										if ( ! $value )
 											continue; ?>
 								
-										<div class="um-member-metaline um-member-metaline-<?php echo $key; ?>"><span><strong><?php echo UM()->fields()->get_label( $key ); ?>:</strong> <?php _e( $value, 'ultimate-member'); ?></span></div>
+										<div class="um-member-metaline um-member-metaline-<?php echo esc_attr( $key ); ?>"><span><strong><?php echo UM()->fields()->get_label( $key ); ?>:</strong> <?php _e( $value, 'ultimate-member'); ?></span></div>
 
 									<?php }
 								} 

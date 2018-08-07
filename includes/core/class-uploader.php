@@ -232,7 +232,10 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 		/**
 		 * Set upload directory
+		 *
 		 * @param array $args
+		 *
+		 * @return array
 		 */
 		public function set_upload_directory( $args ){
 
@@ -252,17 +255,20 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			return $args;
 		}
-		
+
 		/**
 		 * Upload Image files
-		 * @param  string $uploadedfile 
-		 * @param  integer $user_id      
-		 * @param  string $field_key    
-		 * @param  string $upload_type  
 		 *
-		 * @since  2.0.22 
+		 * @param $uploadedfile
+		 * @param int|null $user_id
+		 * @param string $field_key
+		 * @param string $upload_type
+		 *
+		 * @since  2.0.22
+		 *
+		 * @return array
 		 */
-		public function upload_image( $uploadedfile, $user_id = null, $field_key = '', $upload_type = 'stream_photo' ){
+		public function upload_image( $uploadedfile, $user_id = null, $field_key = '', $upload_type = 'stream_photo' ) {
 
 
 			$response = array();
@@ -324,6 +330,8 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			    $response['error'] = $movefile['error'];
 			}else{
 
+				$movefile['url'] = set_url_scheme( $movefile['url'] );
+
 				$movefile['file_info']['basename'] = wp_basename( $movefile['file'] );
 				
 				$file_type = wp_check_filetype( $movefile['file_info']['basename'] );
@@ -336,7 +344,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				$movefile['file_info']['size_format'] = size_format( $movefile['file_info']['size'] );
 				$movefile['file'] = $movefile['file_info']['basename'];
 
-				
+
 				/**
 				 * UM hook
 				 *
@@ -438,11 +446,14 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 		/**
 		 * Upload Files
-		 * @param  string $uploadedfile 
-		 * @param  integer $user_id      
-		 * @param  string $field_key 
 		 *
-		 * @since  2.0.22 
+		 * @param $uploadedfile
+		 * @param int|null $user_id
+		 * @param string $field_key
+		 *
+		 * @since  2.0.22
+		 *
+		 * @return array
 		 */
 		public function upload_file( $uploadedfile, $user_id = null, $field_key = '' ){
 
@@ -491,6 +502,8 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			}else{
 
 				$file_type = wp_check_filetype( $movefile['file'] );
+
+				$movefile['url'] = set_url_scheme( $movefile['url'] );
 
 				$movefile['file_info']['name'] = $movefile['url'];
 				$movefile['file_info']['original_name'] = $uploadedfile['name'];

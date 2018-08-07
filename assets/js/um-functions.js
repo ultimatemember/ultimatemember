@@ -241,12 +241,13 @@ function initImageUpload_UM( trigger ) {
 	 	}
 
 		trigger.uploadFile({
-			url: um_scripts.imageupload,
+			url: wp.ajax.settings.url,
 			method: "POST",
 			multiple: false,
 			formData: {
-				key: trigger.data('key'), 
-				set_id: trigger.data('set_id'), 
+				action: 'um_imageupload',
+				key: trigger.data('key'),
+				set_id: trigger.data('set_id'),
 				set_mode: trigger.data('set_mode'),
 				_wpnonce: trigger.data('nonce'),
 				timestamp: trigger.data('timestamp'),
@@ -339,10 +340,11 @@ function initFileUpload_UM( trigger ) {
 	 	}
 
 		trigger.uploadFile({
-			url: um_scripts.fileupload,
+			url: wp.ajax.settings.url,
 			method: "POST",
 			multiple: false,
 			formData: {
+				action: 'um_fileupload',
 				key: trigger.data('key'), 
 				set_id: trigger.data('set_id'), 
 				set_mode: trigger.data('set_mode'),
