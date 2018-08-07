@@ -715,7 +715,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			 */
 			$data = apply_filters( "um_image_handle_{$field_key}__option", $data );
 
-			if ( $image_info['invalid_image'] == true ) {
+			if ( isset( $image_info['invalid_image'] ) && $image_info['invalid_image'] == true ) {
 				$error = sprintf(__('Your image is invalid or too large!','ultimate-member') );
 			} elseif ( isset($data['min_size']) && ( $image_info['size'] < $data['min_size'] ) ) {
 				$error = $data['min_size_error'];
@@ -1097,9 +1097,11 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				if ( empty( $filename ) || 'empty_file' == $filename ) {
 					//clear empty filename values
 					$old_filename = get_user_meta( $user_id, $key, true );
-					$file = $user_basedir . DIRECTORY_SEPARATOR . $old_filename;
-					if ( file_exists( $file ) ) {
-						unlink( $file );
+					if ( ! empty( $old_filename ) ) {
+						$file = $user_basedir . DIRECTORY_SEPARATOR . $old_filename;
+						if ( file_exists( $file ) ) {
+							unlink( $file );
+						}
 					}
 
 					delete_user_meta( $user_id, $key );
