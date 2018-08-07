@@ -738,7 +738,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @param $file
 		 * @param $field
 		 *
-		 * @return null|string|void
+		 * @return null|string
 		 */
 		public function validate_file_data( $file, $field_key ){
 			$error = null;
@@ -825,15 +825,11 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			 */
 			$data = apply_filters( "um_file_handle_{$field_key}__option", $data );
 
-			if ( $image_info['invalid_file'] == true ) {
-				$error = sprintf(__('Your file is invalid or too large!','ultimate-member') );
-			} elseif ( isset($data['max_file_size']) && ( $image_info['size'] > $data['max_file_size'] ) ) {
+			if ( isset( $data['max_file_size'] ) && ( $file_info['size'] > $data['max_file_size'] ) ) {
 				$error = $data['max_file_size_error'];
 			}
 
-
 			return $error;
-		
 		}
 
 
@@ -1081,6 +1077,95 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			return $ret;
 
+		}
+
+
+		/**
+		 * Move temporary files
+		 *
+		 * @param $user_id
+		 * @param $files
+		 * @param bool $move_only
+		 */
+		function move_temporary_files( $user_id, $files, $move_only = false ) {
+			$new_files = array();
+
+			foreach ( $files as $key => $filename ) {
+
+				if ( empty( $filename ) ) {
+					continue;
+				}
+
+				$user_basedir = UM()->uploader()->get_upload_user_base_dir( $user_id, true );
+				$temp_file_path = UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $filename;
+
+				if ( file_exists( $temp_file_path ) ) {
+					$extra_hash = hash( 'crc32b', current_time('timestamp') );
+
+					if ( strpos( $filename , 'stream_photo_' ) !== false ) {
+						$new_filename = str_replace("stream_photo_","stream_photo_{$extra_hash}_", $filename );
+					} else {
+						$new_filename = str_replace("file_","file_{$extra_hash}_", $filename );
+					}
+
+					if ( $move_only ) {
+
+						$file = $user_basedir. DIRECTORY_SEPARATOR . $filename;
+						$new_files[ $key ] = $filename;
+						rename( $temp_file_path, $file );
+
+					} else {
+
+						$file = $user_basedir. DIRECTORY_SEPARATOR . $new_filename;
+
+						$new_files[ $key ] = $new_filename;
+
+						if ( rename( $temp_file_path, $file ) ) {
+							$file_info = get_transient("um_{$filename}");
+							update_user_meta( $user_id, $key, $new_filename );
+							update_user_meta( $user_id, "{$key}_metadata", $file_info );
+							delete_transient("um_{$filename}");
+						}
+					}
+				}
+
+			}
+
+			$this->remove_unused_uploads( $user_id, $new_files );
+		}
+
+
+		/**
+		 * Clean user temp uploads
+		 *
+		 * @param int $user_id
+		 * @param array $new_files
+		 */
+		function remove_unused_uploads( $user_id, $new_files ) {
+			um_fetch_user( $user_id );
+			$user_meta_keys = UM()->user()->profile;
+
+			$_array = array();
+			foreach ( UM()->builtin()->custom_fields as $_field ) {
+				if ( $_field['type'] == 'file' && ! empty( $user_meta_keys[ $_field['metakey'] ] ) ) {
+					$_array[ $_field['metakey'] ] = $user_meta_keys[ $_field['metakey'] ];
+				}
+			}
+			$_array = array_merge( $_array, $new_files );
+
+			$files = glob( um_user_uploads_dir() . '*', GLOB_BRACE );
+			$error = array();
+			if ( file_exists( um_user_uploads_dir() ) && $files && isset( $_array ) && is_array( $_array ) ) {
+				foreach ( $files as $file ) {
+					$str = basename( $file );
+
+					if ( ! strstr( $str, 'profile_photo' ) && ! strstr( $str, 'cover_photo' ) &&
+					     ! strstr( $str, 'stream_photo' ) && ! preg_grep( '/' . $str . '/', $_array ) ) {
+						$error[] = $str;
+						unlink( $file );
+					}
+				}
+			}
 		}
 
 

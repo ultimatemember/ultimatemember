@@ -394,29 +394,7 @@ function um_user_edit_profile( $args ) {
 		
 		//UM()->user()->update_files( $files );
 
-		UM()->user()->move_temporary_files( um_user( 'ID' ), $files );
-
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_after_user_upload
-		 * @description After complete UM user profile edit and file uploaded.
-		 * @input_vars
-		 * [{"var":"$user_id","type":"int","desc":"User ID"},
-		 * {"var":"$files","type":"array","desc":"Files data"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_after_user_upload', 'function_name', 10, 2 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_after_user_upload', 'my_after_user_upload', 10, 2 );
-		 * function my_after_user_upload( $user_id, $files ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_after_user_upload', um_user( 'ID' ), $files );
+		UM()->uploader()->move_temporary_files( um_user( 'ID' ), $files );
 	}
 
 	/**
@@ -467,7 +445,6 @@ function um_user_edit_profile( $args ) {
 		$url = um_user_profile_url( um_user( 'ID' ) );
 		exit( wp_redirect( um_edit_my_profile_cancel_uri( $url ) ) );
 	}
-
 }
 add_action( 'um_user_edit_profile', 'um_user_edit_profile', 10 );
 

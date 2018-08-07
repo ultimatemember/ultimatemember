@@ -192,7 +192,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		/**
 		 * File upload by AJAX
 		 */
-		function ajax_file_upload(){
+		function ajax_file_upload() {
 			$ret['error'] = null;
 			$ret = array();
 
@@ -244,7 +244,9 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			if( isset( $_FILES[ $id ]['name'] ) ) {
 
-				if( ! is_array( $_FILES[ $id ]['name'] ) ) {
+				if ( ! is_array( $_FILES[ $id ]['name'] ) ) {
+
+					$user_id = $_POST['user_id'];
 
 					$uploaded = UM()->uploader()->upload_file( $_FILES[ $id ], $user_id, $id );
 					if ( isset( $uploaded['error'] ) ){
@@ -266,7 +268,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				}
 
 			} else {
-					$ret['error'] = __('A theme or plugin compatibility issue','ultimate-member');
+				$ret['error'] = __('A theme or plugin compatibility issue','ultimate-member');
 			}
 
 			

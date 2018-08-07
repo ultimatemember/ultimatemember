@@ -57,7 +57,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'woocommerce'           => '2.0.1',
 			'restrict-content'      => '2.0',
 			'beaver-builder'        => '2.0',
-			'photos'                => '1.1',
+			'user-photos'           => '2.0.1',
 		);
 
 

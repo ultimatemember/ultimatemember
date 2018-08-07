@@ -347,6 +347,7 @@ function initFileUpload_UM( trigger ) {
 				action: 'um_fileupload',
 				key: trigger.data('key'), 
 				set_id: trigger.data('set_id'), 
+				user_id: trigger.data('user_id'),
 				set_mode: trigger.data('set_mode'),
 				_wpnonce: trigger.data('nonce'),
 				timestamp: trigger.data('timestamp')

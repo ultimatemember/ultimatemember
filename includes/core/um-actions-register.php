@@ -695,29 +695,7 @@ function um_registration_save_files( $user_id, $args ) {
 	
 		//UM()->user()->update_files( $files );
 
-		UM()->user()->move_temporary_files( $user_id, $files );
-
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_after_user_upload
-		 * @description After complete UM user registration and file uploaded.
-		 * @input_vars
-		 * [{"var":"$user_id","type":"int","desc":"User ID"},
-		 * {"var":"$files","type":"array","desc":"Files data"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_after_user_upload', 'function_name', 10, 2 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_after_user_upload', 'my_after_user_upload', 10, 2 );
-		 * function my_after_user_upload( $user_id, $files ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_after_user_upload', $user_id, $files );
+		UM()->uploader()->move_temporary_files( $user_id, $files );
 	}
 }
 add_action( 'um_registration_set_extra_data', 'um_registration_save_files', 10, 2 );
