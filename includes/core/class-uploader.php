@@ -889,8 +889,8 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 */
 		public function delete_existing_file( $filename, $ext = '', $dir = ''  ){
 			
-			if( file_exists( $this->upload_user_basedir."/".$filename  ) && ! empty( $filename ) ){
-				unlink( $this->upload_user_basedir."/".$filename  );
+			if( file_exists( $this->upload_user_basedir . DIRECTORY_SEPARATOR . $filename  ) && ! empty( $filename ) ){
+				unlink( $this->upload_user_basedir . DIRECTORY_SEPARATOR . $filename  );
 			}
 
 		}
