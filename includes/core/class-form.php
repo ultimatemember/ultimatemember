@@ -27,6 +27,12 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 
 		/**
+		 * @var
+		 */
+		private $notices;
+
+
+		/**
 		 * Form constructor.
 		 */
 		function __construct() {
@@ -43,6 +49,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 			add_action('init', array(&$this, 'field_declare'), 10);
 
+			$this->init_notices();
 		}
 
 
@@ -171,7 +178,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 * @param string $error
 		 */
 		function add_error( $key, $error ) {
-			if ( ! isset( $this->errors[ $key ] ) ){
+			if ( ! isset( $this->errors[ $key ] ) ) {
 				/**
 				 * UM hook
 				 *
@@ -194,8 +201,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				 * }
 				 * ?>
 				 */
-				$error = apply_filters( 'um_submit_form_error', $error, $key );
-				$this->errors[ $key ] = $error;
+				$this->errors[ $key ] = apply_filters( 'um_submit_form_error', $error, $key );
 			}
 		}
 
@@ -206,9 +212,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 * @return boolean
 		 */
 		function has_error( $key ) {
-			if ( isset( $this->errors[$key] ) )
-				return true;
-			return false;
+			return isset( $this->errors[$key] );
 		}
 
 
@@ -518,6 +522,76 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			}
 
 			return false;
+		}
+
+
+		function init_notices() {
+			$this->notices = array(
+				'error' => array(
+					'registration_disabled' => __('Registration is currently disabled','ultimate-member'),
+					'blocked_email' => __('This email address has been blocked.','ultimate-member'),
+					'blocked_domain' => __('We do not accept registrations from that domain.','ultimate-member'),
+					'blocked_ip' => __('Your IP address has been blocked.','ultimate-member'),
+					'inactive' => __('Your account has been disabled.','ultimate-member'),
+					'awaiting_admin_review' => __('Your account has not been approved yet.','ultimate-member'),
+					'awaiting_email_confirmation' => __('Your account is awaiting e-mail verification.','ultimate-member'),
+					'rejected' => __('Your membership request has been rejected.','ultimate-member'),
+				),
+				'success' => array(
+					'account' => __('Your account was updated successfully.','ultimate-member'),
+					'password_changed' => __('You have successfully changed your password.','ultimate-member'),
+					'account_active' => __('Your account is now active! You can login.','ultimate-member')
+				)
+			);
+		}
+
+
+		function get_notice_by_code( $code, $type = "" ) {
+			$notice = '';
+			foreach( $this->notices as $key=>$notice_list ) {
+				if( $key != $type && $type != '' ) continue;
+				if( isset( $notice_list[ $code ] ) ) {
+					$notice = $notice_list[ $code ];
+				}
+			}
+			if( empty( $notice ) ) {
+				$default_message = $type == 'error' ? __( 'An error has been encountered', 'ultimate-member' ) : '';
+
+				$notice = apply_filters( "um_custom_{$type}_message_handler", $default_message, $code );
+			}
+
+			return $notice;
+		}
+
+
+		function get_notice_type_by_code( $code ) {
+			$notice_type = '';
+			foreach( $this->notices as $key=>$notice_list ) {
+				if( isset( $notice_list[ $code ] ) ) {
+					$notice_type = $key;
+				} else {
+					$notice = apply_filters( "um_custom_{$key}_message_handler", '', $code );
+					if( !empty( $notice ) ) $notice_type = $key;
+				}
+			}
+
+			return $notice;
+		}
+
+		function validate_blocked_ips() {
+			$ips = UM()->options()->get('blocked_ips');
+			if ( !$ips )
+				return true;
+
+			$ips = array_map("rtrim", explode("\n", $ips));
+			$user_ip = um_user_ip();
+
+			foreach($ips as $ip) {
+				$ip = str_replace('*','',$ip);
+				if ( !empty( $ip ) && strpos($user_ip, $ip) === 0) {
+					return false;
+				}
+			}
 		}
 	}
 }

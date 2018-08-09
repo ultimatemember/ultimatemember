@@ -455,9 +455,9 @@ function um_js_redirect( $url ) {
 		}
 
 		?>
-        <script data-cfasync='false' type="text/javascript">
-            window.location = '<?php echo $url; ?>';
-        </script>
+		<script data-cfasync='false' type="text/javascript">
+			window.location = '<?php echo $url; ?>';
+		</script>
 		<?php
 		exit;
 	} else {
@@ -725,9 +725,9 @@ function um_profile_id() {
  * @return bool|string
  */
 function um_is_temp_upload( $url ) {
-    if( is_string( $url ) ) {
-        $url = trim($url);
-    }
+	if( is_string( $url ) ) {
+		$url = trim($url);
+	}
 
 	if (filter_var( $url, FILTER_VALIDATE_URL ) === false)
 		$url = realpath( $url );
@@ -1389,7 +1389,8 @@ function um_is_myprofile() {
  * @return mixed|string|void
  */
 function um_edit_profile_url() {
-	if (um_is_core_page( 'user' )) {
+	$user_id = um_user('ID');
+    if ( um_is_core_page( 'user' ) && !( is_multisite() && !is_user_member_of_blog( $user_id ) ) ) {
 		$url = UM()->permalinks()->get_current_url();
 	} else {
 		$url = um_user_profile_url();
@@ -1610,7 +1611,7 @@ function um_youtube_id_from_url( $url ) {
  * @return string
  */
 function um_user_uploads_uri() {
-    UM()->files()->upload_baseurl = set_url_scheme( UM()->files()->upload_baseurl );
+	UM()->files()->upload_baseurl = set_url_scheme( UM()->files()->upload_baseurl );
 
 	$uri = UM()->files()->upload_baseurl . um_user( 'ID' ) . '/';
 
@@ -1721,8 +1722,8 @@ function um_get_avatar_uri( $image, $attrs ) {
 	$cache_time = apply_filters( 'um_filter_avatar_cache_time', current_time( 'timestamp' ), um_user( 'ID' ) );
 
 	if( $attrs == 'original' && file_exists( um_user_uploads_dir() . "profile_photo{$ext}" ) ) {
-        $uri = um_user_uploads_uri() . "profile_photo{$ext}";
-    } else if (file_exists( um_user_uploads_dir() . "profile_photo-{$attrs}{$ext}" )) {
+		$uri = um_user_uploads_uri() . "profile_photo{$ext}";
+	} else if (file_exists( um_user_uploads_dir() . "profile_photo-{$attrs}{$ext}" )) {
 		$uri = um_user_uploads_uri() . "profile_photo-{$attrs}{$ext}";
 	} else {
 		$sizes = UM()->options()->get( 'photo_thumb_sizes' );
@@ -1879,8 +1880,8 @@ function um_get_user_avatar_data( $user_id = '', $size = '96' ) {
  * @return bool|string
  */
 function um_get_user_avatar_url( $user_id = '', $size = '96' ) {
-    $data = um_get_user_avatar_data( $user_id, $size );
-    return $data['url'];
+	$data = um_get_user_avatar_data( $user_id, $size );
+	return $data['url'];
 }
 
 
@@ -2172,12 +2173,12 @@ function um_user( $data, $attrs = null ) {
 			$data = um_get_user_avatar_data( um_user( 'ID' ), $attrs );
 
 			return '<img src="' . esc_attr($data['url']) . '" 
-			    class="' . esc_attr($data['class']) . '" 
-			    width="' . esc_attr($data['size']) . '"  
-			    height="' . esc_attr($data['size']) . '" 
-			    alt="' . esc_attr($data['alt']) . '"
-			    data-default="' . esc_attr($data['default']) . '"
-			    onerror="if(!this.getAttribute(\'data-load-error\')){this.setAttribute(\'data-load-error\', \'1\');this.setAttribute(\'src\', this.getAttribute(\'data-default\'));}" />'; //don't move attribute before src
+				class="' . esc_attr($data['class']) . '" 
+				width="' . esc_attr($data['size']) . '"  
+				height="' . esc_attr($data['size']) . '" 
+				alt="' . esc_attr($data['alt']) . '"
+				data-default="' . esc_attr($data['default']) . '"
+				onerror="if(!this.getAttribute(\'data-load-error\')){this.setAttribute(\'data-load-error\', \'1\');this.setAttribute(\'src\', this.getAttribute(\'data-default\'));}" />'; //don't move attribute before src
 
 			break;
 

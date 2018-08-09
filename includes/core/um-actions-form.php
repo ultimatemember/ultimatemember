@@ -1,264 +1,96 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
+/**
+ * Error handling: blocked IPs
+ *
+ * @param $args
+ */
+function um_prevent_submit_form_blockedips( $args ) {
+	if( $args['mode'] == 'login' ) return true; //check blocked values for login on 'authenticate' filter
+
+	if( UM()->form()->validate_blocked_ips() ) {
+		UM()->form()->add_error( 'blocked_ip', UM()->form()->get_notice_by_code( 'blocked_ip' ) );
+	}
+}
+add_action( 'um_submit_form_errors_hook', 'um_prevent_submit_form_blockedips', 10 );
+
 
 /**
  * Error handling: blocked emails
  *
  * @param $args
  */
-function um_submit_form_errors_hook__blockedemails( $args ) {
-	$emails = UM()->options()->get( 'blocked_emails' );
-	if ( ! $emails )
-		return;
+function um_prevent_submit_form_blockedemails( $args ) {
+	if( $args['mode'] == 'login' ) return true; //check blocked values for login on 'authenticate' filter
 
-	$emails = array_map("rtrim", explode("\n", $emails));
+	if ( $emails = UM()->options()->get( 'blocked_emails' ) ) {
+		$emails = array_map( "rtrim", explode( "\n", $emails ) );
 
-	if ( isset( $args['user_email'] ) && is_email( $args['user_email'] ) ) {
+		$check_values = array();
 
-		$domain = explode('@', $args['user_email'] );
-		$check_domain = str_replace($domain[0], '*', $args['user_email']);
+		if ( isset( $args['username'] ) ) {
+			if ( is_email( $args['username'] ) ) {
+				$check_values[] = $args['username'];
+			} else {
+				$user = get_user_by('login', $args['username'] );
+				if( isset( $user->user_email ) ) {
+					$check_values[] = $user->user_email;
+				}
+			}
+		} else if ( isset( $args['user_email'] ) ) {
+			$check_values[] = $args['user_email'];
+		} else if ( isset( $args['user_login'] ) ) {
+			$user = get_user_by('login', $args['user_login'] );
+			if( isset( $user->user_email ) ) {
+				$check_values[] = $user->user_email;
+			}
+		} else {
+			return true;
+		}
 
-		if ( in_array( $args['user_email'], $emails ) )
-			exit( wp_redirect( esc_url(  add_query_arg('err', 'blocked_email') ) ) );
+		foreach( $check_values as $check_email ) {
+			$domain       = explode( '@', $check_email );
+			$check_domain = str_replace( $domain[0], '*', $check_email );
 
-		if ( in_array( $check_domain, $emails ) )
-			exit( wp_redirect( esc_url(  add_query_arg('err', 'blocked_domain') ) ) );
+			if ( in_array( $check_email, $emails ) ) {
+				UM()->form()->add_error( 'blocked_email', UM()->form()->get_notice_by_code( 'blocked_email' ) );
+			}
 
-	}
-
-	if ( isset( $args['username'] ) && is_email( $args['username'] ) ) {
-
-		$domain = explode('@', $args['username'] );
-		$check_domain = str_replace($domain[0], '*', $args['username']);
-
-		if ( in_array( $args['username'], $emails ) )
-			exit( wp_redirect(  esc_url( add_query_arg('err', 'blocked_email') ) ) );
-
-		if ( in_array( $check_domain, $emails ) )
-			exit( wp_redirect(  esc_url(  add_query_arg('err', 'blocked_domain') ) ) );
-
-	}
-}
-add_action( 'um_submit_form_errors_hook__blockedemails', 'um_submit_form_errors_hook__blockedemails', 10 );
-
-
-/**
- * Error handling: blocked IPs
- *
- * @param $args
- */
-function um_submit_form_errors_hook__blockedips($args){
-	$ips = UM()->options()->get('blocked_ips');
-	if ( !$ips )
-		return;
-
-	$ips = array_map("rtrim", explode("\n", $ips));
-	$user_ip = um_user_ip();
-
-	foreach($ips as $ip) {
-		$ip = str_replace('*','',$ip);
-		if ( !empty( $ip ) && strpos($user_ip, $ip) === 0) {
-			exit( wp_redirect(  esc_url(  add_query_arg('err', 'blocked_ip') ) ) );
+			if ( in_array( $check_domain, $emails ) ) {
+				UM()->form()->add_error( 'blocked_domain', UM()->form()->get_notice_by_code( 'blocked_domain' ) );
+			}
 		}
 	}
+	return true;
 }
-add_action( 'um_submit_form_errors_hook__blockedips', 'um_submit_form_errors_hook__blockedips', 10 );
-
+add_action( 'um_submit_form_errors_hook', 'um_prevent_submit_form_blockedemails', 20 );
 
 /**
  * Error handling: blocked words during sign up
  *
  * @param $args
  */
-function um_submit_form_errors_hook__blockedwords( $args ) {
-	$form_id = $args['form_id'];
-	$mode = $args['mode'];
+function um_prevent_submit_form_blockedwords( $args ) {
+	if( $args['mode'] == 'login' ) return true;
+
 	$fields = unserialize( $args['custom_fields'] );
 
 	$words = UM()->options()->get('blocked_words');
-	if ( $words != '' ) {
+	if ( $words == '' ) return true;
 
-		$words = array_map("rtrim", explode("\n", $words));
-		if ( ! empty( $fields ) && is_array( $fields ) ) {
-			foreach ( $fields as $key => $array ) {
-				if ( isset($array['validate']) && in_array( $array['validate'], array('unique_username','unique_email','unique_username_or_email') ) ) {
-					if ( ! UM()->form()->has_error( $key ) && isset( $args[$key] ) && in_array( $args[$key], $words ) ) {
-						UM()->form()->add_error( $key,  __('You are not allowed to use this word as your username.','ultimate-member') );
-					}
+	$words = array_map("rtrim", explode("\n", $words));
+	if ( ! empty( $fields ) && is_array( $fields ) ) {
+		foreach ( $fields as $key => $array ) {
+			if ( isset($array['validate']) && in_array( $array['validate'], array('unique_username','unique_email','unique_username_or_email') ) ) {
+				if ( ! UM()->form()->has_error( $key ) && isset( $args[$key] ) && in_array( $args[$key], $words ) ) {
+					UM()->form()->add_error( $key,  __('You are not allowed to use this word as your username.','ultimate-member') );
 				}
 			}
 		}
-
 	}
+	return true;
 }
-add_action( 'um_submit_form_errors_hook__blockedwords', 'um_submit_form_errors_hook__blockedwords', 10 );
-
-
-/**
- * Error handling
- *
- * @param $args
- */
-function um_submit_form_errors_hook( $args ) {
-	$form_id = $args['form_id'];
-
-	$mode = $args['mode'];
-
-	$fields = unserialize( $args['custom_fields'] );
-
-	if ( $mode == 'register' ) {
-
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_submit_form_errors_hook__registration
-		 * @description Submit registration form validation
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_submit_form_errors_hook__registration', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_submit_form_errors_hook__registration', 'my_submit_form_errors_registration', 10, 1 );
-		 * function my_submit_form_errors_registration( $args ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( "um_submit_form_errors_hook__registration", $args );
-
-	}
-	/**
-	 * UM hook
-	 *
-	 * @type action
-	 * @title um_submit_form_errors_hook__blockedips
-	 * @description Submit form validation
-	 * @input_vars
-	 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_action( 'um_submit_form_errors_hook__blockedips', 'function_name', 10, 1 );
-	 * @example
-	 * <?php
-	 * add_action( 'um_submit_form_errors_hook__blockedips', 'my_submit_form_errors_hook__blockedips', 10, 1 );
-	 * function my_submit_form_errors_hook__blockedips( $args ) {
-	 *     // your code here
-	 * }
-	 * ?>
-	 */
-	do_action( "um_submit_form_errors_hook__blockedips", $args );
-	/**
-	 * UM hook
-	 *
-	 * @type action
-	 * @title um_submit_form_errors_hook__blockedemails
-	 * @description Submit form validation
-	 * @input_vars
-	 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_action( 'um_submit_form_errors_hook__blockedemails', 'function_name', 10, 1 );
-	 * @example
-	 * <?php
-	 * add_action( 'um_submit_form_errors_hook__blockedemails', 'my_submit_form_errors_hook__blockedemails', 10, 1 );
-	 * function my_submit_form_errors_hook__blockedemails( $args ) {
-	 *     // your code here
-	 * }
-	 * ?>
-	 */
-	do_action( "um_submit_form_errors_hook__blockedemails", $args );
-
-	if ( $mode == 'login' ) {
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_submit_form_errors_hook_login
-		 * @description Submit login form validation
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_submit_form_errors_hook_login', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_submit_form_errors_hook_login', 'my_submit_form_errors_hook_login', 10, 1 );
-		 * function my_submit_form_errors_hook_login( $args ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_submit_form_errors_hook_login', $args );
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_submit_form_errors_hook_logincheck
-		 * @description Submit login form validation
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_submit_form_errors_hook_logincheck', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_submit_form_errors_hook_logincheck', 'my_submit_form_errors_hook_logincheck', 10, 1 );
-		 * function my_submit_form_errors_hook_logincheck( $args ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_submit_form_errors_hook_logincheck', $args );
-
-	} else {
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_submit_form_errors_hook_
-		 * @description Submit form validation
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_submit_form_errors_hook_', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_submit_form_errors_hook_', 'my_submit_form_errors_hook', 10, 1 );
-		 * function my_submit_form_errors_hook( $args ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_submit_form_errors_hook_', $args );
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_submit_form_errors_hook__blockedwords
-		 * @description Submit form validation
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_submit_form_errors_hook__blockedwords', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_submit_form_errors_hook__blockedwords', 'my_submit_form_errors_hook__blockedwords', 10, 1 );
-		 * function my_submit_form_errors_hook__blockedwords( $args ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( "um_submit_form_errors_hook__blockedwords", $args );
-
-	}
-
-}
-add_action( 'um_submit_form_errors_hook', 'um_submit_form_errors_hook', 10 );
+add_action( 'um_submit_form_errors_hook', 'um_prevent_submit_form_blockedwords', 30 );
 
 
 /**
@@ -266,9 +98,11 @@ add_action( 'um_submit_form_errors_hook', 'um_submit_form_errors_hook', 10 );
  *
  * @param $args
  */
-function um_submit_form_errors_hook_( $args ) {
+function um_submit_form_validate_fields( $args ) {
 	$form_id = $args['form_id'];
 	$mode = $args['mode'];
+	if( $mode == 'login' ) return true;
+
 	$fields = unserialize( $args['custom_fields'] );
 	$um_profile_photo = um_profile('profile_photo');
 
@@ -743,4 +577,4 @@ function um_submit_form_errors_hook_( $args ) {
 		} // end if ( isset in args array )
 	}
 }
-add_action( 'um_submit_form_errors_hook_', 'um_submit_form_errors_hook_', 10 );
+add_action( 'um_submit_form_errors_hook', 'um_submit_form_validate_fields', 40 );

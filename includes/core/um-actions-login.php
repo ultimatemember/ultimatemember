@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @param $args
  */
 function um_submit_form_errors_hook_login( $args ) {
+    if( $args['mode'] != 'login' ) return true;
+
 	if ( ( UM()->options()->get('deny_admin_frontend_login')   && ! isset( $_GET['provider'] ) ) && strrpos( um_user('wp_roles' ), 'administrator' ) !== false ) {
 		wp_die( __('This action has been prevented for security measures.','ultimate-member') );
 	}
@@ -55,7 +57,7 @@ function um_submit_form_errors_hook_login( $args ) {
 	}
 	return true;
 }
-add_action( 'um_submit_form_errors_hook_login', 'um_submit_form_errors_hook_login', 10 );
+add_action( 'um_submit_form_errors_hook', 'um_submit_form_errors_hook_login', 40 );
 
 
 /**
@@ -114,7 +116,9 @@ add_action( 'wp_login', 'um_store_lastlogin_timestamp_' );
  *
  * @param array $args
  */
-function um_user_login( $args ) {
+function um_user_after_login_redirect( $args ) {
+    if ( UM()->form()->count_errors() ) return false;
+
 	extract( $args );
 
 	/**
@@ -193,7 +197,7 @@ function um_user_login( $args ) {
 
 	}
 }
-add_action( 'um_user_login', 'um_user_login', 10 );
+add_action( 'um_submit_form_login', 'um_user_after_login_redirect', 9999 );
 
 
 /**
@@ -366,7 +370,7 @@ add_action( 'um_after_login_fields', 'um_add_submit_button_to_login', 1000 );
  *
  * @param $args
  */
-function um_after_login_submit( $args ) {
+function um_after_login_submit_button( $args ) {
 	if ( $args['forgot_pass_link'] == 0 ) return;
 
 	?>
@@ -377,7 +381,7 @@ function um_after_login_submit( $args ) {
 
 		<?php
 	}
-add_action( 'um_after_login_fields', 'um_after_login_submit', 1001 );
+add_action( 'um_after_login_fields', 'um_after_login_submit_button', 1001 );
 
 
 /**
@@ -389,17 +393,3 @@ function um_add_login_fields($args){
 	echo UM()->fields()->display( 'login', $args );
 }
 add_action('um_main_login_fields', 'um_add_login_fields', 100);
-
-
-/**
- * Remove authenticate filter
- * @uses 'wp_authenticate_username_password_before'
- *
- * @param $user
- * @param $username
- * @param $password
- */
-function um_auth_username_password_before( $user, $username, $password ) {
-	remove_filter( 'authenticate', 'wp_authenticate_username_password', 20 );
-}
-add_action( 'wp_authenticate_username_password_before', 'um_auth_username_password_before', 10, 3 );
