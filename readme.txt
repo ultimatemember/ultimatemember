@@ -131,7 +131,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
-= 2.0.22: August 10, 2018 =
+= 2.0.22: August 9, 2018 =
 
 * Enhancements:
   - Added an ability to filter user's profile slug "um_change_user_profile_slug"
