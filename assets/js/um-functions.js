@@ -276,7 +276,7 @@ function initImageUpload_UM( trigger ) {
 
 				trigger.selectedFiles = 0;
 
-				if ( response.status && response.status == false || typeof response.data.error !== 'undefined' ) {
+				if ( response.success && response.success == false || typeof response.data.error !== 'undefined' ) {
 
 					trigger.parents('.um-modal-body').append('<div class="um-error-block">'+response.data.error+'</div>');
 					trigger.parents('.um-modal-body').find('.upload-statusbar').hide(0);
@@ -374,7 +374,7 @@ function initFileUpload_UM( trigger ) {
 
 				trigger.selectedFiles = 0;
 
-				if ( response.status &&  response.status == false ) {
+				if ( response.success && response.success == false || typeof response.data.error !== 'undefined' ) {
 
 					trigger.parents('.um-modal-body').append('<div class="um-error-block">'+ response.data.error+'</div>');
 					trigger.parents('.um-modal-body').find('.upload-statusbar').hide(0);
