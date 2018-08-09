@@ -847,7 +847,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			 */
 			do_action( "um_after_remove_{$type}", $user_id );
 
-			$dir = $this->upload_basedir . $user_id . '/';
+			$dir = $this->upload_basedir . $user_id . DIRECTORY_SEPARATOR;
 			$prefix = $type;
 			chdir($dir);
 			$matches = glob($prefix.'*',GLOB_MARK);
@@ -862,6 +862,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				rmdir( $dir );
 			}
 
+			UM()->user()->remove_cache( $user_id );
 		}
 
 

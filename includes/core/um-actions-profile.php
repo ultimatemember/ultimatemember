@@ -546,14 +546,15 @@ function um_profile_header_cover_area( $args ) {
 			do_action( 'um_cover_area_content', um_profile_id() );
 			if ( UM()->fields()->editing ) {
 
+				$hide_remove = um_profile( 'cover_photo' ) ? false : ' style="display:none;"';
+
 				$items = array(
 					'<a href="#" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . __( 'Change cover photo', 'ultimate-member' ) . '</a>',
-					'<a href="#" class="um-reset-cover-photo" data-user_id="' . um_profile_id() . '">' . __( 'Remove', 'ultimate-member' ) . '</a>',
+					'<a href="#" class="um-reset-cover-photo" data-user_id="' . um_profile_id() . '" ' . $hide_remove . '>' . __( 'Remove', 'ultimate-member' ) . '</a>',
 					'<a href="#" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
 				);
 
-				echo UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
-
+				UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
 			}
 
 			UM()->fields()->add_hidden_field( 'cover_photo' );
