@@ -210,22 +210,18 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @param  array $file 
 		 * @return array
 		 */
-		public function validate_upload( $file ){
-			
+		public function validate_upload( $file ) {
 
+			$error = false;
 			if ( 'image' == $this->upload_type ) {
-			
 				$error = $this->validate_image_data( $file['tmp_name'], $this->field_key );
-			
 			} elseif( 'file' == $this->upload_type ) {
-
 				$error = $this->validate_file_data( $file['tmp_name'], $this->field_key );
-
 			}
 
 			if ( $error ) {
 				$file['error'] = $error;
-			}	
+			}
 
 			return $file;
 		}
@@ -285,7 +281,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			$this->upload_type = 'image';
 
-			$this->upload_image_type = $upload_type;			
+			$this->upload_image_type = $upload_type;
 
 			if( $user_id && is_user_logged_in() ){
 				$this->user_id = $user_id;
@@ -441,8 +437,8 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			$response['handle_upload'] = $movefile;
 
 			return $response;
-		
 		}
+
 
 		/**
 		 * Upload Files
@@ -456,8 +452,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @return array
 		 */
 		public function upload_file( $uploadedfile, $user_id = null, $field_key = '' ){
-
-
 			$response = array();
 
 			if ( ! function_exists( 'wp_handle_upload' ) ) {
@@ -466,7 +460,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			$this->field_key = $field_key;
 
-			if( $user_id && is_user_logged_in() ){
+			if ( $user_id && is_user_logged_in() ) {
 				$this->user_id = $user_id;
 			}
 
