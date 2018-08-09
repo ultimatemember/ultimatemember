@@ -150,7 +150,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 
 			$all_packages = $this->get_packages();
 			foreach ( $all_packages as $package ) {
-				if ( version_compare( $um_last_version_upgrade, $package, '<' ) ) {
+				if ( version_compare( $um_last_version_upgrade, $package, '<' ) && version_compare( $package, ultimatemember_version, '<=' ) ) {
 					$diff_packages[] = $package;
 				}
 			}
@@ -402,28 +402,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 
 
 
-		/**
-		 * Parse packages dir for packages files
-		 */
-		/*function set_update_versions_() {
-			$update_versions = array();
-			$handle = opendir( $this->packages_dir );
-			if ( $handle ) {
-				while ( false !== ( $filename = readdir( $handle ) ) ) {
-					if ( $filename != '.' && $filename != '..' ) {
-						var_dump( $filename );
-						if ( is_dir( $this->packages_dir . DIRECTORY_SEPARATOR . $filename ) ) {
-							$update_versions[] = $filename;
-						}
-					}
-				}
-				closedir( $handle );
 
-				usort( $update_versions, array( &$this, 'version_compare_sort' ) );
-
-				$this->update_packages = $update_versions;
-			}
-		}*/
 
 
 		/**

@@ -54,13 +54,11 @@ jQuery(document).ready(function() {
 	});
 
 	jQuery(document).on('click', '.um-reset-cover-photo', function(e){
-		
+		var obj = jQuery(this);
 		jQuery('.um-cover-overlay').hide();
-		
 		jQuery('.um-cover-e').html('<a href="#" class="um-cover-add um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width"><span class="um-cover-add-i"><i class="um-icon-plus um-tip-n" title="Upload a cover photo"></i></span></a>');
-		
 		jQuery('.um-dropdown').hide();
-		
+
 		um_responsive();
 		
 		user_id = jQuery(this).attr('data-user_id');
@@ -72,6 +70,9 @@ jQuery(document).ready(function() {
 			data: {
 				metakey: metakey,
 				user_id: user_id
+			},
+			success: function( response ) {
+				obj.hide();
 			}
 		});
 		

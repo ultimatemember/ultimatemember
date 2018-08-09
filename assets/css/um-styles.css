@@ -295,9 +295,9 @@ p.um-notice.warning {
 	padding-top: 0 !important;
 }
 
-.um-field.um-is-conditional {
+/*.um-field.um-is-conditional {
 	display: none;
-}
+}*/
 
 .um-field-label {
 	display: block;

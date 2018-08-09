@@ -30,7 +30,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Terms_Conditions_API Terms_Conditions_API()
 	 * @method UM_Private_Content_API Private_Content_API()
 	 * @method UM_User_Location_API User_Location_API()
-	 * @method UM_GDPR_API GDPR_API()
+	 * @method UM_Photos_API Photos_API()
 	 *
 	 */
 	final class UM extends UM_Functions {
@@ -281,6 +281,7 @@ if ( ! class_exists( 'UM' ) ) {
 
 				// include UM classes
 				$this->includes();
+				$this->plugins_loaded();
 
 				// include hook files
 				add_action( 'plugins_loaded', array( &$this, 'init' ), 0 );
@@ -297,6 +298,18 @@ if ( ! class_exists( 'UM' ) ) {
 				//include short non class functions
 				require_once 'um-short-functions.php';
 				require_once 'um-deprecated-functions.php';
+			}
+		}
+
+
+		public function plugins_loaded() {
+			//gravity forms
+			if ( ! function_exists('members_get_capabilities' ) ) {
+
+				function members_get_capabilities() {
+
+				}
+
 			}
 		}
 
@@ -541,6 +554,8 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->mobile();
 			$this->external_integrations();
 			$this->gdpr();
+			$this->uploader();
+			
 		}
 
 
@@ -1138,6 +1153,19 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 
 			return $this->classes['files'];
+		}
+
+		
+		/**
+		 * @since 2.0.21
+		 *
+		 * @return um\core\Uploader
+		 */
+		function uploader() {
+			if ( empty( $this->classes['uploader'] ) ) {
+				$this->classes['uploader'] = new um\core\Uploader();
+			}
+			return $this->classes['uploader'];
 		}
 
 

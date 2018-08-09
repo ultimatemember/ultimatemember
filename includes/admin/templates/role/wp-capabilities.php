@@ -62,8 +62,13 @@
 		}
 	}
 
+	//gravity forms compatibility filter
+	$all_caps = apply_filters( 'members_get_capabilities', array_keys( $all_caps ) );
 	$fields = array();
-	foreach ( array_keys( $all_caps ) as $cap ) {
+	foreach ( $all_caps as $cap ) {
+		if ( is_numeric( $cap ) ) {
+			continue;
+		}
 		$fields[ $cap ] = $cap;
 	}
 
