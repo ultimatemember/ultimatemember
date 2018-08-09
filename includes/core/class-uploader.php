@@ -213,17 +213,17 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		public function validate_upload( $file ){
 			
 
-			if( 'image' == $this->upload_type ){
+			if ( 'image' == $this->upload_type ) {
 			
 				$error = $this->validate_image_data( $file['tmp_name'], $this->field_key );
 			
-			}else if( 'file' == $this->upload_type ){
+			} elseif( 'file' == $this->upload_type ) {
 
 				$error = $this->validate_file_data( $file['tmp_name'], $this->field_key );
 
 			}
 
-			if( $error ){
+			if ( $error ) {
 				$file['error'] = $error;
 			}	
 
@@ -610,8 +610,8 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			$response['handle_upload'] = $movefile;
 
 			return $response;
-
 		}
+
 
 		/**
 		 * Check image upload and handle errors
@@ -619,9 +619,9 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @param $file
 		 * @param $field
 		 *
-		 * @return null|string|void
+		 * @return null|string
 		 */
-		public function validate_image_data( $file, $field_key ){
+		public function validate_image_data( $file, $field_key ) {
 			$error = null;
 
 			if ( ! function_exists( 'wp_get_image_editor' ) ) {
@@ -729,8 +729,8 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 
 			return $error;
-		
 		}
+
 
 		/**
 		 * Check file upload and handle errors
@@ -740,7 +740,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 *
 		 * @return null|string
 		 */
-		public function validate_file_data( $file, $field_key ){
+		public function validate_file_data( $file, $field_key ) {
 			$error = null;
 
 			if ( ! function_exists( 'wp_get_image_editor' ) ) {

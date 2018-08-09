@@ -773,129 +773,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 
 			return $array;
-
-
-		}
-
-
-		/**
-		 * Check image upload and handle errors
-		 *
-		 * @param $file
-		 * @param $field
-		 *
-		 * @return null|string|void
-		 */
-		function check_image_upload( $file, $field, $stream_photo = false ) {
-			$error = null;
-
-			$fileinfo = $this->get_image_data( $file );
-			$data = UM()->fields()->get_field( $field );
-
-			if ( $data == null ) {
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_custom_image_handle_{$field}
-				 * @description Custom image handle
-				 * @input_vars
-				 * [{"var":"$data","type":"array","desc":"Image Data"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_filter( 'um_custom_image_handle_{$field}', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_filter( 'um_custom_image_handle_{$field}', 'my_custom_image_handle', 10, 1 );
-				 * function my_custom_image_handle( $data ) {
-				 *     // your code here
-				 *     return $data;
-				 * }
-				 * ?>
-				 */
-				$data = apply_filters( "um_custom_image_handle_{$field}", array() );
-				if ( ! $data ) {
-					$error = __( 'This media type is not recognized.', 'ultimate-member' );
-				}
-			}
-
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_image_handle_global__option
-			 * @description Custom image global handle
-			 * @input_vars
-			 * [{"var":"$data","type":"array","desc":"Image Data"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_image_handle_global__option', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_image_handle_global__option', 'my_image_handle_global', 10, 1 );
-			 * function my_image_handle_global( $data ) {
-			 *     // your code here
-			 *     return $data;
-			 * }
-			 * ?>
-			 */
-			$data = apply_filters("um_image_handle_global__option", $data );
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_image_handle_{$field}__option
-			 * @description Custom image handle for each $field
-			 * @input_vars
-			 * [{"var":"$data","type":"array","desc":"Image Data"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_image_handle_{$field}__option', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_image_handle_{$field}__option', 'my_image_handle', 10, 1 );
-			 * function my_image_handle( $data ) {
-			 *     // your code here
-			 *     return $data;
-			 * }
-			 * ?>
-			 */
-			$data = apply_filters( "um_image_handle_{$field}__option", $data );
-
-			if ( $fileinfo['invalid_image'] == true ) {
-				$error = sprintf(__('Your image is invalid or too large!','ultimate-member') );
-			} elseif ( isset($data['min_size']) && ( $fileinfo['size'] < $data['min_size'] ) ) {
-				$error = $data['min_size_error'];
-			} elseif ( isset($data['min_width']) && ( $fileinfo['width'] < $data['min_width'] ) ) {
-				$error = sprintf(__('Your photo is too small. It must be at least %spx wide.','ultimate-member'), $data['min_width']);
-			} elseif ( isset($data['min_height']) && ( $fileinfo['height'] < $data['min_height'] ) ) {
-				$error = sprintf(__('Your photo is too small. It must be at least %spx wide.','ultimate-member'), $data['min_height']);
-			}
-
-			return $error;
-		}
-
-
-		/**
-		 * Check file upload and handle errors
-		 *
-		 * @param $file
-		 * @param $extension
-		 * @param $field
-		 *
-		 * @return null|string
-		 */
-		function check_file_upload( $file, $extension, $field ) {
-			$error = null;
-
-			$fileinfo = $this->get_file_data( $file );
-			$data = UM()->fields()->get_field( $field );
-
-			if ( isset($data['min_size']) && ( $fileinfo['size'] < $data['min_size'] ) ) {
-				$error = $data['min_size_error'];
-			}
-
-			return $error;
 		}
 
 
@@ -907,7 +784,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 *
 		 * @return bool
 		 */
-		function in_array( $value, $array ){
+		function in_array( $value, $array ) {
 
 			if ( in_array( $value, explode(',', $array ) ) ){
 				return true;

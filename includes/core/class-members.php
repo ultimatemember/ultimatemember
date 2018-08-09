@@ -262,7 +262,7 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 
 							?>
 
-                            <option value="<?php echo $opt; ?>" <?php um_select_if_in_query_params( $filter, $opt ); ?> <?php selected( $_GET[$filter], $v ) ?>><?php echo __( $v, 'ultimate-member'); ?></option>
+                            <option value="<?php echo $opt; ?>" <?php um_select_if_in_query_params( $filter, $opt ); ?> <?php selected( isset( $_GET[$filter] ) && $_GET[$filter] == $v ) ?>><?php echo __( $v, 'ultimate-member'); ?></option>
 
 						<?php } ?>
 
