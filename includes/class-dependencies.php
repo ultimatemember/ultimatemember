@@ -48,7 +48,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'profile-completeness'  => '2.0.1',
 			'recaptcha'             => '2.0.2',
 			'reviews'               => '2.0.3',
-			'social-activity'       => '2.0.1',
+			'social-activity'       => '2.0.6',
 			'social-login'          => '2.0.1',
 			'terms-conditions'      => '2.0',
 			'user-location'         => '2.0',
