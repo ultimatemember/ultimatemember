@@ -478,7 +478,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			$allowed_file_mimes = array();
 			
-			foreach( $field_allowed_file_types as $a ){
+			foreach ( $field_allowed_file_types as $a ) {
 				$atype = wp_check_filetype( "test.{$a}" );
 				$allowed_file_mimes[ $atype['ext'] ] = $atype['type']; 
 			}
@@ -499,7 +499,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			     * @see _wp_handle_upload() in wp-admin/includes/file.php
 			     */
 			    $response['error'] = $movefile['error'];
-			}else{
+			} else {
 
 				$file_type = wp_check_filetype( $movefile['file'] );
 
@@ -629,8 +629,12 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			}
 
 			$image = wp_get_image_editor( $file );
+			if ( is_wp_error( $image ) ) {
+				$error = sprintf( __( 'Your image is invalid!', 'ultimate-member' ) );
+				return $error;
+			}
+
 			$image_sizes = $image->get_size();
-			
 			$image_info['width'] = $image_sizes['width'];
 			$image_info['height'] = $image_sizes['height'];
 			$image_info['ratio'] = $image_sizes['width'] / $image_sizes['height'];
