@@ -1660,7 +1660,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 * }
 			 * ?>
 			 */
-			$changes = apply_filters('um_before_update_profile', $changes, $this->id );
+			$changes = apply_filters( 'um_before_update_profile', $changes, $args['ID'] );
 
 			foreach ( $changes as $key => $value ) {
 				if ( ! in_array( $key, $this->update_user_keys ) ) {
