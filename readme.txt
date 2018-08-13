@@ -4,7 +4,7 @@ Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember, champsupertramp, nsinelnikov
 Donate link: 
 Tags: community, member, membership, user-profile, user-registration
-Requires at least: 4.1
+Requires at least: 4.7
 Tested up to: 4.9
 Stable tag: 2.0.23
 License: GNU Version 2 or Any Later Version

@@ -133,7 +133,11 @@ if ( ! empty( $um_roles ) ) {
 						}
 					}
 				} elseif ( '_um_profilec_upgrade_role' == $metakey ) {
-					$metadata = $roles_associations[ $metadata ];
+					if ( isset( $roles_associations[ $metadata ] ) ) {
+						$metadata = $roles_associations[ $metadata ];
+					} else {
+						$metadata = '';
+					}
 				}
 
 				$role_meta[ $metakey ] = $metadata;
@@ -149,6 +153,7 @@ update_option( 'um_roles', $role_keys );
 global $wp_roles, $wp_version;
 if ( version_compare( $wp_version, '4.9', '<' ) ) {
 	$wp_roles->_init();
+	$wp_roles->reinit();
 } elseif ( method_exists( $wp_roles, 'for_site' ) ) {
 	$wp_roles->for_site( get_current_blog_id() );
 }
