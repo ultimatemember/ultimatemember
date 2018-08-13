@@ -265,6 +265,8 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				unset( $args['theme_file'] );
 				unset( $args['tpl'] );
 
+				$args = apply_filters( 'um_template_load_args', $args, $tpl );
+
 				extract( $args );
 			}
 
