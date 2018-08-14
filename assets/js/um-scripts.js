@@ -151,9 +151,10 @@ jQuery(document).ready(function() {
         parent.find('input[type=hidden]').val('empty_file');
 
         jQuery.ajax({
-            url: um_scripts.remove_file,
+            url: wp.ajax.settings.url,
             type: 'post',
             data: {
+	            action: 'um_remove_file',
                 src: src
             }
         });
@@ -170,9 +171,10 @@ jQuery(document).ready(function() {
         parent.find('input[type=hidden]').val('empty_file');
 
         jQuery.ajax({
-            url: um_scripts.remove_file,
+            url: wp.ajax.settings.url,
             type: 'post',
             data: {
+	            action: 'um_remove_file',
                 src: src
             }
         });
@@ -247,9 +249,10 @@ jQuery(document).ready(function() {
         var hook = jQuery(this).data('hook');
         var container = jQuery(this).parents('.um').find('.um-ajax-items');
         jQuery.ajax({
-            url: um_scripts.ajax_paginate,
+            url: wp.ajax.settings.url,
             type: 'post',
             data: {
+                action: 'um_ajax_paginate',
                 hook: hook,
                 args: args
             },

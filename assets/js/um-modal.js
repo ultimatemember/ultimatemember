@@ -30,9 +30,10 @@ jQuery(document).ready(function() {
 		um_modal_responsive();
 		
 		jQuery.ajax({
-			url: um_scripts.remove_file,
+			url: wp.ajax.settings.url,
 			type: 'post',
 			data: {
+				action: 'um_remove_file',
 				src: src
 			}
 		});
@@ -59,9 +60,10 @@ jQuery(document).ready(function() {
 		um_modal_responsive();
 		
 		jQuery.ajax({
-			url: um_scripts.remove_file,
+			url: wp.ajax.settings.url,
 			type: 'post',
 			data: {
+				action: 'um_remove_file',
 				src: src
 			}
 		});
@@ -105,10 +107,11 @@ jQuery(document).ready(function() {
 			jQuery(this).html( jQuery(this).attr('data-processing') ).addClass('disabled');
 
 			jQuery.ajax({
-				url: um_scripts.resize_image,
+				url: wp.ajax.settings.url,
 				type: 'POST',
 				dataType: 'json',
 				data: {
+					action: 'um_resize_image',
 					src : src,
 					coord : coord,
 					user_id : user_id,
