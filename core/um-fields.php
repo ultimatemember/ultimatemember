@@ -1630,7 +1630,7 @@ class UM_Fields {
 
 						if ( !in_array( $key, array('profile_photo','cover_photo') ) ) {
 							if ( isset( $this->set_mode ) && $this->set_mode == 'register' ) {
-								$imgValue = $ultimatemember->uploader->get_core_temp_url() . "/" . $this->field_value( $key, $default, $data );
+								$imgValue = $ultimatemember->uploader()->get_core_temp_url() . "/" . $this->field_value( $key, $default, $data );
 							} else {
 								$imgValue = um_user_uploads_uri() . $this->field_value( $key, $default, $data );
 							}
@@ -1720,7 +1720,7 @@ class UM_Fields {
 							$file_field_name = $file_info['original_name'];
 						}
 						if ( isset( $this->set_mode  ) && 'register' == $this->set_mode ){
-							$file_url = $ultimatemember->uploader->get_core_temp_dir() . "/" . $this->field_value( $key, $default, $data );
+							$file_url = $ultimatemember->uploader()->get_core_temp_dir() . "/" . $this->field_value( $key, $default, $data );
 						}else{
 							$file_url = um_user_uploads_uri() . $this->field_value( $key, $default, $data );
 						}

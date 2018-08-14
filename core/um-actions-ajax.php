@@ -101,7 +101,7 @@
 			wp_send_json_error( esc_js( __( 'Invalid file ownership', 'ultimate-member' ) ) );
 		}
 
-		$output = $ultimatemember->uploader->resize_image( $image_path, $src, $key, $user_id, $coord );
+		$output = $ultimatemember->uploader()->resize_image( $image_path, $src, $key, $user_id, $coord );
 
 		delete_option( "um_cache_userdata_{$user_id}" );
 
@@ -165,7 +165,7 @@
 
 			if( ! is_array( $_FILES[ $id ]['name'] ) ) {
 
-				$uploaded = $ultimatemember->uploader->upload_image( $_FILES[ $id ], $user_id, $id );
+				$uploaded = $ultimatemember->uploader()->upload_image( $_FILES[ $id ], $user_id, $id );
 				if ( isset( $uploaded['error'] ) ){
 
 					$ret['error'] = $uploaded['error'];
@@ -246,7 +246,7 @@
 
 			if( ! is_array( $_FILES[ $id ]['name'] ) ) {
 				$user_id = $_POST['user_id'];
-				$uploaded = $ultimatemember->uploader->upload_file( $_FILES[ $id ], $user_id, $id );
+				$uploaded = $ultimatemember->uploader()->upload_file( $_FILES[ $id ], $user_id, $id );
 				if ( isset( $uploaded['error'] ) ){
 
 					$ret['error'] = $uploaded['error'];

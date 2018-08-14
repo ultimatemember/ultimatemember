@@ -117,7 +117,7 @@
 		$files = apply_filters('um_user_pre_updating_files_array', $files);
 		
 		if ( is_array( $files ) ) {
-			$ultimatemember->uploader->move_temporary_files( um_user('ID'), $files );
+			$ultimatemember->uploader()->move_temporary_files( um_user('ID'), $files );
 		}
 
 		do_action('um_user_after_updating_profile', $to_update );

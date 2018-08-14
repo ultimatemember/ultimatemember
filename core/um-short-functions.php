@@ -2017,7 +2017,7 @@ function um_is_file_owner( $url, $user_id = null, $image_path = false ){
 
 	if( strpos( $url, "/uploads/ultimatemember/{$user_id}/" ) !== false && is_user_logged_in() ){
 
-		$user_basedir = $ultimatemember->uploader->get_upload_user_base_dir( $user_id );
+		$user_basedir = $ultimatemember->uploader()->get_upload_user_base_dir( $user_id );
 
 		$filename = wp_basename( parse_url( $url,  PHP_URL_PATH ) );
 
@@ -2030,7 +2030,7 @@ function um_is_file_owner( $url, $user_id = null, $image_path = false ){
 			return true;
 		}
 	}else{
-		$user_basedir = $ultimatemember->uploader->get_upload_user_base_dir( 'temp' );
+		$user_basedir = $ultimatemember->uploader()->get_upload_user_base_dir( 'temp' );
 
 		$filename = wp_basename( parse_url( $url,  PHP_URL_PATH ) );
 
@@ -2055,9 +2055,9 @@ function um_is_file_owner( $url, $user_id = null, $image_path = false ){
 function um_is_temp_file( $filename ){
 	global $ultimatemember;
 
-	$user_basedir = $ultimatemember->uploader->get_upload_user_base_dir( 'temp' );
+	$user_basedir = $ultimatemember->uploader()->get_upload_user_base_dir( 'temp' );
 
-	$file = $user_basedir . '/' . $filename;
+	$file = $user_basedir . DIRECTORY_SEPARATOR . $filename;
 
 	if( file_exists( $file ) ){
 		return true;

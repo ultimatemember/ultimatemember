@@ -190,7 +190,7 @@ class UM_API {
 		$this->builtin = new UM_Builtin();
 		$this->form = new UM_Form();
 		$this->files = new UM_Files();
-		$this->uploader = new UM_Uploader();
+		//$this->uploader = new UM_Uploader();
 		$this->taxonomies = new UM_Taxonomies();
 		$this->validation = new UM_Validation();
 		$this->query = new UM_Query();
@@ -224,6 +224,15 @@ class UM_API {
 		}
 
 	}
+
+
+	function uploader() {
+		if ( empty( $this->uploader ) ) {
+			$this->uploader = new UM_Uploader();
+		}
+		return $this->uploader;
+	}
+
 
 	function widgets_init() {
 		register_widget( 'um_search_widget' );
