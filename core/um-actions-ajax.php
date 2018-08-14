@@ -113,8 +113,8 @@
 	/**
 	 * Image upload by AJAX
 	 */
-	add_action('wp_ajax_nopriv_ultimatemember_image_upload', 'ajax_image_upload');
-	add_action('wp_ajax_ultimatemember_image_upload', 'ajax_image_upload');
+	add_action('wp_ajax_nopriv_um_imageupload', 'ajax_image_upload');
+	add_action('wp_ajax_um_imageupload', 'ajax_image_upload');
 	function ajax_image_upload() {
 		global $ultimatemember;
 
@@ -186,8 +186,8 @@
 
 
 
-	add_action('wp_ajax_nopriv_ultimatemember_file_upload', 'ajax_image_upload');
-	add_action('wp_ajax_ultimatemember_file_upload', 'ajax_image_upload');
+	add_action('wp_ajax_nopriv_um_fileupload', 'ajax_file_upload');
+	add_action('wp_ajax_um_fileupload', 'ajax_file_upload');
 	/**
 	 *
 	 */

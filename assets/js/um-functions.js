@@ -277,13 +277,6 @@ function initImageUpload_UM( trigger ) {
 
 				trigger.selectedFiles = 0;
 
-				try{
-				data = jQuery.parseJSON(data);
-				} catch (e) {
-				   console.log( e, data );
-				    return;
-				}
-
 				if ( response.success && response.success == false || typeof response.data.error !== 'undefined' ) {
 
 					trigger.parents('.um-modal-body').append('<div class="um-error-block">'+response.data.error+'</div>');

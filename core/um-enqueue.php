@@ -94,7 +94,7 @@ class UM_Enqueue {
 
 		} else {
 
-			wp_register_script('um_minified', um_url . 'assets/js/um.min.js', array('jquery', 'jquery-masonry'), ultimatemember_version, true );
+			wp_register_script('um_minified', um_url . 'assets/js/um.min.js', array('jquery', 'jquery-masonry', 'wp-util'), ultimatemember_version, true );
 			wp_enqueue_script('um_minified');
 
 			wp_localize_script( 'um_minified', 'um_scripts', array(
@@ -250,7 +250,7 @@ class UM_Enqueue {
 	***/
 	function load_functions(){
 
-		wp_register_script('um_functions', um_url . 'assets/js/um-functions.js' );
+		wp_register_script('um_functions', um_url . 'assets/js/um-functions.js', array('jquery', 'wp-util') );
 		wp_enqueue_script('um_functions');
 
 	}
@@ -375,7 +375,7 @@ class UM_Enqueue {
 		wp_register_style('um_modal', um_url . 'assets/css/um-modal.css' );
 		wp_enqueue_style('um_modal');
 
-		wp_register_script('um_modal', um_url . 'assets/js/um-modal.js' );
+		wp_register_script('um_modal', um_url . 'assets/js/um-modal.js', array('jquery', 'wp-util') );
 		wp_enqueue_script('um_modal');
 
 	}
