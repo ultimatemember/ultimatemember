@@ -78,7 +78,7 @@
 				if ( isset( $args['submitted'][ $key ] ) ) {
 
 					if ( isset( $fields[$key]['type'] ) && in_array( $fields[$key]['type'], array('image','file') ) && 
-						( um_is_temp_upload( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' ) ) {
+						( um_is_temp_file( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' ) ) {
 
 						$files[ $key ] = $args['submitted'][ $key ];
 
@@ -117,9 +117,7 @@
 		$files = apply_filters('um_user_pre_updating_files_array', $files);
 		
 		if ( is_array( $files ) ) {
-			do_action('um_before_user_upload', um_user('ID'), $files );
-			$ultimatemember->user->update_files( $files );
-			do_action('um_after_user_upload', um_user('ID'), $files );
+			$ultimatemember->uploader->move_temporary_files( um_user('ID'), $files );
 		}
 
 		do_action('um_user_after_updating_profile', $to_update );
@@ -706,30 +704,5 @@
 
 			}
 
-	}
-
-	/**
-	 * Clean up file for new uploaded files
-	 * @param  integer $user_id   
-	 * @param  array $arr_files 
-	 */
-	add_action("um_before_user_upload","um_before_user_upload", 10 ,2 );
-	function um_before_user_upload( $user_id, $arr_files ){
-		global $ultimatemember;
-
-		um_fetch_user( $user_id );
-		
-		foreach ($arr_files as $key => $filename ) {
-			if( um_user( $key ) ){
-				if( basename( $filename ) != basename( um_user( $key ) ) || in_array( $old_filename , array( basename( um_user( $key ) ), basename( $filename ) ) ) || $filename == 'empty_file' ){
-					$old_filename = um_user( $key );
-					$path = $ultimatemember->files->upload_basedir;
-					delete_user_meta( $user_id, $old_filename );
-					if ( file_exists( $path . $user_id . '/' . $old_filename ) ) {
-						unlink( $path . $user_id . '/' . $old_filename );
-					}
-				}
-			}
-		}
 	}
 

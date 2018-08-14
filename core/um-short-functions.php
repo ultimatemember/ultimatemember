@@ -1358,11 +1358,15 @@
 		global $ultimatemember;
 		$uri = false;
 		$ext = '.' . pathinfo($image, PATHINFO_EXTENSION);
-		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/cover_photo'.$ext ) ) {
-			$uri = um_user_uploads_uri() . 'cover_photo'.$ext.'?' . current_time( 'timestamp' );
+
+		if ( file_exists( $ultimatemember->files->upload_basedir . um_user( 'ID' ) . "/cover_photo{$ext}" ) ) {
+			$uri = um_user_uploads_uri() . "/cover_photo{$ext}?" . current_time( 'timestamp' );
 		}
-		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . '/cover_photo-' .$attrs.$ext ) ){
-			$uri = um_user_uploads_uri() . 'cover_photo-'.$attrs.$ext.'?' . current_time( 'timestamp' );
+
+		if ( file_exists( $ultimatemember->files->upload_basedir . um_user( 'ID' ) . "/cover_photo-{$attrs}x{$attrs}{$ext}" ) ) {
+			$uri = um_user_uploads_uri() . "/cover_photo-{$attrs}x{$attrs}{$ext}?". current_time( 'timestamp' );
+		}else if ( file_exists( $ultimatemember->files->upload_basedir . um_user( 'ID' ) . "/cover_photo-{$attrs}{$ext}" ) ) {
+			$uri = um_user_uploads_uri() . "/cover_photo-{$attrs}{$ext}?" . current_time( 'timestamp' );
 		}
 		return $uri;
 	}
@@ -1385,35 +1389,30 @@
 		$ext = '.' . pathinfo($image, PATHINFO_EXTENSION);
 
 		$cache_time = apply_filters('um_filter_avatar_cache_time', current_time( 'timestamp' ), um_user('ID') );
-		
-		if( ! empty( $cache_time ) ){
-				$cache_time = "?{$cache_time}";
-		}
 
-		if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . "/profile_photo-{$attrs}{$ext}" ) ) {
-			
-			$uri = um_user_uploads_uri() . "profile_photo-{$attrs}{$ext}{$cache_time}";
-
+		if( $attrs == 'original' && file_exists( um_user_uploads_dir() . "profile_photo{$ext}" ) ) {
+			$uri = um_user_uploads_uri() . "profile_photo{$ext}";
+		} else if ( file_exists( um_user_uploads_dir() . "profile_photo-{$attrs}x{$attrs}{$ext}" ) ) {
+			$uri = um_user_uploads_uri() . "profile_photo-{$attrs}x{$attrs}{$ext}";
+		} else if ( file_exists( um_user_uploads_dir() . "profile_photo-{$attrs}{$ext}" ) ) {
+			$uri = um_user_uploads_uri() . "profile_photo-{$attrs}{$ext}";
 		} else {
-
-			$sizes = um_get_option('photo_thumb_sizes');
+			$sizes = um_get_option( 'photo_thumb_sizes' );
 			if ( is_array( $sizes ) ) $find = um_closest_num( $sizes, $attrs );
-
-			if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . "/profile_photo-{$find}{$ext}" ) ) {
-
-				$uri = um_user_uploads_uri() . "profile_photo-{$find}{$ext}{$cache_time}";
-
-			} else if ( file_exists( $ultimatemember->files->upload_basedir . um_user('ID') . "/profile_photo{$ext}" ) ) {
-
-				$uri = um_user_uploads_uri() . "profile_photo{$ext}{$cache_time}";
-
+			if ( file_exists( um_user_uploads_dir() . "profile_photo-{$find}x{$find}{$ext}" ) ) {
+				$uri = um_user_uploads_uri() . "profile_photo-{$find}x{$find}{$ext}";
+			}else if ( file_exists( um_user_uploads_dir() . "profile_photo-{$find}{$ext}" ) ) {
+				$uri = um_user_uploads_uri() . "profile_photo-{$find}{$ext}";
+			} else if ( file_exists( um_user_uploads_dir() . "profile_photo{$ext}" ) ) {
+				$uri = um_user_uploads_uri() . "profile_photo{$ext}";
 			}
-
-			if ( $attrs == 'original' ) {
-				$uri = um_user_uploads_uri() . "profile_photo{$ext}{$cache_time}";
-			}
-
 		}
+
+
+		if( ! empty( $cache_time ) ){
+			$cache_time = "?{$cache_time}";
+		}
+
 		return $uri;
 	}
 
@@ -2007,3 +2006,61 @@
 		return $ret;
 	}
 
+/**
+ * Check user's file ownership
+ * @param  string $url
+ * @param  integer $user_id
+ * @return bool
+ */
+function um_is_file_owner( $url, $user_id = null, $image_path = false ){
+	global $ultimatemember;
+
+	if( strpos( $url, "/uploads/ultimatemember/{$user_id}/" ) !== false && is_user_logged_in() ){
+
+		$user_basedir = $ultimatemember->uploader->get_upload_user_base_dir( $user_id );
+
+		$filename = wp_basename( parse_url( $url,  PHP_URL_PATH ) );
+
+		$file = $user_basedir . '/' . $filename;
+		if( file_exists( $file ) ){
+			if( $image_path ){
+				return $file;
+			}
+
+			return true;
+		}
+	}else{
+		$user_basedir = $ultimatemember->uploader->get_upload_user_base_dir( 'temp' );
+
+		$filename = wp_basename( parse_url( $url,  PHP_URL_PATH ) );
+
+		$file = $user_basedir . '/' . $filename;
+		if( file_exists( $file ) ){
+			if( $image_path ){
+				return $file;
+			}
+
+			return true;
+		}
+	}
+	return false;
+}
+
+
+/**
+ * Check if file is temporary
+ * @param  string $filename
+ * @return bool
+ */
+function um_is_temp_file( $filename ){
+	global $ultimatemember;
+
+	$user_basedir = $ultimatemember->uploader->get_upload_user_base_dir( 'temp' );
+
+	$file = $user_basedir . '/' . $filename;
+
+	if( file_exists( $file ) ){
+		return true;
+	}
+	return false;
+}

@@ -1630,7 +1630,7 @@ class UM_Fields {
 
 						if ( !in_array( $key, array('profile_photo','cover_photo') ) ) {
 							if ( isset( $this->set_mode ) && $this->set_mode == 'register' ) {
-								$imgValue = $this->field_value( $key, $default, $data );
+								$imgValue = $ultimatemember->uploader->get_core_temp_url() . "/" . $this->field_value( $key, $default, $data );
 							} else {
 								$imgValue = um_user_uploads_uri() . $this->field_value( $key, $default, $data );
 							}
@@ -1672,7 +1672,7 @@ class UM_Fields {
 					$nonce = wp_create_nonce( 'um_upload_nonce-'.$this->timestamp );
 
 					$output .= '<div class="um-single-image-preview '. $crop_class .'"  data-crop="'.$crop_data.'" data-ratio="'.$ratio.'" data-min_width="'.$min_width.'" data-min_height="'.$min_height.'" data-coord=""><a href="#" class="cancel"><i class="um-icon-close"></i></a><img src="" alt="" /><div class="um-clear"></div></div><div class="um-clear"></div>';
-					$output .= '<div class="um-single-image-upload" data-nonce="'.$nonce.'" data-timestamp="'.$this->timestamp.'" data-icon="'.$icon.'" data-set_id="'.$set_id.'" data-set_mode="'.$set_mode.'" data-type="'.$type.'" data-key="'.$key.'" data-max_size="'.$max_size.'" data-max_size_error="'.$max_size_error.'" data-min_size_error="'.$min_size_error.'" data-extension_error="'.$extension_error.'"  data-allowed_types="'.$allowed_types.'" data-upload_text="'.$upload_text.'" data-max_files_error="'.$max_files_error.'" data-upload_help_text="'.$upload_help_text.'">'.$button_text.'</div>';
+					$output .= '<div class="um-single-image-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-nonce="'.$nonce.'" data-timestamp="'.$this->timestamp.'" data-icon="'.$icon.'" data-set_id="'.$set_id.'" data-set_mode="'.$set_mode.'" data-type="'.$type.'" data-key="'.$key.'" data-max_size="'.$max_size.'" data-max_size_error="'.$max_size_error.'" data-min_size_error="'.$min_size_error.'" data-extension_error="'.$extension_error.'"  data-allowed_types="'.$allowed_types.'" data-upload_text="'.$upload_text.'" data-max_files_error="'.$max_files_error.'" data-upload_help_text="'.$upload_help_text.'">'.$button_text.'</div>';
 
 					$output .= '<div class="um-modal-footer">
 									<div class="um-modal-right">
@@ -1710,25 +1710,38 @@ class UM_Fields {
 
 					$output .= '<div class="um-field-area" style="text-align: center">';
 
-					if ( $this->field_value( $key, $default, $data ) ) {
+					if ($this->field_value( $key, $default, $data )) {
+						$file_field_value = $this->field_value( $key, $default, $data );
+						$file_type = wp_check_filetype( $file_field_value );
+						$file_info = um_user( $data['metakey']."_metadata" );
 
-						$extension = pathinfo( $this->field_value( $key, $default, $data ), PATHINFO_EXTENSION);
+						$file_field_name = $file_field_value;
+						if( isset( $file_info['original_name'] ) && ! empty( $file_info['original_name'] ) ){
+							$file_field_name = $file_info['original_name'];
+						}
+						if ( isset( $this->set_mode  ) && 'register' == $this->set_mode ){
+							$file_url = $ultimatemember->uploader->get_core_temp_dir() . "/" . $this->field_value( $key, $default, $data );
+						}else{
+							$file_url = um_user_uploads_uri() . $this->field_value( $key, $default, $data );
+						}
 
-						$output .= '<div class="um-single-file-preview show" data-key="'.$key.'">
-										<a href="#" class="cancel"><i class="um-icon-close"></i></a>
-										<div class="um-single-fileinfo">
-											<a href="' . um_user_uploads_uri() . $this->field_value( $key, $default, $data )  . '" target="_blank">
-												<span class="icon" style="background:'. $ultimatemember->files->get_fonticon_bg_by_ext( $extension ) . '"><i class="'. $ultimatemember->files->get_fonticon_by_ext( $extension ) .'"></i></span>
-												<span class="filename">' . $this->field_value( $key, $default, $data ) . '</span>
-											</a>
-										</div>
-							</div><a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. __('Change file','ultimate-member') . '</a>';
+						if ( file_exists( um_user_uploads_dir() . $file_field_value ) ) {
+							$output .= "<div class=\"um-single-file-preview show\" data-key=\"{$key}\">
+                                        <a href=\"#\" class=\"cancel\"><i class=\"um-icon-close\"></i></a>
+                                        <div class=\"um-single-fileinfo\">
+                                            <a href=\"{$file_url}\" target=\"_blank\">
+                                                <span class=\"icon\" style=\"background:" . $ultimatemember->files->get_fonticon_bg_by_ext( $file_type['ext'] ) . "\"><i class=\"" . $ultimatemember->files->get_fonticon_by_ext( $file_type['ext'] ) . "\"></i></span>
+                                                <span class=\"filename\">{file_field_name}</span>
+                                            </a>
+                                        </div></div>";
+						} else {
+							$output .= "<div class=\"um-single-file-preview show\" data-key=\"{$key}\">" . __('This file has been removed.','ultimate-member') . "</div>";
+						}
 
+						$output .= "<a href=\"#\" data-modal=\"um_upload_single\" data-modal-size=\"{$modal_size}\" data-modal-copy=\"1\" class=\"um-button um-btn-auto-width\">" . __( 'Change file', 'ultimate-member' ) . "</a>";
 					} else {
-
-						$output .= '<div class="um-single-file-preview" data-key="'.$key.'">
-							</div><a href="#" data-modal="um_upload_single" data-modal-size="'.$modal_size.'" data-modal-copy="1" class="um-button um-btn-auto-width">'. $button_text . '</a>';
-
+						$output .= "<div class=\"um-single-file-preview\" data-key=\"{$key}\">
+	                            </div><a href=\"#\" data-modal=\"um_upload_single\" data-modal-size=\"{$modal_size}\" data-modal-copy=\"1\" class=\"um-button um-btn-auto-width\">{$button_text}</a>";
 					}
 
 					$output .= '</div>';
@@ -1760,7 +1773,7 @@ class UM_Fields {
 
 					$nonce = wp_create_nonce( 'um_upload_nonce-'.$this->timestamp );
 
-					$output .= '<div class="um-single-file-upload" data-timestamp="'.$this->timestamp.'" data-nonce="'.$nonce.'" data-icon="'.$icon.'" data-set_id="'.$set_id.'" data-set_mode="'.$set_mode.'" data-type="'.$type.'" data-key="'.$key.'" data-max_size="'.$max_size.'" data-max_size_error="'.$max_size_error.'" data-min_size_error="'.$min_size_error.'" data-extension_error="'.$extension_error.'"  data-allowed_types="'.$allowed_types.'" data-upload_text="'.$upload_text.'" data-max_files_error="'.$max_files_error.'" data-upload_help_text="'.$upload_help_text.'">'.$button_text.'</div>';
+					$output .= '<div class="um-single-file-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-timestamp="'.$this->timestamp.'" data-nonce="'.$nonce.'" data-icon="'.$icon.'" data-set_id="'.$set_id.'" data-set_mode="'.$set_mode.'" data-type="'.$type.'" data-key="'.$key.'" data-max_size="'.$max_size.'" data-max_size_error="'.$max_size_error.'" data-min_size_error="'.$min_size_error.'" data-extension_error="'.$extension_error.'"  data-allowed_types="'.$allowed_types.'" data-upload_text="'.$upload_text.'" data-max_files_error="'.$max_files_error.'" data-upload_help_text="'.$upload_help_text.'">'.$button_text.'</div>';
 
 					$output .= '<div class="um-modal-footer">
 									<div class="um-modal-right">

@@ -338,89 +338,65 @@ class UM_Files {
 	***/
 	function get_image_data( $file ){
 
-		$array['size'] = filesize( $file );
+		$finfo = finfo_open( FILEINFO_MIME_TYPE );
 
-		$array['image'] = @getimagesize( $file );
+		$mime_type = finfo_file( $finfo, $file );
 
-		if ( $array['image'] > 0 ) {
+		if( function_exists('exif_imagetype') ){
 
-			$array['invalid_image'] = false;
+			$array_exif_image_mimes = array( IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG );
 
-			list($width, $height, $type, $attr) = @getimagesize( $file );
+			$allowed_types = apply_filters('um_image_upload_allowed_exif_mimes', $array_exif_image_mimes );
 
-			$array['width'] = $width;
-			$array['height'] = $height;
-			$array['ratio'] = $width / $height;
+			if( ! in_array( @exif_imagetype( $file ), $allowed_types ) ) {
 
-			$array['extension'] = $this->get_extension_by_mime_type( $array['image']['mime'] );
+				$array['invalid_image'] = true;
 
-		} else {
+				return $array;
+			}
 
-			$array['invalid_image'] = true;
+		}else{
+
+			$array_image_mimes = array('image/jpeg','image/png','image/gif');
+
+			$allowed_types = apply_filters('um_image_upload_allowed_mimes', $array_image_mimes );
+
+			if ( ! in_array( $mime_type, $allowed_types ) ) {
+
+				$array['invalid_image'] = true;
+
+				return $array;
+			}
 
 		}
+
+		$array['size'] = filesize( $file );
+
+		$image_data = @getimagesize( $file );
+
+		$array['image'] = $image_data;
+
+		$array['invalid_image'] = false;
+
+		list($width, $height, $type, $attr) = $image_data;
+
+		$array['width'] = $width;
+
+		$array['height'] = $height;
+
+		$array['ratio'] = $width / $height;
+
+		$array['extension'] = $this->get_extension_by_mime_type( $mime_type );
+
 
 		return $array;
 	}
 
-	/***
-	***	@Check image upload and handle errors
-	***/
-	function check_image_upload( $file, $field ) {
-		global $ultimatemember;
-		$error = null;
-
-		$fileinfo = $this->get_image_data( $file );
-		$data = $ultimatemember->fields->get_field( $field );
-
-		if ( $data == null ) {
-			$data = apply_filters("um_custom_image_handle_{$field}", '' );
-			if ( !$data  ) {
-				$error = __('This media type is not recognized.','ultimate-member');
-			}
-		}
-
-		$data = apply_filters("um_image_handle_global__option", $data );
-		$data = apply_filters("um_image_handle_{$field}__option", $data );
-
-		if ( $fileinfo['invalid_image'] == true ) {
-			$error = sprintf(__('Your image is invalid or too large!','ultimate-member') );
-		} elseif ( isset( $data['allowed_types'] ) && !$this->in_array( $fileinfo['extension'], $data['allowed_types'] ) ) {
-			$error = ( isset( $data['extension_error'] ) && !empty( $data['extension_error'] ) ) ? $data['extension_error'] : 'not allowed';
-		} elseif ( isset($data['min_size']) && ( $fileinfo['size'] < $data['min_size'] ) ) {
-			$error = $data['min_size_error'];
-		} elseif ( isset($data['min_width']) && ( $fileinfo['width'] < $data['min_width'] ) ) {
-			$error = sprintf(__('Your photo is too small. It must be at least %spx wide.','ultimate-member'), $data['min_width']);
-		} elseif ( isset($data['min_height']) && ( $fileinfo['height'] < $data['min_height'] ) ) {
-			$error = sprintf(__('Your photo is too small. It must be at least %spx wide.','ultimate-member'), $data['min_height']);
-		}
-
-		return $error;
-	}
-
-	/***
-	***	@Check file upload and handle errors
-	***/
-	function check_file_upload( $file, $extension, $field ) {
-		global $ultimatemember;
-		$error = null;
-
-		$fileinfo = $this->get_file_data( $file );
-		$data = $ultimatemember->fields->get_field( $field );
-
-		if ( !$this->in_array( $extension, $data['allowed_types'] ) ) {
-			$error = ( isset( $data['extension_error'] ) && !empty( $data['extension_error'] ) ) ? $data['extension_error'] : 'not allowed';
-		} elseif ( isset($data['min_size']) && ( $fileinfo['size'] < $data['min_size'] ) ) {
-			$error = $data['min_size_error'];
-		}
-
-		return $error;
-	}
 
 	/***
 	***	@If a value exists in comma seperated list
 	***/
-	function in_array( $value, $array ){
+	function in_array( $value, $array ) {
 		
 		if ( in_array( $value, explode(',', $array ) ) ){
 			return true;
@@ -457,7 +433,7 @@ class UM_Files {
 
 		do_action("um_after_remove_{$type}", $user_id);
 
-		$dir = $this->upload_basedir . $user_id . '/';
+		$dir = $this->upload_basedir . $user_id . DIRECTORY_SEPARATOR;
 		$prefix = $type;
 		chdir($dir);
 		$matches = glob($prefix.'*',GLOB_MARK);
@@ -472,6 +448,7 @@ class UM_Files {
 			rmdir( $dir );
 		}
 
+		UM()->user()->remove_cache( $user_id );
 	}
 
 	/***

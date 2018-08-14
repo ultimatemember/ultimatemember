@@ -36,31 +36,6 @@
 
 
 	/***
-	***	@after user uploads, clean up uploads dir
-	***/
-	add_action('um_after_user_upload','um_remove_unused_uploads', 10);
-	function um_remove_unused_uploads( $user_id ) {
-		global $ultimatemember;
-
-		um_fetch_user( $user_id );
-
-		$array = $ultimatemember->user->profile;
-
-		$files = glob( um_user_uploads_dir() . '*', GLOB_BRACE);
-
-		if ( file_exists( um_user_uploads_dir() ) && $files && isset( $array ) && is_array( $array ) ) {
-
-			foreach($files as $file) {
-				$str = basename($file);
-				if ( !strstr( $str, 'profile_photo') && !strstr( $str, 'cover_photo') && !strstr( $str, 'stream_photo') && !preg_grep('/' . $str . '/', $array ) )
-					unlink( $file );
-			}
-
-		}
-
-	}
-
-	/***
 	***	@listen to a new user creation in backend
 	***/
 	add_action( 'user_register', 'um_new_user_via_wpadmin', 10, 1 );

@@ -164,19 +164,24 @@
 		global $ultimatemember;
 
 		$uri = um_user_uploads_uri() . $value;
-		$extension = pathinfo( $uri, PATHINFO_EXTENSION);
 
-		if ( !file_exists( um_user_uploads_dir() . $value ) ) {
-			$value = __('This file has been removed.');
+		$file_type = wp_check_filetype( $value );
+
+		if ( ! file_exists( um_user_uploads_dir() . $value ) ) {
+			$value = __('This file has been removed.','ultimate-member');
 		} else {
+			$file_info = um_user( $data['metakey']."_metadata" );
+			if( isset( $file_info['original_name'] ) && ! empty( $file_info['original_name'] ) ){
+				$value = $file_info['original_name'];
+			}
 			$value = '<div class="um-single-file-preview show">
-										<div class="um-single-fileinfo">
-											<a href="' . $uri  . '" target="_blank">
-												<span class="icon" style="background:'. $ultimatemember->files->get_fonticon_bg_by_ext( $extension ) . '"><i class="'. $ultimatemember->files->get_fonticon_by_ext( $extension ) .'"></i></span>
-												<span class="filename">' . $value . '</span>
-											</a>
-										</div>
-							</div>';
+                        <div class="um-single-fileinfo">
+                            <a href="' . $uri  . '" target="_blank">
+                                <span class="icon" style="background:'. $ultimatemember->files->get_fonticon_bg_by_ext( $file_type['ext'] ) . '"><i class="'. $ultimatemember->files->get_fonticon_by_ext( $file_type['ext'] ) .'"></i></span>
+                                <span class="filename">' . esc_attr( $value ) . '</span>
+                            </a>
+                        </div>
+                    </div>';
 		}
 
 		return $value;

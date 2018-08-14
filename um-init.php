@@ -120,6 +120,7 @@ class UM_API {
 		require_once um_path . 'core/um-chart.php';
 		require_once um_path . 'core/um-builtin.php';
 		require_once um_path . 'core/um-files.php';
+		require_once um_path . 'core/um-uploader.php';
 		require_once um_path . 'core/um-taxonomies.php';
 		require_once um_path . 'core/um-validation.php';
 		require_once um_path . 'core/um-navmenu.php';
@@ -189,6 +190,7 @@ class UM_API {
 		$this->builtin = new UM_Builtin();
 		$this->form = new UM_Form();
 		$this->files = new UM_Files();
+		$this->uploader = new UM_Uploader();
 		$this->taxonomies = new UM_Taxonomies();
 		$this->validation = new UM_Validation();
 		$this->query = new UM_Query();
