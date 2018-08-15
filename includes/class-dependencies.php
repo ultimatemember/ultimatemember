@@ -163,7 +163,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 				} elseif ( empty( $this->ext_required_version[$ext_key] ) || version_compare( $this->ext_required_version[$ext_key], $ext_ver, '>' ) ) {
 					$message = sprintf( __( 'Sorry, but this version of <strong>%s</strong> does not work with extension <strong>"%s" %s</strong> version.', 'ultimate-member' ), ultimatemember_plugin_name, $ext_title, $ext_ver ) .
 					           '<br />' .
-					           sprintf( __( 'Please update extension <strong>"%s"</strong> to the latest version, or install previous versions of <strong>%s</strong>.', 'ultimate-member' ), $ext_title, ultimatemember_plugin_name );
+					           sprintf( __( 'Please update extension <strong>"%s"</strong> to the latest version.', 'ultimate-member' ), $ext_title );
 				}
 
 				return $message;
