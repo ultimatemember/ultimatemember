@@ -134,6 +134,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 = 2.0.24: August 15, 2018 =
 
 * Bugfixes:
+  - WP native AJAX using
   - Force purge temp files dir
 
 = 2.0.23: August 10, 2018 =
