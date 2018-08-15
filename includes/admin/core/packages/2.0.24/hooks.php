@@ -1,5 +1,5 @@
 <?php
 
 return array(
-	'privacy2024' => 'privacy2024',
+	'tempfolder2024' => 'tempfolder2024',
 );

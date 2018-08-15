@@ -3,14 +3,14 @@
 <script type="text/javascript">
 	jQuery( document ).ready( function() {
 		//upgrade styles
-		um_add_upgrade_log( '<?php echo esc_js( __( 'Upgrade Privacy Settings...', 'ultimate-member' ) ) ?>' );
+		um_add_upgrade_log( '<?php echo esc_js( __( 'Purge temp files dir...', 'ultimate-member' ) ) ?>' );
 
 		jQuery.ajax({
 			url: '<?php echo admin_url( 'admin-ajax.php' ) ?>',
 			type: 'POST',
 			dataType: 'json',
 			data: {
-				action: 'um_privacy2024'
+				action: 'um_tempfolder2024'
 			},
 			success: function( response ) {
 				if ( typeof response.data != 'undefined' ) {
