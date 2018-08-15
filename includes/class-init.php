@@ -553,7 +553,7 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->mobile();
 			$this->external_integrations();
 			$this->gdpr();
-			$this->uploader();
+			//$this->uploader();
 			
 		}
 
