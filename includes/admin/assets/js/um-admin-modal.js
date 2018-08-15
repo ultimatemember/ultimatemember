@@ -51,9 +51,9 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 	}
 	
 	jQuery.ajax({
-		url: um_admin_modal_data.ajax_url,
+		url: wp.ajax.settings.url,
 		type: 'POST',
-		data: {act_id: act_id, arg1 : arg1, arg2 : arg2, arg3: arg3, in_row: in_row, in_sub_row: in_sub_row, in_column: in_column, in_group: in_group },
+		data: { action:'um_dynamic_modal_content',act_id: act_id, arg1 : arg1, arg2 : arg2, arg3: arg3, in_row: in_row, in_sub_row: in_sub_row, in_column: in_column, in_group: in_group },
 		complete: function(){
 			um_admin_modal_loaded();
 			um_admin_modal_responsive();
@@ -383,9 +383,9 @@ jQuery(document).ready(function() {
         if( me.val() != '' ){
         	var um_option_callback = me.val();
           	jQuery.ajax({
-				url: um_admin_modal_data.dropdown_ajax_url,
+				url: wp.ajax.settings.url,
 				type: 'POST',
-				data: { um_option_callback: um_option_callback },
+				data: { action:'populate_dropdown_options',um_option_callback: um_option_callback },
 				complete: function(){
 					
 				},

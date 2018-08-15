@@ -115,35 +115,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 				return;
 			}
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_enqueue_localize_data
-			 * @description Extend UM localized data
-			 * @input_vars
-			 * [{"var":"$data","type":"array","desc":"Localize Array"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_enqueue_localize_data', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_enqueue_localize_data', 'my_enqueue_localize_data', 10, 1 );
-			 * function my_enqueue_localize_data( $data ) {
-			 *     // your code here
-			 *     return $data;
-			 * }
-			 * ?>
-			 */
-			$localize_data = apply_filters( 'um_enqueue_localize_data', array(
-				'ajaxurl'               => admin_url( 'admin-ajax.php' ),
-				'muted_action'          => UM()->get_ajax_route( 'um\core\Form', 'ajax_muted_action' ),
-				'ajax_select_options'   => UM()->get_ajax_route( 'um\core\Form', 'ajax_select_options' ),
-			) );
-
-
 			$this->load_original();
-			wp_localize_script( 'um_scripts', 'um_scripts', $localize_data );
 
 			// rtl style
 			if ( is_rtl() ) {
@@ -327,13 +299,13 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_script('um_conditional', um_url . 'assets/js/um-conditional' . $this->suffix . '.js' );
 			wp_enqueue_script('um_conditional');
 
-			wp_register_script('um_scripts', um_url . 'assets/js/um-scripts' . $this->suffix . '.js' );
+			wp_register_script('um_scripts', um_url . 'assets/js/um-scripts' . $this->suffix . '.js', array('jquery','wp-util') );
 			wp_enqueue_script('um_scripts');
 
 			wp_register_script('um_members', um_url . 'assets/js/um-members' . $this->suffix . '.js' );
 			wp_enqueue_script('um_members');
 
-			wp_register_script('um_profile', um_url . 'assets/js/um-profile' . $this->suffix . '.js' );
+			wp_register_script('um_profile', um_url . 'assets/js/um-profile' . $this->suffix . '.js', array('jquery','wp-util') );
 			wp_enqueue_script('um_profile');
 
 			wp_register_script('um_account', um_url . 'assets/js/um-account' . $this->suffix . '.js' );
@@ -446,7 +418,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_style('um_modal', um_url . 'assets/css/um-modal.css' );
 			wp_enqueue_style('um_modal');
 
-			wp_register_script('um_modal', um_url . 'assets/js/um-modal' . $this->suffix . '.js' );
+			wp_register_script('um_modal', um_url . 'assets/js/um-modal' . $this->suffix . '.js', array('jquery','wp-util') );
 			wp_enqueue_script('um_modal');
 
 		}

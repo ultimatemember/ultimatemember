@@ -216,6 +216,7 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 			<form action="" method="post" class="um_update_order">
 
 				<input type="hidden" name="form_id" id="form_id" value="<?php echo get_the_ID(); ?>" />
+				<input type="hidden" name="action" value="um_update_order" />
 
 				<div class="um_update_order_fields">
 

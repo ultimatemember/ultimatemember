@@ -278,9 +278,10 @@ jQuery(document).ready(function() {
         }
 
         jQuery.ajax({
-            url: um_scripts.muted_action,
+            url: wp.ajax.settings.url,
             type: 'post',
             data: {
+                action: 'um_muted_action',
                 hook: hook,
                 user_id: user_id,
                 arguments: arguments
@@ -329,15 +330,16 @@ jQuery(document).ready(function() {
             if( parent.val() != '' && typeof um_select_options_cache[ arr_key ] != 'object' ){
 
                 jQuery.ajax({
-                    url: um_scripts.ajax_select_options,
+                    url: wp.ajax.settings.url,
                     type: 'post',
                     data: {
+                        action: 'um_select_options',
                         parent_option_name: parent_option,
                         parent_option: parent.val(),
                         child_callback: um_ajax_source,
                         child_name:  me.attr('name'),
                         members_directory:  me.attr('data-mebers-directory'),
-                        form_id: form_id,
+                        form_id: form_id
                     },
                     success: function( data ){
                         if( data.status == 'success' && parent.val() != '' ){
