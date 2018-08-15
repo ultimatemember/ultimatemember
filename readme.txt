@@ -125,6 +125,11 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 == Changelog ==
 
 
+= 1.3.89: August 15, 2018 =
+
+* Bugfixes:
+  - Fixed security vulnerability with file/image uploader
+
 = 1.3.88: July 25, 2017 =
 
 * Enhancements:
@@ -132,7 +137,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Add class for member tagline in directory grid `um-member-tagline-<field key>`
   - Add recaptcha support and submit button id
   - Update extensions page layout
- 
+
 * Bugfixes:
   - Fix Conditional Logic fields
   - Fix required field with specific roles in privacy

@@ -1097,10 +1097,13 @@ class UM_Fields {
 	 * @return string
 	 */
 	function edit_field( $key, $data, $rule=false ) {
-		global $ultimatemember;
+		global $ultimatemember, $_um_profile_id;
 
 		$output = null;
 		$disabled = '';
+		if (empty( $_um_profile_id )) {
+			$_um_profile_id = um_user( 'ID' );
+		}
 
 		// get whole field data
 		if ( isset( $data ) && is_array( $data ) ) {
