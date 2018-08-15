@@ -300,6 +300,31 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_enqueue_script('um_conditional');
 
 			wp_register_script('um_scripts', um_url . 'assets/js/um-scripts' . $this->suffix . '.js', array('jquery','wp-util') );
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_enqueue_localize_data
+			 * @description Extend UM localized data
+			 * @input_vars
+			 * [{"var":"$data","type":"array","desc":"Localize Array"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_enqueue_localize_data', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_enqueue_localize_data', 'my_enqueue_localize_data', 10, 1 );
+			 * function my_enqueue_localize_data( $data ) {
+			 *     // your code here
+			 *     return $data;
+			 * }
+			 * ?>
+			 */
+			$localize_data = apply_filters( 'um_enqueue_localize_data', array() );
+
+			wp_localize_script( 'um_scripts', 'um_scripts', $localize_data );
+
 			wp_enqueue_script('um_scripts');
 
 			wp_register_script('um_members', um_url . 'assets/js/um-members' . $this->suffix . '.js' );
