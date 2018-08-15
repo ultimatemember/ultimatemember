@@ -2167,9 +2167,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						// add the contents of the buffer to the output variable
 						$output .= ob_get_clean();
-
+                        $output .= '<br /><span class="description">' . $placeholder . '</span>';
 					} else {
-						$output .= '<textarea  ' . $disabled . '  style="height: ' . $height . ';" class="' . $this->get_class( $key, $data ) . '" name="' . $field_name . '" id="' . $field_id . '" placeholder="' . $placeholder . '">' . $field_value . '</textarea>';
+						$output .= '<textarea  ' . $disabled . '  style="height: ' . $height . ';" class="' . $this->get_class( $key, $data ) . '" name="' . $field_name . '" id="' . $field_id . '" placeholder="' . $placeholder . '">' . strip_tags( $field_value ) . '</textarea>';
 					}
 
 					$output .= '</div>';
