@@ -384,19 +384,25 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 
 
 		/**
+		 * Get editable UM user roles
+		 *
 		 * @return array
 		 */
 		function get_editable_user_roles() {
-			// User has roles so look for a UM Role one
-			$um_roles_keys = get_option( 'um_roles' );
+			$default_roles = array( 'subscriber' );
 
-			if ( ! empty( $um_roles_keys ) ) {
+			// User has roles so look for a UM Role one
+			$um_roles_keys = get_option( 'um_roles', array() );
+
+			if ( ! empty( $um_roles_keys ) && is_array( $um_roles_keys ) ) {
 				$um_roles_keys = array_map( function( $item ) {
 					return 'um_' . $item;
 				}, $um_roles_keys );
+
+				return array_merge( $um_roles_keys, $default_roles );
 			}
 
-			return array_merge( $um_roles_keys, array( 'subscriber' ) );
+			return $default_roles;
 		}
 
 
@@ -584,16 +590,25 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 
 			switch( $cap ) {
 				case 'edit':
-					if ( get_current_user_id() == $user_id && um_user( 'can_edit_profile' ) )
-						$return = 1;
-					elseif ( get_current_user_id() == $user_id && ! um_user( 'can_edit_profile' ) )
-						$return = 0;
-					elseif ( um_user( 'can_edit_everyone' ) )
-						$return = 1;
-					elseif ( ! um_user( 'can_edit_everyone' ) )
-						$return = 0;
-					elseif ( um_user( 'can_edit_roles' ) && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, um_user( 'can_edit_roles' ) ) ) <= 0 ) )
-						$return = 0;
+
+					if ( get_current_user_id() == $user_id ) {
+						if ( um_user( 'can_edit_profile' ) ) {
+							$return = 1;
+						} else {
+							$return = 0;
+						}
+					} else {
+						if ( ! um_user( 'can_edit_everyone' ) ) {
+							$return = 0;
+						} else {
+							if ( um_user( 'can_edit_roles' ) && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, um_user( 'can_edit_roles' ) ) ) <= 0 ) ) {
+								$return = 0;
+							} else {
+								$return = 1;
+							}
+						}
+					}
+
 					break;
 
 				case 'delete':

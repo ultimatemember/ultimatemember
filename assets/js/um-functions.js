@@ -234,16 +234,24 @@ function initImageUpload_UM( trigger ) {
 			upload_text = '';
 		}
 
+		var user_id = 0;
+
+		if( jQuery('#um_upload_single:visible').data('user_id') ){
+	 		user_id = jQuery('#um_upload_single:visible').data('user_id');
+	 	}
+
 		trigger.uploadFile({
-			url: um_scripts.imageupload,
+			url: wp.ajax.settings.url,
 			method: "POST",
 			multiple: false,
 			formData: {
-				key: trigger.data('key'), 
-				set_id: trigger.data('set_id'), 
+				action: 'um_imageupload',
+				key: trigger.data('key'),
+				set_id: trigger.data('set_id'),
 				set_mode: trigger.data('set_mode'),
 				_wpnonce: trigger.data('nonce'),
-				timestamp: trigger.data('timestamp')
+				timestamp: trigger.data('timestamp'),
+				user_id: user_id
 			 },
 			fileName: trigger.data('key'),
 			allowedTypes: trigger.data('allowed_types'),
@@ -258,36 +266,34 @@ function initImageUpload_UM( trigger ) {
 			showDone: false,
 			showFileCounter: false,
 			showStatusAfterSuccess: true,
+			returnType: 'json',
 			onSubmit:function(files){
 
 				trigger.parents('.um-modal-body').find('.um-error-block').remove();
 
 			},
-			onSuccess:function(files,data,xhr){
+			onSuccess:function( files, response, xhr ){
 
 				trigger.selectedFiles = 0;
 
-				try{
-				data = jQuery.parseJSON(data);
-				} catch (e) {
-				   console.log( e, data );
-				    return;
-				}
+				if ( response.success && response.success == false || typeof response.data.error !== 'undefined' ) {
 
-				if (data.error && data.error != '') {
-
-					trigger.parents('.um-modal-body').append('<div class="um-error-block">'+data.error+'</div>');
+					trigger.parents('.um-modal-body').append('<div class="um-error-block">'+response.data.error+'</div>');
 					trigger.parents('.um-modal-body').find('.upload-statusbar').hide(0);
 					um_modal_responsive();
 
 				} else {
-
-					jQuery.each( data, function(key, value) {
-
+					
+					jQuery.each( response.data, function( i, d ) {
+					
 						var img_id = trigger.parents('.um-modal-body').find('.um-single-image-preview img');
 						var img_id_h = trigger.parents('.um-modal-body').find('.um-single-image-preview');
 
-						img_id.attr("src", value);
+						var cache_ts = new Date();
+				
+						img_id.attr("src", d.url + "?"+cache_ts.getTime() );
+						img_id.data("file", d.file );
+
 						img_id.load(function(){
 
 							trigger.parents('.um-modal-body').find('.um-modal-btn.um-finish-upload.disabled').removeClass('disabled');
@@ -301,6 +307,9 @@ function initImageUpload_UM( trigger ) {
 
 				}
 
+			},
+			onError: function ( e ){
+				console.log( e );
 			}
 		});
 
@@ -326,13 +335,19 @@ function initFileUpload_UM( trigger ) {
 			upload_text = '';
 		}
 
+		if( jQuery('#um_upload_single:visible').data('user_id') ){
+	 		user_id = jQuery('#um_upload_single:visible').data('user_id');
+	 	}
+
 		trigger.uploadFile({
-			url: um_scripts.fileupload,
+			url: wp.ajax.settings.url,
 			method: "POST",
 			multiple: false,
 			formData: {
+				action: 'um_fileupload',
 				key: trigger.data('key'), 
 				set_id: trigger.data('set_id'), 
+				user_id: trigger.data('user_id'),
 				set_mode: trigger.data('set_mode'),
 				_wpnonce: trigger.data('nonce'),
 				timestamp: trigger.data('timestamp')
@@ -355,14 +370,13 @@ function initFileUpload_UM( trigger ) {
 				trigger.parents('.um-modal-body').find('.um-error-block').remove();
 
 			},
-			onSuccess:function(files,data,xhr){
+			onSuccess:function( files, response ,xhr ){
 
 				trigger.selectedFiles = 0;
 
-				data = jQuery.parseJSON(data);
-				if (data.error && data.error != '') {
+				if ( response.success && response.success == false || typeof response.data.error !== 'undefined' ) {
 
-					trigger.parents('.um-modal-body').append('<div class="um-error-block">'+data.error+'</div>');
+					trigger.parents('.um-modal-body').append('<div class="um-error-block">'+ response.data.error+'</div>');
 					trigger.parents('.um-modal-body').find('.upload-statusbar').hide(0);
 					
 					setTimeout(function(){
@@ -371,20 +385,33 @@ function initFileUpload_UM( trigger ) {
 
 				} else {
 
-					jQuery.each( data, function(key, value) {
+					jQuery.each(  response.data , function(key, value) {
 
 						trigger.parents('.um-modal-body').find('.um-modal-btn.um-finish-upload.disabled').removeClass('disabled');
 						trigger.parents('.um-modal-body').find('.ajax-upload-dragdrop,.upload-statusbar').hide(0);
 						trigger.parents('.um-modal-body').find('.um-single-file-preview').show(0);
 
-						if (key == 'icon') {
-							trigger.parents('.um-modal-body').find('.um-single-fileinfo i').removeClass().addClass(value);
+						if ( key == 'icon' ) {
+					
+							trigger.parents('.um-modal-body').find('.um-single-fileinfo i').removeClass().addClass( value );
+					
 						} else if ( key == 'icon_bg' ) {
+							
 							trigger.parents('.um-modal-body').find('.um-single-fileinfo span.icon').css({'background-color' : value } );
+						
 						} else if ( key == 'filename' ) {
-							trigger.parents('.um-modal-body').find('.um-single-fileinfo span.filename').html(value);
-						} else {
+							
+							trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('data-file', value );
+							
+						}else if( key == 'original_name' ){
+
+							trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('data-orignal-name', value );
+							trigger.parents('.um-modal-body').find('.um-single-fileinfo span.filename').html( value );						
+							
+						} else if ( key == 'url' ) {
+							
 							trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('href', value);
+						
 						}
 
 					});
@@ -395,6 +422,9 @@ function initFileUpload_UM( trigger ) {
 
 				}
 
+			},
+			onError: function ( e ){
+				console.log( e );
 			}
 		});
 

@@ -775,6 +775,63 @@ function um_is_temp_image( $url ) {
 
 
 /**
+ * Check user's file ownership
+ * @param  string $url     
+ * @param  integer $user_id 
+ * @return bool      
+ */
+function um_is_file_owner( $url, $user_id = null, $image_path = false ){
+	
+	if( strpos( $url, "/uploads/ultimatemember/{$user_id}/" ) !== false && is_user_logged_in() ){
+		
+		$user_basedir = UM()->uploader()->get_upload_user_base_dir( $user_id );
+		
+		$filename = wp_basename( parse_url( $url,  PHP_URL_PATH ) );
+		
+		$file = $user_basedir . '/' . $filename;
+		if( file_exists( $file ) ){
+			if( $image_path ){
+				return $file;
+			}
+			
+			return true;
+		}
+	}else{
+		$user_basedir = UM()->uploader()->get_upload_user_base_dir( 'temp' );
+		
+		$filename = wp_basename( parse_url( $url,  PHP_URL_PATH ) );
+		
+		$file = $user_basedir . '/' . $filename;
+		if( file_exists( $file ) ){
+			if( $image_path ){
+				return $file;
+			}
+			
+			return true;
+		}
+	}
+	return false;
+}
+
+
+/**
+ * Check if file is temporary
+ * @param  string $filename 
+ * @return bool       
+ */
+function um_is_temp_file( $filename ){
+	$user_basedir = UM()->uploader()->get_upload_user_base_dir( 'temp' );
+	
+	$file = $user_basedir . '/' . $filename;
+	
+	if( file_exists( $file ) ){
+		return true;
+	}	
+	return false;
+}
+
+
+/**
  * Get core page url
  *
  * @param $time1
@@ -1306,15 +1363,20 @@ function um_can_view_profile( $user_id ) {
 		return ! UM()->user()->is_private_profile( $user_id );
 	}
 
+	$temp_id = um_user('ID');
+	um_fetch_user( get_current_user_id() );
+
 	if ( ! um_user( 'can_access_private_profile' ) && UM()->user()->is_private_profile( $user_id ) ) {
 		return false;
 	}
 
-	$temp_id = um_user('ID');
-	um_fetch_user( get_current_user_id() );
-
 	if ( um_user( 'can_view_roles' ) && $user_id != get_current_user_id() ) {
-		if ( count( array_intersect( UM()->roles()->get_all_user_roles( $user_id ), um_user( 'can_view_roles' ) ) ) <= 0 ) {
+
+		$can_view_roles = um_user( 'can_view_roles' );
+ 		
+ 		if( ! is_array( $can_view_roles ) ) $can_view_roles = array();
+
+		if ( count( array_intersect( UM()->roles()->get_all_user_roles( $user_id ), $can_view_roles ) ) <= 0 ) {
 			um_fetch_user( $temp_id );
 			return false;
 		}
@@ -1640,8 +1702,8 @@ function um_user_uploads_dir() {
  */
 function um_closest_num( $array, $number ) {
 	sort( $array );
-	foreach ($array as $a) {
-		if ($a >= $number) return $a;
+	foreach ( $array as $a ) {
+		if ( $a >= $number ) return $a;
 	}
 
 	return end( $array );
@@ -1659,15 +1721,18 @@ function um_closest_num( $array, $number ) {
 function um_get_cover_uri( $image, $attrs ) {
 	$uri = false;
 	$ext = '.' . pathinfo( $image, PATHINFO_EXTENSION );
-	if (file_exists( UM()->files()->upload_basedir . um_user( 'ID' ) . '/cover_photo' . $ext )) {
-		$uri = um_user_uploads_uri() . 'cover_photo' . $ext . '?' . current_time( 'timestamp' );
+	if (file_exists( UM()->files()->upload_basedir . um_user( 'ID' ) . "/cover_photo{$ext}" ) ) {
+		$uri = um_user_uploads_uri() . "/cover_photo{$ext}?" . current_time( 'timestamp' );
 	}
-	if (file_exists( UM()->files()->upload_basedir . um_user( 'ID' ) . '/cover_photo-' . $attrs . $ext )) {
-		$uri = um_user_uploads_uri() . 'cover_photo-' . $attrs . $ext . '?' . current_time( 'timestamp' );
+	
+	if ( file_exists( UM()->files()->upload_basedir . um_user( 'ID' ) . "/cover_photo-{$attrs}x{$attrs}{$ext}" ) ) {
+		$uri = um_user_uploads_uri() . "/cover_photo-{$attrs}x{$attrs}{$ext}?". current_time( 'timestamp' );
+	}else if ( file_exists( UM()->files()->upload_basedir . um_user( 'ID' ) . "/cover_photo-{$attrs}{$ext}" ) ) {
+		$uri = um_user_uploads_uri() . "/cover_photo-{$attrs}{$ext}?" . current_time( 'timestamp' );
 	}
-
 	return $uri;
 }
+
 
 
 /**
@@ -1696,7 +1761,6 @@ function um_get_avatar_uri( $image, $attrs ) {
 	$uri = false;
 	$find = false;
 	$ext = '.' . pathinfo( $image, PATHINFO_EXTENSION );
-
 	/**
 	 * UM hook
 	 *
@@ -1719,26 +1783,26 @@ function um_get_avatar_uri( $image, $attrs ) {
 	 * ?>
 	 */
 	$cache_time = apply_filters( 'um_filter_avatar_cache_time', current_time( 'timestamp' ), um_user( 'ID' ) );
-
 	if( $attrs == 'original' && file_exists( um_user_uploads_dir() . "profile_photo{$ext}" ) ) {
         $uri = um_user_uploads_uri() . "profile_photo{$ext}";
-    } else if (file_exists( um_user_uploads_dir() . "profile_photo-{$attrs}{$ext}" )) {
+    } else if ( file_exists( um_user_uploads_dir() . "profile_photo-{$attrs}x{$attrs}{$ext}" ) ) {
+		$uri = um_user_uploads_uri() . "profile_photo-{$attrs}x{$attrs}{$ext}";
+	} else if ( file_exists( um_user_uploads_dir() . "profile_photo-{$attrs}{$ext}" ) ) {
 		$uri = um_user_uploads_uri() . "profile_photo-{$attrs}{$ext}";
 	} else {
 		$sizes = UM()->options()->get( 'photo_thumb_sizes' );
-		if (is_array( $sizes )) $find = um_closest_num( $sizes, $attrs );
-
-		if (file_exists( um_user_uploads_dir() . "profile_photo-{$find}{$ext}" )) {
+		if ( is_array( $sizes ) ) $find = um_closest_num( $sizes, $attrs );
+		if ( file_exists( um_user_uploads_dir() . "profile_photo-{$find}x{$find}{$ext}" ) ) {
+			$uri = um_user_uploads_uri() . "profile_photo-{$find}x{$find}{$ext}";
+		}else if ( file_exists( um_user_uploads_dir() . "profile_photo-{$find}{$ext}" ) ) {
 			$uri = um_user_uploads_uri() . "profile_photo-{$find}{$ext}";
-		} else if (file_exists( um_user_uploads_dir() . "profile_photo{$ext}" )) {
+		} else if ( file_exists( um_user_uploads_dir() . "profile_photo{$ext}" ) ) {
 			$uri = um_user_uploads_uri() . "profile_photo{$ext}";
 		}
 	}
-
 	if ( !empty( $cache_time ) ) {
 		$uri .= "?{$cache_time}";
 	}
-
 	return $uri;
 }
 

@@ -313,7 +313,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 
 		/**
-		 * @param $user_id
+		 * Generate User Profile Slug and seve to meta
+		 *
+		 * @param int $user_id
+		 * @param bool $force
 		 */
 		function generate_profile_slug( $user_id, $force = false ) {
 			$userdata = get_userdata( $user_id );
@@ -405,6 +408,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 				$user_in_url = trim( $user_in_url, $separate );
 			}
+
+			$user_in_url = apply_filters( 'um_change_user_profile_slug', $user_in_url, $user_id );
 
 			if ( $force || empty( $current_profile_slug ) || $current_profile_slug != $user_in_url ) {
 				update_user_meta( $user_id, "um_user_profile_url_slug_{$permalink_base}", $user_in_url );
@@ -1572,7 +1577,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param $user_id
 		 * @param $case
 		 *
-		 * @return bool|mixed|void
+		 * @return bool
 		 */
 		function is_private_case( $user_id, $case ) {
 			$privacy = get_user_meta( $user_id, 'profile_privacy', true );
@@ -1884,6 +1889,5 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			return $hash_email_address;
 		}
-
 	}
 }

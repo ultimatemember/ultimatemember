@@ -137,8 +137,6 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			 */
 			$localize_data = apply_filters( 'um_enqueue_localize_data', array(
 				'ajaxurl'               => admin_url( 'admin-ajax.php' ),
-				'fileupload'            => UM()->get_ajax_route( 'um\core\Files', 'ajax_file_upload' ),
-				'imageupload'           => UM()->get_ajax_route( 'um\core\Files', 'ajax_image_upload' ),
 				'remove_file'           => UM()->get_ajax_route( 'um\core\Files', 'ajax_remove_file' ),
 				'delete_profile_photo'  => UM()->get_ajax_route( 'um\core\Profile', 'ajax_delete_profile_photo' ),
 				'delete_cover_photo'    => UM()->get_ajax_route( 'um\core\Profile', 'ajax_delete_cover_photo' ),
@@ -318,7 +316,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 		 */
 		function load_functions() {
 
-			wp_register_script('um_functions', um_url . 'assets/js/um-functions' . $this->suffix . '.js', array('jquery', 'jquery-masonry') );
+			wp_register_script('um_functions', um_url . 'assets/js/um-functions' . $this->suffix . '.js', array('jquery', 'jquery-masonry', 'wp-util') );
 			wp_enqueue_script('um_functions');
 
 			wp_enqueue_script( 'um-gdpr', um_url . 'assets/js/um-gdpr' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, false );

@@ -87,6 +87,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 */
 		function ajax_select_options() {
 
+
 			$arr_options = array();
 			$arr_options['status'] = 'success';
 			$arr_options['post'] = $_POST;
@@ -96,57 +97,66 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			$form_fields = UM()->fields()->get_fields();
 			$arr_options['fields'] = $form_fields;
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_ajax_select_options__debug_mode
-			 * @description Activate debug mode for AJAX select options
-			 * @input_vars
-			 * [{"var":"$debug_mode","type":"bool","desc":"Enable Debug mode"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_ajax_select_options__debug_mode', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_ajax_select_options__debug_mode', 'my_ajax_select_options__debug_mode', 10, 1 );
-			 * function my_ajax_select_options__debug_mode( $debug_mode ) {
-			 *     // your code here
-			 *     return $debug_mode;
-			 * }
-			 * ?>
-			 */
-			$debug = apply_filters('um_ajax_select_options__debug_mode', false );
-			if( $debug ){
-				$arr_options['debug'] = array(
-					$_POST,
-					$form_fields,
-				);
-			}
-
-			if( isset( $_POST['child_callback'] ) && ! empty( $_POST['child_callback'] ) && isset( $form_fields[ $_POST['child_name'] ] )  ){
-
+			if ( $arr_options['post']['members_directory'] == 'yes' ) {
 				$ajax_source_func = $_POST['child_callback'];
-
-				// If the requested callback function is added in the form or added in the field option, execute it with call_user_func.
-				if( isset( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
-				    ! empty( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
-				    $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] == $ajax_source_func ){
-
-					$arr_options['field'] = $form_fields[ $_POST['child_name'] ];
-					if( function_exists( $ajax_source_func ) ){
-						$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship']  );
-					}
-
-				}else{
-					$arr_options['status'] = 'error';
-					$arr_options['message'] = __( 'This is not possible for security reasons.','ultimate-member');
+				if( function_exists( $ajax_source_func ) ){
+					$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship']  );
+					wp_send_json( $arr_options );
+				}
+			} else {
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_ajax_select_options__debug_mode
+				 * @description Activate debug mode for AJAX select options
+				 * @input_vars
+				 * [{"var":"$debug_mode","type":"bool","desc":"Enable Debug mode"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage
+				 * <?php add_filter( 'um_ajax_select_options__debug_mode', 'function_name', 10, 1 ); ?>
+				 * @example
+				 * <?php
+				 * add_filter( 'um_ajax_select_options__debug_mode', 'my_ajax_select_options__debug_mode', 10, 1 );
+				 * function my_ajax_select_options__debug_mode( $debug_mode ) {
+				 *     // your code here
+				 *     return $debug_mode;
+				 * }
+				 * ?>
+				 */
+				$debug = apply_filters('um_ajax_select_options__debug_mode', false );
+				if( $debug ){
+					$arr_options['debug'] = array(
+						$_POST,
+						$form_fields,
+					);
 				}
 
-			}
+				if( isset( $_POST['child_callback'] ) && ! empty( $_POST['child_callback'] ) && isset( $form_fields[ $_POST['child_name'] ] )  ){
 
-			wp_send_json( $arr_options );
+					$ajax_source_func = $_POST['child_callback'];
+
+					// If the requested callback function is added in the form or added in the field option, execute it with call_user_func.
+					if ( isset( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
+						! empty( $form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] ) &&
+						$form_fields[ $_POST['child_name'] ]['custom_dropdown_options_source'] == $ajax_source_func ) {
+
+						$arr_options['field'] = $form_fields[ $_POST['child_name'] ];
+
+						if( function_exists( $ajax_source_func ) ){
+							$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship']  );
+						}
+
+					} else {
+						$arr_options['status'] = 'error';
+						$arr_options['message'] = __( 'This is not possible for security reasons.','ultimate-member');
+					}
+
+				}
+
+				wp_send_json( $arr_options );
+			}
 		}
 
 
@@ -312,7 +322,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 							$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
 
 							if ( ! empty( $role ) &&
-							     ( ! in_array( $role , $custom_field_roles ) || in_array( $role , $exclude_roles ) ) ) {
+								( ! in_array( $role , $custom_field_roles ) || in_array( $role , $exclude_roles ) ) ) {
 								wp_die( __( 'This is not possible for security reasons.','ultimate-member') );
 							}
 

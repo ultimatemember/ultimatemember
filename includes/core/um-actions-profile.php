@@ -221,9 +221,6 @@ function um_user_edit_profile( $args ) {
 
 		foreach ( $fields as $key => $array ) {
 
-			/*if ( ! um_can_edit_field( $fields[ $key ] ) )
-				continue;*/
-
 			if ( ! um_can_edit_field( $fields[ $key ] ) && isset( $fields[ $key ]['editable'] ) && ! $fields[ $key ]['editable'] )
 				continue;
 
@@ -234,7 +231,7 @@ function um_user_edit_profile( $args ) {
 			if ( isset( $args['submitted'][ $key ] ) ) {
 
 				if ( isset( $fields[ $key ]['type'] ) && in_array( $fields[ $key ]['type'], array( 'image', 'file' ) ) &&
-				     ( um_is_temp_upload( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' ) ) {
+				     ( um_is_temp_file( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' ) ) {
 
 					$files[ $key ] = $args['submitted'][ $key ];
 
@@ -370,49 +367,7 @@ function um_user_edit_profile( $args ) {
 	$files = apply_filters( 'um_user_pre_updating_files_array', $files );
 
 	if ( is_array( $files ) ) {
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_before_user_upload
-		 * @description Before file uploaded on complete UM user profile.
-		 * @input_vars
-		 * [{"var":"$user_id","type":"int","desc":"User ID"},
-		 * {"var":"$files","type":"array","desc":"Files data"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_before_user_upload', 'function_name', 10, 2 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_before_user_upload', 'my_before_user_upload', 10, 2 );
-		 * function my_before_user_upload( $user_id, $files ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_before_user_upload', um_user( 'ID' ), $files );
-		UM()->user()->update_files( $files );
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_after_user_upload
-		 * @description After complete UM user profile edit and file uploaded.
-		 * @input_vars
-		 * [{"var":"$user_id","type":"int","desc":"User ID"},
-		 * {"var":"$files","type":"array","desc":"Files data"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_after_user_upload', 'function_name', 10, 2 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_after_user_upload', 'my_after_user_upload', 10, 2 );
-		 * function my_after_user_upload( $user_id, $files ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_after_user_upload', um_user( 'ID' ), $files );
+		UM()->uploader()->move_temporary_files( um_user( 'ID' ), $files );
 	}
 
 	/**
@@ -463,7 +418,6 @@ function um_user_edit_profile( $args ) {
 		$url = um_user_profile_url( um_user( 'ID' ) );
 		exit( wp_redirect( um_edit_my_profile_cancel_uri( $url ) ) );
 	}
-
 }
 add_action( 'um_user_edit_profile', 'um_user_edit_profile', 10 );
 
@@ -592,14 +546,15 @@ function um_profile_header_cover_area( $args ) {
 			do_action( 'um_cover_area_content', um_profile_id() );
 			if ( UM()->fields()->editing ) {
 
+				$hide_remove = um_profile( 'cover_photo' ) ? false : ' style="display:none;"';
+
 				$items = array(
 					'<a href="#" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . __( 'Change cover photo', 'ultimate-member' ) . '</a>',
-					'<a href="#" class="um-reset-cover-photo" data-user_id="' . um_profile_id() . '">' . __( 'Remove', 'ultimate-member' ) . '</a>',
+					'<a href="#" class="um-reset-cover-photo" data-user_id="' . um_profile_id() . '" ' . $hide_remove . '>' . __( 'Remove', 'ultimate-member' ) . '</a>',
 					'<a href="#" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
 				);
 
-				echo UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
-
+				UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
 			}
 
 			UM()->fields()->add_hidden_field( 'cover_photo' );
@@ -1440,32 +1395,3 @@ function um_profile_menu( $args ) {
 
 }
 add_action( 'um_profile_menu', 'um_profile_menu', 9 );
-
-
-/**
- * Clean up file for new uploaded files
- *
- * @param  integer $user_id
- * @param  array   $arr_files
- */
-function um_before_user_upload( $user_id, $arr_files ) {
-	um_fetch_user( $user_id );
-
-	foreach ( $arr_files as $key => $filename ) {
-		if ( um_user( $key ) ) {
-			$old_filename = um_user( $key );
-
-			if ( basename( $filename ) != basename( um_user( $key ) ) ||
-			     in_array( $old_filename, array( basename( um_user( $key ) ), basename( $filename ) ) ) ||
-			     $filename == 'empty_file' ) {
-
-				$path = UM()->files()->upload_basedir;
-				delete_user_meta( $user_id, $old_filename );
-				if (file_exists( $path . $user_id . '/' . $old_filename )) {
-					unlink( $path . $user_id . '/' . $old_filename );
-				}
-			}
-		}
-	}
-}
-add_action( "um_before_user_upload", "um_before_user_upload", 10, 2 );

@@ -528,17 +528,24 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * @return bool|array
 		 */
 		function get_post_privacy_settings( $post ) {
+			$exclude = false;
+
 			//if logged in administrator all pages are visible
 			if ( current_user_can( 'administrator' ) ) {
-				return false;
+				$exclude = true;
 			}
 
-			//exlude from privacy UM default pages (except Members list and User(Profile) page)
+			//exclude from privacy UM default pages (except Members list and User(Profile) page)
 			if ( ! empty( $post->post_type ) && $post->post_type == 'page' ) {
 				if ( um_is_core_post( $post, 'login' ) || um_is_core_post( $post, 'register' ) ||
 				     um_is_core_post( $post, 'account' ) || um_is_core_post( $post, 'logout' ) ||
 				     um_is_core_post( $post, 'password-reset' ) || ( is_user_logged_in() && um_is_core_post( $post, 'user' ) ) )
-					return false;
+					$exclude = true;
+			}
+
+			$exclude = apply_filters( 'um_exclude_posts_from_privacy', $exclude, $post );
+			if ( $exclude ) {
+				return false;
 			}
 
 			$restricted_posts = UM()->options()->get( 'restricted_access_post_metabox' );

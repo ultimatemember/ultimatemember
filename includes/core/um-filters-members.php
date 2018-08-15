@@ -154,7 +154,8 @@ function um_add_search_to_query( $query_args, $args ){
 								) );
 
 								if ( in_array( $filter_data['attrs']['type'], $types ) ) {
-									$field_query = array_merge( $field_query, array(
+									
+									$arr_meta_query = array(
 										array(
 											'key' => $field,
 											'value' => serialize( strval( trim( $value ) ) ),
@@ -162,11 +163,24 @@ function um_add_search_to_query( $query_args, $args ){
 										),
 										array(
 											'key' => $field,
-											'value' => serialize( intval( trim( $value ) ) ),
+											'value' => '"' . trim( $value ) . '"',
 											'compare' => 'LIKE',
 										)
-									) );
+									);
+
+									if( is_numeric( $value ) ){
+
+										$arr_meta_query[ ] = array(
+											'key' => $field,
+											'value' => serialize( intval( trim( $value ) ) ),
+											'compare' => 'LIKE',
+										);
+
+									}
+
+									$field_query = array_merge( $field_query, $arr_meta_query );
 								}
+
 							} else {
 								$field_query = array(
 									array(
@@ -436,30 +450,33 @@ add_filter( 'um_modify_sortby_parameter', 'um_sortby_last_login', 100, 2 );
  * @return mixed
  */
 function um_modify_sortby_randomly( $query ) {
-	if( um_is_session_started() === false ){
-		@session_start();
-	}
 
-	// Reset seed on load of initial
-	if( ! isset( $_REQUEST['members_page'] ) || $_REQUEST['members_page'] == 0 ||  $_REQUEST['members_page'] == 1 ) {
-		if( isset( $_SESSION['seed'] ) ) {
-			unset( $_SESSION['seed'] );
+	if( 'random' == $query->query_vars["orderby"] ) {
+
+		if( um_is_session_started() === false ){
+			@session_start();
 		}
-	}
 
-	// Get seed from session variable if it exists
-	$seed = false;
-	if( isset( $_SESSION['seed'] ) ) {
-		$seed = $_SESSION['seed'];
-	}
-        
-	// Set new seed if none exists
-	if ( ! $seed ) {
-		$seed = rand();
-		$_SESSION['seed'] = $seed;
-	}
+		// Reset seed on load of initial
+		if( ! isset( $_REQUEST['members_page'] ) || $_REQUEST['members_page'] == 0 ||  $_REQUEST['members_page'] == 1 ) {
+			if( isset( $_SESSION['seed'] ) ) {
+				unset( $_SESSION['seed'] );
+			}
+		}
 
-	if($query->query_vars["orderby"] == 'random') {
+		// Get seed from session variable if it exists
+		$seed = false;
+		if( isset( $_SESSION['seed'] ) ) {
+			$seed = $_SESSION['seed'];
+		}
+	        
+		// Set new seed if none exists
+		if ( ! $seed ) {
+			$seed = rand();
+			$_SESSION['seed'] = $seed;
+		}
+
+	
 		$query->query_orderby = 'ORDER by RAND('. $seed.')';
 	}
 

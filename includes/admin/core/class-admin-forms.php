@@ -349,6 +349,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 
 		/**
+		 * Render text field
+		 *
 		 * @param $field_data
 		 *
 		 * @return bool|string

@@ -31,7 +31,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			add_action( 'admin_notices', array( &$this, 'render_notices' ), 1 );
 
 			add_action( 'wp_ajax_um_dismiss_notice', array( &$this, 'dismiss_notice' ) );
-			add_action( 'wp_ajax_um_opt_in_notice', array( &$this, 'opt_in_notice' ) );
 		}
 
 
@@ -514,22 +513,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				return;
 			}
 
-			$optin_url = esc_url( add_query_arg( 'um_adm_action', 'opt_in' ) );
-
 			ob_start(); ?>
 
 			<p>
-				<?php printf( __( 'Thanks for installing <strong>%s</strong>! We hope you like the plugin. To fund full-time development and support of the plugin we also sell extensions for %s via our website. If you subscribe to our mailing list we will email you a 20%% discount code for our <a href="%s" target="_blank">extensions bundle</a> (you\'ll need to confirm your opt-in via email before the discount code can be sent).', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_plugin_name, 'https://ultimatemember.com/core-extensions-bundle/' ); ?>
+				<?php printf( __( 'Thanks for installing <strong>%s</strong>! We hope you like the plugin.  To fund full-time development and support of the plugin we also sell extensions. If you subscribe to our mailing list we will send you a 20%% discount code for our <a href="%s" target="_blank">extensions bundle</a>.', 'ultimate-member' ), ultimatemember_plugin_name, 'https://ultimatemember.com/core-extensions-bundle/' ); ?>
 			</p>
 
 			<p>
-				<a href="javascript:void(0);" id="um_opt_in_start" class="button button-primary"><?php _e( 'Subscribe to mailing list', 'ultimate-member' ) ?></a>
+				<a href="http://ultimatemember.com/discount/" target="_blank" id="um_opt_in_start" class="button button-primary"><?php _e( 'Claim 20% discount code', 'ultimate-member' ) ?></a>
 				&nbsp;
 				<a href="javascript:void(0);" class="button-secondary um_opt_in_link"><?php _e( 'No thanks', 'ultimate-member' ) ?></a>
-			</p>
-
-			<p class="description" style="font-size: 11px;">
-				<?php printf( __( 'By clicking the subscribe button you are agree to join our mailing list. See our <a href="%s" target="_blank">privacy policy</a>', 'ultimate-member' ), 'https://ultimatemember.com/privacy-policy/' ); ?>
 			</p>
 
 			<?php $message = ob_get_clean();
@@ -566,7 +559,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			if ( ! empty(  $arr_inactive_license_keys ) ) {
 				$this->add_notice( 'license_key', array(
 					'class'     => 'error',
-					'message'   => '<p>' . sprintf( __( 'There are %d inactive %s license keys for this site. This site is not authorized to get plugin updates. You can active this site on <a href="%s">www.UltimateMember.com</a>.', 'ultimate-member' ), count( $arr_inactive_license_keys ) , ultimatemember_plugin_name, 'https://ultimatemember.com' ) . '</p>',
+					'message'   => '<p>' . sprintf( __( 'There are %d inactive %s license keys for this site. This site is not authorized to get plugin updates. You can active this site on <a href="%s">www.ultimatemember.com</a>.', 'ultimate-member' ), count( $arr_inactive_license_keys ) , ultimatemember_plugin_name, 'https://ultimatemember.com' ) . '</p>',
 				), 3 );
 			}
 
@@ -715,54 +708,5 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			wp_send_json_success();
 		}
-
-
-		function opt_in_notice() {
-			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
-			if ( ! wp_verify_nonce( $nonce, "um-admin-nonce" ) ) {
-				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
-			}
-
-			// Send a maximum of once per period
-			$last_send = get_option( 'um_opt_in_last_send', false );
-			if ( $last_send && $last_send > strtotime( '-1 day' ) ) {
-				return;
-			}
-
-			$data = array();
-
-			UM()->setup()->install_basics();
-
-			$data['email'] = get_option( 'admin_email' );
-			$data['send_discount'] = ! get_option( '__ultimatemember_coupon_sent' ) ? 1 : 0;
-			$data['unique_sitekey'] = get_option( '__ultimatemember_sitekey' );
-
-			$request = wp_remote_post( 'https://ultimatemember.com/?um_action=checkin', array(
-				'method'      => 'POST',
-				'timeout'     => 45,
-				'redirection' => 5,
-				'httpversion' => '1.0',
-				'blocking'    => true,
-				'body'        => $data,
-				'user-agent'  => 'UM/' . ultimatemember_version . '; ' . get_bloginfo( 'url' ),
-			) );
-
-			if ( ! is_wp_error( $request ) ) {
-				$request = json_decode( wp_remote_retrieve_body( $request ), true );
-			}
-
-			$request = ( $request ) ? maybe_unserialize( $request ) : false;
-
-			if ( ! empty( $request['id'] ) && ! empty( $request['list_id'] ) ) {
-				update_option( 'um_opt_in_last_send', time() );
-
-				if ( $request['discount_ready'] ) {
-					update_option( '__ultimatemember_coupon_sent', 1 );
-				}
-			}
-
-			wp_send_json_success();
-		}
-
 	}
 }
