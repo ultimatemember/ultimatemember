@@ -20,12 +20,12 @@ add_filter( 'lostpassword_url',  'um_lostpassword_url', 10, 1 );
  *
  * @param $args
  */
-function um_login_check_user_data( $user, $username ) {
+function um_login_check_user_data( $user ) {
 	if ( ! isset( $user->ID ) ) {
 		return $user;
 	}
 
-	if( UM()->form()->validate_blocked_ips() ) {
+	if( !UM()->form()->validate_blocked_ips() ) {
 		return new WP_Error( 'blocked_ip', UM()->form()->get_notice_by_code( 'blocked_ip' ) );
 	}
 
@@ -58,4 +58,4 @@ function um_login_check_user_data( $user, $username ) {
 
 	return $user;
 }
-add_filter( 'authenticate', 'um_login_check_user_data', 9999, 2 );
+add_filter( 'authenticate', 'um_login_check_user_data', 9999 );

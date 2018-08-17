@@ -8,7 +8,7 @@
 function um_prevent_submit_form_blockedips( $args ) {
 	if( $args['mode'] == 'login' ) return true; //check blocked values for login on 'authenticate' filter
 
-	if( UM()->form()->validate_blocked_ips() ) {
+	if( !UM()->form()->validate_blocked_ips() ) {
 		UM()->form()->add_error( 'blocked_ip', UM()->form()->get_notice_by_code( 'blocked_ip' ) );
 	}
 }
@@ -444,12 +444,13 @@ function um_submit_form_validate_fields( $args ) {
 
 							if ( $args[$key] == '' ) {
 								UM()->form()->add_error($key, __('You must provide a username','ultimate-member') );
-							} else if ( $mode == 'register' && username_exists( sanitize_user( $args[$key] ) ) ) {
-								UM()->form()->add_error($key, __('Your username is already taken','ultimate-member') );
 							} else if ( is_email( $args[$key] ) ) {
 								UM()->form()->add_error($key, __('Username cannot be an email','ultimate-member') );
 							} else if ( ! UM()->validation()->safe_username( $args[$key] ) ) {
 								UM()->form()->add_error($key, __('Your username contains invalid characters','ultimate-member') );
+							} else if ( $mode == 'register' && $exist_user_id =  username_exists( sanitize_user( $args[$key] ) ) ) {
+								if( is_user_member_of_blog( $exist_user_id ) )
+									UM()->form()->add_error($key, __('Your username is already taken','ultimate-member') );
 							}
 
 							break;
@@ -458,12 +459,14 @@ function um_submit_form_validate_fields( $args ) {
 
 							if ( $args[$key] == '' ) {
 								UM()->form()->add_error($key,  __('You must provide a username','ultimate-member') );
-							} else if ( $mode == 'register' && username_exists( sanitize_user( $args[$key] ) ) ) {
-								UM()->form()->add_error($key, __('Your username is already taken','ultimate-member') );
-							} else if ( $mode == 'register' && email_exists( $args[$key] ) ) {
-								UM()->form()->add_error($key,  __('This email is already linked to an existing account','ultimate-member') );
 							} else if ( ! UM()->validation()->safe_username( $args[$key] ) ) {
 								UM()->form()->add_error($key,  __('Your username contains invalid characters','ultimate-member') );
+							} else if ( $mode == 'register' && $exist_user_id = username_exists( sanitize_user( $args[$key] ) ) ) {
+								if( is_user_member_of_blog( $exist_user_id ) )
+									UM()->form()->add_error($key, __('Your username is already taken','ultimate-member') );
+							} else if ( $mode == 'register' && $exist_user_id = email_exists( $args[$key] ) ) {
+								if( is_user_member_of_blog( $exist_user_id ) )
+									UM()->form()->add_error($key,  __('This email is already linked to an existing account','ultimate-member') );
 							}
 
 							break;
@@ -479,17 +482,20 @@ function um_submit_form_validate_fields( $args ) {
 								}
 
 								$email_exists =  email_exists( $args[ $key ] );
+								if( !is_user_member_of_blog( $email_exists ) ) {
+									$email_exists = false;
+								}
 
 								if ( $args[ $key ] == '' && in_array( $key, array('user_email') ) ) {
 									UM()->form()->add_error( $key, __('You must provide your email','ultimate-member') );
-								} else if ( in_array( $mode, array('register') )  && $email_exists  ) {
-									UM()->form()->add_error($key, __('This email is already linked to an existing account','ultimate-member') );
 								} else if ( in_array( $mode, array('profile') )  && $email_exists && $email_exists != $args['user_id']  ) {
 									UM()->form()->add_error( $key, __('This email is already linked to an existing account','ultimate-member') );
 								} else if ( !is_email( $args[ $key ] ) ) {
 									UM()->form()->add_error( $key, __('This is not a valid email','ultimate-member') );
 								} else if ( ! UM()->validation()->safe_username( $args[ $key ] ) ) {
 									UM()->form()->add_error( $key,  __('Your email contains invalid characters','ultimate-member') );
+								} else if ( in_array( $mode, array('register') )  && $email_exists  ) {
+									UM()->form()->add_error($key, __('This email is already linked to an existing account','ultimate-member') );
 								}
 
 							} else {

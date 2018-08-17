@@ -64,28 +64,6 @@ function um_after_insert_user( $user_id, $args ) {
 	 * UM hook
 	 *
 	 * @type action
-	 * @title um_registration_set_extra_data
-	 * @description Hook that runs after insert user to DB and there you can set any extra details
-	 * @input_vars
-	 * [{"var":"$user_id","type":"int","desc":"User ID"},
-	 * {"var":"$args","type":"array","desc":"Form data"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_action( 'um_registration_set_extra_data', 'function_name', 10, 2 );
-	 * @example
-	 * <?php
-	 * add_action( 'um_registration_set_extra_data', 'my_registration_set_extra_data', 10, 2 );
-	 * function my_registration_set_extra_data( $user_id, $args ) {
-	 *     // your code here
-	 * }
-	 * ?>
-	 */
-	do_action( 'um_registration_set_extra_data', $user_id, $args );
-
-	/**
-	 * UM hook
-	 *
-	 * @type action
 	 * @title um_registration_complete
 	 * @description After complete UM user registration. Redirects handlers at 100 priority, you can add some info before redirects
 	 * @input_vars
@@ -263,7 +241,7 @@ add_action( 'um_registration_complete', 'um_check_user_status', 100, 2 );
  * @return bool|int|WP_Error
  */
 function um_submit_form_register( $args ) {
-	if ( isset( UM()->form()->errors ) )
+    if ( isset( UM()->form()->errors ) )
 		return false;
 
 	/**
@@ -417,6 +395,18 @@ function um_submit_form_register( $args ) {
 	 */
 	$user_role = apply_filters( 'um_registration_user_role', $user_role, $args );
 
+	if( is_multisite() ) {
+	    if( $user_id = username_exists( $user_login ) ) {
+            add_user_to_blog( get_current_blog_id(), $user_id, $user_role );
+            do_action( 'um_user_register', $user_id, $args );
+            return $user_id;
+	    }
+        if( $user_id = email_exists( $user_email ) ) {
+            add_user_to_blog( get_current_blog_id(), $user_id, $user_role );
+            do_action( 'um_user_register', $user_id, $args );
+            return $user_id;
+        }
+    }
 	$userdata = array(
 		'user_login'	=> $user_login,
 		'user_pass'		=> $user_password,
@@ -674,7 +664,7 @@ function um_registration_save_files( $user_id, $args ) {
 		UM()->uploader()->move_temporary_files( $user_id, $files );
 	}
 }
-add_action( 'um_registration_set_extra_data', 'um_registration_save_files', 10, 2 );
+add_action( 'um_user_register', 'um_registration_save_files', 10, 2 );
 
 
 /**
@@ -708,7 +698,7 @@ function um_registration_set_profile_full_name( $user_id, $args ) {
 	 */
 	do_action( 'um_update_profile_full_name', $user_id, $args );
 }
-add_action( 'um_registration_set_extra_data', 'um_registration_set_profile_full_name', 10, 2 );
+add_action( 'um_user_register', 'um_registration_set_profile_full_name', 20, 2 );
 
 
 /**

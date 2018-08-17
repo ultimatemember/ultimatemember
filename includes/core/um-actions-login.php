@@ -201,60 +201,6 @@ add_action( 'um_submit_form_login', 'um_user_after_login_redirect', 9999 );
 
 
 /**
- * Form processing
- *
- * @param $args
- */
-function um_submit_form_login( $args ) {
-
-	if ( ! isset( UM()->form()->errors ) ) {
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_user_login
-		 * @description Hook that runs after successful submit login form
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Form data"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_user_login', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_user_login', 'my_user_login', 10, 1 );
-		 * function my_user_login( $args ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_user_login', $args );
-	}
-
-	/**
-	 * UM hook
-	 *
-	 * @type action
-	 * @title um_user_login_extra_hook
-	 * @description Hook that runs after successful submit login form
-	 * @input_vars
-	 * [{"var":"$args","type":"array","desc":"Form data"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_action( 'um_user_login_extra_hook', 'function_name', 10, 1 );
-	 * @example
-	 * <?php
-	 * add_action( 'um_user_login_extra_hook', 'my_user_login_extra', 10, 1 );
-	 * function my_user_login_extra( $args ) {
-	 *     // your code here
-	 * }
-	 * ?>
-	 */
-	do_action( 'um_user_login_extra_hook', $args );
-}
-add_action( 'um_submit_form_login', 'um_submit_form_login', 10 );
-
-
-/**
  * Show the submit button
  *
  * @param $args
