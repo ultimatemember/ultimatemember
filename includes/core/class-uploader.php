@@ -1074,7 +1074,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			$ret['image']['filename'] = wp_basename( $image_path );
 
 			return $ret;
-
 		}
 
 
@@ -1119,6 +1118,10 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 					} else {
 						$new_filename = str_replace("file_","file_{$extra_hash}_", $filename );
 					}
+
+					$submitted = get_user_meta( $user_id, 'submitted', true );
+					$submitted[ $key ] = $new_filename;
+					update_user_meta( $user_id, 'submitted', $submitted );
 
 					if ( $move_only ) {
 
