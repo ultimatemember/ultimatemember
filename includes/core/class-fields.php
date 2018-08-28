@@ -2294,20 +2294,27 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ($this->field_value( $key, $default, $data )) {
 						$file_field_value = $this->field_value( $key, $default, $data );
 						$file_type = wp_check_filetype( $file_field_value );
-						$file_info = um_user( $data['metakey']."_metadata" );
+
+						if ( isset( $this->set_mode ) && 'register' == $this->set_mode ) {
+							$file_info = get_transient("um_{$file_field_value}");
+						} else {
+							$file_info = um_user( $data['metakey']."_metadata" );
+						}
 
 						$file_field_name = $file_field_value;
 						if( isset( $file_info['original_name'] ) && ! empty( $file_info['original_name'] ) ){
 							$file_field_name = $file_info['original_name'];
 						}
 
-						if( 'register' == $this->set_mode ){
-							$file_url = UM()->uploader()->get_core_temp_dir() . "/" . $this->field_value( $key, $default, $data );
-						}else{
+						if ( isset( $this->set_mode ) && 'register' == $this->set_mode ) {
+							$file_url = UM()->uploader()->get_core_temp_url() . DIRECTORY_SEPARATOR . $this->field_value( $key, $default, $data );
+							$file_dir = UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $this->field_value( $key, $default, $data );
+						} else {
 							$file_url = um_user_uploads_uri() . $this->field_value( $key, $default, $data );
+							$file_dir = um_user_uploads_dir() . $this->field_value( $key, $default, $data );
 						}
 
-						if ( file_exists( um_user_uploads_dir() . $file_field_value ) ) {
+						if ( file_exists( $file_dir ) ) {
 							$output .= "<div class=\"um-single-file-preview show\" data-key=\"{$key}\">
                                         <a href=\"#\" class=\"cancel\"><i class=\"um-icon-close\"></i></a>
                                         <div class=\"um-single-fileinfo\">
