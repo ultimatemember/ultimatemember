@@ -553,7 +553,7 @@ function um_user_submitted_registration( $style = false ) {
 				continue;
 			}
 
-			if ( ! is_array( $v ) && strstr( $v, 'ultimatemember/temp' ) ) {
+			if ( UM()->fields()->get_field_type( $k ) == 'image' || UM()->fields()->get_field_type( $k ) == 'file' ) {
 				$file = basename( $v );
 				$v = um_user_uploads_uri() . $file;
 			}

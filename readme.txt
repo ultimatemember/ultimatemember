@@ -131,6 +131,12 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
+= 2.0.26: August 29, 2018 =
+
+* Bugfixes:
+  - File/Image email placeholders after registration form submitting
+  - File/Image forms fields values on submit/edit
+
 = 2.0.25: August 20, 2018 =
 
 * Enhancements:
