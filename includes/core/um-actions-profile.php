@@ -1341,7 +1341,7 @@ function um_profile_menu( $args ) {
 						<i class="<?php echo $tab['icon']; ?>"></i>
 
 						<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?>
-							<span class="um-tab-notifier uimob800-show uimob500-show uimob340-show"><?php echo $tab['notifier']; ?></span>
+							<span class="um-tab-notifier"><?php echo $tab['notifier']; ?></span>
 						<?php } ?>
 
 						<span class="title"><?php echo $tab['name']; ?></span>
@@ -1360,7 +1360,7 @@ function um_profile_menu( $args ) {
 					   title="<?php echo esc_attr( $tab['name'] ); ?>">
 
 						<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0) { ?>
-							<span class="um-tab-notifier uimob800-show uimob500-show uimob340-show"><?php echo $tab['notifier']; ?></span>
+							<span class="um-tab-notifier"><?php echo $tab['notifier']; ?></span>
 						<?php } ?>
 
 						<span class="title"><?php echo $tab['name']; ?></span>

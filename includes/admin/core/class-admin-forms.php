@@ -734,15 +734,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$value = $this->get_field_value( $field_data );
 
 			$options = '';
-			foreach ( $field_data['options'] as $key => $option ) {
-				if ( ! empty( $field_data['multi'] ) ) {
+			if ( ! empty( $field_data['options'] ) ) {
+				foreach ( $field_data['options'] as $key => $option ) {
+					if ( ! empty( $field_data['multi'] ) ) {
 
-					if ( ! is_array( $value ) || empty( $value ) )
-						$value = array();
+						if ( ! is_array( $value ) || empty( $value ) )
+							$value = array();
 
-					$options .= '<option value="' . $key . '" ' . selected( in_array( $key, $value ), true, false ) . '>' . esc_html( $option ) . '</option>';
-				} else {
-					$options .= '<option value="' . $key . '" ' . selected( (string)$key == $value, true, false ) . '>' . esc_html( $option ) . '</option>';
+						$options .= '<option value="' . $key . '" ' . selected( in_array( $key, $value ), true, false ) . '>' . esc_html( $option ) . '</option>';
+					} else {
+						$options .= '<option value="' . $key . '" ' . selected( (string)$key == $value, true, false ) . '>' . esc_html( $option ) . '</option>';
+					}
 				}
 			}
 
