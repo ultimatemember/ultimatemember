@@ -101,8 +101,9 @@ jQuery(document).ready(function() {
 	/**
 		WP Color Picker
 	**/
-	
-	jQuery('.um-admin-colorpicker').wpColorPicker();
+	if ( jQuery('.um-admin-colorpicker').length ) {
+		jQuery('.um-admin-colorpicker').wpColorPicker();
+	}
 	
 /*	/!**
 		Select Dropdowns

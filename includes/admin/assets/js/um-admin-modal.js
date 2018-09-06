@@ -6,8 +6,9 @@ function um_admin_live_update_scripts() {
 	});*/
 
 	jQuery('.um-adm-conditional').each(function(){jQuery(this).trigger('change');});
-	
-	jQuery('.um-admin-colorpicker').wpColorPicker();
+	if ( jQuery('.um-admin-colorpicker').length ) {
+		jQuery('.um-admin-colorpicker').wpColorPicker();
+	}
 	
 }
 
