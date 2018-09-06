@@ -1170,7 +1170,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			 */
 			do_action( "um_settings_page_before_" . $current_tab . "_" . $current_subtab . "_content" );
 
-			if ( 'licenses' == $current_tab || 'install_info' == $current_tab ) {
+			if ( in_array( $current_tab, apply_filters('um_settings_custom_tabs', array('licenses', 'install_info' ) ) ) || in_array( $current_subtab, apply_filters('um_settings_custom_subtabs', array('licenses', 'install_info' ) ) ) ) {
 
 				/**
 				 * UM hook
@@ -2011,7 +2011,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							$license_status = null;
 
 						}
-                           
+
 						?>
 
 						<tr class="um-settings-line">
