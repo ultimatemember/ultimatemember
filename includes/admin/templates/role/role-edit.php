@@ -155,7 +155,7 @@ $screen_id = $current_screen->id; ?>
 	<?php } ?>
 
 	<form id="um_edit_role" action="" method="post">
-		<input type="hidden" name="role[id]" value="<?php echo isset( $_GET['id'] ) ? $_GET['id'] : '' ?>" />
+		<input type="hidden" name="role[id]" value="<?php echo isset( $_GET['id'] ) ? esc_attr( $_GET['id'] ) : '' ?>" />
 		<?php if ( 'add' == $_GET['tab'] ) { ?>
 			<input type="hidden" name="role[_um_is_custom]" value="1" />
 		<?php } else { ?>
