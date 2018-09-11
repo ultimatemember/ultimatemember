@@ -99,7 +99,7 @@
 .um img {box-shadow: none !important}
 
 .um-col {padding-bottom: 20px}
-.um-col-alt {margin: 0 0 5px 0}
+.um-col-alt {margin: 15px 0 5px 0}
 .um-col-alt-s {padding-top: 10px}
 .um-col-alt-b {padding-top: 20px}
 
@@ -459,9 +459,9 @@ p.um-notice.warning {
 */
 
 .um-field-c .um-field-checkbox {
-	margin: 0 !important;
+	margin-bottom: 14px;
+	margin-top: 0 !important;
 	position: relative;
-	top: -14px;
 }
 
 .um-field-checkbox,
