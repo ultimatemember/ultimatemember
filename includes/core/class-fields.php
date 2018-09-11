@@ -2369,7 +2369,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_error( $this->show_error( $key ) );
 					}
 					$output .= '</div>';
-					
+
 				break;
 
 				/* Select dropdown */
@@ -2580,6 +2580,18 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '<option value=""></option>';
 
 					$field_value = '';
+
+					/**
+					 * UM hook
+					 *
+					 * @type filter
+					 * @title um_select_option_value
+					 * @description Enable options pair by field $data
+					 * @input_vars
+					 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
+					 * {"var":"$data","type":"array","desc":"Field Data"}]
+					 */
+					$options_pair = apply_filters( "um_select_options_pair", null, $data );
 
 					// switch options pair for custom options from a callback function
 					if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
