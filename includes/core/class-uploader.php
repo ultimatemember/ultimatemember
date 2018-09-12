@@ -1169,9 +1169,9 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			}
 			$_array = array_merge( $_array, $new_files );
 
-			$files = glob( um_user_uploads_dir() . '*', GLOB_BRACE );
+			$files = glob( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . '*', GLOB_BRACE );
 			$error = array();
-			if ( file_exists( um_user_uploads_dir() ) && $files && isset( $_array ) && is_array( $_array ) ) {
+			if ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR ) && $files && isset( $_array ) && is_array( $_array ) ) {
 				foreach ( $files as $file ) {
 					$str = basename( $file );
 

@@ -152,7 +152,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			// remove uploads
-			UM()->files()->remove_dir( um_user_uploads_dir() );
+			UM()->files()->remove_dir( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR );
 		}
 
 

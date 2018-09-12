@@ -2235,7 +2235,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							if (isset( $this->set_mode ) && $this->set_mode == 'register') {
 								$imgValue = UM()->uploader()->get_core_temp_url() . "/" . $this->field_value( $key, $default, $data );
 							} else {
-								$imgValue = um_user_uploads_uri() . $this->field_value( $key, $default, $data );
+								$imgValue = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . $this->field_value( $key, $default, $data );
 							}
 							$img = '<img src="' . $imgValue . '" alt="" />';
 						} else {
@@ -2310,8 +2310,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$file_url = UM()->uploader()->get_core_temp_url() . DIRECTORY_SEPARATOR . $this->field_value( $key, $default, $data );
 							$file_dir = UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $this->field_value( $key, $default, $data );
 						} else {
-							$file_url = um_user_uploads_uri() . $this->field_value( $key, $default, $data );
-							$file_dir = um_user_uploads_dir() . $this->field_value( $key, $default, $data );
+							$file_url = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . $this->field_value( $key, $default, $data );
+							$file_dir = UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $this->field_value( $key, $default, $data );
 						}
 
 						if ( file_exists( $file_dir ) ) {

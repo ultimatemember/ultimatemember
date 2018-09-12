@@ -555,7 +555,7 @@ function um_user_submitted_registration( $style = false ) {
 
 			if ( UM()->fields()->get_field_type( $k ) == 'image' || UM()->fields()->get_field_type( $k ) == 'file' ) {
 				$file = basename( $v );
-				$v = um_user_uploads_uri() . $file;
+				$v = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . $file;
 			}
 
 			if ( is_array( $v ) ) {
@@ -1652,32 +1652,6 @@ function um_youtube_id_from_url( $url ) {
 	}
 
 	return false;
-}
-
-
-/**
- * user uploads uri
- *
- * @return string
- */
-function um_user_uploads_uri() {
-    UM()->files()->upload_baseurl = set_url_scheme( UM()->files()->upload_baseurl );
-
-	$uri = UM()->files()->upload_baseurl . um_user( 'ID' ) . '/';
-
-	return $uri;
-}
-
-
-/**
- * user uploads directory
- *
- * @return string
- */
-function um_user_uploads_dir() {
-	$uri = UM()->files()->upload_basedir . um_user( 'ID' ) . '/';
-
-	return $uri;
 }
 
 
