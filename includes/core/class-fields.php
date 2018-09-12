@@ -859,6 +859,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
                         }*/
 					}
 
+					if (empty($field_value))
+						$field_value = get_user_meta(um_user( 'ID' ), $key);
+
 					/**
 					 * UM hook
 					 *
@@ -905,7 +908,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					 */
 					$data = apply_filters( 'um_is_selected_filter_data', $data, $key, $field_value );
 
-					if ($field_value && $this->editing == true && is_array( $field_value ) && ( in_array( $value, $field_value ) || in_array( html_entity_decode( $value ), $field_value ) )) {
+					if ($field_value && $this->editing == true && is_array( $field_value ) && ( in_array( $value, $field_value, true ) || in_array( html_entity_decode( $value ), $field_value, true ) )) {
 						return true;
 					}
 
