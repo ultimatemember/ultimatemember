@@ -58,5 +58,22 @@ function um_account_disable_name_fields( $fields ){
 
 	return $fields;
 }
+
+/**
+ * Disables email fields in account page
+ * @param  array $fields
+ * @return array
+ * @uses  um_get_field__user_email
+ */
+function um_account_disable_email_field( $fields ){
+	if( UM()->options()->get( "account_email" ) ) return $fields;
+
+	if ( um_is_core_page("account") ) {
+		$fields['disabled'] = 'disabled="disabled"';
+	}
+
+	return $fields;
+}
 add_filter( "um_get_field__first_name","um_account_disable_name_fields", 10 ,1 );
 add_filter( "um_get_field__last_name","um_account_disable_name_fields", 10 ,1 );
+add_filter( "um_get_field__user_email","um_account_disable_email_field", 10 ,1 );
