@@ -94,6 +94,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			foreach ( $fields as $field ) {
 				if ( isset( $this->predefined_fields[ $field ] ) ) {
 					$array[ $field ] = $this->predefined_fields[ $field ];
+				} elseif ( isset( $this->saved_fields[ $field ] ) ) {
+					$array[ $field ] = $this->saved_fields[ $field ];
 				}
 			}
 			return $array;
