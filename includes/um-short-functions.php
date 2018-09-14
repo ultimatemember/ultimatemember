@@ -790,7 +790,7 @@ function um_is_file_owner( $url, $user_id = null, $image_path = false ) {
 
 	$filename = wp_basename( parse_url( $url, PHP_URL_PATH ) );
 
-	$file = $user_basedir . '/' . $filename;
+	$file = $user_basedir . DIRECTORY_SEPARATOR . $filename;
 	if ( file_exists( $file ) ) {
 		if ( $image_path ) {
 			return $file;
@@ -2186,8 +2186,10 @@ function um_user( $data, $attrs = null ) {
 
 		case 'submitted':
 			$array = um_profile( $data );
-			if (empty( $array )) return '';
-			$array = unserialize( $array );
+			if ( empty( $array ) ) {
+				return '';
+			}
+			$array = maybe_unserialize( $array );
 
 			return $array;
 			break;

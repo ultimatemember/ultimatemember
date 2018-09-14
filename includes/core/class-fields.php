@@ -2232,10 +2232,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '<div class="um-field-area" style="text-align: center">';
 					if ($this->field_value( $key, $default, $data )) {
 						if ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ) ) ) {
-							if (isset( $this->set_mode ) && $this->set_mode == 'register') {
+							if ( isset( $this->set_mode ) && $this->set_mode == 'register' ) {
 								$imgValue = UM()->uploader()->get_core_temp_url() . "/" . $this->field_value( $key, $default, $data );
 							} else {
-								$imgValue = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . $this->field_value( $key, $default, $data );
+								$imgValue = UM()->files()->get_download_link( $this->set_id, $key, um_user( 'ID' ) );
 							}
 							$img = '<img src="' . $imgValue . '" alt="" />';
 						} else {
@@ -2289,7 +2289,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if (isset( $data['label'] )) {
 						$output .= $this->field_label( $label, $key, $data );
 					}
-					$modal_label = ( isset( $data['label'] ) ) ? $data['label'] : __( 'Upload Photo', 'ultimate-member' );
+					$modal_label = ( isset( $data['label'] ) ) ? $data['label'] : __( 'Upload File', 'ultimate-member' );
 					$output .= '<div class="um-field-area" style="text-align: center">';
 					if ($this->field_value( $key, $default, $data )) {
 						$file_field_value = $this->field_value( $key, $default, $data );
@@ -2310,7 +2310,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$file_url = UM()->uploader()->get_core_temp_url() . DIRECTORY_SEPARATOR . $this->field_value( $key, $default, $data );
 							$file_dir = UM()->uploader()->get_core_temp_dir() . DIRECTORY_SEPARATOR . $this->field_value( $key, $default, $data );
 						} else {
-							$file_url = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . $this->field_value( $key, $default, $data );
+							$file_url = UM()->files()->get_download_link( $this->set_id, $key, um_user( 'ID' ) );
 							$file_dir = UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $this->field_value( $key, $default, $data );
 						}
 

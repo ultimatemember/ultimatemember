@@ -55,6 +55,12 @@ if ( ! class_exists( 'UM' ) ) {
 
 
 		/**
+		 * @var
+		 */
+		public $permalinks;
+
+
+		/**
 		 * @var array Languages
 		 */
 		var $available_languages;
@@ -173,6 +179,9 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @since 2.0.18
 		 */
 		function _um_construct() {
+			if ( get_option( 'permalink_structure' ) )
+				$this->permalinks = true;
+
 			//register autoloader for include UM classes
 			spl_autoload_register( array( $this, 'um__autoloader' ) );
 

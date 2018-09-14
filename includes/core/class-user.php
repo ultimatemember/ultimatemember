@@ -1673,7 +1673,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			// update user
 			if ( count( $args ) > 1 ) {
-
 				//if isset roles argument validate role to properly for security reasons
 				if ( isset( $args['role'] ) ) {
 					global $wp_roles;
