@@ -1088,13 +1088,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'private_use' => true,
 				),
 
-				'password_reset_text' => array(
-					'title' => __('Password Reset','ultimate-member'),
-					'type' => 'block',
-					'content' => '<div style="text-align:center">' . __('To reset your password, please enter your email address or username below','ultimate-member'). '</div>',
-					'private_use' => true,
-				),
-
 				'username_b' => array(
 					'title' => __('Username or E-mail','ultimate-member'),
 					'metakey' => 'username_b',

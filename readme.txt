@@ -137,6 +137,8 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - File/Image email placeholders after registration form submitting
   - File/Image forms fields values on submit/edit
   - Fixed multisite file/image upload process
+  - Fixed clearing old user sessions after the changing a password
+  - Made reset password process via WP native functions
 
 = 2.0.25: August 20, 2018 =
 

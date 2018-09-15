@@ -1091,36 +1091,6 @@ function um_get_metadefault( $id ) {
 
 
 /**
- * Check if a legitimate password reset request is in action
- *
- * @return bool
- */
-function um_requesting_password_reset() {
-	if (um_is_core_page( 'password-reset' ) && isset( $_POST['_um_password_reset'] ) == 1)
-		return true;
-
-	return false;
-}
-
-
-/**
- * Check if a legitimate password change request is in action
- *
- *
- * @return bool
- */
-function um_requesting_password_change() {
-	if ( um_is_core_page( 'account' ) && isset( $_POST['_um_account'] ) == 1 & isset( $_POST['_um_account_tab'] ) == 'password' ) {
-		return true;
-	} elseif ( isset( $_POST['_um_password_change'] ) && $_POST['_um_password_change'] == 1 ) {
-		return true;
-	}
-
-	return false;
-}
-
-
-/**
  * boolean for account page editing
  *
  * @return bool
