@@ -2229,9 +2229,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_label( $label, $key, $data );
 					}
 					$modal_label = ( isset( $data['label'] ) ) ? $data['label'] : __( 'Upload Photo', 'ultimate-member' );
-					$output .= '<div class="um-field-area" style="text-align: center">';
-					if ($this->field_value( $key, $default, $data )) {
+					$output .= '<div class="um-field-area" style="text-align: center;">';
+					if ( $field_value ) {
 						if ( ! in_array( $key, array( 'profile_photo', 'cover_photo' ) ) ) {
+							if ( isset( $this->set_mode ) && 'register' == $this->set_mode ) {
+								$image_info = get_transient("um_{$field_value}");
+							} else {
+								$image_info = um_user( $data['metakey']."_metadata" );
+							}
+
 							if ( isset( $this->set_mode ) && $this->set_mode == 'register' ) {
 								$imgValue = UM()->uploader()->get_core_temp_url() . "/" . $this->field_value( $key, $default, $data );
 							} else {
@@ -2290,8 +2296,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_label( $label, $key, $data );
 					}
 					$modal_label = ( isset( $data['label'] ) ) ? $data['label'] : __( 'Upload File', 'ultimate-member' );
-					$output .= '<div class="um-field-area" style="text-align: center">';
-					if ($this->field_value( $key, $default, $data )) {
+					$output .= '<div class="um-field-area" style="text-align: center;">';
+					if ( $this->field_value( $key, $default, $data ) ) {
 						$file_field_value = $this->field_value( $key, $default, $data );
 						$file_type = wp_check_filetype( $file_field_value );
 

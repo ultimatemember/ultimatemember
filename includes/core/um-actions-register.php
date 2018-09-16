@@ -670,7 +670,7 @@ function um_registration_save_files( $user_id, $args ) {
 	 */
 	$files = apply_filters( 'um_user_pre_updating_files_array', $files );
 
-	if ( !empty( $files ) ) {
+	if ( ! empty( $files ) ) {
 		UM()->uploader()->move_temporary_files( $user_id, $files );
 	}
 }
