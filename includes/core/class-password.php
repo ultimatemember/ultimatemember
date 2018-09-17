@@ -513,15 +513,8 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				wp_die('Hello, spam bot!','ultimate-member');
 			}
 
-			$reset_pass_hash = '';
-			if ( isset( $_REQUEST['act'] ) && $_REQUEST['act'] == 'reset_password' && um_is_core_page( 'password-reset' ) ) {
-				$reset_pass_hash = get_user_meta( $args['user_id'], 'reset_pass_hash', true );
-			}
-
 			if ( ! is_user_logged_in() && isset( $args ) && ! um_is_core_page( 'password-reset' ) ||
-			     is_user_logged_in() && isset( $args['user_id'] ) && $args['user_id'] != get_current_user_id() ||
-			     !is_user_logged_in() && isset( $_REQUEST['hash'] ) && $reset_pass_hash != $_REQUEST['hash'] && um_is_core_page('password-reset')
-			){
+			     is_user_logged_in() && isset( $args['user_id'] ) && $args['user_id'] != get_current_user_id() ) {
 				wp_die( __( 'This is not possible for security reasons.','ultimate-member') );
 			}
 
@@ -564,40 +557,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		function um_change_password_process_hook( $args ) {
 			extract( $args );
 
-			if ( um_is_core_page( 'account' ) && isset( $_POST['_um_account'] ) == 1 && isset( $_POST['_um_account_tab'] ) && $_POST['_um_account_tab'] == 'password' ) {
-
-				wp_set_password( $args['user_password'], $args['user_id'] );
-				delete_user_meta( $args['user_id'], 'password_rst_attempts');
-
-				/**
-				 * UM hook
-				 *
-				 * @type action
-				 * @title um_after_changing_user_password
-				 * @description Hook that runs after user change their password
-				 * @input_vars
-				 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_after_changing_user_password', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_after_changing_user_password', 'my_after_changing_user_password', 10, 1 );
-				 * function my_user_login_extra( $user_id ) {
-				 *     // your code here
-				 * }
-				 * ?>
-				 */
-				do_action( 'um_after_changing_user_password', $args['user_id'] );
-
-
-				if ( is_user_logged_in() ) {
-					wp_logout();
-				}
-
-				exit( wp_redirect( um_get_core_page('login', 'password_changed') ) );
-
-			} elseif ( isset( $_POST['_um_password_change'] ) && $_POST['_um_password_change'] == 1 ) {
+			if ( isset( $_POST['_um_password_change'] ) && $_POST['_um_password_change'] == 1 ) {
 				/**
 				 * UM hook
 				 *
