@@ -1224,6 +1224,12 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		function approve() {
 			$user_id = um_user('ID');
+
+			$status = get_user_meta( $user_id, 'account_status', true );
+			if ( 'approved' === $status ) {
+				return;
+			}
+
 			delete_option( "um_cache_userdata_{$user_id}" );
 
 			if ( um_user('account_status') == 'awaiting_admin_review' ) {
