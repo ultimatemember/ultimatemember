@@ -43,6 +43,8 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			add_action( 'um_admin_do_action__um_hide_exif_notice', array( &$this, 'um_hide_notice' ) );
 			add_action( 'um_admin_do_action__user_action', array( &$this, 'user_action' ) );
 
+			add_action( 'um_admin_do_action__install_core_pages', array( &$this, 'install_core_pages' ) );
+
 			add_action( 'parent_file', array( &$this, 'parent_file' ), 9 );
 			add_filter( 'gettext', array( &$this, 'gettext' ), 10, 4 );
 			add_filter( 'post_updated_messages', array( &$this, 'post_updated_messages' ) );
@@ -79,6 +81,43 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			} else {
 				$url = add_query_arg( array( 'page' => 'ultimatemember', 'update' => 'often_updates' ), admin_url( 'admin.php' ) );
 			}
+			exit( wp_redirect( $url ) );
+		}
+
+
+		/**
+		 * Core pages installation
+		 */
+		function install_core_pages() {
+			if ( ! is_admin() ) {
+				die();
+			}
+
+			UM()->setup()->install_default_pages();
+
+			//check empty pages in settings
+			$empty_pages = array();
+
+			$pages = UM()->config()->permalinks;
+			if ( $pages && is_array( $pages ) ) {
+				foreach ( $pages as $slug => $page_id ) {
+					$page = get_post( $page_id );
+
+					if ( ! isset( $page->ID ) && in_array( $slug, array_keys( UM()->config()->core_pages ) ) ) {
+						$empty_pages[] = $slug;
+					}
+				}
+			}
+
+			//if there aren't empty pages - then hide pages notice
+			if ( empty( $empty_pages ) ) {
+				$hidden_notices = get_option( 'um_hidden_admin_notices', array() );
+				$hidden_notices[] = 'wrong_pages';
+
+				update_option( 'um_hidden_admin_notices', $hidden_notices );
+			}
+
+			$url = add_query_arg( array( 'page' => 'um_options' ), admin_url( 'admin.php' ) );
 			exit( wp_redirect( $url ) );
 		}
 

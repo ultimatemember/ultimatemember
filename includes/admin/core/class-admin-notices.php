@@ -36,7 +36,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 		function create_list() {
 			$this->old_extensions_notice();
-			$this->main_notices();
+			$this->install_core_page_notice();
+			$this->exif_extension_notice();
 			$this->localize_note();
 			$this->show_update_messages();
 			$this->check_wrong_install_folder();
@@ -45,7 +46,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->check_wrong_licenses();
 
 			$this->reviews_notice();
-
 
 			//$this->future_changed();
 
@@ -283,40 +283,40 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 
 		/**
-		* Show main notices
-		*/
-		function main_notices() {
-
-			$hide_exif_notice = get_option( 'um_hide_exif_notice' );
-
-			if ( ! extension_loaded( 'exif' ) && ! $hide_exif_notice ) {
-				$this->add_notice( 'exif_disabled', array(
-					'class'     => 'updated',
-					'message'   => '<p>' . sprintf(__( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension. <a href="%s">Hide this notice</a>', 'ultimate-member' ), add_query_arg('um_adm_action', 'um_hide_exif_notice') ) . '</p>',
-				), 10 );
-			}
-
-			// Regarding page setup
+		 * Regarding page setup
+		 */
+		function install_core_page_notice() {
 			$pages = UM()->config()->permalinks;
+
 			if ( $pages && is_array( $pages ) ) {
 
-				$err = false;
-
 				foreach ( $pages as $slug => $page_id ) {
-
 					$page = get_post( $page_id );
 
-					if ( ! isset( $page->ID ) && in_array( $slug, array( 'user', 'account', 'members', 'register', 'login', 'logout', 'password-reset' ) ) ) {
-						$err = true;
+					if ( ! isset( $page->ID ) && in_array( $slug, array_keys( UM()->config()->core_pages ) ) ) {
+
+						ob_start(); ?>
+
+						<p>
+							<?php printf( __( 'One or more of your %s pages are not correctly setup. Please visit <strong>%s > Settings</strong> to re-assign your missing pages.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_plugin_name ); ?>
+						</p>
+
+						<p>
+							<a href="<?php echo esc_attr( add_query_arg( 'um_adm_action', 'install_core_pages' ) ); ?>" class="button button-primary"><?php _e( 'Setup Pages', 'ultimate-member' ) ?></a>
+							&nbsp;
+							<a href="javascript:void(0);" class="button-secondary um_secondary_dimiss"><?php _e( 'No thanks', 'ultimate-member' ) ?></a>
+						</p>
+
+						<?php $message = ob_get_clean();
+
+						$this->add_notice( 'wrong_pages', array(
+							'class'         => 'updated',
+							'message'       => $message,
+							'dismissible'   => true
+						), 20 );
+
+						break;
 					}
-
-				}
-
-				if ( $err ) {
-					$this->add_notice( 'wrong_pages', array(
-						'class'     => 'updated',
-						'message'   => '<p>' . __( 'One or more of your Ultimate Member pages are not correctly setup. Please visit <strong>Ultimate Member > Settings</strong> to re-assign your missing pages.', 'ultimate-member' ) . '</p>',
-					), 20 );
 				}
 
 				if ( isset( $pages['user'] ) ) {
@@ -339,6 +339,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					}
 				}
 
+			}
+		}
+
+
+		/**
+		* EXIF library notice
+		*/
+		function exif_extension_notice() {
+			$hide_exif_notice = get_option( 'um_hide_exif_notice' );
+
+			if ( ! extension_loaded( 'exif' ) && ! $hide_exif_notice ) {
+				$this->add_notice( 'exif_disabled', array(
+					'class'     => 'updated',
+					'message'   => '<p>' . sprintf(__( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension. <a href="%s">Hide this notice</a>', 'ultimate-member' ), add_query_arg('um_adm_action', 'um_hide_exif_notice') ) . '</p>',
+				), 10 );
 			}
 		}
 

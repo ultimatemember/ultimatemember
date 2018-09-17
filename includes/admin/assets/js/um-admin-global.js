@@ -24,6 +24,10 @@ jQuery(document).ready(function() {
 	});
 
 
+	jQuery(document).on('click', '.um_secondary_dimiss', function (e) {
+		jQuery(this).parents('.um-admin-notice').find( '.notice-dismiss' ).trigger('click');
+	});
+
 	jQuery(document).on('click', '.um_opt_in_link', function (e) {
 		jQuery(this).parents('.um-admin-notice').find( '.notice-dismiss' ).trigger('click');
 	});
