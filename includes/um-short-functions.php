@@ -555,7 +555,12 @@ function um_user_submitted_registration( $style = false ) {
 
 			if ( UM()->fields()->get_field_type( $k ) == 'image' || UM()->fields()->get_field_type( $k ) == 'file' ) {
 				$file = basename( $v );
-				$v = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . $file;
+				$filedata = get_user_meta( um_user( 'ID' ), $k . "_metadata", true );
+				if ( ! empty( $filedata['original_name'] ) ) {
+					$v = '<a href="' . esc_attr( UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . $file ) . '">' . $filedata['original_name'] . '</a>';
+				} else {
+					$v = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . $file;
+				}
 			}
 
 			if ( is_array( $v ) ) {
