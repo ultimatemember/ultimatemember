@@ -1,4 +1,4 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly.
+<?php if ( ! defined( 'ABSPATH' ) ) exit;
 
 
 if ( ! class_exists( 'UM' ) ) {
@@ -57,11 +57,13 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @var
 		 */
-		public $permalinks;
+		public $is_permalinks;
 
 
 		/**
-		 * @var array Languages
+		 * UM Available Languages
+		 *
+		 * @var array
 		 */
 		var $available_languages;
 
@@ -138,9 +140,9 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @param bool $instance
 		 */
 		public function set_class( $class_name, $instance = false ) {
-			if ( empty( $this->classes[$class_name] ) ) {
+			if ( empty( $this->classes[ $class_name ] ) ) {
 				$class = 'UM_' . $class_name;
-				$this->classes[$class_name] = $instance ? $class::instance() : new $class;
+				$this->classes[ $class_name ] = $instance ? $class::instance() : new $class;
 			}
 		}
 
@@ -179,16 +181,18 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @since 2.0.18
 		 */
 		function _um_construct() {
-			if ( get_option( 'permalink_structure' ) )
-				$this->permalinks = true;
-
 			//register autoloader for include UM classes
 			spl_autoload_register( array( $this, 'um__autoloader' ) );
 
 			if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 
+				if ( get_option( 'permalink_structure' ) ) {
+					$this->is_permalinks = true;
+				}
+
 				$this->is_filtering = 0;
 				$this->honeypot = 'request';
+
 				$this->available_languages = array(
 					'en_US' => 'English (US)',
 					'es_ES' => 'Español',
@@ -214,82 +218,11 @@ if ( ! class_exists( 'UM' ) ) {
 					'ar'    => 'العربية',
 				);
 
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_language_textdomain
-				 * @description Change UM textdomain
-				 * @input_vars
-				 * [{"var":"$domain","type":"string","desc":"UM Textdomain"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_filter( 'um_language_textdomain', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_filter( 'um_language_textdomain', 'my_textdomain', 10, 1 );
-				 * function my_textdomain( $domain ) {
-				 *     // your code here
-				 *     return $domain;
-				 * }
-				 * ?>
-				 */
-				$language_domain = apply_filters( 'um_language_textdomain', 'ultimate-member' );
-
-				$language_locale = ( get_locale() != '' ) ? get_locale() : 'en_US';
-
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_language_locale
-				 * @description Change UM language locale
-				 * @input_vars
-				 * [{"var":"$locale","type":"string","desc":"UM language locale"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_filter( 'um_language_locale', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_filter( 'um_language_locale', 'my_language_locale', 10, 1 );
-				 * function my_language_locale( $locale ) {
-				 *     // your code here
-				 *     return $locale;
-				 * }
-				 * ?>
-				 */
-				$language_locale = apply_filters( 'um_language_locale', $language_locale );
-
-				$language_file = WP_LANG_DIR . '/plugins/' . $language_domain . '-' . $language_locale . '.mo';
-
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_language_file
-				 * @description Change UM language file path
-				 * @input_vars
-				 * [{"var":"$language_file","type":"string","desc":"UM language file path"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_filter( 'um_language_file', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_filter( 'um_language_file', 'my_language_file', 10, 1 );
-				 * function my_language_file( $language_file ) {
-				 *     // your code here
-				 *     return $language_file;
-				 * }
-				 * ?>
-				 */
-				$language_file = apply_filters( 'um_language_file', $language_file );
-
-				load_textdomain( $language_domain, $language_file );
-
+				// textdomain loading
+				$this->localize();
 
 				// include UM classes
 				$this->includes();
-				$this->plugins_loaded();
 
 				// include hook files
 				add_action( 'plugins_loaded', array( &$this, 'init' ), 0 );
@@ -302,7 +235,6 @@ if ( ! class_exists( 'UM' ) ) {
 				// init widgets
 				add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
 
-
 				//include short non class functions
 				require_once 'um-short-functions.php';
 				require_once 'um-deprecated-functions.php';
@@ -310,18 +242,90 @@ if ( ! class_exists( 'UM' ) ) {
 		}
 
 
-		public function plugins_loaded() {
-			//gravity forms
-			if ( ! function_exists('members_get_capabilities' ) ) {
+		/**
+		 * Loading UM textdomain
+		 *
+		 * 'ultimate-member' by default
+		 */
+		function localize() {
+			$language_locale = ( get_locale() != '' ) ? get_locale() : 'en_US';
 
-				function members_get_capabilities() {
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_language_locale
+			 * @description Change UM language locale
+			 * @input_vars
+			 * [{"var":"$locale","type":"string","desc":"UM language locale"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_language_locale', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_language_locale', 'my_language_locale', 10, 1 );
+			 * function my_language_locale( $locale ) {
+			 *     // your code here
+			 *     return $locale;
+			 * }
+			 * ?>
+			 */
+			$language_locale = apply_filters( 'um_language_locale', $language_locale );
 
-				}
 
-			}
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_language_textdomain
+			 * @description Change UM textdomain
+			 * @input_vars
+			 * [{"var":"$domain","type":"string","desc":"UM Textdomain"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_language_textdomain', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_language_textdomain', 'my_textdomain', 10, 1 );
+			 * function my_textdomain( $domain ) {
+			 *     // your code here
+			 *     return $domain;
+			 * }
+			 * ?>
+			 */
+			$language_domain = apply_filters( 'um_language_textdomain', 'ultimate-member' );
+
+			$language_file = WP_LANG_DIR . '/plugins/' . $language_domain . '-' . $language_locale . '.mo';
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_language_file
+			 * @description Change UM language file path
+			 * @input_vars
+			 * [{"var":"$language_file","type":"string","desc":"UM language file path"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_language_file', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_language_file', 'my_language_file', 10, 1 );
+			 * function my_language_file( $language_file ) {
+			 *     // your code here
+			 *     return $language_file;
+			 * }
+			 * ?>
+			 */
+			$language_file = apply_filters( 'um_language_file', $language_file );
+
+			load_textdomain( $language_domain, $language_file );
 		}
 
 
+		/**
+		 * 1.3.x active extensions deactivate for properly running 2.0.x AJAX upgrades
+		 */
 		function old_update_patch() {
 			global $um_woocommerce, $um_bbpress, $um_followers, $um_friends, $um_mailchimp, $um_messaging, $um_mycred, $um_notices, $um_notifications, $um_online, $um_private_content, $um_profile_completeness, $um_recaptcha, $um_reviews, $um_activity, $um_social_login, $um_user_tags, $um_verified;
 
@@ -521,6 +525,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->admin_gdpr();
 				$this->columns();
 				$this->notices();
+				$this->admin_navmenu();
 			} elseif ( $this->is_request( 'admin' ) ) {
 				$this->admin();
 				$this->admin_menu();
@@ -534,6 +539,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->dragdrop();
 				$this->plugin_updater();
 				$this->admin_gdpr();
+				$this->admin_navmenu();
 			} elseif ( $this->is_request( 'frontend' ) ) {
 				$this->enqueue();
 				$this->account();
@@ -650,6 +656,19 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->classes['admin_menu'] = new um\admin\core\Admin_Menu();
 			}
 			return $this->classes['admin_menu'];
+		}
+
+
+		/**
+		 * @since 2.0.26
+		 *
+		 * @return um\admin\core\Admin_Navmenu()
+		 */
+		function admin_navmenu() {
+			if ( empty( $this->classes['admin_navmenu'] ) ) {
+				$this->classes['admin_navmenu'] = new um\admin\core\Admin_Navmenu();
+			}
+			return $this->classes['admin_navmenu'];
 		}
 
 
@@ -1311,10 +1330,6 @@ if ( ! class_exists( 'UM' ) ) {
 		function init() {
 
 			ob_start();
-
-			if ( $this->options()->get( 'disable_menu' ) == 0 ) {
-				require_once 'core/um-navmenu.php';
-			}
 
 			require_once 'core/um-actions-form.php';
 			require_once 'core/um-actions-access.php';

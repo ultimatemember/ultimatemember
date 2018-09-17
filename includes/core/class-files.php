@@ -81,7 +81,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		function get_download_link( $form_id, $field_key, $user_id ) {
 			$field_key = urlencode( $field_key );
 
-			if ( UM()->permalinks ) {
+			if ( UM()->is_permalinks ) {
 				$url = get_site_url( get_current_blog_id() );
 				$nonce = wp_create_nonce( $user_id . $form_id . 'um-download-nonce' );
 				return $url . "/um-download/{$form_id}/{$field_key}/{$user_id}/{$nonce}";

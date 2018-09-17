@@ -31,6 +31,23 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 
 			add_filter( 'um_localize_permalink_filter', array( &$this, 'um_localize_permalink_filter' ), 10, 2 );
 			add_filter( 'icl_ls_languages', array( &$this, 'um_core_page_wpml_permalink' ), 10, 1 );
+
+			$this->plugins_loaded();
+		}
+
+
+		/**
+		 * Gravity forms role capabilities compatibility
+		 */
+		public function plugins_loaded() {
+			//gravity forms
+			if ( ! function_exists('members_get_capabilities' ) ) {
+
+				function members_get_capabilities() {
+
+				}
+
+			}
 		}
 
 

@@ -2184,7 +2184,6 @@ JS/CSS Compression: 			<?php if ( defined('SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) { e
 <?php if( is_multisite() ): ?>
     Network Structure:			<?php echo UM()->options()->get( 'network_permalink_structure' ). "\n"; ?>
 <?php endif; ?>
-Nav Menu Settings: 			<?php if( UM()->options()->get( 'disable_menu' ) == 0 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
 Port Forwarding in URL: 		<?php if( UM()->options()->get( 'um_port_forwarding_url' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
 Exclude CSS/JS on Home: 		<?php if( UM()->options()->get( 'js_css_exlcude_home' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
 
