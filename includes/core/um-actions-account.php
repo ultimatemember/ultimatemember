@@ -21,7 +21,7 @@ function um_submit_account_errors_hook( $args ) {
 				if ( strlen(trim( $_POST['single_user_password'] ) ) == 0 ) {
 					UM()->form()->add_error('single_user_password', __('You must enter your password','ultimate-member') );
 				} else {
-					if (  ! wp_check_password( $_POST['single_user_password'], $user->data->user_pass, $user->data->ID ) ) {
+					if ( ! wp_check_password( $_POST['single_user_password'], $user->data->user_pass, $user->data->ID ) ) {
 						UM()->form()->add_error('single_user_password', __('This is not your password','ultimate-member') );
 					}
 				}

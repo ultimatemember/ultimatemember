@@ -324,8 +324,9 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				UM()->fields()->set_mode = 'account';
 				UM()->fields()->editing = true;
 
-				if ( get_query_var('um_tab') )
+				if ( get_query_var('um_tab') ) {
 					$this->current_tab = get_query_var('um_tab');
+				}
 
 			}
 		}

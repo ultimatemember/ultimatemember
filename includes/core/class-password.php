@@ -258,7 +258,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 * @return bool
 		 */
 		function is_change_request() {
-			if ( um_is_core_page( 'account' ) && isset( $_POST['_um_account'] ) == 1 & isset( $_POST['_um_account_tab'] ) == 'password' ) {
+			if ( um_is_core_page( 'account' ) && isset( $_POST['_um_account'] ) == 1 && isset( $_POST['_um_account_tab'] ) && $_POST['_um_account_tab'] == 'password' ) {
 				return true;
 			} elseif ( isset( $_POST['_um_password_change'] ) && $_POST['_um_password_change'] == 1 ) {
 				return true;
@@ -369,7 +369,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			}
 
 			if ( $this->is_change_request() ) {
-
 				UM()->form()->post_form = $_POST;
 
 				/**
@@ -565,57 +564,87 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		function um_change_password_process_hook( $args ) {
 			extract( $args );
 
-			//wp_set_password( $args['user_password'], $args['user_id'] );
+			if ( um_is_core_page( 'account' ) && isset( $_POST['_um_account'] ) == 1 && isset( $_POST['_um_account_tab'] ) && $_POST['_um_account_tab'] == 'password' ) {
 
-			//delete_user_meta( $args['user_id'], 'reset_pass_hash');
-			//delete_user_meta( $args['user_id'], 'reset_pass_hash_token');
+				wp_set_password( $args['user_password'], $args['user_id'] );
+				delete_user_meta( $args['user_id'], 'password_rst_attempts');
 
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_after_changing_user_password
-			 * @description Hook that runs after user change their password
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_after_changing_user_password', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_after_changing_user_password', 'my_after_changing_user_password', 10, 1 );
-			 * function my_user_login_extra( $user_id ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_after_changing_user_password', $args['user_id'] );
+				/**
+				 * UM hook
+				 *
+				 * @type action
+				 * @title um_after_changing_user_password
+				 * @description Hook that runs after user change their password
+				 * @input_vars
+				 * [{"var":"$user_id","type":"int","desc":"User ID"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_action( 'um_after_changing_user_password', 'function_name', 10, 1 );
+				 * @example
+				 * <?php
+				 * add_action( 'um_after_changing_user_password', 'my_after_changing_user_password', 10, 1 );
+				 * function my_user_login_extra( $user_id ) {
+				 *     // your code here
+				 * }
+				 * ?>
+				 */
+				do_action( 'um_after_changing_user_password', $args['user_id'] );
 
-			$user = get_userdata( $args['user_id'] );
-			$errors = new \WP_Error();
-			/**
-			 * Fires before the password reset procedure is validated.
-			 *
-			 * @since 3.5.0
-			 *
-			 * @param object           $errors WP Error object.
-			 * @param \WP_User|\WP_Error $user   WP_User object if the login and reset key match. WP_Error object otherwise.
-			 */
-			do_action( 'validate_password_reset', $errors, $user );
-
-			list( $rp_path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
-			$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
-
-			if ( ( ! $errors->get_error_code() ) ) {
-				reset_password( $user, $args['user_password'] );
-				setcookie( $rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
-				delete_user_meta( $args['user_id'], 'password_rst_attempts' );
 
 				if ( is_user_logged_in() ) {
 					wp_logout();
 				}
 
-				exit( wp_redirect( um_get_core_page('login', 'password_changed' ) ) );
+				exit( wp_redirect( um_get_core_page('login', 'password_changed') ) );
+
+			} elseif ( isset( $_POST['_um_password_change'] ) && $_POST['_um_password_change'] == 1 ) {
+				/**
+				 * UM hook
+				 *
+				 * @type action
+				 * @title um_after_changing_user_password
+				 * @description Hook that runs after user change their password
+				 * @input_vars
+				 * [{"var":"$user_id","type":"int","desc":"User ID"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_action( 'um_after_changing_user_password', 'function_name', 10, 1 );
+				 * @example
+				 * <?php
+				 * add_action( 'um_after_changing_user_password', 'my_after_changing_user_password', 10, 1 );
+				 * function my_user_login_extra( $user_id ) {
+				 *     // your code here
+				 * }
+				 * ?>
+				 */
+				do_action( 'um_after_changing_user_password', $args['user_id'] );
+
+				$user = get_userdata( $args['user_id'] );
+				$errors = new \WP_Error();
+				/**
+				 * Fires before the password reset procedure is validated.
+				 *
+				 * @since 3.5.0
+				 *
+				 * @param object           $errors WP Error object.
+				 * @param \WP_User|\WP_Error $user   WP_User object if the login and reset key match. WP_Error object otherwise.
+				 */
+				do_action( 'validate_password_reset', $errors, $user );
+
+				list( $rp_path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
+				$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
+
+				if ( ( ! $errors->get_error_code() ) ) {
+					reset_password( $user, $args['user_password'] );
+					setcookie( $rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
+					delete_user_meta( $args['user_id'], 'password_rst_attempts' );
+
+					if ( is_user_logged_in() ) {
+						wp_logout();
+					}
+
+					exit( wp_redirect( um_get_core_page('login', 'password_changed' ) ) );
+				}
 			}
 		}
 	}
