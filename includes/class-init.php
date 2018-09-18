@@ -50,11 +50,15 @@ if ( ! class_exists( 'UM' ) ) {
 
 		/**
 		 * @var bool Old variable
+		 *
+		 * @todo deprecate this variable
 		 */
 		public $is_filtering;
 
 
 		/**
+		 * WP Native permalinks turned on?
+		 *
 		 * @var
 		 */
 		public $is_permalinks;

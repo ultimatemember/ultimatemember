@@ -532,8 +532,11 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			foreach ( $role_data as $key=>$value ) {
 				if ( strpos( $key, '_um_' ) === 0 )
 					$key = str_replace( '_um_', '', $key );
-				$temp[$key] = $value;
+				$temp[ $key ] = $value;
 			}
+
+			$temp = apply_filters( 'um_change_role_data', $temp, $roleID );
+
 			return $temp;
 		}
 
