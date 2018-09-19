@@ -338,7 +338,13 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 			<?php } else {
 
-				echo $this->get_email_template( $slug, $args );
+				$raw_email_template = $this->get_email_template( $slug, $args );
+				$plain_email_template = strip_tags( $raw_email_template );
+				if( $plain_email_template !== $raw_email_template ){
+					$plain_email_template = preg_replace( array('/&nbsp;/mi', '/^\s+/mi'), array(' ', ''), $plain_email_template );
+				}
+
+				echo $plain_email_template;
 
 			}
 
