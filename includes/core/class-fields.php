@@ -838,7 +838,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			} else {
 
-				if (!isset( UM()->form()->post_form[$key] )) {
+				if ( ! isset( UM()->form()->post_form[ $key ] ) ) {
 
 					$field_value = um_user( $key );
 
@@ -851,12 +851,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$field_value = 'um_' . $field_value;
 							}
 						}
-						/*elseif( $this->set_mode == 'register' ){
-                          $data['default'] = UM()->options()->get( 'register_role' );
-                        }
-                        else{
-                          $data['default'] = get_option( 'default_role' );
-                        }*/
 					}
 
 					/**
@@ -881,6 +875,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					 * ?>
 					 */
 					$field_value = apply_filters( 'um_is_selected_filter_value', $field_value, $key );
+
 					/**
 					 * UM hook
 					 *
@@ -905,27 +900,27 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					 */
 					$data = apply_filters( 'um_is_selected_filter_data', $data, $key, $field_value );
 
-					if ($field_value && $this->editing == true && is_array( $field_value ) && ( in_array( $value, $field_value ) || in_array( html_entity_decode( $value ), $field_value ) )) {
+					if ( $field_value && $this->editing == true && is_array( $field_value ) && ( in_array( $value, $field_value ) || in_array( html_entity_decode( $value ), $field_value ) ) ) {
 						return true;
 					}
 
-					if ($field_value && $this->editing == true && !is_array( $field_value ) && $field_value == $value) {
+					if ( $field_value && $this->editing == true && ! is_array( $field_value ) && $field_value == $value ) {
 						return true;
 					}
 
-					if ($field_value && $this->editing == true && !is_array( $field_value ) && html_entity_decode( $field_value ) == html_entity_decode( $value )) {
+					if ( $field_value && $this->editing == true && ! is_array( $field_value ) && html_entity_decode( $field_value ) == html_entity_decode( $value )) {
 						return true;
 					}
 
-					if (strstr( $data['default'], ', ' )) {
+					if ( strstr( $data['default'], ', ' ) ) {
 						$data['default'] = explode( ', ', $data['default'] );
 					}
 
-					if (isset( $data['default'] ) && !is_array( $data['default'] ) && $data['default'] == $value) {
+					if ( isset( $data['default'] ) && ! is_array( $data['default'] ) && $data['default'] === $value ) {
 						return true;
 					}
 
-					if (isset( $data['default'] ) && is_array( $data['default'] ) && in_array( $value, $data['default'] )) {
+					if ( isset( $data['default'] ) && is_array( $data['default'] ) && in_array( $value, $data['default'] )) {
 						return true;
 					}
 
@@ -2383,7 +2378,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="' . $key . '">';
 
-
 					if (isset( $data['allowclear'] ) && $data['allowclear'] == 0) {
 						$class = 'um-s2';
 					} else {
@@ -2631,17 +2625,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							$output .= '<option value="' . $option_value . '" ';
 
-							if ($this->is_selected( $form_key, $option_value, $data )) {
+							if ( $this->is_selected( $form_key, $option_value, $data ) ) {
 								$output .= 'selected';
 								$field_value = $option_value;
-							} else if (!isset( $options_pair ) && $this->is_selected( $form_key, $v, $data )) {
+							} elseif ( ! isset( $options_pair ) && $this->is_selected( $form_key, $v, $data ) ) {
 								$output .= 'selected';
 								$field_value = $v;
 							}
 
 							$output .= '>' . __( $um_field_checkbox_item_title, 'ultimate-member' ) . '</option>';
-
-
 						}
 					}
 

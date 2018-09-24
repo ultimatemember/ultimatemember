@@ -2181,14 +2181,15 @@ function um_user( $data, $attrs = null ) {
 		case 'profile_photo':
 			$data = um_get_user_avatar_data( um_user( 'ID' ), $attrs );
 
-			return '<img src="' . esc_attr($data['url']) . '" 
-			    class="' . esc_attr($data['class']) . '" 
-			    width="' . esc_attr($data['size']) . '"  
-			    height="' . esc_attr($data['size']) . '" 
-			    alt="' . esc_attr($data['alt']) . '"
-			    data-default="' . esc_attr($data['default']) . '"
-			    onerror="if(!this.getAttribute(\'data-load-error\')){this.setAttribute(\'data-load-error\', \'1\');this.setAttribute(\'src\', this.getAttribute(\'data-default\'));}" />'; //don't move attribute before src
-
+			return sprintf( '<img src="%s" class="%s" width="%s" height="%s" alt="%s" data-default="%s" onerror="%s" />',
+				esc_attr( $data['url'] ),
+				esc_attr( $data['class'] ),
+				esc_attr( $data['size'] ),
+				esc_attr( $data['size'] ),
+				esc_attr( $data['alt'] ),
+				esc_attr( $data['default'] ),
+				'if ( ! this.getAttribute(\'data-load-error\') ){ this.setAttribute(\'data-load-error\', \'1\');this.setAttribute(\'src\', this.getAttribute(\'data-default\'));}'
+			);
 			break;
 
 		case 'cover_photo':
