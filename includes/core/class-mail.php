@@ -338,6 +338,8 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 			<?php } else {
 
+				//strip tags in plain text email
+				//important don't use HTML in plain text emails!
 				$raw_email_template = $this->get_email_template( $slug, $args );
 				$plain_email_template = strip_tags( $raw_email_template );
 				if( $plain_email_template !== $raw_email_template ){
