@@ -425,7 +425,7 @@ function um_submit_form_errors_hook_( $args ) {
 			 */
 			do_action( 'um_add_error_on_form_submit_validation', $array, $key, $args );
 
-			if ( isset( $args[$key] ) ) {
+			if ( isset( $args[ $key ] ) ) {
 
 				if ( isset( $array['required'] ) && $array['required'] == 1 ) {
 					if ( ! isset( $args[$key] ) || $args[$key] == '' || $args[$key] == 'empty_file') {

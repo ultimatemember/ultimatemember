@@ -1127,6 +1127,8 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 					}
 
 					$submitted = get_user_meta( $user_id, 'submitted', true );
+					$submitted = ! empty( $submitted ) ? $submitted : array();
+
 					$submitted[ $key ] = $new_filename;
 					update_user_meta( $user_id, 'submitted', $submitted );
 
