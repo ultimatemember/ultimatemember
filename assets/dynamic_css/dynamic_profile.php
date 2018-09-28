@@ -5,7 +5,9 @@ $photosize = str_replace('px','',$photosize);
 $photosize_up = ( $photosize / 2 ) + 10;
 $meta_padding = ( $photosize + 60 ) . 'px';
 
-if ( $area_max_width ) {
+if ( isset($area_max_width) ) {
+    if(is_numeric($area_max_width))
+        $area_max_width.="px";
 print "
 .um-$form_id.um .um-profile-body {
 	max-width: $area_max_width;
