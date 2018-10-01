@@ -55,10 +55,10 @@ function um_after_insert_user( $user_id, $args ) {
 	UM()->user()->remove_cached_queue();
 
 	um_fetch_user( $user_id );
-	UM()->user()->set_status( um_user( 'status' ) );
 	if ( ! empty( $args['submitted'] ) ) {
 		UM()->user()->set_registration_details( $args['submitted'] );
 	}
+    UM()->user()->set_status( um_user( 'status' ) );
 
 	/**
 	 * UM hook
