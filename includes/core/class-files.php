@@ -39,7 +39,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			$this->setup_paths();
 
-			//add_action( 'template_redirect', array( &$this, 'file_download' ) );
 			add_action( 'template_redirect', array( &$this, 'download_routing' ) );
 
 			$this->fonticon = array(
@@ -144,7 +143,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 
 			$download_type = $field_data[ $field_key ]['type'];
-
 			if ( $download_type === 'file' ) {
 				$this->file_download( $user_id, $field_key, $field_value );
 			} else {

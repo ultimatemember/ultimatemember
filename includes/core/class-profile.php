@@ -76,7 +76,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		/**
 		 * All tab data
 		 *
-		 * @return mixed|void
+		 * @return array
 		 */
 		function tabs() {
 
@@ -141,7 +141,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		/**
 		 * Tabs that are active
 		 *
-		 * @return mixed|void
+		 * @return array
 		 */
 		function tabs_active() {
 			$tabs = $this->tabs();
@@ -161,7 +161,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 *
 		 * @return array
 		 */
-		function tabs_primary(){
+		function tabs_primary() {
 			$tabs = $this->tabs();
 			$primary = array();
 			foreach ( $tabs as $id => $info ) {
@@ -178,7 +178,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 *
 		 * @return string
 		 */
-		function tabs_enabled(){
+		function tabs_enabled() {
 			$tabs = $this->tabs();
 			foreach( $tabs as $id => $info ){
 				if ( isset( $info['name'] ) ) {
@@ -266,7 +266,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		/**
 		 * Get active_tab
 		 *
-		 * @return mixed|void
+		 * @return string
 		 */
 		function active_tab() {
 
@@ -306,7 +306,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		/**
 		 * Get active active_subnav
 		 *
-		 * @return mixed|null
+		 * @return string|null
 		 */
 		function active_subnav() {
 

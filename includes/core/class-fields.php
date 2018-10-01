@@ -2493,7 +2493,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					}
 
-					if( ! empty( $placeholder ) ) {
+					if ( ! empty( $placeholder ) && is_string( $placeholder ) ) {
 						$placeholder = strip_tags( $placeholder );
 					}
 
