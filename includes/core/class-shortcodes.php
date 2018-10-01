@@ -385,14 +385,13 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			ob_start();
 
 			// Hide for logged in users
-			if (is_user_logged_in()) {
+			if ( is_user_logged_in() ) {
 				echo '';
 			} else {
-				echo do_shortcode(wpautop($content));
+				echo do_shortcode( wpautop( $content ) );
 			}
 
-			$output = ob_get_contents();
-			ob_end_clean();
+			$output = ob_get_clean();
 			return $output;
 		}
 
@@ -417,8 +416,6 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 * @return string
 		 */
 		function load( $args ) {
-			ob_start();
-
 			$defaults = array();
 			$args = wp_parse_args($args, $defaults);
 
@@ -435,6 +432,8 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			// get data into one global array
 			$post_data = UM()->query()->post_data($this->form_id);
+
+			ob_start();
 
 			/**
 			 * UM hook
@@ -459,7 +458,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			 */
 			$args = apply_filters( 'um_pre_args_setup', $post_data );
 
-			if (!isset($args['template'])) {
+			if ( ! isset( $args['template'] ) ) {
 				$args['template'] = '';
 			}
 
@@ -515,6 +514,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			//not display on admin preview
 			if ( empty( $_POST['act_id'] ) || $_POST['act_id'] != 'um_admin_preview_form' ) {
 				if ( 'register' == $mode && is_user_logged_in() ) {
+					ob_get_clean();
 					return __( 'You are already registered', 'ultimate-member' );
 				}
 			}
@@ -529,10 +529,12 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 					if ( ! empty( $args['role'] ) ) {
 						if ( is_array( $args['role'] ) ) {
 							if ( ! count( array_intersect( $args['role'], $current_user_roles ) ) ) {
+								ob_get_clean();
 								return '';
 							}
 						} else {
 							if ( ! in_array( $args['role'], $current_user_roles ) ) {
+								ob_get_clean();
 								return '';
 							}
 						}
@@ -628,8 +630,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			 */
 			do_action( 'um_after_everything_output' );
 
-			$output = ob_get_contents();
-			ob_end_clean();
+			$output = ob_get_clean();
 			return $output;
 		}
 
@@ -998,10 +999,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$this->load_template( 'searchform' );
 
 			// get the buffer
-			$template = ob_get_contents();
-
-			// clear the buffer
-			ob_end_clean();
+			$template = ob_get_clean();
 
 			return $template;
 		}

@@ -651,7 +651,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			);
 
 			$html = ob_get_clean();
-
 			return $html;
 		}
 
