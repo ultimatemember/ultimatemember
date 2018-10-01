@@ -149,6 +149,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'_um_profile_photo' => '1',
 				'_um_cover_photos' => '1',
 				'_um_show_name' => '1',
+				'_um_search_filters' => '',
 				'_um_directory_header' => __('{total_users} Members','ultimate-member'),
 				'_um_directory_header_single' => __('{total_users} Member','ultimate-member'),
 				'_um_directory_no_users' => __('We are sorry. We cannot find any users who match your search criteria.','ultimate-member'),
