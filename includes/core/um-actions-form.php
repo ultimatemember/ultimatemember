@@ -346,7 +346,10 @@ function um_submit_form_errors_hook_( $args ) {
 								continue 2;
 							}
 						} elseif ( $op == 'contains' ) {
-							if ( strstr( $cond_value, $parent_value ) ) {
+							if ( is_string( $cond_value ) && strstr( $cond_value, $parent_value ) ) {
+								continue 2;
+							}
+							if( is_array( $cond_value ) && in_array( $parent_value, $cond_value ) ) {
 								continue 2;
 							}
 						}
@@ -376,7 +379,10 @@ function um_submit_form_errors_hook_( $args ) {
 								continue 2;
 							}
 						} elseif ( $op == 'contains' ) {
-							if ( ! strstr( $cond_value, $parent_value ) ) {
+							if ( is_string( $cond_value ) && ! strstr( $cond_value, $parent_value ) ) {
+								continue 2;
+							}
+							if( is_array( $cond_value ) && !in_array( $parent_value, $cond_value ) ) {
 								continue 2;
 							}
 						}
