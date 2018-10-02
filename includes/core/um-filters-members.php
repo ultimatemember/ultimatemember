@@ -107,10 +107,10 @@ add_filter( 'um_prepare_user_query_args', 'um_remove_special_users_from_list', 9
  *
  * @return mixed|void
  */
-function um_add_search_to_query( $query_args, $args ){
+function um_add_search_to_query( $query_args, $args ) {
 	extract( $args );
 
-	if( !empty( $args['search_filters'] ) ){
+	if ( ! empty( $args['search_filters'] ) ) {
 		$_REQUEST['um_search'] = 1;
 	}
 
@@ -118,9 +118,9 @@ function um_add_search_to_query( $query_args, $args ){
 
 		$query = UM()->permalinks()->get_query_array();
 
-		if( !empty( $args['search_filters'] ) ){
+		if ( ! empty( $args['search_filters'] ) ) {
 			parse_str( $args['search_filters'], $search_filters );
-			if( $search_filters && is_array( $search_filters ) ){
+			if ( $search_filters && is_array( $search_filters ) ) {
 				$query = array_merge( $search_filters, $query );
 			}
 		}
