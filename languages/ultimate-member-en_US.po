@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2018-10-02 13:01+0300\n"
-"PO-Revision-Date: 2018-10-02 13:01+0300\n"
+"POT-Creation-Date: 2018-10-02 21:48+0300\n"
+"PO-Revision-Date: 2018-10-02 21:48+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -6325,35 +6325,35 @@ msgstr ""
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
-#: includes/core/class-files.php:239
+#: includes/core/class-files.php:240
 msgid "Invalid parameters"
 msgstr ""
 
-#: includes/core/class-files.php:244
+#: includes/core/class-files.php:245
 msgid "Invalid coordinates"
 msgstr ""
 
-#: includes/core/class-files.php:249
+#: includes/core/class-files.php:250
 msgid "Invalid file ownership"
 msgstr ""
 
-#: includes/core/class-files.php:302
+#: includes/core/class-files.php:303
 msgid "Invalid nonce"
 msgstr ""
 
-#: includes/core/class-files.php:322 includes/core/class-files.php:407
+#: includes/core/class-files.php:323 includes/core/class-files.php:408
 msgid "A theme or plugin compatibility issue"
 msgstr ""
 
-#: includes/core/class-files.php:950
+#: includes/core/class-files.php:951
 msgid "Ultimate Member: Not a valid temp file"
 msgstr ""
 
-#: includes/core/class-files.php:1078
+#: includes/core/class-files.php:1079
 msgid "Invalid user ID: "
 msgstr ""
 
-#: includes/core/class-files.php:1087 includes/core/class-files.php:1115
+#: includes/core/class-files.php:1088 includes/core/class-files.php:1116
 msgid "Unauthorized to do this attempt."
 msgstr ""
 
