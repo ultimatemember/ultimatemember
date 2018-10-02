@@ -79,6 +79,15 @@
 				'show_default_number'	=> 1,
 			),
 			array(
+				'id'		=> '_um_search_filters',
+				'type'		=> 'text',
+				'label'		=> __( 'Additional search filters', 'ultimate-member' ),
+				'tooltip'	=> __( 'Additional search filters like URL parameters' ),
+				'value'		=> UM()->query()->get_meta_value('_um_search_filters', null, '' ),
+				'conditional'   => array( '_um_search', '=', 1 ),
+				'placeholder' => 'field1=val1&field2=val2'
+			),
+			array(
 				'id'		=> '_um_directory_header',
 				'type'		=> 'text',
 				'label'		=> __( 'Results Text', 'ultimate-member' ),
@@ -104,6 +113,6 @@
 			)
 		)
 	) )->render_form(); ?>
-	
+
 	<div class="um-admin-clear"></div>
 </div>
