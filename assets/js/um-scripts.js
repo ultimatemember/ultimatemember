@@ -319,6 +319,7 @@ jQuery(document).ready(function() {
         var um_ajax_url = me.data('um-ajax-url');
         var um_ajax_source = me.data('um-ajax-source');
         var original_value = me.val();
+        var cache_key = me.attr('id');
 
         me.attr('data-um-init-field', true );
 
@@ -326,8 +327,12 @@ jQuery(document).ready(function() {
             var parent  = jQuery(this);
             var form_id = parent.closest('form').find('input[type=hidden][name=form_id]').val();
             var arr_key = parent.val();
+            
+            if(typeof um_select_options_cache[ cache_key ] === 'undefined') {
+                um_select_options_cache[ cache_key ] = {};
+            }
 
-            if( parent.val() != '' && typeof um_select_options_cache[ arr_key ] != 'object' ){
+            if( parent.val() != '' && typeof um_select_options_cache[ cache_key ][ arr_key ] == 'undefined' ){
 
                 jQuery.ajax({
                     url: wp.ajax.settings.url,
@@ -358,8 +363,8 @@ jQuery(document).ready(function() {
 
             }
 
-            if( parent.val() != '' && typeof um_select_options_cache[ arr_key ] == 'object'  ) {
-                var data = um_select_options_cache[ arr_key ];
+            if( parent.val() != '' && typeof um_select_options_cache[ cache_key ][ arr_key ] == 'object'  ) {
+                var data = um_select_options_cache[ cache_key ][ arr_key ];
                 um_field_populate_child_options( me, data, arr_key );
             }
 
@@ -382,10 +387,11 @@ jQuery(document).ready(function() {
      */
     function um_field_populate_child_options( me, data, arr_key, arr_items ){
 
-
         var parent_option = me.data('um-parent');
         var child_name = me.attr('name');
         var parent_dom = jQuery('select[name="'+parent_option+'"]');
+        var cache_key = me.attr('id');
+
         me.find('option[value!=""]').remove();
 
         if( ! me.hasClass('um-child-option-disabled') ){
@@ -422,7 +428,7 @@ jQuery(document).ready(function() {
                 me.attr('disabled','disabled');
             }
         }
-        um_select_options_cache[ arr_key ] = data;
+        um_select_options_cache[ cache_key ][ arr_key ] = data;
 
 
     }
