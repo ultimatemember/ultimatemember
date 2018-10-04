@@ -161,11 +161,19 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 */
 		function image_download( $user_id, $field_key, $field_value ) {
 			$file_path = UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . $field_value;
+			if ( ! file_exists( $file_path ) ) {
+				if ( is_multisite() ) {
+					//multisite fix for old customers
+					$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $file_path );
+				}
+			}
+
 			$file_info = get_user_meta( $user_id, $field_key . "_metadata", true );
 
+			$pathinfo = pathinfo( $file_path );
 			$size = filesize( $file_path );
-			$originalname = $file_info['original_name'];
-			$type = $file_info['type'];
+			$originalname = ! empty( $file_info['original_name'] ) ? $file_info['original_name'] : $pathinfo['basename'];
+			$type = ! empty( $file_info['type'] ) ? $file_info['type'] : $pathinfo['extension'];
 
 			header('Content-Description: File Transfer');
 			header('Content-Type: ' . $type );
@@ -187,11 +195,19 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 */
 		function file_download( $user_id, $field_key, $field_value ) {
 			$file_path = UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . $field_value;
+			if ( ! file_exists( $file_path ) ) {
+				if ( is_multisite() ) {
+					//multisite fix for old customers
+					$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $file_path );
+				}
+			}
+
 			$file_info = get_user_meta( $user_id, $field_key . "_metadata", true );
 
+			$pathinfo = pathinfo( $file_path );
 			$size = filesize( $file_path );
-			$originalname = $file_info['original_name'];
-			$type = $file_info['type'];
+			$originalname = ! empty( $file_info['original_name'] ) ? $file_info['original_name'] : $pathinfo['basename'];
+			$type = ! empty( $file_info['type'] ) ? $file_info['type'] : $pathinfo['extension'];
 
 			header('Content-Description: File Transfer');
 			header('Content-Type: ' . $type );

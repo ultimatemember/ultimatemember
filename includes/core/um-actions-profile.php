@@ -1195,15 +1195,15 @@ function um_add_submit_button_to_profile( $args ) {
 
 		<?php if (isset( $args['secondary_btn'] ) && $args['secondary_btn'] != 0) { ?>
 
-			<div class="um-left um-half"><input type="submit" value="<?php echo $args['primary_btn_word']; ?>"
+			<div class="um-left um-half"><input type="submit" value="<?php esc_attr_e( $args['primary_btn_word'], 'ultimate-member' ); ?>"
 			                                    class="um-button"/></div>
-			<div class="um-right um-half"><a href="<?php echo um_edit_my_profile_cancel_uri(); ?>"
-			                                 class="um-button um-alt"><?php echo $args['secondary_btn_word']; ?></a>
+			<div class="um-right um-half"><a href="<?php echo esc_attr( um_edit_my_profile_cancel_uri() ); ?>"
+			                                 class="um-button um-alt"><?php esc_attr_e( $args['secondary_btn_word'], 'ultimate-member' ); ?></a>
 			</div>
 
 		<?php } else { ?>
 
-			<div class="um-center"><input type="submit" value="<?php echo $args['primary_btn_word']; ?>"
+			<div class="um-center"><input type="submit" value="<?php esc_attr_e( $args['primary_btn_word'], 'ultimate-member' ); ?>"
 			                              class="um-button"/></div>
 
 		<?php } ?>

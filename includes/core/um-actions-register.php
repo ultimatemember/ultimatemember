@@ -585,12 +585,12 @@ function um_add_submit_button_to_register( $args ) {
 
 		<?php if ( isset($args['secondary_btn']) && $args['secondary_btn'] != 0 ) { ?>
 
-			<div class="um-left um-half"><input type="submit" value="<?php echo __( $primary_btn_word,'ultimate-member'); ?>" class="um-button" id="um-submit-btn" /></div>
-			<div class="um-right um-half"><a href="<?php echo $secondary_btn_url; ?>" class="um-button um-alt"><?php echo __( $secondary_btn_word,'ultimate-member'); ?></a></div>
+			<div class="um-left um-half"><input type="submit" value="<?php esc_attr_e( $primary_btn_word,'ultimate-member' ) ?>" class="um-button" id="um-submit-btn" /></div>
+			<div class="um-right um-half"><a href="<?php echo esc_attr( $secondary_btn_url ); ?>" class="um-button um-alt"><?php esc_attr_e( $secondary_btn_word,'ultimate-member'); ?></a></div>
 
 		<?php } else { ?>
 
-			<div class="um-center"><input type="submit" value="<?php echo __( $primary_btn_word,'ultimate-member'); ?>" class="um-button" id="um-submit-btn" /></div>
+			<div class="um-center"><input type="submit" value="<?php esc_attr_e( $primary_btn_word,'ultimate-member' ) ?>" class="um-button" id="um-submit-btn" /></div>
 
 		<?php } ?>
 

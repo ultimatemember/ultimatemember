@@ -47,16 +47,18 @@ function um_submit_form_errors_hook_login( $args ) {
 		$user_name = $args['user_login'];
 	}
 
-	if ( !username_exists( $user_name ) ) {
+	/*if ( !username_exists( $user_name ) ) {
 		if ( $is_email ) {
 			UM()->form()->add_error( $field,  __(' Sorry, we can\'t find an account with that email address','ultimate-member') );
 		} else {
 			UM()->form()->add_error( $field,  __(' Sorry, we can\'t find an account with that username','ultimate-member') );
 		}
 	} else {
-		if ( $args['user_password'] == '' ) {
-			UM()->form()->add_error( 'user_password',  __('Please enter your password','ultimate-member') );
-		}
+
+	}*/
+
+	if ( $args['user_password'] == '' ) {
+		UM()->form()->add_error( 'user_password',  __('Please enter your password','ultimate-member') );
 	}
 
 	$user = get_user_by( 'login', $user_name );
@@ -100,26 +102,29 @@ add_action( 'um_submit_form_errors_hook_login', 'um_submit_form_errors_hook_logi
  */
 function um_display_login_errors( $args ) {
 	$error = '';
-	
-	if( UM()->form()->count_errors() > 0 ) {
+
+	if ( UM()->form()->count_errors() > 0 ) {
 		$errors = UM()->form()->errors;
 		// hook for other plugins to display error
 		$error_keys = array_keys( $errors );
-		}
+	}
 
-		if( isset( $args['custom_fields'] ) ){
-			$custom_fields = $args['custom_fields'];
-		}
+	if ( isset( $args['custom_fields'] ) ) {
+		$custom_fields = $args['custom_fields'];
+	}
 
-		if( ! empty( $error_keys ) && ! empty( $custom_fields ) ){
-			foreach( $error_keys as $error ){
-				if( trim( $error ) && ! isset( $custom_fields[ $error ] )  && ! empty(  $errors[ $error ] ) ){
-					$error_message = apply_filters( 'login_errors', $errors[ $error ]  );
-					echo '<p class="um-notice err um-error-code-'.$error.'"><i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i>' . $error_message  . '</p>';
+	if ( ! empty( $error_keys ) && ! empty( $custom_fields ) ) {
+		foreach ( $error_keys as $error ) {
+			if ( trim( $error ) && ! isset( $custom_fields[ $error ] ) && ! empty( $errors[ $error ] ) ) {
+				$error_message = apply_filters( 'login_errors', $errors[ $error ], $error );
+				if ( empty( $error_message ) ) {
+					return;
 				}
+				echo '<p class="um-notice err um-error-code-' . esc_attr( $error ) . '"><i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i>' . $error_message  . '</p>';
 			}
 		}
 	}
+}
 add_action( 'um_before_login_fields', 'um_display_login_errors' );
 
 
@@ -421,12 +426,12 @@ function um_add_submit_button_to_login( $args ) {
 
 		<?php if ( isset($args['secondary_btn']) && $args['secondary_btn'] != 0 ) { ?>
 
-			<div class="um-left um-half"><input type="submit" value="<?php echo __( $primary_btn_word,'ultimate-member'); ?>" class="um-button" id="um-submit-btn" /></div>
-			<div class="um-right um-half"><a href="<?php echo $secondary_btn_url; ?>" class="um-button um-alt"><?php echo __( $secondary_btn_word,'ultimate-member'); ?></a></div>
+			<div class="um-left um-half"><input type="submit" value="<?php esc_attr_e( $primary_btn_word, 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" /></div>
+			<div class="um-right um-half"><a href="<?php echo esc_attr( $secondary_btn_url ); ?>" class="um-button um-alt"><?php esc_attr_e( $secondary_btn_word,'ultimate-member'); ?></a></div>
 
 		<?php } else { ?>
 
-			<div class="um-center"><input type="submit" value="<?php echo __( $args['primary_btn_word'],'ultimate-member'); ?>" class="um-button" id="um-submit-btn" /></div>
+			<div class="um-center"><input type="submit" value="<?php esc_attr_e( $args['primary_btn_word'],'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" /></div>
 
 		<?php } ?>
 
