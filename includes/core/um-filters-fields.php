@@ -672,8 +672,10 @@ add_filter( 'um_profile_field_filter_hook__','um_profile_field_filter_xss_valida
  * @return mixed
  */
 function um_submit_form_data_trim_fields( $post_form, $mode ) {
-	foreach ( $post_form as &$field ) {
-		$field = trim( $field );
+	foreach ( $post_form as $key => $field ) {
+		if ( is_string( $field ) ) {
+			$post_form[ $key ] = trim( $field );
+		}
 	}
 
 	return $post_form;
