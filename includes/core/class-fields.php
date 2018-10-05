@@ -2599,6 +2599,28 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					}
 
 					$options = $this->get_available_roles( $form_key, $options );
+					
+					/**
+					* UM hook
+					*
+					* @type filter
+					* @title um_select_options_format_pair
+					* @description Enable format options key => value for a better support with ACF
+					* @input_vars
+					* [{"var":"$options","type":"array","desc":"Dynamic options"}]
+					* @change_log
+					* ["Since: 2.0.28"]
+					* @usage add_filter( 'um_select_options_format_pair', 'function_name', 10, 1 );
+					* @example
+					* <?php
+					* add_filter( 'um_select_options_format_pair', 'my_fields_options_format_pairs', 10, 1 );
+					* function my_fields_options_format_pairs( $options ) {
+					*     // your code here
+					*     return $options;
+					* }
+					* ?>
+					*/
+					$options = apply_filters('um_select_options_format_pair', $options);
 
 					// add options
 					if ( ! empty( $options ) ) {
