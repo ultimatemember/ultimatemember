@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.7
 Tested up to: 4.9
-Stable tag: 2.0.27
+Stable tag: 2.0.28
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -132,6 +132,16 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 == Changelog ==
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
+
+= 2.0.28: October 5, 2018 =
+
+* Bugfixes:
+  - Fixed Email notifications
+  - Fixed Download files/images for multisites
+  - Fixed Profile/Cover image for multisites
+  - Fixed XSS vulnerabilities (detected by @Serhack)
+  - Fixed trim fields on submit forms
+  - Fixed submitted info
 
 = 2.0.27: October 2, 2018 =
 

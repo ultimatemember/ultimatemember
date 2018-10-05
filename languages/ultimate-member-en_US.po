@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2018-10-02 21:48+0300\n"
-"PO-Revision-Date: 2018-10-02 21:48+0300\n"
+"POT-Creation-Date: 2018-10-05 10:16+0300\n"
+"PO-Revision-Date: 2018-10-05 10:16+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -115,7 +115,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-builder.php:609
 #: includes/admin/core/class-admin-builder.php:763
-#: includes/core/class-fields.php:4026
+#: includes/core/class-fields.php:4033
 msgid "Please login as administrator"
 msgstr ""
 
@@ -3526,7 +3526,7 @@ msgstr ""
 #: includes/admin/templates/modal/dynamic_new_group.php:14
 #: includes/admin/templates/modal/fonticons.php:11
 #: includes/admin/templates/role/publish.php:24
-#: includes/core/class-fields.php:2272 includes/core/class-fields.php:2362
+#: includes/core/class-fields.php:2272 includes/core/class-fields.php:2369
 #: includes/core/um-actions-profile.php:554
 #: includes/core/um-actions-profile.php:693
 #: includes/core/um-actions-profile.php:726
@@ -4165,7 +4165,7 @@ msgstr ""
 msgid "You must add a shortcode to the content area"
 msgstr ""
 
-#: includes/core/class-builtin.php:663 includes/core/class-user.php:1536
+#: includes/core/class-builtin.php:663 includes/core/class-user.php:1538
 msgid "Only me"
 msgstr ""
 
@@ -6294,7 +6294,7 @@ msgstr ""
 msgid "Change photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2271 includes/core/class-fields.php:2361
+#: includes/core/class-fields.php:2271 includes/core/class-fields.php:2368
 msgid "Processing..."
 msgstr ""
 
@@ -6302,58 +6302,58 @@ msgstr ""
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:2328 includes/core/um-filters-fields.php:230
+#: includes/core/class-fields.php:2335 includes/core/um-filters-fields.php:243
 msgid "This file has been removed."
 msgstr ""
 
-#: includes/core/class-fields.php:2331 includes/core/class-fields.php:2361
+#: includes/core/class-fields.php:2338 includes/core/class-fields.php:2368
 msgid "Change file"
 msgstr ""
 
-#: includes/core/class-fields.php:2361
+#: includes/core/class-fields.php:2368
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:3784
+#: includes/core/class-fields.php:3791
 #, php-format
 msgid ""
 "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some "
 "information!"
 msgstr ""
 
-#: includes/core/class-fields.php:3786
+#: includes/core/class-fields.php:3793
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
-#: includes/core/class-files.php:240
+#: includes/core/class-files.php:256
 msgid "Invalid parameters"
 msgstr ""
 
-#: includes/core/class-files.php:245
+#: includes/core/class-files.php:261
 msgid "Invalid coordinates"
 msgstr ""
 
-#: includes/core/class-files.php:250
+#: includes/core/class-files.php:266
 msgid "Invalid file ownership"
 msgstr ""
 
-#: includes/core/class-files.php:303
+#: includes/core/class-files.php:319
 msgid "Invalid nonce"
 msgstr ""
 
-#: includes/core/class-files.php:323 includes/core/class-files.php:408
+#: includes/core/class-files.php:339 includes/core/class-files.php:424
 msgid "A theme or plugin compatibility issue"
 msgstr ""
 
-#: includes/core/class-files.php:951
+#: includes/core/class-files.php:967
 msgid "Ultimate Member: Not a valid temp file"
 msgstr ""
 
-#: includes/core/class-files.php:1079
+#: includes/core/class-files.php:1095
 msgid "Invalid user ID: "
 msgstr ""
 
-#: includes/core/class-files.php:1088 includes/core/class-files.php:1116
+#: includes/core/class-files.php:1104 includes/core/class-files.php:1132
 msgid "Unauthorized to do this attempt."
 msgstr ""
 
@@ -6778,31 +6778,23 @@ msgstr ""
 msgid "Please enter your email"
 msgstr ""
 
-#: includes/core/um-actions-login.php:52
-msgid " Sorry, we can't find an account with that email address"
-msgstr ""
-
-#: includes/core/um-actions-login.php:54
-msgid " Sorry, we can't find an account with that username"
-msgstr ""
-
-#: includes/core/um-actions-login.php:58
+#: includes/core/um-actions-login.php:61
 msgid "Please enter your password"
 msgstr ""
 
-#: includes/core/um-actions-login.php:66
+#: includes/core/um-actions-login.php:68
 msgid "Password is incorrect. Please try again."
 msgstr ""
 
-#: includes/core/um-actions-login.php:194
+#: includes/core/um-actions-login.php:199
 msgid "This action has been prevented for security measures."
 msgstr ""
 
-#: includes/core/um-actions-login.php:418
+#: includes/core/um-actions-login.php:423
 msgid "Keep me signed in"
 msgstr ""
 
-#: includes/core/um-actions-login.php:453
+#: includes/core/um-actions-login.php:458
 msgid "Forgot your password?"
 msgstr ""
 
@@ -6952,7 +6944,7 @@ msgstr ""
 msgid "Last login: %s"
 msgstr ""
 
-#: includes/core/um-filters-fields.php:261
+#: includes/core/um-filters-fields.php:274
 msgid "Untitled photo"
 msgstr ""
 
@@ -6977,11 +6969,11 @@ msgstr ""
 msgid "Login as this user"
 msgstr ""
 
-#: includes/um-short-functions.php:571
+#: includes/um-short-functions.php:580
 msgid "date submitted"
 msgstr ""
 
-#: includes/um-short-functions.php:577
+#: includes/um-short-functions.php:586
 msgid "(empty)"
 msgstr ""
 
