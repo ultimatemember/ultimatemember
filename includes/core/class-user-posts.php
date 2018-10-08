@@ -20,31 +20,108 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 			add_action( 'um_profile_content_posts', array( &$this, 'add_posts' ) );
 			add_action( 'um_profile_content_comments', array( &$this, 'add_comments' ) );
 
-			add_action( 'um_ajax_load_posts__um_load_posts', array( &$this, 'load_posts' ) );
-			add_action( 'um_ajax_load_posts__um_load_comments', array( &$this, 'load_comments' ) );
+			add_action( 'um_ajax_load_posts__um_load_comments', array( &$this, 'load_comments' ), 10, 1 );
+		}
+
+
+		/**
+		 * Add posts
+		 */
+		function add_posts() {
+
+			$args = array(
+				'post_type'         => 'post',
+				'posts_per_page'    => 10,
+				'offset'            => 0,
+				'author'            => um_get_requested_user(),
+				'post_status'       => array( 'publish' )
+			);
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_profile_query_make_posts
+			 * @description Some changes of WP_Query Posts Tab
+			 * @input_vars
+			 * [{"var":"$query_posts","type":"WP_Query","desc":"UM Posts Tab query"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_profile_query_make_posts', 'function_name', 10, 1 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_profile_query_make_posts', 'my_profile_query_make_posts', 10, 1 );
+			 * function my_profile_query_make_posts( $query_posts ) {
+			 *     // your code here
+			 *     return $query_posts;
+			 * }
+			 * ?>
+			 */
+			$args = apply_filters( 'um_profile_query_make_posts', $args );
+			$posts = get_posts( $args );
+
+			$count_posts = wp_count_posts();
+			$count_posts = ! empty( $count_posts->publish ) ? $count_posts->publish : 0;
+
+			UM()->shortcodes()->set_args = array( 'posts' => $posts, 'count_posts' => $count_posts );
+			UM()->shortcodes()->load_template( 'profile/posts' );
+		}
+
+
+		/**
+		 * Add comments
+		 */
+		function add_comments() {
+			UM()->shortcodes()->load_template( 'profile/comments' );
 		}
 
 
 		/**
 		 * Dynamic load of posts
 		 *
-		 * @param array $args
 		 */
-		function load_posts( $args ) {
-			$array = explode(',', $args );
-			$post_type = $array[0];
-			$posts_per_page = $array[1];
-			$offset = $array[2];
-			$author = $array[3];
+		function load_posts() {
+			$author = ! empty( $_POST['author'] ) ? $_POST['author'] : get_current_user_id();
+			$page = ! empty( $_POST['page'] ) ? $_POST['page'] : 0;
 
-			$offset_n = $posts_per_page + $offset;
+			$args = array(
+				'post_type'         => 'post',
+				'posts_per_page'    => 10,
+				'offset'            => ( $page - 1 ) * 10,
+				'author'            => $author,
+				'post_status'       => array( 'publish' )
+			);
 
-			UM()->shortcodes()->modified_args = "$post_type,$posts_per_page,$offset_n,$author";
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_profile_query_make_posts
+			 * @description Some changes of WP_Query Posts Tab
+			 * @input_vars
+			 * [{"var":"$query_posts","type":"WP_Query","desc":"UM Posts Tab query"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_profile_query_make_posts', 'function_name', 10, 1 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_profile_query_make_posts', 'my_profile_query_make_posts', 10, 1 );
+			 * function my_profile_query_make_posts( $query_posts ) {
+			 *     // your code here
+			 *     return $query_posts;
+			 * }
+			 * ?>
+			 */
+			$args = apply_filters( 'um_profile_query_make_posts', $args );
+			$posts = get_posts( $args );
 
-			UM()->shortcodes()->loop = UM()->query()->make("post_type=$post_type&posts_per_page=$posts_per_page&offset=$offset&author=$author");
-
-			UM()->shortcodes()->load_template('profile/posts-single');
+			UM()->shortcodes()->set_args = array( 'posts' => $posts );
+			UM()->shortcodes()->load_template( 'profile/posts' );
+			wp_die();
 		}
+
 
 		/**
 		 * Dynamic load of comments
@@ -65,22 +142,6 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 			UM()->shortcodes()->loop = UM()->query()->make("post_type=$post_type&number=$posts_per_page&offset=$offset&user_id=$author");
 
 			UM()->shortcodes()->load_template('profile/comments-single');
-		}
-
-
-		/**
-		 * Add posts
-		 */
-		function add_posts() {
-			UM()->shortcodes()->load_template( 'profile/posts' );
-		}
-
-
-		/**
-		 * Add comments
-		 */
-		function add_comments() {
-			UM()->shortcodes()->load_template( 'profile/comments' );
 		}
 
 

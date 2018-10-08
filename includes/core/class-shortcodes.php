@@ -272,14 +272,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			$file = um_path . "templates/{$tpl}.php";
 			$theme_file = get_stylesheet_directory() . "/ultimate-member/templates/{$tpl}.php";
-
-
 			if ( file_exists( $theme_file ) ) {
 				$file = $theme_file;
 			}
 
 			if ( file_exists( $file ) ) {
-
 				include $file;
 			}
 		}

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2018-10-05 10:16+0300\n"
-"PO-Revision-Date: 2018-10-05 10:16+0300\n"
+"POT-Creation-Date: 2018-10-08 23:32+0300\n"
+"PO-Revision-Date: 2018-10-08 23:32+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -6513,17 +6513,17 @@ msgstr ""
 msgid "Wrong nonce"
 msgstr ""
 
-#: includes/core/class-shortcodes.php:358
+#: includes/core/class-shortcodes.php:355
 msgid ""
 "This content has been restricted to logged in users only. Please <a href="
 "\"{login_referrer}\">login</a> to view this content."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:518
+#: includes/core/class-shortcodes.php:515
 msgid "You are already registered"
 msgstr ""
 
-#: includes/core/class-shortcodes.php:760
+#: includes/core/class-shortcodes.php:757
 msgid "Default Template"
 msgstr ""
 
@@ -7043,37 +7043,37 @@ msgstr ""
 msgid "This user has not made any comments."
 msgstr ""
 
-#: templates/profile/posts-single.php:16
+#: templates/profile/posts-single.php:21
 #, php-format
 msgid "%s ago"
 msgstr ""
 
-#: templates/profile/posts-single.php:17
+#: templates/profile/posts-single.php:24
 msgid "in"
 msgstr ""
 
-#: templates/profile/posts-single.php:18
+#: templates/profile/posts-single.php:30
 msgid "no comments"
 msgstr ""
 
-#: templates/profile/posts-single.php:18
+#: templates/profile/posts-single.php:32
+#, php-format
+msgid "%s comments"
+msgstr ""
+
+#: templates/profile/posts-single.php:34
 msgid "1 comment"
 msgstr ""
 
-#: templates/profile/posts-single.php:18
-#, php-format
-msgid "% comments"
-msgstr ""
-
-#: templates/profile/posts-single.php:27 templates/profile/posts.php:35
+#: templates/profile/posts.php:21
 msgid "load more posts"
 msgstr ""
 
-#: templates/profile/posts.php:43
+#: templates/profile/posts.php:32
 msgid "You have not created any posts."
 msgstr ""
 
-#: templates/profile/posts.php:43
+#: templates/profile/posts.php:32
 msgid "This user has not created any posts."
 msgstr ""
 

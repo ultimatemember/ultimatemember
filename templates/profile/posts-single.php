@@ -1,30 +1,40 @@
-	<?php while (UM()->shortcodes()->loop->have_posts()) { UM()->shortcodes()->loop->the_post(); $post_id = get_the_ID(); ?>
+<div class="um-item">
+	<div class="um-item-link">
+		<i class="um-icon-ios-paper"></i>
+		<a href="<?php echo get_permalink( $post ) ?>"><?php echo $post->post_title; ?></a>
+	</div>
 
-		<div class="um-item">
-			<div class="um-item-link"><i class="um-icon-ios-paper"></i><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></div>
-			
-			<?php if ( has_post_thumbnail( $post_id ) ) {
-					$image_id = get_post_thumbnail_id( $post_id );
-					$image_url = wp_get_attachment_image_src( $image_id, 'full', true );
-			?>
-			
-			<div class="um-item-img"><a href="<?php the_permalink(); ?>"><?php echo get_the_post_thumbnail( $post_id, 'medium' ); ?></a></div>
-			
-			<?php } ?>
-			
-			<div class="um-item-meta">
-				<span><?php echo sprintf(__('%s ago','ultimate-member'), human_time_diff( get_the_time('U'), current_time('timestamp') ) ); ?></span>
-				<span><?php echo __('in','ultimate-member');?>: <?php the_category( ', ' ); ?></span>
-				<span><?php comments_number( __('no comments','ultimate-member'), __('1 comment','ultimate-member'), __('% comments','ultimate-member') ); ?></span>
-			</div>
+	<?php if ( has_post_thumbnail( $post->ID ) ) {
+		$image_id = get_post_thumbnail_id( $post->ID );
+		$image_url = wp_get_attachment_image_src( $image_id, 'full', true ); ?>
+
+		<div class="um-item-img">
+			<a href="<?php echo get_permalink( $post ) ?>">
+				<?php echo get_the_post_thumbnail( $post->ID, 'medium' ); ?>
+			</a>
 		</div>
-		
+
 	<?php } ?>
-	
-	<?php if ( isset(UM()->shortcodes()->modified_args) && UM()->shortcodes()->loop->have_posts() && UM()->shortcodes()->loop->found_posts >= 10 ) { ?>
-	
-		<div class="um-load-items">
-			<a href="#" class="um-ajax-paginate um-button" data-hook="um_load_posts" data-args="<?php echo UM()->shortcodes()->modified_args; ?>"><?php _e('load more posts','ultimate-member'); ?></a>
-		</div>
-		
-	<?php } ?>
+
+	<div class="um-item-meta">
+		<span>
+			<?php printf( __( '%s ago', 'ultimate-member' ), human_time_diff( get_the_time( 'U', $post->ID ), current_time( 'timestamp' ) ) ); ?>
+		</span>
+		<span>
+			<?php echo __( 'in', 'ultimate-member' ); ?>: <?php the_category( ', ', '', $post->ID ); ?>
+		</span>
+		<span>
+			<?php $num_comments = get_comments_number( $post->ID );
+
+			if ( $num_comments == 0 ) {
+				$comments = __( 'no comments', 'ultimate-member' );
+			} elseif ( $num_comments > 1 ) {
+				$comments = sprintf( __( '%s comments', 'ultimate-member' ), $num_comments );
+			} else {
+				$comments = __( '1 comment', 'ultimate-member' );
+			} ?>
+
+			<a href="<?php echo get_comments_link( $post->ID ) ?>"><?php echo $comments ?></a>
+		</span>
+	</div>
+</div>

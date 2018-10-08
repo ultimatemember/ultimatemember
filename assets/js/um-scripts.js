@@ -241,31 +241,62 @@ jQuery(document).ready(function() {
         return false;
     });
 
-    jQuery(document).on('click', '.um-ajax-paginate', function(e){
-        e.preventDefault();
-        var parent = jQuery(this).parent();
-        parent.addClass('loading');
-        var args = jQuery(this).data('args');
-        var hook = jQuery(this).data('hook');
-        var container = jQuery(this).parents('.um').find('.um-ajax-items');
-        jQuery.ajax({
-            url: wp.ajax.settings.url,
-            type: 'post',
-            data: {
-                action: 'um_ajax_paginate',
-                hook: hook,
-                args: args
-            },
-            complete: function(){
-                parent.removeClass('loading');
-            },
-            success: function(data){
-                parent.remove();
-                container.append( data );
-            }
-        });
-        return false;
-    });
+
+	jQuery( document.body ).on( 'click', '.um-ajax-paginate', function(e) {
+		e.preventDefault();
+
+		var obj = jQuery(this);
+		var parent = jQuery(this).parent();
+		parent.addClass( 'loading' );
+
+		var hook = jQuery(this).data('hook');
+		if ( 'um_load_posts' === hook ) {
+			var pages = jQuery(this).data('pages')*1;
+			var next_page = jQuery(this).data('page')*1 + 1;
+
+			jQuery.ajax({
+				url: wp.ajax.settings.url,
+				type: 'post',
+				data: {
+					action: 'um_ajax_paginate_posts',
+					author: jQuery(this).data('author'),
+					page:   next_page
+				},
+				complete: function() {
+					parent.removeClass( 'loading' );
+				},
+				success: function( data ) {
+					parent.before( data );
+					if ( next_page === pages ) {
+						parent.remove();
+					} else {
+						obj.data( 'page', next_page );
+					}
+				}
+			});
+		} else {
+			var args = jQuery(this).data('args');
+			var container = jQuery(this).parents('.um').find('.um-ajax-items');
+
+			jQuery.ajax({
+				url: wp.ajax.settings.url,
+				type: 'post',
+				data: {
+					action: 'um_ajax_paginate',
+					hook: hook,
+					args: args
+				},
+				complete: function() {
+					parent.removeClass( 'loading' );
+				},
+				success: function(data){
+					parent.remove();
+					container.append( data );
+				}
+			});
+		}
+	});
+
 
     jQuery(document).on('click', '.um-ajax-action', function(e){
         e.preventDefault();
