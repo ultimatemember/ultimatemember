@@ -1084,8 +1084,6 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			$crop = explode( ',', $coord );
 			$crop = array_map( 'intval', $crop );
 
-			error_log(__METHOD__ . " key=$key");
-
 			do_action("um_upload_image_process__{$key}", $image_path, $src, $key, $user_id, $coord, $crop );
 
 			if ( ! in_array( $key, array('profile_photo','cover_photo') ) ) {

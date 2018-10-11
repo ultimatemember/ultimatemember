@@ -286,8 +286,8 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			$language_codes = $this->get_languages_codes();
 
 			$lang = '';
-			if ( $language_codes['default'] != $language_codes['current'] &&
-			     UM()->config()->email_notifications[ $template_name ]['recipient'] != 'admin' ) {
+			if ( $language_codes['default'] != $language_codes['current'] /*&&
+			     UM()->config()->email_notifications[ $template_name ]['recipient'] != 'admin'*/ ) {
 				$lang = $language_codes['current'] . '/';
 			}
 
