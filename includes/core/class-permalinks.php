@@ -373,11 +373,11 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 
 			} else {
 
-				$profile_url =  add_query_arg( 'um_user', $slug, $profile_url );
+				$profile_url =  add_query_arg( 'um_user', strtolower( $slug ), $profile_url );
 
 			}
 
-			return ! empty( $profile_url ) ? strtolower( $profile_url ) : '';
+			return ! empty( $profile_url ) ? $profile_url : '';
 		}
 
 

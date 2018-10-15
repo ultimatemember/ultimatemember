@@ -22,7 +22,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 		 * Enqueue constructor.
 		 */
 		function __construct() {
-
+			$this->suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG || defined( 'UM_SCRIPT_DEBUG' ) ) ? '' : '.min';
 
 			/**
 			 * UM hook
@@ -72,8 +72,6 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 		 */
 		function wp_enqueue_scripts() {
 			global $post;
-
-			$this->suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG || defined( 'UM_SCRIPT_DEBUG' ) ) ? '' : '.min';
 
 			if ( ! is_admin() ) {
 				$c_url = UM()->permalinks()->get_current_url( get_option( 'permalink_structure' ) );
