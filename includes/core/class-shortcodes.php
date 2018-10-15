@@ -260,7 +260,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			if ( isset( $this->set_args ) && is_array( $this->set_args ) ) {
 				$args = $this->set_args;
-                
+
 				unset( $args['file'] );
 				unset( $args['theme_file'] );
 				unset( $args['tpl'] );

@@ -936,7 +936,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				$max_w = UM()->options()->get('image_max_width');
 				if ( $src_w > $max_w ) {
-					$image->resize( $max_w );
+					$image->resize( $max_w, $src_h );
 				}
 
 				$image->save( $image_path );
@@ -987,7 +987,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				$max_w = UM()->options()->get('image_max_width');
 				if ( $src_w > $max_w ) {
-					$image->resize( $max_w );
+					$image->resize( $max_w, $src_h );
 				}
 
 				$image->save( $image_path );
@@ -1039,7 +1039,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 					$max_w = UM()->options()->get('image_max_width');
 					if ( $src_w > $max_w ) {
-						$image->resize( $max_w );
+						$image->resize( $max_w, $src_h );
 					}
 				}
 

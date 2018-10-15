@@ -396,14 +396,12 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 		/**
 		 * Load rating
 		 */
-		function load_raty(){
-
-			wp_register_script('um_raty', um_url . 'assets/js/um-raty' . $this->suffix . '.js' );
+		function load_raty() {
+			wp_register_script('um_raty', um_url . 'assets/js/um-raty' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 			wp_enqueue_script('um_raty');
 
-			wp_register_style('um_raty', um_url . 'assets/css/um-raty.css' );
+			wp_register_style('um_raty', um_url . 'assets/css/um-raty.css', array(), ultimatemember_version );
 			wp_enqueue_style('um_raty');
-
 		}
 
 
@@ -426,10 +424,10 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 		 */
 		function load_tipsy(){
 
-			wp_register_script('um_tipsy', um_url . 'assets/js/um-tipsy' . $this->suffix . '.js' );
+			wp_register_script('um_tipsy', um_url . 'assets/js/um-tipsy' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 			wp_enqueue_script('um_tipsy');
 
-			wp_register_style('um_tipsy', um_url . 'assets/css/um-tipsy.css' );
+			wp_register_style('um_tipsy', um_url . 'assets/css/um-tipsy.css', array(), ultimatemember_version );
 			wp_enqueue_style('um_tipsy');
 
 		}
