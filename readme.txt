@@ -67,6 +67,10 @@ Ultimate Member has a range of extensions that allow you to extend the power of 
 * [Google reCAPTCHA](https://ultimatemember.com/extensions/google-recaptcha/) - Stop bots on your registration & login forms with Google reCAPTCHA
 * [Online Users](https://ultimatemember.com/extensions/online-users/) - Display what users are online with this extension
 
+= Theme =
+
+Our official [theme](https://ultimatemember.com/theme/) is purpose built for websites that have logged in and out users. The [theme](https://ultimatemember.com/theme/) has deep integration with Ultimate Member plugin and the extensions, different header designs for logged-in/out users and works alongside the Beaver Builder and Elementor page builders.
+
 = Development * Translations =
 
 If you're a developer and would like to contribute to the source code of the plugin you can do so via our [GitHub Repository](https://github.com/ultimatemember/ultimatemember).
