@@ -1161,6 +1161,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			 * ?>
 			 */
 			$label = apply_filters( 'um_change_field_label', $label, $key );
+
+			$label = sprintf( __( '%s', 'ultimate-member' ), $label );
 			return $label;
 		}
 

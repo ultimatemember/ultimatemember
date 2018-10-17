@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2018-10-08 23:32+0300\n"
-"PO-Revision-Date: 2018-10-08 23:32+0300\n"
+"POT-Creation-Date: 2018-10-17 10:44+0300\n"
+"PO-Revision-Date: 2018-10-17 10:44+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -115,7 +115,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-builder.php:609
 #: includes/admin/core/class-admin-builder.php:763
-#: includes/core/class-fields.php:4033
+#: includes/core/class-fields.php:4062
 msgid "Please login as administrator"
 msgstr ""
 
@@ -2482,7 +2482,7 @@ msgid "UM Action"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:116
-#: includes/core/class-fields.php:2271
+#: includes/core/class-fields.php:2300
 msgid "Apply"
 msgstr ""
 
@@ -3526,7 +3526,7 @@ msgstr ""
 #: includes/admin/templates/modal/dynamic_new_group.php:14
 #: includes/admin/templates/modal/fonticons.php:11
 #: includes/admin/templates/role/publish.php:24
-#: includes/core/class-fields.php:2272 includes/core/class-fields.php:2369
+#: includes/core/class-fields.php:2301 includes/core/class-fields.php:2398
 #: includes/core/um-actions-profile.php:554
 #: includes/core/um-actions-profile.php:693
 #: includes/core/um-actions-profile.php:726
@@ -4019,36 +4019,36 @@ msgid ""
 "account data from the site. To delete your account enter your password below"
 msgstr ""
 
-#: includes/class-dependencies.php:160
+#: includes/class-dependencies.php:161
 #, php-format
 msgid ""
 "This version of <strong>\"%s\"</strong> requires the core <strong>%s</"
 "strong> plugin to be <strong>%s</strong> or higher."
 msgstr ""
 
-#: includes/class-dependencies.php:162
+#: includes/class-dependencies.php:163
 #, php-format
 msgid "Please update <strong>%s</strong> to the latest version."
 msgstr ""
 
-#: includes/class-dependencies.php:164
+#: includes/class-dependencies.php:165
 #, php-format
 msgid ""
 "Sorry, but this version of <strong>%s</strong> does not work with extension "
 "<strong>\"%s\" %s</strong> version."
 msgstr ""
 
-#: includes/class-dependencies.php:166
+#: includes/class-dependencies.php:167
 #, php-format
 msgid "Please update extension <strong>\"%s\"</strong> to the latest version."
 msgstr ""
 
-#: includes/class-dependencies.php:175
+#: includes/class-dependencies.php:176
 #, php-format
 msgid "Please check <strong>\"%s\" %s</strong> extension's folder name."
 msgstr ""
 
-#: includes/class-dependencies.php:177
+#: includes/class-dependencies.php:178
 #, php-format
 msgid "Correct folder name is <strong>\"%s\"</strong>"
 msgstr ""
@@ -6244,84 +6244,89 @@ msgstr ""
 msgid "Add translation to %s"
 msgstr ""
 
-#: includes/core/class-fields.php:1155
+#: includes/core/class-fields.php:1165
+#, php-format
+msgid "%s"
+msgstr ""
+
+#: includes/core/class-fields.php:1184
 msgid "Custom Field"
 msgstr ""
 
-#: includes/core/class-fields.php:1452
+#: includes/core/class-fields.php:1481
 msgid "Please upload a valid image!"
 msgstr ""
 
-#: includes/core/class-fields.php:1459 includes/core/class-fields.php:1480
+#: includes/core/class-fields.php:1488 includes/core/class-fields.php:1509
 msgid "Upload"
 msgstr ""
 
-#: includes/core/class-fields.php:1460
+#: includes/core/class-fields.php:1489
 msgid "Sorry this is not a valid image."
 msgstr ""
 
-#: includes/core/class-fields.php:1461
+#: includes/core/class-fields.php:1490
 msgid "This image is too large!"
 msgstr ""
 
-#: includes/core/class-fields.php:1462
+#: includes/core/class-fields.php:1491
 msgid "This image is too small!"
 msgstr ""
 
-#: includes/core/class-fields.php:1463
+#: includes/core/class-fields.php:1492
 msgid "You can only upload one image"
 msgstr ""
 
-#: includes/core/class-fields.php:1930
+#: includes/core/class-fields.php:1959
 msgid "Current Password"
 msgstr ""
 
-#: includes/core/class-fields.php:1959
+#: includes/core/class-fields.php:1988
 msgid "New Password"
 msgstr ""
 
-#: includes/core/class-fields.php:1991
+#: includes/core/class-fields.php:2020
 #, php-format
 msgid "Confirm %s"
 msgstr ""
 
-#: includes/core/class-fields.php:2226
+#: includes/core/class-fields.php:2255
 msgid "Upload Photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2247 includes/core/class-fields.php:2271
+#: includes/core/class-fields.php:2276 includes/core/class-fields.php:2300
 #: includes/core/um-actions-profile.php:724
 msgid "Change photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2271 includes/core/class-fields.php:2368
+#: includes/core/class-fields.php:2300 includes/core/class-fields.php:2397
 msgid "Processing..."
 msgstr ""
 
-#: includes/core/class-fields.php:2293
+#: includes/core/class-fields.php:2322
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:2335 includes/core/um-filters-fields.php:243
+#: includes/core/class-fields.php:2364 includes/core/um-filters-fields.php:243
 msgid "This file has been removed."
 msgstr ""
 
-#: includes/core/class-fields.php:2338 includes/core/class-fields.php:2368
+#: includes/core/class-fields.php:2367 includes/core/class-fields.php:2397
 msgid "Change file"
 msgstr ""
 
-#: includes/core/class-fields.php:2368
+#: includes/core/class-fields.php:2397
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:3791
+#: includes/core/class-fields.php:3820
 #, php-format
 msgid ""
 "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some "
 "information!"
 msgstr ""
 
-#: includes/core/class-fields.php:3793
+#: includes/core/class-fields.php:3822
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
@@ -6548,7 +6553,7 @@ msgstr ""
 msgid "This file type is not recognized."
 msgstr ""
 
-#: includes/core/class-uploader.php:1050
+#: includes/core/class-uploader.php:1065
 #, php-format
 msgid "Maximum file size allowed: %s"
 msgstr ""
