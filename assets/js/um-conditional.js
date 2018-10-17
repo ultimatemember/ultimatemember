@@ -322,25 +322,30 @@ jQuery(document).ready( function (){
      */
     function um_field_apply_action($dom, condition, is_true) {
         var child_dom = jQuery('div.um-field[data-key="' + condition.owner + '"]');
+        var child_dom_input = jQuery('div.um-field[data-key="' + condition.owner + '"] input');
 
         if (condition.action == 'show' && is_true /*&& child_dom.is(':hidden')*/) {
             child_dom.show();
+            child_dom_input.removeAttr('disabled');
             _show_in_ie( child_dom );
             um_field_restore_default_value(child_dom);
         }
 
         if (condition.action == 'show' && !is_true /*&& child_dom.is(':visible') */) {
             child_dom.hide();
+            child_dom_input.attr('disabled','disabled');
             _hide_in_ie( child_dom );
         }
 
         if (condition.action == 'hide' && is_true  /*&& child_dom.is(':visible')*/) {
             child_dom.hide();
-             _hide_in_ie( child_dom );
-       }
+            child_dom_input.attr('disabled','disabled');
+            _hide_in_ie( child_dom );
+        }
 
         if (condition.action == 'hide' && !is_true /*&& child_dom.is(':hidden')*/) {
             child_dom.show();
+            child_dom_input.removeAttr('disabled');
             _show_in_ie( child_dom );
             um_field_restore_default_value( child_dom );
 

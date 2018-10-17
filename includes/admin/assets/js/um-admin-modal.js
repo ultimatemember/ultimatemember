@@ -199,41 +199,68 @@ jQuery(document).ready(function() {
 	**/
 	jQuery(document).on('click', '.um-admin-new-condition', function() {
 
-		if ( jQuery(this).hasClass('disabled') )
-			return false;
+        if ( jQuery(this).hasClass('disabled') )
+            return false;
 
-		var content = jQuery(this).parents('.um-admin-btn-content'),
-			length = content.find('.um-admin-cur-condition').length;
+        var content = jQuery(this).parents('.um-admin-btn-content'),
+            length = content.find('.um-admin-cur-condition').length;
 
-		if ( length < 5 ) {
-			//content.find('select').select2('destroy');
+        if ( length < 5 ) {
+            //content.find('select').select2('destroy');
 
-			var template = jQuery('.um-admin-btn-content').find('.um-admin-cur-condition-template').clone();
-			template.find('input[type=text]').val('');
-			template.find('select').val('');
+            var template = jQuery('.um-admin-btn-content').find('.um-admin-cur-condition-template').clone();
+            template.find('input[type=text]').val('');
+            template.find('select').val('');
 
-			template.appendTo( content );
-			jQuery(template).removeClass("um-admin-cur-condition-template");
-			jQuery(template).addClass("um-admin-cur-condition");
+            if ( jQuery(this).hasClass('um-admin-new-condition-compare-and') ){
 
-			um_admin_live_update_scripts();
-			um_admin_modal_responsive();
-		} else {
-			jQuery(this).addClass('disabled');
-			alert( 'You already have 5 rules' );
-		}
-		//need fields refactor
+                template.find('#_conditional_compare').val('and');
+                var group = jQuery(this).prev('.um-admin-cur-condition').find('[id^="_conditional_group"]').val();
+                console.log(group);
+                template.find('#_conditional_group').val(group);
+                var templatehtml = template.html();
+                template.insertBefore( jQuery(this) );
+
+            } else {
+
+                template.find('#_conditional_compare').val('or');
+                var group = jQuery('.condition-wrap .um-admin-cur-condition').last().find('[id^="_conditional_group"]').val();
+                template.find('#_conditional_group').val(parseInt(group)+1);
+                var button = jQuery('.um-admin-new-condition-compare-and:first').clone();
+                $( "<hr />" ).insertBefore( jQuery(this) );
+                template.insertBefore( jQuery(this) );
+                button.insertBefore( jQuery(this) );
+
+            }
+
+            jQuery(template).removeClass("um-admin-cur-condition-template");
+            jQuery(template).addClass("um-admin-cur-condition");
+
+            um_admin_live_update_scripts();
+            um_admin_modal_responsive();
+        } else {
+            jQuery(this).addClass('disabled');
+            alert( 'You already have 5 rules' );
+        }
+        //need fields refactor
         var conditions = jQuery('.um-admin-cur-condition');
-		jQuery(conditions).each( function ( i ) {
-			id = i === 0 ? '' : i;
-			jQuery( this ).find('[id^="_conditional_action"]').attr('name', '_conditional_action' + id);
-			jQuery( this ).find('[id^="_conditional_action"]').attr('id', '_conditional_action' + id);
-			jQuery( this ).find('[id^="_conditional_field"]').attr('name', '_conditional_field' + id);
-			jQuery( this ).find('[id^="_conditional_field"]').attr('id', '_conditional_field' + id);
-			jQuery( this ).find('[id^="_conditional_operator"]').attr('name', '_conditional_operator' + id);
-			jQuery( this ).find('[id^="_conditional_operator"]').attr('id', '_conditional_operator' + id);
-			jQuery( this ).find('[id^="_conditional_value"]').attr('name', '_conditional_value' + id);
-			jQuery( this ).find('[id^="_conditional_value"]').attr('id', '_conditional_value' + id);
+
+        jQuery(conditions).each( function ( i ) {
+            // var value = jQuery( this )
+
+            id = i === 0 ? '' : i;
+            jQuery( this ).find('[id^="_conditional_action"]').attr('name', '_conditional_action' + id);
+            jQuery( this ).find('[id^="_conditional_action"]').attr('id', '_conditional_action' + id);
+            jQuery( this ).find('[id^="_conditional_field"]').attr('name', '_conditional_field' + id);
+            jQuery( this ).find('[id^="_conditional_field"]').attr('id', '_conditional_field' + id);
+            jQuery( this ).find('[id^="_conditional_operator"]').attr('name', '_conditional_operator' + id);
+            jQuery( this ).find('[id^="_conditional_operator"]').attr('id', '_conditional_operator' + id);
+            jQuery( this ).find('[id^="_conditional_value"]').attr('name', '_conditional_value' + id);
+            jQuery( this ).find('[id^="_conditional_value"]').attr('id', '_conditional_value' + id);
+            jQuery( this ).find('[id^="_conditional_compare"]').attr('name', '_conditional_compare' + id);
+            jQuery( this ).find('[id^="_conditional_compare"]').attr('id', '_conditional_compare' + id);
+            jQuery( this ).find('[id^="_conditional_group"]').attr('name', '_conditional_group' + id);
+            jQuery( this ).find('[id^="_conditional_group"]').attr('id', '_conditional_group' + id);
         } );
 
 	});
@@ -255,10 +282,20 @@ jQuery(document).ready(function() {
 		remove a condition
 	**/
 	jQuery(document).on('click', '.um-admin-remove-condition', function(){
-		var condition = jQuery(this).parents('.um-admin-cur-condition');
-		jQuery('.um-admin-new-condition').removeClass('disabled');
-		jQuery('.tipsy').remove();
-		condition.remove();
+        var condition = jQuery(this).parents('.um-admin-cur-condition');
+        jQuery('.um-admin-new-condition').removeClass('disabled');
+        jQuery('.tipsy').remove();
+        var compare = condition.find('input[type=hidden]').val();
+        if( compare == 'or' ){
+            condition.next().find('input[type=hidden]').val(compare);
+        }
+
+        if( condition.prev().is('hr') && condition.next().is('.um-admin-new-condition-compare-and') ){
+            condition.next().remove();
+            condition.prev().remove();
+        }
+        condition.remove();
+
         //need fields refactor
         var conditions = jQuery('.um-admin-cur-condition');
         jQuery(conditions).each( function ( i ) {
@@ -271,9 +308,13 @@ jQuery(document).ready(function() {
             jQuery( this ).find('[id^="_conditional_operator"]').attr('id', '_conditional_operator' + id);
             jQuery( this ).find('[id^="_conditional_value"]').attr('name', '_conditional_value' + id);
             jQuery( this ).find('[id^="_conditional_value"]').attr('id', '_conditional_value' + id);
+            jQuery( this ).find('[id^="_conditional_compare"]').attr('name', '_conditional_compare' + id);
+            jQuery( this ).find('[id^="_conditional_compare"]').attr('id', '_conditional_compare' + id);
+            jQuery( this ).find('[id^="_conditional_group"]').attr('name', '_conditional_group' + id);
+            jQuery( this ).find('[id^="_conditional_group"]').attr('id', '_conditional_group' + id);
         } );
-		um_admin_live_update_scripts();
-		um_admin_modal_responsive();
+        um_admin_live_update_scripts();
+        um_admin_modal_responsive();
 	});
 	
 	/**

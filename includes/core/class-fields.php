@@ -202,12 +202,16 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						unset( $condition_fields[ $key ][ $deleted_field ] );
 						unset( $condition_fields[ $key ][ 'conditional_operator' . $deleted_field_id ] );
 						unset( $condition_fields[ $key ][ 'conditional_value' . $deleted_field_id ] );
+                        unset( $condition_fields[ $key ][ 'conditional_compare' . $deleted_field_id ] );
+                        unset( $condition_fields[ $key ][ 'conditional_group' . $deleted_field_id ] );
 						unset( $condition_fields[ $key ]['conditions'][ $arr_id ] );
 
 						unset( $fields[ $key ][ 'conditional_action' . $deleted_field_id ] );
 						unset( $fields[ $key ][ $deleted_field ] );
 						unset( $fields[ $key ][ 'conditional_operator' . $deleted_field_id ] );
 						unset( $fields[ $key ][ 'conditional_value' . $deleted_field_id ] );
+                        unset( $fields[ $key ][ 'conditional_compare' . $deleted_field_id ] );
+                        unset( $fields[ $key ][ 'conditional_group' . $deleted_field_id ] );
 						unset( $fields[ $key ]['conditions'][ $arr_id ] );
 					}
 				}

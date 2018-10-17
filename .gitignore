@@ -13,6 +13,7 @@ tmp/
 *~.nib
 local.properties
 .classpath
+.ideanpg
 .settings/
 .loadpath
 
@@ -217,3 +218,5 @@ pip-log.txt
 
 node_modules/
 assets/vendor/
+package-lock.json
+.idea

@@ -296,3 +296,13 @@ span.um-admin-icon-clear{
 span.um-admin-icon-clear.show {display: inline-block}
 span.um-admin-icon-clear:hover {color: #777}
 span.um-admin-icon-clear i {font-size: 20px;vertical-align: middle;}
+
+.um-admin-new-condition-compare-and {
+	margin-top: 10px !important;
+	margin-bottom: 10px !important;
+}
+.um-admin-new-condition-compare-or {
+	display: block !important;
+	width: 150px;
+	margin-top: 20px !important;
+}
