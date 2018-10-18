@@ -183,6 +183,12 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			header('Pragma: public');
 			header('Content-Length: ' . $size);
+
+			$levels = ob_get_level();
+			for ( $i = 0; $i < $levels; $i++ ) {
+				@ob_end_clean();
+			}
+
 			readfile( $file_path );
 			exit;
 		}
@@ -217,6 +223,12 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			header('Pragma: public');
 			header('Content-Length: ' . $size);
+
+			$levels = ob_get_level();
+			for ( $i = 0; $i < $levels; $i++ ) {
+				@ob_end_clean();
+			}
+
 			readfile( $file_path );
 			exit;
 		}
