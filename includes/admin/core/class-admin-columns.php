@@ -90,11 +90,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Columns' ) ) {
 		 */
 		function manage_edit_um_form_columns( $columns ) {
 			$new_columns['cb'] = '<input type="checkbox" />';
-			$new_columns['title'] = __( 'Title', 'ulitmatemember' );
-			$new_columns['id'] = __('ID', 'ulitmatemember' );
-			$new_columns['mode'] = __( 'Type', 'ulitmatemember' );
-			$new_columns['shortcode'] = __( 'Shortcode', 'ulitmatemember' );
-			$new_columns['date'] = __( 'Date', 'ulitmatemember' );
+			$new_columns['title'] = __( 'Title', 'ulitmate-member' );
+			$new_columns['id'] = __('ID', 'ulitmate-member' );
+			$new_columns['mode'] = __( 'Type', 'ulitmate-member' );
+			$new_columns['is_default'] = __( 'Default', 'ulitmate-member' );
+			$new_columns['shortcode'] = __( 'Shortcode', 'ulitmate-member' );
+			$new_columns['date'] = __( 'Date', 'ulitmate-member' );
 
 			return $new_columns;
 		}
@@ -132,6 +133,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Columns' ) ) {
 
 				case 'shortcode':
 					echo UM()->shortcodes()->get_shortcode( $id );
+					break;
+
+				case 'is_default':
+					$is_default = UM()->query()->get_attr( 'is_default', $id );
+					echo empty( $is_default ) ? __( 'No', 'ultimate-member' ) : __( 'Yes', 'ultimate-member' );
 					break;
 
 				case 'mode':

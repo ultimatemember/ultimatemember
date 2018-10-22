@@ -298,11 +298,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 						ob_start(); ?>
 
 						<p>
-							<?php printf( __( 'One or more of your %s pages are not correctly setup. Please visit <strong>%s > Settings</strong> to re-assign your missing pages.', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_plugin_name ); ?>
+							<?php printf( __( '%s needs to create several pages (User Profiles, Account, Registration, Login, Password Reset, Logout, Member Directory) to function correctly.', 'ultimate-member' ), ultimatemember_plugin_name ); ?>
 						</p>
 
 						<p>
-							<a href="<?php echo esc_attr( add_query_arg( 'um_adm_action', 'install_core_pages' ) ); ?>" class="button button-primary"><?php _e( 'Setup Pages', 'ultimate-member' ) ?></a>
+							<a href="<?php echo esc_attr( add_query_arg( 'um_adm_action', 'install_core_pages' ) ); ?>" class="button button-primary"><?php _e( 'Create Pages', 'ultimate-member' ) ?></a>
 							&nbsp;
 							<a href="javascript:void(0);" class="button-secondary um_secondary_dimiss"><?php _e( 'No thanks', 'ultimate-member' ) ?></a>
 						</p>
@@ -531,7 +531,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			ob_start(); ?>
 
 			<p>
-				<?php printf( __( 'Thanks for installing <strong>%s</strong>! We hope you like the plugin.  To fund full-time development and support of the plugin we also sell extensions. If you subscribe to our mailing list we will send you a 20%% discount code for our <a href="%s" target="_blank">extensions bundle</a>.', 'ultimate-member' ), ultimatemember_plugin_name, 'https://ultimatemember.com/core-extensions-bundle/' ); ?>
+				<?php printf( __( 'Thanks for installing <strong>%s</strong>! We hope you like the plugin. To fund full-time development and support of the plugin we also sell extensions. If you subscribe to our mailing list we will send you a 20%% discount code for our <a href="%s" target="_blank">extensions bundle</a>.', 'ultimate-member' ), ultimatemember_plugin_name, 'https://ultimatemember.com/core-extensions-bundle/' ); ?>
 			</p>
 
 			<p>

@@ -26,6 +26,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			add_shortcode( 'ultimatemember', array( &$this, 'ultimatemember' ) );
 
+			add_shortcode( 'ultimatemember_login', array( &$this, 'ultimatemember_login' ) );
+			add_shortcode( 'ultimatemember_register', array( &$this, 'ultimatemember_register' ) );
+			add_shortcode( 'ultimatemember_profile', array( &$this, 'ultimatemember_profile' ) );
+			add_shortcode( 'ultimatemember_directory', array( &$this, 'ultimatemember_directory' ) );
+
 			add_shortcode( 'um_loggedin', array( &$this, 'um_loggedin' ) );
 			add_shortcode( 'um_loggedout', array( &$this, 'um_loggedout' ) );
 			add_shortcode( 'um_show_content', array( &$this, 'um_shortcode_show_content_for_role' ) );
@@ -375,8 +380,14 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			return $output;
 		}
 
-		/***
-		 ***	@Logged-out only content
+
+		/**
+		 * Logged-out only content
+		 *
+		 * @param array $args
+		 * @param string $content
+		 *
+		 * @return string
 		 */
 		function um_loggedout($args = array(), $content = "") {
 			ob_start();
@@ -390,6 +401,94 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			$output = ob_get_clean();
 			return $output;
+		}
+
+
+		/**
+		 * @param array $args
+		 *
+		 * @return string
+		 */
+		function ultimatemember_login( $args = array() ) {
+			global $wpdb;
+
+			$args = ! empty( $args ) ? $args : array();
+
+			$default_login = $wpdb->get_var(
+				"SELECT pm.post_id 
+				FROM {$wpdb->postmeta} pm 
+				LEFT JOIN {$wpdb->postmeta} pm2 ON( pm.post_id = pm2.post_id AND pm2.meta_key = '_um_is_default' )
+				WHERE pm.meta_key = '_um_mode' AND 
+					  pm.meta_value = 'login' AND 
+					  pm2.meta_value = '1'"
+			);
+
+			$args['form_id'] = $default_login;
+			$shortcode_attrs = '';
+			foreach ( $args as $key => $value ) {
+				$shortcode_attrs .= " {$key}=\"{$value}\"";
+			}
+
+			return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
+		}
+
+
+		/**
+		 * @param array $args
+		 *
+		 * @return string
+		 */
+		function ultimatemember_register( $args = array() ) {
+			global $wpdb;
+
+			$args = ! empty( $args ) ? $args : array();
+
+			$default_register = $wpdb->get_var(
+				"SELECT pm.post_id 
+				FROM {$wpdb->postmeta} pm 
+				LEFT JOIN {$wpdb->postmeta} pm2 ON( pm.post_id = pm2.post_id AND pm2.meta_key = '_um_is_default' )
+				WHERE pm.meta_key = '_um_mode' AND 
+					  pm.meta_value = 'register' AND 
+					  pm2.meta_value = '1'"
+			);
+
+			$args['form_id'] = $default_register;
+			$shortcode_attrs = '';
+			foreach ( $args as $key => $value ) {
+				$shortcode_attrs .= " {$key}=\"{$value}\"";
+			}
+
+			return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
+		}
+
+
+		/**
+		 * @param array $args
+		 *
+		 * @return string
+		 */
+		function ultimatemember_profile( $args = array() ) {
+			global $wpdb;
+
+			$args = ! empty( $args ) ? $args : array();
+
+			$default_profile = $wpdb->get_var(
+				"SELECT pm.post_id 
+				FROM {$wpdb->postmeta} pm 
+				LEFT JOIN {$wpdb->postmeta} pm2 ON( pm.post_id = pm2.post_id AND pm2.meta_key = '_um_is_default' )
+				WHERE pm.meta_key = '_um_mode' AND 
+					  pm.meta_value = 'profile' AND 
+					  pm2.meta_value = '1'"
+			);
+
+			$args['form_id'] = $default_profile;
+
+			$shortcode_attrs = '';
+			foreach ( $args as $key => $value ) {
+				$shortcode_attrs .= " {$key}=\"{$value}\"";
+			}
+
+			return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
 		}
 
 
@@ -813,7 +912,33 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 * @return string
 		 */
 		function get_shortcode( $post_id ) {
-			$shortcode = '[ultimatemember form_id=' . $post_id . ']';
+			$shortcode = '[ultimatemember form_id="' . $post_id . '"]';
+			return $shortcode;
+		}
+
+
+		/**
+		 * Get Shortcode for given form ID
+		 *
+		 * @param $post_id
+		 *
+		 * @return string
+		 */
+		function get_default_shortcode( $post_id ) {
+			$mode = UM()->query()->get_attr( 'mode', $post_id );
+
+			switch ( $mode ) {
+				case 'login':
+					$shortcode = '[ultimatemember_login]';
+					break;
+				case 'profile':
+					$shortcode = '[ultimatemember_profile]';
+					break;
+				case 'register':
+					$shortcode = '[ultimatemember_register]';
+					break;
+			}
+
 			return $shortcode;
 		}
 

@@ -192,6 +192,9 @@
 
 		if ( um_is_on_edit_profile() ) { ?>
 			</form>
-		<?php } ?>
+		<?php }
+
+
+		do_action( 'um_profile_footer', $args ); ?>
 	</div>
 </div>
