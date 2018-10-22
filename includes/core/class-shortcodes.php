@@ -493,6 +493,36 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 
 		/**
+		 * @param array $args
+		 *
+		 * @return string
+		 */
+		function ultimatemember_directory( $args = array() ) {
+			global $wpdb;
+
+			$args = ! empty( $args ) ? $args : array();
+
+			$default_directory = $wpdb->get_var(
+				"SELECT pm.post_id 
+				FROM {$wpdb->postmeta} pm 
+				LEFT JOIN {$wpdb->postmeta} pm2 ON( pm.post_id = pm2.post_id AND pm2.meta_key = '_um_is_default' )
+				WHERE pm.meta_key = '_um_mode' AND 
+					  pm.meta_value = 'directory' AND 
+					  pm2.meta_value = '1'"
+			);
+
+			$args['form_id'] = $default_directory;
+
+			$shortcode_attrs = '';
+			foreach ( $args as $key => $value ) {
+				$shortcode_attrs .= " {$key}=\"{$value}\"";
+			}
+
+			return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
+		}
+
+
+		/**
 		 * Shortcode
 		 *
 		 * @param array $args
@@ -936,6 +966,9 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 					break;
 				case 'register':
 					$shortcode = '[ultimatemember_register]';
+					break;
+				case 'directory':
+					$shortcode = '[ultimatemember_directory]';
 					break;
 			}
 
