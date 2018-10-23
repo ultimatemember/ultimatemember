@@ -1186,9 +1186,11 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			$user_meta_keys = UM()->user()->profile;
 
 			$_array = array();
-			foreach ( UM()->builtin()->custom_fields as $_field ) {
-				if ( $_field['type'] == 'file' && ! empty( $user_meta_keys[ $_field['metakey'] ] ) ) {
-					$_array[ $_field['metakey'] ] = $user_meta_keys[ $_field['metakey'] ];
+			if ( ! empty( UM()->builtin()->custom_fields ) ) {
+				foreach ( UM()->builtin()->custom_fields as $_field ) {
+					if ( $_field['type'] == 'file' && ! empty( $user_meta_keys[ $_field['metakey'] ] ) ) {
+						$_array[ $_field['metakey'] ] = $user_meta_keys[ $_field['metakey'] ];
+					}
 				}
 			}
 			$_array = array_merge( $_array, $new_files );
