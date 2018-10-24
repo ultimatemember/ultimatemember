@@ -2313,6 +2313,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						} else {
 							$file_url = UM()->files()->get_download_link( $this->set_id, $key, um_user( 'ID' ) );
 							$file_dir = UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $this->field_value( $key, $default, $data );
+
+							if ( ! file_exists( $file_dir ) ) {
+								if ( is_multisite() ) {
+									//multisite fix for old customers
+									$file_dir = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $file_dir );
+								}
+							}
 						}
 
 						if ( file_exists( $file_dir ) ) {

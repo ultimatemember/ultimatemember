@@ -117,7 +117,21 @@ $premium['private-content'] = array(
 	'url' => 'https://ultimatemember.com/extensions/private-content/',
 	'image' => 'https://ultimatemember.com/wp-content/uploads/bb-plugin/cache/private-content-page-circle.png',
 	'name' => 'Private Content',
-	'desc' => 'With the private content extension you can provide logged in users with content that only they can access and view',
+	'desc' => 'Display private content to logged in users that only they can access',
+);
+
+$premium['groups'] = array(
+	'url' => 'https://ultimatemember.com/extensions/groups/',
+	'image' => 'https://ultimatemember.com/wp-content/uploads/edd/2018/10/groupimage.png',
+	'name' => 'Groups',
+	'desc' => 'Allow users to create and join groups around shared topics, interests etc.',
+);
+
+$premium['user-photos'] = array(
+	'url' => 'https://ultimatemember.com/extensions/user-photos/',
+	'image' => 'https://ultimatemember.com/wp-content/uploads/edd/2018/06/User-Photos.png',
+	'name' => 'User Photos',
+	'desc' => 'Allow users to upload photos to their profile',
 );
 
 

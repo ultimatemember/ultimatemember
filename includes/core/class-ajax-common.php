@@ -36,7 +36,10 @@ if ( ! class_exists( 'um\core\AJAX_Common' ) ) {
 
 			add_action( 'wp_ajax_um_delete_profile_photo', array( UM()->profile(), 'ajax_delete_profile_photo' ) );
 			add_action( 'wp_ajax_um_delete_cover_photo', array( UM()->profile(), 'ajax_delete_cover_photo' ) );
+
 			add_action( 'wp_ajax_um_ajax_paginate', array( UM()->query(), 'ajax_paginate' ) );
+			add_action( 'wp_ajax_um_ajax_paginate_posts', array( UM()->user_posts(), 'load_posts' ) );
+
 			add_action( 'wp_ajax_um_muted_action', array( UM()->form(), 'ajax_muted_action' ) );
 
 			add_action( 'wp_ajax_um_remove_file', array( UM()->files(), 'ajax_remove_file' ) );

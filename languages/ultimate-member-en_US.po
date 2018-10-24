@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2018-09-18 09:44+0300\n"
-"PO-Revision-Date: 2018-09-18 09:45+0300\n"
+"POT-Creation-Date: 2018-10-08 23:32+0300\n"
+"PO-Revision-Date: 2018-10-08 23:32+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -94,62 +94,62 @@ msgstr ""
 msgid "Reset all rules"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:402
-#: includes/admin/core/class-admin-builder.php:472
+#: includes/admin/core/class-admin-builder.php:401
+#: includes/admin/core/class-admin-builder.php:471
 #: includes/admin/core/class-admin-dragdrop.php:161
 msgid "Add Row"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:403
-#: includes/admin/core/class-admin-builder.php:473
+#: includes/admin/core/class-admin-builder.php:402
+#: includes/admin/core/class-admin-builder.php:472
 #: includes/admin/core/class-admin-dragdrop.php:162
 msgid "Edit Row"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:476
+#: includes/admin/core/class-admin-builder.php:475
 #: includes/admin/core/class-admin-dragdrop.php:164
 #: includes/admin/core/class-admin-dragdrop.php:178
 #: includes/admin/core/class-admin-dragdrop.php:203
 msgid "Delete Row"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:610
-#: includes/admin/core/class-admin-builder.php:764
-#: includes/core/class-fields.php:4034
+#: includes/admin/core/class-admin-builder.php:609
+#: includes/admin/core/class-admin-builder.php:763
+#: includes/core/class-fields.php:4033
 msgid "Please login as administrator"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:830
+#: includes/admin/core/class-admin-builder.php:827
 msgid "Search Icons..."
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:851
+#: includes/admin/core/class-admin-builder.php:847
 msgid "Setup New Field"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:867
+#: includes/admin/core/class-admin-builder.php:863
 msgid "Predefined Fields"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:878
+#: includes/admin/core/class-admin-builder.php:874
 #: includes/core/class-builtin.php:1308
 msgid "None"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:882
+#: includes/admin/core/class-admin-builder.php:878
 msgid "Custom Fields"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:893
+#: includes/admin/core/class-admin-builder.php:889
 msgid "You did not create any custom fields"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:925
-#: includes/admin/core/class-admin-builder.php:999
+#: includes/admin/core/class-admin-builder.php:920
+#: includes/admin/core/class-admin-builder.php:992
 msgid "This field type is not setup correcty."
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:1146
+#: includes/admin/core/class-admin-builder.php:1137
 #: includes/core/class-form.php:153 includes/core/class-form.php:326
 #: includes/core/class-password.php:518
 msgid "This is not possible for security reasons."
@@ -188,10 +188,10 @@ msgstr ""
 
 #: includes/admin/core/class-admin-enqueue.php:127
 #: includes/admin/core/class-admin-enqueue.php:161
-#: includes/admin/core/class-admin-forms.php:814
-#: includes/admin/core/class-admin-forms.php:828
-#: includes/admin/core/class-admin-forms.php:933
-#: includes/admin/core/class-admin-forms.php:942
+#: includes/admin/core/class-admin-forms.php:813
+#: includes/admin/core/class-admin-forms.php:827
+#: includes/admin/core/class-admin-forms.php:932
+#: includes/admin/core/class-admin-forms.php:941
 #: includes/admin/core/class-admin-notices.php:430
 #: includes/core/um-actions-profile.php:553
 msgid "Remove"
@@ -199,7 +199,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-enqueue.php:128
 #: includes/admin/core/class-admin-enqueue.php:162
-#: includes/admin/core/class-admin-forms.php:1010
+#: includes/admin/core/class-admin-forms.php:1009
 msgid "Select"
 msgstr ""
 
@@ -215,11 +215,11 @@ msgstr ""
 msgid "No Icon"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:987
+#: includes/admin/core/class-admin-forms.php:986
 msgid "Select media"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1011
+#: includes/admin/core/class-admin-forms.php:1010
 msgid "Clear"
 msgstr ""
 
@@ -1534,7 +1534,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:338
-#: includes/class-config.php:134 includes/class-config.php:738
+#: includes/class-config.php:134 includes/class-config.php:739
 #: includes/core/class-account.php:90
 msgid "Account"
 msgstr ""
@@ -2482,7 +2482,7 @@ msgid "UM Action"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:116
-#: includes/core/class-fields.php:2276
+#: includes/core/class-fields.php:2271
 msgid "Apply"
 msgstr ""
 
@@ -3129,44 +3129,52 @@ msgid "Choose field(s) to enable in search"
 msgstr ""
 
 #: includes/admin/templates/directory/search.php:84
-msgid "Results Text"
+msgid "Additional search filters"
 msgstr ""
 
 #: includes/admin/templates/directory/search.php:85
+msgid "Additional search filters like URL parameters"
+msgstr ""
+
+#: includes/admin/templates/directory/search.php:93
+msgid "Results Text"
+msgstr ""
+
+#: includes/admin/templates/directory/search.php:94
 msgid ""
 "Customize the search result text . e.g. Found 3,000 Members. Leave this "
 "blank to not show result text"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:86
-#: includes/class-config.php:152 includes/class-config.php:247
+#: includes/admin/templates/directory/search.php:95
+#: includes/class-config.php:153 includes/class-config.php:248
 msgid "{total_users} Members"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:92
+#: includes/admin/templates/directory/search.php:101
 msgid "Single Result Text"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:93
+#: includes/admin/templates/directory/search.php:102
 msgid "Same as above but in case of 1 user found only"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:94
-#: includes/class-config.php:153 includes/class-config.php:248
+#: includes/admin/templates/directory/search.php:103
+#: includes/class-config.php:154 includes/class-config.php:249
 msgid "{total_users} Member"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:100
+#: includes/admin/templates/directory/search.php:109
 msgid "Custom text if no users were found"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:101
+#: includes/admin/templates/directory/search.php:110
 msgid ""
 "This is the text that is displayed if no users are found during a search"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:102
-#: includes/class-config.php:154
+#: includes/admin/templates/directory/search.php:111
+#: includes/class-config.php:155
 msgid "We are sorry. We cannot find any users who match your search criteria."
 msgstr ""
 
@@ -3518,7 +3526,7 @@ msgstr ""
 #: includes/admin/templates/modal/dynamic_new_group.php:14
 #: includes/admin/templates/modal/fonticons.php:11
 #: includes/admin/templates/role/publish.php:24
-#: includes/core/class-fields.php:2277 includes/core/class-fields.php:2367
+#: includes/core/class-fields.php:2272 includes/core/class-fields.php:2369
 #: includes/core/um-actions-profile.php:554
 #: includes/core/um-actions-profile.php:693
 #: includes/core/um-actions-profile.php:726
@@ -3867,145 +3875,145 @@ msgstr ""
 msgid "Check All"
 msgstr ""
 
-#: includes/class-config.php:129 includes/class-config.php:733
+#: includes/class-config.php:129 includes/class-config.php:734
 msgid "User"
 msgstr ""
 
-#: includes/class-config.php:130 includes/class-config.php:234
-#: includes/class-config.php:240 includes/class-config.php:734
+#: includes/class-config.php:130 includes/class-config.php:235
+#: includes/class-config.php:241 includes/class-config.php:735
 msgid "Login"
 msgstr ""
 
-#: includes/class-config.php:131 includes/class-config.php:232
-#: includes/class-config.php:244 includes/class-config.php:735
+#: includes/class-config.php:131 includes/class-config.php:233
+#: includes/class-config.php:245 includes/class-config.php:736
 msgid "Register"
 msgstr ""
 
-#: includes/class-config.php:132 includes/class-config.php:736
+#: includes/class-config.php:132 includes/class-config.php:737
 msgid "Members"
 msgstr ""
 
-#: includes/class-config.php:133 includes/class-config.php:737
+#: includes/class-config.php:133 includes/class-config.php:738
 #: includes/core/um-actions-profile.php:1079
 #: includes/core/um-actions-user.php:15
 msgid "Logout"
 msgstr ""
 
-#: includes/class-config.php:135 includes/class-config.php:739
+#: includes/class-config.php:135 includes/class-config.php:740
 msgid "Password Reset"
 msgstr ""
 
-#: includes/class-config.php:307
+#: includes/class-config.php:308
 msgid "Account Welcome Email"
 msgstr ""
 
-#: includes/class-config.php:318
+#: includes/class-config.php:319
 msgid ""
 "Whether to send the user an email when his account is automatically approved"
 msgstr ""
 
-#: includes/class-config.php:324
+#: includes/class-config.php:325
 msgid "Account Activation Email"
 msgstr ""
 
-#: includes/class-config.php:332
+#: includes/class-config.php:333
 msgid ""
 "Whether to send the user an email when his account needs e-mail activation"
 msgstr ""
 
-#: includes/class-config.php:337
+#: includes/class-config.php:338
 msgid "Your account is pending review"
 msgstr ""
 
-#: includes/class-config.php:345
+#: includes/class-config.php:346
 msgid "Whether to send the user an email when his account needs admin review"
 msgstr ""
 
-#: includes/class-config.php:350
+#: includes/class-config.php:351
 msgid "Account Approved Email"
 msgstr ""
 
-#: includes/class-config.php:362
+#: includes/class-config.php:363
 msgid "Whether to send the user an email when his account is approved"
 msgstr ""
 
-#: includes/class-config.php:367
+#: includes/class-config.php:368
 msgid "Account Rejected Email"
 msgstr ""
 
-#: includes/class-config.php:374
+#: includes/class-config.php:375
 msgid "Whether to send the user an email when his account is rejected"
 msgstr ""
 
-#: includes/class-config.php:379
+#: includes/class-config.php:380
 msgid "Account Deactivated Email"
 msgstr ""
 
-#: includes/class-config.php:386
+#: includes/class-config.php:387
 msgid "Whether to send the user an email when his account is deactivated"
 msgstr ""
 
-#: includes/class-config.php:392
+#: includes/class-config.php:393
 msgid "Account Deleted Email"
 msgstr ""
 
-#: includes/class-config.php:399
+#: includes/class-config.php:400
 msgid "Whether to send the user an email when his account is deleted"
 msgstr ""
 
-#: includes/class-config.php:405
+#: includes/class-config.php:406
 msgid "Password Reset Email"
 msgstr ""
 
-#: includes/class-config.php:413
+#: includes/class-config.php:414
 msgid ""
 "Whether to send an email when users changed their password (Recommended, "
 "please keep on)"
 msgstr ""
 
-#: includes/class-config.php:419
+#: includes/class-config.php:420
 msgid "Password Changed Email"
 msgstr ""
 
-#: includes/class-config.php:426
+#: includes/class-config.php:427
 msgid ""
 "Whether to send the user an email when he request to reset password "
 "(Recommended, please keep on)"
 msgstr ""
 
-#: includes/class-config.php:432
+#: includes/class-config.php:433
 msgid "Account Updated Email"
 msgstr ""
 
-#: includes/class-config.php:439
+#: includes/class-config.php:440
 msgid "Whether to send the user an email when he updated their account"
 msgstr ""
 
-#: includes/class-config.php:445
+#: includes/class-config.php:446
 msgid "New User Notification"
 msgstr ""
 
-#: includes/class-config.php:451
+#: includes/class-config.php:452
 msgid "Whether to receive notification when a new user account is approved"
 msgstr ""
 
-#: includes/class-config.php:457
+#: includes/class-config.php:458
 msgid "Account Needs Review Notification"
 msgstr ""
 
-#: includes/class-config.php:464
+#: includes/class-config.php:465
 msgid "Whether to receive notification when an account needs admin review"
 msgstr ""
 
-#: includes/class-config.php:469
+#: includes/class-config.php:470
 msgid "Account Deletion Notification"
 msgstr ""
 
-#: includes/class-config.php:472
+#: includes/class-config.php:473
 msgid "Whether to receive notification when an account is deleted"
 msgstr ""
 
-#: includes/class-config.php:495
+#: includes/class-config.php:496
 msgid ""
 "Are you sure you want to delete your account? This will erase all of your "
 "account data from the site. To delete your account enter your password below"
@@ -4045,7 +4053,7 @@ msgstr ""
 msgid "Correct folder name is <strong>\"%s\"</strong>"
 msgstr ""
 
-#: includes/class-init.php:159 includes/class-init.php:168
+#: includes/class-init.php:160 includes/class-init.php:169
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
@@ -4157,7 +4165,7 @@ msgstr ""
 msgid "You must add a shortcode to the content area"
 msgstr ""
 
-#: includes/core/class-builtin.php:663 includes/core/class-user.php:1536
+#: includes/core/class-builtin.php:663 includes/core/class-user.php:1538
 msgid "Only me"
 msgstr ""
 
@@ -6236,116 +6244,116 @@ msgstr ""
 msgid "Add translation to %s"
 msgstr ""
 
-#: includes/core/class-fields.php:1160
+#: includes/core/class-fields.php:1155
 msgid "Custom Field"
 msgstr ""
 
-#: includes/core/class-fields.php:1457
+#: includes/core/class-fields.php:1452
 msgid "Please upload a valid image!"
 msgstr ""
 
-#: includes/core/class-fields.php:1464 includes/core/class-fields.php:1485
+#: includes/core/class-fields.php:1459 includes/core/class-fields.php:1480
 msgid "Upload"
 msgstr ""
 
-#: includes/core/class-fields.php:1465
+#: includes/core/class-fields.php:1460
 msgid "Sorry this is not a valid image."
 msgstr ""
 
-#: includes/core/class-fields.php:1466
+#: includes/core/class-fields.php:1461
 msgid "This image is too large!"
 msgstr ""
 
-#: includes/core/class-fields.php:1467
+#: includes/core/class-fields.php:1462
 msgid "This image is too small!"
 msgstr ""
 
-#: includes/core/class-fields.php:1468
+#: includes/core/class-fields.php:1463
 msgid "You can only upload one image"
 msgstr ""
 
-#: includes/core/class-fields.php:1935
+#: includes/core/class-fields.php:1930
 msgid "Current Password"
 msgstr ""
 
-#: includes/core/class-fields.php:1964
+#: includes/core/class-fields.php:1959
 msgid "New Password"
 msgstr ""
 
-#: includes/core/class-fields.php:1996
+#: includes/core/class-fields.php:1991
 #, php-format
 msgid "Confirm %s"
 msgstr ""
 
-#: includes/core/class-fields.php:2231
+#: includes/core/class-fields.php:2226
 msgid "Upload Photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2252 includes/core/class-fields.php:2276
+#: includes/core/class-fields.php:2247 includes/core/class-fields.php:2271
 #: includes/core/um-actions-profile.php:724
 msgid "Change photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2276 includes/core/class-fields.php:2366
+#: includes/core/class-fields.php:2271 includes/core/class-fields.php:2368
 msgid "Processing..."
 msgstr ""
 
-#: includes/core/class-fields.php:2298
+#: includes/core/class-fields.php:2293
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:2333 includes/core/um-filters-fields.php:230
+#: includes/core/class-fields.php:2335 includes/core/um-filters-fields.php:243
 msgid "This file has been removed."
 msgstr ""
 
-#: includes/core/class-fields.php:2336 includes/core/class-fields.php:2366
+#: includes/core/class-fields.php:2338 includes/core/class-fields.php:2368
 msgid "Change file"
 msgstr ""
 
-#: includes/core/class-fields.php:2366
+#: includes/core/class-fields.php:2368
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:3792
+#: includes/core/class-fields.php:3791
 #, php-format
 msgid ""
 "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some "
 "information!"
 msgstr ""
 
-#: includes/core/class-fields.php:3794
+#: includes/core/class-fields.php:3793
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
-#: includes/core/class-files.php:241
+#: includes/core/class-files.php:256
 msgid "Invalid parameters"
 msgstr ""
 
-#: includes/core/class-files.php:246
+#: includes/core/class-files.php:261
 msgid "Invalid coordinates"
 msgstr ""
 
-#: includes/core/class-files.php:251
+#: includes/core/class-files.php:266
 msgid "Invalid file ownership"
 msgstr ""
 
-#: includes/core/class-files.php:304
+#: includes/core/class-files.php:319
 msgid "Invalid nonce"
 msgstr ""
 
-#: includes/core/class-files.php:324 includes/core/class-files.php:409
+#: includes/core/class-files.php:339 includes/core/class-files.php:424
 msgid "A theme or plugin compatibility issue"
 msgstr ""
 
-#: includes/core/class-files.php:952
+#: includes/core/class-files.php:967
 msgid "Ultimate Member: Not a valid temp file"
 msgstr ""
 
-#: includes/core/class-files.php:1080
+#: includes/core/class-files.php:1095
 msgid "Invalid user ID: "
 msgstr ""
 
-#: includes/core/class-files.php:1089 includes/core/class-files.php:1117
+#: includes/core/class-files.php:1104 includes/core/class-files.php:1132
 msgid "Unauthorized to do this attempt."
 msgstr ""
 
@@ -6381,7 +6389,7 @@ msgid "Your password must contain less than 30 characters"
 msgstr ""
 
 #: includes/core/class-password.php:536 includes/core/um-actions-account.php:62
-#: includes/core/um-actions-form.php:470
+#: includes/core/um-actions-form.php:476
 msgid ""
 "Your password must contain at least one lowercase letter, one capital letter "
 "and one number"
@@ -6391,7 +6399,7 @@ msgstr ""
 msgid "You must confirm your new password"
 msgstr ""
 
-#: includes/core/class-password.php:546 includes/core/um-actions-form.php:479
+#: includes/core/class-password.php:546 includes/core/um-actions-form.php:485
 msgid "Your passwords do not match"
 msgstr ""
 
@@ -6505,17 +6513,17 @@ msgstr ""
 msgid "Wrong nonce"
 msgstr ""
 
-#: includes/core/class-shortcodes.php:358
+#: includes/core/class-shortcodes.php:355
 msgid ""
 "This content has been restricted to logged in users only. Please <a href="
 "\"{login_referrer}\">login</a> to view this content."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:518
+#: includes/core/class-shortcodes.php:515
 msgid "You are already registered"
 msgstr ""
 
-#: includes/core/class-shortcodes.php:759
+#: includes/core/class-shortcodes.php:757
 msgid "Default Template"
 msgstr ""
 
@@ -6620,136 +6628,136 @@ msgstr ""
 msgid "You are not allowed to use this word as your username."
 msgstr ""
 
-#: includes/core/um-actions-form.php:276 includes/core/um-actions-form.php:388
-#: includes/core/um-actions-form.php:392 includes/core/um-actions-form.php:396
+#: includes/core/um-actions-form.php:276 includes/core/um-actions-form.php:394
+#: includes/core/um-actions-form.php:398 includes/core/um-actions-form.php:402
 #, php-format
 msgid "%s is required."
 msgstr ""
 
-#: includes/core/um-actions-form.php:401
+#: includes/core/um-actions-form.php:407
 msgid "Please specify account type."
 msgstr ""
 
-#: includes/core/um-actions-form.php:433
+#: includes/core/um-actions-form.php:439
 msgid "This field is required"
 msgstr ""
 
-#: includes/core/um-actions-form.php:435
+#: includes/core/um-actions-form.php:441
 #, php-format
 msgid "%s is required"
 msgstr ""
 
-#: includes/core/um-actions-form.php:442
+#: includes/core/um-actions-form.php:448
 #, php-format
 msgid "You are only allowed to enter a maximum of %s words"
 msgstr ""
 
-#: includes/core/um-actions-form.php:448
+#: includes/core/um-actions-form.php:454
 #, php-format
 msgid "Your %s must contain at least %s characters"
 msgstr ""
 
-#: includes/core/um-actions-form.php:454
+#: includes/core/um-actions-form.php:460
 #, php-format
 msgid "Your %s must contain less than %s characters"
 msgstr ""
 
-#: includes/core/um-actions-form.php:463
+#: includes/core/um-actions-form.php:469
 msgid "You can not use HTML tags here"
 msgstr ""
 
-#: includes/core/um-actions-form.php:476
+#: includes/core/um-actions-form.php:482
 msgid "Please confirm your password"
-msgstr ""
-
-#: includes/core/um-actions-form.php:485
-#, php-format
-msgid "Please select at least %s choices"
 msgstr ""
 
 #: includes/core/um-actions-form.php:491
 #, php-format
-msgid "You can only select up to %s choices"
+msgid "Please select at least %s choices"
 msgstr ""
 
 #: includes/core/um-actions-form.php:497
 #, php-format
-msgid "Minimum number limit is %s"
+msgid "You can only select up to %s choices"
 msgstr ""
 
 #: includes/core/um-actions-form.php:503
 #, php-format
+msgid "Minimum number limit is %s"
+msgstr ""
+
+#: includes/core/um-actions-form.php:509
+#, php-format
 msgid "Maximum number limit is %s"
 msgstr ""
 
-#: includes/core/um-actions-form.php:539
+#: includes/core/um-actions-form.php:545
 msgid "Please enter numbers only in this field"
 msgstr ""
 
-#: includes/core/um-actions-form.php:545
+#: includes/core/um-actions-form.php:551
 msgid "Please enter a valid phone number"
 msgstr ""
 
-#: includes/core/um-actions-form.php:551 includes/core/um-actions-form.php:557
-#: includes/core/um-actions-form.php:563 includes/core/um-actions-form.php:569
-#: includes/core/um-actions-form.php:575 includes/core/um-actions-form.php:581
-#: includes/core/um-actions-form.php:587 includes/core/um-actions-form.php:593
-#: includes/core/um-actions-form.php:605
+#: includes/core/um-actions-form.php:557 includes/core/um-actions-form.php:563
+#: includes/core/um-actions-form.php:569 includes/core/um-actions-form.php:575
+#: includes/core/um-actions-form.php:581 includes/core/um-actions-form.php:587
+#: includes/core/um-actions-form.php:593 includes/core/um-actions-form.php:599
+#: includes/core/um-actions-form.php:611
 #, php-format
 msgid "Please enter a valid %s username or profile URL"
 msgstr ""
 
-#: includes/core/um-actions-form.php:599
+#: includes/core/um-actions-form.php:605
 msgid "Please enter a valid URL"
 msgstr ""
 
-#: includes/core/um-actions-form.php:612 includes/core/um-actions-form.php:626
+#: includes/core/um-actions-form.php:618 includes/core/um-actions-form.php:632
 msgid "You must provide a username"
 msgstr ""
 
-#: includes/core/um-actions-form.php:614 includes/core/um-actions-form.php:628
+#: includes/core/um-actions-form.php:620 includes/core/um-actions-form.php:634
 msgid "Your username is already taken"
 msgstr ""
 
-#: includes/core/um-actions-form.php:616
+#: includes/core/um-actions-form.php:622
 msgid "Username cannot be an email"
 msgstr ""
 
-#: includes/core/um-actions-form.php:618 includes/core/um-actions-form.php:632
+#: includes/core/um-actions-form.php:624 includes/core/um-actions-form.php:638
 msgid "Your username contains invalid characters"
 msgstr ""
 
-#: includes/core/um-actions-form.php:630 includes/core/um-actions-form.php:652
-#: includes/core/um-actions-form.php:654 includes/core/um-actions-form.php:666
-#: includes/core/um-actions-form.php:673
+#: includes/core/um-actions-form.php:636 includes/core/um-actions-form.php:658
+#: includes/core/um-actions-form.php:660 includes/core/um-actions-form.php:672
+#: includes/core/um-actions-form.php:679
 msgid "This email is already linked to an existing account"
 msgstr ""
 
-#: includes/core/um-actions-form.php:650
+#: includes/core/um-actions-form.php:656
 msgid "You must provide your email"
 msgstr ""
 
-#: includes/core/um-actions-form.php:656 includes/core/um-actions-form.php:664
+#: includes/core/um-actions-form.php:662 includes/core/um-actions-form.php:670
 msgid "This is not a valid email"
 msgstr ""
 
-#: includes/core/um-actions-form.php:658
+#: includes/core/um-actions-form.php:664
 msgid "Your email contains invalid characters"
 msgstr ""
 
-#: includes/core/um-actions-form.php:698
+#: includes/core/um-actions-form.php:704
 msgid "You must provide a unique value"
 msgstr ""
 
-#: includes/core/um-actions-form.php:708
+#: includes/core/um-actions-form.php:714
 msgid "You must provide alphabetic letters"
 msgstr ""
 
-#: includes/core/um-actions-form.php:718
+#: includes/core/um-actions-form.php:724
 msgid "You must provide lowercase letters."
 msgstr ""
 
-#: includes/core/um-actions-form.php:737
+#: includes/core/um-actions-form.php:743
 #, php-format
 msgid "Your user description must contain less than %s characters"
 msgstr ""
@@ -6770,31 +6778,23 @@ msgstr ""
 msgid "Please enter your email"
 msgstr ""
 
-#: includes/core/um-actions-login.php:52
-msgid " Sorry, we can't find an account with that email address"
-msgstr ""
-
-#: includes/core/um-actions-login.php:54
-msgid " Sorry, we can't find an account with that username"
-msgstr ""
-
-#: includes/core/um-actions-login.php:58
+#: includes/core/um-actions-login.php:61
 msgid "Please enter your password"
 msgstr ""
 
-#: includes/core/um-actions-login.php:66
+#: includes/core/um-actions-login.php:68
 msgid "Password is incorrect. Please try again."
 msgstr ""
 
-#: includes/core/um-actions-login.php:194
+#: includes/core/um-actions-login.php:199
 msgid "This action has been prevented for security measures."
 msgstr ""
 
-#: includes/core/um-actions-login.php:418
+#: includes/core/um-actions-login.php:423
 msgid "Keep me signed in"
 msgstr ""
 
-#: includes/core/um-actions-login.php:453
+#: includes/core/um-actions-login.php:458
 msgid "Forgot your password?"
 msgstr ""
 
@@ -6944,7 +6944,7 @@ msgstr ""
 msgid "Last login: %s"
 msgstr ""
 
-#: includes/core/um-filters-fields.php:261
+#: includes/core/um-filters-fields.php:274
 msgid "Untitled photo"
 msgstr ""
 
@@ -6969,11 +6969,11 @@ msgstr ""
 msgid "Login as this user"
 msgstr ""
 
-#: includes/um-short-functions.php:571
+#: includes/um-short-functions.php:580
 msgid "date submitted"
 msgstr ""
 
-#: includes/um-short-functions.php:577
+#: includes/um-short-functions.php:586
 msgid "(empty)"
 msgstr ""
 
@@ -7043,37 +7043,37 @@ msgstr ""
 msgid "This user has not made any comments."
 msgstr ""
 
-#: templates/profile/posts-single.php:16
+#: templates/profile/posts-single.php:21
 #, php-format
 msgid "%s ago"
 msgstr ""
 
-#: templates/profile/posts-single.php:17
+#: templates/profile/posts-single.php:24
 msgid "in"
 msgstr ""
 
-#: templates/profile/posts-single.php:18
+#: templates/profile/posts-single.php:30
 msgid "no comments"
 msgstr ""
 
-#: templates/profile/posts-single.php:18
+#: templates/profile/posts-single.php:32
+#, php-format
+msgid "%s comments"
+msgstr ""
+
+#: templates/profile/posts-single.php:34
 msgid "1 comment"
 msgstr ""
 
-#: templates/profile/posts-single.php:18
-#, php-format
-msgid "% comments"
-msgstr ""
-
-#: templates/profile/posts-single.php:27 templates/profile/posts.php:35
+#: templates/profile/posts.php:21
 msgid "load more posts"
 msgstr ""
 
-#: templates/profile/posts.php:43
+#: templates/profile/posts.php:32
 msgid "You have not created any posts."
 msgstr ""
 
-#: templates/profile/posts.php:43
+#: templates/profile/posts.php:32
 msgid "This user has not created any posts."
 msgstr ""
 

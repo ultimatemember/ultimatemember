@@ -31,6 +31,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Private_Content_API Private_Content_API()
 	 * @method UM_User_Location_API User_Location_API()
 	 * @method UM_Photos_API Photos_API()
+	 * @method UM_Groups Groups()
 	 *
 	 */
 	final class UM extends UM_Functions {

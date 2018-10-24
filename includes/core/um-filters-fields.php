@@ -226,7 +226,20 @@ function um_profile_field_filter_hook__file( $value, $data ) {
 	$file_type = wp_check_filetype( $value );
 	$uri = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
 
+	$removed = false;
 	if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
+		if ( is_multisite() ) {
+			//multisite fix for old customers
+			$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value );
+			if ( ! file_exists( $file_path ) ) {
+				$removed = true;
+			}
+		} else {
+			$removed = true;
+		}
+	}
+
+	if ( $removed ) {
 		$value = __( 'This file has been removed.', 'ultimate-member' );
 	} else {
 		$file_info = um_user( $data['metakey'] . "_metadata" );
@@ -260,11 +273,24 @@ function um_profile_field_filter_hook__image( $value, $data ) {
 	$uri = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
 	$title = ( isset( $data['title'] ) ) ? $data['title'] : __( 'Untitled photo', 'ultimate-member' );
 
+	$removed = false;
+	if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
+		if ( is_multisite() ) {
+			//multisite fix for old customers
+			$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value );
+			if ( ! file_exists( $file_path ) ) {
+				$removed = true;
+			}
+		} else {
+			$removed = true;
+		}
+	}
+
 	// if value is an image tag
 	if( preg_match( '/\<img.*src=\"([^"]+).*/', $value, $matches ) ) {
 		$uri   = $matches[1];
 		$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="' . esc_attr( $uri ) . '"><img src="' . esc_attr( $uri ) . '" alt="' . esc_attr( $title ) . '" title="' . esc_attr( $title ) . '" class="" /></a></div>';
-	} else if ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
+	} else if ( ! $removed ) {
 		$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="' . esc_attr( $uri ) . '"><img src="' . esc_attr( $uri ) . '" alt="' . esc_attr( $title ) . '" title="' . esc_attr( $title ) . '" class="" /></a></div>';
 	} else {
 		$value = '';
@@ -635,6 +661,26 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 	return $value;
 }
 add_filter( 'um_profile_field_filter_hook__','um_profile_field_filter_xss_validation', 10, 3 );
+
+
+/**
+ * Trim All form POST submitted data
+ *
+ * @param $post_form
+ * @param $mode
+ *
+ * @return mixed
+ */
+function um_submit_form_data_trim_fields( $post_form, $mode ) {
+	foreach ( $post_form as $key => $field ) {
+		if ( is_string( $field ) ) {
+			$post_form[ $key ] = trim( $field );
+		}
+	}
+
+	return $post_form;
+}
+add_filter( 'um_submit_form_data', 'um_submit_form_data_trim_fields', 9, 2 );
 
 
 /**

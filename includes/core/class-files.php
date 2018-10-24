@@ -100,18 +100,19 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				return false;
 			}
 
-			if ( empty( get_query_var( 'um_form' ) ) ) {
+			$query_form = get_query_var( 'um_form' );
+			if ( empty( $query_form ) ) {
 				return false;
 			}
 
 			$form_id = get_query_var( 'um_form' );
-
-			if ( empty( get_query_var( 'um_field' ) ) ) {
+			$query_field = get_query_var( 'um_field' );
+			if ( empty( $query_field ) ) {
 				return false;
 			}
 			$field_key = urldecode( get_query_var( 'um_field' ) );
-
-			if ( empty( get_query_var( 'um_user' ) ) ) {
+			$query_user = get_query_var( 'um_user' );
+			if ( empty( $query_user ) ) {
 				return false;
 			}
 
@@ -121,9 +122,9 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			if ( empty( $user ) || is_wp_error( $user ) ) {
 				return false;
 			}
-
-			if ( empty( get_query_var( 'um_verify' ) ) ||
-			     ! wp_verify_nonce( get_query_var( 'um_verify' ), $user_id . $form_id . 'um-download-nonce' ) ) {
+			$query_verify = get_query_var( 'um_verify' );
+			if ( empty( $query_verify ) ||
+			     ! wp_verify_nonce( $query_verify, $user_id . $form_id . 'um-download-nonce' ) ) {
 				return false;
 			}
 
@@ -160,11 +161,19 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 */
 		function image_download( $user_id, $field_key, $field_value ) {
 			$file_path = UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . $field_value;
+			if ( ! file_exists( $file_path ) ) {
+				if ( is_multisite() ) {
+					//multisite fix for old customers
+					$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $file_path );
+				}
+			}
+
 			$file_info = get_user_meta( $user_id, $field_key . "_metadata", true );
 
+			$pathinfo = pathinfo( $file_path );
 			$size = filesize( $file_path );
-			$originalname = $file_info['original_name'];
-			$type = $file_info['type'];
+			$originalname = ! empty( $file_info['original_name'] ) ? $file_info['original_name'] : $pathinfo['basename'];
+			$type = ! empty( $file_info['type'] ) ? $file_info['type'] : $pathinfo['extension'];
 
 			header('Content-Description: File Transfer');
 			header('Content-Type: ' . $type );
@@ -186,11 +195,19 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 */
 		function file_download( $user_id, $field_key, $field_value ) {
 			$file_path = UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . $field_value;
+			if ( ! file_exists( $file_path ) ) {
+				if ( is_multisite() ) {
+					//multisite fix for old customers
+					$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $file_path );
+				}
+			}
+
 			$file_info = get_user_meta( $user_id, $field_key . "_metadata", true );
 
+			$pathinfo = pathinfo( $file_path );
 			$size = filesize( $file_path );
-			$originalname = $file_info['original_name'];
-			$type = $file_info['type'];
+			$originalname = ! empty( $file_info['original_name'] ) ? $file_info['original_name'] : $pathinfo['basename'];
+			$type = ! empty( $file_info['type'] ) ? $file_info['type'] : $pathinfo['extension'];
 
 			header('Content-Description: File Transfer');
 			header('Content-Type: ' . $type );

@@ -1214,12 +1214,14 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		?>
 		 *
 		 */
-		function approve() {
+		function approve( $repeat = true ) {
 			$user_id = um_user('ID');
 
-			$status = get_user_meta( $user_id, 'account_status', true );
-			if ( 'approved' === $status ) {
-				return;
+			if ( ! $repeat ) {
+				$status = get_user_meta( $user_id, 'account_status', true );
+				if ( 'approved' === $status ) {
+					return;
+				}
 			}
 
 			delete_option( "um_cache_userdata_{$user_id}" );

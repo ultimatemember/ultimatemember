@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.7
 Tested up to: 4.9
-Stable tag: 2.0.26
+Stable tag: 2.0.29
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -58,12 +58,18 @@ Ultimate Member has a range of extensions that allow you to extend the power of 
 * [Notices](https://ultimatemember.com/extensions/notices/) - Alert users to important information using conditional notices
 * [Profile Completeness](https://ultimatemember.com/extensions/profile-completeness/) - Encourage or force users to complete their profiles with the profile completeness extension
 * [Friends](https://ultimatemember.com/extensions/friends/) - Allows users to become friends by sending & accepting/rejecting friend requests
+* [User Photos](https://ultimatemember.com/extensions/user-photos/) - Allow users to upload photos to their profile
+* [Groups](https://ultimatemember.com/extensions/groups/) - Allow users to create and join groups around shared topics, interests etc.
 
 = Free Extensions =
 
 * [Terms & Conditions](https://ultimatemember.com/extensions/terms-conditions/) - Add a terms and condition checkbox to your registration forms & require users to agree to your T&Cs before registering on your site.
 * [Google reCAPTCHA](https://ultimatemember.com/extensions/google-recaptcha/) - Stop bots on your registration & login forms with Google reCAPTCHA
 * [Online Users](https://ultimatemember.com/extensions/online-users/) - Display what users are online with this extension
+
+= Theme =
+
+Our official [theme](https://ultimatemember.com/theme/) is purpose built for websites that have logged in and out users. The [theme](https://ultimatemember.com/theme/) has deep integration with Ultimate Member plugin and the extensions, different header designs for logged-in/out users and works alongside the Beaver Builder and Elementor page builders.
 
 = Development * Translations =
 
@@ -131,10 +137,31 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
-= 2.0.26: September 18, 2018 =
+= 2.0.29: October 8, 2018 =
+
+* Bugfixes:
+  - Fixed User Profile Posts pagination
+
+= 2.0.28: October 5, 2018 =
+
+* Bugfixes:
+  - Fixed Email notifications
+  - Fixed Download files/images for multisites
+  - Fixed Profile/Cover image for multisites
+  - Fixed XSS vulnerabilities (detected by @Serhack)
+  - Fixed trim fields on submit forms
+  - Fixed submitted info
+
+= 2.0.27: October 2, 2018 =
+
+* Bugfixes:
+  - Fixed files class
+
+= 2.0.26: October 2, 2018 =
 
 * Enhancements:
   - New files/images downloading process
+  - Added dependencies with User Photos and Groups extensions
 
 * Bugfixes:
   - File/Image email placeholders after registration form submitting

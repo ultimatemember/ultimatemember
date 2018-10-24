@@ -631,7 +631,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				return;
 			}
 
-			if ( $first_activation_date + MONTH_IN_SECONDS > time() ) {
+			if ( $first_activation_date + 2*WEEK_IN_SECONDS > time() ) {
 				return;
 			}
 

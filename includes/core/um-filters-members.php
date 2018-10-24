@@ -100,17 +100,30 @@ add_filter( 'um_prepare_user_query_args', 'um_remove_special_users_from_list', 9
 /**
  * Adds search parameters
  *
+ * @hooked 'um_prepare_user_query_args'
+ *
  * @param $query_args
  * @param $args
  *
  * @return mixed|void
  */
-function um_add_search_to_query( $query_args, $args ){
+function um_add_search_to_query( $query_args, $args ) {
 	extract( $args );
+
+	if ( ! empty( $args['search_filters'] ) ) {
+		$_REQUEST['um_search'] = 1;
+	}
 
 	if ( isset( $_REQUEST['um_search'] ) ) {
 
 		$query = UM()->permalinks()->get_query_array();
+
+		if ( ! empty( $args['search_filters'] ) ) {
+			parse_str( $args['search_filters'], $search_filters );
+			if ( $search_filters && is_array( $search_filters ) ) {
+				$query = array_merge( $search_filters, $query );
+			}
+		}
 
 		// if searching
 		if ( isset( $query['search'] ) ) {
@@ -154,7 +167,7 @@ function um_add_search_to_query( $query_args, $args ){
 								) );
 
 								if ( in_array( $filter_data['attrs']['type'], $types ) ) {
-									
+
 									$arr_meta_query = array(
 										array(
 											'key' => $field,
@@ -383,7 +396,7 @@ function um_prepare_user_query_args( $query_args, $args ) {
 				$sortby = str_replace('_asc','',$sortby);
 				$order = 'ASC';
 			}
-				
+
 			$query_args['orderby'] = $sortby;
 
 		}
@@ -469,14 +482,14 @@ function um_modify_sortby_randomly( $query ) {
 		if( isset( $_SESSION['seed'] ) ) {
 			$seed = $_SESSION['seed'];
 		}
-	        
+
 		// Set new seed if none exists
 		if ( ! $seed ) {
 			$seed = rand();
 			$_SESSION['seed'] = $seed;
 		}
 
-	
+
 		$query->query_orderby = 'ORDER by RAND('. $seed.')';
 	}
 
@@ -498,7 +511,7 @@ function um_prepare_user_results_array( $result ) {
 	} else {
 		$result['no_users'] = 0;
 	}
-   
+
 	return $result;
 }
 add_filter( 'um_prepare_user_results_array', 'um_prepare_user_results_array', 50, 2 );
