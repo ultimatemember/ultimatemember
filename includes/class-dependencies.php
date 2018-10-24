@@ -38,6 +38,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'groups'                => '2.0',
 			'instagram'             => '2.0',
 			'invitations'           => '2.0',
+			'frontend-posting'      => '1.0',
 			'mailchimp'             => '2.0.1',
 			'messaging'             => '2.0.5',
 			'mycred'                => '2.0',

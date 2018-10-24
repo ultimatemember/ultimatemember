@@ -99,7 +99,7 @@
 .um img {box-shadow: none !important}
 
 .um-col {padding-bottom: 20px}
-.um-col-alt {margin: 0 0 5px 0}
+.um-col-alt {margin: 15px 0 5px 0}
 .um-col-alt-s {padding-top: 10px}
 .um-col-alt-b {padding-top: 20px}
 
@@ -440,6 +440,10 @@ p.um-notice.warning {
 	outline: none !important;
 }
 
+.um-form .um-meta-text textarea {
+	max-width: 100%;
+}
+
 .um-form .wp-editor-container {
 	border: 1px solid #ddd;
 }
@@ -455,9 +459,9 @@ p.um-notice.warning {
 */
 
 .um-field-c .um-field-checkbox {
-	margin: 0 !important;
+	margin-bottom: 14px;
+	margin-top: 0 !important;
 	position: relative;
-	top: -14px;
 }
 
 .um-field-checkbox,
@@ -467,7 +471,7 @@ p.um-notice.warning {
 	position: relative;
 }
 
-.um-profile.um-editing .um-field-checkbox, 
+.um-profile.um-editing .um-field-checkbox,
 .um-profile.um-editing .um-field-radio{
 	cursor: pointer !important;
 }

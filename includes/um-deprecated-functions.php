@@ -336,3 +336,67 @@ function um_get_url_for_language( $post_id, $language ) {
 	//um_deprecated_function( 'um_get_url_for_language', '2.0', 'UM()->external_integrations()->get_url_for_language' );
 	return UM()->external_integrations()->get_url_for_language( $post_id, $language );
 }
+
+
+/**
+ * user uploads directory
+ *
+ * @deprecated 2.0.26
+ *
+ * @return string
+ */
+function um_user_uploads_dir() {
+	//um_deprecated_function( 'um_user_uploads_dir', '2.0.26', 'UM()->external_integrations()->get_url_for_language' );
+	$uri = UM()->files()->upload_basedir . um_user( 'ID' ) . '/';
+	return $uri;
+}
+
+/**
+ * user uploads uri
+ *
+ * @deprecated 2.0.26
+ *
+ * @return string
+ */
+function um_user_uploads_uri() {
+	//um_deprecated_function( 'um_user_uploads_uri', '2.0.26', 'UM()->external_integrations()->get_url_for_language' );
+	UM()->files()->upload_baseurl = set_url_scheme( UM()->files()->upload_baseurl );
+	$uri = UM()->files()->upload_baseurl . um_user( 'ID' ) . '/';
+	return $uri;
+}
+
+/**
+ * Check if a legitimate password reset request is in action
+ *
+ * @deprecated 2.0.26
+ *
+ * @return bool
+ */
+function um_requesting_password_reset() {
+	//um_deprecated_function( 'um_requesting_password_reset', '2.0.26', 'UM()->password()->is_reset_request' );
+
+	if ( um_is_core_page( 'password-reset' ) && isset( $_POST['_um_password_reset'] ) == 1 )
+		return true;
+
+	return false;
+}
+
+
+/**
+ * Check if a legitimate password change request is in action
+ *
+ * @deprecated 2.0.26
+ *
+ * @return bool
+ */
+function um_requesting_password_change() {
+	//um_deprecated_function( 'um_requesting_password_change', '2.0.26', 'UM()->password()->is_change_request' );
+
+	if ( um_is_core_page( 'account' ) && isset( $_POST['_um_account'] ) == 1 & isset( $_POST['_um_account_tab'] ) == 'password' ) {
+		return true;
+	} elseif ( isset( $_POST['_um_password_change'] ) && $_POST['_um_password_change'] == 1 ) {
+		return true;
+	}
+
+	return false;
+}

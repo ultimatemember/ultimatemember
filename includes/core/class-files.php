@@ -39,6 +39,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			$this->setup_paths();
 
+			add_action( 'template_redirect', array( &$this, 'download_routing' ) );
+
 			$this->fonticon = array(
 				'pdf' 	=> array('icon' 	=> 'um-faicon-file-pdf-o', 'color' => '#D24D4D' ),
 				'txt' 	=> array('icon' 	=> 'um-faicon-file-text-o' ),
@@ -63,6 +65,143 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			);
 
 			$this->default_file_fonticon = 'um-faicon-file-o';
+		}
+
+
+		/**
+		 * File download link generate
+		 *
+		 * @param int $form_id
+		 * @param string $field_key
+		 * @param int $user_id
+		 *
+		 * @return string
+		 */
+		function get_download_link( $form_id, $field_key, $user_id ) {
+			$field_key = urlencode( $field_key );
+
+			if ( UM()->is_permalinks ) {
+				$url = get_site_url( get_current_blog_id() );
+				$nonce = wp_create_nonce( $user_id . $form_id . 'um-download-nonce' );
+				return $url . "/um-download/{$form_id}/{$field_key}/{$user_id}/{$nonce}";
+			} else {
+				$url = get_site_url( get_current_blog_id() );
+				$nonce = wp_create_nonce( $user_id . $form_id . 'um-download-nonce' );
+				return add_query_arg( array( 'um_action' => 'download', 'um_form' => $form_id, 'um_field' => $field_key, 'um_user' => $user_id, 'um_verify' => $nonce ), $url );
+			}
+		}
+
+
+		/**
+		 * @return bool
+		 */
+		function download_routing() {
+			if ( 'download' !== get_query_var( 'um_action' ) ) {
+				return false;
+			}
+
+			if ( empty( get_query_var( 'um_form' ) ) ) {
+				return false;
+			}
+
+			$form_id = get_query_var( 'um_form' );
+
+			if ( empty( get_query_var( 'um_field' ) ) ) {
+				return false;
+			}
+			$field_key = urldecode( get_query_var( 'um_field' ) );
+
+			if ( empty( get_query_var( 'um_user' ) ) ) {
+				return false;
+			}
+
+			$user_id = get_query_var( 'um_user' );
+			$user = get_userdata( $user_id );
+
+			if ( empty( $user ) || is_wp_error( $user ) ) {
+				return false;
+			}
+
+			if ( empty( get_query_var( 'um_verify' ) ) ||
+			     ! wp_verify_nonce( get_query_var( 'um_verify' ), $user_id . $form_id . 'um-download-nonce' ) ) {
+				return false;
+			}
+
+			um_fetch_user( $user_id );
+			$field_data = get_post_meta( $form_id, '_um_custom_fields', true );
+			if ( empty( $field_data[ $field_key ] ) ) {
+				return false;
+			}
+
+			if ( ! um_can_view_field( $field_data[ $field_key ] ) ) {
+				return false;
+			}
+
+			$field_value = UM()->fields()->field_value( $field_key );
+			if ( empty( $field_value ) ) {
+				return false;
+			}
+
+			$download_type = $field_data[ $field_key ]['type'];
+			if ( $download_type === 'file' ) {
+				$this->file_download( $user_id, $field_key, $field_value );
+			} else {
+				$this->image_download( $user_id, $field_key, $field_value );
+			}
+
+			return false;
+		}
+
+
+		/**
+		 * @param $user_id
+		 * @param $field_key
+		 * @param $field_value
+		 */
+		function image_download( $user_id, $field_key, $field_value ) {
+			$file_path = UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . $field_value;
+			$file_info = get_user_meta( $user_id, $field_key . "_metadata", true );
+
+			$size = filesize( $file_path );
+			$originalname = $file_info['original_name'];
+			$type = $file_info['type'];
+
+			header('Content-Description: File Transfer');
+			header('Content-Type: ' . $type );
+			header('Content-Disposition: inline; filename="' . $originalname . '"');
+			header('Content-Transfer-Encoding: binary');
+			header('Expires: 0');
+			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+			header('Pragma: public');
+			header('Content-Length: ' . $size);
+			readfile( $file_path );
+			exit;
+		}
+
+
+		/**
+		 * @param $user_id
+		 * @param $field_key
+		 * @param $field_value
+		 */
+		function file_download( $user_id, $field_key, $field_value ) {
+			$file_path = UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . $field_value;
+			$file_info = get_user_meta( $user_id, $field_key . "_metadata", true );
+
+			$size = filesize( $file_path );
+			$originalname = $file_info['original_name'];
+			$type = $file_info['type'];
+
+			header('Content-Description: File Transfer');
+			header('Content-Type: ' . $type );
+			header('Content-Disposition: attachment; filename="' . $originalname . '"');
+			header('Content-Transfer-Encoding: binary');
+			header('Expires: 0');
+			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+			header('Pragma: public');
+			header('Content-Length: ' . $size);
+			readfile( $file_path );
+			exit;
 		}
 
 
@@ -104,7 +243,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			if ( $coord_n != 3 ) {
 				wp_send_json_error( esc_js( __( 'Invalid coordinates', 'ultimate-member' ) ) );
 			}
- 
+
 			$image_path = um_is_file_owner( $src, $user_id, true );
 			if ( ! $image_path ) {
 				wp_send_json_error( esc_js( __( 'Invalid file ownership', 'ultimate-member' ) ) );
@@ -134,7 +273,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			UM()->fields()->set_id = $_POST['set_id'];
 			UM()->fields()->set_mode = $_POST['set_mode'];
 
-
 			/**
 			 * UM hook
 			 *
@@ -156,26 +294,24 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			 * }
 			 * ?>
 			 */
-			$um_image_upload_nonce = apply_filters("um_image_upload_nonce", true );
+			$um_image_upload_nonce = apply_filters( "um_image_upload_nonce", true );
 
-			if(  $um_image_upload_nonce ){
+			if ( $um_image_upload_nonce ) {
 				if ( ! wp_verify_nonce( $nonce, "um_upload_nonce-{$timestamp}" ) && is_user_logged_in() ) {
 					// This nonce is not valid.
-					$ret['error'] = 'Invalid nonce';
+					$ret['error'] = __( 'Invalid nonce', 'ultimate-member' );
 					wp_send_json_error( $ret );
 				}
 			}
-			
-			if( isset( $_FILES[ $id ]['name'] ) ) {
 
-				if( ! is_array( $_FILES[ $id ]['name'] ) ) {
+			if ( isset( $_FILES[ $id ]['name'] ) ) {
+
+				if ( ! is_array( $_FILES[ $id ]['name'] ) ) {
 
 					$uploaded = UM()->uploader()->upload_image( $_FILES[ $id ], $user_id, $id );
 					if ( isset( $uploaded['error'] ) ){
-
 						$ret['error'] = $uploaded['error'];
-
-					}else{
+					} else {
 						$ts = current_time( 'timestamp' );
 						$ret[ ] = $uploaded['handle_upload'];
 					}
@@ -183,7 +319,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				}
 
 			} else {
-				$ret['error'] = __('A theme or plugin compatibility issue','ultimate-member');
+				$ret['error'] = __( 'A theme or plugin compatibility issue', 'ultimate-member' );
 			}
 			wp_send_json_success( $ret ); 
 		}

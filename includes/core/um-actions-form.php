@@ -346,7 +346,10 @@ function um_submit_form_errors_hook_( $args ) {
 								continue 2;
 							}
 						} elseif ( $op == 'contains' ) {
-							if ( strstr( $cond_value, $parent_value ) ) {
+							if ( is_string( $cond_value ) && strstr( $cond_value, $parent_value ) ) {
+								continue 2;
+							}
+							if( is_array( $cond_value ) && in_array( $parent_value, $cond_value ) ) {
 								continue 2;
 							}
 						}
@@ -376,7 +379,10 @@ function um_submit_form_errors_hook_( $args ) {
 								continue 2;
 							}
 						} elseif ( $op == 'contains' ) {
-							if ( ! strstr( $cond_value, $parent_value ) ) {
+							if ( is_string( $cond_value ) && ! strstr( $cond_value, $parent_value ) ) {
+								continue 2;
+							}
+							if( is_array( $cond_value ) && !in_array( $parent_value, $cond_value ) ) {
 								continue 2;
 							}
 						}
@@ -425,7 +431,7 @@ function um_submit_form_errors_hook_( $args ) {
 			 */
 			do_action( 'um_add_error_on_form_submit_validation', $array, $key, $args );
 
-			if ( isset( $args[$key] ) ) {
+			if ( isset( $args[ $key ] ) ) {
 
 				if ( isset( $array['required'] ) && $array['required'] == 1 ) {
 					if ( ! isset( $args[$key] ) || $args[$key] == '' || $args[$key] == 'empty_file') {

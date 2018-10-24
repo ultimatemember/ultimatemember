@@ -1,6 +1,7 @@
 <?php
 namespace um\widgets;
 
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 

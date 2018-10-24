@@ -152,7 +152,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			// remove uploads
-			UM()->files()->remove_dir( um_user_uploads_dir() );
+			UM()->files()->remove_dir( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR );
 		}
 
 
@@ -1136,15 +1136,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 
 		/**
-		 * Set user's hash for password reset
-		 */
-		function password_reset_hash() {
-			$this->profile['reset_pass_hash'] = UM()->validation()->generate();
-			$this->update_usermeta_info('reset_pass_hash');
-		}
-
-
-		/**
 		 * Set user's hash
 		 */
 		function assign_secretkey() {
@@ -1194,7 +1185,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * Password reset email
 		 */
 		function password_reset() {
-			$this->password_reset_hash();
+			$userdata = get_userdata( um_user('ID') );
+			get_password_reset_key( $userdata );
 			UM()->mail()->send( um_user('user_email'), 'resetpw_email' );
 		}
 
@@ -1224,14 +1216,22 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		function approve() {
 			$user_id = um_user('ID');
+
+			$status = get_user_meta( $user_id, 'account_status', true );
+			if ( 'approved' === $status ) {
+				return;
+			}
+
 			delete_option( "um_cache_userdata_{$user_id}" );
 
 			if ( um_user('account_status') == 'awaiting_admin_review' ) {
-				$this->password_reset_hash();
+				$userdata = get_userdata( $user_id );
+				get_password_reset_key( $userdata );
 				UM()->mail()->send( um_user('user_email'), 'approved_email' );
 
 			} else {
-				$this->password_reset_hash();
+				$userdata = get_userdata( $user_id );
+				get_password_reset_key( $userdata );
 				UM()->mail()->send( um_user('user_email'), 'welcome_email');
 			}
 
@@ -1673,7 +1673,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			// update user
 			if ( count( $args ) > 1 ) {
-
 				//if isset roles argument validate role to properly for security reasons
 				if ( isset( $args['role'] ) ) {
 					global $wp_roles;

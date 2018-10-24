@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.7
 Tested up to: 4.9
-Stable tag: 2.0.25
+Stable tag: 2.0.26
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -131,11 +131,17 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
-= 2.0.26: August 29, 2018 =
+= 2.0.26: September 18, 2018 =
+
+* Enhancements:
+  - New files/images downloading process
 
 * Bugfixes:
   - File/Image email placeholders after registration form submitting
   - File/Image forms fields values on submit/edit
+  - Fixed multisite file/image upload process
+  - Fixed clearing old user sessions after the changing a password
+  - Made reset password process via WP native functions
 
 = 2.0.25: August 20, 2018 =
 

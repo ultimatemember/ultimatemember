@@ -21,7 +21,7 @@ function um_submit_account_errors_hook( $args ) {
 				if ( strlen(trim( $_POST['single_user_password'] ) ) == 0 ) {
 					UM()->form()->add_error('single_user_password', __('You must enter your password','ultimate-member') );
 				} else {
-					if (  ! wp_check_password( $_POST['single_user_password'], $user->data->user_pass, $user->data->ID ) ) {
+					if ( ! wp_check_password( $_POST['single_user_password'], $user->data->user_pass, $user->data->ID ) ) {
 						UM()->form()->add_error('single_user_password', __('This is not your password','ultimate-member') );
 					}
 				}
@@ -149,7 +149,13 @@ function um_submit_account_details( $args ) {
 
 		$args['user_id'] = um_user('ID');
 
+		UM()->user()->password_changed();
+
 		do_action( 'send_password_change_email', $args );
+
+		//clear all sessions with old passwords
+		$user = WP_Session_Tokens::get_instance( um_user( 'ID' ) );
+		$user->destroy_all();
 
 		wp_set_password( $changes['user_pass'], um_user( 'ID' ) );
 			

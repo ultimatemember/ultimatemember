@@ -1,6 +1,4 @@
-<?php
-// Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) exit;
+<?php if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'UM_Functions' ) ) {
 
@@ -12,22 +10,9 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 
 		/**
-		 * @var
-		 */
-		var $options;
-
-
-		/**
-		 * @var array variable for Flags
-		 */
-		var $screenload_flags;
-
-
-		/**
 		 * UM_Functions constructor.
 		 */
 		function __construct() {
-			$this->init_variables();
 		}
 
 
@@ -88,14 +73,6 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 				), get_home_url() );
 			}
 			return $url;
-		}
-
-
-		/**
-		 * Set variables
-		 */
-		function init_variables() {
-			$this->options = get_option( 'um_options' );
 		}
 
 
@@ -344,6 +321,9 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		}
 
 
+		/**
+		 * @return mixed|void
+		 */
 		function cpt_list() {
 			/**
 			 * UM hook

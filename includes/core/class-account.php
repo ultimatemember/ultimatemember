@@ -324,8 +324,9 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				UM()->fields()->set_mode = 'account';
 				UM()->fields()->editing = true;
 
-				if ( get_query_var('um_tab') )
+				if ( get_query_var('um_tab') ) {
 					$this->current_tab = get_query_var('um_tab');
+				}
 
 			}
 		}
@@ -532,7 +533,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					$fields = $this->account_secure_fields( $fields, $id );
 					$fields = $this->filter_fields_by_attrs( $fields, $shortcode_args );
 
-					foreach ( $fields as $key => $data ){
+					foreach ( $fields as $key => $data ) {
 						$output .= UM()->fields()->edit_field( $key, $data );
 					}
 					break;

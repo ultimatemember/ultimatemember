@@ -305,8 +305,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 			$this->show_builder();
 
-			$output = ob_get_contents();
-			ob_end_clean();
+			$output = ob_get_clean();
 
 			if(is_array($output)){ print_r($output); }else{ echo $output; } die;
 		}
@@ -817,9 +816,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					 */
 					do_action( "um_admin_ajax_modal_content__hook_{$act_id}" );
 
-					$output = ob_get_contents();
-					ob_end_clean();
-
+					$output = ob_get_clean();
 					break;
 
 				case 'um_admin_fonticon_selector':
@@ -836,8 +833,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						<?php } ?>
 					</div><div class="um-admin-clear"></div>
 
-					<?php $output = ob_get_contents();
-					ob_end_clean();
+					<?php $output = ob_get_clean();
 					break;
 
 				case 'um_admin_show_fields':
@@ -894,8 +890,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 					</div>
 
-					<?php $output = ob_get_contents();
-					ob_end_clean();
+					<?php $output = ob_get_clean();
 					break;
 
 				case 'um_admin_edit_field_popup':
@@ -973,9 +968,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 					}
 
-					$output = ob_get_contents();
-					ob_end_clean();
-
+					$output = ob_get_clean();
 					break;
 
 				case 'um_admin_new_field_popup':
@@ -1037,9 +1030,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 					}
 
-					$output = ob_get_contents();
-					ob_end_clean();
-
+					$output = ob_get_clean();
 					break;
 
 				case 'um_admin_preview_form':

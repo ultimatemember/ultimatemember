@@ -223,26 +223,26 @@ add_filter( 'um_profile_field_filter_hook__date', 'um_profile_field_filter_hook_
  * @return string
  */
 function um_profile_field_filter_hook__file( $value, $data ) {
-	$uri = um_user_uploads_uri() . $value;
 	$file_type = wp_check_filetype( $value );
-    
-	if ( ! file_exists( um_user_uploads_dir() . $value ) ) {
-		$value = __('This file has been removed.','ultimate-member');
+	$uri = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
+
+	if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
+		$value = __( 'This file has been removed.', 'ultimate-member' );
 	} else {
-		$file_info = um_user( $data['metakey']."_metadata" );
-		if( isset( $file_info['original_name'] ) && ! empty( $file_info['original_name'] ) ){
+		$file_info = um_user( $data['metakey'] . "_metadata" );
+		if ( ! empty( $file_info['original_name'] ) ) {
 			$value = $file_info['original_name'];
 		}
 		$value = '<div class="um-single-file-preview show">
                         <div class="um-single-fileinfo">
-                            <a href="' . $uri  . '" target="_blank">
+                            <a href="' . esc_attr( $uri )  . '" target="_blank">
                                 <span class="icon" style="background:'. UM()->files()->get_fonticon_bg_by_ext( $file_type['ext'] ) . '"><i class="'. UM()->files()->get_fonticon_by_ext( $file_type['ext'] ) .'"></i></span>
                                 <span class="filename">' . esc_attr( $value ) . '</span>
                             </a>
                         </div>
                     </div>';
 	}
-	
+
 	return $value;
 }
 add_filter( 'um_profile_field_filter_hook__file', 'um_profile_field_filter_hook__file', 99, 2 );
@@ -257,15 +257,15 @@ add_filter( 'um_profile_field_filter_hook__file', 'um_profile_field_filter_hook_
  * @return string
  */
 function um_profile_field_filter_hook__image( $value, $data ) {
-	$uri = um_user_uploads_uri() . $value;
-	$title = ( isset( $data['title'] ) ) ? $data['title'] : __('Untitled photo');
+	$uri = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
+	$title = ( isset( $data['title'] ) ) ? $data['title'] : __( 'Untitled photo', 'ultimate-member' );
 
 	// if value is an image tag
 	if( preg_match( '/\<img.*src=\"([^"]+).*/', $value, $matches ) ) {
 		$uri   = $matches[1];
-		$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="'.$uri.'"><img src="'. $uri .'" alt="'.$title.'" title="'.$title.'" class="" /></a></div>';
-	} else if ( file_exists( um_user_uploads_dir() . $value ) ) {
-		$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="'.$uri.'"><img src="'. $uri .'" alt="'.$title.'" title="'.$title.'" class="" /></a></div>';
+		$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="' . esc_attr( $uri ) . '"><img src="' . esc_attr( $uri ) . '" alt="' . esc_attr( $title ) . '" title="' . esc_attr( $title ) . '" class="" /></a></div>';
+	} else if ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $value ) ) {
+		$value = '<div class="um-photo"><a href="#" class="um-photo-modal" data-src="' . esc_attr( $uri ) . '"><img src="' . esc_attr( $uri ) . '" alt="' . esc_attr( $title ) . '" title="' . esc_attr( $title ) . '" class="" /></a></div>';
 	} else {
 		$value = '';
 	}
@@ -405,7 +405,10 @@ function um_get_custom_field_array( $array, $fields ) {
 							$array['required'] = 0;
 						}
 					} elseif ( $op == 'contains' ) {
-						if ( strstr( $cond_value, $parent_value ) ) {
+						if ( is_string( $cond_value ) && strstr( $cond_value, $parent_value ) ) {
+							$array['required'] = 0;
+						}
+						if( is_array( $cond_value ) && in_array( $parent_value, $cond_value ) ) {
 							$array['required'] = 0;
 						}
 					}
@@ -435,7 +438,10 @@ function um_get_custom_field_array( $array, $fields ) {
 							$array['required'] = 0;
 						}
 					} elseif ( $op == 'contains' ) {
-						if ( ! strstr( $cond_value, $parent_value ) ) {
+						if( is_string( $cond_value ) && !strstr( $cond_value, $parent_value ) ) {
+							$array['required'] = 0;
+						}
+						if( is_array( $cond_value ) && !in_array( $parent_value, $cond_value ) ) {
 							$array['required'] = 0;
 						}
 					}

@@ -15,12 +15,6 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 
 
 		/**
-		 * @var array
-		 */
-		var $setup_shortcode = array();
-
-
-		/**
 		 * Setup constructor.
 		 */
 		function __construct() {
@@ -34,6 +28,7 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 		function run_setup() {
 			$this->install_basics();
 			$this->install_default_forms();
+			//$this->install_default_pages();
 			$this->set_default_settings();
 			$this->set_default_role_meta();
 		}
@@ -43,8 +38,9 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 		 * Basics
 		 */
 		function install_basics() {
-			if ( ! get_option( '__ultimatemember_sitekey' ) )
+			if ( ! get_option( '__ultimatemember_sitekey' ) ) {
 				update_option( '__ultimatemember_sitekey', str_replace( array( 'http://', 'https://' ), '', sanitize_user( get_bloginfo('url') ) ) . '-' . wp_generate_password( 20, false ) );
+			}
 		}
 
 
@@ -52,11 +48,8 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 		 * Default Forms
 		 */
 		function install_default_forms() {
-
-			$options = get_option( 'um_options' );
-			$options = empty( $options ) ? array() : $options;
-
 			if ( current_user_can( 'manage_options' ) && ! get_option( 'um_is_installed' ) ) {
+				$options = get_option( 'um_options', array() );
 
 				update_option( 'um_is_installed', 1 );
 
@@ -101,17 +94,14 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 							}
 						}
 
-						$this->setup_shortcode[$id] = '[ultimatemember form_id='.$form_id.']';
-
-						$core_forms[ $form_id ] = $form_id;
-
+						$core_forms[ $id ] = $form_id;
 					}
 					/** DONE **/
-
 				}
 
-				if ( isset( $core_forms ) )
+				if ( isset( $core_forms ) ) {
 					update_option( 'um_core_forms', $core_forms );
+				}
 
 				// Install Core Directories
 				foreach ( UM()->config()->core_directories as $id ) {
@@ -134,7 +124,7 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 
 						$form_id = wp_insert_post( $form );
 
-						foreach ( UM()->config()->core_directory_meta[$id] as $key => $value ) {
+						foreach ( UM()->config()->core_directory_meta[ $id ] as $key => $value ) {
 							if ( $key == '_um_custom_fields' ) {
 								$array = unserialize( $value );
 								update_post_meta( $form_id, $key, $array );
@@ -143,68 +133,78 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 							}
 						}
 
-						$this->setup_shortcode[$id] = '[ultimatemember form_id='.$form_id.']';
-
-						$core_directories[ $form_id ] = $form_id;
-
+						$core_directories[ $id ] = $form_id;
 					}
 					/** DONE **/
 
 				}
 
-				if ( isset( $core_directories ) ) update_option( 'um_core_directories', $core_directories );
-
-
-				// Install Core Pages
-				$core_pages = array();
-				foreach ( UM()->config()->core_pages as $slug => $array ) {
-
-					/**
-					If page does not exist
-					Create it
-					 **/
-					$page_exists = UM()->query()->find_post_id( 'page', '_um_core', $slug );
-					if ( ! $page_exists ) {
-
-						if ( $slug == 'logout' ) {
-							$content = '';
-						} else if ( $slug == 'account' ) {
-							$content = '[ultimatemember_account]';
-						} else if ( $slug == 'password-reset' ) {
-							$content = '[ultimatemember_password]';
-						} else if ( $slug == 'user' ){
-							$content = $this->setup_shortcode['profile'];
-						} else {
-							$content = $this->setup_shortcode[$slug];
-						}
-
-						$user_page = array(
-							'post_title'		=> $array['title'],
-							'post_content'		=> $content,
-							'post_name'			=> $slug,
-							'post_type' 	  	=> 'post',
-							'post_status'		=> 'publish',
-							'post_author'   	=> get_current_user_id(),
-							'comment_status'    => 'closed'
-						);
-
-						$post_id = wp_insert_post( $user_page );
-						wp_update_post( array( 'ID' => $post_id, 'post_type' => 'page' ) );
-
-						update_post_meta( $post_id, '_um_core', $slug );
-
-						$core_pages[ $slug ] = $post_id;
-
-					} else {
-						$core_pages[ $slug ] = $page_exists;
-					}
-					/** DONE **/
+				if ( isset( $core_directories ) ) {
+					update_option( 'um_core_directories', $core_directories );
 				}
 
-				foreach ( $core_pages as $slug => $page_id ) {
-					$key = UM()->options()->get_core_page_id( $slug );
-					$options[ $key ] = $page_id;
+				update_option( 'um_options', $options );
+			}
+		}
+
+
+		/**
+		 * Install Pre-defined pages with shortcodes
+		 */
+		function install_default_pages() {
+			if ( ! current_user_can( 'manage_options' ) ) {
+				return;
+			}
+
+			$core_forms = get_option( 'um_core_forms', array() );
+			$core_directories = get_option( 'um_core_directories', array() );
+
+			$setup_shortcodes = array_merge( $core_forms, $core_directories );
+
+			//Install Core Pages
+			$core_pages = array();
+			foreach ( UM()->config()->core_pages as $slug => $array ) {
+
+				$page_exists = UM()->query()->find_post_id( 'page', '_um_core', $slug );
+				if ( $page_exists ) {
+					$core_pages[ $slug ] = $page_exists;
+					continue;
 				}
+
+				//If page does not exist - create it
+				if ( $slug == 'logout' ) {
+					$content = '';
+				} elseif ( $slug == 'account' ) {
+					$content = '[ultimatemember_account]';
+				} elseif ( $slug == 'password-reset' ) {
+					$content = '[ultimatemember_password]';
+				} elseif ( $slug == 'user' ) {
+					$content = '[ultimatemember form_id="' . $setup_shortcodes['profile'] . '"]';
+				} else {
+					$content = '[ultimatemember form_id="' . $setup_shortcodes[ $slug ] . '"]';
+				}
+
+				$user_page = array(
+					'post_title'        => $array['title'],
+					'post_content'      => $content,
+					'post_name'         => $slug,
+					'post_type'         => 'page',
+					'post_status'       => 'publish',
+					'post_author'       => get_current_user_id(),
+					'comment_status'    => 'closed'
+				);
+
+				$post_id = wp_insert_post( $user_page );
+				update_post_meta( $post_id, '_um_core', $slug );
+
+				$core_pages[ $slug ] = $post_id;
+			}
+
+			$options = get_option( 'um_options', array() );
+
+			foreach ( $core_pages as $slug => $page_id ) {
+				$key = UM()->options()->get_core_page_id( $slug );
+				$options[ $key ] = $page_id;
 			}
 
 			update_option( 'um_options', $options );

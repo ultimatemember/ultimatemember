@@ -41,9 +41,9 @@ jQuery(document).ready(function() {
         var field = jQuery(this).parents('.um-field-area');
         var this_field = jQuery(this).parents('label');
         field.find('.um-field-radio').removeClass('active');
-        field.find('.um-field-radio').find('i').removeClass().addClass('um-icon-android-radio-button-off');
+        field.find('.um-field-radio').find('i').removeAttr('class').addClass('um-icon-android-radio-button-off');
         this_field.addClass('active');
-        this_field.find('i').removeClass().addClass('um-icon-android-radio-button-on');
+        this_field.find('i').removeAttr('class').addClass('um-icon-android-radio-button-on');
     });
 
     jQuery(document).on('change', '.um-field-area input[type=checkbox]', function(){
@@ -52,10 +52,10 @@ jQuery(document).ready(function() {
         var this_field = jQuery(this).parents('label');
         if ( this_field.hasClass('active') ) {
             this_field.removeClass('active');
-            this_field.find('i').removeClass().addClass('um-icon-android-checkbox-outline-blank');
+            this_field.find('i').removeAttr('class').addClass('um-icon-android-checkbox-outline-blank');
         } else {
             this_field.addClass('active');
-            this_field.find('i').removeClass().addClass('um-icon-android-checkbox-outline');
+            this_field.find('i').removeAttr('class').addClass('um-icon-android-checkbox-outline');
         }
     });
 

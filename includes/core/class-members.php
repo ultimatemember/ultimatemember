@@ -198,6 +198,9 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 			$attrs = apply_filters( 'um_search_fields', $attrs );
 
 			if ( $type == 'select' ) {
+				if( isset($attrs) && is_array( $attrs['options'] ) ){
+					asort( $attrs['options'] );
+				}
 				/**
 				 * UM hook
 				 *
@@ -240,7 +243,9 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 			switch ( $type ) {
 
 				case 'select':
-
+					/*if( isset($attrs) && is_array( $attrs['options'] ) ){
+						asort( $attrs['options'] );
+					}*/
 					?>
 
                     <select name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" class="um-s1" style="width: 100%" data-placeholder="<?php echo __( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>" <?php if ( ! empty( $attrs['custom_dropdown_options_source'] ) ) { ?> data-um-parent="<?php echo $attrs['parent_dropdown_relationship']; ?>" data-mebers-directory="yes"  data-um-ajax-source="<?php echo $attrs['custom_dropdown_options_source'] ?>"<?php } ?>>

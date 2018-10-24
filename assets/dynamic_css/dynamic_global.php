@@ -7,5 +7,11 @@ print ".um-$form_id.um {
 }";
 }
 
+if ( isset( $align ) && in_array( $align, ['left', 'right'] ) ) {
+print ".um-$form_id.um {
+	margin-$align: 0px !important;
+}";
+}
+
 ?>
 </style>
