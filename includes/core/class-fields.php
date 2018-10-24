@@ -1220,9 +1220,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			if (isset( $array['conditions'] ) && is_array( $array['conditions'] ) && !$this->viewing) {
 				$array['conditional'] = '';
 
-				foreach ($array['conditions'] as $cond_id => $cond) {
-					$array['conditional'] .= ' data-cond-' . $cond_id . '-action="' . $cond[0] . '" data-cond-' . $cond_id . '-field="' . $cond[1] . '" data-cond-' . $cond_id . '-operator="' . $cond[2] . '" data-cond-' . $cond_id . '-value="' . $cond[3] . '"';
-				}
+                $cond_data = json_encode($array['conditions']);
+                $array['conditional'] .= " data-conds='".$cond_data."'";
 
 				$array['classes'] .= ' um-is-conditional';
 
