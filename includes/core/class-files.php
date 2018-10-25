@@ -90,6 +90,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				$url = add_query_arg( array( 'um_action' => 'download', 'um_form' => $form_id, 'um_field' => $field_key, 'um_user' => $user_id, 'um_verify' => $nonce ), $url );
 			}
 
+			//add time to query args for sites with the cache
 			return add_query_arg( array( 't' => time() ), $url );
 		}
 
