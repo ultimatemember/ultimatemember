@@ -454,7 +454,10 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				$filename = wp_basename( $movefile['url'] );
 
-				set_transient( "um_{$filename}", $movefile['file_info'], 2 * HOUR_IN_SECONDS );
+				$transient = set_transient( "um_{$filename}", $movefile['file_info'], 2 * HOUR_IN_SECONDS );
+				if ( empty( $transient ) ) {
+					update_user_meta( $this->user_id, "{$field_key}_metadata_temp", $movefile['file_info'] );
+				}
 			}
 
 			$response['handle_upload'] = $movefile;
@@ -619,7 +622,10 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				$filename = wp_basename( $movefile['url'] );
 
-				set_transient( "um_{$filename}", $movefile['file_info'], 2 * HOUR_IN_SECONDS );
+				$transient = set_transient( "um_{$filename}", $movefile['file_info'], 2 * HOUR_IN_SECONDS );
+				if ( empty( $transient ) ) {
+					update_user_meta( $this->user_id, "{$field_key}_metadata_temp", $movefile['file_info'] );
+				}
 			}
 
 			$response['handle_upload'] = $movefile;
@@ -1161,10 +1167,16 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 						if ( rename( $temp_file_path, $file ) ) {
 							update_user_meta( $user_id, $key, $new_filename );
-							$file_info = get_transient("um_{$filename}");
+
+							$file_info = get_transient( "um_{$filename}" );
+							if ( ! $file_info ) {
+								$file_info = get_user_meta( $user_id, "{$key}_metadata_temp", true );
+								delete_user_meta( $user_id, "{$key}_metadata_temp" );
+							}
+
 							if ( $file_info ) {
 								update_user_meta( $user_id, "{$key}_metadata", $file_info );
-								delete_transient("um_{$filename}");
+								delete_transient( "um_{$filename}" );
 							}
 						}
 					}
