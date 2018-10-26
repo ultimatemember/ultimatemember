@@ -45,22 +45,32 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			add_action( 'um_admin_do_action__install_core_pages', array( &$this, 'install_core_pages' ) );
 
+			add_filter( 'admin_body_class', array( &$this, 'admin_body_class' ), 999 );
+
 			add_action( 'parent_file', array( &$this, 'parent_file' ), 9 );
 			add_filter( 'gettext', array( &$this, 'gettext' ), 10, 4 );
 			add_filter( 'post_updated_messages', array( &$this, 'post_updated_messages' ) );
-
-
-
-			add_action( 'wp_ajax_um_dynamic_modal_content', array( UM()->builder(), 'dynamic_modal_content' ) );
-			add_action( 'wp_ajax_um_populate_dropdown_options', array( UM()->builder(), 'populate_dropdown_options' ) );
-			add_action( 'wp_ajax_um_update_field', array( UM()->builder(), 'update_field' ) );
-			add_action( 'wp_ajax_um_do_ajax_action', array( UM()->fields(), 'do_ajax_action' ) );
-			add_action( 'wp_ajax_um_update_builder', array( UM()->builder(), 'update_builder' ) );
-			add_action( 'wp_ajax_um_update_order', array( UM()->dragdrop(), 'update_order' ) );
-			add_action( 'wp_ajax_um_rated', array( UM()->admin_menu(), 'ultimatemember_rated' ) );
 		}
 
 
+		/**
+		 * Adds class to our admin pages
+		 *
+		 * @param $classes
+		 *
+		 * @return string
+		 */
+		function admin_body_class( $classes ) {
+			if ( $this->is_um_screen() ) {
+				return "$classes um-admin";
+			}
+			return $classes;
+		}
+
+
+		/**
+		 *
+		 */
 		function manual_upgrades_request() {
 			if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
 				die();

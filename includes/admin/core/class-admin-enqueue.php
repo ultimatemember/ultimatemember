@@ -39,8 +39,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 
 			add_action( 'admin_enqueue_scripts',  array( &$this, 'admin_enqueue_scripts' ) );
 
-			add_filter( 'admin_body_class', array( &$this, 'admin_body_class' ), 999 );
-
 			add_filter( 'enter_title_here', array( &$this, 'enter_title_here' ) );
 
 			add_action( 'load-user-new.php', array( &$this, 'enqueue_role_wrapper' ) );
@@ -341,21 +339,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			);
 
 			wp_localize_script( 'um_admin_global', 'um_admin_scripts', $localize_data );
-		}
-
-
-		/**
-		 * Adds class to our admin pages
-		 *
-		 * @param $classes
-		 *
-		 * @return string
-		 */
-		function admin_body_class( $classes ) {
-			if ( UM()->admin()->is_um_screen() ) {
-				return "$classes um-admin";
-			}
-			return $classes;
 		}
 
 
