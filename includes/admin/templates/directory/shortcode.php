@@ -1,5 +1,5 @@
 <div class="um-admin-metabox">
-	<?php UM()->admin_forms( array(
+	<?php /*UM()->admin_forms( array(
 		'class'		=> 'um-member-directory-shortcode um-top-label',
 		'prefix_id'	=> 'um_metadata',
 		'fields' => array(
@@ -15,10 +15,10 @@
 				),
 			),
 		)
-	) )->render_form(); ?>
+	) )->render_form();*/ ?>
 
-	<div class="um-admin-clear"></div>
+<!--	<div class="um-admin-clear"></div>-->
 
 	<p><?php echo UM()->shortcodes()->get_shortcode( get_the_ID() ); ?></p>
-	<p><?php echo UM()->shortcodes()->get_default_shortcode( get_the_ID() ); ?></p>
+<!--	<p>--><?php //echo UM()->shortcodes()->get_default_shortcode( get_the_ID() ); ?><!--</p>-->
 </div>
