@@ -1160,10 +1160,12 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 						$new_files[ $key ] = $new_filename;
 
 						if ( rename( $temp_file_path, $file ) ) {
-							$file_info = get_transient("um_{$filename}");
 							update_user_meta( $user_id, $key, $new_filename );
-							update_user_meta( $user_id, "{$key}_metadata", $file_info );
-							delete_transient("um_{$filename}");
+							$file_info = get_transient("um_{$filename}");
+							if ( $file_info ) {
+								update_user_meta( $user_id, "{$key}_metadata", $file_info );
+								delete_transient("um_{$filename}");
+							}
 						}
 					}
 				}
