@@ -1087,6 +1087,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					$v = preg_split( '/[\r\n]+/', $v, -1, PREG_SPLIT_NO_EMPTY );
 				}
 				if ( strstr( $k, '_um_' ) ) {
+					if ( $k === '_um_is_default' ) {
+						$mode = UM()->query()->get_attr( 'mode', $post_id );
+						if ( ! empty( $mode ) ) {
+							$posts = $wpdb->get_col(
+								"SELECT post_id 
+								FROM {$wpdb->postmeta} 
+								WHERE meta_key = '_um_mode' AND 
+									  meta_value = 'directory'"
+							);
+							foreach ( $posts as $p_id ) {
+								delete_post_meta( $p_id, '_um_is_default' );
+							}
+						}
+					}
+
 					update_post_meta( $post_id, $k, $v );
 				}
 			}
@@ -1121,8 +1136,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			// save
 			delete_post_meta( $post_id, '_um_profile_metafields' );
 			foreach ( $_POST['form'] as $k => $v ) {
-				if ( strstr( $k, '_um_' ) ){
-					update_post_meta( $post_id, $k, $v);
+				if ( strstr( $k, '_um_' ) ) {
+					if ( $k === '_um_is_default' ) {
+						$mode = UM()->query()->get_attr( 'mode', $post_id );
+						if ( ! empty( $mode ) ) {
+							$posts = $wpdb->get_col( $wpdb->prepare(
+								"SELECT post_id 
+								FROM {$wpdb->postmeta} 
+								WHERE meta_key = '_um_mode' AND 
+									  meta_value = %s",
+								$mode
+							) );
+							foreach ( $posts as $p_id ) {
+								delete_post_meta( $p_id, '_um_is_default' );
+							}
+						}
+					}
+
+					update_post_meta( $post_id, $k, $v );
 				}
 			}
 

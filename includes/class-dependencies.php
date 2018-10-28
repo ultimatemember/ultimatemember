@@ -59,6 +59,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'beaver-builder'        => '2.0',
 			'user-photos'           => '2.0.1',
 			'user-exporter'         => '1.0.0',
+			'bookmark'              => '2.0',
 		);
 
 
