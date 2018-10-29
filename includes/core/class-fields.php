@@ -263,6 +263,40 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					}
 				}
 
+                $keys = array_keys($fields);
+                $last_key = end($keys);
+                unset($fields[$last_key]['conditions']);
+                unset($fields[$last_key]['conditional_action']);
+                unset($fields[$last_key]['conditional_action1']);
+                unset($fields[$last_key]['conditional_action2']);
+                unset($fields[$last_key]['conditional_action3']);
+                unset($fields[$last_key]['conditional_action4']);
+                unset($fields[$last_key]['conditional_field']);
+                unset($fields[$last_key]['conditional_field1']);
+                unset($fields[$last_key]['conditional_field2']);
+                unset($fields[$last_key]['conditional_field3']);
+                unset($fields[$last_key]['conditional_field4']);
+                unset($fields[$last_key]['conditional_operator']);
+                unset($fields[$last_key]['conditional_operator1']);
+                unset($fields[$last_key]['conditional_operator2']);
+                unset($fields[$last_key]['conditional_operator3']);
+                unset($fields[$last_key]['conditional_operator4']);
+                unset($fields[$last_key]['conditional_value']);
+                unset($fields[$last_key]['conditional_value1']);
+                unset($fields[$last_key]['conditional_value2']);
+                unset($fields[$last_key]['conditional_value3']);
+                unset($fields[$last_key]['conditional_value4']);
+                unset($fields[$last_key]['conditional_group']);
+                unset($fields[$last_key]['conditional_group1']);
+                unset($fields[$last_key]['conditional_group2']);
+                unset($fields[$last_key]['conditional_group3']);
+                unset($fields[$last_key]['conditional_group4']);
+                unset($fields[$last_key]['conditional_compare']);
+                unset($fields[$last_key]['conditional_compare1']);
+                unset($fields[$last_key]['conditional_compare2']);
+                unset($fields[$last_key]['conditional_compare3']);
+                unset($fields[$last_key]['conditional_compare4']);
+
 				// add field to form
 				UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
 
