@@ -1,14 +1,19 @@
-function um_admin_live_update_scripts() {
+function um_admin_live_update_scripts(count) {
 
-	/*jQuery('.um-admin-modal-body:visible select').select2({
-		allowClear: false,
-		minimumResultsForSearch: 10
-	});*/
+    var metakey = jQuery('.um-admin-modal #UM_edit_field #_metakey').val();
 
-	jQuery('.um-adm-conditional').each(function(){jQuery(this).trigger('change');});
-	if ( jQuery('.um-admin-colorpicker').length ) {
-		jQuery('.um-admin-colorpicker').wpColorPicker();
-	}
+    if( count === 0 ){
+        jQuery('.um_add_field .um-admin-btn-toggle').hide();
+    } else if( metakey && count === 1 ){
+        jQuery('.um_add_field .um-admin-btn-toggle').hide();
+    } else {
+        jQuery('.um_add_field .um-admin-btn-toggle').show();
+    }
+
+    jQuery('.um-adm-conditional').each(function(){jQuery(this).trigger('change');});
+    if ( jQuery('.um-admin-colorpicker').length ) {
+        jQuery('.um-admin-colorpicker').wpColorPicker();
+    }
 	
 }
 
@@ -38,7 +43,7 @@ function um_admin_new_modal( id, ajax, size ){
 }
 
 function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
-	
+    var count = jQuery('.um-admin-builder .um-admin-drag-fld').length;
 	in_row = '';
 	in_sub_row = '';
 	in_column = '';
@@ -65,7 +70,7 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 			
 			um_responsive();
 			
-			um_admin_live_update_scripts();
+			um_admin_live_update_scripts(count);
 
 			jQuery( "#_custom_dropdown_options_source" ).trigger('blur');
 
@@ -178,6 +183,17 @@ jQuery(document).ready(function() {
 		toggle area
 	**/
 	jQuery(document).on('click', '.um-admin-btn-toggle a', function(e){
+
+        jQuery('.condition-wrap .um-admin-cur-condition').each(function () {
+            var cond_operator = jQuery(this).find('[id^="_conditional_operator"]').val();
+            var cond_value = jQuery(this).find('[id^="_conditional_value"]');
+            if( cond_operator === 'empty' || cond_operator === 'not empty' ){
+                cond_value.hide();
+            } else {
+                cond_value.show();
+            }
+        });
+
 		var content = jQuery(this).parent().find('.um-admin-btn-content');
 		var link = jQuery(this);
 		if ( content.is(':hidden') ) {
@@ -192,7 +208,18 @@ jQuery(document).ready(function() {
 		um_admin_modal_responsive();
 	});
 
-
+    /**
+     check if empty/not empty
+     **/
+    jQuery(document).on('change', 'select[id^="_conditional_operator"]', function(){
+        var cond_operator = jQuery(this).val();
+        var cond_value = jQuery(this).closest('.um-admin-cur-condition').find('[id^="_conditional_value"]');
+        if( cond_operator === 'empty' || cond_operator === 'not empty' ){
+            cond_value.hide();
+        } else {
+            cond_value.show();
+        }
+    });
 
 	/**
 		clone a condition
