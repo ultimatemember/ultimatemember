@@ -430,10 +430,10 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 		/**
 		 * Load responsive styles
 		 */
-		function load_responsive(){
+		function load_responsive() {
 
-			wp_register_script('um_responsive', um_url . 'assets/js/um-responsive' . $this->suffix . '.js' );
-			wp_enqueue_script('um_responsive');
+			wp_register_script( 'um_responsive', um_url . 'assets/js/um-responsive' . $this->suffix . '.js', array( 'um_crop' ), ultimatemember_version, true );
+			wp_enqueue_script( 'um_responsive' );
 
 			wp_register_style('um_responsive', um_url . 'assets/css/um-responsive.css', array( 'um_profile' ) );
 			wp_enqueue_style('um_responsive');
