@@ -243,7 +243,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
                         <div class="um-admin-clear"></div>
                     </div>
-                    <p><a href="#" class="um-admin-new-condition button button-primary um-admin-tipsy-n" title="Add new condition"><?php _e( 'Add new rule', 'ultimate-member' ); ?></a></p>
+                    <?php /*<p><a href="#" class="um-admin-new-condition button button-primary um-admin-tipsy-n" title="Add new condition"><?php _e( 'Add new rule', 'ultimate-member' ); ?></a></p>*/ ?>
                     <p class="um-admin-reset-conditions"><a href="#" class="button"><?php _e( 'Reset all rules', 'ultimate-member' ); ?></a></p>
 					<div class="um-admin-clear"></div>
                     <div class="condition-wrap">
@@ -253,9 +253,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
                                 if ( $k == 0 ) $k = ''; ?>
                                 <?php if( $arr[4] == 'or' ){ ?>
-                                    <a href="#" class="um-admin-new-condition um-admin-new-condition-compare-and button button-primary um-admin-tipsy-n" title="Add new condition"><?php _e( 'Add new rule', 'ultimate-member' ); ?></a>
+                                    <a href="#" class="for-remove-on-reset um-admin-new-condition um-admin-new-condition-compare-and button button-primary um-admin-tipsy-n" title="Add new condition"><?php _e( 'Add new rule', 'ultimate-member' ); ?></a>
 
-                                    <hr />
+                                    <hr class="or-devider" />
                                 <?php } ?>
                                 <div class="um-admin-cur-condition">
 
