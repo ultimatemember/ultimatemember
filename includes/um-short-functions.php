@@ -2179,17 +2179,16 @@ function um_user( $data, $attrs = null ) {
 			}
 
 
-			if ($op == 'field' && UM()->options()->get( 'display_name_field' ) != '') {
+			if ( $op == 'field' && UM()->options()->get( 'display_name_field' ) != '' ) {
 				$fields = array_filter( preg_split( '/[,\s]+/', UM()->options()->get( 'display_name_field' ) ) );
 				$name = '';
 
-				foreach ($fields as $field) {
-					if (um_profile( $field )) {
+				foreach ( $fields as $field ) {
+					if ( um_profile( $field ) ) {
 						$name .= um_profile( $field ) . ' ';
-					} else if (um_user( $field )) {
+					} elseif ( um_user( $field ) && $field != 'display_name' ) {
 						$name .= um_user( $field ) . ' ';
 					}
-
 				}
 			}
 
