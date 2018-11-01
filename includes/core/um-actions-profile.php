@@ -177,7 +177,7 @@ add_action( 'um_profile_content_main', 'um_profile_content_main' );
  */
 function um_user_edit_profile( $args ) {
 	$to_update = null;
-	$files = null;
+	$files = array();
 
 	if ( isset( $args['user_id'] ) ) {
 		if ( UM()->roles()->um_current_user_can( 'edit', $args['user_id'] ) ) {
@@ -218,18 +218,18 @@ function um_user_edit_profile( $args ) {
 
 	// loop through fields
 	if ( ! empty( $fields ) ) {
-
 		foreach ( $fields as $key => $array ) {
 
-			if ( ! um_can_edit_field( $fields[ $key ] ) && isset( $fields[ $key ]['editable'] ) && ! $fields[ $key ]['editable'] )
+			if ( ! um_can_edit_field( $array ) && isset( $array['editable'] ) && ! $array['editable'] ) {
 				continue;
+			}
 
-			if ( $fields[$key]['type'] == 'multiselect' || $fields[$key]['type'] == 'checkbox' && ! isset( $args['submitted'][ $key ] ) ) {
+			if ( $array['type'] == 'multiselect' || $array['type'] == 'checkbox' && ! isset( $args['submitted'][ $key ] ) ) {
 				delete_user_meta( um_user( 'ID' ), $key );
 			}
 
 			if ( isset( $args['submitted'][ $key ] ) ) {
-				if ( isset( $fields[ $key ]['type'] ) && in_array( $fields[ $key ]['type'], array( 'image', 'file' ) ) &&
+				if ( isset( $array['type'] ) && in_array( $array['type'], array( 'image', 'file' ) ) &&
 				     ( /*um_is_file_owner( UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . $args['submitted'][ $key ], um_user( 'ID' ) ) ||*/
 					     um_is_temp_file( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' ) ) {
 
@@ -366,7 +366,7 @@ function um_user_edit_profile( $args ) {
 	 */
 	$files = apply_filters( 'um_user_pre_updating_files_array', $files );
 
-	if ( is_array( $files ) ) {
+	if ( ! empty( $files ) && is_array( $files ) ) {
 		UM()->uploader()->move_temporary_files( um_user( 'ID' ), $files );
 	}
 

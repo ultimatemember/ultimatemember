@@ -525,6 +525,7 @@ if ( ! class_exists( 'UM' ) ) {
 			if ( $this->is_request( 'ajax' ) ) {
 				$this->admin();
 				$this->ajax_init();
+				$this->admin_ajax_hooks();
 				$this->metabox();
 				$this->admin_upgrade()->init_packages_ajax_handlers();
 				$this->admin_gdpr();
@@ -635,6 +636,17 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		function ajax_init() {
 			new um\core\AJAX_Common();
+		}
+
+
+		/**
+		 * @since 2.0.30
+		 */
+		function admin_ajax_hooks() {
+			if ( empty( $this->classes['admin_ajax_hooks'] ) ) {
+				$this->classes['admin_ajax_hooks'] = new um\admin\core\Admin_Ajax_Hooks();
+			}
+			return $this->classes['admin_ajax_hooks'];
 		}
 
 
@@ -1310,6 +1322,20 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 
 			return $this->classes['cron'];
+		}
+
+
+		/**
+		 * @since 2.0
+		 *
+		 * @return um\core\Templates
+		 */
+		function templates() {
+			if ( empty( $this->classes['templates'] ) ) {
+				$this->classes['templates'] = new um\core\Templates();
+			}
+
+			return $this->classes['templates'];
 		}
 
 

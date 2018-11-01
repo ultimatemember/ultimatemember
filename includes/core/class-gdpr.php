@@ -70,10 +70,9 @@ if ( ! class_exists( 'um\core\GDPR' ) ) {
 		 * @return mixed
 		 */
 		function email_registration_data( $submitted ) {
-
-			$timestamp = ! empty( $submitted['timestamp'] ) ? $submitted['timestamp'] : $submitted['use_gdpr_agreement'];
-
 			if ( ! empty( $submitted['use_gdpr_agreement'] ) ) {
+				$timestamp = ! empty( $submitted['timestamp'] ) ? $submitted['timestamp'] : $submitted['use_gdpr_agreement'];
+
 				$submitted['GDPR Applied'] = date( "d M Y H:i", $timestamp );
 				unset( $submitted['use_gdpr_agreement'] );
 			}

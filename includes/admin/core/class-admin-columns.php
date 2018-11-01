@@ -90,11 +90,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Columns' ) ) {
 		 */
 		function manage_edit_um_form_columns( $columns ) {
 			$new_columns['cb'] = '<input type="checkbox" />';
-			$new_columns['title'] = __( 'Title', 'ulitmatemember' );
-			$new_columns['id'] = __('ID', 'ulitmatemember' );
-			$new_columns['mode'] = __( 'Type', 'ulitmatemember' );
-			$new_columns['shortcode'] = __( 'Shortcode', 'ulitmatemember' );
-			$new_columns['date'] = __( 'Date', 'ulitmatemember' );
+			$new_columns['title'] = __( 'Title', 'ulitmate-member' );
+			$new_columns['id'] = __('ID', 'ulitmate-member' );
+			$new_columns['mode'] = __( 'Type', 'ulitmate-member' );
+			$new_columns['is_default'] = __( 'Default', 'ulitmate-member' );
+			$new_columns['shortcode'] = __( 'Shortcode', 'ulitmate-member' );
+			$new_columns['date'] = __( 'Date', 'ulitmate-member' );
 
 			return $new_columns;
 		}
@@ -111,6 +112,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Columns' ) ) {
 			$new_columns['cb'] = '<input type="checkbox" />';
 			$new_columns['title'] = __( 'Title', 'ultimate-member' );
 			$new_columns['id'] = __( 'ID', 'ultimate-member' );
+			$new_columns['is_default'] = __( 'Default', 'ulitmate-member' );
 			$new_columns['shortcode'] = __( 'Shortcode', 'ultimate-member' );
 			$new_columns['date'] = __( 'Date', 'ultimate-member' );
 
@@ -131,7 +133,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Columns' ) ) {
 					break;
 
 				case 'shortcode':
-					echo UM()->shortcodes()->get_shortcode( $id );
+					$is_default = UM()->query()->get_attr( 'is_default', $id );
+
+					if ( $is_default ) {
+						echo UM()->shortcodes()->get_default_shortcode( $id );
+					} else {
+						echo UM()->shortcodes()->get_shortcode( $id );
+					}
+
+					break;
+
+				case 'is_default':
+					$is_default = UM()->query()->get_attr( 'is_default', $id );
+					echo empty( $is_default ) ? __( 'No', 'ultimate-member' ) : __( 'Yes', 'ultimate-member' );
 					break;
 
 				case 'mode':
@@ -143,7 +157,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Columns' ) ) {
 
 
 		/**
-		 * Display cusom columns for Directory
+		 * Display custom columns for Directory
 		 *
 		 * @param string $column_name
 		 * @param int $id
@@ -154,7 +168,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Columns' ) ) {
 					echo '<span class="um-admin-number">'.$id.'</span>';
 					break;
 				case 'shortcode':
-					echo UM()->shortcodes()->get_shortcode( $id );
+					$is_default = UM()->query()->get_attr( 'is_default', $id );
+
+					if ( $is_default ) {
+						echo UM()->shortcodes()->get_default_shortcode( $id );
+					} else {
+						echo UM()->shortcodes()->get_shortcode( $id );
+					}
+					break;
+				case 'is_default':
+					$is_default = UM()->query()->get_attr( 'is_default', $id );
+					echo empty( $is_default ) ? __( 'No', 'ultimate-member' ) : __( 'Yes', 'ultimate-member' );
 					break;
 			}
 		}

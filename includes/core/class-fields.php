@@ -1128,13 +1128,42 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return string
 		 */
 		function get_label( $key ) {
-			$fields = UM()->builtin()->all_user_fields;
-			if ( isset( $fields[$key]['label'] ) )
-				return stripslashes( $fields[$key]['label'] );
-			if ( isset( $fields[$key]['title'] ) )
-				return stripslashes( $fields[$key]['title'] );
+			$label = '';
 
-			return '';
+			$fields = UM()->builtin()->all_user_fields;
+			if ( isset( $fields[ $key ]['label'] ) ) {
+				$label = stripslashes( $fields[ $key ]['label'] );
+			}
+
+			if ( isset( $fields[ $key ]['title'] ) ) {
+				$label = stripslashes( $fields[ $key ]['title'] );
+			}
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_change_field_label
+			 * @description Change Field Label
+			 * @input_vars
+			 * [{"var":"$label","type":"string","desc":"Field Label"},
+			 * {"var":"$key","type":"string","desc":"Field Key"}]
+			 * @change_log
+			 * ["Since: 2.0.30"]
+			 * @usage add_filter( 'um_change_field_label', 'function_name', 10, 2 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_change_field_label', 'my_change_field_label', 10, 2 );
+			 * function my_form_fields( $label, $key ) {
+			 *     // your code here
+			 *     return $label;
+			 * }
+			 * ?>
+			 */
+			$label = apply_filters( 'um_change_field_label', $label, $key );
+
+			$label = sprintf( __( '%s', 'ultimate-member' ), $label );
+			return $label;
 		}
 
 
@@ -2268,8 +2297,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '<div class="um-single-image-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-nonce="' . $nonce . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" data-icon="' . esc_attr( $icon ) . '" data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $max_size ) . '" data-max_size_error="' . esc_attr( $max_size_error ) . '" data-min_size_error="' . esc_attr( $min_size_error ) . '" data-extension_error="' . esc_attr( $extension_error ) . '"  data-allowed_types="' . esc_attr( $allowed_types ) . '" data-upload_text="' . esc_attr( $upload_text ) . '" data-max_files_error="' . esc_attr( $max_files_error ) . '" data-upload_help_text="' . esc_attr( $upload_help_text ) . '">' . $button_text . '</div>';
 					$output .= '<div class="um-modal-footer">
                                     <div class="um-modal-right">
-                                        <a href="#" class="um-modal-btn um-finish-upload image disabled" data-key="' . $key . '" data-change="' . __( 'Change photo', 'ultimate-member' ) . '" data-processing="' . __( 'Processing...', 'ultimate-member' ) . '"> ' . __( 'Apply', 'ultimate-member' ) . '</a>
-                                        <a href="#" class="um-modal-btn alt" data-action="um_remove_modal"> ' . __( 'Cancel', 'ultimate-member' ) . '</a>
+                                        <a href="javascript:void(0);" class="um-modal-btn um-finish-upload image disabled" data-key="' . $key . '" data-change="' . __( 'Change photo', 'ultimate-member' ) . '" data-processing="' . __( 'Processing...', 'ultimate-member' ) . '"> ' . __( 'Apply', 'ultimate-member' ) . '</a>
+                                        <a href="javascript:void(0);" class="um-modal-btn alt" data-action="um_remove_modal"> ' . __( 'Cancel', 'ultimate-member' ) . '</a>
                                     </div>
                                     <div class="um-clear"></div>
                                 </div>';
@@ -2365,8 +2394,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '<div class="um-single-file-upload" data-user_id="' . esc_attr( $_um_profile_id ) . '" data-timestamp="' . esc_attr( $this->timestamp ) . '" data-nonce="' . $nonce . '" data-icon="' . esc_attr( $icon ) . '" data-set_id="' . esc_attr( $set_id ) . '" data-set_mode="' . esc_attr( $set_mode ) . '" data-type="' . esc_attr( $type ) . '" data-key="' . esc_attr( $key ) . '" data-max_size="' . esc_attr( $max_size ) . '" data-max_size_error="' . esc_attr( $max_size_error ) . '" data-min_size_error="' . esc_attr( $min_size_error ) . '" data-extension_error="' . esc_attr( $extension_error ) . '"  data-allowed_types="' . esc_attr( $allowed_types ) . '" data-upload_text="' . esc_attr( $upload_text ) . '" data-max_files_error="' . esc_attr( $max_files_error ) . '" data-upload_help_text="' . esc_attr( $upload_help_text ) . '">' . $button_text . '</div>';
 					$output .= '<div class="um-modal-footer">
                                     <div class="um-modal-right">
-                                        <a href="#" class="um-modal-btn um-finish-upload file disabled" data-key="' . $key . '" data-change="' . __( 'Change file' ) . '" data-processing="' . __( 'Processing...', 'ultimate-member' ) . '"> ' . __( 'Save', 'ultimate-member' ) . '</a>
-                                        <a href="#" class="um-modal-btn alt" data-action="um_remove_modal"> ' . __( 'Cancel', 'ultimate-member' ) . '</a>
+                                        <a href="javascript:void(0);" class="um-modal-btn um-finish-upload file disabled" data-key="' . $key . '" data-change="' . __( 'Change file' ) . '" data-processing="' . __( 'Processing...', 'ultimate-member' ) . '"> ' . __( 'Save', 'ultimate-member' ) . '</a>
+                                        <a href="javascript:void(0);" class="um-modal-btn alt" data-action="um_remove_modal"> ' . __( 'Cancel', 'ultimate-member' ) . '</a>
                                     </div>
                                     <div class="um-clear"></div>
                                 </div>';

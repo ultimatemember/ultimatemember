@@ -2,7 +2,7 @@
 
 	<div class="um-postmessage">
 		
-		<?php echo $this->custom_message; ?>
+		<?php printf( __( '%s', 'ultimate-member' ), $this->custom_message ); ?>
 		
 	</div>
 	
