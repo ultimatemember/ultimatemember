@@ -127,6 +127,8 @@ jQuery(document).ready( function() {
 
                 button.siblings('.um-clear-image').show();
                 button.hide();
+
+	            jQuery( document ).trigger( 'um_media_upload_select', button );
             });
 
             frame.open();
@@ -137,16 +139,19 @@ jQuery(document).ready( function() {
         });
 
         jQuery('.um-clear-image').click( function(e) {
-            var default_image_url = jQuery(this).siblings('.um-forms-field').data('default');
-            jQuery(this).siblings('.um-set-image').show();
-            jQuery(this).hide();
-            jQuery(this).siblings('.icon_preview').attr( 'src', default_image_url );
-            jQuery(this).siblings('.um-media-upload-data-id').val('');
-            jQuery(this).siblings('.um-media-upload-data-width').val('');
-            jQuery(this).siblings('.um-media-upload-data-height').val('');
-            jQuery(this).siblings('.um-media-upload-data-thumbnail').val('');
-            jQuery(this).siblings('.um-forms-field').val( default_image_url );
-            jQuery(this).siblings('.um-media-upload-url').val( default_image_url );
+            var clear_button = jQuery(this);
+            var default_image_url = clear_button.siblings('.um-forms-field').data('default');
+	        clear_button.siblings('.um-set-image').show();
+	        clear_button.hide();
+	        clear_button.siblings('.icon_preview').attr( 'src', default_image_url );
+	        clear_button.siblings('.um-media-upload-data-id').val('');
+	        clear_button.siblings('.um-media-upload-data-width').val('');
+	        clear_button.siblings('.um-media-upload-data-height').val('');
+	        clear_button.siblings('.um-media-upload-data-thumbnail').val('');
+	        clear_button.siblings('.um-forms-field').val( default_image_url );
+	        clear_button.siblings('.um-media-upload-url').val( default_image_url );
+
+	        jQuery( document ).trigger( 'um_media_upload_clear', clear_button );
         });
     }
 
