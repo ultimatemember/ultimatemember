@@ -836,19 +836,6 @@ function um_is_temp_file( $filename ) {
 
 
 /**
- * Get core page url
- *
- * @param $time1
- * @param $time2
- *
- * @return mixed|void
- */
-function um_time_diff( $time1, $time2 ) {
-	return UM()->datetime()->time_diff( $time1, $time2 );
-}
-
-
-/**
  * Get user's last login timestamp
  *
  * @param $user_id
@@ -867,19 +854,13 @@ function um_user_last_login_timestamp( $user_id ) {
 /**
  * Get user's last login (time diff)
  *
- * @param $user_id
+ * @param int $user_id
  *
- * @return mixed|string|void
+ * @return string
  */
 function um_user_last_login( $user_id ) {
 	$value = get_user_meta( $user_id, '_um_last_login', true );
-	if ( $value ) {
-		$value = um_time_diff( $value, current_time( 'timestamp' ) );
-	} else {
-		$value = '';
-	}
-
-	return $value;
+	return ! empty( $value ) ? UM()->datetime()->time_diff( $value, current_time( 'timestamp' ) ) : '';
 }
 
 

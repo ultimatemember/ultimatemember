@@ -130,7 +130,8 @@ add_filter( 'um_profile_field_filter_hook__user_registered', 'um_profile_field_f
  * @return string
  */
 function um_profile_field_filter_hook__last_login( $value, $data ) {
-	$value = sprintf( __('Last login: %s','ultimate-member'), um_user_last_login( um_user('ID') ) );
+	//$value = sprintf( __('Last login: %s','ultimate-member'), um_user_last_login( um_user('ID') ) );
+	$value = um_user_last_login( um_user( 'ID' ) );
 	return $value;
 }
 add_filter( 'um_profile_field_filter_hook__last_login', 'um_profile_field_filter_hook__last_login', 99, 2 );
