@@ -128,7 +128,7 @@ jQuery(document).ready( function() {
                 button.siblings('.um-clear-image').show();
                 button.hide();
 
-	            jQuery( document ).trigger( 'um_media_upload_select', button );
+	            jQuery( document ).trigger( 'um_media_upload_select', [button, attachment] );
             });
 
             frame.open();

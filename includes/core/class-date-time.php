@@ -60,7 +60,7 @@ if ( ! class_exists( 'um\core\Date_Time' ) ) {
 					$mins = 1;
 				}
 
-				$since = _n( '%s min', '%s mins', $mins, 'ultimate-member' );
+				$since = sprintf( _n( '%s min', '%s mins', $mins, 'ultimate-member' ), $mins );
 
 			} elseif ( $diff < DAY_IN_SECONDS && $diff >= HOUR_IN_SECONDS ) {
 
@@ -69,7 +69,7 @@ if ( ! class_exists( 'um\core\Date_Time' ) ) {
 					$hours = 1;
 				}
 
-				$since = _n( '%s hr', '%s hrs', $hours, 'ultimate-member' );
+				$since = sprintf( _n( '%s hr', '%s hrs', $hours, 'ultimate-member' ), $hours );
 
 			} elseif ( $diff < WEEK_IN_SECONDS && $diff >= DAY_IN_SECONDS ) {
 
@@ -77,8 +77,6 @@ if ( ! class_exists( 'um\core\Date_Time' ) ) {
 				if ( $days <= 1 ) {
 					$days = 1;
 				}
-
-
 
 				if ( $days == 1 ) {
 					$since = sprintf( __( 'Yesterday at %s', 'ultimate-member' ), date_i18n( 'g:ia', $from ) );
