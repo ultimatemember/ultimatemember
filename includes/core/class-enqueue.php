@@ -110,7 +110,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_script('um_functions', $this->js_baseurl . 'um-functions' . $this->suffix . '.js', array( 'jquery', 'jquery-masonry', 'wp-util', 'um_scrollbar' ), ultimatemember_version, true );
 			wp_register_script( 'um-gdpr', $this->js_baseurl . 'um-gdpr' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, false );
 			wp_register_script('um_conditional', $this->js_baseurl . 'um-conditional' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
-			wp_register_script('um_scripts', $this->js_baseurl . 'um-scripts' . $this->suffix . '.js', array( 'jquery', 'wp-util' ), ultimatemember_version, true );
+			wp_register_script('um_scripts', $this->js_baseurl . 'um-scripts' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'um_conditional' ), ultimatemember_version, true );
 			/**
 			 * UM hook
 			 *
@@ -155,8 +155,8 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_style( 'select2', $this->css_baseurl . 'select2/select2.min.css', array(), ultimatemember_version );
 			wp_register_style( 'um_fileupload', $this->css_baseurl . 'um-fileupload.css', array(), ultimatemember_version );
 			wp_register_style( 'um_datetime', $this->css_baseurl . 'pickadate/default.css', array(), ultimatemember_version );
-			wp_register_style( 'um_datetime_date', $this->css_baseurl . 'pickadate/default.date.css', array( 'um-datetime' ), ultimatemember_version );
-			wp_register_style( 'um_datetime_time', $this->css_baseurl . 'pickadate/default.time.css', array( 'um-datetime' ), ultimatemember_version );
+			wp_register_style( 'um_datetime_date', $this->css_baseurl . 'pickadate/default.date.css', array( 'um_datetime' ), ultimatemember_version );
+			wp_register_style( 'um_datetime_time', $this->css_baseurl . 'pickadate/default.time.css', array( 'um_datetime' ), ultimatemember_version );
 			wp_register_style( 'um_scrollbar', $this->css_baseurl . 'um-scrollbar.css', array(), ultimatemember_version );
 
 			wp_register_style( 'um_rtl', $this->css_baseurl . 'um.rtl.css', array(), ultimatemember_version );

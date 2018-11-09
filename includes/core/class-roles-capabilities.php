@@ -530,8 +530,11 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 
 			$temp = array();
 			foreach ( $role_data as $key=>$value ) {
-				if ( strpos( $key, '_um_' ) === 0 )
-					$key = str_replace( '_um_', '', $key );
+				if ( strpos( $key, '_um_' ) === 0 ) {
+					$key = preg_replace('/_um_/', '', $key, 1);
+				}
+
+				//$key = str_replace( '_um_', '', $key, $count );
 				$temp[ $key ] = $value;
 			}
 
