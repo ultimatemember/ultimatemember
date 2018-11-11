@@ -967,7 +967,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$class_attr = ' class="um-forms-field um-media-upload-data-url ' . $class . '"';
 
 			$data = array(
-				'field_id' => $field_data['id'],
+				'field_id' => $field_data['id'] . '_url',
 			);
 
 			if ( ! empty( $field_data['default']['url'] ) )

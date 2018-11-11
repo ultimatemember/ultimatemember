@@ -123,6 +123,7 @@ jQuery(document).ready( function() {
                 button.siblings('.um-media-upload-data-width').val(attachment.width);
                 button.siblings('.um-media-upload-data-height').val(attachment.height);
                 button.siblings('.um-media-upload-data-thumbnail').val(attachment.thumbnail);
+                button.siblings('.um-media-upload-data-url').trigger('change');
                 button.siblings('.um-media-upload-url').val(attachment.url);
 
                 button.siblings('.um-clear-image').show();
@@ -149,6 +150,7 @@ jQuery(document).ready( function() {
 	        clear_button.siblings('.um-media-upload-data-height').val('');
 	        clear_button.siblings('.um-media-upload-data-thumbnail').val('');
 	        clear_button.siblings('.um-forms-field').val( default_image_url );
+	        clear_button.siblings('.um-media-upload-data-url').trigger('change');
 	        clear_button.siblings('.um-media-upload-url').val( default_image_url );
 
 	        jQuery( document ).trigger( 'um_media_upload_clear', clear_button );
@@ -159,7 +161,7 @@ jQuery(document).ready( function() {
     /**
      * On option fields change
      */
-    jQuery('body').on('change', '.um-forms-field', function() {
+    jQuery( document.body ).on('change', '.um-forms-field', function() {
         if ( jQuery('.um-forms-line[data-conditional*=\'"' + jQuery(this).data('field_id') + '",\']').length > 0 ) {
             run_check_conditions();
         }
