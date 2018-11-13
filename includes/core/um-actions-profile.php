@@ -888,9 +888,7 @@ function um_profile_header( $args ) {
 					          data-character-limit="<?php echo UM()->options()->get( 'profile_bio_maxchars' ); ?>"
 					          placeholder="<?php _e( 'Tell us a bit about yourself...', 'ultimate-member' ); ?>"
 					          name="<?php echo 'description-' . $args['form_id']; ?>"
-					          id="<?php echo 'description-' . $args['form_id']; ?>"><?php if (um_user( 'description' )) {
-							echo um_user( 'description' );
-						} ?></textarea>
+					          id="<?php echo 'description-' . $args['form_id']; ?>"><?php echo UM()->fields()->field_value( 'description' ) ?></textarea>
 					<span class="um-meta-bio-character um-right"><span
 							class="um-bio-limit"><?php echo UM()->options()->get( 'profile_bio_maxchars' ); ?></span></span>
 					<?php
