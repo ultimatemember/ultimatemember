@@ -1346,7 +1346,30 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				<p>
 					<input type="text" name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" value="<?php echo isset( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" placeholder="<?php _e( 'Value', 'ultimate-member' ); ?>" style="width: 150px!important;position: relative;top: -1px;" />
 				</p>
+                <?php
+                break;
 
+                case '_conditional_compare':
+                case '_conditional_compare1':
+                case '_conditional_compare2':
+                case '_conditional_compare3':
+                case '_conditional_compare4':
+                    ?>
+                    <p>
+                        <input type="hidden" name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" value="<?php echo isset( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>">
+                    </p>
+                    <?php
+                    break;
+
+                case '_conditional_group':
+                case '_conditional_group1':
+                case '_conditional_group2':
+                case '_conditional_group3':
+                case '_conditional_group4':
+                    ?>
+                    <p>
+                        <input type="hidden" name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" value="<?php echo isset( $this->edit_mode_value ) ? $this->edit_mode_value : '0'; ?>">
+                    </p>
 				<?php
 				break;
 

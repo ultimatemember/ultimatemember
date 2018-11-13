@@ -855,7 +855,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @param $data array
 		 * @return um\admin\core\Admin_Forms()
 		 */
-		function admin_forms( $data ) {
+		function admin_forms( $data = false ) {
 			if ( empty( $this->classes['admin_forms_' . $data['class']] ) ) {
 				$this->classes['admin_forms_' . $data['class']] = new um\admin\core\Admin_Forms( $data );
 			}
@@ -869,7 +869,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @param $data array
 		 * @return um\admin\core\Admin_Forms_Settings()
 		 */
-		function admin_forms_settings( $data ) {
+		function admin_forms_settings( $data = false ) {
 			if ( empty( $this->classes['admin_forms_settings_' . $data['class']] ) ) {
 				$this->classes['admin_forms_settings_' . $data['class']] = new um\admin\core\Admin_Forms_Settings( $data );
 			}

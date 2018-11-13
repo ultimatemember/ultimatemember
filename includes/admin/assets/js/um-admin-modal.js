@@ -1,30 +1,35 @@
-function um_admin_live_update_scripts() {
+function um_admin_live_update_scripts(count) {
 
-	/*jQuery('.um-admin-modal-body:visible select').select2({
-		allowClear: false,
-		minimumResultsForSearch: 10
-	});*/
+    var metakey = jQuery('.um-admin-modal #UM_edit_field #_metakey').val();
 
-	jQuery('.um-adm-conditional').each(function(){jQuery(this).trigger('change');});
-	if ( jQuery('.um-admin-colorpicker').length ) {
-		jQuery('.um-admin-colorpicker').wpColorPicker();
-	}
-	
+    if( count === 0 ){
+        jQuery('.um_add_field .um-admin-btn-toggle').hide();
+    } else if( metakey && count === 1 ){
+        jQuery('.um_add_field .um-admin-btn-toggle').hide();
+    } else {
+        jQuery('.um_add_field .um-admin-btn-toggle').show();
+    }
+
+    jQuery('.um-adm-conditional').each(function(){jQuery(this).trigger('change');});
+    if ( jQuery('.um-admin-colorpicker').length ) {
+        jQuery('.um-admin-colorpicker').wpColorPicker();
+    }
+
 }
 
 function um_admin_new_modal( id, ajax, size ){
-	
+
 	var modal = jQuery('body').find('.um-admin-overlay');
-	
+
 	jQuery('.tipsy').hide();
-	
+
 	um_admin_remove_modal();
-		
+
 	jQuery('body').addClass('um-admin-modal-open').append('<div class="um-admin-overlay" /><div class="um-admin-modal" />');
 	jQuery('#' + id).prependTo('.um-admin-modal');
 	jQuery('#' + id).show();
 	jQuery('.um-admin-modal').show();
-	
+
 	jQuery('.um-admin-modal-head').append('<a href="#" data-action="UM_remove_modal" class="um-admin-modal-close"><i class="um-faicon-times"></i></a>');
 
 	if ( ajax == true ) {
@@ -34,23 +39,23 @@ function um_admin_new_modal( id, ajax, size ){
 	} else {
 		um_admin_modal_responsive();
 	}
-	
+
 }
 
 function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
-	
+    var count = jQuery('.um-admin-builder .um-admin-drag-fld').length;
 	in_row = '';
 	in_sub_row = '';
 	in_column = '';
 	in_group = '';
-	
+
 	if ( jQuery('.um-col-demon-settings').data('in_column') ) {
 		in_row = jQuery('.um-col-demon-settings').data('in_row');
 		in_sub_row = jQuery('.um-col-demon-settings').data('in_sub_row');
 		in_column = jQuery('.um-col-demon-settings').data('in_column');
 		in_group = jQuery('.um-col-demon-settings').data('in_group');
 	}
-	
+
 	jQuery.ajax({
 		url: wp.ajax.settings.url,
 		type: 'POST',
@@ -62,10 +67,10 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 		success: function(data){
 
 			jQuery('.um-admin-modal').find('.um-admin-modal-body').html( data );
-			
+
 			um_responsive();
-			
-			um_admin_live_update_scripts();
+
+			um_admin_live_update_scripts(count);
 
 			jQuery( "#_custom_dropdown_options_source" ).trigger('blur');
 
@@ -76,11 +81,11 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 					tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_edit');
 					jQuery('.um-admin-editor:visible').html( jQuery('.um-hidden-editor-edit').contents() );
 					tinyMCE.execCommand('mceAddEditor', true, 'um_editor_edit');
-					
+
 					jQuery('.switch-html').trigger('click');
 					jQuery('.switch-html').trigger('click');
 					jQuery('.switch-tmce').trigger('click');
-					
+
 					jQuery('#um_editor_edit_ifr').height(200);
 
 					var editor = tinyMCE.get('um_editor_edit');
@@ -92,19 +97,19 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 					tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_new');
 					jQuery('.um-admin-editor:visible').html( jQuery('.um-hidden-editor-new').contents() );
 					tinyMCE.execCommand('mceAddEditor', true, 'um_editor_new');
-					
+
 					jQuery('.switch-html').trigger('click');
 					jQuery('.switch-html').trigger('click');
 					jQuery('.switch-tmce').trigger('click');
-					
+
 					jQuery('#um_editor_new_ifr').height(200);
-					
+
 				}
-				
+
 			}
 
 			um_init_tooltips();
-			
+
 		},
 		error: function(data){
 
@@ -121,23 +126,23 @@ function um_admin_modal_responsive() {
 function um_admin_remove_modal(){
 
 	if ( jQuery('.um-admin-editor:visible').length > 0 ) {
-	
+
 		if ( jQuery('.um-admin-modal:visible').find('form').parent().attr('id') == 'UM_edit_field' ) {
-		
+
 			tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_edit');
 			jQuery('.um-hidden-editor-edit').html( jQuery('.um-admin-editor:visible').contents() );
 			tinyMCE.execCommand('mceAddEditor', true, 'um_editor_edit');
-		
+
 		} else {
-		
+
 			tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_new');
 			jQuery('.um-hidden-editor-new').html( jQuery('.um-admin-editor:visible').contents() );
 			tinyMCE.execCommand('mceAddEditor', true, 'um_editor_new');
-		
+
 		}
-				
+
 	}
-			
+
 	jQuery('body').removeClass('um-admin-modal-open');
 	jQuery('.um-admin-modal div[id^="UM_"]').hide().appendTo('body');
 	jQuery('.um-admin-modal,.um-admin-overlay').remove();
@@ -165,7 +170,7 @@ function um_admin_modal_add_attr( id, value ) {
 **/
 
 jQuery(document).ready(function() {
-	
+
 	/**
 		disable link
 	**/
@@ -173,11 +178,22 @@ jQuery(document).ready(function() {
 		e.preventDefault();
 		return false;
 	});
-	
+
 	/**
 		toggle area
 	**/
 	jQuery(document).on('click', '.um-admin-btn-toggle a', function(e){
+
+        jQuery('.condition-wrap .um-admin-cur-condition').each(function () {
+            var cond_operator = jQuery(this).find('[id^="_conditional_operator"]').val();
+            var cond_value = jQuery(this).find('[id^="_conditional_value"]');
+            if( cond_operator === 'empty' || cond_operator === 'not empty' ){
+                cond_value.attr('disabled','disabled');
+            } else {
+                cond_value.removeAttr('disabled');
+            }
+        });
+
 		var content = jQuery(this).parent().find('.um-admin-btn-content');
 		var link = jQuery(this);
 		if ( content.is(':hidden') ) {
@@ -192,73 +208,128 @@ jQuery(document).ready(function() {
 		um_admin_modal_responsive();
 	});
 
-
+    /**
+     check if empty/not empty
+     **/
+    jQuery(document).on('change', 'select[id^="_conditional_operator"]', function(){
+        var cond_operator = jQuery(this).val();
+        var cond_value = jQuery(this).closest('.um-admin-cur-condition').find('[id^="_conditional_value"]');
+        if( cond_operator === 'empty' || cond_operator === 'not empty' ){
+            cond_value.attr('disabled','disabled');
+        } else {
+            cond_value.removeAttr('disabled');
+        }
+    });
 
 	/**
 		clone a condition
 	**/
 	jQuery(document).on('click', '.um-admin-new-condition', function() {
 
-		if ( jQuery(this).hasClass('disabled') )
-			return false;
+        if ( jQuery(this).hasClass('disabled') )
+            return false;
 
-		var content = jQuery(this).parents('.um-admin-btn-content'),
-			length = content.find('.um-admin-cur-condition').length;
+        var content = jQuery(this).parents('.um-admin-btn-content'),
+            length = content.find('.um-admin-cur-condition').length;
 
-		if ( length < 5 ) {
-			//content.find('select').select2('destroy');
+        if ( length < 5 ) {
 
-			var template = jQuery('.um-admin-btn-content').find('.um-admin-cur-condition-template').clone();
-			template.find('input[type=text]').val('');
-			template.find('select').val('');
+            if( jQuery('#UM_add_field .um-admin-btn-content .um-admin-cur-condition-template').length>0 ){
+                var template = jQuery('#UM_add_field .um-admin-btn-content').find('.um-admin-cur-condition-template').clone();
+            } else {
+                var template = jQuery('#UM_edit_field .um-admin-btn-content').find('.um-admin-cur-condition-template').clone();
+            }
 
-			template.appendTo( content );
-			jQuery(template).removeClass("um-admin-cur-condition-template");
-			jQuery(template).addClass("um-admin-cur-condition");
+            template.find('input[type=text]').val('');
+            template.find('select').val('');
 
-			um_admin_live_update_scripts();
-			um_admin_modal_responsive();
-		} else {
-			jQuery(this).addClass('disabled');
-			alert( 'You already have 5 rules' );
-		}
-		//need fields refactor
+            if ( jQuery(this).hasClass('um-admin-new-condition-compare-and') ){
+
+                template.find('#_conditional_compare').val('and');
+                var group = jQuery(this).prev('.um-admin-cur-condition').find('[id^="_conditional_group"]').val();
+
+                template.find('#_conditional_group').val(group);
+                var templatehtml = template.html();
+                template.insertBefore( jQuery(this) );
+
+            } else {
+
+                template.find('#_conditional_compare').val('or');
+                var group = jQuery('.condition-wrap .um-admin-cur-condition').last().find('[id^="_conditional_group"]').val();
+                template.find('#_conditional_group').val(parseInt(group)+1);
+                var button = jQuery('.um-admin-new-condition-compare-and:first').clone();
+                jQuery('<hr class="or-devider" />').insertBefore( jQuery(this) );
+                template.insertBefore( jQuery(this) );
+                button.addClass('for-remove-on-reset').insertBefore( jQuery(this) );
+
+            }
+
+            jQuery(template).removeClass("um-admin-cur-condition-template");
+            jQuery(template).addClass("um-admin-cur-condition");
+
+            um_admin_live_update_scripts();
+            um_admin_modal_responsive();
+        } else {
+            jQuery(this).addClass('disabled');
+            alert( 'You already have 5 rules' );
+        }
+        //need fields refactor
         var conditions = jQuery('.um-admin-cur-condition');
-		jQuery(conditions).each( function ( i ) {
-			id = i === 0 ? '' : i;
-			jQuery( this ).find('[id^="_conditional_action"]').attr('name', '_conditional_action' + id);
-			jQuery( this ).find('[id^="_conditional_action"]').attr('id', '_conditional_action' + id);
-			jQuery( this ).find('[id^="_conditional_field"]').attr('name', '_conditional_field' + id);
-			jQuery( this ).find('[id^="_conditional_field"]').attr('id', '_conditional_field' + id);
-			jQuery( this ).find('[id^="_conditional_operator"]').attr('name', '_conditional_operator' + id);
-			jQuery( this ).find('[id^="_conditional_operator"]').attr('id', '_conditional_operator' + id);
-			jQuery( this ).find('[id^="_conditional_value"]').attr('name', '_conditional_value' + id);
-			jQuery( this ).find('[id^="_conditional_value"]').attr('id', '_conditional_value' + id);
+
+        jQuery(conditions).each( function ( i ) {
+            // var value = jQuery( this )
+
+            id = i === 0 ? '' : i;
+            jQuery( this ).find('[id^="_conditional_action"]').attr('name', '_conditional_action' + id);
+            jQuery( this ).find('[id^="_conditional_action"]').attr('id', '_conditional_action' + id);
+            jQuery( this ).find('[id^="_conditional_field"]').attr('name', '_conditional_field' + id);
+            jQuery( this ).find('[id^="_conditional_field"]').attr('id', '_conditional_field' + id);
+            jQuery( this ).find('[id^="_conditional_operator"]').attr('name', '_conditional_operator' + id);
+            jQuery( this ).find('[id^="_conditional_operator"]').attr('id', '_conditional_operator' + id);
+            jQuery( this ).find('[id^="_conditional_value"]').attr('name', '_conditional_value' + id);
+            jQuery( this ).find('[id^="_conditional_value"]').attr('id', '_conditional_value' + id);
+            jQuery( this ).find('[id^="_conditional_compare"]').attr('name', '_conditional_compare' + id);
+            jQuery( this ).find('[id^="_conditional_compare"]').attr('id', '_conditional_compare' + id);
+            jQuery( this ).find('[id^="_conditional_group"]').attr('name', '_conditional_group' + id);
+            jQuery( this ).find('[id^="_conditional_group"]').attr('id', '_conditional_group' + id);
         } );
 
 	});
-	
+
 	/**
 		reset conditions
 	**/
 	jQuery(document).on('click', '.um-admin-reset-conditions a', function(){
-		var content = jQuery(this).parents('.um-admin-btn-content');
-		content.find('.um-admin-cur-condition').slice(1).remove();
-		content.find('input[type=text]').val('');
-		content.find('select').val('');
-		jQuery('.um-admin-new-condition').removeClass('disabled');
-		um_admin_live_update_scripts();
-		um_admin_modal_responsive();
+        var content = jQuery(this).parents('.um-admin-btn-content');
+        content.find('.um-admin-cur-condition').slice(1).remove();
+        content.find('input[type=text]').val('');
+        content.find('select').val('');
+        jQuery('.um-admin-new-condition').removeClass('disabled');
+        jQuery('.condition-wrap hr').remove();
+        jQuery('.condition-wrap .for-remove-on-reset').remove();
+
+        um_admin_live_update_scripts();
+        um_admin_modal_responsive();
 	});
-	
+
 	/**
 		remove a condition
 	**/
 	jQuery(document).on('click', '.um-admin-remove-condition', function(){
-		var condition = jQuery(this).parents('.um-admin-cur-condition');
-		jQuery('.um-admin-new-condition').removeClass('disabled');
-		jQuery('.tipsy').remove();
-		condition.remove();
+        var condition = jQuery(this).parents('.um-admin-cur-condition');
+        jQuery('.um-admin-new-condition').removeClass('disabled');
+        jQuery('.tipsy').remove();
+        var compare = condition.find('input[type=hidden]').val();
+        if( compare == 'or' ){
+            condition.next().find('input[type=hidden]').val(compare);
+        }
+
+        if( condition.prev().is('hr') && condition.next().is('.um-admin-new-condition-compare-and') ){
+            condition.next().remove();
+            condition.prev().remove();
+        }
+        condition.remove();
+
         //need fields refactor
         var conditions = jQuery('.um-admin-cur-condition');
         jQuery(conditions).each( function ( i ) {
@@ -271,48 +342,52 @@ jQuery(document).ready(function() {
             jQuery( this ).find('[id^="_conditional_operator"]').attr('id', '_conditional_operator' + id);
             jQuery( this ).find('[id^="_conditional_value"]').attr('name', '_conditional_value' + id);
             jQuery( this ).find('[id^="_conditional_value"]').attr('id', '_conditional_value' + id);
+            jQuery( this ).find('[id^="_conditional_compare"]').attr('name', '_conditional_compare' + id);
+            jQuery( this ).find('[id^="_conditional_compare"]').attr('id', '_conditional_compare' + id);
+            jQuery( this ).find('[id^="_conditional_group"]').attr('name', '_conditional_group' + id);
+            jQuery( this ).find('[id^="_conditional_group"]').attr('id', '_conditional_group' + id);
         } );
-		um_admin_live_update_scripts();
-		um_admin_modal_responsive();
+        um_admin_live_update_scripts();
+        um_admin_modal_responsive();
 	});
-	
+
 	/**
 		remove modal via action
 	**/
 	jQuery(document).on('click', '.um-admin-overlay, a[data-action="UM_remove_modal"]', function(){
 		um_admin_remove_modal();
 	});
-	
+
 	/**
 		fire new modal
 	**/
 	jQuery(document).on('click', 'a[data-modal^="UM_"], span[data-modal^="UM_"]', function(e){
-		
+
 		e.preventDefault();
 
 		var modal_id = jQuery(this).attr('data-modal');
 
 		if ( jQuery(this).attr('data-back') ) {
-		
+
 			jQuery('#UM_fonticons').find('a.um-admin-modal-back').attr("data-modal", jQuery(this).attr('data-back') );
 			var current_icon = jQuery( '#' + jQuery(this).attr('data-back') ).find('input#_icon').val();
 			if ( current_icon == '' ) {
 				jQuery('#UM_fonticons').find('.um-admin-icons span').removeClass('highlighted');
 			}
-		
+
 		}
-		
+
 		if ( jQuery(this).data('dynamic-content') ) {
 			um_admin_new_modal( modal_id, true, jQuery(this).data('modal-size') );
 			um_admin_modal_ajaxcall( jQuery(this).data('dynamic-content'), jQuery(this).data('arg1'), jQuery(this).data('arg2'), jQuery(this).data('arg3') );
 		} else {
 			um_admin_new_modal( modal_id );
 		}
-		
+
 		return false;
 
 	});
-	
+
 	/**
 		choose font icon
 	**/
@@ -322,7 +397,7 @@ jQuery(document).ready(function() {
 		jQuery(this).addClass('highlighted');
 		jQuery('#UM_fonticons').find('a.um-admin-modal-back').attr("data-code", icon);
 	});
-	
+
 	/**
 		submit font icon
 	**/
@@ -344,7 +419,7 @@ jQuery(document).ready(function() {
 			um_admin_remove_modal();
 		}
 	});
-	
+
 	/**
 		restore font icon
 	**/
@@ -359,7 +434,7 @@ jQuery(document).ready(function() {
 		element.find('.um-admin-icon-value').html('No Icon');
 		jQuery(this).hide();
 	});
-	
+
 	/**
 		search font icons
 	**/
@@ -373,14 +448,14 @@ jQuery(document).ready(function() {
 		um_admin_modal_responsive();
 	});
 
-	
+
 	/**
 	 * Retrieve options from a callback function
 	 */
 	jQuery(document).on('blur',"#_custom_dropdown_options_source", function(){
         var me = jQuery(this);
         var _options = jQuery('textarea[id=_options]');
-        
+
         if( me.val() != '' ){
         	var um_option_callback = me.val();
           	jQuery.ajax({
@@ -388,17 +463,17 @@ jQuery(document).ready(function() {
 				type: 'POST',
 				data: { action:'populate_dropdown_options',um_option_callback: um_option_callback },
 				complete: function(){
-					
+
 				},
 				success: function( response ){
 					var arr_opts = [];
-					
+
 					for (var key in response.data ){
                          arr_opts.push( response.data[ key ] );
 					}
 
 					_options.val( arr_opts.join('\n') );
-					
+
 		        }
 			});
 		}

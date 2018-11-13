@@ -327,63 +327,63 @@ function um_submit_form_errors_hook_( $args ) {
 							}
 						} elseif ( $op == 'not empty' ) {
 							if ( ! empty( $cond_value ) ) {
-								continue 2;
+								continue;
 							}
 						} elseif ( $op == 'equals to' ) {
 							if ( $cond_value == $parent_value ) {
-								continue 2;
+								continue;
 							}
 						} elseif ( $op == 'not equals' ) {
 							if ( $cond_value != $parent_value ) {
-								continue 2;
+								continue;
 							}
 						} elseif ( $op == 'greater than' ) {
 							if ( $cond_value > $parent_value ) {
-								continue 2;
+								continue;
 							}
 						} elseif ( $op == 'less than' ) {
 							if ( $cond_value < $parent_value ) {
-								continue 2;
+								continue;
 							}
 						} elseif ( $op == 'contains' ) {
 							if ( is_string( $cond_value ) && strstr( $cond_value, $parent_value ) ) {
-								continue 2;
+								continue;
 							}
 							if( is_array( $cond_value ) && in_array( $parent_value, $cond_value ) ) {
-								continue 2;
+								continue;
 							}
 						}
 					} elseif ( $visibility == 'show' ) {
 						if ( $op == 'empty' ) {
 							if ( ! empty( $cond_value ) ) {
-								continue 2;
+								continue;
 							}
 						} elseif ( $op == 'not empty' ) {
 							if ( empty( $cond_value ) ) {
-								continue 2;
+								continue;
 							}
 						} elseif ( $op == 'equals to' ) {
 							if ( $cond_value != $parent_value ) {
-								continue 2;
+								continue;
 							}
 						} elseif ( $op == 'not equals' ) {
 							if ( $cond_value == $parent_value ) {
-								continue 2;
+								continue;
 							}
 						} elseif ( $op == 'greater than' ) {
 							if ( $cond_value <= $parent_value ) {
-								continue 2;
+								continue;
 							}
 						} elseif ( $op == 'less than' ) {
 							if ( $cond_value >= $parent_value ) {
-								continue 2;
+								continue;
 							}
 						} elseif ( $op == 'contains' ) {
 							if ( is_string( $cond_value ) && ! strstr( $cond_value, $parent_value ) ) {
-								continue 2;
+								continue;
 							}
 							if( is_array( $cond_value ) && !in_array( $parent_value, $cond_value ) ) {
-								continue 2;
+								continue;
 							}
 						}
 					}

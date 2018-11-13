@@ -184,6 +184,15 @@ jQuery(document).ready(function() {
 
     jQuery('.um-s1,.um-s2').css({'display':'block'});
 
+    if( jQuery(".um-s1").length > 0 ){
+        jQuery(".um-s1").each(function () {
+            var select = jQuery(this);
+            if( select.val() === '' && select.attr('data-default') ) {
+                select.val(select.attr('data-default'));
+            }
+        });
+    }
+
     jQuery(".um-s1").select2({
 
         allowClear: true,

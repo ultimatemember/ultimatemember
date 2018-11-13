@@ -31,6 +31,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		}
 
 
+		function set_data( $data ) {
+		    $this->form_data = $data;
+		    return $this;
+        }
+
+
 		/**
 		 * Render form
 		 *
@@ -247,7 +253,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					$html .= call_user_func( array( &$this, 'render_' . $data['type'] ), $data );
 
 				} else {
-
 					$html .= $this->render_field_by_hook( $data );
 
 				}
@@ -304,6 +309,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$for_attr = ' for="' . $id . '" ';
 
 			$label = $data['label'];
+			if ( isset( $data['required'] ) && $data['required'] )
+		        $label = $label . '<span class="um-req" title="'.__('Required','ultimate-member').'">*</span>';
+
 			$tooltip = ! empty( $data['tooltip'] ) ? UM()->tooltip( $data['tooltip'], false, false ) : '';
 
 			return "<label $for_attr>$label $tooltip</label>";

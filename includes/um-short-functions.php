@@ -288,142 +288,288 @@ function um_user_ip() {
  * @return bool
  */
 function um_field_conditions_are_met( $data ) {
+
+
+
 	if (!isset( $data['conditions'] )) return true;
 
-	$state = 1;
+    $state = ( $data['conditional_action'] == 'show' ) ? 1 : 0;
 
-	foreach ($data['conditions'] as $k => $arr) {
-		if ($arr[0] == 'show') {
 
-			$val = $arr[3];
-			$op = $arr[2];
+    $first_group = 0;
+    $state_array = array();
+    $count = count($state_array);
+    foreach ($data['conditions'] as $k => $arr){
 
-			if (strstr( $arr[1], 'role_' ))
-				$arr[1] = 'role';
+        $val = $arr[3];
+        $op = $arr[2];
 
-			$field = um_profile( $arr[1] );
+        if (strstr($arr[1], 'role_'))
+            $arr[1] = 'role';
 
-			switch ($op) {
-				case 'equals to':
+        $field = um_profile($arr[1]);
 
-					$field = maybe_unserialize( $field );
 
-					if (is_array( $field ))
-						$state = in_array( $val, $field ) ? 1 : 0;
-					else
-						$state = ( $field == $val ) ? 1 : 0;
+        if( $arr[5] != $first_group ){
 
-					break;
-				case 'not equals':
 
-					$field = maybe_unserialize( $field );
+            if ($arr[0] == 'show') {
 
-					if (is_array( $field ))
-						$state = !in_array( $val, $field ) ? 1 : 0;
-					else
-						$state = ( $field != $val ) ? 1 : 0;
+                switch ($op) {
+                    case 'equals to':
 
-					break;
-				case 'empty':
+                        $field = maybe_unserialize( $field );
 
-					$state = ( !$field ) ? 1 : 0;
+                        if (is_array( $field ))
+                            $state = in_array( $val, $field ) ? 'show' : 'hide';
+                        else
+                            $state = ( $field == $val ) ? 'show' : 'hide';
 
-					break;
-				case 'not empty':
+                        break;
+                    case 'not equals':
 
-					$state = ( $field ) ? 1 : 0;
+                        $field = maybe_unserialize( $field );
 
-					break;
-				case 'greater than':
-					if ($field > $val) {
-						$state = 1;
-					} else {
-						$state = 0;
-					}
-					break;
-				case 'less than':
-					if ($field < $val) {
-						$state = 1;
-					} else {
-						$state = 0;
-					}
-					break;
-				case 'contains':
-					if (strstr( $field, $val )) {
-						$state = 1;
-					} else {
-						$state = 0;
-					}
-					break;
-			}
-		} else if ($arr[0] == 'hide') {
+                        if (is_array( $field ))
+                            $state = !in_array( $val, $field ) ? 'show' : 'hide';
+                        else
+                            $state = ( $field != $val ) ? 'show' : 'hide';
 
-			$state = 1;
-			$val = $arr[3];
-			$op = $arr[2];
+                        break;
+                    case 'empty':
 
-			if (strstr( $arr[1], 'role_' ))
-				$arr[1] = 'role';
+                        $state = ( !$field ) ? 'show' : 'hide';
 
-			$field = um_profile( $arr[1] );
+                        break;
+                    case 'not empty':
 
-			switch ($op) {
-				case 'equals to':
+                        $state = ( $field ) ? 'show' : 'hide';
 
-					$field = maybe_unserialize( $field );
+                        break;
+                    case 'greater than':
+                        if ($field > $val) {
+                            $state = 'show';
+                        } else {
+                            $state = 'hide';
+                        }
+                        break;
+                    case 'less than':
+                        if ($field < $val) {
+                            $state = 'show';
+                        } else {
+                            $state = 'hide';
+                        }
+                        break;
+                    case 'contains':
+                        if (strstr( $field, $val )) {
+                            $state = 'show';
+                        } else {
+                            $state = 'hide';
+                        }
+                        break;
+                }
+            } else if ($arr[0] == 'hide') {
 
-					if (is_array( $field ))
-						$state = in_array( $val, $field ) ? 0 : 1;
-					else
-						$state = ( $field == $val ) ? 0 : 1;
+                switch ($op) {
+                    case 'equals to':
 
-					break;
-				case 'not equals':
+                        $field = maybe_unserialize( $field );
 
-					$field = maybe_unserialize( $field );
+                        if (is_array( $field ))
+                            $state = in_array( $val, $field ) ? 'hide' : 'show';
+                        else
+                            $state = ( $field == $val ) ? 'hide' : 'show';
 
-					if (is_array( $field ))
-						$state = !in_array( $val, $field ) ? 0 : 1;
-					else
-						$state = ( $field != $val ) ? 0 : 1;
+                        break;
+                    case 'not equals':
 
-					break;
-				case 'empty':
+                        $field = maybe_unserialize( $field );
 
-					$state = ( !$field ) ? 0 : 1;
+                        if (is_array( $field ))
+                            $state = !in_array( $val, $field ) ? 'hide' : 'show';
+                        else
+                            $state = ( $field != $val ) ? 'hide' : 'show';
 
-					break;
-				case 'not empty':
+                        break;
+                    case 'empty':
 
-					$state = ( $field ) ? 0 : 1;
+                        $state = ( !$field ) ? 'hide' : 'show';
 
-					break;
-				case 'greater than':
-					if ($field <= $val) {
-						$state = 0;
-					} else {
-						$state = 1;
-					}
-					break;
-				case 'less than':
-					if ($field >= $val) {
-						$state = 0;
-					} else {
-						$state = 1;
-					}
-					break;
-				case 'contains':
-					if (strstr( $field, $val )) {
-						$state = 0;
-					} else {
-						$state = 1;
-					}
-					break;
-			}
-		}
-	}
+                        break;
+                    case 'not empty':
 
-	return ( $state ) ? true : false;
+                        $state = ( $field ) ? 'hide' : 'show';
+
+                        break;
+                    case 'greater than':
+                        if ($field <= $val) {
+                            $state = 'hide';
+                        } else {
+                            $state = 'show';
+                        }
+                        break;
+                    case 'less than':
+                        if ($field >= $val) {
+                            $state = 'hide';
+                        } else {
+                            $state = 'show';
+                        }
+                        break;
+                    case 'contains':
+                        if (strstr( $field, $val )) {
+                            $state = 'hide';
+                        } else {
+                            $state = 'show';
+                        }
+                        break;
+                }
+            }
+            $first_group++;
+            array_push($state_array, $state);
+        } else {
+
+            if ($arr[0] == 'show') {
+
+                switch ($op) {
+                    case 'equals to':
+
+                        $field = maybe_unserialize( $field );
+
+                        if (is_array( $field ))
+                            $state = in_array( $val, $field ) ? 'show' : 'not_show';
+                        else
+                            $state = ( $field == $val ) ? 'show' : 'not_show';
+
+                        break;
+                    case 'not equals':
+
+                        $field = maybe_unserialize( $field );
+
+                        if (is_array( $field ))
+                            $state = !in_array( $val, $field ) ? 'show' : 'not_show';
+                        else
+                            $state = ( $field != $val ) ? 'show' : 'not_show';
+
+                        break;
+                    case 'empty':
+
+                        $state = ( !$field ) ? 'show' : 'not_show';
+
+                        break;
+                    case 'not empty':
+
+                        $state = ( $field ) ? 'show': 'not_show';
+
+                        break;
+                    case 'greater than':
+                        if ($field > $val) {
+                            $state = 'show';
+                        } else {
+                            $state = 'not_show';
+                        }
+                        break;
+                    case 'less than':
+                        if ($field < $val) {
+                            $state = 'show';
+                        } else {
+                            $state = 'not_show';
+                        }
+                        break;
+                    case 'contains':
+                        if (strstr( $field, $val )) {
+                            $state = 'show';
+                        } else {
+                            $state = 'not_show';
+                        }
+                        break;
+                }
+            } else if ($arr[0] == 'hide') {
+
+                switch ($op) {
+                    case 'equals to':
+
+                        $field = maybe_unserialize( $field );
+
+                        if (is_array( $field ))
+                            $state = in_array( $val, $field ) ? 'hide' : 'not_hide';
+                        else
+                            $state = ( $field == $val ) ? 'hide' : 'not_hide';
+
+                        break;
+                    case 'not equals':
+
+                        $field = maybe_unserialize( $field );
+
+                        if (is_array( $field ))
+                            $state = !in_array( $val, $field ) ? 'hide' : 'not_hide';
+                        else
+                            $state = ( $field != $val ) ? 'hide' : 'not_hide';
+
+                        break;
+                    case 'empty':
+
+                        $state = ( !$field ) ? 'hide' : 'not_hide';
+
+                        break;
+                    case 'not empty':
+
+                        $state = ( $field ) ? 'hide' : 'not_hide';
+
+                        break;
+                    case 'greater than':
+                        if ($field <= $val) {
+                            $state = 'hide';
+                        } else {
+                            $state = 'not_hide';
+                        }
+                        break;
+                    case 'less than':
+                        if ($field >= $val) {
+                            $state = 'hide';
+                        } else {
+                            $state = 'not_hide';
+                        }
+                        break;
+                    case 'contains':
+                        if (strstr( $field, $val )) {
+                            $state = 'hide';
+                        } else {
+                            $state = 'not_hide';
+                        }
+                        break;
+                }
+            }
+            if( isset($state_array[$count]) ){
+                if( $state_array[$count] == 'show' || $state_array[$count] == 'not_hide' ){
+                    if ( $state == 'show' || $state == 'not_hide' ){
+                        $state_array[$count] = 'show';
+                    } else {
+                        $state_array[$count] = 'hide';
+                    }
+                } else {
+                    if ( $state == 'hide' || $state == 'not_show' ){
+                        $state_array[$count] = 'hide';
+                    } else {
+                        $state_array[$count] = 'hide';
+                    }
+                }
+            } else {
+                if ( $state == 'show' || $state == 'not_hide' ){
+                    $state_array[$count] = 'show';
+                } else {
+                    $state_array[$count] = 'hide';
+                }
+            }
+        }
+
+
+    }
+    $result = array_unique($state_array);
+    if( !in_array("show", $result) ){
+        return $state = false;
+    } else {
+        return $state = true;
+    }
 }
 
 
