@@ -1292,8 +1292,6 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 
 			$all = UM()->fields()->array_sort_by_column( $all, 'title');
 
-			$all = array( 0 => '') + $all;
-
 			return $all;
 		}
 
