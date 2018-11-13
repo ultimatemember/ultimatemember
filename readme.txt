@@ -137,7 +137,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
-= 2.0.30: October 29, 2018 =
+= 2.0.30: November 12, 2018 =
 
 * Bugfixes:
   - Fixed crop settings of the big images
@@ -145,7 +145,13 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed uppercase symbols using at profile page slug
   - Fixed download files/images with cache
   - Fixed download files/images with not closed buffers
-  - Added bookmarks compatibility
+  - Fixed looping in case if set 'display_name' as custom fields for display name setting
+  - Fixed cover photo size
+  - Fixed date time internalization
+  - Fixed posts pagination for un-logged users
+  - Fixed conditional JS
+  - Fixed "um_" prefix for role data
+  - Added compatibility for upcoming User Bookmarks extension
 
 = 2.0.29: October 8, 2018 =
 

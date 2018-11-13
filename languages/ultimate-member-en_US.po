@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2018-10-26 14:45+0300\n"
-"PO-Revision-Date: 2018-10-26 14:46+0300\n"
+"POT-Creation-Date: 2018-11-12 17:51+0200\n"
+"PO-Revision-Date: 2018-11-12 17:52+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -6195,48 +6195,42 @@ msgstr ""
 msgid "just now"
 msgstr ""
 
-#: includes/core/class-date-time.php:62
+#: includes/core/class-date-time.php:63
 #, php-format
 msgid "%s min"
-msgstr ""
+msgid_plural "%s mins"
+msgstr[0] ""
+msgstr[1] ""
 
-#: includes/core/class-date-time.php:64
-#, php-format
-msgid "%s mins"
-msgstr ""
-
-#: includes/core/class-date-time.php:73
+#: includes/core/class-date-time.php:72
 #, php-format
 msgid "%s hr"
-msgstr ""
+msgid_plural "%s hrs"
+msgstr[0] ""
+msgstr[1] ""
 
-#: includes/core/class-date-time.php:75
-#, php-format
-msgid "%s hrs"
-msgstr ""
-
-#: includes/core/class-date-time.php:84
+#: includes/core/class-date-time.php:82
 #, php-format
 msgid "Yesterday at %s"
 msgstr ""
 
-#: includes/core/class-date-time.php:86 includes/core/class-date-time.php:91
-#: includes/core/class-date-time.php:95 includes/core/class-date-time.php:99
+#: includes/core/class-date-time.php:84 includes/core/class-date-time.php:89
+#: includes/core/class-date-time.php:93 includes/core/class-date-time.php:97
 #, php-format
 msgid "%s at %s"
 msgstr ""
 
-#: includes/core/class-date-time.php:148
+#: includes/core/class-date-time.php:146
 #, php-format
 msgid "%s year old"
 msgstr ""
 
-#: includes/core/class-date-time.php:151
+#: includes/core/class-date-time.php:149
 #, php-format
 msgid "%s years old"
 msgstr ""
 
-#: includes/core/class-date-time.php:154
+#: includes/core/class-date-time.php:152
 msgid "Less than 1 year old"
 msgstr ""
 
@@ -6313,7 +6307,7 @@ msgstr ""
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:2364 includes/core/um-filters-fields.php:243
+#: includes/core/class-fields.php:2364 includes/core/um-filters-fields.php:244
 msgid "This file has been removed."
 msgstr ""
 
@@ -6530,36 +6524,36 @@ msgid ""
 "\"{login_referrer}\">login</a> to view this content."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:644
+#: includes/core/class-shortcodes.php:645
 msgid "You are already registered"
 msgstr ""
 
-#: includes/core/class-shortcodes.php:886
+#: includes/core/class-shortcodes.php:887
 msgid "Default Template"
 msgstr ""
 
-#: includes/core/class-uploader.php:648
+#: includes/core/class-uploader.php:654
 msgid "Your image is invalid!"
 msgstr ""
 
-#: includes/core/class-uploader.php:690
+#: includes/core/class-uploader.php:696
 msgid "This media type is not recognized."
 msgstr ""
 
-#: includes/core/class-uploader.php:738
+#: includes/core/class-uploader.php:744
 msgid "Your image is invalid or too large!"
 msgstr ""
 
-#: includes/core/class-uploader.php:744 includes/core/class-uploader.php:746
+#: includes/core/class-uploader.php:750 includes/core/class-uploader.php:752
 #, php-format
 msgid "Your photo is too small. It must be at least %spx wide."
 msgstr ""
 
-#: includes/core/class-uploader.php:799
+#: includes/core/class-uploader.php:805
 msgid "This file type is not recognized."
 msgstr ""
 
-#: includes/core/class-uploader.php:1065
+#: includes/core/class-uploader.php:1071
 #, php-format
 msgid "Maximum file size allowed: %s"
 msgstr ""
@@ -6950,12 +6944,7 @@ msgstr ""
 msgid "Joined %s"
 msgstr ""
 
-#: includes/core/um-filters-fields.php:133
-#, php-format
-msgid "Last login: %s"
-msgstr ""
-
-#: includes/core/um-filters-fields.php:274
+#: includes/core/um-filters-fields.php:275
 msgid "Untitled photo"
 msgstr ""
 

@@ -36,10 +36,10 @@ if ( ! class_exists( 'um\core\Date_Time' ) ) {
 		/**
 		 * Show a cool time difference between 2 timestamps
 		 *
-		 * @param $from
-		 * @param string $to
+		 * @param int $from
+		 * @param int $to
 		 *
-		 * @return mixed|void
+		 * @return string
 		 */
 		function time_diff( $from, $to = '' ) {
 			$since = '';
@@ -51,52 +51,50 @@ if ( ! class_exists( 'um\core\Date_Time' ) ) {
 			$diff = (int) abs( $to - $from );
 			if ( $diff < 60 ) {
 
-				$since = __('just now','ultimate-member');
+				$since = __( 'just now', 'ultimate-member' );
 
 			} elseif ( $diff < HOUR_IN_SECONDS ) {
 
 				$mins = round( $diff / MINUTE_IN_SECONDS );
-				if ( $mins <= 1 )
+				if ( $mins <= 1 ) {
 					$mins = 1;
-				if ( $mins == 1 ) {
-					$since = sprintf( __('%s min','ultimate-member'), $mins );
-				} else {
-					$since = sprintf( __('%s mins','ultimate-member'), $mins );
 				}
+
+				$since = sprintf( _n( '%s min', '%s mins', $mins, 'ultimate-member' ), $mins );
 
 			} elseif ( $diff < DAY_IN_SECONDS && $diff >= HOUR_IN_SECONDS ) {
 
 				$hours = round( $diff / HOUR_IN_SECONDS );
-				if ( $hours <= 1 )
+				if ( $hours <= 1 ) {
 					$hours = 1;
-				if ( $hours == 1 ) {
-					$since = sprintf( __('%s hr','ultimate-member'), $hours );
-				} else {
-					$since = sprintf( __('%s hrs','ultimate-member'), $hours );
 				}
+
+				$since = sprintf( _n( '%s hr', '%s hrs', $hours, 'ultimate-member' ), $hours );
 
 			} elseif ( $diff < WEEK_IN_SECONDS && $diff >= DAY_IN_SECONDS ) {
 
 				$days = round( $diff / DAY_IN_SECONDS );
-				if ( $days <= 1 )
+				if ( $days <= 1 ) {
 					$days = 1;
+				}
+
 				if ( $days == 1 ) {
-					$since = sprintf( __('Yesterday at %s','ultimate-member'), date('g:ia', $from ) );
+					$since = sprintf( __( 'Yesterday at %s', 'ultimate-member' ), date_i18n( 'g:ia', $from ) );
 				} else {
-					$since = sprintf(__('%s at %s','ultimate-member'), date('F d', $from ), date('g:ia', $from ) );
+					$since = sprintf( __( '%s at %s', 'ultimate-member' ), date_i18n( 'F d', $from ), date_i18n( 'g:ia', $from ) );
 				}
 
 			} elseif ( $diff < 30 * DAY_IN_SECONDS && $diff >= WEEK_IN_SECONDS ) {
 
-				$since = sprintf(__('%s at %s','ultimate-member'), date('F d', $from ), date('g:ia', $from ) );
+				$since = sprintf( __( '%s at %s', 'ultimate-member' ), date_i18n( 'F d', $from ), date_i18n( 'g:ia', $from ) );
 
 			} elseif ( $diff < YEAR_IN_SECONDS && $diff >= 30 * DAY_IN_SECONDS ) {
 
-				$since = sprintf(__('%s at %s','ultimate-member'), date('F d', $from ), date('g:ia', $from ) );
+				$since = sprintf( __( '%s at %s','ultimate-member'), date_i18n( 'F d', $from ), date_i18n( 'g:ia', $from ) );
 
 			} elseif ( $diff >= YEAR_IN_SECONDS ) {
 
-				$since = sprintf(__('%s at %s','ultimate-member'), date( 'F d, Y', $from ), date('g:ia', $from ) );
+				$since = sprintf( __( '%s at %s', 'ultimate-member' ), date_i18n( 'F d, Y', $from ), date_i18n( 'g:ia', $from ) );
 
 			}
 

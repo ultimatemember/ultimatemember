@@ -400,3 +400,21 @@ function um_requesting_password_change() {
 
 	return false;
 }
+
+
+
+/**
+ * Get core page url
+ *
+ * @deprecated 2.0.30
+ *
+ * @param $time1
+ * @param $time2
+ *
+ * @return string
+ */
+function um_time_diff( $time1, $time2 ) {
+	//um_deprecated_function( 'um_time_diff', '2.0.30', 'UM()->datetime()->time_diff' );
+
+	return UM()->datetime()->time_diff( $time1, $time2 );
+}

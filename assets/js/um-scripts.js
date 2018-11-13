@@ -124,10 +124,10 @@ jQuery(document).ready(function() {
         score: 		function() {return jQuery(this).attr('data-score');},
         scoreName: 	function(){return jQuery(this).attr('data-key');},
         hints: 		false,
-        click: function(score, evt) {
+        click: function( score, evt ) {
             live_field = this.id;
             live_value = score;
-            um_conditional();
+	        um_apply_conditions( jQuery(this), false );
         }
     });
 
