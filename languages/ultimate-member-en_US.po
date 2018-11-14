@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2018-11-12 17:51+0200\n"
-"PO-Revision-Date: 2018-11-12 17:52+0200\n"
+"POT-Creation-Date: 2018-11-14 11:06+0200\n"
+"PO-Revision-Date: 2018-11-14 11:06+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -3536,8 +3536,8 @@ msgstr ""
 #: includes/core/um-actions-profile.php:554
 #: includes/core/um-actions-profile.php:693
 #: includes/core/um-actions-profile.php:726
-#: includes/core/um-actions-profile.php:1073
-#: includes/core/um-actions-profile.php:1080
+#: includes/core/um-actions-profile.php:1071
+#: includes/core/um-actions-profile.php:1078
 msgid "Cancel"
 msgstr ""
 
@@ -3900,7 +3900,7 @@ msgid "Members"
 msgstr ""
 
 #: includes/class-config.php:133 includes/class-config.php:738
-#: includes/core/um-actions-profile.php:1079
+#: includes/core/um-actions-profile.php:1077
 #: includes/core/um-actions-user.php:15
 msgid "Logout"
 msgstr ""
@@ -6913,17 +6913,17 @@ msgstr ""
 msgid "Tell us a bit about yourself..."
 msgstr ""
 
-#: includes/core/um-actions-profile.php:907
+#: includes/core/um-actions-profile.php:905
 #, php-format
 msgid "This user account status is %s"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1046
-#: includes/core/um-actions-profile.php:1077
+#: includes/core/um-actions-profile.php:1044
+#: includes/core/um-actions-profile.php:1075
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1078
+#: includes/core/um-actions-profile.php:1076
 msgid "My Account"
 msgstr ""
 
