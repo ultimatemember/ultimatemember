@@ -439,27 +439,25 @@ function um_redirect_home() {
  * @param $url
  */
 function um_js_redirect( $url ) {
-	if (headers_sent() || empty( $url )) {
+	if ( headers_sent() || empty( $url ) ) {
 		//for blank redirects
-		if ('' == $url) {
+		if ( '' == $url ) {
 			$url = set_url_scheme( '//' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] );
 		}
 
-		$funtext = "echo \"<script data-cfasync='false' type='text/javascript'>window.location = '" . $url . "'</script>\";";
-		register_shutdown_function( create_function( '', $funtext ) );
+		register_shutdown_function( function( $url ) {
+			echo '<script data-cfasync="false" type="text/javascript">window.location = "' . $url . '"</script>';
+		}, $url );
 
-		if (1 < ob_get_level()) {
-			while (ob_get_level() > 1) {
+		if ( 1 < ob_get_level() ) {
+			while ( ob_get_level() > 1 ) {
 				ob_end_clean();
 			}
-		}
-
-		?>
-        <script data-cfasync='false' type="text/javascript">
-            window.location = '<?php echo $url; ?>';
-        </script>
-		<?php
-		exit;
+		} ?>
+		<script data-cfasync='false' type="text/javascript">
+			window.location = '<?php echo $url; ?>';
+		</script>
+		<?php exit;
 	} else {
 		wp_redirect( $url );
 	}
@@ -2509,7 +2507,5 @@ function is_ultimatemember() {
  * Maybe set empty time limit
  */
 function um_maybe_unset_time_limit() {
-	if ( ! ini_get( 'safe_mode' ) ) {
-		@set_time_limit(0);
-	}
+	@set_time_limit( 0 );
 }

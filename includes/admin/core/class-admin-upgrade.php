@@ -350,36 +350,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 			wp_send_json_success( array( 'packages' => $update_versions ) );
 		}
 
-		/**
-		 * Load packages
-		 */
-		/*public function packages() {
-			if ( ! ini_get( 'safe_mode' ) ) {
-				@set_time_limit(0);
-			}
-
-			$this->set_update_versions();
-
-			$um_last_version_upgrade = get_option( 'um_last_version_upgrade' );
-			$um_last_version_upgrade = ! $um_last_version_upgrade ? '0.0.0' : $um_last_version_upgrade;
-
-			foreach ( $this->update_versions as $update_version ) {
-
-				if ( version_compare( $update_version, $um_last_version_upgrade, '<=' ) )
-					continue;
-
-				if ( version_compare( $update_version, ultimatemember_version, '>' ) )
-					continue;
-
-				$file_path = $this->packages_dir . $update_version . '.php';
-
-				if ( file_exists( $file_path ) ) {
-					include_once( $file_path );
-					update_option( 'um_last_version_upgrade', $update_version );
-				}
-			}
-		}*/
-
 
 		/**
 		 * Parse packages dir for packages files
