@@ -241,8 +241,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * Remove file by AJAX
 		 */
 		function ajax_remove_file() {
-			UM()->check_frontend_ajax_nonce();
-
 			/**
 			 * @var $src
 			 */
@@ -257,8 +255,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * Resize image AJAX handler
 		 */
 		function ajax_resize_image() {
-			UM()->check_frontend_ajax_nonce();
-
 			/**
 			 * @var $key
 			 * @var $src
