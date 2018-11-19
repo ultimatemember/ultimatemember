@@ -81,11 +81,11 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			$field_key = urlencode( $field_key );
 
 			if ( UM()->is_permalinks ) {
-				$url = get_site_url( get_current_blog_id() );
+				$url = get_home_url( get_current_blog_id() );
 				$nonce = wp_create_nonce( $user_id . $form_id . 'um-download-nonce' );
 				$url = $url . "/um-download/{$form_id}/{$field_key}/{$user_id}/{$nonce}";
 			} else {
-				$url = get_site_url( get_current_blog_id() );
+				$url = get_home_url( get_current_blog_id() );
 				$nonce = wp_create_nonce( $user_id . $form_id . 'um-download-nonce' );
 				$url = add_query_arg( array( 'um_action' => 'download', 'um_form' => $form_id, 'um_field' => $field_key, 'um_user' => $user_id, 'um_verify' => $nonce ), $url );
 			}
