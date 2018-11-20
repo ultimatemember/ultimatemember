@@ -218,7 +218,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 */
 		function can_view_tab( $tab ) {
 
-			$target_id = UM()->user()->target_id;
+			$target_id = (int) UM()->user()->target_id;
 			if ( empty( $target_id ) ) {
 				return true;
 			}
