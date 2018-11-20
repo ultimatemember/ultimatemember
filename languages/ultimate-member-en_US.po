@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2018-11-14 11:06+0200\n"
-"PO-Revision-Date: 2018-11-14 11:06+0200\n"
+"POT-Creation-Date: 2018-11-20 13:57+0200\n"
+"PO-Revision-Date: 2018-11-20 13:57+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -21,53 +21,53 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: includes/admin/class-admin.php:182
+#: includes/admin/class-admin.php:181
 #, php-format
 msgid "Duplicate of %s"
 msgstr ""
 
-#: includes/admin/class-admin.php:331
+#: includes/admin/class-admin.php:295
 msgid "Docs"
 msgstr ""
 
-#: includes/admin/class-admin.php:332
-#: includes/admin/core/class-admin-settings.php:1119
+#: includes/admin/class-admin.php:296
+#: includes/admin/core/class-admin-settings.php:1128
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-admin.php:403 includes/admin/class-admin.php:406
+#: includes/admin/class-admin.php:367 includes/admin/class-admin.php:370
 msgid "Form updated."
 msgstr ""
 
-#: includes/admin/class-admin.php:404
+#: includes/admin/class-admin.php:368
 msgid "Custom field updated."
 msgstr ""
 
-#: includes/admin/class-admin.php:405
+#: includes/admin/class-admin.php:369
 msgid "Custom field deleted."
 msgstr ""
 
-#: includes/admin/class-admin.php:407
+#: includes/admin/class-admin.php:371
 msgid "Form restored to revision."
 msgstr ""
 
-#: includes/admin/class-admin.php:408
+#: includes/admin/class-admin.php:372
 msgid "Form created."
 msgstr ""
 
-#: includes/admin/class-admin.php:409
+#: includes/admin/class-admin.php:373
 msgid "Form saved."
 msgstr ""
 
-#: includes/admin/class-admin.php:410
+#: includes/admin/class-admin.php:374
 msgid "Form submitted."
 msgstr ""
 
-#: includes/admin/class-admin.php:411
+#: includes/admin/class-admin.php:375
 msgid "Form scheduled."
 msgstr ""
 
-#: includes/admin/class-admin.php:412
+#: includes/admin/class-admin.php:376
 msgid "Form draft updated."
 msgstr ""
 
@@ -248,7 +248,7 @@ msgstr ""
 #: includes/admin/core/class-admin-forms.php:827
 #: includes/admin/core/class-admin-forms.php:932
 #: includes/admin/core/class-admin-forms.php:941
-#: includes/admin/core/class-admin-notices.php:430
+#: includes/admin/core/class-admin-notices.php:390
 #: includes/core/um-actions-profile.php:553
 msgid "Remove"
 msgstr ""
@@ -429,13 +429,7 @@ msgstr ""
 msgid "User Cache"
 msgstr ""
 
-#: includes/admin/core/class-admin-menu.php:219
 #: includes/admin/core/class-admin-menu.php:221
-#: includes/admin/core/class-admin-menu.php:223
-msgid "Language"
-msgstr ""
-
-#: includes/admin/core/class-admin-menu.php:229
 msgid "Upgrade's Manual Request"
 msgstr ""
 
@@ -1102,7 +1096,7 @@ msgstr ""
 msgid "Select the member roles that can see this link"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:280
+#: includes/admin/core/class-admin-notices.php:279
 #, php-format
 msgid ""
 "<strong>%s %s</strong> requires 2.0 extensions. You have pre 2.0 extensions "
@@ -1110,31 +1104,31 @@ msgid ""
 "versions. For more info see this <a href=\"%s\" target=\"_blank\">doc</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:301
+#: includes/admin/core/class-admin-notices.php:300
 #, php-format
 msgid ""
 "%s needs to create several pages (User Profiles, Account, Registration, "
 "Login, Password Reset, Logout, Member Directory) to function correctly."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:305
+#: includes/admin/core/class-admin-notices.php:304
 msgid "Create Pages"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:307
-#: includes/admin/core/class-admin-notices.php:540
+#: includes/admin/core/class-admin-notices.php:306
+#: includes/admin/core/class-admin-notices.php:500
 msgid "No thanks"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:327
+#: includes/admin/core/class-admin-notices.php:326
 msgid "Ultimate Member Setup Error: User page can not be a child page."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:337
+#: includes/admin/core/class-admin-notices.php:336
 msgid "Ultimate Member Setup Error: Account page can not be a child page."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:355
+#: includes/admin/core/class-admin-notices.php:354
 #, php-format
 msgid ""
 "Exif is not enabled on your server. Mobile photo uploads will not be rotated "
@@ -1142,88 +1136,69 @@ msgid ""
 "notice</a>"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:385
-#, php-format
-msgid ""
-"Your site language is <strong>%1$s</strong>. Good news! Ultimate Member is "
-"already available in <strong>%2$s language</strong>. <a href=\"%3$s"
-"\">Download the translation</a> files and start using the plugin in your "
-"language now. <a href=\"%4$s\">Hide this notice</a>"
-msgstr ""
-
-#: includes/admin/core/class-admin-notices.php:392
-#, php-format
-msgid ""
-"Ultimate Member has not yet been translated to your language: <strong>%1$s</"
-"strong>. If you have translated the plugin you need put these files "
-"<code>ultimatemember-%1$s.po and ultimatemember-%1$s.mo</code> in <strong>/"
-"wp-content/languages/plugins/</strong> for the plugin to be translated in "
-"your language. <a href=\"%2$s\">Hide this notice</a>"
-msgstr ""
-
-#: includes/admin/core/class-admin-notices.php:429
+#: includes/admin/core/class-admin-notices.php:389
 #, php-format
 msgid ""
 "Are you sure you want to delete the selected user(s)? The following users "
 "will be deleted: <p>%s</p> <strong>This cannot be undone!</strong>"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:430
+#: includes/admin/core/class-admin-notices.php:390
 msgid "Undo"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:435
+#: includes/admin/core/class-admin-notices.php:395
 msgid "Your translation files have been updated successfully."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:439
+#: includes/admin/core/class-admin-notices.php:399
 msgid "Your temp uploads directory is now clean."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:443
+#: includes/admin/core/class-admin-notices.php:403
 msgid "Your user cache is now removed."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:447
+#: includes/admin/core/class-admin-notices.php:407
 msgid "You got the latest upgrades."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:451
+#: includes/admin/core/class-admin-notices.php:411
 msgid "Try again later. You can run this action once daily."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:455
+#: includes/admin/core/class-admin-notices.php:415
 msgid "The form has been duplicated successfully."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:459
+#: includes/admin/core/class-admin-notices.php:419
 msgid "User has been updated."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:463
+#: includes/admin/core/class-admin-notices.php:423
 msgid "Users have been updated."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:467
+#: includes/admin/core/class-admin-notices.php:427
 msgid "Changed roles."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:471
+#: includes/admin/core/class-admin-notices.php:431
 msgid "Super administrators cannot be modified."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:472
+#: includes/admin/core/class-admin-notices.php:432
 msgid "Other users have been updated."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:509
+#: includes/admin/core/class-admin-notices.php:469
 #, php-format
 msgid ""
 "You have installed <strong>%s</strong> with wrong folder name. Correct "
 "folder name is <strong>\"ultimate-member\"</strong>."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:534
+#: includes/admin/core/class-admin-notices.php:494
 #, php-format
 msgid ""
 "Thanks for installing <strong>%s</strong>! We hope you like the plugin. To "
@@ -1232,12 +1207,12 @@ msgid ""
 "discount code for our <a href=\"%s\" target=\"_blank\">extensions bundle</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:538
+#: includes/admin/core/class-admin-notices.php:498
 #, php-format
 msgid "Claim 20% discount code"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:577
+#: includes/admin/core/class-admin-notices.php:537
 #, php-format
 msgid ""
 "There are %d inactive %s license keys for this site. This site is not "
@@ -1245,14 +1220,14 @@ msgid ""
 "\">www.ultimatemember.com</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:584
+#: includes/admin/core/class-admin-notices.php:544
 #, php-format
 msgid ""
 "You have %d invalid or expired license keys for %s. Please go to the <a href="
 "\"%s\">Licenses page</a> to correct this issue."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:598
+#: includes/admin/core/class-admin-notices.php:558
 #, php-format
 msgid ""
 "<strong>%s version %s</strong> needs to be updated to work correctly.<br /"
@@ -1261,35 +1236,35 @@ msgid ""
 "\"Upgrade\"</a> page and run the upgrade process."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:602
+#: includes/admin/core/class-admin-notices.php:562
 msgid "Upgrade Now"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:616
+#: includes/admin/core/class-admin-notices.php:576
 #, php-format
 msgid "<strong>%s %s</strong> Successfully Upgraded"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:642
+#: includes/admin/core/class-admin-notices.php:602
 #, php-format
 msgid ""
 "Hey there! It's been one month since you installed %s. How have you found "
 "the plugin so far?"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:645
+#: includes/admin/core/class-admin-notices.php:605
 msgid "I love it!"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:646
+#: includes/admin/core/class-admin-notices.php:606
 msgid "It's good but could be better"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:647
+#: includes/admin/core/class-admin-notices.php:607
 msgid "I don't like the plugin"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:652
+#: includes/admin/core/class-admin-notices.php:612
 #, php-format
 msgid ""
 "Great! We're happy to hear that you love the plugin. It would be amazing if "
@@ -1298,22 +1273,22 @@ msgid ""
 "appreciated by us!"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:656
+#: includes/admin/core/class-admin-notices.php:616
 msgid "Leave Review"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:661
+#: includes/admin/core/class-admin-notices.php:621
 msgid ""
 "We're glad to hear that you like the plugin but we would love to get your "
 "feedback so we can make the plugin better."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:665
-#: includes/admin/core/class-admin-notices.php:674
+#: includes/admin/core/class-admin-notices.php:625
+#: includes/admin/core/class-admin-notices.php:634
 msgid "Provide Feedback"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:670
+#: includes/admin/core/class-admin-notices.php:630
 #, php-format
 msgid ""
 "We're sorry to hear that. If you're having the issue with the plugin you can "
@@ -1323,18 +1298,18 @@ msgid ""
 "like about the plugin you can tell us know by giving us feedback."
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:696
+#: includes/admin/core/class-admin-notices.php:656
 #, php-format
 msgid ""
 "<strong>%s</strong> future plans! Detailed future list is <a href=\"%s\" "
 "target=\"_blank\">here</a>"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:711
+#: includes/admin/core/class-admin-notices.php:671
 msgid "Wrong Nonce"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:716
+#: includes/admin/core/class-admin-notices.php:676
 msgid "Wrong Data"
 msgstr ""
 
@@ -2337,130 +2312,130 @@ msgstr ""
 msgid "Install Info"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1150
+#: includes/admin/core/class-admin-settings.php:1159
 msgid "Ultimate Member - Settings"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1289
+#: includes/admin/core/class-admin-settings.php:1298
 msgid "Save Changes"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1732
+#: includes/admin/core/class-admin-settings.php:1741
 msgid "Subject Line"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1734
+#: includes/admin/core/class-admin-settings.php:1743
 msgid "This is the subject line of the e-mail"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1739
+#: includes/admin/core/class-admin-settings.php:1748
 msgid "Message Body"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1741
+#: includes/admin/core/class-admin-settings.php:1750
 msgid "This is the content of the e-mail"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1791
-#: includes/admin/core/class-admin-settings.php:1889
+#: includes/admin/core/class-admin-settings.php:1800
+#: includes/admin/core/class-admin-settings.php:1898
 #, php-format
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" target=\"_blank"
 "\">renew your license key</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1804
-#: includes/admin/core/class-admin-settings.php:1902
+#: includes/admin/core/class-admin-settings.php:1813
+#: includes/admin/core/class-admin-settings.php:1911
 #, php-format
 msgid ""
 "Your license key has been disabled. Please <a href=\"%s\" target=\"_blank"
 "\">contact support</a> for more information."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1816
-#: includes/admin/core/class-admin-settings.php:1914
+#: includes/admin/core/class-admin-settings.php:1825
+#: includes/admin/core/class-admin-settings.php:1923
 #, php-format
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\">visit your account "
 "page</a> and verify it."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1829
-#: includes/admin/core/class-admin-settings.php:1927
+#: includes/admin/core/class-admin-settings.php:1838
+#: includes/admin/core/class-admin-settings.php:1936
 #, php-format
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" target=\"_blank"
 "\">visit your account page</a> to manage your license key URLs."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1841
-#: includes/admin/core/class-admin-settings.php:1939
+#: includes/admin/core/class-admin-settings.php:1850
+#: includes/admin/core/class-admin-settings.php:1948
 #, php-format
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1850
-#: includes/admin/core/class-admin-settings.php:1948
+#: includes/admin/core/class-admin-settings.php:1859
+#: includes/admin/core/class-admin-settings.php:1957
 #, php-format
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1859
-#: includes/admin/core/class-admin-settings.php:1957
+#: includes/admin/core/class-admin-settings.php:1868
+#: includes/admin/core/class-admin-settings.php:1966
 msgid ""
 "The key you entered belongs to a bundle, please use the product specific "
 "license key."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1867
-#: includes/admin/core/class-admin-settings.php:1875
+#: includes/admin/core/class-admin-settings.php:1876
+#: includes/admin/core/class-admin-settings.php:1884
 msgid "unknown_error"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1868
-#: includes/admin/core/class-admin-settings.php:1876
+#: includes/admin/core/class-admin-settings.php:1877
+#: includes/admin/core/class-admin-settings.php:1885
 #, php-format
 msgid ""
 "There was an error with this license key: %s. Please <a href=\"%s\">contact "
 "our support team</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1972
+#: includes/admin/core/class-admin-settings.php:1981
 msgid "License key never expires."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1979
+#: includes/admin/core/class-admin-settings.php:1988
 #, php-format
 msgid ""
 "Your license key expires soon! It expires on %s. <a href=\"%s\" target="
 "\"_blank\">Renew your license key</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1989
+#: includes/admin/core/class-admin-settings.php:1998
 #, php-format
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2007
+#: includes/admin/core/class-admin-settings.php:2016
 #, php-format
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2031
+#: includes/admin/core/class-admin-settings.php:2040
 msgid "Clear License"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2033
+#: includes/admin/core/class-admin-settings.php:2042
 msgid "Activate"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2035
+#: includes/admin/core/class-admin-settings.php:2044
 msgid "Re-Activate"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2087
+#: includes/admin/core/class-admin-settings.php:2096
 msgid ""
 "To copy the Install info, click below then press Ctrl + C (PC) or Cmd + C "
 "(Mac)."
@@ -2893,27 +2868,6 @@ msgid ""
 "our <a href=\"https://ultimatemember.com/forums/\">community forum</a>."
 msgstr ""
 
-#: includes/admin/templates/dashboard/language-download.php:2
-#, php-format
-msgid ""
-"Ultimate Member is available in your language: <strong>%1$s (%2$s)</strong>."
-msgstr ""
-
-#: includes/admin/templates/dashboard/language-download.php:7
-msgid "Download Translation"
-msgstr ""
-
-#: includes/admin/templates/dashboard/language-update.php:2
-#, php-format
-msgid ""
-"You are currently using Ultimate Member in your language: <strong>%1$s "
-"(%2$s)</strong>."
-msgstr ""
-
-#: includes/admin/templates/dashboard/language-update.php:7
-msgid "Force Update Translation"
-msgstr ""
-
 #: includes/admin/templates/dashboard/purge.php:4
 #, php-format
 msgid ""
@@ -3184,8 +3138,14 @@ msgstr ""
 msgid "We are sorry. We cannot find any users who match your search criteria."
 msgstr ""
 
+#: includes/admin/templates/extensions.php:165
+msgid ""
+"<strong>All Access Pass</strong> – Get access to all Ultimate Member "
+"extensions at a significant discount with our All Access Pass."
+msgstr ""
+
 #: includes/admin/templates/extensions.php:169
-msgid "View our Extensions Bundle"
+msgid "View Pricing"
 msgstr ""
 
 #: includes/admin/templates/extensions.php:178
@@ -4059,7 +4019,7 @@ msgstr ""
 msgid "Correct folder name is <strong>\"%s\"</strong>"
 msgstr ""
 
-#: includes/class-init.php:160 includes/class-init.php:169
+#: includes/class-init.php:152 includes/class-init.php:161
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
@@ -6330,35 +6290,35 @@ msgstr ""
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
-#: includes/core/class-files.php:271
+#: includes/core/class-files.php:267
 msgid "Invalid parameters"
 msgstr ""
 
-#: includes/core/class-files.php:276
+#: includes/core/class-files.php:272
 msgid "Invalid coordinates"
 msgstr ""
 
-#: includes/core/class-files.php:281
+#: includes/core/class-files.php:277
 msgid "Invalid file ownership"
 msgstr ""
 
-#: includes/core/class-files.php:334
+#: includes/core/class-files.php:330
 msgid "Invalid nonce"
 msgstr ""
 
-#: includes/core/class-files.php:354 includes/core/class-files.php:439
+#: includes/core/class-files.php:350 includes/core/class-files.php:435
 msgid "A theme or plugin compatibility issue"
 msgstr ""
 
-#: includes/core/class-files.php:982
+#: includes/core/class-files.php:978
 msgid "Ultimate Member: Not a valid temp file"
 msgstr ""
 
-#: includes/core/class-files.php:1110
+#: includes/core/class-files.php:1106
 msgid "Invalid user ID: "
 msgstr ""
 
-#: includes/core/class-files.php:1119 includes/core/class-files.php:1147
+#: includes/core/class-files.php:1115 includes/core/class-files.php:1143
 msgid "Unauthorized to do this attempt."
 msgstr ""
 
@@ -6836,51 +6796,51 @@ msgstr ""
 msgid "Last Page"
 msgstr ""
 
-#: includes/core/um-actions-misc.php:115
+#: includes/core/um-actions-misc.php:111
 msgid "Your account was updated successfully."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:119
+#: includes/core/um-actions-misc.php:115
 msgid "You have successfully changed your password."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:123
+#: includes/core/um-actions-misc.php:119
 msgid "Your account is now active! You can login."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:157
+#: includes/core/um-actions-misc.php:153
 msgid "An error has been encountered"
 msgstr ""
 
-#: includes/core/um-actions-misc.php:161
+#: includes/core/um-actions-misc.php:157
 msgid "Registration is currently disabled"
 msgstr ""
 
-#: includes/core/um-actions-misc.php:165 includes/core/um-filters-login.php:40
+#: includes/core/um-actions-misc.php:161 includes/core/um-filters-login.php:40
 msgid "This email address has been blocked."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:169
+#: includes/core/um-actions-misc.php:165
 msgid "We do not accept registrations from that domain."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:173 includes/core/um-filters-login.php:43
+#: includes/core/um-actions-misc.php:169 includes/core/um-filters-login.php:43
 msgid "Your IP address has been blocked."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:177 includes/core/um-filters-login.php:136
+#: includes/core/um-actions-misc.php:173 includes/core/um-filters-login.php:136
 msgid "Your account has been disabled."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:181 includes/core/um-filters-login.php:139
+#: includes/core/um-actions-misc.php:177 includes/core/um-filters-login.php:139
 msgid "Your account has not been approved yet."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:185 includes/core/um-filters-login.php:142
+#: includes/core/um-actions-misc.php:181 includes/core/um-filters-login.php:142
 msgid "Your account is awaiting e-mail verification."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:189 includes/core/um-filters-login.php:145
+#: includes/core/um-actions-misc.php:185 includes/core/um-filters-login.php:145
 msgid "Your membership request has been rejected."
 msgstr ""
 
@@ -6969,11 +6929,11 @@ msgstr ""
 msgid "Login as this user"
 msgstr ""
 
-#: includes/um-short-functions.php:580
+#: includes/um-short-functions.php:578
 msgid "date submitted"
 msgstr ""
 
-#: includes/um-short-functions.php:586
+#: includes/um-short-functions.php:584
 msgid "(empty)"
 msgstr ""
 
