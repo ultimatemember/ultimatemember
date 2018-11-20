@@ -1455,6 +1455,7 @@ function um_multi_admin_email() {
 		$emails_array = array_map( 'trim', $emails_array );
 	}
 
+	$emails_array = array_unique( $emails_array );
 	return $emails_array;
 }
 
