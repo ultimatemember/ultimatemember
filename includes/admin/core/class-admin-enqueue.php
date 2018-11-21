@@ -332,9 +332,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			 * }
 			 * ?>
 			 */
-			$localize_data = apply_filters('um_admin_enqueue_localize_data', array(
-					'ajaxurl'   => admin_url( 'admin-ajax.php' ),
-					'nonce'     => wp_create_nonce( "um-admin-nonce" )
+			$localize_data = apply_filters( 'um_admin_enqueue_localize_data', array(
+					'nonce' => wp_create_nonce( "um-admin-nonce" )
 				)
 			);
 

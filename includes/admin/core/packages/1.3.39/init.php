@@ -5,11 +5,12 @@
 		um_add_upgrade_log( 'Upgrade Usermeta...' );
 
 		jQuery.ajax({
-			url: '<?php echo admin_url( 'admin-ajax.php' ) ?>',
+			url: wp.ajax.settings.url,
 			type: 'POST',
 			dataType: 'json',
 			data: {
-				action: 'um_usermetaquery1339'
+				action: 'um_usermetaquery1339',
+				nonce: um_admin_scripts.nonce
 			},
 			success: function( response ) {
 				if ( typeof response.data != 'undefined' ) {

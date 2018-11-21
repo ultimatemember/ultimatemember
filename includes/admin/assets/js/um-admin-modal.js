@@ -54,7 +54,18 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 	jQuery.ajax({
 		url: wp.ajax.settings.url,
 		type: 'POST',
-		data: { action:'um_dynamic_modal_content',act_id: act_id, arg1 : arg1, arg2 : arg2, arg3: arg3, in_row: in_row, in_sub_row: in_sub_row, in_column: in_column, in_group: in_group },
+		data: {
+			action:'um_dynamic_modal_content',
+			act_id: act_id,
+			arg1 : arg1,
+			arg2 : arg2,
+			arg3: arg3,
+			in_row: in_row,
+			in_sub_row: in_sub_row,
+			in_column: in_column,
+			in_group: in_group,
+			nonce: um_admin_scripts.nonce
+		},
 		complete: function(){
 			um_admin_modal_loaded();
 			um_admin_modal_responsive();
@@ -386,7 +397,11 @@ jQuery(document).ready(function() {
           	jQuery.ajax({
 				url: wp.ajax.settings.url,
 				type: 'POST',
-				data: { action:'populate_dropdown_options',um_option_callback: um_option_callback },
+				data: {
+					action:'um_populate_dropdown_options',
+					um_option_callback: um_option_callback,
+					nonce: um_admin_scripts.nonce
+				},
 				complete: function(){
 					
 				},

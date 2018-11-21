@@ -8,6 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return boolean
  */
 function ultimatemember_check_username_exists() {
+	UM()->check_ajax_nonce();
+
 	$username = isset($_REQUEST['username']) ? $_REQUEST['username'] : '';
 	$exists   = username_exists( $username );
 

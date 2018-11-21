@@ -48,7 +48,8 @@ jQuery(document).ready(function() {
 			data: {
 				action:'um_delete_profile_photo',
 				metakey: metakey,
-				user_id: user_id
+				user_id: user_id,
+				nonce: um_scripts.nonce
 			}
 		});
 		
@@ -71,7 +72,8 @@ jQuery(document).ready(function() {
 			data: {
 				action: 'um_delete_cover_photo',
 				metakey: metakey,
-				user_id: user_id
+				user_id: user_id,
+				nonce: um_scripts.nonce
 			},
 			success: function( response ) {
 				obj.hide();

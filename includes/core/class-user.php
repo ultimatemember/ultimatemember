@@ -87,8 +87,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			add_action( 'init', array( &$this, 'check_membership' ), 10 );
 
-			add_action( 'delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
-			add_action( 'wpmu_delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
+			if ( is_multisite() ) {
+				add_action( 'delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
+			} else {
+				add_action( 'wpmu_delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
+			}
 		}
 
 
@@ -96,6 +99,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param $user_id
 		 */
 		function delete_user_handler( $user_id ) {
+			error_log( '----------------' );
+			error_log( $user_id );
 
 			um_fetch_user( $user_id );
 

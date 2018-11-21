@@ -1,5 +1,7 @@
 <?php
 function um_upgrade_styles20beta1() {
+	UM()->admin()->check_ajax_nonce();
+
 	um_maybe_unset_time_limit();
 
 	include 'styles.php';
@@ -8,6 +10,8 @@ function um_upgrade_styles20beta1() {
 
 
 function um_upgrade_user_roles20beta1() {
+	UM()->admin()->check_ajax_nonce();
+
 	um_maybe_unset_time_limit();
 	/**
 	 * @var $response_roles_data
@@ -19,7 +23,10 @@ function um_upgrade_user_roles20beta1() {
 
 
 function um_upgrade_get_users_per_role20beta1() {
+	UM()->admin()->check_ajax_nonce();
+
 	um_maybe_unset_time_limit();
+
 	if ( ! empty( $_POST['key_in_meta'] ) ) {
 		$args = array(
 			'meta_query'    => array(
@@ -43,6 +50,8 @@ function um_upgrade_get_users_per_role20beta1() {
 
 
 function um_upgrade_update_users_per_page20beta1() {
+	UM()->admin()->check_ajax_nonce();
+
 	um_maybe_unset_time_limit();
 	if ( ! empty( $_POST['key_in_meta'] ) && ! empty( $_POST['role_key'] ) && ! empty( $_POST['page'] ) ) {
 		$users_per_page = 100;
@@ -85,6 +94,8 @@ function um_upgrade_update_users_per_page20beta1() {
 
 
 function um_upgrade_content_restriction20beta1() {
+	UM()->admin()->check_ajax_nonce();
+
 	um_maybe_unset_time_limit();
 
 	include 'content_restriction.php';
@@ -94,6 +105,8 @@ function um_upgrade_content_restriction20beta1() {
 
 
 function um_upgrade_settings20beta1() {
+	UM()->admin()->check_ajax_nonce();
+
 	um_maybe_unset_time_limit();
 
 	include 'settings.php';
@@ -102,6 +115,8 @@ function um_upgrade_settings20beta1() {
 
 
 function um_upgrade_menus20beta1() {
+	UM()->admin()->check_ajax_nonce();
+
 	um_maybe_unset_time_limit();
 
 	include 'menus.php';
@@ -110,6 +125,8 @@ function um_upgrade_menus20beta1() {
 
 
 function um_upgrade_mc_lists20beta1() {
+	UM()->admin()->check_ajax_nonce();
+
 	um_maybe_unset_time_limit();
 
 	include 'mc_lists.php';
@@ -118,6 +135,8 @@ function um_upgrade_mc_lists20beta1() {
 
 
 function um_upgrade_social_login20beta1() {
+	UM()->admin()->check_ajax_nonce();
+
 	um_maybe_unset_time_limit();
 
 	include 'social_login.php';
@@ -126,6 +145,8 @@ function um_upgrade_social_login20beta1() {
 
 
 function um_upgrade_cpt20beta1() {
+	UM()->admin()->check_ajax_nonce();
+
 	um_maybe_unset_time_limit();
 
 	include 'um_cpt.php';
@@ -134,6 +155,8 @@ function um_upgrade_cpt20beta1() {
 
 
 function um_upgrade_get_forums20beta1() {
+	UM()->admin()->check_ajax_nonce();
+
 	um_maybe_unset_time_limit();
 
 	remove_all_actions( 'pre_get_posts' );
@@ -149,6 +172,8 @@ function um_upgrade_get_forums20beta1() {
 
 
 function um_upgrade_update_forum_per_page20beta1() {
+	UM()->admin()->check_ajax_nonce();
+
 	um_maybe_unset_time_limit();
 
 	if ( ! empty( $_POST['page'] ) ) {
@@ -205,6 +230,8 @@ function um_upgrade_update_forum_per_page20beta1() {
 
 
 function um_upgrade_get_products20beta1() {
+	UM()->admin()->check_ajax_nonce();
+
 	um_maybe_unset_time_limit();
 
 	$wc_products = get_posts( array(
@@ -218,6 +245,8 @@ function um_upgrade_get_products20beta1() {
 
 
 function um_upgrade_update_products_per_page20beta1() {
+	UM()->admin()->check_ajax_nonce();
+
 	um_maybe_unset_time_limit();
 
 	if ( ! empty( $_POST['page'] ) ) {
@@ -296,6 +325,8 @@ function um_upgrade_update_products_per_page20beta1() {
 
 
 function um_upgrade_email_templates20beta1() {
+	UM()->admin()->check_ajax_nonce();
+
 	um_maybe_unset_time_limit();
 
 	include 'email_templates.php';

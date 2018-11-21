@@ -26,9 +26,11 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 		 * Update order of fields
 		 */
 		function update_order() {
+			UM()->admin()->check_ajax_nonce();
 
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) )
-				die( 'Please login as administrator' );
+			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
+			}
 
 			/**
 			 * @var $form_id
@@ -43,8 +45,8 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 			if ( ! empty( $fields ) ) {
 				foreach ( $fields as $key => $array ) {
 					if ( $array['type'] == 'row' ) {
-						$this->row_data[$key] = $array;
-						unset( $fields[$key] );
+						$this->row_data[ $key ] = $array;
+						unset( $fields[ $key ] );
 					}
 				}
 			} else {
@@ -217,6 +219,7 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 
 				<input type="hidden" name="form_id" id="form_id" value="<?php echo get_the_ID(); ?>" />
 				<input type="hidden" name="action" value="um_update_order" />
+				<input type="hidden" name="nonce" value="<?php echo wp_create_nonce( 'um-admin-nonce' ) ?>" />
 
 				<div class="um_update_order_fields">
 

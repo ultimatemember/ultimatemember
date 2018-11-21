@@ -34,7 +34,8 @@ jQuery(document).ready(function() {
 			type: 'post',
 			data: {
 				action: 'um_remove_file',
-				src: src
+				src: src,
+				nonce: um_scripts.nonce
 			}
 		});
 		
@@ -64,7 +65,8 @@ jQuery(document).ready(function() {
 			type: 'post',
 			data: {
 				action: 'um_remove_file',
-				src: src
+				src: src,
+				nonce: um_scripts.nonce
 			}
 		});
 		
@@ -115,7 +117,8 @@ jQuery(document).ready(function() {
 					src : src,
 					coord : coord,
 					user_id : user_id,
-					key: key
+					key: key,
+					nonce: um_scripts.nonce
 				},
 				success: function( response ){
 

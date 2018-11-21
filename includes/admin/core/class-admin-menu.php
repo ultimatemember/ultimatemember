@@ -76,7 +76,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 								url: wp.ajax.settings.url,
 								type: 'post',
 								data: {
-									action: 'um_rated'
+									action: 'um_rated',
+									nonce: um_admin_scripts.nonce
 								},
 								success: function(){
 
@@ -98,8 +99,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		 * When user clicks the review link in backend
 		 */
 		function ultimatemember_rated() {
+			UM()->admin()->check_ajax_nonce();
+
+			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
+			}
+
 			update_option( 'um_admin_footer_text_rated', 1 );
-			die();
+			wp_send_json_success();
 		}
 
 
@@ -109,8 +116,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		public function menu_order_count() {
 			global $menu, $submenu;
 
-			if ( ! current_user_can( 'list_users' ) )
+			if ( ! current_user_can( 'list_users' ) ) {
 				return;
+			}
 
 			$count = UM()->user()->get_pending_users_count();
 			if ( is_array( $menu ) ) {

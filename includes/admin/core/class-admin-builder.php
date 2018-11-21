@@ -292,9 +292,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 * Update the builder area
 		 */
 		function update_builder() {
+			UM()->admin()->check_ajax_nonce();
 
 			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-				die( 'Please login as administrator' );
+				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
 			}
 
 			extract( $_POST );
@@ -605,8 +606,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 *
 		 */
 		function update_field() {
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) )
-				die( __('Please login as administrator','ultimate-member') );
+			UM()->admin()->check_ajax_nonce();
+
+			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
+			}
 
 			$output['error'] = null;
 
@@ -757,11 +761,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 *
 		 */
 		function dynamic_modal_content() {
-			$metabox = UM()->metabox();
+			UM()->admin()->check_ajax_nonce();
 
 			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
-				die( __( 'Please login as administrator', 'ultimate-member' ) );
+				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
 			}
+
+			$metabox = UM()->metabox();
 
 			/**
 			 * @var $act_id
@@ -1131,11 +1137,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 *  Retrieves dropdown/multi-select options from a callback function
 		 */
 		function populate_dropdown_options() {
-			$arr_options = array();
+			UM()->admin()->check_ajax_nonce();
 
-			if ( ! current_user_can('manage_options') ) {
-				wp_die( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
+			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
 			}
+
+			$arr_options = array();
 
 			$um_callback_func = $_POST['um_option_callback'];
 			if ( empty( $um_callback_func ) ) {
@@ -1145,7 +1153,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			}
 
 			$arr_options['data'] = array();
-
 			if ( function_exists( $um_callback_func ) ) {
 				$arr_options['data'] = call_user_func( $um_callback_func );
 			}

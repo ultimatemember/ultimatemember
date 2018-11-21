@@ -23,6 +23,21 @@ if ( ! class_exists( 'um\admin\Admin_Functions' ) ) {
 
 
 		/**
+		 * Check wp-admin nonce
+		 *
+		 * @param bool $action
+		 */
+		function check_ajax_nonce( $action = false ) {
+			$nonce = isset( $_POST['nonce'] ) ? $_POST['nonce'] : '';
+			$action = empty( $action ) ? 'um-admin-nonce' : $action;
+
+			if ( ! wp_verify_nonce( $nonce, $action ) ) {
+				wp_send_json_error( esc_js( __( 'Wrong Nonce', 'ultimate-member' ) ) );
+			}
+		}
+
+
+		/**
 		 * Boolean check if we're viewing UM backend
 		 *
 		 * @return bool

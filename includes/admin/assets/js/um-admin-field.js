@@ -13,7 +13,13 @@ jQuery(document).ready(function() {
 			jQuery.ajax({
 				url: wp.ajax.settings.url,
 				type: 'POST',
-				data: {action:'um_do_ajax_action',act_id : 'um_admin_remove_field_global', arg1 : arg1 },
+				data: {
+					action:'um_do_ajax_action',
+					act_id : 'um_admin_remove_field_global',
+					arg1 : arg1,
+					nonce: um_admin_scripts.nonce
+
+				},
 				success: function(data){
 					
 				},

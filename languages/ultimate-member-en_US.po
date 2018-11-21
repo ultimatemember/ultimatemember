@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2018-11-20 13:57+0200\n"
-"PO-Revision-Date: 2018-11-20 13:57+0200\n"
+"POT-Creation-Date: 2018-11-21 11:52+0200\n"
+"PO-Revision-Date: 2018-11-21 11:52+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -20,6 +20,10 @@ msgstr ""
 "_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: includes/admin/class-admin-functions.php:35 includes/class-functions.php:29
+msgid "Wrong Nonce"
+msgstr ""
 
 #: includes/admin/class-admin.php:181
 #, php-format
@@ -94,63 +98,66 @@ msgstr ""
 msgid "Reset all rules"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:401
-#: includes/admin/core/class-admin-builder.php:471
-#: includes/admin/core/class-admin-dragdrop.php:161
-msgid "Add Row"
+#: includes/admin/core/class-admin-builder.php:298
+#: includes/admin/core/class-admin-builder.php:612
+#: includes/admin/core/class-admin-builder.php:767
+#: includes/admin/core/class-admin-dragdrop.php:32
+#: includes/admin/core/class-admin-menu.php:105
+#: includes/core/class-fields.php:4065
+msgid "Please login as administrator"
 msgstr ""
 
 #: includes/admin/core/class-admin-builder.php:402
 #: includes/admin/core/class-admin-builder.php:472
-#: includes/admin/core/class-admin-dragdrop.php:162
+#: includes/admin/core/class-admin-dragdrop.php:163
+msgid "Add Row"
+msgstr ""
+
+#: includes/admin/core/class-admin-builder.php:403
+#: includes/admin/core/class-admin-builder.php:473
+#: includes/admin/core/class-admin-dragdrop.php:164
 msgid "Edit Row"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:475
-#: includes/admin/core/class-admin-dragdrop.php:164
-#: includes/admin/core/class-admin-dragdrop.php:178
-#: includes/admin/core/class-admin-dragdrop.php:203
+#: includes/admin/core/class-admin-builder.php:476
+#: includes/admin/core/class-admin-dragdrop.php:166
+#: includes/admin/core/class-admin-dragdrop.php:180
+#: includes/admin/core/class-admin-dragdrop.php:205
 msgid "Delete Row"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:609
-#: includes/admin/core/class-admin-builder.php:763
-#: includes/core/class-fields.php:4062
-msgid "Please login as administrator"
-msgstr ""
-
-#: includes/admin/core/class-admin-builder.php:827
+#: includes/admin/core/class-admin-builder.php:833
 msgid "Search Icons..."
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:847
+#: includes/admin/core/class-admin-builder.php:853
 msgid "Setup New Field"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:863
+#: includes/admin/core/class-admin-builder.php:869
 msgid "Predefined Fields"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:874
+#: includes/admin/core/class-admin-builder.php:880
 #: includes/core/class-builtin.php:1308
 msgid "None"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:878
+#: includes/admin/core/class-admin-builder.php:884
 msgid "Custom Fields"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:889
+#: includes/admin/core/class-admin-builder.php:895
 msgid "You did not create any custom fields"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:920
-#: includes/admin/core/class-admin-builder.php:992
+#: includes/admin/core/class-admin-builder.php:926
+#: includes/admin/core/class-admin-builder.php:998
 msgid "This field type is not setup correcty."
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:1137
-#: includes/core/class-form.php:153 includes/core/class-form.php:326
+#: includes/admin/core/class-admin-builder.php:1143
+#: includes/core/class-form.php:155 includes/core/class-form.php:328
 #: includes/core/class-password.php:518
 msgid "This is not possible for security reasons."
 msgstr ""
@@ -371,65 +378,65 @@ msgid ""
 "help us to grow the plugin and make it more popular. Thank you."
 msgstr ""
 
-#: includes/admin/core/class-admin-menu.php:118
+#: includes/admin/core/class-admin-menu.php:126
 msgctxt "Admin menu name"
 msgid "Users"
 msgstr ""
 
-#: includes/admin/core/class-admin-menu.php:126
+#: includes/admin/core/class-admin-menu.php:134
 msgctxt "Admin menu name"
 msgid "All Users"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
 #. Author of the plugin/theme
-#: includes/admin/core/class-admin-menu.php:138
-#: includes/core/class-user.php:552
+#: includes/admin/core/class-admin-menu.php:146
+#: includes/core/class-user.php:557
 msgid "Ultimate Member"
 msgstr ""
 
-#: includes/admin/core/class-admin-menu.php:142
+#: includes/admin/core/class-admin-menu.php:150
 msgid "Dashboard"
 msgstr ""
 
-#: includes/admin/core/class-admin-menu.php:150
+#: includes/admin/core/class-admin-menu.php:158
 #: includes/admin/templates/gdpr.php:7 includes/core/class-common.php:56
 msgid "Forms"
 msgstr ""
 
-#: includes/admin/core/class-admin-menu.php:152
+#: includes/admin/core/class-admin-menu.php:160
 #: includes/admin/core/list-tables/roles-list-table.php:477
 #: includes/admin/core/packages/2.0-beta1/user_roles.php:12
 msgid "User Roles"
 msgstr ""
 
-#: includes/admin/core/class-admin-menu.php:155
+#: includes/admin/core/class-admin-menu.php:163
 #: includes/core/class-common.php:85
 msgid "Member Directories"
 msgstr ""
 
-#: includes/admin/core/class-admin-menu.php:197
+#: includes/admin/core/class-admin-menu.php:205
 #: includes/admin/core/class-admin-settings.php:1007
 msgid "Extensions"
 msgstr ""
 
-#: includes/admin/core/class-admin-menu.php:210
+#: includes/admin/core/class-admin-menu.php:218
 msgid "Users Overview"
 msgstr ""
 
-#: includes/admin/core/class-admin-menu.php:212
+#: includes/admin/core/class-admin-menu.php:220
 msgid "Latest from our blog"
 msgstr ""
 
-#: includes/admin/core/class-admin-menu.php:214
+#: includes/admin/core/class-admin-menu.php:222
 msgid "Purge Temp Files"
 msgstr ""
 
-#: includes/admin/core/class-admin-menu.php:216
+#: includes/admin/core/class-admin-menu.php:224
 msgid "User Cache"
 msgstr ""
 
-#: includes/admin/core/class-admin-menu.php:221
+#: includes/admin/core/class-admin-menu.php:229
 msgid "Upgrade's Manual Request"
 msgstr ""
 
@@ -1305,11 +1312,7 @@ msgid ""
 "target=\"_blank\">here</a>"
 msgstr ""
 
-#: includes/admin/core/class-admin-notices.php:671
-msgid "Wrong Nonce"
-msgstr ""
-
-#: includes/admin/core/class-admin-notices.php:676
+#: includes/admin/core/class-admin-notices.php:672
 msgid "Wrong Data"
 msgstr ""
 
@@ -2549,7 +2552,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-users.php:305
 #: includes/admin/templates/dashboard/users.php:11
-#: includes/core/class-user.php:816
+#: includes/core/class-user.php:821
 msgid "Approved"
 msgstr ""
 
@@ -2672,59 +2675,59 @@ msgstr ""
 msgid "User Role <strong>Deleted</strong> Successfully."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/functions.php:6
-#: includes/admin/core/packages/2.0.10/functions.php:6
+#: includes/admin/core/packages/2.0-beta1/functions.php:8
+#: includes/admin/core/packages/2.0.10/functions.php:8
 msgid "Styles was upgraded successfully"
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/functions.php:17
+#: includes/admin/core/packages/2.0-beta1/functions.php:21
 msgid "User Roles was upgraded successfully"
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/functions.php:80
+#: includes/admin/core/packages/2.0-beta1/functions.php:89
 #, php-format
 msgid "Users from %s to %s was upgraded successfully..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/functions.php:100
+#: includes/admin/core/packages/2.0-beta1/functions.php:113
 msgid "Settings was upgraded successfully"
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/functions.php:108
+#: includes/admin/core/packages/2.0-beta1/functions.php:123
 msgid "Menus settings was upgraded successfully"
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/functions.php:116
+#: includes/admin/core/packages/2.0-beta1/functions.php:133
 msgid "Mailchimp Lists was upgraded successfully"
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/functions.php:124
+#: includes/admin/core/packages/2.0-beta1/functions.php:143
 msgid "Social login forms was upgraded successfully"
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/functions.php:132
+#: includes/admin/core/packages/2.0-beta1/functions.php:153
 msgid "UM Custom Posts was upgraded successfully"
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/functions.php:147
+#: includes/admin/core/packages/2.0-beta1/functions.php:170
 msgid "Forums are ready for upgrade"
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/functions.php:200
+#: includes/admin/core/packages/2.0-beta1/functions.php:225
 #, php-format
 msgid "Forums from %s to %s was upgraded successfully..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/functions.php:216
+#: includes/admin/core/packages/2.0-beta1/functions.php:243
 msgid "Woocommerce Products are ready for upgrade"
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/functions.php:290
+#: includes/admin/core/packages/2.0-beta1/functions.php:319
 #, php-format
 msgid "Woocommerce Products from %s to %s was upgraded successfully..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/functions.php:306
+#: includes/admin/core/packages/2.0-beta1/functions.php:337
 msgid "Email Templates was upgraded successfully"
 msgstr ""
 
@@ -2733,72 +2736,72 @@ msgstr ""
 msgid "Upgrade Styles..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/init.php:37
+#: includes/admin/core/packages/2.0-beta1/init.php:38
 msgid "Upgrade Roles..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/init.php:50
+#: includes/admin/core/packages/2.0-beta1/init.php:52
 msgid "Upgrade Users..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/init.php:71
+#: includes/admin/core/packages/2.0-beta1/init.php:73
 msgid "Getting "
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/init.php:71
-#: includes/admin/core/packages/2.0-beta1/init.php:82
+#: includes/admin/core/packages/2.0-beta1/init.php:73
+#: includes/admin/core/packages/2.0-beta1/init.php:85
 msgid " users..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/init.php:82
+#: includes/admin/core/packages/2.0-beta1/init.php:85
 msgid "There are "
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/init.php:83
+#: includes/admin/core/packages/2.0-beta1/init.php:86
 msgid "Start users upgrading..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/init.php:135
+#: includes/admin/core/packages/2.0-beta1/init.php:139
 msgid "Upgrade Content Restriction Settings..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/init.php:160
+#: includes/admin/core/packages/2.0-beta1/init.php:165
 msgid "Upgrade Settings..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/init.php:185
+#: includes/admin/core/packages/2.0-beta1/init.php:191
 msgid "Upgrade Menu Items..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/init.php:210
+#: includes/admin/core/packages/2.0-beta1/init.php:217
 msgid "Upgrade Mailchimp Lists..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/init.php:235
+#: includes/admin/core/packages/2.0-beta1/init.php:243
 msgid "Upgrade Social Login Forms..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/init.php:260
+#: includes/admin/core/packages/2.0-beta1/init.php:269
 msgid "Upgrade UM Custom Post Types..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/init.php:285
+#: includes/admin/core/packages/2.0-beta1/init.php:295
 msgid "Upgrade bbPress Forums..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/init.php:286
+#: includes/admin/core/packages/2.0-beta1/init.php:296
 msgid "Get bbPress Forums count..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/init.php:343
+#: includes/admin/core/packages/2.0-beta1/init.php:355
 msgid "Upgrade Woocommerce Products..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/init.php:344
+#: includes/admin/core/packages/2.0-beta1/init.php:356
 msgid "Get all Products..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0-beta1/init.php:403
+#: includes/admin/core/packages/2.0-beta1/init.php:417
 msgid "Upgrade Email Templates..."
 msgstr ""
 
@@ -2827,15 +2830,15 @@ msgstr ""
 msgid "Search User Roles"
 msgstr ""
 
-#: includes/admin/core/packages/2.0.10/functions.php:17
+#: includes/admin/core/packages/2.0.10/functions.php:21
 msgid "Users cache was cleared successfully"
 msgstr ""
 
-#: includes/admin/core/packages/2.0.10/init.php:31
+#: includes/admin/core/packages/2.0.10/init.php:32
 msgid "Clear Users Cache..."
 msgstr ""
 
-#: includes/admin/core/packages/2.0.24/functions.php:9
+#: includes/admin/core/packages/2.0.24/functions.php:11
 msgid "Temporary dir was purged successfully"
 msgstr ""
 
@@ -2854,18 +2857,6 @@ msgstr ""
 
 #: includes/admin/templates/dashboard/feed.php:4
 msgid "Latest From Ultimate Member"
-msgstr ""
-
-#: includes/admin/templates/dashboard/language-contrib.php:2
-#, php-format
-msgid ""
-"Ultimate Member is not yet available in your language: <strong>%1$s</strong>."
-msgstr ""
-
-#: includes/admin/templates/dashboard/language-contrib.php:6
-msgid ""
-"If you want to contribute this translation to the plugin, please add it on "
-"our <a href=\"https://ultimatemember.com/forums/\">community forum</a>."
 msgstr ""
 
 #: includes/admin/templates/dashboard/purge.php:4
@@ -2896,12 +2887,12 @@ msgid "Get latest versions"
 msgstr ""
 
 #: includes/admin/templates/dashboard/users.php:27
-#: includes/core/class-user.php:824
+#: includes/core/class-user.php:829
 msgid "Pending Review"
 msgstr ""
 
 #: includes/admin/templates/dashboard/users.php:32
-#: includes/core/class-user.php:820
+#: includes/core/class-user.php:825
 msgid "Awaiting E-mail Confirmation"
 msgstr ""
 
@@ -3485,11 +3476,11 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-#: includes/admin/templates/modal/dynamic_edit_field.php:14
-#: includes/admin/templates/modal/dynamic_edit_row.php:14
-#: includes/admin/templates/modal/dynamic_new_divider.php:14
-#: includes/admin/templates/modal/dynamic_new_field.php:14
-#: includes/admin/templates/modal/dynamic_new_group.php:14
+#: includes/admin/templates/modal/dynamic_edit_field.php:15
+#: includes/admin/templates/modal/dynamic_edit_row.php:15
+#: includes/admin/templates/modal/dynamic_new_divider.php:15
+#: includes/admin/templates/modal/dynamic_new_field.php:15
+#: includes/admin/templates/modal/dynamic_new_group.php:15
 #: includes/admin/templates/modal/fonticons.php:11
 #: includes/admin/templates/role/publish.php:24
 #: includes/core/class-fields.php:2301 includes/core/class-fields.php:2398
@@ -4131,7 +4122,7 @@ msgstr ""
 msgid "You must add a shortcode to the content area"
 msgstr ""
 
-#: includes/core/class-builtin.php:663 includes/core/class-user.php:1538
+#: includes/core/class-builtin.php:663 includes/core/class-user.php:1543
 msgid "Only me"
 msgstr ""
 
@@ -6290,40 +6281,40 @@ msgstr ""
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
-#: includes/core/class-files.php:267
+#: includes/core/class-files.php:271
 msgid "Invalid parameters"
 msgstr ""
 
-#: includes/core/class-files.php:272
+#: includes/core/class-files.php:276
 msgid "Invalid coordinates"
 msgstr ""
 
-#: includes/core/class-files.php:277
+#: includes/core/class-files.php:281
 msgid "Invalid file ownership"
 msgstr ""
 
-#: includes/core/class-files.php:330
+#: includes/core/class-files.php:334
 msgid "Invalid nonce"
 msgstr ""
 
-#: includes/core/class-files.php:350 includes/core/class-files.php:435
+#: includes/core/class-files.php:354 includes/core/class-files.php:439
 msgid "A theme or plugin compatibility issue"
 msgstr ""
 
-#: includes/core/class-files.php:978
+#: includes/core/class-files.php:982
 msgid "Ultimate Member: Not a valid temp file"
 msgstr ""
 
-#: includes/core/class-files.php:1106
+#: includes/core/class-files.php:1110
 msgid "Invalid user ID: "
 msgstr ""
 
-#: includes/core/class-files.php:1115 includes/core/class-files.php:1143
+#: includes/core/class-files.php:1119 includes/core/class-files.php:1147
 msgid "Unauthorized to do this attempt."
 msgstr ""
 
-#: includes/core/class-form.php:56 includes/core/class-profile.php:54
-#: includes/core/class-profile.php:70
+#: includes/core/class-form.php:58 includes/core/class-profile.php:56
+#: includes/core/class-profile.php:74
 msgid "You can not edit this user"
 msgstr ""
 
@@ -6385,15 +6376,15 @@ msgstr ""
 msgid "https://wordpress.org/support/"
 msgstr ""
 
-#: includes/core/class-profile.php:106
+#: includes/core/class-profile.php:110
 msgid "About"
 msgstr ""
 
-#: includes/core/class-profile.php:110
+#: includes/core/class-profile.php:114
 msgid "Posts"
 msgstr ""
 
-#: includes/core/class-profile.php:114
+#: includes/core/class-profile.php:118
 msgid "Comments"
 msgstr ""
 
@@ -6518,19 +6509,19 @@ msgstr ""
 msgid "Maximum file size allowed: %s"
 msgstr ""
 
-#: includes/core/class-user.php:610
+#: includes/core/class-user.php:615
 msgid "Ultimate Member Role"
 msgstr ""
 
-#: includes/core/class-user.php:613
+#: includes/core/class-user.php:618
 msgid "&mdash; No role for Ultimate Member &mdash;"
 msgstr ""
 
-#: includes/core/class-user.php:828
+#: includes/core/class-user.php:833
 msgid "Membership Rejected"
 msgstr ""
 
-#: includes/core/class-user.php:832
+#: includes/core/class-user.php:837
 msgid "Membership Inactive"
 msgstr ""
 

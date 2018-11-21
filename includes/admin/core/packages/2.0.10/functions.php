@@ -1,5 +1,7 @@
 <?php
 function um_upgrade_styles2010() {
+	UM()->admin()->check_ajax_nonce();
+
 	um_maybe_unset_time_limit();
 
 	include 'styles.php';
@@ -8,6 +10,8 @@ function um_upgrade_styles2010() {
 
 
 function um_upgrade_cache2010() {
+	UM()->admin()->check_ajax_nonce();
+
 	um_maybe_unset_time_limit();
 
 	UM()->user()->remove_cache_all_users();

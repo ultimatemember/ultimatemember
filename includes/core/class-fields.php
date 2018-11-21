@@ -4059,21 +4059,25 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 */
 		function do_ajax_action() {
-			if (!is_user_logged_in() || !current_user_can( 'manage_options' )) die( __( 'Please login as administrator', 'ultimate-member' ) );
+			UM()->admin()->check_ajax_nonce();
+
+			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
+			}
 
 			extract( $_POST );
 
 			$output = null;
 
 			$position = array();
-			if (!empty( $in_column )) {
+			if ( ! empty( $in_column ) ) {
 				$position['in_row'] = '_um_row_' . ( (int)$in_row + 1 );
 				$position['in_sub_row'] = $in_sub_row;
 				$position['in_column'] = $in_column;
 				$position['in_group'] = $in_group;
 			}
 
-			switch ($act_id) {
+			switch ( $act_id ) {
 
 				case 'um_admin_duplicate_field':
 					$this->duplicate_field( $arg1, $arg2 );

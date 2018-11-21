@@ -14,7 +14,8 @@ function um_admin_update_builder() {
 		type: 'POST',
 		data: {
 			action:'um_update_builder',
-			form_id: form_id
+			form_id: form_id,
+			nonce: um_admin_scripts.nonce
 		},
 		success: function(data){
 			
