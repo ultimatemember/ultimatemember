@@ -82,6 +82,8 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 		 *
 		 */
 		function load_posts() {
+			UM()->check_ajax_nonce();
+
 			$author = ! empty( $_POST['author'] ) ? $_POST['author'] : get_current_user_id();
 			$page = ! empty( $_POST['page'] ) ? $_POST['page'] : 0;
 

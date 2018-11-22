@@ -1,5 +1,7 @@
 <?php
 function um_upgrade_tempfolder2024() {
+	UM()->admin()->check_ajax_nonce();
+
 	um_maybe_unset_time_limit();
 
 	UM()->files()->remove_dir( UM()->files()->upload_temp );

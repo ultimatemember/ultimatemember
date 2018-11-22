@@ -50,6 +50,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 *
 		 */
 		function ajax_muted_action() {
+			UM()->check_ajax_nonce();
+
 			extract( $_REQUEST );
 
 			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) )
@@ -86,7 +88,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 *
 		 */
 		function ajax_select_options() {
-
+			UM()->check_ajax_nonce();
 
 			$arr_options = array();
 			$arr_options['status'] = 'success';

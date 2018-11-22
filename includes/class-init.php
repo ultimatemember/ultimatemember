@@ -66,14 +66,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 
 		/**
-		 * UM Available Languages
-		 *
-		 * @var array
-		 */
-		var $available_languages;
-
-
-		/**
 		 * Main UM Instance
 		 *
 		 * Ensures only one instance of UM is loaded or can be loaded.
@@ -197,31 +189,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 				$this->is_filtering = 0;
 				$this->honeypot = 'request';
-
-				$this->available_languages = array(
-					'en_US' => 'English (US)',
-					'es_ES' => 'Español',
-					'es_MX' => 'Español (México)',
-					'fr_FR' => 'Français',
-					'it_IT' => 'Italiano',
-					'de_DE' => 'Deutsch',
-					'nl_NL' => 'Nederlands',
-					'pt_BR' => 'Português do Brasil',
-					'fi_FI' => 'Suomi',
-					'ro_RO' => 'Română',
-					'da_DK' => 'Dansk',
-					'sv_SE' => 'Svenska',
-					'pl_PL' => 'Polski',
-					'cs_CZ' => 'Czech',
-					'el'    => 'Greek',
-					'id_ID' => 'Indonesian',
-					'zh_CN' => '简体中文',
-					'ru_RU' => 'Русский',
-					'tr_TR' => 'Türkçe',
-					'fa_IR' => 'Farsi',
-					'he_IL' => 'Hebrew',
-					'ar'    => 'العربية',
-				);
 
 				// textdomain loading
 				$this->localize();

@@ -162,11 +162,11 @@ $free['terms-conditions'] = array(
 
 	<div class="wp-filter um-admin-notice um-filter">
 		<div class="alignleft">
-			<strong>Core Extensions Bundle</strong> – Check out our extensions bundle which includes all extensions at a significant discount.
+			<?php _e( '<strong>All Access Pass</strong> – Get access to all Ultimate Member extensions at a significant discount with our All Access Pass.', 'ultimate-member' ) ?>
 		</div>
 		<div class="alignright">
-			<a href="https://ultimatemember.com/core-extensions-bundle/" class="button button-primary" target="_blank">
-				<?php _e( 'View our Extensions Bundle', 'ultimate-member' ) ?>
+			<a href="https://ultimatemember.com/pricing/" class="button button-primary" target="_blank">
+				<?php _e( 'View Pricing', 'ultimate-member' ) ?>
 			</a>
 		</div>
 	</div>

@@ -88,17 +88,15 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_script( 'um_fileupload', $this->js_baseurl . 'um-fileupload' . $this->suffix . '.js', array( 'jquery', 'um_jquery_form' ), ultimatemember_version, true );
 
 
-			$datetime_deps = array( 'jquery' );
-			// load a localized version for date/time
-			$locale = get_locale();
-			if ( $locale && file_exists( um_path . 'assets/js/pickadate/translations/' . $locale . '.js' ) ) {
-				wp_register_script('um_datetime_locale', um_url . 'assets/js/pickadate/translations/' . $locale . '.js', array( 'jquery' ), ultimatemember_version, true );
-				$datetime_deps[] = 'um_datetime_locale';
-			}
-			wp_register_script( 'um_datetime', $this->js_baseurl . 'pickadate/picker.js', $datetime_deps, ultimatemember_version, true );
+			wp_register_script( 'um_datetime', $this->js_baseurl . 'pickadate/picker.js', array( 'jquery' ), ultimatemember_version, true );
 			wp_register_script( 'um_datetime_date', $this->js_baseurl . 'pickadate/picker.date.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
 			wp_register_script( 'um_datetime_time', $this->js_baseurl . 'pickadate/picker.time.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
 			wp_register_script( 'um_datetime_legacy', $this->js_baseurl . 'pickadate/legacy.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
+			// load a localized version for date/time
+			$locale = get_locale();
+			if ( $locale && file_exists( um_path . 'assets/js/pickadate/translations/' . $locale . '.js' ) ) {
+				wp_register_script('um_datetime_locale', um_url . 'assets/js/pickadate/translations/' . $locale . '.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
+			}
 
 			wp_register_script( 'um_tipsy', $this->js_baseurl . 'um-tipsy' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 			wp_register_script( 'um_raty', $this->js_baseurl . 'um-raty' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
@@ -110,7 +108,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_script('um_functions', $this->js_baseurl . 'um-functions' . $this->suffix . '.js', array( 'jquery', 'jquery-masonry', 'wp-util', 'um_scrollbar' ), ultimatemember_version, true );
 			wp_register_script( 'um-gdpr', $this->js_baseurl . 'um-gdpr' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, false );
 			wp_register_script('um_conditional', $this->js_baseurl . 'um-conditional' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
-			wp_register_script('um_scripts', $this->js_baseurl . 'um-scripts' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'um_conditional' ), ultimatemember_version, true );
+			wp_register_script('um_scripts', $this->js_baseurl . 'um-scripts' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'um_conditional', 'um_datetime', 'um_datetime_date', 'um_datetime_time', 'um_datetime_legacy' ), ultimatemember_version, true );
 			/**
 			 * UM hook
 			 *
@@ -131,7 +129,9 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			 * }
 			 * ?>
 			 */
-			$localize_data = apply_filters( 'um_enqueue_localize_data', array() );
+			$localize_data = apply_filters( 'um_enqueue_localize_data', array(
+				'nonce' => wp_create_nonce( "um-frontend-nonce" ),
+			) );
 			wp_localize_script( 'um_scripts', 'um_scripts', $localize_data );
 
 			wp_register_script('um_members', $this->js_baseurl . 'um-members' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
@@ -327,6 +327,13 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_enqueue_script('um_datetime_date');
 			wp_enqueue_script('um_datetime_time');
 			wp_enqueue_script('um_datetime_legacy');
+
+			// load a localized version for date/time
+			$locale = get_locale();
+			if ( $locale && file_exists( um_path . 'assets/js/pickadate/translations/' . $locale . '.js' ) ) {
+				wp_enqueue_script('um_datetime_locale' );
+			}
+
 			wp_enqueue_style('um_datetime');
 			wp_enqueue_style('um_datetime_date');
 			wp_enqueue_style('um_datetime_time');

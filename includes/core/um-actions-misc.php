@@ -12,33 +12,30 @@ function um_browser_url_redirect_to( $args ) {
 	$url = '';
 
 	if ( ! empty( $_REQUEST['redirect_to'] ) ) {
+
 		$url = $_REQUEST['redirect_to'];
-		echo '<input type="hidden" name="redirect_to" id="redirect_to" value="'.esc_url( $url ).'" />';
 
 	} elseif ( ! empty( $args['after_login'] ) ) {
-			
+
 		switch ( $args['after_login'] ) {
-				
+
 			case 'redirect_admin':
 				$url = admin_url();
 				break;
-					
+
 			case 'redirect_profile':
 				$url = um_user_profile_url();
 				break;
-				
+
 			case 'redirect_url':
 				$url = $args['redirect_url'];
 				break;
-					
+
 			case 'refresh':
-
 				$url = UM()->permalinks()->get_current_url();
-
 				break;
-					
+
 		}
-			
 	}
 
 	/**
@@ -66,7 +63,6 @@ function um_browser_url_redirect_to( $args ) {
 	if ( ! empty( $url ) ) {
 		echo '<input type="hidden" name="redirect_to" id="redirect_to" value="' . esc_url( $url ) . '" />';
 	}
-
 }
 add_action( 'um_after_form_fields', 'um_browser_url_redirect_to' );
 

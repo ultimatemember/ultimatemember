@@ -17,6 +17,21 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 
 		/**
+		 * Check frontend nonce
+		 *
+		 * @param bool $action
+		 */
+		function check_ajax_nonce( $action = false ) {
+			$nonce = isset( $_POST['nonce'] ) ? $_POST['nonce'] : '';
+			$action = empty( $action ) ? 'um-frontend-nonce' : $action;
+
+			if ( ! wp_verify_nonce( $nonce, $action ) ) {
+				wp_send_json_error( esc_js( __( 'Wrong Nonce', 'ultimate-member' ) ) );
+			}
+		}
+
+
+		/**
 		 * What type of request is this?
 		 *
 		 * @param string $type String containing name of request type (ajax, frontend, cron or admin)

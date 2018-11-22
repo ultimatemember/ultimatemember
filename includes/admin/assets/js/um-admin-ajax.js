@@ -31,7 +31,17 @@ jQuery(document).ready(function() {
 		jQuery.ajax({
 			url: wp.ajax.settings.url,
 			type: 'POST',
-			data: { action:'um_do_ajax_action',act_id : act_id, arg1 : arg1, arg2 : arg2, in_row: in_row, in_sub_row: in_sub_row, in_column: in_column, in_group: in_group },
+			data: {
+				action:'um_do_ajax_action',
+				act_id : act_id,
+				arg1 : arg1,
+				arg2 : arg2,
+				in_row: in_row,
+				in_sub_row: in_sub_row,
+				in_column: in_column,
+				in_group: in_group,
+				nonce: um_admin_scripts.nonce
+			},
 			success: function(data){
 				
 				jQuery('.um-col-demon-settings').data('in_row', '');

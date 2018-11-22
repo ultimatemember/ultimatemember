@@ -38,7 +38,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->old_extensions_notice();
 			$this->install_core_page_notice();
 			$this->exif_extension_notice();
-			$this->localize_note();
 			$this->show_update_messages();
 			$this->check_wrong_install_folder();
 			$this->admin_notice_opt_in();
@@ -359,45 +358,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 
 		/**
-		 * Localization notice
-		 */
-		function localize_note() {
-			$locale = get_option( 'WPLANG' );
-			if ( ! $locale || strstr( $locale, 'en_' ) ) {
-				return;
-			}
-
-			if ( file_exists( WP_LANG_DIR . '/plugins/ultimatemember-' . $locale . '.mo' ) ) {
-				return;
-			}
-
-			$hide_locale_notice = get_option( 'um_hide_locale_notice' );
-			if ( $hide_locale_notice ) {
-				return;
-			}
-
-			if ( isset( UM()->available_languages[ $locale ] ) ) {
-
-				$download_uri = add_query_arg( 'um_adm_action', 'um_language_downloader' );
-
-				$this->add_notice( 'locale', array(
-					'class'     => 'updated',
-					'message'   => '<p>' . sprintf( __( 'Your site language is <strong>%1$s</strong>. Good news! Ultimate Member is already available in <strong>%2$s language</strong>. <a href="%3$s">Download the translation</a> files and start using the plugin in your language now. <a href="%4$s">Hide this notice</a>','ultimate-member'), $locale, UM()->available_languages[ $locale ], $download_uri, add_query_arg( 'um_adm_action', 'um_hide_locale_notice' ) ) . '</p>',
-				), 40 );
-
-			} else {
-
-				$this->add_notice( 'locale', array(
-					'class'     => 'updated',
-					'message'   => '<p>' . sprintf( __( 'Ultimate Member has not yet been translated to your language: <strong>%1$s</strong>. If you have translated the plugin you need put these files <code>ultimatemember-%1$s.po and ultimatemember-%1$s.mo</code> in <strong>/wp-content/languages/plugins/</strong> for the plugin to be translated in your language. <a href="%2$s">Hide this notice</a>', 'ultimate-member' ), $locale, add_query_arg( 'um_adm_action', 'um_hide_locale_notice' ) ) . '</p>',
-				), 40 );
-
-			}
-
-		}
-
-
-		/**
 		 * Updating users
 		 */
 		function show_update_messages() {
@@ -706,11 +666,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 
 		function dismiss_notice() {
-			$nonce = isset( $_POST["nonce"] ) ? $_POST["nonce"] : "";
-			if ( ! wp_verify_nonce( $nonce, "um-admin-nonce" ) ) {
-				wp_send_json_error( esc_js( __( "Wrong Nonce", 'ultimate-member' ) ) );
-			}
-
+			UM()->admin()->check_ajax_nonce();
 
 			if ( empty( $_POST['key'] ) ) {
 				wp_send_json_error( __( 'Wrong Data', 'ultimate-member' ) );

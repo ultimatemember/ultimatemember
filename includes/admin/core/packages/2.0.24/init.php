@@ -6,11 +6,12 @@
 		um_add_upgrade_log( '<?php echo esc_js( __( 'Purge temp files dir...', 'ultimate-member' ) ) ?>' );
 
 		jQuery.ajax({
-			url: '<?php echo admin_url( 'admin-ajax.php' ) ?>',
+			url: wp.ajax.settings.url,
 			type: 'POST',
 			dataType: 'json',
 			data: {
-				action: 'um_tempfolder2024'
+				action: 'um_tempfolder2024',
+				nonce: um_admin_scripts.nonce
 			},
 			success: function( response ) {
 				if ( typeof response.data != 'undefined' ) {

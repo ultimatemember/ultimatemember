@@ -6,11 +6,12 @@
 		um_add_upgrade_log( '<?php echo esc_js( __( 'Upgrade Styles...', 'ultimate-member' ) ) ?>' );
 
 		jQuery.ajax({
-			url: '<?php echo admin_url( 'admin-ajax.php' ) ?>',
+			url: wp.ajax.settings.url,
 			type: 'POST',
 			dataType: 'json',
 			data: {
-				action: 'um_styles2010'
+				action: 'um_styles2010',
+				nonce: um_admin_scripts.nonce
 			},
 			success: function( response ) {
 				if ( typeof response.data != 'undefined' ) {
@@ -30,11 +31,12 @@
 		function um_clear_cache2010() {
 			um_add_upgrade_log( '<?php echo esc_js( __( 'Clear Users Cache...', 'ultimate-member' ) ) ?>' );
 			jQuery.ajax({
-				url: '<?php echo admin_url( 'admin-ajax.php' ) ?>',
+				url: wp.ajax.settings.url,
 				type: 'POST',
 				dataType: 'json',
 				data: {
-					action: 'um_cache2010'
+					action: 'um_cache2010',
+					nonce: um_admin_scripts.nonce
 				},
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {
