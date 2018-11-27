@@ -453,51 +453,6 @@ add_action( 'um_submit_form_register', 'um_submit_form_register', 10 );
 
 
 /**
- * Register user with predefined role in options
- *
- * @param $args
- */
-function um_add_user_role( $args ) {
-
-	if ( isset( $args['custom_fields']['role_select'] ) || isset( $args['custom_fields']['role_radio'] ) ) return;
-
-	$use_custom_settings = get_post_meta( $args['form_id'], '_um_register_use_custom_settings', true );
-
-	$role = apply_filters( 'um_registration_user_role', UM()->form()->assigned_role( UM()->form()->form_id ), $args );
-
-	if ( empty( $use_custom_settings ) || empty( $role ) ) return;
-
-	/**
-	 * UM hook
-	 *
-	 * @type filter
-	 * @title um_register_hidden_role_field
-	 * @description Display hidden role field
-	 * @input_vars
-	 * [{"var":"$role","type":"string","desc":"Hidden user role"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * <?php add_filter( 'um_register_hidden_role_field', 'function_name', 10, 1 ); ?>
-	 * @example
-	 * <?php
-	 * add_filter( 'um_register_hidden_role_field', 'my_register_hidden_role_field', 10, 1 );
-	 * function my_register_hidden_role_field( $role ) {
-	 *     // your code here
-	 *     return $role;
-	 * }
-	 * ?>
-	 */
-	$role = apply_filters( 'um_register_hidden_role_field', $role );
-	if ( $role ) {
-		echo '<input type="hidden" name="role" id="role" value="' . $role . '" />';
-	}
-
-}
-//add_action( 'um_after_register_fields', 'um_add_user_role', 10, 1 );
-
-
-/**
  * Show the submit button
  *
  * @param $args
