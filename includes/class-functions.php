@@ -55,43 +55,6 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 
 		/**
-		 * Get ajax routed URL
-		 *
-		 * @param string $route
-		 * @param string $method
-		 *
-		 * @return string
-		 */
-		public function get_ajax_route( $route, $method ) {
-
-			$route = str_replace( array( '\\', '/' ), '!', $route );
-			$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '';
-			$nonce = wp_create_nonce( $ip . get_current_user_id() . $route . $method );
-
-			if ( is_admin() ) {
-				$url = add_query_arg( array(
-					'action'        => 'um_router',
-					'um_action'     => 'route',
-					'um_resource'   => $route,
-					'um_method'     => $method,
-					'um_verify'     => $nonce
-				), get_admin_url( null, 'admin-ajax.php' ) );
-			} else if ( get_option( 'permalink_structure' ) ) {
-				$url = get_home_url( null, 'um-api/route/' . $route . '/' . $method . '/' . $nonce );
-			} else {
-				$url = add_query_arg( array(
-					'um_page'       => 'api',
-					'um_action'     => 'route',
-					'um_resource'   => $route,
-					'um_method'     => $method,
-					'um_verify'     => $nonce
-				), get_home_url() );
-			}
-			return $url;
-		}
-
-
-		/**
 		 * Help Tip displaying
 		 *
 		 * Function for render/displaying UltimateMember help tip

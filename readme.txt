@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.7
 Tested up to: 4.9
-Stable tag: 2.0.33
+Stable tag: 2.0.34
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -136,6 +136,14 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 == Changelog ==
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
+
+= 2.0.34: December , 2018 =
+
+* Bugfixes:
+
+* Deprecated:
+  - removed "UM_TEXTDOMAIN" constant;
+  - removed function UM()->get_ajax_route();
 
 = 2.0.33: November 22, 2018 =
 

@@ -3,7 +3,7 @@
 Plugin Name: Ultimate Member
 Plugin URI: http://ultimatemember.com/
 Description: The easiest way to create powerful online communities and beautiful user profiles with WordPress
-Version: 2.0.33
+Version: 2.0.34
 Author: Ultimate Member
 Author URI: http://ultimatemember.com/
 Text Domain: ultimate-member
@@ -14,13 +14,6 @@ defined( 'ABSPATH' ) || exit;
 
 require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 $plugin_data = get_plugin_data( __FILE__ );
-
-/**
- * Textdomain constant backward compatibility will be removed in future releases
- *
- * @todo remove in future releases
- */
-define( 'UM_TEXTDOMAIN', 'ultimate-member' );
 
 define( 'um_url', plugin_dir_url( __FILE__ ) );
 define( 'um_path', plugin_dir_path( __FILE__ ) );
