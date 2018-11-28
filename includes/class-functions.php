@@ -1,5 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit;
 
+
 if ( ! class_exists( 'UM_Functions' ) ) {
 
 
@@ -327,6 +328,5 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			$cpt = apply_filters( 'um_cpt_list', array( 'um_form', 'um_directory' ) );
 			return $cpt;
 		}
-
 	}
 }
