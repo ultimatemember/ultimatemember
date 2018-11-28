@@ -46,8 +46,6 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 			$public_query_vars[] = 'um_action';
 			$public_query_vars[] = 'um_field';
 			$public_query_vars[] = 'um_form';
-			$public_query_vars[] = 'um_resource';
-			$public_query_vars[] = 'um_method';
 			$public_query_vars[] = 'um_verify';
 
 			return $public_query_vars;
@@ -64,7 +62,6 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 		function _add_rewrite_rules( $rules ) {
 			$newrules = array();
 
-			$newrules['um-api/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$'] = 'index.php?um_page=api&um_action=$matches[1]&um_resource=$matches[2]&um_method=$matches[3]&um_verify=$matches[4]';
 			$newrules['um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$'] = 'index.php?um_action=download&um_form=$matches[1]&um_field=$matches[2]&um_user=$matches[3]&um_verify=$matches[4]';
 
 			if ( isset( UM()->config()->permalinks['user'] ) ) {
