@@ -82,6 +82,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 
 		/**
+		 * Hide Woocommerce Shop page restrict content metabox
 		 * @param $hide
 		 *
 		 * @return bool

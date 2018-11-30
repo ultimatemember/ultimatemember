@@ -32,7 +32,43 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			add_filter( 'um_localize_permalink_filter', array( &$this, 'um_localize_permalink_filter' ), 10, 2 );
 			add_filter( 'icl_ls_languages', array( &$this, 'um_core_page_wpml_permalink' ), 10, 1 );
 
+			/**
+			 * @todo Customize this form metadata
+			 */
+			//add_filter( 'um_pre_args_setup',  array( &$this, 'shortcode_pre_args_setup' ), 20, 1 );
+
 			$this->plugins_loaded();
+		}
+
+
+		/**
+		 * UM filter - Restore original arguments on translated page
+		 *
+		 * @description Restore original arguments on load shortcode if they are missed in the WPML translation
+		 * @hook um_pre_args_setup
+		 *
+		 * @global \SitePress $sitepress
+		 * @param array $args
+		 * @return array
+		 */
+		function shortcode_pre_args_setup( $args ) {
+			if ( UM()->external_integrations()->is_wpml_active() ) {
+				global $sitepress;
+
+				$original_form_id = $sitepress->get_object_id( $args['form_id'], 'post', true, $sitepress->get_default_language() );
+
+				if ( $original_form_id != $args['form_id'] ) {
+					$original_post_data = UM()->query()->post_data( $original_form_id );
+
+					foreach ( $original_post_data as $key => $value ) {
+						if ( ! isset( $args[ $key ] ) ) {
+							$args[ $key ] = $value;
+						}
+					}
+				}
+			}
+
+			return $args;
 		}
 
 

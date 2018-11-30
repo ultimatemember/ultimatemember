@@ -42,25 +42,25 @@ add_filter('pre_get_document_title', 'um_dynamic_user_profile_pagetitle', 100000
  * @return string
  */
 function um_dynamic_user_profile_title( $title, $id = '' ) {
-
-	if( is_admin() ){
+	if ( is_admin() ) {
 		return $title;
 	}
 
-	if (  $id == UM()->config()->permalinks['user'] && in_the_loop() ) {
-		if ( um_is_core_page('user') && um_get_requested_user() ) {
-			$title = um_get_display_name( um_get_requested_user() );
-		} else if ( um_is_core_page('user') && is_user_logged_in() ) {
-			$title = um_get_display_name( get_current_user_id() );
+	if ( um_is_core_page('user') ) {
+		if ( $id == UM()->config()->permalinks['user'] && in_the_loop() ) {
+			if ( um_get_requested_user() ) {
+				$title = um_get_display_name( um_get_requested_user() );
+			} elseif ( is_user_logged_in() ) {
+				$title = um_get_display_name( get_current_user_id() );
+			}
 		}
 	}
 
-
-	if( ! function_exists('utf8_decode') ){
+	if ( ! function_exists( 'utf8_decode' ) ) {
 		return $title;
 	}
 
-	return (strlen($title)!==strlen(utf8_decode($title))) ? $title : utf8_encode($title);
+	return ( strlen( $title ) !== strlen( utf8_decode( $title ) ) ) ? $title : utf8_encode( $title );
 }
 add_filter( 'the_title', 'um_dynamic_user_profile_title', 100000, 2 );
 

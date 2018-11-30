@@ -77,6 +77,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 			add_action( 'in_plugin_update_message-' . um_plugin, array( $this, 'in_plugin_update_message' ) );
 		}
 
+
 		/**
 		 * Function for major updates
 		 *
@@ -135,16 +136,30 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 
 
 		/**
+		 * @return array
+		 */
+		function get_extension_upgrades() {
+			$extensions = UM()->extensions()->get_list();
+			if ( empty( $extensions ) ) {
+				return array();
+			}
+
+			$upgrades = array();
+			foreach ( $extensions as $extension ) {
+				$upgrades[ $extension ] = UM()->extensions()->get_packages( $extension );
+			}
+
+			return $upgrades;
+		}
+
+
+		/**
 		 * Get array of necessary upgrade packages
 		 *
 		 * @return array
 		 */
 		function need_run_upgrades() {
-			$um_last_version_upgrade = get_option( 'um_last_version_upgrade' );
-			//first install
-			if ( ! $um_last_version_upgrade ) {
-				$um_last_version_upgrade = '1.3.88';
-			}
+			$um_last_version_upgrade = get_option( 'um_last_version_upgrade', '1.3.88' );
 
 			$diff_packages = array();
 

@@ -558,7 +558,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			}
 
 			// get data into one global array
-			$post_data = UM()->query()->post_data($this->form_id);
+			$post_data = UM()->query()->post_data( $this->form_id );
 
 			ob_start();
 
@@ -589,23 +589,22 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$args['template'] = '';
 			}
 
-			if (isset($post_data['template']) && $post_data['template'] != $args['template']) {
+			if ( isset( $post_data['template'] ) && $post_data['template'] != $args['template'] ) {
 				$args['template'] = $post_data['template'];
 			}
 
-			if (!$this->template_exists($args['template'])) {
+			if ( ! $this->template_exists( $args['template'] ) ) {
 				$args['template'] = $post_data['mode'];
 			}
 
-			if (!isset($post_data['template'])) {
+			if ( ! isset( $post_data['template'] ) ) {
 				$post_data['template'] = $post_data['mode'];
 			}
 
-			if( 'directory' != $args['mode'] ) {
-
+			if ( 'directory' != $args['mode'] ) {
 				$args = array_merge( $post_data, $args );
 
-				if (empty( $args['use_custom_settings'] )) {
+				if ( empty( $args['use_custom_settings'] ) ) {
 					$args = array_merge( $args, $this->get_css_args( $args ) );
 				} else {
 					$args = array_merge( $this->get_css_args( $args ), $args );
@@ -648,8 +647,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			// for profiles only
 			if ( $mode == 'profile' && um_profile_id() ) {
-				$use_custom = get_post_meta( $this->form_id, "_um_{$mode}_use_custom_settings", true );
-				if ( $use_custom ) { // Custom Form settings
+				if ( ! empty( $args['use_custom_settings'] ) ) { // Custom Form settings
 					$current_user_roles = UM()->roles()->get_all_user_roles( um_profile_id() );
 
 					//backward compatibility between single/multi role form's setting

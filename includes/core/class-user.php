@@ -1540,7 +1540,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		function is_private_profile( $user_id ) {
 			$privacy = get_user_meta( $user_id, 'profile_privacy', true );
-			if ( $privacy == __('Only me','ultimate-member') ) {
+			if ( $privacy == __('Only me','ultimate-member') || $privacy == 'Only me' ) {
 				return true;
 			}
 			return false;

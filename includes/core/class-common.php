@@ -18,8 +18,6 @@ if ( ! class_exists( 'um\core\Common' ) ) {
 		function __construct() {
 			add_action( 'init',  array( &$this, 'create_post_types' ), 1 );
 
-			add_filter( 'posts_request', array( &$this, 'um_query_pages' ) );
-
 			add_filter( 'body_class', array( &$this, 'remove_admin_bar' ), 1000, 1 );
 		}
 
@@ -109,33 +107,6 @@ if ( ! class_exists( 'um\core\Common' ) ) {
 
 			}
 
-		}
-
-
-		/**
-		 * Check query string on 'posts_request' for our pages
-		 *
-		 * @param string $q
-		 *
-		 * @return string
-		 */
-		public function um_query_pages( $q ) {
-			global $wp_query;
-
-			//We need main query
-			if ( isset( $wp_query->request ) && $q == $wp_query->request ) {
-
-				if ( ! empty( $wp_query->query_vars['um_page'] ) ) {
-
-					if ( 'api' == $wp_query->query_vars['um_page'] ) {
-						$router = new Router();
-						$router->frontend_requests();
-					}
-				}
-
-			}
-
-			return $q;
 		}
 	}
 

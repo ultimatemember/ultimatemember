@@ -481,8 +481,11 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				$global_role = $um_global_role; // Form Global settings
 			}
 
-
 			$mode = $this->form_type( $post_id );
+
+			/**
+			 * @todo WPML integration to get role from original if it's empty
+			 */
 			$use_custom = get_post_meta( $post_id, "_um_{$mode}_use_custom_settings", true );
 			if ( $use_custom ) { // Custom Form settings
 				$role = get_post_meta( $post_id, "_um_{$mode}_role", true );
