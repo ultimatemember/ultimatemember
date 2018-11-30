@@ -55,10 +55,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			ob_start();
 
 			foreach ( $this->form_data['fields'] as $field_data ) {
-				if ( isset( $field_data['type'] ) && 'hidden' == $field_data['type'] )
-					echo $this->render_form_row( $field_data );
+				if ( isset( $field_data['type'] ) && 'hidden' == $field_data['type'] ) {
+				    echo $this->render_form_row( $field_data );
+				}
 			}
-
 
 			if ( empty( $this->form_data['without_wrapper'] ) ) { ?>
 
@@ -248,14 +248,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				}
 
 			} else {
-				if ( method_exists( $this, 'render_' . $data['type'] ) ) {
-
-					$html .= call_user_func( array( &$this, 'render_' . $data['type'] ), $data );
-
-				} else {
-					$html .= $this->render_field_by_hook( $data );
-
-				}
+				$html .= $this->render_hidden( $data );
 			}
 
 			return $html;
@@ -326,7 +319,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		function render_hidden( $field_data ) {
 
 			if ( empty( $field_data['id'] ) )
-				return false;
+				return '';
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
 			$id_attr = ' id="' . $id . '" ';

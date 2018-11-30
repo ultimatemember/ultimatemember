@@ -20,14 +20,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		 * @var string
 		 */
 		var $pagehook;
+		var $slug = 'ultimatemember';
 
 
 		/**
 		 * Admin_Menu constructor.
 		 */
 		function __construct() {
-			$this->slug = 'ultimatemember';
-
 			add_action( 'admin_menu', array( &$this, 'primary_admin_menu' ), 0 );
 			add_action( 'admin_menu', array( &$this, 'secondary_menu_items' ), 1000 );
 			add_action( 'admin_menu', array( &$this, 'extension_menu' ), 9999 );

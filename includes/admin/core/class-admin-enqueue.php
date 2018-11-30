@@ -30,8 +30,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 * Admin_Enqueue constructor.
 		 */
 		function __construct() {
-			$this->slug = 'ultimatemember';
-
 			$this->js_url = um_url . 'includes/admin/assets/js/';
 			$this->css_url = um_url . 'includes/admin/assets/css/';
 
