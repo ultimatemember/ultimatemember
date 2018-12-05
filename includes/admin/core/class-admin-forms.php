@@ -31,10 +31,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		}
 
 
+		/**
+		 * Set Form Data
+		 *
+		 * @param $data
+		 *
+		 * @return $this
+		 */
 		function set_data( $data ) {
-		    $this->form_data = $data;
-		    return $this;
-        }
+			$this->form_data = $data;
+			return $this;
+		}
 
 
 		/**
@@ -46,8 +53,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 */
 		function render_form( $echo = true ) {
 
-			if ( empty( $this->form_data['fields'] ) )
+			if ( empty( $this->form_data['fields'] ) ) {
 				return '';
+			}
 
 			$class = 'form-table um-form-table ' . ( ! empty( $this->form_data['class'] ) ? $this->form_data['class'] : '' );
 			$class_attr = ' class="' . $class . '" ';
@@ -56,7 +64,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			foreach ( $this->form_data['fields'] as $field_data ) {
 				if ( isset( $field_data['type'] ) && 'hidden' == $field_data['type'] ) {
-				    echo $this->render_form_row( $field_data );
+					echo $this->render_form_row( $field_data );
 				}
 			}
 
@@ -183,7 +191,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					if ( strpos( $this->form_data['class'], 'um-top-label' ) !== false ) {
 
 						$html .= '<tr class="um-forms-line" ' . $conditional . $prefix_attr . $type_attr . '>
-                        <td>' . $this->render_field_label( $data );
+						<td>' . $this->render_field_label( $data );
 
 						if ( method_exists( $this, 'render_' . $data['type'] ) ) {
 
@@ -205,7 +213,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						if ( ! empty( $data['without_label'] ) ) {
 
 							$html .= '<tr class="um-forms-line" ' . $conditional . $prefix_attr . $type_attr . '>
-                            <td colspan="2">';
+							<td colspan="2">';
 
 							if ( method_exists( $this, 'render_' . $data['type'] ) ) {
 
@@ -225,8 +233,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						} else {
 
 							$html .= '<tr class="um-forms-line" ' . $conditional . $prefix_attr . $type_attr . '>
-                            <th>' . $this->render_field_label( $data ) . '</th>
-                            <td>';
+							<th>' . $this->render_field_label( $data ) . '</th>
+							<td>';
 
 							if ( method_exists( $this, 'render_' . $data['type'] ) ) {
 
@@ -303,7 +311,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$label = $data['label'];
 			if ( isset( $data['required'] ) && $data['required'] )
-		        $label = $label . '<span class="um-req" title="'.__('Required','ultimate-member').'">*</span>';
+				$label = $label . '<span class="um-req" title="'.__('Required','ultimate-member').'">*</span>';
 
 			$tooltip = ! empty( $data['tooltip'] ) ? UM()->tooltip( $data['tooltip'], false, false ) : '';
 
@@ -318,8 +326,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 */
 		function render_hidden( $field_data ) {
 
-			if ( empty( $field_data['id'] ) )
+			if ( empty( $field_data['id'] ) ) {
 				return '';
+			}
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
 			$id_attr = ' id="' . $id . '" ';
@@ -455,7 +464,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$value_attr = ' value="' . $value . '" ';
 
 			$html = '<a href="#" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="">' . __( 'Choose Icon', 'ultimate-member' ) . '</a>
-                <span class="um-admin-icon-value">';
+				<span class="um-admin-icon-value">';
 
 			if ( ! empty( $value ) ) {
 				$html .= '<i class="' . $value . '"></i>';
@@ -690,7 +699,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$value = $this->get_field_value( $field_data );
 
 			$html = "<input type=\"hidden\" $id_attr_hidden $name_attr value=\"0\" />
-            <input type=\"checkbox\" $id_attr $class_attr $name_attr $data_attr " . checked( $value, true, false ) . " value=\"1\" />";
+			<input type=\"checkbox\" $id_attr $class_attr $name_attr $data_attr " . checked( $value, true, false ) . " value=\"1\" />";
 
 
 			return $html;
@@ -810,8 +819,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					}
 
 					$html .= "<li class=\"um-multi-selects-option-line\"><span class=\"um-field-wrapper\">
-                        <select $id_attr $name_attr $class_attr $data_attr>$options</select></span>
-                        <span class=\"um-field-control\"><a href=\"javascript:void(0);\" class=\"um-select-delete\">" . __( 'Remove', 'ultimate-member' ) . "</a></span></li>";
+						<select $id_attr $name_attr $class_attr $data_attr>$options</select></span>
+						<span class=\"um-field-control\"><a href=\"javascript:void(0);\" class=\"um-select-delete\">" . __( 'Remove', 'ultimate-member' ) . "</a></span></li>";
 				}
 			} elseif ( ! empty( $field_data['show_default_number'] ) && is_numeric( $field_data['show_default_number'] ) && $field_data['show_default_number'] > 0 ) {
 				$i = 0;
@@ -824,8 +833,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					}
 
 					$html .= "<li class=\"um-multi-selects-option-line\"><span class=\"um-field-wrapper\">
-                        <select $id_attr $name_attr $class_attr $data_attr>$options</select></span>
-                        <span class=\"um-field-control\"><a href=\"javascript:void(0);\" class=\"um-select-delete\">" . __( 'Remove', 'ultimate-member' ) . "</a></span></li>";
+						<select $id_attr $name_attr $class_attr $data_attr>$options</select></span>
+						<span class=\"um-field-control\"><a href=\"javascript:void(0);\" class=\"um-select-delete\">" . __( 'Remove', 'ultimate-member' ) . "</a></span></li>";
 
 					$i++;
 				}
@@ -873,11 +882,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					$name_attr = ' name="' . $name . '[' . $k . ']" ';
 
 					$html .= "<label $for_attr>
-                        <input type=\"checkbox\" " . checked( in_array( $k, $values ), true, false ) . "$id_attr $name_attr value=\"1\" $class_attr>
-                        <span>$title</span>
-                    </label>";
+						<input type=\"checkbox\" " . checked( in_array( $k, $values ), true, false ) . "$id_attr $name_attr value=\"1\" $class_attr>
+						<span>$title</span>
+					</label>";
 				}
-                
+
 				$html .= '</span>';
 				$i++;
 			}
@@ -929,8 +938,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					$id_attr = ' id="' . $id . '-' . $k . '" ';
 
 					$html .= "<li class=\"um-multi-text-option-line {$size}\"><span class=\"um-field-wrapper\">
-                        <input type=\"text\" $id_attr $name_attr $class_attr $data_attr value=\"$value\" /></span>
-                        <span class=\"um-field-control\"><a href=\"javascript:void(0);\" class=\"um-text-delete\">" . __( 'Remove', 'ultimate-member' ) . "</a></span></li>";
+						<input type=\"text\" $id_attr $name_attr $class_attr $data_attr value=\"$value\" /></span>
+						<span class=\"um-field-control\"><a href=\"javascript:void(0);\" class=\"um-text-delete\">" . __( 'Remove', 'ultimate-member' ) . "</a></span></li>";
 				}
 			} elseif ( ! empty( $field_data['show_default_number'] ) && is_numeric( $field_data['show_default_number'] ) && $field_data['show_default_number'] > 0 ) {
 				$i = 0;
@@ -938,8 +947,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					$id_attr = ' id="' . $id . '-' . $i . '" ';
 
 					$html .= "<li class=\"um-multi-text-option-line {$size}\"><span class=\"um-field-wrapper\">
-                         <input type=\"text\" $id_attr $name_attr $class_attr $data_attr value=\"\" /></span>
-                        <span class=\"um-field-control\"><a href=\"javascript:void(0);\" class=\"um-text-delete\">" . __( 'Remove', 'ultimate-member' ) . "</a></span></li>";
+						 <input type=\"text\" $id_attr $name_attr $class_attr $data_attr value=\"\" /></span>
+						<span class=\"um-field-control\"><a href=\"javascript:void(0);\" class=\"um-text-delete\">" . __( 'Remove', 'ultimate-member' ) . "</a></span></li>";
 
 					$i++;
 				}
@@ -993,11 +1002,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$image_url = ! empty( $value['url'] ) ? $value['url'] : '';
 
 			$html = "<div class=\"um-media-upload\">" .
-			        "<input type=\"hidden\" class=\"um-media-upload-data-id\" name=\"{$name}[id]\" id=\"{$id}_id\" value=\"$image_id\">" .
-			        "<input type=\"hidden\" class=\"um-media-upload-data-width\" name=\"{$name}[width]\" id=\"{$id}_width\" value=\"$image_width\">" .
-			        "<input type=\"hidden\" class=\"um-media-upload-data-height\" name=\"{$name}[height]\" id=\"{$id}_height\" value=\"$image_height\">" .
-			        "<input type=\"hidden\" class=\"um-media-upload-data-thumbnail\" name=\"{$name}[thumbnail]\" id=\"{$id}_thumbnail\" value=\"$image_thumbnail\">" .
-			        "<input type=\"hidden\" $class_attr name=\"{$name}[url]\" id=\"{$id}_url\" value=\"$image_url\" $data_attr>";
+					"<input type=\"hidden\" class=\"um-media-upload-data-id\" name=\"{$name}[id]\" id=\"{$id}_id\" value=\"$image_id\">" .
+					"<input type=\"hidden\" class=\"um-media-upload-data-width\" name=\"{$name}[width]\" id=\"{$id}_width\" value=\"$image_width\">" .
+					"<input type=\"hidden\" class=\"um-media-upload-data-height\" name=\"{$name}[height]\" id=\"{$id}_height\" value=\"$image_height\">" .
+					"<input type=\"hidden\" class=\"um-media-upload-data-thumbnail\" name=\"{$name}[thumbnail]\" id=\"{$id}_thumbnail\" value=\"$image_thumbnail\">" .
+					"<input type=\"hidden\" $class_attr name=\"{$name}[url]\" id=\"{$id}_url\" value=\"$image_url\" $data_attr>";
 
 			if ( ! isset( $field_data['preview'] ) || $field_data['preview'] !== false ) {
 				$html .= '<img src="' . $image_url . '" alt="" class="icon_preview"><div style="clear:both;"></div>';
@@ -1008,7 +1017,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			}
 
 			$html .= '<input type="button" class="um-set-image button button-primary" value="' . __( 'Select', 'ultimate-member' ) . '" data-upload_frame="' . $upload_frame_title . '" />
-                    <input type="button" class="um-clear-image button" value="' . __( 'Clear', 'ultimate-member' ) . '" /></div>';
+					<input type="button" class="um-clear-image button" value="' . __( 'Clear', 'ultimate-member' ) . '" /></div>';
 
 			return $html;
 		}

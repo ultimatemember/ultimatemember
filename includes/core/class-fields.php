@@ -202,16 +202,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						unset( $condition_fields[ $key ][ $deleted_field ] );
 						unset( $condition_fields[ $key ][ 'conditional_operator' . $deleted_field_id ] );
 						unset( $condition_fields[ $key ][ 'conditional_value' . $deleted_field_id ] );
-                        unset( $condition_fields[ $key ][ 'conditional_compare' . $deleted_field_id ] );
-                        unset( $condition_fields[ $key ][ 'conditional_group' . $deleted_field_id ] );
 						unset( $condition_fields[ $key ]['conditions'][ $arr_id ] );
 
 						unset( $fields[ $key ][ 'conditional_action' . $deleted_field_id ] );
 						unset( $fields[ $key ][ $deleted_field ] );
 						unset( $fields[ $key ][ 'conditional_operator' . $deleted_field_id ] );
 						unset( $fields[ $key ][ 'conditional_value' . $deleted_field_id ] );
-                        unset( $fields[ $key ][ 'conditional_compare' . $deleted_field_id ] );
-                        unset( $fields[ $key ][ 'conditional_group' . $deleted_field_id ] );
 						unset( $fields[ $key ]['conditions'][ $arr_id ] );
 					}
 				}
@@ -262,40 +258,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$fields[$global_id][$key] = $val;
 					}
 				}
-
-                $keys = array_keys($fields);
-                $last_key = end($keys);
-                unset($fields[$last_key]['conditions']);
-                unset($fields[$last_key]['conditional_action']);
-                unset($fields[$last_key]['conditional_action1']);
-                unset($fields[$last_key]['conditional_action2']);
-                unset($fields[$last_key]['conditional_action3']);
-                unset($fields[$last_key]['conditional_action4']);
-                unset($fields[$last_key]['conditional_field']);
-                unset($fields[$last_key]['conditional_field1']);
-                unset($fields[$last_key]['conditional_field2']);
-                unset($fields[$last_key]['conditional_field3']);
-                unset($fields[$last_key]['conditional_field4']);
-                unset($fields[$last_key]['conditional_operator']);
-                unset($fields[$last_key]['conditional_operator1']);
-                unset($fields[$last_key]['conditional_operator2']);
-                unset($fields[$last_key]['conditional_operator3']);
-                unset($fields[$last_key]['conditional_operator4']);
-                unset($fields[$last_key]['conditional_value']);
-                unset($fields[$last_key]['conditional_value1']);
-                unset($fields[$last_key]['conditional_value2']);
-                unset($fields[$last_key]['conditional_value3']);
-                unset($fields[$last_key]['conditional_value4']);
-                unset($fields[$last_key]['conditional_group']);
-                unset($fields[$last_key]['conditional_group1']);
-                unset($fields[$last_key]['conditional_group2']);
-                unset($fields[$last_key]['conditional_group3']);
-                unset($fields[$last_key]['conditional_group4']);
-                unset($fields[$last_key]['conditional_compare']);
-                unset($fields[$last_key]['conditional_compare1']);
-                unset($fields[$last_key]['conditional_compare2']);
-                unset($fields[$last_key]['conditional_compare3']);
-                unset($fields[$last_key]['conditional_compare4']);
 
 				// add field to form
 				UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
@@ -1283,8 +1245,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			if (isset( $array['conditions'] ) && is_array( $array['conditions'] ) && !$this->viewing) {
 				$array['conditional'] = '';
 
-                $cond_data = json_encode($array['conditions']);
-                $array['conditional'] .= " data-conds='".$cond_data."'";
+				foreach ($array['conditions'] as $cond_id => $cond) {
+					$array['conditional'] .= ' data-cond-' . $cond_id . '-action="' . $cond[0] . '" data-cond-' . $cond_id . '-field="' . $cond[1] . '" data-cond-' . $cond_id . '-operator="' . $cond[2] . '" data-cond-' . $cond_id . '-value="' . $cond[3] . '"';
+				}
 
 				$array['classes'] .= ' um-is-conditional';
 
