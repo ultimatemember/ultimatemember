@@ -595,6 +595,14 @@ function um_new_modal( id, size, isPhoto, source ){
 
 function um_modal_responsive() {
 
+	var w = window.innerWidth
+		|| document.documentElement.clientWidth
+		|| document.body.clientWidth;
+
+	var h = window.innerHeight
+		|| document.documentElement.clientHeight
+		|| document.body.clientHeight;
+
 	var modal = jQuery('.um-modal:visible');
 	var photo_modal = jQuery('.um-modal-body.photo:visible');
 
@@ -604,8 +612,8 @@ function um_modal_responsive() {
 		modal.removeClass('uimob500');
 
 		var photo_ = jQuery('.um-modal-photo img');
-		var photo_maxw = jQuery(window).width() - 60;
-		var photo_maxh = jQuery(window).height() - ( jQuery(window).height() * 0.25 );
+		var photo_maxw = w - 60;
+		var photo_maxh = h - ( h * 0.25 );
 
 		photo_.css({'opacity': 0});
 		photo_.css({'max-width': photo_maxw });
@@ -618,44 +626,42 @@ function um_modal_responsive() {
 
 		photo_.animate({'opacity' : 1}, 1000);
 
-		var half_gap = ( jQuery(window).height() - modal.innerHeight() ) / 2 + 'px';
+		var half_gap = ( h - modal.innerHeight() ) / 2 + 'px';
 		modal.animate({ 'bottom' : half_gap }, 300);
 
 	} else if ( modal.length ) {
 
-		var element_width = jQuery(window).width();
-
 		modal.removeClass('uimob340');
 		modal.removeClass('uimob500');
 
-		if ( element_width <= 340 ) {
+		if ( w <= 340 ) {
 
 			modal.addClass('uimob340');
 			initCrop_UM();
 			modal.animate({ 'bottom' : 0 }, 300);
 
-		} else if ( element_width <= 500 ) {
+		} else if ( w <= 500 ) {
 
 			modal.addClass('uimob500');
 			initCrop_UM();
 			modal.animate({ 'bottom' : 0 }, 300);
 
-		} else if ( element_width <= 800 ) {
+		} else if ( w <= 800 ) {
 
 			initCrop_UM();
-			var half_gap = ( jQuery(window).height() - modal.innerHeight() ) / 2 + 'px';
+			var half_gap = ( h - modal.innerHeight() ) / 2 + 'px';
 			modal.animate({ 'bottom' : half_gap }, 300);
 
-		} else if ( element_width <= 960 ) {
+		} else if ( w <= 960 ) {
 
 			initCrop_UM();
-			var half_gap = ( jQuery(window).height() - modal.innerHeight() ) / 2 + 'px';
+			var half_gap = ( h - modal.innerHeight() ) / 2 + 'px';
 			modal.animate({ 'bottom' : half_gap }, 300);
 
-		} else if ( element_width > 960 ) {
+		} else if ( w > 960 ) {
 
 			initCrop_UM();
-			var half_gap = ( jQuery(window).height() - modal.innerHeight() ) / 2 + 'px';
+			var half_gap = ( h - modal.innerHeight() ) / 2 + 'px';
 			modal.animate({ 'bottom' : half_gap }, 300);
 
 		}
