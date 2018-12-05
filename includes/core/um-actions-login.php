@@ -420,7 +420,7 @@ function um_add_submit_button_to_login( $args ) {
 	<div class="um-col-alt">
 
 		<?php if ( isset( $args['show_rememberme'] ) && $args['show_rememberme'] ) {
-			echo UM()->fields()->checkbox('rememberme', __('Keep me signed in','ultimate-member') );
+			UM()->fields()->checkbox( 'rememberme', __( 'Keep me signed in', 'ultimate-member' ), false );
 			echo '<div class="um-clear"></div>';
 		} ?>
 

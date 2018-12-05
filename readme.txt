@@ -139,7 +139,15 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = 2.0.34: December , 2018 =
 
+* Enhancements:
+  - Added new "Extensions" class for future integrations
+
 * Bugfixes:
+  - Fixed modal window responsive position
+  - Fixed class autoloader for Windows servers
+  - Fixed admin forms integration
+  - Fixed empty value for select2 selectbox
+  - Fixed unchecked Remember Me by default on login page
 
 * Deprecated:
   - removed "UM_TEXTDOMAIN" constant;

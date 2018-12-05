@@ -36,15 +36,16 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @param  integer $id
 		 * @param  string  $title
+		 * @param  bool $checked
 		 */
-		function checkbox( $id, $title ) {
-			?>
+		function checkbox( $id, $title, $checked = true ) {
+			$class = $checked ? 'um-icon-android-checkbox-outline' : 'um-icon-android-checkbox-outline-blank'; ?>
 
 			<div class="um-field um-field-c">
 				<div class="um-field-area">
-					<label class="um-field-checkbox active">
-						<input type="checkbox" name="<?php echo $id; ?>" value="1" checked/>
-						<span class="um-field-checkbox-state"><i class="um-icon-android-checkbox-outline"></i></span>
+					<label class="um-field-checkbox <?php echo ( $checked ) ? 'active' : '' ?>">
+						<input type="checkbox" name="<?php echo $id; ?>" value="1" <?php checked( $checked ) ?> />
+						<span class="um-field-checkbox-state"><i class="<?php echo $class ?>"></i></span>
 						<span class="um-field-checkbox-option"> <?php echo $title; ?></span>
 					</label>
 				</div>
