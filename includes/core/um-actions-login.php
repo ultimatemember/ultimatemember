@@ -1,6 +1,4 @@
-<?php
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+<?php if ( ! defined( 'ABSPATH' ) ) exit;
 
 
 /**
@@ -101,8 +99,6 @@ add_action( 'um_submit_form_errors_hook_login', 'um_submit_form_errors_hook_logi
  * @param $args
  */
 function um_display_login_errors( $args ) {
-	$error = '';
-
 	if ( UM()->form()->count_errors() > 0 ) {
 		$errors = UM()->form()->errors;
 		// hook for other plugins to display error
@@ -340,9 +336,10 @@ add_action( 'um_submit_form_login', 'um_submit_form_login', 10 );
  */
 function um_add_submit_button_to_login( $args ) {
 	// DO NOT add when reviewing user's details
-	if ( UM()->user()->preview == true && is_admin() ) return;
+	if ( UM()->user()->preview == true && is_admin() ) {
+		return;
+	}
 
-	$primary_btn_word = $args['primary_btn_word'];
 	/**
 	 * UM hook
 	 *
@@ -365,9 +362,8 @@ function um_add_submit_button_to_login( $args ) {
 	 * }
 	 * ?>
 	 */
-	$primary_btn_word = apply_filters('um_login_form_button_one', $primary_btn_word, $args );
+	$primary_btn_word = apply_filters('um_login_form_button_one', $args['primary_btn_word'], $args );
 
-	$secondary_btn_word = $args['secondary_btn_word'];
 	/**
 	 * UM hook
 	 *
@@ -390,7 +386,7 @@ function um_add_submit_button_to_login( $args ) {
 	 * }
 	 * ?>
 	 */
-	$secondary_btn_word = apply_filters('um_login_form_button_two', $secondary_btn_word, $args );
+	$secondary_btn_word = apply_filters('um_login_form_button_two', $args['secondary_btn_word'], $args );
 
 	$secondary_btn_url = ( isset( $args['secondary_btn_url'] ) && $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page('register');
 	/**
@@ -420,18 +416,26 @@ function um_add_submit_button_to_login( $args ) {
 	<div class="um-col-alt">
 
 		<?php if ( isset( $args['show_rememberme'] ) && $args['show_rememberme'] ) {
-			UM()->fields()->checkbox( 'rememberme', __( 'Keep me signed in', 'ultimate-member' ), false );
-			echo '<div class="um-clear"></div>';
-		} ?>
+			UM()->fields()->checkbox( 'rememberme', __( 'Keep me signed in', 'ultimate-member' ), false ); ?>
+			<div class="um-clear"></div>
+		<?php }
 
-		<?php if ( isset($args['secondary_btn']) && $args['secondary_btn'] != 0 ) { ?>
+		if ( isset( $args['secondary_btn'] ) && $args['secondary_btn'] != 0 ) { ?>
 
-			<div class="um-left um-half"><input type="submit" value="<?php esc_attr_e( $primary_btn_word, 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" /></div>
-			<div class="um-right um-half"><a href="<?php echo esc_attr( $secondary_btn_url ); ?>" class="um-button um-alt"><?php esc_attr_e( $secondary_btn_word,'ultimate-member'); ?></a></div>
+			<div class="um-left um-half">
+				<input type="submit" value="<?php esc_attr_e( $primary_btn_word, 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+			</div>
+			<div class="um-right um-half">
+				<a href="<?php echo esc_attr( $secondary_btn_url ); ?>" class="um-button um-alt">
+					<?php esc_attr_e( $secondary_btn_word, 'ultimate-member' ); ?>
+				</a>
+			</div>
 
 		<?php } else { ?>
 
-			<div class="um-center"><input type="submit" value="<?php esc_attr_e( $args['primary_btn_word'],'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" /></div>
+			<div class="um-center">
+				<input type="submit" value="<?php esc_attr_e( $args['primary_btn_word'],'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+			</div>
 
 		<?php } ?>
 
@@ -450,16 +454,18 @@ add_action( 'um_after_login_fields', 'um_add_submit_button_to_login', 1000 );
  * @param $args
  */
 function um_after_login_submit( $args ) {
-	if ( $args['forgot_pass_link'] == 0 ) return;
-
-	?>
+	if ( $args['forgot_pass_link'] == 0 ) {
+		return;
+	} ?>
 
 	<div class="um-col-alt-b">
-		<a href="<?php echo um_get_core_page('password-reset'); ?>" class="um-link-alt"><?php _e('Forgot your password?','ultimate-member'); ?></a>
-		</div>
+		<a href="<?php echo um_get_core_page('password-reset'); ?>" class="um-link-alt">
+			<?php _e( 'Forgot your password?', 'ultimate-member' ); ?>
+		</a>
+	</div>
 
-		<?php
-	}
+	<?php
+}
 add_action( 'um_after_login_fields', 'um_after_login_submit', 1001 );
 
 
@@ -468,10 +474,10 @@ add_action( 'um_after_login_fields', 'um_after_login_submit', 1001 );
  *
  * @param $args
  */
-function um_add_login_fields($args){
+function um_add_login_fields( $args ) {
 	echo UM()->fields()->display( 'login', $args );
 }
-add_action('um_main_login_fields', 'um_add_login_fields', 100);
+add_action( 'um_main_login_fields', 'um_add_login_fields', 100 );
 
 
 /**
