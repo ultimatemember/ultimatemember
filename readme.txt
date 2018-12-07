@@ -137,21 +137,25 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
-= 2.0.34: December , 2018 =
+= 2.0.34: December 7, 2018 =
 
 * Enhancements:
   - Added new "Extensions" class for future integrations
 
 * Bugfixes:
+  - Fixed logout redirect vulnerability
   - Fixed modal window responsive position
   - Fixed class autoloader for Windows servers
   - Fixed admin forms integration
   - Fixed empty value for select2 selectbox
   - Fixed unchecked Remember Me by default on login page
+  - Fixed admin forms esc_attr value
+  - Fixed admin forms buttons wp_unslash
+  - Fixed get/clean plugin upgrades on multisites
 
 * Deprecated:
-  - removed "UM_TEXTDOMAIN" constant;
-  - removed function UM()->get_ajax_route();
+  - removed "UM_TEXTDOMAIN" constant
+  - removed function UM()->get_ajax_route() for AJAX vulnerability fix
 
 = 2.0.33: November 22, 2018 =
 

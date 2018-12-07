@@ -126,10 +126,15 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 				// Per site activated
 				$sites = get_sites();
 
+				$sitewide_plugins = get_site_option( 'active_sitewide_plugins' );
+				$sitewide_plugins = array_keys( $sitewide_plugins );
+
 				foreach ( $sites as $site ) {
 					switch_to_blog( $site->blog_id );
 
 					$the_plugs = get_option( 'active_plugins' );
+					$the_plugs = array_merge( $the_plugs, $sitewide_plugins );
+
 					foreach ( $the_plugs as $key => $value ) {
 
 						if ( in_array( $value, array_keys( $paid_extensions ) ) ) {

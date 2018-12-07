@@ -386,7 +386,7 @@ function um_add_submit_button_to_login( $args ) {
 	 * }
 	 * ?>
 	 */
-	$secondary_btn_word = apply_filters('um_login_form_button_two', $args['secondary_btn_word'], $args );
+	$secondary_btn_word = apply_filters( 'um_login_form_button_two', $args['secondary_btn_word'], $args );
 
 	$secondary_btn_url = ( isset( $args['secondary_btn_url'] ) && $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page('register');
 	/**
@@ -423,18 +423,18 @@ function um_add_submit_button_to_login( $args ) {
 		if ( isset( $args['secondary_btn'] ) && $args['secondary_btn'] != 0 ) { ?>
 
 			<div class="um-left um-half">
-				<input type="submit" value="<?php esc_attr_e( $primary_btn_word, 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
 			</div>
 			<div class="um-right um-half">
 				<a href="<?php echo esc_attr( $secondary_btn_url ); ?>" class="um-button um-alt">
-					<?php esc_attr_e( $secondary_btn_word, 'ultimate-member' ); ?>
+					<?php _e( wp_unslash( $secondary_btn_word ), 'ultimate-member' ); ?>
 				</a>
 			</div>
 
 		<?php } else { ?>
 
 			<div class="um-center">
-				<input type="submit" value="<?php esc_attr_e( $args['primary_btn_word'],'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
 			</div>
 
 		<?php } ?>

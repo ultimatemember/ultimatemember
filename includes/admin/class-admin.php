@@ -79,8 +79,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			if ( empty( $last_request ) || time() > $last_request + DAY_IN_SECONDS ) {
 
-				delete_transient( 'update_plugins' );
-				delete_site_transient( 'update_plugins' );
+				wp_clean_update_cache();
 
 				UM()->plugin_updater()->um_checklicenses();
 

@@ -509,7 +509,7 @@ function um_add_submit_button_to_register( $args ) {
 	 * }
 	 * ?>
 	 */
-	$secondary_btn_word = apply_filters('um_register_form_button_two', $secondary_btn_word, $args );
+	$secondary_btn_word = apply_filters( 'um_register_form_button_two', $secondary_btn_word, $args );
 
 	$secondary_btn_url = ( isset( $args['secondary_btn_url'] ) && $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page('login');
 	/**
@@ -538,14 +538,22 @@ function um_add_submit_button_to_register( $args ) {
 
 	<div class="um-col-alt">
 
-		<?php if ( isset($args['secondary_btn']) && $args['secondary_btn'] != 0 ) { ?>
+		<?php if ( isset( $args['secondary_btn'] ) && $args['secondary_btn'] != 0 ) { ?>
 
-			<div class="um-left um-half"><input type="submit" value="<?php esc_attr_e( $primary_btn_word,'ultimate-member' ) ?>" class="um-button" id="um-submit-btn" /></div>
-			<div class="um-right um-half"><a href="<?php echo esc_attr( $secondary_btn_url ); ?>" class="um-button um-alt"><?php esc_attr_e( $secondary_btn_word,'ultimate-member'); ?></a></div>
+			<div class="um-left um-half">
+				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ) ?>" class="um-button" id="um-submit-btn" />
+			</div>
+			<div class="um-right um-half">
+				<a href="<?php echo esc_attr( $secondary_btn_url ); ?>" class="um-button um-alt">
+					<?php _e( wp_unslash( $secondary_btn_word ),'ultimate-member' ); ?>
+				</a>
+			</div>
 
 		<?php } else { ?>
 
-			<div class="um-center"><input type="submit" value="<?php esc_attr_e( $primary_btn_word,'ultimate-member' ) ?>" class="um-button" id="um-submit-btn" /></div>
+			<div class="um-center">
+				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ) ?>" class="um-button" id="um-submit-btn" />
+			</div>
 
 		<?php } ?>
 

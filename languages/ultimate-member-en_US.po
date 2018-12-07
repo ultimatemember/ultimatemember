@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2018-12-05 10:54+0200\n"
-"PO-Revision-Date: 2018-12-05 10:54+0200\n"
+"POT-Creation-Date: 2018-12-07 10:26+0200\n"
+"PO-Revision-Date: 2018-12-07 10:26+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -25,53 +25,53 @@ msgstr ""
 msgid "Wrong Nonce"
 msgstr ""
 
-#: includes/admin/class-admin.php:181
+#: includes/admin/class-admin.php:180
 #, php-format
 msgid "Duplicate of %s"
 msgstr ""
 
-#: includes/admin/class-admin.php:295
+#: includes/admin/class-admin.php:294
 msgid "Docs"
 msgstr ""
 
-#: includes/admin/class-admin.php:296
+#: includes/admin/class-admin.php:295
 #: includes/admin/core/class-admin-settings.php:1128
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-admin.php:367 includes/admin/class-admin.php:370
+#: includes/admin/class-admin.php:366 includes/admin/class-admin.php:369
 msgid "Form updated."
 msgstr ""
 
-#: includes/admin/class-admin.php:368
+#: includes/admin/class-admin.php:367
 msgid "Custom field updated."
 msgstr ""
 
-#: includes/admin/class-admin.php:369
+#: includes/admin/class-admin.php:368
 msgid "Custom field deleted."
 msgstr ""
 
-#: includes/admin/class-admin.php:371
+#: includes/admin/class-admin.php:370
 msgid "Form restored to revision."
 msgstr ""
 
-#: includes/admin/class-admin.php:372
+#: includes/admin/class-admin.php:371
 msgid "Form created."
 msgstr ""
 
-#: includes/admin/class-admin.php:373
+#: includes/admin/class-admin.php:372
 msgid "Form saved."
 msgstr ""
 
-#: includes/admin/class-admin.php:374
+#: includes/admin/class-admin.php:373
 msgid "Form submitted."
 msgstr ""
 
-#: includes/admin/class-admin.php:375
+#: includes/admin/class-admin.php:374
 msgid "Form scheduled."
 msgstr ""
 
-#: includes/admin/class-admin.php:376
+#: includes/admin/class-admin.php:375
 msgid "Form draft updated."
 msgstr ""
 
@@ -103,7 +103,7 @@ msgstr ""
 #: includes/admin/core/class-admin-builder.php:767
 #: includes/admin/core/class-admin-dragdrop.php:32
 #: includes/admin/core/class-admin-menu.php:104
-#: includes/core/class-fields.php:4065
+#: includes/core/class-fields.php:4066
 msgid "Please login as administrator"
 msgstr ""
 
@@ -2514,7 +2514,7 @@ msgid "UM Action"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:116
-#: includes/core/class-fields.php:2300
+#: includes/core/class-fields.php:2301
 msgid "Apply"
 msgstr ""
 
@@ -3488,7 +3488,7 @@ msgstr ""
 #: includes/admin/templates/modal/dynamic_new_group.php:15
 #: includes/admin/templates/modal/fonticons.php:11
 #: includes/admin/templates/role/publish.php:24
-#: includes/core/class-fields.php:2301 includes/core/class-fields.php:2398
+#: includes/core/class-fields.php:2302 includes/core/class-fields.php:2399
 #: includes/core/um-actions-profile.php:554
 #: includes/core/um-actions-profile.php:693
 #: includes/core/um-actions-profile.php:726
@@ -6205,89 +6205,89 @@ msgstr ""
 msgid "Add translation to %s"
 msgstr ""
 
-#: includes/core/class-fields.php:1165 templates/message.php:5
+#: includes/core/class-fields.php:1166 templates/message.php:5
 #, php-format
 msgid "%s"
 msgstr ""
 
-#: includes/core/class-fields.php:1184
+#: includes/core/class-fields.php:1185
 msgid "Custom Field"
 msgstr ""
 
-#: includes/core/class-fields.php:1481
+#: includes/core/class-fields.php:1482
 msgid "Please upload a valid image!"
 msgstr ""
 
-#: includes/core/class-fields.php:1488 includes/core/class-fields.php:1509
+#: includes/core/class-fields.php:1489 includes/core/class-fields.php:1510
 msgid "Upload"
 msgstr ""
 
-#: includes/core/class-fields.php:1489
+#: includes/core/class-fields.php:1490
 msgid "Sorry this is not a valid image."
 msgstr ""
 
-#: includes/core/class-fields.php:1490
+#: includes/core/class-fields.php:1491
 msgid "This image is too large!"
 msgstr ""
 
-#: includes/core/class-fields.php:1491
+#: includes/core/class-fields.php:1492
 msgid "This image is too small!"
 msgstr ""
 
-#: includes/core/class-fields.php:1492
+#: includes/core/class-fields.php:1493
 msgid "You can only upload one image"
 msgstr ""
 
-#: includes/core/class-fields.php:1959
+#: includes/core/class-fields.php:1960
 msgid "Current Password"
 msgstr ""
 
-#: includes/core/class-fields.php:1988
+#: includes/core/class-fields.php:1989
 msgid "New Password"
 msgstr ""
 
-#: includes/core/class-fields.php:2020
+#: includes/core/class-fields.php:2021
 #, php-format
 msgid "Confirm %s"
 msgstr ""
 
-#: includes/core/class-fields.php:2255
+#: includes/core/class-fields.php:2256
 msgid "Upload Photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2276 includes/core/class-fields.php:2300
+#: includes/core/class-fields.php:2277 includes/core/class-fields.php:2301
 #: includes/core/um-actions-profile.php:724
 msgid "Change photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2300 includes/core/class-fields.php:2397
+#: includes/core/class-fields.php:2301 includes/core/class-fields.php:2398
 msgid "Processing..."
 msgstr ""
 
-#: includes/core/class-fields.php:2322
+#: includes/core/class-fields.php:2323
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:2364 includes/core/um-filters-fields.php:243
+#: includes/core/class-fields.php:2365 includes/core/um-filters-fields.php:243
 msgid "This file has been removed."
 msgstr ""
 
-#: includes/core/class-fields.php:2367 includes/core/class-fields.php:2397
+#: includes/core/class-fields.php:2368 includes/core/class-fields.php:2398
 msgid "Change file"
 msgstr ""
 
-#: includes/core/class-fields.php:2397
+#: includes/core/class-fields.php:2398
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:3820
+#: includes/core/class-fields.php:3821
 #, php-format
 msgid ""
 "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some "
 "information!"
 msgstr ""
 
-#: includes/core/class-fields.php:3822
+#: includes/core/class-fields.php:3823
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
@@ -6374,7 +6374,7 @@ msgid "This activation link is expired or have already been used."
 msgstr ""
 
 #. translators: %s: support forums URL
-#: includes/core/class-plugin-updater.php:220
+#: includes/core/class-plugin-updater.php:248
 #, php-format
 msgid ""
 "An unexpected error occurred. Something may be wrong with https://"
@@ -6382,7 +6382,7 @@ msgid ""
 "have problems, please try the <a href=\"%s\">support forums</a>."
 msgstr ""
 
-#: includes/core/class-plugin-updater.php:221
+#: includes/core/class-plugin-updater.php:249
 msgid "https://wordpress.org/support/"
 msgstr ""
 
@@ -6720,35 +6720,35 @@ msgstr ""
 msgid "Only fill in if you are not human"
 msgstr ""
 
-#: includes/core/um-actions-login.php:20
+#: includes/core/um-actions-login.php:18
 msgid "Please enter your username or email"
 msgstr ""
 
-#: includes/core/um-actions-login.php:24
+#: includes/core/um-actions-login.php:22
 msgid "Please enter your username"
 msgstr ""
 
-#: includes/core/um-actions-login.php:28
+#: includes/core/um-actions-login.php:26
 msgid "Please enter your email"
 msgstr ""
 
-#: includes/core/um-actions-login.php:61
+#: includes/core/um-actions-login.php:59
 msgid "Please enter your password"
 msgstr ""
 
-#: includes/core/um-actions-login.php:68
+#: includes/core/um-actions-login.php:66
 msgid "Password is incorrect. Please try again."
 msgstr ""
 
-#: includes/core/um-actions-login.php:199
+#: includes/core/um-actions-login.php:195
 msgid "This action has been prevented for security measures."
 msgstr ""
 
-#: includes/core/um-actions-login.php:423
+#: includes/core/um-actions-login.php:419
 msgid "Keep me signed in"
 msgstr ""
 
-#: includes/core/um-actions-login.php:458
+#: includes/core/um-actions-login.php:463
 msgid "Forgot your password?"
 msgstr ""
 

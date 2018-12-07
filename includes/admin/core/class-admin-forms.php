@@ -393,7 +393,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$name_attr = ' name="' . $name . '" ';
 
 			$value = $this->get_field_value( $field_data );
-			$value_attr = ' value="' . $value . '" ';
+			$value_attr = ' value="' . esc_attr( $value ) . '" ';
 
 			$html = "<input type=\"text\" $id_attr $class_attr $name_attr $data_attr $value_attr $placeholder_attr />";
 

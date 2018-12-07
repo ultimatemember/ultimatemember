@@ -1191,18 +1191,22 @@ function um_add_submit_button_to_profile( $args ) {
 
 	<div class="um-col-alt">
 
-		<?php if (isset( $args['secondary_btn'] ) && $args['secondary_btn'] != 0) { ?>
+		<?php if ( isset( $args['secondary_btn'] ) && $args['secondary_btn'] != 0 ) { ?>
 
-			<div class="um-left um-half"><input type="submit" value="<?php esc_attr_e( $args['primary_btn_word'], 'ultimate-member' ); ?>"
-			                                    class="um-button"/></div>
-			<div class="um-right um-half"><a href="<?php echo esc_attr( um_edit_my_profile_cancel_uri() ); ?>"
-			                                 class="um-button um-alt"><?php esc_attr_e( $args['secondary_btn_word'], 'ultimate-member' ); ?></a>
+			<div class="um-left um-half">
+				<input type="submit" value="<?php esc_attr_e( wp_unslash( $args['primary_btn_word'] ), 'ultimate-member' ); ?>" class="um-button" />
+			</div>
+			<div class="um-right um-half">
+				<a href="<?php echo esc_attr( um_edit_my_profile_cancel_uri() ); ?>" class="um-button um-alt">
+					<?php _e( wp_unslash( $args['secondary_btn_word'] ), 'ultimate-member' ); ?>
+				</a>
 			</div>
 
 		<?php } else { ?>
 
-			<div class="um-center"><input type="submit" value="<?php esc_attr_e( $args['primary_btn_word'], 'ultimate-member' ); ?>"
-			                              class="um-button"/></div>
+			<div class="um-center">
+				<input type="submit" value="<?php esc_attr_e( wp_unslash( $args['primary_btn_word'] ), 'ultimate-member' ); ?>" class="um-button" />
+			</div>
 
 		<?php } ?>
 
