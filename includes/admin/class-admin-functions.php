@@ -28,7 +28,7 @@ if ( ! class_exists( 'um\admin\Admin_Functions' ) ) {
 		 * @param bool $action
 		 */
 		function check_ajax_nonce( $action = false ) {
-			$nonce = isset( $_POST['nonce'] ) ? $_POST['nonce'] : '';
+			$nonce = isset( $_REQUEST['nonce'] ) ? $_REQUEST['nonce'] : '';
 			$action = empty( $action ) ? 'um-admin-nonce' : $action;
 
 			if ( ! wp_verify_nonce( $nonce, $action ) ) {

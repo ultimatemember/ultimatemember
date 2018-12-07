@@ -152,6 +152,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed admin forms esc_attr value
   - Fixed admin forms buttons wp_unslash
   - Fixed get/clean plugin upgrades on multisites
+  - Fixed verify nonce on $_GET requests
 
 * Deprecated:
   - removed "UM_TEXTDOMAIN" constant
