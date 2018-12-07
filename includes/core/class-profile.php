@@ -184,14 +184,14 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 */
 		function tabs_enabled() {
 			$tabs = $this->tabs();
-			foreach( $tabs as $id => $info ){
+			foreach ( $tabs as $id => $info ) {
 				if ( isset( $info['name'] ) ) {
-					if ( UM()->options()->get('profile_tab_'.$id) || isset( $info['_builtin'] ) ) {
-						$primary[$id] = $info['name'];
+					if ( UM()->options()->get( 'profile_tab_' . $id ) || isset( $info['_builtin'] ) ) {
+						$primary[ $id ] = $info['name'];
 					}
 				}
 			}
-			return ( isset( $primary ) ) ? $primary : '';
+			return isset( $primary ) ? $primary : '';
 		}
 
 

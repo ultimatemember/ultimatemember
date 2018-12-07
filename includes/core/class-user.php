@@ -360,7 +360,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 				} else {
 
-					//$user_in_url = sanitize_title( $user_in_url );
 					$user_in_url = urlencode( $user_in_url );
 
 				}
