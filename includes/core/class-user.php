@@ -99,9 +99,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param $user_id
 		 */
 		function delete_user_handler( $user_id ) {
-			error_log( '----------------' );
-			error_log( $user_id );
-
 			um_fetch_user( $user_id );
 
 			/**

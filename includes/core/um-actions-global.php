@@ -7,11 +7,22 @@
  * @param $args
  */
 function um_add_form_identifier( $args ) {
-	?>
-		<input type="hidden" name="form_id" id="form_id_<?php echo $args['form_id']; ?>" value="<?php echo $args['form_id']; ?>" />
+	$conditional_array = array();
+	foreach ( $args['custom_fields'] as $arg ) {
+		if ( isset( $arg['conditions'] ) ) {
+			$field_array = array(
+				'metakey'       => $arg['metakey'],
+				'conditions'    => $arg['conditions'],
+			);
+			array_push( $conditional_array, $field_array );
+		}
+	}
+	$cond_data = json_encode( $conditional_array ); ?>
+
+	<input type="hidden" name="form_id" id="form_id_<?php echo $args['form_id']; ?>" class="condition-data" value="<?php echo $args['form_id']; ?>" data-conds="<?php echo esc_attr($cond_data); ?>" />
 	<?php
 }
-add_action( 'um_after_form_fields', 'um_add_form_identifier' );
+add_action( 'um_after_form_fields', 'um_add_form_identifier', 10, 1 );
 
 
 /**
@@ -33,8 +44,8 @@ function um_add_security_checks( $args ) {
 
 	<?php
 }
-add_action( 'um_after_form_fields', 'um_add_security_checks' );
-add_action( 'um_account_page_hidden_fields', 'um_add_security_checks' );
+add_action( 'um_after_form_fields', 'um_add_security_checks', 10, 1 );
+add_action( 'um_account_page_hidden_fields', 'um_add_security_checks', 10, 1 );
 
 
 /**

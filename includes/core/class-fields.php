@@ -203,12 +203,16 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						unset( $condition_fields[ $key ][ $deleted_field ] );
 						unset( $condition_fields[ $key ][ 'conditional_operator' . $deleted_field_id ] );
 						unset( $condition_fields[ $key ][ 'conditional_value' . $deleted_field_id ] );
+						unset( $condition_fields[ $key ][ 'conditional_compare' . $deleted_field_id ] );
+						unset( $condition_fields[ $key ][ 'conditional_group' . $deleted_field_id ] );
 						unset( $condition_fields[ $key ]['conditions'][ $arr_id ] );
 
 						unset( $fields[ $key ][ 'conditional_action' . $deleted_field_id ] );
 						unset( $fields[ $key ][ $deleted_field ] );
 						unset( $fields[ $key ][ 'conditional_operator' . $deleted_field_id ] );
 						unset( $fields[ $key ][ 'conditional_value' . $deleted_field_id ] );
+						unset( $fields[ $key ][ 'conditional_compare' . $deleted_field_id ] );
+						unset( $fields[ $key ][ 'conditional_group' . $deleted_field_id ] );
 						unset( $fields[ $key ]['conditions'][ $arr_id ] );
 					}
 				}
@@ -245,19 +249,38 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
 			$field_scope = UM()->builtin()->saved_fields;
 
-			if (!isset( $fields[$global_id] )) {
+			if ( ! isset( $fields[ $global_id ] ) ) {
 
 				$count = 1;
-				if (isset( $fields ) && !empty( $fields )) $count = count( $fields ) + 1;
+				if ( !empty( $fields ) ) {
+					$count = count( $fields ) + 1;
+				}
 
-				$fields[$global_id] = $field_scope[$global_id];
-				$fields[$global_id]['position'] = $count;
+				$fields[ $global_id ] = $field_scope[ $global_id ];
+				$fields[ $global_id ]['position'] = $count;
 
 				// set position
-				if ($position) {
-					foreach ($position as $key => $val) {
-						$fields[$global_id][$key] = $val;
+				if ( $position ) {
+					foreach ( $position as $key => $val ) {
+						$fields[ $global_id ][ $key ] = $val;
 					}
+				}
+
+				$keys = array_keys( $fields );
+				$last_key = end( $keys );
+
+				unset( $fields[ $last_key ]['conditions'] );
+				for ( $i = 0; $i < 5; $i++ ) {
+					$index = '';
+					if ( $i > 0 ) {
+						$index = $i;
+					}
+					unset( $fields[ $last_key ][ 'conditional_action' . $index ] );
+					unset( $fields[ $last_key ][ 'conditional_field' . $index ] );
+					unset( $fields[ $last_key ][ 'conditional_operator' . $index ] );
+					unset( $fields[ $last_key ][ 'conditional_value' . $index ] );
+					unset( $fields[ $last_key ][ 'conditional_group' . $index ] );
+					unset( $fields[ $last_key ][ 'conditional_compare' . $index ] );
 				}
 
 				// add field to form
@@ -1220,9 +1243,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		/**
 		 * Get specific field
 		 *
-		 * @param  string $key
+		 * @param $key
 		 *
-		 * @return array
+		 * @return mixed
+		 * @throws \Exception
 		 */
 		function get_field( $key ) {
 			$fields = $this->get_fields();
@@ -1245,13 +1269,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if (isset( $array['conditions'] ) && is_array( $array['conditions'] ) && !$this->viewing) {
 				$array['conditional'] = '';
-
-				foreach ($array['conditions'] as $cond_id => $cond) {
-					$array['conditional'] .= ' data-cond-' . $cond_id . '-action="' . $cond[0] . '" data-cond-' . $cond_id . '-field="' . $cond[1] . '" data-cond-' . $cond_id . '-operator="' . $cond[2] . '" data-cond-' . $cond_id . '-value="' . $cond[3] . '"';
-				}
-
 				$array['classes'] .= ' um-is-conditional';
-
 			} else {
 				$array['conditional'] = null;
 			}
@@ -3520,11 +3538,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		/**
 		 * Gets a field in `view mode`
 		 *
-		 * @param  string  $key
-		 * @param  array   $data
-		 * @param  boolean $rule
+		 * @param $key
+		 * @param $data
+		 * @param bool $rule
 		 *
-		 * @return string
+		 * @return string|null
+		 * @throws \Exception
 		 */
 		function view_field( $key, $data, $rule = false ) {
 			$output = null;
@@ -3567,10 +3586,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			// disable these fields in profile view only
 			if ( in_array( $key, array( 'user_password' ) ) && $this->set_mode == 'profile' ) {
-				return;
-			}
-
-			if ( ! um_field_conditions_are_met( $data ) ) {
 				return;
 			}
 
@@ -3642,7 +3657,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$res = apply_filters( "um_view_field_value_{$type}", $res, $data );
 
 					$output .= '<div class="um-field-area">';
-					$output .= '<div class="um-field-value">' . $res . '</div>';
+					$output .= '<div class="um-field-value um-field-value-'.$type.'" data-type="'.$type.'">' . $res . '</div>';
 					$output .= '</div>';
 
 					$output .= '</div>';
