@@ -5,7 +5,7 @@ Contributors: ultimatemember, champsupertramp, nsinelnikov
 Donate link: 
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.7
-Tested up to: 4.9
+Tested up to: 5.0
 Stable tag: 2.0.34
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
