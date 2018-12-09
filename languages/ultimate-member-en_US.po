@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2018-12-07 18:03+0200\n"
-"PO-Revision-Date: 2018-12-07 18:04+0200\n"
+"POT-Creation-Date: 2018-12-09 15:45+0200\n"
+"PO-Revision-Date: 2018-12-09 15:45+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -249,8 +249,16 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:123
-#: includes/admin/core/class-admin-enqueue.php:157
+#: includes/admin/core/class-admin-enqueue.php:75
+msgid "e.g. Member Directory"
+msgstr ""
+
+#: includes/admin/core/class-admin-enqueue.php:77
+msgid "e.g. New Registration Form"
+msgstr ""
+
+#: includes/admin/core/class-admin-enqueue.php:122
+#: includes/admin/core/class-admin-enqueue.php:153
 #: includes/admin/core/class-admin-forms.php:823
 #: includes/admin/core/class-admin-forms.php:837
 #: includes/admin/core/class-admin-forms.php:942
@@ -260,13 +268,13 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:124
-#: includes/admin/core/class-admin-enqueue.php:158
+#: includes/admin/core/class-admin-enqueue.php:123
+#: includes/admin/core/class-admin-enqueue.php:154
 #: includes/admin/core/class-admin-forms.php:1019
 msgid "Select"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:155
+#: includes/admin/core/class-admin-enqueue.php:151
 msgid "Are sure, maybe some settings not saved"
 msgstr ""
 

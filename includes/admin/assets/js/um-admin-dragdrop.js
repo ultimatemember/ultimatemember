@@ -1,5 +1,4 @@
-function UM_Drag_and_Drop(){
-	
+function UM_Drag_and_Drop() {
 	jQuery('.um-admin-drag-col,.um-admin-drag-group').sortable({
 		items: '.um-admin-drag-fld',
 		connectWith: '.um-admin-drag-col,.um-admin-drag-group',
@@ -89,10 +88,9 @@ function UM_Drag_and_Drop(){
 
 		}
 	}).disableSelection();
-
 }
 
-function UM_update_rows(){
+function UM_update_rows() {
 	var c = 0;
 	jQuery('a[data-remove_element="um-admin-drag-row"]').remove();
 	jQuery('.um-admin-drag-row').each(function(){
@@ -279,13 +277,14 @@ function UM_Add_Icon(){
 }
 
 jQuery(document).ready(function() {
-	
-	if ( !jQuery('.um-admin-drag').length ) return false;
+	if ( !jQuery('.um-admin-drag').length ) {
+		return false;
+	}
 	
 	UM_Drag_and_Drop();
 
 	/* add field to respected area */
-	jQuery(document).on('click', 'a.um-admin-drag-add-field', function(){
+	jQuery( document.body ).on('click', 'a.um-admin-drag-add-field', function() {
 		in_row = jQuery(this).parents('.um-admin-drag-row').index();
 		in_sub_row = jQuery(this).parents('.um-admin-drag-rowsub').index();
 		if ( jQuery(this).parents('.um-admin-drag-rowsub').find('.um-admin-drag-col').length == 1 ) {
@@ -317,7 +316,7 @@ jQuery(document).ready(function() {
 	});
 	
 	/* add row */
-	jQuery(document).on('click', '*[data-row_action="add_row"]', function(){
+	jQuery(document.body).on('click', '*[data-row_action="add_row"]', function(){
 		var dragg = jQuery('.um-admin-drag-ajax');
 		dragg.append( '<div class="um-admin-drag-row">' + jQuery('.um-col-demon-row').html() + '</div>' );
 		dragg.find('.um-admin-drag-row:last').find('.um-admin-drag-row-icons').find('a.um-admin-drag-row-edit').attr('data-arg3', '_um_row_' + ( dragg.find('.um-admin-drag-row').length ) );
@@ -328,7 +327,7 @@ jQuery(document).ready(function() {
 	});
 	
 	/* add sub row */
-	jQuery(document).on('click', '*[data-row_action="add_subrow"]', function(){
+	jQuery(document.body).on('click', '*[data-row_action="add_subrow"]', function(){
 		var dragg = jQuery(this).parents('.um-admin-drag-row').find('.um-admin-drag-rowsubs');
 		dragg.append( '<div class="um-admin-drag-rowsub">' + jQuery('.um-col-demon-subrow').html() + '</div>' );
 		UM_update_subrows();
@@ -336,7 +335,7 @@ jQuery(document).ready(function() {
 	});
 	
 	/* remove element */
-	jQuery(document).on('click', 'a[data-remove_element^="um-"]',function(){
+	jQuery(document.body).on('click', 'a[data-remove_element^="um-"]',function(){
 		element = jQuery(this).data('remove_element');
 
 		jQuery(this).parents('.' +element).find('.um-admin-drag-fld').each(function(){
@@ -349,7 +348,7 @@ jQuery(document).ready(function() {
 	});
 	
 	/* dynamically change columns */
-	jQuery(document).on('click', '.um-admin-drag-ctrls.columns a', function(){
+	jQuery(document.body).on('click', '.um-admin-drag-ctrls.columns a', function(){
 		
 		var row = jQuery(this).parents('.um-admin-drag-rowsub');
 		var tab = jQuery(this);
@@ -406,5 +405,4 @@ jQuery(document).ready(function() {
 	}).promise().done( function(){ allow_update_via_col_click = true; } );
 	
 	UM_Rows_Refresh();
-
 });

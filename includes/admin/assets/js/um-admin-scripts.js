@@ -13,34 +13,9 @@ function um_init_tooltips() {
 jQuery(document).ready(function() {
 
 	/**
-	 clone a field dropdown
-	 **/
-	jQuery(document).on( 'click', '#um_add_review_love', function(e){
-		jQuery(this).parents('#um_start_review_notice').hide();
-		jQuery('.um_hidden_notice[data-key="love"]').show();
-	});
-
-	/**
-	 clone a field dropdown
-	 **/
-	jQuery(document).on( 'click', '#um_add_review_good', function(e){
-		jQuery(this).parents('#um_start_review_notice').hide();
-		jQuery('.um_hidden_notice[data-key="good"]').show();
-	});
-
-	/**
-	 clone a field dropdown
-	 **/
-	jQuery(document).on( 'click', '#um_add_review_bad', function(e){
-		jQuery(this).parents('#um_start_review_notice').hide();
-		jQuery('.um_hidden_notice[data-key="bad"]').show();
-	});
-
-
-	/**
 		clone a field dropdown
 	**/
-	jQuery(document).on('click', '.um-admin-clone', function(e){
+	jQuery(document.body).on('click', '.um-admin-clone', function(e){
 		e.preventDefault();
 		var container = jQuery(this).parents('.um-admin-field');
 		var parent = jQuery(this).parents('p').find('.um-admin-field:last-child');
@@ -59,7 +34,7 @@ jQuery(document).ready(function() {
 	/**
 		remove a field dropdown
 	**/
-	jQuery(document).on('click', '.um-admin-clone-remove', function(e){
+	jQuery(document.body).on('click', '.um-admin-clone-remove', function(e){
 		e.preventDefault();
 		var container = jQuery(this).parents('.um-admin-field');
 		jQuery('.tipsy').remove();
@@ -74,7 +49,6 @@ jQuery(document).ready(function() {
 	/**
 		Ajax link
 	**/
-	
 	jQuery('.um-admin-ajaxlink').click(function(e){
 		e.preventDefault();
 		return false;
@@ -83,8 +57,7 @@ jQuery(document).ready(function() {
 	/**
 		On/Off Buttons
 	**/
-	
-	jQuery(document).on('click', '.um-admin-yesno span.btn', function(){
+	jQuery(document.body).on('click', '.um-admin-yesno span.btn', function(){
 		if (!jQuery(this).parents('p').hasClass('disabled-on-off')){
 		if ( jQuery(this).parent().find('input[type=hidden]').val() == 0 ){
 			update_val = 1;
@@ -104,20 +77,7 @@ jQuery(document).ready(function() {
 	if ( jQuery('.um-admin-colorpicker').length ) {
 		jQuery('.um-admin-colorpicker').wpColorPicker();
 	}
-	
-/*	/!**
-		Select Dropdowns
-	**!/
-	
-	jQuery(".umaf-selectjs").select2({
-		allowClear: false,
-		minimumResultsForSearch: 10
-	});
-	
-	jQuery('.um-admin-field select').select2({
-		allowClear: true,
-		minimumResultsForSearch: 10
-	});*/
+
 	
 	/**
 		Tooltips
@@ -130,58 +90,58 @@ jQuery(document).ready(function() {
 		jQuery('.um-admin-tipsy-e').tipsy({gravity: 'e', opacity: 1, live: 'a.live' });
 		jQuery('.um-admin-tipsy-s').tipsy({gravity: 's', opacity: 1, live: 'a.live' });
 	}
+
 	
 	/**
 		Conditional fields
 	**/
-	
-	jQuery(document).on('change', '.um-adm-conditional', function(){
+	jQuery( document.body ).on('change', '.um-adm-conditional', function(){
 
-        var value;
-        if ( jQuery(this).attr("type") == 'checkbox' ) {
-            value = jQuery(this).is(':checked') ? 1 : 0;
-        } else {
-            value = jQuery(this).val();
-        }
+		var value;
+		if ( jQuery(this).attr("type") == 'checkbox' ) {
+			value = jQuery(this).is(':checked') ? 1 : 0;
+		} else {
+			value = jQuery(this).val();
+		}
 
 		if ( jQuery(this).data('cond1') ) {
-            if ( value == jQuery(this).data('cond1') ) {
-                jQuery('.' + jQuery(this).data('cond1-show') ).show();
-                jQuery('.' + jQuery(this).data('cond1-hide') ).hide();
+			if ( value == jQuery(this).data('cond1') ) {
+				jQuery('.' + jQuery(this).data('cond1-show') ).show();
+				jQuery('.' + jQuery(this).data('cond1-hide') ).hide();
 
-                if ( jQuery(this).data('cond1-show') == '_roles' ) {
-                    return false;
-                }
+				if ( jQuery(this).data('cond1-show') == '_roles' ) {
+					return false;
+				}
 
-            } else {
-                jQuery('.' + jQuery(this).data('cond1-show') ).hide();
-                jQuery('.' + jQuery(this).data('cond1-hide') ).show();
-		    }
+			} else {
+				jQuery('.' + jQuery(this).data('cond1-show') ).hide();
+				jQuery('.' + jQuery(this).data('cond1-hide') ).show();
+			}
 		}
 		
 		if ( jQuery(this).data('cond2') ) {
-            if ( value == jQuery(this).data('cond2') ) {
-                jQuery('.' + jQuery(this).data('cond2-show') ).show();
-                jQuery('.' + jQuery(this).data('cond2-hide') ).hide();
+			if ( value == jQuery(this).data('cond2') ) {
+				jQuery('.' + jQuery(this).data('cond2-show') ).show();
+				jQuery('.' + jQuery(this).data('cond2-hide') ).hide();
 
-                if ( jQuery(this).data('cond2-show') == '_roles' ) {
-                    return false;
-                }
+				if ( jQuery(this).data('cond2-show') == '_roles' ) {
+					return false;
+				}
 
-            } else {
-                jQuery('.' + jQuery(this).data('cond2-show') ).hide();
-                jQuery('.' + jQuery(this).data('cond2-hide') ).show();
-            }
+			} else {
+				jQuery('.' + jQuery(this).data('cond2-show') ).hide();
+				jQuery('.' + jQuery(this).data('cond2-hide') ).show();
+			}
 		}
 		
 		if ( jQuery(this).data('cond3') ) {
-            if ( value == jQuery(this).data('cond3') ) {
-                jQuery('.' + jQuery(this).data('cond3-show') ).show();
-                jQuery('.' + jQuery(this).data('cond3-hide') ).hide();
-            } else {
-                jQuery('.' + jQuery(this).data('cond3-show') ).hide();
-                jQuery('.' + jQuery(this).data('cond3-hide') ).show();
-            }
+			if ( value == jQuery(this).data('cond3') ) {
+				jQuery('.' + jQuery(this).data('cond3-show') ).show();
+				jQuery('.' + jQuery(this).data('cond3-hide') ).hide();
+			} else {
+				jQuery('.' + jQuery(this).data('cond3-show') ).hide();
+				jQuery('.' + jQuery(this).data('cond3-hide') ).show();
+			}
 		}
 		
 	});jQuery('.um-adm-conditional').each(function(){jQuery(this).trigger('change');});
@@ -212,11 +172,6 @@ jQuery(document).ready(function() {
 		}
 		
 	});jQuery('.um-conditional-radio-group input[type=radio]:checked').each(function(){jQuery(this).trigger('click');});
-	
-
-
-
-
 
 
 
@@ -226,19 +181,19 @@ jQuery(document).ready(function() {
 	**/
 	
 	jQuery('.um-nav-mode').each( function() {
-        if ( jQuery(this).find('select').val() == 2 ) {
-            jQuery(this).parents('.um-nav-edit').find('.um-nav-roles').show();
-        } else {
-            jQuery(this).parents('.um-nav-edit').find('.um-nav-roles').hide();
-        }
+		if ( jQuery(this).find('select').val() == 2 ) {
+			jQuery(this).parents('.um-nav-edit').find('.um-nav-roles').show();
+		} else {
+			jQuery(this).parents('.um-nav-edit').find('.um-nav-roles').hide();
+		}
 	});
 
 
-	jQuery(document).on('change', '.um-nav-mode select', function(){
-        if ( jQuery(this).val() == 2 ) {
-            jQuery(this).parents('.um-nav-edit').find('.um-nav-roles').show();
-        } else {
-            jQuery(this).parents('.um-nav-edit').find('.um-nav-roles').hide();
-        }
+	jQuery( document.body ).on('change', '.um-nav-mode select', function(){
+		if ( jQuery(this).val() == 2 ) {
+			jQuery(this).parents('.um-nav-edit').find('.um-nav-roles').show();
+		} else {
+			jQuery(this).parents('.um-nav-edit').find('.um-nav-roles').hide();
+		}
 	});
 });

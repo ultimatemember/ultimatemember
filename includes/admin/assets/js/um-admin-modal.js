@@ -1,25 +1,20 @@
 function um_admin_live_update_scripts() {
+	jQuery('.um-adm-conditional').each( function() {
+		jQuery(this).trigger('change');
+	});
 
-	/*jQuery('.um-admin-modal-body:visible select').select2({
-		allowClear: false,
-		minimumResultsForSearch: 10
-	});*/
-
-	jQuery('.um-adm-conditional').each(function(){jQuery(this).trigger('change');});
 	if ( jQuery('.um-admin-colorpicker').length ) {
 		jQuery('.um-admin-colorpicker').wpColorPicker();
 	}
-	
 }
 
-function um_admin_new_modal( id, ajax, size ){
-	
+function um_admin_new_modal( id, ajax, size ) {
 	var modal = jQuery('body').find('.um-admin-overlay');
-	
+
 	jQuery('.tipsy').hide();
-	
+
 	um_admin_remove_modal();
-		
+
 	jQuery('body').addClass('um-admin-modal-open').append('<div class="um-admin-overlay" /><div class="um-admin-modal" />');
 	jQuery('#' + id).prependTo('.um-admin-modal');
 	jQuery('#' + id).show();
@@ -34,11 +29,9 @@ function um_admin_new_modal( id, ajax, size ){
 	} else {
 		um_admin_modal_responsive();
 	}
-	
 }
 
 function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
-	
 	in_row = '';
 	in_sub_row = '';
 	in_column = '';
@@ -180,7 +173,7 @@ jQuery(document).ready(function() {
 	/**
 		disable link
 	**/
-	jQuery(document).on('click', '.um-admin-builder a, .um-admin-modal a', function(e){
+	jQuery(document.body).on('click', '.um-admin-builder a, .um-admin-modal a', function(e){
 		e.preventDefault();
 		return false;
 	});
@@ -188,7 +181,7 @@ jQuery(document).ready(function() {
 	/**
 		toggle area
 	**/
-	jQuery(document).on('click', '.um-admin-btn-toggle a', function(e){
+	jQuery(document.body).on('click', '.um-admin-btn-toggle a', function(e){
 		var content = jQuery(this).parent().find('.um-admin-btn-content');
 		var link = jQuery(this);
 		if ( content.is(':hidden') ) {
@@ -208,7 +201,7 @@ jQuery(document).ready(function() {
 	/**
 		clone a condition
 	**/
-	jQuery(document).on('click', '.um-admin-new-condition', function() {
+	jQuery(document.body).on('click', '.um-admin-new-condition', function() {
 
 		if ( jQuery(this).hasClass('disabled') )
 			return false;
@@ -252,7 +245,7 @@ jQuery(document).ready(function() {
 	/**
 		reset conditions
 	**/
-	jQuery(document).on('click', '.um-admin-reset-conditions a', function(){
+	jQuery(document.body).on('click', '.um-admin-reset-conditions a', function(){
 		var content = jQuery(this).parents('.um-admin-btn-content');
 		content.find('.um-admin-cur-condition').slice(1).remove();
 		content.find('input[type=text]').val('');
@@ -265,7 +258,7 @@ jQuery(document).ready(function() {
 	/**
 		remove a condition
 	**/
-	jQuery(document).on('click', '.um-admin-remove-condition', function(){
+	jQuery(document.body).on('click', '.um-admin-remove-condition', function(){
 		var condition = jQuery(this).parents('.um-admin-cur-condition');
 		jQuery('.um-admin-new-condition').removeClass('disabled');
 		jQuery('.tipsy').remove();
@@ -290,14 +283,14 @@ jQuery(document).ready(function() {
 	/**
 		remove modal via action
 	**/
-	jQuery(document).on('click', '.um-admin-overlay, a[data-action="UM_remove_modal"]', function(){
+	jQuery(document.body).on('click', '.um-admin-overlay, a[data-action="UM_remove_modal"]', function(){
 		um_admin_remove_modal();
 	});
 	
 	/**
 		fire new modal
 	**/
-	jQuery(document).on('click', 'a[data-modal^="UM_"], span[data-modal^="UM_"]', function(e){
+	jQuery(document.body).on('click', 'a[data-modal^="UM_"], span[data-modal^="UM_"]', function(e){
 		
 		e.preventDefault();
 
@@ -327,7 +320,7 @@ jQuery(document).ready(function() {
 	/**
 		choose font icon
 	**/
-	jQuery(document).on('click', '.um-admin-icons span', function(){
+	jQuery(document.body).on('click', '.um-admin-icons span', function(){
 		var icon = jQuery(this).attr('data-code');
 		jQuery(this).parent().find('span').removeClass('highlighted');
 		jQuery(this).addClass('highlighted');
@@ -337,7 +330,7 @@ jQuery(document).ready(function() {
 	/**
 		submit font icon
 	**/
-	jQuery(document).on('click', '#UM_fonticons a.um-admin-modal-back:not(.um-admin-modal-cancel)', function(){
+	jQuery(document.body).on('click', '#UM_fonticons a.um-admin-modal-back:not(.um-admin-modal-cancel)', function(){
 		var v_id = '';
 		var icon_selected = jQuery(this).attr('data-code');
 		if (icon_selected != ''){
@@ -359,7 +352,7 @@ jQuery(document).ready(function() {
 	/**
 		restore font icon
 	**/
-	jQuery(document).on('click', 'span.um-admin-icon-clear', function(){
+	jQuery(document.body).on('click', 'span.um-admin-icon-clear', function(){
 		var element = jQuery(this).parents('p');
 		jQuery('#UM_fonticons a.um-admin-modal-back').attr('data-code', '');
 		element.find('input[type=hidden]').val('');
@@ -374,7 +367,7 @@ jQuery(document).ready(function() {
 	/**
 		search font icons
 	**/
-	jQuery(document).on('keyup blur', '#_icon_search', function(){
+	jQuery(document.body).on('keyup blur', '#_icon_search', function(){
 		if ( jQuery(this).val().toLowerCase() != '' ) {
 			jQuery('.um-admin-icons span').hide();
 			jQuery('.um-admin-icons span[data-code*="'+jQuery(this).val().toLowerCase()+'"]').show();
@@ -388,7 +381,7 @@ jQuery(document).ready(function() {
 	/**
 	 * Retrieve options from a callback function
 	 */
-	jQuery(document).on('blur',"#_custom_dropdown_options_source", function(){
+	jQuery(document.body).on('blur',"#_custom_dropdown_options_source", function(){
         var me = jQuery(this);
         var _options = jQuery('textarea[id=_options]');
         
