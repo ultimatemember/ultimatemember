@@ -1,7 +1,7 @@
 jQuery(document).ready(function() {
 
 	/* Remove field permanently */
-	jQuery(document).on('click', '.um-admin-btns a span.remove', function(e){
+	jQuery(document.body).on('click', '.um-admin-btns a span.remove', function(e){
 		e.preventDefault();
 
 		if ( confirm( 'This will permanently delete this custom field from database' ) ) {
@@ -34,7 +34,7 @@ jQuery(document).ready(function() {
 
 
 	/* Add a Field */
-	jQuery(document).on('submit', 'form.um_add_field', function(e){
+	jQuery(document.body).on('submit', 'form.um_add_field', function(e){
 
 		e.preventDefault();
         var conditions = jQuery('.um-admin-cur-condition');
