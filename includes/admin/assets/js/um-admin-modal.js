@@ -1,4 +1,4 @@
-function um_admin_live_update_scripts() {
+function um_admin_live_update_scripts(count) {
 	var metakey = jQuery('.um-admin-modal #UM_edit_field #_metakey').val();
 
 	if ( count === 0 ) {
@@ -396,6 +396,7 @@ jQuery(document).ready(function() {
 		});
 
 		conditionwrap.find('.um-admin-new-condition-compare-and').each( function() {
+			console.log(jQuery(this).prev('.um-admin-cur-condition').length )
 			if ( jQuery(this).prev('.um-admin-cur-condition').length === 0 ) {
 				jQuery(this).remove();
 			}
