@@ -654,26 +654,26 @@ function condition_fields(template) {
 		if (jQuery.inArray('show', state_array) < 0) {
 
 			field.hide();
-			field.html('');
+			// field.html('');
 
 		} else {
 			var field_html = template.find('.um-field[data-key="' + metakey + '"]').html();
 			field.show();
 
-			if( field.html() === '' ) {
-				field.html(field_html);
-			}
-			if( field.find('select') && field.find('select').hasClass('um-s1') ) {
-				field.find('select').select2({
-					allowClear: true,
-				});
-			}
-			if( field.find('select') && field.find('select').hasClass('um-s2') ) {
-				field.find('select').select2({
-					allowClear: false,
-					minimumResultsForSearch: 10
-				});
-			}
+			// if( field.html() === '' ) {
+			// 	field.html(field_html);
+			// }
+			// if( field.find('select') && field.find('select').hasClass('um-s1') ) {
+			// 	field.find('select').select2({
+			// 		allowClear: true,
+			// 	});
+			// }
+			// if( field.find('select') && field.find('select').hasClass('um-s2') ) {
+			// 	field.find('select').select2({
+			// 		allowClear: false,
+			// 		minimumResultsForSearch: 10
+			// 	});
+			// }
 
 		}
 

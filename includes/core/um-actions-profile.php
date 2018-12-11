@@ -176,6 +176,9 @@ add_action( 'um_profile_content_main', 'um_profile_content_main' );
  * @param array $args
  */
 function um_user_edit_profile( $args ) {
+	// Remove field from conditional logic
+	$hide_array = um_field_conditions_are_met( $args );
+
 	$to_update = null;
 	$files = array();
 
@@ -218,6 +221,9 @@ function um_user_edit_profile( $args ) {
 
 	// loop through fields
 	if ( ! empty( $fields ) ) {
+		foreach ( $hide_array as $hide ){
+			unset($fields[$hide]);
+		}
 		foreach ( $fields as $key => $array ) {
 
 			if ( ! um_can_edit_field( $array ) && isset( $array['editable'] ) && ! $array['editable'] ) {
