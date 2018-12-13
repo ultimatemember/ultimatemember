@@ -106,12 +106,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 
 
 			wp_register_script( 'select2', $this->front_js_baseurl . 'select2/select2.full.min.js', array( 'jquery', 'jquery-masonry' ), ultimatemember_version, true );
-			wp_register_script( 'um-jquery-form', $this->front_js_baseurl . 'um-jquery-form' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
-			wp_register_script( 'um-fileupload', $this->front_js_baseurl . 'um-fileupload' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
+			wp_register_script( 'um_jquery_form', $this->front_js_baseurl . 'um-jquery-form' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
+			wp_register_script( 'um_fileupload', $this->front_js_baseurl . 'um-fileupload' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 			wp_register_script( 'um_crop', $this->front_js_baseurl . 'um-crop' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 			wp_register_script( 'um_tipsy', $this->front_js_baseurl . 'um-tipsy' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 			wp_register_script( 'um_functions', $this->front_js_baseurl . 'um-functions' . $this->suffix . '.js', array( 'jquery', 'um_tipsy', 'um_scrollbar' ), ultimatemember_version, true );
-			wp_register_script( 'um_scripts', $this->front_js_baseurl . 'um-scripts' . $this->suffix . '.js', array( 'um_functions', 'um_crop', 'um_raty', 'select2', 'um-jquery-form', 'um-fileupload' ), ultimatemember_version, true );
+			wp_register_script( 'um_scripts', $this->front_js_baseurl . 'um-scripts' . $this->suffix . '.js', array( 'um_functions', 'um_crop', 'um_raty', 'select2', 'um_jquery_form', 'um_fileupload' ), ultimatemember_version, true );
 			wp_register_script( 'um_responsive', $this->front_js_baseurl . 'um-responsive' . $this->suffix . '.js', array( 'um_scripts' ), ultimatemember_version, true );
 			wp_register_script( 'um_modal', $this->front_js_baseurl . 'um-modal' . $this->suffix . '.js', array( 'um_responsive' ), ultimatemember_version, true );
 

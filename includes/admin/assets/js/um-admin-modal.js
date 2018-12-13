@@ -1,3 +1,6 @@
+var $um_tiny_editor = {};
+
+
 function um_admin_live_update_scripts() {
 	jQuery('.um-adm-conditional').each( function() {
 		jQuery(this).trigger('change');
@@ -31,6 +34,57 @@ function um_admin_new_modal( id, ajax, size ) {
 	}
 }
 
+function um_tinymce_init( id, content ) {
+	var object = jQuery('#' + id);
+
+	if ( tinyMCE.get( id ) !== null ) {
+		tinyMCE.triggerSave();
+		tinyMCE.EditorManager.execCommand( 'mceRemoveEditor', true, id );
+		"4" === tinyMCE.majorVersion ? window.tinyMCE.execCommand( "mceRemoveEditor", !0, id ) : window.tinyMCE.execCommand( "mceRemoveControl", !0, id );
+		$um_tiny_editor = jQuery('<div>').append( object.parents( '#wp-' + id + '-wrap' ).clone() );
+		object.parents('#wp-' + id + '-wrap').replaceWith('<div class="um_tiny_placeholder"></div>');
+		jQuery('.um-admin-editor:visible').html( jQuery( $um_tiny_editor ).html() );
+
+		var init;
+		if( typeof tinyMCEPreInit.mceInit[ id ] == 'undefined' ){
+			init = tinyMCEPreInit.mceInit[ id ] = tinyMCE.extend( {}, tinyMCEPreInit.mceInit[ id ] );
+		} else {
+			init = tinyMCEPreInit.mceInit[ id ];
+		}
+		if ( typeof(QTags) == 'function' ) {
+			QTags( tinyMCEPreInit.qtInit[ id ] );
+			QTags._buttonsInit();
+		}
+		window.switchEditors.go( id );
+		tinyMCE.init( init );
+		tinyMCE.get( id ).setContent( content );
+		object.html( content );
+	} else {
+		$um_tiny_editor = jQuery('<div>').append( object.parents('#wp-' + id + '-wrap').clone() );
+		object.parents('#wp-' + id + '-wrap').replaceWith('<div class="um_tiny_placeholder"></div>');
+
+		jQuery('.um-admin-editor:visible').html( jQuery( $um_tiny_editor ).html() );
+
+		if ( typeof(QTags) == 'function' ) {
+			QTags( tinyMCEPreInit.qtInit[ id ] );
+			QTags._buttonsInit();
+		}
+
+		//use duplicate because it's new element
+		jQuery('#' + id).html( content );
+	}
+
+	jQuery( 'body' ).on( 'click', '.wp-switch-editor', function() {
+		var target = jQuery(this);
+
+		if ( target.hasClass( 'wp-switch-editor' ) ) {
+			var mode = target.hasClass( 'switch-tmce' ) ? 'tmce' : 'html';
+			window.switchEditors.go( id, mode );
+		}
+	});
+}
+
+
 function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 	in_row = '';
 	in_sub_row = '';
@@ -63,61 +117,29 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 			um_admin_modal_loaded();
 			um_admin_modal_responsive();
 		},
-		success: function(data){
+		success: function(data) {
 
 			jQuery('.um-admin-modal').find('.um-admin-modal-body').html( data );
-			
+
 			um_responsive();
-			
 			um_admin_live_update_scripts();
 
 			jQuery( "#_custom_dropdown_options_source" ).trigger('blur');
 
+
 			if ( jQuery('.um-admin-editor:visible').length > 0 ) {
 
 				if ( act_id == 'um_admin_edit_field_popup' ) {
-
-					tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_edit');
-					jQuery('.um-admin-editor:visible').html( jQuery('.um-hidden-editor-edit').contents() );
-					tinyMCE.execCommand('mceAddEditor', true, 'um_editor_edit');
-					
-					jQuery('.switch-html').trigger('click');
-					jQuery('.switch-html').trigger('click');
-					jQuery('.switch-tmce').trigger('click');
-					
-					jQuery('#um_editor_edit_ifr').height(200);
-
-					var editor = tinyMCE.get('um_editor_edit');
-					var content = editor.getContent();
-					editor.setContent( jQuery('.um-admin-modal:visible .dynamic-mce-content').html() );
-
+					um_tinymce_init( 'um_editor_edit', jQuery('.um-admin-modal:visible .dynamic-mce-content').html() );
 				} else {
-					if ( tinyMCE.get('um_editor_new') !== null ) {
-						tinyMCE.get('um_editor_new').setContent('');
-					} else {
-						jQuery('#um_editor_new').val('');
-					}
-
-					tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_new');
-					jQuery('.um-admin-editor:visible').html( jQuery('.um-hidden-editor-new').contents() );
-					tinyMCE.execCommand('mceAddEditor', true, 'um_editor_new');
-					
-					jQuery('.switch-html').trigger('click');
-					jQuery('.switch-html').trigger('click');
-					jQuery('.switch-tmce').trigger('click');
-					
-					jQuery('#um_editor_new_ifr').height(200);
-					if ( tinyMCE.get('um_editor_new') === null ) {
-						jQuery('#um_editor_new').show();
-					}
+					um_tinymce_init( 'um_editor_new', '' );
 				}
-				
+
 			}
 
 			um_init_tooltips();
-			
 		},
-		error: function(data){
+		error: function(data) {
 
 		}
 	});
@@ -129,26 +151,30 @@ function um_admin_modal_responsive() {
 	jQuery('.um-admin-modal:visible').css({'margin-top': '-' + required_margin });
 }
 
-function um_admin_remove_modal(){
+function um_admin_remove_modal() {
 
 	if ( jQuery('.um-admin-editor:visible').length > 0 ) {
-	
+		tinyMCE.triggerSave();
+
 		if ( jQuery('.um-admin-modal:visible').find('form').parent().attr('id') == 'UM_edit_field' ) {
-		
-			tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_edit');
+			jQuery('#wp-um_editor_edit-wrap').remove();
+
+			/*tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_edit');
 			jQuery('.um-hidden-editor-edit').html( jQuery('.um-admin-editor:visible').contents() );
-			tinyMCE.execCommand('mceAddEditor', true, 'um_editor_edit');
+			tinyMCE.execCommand('mceAddEditor', true, 'um_editor_edit');*/
 		
 		} else {
-		
-			tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_new');
+			jQuery('#wp-um_editor_new-wrap').remove();
+
+			/*tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_new');
 			jQuery('.um-hidden-editor-new').html( jQuery('.um-admin-editor:visible').contents() );
-			tinyMCE.execCommand('mceAddEditor', true, 'um_editor_new');
+			tinyMCE.execCommand('mceAddEditor', true, 'um_editor_new');*/
 		
 		}
-				
+
+		jQuery('.um_tiny_placeholder').replaceWith( jQuery( $um_tiny_editor ).html() );
 	}
-			
+
 	jQuery('body').removeClass('um-admin-modal-open');
 	jQuery('.um-admin-modal div[id^="UM_"]').hide().appendTo('body');
 	jQuery('.um-admin-modal,.um-admin-overlay').remove();
@@ -298,7 +324,6 @@ jQuery(document).ready(function() {
 		fire new modal
 	**/
 	jQuery(document.body).on('click', 'a[data-modal^="UM_"], span[data-modal^="UM_"]', function(e){
-		console.log();
 		e.preventDefault();
 
 		var modal_id = jQuery(this).attr('data-modal');

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2018-12-09 15:45+0200\n"
-"PO-Revision-Date: 2018-12-09 15:45+0200\n"
+"POT-Creation-Date: 2018-12-13 17:43+0200\n"
+"PO-Revision-Date: 2018-12-13 17:43+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -249,16 +249,16 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:75
+#: includes/admin/core/class-admin-enqueue.php:157
 msgid "e.g. Member Directory"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:77
+#: includes/admin/core/class-admin-enqueue.php:159
 msgid "e.g. New Registration Form"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:122
-#: includes/admin/core/class-admin-enqueue.php:153
+#: includes/admin/core/class-admin-enqueue.php:204
+#: includes/admin/core/class-admin-enqueue.php:235
 #: includes/admin/core/class-admin-forms.php:823
 #: includes/admin/core/class-admin-forms.php:837
 #: includes/admin/core/class-admin-forms.php:942
@@ -268,13 +268,13 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:123
-#: includes/admin/core/class-admin-enqueue.php:154
+#: includes/admin/core/class-admin-enqueue.php:205
+#: includes/admin/core/class-admin-enqueue.php:236
 #: includes/admin/core/class-admin-forms.php:1019
 msgid "Select"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:151
+#: includes/admin/core/class-admin-enqueue.php:233
 msgid "Are sure, maybe some settings not saved"
 msgstr ""
 
@@ -1224,7 +1224,8 @@ msgid ""
 "Thanks for installing <strong>%s</strong>! We hope you like the plugin. To "
 "fund full-time development and support of the plugin we also sell "
 "extensions. If you subscribe to our mailing list we will send you a 20%% "
-"discount code for our <a href=\"%s\" target=\"_blank\">extensions bundle</a>."
+"discount code for one of our <a href=\"%s\" target=\"_blank\">access passes</"
+"a>."
 msgstr ""
 
 #: includes/admin/core/class-admin-notices.php:498
