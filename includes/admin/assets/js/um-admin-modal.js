@@ -92,7 +92,12 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 					editor.setContent( jQuery('.um-admin-modal:visible .dynamic-mce-content').html() );
 
 				} else {
-                    tinyMCE.get('um_editor_new').setContent('');
+					if ( tinyMCE.get('um_editor_new') !== null ) {
+						tinyMCE.get('um_editor_new').setContent('');
+					} else {
+						jQuery('#um_editor_new').val('');
+					}
+
 					tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_new');
 					jQuery('.um-admin-editor:visible').html( jQuery('.um-hidden-editor-new').contents() );
 					tinyMCE.execCommand('mceAddEditor', true, 'um_editor_new');
@@ -102,7 +107,9 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 					jQuery('.switch-tmce').trigger('click');
 					
 					jQuery('#um_editor_new_ifr').height(200);
-					
+					if ( tinyMCE.get('um_editor_new') === null ) {
+						jQuery('#um_editor_new').show();
+					}
 				}
 				
 			}
@@ -291,7 +298,7 @@ jQuery(document).ready(function() {
 		fire new modal
 	**/
 	jQuery(document.body).on('click', 'a[data-modal^="UM_"], span[data-modal^="UM_"]', function(e){
-		
+		console.log();
 		e.preventDefault();
 
 		var modal_id = jQuery(this).attr('data-modal');
