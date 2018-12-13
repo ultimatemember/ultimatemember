@@ -19,10 +19,8 @@ jQuery(document).ready( function() {
 
 		var selector_html = jQuery( '<div>' ).append( list.siblings('.um-hidden-multi-selects').clone() ).html();
 
-		var classes = list.find('li:last').attr('class');
-
 		list.append(
-			'<li class="' + classes + '"><span class="um-field-wrapper">' + selector_html +
+			'<li class="um-multi-selects-option-line"><span class="um-field-wrapper">' + selector_html +
 			'</span><span class="um-field-control"><a href="javascript:void(0);" class="um-select-delete">' + php_data.texts.remove + '</a></span></li>'
 		);
 

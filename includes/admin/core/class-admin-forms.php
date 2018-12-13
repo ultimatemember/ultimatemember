@@ -774,8 +774,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 */
 		function render_multi_selects( $field_data ) {
 
-			if ( empty( $field_data['id'] ) )
+			if ( empty( $field_data['id'] ) ) {
 				return false;
+			}
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
 
@@ -801,7 +802,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$values = $this->get_field_value( $field_data );
 
 			$options = '';
-			foreach ( $field_data['options'] as $key=>$option ) {
+			foreach ( $field_data['options'] as $key => $option ) {
 				$options .= '<option value="' . $key . '">' . $option . '</option>';
 			}
 
@@ -809,12 +810,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$html .= "<ul class=\"um-multi-selects-list\" $data_attr>";
 
 			if ( ! empty( $values ) ) {
-				foreach ( $values as $k=>$value ) {
+				foreach ( $values as $k => $value ) {
+
+					if ( ! in_array( $value, array_keys( $field_data['options'] ) ) ) {
+						continue ;
+					}
 
 					$id_attr = ' id="' . $id . '-' . $k . '" ';
 
 					$options = '';
-					foreach ( $field_data['options'] as $key=>$option ) {
+					foreach ( $field_data['options'] as $key => $option ) {
 						$options .= '<option value="' . $key . '" ' . selected( $key == $value, true, false ) . '>' . $option . '</option>';
 					}
 
@@ -824,11 +829,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				}
 			} elseif ( ! empty( $field_data['show_default_number'] ) && is_numeric( $field_data['show_default_number'] ) && $field_data['show_default_number'] > 0 ) {
 				$i = 0;
-				while( $i < $field_data['show_default_number'] ) {
+				while ( $i < $field_data['show_default_number'] ) {
 					$id_attr = ' id="' . $id . '-' . $i . '" ';
 
 					$options = '';
-					foreach ( $field_data['options'] as $key=>$option ) {
+					foreach ( $field_data['options'] as $key => $option ) {
 						$options .= '<option value="' . $key . '">' . $option . '</option>';
 					}
 
