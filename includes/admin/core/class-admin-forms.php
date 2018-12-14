@@ -809,7 +809,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$html = "<select class=\"um-hidden-multi-selects\" $data_attr>$options</select>";
 			$html .= "<ul class=\"um-multi-selects-list\" $data_attr>";
 
-			if ( ! empty( $values ) ) {
+			if ( ! empty( $values ) && is_array( $values ) ) {
 				foreach ( $values as $k => $value ) {
 
 					if ( ! in_array( $value, array_keys( $field_data['options'] ) ) ) {
@@ -1137,12 +1137,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 */
 		function get_field_value( $field_data, $i = '' ) {
 			$default = ( $field_data['type'] == 'multi_checkbox' ) ? array() : '';
-			$default = isset( $field_data['default' . $i] ) ? $field_data['default' . $i] : $default;
+			$default = isset( $field_data[ 'default' . $i ] ) ? $field_data[ 'default' . $i ] : $default;
 
 			if ( $field_data['type'] == 'checkbox' || $field_data['type'] == 'multi_checkbox' ) {
-				$value = ( isset( $field_data['value' . $i] ) && '' !== $field_data['value' . $i] ) ? $field_data['value' . $i] : $default;
+				$value = ( isset( $field_data[ 'value' . $i ] ) && '' !== $field_data[ 'value' . $i ] ) ? $field_data[ 'value' . $i ] : $default;
 			} else {
-				$value = isset( $field_data['value' . $i] ) ? $field_data['value' . $i] : $default;
+				$value = isset( $field_data[ 'value' . $i ] ) ? $field_data[ 'value' . $i ] : $default;
 			}
 
 			$value = is_string( $value ) ? stripslashes( $value ) : $value;
