@@ -8,6 +8,7 @@
 
 	$post_id = get_the_ID();
 	$_um_search_fields = get_post_meta( $post_id, '_um_profile_metafields', true );
+	$_um_search_fields = empty( $_um_search_fields ) ? array() : $_um_search_fields;
 
 	UM()->admin_forms( array(
 		'class'     => 'um-form-profile-settings um-top-label',
@@ -21,7 +22,7 @@
 				'value'                 => $_um_search_fields,
 				'options'               => $user_fields,
 				'add_text'              => __( 'Add New Field', 'ultimate-member' ),
-				'show_default_number'   => 1,
+				'show_default_number'   => 0,
 			)
 		)
 	) )->render_form(); ?>
