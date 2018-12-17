@@ -1,7 +1,7 @@
 jQuery(document).ready(function ($) {
 	var template = wp.template( 'um-nav-menus-fields' );
 
-	$( document.body ).on( 'menu-item-added', function ( e, $menuMarkup ) {
+	$( document ).on( 'menu-item-added', function ( e, $menuMarkup ) {
 		var id = $( $menuMarkup ).attr('id').substr(10);
 
 		var template_content = template({
