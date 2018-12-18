@@ -310,7 +310,7 @@ function um_field_conditions_are_met( $data ) {
         $field = um_profile($arr[1]);
 
 
-        if( $arr[5] != $first_group ){
+        if( ! isset( $arr[5] ) || $arr[5] != $first_group ){
 
 
             if ($arr[0] == 'show') {
