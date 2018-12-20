@@ -953,7 +953,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 * @param $submitted
 		 */
-		function set_registration_details( $submitted ) {
+		function set_registration_details( $submitted, $args ) {
 
 			if ( isset( $submitted['user_pass'] ) ) {
 				unset( $submitted['user_pass'] );
@@ -1026,6 +1026,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 */
 			do_action( 'um_before_save_registration_details', $this->id, $submitted );
 
+			$hide_array = um_field_conditions_are_met( $args );
+			foreach ( $hide_array as $hide ){
+				unset($submitted[$hide]);
+			}
 			update_user_meta( $this->id, 'submitted', $submitted );
 
 			$this->update_profile( $submitted );

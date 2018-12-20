@@ -79,6 +79,7 @@ function condition_fields(template) {
 
 					switch (op) {
 						case 'equals to':
+							console.log('sss')
 							if (depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
 									if (this == val) {
@@ -652,29 +653,9 @@ function condition_fields(template) {
 		var field = jQuery('.um-field[data-key="' + metakey + '"]');
 
 		if (jQuery.inArray('show', state_array) < 0) {
-
 			field.hide();
-			// field.html('');
-
 		} else {
-			var field_html = template.find('.um-field[data-key="' + metakey + '"]').html();
 			field.show();
-
-			// if( field.html() === '' ) {
-			// 	field.html(field_html);
-			// }
-			// if( field.find('select') && field.find('select').hasClass('um-s1') ) {
-			// 	field.find('select').select2({
-			// 		allowClear: true,
-			// 	});
-			// }
-			// if( field.find('select') && field.find('select').hasClass('um-s2') ) {
-			// 	field.find('select').select2({
-			// 		allowClear: false,
-			// 		minimumResultsForSearch: 10
-			// 	});
-			// }
-
 		}
 
 	});

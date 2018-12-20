@@ -56,7 +56,7 @@ function um_after_insert_user( $user_id, $args ) {
 
 	um_fetch_user( $user_id );
 	if ( ! empty( $args['submitted'] ) ) {
-		UM()->user()->set_registration_details( $args['submitted'] );
+		UM()->user()->set_registration_details( $args['submitted'], $args );
 	}
     UM()->user()->set_status( um_user( 'status' ) );
 

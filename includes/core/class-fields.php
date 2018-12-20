@@ -940,7 +940,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$data['default'] = explode( ', ', $data['default'] );
 					}
 
-					if ( isset( $data['default'] ) && ! is_array( $data['default'] ) && $data['default'] === $value ) {
+					if (isset($data['default']) && !is_array($data['default']) && $data['default'] === $value) {
 						return true;
 					}
 
@@ -2681,7 +2681,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$output .= '<option value="' . $option_value . '" ';
 
 							if ( $this->is_selected( $form_key, $option_value, $data ) ) {
-								$output .= 'selected';
+								if( $data['default'] != $option_value ){
+									$output .= 'selected';
+								}
 								$field_value = $option_value;
 							} elseif ( ! isset( $options_pair ) && $this->is_selected( $form_key, $v, $data ) ) {
 								$output .= 'selected';
