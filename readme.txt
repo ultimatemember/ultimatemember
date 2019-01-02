@@ -142,6 +142,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed Add New Menu Item handler
   - Fixed small notices at frontend
   - Fixed a few admin settings fields
+  - Fixed displaying comments when they are disabled
   - Added compatibility for upcoming User Events extension
 
 = 2.0.35: December 9, 2018 =
