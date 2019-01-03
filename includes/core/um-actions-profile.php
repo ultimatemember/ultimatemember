@@ -221,9 +221,11 @@ function um_user_edit_profile( $args ) {
 
 	// loop through fields
 	if ( ! empty( $fields ) ) {
+
 		foreach ( $hide_array as $hide ){
 			unset($fields[$hide]);
 		}
+
 		foreach ( $fields as $key => $array ) {
 
 			if ( ! um_can_edit_field( $array ) && isset( $array['editable'] ) && ! $array['editable'] ) {

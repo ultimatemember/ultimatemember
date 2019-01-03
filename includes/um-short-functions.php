@@ -299,7 +299,11 @@ function um_field_conditions_are_met( $args ) {
 
 	foreach ( $arrays as $array ) {
 		if (isset($array['conditions'])) {
-			$state = ( $array['conditional_action'] == 'show' ) ? 1 : 0;
+			if( isset($array['conditional_action']) && $array['conditional_action'] == 'show' ){
+				$state = 'show';
+			} else {
+				$state = 'hide';
+			}
 			foreach ($array['conditions'] as $k => $arr){
 				$field_name = $arr[1].'-'.$form_id;
 				$val = $arr[3];
@@ -335,12 +339,21 @@ function um_field_conditions_are_met( $args ) {
 								break;
 							case 'empty':
 
-								$state = ( !$field ) ? 'show' : 'hide';
+								if ( !isset($field) ){
+									$state = 'show';
+								} elseif (isset($field)) {
+									$state = 'hide';
+								}
+
 
 								break;
 							case 'not empty':
 
-								$state = ( $field ) ? 'show' : 'hide';
+								if ( !isset($field) ){
+									$state = 'hide';
+								} elseif (isset($field)) {
+									$state = 'show';
+								}
 
 								break;
 							case 'greater than':
@@ -390,12 +403,20 @@ function um_field_conditions_are_met( $args ) {
 								break;
 							case 'empty':
 
-								$state = ( !$field ) ? 'hide' : 'show';
+								if ( !isset($field) ){
+									$state = 'hide';
+								} elseif (isset($field)) {
+									$state = 'show';
+								}
 
 								break;
 							case 'not empty':
 
-								$state = ( $field ) ? 'hide' : 'show';
+								if ( !isset($field) ){
+									$state = 'show';
+								} elseif (isset($field)) {
+									$state = 'hide';
+								}
 
 								break;
 							case 'greater than':
@@ -450,12 +471,20 @@ function um_field_conditions_are_met( $args ) {
 								break;
 							case 'empty':
 
-								$state = ( !$field ) ? 'show' : 'not_show';
+								if ( !isset($field) ){
+									$state = 'show';
+								} elseif (isset($field)) {
+									$state = 'not_show';
+								}
 
 								break;
 							case 'not empty':
 
-								$state = ( $field ) ? 'show': 'not_show';
+								if ( !isset($field) ){
+									$state = 'not_show';
+								} elseif (isset($field)) {
+									$state = 'show';
+								}
 
 								break;
 							case 'greater than':
@@ -505,12 +534,20 @@ function um_field_conditions_are_met( $args ) {
 								break;
 							case 'empty':
 
-								$state = ( !$field ) ? 'hide' : 'not_hide';
+								if ( !isset($field) ){
+									$state = 'hide';
+								} elseif (isset($field)) {
+									$state = 'not_hide';
+								}
 
 								break;
 							case 'not empty':
 
-								$state = ( $field ) ? 'hide' : 'not_hide';
+								if ( !isset($field) ){
+									$state = 'not_hide';
+								} elseif (isset($field)) {
+									$state = 'hide';
+								}
 
 								break;
 							case 'greater than':

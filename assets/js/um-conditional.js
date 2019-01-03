@@ -1,5 +1,4 @@
-
-function condition_fields(template) {
+function condition_fields() {
 	var all_conds = jQuery('.condition-data').attr('data-conds');
 	var array = JSON.parse(all_conds);
 
@@ -79,12 +78,11 @@ function condition_fields(template) {
 
 					switch (op) {
 						case 'equals to':
-							console.log('sss')
+
 							if (depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
 									if (this == val) {
 										state = 'show';
-										return false;
 									} else {
 										state = 'hide';
 									}
@@ -96,6 +94,7 @@ function condition_fields(template) {
 									state = 'hide';
 								}
 							}
+
 							break;
 
 						case 'not equals':
@@ -116,6 +115,7 @@ function condition_fields(template) {
 									state = 'hide';
 								}
 							}
+
 							break;
 
 						case 'empty':
@@ -125,6 +125,7 @@ function condition_fields(template) {
 							} else {
 								state = 'hide';
 							}
+
 							break;
 
 						case 'not empty':
@@ -134,6 +135,7 @@ function condition_fields(template) {
 							} else {
 								state = 'hide';
 							}
+
 							break;
 
 						case 'greater than':
@@ -210,6 +212,7 @@ function condition_fields(template) {
 									state = 'hide';
 								}
 							}
+
 							break;
 
 					}
@@ -227,7 +230,6 @@ function condition_fields(template) {
 									state = 'show';
 								}
 							}
-
 
 							break;
 
@@ -252,6 +254,7 @@ function condition_fields(template) {
 							} else {
 								state = 'show';
 							}
+
 							break;
 
 						case 'not empty':
@@ -261,6 +264,7 @@ function condition_fields(template) {
 							} else {
 								state = 'show';
 							}
+
 							break;
 
 						case 'greater than':
@@ -491,6 +495,7 @@ function condition_fields(template) {
 									state = 'not_show';
 								}
 							}
+
 							break;
 
 					}
@@ -646,39 +651,76 @@ function condition_fields(template) {
 					}
 				}
 			}
+
 		});
 
 
 
 		var field = jQuery('.um-field[data-key="' + metakey + '"]');
 
-		if (jQuery.inArray('show', state_array) < 0) {
-			field.hide();
+
+		if(jQuery.inArray('full_hide', state_array) < 0){
+			if (jQuery.inArray('show', state_array) < 0) {
+				field.hide();
+				field.find('input, textarea').attr('disabled', 'disabled').attr('readonly','readonly');
+			} else {
+				field.show();
+				field.find('input, textarea').removeAttr('disabled').removeAttr('readonly');
+			}
 		} else {
-			field.show();
+			field.hide();
+			field.find('input, textarea').attr('disabled', 'disabled').attr('readonly','readonly');
 		}
+
 
 	});
 }
 
-jQuery(document).ready(function () {
-	var template = jQuery('.um-form form').clone();
+function check_parent() {
+	var all_conds = jQuery('.condition-data').attr('data-conds');
+	var array = JSON.parse(all_conds);
 
-	condition_fields(template);
+	jQuery.each(array, function () {
+		var metakey = this.metakey;
+
+		jQuery.each(this.conditions, function () {
+			var field = this[1];
+			var check_field = jQuery('.um-field[data-key="' + field + '"]').is(':visible');
+			var check = jQuery('.um-field[data-key="' + metakey + '"]');
+
+			if( check_field === false ){
+				check.hide();
+				check.find('input, textarea').attr('disabled', 'disabled').attr('readonly','readonly');
+				return false;
+			}
+
+		});
+	});
+}
+
+jQuery(document).ready(function () {
+
+	condition_fields();
+	check_parent();
 
 	jQuery('.um-field input, .um-field textarea').on('change keyup', function () {
-		condition_fields(template);
+		condition_fields();
+		check_parent();
 	});
 	jQuery(document).on('click','.um-modal .um-finish-upload', function () {
-		condition_fields(template);
+		condition_fields();
+		check_parent();
 	});
 	jQuery(document).on('click','.um-field-area .cancel', function () {
 		setTimeout(function () {
-			condition_fields(template);
+			condition_fields();
+			check_parent();
 		})
 	});
 	jQuery('.um-field select').on('change', function () {
-		condition_fields(template);
+		condition_fields();
+		check_parent();
 	});
+
 
 });

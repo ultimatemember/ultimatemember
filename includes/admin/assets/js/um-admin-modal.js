@@ -413,6 +413,10 @@ jQuery(document).ready(function() {
 		if ( count_button.length === 0 ) {
 			jQuery('.um-admin-new-condition-compare-or').before( and_button_clone );
 		}
+		if( count_button.length === 1 ) {
+			count_button.removeClass('for-remove-on-reset');
+		}
+
 
 		um_admin_live_update_scripts();
 		um_admin_modal_responsive();
