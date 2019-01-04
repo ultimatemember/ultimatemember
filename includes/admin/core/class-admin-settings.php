@@ -1,8 +1,10 @@
 <?php
 namespace um\admin\core;
 
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
@@ -524,10 +526,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									'conditional'		=> array( 'accessible', '=', 2 ),
 								),
 								array(
-									'id'       		=> 'restricted_access_message',
-									'type'     		=> 'wp_editor',
-									'label'   		=> __( 'Restricted Access Message','ultimate-member' ),
+									'id'        => 'restricted_access_message',
+									'type'      => 'wp_editor',
+									'label'     => __( 'Restricted Access Message','ultimate-member' ),
 									'tooltip'   => __( 'This is the message shown to users that do not have permission to view the content','ultimate-member' ),
+								),
+								array(
+									'id'        => 'restricted_block_message',
+									'type'      => 'textarea',
+									'label'     => __( 'Restricted Block Message', 'ultimate-member' ),
+									'tooltip'   => __( 'This is the message shown to users that do not have permission to view the block\'s content', 'ultimate-member' ),
 								),
 								array(
 									'id'       		=> 'restricted_access_post_metabox',

@@ -69,6 +69,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			/* Disable comments if user has not permission to access current post */
 			add_filter( 'comments_open', array( $this, 'disable_comments_open' ), 99, 2 );
 			add_filter( 'get_comments_number', array( $this, 'disable_comments_open_number' ), 99, 2 );
+
+			add_filter( 'render_block', array( $this, 'restrict_blocks' ), 10, 2 );
 		}
 
 
@@ -1153,5 +1155,83 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 			return $filtered_items;
 		}
+
+
+		/**
+		 * @param $block_content
+		 * @param $block
+		 *
+		 * @return string
+		 */
+		function restrict_blocks( $block_content, $block ) {
+			if ( is_admin() ) {
+				return $block_content;
+			}
+
+			if ( is_user_logged_in() && current_user_can( 'administrator' ) ) {
+				return $block_content;
+			}
+
+			if ( $block['attrs']['um_is_restrict'] !== true ) {
+				return $block_content;
+			}
+
+			if ( empty( $block['attrs']['um_who_access'] ) ) {
+				return $block_content;
+			}
+
+			$default_message = UM()->options()->get( 'restricted_block_message' );
+			switch ( $block['attrs']['um_who_access'] ) {
+				case '1': {
+					if ( ! is_user_logged_in() ) {
+						$block_content = '';
+						if ( isset( $block['attrs']['um_message_type'] ) ) {
+							if ( $block['attrs']['um_message_type'] == '0' ) {
+								$block_content = $default_message;
+							} elseif ( $block['attrs']['um_message_type'] == '1' ) {
+								$block_content = $block['attrs']['um_message_content'];
+							}
+						}
+					} else {
+						if ( ! empty( $block['attrs']['um_roles_access'] ) ) {
+							$display = false;
+							foreach ( $block['attrs']['um_roles_access'] as $role ) {
+								if ( current_user_can( $role ) ) {
+									$display = true;
+								}
+							}
+
+							if ( ! $display ) {
+								$block_content = '';
+								if ( isset( $block['attrs']['um_message_type'] ) ) {
+									if ( $block['attrs']['um_message_type'] == '0' ) {
+										$block_content = $default_message;
+									} elseif ( $block['attrs']['um_message_type'] == '1' ) {
+										$block_content = $block['attrs']['um_message_content'];
+									}
+								}
+							}
+						}
+					}
+					break;
+				}
+				case '2': {
+					if ( is_user_logged_in() ) {
+						$block_content = '';
+						if ( isset( $block['attrs']['um_message_type'] ) ) {
+							if ( $block['attrs']['um_message_type'] == '0' ) {
+								$block_content = $default_message;
+							} elseif ( $block['attrs']['um_message_type'] == '1' ) {
+								$block_content = $block['attrs']['um_message_content'];
+							}
+						}
+					}
+					break;
+				}
+			}
+
+			return $block_content;
+		}
+
 	}
 }

@@ -51,6 +51,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 */
 		var $um_cpt_form_screen;
 
+
+		/**
+		 * @var bool
+		 */
+		var $post_page;
+
+
 		/**
 		 * Admin_Enqueue constructor.
 		 */
@@ -91,6 +98,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			if ( ( isset( $_GET['post_type'] ) && 'um_form' == $_GET['post_type'] ) || ( isset( $_GET['post'] ) && 'um_form' == get_post_type( $_GET['post'] ) ) ) {
 				$this->um_cpt_form_screen = true;
 			}
+
+			$this->post_page = true;
 		}
 
 
@@ -381,6 +390,29 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 
 
 		/**
+		 * Load Gutenberg scripts
+		 */
+		function load_gutenberg_js() {
+			wp_register_script( 'um_block_js', $this->js_url . 'um-admin-blocks.js', array( 'wp-i18n', 'wp-blocks', 'wp-editor', 'wp-components' ), ultimatemember_version, true );
+			wp_set_script_translations( 'um_block_js', 'ultimate-member' );
+
+			$restrict_options = array();
+			$roles = UM()->roles()->get_roles( false, array( 'administrator' ) );
+			if ( ! empty( $roles ) ) {
+				foreach ( $roles as $role_key => $title ) {
+					$restrict_options[] = array(
+						'label' => $title,
+						'value' => $role_key
+					);
+				}
+			}
+			wp_localize_script( 'um_block_js', 'um_restrict_roles', $restrict_options );
+
+			wp_enqueue_script( 'um_block_js' );
+		}
+
+
+		/**
 		 * Load localize scripts
 		 */
 		function load_localize_scripts() {
@@ -470,6 +502,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 				$this->load_global_scripts();
 				$this->load_localize_scripts();
 
+			}
+
+			global $wp_version;
+			if ( version_compare( $wp_version, '5.0', '>=' ) && ! empty( $this->post_page ) ) {
+				$this->load_gutenberg_js();
 			}
 
 		}

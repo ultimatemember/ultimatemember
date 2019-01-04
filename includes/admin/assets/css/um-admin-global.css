@@ -199,6 +199,8 @@ a.um-delete{ color: #a00; }
 	margin-bottom: 2px !important;
 }
 
-.um_hidden_notice {
+.um_hidden_notice,
+.um_block_settings_hide {
 	display: none;
 }
+
