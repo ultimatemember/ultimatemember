@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined( 'ABSPATH' ) ) exit;
+
 $premium['bbpress'] = array(
 	'url' => 'https://ultimatemember.com/extensions/bbpress/',
 	'image' => 'https://ultimatemember.com/wp-content/uploads/edd/2017/05/bbpress.png',

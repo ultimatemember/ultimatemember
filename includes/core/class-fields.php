@@ -1119,8 +1119,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if ( in_array( $type, array( 'select', 'multiselect' ) ) && isset( $data['custom_dropdown_options_source'] ) && ! empty( $data['custom_dropdown_options_source'] ) ) {
 
-				$arr_options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
-
+				if ( function_exists( $data['custom_dropdown_options_source'] ) ) {
+					$arr_options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+				}
 
 			}
 

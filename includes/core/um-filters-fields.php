@@ -204,7 +204,7 @@ add_filter( 'um_profile_field_filter_hook__time', 'um_profile_field_filter_hook_
  * @return string
  */
 function um_profile_field_filter_hook__date( $value, $data ) {
-	if ( $data['pretty_format'] == 1 ) {
+	if ( isset( $data['pretty_format'] ) && $data['pretty_format'] == 1 ) {
 		$value = UM()->datetime()->get_age( $value );
 	} else {
 		$value = date_i18n( $data['format'], strtotime( $value ) );

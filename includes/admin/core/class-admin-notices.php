@@ -491,7 +491,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			ob_start(); ?>
 
 			<p>
-				<?php printf( __( 'Thanks for installing <strong>%s</strong>! We hope you like the plugin. To fund full-time development and support of the plugin we also sell extensions. If you subscribe to our mailing list we will send you a 20%% discount code for our <a href="%s" target="_blank">extensions bundle</a>.', 'ultimate-member' ), ultimatemember_plugin_name, 'https://ultimatemember.com/core-extensions-bundle/' ); ?>
+				<?php printf( __( 'Thanks for installing <strong>%s</strong>! We hope you like the plugin. To fund full-time development and support of the plugin we also sell extensions. If you subscribe to our mailing list we will send you a 20%% discount code for one of our <a href="%s" target="_blank">access passes</a>.', 'ultimate-member' ), ultimatemember_plugin_name, 'https://ultimatemember.com/pricing/' ); ?>
 			</p>
 
 			<p>

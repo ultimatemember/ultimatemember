@@ -1,4 +1,7 @@
-function um_admin_live_update_scripts(count) {
+var $um_tiny_editor = {};
+
+
+function um_admin_live_update_scripts( count ) {
 	var metakey = jQuery('.um-admin-modal #UM_edit_field #_metakey').val();
 
 	if ( count === 0 ) {
@@ -19,6 +22,7 @@ function um_admin_live_update_scripts(count) {
 	}
 }
 
+
 function um_admin_new_modal( id, ajax, size ) {
 	var body = jQuery('body');
 	//var modal = body.find('.um-admin-overlay');
@@ -26,8 +30,7 @@ function um_admin_new_modal( id, ajax, size ) {
 	um_admin_remove_modal();
 
 	body.addClass('um-admin-modal-open').append('<div class="um-admin-overlay" /><div class="um-admin-modal" />');
-	jQuery('#' + id).prependTo('.um-admin-modal');
-	jQuery('#' + id).show();
+	jQuery('#' + id).prependTo('.um-admin-modal').show();
 	jQuery('.um-admin-modal').show();
 
 	jQuery('.um-admin-modal-head').append('<a href="#" data-action="UM_remove_modal" class="um-admin-modal-close"><i class="um-faicon-times"></i></a>');
@@ -40,6 +43,58 @@ function um_admin_new_modal( id, ajax, size ) {
 		um_admin_modal_responsive();
 	}
 }
+
+
+function um_tinymce_init( id, content ) {
+	var object = jQuery('#' + id);
+
+	if ( tinyMCE.get( id ) !== null ) {
+		tinyMCE.triggerSave();
+		tinyMCE.EditorManager.execCommand( 'mceRemoveEditor', true, id );
+		"4" === tinyMCE.majorVersion ? window.tinyMCE.execCommand( "mceRemoveEditor", !0, id ) : window.tinyMCE.execCommand( "mceRemoveControl", !0, id );
+		$um_tiny_editor = jQuery('<div>').append( object.parents( '#wp-' + id + '-wrap' ).clone() );
+		object.parents('#wp-' + id + '-wrap').replaceWith('<div class="um_tiny_placeholder"></div>');
+		jQuery('.um-admin-editor:visible').html( jQuery( $um_tiny_editor ).html() );
+
+		var init;
+		if( typeof tinyMCEPreInit.mceInit[ id ] == 'undefined' ){
+			init = tinyMCEPreInit.mceInit[ id ] = tinyMCE.extend( {}, tinyMCEPreInit.mceInit[ id ] );
+		} else {
+			init = tinyMCEPreInit.mceInit[ id ];
+		}
+		if ( typeof(QTags) == 'function' ) {
+			QTags( tinyMCEPreInit.qtInit[ id ] );
+			QTags._buttonsInit();
+		}
+		window.switchEditors.go( id );
+		tinyMCE.init( init );
+		tinyMCE.get( id ).setContent( content );
+		object.html( content );
+	} else {
+		$um_tiny_editor = jQuery('<div>').append( object.parents('#wp-' + id + '-wrap').clone() );
+		object.parents('#wp-' + id + '-wrap').replaceWith('<div class="um_tiny_placeholder"></div>');
+
+		jQuery('.um-admin-editor:visible').html( jQuery( $um_tiny_editor ).html() );
+
+		if ( typeof(QTags) == 'function' ) {
+			QTags( tinyMCEPreInit.qtInit[ id ] );
+			QTags._buttonsInit();
+		}
+
+		//use duplicate because it's new element
+		jQuery('#' + id).html( content );
+	}
+
+	jQuery( document.body ).on( 'click', '.wp-switch-editor', function() {
+		var target = jQuery(this);
+
+		if ( target.hasClass( 'wp-switch-editor' ) ) {
+			var mode = target.hasClass( 'switch-tmce' ) ? 'tmce' : 'html';
+			window.switchEditors.go( id, mode );
+		}
+	});
+}
+
 
 function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 	var count = jQuery('.um-admin-builder .um-admin-drag-fld').length;
@@ -90,31 +145,9 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 			if ( visible_editor.length > 0 ) {
 
 				if ( act_id === 'um_admin_edit_field_popup' ) {
-
-					tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_edit');
-					visible_editor.html( jQuery('.um-hidden-editor-edit').contents() );
-					tinyMCE.execCommand('mceAddEditor', true, 'um_editor_edit');
-
-					jQuery('.switch-html').trigger('click').trigger('click');
-					jQuery('.switch-tmce').trigger('click');
-
-					jQuery('#um_editor_edit_ifr').height(200);
-
-					var editor = tinyMCE.get('um_editor_edit');
-					//var content = editor.getContent();
-					editor.setContent( jQuery('.um-admin-modal:visible .dynamic-mce-content').html() );
-
+					um_tinymce_init( 'um_editor_edit', jQuery('.um-admin-modal:visible .dynamic-mce-content').html() );
 				} else {
-					tinyMCE.get('um_editor_new').setContent('');
-					tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_new');
-					visible_editor.html( jQuery('.um-hidden-editor-new').contents() );
-					tinyMCE.execCommand('mceAddEditor', true, 'um_editor_new');
-
-					jQuery('.switch-html').trigger('click').trigger('click');
-					jQuery('.switch-tmce').trigger('click');
-
-					jQuery('#um_editor_new_ifr').height(200);
-
+					um_tinymce_init( 'um_editor_new', '' );
 				}
 			}
 
@@ -144,19 +177,15 @@ function um_admin_modal_responsive() {
 function um_admin_remove_modal() {
 	var visible_editor = jQuery('.um-admin-editor:visible');
 	if ( visible_editor.length > 0 ) {
+		tinyMCE.triggerSave();
+
 		if ( jQuery('.um-admin-modal:visible').find('form').parent().attr('id') === 'UM_edit_field' ) {
-
-			tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_edit');
-			jQuery('.um-hidden-editor-edit').html( visible_editor.contents() );
-			tinyMCE.execCommand('mceAddEditor', true, 'um_editor_edit');
-
+			jQuery('#wp-um_editor_edit-wrap').remove();
 		} else {
-
-			tinyMCE.execCommand('mceRemoveEditor', true, 'um_editor_new');
-			jQuery('.um-hidden-editor-new').html( visible_editor.contents() );
-			tinyMCE.execCommand('mceAddEditor', true, 'um_editor_new');
-
+			jQuery('#wp-um_editor_new-wrap').remove();
 		}
+
+		jQuery('.um_tiny_placeholder').replaceWith( jQuery( $um_tiny_editor ).html() );
 	}
 
 	jQuery('body').removeClass('um-admin-modal-open');
@@ -396,7 +425,6 @@ jQuery(document).ready(function() {
 		});
 
 		conditionwrap.find('.um-admin-new-condition-compare-and').each( function() {
-			console.log(jQuery(this).prev('.um-admin-cur-condition').length )
 			if ( jQuery(this).prev('.um-admin-cur-condition').length === 0 ) {
 				jQuery(this).remove();
 			}
@@ -438,7 +466,7 @@ jQuery(document).ready(function() {
 		if ( jQuery(this).attr('data-back') ) {
 			fonticons.find('a.um-admin-modal-back').attr("data-modal", jQuery(this).attr('data-back') );
 			var current_icon = jQuery( '#' + jQuery(this).attr('data-back') ).find('input#_icon').val();
-			if ( current_icon == '' ) {
+			if ( current_icon === '' ) {
 				fonticons.find('.um-admin-icons span').removeClass('highlighted');
 			}
 		}
@@ -478,7 +506,7 @@ jQuery(document).ready(function() {
 			jQuery( v_id ).find('.um-admin-icon-clear').show();
 		}
 		jQuery(this).attr('data-code', '');
-		if ( v_id == '.postbox' ) {
+		if ( v_id === '.postbox' ) {
 			um_admin_remove_modal();
 		}
 	});
@@ -500,7 +528,7 @@ jQuery(document).ready(function() {
 
 	// search font icons
 	jQuery( document.body ).on('keyup blur', '#_icon_search', function() {
-		if ( jQuery(this).val().toLowerCase() != '' ) {
+		if ( jQuery(this).val().toLowerCase() !== '' ) {
 			jQuery('.um-admin-icons span').hide();
 			jQuery('.um-admin-icons span[data-code*="'+jQuery(this).val().toLowerCase()+'"]').show();
 		} else {
@@ -515,7 +543,7 @@ jQuery(document).ready(function() {
 		var me = jQuery(this);
 		var _options = jQuery('textarea[id="_options"]');
 
-		if ( me.val() != '' ) {
+		if ( me.val() !== '' ) {
 			var um_option_callback = me.val();
 			jQuery.ajax({
 				url: wp.ajax.settings.url,
@@ -531,7 +559,7 @@ jQuery(document).ready(function() {
 				success: function( response ) {
 					var arr_opts = [];
 
-					for (var key in response.data ) {
+					for ( var key in response.data ) {
 						arr_opts.push( response.data[ key ] );
 					}
 

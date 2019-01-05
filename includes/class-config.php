@@ -507,6 +507,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'access_exclude_uris'                   => array(),
 				'home_page_accessible'                  => 1,
 				'category_page_accessible'              => 1,
+				'restricted_access_message'             => '',
+				'restricted_block_message'              => '',
 				'enable_reset_password_limit'           => 1,
 				'reset_password_limit_number'           => 3,
 				'blocked_emails'                        => '',

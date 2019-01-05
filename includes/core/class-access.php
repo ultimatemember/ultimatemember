@@ -68,7 +68,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 			/* Disable comments if user has not permission to access current post */
 			add_filter( 'comments_open', array( $this, 'disable_comments_open' ), 99, 2 );
-			add_filter( 'get_comments_number', array( $this, 'disable_comments_open' ), 99, 2 );
+			add_filter( 'get_comments_number', array( $this, 'disable_comments_open_number' ), 99, 2 );
+
+			add_filter( 'render_block', array( $this, 'restrict_blocks' ), 10, 2 );
 		}
 
 
@@ -948,12 +950,12 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 		/**
 		 * Disable comments if user has not permission to access this post
+		 *
 		 * @param mixed $open
 		 * @param int $post_id
 		 * @return boolean
 		 */
 		public function disable_comments_open( $open, $post_id ) {
-
 			static $cache = array();
 
 			if ( isset( $cache[ $post_id ] ) ) {
@@ -999,6 +1001,63 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			}
 
 			$cache[ $post_id ] = $open;
+			return $open;
+		}
+
+
+		/**
+		 * Disable comments if user has not permission to access this post
+		 *
+		 * @param mixed $open
+		 * @param int $post_id
+		 * @return boolean
+		 */
+		public function disable_comments_open_number( $open, $post_id ) {
+			static $cache_number = array();
+
+			if ( isset( $cache_number[ $post_id ] ) ) {
+				return $cache_number[ $post_id ] ? $open : false;
+			}
+
+			$post = get_post( $post_id );
+			$restriction = $this->get_post_privacy_settings( $post );
+
+			if ( ! $restriction ) {
+				$cache_number[ $post_id ] = $open;
+				return $open;
+			}
+
+			if ( '1' == $restriction['_um_accessible'] ) {
+
+				if ( is_user_logged_in() ) {
+					if ( ! current_user_can( 'administrator' ) ) {
+						$open = false;
+					}
+				}
+
+			} elseif ( '2' == $restriction['_um_accessible'] ) {
+				if ( ! is_user_logged_in() ) {
+					$open = false;
+				} else {
+					if ( ! current_user_can( 'administrator' ) ) {
+						$custom_restrict = $this->um_custom_restriction( $restriction );
+
+						if ( empty( $restriction['_um_access_roles'] ) || false === array_search( '1', $restriction['_um_access_roles'] ) ) {
+							if ( ! $custom_restrict ) {
+								$open = false;
+							}
+						} else {
+							$user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
+
+							if ( ! isset( $user_can ) || ! $user_can || ! $custom_restrict ) {
+								$open = false;
+							}
+						}
+					}
+				}
+			}
+
+			$cache_number[ $post_id ] = $open;
 			return $open;
 		}
 
@@ -1096,5 +1155,83 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 			return $filtered_items;
 		}
+
+
+		/**
+		 * @param $block_content
+		 * @param $block
+		 *
+		 * @return string
+		 */
+		function restrict_blocks( $block_content, $block ) {
+			if ( is_admin() ) {
+				return $block_content;
+			}
+
+			if ( is_user_logged_in() && current_user_can( 'administrator' ) ) {
+				return $block_content;
+			}
+
+			if ( $block['attrs']['um_is_restrict'] !== true ) {
+				return $block_content;
+			}
+
+			if ( empty( $block['attrs']['um_who_access'] ) ) {
+				return $block_content;
+			}
+
+			$default_message = UM()->options()->get( 'restricted_block_message' );
+			switch ( $block['attrs']['um_who_access'] ) {
+				case '1': {
+					if ( ! is_user_logged_in() ) {
+						$block_content = '';
+						if ( isset( $block['attrs']['um_message_type'] ) ) {
+							if ( $block['attrs']['um_message_type'] == '0' ) {
+								$block_content = $default_message;
+							} elseif ( $block['attrs']['um_message_type'] == '1' ) {
+								$block_content = $block['attrs']['um_message_content'];
+							}
+						}
+					} else {
+						if ( ! empty( $block['attrs']['um_roles_access'] ) ) {
+							$display = false;
+							foreach ( $block['attrs']['um_roles_access'] as $role ) {
+								if ( current_user_can( $role ) ) {
+									$display = true;
+								}
+							}
+
+							if ( ! $display ) {
+								$block_content = '';
+								if ( isset( $block['attrs']['um_message_type'] ) ) {
+									if ( $block['attrs']['um_message_type'] == '0' ) {
+										$block_content = $default_message;
+									} elseif ( $block['attrs']['um_message_type'] == '1' ) {
+										$block_content = $block['attrs']['um_message_content'];
+									}
+								}
+							}
+						}
+					}
+					break;
+				}
+				case '2': {
+					if ( is_user_logged_in() ) {
+						$block_content = '';
+						if ( isset( $block['attrs']['um_message_type'] ) ) {
+							if ( $block['attrs']['um_message_type'] == '0' ) {
+								$block_content = $default_message;
+							} elseif ( $block['attrs']['um_message_type'] == '1' ) {
+								$block_content = $block['attrs']['um_message_content'];
+							}
+						}
+					}
+					break;
+				}
+			}
+
+			return $block_content;
+		}
+
 	}
 }
