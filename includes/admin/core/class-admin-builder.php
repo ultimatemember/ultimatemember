@@ -1,14 +1,16 @@
 <?php
 namespace um\admin\core;
 
-// Exit if accessed directly.
+
 if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 
 	/**
 	 * Class Admin_Builder
+	 *
 	 * @package um\admin\core
 	 */
 	class Admin_Builder {
@@ -170,13 +172,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			unset( $array['conditions'] );
 
 			for ( $i = 0; $i < 5; $i++ ) {
-				$index = '';
-				if ( $i > 0 ) {
-					$index = $i;
-				}
+				$index = $i > 0 ? $i : '';
 
 				if ( isset( $array[ 'conditional_field' . $index ] ) && ! empty( $array[ 'conditional_action' . $index ] ) && ! empty( $array[ 'conditional_operator' . $index ] ) ) {
 					$array[ 'conditional_value' . $index ] = isset( $array[ 'conditional_value' . $index ] ) ? $array['conditional_value' . $index ] : '';
+					$array[ 'conditional_compare' . $index ] = isset( $array[ 'conditional_compare' . $index ] ) ? $array['conditional_compare' . $index ] : 'and';
+
 					$array['conditions'][] = array(
 						$array[ 'conditional_action' . $index ],
 						$array[ 'conditional_field' . $index ],
