@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2018-12-13 17:43+0200\n"
-"PO-Revision-Date: 2018-12-13 17:43+0200\n"
+"POT-Creation-Date: 2019-01-07 11:54+0200\n"
+"PO-Revision-Date: 2019-01-07 11:54+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -35,7 +35,7 @@ msgid "Docs"
 msgstr ""
 
 #: includes/admin/class-admin.php:308
-#: includes/admin/core/class-admin-settings.php:1130
+#: includes/admin/core/class-admin-settings.php:1138
 msgid "Settings"
 msgstr ""
 
@@ -103,7 +103,7 @@ msgstr ""
 #: includes/admin/core/class-admin-builder.php:767
 #: includes/admin/core/class-admin-dragdrop.php:32
 #: includes/admin/core/class-admin-menu.php:104
-#: includes/core/class-fields.php:4066
+#: includes/core/class-fields.php:4067
 msgid "Please login as administrator"
 msgstr ""
 
@@ -183,7 +183,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-columns.php:96
 #: includes/admin/core/class-admin-columns.php:115
-#: includes/admin/core/class-admin-settings.php:312
+#: includes/admin/core/class-admin-settings.php:314
 #: includes/admin/templates/form/login_settings.php:13
 #: includes/admin/templates/form/register_customize.php:3
 #: includes/admin/templates/form/register_customize.php:29
@@ -249,32 +249,32 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:157
+#: includes/admin/core/class-admin-enqueue.php:166
 msgid "e.g. Member Directory"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:159
+#: includes/admin/core/class-admin-enqueue.php:168
 msgid "e.g. New Registration Form"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:204
-#: includes/admin/core/class-admin-enqueue.php:235
-#: includes/admin/core/class-admin-forms.php:823
-#: includes/admin/core/class-admin-forms.php:837
-#: includes/admin/core/class-admin-forms.php:942
-#: includes/admin/core/class-admin-forms.php:951
+#: includes/admin/core/class-admin-enqueue.php:213
+#: includes/admin/core/class-admin-enqueue.php:244
+#: includes/admin/core/class-admin-forms.php:828
+#: includes/admin/core/class-admin-forms.php:842
+#: includes/admin/core/class-admin-forms.php:947
+#: includes/admin/core/class-admin-forms.php:956
 #: includes/admin/core/class-admin-notices.php:390
 #: includes/core/um-actions-profile.php:553
 msgid "Remove"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:205
-#: includes/admin/core/class-admin-enqueue.php:236
-#: includes/admin/core/class-admin-forms.php:1019
+#: includes/admin/core/class-admin-enqueue.php:214
+#: includes/admin/core/class-admin-enqueue.php:245
+#: includes/admin/core/class-admin-forms.php:1024
 msgid "Select"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:233
+#: includes/admin/core/class-admin-enqueue.php:242
 msgid "Are sure, maybe some settings not saved"
 msgstr ""
 
@@ -291,11 +291,11 @@ msgstr ""
 msgid "No Icon"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:996
+#: includes/admin/core/class-admin-forms.php:1001
 msgid "Select media"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1020
+#: includes/admin/core/class-admin-forms.php:1025
 msgid "Clear"
 msgstr ""
 
@@ -429,7 +429,7 @@ msgid "Member Directories"
 msgstr ""
 
 #: includes/admin/core/class-admin-menu.php:204
-#: includes/admin/core/class-admin-settings.php:1009
+#: includes/admin/core/class-admin-settings.php:1017
 msgid "Extensions"
 msgstr ""
 
@@ -1330,1129 +1330,1139 @@ msgstr ""
 msgid "Wrong Data"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:107
-#: includes/admin/core/class-admin-settings.php:116
+#: includes/admin/core/class-admin-settings.php:109
+#: includes/admin/core/class-admin-settings.php:118
 #, php-format
 msgid "%s page"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:108
+#: includes/admin/core/class-admin-settings.php:110
 msgid "Add page ID"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:118
+#: includes/admin/core/class-admin-settings.php:120
 msgid "Choose a page..."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:130
+#: includes/admin/core/class-admin-settings.php:132
 msgid "Enable profile menu"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:142
+#: includes/admin/core/class-admin-settings.php:144
 #, php-format
 msgid "%s Tab"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:148
+#: includes/admin/core/class-admin-settings.php:150
 #, php-format
 msgid "Who can see %s Tab?"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:149
+#: includes/admin/core/class-admin-settings.php:151
 msgid "Select which users can view this tab."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:158
+#: includes/admin/core/class-admin-settings.php:160
 msgid "Allowed roles"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:159
+#: includes/admin/core/class-admin-settings.php:161
 msgid "Select the the user roles allowed to view this tab."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:161
+#: includes/admin/core/class-admin-settings.php:163
 msgid "Choose user roles..."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:172
+#: includes/admin/core/class-admin-settings.php:174
 msgid "Profile menu default tab"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:173
+#: includes/admin/core/class-admin-settings.php:175
 msgid "This will be the default tab on user profile page"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:181
+#: includes/admin/core/class-admin-settings.php:183
 msgid "Enable menu icons in desktop view"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:238
+#: includes/admin/core/class-admin-settings.php:240
 msgid "General"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:241
+#: includes/admin/core/class-admin-settings.php:243
 msgid "Pages"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:245
+#: includes/admin/core/class-admin-settings.php:247
 #: includes/admin/templates/dashboard/users.php:6
 msgid "Users"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:251
+#: includes/admin/core/class-admin-settings.php:253
 msgid "Profile Permalink Base"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:252
+#: includes/admin/core/class-admin-settings.php:254
 msgid ""
 "Here you can control the permalink structure of the user profile URL "
 "globally e.g. "
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:254
-#: includes/admin/core/class-admin-settings.php:271
+#: includes/admin/core/class-admin-settings.php:256
+#: includes/admin/core/class-admin-settings.php:273
 #: includes/core/class-builtin.php:669 includes/core/class-builtin.php:672
 msgid "Username"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:255
+#: includes/admin/core/class-admin-settings.php:257
 msgid "First and Last Name with '.'"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:256
+#: includes/admin/core/class-admin-settings.php:258
 msgid "First and Last Name with '-'"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:257
+#: includes/admin/core/class-admin-settings.php:259
 msgid "First and Last Name with '+'"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:258
+#: includes/admin/core/class-admin-settings.php:260
 msgid "User ID"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:260
-#: includes/admin/core/class-admin-settings.php:279
+#: includes/admin/core/class-admin-settings.php:262
+#: includes/admin/core/class-admin-settings.php:281
 msgid "Select..."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:266
+#: includes/admin/core/class-admin-settings.php:268
 msgid "User Display Name"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:267
+#: includes/admin/core/class-admin-settings.php:269
 msgid ""
 "This is the name that will be displayed for users on the front end of your "
 "site. Default setting uses first/last name as display name if it exists"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:269
+#: includes/admin/core/class-admin-settings.php:271
 msgid "Default WP Display Name"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:270
+#: includes/admin/core/class-admin-settings.php:272
 #: includes/core/class-builtin.php:727 includes/core/class-builtin.php:730
 msgid "Nickname"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:272
+#: includes/admin/core/class-admin-settings.php:274
 msgid "First name & last name"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:273
+#: includes/admin/core/class-admin-settings.php:275
 msgid "Last name & first name"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:274
+#: includes/admin/core/class-admin-settings.php:276
 msgid "First name & first initial of last name"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:275
+#: includes/admin/core/class-admin-settings.php:277
 msgid "First initial of first name & last name"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:276
+#: includes/admin/core/class-admin-settings.php:278
 msgid "First name only"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:277
+#: includes/admin/core/class-admin-settings.php:279
 msgid "Custom field(s)"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:284
+#: includes/admin/core/class-admin-settings.php:286
 msgid "Display Name Custom Field(s)"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:285
+#: includes/admin/core/class-admin-settings.php:287
 msgid ""
 "Specify the custom field meta key or custom fields seperated by comma that "
 "you want to use to display users name on the frontend of your site"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:291
+#: includes/admin/core/class-admin-settings.php:293
 msgid "Automatically redirect author page to their profile?"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:292
+#: includes/admin/core/class-admin-settings.php:294
 msgid ""
 "If enabled, author pages will automatically redirect to the user's profile "
 "page"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:297
+#: includes/admin/core/class-admin-settings.php:299
 msgid "Enable Members Directory"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:298
+#: includes/admin/core/class-admin-settings.php:300
 msgid "Control whether to enable or disable member directories on this site"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:303
+#: includes/admin/core/class-admin-settings.php:305
 msgid "Use Gravatars?"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:304
+#: includes/admin/core/class-admin-settings.php:306
 msgid ""
 "Do you want to use gravatars instead of the default plugin profile photo (If "
 "the user did not upload a custom profile photo / avatar)"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:309
+#: includes/admin/core/class-admin-settings.php:311
 msgid "Use Gravatar builtin image"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:310
+#: includes/admin/core/class-admin-settings.php:312
 msgid ""
 "Gravatar has a number of built in options which you can also use as defaults"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:313
+#: includes/admin/core/class-admin-settings.php:315
 msgid "404 ( File Not Found response )"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:314
+#: includes/admin/core/class-admin-settings.php:316
 msgid "Mystery Man"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:315
+#: includes/admin/core/class-admin-settings.php:317
 msgid "Identicon"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:316
+#: includes/admin/core/class-admin-settings.php:318
 msgid "Monsterid"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:317
+#: includes/admin/core/class-admin-settings.php:319
 msgid "Wavatar"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:318
+#: includes/admin/core/class-admin-settings.php:320
 msgid "Retro"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:319
+#: includes/admin/core/class-admin-settings.php:321
 msgid "Blank ( a transparent PNG image )"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:327
+#: includes/admin/core/class-admin-settings.php:329
 msgid "Use Default plugin avatar as Gravatar's Default avatar"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:328
+#: includes/admin/core/class-admin-settings.php:330
 msgid ""
 "Do you want to use the plugin default avatar instead of the gravatar default "
 "photo (If the user did not upload a custom profile photo / avatar)"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:334
+#: includes/admin/core/class-admin-settings.php:336
 msgid "Require a strong password? (when user resets password only)"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:335
+#: includes/admin/core/class-admin-settings.php:337
 msgid ""
 "Enable or disable a strong password rules on password reset and change "
 "procedure"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:340
-#: includes/class-config.php:134 includes/class-config.php:739
+#: includes/admin/core/class-admin-settings.php:342
+#: includes/class-config.php:134 includes/class-config.php:741
 #: includes/core/class-account.php:90
 msgid "Account"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:345
+#: includes/admin/core/class-admin-settings.php:347
 msgid "Password Account Tab"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:351
+#: includes/admin/core/class-admin-settings.php:353
 msgid "Privacy Account Tab"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:352
+#: includes/admin/core/class-admin-settings.php:354
 msgid "Enable/disable the Privacy account tab in account page"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:357
+#: includes/admin/core/class-admin-settings.php:359
 msgid "Notifications Account Tab"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:358
+#: includes/admin/core/class-admin-settings.php:360
 msgid "Enable/disable the Notifications account tab in account page"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:363
+#: includes/admin/core/class-admin-settings.php:365
 msgid "Delete Account Tab"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:364
+#: includes/admin/core/class-admin-settings.php:366
 msgid "Enable/disable the Delete account tab in account page"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:369
+#: includes/admin/core/class-admin-settings.php:371
 msgid "Account Deletion Custom Text"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:370
+#: includes/admin/core/class-admin-settings.php:372
 msgid ""
 "This is custom text that will be displayed to users before they delete their "
 "accounts from your site"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:378
+#: includes/admin/core/class-admin-settings.php:380
 msgid "Add a First & Last Name fields"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:379
+#: includes/admin/core/class-admin-settings.php:381
 msgid ""
 "Whether to enable these fields on the user account page by default or hide "
 "them."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:384
+#: includes/admin/core/class-admin-settings.php:386
 msgid "Disable First & Last Name fields"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:385
+#: includes/admin/core/class-admin-settings.php:387
 msgid ""
 "Whether to allow users changing their first and last name in account page."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:391
+#: includes/admin/core/class-admin-settings.php:393
 msgid "Require First & Last Name"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:392
+#: includes/admin/core/class-admin-settings.php:394
 msgid "Require first and last name?"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:398
+#: includes/admin/core/class-admin-settings.php:400
 msgid "Allow users to change e-mail"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:399
+#: includes/admin/core/class-admin-settings.php:401
 msgid "Whether to allow users changing their email in account page."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:404
+#: includes/admin/core/class-admin-settings.php:406
 msgid "Allow users to hide their profiles from directory"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:405
+#: includes/admin/core/class-admin-settings.php:407
 msgid ""
 "Whether to allow users changing their profile visibility from member "
 "directory in account page."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:410
+#: includes/admin/core/class-admin-settings.php:412
 msgid "Require a strong password?"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:411
+#: includes/admin/core/class-admin-settings.php:413
 msgid ""
 "Enable or disable a strong password rules on account page / change password "
 "tab"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:416
+#: includes/admin/core/class-admin-settings.php:418
 msgid "Uploads"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:422
+#: includes/admin/core/class-admin-settings.php:424
 msgid "Profile Photo Maximum File Size (bytes)"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:423
+#: includes/admin/core/class-admin-settings.php:425
 msgid "Sets a maximum size for the uploaded photo"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:430
+#: includes/admin/core/class-admin-settings.php:432
 msgid "Cover Photo Maximum File Size (bytes)"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:431
+#: includes/admin/core/class-admin-settings.php:433
 msgid "Sets a maximum size for the uploaded cover"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:437
+#: includes/admin/core/class-admin-settings.php:439
 msgid "Profile Photo Thumbnail Sizes (px)"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:438
+#: includes/admin/core/class-admin-settings.php:440
 msgid ""
 "Here you can define which thumbnail sizes will be created for each profile "
 "photo upload."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:440
-#: includes/admin/core/class-admin-settings.php:450
+#: includes/admin/core/class-admin-settings.php:442
+#: includes/admin/core/class-admin-settings.php:452
 msgid "Add New Size"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:447
+#: includes/admin/core/class-admin-settings.php:449
 msgid "Cover Photo Thumbnail Sizes (px)"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:448
+#: includes/admin/core/class-admin-settings.php:450
 msgid ""
 "Here you can define which thumbnail sizes will be created for each cover "
 "photo upload."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:458
+#: includes/admin/core/class-admin-settings.php:460
 msgid "Image Quality"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:459
+#: includes/admin/core/class-admin-settings.php:461
 msgid ""
 "Quality is used to determine quality of image uploads, and ranges from 0 "
 "(worst quality, smaller file) to 100 (best quality, biggest file). The "
 "default range is 60."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:466
+#: includes/admin/core/class-admin-settings.php:468
 msgid "Image Upload Maximum Width (px)"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:467
+#: includes/admin/core/class-admin-settings.php:469
 msgid ""
 "Any image upload above this width will be resized to this limit "
 "automatically."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:474
+#: includes/admin/core/class-admin-settings.php:476
 msgid "Cover Photo Minimum Width (px)"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:475
+#: includes/admin/core/class-admin-settings.php:477
 msgid "This will be the minimum width for cover photo uploads"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:482
+#: includes/admin/core/class-admin-settings.php:484
 msgid "Access"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:485
+#: includes/admin/core/class-admin-settings.php:487
 msgid "Restriction Content"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:490
+#: includes/admin/core/class-admin-settings.php:492
 msgid "Global Site Access"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:491
+#: includes/admin/core/class-admin-settings.php:493
 msgid ""
 "Globally control the access of your site, you can have seperate restrict "
 "options per post/page by editing the desired item."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:501
+#: includes/admin/core/class-admin-settings.php:503
 msgid "Custom Redirect URL"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:502
+#: includes/admin/core/class-admin-settings.php:504
 msgid ""
 "A logged out user will be redirected to this url If he is not permitted to "
 "access the site"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:508
+#: includes/admin/core/class-admin-settings.php:510
 msgid "Exclude the following URLs"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:509
+#: includes/admin/core/class-admin-settings.php:511
 msgid ""
 "Here you can exclude URLs beside the redirect URI to be accessible to "
 "everyone"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:510
+#: includes/admin/core/class-admin-settings.php:512
 msgid "Add New URL"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:517
+#: includes/admin/core/class-admin-settings.php:519
 msgid "Allow Homepage to be accessible"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:523
+#: includes/admin/core/class-admin-settings.php:525
 msgid "Allow Category pages to be accessible"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:529
+#: includes/admin/core/class-admin-settings.php:531
 msgid "Restricted Access Message"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:530
+#: includes/admin/core/class-admin-settings.php:532
 msgid ""
 "This is the message shown to users that do not have permission to view the "
 "content"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:545
+#: includes/admin/core/class-admin-settings.php:537
+msgid "Restricted Block Message"
+msgstr ""
+
+#: includes/admin/core/class-admin-settings.php:538
+msgid ""
+"This is the message shown to users that do not have permission to view the "
+"block's content"
+msgstr ""
+
+#: includes/admin/core/class-admin-settings.php:553
 msgid "Restricted Access to Posts"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:546
+#: includes/admin/core/class-admin-settings.php:554
 msgid "Restriction content of the current Posts"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:555
+#: includes/admin/core/class-admin-settings.php:563
 msgid "Restricted Access to Taxonomies"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:556
+#: includes/admin/core/class-admin-settings.php:564
 msgid "Restriction content of the current Taxonomies"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:565
+#: includes/admin/core/class-admin-settings.php:573
 msgid "Other"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:570
+#: includes/admin/core/class-admin-settings.php:578
 msgid "Enable the Reset Password Limit?"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:575
+#: includes/admin/core/class-admin-settings.php:583
 msgid "Reset Password Limit"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:576
+#: includes/admin/core/class-admin-settings.php:584
 msgid ""
 "Set the maximum reset password limit. If reached the maximum limit, user "
 "will be locked from using this."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:584
+#: includes/admin/core/class-admin-settings.php:592
 msgid "Blocked Email Addresses"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:585
+#: includes/admin/core/class-admin-settings.php:593
 msgid ""
 "This will block the specified e-mail addresses from being able to sign up or "
 "sign in to your site. To block an entire domain, use something like *@domain."
 "com"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:590
+#: includes/admin/core/class-admin-settings.php:598
 msgid "Blacklist Words"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:591
+#: includes/admin/core/class-admin-settings.php:599
 msgid ""
 "This option lets you specify blacklist of words to prevent anyone from "
 "signing up with such a word as their username"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:598
+#: includes/admin/core/class-admin-settings.php:606
 #: includes/admin/core/list-tables/emails-list-table.php:300
 msgid "Email"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:603
+#: includes/admin/core/class-admin-settings.php:611
 msgid "Admin E-mail Address"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:604
-#: includes/admin/core/class-admin-settings.php:616
+#: includes/admin/core/class-admin-settings.php:612
+#: includes/admin/core/class-admin-settings.php:624
 msgid "e.g. admin@companyname.com"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:609
+#: includes/admin/core/class-admin-settings.php:617
 msgid "Mail appears from"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:610
+#: includes/admin/core/class-admin-settings.php:618
 msgid "e.g. Site Name"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:615
+#: includes/admin/core/class-admin-settings.php:623
 msgid "Mail appears from address"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:621
+#: includes/admin/core/class-admin-settings.php:629
 msgid "Use HTML for E-mails?"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:622
+#: includes/admin/core/class-admin-settings.php:630
 msgid ""
 "If you plan use e-mails with HTML, please make sure that this option is "
 "enabled. Otherwise, HTML will be displayed as plain text."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:627
+#: includes/admin/core/class-admin-settings.php:635
 msgid "Appearance"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:630
+#: includes/admin/core/class-admin-settings.php:638
 msgid "Profile"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:635
+#: includes/admin/core/class-admin-settings.php:643
 msgid "Profile Default Template"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:636
+#: includes/admin/core/class-admin-settings.php:644
 msgid "This will be the default template to output profile"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:644
+#: includes/admin/core/class-admin-settings.php:652
 msgid "Profile Maximum Width"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:653
+#: includes/admin/core/class-admin-settings.php:661
 msgid "Profile Area Maximum Width"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:655
+#: includes/admin/core/class-admin-settings.php:663
 #: includes/admin/templates/form/profile_customize.php:56
 msgid ""
 "The maximum width of the profile area inside profile (below profile header)"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:661
+#: includes/admin/core/class-admin-settings.php:669
 msgid "Profile Field Icons"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:662
+#: includes/admin/core/class-admin-settings.php:670
 msgid "This is applicable for edit mode only"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:665
-#: includes/admin/core/class-admin-settings.php:861
-#: includes/admin/core/class-admin-settings.php:951
+#: includes/admin/core/class-admin-settings.php:673
+#: includes/admin/core/class-admin-settings.php:869
+#: includes/admin/core/class-admin-settings.php:959
 #: includes/admin/templates/form/login_customize.php:40
 #: includes/admin/templates/form/profile_customize.php:67
 #: includes/admin/templates/form/register_customize.php:55
 msgid "Show inside text field"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:666
-#: includes/admin/core/class-admin-settings.php:862
-#: includes/admin/core/class-admin-settings.php:952
+#: includes/admin/core/class-admin-settings.php:674
+#: includes/admin/core/class-admin-settings.php:870
+#: includes/admin/core/class-admin-settings.php:960
 #: includes/admin/templates/form/login_customize.php:41
 #: includes/admin/templates/form/profile_customize.php:68
 #: includes/admin/templates/form/register_customize.php:56
 msgid "Show with label"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:667
-#: includes/admin/core/class-admin-settings.php:863
-#: includes/admin/core/class-admin-settings.php:953
+#: includes/admin/core/class-admin-settings.php:675
+#: includes/admin/core/class-admin-settings.php:871
+#: includes/admin/core/class-admin-settings.php:961
 #: includes/admin/templates/form/login_customize.php:42
 #: includes/admin/templates/form/profile_customize.php:69
 #: includes/admin/templates/form/register_customize.php:57
 msgid "Turn off"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:674
+#: includes/admin/core/class-admin-settings.php:682
 msgid "Profile Primary Button Text"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:676
+#: includes/admin/core/class-admin-settings.php:684
 msgid "The text that is used for updating profile button"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:682
+#: includes/admin/core/class-admin-settings.php:690
 msgid "Profile Secondary Button"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:684
-#: includes/admin/core/class-admin-settings.php:880
-#: includes/admin/core/class-admin-settings.php:970
+#: includes/admin/core/class-admin-settings.php:692
+#: includes/admin/core/class-admin-settings.php:888
+#: includes/admin/core/class-admin-settings.php:978
 msgid "Switch on/off the secondary button display in the form"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:689
+#: includes/admin/core/class-admin-settings.php:697
 msgid "Profile Secondary Button Text"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:691
+#: includes/admin/core/class-admin-settings.php:699
 msgid "The text that is used for cancelling update profile button"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:698
+#: includes/admin/core/class-admin-settings.php:706
 msgid "Default Profile Photo"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:699
+#: includes/admin/core/class-admin-settings.php:707
 msgid ""
 "You can change the default profile picture globally here. Please make sure "
 "that the photo is 300x300px."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:700
+#: includes/admin/core/class-admin-settings.php:708
 msgid "Select Default Profile Photo"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:710
+#: includes/admin/core/class-admin-settings.php:718
 msgid "Default Cover Photo"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:711
+#: includes/admin/core/class-admin-settings.php:719
 msgid ""
 "You can change the default cover photo globally here. Please make sure that "
 "the default cover is large enough and respects the ratio you are using for "
 "cover photos."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:712
+#: includes/admin/core/class-admin-settings.php:720
 msgid "Select Default Cover Photo"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:717
+#: includes/admin/core/class-admin-settings.php:725
 #: includes/admin/templates/form/profile_customize.php:127
 msgid "Profile Photo Size"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:719
+#: includes/admin/core/class-admin-settings.php:727
 msgid ""
 "The global default of profile photo size. This can be overridden by "
 "individual form settings"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:725
+#: includes/admin/core/class-admin-settings.php:733
 msgid "Profile Cover Photos"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:727
+#: includes/admin/core/class-admin-settings.php:735
 msgid "Switch on/off the profile cover photos"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:732
+#: includes/admin/core/class-admin-settings.php:740
 msgid "Profile Cover Ratio"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:733
+#: includes/admin/core/class-admin-settings.php:741
 msgid "Choose global ratio for cover photos of profiles"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:747
+#: includes/admin/core/class-admin-settings.php:755
 msgid "Profile Header Meta Text Icon"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:749
+#: includes/admin/core/class-admin-settings.php:757
 msgid "Display field icons for related user meta fields in header or not"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:754
+#: includes/admin/core/class-admin-settings.php:762
 msgid "Show display name in profile header"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:756
+#: includes/admin/core/class-admin-settings.php:764
 msgid "Switch on/off the user name on profile header"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:761
+#: includes/admin/core/class-admin-settings.php:769
 msgid "Show social links in profile header"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:763
+#: includes/admin/core/class-admin-settings.php:771
 msgid "Switch on/off the social links on profile header"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:768
+#: includes/admin/core/class-admin-settings.php:776
 msgid "Show user description in header"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:770
+#: includes/admin/core/class-admin-settings.php:778
 msgid "Switch on/off the user description on profile header"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:775
+#: includes/admin/core/class-admin-settings.php:783
 msgid "Enable html support for user description"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:777
+#: includes/admin/core/class-admin-settings.php:785
 msgid ""
 "Switch on/off to enable/disable support for html tags on user description."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:782
+#: includes/admin/core/class-admin-settings.php:790
 msgid "User description maximum chars"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:784
+#: includes/admin/core/class-admin-settings.php:792
 msgid ""
 "Maximum number of characters to allow in user description field in header."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:791
+#: includes/admin/core/class-admin-settings.php:799
 msgid "Profile Header Menu Position"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:793
+#: includes/admin/core/class-admin-settings.php:801
 msgid ""
 "For incompatible themes, please make the menu open from left instead of "
 "bottom by default."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:803
+#: includes/admin/core/class-admin-settings.php:811
 msgid "Show a custom message if profile is empty"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:805
+#: includes/admin/core/class-admin-settings.php:813
 msgid "Switch on/off the custom message that appears when the profile is empty"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:810
+#: includes/admin/core/class-admin-settings.php:818
 msgid "Show the emoticon"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:812
+#: includes/admin/core/class-admin-settings.php:820
 msgid "Switch on/off the emoticon (sad face) that appears above the message"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:818
+#: includes/admin/core/class-admin-settings.php:826
 msgid "Profile Menu"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:822
+#: includes/admin/core/class-admin-settings.php:830
 #: includes/admin/templates/form/mode.php:9
 msgid "Registration Form"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:827
+#: includes/admin/core/class-admin-settings.php:835
 msgid "Registration Default Template"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:828
+#: includes/admin/core/class-admin-settings.php:836
 msgid "This will be the default template to output registration"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:836
+#: includes/admin/core/class-admin-settings.php:844
 msgid "Registration Maximum Width"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:838
-#: includes/admin/core/class-admin-settings.php:928
+#: includes/admin/core/class-admin-settings.php:846
+#: includes/admin/core/class-admin-settings.php:936
 msgid "The maximum width this shortcode can take from the page width"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:844
+#: includes/admin/core/class-admin-settings.php:852
 msgid "Registration Shortcode Alignment"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:845
-#: includes/admin/core/class-admin-settings.php:935
+#: includes/admin/core/class-admin-settings.php:853
+#: includes/admin/core/class-admin-settings.php:943
 #: includes/admin/templates/form/profile_customize.php:115
 msgid "The shortcode is centered by default unless you specify otherwise here"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:848
-#: includes/admin/core/class-admin-settings.php:938
+#: includes/admin/core/class-admin-settings.php:856
+#: includes/admin/core/class-admin-settings.php:946
 msgid "Centered"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:849
-#: includes/admin/core/class-admin-settings.php:939
+#: includes/admin/core/class-admin-settings.php:857
+#: includes/admin/core/class-admin-settings.php:947
 msgid "Left aligned"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:850
-#: includes/admin/core/class-admin-settings.php:940
+#: includes/admin/core/class-admin-settings.php:858
+#: includes/admin/core/class-admin-settings.php:948
 msgid "Right aligned"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:857
+#: includes/admin/core/class-admin-settings.php:865
 msgid "Registration Field Icons"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:858
+#: includes/admin/core/class-admin-settings.php:866
 msgid "This controls the display of field icons in the registration form"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:870
+#: includes/admin/core/class-admin-settings.php:878
 msgid "Registration Primary Button Text"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:872
-#: includes/admin/core/class-admin-settings.php:962
+#: includes/admin/core/class-admin-settings.php:880
+#: includes/admin/core/class-admin-settings.php:970
 msgid "The text that is used for primary button text"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:878
+#: includes/admin/core/class-admin-settings.php:886
 msgid "Registration Secondary Button"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:885
+#: includes/admin/core/class-admin-settings.php:893
 msgid "Registration Secondary Button Text"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:887
-#: includes/admin/core/class-admin-settings.php:977
+#: includes/admin/core/class-admin-settings.php:895
+#: includes/admin/core/class-admin-settings.php:985
 msgid "The text that is used for the secondary button text"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:894
+#: includes/admin/core/class-admin-settings.php:902
 msgid "Registration Secondary Button URL"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:896
-#: includes/admin/core/class-admin-settings.php:986
+#: includes/admin/core/class-admin-settings.php:904
+#: includes/admin/core/class-admin-settings.php:994
 msgid "You can replace default link for this button by entering custom URL"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:903
+#: includes/admin/core/class-admin-settings.php:911
 msgid "Registration Default Role"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:904
+#: includes/admin/core/class-admin-settings.php:912
 msgid ""
 "This will be the default role assigned to users registering thru "
 "registration form"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:912
+#: includes/admin/core/class-admin-settings.php:920
 #: includes/admin/templates/form/mode.php:13
 msgid "Login Form"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:917
+#: includes/admin/core/class-admin-settings.php:925
 msgid "Login Default Template"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:918
+#: includes/admin/core/class-admin-settings.php:926
 msgid "This will be the default template to output login"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:926
+#: includes/admin/core/class-admin-settings.php:934
 msgid "Login Maximum Width"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:934
+#: includes/admin/core/class-admin-settings.php:942
 msgid "Login Shortcode Alignment"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:947
+#: includes/admin/core/class-admin-settings.php:955
 msgid "Login Field Icons"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:948
+#: includes/admin/core/class-admin-settings.php:956
 msgid "This controls the display of field icons in the login form"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:960
+#: includes/admin/core/class-admin-settings.php:968
 msgid "Login Primary Button Text"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:968
+#: includes/admin/core/class-admin-settings.php:976
 msgid "Login Secondary Button"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:975
+#: includes/admin/core/class-admin-settings.php:983
 msgid "Login Secondary Button Text"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:984
+#: includes/admin/core/class-admin-settings.php:992
 msgid "Login Secondary Button URL"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:993
+#: includes/admin/core/class-admin-settings.php:1001
 msgid "Login Forgot Password Link"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:995
+#: includes/admin/core/class-admin-settings.php:1003
 msgid "Switch on/off the forgot password link in login form"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1000
+#: includes/admin/core/class-admin-settings.php:1008
 msgid "Show \"Remember Me\""
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1002
+#: includes/admin/core/class-admin-settings.php:1010
 msgid ""
 "Allow users to choose If they want to stay signed in even after closing the "
 "browser. If you do not show this option, the default will be to not remember "
 "login session."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1012
+#: includes/admin/core/class-admin-settings.php:1020
 msgid "Licenses"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1015
+#: includes/admin/core/class-admin-settings.php:1023
 msgid "Misc"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1020
+#: includes/admin/core/class-admin-settings.php:1028
 msgid "Show an asterisk for required fields"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1025
+#: includes/admin/core/class-admin-settings.php:1033
 msgid "User Profile Title"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1026
+#: includes/admin/core/class-admin-settings.php:1034
 msgid "This is the title that is displayed on a specific user profile"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1032
+#: includes/admin/core/class-admin-settings.php:1040
 msgid "User Profile Dynamic Meta Description"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1033
+#: includes/admin/core/class-admin-settings.php:1041
 msgid ""
 "This will be used in the meta description that is available for search-"
 "engines."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1041
+#: includes/admin/core/class-admin-settings.php:1049
 msgid "Remove Data on Uninstall?"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1042
+#: includes/admin/core/class-admin-settings.php:1050
 msgid ""
 "Check this box if you would like Ultimate Member to completely remove all of "
 "its data when the plugin/extensions are deleted."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1047
+#: includes/admin/core/class-admin-settings.php:1055
 msgid "Install Info"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1161
+#: includes/admin/core/class-admin-settings.php:1169
 msgid "Ultimate Member - Settings"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1300
+#: includes/admin/core/class-admin-settings.php:1308
 msgid "Save Changes"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1743
+#: includes/admin/core/class-admin-settings.php:1751
 msgid "Subject Line"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1745
+#: includes/admin/core/class-admin-settings.php:1753
 msgid "This is the subject line of the e-mail"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1750
+#: includes/admin/core/class-admin-settings.php:1758
 msgid "Message Body"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1752
+#: includes/admin/core/class-admin-settings.php:1760
 msgid "This is the content of the e-mail"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1802
-#: includes/admin/core/class-admin-settings.php:1900
+#: includes/admin/core/class-admin-settings.php:1810
+#: includes/admin/core/class-admin-settings.php:1908
 #, php-format
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" target=\"_blank"
 "\">renew your license key</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1815
-#: includes/admin/core/class-admin-settings.php:1913
+#: includes/admin/core/class-admin-settings.php:1823
+#: includes/admin/core/class-admin-settings.php:1921
 #, php-format
 msgid ""
 "Your license key has been disabled. Please <a href=\"%s\" target=\"_blank"
 "\">contact support</a> for more information."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1827
-#: includes/admin/core/class-admin-settings.php:1925
+#: includes/admin/core/class-admin-settings.php:1835
+#: includes/admin/core/class-admin-settings.php:1933
 #, php-format
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\">visit your account "
 "page</a> and verify it."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1840
-#: includes/admin/core/class-admin-settings.php:1938
+#: includes/admin/core/class-admin-settings.php:1848
+#: includes/admin/core/class-admin-settings.php:1946
 #, php-format
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" target=\"_blank"
 "\">visit your account page</a> to manage your license key URLs."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1852
-#: includes/admin/core/class-admin-settings.php:1950
+#: includes/admin/core/class-admin-settings.php:1860
+#: includes/admin/core/class-admin-settings.php:1958
 #, php-format
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1861
-#: includes/admin/core/class-admin-settings.php:1959
+#: includes/admin/core/class-admin-settings.php:1869
+#: includes/admin/core/class-admin-settings.php:1967
 #, php-format
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1870
-#: includes/admin/core/class-admin-settings.php:1968
+#: includes/admin/core/class-admin-settings.php:1878
+#: includes/admin/core/class-admin-settings.php:1976
 msgid ""
 "The key you entered belongs to a bundle, please use the product specific "
 "license key."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1878
 #: includes/admin/core/class-admin-settings.php:1886
+#: includes/admin/core/class-admin-settings.php:1894
 msgid "unknown_error"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1879
 #: includes/admin/core/class-admin-settings.php:1887
+#: includes/admin/core/class-admin-settings.php:1895
 #, php-format
 msgid ""
 "There was an error with this license key: %s. Please <a href=\"%s\">contact "
 "our support team</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1983
+#: includes/admin/core/class-admin-settings.php:1991
 msgid "License key never expires."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1990
+#: includes/admin/core/class-admin-settings.php:1998
 #, php-format
 msgid ""
 "Your license key expires soon! It expires on %s. <a href=\"%s\" target="
 "\"_blank\">Renew your license key</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2000
+#: includes/admin/core/class-admin-settings.php:2008
 #, php-format
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2018
+#: includes/admin/core/class-admin-settings.php:2026
 #, php-format
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2042
+#: includes/admin/core/class-admin-settings.php:2050
 msgid "Clear License"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2044
+#: includes/admin/core/class-admin-settings.php:2052
 msgid "Activate"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2046
+#: includes/admin/core/class-admin-settings.php:2054
 msgid "Re-Activate"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2098
+#: includes/admin/core/class-admin-settings.php:2106
 msgid ""
 "To copy the Install info, click below then press Ctrl + C (PC) or Cmd + C "
 "(Mac)."
@@ -2523,7 +2533,7 @@ msgid "UM Action"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:116
-#: includes/core/class-fields.php:2301
+#: includes/core/class-fields.php:2302
 msgid "Apply"
 msgstr ""
 
@@ -3143,31 +3153,31 @@ msgstr ""
 msgid "We are sorry. We cannot find any users who match your search criteria."
 msgstr ""
 
-#: includes/admin/templates/extensions.php:165
+#: includes/admin/templates/extensions.php:166
 msgid ""
 "<strong>All Access Pass</strong> – Get access to all Ultimate Member "
 "extensions at a significant discount with our All Access Pass."
 msgstr ""
 
-#: includes/admin/templates/extensions.php:169
+#: includes/admin/templates/extensions.php:170
 msgid "View Pricing"
 msgstr ""
 
-#: includes/admin/templates/extensions.php:178
+#: includes/admin/templates/extensions.php:179
 msgid "Premium"
 msgstr ""
 
-#: includes/admin/templates/extensions.php:183
+#: includes/admin/templates/extensions.php:184
 msgid "Free"
 msgstr ""
 
-#: includes/admin/templates/extensions.php:209
-#: includes/admin/templates/extensions.php:243
+#: includes/admin/templates/extensions.php:210
+#: includes/admin/templates/extensions.php:244
 msgid "Get this Add on"
 msgstr ""
 
-#: includes/admin/templates/extensions.php:214
-#: includes/admin/templates/extensions.php:248
+#: includes/admin/templates/extensions.php:215
+#: includes/admin/templates/extensions.php:249
 msgid "More Details"
 msgstr ""
 
@@ -3352,17 +3362,17 @@ msgstr ""
 msgid "Show user description in profile header?"
 msgstr ""
 
-#: includes/admin/templates/form/profile_settings.php:17
+#: includes/admin/templates/form/profile_settings.php:20
 msgid "Field(s) to show in user meta"
 msgstr ""
 
-#: includes/admin/templates/form/profile_settings.php:18
+#: includes/admin/templates/form/profile_settings.php:21
 msgid ""
 "Fields selected here will appear in the profile header area below the user's "
 "display name"
 msgstr ""
 
-#: includes/admin/templates/form/profile_settings.php:21
+#: includes/admin/templates/form/profile_settings.php:24
 msgid "Add New Field"
 msgstr ""
 
@@ -3497,7 +3507,7 @@ msgstr ""
 #: includes/admin/templates/modal/dynamic_new_group.php:15
 #: includes/admin/templates/modal/fonticons.php:11
 #: includes/admin/templates/role/publish.php:24
-#: includes/core/class-fields.php:2302 includes/core/class-fields.php:2399
+#: includes/core/class-fields.php:2303 includes/core/class-fields.php:2400
 #: includes/core/um-actions-profile.php:554
 #: includes/core/um-actions-profile.php:693
 #: includes/core/um-actions-profile.php:726
@@ -3846,31 +3856,31 @@ msgstr ""
 msgid "Check All"
 msgstr ""
 
-#: includes/class-config.php:129 includes/class-config.php:734
+#: includes/class-config.php:129 includes/class-config.php:736
 msgid "User"
 msgstr ""
 
 #: includes/class-config.php:130 includes/class-config.php:235
-#: includes/class-config.php:241 includes/class-config.php:735
+#: includes/class-config.php:241 includes/class-config.php:737
 msgid "Login"
 msgstr ""
 
 #: includes/class-config.php:131 includes/class-config.php:233
-#: includes/class-config.php:245 includes/class-config.php:736
+#: includes/class-config.php:245 includes/class-config.php:738
 msgid "Register"
 msgstr ""
 
-#: includes/class-config.php:132 includes/class-config.php:737
+#: includes/class-config.php:132 includes/class-config.php:739
 msgid "Members"
 msgstr ""
 
-#: includes/class-config.php:133 includes/class-config.php:738
+#: includes/class-config.php:133 includes/class-config.php:740
 #: includes/core/um-actions-profile.php:1077
 #: includes/core/um-actions-user.php:15
 msgid "Logout"
 msgstr ""
 
-#: includes/class-config.php:135 includes/class-config.php:740
+#: includes/class-config.php:135 includes/class-config.php:742
 msgid "Password Reset"
 msgstr ""
 
@@ -3990,36 +4000,36 @@ msgid ""
 "account data from the site. To delete your account enter your password below"
 msgstr ""
 
-#: includes/class-dependencies.php:162
+#: includes/class-dependencies.php:163
 #, php-format
 msgid ""
 "This version of <strong>\"%s\"</strong> requires the core <strong>%s</"
 "strong> plugin to be <strong>%s</strong> or higher."
 msgstr ""
 
-#: includes/class-dependencies.php:164
+#: includes/class-dependencies.php:165
 #, php-format
 msgid "Please update <strong>%s</strong> to the latest version."
 msgstr ""
 
-#: includes/class-dependencies.php:166
+#: includes/class-dependencies.php:167
 #, php-format
 msgid ""
 "Sorry, but this version of <strong>%s</strong> does not work with extension "
 "<strong>\"%s\" %s</strong> version."
 msgstr ""
 
-#: includes/class-dependencies.php:168
+#: includes/class-dependencies.php:169
 #, php-format
 msgid "Please update extension <strong>\"%s\"</strong> to the latest version."
 msgstr ""
 
-#: includes/class-dependencies.php:177
+#: includes/class-dependencies.php:178
 #, php-format
 msgid "Please check <strong>\"%s\" %s</strong> extension's folder name."
 msgstr ""
 
-#: includes/class-dependencies.php:179
+#: includes/class-dependencies.php:180
 #, php-format
 msgid "Correct folder name is <strong>\"%s\"</strong>"
 msgstr ""
@@ -6214,89 +6224,89 @@ msgstr ""
 msgid "Add translation to %s"
 msgstr ""
 
-#: includes/core/class-fields.php:1166 templates/message.php:5
+#: includes/core/class-fields.php:1167 templates/message.php:5
 #, php-format
 msgid "%s"
 msgstr ""
 
-#: includes/core/class-fields.php:1185
+#: includes/core/class-fields.php:1186
 msgid "Custom Field"
 msgstr ""
 
-#: includes/core/class-fields.php:1482
+#: includes/core/class-fields.php:1483
 msgid "Please upload a valid image!"
 msgstr ""
 
-#: includes/core/class-fields.php:1489 includes/core/class-fields.php:1510
+#: includes/core/class-fields.php:1490 includes/core/class-fields.php:1511
 msgid "Upload"
 msgstr ""
 
-#: includes/core/class-fields.php:1490
+#: includes/core/class-fields.php:1491
 msgid "Sorry this is not a valid image."
 msgstr ""
 
-#: includes/core/class-fields.php:1491
+#: includes/core/class-fields.php:1492
 msgid "This image is too large!"
 msgstr ""
 
-#: includes/core/class-fields.php:1492
+#: includes/core/class-fields.php:1493
 msgid "This image is too small!"
 msgstr ""
 
-#: includes/core/class-fields.php:1493
+#: includes/core/class-fields.php:1494
 msgid "You can only upload one image"
 msgstr ""
 
-#: includes/core/class-fields.php:1960
+#: includes/core/class-fields.php:1961
 msgid "Current Password"
 msgstr ""
 
-#: includes/core/class-fields.php:1989
+#: includes/core/class-fields.php:1990
 msgid "New Password"
 msgstr ""
 
-#: includes/core/class-fields.php:2021
+#: includes/core/class-fields.php:2022
 #, php-format
 msgid "Confirm %s"
 msgstr ""
 
-#: includes/core/class-fields.php:2256
+#: includes/core/class-fields.php:2257
 msgid "Upload Photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2277 includes/core/class-fields.php:2301
+#: includes/core/class-fields.php:2278 includes/core/class-fields.php:2302
 #: includes/core/um-actions-profile.php:724
 msgid "Change photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2301 includes/core/class-fields.php:2398
+#: includes/core/class-fields.php:2302 includes/core/class-fields.php:2399
 msgid "Processing..."
 msgstr ""
 
-#: includes/core/class-fields.php:2323
+#: includes/core/class-fields.php:2324
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:2365 includes/core/um-filters-fields.php:243
+#: includes/core/class-fields.php:2366 includes/core/um-filters-fields.php:243
 msgid "This file has been removed."
 msgstr ""
 
-#: includes/core/class-fields.php:2368 includes/core/class-fields.php:2398
+#: includes/core/class-fields.php:2369 includes/core/class-fields.php:2399
 msgid "Change file"
 msgstr ""
 
-#: includes/core/class-fields.php:2398
+#: includes/core/class-fields.php:2399
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:3821
+#: includes/core/class-fields.php:3822
 #, php-format
 msgid ""
 "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some "
 "information!"
 msgstr ""
 
-#: includes/core/class-fields.php:3823
+#: includes/core/class-fields.php:3824
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
