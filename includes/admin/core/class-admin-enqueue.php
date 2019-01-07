@@ -393,6 +393,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 * Load Gutenberg scripts
 		 */
 		function load_gutenberg_js() {
+			//disable Gutenberg scripts to avoid the conflicts
+			$disable_script = apply_filters( 'um_disable_blocks_script', false );
+			if ( $disable_script ) {
+				return;
+			}
+
 			wp_register_script( 'um_block_js', $this->js_url . 'um-admin-blocks.js', array( 'wp-i18n', 'wp-blocks', 'wp-editor', 'wp-components' ), ultimatemember_version, true );
 			wp_set_script_translations( 'um_block_js', 'ultimate-member' );
 
