@@ -34,36 +34,25 @@ jQuery(document).ready(function() {
 
 
 	/* Add a Field */
-	jQuery(document.body).on('submit', 'form.um_add_field', function(e){
-
+	jQuery(document.body).on('submit', 'form.um_add_field', function(e) {
 		e.preventDefault();
-        var conditions = jQuery('.um-admin-cur-condition');
-        //need fields refactor
-        jQuery(conditions).each( function ( i ) {
 
-            if ( jQuery( this ).find('[id^="_conditional_action"]').val() === '' ||
-                jQuery( this ).find('[id^="_conditional_field"]').val() === '' ||
-                jQuery( this ).find('[id^="_conditional_operator"]').val() ==='' )
-            {
-                jQuery(conditions[i]).find('.um-admin-remove-condition').click();
-            }
-        } );
-        conditions = jQuery('.um-admin-cur-condition');
-        jQuery(conditions).each( function ( i ) {
-            var id = i === 0 ? '' : i;
+		//need fields refactor
+		jQuery('.um-admin-cur-condition').each( function() {
+			if ( jQuery( this ).find('[id^="_conditional_action"]').val() === '' ||
+				jQuery( this ).find('[id^="_conditional_field"]').val() === '' ||
+				jQuery( this ).find('[id^="_conditional_operator"]').val() === '' ) {
 
-			jQuery( this ).find('[id^="_conditional_action"]').attr('name', '_conditional_action' + id);
-			jQuery( this ).find('[id^="_conditional_action"]').attr('id', '_conditional_action' + id);
-			jQuery( this ).find('[id^="_conditional_field"]').attr('name', '_conditional_field' + id);
-			jQuery( this ).find('[id^="_conditional_field"]').attr('id', '_conditional_field' + id);
-			jQuery( this ).find('[id^="_conditional_operator"]').attr('name', '_conditional_operator' + id);
-			jQuery( this ).find('[id^="_conditional_operator"]').attr('id', '_conditional_operator' + id);
-			jQuery( this ).find('[id^="_conditional_value"]').attr('name', '_conditional_value' + id);
-			jQuery( this ).find('[id^="_conditional_value"]').attr('id', '_conditional_value' + id);
+				if ( jQuery('.um-admin-cur-condition').length !== 1 ) {
+					jQuery( this ).find('.um-admin-remove-condition').trigger('click');
+				}
+			}
+		} );
 
-        } );
+		//need fields refactor
+		um_build_conditions();
+
 		var form = jQuery(this);
-
 		jQuery.ajax({
 			url: wp.ajax.settings.url,
 			type: 'POST',
@@ -85,8 +74,8 @@ jQuery(document).ready(function() {
 					jQuery.each(data.error, function(i, v){
 						c++;
 						if ( c == 1 ) {
-						form.find('#'+i).addClass('um-admin-error').focus();
-						form.find('.um-admin-error-block').show().html(v);
+							form.find('#'+i).addClass('um-admin-error').focus();
+							form.find('.um-admin-error-block').show().html(v);
 						}
 					});
 

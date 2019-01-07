@@ -1111,21 +1111,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 *
 		 * @param $post_id
 		 * @param $post
-		 *
-		 * @return mixed
 		 */
 		function save_metabox_form( $post_id, $post ) {
 			global $wpdb;
 
 			// validate nonce
-			if ( !isset( $_POST['um_admin_save_metabox_form_nonce'] ) || !wp_verify_nonce( $_POST['um_admin_save_metabox_form_nonce'], basename( __FILE__ ) ) ) return $post_id;
+			if ( ! isset( $_POST['um_admin_save_metabox_form_nonce'] ) || ! wp_verify_nonce( $_POST['um_admin_save_metabox_form_nonce'], basename( __FILE__ ) ) ) {
+				return;
+			}
 
 			// validate post type
-			if ( $post->post_type != 'um_form' ) return $post_id;
+			if ( $post->post_type != 'um_form' ) {
+				return;
+			}
 
 			// validate user
 			$post_type = get_post_type_object( $post->post_type );
-			if ( !current_user_can( $post_type->cap->edit_post, $post_id ) ) return $post_id;
+			if ( !current_user_can( $post_type->cap->edit_post, $post_id ) ) {
+				return;
+			}
 
 			$where = array( 'ID' => $post_id );
 			if ( empty( $_POST['post_title'] ) ) $_POST['post_title'] = 'Form #' . $post_id;
@@ -1198,7 +1202,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 			if ( $this->in_edit == true ) { // we're editing a field
 				$real_attr = substr( $attribute, 1 );
-				$this->edit_mode_value = (isset( $this->edit_array[ $real_attr ] ) ) ?  $this->edit_array[ $real_attr ] : null;
+				$this->edit_mode_value = isset( $this->edit_array[ $real_attr ] ) ?  $this->edit_array[ $real_attr ] : null;
+			}
+
+			$field_args_html = '';
+			foreach ( $field_args as $tag => $tag_value ) {
+				if ( ! is_string( $tag_value ) ) {
+					continue;
+				}
+				$tag_value = esc_attr( $tag_value );
+				$field_args_html .= "$tag=\"$tag_value\" ";
 			}
 
 			switch ( $attribute ) {
@@ -1244,19 +1257,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_conditional_action1':
 				case '_conditional_action2':
 				case '_conditional_action3':
-				case '_conditional_action4':
-				?>
+				case '_conditional_action4': ?>
 
 				<p>
-					<select name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" style="width: 90px">
+					<select name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" style="width: 90px" <?php echo $field_args_html ?>>
 
 						<option></option>
 
-						<?php $actions = array( 'show', 'hide' );
-						foreach ( $actions as $action ) { ?>
+						<?php $actions = array(
+							'show'  => __( 'Show', 'ultimate-member' ),
+							'hide'  => __( 'Hide', 'ultimate-member' )
+						);
+						foreach ( $actions as $action => $label ) { ?>
 
 							<option value="<?php echo $action; ?>" <?php selected( $action, $this->edit_mode_value ); ?>>
-								<?php echo $action; ?>
+								<?php echo $label; ?>
 							</option>
 
 						<?php } ?>
@@ -1277,7 +1292,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				?>
 
 				<p>
-					<select name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" style="width: 150px">
+					<select name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" style="width: 150px" <?php echo $field_args_html ?>>
 
 						<option></option>
 
@@ -1308,24 +1323,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				?>
 
 				<p>
-					<select name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" style="width: 150px">
+					<select name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" style="width: 150px" <?php echo $field_args_html ?>>
 
 						<option></option>
 
 						<?php $operators = array(
-							'empty',
-							'not empty',
-							'equals to',
-							'not equals',
-							'greater than',
-							'less than',
-							'contains'
+							'empty'         => __( 'Empty', 'ultimate-member' ),
+							'not empty'     => __( 'Not empty', 'ultimate-member' ),
+							'equals to'     => __( 'Equals to', 'ultimate-member' ),
+							'not equals'    => __( 'Not equals', 'ultimate-member' ),
+							'greater than'  => __( 'Greater than', 'ultimate-member' ),
+							'less than'     => __( 'Less than', 'ultimate-member' ),
+							'contains'      => __( 'Contains', 'ultimate-member' ),
 						);
 
-						foreach ( $operators as $operator ) { ?>
+						foreach ( $operators as $operator => $label ) { ?>
 
 							<option value="<?php echo $operator; ?>" <?php selected( $operator, $this->edit_mode_value ); ?>>
-								<?php echo $operator; ?>
+								<?php echo $label; ?>
 							</option>
 
 						<?php } ?>
@@ -1343,7 +1358,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_conditional_value4': ?>
 
 					<p>
-						<input type="text" name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" value="<?php echo isset( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" placeholder="<?php _e( 'Value', 'ultimate-member' ); ?>" style="width: 150px!important;position: relative;top: -1px;" />
+						<input type="text" name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" value="<?php echo isset( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" placeholder="<?php _e( 'Value', 'ultimate-member' ); ?>" style="width: 150px!important;position: relative;top: -1px;" <?php echo $field_args_html ?> />
 					</p>
 
 					<?php break;
@@ -1355,7 +1370,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_conditional_compare4': ?>
 
 					<p>
-						<input type="hidden" name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" value="<?php echo isset( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>">
+						<input type="hidden" name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" value="<?php echo isset( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" <?php echo $field_args_html ?> />
 					</p>
 
 					<?php break;
@@ -1367,7 +1382,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_conditional_group4': ?>
 
 					<p>
-						<input type="hidden" name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" value="<?php echo isset( $this->edit_mode_value ) ? $this->edit_mode_value : '0'; ?>">
+						<input type="hidden" name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" value="<?php echo isset( $this->edit_mode_value ) ? $this->edit_mode_value : '0'; ?>" <?php echo $field_args_html ?> />
 					</p>
 
 					<?php break;

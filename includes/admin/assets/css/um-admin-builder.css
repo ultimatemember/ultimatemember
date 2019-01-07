@@ -302,3 +302,22 @@
 	box-sizing: border-box;
 	width: 100%;
 }
+
+.um_conditional_action {
+	width: 90px;
+}
+
+.um_conditional_field,
+.um_conditional_operator {
+	width: 150px;
+}
+
+.um_conditional_value {
+	width: 150px !important;
+	position: relative;
+	top: -1px;
+}
+
+.um-admin .um-admin-remove-condition .um-icon-close {
+	margin-right:0 !important;
+}

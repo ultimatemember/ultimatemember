@@ -336,12 +336,21 @@ hr.or-devider:after {
 	content: '';
 	display: block;
 }
+
 .um-admin-cur-condition + .um-admin-cur-condition:before {
 	content: 'AND';
 	display: block;
 	position: absolute;
 	top: -25px;
 	right: -7px;
+}
+
+.um-condition-group-wrapper .or-devider {
+	visibility: hidden;
+}
+
+.um-condition-group-wrapper + .um-condition-group-wrapper .or-devider {
+	visibility: visible;
 }
 .um-admin-cur-condition p:last-of-type('p') {
 	float: right;

@@ -8,13 +8,20 @@
  */
 function um_add_form_identifier( $args ) {
 	$conditional_array = array();
-	foreach ( $args['custom_fields'] as $arg ) {
+	/*foreach ( $args['custom_fields'] as $arg ) {
 		if ( isset( $arg['conditions'] ) ) {
 			$field_array = array(
 				'metakey'       => $arg['metakey'],
 				'conditions'    => $arg['conditions'],
 			);
 			array_push( $conditional_array, $field_array );
+		}
+	}
+	$cond_data = json_encode( $conditional_array );*/
+
+	foreach ( $args['custom_fields'] as $arg ) {
+		if ( isset( $arg['conditions'] ) ) {
+			$conditional_array[ $arg['metakey'] ] = $arg['conditions'];
 		}
 	}
 	$cond_data = json_encode( $conditional_array ); ?>

@@ -1,15 +1,84 @@
-function condition_fields() {
-	var all_conds = jQuery('.condition-data').attr('data-conds');
-	var array = JSON.parse(all_conds);
+/**
+ * Run conditional logic
+ */
+function um_run_conditional_logic() {
+	jQuery( '.um-field' ).removeClass('um-field-conditioned').each( function() {
+		if ( jQuery(this).hasClass('um-field-conditioned') ) {
+			return;
+		}
 
-	jQuery.each(array, function () {
+		if ( um_check_condition( jQuery(this) ) ) {
+			jQuery(this).show();
+		} else {
+			jQuery(this).hide();
+		}
+	});
+}
+
+
+function um_check_condition( form_field ) {
+	form_field.addClass( 'um-field-conditioned' );
+
+	/*var conditional = form_field.data('conditional');
+	var condition = conditional[1];
+	var value = conditional[2];*/
+	var all_conds = JSON.parse( jQuery('.condition-data').data( 'conds' ) );
+
+	form_field.data('key');
+
+	var conditional = form_field.data('conditional');
+
+	var prefix = form_field.data( 'prefix' );
+
+	var condition_field = jQuery( '#' + prefix + '_' + conditional[0] );
+	var parent_condition = true;
+	if ( typeof condition_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
+		parent_condition = check_condition( condition_field.parents('.um-forms-line') );
+	}
+
+	var own_condition = false;
+	if ( condition == '=' ) {
+		var tagName = condition_field.prop("tagName").toLowerCase();
+
+		if ( tagName == 'input' ) {
+			var input_type = condition_field.attr('type');
+			if ( input_type == 'checkbox' ) {
+				own_condition = ( value == '1' ) ? condition_field.is(':checked') : ! condition_field.is(':checked');
+			} else {
+				own_condition = ( condition_field.val() == value );
+			}
+		} else if ( tagName == 'select' ) {
+			own_condition = ( condition_field.val() == value );
+		}
+	} else if ( condition == '!=' ) {
+		var tagName = condition_field.prop("tagName").toLowerCase();
+
+		if ( tagName == 'input' ) {
+			var input_type = condition_field.attr('type');
+			if ( input_type == 'checkbox' ) {
+				own_condition = ( value == '1' ) ? ! condition_field.is(':checked') : condition_field.is(':checked');
+			} else {
+				own_condition = ( condition_field.val() != value );
+			}
+		} else if ( tagName == 'select' ) {
+			own_condition = ( condition_field.val() != value );
+		}
+	}
+
+	return ( own_condition && parent_condition );
+}
+
+
+function condition_fields() {
+	var all_conds = JSON.parse( jQuery('.condition-data').data( 'conds' ) );
+
+	jQuery.each( all_conds, function( metakey ) {
 		var first_group = 0,
 			state_array = [],
 			count = state_array.length,
-			state = 'show',
-			metakey = this.metakey;
+			state = 'show';
 
-		jQuery.each(this.conditions, function () {
+		jQuery.each( all_conds[ metakey ], function() {
 			var action = this[0],
 				field = this[1],
 				op = this[2],
@@ -654,12 +723,8 @@ function condition_fields() {
 
 		});
 
-
-
 		var field = jQuery('.um-field[data-key="' + metakey + '"]');
-
-
-		if(jQuery.inArray('full_hide', state_array) < 0){
+		if ( jQuery.inArray('full_hide', state_array) < 0 ) {
 			if (jQuery.inArray('show', state_array) < 0) {
 				field.hide();
 				field.find('input, textarea').attr('disabled', 'disabled').attr('readonly','readonly');
@@ -671,24 +736,19 @@ function condition_fields() {
 			field.hide();
 			field.find('input, textarea').attr('disabled', 'disabled').attr('readonly','readonly');
 		}
-
-
 	});
 }
 
 function check_parent() {
-	var all_conds = jQuery('.condition-data').attr('data-conds');
-	var array = JSON.parse(all_conds);
+	var all_conds = JSON.parse( jQuery('.condition-data').data('conds') );
 
-	jQuery.each(array, function () {
-		var metakey = this.metakey;
-
-		jQuery.each(this.conditions, function () {
+	jQuery.each( all_conds, function( metakey ) {
+		jQuery.each( all_conds[ metakey ], function() {
 			var field = this[1];
 			var check_field = jQuery('.um-field[data-key="' + field + '"]').is(':visible');
 			var check = jQuery('.um-field[data-key="' + metakey + '"]');
 
-			if( check_field === false ){
+			if( check_field === false ) {
 				check.hide();
 				check.find('input, textarea').attr('disabled', 'disabled').attr('readonly','readonly');
 				return false;
@@ -698,29 +758,33 @@ function check_parent() {
 	});
 }
 
-jQuery(document).ready(function () {
+jQuery(document).ready(function() {
 
-	condition_fields();
+	um_run_conditional_logic();
+
+	/*condition_fields();
 	check_parent();
-
+*/
 	jQuery('.um-field input, .um-field textarea').on('change keyup', function () {
 		condition_fields();
 		check_parent();
 	});
+
+	jQuery('.um-field select').on('change', function () {
+		condition_fields();
+		check_parent();
+	});
+
 	jQuery(document).on('click','.um-modal .um-finish-upload', function () {
 		condition_fields();
 		check_parent();
 	});
+
+
 	jQuery(document).on('click','.um-field-area .cancel', function () {
 		setTimeout(function () {
 			condition_fields();
 			check_parent();
 		})
 	});
-	jQuery('.um-field select').on('change', function () {
-		condition_fields();
-		check_parent();
-	});
-
-
 });
