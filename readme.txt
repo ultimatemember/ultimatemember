@@ -137,15 +137,14 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * Enhancements:
   - Additional Block's restriction options
-  - Added block to show User Account Status
-
-* Bugfixes:
-  - Added filter for disable Gutenberg blocks restriction to avoid themes conflicts
+  - Added column to show User Account Status
+  - Added filter for disabling Gutenberg blocks restriction to avoid themes conflicts
 
 = 2.0.36: January 7, 2019 =
 
 * Enhancements:
   - Added Block's restriction options
+  - Added compatibility for upcoming User Events extension
 
 * Bugfixes:
   - Fixed Live Preview form at wp-admin
@@ -155,7 +154,6 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed small notices at frontend
   - Fixed a few admin settings fields
   - Fixed displaying comments when they are disabled
-  - Added compatibility for upcoming User Events extension
 
 = 2.0.35: December 9, 2018 =
 
