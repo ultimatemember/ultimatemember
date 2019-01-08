@@ -80,12 +80,10 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		 *
 		 * @description Fix issue "404 Not Found" on profile page
 		 * @hook template_redirect
-		 * @see elementName http://transposh.org/
+		 * @see http://transposh.org/
 		 *
 		 * @global transposh_plugin $my_transposh_plugin
 		 * @global WP_Query $wp_query Global WP_Query instance.
-		 *
-		 * @return type
 		 */
 		public function transposh_user_profile() {
 			global $my_transposh_plugin, $wp_query;
