@@ -1172,7 +1172,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				return $block_content;
 			}
 
-			if ( $block['attrs']['um_is_restrict'] !== true ) {
+			if ( ! isset( $block['attrs']['um_is_restrict'] ) || $block['attrs']['um_is_restrict'] !== true ) {
 				return $block_content;
 			}
 
