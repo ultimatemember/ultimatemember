@@ -37,18 +37,18 @@ var um_block_restriction = wp.compose.createHigherOrderComponent( function( Bloc
 				um_condition_fields['um_roles_access'] = '';
 				um_condition_fields['um_message_type'] = '';
 
-				if ( parseInt( props.attributes.um_message_type ) === 0 || typeof props.attributes.um_message_type === 'undefined' ) {
-					um_condition_fields['um_message_content'] = 'um_block_settings_hide';
-				} else {
+				if ( parseInt( props.attributes.um_message_type ) === 2 ) {
 					um_condition_fields['um_message_content'] = '';
+				} else {
+					um_condition_fields['um_message_content'] = 'um_block_settings_hide';
 				}
 			} else {
 				um_condition_fields['um_message_type'] = '';
 
-				if ( parseInt( props.attributes.um_message_type ) === 0 || typeof props.attributes.um_message_type === 'undefined' ) {
-					um_condition_fields['um_message_content'] = 'um_block_settings_hide';
-				} else {
+				if ( parseInt( props.attributes.um_message_type ) === 2 ) {
 					um_condition_fields['um_message_content'] = '';
+				} else {
+					um_condition_fields['um_message_content'] = 'um_block_settings_hide';
 				}
 			}
 		}
@@ -138,24 +138,28 @@ var um_block_restriction = wp.compose.createHigherOrderComponent( function( Bloc
 						{
 							type: 'number',
 							className: um_condition_fields['um_message_type'],
-							label: wp.i18n.__( 'Restriction Message', 'ultimate-member' ),
+							label: wp.i18n.__( 'Restriction Action', 'ultimate-member' ),
 							value: props.attributes.um_message_type,
 							options: [
 								{
-									label: wp.i18n.__( 'Global default message', 'ultimate-member' ),
+									label: wp.i18n.__( 'Hide block', 'ultimate-member' ),
 									value: 0
 								},
 								{
-									label: wp.i18n.__( 'Custom Message', 'ultimate-member' ),
+									label: wp.i18n.__( 'Show global default message', 'ultimate-member' ),
 									value: 1
+								},
+								{
+									label: wp.i18n.__( 'Show custom message', 'ultimate-member' ),
+									value: 2
 								}
 							],
 							onChange: function onChange( value ) {
 								props.setAttributes({ um_message_type: value });
-								if ( parseInt( value ) === 0 ) {
-									um_condition_fields['um_message_content'] = 'um_block_settings_hide';
-								} else {
+								if ( parseInt( value ) === 2 ) {
 									um_condition_fields['um_message_content'] = '';
+								} else {
+									um_condition_fields['um_message_content'] = 'um_block_settings_hide';
 								}
 							}
 						}
@@ -165,7 +169,7 @@ var um_block_restriction = wp.compose.createHigherOrderComponent( function( Bloc
 						{
 							type: 'number',
 							className: um_condition_fields['um_message_content'],
-							label: wp.i18n.__( 'Message Content', 'ultimate-member' ),
+							label: wp.i18n.__( 'Restriction Message Content', 'ultimate-member' ),
 							value: props.attributes.um_message_content,
 							onChange: function onChange( value ) {
 								props.setAttributes({ um_message_content: value });
