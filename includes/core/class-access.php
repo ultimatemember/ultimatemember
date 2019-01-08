@@ -1172,7 +1172,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				return $block_content;
 			}
 
-			if ( $block['attrs']['um_is_restrict'] !== true ) {
+			if ( ! isset( $block['attrs']['um_is_restrict'] ) || $block['attrs']['um_is_restrict'] !== true ) {
 				return $block_content;
 			}
 
@@ -1186,9 +1186,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					if ( ! is_user_logged_in() ) {
 						$block_content = '';
 						if ( isset( $block['attrs']['um_message_type'] ) ) {
-							if ( $block['attrs']['um_message_type'] == '0' ) {
+							if ( $block['attrs']['um_message_type'] == '1' ) {
 								$block_content = $default_message;
-							} elseif ( $block['attrs']['um_message_type'] == '1' ) {
+							} elseif ( $block['attrs']['um_message_type'] == '2' ) {
 								$block_content = $block['attrs']['um_message_content'];
 							}
 						}
@@ -1204,9 +1204,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							if ( ! $display ) {
 								$block_content = '';
 								if ( isset( $block['attrs']['um_message_type'] ) ) {
-									if ( $block['attrs']['um_message_type'] == '0' ) {
+									if ( $block['attrs']['um_message_type'] == '1' ) {
 										$block_content = $default_message;
-									} elseif ( $block['attrs']['um_message_type'] == '1' ) {
+									} elseif ( $block['attrs']['um_message_type'] == '2' ) {
 										$block_content = $block['attrs']['um_message_content'];
 									}
 								}
@@ -1219,9 +1219,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					if ( is_user_logged_in() ) {
 						$block_content = '';
 						if ( isset( $block['attrs']['um_message_type'] ) ) {
-							if ( $block['attrs']['um_message_type'] == '0' ) {
+							if ( $block['attrs']['um_message_type'] == '1' ) {
 								$block_content = $default_message;
-							} elseif ( $block['attrs']['um_message_type'] == '1' ) {
+							} elseif ( $block['attrs']['um_message_type'] == '2' ) {
 								$block_content = $block['attrs']['um_message_content'];
 							}
 						}
