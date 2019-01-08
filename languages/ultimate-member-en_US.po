@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-01-07 21:02+0200\n"
-"PO-Revision-Date: 2019-01-07 21:02+0200\n"
+"POT-Creation-Date: 2019-01-08 11:08+0200\n"
+"PO-Revision-Date: 2019-01-08 11:08+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -162,27 +162,31 @@ msgstr ""
 msgid "This is not possible for security reasons."
 msgstr ""
 
-#: includes/admin/core/class-admin-columns.php:64
+#: includes/admin/core/class-admin-columns.php:49
+msgid "Status"
+msgstr ""
+
+#: includes/admin/core/class-admin-columns.php:101
 msgid "Duplicate"
 msgstr ""
 
-#: includes/admin/core/class-admin-columns.php:93
-#: includes/admin/core/class-admin-columns.php:113
+#: includes/admin/core/class-admin-columns.php:130
+#: includes/admin/core/class-admin-columns.php:150
 #: includes/admin/templates/role/role-edit.php:171
 msgid "Title"
 msgstr ""
 
-#: includes/admin/core/class-admin-columns.php:94
-#: includes/admin/core/class-admin-columns.php:114
+#: includes/admin/core/class-admin-columns.php:131
+#: includes/admin/core/class-admin-columns.php:151
 msgid "ID"
 msgstr ""
 
-#: includes/admin/core/class-admin-columns.php:95
+#: includes/admin/core/class-admin-columns.php:132
 msgid "Type"
 msgstr ""
 
-#: includes/admin/core/class-admin-columns.php:96
-#: includes/admin/core/class-admin-columns.php:115
+#: includes/admin/core/class-admin-columns.php:133
+#: includes/admin/core/class-admin-columns.php:152
 #: includes/admin/core/class-admin-settings.php:314
 #: includes/admin/templates/form/login_settings.php:13
 #: includes/admin/templates/form/register_customize.php:3
@@ -190,20 +194,20 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: includes/admin/core/class-admin-columns.php:97
-#: includes/admin/core/class-admin-columns.php:116
+#: includes/admin/core/class-admin-columns.php:134
+#: includes/admin/core/class-admin-columns.php:153
 #: includes/admin/core/class-admin-metabox.php:816
 #: includes/admin/core/class-admin-metabox.php:977
 msgid "Shortcode"
 msgstr ""
 
-#: includes/admin/core/class-admin-columns.php:98
-#: includes/admin/core/class-admin-columns.php:117
+#: includes/admin/core/class-admin-columns.php:135
+#: includes/admin/core/class-admin-columns.php:154
 msgid "Date"
 msgstr ""
 
-#: includes/admin/core/class-admin-columns.php:148
-#: includes/admin/core/class-admin-columns.php:181
+#: includes/admin/core/class-admin-columns.php:185
+#: includes/admin/core/class-admin-columns.php:218
 #: includes/admin/core/list-tables/roles-list-table.php:367
 #: includes/admin/core/list-tables/roles-list-table.php:375
 #: includes/admin/templates/form/login_customize.php:13
@@ -226,8 +230,8 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: includes/admin/core/class-admin-columns.php:148
-#: includes/admin/core/class-admin-columns.php:181
+#: includes/admin/core/class-admin-columns.php:185
+#: includes/admin/core/class-admin-columns.php:218
 #: includes/admin/core/list-tables/roles-list-table.php:367
 #: includes/admin/core/list-tables/roles-list-table.php:375
 #: includes/admin/templates/form/login_customize.php:14
