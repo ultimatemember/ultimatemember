@@ -24,13 +24,11 @@ function um_check_condition( form_field ) {
 	var value = conditional[2];*/
 	var all_conds = JSON.parse( jQuery('.condition-data').data( 'conds' ) );
 
-	form_field.data('key');
+	all_conds[ form_field.data('key') ];
 
 	var conditional = form_field.data('conditional');
 
-	var prefix = form_field.data( 'prefix' );
-
-	var condition_field = jQuery( '#' + prefix + '_' + conditional[0] );
+	var condition_field = jQuery( '#' + conditional[0] );
 	var parent_condition = true;
 	if ( typeof condition_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
 		parent_condition = check_condition( condition_field.parents('.um-forms-line') );
