@@ -107,6 +107,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 						'page_id' => $post->ID
 					) );
 					set_query_var( 'um_user', $maches[1] );
+					wp_reset_postdata();
 				}
 			}
 		}
