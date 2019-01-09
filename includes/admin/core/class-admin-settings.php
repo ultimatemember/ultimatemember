@@ -532,10 +532,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									'tooltip'   => __( 'This is the message shown to users that do not have permission to view the content','ultimate-member' ),
 								),
 								array(
-									'id'        => 'restricted_block_message',
-									'type'      => 'textarea',
-									'label'     => __( 'Restricted Block Message', 'ultimate-member' ),
-									'tooltip'   => __( 'This is the message shown to users that do not have permission to view the block\'s content', 'ultimate-member' ),
+									'id'       		=> 'restricted_blocks',
+									'type'     		=> 'checkbox',
+									'label'   		=> __( 'Allow Gutenberg Blocks restriction options', 'ultimate-member' ),
+								),
+								array(
+									'id'            => 'restricted_block_message',
+									'type'          => 'textarea',
+									'label'         => __( 'Restricted Block Message', 'ultimate-member' ),
+									'tooltip'       => __( 'This is the message shown to users that do not have permission to view the block\'s content', 'ultimate-member' ),
+									'conditional'   => array( 'restricted_blocks', '=', 1 ),
 								),
 								array(
 									'id'       		=> 'restricted_access_post_metabox',
