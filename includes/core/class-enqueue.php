@@ -107,7 +107,25 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 
 			wp_register_script('um_functions', $this->js_baseurl . 'um-functions' . $this->suffix . '.js', array( 'jquery', 'jquery-masonry', 'wp-util', 'um_scrollbar' ), ultimatemember_version, true );
 			wp_register_script( 'um-gdpr', $this->js_baseurl . 'um-gdpr' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, false );
+
+
+			/* @todo future A/B enqueue for old/new customers
+			 * $logic_updated = get_option( 'um_conditional_logic_upgrade' );
+			$first_activation_date = get_option( 'um_first_activation_date' );
+
+			$new = true;
+			if ( $first_activation_date < time() - 1 ) {
+				$new = false;
+			}
+
+			if ( $new ) {
+				wp_register_script('um_conditional', $this->js_baseurl . 'um-conditional' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
+			} else {
+				wp_register_script('um_conditional', $this->js_baseurl . 'um-conditional-old' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
+			}*/
+
 			wp_register_script('um_conditional', $this->js_baseurl . 'um-conditional' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
+
 			wp_register_script('um_scripts', $this->js_baseurl . 'um-scripts' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'um_conditional', 'um_datetime', 'um_datetime_date', 'um_datetime_time', 'um_datetime_legacy' ), ultimatemember_version, true );
 			/**
 			 * UM hook
