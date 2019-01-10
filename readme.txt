@@ -133,10 +133,10 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
-= 2.0.38: January 9, 2019 =
+= 2.0.38: January 10, 2019 =
 
 * Enhancements:
-  - Added option to disable Gutenberg Blocks restriction
+  - Added option to enable Gutenberg Blocks restriction
 
 = 2.0.37: January 8, 2019 =
 
