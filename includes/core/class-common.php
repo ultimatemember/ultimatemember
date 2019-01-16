@@ -73,6 +73,7 @@ if ( ! class_exists( 'um\core\Common' ) ) {
 				'show_ui' => true,
 				'show_in_menu' => false,
 				'public' => false,
+				'show_in_rest' => true,
 				'supports' => array('title')
 			) );
 
@@ -102,6 +103,7 @@ if ( ! class_exists( 'um\core\Common' ) ) {
 					'show_ui' => true,
 					'show_in_menu' => false,
 					'public' => false,
+					'show_in_rest' => true,
 					'supports' => array('title')
 				) );
 
