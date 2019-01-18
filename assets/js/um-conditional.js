@@ -1,74 +1,5 @@
-/**
- * Run conditional logic
- */
-function um_run_conditional_logic() {
-	jQuery( '.um-field' ).removeClass('um-field-conditioned').each( function() {
-		if ( jQuery(this).hasClass('um-field-conditioned') ) {
-			return;
-		}
-
-		if ( um_check_condition( jQuery(this) ) ) {
-			jQuery(this).show();
-		} else {
-			jQuery(this).hide();
-		}
-	});
-}
-
-
-function um_check_condition( form_field ) {
-	form_field.addClass( 'um-field-conditioned' );
-
-	/*var conditional = form_field.data('conditional');
-	var condition = conditional[1];
-	var value = conditional[2];*/
-	var all_conds = JSON.parse( jQuery('.condition-data').data( 'conds' ) );
-
-	all_conds[ form_field.data('key') ];
-
-	var conditional = form_field.data('conditional');
-
-	var condition_field = jQuery( '#' + conditional[0] );
-	var parent_condition = true;
-	if ( typeof condition_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
-		parent_condition = check_condition( condition_field.parents('.um-forms-line') );
-	}
-
-	var own_condition = false;
-	if ( condition == '=' ) {
-		var tagName = condition_field.prop("tagName").toLowerCase();
-
-		if ( tagName == 'input' ) {
-			var input_type = condition_field.attr('type');
-			if ( input_type == 'checkbox' ) {
-				own_condition = ( value == '1' ) ? condition_field.is(':checked') : ! condition_field.is(':checked');
-			} else {
-				own_condition = ( condition_field.val() == value );
-			}
-		} else if ( tagName == 'select' ) {
-			own_condition = ( condition_field.val() == value );
-		}
-	} else if ( condition == '!=' ) {
-		var tagName = condition_field.prop("tagName").toLowerCase();
-
-		if ( tagName == 'input' ) {
-			var input_type = condition_field.attr('type');
-			if ( input_type == 'checkbox' ) {
-				own_condition = ( value == '1' ) ? ! condition_field.is(':checked') : condition_field.is(':checked');
-			} else {
-				own_condition = ( condition_field.val() != value );
-			}
-		} else if ( tagName == 'select' ) {
-			own_condition = ( condition_field.val() != value );
-		}
-	}
-
-	return ( own_condition && parent_condition );
-}
-
-
 function condition_fields() {
-	var all_conds = JSON.parse( jQuery('.condition-data').data( 'conds' ) );
+	var all_conds = JSON.parse( JSON.stringify(jQuery('.condition-data').data( 'conds' )) );
 
 	jQuery.each( all_conds, function( metakey ) {
 		var first_group = 0,
@@ -139,6 +70,7 @@ function condition_fields() {
 
 			}
 
+			// If another group rule
 			if (parseInt(group) !== first_group) {
 
 				if (action === 'show') {
@@ -417,7 +349,7 @@ function condition_fields() {
 				}
 				first_group++;
 				state_array.push(state);
-			} else {
+			} else { // If the same group rule
 
 				if (action === 'show') {
 
@@ -437,7 +369,7 @@ function condition_fields() {
 								if (depend_field == val) {
 									state = 'show';
 								} else {
-									state = 'not_show';
+									state = 'hide';
 								}
 							}
 
@@ -451,14 +383,14 @@ function condition_fields() {
 										state = 'show';
 										return false;
 									} else {
-										state = 'not_show';
+										state = 'hide';
 									}
 								});
 							} else {
 								if (depend_field != val) {
 									state = 'show';
 								} else {
-									state = 'not_show';
+									state = 'hide';
 								}
 							}
 
@@ -469,7 +401,7 @@ function condition_fields() {
 							if (!depend_field || depend_field === '') {
 								state = 'show';
 							} else {
-								state = 'not_show';
+								state = 'hide';
 							}
 
 							break;
@@ -479,7 +411,7 @@ function condition_fields() {
 							if (depend_field && depend_field !== '') {
 								state = 'show';
 							} else {
-								state = 'not_show';
+								state = 'hide';
 							}
 
 							break;
@@ -494,10 +426,10 @@ function condition_fields() {
 											state = 'show';
 											return false;
 										} else {
-											state = 'not_show';
+											state = 'hide';
 										}
 									} else {
-										state = 'not_show';
+										state = 'hide';
 									}
 								});
 							} else {
@@ -506,10 +438,10 @@ function condition_fields() {
 									if (parseInt(val) < parseInt(depend_field)) {
 										state = 'show'
 									} else {
-										state = 'not_show'
+										state = 'hide'
 									}
 								} else {
-									state = 'not_show';
+									state = 'hide';
 								}
 							}
 
@@ -524,10 +456,10 @@ function condition_fields() {
 											state = 'show';
 											return false;
 										} else {
-											state = 'not_show';
+											state = 'hide';
 										}
 									} else {
-										state = 'not_show';
+										state = 'hide';
 									}
 								});
 							} else {
@@ -535,10 +467,10 @@ function condition_fields() {
 									if (parseInt(val) > parseInt(depend_field)) {
 										state = 'show'
 									} else {
-										state = 'not_show'
+										state = 'hide'
 									}
 								} else {
-									state = 'not_show';
+									state = 'hide';
 								}
 							}
 
@@ -552,14 +484,14 @@ function condition_fields() {
 										state = 'show';
 										return false;
 									} else {
-										state = 'not_show';
+										state = 'hide';
 									}
 								});
 							} else {
 								if (depend_field && depend_field.search(val) >= 0) {
 									state = 'show';
 								} else {
-									state = 'not_show';
+									state = 'hide';
 								}
 							}
 
@@ -577,7 +509,7 @@ function condition_fields() {
 								if (depend_field == val) {
 									state = 'hide';
 								} else {
-									state = 'not_hide';
+									state = 'show';
 								}
 							}
 
@@ -591,7 +523,7 @@ function condition_fields() {
 								if (depend_field != val) {
 									state = 'hide';
 								} else {
-									state = 'not_hide';
+									state = 'show';
 								}
 							}
 
@@ -602,7 +534,7 @@ function condition_fields() {
 							if (!depend_field || depend_field === '') {
 								state = 'hide';
 							} else {
-								state = 'not_hide';
+								state = 'show';
 							}
 
 							break;
@@ -612,7 +544,7 @@ function condition_fields() {
 							if (depend_field && depend_field !== '') {
 								state = 'hide';
 							} else {
-								state = 'not_hide';
+								state = 'show';
 							}
 
 							break;
@@ -626,10 +558,10 @@ function condition_fields() {
 											state = 'hide';
 											return false;
 										} else {
-											state = 'not_hide';
+											state = 'show';
 										}
 									} else {
-										state = 'not_hide';
+										state = 'show';
 									}
 								});
 							} else {
@@ -637,10 +569,10 @@ function condition_fields() {
 									if (parseInt(val) < parseInt(depend_field)) {
 										state = 'hide'
 									} else {
-										state = 'not_hide'
+										state = 'show'
 									}
 								} else {
-									state = 'not_hide';
+									state = 'show';
 								}
 							}
 
@@ -655,10 +587,10 @@ function condition_fields() {
 											state = 'hide';
 											return false;
 										} else {
-											state = 'not_hide';
+											state = 'show';
 										}
 									} else {
-										state = 'not_hide';
+										state = 'show';
 									}
 								});
 							} else {
@@ -667,10 +599,10 @@ function condition_fields() {
 									if (parseInt(val) > parseInt(depend_field)) {
 										state = 'hide'
 									} else {
-										state = 'not_hide'
+										state = 'show'
 									}
 								} else {
-									state = 'not_hide';
+									state = 'show';
 								}
 							}
 
@@ -683,14 +615,14 @@ function condition_fields() {
 										state = 'hide';
 										return false;
 									} else {
-										state = 'not_hide';
+										state = 'show';
 									}
 								});
 							} else {
 								if (depend_field && depend_field.search(val) >= 0) {
 									state = 'hide';
 								} else {
-									state = 'not_hide';
+									state = 'show';
 								}
 							}
 
@@ -701,44 +633,37 @@ function condition_fields() {
 				}
 
 				if (state_array[count]) {
-					if (state_array[count] === 'show' || state_array[count] === 'not_hide') {
-						if (state === 'show' || state === 'not_hide') {
-							state_array[count] = 'show';
-						} else {
-							state_array[count] = 'hide';
-						}
+					if (state_array[count] == 'show' && state === 'show') {
+						state_array[count] = 'show';
 					} else {
 						state_array[count] = 'hide';
 					}
 				} else {
-					if (state === 'show' || state === 'not_hide') {
+					if (state === 'show') {
 						state_array[count] = 'show';
 					} else {
 						state_array[count] = 'hide';
 					}
 				}
+
 			}
 
 		});
 
 		var field = jQuery('.um-field[data-key="' + metakey + '"]');
-		if ( jQuery.inArray('full_hide', state_array) < 0 ) {
-			if (jQuery.inArray('show', state_array) < 0) {
-				field.hide();
-				field.find('input, textarea').attr('disabled', 'disabled').attr('readonly','readonly');
-			} else {
-				field.show();
-				field.find('input, textarea').removeAttr('disabled').removeAttr('readonly');
-			}
-		} else {
+		if (jQuery.inArray('show', state_array) < 0) {
 			field.hide();
 			field.find('input, textarea').attr('disabled', 'disabled').attr('readonly','readonly');
+		} else {
+			field.show();
+			field.find('input, textarea').removeAttr('disabled').removeAttr('readonly');
 		}
+
 	});
 }
 
 function check_parent() {
-	var all_conds = JSON.parse( jQuery('.condition-data').data('conds') );
+	var all_conds = JSON.parse( JSON.stringify(jQuery('.condition-data').data('conds')) );
 
 	jQuery.each( all_conds, function( metakey ) {
 		jQuery.each( all_conds[ metakey ], function() {
@@ -758,11 +683,9 @@ function check_parent() {
 
 jQuery(document).ready(function() {
 
-	um_run_conditional_logic();
-
-	/*condition_fields();
+	condition_fields();
 	check_parent();
-*/
+
 	jQuery('.um-field input, .um-field textarea').on('change keyup', function () {
 		condition_fields();
 		check_parent();

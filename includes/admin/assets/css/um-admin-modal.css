@@ -148,6 +148,7 @@
 
 .um-admin-btn-toggle p.um-admin-reset-conditions {
 	margin: 0 0 5px 0 !important;
+	float: right;
 }
 
 .um-admin-btn-toggle a {
@@ -342,7 +343,7 @@ hr.or-devider:after {
 	display: block;
 	position: absolute;
 	top: -25px;
-	right: -7px;
+	right: 0;
 }
 
 .um-condition-group-wrapper .or-devider {

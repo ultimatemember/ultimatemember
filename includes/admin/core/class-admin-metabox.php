@@ -1261,7 +1261,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 				<p>
 					<select name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" style="width: 90px" <?php echo $field_args_html ?>>
-
 						<option></option>
 
 						<?php $actions = array(
@@ -1291,9 +1290,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_conditional_field4':
 				?>
 
-				<p>
-					<select name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" style="width: 150px" <?php echo $field_args_html ?>>
+				<p> <?php echo __('field','ultimate-member' ); ?>
 
+					<select name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" style="width: 180px" <?php echo $field_args_html ?>>
 						<option></option>
 
 						<?php $fields = UM()->query()->get_attr( 'custom_fields', $form_id );
@@ -1322,10 +1321,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_conditional_operator4':
 				?>
 
-				<p>
-					<select name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" style="width: 150px" <?php echo $field_args_html ?>>
+				<p> <?php echo __('is','ultimate-member' ); ?>
+					<select name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" style="width: 180px" <?php echo $field_args_html ?>>
 
-						<option></option>
+
 
 						<?php $operators = array(
 							'empty'         => __( 'Empty', 'ultimate-member' ),

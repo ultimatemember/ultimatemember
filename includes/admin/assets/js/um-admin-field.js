@@ -50,7 +50,8 @@ jQuery(document).ready(function() {
 		} );
 
 		//need fields refactor
-		um_build_conditions();
+		var form = $(this).closest('form');
+		um_build_conditions(form);
 
 		var form = jQuery(this);
 		jQuery.ajax({

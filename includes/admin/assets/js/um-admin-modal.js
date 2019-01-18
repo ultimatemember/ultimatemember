@@ -244,6 +244,7 @@ jQuery(document).ready(function() {
 
 	// toggle area
 	jQuery( document.body ).on('click', '.um-admin-btn-toggle a', function() {
+
 		var length = jQuery(this).parents('.um-admin-btn-toggle').find('.um-admin-cur-condition').length;
 
 		if ( length === 5 ) {
@@ -273,6 +274,16 @@ jQuery(document).ready(function() {
 			link.find('i').removeClass().addClass('um-icon-plus');
 			link.removeClass('active');
 		}
+
+		var form = jQuery(this).closest('form');
+		if( form.find('.condition-wrap').is(":visible") ){
+			var first_el = form.find('.um-condition-group-wrapper:first-child');
+			if( first_el.find('select').length === 0 ){
+				first_el.next().find('.or-devider').remove();
+				first_el.remove();
+			}
+		}
+
 		um_admin_modal_responsive();
 	});
 
@@ -291,7 +302,7 @@ jQuery(document).ready(function() {
 
 	// clone a condition
 	jQuery( document.body ).on( 'click', '.um-admin-new-condition', function() {
-
+		var form = $(this).closest('form');
 		if ( jQuery(this).hasClass('disabled') ) {
 			return false;
 		}
@@ -300,7 +311,12 @@ jQuery(document).ready(function() {
 			length = content.find('.um-admin-cur-condition').length;
 
 		if ( length < 5 ) {
-			var template = wp.template( 'um-admin-conditional' );
+			var template
+			if ( jQuery('#tmpl-um-admin-conditional-add').length > 0 ) {
+				template = wp.template('um-admin-conditional-add');
+			} else {
+				template = wp.template('um-admin-conditional-edit');
+			}
 
 			length = length ? length : '';
 
@@ -336,7 +352,7 @@ jQuery(document).ready(function() {
 		}
 
 		//need fields refactor
-		um_build_conditions();
+		um_build_conditions(form);
 	});
 
 
@@ -350,7 +366,8 @@ jQuery(document).ready(function() {
 		jQuery('.um-admin-new-condition').removeAttr('disabled').removeClass('disabled');
 
 		//need fields refactor
-		um_build_conditions();
+		var form = $(this).closest('form');
+		um_build_conditions(form);
 
 		um_admin_live_update_scripts();
 		um_admin_modal_responsive();
@@ -370,7 +387,8 @@ jQuery(document).ready(function() {
 		}
 
 		//need fields refactor
-		um_build_conditions();
+		var form = $(this).closest('form');
+		um_build_conditions(form);
 
 		um_admin_live_update_scripts();
 		um_admin_modal_responsive();

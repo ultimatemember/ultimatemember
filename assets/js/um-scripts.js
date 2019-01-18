@@ -127,7 +127,9 @@ jQuery(document).ready(function() {
         click: function( score, evt ) {
             live_field = this.id;
             live_value = score;
-	        um_apply_conditions( jQuery(this), false );
+			condition_fields();
+			check_parent();
+	        // um_apply_conditions( jQuery(this), false );
         }
     });
 
