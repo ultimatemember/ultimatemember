@@ -1006,8 +1006,16 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 					$sizes_array[ ] = array ('width' => $size );
 				}
 
-				$image->multi_resize( $sizes_array );
+				$resize = $image->multi_resize( $sizes_array );
 
+				// change filenames of resized images 
+				foreach( $resize as $row ){
+					$new_filename = str_replace( "x{$row['height']}" , "", $row["file"] );
+					$old_filename = $row["file"]; 
+					
+					rename( dirname( $image_path ) . DIRECTORY_SEPARATOR . $old_filename, dirname( $image_path ) . DIRECTORY_SEPARATOR . $new_filename );
+				}
+				
 			} else {
 				wp_send_json_error( esc_js( __( "Unable to crop image file: {$src}", 'ultimate-member' ) ) );
 			}
