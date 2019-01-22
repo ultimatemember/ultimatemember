@@ -1137,7 +1137,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$label = stripslashes( $fields[ $key ]['label'] );
 			}
 
-			if ( isset( $fields[ $key ]['title'] ) ) {
+			if ( empty( $label ) && isset( $fields[ $key ]['title'] ) ) {
 				$label = stripslashes( $fields[ $key ]['title'] );
 			}
 
