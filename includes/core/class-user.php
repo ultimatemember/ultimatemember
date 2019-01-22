@@ -88,9 +88,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			add_action( 'init', array( &$this, 'check_membership' ), 10 );
 
 			if ( is_multisite() ) {
-				add_action( 'delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
-			} else {
 				add_action( 'wpmu_delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
+			} else {
+				add_action( 'delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
 			}
 		}
 
@@ -157,6 +157,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			// remove uploads
+			UM()->files()->remove_dir( UM()->files()->upload_temp );
 			UM()->files()->remove_dir( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR );
 		}
 
