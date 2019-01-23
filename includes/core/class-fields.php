@@ -655,8 +655,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 */
 				$value = apply_filters( "um_edit_{$type}_field_value", $value, $key );
 
-				return $value;
-
 			} elseif ( ( um_user( $key ) || isset( $data['show_anyway'] ) ) && $this->viewing == true ) {
 
 				return um_filtered_value( $key, $data );
@@ -686,7 +684,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 * ?>
 				 */
 				$value = apply_filters( "um_edit_{$key}_field_value", $value, $key );
-				return $value;
 
 			} elseif ( $default ) {
 
@@ -757,9 +754,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 * ?>
 				 */
 				$default = apply_filters( "um_field_{$type}_default_value", $default, $data );
-				return $default;
 
-			} elseif ( $this->editing == true ) {
+			}
+
+			// Default Value for Registration Form and Profile Form editing
+			if ( !isset( $value ) && ( $this->set_mode == 'register' || $this->editing == true ) ) {
 
 				/**
 				 * UM hook
@@ -782,11 +781,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 * }
 				 * ?>
 				 */
-				return apply_filters( "um_edit_{$key}_field_value", '', $key );
+				$value = apply_filters( "um_edit_{$key}_field_value", $default, $key );
 
 			}
 
-			return '';
+			return isset( $value ) ? $value : '';
 		}
 
 
