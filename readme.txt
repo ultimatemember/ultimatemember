@@ -138,6 +138,11 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * Enhancements:
   - Restored option for disable users cache
 
+* Bugfixes:
+  - Fixed delete users handlers on single/multisite installs
+  - Fixed fields labels on member directory
+  - Fixed profile form cover photo ratio value
+
 = 2.0.38: January 10, 2019 =
 
 * Enhancements:
