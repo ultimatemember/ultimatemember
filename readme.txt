@@ -137,6 +137,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * Enhancements:
   - Restored option for disable users cache
+  - Transposh plugin integration
 
 * Bugfixes:
   - Fixed delete users handlers on single/multisite installs
