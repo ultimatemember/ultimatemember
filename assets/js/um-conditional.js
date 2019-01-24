@@ -45,10 +45,19 @@ function condition_fields() {
 
 			} else if (select.length > 0) {
 
-				if (jQuery.inArray(val, select.val()) > 0) {
-					depend_field = val;
+				var multi = select.prop('multiple');
+				if( multi === true ){
+					if (jQuery.inArray(val, select.val()) > 0) {
+						depend_field = val;
+					} else {
+						depend_arr = select.val();
+					}
 				} else {
-					depend_field = select.val()
+					if (jQuery.inArray(val, select.val()) > 0) {
+						depend_field = val;
+					} else {
+						depend_field = select.val();
+					}
 				}
 
 			} else if (textarea.length > 0) {
@@ -78,10 +87,11 @@ function condition_fields() {
 					switch (op) {
 						case 'equals to':
 
-							if (depend_arr.length > 0) {
+							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
 									if (this == val) {
 										state = 'show';
+										return false;
 									} else {
 										state = 'hide';
 									}
@@ -98,13 +108,16 @@ function condition_fields() {
 
 						case 'not equals':
 
-							if (depend_arr.length > 0) {
+							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
-									if (this != val) {
+									console.log(this)
+									console.log(val)
+									if (this && this != val) {
 										state = 'show';
-										return false;
+
 									} else {
 										state = 'hide';
+										return false;
 									}
 								});
 							} else {
@@ -119,27 +132,45 @@ function condition_fields() {
 
 						case 'empty':
 
-							if (!depend_field || depend_field === '') {
-								state = 'show';
+							if ( depend_arr && depend_arr.length > 0 ) {
+								if( depend_arr.length === 0 ){
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+
 							} else {
-								state = 'hide';
+								if (!depend_field || depend_field === '') {
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
 							}
 
 							break;
 
 						case 'not empty':
 
-							if (depend_field && depend_field !== '') {
-								state = 'show';
+							if ( depend_arr && depend_arr.length > 0 ) {
+								if( depend_arr.length > 0 ){
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+
 							} else {
-								state = 'hide';
+								if (depend_field && depend_field !== '') {
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
 							}
 
 							break;
 
 						case 'greater than':
 
-							if (depend_arr.length > 0) {
+							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
 									if (jQuery.isNumeric(val) && jQuery.isNumeric(this)) {
 										if (parseInt(val) < parseInt(this)) {
@@ -167,7 +198,7 @@ function condition_fields() {
 							break;
 
 						case 'less than':
-							if (depend_arr.length > 0) {
+							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
 									if (jQuery.isNumeric(val) && jQuery.isNumeric(this)) {
 										if (parseInt(val) > parseInt(this)) {
@@ -195,7 +226,7 @@ function condition_fields() {
 							break;
 
 						case 'contains':
-							if (depend_arr.length > 0) {
+							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
 									if (this && this.search(val) >= 0) {
 										state = 'show';
@@ -220,8 +251,16 @@ function condition_fields() {
 
 					switch (op) {
 						case 'equals to':
-							if (depend_arr.length > 0) {
 
+							if (depend_arr && depend_arr.length > 0) {
+								jQuery.each(depend_arr, function () {
+									if (this == val) {
+										state = 'hide';
+										return false;
+									} else {
+										state = 'show';
+									}
+								});
 							} else {
 								if (depend_field == val) {
 									state = 'hide';
@@ -234,8 +273,18 @@ function condition_fields() {
 
 						case 'not equals':
 
-							if (depend_arr.length > 0) {
+							if (depend_arr && depend_arr.length > 0) {
+								jQuery.each(depend_arr, function () {
+									console.log(this)
+									console.log(val)
+									if (this && this != val) {
+										state = 'hide';
 
+									} else {
+										state = 'show';
+										return false;
+									}
+								});
 							} else {
 								if (depend_field != val) {
 									state = 'hide';
@@ -248,27 +297,45 @@ function condition_fields() {
 
 						case 'empty':
 
-							if (!depend_field || depend_field === '') {
-								state = 'hide';
+							if ( depend_arr && depend_arr.length > 0 ) {
+								if( depend_arr.length === 0 ){
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+
 							} else {
-								state = 'show';
+								if (!depend_field || depend_field === '') {
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
 							}
 
 							break;
 
 						case 'not empty':
 
-							if (depend_field && depend_field !== '') {
-								state = 'hide';
+							if ( depend_arr && depend_arr.length > 0 ) {
+								if( depend_arr.length > 0 ){
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+
 							} else {
-								state = 'show';
+								if (depend_field && depend_field !== '') {
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
 							}
 
 							break;
 
 						case 'greater than':
 
-							if (depend_arr.length > 0) {
+							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
 									if (jQuery.isNumeric(val) && jQuery.isNumeric(this)) {
 										if (parseInt(val) < parseInt(this)) {
@@ -297,7 +364,7 @@ function condition_fields() {
 
 						case 'less than':
 
-							if (depend_arr.length > 0) {
+							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
 									if (jQuery.isNumeric(val) && jQuery.isNumeric(this)) {
 										if (parseInt(val) > parseInt(this)) {
@@ -325,7 +392,7 @@ function condition_fields() {
 							break;
 
 						case 'contains':
-							if (depend_arr.length > 0) {
+							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
 									if (this && this.search(val) >= 0) {
 										state = 'hide';
@@ -356,7 +423,7 @@ function condition_fields() {
 					switch (op) {
 						case 'equals to':
 
-							if (depend_arr.length > 0) {
+							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
 									if (this == val) {
 										state = 'show';
@@ -377,13 +444,16 @@ function condition_fields() {
 
 						case 'not equals':
 
-							if (depend_arr.length > 0) {
+							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
-									if (this != val) {
+									console.log(this)
+									console.log(val)
+									if (this && this != val) {
 										state = 'show';
-										return false;
+
 									} else {
 										state = 'hide';
+										return false;
 									}
 								});
 							} else {
@@ -398,27 +468,45 @@ function condition_fields() {
 
 						case 'empty':
 
-							if (!depend_field || depend_field === '') {
-								state = 'show';
+							if ( depend_arr && depend_arr.length > 0 ) {
+								if( depend_arr.length === 0 ){
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+
 							} else {
-								state = 'hide';
+								if (!depend_field || depend_field === '') {
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
 							}
 
 							break;
 
 						case 'not empty':
 
-							if (depend_field && depend_field !== '') {
-								state = 'show';
+							if ( depend_arr && depend_arr.length > 0 ) {
+								if( depend_arr.length > 0 ){
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+
 							} else {
-								state = 'hide';
+								if (depend_field && depend_field !== '') {
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
 							}
 
 							break;
 
 						case 'greater than':
 
-							if (depend_arr.length > 0) {
+							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
 
 									if (jQuery.isNumeric(val) && jQuery.isNumeric(this)) {
@@ -449,7 +537,7 @@ function condition_fields() {
 
 						case 'less than':
 
-							if (depend_arr.length > 0) {
+							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
 									if (jQuery.isNumeric(val) && jQuery.isNumeric(this)) {
 										if (parseInt(val) > parseInt(this)) {
@@ -478,7 +566,7 @@ function condition_fields() {
 
 						case 'contains':
 
-							if (depend_arr.length > 0) {
+							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
 									if (this && this.search(val) >= 0) {
 										state = 'show';
@@ -503,8 +591,19 @@ function condition_fields() {
 					switch (op) {
 						case 'equals to':
 
-							if (depend_arr.length > 0) {
-
+							if (depend_arr && depend_arr.length > 0) {
+								jQuery.each(depend_arr, function () {
+									console.log(this)
+									console.log(val)
+									if (this && this == val) {
+										state = 'hide';
+										console.log(1)
+										return false;
+									} else {
+										state = 'show';
+										console.log(2)
+									}
+								});
 							} else {
 								if (depend_field == val) {
 									state = 'hide';
@@ -517,8 +616,18 @@ function condition_fields() {
 
 						case 'not equals':
 
-							if (depend_arr.length > 0) {
+							if (depend_arr && depend_arr.length > 0) {
+								jQuery.each(depend_arr, function () {
+									console.log(this)
+									console.log(val)
+									if (this && this != val) {
+										state = 'hide';
 
+									} else {
+										state = 'show';
+										return false;
+									}
+								});
 							} else {
 								if (depend_field != val) {
 									state = 'hide';
@@ -531,27 +640,46 @@ function condition_fields() {
 
 						case 'empty':
 
-							if (!depend_field || depend_field === '') {
-								state = 'hide';
+							if ( depend_arr && depend_arr.length > 0 ) {
+								if( depend_arr.length === 0 ){
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+
 							} else {
-								state = 'show';
+								if (!depend_field || depend_field === '') {
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
 							}
+
 
 							break;
 
 						case 'not empty':
 
-							if (depend_field && depend_field !== '') {
-								state = 'hide';
+							if ( depend_arr && depend_arr.length > 0 ) {
+								if( depend_arr.length > 0 ){
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+
 							} else {
-								state = 'show';
+								if (depend_field && depend_field !== '') {
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
 							}
 
 							break;
 
 						case 'greater than':
 
-							if (depend_arr.length > 0) {
+							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
 									if (jQuery.isNumeric(val) && jQuery.isNumeric(this)) {
 										if (parseInt(val) < parseInt(this)) {
@@ -580,7 +708,7 @@ function condition_fields() {
 
 						case 'less than':
 
-							if (depend_arr.length > 0) {
+							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
 									if (jQuery.isNumeric(val) && jQuery.isNumeric(this)) {
 										if (parseInt(val) > parseInt(this)) {
@@ -609,7 +737,7 @@ function condition_fields() {
 							break;
 
 						case 'contains':
-							if (depend_arr.length > 0) {
+							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
 									if (this && this.search(val) >= 0) {
 										state = 'hide';
@@ -682,30 +810,31 @@ function check_parent() {
 }
 
 jQuery(document).ready(function() {
-
-	condition_fields();
-	check_parent();
-
-	jQuery('.um-field input, .um-field textarea').on('change keyup', function () {
+	if( jQuery('.um-field').length>0 ) {
 		condition_fields();
 		check_parent();
-	});
 
-	jQuery('.um-field select').on('change', function () {
-		condition_fields();
-		check_parent();
-	});
-
-	jQuery(document).on('click','.um-modal .um-finish-upload', function () {
-		condition_fields();
-		check_parent();
-	});
-
-
-	jQuery(document).on('click','.um-field-area .cancel', function () {
-		setTimeout(function () {
+		jQuery('.um-field input, .um-field textarea').on('change keyup', function () {
 			condition_fields();
 			check_parent();
-		})
-	});
+		});
+
+		jQuery('.um-field select').on('change', function () {
+			condition_fields();
+			check_parent();
+		});
+
+		jQuery(document).on('click', '.um-modal .um-finish-upload', function () {
+			condition_fields();
+			check_parent();
+		});
+
+
+		jQuery(document).on('click', '.um-field-area .cancel', function () {
+			setTimeout(function () {
+				condition_fields();
+				check_parent();
+			})
+		});
+	}
 });

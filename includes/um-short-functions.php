@@ -309,7 +309,12 @@ function um_field_conditions_are_met( $args ) {
 				$val = $arr[3];
 				$op = $arr[2];
 
-				$field = $_POST[$field_name];
+				if( isset($_POST[$field_name]) ){
+					$field = $_POST[$field_name];
+				} else {
+					$field = $_POST[$arr[1]];
+				}
+
 
 				if( $arr[5] != $first_group ){
 
