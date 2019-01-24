@@ -511,7 +511,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 * }
 			 * ?>
 			 */
-			do_action( 'um_after_member_role_upgrade', $new_roles, $old_roles );
+			do_action( 'um_after_member_role_upgrade', $new_roles, $old_roles, $user_id );
 
 			//Update permalink
 			$this->generate_profile_slug( $user_id, true );

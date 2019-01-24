@@ -458,7 +458,7 @@ if ( ! class_exists( 'um\core\REST_API' ) ) {
 					 * }
 					 * ?>
 					 */
-					do_action( 'um_after_member_role_upgrade', array( $value ), $old_roles );
+					do_action( 'um_after_member_role_upgrade', array( $value ), $old_roles, $id );
 
 					$response['success'] = __( 'User role has been changed.', 'ultimate-member' );
 					break;
