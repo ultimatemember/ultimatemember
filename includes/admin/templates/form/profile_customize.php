@@ -115,6 +115,7 @@
 				'tooltip'    		=> __( 'The shortcode is centered by default unless you specify otherwise here', 'ultimate-member' ),
 				'value' 		=> UM()->query()->get_meta_value( '_um_profile_cover_ratio', null, UM()->options()->get( 'profile_cover_ratio' ) ),
 				'options'		=> array(
+					'1.6:1' =>  '1.6:1',
 					'2.7:1'	=>	'2.7:1',
 					'2.2:1'	=>	'2.2:1',
 					'3.2:1'	=>	'3.2:1'
