@@ -143,6 +143,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed delete users handlers on single/multisite installs
   - Fixed fields labels on member directory
   - Fixed profile form cover photo ratio value
+  - Fixed profile and registration form default field's values
 
 = 2.0.38: January 10, 2019 =
 
