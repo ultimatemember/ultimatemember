@@ -62,6 +62,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'user-exporter'         => '1.0.0',
 			'bookmark'              => '2.0',
 			'user-events'           => '1.0.0',
+			'filesharing'           => '1.0.0',
 		);
 
 
