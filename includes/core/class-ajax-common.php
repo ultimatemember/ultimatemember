@@ -54,4 +54,4 @@ if ( ! class_exists( 'um\core\AJAX_Common' ) ) {
 			add_action( 'wp_ajax_um_resize_image', array( UM()->files(), 'ajax_resize_image' ) );
 		}
 	}
-}
+} // End if().
