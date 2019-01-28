@@ -150,7 +150,8 @@ function um_profile_field_filter_hook__textarea( $value, $data ) {
 		return $value;
 	}
 
-	$value = esc_textarea( $value );
+	$value = wp_kses( $value, 'strip' );
+	$value = html_entity_decode( $value );
 	$value = preg_replace('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', ' <a href="$1" target="_blank">$1</a> ', $value." ");
 	$value = preg_replace('$(www\.[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', '<a target="_blank" href="http://$1">$1</a> ', $value." ");
 	$value = wpautop($value);
@@ -158,7 +159,6 @@ function um_profile_field_filter_hook__textarea( $value, $data ) {
 	return $value;
 }
 add_filter( 'um_profile_field_filter_hook__textarea', 'um_profile_field_filter_hook__textarea', 99, 2 );
-
 
     /***
      ***	@urls in description
