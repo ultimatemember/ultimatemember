@@ -144,6 +144,9 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed fields labels on member directory
   - Fixed profile form cover photo ratio value
   - Fixed profile and registration form default field's values
+  - Fixed member directory notices with disabled metadata
+  - Fixed textarea profile field formatting
+  - Fixed registration without username field
 
 = 2.0.38: January 10, 2019 =
 
