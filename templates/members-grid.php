@@ -89,7 +89,7 @@
 						do_action( 'um_members_after_user_name', um_user('ID'), $args ); ?>
 						
 						<?php
-						if ( $show_tagline && is_array( $tagline_fields ) ) {
+						if ( $show_tagline && ! empty( $tagline_fields ) && is_array( $tagline_fields ) ) {
 							
 							um_fetch_user( $member );
 
@@ -118,16 +118,18 @@
 							<div class="um-member-meta <?php if ( ! $userinfo_animate ) { echo 'no-animate'; } ?>">
 							
 								<?php um_fetch_user( $member );
-								foreach ( $reveal_fields as $key ) {
-									if ( $key ) {
-										$value = um_filtered_value( $key );
-										if ( ! $value )
-											continue; ?>
-								
-										<div class="um-member-metaline um-member-metaline-<?php echo esc_attr( $key ); ?>"><span><strong><?php echo UM()->fields()->get_label( $key ); ?>:</strong> <?php _e( $value, 'ultimate-member'); ?></span></div>
+								if ( ! empty( $reveal_fields ) && is_array( $reveal_fields ) ) {
+									foreach ( $reveal_fields as $key ) {
+										if ( $key ) {
+											$value = um_filtered_value( $key );
+											if ( ! $value )
+												continue; ?>
 
-									<?php }
-								} 
+											<div class="um-member-metaline um-member-metaline-<?php echo esc_attr( $key ); ?>"><span><strong><?php echo UM()->fields()->get_label( $key ); ?>:</strong> <?php _e( $value, 'ultimate-member'); ?></span></div>
+
+										<?php }
+									}
+								}
 
 								if ( $show_social ) { ?>
 									<div class="um-member-connect">
