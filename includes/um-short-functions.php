@@ -304,6 +304,7 @@ function um_field_conditions_are_met( $args ) {
 			} else {
 				$state = 'hide';
 			}
+
 			foreach ($array['conditions'] as $k => $arr){
 				$field_name = $arr[1].'-'.$form_id;
 				$val = $arr[3];
@@ -314,7 +315,10 @@ function um_field_conditions_are_met( $args ) {
 				} else {
 					$field = $_POST[$arr[1]];
 				}
-
+				if(!$field){
+					$state = 'show';
+					return $state;
+				}
 
 				if( $arr[5] != $first_group ){
 

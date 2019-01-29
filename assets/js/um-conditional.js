@@ -4,7 +4,7 @@ function condition_fields() {
 	jQuery.each( all_conds, function( metakey ) {
 		var first_group = 0,
 			state_array = [],
-			count = state_array.length,
+			// count = state_array.length,
 			state = 'show';
 
 		jQuery.each( all_conds[ metakey ], function() {
@@ -110,8 +110,6 @@ function condition_fields() {
 
 							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
-									console.log(this)
-									console.log(val)
 									if (this && this != val) {
 										state = 'show';
 
@@ -275,8 +273,6 @@ function condition_fields() {
 
 							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
-									console.log(this)
-									console.log(val)
 									if (this && this != val) {
 										state = 'hide';
 
@@ -446,8 +442,6 @@ function condition_fields() {
 
 							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
-									console.log(this)
-									console.log(val)
 									if (this && this != val) {
 										state = 'show';
 
@@ -593,15 +587,11 @@ function condition_fields() {
 
 							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
-									console.log(this)
-									console.log(val)
 									if (this && this == val) {
 										state = 'hide';
-										console.log(1)
 										return false;
 									} else {
 										state = 'show';
-										console.log(2)
 									}
 								});
 							} else {
@@ -618,8 +608,6 @@ function condition_fields() {
 
 							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
-									console.log(this)
-									console.log(val)
 									if (this && this != val) {
 										state = 'hide';
 
@@ -755,22 +743,21 @@ function condition_fields() {
 							}
 
 							break;
-
 					}
 
 				}
 
-				if (state_array[count]) {
-					if (state_array[count] == 'show' && state === 'show') {
-						state_array[count] = 'show';
+				if (state_array[first_group]) {
+					if (state_array[first_group] === 'show' && state === 'show') {
+						state_array[first_group] = 'show';
 					} else {
-						state_array[count] = 'hide';
+						state_array[first_group] = 'hide';
 					}
 				} else {
 					if (state === 'show') {
-						state_array[count] = 'show';
+						state_array[first_group] = 'show';
 					} else {
-						state_array[count] = 'hide';
+						state_array[first_group] = 'hide';
 					}
 				}
 
@@ -779,7 +766,9 @@ function condition_fields() {
 		});
 
 		var field = jQuery('.um-field[data-key="' + metakey + '"]');
+
 		if (jQuery.inArray('show', state_array) < 0) {
+
 			field.hide();
 			field.find('input, textarea').attr('disabled', 'disabled').attr('readonly','readonly');
 		} else {
@@ -794,18 +783,52 @@ function check_parent() {
 	var all_conds = JSON.parse( JSON.stringify(jQuery('.condition-data').data('conds')) );
 
 	jQuery.each( all_conds, function( metakey ) {
+		var first_group = 0;
+		var group_array = [];
 		jQuery.each( all_conds[ metakey ], function() {
 			var field = this[1];
+			var group = this[5];
+			var state;
 			var check_field = jQuery('.um-field[data-key="' + field + '"]').is(':visible');
 			var check = jQuery('.um-field[data-key="' + metakey + '"]');
 
-			if( check_field === false ) {
-				check.hide();
-				check.find('input, textarea').attr('disabled', 'disabled').attr('readonly','readonly');
-				return false;
+
+			if( first_group !== parseInt(group) ){
+				if( check_field === false ) {
+					state = 'hide';
+				} else {
+					state = 'show';
+				}
+				first_group++;
+				group_array.push(state)
+			} else {
+				if( check_field === false ) {
+					state = 'hide';
+				} else {
+					state = 'show';
+				}
+				if (group_array[first_group]) {
+					if (group_array[first_group] === 'show' && state === 'show') {
+						group_array[first_group] = 'show';
+					} else {
+						group_array[first_group] = 'hide';
+					}
+				} else {
+					if (state === 'show') {
+						group_array[first_group] = 'show';
+					} else {
+						group_array[first_group] = 'hide';
+					}
+				}
+			}
+			if (jQuery.inArray('show', group_array) < 0) {
+				check.addClass('hide-after-parent-check')
+			} else {
+				check.removeClass('hide-after-parent-check')
 			}
 
 		});
+
 	});
 }
 
