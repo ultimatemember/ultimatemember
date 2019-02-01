@@ -35,11 +35,11 @@ Installation
 2. Copy the plugin folder into your wp-content/plugins directory.
 3. Activate the plugin.
 4. That's it. Go to Ultimate Member > Settings to customize plugin options.
-5. For more details, please visit the official [Documentation](https://ultimatemember.com/docs/) page.
+5. For more details, please visit the official [Documentation](https://docs.ultimatemember.com/) page.
 
 Documentation & Support
 ======================
-Got a problem or need help with Ultimate Member? Head over to our [documentation](http://docs.ultimatemember.com/) and perform a search of the knowledge base. If you can’t find a solution to your issue then you can create a [paid support ticket](https://ultimatemember.com/support-contact/) or [free support ticket](https://wordpress.org/support/plugin/ultimate-member)
+Got a problem or need help with Ultimate Member? Head over to our [documentation](https://docs.ultimatemember.com/) and perform a search of the knowledge base. If you can’t find a solution to your issue then you can create a [paid support ticket](https://ultimatemember.com/support-contact/) or [free support ticket](https://wordpress.org/support/plugin/ultimate-member)
 
 
 License
