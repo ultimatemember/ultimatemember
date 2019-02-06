@@ -912,24 +912,27 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						return true;
 					}
 
-					if ( strstr( $data['default'], ', ' ) ) {
-						$data['default'] = explode( ', ', $data['default'] );
-					}
+					if ( empty( $field_value ) ) {
+						if ( isset( $data['default'] ) ) {
+							if ( strstr( $data['default'], ', ' ) ) {
+								$data['default'] = explode( ', ', $data['default'] );
+							}
 
-					if ( isset( $data['default'] ) && ! is_array( $data['default'] ) && $data['default'] === $value ) {
-						return true;
-					}
+							if ( ! is_array( $data['default'] ) && $data['default'] === $value ) {
+								return true;
+							}
 
-					if ( isset( $data['default'] ) && is_array( $data['default'] ) && in_array( $value, $data['default'] )) {
-						return true;
+							if ( is_array( $data['default'] ) && in_array( $value, $data['default'] ) ) {
+								return true;
+							}
+						}
 					}
 
 				} else {
 
-					if ($value == UM()->form()->post_form[$key]) {
+					if ( $value == UM()->form()->post_form[ $key ] ) {
 						return true;
 					}
-
 
 				}
 

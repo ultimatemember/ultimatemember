@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-01-10 14:28+0200\n"
-"PO-Revision-Date: 2019-01-10 14:28+0200\n"
+"POT-Creation-Date: 2019-02-06 18:21+0200\n"
+"PO-Revision-Date: 2019-02-06 18:21+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -35,7 +35,7 @@ msgid "Docs"
 msgstr ""
 
 #: includes/admin/class-admin.php:308
-#: includes/admin/core/class-admin-settings.php:1150
+#: includes/admin/core/class-admin-settings.php:1156
 msgid "Settings"
 msgstr ""
 
@@ -103,7 +103,7 @@ msgstr ""
 #: includes/admin/core/class-admin-builder.php:767
 #: includes/admin/core/class-admin-dragdrop.php:32
 #: includes/admin/core/class-admin-menu.php:104
-#: includes/core/class-fields.php:4067
+#: includes/core/class-fields.php:4069
 msgid "Please login as administrator"
 msgstr ""
 
@@ -158,7 +158,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-builder.php:1143
 #: includes/core/class-form.php:155 includes/core/class-form.php:328
-#: includes/core/class-password.php:518
+#: includes/core/class-password.php:528
 msgid "This is not possible for security reasons."
 msgstr ""
 
@@ -217,10 +217,10 @@ msgstr ""
 #: includes/admin/templates/form/profile_customize.php:22
 #: includes/admin/templates/form/profile_customize.php:88
 #: includes/admin/templates/form/profile_customize.php:107
-#: includes/admin/templates/form/profile_customize.php:140
-#: includes/admin/templates/form/profile_customize.php:151
-#: includes/admin/templates/form/profile_customize.php:162
-#: includes/admin/templates/form/profile_customize.php:173
+#: includes/admin/templates/form/profile_customize.php:141
+#: includes/admin/templates/form/profile_customize.php:152
+#: includes/admin/templates/form/profile_customize.php:163
+#: includes/admin/templates/form/profile_customize.php:174
 #: includes/admin/templates/form/register_customize.php:20
 #: includes/admin/templates/form/register_customize.php:76
 #: includes/admin/templates/form/register_gdpr.php:23
@@ -241,10 +241,10 @@ msgstr ""
 #: includes/admin/templates/form/profile_customize.php:23
 #: includes/admin/templates/form/profile_customize.php:89
 #: includes/admin/templates/form/profile_customize.php:108
-#: includes/admin/templates/form/profile_customize.php:141
-#: includes/admin/templates/form/profile_customize.php:152
-#: includes/admin/templates/form/profile_customize.php:163
-#: includes/admin/templates/form/profile_customize.php:174
+#: includes/admin/templates/form/profile_customize.php:142
+#: includes/admin/templates/form/profile_customize.php:153
+#: includes/admin/templates/form/profile_customize.php:164
+#: includes/admin/templates/form/profile_customize.php:175
 #: includes/admin/templates/form/register_customize.php:21
 #: includes/admin/templates/form/register_customize.php:77
 #: includes/admin/templates/form/register_gdpr.php:24
@@ -408,7 +408,7 @@ msgstr ""
 #. Plugin Name of the plugin/theme
 #. Author of the plugin/theme
 #: includes/admin/core/class-admin-menu.php:145
-#: includes/core/class-user.php:557
+#: includes/core/class-user.php:558
 msgid "Ultimate Member"
 msgstr ""
 
@@ -1661,7 +1661,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:436
-#: includes/class-config.php:134 includes/class-config.php:742
+#: includes/class-config.php:134 includes/class-config.php:743
 #: includes/core/class-account.php:90
 msgid "Account"
 msgstr ""
@@ -2037,7 +2037,7 @@ msgid "Select Default Cover Photo"
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:737
-#: includes/admin/templates/form/profile_customize.php:127
+#: includes/admin/templates/form/profile_customize.php:128
 msgid "Profile Photo Size"
 msgstr ""
 
@@ -2334,143 +2334,152 @@ msgid ""
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:1061
-msgid "Remove Data on Uninstall?"
+msgid "Disable Cache User Profile"
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:1062
+msgid ""
+"Check this box if you would like to disable Ultimate Member user's cache."
+msgstr ""
+
+#: includes/admin/core/class-admin-settings.php:1067
+msgid "Remove Data on Uninstall?"
+msgstr ""
+
+#: includes/admin/core/class-admin-settings.php:1068
 msgid ""
 "Check this box if you would like Ultimate Member to completely remove all of "
 "its data when the plugin/extensions are deleted."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1067
+#: includes/admin/core/class-admin-settings.php:1073
 msgid "Install Info"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1181
+#: includes/admin/core/class-admin-settings.php:1187
 msgid "Ultimate Member - Settings"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1320
+#: includes/admin/core/class-admin-settings.php:1326
 msgid "Save Changes"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1763
+#: includes/admin/core/class-admin-settings.php:1769
 msgid "Subject Line"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1765
+#: includes/admin/core/class-admin-settings.php:1771
 msgid "This is the subject line of the e-mail"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1770
+#: includes/admin/core/class-admin-settings.php:1776
 msgid "Message Body"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1772
+#: includes/admin/core/class-admin-settings.php:1778
 msgid "This is the content of the e-mail"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1822
-#: includes/admin/core/class-admin-settings.php:1920
+#: includes/admin/core/class-admin-settings.php:1828
+#: includes/admin/core/class-admin-settings.php:1926
 #, php-format
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" target=\"_blank"
 "\">renew your license key</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1835
-#: includes/admin/core/class-admin-settings.php:1933
+#: includes/admin/core/class-admin-settings.php:1841
+#: includes/admin/core/class-admin-settings.php:1939
 #, php-format
 msgid ""
 "Your license key has been disabled. Please <a href=\"%s\" target=\"_blank"
 "\">contact support</a> for more information."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1847
-#: includes/admin/core/class-admin-settings.php:1945
+#: includes/admin/core/class-admin-settings.php:1853
+#: includes/admin/core/class-admin-settings.php:1951
 #, php-format
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\">visit your account "
 "page</a> and verify it."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1860
-#: includes/admin/core/class-admin-settings.php:1958
+#: includes/admin/core/class-admin-settings.php:1866
+#: includes/admin/core/class-admin-settings.php:1964
 #, php-format
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" target=\"_blank"
 "\">visit your account page</a> to manage your license key URLs."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1872
-#: includes/admin/core/class-admin-settings.php:1970
+#: includes/admin/core/class-admin-settings.php:1878
+#: includes/admin/core/class-admin-settings.php:1976
 #, php-format
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1881
-#: includes/admin/core/class-admin-settings.php:1979
+#: includes/admin/core/class-admin-settings.php:1887
+#: includes/admin/core/class-admin-settings.php:1985
 #, php-format
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1890
-#: includes/admin/core/class-admin-settings.php:1988
+#: includes/admin/core/class-admin-settings.php:1896
+#: includes/admin/core/class-admin-settings.php:1994
 msgid ""
 "The key you entered belongs to a bundle, please use the product specific "
 "license key."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1898
-#: includes/admin/core/class-admin-settings.php:1906
+#: includes/admin/core/class-admin-settings.php:1904
+#: includes/admin/core/class-admin-settings.php:1912
 msgid "unknown_error"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1899
-#: includes/admin/core/class-admin-settings.php:1907
+#: includes/admin/core/class-admin-settings.php:1905
+#: includes/admin/core/class-admin-settings.php:1913
 #, php-format
 msgid ""
 "There was an error with this license key: %s. Please <a href=\"%s\">contact "
 "our support team</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2003
+#: includes/admin/core/class-admin-settings.php:2009
 msgid "License key never expires."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2010
+#: includes/admin/core/class-admin-settings.php:2016
 #, php-format
 msgid ""
 "Your license key expires soon! It expires on %s. <a href=\"%s\" target="
 "\"_blank\">Renew your license key</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2020
+#: includes/admin/core/class-admin-settings.php:2026
 #, php-format
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2038
+#: includes/admin/core/class-admin-settings.php:2044
 #, php-format
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2062
+#: includes/admin/core/class-admin-settings.php:2068
 msgid "Clear License"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2064
+#: includes/admin/core/class-admin-settings.php:2070
 msgid "Activate"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2066
+#: includes/admin/core/class-admin-settings.php:2072
 msgid "Re-Activate"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2118
+#: includes/admin/core/class-admin-settings.php:2124
 msgid ""
 "To copy the Install info, click below then press Ctrl + C (PC) or Cmd + C "
 "(Mac)."
@@ -2541,7 +2550,7 @@ msgid "UM Action"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:116
-#: includes/core/class-fields.php:2302
+#: includes/core/class-fields.php:2304
 msgid "Apply"
 msgstr ""
 
@@ -2584,7 +2593,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-users.php:305
 #: includes/admin/templates/dashboard/users.php:11
-#: includes/core/class-user.php:821
+#: includes/core/class-user.php:822
 msgid "Approved"
 msgstr ""
 
@@ -2919,12 +2928,12 @@ msgid "Get latest versions"
 msgstr ""
 
 #: includes/admin/templates/dashboard/users.php:27
-#: includes/core/class-user.php:829
+#: includes/core/class-user.php:830
 msgid "Pending Review"
 msgstr ""
 
 #: includes/admin/templates/dashboard/users.php:32
-#: includes/core/class-user.php:825
+#: includes/core/class-user.php:826
 msgid "Awaiting E-mail Confirmation"
 msgstr ""
 
@@ -3346,27 +3355,27 @@ msgstr ""
 msgid "Cover photo ratio"
 msgstr ""
 
-#: includes/admin/templates/form/profile_customize.php:128
+#: includes/admin/templates/form/profile_customize.php:129
 msgid "Set the profile photo size in pixels here"
 msgstr ""
 
-#: includes/admin/templates/form/profile_customize.php:135
+#: includes/admin/templates/form/profile_customize.php:136
 msgid "Make Profile Photo Required"
 msgstr ""
 
-#: includes/admin/templates/form/profile_customize.php:136
+#: includes/admin/templates/form/profile_customize.php:137
 msgid "Require user to update a profile photo when updating their profile"
 msgstr ""
 
-#: includes/admin/templates/form/profile_customize.php:147
+#: includes/admin/templates/form/profile_customize.php:148
 msgid "Show display name in profile header?"
 msgstr ""
 
-#: includes/admin/templates/form/profile_customize.php:158
+#: includes/admin/templates/form/profile_customize.php:159
 msgid "Show social links in profile header?"
 msgstr ""
 
-#: includes/admin/templates/form/profile_customize.php:169
+#: includes/admin/templates/form/profile_customize.php:170
 msgid "Show user description in profile header?"
 msgstr ""
 
@@ -3515,7 +3524,7 @@ msgstr ""
 #: includes/admin/templates/modal/dynamic_new_group.php:15
 #: includes/admin/templates/modal/fonticons.php:11
 #: includes/admin/templates/role/publish.php:24
-#: includes/core/class-fields.php:2303 includes/core/class-fields.php:2400
+#: includes/core/class-fields.php:2305 includes/core/class-fields.php:2402
 #: includes/core/um-actions-profile.php:554
 #: includes/core/um-actions-profile.php:693
 #: includes/core/um-actions-profile.php:726
@@ -3864,31 +3873,31 @@ msgstr ""
 msgid "Check All"
 msgstr ""
 
-#: includes/class-config.php:129 includes/class-config.php:737
+#: includes/class-config.php:129 includes/class-config.php:738
 msgid "User"
 msgstr ""
 
 #: includes/class-config.php:130 includes/class-config.php:235
-#: includes/class-config.php:241 includes/class-config.php:738
+#: includes/class-config.php:241 includes/class-config.php:739
 msgid "Login"
 msgstr ""
 
 #: includes/class-config.php:131 includes/class-config.php:233
-#: includes/class-config.php:245 includes/class-config.php:739
+#: includes/class-config.php:245 includes/class-config.php:740
 msgid "Register"
 msgstr ""
 
-#: includes/class-config.php:132 includes/class-config.php:740
+#: includes/class-config.php:132 includes/class-config.php:741
 msgid "Members"
 msgstr ""
 
-#: includes/class-config.php:133 includes/class-config.php:741
+#: includes/class-config.php:133 includes/class-config.php:742
 #: includes/core/um-actions-profile.php:1077
 #: includes/core/um-actions-user.php:15
 msgid "Logout"
 msgstr ""
 
-#: includes/class-config.php:135 includes/class-config.php:743
+#: includes/class-config.php:135 includes/class-config.php:744
 msgid "Password Reset"
 msgstr ""
 
@@ -4008,36 +4017,36 @@ msgid ""
 "account data from the site. To delete your account enter your password below"
 msgstr ""
 
-#: includes/class-dependencies.php:163
+#: includes/class-dependencies.php:164
 #, php-format
 msgid ""
 "This version of <strong>\"%s\"</strong> requires the core <strong>%s</"
 "strong> plugin to be <strong>%s</strong> or higher."
 msgstr ""
 
-#: includes/class-dependencies.php:165
+#: includes/class-dependencies.php:166
 #, php-format
 msgid "Please update <strong>%s</strong> to the latest version."
 msgstr ""
 
-#: includes/class-dependencies.php:167
+#: includes/class-dependencies.php:168
 #, php-format
 msgid ""
 "Sorry, but this version of <strong>%s</strong> does not work with extension "
 "<strong>\"%s\" %s</strong> version."
 msgstr ""
 
-#: includes/class-dependencies.php:169
+#: includes/class-dependencies.php:170
 #, php-format
 msgid "Please update extension <strong>\"%s\"</strong> to the latest version."
 msgstr ""
 
-#: includes/class-dependencies.php:178
+#: includes/class-dependencies.php:179
 #, php-format
 msgid "Please check <strong>\"%s\" %s</strong> extension's folder name."
 msgstr ""
 
-#: includes/class-dependencies.php:180
+#: includes/class-dependencies.php:181
 #, php-format
 msgid "Correct folder name is <strong>\"%s\"</strong>"
 msgstr ""
@@ -4159,7 +4168,7 @@ msgstr ""
 msgid "You must add a shortcode to the content area"
 msgstr ""
 
-#: includes/core/class-builtin.php:663 includes/core/class-user.php:1543
+#: includes/core/class-builtin.php:663 includes/core/class-user.php:1544
 msgid "Only me"
 msgstr ""
 
@@ -6222,99 +6231,99 @@ msgstr ""
 msgid "Less than 1 year old"
 msgstr ""
 
-#: includes/core/class-external-integrations.php:420
+#: includes/core/class-external-integrations.php:465
 #, php-format
 msgid "Edit the %s translation"
 msgstr ""
 
-#: includes/core/class-external-integrations.php:427
+#: includes/core/class-external-integrations.php:472
 #, php-format
 msgid "Add translation to %s"
 msgstr ""
 
-#: includes/core/class-fields.php:1167 templates/message.php:5
+#: includes/core/class-fields.php:1169 templates/message.php:5
 #, php-format
 msgid "%s"
 msgstr ""
 
-#: includes/core/class-fields.php:1186
+#: includes/core/class-fields.php:1188
 msgid "Custom Field"
 msgstr ""
 
-#: includes/core/class-fields.php:1483
+#: includes/core/class-fields.php:1485
 msgid "Please upload a valid image!"
 msgstr ""
 
-#: includes/core/class-fields.php:1490 includes/core/class-fields.php:1511
+#: includes/core/class-fields.php:1492 includes/core/class-fields.php:1513
 msgid "Upload"
 msgstr ""
 
-#: includes/core/class-fields.php:1491
+#: includes/core/class-fields.php:1493
 msgid "Sorry this is not a valid image."
 msgstr ""
 
-#: includes/core/class-fields.php:1492
+#: includes/core/class-fields.php:1494
 msgid "This image is too large!"
 msgstr ""
 
-#: includes/core/class-fields.php:1493
+#: includes/core/class-fields.php:1495
 msgid "This image is too small!"
 msgstr ""
 
-#: includes/core/class-fields.php:1494
+#: includes/core/class-fields.php:1496
 msgid "You can only upload one image"
 msgstr ""
 
-#: includes/core/class-fields.php:1961
+#: includes/core/class-fields.php:1963
 msgid "Current Password"
 msgstr ""
 
-#: includes/core/class-fields.php:1990
+#: includes/core/class-fields.php:1992
 msgid "New Password"
 msgstr ""
 
-#: includes/core/class-fields.php:2022
+#: includes/core/class-fields.php:2024
 #, php-format
 msgid "Confirm %s"
 msgstr ""
 
-#: includes/core/class-fields.php:2257
+#: includes/core/class-fields.php:2259
 msgid "Upload Photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2278 includes/core/class-fields.php:2302
+#: includes/core/class-fields.php:2280 includes/core/class-fields.php:2304
 #: includes/core/um-actions-profile.php:724
 msgid "Change photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2302 includes/core/class-fields.php:2399
+#: includes/core/class-fields.php:2304 includes/core/class-fields.php:2401
 msgid "Processing..."
 msgstr ""
 
-#: includes/core/class-fields.php:2324
+#: includes/core/class-fields.php:2326
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:2366 includes/core/um-filters-fields.php:243
+#: includes/core/class-fields.php:2368 includes/core/um-filters-fields.php:243
 msgid "This file has been removed."
 msgstr ""
 
-#: includes/core/class-fields.php:2369 includes/core/class-fields.php:2399
+#: includes/core/class-fields.php:2371 includes/core/class-fields.php:2401
 msgid "Change file"
 msgstr ""
 
-#: includes/core/class-fields.php:2399
+#: includes/core/class-fields.php:2401
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:3822
+#: includes/core/class-fields.php:3824
 #, php-format
 msgid ""
 "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some "
 "information!"
 msgstr ""
 
-#: includes/core/class-fields.php:3824
+#: includes/core/class-fields.php:3826
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
@@ -6355,44 +6364,44 @@ msgstr ""
 msgid "You can not edit this user"
 msgstr ""
 
-#: includes/core/class-password.php:443
+#: includes/core/class-password.php:453
 msgid "Please provide your username or email"
 msgstr ""
 
-#: includes/core/class-password.php:447
+#: includes/core/class-password.php:457
 msgid "We can't find an account registered with that address or username"
 msgstr ""
 
-#: includes/core/class-password.php:466
+#: includes/core/class-password.php:476
 msgid ""
 "You have reached the limit for requesting password change for this user "
 "already. Contact support if you cannot open the email"
 msgstr ""
 
-#: includes/core/class-password.php:522
+#: includes/core/class-password.php:532
 msgid "You must enter a new password"
 msgstr ""
 
-#: includes/core/class-password.php:528 includes/core/um-actions-account.php:54
+#: includes/core/class-password.php:538 includes/core/um-actions-account.php:54
 msgid "Your password must contain at least 8 characters"
 msgstr ""
 
-#: includes/core/class-password.php:532 includes/core/um-actions-account.php:58
+#: includes/core/class-password.php:542 includes/core/um-actions-account.php:58
 msgid "Your password must contain less than 30 characters"
 msgstr ""
 
-#: includes/core/class-password.php:536 includes/core/um-actions-account.php:62
+#: includes/core/class-password.php:546 includes/core/um-actions-account.php:62
 #: includes/core/um-actions-form.php:476
 msgid ""
 "Your password must contain at least one lowercase letter, one capital letter "
 "and one number"
 msgstr ""
 
-#: includes/core/class-password.php:542
+#: includes/core/class-password.php:552
 msgid "You must confirm your new password"
 msgstr ""
 
-#: includes/core/class-password.php:546 includes/core/um-actions-form.php:485
+#: includes/core/class-password.php:556 includes/core/um-actions-form.php:485
 msgid "Your passwords do not match"
 msgstr ""
 
@@ -6529,24 +6538,24 @@ msgstr ""
 msgid "This file type is not recognized."
 msgstr ""
 
-#: includes/core/class-uploader.php:1071
+#: includes/core/class-uploader.php:1079
 #, php-format
 msgid "Maximum file size allowed: %s"
 msgstr ""
 
-#: includes/core/class-user.php:615
+#: includes/core/class-user.php:616
 msgid "Ultimate Member Role"
 msgstr ""
 
-#: includes/core/class-user.php:618
+#: includes/core/class-user.php:619
 msgid "&mdash; No role for Ultimate Member &mdash;"
 msgstr ""
 
-#: includes/core/class-user.php:833
+#: includes/core/class-user.php:834
 msgid "Membership Rejected"
 msgstr ""
 
-#: includes/core/class-user.php:837
+#: includes/core/class-user.php:838
 msgid "Membership Inactive"
 msgstr ""
 
