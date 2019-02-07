@@ -187,6 +187,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			if ( isset( $fields[ $id ] ) ) {
 				$condition_fields = get_option( 'um_fields' );
 
+				if( ! is_array( $condition_fields ) ) $condition_fields = array();
+				
 				foreach ( $condition_fields as $key => $value ) {
 					$deleted_field = array_search( $id, $value );
 
