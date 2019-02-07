@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-02-06 18:21+0200\n"
-"PO-Revision-Date: 2019-02-06 18:21+0200\n"
+"POT-Creation-Date: 2019-02-07 15:40+0200\n"
+"PO-Revision-Date: 2019-02-07 15:40+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -249,7 +249,7 @@ msgstr ""
 #: includes/admin/templates/form/register_customize.php:77
 #: includes/admin/templates/form/register_gdpr.php:24
 #: includes/core/class-builtin.php:1130 includes/core/class-builtin.php:1145
-#: includes/core/um-filters-members.php:68
+#: includes/core/um-filters-members.php:69
 msgid "Yes"
 msgstr ""
 
@@ -6776,15 +6776,15 @@ msgstr ""
 msgid "Password is incorrect. Please try again."
 msgstr ""
 
-#: includes/core/um-actions-login.php:195
+#: includes/core/um-actions-login.php:196
 msgid "This action has been prevented for security measures."
 msgstr ""
 
-#: includes/core/um-actions-login.php:419
+#: includes/core/um-actions-login.php:420
 msgid "Keep me signed in"
 msgstr ""
 
-#: includes/core/um-actions-login.php:463
+#: includes/core/um-actions-login.php:464
 msgid "Forgot your password?"
 msgstr ""
 

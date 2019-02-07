@@ -177,6 +177,7 @@ add_action( 'um_on_login_before_redirect', 'um_store_lastlogin_timestamp', 10, 1
 function um_store_lastlogin_timestamp_( $login ) {
 	$user = get_user_by( 'login', $login );
 	um_store_lastlogin_timestamp( $user->ID );
+	delete_user_meta( $user->ID, 'password_rst_attempts' );
 }
 add_action( 'wp_login', 'um_store_lastlogin_timestamp_' );
 

@@ -148,6 +148,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed member directory notices with disabled metadata
   - Fixed textarea profile field formatting
   - Fixed registration without username field
+  - Fixed flush password reset limit after successfully login
 
 = 2.0.38: January 10, 2019 =
 

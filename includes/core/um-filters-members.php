@@ -53,28 +53,30 @@ function um_remove_special_users_from_list( $query_args, $args ) {
 
 	}
 
-	if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) || UM()->options()->get( 'account_hide_in_directory' ) ) {
-		$query_args['meta_query'][] = array(
-			"relation"	=> "OR",
-			array(
-				'key' => 'hide_in_members',
-				'value' => '',
-				'compare' => 'NOT EXISTS'
-			),
-			array(
-				"relation"	=> "AND",
+	if ( UM()->options()->get( 'account_hide_in_directory' ) ) {
+		if ( ! UM()->roles()->um_user_can( 'can_access_private_profile' ) ) {
+			$query_args['meta_query'][] = array(
+				"relation"	=> "OR",
 				array(
 					'key' => 'hide_in_members',
-					'value' => __('Yes','ultimate-member'),
-					'compare' => 'NOT LIKE'
+					'value' => '',
+					'compare' => 'NOT EXISTS'
 				),
 				array(
-					'key' => 'hide_in_members',
-					'value' => 'Yes',
-					'compare' => 'NOT LIKE'
+					"relation"	=> "AND",
+					array(
+						'key' => 'hide_in_members',
+						'value' => __('Yes','ultimate-member'),
+						'compare' => 'NOT LIKE'
+					),
+					array(
+						'key' => 'hide_in_members',
+						'value' => 'Yes',
+						'compare' => 'NOT LIKE'
+					),
 				),
-			),
-		);
+			);
+		}
 	}
 
 	$roles = um_user( 'can_view_roles' );
