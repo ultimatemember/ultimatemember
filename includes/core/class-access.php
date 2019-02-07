@@ -1168,6 +1168,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				return $block_content;
 			}
 
+			$restricted_blocks = UM()->options()->get( 'restricted_blocks' );
+			if ( empty( $restricted_blocks ) ) {
+				return $block_content;
+			}
+
 			if ( is_user_logged_in() && current_user_can( 'administrator' ) ) {
 				return $block_content;
 			}

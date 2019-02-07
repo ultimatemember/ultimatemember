@@ -150,7 +150,8 @@ function um_profile_field_filter_hook__textarea( $value, $data ) {
 		return $value;
 	}
 
-	$value = esc_textarea( $value );
+	$value = wp_kses( $value, 'strip' );
+	$value = html_entity_decode( $value );
 	$value = preg_replace('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', ' <a href="$1" target="_blank">$1</a> ', $value." ");
 	$value = preg_replace('$(www\.[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', '<a target="_blank" href="http://$1">$1</a> ', $value." ");
 	$value = wpautop($value);
@@ -158,7 +159,6 @@ function um_profile_field_filter_hook__textarea( $value, $data ) {
 	return $value;
 }
 add_filter( 'um_profile_field_filter_hook__textarea', 'um_profile_field_filter_hook__textarea', 99, 2 );
-
 
     /***
      ***	@urls in description
@@ -327,12 +327,13 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 			if ( $data['validate'] == 'facebook_url' ) 		$value = 'https://facebook.com/' . $value;
 			if ( $data['validate'] == 'twitter_url' ) 		$value = 'https://twitter.com/' . $value;
 			if ( $data['validate'] == 'linkedin_url' ) 		$value = 'https://linkedin.com/' . $value;
-			if ( $data['validate'] == 'skype' ) 			$value = $value;
+			if ( $data['validate'] == 'skype' ) 			$value = 'skype:'.$value.'?chat';
 			if ( $data['validate'] == 'googleplus_url' ) 	$value = 'https://plus.google.com/' . $value;
 			if ( $data['validate'] == 'instagram_url' ) 	$value = 'https://instagram.com/' . $value;
 			if ( $data['validate'] == 'vk_url' ) 			$value = 'https://vk.com/' . $value;
 		}
 
+		
 		if ( isset( $data['validate'] ) && $data['validate'] == 'skype' ) {
 
 			$value = $value;
@@ -349,6 +350,16 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 
 	}
 
+	if ( isset( $data['validate'] ) && $data['validate'] == 'skype' ) {
+		
+		$value = str_replace('https://','',$value );
+		$value = str_replace('http://','',$value );
+		
+		$data['url_target'] = ( isset( $data['url_target'] ) ) ? $data['url_target'] : '_blank';
+		$value = '<a href="'. 'skype:'.$value.'?chat'.'" title="'.$value.'" target="'.$data['url_target'].'" ' . $url_rel . '>'.$value.'</a>';
+
+	} 
+	
 	if ( !is_array( $value ) ) {
 		if ( is_email( $value ) )
 			$value = '<a href="mailto:'. $value.'" title="'.$value.'">'.$value.'</a>';

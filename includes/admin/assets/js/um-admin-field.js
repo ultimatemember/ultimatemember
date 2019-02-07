@@ -21,7 +21,7 @@ jQuery(document).ready(function() {
 
 				},
 				success: function(data){
-					
+
 				},
 				error: function(data){
 
@@ -93,15 +93,15 @@ jQuery(document).ready(function() {
 					um_admin_update_builder();
 
 				}
-				
+
 			},
 			error: function(data){
 				console.log(data);
 			}
 		});
-		
+
 		return false;
-		
+
 	});
 
 });

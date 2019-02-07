@@ -46,6 +46,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 			$this->reviews_notice();
 
+			$this->new_cond_logic();
+
 			//$this->future_changed();
 
 			/**
@@ -678,6 +680,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			update_option( 'um_hidden_admin_notices', $hidden_notices );
 
 			wp_send_json_success();
+		}
+
+		function new_cond_logic() {
+			ob_start(); ?>
+			<p>
+				<?php _e( 'Ultimate Member has new conditional logic for forms.', 'ultimate-member' ); ?>
+				<?php _e( 'We recommend you update conditional logic for best experience with UM forms.', 'ultimate-member' ); ?>
+			</p>
+			<p>
+				<a href="" class="button button-primary"><?php _e( 'Updade Forms Now', 'ultimate-member' ) ?></a>
+				&nbsp;
+			</p>
+			<?php $message = ob_get_clean();
+
+			$this->add_notice( 'reviews_notice', array(
+				'class'     => 'updated',
+				'message'   => $message,
+				'dismissible' => false
+			), 1 );
 		}
 	}
 }

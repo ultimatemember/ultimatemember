@@ -88,9 +88,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			add_action( 'init', array( &$this, 'check_membership' ), 10 );
 
 			if ( is_multisite() ) {
-				add_action( 'delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
-			} else {
 				add_action( 'wpmu_delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
+			} else {
+				add_action( 'delete_user', array( &$this, 'delete_user_handler' ), 10, 1 );
 			}
 		}
 
@@ -99,6 +99,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param $user_id
 		 */
 		function delete_user_handler( $user_id ) {
+			error_log( '----------------' );
+			error_log( $user_id );
+
 			um_fetch_user( $user_id );
 
 			/**
@@ -154,6 +157,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			// remove uploads
+			UM()->files()->remove_dir( UM()->files()->upload_temp );
 			UM()->files()->remove_dir( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR );
 		}
 
@@ -507,7 +511,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 * }
 			 * ?>
 			 */
-			do_action( 'um_after_member_role_upgrade', $new_roles, $old_roles );
+			do_action( 'um_after_member_role_upgrade', $new_roles, $old_roles, $user_id );
 
 			//Update permalink
 			$this->generate_profile_slug( $user_id, true );
@@ -1026,10 +1030,14 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 */
 			do_action( 'um_before_save_registration_details', $this->id, $submitted );
 
-			$hide_array = um_field_conditions_are_met( $args );
-			foreach ( $hide_array as $hide ){
-				unset($submitted[$hide]);
+			$new_cond = get_post_meta($args['form_id'], '_um_has_new_cond', true);
+			if( isset($new_cond) && $new_cond == '1' ) {
+				$hide_array = um_field_conditions_are_met( $args );
+				foreach ( $hide_array as $hide ){
+					unset($submitted[$hide]);
+				}
 			}
+
 			update_user_meta( $this->id, 'submitted', $submitted );
 
 			$this->update_profile( $submitted );

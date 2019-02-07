@@ -281,6 +281,300 @@ function um_user_ip() {
 
 
 /**
+ * For old condition logic.
+ * If conditions are met return true;
+ *
+ * @param $data
+ *
+ * @return bool
+ */
+function um_field_conditions_are_met_old( $data ) {
+
+
+
+	if (!isset( $data['conditions'] )) return true;
+
+    $state = ( $data['conditional_action'] == 'show' ) ? 1 : 0;
+
+
+    $first_group = 0;
+    $state_array = array();
+    $count = count($state_array);
+    foreach ($data['conditions'] as $k => $arr){
+
+        $val = $arr[3];
+        $op = $arr[2];
+
+        if (strstr($arr[1], 'role_'))
+            $arr[1] = 'role';
+
+        $field = um_profile($arr[1]);
+
+
+        if( ! isset( $arr[5] ) || $arr[5] != $first_group ){
+
+
+            if ($arr[0] == 'show') {
+
+                switch ($op) {
+                    case 'equals to':
+
+                        $field = maybe_unserialize( $field );
+
+                        if (is_array( $field ))
+                            $state = in_array( $val, $field ) ? 'show' : 'hide';
+                        else
+                            $state = ( $field == $val ) ? 'show' : 'hide';
+
+                        break;
+                    case 'not equals':
+
+                        $field = maybe_unserialize( $field );
+
+                        if (is_array( $field ))
+                            $state = !in_array( $val, $field ) ? 'show' : 'hide';
+                        else
+                            $state = ( $field != $val ) ? 'show' : 'hide';
+
+                        break;
+                    case 'empty':
+
+                        $state = ( !$field ) ? 'show' : 'hide';
+
+                        break;
+                    case 'not empty':
+
+                        $state = ( $field ) ? 'show' : 'hide';
+
+                        break;
+                    case 'greater than':
+                        if ($field > $val) {
+                            $state = 'show';
+                        } else {
+                            $state = 'hide';
+                        }
+                        break;
+                    case 'less than':
+                        if ($field < $val) {
+                            $state = 'show';
+                        } else {
+                            $state = 'hide';
+                        }
+                        break;
+                    case 'contains':
+                        if (strstr( $field, $val )) {
+                            $state = 'show';
+                        } else {
+                            $state = 'hide';
+                        }
+                        break;
+                }
+            } else if ($arr[0] == 'hide') {
+
+                switch ($op) {
+                    case 'equals to':
+
+                        $field = maybe_unserialize( $field );
+
+                        if (is_array( $field ))
+                            $state = in_array( $val, $field ) ? 'hide' : 'show';
+                        else
+                            $state = ( $field == $val ) ? 'hide' : 'show';
+
+                        break;
+                    case 'not equals':
+
+                        $field = maybe_unserialize( $field );
+
+                        if (is_array( $field ))
+                            $state = !in_array( $val, $field ) ? 'hide' : 'show';
+                        else
+                            $state = ( $field != $val ) ? 'hide' : 'show';
+
+                        break;
+                    case 'empty':
+
+                        $state = ( !$field ) ? 'hide' : 'show';
+
+                        break;
+                    case 'not empty':
+
+                        $state = ( $field ) ? 'hide' : 'show';
+
+                        break;
+                    case 'greater than':
+                        if ($field <= $val) {
+                            $state = 'hide';
+                        } else {
+                            $state = 'show';
+                        }
+                        break;
+                    case 'less than':
+                        if ($field >= $val) {
+                            $state = 'hide';
+                        } else {
+                            $state = 'show';
+                        }
+                        break;
+                    case 'contains':
+                        if (strstr( $field, $val )) {
+                            $state = 'hide';
+                        } else {
+                            $state = 'show';
+                        }
+                        break;
+                }
+            }
+            $first_group++;
+            array_push($state_array, $state);
+        } else {
+
+            if ($arr[0] == 'show') {
+
+                switch ($op) {
+                    case 'equals to':
+
+                        $field = maybe_unserialize( $field );
+
+                        if (is_array( $field ))
+                            $state = in_array( $val, $field ) ? 'show' : 'not_show';
+                        else
+                            $state = ( $field == $val ) ? 'show' : 'not_show';
+
+                        break;
+                    case 'not equals':
+
+                        $field = maybe_unserialize( $field );
+
+                        if (is_array( $field ))
+                            $state = !in_array( $val, $field ) ? 'show' : 'not_show';
+                        else
+                            $state = ( $field != $val ) ? 'show' : 'not_show';
+
+                        break;
+                    case 'empty':
+
+                        $state = ( !$field ) ? 'show' : 'not_show';
+
+                        break;
+                    case 'not empty':
+
+                        $state = ( $field ) ? 'show': 'not_show';
+
+                        break;
+                    case 'greater than':
+                        if ($field > $val) {
+                            $state = 'show';
+                        } else {
+                            $state = 'not_show';
+                        }
+                        break;
+                    case 'less than':
+                        if ($field < $val) {
+                            $state = 'show';
+                        } else {
+                            $state = 'not_show';
+                        }
+                        break;
+                    case 'contains':
+                        if (strstr( $field, $val )) {
+                            $state = 'show';
+                        } else {
+                            $state = 'not_show';
+                        }
+                        break;
+                }
+            } else if ($arr[0] == 'hide') {
+
+                switch ($op) {
+                    case 'equals to':
+
+                        $field = maybe_unserialize( $field );
+
+                        if (is_array( $field ))
+                            $state = in_array( $val, $field ) ? 'hide' : 'not_hide';
+                        else
+                            $state = ( $field == $val ) ? 'hide' : 'not_hide';
+
+                        break;
+                    case 'not equals':
+
+                        $field = maybe_unserialize( $field );
+
+                        if (is_array( $field ))
+                            $state = !in_array( $val, $field ) ? 'hide' : 'not_hide';
+                        else
+                            $state = ( $field != $val ) ? 'hide' : 'not_hide';
+
+                        break;
+                    case 'empty':
+
+                        $state = ( !$field ) ? 'hide' : 'not_hide';
+
+                        break;
+                    case 'not empty':
+
+                        $state = ( $field ) ? 'hide' : 'not_hide';
+
+                        break;
+                    case 'greater than':
+                        if ($field <= $val) {
+                            $state = 'hide';
+                        } else {
+                            $state = 'not_hide';
+                        }
+                        break;
+                    case 'less than':
+                        if ($field >= $val) {
+                            $state = 'hide';
+                        } else {
+                            $state = 'not_hide';
+                        }
+                        break;
+                    case 'contains':
+                        if (strstr( $field, $val )) {
+                            $state = 'hide';
+                        } else {
+                            $state = 'not_hide';
+                        }
+                        break;
+                }
+            }
+            if( isset($state_array[$count]) ){
+                if( $state_array[$count] == 'show' || $state_array[$count] == 'not_hide' ){
+                    if ( $state == 'show' || $state == 'not_hide' ){
+                        $state_array[$count] = 'show';
+                    } else {
+                        $state_array[$count] = 'hide';
+                    }
+                } else {
+                    if ( $state == 'hide' || $state == 'not_show' ){
+                        $state_array[$count] = 'hide';
+                    } else {
+                        $state_array[$count] = 'hide';
+                    }
+                }
+            } else {
+                if ( $state == 'show' || $state == 'not_hide' ){
+                    $state_array[$count] = 'show';
+                } else {
+                    $state_array[$count] = 'hide';
+                }
+            }
+        }
+
+
+    }
+    $result = array_unique($state_array);
+    if( !in_array("show", $result) ){
+        return $state = false;
+    } else {
+        return $state = true;
+    }
+}
+
+/**
+ * For new conditional logic.
  * If conditions are met return array;
  *
  * @param $data
@@ -1848,22 +2142,22 @@ function um_get_cover_uri( $image, $attrs ) {
 			$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/cover_photo{$ext}?" . current_time( 'timestamp' );
 		}
 
-		if ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo-{$attrs}x{$height}{$ext}" ) ) {
-			$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/cover_photo-{$attrs}x{$height}{$ext}?". current_time( 'timestamp' );
-		} elseif ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo-{$attrs}{$ext}" ) ) {
+		if ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo-{$attrs}{$ext}" ) ) {
 			$uri_common = $multisite_fix_url . um_user( 'ID' ) . "/cover_photo-{$attrs}{$ext}?" . current_time( 'timestamp' );
-		}
+		}elseif ( file_exists( $multisite_fix_dir . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo-{$attrs}x{$height}{$ext}" ) ) {
+            $uri_common = $multisite_fix_url . um_user( 'ID' ) . "/cover_photo-{$attrs}x{$height}{$ext}?". current_time( 'timestamp' );
+        } 
 	}
 
 	if ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo{$ext}" ) ) {
 		$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/cover_photo{$ext}?" . current_time( 'timestamp' );
 	}
 
-	if ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo-{$attrs}x{$height}{$ext}" ) ) {
-		$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/cover_photo-{$attrs}x{$height}{$ext}?". current_time( 'timestamp' );
-	} elseif ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo-{$attrs}{$ext}" ) ) {
+	if ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo-{$attrs}{$ext}" ) ) {
 		$uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/cover_photo-{$attrs}{$ext}?" . current_time( 'timestamp' );
-	}
+	}elseif ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . "cover_photo-{$attrs}x{$height}{$ext}" ) ) {
+        $uri = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/cover_photo-{$attrs}x{$height}{$ext}?". current_time( 'timestamp' );
+    } 
 
 	if ( ! empty( $uri_common ) && empty( $uri ) ) {
 		$uri = $uri_common;

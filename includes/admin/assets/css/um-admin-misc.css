@@ -259,5 +259,8 @@ p.disabled-on-off .um-admin-yesno *{
 	height: 0;
 }
 
+.um-admin-cur-condition-template {
+	display: none;
+}
 
 

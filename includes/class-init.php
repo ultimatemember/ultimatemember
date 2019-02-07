@@ -468,15 +468,17 @@ if ( ! class_exists( 'UM' ) ) {
 				if ( ! get_option( 'show_avatars' ) ) {
 					update_option( 'show_avatars', 1 );
 				}
+
 			}
 
-			if ( $version != ultimatemember_version ) {
-				update_option( 'um_version', ultimatemember_version );
-			}
 
 			//run setup
 			$this->common()->create_post_types();
 			$this->setup()->run_setup();
+
+			if ( $version != ultimatemember_version ) {
+				update_option( 'um_version', ultimatemember_version );
+			}
 		}
 
 

@@ -309,9 +309,13 @@ function um_submit_form_register( $args ) {
 
 		// if full name exists
 		$count = 1;
-		while ( username_exists( $user_login ) ) {
-			$user_login .= $count;
+		$temp_user_login = $user_login;
+		while ( username_exists( $temp_user_login ) ) {
+			$temp_user_login = $user_login . $count;
 			$count++;
+		}
+		if ( $temp_user_login !== $user_login ) {
+			$user_login = $temp_user_login;
 		}
 	}
 

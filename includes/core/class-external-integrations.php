@@ -32,6 +32,9 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			add_filter( 'um_localize_permalink_filter', array( &$this, 'um_localize_permalink_filter' ), 10, 2 );
 			add_filter( 'icl_ls_languages', array( &$this, 'um_core_page_wpml_permalink' ), 10, 1 );
 
+			// Integration for the "Transposh Translation Filter" plugin
+			add_action( 'template_redirect', array( &$this, 'transposh_user_profile'), 9990 );
+
 			/**
 			 * @todo Customize this form metadata
 			 */
@@ -69,6 +72,48 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			}
 
 			return $args;
+		}
+
+
+		/**
+		 * Integration for the "Transposh Translation Filter" plugin
+		 *
+		 * @description Fix issue "404 Not Found" on profile page
+		 * @hook template_redirect
+		 * @see http://transposh.org/
+		 *
+		 * @global transposh_plugin $my_transposh_plugin
+		 * @global \WP_Query $wp_query Global WP_Query instance.
+		 */
+		public function transposh_user_profile() {
+			global $my_transposh_plugin, $wp_query;
+
+			if ( empty( $my_transposh_plugin ) ) {
+				return;
+			}
+
+			if ( ! $wp_query->is_404() ) {
+				return;
+			}
+
+			$profile_id = UM()->options()->get( 'core_user' );
+			$post = get_post( $profile_id );
+
+			if ( empty( $post ) || is_wp_error( $post ) ) {
+				return;
+			}
+
+			if ( ! empty( $_SERVER['REQUEST_URI'] ) && stripos( $_SERVER['REQUEST_URI'], "$my_transposh_plugin->target_language/$post->post_name" ) !== false ) {
+				preg_match( "#/$post->post_name/([^\/\?$]+)#", $_SERVER['REQUEST_URI'], $matches );
+
+				if ( isset( $matches[1] ) ) {
+					query_posts( array(
+						'page_id' => $post->ID
+					) );
+					set_query_var( 'um_user', $matches[1] );
+					wp_reset_postdata();
+				}
+			}
 		}
 
 
