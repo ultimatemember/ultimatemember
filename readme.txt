@@ -149,6 +149,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed textarea profile field formatting
   - Fixed registration without username field
   - Fixed flush password reset limit after successfully login
+  - Fixed upload files handlers for avoid the conflicts with other plugins
 
 = 2.0.38: January 10, 2019 =
 

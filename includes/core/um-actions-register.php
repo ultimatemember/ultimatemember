@@ -638,7 +638,9 @@ function um_registration_save_files( $user_id, $args ) {
 	$files = apply_filters( 'um_user_pre_updating_files_array', $files );
 
 	if ( ! empty( $files ) ) {
+		UM()->uploader()->replace_upload_dir = true;
 		UM()->uploader()->move_temporary_files( $user_id, $files );
+		UM()->uploader()->replace_upload_dir = false;
 	}
 }
 add_action( 'um_registration_set_extra_data', 'um_registration_save_files', 10, 2 );

@@ -23,6 +23,12 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 
 		/**
+		 * @var integer
+		 */
+		var $replace_upload_dir = false;
+
+
+		/**
 		 * @var string
 		 */
 		var $field_key;
@@ -270,8 +276,10 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			list( $this->upload_user_baseurl, $this->upload_user_basedir ) = apply_filters( 'um_change_upload_user_path', array( $this->upload_user_baseurl, $this->upload_user_basedir ), $this->field_key, $this->upload_type );
 
-			$args['path'] = $this->upload_user_basedir;
-			$args['url'] = $this->upload_user_baseurl;
+			if ( $this->replace_upload_dir ) {
+				$args['path'] = $this->upload_user_basedir;
+				$args['url'] = $this->upload_user_baseurl;
+			}
 
 			return $args;
 		}

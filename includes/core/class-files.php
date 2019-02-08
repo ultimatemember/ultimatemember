@@ -281,7 +281,9 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				wp_send_json_error( esc_js( __( 'Invalid file ownership', 'ultimate-member' ) ) );
 			}
 
+			UM()->uploader()->replace_upload_dir = true;
 			$output = UM()->uploader()->resize_image( $image_path, $src, $key, $user_id, $coord );
+			UM()->uploader()->replace_upload_dir = false;
 
 			delete_option( "um_cache_userdata_{$user_id}" );
 
@@ -340,7 +342,9 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 				if ( ! is_array( $_FILES[ $id ]['name'] ) ) {
 
+					UM()->uploader()->replace_upload_dir = true;
 					$uploaded = UM()->uploader()->upload_image( $_FILES[ $id ], $user_id, $id );
+					UM()->uploader()->replace_upload_dir = false;
 					if ( isset( $uploaded['error'] ) ){
 						$ret['error'] = $uploaded['error'];
 					} else {
@@ -416,7 +420,9 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 					$user_id = $_POST['user_id'];
 
+					UM()->uploader()->replace_upload_dir = true;
 					$uploaded = UM()->uploader()->upload_file( $_FILES[ $id ], $user_id, $id );
+					UM()->uploader()->replace_upload_dir = false;
 					if ( isset( $uploaded['error'] ) ){
 
 						$ret['error'] = $uploaded['error'];
