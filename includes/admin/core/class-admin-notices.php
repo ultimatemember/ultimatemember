@@ -689,16 +689,37 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				<?php _e( 'We recommend you update conditional logic for best experience with UM forms.', 'ultimate-member' ); ?>
 			</p>
 			<p>
-				<a href="" class="button button-primary"><?php _e( 'Updade Forms Now', 'ultimate-member' ) ?></a>
+				<a href="<?php echo admin_url('edit.php?post_type=um_form'); ?>" class="button button-primary"><?php _e( 'Updade Forms Now', 'ultimate-member' ) ?></a>
 				&nbsp;
 			</p>
 			<?php $message = ob_get_clean();
 
-			$this->add_notice( 'reviews_notice', array(
-				'class'     => 'updated',
-				'message'   => $message,
-				'dismissible' => false
-			), 1 );
+			$posts_array = array();
+			$forms_query = new \WP_Query( array(
+				'post_type' => 'um_form',
+				'posts_per_page' => -1
+			) );
+			while ($forms_query->have_posts()) {
+				$forms_query->the_post();
+				$post_id = get_the_ID();
+				array_push($posts_array, $post_id);
+			}
+			wp_reset_query();
+			$count_forms = count($posts_array);
+			$count_new_cond = 0;
+			foreach( $posts_array as $id ){
+				$new_cond = get_post_meta($id, '_um_has_new_cond', true);
+				if( isset($new_cond) && $new_cond == 1 ){
+					$count_new_cond++;
+				}
+			}
+			if( $count_forms != $count_new_cond ){
+				$this->add_notice( 'new_cond_logic', array(
+					'class'     => 'updated',
+					'message'   => $message,
+					'dismissible' => true
+				), 1 );
+			}
 		}
 	}
 }
