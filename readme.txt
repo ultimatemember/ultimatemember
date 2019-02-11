@@ -133,7 +133,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
-= 2.0.39: February , 2019 =
+= 2.0.39: February 11, 2019 =
 
 * Enhancements:
   - Restored option for disable users cache
