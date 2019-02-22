@@ -226,6 +226,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 				$this->init_tabs( $args );
 
+				$this->current_tab = apply_filters( 'um_change_default_tab', $this->current_tab );
+
 				/**
 				 * UM hook
 				 *
@@ -528,7 +530,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					 * ?>
 					 */
 					$args = apply_filters( 'um_account_tab_privacy_fields', $args, $shortcode_args );
-					
+
 					$fields = UM()->builtin()->get_specific_fields( $args );
 					$fields = $this->account_secure_fields( $fields, $id );
 					$fields = $this->filter_fields_by_attrs( $fields, $shortcode_args );
