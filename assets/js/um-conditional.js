@@ -1404,7 +1404,7 @@ function um_init_field_conditions() {
 
 jQuery(document).ready(function() {
 	if( jQuery('.new-cond-form').length > 0 ){
-
+		console.log('NEW');
 		if( jQuery('.um-field').length>0 ) {
 			condition_fields();
 			check_parent();
@@ -1433,6 +1433,7 @@ jQuery(document).ready(function() {
 			});
 		}
 	} else {
+		console.log('OLD');
 		jQuery(document).on('change', '.um-field select, .um-field input[type="radio"], .um-field input[type="checkbox"]', function () {
 			var me = jQuery(this);
 			um_apply_conditions(me, false);
