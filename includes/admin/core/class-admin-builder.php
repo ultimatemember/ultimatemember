@@ -688,10 +688,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 												extract( $keyarray );
 												$field_cond_class = '';
 												$field_cond_text = '';
-												if( !isset($keyarray['um_new_cond_field']) || $keyarray['um_new_cond_field'] != 1 ){
-													$field_cond_class = 'has-old-cond';
-													$field_cond_text = '<div class="um-admin-old-cond-message">'.__('Please update conditions in this field', 'ultimate-member').'</div>';
+												$has_new_cond =	get_post_meta($form_id, '_um_has_new_cond', true);
+												if( $has_new_cond != 1 ){
+													if( !isset($keyarray['um_new_cond_field']) || $keyarray['um_new_cond_field'] != 1 ){
+														$field_cond_class = 'has-old-cond';
+														$field_cond_text = '<div class="um-admin-old-cond-message">'.__('Please update conditions in this field', 'ultimate-member').'</div>';
+													}
 												}
+
 												?>
 
 												<div class="<?php echo $field_cond_class; ?> um-admin-drag-fld um-admin-delete-area um-field-type-<?php echo $type; ?> <?php echo $key; ?>" data-group="<?php echo (isset($keyarray['in_group'])) ? $keyarray['in_group'] : ''; ?>" data-key="<?php echo $key; ?>" data-column="<?php echo ( isset($keyarray['in_column']) ) ? $keyarray['in_column'] : 1; ?>">
