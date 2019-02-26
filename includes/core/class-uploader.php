@@ -159,7 +159,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		public function get_upload_base_url() {
 			$wp_baseurl = $this->wp_upload_dir['baseurl'];
 
-			$this->upload_baseurl = set_url_scheme( $wp_baseurl . $this->core_upload_dir );
+			$this->upload_baseurl = set_url_scheme( $wp_baseurl . $this->core_upload_url );
 
 			return $this->upload_baseurl;
 		}
@@ -1008,14 +1008,14 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 				$resize = $image->multi_resize( $sizes_array );
 
-				// change filenames of resized images 
+				// change filenames of resized images
 				foreach( $resize as $row ){
 					$new_filename = str_replace( "x{$row['height']}" , "", $row["file"] );
-					$old_filename = $row["file"]; 
-					
+					$old_filename = $row["file"];
+
 					rename( dirname( $image_path ) . DIRECTORY_SEPARATOR . $old_filename, dirname( $image_path ) . DIRECTORY_SEPARATOR . $new_filename );
 				}
-				
+
 			} else {
 				wp_send_json_error( esc_js( __( "Unable to crop image file: {$src}", 'ultimate-member' ) ) );
 			}
