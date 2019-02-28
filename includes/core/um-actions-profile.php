@@ -218,6 +218,7 @@ function um_user_edit_profile( $args ) {
 
 	// loop through fields
 	if ( ! empty( $fields ) ) {
+
 		foreach ( $fields as $key => $array ) {
 
 			if ( ! um_can_edit_field( $array ) && isset( $array['editable'] ) && ! $array['editable'] ) {
@@ -229,6 +230,7 @@ function um_user_edit_profile( $args ) {
 			}
 
 			if ( isset( $args['submitted'][ $key ] ) ) {
+
 				if ( isset( $array['type'] ) && in_array( $array['type'], array( 'image', 'file' ) ) &&
 				     ( /*um_is_file_owner( UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . $args['submitted'][ $key ], um_user( 'ID' ) ) ||*/
 					     um_is_temp_file( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' ) ) {
@@ -236,14 +238,13 @@ function um_user_edit_profile( $args ) {
 					$files[ $key ] = $args['submitted'][ $key ];
 
 				} else {
-
 					if ( $array['type'] == 'password' ) {
 						$to_update[ $key ] = wp_hash_password( $args['submitted'][ $key ] );
 						$args['submitted'][ $key ] = sprintf( __( 'Your choosed %s', 'ultimate-member' ), $array['title'] );
 					} else {
 						if ( isset( $userinfo[ $key ] ) && $args['submitted'][ $key ] != $userinfo[ $key ] ) {
 							$to_update[ $key ] = $args['submitted'][ $key ];
-						} elseif ( $args['submitted'][ $key ] ) {
+						} elseif ( $args['submitted'][ $key ] != '' ) {
 							$to_update[ $key ] = $args['submitted'][ $key ];
 						}
 					}
