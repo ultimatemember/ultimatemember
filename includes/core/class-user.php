@@ -1672,7 +1672,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			foreach ( $changes as $key => $value ) {
 				if ( ! in_array( $key, $this->update_user_keys ) ) {
-					if( $value == 0 ){
+					if( $value === 0 ){
 						update_user_meta( $this->id, $key, '0' );
 					} else {
 						update_user_meta( $this->id, $key, $value );
