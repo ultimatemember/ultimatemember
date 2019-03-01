@@ -874,17 +874,22 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 		/**
 		 * Make unique filename
+		 * @param  string $dir
 		 * @param  string $filename
 		 * @param  string $ext
-		 * @param  string $dir
 		 * @return string $filename
 		 *
 		 * @since  2.0.22
 		 */
-		public function unique_filename( $filename, $ext, $dir ) {
-			$image_type = wp_check_filetype( $ext );
+		public function unique_filename( $dir, $filename, $ext ) {
 
-			$ext = $image_type['ext'];
+			if ( empty( $ext ) ) {
+				$image_type = wp_check_filetype( $filename );
+				$ext = strtolower( trim( $image_type['ext'], ' \/.' ) );
+			}
+			else {
+				$ext = strtolower( trim( $ext, ' \/.' ) );
+			}
 
 			if ( 'image' == $this->upload_type ) {
 
