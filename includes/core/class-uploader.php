@@ -165,7 +165,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		public function get_upload_base_url() {
 			$wp_baseurl = $this->wp_upload_dir['baseurl'];
 
-			$this->upload_baseurl = set_url_scheme( $wp_baseurl . $this->core_upload_dir );
+			$this->upload_baseurl = set_url_scheme( $wp_baseurl . $this->core_upload_url );
 
 			return $this->upload_baseurl;
 		}
