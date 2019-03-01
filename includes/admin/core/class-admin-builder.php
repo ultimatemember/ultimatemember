@@ -691,27 +691,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 												$has_new_cond =	get_post_meta($form_id, '_um_has_new_cond', true);
 
 												if( $has_new_cond != 1 ){
-													if( !isset($keyarray['conditions']) ){
+													if( !isset( $keyarray['conditions'] ) ){
 														$metakey = $keyarray['metakey'];
 														$um_form_custom_fields[$metakey]['um_new_cond_field'] = 1;
 													}
-													update_post_meta($form_id, '_um_custom_fields', $um_form_custom_fields);
-//													echo '<pre>';
-//													print_r($um_form_custom_fields);
-//													echo '</pre>';
-													if( ( !isset($keyarray['um_new_cond_field']) || $keyarray['um_new_cond_field'] != 1 ) && isset($keyarray['conditions']) ){
+													update_post_meta( $form_id, '_um_custom_fields', $um_form_custom_fields );
+													if( ( !isset( $keyarray['um_new_cond_field'] ) || $keyarray['um_new_cond_field'] != 1 ) && isset( $keyarray['conditions'] ) ){
 														$field_cond_class = 'has-old-cond';
-														$field_cond_text = '<div class="um-admin-old-cond-message">'.__('Please update conditions in this field', 'ultimate-member').'</div>';
+														$field_cond_text = '<div class="um-admin-old-cond-message">'.__( 'Please update conditions in this field', 'ultimate-member' ).'</div>';
 													}
 												}
 
 												?>
 
-												<div class="<?php echo $field_cond_class; ?> um-admin-drag-fld um-admin-delete-area um-field-type-<?php echo $type; ?> <?php echo $key; ?>" data-group="<?php echo (isset($keyarray['in_group'])) ? $keyarray['in_group'] : ''; ?>" data-key="<?php echo $key; ?>" data-column="<?php echo ( isset($keyarray['in_column']) ) ? $keyarray['in_column'] : 1; ?>">
+												<div class="<?php echo $field_cond_class; ?> um-admin-drag-fld um-admin-delete-area um-field-type-<?php echo $type; ?> <?php echo $key; ?>" data-group="<?php echo ( isset($keyarray['in_group'] ) ) ? $keyarray['in_group'] : ''; ?>" data-key="<?php echo $key; ?>" data-column="<?php echo ( isset( $keyarray['in_column'] ) ) ? $keyarray['in_column'] : 1; ?>">
 													<div class="um-admin-drag-fld-title um-field-type-<?php echo $type; ?>">
 														<?php if ( $type == 'group' ) { ?>
 															<i class="um-icon-plus"></i>
-														<?php } else if ( isset($keyarray['icon']) && !empty( $keyarray['icon'] ) ) { ?>
+														<?php } else if ( isset( $keyarray['icon'] ) && !empty( $keyarray['icon'] ) ) { ?>
 															<i class="<?php echo $keyarray['icon']; ?>"></i>
 														<?php } ?><?php echo $title; ?></div>
 													<?php $field_name = isset( UM()->builtin()->core_fields[$type]['name'] ) ? UM()->builtin()->core_fields[$type]['name'] : ''; ?>
