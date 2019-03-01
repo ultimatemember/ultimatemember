@@ -357,7 +357,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			} else {
 				$ret['error'] = __( 'A theme or plugin compatibility issue', 'ultimate-member' );
 			}
-			wp_send_json_success( $ret ); 
+			wp_send_json_success( $ret );
 		}
 
 
@@ -408,7 +408,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				if ( ! wp_verify_nonce( $nonce, 'um_upload_nonce-'.$timestamp  ) && is_user_logged_in() ) {
 					// This nonce is not valid.
 					$ret['error'] = 'Invalid nonce';
-					wp_send_json_error( $ret ); 
+					wp_send_json_error( $ret );
 
 				}
 			}
@@ -428,14 +428,14 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 						$ret['error'] = $uploaded['error'];
 
 					}else{
-						
+
 						$uploaded_file = $uploaded['handle_upload'];
 						$ret['url'] = $uploaded_file['file_info']['name'];
 						$ret['icon'] = UM()->files()->get_fonticon_by_ext( $uploaded_file['file_info']['ext'] );
 						$ret['icon_bg'] = UM()->files()->get_fonticon_bg_by_ext( $uploaded_file['file_info']['ext'] );
 						$ret['filename'] = $uploaded_file['file_info']['basename'];
 						$ret['original_name'] = $uploaded_file['file_info']['original_name'];
-						
+
 
 					}
 
@@ -445,8 +445,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				$ret['error'] = __('A theme or plugin compatibility issue','ultimate-member');
 			}
 
-			
-			wp_send_json_success( $ret ); 
+
+			wp_send_json_success( $ret );
 		}
 
 
@@ -669,7 +669,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * @return string
 		 */
 		function path_only( $file ) {
-			
+
 			return trailingslashit( dirname( $file ) );
 		}
 
@@ -796,7 +796,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * @param $destination
 		 */
 		function upload_temp_file( $source, $destination ) {
-		
+
 			move_uploaded_file( $source, $destination );
 		}
 
@@ -893,29 +893,29 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 *
 		 * @return mixed
 		 */
-		function get_image_data( $file ) {	
+		function get_image_data( $file ) {
 
 			$finfo = finfo_open( FILEINFO_MIME_TYPE );
-			
-			$mime_type = finfo_file( $finfo, $file );		
+
+			$mime_type = finfo_file( $finfo, $file );
 
 			if( function_exists('exif_imagetype') ){
-				
+
 				$array_exif_image_mimes = array( IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG );
-				
+
 				$allowed_types = apply_filters('um_image_upload_allowed_exif_mimes', $array_exif_image_mimes );
 
 				if( ! in_array( @exif_imagetype( $file ), $allowed_types ) ) {
-					
+
 					$array['invalid_image'] = true;
 
 					return $array;
 				}
 
 			}else{
-				
+
 				$array_image_mimes = array('image/jpeg','image/png','image/gif');
-			
+
 				$allowed_types = apply_filters('um_image_upload_allowed_mimes', $array_image_mimes );
 
 				if ( ! in_array( $mime_type, $allowed_types ) ) {
@@ -931,7 +931,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			$image_data = @getimagesize( $file );
 
-			$array['image'] = $image_data; 
+			$array['image'] = $image_data;
 
 			$array['invalid_image'] = false;
 
@@ -940,7 +940,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			$array['width'] = $width;
 
 			$array['height'] = $height;
-				
+
 			$array['ratio'] = $width / $height;
 
 			$array['extension'] = $this->get_extension_by_mime_type( $mime_type );
@@ -1366,6 +1366,47 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					if(is_dir($file)) $this->remove_dir($file); else unlink($file);
 				} rmdir($dir);
 			}
+		}
+
+
+		/**
+		 * Remove old files
+		 * @param string $dir							Path to directoty.
+		 * @param int|string $timestamp		Unix timestamp or PHP relative time. All older files will be removed.
+		 */
+		function remove_old_files( $dir, $timestamp = NULL ) {
+
+			$removed_files = array();
+
+			if ( empty( $timestamp ) ) {
+				$timestamp = strtotime( '-1 day' );
+			}
+			elseif ( is_string( $timestamp ) && !is_numeric( $timestamp ) ) {
+				$timestamp = strtotime( $timestamp );
+			}
+
+			if ( $timestamp && is_dir( $dir ) ) {
+
+				$files = glob( $dir . '/*' );
+
+				foreach ( (array) $files as $file ) {
+					if ( in_array( wp_basename( $file ), array('.', '..') ) ) {
+						continue;
+					}
+					elseif ( is_dir( $file ) ) {
+						$this->remove_old_files( $file, $timestamp );
+					}
+					elseif ( is_file( $file ) ) {
+						$fileatime = fileatime( $file );
+						if ( $fileatime && $fileatime < (int) $timestamp ) {
+							unlink( $file );
+							$removed_files[] = $file;
+						}
+					}
+				}
+			}
+
+			return $removed_files;
 		}
 
 
