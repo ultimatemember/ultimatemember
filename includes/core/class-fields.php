@@ -843,7 +843,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				if ( ! isset( UM()->form()->post_form[ $key ] ) ) {
 
 					$field_value = um_user( $key );
-					if( isset($field_value) && !$field_value ){
+					if ( ! $field_value ) {
 						$field_value = 0;
 					}
 

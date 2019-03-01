@@ -99,9 +99,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @param $user_id
 		 */
 		function delete_user_handler( $user_id ) {
-			error_log( '----------------' );
-			error_log( $user_id );
-
 			um_fetch_user( $user_id );
 
 			/**
@@ -1377,8 +1374,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			if ( 'approved' != um_user( 'account_status' ) ) {
 				$this->send_mail_on_delete = false;
 			}
-
-			$this->delete_user_handler( um_user( 'ID' ) );
 
 			// remove user
 			if ( is_multisite() ) {

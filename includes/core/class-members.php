@@ -246,16 +246,15 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 					/*if( isset($attrs) && is_array( $attrs['options'] ) ){
 						asort( $attrs['options'] );
 					}*/
-					if( isset( $attrs['label'] ) ){
+					if ( isset( $attrs['label'] ) ) {
 						$label = $attrs['label'];
 					} else {
-						$label = $attrs['title'];
-					}
-					?>
+						$label = isset( $attrs['title'] ) ? $attrs['title'] : '';
+					} ?>
 
-                    <select name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" class="um-s1" style="width: 100%" data-placeholder="<?php echo __( stripslashes( $label ), 'ultimate-member' ); ?>" <?php if ( ! empty( $attrs['custom_dropdown_options_source'] ) ) { ?> data-um-parent="<?php echo $attrs['parent_dropdown_relationship']; ?>" data-mebers-directory="yes"  data-um-ajax-source="<?php echo $attrs['custom_dropdown_options_source'] ?>"<?php } ?>>
+					<select name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" class="um-s1" style="width: 100%" data-placeholder="<?php echo __( stripslashes( $label ), 'ultimate-member' ); ?>" <?php if ( ! empty( $attrs['custom_dropdown_options_source'] ) ) { ?> data-um-parent="<?php echo $attrs['parent_dropdown_relationship']; ?>" data-mebers-directory="yes"  data-um-ajax-source="<?php echo $attrs['custom_dropdown_options_source'] ?>"<?php } ?>>
 
-                        <option></option>
+						<option></option>
 
 						<?php foreach ( $attrs['options'] as $k => $v ) {
 

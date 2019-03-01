@@ -144,6 +144,8 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed upload photo base URL for Windows servers
   - Fixed displaying user Posts at Profile/Posts tab
   - Fixed unique filename issue, upload avatar with high case extension
+  - Fixed member directory filter title
+  - Fixed duplicate delete user handler
 
 
 = 2.0.39: February 11, 2019 =
