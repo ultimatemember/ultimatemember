@@ -683,14 +683,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 										if ( is_array( $subrow_fields ) ) {
 
 											$subrow_fields = $this->array_sort_by_column( $subrow_fields, 'position');
-
+											$um_form_custom_fields = get_post_meta($form_id, '_um_custom_fields', true);
 											foreach( $subrow_fields as $key => $keyarray ) {
 												extract( $keyarray );
 												$field_cond_class = '';
 												$field_cond_text = '';
 												$has_new_cond =	get_post_meta($form_id, '_um_has_new_cond', true);
+
 												if( $has_new_cond != 1 ){
-													if( !isset($keyarray['um_new_cond_field']) || $keyarray['um_new_cond_field'] != 1 ){
+													if( !isset($keyarray['conditions']) ){
+														$metakey = $keyarray['metakey'];
+														$um_form_custom_fields[$metakey]['um_new_cond_field'] = 1;
+													}
+													update_post_meta($form_id, '_um_custom_fields', $um_form_custom_fields);
+//													echo '<pre>';
+//													print_r($um_form_custom_fields);
+//													echo '</pre>';
+													if( ( !isset($keyarray['um_new_cond_field']) || $keyarray['um_new_cond_field'] != 1 ) && isset($keyarray['conditions']) ){
 														$field_cond_class = 'has-old-cond';
 														$field_cond_text = '<div class="um-admin-old-cond-message">'.__('Please update conditions in this field', 'ultimate-member').'</div>';
 													}

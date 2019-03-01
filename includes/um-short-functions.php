@@ -585,7 +585,9 @@ function um_field_conditions_are_met( $args ) {
 
 	$arrays = unserialize($args['custom_fields']);
 	$form_id = $_POST['form_id'];
-	$hide_array = array();
+	if( !isset($hide_array) ){
+		$hide_array = array();
+	}
 
 	$first_group = 0;
 	$state_array = array();
@@ -892,13 +894,17 @@ function um_field_conditions_are_met( $args ) {
 					}
 				}
 			}
+
 			$field_check = $array['metakey'];
 			$result = array_unique($state_array);
 			if( !in_array("show", $result) ){
 				array_push($hide_array, $field_check);
+
 			}
+
 		}
 	}
+
 	return $hide_array;
 
 }

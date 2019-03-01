@@ -290,6 +290,9 @@ p.um-notice.warning {
 	position: relative;
 	padding: 15px 0 0 0;
 }
+.um-field.empty-field {
+	display: none;
+}
 
 .um-field-b, .um-field-c {
 	padding-top: 0 !important;

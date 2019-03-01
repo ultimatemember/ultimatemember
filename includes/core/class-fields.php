@@ -2843,7 +2843,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					}
 
 					// add an empty option!
-					$output .= '<option value=""></option>';
+//					$output .= '<option value=""></option>';
 
 					$arr_selected = array();
 					// add options
@@ -3576,7 +3576,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			if ( ! in_array( $type, array( 'block', 'shortcode', 'spacing', 'divider', 'group' ) ) ) {
 				$_field_value = $this->field_value( $key, $default, $data );
 
-				if ( ! isset( $_field_value ) || $_field_value == '' ) {
+//				if ( ! isset( $_field_value ) || $_field_value == '' ) {
+//					return;
+//				}
+				if ( ! isset( $_field_value ) ) {
 					return;
 				}
 			}
@@ -3600,11 +3603,16 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				/* Default */
 				default:
 
-					$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="' . $key . '">';
+					if ( $_field_value == '' ){
+						$empty_field_class = 'empty-field';
+					} else {
+						$empty_field_class = '';
+					}
+					$output .= '<div class="um-field' . $classes . ' ' .$empty_field_class .'"' . $conditional . ' data-key="' . $key . '">';
 
 					if (isset( $data['label'] ) || isset( $data['icon'] ) && !empty( $data['icon'] )) {
 
-						if (!isset( $data['label'] )) $data['label'] = '';
+						if (!isset( $data['label'] ) || $_field_value == '' ) $data['label'] = '';
 
 						$output .= $this->field_label( $data['label'], $key, $data );
 					}
