@@ -188,7 +188,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$condition_fields = get_option( 'um_fields' );
 
 				if( ! is_array( $condition_fields ) ) $condition_fields = array();
-				
+
 				foreach ( $condition_fields as $key => $value ) {
 					$deleted_field = array_search( $id, $value );
 
@@ -4029,29 +4029,35 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			// show the heading
 			if ($heading) {
 
-				$heading_background_color = ( isset( $heading_background_color ) ) ? $heading_background_color : '';
-				$heading_text_color = ( isset( $heading_text_color ) ) ? $heading_text_color : '';
-
-				if ($heading_background_color) {
-					$css_heading_background_color = 'background-color: ' . $heading_background_color . ';';
+				if ( !empty( $heading_background_color ) ) {
+					$css_heading_background_color = "background-color: $heading_background_color;";
 					$css_heading_padding = 'padding: 10px 15px;';
 				}
 
-				if ($heading_text_color) $css_heading_text_color = 'color: ' . $heading_text_color . ';';
-				if ($borderradius) $css_heading_borderradius = 'border-radius: ' . $borderradius . ' ' . $borderradius . ' 0px 0px;';
+				$css_heading_borderradius = empty( $borderradius ) ? '' : "border-radius: $borderradius $borderradius 0px 0px;";
+				$css_heading_border = $css_border . $css_borderstyle . $css_bordercolor . $css_heading_borderradius . 'border-bottom-width: 0px;';
+				$css_heading_margin = $css_margin . 'margin-bottom: 0px;';
+				$css_heading_text_color = empty( $heading_text_color ) ? '' : "color: $heading_text_color;";
+				$css_icon_color = empty( $icon_color ) ?  '' : "color: $icon_color;";
 
-				$output .= '<div class="um-row-heading" style="' . $css_heading_background_color . $css_heading_padding . $css_heading_text_color . $css_heading_borderradius . '">';
+				$output .= '<div class="um-row-heading" style="' . $css_heading_margin . $css_heading_padding . $css_heading_border . $css_heading_background_color . $css_heading_text_color . '">';
 
-				if (isset( $icon )) {
-					$output .= '<span class="um-row-heading-icon"><i class="' . $icon . '"></i></span>';
+				if ( !empty( $icon ) ) {
+					$output .= '<span class="um-row-heading-icon" style="' . $css_icon_color . '"><i class="' . $icon . '"></i></span>';
+				}
+				if ( !empty( $heading_text ) ) {
+					$output .= htmlspecialchars( $heading_text );
 				}
 
-				$output .= ( !empty( $heading_text ) ? $heading_text : '' ) . '</div>';
+				$output .= '</div>';
+
+				$css_border .= 'border-top-width: 0px;';
+				$css_margin .= 'margin-top: 0px;';
 
 			} else {
 
 				// no heading
-				if ($borderradius) $css_borderradius = 'border-radius: ' . $borderradius . ';';
+				$css_borderradius = empty( $borderradius ) ? '' : "border-radius: $borderradius;";
 
 			}
 
