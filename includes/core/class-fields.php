@@ -4027,9 +4027,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			if ($text_color) $css_text_color = 'color: ' . $text_color . ' !important;';
 
 			// show the heading
-			if ($heading) {
+			if ( $heading ) {
 
-				if ( !empty( $heading_background_color ) ) {
+				if ( ! empty( $heading_background_color ) ) {
 					$css_heading_background_color = "background-color: $heading_background_color;";
 					$css_heading_padding = 'padding: 10px 15px;';
 				}
@@ -4042,10 +4042,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				$output .= '<div class="um-row-heading" style="' . $css_heading_margin . $css_heading_padding . $css_heading_border . $css_heading_background_color . $css_heading_text_color . '">';
 
-				if ( !empty( $icon ) ) {
+				if ( ! empty( $icon ) ) {
 					$output .= '<span class="um-row-heading-icon" style="' . $css_icon_color . '"><i class="' . $icon . '"></i></span>';
 				}
-				if ( !empty( $heading_text ) ) {
+				if ( ! empty( $heading_text ) ) {
 					$output .= htmlspecialchars( $heading_text );
 				}
 

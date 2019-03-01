@@ -404,7 +404,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					break;
 
 				case 'got_updates':
-					$messages[0]['content'] = __( 'You got the latest upgrades.', 'ultimate-member' );
+					$messages[0]['content'] = __( 'You have the latest updates.', 'ultimate-member' );
 					break;
 
 				case 'often_updates':
