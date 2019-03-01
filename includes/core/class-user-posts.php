@@ -61,8 +61,9 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 			$args = apply_filters( 'um_profile_query_make_posts', $args );
 			$posts = get_posts( $args );
 
-			$count_posts = wp_count_posts();
-			$count_posts = ! empty( $count_posts->publish ) ? $count_posts->publish : 0;
+			//$count_posts = wp_count_posts();
+			//$count_posts = ! empty( $count_posts->publish ) ? $count_posts->publish : 0;
+			$count_posts = (int) count_user_posts( um_get_requested_user(), 'post', true );
 
 			UM()->shortcodes()->set_args = array( 'posts' => $posts, 'count_posts' => $count_posts );
 			UM()->shortcodes()->load_template( 'profile/posts' );
