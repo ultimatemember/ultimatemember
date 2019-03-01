@@ -915,7 +915,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						return true;
 					}
 
-					if ( $field_value && $this->editing == true && ! is_array( $field_value ) && html_entity_decode( $field_value ) == html_entity_decode( $value )) {
+					if ( $field_value && $this->editing == true && ! is_array( $field_value ) && html_entity_decode( $field_value ) == html_entity_decode( $value ) ) {
 						return true;
 					}
 
