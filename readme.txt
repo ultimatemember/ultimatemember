@@ -141,6 +141,9 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * Bugfixes:
   - Fixed Edit Row settings
   - Fixed save profile fields with 0 values
+  - Fixed upload photo base URL for Windows servers
+  - Fixed displaying user Posts at Profile/Posts tab
+  - Fixed unique filename issue, upload avatar with high case extension
 
 
 = 2.0.39: February 11, 2019 =

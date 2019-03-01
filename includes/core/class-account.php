@@ -226,7 +226,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 				$this->init_tabs( $args );
 
-				$this->current_tab = apply_filters( 'um_change_default_tab', $this->current_tab );
+				$this->current_tab = apply_filters( 'um_change_default_tab', $this->current_tab, $args );
 
 				/**
 				 * UM hook
