@@ -500,7 +500,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			}
 
 			if ( username_exists( $user ) ) {
-				$data = get_user_by( 'login', $user );
+				$data = get_user_by( 'login', sanitize_user( wp_unslash( $user ) ) );
 			} elseif ( email_exists( $user ) ) {
 				$data = get_user_by( 'email', $user );
 			}
