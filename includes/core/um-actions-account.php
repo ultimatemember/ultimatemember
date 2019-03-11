@@ -9,8 +9,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function um_submit_account_errors_hook( $args ) {
 
-	if ( ! isset( $_POST['um_account_submit'] ) )
+	if ( ! isset( $_POST['um_account_submit'] ) ) {
 		return;
+	}
+
+	if ( ! wp_verify_nonce( $_POST[ 'um_account_nonce_' . $_POST['_um_account_tab'] ], 'um_update_account_' . $_POST['_um_account_tab'] ) ) {
+		UM()->form()->add_error('um_account_security', __( 'Are you hacking? Please try again!', 'ultimate-member' ) );
+	}
 
 	$user = get_user_by( 'login', um_user( 'user_login' ) );
 

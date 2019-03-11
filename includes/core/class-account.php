@@ -364,14 +364,13 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				 */
 				do_action( 'um_submit_account_errors_hook', UM()->form()->post_form );
 
+				if ( um_is_core_page( 'account' ) && get_query_var( 'um_tab' ) ) {
+					$this->current_tab = get_query_var( 'um_tab' );
+				} else {
+					$this->current_tab = UM()->form()->post_form['_um_account_tab'];
+				}
+
 				if ( ! isset( UM()->form()->errors ) ) {
-
-					if ( um_is_core_page( 'account' ) && get_query_var( 'um_tab' ) ) {
-						$this->current_tab = get_query_var( 'um_tab' );
-					} else {
-						$this->current_tab = UM()->form()->post_form['_um_account_tab'];
-					}
-
 					/**
 					 * UM hook
 					 *
@@ -393,6 +392,25 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					 */
 					do_action( 'um_submit_account_details', UM()->form()->post_form );
 
+				} elseif ( UM()->form()->has_error( 'um_account_security' ) ) {
+					$url = '';
+					if ( um_is_core_page( 'account' ) ) {
+
+						$url = UM()->account()->tab_link( $this->current_tab );
+
+						$url = add_query_arg( 'err', 'account', $url );
+
+						if ( function_exists( 'icl_get_current_language' ) ) {
+							if ( icl_get_current_language() != icl_get_default_language() ) {
+								$url = UM()->permalinks()->get_current_url( true );
+								$url = add_query_arg( 'err', 'account', $url );
+
+								exit( wp_redirect( $url ) );
+							}
+						}
+					}
+
+					exit( wp_redirect( $url ) );
 				}
 
 			}
@@ -759,7 +777,9 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 					<div class="um-col-alt um-col-alt-b">
 						<div class="um-left">
-							<input type="submit" name="um_account_submit" id="um_account_submit_<?php echo $tab_id ?>"  class="um-button" value="<?php echo ! empty( $tab_data['submit_title'] ) ? $tab_data['submit_title'] : $tab_data['title']; ?>" />
+							<?php $submit_title = ! empty( $tab_data['submit_title'] ) ? $tab_data['submit_title'] : $tab_data['title']; ?>
+							<input type="hidden" name="um_account_nonce_<?php echo esc_attr( $tab_id ) ?>" value="<?php echo esc_attr( wp_create_nonce( 'um_update_account_' . $tab_id ) ) ?>" />
+							<input type="submit" name="um_account_submit" id="um_account_submit_<?php echo $tab_id ?>"  class="um-button" value="<?php echo esc_attr( $submit_title ) ?>" />
 						</div>
 
 						<?php
