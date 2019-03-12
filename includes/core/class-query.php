@@ -95,7 +95,7 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 			}
 
 
-			$pages = $wpdb->get_results('SELECT * FROM '.$wpdb->posts.' WHERE post_type = "page" AND post_status = "publish" ', OBJECT);
+			$pages = $wpdb->get_results("SELECT * FROM ".$wpdb->posts." WHERE post_type = 'page' AND post_status = 'publish' ", OBJECT);
 
 			$array = array();
 			if( $wpdb->num_rows > 0 ){
