@@ -568,26 +568,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			extract( $args );
 
 			if ( isset( $_POST['_um_password_change'] ) && $_POST['_um_password_change'] == 1 ) {
-				/**
-				 * UM hook
-				 *
-				 * @type action
-				 * @title um_after_changing_user_password
-				 * @description Hook that runs after user change their password
-				 * @input_vars
-				 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_action( 'um_after_changing_user_password', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_action( 'um_after_changing_user_password', 'my_after_changing_user_password', 10, 1 );
-				 * function my_user_login_extra( $user_id ) {
-				 *     // your code here
-				 * }
-				 * ?>
-				 */
-				do_action( 'um_after_changing_user_password', $args['user_id'] );
 
 				$user = get_userdata( $args['user_id'] );
 				$errors = new \WP_Error();
@@ -612,6 +592,27 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					if ( is_user_logged_in() ) {
 						wp_logout();
 					}
+
+					/**
+					 * UM hook
+					 *
+					 * @type action
+					 * @title um_after_changing_user_password
+					 * @description Hook that runs after user change their password
+					 * @input_vars
+					 * [{"var":"$user_id","type":"int","desc":"User ID"}]
+					 * @change_log
+					 * ["Since: 2.0"]
+					 * @usage add_action( 'um_after_changing_user_password', 'function_name', 10, 1 );
+					 * @example
+					 * <?php
+					 * add_action( 'um_after_changing_user_password', 'my_after_changing_user_password', 10, 1 );
+					 * function my_user_login_extra( $user_id ) {
+					 *     // your code here
+					 * }
+					 * ?>
+					 */
+					do_action( 'um_after_changing_user_password', $args['user_id'] );
 
 					exit( wp_redirect( um_get_core_page('login', 'password_changed' ) ) );
 				}
