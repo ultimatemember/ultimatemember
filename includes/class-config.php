@@ -498,6 +498,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'account_name_disable'                  => 0,
 				'account_name_require'                  => 1,
 				'account_email'                         => 1,
+				'account_general_password'              => 0,
 				'account_hide_in_directory'             => 1,
 				'account_require_strongpass'            => 0,
 				'photo_thumb_sizes'                     => array( 40, 80, 190 ),

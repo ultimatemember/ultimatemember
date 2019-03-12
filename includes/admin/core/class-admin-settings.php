@@ -492,7 +492,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									'id'       		=> 'account_email',
 									'type'     		=> 'checkbox',
 									'label'   		=> __( 'Allow users to change e-mail','ultimate-member' ),
-									'tooltip' 	=> __('Whether to allow users changing their email in account page.','ultimate-member'),
+									'tooltip' 	=> __( 'Whether to allow users changing their email in account page.', 'ultimate-member' ),
+								),
+								array(
+									'id'        => 'account_general_password',
+									'type'      => 'checkbox',
+									'label'     => __( 'Password is required?','ultimate-member' ),
+									'tooltip'   => __( 'Password is required to save account data.', 'ultimate-member' ),
 								),
 								array(
 									'id'       		=> 'account_hide_in_directory',
