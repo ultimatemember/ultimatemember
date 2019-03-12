@@ -781,33 +781,43 @@ function condition_fields() {
 
 		if ( all_conds[metakey][0][0] === 'show' ){
 			if ( jQuery.inArray('show', state_array ) < 0) {
-				field.hide();
-				field.find('input, textarea').attr('disabled', 'disabled').attr('readonly','readonly');
+				hide_field(field);
 			} else {
-				field.show();
-				field.find('input, textarea').removeAttr('disabled').removeAttr('readonly');
+				show_field(field);
 			}
 		} else {
 			if ( jQuery.inArray('hide', state_array) < 0 ) {
-				field.show();
-				field.find('input, textarea').removeAttr('disabled').removeAttr('readonly');
+				show_field(field);
 			} else {
-				field.hide();
-				field.find('input, textarea').attr('disabled', 'disabled').attr('readonly','readonly');
+				hide_field(field);
 			}
 			if( less_greater ){
 				if( less_greater['less'] === 'hide' && less_greater['greater'] === 'hide' ){
-					field.hide();
-					field.find('input, textarea').attr('disabled', 'disabled').attr('readonly','readonly');
+					hide_field(field);
 				} else if( less_greater['less'] === 'show' && less_greater['greater'] === 'hide' ){
-					field.show();
-					field.find('input, textarea').removeAttr('disabled').removeAttr('readonly');
+					show_field(field);
 				}
 			}
 		}
 
 
 	});
+}
+
+function show_field(field) {
+	field.show();
+	field.find('input, textarea').removeAttr('disabled').removeAttr('readonly');
+
+}
+
+function hide_field(field) {
+	field.hide();
+	var parent_field = field.closest('form');
+	if( parent_field.length>0 ){
+		field.find('input, textarea').attr('disabled', 'disabled').attr('readonly','readonly');
+	} else {
+		field.find('.um-field-value').empty();
+	}
 }
 
 function check_parent() {
