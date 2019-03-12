@@ -5,8 +5,8 @@ Contributors: ultimatemember, champsupertramp, nsinelnikov
 Donate link: 
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.7
-Tested up to: 5.0
-Stable tag: 2.0.40
+Tested up to: 5.1
+Stable tag: 2.0.41
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -133,10 +133,11 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
-= 2.0.40: March XX, 2019 =
+= 2.0.41: March XX, 2019 =
 
 * Enhancements:
   - Clear temp directory on upload process 1 day files old
+  - Updated custom scrollbar JS library to jQuery 3 support
 
 * Bugfixes:
   - Fixed Edit Row settings
@@ -146,7 +147,12 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed unique filename issue, upload avatar with high case extension
   - Fixed member directory filter title
   - Fixed duplicate delete user handler
+  - Fixed sorting by Last Login date for users without meta
 
+= 2.0.40: March 12, 2019 =
+
+* Bugfixes:
+  - Fixed security issue on user Account Update
 
 = 2.0.39: February 11, 2019 =
 

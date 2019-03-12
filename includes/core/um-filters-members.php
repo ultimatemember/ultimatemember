@@ -376,7 +376,6 @@ function um_prepare_user_query_args( $query_args, $args ) {
 
 	if ( isset( $sortby ) ) {
 
-
 		if ( $sortby == 'other' && $sortby_custom ) {
 
 			$query_args['meta_key'] = $sortby_custom;
@@ -448,9 +447,18 @@ add_filter( 'um_prepare_user_query_args', 'um_prepare_user_query_args', 10, 2 );
  */
 function um_sortby_last_login( $query_args, $sortby ) {
 	if ( $sortby == 'last_login' ) {
-		$query_args['orderby'] = 'meta_value_num';
-		$query_args['order'] = 'desc';
-		$query_args['meta_key'] = '_um_last_login';
+		$query_args['orderby'] = array( 'um_last_login' => 'DESC' );
+		$query_args['meta_query']['um_last_login'] = array(
+			'relation' => 'OR',
+			array(
+				'key'   => '_um_last_login',
+				'compare'   => 'EXISTS',
+			),
+			array(
+				'key'   => '_um_last_login',
+				'compare'   => 'NOT EXISTS',
+			),
+		);
 	}
 	return $query_args;
 }

@@ -1008,57 +1008,57 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		/**
 		 * Disable comments if user has not permission to access this post
 		 *
-		 * @param mixed $open
+		 * @param int $count
 		 * @param int $post_id
 		 * @return boolean
 		 */
-		public function disable_comments_open_number( $open, $post_id ) {
+		public function disable_comments_open_number( $count, $post_id ) {
 			static $cache_number = array();
 
 			if ( isset( $cache_number[ $post_id ] ) ) {
-				return $cache_number[ $post_id ] ? $open : false;
+				return $cache_number[ $post_id ];
 			}
 
 			$post = get_post( $post_id );
 			$restriction = $this->get_post_privacy_settings( $post );
 
 			if ( ! $restriction ) {
-				$cache_number[ $post_id ] = $open;
-				return $open;
+				$cache_number[ $post_id ] = $count;
+				return $count;
 			}
 
 			if ( '1' == $restriction['_um_accessible'] ) {
 
 				if ( is_user_logged_in() ) {
 					if ( ! current_user_can( 'administrator' ) ) {
-						$open = false;
+						$count = 0;
 					}
 				}
 
 			} elseif ( '2' == $restriction['_um_accessible'] ) {
 				if ( ! is_user_logged_in() ) {
-					$open = false;
+					$count = 0;
 				} else {
 					if ( ! current_user_can( 'administrator' ) ) {
 						$custom_restrict = $this->um_custom_restriction( $restriction );
 
 						if ( empty( $restriction['_um_access_roles'] ) || false === array_search( '1', $restriction['_um_access_roles'] ) ) {
 							if ( ! $custom_restrict ) {
-								$open = false;
+								$count = 0;
 							}
 						} else {
 							$user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
 
 							if ( ! isset( $user_can ) || ! $user_can || ! $custom_restrict ) {
-								$open = false;
+								$count = 0;
 							}
 						}
 					}
 				}
 			}
 
-			$cache_number[ $post_id ] = $open;
-			return $open;
+			$cache_number[ $post_id ] = $count;
+			return $count;
 		}
 
 
