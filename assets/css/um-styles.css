@@ -291,7 +291,7 @@ p.um-notice.warning {
 	padding: 15px 0 0 0;
 }
 .um-field.empty-field {
-	display: none;
+	display: none !important;
 }
 
 .um-field-b, .um-field-c {

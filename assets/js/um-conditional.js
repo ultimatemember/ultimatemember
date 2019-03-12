@@ -1,6 +1,7 @@
 // NEW CONDITION LOGIC
-function condition_fields() {
+var greater, less;
 
+function condition_fields() {
 	var all_conds = JSON.parse( JSON.stringify(jQuery('.condition-data').data( 'conds' )) );
 
 	jQuery.each( all_conds, function( metakey ) {
@@ -8,6 +9,7 @@ function condition_fields() {
 			state_array = [],
 			// count = state_array.length,
 			state = 'show';
+		var less_greater = [];
 
 		jQuery.each( all_conds[ metakey ], function() {
 			var action = this[0],
@@ -671,12 +673,11 @@ function condition_fields() {
 
 							if (depend_arr && depend_arr.length > 0) {
 								jQuery.each(depend_arr, function () {
-
 									if (jQuery.isNumeric(val) && jQuery.isNumeric(this)) {
 										if (parseInt(val) > parseInt(this)) {
-											state = 'hide';
-										} else {
 											state = 'show';
+										} else {
+											state = 'hide';
 										}
 									} else {
 										state = 'show';
@@ -684,17 +685,22 @@ function condition_fields() {
 								});
 							} else {
 								if (jQuery.isNumeric(val) && jQuery.isNumeric(depend_field)) {
-
 									if (parseInt(val) > parseInt(depend_field)) {
-										state = 'hide'
+										state = 'show';
 									} else {
-										state = 'show'
+										state = 'hide';
 									}
 								} else {
 									state = 'show';
 								}
-							}
 
+							}
+							less_greater['greater'] = state;
+							greater = state;
+
+							if( less && (less !== 'hide' || state !== 'hide') ){
+								state = 'show';
+							}
 							break;
 
 						case 'less than':
@@ -703,9 +709,9 @@ function condition_fields() {
 								jQuery.each(depend_arr, function () {
 									if (jQuery.isNumeric(val) && jQuery.isNumeric(this)) {
 										if (parseInt(val) < parseInt(this)) {
-											state = 'hide';
-										} else {
 											state = 'show';
+										} else {
+											state = 'hide';
 										}
 									} else {
 										state = 'show';
@@ -713,16 +719,19 @@ function condition_fields() {
 								});
 							} else {
 								if (jQuery.isNumeric(val) && jQuery.isNumeric(depend_field)) {
-
 									if (parseInt(val) < parseInt(depend_field)) {
-										state = 'hide'
-
+										state = 'show';
 									} else {
-										state = 'show'
+										state = 'hide';
 									}
 								} else {
 									state = 'show';
 								}
+							}
+							less_greater['less'] = state;
+							less = state;
+							if( greater && (greater !== 'hide' || state !== 'hide') ){
+								state = 'show';
 							}
 							break;
 
@@ -747,8 +756,8 @@ function condition_fields() {
 							break;
 					}
 
-				}
 
+				}
 
 				if (state_array[first_group]) {
 					if (state_array[first_group] === 'show' && state === 'show') {
@@ -768,11 +777,10 @@ function condition_fields() {
 			}
 
 		});
-
 		var field = jQuery('.um-field[data-key="' + metakey + '"]');
 
 		if ( all_conds[metakey][0][0] === 'show' ){
-			if (jQuery.inArray('show', state_array) < 0) {
+			if ( jQuery.inArray('show', state_array ) < 0) {
 				field.hide();
 				field.find('input, textarea').attr('disabled', 'disabled').attr('readonly','readonly');
 			} else {
@@ -780,12 +788,21 @@ function condition_fields() {
 				field.find('input, textarea').removeAttr('disabled').removeAttr('readonly');
 			}
 		} else {
-			if (jQuery.inArray('hide', state_array) < 0) {
+			if ( jQuery.inArray('hide', state_array) < 0 ) {
 				field.show();
 				field.find('input, textarea').removeAttr('disabled').removeAttr('readonly');
 			} else {
 				field.hide();
 				field.find('input, textarea').attr('disabled', 'disabled').attr('readonly','readonly');
+			}
+			if( less_greater ){
+				if( less_greater['less'] === 'hide' && less_greater['greater'] === 'hide' ){
+					field.hide();
+					field.find('input, textarea').attr('disabled', 'disabled').attr('readonly','readonly');
+				} else if( less_greater['less'] === 'show' && less_greater['greater'] === 'hide' ){
+					field.show();
+					field.find('input, textarea').removeAttr('disabled').removeAttr('readonly');
+				}
 			}
 		}
 
@@ -803,7 +820,6 @@ function check_parent() {
 			var field = this[1];
 			var group = this[5];
 			var state;
-			// var check_field = jQuery('.um-field[data-key="' + field + '"]').is(':visible');
 			var check_field_visible = jQuery('.um-field[data-key="' + field + '"]').not('.empty-field').is(':visible');
 			var check_field_empty = jQuery('.empty-field.um-field[data-key="' + field + '"] .um-field-value').html();
 			var check = jQuery('.um-field[data-key="' + metakey + '"]');

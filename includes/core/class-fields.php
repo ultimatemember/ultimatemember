@@ -3547,7 +3547,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return string
 		 */
 		function view_field( $key, $data, $rule = false ) {
-
 			$output = null;
 			// get whole field data
 			if ( is_array( $data ) ) {
