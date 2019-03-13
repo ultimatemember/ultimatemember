@@ -136,6 +136,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 = 2.0.41: March XX, 2019 =
 
 * Enhancements:
+  - Added Gutenberg blocks section with Ultimate Member shortcodes
   - Clear temp directory on upload process 1 day files old
   - Updated custom scrollbar JS library to jQuery 3 support
 

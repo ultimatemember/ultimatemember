@@ -111,5 +111,4 @@ if ( ! class_exists( 'um\core\Common' ) ) {
 
 		}
 	}
-
 }
