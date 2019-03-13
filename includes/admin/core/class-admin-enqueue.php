@@ -465,41 +465,27 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			);
 			wp_localize_script( 'um-blocks-shortcode-js', 'um_account_settings', $account_settings );
 
-			wp_register_style( 'um-block-shortcode-editor-style', um_url . 'assets/css/um-block-shortcode-editor-style.css', '', ultimatemember_version );
-			wp_register_style( 'um-block-shortcode-frontend-style', um_url . 'assets/css/um-block-shortcode-frontend-style.css', '', ultimatemember_version );
-
-
 			/**
 			 * create gutenberg blocks
 			 */
 			register_block_type( 'um-block/um-user-profile-wall', array(
 				'editor_script' => 'um-blocks-shortcode-js',
-				'editor_style'  => 'um-block-shortcode-editor-style',
-				'style'         => 'um-block-shortcode-frontend-style',
 			) );
 
 			register_block_type( 'um-block/um-forms', array(
 				'editor_script' => 'um-blocks-shortcode-js',
-				'editor_style'  => 'um-block-shortcode-editor-style',
-				'style'         => 'um-block-shortcode-frontend-style',
 			) );
 
 			register_block_type( 'um-block/um-member-directories', array(
 				'editor_script' => 'um-blocks-shortcode-js',
-				'editor_style'  => 'um-block-shortcode-editor-style',
-				'style'         => 'um-block-shortcode-frontend-style',
 			) );
 
 			register_block_type( 'um-block/um-password-reset', array(
 				'editor_script' => 'um-blocks-shortcode-js',
-				'editor_style'  => 'um-block-shortcode-editor-style',
-				'style'         => 'um-block-shortcode-frontend-style',
 			) );
 
 			register_block_type( 'um-block/um-account', array(
 				'editor_script' => 'um-blocks-shortcode-js',
-				'editor_style'  => 'um-block-shortcode-editor-style',
-				'style'         => 'um-block-shortcode-frontend-style',
 			) );
 		}
 
