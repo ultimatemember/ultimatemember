@@ -25,7 +25,6 @@ jQuery(document).ready(function() {
 
 	jQuery( document.body ).on( 'click', '.um-cover a.um-cover-add, .um-photo a', function(e){
 		e.preventDefault();
-		return false;
 	});
 
 	jQuery( document.body ).on('click', '.um-photo-modal', function(e){

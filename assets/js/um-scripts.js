@@ -22,7 +22,6 @@ jQuery(document).ready(function() {
     });
 
     jQuery(document).on('click', '.um-dropdown-hide', function(e){
-
         UM_hide_menus();
     });
 
