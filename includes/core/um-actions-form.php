@@ -444,7 +444,7 @@ function um_submit_form_errors_hook_( $args ) {
 				}
 
 				if ( isset( $array['max_words'] ) && $array['max_words'] > 0 ) {
-					if ( str_word_count( $args[$key] ) > $array['max_words'] ) {
+					if ( str_word_count( $args[$key], 0, "éèàôù" ) > $array['max_words'] ) {
 						UM()->form()->add_error($key, sprintf(__('You are only allowed to enter a maximum of %s words','ultimate-member'), $array['max_words']) );
 					}
 				}
