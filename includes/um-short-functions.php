@@ -620,7 +620,7 @@ function um_js_redirect( $url ) {
  * @return string
  */
 function um_get_snippet( $str, $wordCount = 10 ) {
-	if (str_word_count( $str ) > $wordCount) {
+	if (str_word_count( $str, 0, "éèàôù" ) > $wordCount) {
 		$str = implode(
 			'',
 			array_slice(
