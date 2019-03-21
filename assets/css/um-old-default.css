@@ -112,6 +112,10 @@ div.uimob800 .um-account-side li a.current:hover
     color: #555555;
 }
 
+.um .um-row.um-customized-row .um-field-label {
+    color: inherit;
+}
+
 .um .um-form input[type=text],
 .um .um-form input[type=tel],
 .um .um-form input[type=number],

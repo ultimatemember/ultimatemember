@@ -4017,19 +4017,34 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$css_text_color = '';
 
 			// row css rules
-			if ($padding) $css_padding = 'padding: ' . $padding . ';';
-			if ($margin) {
+			if ( $padding ) {
+				$css_padding = 'padding: ' . $padding . ';';
+			}
+			if ( $margin ) {
 				$css_margin = 'margin: ' . $margin . ';';
 			} else {
 				$css_margin = 'margin: 0 0 30px 0;';
 			}
 
-			if ($background) $css_background = 'background-color: ' . $background . ';';
-			if ($borderradius) $css_borderradius = 'border-radius: 0px 0px ' . $borderradius . ' ' . $borderradius . ';';
-			if ($border) $css_border = 'border-width: ' . $border . ';';
-			if ($bordercolor) $css_bordercolor = 'border-color: ' . $bordercolor . ';';
-			if ($borderstyle) $css_borderstyle = 'border-style: ' . $borderstyle . ';';
-			if ($text_color) $css_text_color = 'color: ' . $text_color . ' !important;';
+			if ( $background ) {
+				$css_background = 'background-color: ' . $background . ';';
+			}
+			if ( $borderradius ) {
+				$css_borderradius = 'border-radius: 0px 0px ' . $borderradius . ' ' . $borderradius . ';';
+			}
+			if ( $border ) {
+				$css_border = 'border-width: ' . $border . ';';
+			}
+			if ( $bordercolor ) {
+				$css_bordercolor = 'border-color: ' . $bordercolor . ';';
+			}
+			if ( $borderstyle ) {
+				$css_borderstyle = 'border-style: ' . $borderstyle . ';';
+			}
+			if ( $text_color ) {
+				$css_text_color = 'color: ' . $text_color . ' !important;';
+				$css_class .= ' um-customized-row';
+			}
 
 			// show the heading
 			if ( $heading ) {

@@ -248,7 +248,9 @@ if ( $form_field_label ) {
 .um .um-field-label {
 	color: $form_field_label;
 }
-";
+.um .um-row.um-customized-row .um-field-label {
+    color: inherit;
+} ";
 }
 
 $form_border = UM()->options()->get( 'form_border' );
