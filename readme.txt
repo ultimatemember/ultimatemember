@@ -151,6 +151,8 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed sorting by Last Login date for users without meta
   - Fixed hook after password reset (issue #532)
   - Fixed member directory user role filter
+  - Fixed restriction content WC Products integration
+  - Fixed words count for French in user description field
 
 = 2.0.40: March 12, 2019 =
 
