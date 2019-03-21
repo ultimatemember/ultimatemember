@@ -711,6 +711,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 								 */
 								do_action( 'um_access_fix_external_post_content' );
 
+								add_filter( 'single_template', array( &$this, 'woocommerce_template' ), 9999999, 1 );
+
 								$filtered_posts[] = $post;
 								continue;
 							} elseif ( '1' == $restriction['_um_noaccess_action'] ) {
@@ -825,6 +827,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 								 */
 								do_action( 'um_access_fix_external_post_content' );
 
+								add_filter( 'single_template', array( &$this, 'woocommerce_template' ), 9999999, 1 );
+
 								$filtered_posts[] = $post;
 								continue;
 							} elseif ( '1' == $restriction['_um_noaccess_action'] ) {
@@ -850,6 +854,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 						}
 
 					} else {
+
 						if ( empty( $is_singular ) ) {
 							if ( empty( $restriction['_um_access_hide_from_queries'] ) ) {
 
@@ -911,6 +916,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 								 */
 								do_action( 'um_access_fix_external_post_content' );
 
+								add_filter( 'single_template', array( &$this, 'woocommerce_template' ), 9999999, 1 );
+
 								$filtered_posts[] = $post;
 								continue;
 							} elseif ( '1' == $restriction['_um_noaccess_action'] ) {
@@ -938,6 +945,24 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			}
 
 			return $filtered_posts;
+		}
+
+
+		/**
+		 * @param string $single_template
+		 *
+		 * @return string
+		 */
+		function woocommerce_template( $single_template ) {
+			if ( ! UM()->dependencies()->woocommerce_active_check() ) {
+				return $single_template;
+			}
+
+			if ( is_product() ) {
+				remove_filter( 'template_include', array( 'WC_Template_Loader', 'template_loader' ) );
+			}
+
+			return $single_template;
 		}
 
 
