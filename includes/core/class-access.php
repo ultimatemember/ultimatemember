@@ -556,10 +556,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				$restriction = get_post_meta( $post->ID, 'um_content_restriction', true );
 
 				if ( ! empty( $restriction['_um_custom_access_settings'] ) ) {
-					if ( ! isset( $restriction['_um_accessible'] ) )
+					if ( ! isset( $restriction['_um_accessible'] ) ) {
 						return false;
-					else
+					} else {
 						return $restriction;
+					}
 				}
 			}
 
@@ -573,8 +574,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			$terms = array();
 			if ( ! empty( $taxonomies ) ) {
 				foreach ( $taxonomies as $taxonomy ) {
-					if ( empty( $restricted_taxonomies[$taxonomy] ) )
+					if ( empty( $restricted_taxonomies[ $taxonomy ] ) ) {
 						continue;
+					}
 
 					$terms = array_merge( $terms, wp_get_post_terms( $post->ID, $taxonomy, array( 'fields' => 'ids' ) ) );
 				}
@@ -585,10 +587,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				$restriction = get_term_meta( $term_id, 'um_content_restriction', true );
 
 				if ( ! empty( $restriction['_um_custom_access_settings'] ) ) {
-					if ( ! isset( $restriction['_um_accessible'] ) || '0' == $restriction['_um_accessible'] )
+					if ( ! isset( $restriction['_um_accessible'] ) || '0' == $restriction['_um_accessible'] ) {
 						continue;
-					else
+					} else {
 						return $restriction;
+					}
 				}
 			}
 
@@ -610,10 +613,17 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			$filtered_posts = array();
 
 			//if empty
-			if ( empty( $posts ) )
+			if ( empty( $posts ) ) {
 				return $posts;
+			}
 
 			$restricted_global_message = UM()->options()->get( 'restricted_access_message' );
+
+			if ( is_object( $query ) ) {
+				$is_singular = $query->is_singular();
+			} else {
+				$is_singular = ! empty( $query->is_singular ) ? true : false;
+			}
 
 			//other filter
 			foreach ( $posts as $post ) {
@@ -629,12 +639,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				if ( ! $restriction ) {
 					$filtered_posts[] = $post;
 					continue;
-				}
-
-				if ( is_object( $query ) ) {
-					$is_singular = $query->is_singular();
-				} else {
-					$is_singular = ! empty( $query->is_singular ) ? true : false;
 				}
 
 				//post is private
