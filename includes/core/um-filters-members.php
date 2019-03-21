@@ -86,11 +86,14 @@ function um_remove_special_users_from_list( $query_args, $args ) {
 
 		if ( ! empty( $roles ) ) {
 			if ( ! empty( $query_args['role__in'] ) ) {
-				$query_args['role__in'] = array_intersect( $query_args['role__in'], $roles );
+				$roles_intersect = array_intersect( $query_args['role__in'], $roles );
+				if( ! empty( $roles_intersect ) ){
+					$query_args['role__in'] = $roles_intersect;
+				}
 			} else {
 				$query_args['role__in'] = $roles;
 			}
-		}
+		}		
 
 	}
 
