@@ -150,6 +150,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed duplicate delete user handler
   - Fixed sorting by Last Login date for users without meta
   - Fixed hook after password reset (issue #532)
+  - Fixed member directory user role filter
 
 = 2.0.40: March 12, 2019 =
 
