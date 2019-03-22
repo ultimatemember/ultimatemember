@@ -592,7 +592,7 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 
 			um_fetch_user( get_current_user_id() );
 
-			$current_user_roles = UM()->roles()->get_all_user_roles( $user_id );
+			$current_user_roles = $this->get_all_user_roles( $user_id );
 
 			switch( $cap ) {
 				case 'edit':

@@ -2131,7 +2131,7 @@ function um_get_default_cover_uri() {
  * @param $data
  * @param null $attrs
  *
- * @return string
+ * @return string|array
  */
 function um_user( $data, $attrs = null ) {
 

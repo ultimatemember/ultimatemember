@@ -277,8 +277,11 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			}
 
 			if ( um_is_core_page( 'password-reset' ) && isset( $_REQUEST['act'] ) && $_REQUEST['act'] == 'reset_password' ) {
+				wp_fix_server_vars();
+
 				list( $rp_path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
 				$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
+
 				if ( isset( $_GET['hash'] ) ) {
 					$userdata = get_userdata( wp_unslash( $_GET['user_id'] ) );
 					if ( ! $userdata || is_wp_error( $userdata ) ) {
