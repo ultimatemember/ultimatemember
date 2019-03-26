@@ -296,7 +296,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					if ( is_wp_error( $user ) ) {
 						setcookie( $rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
 						wp_redirect( add_query_arg( array( 'updated' => 'invalidkey' ), get_permalink() ) );
-					}else{
+					} else {
 						$value = sprintf( '%s:%s', $rp_login, wp_unslash( $_GET['hash'] ) );
 						setcookie( $rp_cookie, $value, 0, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
 						wp_safe_redirect( remove_query_arg( array( 'hash', 'user_id' ) ) );
@@ -441,23 +441,24 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 */
 		function um_reset_password_errors_hook( $args ) {
 
-			if ( $_POST[ UM()->honeypot ] != '' )
-				wp_die('Hello, spam bot!','ultimate-member');
+			if ( $_POST[ UM()->honeypot ] != '' ) {
+				wp_die( 'Hello, spam bot!', 'ultimate-member' );
+			}
 
 			$user = "";
 
 			foreach ( $_POST as $key => $val ) {
-				if( strstr( $key, "username_b") ){
+				if ( strstr( $key, "username_b") ) {
 					$user = trim( $val );
 				}
 			}
 
 			if ( empty( $user ) ) {
-				UM()->form()->add_error('username_b', __('Please provide your username or email','ultimate-member') );
+				UM()->form()->add_error('username_b', __( 'Please provide your username or email', 'ultimate-member' ) );
 			}
 
-			if ( ( !is_email( $user ) && !username_exists( $user ) ) || ( is_email( $user ) && !email_exists( $user ) ) ) {
-				UM()->form()->add_error('username_b', __('We can\'t find an account registered with that address or username','ultimate-member') );
+			if ( ( ! is_email( $user ) && ! username_exists( $user ) ) || ( is_email( $user ) && ! email_exists( $user ) ) ) {
+				UM()->form()->add_error('username_b', __( 'We can\'t find an account registered with that address or username','ultimate-member') );
 			} else {
 
 				if ( is_email( $user ) ) {
@@ -466,7 +467,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					$user_id = username_exists( $user );
 				}
 
-				$attempts = (int)get_user_meta( $user_id, 'password_rst_attempts', true );
+				$attempts = (int) get_user_meta( $user_id, 'password_rst_attempts', true );
 				$is_admin = user_can( intval( $user_id ),'manage_options' );
 
 				if ( UM()->options()->get( 'enable_reset_password_limit' ) ) { // if reset password limit is set
@@ -476,7 +477,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					} else {
 						$limit = UM()->options()->get( 'reset_password_limit_number' );
 						if ( $attempts >= $limit ) {
-							UM()->form()->add_error('username_b', __('You have reached the limit for requesting password change for this user already. Contact support if you cannot open the email','ultimate-member') );
+							UM()->form()->add_error( 'username_b', __( 'You have reached the limit for requesting password change for this user already. Contact support if you cannot open the email','ultimate-member') );
 						} else {
 							update_user_meta( $user_id, 'password_rst_attempts', $attempts + 1 );
 						}
@@ -572,7 +573,36 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 			if ( isset( $_POST['_um_password_change'] ) && $_POST['_um_password_change'] == 1 ) {
 
+				list( $rp_path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
+				$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
+
 				$user = get_userdata( $args['user_id'] );
+				if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
+					list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
+
+					if ( $user->user_login != $rp_login ) {
+						$user = false;
+					} else {
+						$user = check_password_reset_key( $rp_key, $rp_login );
+						if ( isset( $_POST['user_password'] ) && ! hash_equals( $rp_key, $_POST['rp_key'] ) ) {
+							$user = false;
+						}
+					}
+				} else {
+					$user = false;
+				}
+
+				if ( ! $user || is_wp_error( $user ) ) {
+					setcookie( $rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
+					if ( $user && $user->get_error_code() === 'expired_key' ) {
+						wp_redirect( add_query_arg( array( 'updated' => 'expiredkey' ), get_permalink() ) );
+					} else {
+						wp_redirect( add_query_arg( array( 'updated' => 'invalidkey' ), get_permalink() ) );
+					}
+					exit;
+				}
+
+
 				$errors = new \WP_Error();
 				/**
 				 * Fires before the password reset procedure is validated.
@@ -583,9 +613,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				 * @param \WP_User|\WP_Error $user   WP_User object if the login and reset key match. WP_Error object otherwise.
 				 */
 				do_action( 'validate_password_reset', $errors, $user );
-
-				list( $rp_path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
-				$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
 
 				if ( ( ! $errors->get_error_code() ) ) {
 					reset_password( $user, $args['user_password'] );
