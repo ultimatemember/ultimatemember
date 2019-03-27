@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-03-27 10:29+0200\n"
-"PO-Revision-Date: 2019-03-27 10:29+0200\n"
+"POT-Creation-Date: 2019-03-27 19:13+0200\n"
+"PO-Revision-Date: 2019-03-27 19:13+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -103,7 +103,7 @@ msgstr ""
 #: includes/admin/core/class-admin-builder.php:767
 #: includes/admin/core/class-admin-dragdrop.php:32
 #: includes/admin/core/class-admin-menu.php:104
-#: includes/core/class-fields.php:4099
+#: includes/core/class-fields.php:4100
 msgid "Please login as administrator"
 msgstr ""
 
@@ -2584,7 +2584,7 @@ msgid "UM Action"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:116
-#: includes/core/class-fields.php:2313
+#: includes/core/class-fields.php:2314
 msgid "Apply"
 msgstr ""
 
@@ -3553,7 +3553,7 @@ msgstr ""
 #: includes/admin/templates/modal/dynamic_new_group.php:15
 #: includes/admin/templates/modal/fonticons.php:11
 #: includes/admin/templates/role/publish.php:24
-#: includes/core/class-fields.php:2314 includes/core/class-fields.php:2411
+#: includes/core/class-fields.php:2315 includes/core/class-fields.php:2412
 #: includes/core/um-actions-profile.php:557
 #: includes/core/um-actions-profile.php:696
 #: includes/core/um-actions-profile.php:729
@@ -6290,56 +6290,56 @@ msgstr ""
 msgid "You can only upload one image"
 msgstr ""
 
-#: includes/core/class-fields.php:1972
+#: includes/core/class-fields.php:1973
 msgid "Current Password"
 msgstr ""
 
-#: includes/core/class-fields.php:2001
+#: includes/core/class-fields.php:2002
 msgid "New Password"
 msgstr ""
 
-#: includes/core/class-fields.php:2033
+#: includes/core/class-fields.php:2034
 #, php-format
 msgid "Confirm %s"
 msgstr ""
 
-#: includes/core/class-fields.php:2268
+#: includes/core/class-fields.php:2269
 msgid "Upload Photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2289 includes/core/class-fields.php:2313
+#: includes/core/class-fields.php:2290 includes/core/class-fields.php:2314
 #: includes/core/um-actions-profile.php:727
 msgid "Change photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2313 includes/core/class-fields.php:2410
+#: includes/core/class-fields.php:2314 includes/core/class-fields.php:2411
 msgid "Processing..."
 msgstr ""
 
-#: includes/core/class-fields.php:2335
+#: includes/core/class-fields.php:2336
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:2377 includes/core/um-filters-fields.php:243
+#: includes/core/class-fields.php:2378 includes/core/um-filters-fields.php:243
 msgid "This file has been removed."
 msgstr ""
 
-#: includes/core/class-fields.php:2380 includes/core/class-fields.php:2410
+#: includes/core/class-fields.php:2381 includes/core/class-fields.php:2411
 msgid "Change file"
 msgstr ""
 
-#: includes/core/class-fields.php:2410
+#: includes/core/class-fields.php:2411
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:3833
+#: includes/core/class-fields.php:3834
 #, php-format
 msgid ""
 "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some "
 "information!"
 msgstr ""
 
-#: includes/core/class-fields.php:3835
+#: includes/core/class-fields.php:3836
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 

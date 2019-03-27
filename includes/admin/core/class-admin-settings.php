@@ -2292,7 +2292,6 @@ Use Gravatars: 				<?php echo $this->info_value( UM()->options()->get('use_grava
 <?php if( UM()->options()->get('use_gravatars') ): ?>Gravatar builtin image:		<?php  echo UM()->options()->get('use_um_gravatar_default_builtin_image') . "\n"; ?>
     UM Avatar as blank Gravatar: 	<?php echo $this->info_value( UM()->options()->get('use_um_gravatar_default_image'), 'yesno', true ); ?><?php endif; ?>
 Require a strong password: 	<?php echo $this->info_value( UM()->options()->get('reset_require_strongpass'), 'onoff', true ); ?>
-Editable primary email field in profile view:	<?php echo $this->info_value( UM()->options()->get('editable_primary_email_in_profile'), 'onoff', true ); ?>
 
 
 --- UM Access Configuration ---

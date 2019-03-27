@@ -155,6 +155,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed restriction content WC Products integration
   - Fixed words count for French in user description field
   - Fixed is_selected function for dropdown/multi-select/checkbox profile fields
+  - Fixed disable email field at Edit Profile form via filter (disabled by default)
 
 = 2.0.40: March 12, 2019 =
 

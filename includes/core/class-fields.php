@@ -1676,25 +1676,26 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$disabled = '';
 					}
 				}
-
 			}
 
 			if ( ! isset( $data['autocomplete'] ) ) {
 				$autocomplete = 'off';
 			}
+
 			um_fetch_user( get_current_user_id() );
-			if (!um_can_view_field( $data )) return;
-			if (!um_can_edit_field( $data )) return;
+			if ( ! um_can_view_field( $data ) ) {
+				return;
+			}
+			if ( ! um_can_edit_field( $data ) ) {
+				return;
+			}
 			um_fetch_user( $_um_profile_id );
 
 			// fields that need to be disabled in edit mode (profile)
 			$arr_restricted_fields = array( 'user_email', 'username', 'user_login', 'user_password' );
+			$arr_restricted_fields = apply_filters( 'um_user_profile_restricted_edit_fields', $arr_restricted_fields, $key, $data, $_um_profile_id );
 
-			if ( UM()->options()->get( 'editable_primary_email_in_profile' ) == 1 ) {
-				unset( $arr_restricted_fields[0] ); // remove user_email
-			}
-
-			if (in_array( $key, $arr_restricted_fields ) && $this->editing == true && $this->set_mode == 'profile') {
+			if ( in_array( $key, $arr_restricted_fields ) && $this->editing == true && $this->set_mode == 'profile' ) {
 				return;
 			}
 
