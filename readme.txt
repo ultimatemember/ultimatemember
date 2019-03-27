@@ -133,7 +133,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
-= 2.0.41: March XX, 2019 =
+= 2.0.41: March 27, 2019 =
 
 * Enhancements:
   - Added Gutenberg blocks section with Ultimate Member shortcodes
@@ -141,6 +141,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Updated custom scrollbar JS library to jQuery 3 support
 
 * Bugfixes:
+  - Fixed vulnerability with Reset Password form
   - Fixed Edit Row settings
   - Fixed save profile fields with 0 values
   - Fixed upload photo base URL for Windows servers
@@ -153,6 +154,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed member directory user role filter
   - Fixed restriction content WC Products integration
   - Fixed words count for French in user description field
+  - Fixed is_selected function for dropdown/multi-select/checkbox profile fields
 
 = 2.0.40: March 12, 2019 =
 
