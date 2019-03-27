@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-03-21 12:27+0200\n"
-"PO-Revision-Date: 2019-03-21 12:27+0200\n"
+"POT-Creation-Date: 2019-03-27 10:29+0200\n"
+"PO-Revision-Date: 2019-03-27 10:29+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -103,7 +103,7 @@ msgstr ""
 #: includes/admin/core/class-admin-builder.php:767
 #: includes/admin/core/class-admin-dragdrop.php:32
 #: includes/admin/core/class-admin-menu.php:104
-#: includes/core/class-fields.php:4082
+#: includes/core/class-fields.php:4099
 msgid "Please login as administrator"
 msgstr ""
 
@@ -158,7 +158,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-builder.php:1143
 #: includes/core/class-form.php:155 includes/core/class-form.php:328
-#: includes/core/class-password.php:528
+#: includes/core/class-password.php:532
 msgid "This is not possible for security reasons."
 msgstr ""
 
@@ -2584,7 +2584,7 @@ msgid "UM Action"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:116
-#: includes/core/class-fields.php:2311
+#: includes/core/class-fields.php:2313
 msgid "Apply"
 msgstr ""
 
@@ -3553,7 +3553,7 @@ msgstr ""
 #: includes/admin/templates/modal/dynamic_new_group.php:15
 #: includes/admin/templates/modal/fonticons.php:11
 #: includes/admin/templates/role/publish.php:24
-#: includes/core/class-fields.php:2312 includes/core/class-fields.php:2409
+#: includes/core/class-fields.php:2314 includes/core/class-fields.php:2411
 #: includes/core/um-actions-profile.php:557
 #: includes/core/um-actions-profile.php:696
 #: includes/core/um-actions-profile.php:729
@@ -6257,89 +6257,89 @@ msgstr ""
 msgid "Add translation to %s"
 msgstr ""
 
-#: includes/core/class-fields.php:1176 templates/message.php:5
+#: includes/core/class-fields.php:1178 templates/message.php:5
 #, php-format
 msgid "%s"
 msgstr ""
 
-#: includes/core/class-fields.php:1195
+#: includes/core/class-fields.php:1197
 msgid "Custom Field"
 msgstr ""
 
-#: includes/core/class-fields.php:1492
+#: includes/core/class-fields.php:1494
 msgid "Please upload a valid image!"
 msgstr ""
 
-#: includes/core/class-fields.php:1499 includes/core/class-fields.php:1520
+#: includes/core/class-fields.php:1501 includes/core/class-fields.php:1522
 msgid "Upload"
 msgstr ""
 
-#: includes/core/class-fields.php:1500
+#: includes/core/class-fields.php:1502
 msgid "Sorry this is not a valid image."
 msgstr ""
 
-#: includes/core/class-fields.php:1501
+#: includes/core/class-fields.php:1503
 msgid "This image is too large!"
 msgstr ""
 
-#: includes/core/class-fields.php:1502
+#: includes/core/class-fields.php:1504
 msgid "This image is too small!"
 msgstr ""
 
-#: includes/core/class-fields.php:1503
+#: includes/core/class-fields.php:1505
 msgid "You can only upload one image"
 msgstr ""
 
-#: includes/core/class-fields.php:1970
+#: includes/core/class-fields.php:1972
 msgid "Current Password"
 msgstr ""
 
-#: includes/core/class-fields.php:1999
+#: includes/core/class-fields.php:2001
 msgid "New Password"
 msgstr ""
 
-#: includes/core/class-fields.php:2031
+#: includes/core/class-fields.php:2033
 #, php-format
 msgid "Confirm %s"
 msgstr ""
 
-#: includes/core/class-fields.php:2266
+#: includes/core/class-fields.php:2268
 msgid "Upload Photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2287 includes/core/class-fields.php:2311
+#: includes/core/class-fields.php:2289 includes/core/class-fields.php:2313
 #: includes/core/um-actions-profile.php:727
 msgid "Change photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2311 includes/core/class-fields.php:2408
+#: includes/core/class-fields.php:2313 includes/core/class-fields.php:2410
 msgid "Processing..."
 msgstr ""
 
-#: includes/core/class-fields.php:2333
+#: includes/core/class-fields.php:2335
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:2375 includes/core/um-filters-fields.php:243
+#: includes/core/class-fields.php:2377 includes/core/um-filters-fields.php:243
 msgid "This file has been removed."
 msgstr ""
 
-#: includes/core/class-fields.php:2378 includes/core/class-fields.php:2408
+#: includes/core/class-fields.php:2380 includes/core/class-fields.php:2410
 msgid "Change file"
 msgstr ""
 
-#: includes/core/class-fields.php:2408
+#: includes/core/class-fields.php:2410
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:3831
+#: includes/core/class-fields.php:3833
 #, php-format
 msgid ""
 "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some "
 "information!"
 msgstr ""
 
-#: includes/core/class-fields.php:3833
+#: includes/core/class-fields.php:3835
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
@@ -6380,44 +6380,44 @@ msgstr ""
 msgid "You can not edit this user"
 msgstr ""
 
-#: includes/core/class-password.php:453
+#: includes/core/class-password.php:457
 msgid "Please provide your username or email"
 msgstr ""
 
-#: includes/core/class-password.php:457
+#: includes/core/class-password.php:461
 msgid "We can't find an account registered with that address or username"
 msgstr ""
 
-#: includes/core/class-password.php:476
+#: includes/core/class-password.php:480
 msgid ""
 "You have reached the limit for requesting password change for this user "
 "already. Contact support if you cannot open the email"
 msgstr ""
 
-#: includes/core/class-password.php:532
+#: includes/core/class-password.php:536
 msgid "You must enter a new password"
 msgstr ""
 
-#: includes/core/class-password.php:538 includes/core/um-actions-account.php:59
+#: includes/core/class-password.php:542 includes/core/um-actions-account.php:59
 msgid "Your password must contain at least 8 characters"
 msgstr ""
 
-#: includes/core/class-password.php:542 includes/core/um-actions-account.php:63
+#: includes/core/class-password.php:546 includes/core/um-actions-account.php:63
 msgid "Your password must contain less than 30 characters"
 msgstr ""
 
-#: includes/core/class-password.php:546 includes/core/um-actions-account.php:67
+#: includes/core/class-password.php:550 includes/core/um-actions-account.php:67
 #: includes/core/um-actions-form.php:476
 msgid ""
 "Your password must contain at least one lowercase letter, one capital letter "
 "and one number"
 msgstr ""
 
-#: includes/core/class-password.php:552
+#: includes/core/class-password.php:556
 msgid "You must confirm your new password"
 msgstr ""
 
-#: includes/core/class-password.php:556 includes/core/um-actions-form.php:485
+#: includes/core/class-password.php:560 includes/core/um-actions-form.php:485
 msgid "Your passwords do not match"
 msgstr ""
 
@@ -6996,7 +6996,7 @@ msgstr ""
 msgid "Title:"
 msgstr ""
 
-#: templates/members-grid.php:65
+#: templates/members-grid.php:66
 msgid "Edit profile"
 msgstr ""
 

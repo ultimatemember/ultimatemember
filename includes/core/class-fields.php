@@ -908,9 +908,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( $field_value && $this->editing == true && is_array( $field_value ) && ( in_array( $value, $field_value ) || in_array( html_entity_decode( $value ), $field_value ) ) ) {
 						return true;
 					}
-					// if ( $field_value == 0 && $this->editing == true && ! is_array( $field_value ) && $field_value == $value ) {
-					// 	return true;
-					// }
+
+					if ( $field_value == 0 && $this->editing == true && ! is_array( $field_value ) && $field_value === $value ) {
+						return true;
+					}
+
 					if ( $field_value && $this->editing == true && ! is_array( $field_value ) && $field_value == $value ) {
 						return true;
 					}
