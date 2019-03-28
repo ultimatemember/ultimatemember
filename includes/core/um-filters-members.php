@@ -451,13 +451,13 @@ add_filter( 'um_prepare_user_query_args', 'um_prepare_user_query_args', 10, 2 );
 function um_sortby_last_login( $query_args, $sortby ) {
 	if ( $sortby == 'last_login' ) {
 		$query_args['orderby'] = array( 'um_last_login' => 'DESC' );
-		$query_args['meta_query']['um_last_login'] = array(
+		$query_args['meta_query'][] = array(
 			'relation' => 'OR',
 			array(
 				'key'   => '_um_last_login',
 				'compare'   => 'EXISTS',
 			),
-			array(
+			'um_last_login' => array(
 				'key'   => '_um_last_login',
 				'compare'   => 'NOT EXISTS',
 			),
