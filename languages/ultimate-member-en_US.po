@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-03-27 19:18+0200\n"
-"PO-Revision-Date: 2019-03-27 19:18+0200\n"
+"POT-Creation-Date: 2019-03-28 14:53+0200\n"
+"PO-Revision-Date: 2019-03-28 14:53+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -35,7 +35,7 @@ msgid "Docs"
 msgstr ""
 
 #: includes/admin/class-admin.php:308
-#: includes/admin/core/class-admin-settings.php:1162
+#: includes/admin/core/class-admin-settings.php:1168
 msgid "Settings"
 msgstr ""
 
@@ -282,29 +282,29 @@ msgstr ""
 msgid "Are sure, maybe some settings not saved"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:450
+#: includes/admin/core/class-admin-enqueue.php:454
 #: includes/core/class-builtin.php:693 includes/core/class-builtin.php:696
 #: includes/core/class-builtin.php:1150 includes/core/class-builtin.php:1153
 msgid "Password"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:454
+#: includes/admin/core/class-admin-enqueue.php:458
 #: includes/core/class-account.php:104
 msgid "Privacy"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:458
+#: includes/admin/core/class-admin-enqueue.php:462
 #: includes/core/class-account.php:110
 msgid "Notifications"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:462
+#: includes/admin/core/class-admin-enqueue.php:466
 #: includes/admin/core/list-tables/roles-list-table.php:338
 #: includes/admin/core/list-tables/roles-list-table.php:406
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:507
+#: includes/admin/core/class-admin-enqueue.php:516
 msgid "Ultimate Member Blocks"
 msgstr ""
 
@@ -1687,7 +1687,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:436
-#: includes/class-config.php:134 includes/class-config.php:744
+#: includes/class-config.php:134 includes/class-config.php:745
 #: includes/core/class-account.php:92
 msgid "Account"
 msgstr ""
@@ -2377,143 +2377,153 @@ msgid ""
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:1073
-msgid "Remove Data on Uninstall?"
+msgid "Enable Gutenberg Blocks"
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:1074
+msgid ""
+"Check this box if you would like to use Ultimate Member blocks in Gutenberg "
+"editor. Important some themes have the conflicts with Gutenberg editor."
+msgstr ""
+
+#: includes/admin/core/class-admin-settings.php:1079
+msgid "Remove Data on Uninstall?"
+msgstr ""
+
+#: includes/admin/core/class-admin-settings.php:1080
 msgid ""
 "Check this box if you would like Ultimate Member to completely remove all of "
 "its data when the plugin/extensions are deleted."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1079
+#: includes/admin/core/class-admin-settings.php:1085
 msgid "Install Info"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1193
+#: includes/admin/core/class-admin-settings.php:1199
 msgid "Ultimate Member - Settings"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1332
+#: includes/admin/core/class-admin-settings.php:1338
 msgid "Save Changes"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1775
+#: includes/admin/core/class-admin-settings.php:1781
 msgid "Subject Line"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1777
+#: includes/admin/core/class-admin-settings.php:1783
 msgid "This is the subject line of the e-mail"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1782
+#: includes/admin/core/class-admin-settings.php:1788
 msgid "Message Body"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1784
+#: includes/admin/core/class-admin-settings.php:1790
 msgid "This is the content of the e-mail"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1834
-#: includes/admin/core/class-admin-settings.php:1932
+#: includes/admin/core/class-admin-settings.php:1840
+#: includes/admin/core/class-admin-settings.php:1938
 #, php-format
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" target=\"_blank"
 "\">renew your license key</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1847
-#: includes/admin/core/class-admin-settings.php:1945
+#: includes/admin/core/class-admin-settings.php:1853
+#: includes/admin/core/class-admin-settings.php:1951
 #, php-format
 msgid ""
 "Your license key has been disabled. Please <a href=\"%s\" target=\"_blank"
 "\">contact support</a> for more information."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1859
-#: includes/admin/core/class-admin-settings.php:1957
+#: includes/admin/core/class-admin-settings.php:1865
+#: includes/admin/core/class-admin-settings.php:1963
 #, php-format
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\">visit your account "
 "page</a> and verify it."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1872
-#: includes/admin/core/class-admin-settings.php:1970
+#: includes/admin/core/class-admin-settings.php:1878
+#: includes/admin/core/class-admin-settings.php:1976
 #, php-format
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" target=\"_blank"
 "\">visit your account page</a> to manage your license key URLs."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1884
-#: includes/admin/core/class-admin-settings.php:1982
+#: includes/admin/core/class-admin-settings.php:1890
+#: includes/admin/core/class-admin-settings.php:1988
 #, php-format
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1893
-#: includes/admin/core/class-admin-settings.php:1991
+#: includes/admin/core/class-admin-settings.php:1899
+#: includes/admin/core/class-admin-settings.php:1997
 #, php-format
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1902
-#: includes/admin/core/class-admin-settings.php:2000
+#: includes/admin/core/class-admin-settings.php:1908
+#: includes/admin/core/class-admin-settings.php:2006
 msgid ""
 "The key you entered belongs to a bundle, please use the product specific "
 "license key."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1910
-#: includes/admin/core/class-admin-settings.php:1918
+#: includes/admin/core/class-admin-settings.php:1916
+#: includes/admin/core/class-admin-settings.php:1924
 msgid "unknown_error"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1911
-#: includes/admin/core/class-admin-settings.php:1919
+#: includes/admin/core/class-admin-settings.php:1917
+#: includes/admin/core/class-admin-settings.php:1925
 #, php-format
 msgid ""
 "There was an error with this license key: %s. Please <a href=\"%s\">contact "
 "our support team</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2015
+#: includes/admin/core/class-admin-settings.php:2021
 msgid "License key never expires."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2022
+#: includes/admin/core/class-admin-settings.php:2028
 #, php-format
 msgid ""
 "Your license key expires soon! It expires on %s. <a href=\"%s\" target="
 "\"_blank\">Renew your license key</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2032
+#: includes/admin/core/class-admin-settings.php:2038
 #, php-format
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2050
+#: includes/admin/core/class-admin-settings.php:2056
 #, php-format
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2074
+#: includes/admin/core/class-admin-settings.php:2080
 msgid "Clear License"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2076
+#: includes/admin/core/class-admin-settings.php:2082
 msgid "Activate"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2078
+#: includes/admin/core/class-admin-settings.php:2084
 msgid "Re-Activate"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2130
+#: includes/admin/core/class-admin-settings.php:2136
 msgid ""
 "To copy the Install info, click below then press Ctrl + C (PC) or Cmd + C "
 "(Mac)."
@@ -3902,31 +3912,31 @@ msgstr ""
 msgid "Check All"
 msgstr ""
 
-#: includes/class-config.php:129 includes/class-config.php:739
+#: includes/class-config.php:129 includes/class-config.php:740
 msgid "User"
 msgstr ""
 
 #: includes/class-config.php:130 includes/class-config.php:235
-#: includes/class-config.php:241 includes/class-config.php:740
+#: includes/class-config.php:241 includes/class-config.php:741
 msgid "Login"
 msgstr ""
 
 #: includes/class-config.php:131 includes/class-config.php:233
-#: includes/class-config.php:245 includes/class-config.php:741
+#: includes/class-config.php:245 includes/class-config.php:742
 msgid "Register"
 msgstr ""
 
-#: includes/class-config.php:132 includes/class-config.php:742
+#: includes/class-config.php:132 includes/class-config.php:743
 msgid "Members"
 msgstr ""
 
-#: includes/class-config.php:133 includes/class-config.php:743
+#: includes/class-config.php:133 includes/class-config.php:744
 #: includes/core/um-actions-profile.php:1080
 #: includes/core/um-actions-user.php:15
 msgid "Logout"
 msgstr ""
 
-#: includes/class-config.php:135 includes/class-config.php:745
+#: includes/class-config.php:135 includes/class-config.php:746
 msgid "Password Reset"
 msgstr ""
 

@@ -510,6 +510,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'category_page_accessible'              => 1,
 				'restricted_access_message'             => '',
 				'restricted_blocks'                     => 0,
+				'enable_blocks'                         => 0,
 				'restricted_block_message'              => '',
 				'enable_reset_password_limit'           => 1,
 				'reset_password_limit_number'           => 3,

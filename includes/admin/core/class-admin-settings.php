@@ -1068,6 +1068,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							'tooltip'   => __( 'Check this box if you would like to disable Ultimate Member user\'s cache.', 'ultimate-member' ),
 						),
 						array(
+							'id'        => 'enable_blocks',
+							'type'      => 'checkbox',
+							'label'     => __( 'Enable Gutenberg Blocks', 'ultimate-member' ),
+							'tooltip'   => __( 'Check this box if you would like to use Ultimate Member blocks in Gutenberg editor. Important some themes have the conflicts with Gutenberg editor.', 'ultimate-member' ),
+						),
+						array(
 							'id'       		=> 'uninstall_on_delete',
 							'type'     		=> 'checkbox',
 							'label'   		=> __( 'Remove Data on Uninstall?', 'ultimate-member' ),
