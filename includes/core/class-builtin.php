@@ -663,6 +663,11 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'Only me'   => __( 'Only me', 'ultimate-member' )
 			) );
 
+			/*
+			 * it's important create key for array equals value of 'metakey'.
+			 *
+			 */
+
 			$this->predefined_fields = array(
 
 				'user_login' => array(
@@ -755,7 +760,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'edit_forbidden' => 1,
 				),
 
-				'last_login' => array(
+				'_um_last_login' => array(
 					'title' => __('Last Login','ultimate-member'),
 					'metakey' => '_um_last_login',
 					'type' => 'text',
@@ -980,7 +985,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'match' => 'https://soundcloud.com/',
 				),
 
-				'vk' => array(
+				'vkontakte' => array(
 					'title' => __('VKontakte','ultimate-member'),
 					'metakey' => 'vkontakte',
 					'type' => 'url',
