@@ -371,8 +371,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			$language_codes = $this->get_languages_codes();
 
 			$lang = '';
-			if ( $language_codes['default'] != $language_codes['current'] /*&&
-			     UM()->config()->email_notifications[ $template_name ]['recipient'] != 'admin'*/ ) {
+			if ( $language_codes['default'] != $language_codes['current'] ) {
 				$lang = $language_codes['current'] . '/';
 			}
 
@@ -385,7 +384,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			//if there isn't template at theme folder get template file from plugin dir
 			if ( ! $template ) {
 				$path = ! empty( UM()->mail()->path_by_slug[ $template_name ] ) ? UM()->mail()->path_by_slug[ $template_name ] : um_path . 'templates/email';
-				$template = trailingslashit( $path ) . $lang . $template_name . '.php';
+				$template = trailingslashit( $path ) . $template_name . '.php';
 			}
 
 			return $template;
