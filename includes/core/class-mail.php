@@ -1,8 +1,10 @@
 <?php
 namespace um\core;
 
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 if ( ! class_exists( 'um\core\Mail' ) ) {
 
@@ -392,8 +394,13 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 */
 		function send( $email, $template, $args = array() ) {
 
-			if ( ! is_email( $email ) ) return;
-			if ( UM()->options()->get( $template . '_on' ) != 1 ) return;
+			if ( ! is_email( $email ) ) {
+				return;
+			}
+
+			if ( UM()->options()->get( $template . '_on' ) != 1 ) {
+				return;
+			}
 
 			$this->attachments = null;
 			$this->headers = 'From: '. UM()->options()->get('mail_from') .' <'. UM()->options()->get('mail_from_addr') .'>' . "\r\n";
@@ -485,7 +492,11 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			) );
 
 			// Return what we found.
-			return ! $template ? false : true;
+			if ( get_template_directory() === get_stylesheet_directory() ) {
+				return ! $template ? false : true;
+			} else {
+				return strstr( $template, get_stylesheet_directory() );
+			}
 		}
 
 

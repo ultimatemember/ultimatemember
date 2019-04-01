@@ -2579,7 +2579,9 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 
 			$theme_template_path = UM()->mail()->get_template_file( 'theme', $template );
 
-			UM()->mail()->copy_email_template( $template );
+			if ( ! file_exists( $theme_template_path ) ) {
+				UM()->mail()->copy_email_template( $template );
+			}
 
 			$fp = fopen( $theme_template_path, "w" );
 			$result = fputs( $fp, $content );

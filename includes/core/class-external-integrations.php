@@ -33,7 +33,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			add_filter( 'icl_ls_languages', array( &$this, 'um_core_page_wpml_permalink' ), 10, 1 );
 
 			// Integration for the "Transposh Translation Filter" plugin
-			add_action( 'template_redirect', array( &$this, 'transposh_user_profile'), 9990 );
+			add_action( 'template_redirect', array( &$this, 'transposh_user_profile' ), 9990 );
 
 			/**
 			 * @todo Customize this form metadata
@@ -362,6 +362,12 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		}
 
 
+		/**
+		 * @param $template
+		 * @param $template_name
+		 *
+		 * @return string
+		 */
 		function locate_email_template( $template, $template_name ) {
 			if ( ! $this->is_wpml_active() ) {
 				return $template;
@@ -391,6 +397,11 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		}
 
 
+		/**
+		 * @param $template
+		 *
+		 * @return string
+		 */
 		function change_email_template_file( $template ) {
 			if ( ! $this->is_wpml_active() ) {
 				return $template;
@@ -407,7 +418,11 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		}
 
 
-
+		/**
+		 * @param $columns
+		 *
+		 * @return array
+		 */
 		function add_email_templates_wpml_column( $columns ) {
 			if ( ! $this->is_wpml_active() ) {
 				return $columns;
@@ -438,6 +453,11 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		}
 
 
+		/**
+		 * @param $item
+		 *
+		 * @return string
+		 */
 		function wpml_column_content( $item ) {
 			if ( ! $this->is_wpml_active() ) {
 				return '';
@@ -456,6 +476,12 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		}
 
 
+		/**
+		 * @param $template
+		 * @param $code
+		 *
+		 * @return string
+		 */
 		function get_status_html( $template, $code ) {
 			global $sitepress;
 			$status = 'add';
@@ -478,14 +504,21 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 				)
 			);
 
-			$language_codes = $this->get_languages_codes($code);
+			$language_codes = $this->get_languages_codes( $code );
 
 			$lang = '';
 			if ( $language_codes['default'] != $language_codes['current'] ) {
 				$lang = $language_codes['current'] . '/';
 			}
 
+			//theme location
 			$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' ) . $lang . $template . '.php';
+
+			//plugin location for default language
+			if ( empty( $lang ) && ! file_exists( $template_path ) ) {
+				$template_path = UM()->mail()->get_template_file( 'plugin', $template );
+			}
+
 			if ( file_exists( $template_path ) ) {
 				$status = 'edit';
 			}
@@ -495,6 +528,14 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			return $this->render_status_icon( $link, $translation[ $status ]['text'], $translation[ $status ]['icon'] );
 		}
 
+
+		/**
+		 * @param $link
+		 * @param $text
+		 * @param $img
+		 *
+		 * @return string
+		 */
 		function render_status_icon( $link, $text, $img ) {
 
 			$icon_html = '<a href="' . $link . '" title="' . $text . '">';
