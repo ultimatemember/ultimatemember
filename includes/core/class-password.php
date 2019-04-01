@@ -279,7 +279,6 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			if ( um_is_core_page( 'password-reset' ) && isset( $_REQUEST['act'] ) && $_REQUEST['act'] == 'reset_password' ) {
 				wp_fix_server_vars();
 
-				list( $rp_path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
 				$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
 
 				if ( isset( $_GET['hash'] ) ) {
@@ -294,11 +293,11 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					$user = check_password_reset_key( $rp_key, $rp_login );
 
 					if ( is_wp_error( $user ) ) {
-						setcookie( $rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
+						$this->setcookie( $rp_cookie, false );
 						wp_redirect( add_query_arg( array( 'updated' => 'invalidkey' ), get_permalink() ) );
 					} else {
 						$value = sprintf( '%s:%s', $rp_login, wp_unslash( $_GET['hash'] ) );
-						setcookie( $rp_cookie, $value, 0, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
+						$this->setcookie( $rp_cookie, $value );
 						wp_safe_redirect( remove_query_arg( array( 'hash', 'user_id' ) ) );
 					}
 					
@@ -313,7 +312,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				}
 
 				if ( ( ! $user || is_wp_error( $user ) ) && ! isset( $_GET['updated'] ) ) {
-					setcookie( $rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
+					$this->setcookie( $rp_cookie, false );
 					if ( $user && $user->get_error_code() === 'expired_key' ) {
 						wp_redirect( add_query_arg( array( 'updated' => 'expiredkey' ), get_permalink() ) );
 					} else {
@@ -573,10 +572,9 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 			if ( isset( $_POST['_um_password_change'] ) && $_POST['_um_password_change'] == 1 ) {
 
-				list( $rp_path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
 				$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
-
 				$user = get_userdata( $args['user_id'] );
+
 				if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
 					list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
 
@@ -593,7 +591,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				}
 
 				if ( ! $user || is_wp_error( $user ) ) {
-					setcookie( $rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
+					$this->setcookie( $rp_cookie, false );
 					if ( $user && $user->get_error_code() === 'expired_key' ) {
 						wp_redirect( add_query_arg( array( 'updated' => 'expiredkey' ), get_permalink() ) );
 					} else {
@@ -616,9 +614,8 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 				if ( ( ! $errors->get_error_code() ) ) {
 					reset_password( $user, $args['user_password'] );
-					setcookie( $rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
 					delete_user_meta( $args['user_id'], 'password_rst_attempts' );
-
+					$this->setcookie( $rp_cookie, false );
 					if ( is_user_logged_in() ) {
 						wp_logout();
 					}
@@ -647,6 +644,32 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					exit( wp_redirect( um_get_core_page('login', 'password_changed' ) ) );
 				}
 			}
+		}
+
+
+		/**
+		 * Disable page caching and set or clear cookie
+		 *
+		 * @param string $name
+		 * @param string $value
+		 * @param int $expire
+		 * @param string $path
+		 */
+		public function setcookie( $name, $value = '', $expire = 0, $path = '' ) {
+			if ( empty( $value ) ) {
+				$expire = time() - YEAR_IN_SECONDS;
+			}
+			if ( empty( $path ) ) {
+				list( $path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
+			}
+
+			$levels = ob_get_level();
+			for ( $i = 0; $i < $levels; $i++ ) {
+				@ob_end_clean();
+			}
+
+			nocache_headers();
+			setcookie( $name, $value, $expire, $path, COOKIE_DOMAIN, is_ssl(), true );
 		}
 	}
 }
