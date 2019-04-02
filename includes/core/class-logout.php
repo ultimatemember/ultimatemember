@@ -45,15 +45,15 @@ if ( ! class_exists( 'um\core\Logout' ) ) {
 			}
 
 			$trid = 0;
-			$language_code = '';
+			//$language_code = '';
 			if ( UM()->external_integrations()->is_wpml_active() ) {
 				global $sitepress;
 				$default_lang = $sitepress->get_default_language();
 
-				$language_code = $sitepress->get_current_language();
+				/*$language_code = $sitepress->get_current_language();
 				if ( $language_code == $default_lang ) {
 					$language_code = '';
-				}
+				}*/
 
 				$current_page_ID = get_the_ID();
 				if ( function_exists( 'icl_object_id' ) ) {
@@ -64,7 +64,7 @@ if ( ! class_exists( 'um\core\Logout' ) ) {
 			}
 
 			$logout_page_id = UM()->config()->permalinks['logout'];
-			if ( um_is_core_page( 'logout' ) || ( $trid > 0 && $trid == $logout_page_id )  ) {
+			if ( um_is_core_page( 'logout' ) || ( $trid > 0 && $trid == $logout_page_id ) ) {
 
 				if ( is_user_logged_in() ) {
 
@@ -77,7 +77,7 @@ if ( ! class_exists( 'um\core\Logout' ) ) {
 					} else if ( um_user('after_logout') == 'redirect_home' ) {
 						wp_logout();
 						session_unset();
-						exit( wp_safe_redirect( home_url( $language_code ) ) );
+						exit( wp_safe_redirect( home_url() ) );
 					} else {
 						/**
 						 * UM hook
@@ -109,7 +109,7 @@ if ( ! class_exists( 'um\core\Logout' ) ) {
 
 				} else {
 					add_filter( 'wp_safe_redirect_fallback', array( &$this, 'safe_redirect_default' ), 10, 2 );
-					exit( wp_safe_redirect( home_url( $language_code ) ) );
+					exit( wp_safe_redirect( home_url() ) );
 				}
 
 			}

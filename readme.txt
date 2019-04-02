@@ -140,6 +140,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Email templates saving to child theme, if parent theme already has email template files
   - Email templates locate in the default plugin folder with active WPML
   - Form builder with some predefined form fields, which had different keys/metakeys (currently use the same)
+  - Logout redirect with active WPML
 
 * Deprecated:
   - "Is Account page?" and "Is User page?" options for WPML integration ( because WPML translations works properly )
