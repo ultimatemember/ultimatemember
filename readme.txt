@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.7
 Tested up to: 5.1
-Stable tag: 2.0.43
+Stable tag: 2.0.44
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -132,6 +132,17 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 == Changelog ==
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
+
+= 2.0.44: April xx, 2019 =
+
+* Bugfixes:
+  - Added nocache headers to reset password form
+  - Email templates saving to child theme, if parent theme already has email template files
+  - Email templates locate in the default plugin folder with active WPML
+  - Form builder with some predefined form fields, which had different keys/metakeys (currently use the same)
+
+* Deprecated:
+  - "Is Account page?" and "Is User page?" options for WPML integration ( because WPML translations works properly )
 
 = 2.0.43: March 29, 2019 =
 
