@@ -45,7 +45,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			/**
 			 * @todo remove these options
 			 */
-			add_filter( 'um_admin_access_settings_fields', array( &$this, 'wpml_post_options' ), 10, 2 );
+			//add_filter( 'um_admin_access_settings_fields', array( &$this, 'wpml_post_options' ), 10, 2 );
 		}
 
 
@@ -57,7 +57,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 *
 		 * @return array
 		 */
-		function wpml_post_options( $fields, $data ) {
+		/*function wpml_post_options( $fields, $data ) {
 			global $post;
 
 			if ( ! function_exists( 'icl_get_current_language' ) ) {
@@ -83,7 +83,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			);
 
 			return $fields;
-		}
+		}*/
 
 
 		/**

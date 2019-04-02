@@ -151,11 +151,11 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			if ( ! $this->is_wpml_active() )
 				return $profile_url;
 
-			if ( function_exists( 'icl_get_current_language' ) && icl_get_current_language() != icl_get_default_language() ) {
+			/*if ( function_exists( 'icl_get_current_language' ) && icl_get_current_language() != icl_get_default_language() ) {
 				if ( get_the_ID() > 0 && get_post_meta( get_the_ID(), '_um_wpml_user', true ) == 1 ) {
 					$profile_url = get_permalink( get_the_ID() );
 				}
-			}
+			}*/
 
 			// WPML compatibility
 			if ( function_exists( 'icl_object_id' ) ) {
@@ -286,12 +286,12 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			if ( function_exists( 'icl_get_current_language' ) && icl_get_current_language() != icl_get_default_language() ) {
 				$url = $this->get_url_for_language( UM()->config()->permalinks[ $slug ], icl_get_current_language() );
 
-				if ( get_post_meta( get_the_ID(), '_um_wpml_account', true ) == 1 ) {
+				/*if ( get_post_meta( get_the_ID(), '_um_wpml_account', true ) == 1 ) {
 					$url = get_permalink( get_the_ID() );
 				}
 				if ( get_post_meta( get_the_ID(), '_um_wpml_user', true ) == 1 ) {
 					$url = $this->get_url_for_language( UM()->config()->permalinks[ $slug ], icl_get_current_language() );
-				}
+				}*/
 
 				if ( $updated ) {
 					$url = add_query_arg( 'updated', esc_attr( $updated ), $url );
