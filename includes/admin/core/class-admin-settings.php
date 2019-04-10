@@ -1074,6 +1074,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							'tooltip'   => __( 'Check this box if you would like to use Ultimate Member blocks in Gutenberg editor. Important some themes have the conflicts with Gutenberg editor.', 'ultimate-member' ),
 						),
 						array(
+							'id'        => 'rest_api_version',
+							'type'      => 'select',
+							'label'     => __( 'REST API version','ultimate-member' ),
+							'tooltip'   => __( 'This controls the REST API version, we recommend to use the last version', 'ultimate-member' ),
+							'options'   => array(
+								'1.0'   => __( '1.0 version', 'ultimate-member' ),
+								'2.0'   => __( '2.0 version', 'ultimate-member' ),
+							),
+						),
+						array(
 							'id'       		=> 'uninstall_on_delete',
 							'type'     		=> 'checkbox',
 							'label'   		=> __( 'Remove Data on Uninstall?', 'ultimate-member' ),

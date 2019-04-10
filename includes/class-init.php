@@ -469,6 +469,8 @@ if ( ! class_exists( 'UM' ) ) {
 				if ( ! get_option( 'show_avatars' ) ) {
 					update_option( 'show_avatars', 1 );
 				}
+			} else {
+				UM()->options()->update( 'rest_api_version', '1.0' );
 			}
 
 			if ( $version != ultimatemember_version ) {
@@ -937,11 +939,20 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @return um\core\REST_API
+		 * @return um\core\rest\API_v1|um\core\rest\API_v2
 		 */
 		function rest_api() {
+
+			$api_version = $this->options()->get( 'rest_api_version' );
+
 			if ( empty( $this->classes['rest_api'] ) ) {
-				$this->classes['rest_api'] = new um\core\REST_API();
+				if ( '1.0' === $api_version ) {
+					$this->classes['rest_api'] = new um\core\rest\API_v1();
+				} elseif ( '2.0' === $api_version ) {
+					$this->classes['rest_api'] = new um\core\rest\API_v2();
+				} else {
+					$this->classes['rest_api'] = new um\core\rest\API_v1();
+				}
 			}
 
 			return $this->classes['rest_api'];
