@@ -1722,8 +1722,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$email_key = empty( $_GET['email'] ) ? '' : urldecode( $_GET['email'] );
 			$emails = UM()->config()->email_notifications;
 
-			if ( empty( $email_key ) || empty( $emails[$email_key] ) )
+			if ( empty( $email_key ) || empty( $emails[ $email_key ] ) ) {
 				include_once um_path . 'includes/admin/core/list-tables/emails-list-table.php';
+			}
 		}
 
 

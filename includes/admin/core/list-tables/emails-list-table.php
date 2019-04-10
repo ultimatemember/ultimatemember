@@ -13,8 +13,9 @@ if ( !empty( $_GET['_wp_http_referer'] ) ) {
 	um_js_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce'), wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
 }
 
-if( ! class_exists( 'WP_List_Table' ) )
+if( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+}
 
 
 /**
@@ -265,7 +266,6 @@ class UM_Emails_List_Table extends WP_List_Table {
 	}
 }
 
-
 $ListTable = new UM_Emails_List_Table( array(
 	'singular'  => __( 'Email Notification', 'ultimate-member' ),
 	'plural'    => __( 'Email Notifications', 'ultimate-member' ),
@@ -310,9 +310,16 @@ $ListTable->prepare_items();
 $ListTable->items = $emails;
 $ListTable->wpc_set_pagination_args( array( 'total_items' => count( $emails ), 'per_page' => $per_page ) ); ?>
 
+<p class="description" style="margin: 20px 0 0 0;">
+	<?php printf( __( 'You may get more details about email notifications customization <a href="%s">here</a>', 'ultimate-member' ),
+		'https://docs.ultimatemember.com/article/1335-email-templates'
+	); ?>
+</p>
+
 <form action="" method="get" name="um-settings-emails" id="um-settings-emails">
 	<input type="hidden" name="page" value="um_options" />
 	<input type="hidden" name="tab" value="email" />
+
 	<?php if ( ! empty( $_GET['section'] ) ) { ?>
 		<input type="hidden" name="section" value="<?php echo esc_attr( $_GET['section'] ) ?>" />
 	<?php }
