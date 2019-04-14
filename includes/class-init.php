@@ -512,6 +512,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->columns();
 				$this->notices();
 				$this->admin_navmenu();
+				$this->theme_updater();
 			} elseif ( $this->is_request( 'admin' ) ) {
 				$this->admin();
 				$this->admin_menu();
@@ -526,6 +527,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->plugin_updater();
 				$this->admin_gdpr();
 				$this->admin_navmenu();
+				$this->theme_updater();
 			} elseif ( $this->is_request( 'frontend' ) ) {
 				$this->enqueue();
 				$this->account();
@@ -645,6 +647,18 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->classes['plugin_updater'] = new um\core\Plugin_Updater();
 			}
 			return $this->classes['plugin_updater'];
+		}
+
+
+		/**
+		 * @since 2.0.45
+		 * @return um\admin\core\Admin_Theme_Updater()
+		 */
+		function theme_updater() {
+			if ( empty( $this->classes['theme_updater'] ) ) {
+				$this->classes['theme_updater'] = new um\admin\core\Admin_Theme_Updater();
+			}
+			return $this->classes['theme_updater'];
 		}
 
 
