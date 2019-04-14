@@ -135,12 +135,18 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = 2.0.44: April xx, 2019 =
 
+* Enhancements:
+  - Added automatically template saver when you upgrade your theme
+
 * Bugfixes:
   - Added nocache headers to reset password form
   - Email templates saving to child theme, if parent theme already has email template files
   - Email templates locate in the default plugin folder with active WPML
   - Form builder with some predefined form fields, which had different keys/metakeys (currently use the same)
   - Logout redirect with active WPML
+  - Fixed $_SERVER usage when WP-CLI using
+  - Extended integration for UM field value
+  - um_user function avoid loop when 'display name' and 'full name' used
 
 * Deprecated:
   - "Is Account page?" and "Is User page?" options for WPML integration ( because WPML translations works properly )

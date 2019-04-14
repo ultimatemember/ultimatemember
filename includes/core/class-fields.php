@@ -580,9 +580,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return mixed
 		 */
 		function field_value( $key, $default = false, $data = null ) {
-			if ( isset( $_SESSION ) && isset( $_SESSION['um_social_profile'][ $key ] ) && isset( $this->set_mode ) && $this->set_mode == 'register' )
+			if ( isset( $_SESSION ) && isset( $_SESSION['um_social_profile'][ $key ] ) && isset( $this->set_mode ) && $this->set_mode == 'register' ) {
 				return $_SESSION['um_social_profile'][ $key ];
+			}
 
+			$value = '';
 			$type = ( isset( $data['type'] ) ) ? $data['type'] : '';
 
 			// preview in backend
@@ -787,7 +789,22 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			}
 
-			return isset( $value ) ? $value : '';
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_field_value
+			 * @description Change field value
+			 * @input_vars
+			 * [{"var":"$value","type":"string","desc":"Field Value"},
+			 * {"var":"$key","type":"string","desc":"Field Key"},,
+			 * {"var":"$type","type":"string","desc":"Field Type"}
+			 * {"var":"$default","type":"string","desc":"Field Default Value"},
+			 * {"var":"$data","type":"array","desc":"Field Data"}]
+			 * @usage add_filter( 'um_field_value', 'function_name', 10, 5 );
+			 */
+			return apply_filters( 'um_field_value', $value, $default, $key, $type, $data );
 		}
 
 

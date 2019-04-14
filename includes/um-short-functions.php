@@ -2143,8 +2143,8 @@ function um_user( $data, $attrs = null ) {
 
 			$value = maybe_unserialize( $value );
 
-			if (in_array( $data, array( 'role', 'gender' ) )) {
-				if (is_array( $value )) {
+			if ( in_array( $data, array( 'role', 'gender' ) ) ) {
+				if ( is_array( $value ) ) {
 					$value = implode( ",", $value );
 				}
 
@@ -2157,7 +2157,7 @@ function um_user( $data, $attrs = null ) {
 		case 'user_email':
 
 			$user_email_in_meta = get_user_meta( um_user( 'ID' ), 'user_email', true );
-			if ($user_email_in_meta) {
+			if ( $user_email_in_meta ) {
 				delete_user_meta( um_user( 'ID' ), 'user_email' );
 			}
 
@@ -2203,7 +2203,7 @@ function um_user( $data, $attrs = null ) {
 
 		case 'full_name':
 
-			if (um_user( 'first_name' ) && um_user( 'last_name' )) {
+			if ( um_user( 'first_name' ) && um_user( 'last_name' ) ) {
 				$full_name = um_user( 'first_name' ) . ' ' . um_user( 'last_name' );
 			} else {
 				$full_name = um_user( 'display_name' );
@@ -2212,7 +2212,7 @@ function um_user( $data, $attrs = null ) {
 			$full_name = UM()->validation()->safe_name_in_url( $full_name );
 
 			// update full_name changed
-			if (um_profile( $data ) !== $full_name) {
+			if ( um_profile( $data ) !== $full_name ) {
 				update_user_meta( um_user( 'ID' ), 'full_name', $full_name );
 			}
 
@@ -2224,7 +2224,7 @@ function um_user( $data, $attrs = null ) {
 
 			$f_and_l_initial = '';
 
-			if (um_user( 'first_name' ) && um_user( 'last_name' )) {
+			if ( um_user( 'first_name' ) && um_user( 'last_name' ) ) {
 				$initial = um_user( 'last_name' );
 				$f_and_l_initial = um_user( 'first_name' ) . ' ' . $initial[0];
 			} else {
@@ -2249,47 +2249,46 @@ function um_user( $data, $attrs = null ) {
 
 			$name = '';
 
-
-			if ($op == 'default') {
+			if ( $op == 'default' ) {
 				$name = um_profile( 'display_name' );
 			}
 
-			if ($op == 'nickname') {
+			if ( $op == 'nickname' ) {
 				$name = um_profile( 'nickname' );
 			}
 
-			if ($op == 'full_name') {
-				if (um_user( 'first_name' ) && um_user( 'last_name' )) {
+			if ( $op == 'full_name' ) {
+				if ( um_user( 'first_name' ) && um_user( 'last_name' ) ) {
 					$name = um_user( 'first_name' ) . ' ' . um_user( 'last_name' );
 				} else {
 					$name = um_profile( $data );
 				}
-				if (!$name) {
+				if ( ! $name ) {
 					$name = um_user( 'user_login' );
 				}
 			}
 
-			if ($op == 'sur_name') {
-				if (um_user( 'first_name' ) && um_user( 'last_name' )) {
+			if ( $op == 'sur_name' ) {
+				if ( um_user( 'first_name' ) && um_user( 'last_name' ) ) {
 					$name = um_user( 'last_name' ) . ' ' . um_user( 'first_name' );
 				} else {
 					$name = um_profile( $data );
 				}
 			}
 
-			if ($op == 'first_name') {
-				if (um_user( 'first_name' )) {
+			if ( $op == 'first_name' ) {
+				if ( um_user( 'first_name' ) ) {
 					$name = um_user( 'first_name' );
 				} else {
 					$name = um_profile( $data );
 				}
 			}
 
-			if ($op == 'username') {
+			if ( $op == 'username' ) {
 				$name = um_user( 'user_login' );
 			}
 
-			if ($op == 'initial_name') {
+			if ( $op == 'initial_name' ) {
 				if (um_user( 'first_name' ) && um_user( 'last_name' )) {
 					$initial = um_user( 'last_name' );
 					$name = um_user( 'first_name' ) . ' ' . $initial[0];
@@ -2298,8 +2297,8 @@ function um_user( $data, $attrs = null ) {
 				}
 			}
 
-			if ($op == 'initial_name_f') {
-				if (um_user( 'first_name' ) && um_user( 'last_name' )) {
+			if ( $op == 'initial_name_f' ) {
+				if ( um_user( 'first_name' ) && um_user( 'last_name' ) ) {
 					$initial = um_user( 'first_name' );
 					$name = $initial[0] . ' ' . um_user( 'last_name' );
 				} else {
@@ -2315,7 +2314,7 @@ function um_user( $data, $attrs = null ) {
 				foreach ( $fields as $field ) {
 					if ( um_profile( $field ) ) {
 						$name .= um_profile( $field ) . ' ';
-					} elseif ( um_user( $field ) && $field != 'display_name' ) {
+					} elseif ( um_user( $field ) && $field != 'display_name' && $field != 'full_name' ) {
 						$name .= um_user( $field ) . ' ';
 					}
 				}
@@ -2426,7 +2425,9 @@ function um_user( $data, $attrs = null ) {
 			 */
 			$cover_uri = apply_filters( 'um_user_cover_photo_uri__filter', $cover_uri, $is_default, $attrs );
 
-			return $cover_uri ? '<img src="' . esc_attr( $cover_uri ) . '" alt="" />' : '';
+			$alt = um_profile( 'nickname' );
+
+			return $cover_uri ? '<img src="' . esc_attr( $cover_uri ) . '" alt="' . esc_attr( $alt ) . '" />' : '';
 			break;
 
 

@@ -441,9 +441,9 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 			do_action( 'um_user_after_query', $query_args, $users );
 
 
-			$array['users'] = isset( $users->results ) && ! empty( $users->results ) ? array_unique( $users->results ) : array();
+			$array['users'] = ! empty( $users->results ) ? $users->results : array();
 
-			$array['total_users'] = (isset( $max_users ) && $max_users && $max_users <= $users->total_users ) ? $max_users : $users->total_users;
+			$array['total_users'] = ( isset( $max_users ) && $max_users && $max_users <= $users->total_users ) ? $max_users : $users->total_users;
 
 			$array['page'] = $members_page;
 
@@ -458,7 +458,7 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 
 			$array['users_per_page'] = $array['users'];
 
-			for( $i = $array['page']; $i <= $array['page'] + 2; $i++ ) {
+			for ( $i = $array['page']; $i <= $array['page'] + 2; $i++ ) {
 				if ( $i <= $array['total_pages'] ) {
 					$pages_to_show[] = $i;
 				}
@@ -468,7 +468,7 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 				$pages_needed = 5 - count( $pages_to_show );
 
 				for ( $c = $array['page']; $c >= $array['page'] - 2; $c-- ) {
-					if ( !in_array( $c, $pages_to_show ) && $c > 0 ) {
+					if ( ! in_array( $c, $pages_to_show ) && $c > 0 ) {
 						$pages_to_add[] = $c;
 					}
 				}
@@ -500,15 +500,15 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 			} else {
 
 				if ( isset( $pages_to_show ) && count( $pages_to_show ) < 5 ) {
-					if ( max($pages_to_show) - $array['page'] >= 2 ) {
-						$pages_to_show[] = max($pages_to_show) + 1;
+					if ( max( $pages_to_show ) - $array['page'] >= 2 ) {
+						$pages_to_show[] = max( $pages_to_show ) + 1;
 						if ( count( $pages_to_show ) < 5 ) {
-							$pages_to_show[] = max($pages_to_show) + 1;
+							$pages_to_show[] = max( $pages_to_show ) + 1;
 						}
-					} else if ( $array['page'] - min($pages_to_show) >= 2 ) {
-						$pages_to_show[] = min($pages_to_show) - 1;
+					} elseif ( $array['page'] - min( $pages_to_show ) >= 2 ) {
+						$pages_to_show[] = min( $pages_to_show ) - 1;
 						if ( count( $pages_to_show ) < 5 ) {
-							$pages_to_show[] = min($pages_to_show) - 1;
+							$pages_to_show[] = min( $pages_to_show ) - 1;
 						}
 					}
 				}
@@ -526,14 +526,14 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 			if ( isset( $array['pages_to_show'] ) ) {
 
 				if ( $array['total_pages'] < count( $array['pages_to_show'] ) ) {
-					foreach( $array['pages_to_show'] as $k => $v ) {
+					foreach ( $array['pages_to_show'] as $k => $v ) {
 						if ( $v > $array['total_pages'] ) unset( $array['pages_to_show'][$k] );
 					}
 				}
 
-				foreach( $array['pages_to_show'] as $k => $v ) {
-					if ( (int)$v <= 0 ) {
-						unset( $array['pages_to_show'][$k] );
+				foreach ( $array['pages_to_show'] as $k => $v ) {
+					if ( (int) $v <= 0 ) {
+						unset( $array['pages_to_show'][ $k ] );
 					}
 				}
 

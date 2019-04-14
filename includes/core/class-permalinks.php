@@ -132,8 +132,13 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 		function get_current_url( $no_query_params = false ) {
 			//use WP native function for fill $_SERVER variables by correct values
 			wp_fix_server_vars();
-			
-			$host = isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : 'localhost';
+
+			//check if WP-CLI there isn't set HTTP_HOST, use localhost instead
+			if ( defined( 'WP_CLI' ) && WP_CLI ) {
+				$host = isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : 'localhost';
+			} else {
+				$host = $_SERVER['HTTP_HOST'];
+			}
 			$page_url = ( is_ssl() ? 'https://' : 'http://' ) . $host . $_SERVER['REQUEST_URI'];
 
 			if ( $no_query_params == true ) {
