@@ -137,6 +137,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * Enhancements:
   - Added automatically template saver when you upgrade your theme
+  - Added default value for Date and Time user profile fields
 
 * Bugfixes:
   - Added nocache headers to reset password form

@@ -584,7 +584,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				return $_SESSION['um_social_profile'][ $key ];
 			}
 
-			$value = '';
 			$type = ( isset( $data['type'] ) ) ? $data['type'] : '';
 
 			// preview in backend
@@ -787,6 +786,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 */
 				$value = apply_filters( "um_edit_{$key}_field_value", $default, $key );
 
+			} else {
+				$value = '';
 			}
 
 
@@ -2119,6 +2120,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= '<div class="um-field-icon"><i class="' . $icon . '"></i></div>';
 
 					}
+
+					//var_dump( $this->field_value( $key, $default, $data ) );
 
 					$output .= '<input  ' . $disabled . '  class="' . $this->get_class( $key, $data ) . '" type="' . $input . '" name="' . $key . UM()->form()->form_suffix . '" id="' . $key . UM()->form()->form_suffix . '" value="' . $this->field_value( $key, $default, $data ) . '" placeholder="' . $placeholder . '" data-validate="' . $validate . '" data-key="' . $key . '"    data-range="' . $range . '" data-years="' . $years . '" data-years_x="' . $years_x . '" data-disabled_weekdays="' . $disabled_weekdays . '" data-date_min="' . $date_min . '" data-date_max="' . $date_max . '" data-format="' . $js_format . '" data-value="' . $this->field_value( $key, $default, $data ) . '" />
 

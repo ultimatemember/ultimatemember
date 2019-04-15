@@ -86,15 +86,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 		 * @return void
 		 */
 		public function restore_templates( $name = '' ) {
-			$theme = wp_get_theme();
+			$theme = wp_get_theme( $name );
 
-			if ( $name && $name !== $theme->get( 'template' ) ) {
+			if ( empty( $theme ) || ! $theme->exists() ) {
 				return;
 			}
-			if ( isset( $this->restored[$theme->get( 'Name' )] ) ) {
+			if ( isset( $this->restored[ $theme->get( 'Name' ) ] ) ) {
 				return;
 			}
-			if ( empty( $this->saved[$theme->get( 'Name' )] ) ) {
+			if ( empty( $this->saved[ $theme->get( 'Name' ) ] ) ) {
 				return;
 			}
 
@@ -121,8 +121,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 				error_log( "UM Error. Can not restore theme templates." );
 			}
 
-			update_option( 'theme_version ' . $theme->get( 'Name' ), $theme->get( 'Version' ) );
-			$this->restored[$theme->get( 'Name' )] = $theme->get( 'Version' );
+			delete_option( 'theme_version ' . $theme->get( 'Name' ) );
+			$this->restored[ $theme->get( 'Name' ) ] = $theme->get( 'Version' );
 		}
 
 
@@ -133,10 +133,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 		 * @return void
 		 */
 		public function save_templates( $name = '' ) {
+			$theme = wp_get_theme( $name );
 
-			$theme = wp_get_theme();
-
-			if ( $name && $name !== $theme->get( 'template' ) ) {
+			if ( empty( $theme ) || ! $theme->exists() ) {
 				return;
 			}
 			if ( isset( $this->restored[ $theme->get( 'Name' ) ] ) ) {

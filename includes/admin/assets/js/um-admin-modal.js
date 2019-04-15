@@ -31,6 +31,7 @@ function um_admin_new_modal( id, ajax, size ) {
 		um_admin_modal_responsive();
 	} else {
 		um_admin_modal_responsive();
+		um_init_datetimepicker();
 	}
 }
 
@@ -138,6 +139,8 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 			}
 
 			um_init_tooltips();
+
+			um_init_datetimepicker();
 		},
 		error: function(data) {
 
