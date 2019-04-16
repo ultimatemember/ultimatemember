@@ -18,17 +18,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 
 
 		/**
-		 * When enable this functionality?
-		 * @var array 
-		 */
-		private $actions = array(
-			'do-theme-upgrade',
-			'update-selected-themes',
-			'update-theme',
-		);
-
-
-		/**
 		 * Restored themes
 		 * @var array
 		 */
@@ -46,10 +35,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 		 * Constructor.
 		 */
 		public function __construct() {
-			if ( isset( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], $this->actions ) ) {
-				add_filter( 'upgrader_package_options', array( $this, 'upgrader_package_options' ), 40, 1 );
-				add_action( 'upgrader_process_complete', array( $this, 'upgrader_process_complete' ), 40, 2 );
-			}
+			add_filter( 'upgrader_package_options', array( $this, 'upgrader_package_options' ), 40, 1 );
+			add_action( 'upgrader_process_complete', array( $this, 'upgrader_process_complete' ), 40, 2 );
 		}
 
 
@@ -65,12 +52,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 			}
 
 			$dir = opendir( $src );
-			while ( false !== ( $file = readdir( $dir )) ) {
+			while ( false !== ( $file = readdir( $dir ) ) ) {
 				if ( ( $file != '.' ) && ( $file != '..' ) ) {
 					if ( is_dir( $src . DIRECTORY_SEPARATOR . $file ) ) {
 						self::recurse_copy( $src . DIRECTORY_SEPARATOR . $file, $dest . DIRECTORY_SEPARATOR . $file );
-					}
-					else {
+					} else {
 						copy( $src . DIRECTORY_SEPARATOR . $file, $dest . DIRECTORY_SEPARATOR . $file );
 					}
 				}
@@ -116,6 +102,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 			$dest = realpath( $um_dir );
 			if ( $src && $dest ) {
 				self::recurse_copy( $src, $dest );
+				error_log( "UM Log. Theme '" . $theme->get( 'template' ) . "' templates restored." );
 				UM()->files()->remove_dir( $src );
 			} else {
 				error_log( "UM Error. Can not restore theme templates." );
@@ -157,6 +144,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 			$dest = realpath( $temp_dir );
 			if ( $src && $dest ) {
 				self::recurse_copy( $src, $dest );
+				error_log( "UM Log. Theme '" . $theme->get( 'template' ) . "' templates saved." );
 			} else {
 				error_log( "UM Error. Can not save theme templates." );
 			}
@@ -173,10 +161,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 		 * @return array
 		 */
 		function upgrader_package_options( $options ) {
-			/*if ( ! isset( $options['hook_extra']['type'] ) || 'theme' != $options['hook_extra']['type'] ) {
-				return $options;
-			}*/
-
 			if ( isset( $options['hook_extra'] ) && isset( $options['hook_extra']['theme'] ) ) {
 				$this->save_templates( $options['hook_extra']['theme'] );
 			}
@@ -191,10 +175,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Theme_Updater' ) ) {
 		 * @param array $options
 		 */
 		public function upgrader_process_complete( $WP_Upgrader, $options ) {
-			/*if ( ! isset( $options['type'] ) || 'theme' != $options['type'] ) {
-				return;
-			}*/
-
 			if ( isset( $options['themes'] ) && is_array( $options['themes'] ) ) {
 				foreach ( $options['themes'] as $theme ) {
 					$this->restore_templates( $theme );

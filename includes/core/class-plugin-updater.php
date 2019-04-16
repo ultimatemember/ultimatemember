@@ -69,7 +69,7 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 				),
 				'um-messaging/um-messaging.php'                         => array(
 					'key'   => 'messaging',
-					'title' => 'Messaging',
+					'title' => 'Private Messages',
 				),
 				'um-mycred/um-mycred.php'                               => array(
 					'key'   => 'mycred',
@@ -81,7 +81,7 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 				),
 				'um-notifications/um-notifications.php'                 => array(
 					'key'   => 'notifications',
-					'title' => 'Notifications',
+					'title' => 'Real-time Notifications',
 				),
 				'um-profile-completeness/um-profile-completeness.php'   => array(
 					'key'   => 'profile_completeness',
@@ -89,7 +89,7 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 				),
 				'um-reviews/um-reviews.php'                             => array(
 					'key'   => 'reviews',
-					'title' => 'Reviews',
+					'title' => 'User Reviews',
 				),
 				'um-social-activity/um-social-activity.php'             => array(
 					'key'   => 'activity',
@@ -109,7 +109,7 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 				),
 				'um-woocommerce/um-woocommerce.php'                     => array(
 					'key'   => 'woocommerce',
-					'title' => 'Woocommerce',
+					'title' => 'WooCommerce',
 				),
 				'um-user-photos/um-user-photos.php'                     => array(
 					'key'   => 'user_photos',
@@ -118,6 +118,14 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 				'um-private-content/um-private-content.php'             => array(
 					'key'   => 'private_content',
 					'title' => 'Private Content',
+				),
+				'um-user-bookmarks/um-user-bookmarks.php'               => array(
+					'key'   => 'user_bookmarks',
+					'title' => 'User Bookmarks',
+				),
+				'um-user-notes/um-user-notes.php'                       => array(
+					'key'   => 'user_notes',
+					'title' => 'User Notes',
 				),
 			);
 
@@ -186,8 +194,9 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 		function um_checklicenses() {
 			$exts = $this->um_get_active_plugins();
 
-			if ( 0 == count( $exts ) )
+			if ( 0 == count( $exts ) ) {
 				return;
+			}
 
 			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
@@ -198,13 +207,14 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 			);
 
 			$api_params['active_extensions'] = array();
+
 			foreach ( $exts as $slug => $data ) {
 				$plugin_data = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $slug );
 
-				$api_params['active_extensions'][$slug] = array(
+				$api_params['active_extensions'][ $slug ] = array(
 					'slug'      => $slug,
 					'license'   => $data['license'],
-					'item_name' => str_replace( 'Ultimate Member - ', '', $plugin_data['Name'] ),
+					'item_name' => $data['title'],
 					'version'   => $plugin_data['Version']
 				);
 			}

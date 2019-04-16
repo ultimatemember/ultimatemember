@@ -148,6 +148,8 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed $_SERVER usage when WP-CLI using
   - Extended integration for UM field value
   - um_user function avoid loop when 'display name' and 'full name' used
+  - Restriction options for Terms and access on front-end
+  - Plugin/Theme upgrader
 
 * Deprecated:
   - "Is Account page?" and "Is User page?" options for WPML integration ( because WPML translations works properly )
