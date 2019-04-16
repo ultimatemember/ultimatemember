@@ -557,6 +557,36 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 				if ( ! empty( $restriction['_um_custom_access_settings'] ) ) {
 					if ( ! isset( $restriction['_um_accessible'] ) ) {
+						$restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
+
+						//get all taxonomies for current post type
+						$taxonomies = get_object_taxonomies( $post );
+
+						//get all post terms
+						$terms = array();
+						if ( ! empty( $taxonomies ) ) {
+							foreach ( $taxonomies as $taxonomy ) {
+								if ( empty( $restricted_taxonomies[ $taxonomy ] ) ) {
+									continue;
+								}
+
+								$terms = array_merge( $terms, wp_get_post_terms( $post->ID, $taxonomy, array( 'fields' => 'ids' ) ) );
+							}
+						}
+
+						//get restriction options for first term with privacy settigns
+						foreach ( $terms as $term_id ) {
+							$restriction = get_term_meta( $term_id, 'um_content_restriction', true );
+
+							if ( ! empty( $restriction['_um_custom_access_settings'] ) ) {
+								if ( ! isset( $restriction['_um_accessible'] ) ) {
+									continue;
+								} else {
+									return $restriction;
+								}
+							}
+						}
+
 						return false;
 					} else {
 						return $restriction;
@@ -587,7 +617,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				$restriction = get_term_meta( $term_id, 'um_content_restriction', true );
 
 				if ( ! empty( $restriction['_um_custom_access_settings'] ) ) {
-					if ( ! isset( $restriction['_um_accessible'] ) || '0' == $restriction['_um_accessible'] ) {
+					if ( ! isset( $restriction['_um_accessible'] ) ) {
 						continue;
 					} else {
 						return $restriction;
