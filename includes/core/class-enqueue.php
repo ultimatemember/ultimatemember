@@ -103,9 +103,10 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_script( 'um_crop', $this->js_baseurl . 'um-crop' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
 			wp_register_script( 'um_modal', $this->js_baseurl . 'um-modal' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'um_crop' ), ultimatemember_version, true );
-			wp_register_script( 'um_responsive', $this->js_baseurl . 'um-responsive' . $this->suffix . '.js', array( 'jquery', 'um_functions', 'um_crop' ), ultimatemember_version, true );
 
 			wp_register_script('um_functions', $this->js_baseurl . 'um-functions' . $this->suffix . '.js', array( 'jquery', 'jquery-masonry', 'wp-util', 'um_scrollbar' ), ultimatemember_version, true );
+			wp_register_script( 'um_responsive', $this->js_baseurl . 'um-responsive' . $this->suffix . '.js', array( 'jquery', 'um_functions', 'um_crop' ), ultimatemember_version, true );
+
 			wp_register_script( 'um-gdpr', $this->js_baseurl . 'um-gdpr' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, false );
 			wp_register_script('um_conditional', $this->js_baseurl . 'um-conditional' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 			wp_register_script('um_scripts', $this->js_baseurl . 'um-scripts' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'um_conditional', 'um_datetime', 'um_datetime_date', 'um_datetime_time', 'um_datetime_legacy' ), ultimatemember_version, true );
