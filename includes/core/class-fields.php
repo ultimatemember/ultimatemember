@@ -786,7 +786,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 */
 				$value = apply_filters( "um_edit_{$key}_field_value", $default, $key );
 
-			} else {
+			} elseif ( ! isset( $value ) ) {
 				$value = '';
 			}
 
@@ -2121,8 +2121,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					}
 
-					//var_dump( $this->field_value( $key, $default, $data ) );
-
 					$output .= '<input  ' . $disabled . '  class="' . $this->get_class( $key, $data ) . '" type="' . $input . '" name="' . $key . UM()->form()->form_suffix . '" id="' . $key . UM()->form()->form_suffix . '" value="' . $this->field_value( $key, $default, $data ) . '" placeholder="' . $placeholder . '" data-validate="' . $validate . '" data-key="' . $key . '"    data-range="' . $range . '" data-years="' . $years . '" data-years_x="' . $years_x . '" data-disabled_weekdays="' . $disabled_weekdays . '" data-date_min="' . $date_min . '" data-date_max="' . $date_max . '" data-format="' . $js_format . '" data-value="' . $this->field_value( $key, $default, $data ) . '" />
 
                         </div>';
@@ -2277,13 +2275,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				/* Single Image Upload */
 				case 'image':
 					$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="' . $key . '">';
-					if (in_array( $key, array( 'profile_photo', 'cover_photo' ) )) {
+					if ( in_array( $key, array( 'profile_photo', 'cover_photo' ) ) ) {
 						$field_value = '';
 					} else {
 						$field_value = $this->field_value( $key, $default, $data );
 					}
 					$output .= '<input type="hidden" name="' . $key . UM()->form()->form_suffix . '" id="' . $key . UM()->form()->form_suffix . '" value="' . $field_value . '" />';
-					if (isset( $data['label'] )) {
+					if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label( $label, $key, $data );
 					}
 					$modal_label = ( isset( $data['label'] ) ) ? $data['label'] : __( 'Upload Photo', 'ultimate-member' );
