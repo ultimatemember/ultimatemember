@@ -4,7 +4,7 @@
 });*/
 
 function um_init_datetimepicker() {
-	jQuery('.um-datepicker').each(function(){
+	jQuery('.um-datepicker:not(.picker__input)').each(function(){
 		elem = jQuery(this);
 
 		if ( typeof elem.attr('data-disabled_weekdays') != 'undefined' && elem.attr('data-disabled_weekdays') != '' ) {
@@ -68,7 +68,7 @@ function um_init_datetimepicker() {
 		elem.pickadate( data );
 	});
 
-	jQuery('.um-timepicker').each(function(){
+	jQuery('.um-timepicker:not(.picker__input)').each(function(){
 		elem = jQuery(this);
 
 		elem.pickatime({
