@@ -2166,6 +2166,18 @@ function um_user( $data, $attrs = null ) {
 			return $value;
 			break;
 
+		case 'user_login':
+
+			$user_login_in_meta = get_user_meta( um_user( 'ID' ), 'user_login', true );
+			if ( $user_login_in_meta ) {
+				delete_user_meta( um_user( 'ID' ), 'user_login' );
+			}
+
+			$value = um_profile( $data );
+
+			return $value;
+			break;
+
 		case 'first_name':
 		case 'last_name':
 
