@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-04-16 00:56+0300\n"
-"PO-Revision-Date: 2019-04-16 00:56+0300\n"
+"POT-Creation-Date: 2019-04-19 18:06+0300\n"
+"PO-Revision-Date: 2019-04-19 18:06+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -103,7 +103,7 @@ msgstr ""
 #: includes/admin/core/class-admin-builder.php:767
 #: includes/admin/core/class-admin-dragdrop.php:32
 #: includes/admin/core/class-admin-menu.php:104
-#: includes/core/class-fields.php:4120
+#: includes/core/class-fields.php:4118
 msgid "Please login as administrator"
 msgstr ""
 
@@ -282,29 +282,29 @@ msgstr ""
 msgid "Are sure, maybe some settings not saved"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:469
+#: includes/admin/core/class-admin-enqueue.php:485
 #: includes/core/class-builtin.php:698 includes/core/class-builtin.php:701
 #: includes/core/class-builtin.php:1155 includes/core/class-builtin.php:1158
 msgid "Password"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:473
+#: includes/admin/core/class-admin-enqueue.php:489
 #: includes/core/class-account.php:104
 msgid "Privacy"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:477
+#: includes/admin/core/class-admin-enqueue.php:493
 #: includes/core/class-account.php:110
 msgid "Notifications"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:481
+#: includes/admin/core/class-admin-enqueue.php:497
 #: includes/admin/core/list-tables/roles-list-table.php:338
 #: includes/admin/core/list-tables/roles-list-table.php:406
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:531
+#: includes/admin/core/class-admin-enqueue.php:547
 msgid "Ultimate Member Blocks"
 msgstr ""
 
@@ -2630,7 +2630,7 @@ msgid "UM Action"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:116
-#: includes/core/class-fields.php:2334
+#: includes/core/class-fields.php:2332
 msgid "Apply"
 msgstr ""
 
@@ -3614,7 +3614,7 @@ msgstr ""
 #: includes/admin/templates/modal/dynamic_new_group.php:15
 #: includes/admin/templates/modal/fonticons.php:11
 #: includes/admin/templates/role/publish.php:24
-#: includes/core/class-fields.php:2335 includes/core/class-fields.php:2432
+#: includes/core/class-fields.php:2333 includes/core/class-fields.php:2430
 #: includes/core/um-actions-profile.php:557
 #: includes/core/um-actions-profile.php:696
 #: includes/core/um-actions-profile.php:729
@@ -6364,43 +6364,43 @@ msgstr ""
 msgid "Confirm %s"
 msgstr ""
 
-#: includes/core/class-fields.php:2289
+#: includes/core/class-fields.php:2287
 msgid "Upload Photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2310 includes/core/class-fields.php:2334
+#: includes/core/class-fields.php:2308 includes/core/class-fields.php:2332
 #: includes/core/um-actions-profile.php:727
 msgid "Change photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2334 includes/core/class-fields.php:2431
+#: includes/core/class-fields.php:2332 includes/core/class-fields.php:2429
 msgid "Processing..."
 msgstr ""
 
-#: includes/core/class-fields.php:2356
+#: includes/core/class-fields.php:2354
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:2398 includes/core/um-filters-fields.php:243
+#: includes/core/class-fields.php:2396 includes/core/um-filters-fields.php:243
 msgid "This file has been removed."
 msgstr ""
 
-#: includes/core/class-fields.php:2401 includes/core/class-fields.php:2431
+#: includes/core/class-fields.php:2399 includes/core/class-fields.php:2429
 msgid "Change file"
 msgstr ""
 
-#: includes/core/class-fields.php:2431
+#: includes/core/class-fields.php:2429
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:3854
+#: includes/core/class-fields.php:3852
 #, php-format
 msgid ""
 "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some "
 "information!"
 msgstr ""
 
-#: includes/core/class-fields.php:3856
+#: includes/core/class-fields.php:3854
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
@@ -6487,7 +6487,7 @@ msgid "This activation link is expired or have already been used."
 msgstr ""
 
 #. translators: %s: support forums URL
-#: includes/core/class-plugin-updater.php:248
+#: includes/core/class-plugin-updater.php:258
 #, php-format
 msgid ""
 "An unexpected error occurred. Something may be wrong with https://"
@@ -6495,7 +6495,7 @@ msgid ""
 "have problems, please try the <a href=\"%s\">support forums</a>."
 msgstr ""
 
-#: includes/core/class-plugin-updater.php:249
+#: includes/core/class-plugin-updater.php:259
 msgid "https://wordpress.org/support/"
 msgstr ""
 

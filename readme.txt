@@ -150,6 +150,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - um_user function avoid loop when 'display name' and 'full name' used
   - Restriction options for Terms and access on front-end
   - Plugin/Theme upgrader
+  - Remove duplicate data 'user_login' from metadata
 
 * Deprecated:
   - "Is Account page?" and "Is User page?" options for WPML integration ( because WPML translations works properly )
