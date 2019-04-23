@@ -480,7 +480,10 @@ p.um-notice.warning {
 }
 
 .um-field-checkbox:hover i, .um-field-radio:hover i {color: #666}
-
+.um-field-checkbox:hover i.um-faicon-caret-up,
+.um-field-radio:hover i.um-faicon-caret-up {
+	color: #C74A4A;
+}
 .um-field-checkbox input,
 .um-field-radio input{
 	opacity: 0 !important;

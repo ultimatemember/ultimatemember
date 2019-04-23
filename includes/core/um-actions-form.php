@@ -389,25 +389,33 @@ function um_submit_form_errors_hook_( $args ) {
 					}
 				}
 			}
+			$hide_array = um_field_conditions_are_met($args);
 
-			if ( isset( $array['type'] ) && $array['type'] == 'checkbox' && isset( $array['required'] ) && $array['required'] == 1 && !isset( $args[$key] ) ) {
-				UM()->form()->add_error($key, sprintf(__('%s is required.','ultimate-member'), $array['title'] ) );
-			}
+			if( isset($array['metakey']) && !in_array( $array['metakey'], $hide_array ) ) {
+				if ( isset( $array['type'] ) && $array['type'] == 'checkbox' && isset( $array['required'] ) && $array['required'] == 1 && ! isset( $args[ $key ] ) ) {
+					UM()->form()->add_error( $key, sprintf( __( '%s is required.', 'ultimate-member' ), $array['title'] ) );
+				}
 
-			if ( isset( $array['type'] ) && $array['type'] == 'radio' && isset( $array['required'] ) && $array['required'] == 1 && !isset( $args[$key] ) && !in_array($key, array('role_radio','role_select') ) ) {
-				UM()->form()->add_error($key, sprintf(__('%s is required.','ultimate-member'), $array['title'] ) );
-			}
+				if ( isset( $array['type'] ) && $array['type'] == 'radio' && isset( $array['required'] ) && $array['required'] == 1 && ! isset( $args[ $key ] ) && ! in_array( $key, array(
+						'role_radio',
+						'role_select'
+					) ) ) {
+					UM()->form()->add_error( $key, sprintf( __( '%s is required.', 'ultimate-member' ), $array['title'] ) );
+				}
 
-			if ( isset( $array['type'] ) && $array['type'] == 'multiselect' && isset( $array['required'] ) && $array['required'] == 1 && !isset( $args[$key] ) && !in_array($key, array('role_radio','role_select') ) ) {
-				UM()->form()->add_error($key, sprintf(__('%s is required.','ultimate-member'), $array['title'] ) );
-			}
+				if ( isset( $array['type'] ) && $array['type'] == 'multiselect' && isset( $array['required'] ) && $array['required'] == 1 && ! isset( $args[ $key ] ) && ! in_array( $key, array(
+						'role_radio',
+						'role_select'
+					) ) ) {
+					UM()->form()->add_error( $key, sprintf( __( '%s is required.', 'ultimate-member' ), $array['title'] ) );
+				}
 
-			if ( $key == 'role_select' || $key == 'role_radio' ) {
-				if ( isset( $array['required'] ) && $array['required'] == 1 && ( !isset( $args['role'] ) || empty( $args['role'] ) ) ) {
-					UM()->form()->add_error('role', __('Please specify account type.','ultimate-member') );
+				if ( $key == 'role_select' || $key == 'role_radio' ) {
+					if ( isset( $array['required'] ) && $array['required'] == 1 && ( ! isset( $args['role'] ) || empty( $args['role'] ) ) ) {
+						UM()->form()->add_error( 'role', __( 'Please specify account type.', 'ultimate-member' ) );
+					}
 				}
 			}
-
 			/**
 			 * UM hook
 			 *

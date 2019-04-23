@@ -667,6 +667,7 @@ function um_field_conditions_are_met( $args ) {
 								} else {
 									$state = 'hide';
 								}
+
 								break;
 							case 'less than':
 								if ( $field < $val ) {
@@ -798,6 +799,7 @@ function um_field_conditions_are_met( $args ) {
 								} else {
 									$state = 'hide';
 								}
+
 								break;
 							case 'less than':
 								if ($field < $val) {
