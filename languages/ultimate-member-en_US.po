@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-04-19 18:06+0300\n"
-"PO-Revision-Date: 2019-04-19 18:06+0300\n"
+"POT-Creation-Date: 2019-04-23 11:40+0300\n"
+"PO-Revision-Date: 2019-04-23 11:40+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -6487,7 +6487,7 @@ msgid "This activation link is expired or have already been used."
 msgstr ""
 
 #. translators: %s: support forums URL
-#: includes/core/class-plugin-updater.php:258
+#: includes/core/class-plugin-updater.php:266
 #, php-format
 msgid ""
 "An unexpected error occurred. Something may be wrong with https://"
@@ -6495,7 +6495,7 @@ msgid ""
 "have problems, please try the <a href=\"%s\">support forums</a>."
 msgstr ""
 
-#: includes/core/class-plugin-updater.php:259
+#: includes/core/class-plugin-updater.php:267
 msgid "https://wordpress.org/support/"
 msgstr ""
 
