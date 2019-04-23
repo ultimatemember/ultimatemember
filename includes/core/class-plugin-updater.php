@@ -127,6 +127,14 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 					'key'   => 'user_notes',
 					'title' => 'User Notes',
 				),
+				'um-frontend-posting/um-frontend-posting.php'           => array(
+					'key'   => 'frontend_posting',
+					'title' => 'Frontend Posting',
+				),
+				'um-filesharing/um-filesharing.php'                     => array(
+					'key'   => 'filesharing',
+					'title' => 'File Sharing',
+				),
 			);
 
 			$active_um_plugins = array();

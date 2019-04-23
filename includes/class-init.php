@@ -32,7 +32,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_User_Location_API User_Location_API()
 	 * @method UM_Photos_API Photos_API()
 	 * @method UM_Groups Groups()
-	 * @method UM_Frontend_Posting_API Frontend_Posting_API()
+	 * @method UM_Frontend_Posting Frontend_Posting()
 	 *
 	 */
 	final class UM extends UM_Functions {
