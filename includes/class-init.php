@@ -556,6 +556,12 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->mobile();
 			$this->external_integrations();
 			$this->gdpr();
+
+			//if multisite networks active
+			if ( is_multisite() ) {
+				$this->multisite();
+			}
+
 		}
 
 
@@ -1405,6 +1411,19 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['mobile'];
 		}
 
+		/**
+		 * @since 2.0.44
+		 *
+		 * @return um\lib\mobiledetect\Um_Mobile_Detect
+		 */
+		function multisite() {
+
+			if ( empty( $this->classes['multisite'] ) ) {
+				$this->classes['multisite'] = new um\core\Multisite();
+			}
+
+			return $this->classes['multisite'];
+		}
 
 		/**
 		 * Include files with hooked filters/actions
@@ -1453,7 +1472,6 @@ if ( ! class_exists( 'UM' ) ) {
 		function widgets_init() {
 			register_widget( 'um\widgets\UM_Search_Widget' );
 		}
-
 	}
 }
 
