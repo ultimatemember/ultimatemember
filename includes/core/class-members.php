@@ -25,9 +25,9 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 		 */
 		function __construct() {
 
-			add_filter('user_search_columns', array(&$this, 'user_search_columns'), 99 );
+			add_filter( 'user_search_columns', array( &$this, 'user_search_columns' ), 99 );
 
-			add_action('template_redirect', array(&$this, 'access_members'), 555);
+			add_action( 'template_redirect', array( &$this, 'access_members' ), 555);
 
 			$this->core_search_fields = array(
 				'user_login',
@@ -48,7 +48,7 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 		 *
 		 * @return array
 		 */
-		function user_search_columns( $search_columns ){
+		function user_search_columns( $search_columns ) {
 			if ( is_admin() ) {
 				$search_columns[] = 'display_name';
 			}
@@ -198,7 +198,7 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 			$attrs = apply_filters( 'um_search_fields', $attrs );
 
 			if ( $type == 'select' ) {
-				if( isset($attrs) && is_array( $attrs['options'] ) ){
+				if ( isset( $attrs ) && is_array( $attrs['options'] ) ) {
 					asort( $attrs['options'] );
 				}
 				/**
@@ -227,6 +227,7 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 
 			return compact( 'type', 'attrs' );
 		}
+
 
 		/**
 		 * Show filter

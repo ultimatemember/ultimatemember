@@ -82,7 +82,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			}
 			wp_register_script( 'select2', $this->js_baseurl . 'select2/select2.full.min.js', array( 'jquery', 'jquery-masonry' ), ultimatemember_version, true );
 
-			wp_register_script( 'um_scrollbar', $this->js_baseurl . 'um-scrollbar' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
+			wp_register_script( 'um_scrollbar', $this->js_baseurl . 'simplebar' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
 			wp_register_script( 'um_jquery_form', $this->js_baseurl . 'um-jquery-form' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 			wp_register_script( 'um_fileupload', $this->js_baseurl . 'um-fileupload' . $this->suffix . '.js', array( 'jquery', 'um_jquery_form' ), ultimatemember_version, true );
@@ -158,7 +158,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_style( 'um_datetime', $this->css_baseurl . 'pickadate/default.css', array(), ultimatemember_version );
 			wp_register_style( 'um_datetime_date', $this->css_baseurl . 'pickadate/default.date.css', array( 'um_datetime' ), ultimatemember_version );
 			wp_register_style( 'um_datetime_time', $this->css_baseurl . 'pickadate/default.time.css', array( 'um_datetime' ), ultimatemember_version );
-			wp_register_style( 'um_scrollbar', $this->css_baseurl . 'um-scrollbar.css', array(), ultimatemember_version );
+			wp_register_style( 'um_scrollbar', $this->css_baseurl . 'simplebar.css', array(), ultimatemember_version );
 
 			wp_register_style( 'um_rtl', $this->css_baseurl . 'um.rtl.css', array(), ultimatemember_version );
 			wp_register_style( 'um_default_css', $this->css_baseurl . 'um-old-default.css', array(), ultimatemember_version );

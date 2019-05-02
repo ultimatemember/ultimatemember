@@ -328,5 +328,26 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			$cpt = apply_filters( 'um_cpt_list', array( 'um_form', 'um_directory' ) );
 			return $cpt;
 		}
+
+
+		/**
+		 * @param array $array
+		 * @param string $key
+		 * @param array $insert_array
+		 *
+		 * @return array
+		 */
+		function array_insert_before( $array, $key, $insert_array ) {
+			$index = array_search( $key, array_keys( $array ) );
+			if ( $index === false ) {
+				return $array;
+			}
+
+			$array = array_slice( $array, 0, $index, true ) +
+			         $insert_array +
+			         array_slice( $array, $index, count( $array ) - 1, true );
+
+			return $array;
+		}
 	}
 }
