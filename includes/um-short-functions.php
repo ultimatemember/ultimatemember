@@ -60,7 +60,16 @@ function um_is_session_started() {
 
 	return false;
 }
-
+function password_reset_link_tags_patterns( $placeholders ) {
+	// your code here
+	$placeholders[] = '{password_reset_link}';
+	return $placeholders;
+}
+function password_reset_link_tags_replaces( $replace_placeholders ) {
+    // your code here
+    $replace_placeholders[] = um_user( 'password_reset_link' );
+    return $replace_placeholders;
+}
 
 /**
  * User clean basename
@@ -126,7 +135,7 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 		'{site_name}',
 		'{site_url}',
 		'{account_activation_link}',
-		'{password_reset_link}',
+//		'{password_reset_link}',
 		'{admin_email}',
 		'{user_profile_link}',
 		'{user_account_link}',
@@ -170,14 +179,14 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 		UM()->options()->get( 'site_name' ),
 		get_bloginfo( 'url' ),
 		um_user( 'account_activation_link' ),
-		um_user( 'password_reset_link' ),
+//		um_user( 'password_reset_link' ),
 		um_admin_email(),
 		um_user_profile_url(),
 		um_get_core_page( 'account' ),
 		um_user_submitted_registration(),
 		um_get_user_avatar_url(),
 	);
-
+//	debug_print_backtrace();
 	/**
 	 * UM hook
 	 *
@@ -220,7 +229,6 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 			$content = str_replace( '{' . $match . '}', um_user( $strip_key ), $content );
 		}
 	}
-
 	return $content;
 }
 
