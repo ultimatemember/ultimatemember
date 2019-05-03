@@ -60,16 +60,6 @@ function um_is_session_started() {
 
 	return false;
 }
-function password_reset_link_tags_patterns( $placeholders ) {
-	// your code here
-	$placeholders[] = '{password_reset_link}';
-	return $placeholders;
-}
-function password_reset_link_tags_replaces( $replace_placeholders ) {
-    // your code here
-    $replace_placeholders[] = um_user( 'password_reset_link' );
-    return $replace_placeholders;
-}
 
 /**
  * User clean basename
@@ -230,6 +220,30 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 		}
 	}
 	return $content;
+}
+
+/**
+ * UM Placeholders for reset password
+ *
+ * @param $placeholders
+ *
+ * @return array
+ */
+function password_reset_link_tags_patterns( $placeholders ) {
+	$placeholders[] = '{password_reset_link}';
+	return $placeholders;
+}
+
+/**
+ * UM Replace Placeholders for reset password
+ *
+ * @param $replace_placeholders
+ *
+ * @return array
+ */
+function password_reset_link_tags_replaces( $replace_placeholders ) {
+	$replace_placeholders[] = um_user( 'password_reset_link' );
+	return $replace_placeholders;
 }
 
 
