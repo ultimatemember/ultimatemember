@@ -14,12 +14,15 @@ function um_add_form_identifier( $args ) {
 		$form_cond_class = 'new-cond-form';
 	}
 	$conditional_array = array();
-	foreach ( $args['custom_fields'] as $arg ) {
-		if ( isset( $arg['conditions'] ) ) {
-			$conditional_array[ $arg['metakey'] ] = $arg['conditions'];
+	if( !empty($args['custom_fields']) ){
+		foreach ( $args['custom_fields'] as $arg ) {
+			if ( isset( $arg['conditions'] ) ) {
+				$conditional_array[ $arg['metakey'] ] = $arg['conditions'];
+			}
 		}
+		$cond_data = json_encode( $conditional_array );
 	}
-	$cond_data = json_encode( $conditional_array );	?>
+	?>
 	<input type="hidden" name="form_id" id="form_id_<?php echo $args['form_id']; ?>" class="condition-data <?php echo esc_attr($form_cond_class); ?>" value="<?php echo $args['form_id']; ?>" data-conds="<?php echo esc_attr($cond_data); ?>" />
 	<?php
 }
