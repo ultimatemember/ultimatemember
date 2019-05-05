@@ -614,14 +614,14 @@ function um_submit_form_errors_hook_( $args ) {
 
 						case 'unique_username':
 
-							if ( $args[$key] == '' ) {
-								UM()->form()->add_error($key, __('You must provide a username','ultimate-member') );
-							} else if ( $mode == 'register' && username_exists( sanitize_user( $args[$key] ) ) ) {
-								UM()->form()->add_error($key, __('Your username is already taken','ultimate-member') );
-							} else if ( is_email( $args[$key] ) ) {
-								UM()->form()->add_error($key, __('Username cannot be an email','ultimate-member') );
-							} else if ( ! UM()->validation()->safe_username( $args[$key] ) ) {
-								UM()->form()->add_error($key, __('Your username contains invalid characters','ultimate-member') );
+							if ( $args[ $key ] == '' ) {
+								UM()->form()->add_error( $key, __( 'You must provide a username', 'ultimate-member' ) );
+							} elseif ( $mode == 'register' && username_exists( sanitize_user( $args[ $key ] ) ) ) {
+								UM()->form()->add_error( $key, __( 'Your username is already taken', 'ultimate-member' ) );
+							} elseif ( is_email( $args[ $key ] ) ) {
+								UM()->form()->add_error( $key, __( 'Username cannot be an email', 'ultimate-member' ) );
+							} elseif ( ! UM()->validation()->safe_username( $args[$key] ) ) {
+								UM()->form()->add_error( $key, __( 'Your username contains invalid characters', 'ultimate-member' ) );
 							}
 
 							break;

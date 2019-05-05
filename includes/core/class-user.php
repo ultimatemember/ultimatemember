@@ -1192,8 +1192,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function password_reset() {
 			$userdata = get_userdata( um_user('ID') );
 			get_password_reset_key( $userdata );
-			add_filter( 'um_template_tags_patterns_hook', 'password_reset_link_tags_patterns', 10, 1 );
-			add_filter( 'um_template_tags_replaces_hook', 'password_reset_link_tags_replaces', 10, 1 );
+
+			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ), 10, 1 );
+			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ), 10, 1 );
+
 			UM()->mail()->send( um_user('user_email'), 'resetpw_email' );
 		}
 

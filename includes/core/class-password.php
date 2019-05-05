@@ -1,8 +1,10 @@
 <?php
 namespace um\core;
 
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 if ( ! class_exists( 'um\core\Password' ) ) {
 
@@ -670,6 +672,32 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 			nocache_headers();
 			setcookie( $name, $value, $expire, $path, COOKIE_DOMAIN, is_ssl(), true );
+		}
+
+
+		/**
+		 * UM Placeholders for reset password
+		 *
+		 * @param $placeholders
+		 *
+		 * @return array
+		 */
+		function add_placeholder( $placeholders ) {
+			$placeholders[] = '{password_reset_link}';
+			return $placeholders;
+		}
+
+
+		/**
+		 * UM Replace Placeholders for reset password
+		 *
+		 * @param $replace_placeholders
+		 *
+		 * @return array
+		 */
+		function add_replace_placeholder( $replace_placeholders ) {
+			$replace_placeholders[] = um_user( 'password_reset_link' );
+			return $replace_placeholders;
 		}
 	}
 }

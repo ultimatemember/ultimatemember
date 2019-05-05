@@ -504,7 +504,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 * @param  integer $post_id
 		 * @return string
 		 */
-		function form_type( $post_id ){
+		function form_type( $post_id ) {
 			$mode = get_post_meta( $post_id, '_um_mode', true );
 			return $mode;
 		}
