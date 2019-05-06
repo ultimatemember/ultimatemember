@@ -123,6 +123,9 @@ function um_action_request_process() {
 				wp_die( __( 'You do not have permission to make this action.', 'ultimate-member' ) );
 			}
 
+			add_filter( 'um_template_tags_patterns_hook', array( UM()->user(), 'add_activation_placeholder' ), 10, 1 );
+			add_filter( 'um_template_tags_replaces_hook', array( UM()->user(), 'add_activation_replace_placeholder' ), 10, 1 );
+
 			um_fetch_user( $uid );
 			UM()->user()->email_pending();
 			exit( wp_redirect( UM()->permalinks()->get_current_url( true ) ) );

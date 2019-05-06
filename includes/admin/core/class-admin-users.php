@@ -85,6 +85,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 					break;
 
 				case 'um_resend_activation':
+
+					add_filter( 'um_template_tags_patterns_hook', array( UM()->user(), 'add_activation_placeholder' ), 10, 1 );
+					add_filter( 'um_template_tags_replaces_hook', array( UM()->user(), 'add_activation_replace_placeholder' ), 10, 1 );
+
 					UM()->user()->email_pending();
 					break;
 

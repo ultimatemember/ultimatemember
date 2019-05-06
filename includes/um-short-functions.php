@@ -103,15 +103,11 @@ function um_clean_user_basename( $value ) {
 
 
 /**
- * Convert template tags
+ * Getting replace placeholders array
  *
- * @param $content
- * @param array $args
- * @param bool $with_kses
- *
- * @return mixed|string
+ * @return array
  */
-function um_convert_tags( $content, $args = array(), $with_kses = true ) {
+function um_replace_placeholders() {
 	$search = array(
 		'{display_name}',
 		'{first_name}',
@@ -124,7 +120,6 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 		'{login_referrer}',
 		'{site_name}',
 		'{site_url}',
-		'{account_activation_link}',
 		'{admin_email}',
 		'{user_profile_link}',
 		'{user_account_link}',
@@ -167,7 +162,6 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 		um_dynamic_login_page_redirect(),
 		UM()->options()->get( 'site_name' ),
 		get_bloginfo( 'url' ),
-		um_user( 'account_activation_link' ),
 		um_admin_email(),
 		um_user_profile_url(),
 		um_get_core_page( 'account' ),
@@ -198,7 +192,23 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 	 */
 	$replace = apply_filters( 'um_template_tags_replaces_hook', $replace );
 
-	$content = str_replace( $search, $replace, $content );
+	return array_combine( $search, $replace );
+}
+
+
+/**
+ * Convert template tags
+ *
+ * @param $content
+ * @param array $args
+ * @param bool $with_kses
+ *
+ * @return mixed|string
+ */
+function um_convert_tags( $content, $args = array(), $with_kses = true ) {
+	$placeholders = um_replace_placeholders();
+
+	$content = str_replace( array_keys( $placeholders ), array_values( $placeholders ), $content );
 	if ( $with_kses ) {
 		$content = wp_kses_decode_entities( $content );
 	}
@@ -218,6 +228,31 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 		}
 	}
 	return $content;
+}
+
+
+/**
+ * UM Placeholders for activation link in email
+ *
+ * @param $placeholders
+ *
+ * @return array
+ */
+function account_activation_link_tags_patterns( $placeholders ) {
+	$placeholders[] = '{account_activation_link}';
+	return $placeholders;
+}
+
+/**
+ * UM Replace Placeholders for activation link in email
+ *
+ * @param $replace_placeholders
+ *
+ * @return array
+ */
+function account_activation_link_tags_replaces( $replace_placeholders ) {
+	$replace_placeholders[] = um_user( 'account_activation_link' );
+	return $replace_placeholders;
 }
 
 

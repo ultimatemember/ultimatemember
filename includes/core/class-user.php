@@ -1901,5 +1901,31 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			return $hash_email_address;
 		}
+
+
+		/**
+		 * UM Placeholders for activation link in email
+		 *
+		 * @param $placeholders
+		 *
+		 * @return array
+		 */
+		function add_activation_placeholder( $placeholders ) {
+			$placeholders[] = '{account_activation_link}';
+			return $placeholders;
+		}
+
+
+		/**
+		 * UM Replace Placeholders for activation link in email
+		 *
+		 * @param $replace_placeholders
+		 *
+		 * @return array
+		 */
+		function add_activation_replace_placeholder( $replace_placeholders ) {
+			$replace_placeholders[] = um_user( 'account_activation_link' );
+			return $replace_placeholders;
+		}
 	}
 }

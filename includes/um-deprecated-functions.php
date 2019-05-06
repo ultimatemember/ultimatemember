@@ -132,20 +132,20 @@ function um_set_redirect_url( $url ) {
  */
 function um_get_redirect_url( $key ) {
 
-	if (um_is_session_started() === false) {
+	if ( um_is_session_started() === false ) {
 		session_start();
 	}
 
-	if (isset( $_SESSION['um_redirect_key'][$key] )) {
+	if ( isset( $_SESSION['um_redirect_key'][ $key ] ) ) {
 
-		$url = $_SESSION['um_redirect_key'][$key];
+		$url = $_SESSION['um_redirect_key'][ $key ];
 
 		return $url;
 
 	} else {
 
-		if (isset( $_SESSION['um_redirect_key'] )) {
-			foreach ($_SESSION['um_redirect_key'] as $key => $url) {
+		if ( isset( $_SESSION['um_redirect_key'] ) ) {
+			foreach ( $_SESSION['um_redirect_key'] as $key => $url ) {
 
 				return $url;
 

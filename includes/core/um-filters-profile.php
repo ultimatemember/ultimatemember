@@ -14,11 +14,19 @@ function um_dynamic_user_profile_pagetitle( $title, $sep = '' ) {
 
 	$profile_title = UM()->options()->get( 'profile_title' );
 
-	if ( um_is_core_page('user') && um_get_requested_user() ) {
+	if ( um_is_core_page( 'user' ) && um_get_requested_user() ) {
 
 		um_fetch_user( um_get_requested_user() );
 
-		$profile_title = um_convert_tags( $profile_title );
+		$search = array(
+			'{display_name}',
+			'{site_name}'
+		);
+		$replace = array(
+			um_user( 'display_name' ),
+			UM()->options()->get( 'site_name' )
+		);
+		$profile_title = str_replace( $search, $replace, $profile_title );
 
 		$title = $profile_title;
 
