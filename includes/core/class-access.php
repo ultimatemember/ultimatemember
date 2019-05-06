@@ -59,6 +59,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			add_filter( 'get_pages', array( &$this, 'filter_protected_posts' ), 99, 2 );
 			//filter menu items
 			add_filter( 'wp_nav_menu_objects', array( &$this, 'filter_menu' ), 99, 2 );
+			
+			//filter attachment
+			add_filter( 'wp_get_attachment_url', array( &$this, 'filter_attachment' ), 99, 2 );
 
 
 			//check the site's accessible more priority have Individual Post/Term Restriction settings
@@ -1119,7 +1122,80 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			$cache_number[ $post_id ] = $count;
 			return $count;
 		}
+		
+		
+		/**
+		 * Is post restricted?
+		 * @param		int		$post_id
+		 * @return	boolean
+		 */
+		public function is_restricted( $post_id ) {
 
+			$restricted = true;
+
+			$post = get_post( $post_id );
+			$restriction = $this->get_post_privacy_settings( $post );
+
+			if ( !$restriction ) {
+				$restricted = false;
+			} else {
+
+				//post is private
+				if ( '0' == $restriction[ '_um_accessible' ] ) {
+					$restricted = false;
+				}
+				//if post for not logged in users and user is not logged in
+				elseif ( '1' == $restriction[ '_um_accessible' ] ) {
+					if ( !is_user_logged_in() ) {
+						$restricted = false;
+					} else {
+
+						if ( current_user_can( 'administrator' ) ) {
+							$restricted = false;
+						}
+					}
+				}
+				//if post for logged in users and user is not logged in
+				elseif ( '2' == $restriction[ '_um_accessible' ] ) {
+					if ( is_user_logged_in() ) {
+
+						if ( current_user_can( 'administrator' ) ) {
+							$restricted = false;
+						}
+
+						$custom_restrict = $this->um_custom_restriction( $restriction );
+
+						if ( empty( $restriction[ '_um_access_roles' ] ) || false === array_search( '1', $restriction[ '_um_access_roles' ] ) ) {
+							if ( $custom_restrict ) {
+								$restricted = false;
+							}
+						} else {
+							$user_can = $this->user_can( get_current_user_id(), $restriction[ '_um_access_roles' ] );
+
+							if ( isset( $user_can ) && $user_can && $custom_restrict ) {
+								$restricted = false;
+							}
+						}
+					}
+				}
+			}
+
+			return $restricted;
+		}
+
+		
+		/**
+		 * Hide attachment if the post is restricted
+		 * @param		string		$url
+		 * @param		int				$attachment_id
+		 * @return	boolean|string
+		 */
+		public function filter_attachment( $url, $attachment_id ) {
+			$post_id = get_the_ID();
+
+			return ($post_id && $this->is_restricted( $post_id )) ? false : $url;
+		}
+		
 
 		/**
 		 * Protect Post Types in menu query
