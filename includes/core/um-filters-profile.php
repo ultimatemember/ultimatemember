@@ -18,7 +18,15 @@ function um_dynamic_user_profile_pagetitle( $title, $sep = '' ) {
 
 		um_fetch_user( um_get_requested_user() );
 
-		$profile_title = um_convert_tags( $profile_title );
+		$search = array(
+			'{display_name}',
+			'{site_name}'
+		);
+		$replace = array(
+			um_user( 'display_name' ),
+			 UM()->options()->get( 'site_name' )
+		);
+		$profile_title = str_replace( $search, $replace, $profile_title );
 
 		$title = $profile_title;
 

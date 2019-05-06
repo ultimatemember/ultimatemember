@@ -124,7 +124,6 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 		'{login_referrer}',
 		'{site_name}',
 		'{site_url}',
-		'{account_activation_link}',
 		'{admin_email}',
 		'{user_profile_link}',
 		'{user_account_link}',
@@ -167,7 +166,6 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 		um_dynamic_login_page_redirect(),
 		UM()->options()->get( 'site_name' ),
 		get_bloginfo( 'url' ),
-		um_user( 'account_activation_link' ),
 		um_admin_email(),
 		um_user_profile_url(),
 		um_get_core_page( 'account' ),
@@ -241,6 +239,30 @@ function password_reset_link_tags_patterns( $placeholders ) {
  */
 function password_reset_link_tags_replaces( $replace_placeholders ) {
 	$replace_placeholders[] = um_user( 'password_reset_link' );
+	return $replace_placeholders;
+}
+
+/**
+ * UM Placeholders for activation link in email
+ *
+ * @param $placeholders
+ *
+ * @return array
+ */
+function account_activation_link_tags_patterns( $placeholders ) {
+	$placeholders[] = '{account_activation_link}';
+	return $placeholders;
+}
+
+/**
+ * UM Replace Placeholders for activation link in email
+ *
+ * @param $replace_placeholders
+ *
+ * @return array
+ */
+function account_activation_link_tags_replaces( $replace_placeholders ) {
+	$replace_placeholders[] = um_user( 'account_activation_link' );
 	return $replace_placeholders;
 }
 
