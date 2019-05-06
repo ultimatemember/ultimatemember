@@ -482,8 +482,8 @@ function um_profile_dynamic_meta_desc() {
 
 		$content = um_convert_tags( UM()->options()->get( 'profile_desc' ) );
 		$user_id = um_user( 'ID' );
-		$url = um_user_profile_url();
 
+		$url = um_user_profile_url();
         $avatar = um_get_user_avatar_url( $user_id, 'original' );
 
 		um_reset_user(); ?>

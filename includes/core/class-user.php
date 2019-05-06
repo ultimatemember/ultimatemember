@@ -1192,8 +1192,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function password_reset() {
 			$userdata = get_userdata( um_user('ID') );
 			get_password_reset_key( $userdata );
-			add_filter( 'um_template_tags_patterns_hook', 'password_reset_link_tags_patterns', 10, 1 );
-			add_filter( 'um_template_tags_replaces_hook', 'password_reset_link_tags_replaces', 10, 1 );
+
+			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ), 10, 1 );
+			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ), 10, 1 );
+
 			UM()->mail()->send( um_user('user_email'), 'resetpw_email' );
 		}
 
@@ -1898,6 +1900,32 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			return $hash_email_address;
+		}
+
+
+		/**
+		 * UM Placeholders for activation link in email
+		 *
+		 * @param $placeholders
+		 *
+		 * @return array
+		 */
+		function add_activation_placeholder( $placeholders ) {
+			$placeholders[] = '{account_activation_link}';
+			return $placeholders;
+		}
+
+
+		/**
+		 * UM Replace Placeholders for activation link in email
+		 *
+		 * @param $replace_placeholders
+		 *
+		 * @return array
+		 */
+		function add_activation_replace_placeholder( $replace_placeholders ) {
+			$replace_placeholders[] = um_user( 'account_activation_link' );
+			return $replace_placeholders;
 		}
 	}
 }

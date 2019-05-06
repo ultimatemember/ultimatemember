@@ -6511,6 +6511,11 @@ msgstr ""
 msgid "Comments"
 msgstr ""
 
+#: includes/core/class-profile.php:424 includes/core/class-mail.php:609
+#: includes/core/class-password.php:701
+msgid "Your set password"
+msgstr ""
+
 #: includes/core/class-shortcodes.php:360
 msgid ""
 "This content has been restricted to logged in users only. Please <a href="

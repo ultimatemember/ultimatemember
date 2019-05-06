@@ -74,8 +74,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 				case 'um_approve_membership':
 				case 'um_reenable':
 
-					add_filter( 'um_template_tags_patterns_hook', 'password_reset_link_tags_patterns', 10, 1 );
-					add_filter( 'um_template_tags_replaces_hook', 'password_reset_link_tags_replaces', 10, 1 );
+					add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ), 10, 1 );
+					add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ), 10, 1 );
 
 					UM()->user()->approve();
 					break;
@@ -86,8 +86,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 				case 'um_resend_activation':
 
-					add_filter( 'um_template_tags_patterns_hook', 'account_activation_link_tags_patterns', 10, 1 );
-					add_filter( 'um_template_tags_replaces_hook', 'account_activation_link_tags_replaces', 10, 1 );
+					add_filter( 'um_template_tags_patterns_hook', array( UM()->user(), 'add_activation_placeholder' ), 10, 1 );
+					add_filter( 'um_template_tags_replaces_hook', array( UM()->user(), 'add_activation_replace_placeholder' ), 10, 1 );
 
 					UM()->user()->email_pending();
 					break;
