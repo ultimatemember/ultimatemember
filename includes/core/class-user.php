@@ -1248,7 +1248,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			$this->set_status('approved');
 			$this->delete_meta('account_secret_hash');
-			$this->delete_meta('_um_cool_but_hard_to_guess_plain_pw');
 
 			/**
 			 * UM hook
