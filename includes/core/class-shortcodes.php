@@ -1004,6 +1004,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				'{display_name}',
 				'{user_avatar_small}',
 				'{username}',
+				'{nickname}',
 			);
 
 			/**
@@ -1047,6 +1048,10 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 						if ( $usermeta == 'username' ) {
 							$value = um_user( 'user_login' );
+						}
+
+						if ( $usermeta == 'nickname' ) {
+							$value = um_profile( 'nickname' );
 						}
 
 						/**
