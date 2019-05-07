@@ -477,7 +477,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 				return;
 			}
 
-			wp_register_script( 'um-blocks-shortcode-js', $this->js_url . 'um-admin-blocks-shortcode.js', array( 'wp-i18n', 'wp-blocks', 'wp-components', 'rich-text' ), ultimatemember_version, true );
+			wp_register_script( 'um-blocks-shortcode-js', $this->js_url . 'um-admin-blocks-shortcode.js', array( 'wp-i18n', 'wp-blocks', 'wp-components' ), ultimatemember_version, true );
 			wp_set_script_translations( 'um-blocks-shortcode-js', 'ultimate-member' );
 			wp_enqueue_script( 'um-blocks-shortcode-js' );
 
