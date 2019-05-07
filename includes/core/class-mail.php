@@ -585,11 +585,13 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @return array
 		 */
 		function add_placeholder( $placeholders ) {
+			$placeholders[] = '{user_profile_link}';
 			$placeholders[] = '{site_url}';
 			$placeholders[] = '{admin_email}';
 			$placeholders[] = '{submitted_registration}';
 			$placeholders[] = '{login_url}';
 			$placeholders[] = '{password}';
+			$placeholders[] = '{account_activation_link}';
 			return $placeholders;
 		}
 
@@ -602,11 +604,13 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @return array
 		 */
 		function add_replace_placeholder( $replace_placeholders ) {
+			$replace_placeholders[] = um_user_profile_url();
 			$replace_placeholders[] = get_bloginfo( 'url' );
 			$replace_placeholders[] = um_admin_email();
 			$replace_placeholders[] = um_user_submitted_registration();
 			$replace_placeholders[] = um_get_core_page( 'login' );
 			$replace_placeholders[] = esc_html__( 'Your set password', 'ultimate-member' );
+			$replace_placeholders[] = um_user( 'account_activation_link' );
 			return $replace_placeholders;
 		}
 	}
