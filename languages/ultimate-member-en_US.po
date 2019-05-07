@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-04-23 11:40+0300\n"
-"PO-Revision-Date: 2019-04-23 11:40+0300\n"
+"POT-Creation-Date: 2019-05-07 10:52+0300\n"
+"PO-Revision-Date: 2019-05-07 10:52+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -158,7 +158,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-builder.php:1143
 #: includes/core/class-form.php:155 includes/core/class-form.php:328
-#: includes/core/class-password.php:531
+#: includes/core/class-password.php:533
 msgid "This is not possible for security reasons."
 msgstr ""
 
@@ -253,16 +253,16 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:183
+#: includes/admin/core/class-admin-enqueue.php:184
 msgid "e.g. Member Directory"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:185
+#: includes/admin/core/class-admin-enqueue.php:186
 msgid "e.g. New Registration Form"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:230
-#: includes/admin/core/class-admin-enqueue.php:261
+#: includes/admin/core/class-admin-enqueue.php:231
+#: includes/admin/core/class-admin-enqueue.php:262
 #: includes/admin/core/class-admin-forms.php:832
 #: includes/admin/core/class-admin-forms.php:846
 #: includes/admin/core/class-admin-forms.php:951
@@ -272,39 +272,39 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:231
-#: includes/admin/core/class-admin-enqueue.php:262
+#: includes/admin/core/class-admin-enqueue.php:232
+#: includes/admin/core/class-admin-enqueue.php:263
 #: includes/admin/core/class-admin-forms.php:1028
 msgid "Select"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:259
+#: includes/admin/core/class-admin-enqueue.php:260
 msgid "Are sure, maybe some settings not saved"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:485
+#: includes/admin/core/class-admin-enqueue.php:486
 #: includes/core/class-builtin.php:698 includes/core/class-builtin.php:701
 #: includes/core/class-builtin.php:1155 includes/core/class-builtin.php:1158
 msgid "Password"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:489
+#: includes/admin/core/class-admin-enqueue.php:490
 #: includes/core/class-account.php:104
 msgid "Privacy"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:493
+#: includes/admin/core/class-admin-enqueue.php:494
 #: includes/core/class-account.php:110
 msgid "Notifications"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:497
+#: includes/admin/core/class-admin-enqueue.php:498
 #: includes/admin/core/list-tables/roles-list-table.php:338
 #: includes/admin/core/list-tables/roles-list-table.php:406
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/core/class-admin-enqueue.php:547
+#: includes/admin/core/class-admin-enqueue.php:548
 msgid "Ultimate Member Blocks"
 msgstr ""
 
@@ -2624,78 +2624,78 @@ msgstr ""
 msgid "Run"
 msgstr ""
 
-#: includes/admin/core/class-admin-users.php:109
-#: includes/admin/core/class-admin-users.php:112
+#: includes/admin/core/class-admin-users.php:116
+#: includes/admin/core/class-admin-users.php:119
 msgid "UM Action"
 msgstr ""
 
-#: includes/admin/core/class-admin-users.php:116
+#: includes/admin/core/class-admin-users.php:123
 #: includes/core/class-fields.php:2332
 msgid "Apply"
 msgstr ""
 
-#: includes/admin/core/class-admin-users.php:158
+#: includes/admin/core/class-admin-users.php:165
 #: includes/core/um-filters-user.php:20 includes/core/um-filters-user.php:25
 msgid "Approve Membership"
 msgstr ""
 
-#: includes/admin/core/class-admin-users.php:161
+#: includes/admin/core/class-admin-users.php:168
 #: includes/core/um-filters-user.php:21
 msgid "Reject Membership"
 msgstr ""
 
-#: includes/admin/core/class-admin-users.php:164
+#: includes/admin/core/class-admin-users.php:171
 #: includes/core/um-filters-user.php:29
 msgid "Put as Pending Review"
 msgstr ""
 
-#: includes/admin/core/class-admin-users.php:167
+#: includes/admin/core/class-admin-users.php:174
 #: includes/core/um-filters-user.php:33
 msgid "Resend Activation E-mail"
 msgstr ""
 
-#: includes/admin/core/class-admin-users.php:170
+#: includes/admin/core/class-admin-users.php:177
 msgid "Deactivate"
 msgstr ""
 
-#: includes/admin/core/class-admin-users.php:173
+#: includes/admin/core/class-admin-users.php:180
 msgid "Reactivate"
 msgstr ""
 
-#: includes/admin/core/class-admin-users.php:196 templates/account.php:38
+#: includes/admin/core/class-admin-users.php:203 templates/account.php:38
 #: templates/account.php:62
 msgid "View profile"
 msgstr ""
 
-#: includes/admin/core/class-admin-users.php:200
+#: includes/admin/core/class-admin-users.php:207
 msgid "Info"
 msgstr ""
 
-#: includes/admin/core/class-admin-users.php:305
+#: includes/admin/core/class-admin-users.php:312
 #: includes/admin/templates/dashboard/users.php:11
 #: includes/core/class-user.php:819
 msgid "Approved"
 msgstr ""
 
-#: includes/admin/core/class-admin-users.php:306
+#: includes/admin/core/class-admin-users.php:313
 msgid "Pending review"
 msgstr ""
 
-#: includes/admin/core/class-admin-users.php:307
+#: includes/admin/core/class-admin-users.php:314
 msgid "Waiting e-mail confirmation"
 msgstr ""
 
-#: includes/admin/core/class-admin-users.php:308
+#: includes/admin/core/class-admin-users.php:315
 #: includes/admin/templates/dashboard/users.php:37
 msgid "Inactive"
 msgstr ""
 
-#: includes/admin/core/class-admin-users.php:309
+#: includes/admin/core/class-admin-users.php:316
 #: includes/admin/templates/dashboard/users.php:16
 msgid "Rejected"
 msgstr ""
 
-#: includes/admin/core/class-admin-users.php:369
+#: includes/admin/core/class-admin-users.php:376
 msgid "You do not have enough permissions to do that."
 msgstr ""
 
@@ -4250,7 +4250,7 @@ msgstr ""
 msgid "You must add a shortcode to the content area"
 msgstr ""
 
-#: includes/core/class-builtin.php:663 includes/core/class-user.php:1541
+#: includes/core/class-builtin.php:663 includes/core/class-user.php:1545
 msgid "Only me"
 msgstr ""
 
@@ -6441,44 +6441,49 @@ msgstr ""
 msgid "You can not edit this user"
 msgstr ""
 
-#: includes/core/class-password.php:456
+#: includes/core/class-mail.php:609 includes/core/class-password.php:701
+#: includes/core/class-profile.php:424
+msgid "Your set password"
+msgstr ""
+
+#: includes/core/class-password.php:458
 msgid "Please provide your username or email"
 msgstr ""
 
-#: includes/core/class-password.php:460
+#: includes/core/class-password.php:462
 msgid "We can't find an account registered with that address or username"
 msgstr ""
 
-#: includes/core/class-password.php:479
+#: includes/core/class-password.php:481
 msgid ""
 "You have reached the limit for requesting password change for this user "
 "already. Contact support if you cannot open the email"
 msgstr ""
 
-#: includes/core/class-password.php:535
+#: includes/core/class-password.php:537
 msgid "You must enter a new password"
 msgstr ""
 
-#: includes/core/class-password.php:541 includes/core/um-actions-account.php:59
+#: includes/core/class-password.php:543 includes/core/um-actions-account.php:59
 msgid "Your password must contain at least 8 characters"
 msgstr ""
 
-#: includes/core/class-password.php:545 includes/core/um-actions-account.php:63
+#: includes/core/class-password.php:547 includes/core/um-actions-account.php:63
 msgid "Your password must contain less than 30 characters"
 msgstr ""
 
-#: includes/core/class-password.php:549 includes/core/um-actions-account.php:67
+#: includes/core/class-password.php:551 includes/core/um-actions-account.php:67
 #: includes/core/um-actions-form.php:476
 msgid ""
 "Your password must contain at least one lowercase letter, one capital letter "
 "and one number"
 msgstr ""
 
-#: includes/core/class-password.php:555
+#: includes/core/class-password.php:557
 msgid "You must confirm your new password"
 msgstr ""
 
-#: includes/core/class-password.php:559 includes/core/um-actions-form.php:485
+#: includes/core/class-password.php:561 includes/core/um-actions-form.php:485
 msgid "Your passwords do not match"
 msgstr ""
 
@@ -6676,12 +6681,12 @@ msgid "Super administrators can not be modified."
 msgstr ""
 
 #: includes/core/um-actions-core.php:89 includes/core/um-actions-core.php:100
-#: includes/core/um-actions-core.php:110 includes/core/um-actions-core.php:120
-#: includes/core/um-actions-core.php:130
+#: includes/core/um-actions-core.php:113 includes/core/um-actions-core.php:123
+#: includes/core/um-actions-core.php:136
 msgid "You do not have permission to make this action."
 msgstr ""
 
-#: includes/core/um-actions-core.php:140
+#: includes/core/um-actions-core.php:146
 msgid "You do not have permission to delete this user."
 msgstr ""
 
@@ -7021,11 +7026,11 @@ msgstr ""
 msgid "Login as this user"
 msgstr ""
 
-#: includes/um-short-functions.php:724
+#: includes/um-short-functions.php:741
 msgid "date submitted"
 msgstr ""
 
-#: includes/um-short-functions.php:730
+#: includes/um-short-functions.php:747
 msgid "(empty)"
 msgstr ""
 

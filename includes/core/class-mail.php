@@ -380,6 +380,9 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			 */
 			$message = apply_filters( 'um_email_send_message_content', $message, $slug, $args );
 
+			add_filter( 'um_template_tags_patterns_hook', array( &$this, 'add_placeholder' ), 10, 1 );
+			add_filter( 'um_template_tags_replaces_hook', array( &$this, 'add_replace_placeholder' ), 10, 1 );
+
 			// Convert tags in email template
 			return um_convert_tags( $message, $args );
 		}
@@ -427,6 +430,10 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			 * }
 			 * ?>
 			 */
+
+			add_filter( 'um_template_tags_patterns_hook', array( UM()->mail(), 'add_placeholder' ), 10, 1 );
+			add_filter( 'um_template_tags_replaces_hook', array( UM()->mail(), 'add_replace_placeholder' ), 10, 1 );
+
 			$subject = apply_filters( 'um_email_send_subject', UM()->options()->get( $template . '_sub' ), $template );
 			$this->subject = um_convert_tags( $subject , $args );
 
@@ -567,6 +574,40 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			} else {
 				return false;
 			}
+		}
+
+
+		/**
+		 * UM Placeholders for site url, admin email, submit registration
+		 *
+		 * @param $placeholders
+		 *
+		 * @return array
+		 */
+		function add_placeholder( $placeholders ) {
+			$placeholders[] = '{site_url}';
+			$placeholders[] = '{admin_email}';
+			$placeholders[] = '{submitted_registration}';
+			$placeholders[] = '{login_url}';
+			$placeholders[] = '{password}';
+			return $placeholders;
+		}
+
+
+		/**
+		 * UM Replace Placeholders for site url, admin email, submit registration
+		 *
+		 * @param $replace_placeholders
+		 *
+		 * @return array
+		 */
+		function add_replace_placeholder( $replace_placeholders ) {
+			$replace_placeholders[] = get_bloginfo( 'url' );
+			$replace_placeholders[] = um_admin_email();
+			$replace_placeholders[] = um_user_submitted_registration();
+			$replace_placeholders[] = um_get_core_page( 'login' );
+			$replace_placeholders[] = esc_html__( 'Your set password', 'ultimate-member' );
+			return $replace_placeholders;
 		}
 	}
 }

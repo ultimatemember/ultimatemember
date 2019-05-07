@@ -6401,6 +6401,11 @@ msgstr ""
 msgid "Comments"
 msgstr ""
 
+#: includes/core/class-profile.php:424 includes/core/class-mail.php:609
+#: includes/core/class-password.php:701
+msgid "Your set password"
+msgstr ""
+
 #: includes/core/class-rest-api.php:217
 msgid "You must specify both a token and API key!"
 msgstr ""

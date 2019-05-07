@@ -983,6 +983,8 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 * @return mixed|string
 		 */
 		function convert_locker_tags( $str ) {
+			add_filter( 'um_template_tags_patterns_hook', array( &$this, 'add_placeholder' ), 10, 1 );
+			add_filter( 'um_template_tags_replaces_hook', array( &$this, 'add_replace_placeholder' ), 10, 1 );
 			return um_convert_tags( $str, array(), false );
 		}
 
@@ -1002,6 +1004,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				'{display_name}',
 				'{user_avatar_small}',
 				'{username}',
+				'{nickname}',
 			);
 
 			/**
@@ -1045,6 +1048,10 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 						if ( $usermeta == 'username' ) {
 							$value = um_user( 'user_login' );
+						}
+
+						if ( $usermeta == 'nickname' ) {
+							$value = um_profile( 'nickname' );
 						}
 
 						/**
@@ -1156,6 +1163,32 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$template = ob_get_clean();
 
 			return $template;
+		}
+
+
+		/**
+		 * UM Placeholders for login referrer
+		 *
+		 * @param $placeholders
+		 *
+		 * @return array
+		 */
+		function add_placeholder( $placeholders ) {
+			$placeholders[] = '{login_referrer}';
+			return $placeholders;
+		}
+
+
+		/**
+		 * UM Replace Placeholders for login referrer
+		 *
+		 * @param $replace_placeholders
+		 *
+		 * @return array
+		 */
+		function add_replace_placeholder( $replace_placeholders ) {
+			$replace_placeholders[] = um_dynamic_login_page_redirect();
+			return $replace_placeholders;
 		}
 
 	}

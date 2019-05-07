@@ -108,6 +108,7 @@ function um_clean_user_basename( $value ) {
  * @return array
  */
 function um_replace_placeholders() {
+
 	$search = array(
 		'{display_name}',
 		'{first_name}',
@@ -115,17 +116,10 @@ function um_replace_placeholders() {
 		'{gender}',
 		'{username}',
 		'{email}',
-		'{password}',
-		'{login_url}',
-		'{login_referrer}',
 		'{site_name}',
-		'{site_url}',
-		'{admin_email}',
-		'{user_profile_link}',
 		'{user_account_link}',
-		'{submitted_registration}',
-		'{user_avatar_url}',
 	);
+
 
 	/**
 	 * UM hook
@@ -157,16 +151,8 @@ function um_replace_placeholders() {
 		um_user( 'gender' ),
 		um_user( 'user_login' ),
 		um_user( 'user_email' ),
-		um_user( '_um_cool_but_hard_to_guess_plain_pw' ),
-		um_get_core_page( 'login' ),
-		um_dynamic_login_page_redirect(),
 		UM()->options()->get( 'site_name' ),
-		get_bloginfo( 'url' ),
-		um_admin_email(),
-		um_user_profile_url(),
 		um_get_core_page( 'account' ),
-		um_user_submitted_registration(),
-		um_get_user_avatar_url(),
 	);
 
 	/**

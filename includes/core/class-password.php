@@ -684,6 +684,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 */
 		function add_placeholder( $placeholders ) {
 			$placeholders[] = '{password_reset_link}';
+			$placeholders[] = '{password}';
 			return $placeholders;
 		}
 
@@ -697,6 +698,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 */
 		function add_replace_placeholder( $replace_placeholders ) {
 			$replace_placeholders[] = um_user( 'password_reset_link' );
+			$replace_placeholders[] = esc_html__( 'Your set password', 'ultimate-member' );
 			return $replace_placeholders;
 		}
 	}
