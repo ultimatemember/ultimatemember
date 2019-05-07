@@ -2686,3 +2686,27 @@ function is_ultimatemember() {
 function um_maybe_unset_time_limit() {
 	@set_time_limit( 0 );
 }
+
+
+/*
+ * Check if current user is owner of requested profile
+ * @Returns Boolean
+*/
+if ( ! function_exists( 'um_is_profile_owner' ) ) {
+	/**
+	 * @param $user_id
+	 *
+	 * @return bool
+	 */
+	function um_is_profile_owner( $user_id = false ) {
+		if ( ! is_user_logged_in() ) {
+			return false;
+		}
+
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+
+		return ( $user_id == um_profile_id() );
+	}
+}

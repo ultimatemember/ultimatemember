@@ -33,6 +33,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Photos_API Photos_API()
 	 * @method UM_Groups Groups()
 	 * @method UM_Frontend_Posting Frontend_Posting()
+	 * @method UM_Notes Notes()
 	 *
 	 */
 	final class UM extends UM_Functions {
