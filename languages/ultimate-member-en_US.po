@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-05-07 10:52+0300\n"
-"PO-Revision-Date: 2019-05-07 10:52+0300\n"
+"POT-Creation-Date: 2019-05-07 11:26+0300\n"
+"PO-Revision-Date: 2019-05-07 11:26+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -4107,36 +4107,36 @@ msgid ""
 "account data from the site. To delete your account enter your password below"
 msgstr ""
 
-#: includes/class-dependencies.php:164
+#: includes/class-dependencies.php:167
 #, php-format
 msgid ""
 "This version of <strong>\"%s\"</strong> requires the core <strong>%s</"
 "strong> plugin to be <strong>%s</strong> or higher."
 msgstr ""
 
-#: includes/class-dependencies.php:166
+#: includes/class-dependencies.php:169
 #, php-format
 msgid "Please update <strong>%s</strong> to the latest version."
 msgstr ""
 
-#: includes/class-dependencies.php:168
+#: includes/class-dependencies.php:171
 #, php-format
 msgid ""
 "Sorry, but this version of <strong>%s</strong> does not work with extension "
 "<strong>\"%s\" %s</strong> version."
 msgstr ""
 
-#: includes/class-dependencies.php:170
+#: includes/class-dependencies.php:173
 #, php-format
 msgid "Please update extension <strong>\"%s\"</strong> to the latest version."
 msgstr ""
 
-#: includes/class-dependencies.php:179
+#: includes/class-dependencies.php:182
 #, php-format
 msgid "Please check <strong>\"%s\" %s</strong> extension's folder name."
 msgstr ""
 
-#: includes/class-dependencies.php:181
+#: includes/class-dependencies.php:184
 #, php-format
 msgid "Correct folder name is <strong>\"%s\"</strong>"
 msgstr ""
@@ -6492,7 +6492,7 @@ msgid "This activation link is expired or have already been used."
 msgstr ""
 
 #. translators: %s: support forums URL
-#: includes/core/class-plugin-updater.php:266
+#: includes/core/class-plugin-updater.php:270
 #, php-format
 msgid ""
 "An unexpected error occurred. Something may be wrong with https://"
@@ -6500,7 +6500,7 @@ msgid ""
 "have problems, please try the <a href=\"%s\">support forums</a>."
 msgstr ""
 
-#: includes/core/class-plugin-updater.php:267
+#: includes/core/class-plugin-updater.php:271
 msgid "https://wordpress.org/support/"
 msgstr ""
 
