@@ -123,6 +123,10 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 					'key'   => 'user_bookmarks',
 					'title' => 'User Bookmarks',
 				),
+				'um-unsplash/um-unsplash.php'                           => array(
+					'key'   => 'unsplash',
+					'title' => 'Unsplash',
+				),
 				'um-user-notes/um-user-notes.php'                       => array(
 					'key'   => 'user_notes',
 					'title' => 'User Notes',
