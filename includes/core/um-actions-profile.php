@@ -267,11 +267,13 @@ function um_user_edit_profile( $args ) {
 
 			if ( isset( $args['submitted'][ $key ] ) ) {
 
-				if ( isset( $array['type'] ) && in_array( $array['type'], array( 'image', 'file' ) ) &&
-				     ( /*um_is_file_owner( UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . $args['submitted'][ $key ], um_user( 'ID' ) ) ||*/
-					     um_is_temp_file( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' ) ) {
+				if ( isset( $array['type'] ) && in_array( $array['type'], array( 'image', 'file' ) ) ) {
 
-					$files[ $key ] = $args['submitted'][ $key ];
+					if ( /*um_is_file_owner( UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . $args['submitted'][ $key ], um_user( 'ID' ) ) ||*/ um_is_temp_file( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' ) {
+						$files[ $key ] = $args['submitted'][ $key ];
+					} else {
+						$files[ $key ] = 'empty_file';
+					}
 
 				} else {
 					if ( $array['type'] == 'password' ) {

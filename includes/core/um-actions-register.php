@@ -602,7 +602,7 @@ function um_registration_save_files( $user_id, $args ) {
 
 		foreach ( $fields as $key => $array ) {
 
-			if ( isset( $args['submitted'][$key] ) ) {
+			if ( isset( $args['submitted'][ $key ] ) ) {
 
 				if ( isset( $fields[ $key ]['type'] ) && in_array( $fields[ $key ]['type'], array( 'image', 'file' ) ) &&
 				     ( um_is_temp_file( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' )

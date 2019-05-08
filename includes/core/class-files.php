@@ -171,6 +171,10 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				}
 			}
 
+			if ( validate_file( $file_path ) !== 0 ) {
+				return;
+			}
+
 			$file_info = get_user_meta( $user_id, $field_key . "_metadata", true );
 
 			$pathinfo = pathinfo( $file_path );
@@ -209,6 +213,10 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					//multisite fix for old customers
 					$file_path = str_replace( DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . get_current_blog_id() . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $file_path );
 				}
+			}
+
+			if ( validate_file( $file_path ) !== 0 ) {
+				return;
 			}
 
 			$file_info = get_user_meta( $user_id, $field_key . "_metadata", true );
