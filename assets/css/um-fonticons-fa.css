@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.um-faicon-sticky-note:before {
+  content: "\f249";
+}
 .um-faicon-glass:before {
   content: "\f000";
 }

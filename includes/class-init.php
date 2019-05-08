@@ -34,7 +34,8 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Groups Groups()
 	 * @method UM_Frontend_Posting Frontend_Posting()
 	 * @method UM_Notes Notes()
-	 *
+	 * @method UM_User_Bookmarks User_Bookmarks()
+	 * @method UM_Unsplash Unsplash()
 	 */
 	final class UM extends UM_Functions {
 
@@ -439,14 +440,18 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		function activation() {
 			if ( is_multisite() ) {
-				//get all blogs
-				$blogs = get_sites();
-				if ( ! empty( $blogs ) ) {
-					foreach( $blogs as $blog ) {
-						switch_to_blog( $blog->blog_id );
-						//make activation script for each sites blog
-						$this->single_site_activation();
-						restore_current_blog();
+				if ( ! is_plugin_active_for_network( um_plugin ) ) {
+					$this->single_site_activation();
+				} else {
+					//get all blogs
+					$blogs = get_sites();
+					if ( ! empty( $blogs ) ) {
+						foreach( $blogs as $blog ) {
+							switch_to_blog( $blog->blog_id );
+							//make activation script for each sites blog
+							$this->single_site_activation();
+							restore_current_blog();
+						}
 					}
 				}
 			} else {

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-05-07 11:26+0300\n"
-"PO-Revision-Date: 2019-05-07 11:26+0300\n"
+"POT-Creation-Date: 2019-05-08 11:05+0300\n"
+"PO-Revision-Date: 2019-05-08 11:05+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -4146,7 +4146,7 @@ msgstr ""
 msgid "%s License Key"
 msgstr ""
 
-#: includes/class-init.php:153 includes/class-init.php:162
+#: includes/class-init.php:155 includes/class-init.php:164
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
@@ -4250,7 +4250,7 @@ msgstr ""
 msgid "You must add a shortcode to the content area"
 msgstr ""
 
-#: includes/core/class-builtin.php:663 includes/core/class-user.php:1545
+#: includes/core/class-builtin.php:663 includes/core/class-user.php:1544
 msgid "Only me"
 msgstr ""
 
@@ -6441,7 +6441,7 @@ msgstr ""
 msgid "You can not edit this user"
 msgstr ""
 
-#: includes/core/class-mail.php:609 includes/core/class-password.php:701
+#: includes/core/class-mail.php:612 includes/core/class-password.php:701
 #: includes/core/class-profile.php:424
 msgid "Your set password"
 msgstr ""
