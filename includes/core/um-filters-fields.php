@@ -658,13 +658,37 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 		$value = stripslashes( $value );
 		$data['validate'] = isset( $data['validate'] ) ? $data['validate'] : '';
 
-		if( 'text' == $type && ! in_array( $data['validate'], array( 'unique_email' ) ) || 'password' == $type ) {
+		if ( 'text' == $type && ! in_array( $data['validate'], array( 'unique_email' ) ) || 'password' == $type ) {
 			$value = esc_attr( $value );
-		} elseif( $type == 'url' ) {
+		} elseif ( $type == 'url' ) {
 			$value = esc_url( $value );
 		} elseif ( 'textarea' == $type ) {
 			if ( empty( $data['html'] ) ) {
 				$value =  wp_kses_post( $value );
+			}
+		} elseif ( 'rating' == $type ) {
+			if ( ! is_numeric( $value ) ) {
+				$value = 0;
+			} else {
+				if ( $data['number'] == 5 ) {
+					if ( ! in_array( $value, range( 1, 5 ) ) ) {
+						$value = 0;
+					}
+				} elseif ( $data['number'] == 10 ) {
+					if ( ! in_array( $value, range( 1, 10 ) ) ) {
+						$value = 0;
+					}
+				}
+			}
+		} elseif ( 'select' == $type || 'radio' == $type ) {
+			if ( ! empty( $data['options'] ) && ! in_array( $value, $data['options'] ) ) {
+				$value = '';
+			}
+		}
+	} elseif ( ! empty( $value ) ) {
+		if ( 'multiselect' == $type || 'checkbox' == $type ) {
+			if ( ! empty( $data['options'] ) && is_array( $value ) ) {
+				$value = array_intersect( $value, $data['options'] );
 			}
 		}
 	}

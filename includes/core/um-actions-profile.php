@@ -247,7 +247,7 @@ function um_user_edit_profile( $args ) {
 			}
 
 			//validation of correct values from options in wp-admin
-			if ( in_array( $array['type'], array( 'select', 'radio' ) ) &&
+			if ( in_array( $array['type'], array( 'select' ) ) &&
 			     isset( $args['submitted'][ $key ] ) && ! empty( $array['options'] ) &&
 			     ! in_array( $args['submitted'][ $key ], $array['options'] ) ) {
 				continue;
@@ -255,7 +255,7 @@ function um_user_edit_profile( $args ) {
 
 			//validation of correct values from options in wp-admin
 			//the user cannot set invalid value in the hidden input at the page
-			if ( in_array( $array['type'], array( 'multiselect', 'checkbox' ) ) &&
+			if ( in_array( $array['type'], array( 'multiselect', 'checkbox', 'radio' ) ) &&
 			     isset( $args['submitted'][ $key ] ) && ! empty( $array['options'] ) ) {
 
 				$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], $array['options'] );

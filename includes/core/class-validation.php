@@ -73,7 +73,7 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 				}
 
 				//validation of correct values from options in wp-admin
-				if ( in_array( $fields[ $key ]['type'], array( 'select', 'radio' ) ) &&
+				if ( in_array( $fields[ $key ]['type'], array( 'select' ) ) &&
 				     isset( $value ) && ! empty( $fields[ $key ]['options'] ) &&
 				     ! in_array( $value, $fields[ $key ]['options'] ) ) {
 					unset( $changes[ $key ] );
@@ -81,7 +81,7 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 
 				//validation of correct values from options in wp-admin
 				//the user cannot set invalid value in the hidden input at the page
-				if ( in_array( $fields[ $key ]['type'], array( 'multiselect', 'checkbox' ) ) &&
+				if ( in_array( $fields[ $key ]['type'], array( 'multiselect', 'checkbox', 'radio' ) ) &&
 				     isset( $value ) && ! empty( $fields[ $key ]['options'] ) ) {
 
 					$changes[ $key ] = array_intersect( $value, $fields[ $key ]['options'] );
