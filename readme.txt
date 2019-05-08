@@ -133,12 +133,18 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
+= 2.0.45: May 08, 2019 =
+
+* Bugfixes:
+  - Security vulnerabilities on Profile/Registration submit
+
 = 2.0.44: May 08, 2019 =
 
 * Enhancements:
   - Added automatically template saver when you upgrade your theme
   - Added default value for Date and Time user profile fields
   - Updated Scroll library
+  - Added REST API v2 class with new query vars. There is an ability to select v1 or v2 for use. For old users v1 is default, for new users v2
 
 * Bugfixes:
   - Added nocache headers to reset password form

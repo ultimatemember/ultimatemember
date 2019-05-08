@@ -727,7 +727,7 @@ function um_user_submitted_registration( $style = false ) {
 				}
 
 				if ( ! empty( $filedata['original_name'] ) ) {
-					$v = '<a href="' . esc_attr( $baseurl . um_user( 'ID' ) . '/' . $file ) . '">' . $filedata['original_name'] . '</a>';
+					$v = '<a href="' . esc_attr( $baseurl . um_user( 'ID' ) . '/' . $file ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
 				} else {
 					$v = $baseurl . um_user( 'ID' ) . '/' . $file;
 				}

@@ -179,14 +179,17 @@ function um_user_edit_profile( $args ) {
 	$to_update = null;
 	$files = array();
 
+	$user_id = null;
 	if ( isset( $args['user_id'] ) ) {
-		if ( UM()->roles()->um_current_user_can( 'edit', $args['user_id'] ) ) {
-			UM()->user()->set( $args['user_id'] );
-		} else {
-			wp_die( __( 'You are not allowed to edit this user.', 'ultimate-member' ) );
-		}
+		$user_id = $args['user_id'];
 	} elseif ( isset( $args['_user_id'] ) ) {
-		UM()->user()->set( $args['_user_id'] );
+		$user_id = $args['_user_id'];
+	}
+
+	if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+		UM()->user()->set( $user_id );
+	} else {
+		wp_die( __( 'You are not allowed to edit this user.', 'ultimate-member' ) );
 	}
 
 	$userinfo = UM()->user()->profile;
