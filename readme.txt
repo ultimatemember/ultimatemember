@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.9
 Tested up to: 5.2
-Stable tag: 2.0.44
+Stable tag: 2.0.45
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -136,7 +136,8 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 = 2.0.45: May 08, 2019 =
 
 * Bugfixes:
-  - Security vulnerabilities on Profile/Registration submit
+  - Fixed issues with Gutenberg scripts and UM blocks
+  - Security vulnerabilities on Profile/Registration submit and file/images uploading
 
 = 2.0.44: May 08, 2019 =
 
