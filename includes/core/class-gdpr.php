@@ -21,7 +21,7 @@ if ( ! class_exists( 'um\core\GDPR' ) ) {
 		function __construct() {
 			add_action( 'um_submit_form_register', array( &$this, 'agreement_validation' ), 9 );
 
-			add_filter( 'um_before_save_filter_submitted', array( &$this, 'add_agreement_date' ), 10, 1 );
+			add_filter( 'um_before_save_filter_submitted', array( &$this, 'add_agreement_date' ), 10, 2 );
 			add_filter( 'um_email_registration_data', array( &$this, 'email_registration_data' ), 10, 1 );
 
 			add_action( 'um_after_form_fields', array( &$this, 'display_option' ) );
@@ -52,10 +52,11 @@ if ( ! class_exists( 'um\core\GDPR' ) ) {
 
 		/**
 		 * @param $submitted
+		 * @param $args
 		 *
 		 * @return mixed
 		 */
-		function add_agreement_date( $submitted ) {
+		function add_agreement_date( $submitted, $args ) {
 			if ( isset( $submitted['use_gdpr_agreement'] ) ) {
 				$submitted['use_gdpr_agreement'] = time();
 			}

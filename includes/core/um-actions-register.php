@@ -56,7 +56,7 @@ function um_after_insert_user( $user_id, $args ) {
 
 	um_fetch_user( $user_id );
 	if ( ! empty( $args['submitted'] ) ) {
-		UM()->user()->set_registration_details( $args['submitted'] );
+		UM()->user()->set_registration_details( $args['submitted'], $args );
 	}
     UM()->user()->set_status( um_user( 'status' ) );
 
@@ -589,8 +589,9 @@ add_action( 'um_main_register_fields', 'um_add_register_fields', 100 );
  */
 function um_registration_save_files( $user_id, $args ) {
 
-	if ( empty( $args['custom_fields'] ) )
+	if ( empty( $args['custom_fields'] ) ) {
 		return;
+	}
 
 	$files = array();
 
@@ -603,11 +604,11 @@ function um_registration_save_files( $user_id, $args ) {
 
 			if ( isset( $args['submitted'][$key] ) ) {
 
-				if ( isset( $fields[$key]['type'] ) && in_array( $fields[$key]['type'], array( 'image', 'file' ) ) &&
-				     ( um_is_temp_file( $args['submitted'][$key] ) || $args['submitted'][$key] == 'empty_file' )
+				if ( isset( $fields[ $key ]['type'] ) && in_array( $fields[ $key ]['type'], array( 'image', 'file' ) ) &&
+				     ( um_is_temp_file( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' )
 				) {
 
-					$files[$key] = $args['submitted'][$key];
+					$files[ $key ] = $args['submitted'][ $key ];
 
 				}
 			}

@@ -228,6 +228,39 @@ function um_user_edit_profile( $args ) {
 				continue;
 			}
 
+			//the same code in class-validation.php validate_fields_values for registration form
+			//rating field validation
+			if ( $array['type'] == 'rating' && isset( $args['submitted'][ $key ] ) ) {
+				if ( ! is_numeric( $args['submitted'][ $key ] ) ) {
+					continue;
+				} else {
+					if ( $array['number'] == 5 ) {
+						if ( ! in_array( $args['submitted'][ $key ], range( 1, 5 ) ) ) {
+							continue;
+						}
+					} elseif ( $array['number'] == 10 ) {
+						if ( ! in_array( $args['submitted'][ $key ], range( 1, 10 ) ) ) {
+							continue;
+						}
+					}
+				}
+			}
+
+			//validation of correct values from options in wp-admin
+			if ( in_array( $array['type'], array( 'select', 'radio' ) ) &&
+			     isset( $args['submitted'][ $key ] ) && ! empty( $array['options'] ) &&
+			     ! in_array( $args['submitted'][ $key ], $array['options'] ) ) {
+				continue;
+			}
+
+			//validation of correct values from options in wp-admin
+			//the user cannot set invalid value in the hidden input at the page
+			if ( in_array( $array['type'], array( 'multiselect', 'checkbox' ) ) &&
+			     isset( $args['submitted'][ $key ] ) && ! empty( $array['options'] ) ) {
+
+				$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], $array['options'] );
+			}
+
 			if ( $array['type'] == 'multiselect' || $array['type'] == 'checkbox' && ! isset( $args['submitted'][ $key ] ) ) {
 				delete_user_meta( um_user( 'ID' ), $key );
 			}

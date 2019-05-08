@@ -671,7 +671,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 
 	return $value;
 }
-add_filter( 'um_profile_field_filter_hook__','um_profile_field_filter_xss_validation', 10, 3 );
+add_filter( 'um_profile_field_filter_hook__', 'um_profile_field_filter_xss_validation', 10, 3 );
 
 
 /**

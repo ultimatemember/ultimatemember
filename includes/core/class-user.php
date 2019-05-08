@@ -954,9 +954,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		/**
 		 * Set user's registration details
 		 *
-		 * @param $submitted
+		 * @param array $submitted
+		 * @param array $args
 		 */
-		function set_registration_details( $submitted ) {
+		function set_registration_details( $submitted, $args ) {
 
 			if ( isset( $submitted['user_pass'] ) ) {
 				unset( $submitted['user_pass'] );
@@ -991,21 +992,22 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 * @title um_before_save_filter_submitted
 			 * @description Change submitted data before save usermeta "submitted" on registration process
 			 * @input_vars
-			 * [{"var":"$submitted","type":"array","desc":"Submitted data"}]
+			 * [{"var":"$submitted","type":"array","desc":"Submitted data"},
+			 * {"var":"$args","type":"array","desc":"Form Args"}]
 			 * @change_log
 			 * ["Since: 2.0"]
 			 * @usage
-			 * <?php add_filter( 'um_before_save_filter_submitted', 'function_name', 10, 1 ); ?>
+			 * <?php add_filter( 'um_before_save_filter_submitted', 'function_name', 10, 2 ); ?>
 			 * @example
 			 * <?php
-			 * add_filter( 'um_before_save_filter_submitted', 'my_before_save_filter_submitted', 10, 1 );
-			 * function my_before_save_filter_submitted( $submitted ) {
+			 * add_filter( 'um_before_save_filter_submitted', 'my_before_save_filter_submitted', 10, 2 );
+			 * function my_before_save_filter_submitted( $submitted, $args ) {
 			 *     // your code here
 			 *     return $submitted;
 			 * }
 			 * ?>
 			 */
-			$submitted = apply_filters( 'um_before_save_filter_submitted', $submitted );
+			$submitted = apply_filters( 'um_before_save_filter_submitted', $submitted, $args );
 
 			/**
 			 * UM hook
@@ -1672,7 +1674,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			foreach ( $changes as $key => $value ) {
 				if ( ! in_array( $key, $this->update_user_keys ) ) {
-					if( $value === 0 ){
+					if ( $value === 0 ) {
 						update_user_meta( $this->id, $key, '0' );
 					} else {
 						update_user_meta( $this->id, $key, $value );
