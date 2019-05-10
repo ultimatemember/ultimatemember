@@ -406,7 +406,7 @@ function initFileUpload_UM( trigger ) {
 						}else if( key == 'original_name' ){
 
 							trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('data-orignal-name', value );
-							trigger.parents('.um-modal-body').find('.um-single-fileinfo span.filename').html( value );						
+							trigger.parents('.um-modal-body').find('.um-single-fileinfo span.filename').html( value );
 							
 						} else if ( key == 'url' ) {
 							

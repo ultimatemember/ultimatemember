@@ -437,7 +437,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 						$ret['error'] = $uploaded['error'];
 
-					}else{
+					} else {
 
 						$uploaded_file = $uploaded['handle_upload'];
 						$ret['url'] = $uploaded_file['file_info']['name'];
@@ -445,7 +445,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 						$ret['icon_bg'] = UM()->files()->get_fonticon_bg_by_ext( $uploaded_file['file_info']['ext'] );
 						$ret['filename'] = $uploaded_file['file_info']['basename'];
 						$ret['original_name'] = $uploaded_file['file_info']['original_name'];
-
 
 					}
 

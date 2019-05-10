@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-05-08 17:47+0300\n"
-"PO-Revision-Date: 2019-05-08 17:47+0300\n"
+"POT-Creation-Date: 2019-05-10 20:31+0300\n"
+"PO-Revision-Date: 2019-05-10 20:31+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -21,7 +21,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: includes/admin/class-admin-functions.php:35 includes/class-functions.php:30
+#: includes/admin/class-admin-functions.php:35 includes/class-functions.php:45
 msgid "Wrong Nonce"
 msgstr ""
 
@@ -268,7 +268,7 @@ msgstr ""
 #: includes/admin/core/class-admin-forms.php:951
 #: includes/admin/core/class-admin-forms.php:960
 #: includes/admin/core/class-admin-notices.php:390
-#: includes/core/um-actions-profile.php:592
+#: includes/core/um-actions-profile.php:601
 msgid "Remove"
 msgstr ""
 
@@ -3615,11 +3615,11 @@ msgstr ""
 #: includes/admin/templates/modal/fonticons.php:11
 #: includes/admin/templates/role/publish.php:24
 #: includes/core/class-fields.php:2333 includes/core/class-fields.php:2430
-#: includes/core/um-actions-profile.php:593
-#: includes/core/um-actions-profile.php:732
-#: includes/core/um-actions-profile.php:765
-#: includes/core/um-actions-profile.php:1110
-#: includes/core/um-actions-profile.php:1117
+#: includes/core/um-actions-profile.php:602
+#: includes/core/um-actions-profile.php:741
+#: includes/core/um-actions-profile.php:774
+#: includes/core/um-actions-profile.php:1119
+#: includes/core/um-actions-profile.php:1126
 msgid "Cancel"
 msgstr ""
 
@@ -3982,7 +3982,7 @@ msgid "Members"
 msgstr ""
 
 #: includes/class-config.php:133 includes/class-config.php:745
-#: includes/core/um-actions-profile.php:1116
+#: includes/core/um-actions-profile.php:1125
 #: includes/core/um-actions-user.php:15
 msgid "Logout"
 msgstr ""
@@ -4399,7 +4399,7 @@ msgid "Cover Photo"
 msgstr ""
 
 #: includes/core/class-builtin.php:1085
-#: includes/core/um-actions-profile.php:555
+#: includes/core/um-actions-profile.php:564
 msgid "Change your cover photo"
 msgstr ""
 
@@ -6369,7 +6369,7 @@ msgid "Upload Photo"
 msgstr ""
 
 #: includes/core/class-fields.php:2308 includes/core/class-fields.php:2332
-#: includes/core/um-actions-profile.php:763
+#: includes/core/um-actions-profile.php:772
 msgid "Change photo"
 msgstr ""
 
@@ -6404,35 +6404,35 @@ msgstr ""
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
-#: includes/core/class-files.php:271
+#: includes/core/class-files.php:281
 msgid "Invalid parameters"
 msgstr ""
 
-#: includes/core/class-files.php:276
+#: includes/core/class-files.php:286
 msgid "Invalid coordinates"
 msgstr ""
 
-#: includes/core/class-files.php:281
+#: includes/core/class-files.php:291
 msgid "Invalid file ownership"
 msgstr ""
 
-#: includes/core/class-files.php:336
+#: includes/core/class-files.php:346
 msgid "Invalid nonce"
 msgstr ""
 
-#: includes/core/class-files.php:358 includes/core/class-files.php:445
+#: includes/core/class-files.php:368 includes/core/class-files.php:454
 msgid "A theme or plugin compatibility issue"
 msgstr ""
 
-#: includes/core/class-files.php:988
+#: includes/core/class-files.php:997
 msgid "Ultimate Member: Not a valid temp file"
 msgstr ""
 
-#: includes/core/class-files.php:1116
+#: includes/core/class-files.php:1125
 msgid "Invalid user ID: "
 msgstr ""
 
-#: includes/core/class-files.php:1125 includes/core/class-files.php:1153
+#: includes/core/class-files.php:1134 includes/core/class-files.php:1162
 msgid "Unauthorized to do this attempt."
 msgstr ""
 
@@ -6492,15 +6492,15 @@ msgid "This activation link is expired or have already been used."
 msgstr ""
 
 #. translators: %s: support forums URL
-#: includes/core/class-plugin-updater.php:270
+#: includes/core/class-plugin-updater.php:275
 #, php-format
 msgid ""
-"An unexpected error occurred. Something may be wrong with https://"
-"ultimatemember.com/ or this server&#8217;s configuration. If you continue to "
-"have problems, please try the <a href=\"%s\">support forums</a>."
+"An unexpected error occurred. Something may be wrong with %s or this "
+"server&#8217;s configuration. If you continue to have problems, please try "
+"the <a href=\"%s\">support forums</a>."
 msgstr ""
 
-#: includes/core/class-plugin-updater.php:271
+#: includes/core/class-plugin-updater.php:277
 msgid "https://wordpress.org/support/"
 msgstr ""
 
@@ -6949,42 +6949,42 @@ msgstr ""
 msgid "You are not allowed to edit this user."
 msgstr ""
 
-#: includes/core/um-actions-profile.php:279
+#: includes/core/um-actions-profile.php:283
 #, php-format
 msgid "Your choosed %s"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:591
+#: includes/core/um-actions-profile.php:600
 msgid "Change cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:634
+#: includes/core/um-actions-profile.php:643
 msgid "Upload a cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:731
+#: includes/core/um-actions-profile.php:740
 msgid "Upload photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:764
+#: includes/core/um-actions-profile.php:773
 msgid "Remove photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:928
+#: includes/core/um-actions-profile.php:937
 msgid "Tell us a bit about yourself..."
 msgstr ""
 
-#: includes/core/um-actions-profile.php:944
+#: includes/core/um-actions-profile.php:953
 #, php-format
 msgid "This user account status is %s"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1083
-#: includes/core/um-actions-profile.php:1114
+#: includes/core/um-actions-profile.php:1092
+#: includes/core/um-actions-profile.php:1123
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1115
+#: includes/core/um-actions-profile.php:1124
 msgid "My Account"
 msgstr ""
 
