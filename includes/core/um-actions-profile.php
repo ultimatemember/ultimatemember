@@ -405,8 +405,6 @@ function um_user_edit_profile( $args ) {
 	 * }
 	 * ?>
 	 */
-	/*var_dump( $files );
-	exit;*/
 	$files = apply_filters( 'um_user_pre_updating_files_array', $files );
 
 	if ( ! empty( $files ) && is_array( $files ) ) {
