@@ -1703,9 +1703,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				);
 
 				$request = wp_remote_post(
-					'https://ultimatemember.com/',
+					UM()->store_url,
 					array(
-						'timeout'   => 15,
+						'timeout'   => UM()->request_timeout,
 						'sslverify' => false,
 						'body'      => $api_params
 					)

@@ -11,6 +11,21 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 
 		/**
+		 * Store URL
+		 *
+		 * @var string
+		 */
+		var $store_url = 'https://ultimatemember.com/';
+
+
+		/**
+		 * WP remote Post timeout
+		 * @var int
+		 */
+		var $request_timeout = 60;
+
+
+		/**
 		 * UM_Functions constructor.
 		 */
 		function __construct() {

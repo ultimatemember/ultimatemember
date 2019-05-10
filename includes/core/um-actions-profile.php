@@ -271,6 +271,8 @@ function um_user_edit_profile( $args ) {
 
 					if ( /*um_is_file_owner( UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . $args['submitted'][ $key ], um_user( 'ID' ) ) ||*/ um_is_temp_file( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' ) {
 						$files[ $key ] = $args['submitted'][ $key ];
+					} elseif( um_is_file_owner( UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . $args['submitted'][ $key ], um_user( 'ID' ) ) ) {
+						/*$files[ $key ] = 'empty_file';*/
 					} else {
 						$files[ $key ] = 'empty_file';
 					}
@@ -403,6 +405,8 @@ function um_user_edit_profile( $args ) {
 	 * }
 	 * ?>
 	 */
+	/*var_dump( $files );
+	exit;*/
 	$files = apply_filters( 'um_user_pre_updating_files_array', $files );
 
 	if ( ! empty( $files ) && is_array( $files ) ) {
@@ -462,6 +466,9 @@ function um_user_edit_profile( $args ) {
 }
 add_action( 'um_user_edit_profile', 'um_user_edit_profile', 10 );
 
+
+add_filter( 'um_user_pre_updating_files_array', array( UM()->validation(), 'validate_files' ), 10, 1 );
+add_filter( 'um_before_save_filter_submitted', array( UM()->validation(), 'validate_fields_values' ), 10, 2 );
 
 /**
  * Leave roles for User, which are not in the list of update profile (are default WP or 3rd plugins roles)

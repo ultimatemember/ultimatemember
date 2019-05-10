@@ -1151,8 +1151,17 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 					$old_filename = get_user_meta( $user_id, $key, true );
 					if ( ! empty( $old_filename ) ) {
 						$file = $user_basedir . DIRECTORY_SEPARATOR . $old_filename;
-						if ( file_exists( $file ) ) {
-							unlink( $file );
+
+						$valid = true;
+						//validate traversal file
+						if ( validate_file( $file ) === 1 ) {
+							$valid = false;
+						}
+
+						if ( $valid ) {
+							if ( file_exists( $file ) && um_is_file_owner( $file, $user_id ) ) {
+								unlink( $file );
+							}
 						}
 					}
 

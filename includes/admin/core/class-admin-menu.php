@@ -223,7 +223,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 			add_meta_box( 'um-metaboxes-sidebox-2', __( 'User Cache', 'ultimate-member' ), array( &$this, 'user_cache' ), $this->pagehook, 'side', 'core' );
 
 			//If there are active and licensed extensions - show metabox for upgrade it
-			$exts = UM()->plugin_updater()->um_get_active_plugins();
+			$exts = UM()->plugin_updater()->get_active_plugins();
 			if ( 0 < count( $exts ) ) {
 				add_meta_box( 'um-metaboxes-sidebox-3', __( 'Upgrade\'s Manual Request', 'ultimate-member' ), array( &$this, 'upgrade_request' ), $this->pagehook, 'side', 'core' );
 			}

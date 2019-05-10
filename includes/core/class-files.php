@@ -171,7 +171,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				}
 			}
 
-			if ( validate_file( $file_path ) !== 0 ) {
+			//validate traversal file
+			if ( validate_file( $file_path ) === 1 ) {
 				return;
 			}
 
@@ -215,7 +216,8 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				}
 			}
 
-			if ( validate_file( $file_path ) !== 0 ) {
+			//validate traversal file
+			if ( validate_file( $file_path ) === 1 ) {
 				return;
 			}
 
