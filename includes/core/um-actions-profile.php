@@ -595,13 +595,28 @@ function um_profile_header_cover_area( $args ) {
 
 				$hide_remove = um_profile( 'cover_photo' ) ? false : ' style="display:none;"';
 
+				$text = ! um_profile( 'cover_photo' ) ? __( 'Upload a cover photo', 'ultimate-member' ) : __( 'Change cover photo', 'ultimate-member' ) ;
+
 				$items = array(
-					'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . __( 'Change cover photo', 'ultimate-member' ) . '</a>',
+					'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . $text . '</a>',
 					'<a href="javascript:void(0);" class="um-reset-cover-photo" data-user_id="' . um_profile_id() . '" ' . $hide_remove . '>' . __( 'Remove', 'ultimate-member' ) . '</a>',
 					'<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
 				);
 
 				UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
+			} else {
+
+				if ( ! isset( UM()->user()->cannot_edit ) && ! um_profile( 'cover_photo' ) ) {
+
+					$items = array(
+						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . __( 'Upload a cover photo', 'ultimate-member' ) . '</a>',
+						'<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
+					);
+
+					UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
+
+				}
+
 			}
 
 			UM()->fields()->add_hidden_field( 'cover_photo' ); ?>
@@ -724,7 +739,7 @@ function um_profile_header( $args ) {
 
 			<?php
 
-			if (!isset( UM()->user()->cannot_edit )) {
+			if ( ! isset( UM()->user()->cannot_edit ) ) {
 
 				UM()->fields()->add_hidden_field( 'profile_photo' );
 
@@ -760,7 +775,7 @@ function um_profile_header( $args ) {
 
 					echo UM()->profile()->new_ui( 'bc', 'div.um-profile-photo', 'click', $items );
 
-				} else if (UM()->fields()->editing == true) {
+				} elseif ( UM()->fields()->editing == true ) {
 
 					$items = array(
 						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>',
