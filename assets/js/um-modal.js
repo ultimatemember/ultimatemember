@@ -166,7 +166,7 @@ jQuery(document).ready(function() {
 		}
 	});
 	
-	jQuery(document).on('click', 'a[data-modal^="um_"], span[data-modal^="um_"]', function(e){
+	jQuery(document.body).on('click', 'a[data-modal^="um_"], span[data-modal^="um_"]', function(e){
 
 		var modal_id = jQuery(this).attr('data-modal');
 

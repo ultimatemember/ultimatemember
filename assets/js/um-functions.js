@@ -16,11 +16,9 @@ function UM_check_password_matched() {
 }
 
 function UM_hide_menus() {
-
-		menu = jQuery('.um-dropdown');
-		menu.parents('div').find('a').removeClass('active');
-		menu.hide();
-
+	var menu = jQuery( '.um-dropdown' );
+	menu.parents('div' ).find('a').removeClass( 'active' );
+	menu.hide();
 }
 
 function UM_domenus(){
@@ -31,7 +29,7 @@ function UM_domenus(){
 		var element = jQuery(this).attr('data-element');
 		var position = jQuery(this).attr('data-position');
 
-		jQuery(element).addClass('um-trigger-menu-on-'+menu.attr('data-trigger'));
+		jQuery( element ).addClass('um-trigger-menu-on-' + menu.attr( 'data-trigger' ) );
 
 		if ( jQuery(window).width() <= 1200 && element == 'div.um-profile-edit' ) {
 			position = 'lc';

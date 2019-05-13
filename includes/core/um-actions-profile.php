@@ -551,7 +551,7 @@ add_action( 'wp_head', 'um_profile_dynamic_meta_desc', 9999999 );
  * @param $args
  */
 function um_profile_header_cover_area( $args ) {
-	if ($args['cover_enabled'] == 1) {
+	if ( $args['cover_enabled'] == 1 ) {
 
 		$default_cover = UM()->options()->get( 'default_cover' );
 
@@ -603,9 +603,7 @@ function um_profile_header_cover_area( $args ) {
 				UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
 			}
 
-			UM()->fields()->add_hidden_field( 'cover_photo' );
-
-			echo $overlay; ?>
+			UM()->fields()->add_hidden_field( 'cover_photo' ); ?>
 
 			<div class="um-cover-e" data-ratio="<?php echo $args['cover_ratio']; ?>">
 
@@ -640,6 +638,8 @@ function um_profile_header_cover_area( $args ) {
 				} ?>
 
 			</div>
+
+			<?php echo $overlay; ?>
 
 		</div>
 
@@ -727,7 +727,7 @@ function um_profile_header( $args ) {
 
 				UM()->fields()->add_hidden_field( 'profile_photo' );
 
-				if (!um_profile( 'profile_photo' )) { // has profile photo
+				if ( ! um_profile( 'profile_photo' ) ) { // has profile photo
 
 					$items = array(
 						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Upload photo', 'ultimate-member' ) . '</a>',
