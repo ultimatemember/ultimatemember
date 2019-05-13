@@ -687,6 +687,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 * ?>
 				 */
 				$value = apply_filters( "um_edit_{$key}_field_value", $value, $key );
+				$value = maybe_unserialize( $value );
 
 			} elseif ( $default ) {
 
@@ -786,6 +787,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 */
 				$value = apply_filters( "um_edit_{$key}_field_value", $default, $key );
 
+			} elseif ( isset( $value ) && is_array( $value ) && ! count( $value ) ) {
+				$value = '';
 			} elseif ( ! isset( $value ) ) {
 				$value = '';
 			}
@@ -2446,18 +2449,18 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="' . $key . '">';
 
-					if (isset( $data['allowclear'] ) && $data['allowclear'] == 0) {
+					if ( isset( $data['allowclear'] ) && $data['allowclear'] == 0 ) {
 						$class = 'um-s2';
 					} else {
 						$class = 'um-s1';
 					}
 
-					if (isset( $data['label'] )) {
+					if ( isset( $data['label'] ) ) {
 						$output .= $this->field_label( $label, $key, $data );
 					}
 
 					$output .= '<div class="um-field-area ' . ( isset( $this->field_icons ) && $this->field_icons == 'field' ? 'um-field-area-has-icon' : '' ) . ' ">';
-					if (isset( $icon ) && $icon && isset( $this->field_icons ) && $this->field_icons == 'field') {
+					if ( isset( $icon ) && $icon && isset( $this->field_icons ) && $this->field_icons == 'field' ) {
 						$output .= '<div class="um-field-icon"><i class="' . $icon . '"></i></div>';
 					}
 
@@ -2466,7 +2469,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$atts_ajax = '';
 					$select_original_option_value = '';
 
-					if (isset( $data['parent_dropdown_relationship'] ) && !empty( $data['parent_dropdown_relationship'] ) && !UM()->user()->preview) {
+					if ( ! empty( $data['parent_dropdown_relationship'] ) && ! UM()->user()->preview ) {
 
 						$disabled_by_parent_option = 'disabled = disabled';
 
@@ -2496,20 +2499,19 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$parent_dropdown_relationship = apply_filters( "um_custom_dropdown_options_parent__{$form_key}", $data['parent_dropdown_relationship'], $data );
 						$atts_ajax .= " data-um-parent='{$parent_dropdown_relationship}' ";
 
-						if (isset( $data['custom_dropdown_options_source'] ) && !empty( $data['custom_dropdown_options_source'] ) &&
-							$has_parent_option && function_exists( $data['custom_dropdown_options_source'] ) &&
+						if ( ! empty( $data['custom_dropdown_options_source'] ) && $has_parent_option && function_exists( $data['custom_dropdown_options_source'] ) &&
 							um_user( $data['parent_dropdown_relationship'] )
 						) {
 							$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
 							$disabled_by_parent_option = '';
-							if (um_user( $form_key )) {
+							if ( um_user( $form_key ) ) {
 								$select_original_option_value = " data-um-original-value='" . um_user( $form_key ) . "' ";
 							}
 						}
 
 					}
 
-					if (!empty( $data['custom_dropdown_options_source'] )) {
+					if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
 
 						/**
 						 * UM hook
@@ -2589,12 +2591,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					 */
 					$enable_options_pair = apply_filters( "um_fields_options_enable_pairs__{$key}", false );
 
-					if( ! $has_parent_option ) {
-						if ( isset($options) && $options == 'builtin'){
+					if ( ! $has_parent_option ) {
+						if ( isset( $options ) && $options == 'builtin' ) {
 							$options = UM()->builtin()->get ( $filter );
 						}
 
-						if ( ! isset( $options )) {
+						if ( ! isset( $options ) ) {
 							$options = UM()->builtin()->get( 'countries' );
 						}
 
@@ -2684,7 +2686,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$um_field_checkbox_item_title = $v;
 							}
 
-							if (isset( $options_pair )) {
+							if ( isset( $options_pair ) ) {
 								$option_value = $k;
 								$um_field_checkbox_item_title = $v;
 							}

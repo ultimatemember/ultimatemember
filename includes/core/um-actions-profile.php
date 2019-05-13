@@ -247,16 +247,17 @@ function um_user_edit_profile( $args ) {
 			}
 
 			//validation of correct values from options in wp-admin
+			$stripslashes = stripslashes( $args['submitted'][ $key ] );
 			if ( in_array( $array['type'], array( 'select' ) ) &&
-			     isset( $args['submitted'][ $key ] ) && ! empty( $array['options'] ) &&
-			     ! in_array( stripslashes( $args['submitted'][ $key ] ), array_map( 'trim', $array['options'] ) ) ) {
+			     ! empty( $array['options'] ) && ! empty( $stripslashes ) &&
+			     ! in_array( $stripslashes, array_map( 'trim', $array['options'] ) ) ) {
 				continue;
 			}
 
 			//validation of correct values from options in wp-admin
 			//the user cannot set invalid value in the hidden input at the page
 			if ( in_array( $array['type'], array( 'multiselect', 'checkbox', 'radio' ) ) &&
-			     isset( $args['submitted'][ $key ] ) && ! empty( $array['options'] ) ) {
+			     ! empty( $args['submitted'][ $key ] ) && ! empty( $array['options'] ) ) {
 				$args['submitted'][ $key ] = array_map( 'stripslashes', array_map( 'trim', $args['submitted'][ $key ] ) );
 				$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], array_map( 'trim', $array['options'] ) );
 			}

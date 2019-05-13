@@ -73,16 +73,17 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 				}
 
 				//validation of correct values from options in wp-admin
+				$stripslashes = stripslashes( $value );
 				if ( in_array( $fields[ $key ]['type'], array( 'select' ) ) &&
-				     isset( $value ) && ! empty( $fields[ $key ]['options'] ) &&
-				     ! in_array( stripslashes( $value ), array_map( 'trim', $fields[ $key ]['options'] ) ) ) {
+				     ! empty( $stripslashes ) && ! empty( $fields[ $key ]['options'] ) &&
+				     ! in_array( $stripslashes, array_map( 'trim', $fields[ $key ]['options'] ) ) ) {
 					unset( $changes[ $key ] );
 				}
 
 				//validation of correct values from options in wp-admin
 				//the user cannot set invalid value in the hidden input at the page
 				if ( in_array( $fields[ $key ]['type'], array( 'multiselect', 'checkbox', 'radio' ) ) &&
-				     isset( $value ) && ! empty( $fields[ $key ]['options'] ) ) {
+				     ! empty( $value ) && ! empty( $fields[ $key ]['options'] ) ) {
 					$value = array_map( 'stripslashes', array_map( 'trim', $value ) );
 					$changes[ $key ] = array_intersect( $value, array_map( 'trim', $fields[ $key ]['options'] ) );
 				}
