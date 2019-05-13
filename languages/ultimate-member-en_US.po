@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-05-10 20:47+0300\n"
-"PO-Revision-Date: 2019-05-10 20:47+0300\n"
+"POT-Creation-Date: 2019-05-13 16:57+0300\n"
+"PO-Revision-Date: 2019-05-13 16:57+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -103,7 +103,7 @@ msgstr ""
 #: includes/admin/core/class-admin-builder.php:767
 #: includes/admin/core/class-admin-dragdrop.php:32
 #: includes/admin/core/class-admin-menu.php:104
-#: includes/core/class-fields.php:4118
+#: includes/core/class-fields.php:4117
 msgid "Please login as administrator"
 msgstr ""
 
@@ -3616,10 +3616,10 @@ msgstr ""
 #: includes/admin/templates/role/publish.php:24
 #: includes/core/class-fields.php:2333 includes/core/class-fields.php:2430
 #: includes/core/um-actions-profile.php:600
-#: includes/core/um-actions-profile.php:739
-#: includes/core/um-actions-profile.php:772
-#: includes/core/um-actions-profile.php:1117
-#: includes/core/um-actions-profile.php:1124
+#: includes/core/um-actions-profile.php:734
+#: includes/core/um-actions-profile.php:767
+#: includes/core/um-actions-profile.php:1112
+#: includes/core/um-actions-profile.php:1119
 msgid "Cancel"
 msgstr ""
 
@@ -3982,7 +3982,7 @@ msgid "Members"
 msgstr ""
 
 #: includes/class-config.php:133 includes/class-config.php:745
-#: includes/core/um-actions-profile.php:1123
+#: includes/core/um-actions-profile.php:1118
 #: includes/core/um-actions-user.php:15
 msgid "Logout"
 msgstr ""
@@ -6369,7 +6369,7 @@ msgid "Upload Photo"
 msgstr ""
 
 #: includes/core/class-fields.php:2308 includes/core/class-fields.php:2332
-#: includes/core/um-actions-profile.php:770
+#: includes/core/um-actions-profile.php:765
 msgid "Change photo"
 msgstr ""
 
@@ -6393,14 +6393,14 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:3852
+#: includes/core/class-fields.php:3851
 #, php-format
 msgid ""
 "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some "
 "information!"
 msgstr ""
 
-#: includes/core/class-fields.php:3854
+#: includes/core/class-fields.php:3853
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
@@ -6958,33 +6958,33 @@ msgstr ""
 msgid "Change cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:641
+#: includes/core/um-actions-profile.php:634
 msgid "Upload a cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:738
+#: includes/core/um-actions-profile.php:733
 msgid "Upload photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:771
+#: includes/core/um-actions-profile.php:766
 msgid "Remove photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:935
+#: includes/core/um-actions-profile.php:930
 msgid "Tell us a bit about yourself..."
 msgstr ""
 
-#: includes/core/um-actions-profile.php:951
+#: includes/core/um-actions-profile.php:946
 #, php-format
 msgid "This user account status is %s"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1090
-#: includes/core/um-actions-profile.php:1121
+#: includes/core/um-actions-profile.php:1085
+#: includes/core/um-actions-profile.php:1116
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1122
+#: includes/core/um-actions-profile.php:1117
 msgid "My Account"
 msgstr ""
 
