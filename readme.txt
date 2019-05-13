@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.9
 Tested up to: 5.2
-Stable tag: 2.0.46
+Stable tag: 2.0.47
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -132,6 +132,12 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 == Changelog ==
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
+
+= 2.0.47: May 13, 2019 =
+
+* Bugfixes:
+  - Fixed save special characters values
+  - Fixed trim fields options before validation
 
 = 2.0.46: May 10, 2019 =
 

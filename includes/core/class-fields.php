@@ -2304,13 +2304,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$img = '';
 						}
 						$output .= '<div class="um-single-image-preview show ' . $crop_class . '" data-crop="' . $crop_data . '" data-key="' . $key . '">
-                                <a href="#" class="cancel"><i class="um-icon-close"></i></a>' . $img . '
-                            </div><a href="#" data-modal="um_upload_single" data-modal-size="' . $modal_size . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>';
+                                <a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>' . $img . '
+                            </div><a href="javascript:void(0);" data-modal="um_upload_single" data-modal-size="' . $modal_size . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>';
 					} else {
 						$output .= '<div class="um-single-image-preview ' . $crop_class . '" data-crop="' . $crop_data . '" data-key="' . $key . '">
-                                <a href="#" class="cancel"><i class="um-icon-close"></i></a>
+                                <a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>
                                 <img src="" alt="" />
-                            <div class="um-clear"></div></div><a href="#" data-modal="um_upload_single" data-modal-size="' . $modal_size . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . $button_text . '</a>';
+                            <div class="um-clear"></div></div><a href="javascript:void(0);" data-modal="um_upload_single" data-modal-size="' . $modal_size . '" data-modal-copy="1" class="um-button um-btn-auto-width">' . $button_text . '</a>';
 					}
 					$output .= '</div>';
 					/* modal hidden */

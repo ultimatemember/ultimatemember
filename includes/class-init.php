@@ -1417,10 +1417,11 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['mobile'];
 		}
 
+
 		/**
 		 * @since 2.0.44
 		 *
-		 * @return um\lib\mobiledetect\Um_Mobile_Detect
+		 * @return um\core\Multisite
 		 */
 		function multisite() {
 
@@ -1430,6 +1431,7 @@ if ( ! class_exists( 'UM' ) ) {
 
 			return $this->classes['multisite'];
 		}
+
 
 		/**
 		 * Include files with hooked filters/actions
