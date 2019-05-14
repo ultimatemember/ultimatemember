@@ -133,11 +133,14 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
-= 2.0.47: May 13, 2019 =
+= 2.0.47: May 14, 2019 =
 
 * Bugfixes:
   - Fixed save special characters values
   - Fixed trim fields options before validation
+  - Fixed save empty value at Profile Registration form in radio/checkbox/select/multiselect fields
+  - Fixed displaying empty value of multiselect field at Profile Page
+  - Fixed cover photo dropdown menus
 
 = 2.0.46: May 10, 2019 =
 
