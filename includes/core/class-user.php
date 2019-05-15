@@ -836,11 +836,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					}
 
 					// add user meta
-					foreach( $this->usermeta as $k=>$v ) {
+					foreach ( $this->usermeta as $k => $v ) {
 						if ( $k == 'display_name') {
 							continue;
 						}
-						$this->profile[$k] = $v[0];
+						$this->profile[ $k ] = $v[0];
 					}
 
 					// add permissions

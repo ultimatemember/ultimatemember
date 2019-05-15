@@ -567,7 +567,7 @@ function um_profile_header_cover_area( $args ) {
 
 		?>
 
-		<div class="um-cover <?php if ( um_profile( 'cover_photo' ) || ( $default_cover && $default_cover['url'] ) ) echo 'has-cover'; ?>"
+		<div class="um-cover <?php if ( um_user( 'cover_photo' ) || ( $default_cover && $default_cover['url'] ) ) echo 'has-cover'; ?>"
 		     data-user_id="<?php echo um_profile_id(); ?>" data-ratio="<?php echo $args['cover_ratio']; ?>">
 
 			<?php
@@ -593,9 +593,9 @@ function um_profile_header_cover_area( $args ) {
 			do_action( 'um_cover_area_content', um_profile_id() );
 			if ( UM()->fields()->editing ) {
 
-				$hide_remove = um_profile( 'cover_photo' ) ? false : ' style="display:none;"';
+				$hide_remove = um_user( 'cover_photo' ) ? false : ' style="display:none;"';
 
-				$text = ! um_profile( 'cover_photo' ) ? __( 'Upload a cover photo', 'ultimate-member' ) : __( 'Change cover photo', 'ultimate-member' ) ;
+				$text = ! um_user( 'cover_photo' ) ? __( 'Upload a cover photo', 'ultimate-member' ) : __( 'Change cover photo', 'ultimate-member' ) ;
 
 				$items = array(
 					'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . $text . '</a>',
@@ -608,7 +608,7 @@ function um_profile_header_cover_area( $args ) {
 				UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
 			} else {
 
-				if ( ! isset( UM()->user()->cannot_edit ) && ! um_profile( 'cover_photo' ) ) {
+				if ( ! isset( UM()->user()->cannot_edit ) && ! um_user( 'cover_photo' ) ) {
 
 					$items = array(
 						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . __( 'Upload a cover photo', 'ultimate-member' ) . '</a>',
@@ -627,7 +627,7 @@ function um_profile_header_cover_area( $args ) {
 
 			<div class="um-cover-e" data-ratio="<?php echo $args['cover_ratio']; ?>">
 
-				<?php if ( um_profile( 'cover_photo' ) ) {
+				<?php if ( um_user( 'cover_photo' ) ) {
 
 					if ( UM()->mobile()->isMobile() ) {
 						if ( UM()->mobile()->isTablet() ) {

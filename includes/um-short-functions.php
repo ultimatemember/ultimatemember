@@ -1697,10 +1697,9 @@ function um_fetch_user( $user_id ) {
  *
  * @param $key
  *
- * @return mixed|void
+ * @return bool|string
  */
 function um_profile( $key ) {
-
 	if ( ! empty( UM()->user()->profile[ $key ] ) ) {
 		/**
 		 * UM hook
