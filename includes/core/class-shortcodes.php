@@ -635,7 +635,10 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			 */
 			$args = apply_filters( 'um_shortcode_args_filter', $args );
 
-			extract($args, EXTR_SKIP);
+			/**
+			 * @var string $mode
+			 */
+			extract( $args, EXTR_SKIP );
 
 			//not display on admin preview
 			if ( empty( $_POST['act_id'] ) || $_POST['act_id'] != 'um_admin_preview_form' ) {
@@ -647,6 +650,12 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			// for profiles only
 			if ( $mode == 'profile' && um_profile_id() ) {
+
+				//set requested user if it's not setup from permalinks (for not profile page in edit mode)
+				if ( ! um_get_requested_user() ) {
+					um_set_requested_user( um_profile_id() );
+				}
+
 				if ( ! empty( $args['use_custom_settings'] ) ) { // Custom Form settings
 					$current_user_roles = UM()->roles()->get_all_user_roles( um_profile_id() );
 

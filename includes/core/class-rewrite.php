@@ -197,9 +197,7 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 		 * Locate/display a profile
 		 */
 		function locate_user_profile() {
-			global $post;
-
-			if ( um_queried_user() && um_is_core_page('user') ) {
+			if ( um_queried_user() && um_is_core_page( 'user' ) ) {
 
 				if ( UM()->options()->get( 'permalink_base' ) == 'user_login' ) {
 
@@ -214,9 +212,9 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 							"fields" => 'ids',
 							'meta_query' => array(
 								array(
-									'key'		=>  'um_user_profile_url_slug_'.$permalink_base,
-									'value'		=> strtolower( um_queried_user() ),
-									'compare'	=> '='
+									'key'       =>  'um_user_profile_url_slug_' . $permalink_base,
+									'value'     => strtolower( um_queried_user() ),
+									'compare'   => '='
 								)
 							),
 							'number'    => 1
@@ -230,19 +228,21 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 					}
 
 					// Try nice name
-					if ( !$user_id ) {
+					if ( ! $user_id ) {
 						$slug = um_queried_user();
-						$slug = str_replace('.','-',$slug);
+						$slug = str_replace( '.', '-', $slug );
 						$the_user = get_user_by( 'slug', $slug );
 						if ( isset( $the_user->ID ) ){
 							$user_id = $the_user->ID;
 						}
 
-						if ( ! $user_id )
+						if ( ! $user_id ) {
 							$user_id = UM()->user()->user_exists_by_email_as_username( um_queried_user() );
+						}
 
-						if ( ! $user_id )
+						if ( ! $user_id ) {
 							$user_id = UM()->user()->user_exists_by_email_as_username( $slug );
+						}
 
 					}
 
@@ -250,12 +250,10 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 
 				if ( UM()->options()->get( 'permalink_base' ) == 'user_id' ) {
 					$user_id = UM()->user()->user_exists_by_id( um_queried_user() );
-
 				}
 
-				if ( in_array( UM()->options()->get( 'permalink_base' ), array('name','name_dash','name_dot','name_plus') ) ) {
+				if ( in_array( UM()->options()->get( 'permalink_base' ), array( 'name', 'name_dash', 'name_dot', 'name_plus' ) ) ) {
 					$user_id = UM()->user()->user_exists_by_name( um_queried_user() );
-
 				}
 
 				/** USER EXISTS SET USER AND CONTINUE **/
@@ -291,7 +289,7 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 
 				}
 
-			} else if ( um_is_core_page( 'user' ) ) {
+			} elseif ( um_is_core_page( 'user' ) ) {
 
 				if ( is_user_logged_in() ) { // just redirect to their profile
 
@@ -330,7 +328,7 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 					 * ?>
 					 */
 					$redirect_to = apply_filters( 'um_locate_user_profile_not_loggedin__redirect', home_url() );
-					if ( ! empty( $redirect_to ) ){
+					if ( ! empty( $redirect_to ) ) {
 						exit( wp_redirect( $redirect_to ) );
 					}
 
