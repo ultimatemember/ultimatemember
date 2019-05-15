@@ -867,6 +867,24 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( ! $field_value ) {
 						$field_value = 0;
 					}
+					
+					
+					// Support for the old user tags values
+					if( is_numeric( $value ) && is_array( $field_value ) ) {
+						$type = UM()->fields()->get_field_type( $key );
+						if( $type === 'user_tags' ) {
+							foreach( $field_value as $k => $v ) {
+								if( is_numeric( $value ) && is_string( $v ) ) {
+									$term = get_term_by( 'slug', $v, 'um_user_tag' );
+									if( $term ) {
+										$field_value[ $k ] = $term->term_id;
+									}
+								}
+							}
+						}
+					}
+
+
 
 					if ( $key == 'role' ) {
 
