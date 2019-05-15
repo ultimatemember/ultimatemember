@@ -603,6 +603,8 @@ function um_profile_header_cover_area( $args ) {
 					'<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
 				);
 
+				$items = apply_filters( 'um_cover_area_content_dropdown_items', $items, um_profile_id() );
+
 				UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
 			} else {
 
@@ -612,6 +614,8 @@ function um_profile_header_cover_area( $args ) {
 						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-cover" data-child=".um-btn-auto-width">' . __( 'Upload a cover photo', 'ultimate-member' ) . '</a>',
 						'<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
 					);
+
+					$items = apply_filters( 'um_cover_area_content_dropdown_items', $items, um_profile_id() );
 
 					UM()->profile()->new_ui( 'bc', 'div.um-cover', 'click', $items );
 
