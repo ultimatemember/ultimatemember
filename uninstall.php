@@ -27,6 +27,10 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-init.php';
 $delete_options = UM()->options()->get( 'uninstall_on_delete' );
 if ( ! empty( $delete_options ) ) {
 
+	//remove uploads
+	$upl_folder = UM()->files()->upload_basedir;
+	UM()->files()->remove_dir( $upl_folder );
+
 	//remove core pages
 	foreach ( UM()->config()->core_pages as $page_key => $page_value ) {
 		$page_id = UM()->options()->get( UM()->options()->get_core_page_id( $page_key ) );
@@ -50,9 +54,22 @@ if ( ! empty( $delete_options ) ) {
 		'numberposts'   => -1
 	) );
 
-	foreach ( $um_posts as $um_post )
+	foreach ( $um_posts as $um_post ){
+		delete_option( 'um_existing_rows_' . $um_post->ID );
+		delete_option( 'um_form_rowdata_' . $um_post->ID );
 		wp_delete_post( $um_post->ID, 1 );
+	}
 
+	delete_option( 'um_first_activation_date' );
+	delete_option( 'um_role_subscriber_meta' );
+	delete_option( 'um_role_author_meta' );
+	delete_option( 'um_role_contributor_meta' );
+	delete_option( 'um_role_editor_meta' );
+	delete_option( 'um_role_administrator_meta' );
+	delete_option( 'um_roles' );
+	delete_option( 'um_role_um_user_meta' );
+	delete_option( 'um_fields' );
+	delete_option( 'um_roles' );
 	delete_option( 'um_options' );
 	delete_option( 'um_version' );
 	delete_option( 'um_is_installed' );
@@ -69,11 +86,8 @@ if ( ! empty( $delete_options ) ) {
 	delete_option( 'widget_um_search_widget' );
 	delete_option( '__ultimatemember_sitekey' );
 
-	foreach ( wp_load_alloptions() as $k => $v ) {
-		if ( substr( $k, 0, 18 ) == 'um_cache_userdata_' )
-			delete_option( $k );
-	}
-
+	//remove all users cache
+	UM()->user()->remove_cache_all_users();
 
 	global $wpdb;
 
