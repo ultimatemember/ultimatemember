@@ -30,7 +30,7 @@ if ( ! empty( $delete_options ) ) {
 	//remove uploads
 	$upl_folder = UM()->files()->upload_basedir;
 	UM()->files()->remove_dir( $upl_folder );
-	
+
 	//remove core pages
 	foreach ( UM()->config()->core_pages as $page_key => $page_value ) {
 		$page_id = UM()->options()->get( UM()->options()->get_core_page_id( $page_key ) );
@@ -123,4 +123,22 @@ if ( ! empty( $delete_options ) ) {
               meta_key = 'synced_profile_photo' OR 
               meta_key = 'full_name'"
 	);
+
+	//remove all tables from extensions
+	$all_tables = "SHOW TABLES LIKE '{$wpdb->prefix}um\_%'";
+	$results = $wpdb->get_results( $all_tables );
+	if( $results ){
+		foreach( $results as $index => $value ) {
+			foreach( $value as $table_name ) {
+				$wpdb->query( "DROP TABLE IF EXISTS $table_name" );
+			}
+		}
+	}
+
+	//remove options from extensions
+	delete_option( 'um_messaging_last_version_upgrade' );
+	delete_option( 'um_messaging_version' );
+	delete_option( 'ultimatemember_messaging_db2' );
+
+
 }
