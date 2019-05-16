@@ -30,7 +30,7 @@ if ( ! empty( $delete_options ) ) {
 	//remove uploads
 	$upl_folder = UM()->files()->upload_basedir;
 	UM()->files()->remove_dir( $upl_folder );
-
+	
 	//remove core pages
 	foreach ( UM()->config()->core_pages as $page_key => $page_value ) {
 		$page_id = UM()->options()->get( UM()->options()->get_core_page_id( $page_key ) );
@@ -58,6 +58,14 @@ if ( ! empty( $delete_options ) ) {
 		delete_option( 'um_existing_rows_' . $um_post->ID );
 		delete_option( 'um_form_rowdata_' . $um_post->ID );
 		wp_delete_post( $um_post->ID, 1 );
+	}
+
+	//remove user role meta
+	$role_keys = get_option( 'um_roles' );
+	if ( $role_keys ) {
+		foreach ( $role_keys as $role_key ) {
+			delete_option( 'um_role_' . $role_key . '_meta' );
+		}
 	}
 
 	delete_option( 'um_first_activation_date' );
