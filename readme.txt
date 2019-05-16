@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.9
 Tested up to: 5.2
-Stable tag: 2.0.47
+Stable tag: 2.0.48
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -132,6 +132,14 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 == Changelog ==
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
+
+= 2.0.48: May 16, 2019 =
+
+* Enhancements:
+  - Added an ability to 3rd party integration with cover image actions
+
+* Bugfixes:
+  - Fixed ability to edit profile on not predefined Profile Page
 
 = 2.0.47: May 14, 2019 =
 

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-05-14 10:09+0300\n"
-"PO-Revision-Date: 2019-05-14 10:09+0300\n"
+"POT-Creation-Date: 2019-05-16 19:17+0300\n"
+"PO-Revision-Date: 2019-05-16 19:17+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -3616,11 +3616,11 @@ msgstr ""
 #: includes/admin/templates/role/publish.php:24
 #: includes/core/class-fields.php:2336 includes/core/class-fields.php:2433
 #: includes/core/um-actions-profile.php:603
-#: includes/core/um-actions-profile.php:613
-#: includes/core/um-actions-profile.php:750
-#: includes/core/um-actions-profile.php:783
-#: includes/core/um-actions-profile.php:1128
-#: includes/core/um-actions-profile.php:1135
+#: includes/core/um-actions-profile.php:615
+#: includes/core/um-actions-profile.php:754
+#: includes/core/um-actions-profile.php:787
+#: includes/core/um-actions-profile.php:1132
+#: includes/core/um-actions-profile.php:1139
 msgid "Cancel"
 msgstr ""
 
@@ -3983,7 +3983,7 @@ msgid "Members"
 msgstr ""
 
 #: includes/class-config.php:133 includes/class-config.php:745
-#: includes/core/um-actions-profile.php:1134
+#: includes/core/um-actions-profile.php:1138
 #: includes/core/um-actions-user.php:15
 msgid "Logout"
 msgstr ""
@@ -6370,7 +6370,7 @@ msgid "Upload Photo"
 msgstr ""
 
 #: includes/core/class-fields.php:2311 includes/core/class-fields.php:2335
-#: includes/core/um-actions-profile.php:781
+#: includes/core/um-actions-profile.php:785
 msgid "Change photo"
 msgstr ""
 
@@ -6523,11 +6523,11 @@ msgid ""
 "\"{login_referrer}\">login</a> to view this content."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:644
+#: includes/core/class-shortcodes.php:647
 msgid "You are already registered"
 msgstr ""
 
-#: includes/core/class-shortcodes.php:885
+#: includes/core/class-shortcodes.php:894
 msgid "Default Template"
 msgstr ""
 
@@ -6956,8 +6956,8 @@ msgid "Your choosed %s"
 msgstr ""
 
 #: includes/core/um-actions-profile.php:598
-#: includes/core/um-actions-profile.php:612
-#: includes/core/um-actions-profile.php:650
+#: includes/core/um-actions-profile.php:614
+#: includes/core/um-actions-profile.php:654
 msgid "Upload a cover photo"
 msgstr ""
 
@@ -6965,29 +6965,29 @@ msgstr ""
 msgid "Change cover photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:749
+#: includes/core/um-actions-profile.php:753
 msgid "Upload photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:782
+#: includes/core/um-actions-profile.php:786
 msgid "Remove photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:946
+#: includes/core/um-actions-profile.php:950
 msgid "Tell us a bit about yourself..."
 msgstr ""
 
-#: includes/core/um-actions-profile.php:962
+#: includes/core/um-actions-profile.php:966
 #, php-format
 msgid "This user account status is %s"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1101
-#: includes/core/um-actions-profile.php:1132
+#: includes/core/um-actions-profile.php:1105
+#: includes/core/um-actions-profile.php:1136
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1133
+#: includes/core/um-actions-profile.php:1137
 msgid "My Account"
 msgstr ""
 
