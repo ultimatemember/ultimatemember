@@ -1220,6 +1220,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				}
 			}
 
+			$has_thumbnail = apply_filters("um_restrict_post_thumbnail", $has_thumbnail, $post, $thumbnail_id );
+
 			return $has_thumbnail;
 		}
 
