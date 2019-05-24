@@ -868,6 +868,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$field_value = 0;
 					}
 
+					if( $field_value == 0 && $value == '0' ){
+						$value = (int)$value;
+					}
+
 					if ( $key == 'role' ) {
 
 						$role_keys = get_option( 'um_roles' );
