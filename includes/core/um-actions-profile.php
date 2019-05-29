@@ -119,7 +119,7 @@ function um_profile_content_main( $args ) {
 		 * }
 		 * ?>
 		 */
-		do_action( "um_after_form_fields", $args );
+		do_action( 'um_after_form_fields', $args );
 
 		/**
 		 * UM hook
@@ -921,7 +921,7 @@ function um_profile_header( $args ) {
 
 			</div>
 
-			<?php if (isset( $args['metafields'] ) && !empty( $args['metafields'] )) { ?>
+			<?php if ( ! empty( $args['metafields'] ) ) { ?>
 				<div class="um-meta">
 
 					<?php echo UM()->profile()->show_meta( $args['metafields'] ); ?>

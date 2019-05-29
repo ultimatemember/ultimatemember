@@ -1225,8 +1225,16 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 */
 		function all_user_fields( $exclude_types = null, $show_all = false ) {
 
-			$fields_without_metakey = array('block','shortcode','spacing','divider','group');
-			remove_filter('um_fields_without_metakey', 'um_user_tags_requires_no_metakey');
+			$fields_without_metakey = array(
+				'block',
+				'shortcode',
+				'spacing',
+				'divider',
+				'group'
+			);
+			$fields_without_metakey = apply_filters( 'um_fields_without_metakey', $fields_without_metakey );
+
+			remove_filter( 'um_fields_without_metakey', 'um_user_tags_requires_no_metakey' );
 
 			/**
 			 * UM hook

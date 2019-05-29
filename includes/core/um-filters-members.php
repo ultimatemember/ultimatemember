@@ -378,6 +378,27 @@ function um_prepare_user_query_args( $query_args, $args ) {
 
 		} elseif ( 'display_name' == $sortby ) {
 
+			/*$display_name = UM()->options()->get( 'display_name' );
+			if ( $display_name == 'username' ) {
+				$query_args['orderby'] = 'user_login';
+				$order = 'ASC';
+			} else {
+				$query_args['meta_query'][] = array(
+					'relation' => 'OR',
+					'full_name' => array(
+						'key'       => 'full_name',
+						'compare'   => 'EXISTS'
+					),
+					array(
+						'key'       => 'full_name',
+						'compare'   => 'NOT EXISTS'
+					)
+				);
+
+				$query_args['orderby'] = 'full_name, display_name';
+				$order = 'ASC';
+			}*/
+
 			$query_args['meta_query'][] = array(
 				'relation' => 'OR',
 				'full_name' => array(

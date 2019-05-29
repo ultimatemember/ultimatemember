@@ -171,7 +171,7 @@ function um_submit_account_details( $args ) {
 
 		UM()->user()->password_changed();
 
-		do_action( 'send_password_change_email', $args );
+		add_filter( 'send_password_change_email', '__return_false' );
 
 		//clear all sessions with old passwords
 		$user = WP_Session_Tokens::get_instance( um_user( 'ID' ) );

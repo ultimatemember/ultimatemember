@@ -337,7 +337,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 				foreach ( $array as $key ) {
 					if ( $key ) {
 						$data = array();
-						if ( isset( UM()->builtin()->all_user_fields[ $key ] ) ){
+						if ( isset( UM()->builtin()->all_user_fields[ $key ] ) ) {
 							$data = UM()->builtin()->all_user_fields[ $key ];
 						}
 

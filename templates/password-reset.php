@@ -137,7 +137,7 @@
 				 * }
 				 * ?>
 				 */
-				do_action( "um_after_form_fields", $args );
+				do_action( 'um_after_form_fields', $args );
 			} ?>
 		</form>
 	</div>

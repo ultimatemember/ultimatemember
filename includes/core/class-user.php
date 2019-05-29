@@ -82,8 +82,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			add_action( 'user_register', array( &$this, 'set_gravatar' ), 11, 1 );
 
 
-			add_action( 'added_existing_user', array( &$this, 'add_um_role_existing_user' ), 10, 2 );
-			add_action( 'wpmu_activate_user', array( &$this, 'add_um_role_wpmu_new_user' ), 10, 1 );
+			if ( is_multisite() ) {
+				add_action( 'added_existing_user', array( &$this, 'add_um_role_existing_user' ), 10, 2 );
+				add_action( 'wpmu_activate_user', array( &$this, 'add_um_role_wpmu_new_user' ), 10, 1 );
+			}
 
 			add_action( 'init', array( &$this, 'check_membership' ), 10 );
 
@@ -187,8 +189,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		function add_um_role_existing_user( $user_id, $result ) {
 			// Bail if no user ID was passed
-			if ( empty( $user_id ) )
+			if ( empty( $user_id ) ) {
 				return;
+			}
 
 			if ( ! empty( $_POST['um-role'] ) ) {
 				if ( ! user_can( $user_id, $_POST['um-role'] ) ) {
@@ -427,8 +430,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		function user_register_via_admin( $user_id ) {
 
-			if ( empty( $user_id ) )
+			if ( empty( $user_id ) ) {
 				return;
+			}
 
 			if ( is_admin() ) {
 				//if there custom 2 role not empty
@@ -481,10 +485,12 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$userdata  = get_userdata( $user_id );
 			$new_roles = $userdata->roles;
 
-			if ( ! empty( $_POST['um-role'] ) ) {
-				$new_roles = array_merge( $new_roles, array( $_POST['um-role'] ) );
-				if ( ! user_can( $user_id, $_POST['um-role'] ) ) {
-					UM()->roles()->set_role( $user_id, $_POST['um-role'] );
+			if ( is_admin() ) {
+				if ( ! empty( $_POST['um-role'] ) ) {
+					$new_roles = array_merge( $new_roles, array( $_POST['um-role'] ) );
+					if ( ! user_can( $user_id, $_POST['um-role'] ) ) {
+						UM()->roles()->set_role( $user_id, $_POST['um-role'] );
+					}
 				}
 			}
 
