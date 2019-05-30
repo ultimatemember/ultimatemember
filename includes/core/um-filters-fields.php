@@ -333,7 +333,7 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 			if ( $data['validate'] == 'vk_url' ) 			$value = 'https://vk.com/' . $value;
 		}
 
-		
+
 		if ( isset( $data['validate'] ) && $data['validate'] == 'skype' ) {
 
 			$value = $value;
@@ -351,15 +351,15 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 	}
 
 	if ( isset( $data['validate'] ) && $data['validate'] == 'skype' ) {
-		
+
 		$value = str_replace('https://','',$value );
 		$value = str_replace('http://','',$value );
-		
+
 		$data['url_target'] = ( isset( $data['url_target'] ) ) ? $data['url_target'] : '_blank';
 		$value = '<a href="'. 'skype:'.$value.'?chat'.'" title="'.$value.'" target="'.$data['url_target'].'" ' . $url_rel . '>'.$value.'</a>';
 
-	} 
-	
+	}
+
 	if ( !is_array( $value ) ) {
 		if ( is_email( $value ) )
 			$value = '<a href="mailto:'. $value.'" title="'.$value.'">'.$value.'</a>';
@@ -681,13 +681,13 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 				}
 			}
 		} elseif ( 'select' == $type || 'radio' == $type ) {
-			if ( ! empty( $data['options'] ) && ! in_array( $value, $data['options'] ) ) {
+			if ( ! empty( $data['options'] ) && ! in_array( $value, $data['options'] ) && empty( $data[ 'custom_dropdown_options_source' ] ) ) {
 				$value = '';
 			}
 		}
-	} elseif ( ! empty( $value ) ) {
+	} elseif ( ! empty( $value ) && is_array( $value ) ) {
 		if ( 'multiselect' == $type || 'checkbox' == $type ) {
-			if ( ! empty( $data['options'] ) && is_array( $value ) ) {
+			if ( ! empty( $data['options'] ) && empty( $data[ 'custom_dropdown_options_source' ] ) ) {
 				$value = array_intersect( $value, $data['options'] );
 			}
 		}
