@@ -373,6 +373,9 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 				return $template;
 			}
 
+			//get blog id
+			$blog_id = UM()->mail()->get_blog_id();
+
 			//WPML compatibility and multilingual email templates
 			$language_codes = $this->get_languages_codes();
 
@@ -383,6 +386,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 
 			// check if there is template at theme folder
 			$template = locate_template( array(
+				trailingslashit( 'ultimate-member/email' ) . $blog_id . '/' . $lang . $template_name . '.php',
 				trailingslashit( 'ultimate-member/email' ) . $lang . $template_name . '.php',
 				trailingslashit( 'ultimate-member/email' ) . $template_name . '.php'
 			) );
