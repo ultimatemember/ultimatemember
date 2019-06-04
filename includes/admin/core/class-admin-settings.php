@@ -738,6 +738,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									'upload_frame_title'=> __('Select Default Cover Photo', 'ultimate-member'),
 								),
 								array(
+									'id'       		=> 'profile_photo_uploader',
+									'type'     		=> 'checkbox',
+									'label'    		=> __( 'Profile Photo Uploader','ultimate-member' ),
+									'default' 		=> 1,
+									'tooltip' 	=> __('Switch on/off the profile photo uploader','ultimate-member'),
+								),
+								array(
 									'id'      		=> 'profile_photosize',
 									'type'     		=> 'text',
 									'label'    		=> __( 'Profile Photo Size','ultimate-member' ),

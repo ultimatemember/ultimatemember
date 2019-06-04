@@ -123,11 +123,23 @@
 				'conditional'	=> array( '_um_profile_cover_enabled', '=', 1 )
 			),
 			array(
-				'id'		    => '_um_profile_photosize',
+				'id'       		=> '_um_profile_photo_uploader',
+				'type'		    => 'select',
+				'label'    		=> __( 'Profile Photo Uploader','ultimate-member' ),
+				'tooltip' 	  => __('Switch on/off the profile photo uploader','ultimate-member'),
+				'value' 		  => UM()->query()->get_meta_value( '_um_profile_photo_uploader', null, UM()->options()->get( 'profile_photo_uploader' ) ),
+				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 ),
+				'options'		  => array(
+					0	=> __( 'No', 'ultimate-member' ),
+					1	=> __( 'Yes', 'ultimate-member' ),
+				),
+			),
+			array(
+				'id'		      => '_um_profile_photosize',
 				'type'		    => 'text',
-				'label'    		=> __( 'Profile Photo Size', 'ultimate-member' ),
-				'tooltip'    	=> __( 'Set the profile photo size in pixels here', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_profile_photosize', null, UM()->options()->get( 'profile_photosize' ) ),
+				'label'       => __( 'Profile Photo Size', 'ultimate-member' ),
+				'tooltip'     => __( 'Set the profile photo size in pixels here', 'ultimate-member' ),
+				'value' 		  => UM()->query()->get_meta_value( '_um_profile_photosize', null, UM()->options()->get( 'profile_photosize' ) ),
 				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 )
 			),
 			array(

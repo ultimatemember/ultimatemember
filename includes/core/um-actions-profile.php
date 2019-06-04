@@ -710,6 +710,12 @@ function um_profile_header( $args ) {
 			</span>
 		</span>';
 
+	// Switch on/off the profile photo uploader
+	$photo_uploader = empty( $args['use_custom_settings'] ) ? UM()->options()->get( 'profile_photo_uploader' ) : $args['photo_uploader'];
+	if( !$photo_uploader ){
+		$args['photo_uploader'] = 0;
+		$overlay = '';
+	}
 	?>
 
 	<div class="um-header<?php echo $classes; ?>">
@@ -743,7 +749,7 @@ function um_profile_header( $args ) {
 
 			<?php
 
-			if ( ! isset( UM()->user()->cannot_edit ) ) {
+			if ( $photo_uploader && empty( UM()->user()->cannot_edit ) ) {
 
 				UM()->fields()->add_hidden_field( 'profile_photo' );
 
