@@ -1068,45 +1068,53 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 */
 		function get_option_value_from_callback( $value, $data, $type ) {
 
+
 			if ( in_array( $type, array( 'select', 'multiselect' ) ) && ! empty( $data['custom_dropdown_options_source'] ) ) {
 
-				if ( function_exists( $data['custom_dropdown_options_source'] ) ) {
+				$has_custom_source = apply_filters("um_has_dropdown_options_source__{$data['metakey']}", false );
+
+				if( $has_custom_source ){
+
+					$opts = apply_filters("um_get_field__{$data['metakey']}", array() );
+					$arr_options = $opts['options'];
+
+				}else if ( function_exists( $data['custom_dropdown_options_source'] ) ) {
 
 					$arr_options = call_user_func(
 						$data['custom_dropdown_options_source'],
 						( ! empty( $data['parent_dropdown_relationship'] ) ? $data['parent_dropdown_relationship'] : '' )
 					);
+				}
 
-
+				if( $has_custom_source || function_exists( $data['custom_dropdown_options_source'] ) ){
 					if ( $type == 'select' ) {
-						if ( ! empty( $arr_options[ $value ] ) ) {
-							return $arr_options[ $value ];
-						} elseif ( ! empty( $data['default'] ) && empty( $arr_options[ $value ] ) ) {
-							return $arr_options[ $data['default'] ];
-						} else {
-							return '';
-						}
-					}
-
-					if ( $type == 'multiselect' ) {
-
-						if ( is_array( $value ) ) {
-							$values = $value;
-						} else {
-							$values = explode( ', ', $value );
-						}
-
-						$arr_paired_options = array();
-
-						foreach ( $values as $option ) {
-							if ( isset( $arr_options[ $option ] ) ) {
-								$arr_paired_options[] = $arr_options[ $option ];
+							if ( ! empty( $arr_options[ $value ] ) ) {
+								return $arr_options[ $value ];
+							} elseif ( ! empty( $data['default'] ) && empty( $arr_options[ $value ] ) ) {
+								return $arr_options[ $data['default'] ];
+							} else {
+								return '';
 							}
 						}
 
-						return implode( ', ', $arr_paired_options );
-					}
+						if ( $type == 'multiselect' ) {
 
+							if ( is_array( $value ) ) {
+								$values = $value;
+							} else {
+								$values = explode( ', ', $value );
+							}
+
+							$arr_paired_options = array();
+
+							foreach ( $values as $option ) {
+								if ( isset( $arr_options[ $option ] ) ) {
+									$arr_paired_options[] = $arr_options[ $option ];
+								}
+							}
+
+							return implode( ', ', $arr_paired_options );
+					}
 				}
 
 
