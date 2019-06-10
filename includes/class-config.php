@@ -1,7 +1,9 @@
 <?php
 namespace um;
 
+
 if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 if ( ! class_exists( 'um\Config' ) ) {
 
@@ -538,6 +540,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'um_profile_object_cache_stop'          => 0,
 				'rest_api_version'                      => '2.0'
 			);
+
+			add_filter( 'um_get_tabs_from_config', '__return_true' );
 
 			$tabs = UM()->profile()->tabs_primary();
 			foreach ( $tabs as $id => $tab ) {
