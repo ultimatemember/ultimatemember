@@ -372,15 +372,22 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * Old global restrict content logic
 		 */
 		function template_redirect() {
-			global $post;
+			global $post, $wp_query;
 
 			//if we logged by administrator it can access to all content
 			if ( current_user_can( 'administrator' ) )
 				return;
 
+			if ( is_object( $wp_query ) ) {
+				$is_singular = $wp_query->is_singular();
+			} else {
+				$is_singular = ! empty( $wp_query->is_singular ) ? true : false;
+			}
+
 			//if we use individual restrict content options skip this function
-			if ( $this->singular_page )
+			if ( $is_singular && $this->singular_page ) {
 				return;
+			}
 
 			//also skip if we currently at wp-admin or 404 page
 			if ( is_admin() || is_404() )
