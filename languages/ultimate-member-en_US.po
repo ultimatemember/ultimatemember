@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-05-29 18:50+0300\n"
-"PO-Revision-Date: 2019-05-29 18:50+0300\n"
+"POT-Creation-Date: 2019-07-01 14:36+0300\n"
+"PO-Revision-Date: 2019-07-01 14:36+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -1706,7 +1706,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:436
-#: includes/class-config.php:134 includes/class-config.php:746
+#: includes/class-config.php:136 includes/class-config.php:750
 #: includes/core/class-account.php:92
 msgid "Account"
 msgstr ""
@@ -3229,7 +3229,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/templates/directory/search.php:95
-#: includes/class-config.php:153 includes/class-config.php:248
+#: includes/class-config.php:155 includes/class-config.php:250
 msgid "{total_users} Members"
 msgstr ""
 
@@ -3242,7 +3242,7 @@ msgid "Same as above but in case of 1 user found only"
 msgstr ""
 
 #: includes/admin/templates/directory/search.php:103
-#: includes/class-config.php:154 includes/class-config.php:249
+#: includes/class-config.php:156 includes/class-config.php:251
 msgid "{total_users} Member"
 msgstr ""
 
@@ -3256,7 +3256,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/templates/directory/search.php:111
-#: includes/class-config.php:155
+#: includes/class-config.php:157
 msgid "We are sorry. We cannot find any users who match your search criteria."
 msgstr ""
 
@@ -3964,145 +3964,145 @@ msgstr ""
 msgid "Check All"
 msgstr ""
 
-#: includes/class-config.php:129 includes/class-config.php:741
+#: includes/class-config.php:131 includes/class-config.php:745
 msgid "User"
 msgstr ""
 
-#: includes/class-config.php:130 includes/class-config.php:235
-#: includes/class-config.php:241 includes/class-config.php:742
+#: includes/class-config.php:132 includes/class-config.php:237
+#: includes/class-config.php:243 includes/class-config.php:746
 msgid "Login"
 msgstr ""
 
-#: includes/class-config.php:131 includes/class-config.php:233
-#: includes/class-config.php:245 includes/class-config.php:743
+#: includes/class-config.php:133 includes/class-config.php:235
+#: includes/class-config.php:247 includes/class-config.php:747
 msgid "Register"
 msgstr ""
 
-#: includes/class-config.php:132 includes/class-config.php:744
+#: includes/class-config.php:134 includes/class-config.php:748
 msgid "Members"
 msgstr ""
 
-#: includes/class-config.php:133 includes/class-config.php:745
+#: includes/class-config.php:135 includes/class-config.php:749
 #: includes/core/um-actions-profile.php:1138
 #: includes/core/um-actions-user.php:15
 msgid "Logout"
 msgstr ""
 
-#: includes/class-config.php:135 includes/class-config.php:747
+#: includes/class-config.php:137 includes/class-config.php:751
 msgid "Password Reset"
 msgstr ""
 
-#: includes/class-config.php:308
+#: includes/class-config.php:310
 msgid "Account Welcome Email"
 msgstr ""
 
-#: includes/class-config.php:319
+#: includes/class-config.php:321
 msgid ""
 "Whether to send the user an email when his account is automatically approved"
 msgstr ""
 
-#: includes/class-config.php:325
+#: includes/class-config.php:327
 msgid "Account Activation Email"
 msgstr ""
 
-#: includes/class-config.php:333
+#: includes/class-config.php:335
 msgid ""
 "Whether to send the user an email when his account needs e-mail activation"
 msgstr ""
 
-#: includes/class-config.php:338
+#: includes/class-config.php:340
 msgid "Your account is pending review"
 msgstr ""
 
-#: includes/class-config.php:346
+#: includes/class-config.php:348
 msgid "Whether to send the user an email when his account needs admin review"
 msgstr ""
 
-#: includes/class-config.php:351
+#: includes/class-config.php:353
 msgid "Account Approved Email"
 msgstr ""
 
-#: includes/class-config.php:363
+#: includes/class-config.php:365
 msgid "Whether to send the user an email when his account is approved"
 msgstr ""
 
-#: includes/class-config.php:368
+#: includes/class-config.php:370
 msgid "Account Rejected Email"
 msgstr ""
 
-#: includes/class-config.php:375
+#: includes/class-config.php:377
 msgid "Whether to send the user an email when his account is rejected"
 msgstr ""
 
-#: includes/class-config.php:380
+#: includes/class-config.php:382
 msgid "Account Deactivated Email"
 msgstr ""
 
-#: includes/class-config.php:387
+#: includes/class-config.php:389
 msgid "Whether to send the user an email when his account is deactivated"
 msgstr ""
 
-#: includes/class-config.php:393
+#: includes/class-config.php:395
 msgid "Account Deleted Email"
 msgstr ""
 
-#: includes/class-config.php:400
+#: includes/class-config.php:402
 msgid "Whether to send the user an email when his account is deleted"
 msgstr ""
 
-#: includes/class-config.php:406
+#: includes/class-config.php:408
 msgid "Password Reset Email"
 msgstr ""
 
-#: includes/class-config.php:414
+#: includes/class-config.php:416
 msgid ""
 "Whether to send an email when users changed their password (Recommended, "
 "please keep on)"
 msgstr ""
 
-#: includes/class-config.php:420
+#: includes/class-config.php:422
 msgid "Password Changed Email"
 msgstr ""
 
-#: includes/class-config.php:427
+#: includes/class-config.php:429
 msgid ""
 "Whether to send the user an email when he request to reset password "
 "(Recommended, please keep on)"
 msgstr ""
 
-#: includes/class-config.php:433
+#: includes/class-config.php:435
 msgid "Account Updated Email"
 msgstr ""
 
-#: includes/class-config.php:440
+#: includes/class-config.php:442
 msgid "Whether to send the user an email when he updated their account"
 msgstr ""
 
-#: includes/class-config.php:446
+#: includes/class-config.php:448
 msgid "New User Notification"
 msgstr ""
 
-#: includes/class-config.php:452
+#: includes/class-config.php:454
 msgid "Whether to receive notification when a new user account is approved"
 msgstr ""
 
-#: includes/class-config.php:458
+#: includes/class-config.php:460
 msgid "Account Needs Review Notification"
 msgstr ""
 
-#: includes/class-config.php:465
+#: includes/class-config.php:467
 msgid "Whether to receive notification when an account needs admin review"
 msgstr ""
 
-#: includes/class-config.php:470
+#: includes/class-config.php:472
 msgid "Account Deletion Notification"
 msgstr ""
 
-#: includes/class-config.php:473
+#: includes/class-config.php:475
 msgid "Whether to receive notification when an account is deleted"
 msgstr ""
 
-#: includes/class-config.php:496
+#: includes/class-config.php:498
 msgid ""
 "Are you sure you want to delete your account? This will erase all of your "
 "account data from the site. To delete your account enter your password below"
@@ -6309,12 +6309,12 @@ msgstr ""
 msgid "Less than 1 year old"
 msgstr ""
 
-#: includes/core/class-external-integrations.php:494
+#: includes/core/class-external-integrations.php:487
 #, php-format
 msgid "Edit the %s translation"
 msgstr ""
 
-#: includes/core/class-external-integrations.php:501
+#: includes/core/class-external-integrations.php:494
 #, php-format
 msgid "Add translation to %s"
 msgstr ""
