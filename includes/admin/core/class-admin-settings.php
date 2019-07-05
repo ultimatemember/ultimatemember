@@ -133,38 +133,52 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				)
 			);
 
-			$tabs = UM()->profile()->tabs_primary();
+			$tabs = UM()->profile()->tabs();
 
 			foreach ( $tabs as $id => $tab ) {
 
-				$appearances_profile_menu_fields = array_merge( $appearances_profile_menu_fields, array(
-					array(
-						'id'            => 'profile_tab_' . $id,
-						'type'          => 'checkbox',
-						'label'         => sprintf( __( '%s Tab', 'ultimate-member' ), $tab ),
-						'conditional'   => array( 'profile_menu', '=', 1 ),
-					),
-					array(
-						'id'            => 'profile_tab_' . $id . '_privacy',
-						'type'          => 'select',
-						'label'         => sprintf( __( 'Who can see %s Tab?', 'ultimate-member' ), $tab ),
-						'tooltip'       => __( 'Select which users can view this tab.', 'ultimate-member' ),
-						'options'       => UM()->profile()->tabs_privacy(),
-						'conditional'   => array( 'profile_tab_' . $id, '=', 1 ),
-						'size'          => 'small'
-					),
-					array(
-						'id'            => 'profile_tab_' . $id . '_roles',
-						'type'          => 'select',
-						'multi'         => true,
-						'label'         => __( 'Allowed roles','ultimate-member' ),
-						'tooltip'       => __( 'Select the the user roles allowed to view this tab.','ultimate-member' ),
-						'options'       => UM()->roles()->get_roles(),
-						'placeholder'   => __( 'Choose user roles...','ultimate-member' ),
-						'conditional'   => array( 'profile_tab_' . $id . '_privacy', '=', 4 ),
-						'size'          => 'small'
-					)
-				) );
+				if ( isset( $tab['default_privacy'] ) ) {
+					$fields = array(
+						array(
+							'id'            => 'profile_tab_' . $id,
+							'type'          => 'checkbox',
+							'label'         => sprintf( __( '%s Tab', 'ultimate-member' ), $tab['name'] ),
+							'conditional'   => array( 'profile_menu', '=', 1 ),
+						),
+					);
+				} else {
+
+					$fields = array(
+						array(
+							'id'            => 'profile_tab_' . $id,
+							'type'          => 'checkbox',
+							'label'         => sprintf( __( '%s Tab', 'ultimate-member' ), $tab['name'] ),
+							'conditional'   => array( 'profile_menu', '=', 1 ),
+						),
+						array(
+							'id'            => 'profile_tab_' . $id . '_privacy',
+							'type'          => 'select',
+							'label'         => sprintf( __( 'Who can see %s Tab?', 'ultimate-member' ), $tab['name'] ),
+							'tooltip'       => __( 'Select which users can view this tab.', 'ultimate-member' ),
+							'options'       => UM()->profile()->tabs_privacy(),
+							'conditional'   => array( 'profile_tab_' . $id, '=', 1 ),
+							'size'          => 'small'
+						),
+						array(
+							'id'            => 'profile_tab_' . $id . '_roles',
+							'type'          => 'select',
+							'multi'         => true,
+							'label'         => __( 'Allowed roles','ultimate-member' ),
+							'tooltip'       => __( 'Select the the user roles allowed to view this tab.','ultimate-member' ),
+							'options'       => UM()->roles()->get_roles(),
+							'placeholder'   => __( 'Choose user roles...','ultimate-member' ),
+							'conditional'   => array( 'profile_tab_' . $id . '_privacy', '=', 4 ),
+							'size'          => 'small'
+						)
+					);
+				}
+
+				$appearances_profile_menu_fields = array_merge( $appearances_profile_menu_fields, $fields );
 			}
 
 			$appearances_profile_menu_fields = array_merge( $appearances_profile_menu_fields, array(
