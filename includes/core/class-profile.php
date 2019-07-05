@@ -78,6 +78,24 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 
 
 		/**
+		 * Pre-defined privacy options
+		 *
+		 * @return array
+		 */
+		function tabs_privacy() {
+			$privacy = array(
+				0 => __( 'Anyone', 'ultimate-member' ),
+				1 => __( 'Guests only', 'ultimate-member' ),
+				2 => __( 'Members only', 'ultimate-member' ),
+				3 => __( 'Only the owner', 'ultimate-member' ),
+				4 => __( 'Specific roles', 'ultimate-member' ),
+			);
+
+			return $privacy;
+		}
+
+
+		/**
 		 * All tab data
 		 *
 		 * @return array
@@ -123,7 +141,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			// disable private tabs
 			if ( ! is_admin() ) {
 				if ( is_user_logged_in() ) {
-					$user_id = um_user('ID');
+					$user_id = um_user( 'ID' );
 					um_fetch_user( get_current_user_id() );
 				}
 
@@ -139,60 +157,6 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			}
 
 			return $tabs;
-		}
-
-
-		/**
-		 * Tabs that are active
-		 *
-		 * @return array
-		 */
-		function tabs_active() {
-			$tabs = $this->tabs();
-
-			foreach ( $tabs as $id => $info ) {
-				if ( ! UM()->options()->get( 'profile_tab_' . $id ) ) {
-					unset( $tabs[ $id ] );
-				}
-			}
-
-			return $tabs;
-		}
-
-
-		/**
-		 * Activated tabs in backend
-		 *
-		 * @return string
-		 */
-		function tabs_enabled() {
-			$tabs = $this->tabs_active();
-
-			foreach ( $tabs as $id => $info ) {
-				if ( isset( $info['name'] ) ) {
-					$primary[ $id ] = $info['name'];
-				}
-			}
-
-			return isset( $primary ) ? $primary : '';
-		}
-
-
-		/**
-		 * Privacy options
-		 *
-		 * @return array
-		 */
-		function tabs_privacy() {
-			$privacy = array(
-				0 => __( 'Anyone', 'ultimate-member' ),
-				1 => __( 'Guests only', 'ultimate-member' ),
-				2 => __( 'Members only', 'ultimate-member' ),
-				3 => __( 'Only the owner', 'ultimate-member' ),
-				4 => __( 'Specific roles', 'ultimate-member' ),
-			);
-
-			return $privacy;
 		}
 
 
@@ -257,6 +221,28 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			}
 
 			return $can_view;
+		}
+
+
+		/**
+		 * Tabs that are active
+		 *
+		 * @return array
+		 */
+		function tabs_active() {
+			$tabs = $this->tabs();
+
+			foreach ( $tabs as $id => $info ) {
+				if ( ! empty( $info['hidden'] ) ) {
+					continue;
+				}
+
+				if ( ! UM()->options()->get( 'profile_tab_' . $id ) ) {
+					unset( $tabs[ $id ] );
+				}
+			}
+
+			return $tabs;
 		}
 
 

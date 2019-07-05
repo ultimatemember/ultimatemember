@@ -137,6 +137,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			foreach ( $tabs as $id => $tab ) {
 
+				if ( isset( $tab['hidden'] ) ) {
+					continue;
+				}
+
 				if ( isset( $tab['default_privacy'] ) ) {
 					$fields = array(
 						array(
@@ -181,13 +185,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$appearances_profile_menu_fields = array_merge( $appearances_profile_menu_fields, $fields );
 			}
 
+			$active_tabs = array();
+			$tabs = UM()->profile()->tabs_active();
+			if ( ! empty( $tabs ) ) {
+				foreach ( $tabs as $id => $info ) {
+					if ( isset( $info['name'] ) ) {
+						$active_tabs[ $id ] = $info['name'];
+					}
+				}
+			}
+
 			$appearances_profile_menu_fields = array_merge( $appearances_profile_menu_fields, array(
 				array(
 					'id'            => 'profile_menu_default_tab',
 					'type'          => 'select',
 					'label'         => __( 'Profile menu default tab', 'ultimate-member' ),
 					'tooltip'       => __( 'This will be the default tab on user profile page', 'ultimate-member' ),
-					'options'       => UM()->profile()->tabs_enabled(),
+					'options'       => $active_tabs,
 					'conditional'   => array( 'profile_menu', '=', 1 ),
 					'size'          => 'small'
 				),

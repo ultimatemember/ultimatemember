@@ -545,18 +545,18 @@ if ( ! class_exists( 'um\Config' ) ) {
 
 			$tabs = UM()->profile()->tabs();
 			foreach ( $tabs as $id => $tab ) {
-				$this->settings_defaults['profile_tab_' . $id] = 1;
+				$this->settings_defaults[ 'profile_tab_' . $id ] = 1;
 
 				if ( ! isset( $tab['default_privacy'] ) ) {
-					$this->settings_defaults['profile_tab_' . $id . '_privacy'] = 0;
-					$this->settings_defaults['profile_tab_' . $id . '_roles'] = '';
+					$this->settings_defaults[ 'profile_tab_' . $id . '_privacy' ] = 0;
+					$this->settings_defaults[ 'profile_tab_' . $id . '_roles' ] = '';
 				}
 			}
 
 			foreach ( $this->email_notifications as $key => $notification ) {
-				$this->settings_defaults[$key . '_on'] = ! empty( $notification['default_active'] );
-				$this->settings_defaults[$key . '_sub'] = $notification['subject'];
-				$this->settings_defaults[$key] = $notification['body'];
+				$this->settings_defaults[ $key . '_on' ] = ! empty( $notification['default_active'] );
+				$this->settings_defaults[ $key . '_sub' ] = $notification['subject'];
+				$this->settings_defaults[ $key ] = $notification['body'];
 			}
 
 			foreach ( $this->core_pages as $page_s => $page ) {

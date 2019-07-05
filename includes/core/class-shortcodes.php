@@ -36,9 +36,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			add_shortcode( 'um_show_content', array( &$this, 'um_shortcode_show_content_for_role' ) );
 			add_shortcode( 'ultimatemember_searchform', array( &$this, 'ultimatemember_searchform' ) );
 
-
 			add_filter( 'body_class', array( &$this, 'body_class' ), 0 );
-			add_action( 'template_redirect', array( &$this, 'is_um_page' ) );
 
 			add_filter( 'um_shortcode_args_filter', array( &$this, 'display_logout_form' ), 99 );
 			add_filter( 'um_shortcode_args_filter', array( &$this, 'parse_shortcode_args' ), 99 );
