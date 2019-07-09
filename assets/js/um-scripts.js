@@ -1,8 +1,3 @@
-/*jQuery('body').on('error', '.um-avatar', function() {
-	if( jQuery(this).data('load-error') != undefined ) return;
-	jQuery(this).data('load-error', '1').attr('src', jQuery(this).data('default'));
-});*/
-
 function um_init_datetimepicker() {
 	jQuery('.um-datepicker:not(.picker__input)').each(function(){
 		elem = jQuery(this);

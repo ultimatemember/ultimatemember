@@ -59,64 +59,77 @@ if ( ! empty( $_GET['id'] ) ) {
 
 if ( ! empty( $_POST['role'] ) ) {
 
-	$data = $_POST['role'];
-
 	$id = '';
 	$redirect = '';
 	$error = '';
 
-	if ( empty( $data['name'] ) ) {
-
-		$error .= __( 'Title is empty!', 'ultimate-member' ) . '<br />';
-
-	} else {
-
-		if ( 'add' == $_GET['tab'] ) {
-
-			if ( preg_match( "/[a-z0-9]+$/i", $data['name'] ) ) {
-				$id = sanitize_title( $data['name'] );
-			} else {
-				$auto_increment = UM()->options()->get( 'custom_roles_increment' );
-				$auto_increment = ! empty( $auto_increment ) ? $auto_increment : 1;
-				$id = 'custom_role_' . $auto_increment;
-			}
-
-			$redirect = add_query_arg( array( 'page'=>'um_roles', 'tab'=>'edit', 'id'=>$id, 'msg'=>'a' ), admin_url( 'admin.php' ) );
-		} elseif ( 'edit' == $_GET['tab'] && ! empty( $_GET['id'] ) ) {
-			$id = $_GET['id'];
-			$redirect = add_query_arg( array( 'page' => 'um_roles', 'tab'=>'edit', 'id'=>$id, 'msg'=>'u' ), admin_url( 'admin.php' ) );
-		}
-
-	}
-
-	$all_roles = array_keys( get_editable_roles() );
 	if ( 'add' == $_GET['tab'] ) {
-		if ( in_array( 'um_' . $id, $all_roles ) || in_array( $id, $all_roles ) )
-			$error .= __( 'Role already exists!', 'ultimate-member' ) . '<br />';
+		if ( ! wp_verify_nonce( $_POST['um_nonce'], 'um-add-role' ) ) {
+			$error = __( 'Security Issue', 'ultimate-member' ) . '<br />';
+		}
+	} else {
+		if ( ! wp_verify_nonce( $_POST['um_nonce'], 'um-edit-role' ) ) {
+			$error = __( 'Security Issue', 'ultimate-member' ) . '<br />';
+		}
 	}
 
-	if ( '' == $error ) {
+	if ( empty( $error ) ) {
 
-		if ( 'add' == $_GET['tab'] ) {
-			$roles = get_option( 'um_roles' );
-			$roles[] = $id;
+		$data = $_POST['role'];
 
-			update_option( 'um_roles', $roles );
+		if ( empty( $data['name'] ) ) {
 
-			if ( isset( $auto_increment ) ) {
-				$auto_increment++;
-				UM()->options()->update( 'custom_roles_increment', $auto_increment );
+			$error .= __( 'Title is empty!', 'ultimate-member' ) . '<br />';
+
+		} else {
+
+			if ( 'add' == $_GET['tab'] ) {
+
+				if ( preg_match( "/[a-z0-9]+$/i", $data['name'] ) ) {
+					$id = sanitize_title( $data['name'] );
+				} else {
+					$auto_increment = UM()->options()->get( 'custom_roles_increment' );
+					$auto_increment = ! empty( $auto_increment ) ? $auto_increment : 1;
+					$id = 'custom_role_' . $auto_increment;
+				}
+
+				$redirect = add_query_arg( array( 'page'=>'um_roles', 'tab'=>'edit', 'id'=>$id, 'msg'=>'a' ), admin_url( 'admin.php' ) );
+			} elseif ( 'edit' == $_GET['tab'] && ! empty( $_GET['id'] ) ) {
+				$id = $_GET['id'];
+				$redirect = add_query_arg( array( 'page' => 'um_roles', 'tab'=>'edit', 'id'=>$id, 'msg'=>'u' ), admin_url( 'admin.php' ) );
 			}
+
 		}
 
-		$role_meta = $data;
-		unset( $role_meta['id'] );
+		$all_roles = array_keys( get_editable_roles() );
+		if ( 'add' == $_GET['tab'] ) {
+			if ( in_array( 'um_' . $id, $all_roles ) || in_array( $id, $all_roles ) )
+				$error .= __( 'Role already exists!', 'ultimate-member' ) . '<br />';
+		}
 
-		update_option( "um_role_{$id}_meta", $role_meta );
+		if ( '' == $error ) {
 
-		UM()->user()->remove_cache_all_users();
+			if ( 'add' == $_GET['tab'] ) {
+				$roles = get_option( 'um_roles' );
+				$roles[] = $id;
 
-		um_js_redirect( $redirect );
+				update_option( 'um_roles', $roles );
+
+				if ( isset( $auto_increment ) ) {
+					$auto_increment++;
+					UM()->options()->update( 'custom_roles_increment', $auto_increment );
+				}
+			}
+
+			$role_meta = $data;
+			unset( $role_meta['id'] );
+
+			update_option( "um_role_{$id}_meta", $role_meta );
+
+			UM()->user()->remove_cache_all_users();
+
+			um_js_redirect( $redirect );
+		}
 	}
 }
 
@@ -158,8 +171,10 @@ $screen_id = $current_screen->id; ?>
 		<input type="hidden" name="role[id]" value="<?php echo isset( $_GET['id'] ) ? esc_attr( $_GET['id'] ) : '' ?>" />
 		<?php if ( 'add' == $_GET['tab'] ) { ?>
 			<input type="hidden" name="role[_um_is_custom]" value="1" />
+			<input type="hidden" name="um_nonce" value="<?php echo wp_create_nonce( 'um-add-role' ) ?>" />
 		<?php } else { ?>
 			<input type="hidden" name="role[_um_is_custom]" value="<?php echo ! empty( $data['_um_is_custom'] ) ? 1 : 0 ?>" />
+			<input type="hidden" name="um_nonce" value="<?php echo wp_create_nonce( 'um-edit-role' ) ?>" />
 		<?php } ?>
 		<?php wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>
 		<div id="poststuff">

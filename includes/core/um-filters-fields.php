@@ -521,15 +521,16 @@ add_filter('um_profile_field_filter_hook__','um_force_utf8_fields', 9, 3 );
  * @uses   hook filter: um_is_selected_filter_value
  */
 function um_is_selected_filter_value( $value ) {
-	if ( ! UM()->options()->get('um_force_utf8_strings') )
+	if ( ! UM()->options()->get( 'um_force_utf8_strings' ) ) {
 		return $value;
+	}
 
 	$value = um_force_utf8_string( $value );
 
 	return $value;
 }
-add_filter( 'um_is_selected_filter_value','um_is_selected_filter_value', 1, 9 );
-add_filter( 'um_select_dropdown_dynamic_option_value','um_is_selected_filter_value', 1, 10 );
+add_filter( 'um_is_selected_filter_value','um_is_selected_filter_value', 9, 1 );
+add_filter( 'um_select_dropdown_dynamic_option_value','um_is_selected_filter_value', 10, 1 );
 
 /**
  * Filter select dropdown to use UTF-8 encoding
@@ -539,9 +540,10 @@ add_filter( 'um_select_dropdown_dynamic_option_value','um_is_selected_filter_val
  * @return array
  * @uses   hook filter: um_select_dropdown_dynamic_options
  */
-function um_select_dropdown_dynamic_options_to_utf8( $options, $data ){
-	if ( ! UM()->options()->get( 'um_force_utf8_strings' ) )
+function um_select_dropdown_dynamic_options_to_utf8( $options, $data ) {
+	if ( ! UM()->options()->get( 'um_force_utf8_strings' ) ) {
 		return $options;
+	}
 
 	foreach ( $options as $key => $value ) {
 		$options[ $key ] = um_force_utf8_string( $value );
@@ -549,7 +551,7 @@ function um_select_dropdown_dynamic_options_to_utf8( $options, $data ){
 
 	return $options;
 }
-add_filter( 'um_select_dropdown_dynamic_options','um_select_dropdown_dynamic_options_to_utf8', 2, 10 );
+add_filter( 'um_select_dropdown_dynamic_options','um_select_dropdown_dynamic_options_to_utf8', 10, 2 );
 
 
 /**
@@ -580,12 +582,8 @@ add_filter( 'um_field_non_utf8_value', 'um_field_non_utf8_value' );
  * @uses   hook filter: um_select_dropdown_dynamic_options, um_multiselect_options
  */
 function um_select_dropdown_dynamic_callback_options( $options, $data ) {
-
-	if( isset( $data['custom_dropdown_options_source'] ) && ! empty( $data['custom_dropdown_options_source'] ) ){
-
-		if( function_exists( $data['custom_dropdown_options_source'] ) ){
-			$options = call_user_func( $data['custom_dropdown_options_source'] );
-		}
+	if ( ! empty( $data['custom_dropdown_options_source'] ) && function_exists( $data['custom_dropdown_options_source'] ) ) {
+		$options = call_user_func( $data['custom_dropdown_options_source'] );
 	}
 
 	return $options;
@@ -604,7 +602,7 @@ add_filter( 'um_multiselect_options','um_select_dropdown_dynamic_callback_option
  */
 
 function um_option_match_callback_view_field( $value, $data ) {
-	if( ! empty( $data['custom_dropdown_options_source'] ) ){
+	if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
 		return UM()->fields()->get_option_value_from_callback( $value, $data, $data['type'] );
 	}
 

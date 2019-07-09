@@ -867,24 +867,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					if ( ! $field_value ) {
 						$field_value = 0;
 					}
-					
-					
-					// Support for the old user tags values
-					if( is_numeric( $value ) && is_array( $field_value ) ) {
-						$type = UM()->fields()->get_field_type( $key );
-						if( $type === 'user_tags' ) {
-							foreach( $field_value as $k => $v ) {
-								if( is_numeric( $value ) && is_string( $v ) ) {
-									$term = get_term_by( 'slug', $v, 'um_user_tag' );
-									if( $term ) {
-										$field_value[ $k ] = $term->term_id;
-									}
-								}
-							}
-						}
-					}
-
-
 
 					if ( $key == 'role' ) {
 
@@ -897,6 +879,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 					}
 
+
 					/**
 					 * UM hook
 					 *
@@ -905,7 +888,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					 * @description Change is selected filter value
 					 * @input_vars
 					 * [{"var":"$value","type":"string","desc":"Selected filter value"},
-					 * {"var":"$key","type":"string","desc":"Selected filter key"}]
+					 * {"var":"$key","type":"string","desc":"Selected filter key"},
+					 * {"var":"$value","type":"string","desc":"Selected filter value"}]
 					 * @change_log
 					 * ["Since: 2.0"]
 					 * @usage add_filter( 'um_is_selected_filter_value', 'function_name', 10, 2 );
@@ -918,7 +902,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					 * }
 					 * ?>
 					 */
-					$field_value = apply_filters( 'um_is_selected_filter_value', $field_value, $key );
+					$field_value = apply_filters( 'um_is_selected_filter_value', $field_value, $key, $value );
 
 					/**
 					 * UM hook
