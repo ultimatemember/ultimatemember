@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-07-01 14:36+0300\n"
-"PO-Revision-Date: 2019-07-01 14:36+0300\n"
+"POT-Creation-Date: 2019-07-09 18:37+0300\n"
+"PO-Revision-Date: 2019-07-09 18:37+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -172,7 +172,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-columns.php:130
 #: includes/admin/core/class-admin-columns.php:150
-#: includes/admin/templates/role/role-edit.php:171
+#: includes/admin/templates/role/role-edit.php:186
 msgid "Title"
 msgstr ""
 
@@ -2789,7 +2789,7 @@ msgstr ""
 
 #: includes/admin/core/list-tables/roles-list-table.php:479
 #: includes/admin/core/packages/2.0-beta1/user_roles.php:14
-#: includes/admin/templates/role/role-edit.php:136
+#: includes/admin/templates/role/role-edit.php:149
 #: includes/core/class-common.php:56 includes/core/class-common.php:86
 msgid "Add New"
 msgstr ""
@@ -3927,31 +3927,36 @@ msgid ""
 "been successful or not."
 msgstr ""
 
-#: includes/admin/templates/role/role-edit.php:70
+#: includes/admin/templates/role/role-edit.php:68
+#: includes/admin/templates/role/role-edit.php:72
+msgid "Security Issue"
+msgstr ""
+
+#: includes/admin/templates/role/role-edit.php:82
 msgid "Title is empty!"
 msgstr ""
 
-#: includes/admin/templates/role/role-edit.php:95
+#: includes/admin/templates/role/role-edit.php:107
 msgid "Role already exists!"
 msgstr ""
 
-#: includes/admin/templates/role/role-edit.php:134
+#: includes/admin/templates/role/role-edit.php:147
 msgid "Add New Role"
 msgstr ""
 
-#: includes/admin/templates/role/role-edit.php:134
+#: includes/admin/templates/role/role-edit.php:147
 msgid "Edit Role"
 msgstr ""
 
-#: includes/admin/templates/role/role-edit.php:143
+#: includes/admin/templates/role/role-edit.php:156
 msgid "User Role <strong>Added</strong> Successfully."
 msgstr ""
 
-#: includes/admin/templates/role/role-edit.php:146
+#: includes/admin/templates/role/role-edit.php:159
 msgid "User Role <strong>Updated</strong> Successfully."
 msgstr ""
 
-#: includes/admin/templates/role/role-edit.php:172
+#: includes/admin/templates/role/role-edit.php:187
 msgid "Enter Title Here"
 msgstr ""
 
