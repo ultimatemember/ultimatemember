@@ -410,14 +410,19 @@ add_action( 'um_before_account_delete', 'um_before_account_delete' );
 /**
  * Before notifications account tab content
  */
-function um_before_account_notifications() { ?>
-	<div class="um-field">
-		<div class="um-field-label">
-			<label for=""><?php _e( 'Email me when', 'ultimate-member' ); ?></label>
-			<div class="um-clear"></div>
+function um_before_account_notifications( $args = array() ) {
+	$output = UM()->account()->get_tab_fields( 'notifications', $args );
+	if( substr_count( $output, '_enable_new_' ) ) {
+		?>
+		<div class="um-field">
+			<div class="um-field-label">
+				<label for=""><?php _e( 'Email me when', 'ultimate-member' ); ?></label>
+				<div class="um-clear"></div>
+			</div>
 		</div>
-	</div>
-<?php }
+		<?php
+	}
+}
 add_action( 'um_before_account_notifications', 'um_before_account_notifications' );
 
 
