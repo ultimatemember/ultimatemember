@@ -143,6 +143,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Extended hooks for 3rd party integrations
 
 * Bugfixes:
+  - Fixed settings labels with CPT & Taxonomies
   - Fixed UM Roles create/edit XSS security issue
   - Fixed XSS security issue on account upgrade
 
