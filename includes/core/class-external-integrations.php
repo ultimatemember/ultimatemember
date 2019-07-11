@@ -151,6 +151,16 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 
 
 		/**
+		 * Fixed ForumWP access to Forums message
+		 */
+		function forumwp_fix() {
+			if ( function_exists( 'FMWP' ) ) {
+				remove_filter( 'single_template', array( FMWP()->shortcodes(), 'cpt_template' ) );
+			}
+		}
+
+
+		/**
 		 * @param $profile_url
 		 * @param $page_id
 		 *
