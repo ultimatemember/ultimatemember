@@ -140,15 +140,6 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			remove_filter( 'template_include', 'bbp_template_include' );
 		}
 
-		/**
-		 * Fixed bbPress access to Forums message
-		 */
-		function forumwp_fix() {
-			if ( function_exists( 'FMWP' ) ) {
-				remove_filter( 'single_template', array( FMWP()->shortcodes(), 'cpt_template' ) );
-			}
-		}
-
 
 		/**
 		 * Fixed ForumWP access to Forums message
