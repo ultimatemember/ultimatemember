@@ -1444,9 +1444,12 @@ function um_profile_menu( $args ) {
 			$active_subnav = ( UM()->profile()->active_subnav() ) ? UM()->profile()->active_subnav() : $tab['subnav_default']; ?>
 
 			<div class="um-profile-subnav">
-				<?php foreach ( $tab['subnav'] as $id_s => $subtab ) { ?>
+				<?php foreach ( $tab['subnav'] as $id_s => $subtab ) {
 
-					<a href="<?php echo add_query_arg( 'subnav', $id_s ); ?>" class="<?php if ( $active_subnav == $id_s ) echo 'active'; ?>">
+					$subnav_link = add_query_arg( 'subnav', $id_s );
+					$subnav_link = apply_filters( 'um_user_profile_subnav_link', $subnav_link, $id_s, $subtab ); ?>
+
+					<a href="<?php echo $subnav_link; ?>" class="<?php if ( $active_subnav == $id_s ) echo 'active'; ?>">
 						<?php echo $subtab; ?>
 					</a>
 

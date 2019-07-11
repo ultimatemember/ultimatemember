@@ -77,34 +77,38 @@ if ( ! empty( $_POST['role'] ) ) {
 
 		$data = $_POST['role'];
 
-		if ( empty( $data['name'] ) ) {
+		if ( 'add' == $_GET['tab'] ) {
 
-			$error .= __( 'Title is empty!', 'ultimate-member' ) . '<br />';
+			$data['name'] = trim( esc_html( strip_tags( $data['name'] ) ) );
 
-		} else {
-
-			if ( 'add' == $_GET['tab'] ) {
-
-				if ( preg_match( "/[a-z0-9]+$/i", $data['name'] ) ) {
-					$id = sanitize_title( $data['name'] );
-				} else {
-					$auto_increment = UM()->options()->get( 'custom_roles_increment' );
-					$auto_increment = ! empty( $auto_increment ) ? $auto_increment : 1;
-					$id = 'custom_role_' . $auto_increment;
-				}
-
-				$redirect = add_query_arg( array( 'page'=>'um_roles', 'tab'=>'edit', 'id'=>$id, 'msg'=>'a' ), admin_url( 'admin.php' ) );
-			} elseif ( 'edit' == $_GET['tab'] && ! empty( $_GET['id'] ) ) {
-				$id = $_GET['id'];
-				$redirect = add_query_arg( array( 'page' => 'um_roles', 'tab'=>'edit', 'id'=>$id, 'msg'=>'u' ), admin_url( 'admin.php' ) );
+			if ( empty( $data['name'] ) ) {
+				$error .= __( 'Title is empty!', 'ultimate-member' ) . '<br />';
 			}
 
+			if ( preg_match( "/[a-z0-9]+$/i", $data['name'] ) ) {
+				$id = sanitize_title( $data['name'] );
+			} else {
+				$auto_increment = UM()->options()->get( 'custom_roles_increment' );
+				$auto_increment = ! empty( $auto_increment ) ? $auto_increment : 1;
+				$id = 'custom_role_' . $auto_increment;
+			}
+
+			$redirect = add_query_arg( array( 'page'=>'um_roles', 'tab'=>'edit', 'id'=>$id, 'msg'=>'a' ), admin_url( 'admin.php' ) );
+		} elseif ( 'edit' == $_GET['tab'] && ! empty( $_GET['id'] ) ) {
+			$id = $_GET['id'];
+
+			$pre_role_meta = get_option( "um_role_{$id}_meta", array() );
+			$data['name'] = $pre_role_meta['name'];
+
+			$redirect = add_query_arg( array( 'page' => 'um_roles', 'tab'=>'edit', 'id'=>$id, 'msg'=>'u' ), admin_url( 'admin.php' ) );
 		}
+
 
 		$all_roles = array_keys( get_editable_roles() );
 		if ( 'add' == $_GET['tab'] ) {
-			if ( in_array( 'um_' . $id, $all_roles ) || in_array( $id, $all_roles ) )
+			if ( in_array( 'um_' . $id, $all_roles ) || in_array( $id, $all_roles ) ) {
 				$error .= __( 'Role already exists!', 'ultimate-member' ) . '<br />';
+			}
 		}
 
 		if ( '' == $error ) {
@@ -186,7 +190,6 @@ $screen_id = $current_screen->id; ?>
 								<label for="title" class="screen-reader-text"><?php _e( 'Title', 'ultimate-member' ) ?></label>
 								<input type="text" name="role[name]" placeholder="<?php _e( 'Enter Title Here', 'ultimate-member' ) ?>" id="title" value="<?php echo isset( $data['name'] ) ? $data['name'] : '' ?>" />
 							<?php } else { ?>
-								<input type="hidden" name="role[name]" value="<?php echo isset( $data['name'] ) ? $data['name'] : '' ?>" />
 								<span style="float: left;width:100%;"><?php echo isset( $data['name'] ) ? $data['name'] : '' ?></span>
 							<?php } ?>
 						</div>
