@@ -213,15 +213,29 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				)
 			) );
 
-			$all_post_types = get_post_types( array( 'public' => true ) );
+			$post_types_options = array();
+			$all_post_types = get_post_types( array( 'public' => true ), 'objects' );
+			foreach ( $all_post_types as $key => $post_type_data ) {
+				$post_types_options[ $key ] = $post_type_data->labels->singular_name;
+			}
 
-			$all_taxonomies = get_taxonomies( array( 'public' => true ) );
+			$taxonomies_options = array();
 			$exclude_taxonomies = UM()->excluded_taxonomies();
-
+			$all_taxonomies = get_taxonomies( array( 'public' => true ), 'objects' );
+			$duplicates = array();
 			foreach ( $all_taxonomies as $key => $taxonomy ) {
-				if( in_array( $key , $exclude_taxonomies ) ) {
-					unset( $all_taxonomies[ $key ] );
+				if ( in_array( $key , $exclude_taxonomies ) ) {
+					continue;
 				}
+
+				if ( ! in_array( $taxonomy->labels->singular_name, $duplicates ) ) {
+					$duplicates[] = $taxonomy->labels->singular_name;
+					$label = $taxonomy->labels->singular_name;
+				} else {
+					$label = $taxonomy->labels->singular_name . ' (' . $key . ')';
+				}
+
+				$taxonomies_options[ $key ] = $label;
 			}
 
 			$restricted_access_post_metabox_value = array();
@@ -320,7 +334,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'type'     		=> 'multi_checkbox',
 					'label'   		=> __( 'Restricted Access to Posts','ultimate-member' ),
 					'tooltip'   => __( 'Restriction content of the current Posts','ultimate-member' ),
-					'options'       => $all_post_types,
+					'options'       => $post_types_options,
 					'columns'       => 3,
 					'value' 		=> $restricted_access_post_metabox_value,
 					'default' 		=> UM()->options()->get_default( 'restricted_access_post_metabox' ),
@@ -330,7 +344,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'type'     		=> 'multi_checkbox',
 					'label'   		=> __( 'Restricted Access to Taxonomies','ultimate-member' ),
 					'tooltip'   => __( 'Restriction content of the current Taxonomies','ultimate-member' ),
-					'options'       => $all_taxonomies,
+					'options'       => $taxonomies_options,
 					'columns'       => 3,
 					'value' 		=> $restricted_access_taxonomy_metabox_value,
 					'default' 		=> UM()->options()->get_default( 'restricted_access_taxonomy_metabox' ),
