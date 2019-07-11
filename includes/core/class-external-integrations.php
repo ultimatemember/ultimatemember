@@ -28,6 +28,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 
 
 			add_action( 'um_access_fix_external_post_content', array( &$this, 'bbpress_no_access_message_fix' ), 10 );
+			add_action( 'um_access_fix_external_post_content', array( &$this, 'forumwp_fix' ), 11 );
 
 			add_filter( 'um_localize_permalink_filter', array( &$this, 'um_localize_permalink_filter' ), 10, 2 );
 			add_filter( 'icl_ls_languages', array( &$this, 'um_core_page_wpml_permalink' ), 10, 1 );
@@ -137,6 +138,16 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		 */
 		function bbpress_no_access_message_fix() {
 			remove_filter( 'template_include', 'bbp_template_include' );
+		}
+
+
+		/**
+		 * Fixed ForumWP access to Forums message
+		 */
+		function forumwp_fix() {
+			if ( function_exists( 'FMWP' ) ) {
+				remove_filter( 'single_template', array( FMWP()->shortcodes(), 'cpt_template' ) );
+			}
 		}
 
 

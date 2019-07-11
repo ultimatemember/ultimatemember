@@ -155,6 +155,13 @@ $free['terms-conditions'] = array(
 	'image' => 'https://ultimatemember.com/wp-content/uploads/edd/2017/07/terms-conditions.png',
 	'name' => 'Terms & Conditions',
 	'desc' => 'Add terms & conditions to your registration form',
+);
+
+$free['forumwp'] = array(
+	'url' => 'https://ultimatemember.com/extensions/forumwp/',
+	'image' => 'https://ultimatemember.com/wp-content/uploads/bb-plugin/cache/um-forumwp-extension-circle.png',
+	'name' => 'ForumWP',
+	'desc' => 'Integrates Ultimate Member with the forum plugin <a href="https://forumwpplugin.com" target="_blank">ForumWP</a>',
 ); ?>
 
 <div id="um-extensions-wrap" class="wrap">
