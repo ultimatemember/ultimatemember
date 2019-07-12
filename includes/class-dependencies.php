@@ -60,12 +60,12 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'beaver-builder'        => '2.0',
 			'user-photos'           => '2.0.1',
 			'user-exporter'         => '1.0.0',
-//			'bookmark'              => '2.0',
 			'user-events'           => '1.0.0',
 			'filesharing'           => '1.0.0',
 			'user-notes'            => '2.0',
 			'user-bookmarks'        => '2.0',
 			'unsplash'              => '2.0',
+			'fmwp'                  => '2.0.1',
 		);
 
 
@@ -115,6 +115,20 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			if ( ! self::$active_plugins ) self::init();
 
 			return in_array( 'bbpress/bbpress.php', self::$active_plugins ) || array_key_exists( 'bbpress/bbpress.php', self::$active_plugins );
+
+		}
+
+
+		/**
+		 * Check if ForumWP plugin is active
+		 *
+		 * @return bool
+		 */
+		public static function forumwp_active_check() {
+
+			if ( ! self::$active_plugins ) self::init();
+
+			return in_array( 'forumwp/forumwp.php', self::$active_plugins ) || array_key_exists( 'forumwp/forumwp.php', self::$active_plugins );
 
 		}
 
