@@ -55,6 +55,10 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 			}
 
 			foreach ( $changes as $key => $value ) {
+				if( !isset( $fields[ $key ] ) ){
+					continue;
+				}
+
 				//rating field validation
 				if ( isset( $fields[ $key ]['type'] ) && $fields[ $key ]['type'] == 'rating' ) {
 					if ( ! is_numeric( $value ) ) {
