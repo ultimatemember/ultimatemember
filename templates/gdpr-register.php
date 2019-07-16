@@ -12,9 +12,9 @@
 			} ?>
 		</div>
 		<a href="javascript:;" class="um-toggle-gdpr" data-toggle-state="hidden"
-		   data-toggle-show="<?php echo ! empty( $args['use_gdpr_toggle_show'] ) ? $args['use_gdpr_toggle_show'] : __( 'Show privacy policy', 'ultimate-member' ); ?>"
-		   data-toggle-hide="<?php echo ! empty( $args['use_gdpr_toggle_hide'] ) ? $args['use_gdpr_toggle_hide'] : __( 'Hide privacy policy', 'ultimate-member' ); ?>">
-			<?php echo ! empty( $args['use_gdpr_toggle_show'] ) ? $args['use_gdpr_toggle_show'] : __( 'Show privacy policy', 'ultimate-member' ); ?>
+		   data-toggle-show="<?php echo esc_attr( ! empty( $args['use_gdpr_toggle_show'] ) ? $args['use_gdpr_toggle_show'] : __( 'Show privacy policy', 'ultimate-member' ) ); ?>"
+		   data-toggle-hide="<?php echo esc_attr( ! empty( $args['use_gdpr_toggle_hide'] ) ? $args['use_gdpr_toggle_hide'] : __( 'Hide privacy policy', 'ultimate-member' ) ); ?>">
+			<?php esc_html_e( ! empty( $args['use_gdpr_toggle_show'] ) ? $args['use_gdpr_toggle_show'] : __( 'Show privacy policy', 'ultimate-member' ) ); ?>
 		</a>
 	</div>
 	<div class="um-field-area">
@@ -25,7 +25,7 @@
 				<i class="um-icon-android-checkbox-outline-blank"></i>
 			</span>
 			<span class="um-field-checkbox-option">
-				<?php echo ! empty( $args['use_gdpr_agreement'] ) ? $args['use_gdpr_agreement'] :  __( 'Please confirm that you agree to our privacy policy', 'ultimate-member' ); ?>
+				<?php esc_html_e( ! empty( $args['use_gdpr_agreement'] ) ? $args['use_gdpr_agreement'] :  __( 'Please confirm that you agree to our privacy policy', 'ultimate-member' ) ); ?>
 			</span>
 		</label>
 		<div class="um-clear"></div>

@@ -1,14 +1,14 @@
-<div class="um <?php echo $this->get_class( $mode, $args ); ?> um-<?php echo esc_attr( $form_id ); ?>">
+<div class="um <?php echo esc_attr( $this->get_class( $mode, $args ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 
 	<div class="um-form">
 	
 		<div class="um-misc-with-img">
 			
 			<div class="um-misc-img">
-				<a href="<?php echo um_get_core_page( 'user' ); ?>"><?php echo um_user( 'profile_photo', 80 ); ?></a>
+				<a href="<?php echo esc_url( um_get_core_page( 'user' ) ); ?>"><?php echo um_user( 'profile_photo', 80 ); ?></a>
 			</div>
 			
-			<div><strong><?php echo um_user( 'display_name' ); ?></strong></div>
+			<div><strong><?php esc_html_e( um_user( 'display_name' ) ); ?></strong></div>
 			
 			<?php
 			/**
