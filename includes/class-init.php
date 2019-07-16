@@ -36,7 +36,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Notes Notes()
 	 * @method UM_User_Bookmarks User_Bookmarks()
 	 * @method UM_Unsplash Unsplash()
-	 * @method UM_FMWP FMWP()
+	 * @method UM_ForumWP ForumWP()
 	 */
 	final class UM extends UM_Functions {
 

@@ -65,7 +65,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'user-notes'            => '2.0',
 			'user-bookmarks'        => '2.0',
 			'unsplash'              => '2.0',
-			'fmwp'                  => '2.0.1',
+			'forumwp'               => '2.0.1',
 		);
 
 
