@@ -739,8 +739,8 @@ function um_submit_form_errors_hook_( $args ) {
 				$profile_show_bio = UM()->options()->get('profile_show_bio');
 
 				if( $profile_show_bio ){
-					if ( strlen( utf8_decode( $args['description'] ) ) > $max_chars && $max_chars  ) {
-						UM()->form()->add_error('description', sprintf(__('Your user description must contain less than %s characters','ultimate-member'), $max_chars ) );
+					if( strlen( utf8_decode( str_replace( array( "\r\n", "\n", "\r\t", "\t" ), ' ', $args[ 'description' ] ) ) ) > $max_chars && $max_chars ) {
+						UM()->form()->add_error( 'description', sprintf( __( 'Your user description must contain less than %s characters', 'ultimate-member' ), $max_chars ) );
 					}
 				}
 
