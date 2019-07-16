@@ -55,7 +55,7 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 			}
 
 			foreach ( $changes as $key => $value ) {
-				if( !isset( $fields[ $key ] ) ){
+				if ( ! isset( $fields[ $key ] ) ) {
 					continue;
 				}
 
