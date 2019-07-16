@@ -7,7 +7,7 @@ Ultimate Member is the #1 user profile & membership plugin for WordPress. The pl
 
 | Latest Version |Requires at least|Stable Tag|
 | :------------: |:------------:|:------------:|
-| 2.0.52 | WordPress 4.9 or higher| 2.0.52 |
+| 2.0.53 | WordPress 4.9 or higher| 2.0.53 |
 
 
 Features of the plugin include:
@@ -48,7 +48,7 @@ GNU Version 2 or Any Later Version
 
 Releases
 ====================
-[Official Release Version: 2.0.52](https://github.com/ultimatemember/ultimatemember/releases/tag/2.0.52).
+[Official Release Version: 2.0.53](https://github.com/ultimatemember/ultimatemember/releases/tag/2.0.53).
 
 Changelog
 ====================
