@@ -310,7 +310,9 @@ add_filter( 'um_profile_field_filter_hook__image', 'um_profile_field_filter_hook
  * @return string
  */
 function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
-	if ( !$value ) return '';
+	if ( ! $value ) {
+		return '';
+	}
 
 	if ( ( isset( $data['validate'] ) && $data['validate'] != '' && strstr( $data['validate'], 'url' ) ) || ( isset( $data['type'] ) && $data['type'] == 'url' ) ) {
 		$alt = ( isset( $data['url_text'] ) && !empty( $data['url_text'] ) ) ? $data['url_text'] : $value;
@@ -360,11 +362,12 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 
 	}
 
-	if ( !is_array( $value ) ) {
-		if ( is_email( $value ) )
+	if ( ! is_array( $value ) ) {
+		if ( is_email( $value ) ) {
 			$value = '<a href="mailto:'. $value.'" title="'.$value.'">'.$value.'</a>';
+		}
 	} else {
-		$value = implode(', ', $value);
+		$value = implode( ', ', $value );
 	}
 
 	$value = str_replace('https://https://','https://',$value);
@@ -679,13 +682,13 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 				}
 			}
 		} elseif ( 'select' == $type || 'radio' == $type ) {
-			if ( ! empty( $data['options'] ) && ! in_array( $value, $data['options'] ) && empty( $data[ 'custom_dropdown_options_source' ] ) ) {
+			if ( ! empty( $data['options'] ) && ! in_array( $value, $data['options'] ) && empty( $data['custom_dropdown_options_source'] ) ) {
 				$value = '';
 			}
 		}
 	} elseif ( ! empty( $value ) && is_array( $value ) ) {
 		if ( 'multiselect' == $type || 'checkbox' == $type ) {
-			if ( ! empty( $data['options'] ) && empty( $data[ 'custom_dropdown_options_source' ] ) ) {
+			if ( ! empty( $data['options'] ) && empty( $data['custom_dropdown_options_source'] ) ) {
 				$value = array_intersect( $value, $data['options'] );
 			}
 		}
