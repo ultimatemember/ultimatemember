@@ -215,8 +215,8 @@ function um_user_edit_profile( $args ) {
 	 */
 	do_action( 'um_user_before_updating_profile', $userinfo );
 
-	if ( ! empty( $args['custom_fields'] ) ) {
-		$fields = unserialize( $args['custom_fields'] );
+	if ( !empty( $args[ 'custom_fields' ] ) ) {
+		$fields = apply_filters( 'um_user_edit_profile_fields', unserialize( $args[ 'custom_fields' ] ), $args );
 	}
 
 	// loop through fields
@@ -246,6 +246,27 @@ function um_user_edit_profile( $args ) {
 				}
 			}
 
+
+			/**
+			 * Returns dropdown/multi-select options keys from a callback function
+			 * @since 2019-05-30
+			 */
+			$has_custom_source = apply_filters("um_has_dropdown_options_source__{$key}", false );
+				
+			if ( isset( $array[ 'options' ] ) && in_array( $array[ 'type' ], array( 'select', 'multiselect' ) ) ) {
+	
+				if ( !empty( $array[ 'custom_dropdown_options_source' ] ) && function_exists( $array[ 'custom_dropdown_options_source' ] ) && ! $has_custom_source  ) {
+					$options = call_user_func( $array[ 'custom_dropdown_options_source' ], $array[ 'options' ] );
+					if( is_array( $options ) ){
+						$array[ 'options' ] = apply_filters("um_custom_dropdown_options__{$key}", array_keys( $options ) );
+					}
+				}else{
+						$array[ 'options' ] = apply_filters("um_custom_dropdown_options__{$key}", array() );
+				}
+
+			}
+
+
 			//validation of correct values from options in wp-admin
 			$stripslashes = $args['submitted'][ $key ];
 			if ( is_string( $stripslashes ) ) {
@@ -253,7 +274,7 @@ function um_user_edit_profile( $args ) {
 			}
 			if ( in_array( $array['type'], array( 'select' ) ) &&
 			     ! empty( $array['options'] ) && ! empty( $stripslashes ) &&
-			     ! in_array( $stripslashes, array_map( 'trim', $array['options'] ) ) ) {
+			     ! in_array( $stripslashes, array_map( 'trim', $array['options'] ) ) && ! $has_custom_source  ) {
 				continue;
 			}
 
@@ -298,6 +319,7 @@ function um_user_edit_profile( $args ) {
 			}
 		}
 	}
+
 
 	if ( isset( $args['submitted']['description'] ) ) {
 		$to_update['description'] = $args['submitted']['description'];
