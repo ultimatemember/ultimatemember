@@ -147,6 +147,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed Notifications Account tab view
   - Fixed warnings on validation process
   - Fixed slashes in some texts from options
+  - Fixed callback functions for select and multiselect fields
 
 = 2.0.52: July 11, 2019 =
 

@@ -273,15 +273,15 @@ function um_user_edit_profile( $args ) {
 				$stripslashes = stripslashes( $stripslashes );
 			}
 			if ( in_array( $array['type'], array( 'select' ) ) &&
-			     ! empty( $array['options'] ) && ! empty( $stripslashes ) &&
-			     ! in_array( $stripslashes, array_map( 'trim', $array['options'] ) ) && ! $has_custom_source  ) {
+				 ! empty( $array['options'] ) && ! empty( $stripslashes ) &&
+				 ! in_array( $stripslashes, array_map( 'trim', $array['options'] ) ) && ! $has_custom_source  ) {
 				continue;
 			}
 
 			//validation of correct values from options in wp-admin
 			//the user cannot set invalid value in the hidden input at the page
 			if ( in_array( $array['type'], array( 'multiselect', 'checkbox', 'radio' ) ) &&
-			     ! empty( $args['submitted'][ $key ] ) && ! empty( $array['options'] ) ) {
+				 ! empty( $args['submitted'][ $key ] ) && ! empty( $array['options'] ) ) {
 				$args['submitted'][ $key ] = array_map( 'stripslashes', array_map( 'trim', $args['submitted'][ $key ] ) );
 				$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], array_map( 'trim', $array['options'] ) );
 			}
@@ -553,7 +553,7 @@ function um_profile_dynamic_meta_desc() {
 		$user_id = um_user( 'ID' );
 
 		$url = um_user_profile_url();
-        $avatar = um_get_user_avatar_url( $user_id, 'original' );
+		$avatar = um_get_user_avatar_url( $user_id, 'original' );
 
 		um_reset_user(); ?>
 
@@ -593,7 +593,7 @@ function um_profile_header_cover_area( $args ) {
 		?>
 
 		<div class="um-cover <?php if ( um_user( 'cover_photo' ) || ( $default_cover && $default_cover['url'] ) ) echo 'has-cover'; ?>"
-		     data-user_id="<?php echo um_profile_id(); ?>" data-ratio="<?php echo $args['cover_ratio']; ?>">
+			 data-user_id="<?php echo um_profile_id(); ?>" data-ratio="<?php echo $args['cover_ratio']; ?>">
 
 			<?php
 			/**
@@ -721,21 +721,26 @@ add_action( 'um_after_profile_header_name_args', 'um_social_links_icons', 50 );
 function um_profile_header( $args ) {
 	$classes = null;
 
-	if (!$args['cover_enabled']) {
+	if ( ! $args['cover_enabled'] ) {
 		$classes .= ' no-cover';
 	}
 
 	$default_size = str_replace( 'px', '', $args['photosize'] );
 
-	$overlay = '<span class="um-profile-photo-overlay">
+	// Switch on/off the profile photo uploader
+	$disable_photo_uploader = empty( $args['use_custom_settings'] ) ? UM()->options()->get( 'disable_profile_photo_upload' ) : $args['disable_photo_upload'];
+	if ( $disable_photo_uploader ) {
+		$args['disable_photo_upload'] = 1;
+		$overlay = '';
+	} else {
+		$overlay = '<span class="um-profile-photo-overlay">
 			<span class="um-profile-photo-overlay-s">
 				<ins>
 					<i class="um-faicon-camera"></i>
 				</ins>
 			</span>
 		</span>';
-
-	?>
+	} ?>
 
 	<div class="um-header<?php echo $classes; ?>">
 
@@ -766,9 +771,7 @@ function um_profile_header( $args ) {
 			<a href="<?php echo um_user_profile_url(); ?>" class="um-profile-photo-img"
 			   title="<?php echo um_user( 'display_name' ); ?>"><?php echo $overlay . get_avatar( um_user( 'ID' ), $default_size ); ?></a>
 
-			<?php
-
-			if ( ! isset( UM()->user()->cannot_edit ) ) {
+			<?php if ( ! $disable_photo_uploader && empty( UM()->user()->cannot_edit ) ) {
 
 				UM()->fields()->add_hidden_field( 'profile_photo' );
 
@@ -839,35 +842,33 @@ function um_profile_header( $args ) {
 
 				}
 
-			}
-
-			?>
+			} ?>
 
 		</div>
 
 		<div class="um-profile-meta">
 
-            <?php
-            /**
-             * UM hook
-             *
-             * @type action
-             * @title um_before_profile_main_meta
-             * @description Insert before profile main meta block
-             * @input_vars
-             * [{"var":"$args","type":"array","desc":"Form Arguments"}]
-             * @change_log
-             * ["Since: 2.0.1"]
-             * @usage add_action( 'um_before_profile_main_meta', 'function_name', 10, 1 );
-             * @example
-             * <?php
-             * add_action( 'um_before_profile_main_meta', 'my_before_profile_main_meta', 10, 1 );
-             * function my_before_profile_main_meta( $args ) {
-             *     // your code here
-             * }
-             * ?>
-             */
-            do_action( 'um_before_profile_main_meta', $args ); ?>
+			<?php
+			/**
+			 * UM hook
+			 *
+			 * @type action
+			 * @title um_before_profile_main_meta
+			 * @description Insert before profile main meta block
+			 * @input_vars
+			 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
+			 * @change_log
+			 * ["Since: 2.0.1"]
+			 * @usage add_action( 'um_before_profile_main_meta', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_action( 'um_before_profile_main_meta', 'my_before_profile_main_meta', 10, 1 );
+			 * function my_before_profile_main_meta( $args ) {
+			 *     // your code here
+			 * }
+			 * ?>
+			 */
+			do_action( 'um_before_profile_main_meta', $args ); ?>
 
 			<div class="um-main-meta">
 
@@ -971,10 +972,10 @@ function um_profile_header( $args ) {
 
 				<div class="um-meta-text">
 					<textarea id="um-meta-bio"
-					          data-character-limit="<?php echo UM()->options()->get( 'profile_bio_maxchars' ); ?>"
-					          placeholder="<?php _e( 'Tell us a bit about yourself...', 'ultimate-member' ); ?>"
-					          name="<?php echo 'description-' . $args['form_id']; ?>"
-					          id="<?php echo 'description-' . $args['form_id']; ?>"><?php echo UM()->fields()->field_value( 'description' ) ?></textarea>
+							  data-character-limit="<?php echo UM()->options()->get( 'profile_bio_maxchars' ); ?>"
+							  placeholder="<?php _e( 'Tell us a bit about yourself...', 'ultimate-member' ); ?>"
+							  name="<?php echo 'description-' . $args['form_id']; ?>"
+							  id="<?php echo 'description-' . $args['form_id']; ?>"><?php echo UM()->fields()->field_value( 'description' ) ?></textarea>
 					<span class="um-meta-bio-character um-right"><span
 							class="um-bio-limit"><?php echo UM()->options()->get( 'profile_bio_maxchars' ); ?></span></span>
 					<?php

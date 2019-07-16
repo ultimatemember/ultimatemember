@@ -123,45 +123,57 @@
 				'conditional'	=> array( '_um_profile_cover_enabled', '=', 1 )
 			),
 			array(
-				'id'		    => '_um_profile_photosize',
-				'type'		    => 'text',
-				'label'    		=> __( 'Profile Photo Size', 'ultimate-member' ),
-				'tooltip'    	=> __( 'Set the profile photo size in pixels here', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_profile_photosize', null, UM()->options()->get( 'profile_photosize' ) ),
-				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 )
-			),
-			array(
-				'id'		    => '_um_profile_photo_required',
-				'type'		    => 'select',
-				'label'    		=> __( 'Make Profile Photo Required', 'ultimate-member' ),
-				'tooltip'    		=> __( 'Require user to update a profile photo when updating their profile', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_profile_photo_required' ),
-				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 ),
-				'options'		=> array(
-					0	=> __( 'No', 'ultimate-member' ),
-					1	=> __( 'Yes', 'ultimate-member' ),
+				'id'            => '_um_profile_disable_photo_upload',
+				'type'          => 'select',
+				'label'         => __( 'Disable Profile Photo Upload', 'ultimate-member' ),
+				'tooltip'       => __( 'Switch on/off the profile photo uploader', 'ultimate-member' ),
+				'value'         => UM()->query()->get_meta_value( '_um_profile_disable_photo_upload', null, UM()->options()->get( 'disable_profile_photo_upload' ) ),
+				'conditional'   => array( '_um_profile_use_custom_settings', '=', 1 ),
+				'options'       => array(
+					0   => __( 'No', 'ultimate-member' ),
+					1   => __( 'Yes', 'ultimate-member' ),
 				),
 			),
 			array(
-				'id'		    => '_um_profile_show_name',
-				'type'		    => 'select',
-				'label'    		=> __( 'Show display name in profile header?', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_profile_show_name', null, 1 ),
-				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 ),
-				'options'		=> array(
-					0	=> __( 'No', 'ultimate-member' ),
-					1	=> __( 'Yes', 'ultimate-member' ),
+				'id'            => '_um_profile_photosize',
+				'type'          => 'text',
+				'label'         => __( 'Profile Photo Size', 'ultimate-member' ),
+				'tooltip'       => __( 'Set the profile photo size in pixels here', 'ultimate-member' ),
+				'value'         => UM()->query()->get_meta_value( '_um_profile_photosize', null, UM()->options()->get( 'profile_photosize' ) ),
+				'conditional'   => array( '_um_profile_use_custom_settings', '=', 1 )
+			),
+			array(
+				'id'            => '_um_profile_photo_required',
+				'type'          => 'select',
+				'label'         => __( 'Make Profile Photo Required', 'ultimate-member' ),
+				'tooltip'       => __( 'Require user to update a profile photo when updating their profile', 'ultimate-member' ),
+				'value'         => UM()->query()->get_meta_value( '_um_profile_photo_required' ),
+				'conditional'   => array( '_um_profile_use_custom_settings', '=', 1 ),
+				'options'       => array(
+					0   => __( 'No', 'ultimate-member' ),
+					1   => __( 'Yes', 'ultimate-member' ),
 				),
 			),
 			array(
-				'id'		    => '_um_profile_show_social_links',
-				'type'		    => 'select',
-				'label'    		=> __( 'Show social links in profile header?', 'ultimate-member' ),
-				'value' 		=> UM()->query()->get_meta_value( '_um_profile_show_social_links', null, UM()->options()->get( 'profile_show_social_links' ) ),
-				'conditional'	=> array( '_um_profile_use_custom_settings', '=', 1 ),
-				'options'		=> array(
-					0	=> __( 'No', 'ultimate-member' ),
-					1	=> __( 'Yes', 'ultimate-member' ),
+				'id'            => '_um_profile_show_name',
+				'type'          => 'select',
+				'label'         => __( 'Show display name in profile header?', 'ultimate-member' ),
+				'value'         => UM()->query()->get_meta_value( '_um_profile_show_name', null, 1 ),
+				'conditional'   => array( '_um_profile_use_custom_settings', '=', 1 ),
+				'options'       => array(
+					0   => __( 'No', 'ultimate-member' ),
+					1   => __( 'Yes', 'ultimate-member' ),
+				),
+			),
+			array(
+				'id'            => '_um_profile_show_social_links',
+				'type'          => 'select',
+				'label'         => __( 'Show social links in profile header?', 'ultimate-member' ),
+				'value'         => UM()->query()->get_meta_value( '_um_profile_show_social_links', null, UM()->options()->get( 'profile_show_social_links' ) ),
+				'conditional'   => array( '_um_profile_use_custom_settings', '=', 1 ),
+				'options'       => array(
+					0   => __( 'No', 'ultimate-member' ),
+					1   => __( 'Yes', 'ultimate-member' ),
 				),
 			),
 			array(

@@ -520,6 +520,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'blocked_words'                         => 'admin' . "\r\n" . 'administrator' . "\r\n" . 'webmaster' . "\r\n" . 'support' . "\r\n" . 'staff',
 				'default_avatar'                        => '',
 				'default_cover'                         => '',
+				'disable_profile_photo_upload'          => 0,
 				'profile_show_metaicon'                 => 0,
 				'profile_menu'                          => 1,
 				'profile_menu_default_tab'              => 'main',
