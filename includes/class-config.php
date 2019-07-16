@@ -220,6 +220,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'_um_profile_align' => 'center',
 				'_um_profile_icons' => 'label',
 				'_um_profile_cover_enabled' => 1,
+				'_um_profile_disable_photo_upload' => 0,
 				'_um_profile_cover_ratio' => '2.7:1',
 				'_um_profile_photosize' => '190px',
 				'_um_profile_photocorner' => '1',

@@ -140,6 +140,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 = 2.0.53: July 16, 2019 =
 
 * Enhancements:
+  - Added option to disable profile avatar uploader
   - Moved extensions icons to core
 
 * Bugfixes:
