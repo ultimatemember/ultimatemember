@@ -195,8 +195,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				}
 			}
 
-			$appearances_profile_menu_fields = array_merge( $appearances_profile_menu_fields, array(
-				array(
+			if ( count( $active_tabs ) ) {
+				$appearances_profile_menu_fields[] = array(
 					'id'            => 'profile_menu_default_tab',
 					'type'          => 'select',
 					'label'         => __( 'Profile menu default tab', 'ultimate-member' ),
@@ -204,13 +204,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'options'       => $active_tabs,
 					'conditional'   => array( 'profile_menu', '=', 1 ),
 					'size'          => 'small'
-				),
+				);
+			}
+
+			$appearances_profile_menu_fields = array_merge( $appearances_profile_menu_fields, array(
 				array(
 					'id'            => 'profile_menu_icons',
 					'type'          => 'checkbox',
 					'label'         => __( 'Enable menu icons in desktop view', 'ultimate-member' ),
 					'conditional'   => array( 'profile_menu', '=', 1 ),
-				)
+				),
 			) );
 
 			$post_types_options = array();
