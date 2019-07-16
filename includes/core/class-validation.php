@@ -74,7 +74,7 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 
 				//validation of correct values from options in wp-admin
 				$stripslashes = $value;
-				if( is_string( $value ) ){
+				if ( is_string( $value ) ) {
 					$stripslashes = stripslashes( $value );
 				}
 
