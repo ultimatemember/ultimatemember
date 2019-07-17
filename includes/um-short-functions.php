@@ -2713,11 +2713,3 @@ if ( ! function_exists( 'um_is_profile_owner' ) ) {
 		return ( $user_id == um_profile_id() );
 	}
 }
-
-/**
- * Strip tags if array
- */
-function um_strip_tags_array( $var ) {
-	$var = trim( esc_html( strip_tags( $var ) ) );
-	return $var;
-}
