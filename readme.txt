@@ -41,6 +41,7 @@ Read about all of the plugin's features at [Ultimate Member](https://ultimatemem
 
 Ultimate Member has a range of extensions that allow you to extend the power of the plugin. You can purchase all of these extensions at a significant discount with our [All Access Pass](https://ultimatemember.com/pricing/) or you can purchase extensions individually.
 
+* [User Bookmarks](https://ultimatemember.com/extensions/user-bookmarks/) - Allow users to bookmark content from your website
 * [Private Content](https://ultimatemember.com/extensions/private-content/) - Display private content to logged in users that only they can access
 * [Instagram](https://ultimatemember.com/extensions/instagram/) - Allow users to show their Instagram photos on their profile
 * [User Tags](https://ultimatemember.com/extensions/user-tags/) - Lets you add a user tag system to your website
@@ -53,7 +54,7 @@ Ultimate Member has a range of extensions that allow you to extend the power of 
 * [bbPress](https://ultimatemember.com/extensions/bbpress/) - With the bbPress extension you can beautifully integrate Ultimate Member with bbPress
 * [MailChimp](https://ultimatemember.com/extensions/mailchimp/) - Allow users to subscribe to your MailChimp lists when they signup on your site and sync user meta to MailChimp
 * [User Reviews](https://ultimatemember.com/extensions/user-reviews/) - Allow users to rate & review each other using a 5 star rate/review system
-* [Verified Users](https://ultimatemember.com/extensions/verified-users/) - Add a user verficiation system to your site so user accounts can be verified
+* [Verified Users](https://ultimatemember.com/extensions/verified-users/) - Add a user verification system to your site so user accounts can be verified
 * [myCRED](https://ultimatemember.com/extensions/mycred/) - With the myCRED extension you can integrate Ultimate Member with the popular myCRED points management plugin
 * [Notices](https://ultimatemember.com/extensions/notices/) - Alert users to important information using conditional notices
 * [Profile Completeness](https://ultimatemember.com/extensions/profile-completeness/) - Encourage or force users to complete their profiles with the profile completeness extension
@@ -137,6 +138,16 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 == Changelog ==
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
+
+= 2.0.54: July 17, 2019 =
+
+* Enhancements:
+  - Added security fixes (XSS)
+
+* Bugfixes:
+  - Fixed update process for not UM custom role
+  - Fixed user description length validation
+  - Fixed extensions licenses validation handler
 
 = 2.0.53: July 16, 2019 =
 

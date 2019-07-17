@@ -429,11 +429,11 @@ if ( $role_keys ) {
 		$role_meta = get_option( "um_role_{$role_key}_meta" );
 		if ( $role_meta ) {
 
-			$roles['um_' . $role_key] = array(
+			$roles[ 'um_' . $role_key ] = array(
 				'key'   => $role_key,
-				'users' => ! empty( $users_count['avail_roles']['um_' . $role_key] ) ? $users_count['avail_roles']['um_' . $role_key] : 0
+				'users' => ! empty( $users_count['avail_roles'][ 'um_' . $role_key ] ) ? $users_count['avail_roles'][ 'um_' . $role_key ] : 0
 			);
-			$roles['um_' . $role_key] = array_merge( $roles['um_' . $role_key], $role_meta );
+			$roles[ 'um_' . $role_key ] = array_merge( $roles[ 'um_' . $role_key ], $role_meta );
 		}
 	}
 }
@@ -441,18 +441,20 @@ if ( $role_keys ) {
 global $wp_roles;
 
 foreach ( $wp_roles->roles as $roleID => $role_data ) {
-	if ( in_array( $roleID, array_keys( $roles ) ) )
+	if ( in_array( $roleID, array_keys( $roles ) ) ) {
 		continue;
+	}
 
-	$roles[$roleID] = array(
+	$roles[ $roleID ] = array(
 		'key'   => $roleID,
-		'users' => ! empty( $users_count['avail_roles'][$roleID] ) ? $users_count['avail_roles'][$roleID] : 0,
-		'name' => $role_data['name']
+		'users' => ! empty( $users_count['avail_roles'][ $roleID ] ) ? $users_count['avail_roles'][ $roleID ] : 0,
+		'name'  => $role_data['name']
 	);
 
 	$role_meta = get_option( "um_role_{$roleID}_meta" );
-	if ( $role_meta )
-		$roles[$roleID] = array_merge( $roles[$roleID], $role_meta );
+	if ( $role_meta ) {
+		$roles[ $roleID ] = array_merge( $roles[ $roleID ], $role_meta );
+	}
 }
 
 switch( strtolower( $order ) ) {

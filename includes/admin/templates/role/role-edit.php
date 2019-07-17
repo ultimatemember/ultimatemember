@@ -98,9 +98,11 @@ if ( ! empty( $_POST['role'] ) ) {
 			$id = $_GET['id'];
 
 			$pre_role_meta = get_option( "um_role_{$id}_meta", array() );
-			$data['name'] = $pre_role_meta['name'];
+			if ( isset( $pre_role_meta['name'] ) ) {
+				$data['name'] = $pre_role_meta['name'];
+			}
 
-			$redirect = add_query_arg( array( 'page' => 'um_roles', 'tab'=>'edit', 'id'=>$id, 'msg'=>'u' ), admin_url( 'admin.php' ) );
+			$redirect = add_query_arg( array( 'page' => 'um_roles', 'tab' => 'edit', 'id' => $id, 'msg'=> 'u' ), admin_url( 'admin.php' ) );
 		}
 
 

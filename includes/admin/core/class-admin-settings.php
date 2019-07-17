@@ -1704,7 +1704,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				return;
 
 			foreach ( $_POST['um_options'] as $key => $value ) {
-				$this->previous_licenses[$key] = UM()->options()->get( $key );
+				$this->previous_licenses[ $key ] = UM()->options()->get( $key );
 			}
 		}
 
@@ -1713,25 +1713,27 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 *
 		 */
 		function licenses_save() {
-			if ( empty( $_POST['um_options'] ) || empty( $_POST['licenses_settings'] ) )
+			if ( empty( $_POST['um_options'] ) || empty( $_POST['licenses_settings'] ) ) {
 				return;
+			}
 
 			foreach ( $_POST['um_options'] as $key => $value ) {
 				$edd_action = '';
 				$license_key = '';
-				if ( empty( $this->previous_licenses[$key] ) && ! empty( $value ) || ( ! empty( $this->previous_licenses[$key] ) && ! empty( $value ) && $this->previous_licenses[$key] != $value ) ) {
+				if ( empty( $this->previous_licenses[ $key ] ) && ! empty( $value ) || ( ! empty( $this->previous_licenses[ $key ] ) && ! empty( $value ) && $this->previous_licenses[ $key ] != $value ) ) {
 					$edd_action = 'activate_license';
 					$license_key = $value;
-				} elseif ( ! empty( $this->previous_licenses[$key] ) && empty( $value ) ) {
+				} elseif ( ! empty( $this->previous_licenses[ $key ] ) && empty( $value ) ) {
 					$edd_action = 'deactivate_license';
-					$license_key = $this->previous_licenses[$key];
-				} elseif ( ! empty( $this->previous_licenses[$key] ) && ! empty( $value ) ) {
+					$license_key = $this->previous_licenses[ $key ];
+				} elseif ( ! empty( $this->previous_licenses[ $key ] ) && ! empty( $value ) ) {
 					$edd_action = 'check_license';
 					$license_key = $value;
 				}
 
-				if ( empty( $edd_action ) )
+				if ( empty( $edd_action ) ) {
 					continue;
+				}
 
 				$item_name = false;
 				$version = false;
@@ -1762,15 +1764,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					)
 				);
 
-				if ( ! is_wp_error( $request ) )
+				if ( ! is_wp_error( $request ) ) {
 					$request = json_decode( wp_remote_retrieve_body( $request ) );
+				}
 
 				$request = ( $request ) ? maybe_unserialize( $request ) : false;
 
-				if ( $edd_action == 'activate_license' || $edd_action == 'check_license' )
+				if ( $edd_action == 'activate_license' || $edd_action == 'check_license' ) {
 					update_option( "{$key}_edd_answer", $request );
-				else
+				} else {
 					delete_option( "{$key}_edd_answer" );
+				}
 
 			}
 		}
@@ -1884,13 +1888,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					<tbody>
 					<?php foreach ( $section_fields as $field_data ) {
 						$option_value = UM()->options()->get( $field_data['id'] );
-						$value = isset( $option_value )  && ! empty( $option_value ) ? $option_value : ( isset( $field_data['default'] ) ? $field_data['default'] : '' );
+						$value = isset( $option_value ) && ! empty( $option_value ) ? $option_value : ( isset( $field_data['default'] ) ? $field_data['default'] : '' );
 
 						$license = get_option( "{$field_data['id']}_edd_answer" );
 
 						if ( is_object( $license ) && ! empty( $value ) ) {
 							// activate_license 'invalid' on anything other than valid, so if there was an error capture it
-							if ( false === $license->success ) {
+							if ( empty( $license->success ) ) {
 
 								if ( ! empty( $license->error ) ) {
 									switch ( $license->error ) {
@@ -1935,16 +1939,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										case 'invalid' :
 										case 'site_inactive' :
 
-										$class = 'error';
-										$messages[] = sprintf(
-											__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license key URLs.', 'ultimate-member' ),
-											$field_data['item_name'],
-											'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
-										);
+											$class = 'error';
+											$messages[] = sprintf(
+												__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license key URLs.', 'ultimate-member' ),
+												$field_data['item_name'],
+												'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
+											);
 
-										$license_status = 'license-' . $class . '-notice';
+											$license_status = 'license-' . $class . '-notice';
 
-										break;
+											break;
 
 										case 'item_name_mismatch' :
 
@@ -1975,7 +1979,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										default :
 
 											$class = 'error';
-											$error = ! empty(  $license->error ) ?  $license->error : __( 'unknown_error', 'ultimate-member' );
+											$error = ! empty(  $license->error ) ? $license->error : __( 'unknown_error', 'ultimate-member' );
 											$messages[] = sprintf( __( 'There was an error with this license key: %s. Please <a href="%s">contact our support team</a>.', 'ultimate-member' ), $error, 'https://ultimatemember.com/support' );
 
 											$license_status = 'license-' . $class . '-notice';
@@ -1983,11 +1987,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									}
 								} else {
 									$class = 'error';
-									$error = ! empty(  $license->error ) ?  $license->error : __( 'unknown_error', 'ultimate-member' );
+									$error = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'ultimate-member' );
 									$messages[] = sprintf( __( 'There was an error with this license key: %s. Please <a href="%s">contact our support team</a>.', 'ultimate-member' ), $error, 'https://ultimatemember.com/support' );
 
 									$license_status = 'license-' . $class . '-notice';
 								}
+
+							} elseif ( ! empty( $license->errors ) ) {
+
+								$errors = array_keys( $license->errors );
+								$errors_data = array_values( $license->errors );
+
+								$class = 'error';
+								$error = ! empty( $errors[0] ) ? $errors[0] : __( 'unknown_error', 'ultimate-member' );
+								$errors_data = ! empty( $errors_data[0][0] ) ? ', ' . $errors_data[0][0] : '';
+								$messages[] = sprintf( __( 'There was an error with this license key: %s%s. Please <a href="%s">contact our support team</a>.', 'ultimate-member' ), $error, $errors_data, 'https://ultimatemember.com/support' );
+
+								$license_status = 'license-' . $class . '-notice';
 
 							} else {
 
@@ -2033,16 +2049,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									case 'invalid' :
 									case 'site_inactive' :
 
-									$class = 'error';
-									$messages[] = sprintf(
-										__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license key URLs.', 'ultimate-member' ),
-										$field_data['item_name'],
-										'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
-									);
+										$class = 'error';
+										$messages[] = sprintf(
+											__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license key URLs.', 'ultimate-member' ),
+											$field_data['item_name'],
+											'https://ultimatemember.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
+										);
 
-									$license_status = 'license-' . $class . '-notice';
+										$license_status = 'license-' . $class . '-notice';
 
-									break;
+										break;
 
 									case 'item_name_mismatch' :
 
@@ -2073,39 +2089,39 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									case 'valid' :
 									default:
 
-									$class = 'valid';
+										$class = 'valid';
 
-									$now        = current_time( 'timestamp' );
-									$expiration = strtotime( $license->expires, current_time( 'timestamp' ) );
+										$now        = current_time( 'timestamp' );
+										$expiration = strtotime( $license->expires, $now );
 
-									if( 'lifetime' === $license->expires ) {
+										if( 'lifetime' === $license->expires ) {
 
-										$messages[] = __( 'License key never expires.', 'ultimate-member' );
+											$messages[] = __( 'License key never expires.', 'ultimate-member' );
 
-										$license_status = 'license-lifetime-notice';
+											$license_status = 'license-lifetime-notice';
 
-									} elseif( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
+										} elseif( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
 
-										$messages[] = sprintf(
-											__( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank">Renew your license key</a>.', 'ultimate-member' ),
-											date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
-											'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
-										);
+											$messages[] = sprintf(
+												__( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank">Renew your license key</a>.', 'ultimate-member' ),
+												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+												'https://ultimatemember.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
+											);
 
-										$license_status = 'license-expires-soon-notice';
+											$license_status = 'license-expires-soon-notice';
 
-									} else {
+										} else {
 
-										$messages[] = sprintf(
-											__( 'Your license key expires on %s.', 'ultimate-member' ),
-											date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
-										);
+											$messages[] = sprintf(
+												__( 'Your license key expires on %s.', 'ultimate-member' ),
+												date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
+											);
 
-										$license_status = 'license-expiration-date-notice';
+											$license_status = 'license-expiration-date-notice';
 
-									}
+										}
 
-									break;
+										break;
 
 								}
 
@@ -2121,9 +2137,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 							$license_status = null;
 
-						}
-
-						?>
+						} ?>
 
 						<tr class="um-settings-line">
 							<th><label for="um_options_<?php echo $field_data['id'] ?>"><?php echo $field_data['label'] ?></label></th>
