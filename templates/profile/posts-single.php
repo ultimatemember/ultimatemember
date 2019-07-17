@@ -1,7 +1,9 @@
+<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+
 <div class="um-item">
 	<div class="um-item-link">
 		<i class="um-icon-ios-paper"></i>
-		<a href="<?php echo esc_url( get_permalink( $post ) ); ?>"><?php esc_html_e( $post->post_title ); ?></a>
+		<a href="<?php echo esc_url( get_permalink( $post ) ); ?>"><?php echo esc_html( $post->post_title ); ?></a>
 	</div>
 
 	<?php if ( has_post_thumbnail( $post->ID ) ) {

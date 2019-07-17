@@ -1,4 +1,6 @@
-<?php if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+<?php if ( ! defined( 'ABSPATH' ) ) exit;
+
+if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 	//Only for AJAX loading posts
 	if ( ! empty( $posts ) ) {
 		foreach ( $posts as $post ) {
