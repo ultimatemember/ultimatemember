@@ -71,7 +71,11 @@ add_filter( "um_get_field__last_name","um_account_disable_name_fields", 10 ,1 );
  */
 function um_account_sanitize_data( $data ) {
 	foreach ( $data as $key => $value ) {
-		$data[ $key ] = trim( esc_html( strip_tags( $value ) ) );
+		if ( is_array( $value ) ) {
+			$data[ $key ] = array_filter($value, 'um_strip_tags_array');
+		} else {
+			$data[ $key ] = trim( esc_html( strip_tags( $value ) ) );
+		}
 	}
 
 	return $data;
