@@ -11,7 +11,7 @@
 		<?php if ( count( UM()->shortcodes()->loop) >= 10 ) { ?>
 		
 		<div class="um-load-items">
-			<a href="#" class="um-ajax-paginate um-button" data-hook="um_load_comments" data-args="comment,10,10,<?php echo um_user('ID'); ?>"><?php _e('load more comments','ultimate-member'); ?></a>
+			<a href="#" class="um-ajax-paginate um-button" data-hook="um_load_comments" data-args="comment,10,10,<?php echo esc_attr( um_user('ID') ); ?>"><?php _e('load more comments','ultimate-member'); ?></a>
 		</div>
 		
 		<?php } ?>

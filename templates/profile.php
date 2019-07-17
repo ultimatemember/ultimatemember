@@ -1,4 +1,4 @@
-<div class="um <?php echo $this->get_class( $mode ); ?> um-<?php echo esc_attr( $form_id ); ?> um-role-<?php echo um_user( 'role' ); ?> ">
+<div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?> um-role-<?php echo esc_attr( um_user( 'role' ) ); ?> ">
 
 	<div class="um-form">
 	
@@ -93,7 +93,7 @@
 		 */
 		$classes = apply_filters( 'um_profile_navbar_classes', '' ); ?>
 
-		<div class="um-profile-navbar <?php echo $classes ?>">
+		<div class="um-profile-navbar <?php echo esc_attr( $classes ); ?>">
 			<?php
 			/**
 			 * UM hook
