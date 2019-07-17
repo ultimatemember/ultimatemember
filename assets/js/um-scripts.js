@@ -103,10 +103,60 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
-	jQuery('.um-tip-n').tipsy({gravity: 'n', opacity: 1, live: 'a.live', offset: 3 });
-	jQuery('.um-tip-w').tipsy({gravity: 'w', opacity: 1, live: 'a.live', offset: 3 });
-	jQuery('.um-tip-e').tipsy({gravity: 'e', opacity: 1, live: 'a.live', offset: 3 });
-	jQuery('.um-tip-s').tipsy({gravity: 's', opacity: 1, live: 'a.live', offset: 3 });
+	jQuery('.um-s1,.um-s2').css({'display':'block'});
+
+	if( jQuery(".um-s1").length > 0 ){
+		jQuery(".um-s1").each(function () {
+			var select = jQuery(this);
+			if( select.val() === '' && select.attr('data-default') ) {
+				select.val(select.attr('data-default'));
+			}
+		});
+	}
+
+	if( typeof(jQuery.fn.select2) === "function" ){
+		jQuery(".um-s1").select2({
+			allowClear: true
+		});
+
+		jQuery(".um-s2").select2({
+			allowClear: false,
+			minimumResultsForSearch: 10
+		});
+	}
+	
+	if( typeof(jQuery.fn.tipsy) === "function" ){
+		jQuery('.um-tip-n').tipsy({gravity: 'n', opacity: 1, live: 'a.live', offset: 3 });
+		jQuery('.um-tip-w').tipsy({gravity: 'w', opacity: 1, live: 'a.live', offset: 3 });
+		jQuery('.um-tip-e').tipsy({gravity: 'e', opacity: 1, live: 'a.live', offset: 3 });
+		jQuery('.um-tip-s').tipsy({gravity: 's', opacity: 1, live: 'a.live', offset: 3 });
+	}
+
+	if( typeof(jQuery.fn.um_raty) === "function" ){
+		jQuery('.um-rating').um_raty({
+			half: 		false,
+			starType: 	'i',
+			number: 	function() {return jQuery(this).attr('data-number');},
+			score: 		function() {return jQuery(this).attr('data-score');},
+			scoreName: 	function(){return jQuery(this).attr('data-key');},
+			hints: 		false,
+			click: function( score, evt ) {
+				live_field = this.id;
+				live_value = score;
+				um_apply_conditions( jQuery(this), false );
+			}
+		});
+
+		jQuery('.um-rating-readonly').um_raty({
+			half: 		false,
+			starType: 	'i',
+			number: 	function() {return jQuery(this).attr('data-number');},
+			score: 		function() {return jQuery(this).attr('data-score');},
+			scoreName: 	function(){return jQuery(this).attr('data-key');},
+			hints: 		false,
+			readOnly: true
+		});
+	}
 
 	jQuery(document).on('change', '.um-field-area input[type="radio"]', function(){
 		var field = jQuery(this).parents('.um-field-area');
@@ -132,30 +182,6 @@ jQuery(document).ready(function() {
 
 
 	um_init_datetimepicker();
-
-	jQuery('.um-rating').um_raty({
-		half: 		false,
-		starType: 	'i',
-		number: 	function() {return jQuery(this).attr('data-number');},
-		score: 		function() {return jQuery(this).attr('data-score');},
-		scoreName: 	function(){return jQuery(this).attr('data-key');},
-		hints: 		false,
-		click: function( score, evt ) {
-			live_field = this.id;
-			live_value = score;
-			um_apply_conditions( jQuery(this), false );
-		}
-	});
-
-	jQuery('.um-rating-readonly').um_raty({
-		half: 		false,
-		starType: 	'i',
-		number: 	function() {return jQuery(this).attr('data-number');},
-		score: 		function() {return jQuery(this).attr('data-score');},
-		scoreName: 	function(){return jQuery(this).attr('data-key');},
-		hints: 		false,
-		readOnly: true
-	});
 
 	jQuery(document).on('click', '.um .um-single-image-preview a.cancel', function(e){
 		e.preventDefault();
@@ -198,26 +224,6 @@ jQuery(document).ready(function() {
 		});
 
 		return false;
-	});
-
-	jQuery('.um-s1,.um-s2').css({'display':'block'});
-
-	if( jQuery(".um-s1").length > 0 ){
-		jQuery(".um-s1").each(function () {
-			var select = jQuery(this);
-			if( select.val() === '' && select.attr('data-default') ) {
-				select.val(select.attr('data-default'));
-			}
-		});
-	}
-
-	jQuery(".um-s1").select2({
-		allowClear: true
-	});
-
-	jQuery(".um-s2").select2({
-		allowClear: false,
-		minimumResultsForSearch: 10
 	});
 
 	jQuery(document).on('click', '.um-field-group-head:not(.disabled)', function(){
