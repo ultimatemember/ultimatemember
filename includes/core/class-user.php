@@ -25,7 +25,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$this->data = null;
 			$this->profile = null;
 			$this->cannot_edit = null;
-			$this->tabs = null;
 
 			$this->banned_keys = array(
 				'metabox','postbox','meta-box',

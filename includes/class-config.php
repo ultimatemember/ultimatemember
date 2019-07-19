@@ -546,7 +546,13 @@ if ( ! class_exists( 'um\Config' ) ) {
 			add_filter( 'um_get_tabs_from_config', '__return_true' );
 
 			$tabs = UM()->profile()->tabs();
+
 			foreach ( $tabs as $id => $tab ) {
+
+				if ( ! empty( $tab['hidden'] ) ) {
+					continue;
+				}
+
 				$this->settings_defaults[ 'profile_tab_' . $id ] = 1;
 
 				if ( ! isset( $tab['default_privacy'] ) ) {

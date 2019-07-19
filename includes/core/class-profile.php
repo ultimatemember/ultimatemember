@@ -242,6 +242,31 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 				}
 			}
 
+			if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_user_profile_tabs
+				 * @description Extend profile tabs
+				 * @input_vars
+				 * [{"var":"$tabs","type":"array","desc":"Profile Tabs"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage
+				 * <?php add_filter( 'um_user_profile_tabs', 'function_name', 10, 1 ); ?>
+				 * @example
+				 * <?php
+				 * add_filter( 'um_user_profile_tabs', 'my_user_profile_tabs', 10, 1 );
+				 * function my_user_profile_tabs( $tabs ) {
+				 *     // your code here
+				 *     return $tabs;
+				 * }
+				 * ?>
+				 */
+				$tabs = apply_filters( 'um_user_profile_tabs', $tabs );
+			}
+
 			return $tabs;
 		}
 
@@ -253,10 +278,45 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 */
 		function active_tab() {
 
-			$this->active_tab = UM()->options()->get('profile_menu_default_tab');
+			// get active tabs
+			$tabs = UM()->profile()->tabs_active();
 
-			if ( get_query_var('profiletab') ) {
-				$this->active_tab = get_query_var('profiletab');
+			if ( ! UM()->options()->get( 'profile_menu' ) ) {
+
+				$query_arg = get_query_var( 'profiletab' );
+				if ( ! empty( $query_arg ) && ! empty( $tabs[ $query_arg ]['hidden'] ) ) {
+					$this->active_tab = $query_arg;
+				} else {
+					if ( ! empty( $tabs ) ) {
+						foreach ( $tabs as $k => $tab ) {
+							if ( ! empty( $tab['hidden'] ) ) {
+								$this->active_tab = $k;
+								break;
+							}
+						}
+					}
+				}
+
+			} else {
+				$query_arg = get_query_var( 'profiletab' );
+				if ( ! empty( $query_arg ) && ! empty( $tabs[ $query_arg ] ) ) {
+					$this->active_tab = $query_arg;
+				} else {
+					$default_tab = UM()->options()->get( 'profile_menu_default_tab' );
+
+					if ( ! empty( $tabs[ $default_tab ] ) ) {
+						$this->active_tab = $default_tab;
+					} else {
+						if ( ! empty( $tabs ) ) {
+							foreach ( $tabs as $k => $tab ) {
+								if ( ! empty( $tab['hidden'] ) ) {
+									$this->active_tab = $k;
+									break;
+								}
+							}
+						}
+					}
+				}
 			}
 
 			/**

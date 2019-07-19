@@ -137,7 +137,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			foreach ( $tabs as $id => $tab ) {
 
-				if ( isset( $tab['hidden'] ) ) {
+				if ( ! empty( $tab['hidden'] ) ) {
 					continue;
 				}
 
