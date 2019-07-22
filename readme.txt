@@ -139,15 +139,15 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
-= 2.0.54: July 17, 2019 =
+= 2.0.54: July 22, 2019 =
 
 * Enhancements:
   - Added security fixes (XSS)
 
 * Bugfixes:
   - Fixed update process for not UM custom role
-  - Fixed user description length validation
   - Fixed extensions licenses validation handler
+  - Fixed profile tabs handlers
 
 = 2.0.53: July 16, 2019 =
 
