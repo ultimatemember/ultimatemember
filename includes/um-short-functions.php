@@ -1284,7 +1284,11 @@ function um_get_display_name( $user_id ) {
  * @return mixed
  */
 function um_members( $argument ) {
-	return UM()->members()->results[ $argument ];
+	$result = null;
+	if ( isset( UM()->members()->results[ $argument ] ) ) {
+		$result = UM()->members()->results[ $argument ];
+	}
+	return $result;
 }
 
 

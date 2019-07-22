@@ -11,7 +11,7 @@
 
 		<div class="um-member um-role-<?php echo esc_attr( um_user( 'role' ) ) . ' ' . esc_attr( um_user('account_status') ); ?> <?php if ( $cover_photos ) { echo 'with-cover'; } ?>">
 
-			<span class="um-member-status <?php echo esc_attr( um_user('account_status') ); ?>"><?php echo esc_html( um_user('account_status_name') ); ?></span>
+			<span class="um-member-status <?php echo esc_attr( um_user('account_status') ); ?>"><?php echo esc_html( um_user( 'account_status_name' ) ); ?></span>
 
 			<?php if ( $cover_photos ) {
 				$sizes = UM()->options()->get( 'cover_thumb_sizes' );
@@ -144,7 +144,7 @@
 										} ?>
 
 										<div class="um-member-metaline um-member-metaline-<?php echo esc_attr( $key ); ?>">
-											<span><strong><?php echo esc_html( UM()->fields()->get_label( $key ) ); ?>:</strong> <?php _e( $value, 'ultimate-member' ); ?></span>
+											<span><strong><?php echo UM()->fields()->get_label( $key ); ?>:</strong> <?php _e( $value, 'ultimate-member' ); ?></span>
 										</div>
 
 									<?php }

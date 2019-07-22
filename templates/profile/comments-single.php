@@ -17,7 +17,7 @@ foreach ( UM()->shortcodes()->loop as $comment ) {
 		<div class="um-item-link">
 			<i class="um-icon-chatboxes"></i>
 			<a href="<?php echo esc_url( get_comment_link( $comment->comment_ID ) ); ?>">
-				<?php echo esc_html( get_comment_excerpt( $comment->comment_ID ) ); ?>
+				<?php echo get_comment_excerpt( $comment->comment_ID ); ?>
 			</a>
 		</div>
 		<div class="um-item-meta">
