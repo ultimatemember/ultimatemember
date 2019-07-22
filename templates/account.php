@@ -77,7 +77,7 @@
 
 					<div class="um-account-name uimob800-hide">
 						<a href="<?php echo esc_url( um_user_profile_url() ); ?>">
-							<?php echo esc_html( um_user( 'display_name', 'html' ) ); ?>
+							<?php echo um_user( 'display_name', 'html' ); ?>
 						</a>
 						<div class="um-account-profile-link">
 							<a href="<?php echo esc_url( um_user_profile_url() ); ?>" class="um-link">

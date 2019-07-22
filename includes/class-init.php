@@ -18,7 +18,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_myCRED_API myCRED_API()
 	 * @method UM_Notices_API Notices_API()
 	 * @method UM_Notifications_API Notifications_API()
-	 * @method UM_Online_API Online_API()
+	 * @method UM_Online Online()
 	 * @method UM_Profile_Completeness_API Profile_Completeness_API()
 	 * @method UM_reCAPTCHA_API reCAPTCHA_API()
 	 * @method UM_Reviews_API Reviews_API()

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-07-16 15:14+0300\n"
-"PO-Revision-Date: 2019-07-16 15:14+0300\n"
+"POT-Creation-Date: 2019-07-22 18:18+0300\n"
+"PO-Revision-Date: 2019-07-22 18:18+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -172,7 +172,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-columns.php:130
 #: includes/admin/core/class-admin-columns.php:150
-#: includes/admin/templates/role/role-edit.php:190
+#: includes/admin/templates/role/role-edit.php:192
 msgid "Title"
 msgstr ""
 
@@ -436,7 +436,7 @@ msgstr ""
 #. Plugin Name of the plugin/theme
 #. Author of the plugin/theme
 #: includes/admin/core/class-admin-menu.php:145
-#: includes/core/class-user.php:561
+#: includes/core/class-user.php:560
 msgid "Ultimate Member"
 msgstr ""
 
@@ -450,7 +450,7 @@ msgid "Forms"
 msgstr ""
 
 #: includes/admin/core/class-admin-menu.php:159
-#: includes/admin/core/list-tables/roles-list-table.php:477
+#: includes/admin/core/list-tables/roles-list-table.php:479
 #: includes/admin/core/packages/2.0-beta1/user_roles.php:12
 msgid "User Roles"
 msgstr ""
@@ -1709,7 +1709,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:481
-#: includes/class-config.php:136 includes/class-config.php:755
+#: includes/class-config.php:136 includes/class-config.php:761
 #: includes/core/class-account.php:92
 msgid "Account"
 msgstr ""
@@ -2457,122 +2457,130 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1843
+#: includes/admin/core/class-admin-settings.php:1847
 msgid "Subject Line"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1845
+#: includes/admin/core/class-admin-settings.php:1849
 msgid "This is the subject line of the e-mail"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1850
+#: includes/admin/core/class-admin-settings.php:1854
 msgid "Message Body"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1852
+#: includes/admin/core/class-admin-settings.php:1856
 msgid "This is the content of the e-mail"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1902
-#: includes/admin/core/class-admin-settings.php:2000
+#: includes/admin/core/class-admin-settings.php:1906
+#: includes/admin/core/class-admin-settings.php:2016
 #, php-format
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" target=\"_blank"
 "\">renew your license key</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1915
-#: includes/admin/core/class-admin-settings.php:2013
+#: includes/admin/core/class-admin-settings.php:1919
+#: includes/admin/core/class-admin-settings.php:2029
 #, php-format
 msgid ""
 "Your license key has been disabled. Please <a href=\"%s\" target=\"_blank"
 "\">contact support</a> for more information."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1927
-#: includes/admin/core/class-admin-settings.php:2025
+#: includes/admin/core/class-admin-settings.php:1931
+#: includes/admin/core/class-admin-settings.php:2041
 #, php-format
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\">visit your account "
 "page</a> and verify it."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1940
-#: includes/admin/core/class-admin-settings.php:2038
+#: includes/admin/core/class-admin-settings.php:1944
+#: includes/admin/core/class-admin-settings.php:2054
 #, php-format
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" target=\"_blank"
 "\">visit your account page</a> to manage your license key URLs."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1952
-#: includes/admin/core/class-admin-settings.php:2050
+#: includes/admin/core/class-admin-settings.php:1956
+#: includes/admin/core/class-admin-settings.php:2066
 #, php-format
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1961
-#: includes/admin/core/class-admin-settings.php:2059
+#: includes/admin/core/class-admin-settings.php:1965
+#: includes/admin/core/class-admin-settings.php:2075
 #, php-format
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1970
-#: includes/admin/core/class-admin-settings.php:2068
+#: includes/admin/core/class-admin-settings.php:1974
+#: includes/admin/core/class-admin-settings.php:2084
 msgid ""
 "The key you entered belongs to a bundle, please use the product specific "
 "license key."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1978
-#: includes/admin/core/class-admin-settings.php:1986
+#: includes/admin/core/class-admin-settings.php:1982
+#: includes/admin/core/class-admin-settings.php:1990
+#: includes/admin/core/class-admin-settings.php:2002
 msgid "unknown_error"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:1979
-#: includes/admin/core/class-admin-settings.php:1987
+#: includes/admin/core/class-admin-settings.php:1983
+#: includes/admin/core/class-admin-settings.php:1991
 #, php-format
 msgid ""
 "There was an error with this license key: %s. Please <a href=\"%s\">contact "
 "our support team</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2083
+#: includes/admin/core/class-admin-settings.php:2004
+#, php-format
+msgid ""
+"There was an error with this license key: %s%s. Please <a href=\"%s"
+"\">contact our support team</a>."
+msgstr ""
+
+#: includes/admin/core/class-admin-settings.php:2099
 msgid "License key never expires."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2090
+#: includes/admin/core/class-admin-settings.php:2106
 #, php-format
 msgid ""
 "Your license key expires soon! It expires on %s. <a href=\"%s\" target="
 "\"_blank\">Renew your license key</a>."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2100
+#: includes/admin/core/class-admin-settings.php:2116
 #, php-format
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2118
+#: includes/admin/core/class-admin-settings.php:2134
 #, php-format
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2142
+#: includes/admin/core/class-admin-settings.php:2156
 msgid "Clear License"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2144
+#: includes/admin/core/class-admin-settings.php:2158
 msgid "Activate"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2146
+#: includes/admin/core/class-admin-settings.php:2160
 msgid "Re-Activate"
 msgstr ""
 
-#: includes/admin/core/class-admin-settings.php:2198
+#: includes/admin/core/class-admin-settings.php:2212
 msgid ""
 "To copy the Install info, click below then press Ctrl + C (PC) or Cmd + C "
 "(Mac)."
@@ -2675,8 +2683,8 @@ msgstr ""
 msgid "Reactivate"
 msgstr ""
 
-#: includes/admin/core/class-admin-users.php:203 templates/account.php:38
-#: templates/account.php:62
+#: includes/admin/core/class-admin-users.php:203 templates/account.php:43
+#: templates/account.php:84
 msgid "View profile"
 msgstr ""
 
@@ -2686,7 +2694,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-users.php:312
 #: includes/admin/templates/dashboard/users.php:11
-#: includes/core/class-user.php:825
+#: includes/core/class-user.php:824
 msgid "Approved"
 msgstr ""
 
@@ -2800,14 +2808,14 @@ msgstr ""
 msgid "Priority"
 msgstr ""
 
-#: includes/admin/core/list-tables/roles-list-table.php:479
+#: includes/admin/core/list-tables/roles-list-table.php:481
 #: includes/admin/core/packages/2.0-beta1/user_roles.php:14
-#: includes/admin/templates/role/role-edit.php:153
+#: includes/admin/templates/role/role-edit.php:155
 #: includes/core/class-common.php:56 includes/core/class-common.php:86
 msgid "Add New"
 msgstr ""
 
-#: includes/admin/core/list-tables/roles-list-table.php:486
+#: includes/admin/core/list-tables/roles-list-table.php:488
 msgid "User Role <strong>Deleted</strong> Successfully."
 msgstr ""
 
@@ -2990,6 +2998,14 @@ msgstr ""
 msgid "Upgrade predefined metafields..."
 msgstr ""
 
+#: includes/admin/core/packages/2.0.54/functions.php:13
+msgid "Roles was upgraded successfully"
+msgstr ""
+
+#: includes/admin/core/packages/2.0.54/init.php:7
+msgid "Upgrade user roles..."
+msgstr ""
+
 #: includes/admin/templates/dashboard/cache.php:9
 msgid "Run this task from time to time to keep your DB clean."
 msgstr ""
@@ -3031,12 +3047,12 @@ msgid "Get latest versions"
 msgstr ""
 
 #: includes/admin/templates/dashboard/users.php:27
-#: includes/core/class-user.php:833
+#: includes/core/class-user.php:832
 msgid "Pending Review"
 msgstr ""
 
 #: includes/admin/templates/dashboard/users.php:32
-#: includes/core/class-user.php:829
+#: includes/core/class-user.php:828
 msgid "Awaiting E-mail Confirmation"
 msgstr ""
 
@@ -3538,7 +3554,7 @@ msgstr ""
 
 #: includes/admin/templates/form/register_gdpr.php:55
 #: includes/admin/templates/form/register_gdpr.php:56
-#: templates/gdpr-register.php:28
+#: templates/gdpr-register.php:27
 msgid "Please confirm that you agree to our privacy policy"
 msgstr ""
 
@@ -3548,7 +3564,7 @@ msgstr ""
 
 #: includes/admin/templates/form/register_gdpr.php:63
 #: includes/admin/templates/form/register_gdpr.php:64
-#: templates/gdpr-register.php:37
+#: templates/gdpr-register.php:40
 msgid "Please confirm your acceptance of our privacy policy"
 msgstr ""
 
@@ -3949,27 +3965,27 @@ msgstr ""
 msgid "Title is empty!"
 msgstr ""
 
-#: includes/admin/templates/role/role-edit.php:110
+#: includes/admin/templates/role/role-edit.php:112
 msgid "Role already exists!"
 msgstr ""
 
-#: includes/admin/templates/role/role-edit.php:151
+#: includes/admin/templates/role/role-edit.php:153
 msgid "Add New Role"
 msgstr ""
 
-#: includes/admin/templates/role/role-edit.php:151
+#: includes/admin/templates/role/role-edit.php:153
 msgid "Edit Role"
 msgstr ""
 
-#: includes/admin/templates/role/role-edit.php:160
+#: includes/admin/templates/role/role-edit.php:162
 msgid "User Role <strong>Added</strong> Successfully."
 msgstr ""
 
-#: includes/admin/templates/role/role-edit.php:163
+#: includes/admin/templates/role/role-edit.php:165
 msgid "User Role <strong>Updated</strong> Successfully."
 msgstr ""
 
-#: includes/admin/templates/role/role-edit.php:191
+#: includes/admin/templates/role/role-edit.php:193
 msgid "Enter Title Here"
 msgstr ""
 
@@ -3982,31 +3998,31 @@ msgstr ""
 msgid "Check All"
 msgstr ""
 
-#: includes/class-config.php:131 includes/class-config.php:750
+#: includes/class-config.php:131 includes/class-config.php:756
 msgid "User"
 msgstr ""
 
 #: includes/class-config.php:132 includes/class-config.php:238
-#: includes/class-config.php:244 includes/class-config.php:751
+#: includes/class-config.php:244 includes/class-config.php:757
 msgid "Login"
 msgstr ""
 
 #: includes/class-config.php:133 includes/class-config.php:236
-#: includes/class-config.php:248 includes/class-config.php:752
+#: includes/class-config.php:248 includes/class-config.php:758
 msgid "Register"
 msgstr ""
 
-#: includes/class-config.php:134 includes/class-config.php:753
+#: includes/class-config.php:134 includes/class-config.php:759
 msgid "Members"
 msgstr ""
 
-#: includes/class-config.php:135 includes/class-config.php:754
+#: includes/class-config.php:135 includes/class-config.php:760
 #: includes/core/um-actions-profile.php:1165
 #: includes/core/um-actions-user.php:15
 msgid "Logout"
 msgstr ""
 
-#: includes/class-config.php:137 includes/class-config.php:756
+#: includes/class-config.php:137 includes/class-config.php:762
 msgid "Password Reset"
 msgstr ""
 
@@ -4269,7 +4285,7 @@ msgstr ""
 msgid "You must add a shortcode to the content area"
 msgstr ""
 
-#: includes/core/class-builtin.php:663 includes/core/class-user.php:1552
+#: includes/core/class-builtin.php:663 includes/core/class-user.php:1551
 msgid "Only me"
 msgstr ""
 
@@ -6337,7 +6353,7 @@ msgstr ""
 msgid "Add translation to %s"
 msgstr ""
 
-#: includes/core/class-fields.php:1207 templates/message.php:5
+#: includes/core/class-fields.php:1207 templates/message.php:7
 #, php-format
 msgid "%s"
 msgstr ""
@@ -6461,7 +6477,7 @@ msgid "You can not edit this user"
 msgstr ""
 
 #: includes/core/class-mail.php:612 includes/core/class-password.php:701
-#: includes/core/class-profile.php:403
+#: includes/core/class-profile.php:463
 msgid "Your set password"
 msgstr ""
 
@@ -6595,19 +6611,19 @@ msgstr ""
 msgid "Maximum file size allowed: %s"
 msgstr ""
 
-#: includes/core/class-user.php:619
+#: includes/core/class-user.php:618
 msgid "Ultimate Member Role"
 msgstr ""
 
-#: includes/core/class-user.php:622
+#: includes/core/class-user.php:621
 msgid "&mdash; No role for Ultimate Member &mdash;"
 msgstr ""
 
-#: includes/core/class-user.php:837
+#: includes/core/class-user.php:836
 msgid "Membership Rejected"
 msgstr ""
 
-#: includes/core/class-user.php:841
+#: includes/core/class-user.php:840
 msgid "Membership Inactive"
 msgstr ""
 
@@ -7091,36 +7107,36 @@ msgstr ""
 msgid "Title:"
 msgstr ""
 
-#: templates/members-grid.php:66
+#: templates/members-grid.php:83
 msgid "Edit profile"
 msgstr ""
 
-#: templates/password-change.php:43
+#: templates/password-change.php:45
 msgid "Change my password"
 msgstr ""
 
-#: templates/password-reset.php:8
+#: templates/password-reset.php:10
 msgid ""
 "We have sent you a password reset link to your e-mail. Please check your "
 "inbox."
 msgstr ""
 
-#: templates/password-reset.php:43
+#: templates/password-reset.php:45
 msgid "Your password reset link has expired. Please request a new link below."
 msgstr ""
 
-#: templates/password-reset.php:45
+#: templates/password-reset.php:47
 msgid ""
 "Your password reset link appears to be invalid. Please request a new link "
 "below."
 msgstr ""
 
-#: templates/password-reset.php:54
+#: templates/password-reset.php:56
 msgid ""
 "To reset your password, please enter your email address or username below"
 msgstr ""
 
-#: templates/password-reset.php:92
+#: templates/password-reset.php:94
 msgid "Reset my password"
 msgstr ""
 
@@ -7129,58 +7145,58 @@ msgstr ""
 msgid "On <a href=\"%1$s\">%2$s</a>"
 msgstr ""
 
-#: templates/profile/comments-single.php:34 templates/profile/comments.php:14
+#: templates/profile/comments-single.php:34 templates/profile/comments.php:17
 msgid "load more comments"
 msgstr ""
 
-#: templates/profile/comments.php:23
+#: templates/profile/comments.php:28
 msgid "You have not made any comments."
 msgstr ""
 
-#: templates/profile/comments.php:23
+#: templates/profile/comments.php:28
 msgid "This user has not made any comments."
 msgstr ""
 
-#: templates/profile/posts-single.php:21
+#: templates/profile/posts-single.php:23
 #, php-format
 msgid "%s ago"
 msgstr ""
 
-#: templates/profile/posts-single.php:24
+#: templates/profile/posts-single.php:26
 msgid "in"
 msgstr ""
 
-#: templates/profile/posts-single.php:30
+#: templates/profile/posts-single.php:32
 msgid "no comments"
 msgstr ""
 
-#: templates/profile/posts-single.php:32
+#: templates/profile/posts-single.php:34
 #, php-format
 msgid "%s comments"
 msgstr ""
 
-#: templates/profile/posts-single.php:34
+#: templates/profile/posts-single.php:36
 msgid "1 comment"
 msgstr ""
 
-#: templates/profile/posts.php:21
+#: templates/profile/posts.php:23
 msgid "load more posts"
 msgstr ""
 
-#: templates/profile/posts.php:32
+#: templates/profile/posts.php:34
 msgid "You have not created any posts."
 msgstr ""
 
-#: templates/profile/posts.php:32
+#: templates/profile/posts.php:34
 msgid "This user has not created any posts."
 msgstr ""
 
-#: templates/searchform.php:4 templates/searchform.php:5
+#: templates/searchform.php:6 templates/searchform.php:7
 msgctxt "label"
 msgid "Search for:"
 msgstr ""
 
-#: templates/searchform.php:5
+#: templates/searchform.php:7
 msgctxt "placeholder"
 msgid "Search &hellip;"
 msgstr ""

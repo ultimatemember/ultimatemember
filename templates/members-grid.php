@@ -33,7 +33,9 @@
 
 			if ( $profile_photo ) {
 				$corner = UM()->options()->get( 'profile_photocorner' );
-				$default_size = str_replace( 'px', '', $corner ); ?>
+
+				$default_size = UM()->options()->get( 'profile_photosize' );
+				$default_size = str_replace( 'px', '', $default_size ); ?>
 
 				<div class="um-member-photo radius-<?php echo esc_attr( $corner ); ?>">
 					<a href="<?php echo esc_url( um_user_profile_url() ); ?>" title="<?php echo esc_attr( um_user('display_name') ); ?>">
@@ -48,7 +50,7 @@
 				<?php if ( $show_name ) { ?>
 					<div class="um-member-name">
 						<a href="<?php echo esc_url( um_user_profile_url() ); ?>" title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>">
-							<?php echo esc_html( um_user('display_name', 'html') ); ?>
+							<?php echo um_user('display_name', 'html' ); ?>
 						</a>
 					</div>
 				<?php }
@@ -144,7 +146,7 @@
 										} ?>
 
 										<div class="um-member-metaline um-member-metaline-<?php echo esc_attr( $key ); ?>">
-											<span><strong><?php echo UM()->fields()->get_label( $key ); ?>:</strong> <?php _e( $value, 'ultimate-member' ); ?></span>
+											<span><strong><?php echo esc_html( UM()->fields()->get_label( $key ) ); ?>:</strong> <?php _e( $value, 'ultimate-member' ); ?></span>
 										</div>
 
 									<?php }
