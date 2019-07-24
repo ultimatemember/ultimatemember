@@ -82,6 +82,22 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 					$stripslashes = stripslashes( $value );
 				}
 
+				// Dynamic dropdown options population
+				$has_custom_source = apply_filters("um_has_dropdown_options_source__{$key}", false );
+				if ( in_array( $fields[ $key ]['type'], array( 'select','multiselect' ) ) && $has_custom_source ){
+					$arr_options = apply_filters("um_get_field__{$key}", $fields[ $key ]['options'] );
+					$fields[ $key ]['options'] = array_keys( $arr_options['options'] );
+				}
+
+				// Dropdown options source from callback function
+				if ( in_array( $fields[ $key ]['type'], array( 'select','multiselect' ) ) && 
+					isset( $fields[ $key ]['custom_dropdown_options_source'] ) &&
+					! empty( $fields[ $key ]['custom_dropdown_options_source'] ) &&
+					function_exists( $fields[ $key ]['custom_dropdown_options_source'] ) ){
+					$arr_options = call_user_func( $fields[ $key ]['custom_dropdown_options_source'] );
+				}
+				
+				// Unset changed value that doesn't match the option list
 				if ( in_array( $fields[ $key ]['type'], array( 'select' ) ) &&
 				     ! empty( $stripslashes ) && ! empty( $fields[ $key ]['options'] ) &&
 				     ! in_array( $stripslashes, array_map( 'trim', $fields[ $key ]['options'] ) ) ) {
