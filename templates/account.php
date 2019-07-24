@@ -67,7 +67,7 @@
 
 					<?php } else { ?>
 
-						<div class="um-account-meta-img-b uimob800-show um-tip-w" title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>">
+						<div class="um-account-meta-img-b uimob800-show um-tip-<?php echo ( is_rtl() ? 'e' : 'w' ); ?>" title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>">
 							<a href="<?php echo esc_url( um_user_profile_url() ); ?>">
 								<?php echo get_avatar( um_user('ID'), 120 ); ?>
 							</a>
@@ -99,7 +99,7 @@
 											<i class="<?php echo esc_attr( $info['icon'] ); ?>"></i>
 										</span>
 									<?php } else { ?>
-										<span class="um-account-icontip uimob800-show um-tip-w" title="<?php echo esc_attr( $info['title'] ); ?>">
+										<span class="um-account-icontip uimob800-show um-tip-<?php echo ( is_rtl() ? 'e' : 'w' ); ?>" title="<?php echo esc_attr( $info['title'] ); ?>">
 											<i class="<?php echo esc_attr( $info['icon'] ); ?>"></i>
 										</span>
 									<?php } ?>

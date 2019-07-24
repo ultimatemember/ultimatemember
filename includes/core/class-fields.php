@@ -482,15 +482,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			$output .= '<label for="' . $key . UM()->form()->form_suffix . '">' . __( $label, 'ultimate-member' ) . '</label>';
 
-			if (isset( $data['help'] ) && !empty( $data['help'] ) && $this->viewing == false && !strstr( $key, 'confirm_user_pass' )) {
+			if ( isset( $data['help'] ) && !empty( $data['help'] ) && $this->viewing == false && !strstr( $key, 'confirm_user_pass' ) ) {
 
-				if (!UM()->mobile()->isMobile()) {
-					if (!isset( $this->disable_tooltips )) {
-						$output .= '<span class="um-tip um-tip-w" title="' . __( $data['help'], 'ultimate-member' ) . '"><i class="um-icon-help-circled"></i></span>';
+				if ( ! UM()->mobile()->isMobile() ) {
+					if ( !isset( $this->disable_tooltips ) ) {
+						$output .= '<span class="um-tip um-tip-' . ( is_rtl() ? 'e' : 'w' ) . '" title="' . __( $data['help'], 'ultimate-member' ) . '"><i class="um-icon-help-circled"></i></span>';
 					}
 				}
 
-				if (UM()->mobile()->isMobile() || isset( $this->disable_tooltips )) {
+				if ( UM()->mobile()->isMobile() || isset( $this->disable_tooltips ) ) {
 					$output .= '<span class="um-tip-text">' . __( $data['help'], 'ultimate-member' ) . '</span>';
 				}
 
