@@ -593,9 +593,13 @@ function um_field_conditions_are_met( $data ) {
 /**
  * Exit and redirect to home
  */
-function um_redirect_home() {
-	exit( wp_redirect( home_url() ) );
+function um_redirect_home( $requested_user_id = '', $is_my_profile = '') {
+
+    $url = apply_filters("um_redirect_home_custom_url", home_url(), $requested_user_id, $is_my_profile );
+
+	exit( wp_redirect( $url ) );
 }
+
 
 
 /**

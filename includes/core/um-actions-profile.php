@@ -1068,7 +1068,7 @@ function um_pre_profile_shortcode( $args ) {
 
 		if ( um_get_requested_user() ) {
 			if ( ! um_can_view_profile( um_get_requested_user() ) && ! um_is_myprofile() )
-				um_redirect_home();
+				um_redirect_home( um_get_requested_user(), um_is_myprofile() );
 
 			if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) )
 				UM()->user()->cannot_edit = 1;
@@ -1076,7 +1076,7 @@ function um_pre_profile_shortcode( $args ) {
 			um_fetch_user( um_get_requested_user() );
 		} else {
 			if ( ! is_user_logged_in() )
-				um_redirect_home();
+				um_redirect_home( um_get_requested_user(), um_is_myprofile() );
 
 			if ( ! um_user( 'can_edit_profile' ) )
 				UM()->user()->cannot_edit = 1;
@@ -1088,7 +1088,7 @@ function um_pre_profile_shortcode( $args ) {
 
 		if ( um_get_requested_user() ) {
 			if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) ) {
-				um_redirect_home();
+				um_redirect_home( um_get_requested_user(), um_is_myprofile() );
 			}
 			um_fetch_user( um_get_requested_user() );
 		}
