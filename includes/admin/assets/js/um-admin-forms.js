@@ -159,7 +159,7 @@ jQuery(document).ready( function() {
 	 * On option fields change
 	 */
 	jQuery( document.body ).on('change', '.um-forms-field', function() {
-		if ( jQuery('.um-forms-line[data-conditional*=\'"' + jQuery(this).data('field_id') + '",\']').length > 0 ) {
+		if ( jQuery('.um-forms-line[data-conditional*=\'"' + jQuery(this).data('field_id') + '",\']').length > 0 || jQuery('.um-forms-line[data-conditional*=\'' + jQuery(this).data('field_id') + '|\']').length > 0 || jQuery('.um-forms-line[data-conditional*=\'|' + jQuery(this).data('field_id') + '\']').length > 0 ) {
 			run_check_conditions();
 		}
 	});
@@ -267,6 +267,8 @@ jQuery(document).ready( function() {
 					}
 				}
 			});
+
+			console.log( visible_options );
 
 			var lines_field = jQuery( '[data-field_id="' + field_id + '"]' );
 
