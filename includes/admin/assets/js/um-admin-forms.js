@@ -203,16 +203,27 @@ jQuery(document).ready( function() {
 		var value = conditional[2];
 
 		var prefix = form_line.data( 'prefix' );
-		//var prefix = form_line.parents( '.um-form-table' ).data( 'prefix' );
-
-		var condition_field = jQuery( '#' + prefix + '_' + conditional[0] );
 		var parent_condition = true;
-		if ( typeof condition_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
-			parent_condition = check_condition( condition_field.parents('.um-forms-line') );
+
+		if ( condition === '=' || condition === '!=' ) {
+			var condition_field = jQuery( '#' + prefix + '_' + conditional[0] );
+
+			if ( typeof condition_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
+				parent_condition = check_condition( condition_field.parents('.um-forms-line') );
+			}
+		} else if ( condition === '~' ) {
+			var selectors = conditional[0].split('|');
+			var condition_fields = [];
+			jQuery.each( selectors, function(i) {
+				condition_fields.push( jQuery( '#' + prefix + '_' + selectors[i] ) );
+			});
+			if ( typeof condition_fields[0].parents('.um-forms-line').data('conditional') !== 'undefined' ) {
+				parent_condition = check_condition( condition_fields[0].parents('.um-forms-line') );
+			}
 		}
 
 		var own_condition = false;
-		if ( condition == '=' ) {
+		if ( condition === '=' ) {
 			var tagName = condition_field.prop("tagName").toLowerCase();
 
 			if ( tagName == 'input' ) {
@@ -225,7 +236,7 @@ jQuery(document).ready( function() {
 			} else if ( tagName == 'select' ) {
 				own_condition = ( condition_field.val() == value );
 			}
-		} else if ( condition == '!=' ) {
+		} else if ( condition === '!=' ) {
 			var tagName = condition_field.prop("tagName").toLowerCase();
 
 			if ( tagName == 'input' ) {
@@ -237,6 +248,42 @@ jQuery(document).ready( function() {
 				}
 			} else if ( tagName == 'select' ) {
 				own_condition = ( condition_field.val() != value );
+			}
+		} else if ( condition === '~' ) {
+
+			var field_id = form_line.find( form_line.data('field_type') ).data('field_id');
+			var visible_options = [];
+			jQuery.each( condition_fields, function(i) {
+				var condition_field = condition_fields[ i ];
+
+				var tagName = condition_field.prop("tagName").toLowerCase();
+
+				if ( tagName === 'input' ) {
+					var input_type = condition_field.attr('type');
+					if ( input_type === 'checkbox' ) {
+						if ( value == '1' && condition_field.is(':checked') ) {
+							visible_options.push( condition_field.data( 'fill_' + field_id ) );
+						}
+					}
+				}
+			});
+
+			var lines_field = jQuery( '[data-field_id="' + field_id + '"]' );
+
+			if ( visible_options.length ) {
+				lines_field.find( 'option' ).hide();
+				jQuery.each( visible_options, function(i) {
+					lines_field.find( 'option[value="' + visible_options[ i ] + '"]' ).show();
+				});
+				if ( visible_options.indexOf( lines_field.val() ) === -1 ) {
+					lines_field.val( visible_options[0] );
+					lines_field.find( 'option' ).attr( 'selected', false ).prop( 'selected', false );
+					lines_field.find( 'option[value="' + visible_options[0] + '"]' ).attr( 'selected', true ).prop( 'selected', true );
+				}
+				own_condition = true;
+			} else {
+				lines_field.val( null );
+				lines_field.find( 'option' ).attr( 'selected', false ).prop( 'selected', false );
 			}
 		}
 

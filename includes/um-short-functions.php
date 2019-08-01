@@ -613,7 +613,7 @@ function um_js_redirect( $url ) {
 		}
 
 		register_shutdown_function( function( $url ) {
-			echo '<script data-cfasync="false" type="text/javascript">window.location = "' . $url . '"</script>';
+			echo '<script data-cfasync="false" type="text/javascript">window.location = "' . esc_js( $url ) . '"</script>';
 		}, $url );
 
 		if ( 1 < ob_get_level() ) {
@@ -622,7 +622,7 @@ function um_js_redirect( $url ) {
 			}
 		} ?>
 		<script data-cfasync='false' type="text/javascript">
-			window.location = '<?php echo $url; ?>';
+			window.location = '<?php echo esc_js( $url ); ?>';
 		</script>
 		<?php exit;
 	} else {
@@ -1414,10 +1414,8 @@ function um_edit_my_profile_cancel_uri( $url = '' ) {
  * @return bool
  */
 function um_is_on_edit_profile() {
-	if (isset( $_REQUEST['profiletab'] ) && isset( $_REQUEST['um_action'] )) {
-		if ($_REQUEST['profiletab'] == 'main' && $_REQUEST['um_action'] == 'edit') {
-			return true;
-		}
+	if ( isset( $_REQUEST['um_action'] ) && $_REQUEST['um_action'] == 'edit' ) {
+		return true;
 	}
 
 	return false;
@@ -1576,10 +1574,10 @@ function um_is_myprofile() {
 /**
  * Returns the edit profile link
  *
- * @return mixed|string|void
+ * @return string
  */
 function um_edit_profile_url() {
-	if (um_is_core_page( 'user' )) {
+	if ( um_is_core_page( 'user' ) ) {
 		$url = UM()->permalinks()->get_current_url();
 	} else {
 		$url = um_user_profile_url();
@@ -1587,7 +1585,6 @@ function um_edit_profile_url() {
 
 	$url = remove_query_arg( 'profiletab', $url );
 	$url = remove_query_arg( 'subnav', $url );
-	$url = add_query_arg( 'profiletab', 'main', $url );
 	$url = add_query_arg( 'um_action', 'edit', $url );
 
 	return $url;

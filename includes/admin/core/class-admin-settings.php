@@ -135,10 +135,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			$tabs = UM()->profile()->tabs();
 
+			$tabs_options = array();
+			$tabs_condition = array();
 			foreach ( $tabs as $id => $tab ) {
 
 				if ( ! empty( $tab['hidden'] ) ) {
 					continue;
+				}
+
+				if ( isset( $tab['name'] ) ) {
+					$tabs_options[ $id ] = $tab['name'];
+					$tabs_condition[] = 'profile_tab_' . $id;
 				}
 
 				if ( isset( $tab['default_privacy'] ) ) {
@@ -148,6 +155,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							'type'          => 'checkbox',
 							'label'         => sprintf( __( '%s Tab', 'ultimate-member' ), $tab['name'] ),
 							'conditional'   => array( 'profile_menu', '=', 1 ),
+							'data'          => array( 'fill_profile_menu_default_tab' => $id ),
 						),
 					);
 				} else {
@@ -158,6 +166,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							'type'          => 'checkbox',
 							'label'         => sprintf( __( '%s Tab', 'ultimate-member' ), $tab['name'] ),
 							'conditional'   => array( 'profile_menu', '=', 1 ),
+							'data'          => array( 'fill_profile_menu_default_tab' => $id ),
 						),
 						array(
 							'id'            => 'profile_tab_' . $id . '_privacy',
@@ -185,27 +194,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$appearances_profile_menu_fields = array_merge( $appearances_profile_menu_fields, $fields );
 			}
 
-			$active_tabs = array();
-			$tabs = UM()->profile()->tabs_active();
-			if ( ! empty( $tabs ) ) {
-				foreach ( $tabs as $id => $info ) {
-					if ( isset( $info['name'] ) ) {
-						$active_tabs[ $id ] = $info['name'];
-					}
-				}
-			}
-
-			if ( count( $active_tabs ) ) {
-				$appearances_profile_menu_fields[] = array(
-					'id'            => 'profile_menu_default_tab',
-					'type'          => 'select',
-					'label'         => __( 'Profile menu default tab', 'ultimate-member' ),
-					'tooltip'       => __( 'This will be the default tab on user profile page', 'ultimate-member' ),
-					'options'       => $active_tabs,
-					'conditional'   => array( 'profile_menu', '=', 1 ),
-					'size'          => 'small'
-				);
-			}
+			$appearances_profile_menu_fields[] = array(
+				'id'            => 'profile_menu_default_tab',
+				'type'          => 'select',
+				'label'         => __( 'Profile menu default tab', 'ultimate-member' ),
+				'tooltip'       => __( 'This will be the default tab on user profile page', 'ultimate-member' ),
+				'options'       => $tabs_options,
+				'conditional'   => array( implode( '|', $tabs_condition ), '~', 1 ),
+				'size'          => 'small'
+			);
 
 			$appearances_profile_menu_fields = array_merge( $appearances_profile_menu_fields, array(
 				array(

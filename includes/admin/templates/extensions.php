@@ -122,6 +122,12 @@ $premium['user-bookmarks'] = array(
 	'desc' => 'Allow users to bookmark content from your website',
 );
 
+$premium['unsplash'] = array(
+	'url' => 'https://ultimatemember.com/extensions/unsplash/',
+	'name' => 'Unsplash',
+	'desc' => 'Allow users to select a profile cover photo from <a href="https://unsplash.com/" target="_blank">Unsplash</a> from their profile',
+);
+
 $free['forumwp'] = array(
 	'url' => 'https://ultimatemember.com/extensions/forumwp/',
 	'name' => 'ForumWP',

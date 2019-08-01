@@ -46,23 +46,25 @@ if ( ! class_exists( 'um\admin\Admin_Functions' ) ) {
 			global $current_screen;
 			$screen_id = $current_screen->id;
 
+			$is_um_screen = false;
+
 			if ( strstr( $screen_id, 'ultimatemember') ||
 			     strstr( $screen_id, 'um_') ||
 			     strstr( $screen_id, 'user' ) ||
 			     strstr( $screen_id, 'profile' ) ||
 			     $screen_id == 'nav-menus' ) {
-				return true;
+				$is_um_screen = true;
 			}
 
 			if ( $this->is_plugin_post_type() ) {
-				return true;
+				$is_um_screen = true;
 			}
 
 			if ( $this->is_restricted_entity() ) {
-				return true;
+				$is_um_screen = true;
 			}
 
-			return false;
+			return apply_filters( 'um_is_ultimatememeber_admin_screen', $is_um_screen );
 		}
 
 

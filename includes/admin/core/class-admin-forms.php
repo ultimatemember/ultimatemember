@@ -691,6 +691,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				'field_id' => $field_data['id']
 			);
 
+			if ( ! empty( $field_data['data'] ) ) {
+				$data = array_merge( $data, $field_data['data'] );
+			}
+
 			$data_attr = '';
 			foreach ( $data as $key => $value ) {
 				$data_attr .= " data-{$key}=\"{$value}\" ";

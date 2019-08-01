@@ -548,7 +548,7 @@ function um_add_submit_button_to_register( $args ) {
 				<input type="submit" value="<?php esc_attr_e( wp_unslash( $primary_btn_word ), 'ultimate-member' ) ?>" class="um-button" id="um-submit-btn" />
 			</div>
 			<div class="um-right um-half">
-				<a href="<?php echo esc_attr( $secondary_btn_url ); ?>" class="um-button um-alt">
+				<a href="<?php echo esc_url( $secondary_btn_url ); ?>" class="um-button um-alt">
 					<?php _e( wp_unslash( $secondary_btn_word ),'ultimate-member' ); ?>
 				</a>
 			</div>

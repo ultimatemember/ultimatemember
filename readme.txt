@@ -41,7 +41,10 @@ Read about all of the plugin's features at [Ultimate Member](https://ultimatemem
 
 Ultimate Member has a range of extensions that allow you to extend the power of the plugin. You can purchase all of these extensions at a significant discount with our [All Access Pass](https://ultimatemember.com/pricing/) or you can purchase extensions individually.
 
+* [Unsplash](https://ultimatemember.com/extensions/unsplash/) - Allow users to select a profile cover photo from [Unsplash](https://unsplash.com/) from their profile
 * [User Bookmarks](https://ultimatemember.com/extensions/user-bookmarks/) - Allow users to bookmark content from your website
+* [User Photos](https://ultimatemember.com/extensions/user-photos/) - Allow users to upload photos to their profile
+* [Groups](https://ultimatemember.com/extensions/groups/) - Allow users to create and join groups around shared topics, interests etc.
 * [Private Content](https://ultimatemember.com/extensions/private-content/) - Display private content to logged in users that only they can access
 * [Instagram](https://ultimatemember.com/extensions/instagram/) - Allow users to show their Instagram photos on their profile
 * [User Tags](https://ultimatemember.com/extensions/user-tags/) - Lets you add a user tag system to your website
@@ -59,8 +62,6 @@ Ultimate Member has a range of extensions that allow you to extend the power of 
 * [Notices](https://ultimatemember.com/extensions/notices/) - Alert users to important information using conditional notices
 * [Profile Completeness](https://ultimatemember.com/extensions/profile-completeness/) - Encourage or force users to complete their profiles with the profile completeness extension
 * [Friends](https://ultimatemember.com/extensions/friends/) - Allows users to become friends by sending & accepting/rejecting friend requests
-* [User Photos](https://ultimatemember.com/extensions/user-photos/) - Allow users to upload photos to their profile
-* [Groups](https://ultimatemember.com/extensions/groups/) - Allow users to create and join groups around shared topics, interests etc.
 
 = Free Extensions =
 
