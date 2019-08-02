@@ -20,7 +20,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Notifications_API Notifications_API()
 	 * @method UM_Online Online()
 	 * @method UM_Profile_Completeness_API Profile_Completeness_API()
-	 * @method UM_reCAPTCHA_API reCAPTCHA_API()
+	 * @method UM_reCAPTCHA reCAPTCHA()
 	 * @method UM_Reviews_API Reviews_API()
 	 * @method UM_Activity_API Activity_API()
 	 * @method UM_Social_Login_API Social_Login_API()

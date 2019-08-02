@@ -268,8 +268,6 @@ jQuery(document).ready( function() {
 				}
 			});
 
-			console.log( visible_options );
-
 			var lines_field = jQuery( '[data-field_id="' + field_id + '"]' );
 
 			if ( visible_options.length ) {
