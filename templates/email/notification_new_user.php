@@ -13,7 +13,7 @@
 
 		<div style="padding: 30px 0;font-size: 24px;text-align: center;line-height: 40px;">{display_name} has just created an account on {site_name}.</span></div>
 
-		<div style="padding: 10px 0 50px 0;text-align: center;">To view their profile click here: {user_profile_link}</div>
+		<div style="padding: 10px 0 50px 0;text-align: center;">To view their profile click here: <a href="{user_profile_link}" style="color: #3ba1da;text-decoration: none;">{user_profile_link}</a></div>
 		
 		<div style="padding: 0 0 15px 0;">
 		
