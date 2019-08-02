@@ -372,8 +372,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			// bulk edit users
 			if ( ! empty( $_REQUEST['users'] ) && ! empty( $_REQUEST['um_bulkedit'] ) && ! empty( $_REQUEST['um_bulk_action'] ) ) {
 
-				if ( ! current_user_can( 'edit_users' ) )
+				$rolename = UM()->roles()->get_priority_user_role( get_current_user_id() );
+				$role = get_role( $rolename );
+
+				if( !current_user_can( 'edit_users' ) && !$role->has_cap( 'edit_users' )  ) {
 					wp_die( __( 'You do not have enough permissions to do that.', 'ultimate-member' ) );
+				}
 
 				check_admin_referer( 'bulk-users' );
 
