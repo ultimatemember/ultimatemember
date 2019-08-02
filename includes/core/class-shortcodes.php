@@ -355,7 +355,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			ob_start();
 
 			$defaults = array(
-				'lock_text' => __( 'This content has been restricted to logged in users only. Please <a href="{login_referrer}">login</a> to view this content.', 'ultimate-member' ),
+				'lock_text' => __( 'This content has been restricted to logged in users only. Please login at the following link to view this content: {login_referrer}.', 'ultimate-member' ),				
 				'show_lock' => 'yes',
 			);
 
