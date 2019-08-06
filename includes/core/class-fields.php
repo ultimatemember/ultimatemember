@@ -1711,6 +1711,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 			}
 
+			$disabled = apply_filters( 'um_is_field_disabled', $disabled, $data );
+
 			if ( ! isset( $data['autocomplete'] ) ) {
 				$autocomplete = 'off';
 			}
@@ -1733,13 +1735,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			// forbidden in edit mode?
-			if (isset( $data['edit_forbidden'] )) return;
+			if ( isset( $data['edit_forbidden'] ) ) {
+				return;
+			}
 
 
 			// required option
-			if (isset( $data['required_opt'] )) {
+			if ( isset( $data['required_opt'] ) ) {
 				$opt = $data['required_opt'];
-				if ( UM()->options()->get( $opt[0] ) != $opt[1]) {
+				if ( UM()->options()->get( $opt[0] ) != $opt[1] ) {
 					return;
 				}
 			}
