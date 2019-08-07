@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.9
 Tested up to: 5.2
-Stable tag: 2.0.54
+Stable tag: 2.0.55
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -139,6 +139,23 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 == Changelog ==
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
+
+= 2.0.55: August 12, 2019 =
+
+* Enhancements:
+  - Added security fixes (XSS)
+  - Added hooks for 3rd party integrations
+
+* Bugfixes:
+  - Fixed edit profile mode when profile menu is disabled
+  - Fixed RTL styles and layouts
+  - Fixed user profile description validation
+  - Fixed JS errors on some installs
+  - Fixed ability approve users by Administrator with special capabilities
+  - Fixed multiselects' retrieval of options from callback function
+  - Fixed save process and conditional logic for Appearances -> Profile Menu settings section
+  - Fixed uninstall process
+  - Fixed is_selected method for some cases
 
 = 2.0.54: July 22, 2019 =
 
