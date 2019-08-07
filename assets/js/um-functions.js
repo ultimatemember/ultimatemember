@@ -21,9 +21,9 @@ function UM_hide_menus() {
 	menu.hide();
 }
 
-function UM_domenus(){
+function UM_domenus() {
 
-	jQuery('.um-dropdown').each(function(){
+	jQuery('.um-dropdown').each( function() {
 
 		var menu = jQuery(this);
 		var element = jQuery(this).attr('data-element');
@@ -31,33 +31,41 @@ function UM_domenus(){
 
 		jQuery( element ).addClass('um-trigger-menu-on-' + menu.attr( 'data-trigger' ) );
 
-		if ( jQuery(window).width() <= 1200 && element == 'div.um-profile-edit' ) {
-			position = 'lc';
+		if ( position === 'lc' && jQuery('html').attr('dir') === 'rtl' ){
+			position = 'rc';
+		}
+		if ( jQuery(window).width() <= 1200 && element === 'div.um-profile-edit' ) {
+			if ( jQuery('html').attr('dir') === 'rtl' ){
+				position = 'rc';
+			} else {
+				position = 'lc';
+			}
+
 		}
 
-		if ( position == 'lc' ){
+		if ( 200 > jQuery(element).find('img').width() ) {
+			left_p = ( ( jQuery(element).width() - jQuery(element).find('img').width() ) / 2 ) + ( ( jQuery(element).find('img').width() - 200 ) / 2 );
+		} else {
+			left_p = ( ( jQuery(element).width() - jQuery(element).find('img').width() ) / 2 );
+		}
 
-			if ( 200 > jQuery(element).find('img').width() ) {
-				left_p = ( ( jQuery(element).width() - jQuery(element).find('img').width() ) / 2 ) + ( ( jQuery(element).find('img').width() - 200 ) / 2 );
-			} else {
-				left_p = ( ( jQuery(element).width() - jQuery(element).find('img').width() ) / 2 );
-			}
+		top_ = parseInt( jQuery(element).find('a').css('top') );
 
-			top_ = parseInt( jQuery(element).find('a').css('top') );
+		if ( top_ ) {
+			top_p = jQuery(element).find('img').height() + 4 + top_;
+			left_gap = 4;
+		} else {
+			top_p = jQuery(element).find('img').height() + 4;
+			left_gap = 0;
+		}
 
-			if ( top_ ) {
-				top_p = jQuery(element).find('img').height() + 4 + top_;
-				left_gap = 4;
-			} else {
-				top_p = jQuery(element).find('img').height() + 4;
-				left_gap = 0;
-			}
+		if ( top_p == 4 && element === 'div.um-cover' ) {
+			top_p = jQuery(element).height() / 2 + ( menu.height() / 2 );
+		} else if ( top_p == 4 ) {
+			top_p = jQuery(element).height() + 20;
+		}
 
-			if ( top_p == 4 && element == 'div.um-cover' ) {
-				top_p = jQuery(element).height() / 2 + ( menu.height() / 2 );
-			} else if ( top_p == 4 ) {
-				top_p = jQuery(element).height() + 20;
-			}
+		if ( position === 'lc' ) {
 
 			gap_right = jQuery(element).width() + 17;
 			menu.css({
@@ -76,36 +84,37 @@ function UM_domenus(){
 				'right' : '-17px'
 			});
 
-		}
+		} else if ( position === 'rc' ) {
 
-		if ( position == 'bc' ){
+			gap_right = jQuery(element).width() + 25;
+			menu.css({
+				'top' : 0,
+				'width': 200,
+				'left': gap_right + 'px',
+				'right' : 'auto',
+				'text-align' : 'center'
+			});
 
-			if ( 200 > jQuery(element).find('img').width() ) {
-				left_p = ( ( jQuery(element).width() - jQuery(element).find('img').width() ) / 2 ) + ( ( jQuery(element).find('img').width() - 200 ) / 2 );
+			menu.find('.um-dropdown-arr').find('i').removeClass().addClass('um-icon-arrow-left-b');
+
+			menu.find('.um-dropdown-arr').css({
+				'top' : '4px',
+				'left' : '-17px',
+				'right' : 'auto'
+			});
+
+		} else if ( position === 'bc' ) {
+
+			if ( jQuery('html').attr('dir') === 'rtl' ){
+				rtl_gap = 10;
 			} else {
-				left_p = ( ( jQuery(element).width() - jQuery(element).find('img').width() ) / 2 );
-			}
-
-			top_ = parseInt( jQuery(element).find('a').css('top') );
-
-			if ( top_ ) {
-				top_p = jQuery(element).find('img').height() + 4 + top_;
-				left_gap = 4;
-			} else {
-				top_p = jQuery(element).find('img').height() + 4;
-				left_gap = 0;
-			}
-
-			if ( top_p == 4 && element == 'div.um-cover' ) {
-				top_p = jQuery(element).height() / 2 + ( menu.height() / 2 );
-			} else if ( top_p == 4 ) {
-				top_p = jQuery(element).height() + 20;
+				rtl_gap = 0
 			}
 
 			menu.css({
 				'top' : top_p,
 				'width': 200,
-				'left': left_p + left_gap,
+				'left': left_p + left_gap + rtl_gap,
 				'right' : 'auto',
 				'text-align' : 'center'
 			});

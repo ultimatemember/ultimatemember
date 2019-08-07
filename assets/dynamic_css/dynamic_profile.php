@@ -26,10 +26,18 @@ print "
 }
 ";
 
-print "
-.um-$form_id.um .um-profile-meta {
-	padding-left: $meta_padding;
+if ( is_rtl() ) {
+	print "
+	.um-$form_id.um .um-profile-meta {
+		padding-right: $meta_padding;
+	}
+	";
+} else {
+	print "
+	.um-$form_id.um .um-profile-meta {
+		padding-left: $meta_padding;
+	}
+	";
 }
-";
 ?>
 </style>

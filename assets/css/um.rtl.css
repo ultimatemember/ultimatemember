@@ -10,6 +10,9 @@
 .um-profile-photo a.um-profile-photo-img {
 	float: right;
 	left: auto;
+}
+
+.um-cover + .um-header .um-profile-photo a.um-profile-photo-img {
 	right: 30px;
 }
 
@@ -32,7 +35,15 @@ div.uimob800 .um-header .um-profile-meta {
 .um-name {
 	float: right;
 	margin-right: 0;
-	margin-left: 30px;
+}
+
+.um-profile-nav-item a {
+	float: right;
+	padding: 6px 28px 6px 10px;
+}
+.um-profile-nav-item i {
+	left: auto;
+	right: 6px;
 }
 
 .um-profile-nav-item a{float: right}
@@ -97,4 +108,43 @@ div.uimob800 .um-header .um-profile-meta {
 p.um-notice i {
 	right: auto;
 	left: 14px;
+}
+
+.um-account.uimob340 .um-account-nav a,
+.um-account.uimob500 .um-account-nav a {
+	padding-left: 0;
+	padding-right: 40px;
+}
+.um-account.uimob340 .um-account-nav span.ico,
+.um-account.uimob500 .um-account-nav span.ico {
+	right: 0;
+}
+.um-account.uimob340 .um-account-nav span.arr,
+.um-account.uimob500 .um-account-nav span.arr {
+	right: auto;
+	left: 0;
+}
+
+.select2.select2-container .select2-selection .select2-selection__arrow {
+	right: auto !important;
+}
+
+.select2-container[dir="rtl"] .select2-selection--single .select2-selection__rendered {
+	padding-right: 8px;
+	text-align: right;
+	padding-left: 20px;
+}
+
+.select2-container--default[dir="rtl"] .select2-selection--single .select2-selection__clear {
+	margin-left: 4px;
+}
+
+.um-single-image-preview a.cancel, .um-single-file-preview a.cancel {
+	left: -15px;
+	right: auto;
+}
+
+.cropper-container {
+	margin: 0 auto;
+	left: auto !important;
 }

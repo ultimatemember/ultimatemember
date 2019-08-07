@@ -863,12 +863,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								array(
 									'id'       		=> 'profile_header_menu',
 									'type'     		=> 'select',
-									'label'    		=> __( 'Profile Header Menu Position','ultimate-member' ),
+									'label'    		=> __( 'Profile Header Menu Position', 'ultimate-member' ),
 									'default' 		=> um_get_metadefault('profile_header_menu'),
-									'tooltip' 	=> __('For incompatible themes, please make the menu open from left instead of bottom by default.','ultimate-member'),
+									'tooltip' 	=> __( 'For incompatible themes, please make the menu open from left instead of bottom by default.','ultimate-member'),
 									'options' 		=> array(
-										'bc' 		=> 'Bottom of Icon',
-										'lc' 		=> 'Left of Icon',
+										'bc' 		=> __( 'Bottom of Icon', 'ultimate-member' ),
+										'lc' 		=> __( 'Left of Icon (right for RTL)', 'ultimate-member' ),
 									),
 									'size'          => 'small'
 								),
