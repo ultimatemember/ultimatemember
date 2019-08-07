@@ -1,4 +1,6 @@
-<?php
+<?php if ( ! defined( 'ABSPATH' ) ) exit;
+
+
 $meta = get_post_custom( get_the_ID() );
 foreach( $meta as $k => $v ) {
 	if ( strstr( $k, '_um_' ) && !is_array( $v[0] ) ) {

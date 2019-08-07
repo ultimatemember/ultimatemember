@@ -1,4 +1,7 @@
-<?php global $wpdb;
+<?php if ( ! defined( 'ABSPATH' ) ) exit;
+
+
+global $wpdb;
 
 $count = $wpdb->get_var(
 	"SELECT COUNT( option_id ) 
@@ -8,7 +11,7 @@ $count = $wpdb->get_var(
 
 <p><?php _e( 'Run this task from time to time to keep your DB clean.', 'ultimate-member' ) ?></p>
 <p>
-	<a href="<?php echo add_query_arg( 'um_adm_action', 'user_cache' ); ?>" class="button">
+	<a href="<?php echo esc_url( add_query_arg( 'um_adm_action', 'user_cache' ) ); ?>" class="button">
 		<?php printf( __( 'Clear cache of %s users', 'ultimate-member' ), $count ) ?>
 	</a>
 </p>

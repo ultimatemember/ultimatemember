@@ -450,23 +450,23 @@ function um_submit_form_errors_hook_( $args ) {
 				}
 
 				if ( isset( $array['min_chars'] ) && $array['min_chars'] > 0 ) {
-					if ( $args[$key] && strlen( utf8_decode( $args[$key] ) ) < $array['min_chars'] ) {
+					if ( $args[$key] && strlen( utf8_decode( $args[ $key ] ) ) < $array['min_chars'] ) {
 						UM()->form()->add_error($key, sprintf(__('Your %s must contain at least %s characters','ultimate-member'), $array['label'], $array['min_chars']) );
 					}
 				}
 
 				if ( isset( $array['max_chars'] ) && $array['max_chars'] > 0 ) {
-					if ( $args[$key] && strlen( utf8_decode( $args[$key] ) ) > $array['max_chars'] ) {
+					if ( $args[$key] && strlen( utf8_decode( $args[ $key ] ) ) > $array['max_chars'] ) {
 						UM()->form()->add_error($key, sprintf(__('Your %s must contain less than %s characters','ultimate-member'), $array['label'], $array['max_chars']) );
 					}
 				}
                      
 				$profile_show_html_bio = UM()->options()->get('profile_show_html_bio');
 					
-				if(  $profile_show_html_bio == 1 && $key !== "description" ){
+				if ( $profile_show_html_bio == 1 && $key !== "description" ) {
 					if ( isset( $array['html'] ) && $array['html'] == 0 ) {
-						if ( wp_strip_all_tags( $args[$key] ) != trim( $args[$key] ) ) {
-							UM()->form()->add_error($key, __('You can not use HTML tags here','ultimate-member') );
+						if ( wp_strip_all_tags( $args[$key] ) != trim( $args[ $key ] ) ) {
+							UM()->form()->add_error( $key, __( 'You can not use HTML tags here', 'ultimate-member' ) );
 						}
 					}
 				}
@@ -708,7 +708,7 @@ function um_submit_form_errors_hook_( $args ) {
 							
 						case 'alphabetic':
 
-							if ( $args[$key] != '' ) {
+							if ( $args[ $key ] != '' ) {
 
 								if( ! ctype_alpha( str_replace(' ', '', $args[$key] ) ) ){
 									UM()->form()->add_error( $key , __('You must provide alphabetic letters','ultimate-member') );
@@ -718,9 +718,9 @@ function um_submit_form_errors_hook_( $args ) {
 
 						case 'lowercase':
 
-							if ( $args[$key] != '' ) {
+							if ( $args[ $key ] != '' ) {
 
-								if( ! ctype_lower( str_replace(' ', '',$args[$key] ) ) ){
+								if ( ! ctype_lower( str_replace(' ', '',$args[$key] ) ) ){
 									UM()->form()->add_error( $key , __('You must provide lowercase letters.','ultimate-member') );
 								}
 							}
@@ -734,12 +734,11 @@ function um_submit_form_errors_hook_( $args ) {
 			}
 
 			if ( isset( $args['description'] ) ) {
-					
-				$max_chars = UM()->options()->get('profile_bio_maxchars');
-				$profile_show_bio = UM()->options()->get('profile_show_bio');
+				$max_chars = UM()->options()->get( 'profile_bio_maxchars' );
+				$profile_show_bio = UM()->options()->get( 'profile_show_bio' );
 
-				if( $profile_show_bio ){
-					if( strlen( utf8_decode( str_replace( array( "\r\n", "\n", "\r\t", "\t" ), ' ', $args[ 'description' ] ) ) ) > $max_chars && $max_chars ) {
+				if ( $profile_show_bio ) {
+					if ( strlen( utf8_decode( str_replace( array( "\r\n", "\n", "\r\t", "\t" ), ' ', $args['description'] ) ) ) > $max_chars && $max_chars ) {
 						UM()->form()->add_error( 'description', sprintf( __( 'Your user description must contain less than %s characters', 'ultimate-member' ), $max_chars ) );
 					}
 				}

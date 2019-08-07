@@ -1,7 +1,4 @@
-<?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
+<?php if ( ! defined( 'ABSPATH' ) ) exit;
 
 wp_enqueue_script( 'postbox' );
 wp_enqueue_media();
@@ -52,8 +49,9 @@ global $wp_roles;
 if ( ! empty( $_GET['id'] ) ) {
 	$data = get_option( "um_role_{$_GET['id']}_meta" );
 
-	if ( empty( $data['_um_is_custom'] ) )
+	if ( empty( $data['_um_is_custom'] ) ) {
 		$data['name'] = $wp_roles->roles[ $_GET['id'] ]['name'];
+	}
 }
 
 
@@ -144,7 +142,7 @@ $screen_id = $current_screen->id; ?>
 
 <script type="text/javascript">
 	jQuery( document ).ready( function() {
-		postboxes.add_postbox_toggles( '<?php echo $screen_id; ?>' );
+		postboxes.add_postbox_toggles( '<?php echo esc_js( $screen_id ); ?>' );
 	});
 </script>
 
@@ -152,7 +150,7 @@ $screen_id = $current_screen->id; ?>
 	<h2>
 		<?php echo ( 'add' == $_GET['tab'] ) ? __( 'Add New Role', 'ultimate-member' ) : __( 'Edit Role', 'ultimate-member' ) ?>
 		<?php if ( 'edit' == $_GET['tab'] ) { ?>
-			<a class="add-new-h2" href="<?php echo add_query_arg( array( 'page' => 'um_roles', 'tab' => 'add' ), admin_url( 'admin.php' ) ) ?>"><?php _e( 'Add New', 'ultimate-member' ) ?></a>
+			<a class="add-new-h2" href="<?php echo esc_url( add_query_arg( array( 'page' => 'um_roles', 'tab' => 'add' ), admin_url( 'admin.php' ) ) ) ?>"><?php _e( 'Add New', 'ultimate-member' ) ?></a>
 		<?php } ?>
 	</h2>
 
@@ -177,10 +175,10 @@ $screen_id = $current_screen->id; ?>
 		<input type="hidden" name="role[id]" value="<?php echo isset( $_GET['id'] ) ? esc_attr( $_GET['id'] ) : '' ?>" />
 		<?php if ( 'add' == $_GET['tab'] ) { ?>
 			<input type="hidden" name="role[_um_is_custom]" value="1" />
-			<input type="hidden" name="um_nonce" value="<?php echo wp_create_nonce( 'um-add-role' ) ?>" />
+			<input type="hidden" name="um_nonce" value="<?php echo esc_attr( wp_create_nonce( 'um-add-role' ) ) ?>" />
 		<?php } else { ?>
 			<input type="hidden" name="role[_um_is_custom]" value="<?php echo ! empty( $data['_um_is_custom'] ) ? 1 : 0 ?>" />
-			<input type="hidden" name="um_nonce" value="<?php echo wp_create_nonce( 'um-edit-role' ) ?>" />
+			<input type="hidden" name="um_nonce" value="<?php echo esc_attr( wp_create_nonce( 'um-edit-role' ) ) ?>" />
 		<?php } ?>
 		<?php wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>
 		<div id="poststuff">
@@ -190,7 +188,7 @@ $screen_id = $current_screen->id; ?>
 						<div id="titlewrap">
 							<?php if ( 'add' == $_GET['tab'] ) { ?>
 								<label for="title" class="screen-reader-text"><?php _e( 'Title', 'ultimate-member' ) ?></label>
-								<input type="text" name="role[name]" placeholder="<?php _e( 'Enter Title Here', 'ultimate-member' ) ?>" id="title" value="<?php echo isset( $data['name'] ) ? $data['name'] : '' ?>" />
+								<input type="text" name="role[name]" placeholder="<?php esc_attr_e( 'Enter Title Here', 'ultimate-member' ) ?>" id="title" value="<?php echo isset( $data['name'] ) ? $data['name'] : '' ?>" />
 							<?php } else { ?>
 								<span style="float: left;width:100%;"><?php echo isset( $data['name'] ) ? $data['name'] : '' ?></span>
 							<?php } ?>

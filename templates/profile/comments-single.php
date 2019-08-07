@@ -27,11 +27,12 @@ foreach ( UM()->shortcodes()->loop as $comment ) {
 
 <?php }
 
-if ( isset( UM()->shortcodes()->modified_args ) && count(UM()->shortcodes()->loop ) >= 10 ) { ?>
+if ( isset( UM()->shortcodes()->modified_args ) && count( UM()->shortcodes()->loop ) >= 10 ) { ?>
 
 	<div class="um-load-items">
-		<a href="#" class="um-ajax-paginate um-button" data-hook="um_load_comments" data-args="<?php echo esc_attr( UM()->shortcodes()->modified_args ); ?>">
-			<?php _e('load more comments','ultimate-member'); ?>
+		<a href="javascript:void(0);" class="um-ajax-paginate um-button" data-hook="um_load_comments"
+		   data-args="<?php echo esc_attr( UM()->shortcodes()->modified_args ); ?>">
+			<?php _e( 'load more comments', 'ultimate-member' ); ?>
 		</a>
 	</div>
 

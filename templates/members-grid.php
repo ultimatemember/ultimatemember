@@ -11,7 +11,7 @@
 
 		<div class="um-member um-role-<?php echo esc_attr( um_user( 'role' ) ) . ' ' . esc_attr( um_user('account_status') ); ?> <?php if ( $cover_photos ) { echo 'with-cover'; } ?>">
 
-			<span class="um-member-status <?php echo esc_attr( um_user('account_status') ); ?>"><?php echo esc_html( um_user( 'account_status_name' ) ); ?></span>
+			<span class="um-member-status <?php echo esc_attr( um_user( 'account_status' ) ); ?>"><?php echo esc_html( um_user( 'account_status_name' ) ); ?></span>
 
 			<?php if ( $cover_photos ) {
 				$sizes = UM()->options()->get( 'cover_thumb_sizes' );
@@ -23,7 +23,7 @@
 
 				<div class="um-member-cover" data-ratio="<?php echo esc_attr( UM()->options()->get( 'profile_cover_ratio' ) ); ?>">
 					<div class="um-member-cover-e">
-						<a href="<?php echo esc_url( um_user_profile_url() ); ?>" title="<?php echo esc_attr( um_user('display_name') ); ?>">
+						<a href="<?php echo esc_url( um_user_profile_url() ); ?>" title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>">
 							<?php echo um_user( 'cover_photo', $cover_size ); ?>
 						</a>
 					</div>
@@ -38,7 +38,7 @@
 				$default_size = str_replace( 'px', '', $default_size ); ?>
 
 				<div class="um-member-photo radius-<?php echo esc_attr( $corner ); ?>">
-					<a href="<?php echo esc_url( um_user_profile_url() ); ?>" title="<?php echo esc_attr( um_user('display_name') ); ?>">
+					<a href="<?php echo esc_url( um_user_profile_url() ); ?>" title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>">
 						<?php echo get_avatar( um_user( 'ID' ), $default_size ); ?>
 					</a>
 				</div>
@@ -50,7 +50,7 @@
 				<?php if ( $show_name ) { ?>
 					<div class="um-member-name">
 						<a href="<?php echo esc_url( um_user_profile_url() ); ?>" title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>">
-							<?php echo um_user('display_name', 'html' ); ?>
+							<?php echo um_user( 'display_name', 'html' ); ?>
 						</a>
 					</div>
 				<?php }
@@ -75,9 +75,9 @@
 				 * }
 				 * ?>
 				 */
-				do_action( 'um_members_just_after_name', um_user('ID'), $args );
+				do_action( 'um_members_just_after_name', um_user( 'ID' ), $args );
 
-				if ( UM()->roles()->um_current_user_can( 'edit', um_user('ID') ) ) { ?>
+				if ( UM()->roles()->um_current_user_can( 'edit', um_user( 'ID' ) ) ) { ?>
 					<div class="um-members-edit-btn">
 						<a href="<?php echo esc_url( um_edit_profile_url() ); ?>" class="um-edit-profile-btn um-button um-alt">
 							<?php _e( 'Edit profile','ultimate-member' ) ?>
@@ -105,7 +105,7 @@
 				 * }
 				 * ?>
 				 */
-				do_action( 'um_members_after_user_name', um_user('ID'), $args );
+				do_action( 'um_members_after_user_name', um_user( 'ID' ), $args );
 
 				if ( $show_tagline && ! empty( $tagline_fields ) && is_array( $tagline_fields ) ) {
 
@@ -119,7 +119,7 @@
 							} ?>
 
 							<div class="um-member-tagline um-member-tagline-<?php echo esc_attr( $key ); ?>">
-								<?php _e( $value, 'ultimate-member'); ?>
+								<?php _e( $value, 'ultimate-member' ); ?>
 							</div>
 
 						<?php } // end if
@@ -131,7 +131,7 @@
 					<div class="um-member-meta-main">
 
 						<?php if ( $userinfo_animate ) { ?>
-							<div class="um-member-more"><a href="#"><i class="um-faicon-angle-down"></i></a></div>
+							<div class="um-member-more"><a href="javascript:void(0);"><i class="um-faicon-angle-down"></i></a></div>
 						<?php } ?>
 
 						<div class="um-member-meta <?php if ( ! $userinfo_animate ) { echo 'no-animate'; } ?>">
@@ -161,7 +161,7 @@
 
 						</div>
 
-						<div class="um-member-less"><a href="#"><i class="um-faicon-angle-up"></i></a></div>
+						<div class="um-member-less"><a href="javascript:void(0);"><i class="um-faicon-angle-up"></i></a></div>
 
 					</div>
 

@@ -1,6 +1,4 @@
-<?php
-
-?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
 
 <div style="max-width: 560px;padding: 20px;background: #ffffff;border-radius: 5px;margin:40px auto;font-family: Open Sans,Helvetica,Arial;font-size: 15px;color: #666;">
 

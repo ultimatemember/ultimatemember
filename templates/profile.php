@@ -3,7 +3,7 @@
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?> um-role-<?php echo esc_attr( um_user( 'role' ) ); ?> ">
 
 	<div class="um-form">
-	
+
 		<?php
 		/**
 		 * UM hook
@@ -151,7 +151,6 @@
 			<div class="um-profile-body <?php echo esc_attr( $nav . ' ' . $nav . '-' . $subnav ); ?>">
 
 				<?php
-				// Custom hook to display tabbed content
 				/**
 				 * UM hook
 				 *

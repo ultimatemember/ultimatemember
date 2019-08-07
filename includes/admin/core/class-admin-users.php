@@ -1,8 +1,9 @@
 <?php
 namespace um\admin\core;
 
-// Exit if accessed directly.
+
 if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
@@ -120,7 +121,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 					<?php echo $this->get_bulk_admin_actions(); ?>
 				</select>
 
-				<input name="um_bulkedit" id="um_bulkedit" class="button" value="<?php _e( 'Apply', 'ultimate-member' ); ?>" type="submit" />
+				<input name="um_bulkedit" id="um_bulkedit" class="button" value="<?php esc_attr_e( 'Apply', 'ultimate-member' ); ?>" type="submit" />
 
 			</div>
 
@@ -204,7 +205,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 			$submitted = get_user_meta( $user_id, 'submitted', true );
 			if ( ! empty( $submitted ) )
-				$actions['view_info'] = '<a href="#" data-modal="UM_preview_registration" data-modal-size="smaller" data-dynamic-content="um_admin_review_registration" data-arg1="' . $user_id . '" data-arg2="edit_registration">' . __( 'Info', 'ultimate-member' ) . '</a>';
+				$actions['view_info'] = '<a href="javascript:void(0);" data-modal="UM_preview_registration" data-modal-size="smaller" 
+				data-dynamic-content="um_admin_review_registration" data-arg1="' . esc_attr( $user_id ) . '" data-arg2="edit_registration">' . __( 'Info', 'ultimate-member' ) . '</a>';
 
 			/**
 			 * UM hook
@@ -325,7 +327,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 					$current = '';
 				}
 
-				$views[$k] = '<a href="' . admin_url( 'users.php' ) . '?status=' . $k . '" ' . $current . '>'. $v . ' <span class="count">('.UM()->query()->count_users_by_status( $k ).')</span></a>';
+				$views[ $k ] = '<a href="' . esc_url( admin_url( 'users.php' ) . '?status=' . $k ) . '" ' . $current . '>'. $v . ' <span class="count">('.UM()->query()->count_users_by_status( $k ).')</span></a>';
 			}
 
 			/**
@@ -442,7 +444,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 					exit;
 				}*/
 
-			} else if ( ! empty( $_REQUEST['um_bulkedit'] ) ) {
+			} elseif ( ! empty( $_REQUEST['um_bulkedit'] ) ) {
 
 				$uri = $this->set_redirect_uri( admin_url( 'users.php' ) );
 				wp_redirect( $uri );
@@ -460,11 +462,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		 */
 		function set_redirect_uri( $uri ) {
 
-			if ( ! empty( $_REQUEST['s'] ) )
+			if ( ! empty( $_REQUEST['s'] ) ) {
 				$uri = add_query_arg( 's', $_REQUEST['s'], $uri );
+			}
 
-			if ( ! empty( $_REQUEST['status'] ) )
+			if ( ! empty( $_REQUEST['status'] ) ) {
 				$uri = add_query_arg( 'status', $_REQUEST['status'], $uri );
+			}
 
 			return $uri;
 

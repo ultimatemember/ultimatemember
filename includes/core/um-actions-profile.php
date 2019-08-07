@@ -7,6 +7,10 @@
  * @param $args
  */
 function um_profile_content_main( $args ) {
+
+	/**
+	 * @var $mode
+	 */
 	extract( $args );
 
 	if ( ! UM()->options()->get( 'profile_tab_main' ) && ! isset( $_REQUEST['um_action'] ) ) {
@@ -57,7 +61,7 @@ function um_profile_content_main( $args ) {
 		 * }
 		 * ?>
 		 */
-		do_action( "um_before_form", $args );
+		do_action( 'um_before_form', $args );
 
 		/**
 		 * UM hook
@@ -162,15 +166,17 @@ function um_profile_content_main( $args ) {
 		 * }
 		 * ?>
 		 */
-		do_action( "um_after_form", $args );
+		do_action( 'um_after_form', $args );
 
 	} else { ?>
+
 		<div class="um-profile-note">
 			<span>
 				<i class="um-faicon-lock"></i>
 				<?php echo $can_view; ?>
 			</span>
 		</div>
+
 	<?php }
 }
 add_action( 'um_profile_content_main', 'um_profile_content_main' );
@@ -551,7 +557,7 @@ add_action( 'um_after_form_fields', 'um_editing_user_id_input' );
  * Meta description
  */
 function um_profile_dynamic_meta_desc() {
-	if (um_is_core_page( 'user' ) && um_get_requested_user()) {
+	if ( um_is_core_page( 'user' ) && um_get_requested_user() ) {
 
 		um_fetch_user( um_get_requested_user() );
 
@@ -812,13 +818,13 @@ function um_profile_header( $args ) {
 					 */
 					$items = apply_filters( 'um_user_photo_menu_view', $items );
 
-					echo UM()->profile()->new_ui( 'bc', 'div.um-profile-photo', 'click', $items );
+					UM()->profile()->new_ui( 'bc', 'div.um-profile-photo', 'click', $items );
 
 				} elseif ( UM()->fields()->editing == true ) {
 
 					$items = array(
 						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>',
-						'<a href="javascript:void(0);" class="um-reset-profile-photo" data-user_id="' . um_profile_id() . '" data-default_src="' . um_get_default_avatar_uri() . '">' . __( 'Remove photo', 'ultimate-member' ) . '</a>',
+						'<a href="javascript:void(0);" class="um-reset-profile-photo" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '">' . __( 'Remove photo', 'ultimate-member' ) . '</a>',
 						'<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
 					);
 
@@ -845,7 +851,7 @@ function um_profile_header( $args ) {
 					 */
 					$items = apply_filters( 'um_user_photo_menu_edit', $items );
 
-					echo UM()->profile()->new_ui( 'bc', 'div.um-profile-photo', 'click', $items );
+					UM()->profile()->new_ui( 'bc', 'div.um-profile-photo', 'click', $items );
 
 				}
 
@@ -960,14 +966,13 @@ function um_profile_header( $args ) {
 					<?php echo UM()->profile()->show_meta( $args['metafields'] ); ?>
 
 				</div>
-			<?php } ?>
+			<?php }
 
-			<?php if (UM()->fields()->viewing == true && um_user( 'description' ) && $args['show_bio']) { ?>
+			if ( UM()->fields()->viewing == true && um_user( 'description' ) && $args['show_bio'] ) { ?>
 
 				<div class="um-meta-text">
-					<?php
+					<?php $description = get_user_meta( um_user( 'ID' ), 'description', true );
 
-					$description = get_user_meta( um_user( 'ID' ), 'description', true );
 					if ( UM()->options()->get( 'profile_show_html_bio' ) ) {
 						echo make_clickable( wpautop( wp_kses_post( $description ) ) );
 					} else {
@@ -975,7 +980,7 @@ function um_profile_header( $args ) {
 					} ?>
 				</div>
 
-			<?php } else if (UM()->fields()->editing == true && $args['show_bio']) { ?>
+			<?php } elseif ( UM()->fields()->editing == true && $args['show_bio'] ) { ?>
 
 				<div class="um-meta-text">
 					<textarea id="um-meta-bio"
@@ -1072,19 +1077,23 @@ function um_pre_profile_shortcode( $args ) {
 		UM()->fields()->viewing = 1;
 
 		if ( um_get_requested_user() ) {
-			if ( ! um_can_view_profile( um_get_requested_user() ) && ! um_is_myprofile() )
+			if ( ! um_can_view_profile( um_get_requested_user() ) && ! um_is_myprofile() ) {
 				um_redirect_home( um_get_requested_user(), um_is_myprofile() );
+			}
 
-			if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) )
+			if ( ! UM()->roles()->um_current_user_can( 'edit', um_get_requested_user() ) ) {
 				UM()->user()->cannot_edit = 1;
+			}
 
 			um_fetch_user( um_get_requested_user() );
 		} else {
-			if ( ! is_user_logged_in() )
+			if ( ! is_user_logged_in() ) {
 				um_redirect_home( um_get_requested_user(), um_is_myprofile() );
+			}
 
-			if ( ! um_user( 'can_edit_profile' ) )
+			if ( ! um_user( 'can_edit_profile' ) ) {
 				UM()->user()->cannot_edit = 1;
+			}
 		}
 	}
 
@@ -1120,7 +1129,7 @@ function um_add_edit_icon( $args ) {
 	if ( UM()->fields()->editing == true ) { ?>
 
 		<div class="um-profile-edit um-profile-headericon">
-			<a href="#" class="um-profile-edit-a um-profile-save"><i class="um-faicon-check"></i></a>
+			<a href="javascript:void(0);" class="um-profile-edit-a um-profile-save"><i class="um-faicon-check"></i></a>
 		</div>
 
 		<?php return;
@@ -1134,7 +1143,7 @@ function um_add_edit_icon( $args ) {
 
 		$items = UM()->user()->get_admin_actions();
 		if ( UM()->roles()->um_current_user_can( 'edit', um_profile_id() ) ) {
-			$items['editprofile'] = '<a href="' . um_edit_profile_url() . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>';
+			$items['editprofile'] = '<a href="' . esc_url( um_edit_profile_url() ) . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>';
 		}
 
 		/**
@@ -1161,13 +1170,13 @@ function um_add_edit_icon( $args ) {
 		*/
 		$items = apply_filters( 'um_profile_edit_menu_items', $items, um_profile_id() );
 
-		$items['cancel'] = '<a href="#" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>';
+		$items['cancel'] = '<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>';
 
 	} else {
 		$items = array(
-			'editprofile' => '<a href="' . um_edit_profile_url() . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>',
-			'myaccount'   => '<a href="' . um_get_core_page( 'account' ) . '" class="real_url">' . __( 'My Account', 'ultimate-member' ) . '</a>',
-			'logout'      => '<a href="' . um_get_core_page( 'logout' ) . '" class="real_url">' . __( 'Logout', 'ultimate-member' ) . '</a>',
+			'editprofile' => '<a href="' . esc_url( um_edit_profile_url() ) . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>',
+			'myaccount'   => '<a href="' . esc_url( um_get_core_page( 'account' ) ) . '" class="real_url">' . __( 'My Account', 'ultimate-member' ) . '</a>',
+			'logout'      => '<a href="' . esc_url( um_get_core_page( 'logout' ) ) . '" class="real_url">' . __( 'Logout', 'ultimate-member' ) . '</a>',
 			'cancel'      => '<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
 		);
 
@@ -1201,7 +1210,7 @@ function um_add_edit_icon( $args ) {
 
 	<div class="um-profile-edit um-profile-headericon">
 
-		<a href="#" class="um-profile-edit-a"><i class="um-faicon-cog"></i></a>
+		<a href="javascript:void(0);" class="um-profile-edit-a"><i class="um-faicon-cog"></i></a>
 
 		<?php UM()->profile()->new_ui( $args['header_menu'], 'div.um-profile-edit', 'click', $items ); ?>
 
@@ -1275,12 +1284,14 @@ add_action( 'um_submit_form_profile', 'um_submit_form_profile', 10 );
  */
 function um_add_submit_button_to_profile( $args ) {
 	// DO NOT add when reviewing user's details
-	if (UM()->user()->preview == true && is_admin()) return;
+	if ( UM()->user()->preview == true && is_admin() ) {
+		return;
+	}
 
 	// only when editing
-	if (UM()->fields()->editing == false) return;
-
-	?>
+	if ( UM()->fields()->editing == false ) {
+		return;
+	} ?>
 
 	<div class="um-col-alt">
 
@@ -1336,7 +1347,7 @@ function um_profile_menu( $args ) {
 
 	$active_tab = UM()->profile()->active_tab();
 	//check here tabs with hidden also, to make correct check of active tab
-	if ( ! isset( $all_tabs[ $active_tab ] ) ) {
+	if ( ! isset( $all_tabs[ $active_tab ] ) || um_is_on_edit_profile() ) {
 		$active_tab = 'main';
 		UM()->profile()->active_tab = $active_tab;
 		UM()->profile()->active_subnav = null;
@@ -1446,7 +1457,7 @@ function um_profile_menu( $args ) {
 							<a href="<?php echo esc_url( $nav_link ); ?>" class="uimob800-hide uimob500-hide uimob340-hide"
 							   title="<?php echo esc_attr( $tab['name'] ); ?>">
 
-								<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0) { ?>
+								<?php if ( isset( $tab['notifier'] ) && $tab['notifier'] > 0 ) { ?>
 									<span class="um-tab-notifier"><?php echo $tab['notifier']; ?></span>
 								<?php } ?>
 

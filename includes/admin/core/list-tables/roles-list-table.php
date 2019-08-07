@@ -1,5 +1,4 @@
-<?php
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+<?php if ( ! defined( 'ABSPATH' ) ) exit;
 
 global $wpdb;
 
@@ -18,14 +17,15 @@ if ( isset( $_GET['action'] ) ) {
 			$role_keys = array();
 			if ( isset( $_REQUEST['id'] ) ) {
 				check_admin_referer( 'um_role_delete' .  $_REQUEST['id'] . get_current_user_id() );
-				$role_keys = (array)$_REQUEST['id'];
+				$role_keys = (array) $_REQUEST['id'];
 			} elseif( isset( $_REQUEST['item'] ) )  {
 				check_admin_referer( 'bulk-' . sanitize_key( __( 'Roles', 'ultimate-member' ) ) );
 				$role_keys = $_REQUEST['item'];
 			}
 
-			if ( ! count( $role_keys ) )
+			if ( ! count( $role_keys ) ) {
 				um_js_redirect( $redirect );
+			}
 
 			$um_roles = get_option( 'um_roles' );
 
@@ -69,8 +69,9 @@ if ( isset( $_GET['action'] ) ) {
 					}
 
 					//update user role if it's empty
-					if ( empty( $object_user->roles ) )
+					if ( empty( $object_user->roles ) ) {
 						wp_update_user( array( 'ID' => $user_id, 'role' => 'subscriber' ) );
+					}
 				}
 			}
 
@@ -83,20 +84,21 @@ if ( isset( $_GET['action'] ) ) {
 			$role_keys = array();
 			if ( isset( $_REQUEST['id'] ) ) {
 				check_admin_referer( 'um_role_reset' .  $_REQUEST['id'] . get_current_user_id() );
-				$role_keys = (array)$_REQUEST['id'];
+				$role_keys = (array) $_REQUEST['id'];
 			} elseif( isset( $_REQUEST['item'] ) )  {
 				check_admin_referer( 'bulk-' . sanitize_key( __( 'Roles', 'ultimate-member' ) ) );
 				$role_keys = $_REQUEST['item'];
 			}
 
-			if ( ! count( $role_keys ) )
+			if ( ! count( $role_keys ) ) {
 				um_js_redirect( $redirect );
+			}
 
 			foreach ( $role_keys as $k=>$role_key ) {
 				$role_meta = get_option( "um_role_{$role_key}_meta" );
 
 				if ( ! empty( $role_meta['_um_is_custom'] ) ) {
-					unset( $role_keys[array_search( $role_key, $role_keys )] );
+					unset( $role_keys[ array_search( $role_key, $role_keys ) ] );
 					continue;
 				}
 
@@ -110,14 +112,16 @@ if ( isset( $_GET['action'] ) ) {
 }
 
 //remove extra query arg
-if ( ! empty( $_GET['_wp_http_referer'] ) )
+if ( ! empty( $_GET['_wp_http_referer'] ) ) {
 	um_js_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce'), wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
+}
 
 $order_by = 'name';
 $order = ( isset( $_GET['order'] ) && 'asc' ==  strtolower( $_GET['order'] ) ) ? 'ASC' : 'DESC';
 
-if( ! class_exists( 'WP_List_Table' ) )
+if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+}
 
 
 /**
@@ -477,7 +481,7 @@ $ListTable->um_set_pagination_args( array( 'total_items' => count( $roles ), 'pe
 <div class="wrap">
 	<h2>
 		<?php _e( 'User Roles', 'ultimate-member' ) ?>
-		<a class="add-new-h2" href="<?php echo add_query_arg( array( 'page' => 'um_roles', 'tab' => 'add' ), admin_url( 'admin.php' ) ) ?>">
+		<a class="add-new-h2" href="<?php echo esc_url( add_query_arg( array( 'page' => 'um_roles', 'tab' => 'add' ), admin_url( 'admin.php' ) ) ) ?>">
 			<?php _e( 'Add New', 'ultimate-member' ) ?>
 		</a>
 	</h2>

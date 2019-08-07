@@ -16,7 +16,7 @@ function um_logout_user_links( $args ) {
 	</li>
 	<li>
 		<a href="<?php echo esc_url( add_query_arg( 'redirect_to', UM()->permalinks()->get_current_url( true ), um_get_core_page( 'logout' ) ) ); ?>">
-			<?php _e('Logout','ultimate-member'); ?>
+			<?php _e( 'Logout', 'ultimate-member' ); ?>
 		</a>
 	</li>
 

@@ -26,7 +26,7 @@
 			 * }
 			 * ?>
 			 */
-			do_action( "um_before_form", $args );
+			do_action( 'um_before_form', $args );
 
 			/**
 			 * UM hook
@@ -131,7 +131,7 @@
 			 * }
 			 * ?>
 			 */
-			do_action( "um_after_form", $args ); ?>
+			do_action( 'um_after_form', $args ); ?>
 
 		</form>
 

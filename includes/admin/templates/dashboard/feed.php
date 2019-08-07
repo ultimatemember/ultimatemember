@@ -1,3 +1,6 @@
+<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+
+
 <div class="rss-widget">
 	<?php wp_widget_rss_output(array(
 		'url' 			=> 'https://ultimatemember.com/blog/feed/',

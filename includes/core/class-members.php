@@ -4,6 +4,7 @@ namespace um\core;
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+
 if ( ! class_exists( 'um\core\Members' ) ) {
 
 
@@ -26,8 +27,7 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 		function __construct() {
 
 			add_filter( 'user_search_columns', array( &$this, 'user_search_columns' ), 99 );
-
-			add_action( 'template_redirect', array( &$this, 'access_members' ), 555);
+			add_action( 'template_redirect', array( &$this, 'access_members' ), 555 );
 
 			$this->core_search_fields = array(
 				'user_login',
@@ -36,7 +36,7 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 				'user_email',
 			);
 
-			add_filter( 'um_search_select_fields', array(&$this, 'um_search_select_fields'), 10, 1 );
+			add_filter( 'um_search_select_fields', array( &$this, 'um_search_select_fields' ), 10, 1 );
 
 		}
 
@@ -60,7 +60,7 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 		 * Members page allowed?
 		 */
 		function access_members() {
-			if ( UM()->options()->get('members_page') == 0 && um_is_core_page( 'members' ) ) {
+			if ( UM()->options()->get( 'members_page' ) == 0 && um_is_core_page( 'members' ) ) {
 				um_redirect_home();
 			}
 		}
@@ -84,7 +84,7 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 				$array['total_users'],
 			);
 
-			$string = str_replace($search, $replace, $string);
+			$string = str_replace( $search, $replace, $string );
 			return $string;
 		}
 
@@ -253,7 +253,8 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 						$label = isset( $attrs['title'] ) ? $attrs['title'] : '';
 					} ?>
 
-					<select name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" class="um-s1" style="width: 100%" data-placeholder="<?php echo __( stripslashes( $label ), 'ultimate-member' ); ?>" <?php if ( ! empty( $attrs['custom_dropdown_options_source'] ) ) { ?> data-um-parent="<?php echo $attrs['parent_dropdown_relationship']; ?>" data-mebers-directory="yes"  data-um-ajax-source="<?php echo $attrs['custom_dropdown_options_source'] ?>"<?php } ?>>
+					<select name="<?php echo esc_attr( $filter ); ?>" id="<?php echo esc_attr( $filter ); ?>" class="um-s1"
+							style="width: 100%" data-placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>" <?php if ( ! empty( $attrs['custom_dropdown_options_source'] ) ) { ?> data-um-parent="<?php echo esc_attr( $attrs['parent_dropdown_relationship'] ); ?>" data-mebers-directory="yes"  data-um-ajax-source="<?php echo esc_attr( $attrs['custom_dropdown_options_source'] ) ?>"<?php } ?>>
 
 						<option></option>
 
@@ -263,33 +264,32 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 
 							$opt = $v;
 
-							if ( strstr( $filter, 'role_' ) )
+							if ( strstr( $filter, 'role_' ) ) {
 								$opt = $k;
+							}
 
-							if ( isset( $attrs['custom'] ) )
+							if ( isset( $attrs['custom'] ) ) {
 								$opt = $k;
+							} ?>
 
-
-							?>
-
-                            <option value="<?php echo $opt; ?>" <?php um_select_if_in_query_params( $filter, $opt ); ?> <?php selected( isset( $_GET[$filter] ) && $_GET[$filter] == $v ) ?>><?php echo __( $v, 'ultimate-member'); ?></option>
+							<option value="<?php echo esc_attr( $opt ); ?>" <?php um_select_if_in_query_params( $filter, $opt ); ?> <?php selected( isset( $_GET[ $filter ] ) && $_GET[ $filter ] == $v ) ?>><?php esc_html_e( $v, 'ultimate-member'); ?></option>
 
 						<?php } ?>
 
-                    </select>
+					</select>
 
 					<?php
 
 					break;
 
 				case 'text':
-
 					?>
 
-                    <input type="text" autocomplete="off" name="<?php echo $filter; ?>" id="<?php echo $filter; ?>" placeholder="<?php echo isset( $attrs['label'] ) ? __( $attrs['label'], 'ultimate-member') : ''; ?>" value='<?php echo esc_attr( um_queried_search_value(  $filter, false ) ); ?>' />
+					<input type="text" autocomplete="off" name="<?php echo esc_attr( $filter ); ?>" id="<?php echo esc_attr( $filter ); ?>"
+					       placeholder="<?php echo isset( $attrs['label'] ) ? esc_attr__( $attrs['label'], 'ultimate-member' ) : ''; ?>"
+					       value="<?php echo esc_attr( um_queried_search_value(  $filter, false ) ); ?>" />
 
 					<?php
-
 					break;
 
 			}
@@ -306,12 +306,12 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 		 */
 		function um_search_select_fields( $attrs ) {
 
-			if( !empty($attrs['metakey']) && strstr( $attrs['metakey'], 'role_' ) ){
+			if ( ! empty( $attrs['metakey'] ) && strstr( $attrs['metakey'], 'role_' ) ) {
 
 				$shortcode_roles = get_post_meta( UM()->shortcodes()->form_id, '_um_roles', true );
 				$um_roles = UM()->roles()->get_roles( false );
 
-				if( ! empty( $shortcode_roles ) && is_array( $shortcode_roles ) ){
+				if ( ! empty( $shortcode_roles ) && is_array( $shortcode_roles ) ) {
 
 					$attrs['options'] = array();
 
@@ -371,22 +371,22 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 			$query_args = apply_filters( 'um_prepare_user_query_args', array(), $args );
 
 			// Prepare for BIG SELECT query
-			$wpdb->query('SET SQL_BIG_SELECTS=1');
+			$wpdb->query( 'SET SQL_BIG_SELECTS=1' );
 
 			// number of profiles for mobile
-			if ( UM()->mobile()->isMobile() && isset( $profiles_per_page_mobile ) ){
+			if ( UM()->mobile()->isMobile() && isset( $profiles_per_page_mobile ) ) {
 				$profiles_per_page = $profiles_per_page_mobile;
 			}
 
 			$query_args['number'] = $profiles_per_page;
 
-			if( isset( $args['number'] ) ){
+			if ( isset( $args['number'] ) ) {
 				$query_args['number'] = $args['number'];
 			}
 
-			if(  isset( $args['page'] ) ){
+			if ( isset( $args['page'] ) ) {
 				$members_page = $args['page'];
-			}else{
+			} else {
 				$members_page = isset( $_REQUEST['members_page'] ) ? $_REQUEST['members_page'] : 1;
 			}
 
@@ -478,18 +478,18 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 			if ( isset( $pages_to_add ) ) {
 
 				asort( $pages_to_add );
-				$pages_to_show = array_merge( (array)$pages_to_add, $pages_to_show );
+				$pages_to_show = array_merge( (array) $pages_to_add, $pages_to_show );
 
 				if ( count( $pages_to_show ) < 5 ) {
-					if ( max($pages_to_show) - $array['page'] >= 2 ) {
-						$pages_to_show[] = max($pages_to_show) + 1;
+					if ( max( $pages_to_show ) - $array['page'] >= 2 ) {
+						$pages_to_show[] = max( $pages_to_show ) + 1;
 						if ( count( $pages_to_show ) < 5 ) {
-							$pages_to_show[] = max($pages_to_show) + 1;
+							$pages_to_show[] = max( $pages_to_show ) + 1;
 						}
-					} else if ( $array['page'] - min($pages_to_show) >= 2 ) {
-						$pages_to_show[] = min($pages_to_show) - 1;
+					} else if ( $array['page'] - min( $pages_to_show ) >= 2 ) {
+						$pages_to_show[] = min( $pages_to_show ) - 1;
 						if ( count( $pages_to_show ) < 5 ) {
-							$pages_to_show[] = min($pages_to_show) - 1;
+							$pages_to_show[] = min( $pages_to_show ) - 1;
 						}
 					}
 				}
@@ -528,7 +528,7 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 
 				if ( $array['total_pages'] < count( $array['pages_to_show'] ) ) {
 					foreach ( $array['pages_to_show'] as $k => $v ) {
-						if ( $v > $array['total_pages'] ) unset( $array['pages_to_show'][$k] );
+						if ( $v > $array['total_pages'] ) unset( $array['pages_to_show'][ $k ] );
 					}
 				}
 
@@ -576,13 +576,13 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 
 			$arr_where = explode("\n", $vars->query_where );
 			$arr_left_join = explode("LEFT JOIN", $vars->query_from );
-			$arr_user_photo_key = array('synced_profile_photo','profile_photo','synced_gravatar_hashed_id');
+			$arr_user_photo_key = array( 'synced_profile_photo', 'profile_photo', 'synced_gravatar_hashed_id' );
 
 			foreach ( $arr_where as $where ) {
 
-				foreach( $arr_user_photo_key as $key ){
+				foreach ( $arr_user_photo_key as $key ) {
 
-					if( strpos( $where  , "'".$key."'" ) > -1 ){
+					if ( strpos( $where, "'" . $key . "'" ) > -1 ) {
 
 						// find usermeta key
 						preg_match("#mt[0-9]+.#",  $where, $meta_key );
@@ -597,9 +597,9 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 						$where_exists = 'um_exist EXISTS( SELECT '.$wpdb->usermeta.'.umeta_id FROM '.$wpdb->usermeta.' WHERE '.$wpdb->usermeta.'.user_id = '.$wpdb->users.'.ID AND '.$wpdb->usermeta.'.meta_key IN("'.implode('","',  $arr_user_photo_key ).'") AND '.$wpdb->usermeta.'.meta_value != "" )';
 
 						// Replace LEFT JOIN clauses with EXISTS and remove duplicates
-						if( strpos( $vars->query_where, 'um_exist' ) === FALSE ){
+						if ( strpos( $vars->query_where, 'um_exist' ) === FALSE ) {
 							$vars->query_where = str_replace( $where , $where_exists,  $vars->query_where );
-						}else{
+						} else {
 							$vars->query_where = str_replace( $where , '1=0',  $vars->query_where );
 						}
 					}
@@ -608,8 +608,8 @@ if ( ! class_exists( 'um\core\Members' ) ) {
 
 			}
 
-			$vars->query_where = str_replace("\n", "", $vars->query_where );
-			$vars->query_where = str_replace("um_exist", "", $vars->query_where );
+			$vars->query_where = str_replace( "\n", "", $vars->query_where );
+			$vars->query_where = str_replace( "um_exist", "", $vars->query_where );
 
 			return $vars;
 

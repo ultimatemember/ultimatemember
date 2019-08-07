@@ -53,18 +53,18 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$this->target_id = null;
 
 			// When the cache should be cleared
-			add_action('um_delete_user_hook', array(&$this, 'remove_cached_queue') );
-			add_action('um_delete_user', array( &$this, 'remove_cache' ), 10, 1 );
+			add_action( 'um_delete_user_hook', array( &$this, 'remove_cached_queue' ) );
+			add_action( 'um_delete_user', array( &$this, 'remove_cache' ), 10, 1 );
 
-			add_action('um_after_user_status_is_changed_hook', array(&$this, 'remove_cached_queue') );
+			add_action( 'um_after_user_status_is_changed_hook', array( &$this, 'remove_cached_queue' ) );
 
 			// When user cache should be cleared
-			add_action('um_after_user_updated', array(&$this, 'remove_cache') );
-			add_action('um_after_user_account_updated', array(&$this, 'remove_cache') );
-			add_action('personal_options_update', array(&$this, 'remove_cache') );
+			add_action( 'um_after_user_updated', array( &$this, 'remove_cache' ) );
+			add_action( 'um_after_user_account_updated', array( &$this, 'remove_cache' ) );
+			add_action( 'personal_options_update', array( &$this, 'remove_cache' ) );
 			//add_action('edit_user_profile_update', array(&$this, 'remove_cache') );
-			add_action('um_when_role_is_set', array(&$this, 'remove_cache') );
-			add_action('um_when_status_is_set', array(&$this, 'remove_cache') );
+			add_action( 'um_when_role_is_set', array( &$this, 'remove_cache' ) );
+			add_action( 'um_when_status_is_set', array( &$this, 'remove_cache' ) );
 
 			add_action( 'show_user_profile', array( $this, 'profile_form_additional_section' ), 10 );
 			add_action( 'user_new_form', array( $this, 'profile_form_additional_section' ), 10 );
@@ -164,8 +164,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 */
 		function check_membership() {
-			if ( ! is_user_logged_in() )
+			if ( ! is_user_logged_in() ) {
 				return;
+			}
 
 			um_fetch_user( get_current_user_id() );
 			$status = um_user( 'account_status' );
@@ -209,8 +210,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		function add_um_role_wpmu_new_user( $user_id ) {
 			// Bail if no user ID was passed
-			if ( empty( $user_id ) )
+			if ( empty( $user_id ) ) {
 				return;
+			}
 
 			if ( ! empty( $_POST['um-role'] ) ) {
 				if ( ! user_can( $user_id, $_POST['um-role'] ) ) {
@@ -289,7 +291,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			//get default username permalink if it's empty then return false
 			if ( empty( $profile_slug ) ) {
 				if ( $permalink_base != 'user_login' ) {
-					$profile_slug = get_user_meta( $user_id, "um_user_profile_url_slug_user_login", true );
+					$profile_slug = get_user_meta( $user_id, 'um_user_profile_url_slug_user_login', true );
 				}
 
 				if ( empty( $profile_slug ) ) {
@@ -581,29 +583,32 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					$role_meta = get_option( "um_role_{$role_key}_meta" );
 
 					if ( $role_meta ) {
-						//$role_meta['name'] = 'UM ' . $role_meta['name'];
-						$roles['um_' . $role_key] = $role_meta;
+						$roles[ 'um_' . $role_key ] = $role_meta;
 					}
 				}
 			}
 
-			if ( empty( $roles ) )
+			if ( empty( $roles ) ) {
 				return $content;
+			}
 
 			global $pagenow;
-			if ( 'profile.php' == $pagenow )
+			if ( 'profile.php' == $pagenow ) {
 				return $content;
+			}
 
 			$style = '';
 			$user_role = false;
 			if ( $userdata !== 'add-new-user' && $userdata !== 'add-existing-user' ) {
 				// Bail if current user cannot edit users
-				if ( ! current_user_can( 'edit_user', $userdata->ID ) )
+				if ( ! current_user_can( 'edit_user', $userdata->ID ) ) {
 					return $content;
+				}
 
 				$user_role = UM()->roles()->get_um_user_role( $userdata->ID );
-				if ( $user_role && ! empty( $userdata->roles ) && count( $userdata->roles ) == 1 )
+				if ( $user_role && ! empty( $userdata->roles ) && count( $userdata->roles ) == 1 ) {
 					$style = 'style="display:none;"';
+				}
 
 			}
 
@@ -611,7 +616,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			ob_start(); ?>
 
-			<div id="<?php echo $class ?>" <?php echo $style ?>>
+			<div id="<?php echo esc_attr( $class ) ?>" <?php echo $style ?>>
 				<table class="form-table">
 					<tbody>
 					<tr>
@@ -620,7 +625,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 							<select name="um-role" id="um-role">
 								<option value="" <?php selected( empty( $user_role ) ) ?>><?php esc_html_e( '&mdash; No role for Ultimate Member &mdash;', 'ultimate-member' ); ?></option>
 								<?php foreach ( $roles as $role_id => $details ) { ?>
-									<option <?php selected( $user_role, $role_id ); ?> value="<?php echo esc_attr( $role_id ); ?>"><?php echo $details['name']; ?></option>
+									<option <?php selected( $user_role, $role_id ); ?> value="<?php echo esc_attr( $role_id ); ?>"><?php echo esc_html( $details['name'] ); ?></option>
 								<?php } ?>
 							</select>
 						</td>
@@ -651,7 +656,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * @return array
 		 */
 		function toArray( $obj ) {
-			if ( is_object( $obj ) ) $obj = (array)$obj;
+			if ( is_object( $obj ) ) {
+				$obj = (array) $obj;
+			}
 			if ( is_array( $obj ) ) {
 				$new = array();
 				foreach ( $obj as $key => $val ) {
@@ -668,17 +675,17 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		/**
 		 * @param $user_id
 		 *
-		 * @return mixed|string|void
+		 * @return mixed|string
 		 */
 		function get_cached_data( $user_id ) {
 
 			$disallow_cache = UM()->options()->get( 'um_profile_object_cache_stop' );
-			if( $disallow_cache ){
+			if ( $disallow_cache ) {
 				return '';
 			}
 
 			if ( is_numeric( $user_id ) && $user_id > 0 ) {
-				$find_user = get_option("um_cache_userdata_{$user_id}");
+				$find_user = get_option( "um_cache_userdata_{$user_id}" );
 				if ( $find_user ) {
 					/**
 					 * UM hook
@@ -916,10 +923,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * Clean user profile
 		 */
 		function clean() {
-			foreach($this->profile as $key => $value){
-				foreach($this->banned_keys as $ban){
-					if (strstr($key, $ban) || is_numeric($key) )
-						unset($this->profile[$key]);
+			foreach ( $this->profile as $key => $value ) {
+				foreach ( $this->banned_keys as $ban ) {
+					if ( strstr( $key, $ban ) || is_numeric( $key ) ) {
+						unset( $this->profile[ $key ] );
+					}
 				}
 			}
 		}
@@ -949,7 +957,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			wp_set_auth_cookie( $user_id, $rememberme );
 
-			$user = get_user_by('ID', $user_id );
+			$user = get_user_by( 'ID', $user_id );
 
 			do_action( 'wp_login', $user->user_login, $user );
 
@@ -1197,21 +1205,21 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * Password reset email
 		 */
 		function password_reset() {
-			$userdata = get_userdata( um_user('ID') );
+			$userdata = get_userdata( um_user( 'ID' ) );
 			get_password_reset_key( $userdata );
 
 			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ), 10, 1 );
 			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ), 10, 1 );
 
-			UM()->mail()->send( um_user('user_email'), 'resetpw_email' );
+			UM()->mail()->send( um_user( 'user_email' ), 'resetpw_email' );
 		}
 
 
 		/**
 		 * Password changed email
 		 */
-		function password_changed(){
-			UM()->mail()->send( um_user('user_email'), 'changedpw_email' );
+		function password_changed() {
+			UM()->mail()->send( um_user( 'user_email' ), 'changedpw_email' );
 		}
 
 
@@ -1242,19 +1250,19 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			delete_option( "um_cache_userdata_{$user_id}" );
 
-			if ( um_user('account_status') == 'awaiting_admin_review' ) {
+			if ( um_user( 'account_status' ) == 'awaiting_admin_review' ) {
 				$userdata = get_userdata( $user_id );
 				get_password_reset_key( $userdata );
-				UM()->mail()->send( um_user('user_email'), 'approved_email' );
+				UM()->mail()->send( um_user( 'user_email' ), 'approved_email' );
 
 			} else {
 				$userdata = get_userdata( $user_id );
 				get_password_reset_key( $userdata );
-				UM()->mail()->send( um_user('user_email'), 'welcome_email');
+				UM()->mail()->send( um_user( 'user_email' ), 'welcome_email' );
 			}
 
-			$this->set_status('approved');
-			$this->delete_meta('account_secret_hash');
+			$this->set_status( 'approved' );
+			$this->delete_meta( 'account_secret_hash' );
 
 			/**
 			 * UM hook
@@ -1284,8 +1292,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		function email_pending() {
 			$this->assign_secretkey();
-			$this->set_status('awaiting_email_confirmation');
-			UM()->mail()->send( um_user('user_email'), 'checkmail_email' );
+			$this->set_status( 'awaiting_email_confirmation' );
+			UM()->mail()->send( um_user( 'user_email' ), 'checkmail_email' );
 		}
 
 
@@ -1327,8 +1335,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 */
 		function reject() {
-			$this->set_status('rejected');
-			UM()->mail()->send( um_user('user_email'), 'rejected_email' );
+			$this->set_status( 'rejected' );
+			UM()->mail()->send( um_user( 'user_email' ), 'rejected_email' );
 		}
 
 
@@ -1452,7 +1460,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		function update_usermeta_info( $key ) {
 			// delete the key first just in case
 			delete_user_meta( $this->id, $key );
-			update_user_meta( $this->id, $key, $this->profile[$key] );
+			update_user_meta( $this->id, $key, $this->profile[ $key ] );
 		}
 
 
@@ -1474,7 +1482,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 		 *
 		 */
-		function delete_meta( $key ){
+		function delete_meta( $key ) {
 			delete_user_meta( $this->id, $key );
 		}
 
@@ -1518,7 +1526,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				$url = add_query_arg( array( 'um_action' => $id, 'uid' => um_profile_id() ) );
 				/*$url = add_query_arg( 'um_action', $id );
 				$url = add_query_arg( 'uid', um_profile_id(), $url );*/
-				$items[] = '<a href="' . $url .'" class="real_url ' . esc_attr( $id ) . '-item">' . $arr['label'] . '</a>';
+				$items[] = '<a href="' . esc_url( $url ) .'" class="real_url ' . esc_attr( $id ) . '-item">' . esc_html( $arr['label'] ) . '</a>';
 			}
 			return $items;
 		}
@@ -1548,7 +1556,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		function is_private_profile( $user_id ) {
 			$privacy = get_user_meta( $user_id, 'profile_privacy', true );
-			if ( $privacy == __('Only me','ultimate-member') || $privacy == 'Only me' ) {
+			if ( $privacy == __( 'Only me', 'ultimate-member' ) || $privacy == 'Only me' ) {
 				return true;
 			}
 			return false;
@@ -1730,17 +1738,24 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			$value = UM()->validation()->safe_name_in_url( $value );
 
-			$ids = get_users(array( 'fields' => 'ID', 'meta_key' => $key,'meta_value' => $value,'meta_compare' => '=') );
-			if ( !isset( $ids ) || empty( $ids ) ) return false;
-			foreach( $ids as $k => $id ) {
-				if ( $id == um_user('ID') ){
-					unset( $ids[$k] );
+			$ids = get_users( array( 'fields' => 'ID', 'meta_key' => $key, 'meta_value' => $value, 'meta_compare' => '=' ) );
+			if ( ! isset( $ids ) || empty( $ids ) ) {
+				return false;
+			}
+
+			foreach ( $ids as $k => $id ) {
+
+				if ( $id == um_user('ID') ) {
+					unset( $ids[ $k ] );
 				} else {
 					$duplicates[] = $id;
 				}
+
 			}
-			if ( isset( $duplicates ) && !empty( $duplicates ) )
+
+			if ( ! empty( $duplicates ) ) {
 				return count( $duplicates );
+			}
 			return false;
 		}
 
@@ -1763,57 +1778,55 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			// Search by Profile Slug
 			$args = array(
-				"fields" => array("ID"),
+				'fields' => array( 'ID' ),
 				'meta_query' => array(
 					'relation' => 'OR',
 					array(
-						'key'		=>  'um_user_profile_url_slug_'.$permalink_base,
-						'value'		=> strtolower( $raw_value ),
-						'compare'	=> '='
-
-					)
-
-				)
+						'key'       =>  'um_user_profile_url_slug_' . $permalink_base,
+						'value'     => strtolower( $raw_value ),
+						'compare'   => '=',
+					),
+				),
 			);
 
 
 			$ids = new \WP_User_Query( $args );
 
-			if( $ids->total_users > 0 ){
+			if ( $ids->total_users > 0 ) {
 				$um_user_query = current( $ids->get_results() );
 				return $um_user_query->ID;
 			}
 
 			// Search by Display Name or ID
 			$args = array(
-				"fields" => array("ID"),
-				"search" => $value,
-				'search_columns' => array( 'display_name','ID' )
+				'fields'            => array( 'ID' ),
+				'search'            => $value,
+				'search_columns'    => array( 'display_name', 'ID' ),
 			);
 
 			$ids = new \WP_User_Query( $args );
 
-			if( $ids->total_users > 0 ){
+			if ( $ids->total_users > 0 ) {
 				$um_user_query = current( $ids->get_results() );
 				return $um_user_query->ID;
 			}
 
 
 			// Search By User Login
-			$value = str_replace(".", "_", $value );
-			$value = str_replace(" ", "", $value );
+			$value = str_replace( ".", "_", $value );
+			$value = str_replace( " ", "", $value );
 
 			$args = array(
-				"fields" => array("ID"),
-				"search" => $value,
-				'search_columns' => array(
+				'fields'            => array( 'ID' ),
+				'search'            => $value,
+				'search_columns'    => array(
 					'user_login',
 				)
 			);
 
 			$ids = new \WP_User_Query( $args );
 
-			if( $ids->total_users > 0 ){
+			if ( $ids->total_users > 0 ) {
 				$um_user_query = current( $ids->get_results() );
 				return $um_user_query->ID;
 			}
@@ -1846,7 +1859,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		function user_exists_by_id( $user_id ) {
 			$aux = get_userdata( intval( $user_id ) );
-			if( $aux == false ) {
+			if ( $aux == false ) {
 				return false;
 			} else {
 				return $user_id;
@@ -1878,8 +1891,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			$user_id = false;
 
-			$ids = get_users( array( 'fields' => 'ID', 'meta_key' => 'um_email_as_username_'.$slug ) );
-			if ( isset( $ids[0] ) && ! empty( $ids[0] ) ){
+			$ids = get_users( array( 'fields' => 'ID', 'meta_key' => 'um_email_as_username_' . $slug ) );
+			if ( ! empty( $ids[0] ) ) {
 				$user_id = $ids[0];
 			}
 

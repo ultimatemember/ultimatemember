@@ -1,3 +1,6 @@
+<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+
+
 <div class="um-admin-metabox">
 
 	<?php

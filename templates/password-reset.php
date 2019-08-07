@@ -53,7 +53,7 @@
 					<div class="um-field um-field-block um-field-type_block">
 						<div class="um-field-block">
 							<div style="text-align:center;">
-								<?php _e('To reset your password, please enter your email address or username below','ultimate-member'); ?>
+								<?php _e( 'To reset your password, please enter your email address or username below', 'ultimate-member' ); ?>
 							</div>
 						</div>
 					</div>
@@ -91,7 +91,7 @@
 				<div class="um-col-alt um-col-alt-b">
 
 					<div class="um-center">
-						<input type="submit" value="<?php esc_attr_e('Reset my password','ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
+						<input type="submit" value="<?php esc_attr_e( 'Reset my password', 'ultimate-member' ); ?>" class="um-button" id="um-submit-btn" />
 					</div>
 
 					<div class="um-clear"></div>

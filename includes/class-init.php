@@ -1227,20 +1227,6 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @return um\core\Chart
-		 */
-		function chart() {
-			if ( empty( $this->classes['chart'] ) ) {
-				$this->classes['chart'] = new um\core\Chart();
-			}
-
-			return $this->classes['chart'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
 		 * @return um\core\Builtin
 		 */
 		function builtin() {

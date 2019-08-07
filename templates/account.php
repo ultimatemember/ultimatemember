@@ -31,7 +31,7 @@
 			<div class="um-account-meta radius-<?php echo esc_attr( UM()->options()->get( 'profile_photocorner' ) ); ?> uimob340-show uimob500-show">
 
 				<div class="um-account-meta-img">
-					<a href="<?php echo esc_url( um_user_profile_url() ); ?>"><?php echo get_avatar( um_user('ID'), 120 ); ?></a>
+					<a href="<?php echo esc_url( um_user_profile_url() ); ?>"><?php echo get_avatar( um_user( 'ID' ), 120 ); ?></a>
 				</div>
 
 				<div class="um-account-name">
@@ -49,11 +49,11 @@
 			
 			<div class="um-account-side uimob340-hide uimob500-hide">
 
-				<div class="um-account-meta radius-<?php echo esc_attr( UM()->options()->get('profile_photocorner') ); ?>">
+				<div class="um-account-meta radius-<?php echo esc_attr( UM()->options()->get( 'profile_photocorner' ) ); ?>">
 
 					<div class="um-account-meta-img uimob800-hide">
 						<a href="<?php echo esc_url( um_user_profile_url() ); ?>">
-							<?php echo get_avatar( um_user('ID'), 120 ); ?>
+							<?php echo get_avatar( um_user( 'ID' ), 120 ); ?>
 						</a>
 					</div>
 
@@ -61,7 +61,7 @@
 
 						<div class="um-account-meta-img-b uimob800-show" title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>">
 							<a href="<?php echo esc_url( um_user_profile_url() ); ?>">
-								<?php echo get_avatar( um_user('ID'), 120 ); ?>
+								<?php echo get_avatar( um_user( 'ID' ), 120 ); ?>
 							</a>
 						</div>
 
@@ -69,7 +69,7 @@
 
 						<div class="um-account-meta-img-b uimob800-show um-tip-<?php echo is_rtl() ? 'e' : 'w'; ?>" title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>">
 							<a href="<?php echo esc_url( um_user_profile_url() ); ?>">
-								<?php echo get_avatar( um_user('ID'), 120 ); ?>
+								<?php echo get_avatar( um_user( 'ID' ), 120 ); ?>
 							</a>
 						</div>
 
@@ -150,7 +150,7 @@
 					if ( isset( $info['custom'] ) || UM()->options()->get( 'account_tab_' . $id ) == 1 || $id == 'general' ) { ?>
 
 						<div class="um-account-nav uimob340-show uimob500-show">
-							<a href="#" data-tab="<?php echo esc_attr( $id ); ?>" class="<?php if ( $id == $current_tab ) echo 'current'; ?>">
+							<a href="javascript:void(0);" data-tab="<?php echo esc_attr( $id ); ?>" class="<?php if ( $id == $current_tab ) echo 'current'; ?>">
 								<?php echo esc_html( $info['title'] ); ?>
 								<span class="ico"><i class="<?php echo esc_attr( $info['icon'] ); ?>"></i></span>
 								<span class="arr"><i class="um-faicon-angle-down"></i></span>

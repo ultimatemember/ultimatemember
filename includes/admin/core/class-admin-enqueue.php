@@ -2,7 +2,6 @@
 namespace um\admin\core;
 
 
-// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
@@ -195,9 +194,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		function admin_head() {
 			if ( UM()->admin()->is_plugin_post_type() ) { ?>
 				<style type="text/css">
-					.um-admin.post-type-<?php echo get_post_type(); ?> div#slugdiv,
-					.um-admin.post-type-<?php echo get_post_type(); ?> div#minor-publishing,
-					.um-admin.post-type-<?php echo get_post_type(); ?> div#screen-meta-links
+					.um-admin.post-type-<?php echo esc_attr( get_post_type() ); ?> div#slugdiv,
+					.um-admin.post-type-<?php echo esc_attr( get_post_type() ); ?> div#minor-publishing,
+					.um-admin.post-type-<?php echo esc_attr( get_post_type() ); ?> div#screen-meta-links
 					{display:none}
 				</style>
 			<?php }

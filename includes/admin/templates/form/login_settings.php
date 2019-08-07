@@ -1,3 +1,6 @@
+<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+
+
 <div class="um-admin-metabox">
 	<?php UM()->admin_forms( array(
 		'class'		=> 'um-form-login-settings um-top-label',

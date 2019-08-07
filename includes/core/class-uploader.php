@@ -337,7 +337,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				$allowed_image_mimes[ $atype['ext'] ] = $atype['type'];
 			}
 
-			$image_compression = UM()->options()->get('image_compression');
+			$image_compression = UM()->options()->get( 'image_compression' );
 
 			$upload_overrides = array(
 				'test_form' => false,

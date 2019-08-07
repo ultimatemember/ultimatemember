@@ -211,10 +211,12 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 			 */
 			$regex_safe_username = apply_filters('um_validation_safe_username_regex',$this->regex_safe );
 
-			if ( is_email( $string ) )
+			if ( is_email( $string ) ) {
 				return true;
-			if ( !is_email( $string) && !preg_match( $regex_safe_username, $string ) )
+			}
+			if ( ! is_email( $string ) && ! preg_match( $regex_safe_username, $string ) ) {
 				return false;
+			}
 			return true;
 		}
 
@@ -249,9 +251,9 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 			 * }
 			 * ?>
 			 */
-			$regex_safe_string = apply_filters('um_validation_safe_string_regex',$this->regex_safe );
+			$regex_safe_string = apply_filters( 'um_validation_safe_string_regex', $this->regex_safe );
 
-			if ( !preg_match( $regex_safe_string, $string) ){
+			if ( ! preg_match( $regex_safe_string, $string ) ) {
 				return false;
 			}
 			return true;
@@ -266,10 +268,12 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		 * @return bool
 		 */
 		function is_phone_number( $string ) {
-			if ( !$string )
+			if ( ! $string ) {
 				return true;
-			if ( !preg_match( $this->regex_phone_number, $string) )
+			}
+			if ( ! preg_match( $this->regex_phone_number, $string ) ) {
 				return false;
+			}
 			return true;
 		}
 
@@ -283,19 +287,21 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		 * @return bool
 		 */
 		function is_url( $url, $social = false ){
-			if ( !$url ) return true;
+			if ( ! $url ) {
+				return true;
+			}
 
 			if ( $social ) {
 
-				if ( !filter_var($url, FILTER_VALIDATE_URL) && strstr( $url, $social )  ) { // starts with social requested
+				if ( ! filter_var( $url, FILTER_VALIDATE_URL ) && strstr( $url, $social )  ) { // starts with social requested
 					return true;
 				} else {
 
-					if ( filter_var($url, FILTER_VALIDATE_URL) && strstr( $url, $social ) ) {
+					if ( filter_var( $url, FILTER_VALIDATE_URL ) && strstr( $url, $social ) ) {
 						return true;
-					} elseif ( preg_match( $this->regex_safe, $url) ) {
+					} elseif ( preg_match( $this->regex_safe, $url ) ) {
 
-						if ( strstr( $url, '.com' ) ){
+						if ( strstr( $url, '.com' ) ) {
 							return false;
 						} else {
 							return true;
@@ -307,8 +313,9 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 
 			} else {
 
-				if ( strstr( $url, 'http://') || strstr( $url, 'https://') )
+				if ( strstr( $url, 'http://' ) || strstr( $url, 'https://' ) ) {
 					return true;
+				}
 
 			}
 
@@ -326,8 +333,8 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		function randomize( $length = 10 ) {
 			$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 			$result = '';
-			for ($i = 0; $i < $length; $i++) {
-				$result .= $characters[rand(0, strlen($characters) - 1)];
+			for ( $i = 0; $i < $length; $i++ ) {
+				$result .= $characters[ rand( 0, strlen( $characters ) - 1 ) ];
 			}
 			return $result;
 		}
@@ -354,22 +361,19 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		 */
 		function random_number( $len = false ) {
 			$ints = array();
-			$len = $len ? $len : rand(2,9);
-			if($len > 9)
-			{
-				trigger_error('Maximum length should not exceed 9');
+			$len = $len ? $len : rand( 2, 9 );
+			if ( $len > 9 ) {
+				trigger_error( 'Maximum length should not exceed 9' );
 				return 0;
 			}
-			while(true)
-			{
+
+			while( true ) {
 				$current = rand(0,9);
-				if(!in_array($current,$ints))
-				{
+				if ( ! in_array( $current, $ints ) ) {
 					$ints[] = $current;
 				}
-				if(count($ints) == $len)
-				{
-					return implode($ints);
+				if ( count( $ints ) == $len ) {
+					return implode( $ints );
 				}
 			}
 		}
@@ -383,11 +387,19 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		 *
 		 * @return bool
 		 */
-		function validate_date( $date, $format='YYYY/MM/D' ) {
-			if ( strlen( $date ) < strlen($format) ) return false;
-			if ( $date[4] != '/' ) return false;
-			if ( $date[7] != '/' ) return false;
-			if ( false === strtotime($date) ) return false;
+		function validate_date( $date, $format = 'YYYY/MM/D' ) {
+			if ( strlen( $date ) < strlen( $format ) ) {
+				return false;
+			}
+			if ( $date[4] != '/' ) {
+				return false;
+			}
+			if ( $date[7] != '/' ) {
+				return false;
+			}
+			if ( false === strtotime( $date ) ) {
+				return false;
+			}
 			return true;
 		}
 

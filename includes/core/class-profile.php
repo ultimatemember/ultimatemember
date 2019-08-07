@@ -52,8 +52,9 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			 */
 			extract( $_REQUEST );
 
-			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) )
+			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 				die( __( 'You can not edit this user' ) );
+			}
 
 			UM()->files()->delete_core_user_photo( $user_id, 'profile_photo' );
 		}
@@ -70,8 +71,9 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			 */
 			extract( $_REQUEST );
 
-			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) )
+			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 				die( __( 'You can not edit this user' ) );
+			}
 
 			UM()->files()->delete_core_user_photo( $user_id, 'cover_photo' );
 		}
@@ -355,8 +357,8 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 
 			$this->active_subnav = null;
 
-			if ( get_query_var('subnav') ) {
-				$this->active_subnav = get_query_var('subnav');
+			if ( get_query_var( 'subnav' ) ) {
+				$this->active_subnav = get_query_var( 'subnav' );
 			}
 
 			return $this->active_subnav;
@@ -420,7 +422,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		function new_ui( $position, $element, $trigger, $items ) {
 			?>
 
-			<div class="um-dropdown" data-element="<?php echo $element; ?>" data-position="<?php echo $position; ?>" data-trigger="<?php echo $trigger; ?>">
+			<div class="um-dropdown" data-element="<?php echo esc_attr( $element ); ?>" data-position="<?php echo esc_attr( $position ); ?>" data-trigger="<?php echo esc_attr( $trigger ); ?>">
 				<div class="um-dropdown-b">
 					<div class="um-dropdown-arr"><i class=""></i></div>
 					<ul>

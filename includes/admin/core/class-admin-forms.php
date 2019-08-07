@@ -1,8 +1,9 @@
 <?php
 namespace um\admin\core;
 
-// Exit if accessed directly.
+
 if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
@@ -76,8 +77,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			<?php }
 
 			foreach ( $this->form_data['fields'] as $field_data ) {
-				if ( isset( $field_data['type'] ) && 'hidden' != $field_data['type'] )
+				if ( isset( $field_data['type'] ) && 'hidden' != $field_data['type'] ) {
 					echo $this->render_form_row( $field_data );
+				}
 			}
 
 			if ( empty( $this->form_data['without_wrapper'] ) ) { ?>
@@ -103,8 +105,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 */
 		function render_form_row( $data ) {
 
-			if ( empty( $data['type'] ) )
+			if ( empty( $data['type'] ) ) {
 				return '';
+			}
 
 			if ( !empty( $data['value'] ) && $data['type'] != 'email_template' ) {
 				$data['value'] = wp_unslash( $data['value'] );
@@ -116,9 +119,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			}
 
 			$conditional = ! empty( $data['conditional'] ) ? 'data-conditional="' . esc_attr( json_encode( $data['conditional'] ) ) . '"' : '';
-			$prefix_attr = ! empty( $this->form_data['prefix_id'] ) ? ' data-prefix="' . $this->form_data['prefix_id'] . '" ' : '';
+			$prefix_attr = ! empty( $this->form_data['prefix_id'] ) ? ' data-prefix="' . esc_attr( $this->form_data['prefix_id'] ) . '" ' : '';
 
-			$type_attr = ' data-field_type="' . $data['type'] . '" ';
+			$type_attr = ' data-field_type="' . esc_attr( $data['type'] ) . '" ';
 
 			$html = '';
 			if ( $data['type'] != 'hidden' ) {
@@ -302,16 +305,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 * @return bool|string
 		 */
 		function render_field_label( $data ) {
-			if ( empty( $data['label'] ) )
+			if ( empty( $data['label'] ) ) {
 				return false;
+			}
 
 			$id = ! empty( $data['id1'] ) ? $data['id1'] : $data['id'];
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $id;
-			$for_attr = ' for="' . $id . '" ';
+			$for_attr = ' for="' . esc_attr( $id ) . '" ';
 
 			$label = $data['label'];
-			if ( isset( $data['required'] ) && $data['required'] )
-				$label = $label . '<span class="um-req" title="'.__('Required','ultimate-member').'">*</span>';
+			if ( isset( $data['required'] ) && $data['required'] ) {
+				$label = $label . '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
+			}
 
 			$tooltip = ! empty( $data['tooltip'] ) ? UM()->tooltip( $data['tooltip'], false, false ) : '';
 
@@ -331,10 +336,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			}
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
-			$id_attr = ' id="' . $id . '" ';
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
 
 			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
-			$class_attr = ' class="um-forms-field ' . $class . '" ';
+			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
 			$data = array(
 				'field_id' => $field_data['id']
@@ -342,7 +347,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$data_attr = '';
 			foreach ( $data as $key => $value ) {
-				$data_attr .= " data-{$key}=\"{$value}\" ";
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}
 
 			$name = $field_data['id'];
@@ -367,30 +372,31 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 */
 		function render_text( $field_data ) {
 
-			if ( empty( $field_data['id'] ) )
+			if ( empty( $field_data['id'] ) ) {
 				return false;
+			}
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
-			$id_attr = ' id="' . $id . '" ';
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
 
 			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
 			$class .= ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
-			$class_attr = ' class="um-forms-field ' . $class . '" ';
+			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
 			$data = array(
 				'field_id' => $field_data['id']
 			);
 
-			if( ! empty( $field_data['attr'] ) && is_array( $field_data['attr'] ) ){
+			if ( ! empty( $field_data['attr'] ) && is_array( $field_data['attr'] ) ){
 				$data = array_merge( $data, $field_data['attr'] );
 			}
 
 			$data_attr = '';
 			foreach ( $data as $key => $value ) {
-				$data_attr .= " data-{$key}=\"{$value}\" ";
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}
 
-			$placeholder_attr = ! empty( $field_data['placeholder'] ) ? ' placeholder="' . $field_data['placeholder'] . '"' : '';
+			$placeholder_attr = ! empty( $field_data['placeholder'] ) ? ' placeholder="' . esc_attr( $field_data['placeholder'] ) . '"' : '';
 
 			$name = $field_data['id'];
 			$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
@@ -412,16 +418,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 */
 		function render_color( $field_data ) {
 
-			if ( empty( $field_data['id'] ) )
+			if ( empty( $field_data['id'] ) ) {
 				return false;
+			}
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
-			$id_attr = ' id="' . $id . '" ';
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
 
 			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
 			$class .= ! empty( $field_data['size'] ) ? ' um-' . $field_data['size'] . '-field ' : ' um-long-field ';
 			$class .= ' um-admin-colorpicker ';
-			$class_attr = ' class="um-forms-field ' . $class . '" ';
+			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
 			$data = array(
 				'field_id' => $field_data['id']
@@ -429,10 +436,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$data_attr = '';
 			foreach ( $data as $key => $value ) {
-				$data_attr .= " data-{$key}=\"{$value}\" ";
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}
 
-			$placeholder_attr = ! empty( $field_data['placeholder'] ) ? ' placeholder="' . $field_data['placeholder'] . '"' : '';
+			$placeholder_attr = ! empty( $field_data['placeholder'] ) ? ' placeholder="' . esc_attr( $field_data['placeholder'] ) . '"' : '';
 
 			$name = $field_data['id'];
 			$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
@@ -454,11 +461,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 */
 		function render_icon( $field_data ) {
 
-			if ( empty( $field_data['id'] ) )
+			if ( empty( $field_data['id'] ) ) {
 				return false;
+			}
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
-			$id_attr = ' id="' . $id . '" ';
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
 
 			$name = $field_data['id'];
 			$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
@@ -467,7 +475,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$value = $this->get_field_value( $field_data );
 			$value_attr = ' value="' . $value . '" ';
 
-			$html = '<a href="#" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="">' . __( 'Choose Icon', 'ultimate-member' ) . '</a>
+			$html = '<a href="javascript:void(0);" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="">' . __( 'Choose Icon', 'ultimate-member' ) . '</a>
 				<span class="um-admin-icon-value">';
 
 			if ( ! empty( $value ) ) {
@@ -497,15 +505,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 */
 		function render_datepicker( $field_data ) {
 
-			if ( empty( $field_data['id'] ) )
+			if ( empty( $field_data['id'] ) ) {
 				return false;
+			}
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
-			$id_attr = ' id="' . $id . '" ';
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
 
 			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
 			$class .= ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
-			$class_attr = ' class="um-forms-field ' . $class . '" ';
+			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
 			$data = array(
 				'field_id' => $field_data['id']
@@ -513,10 +522,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$data_attr = '';
 			foreach ( $data as $key => $value ) {
-				$data_attr .= " data-{$key}=\"{$value}\" ";
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}
 
-			$placeholder_attr = ! empty( $field_data['placeholder'] ) ? ' placeholder="' . $field_data['placeholder'] . '"' : '';
+			$placeholder_attr = ! empty( $field_data['placeholder'] ) ? ' placeholder="' . esc_attr( $field_data['placeholder'] ) . '"' : '';
 
 			$name = $field_data['id'];
 			$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
@@ -538,9 +547,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 */
 		function render_inline_texts( $field_data ) {
 
-			if ( empty( $field_data['id1'] ) )
+			if ( empty( $field_data['id1'] ) ) {
 				return false;
-
+			}
 
 			$i = 1;
 			$fields = array();
@@ -550,20 +559,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 				$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
 				$class .= ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
-				$class_attr = ' class="um-forms-field ' . $class . '" ';
+				$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
 				$data = array(
-					'field_id' => $field_data['id'. $i]
+					'field_id' => $field_data[ 'id'. $i ]
 				);
 
 				$data_attr = '';
 				foreach ( $data as $key => $value ) {
-					$data_attr .= " data-{$key}=\"{$value}\" ";
+					$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 				}
 
 				$placeholder_attr = ! empty( $field_data['placeholder'] ) ? ' placeholder="' . $field_data['placeholder'] . '"' : '';
 
-				$name = $field_data['id'. $i];
+				$name = $field_data[ 'id'. $i ];
 				$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
 				$name_attr = ' name="' . $name . '" ';
 
@@ -589,15 +598,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 */
 		function render_textarea( $field_data ) {
 
-			if ( empty( $field_data['id'] ) )
+			if ( empty( $field_data['id'] ) ) {
 				return false;
+			}
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
-			$id_attr = ' id="' . $id . '" ';
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
 
 			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
 			$class .= ! empty( $field_data['size'] ) ? $field_data['size'] : 'um-long-field';
-			$class_attr = ' class="um-forms-field ' . $class . '" ';
+			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
 			$data = array(
 				'field_id' => $field_data['id']
@@ -605,7 +615,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$data_attr = '';
 			foreach ( $data as $key => $value ) {
-				$data_attr .= " data-{$key}=\"{$value}\" ";
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}
 
 			$rows = ! empty( $field_data['args']['textarea_rows'] ) ? ' rows="' . $field_data['args']['textarea_rows'] . '" ' : '';
@@ -629,8 +639,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 */
 		function render_wp_editor( $field_data ) {
 
-			if ( empty( $field_data['id'] ) )
+			if ( empty( $field_data['id'] ) ) {
 				return false;
+			}
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
 
@@ -643,7 +654,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$data_attr = '';
 			foreach ( $data as $key => $value ) {
-				$data_attr .= " data-{$key}=\"{$value}\" ";
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}
 
 			$name = $field_data['id'];
@@ -680,12 +691,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				return false;
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
-			$id_attr = ' id="' . $id . '" ';
-			$id_attr_hidden = ' id="' . $id . '_hidden" ';
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
+			$id_attr_hidden = ' id="' . esc_attr( $id ) . '_hidden" ';
 
 			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
 			$class .= ! empty( $field_data['size'] ) ? $field_data['size'] : 'um-long-field';
-			$class_attr = ' class="um-forms-field ' . $class . '" ';
+			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
 			$data = array(
 				'field_id' => $field_data['id']
@@ -697,7 +708,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$data_attr = '';
 			foreach ( $data as $key => $value ) {
-				$data_attr .= " data-{$key}=\"{$value}\" ";
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}
 
 			$name = $field_data['id'];
@@ -721,17 +732,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 */
 		function render_select( $field_data ) {
 
-			if ( empty( $field_data['id'] ) )
+			if ( empty( $field_data['id'] ) ) {
 				return false;
+			}
 
 			$multiple = ! empty( $field_data['multi'] ) ? 'multiple' : '';
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
-			$id_attr = ' id="' . $id . '" ';
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
 
 			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
 			$class .= ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
-			$class_attr = ' class="um-forms-field ' . $class . '" ';
+			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
 			$data = array(
 				'field_id' => $field_data['id']
@@ -739,7 +751,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$data_attr = '';
 			foreach ( $data as $key => $value ) {
-				$data_attr .= " data-{$key}=\"{$value}\" ";
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}
 
 			$name = $field_data['id'];
@@ -755,8 +767,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				foreach ( $field_data['options'] as $key => $option ) {
 					if ( ! empty( $field_data['multi'] ) ) {
 
-						if ( ! is_array( $value ) || empty( $value ) )
+						if ( ! is_array( $value ) || empty( $value ) ) {
 							$value = array();
+						}
 
 						$options .= '<option value="' . $key . '" ' . selected( in_array( $key, $value ), true, false ) . '>' . esc_html( $option ) . '</option>';
 					} else {
@@ -799,7 +812,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$data_attr = '';
 			foreach ( $data as $key => $value ) {
-				$data_attr .= " data-{$key}=\"{$value}\" ";
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}
 
 			$name = $field_data['id'];
@@ -824,7 +837,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						continue ;
 					}
 
-					$id_attr = ' id="' . $id . '-' . $k . '" ';
+					$id_attr = ' id="' . esc_attr( $id . '-' . $k ) . '" ';
 
 					$options = '';
 					foreach ( $field_data['options'] as $key => $option ) {
@@ -866,14 +879,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 */
 		function render_multi_checkbox( $field_data ) {
 
-			if ( empty( $field_data['id'] ) )
+			if ( empty( $field_data['id'] ) ) {
 				return false;
+			}
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
 
 			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
 			$class .= ! empty( $field_data['size'] ) ? $field_data['size'] : 'um-long-field';
-			$class_attr = ' class="um-forms-field ' . $class . '" ';
+			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
 			$name = $field_data['id'];
 			$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
@@ -890,8 +904,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$html .= '<span class="um-form-fields-section" style="width:' . floor( 100 / $columns ) . '% !important;">';
 
 				foreach ( $section_fields_per_page as $k => $title ) {
-					$id_attr = ' id="' . $id . '_' . $k . '" ';
-					$for_attr = ' for="' . $id . '_' . $k . '" ';
+					$id_attr = ' id="' . esc_attr( $id . '_' . $k ) . '" ';
+					$for_attr = ' for="' . esc_attr( $id . '_' . $k ) . '" ';
 					$name_attr = ' name="' . $name . '[' . $k . ']" ';
 
 					$html .= "<label $for_attr>
@@ -915,15 +929,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 */
 		function render_multi_text( $field_data ) {
 
-			if ( empty( $field_data['id'] ) )
+			if ( empty( $field_data['id'] ) ) {
 				return false;
+			}
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
 
 			$size = ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
 
 			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
-			$class_attr = ' class="um-forms-field ' . $class . '" ';
+			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
 			$data = array(
 				'field_id' => $field_data['id'],
@@ -932,7 +947,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$data_attr = '';
 			foreach ( $data as $key => $value ) {
-				$data_attr .= " data-{$key}=\"{$value}\" ";
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}
 
 			$name = $field_data['id'];
@@ -946,9 +961,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$html .= "<ul class=\"um-multi-text-list\" $data_attr>";
 
 			if ( ! empty( $values ) ) {
-				foreach ( $values as $k=>$value ) {
-					$value = esc_attr($value);
-					$id_attr = ' id="' . $id . '-' . $k . '" ';
+				foreach ( $values as $k => $value ) {
+					$value = esc_attr( $value );
+					$id_attr = ' id="' . esc_attr( $id . '-' . $k ) . '" ';
 
 					$html .= "<li class=\"um-multi-text-option-line {$size}\"><span class=\"um-field-wrapper\">
 						<input type=\"text\" $id_attr $name_attr $class_attr $data_attr value=\"$value\" /></span>
@@ -957,7 +972,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			} elseif ( ! empty( $field_data['show_default_number'] ) && is_numeric( $field_data['show_default_number'] ) && $field_data['show_default_number'] > 0 ) {
 				$i = 0;
 				while( $i < $field_data['show_default_number'] ) {
-					$id_attr = ' id="' . $id . '-' . $i . '" ';
+					$id_attr = ' id="' . esc_attr( $id . '-' . $i ) . '" ';
 
 					$html .= "<li class=\"um-multi-text-option-line {$size}\"><span class=\"um-field-wrapper\">
 						 <input type=\"text\" $id_attr $name_attr $class_attr $data_attr value=\"\" /></span>
@@ -980,8 +995,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 */
 		function render_media( $field_data ) {
 
-			if ( empty( $field_data['id'] ) )
+			if ( empty( $field_data['id'] ) ) {
 				return false;
+			}
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
 
@@ -993,8 +1009,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				'field_id' => $field_data['id'] . '_url',
 			);
 
-			if ( ! empty( $field_data['default']['url'] ) )
+			if ( ! empty( $field_data['default']['url'] ) ) {
 				$data['default'] = esc_attr( $field_data['default']['url'] );
+			}
 
 			$data_attr = '';
 			foreach ( $data as $key => $value ) {
@@ -1029,8 +1046,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$html .= '<input type="text" class="um-media-upload-url" readonly value="' . $image_url . '" /><div style="clear:both;"></div>';
 			}
 
-			$html .= '<input type="button" class="um-set-image button button-primary" value="' . __( 'Select', 'ultimate-member' ) . '" data-upload_frame="' . $upload_frame_title . '" />
-					<input type="button" class="um-clear-image button" value="' . __( 'Clear', 'ultimate-member' ) . '" /></div>';
+			$html .= '<input type="button" class="um-set-image button button-primary" value="' . esc_attr__( 'Select', 'ultimate-member' ) . '" data-upload_frame="' . $upload_frame_title . '" />
+					<input type="button" class="um-clear-image button" value="' . esc_attr__( 'Clear', 'ultimate-member' ) . '" /></div>';
 
 			return $html;
 		}
@@ -1042,8 +1059,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 * @return bool|string
 		 */
 		function render_email_template( $field_data ) {
-			if ( empty( $field_data['id'] ) )
+			if ( empty( $field_data['id'] ) ) {
 				return false;
+			}
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
 
@@ -1056,7 +1074,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$data_attr = '';
 			foreach ( $data as $key => $value ) {
-				$data_attr .= " data-{$key}=\"{$value}\" ";
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}
 
 			$name = $field_data['id'];
@@ -1099,10 +1117,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				return false;
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
-			$id_attr = ' id="' . $id . '" ';
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
 
 			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
-			$class_attr = ' class="um-forms-field button ' . $class . '" ';
+			$class_attr = ' class="um-forms-field button ' . esc_attr( $class ) . '" ';
 
 			$data = array(
 				'field_id' => $field_data['id']
@@ -1110,7 +1128,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$data_attr = '';
 			foreach ( $data as $key => $value ) {
-				$data_attr .= " data-{$key}=\"{$value}\" ";
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
 			}
 
 			$name = $field_data['id'];

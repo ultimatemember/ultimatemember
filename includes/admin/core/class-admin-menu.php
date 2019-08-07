@@ -3,8 +3,10 @@ namespace um\admin\core;
 
 
 use \RecursiveDirectoryIterator;
-// Exit if accessed directly.
+
+
 if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 
@@ -214,7 +216,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 			wp_enqueue_script( 'postbox' );
 
 			/** custom metaboxes for dashboard defined here **/
-			add_meta_box( 'um-metaboxes-contentbox-1', __( 'Users Overview','ultimate-member' ), array( &$this, 'users_overview' ), $this->pagehook, 'core', 'core' );
+			add_meta_box( 'um-metaboxes-contentbox-1', __( 'Users Overview', 'ultimate-member' ), array( &$this, 'users_overview' ), $this->pagehook, 'core', 'core' );
 
 			add_meta_box( 'um-metaboxes-mainbox-1', __( 'Latest from our blog', 'ultimate-member' ), array( &$this, 'um_news' ), $this->pagehook, 'normal', 'core' );
 
@@ -283,7 +285,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 				$size = 0;
 
 				foreach( new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator( $directory ) ) as $file ) {
-					$size+=$file->getSize();
+					$size += $file->getSize();
 				}
 				return round ( $size / 1048576, 2);
 			}
@@ -328,7 +330,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 					//<![CDATA[
 					jQuery(document).ready( function($) {
 						// postboxes setup
-						postboxes.add_postbox_toggles('<?php echo $this->pagehook; ?>');
+						postboxes.add_postbox_toggles('<?php echo esc_js( $this->pagehook ); ?>');
 					});
 					//]]>
 				</script>

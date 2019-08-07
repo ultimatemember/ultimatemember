@@ -1,6 +1,5 @@
-<?php
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+<?php if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 /**
  * Validate for errors in account form
@@ -250,7 +249,7 @@ function um_submit_account_details( $args ) {
 	 * ?>
 	 */
 	$secure_fields = apply_filters( 'um_secure_account_fields', $account_fields, um_user( 'ID' ) );
-		
+
 	if ( is_array( $secure_fields  ) ) {
 		foreach ( $secure_fields as $tab_key => $fields ) {
 			foreach ( $fields as $key => $value ) {
@@ -259,17 +258,17 @@ function um_submit_account_details( $args ) {
 		}
 	}
 
- 
 	$changes = array();
 	foreach ( $_POST as $k => $v ) {
-		if ( strstr( $k, 'password' ) || strstr( $k, 'um_account' ) || ! in_array( $k, $arr_fields ) )
+		if ( strstr( $k, 'password' ) || strstr( $k, 'um_account' ) || ! in_array( $k, $arr_fields ) ) {
 			continue;
+		}
 
 		$changes[ $k ] = $v;
 	}
 
-	if ( isset( $changes['hide_in_members'] ) && ( $changes['hide_in_members'] == __('No','ultimate-member') || $changes['hide_in_members'] == 'No' ) ) {
-		delete_user_meta( um_user('ID'), 'hide_in_members' );
+	if ( isset( $changes['hide_in_members'] ) && ( $changes['hide_in_members'] == __( 'No', 'ultimate-member' ) || $changes['hide_in_members'] == 'No' ) ) {
+		delete_user_meta( um_user( 'ID' ), 'hide_in_members' );
 		unset( $changes['hide_in_members'] );
 	}
 
@@ -391,7 +390,7 @@ function um_account_page_hidden_fields( $args ) {
 	?>
 
 	<input type="hidden" name="_um_account" id="_um_account" value="1" />
-	<input type="hidden" name="_um_account_tab" id="_um_account_tab" value="<?php echo UM()->account()->current_tab;?>" />
+	<input type="hidden" name="_um_account_tab" id="_um_account_tab" value="<?php echo esc_attr( UM()->account()->current_tab ); ?>" />
 
 	<?php
 }
@@ -433,7 +432,7 @@ add_action( 'um_before_account_notifications', 'um_before_account_notifications'
  */
 function um_account_secure_registered_fields(){
 	$secure_fields = UM()->account()->register_fields;
-	update_user_meta( um_user('ID'), 'um_account_secure_fields', $secure_fields );
+	update_user_meta( um_user( 'ID' ), 'um_account_secure_fields', $secure_fields );
 }
 add_action( 'wp_footer', 'um_account_secure_registered_fields' );
 

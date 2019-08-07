@@ -10,10 +10,11 @@ if ( UM()->shortcodes()->loop ) {
 	
 		<!--Ajax output-->
 		
-		<?php if ( count( UM()->shortcodes()->loop) >= 10 ) { ?>
+		<?php if ( count( UM()->shortcodes()->loop ) >= 10 ) { ?>
 		
 			<div class="um-load-items">
-				<a href="#" class="um-ajax-paginate um-button" data-hook="um_load_comments" data-args="comment,10,10,<?php echo esc_attr( um_user('ID') ); ?>">
+				<a href="javascript:void(0);" class="um-ajax-paginate um-button" data-hook="um_load_comments"
+				   data-args="comment,10,10,<?php echo esc_attr( um_user( 'ID' ) ); ?>">
 					<?php _e( 'load more comments', 'ultimate-member' ); ?>
 				</a>
 			</div>
@@ -25,7 +26,13 @@ if ( UM()->shortcodes()->loop ) {
 <?php } else { ?>
 
 	<div class="um-profile-note">
-		<span><?php echo ( um_profile_id() == get_current_user_id() ) ? __( 'You have not made any comments.', 'ultimate-member' ) : __( 'This user has not made any comments.', 'ultimate-member' ); ?></span>
+		<span>
+			<?php if ( um_profile_id() == get_current_user_id() ) {
+				_e( 'You have not made any comments.', 'ultimate-member' );
+			} else {
+				_e( 'This user has not made any comments.', 'ultimate-member' );
+			} ?>
+		</span>
 	</div>
 	
-<?php } ?>
+<?php }
