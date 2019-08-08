@@ -480,7 +480,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$label = apply_filters( 'um_edit_label_all_fields', $label, $data );
 			}
 
-			$output .= '<label for="' . esc_attr( $key . UM()->form()->form_suffix ) . '">' . esc_html__( $label, 'ultimate-member' ) . '</label>';
+			$output .= '<label for="' . esc_attr( $key . UM()->form()->form_suffix ) . '">' . __( $label, 'ultimate-member' ) . '</label>';
 
 			if ( ! empty( $data['help'] ) && $this->viewing == false && ! strstr( $key, 'confirm_user_pass' ) ) {
 

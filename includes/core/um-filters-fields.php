@@ -11,8 +11,9 @@
  */
 function um_edit_label_all_fields( $label, $data ) {
 	$asterisk = UM()->options()->get( 'form_asterisk' );
-	if ( $asterisk && isset( $data['required'] ) && $data['required'] == 1 )
-		$label = $label . '<span class="um-req" title="'.__('Required','ultimate-member').'">*</span>';
+	if ( $asterisk && isset( $data['required'] ) && $data['required'] == 1 ) {
+		$label = $label . '<span class="um-req" title="' . esc_attr__( 'Required', 'ultimate-member' ) . '">*</span>';
+	}
 
 	return $label;
 }
