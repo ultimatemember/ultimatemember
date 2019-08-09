@@ -1291,6 +1291,13 @@ function um_add_submit_button_to_profile( $args ) {
 	// only when editing
 	if ( UM()->fields()->editing == false ) {
 		return;
+	}
+
+	if ( ! isset( $args['primary_btn_word'] ) || $args['primary_btn_word'] == '' ){
+		$args['primary_btn_word'] = UM()->options()->get( 'profile_primary_btn_word' );
+	}
+	if ( ! isset( $args['secondary_btn_word'] ) || $args['secondary_btn_word'] == '' ){
+		$args['secondary_btn_word'] = UM()->options()->get( 'profile_secondary_btn_word' );
 	} ?>
 
 	<div class="um-col-alt">
