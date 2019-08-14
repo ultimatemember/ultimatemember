@@ -376,7 +376,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			}
 
 			$output = ob_get_clean();
-			return $output;
+			return htmlspecialchars_decode( $output );
 		}
 
 
