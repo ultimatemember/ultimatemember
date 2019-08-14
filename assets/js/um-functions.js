@@ -204,22 +204,9 @@ function um_responsive(){
 
 	});
 
-	jQuery('.um-members').each(function(){
-		UM_Member_Grid( jQuery(this) );
-	});
-
 	UM_domenus();
-
 }
 
-function UM_Member_Grid( container ) {
-	container.masonry({
-		itemSelector: '.um-member',
-		columnWidth: '.um-member',
-		gutter: '.um-gutter-sizer'
-	});
-
-}
 
 function initImageUpload_UM( trigger ) {
 

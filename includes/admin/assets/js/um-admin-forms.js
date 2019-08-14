@@ -186,6 +186,11 @@ jQuery(document).ready( function() {
 	}
 
 
+	function um_distinct( value, index, self ) {
+		return self.indexOf( value ) === index;
+	}
+
+
 	/**
 	 * Conditional logic
 	 *
@@ -206,10 +211,12 @@ jQuery(document).ready( function() {
 		var parent_condition = true;
 
 		if ( condition === '=' || condition === '!=' ) {
-			var condition_field = jQuery( '#' + prefix + '_' + conditional[0] );
+			if ( conditional[0].indexOf( '||' ) === -1 ) {
+				var condition_field = jQuery( '#' + prefix + '_' + conditional[0] );
 
-			if ( typeof condition_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
-				parent_condition = check_condition( condition_field.parents('.um-forms-line') );
+				if ( typeof condition_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
+					parent_condition = check_condition( condition_field.parents('.um-forms-line') );
+				}
 			}
 		} else if ( condition === '~' ) {
 			var selectors = conditional[0].split('|');
@@ -224,31 +231,106 @@ jQuery(document).ready( function() {
 
 		var own_condition = false;
 		if ( condition === '=' ) {
-			var tagName = condition_field.prop("tagName").toLowerCase();
+			if ( conditional[0].indexOf( '||' ) !== -1 ) {
+				var selectors = conditional[0].split('||');
+				var complete_condition = false;
 
-			if ( tagName == 'input' ) {
-				var input_type = condition_field.attr('type');
-				if ( input_type == 'checkbox' ) {
-					own_condition = ( value == '1' ) ? condition_field.is(':checked') : ! condition_field.is(':checked');
-				} else {
+				jQuery.each( selectors, function(i) {
+					var cond_field = jQuery( '#' + prefix + '_' + selectors[i] );
+
+					own_condition = false;
+					parent_condition = true;
+
+					if ( typeof cond_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
+						parent_condition = check_condition( cond_field.parents('.um-forms-line') );
+					}
+
+					var tagName = cond_field.prop("tagName").toLowerCase();
+
+					if ( tagName === 'input' ) {
+						var input_type = cond_field.attr('type');
+						if ( input_type === 'checkbox' ) {
+							own_condition = ( value == '1' ) ? cond_field.is(':checked') : ! cond_field.is(':checked');
+						} else {
+							own_condition = ( cond_field.val() == value );
+						}
+					} else if ( tagName === 'select' ) {
+						own_condition = ( cond_field.val() == value );
+					}
+
+					if ( own_condition && parent_condition ) {
+						complete_condition = true;
+					}
+				});
+
+				return complete_condition;
+			} else {
+				var tagName = condition_field.prop("tagName").toLowerCase();
+
+				if ( tagName == 'input' ) {
+					var input_type = condition_field.attr('type');
+					if ( input_type == 'checkbox' ) {
+						own_condition = ( value == '1' ) ? condition_field.is(':checked') : ! condition_field.is(':checked');
+					} else {
+						own_condition = ( condition_field.val() == value );
+					}
+				} else if ( tagName == 'select' ) {
 					own_condition = ( condition_field.val() == value );
 				}
-			} else if ( tagName == 'select' ) {
-				own_condition = ( condition_field.val() == value );
-			}
-		} else if ( condition === '!=' ) {
-			var tagName = condition_field.prop("tagName").toLowerCase();
 
-			if ( tagName == 'input' ) {
-				var input_type = condition_field.attr('type');
-				if ( input_type == 'checkbox' ) {
-					own_condition = ( value == '1' ) ? ! condition_field.is(':checked') : condition_field.is(':checked');
-				} else {
+				return ( own_condition && parent_condition );
+			}
+
+		} else if ( condition === '!=' ) {
+			if ( conditional[0].indexOf( '||' ) !== -1 ) {
+				var selectors = conditional[0].split('||');
+				var complete_condition = false;
+
+				jQuery.each( selectors, function(i) {
+					var cond_field = jQuery( '#' + prefix + '_' + selectors[i] );
+
+					own_condition = false;
+					parent_condition = true;
+					if ( typeof cond_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
+						parent_condition = check_condition( cond_field.parents('.um-forms-line') );
+					}
+
+					var tagName = cond_field.prop("tagName").toLowerCase();
+
+					if ( tagName === 'input' ) {
+						var input_type = cond_field.attr('type');
+						if ( input_type === 'checkbox' ) {
+							own_condition = ( value == '1' ) ? ! cond_field.is(':checked') : cond_field.is(':checked');
+						} else {
+							own_condition = ( cond_field.val() != value );
+						}
+					} else if ( tagName === 'select' ) {
+						own_condition = ( cond_field.val() != value );
+					}
+
+					if ( own_condition && parent_condition ) {
+						complete_condition = true;
+					}
+				});
+
+				return complete_condition;
+			} else {
+				var tagName = condition_field.prop("tagName").toLowerCase();
+
+				if ( tagName == 'input' ) {
+					var input_type = condition_field.attr('type');
+					if ( input_type == 'checkbox' ) {
+						own_condition = ( value == '1' ) ? ! condition_field.is(':checked') : condition_field.is(':checked');
+					} else {
+						own_condition = ( condition_field.val() != value );
+					}
+				} else if ( tagName == 'select' ) {
 					own_condition = ( condition_field.val() != value );
 				}
-			} else if ( tagName == 'select' ) {
-				own_condition = ( condition_field.val() != value );
+
+				return ( own_condition && parent_condition );
 			}
+
 		} else if ( condition === '~' ) {
 
 			var field_id = form_line.find( form_line.data('field_type') ).data('field_id');
@@ -264,6 +346,11 @@ jQuery(document).ready( function() {
 						if ( value == '1' && condition_field.is(':checked') ) {
 							visible_options.push( condition_field.data( 'fill_' + field_id ) );
 						}
+					}
+				} else if ( tagName == 'select' ) {
+					if ( ! value && condition_field.val() ) {
+						visible_options = visible_options.concat( condition_field.val() );
+						visible_options = visible_options.filter( um_distinct );
 					}
 				}
 			});
@@ -285,9 +372,11 @@ jQuery(document).ready( function() {
 				lines_field.val( null );
 				lines_field.find( 'option' ).attr( 'selected', false ).prop( 'selected', false );
 			}
+
+			return ( own_condition && parent_condition );
 		}
 
-		return ( own_condition && parent_condition );
+		return false;
 	}
 
 });

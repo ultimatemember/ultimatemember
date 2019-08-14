@@ -123,6 +123,11 @@ jQuery(document).ready(function() {
 			allowClear: false,
 			minimumResultsForSearch: 10
 		});
+
+		jQuery(".um-s3").select2({
+			allowClear: false,
+			minimumResultsForSearch: -1
+		});
 	}
 	
 	if( typeof(jQuery.fn.tipsy) === "function" ){

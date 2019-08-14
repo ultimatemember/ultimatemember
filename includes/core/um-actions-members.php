@@ -94,7 +94,7 @@ function um_members_directory_search( $args ) {
 
 	}
 }
-add_action( 'um_members_directory_search', 'um_members_directory_search' );
+//add_action( 'um_members_directory_search', 'um_members_directory_search' );
 
 
 /**

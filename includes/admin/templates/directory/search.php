@@ -1,14 +1,35 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit;
+
+global $post_id; ?>
 
 
 <div class="um-admin-metabox">
 	<?php
-	$can_search_array = array();
-	foreach ( UM()->roles()->get_roles() as $key => $value ) {
-	    $_um_roles_can_search = UM()->query()->get_meta_value( '_um_roles_can_search', $key );
-		if ( ! empty( $_um_roles_can_search ) )
-			$can_search_array[] = $_um_roles_can_search;
-	}
+	/*$_um_roles_search_value = array();
+	$_um_roles_search = get_post_meta( $post_id, '_um_roles_can_search', true );
+	if ( ! empty( $_um_roles_search ) ) {
+		foreach ( UM()->roles()->get_roles() as $key => $value ) {
+			if ( in_array( $key, array_keys( $_um_roles_search ) ) ) {
+				$_um_roles_search_value[] = $key;
+			}
+		}
+	}*/
+
+	$_um_roles_search_value = get_post_meta( $post_id, '_um_roles_can_search', true );
+	$_um_roles_search_value = empty( $_um_roles_search_value ) ? array() : $_um_roles_search_value;
+
+	/*$_um_roles_filter_value = array();
+	$_um_roles_filter = get_post_meta( $post_id, '_um_roles_can_filter', true );
+	if ( ! empty( $_um_roles_filter ) ) {
+		foreach ( UM()->roles()->get_roles() as $key => $value ) {
+			if ( in_array( $key, array_keys( $_um_roles_filter ) ) ) {
+				$_um_roles_filter_value[] = $key;
+			}
+		}
+	}*/
+
+	$_um_roles_filter_value = get_post_meta( $post_id, '_um_roles_can_filter', true );
+	$_um_roles_filter_value = empty( $_um_roles_filter_value ) ? array() : $_um_roles_filter_value;
 
 	/**
 	 * UM hook
@@ -36,84 +57,68 @@
 	$searchable_fields = $searchable_fields + $custom_search;
 	$user_fields = array();
 	foreach ( $searchable_fields as $key => $arr ) {
-		$user_fields[$key] = isset( $arr['title'] ) ? $arr['title'] : '';
+		$user_fields[ $key ] = isset( $arr['title'] ) ? $arr['title'] : '';
 	}
 
-    $post_id = get_the_ID();
-    $_um_search_fields = get_post_meta( $post_id, '_um_search_fields', true );
+	//$post_id = get_the_ID();
+	$_um_search_fields = get_post_meta( $post_id, '_um_search_fields', true );
 
 	UM()->admin_forms( array(
-		'class'		=> 'um-member-directory-search um-half-column',
-		'prefix_id'	=> 'um_metadata',
-		'fields' => array(
+		'class'     => 'um-member-directory-search um-half-column',
+		'prefix_id' => 'um_metadata',
+		'fields'    => array(
 			array(
-				'id'		=> '_um_search',
-				'type'		=> 'checkbox',
-				'label'		=> __( 'Enable Search feature', 'ultimate-member' ),
-				'tooltip'	=> __( 'If turned on, users will be able to search members in this directory', 'ultimate-member' ),
-				'value'		=> UM()->query()->get_meta_value( '_um_search' ),
+				'id'        => '_um_search',
+				'type'      => 'checkbox',
+				'label'     => __( 'Enable Search feature', 'ultimate-member' ),
+				'tooltip'   => __( 'If turned on, users will be able to search members in this directory', 'ultimate-member' ),
+				'value'     => UM()->query()->get_meta_value( '_um_search' ),
 			),
 			array(
-				'id'		=> '_um_must_search',
-				'type'		=> 'checkbox',
-				'label'		=> __( 'Show results only after search', 'ultimate-member' ),
-				'tooltip'	=> __( 'If turned on, member results will only appear after search is performed', 'ultimate-member' ),
-				'value'		=> UM()->query()->get_meta_value( '_um_must_search' ),
+				'id'            => '_um_roles_can_search',
+				'type'          => 'multi_checkbox',
+				'label'         => __( 'User Roles that can use search', 'ultimate-member' ),
+				'tooltip'       => __( 'If you want to allow specific user roles to be able to search only', 'ultimate-member' ),
+				'value'         => $_um_roles_search_value,
+				'options'       => UM()->roles()->get_roles(),
+				'columns'       => 3,
 				'conditional'   => array( '_um_search', '=', 1 )
 			),
 			array(
-				'id'		=> '_um_roles_can_search',
-				'type'		=> 'select',
-				'multi'		=> true,
-				'label'		=> __( 'User Roles that can use search', 'ultimate-member' ),
-				'tooltip'	=> __( 'If you want to allow specific user roles to be able to search only', 'ultimate-member' ),
-				'value'		=> $can_search_array,
-				'options'	=> UM()->roles()->get_roles(),
-				'conditional'   => array( '_um_search', '=', 1 )
+				'id'        => '_um_filters',
+				'type'      => 'checkbox',
+				'label'     => __( 'Enable Filters feature', 'ultimate-member' ),
+				'tooltip'   => __( 'If turned on, users will be able to filter members in this directory', 'ultimate-member' ),
+				'value'     => UM()->query()->get_meta_value( '_um_filters' ),
 			),
 			array(
-				'id'		=> '_um_search_fields',
-				'type'		=> 'multi_selects',
-				'label'		=> __( 'Choose field(s) to enable in search', 'ultimate-member' ),
-				'value'		=> $_um_search_fields,
-				'conditional'   => array( '_um_search', '=', 1 ),
-				'options'   => $user_fields,
-				'add_text'		=> __( 'Add New Custom Field','ultimate-member' ),
-				'show_default_number'	=> 1,
+				'id'            => '_um_roles_can_filter',
+				'type'          => 'multi_checkbox',
+				'label'         => __( 'User Roles that can use filters', 'ultimate-member' ),
+				'tooltip'       => __( 'If you want to allow specific user roles to be able to filter only', 'ultimate-member' ),
+				'value'         => $_um_roles_filter_value,
+				'options'       => UM()->roles()->get_roles(),
+				'columns'       => 3,
+				'conditional'   => array( '_um_filters', '=', 1 )
 			),
 			array(
-				'id'		=> '_um_search_filters',
-				'type'		=> 'text',
-				'label'		=> __( 'Additional search filters', 'ultimate-member' ),
-				'tooltip'	=> __( 'Additional search filters like URL parameters' ),
-				'value'		=> UM()->query()->get_meta_value('_um_search_filters', null, '' ),
-				'conditional'   => array( '_um_search', '=', 1 ),
-				'placeholder' => 'field1=val1&field2=val2'
+				'id'                    => '_um_search_fields',
+				'type'                  => 'multi_selects',
+				'label'                 => __( 'Choose filter(s) meta to enable', 'ultimate-member' ),
+				'value'                 => $_um_search_fields,
+				'conditional'           => array( '_um_filters', '=', 1 ),
+				'options'               => UM()->member_directory()->filter_fields,
+				'add_text'              => __( 'Add New Custom Field', 'ultimate-member' ),
+				'show_default_number'   => 1,
 			),
 			array(
-				'id'		=> '_um_directory_header',
-				'type'		=> 'text',
-				'label'		=> __( 'Results Text', 'ultimate-member' ),
-				'tooltip'	=> __( 'Customize the search result text . e.g. Found 3,000 Members. Leave this blank to not show result text', 'ultimate-member' ),
-				'value'		=> UM()->query()->get_meta_value('_um_directory_header', null, __('{total_users} Members','ultimate-member') ),
-				'conditional'   => array( '_um_search', '=', 1 )
+				'id'            => '_um_search_filters',
+				'type'          => 'text',
+				'label'         => __( 'Default filters', 'ultimate-member' ),
+				'tooltip'       => __( 'You can set default filters like URL parameters', 'ultimate-member' ),
+				'value'         => UM()->query()->get_meta_value('_um_search_filters', null, 'na' ),
+				'placeholder'   => 'field1=val1&field2=val2'
 			),
-			array(
-				'id'		=> '_um_directory_header_single',
-				'type'		=> 'text',
-				'label'		=> __( 'Single Result Text', 'ultimate-member' ),
-				'tooltip'	=> __( 'Same as above but in case of 1 user found only', 'ultimate-member' ),
-				'value'		=> UM()->query()->get_meta_value('_um_directory_header_single', null, __('{total_users} Member','ultimate-member') ),
-				'conditional'   => array( '_um_search', '=', 1 )
-			),
-			array(
-				'id'		=> '_um_directory_no_users',
-				'type'		=> 'text',
-				'label'		=> __( 'Custom text if no users were found', 'ultimate-member' ),
-				'tooltip'	=> __( 'This is the text that is displayed if no users are found during a search', 'ultimate-member' ),
-				'value'		=> UM()->query()->get_meta_value('_um_directory_no_users', null, __('We are sorry. We cannot find any users who match your search criteria.','ultimate-member') ),
-				'conditional'   => array( '_um_search', '=', 1 )
-			)
 		)
 	) )->render_form(); ?>
 

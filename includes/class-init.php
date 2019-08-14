@@ -563,12 +563,26 @@ if ( ! class_exists( 'UM' ) ) {
 			$this->mobile();
 			$this->external_integrations();
 			$this->gdpr();
+			$this->member_directory();
 
 			//if multisite networks active
 			if ( is_multisite() ) {
 				$this->multisite();
 			}
 
+		}
+
+
+		/**
+		 * @since 2.1.0
+		 *
+		 * @return um\core\Member_Directory()
+		 */
+		function member_directory() {
+			if ( empty( $this->classes['member_directory'] ) ) {
+				$this->classes['member_directory'] = new um\core\Member_Directory();
+			}
+			return $this->classes['member_directory'];
 		}
 
 

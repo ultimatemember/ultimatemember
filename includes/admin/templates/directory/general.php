@@ -1,5 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit;
 
+global $post_id;
 
 $meta = get_post_custom( get_the_ID() );
 foreach( $meta as $k => $v ) {
@@ -8,67 +9,63 @@ foreach( $meta as $k => $v ) {
 	}
 }
 
-$roles_array = array();
 
-foreach ( UM()->roles()->get_roles() as $key => $value ) {
-    $_um_roles = UM()->query()->get_meta_value( '_um_roles', $key );
-	if ( ! empty( $_um_roles ) )
-		$roles_array[] = $_um_roles;
-}
+$_um_roles_value = get_post_meta( $post_id, '_um_roles', true );
+$_um_roles_value = empty( $_um_roles_value ) ? array() : $_um_roles_value;
 
 $show_these_users = get_post_meta( get_the_ID(), '_um_show_these_users', true );
 if ( $show_these_users ) {
 	$show_these_users = implode( "\n", str_replace( "\r", "", $show_these_users ) );
-} ?>
+}
+
+$_um_view_types_value = get_post_meta( $post_id, '_um_view_types', true );
+$_um_view_types_value = empty( $_um_view_types_value ) ? array( 'grid' ) : $_um_view_types_value;
+
+$view_types_options = array_map( function( $item ) {
+	return $item['title'];
+}, UM()->member_directory()->view_types );
+
+$conditional = array();
+foreach ( $view_types_options as $key => $value ) {
+	$conditional[] = '_um_view_types_' . $key;
+}
+?>
 
 <div class="um-admin-metabox">
 
-	<?php
-	/**
-	 * UM hook
-	 *
-	 * @type filter
-	 * @title um_admin_directory_sort_users_select
-	 * @description Extend Sort Types for Member Directory
-	 * @input_vars
-	 * [{"var":"$sort_types","type":"array","desc":"Sort Types"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_filter( 'um_admin_directory_sort_users_select', 'function_name', 10, 1 );
-	 * @example
-	 * <?php
-	 * add_filter( 'um_admin_directory_sort_users_select', 'my_directory_sort_users_select', 10, 1 );
-	 * function my_directory_sort_users_select( $sort_types ) {
-	 *     // your code here
-	 *     return $sort_types;
-	 * }
-	 * ?>
-	 */
-	$sort_options = apply_filters( 'um_admin_directory_sort_users_select', array(
-		'user_registered_desc'	=> __( 'New users first', 'ultimate-member' ),
-		'user_registered_asc'	=> __( 'Old users first', 'ultimate-member' ),
-		'last_login'			=> __( 'Last login', 'ultimate-member' ),
-		'display_name'			=> __( 'Display Name', 'ultimate-member' ),
-		'first_name'			=> __( 'First Name', 'ultimate-member' ),
-		'last_name'				=> __( 'Last Name', 'ultimate-member' ),
-		'random'				=> __( 'Random', 'ultimate-member' ),
-		'other'					=> __( 'Other (custom field)', 'ultimate-member' ),
-	) );
-
-	$fields = array(
+	<?php $fields = array(
 		array(
-			'id'		=> '_um_mode',
-			'type'		=> 'hidden',
-			'value'		=> 'directory',
+			'id'    => '_um_mode',
+			'type'  => 'hidden',
+			'value' => 'directory',
+		),
+		array(
+			'id'        => '_um_view_types',
+			'type'      => 'multi_checkbox',
+			'label'     => __( 'View type(s)', 'ultimate-member' ),
+			'tooltip'   => __( 'View type a specific parameter in the directory', 'ultimate-member' ),
+			'options'   => $view_types_options,
+			'columns'   => 3,
+			'value'     => $_um_view_types_value,
+			'data'      => array( 'fill__um_default_view' => 'checkbox_key' ),
+		),
+		array(
+			'id'            => '_um_default_view',
+			'type'          => 'select',
+			'label'         => __( 'Default view type', 'ultimate-member' ),
+			'tooltip'       => __( 'Default directory view type', 'ultimate-member' ),
+			'options'       => $view_types_options,
+			'value'         => UM()->query()->get_meta_value( '_um_default_view', null, '' ),
+			'conditional'   => array( implode( '|', $conditional ), '~', 1 )
 		),
 		array(
 			'id'		=> '_um_roles',
-			'type'		=> 'select',
+			'type'		=> 'multi_checkbox',
 			'label'		=> __( 'User Roles to Display', 'ultimate-member' ),
 			'tooltip'	=> __( 'If you do not want to show all members, select only user roles to appear in this directory', 'ultimate-member' ),
 			'options'	=> UM()->roles()->get_roles(),
-			'multi'		=> true,
-			'value'		=> $roles_array,
+			'columns'   => 3,
+			'value'		=> $_um_roles_value,
 		),
 		array(
 			'id'		=> '_um_has_profile_photo',
@@ -82,22 +79,6 @@ if ( $show_these_users ) {
 			'type'		=> 'checkbox',
 			'label'		=> __( 'Only show members who have uploaded a cover photo', 'ultimate-member' ),
 			'value'		=> UM()->query()->get_meta_value( '_um_has_cover_photo' ),
-		),
-		array(
-			'id'		=> '_um_sortby',
-			'type'		=> 'select',
-			'label'		=> __( 'Sort users by', 'ultimate-member' ),
-			'tooltip'	=> __( 'Sort users by a specific parameter in the directory', 'ultimate-member' ),
-			'options'	=> $sort_options,
-			'value'		=> UM()->query()->get_meta_value( '_um_sortby' ),
-		),
-		array(
-			'id'		    => '_um_sortby_custom',
-			'type'		    => 'text',
-			'label'		    => __( 'Meta key', 'ultimate-member' ),
-			'tooltip'	    => __( 'To sort by a custom field, enter the meta key of field here', 'ultimate-member' ),
-			'value'		    => UM()->query()->get_meta_value( '_um_sortby_custom', null, 'na' ),
-			'conditional'   => array( '_um_sortby', '=', 'other' )
 		),
 		array(
 			'id'		    => '_um_show_these_users',

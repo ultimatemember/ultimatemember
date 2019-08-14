@@ -776,6 +776,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 */
 		function add_metabox_directory() {
 			add_meta_box( 'um-admin-form-general', __( 'General Options', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
+			add_meta_box( 'um-admin-form-sorting', __( 'Sorting', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-profile', __( 'Profile Card', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-search', __( 'Search Options', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
 			add_meta_box( 'um-admin-form-pagination', __( 'Results &amp; Pagination', 'ultimate-member' ), array( &$this, 'load_metabox_directory' ), 'um_directory', 'normal', 'default' );
@@ -1014,26 +1015,31 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 *
 		 * @param $post_id
 		 * @param $post
-		 *
-		 * @return mixed
 		 */
 		function save_metabox_directory( $post_id, $post ) {
 			global $wpdb;
 
 			// validate nonce
-			if ( !isset( $_POST['um_admin_save_metabox_directory_nonce'] ) || !wp_verify_nonce( $_POST['um_admin_save_metabox_directory_nonce'], basename( __FILE__ ) ) ) return $post_id;
+			if ( ! isset( $_POST['um_admin_save_metabox_directory_nonce'] ) || ! wp_verify_nonce( $_POST['um_admin_save_metabox_directory_nonce'], basename( __FILE__ ) ) ) {
+				return;
+			}
 
 			// validate post type
-			if ( $post->post_type != 'um_directory' ) return $post_id;
+			if ( $post->post_type != 'um_directory' ) {
+				return;
+			}
 
 			// validate user
 			$post_type = get_post_type_object( $post->post_type );
-			if ( !current_user_can( $post_type->cap->edit_post, $post_id ) ) return $post_id;
+			if ( ! current_user_can( $post_type->cap->edit_post, $post_id ) ) {
+				return;
+			}
 
 			$where = array( 'ID' => $post_id );
 
-			if ( empty( $_POST['post_title'] ) )
+			if ( empty( $_POST['post_title'] ) ) {
 				$_POST['post_title'] = 'Directory #'.$post_id;
+			}
 
 			$wpdb->update( $wpdb->posts, array( 'post_title' => $_POST['post_title'] ), $where );
 
@@ -1043,30 +1049,43 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			delete_post_meta( $post_id, '_um_reveal_fields' );
 			delete_post_meta( $post_id, '_um_search_fields' );
 			delete_post_meta( $post_id, '_um_roles_can_search' );
+			delete_post_meta( $post_id, '_um_roles_can_filter' );
 			delete_post_meta( $post_id, '_um_show_these_users' );
 
 			//save metadata
 			foreach ( $_POST['um_metadata'] as $k => $v ) {
+
 				if ( $k == '_um_show_these_users' && trim( $_POST['um_metadata'][ $k ] ) ) {
 					$v = preg_split( '/[\r\n]+/', $v, -1, PREG_SPLIT_NO_EMPTY );
 				}
+
 				if ( strstr( $k, '_um_' ) ) {
+
 					if ( $k === '_um_is_default' ) {
+
 						$mode = UM()->query()->get_attr( 'mode', $post_id );
+
 						if ( ! empty( $mode ) ) {
+
 							$posts = $wpdb->get_col(
 								"SELECT post_id 
 								FROM {$wpdb->postmeta} 
 								WHERE meta_key = '_um_mode' AND 
 									  meta_value = 'directory'"
 							);
+
 							foreach ( $posts as $p_id ) {
 								delete_post_meta( $p_id, '_um_is_default' );
 							}
+
 						}
+
 					}
 
+					$v = apply_filters( 'um_member_directory_meta_value_before_save', $v, $k, $post_id );
+
 					update_post_meta( $post_id, $k, $v );
+
 				}
 			}
 		}

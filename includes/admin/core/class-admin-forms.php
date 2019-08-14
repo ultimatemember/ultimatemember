@@ -412,6 +412,54 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 
 		/**
+		 * Render text field
+		 *
+		 * @param $field_data
+		 *
+		 * @return bool|string
+		 */
+		function render_number( $field_data ) {
+
+			if ( empty( $field_data['id'] ) ) {
+				return false;
+			}
+
+			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
+
+			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
+			$class .= ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
+			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
+
+			$data = array(
+				'field_id' => $field_data['id']
+			);
+
+			if ( ! empty( $field_data['attr'] ) && is_array( $field_data['attr'] ) ){
+				$data = array_merge( $data, $field_data['attr'] );
+			}
+
+			$data_attr = '';
+			foreach ( $data as $key => $value ) {
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
+			}
+
+			$placeholder_attr = ! empty( $field_data['placeholder'] ) ? ' placeholder="' . esc_attr( $field_data['placeholder'] ) . '"' : '';
+
+			$name = $field_data['id'];
+			$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+			$name_attr = ' name="' . $name . '" ';
+
+			$value = $this->get_field_value( $field_data );
+			$value_attr = ' value="' . esc_attr( $value ) . '" ';
+
+			$html = "<input type=\"number\" $id_attr $class_attr $name_attr $data_attr $value_attr $placeholder_attr />";
+
+			return $html;
+		}
+
+
+		/**
 		 * @param $field_data
 		 *
 		 * @return bool|string
@@ -908,8 +956,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					$for_attr = ' for="' . esc_attr( $id . '_' . $k ) . '" ';
 					$name_attr = ' name="' . $name . '[' . $k . ']" ';
 
+					$data = array(
+						'field_id' => $field_data['id'] . '_' . $k,
+					);
+
+					if ( ! empty( $field_data['data'] ) ) {
+						$data = array_merge( $data, $field_data['data'] );
+					}
+
+					$data_attr = '';
+					foreach ( $data as $key => $value ) {
+						if ( $value == 'checkbox_key' ) {
+							$value = $k;
+						}
+						$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
+					}
+
 					$html .= "<label $for_attr>
-						<input type=\"checkbox\" " . checked( in_array( $k, $values ), true, false ) . "$id_attr $name_attr value=\"1\" $class_attr>
+						<input type=\"checkbox\" " . checked( in_array( $k, $values ), true, false ) . "$id_attr $name_attr $data_attr value=\"1\" $class_attr>
 						<span>$title</span>
 					</label>";
 				}
