@@ -727,7 +727,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								array(
 									'id'       		=> 'profile_icons',
 									'type'     		=> 'select',
-									'label'    		=> __( 'Profile Field Icons' ),
+									'label'    		=> __( 'Profile Field Icons','ultimate-member' ),
 									'tooltip' 	=> __( 'This is applicable for edit mode only','ultimate-member' ),
 									'default'  		=> um_get_metadefault('profile_icons'),
 									'options' 		=> array(
