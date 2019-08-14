@@ -280,9 +280,9 @@ function um_user_edit_profile( $args ) {
 
 
 			//validation of correct values from options in wp-admin
-			$stripslashes = $args['submitted'][ $key ];
-			if ( is_string( $stripslashes ) ) {
-				$stripslashes = stripslashes( $stripslashes );
+			$stripslashes = '';
+			if ( isset( $args['submitted'][ $key ] ) && is_string( $args['submitted'][ $key ] ) ) {
+				$stripslashes = stripslashes( $args['submitted'][ $key ] );
 			}
 			if ( in_array( $array['type'], array( 'select' ) ) &&
 				 ! empty( $array['options'] ) && ! empty( $stripslashes ) &&
