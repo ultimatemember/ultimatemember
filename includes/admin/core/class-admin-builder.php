@@ -150,7 +150,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			}
 
 			// set unique meta key
-			if ( in_array( $field_type, $fields_without_metakey ) && ! isset( $array['post']['_metakey'] ) ) {
+			if ( in_array( $field_type, $fields_without_metakey ) || ! isset( $array['post']['_metakey'] ) ) {
 				$array['post']['_metakey'] = "um_{$field_type}_{$form_id}_{$count}";
 			}
 

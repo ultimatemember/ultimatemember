@@ -144,7 +144,48 @@ p.um-notice i {
 	right: auto;
 }
 
+.select2.select2-container .select2-selection {
+	padding: 0 12px 0 0 !important;
+}
+
+.select2-selection__clear {
+	right: auto;
+	left: 1px;
+}
+
 .cropper-container {
 	margin: 0 auto;
 	left: auto !important;
+}
+
+.um-field-label .um-tip {
+	margin: 0 8px 0 0;
+}
+
+.tipsy-inner {
+	text-align: right !important;
+}
+
+.um span.um-req {
+	margin: 0 8px 0 0;
+}
+
+.um-account-side li a span.um-account-icon,
+.um-account-side li a.current span.um-account-icon,
+.um-account-side li a.current:hover span.um-account-icon {
+	border-right: none;
+}
+
+.um-field-error .um-field-arrow {
+	left: 0;
+	right: 10px;
+}
+
+.um-single-image-preview a.cancel,
+.um-single-file-preview a.cancel {
+	left: 0;
+}
+.um-modal-body .um-single-image-preview a.cancel,
+.um-modal-body .um-single-file-preview a.cancel {
+	left: -15px;
 }
