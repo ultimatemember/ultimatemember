@@ -353,6 +353,10 @@ function um_add_submit_button_to_login( $args ) {
 	 */
 	$primary_btn_word = apply_filters('um_login_form_button_one', $args['primary_btn_word'], $args );
 
+	if ( ! isset( $primary_btn_word ) || $primary_btn_word == '' ){
+		$primary_btn_word = UM()->options()->get( 'login_primary_btn_word' );
+	}
+
 	/**
 	 * UM hook
 	 *
@@ -376,6 +380,10 @@ function um_add_submit_button_to_login( $args ) {
 	 * ?>
 	 */
 	$secondary_btn_word = apply_filters( 'um_login_form_button_two', $args['secondary_btn_word'], $args );
+
+	if ( ! isset( $secondary_btn_word ) || $secondary_btn_word == '' ){
+		$secondary_btn_word = UM()->options()->get( 'login_secondary_btn_word' );
+	}
 
 	$secondary_btn_url = ! empty( $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page( 'register' );
 	/**

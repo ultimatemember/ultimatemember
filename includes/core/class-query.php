@@ -400,12 +400,12 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		 * @param null $fallback
 		 * @return int|mixed|null|string
 		 */
-		function get_meta_value( $key, $array_key = null, $fallback = null ) {
+		function get_meta_value( $key, $array_key = null, $fallback = false ) {
 			$post_id = get_the_ID();
 			$try = get_post_meta( $post_id, $key, true );
 
 			//old version if ( ! empty( $try ) )
-			if ( false !== $try )
+			if ( $try != '' )
 				if ( is_array( $try ) && in_array( $array_key, $try ) ) {
 					return $array_key;
 				} else if ( is_array( $try ) ) {
