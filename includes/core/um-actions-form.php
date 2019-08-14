@@ -261,6 +261,99 @@ function um_submit_form_errors_hook( $args ) {
 add_action( 'um_submit_form_errors_hook', 'um_submit_form_errors_hook', 10 );
 
 
+function um_check_conditions_on_submit( $condition, $fields, $args ) {
+	$continue = false;
+
+	list( $visibility, $parent_key, $op, $parent_value ) = $condition;
+
+	if ( ! isset( $args[ $parent_key ] ) ) {
+		$continue = true;
+		return $continue;
+	}
+
+	if ( ! empty( $fields[ $parent_key ]['conditions'] ) ) {
+		foreach ( $fields[ $parent_key ]['conditions'] as $parent_condition ) {
+			$continue = um_check_conditions_on_submit( $parent_condition, $fields, $args );
+			if ( ! empty( $continue ) ) {
+				return $continue;
+			}
+		}
+	}
+
+	$cond_value = ( $fields[ $parent_key ]['type'] == 'radio' ) ? $args[ $parent_key ][0] : $args[ $parent_key ];
+
+	if ( $visibility == 'hide' ) {
+		if ( $op == 'empty' ) {
+			if ( empty( $cond_value ) ) {
+				$continue = true;
+			}
+		} elseif ( $op == 'not empty' ) {
+			if ( ! empty( $cond_value ) ) {
+				$continue = true;
+			}
+		} elseif ( $op == 'equals to' ) {
+			if ( $cond_value == $parent_value ) {
+				$continue = true;
+			}
+		} elseif ( $op == 'not equals' ) {
+			if ( $cond_value != $parent_value ) {
+				$continue = true;
+			}
+		} elseif ( $op == 'greater than' ) {
+			if ( $cond_value > $parent_value ) {
+				$continue = true;
+			}
+		} elseif ( $op == 'less than' ) {
+			if ( $cond_value < $parent_value ) {
+				$continue = true;
+			}
+		} elseif ( $op == 'contains' ) {
+			if ( is_string( $cond_value ) && strstr( $cond_value, $parent_value ) ) {
+				$continue = true;
+			}
+			if( is_array( $cond_value ) && in_array( $parent_value, $cond_value ) ) {
+				$continue = true;
+			}
+		}
+	} elseif ( $visibility == 'show' ) {
+		if ( $op == 'empty' ) {
+			if ( ! empty( $cond_value ) ) {
+				$continue = true;
+			}
+		} elseif ( $op == 'not empty' ) {
+			if ( empty( $cond_value ) ) {
+				$continue = true;
+			}
+		} elseif ( $op == 'equals to' ) {
+			if ( $cond_value != $parent_value ) {
+				$continue = true;
+			}
+		} elseif ( $op == 'not equals' ) {
+			if ( $cond_value == $parent_value ) {
+				$continue = true;
+			}
+		} elseif ( $op == 'greater than' ) {
+			if ( $cond_value <= $parent_value ) {
+				$continue = true;
+			}
+		} elseif ( $op == 'less than' ) {
+			if ( $cond_value >= $parent_value ) {
+				$continue = true;
+			}
+		} elseif ( $op == 'contains' ) {
+			if ( is_string( $cond_value ) && ! strstr( $cond_value, $parent_value ) ) {
+				$continue = true;
+			}
+			if( is_array( $cond_value ) && !in_array( $parent_value, $cond_value ) ) {
+				$continue = true;
+			}
+		}
+	}
+
+	return $continue;
+}
+
+
 /**
  * Error processing hook : standard
  *
@@ -312,80 +405,9 @@ function um_submit_form_errors_hook_( $args ) {
 
 			if ( ! empty( $array['conditions'] ) ) {
 				foreach ( $array['conditions'] as $condition ) {
-					list( $visibility, $parent_key, $op, $parent_value ) = $condition;
-
-					if ( ! isset( $args[ $parent_key ] ) ) {
-						continue;
-					}
-
-					$cond_value = ( $fields[ $parent_key ]['type'] == 'radio' ) ? $args[ $parent_key ][0] : $args[ $parent_key ];
-
-					if ( $visibility == 'hide' ) {
-						if ( $op == 'empty' ) {
-							if ( empty( $cond_value ) ) {
-								continue 2;
-							}
-						} elseif ( $op == 'not empty' ) {
-							if ( ! empty( $cond_value ) ) {
-								continue;
-							}
-						} elseif ( $op == 'equals to' ) {
-							if ( $cond_value == $parent_value ) {
-								continue;
-							}
-						} elseif ( $op == 'not equals' ) {
-							if ( $cond_value != $parent_value ) {
-								continue;
-							}
-						} elseif ( $op == 'greater than' ) {
-							if ( $cond_value > $parent_value ) {
-								continue;
-							}
-						} elseif ( $op == 'less than' ) {
-							if ( $cond_value < $parent_value ) {
-								continue;
-							}
-						} elseif ( $op == 'contains' ) {
-							if ( is_string( $cond_value ) && strstr( $cond_value, $parent_value ) ) {
-								continue;
-							}
-							if( is_array( $cond_value ) && in_array( $parent_value, $cond_value ) ) {
-								continue;
-							}
-						}
-					} elseif ( $visibility == 'show' ) {
-						if ( $op == 'empty' ) {
-							if ( ! empty( $cond_value ) ) {
-								continue;
-							}
-						} elseif ( $op == 'not empty' ) {
-							if ( empty( $cond_value ) ) {
-								continue;
-							}
-						} elseif ( $op == 'equals to' ) {
-							if ( $cond_value != $parent_value ) {
-								continue;
-							}
-						} elseif ( $op == 'not equals' ) {
-							if ( $cond_value == $parent_value ) {
-								continue;
-							}
-						} elseif ( $op == 'greater than' ) {
-							if ( $cond_value <= $parent_value ) {
-								continue;
-							}
-						} elseif ( $op == 'less than' ) {
-							if ( $cond_value >= $parent_value ) {
-								continue;
-							}
-						} elseif ( $op == 'contains' ) {
-							if ( is_string( $cond_value ) && ! strstr( $cond_value, $parent_value ) ) {
-								continue;
-							}
-							if( is_array( $cond_value ) && !in_array( $parent_value, $cond_value ) ) {
-								continue;
-							}
-						}
+					$continue = um_check_conditions_on_submit( $condition, $fields, $args );
+					if ( $continue === true ) {
+						continue 2;
 					}
 				}
 			}
