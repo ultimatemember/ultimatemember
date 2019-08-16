@@ -9,25 +9,25 @@
  *
  * @return mixed
  */
-function um_search_usernames_emails( $query_args, $args ) {
-	extract( $args );
-
-	$query = UM()->permalinks()->get_query_array();
-	$arr_columns = array();
-
-	foreach ( UM()->members()->core_search_fields as $key ) {
-		if ( ! empty( $query[ $key ]  ) ) {
-			$arr_columns[] = $key;
-			$query_args['search'] = '*' . $query[ $key ] .'*';
-		}
-	}
-
-	if ( ! empty( $arr_columns ) )
-		$query_args['search_columns'] = $arr_columns;
-
-	return $query_args;
-}
-add_filter( 'um_prepare_user_query_args', 'um_search_usernames_emails', 51, 2 );
+//function um_search_usernames_emails( $query_args, $args ) {
+//	extract( $args );
+//
+//	$query = UM()->permalinks()->get_query_array();
+//	$arr_columns = array();
+//
+//	foreach ( UM()->members()->core_search_fields as $key ) {
+//		if ( ! empty( $query[ $key ]  ) ) {
+//			$arr_columns[] = $key;
+//			$query_args['search'] = '*' . $query[ $key ] .'*';
+//		}
+//	}
+//
+//	if ( ! empty( $arr_columns ) )
+//		$query_args['search_columns'] = $arr_columns;
+//
+//	return $query_args;
+//}
+//add_filter( 'um_prepare_user_query_args', 'um_search_usernames_emails', 51, 2 );
 
 
 /**
@@ -99,7 +99,7 @@ function um_remove_special_users_from_list( $query_args, $args ) {
 
 	return $query_args;
 }
-add_filter( 'um_prepare_user_query_args', 'um_remove_special_users_from_list', 99, 2 );
+//add_filter( 'um_prepare_user_query_args', 'um_remove_special_users_from_list', 99, 2 );
 
 
 /**
@@ -283,7 +283,7 @@ function um_add_search_to_query( $query_args, $args ) {
 	return $query_args;
 
 }
-add_filter( 'um_prepare_user_query_args', 'um_add_search_to_query', 50, 2 );
+//add_filter( 'um_prepare_user_query_args', 'um_add_search_to_query', 50, 2 );
 
 
 /**
@@ -452,116 +452,4 @@ function um_prepare_user_query_args( $query_args, $args ) {
 
 	return $query_args;
 }
-add_filter( 'um_prepare_user_query_args', 'um_prepare_user_query_args', 10, 2 );
-
-
-/**
- * Sorting by last login date
- *
- * @param $query_args
- * @param $sortby
- *
- * @return mixed
- */
-function um_sortby_last_login( $query_args, $sortby ) {
-	if ( $sortby == 'last_login' ) {
-		$query_args['orderby'] = array( 'um_last_login' => 'DESC' );
-		$query_args['meta_query'][] = array(
-			'relation' => 'OR',
-			array(
-				'key'   => '_um_last_login',
-				'compare'   => 'EXISTS',
-			),
-			'um_last_login' => array(
-				'key'   => '_um_last_login',
-				'compare'   => 'NOT EXISTS',
-			),
-		);
-	}
-	return $query_args;
-}
-add_filter( 'um_modify_sortby_parameter', 'um_sortby_last_login', 100, 2 );
-
-
-/**
- * Sorting random
- *
- * @param $query
- *
- * @return mixed
- */
-function um_modify_sortby_randomly( $query ) {
-
-	if( 'random' == $query->query_vars["orderby"] ) {
-
-		if( um_is_session_started() === false ){
-			@session_start();
-		}
-
-		// Reset seed on load of initial
-		if( ! isset( $_REQUEST['members_page'] ) || $_REQUEST['members_page'] == 0 ||  $_REQUEST['members_page'] == 1 ) {
-			if( isset( $_SESSION['seed'] ) ) {
-				unset( $_SESSION['seed'] );
-			}
-		}
-
-		// Get seed from session variable if it exists
-		$seed = false;
-		if( isset( $_SESSION['seed'] ) ) {
-			$seed = $_SESSION['seed'];
-		}
-
-		// Set new seed if none exists
-		if ( ! $seed ) {
-			$seed = rand();
-			$_SESSION['seed'] = $seed;
-		}
-
-
-		$query->query_orderby = 'ORDER by RAND('. $seed.')';
-	}
-
-	return $query;
-}
-add_filter( 'pre_user_query','um_modify_sortby_randomly' );
-
-
-/**
- * Hook in the member results array
- *
- * @param $result
- *
- * @return mixed
- */
-function um_prepare_user_results_array( $result ) {
-	if ( empty( $result['users_per_page'] ) ) {
-		$result['no_users'] = 1;
-	} else {
-		$result['no_users'] = 0;
-	}
-
-	return $result;
-}
-add_filter( 'um_prepare_user_results_array', 'um_prepare_user_results_array', 50, 2 );
-
-
-/**
- * Retrieves search filter options from a callback
- *
- * @param  $atts array
- * @return array
- */
-function um_search_select_fields( $atts ) {
-
-	if( isset( $atts['custom_dropdown_options_source'] ) && ! empty( $atts['custom_dropdown_options_source'] ) ){
-		$atts['custom'] = true;
-		$atts['options'] = UM()->fields()->get_options_from_callback( $atts, $atts['type'] );
-	}
-
-	if( isset( $atts['label'] ) ){
-		$atts['label'] = strip_tags( $atts['label'] );
-	}
-
-	return $atts;
-}
-add_filter( 'um_search_select_fields', 'um_search_select_fields' );
+//add_filter( 'um_prepare_user_query_args', 'um_prepare_user_query_args', 10, 2 );

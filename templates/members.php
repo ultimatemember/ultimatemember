@@ -7,6 +7,8 @@ foreach ( UM()->config()->core_directory_meta['members'] as $k => $v ) {
 	$def_args[ $key ] = $v;
 }
 
+$unique_hash = substr( md5( $args['form_id'] ), 10, 5 );
+
 $args = array_merge( $def_args, $args );
 
 
@@ -32,12 +34,13 @@ if ( count( $args['view_types'] ) == 1 ) {
 	$current_view = $args['view_types'][0];
 } else {
 	$args['default_view'] = ! empty( $args['default_view'] ) ? $args['default_view'] : $args['view_types'][0];
-	$current_view = ( ! empty( $_GET['view_type'] ) && in_array( $_GET['view_type'], $args['view_types'] ) ) ? $_GET['view_type'] : $args['default_view'];
+	$current_view = ( ! empty( $_GET[ 'view_type_' . $unique_hash ] ) && in_array( $_GET[ 'view_type_' . $unique_hash ], $args['view_types'] ) ) ? $_GET[ 'view_type_' . $unique_hash ] : $args['default_view'];
 }
 
 // Sorting
 $default_sorting = ! empty( $args['sortby'] ) ? $args['sortby'] : 'user_registered_desc';
 
+$sort_from_url = '';
 if ( $args['enable_sorting'] ) {
 	$sorting_options = empty( $args['sorting_fields'] ) ? array() : $args['sorting_fields'];
 	if ( ! in_array( $default_sorting, $sorting_options ) ) {
@@ -48,12 +51,19 @@ if ( $args['enable_sorting'] ) {
 		$all_sorting_options = UM()->member_directory()->sort_fields;
 		$sorting_options = array_intersect_key( $all_sorting_options, array_flip( $sorting_options ) );
 	}
+
+	$sort_from_url = ( ! empty( $_GET[ 'sort_' . $unique_hash ] ) && in_array( $_GET[ 'sort_' . $unique_hash ], array_keys( $sorting_options ) ) ) ? $_GET[ 'sort_' . $unique_hash ] : $default_sorting;
 }
 
+$current_page = ( ! empty( $_GET[ 'page_' . $unique_hash ] ) && is_numeric( $_GET[ 'page_' . $unique_hash ] ) ) ? (int) $_GET[ 'page_' . $unique_hash ] : 1;
 
 //Search
 $search = isset( $args['search'] ) ? $args['search'] : false;
 $show_search = empty( $args['roles_can_search'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $args['roles_can_search'] ) );
+$search_from_url = '';
+if ( $search && $show_search ) {
+	$search_from_url = ! empty( $_GET[ 'search_' . $unique_hash ] ) ? $_GET[ 'search_' . $unique_hash ] : '';
+}
 
 
 //Filters
@@ -80,16 +90,26 @@ if ( ! $single_view ) {
 
 if ( $args['enable_sorting'] && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) {
 	$classes .= ' um-member-with-sorting';
-} ?>
+}
 
-<div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?>" data-view_type="<?php echo esc_attr( $current_view ) ?>" data-hash="<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ) ?>">
+//send $args variable to the templates
+$args['args'] = $args;
+foreach ( $args['view_types'] as $type ) {
+	$basename = UM()->member_directory()->get_type_basename( $type );
+	UM()->get_template( 'members-' . $type . '.php', $basename, $args, true );
+}
+UM()->get_template( 'members-pagination.php', '', $args, true ); ?>
+
+<div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ); ?>"
+     data-hash="<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ) ?>"
+     data-view_type="<?php echo esc_attr( $current_view ) ?>" data-page="<?php echo esc_attr( $current_page ) ?>">
 
 	<div class="um-form">
 
 		<div class="um-member-directory-header <?php echo esc_attr( $classes ) ?>">
 			<?php if ( $search && $show_search ) { ?>
 				<div class="um-member-directory-search-line">
-					<input type="text" class="um-search-line" placeholder="<?php esc_attr_e( 'Search', 'ultimate-member' ) ?>"  value="" />
+					<input type="text" class="um-search-line" placeholder="<?php esc_attr_e( 'Search', 'ultimate-member' ) ?>"  value="<?php echo esc_attr( $search_from_url ) ?>" />
 					<div class="uimob340-show uimob500-show">
 						<a href="javascript:void(0);" class="um-button um-do-search um-tip-n" title="<?php esc_attr_e( 'Search', 'ultimate-member' ); ?>">
 							<i class="um-faicon-search"></i>
@@ -105,7 +125,7 @@ if ( $args['enable_sorting'] && ! empty( $sorting_options ) && count( $sorting_o
 				<div class="um-member-directory-sorting">
 					<select class="um-s3 um-member-directory-sorting-options" id="um-member-directory-sorting-select-<?php echo esc_attr( $form_id ) ?>" data-placeholder="<?php esc_attr_e( 'Sort By', 'ultimate-member' ); ?>">
 						<?php foreach ( $sorting_options as $value => $title ) { ?>
-							<option value="<?php echo $value ?>" <?php selected( $default_sorting, $value ) ?>><?php echo $title ?></option>
+							<option value="<?php echo $value ?>" <?php selected( $sort_from_url, $value ) ?>><?php echo $title ?></option>
 						<?php } ?>
 					</select>
 				</div>
@@ -163,7 +183,7 @@ if ( $args['enable_sorting'] && ! empty( $sorting_options ) && count( $sorting_o
 
 				<div class="um-search um-search-<?php echo count( $search_filters ) ?>">
 					<?php foreach ( $search_filters as $i => $filter ) {
-						$filter_content = UM()->members()->show_filter( $filter );
+						$filter_content = UM()->member_directory()->show_filter( $filter );
 						if ( empty( $filter_content ) ) {
 							continue;
 						} ?>

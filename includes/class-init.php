@@ -1452,7 +1452,6 @@ if ( ! class_exists( 'UM' ) ) {
 			require_once 'core/um-actions-register.php';
 			require_once 'core/um-actions-profile.php';
 			require_once 'core/um-actions-account.php';
-			require_once 'core/um-actions-members.php';
 			require_once 'core/um-actions-global.php';
 			require_once 'core/um-actions-user.php';
 			require_once 'core/um-actions-save-profile.php';
