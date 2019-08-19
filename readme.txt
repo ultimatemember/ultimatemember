@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires at least: 4.9
 Tested up to: 5.2
-Stable tag: 2.0.55
+Stable tag: 2.0.56
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -140,7 +140,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
-= 2.0.55: August 14, 2019 =
+= 2.0.56: August 20, 2019 =
 
 * Enhancements:
   - Added security fixes (XSS)
@@ -160,6 +160,11 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed form settings fields for default button labels in wp-admin metaboxes
   - Fixed generate metakeys for the form's custom fields
   - Fixed PHP notices
+
+= 2.0.55: August 16, 2019 =
+
+* Bugfixes:
+  - Fixed profile privacy for not logged in users, if restriction options set for profile page as visible only for logged in
 
 = 2.0.54: July 22, 2019 =
 
