@@ -1190,7 +1190,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					 * }
 					 * ?>
 					 */
-					do_action( "um_admin_field_edit_hook{$attribute}", $this->edit_mode_value );
+					do_action( "um_admin_field_edit_hook{$attribute}", $this->edit_mode_value, $form_id, $this->edit_array );
 
 					break;
 
