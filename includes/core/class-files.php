@@ -312,7 +312,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			$id = $_POST['key'];
 			$timestamp = $_POST['timestamp'];
 			$nonce = $_POST['_wpnonce'];
-			$user_id = $_POST['user_id'];
+			$user_id = empty( $_POST['user_id'] ) ? get_current_user_id() : $_POST['user_id'];
 
 			UM()->fields()->set_id = $_POST['set_id'];
 			UM()->fields()->set_mode = $_POST['set_mode'];
