@@ -3744,7 +3744,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			//hide if empty
-			if ( ! in_array( $type, array( 'block', 'shortcode', 'spacing', 'divider', 'group' ) ) ) {
+			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
+			if ( ! in_array( $type, $fields_without_metakey ) ) {
 				$_field_value = $this->field_value( $key, $default, $data );
 
 				if ( ! isset( $_field_value ) || $_field_value == '' ) {
