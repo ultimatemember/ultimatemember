@@ -998,281 +998,312 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 */
 		function filters( $args ) {
 			//filters
-			$query = $_POST;
-			if ( ! empty( $args['search_filters'] ) ) {
-				parse_str( $args['search_filters'], $search_filters );
+			$filter_query = array();
+			if ( ! empty( $args['search_fields'] ) ) {
+				$search_filters = maybe_unserialize( $args['search_fields'] );
 				if ( ! empty( $search_filters ) && is_array( $search_filters ) ) {
-					$query = array_merge( $search_filters, $query );
+					$filter_query = array_intersect_key( $_POST, array_flip( $search_filters ) );
 				}
 			}
 
-			unset( $query['search'] );
-			unset( $query['directory_id'] );
-			unset( $query['sorting'] );
-			unset( $query['page'] );
-			unset( $query['args'] );
-			unset( $query['members_page'] );
-			unset( $query['action'] );
-			unset( $query['nonce'] );
-			unset( $query['referrer_url'] );
-			unset( $query['is_filters'] );
+			if ( empty( $filter_query ) ) {
+				return;
+			}
 
-			if ( ! empty( $query ) && is_array( $query ) ) {
-				foreach ( $query as $field => $value ) {
+			$query = $_POST;
 
-					//$filter_data = UM()->members()->prepare_filter( $field );
+			foreach ( $filter_query as $field => $value ) {
 
-					if ( $value && $field != 'um_search' && $field != 'page_id' ) {
+				switch ( $field ) {
+					default:
+						$value = explode( '||', $value );
 
-						if ( strstr( $field, 'role_' ) ) {
-							$field = 'role';
-						}
+						if ( is_array( $value ) ) {
+							$field_query = array( 'relation' => 'OR' );
 
-						if ( ! in_array( $field, UM()->members()->core_search_fields ) ) {
-
-							if ( 'role' == $field ) {
-
-								if ( ! empty( $this->query_args['role__in'] ) ) {
-									$value = array_map('strtolower', $value);
-
-									$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
-									$default_role = array_intersect( $this->query_args['role__in'], $value );
-									$um_role = array_diff( $value, $default_role );
-
-									foreach ($um_role as $key => &$val) {
-										$val = 'um_' . str_replace(' ', '-', $val);
-									}
-									$this->query_args['role__in'] = array_merge( $default_role, $um_role );
-								} else {
-									$this->query_args['role__in'] = $value;
-								};
-
-							} elseif ( 'birth_date' == $field ) {
-								$from_date = date( 'Y-m-d', mktime( 0,0,0, 1, 1, date('Y', time() - ($query['birth_date'][0] -1)*YEAR_IN_SECONDS ) ) );
-								$to_date = date( 'Y-m-d', mktime( 0,0,0, 1, 1, date('Y', time() - ($query['birth_date'][1] +1)*YEAR_IN_SECONDS ) ) );
-
-								$meta_query = array(
+							foreach ( $value as $single_val ) {
+								$arr_meta_query = array(
 									array(
-										'key'       => 'birth_date',
-										'value'     => array( $to_date, $from_date ),
-										'compare'   => 'BETWEEN',
-										'type'      => 'DATE',
-										'inclusive'	=> true,
+										'key'       => $field,
+										'value'     => trim( $single_val ),
+										'compare'   => '=',
+									),
+									array(
+										'key'       => $field,
+										'value'     => serialize( strval( trim( $single_val ) ) ),
+										'compare'   => 'LIKE',
+									),
+									array(
+										'key'       => $field,
+										'value'     => '"' . trim( $single_val ) . '"',
+										'compare'   => 'LIKE',
 									)
 								);
 
-								$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
+								if ( is_numeric( $single_val ) ) {
 
-							} elseif ( 'user_registered' == $field ) {
-
-								$offset = 0;
-
-								if( isset( $query['gmt_offset'] ) ) {
-									$offset = (int)$query['gmt_offset'];
-								}
-
-								if( isset( $query['user_registered']['from'] ) ) {
-									$from_date = date( 'Y-m-d', strtotime( date( 'Y-m-d H:s:i', $query['user_registered']['from'] ) . "+$offset hours" ) );
-								}
-
-								if( isset( $query['user_registered']['to'] ) ) {
-									$to_date = date( 'Y-m-d', strtotime( date( 'Y-m-d H:s:i', $query['user_registered']['to'] ) . "+$offset hours" ) );
-								}
-
-								$date_query = array(
-									array(
-										'column'	=> 'user_registered',
-										'before'	=> $to_date,
-										'after'		=> $from_date,
-										'inclusive'	=> true,
-									),
-								);
-
-								$this->query_args['date_query'] = array( $date_query );
-
-							} elseif ( 'last_login' == $field ) {
-
-								$meta_query = array();
-								$offset		= 0;
-
-								if( isset( $query['gmt_offset'] ) ) {
-									$offset = (int)$query['gmt_offset'];
-								}
-
-								if( isset( $query['last_login']['from'] ) and isset( $query['last_login']['to'] ) ) {
-									$from_date = (int)$query['last_login']['from'] + ( $offset * 60 * 60 ); // client time zone offset
-									$to_date   = (int)$query['last_login']['to'] + ( $offset * 60 * 60 ) + (24 * 60 * 60 - 1); // time 23:59
-
-									$meta_query[] = array(
-										'key'       => '_um_last_login',
-										'value'     =>  array( $from_date, $to_date ),
-										'compare'   => 'BETWEEN',
+									$arr_meta_query[] = array(
+										'key'       => $field,
+										'value'     => serialize( intval( trim( $single_val ) ) ),
+										'compare'   => 'LIKE',
 									);
 
-								} else {
-
-									if( isset( $query['last_login']['from'] ) ) {
-										$from_date = (int)$query['last_login']['from'] + ( $offset * 60 * 60 );
-
-										$meta_query[] = array(
-											'key'       => '_um_last_login',
-											'value'     =>  $from_date,
-											'compare'   => '>',
-										);
-									}
-
-									if( isset( $query['last_login']['to'] ) ) {
-										$to_date = (int)$query['last_login']['to'] + ( $offset * 60 * 60 ) + (24 * 60 * 60 - 1);
-
-										$meta_query[] = array(
-											'key'       => '_um_last_login',
-											'value'     =>  $to_date,
-											'compare'   => '<',
-										);
-									}
 								}
 
-								$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
-
-							} elseif( 'gmt_offset' == $field ) {
-								continue;
-							} else {
-
-								if ( is_array( $value ) ) {
-									$field_query = array( 'relation' => 'OR' );
-
-									foreach ( $value as $single_val ) {
-										$field_query = array_merge( $field_query, array(
-											array(
-												'key' => $field,
-												'value' => trim( $single_val ),
-												'compare' => '=',
-											)
-										) );
-
-										$types = apply_filters( 'um_search_field_types', array(
-											'multiselect',
-											'radio',
-											'checkbox'
-										) );
-
-										//if ( in_array( $filter_data['attrs']['type'], $types ) ) {
-
-										$arr_meta_query = array(
-											array(
-												'key' => $field,
-												'value' => serialize( strval( trim( $single_val ) ) ),
-												'compare' => 'LIKE',
-											),
-											array(
-												'key' => $field,
-												'value' => '"' . trim( $single_val ) . '"',
-												'compare' => 'LIKE',
-											)
-										);
-
-										if ( is_numeric( $single_val ) ) {
-
-											$arr_meta_query[ ] = array(
-												'key' => $field,
-												'value' => serialize( intval( trim( $single_val ) ) ),
-												'compare' => 'LIKE',
-											);
-
-										}
-
-										$field_query = array_merge( $field_query, $arr_meta_query );
-										//}
-									}
-								} else {
-									$field_query = array(
-										array(
-											'key' => $field,
-											'value' => trim( $value ),
-											'compare' => '=',
-										),
-										'relation' => 'OR',
-									);
-
-									$types = apply_filters( 'um_search_field_types', array(
-										'multiselect',
-										'radio',
-										'checkbox'
-									) );
-
-									//if ( in_array( $filter_data['attrs']['type'], $types ) ) {
-
-									$arr_meta_query = array(
-										array(
-											'key' => $field,
-											'value' => serialize( strval( trim( $value ) ) ),
-											'compare' => 'LIKE',
-										),
-										array(
-											'key' => $field,
-											'value' => '"' . trim( $value ) . '"',
-											'compare' => 'LIKE',
-										)
-									);
-
-									if ( is_numeric( $value ) ) {
-
-										$arr_meta_query[ ] = array(
-											'key' => $field,
-											'value' => serialize( intval( trim( $value ) ) ),
-											'compare' => 'LIKE',
-										);
-
-									}
-
-									$field_query = array_merge( $field_query, $arr_meta_query );
-									//}
-								}
-
-								/**
-								 * UM hook
-								 *
-								 * @type filter
-								 * @title um_query_args_{$field}__filter
-								 * @description Change field's query for search at Members Directory
-								 * @input_vars
-								 * [{"var":"$field_query","type":"array","desc":"Field query"}]
-								 * @change_log
-								 * ["Since: 2.0"]
-								 * @usage
-								 * <?php add_filter( 'um_query_args_{$field}__filter', 'function_name', 10, 1 ); ?>
-								 * @example
-								 * <?php
-								 * add_filter( 'um_query_args_{$field}__filter', 'my_query_args_filter', 10, 1 );
-								 * function my_query_args_filter( $field_query ) {
-								 *     // your code here
-								 *     return $field_query;
-								 * }
-								 * ?>
-								 */
-								$field_query = apply_filters( "um_query_args_{$field}__filter", $field_query );
-								$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $field_query ) );
+								$field_query = array_merge( $field_query, $arr_meta_query );
 							}
-
 						}
 
-					}
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_query_args_{$field}__filter
+						 * @description Change field's query for search at Members Directory
+						 * @input_vars
+						 * [{"var":"$field_query","type":"array","desc":"Field query"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage
+						 * <?php add_filter( 'um_query_args_{$field}__filter', 'function_name', 10, 1 ); ?>
+						 * @example
+						 * <?php
+						 * add_filter( 'um_query_args_{$field}__filter', 'my_query_args_filter', 10, 1 );
+						 * function my_query_args_filter( $field_query ) {
+						 *     // your code here
+						 *     return $field_query;
+						 * }
+						 * ?>
+						 */
+						$field_query = apply_filters( "um_query_args_{$field}__filter", $field_query );
+						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $field_query ) );
 
+						break;
+					case 'role':
+						$value = explode( '||', $value );
+						$value = array_map( 'strtolower', $value );
+
+						if ( ! empty( $this->query_args['role__in'] ) ) {
+							$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
+							$default_role = array_intersect( $this->query_args['role__in'], $value );
+							$um_role = array_diff( $value, $default_role );
+
+							foreach ( $um_role as $key => &$val ) {
+								$val = 'um_' . str_replace( ' ', '-', $val );
+							}
+							$this->query_args['role__in'] = array_merge( $default_role, $um_role );
+						} else {
+							$this->query_args['role__in'] = $value;
+						};
+
+						break;
 				}
-			}
 
-			$query = UM()->permalinks()->get_query_array();
-			$arr_columns = array();
 
-			foreach ( UM()->members()->core_search_fields as $key ) {
-				if ( ! empty( $query[ $key ]  ) ) {
-					$arr_columns[] = $key;
-					$this->query_args['search'] = '*' . $query[ $key ] .'*';
-				}
-			}
 
-			if ( ! empty( $arr_columns ) ) {
-				$this->query_args['search_columns'] = $arr_columns;
+//				if ( 'role' == $field ) {
+//
+//					if ( ! empty( $this->query_args['role__in'] ) ) {
+//						$value = array_map('strtolower', $value);
+//
+//						$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
+//						$default_role = array_intersect( $this->query_args['role__in'], $value );
+//						$um_role = array_diff( $value, $default_role );
+//
+//						foreach ($um_role as $key => &$val) {
+//							$val = 'um_' . str_replace(' ', '-', $val);
+//						}
+//						$this->query_args['role__in'] = array_merge( $default_role, $um_role );
+//					} else {
+//						$this->query_args['role__in'] = $value;
+//					};
+//
+//				} elseif ( 'birth_date' == $field ) {
+//					$from_date = date( 'Y-m-d', mktime( 0,0,0, 1, 1, date('Y', time() - ($query['birth_date'][0] -1)*YEAR_IN_SECONDS ) ) );
+//					$to_date = date( 'Y-m-d', mktime( 0,0,0, 1, 1, date('Y', time() - ($query['birth_date'][1] +1)*YEAR_IN_SECONDS ) ) );
+//
+//					$meta_query = array(
+//						array(
+//							'key'       => 'birth_date',
+//							'value'     => array( $to_date, $from_date ),
+//							'compare'   => 'BETWEEN',
+//							'type'      => 'DATE',
+//							'inclusive'	=> true,
+//						)
+//					);
+//
+//					$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
+//
+//				} elseif ( 'user_registered' == $field ) {
+//
+//					$offset = 0;
+//
+//					if( isset( $query['gmt_offset'] ) ) {
+//						$offset = (int)$query['gmt_offset'];
+//					}
+//
+//					if( isset( $query['user_registered']['from'] ) ) {
+//						$from_date = date( 'Y-m-d', strtotime( date( 'Y-m-d H:s:i', $query['user_registered']['from'] ) . "+$offset hours" ) );
+//					}
+//
+//					if( isset( $query['user_registered']['to'] ) ) {
+//						$to_date = date( 'Y-m-d', strtotime( date( 'Y-m-d H:s:i', $query['user_registered']['to'] ) . "+$offset hours" ) );
+//					}
+//
+//					$date_query = array(
+//						array(
+//							'column'	=> 'user_registered',
+//							'before'	=> $to_date,
+//							'after'		=> $from_date,
+//							'inclusive'	=> true,
+//						),
+//					);
+//
+//					$this->query_args['date_query'] = array( $date_query );
+//
+//				} elseif ( 'last_login' == $field ) {
+//
+//					$meta_query = array();
+//					$offset		= 0;
+//
+//					if( isset( $query['gmt_offset'] ) ) {
+//						$offset = (int)$query['gmt_offset'];
+//					}
+//
+//					if( isset( $query['last_login']['from'] ) and isset( $query['last_login']['to'] ) ) {
+//						$from_date = (int)$query['last_login']['from'] + ( $offset * 60 * 60 ); // client time zone offset
+//						$to_date   = (int)$query['last_login']['to'] + ( $offset * 60 * 60 ) + (24 * 60 * 60 - 1); // time 23:59
+//
+//						$meta_query[] = array(
+//							'key'       => '_um_last_login',
+//							'value'     =>  array( $from_date, $to_date ),
+//							'compare'   => 'BETWEEN',
+//						);
+//
+//					} else {
+//
+//						if( isset( $query['last_login']['from'] ) ) {
+//							$from_date = (int)$query['last_login']['from'] + ( $offset * 60 * 60 );
+//
+//							$meta_query[] = array(
+//								'key'       => '_um_last_login',
+//								'value'     =>  $from_date,
+//								'compare'   => '>',
+//							);
+//						}
+//
+//						if( isset( $query['last_login']['to'] ) ) {
+//							$to_date = (int)$query['last_login']['to'] + ( $offset * 60 * 60 ) + (24 * 60 * 60 - 1);
+//
+//							$meta_query[] = array(
+//								'key'       => '_um_last_login',
+//								'value'     =>  $to_date,
+//								'compare'   => '<',
+//							);
+//						}
+//					}
+//
+//					$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
+//
+//				} elseif( 'gmt_offset' == $field ) {
+//					continue;
+//				} else {
+//
+//					if ( is_array( $value ) ) {
+//						$field_query = array( 'relation' => 'OR' );
+//
+//						foreach ( $value as $single_val ) {
+//							$field_query = array_merge( $field_query, array(
+//								array(
+//									'key'       => $field,
+//									'value'     => trim( $single_val ),
+//									'compare'   => '=',
+//								)
+//							) );
+//
+//							$types = apply_filters( 'um_search_field_types', array(
+//								'multiselect',
+//								'radio',
+//								'checkbox'
+//							) );
+//
+//							//if ( in_array( $filter_data['attrs']['type'], $types ) ) {
+//
+//							$arr_meta_query = array(
+//								array(
+//									'key' => $field,
+//									'value' => serialize( strval( trim( $single_val ) ) ),
+//									'compare' => 'LIKE',
+//								),
+//								array(
+//									'key' => $field,
+//									'value' => '"' . trim( $single_val ) . '"',
+//									'compare' => 'LIKE',
+//								)
+//							);
+//
+//							if ( is_numeric( $single_val ) ) {
+//
+//								$arr_meta_query[ ] = array(
+//									'key' => $field,
+//									'value' => serialize( intval( trim( $single_val ) ) ),
+//									'compare' => 'LIKE',
+//								);
+//
+//							}
+//
+//							$field_query = array_merge( $field_query, $arr_meta_query );
+//							//}
+//						}
+//					} else {
+//						$field_query = array(
+//							array(
+//								'key' => $field,
+//								'value' => trim( $value ),
+//								'compare' => '=',
+//							),
+//							'relation' => 'OR',
+//						);
+//
+//						$types = apply_filters( 'um_search_field_types', array(
+//							'multiselect',
+//							'radio',
+//							'checkbox'
+//						) );
+//
+//						//if ( in_array( $filter_data['attrs']['type'], $types ) ) {
+//
+//						$arr_meta_query = array(
+//							array(
+//								'key' => $field,
+//								'value' => serialize( strval( trim( $value ) ) ),
+//								'compare' => 'LIKE',
+//							),
+//							array(
+//								'key' => $field,
+//								'value' => '"' . trim( $value ) . '"',
+//								'compare' => 'LIKE',
+//							)
+//						);
+//
+//						if ( is_numeric( $value ) ) {
+//
+//							$arr_meta_query[ ] = array(
+//								'key' => $field,
+//								'value' => serialize( intval( trim( $value ) ) ),
+//								'compare' => 'LIKE',
+//							);
+//
+//						}
+//
+//						$field_query = array_merge( $field_query, $arr_meta_query );
+//						//}
+//					}
+//
+//					$field_query = apply_filters( "um_query_args_{$field}__filter", $field_query );
+//					$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $field_query ) );
+//				}
+
 			}
 		}
 
@@ -1369,7 +1400,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$this->general_search();
 
-			//$this->filters( $args );
+			$this->filters( $args );
 
 			/**
 			 * UM hook

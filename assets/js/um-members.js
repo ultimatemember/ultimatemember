@@ -162,45 +162,43 @@ function um_ajax_get_members( directory, args ) {
 	var local_date = new Date();
 	var gmt_hours = -local_date.getTimezoneOffset()/60;
 
-	//var request =;
+	var request = {
+		directory_id:   hash,
+		page:           page,
+		search:         search,
+		sorting:        sorting,
+		nonce:          um_scripts.nonce
+	};
 
-	// if ( directory.find('.um-search-filter').length ) {
-	// 	directory.find('.um-search-filter').each( function() {
-	// 		var filter = jQuery(this);
-	//
-	// 		if ( filter.find( '.um-slider' ).length ) {
-	// 			var filter_name = filter.find( '.um-slider' ).data('field_name');
-	// 			var value = um_get_directory_storage( directory, 'filter_' + filter_name );
-	// 			if ( value !== null ) {
-	// 				request[ filter_name ] = value;
-	// 				request['is_filters'] = true;
-	// 			}
-	// 		} else if ( filter.find( '.um-datepicker-filter' ).length ) {
-	// 			var filter_name = filter.find( '.um-datepicker-filter' ).data('filter_name');
-	// 			var value = um_get_directory_storage( directory, 'filter_' + filter_name );
-	// 			if ( value !== null ) {
-	// 				request[ filter_name ] = value;
-	// 				request['is_filters'] = true;
-	// 			}
-	// 		} else {
-	// 			var filter_name = filter.find('select').attr('name');
-	// 			var value = um_get_directory_storage( directory, 'filter_' + filter_name );
-	// 			if ( value !== null ) {
-	// 				request[ filter_name ] = value;
-	// 				request['is_filters'] = true;
-	// 			}
-	// 		}
-	// 	});
-	// }
+	if ( directory.find('.um-search-filter').length ) {
+		directory.find('.um-search-filter').each( function() {
+			var filter = jQuery(this);
+
+			if ( filter.find( '.um-slider' ).length ) {
+				var filter_name = filter.find( '.um-slider' ).data('field_name');
+
+				var value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+				if ( typeof value != 'undefined' ) {
+					request[ filter_name ] = value;
+				}
+			} else if ( filter.find( '.um-datepicker-filter' ).length ) {
+				var filter_name = filter.find( '.um-datepicker-filter' ).data('filter_name');
+				var value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+				if ( typeof value != 'undefined' ) {
+					request[ filter_name ] = value;
+				}
+			} else {
+				var filter_name = filter.find('select').attr('name');
+				var value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+				if ( typeof value != 'undefined' ) {
+					request[ filter_name ] = value;
+				}
+			}
+		});
+	}
 
 	wp.ajax.send( 'um_get_members', {
-		data:  {
-			directory_id:   hash,
-			page:           page,
-			search:         search,
-			sorting:        sorting,
-			nonce:          um_scripts.nonce
-		},
+		data:  request,
 		success: function( answer ) {
 			//set last data hard for using on layouts reloading
 			um_member_directory_last_data[ hash ] = answer;
@@ -1065,23 +1063,29 @@ jQuery(document).ready( function() {
 
 		var filter_name = jQuery(this).prop('name');
 
-		var current_value = um_get_directory_storage( directory, 'filter_' + filter_name );
-		if ( current_value === null ) {
+		var current_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+		if ( typeof current_value == 'undefined' ) {
 			current_value = [];
+		} else {
+			current_value = current_value.split( '||' );
 		}
+
 		if ( -1 === jQuery.inArray( jQuery(this).val(), current_value ) ) {
 			current_value.push( jQuery(this).val() );
-			um_set_directory_storage( directory, 'filter_' + filter_name, current_value, true );
+			current_value = current_value.join( '||' );
+
+			um_set_url_from_data( directory, 'filter_' + filter_name, current_value );
 
 			//set 1st page after filtration
-			um_set_directory_storage( directory, 'page', 1, true );
+			directory.data( 'page', 1 );
+			um_set_url_from_data( directory, 'page', 1 );
 		}
 
 		jQuery(this).val('').trigger('change');
 
 		um_ajax_get_members( directory );
 
-		um_change_tag( directory );
+		//um_change_tag( directory );
 
 	});
 
