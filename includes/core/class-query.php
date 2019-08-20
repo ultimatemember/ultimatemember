@@ -395,17 +395,18 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		/**
 		 * Capture selected value
 		 *
-		 * @param $key
-		 * @param null $array_key
-		 * @param null $fallback
+		 * @param string $key
+		 * @param string|null $array_key
+		 * @param bool $fallback
 		 * @return int|mixed|null|string
 		 */
 		function get_meta_value( $key, $array_key = null, $fallback = false ) {
 			$post_id = get_the_ID();
 			$try = get_post_meta( $post_id, $key, true );
 
-			//old version if ( ! empty( $try ) )
-			if ( $try != '' )
+			//old-old version if ( ! empty( $try ) )
+			//old version if ( $try !== false )
+			if ( $try != '' ) {
 				if ( is_array( $try ) && in_array( $array_key, $try ) ) {
 					return $array_key;
 				} else if ( is_array( $try ) ) {
@@ -413,6 +414,7 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 				} else {
 					return $try;
 				}
+			}
 
 			if ( $fallback == 'na' ) {
 				$fallback = 0;
