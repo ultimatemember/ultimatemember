@@ -145,6 +145,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * Enhancements:
   - Added security fixes (XSS)
   - Added hooks for 3rd party integrations
+  - Updated Datepicker & Timepicker library from 5.6 to 6.2 version
 
 * Bugfixes:
   - Fixed validation of forms conditional fields at the backend (for the nesting fields)
