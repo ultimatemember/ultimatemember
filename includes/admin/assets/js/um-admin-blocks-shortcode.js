@@ -18,7 +18,7 @@
 
 	UmRegisterBlockType('um-block/um-forms', {
 		title: i18n.__( 'UM Form' , 'ultimate-member' ),
-		description: i18n.__( 'Chose display form', 'ultimate-member' ),
+		description: i18n.__( 'Choose display form', 'ultimate-member' ),
 		icon: 'forms',
 		category: 'um-blocks',
 		attributes: {
@@ -147,7 +147,7 @@
 
 	UmRegisterBlockType( 'um-block/um-member-directories', {
 		title: i18n.__( 'UM Member Directories', 'ultimate-member'),
-		description: i18n.__( 'Chose display form', 'ultimate-member' ),
+		description: i18n.__( 'Choose display form', 'ultimate-member' ),
 		icon: 'groups',
 		category: 'um-blocks',
 		attributes: {
