@@ -2603,6 +2603,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $icon ) . '"></i></div>';
 					}
 
+					$options = array();
 					$has_parent_option = false;
 					$disabled_by_parent_option = '';
 					$atts_ajax = '';
@@ -2735,8 +2736,19 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$options = UM()->builtin()->get ( $filter );
 						}
 
-						if ( ! isset( $options ) ) {
+						// 'country'
+						if( $key === 'country' && empty( $options ) ) {
 							$options = UM()->builtin()->get( 'countries' );
+						}
+
+						// 'billing_country' and 'shipping_country'
+						if( in_array( $key, array( 'billing_country', 'shipping_country' ) ) ) {
+							$countries = UM()->builtin()->get( 'countries' );
+							if( empty( $options ) || !is_array( $options ) ) {
+								$options = $countries;
+							} else {
+								$options = array_intersect_key( $countries, array_flip( $options ) );
+							}
 						}
 
 						if ( isset( $options ) ) {

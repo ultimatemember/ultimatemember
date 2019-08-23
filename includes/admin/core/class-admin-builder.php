@@ -54,6 +54,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				$validate = $field_attr['validate'];
 				foreach ( $validate as $post_input => $arr ) {
 
+					// 'billing_country' and 'shipping_country'
+					if( $post_input === '_options' && isset( $array[ 'post' ][ '_metakey' ] ) && in_array( $array[ 'post' ][ '_metakey' ], array( 'billing_country', 'shipping_country' ) ) ) {
+						continue;
+					}
+
 					$mode = $arr['mode'];
 
 					switch ( $mode ) {
