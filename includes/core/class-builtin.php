@@ -1218,6 +1218,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		/**
 		 * Get all fields without metakeys
 		 *
+		 * @since 2.0.56
+		 *
 		 * @return array
 		 */
 		function get_fields_without_metakey() {
