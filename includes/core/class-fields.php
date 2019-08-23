@@ -2737,19 +2737,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 
 						// 'country'
-						if( $key === 'country' && empty( $options ) ) {
+						if ( $key === 'country' && empty( $options ) ) {
 							$options = UM()->builtin()->get( 'countries' );
 						}
 
-						// 'billing_country' and 'shipping_country'
-						if( in_array( $key, array( 'billing_country', 'shipping_country' ) ) ) {
-							$countries = UM()->builtin()->get( 'countries' );
-							if( empty( $options ) || !is_array( $options ) ) {
-								$options = $countries;
-							} else {
-								$options = array_intersect_key( $countries, array_flip( $options ) );
-							}
-						}
+						$options = apply_filters( 'um_selectbox_options', $options, $key );
 
 						if ( isset( $options ) ) {
 							/**
@@ -2812,7 +2804,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
 					 * {"var":"$data","type":"array","desc":"Field Data"}]
 					 */
-					$options_pair = apply_filters( "um_select_options_pair", null, $data );
+					$options_pair = apply_filters( 'um_select_options_pair', null, $data );
 
 					// switch options pair for custom options from a callback function
 					if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
