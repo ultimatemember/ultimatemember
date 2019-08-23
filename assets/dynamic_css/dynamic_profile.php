@@ -1,7 +1,7 @@
 <style type="text/css">
 <?php
 
-$photosize = str_replace('px','',$photosize);
+$photosize = filter_var( $photosize, FILTER_SANITIZE_NUMBER_INT );
 $photosize_up = ( $photosize / 2 ) + 10;
 $meta_padding = ( $photosize + 60 ) . 'px';
 
