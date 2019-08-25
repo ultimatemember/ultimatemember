@@ -458,19 +458,20 @@ function um_user_edit_profile( $args ) {
 	 * @title um_user_after_updating_profile
 	 * @description After upgrade user's profile
 	 * @input_vars
-	 * [{"var":"$submitted","type":"array","desc":"Form data"}]
+	 * [{"var":"$submitted","type":"array","desc":"Form data"},
+	 * {"var":"$user_id","type":"int","desc":"User Id"}]
 	 * @change_log
 	 * ["Since: 2.0"]
 	 * @usage add_action( 'um_user_after_updating_profile', 'function_name', 10, 1 );
 	 * @example
 	 * <?php
-	 * add_action( 'um_user_after_updating_profile', 'my_user_after_updating_profile'', 10, 1 );
-	 * function my_user_after_updating_profile( $submitted ) {
+	 * add_action( 'um_user_after_updating_profile', 'my_user_after_updating_profile'', 10, 2 );
+	 * function my_user_after_updating_profile( $submitted, $user_id ) {
 	 *     // your code here
 	 * }
 	 * ?>
 	 */
-	do_action( 'um_user_after_updating_profile', $to_update );
+	do_action( 'um_user_after_updating_profile', $to_update, $user_id );
 
 	/**
 	 * UM hook
