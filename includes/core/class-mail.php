@@ -435,7 +435,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			add_filter( 'um_template_tags_replaces_hook', array( UM()->mail(), 'add_replace_placeholder' ), 10, 1 );
 
 			$subject = apply_filters( 'um_email_send_subject', UM()->options()->get( $template . '_sub' ), $template );
-			$this->subject = um_convert_tags( $subject , $args );
+			$this->subject = wp_unslash( um_convert_tags( $subject , $args ) );
 
 			$this->message = $this->prepare_template( $template, $args );
 

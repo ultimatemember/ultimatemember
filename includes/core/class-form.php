@@ -27,11 +27,15 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 
 		/**
+		 * @var null
+		 */
+		var $post_form = null;
+
+
+		/**
 		 * Form constructor.
 		 */
 		function __construct() {
-
-			$this->post_form = null;
 
 			$this->form_suffix = null;
 
@@ -39,9 +43,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 			$this->processing = null;
 
-			add_action('template_redirect', array(&$this, 'form_init'), 2);
+			add_action( 'template_redirect', array( &$this, 'form_init' ), 2 );
 
-			add_action('init', array(&$this, 'field_declare'), 10);
+			add_action( 'init', array( &$this, 'field_declare' ), 10 );
 
 		}
 
@@ -218,8 +222,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 * @return boolean
 		 */
 		function has_error( $key ) {
-			if ( isset( $this->errors[$key] ) )
+			if ( isset( $this->errors[ $key ] ) ) {
 				return true;
+			}
 			return false;
 		}
 
@@ -227,7 +232,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		/**
 		 * Declare all fields
 		 */
-		function field_declare(){
+		function field_declare() {
 			if ( isset( UM()->builtin()->custom_fields ) ) {
 				$this->all_fields = UM()->builtin()->custom_fields;
 			} else {
@@ -237,11 +242,11 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 
 		/**
-		 * Validate form
+		 * Validate form on submit
 		 */
 		function form_init() {
 			if ( isset( $_SERVER['REQUEST_METHOD'] ) ) {
-				$http_post = ('POST' == $_SERVER['REQUEST_METHOD']);
+				$http_post = ( 'POST' == $_SERVER['REQUEST_METHOD'] );
 			} else {
 				$http_post = 'POST';
 			}

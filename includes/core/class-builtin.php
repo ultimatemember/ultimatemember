@@ -1216,6 +1216,47 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 
 
 		/**
+		 * Get all fields without metakeys
+		 *
+		 * @since 2.0.56
+		 *
+		 * @return array
+		 */
+		function get_fields_without_metakey() {
+			$fields_without_metakey = array(
+				'block',
+				'shortcode',
+				'spacing',
+				'divider',
+				'group'
+			);
+
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_fields_without_metakey
+			 * @description Field Types without meta key
+			 * @input_vars
+			 * [{"var":"$types","type":"array","desc":"Field Types"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage add_filter( 'um_fields_without_metakey', 'function_name', 10, 1 );
+			 * @example
+			 * <?php
+			 * add_filter( 'um_fields_without_metakey', 'my_fields_without_metakey', 10, 1 );
+			 * function my_fields_without_metakey( $types ) {
+			 *     // your code here
+			 *     return $types;
+			 * }
+			 * ?>
+			 */
+			return apply_filters( 'um_fields_without_metakey', $fields_without_metakey );
+		}
+
+
+		/**
 		 * May be used to show a dropdown, or source for user meta
 		 *
 		 * @param null $exclude_types
@@ -1225,38 +1266,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 */
 		function all_user_fields( $exclude_types = null, $show_all = false ) {
 
-			$fields_without_metakey = array(
-				'block',
-				'shortcode',
-				'spacing',
-				'divider',
-				'group'
-			);
-			$fields_without_metakey = apply_filters( 'um_fields_without_metakey', $fields_without_metakey );
-
-			remove_filter( 'um_fields_without_metakey', 'um_user_tags_requires_no_metakey' );
-
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_fields_without_metakey
-			 * @description Extend Fields without metakey
-			 * @input_vars
-			 * [{"var":"$fields","type":"array","desc":"Fields without metakey"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_fields_without_metakey', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_fields_without_metakey', 'my_fields_without_metakey', 10, 1 );
-			 * function my_fields_without_metakey( $fields ) {
-			 *     // your code here
-			 *     return $fields;
-			 * }
-			 * ?>
-			 */
-			$fields_without_metakey = apply_filters( 'um_fields_without_metakey', $fields_without_metakey );
+			$fields_without_metakey = $this->get_fields_without_metakey();
+			$fields_without_metakey = apply_filters( 'um_all_user_fields_without_metakey', $fields_without_metakey );
 
 			if ( ! $show_all ) {
 				$this->fields_dropdown = array('image','file','password','rating');

@@ -366,7 +366,7 @@ function um_submit_form_errors_hook_( $args ) {
 	$um_profile_photo = um_profile('profile_photo');
 
 	if ( get_post_meta( $form_id, '_um_profile_photo_required', true ) && ( empty( $args['profile_photo'] ) && empty( $um_profile_photo ) ) ) {
-		UM()->form()->add_error('profile_photo', sprintf(__('%s is required.','ultimate-member'), 'Profile Photo' ) );
+		UM()->form()->add_error('profile_photo', __( 'Profile Photo is required.', 'ultimate-member' ) );
 	}
 
 	if ( ! empty( $fields ) ) {
@@ -413,7 +413,7 @@ function um_submit_form_errors_hook_( $args ) {
 			}
 
 			if ( isset( $array['type'] ) && $array['type'] == 'checkbox' && isset( $array['required'] ) && $array['required'] == 1 && !isset( $args[$key] ) ) {
-				UM()->form()->add_error($key, sprintf(__('%s is required.','ultimate-member'), $array['title'] ) );
+				UM()->form()->add_error($key, sprintf( __( '%s is required.', 'ultimate-member' ), $array['title'] ) );
 			}
 
 			if ( isset( $array['type'] ) && $array['type'] == 'radio' && isset( $array['required'] ) && $array['required'] == 1 && !isset( $args[$key] ) && !in_array($key, array('role_radio','role_select') ) ) {
@@ -453,17 +453,17 @@ function um_submit_form_errors_hook_( $args ) {
 			 */
 			do_action( 'um_add_error_on_form_submit_validation', $array, $key, $args );
 
-			if ( isset( $args[ $key ] ) ) {
-
-				if ( isset( $array['required'] ) && $array['required'] == 1 ) {
-					if ( ! isset( $args[$key] ) || $args[$key] == '' || $args[$key] == 'empty_file') {
-						if( empty( $array['label'] ) ) {
-							UM()->form()->add_error($key, __('This field is required','ultimate-member') );
-						} else {
-							UM()->form()->add_error($key, sprintf( __('%s is required','ultimate-member'), $array['label'] ) );
-						}
+			if ( ! empty( $array['required'] ) ) {
+				if ( ! isset( $args[ $key ] ) || $args[ $key ] == '' || $args[ $key ] == 'empty_file' ) {
+					if ( empty( $array['label'] ) ) {
+						UM()->form()->add_error( $key, __( 'This field is required', 'ultimate-member' ) );
+					} else {
+						UM()->form()->add_error( $key, sprintf( __( '%s is required', 'ultimate-member' ), $array['label'] ) );
 					}
 				}
+			}
+
+			if ( isset( $args[ $key ] ) ) {
 
 				if ( isset( $array['max_words'] ) && $array['max_words'] > 0 ) {
 					if ( str_word_count( $args[$key], 0, "éèàôù" ) > $array['max_words'] ) {

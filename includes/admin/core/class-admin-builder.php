@@ -54,6 +54,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				$validate = $field_attr['validate'];
 				foreach ( $validate as $post_input => $arr ) {
 
+					$skip = apply_filters( 'um_admin_builder_skip_field_validation', false, $post_input, $array );
+					if ( $skip ) {
+						continue;
+					}
+
 					$mode = $arr['mode'];
 
 					switch ( $mode ) {
@@ -115,42 +120,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			 */
 			extract( $array );
 
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_fields_without_metakey
-			 * @description Field Types without meta key
-			 * @input_vars
-			 * [{"var":"$types","type":"array","desc":"Field Types"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_fields_without_metakey', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_fields_without_metakey', 'my_fields_without_metakey', 10, 1 );
-			 * function my_fields_without_metakey( $types ) {
-			 *     // your code here
-			 *     return $types;
-			 * }
-			 * ?>
-			 */
-			$fields_without_metakey = apply_filters( 'um_fields_without_metakey', array(
-				'block',
-				'shortcode',
-				'spacing',
-				'divider',
-				'group'
-			) );
+			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
 
-			$fields = UM()->query()->get_attr('custom_fields', $form_id);
+			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
 			$count = 1;
 			if ( ! empty( $fields ) ) {
 				$count = count( $fields ) + 1;
 			}
 
 			// set unique meta key
-			if ( in_array( $field_type, $fields_without_metakey ) || ! isset( $array['post']['_metakey'] ) ) {
+			if ( in_array( $field_type, $fields_without_metakey ) && ! isset( $array['post']['_metakey'] ) ) {
 				$array['post']['_metakey'] = "um_{$field_type}_{$form_id}_{$count}";
 			}
 

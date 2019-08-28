@@ -2603,6 +2603,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $icon ) . '"></i></div>';
 					}
 
+					$options = array();
 					$has_parent_option = false;
 					$disabled_by_parent_option = '';
 					$atts_ajax = '';
@@ -2735,9 +2736,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$options = UM()->builtin()->get ( $filter );
 						}
 
-						if ( ! isset( $options ) ) {
+						// 'country'
+						if ( $key === 'country' && empty( $options ) ) {
 							$options = UM()->builtin()->get( 'countries' );
 						}
+
+						$options = apply_filters( 'um_selectbox_options', $options, $key );
 
 						if ( isset( $options ) ) {
 							/**
@@ -2800,7 +2804,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
 					 * {"var":"$data","type":"array","desc":"Field Data"}]
 					 */
-					$options_pair = apply_filters( "um_select_options_pair", null, $data );
+					$options_pair = apply_filters( 'um_select_options_pair', null, $data );
 
 					// switch options pair for custom options from a callback function
 					if ( ! empty( $data['custom_dropdown_options_source'] ) ) {
@@ -3744,7 +3748,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			}
 
 			//hide if empty
-			if ( ! in_array( $type, array( 'block', 'shortcode', 'spacing', 'divider', 'group' ) ) ) {
+			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
+			if ( ! in_array( $type, $fields_without_metakey ) ) {
 				$_field_value = $this->field_value( $key, $default, $data );
 
 				if ( ! isset( $_field_value ) || $_field_value == '' ) {

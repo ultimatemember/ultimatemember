@@ -140,11 +140,12 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
-= 2.0.56: August 20, 2019 =
+= 2.0.56: August 21, 2019 =
 
 * Enhancements:
   - Added security fixes (XSS)
   - Added hooks for 3rd party integrations
+  - Updated Datepicker & Timepicker library from 5.6 to 6.2 version
 
 * Bugfixes:
   - Fixed validation of forms conditional fields at the backend (for the nesting fields)
@@ -159,6 +160,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed is_selected method for some cases
   - Fixed form settings fields for default button labels in wp-admin metaboxes
   - Fixed generate metakeys for the form's custom fields
+  - Fixed issue when UM Roles localized as object on Add/Edit User screen
   - Fixed PHP notices
 
 = 2.0.55: August 16, 2019 =
