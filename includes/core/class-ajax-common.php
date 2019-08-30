@@ -26,8 +26,9 @@ if ( ! class_exists( 'um\core\AJAX_Common' ) ) {
 
 				add_action( 'wp_ajax_um_' . $action, array( $this, $action ) );
 
-				if ( $nopriv )
+				if ( $nopriv ){
 					add_action( 'wp_ajax_nopriv_um_' . $action, array( $this, $action ) );
+				}
 
 			}
 
