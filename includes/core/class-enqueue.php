@@ -144,9 +144,10 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 
 
 		/**
-		 *
+		 * Register styles
 		 */
 		function register_styles() {
+
 			//FontAwesome and FontIcons styles
 			wp_register_style( 'um_fonticons_ii', $this->css_baseurl . 'um-fonticons-ii.css', array(), ultimatemember_version );
 			wp_register_style( 'um_fonticons_fa', $this->css_baseurl . 'um-fonticons-fa.css', array(), ultimatemember_version );
@@ -173,6 +174,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_style( 'um_profile', $this->css_baseurl . 'um-profile.css', array(), ultimatemember_version );
 			wp_register_style( 'um_account', $this->css_baseurl . 'um-account.css', array(), ultimatemember_version );
 			wp_register_style( 'um_misc', $this->css_baseurl . 'um-misc.css', array(), ultimatemember_version );
+		
 		}
 
 
