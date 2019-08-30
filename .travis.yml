@@ -92,7 +92,7 @@ before_script:
     - chmod +x ./tests/prepare-wordpress.sh
     - chmod +x ./tests/run-travis.sh
     - ./tests/prepare-wordpress.sh
-    - mysql -e "set global wait_timeout = 3600;"
+  ##  - mysql -e "set global wait_timeout = 3600;"
 
 script:
     - ./tests/run-travis.sh
