@@ -3,6 +3,8 @@
 # Tell Travis CI we're using PHP
 language: php
 
+dist: trusty
+
 # Setup a global environment and overide as needed
 env:
   global:
