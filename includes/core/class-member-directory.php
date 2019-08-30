@@ -407,10 +407,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 						<input type="text" id="<?php echo $filter; ?>_from" name="<?php echo $filter; ?>_from" class="um-half-filter um-datepicker-filter"
 						       placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
+						       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
 						       data-date_min="<?php echo $range[0] ?>" data-date_max="<?php echo $range[1] ?>"
 						       data-filter_name="<?php echo $filter; ?>" data-range="from" />
 						<input type="text" id="<?php echo $filter; ?>_to" name="<?php echo $filter; ?>_to" class="um-half-filter um-datepicker-filter"
 						       placeholder="<?php esc_attr_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?>"
+						       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
 						       data-date_min="<?php echo $range[0] ?>" data-date_max="<?php echo $range[1] ?>"
 						       data-filter_name="<?php echo $filter; ?>" data-range="to" />
 
@@ -440,11 +442,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 						<input type="text" id="<?php echo $filter; ?>_from" name="<?php echo $filter; ?>_from" class="um-half-filter um-timepicker-filter"
 						       placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
+						       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
 						       data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"
 						       data-format="<?php echo esc_attr( $js_format ) ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ) ?>"
 						       data-filter_name="<?php echo $filter; ?>" data-range="from" />
 						<input type="text" id="<?php echo $filter; ?>_to" name="<?php echo $filter; ?>_to" class="um-half-filter um-timepicker-filter"
 						       placeholder="<?php esc_attr_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?>"
+						       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
 						       data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"
 						       data-format="<?php echo esc_attr( $js_format ) ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ) ?>"
 						       data-filter_name="<?php echo $filter; ?>" data-range="to" />

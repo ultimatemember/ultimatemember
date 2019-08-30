@@ -22,6 +22,13 @@ if ( is_user_logged_in() ) {
 // Views
 $single_view = false;
 $current_view = 'grid';
+
+if ( ! empty( $args['view_types'] ) && is_array( $args['view_types'] ) ) {
+	$args['view_types'] = array_filter( $args['view_types'], function( $item ) {
+		return in_array( $item, array_keys( UM()->member_directory()->view_types ) );
+	});
+}
+
 if ( empty( $args['view_types'] ) || ! is_array( $args['view_types'] ) ) {
 	$args['view_types'] = array(
 		'grid',
@@ -72,6 +79,12 @@ $show_filters = empty( $args['roles_can_filter'] ) || ( ! empty( $priority_user_
 $search_filters = array();
 if ( isset( $args['search_fields'] ) ) {
 	$search_filters = apply_filters( 'um_frontend_member_search_filters', array_unique( array_filter( $args['search_fields'] ) ) );
+}
+
+if ( ! empty( $search_filters ) ) {
+	$search_filters = array_filter( $search_filters, function( $item ) {
+		return in_array( $item, array_keys( UM()->member_directory()->filter_fields ) );
+	});
 }
 
 // Classes
@@ -170,14 +183,15 @@ UM()->get_template( 'members-pagination.php', '', $args, true ); ?>
 
 		<?php if ( $filters && $show_filters && count( $search_filters ) ) {
 
-			if ( ! empty( $args['filters'] ) && is_array( $search_filters ) ) { ?>
+			if ( is_array( $search_filters ) ) { ?>
 				<script type="text/template" id="tmpl-um-members-filtered-line">
 					<# if ( data.filters.length > 0 ) { #>
-					<# _.each( data.filters, function( filter, key, list ) { #>
-					<div class="um-members-filter-tag">
-						<strong>{{{filter.label}}}</strong>: {{{filter.value_label}}}
-						<div class="um-members-filter-remove" data-name="{{{filter.name}}}" data-value="{{{filter.value}}}" data-range="{{{filter.range}}}">&times;</div></div>
-					<# }); #>
+						<# _.each( data.filters, function( filter, key, list ) { #>
+							<div class="um-members-filter-tag">
+								<strong>{{{filter.label}}}</strong>: {{{filter.value_label}}}
+								<div class="um-members-filter-remove" data-name="{{{filter.name}}}" data-value="{{{filter.value}}}" data-range="{{{filter.range}}}" data-type="{{{filter.type}}}">&times;</div>
+							</div>
+						<# }); #>
 					<# } #>
 				</script>
 

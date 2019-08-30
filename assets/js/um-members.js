@@ -24,7 +24,7 @@ function um_get_data_for_directory( directory, search_key ) {
 
 	var url_data = um_parse_current_url();
 	jQuery.each( url_data, function( key ) {
-		if ( key.indexOf( '_' + hash ) !== -1 ) {
+		if ( key.indexOf( '_' + hash ) !== -1 && url_data[ key ] !== '' ) {
 			data[ key.replace( '_' + hash, '' ) ] = url_data[ key ];
 		}
 	});
@@ -177,21 +177,30 @@ function um_ajax_get_members( directory, args ) {
 			if ( filter.find( '.um-slider' ).length ) {
 				var filter_name = filter.find( '.um-slider' ).data('field_name');
 
-				var value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+				var value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
+				var value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
 				if ( typeof value != 'undefined' ) {
-					request[ filter_name ] = value;
+					request[ filter_name ] = [ value_from, value_to ];
 				}
 			} else if ( filter.find( '.um-datepicker-filter' ).length ) {
 				var filter_name = filter.find( '.um-datepicker-filter' ).data('filter_name');
-				var value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+				var value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
+				var value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
 				if ( typeof value != 'undefined' ) {
-					request[ filter_name ] = value;
+					request[ filter_name ] = [ value_from, value_to ];
+				}
+			} else if ( filter.find( '.um-timepicker-filter' ).length ) {
+				var filter_name = filter.find( '.um-timepicker-filter' ).data('filter_name');
+				var value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
+				var value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
+				if ( typeof value != 'undefined' ) {
+					request[ filter_name ] = [ value_from, value_to ];
 				}
 			} else {
 				var filter_name = filter.find('select').attr('name');
 				var value = um_get_data_for_directory( directory, 'filter_' + filter_name );
 				if ( typeof value != 'undefined' ) {
-					request[ filter_name ] = value;
+					request[ filter_name ] = value.split( '||' );
 				}
 			}
 		});
@@ -261,7 +270,6 @@ function UM_Member_Grid( container ) {
 
 
 function um_change_tag( directory ) {
-	var unique_id = um_members_get_unique_id( directory );
 	var filters_data = [];
 	var filter_array = [];
 
@@ -275,83 +283,156 @@ function um_change_tag( directory ) {
 			filter_range,
 			filter_value_title;
 
-		if( filter.find('input.um-datepicker-filter').length ) {
-			hoper = 'datepicker';
+		var filter_type;
+		if ( filter.find('input.um-datepicker-filter').length ) {
+			filter_type = 'datepicker';
 
-			filter.find('input.um-datepicker-filter').each(function() {
-				var _this = jQuery(this);
-				var obj = {};
-
-				if( _this.length ) {
-					query_value		= um_get_directory_storage( directory, 'filter_' + _this.data('filter_name') );
-					filter_name		= _this.data('filter_name');
-					filter_range	= _this.data('range');
-
-					if ( query_value !== null ) {
-						if( query_value[filter_range] ) {
-							obj.name		= filter_name;
-							obj.label		= _this.attr('placeholder');
-							obj.range		= filter_range;
-							obj.value_title	= _this.val();
-							filter_array.push(obj);
-						}
-					}
+			filter.find('input.um-datepicker-filter').each( function() {
+				var range = jQuery(this).data('range');
+				if ( range === 'to' ) {
+					return;
 				}
+
+				var filter_name = jQuery(this).data('filter_name');
+
+				var filter_value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
+				var filter_value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
+				if ( typeof filter_value_from === 'undefined' && typeof filter_value_to === 'undefined' ) {
+					return;
+				}
+
+				var from_val = jQuery(this).val();
+				var to_val = directory.find('input.um-datepicker-filter[data-range="to"][data-filter_name="' + filter_name + '"]').val();
+
+				var value;
+				if ( from_val !== '' &&  to_val !== '' ) {
+					value = from_val + ' - ' + to_val;
+				} else if ( from_val === '' ) {
+					value = 'before ' + to_val;
+				} else if ( to_val === '' ) {
+					value = 'since ' + from_val;
+				}
+
+				filters_data.push( {'name':filter_name, 'label':jQuery(this).data('filter-label'), 'value_label': value, 'value':[filter_value_from, filter_value_to], 'type':filter_type} );
 			});
 
+		} else if( filter.find('input.um-timepicker-filter').length ) {
+			filter_type = 'timepicker';
+
+			filter.find('input.um-timepicker-filter').each( function() {
+				var range = jQuery(this).data('range');
+				if ( range === 'to' ) {
+					return;
+				}
+
+				var filter_name = jQuery(this).data('filter_name');
+
+				var filter_value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
+				var filter_value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
+				if ( typeof filter_value_from === 'undefined' && typeof filter_value_to === 'undefined' ) {
+					return;
+				}
+
+				var from_val = jQuery(this).val();
+				var to_val = directory.find('input.um-timepicker-filter[data-range="to"][data-filter_name="' + filter_name + '"]').val();
+
+				var value;
+				if ( from_val !== '' &&  to_val !== '' ) {
+					value = from_val + ' - ' + to_val;
+				} else if ( from_val === '' ) {
+					value = 'before ' + to_val;
+				} else if ( to_val === '' ) {
+					value = 'since ' + from_val;
+				}
+
+				filters_data.push( {'name':filter_name, 'label':jQuery(this).data('filter-label'), 'value_label': value, 'value':[filter_value_from, filter_value_to], 'type':filter_type} );
+			});
 		} else if( filter.find('select').length ) {
-			hoper = 'select';
 
+			filter_type = 'select';
 			filter_name = filter.find('select').attr('name');
-			query_value = um_get_directory_storage( directory, 'filter_' + filter_name );
-
 			filter_title = filter.find('select').data('placeholder');
-			filter_value_title;
+
+			var filter_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+			if ( typeof filter_value == 'undefined' ) {
+				filter_value = [];
+			} else {
+				filter_value = filter_value.split( '||' );
+			}
+
+			jQuery.each( filter_value, function(i) {
+				var filter_value_title = filter.find('select option[value="' + filter_value[ i ] + '"]').data('value_label');
+				filters_data.push( {'name':filter_name, 'label':filter_title, 'value_label':filter_value_title, 'value':filter_value[ i ], 'type':filter_type} );
+			});
 
 		} else if( filter.find('div.ui-slider').length ) {
-			hoper = 'slider';
+			filter_type = 'slider';
 
-			filter_name = filter.find('div.ui-slider').data('field_name');
-			query_value = um_get_directory_storage( directory, 'filter_' + filter_name );
+			filter_name = filter.find('div.ui-slider').data( 'field_name' );
+			var filter_value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
+			var filter_value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
+
+			if ( typeof filter_value_from === 'undefined' && typeof filter_value_to === 'undefined' ) {
+				return;
+			}
 
 			filter_title = filter.find('div.um-slider-range').data('label');
-			filter_value_title;
 
+			var filter_value_title = filter.find('div.um-slider-range').data( 'placeholder' ).replace( '\{min_range\}', filter_value_from )
+				.replace( '\{max_range\}', filter_value_to )
+				.replace( '\{field_label\}', filter.find('div.um-slider-range').data('label') );
+
+			filters_data.push( {'name':filter_name, 'label':filter_title, 'value_label':filter_value_title, 'value':[filter_value_from, filter_value_to], 'type':filter_type} );
 		}
 
-		if ( typeof( query_value ) != 'undefined' && query_value != null) {
-			if ( typeof( query_value ) == 'string' ) {
-				filter_value_title = filter.find('select option[value="' + query_value + '"]').data('value_label');
-				filters_data.push( {'name':filter_name, 'label':filter_title, 'value_label':filter_value_title, 'value':query_value, 'unique_id':unique_id} );
-			} else if( hoper == 'datepicker' ) { // после сформированных данных
-				jQuery.each( filter_array, function(e) {
-					var find = filters_data.find(function (item) {
-						return item.name == filter_array[e].name && item.range == filter_array[e].range;
-					});
-					if( typeof( find ) == 'undefined' ) {
-						filters_data.push(
-							{
-								'name':filter_array[e].name,
-								'range':filter_array[e].range,
-								'label':filter_array[e].label,
-								'value_label':filter_array[e].value_title,
-								'value':query_value[filter_array[e].range],
-								'unique_id':unique_id
-							}
-						);
-					}
-				})
-
-			} else if( hoper == 'slider' ) {
-				filter_value_title = query_value[0] + " - " + query_value[1];
-				filters_data.push( {'name':filter_name, 'label':filter_title, 'value_label': filter_value_title, 'value': query_value, 'unique_id':unique_id} );
-			} else {
-				jQuery.each( query_value, function(e) {
-					filter_value_title = filter.find('select option[value="' + query_value[e] + '"]').data('value_label');
-					filters_data.push( {'name': filter_name, 'label':filter_title, 'value_label':filter_value_title, 'value':query_value[e], 'unique_id':unique_id} );
-				});
-			}
-		}
+		// if ( filter.find('input.um-datepicker-filter').length ) {
+		// 	hoper = 'datepicker';
+		//
+		// 	filter.find('input.um-datepicker-filter').each(function() {
+		// 		var _this = jQuery(this);
+		// 		var obj = {};
+		//
+		// 		if( _this.length ) {
+		// 			query_value		= um_get_directory_storage( directory, 'filter_' + _this.data('filter_name') );
+		// 			filter_name		= _this.data('filter_name');
+		// 			filter_range	= _this.data('range');
+		//
+		// 			if ( query_value !== null ) {
+		// 				if( query_value[filter_range] ) {
+		// 					obj.name		= filter_name;
+		// 					obj.label		= _this.attr('placeholder');
+		// 					obj.range		= filter_range;
+		// 					obj.value_title	= _this.val();
+		// 					filter_array.push(obj);
+		// 				}
+		// 			}
+		// 		}
+		// 	});
+		//
+		// }
+		//
+		// if ( typeof( query_value ) != 'undefined' && query_value != null) {
+		// if( hoper == 'datepicker' ) {
+		// 		jQuery.each( filter_array, function(e) {
+		// 			var find = filters_data.find(function (item) {
+		// 				return item.name == filter_array[e].name && item.range == filter_array[e].range;
+		// 			});
+		// 			if( typeof( find ) == 'undefined' ) {
+		// 				filters_data.push(
+		// 					{
+		// 						'name':filter_array[e].name,
+		// 						'range':filter_array[e].range,
+		// 						'label':filter_array[e].label,
+		// 						'value_label':filter_array[e].value_title,
+		// 						'value':query_value[filter_array[e].range],
+		// 						'unique_id':unique_id
+		// 					}
+		// 				);
+		// 			}
+		// 		})
+		//
+		// 	}
+		// }
 	});
 
 	directory.find('.um-members-filter-tag').remove();
@@ -656,167 +737,76 @@ jQuery(document).ready( function() {
 	 */
 
 
-	/**
-	 * First Page Loading
-	 */
+	//filters controls
+	jQuery('.um-member-directory-filters a').click( function() {
+		var search_bar = jQuery(this).parents('.um-directory').find('.um-search');
 
-
-	//Init Directories
-	jQuery( '.um-directory' ).each( function() {
-		var directory = jQuery(this);
-		var hash = um_members_get_hash( directory );
-		um_member_directories.push( hash );
-
-		var show_after_search = false;
-		var search = um_get_search( directory );
-		if ( search && typeof search !== 'undefined' ) {
-			show_after_search = true;
-		}
-
-		if ( ! ( directory.data( 'only_search' ) > 0 && show_after_search ) ) {
-			//show preloader at first
-			um_members_show_preloader( directory );
+		if ( search_bar.is( ':visible' ) ) {
+			search_bar.slideUp(650);
 		} else {
+			search_bar.slideDown(650);
+		}
+	});
+
+
+	//filtration process
+	jQuery( document.body ).on( 'change', '.um-search-filter select', function() {
+		if ( jQuery(this).val() === '' ) {
 			return;
 		}
 
+		var directory = jQuery(this).parents('.um-directory');
+
+		if ( um_is_directory_busy( directory ) ) {
+			return;
+		}
+
+		var filter_name = jQuery(this).prop('name');
+
+		var current_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+		if ( typeof current_value == 'undefined' ) {
+			current_value = [];
+		} else {
+			current_value = current_value.split( '||' );
+		}
+
+		if ( -1 === jQuery.inArray( jQuery(this).val(), current_value ) ) {
+			current_value.push( jQuery(this).val() );
+			current_value = current_value.join( '||' );
+
+			um_set_url_from_data( directory, 'filter_' + filter_name, current_value );
+
+			//set 1st page after filtration
+			directory.data( 'page', 1 );
+			um_set_url_from_data( directory, 'page', 1 );
+		}
+
+		jQuery(this).val('').trigger( 'change' );
+
 		um_ajax_get_members( directory );
 
-		// if ( jQuery('#tmpl-um-members-filtered-line').length ) {
-		// 	var unique_id = um_members_get_unique_id( directory );
-		// 	var filters_data = [];
-		//
-		// 	var filter_array = [];
-		//
-		// 	directory.find('.um-search-filter').each( function() {
-		//
-		// 		var filter = jQuery(this);
-		// 		var hoper,
-		// 			filter_name,
-		// 			query_value,
-		// 			filter_title,
-		// 			filter_range,
-		// 			filter_value_title;
-		//
-		// 		if( filter.find('input.um-datepicker-filter').length ) {
-		// 			hoper = 'datepicker';
-		//
-		// 			filter.find('input.um-datepicker-filter').each(function() {
-		// 				var _this = jQuery(this);
-		// 				var obj = {};
-		//
-		// 				if( _this.length ) {
-		// 					query_value		= um_get_directory_storage( directory, 'filter_' + _this.data('filter_name') );
-		// 					filter_name		= _this.data('filter_name');
-		// 					filter_range	= _this.data('range');
-		//
-		// 					if ( query_value !== null ) {
-		// 						if( query_value[filter_range] ) {
-		// 							obj.name		= filter_name;
-		// 							obj.label		= _this.attr('placeholder');
-		// 							obj.range		= filter_range;
-		// 							obj.value_title	= _this.val();
-		// 							filter_array.push(obj);
-		// 						}
-		// 					}
-		// 				}
-		// 			});
-		//
-		// 		} else if( filter.find('select').length ) {
-		// 			hoper = 'select';
-		//
-		// 			filter_name = filter.find('select').attr('name');
-		// 			query_value = um_get_directory_storage( directory, 'filter_' + filter_name );
-		//
-		// 			filter_title = filter.find('select').data('placeholder');
-		// 			filter_value_title;
-		//
-		// 		} else if( filter.find('div.ui-slider').length ) {
-		// 			hoper = 'slider';
-		//
-		// 			filter_name = filter.find('div.ui-slider').data('field_name');
-		// 			query_value = um_get_directory_storage( directory, 'filter_' + filter_name );
-		//
-		// 			filter_title = filter.find('div.um-slider-range').data('label');
-		// 			filter_value_title;
-		//
-		// 		}
-		//
-		// 		if ( typeof( query_value ) != 'undefined' && query_value != null) {
-		// 			if ( typeof( query_value ) == 'string' ) {
-		// 				filter_value_title = filter.find('select option[value="' + query_value + '"]').data('value_label');
-		// 				filters_data.push( {'name':filter_name, 'label':filter_title, 'value_label':filter_value_title, 'value':query_value, 'unique_id':unique_id} );
-		// 			} else if( hoper == 'datepicker' ) { // после сформированных данных
-		// 				jQuery.each( filter_array, function(e) {
-		// 					var find = filters_data.find(function (item) {
-		// 						return item.name == filter_array[e].name && item.range == filter_array[e].range;
-		// 					});
-		// 					if( typeof( find ) == 'undefined' ) {
-		// 						filters_data.push(
-		// 							{
-		// 								'name':filter_array[e].name,
-		// 								'range':filter_array[e].range,
-		// 								'label':filter_array[e].label,
-		// 								'value_label':filter_array[e].value_title,
-		// 								'value':query_value[filter_array[e].range],
-		// 								'unique_id':unique_id
-		// 							}
-		// 						);
-		// 					}
-		// 				})
-		//
-		// 			} else if( hoper == 'slider' ) {
-		// 				filter_value_title = query_value[0] + " - " + query_value[1];
-		// 				filters_data.push( {'name':filter_name, 'label':filter_title, 'value_label': filter_value_title, 'value': query_value, 'unique_id':unique_id} );
-		// 			} else {
-		// 				jQuery.each( query_value, function(e) {
-		// 					filter_value_title = filter.find('select option[value="' + query_value[e] + '"]').data('value_label');
-		// 					filters_data.push( {'name': filter_name, 'label':filter_title, 'value_label':filter_value_title, 'value':query_value[e], 'unique_id':unique_id} );
-		// 				});
-		// 			}
-		// 		}
-		// 	});
-		//
-		//
-		// 	directory.find('.um-members-filter-tag').remove();
-		//
-		// 	var filters_template = wp.template( 'um-members-filtered-line' );
-		// 	directory.find('.um-filtered-line').prepend( filters_template( {'filters': filters_data} ) );
-		//
-		// 	if ( filters_data.length > 0 ) {
-		// 		directory.find('.um-filtered-line').show();
-		// 		show_after_search = false;
-		// 	} else {
-		// 		directory.find('.um-filtered-line').hide();
-		// 		show_after_search = true;
-		// 	}
-		// }
-
-		// if ( jQuery('#tmpl-um-members-filtered-line').length ) {
-		// 	um_change_tag( directory );
-		// }
-
-		// if ( directory.data( 'only_search' ) > 0 && show_after_search ) {
-		// 	um_members_hide_preloader( directory );
-		// 	return;
-		// }
-
-		//um_ajax_get_members( directory, {page: page, sorting: sort} );
+		um_change_tag( directory );
 	});
 
 
 	//slider filter
 	jQuery( '.um-slider' ).each( function() {
-		var slider			= jQuery( this );
-		var directory		= jQuery(this).parents('.um-directory');
+		var slider = jQuery( this );
+		var directory = slider.parents('.um-directory');
 
-		var default_value = um_get_data_for_directory( directory, slider.data('field_name') );
+		var filter_name = slider.data('field_name');
 
-
-		//var default_value	= um_get_directory_storage( directory, 'filter_' + slider.data('field_name') );
-		if ( default_value == null ) {
-			default_value	= [ parseInt( slider.data('min') ), parseInt( slider.data('max') ) ];
+		var min_default_value = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
+		var max_default_value = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
+		if ( typeof min_default_value == 'undefined' ) {
+			min_default_value = parseInt( slider.data('min') );
 		}
+
+		if ( typeof max_default_value == 'undefined' ) {
+			max_default_value =  parseInt( slider.data('max') );
+		}
+
+		var default_value = [ min_default_value, max_default_value ];
 
 		slider.slider({
 			range: true,
@@ -832,10 +822,15 @@ jQuery(document).ready( function() {
 			},
 			stop: function( event, ui ) {
 				if ( ! um_is_directory_busy( directory ) ) {
-					um_set_directory_storage( directory, 'filter_' + jQuery(this).data('field_name'), ui.values, true );
-					um_set_directory_storage( directory, 'page', 1, true );
-					um_change_tag( directory );
+					um_set_url_from_data( directory, 'filter_' + filter_name + '_from', ui.values[0] );
+					um_set_url_from_data( directory, 'filter_' + filter_name + '_to', ui.values[1] );
+
+					//set 1st page after filtration
+					directory.data( 'page', 1 );
+					um_set_url_from_data( directory, 'page', 1 );
 					um_ajax_get_members( directory );
+
+					um_change_tag( directory );
 				}
 			}
 		});
@@ -873,40 +868,37 @@ jQuery(document).ready( function() {
 				var filter_name = elem.data( 'filter_name' );
 				var range = elem.data( 'range' );
 
-				var current_value = um_get_data_for_directory( directory, 'um-' + filter_name );
-				if ( typeof current_value === "undefined" ) {
-					current_value = {};
+				var current_value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
+				var current_value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
+				if ( typeof current_value_from === "undefined" ) {
+					current_value_from = min / 1000;
+				}
+				if ( typeof current_value_to === "undefined" ) {
+					current_value_to = max / 1000;
 				}
 
 				var select_val = context.select / 1000;
 				var change_val = elem.val();
 
 				if ( range === 'from' ) {
-					if( select_val !== null && ! isNaN( select_val ) ) {
-						current_value.from = select_val;
-					} else {
-						if ( change_val == '' ) {
-							delete current_value.from;
-							//console.warn('Elem val from: ' + change_val);
-						}
-					}
+					current_value_from = select_val;
 				} else if ( range === 'to' ) {
-					if( select_val !== null && ! isNaN( select_val ) ) {
-						current_value.to = select_val;
-					} else {
-						if ( change_val == '' ) {
-							delete current_value.to;
-							//console.warn('Elem val to: ' + change_val);
-						}
-					}
+					current_value_to = select_val;
 				}
 
+				um_set_url_from_data( directory, 'filter_' + filter_name + '_from', current_value_from );
+				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', current_value_to );
+
 				//set 1st page after filtration
-				//um_set_directory_storage( directory, 'page', 1, true );
+				directory.data( 'page', 1 );
+				um_set_url_from_data( directory, 'page', 1 );
 
 				um_ajax_get_members( directory );
 
-				//um_change_tag( directory );
+				um_change_tag( directory );
+
+				//elem.val('');
+				//elem.data('value','');
 			}
 		});
 
@@ -915,15 +907,15 @@ jQuery(document).ready( function() {
 		var $frange		= elem.data('range');
 		var $directory	= elem.parents('.um-directory');
 
-		var query_value = um_get_data_for_directory( $directory, 'um-' + $fname );
+		var query_value = um_get_data_for_directory( $directory, 'filter_' + $fname + '_' + $frange );
 		if ( typeof query_value !== 'undefined' ) {
-			if ( typeof( query_value[$frange] ) !== 'undefined' )  {
-				$picker.set( 'select', query_value[$frange]*1000 );
-			}
+			$picker.set( 'select', query_value*1000 );
+			//elem.attr('data-value',elem.val());
+			//elem.val(elem.val());
+			//elem.val('data-value', query_value*100);
 		}
 
 	});
-
 
 
 	//timepicker filter
@@ -932,7 +924,10 @@ jQuery(document).ready( function() {
 
 		//using arrays formatted as [HOUR,MINUTE]
 
-		elem.pickatime({
+		var min = elem.data('min');
+		var max = elem.data('max');
+
+		var $input = elem.pickatime({
 			format:         elem.data('format'),
 			interval:       parseInt( elem.data('intervals') ),
 			min:            elem.data('min'),
@@ -951,43 +946,174 @@ jQuery(document).ready( function() {
 				var filter_name = elem.data( 'filter_name' );
 				var range = elem.data( 'range' );
 
-				var current_value = um_get_data_for_directory( directory, 'um-' + filter_name );
-				if ( typeof current_value === "undefined" ) {
-					current_value = {};
+				var current_value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
+				var current_value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
+				if ( typeof current_value_from === "undefined" ) {
+					current_value_from = min;
+				}
+				if ( typeof current_value_to === "undefined" ) {
+					current_value_to = max;
 				}
 
-				var select_val = context.select / 1000;
-				var change_val = elem.val();
+				if ( typeof context.select !== 'undefined' ) {
+					var select_val = context.select / 60;
+					var change_val = elem.val();
 
-				if ( range === 'from' ) {
-					if( select_val !== null && ! isNaN( select_val ) ) {
-						current_value.from = select_val;
-					} else {
-						if ( change_val == '' ) {
-							delete current_value.from;
-							//console.warn('Elem val from: ' + change_val);
-						}
+					if ( range === 'from' ) {
+						current_value_from = select_val + ':00';
+					} else if ( range === 'to' ) {
+						current_value_to = select_val + ':00';
 					}
-				} else if ( range === 'to' ) {
-					if( select_val !== null && ! isNaN( select_val ) ) {
-						current_value.to = select_val;
-					} else {
-						if ( change_val == '' ) {
-							delete current_value.to;
-							//console.warn('Elem val to: ' + change_val);
-						}
+				} else {
+					if ( range === 'from' ) {
+						current_value_from = min;
+					} else if ( range === 'to' ) {
+						current_value_to = max;
 					}
 				}
+
+				$input.clear();
+
+				um_set_url_from_data( directory, 'filter_' + filter_name + '_from', current_value_from );
+				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', current_value_to );
 
 				//set 1st page after filtration
-				//um_set_directory_storage( directory, 'page', 1, true );
+				directory.data( 'page', 1 );
+				um_set_url_from_data( directory, 'page', 1 );
 
 				um_ajax_get_members( directory );
 
-				//um_change_tag( directory );
+				um_change_tag( directory );
 			}
 		});
+
+
+		var $picker 	= $input.pickatime('picker');
+		var $fname		= elem.data('filter_name');
+		var $frange		= elem.data('range');
+		var $directory	= elem.parents('.um-directory');
+
+		var query_value = um_get_data_for_directory( $directory, 'filter_' + $fname + '_' + $frange );
+		if ( typeof query_value !== 'undefined' ) {
+			$picker.set( 'select', query_value );
+		}
 	});
+
+
+
+	jQuery( document.body ).on( 'click', '.um-members-filter-remove', function() {
+		var directory = jQuery(this).parents('.um-directory');
+
+		if ( um_is_directory_busy( directory ) ) {
+			return;
+		}
+
+		var removeItem = jQuery(this).data('value');
+		var filter_name = jQuery(this).data('name');
+
+		var type = jQuery(this).data('type');
+		if ( type === 'select' ) {
+
+			var current_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+			if ( typeof current_value == 'undefined' ) {
+				current_value = [];
+			} else {
+				current_value = current_value.split( '||' );
+			}
+
+			if ( -1 !== jQuery.inArray( removeItem.toString(), current_value ) ) {
+				current_value = jQuery.grep( current_value, function( value ) {
+					return value !== removeItem.toString();
+				});
+			}
+
+			if ( ! current_value.length ) {
+				current_value = '';
+			}
+
+			um_set_url_from_data( directory, 'filter_' + filter_name, current_value );
+
+		} else if ( type === 'slider' ) {
+			um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
+			um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
+		} else if ( type === 'datepicker' ) {
+			um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
+			um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
+		} else if ( type === 'timepicker' ) {
+			um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
+			um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
+		}
+
+
+		//set 1st page after filtration
+		directory.data( 'page', 1 );
+		um_set_url_from_data( directory, 'page', 1 );
+		jQuery(this).parents('.um-members-filter-tag').remove();
+
+		um_ajax_get_members( directory );
+
+		if ( directory.find( '.um-members-filter-remove' ).length === 0 ) {
+			directory.find('.um-clear-filters-a').hide();
+		} else {
+			directory.find('.um-clear-filters-a').show();
+		}
+	});
+
+
+	jQuery( document.body ).on( 'click', '.um-clear-filters-a', function() {
+		var directory = jQuery(this).parents('.um-directory');
+		if ( um_is_directory_busy( directory ) ) {
+			return;
+		}
+
+		directory.find( '.um-members-filter-remove' ).each( function() {
+			var removeItem = jQuery(this).data('value');
+			var filter_name = jQuery(this).data('name');
+
+			var type = jQuery(this).data('type');
+			if ( type === 'select' ) {
+
+				var current_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+				if ( typeof current_value == 'undefined' ) {
+					current_value = [];
+				} else {
+					current_value = current_value.split( '||' );
+				}
+
+				if ( -1 !== jQuery.inArray( removeItem.toString(), current_value ) ) {
+					current_value = jQuery.grep( current_value, function( value ) {
+						return value !== removeItem.toString();
+					});
+				}
+
+				if ( ! current_value.length ) {
+					current_value = '';
+				}
+
+				um_set_url_from_data( directory, 'filter_' + filter_name, current_value );
+
+			} else if ( type === 'slider' ) {
+				um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
+				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
+			} else if ( type === 'datepicker' ) {
+				um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
+				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
+			} else if ( type === 'timepicker' ) {
+				um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
+				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
+			}
+		});
+
+		//set 1st page after filtration
+		directory.data( 'page', 1 );
+		um_set_url_from_data( directory, 'page', 1 );
+		directory.find('.um-members-filter-tag').remove();
+
+		um_ajax_get_members( directory );
+
+		jQuery(this).hide();
+	});
+
 
 
 
@@ -1032,181 +1158,56 @@ jQuery(document).ready( function() {
 
 
 
-	//filters controls
-	jQuery('.um-member-directory-filters').click( function() {
-		var search_bar = jQuery(this).parents('.um-directory').find('.um-search');
 
-		if ( search_bar.is(':visible') ) {
-			search_bar.slideUp(650);
+
+
+	// jQuery('.um-close-filter').click( function() {
+	// 	var search_bar = jQuery(this).parents('.um-directory').find('.um-search');
+	// 	search_bar.slideUp(650);
+	// });
+
+
+	/**
+	 * First Page Loading
+	 */
+
+
+	//Init Directories
+	jQuery( '.um-directory' ).each( function() {
+		var directory = jQuery(this);
+		var hash = um_members_get_hash( directory );
+		um_member_directories.push( hash );
+
+		var show_after_search = false;
+		var search = um_get_search( directory );
+		if ( search && typeof search !== 'undefined' ) {
+			show_after_search = true;
+		}
+
+		if ( ! ( directory.data( 'only_search' ) > 0 && show_after_search ) ) {
+			//show preloader at first
+			um_members_show_preloader( directory );
 		} else {
-			search_bar.slideDown(650);
-		}
-	});
-
-
-	jQuery('.um-close-filter').click( function() {
-		var search_bar = jQuery(this).parents('.um-directory').find('.um-search');
-		search_bar.slideUp(650);
-	});
-
-	//filtration process
-	jQuery( document.body ).on( 'change', '.um-search-filter select', function() {
-		if ( jQuery(this).val() === '' ) {
 			return;
-		}
-
-		var directory = jQuery(this).parents('.um-directory');
-
-		if ( um_is_directory_busy( directory ) ) {
-			return;
-		}
-
-		var filter_name = jQuery(this).prop('name');
-
-		var current_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
-		if ( typeof current_value == 'undefined' ) {
-			current_value = [];
-		} else {
-			current_value = current_value.split( '||' );
-		}
-
-		if ( -1 === jQuery.inArray( jQuery(this).val(), current_value ) ) {
-			current_value.push( jQuery(this).val() );
-			current_value = current_value.join( '||' );
-
-			um_set_url_from_data( directory, 'filter_' + filter_name, current_value );
-
-			//set 1st page after filtration
-			directory.data( 'page', 1 );
-			um_set_url_from_data( directory, 'page', 1 );
-		}
-
-		jQuery(this).val('').trigger('change');
-
-		um_ajax_get_members( directory );
-
-		//um_change_tag( directory );
-
-	});
-
-
-	jQuery( document.body ).on( 'click', '.um-members-filter-remove', function() {
-		var directory = jQuery(this).parents('.um-directory');
-
-		if ( um_is_directory_busy( directory ) ) {
-			return;
-		}
-
-		var range = jQuery(this).data('range');
-
-		var removeItem = jQuery(this).data('value');
-		var filter_name = jQuery(this).data('name');
-
-		var current_value = um_get_directory_storage( directory, 'filter_' + filter_name );
-
-		if ( current_value !== null && -1 != jQuery.inArray( removeItem.toString(), current_value ) ) {
-			current_value = jQuery.grep( current_value, function( value ) {
-				return value != removeItem;
-			});
-
-			if ( current_value.length > 0 ) {
-				um_set_directory_storage( directory, 'filter_' + filter_name, current_value, true );
-			} else {
-				um_delete_directory_storage( directory, 'filter_' + filter_name );
-			}
-
-			//set 1st page after filtration
-			um_set_directory_storage( directory, 'page', 1, true );
-
-			jQuery(this).parents('.um-members-filter-tag').remove();
-		} else if( current_value !== null && current_value[range] !== undefined ) {
-			directory.find('input.um-datepicker-filter[data-filter_name="' + filter_name + '"][data-range="' + range + '"]').val('').change();
-
-			delete current_value[range];
-			if ( jQuery.isEmptyObject( current_value ) === false ) {
-				um_set_directory_storage( directory, 'filter_' + filter_name, current_value, true );
-			} else {
-				um_delete_directory_storage( directory, 'filter_' + filter_name );
-			}
-			jQuery(this).parents('.um-members-filter-tag').remove();
-		} else {
-			if( current_value.length > 1 && current_value.includes(removeItem)) {
-				current_value.splice( current_value.indexOf(removeItem), 1 );
-				um_set_directory_storage( directory, 'filter_' + filter_name, current_value, true );
-			} else {
-				um_delete_directory_storage( directory, 'filter_' + filter_name );
-			}
-			jQuery(this).parents('.um-members-filter-tag').remove();
-			var slider = jQuery(directory).find('div.um-slider');
-			slider.slider( "values", [ parseInt( slider.data('min') ), parseInt( slider.data('max') ) ] );
-			//um_set_range_label( slider );
 		}
 
 		um_ajax_get_members( directory );
 
-		if ( directory.find( '.um-members-filter-remove' ).length === 0 ) {
-			directory.find('.um-clear-filters-a').hide();
-		} else {
-			directory.find('.um-clear-filters-a').show();
-		}
+		um_change_tag( directory );
+
+		// if ( jQuery('#tmpl-um-members-filtered-line').length ) {
+		// 	um_change_tag( directory );
+		// }
+
+		// if ( directory.data( 'only_search' ) > 0 && show_after_search ) {
+		// 	um_members_hide_preloader( directory );
+		// 	return;
+		// }
+
+		//um_ajax_get_members( directory, {page: page, sorting: sort} );
 	});
 
 
-	jQuery( document.body ).on( 'click', '.um-clear-filters-a', function() {
-		var directory = jQuery(this).parents('.um-directory');
-		if ( um_is_directory_busy( directory ) ) {
-			return;
-		}
 
-		directory.find( '.um-members-filter-remove' ).each( function() {
-			var removeItem = jQuery(this).data('value');
-			var filter_name = jQuery(this).data('name');
-			var range = jQuery(this).data('range');
-
-			//um_delete_directory_storage( directory, 'filter_' + filter_name );
-
-			var current_value = um_get_directory_storage( directory, 'filter_' + filter_name );
-			if ( current_value !== null && -1 != jQuery.inArray( removeItem.toString(), current_value ) ) {
-				current_value = jQuery.grep( current_value, function( value ) {
-					return value != removeItem;
-				});
-
-				if ( current_value.length > 0 ) {
-					um_set_directory_storage( directory, 'filter_' + filter_name, current_value, true );
-				} else {
-					um_delete_directory_storage( directory, 'filter_' + filter_name );
-				}
-
-				//set 1st page after filtration
-				um_set_directory_storage( directory, 'page', 1, true );
-
-				jQuery(this).parents('.um-members-filter-tag').remove();
-			} else if( current_value !== null && current_value[range] !== undefined ) {
-				directory.find('input.um-datepicker-filter[data-filter_name="' + filter_name + '"][data-range="' + range + '"]').val('').change();
-
-				delete current_value[range];
-				if ( jQuery.isEmptyObject( current_value ) === false ) {
-					um_set_directory_storage( directory, 'filter_' + filter_name, current_value, true );
-				} else {
-					um_delete_directory_storage( directory, 'filter_' + filter_name );
-				}
-				jQuery(this).parents('.um-members-filter-tag').remove();
-			} else {
-				um_delete_directory_storage( directory, 'filter_' + filter_name );
-				jQuery(this).parents('.um-members-filter-tag').remove();
-				var slider = jQuery(directory).find('div.um-slider');
-				slider.slider( "values", [ parseInt( slider.data('min') ), parseInt( slider.data('max') ) ] );
-				um_set_range_label( slider );
-			}
-		});
-
-		//set 1st page after filtration
-		um_set_directory_storage( directory, 'page', 1, true );
-		directory.find('.um-members-filter-tag').remove();
-
-		um_ajax_get_members( directory );
-
-		jQuery(this).hide();
-	});
 
 });
