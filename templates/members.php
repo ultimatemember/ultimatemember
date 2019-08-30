@@ -85,6 +85,8 @@ if ( ! empty( $search_filters ) ) {
 	$search_filters = array_filter( $search_filters, function( $item ) {
 		return in_array( $item, array_keys( UM()->member_directory()->filter_fields ) );
 	});
+
+	$search_filters = array_values( $search_filters );
 }
 
 // Classes
@@ -188,7 +190,11 @@ UM()->get_template( 'members-pagination.php', '', $args, true ); ?>
 					<# if ( data.filters.length > 0 ) { #>
 						<# _.each( data.filters, function( filter, key, list ) { #>
 							<div class="um-members-filter-tag">
-								<strong>{{{filter.label}}}</strong>: {{{filter.value_label}}}
+								<# if ( filter.type == 'slider' ) { #>
+									{{{filter.value_label}}}
+								<# } else { #>
+									<strong>{{{filter.label}}}</strong>: {{{filter.value_label}}}
+								<# } #>
 								<div class="um-members-filter-remove" data-name="{{{filter.name}}}" data-value="{{{filter.value}}}" data-range="{{{filter.range}}}" data-type="{{{filter.type}}}">&times;</div>
 							</div>
 						<# }); #>
@@ -196,15 +202,17 @@ UM()->get_template( 'members-pagination.php', '', $args, true ); ?>
 				</script>
 
 				<div class="um-search um-search-<?php echo count( $search_filters ) ?>">
-					<?php foreach ( $search_filters as $i => $filter ) {
+					<?php $i = 0;
+					foreach ( $search_filters as $filter ) {
 						$filter_content = UM()->member_directory()->show_filter( $filter );
 						if ( empty( $filter_content ) ) {
 							continue;
 						} ?>
 
-						<div class="um-search-filter"> <?php echo $filter_content; ?> </div>
+						<div class="um-search-filter <?php echo ( $i != 0 && $i%2 !== 0 ) ? 'um-search-filter-2' : '' ?>"> <?php echo $filter_content; ?> </div>
 
-					<?php } ?>
+						<?php $i++;
+					} ?>
 
 					<div class="um-clear"></div>
 				</div>

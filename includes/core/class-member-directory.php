@@ -221,6 +221,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			if ( $filter == 'last_login' ) {
 				$field_key = '_um_last_login';
 			}
+			if ( $filter == 'role' ) {
+				$field_key = 'role_select';
+			}
 
 			$fields = UM()->builtin()->all_user_fields;
 
@@ -521,15 +524,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			switch ( $filter ) {
 				default: {
 					$label = ucwords( str_replace(array('um_', '_'), array('', ' '), $filter) );
-					$placeholder = apply_filters( "um_member_directory_filter_{$filter}_slider_range_placeholder", "$label: {min_range} - {max_range}" );
+					$placeholder = apply_filters( "um_member_directory_filter_{$filter}_slider_range_placeholder", "<strong>$label:</strong> {min_range} - {max_range}" );
 					break;
 				}
 				case 'birth_date': {
-					$placeholder = __( 'Age: {min_range} - {max_range} years old', 'ultimate-member' );
+					$placeholder = __( '<strong>Age:</strong> {min_range} - {max_range} years old', 'ultimate-member' );
 					break;
 				}
 				case 'user_rating': {
-					$placeholder = __( 'User Rating: {min_range} - {max_range} points', 'ultimate-member' );
+					$placeholder = __( '<strong>User Rating:</strong> {min_range} - {max_range} points', 'ultimate-member' );
 					break;
 				}
 			}
