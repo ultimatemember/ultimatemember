@@ -7,7 +7,7 @@
 			<?php _e( 'Jump to page:','ultimate-member' ); ?>
 			<select class="um-s2 um-members-pagi-dropdown" style="width: 100px;display:inline-block;">
 				<# _.each( data.pagination.pages_to_show, function( page, key, list ) { #>
-				<option value="{{{page}}}" <# if ( page == data.pagination.current_page ) { #>selected<# } #>>{{{page}}} <?php _e( 'of','ultimate-member' ) ?> {{{data.pagination.total_pages}}}</option>
+					<option value="{{{page}}}" <# if ( page == data.pagination.current_page ) { #>selected<# } #>>{{{page}}} <?php _e( 'of','ultimate-member' ) ?> {{{data.pagination.total_pages}}}</option>
 				<# }); #>
 			</select>
 		</div>

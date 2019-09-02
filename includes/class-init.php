@@ -543,7 +543,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->register();
 				$this->user_posts();
 				$this->access();
-				$this->members();
+				//$this->members();
 				$this->logout();
 			}
 
@@ -1336,11 +1336,15 @@ if ( ! class_exists( 'UM' ) ) {
 
 
 		/**
+		 * @deprecated 2.1.0
+		 *
 		 * @since 2.0
 		 *
 		 * @return um\core\Members
 		 */
 		function members() {
+			um_deprecated_function( 'UM()->members()', '2.1.0', 'UM()->member_directory()' );
+
 			if ( empty( $this->classes['members'] ) ) {
 				$this->classes['members'] = new um\core\Members();
 			}
@@ -1463,7 +1467,9 @@ if ( ! class_exists( 'UM' ) ) {
 			require_once 'core/um-filters-navmenu.php';
 			require_once 'core/um-filters-avatars.php';
 			require_once 'core/um-filters-user.php';
-			require_once 'core/um-filters-members.php';
+
+			//require_once 'core/um-filters-members.php';
+
 			require_once 'core/um-filters-profile.php';
 			require_once 'core/um-filters-account.php';
 			require_once 'core/um-filters-misc.php';

@@ -149,24 +149,25 @@ function um_ajax_get_members( directory, args ) {
 	 * 1) Page - getting from directory data 'page'
 	 * 2) Sort - getting from 'um-member-directory-sorting-options' field value
 	 * 3) Search - getting from 'um-search-line' field value
-	 * 4) Filters - ?????
+	 * 4) Filters - getting from URL data by 'um_get_data_for_directory' function
 	 *
 	 */
 
 
 	var hash = um_members_get_hash( directory );
-	var search = um_get_search( directory );
 	var page = um_get_current_page( directory );
+	var search = um_get_search( directory );
 	var sorting = um_get_sort( directory );
 
 	var local_date = new Date();
-	var gmt_hours = -local_date.getTimezoneOffset()/60;
+	var gmt_hours = -local_date.getTimezoneOffset() / 60;
 
 	var request = {
 		directory_id:   hash,
 		page:           page,
 		search:         search,
 		sorting:        sorting,
+		gmt_offset:     gmt_hours,
 		nonce:          um_scripts.nonce
 	};
 
@@ -179,21 +180,21 @@ function um_ajax_get_members( directory, args ) {
 
 				var value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
 				var value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
-				if ( typeof value != 'undefined' ) {
+				if ( typeof value_from != 'undefined' || typeof value_to != 'undefined' ) {
 					request[ filter_name ] = [ value_from, value_to ];
 				}
 			} else if ( filter.find( '.um-datepicker-filter' ).length ) {
 				var filter_name = filter.find( '.um-datepicker-filter' ).data('filter_name');
 				var value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
 				var value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
-				if ( typeof value != 'undefined' ) {
+				if (  typeof value_from != 'undefined' || typeof value_to != 'undefined') {
 					request[ filter_name ] = [ value_from, value_to ];
 				}
 			} else if ( filter.find( '.um-timepicker-filter' ).length ) {
 				var filter_name = filter.find( '.um-timepicker-filter' ).data('filter_name');
 				var value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
 				var value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
-				if ( typeof value != 'undefined' ) {
+				if (  typeof value_from != 'undefined' || typeof value_to != 'undefined' ) {
 					request[ filter_name ] = [ value_from, value_to ];
 				}
 			} else {
@@ -212,7 +213,7 @@ function um_ajax_get_members( directory, args ) {
 			//set last data hard for using on layouts reloading
 			um_member_directory_last_data[ hash ] = answer;
 
-			um_build_template( directory, answer );
+			um_build_template( directory, answer.users );
 
 			um_members_hide_preloader( directory );
 
@@ -225,6 +226,8 @@ function um_ajax_get_members( directory, args ) {
 		},
 		error: function( data ) {
 			console.log( data );
+
+			um_members_hide_preloader( directory );
 		}
 	});
 }
@@ -506,7 +509,7 @@ jQuery(document).ready( function() {
 			um_set_url_from_data( directory, 'view_type', layout );
 			directory.data( 'view_type', layout );
 
-			um_build_template( directory, data );
+			um_build_template( directory, data.users );
 		}
 	});
 
@@ -971,8 +974,6 @@ jQuery(document).ready( function() {
 						current_value_to = max;
 					}
 				}
-
-				$input.clear();
 
 				um_set_url_from_data( directory, 'filter_' + filter_name + '_from', current_value_from );
 				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', current_value_to );

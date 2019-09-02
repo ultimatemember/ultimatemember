@@ -418,3 +418,24 @@ function um_time_diff( $time1, $time2 ) {
 
 	return UM()->datetime()->time_diff( $time1, $time2 );
 }
+
+
+/**
+ * Get members to show in directory
+ *
+ * @deprecated 2.1.0
+ *
+ *
+ * @param $argument
+ *
+ * @return mixed
+ */
+function um_members( $argument ) {
+	//um_deprecated_function( 'um_members', '2.1.0', 'UM()->member_directory()' );
+
+	$result = null;
+	if ( isset( UM()->members()->results[ $argument ] ) ) {
+		$result = UM()->members()->results[ $argument ];
+	}
+	return $result;
+}

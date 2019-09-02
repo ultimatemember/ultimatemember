@@ -1286,22 +1286,6 @@ function um_get_display_name( $user_id ) {
 
 
 /**
- * Get members to show in directory
- *
- * @param $argument
- *
- * @return mixed
- */
-function um_members( $argument ) {
-	$result = null;
-	if ( isset( UM()->members()->results[ $argument ] ) ) {
-		$result = UM()->members()->results[ $argument ];
-	}
-	return $result;
-}
-
-
-/**
  * Clears the user data. You need to fetch a user manually after using this function.
  *
  * @function um_reset_user_clean()

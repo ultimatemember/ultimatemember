@@ -372,8 +372,7 @@ a.um-edit-profile-btn {
 	font-size: 13px;
 }
 
-.um-member a.um-follow-btn:before {content: "\f234"}
-.um-member a.um-unfollow-btn:before {content: "\f235"}
+
 .um-member a.um-friend-btn:before {content: "\f234"}
 .um-member a.um-unfriend-btn:before {content: "\f235"}
 
@@ -543,7 +542,7 @@ a.um-edit-profile-btn {
 
 .um-members-list .um-member {
 	width:100% !important;
-	padding: 15px 0;
+	padding: 15px 10px;
 	margin-bottom: 20px;
 	box-sizing: border-box;
 }

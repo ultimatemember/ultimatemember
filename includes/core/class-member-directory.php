@@ -46,10 +46,19 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 
 		var $filter_types = array(
-			'select',
-			'slider',
-			'datepicker',
-			'timepicker',
+//			'select',
+//			'slider',
+//			'datepicker',
+//			'timepicker',
+		);
+
+
+		var $core_search_fields = array(
+			'user_login',
+			'user_url',
+			'display_name',
+			'user_email',
+			'user_nicename',
 		);
 
 
@@ -60,11 +69,94 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 
 		/**
+		 * @var User Card cover size
+		 */
+		var $cover_size;
+
+
+		/**
+		 * @var User Avatar size
+		 */
+		var $avatar_size;
+
+
+		/**
 		 * Member_Directory constructor.
 		 */
 		function __construct() {
 			add_filter( 'plugins_loaded', array( &$this, 'init_variables' ), 99999 );
+			add_filter( 'init', array( &$this, 'init_filter_types' ), 2 );
 			add_filter( 'um_member_directory_meta_value_before_save', array( &$this, 'before_save_data' ), 10, 3 );
+
+			add_action( 'template_redirect', array( &$this, 'access_members' ), 555 );
+		}
+
+
+		/**
+		 * Getting member directory post ID via hash
+		 * Hash is unique attr, which we use visible at frontend
+		 *
+		 * @param string $hash
+		 *
+		 * @return bool|int
+		 */
+		function get_directory_by_hash( $hash ) {
+			global $wpdb;
+
+			$directory_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE SUBSTRING( MD5( ID ), 11, 5 ) = %s", $hash ) );
+
+			if ( empty( $directory_id ) ) {
+				return false;
+			}
+
+			return (int) $directory_id;
+		}
+
+
+		/**
+		 * Get view Type template
+		 * @param string $type
+		 *
+		 * @return string
+		 */
+		function get_type_basename( $type ) {
+			return apply_filters( "um_member_directory_{$type}_type_template_basename", '' );
+		}
+
+
+		/**
+		 * Tag conversion for member directory
+		 *
+		 * @param string $string
+		 * @param array $array
+		 *
+		 * @return string
+		 */
+		function convert_tags( $string, $array ) {
+
+			$search = array(
+				'{total_users}',
+			);
+
+			$replace = array(
+				$array['total_users'],
+			);
+
+			$string = str_replace( $search, $replace, $string );
+			return $string;
+		}
+
+
+		/**
+		 * Members page allowed?
+		 *
+		 * can be disabled by "Enable Members Directory" option
+		 *
+		 */
+		function access_members() {
+			if ( UM()->options()->get( 'members_page' ) == 0 && um_is_core_page( 'members' ) ) {
+				um_redirect_home();
+			}
 		}
 
 
@@ -185,10 +277,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			foreach ( UM()->builtin()->saved_fields as $key => $data ) {
 				if ( isset( $data['type'] ) && in_array( $data['type'], $this->filter_supported_fields ) ) {
-					if ( array_search( $data['title'], $this->filter_fields ) !== false ) {
+					if ( isset( $data['title'] ) && array_search( $data['title'], $this->filter_fields ) !== false ) {
 						$data['title'] = $data['title'] . ' (' . $key . ')';
 					}
-					$this->filter_fields[ $key ] = $data['title'];
+					$this->filter_fields[ $key ] = isset( $data['title'] ) ? $data['title'] : $data['label'];
 				}
 			}
 
@@ -198,16 +290,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		}
 
 
-		/**
-		 * Render member's directory
-		 * filters selectboxes
-		 *
-		 * @param string $filter
-		 * @return string $filter
-		 */
-		function show_filter( $filter ) {
-
-			$filter_types = apply_filters( 'um_members_directory_filter_types', array(
+		function init_filter_types() {
+			$this->filter_types = apply_filters( 'um_members_directory_filter_types', array(
 				'country'           => 'select',
 				'gender'            => 'select',
 				'languages'         => 'select',
@@ -216,14 +300,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'last_login'        => 'datepicker',
 				'user_registered'   => 'datepicker',
 			) );
-
-			$field_key = $filter;
-			if ( $filter == 'last_login' ) {
-				$field_key = '_um_last_login';
-			}
-			if ( $filter == 'role' ) {
-				$field_key = 'role_select';
-			}
 
 			$fields = UM()->builtin()->all_user_fields;
 
@@ -255,11 +331,32 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				}
 			}
 
-			$filter_types = array_merge( $custom_fields_types, $filter_types );
+			$this->filter_types = array_merge( $custom_fields_types, $this->filter_types );
+		}
 
-			if ( empty( $filter_types[ $filter ] ) ) {
+
+		/**
+		 * Render member's directory
+		 * filters selectboxes
+		 *
+		 * @param string $filter
+		 * @return string $filter
+		 */
+		function show_filter( $filter ) {
+
+			if ( empty( $this->filter_types[ $filter ] ) ) {
 				return '';
 			}
+
+			$field_key = $filter;
+			if ( $filter == 'last_login' ) {
+				$field_key = '_um_last_login';
+			}
+			if ( $filter == 'role' ) {
+				$field_key = 'role_select';
+			}
+
+			$fields = UM()->builtin()->all_user_fields;
 
 			if ( isset( $fields[ $field_key ] ) ) {
 				$attrs = $fields[ $field_key ];
@@ -312,10 +409,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$attrs = apply_filters( 'um_search_fields', $attrs );
 			ob_start();
 
-			switch ( $filter_types[ $filter ] ) {
+			switch ( $this->filter_types[ $filter ] ) {
 				default: {
 
-					do_action( "um_member_directory_filter_type_{$filter_types[ $filter ]}", $filter, $filter_types );
+					do_action( "um_member_directory_filter_type_{$this->filter_types[ $filter ]}", $filter, $this->filter_types );
 
 					break;
 				}
@@ -654,52 +751,14 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 
 		/**
-		 * Must have a profile photo
-		 *
-		 * @param $args
+		 * Handle members can view restrictions
 		 */
-		function profile_photo_query( $args ) {
-			if ( $args['has_profile_photo'] == 1 ) {
-				$meta_query = array(
-					'relation'  => 'OR',
-					array(
-						'key'       => 'synced_profile_photo', // addons
-						'value'     => '',
-						'compare'   => '!='
-					),
-					array(
-						'key'       => 'profile_photo', // from upload form
-						'value'     => '',
-						'compare'   => '!='
-					)
-				);
+		function restriction_options() {
+			$this->hide_not_approved();
+			$this->hide_by_role();
+			$this->hide_by_account_settings();
 
-				if ( UM()->options()->get( 'use_gravatars' ) ) {
-					$meta_query[] = array(
-						'key'       => 'synced_gravatar_hashed_id', // gravatar
-						'value'     => '',
-						'compare'   => '!='
-					);
-				}
-
-				$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
-			}
-		}
-
-
-		/**
-		 * Must have a cover photo
-		 *
-		 * @param $args
-		 */
-		function cover_photo_query( $args ) {
-			if ( $args['has_cover_photo'] == 1 ) {
-				$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( array(
-					'key'       => 'cover_photo',
-					'value'     => '',
-					'compare'   => '!='
-				) ) );
-			}
+			do_action( 'um_member_directory_restrictions_handle_extend' );
 		}
 
 
@@ -778,16 +837,136 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 
 		/**
-		 * @param $args
+		 * Handle "General Options" metabox settings
+		 *
+		 * @param array $directory_data
 		 */
-		function sorting_query( $args ) {
+		function general_options( $directory_data ) {
+			$this->show_selected_roles( $directory_data );
+			$this->show_only_with_avatar( $directory_data );
+			$this->show_only_with_cover( $directory_data );
+			$this->show_only_these_users( $directory_data );
+
+			do_action( 'um_member_directory_general_options_handle_extend', $directory_data );
+		}
+
+
+		/**
+		 * Handle "User Roles to Display" option
+		 *
+		 * @param array $directory_data
+		 */
+		function show_selected_roles( $directory_data ) {
+			// add roles to appear in directory
+			if ( ! empty( $directory_data['roles'] ) ) {
+				//since WP4.4 use 'role__in' argument
+				$this->query_args['role__in'] = $directory_data['roles'];
+			}
+		}
+
+
+		/**
+		 * Handle "Only show members who have uploaded a profile photo" option
+		 *
+		 * @param array $directory_data
+		 */
+		function show_only_with_avatar( $directory_data ) {
+			if ( $directory_data['has_profile_photo'] == 1 ) {
+				$meta_query = array(
+					'relation'  => 'OR',
+					array(
+						'key'       => 'synced_profile_photo', // addons
+						'value'     => '',
+						'compare'   => '!='
+					),
+					array(
+						'key'       => 'profile_photo', // from upload form
+						'value'     => '',
+						'compare'   => '!='
+					)
+				);
+
+				if ( UM()->options()->get( 'use_gravatars' ) ) {
+					$meta_query[] = array(
+						'key'       => 'synced_gravatar_hashed_id', // gravatar
+						'value'     => '',
+						'compare'   => '!='
+					);
+				}
+
+				$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
+			}
+		}
+
+
+		/**
+		 * Handle "Only show members who have uploaded a cover photo" option
+		 *
+		 * @param array $directory_data
+		 */
+		function show_only_with_cover( $directory_data ) {
+			if ( $directory_data['has_cover_photo'] == 1 ) {
+				$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( array(
+					'key'       => 'cover_photo',
+					'value'     => '',
+					'compare'   => '!='
+				) ) );
+			}
+		}
+
+
+		/**
+		 * Handle "Only show specific users (Enter one username per line)" option
+		 *
+		 * @param array $directory_data
+		 */
+		function show_only_these_users( $directory_data ) {
+			if ( ! empty( $directory_data['show_these_users'] ) && is_array( $directory_data['show_these_users'] ) ) {
+				$users_array = array();
+
+				foreach ( $directory_data['show_these_users'] as $username ) {
+					if ( false !== ( $exists_id = username_exists( $username ) ) ) {
+						$users_array[] = $exists_id;
+					}
+				}
+
+				if ( ! empty( $users_array ) ) {
+					$this->query_args['include'] = $users_array;
+				}
+			}
+		}
+
+
+		/**
+		 * Handle "Pagination Options" metabox settings
+		 *
+		 * @param array $directory_data
+		 */
+		function pagination_options( $directory_data ) {
+			// number of profiles for mobile
+			$profiles_per_page = $directory_data['profiles_per_page'];
+			if ( UM()->mobile()->isMobile() && isset( $directory_data['profiles_per_page_mobile'] ) ) {
+				$profiles_per_page = $directory_data['profiles_per_page_mobile'];
+			}
+
+			$this->query_args['number'] = ( ! empty( $directory_data['max_users'] ) && $directory_data['max_users'] <= $profiles_per_page ) ? $directory_data['max_users'] : $profiles_per_page;
+			$this->query_args['paged'] = ! empty( $_POST['page'] ) ? $_POST['page'] : 1;
+		}
+
+
+		/**
+		 * Add sorting attributes for \WP_Users_Query
+		 *
+		 * @param array $directory_data Member Directory options
+		 */
+		function sorting_query( $directory_data ) {
 			// sort members by
 			$this->query_args['order'] = 'ASC';
-			$sortby = ! empty( $_POST['sorting'] ) ? $_POST['sorting'] : $args['sortby'];
+			$sortby = ! empty( $_POST['sorting'] ) ? $_POST['sorting'] : $directory_data['sortby'];
 
-			if ( $sortby == 'other' && $args['sortby_custom'] ) {
+			if ( $sortby == 'other' && $directory_data['sortby_custom'] ) {
 
-				$this->query_args['meta_key'] = $args['sortby_custom'];
+				$this->query_args['meta_key'] = $directory_data['sortby_custom'];
 				$this->query_args['orderby'] = 'meta_value, display_name';
 
 			} elseif ( 'display_name' == $sortby ) {
@@ -927,34 +1106,39 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		}
 
 
+
+		/**
+		 * Handle general search line request
+		 */
 		function general_search() {
 			//general search
 			if ( ! empty( $_POST['search'] ) ) {
-				$this->query_args['meta_query'][] = array(
+				// complex using with change_meta_sql function
+
+				$meta_query = array(
+					'relation' => 'OR',
 					array(
-						'key'       => 'first_name',
 						'value'     => trim( $_POST['search'] ),
 						'compare'   => '=',
 					),
 					array(
-						'key'       => 'first_name',
 						'value'     => trim( $_POST['search'] ),
 						'compare'   => 'LIKE',
 					),
 					array(
-						'key'     => 'first_name',
 						'value'     => trim( serialize( strval( $_POST['search'] ) ) ),
 						'compare'   => 'LIKE',
 					),
-					'relation' => 'OR',
 				);
+
+				$this->query_args['meta_query'][] = $meta_query;
 			}
 		}
 
 
 		/**
 		 * Change mySQL meta query join attribute
-		 * for search only by UM user meta fields
+		 * for search only by UM user meta fields and WP core fields in WP Users table
 		 *
 		 * @param array $sql Array containing the query's JOIN and WHERE clauses.
 		 * @param $queries
@@ -968,12 +1152,22 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		function change_meta_sql( $sql, $queries, $type, $primary_table, $primary_id_column, $context ) {
 			if ( ! empty( $_POST['search'] ) ) {
 				global $wpdb;
-
 				$search = trim( $_POST['search'] );
 				if ( ! empty( $search ) ) {
 
+					$identity = '%';
 					preg_match(
-						'/^(.*).meta_value LIKE \'%' . esc_attr( $search ) . '%\' [^\)]/im',
+						'/LIKE \'(\{(.*)\})' . esc_attr( $search ) . '(\{(.*)\})\'/im',
+						$sql['where'],
+						$matches
+					);
+
+					if ( ! empty( $matches[1] ) ) {
+						$identity = $matches[1];
+					}
+
+					preg_match(
+						'/^(.*).meta_value LIKE \'' . $identity . esc_attr( $search ) . $identity . '\' [^\)]/im',
 						$sql['where'],
 						$join_matches
 					);
@@ -989,7 +1183,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					}
 
 					// Add OR instead AND to search in WP core fields user_email, user_login, user_display_name
-					$search_where = $context->get_search_sql( $search, UM()->members()->core_search_fields, 'both' );
+					$search_where = $context->get_search_sql( $search, UM()->member_directory()->core_search_fields, 'both' );
 					$search_where = preg_replace( '/ AND \((.*?)\)/im', " OR $1", $search_where );
 
 					$sql['where'] = $sql['where'] . $search_where;
@@ -1001,13 +1195,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 
 		/**
-		 *
+		 * Handle filters request
 		 */
-		function filters( $args ) {
+		function filters( $directory_data ) {
 			//filters
 			$filter_query = array();
-			if ( ! empty( $args['search_fields'] ) ) {
-				$search_filters = maybe_unserialize( $args['search_fields'] );
+			if ( ! empty( $directory_data['search_fields'] ) ) {
+				$search_filters = maybe_unserialize( $directory_data['search_fields'] );
 				if ( ! empty( $search_filters ) && is_array( $search_filters ) ) {
 					$filter_query = array_intersect_key( $_POST, array_flip( $search_filters ) );
 				}
@@ -1017,49 +1211,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				return;
 			}
 
-			$query = $_POST;
-
 			foreach ( $filter_query as $field => $value ) {
 
 				switch ( $field ) {
 					default:
-						$value = explode( '||', $value );
 
-						if ( is_array( $value ) ) {
-							$field_query = array( 'relation' => 'OR' );
-
-							foreach ( $value as $single_val ) {
-								$arr_meta_query = array(
-									array(
-										'key'       => $field,
-										'value'     => trim( $single_val ),
-										'compare'   => '=',
-									),
-									array(
-										'key'       => $field,
-										'value'     => serialize( strval( trim( $single_val ) ) ),
-										'compare'   => 'LIKE',
-									),
-									array(
-										'key'       => $field,
-										'value'     => '"' . trim( $single_val ) . '"',
-										'compare'   => 'LIKE',
-									)
-								);
-
-								if ( is_numeric( $single_val ) ) {
-
-									$arr_meta_query[] = array(
-										'key'       => $field,
-										'value'     => serialize( intval( trim( $single_val ) ) ),
-										'compare'   => 'LIKE',
-									);
-
-								}
-
-								$field_query = array_merge( $field_query, $arr_meta_query );
-							}
-						}
+						$filter_type = $this->filter_types[ $field ];
 
 						/**
 						 * UM hook
@@ -1082,8 +1239,103 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						 * }
 						 * ?>
 						 */
-						$field_query = apply_filters( "um_query_args_{$field}__filter", $field_query );
-						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $field_query ) );
+						$field_query = apply_filters( "um_query_args_{$field}__filter", false, $field, $value, $filter_type );
+
+						if ( ! $field_query ) {
+
+							switch ( $filter_type ) {
+								default:
+
+									$field_query = apply_filters( "um_query_args_{$field}_{$filter_type}__filter", false, $field, $value, $filter_type );
+
+									break;
+								case 'select':
+									if ( is_array( $value ) ) {
+										$field_query = array( 'relation' => 'OR' );
+
+										foreach ( $value as $single_val ) {
+											$arr_meta_query = array(
+												array(
+													'key'       => $field,
+													'value'     => trim( $single_val ),
+													'compare'   => '=',
+												),
+												array(
+													'key'       => $field,
+													'value'     => serialize( strval( trim( $single_val ) ) ),
+													'compare'   => 'LIKE',
+												),
+												array(
+													'key'       => $field,
+													'value'     => '"' . trim( $single_val ) . '"',
+													'compare'   => 'LIKE',
+												)
+											);
+
+											if ( is_numeric( $single_val ) ) {
+
+												$arr_meta_query[] = array(
+													'key'       => $field,
+													'value'     => serialize( intval( trim( $single_val ) ) ),
+													'compare'   => 'LIKE',
+												);
+
+											}
+
+											$field_query = array_merge( $field_query, $arr_meta_query );
+										}
+									}
+
+									break;
+								case 'slider':
+
+									$field_query = array(
+										array(
+											'key'       => $field,
+											'value'     => $value,
+											'compare'   => 'BETWEEN',
+											'inclusive' => true,
+										)
+									);
+
+									break;
+								case 'datepicker':
+
+									$offset = 0;
+									if ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) {
+										$offset = (int) $_POST['gmt_offset'];
+									}
+
+									$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
+									$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
+									$field_query = array(
+										array(
+											'key'       => $field,
+											'value'     =>  array( $from_date, $to_date ),
+											'compare'   => 'BETWEEN',
+										)
+									);
+
+									break;
+								case 'timepicker':
+
+									$field_query = array(
+										array(
+											'key'       => $field,
+											'value'     => $value,
+											'compare'   => 'BETWEEN',
+											'type'      => 'TIME',
+											'inclusive' => true,
+										)
+									);
+
+									break;
+							}
+						}
+
+						if ( ! empty( $field_query ) ) {
+							$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $field_query ) );
+						}
 
 						break;
 					case 'role':
@@ -1104,310 +1356,282 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						};
 
 						break;
+					case 'birth_date':
+						$from_date = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ), date( 'Y', time() - min( $value ) * YEAR_IN_SECONDS ) ) );
+						$to_date = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ) + 1, date( 'Y', time() - ( max( $value ) + 1 ) * YEAR_IN_SECONDS ) ) );
+
+						$meta_query = array(
+							array(
+								'key'       => 'birth_date',
+								'value'     => array( $to_date, $from_date ),
+								'compare'   => 'BETWEEN',
+								'type'      => 'DATE',
+								'inclusive' => true,
+							)
+						);
+
+						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
+
+						break;
+					case 'user_registered':
+						$offset = 0;
+						if ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) {
+							$offset = (int) $_POST['gmt_offset'];
+						}
+
+						$from_date = date( 'Y-m-d H:s:i', strtotime( date( 'Y-m-d H:s:i', min( $value ) ) . "+$offset hours" ) );
+						$to_date = date( 'Y-m-d H:s:i', strtotime( date( 'Y-m-d H:s:i', max( $value ) ) . "+$offset hours" ) );
+
+						$date_query = array(
+							array(
+								'column'    => 'user_registered',
+								'before'    => $to_date,
+								'after'     => $from_date,
+								'inclusive' => true,
+							),
+						);
+
+						if ( empty( $this->query_args['date_query'] ) ) {
+							$this->query_args['date_query'] = $date_query;
+						} else {
+							$this->query_args['date_query'] = array_merge( $this->query_args['date_query'], array( $date_query ) );
+						}
+
+						break;
+					case 'last_login':
+						$offset = 0;
+						if ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) {
+							$offset = (int) $_POST['gmt_offset'];
+						}
+
+						$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
+						$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
+						$meta_query = array(
+							array(
+								'key'       => '_um_last_login',
+								'value'     =>  array( $from_date, $to_date ),
+								'compare'   => 'BETWEEN',
+							)
+						);
+
+						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
+						break;
 				}
 
-
-
-//				if ( 'role' == $field ) {
-//
-//					if ( ! empty( $this->query_args['role__in'] ) ) {
-//						$value = array_map('strtolower', $value);
-//
-//						$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
-//						$default_role = array_intersect( $this->query_args['role__in'], $value );
-//						$um_role = array_diff( $value, $default_role );
-//
-//						foreach ($um_role as $key => &$val) {
-//							$val = 'um_' . str_replace(' ', '-', $val);
-//						}
-//						$this->query_args['role__in'] = array_merge( $default_role, $um_role );
-//					} else {
-//						$this->query_args['role__in'] = $value;
-//					};
-//
-//				} elseif ( 'birth_date' == $field ) {
-//					$from_date = date( 'Y-m-d', mktime( 0,0,0, 1, 1, date('Y', time() - ($query['birth_date'][0] -1)*YEAR_IN_SECONDS ) ) );
-//					$to_date = date( 'Y-m-d', mktime( 0,0,0, 1, 1, date('Y', time() - ($query['birth_date'][1] +1)*YEAR_IN_SECONDS ) ) );
-//
-//					$meta_query = array(
-//						array(
-//							'key'       => 'birth_date',
-//							'value'     => array( $to_date, $from_date ),
-//							'compare'   => 'BETWEEN',
-//							'type'      => 'DATE',
-//							'inclusive'	=> true,
-//						)
-//					);
-//
-//					$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
-//
-//				} elseif ( 'user_registered' == $field ) {
-//
-//					$offset = 0;
-//
-//					if( isset( $query['gmt_offset'] ) ) {
-//						$offset = (int)$query['gmt_offset'];
-//					}
-//
-//					if( isset( $query['user_registered']['from'] ) ) {
-//						$from_date = date( 'Y-m-d', strtotime( date( 'Y-m-d H:s:i', $query['user_registered']['from'] ) . "+$offset hours" ) );
-//					}
-//
-//					if( isset( $query['user_registered']['to'] ) ) {
-//						$to_date = date( 'Y-m-d', strtotime( date( 'Y-m-d H:s:i', $query['user_registered']['to'] ) . "+$offset hours" ) );
-//					}
-//
-//					$date_query = array(
-//						array(
-//							'column'	=> 'user_registered',
-//							'before'	=> $to_date,
-//							'after'		=> $from_date,
-//							'inclusive'	=> true,
-//						),
-//					);
-//
-//					$this->query_args['date_query'] = array( $date_query );
-//
-//				} elseif ( 'last_login' == $field ) {
-//
-//					$meta_query = array();
-//					$offset		= 0;
-//
-//					if( isset( $query['gmt_offset'] ) ) {
-//						$offset = (int)$query['gmt_offset'];
-//					}
-//
-//					if( isset( $query['last_login']['from'] ) and isset( $query['last_login']['to'] ) ) {
-//						$from_date = (int)$query['last_login']['from'] + ( $offset * 60 * 60 ); // client time zone offset
-//						$to_date   = (int)$query['last_login']['to'] + ( $offset * 60 * 60 ) + (24 * 60 * 60 - 1); // time 23:59
-//
-//						$meta_query[] = array(
-//							'key'       => '_um_last_login',
-//							'value'     =>  array( $from_date, $to_date ),
-//							'compare'   => 'BETWEEN',
-//						);
-//
-//					} else {
-//
-//						if( isset( $query['last_login']['from'] ) ) {
-//							$from_date = (int)$query['last_login']['from'] + ( $offset * 60 * 60 );
-//
-//							$meta_query[] = array(
-//								'key'       => '_um_last_login',
-//								'value'     =>  $from_date,
-//								'compare'   => '>',
-//							);
-//						}
-//
-//						if( isset( $query['last_login']['to'] ) ) {
-//							$to_date = (int)$query['last_login']['to'] + ( $offset * 60 * 60 ) + (24 * 60 * 60 - 1);
-//
-//							$meta_query[] = array(
-//								'key'       => '_um_last_login',
-//								'value'     =>  $to_date,
-//								'compare'   => '<',
-//							);
-//						}
-//					}
-//
-//					$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
-//
-//				} elseif( 'gmt_offset' == $field ) {
-//					continue;
-//				} else {
-//
-//					if ( is_array( $value ) ) {
-//						$field_query = array( 'relation' => 'OR' );
-//
-//						foreach ( $value as $single_val ) {
-//							$field_query = array_merge( $field_query, array(
-//								array(
-//									'key'       => $field,
-//									'value'     => trim( $single_val ),
-//									'compare'   => '=',
-//								)
-//							) );
-//
-//							$types = apply_filters( 'um_search_field_types', array(
-//								'multiselect',
-//								'radio',
-//								'checkbox'
-//							) );
-//
-//							//if ( in_array( $filter_data['attrs']['type'], $types ) ) {
-//
-//							$arr_meta_query = array(
-//								array(
-//									'key' => $field,
-//									'value' => serialize( strval( trim( $single_val ) ) ),
-//									'compare' => 'LIKE',
-//								),
-//								array(
-//									'key' => $field,
-//									'value' => '"' . trim( $single_val ) . '"',
-//									'compare' => 'LIKE',
-//								)
-//							);
-//
-//							if ( is_numeric( $single_val ) ) {
-//
-//								$arr_meta_query[ ] = array(
-//									'key' => $field,
-//									'value' => serialize( intval( trim( $single_val ) ) ),
-//									'compare' => 'LIKE',
-//								);
-//
-//							}
-//
-//							$field_query = array_merge( $field_query, $arr_meta_query );
-//							//}
-//						}
-//					} else {
-//						$field_query = array(
-//							array(
-//								'key' => $field,
-//								'value' => trim( $value ),
-//								'compare' => '=',
-//							),
-//							'relation' => 'OR',
-//						);
-//
-//						$types = apply_filters( 'um_search_field_types', array(
-//							'multiselect',
-//							'radio',
-//							'checkbox'
-//						) );
-//
-//						//if ( in_array( $filter_data['attrs']['type'], $types ) ) {
-//
-//						$arr_meta_query = array(
-//							array(
-//								'key' => $field,
-//								'value' => serialize( strval( trim( $value ) ) ),
-//								'compare' => 'LIKE',
-//							),
-//							array(
-//								'key' => $field,
-//								'value' => '"' . trim( $value ) . '"',
-//								'compare' => 'LIKE',
-//							)
-//						);
-//
-//						if ( is_numeric( $value ) ) {
-//
-//							$arr_meta_query[ ] = array(
-//								'key' => $field,
-//								'value' => serialize( intval( trim( $value ) ) ),
-//								'compare' => 'LIKE',
-//							);
-//
-//						}
-//
-//						$field_query = array_merge( $field_query, $arr_meta_query );
-//						//}
-//					}
-//
-//					$field_query = apply_filters( "um_query_args_{$field}__filter", $field_query );
-//					$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $field_query ) );
-//				}
-
 			}
 		}
 
 
-		function get_directory_by_hash( $hash ) {
-			global $wpdb;
 
-			$directory_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE SUBSTRING( MD5( ID ), 11, 5 ) = %s", $hash ) );
+		/**
+		 * Get data array for pagination
+		 *
+		 *
+		 * @param array $directory_data
+		 * @param \WP_User_Query $result
+		 *
+		 * @return array
+		 */
+		function calculate_pagination( $directory_data, $result ) {
 
-			if ( empty( $directory_id ) ) {
-				return false;
+			$current_page = ! empty( $_POST['page'] ) ? $_POST['page'] : 1;
+
+			$total_users = ( ! empty( $max_users ) && $max_users <= $result->total_users ) ? $max_users : $result->total_users;
+			$total_pages = ceil( $total_users / $directory_data['profiles_per_page'] );
+
+			if ( ! empty( $total_pages ) ) {
+				$index1 = 0 - ( $current_page - 2 ) + 1;
+				$to = $current_page + 2;
+				if ( $index1 > 0 ) {
+					$to += $index1;
+				}
+
+				$index2 = $total_pages - ( $current_page + 2 );
+				$from = $current_page - 2;
+				if ( $index2 < 0 ) {
+					$from += $index2;
+				}
+
+				$pages_to_show = range(
+					( $from > 0 ) ? $from : 1,
+					( $to <= $total_pages ) ? $to : $total_pages
+				);
 			}
 
-			return (int) $directory_id;
-		}
 
+			$pagination_data = array(
+				'pages_to_show' => ( ! empty( $pages_to_show ) && count( $pages_to_show ) > 1 ) ? array_values( $pages_to_show ) : array(),
+				'current_page'  => $current_page,
+				'total_pages'   => $total_pages,
+				'total_users'   => $total_users,
+			);
 
-		function get_type_basename( $type ) {
-			return apply_filters( "um_member_directory_{$type}_type_template_basename", '' );
+			$pagination_data['header'] = $this->convert_tags( $directory_data['header'], $pagination_data );
+			$pagination_data['header_single'] = $this->convert_tags( $directory_data['header_single'], $pagination_data );
+
+			return $pagination_data;
 		}
 
 
 		/**
-		 * get AJAX results members
+		 * @param int $user_id
+		 * @param array $directory_data
+		 *
+		 * @return array
+		 */
+		function build_user_card_data( $user_id, $directory_data ) {
+			um_fetch_user( $user_id );
+
+			$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id ) || UM()->roles()->um_user_can( 'can_edit_everyone' );
+
+			$actions = array();
+			if ( $can_edit ) {
+				$actions[] = array(
+					'title'         => __( 'Edit profile', 'ultimate-member' ),
+					'url'           => um_edit_profile_url(),
+					'wrapper_class' => 'um-members-edit-btn',
+					'class'         => 'um-edit-profile-btn um-button um-alt',
+				);
+			}
+
+			// Replace hook 'um_members_just_after_name'
+			ob_start();
+			do_action( 'um_members_just_after_name', $user_id, $directory_data );
+			$hook_just_after_name = ob_get_clean();
+
+			// Replace hook 'um_members_after_user_name'
+			ob_start();
+			do_action( 'um_members_after_user_name', $user_id, $directory_data );
+			$hook_after_user_name = ob_get_clean();
+
+			$data_array = array(
+				'id'                    => $user_id,
+				'role'                  => um_user( 'role' ),
+				'account_status'        => um_user( 'account_status' ),
+				'account_status_name'   => um_user( 'account_status_name' ),
+				'cover_photo'           => um_user( 'cover_photo', $this->cover_size ),
+				'display_name'          => um_user( 'display_name' ),
+				'profile_url'           => um_user_profile_url(),
+				'can_edit'              => $can_edit,
+				'edit_profile_url'      => um_edit_profile_url(),
+				'avatar'                => get_avatar( $user_id, $this->avatar_size ),
+				'display_name_html'     => um_user( 'display_name', 'html' ),
+				'actions'               => $actions,
+				'hook_just_after_name'  => preg_replace( '/^\s+/im', '', $hook_just_after_name ),
+				'hook_after_user_name'  => preg_replace( '/^\s+/im', '', $hook_after_user_name ),
+			);
+
+			if ( $directory_data['show_tagline'] && is_array( $directory_data['tagline_fields'] ) ) {
+				foreach ( $directory_data['tagline_fields'] as $key ) {
+					if ( ! $key ) {
+						continue;
+					}
+
+					$value = um_filtered_value( $key );
+					if ( ! $value ) {
+						continue;
+					}
+
+					$data_array[ $key ] = $value;
+				}
+			}
+
+			if ( $directory_data['show_userinfo'] ) {
+				foreach ( $directory_data['reveal_fields'] as $key ) {
+					if ( ! $key ) {
+						continue;
+					}
+
+					$value = um_filtered_value( $key );
+					if ( ! $value ) {
+						continue;
+					}
+
+					$label = UM()->fields()->get_label( $key );
+					if ( $key == 'role_select' || $key == 'role_radio' ) {
+						$label = strtr( $label, array(
+							' (Dropdown)'   => '',
+							' (Radio)'      => ''
+						) );
+					}
+
+					$data_array[ "label_{$key}" ] = $label;
+					$data_array[ $key ] = $value;
+				}
+
+				if ( ! empty( $directory_data['show_social'] ) ) {
+					ob_start();
+					UM()->fields()->show_social_urls();
+					$social_urls = ob_get_clean();
+
+					$data_array['social_urls'] = $social_urls;
+				}
+			}
+
+			$data_array = apply_filters( 'um_ajax_get_members_data', $data_array, $user_id );
+			um_reset_user_clean();
+
+			return $data_array;
+		}
+
+
+		/**
+		 * Main Query function for getting members via AJAX
 		 */
 		function ajax_get_members() {
 			UM()->check_ajax_nonce();
 
 			global $wpdb;
 
-			$args = ! empty( $_POST['args'] ) ? $_POST['args'] : array();
-			$args['page'] = ! empty( $_POST['page'] ) ? $_POST['page'] : ( isset( $args['page'] ) ? $args['page'] : 1 );
-
-			$directory_data = array();
 			$directory_id = $this->get_directory_by_hash( $_POST['directory_id'] );
+			$directory_data = UM()->query()->post_data( $directory_id );
 
-			$post_data = UM()->query()->post_data( $directory_id );
+			//predefined result for user without capabilities to see other members
+			if ( is_user_logged_in() && ! UM()->roles()->um_user_can( 'can_view_all' ) ) {
+				$pagination_data = array(
+					'pages_to_show' => array(),
+					'current_page'  => 1,
+					'total_pages'   => 0,
+					'total_users'   => 0,
+				);
 
-			$args = array_merge( $post_data, $args );
+				$pagination_data['header'] = $this->convert_tags( $directory_data['header'], $pagination_data );
+				$pagination_data['header_single'] = $this->convert_tags( $directory_data['header_single'], $pagination_data );
 
-			/**
-			 * @var $profiles_per_page
-			 * @var $profiles_per_page_mobile
-			 * @var $header
-			 * @var $header_single
-			 * @var $has_profile_photo
-			 * @var $has_cover_photo
-			 */
-			extract( $args );
-
-			$data_args = array(
-				'show_count' => false
-			);
-			if ( ! empty( $_POST['search'] ) || ! empty( $_POST['is_filters'] ) || ! empty( $args['search_filters'] ) ) {
-				$data_args['show_count'] = true;
+				wp_send_json_success( array( 'users' => array(), 'pagination' => $pagination_data, 'args' => array( 'show_count' => false ) ) );
 			}
 
+
+			// Prepare for BIG SELECT query
+			$wpdb->query( 'SET SQL_BIG_SELECTS=1' );
+
+			// Prepare default user query values
 			$this->query_args = array(
-				'fields' => 'ids',
-				'number' => 0,
-				'meta_query' => array(
+				'fields'        => 'ids',
+				'number'        => 0,
+				'meta_query'    => array(
 					'relation' => 'AND'
 				),
 			);
 
-			// add roles to appear in directory
-			if ( ! empty( $args['roles'] ) ) {
-				//since WP4.4 use 'role__in' argument
-				$this->query_args['role__in'] = $args['roles'];
-			}
 
-			$this->profile_photo_query( $args );
+			// handle different restrictions
+			$this->restriction_options();
 
-			$this->cover_photo_query( $args );
+			// handle general options
+			$this->general_options( $directory_data );
 
-			// show specific usernames
-			if ( ! empty( $args['show_these_users'] ) && is_array( $args['show_these_users'] ) ) {
-				foreach ( $args['show_these_users'] as $username ) {
-					if ( false !== ( $exists_id = username_exists( $username ) ) ) {
-						$users_array[] = $exists_id;
-					}
-				}
+			// handle pagination options
+			$this->pagination_options( $directory_data );
 
-				$this->query_args['include'] = $users_array;
-			}
+			// handle sorting options
+			$this->sorting_query( $directory_data );
 
-			$this->hide_not_approved();
-
-			$this->hide_by_role();
-
-			$this->hide_by_account_settings();
-
-			$this->sorting_query( $args );
-
+			// handle general search line
 			$this->general_search();
 
-			$this->filters( $args );
+			// handle filters
+			$this->filters( $directory_data );
 
 			/**
 			 * UM hook
@@ -1431,30 +1655,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 * }
 			 * ?>
 			 */
-			$this->query_args = apply_filters( 'um_prepare_user_query_args', $this->query_args, $args );
+			$this->query_args = apply_filters( 'um_prepare_user_query_args', $this->query_args, $directory_data );
 
 			//unset empty meta_query attribute
 			if ( isset( $this->query_args['meta_query']['relation'] ) && count( $this->query_args['meta_query'] ) == 1 ) {
 				unset( $this->query_args['meta_query'] );
-			}
-
-			// Prepare for BIG SELECT query
-			$wpdb->query( 'SET SQL_BIG_SELECTS=1' );
-
-			// number of profiles for mobile
-			$profiles_per_page = $args['profiles_per_page'];
-			if ( UM()->mobile()->isMobile() && isset( $args['profiles_per_page_mobile'] ) ) {
-				$profiles_per_page = $args['profiles_per_page_mobile'];
-			}
-
-			$this->query_args['number'] = isset( $args['number'] ) ? $args['number'] : $profiles_per_page;
-			$this->query_args['number'] = ( ! empty( $args['max_users'] ) && $args['max_users'] <= $profiles_per_page ) ? $args['max_users'] : $this->query_args['number'];
-
-			$current_page = isset( $args['page'] ) ? $args['page'] : 1;
-			$this->query_args['paged'] = $current_page;
-
-			if ( ! UM()->roles()->um_user_can( 'can_view_all' ) && is_user_logged_in() ) {
-				$this->query_args = array();
 			}
 
 			/**
@@ -1480,9 +1685,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			add_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10, 6 );
 
-			$users = new \WP_User_Query( $this->query_args );
-
-			//var_dump($users->request);
+			$user_query = new \WP_User_Query( $this->query_args );
 
 			remove_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10 );
 
@@ -1494,42 +1697,23 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 * @description Action before users query on member directory
 			 * @input_vars
 			 * [{"var":"$query_args","type":"array","desc":"Query arguments"},
-			 * {"var":"$users","type":"array","desc":"Users"}]
+			 * {"var":"$user_query","type":"array","desc":"User Query"}]
 			 * @change_log
 			 * ["Since: 2.0"]
 			 * @usage add_action( 'um_user_after_query', 'function_name', 10, 2 );
 			 * @example
 			 * <?php
 			 * add_action( 'um_user_after_query', 'my_user_after_query', 10, 2 );
-			 * function my_user_after_query( $query_args, $users ) {
+			 * function my_user_after_query( $query_args, $user_query ) {
 			 *     // your code here
 			 * }
 			 * ?>
 			 */
-			do_action( 'um_user_after_query', $this->query_args, $users );
+			do_action( 'um_user_after_query', $this->query_args, $user_query );
 
-			$user_ids = ! empty( $users->results ) ? array_unique( $users->results ) : array();
-			$total_users = ( ! empty( $max_users ) && $max_users <= $users->total_users ) ? $max_users : $users->total_users;
-			$total_pages = ceil( $total_users / $profiles_per_page );
+			$pagination_data = $this->calculate_pagination( $directory_data, $user_query );
 
-			if ( ! empty( $total_pages ) ) {
-				$index1 = 0 - ( $current_page - 2 ) + 1;
-				$to = $current_page + 2;
-				if ( $index1 > 0 ) {
-					$to += $index1;
-				}
-
-				$index2 = $total_pages - ( $current_page + 2 );
-				$from = $current_page - 2;
-				if ( $index2 < 0 ) {
-					$from += $index2;
-				}
-
-				$pages_to_show = range(
-					( $from > 0 ) ? $from : 1,
-					( $to <= $total_pages ) ? $to : $total_pages
-				);
-			}
+			$user_ids = ! empty( $user_query->results ) ? array_unique( $user_query->results ) : array();
 
 			/**
 			 * UM hook
@@ -1552,118 +1736,45 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 * }
 			 * ?>
 			 */
-			$users = apply_filters( 'um_prepare_user_results_array', $user_ids );
+			$user_ids = apply_filters( 'um_prepare_user_results_array', $user_ids );
+
+
+
+
+
+			/*
+			 * @todo generate user card data
+			 */
+
+
+
+
+
+
 
 			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
-			$cover_size = UM()->mobile()->isTablet() ? $sizes[1] : $sizes[0];
+			$this->cover_size = UM()->mobile()->isTablet() ? $sizes[1] : $sizes[0];
 
-			$users_data = array();
-			foreach ( $users as $user_id ) {
-				um_fetch_user( $user_id );
+			$avatar_size = UM()->options()->get( 'profile_photosize' );
+			$this->avatar_size = str_replace( 'px', '', $avatar_size );
 
-				$actions = array();
-				if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) || UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
-					$actions[] = array(
-						'title'         => __( 'Edit profile', 'ultimate-member' ),
-						'url'           => um_edit_profile_url(),
-						'wrapper_class' => 'um-members-edit-btn',
-						'class'         => 'um-edit-profile-btn um-button um-alt',
-					);
-				}
-
-				// Replace hook 'um_members_just_after_name'
-				ob_start();
-				do_action( 'um_members_just_after_name', $user_id, $args );
-				$hook_just_after_name = ob_get_clean();
-
-				// Replace hook 'um_members_after_user_name'
-				ob_start();
-				do_action( 'um_members_after_user_name', $user_id, $args );
-				$hook_after_user_name = ob_get_clean();
-
-				ob_start();
-				UM()->fields()->show_social_urls();
-				$social_urls = ob_get_clean();
-
-				$data_array = array(
-					'id'                    => $user_id,
-					'role'                  => um_user( 'role' ),
-					'account_status'        => um_user( 'account_status' ),
-					'account_status_name'   => um_user( 'account_status_name' ),
-					'cover_photo'           => um_user( 'cover_photo', $cover_size ),
-					'display_name'          => um_user( 'display_name' ),
-					'profile_url'           => um_user_profile_url(),
-					'can_edit'              => ( UM()->roles()->um_current_user_can( 'edit', $user_id ) || UM()->roles()->um_user_can( 'can_edit_everyone' ) ) ? true : false,
-					'edit_profile_url'      => um_edit_profile_url(),
-					'avatar'                => get_avatar( $user_id, str_replace( 'px', '', UM()->options()->get( 'profile_photosize' ) ) ),
-					'display_name_html'     => um_user( 'display_name', 'html' ),
-					'social_urls'           => $social_urls,
-					'actions'               => $actions,
-					'hook_just_after_name'  => preg_replace('/^\s+/im', '', $hook_just_after_name),
-					'hook_after_user_name'  => preg_replace('/^\s+/im', '', $hook_after_user_name),
-				);
-
-				if ( $args['show_tagline'] && is_array( $args['tagline_fields'] ) ) {
-					foreach ( $args['tagline_fields'] as $key ) {
-						if ( $key && um_filtered_value( $key ) ) {
-							$data_array[ $key ] = um_filtered_value( $key );
-						}
-					}
-				}
-
-				if ( $args['show_userinfo'] ) {
-					foreach ( $args['reveal_fields'] as $key ) {
-						if ( $key && um_filtered_value( $key ) ) {
-							$label = strtr( UM()->fields()->get_label( $key ), array(
-								' (Dropdown)' => '',
-								' (Radio)' => ''
-							) );
-							$data_array[ "label_{$key}" ] = $label;
-							$data_array[ $key ] = um_filtered_value( $key );
-						}
-					}
-				}
-
-				$users_data[] = apply_filters( 'um_ajax_get_members_data', $data_array, $user_id );
-				um_reset_user_clean();
+			$users = array();
+			foreach ( $user_ids as $user_id ) {
+				$users[] = $this->build_user_card_data( $user_id, $directory_data );
 			}
 
 			um_reset_user();
+			// end of user card
 
-			$pagination_data = array(
-				'pages_to_show' => ( ! empty( $pages_to_show ) && count( $pages_to_show ) > 1 ) ? array_values( $pages_to_show ) : array(),
-				'current_page'  => $args['page'],
-				'total_pages'   => $total_pages,
-				'total_users'   => $total_users,
+
+			$data_args = array(
+				'show_count' => false
 			);
+			if ( ! empty( $_POST['search'] ) || ! empty( $_POST['is_filters'] ) || ! empty( $directory_data['search_filters'] ) ) {
+				$data_args['show_count'] = true;
+			}
 
-			$pagination_data['header'] = $this->convert_tags( $args['header'], $pagination_data );
-			$pagination_data['header_single'] = $this->convert_tags( $args['header_single'], $pagination_data );
-
-			wp_send_json_success( array( 'users' => $users_data, 'pagination' => $pagination_data, 'args' => $data_args ) );
-		}
-
-
-		/**
-		 * Tag conversion for member directory
-		 *
-		 * @param $string
-		 * @param $array
-		 *
-		 * @return mixed
-		 */
-		function convert_tags( $string, $array ) {
-
-			$search = array(
-				'{total_users}',
-			);
-
-			$replace = array(
-				$array['total_users'],
-			);
-
-			$string = str_replace( $search, $replace, $string );
-			return $string;
+			wp_send_json_success( array( 'pagination' => $pagination_data, 'users' => $users, 'args' => $data_args ) );
 		}
 	}
 }

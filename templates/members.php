@@ -113,6 +113,7 @@ foreach ( $args['view_types'] as $type ) {
 	$basename = UM()->member_directory()->get_type_basename( $type );
 	UM()->get_template( 'members-' . $type . '.php', $basename, $args, true );
 }
+UM()->get_template( 'members-header.php', '', $args, true );
 UM()->get_template( 'members-pagination.php', '', $args, true ); ?>
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ); ?>"
