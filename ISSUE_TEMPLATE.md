@@ -22,25 +22,27 @@ Tell us how to reproduce this issue.
 - [ ] 5.3 below
 
 ### Do you use UM extensions? 
-- [ ] Private Content 
-- [ ] Instagram
-- [ ] User Tags 
-- [ ] Social Activity
-- [ ] WooCommerce
-- [ ] Private Messages
 - [ ] Followers
-- [ ] Real-time Notifications
-- [ ] Social Login
-- [ ] bbPress
+- [ ] ForumWP
+- [ ] Friends
+- [ ] Google reCAPTCHA
+- [ ] Groups
+- [ ] Instagram
 - [ ] MailChimp
-- [ ] User Reviews
-- [ ] Verified Users
 - [ ] myCRED
 - [ ] Notices
-- [ ] Profile Completeness 
-- [ ] Friends
-- [ ] Terms & Conditions
-- [ ] Google reCAPTCHA 
 - [ ] Online Users
-- [ ] Groups
-- [ ] Gallery
+- [ ] Private Content
+- [ ] Private Messages
+- [ ] Profile Completeness
+- [ ] Real-time Notifications
+- [ ] Social Activity
+- [ ] Social Login
+- [ ] Terms & Conditions
+- [ ] Unsplash
+- [ ] User Bookmarks
+- [ ] User Photos
+- [ ] User Reviews
+- [ ] User Tags
+- [ ] Verified Users
+- [ ] WooCommerce
