@@ -39,7 +39,18 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @param  bool $checked
 		 */
 		function checkbox( $id, $title, $checked = true ) {
-			$class = $checked ? 'um-icon-android-checkbox-outline' : 'um-icon-android-checkbox-outline-blank'; ?>
+			
+			/**
+			 * Set value on form submission
+			 */
+			if( isset( $_REQUEST[ $id ] ) ){
+				$checked = $_REQUEST[ $id ]; 
+			}
+
+			$class = $checked ? 'um-icon-android-checkbox-outline' : 'um-icon-android-checkbox-outline-blank'; 
+
+			?>
+
 
 			<div class="um-field um-field-c">
 				<div class="um-field-area">
