@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param  string $replacement
  */
 function um_deprecated_function( $function, $version, $replacement = null ) {
-	if ( is_ajax() ) {
+	if ( UM()->is_ajax() ) {
 		do_action( 'deprecated_function_run', $function, $replacement, $version );
 		$log_string  = "The {$function} function is deprecated since version {$version}.";
 		$log_string .= $replacement ? " Replace with {$replacement}." : '';

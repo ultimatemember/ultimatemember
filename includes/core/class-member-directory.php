@@ -340,9 +340,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * filters selectboxes
 		 *
 		 * @param string $filter
+		 * @param array $directory_data
+		 *
 		 * @return string $filter
 		 */
-		function show_filter( $filter ) {
+		function show_filter( $filter, $directory_data ) {
 
 			if ( empty( $this->filter_types[ $filter ] ) ) {
 				return '';
@@ -485,8 +487,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					break;
 				}
 				case 'slider': {
-					$range = $this->slider_filters_range( $filter );
-					$placeholder = $this->slider_range_placeholder( $filter );
+					$range = $this->slider_filters_range( $filter, $directory_data );
+					$placeholder = $this->slider_range_placeholder( $filter, $attrs );
 
 					if ( $range ) { ?>
 						<input type="hidden" id="<?php echo $filter; ?>_min" name="<?php echo $filter; ?>[]" class="um_range_min" />
@@ -565,11 +567,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 
 		/**
-		 * @param $filter
+		 * @param string $filter
+		 * @param array $directory_data
 		 *
 		 * @return mixed
 		 */
-		function slider_filters_range( $filter ) {
+		function slider_filters_range( $filter, $directory_data ) {
 
 
 			switch ( $filter ) {
@@ -588,7 +591,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$range = array( min( $meta ), max( $meta ) );
 					}
 
-					$range = apply_filters( "um_member_directory_filter_{$filter}_slider", $range );
+					$range = apply_filters( "um_member_directory_filter_{$filter}_slider", $range, $directory_data );
 
 					break;
 				}
@@ -617,19 +620,27 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 *
 		 * @return mixed
 		 */
-		function slider_range_placeholder( $filter ) {
+		function slider_range_placeholder( $filter, $attrs ) {
 			switch ( $filter ) {
 				default: {
-					$label = ucwords( str_replace(array('um_', '_'), array('', ' '), $filter) );
-					$placeholder = apply_filters( "um_member_directory_filter_{$filter}_slider_range_placeholder", "<strong>$label:</strong> {min_range} - {max_range}" );
+					$label = ucwords( str_replace( array( 'um_', '_' ), array( '', ' ' ), $filter ) );
+					$placeholder = apply_filters( 'um_member_directory_filter_slider_range_placeholder', false, $filter );
+
+					if ( ! $placeholder ) {
+						switch ( $attrs['type'] ) {
+							default:
+								$placeholder = "<strong>$label:</strong> {min_range} - {max_range}";
+								break;
+							case 'rating':
+								$placeholder = "<strong>$label:</strong> {min_range} - {max_range}" . __( ' stars', 'ultimate-member' );
+								break;
+						}
+					}
+
 					break;
 				}
 				case 'birth_date': {
 					$placeholder = __( '<strong>Age:</strong> {min_range} - {max_range} years old', 'ultimate-member' );
-					break;
-				}
-				case 'user_rating': {
-					$placeholder = __( '<strong>User Rating:</strong> {min_range} - {max_range} points', 'ultimate-member' );
 					break;
 				}
 			}
@@ -860,7 +871,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			// add roles to appear in directory
 			if ( ! empty( $directory_data['roles'] ) ) {
 				//since WP4.4 use 'role__in' argument
-				$this->query_args['role__in'] = $directory_data['roles'];
+				$this->query_args['role__in'] = maybe_unserialize( $directory_data['roles'] );
 			}
 		}
 
@@ -1290,12 +1301,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								case 'slider':
 
 									$field_query = array(
-										array(
-											'key'       => $field,
-											'value'     => $value,
-											'compare'   => 'BETWEEN',
-											'inclusive' => true,
-										)
+										'key'       => $field,
+										'value'     => $value,
+										'compare'   => 'BETWEEN',
+										'inclusive' => true,
 									);
 
 									break;
@@ -1309,31 +1318,28 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 									$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
 									$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
 									$field_query = array(
-										array(
-											'key'       => $field,
-											'value'     =>  array( $from_date, $to_date ),
-											'compare'   => 'BETWEEN',
-										)
+										'key'       => $field,
+										'value'     =>  array( $from_date, $to_date ),
+										'compare'   => 'BETWEEN',
 									);
 
 									break;
 								case 'timepicker':
 
 									$field_query = array(
-										array(
-											'key'       => $field,
-											'value'     => $value,
-											'compare'   => 'BETWEEN',
-											'type'      => 'TIME',
-											'inclusive' => true,
-										)
+										'key'       => $field,
+										'value'     => $value,
+										'compare'   => 'BETWEEN',
+										'type'      => 'TIME',
+										'inclusive' => true,
 									);
 
 									break;
 							}
+
 						}
 
-						if ( ! empty( $field_query ) ) {
+						if ( ! empty( $field_query ) && $field_query !== true ) {
 							$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $field_query ) );
 						}
 
@@ -1521,6 +1527,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'hook_after_user_name'  => preg_replace( '/^\s+/im', '', $hook_after_user_name ),
 			);
 
+			$directory_data['tagline_fields'] = maybe_unserialize( $directory_data['tagline_fields'] );
+
 			if ( $directory_data['show_tagline'] && is_array( $directory_data['tagline_fields'] ) ) {
 				foreach ( $directory_data['tagline_fields'] as $key ) {
 					if ( ! $key ) {
@@ -1528,6 +1536,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					}
 
 					$value = um_filtered_value( $key );
+
 					if ( ! $value ) {
 						continue;
 					}
@@ -1537,26 +1546,30 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 
 			if ( $directory_data['show_userinfo'] ) {
-				foreach ( $directory_data['reveal_fields'] as $key ) {
-					if ( ! $key ) {
-						continue;
-					}
+				$directory_data['reveal_fields'] = maybe_unserialize( $directory_data['reveal_fields'] );
 
-					$value = um_filtered_value( $key );
-					if ( ! $value ) {
-						continue;
-					}
+				if ( is_array( $directory_data['reveal_fields'] ) ) {
+					foreach ( $directory_data['reveal_fields'] as $key ) {
+						if ( ! $key ) {
+							continue;
+						}
 
-					$label = UM()->fields()->get_label( $key );
-					if ( $key == 'role_select' || $key == 'role_radio' ) {
-						$label = strtr( $label, array(
-							' (Dropdown)'   => '',
-							' (Radio)'      => ''
-						) );
-					}
+						$value = um_filtered_value( $key );
+						if ( ! $value ) {
+							continue;
+						}
 
-					$data_array[ "label_{$key}" ] = $label;
-					$data_array[ $key ] = $value;
+						$label = UM()->fields()->get_label( $key );
+						if ( $key == 'role_select' || $key == 'role_radio' ) {
+							$label = strtr( $label, array(
+								' (Dropdown)'   => '',
+								' (Radio)'      => ''
+							) );
+						}
+
+						$data_array[ "label_{$key}" ] = $label;
+						$data_array[ $key ] = $value;
+					}
 				}
 
 				if ( ! empty( $directory_data['show_social'] ) ) {
@@ -1737,19 +1750,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 * ?>
 			 */
 			$user_ids = apply_filters( 'um_prepare_user_results_array', $user_ids );
-
-
-
-
-
-			/*
-			 * @todo generate user card data
-			 */
-
-
-
-
-
 
 
 			$sizes = UM()->options()->get( 'cover_thumb_sizes' );

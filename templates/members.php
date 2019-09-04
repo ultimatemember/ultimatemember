@@ -1,5 +1,7 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit;
 
+global $post;
+
 // Get default and real arguments
 $def_args = array();
 foreach ( UM()->config()->core_directory_meta['members'] as $k => $v ) {
@@ -59,6 +61,8 @@ if ( $args['enable_sorting'] ) {
 		$sorting_options = array_intersect_key( $all_sorting_options, array_flip( $sorting_options ) );
 	}
 
+	$sorting_options = apply_filters( 'um_member_directory_pre_display_sorting', $sorting_options, $args );
+
 	$sort_from_url = ( ! empty( $_GET[ 'sort_' . $unique_hash ] ) && in_array( $_GET[ 'sort_' . $unique_hash ], array_keys( $sorting_options ) ) ) ? $_GET[ 'sort_' . $unique_hash ] : $default_sorting;
 }
 
@@ -117,7 +121,7 @@ UM()->get_template( 'members-header.php', '', $args, true );
 UM()->get_template( 'members-pagination.php', '', $args, true ); ?>
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ); ?>"
-     data-hash="<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ) ?>"
+     data-hash="<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ) ?>" data-base-post="<?php echo esc_attr( $post->ID ) ?>"
      data-view_type="<?php echo esc_attr( $current_view ) ?>" data-page="<?php echo esc_attr( $current_page ) ?>">
 
 	<div class="um-form">
@@ -205,7 +209,7 @@ UM()->get_template( 'members-pagination.php', '', $args, true ); ?>
 				<div class="um-search um-search-<?php echo count( $search_filters ) ?>">
 					<?php $i = 0;
 					foreach ( $search_filters as $filter ) {
-						$filter_content = UM()->member_directory()->show_filter( $filter );
+						$filter_content = UM()->member_directory()->show_filter( $filter, $args );
 						if ( empty( $filter_content ) ) {
 							continue;
 						} ?>

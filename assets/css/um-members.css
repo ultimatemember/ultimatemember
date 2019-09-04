@@ -373,10 +373,6 @@ a.um-edit-profile-btn {
 }
 
 
-.um-member a.um-friend-btn:before {content: "\f234"}
-.um-member a.um-unfriend-btn:before {content: "\f235"}
-
-
 /* NEW STYLES FOR VIEW TYPE LIST*/
 
 .um-directory .um-member-directory-header {

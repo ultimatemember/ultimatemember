@@ -33,6 +33,16 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 
 		/**
+		 * Check if AJAX now
+		 *
+		 * @return bool
+		 */
+		function is_ajax() {
+			return function_exists( 'wp_doing_ajax' ) ? wp_doing_ajax() : defined( 'DOING_AJAX' );
+		}
+
+
+		/**
 		 * Check frontend nonce
 		 *
 		 * @param bool $action

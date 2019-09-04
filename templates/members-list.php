@@ -18,6 +18,8 @@
 						<div class="um-member-photo radius-<?php echo esc_attr( UM()->options()->get( 'profile_photocorner' ) ); ?>">
 							<a href="{{{user.profile_url}}}" title="{{{user.display_name}}}">
 								{{{user.avatar}}}
+
+								<?php do_action( 'um_members_list_in_profile_photo_tmpl', $args ); ?>
 							</a>
 						</div>
 					<?php } ?>
@@ -32,7 +34,7 @@
 								</div>
 							<?php }
 
-							do_action( 'um_members_after_user_name_tmpl', $args ); ?>
+							do_action( 'um_members_list_after_user_name_tmpl', $args ); ?>
 							{{{user.hook_after_user_name}}}
 						</div>
 
@@ -110,7 +112,7 @@
 							<# }); #>
 						<# } #>
 
-						<?php do_action( 'um_members_just_after_name_tmpl', $args ); ?>
+						<?php do_action( 'um_members_list_just_after_actions_tmpl', $args ); ?>
 						{{{user.hook_just_after_name}}}
 
 					</div>

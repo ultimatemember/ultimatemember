@@ -27,6 +27,7 @@
 						<div class="um-member-photo radius-<?php echo esc_attr( UM()->options()->get( 'profile_photocorner' ) ); ?>">
 							<a href="{{{user.profile_url}}}" title="{{{user.display_name}}}">
 								{{{user.avatar}}}
+								<?php do_action( 'um_members_in_profile_photo_tmpl', $args ); ?>
 							</a>
 						</div>
 					<?php } ?>
@@ -41,6 +42,7 @@
 							</div>
 						<?php }
 
+						// please use for buttons priority > 100
 						do_action( 'um_members_just_after_name_tmpl', $args ); ?>
 						{{{user.hook_just_after_name}}}
 

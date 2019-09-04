@@ -168,6 +168,7 @@ function um_ajax_get_members( directory, args ) {
 		search:         search,
 		sorting:        sorting,
 		gmt_offset:     gmt_hours,
+		post_refferer:  directory.data('base-post'),
 		nonce:          um_scripts.nonce
 	};
 
@@ -236,7 +237,6 @@ function um_ajax_get_members( directory, args ) {
 function um_build_template( directory, data ) {
 	var layout = directory.data('view_type');
 	var template = wp.template( 'um-member-' + layout );
-
 
 	directory.find('.um-members-grid, .um-members-list').remove();
 	directory.find('.um-members-wrapper').prepend( template( data ) );
