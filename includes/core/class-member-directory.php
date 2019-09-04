@@ -275,12 +275,14 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$this->filter_supported_fields = apply_filters( 'um_members_directory_custom_field_types_supported_filter', array( 'date', 'time', 'select', 'multiselect', 'radio', 'checkbox', 'rating' ) );
 
-			foreach ( UM()->builtin()->saved_fields as $key => $data ) {
-				if ( isset( $data['type'] ) && in_array( $data['type'], $this->filter_supported_fields ) ) {
-					if ( isset( $data['title'] ) && array_search( $data['title'], $this->filter_fields ) !== false ) {
-						$data['title'] = $data['title'] . ' (' . $key . ')';
+			if ( UM()->builtin()->saved_fields ) {
+				foreach ( UM()->builtin()->saved_fields as $key => $data ) {
+					if ( isset( $data['type'] ) && in_array( $data['type'], $this->filter_supported_fields ) ) {
+						if ( isset( $data['title'] ) && array_search( $data['title'], $this->filter_fields ) !== false ) {
+							$data['title'] = $data['title'] . ' (' . $key . ')';
+						}
+						$this->filter_fields[ $key ] = isset( $data['title'] ) ? $data['title'] : $data['label'];
 					}
-					$this->filter_fields[ $key ] = isset( $data['title'] ) ? $data['title'] : $data['label'];
 				}
 			}
 
