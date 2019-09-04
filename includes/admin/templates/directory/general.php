@@ -17,9 +17,9 @@ $show_these_users = get_post_meta( get_the_ID(), '_um_show_these_users', true );
 if ( $show_these_users ) {
 	$show_these_users = implode( "\n", str_replace( "\r", "", $show_these_users ) );
 }
-
+$_um_view_types_options = array( 'grid', 'list' );
 $_um_view_types_value = get_post_meta( $post_id, '_um_view_types', true );
-$_um_view_types_value = empty( $_um_view_types_value ) ? array( 'grid' ) : $_um_view_types_value;
+$_um_view_types_value = empty( $_um_view_types_value ) ? array( 'grid', 'list'  ) : $_um_view_types_value;
 
 $view_types_options = array_map( function( $item ) {
 	return $item['title'];
@@ -46,7 +46,7 @@ foreach ( $view_types_options as $key => $value ) {
 			'tooltip'   => __( 'View type a specific parameter in the directory', 'ultimate-member' ),
 			'options'   => $view_types_options,
 			'columns'   => 3,
-			'value'     => $_um_view_types_value,
+			'value'     => $_um_view_types_options,
 			'data'      => array( 'fill__um_default_view' => 'checkbox_key' ),
 		),
 		array(
@@ -55,7 +55,7 @@ foreach ( $view_types_options as $key => $value ) {
 			'label'         => __( 'Default view type', 'ultimate-member' ),
 			'tooltip'       => __( 'Default directory view type', 'ultimate-member' ),
 			'options'       => $view_types_options,
-			'value'         => UM()->query()->get_meta_value( '_um_default_view', null, '' ),
+			'value'         => UM()->query()->get_meta_value( '_um_default_view', null, 'grid' ),
 			'conditional'   => array( implode( '|', $conditional ), '~', 1 )
 		),
 		array(
