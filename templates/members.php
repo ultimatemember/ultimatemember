@@ -50,7 +50,7 @@ if ( count( $args['view_types'] ) == 1 ) {
 $default_sorting = ! empty( $args['sortby'] ) ? $args['sortby'] : 'user_registered_desc';
 
 $sort_from_url = '';
-if ( $args['enable_sorting'] ) {
+if ( isset( $args['enable_sorting'] ) ) {
 	$sorting_options = empty( $args['sorting_fields'] ) ? array() : $args['sorting_fields'];
 	if ( ! in_array( $default_sorting, $sorting_options ) ) {
 		$sorting_options[] = $default_sorting;
@@ -107,7 +107,7 @@ if ( ! $single_view ) {
 	$classes .= ' um-member-with-view';
 }
 
-if ( $args['enable_sorting'] && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) {
+if ( isset( $args['enable_sorting'] ) && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) {
 	$classes .= ' um-member-with-sorting';
 }
 
@@ -141,7 +141,7 @@ UM()->get_template( 'members-pagination.php', '', $args, true ); ?>
 				</div>
 			<?php }
 
-			if ( $args['enable_sorting'] && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) { ?>
+			if ( isset( $args['enable_sorting'] ) && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) { ?>
 				<div class="um-member-directory-sorting">
 					<select class="um-s3 um-member-directory-sorting-options" id="um-member-directory-sorting-select-<?php echo esc_attr( $form_id ) ?>" data-placeholder="<?php esc_attr_e( 'Sort By', 'ultimate-member' ); ?>">
 						<?php foreach ( $sorting_options as $value => $title ) { ?>

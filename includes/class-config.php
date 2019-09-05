@@ -145,7 +145,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'_um_show_social' => 0,
 				'_um_show_userinfo' => 0,
 				'_um_show_tagline' => 0,
-				'_um_search' => 0,
+				'_um_search' => 1,
 				'_um_userinfo_animate' => '1',
 				'_um_sortby' => 'user_registered_desc',
 				'_um_profile_photo' => '1',
