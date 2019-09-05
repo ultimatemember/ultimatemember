@@ -130,7 +130,7 @@ if( $args['must_search'] == 1 ) {
      data-hash="<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ) ?>" data-base-post="<?php echo esc_attr( $post->ID ) ?>"
 	 data-show="<?php echo esc_attr( $after_search ); ?>"
 	 data-view_type="<?php echo esc_attr( $current_view ) ?>" data-page="<?php echo esc_attr( $current_page ) ?>">
-
+	<div class="um-members-overlay"><div class="um-ajax-loading"></div></div>
 	<div class="um-form">
 
 		<div class="um-member-directory-header <?php echo esc_attr( $classes ) ?>">
@@ -243,7 +243,7 @@ if( $args['must_search'] == 1 ) {
 		?>
 
 		<div class="um-members-wrapper">
-			<div class="um-members-overlay"><div class="um-ajax-loading"></div></div>
+
 		</div>
 		<div class="um-clear"></div>
 
