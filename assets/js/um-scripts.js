@@ -77,6 +77,17 @@ function um_init_datetimepicker() {
 	});
 }
 
+
+
+function init_tipsy() {
+	if( typeof(jQuery.fn.tipsy) === "function" ){
+		jQuery('.um-tip-n').tipsy({gravity: 'n', opacity: 1, live: 'a.live', offset: 3 });
+		jQuery('.um-tip-w').tipsy({gravity: 'w', opacity: 1, live: 'a.live', offset: 3 });
+		jQuery('.um-tip-e').tipsy({gravity: 'e', opacity: 1, live: 'a.live', offset: 3 });
+		jQuery('.um-tip-s').tipsy({gravity: 's', opacity: 1, live: 'a.live', offset: 3 });
+	}
+}
+
 jQuery(document).ready(function() {
 
 	jQuery( document.body ).on('click', '.um-dropdown a.real_url', function(e){
@@ -129,13 +140,8 @@ jQuery(document).ready(function() {
 			minimumResultsForSearch: -1
 		});
 	}
-	
-	if( typeof(jQuery.fn.tipsy) === "function" ){
-		jQuery('.um-tip-n').tipsy({gravity: 'n', opacity: 1, live: 'a.live', offset: 3 });
-		jQuery('.um-tip-w').tipsy({gravity: 'w', opacity: 1, live: 'a.live', offset: 3 });
-		jQuery('.um-tip-e').tipsy({gravity: 'e', opacity: 1, live: 'a.live', offset: 3 });
-		jQuery('.um-tip-s').tipsy({gravity: 's', opacity: 1, live: 'a.live', offset: 3 });
-	}
+
+	init_tipsy();
 
 	if( typeof(jQuery.fn.um_raty) === "function" ){
 		jQuery('.um-rating').um_raty({

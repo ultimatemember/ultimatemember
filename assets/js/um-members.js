@@ -249,6 +249,8 @@ function um_build_template( directory, data ) {
 
 	jQuery( document ).trigger( "um_build_template", [ directory, data ] );
 	jQuery( window ).trigger( "resize" );
+
+	init_tipsy();
 }
 
 
