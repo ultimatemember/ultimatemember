@@ -216,14 +216,14 @@ function um_ajax_get_members( directory, args ) {
 
 			um_build_template( directory, answer.users );
 
-			um_members_hide_preloader( directory );
-
 			var pagination_template = wp.template( 'um-members-pagination' );
 			directory.find('.um-members-pagination-box').html( pagination_template( answer ) );
 
 			directory.data( 'total_pages', answer.pagination.total_pages );
 
 			jQuery( document ).trigger('um_members_rendered');
+
+			um_members_hide_preloader( directory );
 		},
 		error: function( data ) {
 			console.log( data );
