@@ -443,22 +443,24 @@ function um_change_tag( directory ) {
 	var filtered_line = directory.find('.um-filtered-line');
 	if( filtered_line.length ){
 		var filters_template = wp.template( 'um-members-filtered-line' );
-		directory.find('.um-filtered-line').prepend( filters_template( {'filters': filters_data} ) );
+		filtered_line.prepend( filters_template( {'filters': filters_data} ) );
+
+		if ( filters_data.length > 0 ) {
+			filtered_line.show();
+			show_after_search = false;
+		} else {
+			filtered_line.hide();
+			show_after_search = true;
+		}
+
+		if ( directory.find( '.um-members-filter-remove' ).length === 0 ) {
+			directory.find('.um-clear-filters-a').hide();
+		} else {
+			directory.find('.um-clear-filters-a').show();
+		}
 	}
 
-	if ( filters_data.length > 0 ) {
-		directory.find('.um-filtered-line').show();
-		show_after_search = false;
-	} else {
-		directory.find('.um-filtered-line').hide();
-		show_after_search = true;
-	}
 
-	if ( directory.find( '.um-members-filter-remove' ).length === 0 ) {
-		directory.find('.um-clear-filters-a').hide();
-	} else {
-		directory.find('.um-clear-filters-a').show();
-	}
 }
 
 
