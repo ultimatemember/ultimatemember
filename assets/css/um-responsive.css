@@ -214,27 +214,6 @@ div.uimob340 .um-field-half {
 	width: 100%;
 }
 
-div.uimob340 .um-search {
-	padding: 20px 0 !important;
-	width: 100% !important;
-	box-sizing: border-box;
-}
-
-div.uimob340 .um-search .um-search-filter {
-	width: 100% !important;
-	float: none !important;
-	padding: 0 0 15px 0 !important;
-}
-
-div.uimob340 .um-search .um-search-submit .um-button {
-	display: block !important;
-	min-width: 100% !important;
-	margin: 0 0 15px 0 !important;
-}
-
-div.uimob340 .um-member {width: 100%}
-div.uimob340 .um-gutter-sizer {width: 0px}
-
 div.uimob340 .um-account-main {
 	float: none;
 	width: 100%;
@@ -436,27 +415,6 @@ div.uimob500 .um-field-half {
 	width: 100%;
 }
 
-div.uimob500 .um-search {
-	padding: 20px 0 !important;
-	width: 100% !important;
-	box-sizing: border-box;
-}
-
-div.uimob500 .um-search .um-search-filter {
-	width: 100% !important;
-	float: none !important;
-	padding: 0 0 15px 0 !important;
-}
-
-div.uimob500 .um-search .um-search-submit .um-button {
-	display: block !important;
-	min-width: 100% !important;
-	margin: 0 0 15px 0 !important;
-}
-
-div.uimob500 .um-member {width: 100%}
-div.uimob500 .um-gutter-sizer {width: 0px}
-
 div.uimob500 .um-account-main {
 	float: none;
 	width: 100%;
@@ -598,35 +556,6 @@ div.uimob800 .um-cover-overlay
 	padding: 0;
 }
 
-div.uimob800 .um-search {
-	padding: 20px 0 !important;
-	width: 100% !important;
-	box-sizing: border-box;
-}
-
-div.uimob800 .um-search .um-search-filter {
-	width: 48% !important;
-	float: left !important;
-	padding: 0 0 15px 0 !important;
-}
-
-div.uimob800 .um-search .um-search-filter-2 {
-	margin-left: 4%;
-}
-
-div.uimob800 .um-search .um-search-submit .um-button {
-	display: block !important;
-	width: 48% !important;
-	margin: 0 0 15px 0 !important;
-	box-sizing: border-box;
-	float: left;
-}
-
-div.uimob800 .um-search .um-search-submit .um-button.um-alt {float: right}
-
-div.uimob800 .um-member {width: 48%}
-div.uimob800 .um-gutter-sizer {width: 4%}
-
 /********************************************/
 
 /**
@@ -634,35 +563,6 @@ div.uimob800 .um-gutter-sizer {width: 4%}
 **/
 
 /********************************************/
-
-div.uimob960 .um-search {
-	padding: 20px 0 !important;
-	width: 100% !important;
-	box-sizing: border-box;
-}
-
-div.uimob960 .um-search .um-search-filter {
-	width: 48% !important;
-	float: left !important;
-	padding: 0 0 15px 0 !important;
-}
-
-div.uimob960 .um-search .um-search-filter-2 {
-	margin-left: 4%;
-}
-
-div.uimob960 .um-search .um-search-submit .um-button {
-	display: block !important;
-	width: 48% !important;
-	margin: 0 0 15px 0 !important;
-	box-sizing: border-box;
-	float: left;
-}
-
-div.uimob960 .um-search .um-search-submit .um-button.um-alt {float: right}
-
-div.uimob960 .um-member {width: 48%}
-div.uimob960 .um-gutter-sizer {width: 4%}
 
 div.uimob960 .um-profile-photo {
 	width: 200px !important;
