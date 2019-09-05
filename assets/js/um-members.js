@@ -100,14 +100,14 @@ function um_set_range_label( slider, ui ) {
 
 	if( ui ) {
 		placeholder = placeholder.replace( '\{min_range\}', ui.values[ 0 ] )
-			.replace( '\{max_range\}', ui.values[ 1 ] )
-			.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
-				.data('label') );
+		.replace( '\{max_range\}', ui.values[ 1 ] )
+		.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
+		.data('label') );
 	} else {
 		placeholder = placeholder.replace( '\{min_range\}', slider.slider( "values", 0 ) )
-			.replace( '\{max_range\}', slider.slider( "values", 1 ) )
-			.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
-				.data('label') );
+		.replace( '\{max_range\}', slider.slider( "values", 1 ) )
+		.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
+		.data('label') );
 	}
 	slider.siblings( '.um-slider-range' ).html( placeholder );
 
@@ -249,8 +249,6 @@ function um_build_template( directory, data ) {
 
 	jQuery( document ).trigger( "um_build_template", [ directory, data ] );
 	jQuery( window ).trigger( "resize" );
-
-	init_tipsy();
 }
 
 
@@ -384,8 +382,8 @@ function um_change_tag( directory ) {
 			filter_title = filter.find('div.um-slider-range').data('label');
 
 			var filter_value_title = filter.find('div.um-slider-range').data( 'placeholder' ).replace( '\{min_range\}', filter_value_from )
-				.replace( '\{max_range\}', filter_value_to )
-				.replace( '\{field_label\}', filter.find('div.um-slider-range').data('label') );
+			.replace( '\{max_range\}', filter_value_to )
+			.replace( '\{field_label\}', filter.find('div.um-slider-range').data('label') );
 
 			filters_data.push( {'name':filter_name, 'label':filter_title, 'value_label':filter_value_title, 'value':[filter_value_from, filter_value_to], 'type':filter_type} );
 		}
@@ -495,6 +493,7 @@ jQuery(document).ready( function() {
 		if ( um_is_directory_busy( directory ) ) {
 			return false;
 		}
+		um_members_show_preloader( directory );
 
 		var $this = jQuery(this);
 		var views = $this.parents('.um-member-directory-view-type');
@@ -533,11 +532,12 @@ jQuery(document).ready( function() {
 
 	//searching
 	jQuery( document.body ).on( 'click', '.um-do-search', function() {
-		var directory = jQuery(this).parents('.um-directory');
 
+		var directory = jQuery(this).parents('.um-directory');
 		if ( um_is_directory_busy( directory ) ) {
 			return;
 		}
+		um_members_show_preloader( directory );
 
 		var pre_search = um_get_data_for_directory( directory, 'search' );
 
@@ -583,6 +583,8 @@ jQuery(document).ready( function() {
 		if ( um_is_directory_busy( directory ) ) {
 			return;
 		}
+
+		um_members_show_preloader( directory );
 
 		var sort = jQuery(this).val();
 
@@ -693,6 +695,8 @@ jQuery(document).ready( function() {
 			return;
 		}
 
+		um_members_show_preloader( directory );
+
 		var page = jQuery(this).val();
 
 		directory.find('.pagi').removeClass('current');
@@ -770,6 +774,8 @@ jQuery(document).ready( function() {
 		if ( um_is_directory_busy( directory ) ) {
 			return;
 		}
+
+		um_members_show_preloader( directory );
 
 		var filter_name = jQuery(this).prop('name');
 
@@ -875,6 +881,8 @@ jQuery(document).ready( function() {
 					return;
 				}
 
+				um_members_show_preloader( directory );
+
 				var filter_name = elem.data( 'filter_name' );
 				var range = elem.data( 'range' );
 
@@ -953,6 +961,8 @@ jQuery(document).ready( function() {
 					return;
 				}
 
+				um_members_show_preloader( directory );
+
 				var filter_name = elem.data( 'filter_name' );
 				var range = elem.data( 'range' );
 
@@ -1016,6 +1026,8 @@ jQuery(document).ready( function() {
 			return;
 		}
 
+		um_members_show_preloader( directory );
+
 		var removeItem = jQuery(this).data('value');
 		var filter_name = jQuery(this).data('name');
 
@@ -1073,6 +1085,8 @@ jQuery(document).ready( function() {
 		if ( um_is_directory_busy( directory ) ) {
 			return;
 		}
+
+		um_members_show_preloader( directory );
 
 		directory.find( '.um-members-filter-remove' ).each( function() {
 			var removeItem = jQuery(this).data('value');
@@ -1186,20 +1200,18 @@ jQuery(document).ready( function() {
 		var hash = um_members_get_hash( directory );
 		um_member_directories.push( hash );
 
-		var show_after_search = false;
-		var search = um_get_search( directory );
-		if ( search && typeof search !== 'undefined' ) {
-			show_after_search = true;
-		}
+		var show_after_search = jQuery(this).data('show');
 
-		if ( ! ( directory.data( 'only_search' ) > 0 && show_after_search ) ) {
-			//show preloader at first
+		um_members_show_preloader( directory );
+
+		if( show_after_search === false ){
 			um_members_show_preloader( directory );
+			um_ajax_get_members( directory );
 		} else {
+			um_members_hide_preloader( directory );
 			return;
 		}
 
-		um_ajax_get_members( directory );
 
 		um_change_tag( directory );
 

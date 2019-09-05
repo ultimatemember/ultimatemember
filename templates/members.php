@@ -118,11 +118,18 @@ foreach ( $args['view_types'] as $type ) {
 	UM()->get_template( 'members-' . $type . '.php', $basename, $args, true );
 }
 UM()->get_template( 'members-header.php', '', $args, true );
-UM()->get_template( 'members-pagination.php', '', $args, true ); ?>
+UM()->get_template( 'members-pagination.php', '', $args, true );
+
+if( $args['must_search'] == 1 ) {
+	$after_search = 'true';
+} else {
+	$after_search = 'false';
+} ?>
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ); ?>"
      data-hash="<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ) ?>" data-base-post="<?php echo esc_attr( $post->ID ) ?>"
-     data-view_type="<?php echo esc_attr( $current_view ) ?>" data-page="<?php echo esc_attr( $current_page ) ?>">
+	 data-show="<?php echo esc_attr( $after_search ); ?>"
+	 data-view_type="<?php echo esc_attr( $current_view ) ?>" data-page="<?php echo esc_attr( $current_page ) ?>">
 
 	<div class="um-form">
 
