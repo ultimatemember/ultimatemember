@@ -116,15 +116,14 @@
 
 .um-member.awaiting_admin_review,
 .um-member.inactive,
-.um-member.rejected  {
+.um-member.rejected {
 	opacity: 0.7;
 }
 
 .um-member-status {display:none}
 .um-member-status.awaiting_admin_review,
 .um-member-status.inactive,
-.um-member-status.rejected
- {
+.um-member-status.rejected {
 	display: block;
 	position: absolute;
 	top: 0;
@@ -374,10 +373,12 @@ a.um-edit-profile-btn {
 
 
 /* NEW STYLES FOR VIEW TYPE LIST*/
-
+.um-directory {
+	position: relative;
+}
 .um-directory .um-member-directory-header {
 	box-sizing: border-box;
-	padding: 20px 0;
+	padding: 0;
 	width: 100%;
 }
 #content .um-member-directory-header a {
@@ -671,8 +672,8 @@ div.uimob500 .um-members-list .um-member-card-actions {
 	float: left;
 	top:0;
 	bottom:0;
-	background: rgba( 0, 0, 0, 0 );
-	/*background: rgba( 0, 0, 0, 0.8 );*/
+	background: rgba(255, 255, 255, 0.8);
+	z-index: 2;
 }
 
 @-webkit-keyframes um-ajax-spinning {
