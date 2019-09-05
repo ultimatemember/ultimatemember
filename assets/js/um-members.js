@@ -387,55 +387,6 @@ function um_change_tag( directory ) {
 
 			filters_data.push( {'name':filter_name, 'label':filter_title, 'value_label':filter_value_title, 'value':[filter_value_from, filter_value_to], 'type':filter_type} );
 		}
-
-		// if ( filter.find('input.um-datepicker-filter').length ) {
-		// 	hoper = 'datepicker';
-		//
-		// 	filter.find('input.um-datepicker-filter').each(function() {
-		// 		var _this = jQuery(this);
-		// 		var obj = {};
-		//
-		// 		if( _this.length ) {
-		// 			query_value		= um_get_directory_storage( directory, 'filter_' + _this.data('filter_name') );
-		// 			filter_name		= _this.data('filter_name');
-		// 			filter_range	= _this.data('range');
-		//
-		// 			if ( query_value !== null ) {
-		// 				if( query_value[filter_range] ) {
-		// 					obj.name		= filter_name;
-		// 					obj.label		= _this.attr('placeholder');
-		// 					obj.range		= filter_range;
-		// 					obj.value_title	= _this.val();
-		// 					filter_array.push(obj);
-		// 				}
-		// 			}
-		// 		}
-		// 	});
-		//
-		// }
-		//
-		// if ( typeof( query_value ) != 'undefined' && query_value != null) {
-		// if( hoper == 'datepicker' ) {
-		// 		jQuery.each( filter_array, function(e) {
-		// 			var find = filters_data.find(function (item) {
-		// 				return item.name == filter_array[e].name && item.range == filter_array[e].range;
-		// 			});
-		// 			if( typeof( find ) == 'undefined' ) {
-		// 				filters_data.push(
-		// 					{
-		// 						'name':filter_array[e].name,
-		// 						'range':filter_array[e].range,
-		// 						'label':filter_array[e].label,
-		// 						'value_label':filter_array[e].value_title,
-		// 						'value':query_value[filter_array[e].range],
-		// 						'unique_id':unique_id
-		// 					}
-		// 				);
-		// 			}
-		// 		})
-		//
-		// 	}
-		// }
 	});
 
 	directory.find('.um-members-filter-tag').remove();
@@ -575,8 +526,6 @@ jQuery(document).ready( function() {
 	/**
 	 * Sorting
 	 */
-
-
 	jQuery( document.body ).on( 'change', '.um-member-directory-sorting-options', function() {
 		var directory = jQuery(this).parents('.um-directory');
 
@@ -587,42 +536,6 @@ jQuery(document).ready( function() {
 		um_members_show_preloader( directory );
 
 		var sort = jQuery(this).val();
-
-		//
-		// var show_after_search = false;
-		// //set search line from session storage
-		// if ( directory.find('.um-search-line').length ) {
-		// 	var general_search = um_get_directory_storage( directory, 'general_search' );
-		// 	if ( general_search === null ) {
-		// 		//show results after search
-		// 		show_after_search = true;
-		// 	}
-		// }
-		//
-		// if ( jQuery('#tmpl-um-members-filtered-line').length ) {
-		// 	var filters_data = [];
-		// 	directory.find('.um-search-filter').each( function() {
-		// 		var filter = jQuery(this);
-		// 		var filter_name = filter.find('select').attr('name');
-		// 		var query_value = um_get_directory_storage( directory, 'filter_' + filter_name );
-		//
-		// 		if ( typeof( query_value ) != 'undefined' ) {
-		// 			if ( typeof( query_value ) == 'string' ) {
-		// 				filters_data.push( {'name':filter_name} );
-		// 			} else {
-		// 				jQuery.each( query_value, function() {
-		// 					filters_data.push( {'name': filter_name} );
-		// 				});
-		// 			}
-		// 		}
-		// 	});
-		//
-		// 	show_after_search = ( filters_data.length <= 0 );
-		// }
-		//
-		// if ( parseInt( directory.data( 'only_search' ) ) === 1 && show_after_search ) {
-		// 	return;
-		// }
 
 		directory.data( 'sorting', jQuery(this).val() );
 		um_set_url_from_data( directory, 'sort', sort );
@@ -914,9 +827,6 @@ jQuery(document).ready( function() {
 				um_ajax_get_members( directory );
 
 				um_change_tag( directory );
-
-				//elem.val('');
-				//elem.data('value','');
 			}
 		});
 
@@ -1016,7 +926,6 @@ jQuery(document).ready( function() {
 			$picker.set( 'select', query_value );
 		}
 	});
-
 
 
 	jQuery( document.body ).on( 'click', '.um-members-filter-remove', function() {
@@ -1137,58 +1046,6 @@ jQuery(document).ready( function() {
 	});
 
 
-
-
-
-	// jQuery('.um-directory .um-member-connect').each(function(){
-	// 	if ( jQuery(this).find('a').length == 0 ) {
-	// 		jQuery(this).remove();
-	// 	}
-	// });
-	//
-	// jQuery('.um-member-meta-main').each(function(){
-	// 	if ( jQuery(this).find('.um-member-metaline').length == 0 && jQuery(this).find('.um-member-connect').find('a').length == 0 ) {
-	// 		jQuery(this).remove();
-	// 	}
-	// });
-
-
-	// jQuery(document.body).on('click', '.um-do-search', function(e){
-	// 	e.preventDefault();
-	//
-	// 	jQuery(this).parents('form').find('input').filter(function(e){
-	// 		if ( this.value.length ===0 ) {
-	// 			return true;
-	// 		}
-	// 	}).prop('disabled', true);
-	//
-	//
-	// 	jQuery(this).parents('form').find('select').filter(function(e){
-	// 		if ( this.value.length ===0 ) {
-	// 			return true;
-	// 		}
-	// 	}).prop('disabled', true);
-	// 	jQuery(this).parents('form').submit();
-	// 	return false;
-	// });
-
-
-
-
-
-
-
-
-
-
-
-
-	// jQuery('.um-close-filter').click( function() {
-	// 	var search_bar = jQuery(this).parents('.um-directory').find('.um-search');
-	// 	search_bar.slideUp(650);
-	// });
-
-
 	/**
 	 * First Page Loading
 	 */
@@ -1201,33 +1058,14 @@ jQuery(document).ready( function() {
 		um_member_directories.push( hash );
 
 		var show_after_search = jQuery(this).data('show');
-
-		um_members_show_preloader( directory );
-
-		if( show_after_search === false ){
-			um_members_show_preloader( directory );
-			um_ajax_get_members( directory );
-		} else {
-			um_members_hide_preloader( directory );
+		if ( show_after_search !== false ) {
 			return;
 		}
 
+		um_members_show_preloader( directory );
+		um_ajax_get_members( directory );
 
 		um_change_tag( directory );
-
-		// if ( jQuery('#tmpl-um-members-filtered-line').length ) {
-		// 	um_change_tag( directory );
-		// }
-
-		// if ( directory.data( 'only_search' ) > 0 && show_after_search ) {
-		// 	um_members_hide_preloader( directory );
-		// 	return;
-		// }
-
-		//um_ajax_get_members( directory, {page: page, sorting: sort} );
 	});
-
-
-
 
 });
