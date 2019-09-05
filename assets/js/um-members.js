@@ -440,8 +440,11 @@ function um_change_tag( directory ) {
 
 	directory.find('.um-members-filter-tag').remove();
 
-	var filters_template = wp.template( 'um-members-filtered-line' );
-	directory.find('.um-filtered-line').prepend( filters_template( {'filters': filters_data} ) );
+	var filtered_line = directory.find('.um-filtered-line');
+	if( filtered_line.length ){
+		var filters_template = wp.template( 'um-members-filtered-line' );
+		directory.find('.um-filtered-line').prepend( filters_template( {'filters': filters_data} ) );
+	}
 
 	if ( filters_data.length > 0 ) {
 		directory.find('.um-filtered-line').show();
