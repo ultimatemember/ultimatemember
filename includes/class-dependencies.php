@@ -52,7 +52,6 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'social-activity'       => '2.0.6',
 			'social-login'          => '2.0.1',
 			'terms-conditions'      => '2.0',
-			'user-location'         => '2.0',
 			'user-tags'             => '2.0',
 			'verified-users'        => '2.0.1',
 			'woocommerce'           => '2.0.1',
@@ -66,6 +65,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'user-bookmarks'        => '2.0',
 			'unsplash'              => '2.0',
 			'forumwp'               => '2.0.1',
+			'user-location'         => '1.0',
 		);
 
 

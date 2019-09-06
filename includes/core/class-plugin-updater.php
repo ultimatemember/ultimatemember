@@ -139,6 +139,10 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 					'key'   => 'filesharing',
 					'title' => 'File Sharing',
 				),
+				'um-user-location/um-user-location.php'                     => array(
+					'key'   => 'user-location',
+					'title' => 'User Location',
+				),
 			);
 
 			$active_um_plugins = array();

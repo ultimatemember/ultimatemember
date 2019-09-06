@@ -1197,7 +1197,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					// Add OR instead AND to search in WP core fields user_email, user_login, user_display_name
 					$search_where = $context->get_search_sql( $search, UM()->member_directory()->core_search_fields, 'both' );
-					$search_where = preg_replace( '/ AND \((.*?)\)/im', " OR $1", $search_where );
+					$search_where = preg_replace( '/ AND \((.*?)\)/im', " AND ( $1 )", $search_where );
 
 					$sql['where'] = $sql['where'] . $search_where;
 				}
