@@ -120,7 +120,7 @@ foreach ( $args['view_types'] as $type ) {
 UM()->get_template( 'members-header.php', '', $args, true );
 UM()->get_template( 'members-pagination.php', '', $args, true );
 
-if( $args['must_search'] == 1 ) {
+if( isset( $args['must_search'] ) && $args['must_search'] == 1 ) {
 	$after_search = 'true';
 } else {
 	$after_search = 'false';
