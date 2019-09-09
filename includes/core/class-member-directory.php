@@ -1583,7 +1583,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				}
 			}
 
-			$data_array = apply_filters( 'um_ajax_get_members_data', $data_array, $user_id );
+			$data_array = apply_filters( 'um_ajax_get_members_data', $data_array, $user_id, $directory_data );
 			um_reset_user_clean();
 
 			return $data_array;

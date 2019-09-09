@@ -227,6 +227,12 @@ jQuery(document).ready( function() {
 			if ( typeof condition_fields[0].parents('.um-forms-line').data('conditional') !== 'undefined' ) {
 				parent_condition = check_condition( condition_fields[0].parents('.um-forms-line') );
 			}
+		} else if ( condition === '><' ) {
+			var condition_field = jQuery( '#' + prefix + '_' + conditional[0] + '_' + conditional[2] );
+
+			if ( typeof condition_field.parents('.um-forms-line').data('conditional') !== 'undefined' ) {
+				parent_condition = check_condition( condition_field.parents('.um-forms-line') );
+			}
 		}
 
 		var own_condition = false;
@@ -374,6 +380,19 @@ jQuery(document).ready( function() {
 			}
 
 			return ( own_condition && parent_condition );
+		} else if ( condition === '><' ) {
+
+			var tagName = condition_field.prop("tagName").toLowerCase();
+
+			if ( tagName == 'input' ) {
+				var input_type = condition_field.attr('type');
+				if ( input_type == 'checkbox' ) {
+					own_condition = condition_field.is(':checked');
+				}
+			}
+
+			return ( own_condition && parent_condition );
+
 		}
 
 		return false;

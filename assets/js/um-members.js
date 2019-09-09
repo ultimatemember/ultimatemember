@@ -244,11 +244,12 @@ function um_build_template( directory, data ) {
 
 	if ( directory.find('.um-members').length ) {
 		UM_Member_Grid( directory.find('.um-members') );
-		jQuery( window ).trigger( 'resize' );
 	}
 
-	jQuery( document ).trigger( "um_build_template", [ directory, data ] );
-	jQuery( window ).trigger( "resize" );
+	jQuery( document ).trigger( 'um_build_template', [ directory, data ] );
+	jQuery( window ).trigger( 'resize' );
+
+	init_tipsy();
 }
 
 
@@ -279,12 +280,8 @@ function um_change_tag( directory ) {
 	directory.find('.um-search-filter').each( function() {
 
 		var filter = jQuery(this);
-		var hoper,
-			filter_name,
-			query_value,
-			filter_title,
-			filter_range,
-			filter_value_title;
+		var filter_name,
+			filter_title;
 
 		var filter_type;
 		if ( filter.find('input.um-datepicker-filter').length ) {
@@ -468,6 +465,7 @@ jQuery(document).ready( function() {
 
 			um_build_template( directory, data.users );
 		}
+		um_members_hide_preloader( directory );
 	});
 
 
