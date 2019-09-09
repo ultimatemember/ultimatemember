@@ -39,7 +39,18 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @param  bool $checked
 		 */
 		function checkbox( $id, $title, $checked = true ) {
-			$class = $checked ? 'um-icon-android-checkbox-outline' : 'um-icon-android-checkbox-outline-blank'; ?>
+			
+			/**
+			 * Set value on form submission
+			 */
+			if( isset( $_REQUEST[ $id ] ) ){
+				$checked = $_REQUEST[ $id ]; 
+			}
+
+			$class = $checked ? 'um-icon-android-checkbox-outline' : 'um-icon-android-checkbox-outline-blank'; 
+
+			?>
+
 
 			<div class="um-field um-field-c">
 				<div class="um-field-area">
@@ -2643,12 +2654,31 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							um_user( $data['parent_dropdown_relationship'] )
 						) {
 							$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+							
+
 							$disabled_by_parent_option = '';
 							if ( um_user( $form_key ) ) {
 								$select_original_option_value = " data-um-original-value='" . um_user( $form_key ) . "' ";
 							}
+
+
 						}
 
+					}
+
+					// Child dropdown option selected
+					if( isset( UM()->form()->post_form[ $form_key ] ) ){
+						$select_original_option_value = " data-um-original-value='" . esc_attr( UM()->form()->post_form[ $form_key ] ) . "' ";
+					}
+
+					// Child dropdown
+					if( $has_parent_option ){
+
+						if ( ! empty( $data['custom_dropdown_options_source'] ) && $has_parent_option && function_exists( $data['custom_dropdown_options_source'] ) &&
+							isset( UM()->form()->post_form[ $form_key ] )
+						) {
+								$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+						}
 					}
 
 					if ( ! empty( $data['custom_dropdown_options_source'] ) ) {

@@ -97,6 +97,8 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 		in_column = jQuery('.um-col-demon-settings').data('in_column');
 		in_group = jQuery('.um-col-demon-settings').data('in_group');
 	}
+
+	var form_mode = jQuery('input[type=hidden][id=form__um_mode]').val();
 	
 	jQuery.ajax({
 		url: wp.ajax.settings.url,
@@ -111,7 +113,8 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 			in_sub_row: in_sub_row,
 			in_column: in_column,
 			in_group: in_group,
-			nonce: um_admin_scripts.nonce
+			nonce: um_admin_scripts.nonce,
+			form_mode: form_mode
 		},
 		complete: function(){
 			um_admin_modal_loaded();
@@ -125,7 +128,6 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 			um_admin_live_update_scripts();
 
 			jQuery( "#_custom_dropdown_options_source" ).trigger('blur');
-
 
 			if ( jQuery('.um-admin-editor:visible').length > 0 ) {
 
