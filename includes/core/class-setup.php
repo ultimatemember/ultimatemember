@@ -184,6 +184,8 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 					$content = '[ultimatemember form_id="' . $setup_shortcodes[ $slug ] . '"]';
 				}
 
+				$content = apply_filters( 'um_setup_predefined_page_content', $content, $slug );
+
 				$user_page = array(
 					'post_title'        => $array['title'],
 					'post_content'      => $content,
