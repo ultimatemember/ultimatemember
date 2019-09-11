@@ -492,6 +492,7 @@ jQuery(document).ready( function() {
 
 		var search = directory.find('.um-search-line').val();
 		if ( search === pre_search || ( search === '' && typeof pre_search == 'undefined' ) ) {
+			um_members_hide_preloader( directory );
 			return;
 		}
 
