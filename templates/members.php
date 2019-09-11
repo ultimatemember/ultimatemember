@@ -123,15 +123,66 @@ foreach ( $args['view_types'] as $type ) {
 UM()->get_template( 'members-header.php', '', $args, true );
 UM()->get_template( 'members-pagination.php', '', $args, true );
 
-if( isset( $args['must_search'] ) && $args['must_search'] == 1 ) {
-	$after_search = 'true';
+if ( isset( $args['must_search'] ) && $args['must_search'] == 1 ) {
+	$must_search = 1;
 } else {
-	$after_search = 'false';
+	$must_search = 0;
+}
+
+
+$not_searched = false;
+if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $search_filters ) ) ) && isset( $args['must_search'] ) && $args['must_search'] == 1 ) {
+	$not_searched = true;
+	if ( $search && $show_search && ! empty( $search_from_url ) ) {
+		$not_searched = false;
+	} elseif ( $filters && $show_filters && count( $search_filters ) ) {
+		foreach ( $search_filters as $filter ) {
+			// getting value from GET line
+			switch ( UM()->member_directory()->filter_types[ $filter ] ) {
+				default: {
+
+					$not_searched = apply_filters( 'um_member_directory_filter_value_from_url', $not_searched, $filter );
+
+					break;
+				}
+				case 'select': {
+
+					// getting value from GET line
+					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? explode( '||', sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ) : array();
+
+					if ( ! empty( $filter_from_url ) ) {
+						$not_searched = false;
+					}
+
+					break;
+				}
+				case 'slider': {
+					// getting value from GET line
+					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) : '';
+					if ( ! empty( $filter_from_url ) ) {
+						$not_searched = false;
+					}
+
+					break;
+				}
+				case 'datepicker':
+				case 'timepicker': {
+					// getting value from GET line
+					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_from_' . $unique_hash ] ) : '';
+					if ( ! empty( $filter_from_url ) ) {
+						$not_searched = false;
+					}
+
+					break;
+				}
+			}
+		}
+	}
 } ?>
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ); ?>"
      data-hash="<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ) ?>" data-base-post="<?php echo esc_attr( $post->ID ) ?>"
-	 data-show="<?php echo esc_attr( $after_search ); ?>"
+	 data-must-search="<?php echo esc_attr( $must_search ); ?>" data-searched="<?php echo $not_searched ? '0' : '1'; ?>"
 	 data-view_type="<?php echo esc_attr( $current_view ) ?>" data-page="<?php echo esc_attr( $current_page ) ?>">
 	<div class="um-members-overlay"><div class="um-ajax-loading"></div></div>
 	<div class="um-form">
@@ -153,7 +204,9 @@ if( isset( $args['must_search'] ) && $args['must_search'] == 1 ) {
 
 			if ( ! empty( $args['enable_sorting'] ) && ! empty( $sorting_options ) && count( $sorting_options ) > 1 ) { ?>
 				<div class="um-member-directory-sorting">
-					<select class="um-s3 um-member-directory-sorting-options" id="um-member-directory-sorting-select-<?php echo esc_attr( $form_id ) ?>" data-placeholder="<?php esc_attr_e( 'Sort By', 'ultimate-member' ); ?>">
+					<select class="um-s3 um-member-directory-sorting-options" id="um-member-directory-sorting-select-<?php echo esc_attr( $form_id ) ?>"
+					        data-placeholder="<?php esc_attr_e( 'Sort By', 'ultimate-member' ); ?>"
+							<?php disabled( $not_searched ) ?>>
 						<?php foreach ( $sorting_options as $value => $title ) { ?>
 							<option value="<?php echo $value ?>" <?php selected( $sort_from_url, $value ) ?>><?php echo $title ?></option>
 						<?php } ?>
@@ -176,13 +229,13 @@ if( isset( $args['must_search'] ) && $args['must_search'] == 1 ) {
 					foreach ( UM()->member_directory()->view_types as $key => $value ) {
 						if ( in_array( $key, $args['view_types'] ) ) {
 							if ( empty( $view_types ) ) { ?>
-								<div class="um-member-directory-view-type">
+								<div class="um-member-directory-view-type<?php if ( $not_searched ) {?> um-disabled<?php } ?>">
 							<?php }
 
 							$view_types++; ?>
 
 							<a href="javascript:void(0)"
-							   class="um-member-directory-view-type-a um-tip-n"
+							   class="um-member-directory-view-type-a<?php if ( ! $not_searched ) {?> um-tip-n<?php } ?>"
 							   data-type="<?php echo $key; ?>"
 							   title="<?php printf( esc_attr__( 'Change to %s', 'ultimate-member' ), $value['title'] ) ?>"
 							   default-title="<?php echo esc_attr( $value['title'] ); ?>"

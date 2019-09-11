@@ -59,33 +59,33 @@ foreach ( $view_types_options as $key => $value ) {
 			'conditional'   => array( implode( '|', $conditional ), '~', 1 )
 		),
 		array(
-			'id'		=> '_um_roles',
-			'type'		=> 'multi_checkbox',
-			'label'		=> __( 'User Roles to Display', 'ultimate-member' ),
-			'tooltip'	=> __( 'If you do not want to show all members, select only user roles to appear in this directory', 'ultimate-member' ),
-			'options'	=> UM()->roles()->get_roles(),
+			'id'        => '_um_roles',
+			'type'      => 'multi_checkbox',
+			'label'     => __( 'User Roles to Display', 'ultimate-member' ),
+			'tooltip'   => __( 'If you do not want to show all members, select only user roles to appear in this directory', 'ultimate-member' ),
+			'options'   => UM()->roles()->get_roles(),
 			'columns'   => 3,
-			'value'		=> $_um_roles_value,
+			'value'     => $_um_roles_value,
 		),
 		array(
-			'id'		=> '_um_has_profile_photo',
-			'type'		=> 'checkbox',
-			'label'		=> __( 'Only show members who have uploaded a profile photo', 'ultimate-member' ),
-			'tooltip'	=> __( 'If \'Use Gravatars\' as profile photo is enabled, this option is ignored', 'ultimate-member' ),
-			'value'		=> UM()->query()->get_meta_value( '_um_has_profile_photo' ),
+			'id'        => '_um_has_profile_photo',
+			'type'      => 'checkbox',
+			'label'     => __( 'Only show members who have uploaded a profile photo', 'ultimate-member' ),
+			'tooltip'   => __( 'If \'Use Gravatars\' as profile photo is enabled, this option is ignored', 'ultimate-member' ),
+			'value'     => UM()->query()->get_meta_value( '_um_has_profile_photo' ),
 		),
 		array(
-			'id'		=> '_um_has_cover_photo',
-			'type'		=> 'checkbox',
-			'label'		=> __( 'Only show members who have uploaded a cover photo', 'ultimate-member' ),
-			'value'		=> UM()->query()->get_meta_value( '_um_has_cover_photo' ),
+			'id'    => '_um_has_cover_photo',
+			'type'  => 'checkbox',
+			'label' => __( 'Only show members who have uploaded a cover photo', 'ultimate-member' ),
+			'value' => UM()->query()->get_meta_value( '_um_has_cover_photo' ),
 		),
 		array(
-			'id'		    => '_um_show_these_users',
-			'type'		    => 'textarea',
-			'label'		    => __( 'Only show specific users (Enter one username per line)', 'ultimate-member' ),
-			'value'		    => $show_these_users,
-		)
+			'id'    => '_um_show_these_users',
+			'type'  => 'textarea',
+			'label' => __( 'Only show specific users (Enter one username per line)', 'ultimate-member' ),
+			'value' => $show_these_users,
+		),
 	);
 
 	/**
@@ -111,9 +111,9 @@ foreach ( $view_types_options as $key => $value ) {
 	$fields = apply_filters( 'um_admin_extend_directory_options_general', $fields );
 
 	UM()->admin_forms( array(
-		'class'		=> 'um-member-directory-general um-half-column',
-		'prefix_id'	=> 'um_metadata',
-		'fields' 	=> $fields
+		'class'     => 'um-member-directory-general um-half-column',
+		'prefix_id' => 'um_metadata',
+		'fields'    => $fields
 	) )->render_form(); ?>
 
 	<div class="um-admin-clear"></div>

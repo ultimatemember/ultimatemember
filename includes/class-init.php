@@ -15,7 +15,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Instagram_API Instagram_API()
 	 * @method UM_Mailchimp Mailchimp()
 	 * @method UM_Messaging_API Messaging_API()
-	 * @method UM_myCRED_API myCRED_API()
+	 * @method UM_myCRED myCRED()
 	 * @method UM_Notices_API Notices_API()
 	 * @method UM_Notifications_API Notifications_API()
 	 * @method UM_Online Online()

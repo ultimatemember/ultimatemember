@@ -5,28 +5,9 @@ global $post_id; ?>
 
 <div class="um-admin-metabox">
 	<?php
-	/*$_um_roles_search_value = array();
-	$_um_roles_search = get_post_meta( $post_id, '_um_roles_can_search', true );
-	if ( ! empty( $_um_roles_search ) ) {
-		foreach ( UM()->roles()->get_roles() as $key => $value ) {
-			if ( in_array( $key, array_keys( $_um_roles_search ) ) ) {
-				$_um_roles_search_value[] = $key;
-			}
-		}
-	}*/
 
 	$_um_roles_search_value = get_post_meta( $post_id, '_um_roles_can_search', true );
 	$_um_roles_search_value = empty( $_um_roles_search_value ) ? array() : $_um_roles_search_value;
-
-	/*$_um_roles_filter_value = array();
-	$_um_roles_filter = get_post_meta( $post_id, '_um_roles_can_filter', true );
-	if ( ! empty( $_um_roles_filter ) ) {
-		foreach ( UM()->roles()->get_roles() as $key => $value ) {
-			if ( in_array( $key, array_keys( $_um_roles_filter ) ) ) {
-				$_um_roles_filter_value[] = $key;
-			}
-		}
-	}*/
 
 	$_um_roles_filter_value = get_post_meta( $post_id, '_um_roles_can_filter', true );
 	$_um_roles_filter_value = empty( $_um_roles_filter_value ) ? array() : $_um_roles_filter_value;
@@ -53,7 +34,7 @@ global $post_id; ?>
 	 * ?>
 	 */
 	$custom_search = apply_filters( 'um_admin_custom_search_filters', array() );
-	$searchable_fields = UM()->builtin()->all_user_fields('date,time,url');
+	$searchable_fields = UM()->builtin()->all_user_fields( 'date,time,url' );
 	$searchable_fields = $searchable_fields + $custom_search;
 	$user_fields = array();
 	foreach ( $searchable_fields as $key => $arr ) {

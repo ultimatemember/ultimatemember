@@ -411,6 +411,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 * ?>
 			 */
 			$attrs = apply_filters( 'um_search_fields', $attrs );
+
+			$unique_hash = substr( md5( $directory_data['form_id'] ), 10, 5 );
+
 			ob_start();
 
 			switch ( $this->filter_types[ $filter ] ) {
@@ -421,6 +424,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					break;
 				}
 				case 'select': {
+
+					// getting value from GET line
+					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? explode( '||', sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ) : array();
 
 					if ( isset( $attrs['metakey'] ) && strstr( $attrs['metakey'], 'role_' ) ) {
 						$shortcode_roles = get_post_meta( UM()->shortcodes()->form_id, '_um_roles', true );
@@ -475,7 +481,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 										$opt = $k;
 									} ?>
 
-									<option value="<?php echo $opt; ?>" data-value_label="<?php esc_attr_e( $v, 'ultimate-member' ); ?>">
+									<option value="<?php echo esc_attr( $opt ); ?>" data-value_label="<?php esc_attr_e( $v, 'ultimate-member' ); ?>"
+										<?php disabled( ! empty( $filter_from_url ) && in_array( $opt, $filter_from_url ) ) ?>>
 										<?php _e( $v, 'ultimate-member' ); ?>
 									</option>
 
