@@ -603,6 +603,10 @@ div.uimob500 .um-members-list .um-member-card-actions {
 	margin-left: 0;
 }
 
+.um-members-list .um-members-follow-stats div {
+	margin-left: 0;
+}
+
 .um-members-list .um-member-tagline {
 	padding-left: 0;
 }
@@ -803,6 +807,10 @@ div.uimob500 .um-members-list .um-member-card-actions {
 	cursor: default;
 	background: #f1f1f1;
 	font-size: 13px;
+}
+
+.um-directory .um-members-filter-tag strong {
+	margin-right: 3px;
 }
 
 .um-directory .um-clear-filters {
