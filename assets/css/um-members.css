@@ -794,6 +794,10 @@ div.uimob500 .um-members-list .um-member-card-actions {
 	font-size: 13px;
 }
 
+.um-directory .um-members-filter-tag strong {
+	margin-right: 3px;
+}
+
 .um-directory .um-clear-filters {
 	/*margin-left: 20px;*/
 }
