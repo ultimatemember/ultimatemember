@@ -128,7 +128,7 @@ div.uimob800 .um-account-side li a.current:hover
 .select2-drop-active,
 .select2-drop.select2-drop-above
 {
-    border: 2px solid #ddd !important;
+    border: 1px solid #ddd !important;
 }
 
 .um .um-form .select2-container-multi .select2-choices .select2-search-field input[type=text] {
@@ -142,7 +142,7 @@ div.uimob800 .um-account-side li a.current:hover
 .um .um-form .um-datepicker.picker__input.picker__input--active,
 .um .um-form .um-datepicker.picker__input.picker__input--target,
 .um .um-form textarea:focus {
-    border: 2px solid #bbb !important;
+    border: 1px solid #bbb !important;
 }
 
 .um .um-form input[type=text],

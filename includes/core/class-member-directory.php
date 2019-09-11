@@ -941,17 +941,23 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * @param array $directory_data
 		 */
 		function show_only_these_users( $directory_data ) {
-			if ( ! empty( $directory_data['show_these_users'] ) && is_array( $directory_data['show_these_users'] ) ) {
-				$users_array = array();
+			if ( ! empty( $directory_data['show_these_users'] ) ) {
+				$show_these_users = maybe_unserialize( $directory_data['show_these_users'] );
 
-				foreach ( $directory_data['show_these_users'] as $username ) {
-					if ( false !== ( $exists_id = username_exists( $username ) ) ) {
-						$users_array[] = $exists_id;
+				if ( is_array( $show_these_users ) && ! empty( $show_these_users ) ) {
+
+					$users_array = array();
+
+					foreach ( $show_these_users as $username ) {
+						if ( false !== ( $exists_id = username_exists( $username ) ) ) {
+							$users_array[] = $exists_id;
+						}
 					}
-				}
 
-				if ( ! empty( $users_array ) ) {
-					$this->query_args['include'] = $users_array;
+					if ( ! empty( $users_array ) ) {
+						$this->query_args['include'] = $users_array;
+					}
+
 				}
 			}
 		}

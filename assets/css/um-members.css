@@ -85,7 +85,7 @@
 	width: 30%;
 	background: #fff;
 	text-align: center;
-	border: 1px solid #eee;
+	border: 1px solid #ddd;
 	box-sizing: border-box;
 	margin-bottom: 40px;
 	position: relative;
@@ -146,7 +146,9 @@
 	text-align: center;
 }
 
-.um-member-photo a{ display: inline !important; }
+.um-member-photo a {
+	display: inline !important;
+}
 
 .um-member-photo img {
 	display: inline !important;
@@ -157,7 +159,9 @@
 	float: none !important;
 }
 
-.um-member.with-cover .um-member-photo {padding-top: 0}
+.um-member.with-cover .um-member-photo {
+	padding-top: 0
+}
 .um-member.with-cover .um-member-photo img {
 	width: 90px;
 	height: 90px;
@@ -172,10 +176,15 @@
 .um-member-photo.radius-2 img { -moz-border-radius: 4px !important;-webkit-border-radius: 4px !important;border-radius: 4px !important }
 .um-member-photo.radius-3 img { -moz-border-radius: 0 !important;-webkit-border-radius: 0 !important; border-radius: 0 !important }
 
+
+/*.um-directory.uimob500*/
+
+/*.um-members-list .um-member-photo*/
+
+
 /*
 	- Member name
 */
-
 .um-member-card.no-photo {
 	padding-top: 30px;
 }
@@ -841,12 +850,12 @@ div.uimob500 .um-members-list .um-member-card-actions {
 
 .um-slider .ui-slider-range.ui-widget-header {
 	background: #44b0ec;
-	border: 2px solid #44b0ec !important;
-	margin-top: -2px;
+	border: 1px solid #44b0ec !important;
+	margin-top: -1px;
 }
 
 .um-slider.ui-slider.ui-slider-horizontal {
-	border: 2px solid #ddd !important;
+	border: 1px solid #ddd !important;
 	box-sizing: border-box;
 }
 

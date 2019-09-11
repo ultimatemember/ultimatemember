@@ -5,6 +5,7 @@
 
 .um-profile-photo {
 	float: right;
+	margin: 0 30px 0 0;
 }
 
 .um-profile-photo a.um-profile-photo-img {
@@ -13,7 +14,7 @@
 }
 
 .um-cover + .um-header .um-profile-photo a.um-profile-photo-img {
-	right: 30px;
+	/*right: 30px;*/
 }
 
 div.uimob500 .um-profile-photo a.um-profile-photo-img {
@@ -22,8 +23,9 @@ div.uimob500 .um-profile-photo a.um-profile-photo-img {
 
 .um-profile-edit {
 	right: auto;
-	left: 10px;
-	padding-left: 10px;
+	left: 0;
+	margin-left: 10px;
+	margin-right: 0;
 }
 
 div.uimob960 .um-header .um-profile-meta,

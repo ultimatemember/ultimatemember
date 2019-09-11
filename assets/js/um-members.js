@@ -431,6 +431,7 @@ function um_run_search( directory ) {
 
 	var search = directory.find('.um-search-line').val();
 	if ( search === pre_search || ( search === '' && typeof pre_search == 'undefined' ) ) {
+		um_members_hide_preloader( directory );
 		return;
 	}
 
@@ -442,9 +443,9 @@ function um_run_search( directory ) {
 	um_set_url_from_data( directory, 'page', '' );
 
 	var show_after_search = directory.data('must-search');
-	var search = um_get_search( directory );
-	if ( directory.find( '.um-members-filter-remove' ).length === 0 && ! search ) {
-		if ( show_after_search === 1 ) {
+	if ( show_after_search === 1 ) {
+		var search = um_get_search( directory );
+		if ( directory.find( '.um-members-filter-remove' ).length === 0 && ! search ) {
 			directory.data( 'searched', 0 );
 			directory.find('.um-members-grid, .um-members-list').remove();
 			directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', true );
@@ -727,9 +728,9 @@ jQuery(document).ready( function() {
 		var search_bar = jQuery(this).parents('.um-directory').find('.um-search');
 
 		if ( search_bar.is( ':visible' ) ) {
-			search_bar.slideUp(650);
+			search_bar.slideUp(250);
 		} else {
-			search_bar.slideDown(650);
+			search_bar.slideDown(250);
 		}
 	});
 
@@ -1077,9 +1078,9 @@ jQuery(document).ready( function() {
 		}
 
 		var show_after_search = directory.data('must-search');
-		var search = um_get_search( directory );
-		if ( directory.find( '.um-members-filter-remove' ).length === 0 && ! search ) {
-			if ( show_after_search === 1 ) {
+		if ( show_after_search === 1 ) {
+			var search = um_get_search( directory );
+			if ( directory.find( '.um-members-filter-remove' ).length === 0 && ! search ) {
 				directory.data( 'searched', 0 );
 				directory.find('.um-members-grid, .um-members-list').remove();
 				directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', true );
@@ -1159,14 +1160,16 @@ jQuery(document).ready( function() {
 		jQuery(this).hide();
 
 		var show_after_search = directory.data('must-search');
-		var search = um_get_search( directory );
-		if ( show_after_search === 1 && ! search ) {
-			directory.data( 'searched', 0 );
-			directory.find('.um-members-grid, .um-members-list').remove();
-			directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', true );
-			directory.find( '.um-member-directory-view-type' ).addClass( 'um-disabled' );
-			um_members_hide_preloader( directory );
-			return;
+		if ( show_after_search === 1 ) {
+			var search = um_get_search( directory );
+			if ( ! search ) {
+				directory.data( 'searched', 0 );
+				directory.find('.um-members-grid, .um-members-list').remove();
+				directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', true );
+				directory.find( '.um-member-directory-view-type' ).addClass( 'um-disabled' );
+				um_members_hide_preloader( directory );
+				return;
+			}
 		}
 
 		directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
@@ -1188,11 +1191,10 @@ jQuery(document).ready( function() {
 		um_member_directories.push( hash );
 
 		var show_after_search = directory.data('must-search');
-		var search = um_get_search( directory );
-
-		var filters_data = um_get_filters_data( directory );
-		if ( ! filters_data.length && ! search ) {
-			if ( show_after_search === 1 ) {
+		if ( show_after_search === 1 ) {
+			var search = um_get_search( directory );
+			var filters_data = um_get_filters_data( directory );
+			if ( ! filters_data.length && ! search ) {
 				return;
 			}
 		}

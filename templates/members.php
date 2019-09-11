@@ -123,15 +123,10 @@ foreach ( $args['view_types'] as $type ) {
 UM()->get_template( 'members-header.php', '', $args, true );
 UM()->get_template( 'members-pagination.php', '', $args, true );
 
-if ( isset( $args['must_search'] ) && $args['must_search'] == 1 ) {
-	$must_search = 1;
-} else {
-	$must_search = 0;
-}
-
-
+$must_search = 0;
 $not_searched = false;
 if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $search_filters ) ) ) && isset( $args['must_search'] ) && $args['must_search'] == 1 ) {
+	$must_search = 1;
 	$not_searched = true;
 	if ( $search && $show_search && ! empty( $search_from_url ) ) {
 		$not_searched = false;
