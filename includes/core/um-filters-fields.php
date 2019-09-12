@@ -187,10 +187,12 @@ add_filter( 'um_profile_field_filter_hook__textarea', 'um_profile_field_filter_h
  * @return mixed|string
  */
 function um_profile_field_filter_hook__time( $value, $data ) {
-	$value = UM()->datetime()->format( $value, $data['format'] );
+	if( $value ) {
+		$value = UM()->datetime()->format( $value, $data['format'] );
 
-	$value = str_replace('am', 'a.m.', $value );
-	$value = str_replace('pm', 'p.m.', $value );
+		$value = str_replace( 'am', 'a.m.', $value );
+		$value = str_replace( 'pm', 'p.m.', $value );
+	}
 	return $value;
 }
 add_filter( 'um_profile_field_filter_hook__time', 'um_profile_field_filter_hook__time', 99, 2 );
