@@ -4,13 +4,10 @@
 [![Active Installs](https://img.shields.io/wordpress/plugin/installs/ultimate-member.svg)](https://img.shields.io/wordpress/plugin/installs/ultimate-member.svg)
 [![Ratings](https://img.shields.io/wordpress/plugin/rating/ultimate-member)](https://img.shields.io/wordpress/plugin/rating/ultimate-member)
 [![Latest Version](https://img.shields.io/wordpress/plugin/v/ultimate-member?label=Latest)](https://img.shields.io/wordpress/plugin/v/ultimate-member?label=Latest)
-[![WP Tested](https://img.shields.io/wordpress/plugin/tested/ultimate-member)](https://img.shields.io/wordpress/plugin/tested/ultimate-member)
-[![WP Version Required](https://img.shields.io/wordpress/plugin/wp-version/ultimate-member)](https://img.shields.io/wordpress/plugin/wp-version/ultimate-member)
+[![WP Tested](https://img.shields.io/wordpress/plugin/tested/ultimate-member?label=wp)](https://img.shields.io/wordpress/plugin/tested/ultimate-member?label=wp)
+[![WP Version Required](https://img.shields.io/wordpress/plugin/wp-version/ultimate-member?label=wp)](https://img.shields.io/wordpress/plugin/wp-version/ultimate-member?label=wp)
 [![Downloads](https://img.shields.io/wordpress/plugin/dt/ultimate-member.svg)](https://img.shields.io/wordpress/plugin/dt/ultimate-member.svg)
-[![Stars](https://img.shields.io/github/stars/ultimatemember/ultimatemember)](https://img.shields.io/github/stars/ultimatemember/ultimatemember)
-[![Forks](https://img.shields.io/github/forks/ultimatemember/ultimatemember)](https://img.shields.io/github/forks/ultimatemember/ultimatemember)
 [![Build Status](https://travis-ci.org/ultimatemember/ultimatemember.svg?branch=master)](https://travis-ci.org/ultimatemember/ultimatemember)
-[![PHP Tested](https://img.shields.io/travis/php-v/ultimatemember/ultimatemember)](https://img.shields.io/travis/php-v/ultimatemember/ultimatemember)
 
 
 
