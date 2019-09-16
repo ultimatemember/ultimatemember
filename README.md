@@ -1,6 +1,9 @@
 # Ultimate Member 
 
 [![Build Status](https://travis-ci.org/ultimatemember/ultimatemember.svg?branch=master)](https://travis-ci.org/ultimatemember/ultimatemember)
+[![Stars](https://img.shields.io/github/stars/ultimatemember/ultimatemember)](https://img.shields.io/github/stars/ultimatemember/ultimatemember)
+[![Forks](https://img.shields.io/github/forks/ultimatemember/ultimatemember)](https://img.shields.io/github/forks/ultimatemember/ultimatemember)
+[![License](https://img.shields.io/github/license/ultimatemember/ultimatemember)](https://img.shields.io/github/license/ultimatemember/ultimatemember)
 
 Ultimate Member is the #1 user profile & membership plugin for WordPress. The plugin makes it a breeze for users to sign-up and become members of your website. The plugin allows you to add beautiful user profiles to your site and is perfect for creating advanced online communities and membership sites. Lightweight and highly extendible, Ultimate Member will enable you to create almost any type of site where users can join and become members with absolute ease.
 
