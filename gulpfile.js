@@ -4,10 +4,15 @@
 
 var gulp = require('gulp')
 , uglify = require('gulp-uglify'),
+  sass = require('gulp-sass'),
   rename = require("gulp-rename");
 
 // task
 gulp.task( 'default', function ( done ) {
+	sass.compiler = require( 'node-sass' );
+
+	gulp.src(['assets/sass/*.sass']).pipe( sass().on( 'error', sass.logError ) ).pipe( gulp.dest( 'assets/css' ) );
+
     gulp.src(['assets/js/*.js', '!assets/js/*.min.js', ]) // path to your files
         .pipe( uglify() )
         .pipe( rename({ suffix: '.min' }) )
@@ -15,6 +20,28 @@ gulp.task( 'default', function ( done ) {
 
     done();
 });
+
+
+// function css( path ) {
+// 	sass.compiler = require( 'node-sass' );
+//
+// 	var src_array = exclude_css( path );
+// 	return src( src_array )
+// 		.pipe( sass().on( 'error', sass.logError ) )
+// 		.pipe( dest( 'assets/' + path + '/css' ) );
+// }
+//
+// function min_css( path ) {
+// 	sass.compiler = require( 'node-sass' );
+//
+// 	var src_array = exclude_css( path );
+// 	return src( src_array )
+// 		.pipe( sass().on( 'error', sass.logError ) )
+// 		.pipe( cleanCSS() )
+// 		.pipe( rename( { suffix: '.min' } ) )
+// 		.pipe( dest( 'assets/' + path + '/css' ) );
+// }
+
 
 /*
        var gulp = require('gulp');

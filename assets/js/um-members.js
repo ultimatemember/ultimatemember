@@ -254,8 +254,8 @@ function um_build_template( directory, data ) {
 	directory.find('.um-members-wrapper').prepend( template( data ) );
 	directory.addClass('um-loaded');
 
-	if ( directory.find('.um-members').length ) {
-		UM_Member_Grid( directory.find('.um-members') );
+	if ( directory.find('.um-members.um-members-grid').length ) {
+		UM_Member_Grid( directory.find('.um-members.um-members-grid') );
 	}
 
 	jQuery( document ).trigger( 'um_build_template', [ directory, data ] );

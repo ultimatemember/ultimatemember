@@ -2,7 +2,7 @@
 
 
 <script type="text/template" id="tmpl-um-member-list">
-	<div class="um-members-list">
+	<div class="um-members um-members-list">
 
 		<# if ( data.length > 0 ) { #>
 			<# _.each( data, function( user, key, list ) { #>
@@ -77,7 +77,7 @@
 
 							<# if ( $show_block ) { #>
 								<div class="um-member-meta-main">
-									<div class="um-member-meta no-animate">
+									<div class="um-member-meta">
 										<?php foreach ( $reveal_fields as $key ) { ?>
 
 											<# if ( typeof user.<?php echo $key; ?> !== 'undefined' ) { #>
