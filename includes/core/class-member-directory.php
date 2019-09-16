@@ -1344,13 +1344,20 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 									break;
 								case 'timepicker':
 
-									$field_query = array(
-										'key'       => $field,
-										'value'     => $value,
-										'compare'   => 'BETWEEN',
-										'type'      => 'TIME',
-										'inclusive' => true,
-									);
+									if ( $value[0] == $value[1] ) {
+										$field_query = array(
+											'key'       => $field,
+											'value'     => $value[0],
+										);
+									} else {
+										$field_query = array(
+											'key'       => $field,
+											'value'     => $value,
+											'compare'   => 'BETWEEN',
+											'type'      => 'TIME',
+											'inclusive' => true,
+										);
+									}
 
 									break;
 							}

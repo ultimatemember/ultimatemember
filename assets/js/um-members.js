@@ -233,7 +233,8 @@ function um_ajax_get_members( directory, args ) {
 				directory.find( '.um-member-directory-view-type' ).addClass( 'um-disabled' );
 			}
 
-			jQuery( document ).trigger('um_members_rendered');
+			//args.directory = directory;
+			jQuery( document ).trigger('um_members_rendered', args );
 
 			um_members_hide_preloader( directory );
 		},
@@ -314,7 +315,9 @@ function um_get_filters_data( directory ) {
 				var to_val = directory.find('input.um-datepicker-filter[data-range="to"][data-filter_name="' + filter_name + '"]').val();
 
 				var value;
-				if ( from_val !== '' &&  to_val !== '' ) {
+				if ( from_val === to_val ) {
+					value = to_val;
+				} else if ( from_val !== '' &&  to_val !== '' ) {
 					value = from_val + ' - ' + to_val;
 				} else if ( from_val === '' ) {
 					value = 'before ' + to_val;
@@ -346,7 +349,9 @@ function um_get_filters_data( directory ) {
 				var to_val = directory.find('input.um-timepicker-filter[data-range="to"][data-filter_name="' + filter_name + '"]').val();
 
 				var value;
-				if ( from_val !== '' &&  to_val !== '' ) {
+				if ( from_val === to_val ) {
+					value = to_val;
+				} else if ( from_val !== '' &&  to_val !== '' ) {
 					value = from_val + ' - ' + to_val;
 				} else if ( from_val === '' ) {
 					value = 'before ' + to_val;
@@ -788,230 +793,6 @@ jQuery(document).ready( function() {
 	});
 
 
-	//slider filter
-	jQuery( '.um-slider' ).each( function() {
-		var slider = jQuery( this );
-		var directory = slider.parents('.um-directory');
-
-		var filter_name = slider.data('field_name');
-
-		var min_default_value = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
-		var max_default_value = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
-		if ( typeof min_default_value == 'undefined' ) {
-			min_default_value = parseInt( slider.data('min') );
-		}
-
-		if ( typeof max_default_value == 'undefined' ) {
-			max_default_value =  parseInt( slider.data('max') );
-		}
-
-		var default_value = [ min_default_value, max_default_value ];
-
-		slider.slider({
-			range: true,
-			min: parseInt( slider.data('min') ),
-			max: parseInt( slider.data('max') ),
-			values: default_value,
-			create: function( event, ui ) {
-				//console.log( ui );
-			},
-			step: 1,
-			slide: function( event, ui ) {
-				um_set_range_label( jQuery( this ), ui );
-			},
-			stop: function( event, ui ) {
-				if ( ! um_is_directory_busy( directory ) ) {
-					um_set_url_from_data( directory, 'filter_' + filter_name + '_from', ui.values[0] );
-					um_set_url_from_data( directory, 'filter_' + filter_name + '_to', ui.values[1] );
-
-					//set 1st page after filtration
-					directory.data( 'page', 1 );
-					um_set_url_from_data( directory, 'page', '' );
-					um_ajax_get_members( directory );
-
-					um_change_tag( directory );
-
-					directory.data( 'searched', 1 );
-					directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
-					directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
-				}
-			}
-		});
-
-		um_set_range_label( slider );
-	});
-
-
-	//datepicker filter
-	jQuery('.um-datepicker-filter').each( function() {
-		var elem = jQuery(this);
-
-		var min = new Date( elem.data('date_min')*1000 );
-		var max = new Date( elem.data('date_max')*1000 );
-
-		var $input = elem.pickadate({
-			selectYears: true,
-			min: min,
-			max: max,
-			formatSubmit: 'yyyy/mm/dd',
-			hiddenName: true,
-			onOpen: function() {
-				elem.blur();
-			},
-			onClose: function() {
-				elem.blur();
-			},
-			onSet: function( context ) {
-				var directory = elem.parents('.um-directory');
-
-				if ( um_is_directory_busy( directory ) ) {
-					return;
-				}
-
-				um_members_show_preloader( directory );
-
-				var filter_name = elem.data( 'filter_name' );
-				var range = elem.data( 'range' );
-
-				var current_value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
-				var current_value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
-				if ( typeof current_value_from === "undefined" ) {
-					current_value_from = min / 1000;
-				}
-				if ( typeof current_value_to === "undefined" ) {
-					current_value_to = max / 1000;
-				}
-
-				var select_val = context.select / 1000;
-				var change_val = elem.val();
-
-				if ( range === 'from' ) {
-					current_value_from = select_val;
-				} else if ( range === 'to' ) {
-					current_value_to = select_val;
-				}
-
-				um_set_url_from_data( directory, 'filter_' + filter_name + '_from', current_value_from );
-				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', current_value_to );
-
-				//set 1st page after filtration
-				directory.data( 'page', 1 );
-				um_set_url_from_data( directory, 'page', '' );
-
-				um_ajax_get_members( directory );
-
-				um_change_tag( directory );
-
-				directory.data( 'searched', 1 );
-				directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
-				directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
-			}
-		});
-
-		var $picker = $input.pickadate('picker');
-		var $fname = elem.data('filter_name');
-		var $frange = elem.data('range');
-		var $directory = elem.parents('.um-directory');
-
-		var query_value = um_get_data_for_directory( $directory, 'filter_' + $fname + '_' + $frange );
-		if ( typeof query_value !== 'undefined' ) {
-			$picker.set( 'select', query_value*1000 );
-			//elem.attr('data-value',elem.val());
-			//elem.val(elem.val());
-			//elem.val('data-value', query_value*100);
-		}
-
-	});
-
-
-	//timepicker filter
-	jQuery('.um-timepicker-filter').each( function() {
-		var elem = jQuery(this);
-
-		//using arrays formatted as [HOUR,MINUTE]
-
-		var min = elem.data('min');
-		var max = elem.data('max');
-		var picker_min = min.split(':');
-		var picker_max = max.split(':');
-
-		var $input = elem.pickatime({
-			format:         elem.data('format'),
-			interval:       parseInt( elem.data('intervals') ),
-			min: [picker_min[0],picker_min[1]],
-			max: [picker_max[0],picker_max[1]],
-			formatSubmit:   'HH:i',
-			hiddenName:     true,
-			onOpen:         function() { elem.blur(); },
-			onClose:        function() { elem.blur(); },
-			onSet:          function( context ) {
-				var directory = elem.parents('.um-directory');
-
-				if ( um_is_directory_busy( directory ) ) {
-					return;
-				}
-
-				um_members_show_preloader( directory );
-
-				var filter_name = elem.data( 'filter_name' );
-				var range = elem.data( 'range' );
-
-				var current_value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
-				var current_value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
-				if ( typeof current_value_from === "undefined" ) {
-					current_value_from = min;
-				}
-				if ( typeof current_value_to === "undefined" ) {
-					current_value_to = max;
-				}
-
-				if ( typeof context.select !== 'undefined' ) {
-					var select_val = context.select / 60;
-					var change_val = elem.val();
-
-					if ( range === 'from' ) {
-						current_value_from = select_val + ':00';
-					} else if ( range === 'to' ) {
-						current_value_to = select_val + ':00';
-					}
-				} else {
-					if ( range === 'from' ) {
-						current_value_from = min;
-					} else if ( range === 'to' ) {
-						current_value_to = max;
-					}
-				}
-
-				um_set_url_from_data( directory, 'filter_' + filter_name + '_from', current_value_from );
-				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', current_value_to );
-
-				//set 1st page after filtration
-				directory.data( 'page', 1 );
-				um_set_url_from_data( directory, 'page', '' );
-
-				um_ajax_get_members( directory );
-
-				um_change_tag( directory );
-
-				directory.data( 'searched', 1 );
-				directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
-				directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
-			}
-		});
-
-
-		var $picker = $input.pickatime('picker');
-		var $fname = elem.data('filter_name');
-		var $frange = elem.data('range');
-		var $directory = elem.parents('.um-directory');
-
-		var query_value = um_get_data_for_directory( $directory, 'filter_' + $fname + '_' + $frange );
-		if ( typeof query_value !== 'undefined' ) {
-			$picker.set( 'select', query_value );
-		}
-	});
-
-
 	jQuery( document.body ).on( 'click', '.um-members-filter-remove', function() {
 		var directory = jQuery(this).parents('.um-directory');
 
@@ -1202,9 +983,238 @@ jQuery(document).ready( function() {
 		}
 
 		um_members_show_preloader( directory );
-		um_ajax_get_members( directory );
+		um_ajax_get_members( directory, {first_load:true} );
+
+
+		//slider filter
+		directory.find('.um-slider').each( function() {
+			var slider = jQuery( this );
+			var directory = slider.parents('.um-directory');
+
+			var filter_name = slider.data('field_name');
+
+			var min_default_value = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
+			var max_default_value = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
+			if ( typeof min_default_value == 'undefined' ) {
+				min_default_value = parseInt( slider.data('min') );
+			}
+
+			if ( typeof max_default_value == 'undefined' ) {
+				max_default_value =  parseInt( slider.data('max') );
+			}
+
+			var default_value = [ min_default_value, max_default_value ];
+
+			slider.slider({
+				range: true,
+				min: parseInt( slider.data('min') ),
+				max: parseInt( slider.data('max') ),
+				values: default_value,
+				create: function( event, ui ) {
+					//console.log( ui );
+				},
+				step: 1,
+				slide: function( event, ui ) {
+					um_set_range_label( jQuery( this ), ui );
+				},
+				stop: function( event, ui ) {
+					if ( ! um_is_directory_busy( directory ) ) {
+						um_set_url_from_data( directory, 'filter_' + filter_name + '_from', ui.values[0] );
+						um_set_url_from_data( directory, 'filter_' + filter_name + '_to', ui.values[1] );
+
+						//set 1st page after filtration
+						directory.data( 'page', 1 );
+						um_set_url_from_data( directory, 'page', '' );
+						um_ajax_get_members( directory );
+
+						um_change_tag( directory );
+
+						directory.data( 'searched', 1 );
+						directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
+						directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
+					}
+				}
+			});
+
+			um_set_range_label( slider );
+		});
+
+
+		//datepicker filter
+		directory.find('.um-datepicker-filter').each( function() {
+			var elem = jQuery(this);
+
+			var min = new Date( elem.data('date_min')*1000 );
+			var max = new Date( elem.data('date_max')*1000 );
+
+			var $input = elem.pickadate({
+				selectYears: true,
+				min: min,
+				max: max,
+				formatSubmit: 'yyyy/mm/dd',
+				hiddenName: true,
+				onOpen: function() {
+					elem.blur();
+				},
+				onClose: function() {
+					elem.blur();
+				},
+				onSet: function( context ) {
+					var directory = elem.parents('.um-directory');
+
+					if ( um_is_directory_busy( directory ) ) {
+						return;
+					}
+
+					um_members_show_preloader( directory );
+
+					var filter_name = elem.data( 'filter_name' );
+					var range = elem.data( 'range' );
+
+					var current_value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
+					var current_value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
+					if ( typeof current_value_from === "undefined" ) {
+						current_value_from = min / 1000;
+					}
+					if ( typeof current_value_to === "undefined" ) {
+						current_value_to = max / 1000;
+					}
+
+					var select_val = context.select / 1000;
+					var change_val = elem.val();
+
+					if ( range === 'from' ) {
+						current_value_from = select_val;
+					} else if ( range === 'to' ) {
+						current_value_to = select_val;
+					}
+
+					um_set_url_from_data( directory, 'filter_' + filter_name + '_from', current_value_from );
+					um_set_url_from_data( directory, 'filter_' + filter_name + '_to', current_value_to );
+
+					//set 1st page after filtration
+					directory.data( 'page', 1 );
+					um_set_url_from_data( directory, 'page', '' );
+
+					um_ajax_get_members( directory );
+
+					um_change_tag( directory );
+
+					directory.data( 'searched', 1 );
+					directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
+					directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
+				}
+			});
+
+			var $picker = $input.pickadate('picker');
+			var $fname = elem.data('filter_name');
+			var $frange = elem.data('range');
+			var $directory = elem.parents('.um-directory');
+
+			var query_value = um_get_data_for_directory( $directory, 'filter_' + $fname + '_' + $frange );
+			if ( typeof query_value !== 'undefined' ) {
+				$picker.set( 'select', query_value*1000 );
+			}
+
+		});
+
+
+		//timepicker filter
+		directory.find('.um-timepicker-filter').each( function() {
+			var elem = jQuery(this);
+
+			//using arrays formatted as [HOUR,MINUTE]
+
+			var min = elem.data('min');
+			var max = elem.data('max');
+			var picker_min = min.split(':');
+			var picker_max = max.split(':');
+
+			var $input = elem.pickatime({
+				format:         elem.data('format'),
+				interval:       parseInt( elem.data('intervals') ),
+				min: [picker_min[0],picker_min[1]],
+				max: [picker_max[0],picker_max[1]],
+				formatSubmit:   'HH:i',
+				hiddenName:     true,
+				onOpen:         function() { elem.blur(); },
+				onClose:        function() { elem.blur(); },
+				onSet:          function( context ) {
+					var directory = elem.parents('.um-directory');
+
+					if ( um_is_directory_busy( directory ) ) {
+						return;
+					}
+
+					um_members_show_preloader( directory );
+
+					var filter_name = elem.data( 'filter_name' );
+					var range = elem.data( 'range' );
+
+					var current_value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
+					var current_value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
+					if ( typeof current_value_from === "undefined" ) {
+						current_value_from = min;
+					}
+					if ( typeof current_value_to === "undefined" ) {
+						current_value_to = max;
+					}
+
+					if ( typeof context.select !== 'undefined' ) {
+						var select_val = context.select / 60;
+						var change_val = elem.val();
+
+						if ( range === 'from' ) {
+							current_value_from = select_val + ':00';
+						} else if ( range === 'to' ) {
+							current_value_to = select_val + ':00';
+						}
+					} else {
+						if ( range === 'from' ) {
+							current_value_from = min;
+						} else if ( range === 'to' ) {
+							current_value_to = max;
+						}
+					}
+
+					um_set_url_from_data( directory, 'filter_' + filter_name + '_from', current_value_from );
+					um_set_url_from_data( directory, 'filter_' + filter_name + '_to', current_value_to );
+
+					//set 1st page after filtration
+					directory.data( 'page', 1 );
+					um_set_url_from_data( directory, 'page', '' );
+
+					um_ajax_get_members( directory );
+
+					um_change_tag( directory );
+
+					directory.data( 'searched', 1 );
+					directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
+					directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
+				}
+			});
+
+
+			var $picker = $input.pickatime('picker');
+			var $fname = elem.data('filter_name');
+			var $frange = elem.data('range');
+			var $directory = elem.parents('.um-directory');
+
+			var query_value = um_get_data_for_directory( $directory, 'filter_' + $fname + '_' + $frange );
+			if ( typeof query_value !== 'undefined' ) {
+				var arr = query_value.split(':');
+				$picker.set( 'select', arr[0]*60 );
+			}
+		});
 
 		um_change_tag( directory );
 	});
+
+	//
+	// jQuery(document).on( 'um_members_rendered', function( event, args ) {
+	// 	if ( args.first_load ) {
+	// 		um_change_tag( args.directory );
+	// 	}
+	// });
 
 });

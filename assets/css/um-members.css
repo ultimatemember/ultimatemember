@@ -275,8 +275,6 @@ body #content .um-directory a {
       cursor: default;
       background: #f1f1f1;
       font-size: 13px; }
-      .um-directory .um-filtered-line .um-members-filter-tag strong {
-        margin-right: 3px; }
       .um-directory .um-filtered-line .um-members-filter-tag:first-child {
         margin-left: 0; }
       .um-directory .um-filtered-line .um-members-filter-tag .um-members-filter-remove {
