@@ -1,4 +1,4 @@
-<p align="center"><a href="https://ultimatemember.com/"><img src="https://ultimatemember.com/wp-content/uploads/2017/06/umlogonew1.png)](https://ultimatemember.com/wp-content/uploads/2017/06/umlogonew1.png" alt="Ultimate Member"></a></p>
+<p align="center"><a href="https://ultimatemember.com/"><img src="https://ultimatemember.com/wp-content/uploads/2017/06/umlogonew1.png" alt="Ultimate Member"></a></p>
 
 [![License](https://img.shields.io/github/license/ultimatemember/ultimatemember)](https://img.shields.io/github/license/ultimatemember/ultimatemember)
 [![Active Installs](https://img.shields.io/wordpress/plugin/installs/ultimate-member.svg)](https://img.shields.io/wordpress/plugin/installs/ultimate-member.svg)
