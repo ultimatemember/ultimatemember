@@ -1,21 +1,22 @@
-# Ultimate Member 
-
+<p align="center"><a href="https://ultimatemember.com/"><img src="https://ultimatemember.com/wp-content/uploads/2017/06/umlogonew1.png)](https://ultimatemember.com/wp-content/uploads/2017/06/umlogonew1.png" alt="Ultimate Member"></a></p>
 
 [![License](https://img.shields.io/github/license/ultimatemember/ultimatemember)](https://img.shields.io/github/license/ultimatemember/ultimatemember)
 [![Active Installs](https://img.shields.io/wordpress/plugin/installs/ultimate-member.svg)](https://img.shields.io/wordpress/plugin/installs/ultimate-member.svg)
 [![Ratings](https://img.shields.io/wordpress/plugin/rating/ultimate-member)](https://img.shields.io/wordpress/plugin/rating/ultimate-member)
+[![Latest Version](https://img.shields.io/wordpress/plugin/v/ultimate-member?label=Latest)](https://img.shields.io/wordpress/plugin/v/ultimate-member?label=Latest)
+[![WP Tested](https://img.shields.io/wordpress/plugin/tested/ultimate-member)](https://img.shields.io/wordpress/plugin/tested/ultimate-member)
+[![WP Version Required](https://img.shields.io/wordpress/plugin/wp-version/ultimate-member)](https://img.shields.io/wordpress/plugin/wp-version/ultimate-member)
 [![Downloads](https://img.shields.io/wordpress/plugin/dt/ultimate-member.svg)](https://img.shields.io/wordpress/plugin/dt/ultimate-member.svg)
 [![Stars](https://img.shields.io/github/stars/ultimatemember/ultimatemember)](https://img.shields.io/github/stars/ultimatemember/ultimatemember)
 [![Forks](https://img.shields.io/github/forks/ultimatemember/ultimatemember)](https://img.shields.io/github/forks/ultimatemember/ultimatemember)
 [![Build Status](https://travis-ci.org/ultimatemember/ultimatemember.svg?branch=master)](https://travis-ci.org/ultimatemember/ultimatemember)
+[![PHP Tested](https://img.shields.io/travis/php-v/ultimatemember/ultimatemember)](https://img.shields.io/travis/php-v/ultimatemember/ultimatemember)
+
 
 
 
 Ultimate Member is the #1 user profile & membership plugin for WordPress. The plugin makes it a breeze for users to sign-up and become members of your website. The plugin allows you to add beautiful user profiles to your site and is perfect for creating advanced online communities and membership sites. Lightweight and highly extendible, Ultimate Member will enable you to create almost any type of site where users can join and become members with absolute ease.
 
-| Latest Version |Requires at least|Stable Tag|
-| :------------: |:------------:|:------------:|
-| 2.0.56 | WordPress 4.9 or higher| 2.0.56 |
 
 If you are not a developer, please use the [Ultimate Member plugin page](https://wordpress.org/plugins/ultimate-member/) on WordPress.org.
 
