@@ -739,6 +739,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						WHERE meta_key = %s
 						ORDER BY meta_value DESC", $filter ) );
 
+					$meta = array_filter($meta);
+
 					if ( empty( $meta ) || count( $meta ) === 1 ) {
 						$range = false;
 					} elseif ( ! empty( $meta ) ) {

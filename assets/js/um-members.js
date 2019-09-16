@@ -932,12 +932,14 @@ jQuery(document).ready( function() {
 
 		var min = elem.data('min');
 		var max = elem.data('max');
+		var picker_min = min.split(':');
+		var picker_max = max.split(':');
 
 		var $input = elem.pickatime({
 			format:         elem.data('format'),
 			interval:       parseInt( elem.data('intervals') ),
-			min:            elem.data('min'),
-			max:            elem.data('max'),
+			min: [picker_min[0],picker_min[1]],
+			max: [picker_max[0],picker_max[1]],
 			formatSubmit:   'HH:i',
 			hiddenName:     true,
 			onOpen:         function() { elem.blur(); },

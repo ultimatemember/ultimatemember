@@ -96,6 +96,9 @@ add_filter( 'um_profile_field_filter_hook__vimeo_video', 'um_profile_field_filte
  * @return string
  */
 function um_profile_field_filter_hook__googlemap( $value, $data ) {
+	if ( ! $value ) {
+		return '';
+	}
 	$value = '<div class="um-googlemap">
 					<iframe width="600" height="450" frameborder="0" style="border:0" src="https://maps.google.it/maps?q=' . urlencode( $value ) . '&output=embed"></iframe>
 				</div>';
@@ -114,6 +117,9 @@ add_filter( 'um_profile_field_filter_hook__googlemap', 'um_profile_field_filter_
  */
 
 function um_profile_field_filter_hook__user_registered( $value, $data ) {
+	if ( ! $value ) {
+		return '';
+	}
 	$value = strtotime($value);
 	$value = sprintf(__('Joined %s','ultimate-member'), date_i18n('F d, Y', $value) );
 	return $value;
@@ -130,6 +136,9 @@ add_filter( 'um_profile_field_filter_hook__user_registered', 'um_profile_field_f
  * @return string
  */
 function um_profile_field_filter_hook__last_login( $value, $data ) {
+	if ( ! $value ) {
+		return '';
+	}
 	//$value = sprintf( __('Last login: %s','ultimate-member'), um_user_last_login( um_user('ID') ) );
 	$value = um_user_last_login( um_user( 'ID' ) );
 	return $value;
@@ -147,6 +156,9 @@ add_filter( 'um_profile_field_filter_hook___um_last_login', 'um_profile_field_fi
  * @return mixed|string|void
  */
 function um_profile_field_filter_hook__textarea( $value, $data ) {
+	if ( ! $value ) {
+		return '';
+	}
 	if ( isset( $data['html'] ) && $data['html'] == 1 ) {
 		return $value;
 	}
@@ -187,10 +199,14 @@ add_filter( 'um_profile_field_filter_hook__textarea', 'um_profile_field_filter_h
  * @return mixed|string
  */
 function um_profile_field_filter_hook__time( $value, $data ) {
+	if ( ! $value ) {
+		return '';
+	}
 	$value = UM()->datetime()->format( $value, $data['format'] );
 
-	$value = str_replace('am', 'a.m.', $value );
-	$value = str_replace('pm', 'p.m.', $value );
+	$value = str_replace( 'am', 'a.m.', $value );
+	$value = str_replace( 'pm', 'p.m.', $value );
+
 	return $value;
 }
 add_filter( 'um_profile_field_filter_hook__time', 'um_profile_field_filter_hook__time', 99, 2 );
@@ -205,6 +221,9 @@ add_filter( 'um_profile_field_filter_hook__time', 'um_profile_field_filter_hook_
  * @return string
  */
 function um_profile_field_filter_hook__date( $value, $data ) {
+	if ( ! $value ) {
+		return '';
+	}
 	if ( isset( $data['pretty_format'] ) && $data['pretty_format'] == 1 ) {
 		$value = UM()->datetime()->get_age( $value );
 	} else {
@@ -224,6 +243,9 @@ add_filter( 'um_profile_field_filter_hook__date', 'um_profile_field_filter_hook_
  * @return string
  */
 function um_profile_field_filter_hook__file( $value, $data ) {
+	if ( ! $value ) {
+		return '';
+	}
 	$file_type = wp_check_filetype( $value );
 	$uri = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
 
@@ -271,6 +293,9 @@ add_filter( 'um_profile_field_filter_hook__file', 'um_profile_field_filter_hook_
  * @return string
  */
 function um_profile_field_filter_hook__image( $value, $data ) {
+	if ( ! $value ) {
+		return '';
+	}
 	$uri = UM()->files()->get_download_link( UM()->fields()->set_id, $data['metakey'], um_user( 'ID' ) );
 	$title = ( isset( $data['title'] ) ) ? $data['title'] : __( 'Untitled photo', 'ultimate-member' );
 
