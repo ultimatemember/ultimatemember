@@ -739,7 +739,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						WHERE meta_key = %s
 						ORDER BY meta_value DESC", $filter ) );
 
-					$meta = array_filter($meta);
+					$meta = array_filter( $meta );
 
 					if ( empty( $meta ) || count( $meta ) === 1 ) {
 						$range = false;
@@ -1338,6 +1338,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 										'key'       => $field,
 										'value'     =>  array( $from_date, $to_date ),
 										'compare'   => 'BETWEEN',
+										'inclusive' => true,
 									);
 
 									break;
@@ -1434,6 +1435,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								'key'       => '_um_last_login',
 								'value'     =>  array( $from_date, $to_date ),
 								'compare'   => 'BETWEEN',
+								'inclusive' => true,
 							)
 						);
 
