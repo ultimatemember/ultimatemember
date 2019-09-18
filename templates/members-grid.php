@@ -84,8 +84,9 @@
 								if ( empty( $key ) ) {
 									unset( $reveal_fields[ $k ] );
 								} ?>
-
-								<# $show_block = typeof user.<?php echo $key; ?> !== 'undefined'; #>
+								<# if ( typeof user.<?php echo $key; ?> !== 'undefined' ) {
+									$show_block = true;
+								} #>
 							<?php }
 
 							if ( $show_social ) { ?>
