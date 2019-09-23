@@ -1494,7 +1494,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 */
 		function get_admin_actions() {
 			$items = array();
-			$actions = array();
 
 			/**
 			 * UM hook
@@ -1517,7 +1516,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 * }
 			 * ?>
 			 */
-			$actions = apply_filters( 'um_admin_user_actions_hook', $actions );
+			$actions = apply_filters( 'um_admin_user_actions_hook', null, um_profile_id() );
 			if ( ! isset( $actions ) || empty( $actions ) ) {
 				return false;
 			}

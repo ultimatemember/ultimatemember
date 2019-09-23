@@ -104,8 +104,14 @@ function UM_domenus() {
 
 		} else if ( position === 'bc' ) {
 
+			var top_o = 0;
+			var top_offset = menu.data('top-offset');
+			if ( typeof top_offset !== 'undefined' ) {
+				top_o = top_offset*1;
+			}
+
 			menu.css({
-				'top' : top_p,
+				'top' : top_p + top_o,
 				'width': 200,
 				'left': left_p,
 				'right' : 'auto',

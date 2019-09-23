@@ -28,7 +28,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Verified_Users_API Verified_Users_API()
 	 * @method UM_WooCommerce_API WooCommerce_API()
 	 * @method UM_Terms_Conditions Terms_Conditions()
-	 * @method UM_Private_Content_API Private_Content_API()
+	 * @method UM_Private_Content Private_Content()
 	 * @method UM_User_Location User_Location()
 	 * @method UM_Photos_API Photos_API()
 	 * @method UM_Groups Groups()
@@ -520,6 +520,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->notices();
 				$this->admin_navmenu();
 				$this->theme_updater();
+				$this->access();
 			} elseif ( $this->is_request( 'admin' ) ) {
 				$this->admin();
 				$this->admin_menu();

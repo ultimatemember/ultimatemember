@@ -60,9 +60,9 @@
 }
 .um.um-in-admin .um-tip {display: none !important}
 
-.um input,
-.um select,
-.um textarea{
+.um:not(.um-directory) input,
+.um:not(.um-directory) select,
+.um:not(.um-directory) textarea{
 	font-size: 15px;
 }
 

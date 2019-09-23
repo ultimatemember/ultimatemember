@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-08-30 15:28+0300\n"
-"PO-Revision-Date: 2019-08-30 15:28+0300\n"
+"POT-Creation-Date: 2019-09-19 15:59+0300\n"
+"PO-Revision-Date: 2019-09-19 15:59+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -21,7 +21,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: includes/admin/class-admin-functions.php:35 includes/class-functions.php:45
+#: includes/admin/class-admin-functions.php:35 includes/class-functions.php:55
 msgid "Wrong Nonce"
 msgstr ""
 
@@ -103,7 +103,7 @@ msgstr ""
 #: includes/admin/core/class-admin-builder.php:764
 #: includes/admin/core/class-admin-dragdrop.php:33
 #: includes/admin/core/class-admin-menu.php:106
-#: includes/core/class-fields.php:4287
+#: includes/core/class-fields.php:4317
 msgid "Please login as administrator"
 msgstr ""
 
@@ -253,8 +253,8 @@ msgstr ""
 #: includes/admin/templates/form/register_customize.php:80
 #: includes/admin/templates/form/register_gdpr.php:27
 #: includes/core/class-builtin.php:1135 includes/core/class-builtin.php:1150
-#: includes/core/class-member-directory.php:765
-#: includes/core/um-filters-members.php:69
+#: includes/core/class-member-directory.php:846
+#: includes/core/um-filters-members.php:40
 msgid "Yes"
 msgstr ""
 
@@ -1278,7 +1278,7 @@ msgid "The text that appears on the button. e.g. Upload"
 msgstr ""
 
 #: includes/admin/core/class-admin-metabox.php:1942
-#: includes/core/class-fields.php:1581 includes/core/class-fields.php:1622
+#: includes/core/class-fields.php:1592 includes/core/class-fields.php:1633
 msgid "Upload"
 msgstr ""
 
@@ -1520,7 +1520,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/core/class-admin-metabox.php:2213
-#: includes/class-config.php:134 includes/class-config.php:759
+#: includes/class-config.php:134 includes/class-config.php:778
 msgid "Members"
 msgstr ""
 
@@ -2015,7 +2015,7 @@ msgstr ""
 #: includes/admin/core/class-admin-settings.php:393
 #: includes/admin/core/class-admin-settings.php:410
 #: includes/core/class-builtin.php:674 includes/core/class-builtin.php:677
-#: includes/core/class-member-directory.php:108
+#: includes/core/class-member-directory.php:200
 msgid "Username"
 msgstr ""
 
@@ -2179,7 +2179,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:479
-#: includes/class-config.php:136 includes/class-config.php:761
+#: includes/class-config.php:136 includes/class-config.php:780
 #: includes/core/class-account.php:93
 msgid "Account"
 msgstr ""
@@ -3129,7 +3129,7 @@ msgid "UM Action"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:124
-#: includes/core/class-fields.php:2474
+#: includes/core/class-fields.php:2485
 msgid "Apply"
 msgstr ""
 
@@ -3239,7 +3239,7 @@ msgstr ""
 #: includes/admin/core/list-tables/roles-list-table.php:22
 #: includes/admin/core/list-tables/roles-list-table.php:89
 #: includes/admin/core/list-tables/roles-list-table.php:402
-#: includes/core/class-member-directory.php:178
+#: includes/core/class-member-directory.php:270
 msgid "Roles"
 msgstr ""
 
@@ -3631,7 +3631,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/templates/directory/pagination.php:46
-#: includes/class-config.php:155 includes/class-config.php:251
+#: includes/class-config.php:177 includes/class-config.php:270
 msgid "{total_users} Members"
 msgstr ""
 
@@ -3644,7 +3644,7 @@ msgid "Same as above but in case of 1 user found only"
 msgstr ""
 
 #: includes/admin/templates/directory/pagination.php:53
-#: includes/class-config.php:156 includes/class-config.php:252
+#: includes/class-config.php:178 includes/class-config.php:271
 msgid "{total_users} Member"
 msgstr ""
 
@@ -3658,7 +3658,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/templates/directory/pagination.php:60
-#: includes/class-config.php:157
+#: includes/class-config.php:179
 msgid "We are sorry. We cannot find any users who match your search criteria."
 msgstr ""
 
@@ -3688,7 +3688,7 @@ msgstr ""
 
 #: includes/admin/templates/directory/profile.php:48
 #: includes/admin/templates/directory/profile.php:63
-#: includes/admin/templates/directory/search.php:111
+#: includes/admin/templates/directory/search.php:92
 msgid "Add New Custom Field"
 msgstr ""
 
@@ -3708,47 +3708,47 @@ msgstr ""
 msgid "Enable reveal section transition by default"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:73
+#: includes/admin/templates/directory/search.php:54
 msgid "Enable Search feature"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:74
+#: includes/admin/templates/directory/search.php:55
 msgid "If turned on, users will be able to search members in this directory"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:80
+#: includes/admin/templates/directory/search.php:61
 msgid "User Roles that can use search"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:81
+#: includes/admin/templates/directory/search.php:62
 msgid "If you want to allow specific user roles to be able to search only"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:90
+#: includes/admin/templates/directory/search.php:71
 msgid "Enable Filters feature"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:91
+#: includes/admin/templates/directory/search.php:72
 msgid "If turned on, users will be able to filter members in this directory"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:97
+#: includes/admin/templates/directory/search.php:78
 msgid "User Roles that can use filters"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:98
+#: includes/admin/templates/directory/search.php:79
 msgid "If you want to allow specific user roles to be able to filter only"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:107
+#: includes/admin/templates/directory/search.php:88
 msgid "Choose filter(s) meta to enable"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:117
+#: includes/admin/templates/directory/search.php:98
 msgid "Default filters"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:118
+#: includes/admin/templates/directory/search.php:99
 msgid "You can set default filters like URL parameters"
 msgstr ""
 
@@ -4136,7 +4136,9 @@ msgstr ""
 #: includes/admin/templates/modal/dynamic_new_group.php:18
 #: includes/admin/templates/modal/fonticons.php:14
 #: includes/admin/templates/role/publish.php:24
-#: includes/core/class-fields.php:2475 includes/core/class-fields.php:2572
+#: includes/core/class-fields.php:2486 includes/core/class-fields.php:2583
+#: includes/core/class-member-directory.php:1552
+#: includes/core/class-member-directory.php:1559
 #: includes/core/um-actions-profile.php:641
 #: includes/core/um-actions-profile.php:653
 #: includes/core/um-actions-profile.php:796
@@ -4491,141 +4493,142 @@ msgstr ""
 msgid "Check All"
 msgstr ""
 
-#: includes/class-config.php:131 includes/class-config.php:756
+#: includes/class-config.php:131 includes/class-config.php:775
 msgid "User"
 msgstr ""
 
-#: includes/class-config.php:132 includes/class-config.php:238
-#: includes/class-config.php:244 includes/class-config.php:757
+#: includes/class-config.php:132 includes/class-config.php:257
+#: includes/class-config.php:263 includes/class-config.php:776
 msgid "Login"
 msgstr ""
 
-#: includes/class-config.php:133 includes/class-config.php:236
-#: includes/class-config.php:248 includes/class-config.php:758
+#: includes/class-config.php:133 includes/class-config.php:255
+#: includes/class-config.php:267 includes/class-config.php:777
 msgid "Register"
 msgstr ""
 
-#: includes/class-config.php:135 includes/class-config.php:760
+#: includes/class-config.php:135 includes/class-config.php:779
+#: includes/core/class-member-directory.php:1558
 #: includes/core/um-actions-profile.php:1180
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
 msgstr ""
 
-#: includes/class-config.php:137 includes/class-config.php:762
+#: includes/class-config.php:137 includes/class-config.php:781
 msgid "Password Reset"
 msgstr ""
 
-#: includes/class-config.php:311
+#: includes/class-config.php:330
 msgid "Account Welcome Email"
 msgstr ""
 
-#: includes/class-config.php:322
+#: includes/class-config.php:341
 msgid ""
 "Whether to send the user an email when his account is automatically approved"
 msgstr ""
 
-#: includes/class-config.php:328
+#: includes/class-config.php:347
 msgid "Account Activation Email"
 msgstr ""
 
-#: includes/class-config.php:336
+#: includes/class-config.php:355
 msgid ""
 "Whether to send the user an email when his account needs e-mail activation"
 msgstr ""
 
-#: includes/class-config.php:341
+#: includes/class-config.php:360
 msgid "Your account is pending review"
 msgstr ""
 
-#: includes/class-config.php:349
+#: includes/class-config.php:368
 msgid "Whether to send the user an email when his account needs admin review"
 msgstr ""
 
-#: includes/class-config.php:354
+#: includes/class-config.php:373
 msgid "Account Approved Email"
 msgstr ""
 
-#: includes/class-config.php:366
+#: includes/class-config.php:385
 msgid "Whether to send the user an email when his account is approved"
 msgstr ""
 
-#: includes/class-config.php:371
+#: includes/class-config.php:390
 msgid "Account Rejected Email"
 msgstr ""
 
-#: includes/class-config.php:378
+#: includes/class-config.php:397
 msgid "Whether to send the user an email when his account is rejected"
 msgstr ""
 
-#: includes/class-config.php:383
+#: includes/class-config.php:402
 msgid "Account Deactivated Email"
 msgstr ""
 
-#: includes/class-config.php:390
+#: includes/class-config.php:409
 msgid "Whether to send the user an email when his account is deactivated"
 msgstr ""
 
-#: includes/class-config.php:396
+#: includes/class-config.php:415
 msgid "Account Deleted Email"
 msgstr ""
 
-#: includes/class-config.php:403
+#: includes/class-config.php:422
 msgid "Whether to send the user an email when his account is deleted"
 msgstr ""
 
-#: includes/class-config.php:409
+#: includes/class-config.php:428
 msgid "Password Reset Email"
 msgstr ""
 
-#: includes/class-config.php:417
+#: includes/class-config.php:436
 msgid ""
 "Whether to send an email when users changed their password (Recommended, "
 "please keep on)"
 msgstr ""
 
-#: includes/class-config.php:423
+#: includes/class-config.php:442
 msgid "Password Changed Email"
 msgstr ""
 
-#: includes/class-config.php:430
+#: includes/class-config.php:449
 msgid ""
 "Whether to send the user an email when he request to reset password "
 "(Recommended, please keep on)"
 msgstr ""
 
-#: includes/class-config.php:436
+#: includes/class-config.php:455
 msgid "Account Updated Email"
 msgstr ""
 
-#: includes/class-config.php:443
+#: includes/class-config.php:462
 msgid "Whether to send the user an email when he updated their account"
 msgstr ""
 
-#: includes/class-config.php:449
+#: includes/class-config.php:468
 msgid "New User Notification"
 msgstr ""
 
-#: includes/class-config.php:455
+#: includes/class-config.php:474
 msgid "Whether to receive notification when a new user account is approved"
 msgstr ""
 
-#: includes/class-config.php:461
+#: includes/class-config.php:480
 msgid "Account Needs Review Notification"
 msgstr ""
 
-#: includes/class-config.php:468
+#: includes/class-config.php:487
 msgid "Whether to receive notification when an account needs admin review"
 msgstr ""
 
-#: includes/class-config.php:473
+#: includes/class-config.php:492
 msgid "Account Deletion Notification"
 msgstr ""
 
-#: includes/class-config.php:476
+#: includes/class-config.php:495
 msgid "Whether to receive notification when an account is deleted"
 msgstr ""
 
-#: includes/class-config.php:499
+#: includes/class-config.php:518
 msgid ""
 "Are you sure you want to delete your account? This will erase all of your "
 "account data from the site. To delete your account enter your password below"
@@ -4784,12 +4787,10 @@ msgid "Username or E-mail"
 msgstr ""
 
 #: includes/core/class-builtin.php:712 includes/core/class-builtin.php:715
-#: includes/core/class-member-directory.php:109
 msgid "First Name"
 msgstr ""
 
 #: includes/core/class-builtin.php:722 includes/core/class-builtin.php:725
-#: includes/core/class-member-directory.php:110
 msgid "Last Name"
 msgstr ""
 
@@ -4803,8 +4804,7 @@ msgid "Registration Date"
 msgstr ""
 
 #: includes/core/class-builtin.php:764 includes/core/class-builtin.php:767
-#: includes/core/class-member-directory.php:112
-#: includes/core/class-member-directory.php:180
+#: includes/core/class-member-directory.php:272
 msgid "Last Login"
 msgstr ""
 
@@ -4829,7 +4829,7 @@ msgid "Birth Date"
 msgstr ""
 
 #: includes/core/class-builtin.php:825 includes/core/class-builtin.php:828
-#: includes/core/class-member-directory.php:176
+#: includes/core/class-member-directory.php:268
 msgid "Gender"
 msgstr ""
 
@@ -4842,7 +4842,7 @@ msgid "Female"
 msgstr ""
 
 #: includes/core/class-builtin.php:836 includes/core/class-builtin.php:839
-#: includes/core/class-member-directory.php:175
+#: includes/core/class-member-directory.php:267
 msgid "Country"
 msgstr ""
 
@@ -4900,7 +4900,7 @@ msgid "Roles (Radio)"
 msgstr ""
 
 #: includes/core/class-builtin.php:1030
-#: includes/core/class-member-directory.php:177
+#: includes/core/class-member-directory.php:269
 msgid "Languages"
 msgstr ""
 
@@ -6857,105 +6857,105 @@ msgstr ""
 msgid "Add translation to %s"
 msgstr ""
 
-#: includes/core/class-fields.php:595
+#: includes/core/class-fields.php:606
 msgid "Undefined"
 msgstr ""
 
-#: includes/core/class-fields.php:1206 templates/message.php:6
+#: includes/core/class-fields.php:1217 templates/message.php:6
 #, php-format
 msgid "%s"
 msgstr ""
 
-#: includes/core/class-fields.php:1227
+#: includes/core/class-fields.php:1238
 msgid "Custom Field"
 msgstr ""
 
-#: includes/core/class-fields.php:1570
+#: includes/core/class-fields.php:1581
 msgid "Please upload a valid image!"
 msgstr ""
 
-#: includes/core/class-fields.php:1584
+#: includes/core/class-fields.php:1595
 msgid "Sorry this is not a valid image."
 msgstr ""
 
-#: includes/core/class-fields.php:1587
+#: includes/core/class-fields.php:1598
 msgid "This image is too large!"
 msgstr ""
 
-#: includes/core/class-fields.php:1590
+#: includes/core/class-fields.php:1601
 msgid "This image is too small!"
 msgstr ""
 
-#: includes/core/class-fields.php:1593
+#: includes/core/class-fields.php:1604
 msgid "You can only upload one image"
 msgstr ""
 
-#: includes/core/class-fields.php:1625
+#: includes/core/class-fields.php:1636
 msgid "Sorry this is not a valid file."
 msgstr ""
 
-#: includes/core/class-fields.php:1628
+#: includes/core/class-fields.php:1639
 msgid "This file is too large!"
 msgstr ""
 
-#: includes/core/class-fields.php:1631
+#: includes/core/class-fields.php:1642
 msgid "This file is too small!"
 msgstr ""
 
-#: includes/core/class-fields.php:1634
+#: includes/core/class-fields.php:1645
 msgid "You can only upload one file"
 msgstr ""
 
-#: includes/core/class-fields.php:2134
+#: includes/core/class-fields.php:2145
 msgid "Current Password"
 msgstr ""
 
-#: includes/core/class-fields.php:2163
+#: includes/core/class-fields.php:2174
 msgid "New Password"
 msgstr ""
 
-#: includes/core/class-fields.php:2195
+#: includes/core/class-fields.php:2206
 #, php-format
 msgid "Confirm %s"
 msgstr ""
 
-#: includes/core/class-fields.php:2429
+#: includes/core/class-fields.php:2440
 msgid "Upload Photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2450 includes/core/class-fields.php:2474
+#: includes/core/class-fields.php:2461 includes/core/class-fields.php:2485
 #: includes/core/um-actions-profile.php:827
 msgid "Change photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2474 includes/core/class-fields.php:2571
+#: includes/core/class-fields.php:2485 includes/core/class-fields.php:2582
 msgid "Processing..."
 msgstr ""
 
-#: includes/core/class-fields.php:2496
+#: includes/core/class-fields.php:2507
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:2538 includes/core/um-filters-fields.php:244
+#: includes/core/class-fields.php:2549 includes/core/um-filters-fields.php:266
 msgid "This file has been removed."
 msgstr ""
 
-#: includes/core/class-fields.php:2541 includes/core/class-fields.php:2571
+#: includes/core/class-fields.php:2552 includes/core/class-fields.php:2582
 msgid "Change file"
 msgstr ""
 
-#: includes/core/class-fields.php:2571
+#: includes/core/class-fields.php:2582
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:4020
+#: includes/core/class-fields.php:4050
 #, php-format
 msgid ""
 "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some "
 "information!"
 msgstr ""
 
-#: includes/core/class-fields.php:4022
+#: includes/core/class-fields.php:4052
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
@@ -6997,56 +6997,79 @@ msgid "You can not edit this user"
 msgstr ""
 
 #: includes/core/class-mail.php:612 includes/core/class-password.php:701
-#: includes/core/class-profile.php:465
+#: includes/core/class-profile.php:470
 msgid "Your set password"
 msgstr ""
 
-#: includes/core/class-member-directory.php:100
+#: includes/core/class-member-directory.php:192
 msgid "Grid"
 msgstr ""
 
-#: includes/core/class-member-directory.php:101
+#: includes/core/class-member-directory.php:193
 msgid "List"
 msgstr ""
 
-#: includes/core/class-member-directory.php:106
-msgid "New Users First"
+#: includes/core/class-member-directory.php:198
+msgid "New users first"
 msgstr ""
 
-#: includes/core/class-member-directory.php:107
-msgid "Old Users First"
+#: includes/core/class-member-directory.php:199
+msgid "Old users first"
 msgstr ""
 
-#: includes/core/class-member-directory.php:111
-msgid "Display Name"
+#: includes/core/class-member-directory.php:201
+msgid "First name"
 msgstr ""
 
-#: includes/core/class-member-directory.php:118
+#: includes/core/class-member-directory.php:202
+msgid "Last name"
+msgstr ""
+
+#: includes/core/class-member-directory.php:203
+msgid "Display name"
+msgstr ""
+
+#: includes/core/class-member-directory.php:204
+msgid "Last login"
+msgstr ""
+
+#: includes/core/class-member-directory.php:210
 msgid "Random"
 msgstr ""
 
-#: includes/core/class-member-directory.php:119
+#: includes/core/class-member-directory.php:211
 msgid "Other (Custom Field)"
 msgstr ""
 
-#: includes/core/class-member-directory.php:179
+#: includes/core/class-member-directory.php:271
 msgid "Age"
 msgstr ""
 
-#: includes/core/class-member-directory.php:181
+#: includes/core/class-member-directory.php:273
 msgid "User Registered"
 msgstr ""
 
-#: includes/core/class-member-directory.php:531
+#: includes/core/class-member-directory.php:644
+msgid " stars"
+msgstr ""
+
+#: includes/core/class-member-directory.php:652
 msgid "<strong>Age:</strong> {min_range} - {max_range} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:535
-msgid "<strong>User Rating:</strong> {min_range} - {max_range} points"
+#: includes/core/class-member-directory.php:1525
+#: includes/core/class-member-directory.php:1556
+#: includes/core/um-actions-profile.php:1147
+#: includes/core/um-actions-profile.php:1178
+msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1567 templates/_members-grid.php:83
-#: templates/members-grid.php:66
+#: includes/core/class-member-directory.php:1557
+#: includes/core/um-actions-profile.php:1179
+msgid "My Account"
+msgstr ""
+
+#: includes/core/class-member-directory.php:1609 templates/members-grid.php:53
 msgid "Edit profile"
 msgstr ""
 
@@ -7096,7 +7119,7 @@ msgid "This activation link is expired or have already been used."
 msgstr ""
 
 #. translators: %s: support forums URL
-#: includes/core/class-plugin-updater.php:275
+#: includes/core/class-plugin-updater.php:279
 #, php-format
 msgid ""
 "An unexpected error occurred. Something may be wrong with %s or this "
@@ -7104,7 +7127,7 @@ msgid ""
 "the <a href=\"%s\">support forums</a>."
 msgstr ""
 
-#: includes/core/class-plugin-updater.php:277
+#: includes/core/class-plugin-updater.php:281
 msgid "https://wordpress.org/support/"
 msgstr ""
 
@@ -7576,15 +7599,6 @@ msgstr ""
 msgid "This user account status is %s"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1147
-#: includes/core/um-actions-profile.php:1178
-msgid "Edit Profile"
-msgstr ""
-
-#: includes/core/um-actions-profile.php:1179
-msgid "My Account"
-msgstr ""
-
 #: includes/core/um-actions-user.php:14
 msgid "Your account"
 msgstr ""
@@ -7593,12 +7607,12 @@ msgstr ""
 msgid "Invalid soundcloud track ID"
 msgstr ""
 
-#: includes/core/um-filters-fields.php:118
+#: includes/core/um-filters-fields.php:124
 #, php-format
 msgid "Joined %s"
 msgstr ""
 
-#: includes/core/um-filters-fields.php:275
+#: includes/core/um-filters-fields.php:300
 msgid "Untitled photo"
 msgstr ""
 
@@ -7651,26 +7665,37 @@ msgstr ""
 msgid "of"
 msgstr ""
 
-#: templates/members.php:127 templates/members.php:129
-#: templates/members.php:134
+#: templates/members.php:189
+msgid "Search:"
+msgstr ""
+
+#: templates/members.php:190 templates/members.php:192
 msgid "Search"
 msgstr ""
 
-#: templates/members.php:141
-msgid "Sort By"
-msgstr ""
-
-#: templates/members.php:152
-msgid "Filters"
-msgstr ""
-
-#: templates/members.php:172
+#: templates/members.php:216
 #, php-format
 msgid "Change to %s"
 msgstr ""
 
-#: templates/members.php:221
-msgid "Clear All Filters"
+#: templates/members.php:229
+msgid "Sort by:"
+msgstr ""
+
+#: templates/members.php:249
+msgid "More filters"
+msgstr ""
+
+#: templates/members.php:278
+msgid "Remove filter"
+msgstr ""
+
+#: templates/members.php:303
+msgid "Remove all filters"
+msgstr ""
+
+#: templates/members.php:303
+msgid "Clear all"
 msgstr ""
 
 #: templates/password-change.php:45

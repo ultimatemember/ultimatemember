@@ -129,11 +129,13 @@ function um_get_search( directory ) {
 }
 
 function um_get_sort( directory ) {
-	if ( directory.find('.um-member-directory-sorting-options').length ) {
+	return directory.data( 'sorting' );
+
+	/*if ( directory.find('.um-member-directory-sorting-options').length ) {
 		return directory.find( '.um-member-directory-sorting-options' ).val();
 	} else {
 		return '';
-	}
+	}*/
 }
 
 function um_get_current_page( directory ) {
@@ -235,6 +237,8 @@ function um_ajax_get_members( directory, args ) {
 
 			//args.directory = directory;
 			jQuery( document ).trigger('um_members_rendered', args );
+
+			um_init_new_dropdown();
 
 			um_members_hide_preloader( directory );
 		},
@@ -416,8 +420,10 @@ function um_change_tag( directory ) {
 
 		if ( directory.find( '.um-members-filter-remove' ).length === 0 ) {
 			directory.find('.um-clear-filters').hide();
+			directory.find('.um-clear-filters').parents('.um-member-directory-header-row').addClass( 'um-header-row-invisible' );
 		} else {
 			directory.find('.um-clear-filters').show();
+			directory.find('.um-clear-filters').parents('.um-member-directory-header-row').removeClass( 'um-header-row-invisible' );
 		}
 	}
 
@@ -582,21 +588,30 @@ jQuery(document).ready( function() {
 	/**
 	 * Sorting
 	 */
-	jQuery( document.body ).on( 'change', '.um-member-directory-sorting-options', function() {
+
+	jQuery( document.body ).on( 'click', '.um-member-directory-sorting-a .um-new-dropdown li a', function() {
 		var directory = jQuery(this).parents('.um-directory');
 
 		if ( um_is_directory_busy( directory ) ) {
 			return;
 		}
 
+		if ( jQuery( this ).data('selected') === 1 ) {
+			return;
+		}
+
 		um_members_show_preloader( directory );
 
-		var sort = jQuery(this).val();
+		var sort = jQuery(this).data('value');
 
-		directory.data( 'sorting', jQuery(this).val() );
+		directory.data( 'sorting', sort );
 		um_set_url_from_data( directory, 'sort', sort );
 
 		um_ajax_get_members( directory );
+
+		jQuery( this ).parents('.um-new-dropdown').find('a').data('selected', 0).prop('data-selected', 0).attr('data-selected', 0);
+		jQuery( this ).data('selected', 1).prop('data-selected', 1).attr('data-selected', 1);
+		jQuery( this ).parents('.um-member-directory-sorting-a').find('> a').html( jQuery( this ).html() );
 	});
 
 	/**
@@ -695,7 +710,32 @@ jQuery(document).ready( function() {
 	 * Profile Cards actions
 	 */
 
-	jQuery( document.body ).on('click', '.um-member-more a', function(e){
+	jQuery( document.body ).on('click', '.um-members.um-members-list .um-member-more a', function(e){
+		e.preventDefault();
+
+		var block = jQuery(this).parents('.um-member');
+
+		block.find('.um-member-more').hide();
+		block.find('.um-member-meta-main').slideDown();
+		block.find('.um-member-less').fadeIn();
+
+		return false;
+	});
+
+	jQuery( document.body ).on('click', '.um-members.um-members-list .um-member-less a', function(e){
+		e.preventDefault();
+
+		var block = jQuery(this).parents('.um-member');
+
+		block.find('.um-member-less').hide();
+		block.find('.um-member-meta-main').slideUp();
+		block.find('.um-member-more').fadeIn();
+
+		return false;
+	});
+
+
+	jQuery( document.body ).on('click', '.um-members.um-members-grid .um-member-more a', function(e){
 		e.preventDefault();
 
 		var block = jQuery(this).parents('.um-member');
@@ -709,7 +749,7 @@ jQuery(document).ready( function() {
 		return false;
 	});
 
-	jQuery( document.body ).on('click', '.um-member-less a', function(e){
+	jQuery( document.body ).on('click', '.um-members.um-members-grid .um-member-less a', function(e){
 		e.preventDefault();
 
 		var block = jQuery(this).parents('.um-member');
@@ -729,13 +769,25 @@ jQuery(document).ready( function() {
 
 
 	//filters controls
-	jQuery('.um-member-directory-filters a').click( function() {
-		var search_bar = jQuery(this).parents('.um-directory').find('.um-search');
+	jQuery('.um-member-directory-filters-a').click( function() {
+		var obj = jQuery(this);
+		var search_bar = obj.parents('.um-directory').find('.um-search');
 
 		if ( search_bar.is( ':visible' ) ) {
-			search_bar.slideUp(250);
+			search_bar.slideUp( 250, function(){
+				obj.toggleClass('um-member-directory-filters-visible');
+				search_bar.parents('.um-member-directory-header-row').toggleClass('um-header-row-invisible');
+			});
 		} else {
-			search_bar.slideDown(250);
+			search_bar.slideDown({
+				start: function() {
+					jQuery(this).css({
+						display: "grid"
+					});
+					obj.toggleClass('um-member-directory-filters-visible');
+					search_bar.parents('.um-member-directory-header-row').toggleClass('um-header-row-invisible');
+				}
+			}, 250 );
 		}
 	});
 
@@ -1210,11 +1262,10 @@ jQuery(document).ready( function() {
 		um_change_tag( directory );
 	});
 
-	//
-	// jQuery(document).on( 'um_members_rendered', function( event, args ) {
-	// 	if ( args.first_load ) {
-	// 		um_change_tag( args.directory );
-	// 	}
-	// });
+
+	//history events when back/forward and change window.location.hash
+	window.addEventListener( "popstate", function(e) {
+
+	});
 
 });

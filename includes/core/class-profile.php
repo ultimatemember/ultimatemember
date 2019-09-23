@@ -418,11 +418,16 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 * @param string $element
 		 * @param string $trigger
 		 * @param array $items
+		 * @param array $args
 		 */
-		function new_ui( $position, $element, $trigger, $items ) {
-			?>
+		function new_ui( $position, $element, $trigger, $items, $args = array() ) {
 
-			<div class="um-dropdown" data-element="<?php echo esc_attr( $element ); ?>" data-position="<?php echo esc_attr( $position ); ?>" data-trigger="<?php echo esc_attr( $trigger ); ?>">
+			$additional_data = '';
+			foreach ( $args as $key => $value ) {
+				$additional_data .= " data-{$key}=\"{$value}\"";
+			} ?>
+
+			<div class="um-dropdown" data-element="<?php echo esc_attr( $element ); ?>" data-position="<?php echo esc_attr( $position ); ?>" data-trigger="<?php echo esc_attr( $trigger ); ?>"<?php echo $additional_data ?>>
 				<div class="um-dropdown-b">
 					<div class="um-dropdown-arr"><i class=""></i></div>
 					<ul>

@@ -195,13 +195,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			// Sort
 			$this->sort_fields = apply_filters( 'um_members_directory_sort_fields', array(
-				'user_registered_desc'  => __( 'New Users First', 'ultimate-member' ),
-				'user_registered_asc'   => __( 'Old Users First', 'ultimate-member' ),
+				'user_registered_desc'  => __( 'New users first', 'ultimate-member' ),
+				'user_registered_asc'   => __( 'Old users first', 'ultimate-member' ),
 				'username'              => __( 'Username', 'ultimate-member' ),
-				'first_name'            => __( 'First Name', 'ultimate-member' ),
-				'last_name'             => __( 'Last Name', 'ultimate-member' ),
-				'display_name'          => __( 'Display Name', 'ultimate-member' ),
-				'last_login'            => __( 'Last Login', 'ultimate-member' ),
+				'first_name'            => __( 'First name', 'ultimate-member' ),
+				'last_name'             => __( 'Last name', 'ultimate-member' ),
+				'display_name'          => __( 'Display name', 'ultimate-member' ),
+				'last_login'            => __( 'Last login', 'ultimate-member' ),
 			) );
 
 			asort( $this->sort_fields );
@@ -503,7 +503,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						<input type="hidden" id="<?php echo $filter; ?>_min" name="<?php echo $filter; ?>[]" class="um_range_min" />
 						<input type="hidden" id="<?php echo $filter; ?>_max" name="<?php echo $filter; ?>[]" class="um_range_max" />
 						<div class="um-slider" data-field_name="<?php echo $filter; ?>" data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"></div>
-						<div class="um-slider-range" data-placeholder="<?php echo esc_attr( $placeholder ); ?>" data-label="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"></div>
+						<div class="um-slider-range" data-placeholder="<?php echo esc_attr( $placeholder ); ?>" data-label="<?php echo ( ! empty( $attrs['label'] ) ) ? esc_attr__( stripslashes( $attrs['label'] ), 'ultimate-member' ) : ''; ?>"></div>
 					<?php }
 
 					break;
@@ -516,12 +516,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					if ( $range ) { ?>
 
-						<input type="text" id="<?php echo $filter; ?>_from" name="<?php echo $filter; ?>_from" class="um-half-filter um-datepicker-filter"
+						<input type="text" id="<?php echo $filter; ?>_from" name="<?php echo $filter; ?>_from" class="um-datepicker-filter"
 						       placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
 						       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
 						       data-date_min="<?php echo $range[0] ?>" data-date_max="<?php echo $range[1] ?>"
 						       data-filter_name="<?php echo $filter; ?>" data-range="from" />
-						<input type="text" id="<?php echo $filter; ?>_to" name="<?php echo $filter; ?>_to" class="um-half-filter um-datepicker-filter"
+						<input type="text" id="<?php echo $filter; ?>_to" name="<?php echo $filter; ?>_to" class="um-datepicker-filter"
 						       placeholder="<?php esc_attr_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?>"
 						       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
 						       data-date_min="<?php echo $range[0] ?>" data-date_max="<?php echo $range[1] ?>"
@@ -551,13 +551,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					if ( $range ) { ?>
 
-						<input type="text" id="<?php echo $filter; ?>_from" name="<?php echo $filter; ?>_from" class="um-half-filter um-timepicker-filter"
+						<input type="text" id="<?php echo $filter; ?>_from" name="<?php echo $filter; ?>_from" class="um-timepicker-filter"
 						       placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
 						       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
 						       data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"
 						       data-format="<?php echo esc_attr( $js_format ) ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ) ?>"
 						       data-filter_name="<?php echo $filter; ?>" data-range="from" />
-						<input type="text" id="<?php echo $filter; ?>_to" name="<?php echo $filter; ?>_to" class="um-half-filter um-timepicker-filter"
+						<input type="text" id="<?php echo $filter; ?>_to" name="<?php echo $filter; ?>_to" class="um-timepicker-filter"
 						       placeholder="<?php esc_attr_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?>"
 						       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
 						       data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"
@@ -1159,6 +1159,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					),
 				);
 
+				$meta_query = apply_filters( 'um_member_directory_general_search_meta_query', $meta_query, $_POST['search'] );
+
 				$this->query_args['meta_query'][] = $meta_query;
 			}
 		}
@@ -1212,13 +1214,26 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					// Add OR instead AND to search in WP core fields user_email, user_login, user_display_name
 					$search_where = $context->get_search_sql( $search, UM()->member_directory()->core_search_fields, 'both' );
-					$search_where = preg_replace( '/ AND \((.*?)\)/im', " AND ( $1 )", $search_where );
+
+					$replacement = apply_filters( 'um_member_directory_organic_search_replacement', " AND ( $1 )" );
+					$search_where = preg_replace( '/ AND \((.*?)\)/im', $replacement, $search_where );
 
 					$sql['where'] = $sql['where'] . $search_where;
 				}
 			}
 
 			return $sql;
+		}
+
+
+		/**
+		 * Use OR in search query if there is only searching, but with filters there will be AND conditional
+		 * @param $replacement
+		 *
+		 * @return string
+		 */
+		function organic_replacement( $replacement ) {
+			return " OR ( $1 )";
 		}
 
 
@@ -1236,6 +1251,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 
 			if ( empty( $filter_query ) ) {
+				add_filter( 'um_member_directory_organic_search_replacement', array( &$this, 'organic_replacement' ) );
 				return;
 			}
 
@@ -1507,6 +1523,89 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 		/**
 		 * @param int $user_id
+		 *
+		 * @return array
+		 */
+		function build_user_actions_list( $user_id ) {
+
+			$actions = array();
+			if ( ! is_user_logged_in() ) {
+				return $actions;
+			}
+
+			if ( get_current_user_id() != $user_id ) {
+
+				if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+					$actions['um-editprofile'] = array(
+						'title' => __( 'Edit Profile', 'ultimate-member' ),
+						'url' => um_edit_profile_url(),
+					);
+				}
+
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_admin_user_actions_hook
+				 * @description Extend admin actions for each user
+				 * @input_vars
+				 * [{"var":"$actions","type":"array","desc":"Actions for user"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage
+				 * <?php add_filter( 'um_admin_user_actions_hook', 'function_name', 10, 1 ); ?>
+				 * @example
+				 * <?php
+				 * add_filter( 'um_admin_user_actions_hook', 'my_admin_user_actions', 10, 1 );
+				 * function my_admin_user_actions( $actions ) {
+				 *     // your code here
+				 *     return $actions;
+				 * }
+				 * ?>
+				 */
+				$admin_actions = apply_filters( 'um_admin_user_actions_hook', null, $user_id );
+				if ( ! empty( $admin_actions ) ) {
+					foreach ( $admin_actions as $id => $arr ) {
+						$url = add_query_arg( array( 'um_action' => $id, 'uid' => $user_id ), um_get_core_page( 'user' ) );
+
+						$actions[ $id ] = array(
+							'title' => $arr['label'],
+							'url'   => $url,
+						);
+					}
+				}
+
+				$actions = apply_filters( 'um_member_directory_users_card_actions', $actions, $user_id );
+
+			} else {
+
+				if ( empty( UM()->user()->cannot_edit ) ) {
+					$actions['um-editprofile'] = array(
+						'title' => __( 'Edit Profile', 'ultimate-member' ),
+						'url'   => um_edit_profile_url(),
+					);
+				}
+
+				$actions['um-myaccount'] = array(
+					'title' => __( 'My Account', 'ultimate-member' ),
+					'url'   => um_get_core_page( 'account' ),
+				);
+
+				$actions['um-logout'] = array(
+					'title' => __( 'Logout', 'ultimate-member' ),
+					'url'   => um_get_core_page( 'logout' ),
+				);
+
+				$actions = apply_filters( 'um_member_directory_my_user_card_actions', $actions, $user_id );
+			}
+
+
+			return $actions;
+		}
+
+
+		/**
+		 * @param int $user_id
 		 * @param array $directory_data
 		 *
 		 * @return array
@@ -1514,17 +1613,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		function build_user_card_data( $user_id, $directory_data ) {
 			um_fetch_user( $user_id );
 
-			$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id ) || UM()->roles()->um_user_can( 'can_edit_everyone' );
+			$dropdown_actions = $this->build_user_actions_list( $user_id );
 
 			$actions = array();
-			if ( $can_edit ) {
-				$actions[] = array(
-					'title'         => __( 'Edit profile', 'ultimate-member' ),
-					'url'           => um_edit_profile_url(),
-					'wrapper_class' => 'um-members-edit-btn',
-					'class'         => 'um-edit-profile-btn um-button um-alt',
-				);
-			}
+			$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id ) || UM()->roles()->um_user_can( 'can_edit_everyone' );
 
 			// Replace hook 'um_members_just_after_name'
 			ob_start();
@@ -1548,7 +1640,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'edit_profile_url'      => um_edit_profile_url(),
 				'avatar'                => get_avatar( $user_id, $this->avatar_size ),
 				'display_name_html'     => um_user( 'display_name', 'html' ),
-				'actions'               => $actions,
+				'dropdown_actions'      => $dropdown_actions,
 				'hook_just_after_name'  => preg_replace( '/^\s+/im', '', $hook_just_after_name ),
 				'hook_after_user_name'  => preg_replace( '/^\s+/im', '', $hook_after_user_name ),
 			);
@@ -1726,6 +1818,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$user_query = new \WP_User_Query( $this->query_args );
 
+			//var_dump( $user_query->request );
+
 			remove_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10 );
 
 			/**
@@ -1801,6 +1895,50 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 
 			wp_send_json_success( array( 'pagination' => $pagination_data, 'users' => $users, 'args' => $data_args ) );
+		}
+
+
+		/**
+		 * New menu
+		 *
+		 * @param string $element
+		 * @param string $trigger
+		 * @param array $items
+		 */
+		function dropdown_menu( $element, $trigger, $items = array() ) {
+			?>
+
+			<div class="um-new-dropdown" data-element="<?php echo $element; ?>" data-trigger="<?php echo $trigger; ?>">
+				<ul>
+					<?php foreach ( $items as $k => $v ) { ?>
+						<li><?php echo $v; ?></li>
+					<?php } ?>
+				</ul>
+			</div>
+
+			<?php
+		}
+
+
+		/**
+		 * New menu JS
+		 *
+		 * @param string $element
+		 * @param string $trigger
+		 * @param string $item
+		 */
+		function dropdown_menu_js( $element, $trigger, $item ) {
+			?>
+
+			<div class="um-new-dropdown" data-element="<?php echo $element; ?>" data-trigger="<?php echo $trigger; ?>">
+				<ul>
+					<# _.each( <?php echo $item; ?>.dropdown_actions, function( action, key, list ) { #>
+						<li><a href="<# if ( typeof action.url != 'undefined' ) { #>{{{action.url}}}<# } else { #>javascript:void(0);<# }#>" class="{{{key}}}">{{{action.title}}}</a></li>
+					<# }); #>
+				</ul>
+			</div>
+
+			<?php
 		}
 	}
 }
