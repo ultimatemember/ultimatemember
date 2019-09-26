@@ -177,7 +177,7 @@ function um_submit_account_details( $args ) {
 		$user->destroy_all();
 
 		wp_set_password( $changes['user_pass'], um_user( 'ID' ) );
-			
+
 		wp_signon( array( 'user_login' => um_user( 'user_login' ), 'user_password' =>  $changes['user_pass'] ) );
 	}
 
@@ -185,7 +185,8 @@ function um_submit_account_details( $args ) {
 	// delete account
 	$user = get_user_by( 'login', um_user( 'user_login' ) );
 
-	if ( 'delete' == $current_tab && isset( $_POST['single_user_password'] ) && wp_check_password( $_POST['single_user_password'], $user->data->user_pass, $user->data->ID ) ) {
+	if ( 'delete' == $current_tab && isset( $_POST['single_user_password'] ) &&
+	     wp_check_password( $_POST['single_user_password'], $user->data->user_pass, $user->data->ID ) ) {
 		if ( current_user_can( 'delete_users' ) || um_user( 'can_delete_profile' ) ) {
 			UM()->user()->delete();
 
@@ -222,45 +223,42 @@ function um_submit_account_details( $args ) {
 		}
 	}
 
+	$arr_fields = array( 'password', 'um_account' );
+	if ( UM()->account()->is_secure_enabled() ) {
+		$account_fields = get_user_meta( um_user( 'ID' ), 'um_account_secure_fields', true );
 
-	$arr_fields = array();
-	$account_fields = get_user_meta( um_user('ID'), 'um_account_secure_fields', true );
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_secure_account_fields
+		 * @description Change secure account fields
+		 * @input_vars
+		 * [{"var":"$fields","type":"array","desc":"Secure account fields"},
+		 * {"var":"$user_id","type":"int","desc":"User ID"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_secure_account_fields', 'function_name', 10, 2 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_secure_account_fields', 'my_secure_account_fields', 10, 2 );
+		 * function my_secure_account_fields( $fields, $user_id ) {
+		 *     // your code here
+		 *     return $fields;
+		 * }
+		 * ?>
+		 */
+		$secure_fields = apply_filters( 'um_secure_account_fields', $account_fields, um_user( 'ID' ) );
 
-	/**
-	 * UM hook
-	 *
-	 * @type filter
-	 * @title um_secure_account_fields
-	 * @description Change secure account fields
-	 * @input_vars
-	 * [{"var":"$fields","type":"array","desc":"Secure account fields"},
-	 * {"var":"$user_id","type":"int","desc":"User ID"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage
-	 * <?php add_filter( 'um_secure_account_fields', 'function_name', 10, 2 ); ?>
-	 * @example
-	 * <?php
-	 * add_filter( 'um_secure_account_fields', 'my_secure_account_fields', 10, 2 );
-	 * function my_secure_account_fields( $fields, $user_id ) {
-	 *     // your code here
-	 *     return $fields;
-	 * }
-	 * ?>
-	 */
-	$secure_fields = apply_filters( 'um_secure_account_fields', $account_fields, um_user( 'ID' ) );
-
-	if ( is_array( $secure_fields  ) ) {
-		foreach ( $secure_fields as $tab_key => $fields ) {
-			foreach ( $fields as $key => $value ) {
-				$arr_fields[ ] = $key;
-			}
+		if ( is_array( $secure_fields[ $current_tab ] ) ) {
+			$arr_fields = array_merge( $arr_fields, $secure_fields[ $current_tab ] );
 		}
 	}
 
 	$changes = array();
 	foreach ( $_POST as $k => $v ) {
-		if ( strstr( $k, 'password' ) || strstr( $k, 'um_account' ) || ! in_array( $k, $arr_fields ) ) {
+		if ( ! in_array( $k, $arr_fields ) ) {
 			continue;
 		}
 
@@ -318,6 +316,11 @@ function um_submit_account_details( $args ) {
 	do_action( 'um_account_pre_update_profile', $changes, um_user( 'ID' ) );
 
 	UM()->user()->update_profile( $changes );
+
+
+	if ( UM()->account()->is_secure_enabled() ) {
+		update_user_meta( um_user( 'ID' ), 'um_account_secure_fields', array() );
+	}
 
 	/**
 	 * UM hook
@@ -410,6 +413,8 @@ add_action( 'um_before_account_delete', 'um_before_account_delete' );
  * Before notifications account tab content
  *
  * @param array $args
+ *
+ * @throws Exception
  */
 function um_before_account_notifications( $args = array() ) {
 	$output = UM()->account()->get_tab_fields( 'notifications', $args );
@@ -425,16 +430,6 @@ function um_before_account_notifications( $args = array() ) {
 	<?php }
 }
 add_action( 'um_before_account_notifications', 'um_before_account_notifications' );
-
-
-/**
- *  Update account fields to secure the account submission
- */
-function um_account_secure_registered_fields(){
-	$secure_fields = UM()->account()->register_fields;
-	update_user_meta( um_user( 'ID' ), 'um_account_secure_fields', $secure_fields );
-}
-add_action( 'wp_footer', 'um_account_secure_registered_fields' );
 
 
 /**

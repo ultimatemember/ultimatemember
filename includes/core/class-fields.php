@@ -2654,30 +2654,26 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							um_user( $data['parent_dropdown_relationship'] )
 						) {
 							$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
-							
 
 							$disabled_by_parent_option = '';
 							if ( um_user( $form_key ) ) {
 								$select_original_option_value = " data-um-original-value='" . um_user( $form_key ) . "' ";
 							}
-
-
 						}
 
 					}
 
 					// Child dropdown option selected
-					if( isset( UM()->form()->post_form[ $form_key ] ) ){
+					if ( isset( UM()->form()->post_form[ $form_key ] ) ) {
 						$select_original_option_value = " data-um-original-value='" . esc_attr( UM()->form()->post_form[ $form_key ] ) . "' ";
 					}
 
 					// Child dropdown
-					if( $has_parent_option ){
+					if ( $has_parent_option ) {
 
-						if ( ! empty( $data['custom_dropdown_options_source'] ) && $has_parent_option && function_exists( $data['custom_dropdown_options_source'] ) &&
-							isset( UM()->form()->post_form[ $form_key ] )
-						) {
-								$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+						if ( ! empty( $data['custom_dropdown_options_source'] ) && $has_parent_option &&
+						     function_exists( $data['custom_dropdown_options_source'] ) && isset( UM()->form()->post_form[ $form_key ] ) ) {
+							$options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
 						}
 					}
 
@@ -2769,6 +2765,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						// 'country'
 						if ( $key === 'country' && empty( $options ) ) {
 							$options = UM()->builtin()->get( 'countries' );
+						} else if ( empty( $options ) ) {
+							$options = $data['options'];
 						}
 
 						$options = apply_filters( 'um_selectbox_options', $options, $key );
@@ -2889,7 +2887,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '</div>';
 
 
-					if ($this->is_error( $form_key )) {
+					if ( $this->is_error( $form_key ) ) {
 						$output .= $this->field_error( $this->show_error( $form_key ) );
 					}
 
