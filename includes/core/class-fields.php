@@ -39,15 +39,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @param  bool $checked
 		 */
 		function checkbox( $id, $title, $checked = true ) {
-			
+
 			/**
 			 * Set value on form submission
 			 */
 			if( isset( $_REQUEST[ $id ] ) ){
-				$checked = $_REQUEST[ $id ]; 
+				$checked = $_REQUEST[ $id ];
 			}
 
-			$class = $checked ? 'um-icon-android-checkbox-outline' : 'um-icon-android-checkbox-outline-blank'; 
+			$class = $checked ? 'um-icon-android-checkbox-outline' : 'um-icon-android-checkbox-outline-blank';
 
 			?>
 
@@ -2620,6 +2620,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$atts_ajax = '';
 					$select_original_option_value = '';
 
+					if ( isset( $data[ 'options' ] ) && is_array( $data[ 'options' ] ) ) {
+						$options = $data[ 'options' ];
+					}
+
 					if ( ! empty( $data['parent_dropdown_relationship'] ) && ! UM()->user()->preview ) {
 
 						$disabled_by_parent_option = 'disabled = disabled';
@@ -2660,7 +2664,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$select_original_option_value = " data-um-original-value='" . um_user( $form_key ) . "' ";
 							}
 						}
-
 					}
 
 					// Child dropdown option selected
@@ -2728,12 +2731,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$atts_ajax .= ' data-um-ajax-url="' . esc_url( $ajax_source_url ) . '" ';
 
 					}
-
-					if ( ! empty( $placeholder ) && is_string( $placeholder ) ) {
-						$placeholder = strip_tags( $placeholder );
-					}
-
-					$output .= '<select data-default="' . $data['default'] . '" ' . $disabled . ' ' . $select_original_option_value . ' ' . $disabled_by_parent_option . '  name="' . esc_attr( $form_key ) . '" id="' . esc_attr( $field_id ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $atts_ajax . '>';
 
 					/**
 					 * UM hook
@@ -2818,9 +2815,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 					}
 
-					$output .= '<option value=""></option>';
-
-					$field_value = '';
+					if ( $form_key === 'role' ) {
+						$options = $this->get_available_roles( $form_key, $options );
+					}
 
 					/**
 					 * UM hook
@@ -2839,7 +2836,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$options_pair = true;
 					}
 
-					$options = $this->get_available_roles( $form_key, $options );
+					$field_value = '';
+
+					if ( ! empty( $placeholder ) && is_string( $placeholder ) ) {
+						$placeholder = strip_tags( $placeholder );
+					}
+
+					$output .= '<select data-default="' . $data['default'] . '" ' . $disabled . ' ' . $select_original_option_value . ' ' . $disabled_by_parent_option . '  name="' . esc_attr( $form_key ) . '" id="' . esc_attr( $field_id ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" class="' . $this->get_class( $key, $data, $class ) . '" style="width: 100%" data-placeholder="' . esc_attr( $placeholder ) . '" ' . $atts_ajax . '>';
+
+					$output .= '<option value=""></option>';
 
 					// add options
 					if ( ! empty( $options ) ) {
