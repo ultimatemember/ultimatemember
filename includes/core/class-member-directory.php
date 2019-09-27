@@ -1729,7 +1729,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				$pagination_data['header'] = $this->convert_tags( $directory_data['header'], $pagination_data );
 				$pagination_data['header_single'] = $this->convert_tags( $directory_data['header_single'], $pagination_data );
 
-				wp_send_json_success( array( 'users' => array(), 'pagination' => $pagination_data, 'args' => array( 'show_count' => false ) ) );
+				wp_send_json_success( array( 'users' => array(), 'pagination' => $pagination_data ) );
 			}
 
 
@@ -1886,15 +1886,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			um_reset_user();
 			// end of user card
 
-
-			$data_args = array(
-				'show_count' => false
-			);
-			if ( ! empty( $_POST['search'] ) || ! empty( $_POST['is_filters'] ) || ! empty( $directory_data['search_filters'] ) ) {
-				$data_args['show_count'] = true;
-			}
-
-			wp_send_json_success( array( 'pagination' => $pagination_data, 'users' => $users, 'args' => $data_args ) );
+			wp_send_json_success( array( 'pagination' => $pagination_data, 'users' => $users ) );
 		}
 
 

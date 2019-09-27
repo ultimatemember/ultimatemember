@@ -374,5 +374,20 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 			return $array;
 		}
+
+
+		/**
+		 * @param $var
+		 *
+		 * @return array|string
+		 */
+		function clean_array( $var ) {
+			if ( is_array( $var ) ) {
+				return array_map( array( $this, 'clean_array' ), $var );
+			} else {
+				return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
+			}
+		}
+
 	}
 }

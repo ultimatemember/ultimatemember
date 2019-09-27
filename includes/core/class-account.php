@@ -54,6 +54,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 * Init AllTabs for user account
 		 *
 		 * @param $args
+		 *
+		 * @throws \Exception
 		 */
 		function init_tabs( $args ) {
 
@@ -84,7 +86,9 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 
 		/**
-		 * @return mixed|void
+		 * Get all Account tabs
+		 *
+		 * @return array
 		 */
 		function get_tabs() {
 			$tabs = array();

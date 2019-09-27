@@ -220,7 +220,7 @@ function um_ajax_get_members( directory, args ) {
 			//set last data hard for using on layouts reloading
 			um_member_directory_last_data[ hash ] = answer;
 
-			um_build_template( directory, answer.users );
+			um_build_template( directory, answer );
 
 			var pagination_template = wp.template( 'um-members-pagination' );
 			directory.find('.um-members-pagination-box').html( pagination_template( answer ) );
@@ -256,7 +256,12 @@ function um_build_template( directory, data ) {
 	var template = wp.template( 'um-member-' + layout );
 
 	directory.find('.um-members-grid, .um-members-list').remove();
-	directory.find('.um-members-wrapper').prepend( template( data ) );
+	directory.find('.um-members-wrapper').prepend( template( data.users ) );
+
+	var header_template = wp.template( 'um-members-header' );
+	directory.find('.um-members-intro').remove();
+	directory.find('.um-members-wrapper').prepend( header_template( data ) );
+
 	directory.addClass('um-loaded');
 
 	if ( directory.find('.um-members.um-members-grid').length ) {
@@ -547,7 +552,7 @@ jQuery(document).ready( function() {
 			um_set_url_from_data( directory, 'view_type', layout );
 			directory.data( 'view_type', layout );
 
-			um_build_template( directory, data.users );
+			um_build_template( directory, data );
 		}
 		um_members_hide_preloader( directory );
 	});

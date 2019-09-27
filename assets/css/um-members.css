@@ -343,6 +343,12 @@ body #content .um-directory a {
     padding: 0;
     position: relative;
     height: 300px; }
+    .um-directory .um-members-wrapper .um-members-intro {
+      text-align: center;
+      margin: 0 0 10px 0; }
+    .um-directory .um-members-wrapper .um-members-total {
+      font-size: 20px;
+      font-weight: 300; }
     .um-directory .um-members-wrapper .um-members {
       width: 100%;
       margin: 0;

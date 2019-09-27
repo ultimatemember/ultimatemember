@@ -24,7 +24,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Reviews_API Reviews_API()
 	 * @method UM_Activity_API Activity_API()
 	 * @method UM_Social_Login_API Social_Login_API()
-	 * @method UM_User_Tags_API User_Tags_API()
+	 * @method UM_User_Tags User_Tags()
 	 * @method UM_Verified_Users_API Verified_Users_API()
 	 * @method UM_WooCommerce_API WooCommerce_API()
 	 * @method UM_Terms_Conditions Terms_Conditions()
