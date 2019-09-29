@@ -72,6 +72,11 @@ if ( ! empty( $member_directories ) && ! is_wp_error( $member_directories ) ) {
 					$search_fields[] = 'last_login';
 				}
 
+				if ( false !== ( $user_rating_key = array_search( 'user_rating', $search_fields ) ) ) {
+					unset( $search_fields[ $user_rating_key ] );
+					$search_fields[] = 'filter_rating';
+				}
+
 				$filter_fields = array_intersect( $search_fields, array_keys( UM()->member_directory()->filter_fields ) );
 
 				$general_search_fields = array_diff( $search_fields, array_keys( UM()->member_directory()->filter_fields ) );
