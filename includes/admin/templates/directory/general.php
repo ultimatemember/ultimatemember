@@ -2,14 +2,6 @@
 
 global $post_id;
 
-$meta = get_post_custom( get_the_ID() );
-foreach( $meta as $k => $v ) {
-	if ( strstr( $k, '_um_' ) && !is_array( $v[0] ) ) {
-		//print "'$k' => '" . $v[0] . "',<br />";
-	}
-}
-
-
 $_um_roles_value = get_post_meta( $post_id, '_um_roles', true );
 $_um_roles_value = empty( $_um_roles_value ) ? array() : $_um_roles_value;
 
@@ -19,7 +11,7 @@ if ( $show_these_users ) {
 }
 
 $_um_view_types_value = get_post_meta( $post_id, '_um_view_types', true );
-$_um_view_types_value = empty( $_um_view_types_value ) ? array( 'grid', 'list'  ) : $_um_view_types_value;
+$_um_view_types_value = empty( $_um_view_types_value ) ? array( 'grid', 'list' ) : $_um_view_types_value;
 
 $view_types_options = array_map( function( $item ) {
 	return $item['title'];
@@ -28,8 +20,7 @@ $view_types_options = array_map( function( $item ) {
 $conditional = array();
 foreach ( $view_types_options as $key => $value ) {
 	$conditional[] = '_um_view_types_' . $key;
-}
-?>
+} ?>
 
 <div class="um-admin-metabox">
 

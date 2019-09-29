@@ -13,16 +13,13 @@ $unique_hash = substr( md5( $args['form_id'] ), 10, 5 );
 
 $args = array_merge( $def_args, $args );
 
-
 //current user priority role
 $priority_user_role = false;
 if ( is_user_logged_in() ) {
 	$priority_user_role = UM()->roles()->get_priority_user_role( um_user( 'ID' ) );
 }
 
-
 $args = apply_filters( 'um_member_directory_agruments_on_load', $args );
-
 
 // Views
 $single_view = false;
@@ -44,8 +41,10 @@ if ( empty( $args['view_types'] ) || ! is_array( $args['view_types'] ) ) {
 if ( count( $args['view_types'] ) == 1 ) {
 	$single_view = true;
 	$current_view = $args['view_types'][0];
+	$default_view = $current_view;
 } else {
 	$args['default_view'] = ! empty( $args['default_view'] ) ? $args['default_view'] : $args['view_types'][0];
+	$default_view = $args['default_view'];
 	$current_view = ( ! empty( $_GET[ 'view_type_' . $unique_hash ] ) && in_array( $_GET[ 'view_type_' . $unique_hash ], $args['view_types'] ) ) ? $_GET[ 'view_type_' . $unique_hash ] : $args['default_view'];
 }
 
@@ -178,7 +177,8 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ); ?>"
      data-hash="<?php echo esc_attr( substr( md5( $form_id ), 10, 5 ) ) ?>" data-base-post="<?php echo esc_attr( $post->ID ) ?>"
 	 data-must-search="<?php echo esc_attr( $must_search ); ?>" data-searched="<?php echo $not_searched ? '0' : '1'; ?>"
-	 data-view_type="<?php echo esc_attr( $current_view ) ?>" data-page="<?php echo esc_attr( $current_page ) ?>">
+	 data-view_type="<?php echo esc_attr( $current_view ) ?>" data-page="<?php echo esc_attr( $current_page ) ?>"
+	 data-sorting="<?php echo esc_attr( $sort_from_url ) ?>">
 	<div class="um-members-overlay"><div class="um-ajax-loading"></div></div>
 
 	<div class="um-member-directory-header">
@@ -213,6 +213,7 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 								<a href="javascript:void(0)"
 								   class="um-member-directory-view-type-a<?php if ( ! $not_searched ) {?> um-tip-n<?php } ?>"
 								   data-type="<?php echo $key; ?>"
+								   data-default="<?php echo ( $default_view == $key ) ? 1 : 0; ?>"
 								   title="<?php printf( esc_attr__( 'Change to %s', 'ultimate-member' ), $value['title'] ) ?>"
 								   default-title="<?php echo esc_attr( $value['title'] ); ?>"
 								   next-item="" ><i class="<?php echo $value['icon']; ?>"></i></a>
@@ -235,7 +236,7 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 
 						<?php $items = array();
 						foreach ( $sorting_options as $value => $title ) {
-							$items[] = '<a href="javascript:void(0);" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '">' . $title . '</a>'; ?>
+							$items[] = '<a href="javascript:void(0);" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting == $value ) ? '1' : '0' ) . '">' . $title . '</a>'; ?>
 						<?php }
 
 						UM()->member_directory()->dropdown_menu( '.um-member-directory-sorting-a', 'click', $items ); ?>
@@ -262,22 +263,22 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 			if ( is_array( $search_filters ) ) { ?>
 				<script type="text/template" id="tmpl-um-members-filtered-line">
 					<# if ( data.filters.length > 0 ) { #>
-					<# _.each( data.filters, function( filter, key, list ) { #>
-					<div class="um-members-filter-tag">
-						<# if ( filter.type == 'slider' ) { #>
-						<# if ( filter.value[0] == filter.value[1] ) { #>
-						<strong>{{{filter.label}}}</strong>: {{{filter.value[0]}}}
-						<# } else { #>
-						{{{filter.value_label}}}
-						<# } #>
-						<# } else { #>
-						<strong>{{{filter.label}}}</strong>: {{{filter.value_label}}}
-						<# } #>
-						<div class="um-members-filter-remove um-tip-n" data-name="{{{filter.name}}}"
-						     data-value="{{{filter.value}}}" data-range="{{{filter.range}}}"
-						     data-type="{{{filter.type}}}" title="<?php esc_attr_e( 'Remove filter', 'ultimate-member' ) ?>">&times;</div>
-					</div>
-					<# }); #>
+						<# _.each( data.filters, function( filter, key, list ) { #>
+							<div class="um-members-filter-tag">
+								<# if ( filter.type == 'slider' ) { #>
+									<# if ( filter.value[0] == filter.value[1] ) { #>
+										<strong>{{{filter.label}}}</strong>: {{{filter.value[0]}}}
+									<# } else { #>
+										{{{filter.value_label}}}
+									<# } #>
+								<# } else { #>
+									<strong>{{{filter.label}}}</strong>: {{{filter.value_label}}}
+								<# } #>
+								<div class="um-members-filter-remove um-tip-n" data-name="{{{filter.name}}}"
+								     data-value="{{{filter.value}}}" data-range="{{{filter.range}}}"
+								     data-type="{{{filter.type}}}" title="<?php esc_attr_e( 'Remove filter', 'ultimate-member' ) ?>">&times;</div>
+							</div>
+						<# }); #>
 					<# } #>
 				</script>
 

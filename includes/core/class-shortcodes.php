@@ -542,21 +542,22 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 */
 		function load( $args ) {
 			$defaults = array();
-			$args = wp_parse_args($args, $defaults);
+			$args = wp_parse_args( $args, $defaults );
 
 			// when to not continue
-			$this->form_id = (isset($args['form_id'])) ? $args['form_id'] : null;
-			if (!$this->form_id) {
+			$this->form_id = isset( $args['form_id'] ) ? $args['form_id'] : null;
+			if ( ! $this->form_id ) {
 				return;
 			}
 
-			$this->form_status = get_post_status($this->form_id);
-			if ($this->form_status != 'publish') {
+			$this->form_status = get_post_status( $this->form_id );
+			if ( $this->form_status != 'publish' ) {
 				return;
 			}
 
 			// get data into one global array
 			$post_data = UM()->query()->post_data( $this->form_id );
+			$args = array_merge( $args, $post_data );
 
 			ob_start();
 
@@ -581,7 +582,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			 * }
 			 * ?>
 			 */
-			$args = apply_filters( 'um_pre_args_setup', $post_data );
+			$args = apply_filters( 'um_pre_args_setup', $args );
 
 			if ( ! isset( $args['template'] ) ) {
 				$args['template'] = '';

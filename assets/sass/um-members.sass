@@ -339,6 +339,12 @@ body
                 -moz-border-radius: 0 !important
                 -webkit-border-radius: 0 !important
                 border-radius: 0 !important
+        .um-member-card
+          .um-member-name
+            +flex( row, flex-start, baseline, nowrap )
+            a
+              +flex( row, flex-start, center, nowrap )
+
 
       img
         display: block
@@ -424,6 +430,7 @@ body
 
             .um-member-name
               margin: 0 0 4px 0
+              justify-content: center
               a
                 font-size: 16px
                 line-height: 26px
@@ -544,7 +551,7 @@ body
           .um-member-card-container
             +flex( row, flex-start, flex-start, nowrap )
             width: 100%
-            margin: 0
+            margin: 0 0 10px 0
             padding: 0
             .um-member-photo
               width: 100px
@@ -659,6 +666,7 @@ body
                   .um-new-dropdown
                     width: 180px
                     right: 0
+                    text-align: left
 
                 a
                   box-sizing: border-box
@@ -703,13 +711,20 @@ body
                     content: "\f013"
 
           .um-member-card-footer
-            +flex( row, flex-end, baseline, nowrap )
+            +flex( row, flex-end, center, nowrap )
             width: 100%
 
             .um-member-card-footer-buttons
               +flex( row, flex-start, baseline, nowrap )
               width: calc( 100% - 145px )
               margin: 0 10px 0 0
+
+              .um-members-list-footer-button-wrapper
+                +flex( row, flex-start, baseline, nowrap )
+                margin: 0
+                //flex: 1 0 calc( ( 100% - 20px ) / 3 )
+              & > :not(:last-child)
+                margin: 0 10px 0 0
             .um-member-card-reveal-buttons
               width: 20px
               text-align: right
@@ -865,10 +880,15 @@ body
               width: calc( 100% - 60px )
 
             .um-member-card-footer
+              align-items: flex-start
               .um-member-card-footer-buttons
-                +flex( row, flex-start, baseline, nowrap )
+                +flex( column, flex-start, stretch, nowrap )
                 width: calc( 100% - 90px )
                 margin: 0 10px 0 0
+                .um-members-list-footer-button-wrapper
+                  margin: 0 0 5px 0
+                  a.um-button
+                    width: 100% !important
 
 
   &.uimob500
@@ -908,10 +928,13 @@ body
             .um-member-card
               width: calc( 100% - 80px )
             .um-member-card-footer
+              align-items: flex-start
               .um-member-card-footer-buttons
-                +flex( row, flex-start, baseline, nowrap )
+                flex-wrap: wrap
                 width: calc( 100% - 110px )
                 margin: 0 10px 0 0
+                .um-members-list-footer-button-wrapper
+                  margin: 0 10px 5px 0
   &.uimob800
     .um-member-directory-header
       .um-member-directory-header-row
@@ -942,10 +965,13 @@ body
             .um-member-card
               width: calc( 100% - 90px )
             .um-member-card-footer
+              align-items: flex-start
               .um-member-card-footer-buttons
-                +flex( row, flex-start, baseline, nowrap )
+                flex-wrap: wrap
                 width: calc( 100% - 120px )
                 margin: 0 10px 0 0
+                .um-members-list-footer-button-wrapper
+                  margin: 0 10px 5px 0
   &.uimob960
     .um-member-directory-header
       .um-search

@@ -292,6 +292,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		}
 
 
+		/**
+		 *
+		 */
 		function init_filter_types() {
 			$this->filter_types = apply_filters( 'um_members_directory_filter_types', array(
 				'country'           => 'select',
@@ -386,7 +389,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				 * }
 				 * ?>
 				 */
-				$attrs = apply_filters( "um_custom_search_field_{$filter}", array() );
+				$attrs = apply_filters( "um_custom_search_field_{$filter}", array(), $field_key );
 			}
 
 			/**
@@ -410,7 +413,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 * }
 			 * ?>
 			 */
-			$attrs = apply_filters( 'um_search_fields', $attrs );
+			$attrs = apply_filters( 'um_search_fields', $attrs, $field_key );
 
 			$unique_hash = substr( md5( $directory_data['form_id'] ), 10, 5 );
 
@@ -583,7 +586,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 */
 		function slider_filters_range( $filter, $directory_data ) {
 
-
 			switch ( $filter ) {
 
 				default: {
@@ -638,10 +640,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					if ( ! $placeholder ) {
 						switch ( $attrs['type'] ) {
 							default:
-								$placeholder = "<strong>$label:</strong> {min_range} - {max_range}";
+								$placeholder = "<strong>$label:</strong>&nbsp;{min_range} - {max_range}";
 								break;
 							case 'rating':
-								$placeholder = "<strong>$label:</strong> {min_range} - {max_range}" . __( ' stars', 'ultimate-member' );
+								$placeholder = "<strong>$label:</strong>&nbsp;{min_range} - {max_range}" . __( ' stars', 'ultimate-member' );
 								break;
 						}
 					}
@@ -649,7 +651,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					break;
 				}
 				case 'birth_date': {
-					$placeholder = __( '<strong>Age:</strong> {min_range} - {max_range} years old', 'ultimate-member' );
+					$placeholder = __( '<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old', 'ultimate-member' );
 					break;
 				}
 			}
@@ -1250,7 +1252,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				}
 			}
 
-			if ( empty( $filter_query ) ) {
+			$ignore_empty_filters = apply_filters( 'um_member_directory_ignore_empty_filters', false );
+
+			if ( empty( $filter_query ) && ! $ignore_empty_filters ) {
 				add_filter( 'um_member_directory_organic_search_replacement', array( &$this, 'organic_replacement' ) );
 				return;
 			}
@@ -1484,7 +1488,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$current_page = ! empty( $_POST['page'] ) ? $_POST['page'] : 1;
 
-			$total_users = ( ! empty( $max_users ) && $max_users <= $result->total_users ) ? $max_users : $result->total_users;
+			$total_users = ( ! empty( $directory_data['max_users'] ) && $directory_data['max_users'] <= $result->total_users ) ? $directory_data['max_users'] : $result->total_users;
 			$total_pages = ceil( $total_users / $directory_data['profiles_per_page'] );
 
 			if ( ! empty( $total_pages ) ) {
@@ -1732,6 +1736,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				wp_send_json_success( array( 'users' => array(), 'pagination' => $pagination_data ) );
 			}
 
+			do_action( 'um_member_directory_before_query' );
 
 			// Prepare for BIG SELECT query
 			$wpdb->query( 'SET SQL_BIG_SELECTS=1' );
@@ -1817,8 +1822,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			add_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10, 6 );
 
 			$user_query = new \WP_User_Query( $this->query_args );
-
-			//var_dump( $user_query->request );
 
 			remove_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10 );
 
