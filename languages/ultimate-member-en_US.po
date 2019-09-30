@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-09-19 15:59+0300\n"
-"PO-Revision-Date: 2019-09-19 15:59+0300\n"
+"POT-Creation-Date: 2019-09-30 13:09+0300\n"
+"PO-Revision-Date: 2019-09-30 13:10+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -103,7 +103,7 @@ msgstr ""
 #: includes/admin/core/class-admin-builder.php:764
 #: includes/admin/core/class-admin-dragdrop.php:33
 #: includes/admin/core/class-admin-menu.php:106
-#: includes/core/class-fields.php:4317
+#: includes/core/class-fields.php:4320
 msgid "Please login as administrator"
 msgstr ""
 
@@ -229,7 +229,7 @@ msgstr ""
 #: includes/admin/templates/form/register_gdpr.php:26
 #: includes/core/class-builtin.php:1135 includes/core/class-builtin.php:1149
 #: includes/core/class-builtin.php:1150
-#: includes/core/um-actions-account.php:270
+#: includes/core/um-actions-account.php:268
 msgid "No"
 msgstr ""
 
@@ -253,7 +253,7 @@ msgstr ""
 #: includes/admin/templates/form/register_customize.php:80
 #: includes/admin/templates/form/register_gdpr.php:27
 #: includes/core/class-builtin.php:1135 includes/core/class-builtin.php:1150
-#: includes/core/class-member-directory.php:846
+#: includes/core/class-member-directory.php:848
 #: includes/core/um-filters-members.php:40
 msgid "Yes"
 msgstr ""
@@ -295,12 +295,12 @@ msgstr ""
 
 #: includes/admin/core/class-admin-enqueue.php:489
 #: includes/admin/core/class-admin-metabox.php:2210
-#: includes/core/class-account.php:105
+#: includes/core/class-account.php:109
 msgid "Privacy"
 msgstr ""
 
 #: includes/admin/core/class-admin-enqueue.php:493
-#: includes/core/class-account.php:111
+#: includes/core/class-account.php:115
 msgid "Notifications"
 msgstr ""
 
@@ -2180,7 +2180,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:479
 #: includes/class-config.php:136 includes/class-config.php:780
-#: includes/core/class-account.php:93
+#: includes/core/class-account.php:97
 msgid "Account"
 msgstr ""
 
@@ -3134,22 +3134,22 @@ msgid "Apply"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:166
-#: includes/core/um-filters-user.php:20 includes/core/um-filters-user.php:25
+#: includes/core/um-filters-user.php:21 includes/core/um-filters-user.php:26
 msgid "Approve Membership"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:169
-#: includes/core/um-filters-user.php:21
+#: includes/core/um-filters-user.php:22
 msgid "Reject Membership"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:172
-#: includes/core/um-filters-user.php:29
+#: includes/core/um-filters-user.php:30
 msgid "Put as Pending Review"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:175
-#: includes/core/um-filters-user.php:33
+#: includes/core/um-filters-user.php:34
 msgid "Resend Activation E-mail"
 msgstr ""
 
@@ -3485,6 +3485,22 @@ msgstr ""
 msgid "Upgrade user roles..."
 msgstr ""
 
+#: includes/admin/core/packages/2.1.0-alpha4/functions.php:11
+msgid "Usermeta was upgraded successfully"
+msgstr ""
+
+#: includes/admin/core/packages/2.1.0-alpha4/functions.php:24
+msgid "Member directories were upgraded successfully"
+msgstr ""
+
+#: includes/admin/core/packages/2.1.0-alpha4/init.php:7
+msgid "Upgrade user metadata..."
+msgstr ""
+
+#: includes/admin/core/packages/2.1.0-alpha4/init.php:33
+msgid "Upgrade Member Directories..."
+msgstr ""
+
 #: includes/admin/templates/dashboard/cache.php:12
 msgid "Run this task from time to time to keep your DB clean."
 msgstr ""
@@ -3542,45 +3558,45 @@ msgstr ""
 msgid "Template"
 msgstr ""
 
-#: includes/admin/templates/directory/general.php:45
+#: includes/admin/templates/directory/general.php:36
 msgid "View type(s)"
 msgstr ""
 
-#: includes/admin/templates/directory/general.php:46
+#: includes/admin/templates/directory/general.php:37
 msgid "View type a specific parameter in the directory"
 msgstr ""
 
-#: includes/admin/templates/directory/general.php:55
+#: includes/admin/templates/directory/general.php:46
 msgid "Default view type"
 msgstr ""
 
-#: includes/admin/templates/directory/general.php:56
+#: includes/admin/templates/directory/general.php:47
 msgid "Default directory view type"
 msgstr ""
 
-#: includes/admin/templates/directory/general.php:64
+#: includes/admin/templates/directory/general.php:55
 msgid "User Roles to Display"
 msgstr ""
 
-#: includes/admin/templates/directory/general.php:65
+#: includes/admin/templates/directory/general.php:56
 msgid ""
 "If you do not want to show all members, select only user roles to appear in "
 "this directory"
 msgstr ""
 
-#: includes/admin/templates/directory/general.php:73
+#: includes/admin/templates/directory/general.php:64
 msgid "Only show members who have uploaded a profile photo"
 msgstr ""
 
-#: includes/admin/templates/directory/general.php:74
+#: includes/admin/templates/directory/general.php:65
 msgid "If 'Use Gravatars' as profile photo is enabled, this option is ignored"
 msgstr ""
 
-#: includes/admin/templates/directory/general.php:80
+#: includes/admin/templates/directory/general.php:71
 msgid "Only show members who have uploaded a cover photo"
 msgstr ""
 
-#: includes/admin/templates/directory/general.php:86
+#: includes/admin/templates/directory/general.php:77
 msgid "Only show specific users (Enter one username per line)"
 msgstr ""
 
@@ -4137,8 +4153,6 @@ msgstr ""
 #: includes/admin/templates/modal/fonticons.php:14
 #: includes/admin/templates/role/publish.php:24
 #: includes/core/class-fields.php:2486 includes/core/class-fields.php:2583
-#: includes/core/class-member-directory.php:1552
-#: includes/core/class-member-directory.php:1559
 #: includes/core/um-actions-profile.php:641
 #: includes/core/um-actions-profile.php:653
 #: includes/core/um-actions-profile.php:796
@@ -4508,7 +4522,7 @@ msgid "Register"
 msgstr ""
 
 #: includes/class-config.php:135 includes/class-config.php:779
-#: includes/core/class-member-directory.php:1558
+#: includes/core/class-member-directory.php:1599
 #: includes/core/um-actions-profile.php:1180
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
@@ -4677,27 +4691,27 @@ msgstr ""
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: includes/core/class-account.php:94
+#: includes/core/class-account.php:98
 msgid "Update Account"
 msgstr ""
 
-#: includes/core/class-account.php:99
+#: includes/core/class-account.php:103
 msgid "Change Password"
 msgstr ""
 
-#: includes/core/class-account.php:100
+#: includes/core/class-account.php:104
 msgid "Update Password"
 msgstr ""
 
-#: includes/core/class-account.php:106
+#: includes/core/class-account.php:110
 msgid "Update Privacy"
 msgstr ""
 
-#: includes/core/class-account.php:112
+#: includes/core/class-account.php:116
 msgid "Update Notifications"
 msgstr ""
 
-#: includes/core/class-account.php:120 includes/core/class-account.php:121
+#: includes/core/class-account.php:124 includes/core/class-account.php:125
 #: includes/core/class-builtin.php:1141 includes/core/class-builtin.php:1144
 msgid "Delete Account"
 msgstr ""
@@ -4777,7 +4791,7 @@ msgstr ""
 msgid "You must add a shortcode to the content area"
 msgstr ""
 
-#: includes/core/class-builtin.php:663 includes/core/class-user.php:1559
+#: includes/core/class-builtin.php:663 includes/core/class-user.php:1558
 msgid "Only me"
 msgstr ""
 
@@ -6948,14 +6962,14 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:4050
+#: includes/core/class-fields.php:4053
 #, php-format
 msgid ""
 "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some "
 "information!"
 msgstr ""
 
-#: includes/core/class-fields.php:4052
+#: includes/core/class-fields.php:4055
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
@@ -6996,7 +7010,7 @@ msgstr ""
 msgid "You can not edit this user"
 msgstr ""
 
-#: includes/core/class-mail.php:612 includes/core/class-password.php:701
+#: includes/core/class-mail.php:615 includes/core/class-password.php:701
 #: includes/core/class-profile.php:470
 msgid "Your set password"
 msgstr ""
@@ -7049,28 +7063,24 @@ msgstr ""
 msgid "User Registered"
 msgstr ""
 
-#: includes/core/class-member-directory.php:644
+#: includes/core/class-member-directory.php:646
 msgid " stars"
 msgstr ""
 
-#: includes/core/class-member-directory.php:652
-msgid "<strong>Age:</strong> {min_range} - {max_range} years old"
+#: includes/core/class-member-directory.php:654
+msgid "<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1525
-#: includes/core/class-member-directory.php:1556
+#: includes/core/class-member-directory.php:1544
+#: includes/core/class-member-directory.php:1588
 #: includes/core/um-actions-profile.php:1147
 #: includes/core/um-actions-profile.php:1178
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1557
+#: includes/core/class-member-directory.php:1594
 #: includes/core/um-actions-profile.php:1179
 msgid "My Account"
-msgstr ""
-
-#: includes/core/class-member-directory.php:1609 templates/members-grid.php:53
-msgid "Edit profile"
 msgstr ""
 
 #: includes/core/class-password.php:458
@@ -7169,11 +7179,11 @@ msgid ""
 "\"{login_referrer}\">login</a> to view this content."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:645
+#: includes/core/class-shortcodes.php:646
 msgid "You are already registered"
 msgstr ""
 
-#: includes/core/class-shortcodes.php:892
+#: includes/core/class-shortcodes.php:893
 msgid "Default Template"
 msgstr ""
 
@@ -7319,7 +7329,7 @@ msgstr ""
 msgid "Email already linked to another account"
 msgstr ""
 
-#: includes/core/um-actions-account.php:420
+#: includes/core/um-actions-account.php:425
 msgid "Email me when"
 msgstr ""
 
@@ -7621,19 +7631,19 @@ msgstr ""
 msgid "max"
 msgstr ""
 
-#: includes/core/um-filters-user.php:37
+#: includes/core/um-filters-user.php:38
 msgid "Deactivate this account"
 msgstr ""
 
-#: includes/core/um-filters-user.php:41
+#: includes/core/um-filters-user.php:42
 msgid "Reactivate this account"
 msgstr ""
 
-#: includes/core/um-filters-user.php:47
+#: includes/core/um-filters-user.php:48
 msgid "Delete this user"
 msgstr ""
 
-#: includes/core/um-filters-user.php:51
+#: includes/core/um-filters-user.php:52
 msgid "Login as this user"
 msgstr ""
 
@@ -7657,6 +7667,10 @@ msgstr ""
 msgid "Search Users"
 msgstr ""
 
+#: templates/members-grid.php:53
+msgid "Edit profile"
+msgstr ""
+
 #: templates/members-pagination.php:7
 msgid "Jump to page:"
 msgstr ""
@@ -7673,28 +7687,28 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: templates/members.php:216
+#: templates/members.php:217
 #, php-format
 msgid "Change to %s"
 msgstr ""
 
-#: templates/members.php:229
+#: templates/members.php:230
 msgid "Sort by:"
 msgstr ""
 
-#: templates/members.php:249
+#: templates/members.php:250
 msgid "More filters"
 msgstr ""
 
-#: templates/members.php:278
+#: templates/members.php:279
 msgid "Remove filter"
 msgstr ""
 
-#: templates/members.php:303
+#: templates/members.php:304
 msgid "Remove all filters"
 msgstr ""
 
-#: templates/members.php:303
+#: templates/members.php:304
 msgid "Clear all"
 msgstr ""
 
