@@ -138,7 +138,27 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 == Changelog ==
 
+= Important: UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin =
+
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
+
+= 2.1.0: October x, 2019 =
+
+* Enhancements:
+  - Added member directory list view
+  - Added member directory search bar
+  - Added member directory filters by range, date and time
+  - Added AJAXed member directories
+  - Updated member directories' search engine
+  - Additional parameter 'user_id' to action hook 'um_user_after_updating_profile'
+
+* Bugfixes:
+  - Optimized usermeta for Account submit security
+  - Fixed Gmail & Yahoo UTF-8 encoding of email notification subject
+  - Fixed ajax_resize_image() process
+  - Fixed country fields values
+  - Fixed dynamic_profile.php notice
+  - Fixed admin_post and admin_post_nopriv submittion
 
 = 2.0.56: August 21, 2019 =
 

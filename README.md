@@ -41,7 +41,7 @@ Support requests in issues on this repository will be closed on sight.
 GNU Version 2 or Any Later Version
 
 ## Releases
-[Official Release Version: 2.0.56](https://github.com/ultimatemember/ultimatemember/releases/tag/2.0.56).
+[Official Release Version: 2.1.0](https://github.com/ultimatemember/ultimatemember/releases/tag/2.1.0).
 
 ## Changelog
 [ From v1.0.0 to latest version ](https://wordpress.org/plugins/ultimate-member/changelog/).

@@ -11,7 +11,7 @@
 			type: 'POST',
 			dataType: 'json',
 			data: {
-				action: 'um_metadata210alpha4',
+				action: 'um_metadata210beta1',
 				nonce: um_admin_scripts.nonce
 			},
 			success: function( response ) {
@@ -36,7 +36,7 @@
 				type: 'POST',
 				dataType: 'json',
 				data: {
-					action: 'um_memberdir210alpha4',
+					action: 'um_memberdir210beta1',
 					nonce: um_admin_scripts.nonce
 				},
 				success: function( response ) {
