@@ -544,7 +544,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->register();
 				$this->user_posts();
 				$this->access();
-				//$this->members();
 				$this->logout();
 			}
 

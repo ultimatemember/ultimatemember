@@ -1247,7 +1247,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$name_attr = ' name="' . $name . '" ';
 
 			$values = $this->get_field_value( $field_data );
-			if( is_array( $values ) ) {
+			if ( is_array( $values ) ) {
 				$filters = array_keys( $values );
 			}
 
