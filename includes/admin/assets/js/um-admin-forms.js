@@ -2,10 +2,16 @@ jQuery(document).ready( function() {
 	/**
 	 * Multi-selects field
 	 */
-	jQuery( document.body ).on( 'click', '.um-select-delete', function() {
+	jQuery( document.body ).on( 'click', '.um-multi-selects-option-line .um-select-delete', function() {
 		jQuery( this ).parents( 'li.um-multi-selects-option-line' ).remove();
 	});
 
+	/**
+	 * Multi-selects field
+	 */
+	jQuery( document.body ).on( 'click', '.um-md-default-filters-option-line .um-select-delete', function() {
+		jQuery( this ).parents( 'li.um-md-default-filters-option-line' ).remove();
+	});
 
 	jQuery( '.um-multi-selects-add-option' ).click( function() {
 		var list = jQuery(this).siblings('ul.um-multi-selects-list');
@@ -27,6 +33,264 @@ jQuery(document).ready( function() {
 		list.find('li:last .um-hidden-multi-selects').attr('name', jQuery(this).data('name') ).
 		addClass('um-forms-field um-long-field').removeClass('um-hidden-multi-selects').attr('id', list.data('id_attr') + '-' + k);
 
+	});
+
+	var um_local_date = new Date();
+	var um_gmt_hours = -um_local_date.getTimezoneOffset() / 60;
+	jQuery('input[name="um-gmt-offset"]').val( um_gmt_hours );
+
+	//slider filter
+	jQuery('.um-admin-metabox').find('.um-slider').each( function() {
+		var slider = jQuery( this );
+
+		var min_default_value = parseInt( slider.data('min') );
+		var max_default_value = parseInt( slider.data('max') );
+
+		if ( typeof jQuery( '#' + slider.data('field_name') + '_min' ).val() != 'undefined' ) {
+			min_default_value = jQuery( '#' + slider.data('field_name') + '_min' ).val();
+		}
+		if ( typeof jQuery( '#' + slider.data('field_name') + '_max' ).val() != 'undefined' ) {
+			max_default_value = jQuery( '#' + slider.data('field_name') + '_max' ).val();
+		}
+
+		var default_value = [ min_default_value, max_default_value ];
+
+		slider.slider({
+			range: true,
+			min: parseInt( slider.data('min') ),
+			max: parseInt( slider.data('max') ),
+			values: default_value,
+			create: function( event, ui ) {
+				//console.log( ui );
+			},
+			step: 1,
+			slide: function( event, ui ) {
+				um_set_range_label( jQuery( this ), ui );
+			},
+			stop: function( event, ui ) {
+
+			}
+		});
+
+		um_set_range_label( slider );
+	});
+
+
+	//datepicker filter
+	jQuery('.um-admin-metabox').find('.um-datepicker-filter').each( function() {
+		var elem = jQuery(this);
+
+		var min = new Date( elem.data('date_min')*1000 );
+		var max = new Date( elem.data('date_max')*1000 );
+
+		var $input = elem.pickadate({
+			selectYears: true,
+			min: min,
+			max: max,
+			formatSubmit: 'yyyy/mm/dd',
+			hiddenName: true,
+			onOpen: function() {
+				elem.blur();
+			},
+			onClose: function() {
+				elem.blur();
+			},
+			onSet: function( context ) {
+
+			}
+		});
+
+		var $picker = $input.pickadate('picker');
+		$picker.set( 'select', elem.data('value')*1000 );
+	});
+
+
+	//timepicker filter
+	jQuery('.um-admin-metabox').find('.um-timepicker-filter').each( function() {
+		var elem = jQuery(this);
+
+		//using arrays formatted as [HOUR,MINUTE]
+
+		var min = elem.data('min');
+		var max = elem.data('max');
+		var picker_min = min.split(':');
+		var picker_max = max.split(':');
+
+		var $input = elem.pickatime({
+			format:         elem.data('format'),
+			interval:       parseInt( elem.data('intervals') ),
+			min: [picker_min[0],picker_min[1]],
+			max: [picker_max[0],picker_max[1]],
+			formatSubmit:   'HH:i',
+			hiddenName:     true,
+			onOpen:         function() { elem.blur(); },
+			onClose:        function() { elem.blur(); },
+			onSet:          function( context ) {
+
+			}
+		});
+	});
+
+	var um_member_dir_filters_busy = false;
+
+	jQuery( document.body ).on( 'change', '.um-md-default-filters-option-line .um-field-wrapper select', function() {
+		if ( um_member_dir_filters_busy ) {
+			return;
+		}
+
+		var obj = jQuery(this);
+		var filter_key = obj.val();
+		var directory_id = obj.data('member_directory');
+
+		um_member_dir_filters_busy = true;
+		wp.ajax.send( 'um_member_directory_default_filter_settings', {
+			data: {
+				key: filter_key,
+				directory_id: directory_id,
+				nonce: um_admin_scripts.nonce
+			},
+			success: function( data ) {
+				var field_wrapper = obj.parents( '.um-md-default-filters-option-line' ).find('.um-field-wrapper2');
+				field_wrapper.html( data.field_html );
+
+				um_member_dir_filters_busy = false;
+
+				//slider filter
+				field_wrapper.find('.um-slider').each( function() {
+					var slider = jQuery( this );
+					var min_default_value = parseInt( slider.data('min') );
+					var max_default_value = parseInt( slider.data('max') );
+
+					var default_value = [ min_default_value, max_default_value ];
+
+					slider.slider({
+						range: true,
+						min: parseInt( slider.data('min') ),
+						max: parseInt( slider.data('max') ),
+						values: default_value,
+						create: function( event, ui ) {
+							//console.log( ui );
+						},
+						step: 1,
+						slide: function( event, ui ) {
+							um_set_range_label( jQuery( this ), ui );
+						},
+						stop: function( event, ui ) {
+
+						}
+					});
+
+					um_set_range_label( slider );
+				});
+
+
+				//datepicker filter
+				field_wrapper.find('.um-datepicker-filter').each( function() {
+					var elem = jQuery(this);
+
+					var min = new Date( elem.data('date_min')*1000 );
+					var max = new Date( elem.data('date_max')*1000 );
+
+					var $input = elem.pickadate({
+						selectYears: true,
+						min: min,
+						max: max,
+						formatSubmit: 'yyyy/mm/dd',
+						hiddenName: true,
+						onOpen: function() {
+							elem.blur();
+						},
+						onClose: function() {
+							elem.blur();
+						},
+						onSet: function( context ) {
+
+						}
+					});
+				});
+
+
+				//timepicker filter
+				field_wrapper.find('.um-timepicker-filter').each( function() {
+					var elem = jQuery(this);
+
+					//using arrays formatted as [HOUR,MINUTE]
+
+					var min = elem.data('min');
+					var max = elem.data('max');
+					var picker_min = min.split(':');
+					var picker_max = max.split(':');
+
+					var $input = elem.pickatime({
+						format:         elem.data('format'),
+						interval:       parseInt( elem.data('intervals') ),
+						min: [picker_min[0],picker_min[1]],
+						max: [picker_max[0],picker_max[1]],
+						formatSubmit:   'HH:i',
+						hiddenName:     true,
+						onOpen:         function() { elem.blur(); },
+						onClose:        function() { elem.blur(); },
+						onSet:          function( context ) {
+
+						}
+					});
+				});
+
+
+			},
+			error: function( data ) {
+				return false;
+			}
+		});
+
+	});
+
+	function um_set_range_label( slider, ui ) {
+		var placeholder = slider.siblings( '.um-slider-range' ).data( 'placeholder' );
+
+		if( ui ) {
+			placeholder = placeholder.replace( '\{min_range\}', ui.values[ 0 ] )
+				.replace( '\{max_range\}', ui.values[ 1 ] )
+				.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
+					.data('label') );
+		} else {
+			placeholder = placeholder.replace( '\{min_range\}', slider.slider( "values", 0 ) )
+				.replace( '\{max_range\}', slider.slider( "values", 1 ) )
+				.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
+					.data('label') );
+		}
+		slider.siblings( '.um-slider-range' ).html( placeholder );
+
+		slider.siblings( ".um_range_min" ).val( slider.slider( "values", 0 ) );
+		slider.siblings( ".um_range_max" ).val( slider.slider( "values", 1 ) );
+	}
+
+
+	jQuery( '.um-md-default-filters-add-option' ).click( function() {
+		if ( um_member_dir_filters_busy ) {
+			return;
+		}
+
+		var list = jQuery(this).siblings('ul.um-md-default-filters-list');
+
+		var field_id = list.data('field_id');
+		var k = 0;
+		if ( list.find( 'li:last select.um-forms-field' ).length > 0 ) {
+			k = list.find( 'li:last select.um-forms-field' ).attr('id').split("-");
+			k = k[1]*1 + 1;
+		}
+
+		var selector_html = jQuery( '<div>' ).append( list.siblings('.um-hidden-md-default-filters').clone() ).html();
+
+		list.append(
+			'<li class="um-md-default-filters-option-line"><span class="um-field-wrapper">' + selector_html +
+			'</span></span><span class="um-field-control"><a href="javascript:void(0);" class="um-select-delete">' + php_data.texts.remove + '</a></span><span class="um-field-wrapper2 um"></li>'
+		);
+
+		list.find('li:last .um-hidden-md-default-filters').attr('name', jQuery(this).data('name') ).
+		addClass('um-forms-field um-long-field').removeClass('um-hidden-md-default-filters').attr('id', list.data('id_attr') + '-' + k);
+
+		list.find('li:last .um-field-wrapper select').trigger('change');
 	});
 
 

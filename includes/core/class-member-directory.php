@@ -41,6 +41,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		var $filter_fields = array();
 
 
+		/**
+		 * @var array
+		 */
+		var $custom_filters_in_query = array();
+
+
 
 		var $filter_supported_fields = array();
 
@@ -175,6 +181,32 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				if ( ! empty( $value ) && in_array( $key, array( '_um_view_types', '_um_roles', '_um_roles_can_search', '_um_roles_can_filter' ) ) ) {
 					$value = array_keys( $value );
+				} elseif ( $key == '_um_search_filters' ) {
+
+					$temp_value = array();
+
+					if ( ! empty( $value ) ) {
+						foreach ( $value as $k ) {
+							$filter_type = $this->filter_types[ $k ];
+							if ( ! empty( $filter_type  ) ) {
+								if ( $filter_type == 'select' ) {
+									if ( ! empty( $_POST[ $k ] ) ) {
+										$temp_value[ $k ] = trim( $_POST[ $k ] );
+									}
+								} elseif ( $filter_type == 'slider' ) {
+									if ( ! empty( $_POST[ $k ] ) ) {
+										$temp_value[ $k ] = $_POST[ $k ];
+									}
+								} elseif ( $filter_type == 'timepicker' || $filter_type == 'datepicker' ) {
+									if ( ! empty( $_POST[ $k . '_from' ] ) && ! empty( $_POST[ $k . '_to' ] ) ) {
+										$temp_value[ $k ] = array( $_POST[ $k . '_from' ], $_POST[ $k . '_to' ] );
+									}
+								}
+							}
+						}
+					}
+
+					$value = $temp_value;
 				}
 			}
 
@@ -346,10 +378,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 *
 		 * @param string $filter
 		 * @param array $directory_data
+		 * @param mixed $default_value
 		 *
 		 * @return string $filter
 		 */
-		function show_filter( $filter, $directory_data ) {
+		function show_filter( $filter, $directory_data, $default_value = false ) {
 
 			if ( empty( $this->filter_types[ $filter ] ) ) {
 				return '';
@@ -485,7 +518,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 									} ?>
 
 									<option value="<?php echo esc_attr( $opt ); ?>" data-value_label="<?php esc_attr_e( $v, 'ultimate-member' ); ?>"
-										<?php disabled( ! empty( $filter_from_url ) && in_array( $opt, $filter_from_url ) ) ?>>
+										<?php disabled( ! empty( $filter_from_url ) && in_array( $opt, $filter_from_url ) ) ?>
+										<?php selected( $opt == $default_value ) ?>>
 										<?php _e( $v, 'ultimate-member' ); ?>
 									</option>
 
@@ -503,8 +537,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$placeholder = $this->slider_range_placeholder( $filter, $attrs );
 
 					if ( $range ) { ?>
-						<input type="hidden" id="<?php echo $filter; ?>_min" name="<?php echo $filter; ?>[]" class="um_range_min" />
-						<input type="hidden" id="<?php echo $filter; ?>_max" name="<?php echo $filter; ?>[]" class="um_range_max" />
+						<input type="hidden" id="<?php echo $filter; ?>_min" name="<?php echo $filter; ?>[]" class="um_range_min" value="<?php echo ! empty( $default_value ) ? esc_attr( min( $default_value ) ) : '' ?>" />
+						<input type="hidden" id="<?php echo $filter; ?>_max" name="<?php echo $filter; ?>[]" class="um_range_max" value="<?php echo ! empty( $default_value ) ? esc_attr( max( $default_value ) ) : '' ?>" />
 						<div class="um-slider" data-field_name="<?php echo $filter; ?>" data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"></div>
 						<div class="um-slider-range" data-placeholder="<?php echo esc_attr( $placeholder ); ?>" data-label="<?php echo ( ! empty( $attrs['label'] ) ) ? esc_attr__( stripslashes( $attrs['label'] ), 'ultimate-member' ) : ''; ?>"></div>
 					<?php }
@@ -523,12 +557,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						       placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
 						       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
 						       data-date_min="<?php echo $range[0] ?>" data-date_max="<?php echo $range[1] ?>"
-						       data-filter_name="<?php echo $filter; ?>" data-range="from" />
+						       data-filter_name="<?php echo $filter; ?>" data-range="from" data-value="<?php echo ! empty( $default_value ) ? esc_attr( strtotime( min( $default_value ) ) ) : '' ?>" />
 						<input type="text" id="<?php echo $filter; ?>_to" name="<?php echo $filter; ?>_to" class="um-datepicker-filter"
 						       placeholder="<?php esc_attr_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?>"
 						       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
 						       data-date_min="<?php echo $range[0] ?>" data-date_max="<?php echo $range[1] ?>"
-						       data-filter_name="<?php echo $filter; ?>" data-range="to" />
+						       data-filter_name="<?php echo $filter; ?>" data-range="to" data-value="<?php echo ! empty( $default_value ) ? esc_attr( strtotime( max( $default_value ) ) ) : '' ?>" />
 
 					<?php }
 
@@ -1334,8 +1368,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 										}
 									}
 
+									$this->custom_filters_in_query[ $field ] = $value;
+
 									break;
 								case 'slider':
+
+									$this->custom_filters_in_query[ $field ] = $value;
 
 									$field_query = array(
 										'key'       => $field,
@@ -1350,6 +1388,260 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 									$offset = 0;
 									if ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) {
 										$offset = (int) $_POST['gmt_offset'];
+									}
+
+									$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
+									$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
+									$field_query = array(
+										'key'       => $field,
+										'value'     =>  array( $from_date, $to_date ),
+										'compare'   => 'BETWEEN',
+										'inclusive' => true,
+									);
+
+									$this->custom_filters_in_query[ $field ] = array( $from_date, $to_date );
+
+									break;
+								case 'timepicker':
+
+									if ( $value[0] == $value[1] ) {
+										$field_query = array(
+											'key'       => $field,
+											'value'     => $value[0],
+										);
+									} else {
+										$field_query = array(
+											'key'       => $field,
+											'value'     => $value,
+											'compare'   => 'BETWEEN',
+											'type'      => 'TIME',
+											'inclusive' => true,
+										);
+									}
+
+									$this->custom_filters_in_query[ $field ] = $value;
+
+									break;
+							}
+
+						}
+
+						if ( ! empty( $field_query ) && $field_query !== true ) {
+							$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $field_query ) );
+						}
+
+						break;
+					case 'role':
+						$value = explode( '||', $value );
+						$value = array_map( 'strtolower', $value );
+
+						if ( ! empty( $this->query_args['role__in'] ) ) {
+							$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
+							$default_role = array_intersect( $this->query_args['role__in'], $value );
+							$um_role = array_diff( $value, $default_role );
+
+							foreach ( $um_role as $key => &$val ) {
+								$val = 'um_' . str_replace( ' ', '-', $val );
+							}
+							$this->query_args['role__in'] = array_merge( $default_role, $um_role );
+						} else {
+							$this->query_args['role__in'] = $value;
+						};
+
+						$this->custom_filters_in_query[ $field ] = $this->query_args['role__in'];
+
+						break;
+					case 'birth_date':
+
+						$from_date = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ), date( 'Y', time() - min( $value ) * YEAR_IN_SECONDS ) ) );
+						$to_date = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ) + 1, date( 'Y', time() - ( max( $value ) + 1 ) * YEAR_IN_SECONDS ) ) );
+
+						$meta_query = array(
+							array(
+								'key'       => 'birth_date',
+								'value'     => array( $to_date, $from_date ),
+								'compare'   => 'BETWEEN',
+								'type'      => 'DATE',
+								'inclusive' => true,
+							)
+						);
+
+						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
+
+						$this->custom_filters_in_query[ $field ] = array( $to_date, $from_date );
+
+						break;
+					case 'user_registered':
+
+						$offset = 0;
+						if ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) {
+							$offset = (int) $_POST['gmt_offset'];
+						}
+
+						$from_date = date( 'Y-m-d H:s:i', strtotime( date( 'Y-m-d H:s:i', min( $value ) ) . "+$offset hours" ) );
+						$to_date = date( 'Y-m-d H:s:i', strtotime( date( 'Y-m-d H:s:i', max( $value ) ) . "+$offset hours" ) );
+
+						$date_query = array(
+							array(
+								'column'    => 'user_registered',
+								'before'    => $to_date,
+								'after'     => $from_date,
+								'inclusive' => true,
+							),
+						);
+
+						if ( empty( $this->query_args['date_query'] ) ) {
+							$this->query_args['date_query'] = $date_query;
+						} else {
+							$this->query_args['date_query'] = array_merge( $this->query_args['date_query'], array( $date_query ) );
+						}
+
+						$this->custom_filters_in_query[ $field ] = $value;
+
+						break;
+					case 'last_login':
+
+						$offset = 0;
+						if ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) {
+							$offset = (int) $_POST['gmt_offset'];
+						}
+
+						$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
+						$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
+						$meta_query = array(
+							array(
+								'key'       => '_um_last_login',
+								'value'     =>  array( $from_date, $to_date ),
+								'compare'   => 'BETWEEN',
+								'inclusive' => true,
+							)
+						);
+
+						$this->custom_filters_in_query[ $field ] = $value;
+
+						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
+						break;
+				}
+
+			}
+		}
+
+
+		/**
+		 * Set default filters
+		 *
+		 * @param $directory_data
+		 */
+		function default_filters( $directory_data ) {
+			$default_filters = array();
+			if ( ! empty( $directory_data['search_filters'] ) ) {
+				$default_filters = maybe_unserialize( $directory_data['search_filters'] );
+			}
+
+			$gmt_offset = get_post_meta( $directory_data['form_id'], '_um_search_filters_gmt', true );
+
+			if ( empty( $default_filters ) ) {
+				return;
+			}
+
+			foreach ( $default_filters as $field => $value ) {
+
+				//unable default filter in case if we select other value in frontend filters
+				if ( in_array( $field, array_keys( $this->custom_filters_in_query ) ) ) {
+					continue;
+				}
+
+				switch ( $field ) {
+					default:
+
+						$filter_type = $this->filter_types[ $field ];
+
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_query_args_{$field}__filter
+						 * @description Change field's query for search at Members Directory
+						 * @input_vars
+						 * [{"var":"$field_query","type":"array","desc":"Field query"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage
+						 * <?php add_filter( 'um_query_args_{$field}__filter', 'function_name', 10, 1 ); ?>
+						 * @example
+						 * <?php
+						 * add_filter( 'um_query_args_{$field}__filter', 'my_query_args_filter', 10, 1 );
+						 * function my_query_args_filter( $field_query ) {
+						 *     // your code here
+						 *     return $field_query;
+						 * }
+						 * ?>
+						 */
+						$field_query = apply_filters( "um_query_args_{$field}__filter", false, $field, $value, $filter_type );
+
+						if ( ! $field_query ) {
+
+							switch ( $filter_type ) {
+								default:
+
+									$field_query = apply_filters( "um_query_args_{$field}_{$filter_type}__filter", false, $field, $value, $filter_type );
+
+									break;
+								case 'select':
+									if ( ! is_array( $value ) ) {
+										$value = array( $value );
+									}
+
+									$field_query = array( 'relation' => 'OR' );
+
+									foreach ( $value as $single_val ) {
+										$arr_meta_query = array(
+											array(
+												'key'       => $field,
+												'value'     => trim( $single_val ),
+												'compare'   => '=',
+											),
+											array(
+												'key'       => $field,
+												'value'     => serialize( strval( trim( $single_val ) ) ),
+												'compare'   => 'LIKE',
+											),
+											array(
+												'key'       => $field,
+												'value'     => '"' . trim( $single_val ) . '"',
+												'compare'   => 'LIKE',
+											)
+										);
+
+										if ( is_numeric( $single_val ) ) {
+
+											$arr_meta_query[] = array(
+												'key'       => $field,
+												'value'     => serialize( intval( trim( $single_val ) ) ),
+												'compare'   => 'LIKE',
+											);
+
+										}
+
+										$field_query = array_merge( $field_query, $arr_meta_query );
+									}
+
+									break;
+								case 'slider':
+
+									$field_query = array(
+										'key'       => $field,
+										'value'     => $value,
+										'compare'   => 'BETWEEN',
+										'inclusive' => true,
+									);
+
+									break;
+								case 'datepicker':
+
+									$offset = 0;
+									if ( is_numeric( $gmt_offset ) ) {
+										$offset = $gmt_offset;
 									}
 
 									$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
@@ -1426,8 +1718,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						break;
 					case 'user_registered':
 						$offset = 0;
-						if ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) {
-							$offset = (int) $_POST['gmt_offset'];
+						if ( is_numeric( $gmt_offset ) ) {
+							$offset = $gmt_offset;
 						}
 
 						$from_date = date( 'Y-m-d H:s:i', strtotime( date( 'Y-m-d H:s:i', min( $value ) ) . "+$offset hours" ) );
@@ -1451,8 +1743,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						break;
 					case 'last_login':
 						$offset = 0;
-						if ( isset( $_POST['gmt_offset'] ) && is_numeric( $_POST['gmt_offset'] ) ) {
-							$offset = (int) $_POST['gmt_offset'];
+						if ( is_numeric( $gmt_offset ) ) {
+							$offset = $gmt_offset;
 						}
 
 						$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
@@ -1469,10 +1761,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
 						break;
 				}
-
 			}
 		}
-
 
 
 		/**
@@ -1769,6 +2059,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			// handle filters
 			$this->filters( $directory_data );
 
+			$this->default_filters( $directory_data );
+
 			/**
 			 * UM hook
 			 *
@@ -1934,6 +2226,19 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			</div>
 
 			<?php
+		}
+
+
+
+		function default_filter_settings() {
+			UM()->admin()->check_ajax_nonce();
+
+			$filter_key = sanitize_key( $_REQUEST['key'] );
+			$directory_id = absint( $_REQUEST['directory_id'] );
+
+			$html = $this->show_filter( $filter_key, array( 'form_id' => $directory_id ) );
+
+			wp_send_json_success( array( 'field_html' => $html ) );
 		}
 	}
 }

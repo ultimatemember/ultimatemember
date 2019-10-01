@@ -1052,6 +1052,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			delete_post_meta( $post_id, '_um_roles_can_filter' );
 			delete_post_meta( $post_id, '_um_show_these_users' );
 
+			delete_post_meta( $post_id, '_um_search_filters' );
+			delete_post_meta( $post_id, '_um_search_filters_gmt' );
+
 			//save metadata
 			foreach ( $_POST['um_metadata'] as $k => $v ) {
 
@@ -1088,6 +1091,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 				}
 			}
+
+			update_post_meta( $post_id, '_um_search_filters_gmt', intval( $_POST['um-gmt-offset'] ) );
 		}
 
 

@@ -48,7 +48,7 @@ if ( ! empty( $postmeta ) ) {
 	}
 }
 
-
+// update member directories settings
 $forms_query = new WP_Query;
 $member_directories = $forms_query->query( array(
 	'post_type'         => 'um_directory',
@@ -93,6 +93,46 @@ if ( ! empty( $member_directories ) && ! is_wp_error( $member_directories ) ) {
 			}
 		}
 
+		$default_filters = get_post_meta( $id, '_um_search_filters', true );
+		$default_filters_new = array();
+		if ( ! empty( $default_filters ) ) {
+			$default_filters_queries = explode( '&', $default_filters );
+			foreach ( $default_filters_queries as $filter_query_part ) {
+				$filter_query_parts = explode( '=', $filter_query_part );
+
+				$filter_key = $filter_query_parts[0];
+				$filter_value = $filter_query_parts[1];
+
+				$default_filters_new[ $filter_key ] = $filter_value;
+			}
+		}
+
+		update_post_meta( $id, '_um_search_filters', $default_filters_new );
+		update_post_meta( $id, '_um_search_filters_old', $default_filters );
+
 		update_post_meta( $id, '_um_search_old', $search_enabled );
+	}
+}
+
+
+// for user tags settings
+if ( UM()->options()->get( 'members_page' ) ) {
+	$member_directory_id = false;
+
+	$page_id = UM()->config()->permalinks['members'];
+	if ( ! empty( $page_id ) ) {
+		$members_page = get_post( $page_id );
+		if ( ! empty( $members_page ) && ! is_wp_error( $members_page ) ) {
+			if ( ! empty( $members_page->post_content ) ) {
+				preg_match( '/\[ultimatemember[^\]]*?form_id\=[\'"]*?(\d+)[\'"]*?/i', $members_page->post_content, $matches );
+				if ( ! empty( $matches[1] ) && is_numeric( $matches[1] ) ) {
+					$member_directory_id = $matches[1];
+				}
+			}
+		}
+	}
+
+	if ( $member_directory_id ) {
+		UM()->options()->update( 'user_tags_base_directory' , $member_directory_id );
 	}
 }

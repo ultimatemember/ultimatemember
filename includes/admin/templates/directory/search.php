@@ -43,6 +43,7 @@ global $post_id; ?>
 
 	//$post_id = get_the_ID();
 	$_um_search_fields = get_post_meta( $post_id, '_um_search_fields', true );
+	$_um_search_filters = get_post_meta( $post_id, '_um_search_filters', true );
 
 	UM()->admin_forms( array(
 		'class'     => 'um-member-directory-search um-half-column',
@@ -92,13 +93,23 @@ global $post_id; ?>
 				'add_text'              => __( 'Add New Custom Field', 'ultimate-member' ),
 				'show_default_number'   => 1,
 			),
+//			array(
+//				'id'            => '_um_search_filters',
+//				'type'          => 'text',
+//				'label'         => __( 'Default filters', 'ultimate-member' ),
+//				'tooltip'       => __( 'You can set default filters like URL parameters', 'ultimate-member' ),
+//				'value'         => UM()->query()->get_meta_value('_um_search_filters', null, 'na' ),
+//				'placeholder'   => 'field1=val1&field2=val2'
+//			),
 			array(
-				'id'            => '_um_search_filters',
-				'type'          => 'text',
-				'label'         => __( 'Default filters', 'ultimate-member' ),
-				'tooltip'       => __( 'You can set default filters like URL parameters', 'ultimate-member' ),
-				'value'         => UM()->query()->get_meta_value('_um_search_filters', null, 'na' ),
-				'placeholder'   => 'field1=val1&field2=val2'
+				'id'                    => '_um_search_filters',
+				'type'                  => 'md_default_filters',
+				'label'                 => __( 'Default filters', 'ultimate-member' ),
+				'tooltip'               => __( 'You can set default filters', 'ultimate-member' ),
+				'value'                 => $_um_search_filters,
+				'options'               => UM()->member_directory()->filter_fields,
+				'add_text'              => __( 'Add New Filter', 'ultimate-member' ),
+				'show_default_number'   => 0,
 			),
 		)
 	) )->render_form(); ?>

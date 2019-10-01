@@ -35,24 +35,33 @@ textarea.um-forms-field.um-small-field {
 
 
 .um-multi-text-list,
-.um-multi-selects-list {
+.um-multi-selects-list,
+.um-md-default-filters-list {
     float: left;
     width:100%;
     margin: 0 0 10px 0;
 }
 
 .um-hidden-multi-text,
-.um-hidden-multi-selects {
+.um-hidden-multi-selects,
+.um-hidden-md-default-filters {
     display: none !important;
 }
 
 .um-multi-text-option-line,
-.um-multi-selects-option-line {
+.um-multi-selects-option-line,
+.um-md-default-filters-option-line {
     float:left;
     width:100%;
     margin: 0;
     padding: 0;
     clear:both;
+}
+
+.um-md-default-filters-option-line {
+    border-bottom: 1px solid #eee;
+    padding: 0 0 5px 0;
+    margin: 5px 0 0 0;
 }
 
 .um-multi-text-option-line .um-field-wrapper,
@@ -61,6 +70,47 @@ textarea.um-forms-field.um-small-field {
     width: calc( 100% - 60px );
     line-height: 30px;
     box-sizing: border-box;
+}
+
+.um-md-default-filters-option-line .um-field-wrapper {
+    float:left;
+    width: calc( 100% - 60px );
+    line-height: 30px;
+    box-sizing: border-box;
+}
+
+.um-md-default-filters-option-line .um-field-wrapper2 {
+    float:left;
+    width: calc( 100% - 60px );
+    line-height: 30px;
+    box-sizing: border-box;
+}
+
+.um-md-default-filters-option-line .um-field-wrapper2 .ui-slider-range.ui-widget-header {
+    background: #44b0ec;
+    border: 1px solid #44b0ec !important;
+    margin-top: -1px;
+}
+
+.um-md-default-filters-option-line .um-field-wrapper2 select {
+    width: 100%;
+    float: left;
+}
+
+.um-md-default-filters-option-line .um-field-wrapper2 input {
+    width: calc( 50% - 7px ) !important;
+    float: left;
+}
+
+.um-md-default-filters-option-line .um-field-wrapper2 .um-slider {
+    margin: 5px 9px 0 9px;
+    width: calc( 100% - 18px );
+    box-sizing: border-box;
+    display: block;
+}
+
+.um-md-default-filters-option-line .um-field-wrapper2 input:first-child {
+    margin-right: 11px;
 }
 
 .um-multi-text-option-line .um-field-wrapper input,
@@ -72,7 +122,8 @@ textarea.um-forms-field.um-small-field {
 
 
 .um-multi-text-option-line .um-field-control,
-.um-multi-selects-option-line .um-field-control {
+.um-multi-selects-option-line .um-field-control,
+.um-md-default-filters-option-line .um-field-control {
     float:left;
     width: 60px;
     line-height: 30px;
