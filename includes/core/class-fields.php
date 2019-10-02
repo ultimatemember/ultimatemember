@@ -2762,7 +2762,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						// 'country'
 						if ( $key === 'country' && empty( $options ) ) {
 							$options = UM()->builtin()->get( 'countries' );
-						} else if ( empty( $options ) ) {
+						} else if ( empty( $options ) && isset( $data['options'] ) ) {
 							$options = $data['options'];
 						}
 
