@@ -1533,6 +1533,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * @param $directory_data
 		 */
 		function default_filters( $directory_data ) {
+			//unable default filter in case if we select other filters in frontend filters
+			if ( ! empty( $this->custom_filters_in_query ) ) {
+				return;
+			}
+
 			$default_filters = array();
 			if ( ! empty( $directory_data['search_filters'] ) ) {
 				$default_filters = maybe_unserialize( $directory_data['search_filters'] );
@@ -1545,11 +1550,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 
 			foreach ( $default_filters as $field => $value ) {
-
 				//unable default filter in case if we select other value in frontend filters
-				if ( in_array( $field, array_keys( $this->custom_filters_in_query ) ) ) {
-					continue;
-				}
+//				if ( in_array( $field, array_keys( $this->custom_filters_in_query ) ) ) {
+//					continue;
+//				}
 
 				switch ( $field ) {
 					default:

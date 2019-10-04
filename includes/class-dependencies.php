@@ -1,8 +1,9 @@
 <?php
 namespace um;
 
-// Exit if executed directly
+
 if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 /**
  * Ultimate Member Dependency Checker
@@ -32,14 +33,13 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 		 * @var array
 		 */
 		public $ext_required_version = array(
-			'bbpress'               => '2.0.1',
-			'followers'             => '2.0.1',
-			'friends'               => '2.0.1',
+			'bbpress'               => '2.0.7',
+			'followers'             => '2.1.6',
+			'forumwp'               => '2.0.1',
+			'friends'               => '2.1.4',
 			'groups'                => '2.0',
-			'instagram'             => '2.0',
-			'invitations'           => '2.0',
-			'frontend-posting'      => '1.0',
-			'mailchimp'             => '2.0.1',
+			'instagram'             => '2.0.5',
+			'mailchimp'             => '2.2.0',
 			'messaging'             => '2.0.5',
 			'mycred'                => '2.0',
 			'notices'               => '2.0.1',
@@ -52,20 +52,30 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'social-activity'       => '2.0.6',
 			'social-login'          => '2.0.1',
 			'terms-conditions'      => '2.0',
+			'unsplash'              => '2.0',
+			'user-bookmarks'        => '2.0',
+			'user-photos'           => '2.0.1',
 			'user-tags'             => '2.0',
 			'verified-users'        => '2.0.1',
 			'woocommerce'           => '2.0.1',
+
+			/*????*/
 			'restrict-content'      => '2.0',
-			'beaver-builder'        => '2.0',
-			'user-photos'           => '2.0.1',
-			'user-exporter'         => '1.0.0',
-			'user-events'           => '1.0.0',
-			'filesharing'           => '1.0.0',
+
+			/*rc*/
 			'user-notes'            => '2.0',
-			'user-bookmarks'        => '2.0',
-			'unsplash'              => '2.0',
-			'forumwp'               => '2.0.1',
+			'profile-tabs'          => '1.6',
+
+			/*beta*/
+			'frontend-posting'      => '1.0',
+			/*alpha*/
+			'user-exporter'         => '1.0.0',
+
+			/*in development*/
 			'user-location'         => '1.0',
+			'filesharing'           => '1.0.0',
+			'beaver-builder'        => '2.0',
+			'user-events'           => '1.0.0',
 		);
 
 

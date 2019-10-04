@@ -377,8 +377,9 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 
 		/**
-		 * @param $var
+		 * @since 2.1.0
 		 *
+		 * @param $var
 		 * @return array|string
 		 */
 		function clean_array( $var ) {

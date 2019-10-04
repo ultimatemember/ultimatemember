@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-10-01 15:42+0300\n"
-"PO-Revision-Date: 2019-10-01 15:42+0300\n"
+"POT-Creation-Date: 2019-10-04 15:02+0300\n"
+"PO-Revision-Date: 2019-10-04 15:02+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -3487,19 +3487,19 @@ msgstr ""
 msgid "Upgrade user roles..."
 msgstr ""
 
-#: includes/admin/core/packages/2.1.0-alpha4/functions.php:11
+#: includes/admin/core/packages/2.1.0/functions.php:11
 msgid "Usermeta was upgraded successfully"
 msgstr ""
 
-#: includes/admin/core/packages/2.1.0-alpha4/functions.php:24
+#: includes/admin/core/packages/2.1.0/functions.php:24
 msgid "Member directories were upgraded successfully"
 msgstr ""
 
-#: includes/admin/core/packages/2.1.0-alpha4/init.php:7
+#: includes/admin/core/packages/2.1.0/init.php:7
 msgid "Upgrade user metadata..."
 msgstr ""
 
-#: includes/admin/core/packages/2.1.0-alpha4/init.php:33
+#: includes/admin/core/packages/2.1.0/init.php:33
 msgid "Upgrade Member Directories..."
 msgstr ""
 
@@ -4528,7 +4528,7 @@ msgid "Register"
 msgstr ""
 
 #: includes/class-config.php:135 includes/class-config.php:779
-#: includes/core/class-member-directory.php:1889
+#: includes/core/class-member-directory.php:1893
 #: includes/core/um-actions-profile.php:1180
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
@@ -4654,36 +4654,36 @@ msgid ""
 "account data from the site. To delete your account enter your password below"
 msgstr ""
 
-#: includes/class-dependencies.php:181
+#: includes/class-dependencies.php:191
 #, php-format
 msgid ""
 "This version of <strong>\"%s\"</strong> requires the core <strong>%s</"
 "strong> plugin to be <strong>%s</strong> or higher."
 msgstr ""
 
-#: includes/class-dependencies.php:183
+#: includes/class-dependencies.php:193
 #, php-format
 msgid "Please update <strong>%s</strong> to the latest version."
 msgstr ""
 
-#: includes/class-dependencies.php:185
+#: includes/class-dependencies.php:195
 #, php-format
 msgid ""
 "Sorry, but this version of <strong>%s</strong> does not work with extension "
 "<strong>\"%s\" %s</strong> version."
 msgstr ""
 
-#: includes/class-dependencies.php:187
+#: includes/class-dependencies.php:197
 #, php-format
 msgid "Please update extension <strong>\"%s\"</strong> to the latest version."
 msgstr ""
 
-#: includes/class-dependencies.php:196
+#: includes/class-dependencies.php:206
 #, php-format
 msgid "Please check <strong>\"%s\" %s</strong> extension's folder name."
 msgstr ""
 
-#: includes/class-dependencies.php:198
+#: includes/class-dependencies.php:208
 #, php-format
 msgid "Correct folder name is <strong>\"%s\"</strong>"
 msgstr ""
@@ -7077,14 +7077,14 @@ msgstr ""
 msgid "<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1834
-#: includes/core/class-member-directory.php:1878
+#: includes/core/class-member-directory.php:1838
+#: includes/core/class-member-directory.php:1882
 #: includes/core/um-actions-profile.php:1147
 #: includes/core/um-actions-profile.php:1178
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1884
+#: includes/core/class-member-directory.php:1888
 #: includes/core/um-actions-profile.php:1179
 msgid "My Account"
 msgstr ""

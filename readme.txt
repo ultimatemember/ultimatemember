@@ -158,7 +158,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed ajax_resize_image() process
   - Fixed country fields values
   - Fixed dynamic_profile.php notice
-  - Fixed admin_post and admin_post_nopriv submittion
+  - Fixed integration with WP native admin_post and admin_post_nopriv requests
 
 = 2.0.56: August 21, 2019 =
 
