@@ -432,5 +432,18 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			}
 			return $parent_file;
 		}
+
+
+		/**
+		 * @since 2.0
+		 *
+		 * @return core\Admin_Notices()
+		 */
+		function notices() {
+			if ( empty( UM()->classes['admin_notices'] ) ) {
+				UM()->classes['admin_notices'] = new core\Admin_Notices();
+			}
+			return UM()->classes['admin_notices'];
+		}
 	}
 }

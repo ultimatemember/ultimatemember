@@ -57,13 +57,13 @@ if ( ! class_exists( 'um\Extensions' ) ) {
 					$compare_version_result = UM()->dependencies()->compare_versions( $extension['min_core_version'], $extension['version'], $slug, $extension['title'] );
 
 					if ( true !== $compare_version_result ) {
-						UM()->notices()->add_notice( "{$slug}_dependencies", array(
+						UM()->admin()->notices()->add_notice( "{$slug}_dependencies", array(
 							'class'     => 'error',
 							'message'   => '<p>' . $compare_version_result . '</p>',
 						), 1 );
 					}
 				} elseif ( ! $run && ! empty( $message ) ) {
-					UM()->notices()->add_notice( "{$slug}_dependencies", array(
+					UM()->admin()->notices()->add_notice( "{$slug}_dependencies", array(
 						'class'     => 'error',
 						'message'   => $message,
 					), 1 );

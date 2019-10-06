@@ -16,7 +16,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Mailchimp Mailchimp()
 	 * @method UM_Messaging_API Messaging_API()
 	 * @method UM_myCRED myCRED()
-	 * @method UM_Notices_API Notices_API()
+	 * @method UM_Notices Notices()
 	 * @method UM_Notifications_API Notifications_API()
 	 * @method UM_Online Online()
 	 * @method UM_Profile_Completeness_API Profile_Completeness_API()
@@ -517,7 +517,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->admin_upgrade()->init_packages_ajax_handlers();
 				$this->admin_gdpr();
 				$this->columns();
-				$this->notices();
+				$this->admin()->notices();
 				$this->admin_navmenu();
 				$this->theme_updater();
 				$this->access();
@@ -529,7 +529,7 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->columns();
 				$this->admin_enqueue();
 				$this->metabox();
-				$this->notices();
+				$this->admin()->notices();
 				$this->users();
 				$this->dragdrop();
 				$this->plugin_updater();
@@ -852,19 +852,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->classes['admin_metabox'] = new um\admin\core\Admin_Metabox();
 			}
 			return $this->classes['admin_metabox'];
-		}
-
-
-		/**
-		 * @since 2.0
-		 *
-		 * @return um\admin\core\Admin_Notices()
-		 */
-		function notices() {
-			if ( empty( $this->classes['admin_notices'] ) ) {
-				$this->classes['admin_notices'] = new um\admin\core\Admin_Notices();
-			}
-			return $this->classes['admin_notices'];
 		}
 
 
