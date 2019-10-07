@@ -37,8 +37,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'followers'             => '2.1.6',
 			'forumwp'               => '2.0.1',
 			'friends'               => '2.1.4',
-			/*need to review*/
-			'groups'                => '2.0',
+			'groups'                => '2.1.7',
 			'instagram'             => '2.0.5',
 			'mailchimp'             => '2.2.0',
 			'messaging'             => '2.2.5',
@@ -51,8 +50,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'recaptcha'             => '2.1.2',
 			'reviews'               => '2.1.5',
 			'social-activity'       => '2.2.0',
-			/*need Champ's feedback */
-			'social-login'          => '2.0.1',
+			'social-login'          => '2.2.0',
 			'terms-conditions'      => '2.1.1',
 			'unsplash'              => '2.0.2',
 			'user-bookmarks'        => '2.0.2',
