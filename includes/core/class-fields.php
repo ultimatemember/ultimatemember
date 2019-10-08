@@ -182,6 +182,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$fields[ $id ]['in_group'] = '';
 			}
 
+			$fields[$id]['um_new_cond_field'] = 1;
+
 			UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
 		}
 
@@ -216,12 +218,16 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						unset( $condition_fields[ $key ][ $deleted_field ] );
 						unset( $condition_fields[ $key ][ 'conditional_operator' . $deleted_field_id ] );
 						unset( $condition_fields[ $key ][ 'conditional_value' . $deleted_field_id ] );
+						unset( $condition_fields[ $key ][ 'conditional_compare' . $deleted_field_id ] );
+						unset( $condition_fields[ $key ][ 'conditional_group' . $deleted_field_id ] );
 						unset( $condition_fields[ $key ]['conditions'][ $arr_id ] );
 
 						unset( $fields[ $key ][ 'conditional_action' . $deleted_field_id ] );
 						unset( $fields[ $key ][ $deleted_field ] );
 						unset( $fields[ $key ][ 'conditional_operator' . $deleted_field_id ] );
 						unset( $fields[ $key ][ 'conditional_value' . $deleted_field_id ] );
+						unset( $fields[ $key ][ 'conditional_compare' . $deleted_field_id ] );
+						unset( $fields[ $key ][ 'conditional_group' . $deleted_field_id ] );
 						unset( $fields[ $key ]['conditions'][ $arr_id ] );
 					}
 				}
@@ -273,6 +279,23 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					foreach ( $position as $key => $val) {
 						$fields[ $global_id ][ $key ] = $val;
 					}
+				}
+
+				$keys = array_keys( $fields );
+				$last_key = end( $keys );
+
+				unset( $fields[ $last_key ]['conditions'] );
+				for ( $i = 0; $i < 5; $i++ ) {
+					$index = '';
+					if ( $i > 0 ) {
+						$index = $i;
+					}
+					unset( $fields[ $last_key ][ 'conditional_action' . $index ] );
+					unset( $fields[ $last_key ][ 'conditional_field' . $index ] );
+					unset( $fields[ $last_key ][ 'conditional_operator' . $index ] );
+					unset( $fields[ $last_key ][ 'conditional_value' . $index ] );
+					unset( $fields[ $last_key ][ 'conditional_group' . $index ] );
+					unset( $fields[ $last_key ][ 'conditional_compare' . $index ] );
 				}
 
 				// add field to form
@@ -3799,15 +3822,21 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				return;
 			}
 
-			if ( ! um_field_conditions_are_met( $data ) ) {
-				return;
+			if( ! isset( $data['um_new_cond_field'] ) || $data['um_new_cond_field'] != '1' ){
+				if ( ! um_field_conditions_are_met_old( $data ) ) {
+					return;
+				}
 			}
 
 			switch ( $type ) {
 
 				/* Default */
 				default:
-
+					if ( $_field_value == '' ){
+						$empty_field_class = 'empty-field';
+					} else {
+						$empty_field_class = '';
+					}
 					$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="' . esc_attr( $key ) . '">';
 
 					if ( isset( $data['label'] ) || ! empty( $data['icon'] ) ) {
@@ -3873,7 +3902,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$res = apply_filters( "um_view_field_value_{$type}", $res, $data );
 
 					$output .= '<div class="um-field-area">';
-					$output .= '<div class="um-field-value">' . $res . '</div>';
+
+					if( isset($data['um_new_cond_field']) && $data['um_new_cond_field'] == '1' ){
+						$output .= '<div class="um-field-value um-field-value-'.$type.'" data-type="'.$type.'">' . $res . '</div>';
+					} else {
+						$output .= '<div class="um-field-value">' . $res . '</div>';
+					}
+
 					$output .= '</div>';
 
 					$output .= '</div>';

@@ -1,7 +1,17 @@
 var $um_tiny_editor = {};
 
 
-function um_admin_live_update_scripts() {
+function um_admin_live_update_scripts( count ) {
+	var metakey = jQuery('.um-admin-modal #UM_edit_field #_metakey').val();
+
+	if ( count === 0 ) {
+		jQuery('.um_add_field .um-admin-btn-toggle').hide();
+	} else if ( metakey && count === 1 ) {
+		jQuery('.um_add_field .um-admin-btn-toggle').hide();
+	} else {
+		jQuery('.um_add_field .um-admin-btn-toggle').show();
+	}
+
 	jQuery('.um-adm-conditional').each( function() {
 		jQuery(this).trigger('change');
 	});
@@ -86,10 +96,11 @@ function um_tinymce_init( id, content ) {
 
 
 function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
-	in_row = '';
-	in_sub_row = '';
-	in_column = '';
-	in_group = '';
+	var count = jQuery('.um-admin-builder .um-admin-drag-fld').length;
+	var in_row = '';
+	var in_sub_row = '';
+	var in_column = '';
+	var in_group = '';
 	
 	if ( jQuery('.um-col-demon-settings').data('in_column') ) {
 		in_row = jQuery('.um-col-demon-settings').data('in_row');
@@ -125,7 +136,7 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 			jQuery('.um-admin-modal').find('.um-admin-modal-body').html( data );
 
 			um_responsive();
-			um_admin_live_update_scripts();
+			um_admin_live_update_scripts( count );
 
 			jQuery( "#_custom_dropdown_options_source" ).trigger('blur');
 
@@ -219,6 +230,25 @@ jQuery(document).ready(function() {
 		toggle area
 	**/
 	jQuery(document.body).on('click', '.um-admin-btn-toggle a', function(e){
+
+		var length = jQuery(this).parents('.um-admin-btn-toggle').find('.um-admin-cur-condition').length;
+
+		if ( length === 5 ) {
+			jQuery('.um-admin-new-condition').attr( 'disabled', 'disabled' );
+		} else {
+			jQuery('.um-admin-new-condition').removeAttr('disabled');
+		}
+
+		jQuery('.condition-wrap .um-admin-cur-condition').each( function() {
+			var cond_operator = jQuery(this).find('[id^="_conditional_operator"]').val();
+			var cond_value = jQuery(this).find('[id^="_conditional_value"]');
+			if ( cond_operator === 'empty' || cond_operator === 'not empty' ) {
+				cond_value.attr( 'disabled', 'disabled' );
+			} else {
+				cond_value.removeAttr('disabled');
+			}
+		});
+
 		var content = jQuery(this).parent().find('.um-admin-btn-content');
 		var link = jQuery(this);
 		if ( content.is(':hidden') ) {
@@ -230,9 +260,32 @@ jQuery(document).ready(function() {
 			link.find('i').removeClass().addClass('um-icon-plus');
 			link.removeClass('active');
 		}
+
+		var form = jQuery(this).closest('form');
+		if( form.find('.condition-wrap').is(":visible") ){
+			var first_el = form.find('.um-condition-group-wrapper:first-child');
+			if( first_el.find('select').length === 0 ){
+				first_el.next().find('.or-devider').remove();
+				first_el.remove();
+			}
+		}
+
 		um_admin_modal_responsive();
 	});
 
+
+	/**
+		check if empty/not empty
+	**/
+	jQuery( document.body ).on('change', 'select[id^="_conditional_operator"]', function(){
+		var cond_operator = jQuery(this).val();
+		var cond_value = jQuery(this).closest('.um-admin-cur-condition').find('[id^="_conditional_value"]');
+		if( cond_operator === 'empty' || cond_operator === 'not empty' ){
+			cond_value.attr( 'disabled', 'disabled' );
+		} else {
+			cond_value.removeAttr('disabled');
+		}
+	});
 
 
 	/**
@@ -247,35 +300,48 @@ jQuery(document).ready(function() {
 			length = content.find('.um-admin-cur-condition').length;
 
 		if ( length < 5 ) {
-			//content.find('select').select2('destroy');
+			var template
+			if ( jQuery('#tmpl-um-admin-conditional-add').length > 0 ) {
+				template = wp.template('um-admin-conditional-add');
+			} else {
+				template = wp.template('um-admin-conditional-edit');
+			}
 
-			var template = jQuery('.um-admin-btn-content').find('.um-admin-cur-condition-template').clone();
-			template.find('input[type=text]').val('');
-			template.find('select').val('');
+			length = length ? length : '';
 
-			template.appendTo( content );
-			jQuery(template).removeClass("um-admin-cur-condition-template");
-			jQuery(template).addClass("um-admin-cur-condition");
+			var compare = jQuery(this).hasClass('um-admin-new-condition-compare-and') ? 'and' : 'or';
+
+			if ( jQuery(this).hasClass('um-admin-new-condition-compare-and') ) {
+				var group = jQuery(this).prev('.um-admin-cur-condition').find('[id^="_conditional_group"]').val();
+
+				if ( jQuery(this).prev('.um-admin-cur-condition').find('[id^="_conditional_group"]').length === 0 ) {
+					group = 0;
+				}
+			} else {
+				var group = jQuery('.condition-wrap .um-admin-cur-condition').last().find('[id^="_conditional_group"]').val();
+				group = parseInt( group ) + 1;
+			}
+
+			var template_content = template({
+				item: length,
+				compare: compare,
+				group: group
+			});
+
+			jQuery(this).before( template_content );
 
 			um_admin_live_update_scripts();
 			um_admin_modal_responsive();
-		} else {
-			jQuery(this).addClass('disabled');
-			alert( 'You already have 5 rules' );
 		}
+
+		if ( length >= 4 ) {
+			jQuery('.um-admin-new-condition').attr('disabled', 'disabled');
+		} else {
+			jQuery('.um-admin-new-condition').removeAttr('disabled');
+		}
+
 		//need fields refactor
-        var conditions = jQuery('.um-admin-cur-condition');
-		jQuery(conditions).each( function ( i ) {
-			id = i === 0 ? '' : i;
-			jQuery( this ).find('[id^="_conditional_action"]').attr('name', '_conditional_action' + id);
-			jQuery( this ).find('[id^="_conditional_action"]').attr('id', '_conditional_action' + id);
-			jQuery( this ).find('[id^="_conditional_field"]').attr('name', '_conditional_field' + id);
-			jQuery( this ).find('[id^="_conditional_field"]').attr('id', '_conditional_field' + id);
-			jQuery( this ).find('[id^="_conditional_operator"]').attr('name', '_conditional_operator' + id);
-			jQuery( this ).find('[id^="_conditional_operator"]').attr('id', '_conditional_operator' + id);
-			jQuery( this ).find('[id^="_conditional_value"]').attr('name', '_conditional_value' + id);
-			jQuery( this ).find('[id^="_conditional_value"]').attr('id', '_conditional_value' + id);
-        } );
+		um_build_conditions(form);
 
 	});
 	
@@ -284,10 +350,15 @@ jQuery(document).ready(function() {
 	**/
 	jQuery(document.body).on('click', '.um-admin-reset-conditions a', function(){
 		var content = jQuery(this).parents('.um-admin-btn-content');
+		content.find('.um-condition-group-wrapper').slice(1).remove();
 		content.find('.um-admin-cur-condition').slice(1).remove();
 		content.find('input[type=text]').val('');
 		content.find('select').val('');
-		jQuery('.um-admin-new-condition').removeClass('disabled');
+		jQuery('.um-admin-new-condition').removeAttr('disabled').removeClass('disabled');
+
+		var form = $(this).closest('form');
+		um_build_conditions(form);
+
 		um_admin_live_update_scripts();
 		um_admin_modal_responsive();
 	});
@@ -296,23 +367,20 @@ jQuery(document).ready(function() {
 		remove a condition
 	**/
 	jQuery(document.body).on('click', '.um-admin-remove-condition', function(){
-		var condition = jQuery(this).parents('.um-admin-cur-condition');
-		jQuery('.um-admin-new-condition').removeClass('disabled');
+		jQuery('.um-admin-new-condition').removeAttr('disabled').removeClass('disabled');
 		jQuery('.tipsy').remove();
-		condition.remove();
+
+		if ( jQuery(this).parents( '.um-condition-group-wrapper' ).find( '.um-admin-cur-condition' ).length === 1 ) {
+			//remove the last condition in group
+			jQuery(this).parents( '.um-condition-group-wrapper' ).remove();
+		} else {
+			jQuery(this).parents( '.um-admin-cur-condition' ).remove();
+		}
+
         //need fields refactor
-        var conditions = jQuery('.um-admin-cur-condition');
-        jQuery(conditions).each( function ( i ) {
-            id = i === 0 ? '' : i;
-            jQuery( this ).find('[id^="_conditional_action"]').attr('name', '_conditional_action' + id);
-            jQuery( this ).find('[id^="_conditional_action"]').attr('id', '_conditional_action' + id);
-            jQuery( this ).find('[id^="_conditional_field"]').attr('name', '_conditional_field' + id);
-            jQuery( this ).find('[id^="_conditional_field"]').attr('id', '_conditional_field' + id);
-            jQuery( this ).find('[id^="_conditional_operator"]').attr('name', '_conditional_operator' + id);
-            jQuery( this ).find('[id^="_conditional_operator"]').attr('id', '_conditional_operator' + id);
-            jQuery( this ).find('[id^="_conditional_value"]').attr('name', '_conditional_value' + id);
-            jQuery( this ).find('[id^="_conditional_value"]').attr('id', '_conditional_value' + id);
-        } );
+		var form = $(this).closest('form');
+		um_build_conditions(form);
+
 		um_admin_live_update_scripts();
 		um_admin_modal_responsive();
 	});

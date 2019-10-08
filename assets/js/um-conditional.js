@@ -1,3 +1,882 @@
+// NEW CONDITION LOGIC
+function condition_fields( all_conds, form_id ) {
+console.log(all_conds)
+	jQuery.each( all_conds, function( metakey ) {
+		var greater, less;
+		var first_group = 0,
+			state_array = [],
+			state = 'show';
+		var less_greater = [];
+
+		jQuery.each( all_conds[ metakey ], function() {
+
+			var action = this[0],
+				field = this[1],
+				op = this[2],
+				val = this[3],
+				group = this[5],
+				depend_field;
+
+			var input = jQuery('.um.um-' + form_id + ' .um-field[data-key="' + field + '"] .um-field-area input'),
+				select = jQuery('.um.um-' + form_id + ' .um-field[data-key="' + field + '"] .um-field-area>select'),
+				textarea = jQuery('.um.um-' + form_id + ' .um-field[data-key="' + field + '"] .um-field-area>textarea'),
+				content_block = jQuery('.um.um-' + form_id + ' .um-field[data-key="' + field + '"] .um-field-block'),
+				depend_arr = [],
+				output_field = jQuery('.um.um-' + form_id + ' .um-field[data-key="' + field + '"] .um-field-value');
+
+			if ( input.length > 0 && select.length === 0 ) {
+
+				if ( input.is(':checkbox') ) {
+					var checked = jQuery('.um.um-' + form_id + ' .um-field[data-key="' + field + '"] input:checked');
+					checked.each(function () {
+						var checked_vals = jQuery(this).val();
+						depend_arr.push(checked_vals);
+					});
+
+				} else if ( input.is(':radio') ) {
+					depend_field = jQuery('.um.um-' + form_id + ' .um-field[data-key="' + field + '"] input:checked').val();
+				} else if ( input.is(':hidden') ) {
+					depend_field = jQuery('.um.um-' + form_id + ' .um-field[data-key="' + field + '"] input').val();
+					if ( depend_field === 'empty_file' ) {
+						depend_field = '';
+					}
+
+				} else {
+
+					depend_field = input.val();
+				}
+
+			} else if ( select.length > 0 ) {
+
+				var multi = select.prop('multiple');
+				if( multi === true ){
+
+					depend_arr = select.val();
+
+				} else {
+					if ( jQuery.inArray(val, select.val()) > 0 ) {
+						depend_field = val;
+					} else {
+						depend_field = select.val();
+					}
+				}
+
+			} else if ( textarea.length > 0 ) {
+
+				depend_field = textarea.val();
+
+			} else if ( content_block.length > 0 ) {
+
+				depend_field = content_block.text();
+				if ( output_field.hasClass('um-field-value-multiselect') || output_field.hasClass('um-field-value-checkbox') ) {
+
+				} else if ( output_field.length > 0 ) {
+					depend_arr = output_field.text().split(', ');
+				} else {
+					depend_field = output_field.text();
+				}
+
+
+			}
+			if( !depend_field ){
+				depend_field = output_field.text();
+			}
+
+			// If another group rule
+			if ( parseInt(group) !== first_group ) {
+
+				if ( action === 'show' ) {
+
+					switch (op) {
+						case 'equals to':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								depend_arr = depend_arr.toString();
+								if( depend_arr === val ){
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+							} else {
+								if ( depend_field == val ) {
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+							}
+
+							break;
+
+						case 'not equals':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								depend_arr = depend_arr.toString();
+								if( depend_arr !== val ){
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+							} else {
+								if ( depend_field != val ) {
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+							}
+
+							break;
+
+						case 'empty':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								if( depend_arr.length === 0 ){
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+							} else {
+								if ( !depend_field || depend_field === '' ) {
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+							}
+
+							break;
+
+						case 'not empty':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								if( depend_arr.length > 0 ){
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+							} else {
+								if ( depend_field && depend_field !== '' ) {
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+							}
+
+							break;
+
+						case 'greater than':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								jQuery.each(depend_arr, function () {
+									if ( jQuery.isNumeric(val) && jQuery.isNumeric(this) ) {
+										if ( parseInt(val) <= parseInt(this) ) {
+											state = 'show';
+											return false;
+										} else {
+											state = 'hide';
+										}
+									} else {
+										state = 'hide';
+									}
+								});
+							} else {
+								if ( jQuery.isNumeric(val) && jQuery.isNumeric(depend_field) ) {
+									if ( parseInt(val) <= parseInt(depend_field) ) {
+										state = 'show';
+									} else {
+										state = 'hide';
+									}
+								} else {
+									state = 'hide';
+								}
+							}
+
+							break;
+
+						case 'less than':
+							if ( depend_arr && depend_arr.length > 0 ) {
+								jQuery.each(depend_arr, function () {
+									if ( jQuery.isNumeric(val) && jQuery.isNumeric(this) ) {
+										if ( parseInt(val) >= parseInt(this) ) {
+											state = 'show';
+											return false;
+										} else {
+											state = 'hide';
+										}
+									} else {
+										state = 'hide';
+									}
+								});
+							} else {
+								if ( jQuery.isNumeric(val) && jQuery.isNumeric(depend_field) ) {
+									if ( parseInt(val) >= parseInt(depend_field) ) {
+										state = 'show';
+									} else {
+										state = 'hide';
+									}
+								} else {
+									state = 'hide';
+								}
+							}
+
+							break;
+
+						case 'contains':
+							if ( depend_arr && depend_arr.length > 0 ) {
+								jQuery.each(depend_arr, function () {
+									if ( this && this.search(val) >= 0 ) {
+										state = 'show';
+										return false;
+									} else {
+										state = 'hide';
+									}
+								});
+							} else {
+								if ( depend_field && depend_field.search(val) >= 0 ) {
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+							}
+
+							break;
+
+					}
+
+				} else { // if hide
+
+					switch (op) {
+						case 'equals to':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								depend_arr = depend_arr.toString();
+								if( depend_arr === val ){
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+							} else {
+								if ( depend_field == val ) {
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+							}
+
+							break;
+
+						case 'not equals':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								depend_arr = depend_arr.toString();
+								if( depend_arr !== val ){
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+							} else {
+								if ( depend_field != val ) {
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+							}
+
+							break;
+
+						case 'empty':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								if( depend_arr.length === 0 ){
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+
+							} else {
+								if ( !depend_field || depend_field === '' ) {
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+							}
+
+							break;
+
+						case 'not empty':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								if( depend_arr.length > 0 ){
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+							} else {
+								if ( depend_field && depend_field !== '' ) {
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+							}
+
+							break;
+
+						case 'greater than':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								jQuery.each(depend_arr, function () {
+									if ( jQuery.isNumeric(val) && jQuery.isNumeric(this) ) {
+										if ( parseInt(val) < parseInt(this) ) {
+											state = 'hide';
+											return false;
+										} else {
+											state = 'show';
+										}
+									} else {
+										state = 'show';
+									}
+								});
+							} else {
+								if ( jQuery.isNumeric(val) && jQuery.isNumeric(depend_field) ) {
+									if ( parseInt(val) < parseInt(depend_field) ) {
+										state = 'hide';
+									} else {
+										state = 'show';
+									}
+								} else {
+									state = 'show';
+								}
+							}
+
+							break;
+
+						case 'less than':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								jQuery.each(depend_arr, function () {
+									if ( jQuery.isNumeric(val) && jQuery.isNumeric(this) ) {
+										if ( parseInt(val) > parseInt(this) ) {
+											state = 'hide';
+											return false;
+										} else {
+											state = 'show';
+										}
+									} else {
+										state = 'show';
+									}
+								});
+							} else {
+								if ( jQuery.isNumeric(val) && jQuery.isNumeric(depend_field) ) {
+									if ( parseInt(val) > parseInt(depend_field) ) {
+										state = 'hide';
+									} else {
+										state = 'show';
+									}
+								} else {
+									state = 'show';
+								}
+							}
+
+							break;
+
+						case 'contains':
+							if ( depend_arr && depend_arr.length > 0 ) {
+								jQuery.each(depend_arr, function () {
+									if ( this && this.search(val) >= 0 ) {
+										state = 'hide';
+										return false;
+									} else {
+										state = 'show';
+									}
+								});
+							} else {
+								if ( depend_field && depend_field.search(val) >= 0 ) {
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+							}
+
+							break;
+
+					}
+
+				}
+				first_group++;
+				state_array.push(state);
+			} else { // If the same group rule
+
+				if ( action === 'show' ) {
+
+					switch (op) {
+						case 'equals to':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								depend_arr = depend_arr.toString();
+								if( depend_arr === val ){
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+							} else {
+								if ( depend_field == val ) {
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+							}
+
+							break;
+
+						case 'not equals':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								depend_arr = depend_arr.toString();
+								if( depend_arr !== val ){
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+							} else {
+								if ( depend_field != val ) {
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+							}
+
+							break;
+
+						case 'empty':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								if( depend_arr.length === 0 ){
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+
+							} else {
+								if ( !depend_field || depend_field === '' ) {
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+							}
+
+							break;
+
+						case 'not empty':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								if( depend_arr.length > 0 ){
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+
+							} else {
+								if ( depend_field && depend_field !== '' ) {
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+							}
+
+							break;
+
+						case 'greater than':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								jQuery.each(depend_arr, function () {
+
+									if ( jQuery.isNumeric(val) && jQuery.isNumeric(this) ) {
+										if ( parseInt(val) <= parseInt(this) ) {
+											state = 'show';
+											return false;
+										} else {
+											state = 'hide';
+										}
+									} else {
+										state = 'hide';
+									}
+								});
+							} else {
+
+								if ( jQuery.isNumeric(val) && jQuery.isNumeric(depend_field) ) {
+									if ( parseInt(val) <= parseInt(depend_field) ) {
+										state = 'show';
+									} else {
+										state = 'hide';
+									}
+								} else {
+									state = 'hide';
+								}
+							}
+
+							break;
+
+						case 'less than':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								jQuery.each(depend_arr, function () {
+									if ( jQuery.isNumeric(val) && jQuery.isNumeric(this) ) {
+										if ( parseInt(val) >= parseInt(this) ) {
+											state = 'show';
+											return false;
+										} else {
+											state = 'hide';
+										}
+									} else {
+										state = 'hide';
+									}
+								});
+							} else {
+								if ( jQuery.isNumeric(val) && jQuery.isNumeric(depend_field) ) {
+									if ( parseInt(val) >= parseInt(depend_field) ) {
+										state = 'show';
+									} else {
+										state = 'hide';
+									}
+								} else {
+									state = 'hide';
+								}
+							}
+
+							break;
+
+						case 'contains':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								jQuery.each(depend_arr, function () {
+									if ( this && this.search(val) >= 0 ) {
+										state = 'show';
+										return false;
+									} else {
+										state = 'hide';
+									}
+								});
+							} else {
+								if ( depend_field && depend_field.search(val) >= 0 ) {
+									state = 'show';
+								} else {
+									state = 'hide';
+								}
+							}
+
+							break;
+
+					}
+				} else { // if hide
+
+					switch (op) {
+						case 'equals to':
+							if ( depend_arr && depend_arr.length > 0 ) {
+								depend_arr = depend_arr.toString();
+								if( depend_arr === val ){
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+							} else {
+								if ( depend_field == val ) {
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+							}
+							break;
+
+						case 'not equals':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								depend_arr = depend_arr.toString();
+								if( depend_arr !== val ){
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+							} else {
+								if ( depend_field != val ) {
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+							}
+
+							break;
+
+						case 'empty':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								if( depend_arr.length === 0 ){
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+
+							} else {
+								if ( !depend_field || depend_field === '' ) {
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+							}
+
+
+							break;
+
+						case 'not empty':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								if( depend_arr.length > 0 ){
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+
+							} else {
+								if ( depend_field && depend_field !== '' ) {
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+							}
+
+							break;
+
+						case 'greater than':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								jQuery.each(depend_arr, function () {
+									if ( jQuery.isNumeric(val) && jQuery.isNumeric(this) ) {
+										if ( parseInt(val) > parseInt(this) ) {
+											state = 'show';
+										} else {
+											state = 'hide';
+										}
+									} else {
+										state = 'show';
+									}
+								});
+							} else {
+								if ( jQuery.isNumeric(val) && jQuery.isNumeric(depend_field) ) {
+									if ( parseInt(val) > parseInt(depend_field) ) {
+										state = 'show';
+									} else {
+										state = 'hide';
+									}
+								} else {
+									state = 'show';
+								}
+
+							}
+							less_greater['greater'] = state;
+							greater = state;
+
+							if( less && (less !== 'hide' || state !== 'hide') ){
+								state = 'show';
+							}
+							break;
+
+						case 'less than':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								jQuery.each(depend_arr, function () {
+									if ( jQuery.isNumeric(val) && jQuery.isNumeric(this) ) {
+										if ( parseInt(val) < parseInt(this) ) {
+											state = 'show';
+										} else {
+											state = 'hide';
+										}
+									} else {
+										state = 'show';
+									}
+								});
+							} else {
+								if ( jQuery.isNumeric(val) && jQuery.isNumeric(depend_field) ) {
+									if ( parseInt(val) < parseInt(depend_field) ) {
+										state = 'show';
+									} else {
+										state = 'hide';
+									}
+								} else {
+									state = 'show';
+								}
+							}
+							less_greater['less'] = state;
+							less = state;
+							if( greater && (greater !== 'hide' || state !== 'hide') ){
+								state = 'show';
+							}
+
+							break;
+
+						case 'contains':
+
+							if ( depend_arr && depend_arr.length > 0 ) {
+								jQuery.each(depend_arr, function () {
+									if ( this && this.search(val) >= 0 ) {
+										state = 'hide';
+										return false;
+									} else {
+										state = 'show';
+									}
+								});
+							} else {
+								if ( depend_field && depend_field.search(val) >= 0 ) {
+									state = 'hide';
+								} else {
+									state = 'show';
+								}
+							}
+
+							break;
+					}
+
+
+				}
+
+				if ( state_array[first_group] ) {
+					if( action === 'hide' ){
+						if ( state_array[first_group] === 'hide' && state === 'hide' ) {
+							state_array[first_group] = 'hide';
+						} else {
+							state_array[first_group] = 'show';
+						}
+					} else {
+						if ( state_array[first_group] === 'show' && state === 'show' ) {
+							state_array[first_group] = 'show';
+						} else {
+							state_array[first_group] = 'hide';
+						}
+					}
+				} else {
+					if ( state === 'show' ) {
+						state_array[first_group] = 'show';
+					} else {
+						state_array[first_group] = 'hide';
+					}
+				}
+
+
+			}
+
+		});
+
+		// var field = jQuery('.um-field[data-key="' + metakey + '"]');
+
+		var field = jQuery('.um.um-' + form_id + ' .um-field[data-key="' + metakey + '"]');
+
+		if ( all_conds[metakey][0][0] === 'show' ){
+			if ( jQuery.inArray('show', state_array ) < 0) {
+				hide_field(field);
+			} else {
+				show_field(field);
+			}
+		} else {
+			if ( jQuery.inArray('hide', state_array) < 0 ) {
+				show_field(field);
+			} else {
+				hide_field(field);
+			}
+			if( less_greater ){
+				if( less_greater['less'] === 'hide' && less_greater['greater'] === 'hide' ){
+					hide_field(field);
+				} else if( less_greater['less'] === 'show' && less_greater['greater'] === 'hide' ){
+					show_field(field);
+				}
+			}
+		}
+
+
+	});
+
+}
+
+function show_field( field ) {
+	field.show();
+	field.find('input, textarea').removeAttr('disabled').removeAttr('readonly');
+	// field.find('label.active input').attr('checked', 'checked')
+}
+
+function hide_field( field ) {
+	field.hide();
+	var parent_field = field.closest('form');
+	if( parent_field.length>0 ){
+		field.find('input, textarea').attr('disabled', 'disabled').attr('readonly','readonly');
+		// field.find('input, textarea').removeAttr('checked');
+	}
+}
+
+function check_parent( all_conds, form_id ) {
+
+	jQuery.each( all_conds, function( metakey ) {
+
+		var first_group = 0;
+		var group_array = [];
+		jQuery.each( all_conds[ metakey ], function() {
+
+			var action = this[0];
+			var field = this[1];
+			var group = this[5];
+			var state;
+
+			var check_field_visible = jQuery('.um.um-' + form_id + ' .um-field[data-key="' + field + '"]').not('.empty-field').is(':visible');
+			var check_field_empty = jQuery('.um.um-' + form_id + ' .empty-field.um-field[data-key="' + field + '"] .um-field-value').html();
+			var check = jQuery('.um.um-' + form_id + ' .um-field[data-key="' + metakey + '"]');
+
+
+
+			if( first_group !== parseInt(group) ){
+				if( check_field_visible === false && check_field_empty !== '' ) {
+					state = 'hide';
+				} else {
+					state = 'show';
+				}
+				first_group++;
+				group_array.push(state)
+			} else {
+
+				if( check_field_visible === false && check_field_empty !== '' ) {
+					state = 'hide';
+				} else {
+					state = 'show';
+				}
+				if ( group_array[first_group] ) {
+					if ( group_array[first_group] === 'show' && state === 'show' ) {
+						group_array[first_group] = 'show';
+					} else {
+						group_array[first_group] = 'hide';
+					}
+				} else {
+					if ( state === 'show' ) {
+						group_array[first_group] = 'show';
+					} else {
+						group_array[first_group] = 'hide';
+					}
+				}
+			}
+
+			if ( jQuery.inArray('show', group_array) < 0 ) {
+				check.addClass('hide-after-parent-check');
+			} else {
+				check.removeClass('hide-after-parent-check');
+			}
+
+			if( action === 'hide' ){
+				if( check_field_visible === false && check_field_empty !== '' ){
+					check.show()
+					check.find('input, textarea').removeAttr('disabled').removeAttr('readonly');
+					check.removeClass('hide-after-parent-check');
+				}
+			}
+
+		});
+
+	});
+}
+
+// OLD CONDITION LOGIC
+
 var arr_all_conditions = []; //raw
 var um_field_conditions = {}; // filtered
 var um_field_default_values = {};
@@ -564,33 +1443,75 @@ function um_init_field_conditions() {
 
 }
 
+jQuery(window).load(function() {
 
-jQuery(document).ready( function (){
+	if( jQuery('.new-cond-form').length > 0 ){
+		console.log('NEW');
+		jQuery('.um-form').each(function () {
+			var all_conds = JSON.parse( JSON.stringify( jQuery(this).find('.condition-data').data('conds') ) );
+			var form_id = jQuery(this).find('.condition-data').attr('value');
 
-    jQuery(document).on('change', '.um-field select, .um-field input[type="radio"], .um-field input[type="checkbox"]', function () {
-        var me = jQuery(this);
-        um_apply_conditions(me, false);
-    });
+			if( jQuery('.um-field').length > 0 ) {
+				var from_top_default;
+				condition_fields(all_conds, form_id);
+				check_parent(all_conds, form_id);
+				// jQuery('.um-field input').on('change keyup', function () {
+				// 	console.log('111')
+				// });
+				jQuery('.um-field input, .um-field textarea').on('change keyup', function () {
 
-    jQuery(document).on('input change', '.um-field input[type="text"]', function () {
-        var me = jQuery(this);
-        um_apply_conditions(me, false);
-    });
+					condition_fields(all_conds, form_id);
+					check_parent(all_conds, form_id);
+				});
 
-    jQuery(document).on('input change', '.um-field input[type="number"]', function () {
-        var me = jQuery(this);
-        um_apply_conditions(me, false);
-    });
+				jQuery('.um-field select').on('change', function () {
+					condition_fields(all_conds, form_id);
+					check_parent(all_conds, form_id);
+				});
 
-    jQuery(document).on('input change', '.um-field input[type="password"]', function () {
-        var me = jQuery(this);
-        um_apply_conditions(me, false);
-    });
+				jQuery(document).on('click', '.um-modal .um-finish-upload', function () {
+					condition_fields(all_conds, form_id);
+					check_parent(all_conds, form_id);
+				});
 
-    jQuery(document).on('um_fields_change', function () {
-        um_field_hide_siblings();
-        um_field_hide_siblings(); // dupes, issue with false field wrapper's visiblity validations. requires optimization.
-    });
+				jQuery(document).on('click', '.um-field-area .cancel', function () {
+					setTimeout(function () {
+						condition_fields(all_conds, form_id);
+						check_parent(all_conds, form_id);
+					})
+				});
+			}
+		});
+	} else {
+		if (jQuery('.um-field').length > 0) {
+			console.log('OLD');
+			jQuery(document).on('change', '.um-field select, .um-field input[type="radio"], .um-field input[type="checkbox"]', function () {
+				var me = jQuery(this);
+				um_apply_conditions(me, false);
+			});
 
-    um_init_field_conditions();
+			jQuery(document).on('input change', '.um-field input[type="text"]', function () {
+				var me = jQuery(this);
+				um_apply_conditions(me, false);
+			});
+
+			jQuery(document).on('input change', '.um-field input[type="number"]', function () {
+				var me = jQuery(this);
+				um_apply_conditions(me, false);
+			});
+
+			jQuery(document).on('input change', '.um-field input[type="password"]', function () {
+				var me = jQuery(this);
+				um_apply_conditions(me, false);
+			});
+
+			jQuery(document).on('um_fields_change', function () {
+				um_field_hide_siblings();
+				um_field_hide_siblings(); // dupes, issue with false field wrapper's visiblity validations. requires optimization.
+			});
+
+			um_init_field_conditions();
+		}
+	}
+
 });

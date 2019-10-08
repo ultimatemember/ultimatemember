@@ -151,30 +151,26 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 */
 		function um_admin_pre_save_field_to_form( $array ){
 			unset( $array['conditions'] );
-			if ( isset($array['conditional_field']) && ! empty( $array['conditional_action'] ) && ! empty( $array['conditional_operator'] ) ) {
-				$array['conditional_value'] = isset( $array['conditional_value'] ) ? $array['conditional_value'] : '';
-				$array['conditions'][] = array( $array['conditional_action'], $array['conditional_field'], $array['conditional_operator'], $array['conditional_value'] );
+
+			for ( $i = 0; $i < 5; $i++ ) {
+				$index = $i > 0 ? $i : '';
+				if ( isset( $array[ 'conditional_field' . $index ] ) && ! empty( $array[ 'conditional_operator' . $index ] ) ) {
+					$array[ 'conditional_value' . $index ] = isset( $array[ 'conditional_value' . $index ] ) ? $array['conditional_value' . $index ] : '';
+					$array[ 'conditional_group' . $index ] = isset( $array[ 'conditional_group' . $index ] ) ? $array['conditional_group' . $index ] : 0;
+					$array[ 'conditional_compare' . $index ] = isset( $array[ 'conditional_compare' . $index ] ) ? $array['conditional_compare' . $index ] : 'and';
+
+					$array['conditions'][] = array(
+						$array[ 'conditional_action' ],
+						$array[ 'conditional_field' . $index ],
+						$array[ 'conditional_operator' . $index ],
+						$array[ 'conditional_value' . $index ],
+						$array[ 'conditional_compare' . $index ],
+						$array[ 'conditional_group' . $index ]
+					);
+
+				}
 			}
 
-			if ( isset( $array['conditional_field1'] ) && ! empty( $array['conditional_action1'] ) && ! empty( $array['conditional_operator1'] ) ) {
-				$array['conditional_value1'] = isset( $array['conditional_value1'] ) ? $array['conditional_value1'] : '';
-				$array['conditions'][] = array( $array['conditional_action1'], $array['conditional_field1'], $array['conditional_operator1'], $array['conditional_value1'] );
-			}
-
-			if ( isset( $array['conditional_field2'] ) && ! empty( $array['conditional_action2'] ) && ! empty( $array['conditional_operator2'] ) ) {
-				$array['conditional_value2'] = isset( $array['conditional_value2'] ) ? $array['conditional_value2'] : '';
-				$array['conditions'][] = array( $array['conditional_action2'], $array['conditional_field2'], $array['conditional_operator2'], $array['conditional_value2'] );
-			}
-
-			if ( isset( $array['conditional_field3'] ) && ! empty( $array['conditional_action3'] ) && ! empty( $array['conditional_operator3'] ) ) {
-				$array['conditional_value3'] = isset( $array['conditional_value3'] ) ? $array['conditional_value3'] : '';
-				$array['conditions'][] = array( $array['conditional_action3'], $array['conditional_field3'], $array['conditional_operator3'], $array['conditional_value3'] );
-			}
-
-			if ( isset( $array['conditional_field4'] ) && ! empty( $array['conditional_action4'] ) && ! empty( $array['conditional_operator4'] ) ) {
-				$array['conditional_value4'] = isset( $array['conditional_value4'] ) ? $array['conditional_value4'] : '';
-				$array['conditions'][] = array( $array['conditional_action4'], $array['conditional_field4'], $array['conditional_operator4'], $array['conditional_value4'] );
-			}
 
 			return $array;
 		}
@@ -200,6 +196,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 * @param $edit_array
 		 */
 		function add_conditional_support( $form_id, $field_args, $in_edit, $edit_array ) {
+
+			$old_condition = get_post_meta( $form_id, '_um_custom_fields_old' );
+
+			if( ! $old_condition ){
+				$old_condition_copy = get_post_meta( $form_id, '_um_custom_fields' );
+				update_post_meta( $form_id, '_um_custom_fields_old', $old_condition_copy );
+			}
+
 			$metabox = UM()->metabox();
 
 			if ( isset( $field_args['conditional_support'] ) && $field_args['conditional_support'] == 0 ) {
@@ -208,64 +212,195 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 			<div class="um-admin-btn-toggle">
 
-				<?php if ( $in_edit ) { $metabox->in_edit = true;  $metabox->edit_array = $edit_array; ?>
+				<?php if ( $in_edit ) {
+					$metabox->in_edit = true;
+					$metabox->edit_array = $edit_array; ?>
 					<a href="javascript:void(0);"><i class="um-icon-plus"></i><?php _e( 'Manage conditional fields support' ); ?></a> <?php UM()->tooltip( __( 'Here you can setup conditional logic to show/hide this field based on specific fields value or conditions', 'ultimate-member' ) ); ?>
 				<?php } else { ?>
 					<a href="javascript:void(0);"><i class="um-icon-plus"></i><?php _e( 'Add conditional fields support' ); ?></a> <?php UM()->tooltip( __( 'Here you can setup conditional logic to show/hide this field based on specific fields value or conditions', 'ultimate-member' ) ); ?>
 				<?php } ?>
 
 				<div class="um-admin-btn-content">
-					<div class="um-admin-cur-condition-template">
+					<?php
 
-						<?php $metabox->field_input( '_conditional_action', $form_id ); ?>
-						<?php $metabox->field_input( '_conditional_field', $form_id ); ?>
-						<?php $metabox->field_input( '_conditional_operator', $form_id ); ?>
-						<?php $metabox->field_input( '_conditional_value', $form_id ); ?>
-
-						<p><a href="javascript:void(0);" class="um-admin-remove-condition button um-admin-tipsy-n" title="Remove condition"><i class="um-icon-close" style="margin-right:0!important"></i></a></p>
-
-						<div class="um-admin-clear"></div>
-					</div>
-					<p><a href="javascript:void(0);" class="um-admin-new-condition button button-primary um-admin-tipsy-n" title="Add new condition"><?php _e( 'Add new rule', 'ultimate-member' ); ?></a></p>
-					<p class="um-admin-reset-conditions"><a href="javascript:void(0);" class="button"><?php _e( 'Reset all rules', 'ultimate-member' ); ?></a></p>
-					<div class="um-admin-clear"></div>
-
-					<?php if ( isset( $edit_array['conditions'] ) && count( $edit_array['conditions'] ) != 0 ) {
-
-						foreach ( $edit_array['conditions'] as $k => $arr ) {
-
-							if ( $k == 0 ) $k = ''; ?>
-
+					if( isset( $edit_array['conditions'] ) && ! isset( $edit_array['um_new_cond_field'] ) ){
+						echo '<div class="old-conditions">';
+						echo '<p>' . __( 'This is yours old conditional logic. Make new logic below. After updating the old one will be deleted.' ) . '</p><br>';
+						foreach ( $edit_array['conditions'] as $condition ){ ?>
+							<p>
+								<span style="width: 90px"><?php echo $condition[0]; ?></span>
+								<span class="if"><?php echo __(' if ', 'ultimate-member'); ?></span>
+								<span style="width: 150px"><?php echo $condition[1]; ?></span>
+								<span style="width: 150px"><?php echo $condition[2]; ?></span>
+								<span style="width: 150px"><?php echo $condition[3]; ?></span>
+							</p>
+						<?php }
+						echo '</div>';
+					} ?>
+					<?php if( $in_edit == 1 ){
+						$template = 'edit';
+					} else {
+						$template = 'add';
+					} ?>
+					<script type="text/template" id="tmpl-um-admin-conditional-<?php echo $template; ?>">
+						<# if ( data.compare === 'or' ) { #>
+						<div class="um-condition-group-wrapper" data-group_id="{{{data.group}}}">
+							<hr class="or-devider" />
+							<# } #>
 							<div class="um-admin-cur-condition">
 
-								<?php $metabox->field_input( '_conditional_action' . $k, $form_id ); ?>
-								<?php $metabox->field_input( '_conditional_field' . $k , $form_id ); ?>
-								<?php $metabox->field_input( '_conditional_operator' . $k, $form_id ); ?>
-								<?php $metabox->field_input( '_conditional_value' . $k, $form_id ); ?>
+								<p> <?php echo __('field','ultimate-member' ); ?>
+									<select name="_conditional_field{{{data.item}}}" id="_conditional_field{{{data.item}}}" class="um_conditional_field" style="width: 180px">
+										<option></option>
 
-								<p><a href="#" class="um-admin-remove-condition button um-admin-tipsy-n" title="Remove condition"><i class="um-icon-close" style="margin-right:0!important"></i></a></p>
+										<?php $fields = UM()->query()->get_attr( 'custom_fields', $form_id );
+										foreach ( $fields as $key => $array ) {
+											if ( ! isset( $array['title'] ) ) {
+												continue;
+											}
+
+											if ( isset( $edit_array['metakey'] ) && $key == $edit_array['metakey'] ) {
+												continue;
+											} ?>
+
+											<option value="<?php echo $key ?>"><?php echo $array['title'] ?></option>
+										<?php } ?>
+									</select>
+								</p>
+								<p> <?php echo __('is','ultimate-member' ); ?>
+									<select name="_conditional_operator{{{data.item}}}" id="_conditional_operator{{{data.item}}}" class="um_conditional_operator" style="width: 180px">
+										<option></option>
+
+										<?php $operators = array(
+											'empty'         => __( 'Empty', 'ultimate-member' ),
+											'not empty'     => __( 'Not empty', 'ultimate-member' ),
+											'equals to'     => __( 'Equals to', 'ultimate-member' ),
+											'not equals'    => __( 'Not equals', 'ultimate-member' ),
+											'greater than'  => __( 'Greater than', 'ultimate-member' ),
+											'less than'     => __( 'Less than', 'ultimate-member' ),
+											'contains'      => __( 'Contains', 'ultimate-member' ),
+										);
+
+										foreach ( $operators as $operator => $label ) { ?>
+											<option value="<?php echo esc_attr( $operator ); ?>"><?php echo esc_js( $label ); ?></option>
+										<?php } ?>
+									</select>
+
+								</p>
+								<p>
+									<input type="text" name="_conditional_value{{{data.item}}}" id="_conditional_value{{{data.item}}}" class="um_conditional_value" value="" placeholder="<?php esc_attr_e( 'Value', 'ultimate-member' ); ?>" style="width: 150px" />
+								</p>
+
+								<p>
+									<input type="hidden" name="_conditional_compare{{{data.item}}}" id="_conditional_compare{{{data.item}}}" value="{{{data.compare}}}" />
+								</p>
+
+								<p>
+									<input type="hidden" name="_conditional_group{{{data.item}}}" id="_conditional_group{{{data.item}}}" value="{{{data.group}}}" />
+								</p>
+
+								<p>
+									<a href="javascript:void(0);" class="button um-admin-remove-condition um-admin-tipsy-n" title="<?php esc_attr_e( 'Remove condition', 'ultimate-member' ); ?>">
+										<i class="um-icon-close"></i>
+									</a>
+								</p>
 
 								<div class="um-admin-clear"></div>
 							</div>
-
-							<?php
-						}
-
-					} else { ?>
-
-						<div class="um-admin-cur-condition">
-
-							<?php $metabox->field_input( '_conditional_action', $form_id ); ?>
-							<?php $metabox->field_input( '_conditional_field', $form_id ); ?>
-							<?php $metabox->field_input( '_conditional_operator', $form_id ); ?>
-							<?php $metabox->field_input( '_conditional_value', $form_id ); ?>
-
-							<p><a href="#" class="um-admin-remove-condition button um-admin-tipsy-n" title="Remove condition"><i class="um-icon-close" style="margin-right:0!important"></i></a></p>
-
-							<div class="um-admin-clear"></div>
+							<# if ( data.compare === 'or' ) { #>
+							<a href="#" class="um-admin-new-condition um-admin-new-condition-compare-and button button-primary um-admin-tipsy-n" title="<?php esc_attr_e( 'Add new condition', 'ultimate-member' ); ?>">
+								<?php _e( 'Add new rule', 'ultimate-member' ); ?>
+							</a>
 						</div>
+						<# } #>
+					</script>
+					<p>
+						<select name="_conditional_action" id="_conditional_action" class="um_conditional_action">
 
-					<?php } ?>
+
+							<?php $actions = array(
+								'show'  => __( 'Show', 'ultimate-member' ),
+								'hide'  => __( 'Hide', 'ultimate-member' )
+							);
+
+							foreach ( $actions as $action => $label ) { ?>
+								<option <?php if( $action == $edit_array['conditional_action'] ) echo 'selected'; ?> value="<?php echo esc_attr( $action ); ?>"><?php echo esc_js( $label ); ?></option>
+							<?php } ?>
+						</select>
+
+						<?php _e( 'If', 'ultimate-member' ); ?>
+					</p>
+					<p class="um-admin-reset-conditions">
+						<a href="javascript:void(0);" class="button">
+							<?php _e( 'Reset all rules', 'ultimate-member' ); ?>
+						</a>
+					</p>
+					<div class="um-admin-clear"></div>
+					<div class="condition-wrap">
+						<?php if ( ! empty( $edit_array['conditions'] ) ) { ?>
+							<div class="um-condition-group-wrapper" data-group_id="0">
+
+							<?php foreach ( $edit_array['conditions'] as $k => $arr ) {
+								$index = $k == 0 ? '' : $k;
+								if ( $arr[4] == 'or' ) { ?>
+									<a href="#" class="um-admin-new-condition um-admin-new-condition-compare-and button button-primary um-admin-tipsy-n" title="<?php esc_attr_e( 'Add new condition', 'ultimate-member' ); ?>">
+										<?php _e( 'Add new rule', 'ultimate-member' ); ?>
+									</a>
+									</div>
+									<div class="um-condition-group-wrapper" data-group_id="<?php echo esc_attr( $arr[5] ) ?>">
+									<hr class="or-devider" />
+								<?php } ?>
+								<div class="um-admin-cur-condition">
+									<?php
+									$metabox->field_input( '_conditional_field' . $index , $form_id );
+									$metabox->field_input( '_conditional_operator' . $index, $form_id );
+									$metabox->field_input( '_conditional_value' . $index, $form_id );
+									$metabox->field_input( '_conditional_compare' . $index, $form_id );
+									$metabox->field_input( '_conditional_group' . $index, $form_id );
+									?>
+									<p>
+										<a href="javascript:void(0);" class="um-admin-remove-condition button um-admin-tipsy-n" title="<?php esc_attr_e( 'Remove condition', 'ultimate-member' ); ?>">
+											<i class="um-icon-close"></i>
+										</a>
+									</p>
+
+									<div class="um-admin-clear"></div>
+								</div>
+							<?php } ?>
+							<a href="javascript:void(0);" class="um-admin-new-condition um-admin-new-condition-compare-and button button-primary um-admin-tipsy-n" title="<?php esc_attr_e( 'Add new condition', 'ultimate-member' ); ?>">
+								<?php _e( 'Add new rule', 'ultimate-member' ); ?>
+							</a>
+							</div>
+						<?php } else { ?>
+							<div class="um-condition-group-wrapper" data-group_id="0">
+								<div class="um-admin-cur-condition">
+
+									<?php
+									$metabox->field_input( '_conditional_field', $form_id );
+									$metabox->field_input( '_conditional_operator', $form_id );
+									$metabox->field_input( '_conditional_value', $form_id );
+									$metabox->field_input( '_conditional_compare', $form_id );
+									$metabox->field_input( '_conditional_group', $form_id ); ?>
+
+									<p>
+										<a href="javascript:void(0);" class="um-admin-remove-condition button um-admin-tipsy-n" title="<?php esc_attr_e( 'Remove condition', 'ultimate-member' ); ?>">
+											<i class="um-icon-close"></i>
+										</a>
+									</p>
+
+									<div class="um-admin-clear"></div>
+								</div>
+
+								<a href="javascript:void(0);" class="um-admin-new-condition um-admin-new-condition-compare-and button button-primary um-admin-tipsy-n" title="<?php esc_attr_e( 'Add new condition', 'ultimate-member' ); ?>">
+									<?php _e( 'Add new rule', 'ultimate-member' ); ?>
+								</a>
+							</div>
+						<?php } ?>
+
+						<a href="javascript:void(0);" class="um-admin-new-condition um-admin-new-condition-compare-or button button-primary um-admin-tipsy-n" title="<?php esc_attr_e( 'Add new condition', 'ultimate-member' ); ?>">
+							<?php _e( 'Add new rule group', 'ultimate-member' ); ?>
+						</a>
+					</div>
 				</div>
 			</div>
 
@@ -476,6 +611,18 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 								$subrow_fields = $this->get_fields_in_subrow( $row_fields, $c );
 
+								if( isset($subrow_fields) && !empty($subrow_fields)) {
+									$count = count($subrow_fields);
+									$count_field = 0;
+									foreach ($subrow_fields as $cond_field) {
+										if (isset($cond_field['um_new_cond_field']) && $cond_field['um_new_cond_field'] == 1) {
+											$count_field++;
+										}
+									}
+									if ($count == $count_field) {
+										update_post_meta($this->form_id, '_um_has_new_cond', 1);
+									}
+								}
 								?>
 
 								<div class="um-admin-drag-rowsub">
@@ -485,7 +632,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 										<?php
 
-										if ( !isset( $array['cols'] ) ){
+										if ( ! isset( $array['cols'] ) ){
 											$col_num = 1;
 										} else {
 
@@ -519,17 +666,31 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 										if ( is_array( $subrow_fields ) ) {
 
 											$subrow_fields = $this->array_sort_by_column( $subrow_fields, 'position');
-
+											$um_form_custom_fields = get_post_meta($this->form_id, '_um_custom_fields', true);
 											foreach( $subrow_fields as $key => $keyarray ) {
 												/**
 												 * @var $type
 												 * @var $title
 												 */
 												extract( $keyarray );
+												$field_cond_class = '';
+												$field_cond_text = '';
+												$has_new_cond =	get_post_meta($this->form_id, '_um_has_new_cond', true);
 
+												if( $has_new_cond != 1 ){
+													if( !isset( $keyarray['conditions'] ) ){
+														$metakey = $keyarray['metakey'];
+														$um_form_custom_fields[$metakey]['um_new_cond_field'] = 1;
+													}
+													update_post_meta( $this->form_id, '_um_custom_fields', $um_form_custom_fields );
+													if( ( !isset( $keyarray['um_new_cond_field'] ) || $keyarray['um_new_cond_field'] != 1 ) && isset( $keyarray['conditions'] ) ){
+														$field_cond_class = 'has-old-cond';
+														$field_cond_text = '<div class="um-admin-old-cond-message">'.__( 'Please update conditions in this field', 'ultimate-member' ).'</div>';
+													}
+												}
 												?>
 
-												<div class="um-admin-drag-fld um-admin-delete-area um-field-type-<?php echo $type; ?> <?php echo $key; ?>" data-group="<?php echo (isset($keyarray['in_group'])) ? $keyarray['in_group'] : ''; ?>" data-key="<?php echo $key; ?>" data-column="<?php echo ( isset($keyarray['in_column']) ) ? $keyarray['in_column'] : 1; ?>">
+												<div class="<?php echo $field_cond_class; ?> um-admin-drag-fld um-admin-delete-area um-field-type-<?php echo $type; ?> <?php echo $key; ?>" data-group="<?php echo (isset($keyarray['in_group'])) ? $keyarray['in_group'] : ''; ?>" data-key="<?php echo $key; ?>" data-column="<?php echo ( isset($keyarray['in_column']) ) ? $keyarray['in_column'] : 1; ?>">
 
 													<div class="um-admin-drag-fld-title um-field-type-<?php echo $type; ?>">
 														<?php if ( $type == 'group' ) { ?>
@@ -546,12 +707,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 														<a href="javascript:void(0);" class="um-admin-tipsy-n um_admin_duplicate_field" title="Duplicate" data-silent_action="um_admin_duplicate_field" data-arg1="<?php echo $key; ?>" data-arg2="<?php echo $this->form_id; ?>"><i class="um-faicon-files-o"></i></a>
 
 														<?php if ( $type == 'group' ) { ?>
-
 															<a href="javascript:void(0);" class="um-admin-tipsy-n" title="Delete Group" data-remove_element="um-admin-drag-fld.um-field-type-group" data-silent_action="um_admin_remove_field" data-arg1="<?php echo $key; ?>" data-arg2="<?php echo $this->form_id; ?>"><i class="um-faicon-trash-o"></i></a>
 														<?php } else { ?>
-
 															<a href="javascript:void(0);" class="um-admin-tipsy-n" title="Delete" data-silent_action="um_admin_remove_field" data-arg1="<?php echo $key; ?>" data-arg2="<?php echo $this->form_id; ?>"><i class="um-faicon-trash-o"></i></a>
-
 														<?php } ?>
 
 													</div><div class="um-admin-clear"></div>

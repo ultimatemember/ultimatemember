@@ -7,8 +7,24 @@
  * @param $args
  */
 function um_add_form_identifier( $args ) {
+	$new_cond = get_post_meta( $args['form_id'], '_um_has_new_cond', true );
+
+	$form_cond_class = '';
+	if( isset( $new_cond ) && $new_cond == '1' ) {
+		$form_cond_class = 'new-cond-form';
+	}
+
+	$conditional_array = array();
+	if( ! empty( $args['custom_fields'] ) ){
+		foreach ( $args['custom_fields'] as $arg ) {
+			if ( isset( $arg['conditions'] ) ) {
+				$conditional_array[ $arg['metakey'] ] = $arg['conditions'];
+			}
+		}
+		$cond_data = json_encode( $conditional_array );
+	}
 	?>
-		<input type="hidden" name="form_id" id="form_id_<?php echo esc_attr( $args['form_id'] ); ?>" value="<?php echo esc_attr( $args['form_id'] ); ?>" />
+		<input type="hidden" name="form_id" id="form_id_<?php echo esc_attr( $args['form_id'] ); ?>" value="<?php echo esc_attr( $args['form_id'] ); ?>" class="condition-data <?php echo esc_attr( $form_cond_class ); ?>" data-conds="<?php echo esc_attr($cond_data); ?>" />
 	<?php
 }
 add_action( 'um_after_form_fields', 'um_add_form_identifier' );

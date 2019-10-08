@@ -680,7 +680,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 0,
 					'validate' => 'unique_username',
 					'min_chars' => 3,
-					'max_chars' => 24
+					'max_chars' => 24,
+					'um_new_cond_field' => 1
 				),
 
 				'username' => array(
@@ -692,6 +693,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'public' => 1,
 					'editable' => 0,
 					'validate' => 'unique_username_or_email',
+					'um_new_cond_field' => 1
 				),
 
 				'user_password' => array(
@@ -706,6 +708,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'max_chars' => 30,
 					'force_good_pass' => 1,
 					'force_confirm_pass' => 1,
+					'um_new_cond_field' => 1
 				),
 
 				'first_name' => array(
@@ -716,6 +719,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required' => 0,
 					'public' => 1,
 					'editable' => 1,
+					'um_new_cond_field' => 1
 				),
 
 				'last_name' => array(
@@ -726,6 +730,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required' => 0,
 					'public' => 1,
 					'editable' => 1,
+					'um_new_cond_field' => 1
 				),
 
 				'nickname' => array(
@@ -736,6 +741,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required' => 0,
 					'public' => 1,
 					'editable' => 1,
+					'um_new_cond_field' => 1
 				),
 
 				'user_url' => array(
@@ -746,7 +752,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required' => 1,
 					'public' => 1,
 					'editable' => 1,
-					'validate' => 'url'
+					'validate' => 'url',
+					'um_new_cond_field' => 1
 				),
 
 				'user_registered' => array(
@@ -758,6 +765,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'public' => 1,
 					'editable' => 1,
 					'edit_forbidden' => 1,
+					'um_new_cond_field' => 1
 				),
 
 				'_um_last_login' => array(
@@ -769,6 +777,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'public' => 1,
 					'editable' => 1,
 					'edit_forbidden' => 1,
+					'um_new_cond_field' => 1
 				),
 
 				'user_email' => array(
@@ -779,7 +788,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required' => 0,
 					'public' => 1,
 					'validate' => 'unique_email',
-					'autocomplete' => 'off'
+					'autocomplete' => 'off',
+					'um_new_cond_field' => 1
 				),
 
 				'secondary_user_email' => array(
@@ -791,7 +801,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'public' => 1,
 					'editable' => 1,
 					'validate' => 'unique_email',
-					'autocomplete' => 'off'
+					'autocomplete' => 'off',
+					'um_new_cond_field' => 1
 				),
 
 				'description' => array(
@@ -805,6 +816,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 1,
 					'max_words' => 40,
 					'placeholder' => __('Enter a bit about yourself...','ultimate-member'),
+					'um_new_cond_field' => 1
 				),
 
 				'birth_date' => array(
@@ -818,7 +830,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'pretty_format' => 1,
 					'years' => 115,
 					'years_x' => 'past',
-					'icon' => 'um-faicon-calendar'
+					'icon' => 'um-faicon-calendar',
+					'um_new_cond_field' => 1
 				),
 
 				'gender' => array(
@@ -829,7 +842,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required' => 0,
 					'public' => 1,
 					'editable' => 1,
-					'options' => array( __('Male','ultimate-member'), __('Female','ultimate-member') )
+					'options' => array( __('Male','ultimate-member'), __('Female','ultimate-member') ),
+					'um_new_cond_field' => 1
 				),
 
 				'country' => array(
@@ -841,7 +855,8 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required' => 0,
 					'public' => 1,
 					'editable' => 1,
-					'options' => $this->get('countries')
+					'options' => $this->get('countries'),
+					'um_new_cond_field' => 1
 				),
 
 				'facebook' => array(
@@ -860,6 +875,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'advanced' => 'social',
 					'color' => '#3B5999',
 					'match' => 'https://facebook.com/',
+					'um_new_cond_field' => 1
 				),
 
 				'twitter' => array(
@@ -878,6 +894,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'advanced' => 'social',
 					'color' => '#4099FF',
 					'match' => 'https://twitter.com/',
+					'um_new_cond_field' => 1
 				),
 
 				'linkedin' => array(
@@ -896,6 +913,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'advanced' => 'social',
 					'color' => '#0976b4',
 					'match' => 'https://linkedin.com/in/',
+					'um_new_cond_field' => 1
 				),
 
 				'googleplus' => array(
@@ -914,6 +932,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'advanced' => 'social',
 					'color' => '#dd4b39',
 					'match' => 'https://google.com/+',
+					'um_new_cond_field' => 1
 				),
 
 				'instagram' => array(
@@ -932,6 +951,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'advanced' => 'social',
 					'color' => 'radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%)',
 					'match' => 'https://instagram.com/',
+					'um_new_cond_field' => 1
 				),
 
 				'skype' => array(
@@ -947,6 +967,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'icon' => 'um-faicon-skype',
 					'validate' => 'skype',
 					'url_text' => 'Skype',
+					'um_new_cond_field' => 1
 				),
 
 				'youtube' => array(
@@ -965,6 +986,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'advanced' => 'social',
 					'color' => '#e52d27',
 					'match' => 'https://youtube.com/',
+					'um_new_cond_field' => 1
 				),
 
 				'soundcloud' => array(
@@ -983,6 +1005,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'advanced' => 'social',
 					'color' => '#f50',
 					'match' => 'https://soundcloud.com/',
+					'um_new_cond_field' => 1
 				),
 
 				'vkontakte' => array(
@@ -1001,6 +1024,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'advanced' => 'social',
 					'color' => '#2B587A',
 					'match' => 'https://vk.com/',
+					'um_new_cond_field' => 1
 				),
 
 				'role_select' => array(
@@ -1013,6 +1037,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'public' => 1,
 					'editable' => 1,
 					'options' => $um_roles,
+					'um_new_cond_field' => 1
 				),
 
 				'role_radio' => array(
@@ -1024,6 +1049,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'public' => 1,
 					'editable' => 1,
 					'options' => $um_roles,
+					'um_new_cond_field' => 1
 				),
 
 				'languages' => array(
@@ -1036,6 +1062,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'public' => 1,
 					'editable' => 1,
 					'options' => $this->get('languages'),
+					'um_new_cond_field' => 1
 				),
 
 				'phone_number' => array(
@@ -1048,6 +1075,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 1,
 					'validate' => 'phone_number',
 					'icon' => 'um-faicon-phone',
+					'um_new_cond_field' => 1
 				),
 
 				'mobile_number' => array(
@@ -1060,6 +1088,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 1,
 					'validate' => 'phone_number',
 					'icon' => 'um-faicon-mobile',
+					'um_new_cond_field' => 1
 				),
 
 				// private use ( not public list )
@@ -1076,6 +1105,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'min_width' => str_replace('px','',UM()->options()->get('profile_photosize')),
 					'min_height' => str_replace('px','',UM()->options()->get('profile_photosize')),
 					'private_use' => true,
+					'um_new_cond_field' => 1
 				),
 
 				'cover_photo' => array(
@@ -1091,6 +1121,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'ratio' => str_replace(':1','',UM()->options()->get('profile_cover_ratio')),
 					'min_width' => UM()->options()->get('cover_min_width'),
 					'private_use' => true,
+					'um_new_cond_field' => 1
 				),
 
 				'username_b' => array(
@@ -1102,6 +1133,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'public' => 1,
 					'editable' => 0,
 					'private_use' => true,
+					'um_new_cond_field' => 1
 				),
 
 				// account page use ( not public )
@@ -1119,7 +1151,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'options' => $profile_privacy,
 					'allowclear' => 0,
 					'account_only' => true,
-					'required_perm' => 'can_make_private_profile',
+					'required_perm' => 'can_make_private_profile'
 				),
 
 				'hide_in_members' => array(
@@ -1134,7 +1166,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'default' => 'No',
 					'options' => array( 'No' => __('No','ultimate-member'), 'Yes' => __('Yes','ultimate-member') ),
 					'account_only' => true,
-					'required_opt' => array( 'members_page', 1 ),
+					'required_opt' => array( 'members_page', 1 )
 				),
 
 				'delete_account' => array(
@@ -1148,7 +1180,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'editable' => 1,
 					'default' => __('No','ultimate-member'),
 					'options' => array( __('Yes','ultimate-member') , __('No','ultimate-member') ),
-					'account_only' => true,
+					'account_only' => true
 				),
 
 				'single_user_password' => array(
@@ -1159,7 +1191,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required' => 1,
 					'public' => 1,
 					'editable' => 1,
-					'account_only' => true,
+					'account_only' => true
 				),
 
 			);

@@ -50,7 +50,7 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 		function install_default_forms() {
 			if ( current_user_can( 'manage_options' ) && ! get_option( 'um_is_installed' ) ) {
 				$options = get_option( 'um_options', array() );
-
+				$version = get_option( 'um_version' );
 				update_option( 'um_is_installed', 1 );
 
 				//Install default options
@@ -91,6 +91,9 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 								update_post_meta( $form_id, $key, $array );
 							} else {
 								update_post_meta( $form_id, $key, $value );
+							}
+							if ( ! $version ) {
+								update_post_meta( $form_id, '_um_has_new_cond', 1 );
 							}
 						}
 

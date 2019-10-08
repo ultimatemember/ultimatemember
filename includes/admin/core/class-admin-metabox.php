@@ -1266,8 +1266,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_conditional_field4':
 				?>
 
-				<p>
-					<select name="<?php echo esc_attr( $attribute ); ?>" id="<?php echo esc_attr( $attribute ); ?>" style="width: 150px">
+				<p> <?php echo __('field','ultimate-member' ); ?>
+					<select name="<?php echo esc_attr( $attribute ); ?>" id="<?php echo esc_attr( $attribute ); ?>" style="width: 180px">
 
 						<option></option>
 
@@ -1295,8 +1295,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_conditional_operator4':
 				?>
 
-				<p>
-					<select name="<?php echo esc_attr( $attribute ); ?>" id="<?php echo esc_attr( $attribute ); ?>" style="width: 150px">
+				<p> <?php echo __('is','ultimate-member' ); ?>
+					<select name="<?php echo esc_attr( $attribute ); ?>" id="<?php echo esc_attr( $attribute ); ?>" style="width: 180px">
 
 						<option></option>
 

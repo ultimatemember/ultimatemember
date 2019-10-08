@@ -188,6 +188,13 @@ add_action( 'um_profile_content_main', 'um_profile_content_main' );
  * @param array $args
  */
 function um_user_edit_profile( $args ) {
+
+	$new_cond = get_post_meta($args['form_id'], '_um_has_new_cond', true);
+
+	if( isset($new_cond) && $new_cond == '1' ) {
+		$hide_array = um_field_conditions_are_met($args);
+	}
+
 	$to_update = null;
 	$files = array();
 
