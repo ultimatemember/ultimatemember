@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-10-04 15:02+0300\n"
-"PO-Revision-Date: 2019-10-04 15:02+0300\n"
+"POT-Creation-Date: 2019-10-08 12:29+0300\n"
+"PO-Revision-Date: 2019-10-08 12:29+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -4528,7 +4528,7 @@ msgid "Register"
 msgstr ""
 
 #: includes/class-config.php:135 includes/class-config.php:779
-#: includes/core/class-member-directory.php:1893
+#: includes/core/class-member-directory.php:1897
 #: includes/core/um-actions-profile.php:1180
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
@@ -7077,14 +7077,14 @@ msgstr ""
 msgid "<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1838
-#: includes/core/class-member-directory.php:1882
+#: includes/core/class-member-directory.php:1842
+#: includes/core/class-member-directory.php:1886
 #: includes/core/um-actions-profile.php:1147
 #: includes/core/um-actions-profile.php:1178
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1888
+#: includes/core/class-member-directory.php:1892
 #: includes/core/um-actions-profile.php:1179
 msgid "My Account"
 msgstr ""

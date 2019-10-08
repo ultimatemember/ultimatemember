@@ -1251,10 +1251,14 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					// Add OR instead AND to search in WP core fields user_email, user_login, user_display_name
 					$search_where = $context->get_search_sql( $search, UM()->member_directory()->core_search_fields, 'both' );
 
-					$replacement = apply_filters( 'um_member_directory_organic_search_replacement', " AND ( $1 )" );
-					$search_where = preg_replace( '/ AND \((.*?)\)/im', $replacement, $search_where );
+					$search_where = preg_replace( '/ AND \((.*?)\)/im', "$1 OR", $search_where );
 
-					$sql['where'] = $sql['where'] . $search_where;
+					$sql['where'] = preg_replace(
+						'/(' . $meta_join_for_search . '.meta_value = \'' . esc_attr( $search ) . '\')/im',
+						trim( $search_where ) . " $1",
+						$sql['where'],
+						1
+					);
 				}
 			}
 
@@ -1289,7 +1293,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$ignore_empty_filters = apply_filters( 'um_member_directory_ignore_empty_filters', false );
 
 			if ( empty( $filter_query ) && ! $ignore_empty_filters ) {
-				add_filter( 'um_member_directory_organic_search_replacement', array( &$this, 'organic_replacement' ) );
+				//add_filter( 'um_member_directory_organic_search_replacement', array( &$this, 'organic_replacement' ) );
 				return;
 			}
 
