@@ -94,10 +94,12 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_script( 'um_datetime_legacy', $this->js_baseurl . 'pickadate/legacy.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
 			// load a localized version for date/time
 			$locale = get_locale();
-			if ( $locale && file_exists( WP_LANG_DIR . '/plugins/ultimate-member/assets/js/pickadate/' . $locale . '.js' ) ) {
-				wp_register_script('um_datetime_locale', content_url() . '/languages/plugins/ultimate-member/assets/js/pickadate/' . $locale . '.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
-			} elseif ( $locale && file_exists( um_path . 'assets/js/pickadate/translations/' . $locale . '.js' ) ) {
-				wp_register_script('um_datetime_locale', um_url . 'assets/js/pickadate/translations/' . $locale . '.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
+			if ( $locale ) {
+				if ( file_exists( WP_LANG_DIR . '/plugins/ultimate-member/assets/js/pickadate/' . $locale . '.js' ) ) {
+					wp_register_script('um_datetime_locale', content_url() . '/languages/plugins/ultimate-member/assets/js/pickadate/' . $locale . '.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
+				} elseif ( file_exists( um_path . 'assets/js/pickadate/translations/' . $locale . '.js' ) ) {
+					wp_register_script('um_datetime_locale', um_url . 'assets/js/pickadate/translations/' . $locale . '.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
+				}
 			}
 
 			wp_register_script( 'um_tipsy', $this->js_baseurl . 'um-tipsy' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
@@ -333,10 +335,10 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 		 * Load date & time picker
 		 */
 		function load_datetimepicker() {
-			wp_enqueue_script('um_datetime');
-			wp_enqueue_script('um_datetime_date');
-			wp_enqueue_script('um_datetime_time');
-			wp_enqueue_script('um_datetime_legacy');
+			wp_enqueue_script( 'um_datetime' );
+			wp_enqueue_script( 'um_datetime_date' );
+			wp_enqueue_script( 'um_datetime_time' );
+			wp_enqueue_script( 'um_datetime_legacy' );
 
 			// load a localized version for date/time
 			$locale = get_locale();
@@ -344,9 +346,9 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 				wp_enqueue_script('um_datetime_locale' );
 			}
 
-			wp_enqueue_style('um_datetime');
-			wp_enqueue_style('um_datetime_date');
-			wp_enqueue_style('um_datetime_time');
+			wp_enqueue_style( 'um_datetime' );
+			wp_enqueue_style( 'um_datetime_date' );
+			wp_enqueue_style( 'um_datetime_time' );
 		}
 
 
