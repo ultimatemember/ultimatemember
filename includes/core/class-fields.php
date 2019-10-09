@@ -1142,6 +1142,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return array $arr_options
 		 */
 		function get_options_from_callback( $data, $type ) {
+			$arr_options = array();
 
 			if ( in_array( $type, array( 'select', 'multiselect' ) ) && ! empty( $data['custom_dropdown_options_source'] ) ) {
 

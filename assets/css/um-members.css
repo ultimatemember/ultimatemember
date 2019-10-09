@@ -405,21 +405,21 @@ body #content .um-directory a {
         .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-status {
           display: none;
           background: #999; }
-        .um-directory .um-members-wrapper .um-members.um-members-grid .um-member.awaiting_admin_review, .um-directory .um-members-wrapper .um-members.um-members-grid .um-member.inactive, .um-directory .um-members-wrapper .um-members.um-members-grid .um-member.rejected {
-          display: block;
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          padding: 7px 15px;
-          color: #fff;
-          z-index: 10;
-          font-size: 13px;
-          box-sizing: border-box;
-          -moz-box-sizing: border-box;
-          -webkit-box-sizing: border-box; }
-        .um-directory .um-members-wrapper .um-members.um-members-grid .um-member.awaiting_admin_review {
-          background: #c74a4a; }
+          .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-status.awaiting_admin_review, .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-status.inactive, .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-status.rejected {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 7px 15px;
+            color: #fff;
+            z-index: 10;
+            font-size: 13px;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box; }
+          .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-status.awaiting_admin_review {
+            background: #c74a4a; }
         .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-photo {
           padding: 40px 0 20px 0;
           text-align: center; }
@@ -570,6 +570,21 @@ body #content .um-directory a {
           box-sizing: border-box;
           -moz-box-sizing: border-box;
           -webkit-box-sizing: border-box; }
+          .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-status {
+            display: none;
+            background: #999; }
+            .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-status.awaiting_admin_review, .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-status.inactive, .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-status.rejected {
+              display: block;
+              width: 100%;
+              padding: 7px 15px;
+              margin-bottom: 10px;
+              color: #fff;
+              font-size: 13px;
+              box-sizing: border-box;
+              -moz-box-sizing: border-box;
+              -webkit-box-sizing: border-box; }
+            .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-status.awaiting_admin_review {
+              background: #c74a4a; }
           .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container {
             display: flex;
             flex-direction: row;

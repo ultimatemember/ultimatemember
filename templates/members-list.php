@@ -8,6 +8,9 @@
 			<# _.each( data, function( user, key, list ) { #>
 
 				<div class="um-member um-role-{{{user.role}}} {{{user.account_status}}} <?php if ( $cover_photos ) { echo 'with-cover'; } ?>">
+					<span class="um-member-status {{{user.account_status}}}">
+						{{{user.account_status_name}}}
+					</span>
 					<div class="um-member-card-container">
 						<?php if ( $profile_photo ) { ?>
 							<div class="um-member-photo radius-<?php echo esc_attr( UM()->options()->get( 'profile_photocorner' ) ); ?>">

@@ -368,21 +368,21 @@ body
           .um-member-status
             display: none
             background: #999
-          &.awaiting_admin_review,
-          &.inactive,
-          &.rejected
-            display: block
-            position: absolute
-            top: 0
-            left: 0
-            width: 100%
-            padding: 7px 15px
-            color: #fff
-            z-index: 10
-            font-size: 13px
-            +border-box
-          &.awaiting_admin_review
-            background: #c74a4a
+            &.awaiting_admin_review,
+            &.inactive,
+            &.rejected
+              display: block
+              position: absolute
+              top: 0
+              left: 0
+              width: 100%
+              padding: 7px 15px
+              color: #fff
+              z-index: 10
+              font-size: 13px
+              +border-box
+            &.awaiting_admin_review
+              background: #c74a4a
           .um-member-photo
             padding: 40px 0 20px 0
             text-align: center
@@ -548,6 +548,21 @@ body
           margin: 0
           background: none
           +border-box
+          .um-member-status
+            display: none
+            background: #999
+            &.awaiting_admin_review,
+            &.inactive,
+            &.rejected
+              display: block
+              width: 100%
+              padding: 7px 15px
+              margin-bottom: 10px
+              color: #fff
+              font-size: 13px
+              +border-box
+            &.awaiting_admin_review
+              background: #c74a4a
           .um-member-card-container
             +flex( row, flex-start, flex-start, nowrap )
             width: 100%
