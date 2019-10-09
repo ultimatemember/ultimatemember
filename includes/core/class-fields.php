@@ -1332,7 +1332,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$array['conditional'] = '';
 
 				foreach ( $array['conditions'] as $cond_id => $cond ) {
-					$array['conditional'] .= ' data-cond-' . $cond_id . '-action="' . esc_attr( $cond[0] ) . '" data-cond-' . $cond_id . '-field="' . esc_attr( $cond[1] ) . '" data-cond-' . $cond_id . '-operator="' . esc_attr( $cond[2] ) . '" data-cond-' . $cond_id . '-value="' . esc_attr( $cond[3] ) . '"';
+					$array['conditional'] .= ' data-cond-' . esc_attr( $cond_id ) . '-action="' . esc_attr( $cond[0] ) . '" data-cond-' . esc_attr( $cond_id ) . '-field="' . esc_attr( $cond[1] ) . '" data-cond-' . esc_attr( $cond_id ) . '-operator="' . esc_attr( $cond[2] ) . '" data-cond-' . esc_attr( $cond_id ) . '-value="' . esc_attr( $cond[3] ) . '"';
 				}
 
 				$array['classes'] .= ' um-is-conditional';
@@ -3837,7 +3837,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					} else {
 						$empty_field_class = '';
 					}
-					$output .= '<div class="um-field' . $classes . '"' . $conditional . ' data-key="' . esc_attr( $key ) . '">';
+					$output .= '<div class="um-field' . $classes . ' ' . $empty_field_class . '"' . $conditional . ' data-key="' . esc_attr( $key ) . '">';
 
 					if ( isset( $data['label'] ) || ! empty( $data['icon'] ) ) {
 
@@ -3903,8 +3903,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '<div class="um-field-area">';
 
-					if( isset($data['um_new_cond_field']) && $data['um_new_cond_field'] == '1' ){
-						$output .= '<div class="um-field-value um-field-value-'.$type.'" data-type="'.$type.'">' . $res . '</div>';
+					if ( isset( $data['um_new_cond_field'] ) && $data['um_new_cond_field'] == '1' ){
+						$output .= '<div class="um-field-value um-field-value-' . $type . '" data-type="' . $type . '">' . $res . '</div>';
 					} else {
 						$output .= '<div class="um-field-value">' . $res . '</div>';
 					}

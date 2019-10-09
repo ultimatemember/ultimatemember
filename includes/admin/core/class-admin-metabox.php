@@ -1343,7 +1343,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_conditional_compare4': ?>
 
 				<p>
-					<input type="hidden" name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" value="<?php echo isset( $this->edit_mode_value ) ? $this->edit_mode_value : ''; ?>" <?php echo $field_args_html ?> />
+					<input type="hidden" name="<?php echo esc_attr( $attribute ); ?>" id="<?php echo esc_attr( $attribute ); ?>" value="<?php echo isset( $this->edit_mode_value ) ? esc_attr( $this->edit_mode_value ) : ''; ?>" <?php echo $field_args_html ?> />
 				</p>
 
 				<?php break;
@@ -1355,7 +1355,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				case '_conditional_group4': ?>
 
 				<p>
-					<input type="hidden" name="<?php echo $attribute; ?>" id="<?php echo $attribute; ?>" value="<?php echo isset( $this->edit_mode_value ) ? $this->edit_mode_value : '0'; ?>" <?php echo $field_args_html ?> />
+					<input type="hidden" name="<?php echo esc_attr( $attribute ); ?>" id="<?php echo esc_attr( $attribute ); ?>" value="<?php echo isset( $this->edit_mode_value ) ? esc_attr( $this->edit_mode_value ) : '0'; ?>" <?php echo $field_args_html ?> />
 				</p>
 
 				<?php break;

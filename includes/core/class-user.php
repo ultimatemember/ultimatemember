@@ -1044,11 +1044,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 */
 			do_action( 'um_before_save_registration_details', $this->id, $submitted );
 
-			$new_cond = get_post_meta($args['form_id'], '_um_has_new_cond', true);
-			if( isset($new_cond) && $new_cond == '1' ) {
+			$new_cond = get_post_meta( $args['form_id'], '_um_has_new_cond', true );
+			if ( isset( $new_cond ) && $new_cond == '1' ) {
 				$hide_array = um_field_conditions_are_met( $args );
 				foreach ( $hide_array as $hide ){
-					unset($submitted[$hide]);
+					unset( $submitted[$hide] );
 				}
 			}
 

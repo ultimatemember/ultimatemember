@@ -132,7 +132,7 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 								$array = unserialize( $value );
 								update_post_meta( $form_id, $key, $array );
 							} else {
-								update_post_meta($form_id, $key, $value);
+								update_post_meta( $form_id, $key, $value );
 							}
 						}
 

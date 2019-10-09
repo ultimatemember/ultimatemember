@@ -24,7 +24,7 @@ function um_add_form_identifier( $args ) {
 		$cond_data = json_encode( $conditional_array );
 	}
 	?>
-		<input type="hidden" name="form_id" id="form_id_<?php echo esc_attr( $args['form_id'] ); ?>" value="<?php echo esc_attr( $args['form_id'] ); ?>" class="condition-data <?php echo esc_attr( $form_cond_class ); ?>" data-conds="<?php echo esc_attr($cond_data); ?>" />
+		<input type="hidden" name="form_id" id="form_id_<?php echo esc_attr( $args['form_id'] ); ?>" value="<?php echo esc_attr( $args['form_id'] ); ?>" class="condition-data <?php echo esc_attr( $form_cond_class ); ?>" data-conds="<?php echo esc_attr( $cond_data ); ?>" />
 	<?php
 }
 add_action( 'um_after_form_fields', 'um_add_form_identifier' );

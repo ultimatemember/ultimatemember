@@ -1,6 +1,5 @@
 // NEW CONDITION LOGIC
 function condition_fields( all_conds, form_id ) {
-console.log(all_conds)
 	jQuery.each( all_conds, function( metakey ) {
 		var greater, less;
 		var first_group = 0,
@@ -382,6 +381,7 @@ console.log(all_conds)
 							break;
 
 						case 'contains':
+
 							if ( depend_arr && depend_arr.length > 0 ) {
 								jQuery.each(depend_arr, function () {
 									if ( this && this.search(val) >= 0 ) {

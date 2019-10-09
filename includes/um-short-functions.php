@@ -307,8 +307,6 @@ function um_user_ip() {
  */
 function um_field_conditions_are_met_old( $data ) {
 
-
-
 	if ( ! isset( $data['conditions'] ) ) return true;
 
 	$state = ( $data['conditional_action'] == 'show' ) ? 1 : 0;
@@ -356,7 +354,7 @@ function um_field_conditions_are_met_old( $data ) {
 						break;
 					case 'empty':
 
-						$state = ( !$field ) ? 'show' : 'hide';
+						$state = ( ! $field ) ? 'show' : 'hide';
 
 						break;
 					case 'not empty':
@@ -365,7 +363,7 @@ function um_field_conditions_are_met_old( $data ) {
 
 						break;
 					case 'greater than':
-						if ($field > $val) {
+						if ( $field > $val ) {
 							$state = 'show';
 						} else {
 							$state = 'hide';
@@ -601,8 +599,8 @@ function um_field_conditions_are_met_old( $data ) {
 function um_field_conditions_are_met( $args ) {
 
 	$arrays = unserialize( $args['custom_fields'] );
-	$form_id = $_POST['form_id'];
-	if( ! isset( $hide_array ) ){
+	$form_id = sanitize_key( $_POST['form_id'] );
+	if ( ! isset( $hide_array ) ){
 		$hide_array = array();
 	}
 
@@ -612,7 +610,7 @@ function um_field_conditions_are_met( $args ) {
 
 	foreach ( $arrays as $array ) {
 		if ( isset( $array['conditions'] ) ) {
-			if( isset( $array['conditional_action'] ) && $array['conditional_action'] == 'show' ){
+			if ( isset( $array['conditional_action'] ) && $array['conditional_action'] == 'show' ){
 				$state = 'show';
 			} else {
 				$state = 'hide';
@@ -623,17 +621,17 @@ function um_field_conditions_are_met( $args ) {
 				$val = $arr[3];
 				$op = $arr[2];
 
-				if( isset( $_POST[$field_name] ) ){
+				if ( isset( $_POST[$field_name] ) ){
 					$field = $_POST[$field_name];
 				} else {
 					$field = $_POST[$arr[1]];
 				}
-				if( ! $field ){
+				if ( ! $field ){
 					$state = 'show';
 					return $state;
 				}
 
-				if( $arr[5] != $first_group ){
+				if ( $arr[5] != $first_group ){
 
 
 					if ( $arr[0] == 'show' ) {
@@ -649,6 +647,7 @@ function um_field_conditions_are_met( $args ) {
 									$state = ( $field == $val ) ? 'show' : 'hide';
 
 								break;
+
 							case 'not equals':
 
 								$field = maybe_unserialize( $field );
@@ -659,6 +658,7 @@ function um_field_conditions_are_met( $args ) {
 									$state = ( $field != $val ) ? 'show' : 'hide';
 
 								break;
+
 							case 'empty':
 
 								if ( ! isset( $field ) ){
@@ -669,6 +669,7 @@ function um_field_conditions_are_met( $args ) {
 
 
 								break;
+
 							case 'not empty':
 
 								if ( ! isset( $field ) ){
@@ -678,7 +679,9 @@ function um_field_conditions_are_met( $args ) {
 								}
 
 								break;
+
 							case 'greater than':
+
 								if ( $field > $val ) {
 									$state = 'show';
 								} else {
@@ -686,20 +689,26 @@ function um_field_conditions_are_met( $args ) {
 								}
 
 								break;
+
 							case 'less than':
+
 								if ( $field < $val ) {
 									$state = 'show';
 								} else {
 									$state = 'hide';
 								}
 								break;
+
 							case 'contains':
+
 								if ( strstr( $field, $val ) ) {
 									$state = 'show';
 								} else {
 									$state = 'hide';
 								}
+
 								break;
+
 						}
 					} else if ( $arr[0] == 'hide' ) {
 
@@ -714,6 +723,7 @@ function um_field_conditions_are_met( $args ) {
 									$state = ( $field == $val ) ? 'hide' : 'show';
 
 								break;
+
 							case 'not equals':
 
 								$field = maybe_unserialize( $field );
@@ -724,6 +734,7 @@ function um_field_conditions_are_met( $args ) {
 									$state = ( $field != $val ) ? 'hide' : 'show';
 
 								break;
+
 							case 'empty':
 
 								if ( ! isset( $field ) ){
@@ -733,6 +744,7 @@ function um_field_conditions_are_met( $args ) {
 								}
 
 								break;
+
 							case 'not empty':
 
 								if ( ! isset( $field ) ){
@@ -742,27 +754,37 @@ function um_field_conditions_are_met( $args ) {
 								}
 
 								break;
+
 							case 'greater than':
+
 								if ( $field <= $val ) {
 									$state = 'hide';
 								} else {
 									$state = 'show';
 								}
+
 								break;
+
 							case 'less than':
+
 								if ( $field >= $val ) {
 									$state = 'hide';
 								} else {
 									$state = 'show';
 								}
+
 								break;
+
 							case 'contains':
+
 								if ( strstr( $field, $val ) ) {
 									$state = 'hide';
 								} else {
 									$state = 'show';
 								}
+
 								break;
+
 						}
 					}
 					$first_group++;
@@ -782,6 +804,7 @@ function um_field_conditions_are_met( $args ) {
 									$state = ( $field == $val ) ? 'show' : 'hide';
 
 								break;
+
 							case 'not equals':
 
 								$field = maybe_unserialize( $field );
@@ -792,6 +815,7 @@ function um_field_conditions_are_met( $args ) {
 									$state = ( $field != $val ) ? 'show' : 'hide';
 
 								break;
+
 							case 'empty':
 
 								if ( ! isset( $field ) ){
@@ -801,6 +825,7 @@ function um_field_conditions_are_met( $args ) {
 								}
 
 								break;
+
 							case 'not empty':
 
 								if ( ! isset( $field ) ){
@@ -810,7 +835,9 @@ function um_field_conditions_are_met( $args ) {
 								}
 
 								break;
+
 							case 'greater than':
+
 								if ( $field > $val ) {
 									$state = 'show';
 								} else {
@@ -818,14 +845,19 @@ function um_field_conditions_are_met( $args ) {
 								}
 
 								break;
+
 							case 'less than':
+
 								if ( $field < $val ) {
 									$state = 'show';
 								} else {
 									$state = 'hide';
 								}
+
 								break;
+
 							case 'contains':
+
 								if ( strstr( $field, $val ) ) {
 									$state = 'show';
 								} else {
@@ -846,6 +878,7 @@ function um_field_conditions_are_met( $args ) {
 									$state = ( $field == $val ) ? 'hide' : 'show';
 
 								break;
+
 							case 'not equals':
 
 								$field = maybe_unserialize( $field );
@@ -856,6 +889,7 @@ function um_field_conditions_are_met( $args ) {
 									$state = ( $field != $val ) ? 'hide' : 'show';
 
 								break;
+
 							case 'empty':
 
 								if ( ! isset( $field ) ){
@@ -865,6 +899,7 @@ function um_field_conditions_are_met( $args ) {
 								}
 
 								break;
+
 							case 'not empty':
 
 								if ( ! isset( $field ) ){
@@ -874,27 +909,37 @@ function um_field_conditions_are_met( $args ) {
 								}
 
 								break;
+
 							case 'greater than':
+
 								if ( $field <= $val ) {
 									$state = 'hide';
 								} else {
 									$state = 'show';
 								}
+
 								break;
+
 							case 'less than':
+
 								if ( $field >= $val ) {
 									$state = 'hide';
 								} else {
 									$state = 'show';
 								}
+
 								break;
+
 							case 'contains':
+
 								if ( strstr( $field, $val ) ) {
 									$state = 'hide';
 								} else {
 									$state = 'show';
 								}
+
 								break;
+
 						}
 					}
 
@@ -918,7 +963,6 @@ function um_field_conditions_are_met( $args ) {
 			$result = array_unique( $state_array );
 			if( ! in_array( "show", $result ) ){
 				array_push( $hide_array, $field_check );
-
 			}
 
 		}
