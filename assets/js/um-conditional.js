@@ -5,8 +5,8 @@ console.log(all_conds)
 		var greater, less;
 		var first_group = 0,
 			state_array = [],
-			state = 'show';
-		var less_greater = [];
+			state = 'show',
+			less_greater = [];
 
 		jQuery.each( all_conds[ metakey ], function() {
 
@@ -27,6 +27,7 @@ console.log(all_conds)
 			if ( input.length > 0 && select.length === 0 ) {
 
 				if ( input.is(':checkbox') ) {
+
 					var checked = jQuery('.um.um-' + form_id + ' .um-field[data-key="' + field + '"] input:checked');
 					checked.each(function () {
 						var checked_vals = jQuery(this).val();
@@ -34,8 +35,11 @@ console.log(all_conds)
 					});
 
 				} else if ( input.is(':radio') ) {
+
 					depend_field = jQuery('.um.um-' + form_id + ' .um-field[data-key="' + field + '"] input:checked').val();
+
 				} else if ( input.is(':hidden') ) {
+
 					depend_field = jQuery('.um.um-' + form_id + ' .um-field[data-key="' + field + '"] input').val();
 					if ( depend_field === 'empty_file' ) {
 						depend_field = '';
@@ -44,6 +48,7 @@ console.log(all_conds)
 				} else {
 
 					depend_field = input.val();
+
 				}
 
 			} else if ( select.length > 0 ) {
@@ -75,7 +80,6 @@ console.log(all_conds)
 				} else {
 					depend_field = output_field.text();
 				}
-
 
 			}
 			if( !depend_field ){
