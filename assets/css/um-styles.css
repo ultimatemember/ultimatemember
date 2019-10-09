@@ -464,10 +464,10 @@ p.um-notice.warning {
 	position: relative;
 }
 
-.um-field-checkbox,
-.um-field-radio {
+.um-field-checkbox:not(.um-field),
+.um-field-radio:not(.um-field) {
 	display: block;
-	margin: 0px;
+	margin: 8px 0;
 	position: relative;
 }
 
