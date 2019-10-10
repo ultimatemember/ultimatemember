@@ -152,6 +152,7 @@ div.uimob340 .um-profile-photo {
 	position: absolute;
 	top: -40px;
 	left: 0;
+	margin: 0;
 }
 
 div.uimob340 .um-header.no-cover .um-profile-photo {
@@ -353,6 +354,8 @@ div.uimob500 .um-profile-photo {
 	position: absolute;
 	top: -40px;
 	left: 0;
+	height: 80px !important;
+	margin: 0;
 }
 
 div.uimob500 .um-header.no-cover .um-profile-photo {
@@ -534,7 +537,8 @@ div.uimob800 .um-account-meta img {
 }
 
 div.uimob800 .um-profile-photo {
-	width: 200px !important;
+	width: 150px !important;
+	height: 80px !important;
 }
 
 div.uimob800 .um-profile-photo a.um-profile-photo-img {
@@ -566,6 +570,7 @@ div.uimob800 .um-cover-overlay
 
 div.uimob960 .um-profile-photo {
 	width: 200px !important;
+	height: 80px !important;
 }
 
 div.uimob960 .um-profile-photo a.um-profile-photo-img {

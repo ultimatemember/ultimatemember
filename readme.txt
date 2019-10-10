@@ -151,6 +151,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Added AJAXed member directories
   - Updated member directories' search engine
   - Additional parameter 'user_id' to action hook 'um_user_after_updating_profile'
+  - Added ability to set profile/cover image sizes from Ultimate Member -> General -> Uploads settings or Original size
 
 * Bugfixes:
   - Optimized usermeta for Account submit security
@@ -159,6 +160,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed country fields values
   - Fixed dynamic_profile.php notice
   - Fixed integration with WP native admin_post and admin_post_nopriv requests
+  - Fixed profile image settings
 
 = 2.0.56: August 21, 2019 =
 

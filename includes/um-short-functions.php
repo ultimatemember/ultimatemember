@@ -1252,7 +1252,7 @@ function um_styling_defaults( $mode ) {
 function um_get_metadefault( $id ) {
 	$core_form_meta_all = UM()->config()->core_form_meta_all;
 
-	return isset( $core_form_meta_all['_um_' . $id] ) ? $core_form_meta_all['_um_' . $id] : '';
+	return isset( $core_form_meta_all[ '_um_' . $id ] ) ? $core_form_meta_all[ '_um_' . $id ] : '';
 }
 
 
@@ -1998,10 +1998,10 @@ function um_get_user_avatar_data( $user_id = '', $size = '96' ) {
 	}
 
 	$data = array(
-		'user_id' => $user_id,
-		'default' => um_get_default_avatar_uri(),
-		'class' => 'gravatar avatar avatar-' . $size . ' um-avatar',
-		'size' => $size
+		'user_id'   => $user_id,
+		'default'   => um_get_default_avatar_uri(),
+		'class'     => 'gravatar avatar avatar-' . $size . ' um-avatar',
+		'size'      => $size
 	);
 
 	if ( $profile_photo = um_profile( 'profile_photo' ) ) {

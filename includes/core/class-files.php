@@ -1442,5 +1442,32 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		}
 
 
+		/**
+		 * Get the list of profile/cover sizes
+		 *
+		 * @param string $type
+		 *
+		 * @return array
+		 */
+		function get_profile_photo_size( $type ) {
+			$sizes = UM()->options()->get( $type );
+
+			$sizes = array_combine( $sizes, $sizes );
+
+			if ( $type == 'cover_thumb_sizes' ) {
+				foreach ( $sizes as $key => $value ) {
+					$sizes[ $key ] = $value . 'px';
+				}
+			} elseif ( $type == 'photo_thumb_sizes' ) {
+				foreach ( $sizes as $key => $value ) {
+					$sizes[ $key ] = $value . 'x' . $value . 'px';
+				}
+			}
+
+			$sizes['original'] = __( 'Original size', 'ultimate-member' );
+			return $sizes;
+		}
+
+
 	}
 }
