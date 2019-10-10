@@ -602,15 +602,29 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 						return false;
 					} else {
 
-						//set default redirect if Profile page is restricted for not-logged in users
-						if ( ! is_user_logged_in() && um_is_core_post( $post, 'user' ) && $restriction['_um_accessible'] == '2' ) {
+						// set default redirect if Profile page is restricted for not-logged in users and showing message instead of redirect
+						// this snippet was added to make the same action for {site_url}/user and {site_url}/user/{user_slug} URLs
+						// by default {site_url}/user is redirected to Homepage in rewrite rules because hasn't found username in query when user is not logged in
+						if ( ! is_user_logged_in() && um_is_core_post( $post, 'user' ) && $restriction['_um_accessible'] == '2' && $restriction['_um_noaccess_action'] == '0' ) {
 							if ( isset( $restriction['_um_access_roles'] ) ) {
-								$restriction = array( '_um_accessible' => '2', '_um_access_roles' => $restriction['_um_access_roles'], '_um_noaccess_action' => '1', '_um_access_redirect' => '1', '_um_access_redirect_url' => get_home_url( get_current_blog_id() ) );
+								$restriction = array(
+									'_um_accessible'            => '2',
+									'_um_access_roles'          => $restriction['_um_access_roles'],
+									'_um_noaccess_action'       => '1',
+									'_um_access_redirect'       => '1',
+									'_um_access_redirect_url'   => get_home_url( get_current_blog_id() )
+								);
 							} else {
-								$restriction = array( '_um_accessible' => '2', '_um_noaccess_action' => '1', '_um_access_redirect' => '1', '_um_access_redirect_url' => get_home_url( get_current_blog_id() ) );
+								$restriction = array(
+									'_um_accessible'            => '2',
+									'_um_noaccess_action'       => '1',
+									'_um_access_redirect'       => '1',
+									'_um_access_redirect_url'   => get_home_url( get_current_blog_id() )
+								);
 							}
 						}
 
+						$restriction = apply_filters( 'um_post_content_restriction_settings', $restriction, $post );
 						return $restriction;
 					}
 				}

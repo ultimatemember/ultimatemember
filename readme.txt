@@ -161,6 +161,8 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed dynamic_profile.php notice
   - Fixed integration with WP native admin_post and admin_post_nopriv requests
   - Fixed profile image settings
+  - Fixed profile privacy for not logged in users, if restriction options set for profile page as visible only for logged in and showing message instead of redirect
+    (it makes the same for {site_url}/user and {site_url}/user/{user_slug} )
 
 = 2.0.56: August 21, 2019 =
 
