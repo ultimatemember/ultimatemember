@@ -152,6 +152,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Updated member directories' search engine
   - Additional parameter 'user_id' to action hook 'um_user_after_updating_profile'
   - Added ability to set profile/cover image sizes from Ultimate Member -> General -> Uploads settings or Original size
+  - Added ability edit cover photo HTML (e.g. for adding some HTML attributes. See how add srcset attribute based on all generated cover sizes [here](https://docs.ultimatemember.com/article/1519-change-cover-photo-html))
 
 * Bugfixes:
   - Optimized usermeta for Account submit security

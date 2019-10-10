@@ -2456,15 +2456,18 @@ function um_user( $data, $attrs = null ) {
 
 			$alt = um_profile( 'nickname' );
 
-			return $cover_uri ? '<img src="' . esc_attr( $cover_uri ) . '" alt="' . esc_attr( $alt ) . '" />' : '';
+			$cover_html = $cover_uri ? '<img src="' . esc_attr( $cover_uri ) . '" alt="' . esc_attr( $alt ) . '" />' : '';
+
+			$cover_html = apply_filters( 'um_user_cover_photo_html__filter', $cover_html, $cover_uri, $alt, $is_default, $attrs );
+			return $cover_html;
+
 			break;
 
+		case 'user_url':
 
-			case 'user_url':
+			$value = um_profile( $data );
 
-				$value = um_profile( $data );
-
-				return $value;
+			return $value;
 
 			break;
 
