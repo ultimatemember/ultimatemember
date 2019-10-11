@@ -4,6 +4,7 @@ Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember, champsupertramp, nsinelnikov
 Donate link: 
 Tags: community, member, membership, user-profile, user-registration
+Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 5.2
 Stable tag: 2.1.0
