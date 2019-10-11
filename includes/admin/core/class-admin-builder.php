@@ -150,13 +150,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 * @return mixed
 		 */
 		function um_admin_pre_save_field_to_form( $array ){
-			unset( $array['conditions'] );
+
+			if ( isset( $array['conditions'] ) ) {
+				unset( $array['conditions'] );
+			}
 
 			for ( $i = 0; $i < 5; $i++ ) {
 				$index = $i > 0 ? $i : '';
 				if ( isset( $array[ 'conditional_field' . $index ] ) && ! empty( $array[ 'conditional_operator' . $index ] ) ) {
 					$array[ 'conditional_value' . $index ] = isset( $array[ 'conditional_value' . $index ] ) ? $array['conditional_value' . $index ] : '';
-					$array[ 'conditional_group' . $index ] = isset( $array[ 'conditional_group' . $index ] ) ? $array['conditional_group' . $index ] : 0;
 					$array[ 'conditional_compare' . $index ] = isset( $array[ 'conditional_compare' . $index ] ) ? $array['conditional_compare' . $index ] : 'and';
 
 					$array['conditions'][] = array(
@@ -170,7 +172,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 				}
 			}
-
 
 			return $array;
 		}

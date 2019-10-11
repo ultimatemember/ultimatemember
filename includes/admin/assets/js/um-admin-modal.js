@@ -292,7 +292,7 @@ jQuery(document).ready(function() {
 		clone a condition
 	**/
 	jQuery(document.body).on('click', '.um-admin-new-condition', function() {
-
+		var form = $(this).closest('form');
 		if ( jQuery(this).hasClass('disabled') )
 			return false;
 

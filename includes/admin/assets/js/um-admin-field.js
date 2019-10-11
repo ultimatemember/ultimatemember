@@ -37,31 +37,22 @@ jQuery(document).ready(function() {
 	jQuery(document.body).on('submit', 'form.um_add_field', function(e){
 
 		e.preventDefault();
-        var conditions = jQuery('.um-admin-cur-condition');
         //need fields refactor
-        jQuery(conditions).each( function ( i ) {
+		jQuery('.um-admin-cur-condition').each( function() {
+			if ( jQuery( this ).find('[id^="_conditional_action"]').val() === '' ||
+				jQuery( this ).find('[id^="_conditional_field"]').val() === '' ||
+				jQuery( this ).find('[id^="_conditional_operator"]').val() === '' ) {
 
-            if ( jQuery( this ).find('[id^="_conditional_action"]').val() === '' ||
-                jQuery( this ).find('[id^="_conditional_field"]').val() === '' ||
-                jQuery( this ).find('[id^="_conditional_operator"]').val() ==='' )
-            {
-                jQuery(conditions[i]).find('.um-admin-remove-condition').click();
-            }
-        } );
-        conditions = jQuery('.um-admin-cur-condition');
-        jQuery(conditions).each( function ( i ) {
-            var id = i === 0 ? '' : i;
+				if ( jQuery('.um-admin-cur-condition').length !== 1 ) {
+					jQuery( this ).find('.um-admin-remove-condition').trigger('click');
+				}
+			}
+		} );
 
-			jQuery( this ).find('[id^="_conditional_action"]').attr('name', '_conditional_action' + id);
-			jQuery( this ).find('[id^="_conditional_action"]').attr('id', '_conditional_action' + id);
-			jQuery( this ).find('[id^="_conditional_field"]').attr('name', '_conditional_field' + id);
-			jQuery( this ).find('[id^="_conditional_field"]').attr('id', '_conditional_field' + id);
-			jQuery( this ).find('[id^="_conditional_operator"]').attr('name', '_conditional_operator' + id);
-			jQuery( this ).find('[id^="_conditional_operator"]').attr('id', '_conditional_operator' + id);
-			jQuery( this ).find('[id^="_conditional_value"]').attr('name', '_conditional_value' + id);
-			jQuery( this ).find('[id^="_conditional_value"]').attr('id', '_conditional_value' + id);
+		//need fields refactor
+		var form = $(this).closest('form');
+		um_build_conditions(form);
 
-        } );
 		var form = jQuery(this);
 
 		jQuery.ajax({
