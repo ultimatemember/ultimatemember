@@ -450,6 +450,8 @@ body #content .um-directory a {
           background-color: #eee;
           box-sizing: border-box;
           position: relative; }
+          .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-cover[data-ratio] {
+            overflow-y: hidden; }
           .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-cover .um-member-cover-e {
             text-align: center;
             box-sizing: border-box; }

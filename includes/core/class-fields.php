@@ -2568,7 +2568,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$set_mode = '';
 					}
 					$output .= '<div class="um-single-file-preview">
-                                        <a href="#" class="cancel"><i class="um-icon-close"></i></a>
+                                        <a href="javascript:void(0);" class="cancel"><i class="um-icon-close"></i></a>
                                         <div class="um-single-fileinfo">
                                             <a href="" target="_blank">
                                                 <span class="icon"><i></i></span>

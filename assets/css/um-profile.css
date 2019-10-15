@@ -206,6 +206,7 @@
 	border: 5px solid #fff;
 	border-bottom: 5px solid #fff !important;/* rewrite ".um-header a" style */
 	overflow: hidden;
+	left: 0;
 }
 
 .um-profile-photo a.um-profile-photo-img img {

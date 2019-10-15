@@ -1428,7 +1428,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 *
 		 * @return string
 		 */
-		function format_bytes( $size , $precision = 1 ) {
+		function format_bytes( $size, $precision = 1 ) {
 			if ( is_numeric( $size ) ) {
 				$base = log( $size, 1024 );
 				$suffixes = array( '', 'kb', 'MB', 'GB', 'TB' );
