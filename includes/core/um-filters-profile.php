@@ -74,15 +74,17 @@ add_filter( 'the_title', 'um_dynamic_user_profile_title', 100000, 2 );
  */
 function um_change_profile_cover_photo_label( $args ){
 	$max_size =  UM()->files()->format_bytes( $args['cover_photo']['max_size'] );
-	list( $file_size, $unit ) = explode(' ', $max_size );
+	if( ! empty( $max_size ) ){
+		list( $file_size, $unit ) = explode(' ', $max_size );
 
-	if( $file_size >= 999999999  ){
+		if( $file_size >= 999999999  ){
 
 		}else{
 			$args['cover_photo']['upload_text'] .= '<small class=\'um-max-filesize\'>( '.__('max','ultimate-member').': <span>'.$file_size.$unit.'</span> )</small>';
 		}
-		return $args;
 	}
+	return $args;
+}
 add_filter( 'um_predefined_fields_hook', 'um_change_profile_cover_photo_label', 10, 1 );
 
 
@@ -95,10 +97,12 @@ add_filter( 'um_predefined_fields_hook', 'um_change_profile_cover_photo_label', 
  */
 function um_change_profile_photo_label( $args ) {
 	$max_size =  UM()->files()->format_bytes( $args['profile_photo']['max_size'] );
-	list( $file_size, $unit ) = explode(' ', $max_size );
+	if( ! empty( $max_size ) ){
+		list( $file_size, $unit ) = explode(' ', $max_size );
 
-	if ( $file_size < 999999999 ) {
-		$args['profile_photo']['upload_text'] .= '<small class=\'um-max-filesize\'>( '.__('max','ultimate-member').': <span>'.$file_size.$unit.'</span> )</small>';
+		if ( $file_size < 999999999 ) {
+			$args['profile_photo']['upload_text'] .= '<small class=\'um-max-filesize\'>( '.__('max','ultimate-member').': <span>'.$file_size.$unit.'</span> )</small>';
+		}
 	}
 	return $args;
 }
