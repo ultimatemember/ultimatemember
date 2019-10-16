@@ -93,19 +93,11 @@ global $post_id; ?>
 				'add_text'              => __( 'Add New Custom Field', 'ultimate-member' ),
 				'show_default_number'   => 1,
 			),
-//			array(
-//				'id'            => '_um_search_filters',
-//				'type'          => 'text',
-//				'label'         => __( 'Default filters', 'ultimate-member' ),
-//				'tooltip'       => __( 'You can set default filters like URL parameters', 'ultimate-member' ),
-//				'value'         => UM()->query()->get_meta_value('_um_search_filters', null, 'na' ),
-//				'placeholder'   => 'field1=val1&field2=val2'
-//			),
 			array(
 				'id'                    => '_um_search_filters',
 				'type'                  => 'md_default_filters',
-				'label'                 => __( 'Default filters', 'ultimate-member' ),
-				'tooltip'               => __( 'You can set default filters', 'ultimate-member' ),
+				'label'                 => __( 'Admin filtering', 'ultimate-member' ),
+				'tooltip'               => __( 'Limit which users appear in the member directory e.g only display users from USA', 'ultimate-member' ),
 				'value'                 => $_um_search_filters,
 				'options'               => UM()->member_directory()->filter_fields,
 				'add_text'              => __( 'Add New Filter', 'ultimate-member' ),

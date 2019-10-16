@@ -177,6 +177,10 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_style( 'um_ui', $this->css_baseurl . 'jquery-ui.css', array(), ultimatemember_version );
 
 			wp_register_style( 'um_members', $this->css_baseurl . 'um-members.css', array( 'um_ui' ), ultimatemember_version );
+			if ( is_rtl() ) {
+				wp_register_style( 'um_members_rtl', $this->css_baseurl . 'um-members-rtl.css', array( 'um_members' ), ultimatemember_version );
+			}
+
 			wp_register_style( 'um_profile', $this->css_baseurl . 'um-profile.css', array(), ultimatemember_version );
 			wp_register_style( 'um_account', $this->css_baseurl . 'um-account.css', array(), ultimatemember_version );
 			wp_register_style( 'um_misc', $this->css_baseurl . 'um-misc.css', array(), ultimatemember_version );
@@ -276,7 +280,12 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 		 */
 		function load_css() {
 			wp_enqueue_style( 'um_styles' );
-			wp_enqueue_style( 'um_members' );
+			if ( is_rtl() ) {
+				wp_enqueue_style( 'um_members_rtl' );
+			} else {
+				wp_enqueue_style( 'um_members' );
+			}
+
 			wp_enqueue_style( 'um_profile' );
 			wp_enqueue_style( 'um_account' );
 			wp_enqueue_style( 'um_misc' );
@@ -325,7 +334,11 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 		function load_customjs() {
 			wp_enqueue_script('um_conditional');
 			wp_enqueue_script('um_scripts');
-			wp_enqueue_script('um_members');
+			if ( is_rtl() ) {
+				wp_enqueue_style( 'um_members_rtl' );
+			} else {
+				wp_enqueue_style( 'um_members' );
+			}
 			wp_enqueue_script('um_profile');
 			wp_enqueue_script('um_account');
 		}

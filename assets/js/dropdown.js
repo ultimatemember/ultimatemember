@@ -51,8 +51,7 @@ function um_init_new_dropdown() {
 
 				jQuery( document.body ).bind( 'click', function( event ) {
 					if ( jQuery('.um-new-dropdown').find( '.' + jQuery( event.target ).attr('class').replace( ' ', '.' ) ).length === 0 &&
-						'.' + jQuery(event.target).parent().attr('class') !== element ) {
-
+						( '.' + jQuery(event.target).parent().attr('class') ) !== element ) {
 						//event = ev;
 						jQuery('.um-new-dropdown').hide();
 						jQuery('.um-new-dropdown').parent().data( 'um-new-dropdown-show', false );

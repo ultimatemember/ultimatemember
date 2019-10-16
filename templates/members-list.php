@@ -84,7 +84,7 @@
 
 												<# if ( typeof user.<?php echo $key; ?> !== 'undefined' ) { #>
 												<div class="um-member-metaline um-member-metaline-<?php echo $key; ?>">
-													<strong>{{{user.label_<?php echo $key;?>}}}:</strong> {{{user.<?php echo $key;?>}}}
+													<strong>{{{user.label_<?php echo $key;?>}}}:</strong>&nbsp;{{{user.<?php echo $key;?>}}}
 												</div>
 												<# } #>
 

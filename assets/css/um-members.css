@@ -206,8 +206,15 @@ body #content .um-directory a {
           flex-wrap: nowrap;
           flex: 5; }
           .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-sorting .um-member-directory-sorting-a {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: baseline;
+            flex-wrap: nowrap;
             position: relative;
             cursor: pointer; }
+            .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-sorting .um-member-directory-sorting-a a {
+              margin: 0 5px 0 0; }
             .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-sorting .um-member-directory-sorting-a i.um-faicon-caret-down {
               display: inline; }
             .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-sorting .um-member-directory-sorting-a i.um-faicon-caret-up {
@@ -223,10 +230,22 @@ body #content .um-directory a {
               .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-sorting .um-member-directory-sorting-a .um-new-dropdown li a[data-selected="1"] {
                 display: none; }
         .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-filters {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+          align-items: baseline;
+          flex-wrap: nowrap;
           flex: 2;
           text-align: right; }
           .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-filters .um-member-directory-filters-a {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: baseline;
+            flex-wrap: nowrap;
             cursor: pointer; }
+            .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-filters .um-member-directory-filters-a a {
+              margin: 0 5px 0 0; }
             .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-filters .um-member-directory-filters-a i.um-faicon-caret-down {
               display: inline; }
             .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line .um-member-directory-filters .um-member-directory-filters-a i.um-faicon-caret-up {
@@ -274,6 +293,11 @@ body #content .um-directory a {
                 box-sizing: border-box;
                 margin: 4px 8px 0 8px; }
             .um-directory .um-member-directory-header .um-member-directory-header-row .um-search .um-search-filter.um-slider-filter-type .um-slider-range {
+              display: flex;
+              flex-direction: row;
+              justify-content: flex-start;
+              align-items: baseline;
+              flex-wrap: nowrap;
               margin: 6px 0 0 8px;
               font-size: 0.8em; }
           .um-directory .um-member-directory-header .um-member-directory-header-row .um-search .um-search-filter.um-datepicker-filter-type, .um-directory .um-member-directory-header .um-member-directory-header-row .um-search .um-search-filter.um-timepicker-filter-type {
@@ -509,6 +533,9 @@ body #content .um-directory a {
               padding: 12px 0 0 0;
               line-height: 16px;
               vertical-align: middle; }
+              .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-member-meta-main .um-member-meta .um-member-metaline strong {
+                display: block;
+                clear: both; }
               .um-directory .um-members-wrapper .um-members.um-members-grid .um-member .um-member-card .um-member-meta-main .um-member-meta .um-member-metaline span {
                 display: block;
                 text-align: center; }
@@ -642,14 +669,19 @@ body #content .um-directory a {
                       color: #444;
                       font-weight: 700; }
                 .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card .um-member-card-content .um-member-tagline {
+                  display: flex;
+                  flex-direction: row;
+                  justify-content: flex-start;
+                  align-items: baseline;
+                  flex-wrap: wrap;
                   width: 100%;
                   font-size: 13px;
-                  line-height: 22px;
                   color: #999;
-                  padding: 0 15px 0 0; }
+                  padding: 0;
+                  box-sizing: border-box; }
                 .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card .um-member-card-content .um-member-meta-main {
                   width: 100%;
-                  padding: 0 10px 0 0;
+                  padding: 0;
                   box-sizing: border-box;
                   display: none; }
                   .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card .um-member-card-content .um-member-meta-main.no-animate {
@@ -659,22 +691,18 @@ body #content .um-directory a {
                     width: 100%;
                     display: block;
                     margin: 10px 0 0 0;
-                    padding: 15px 0;
                     box-sizing: border-box;
                     border: none; }
                     .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card .um-member-card-content .um-member-meta-main .um-member-meta .um-member-metaline {
+                      display: flex;
+                      flex-direction: row;
+                      justify-content: flex-start;
+                      align-items: center;
+                      flex-wrap: wrap;
                       font-size: 13px;
                       padding: 12px 0 0 0;
                       line-height: 16px;
-                      vertical-align: middle;
-                      clear: both;
-                      text-align: left;
                       width: 100%; }
-                      .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card .um-member-card-content .um-member-meta-main .um-member-meta .um-member-metaline span {
-                        text-align: left;
-                        display: block; }
-                        .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card .um-member-card-content .um-member-meta-main .um-member-meta .um-member-metaline span strong, .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card .um-member-card-content .um-member-meta-main .um-member-meta .um-member-metaline span span {
-                          float: left; }
                     .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card .um-member-card-content .um-member-meta-main .um-member-meta .um-member-connect {
                       padding-top: 10px; }
                       .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card .um-member-card-content .um-member-meta-main .um-member-meta .um-member-connect a {
@@ -719,43 +747,6 @@ body #content .um-directory a {
                     text-align: left; }
                 .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card .um-member-card-actions a {
                   box-sizing: border-box; }
-                .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card .um-member-card-actions div[class$="stats"] {
-                  text-align: center; }
-                .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card .um-member-card-actions .um-members-edit-btn {
-                  margin: 2px 0;
-                  height: 40px; }
-                  .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card .um-member-card-actions .um-members-edit-btn a.um-edit-profile-btn {
-                    padding: 10px 15px !important;
-                    transition: none !important;
-                    display: inline-block !important;
-                    margin: 0 auto !important;
-                    min-width: 110px;
-                    width: auto;
-                    text-align: center;
-                    font-size: 13px; }
-                    .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card .um-member-card-actions .um-members-edit-btn a.um-edit-profile-btn:before {
-                      font-family: "FontAwesome";
-                      margin-right: 8px;
-                      width: 14px;
-                      text-align: left;
-                      display: inline-block;
-                      font-size: 16px;
-                      position: relative;
-                      left: 0;
-                      top: 1px;
-                      content: "\f013"; }
-                .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card .um-member-card-actions .um-edit-profile-btn:before {
-                  font-family: "FontAwesome";
-                  margin-right: 8px;
-                  width: 14px;
-                  text-align: left;
-                  display: inline-block;
-                  font-size: 16px;
-                  font-weight: 400;
-                  position: relative;
-                  left: 0;
-                  top: 1px;
-                  content: "\f013"; }
           .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer {
             display: flex;
             flex-direction: row;
@@ -821,11 +812,14 @@ body #content .um-directory a {
     margin: 0 0 10px 0;
     padding: 0; }
     .um-directory .um-members-pagination-box .um-members-pagi {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: baseline;
+      flex-wrap: nowrap;
       width: 100%;
-      float: left;
       margin: 0;
-      text-align: center;
-      padding: 5px 0;
+      padding: 0;
       font-size: 15px; }
       .um-directory .um-members-pagination-box .um-members-pagi .pagi {
         cursor: pointer;
@@ -837,13 +831,15 @@ body #content .um-directory a {
         padding: 0 14px;
         color: #666 !important;
         font-weight: normal; }
-        .um-directory .um-members-pagination-box .um-members-pagi .pagi.pagi-arrow i:before {
-          font-size: 20px;
-          vertical-align: middle !important;
-          height: 34px;
-          line-height: 34px;
-          top: -2px;
-          position: relative; }
+        .um-directory .um-members-pagination-box .um-members-pagi .pagi.pagi-arrow {
+          line-height: 38px; }
+          .um-directory .um-members-pagination-box .um-members-pagi .pagi.pagi-arrow i:before {
+            font-size: 20px;
+            vertical-align: middle !important;
+            height: 34px;
+            line-height: 34px;
+            top: -2px;
+            position: relative; }
         .um-directory .um-members-pagination-box .um-members-pagi .pagi.current {
           cursor: default;
           color: #fff !important; }
@@ -922,6 +918,8 @@ body #content .um-directory a {
           margin: 0 0 5px 0; }
           .um-directory.uimob340 .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-footer-buttons .um-members-list-footer-button-wrapper a.um-button {
             width: 100% !important; }
+  .um-directory.uimob340 .um-members-pagination-box .um-members-pagi {
+    display: none; }
   .um-directory.uimob500 .um-member-directory-header .um-member-directory-header-row .um-member-directory-search-line {
     width: 100%; }
   .um-directory.uimob500 .um-member-directory-header .um-member-directory-header-row.um-member-directory-search-row {
@@ -956,6 +954,8 @@ body #content .um-directory a {
       margin: 0 10px 0 0; }
       .um-directory.uimob500 .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-footer-buttons .um-members-list-footer-button-wrapper {
         margin: 0 10px 5px 0; }
+  .um-directory.uimob500 .um-members-pagination-box .um-members-pagi {
+    display: none; }
   .um-directory.uimob800 .um-member-directory-header .um-member-directory-header-row .um-member-directory-search-line {
     width: 100%; }
   .um-directory.uimob800 .um-member-directory-header .um-search {
