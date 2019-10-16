@@ -227,7 +227,7 @@ p.um-notice.warning {
 	top: -17px;
 	left: 10px;
 	position: absolute;
-	z-index: 900;
+	z-index: 1;
 	color: #C74A4A;
 	font-size: 28px;
 	line-height: 1em !important;
