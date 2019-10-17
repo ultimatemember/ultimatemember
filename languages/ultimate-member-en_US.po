@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-10-17 11:23+0300\n"
-"PO-Revision-Date: 2019-10-17 11:23+0300\n"
+"POT-Creation-Date: 2019-10-17 16:12+0300\n"
+"PO-Revision-Date: 2019-10-17 16:12+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -7822,15 +7822,15 @@ msgstr ""
 msgid "1 comment"
 msgstr ""
 
-#: templates/profile/posts.php:25
+#: templates/profile/posts.php:23
 msgid "load more posts"
 msgstr ""
 
-#: templates/profile/posts.php:37
+#: templates/profile/posts.php:35
 msgid "You have not created any posts."
 msgstr ""
 
-#: templates/profile/posts.php:39
+#: templates/profile/posts.php:37
 msgid "This user has not created any posts."
 msgstr ""
 

@@ -4,8 +4,7 @@ if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 	//Only for AJAX loading posts
 	if ( ! empty( $posts ) ) {
 		foreach ( $posts as $post ) {
-			UM()->shortcodes()->set_args = array( 'post' => $post );
-			UM()->shortcodes()->load_template( 'profile/posts-single' );
+			UM()->get_template( 'profile/posts-single.php', '', array( 'post' => $post ), true );
 		}
 	}
 } else {
@@ -13,8 +12,7 @@ if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		<div class="um-ajax-items">
 
 			<?php foreach ( $posts as $post ) {
-				UM()->shortcodes()->set_args = array( 'post' => $post );
-				UM()->shortcodes()->load_template( 'profile/posts-single' );
+				UM()->get_template( 'profile/posts-single.php', '', array( 'post' => $post ), true );
 			}
 
 			if ( $count_posts > 10 ) { ?>
