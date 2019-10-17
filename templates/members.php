@@ -113,6 +113,8 @@ if ( ! empty( $args['enable_sorting'] ) && ! empty( $sorting_options ) && count(
 	$classes .= ' um-member-with-sorting';
 }
 
+$filters_expanded = ! empty( $args['filters_expanded'] ) ? true : false;
+
 //send $args variable to the templates
 $args['args'] = $args;
 foreach ( $args['view_types'] as $type ) {
@@ -245,7 +247,7 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 
 					if ( $filters && $show_filters && count( $search_filters ) ) { ?>
 						<span class="um-member-directory-filters">
-							<span class="um-member-directory-filters-a">
+							<span class="um-member-directory-filters-a<?php if ( $filters_expanded ) { ?> um-member-directory-filters-visible<?php } ?>">
 								<a href="javascript:void(0);">
 									<?php _e( 'More filters', 'ultimate-member' ); ?>
 								</a>
@@ -282,8 +284,8 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 					<# } #>
 				</script>
 
-				<div class="um-member-directory-header-row um-header-row-invisible">
-					<div class="um-search um-search-<?php echo count( $search_filters ) ?> um-search-invisible">
+				<div class="um-member-directory-header-row<?php if ( ! $filters_expanded ) { ?> um-header-row-invisible<?php } ?>">
+					<div class="um-search um-search-<?php echo count( $search_filters ) ?><?php if ( ! $filters_expanded ) { ?> um-search-invisible<?php } ?>">
 						<?php $i = 0;
 						foreach ( $search_filters as $filter ) {
 							$filter_content = UM()->member_directory()->show_filter( $filter, $args );

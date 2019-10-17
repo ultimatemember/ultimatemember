@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-10-15 23:11+0300\n"
-"PO-Revision-Date: 2019-10-15 23:11+0300\n"
+"POT-Creation-Date: 2019-10-17 11:23+0300\n"
+"PO-Revision-Date: 2019-10-17 11:23+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -1522,7 +1522,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/core/class-admin-metabox.php:2218
-#: includes/class-config.php:134 includes/class-config.php:786
+#: includes/class-config.php:134 includes/class-config.php:787
 msgid "Members"
 msgstr ""
 
@@ -2181,7 +2181,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:479
-#: includes/class-config.php:136 includes/class-config.php:788
+#: includes/class-config.php:136 includes/class-config.php:789
 #: includes/core/class-account.php:97
 msgid "Account"
 msgstr ""
@@ -3660,7 +3660,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/templates/directory/pagination.php:46
-#: includes/class-config.php:177 includes/class-config.php:277
+#: includes/class-config.php:178 includes/class-config.php:278
 msgid "{total_users} Members"
 msgstr ""
 
@@ -3673,7 +3673,7 @@ msgid "Same as above but in case of 1 user found only"
 msgstr ""
 
 #: includes/admin/templates/directory/pagination.php:53
-#: includes/class-config.php:178 includes/class-config.php:278
+#: includes/class-config.php:179 includes/class-config.php:279
 msgid "{total_users} Member"
 msgstr ""
 
@@ -3687,7 +3687,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/templates/directory/pagination.php:60
-#: includes/class-config.php:179
+#: includes/class-config.php:180
 msgid "We are sorry. We cannot find any users who match your search criteria."
 msgstr ""
 
@@ -3773,12 +3773,24 @@ msgstr ""
 msgid "Choose filter(s) meta to enable"
 msgstr ""
 
+#: includes/admin/templates/directory/search.php:99
+msgid "Expand the filter bar by default"
+msgstr ""
+
+#: includes/admin/templates/directory/search.php:100
+msgid ""
+"If turned on, filters bar will be visible after a page loading and can be "
+"collapsed"
+msgstr ""
+
 #: includes/admin/templates/directory/search.php:107
-msgid "Default filters"
+msgid "Admin filtering"
 msgstr ""
 
 #: includes/admin/templates/directory/search.php:108
-msgid "You can set default filters"
+msgid ""
+"Limit which users appear in the member directory e.g only display users from "
+"USA"
 msgstr ""
 
 #: includes/admin/templates/directory/search.php:111
@@ -4173,7 +4185,7 @@ msgstr ""
 #: includes/admin/templates/modal/dynamic_new_field.php:18
 #: includes/admin/templates/modal/dynamic_new_group.php:18
 #: includes/admin/templates/modal/fonticons.php:14
-#: includes/admin/templates/role/publish.php:24 includes/class-config.php:250
+#: includes/admin/templates/role/publish.php:24 includes/class-config.php:251
 #: includes/core/class-fields.php:2487 includes/core/class-fields.php:2584
 #: includes/core/um-actions-profile.php:641
 #: includes/core/um-actions-profile.php:653
@@ -4529,146 +4541,146 @@ msgstr ""
 msgid "Check All"
 msgstr ""
 
-#: includes/class-config.php:131 includes/class-config.php:783
+#: includes/class-config.php:131 includes/class-config.php:784
 msgid "User"
 msgstr ""
 
-#: includes/class-config.php:132 includes/class-config.php:260
-#: includes/class-config.php:268 includes/class-config.php:784
+#: includes/class-config.php:132 includes/class-config.php:261
+#: includes/class-config.php:269 includes/class-config.php:785
 msgid "Login"
 msgstr ""
 
-#: includes/class-config.php:133 includes/class-config.php:258
-#: includes/class-config.php:272 includes/class-config.php:785
+#: includes/class-config.php:133 includes/class-config.php:259
+#: includes/class-config.php:273 includes/class-config.php:786
 msgid "Register"
 msgstr ""
 
-#: includes/class-config.php:135 includes/class-config.php:787
+#: includes/class-config.php:135 includes/class-config.php:788
 #: includes/core/class-member-directory.php:1896
 #: includes/core/um-actions-profile.php:1225
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
 msgstr ""
 
-#: includes/class-config.php:137 includes/class-config.php:789
+#: includes/class-config.php:137 includes/class-config.php:790
 msgid "Password Reset"
 msgstr ""
 
-#: includes/class-config.php:248
+#: includes/class-config.php:249
 msgid "Update Profile"
 msgstr ""
 
-#: includes/class-config.php:337
+#: includes/class-config.php:338
 msgid "Account Welcome Email"
 msgstr ""
 
-#: includes/class-config.php:348
+#: includes/class-config.php:349
 msgid ""
 "Whether to send the user an email when his account is automatically approved"
 msgstr ""
 
-#: includes/class-config.php:354
+#: includes/class-config.php:355
 msgid "Account Activation Email"
 msgstr ""
 
-#: includes/class-config.php:362
+#: includes/class-config.php:363
 msgid ""
 "Whether to send the user an email when his account needs e-mail activation"
 msgstr ""
 
-#: includes/class-config.php:367
+#: includes/class-config.php:368
 msgid "Your account is pending review"
 msgstr ""
 
-#: includes/class-config.php:375
+#: includes/class-config.php:376
 msgid "Whether to send the user an email when his account needs admin review"
 msgstr ""
 
-#: includes/class-config.php:380
+#: includes/class-config.php:381
 msgid "Account Approved Email"
 msgstr ""
 
-#: includes/class-config.php:392
+#: includes/class-config.php:393
 msgid "Whether to send the user an email when his account is approved"
 msgstr ""
 
-#: includes/class-config.php:397
+#: includes/class-config.php:398
 msgid "Account Rejected Email"
 msgstr ""
 
-#: includes/class-config.php:404
+#: includes/class-config.php:405
 msgid "Whether to send the user an email when his account is rejected"
 msgstr ""
 
-#: includes/class-config.php:409
+#: includes/class-config.php:410
 msgid "Account Deactivated Email"
 msgstr ""
 
-#: includes/class-config.php:416
+#: includes/class-config.php:417
 msgid "Whether to send the user an email when his account is deactivated"
 msgstr ""
 
-#: includes/class-config.php:422
+#: includes/class-config.php:423
 msgid "Account Deleted Email"
 msgstr ""
 
-#: includes/class-config.php:429
+#: includes/class-config.php:430
 msgid "Whether to send the user an email when his account is deleted"
 msgstr ""
 
-#: includes/class-config.php:435
+#: includes/class-config.php:436
 msgid "Password Reset Email"
 msgstr ""
 
-#: includes/class-config.php:443
+#: includes/class-config.php:444
 msgid ""
 "Whether to send an email when users changed their password (Recommended, "
 "please keep on)"
 msgstr ""
 
-#: includes/class-config.php:449
+#: includes/class-config.php:450
 msgid "Password Changed Email"
 msgstr ""
 
-#: includes/class-config.php:456
+#: includes/class-config.php:457
 msgid ""
 "Whether to send the user an email when he request to reset password "
 "(Recommended, please keep on)"
 msgstr ""
 
-#: includes/class-config.php:462
+#: includes/class-config.php:463
 msgid "Account Updated Email"
 msgstr ""
 
-#: includes/class-config.php:469
+#: includes/class-config.php:470
 msgid "Whether to send the user an email when he updated their account"
 msgstr ""
 
-#: includes/class-config.php:475
+#: includes/class-config.php:476
 msgid "New User Notification"
 msgstr ""
 
-#: includes/class-config.php:481
+#: includes/class-config.php:482
 msgid "Whether to receive notification when a new user account is approved"
 msgstr ""
 
-#: includes/class-config.php:487
+#: includes/class-config.php:488
 msgid "Account Needs Review Notification"
 msgstr ""
 
-#: includes/class-config.php:494
+#: includes/class-config.php:495
 msgid "Whether to receive notification when an account needs admin review"
 msgstr ""
 
-#: includes/class-config.php:499
+#: includes/class-config.php:500
 msgid "Account Deletion Notification"
 msgstr ""
 
-#: includes/class-config.php:502
+#: includes/class-config.php:503
 msgid "Whether to receive notification when an account is deleted"
 msgstr ""
 
-#: includes/class-config.php:525
+#: includes/class-config.php:526
 msgid ""
 "Are you sure you want to delete your account? This will erase all of your "
 "account data from the site. To delete your account enter your password below"
@@ -7709,36 +7721,36 @@ msgstr ""
 msgid "of"
 msgstr ""
 
-#: templates/members.php:189
+#: templates/members.php:191
 msgid "Search:"
 msgstr ""
 
-#: templates/members.php:190 templates/members.php:192
+#: templates/members.php:192 templates/members.php:194
 msgid "Search"
 msgstr ""
 
-#: templates/members.php:217
+#: templates/members.php:219
 #, php-format
 msgid "Change to %s"
 msgstr ""
 
-#: templates/members.php:230
+#: templates/members.php:232
 msgid "Sort by:"
 msgstr ""
 
-#: templates/members.php:250
+#: templates/members.php:252
 msgid "More filters"
 msgstr ""
 
-#: templates/members.php:279
+#: templates/members.php:281
 msgid "Remove filter"
 msgstr ""
 
-#: templates/members.php:304
+#: templates/members.php:306
 msgid "Remove all filters"
 msgstr ""
 
-#: templates/members.php:304
+#: templates/members.php:306
 msgid "Clear all"
 msgstr ""
 

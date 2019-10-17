@@ -168,7 +168,8 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'_um_filters'                   => 0,
 				'_um_roles_can_filter'          => array(),
 				'_um_search_fields'             => array(),
-				'_um_search_filters'            => '',
+				'_um_filters_expanded'          => 0,
+				'_um_search_filters'            => array(),
 
 				'_um_must_search'               => 0,
 				'_um_max_users'                 => '',
