@@ -63,7 +63,7 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 
 			$count_posts = (int) count_user_posts( um_get_requested_user(), 'post', true );
 
-			UM()->get_template( 'profile/posts', '', array( 'posts' => $posts, 'count_posts' => $count_posts ), true );
+			UM()->get_template( 'profile/posts.php', '', array( 'posts' => $posts, 'count_posts' => $count_posts ), true );
 		}
 
 
@@ -117,7 +117,7 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 			$args = apply_filters( 'um_profile_query_make_posts', $args );
 			$posts = get_posts( $args );
 
-			UM()->get_template( 'profile/posts', '', array( 'posts' => $posts ), true );
+			UM()->get_template( 'profile/posts.php', '', array( 'posts' => $posts ), true );
 			wp_die();
 		}
 
