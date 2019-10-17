@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-10-17 16:12+0300\n"
-"PO-Revision-Date: 2019-10-17 16:12+0300\n"
+"POT-Creation-Date: 2019-10-17 18:03+0300\n"
+"PO-Revision-Date: 2019-10-17 18:03+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -7221,11 +7221,11 @@ msgid ""
 "\"{login_referrer}\">login</a> to view this content."
 msgstr ""
 
-#: includes/core/class-shortcodes.php:646
+#: includes/core/class-shortcodes.php:643
 msgid "You are already registered"
 msgstr ""
 
-#: includes/core/class-shortcodes.php:893
+#: includes/core/class-shortcodes.php:890
 msgid "Default Template"
 msgstr ""
 
@@ -7783,20 +7783,20 @@ msgstr ""
 msgid "Reset my password"
 msgstr ""
 
-#: templates/profile/comments-single.php:24
+#: templates/profile/comments-single.php:14
 #, php-format
 msgid "On <a href=\"%1$s\">%2$s</a>"
 msgstr ""
 
-#: templates/profile/comments-single.php:35 templates/profile/comments.php:18
+#: templates/profile/comments.php:24
 msgid "load more comments"
 msgstr ""
 
-#: templates/profile/comments.php:31
+#: templates/profile/comments.php:36
 msgid "You have not made any comments."
 msgstr ""
 
-#: templates/profile/comments.php:33
+#: templates/profile/comments.php:38
 msgid "This user has not made any comments."
 msgstr ""
 

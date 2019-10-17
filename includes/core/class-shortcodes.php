@@ -361,15 +361,12 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			$args = wp_parse_args( $args, $defaults );
 
-
-
 			if ( ! is_user_logged_in() ) {
 				if ( $args['show_lock'] == 'no' ) {
 					echo '';
 				} else {
 					$args['lock_text'] = $this->convert_locker_tags( $args['lock_text'] );
-					$this->set_args = $args;
-					$this->load_template( 'login-to-view' );
+					UM()->get_template( 'login-to-view.php', '', $args, true );
 				}
 			} else {
 				echo do_shortcode( $this->convert_locker_tags( wpautop( $content ) ) );
@@ -388,7 +385,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 *
 		 * @return string
 		 */
-		function um_loggedout($args = array(), $content = "") {
+		function um_loggedout( $args = array(), $content = '' ) {
 			ob_start();
 
 			// Hide for logged in users
