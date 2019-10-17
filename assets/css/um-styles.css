@@ -175,6 +175,11 @@ p.um-notice {
 	position: relative;
 }
 
+p.um-notice a {
+	color: #fff;
+	text-decoration: underline;
+}
+
 p.um-notice i {
     position: absolute;
     right: 14px;
@@ -199,6 +204,11 @@ p.um-notice.warning {
 	color: #666;
 	border: 1px solid #efe4a2;
 	padding: 8px 15px !important;
+}
+
+p.um-notice.warning a {
+	color: #666;
+	text-decoration: underline;
 }
 
 /*

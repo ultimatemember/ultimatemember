@@ -263,8 +263,9 @@ add_action( 'um_registration_complete', 'um_check_user_status', 100, 2 );
  * @return bool|int|WP_Error
  */
 function um_submit_form_register( $args ) {
-	if ( isset( UM()->form()->errors ) )
+	if ( isset( UM()->form()->errors ) ) {
 		return false;
+	}
 
 	/**
 	 * UM hook
@@ -291,11 +292,11 @@ function um_submit_form_register( $args ) {
 
 	extract( $args );
 
-	if ( isset( $username ) && ! isset( $user_login ) ) {
+	if ( ! empty( $username ) && empty( $user_login ) ) {
 		$user_login = $username;
 	}
 
-	if ( ! empty( $first_name ) && ! empty( $last_name ) && ! isset( $user_login ) ) {
+	if ( ! empty( $first_name ) && ! empty( $last_name ) && empty( $user_login ) ) {
 
 		if ( UM()->options()->get( 'permalink_base' ) == 'name' ) {
 			$user_login = rawurlencode( strtolower( str_replace( " ", ".", $first_name . " " . $last_name ) ) );
@@ -319,13 +320,13 @@ function um_submit_form_register( $args ) {
 		}
 	}
 
-	if ( ! isset( $user_login ) && isset( $user_email ) && $user_email ) {
+	if ( empty( $user_login ) && ! empty( $user_email ) ) {
 		$user_login = $user_email;
 	}
 
 	$unique_userID = UM()->query()->count_users() + 1;
 
-	if ( ! isset( $user_login ) ||  strlen( $user_login ) > 30 && ! is_email( $user_login ) ) {
+	if ( empty( $user_login ) || strlen( $user_login ) > 30 && ! is_email( $user_login ) ) {
 		$user_login = 'user' . $unique_userID;
 	}
 
@@ -337,7 +338,7 @@ function um_submit_form_register( $args ) {
 		$user_password = UM()->validation()->generate( 8 );
 	}
 
-	if ( ! isset( $user_email ) ) {
+	if ( empty( $user_email ) ) {
 		$site_url = @$_SERVER['SERVER_NAME'];
 		$user_email = 'nobody' . $unique_userID . '@' . $site_url;
 		/**
@@ -365,9 +366,9 @@ function um_submit_form_register( $args ) {
 	}
 
 	$credentials = array(
-		'user_login'	=> $user_login,
-		'user_password'	=> $user_password,
-		'user_email'	=> trim( $user_email ),
+		'user_login'    => $user_login,
+		'user_password' => $user_password,
+		'user_email'    => trim( $user_email ),
 	);
 
 	$args['submitted'] = array_merge( $args['submitted'], $credentials );
@@ -422,11 +423,12 @@ function um_submit_form_register( $args ) {
 	$user_role = apply_filters( 'um_registration_user_role', $user_role, $args );
 
 	$userdata = array(
-		'user_login'	=> $user_login,
-		'user_pass'		=> $user_password,
-		'user_email'	=> $user_email,
-		'role'			=> $user_role,
+		'user_login'    => $user_login,
+		'user_pass'     => $user_password,
+		'user_email'    => $user_email,
+		'role'          => $user_role,
 	);
+
 	$user_id = wp_insert_user( $userdata );
 
 	/**
