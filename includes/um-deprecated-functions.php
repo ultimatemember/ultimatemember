@@ -439,3 +439,61 @@ function um_members( $argument ) {
 	}
 	return $result;
 }
+
+
+/**
+ * Returns the ultimate member search form
+ *
+ * @deprecated 2.1.0
+ *
+ * @return string
+ */
+function um_get_search_form() {
+	//um_deprecated_function( 'um_get_search_form', '2.1.0', 'do_shortcode( \'[ultimatemember_searchform]\' )' );
+
+	return do_shortcode( '[ultimatemember_searchform]' );
+}
+
+
+/**
+ * Display the search form.
+ *
+ * @deprecated 2.1.0
+ */
+function um_search_form() {
+	//um_deprecated_function( 'um_search_form', '2.1.0', 'echo do_shortcode( \'[ultimatemember_searchform]\' )' );
+
+	echo um_get_search_form();
+}
+
+
+/**
+ * Filters the search query.
+ *
+ * @deprecated 2.1.0
+ *
+ * @param  string $search
+ *
+ * @return string
+ */
+function um_filter_search( $search ) {
+	$search = trim( strip_tags( $search ) );
+	$search = preg_replace( '/[^a-z \.\@\_\-]+/i', '', $search );
+
+	return $search;
+}
+
+
+/**
+ * Returns the user search query
+ *
+ * @deprecated 2.1.0
+ *
+ * @return string
+ */
+function um_get_search_query() {
+	$query = UM()->permalinks()->get_query_array();
+	$search = isset( $query['search'] ) ? $query['search'] : '';
+
+	return um_filter_search( $search );
+}

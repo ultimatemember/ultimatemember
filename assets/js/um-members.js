@@ -49,6 +49,8 @@ function um_set_url_from_data( directory, key, value ) {
 	var hash = um_members_get_hash( directory );
 	var data = um_get_data_for_directory( directory );
 
+	var other_directories = um_member_directories;
+
 	var new_data = {};
 	if ( value !== '' ) {
 		new_data[ key + '_' + hash ] = value;
@@ -60,6 +62,19 @@ function um_set_url_from_data( directory, key, value ) {
 			}
 		} else {
 			new_data[ data_key + '_' + hash ] = data[ data_key ];
+		}
+	});
+
+	// added data of other directories to the url
+	jQuery.each( um_member_directories, function( k ) {
+		var dir_hash = um_member_directories[ k ];
+		if ( dir_hash !== hash ) {
+			var other_directory = jQuery( '.um-directory[data-hash="' + dir_hash + '"]' );
+			var dir_data = um_get_data_for_directory( other_directory );
+
+			jQuery.each( dir_data, function( data_key ) {
+				new_data[ data_key + '_' + dir_hash ] = dir_data[ data_key ];
+			});
 		}
 	});
 

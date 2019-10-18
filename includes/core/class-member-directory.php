@@ -120,6 +120,17 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 
 		/**
+		 * @param $id
+		 *
+		 * @return bool|string
+		 */
+		function get_directory_hash( $id ) {
+			$hash = substr( md5( $id ), 10, 5 );
+			return $hash;
+		}
+
+
+		/**
 		 * Get view Type template
 		 * @param string $type
 		 *
@@ -244,55 +255,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			) ) );
 
 			asort( $this->default_sorting );
-
-
-
-//			<!--			<option value="description">Biography</option>                          to Search-->
-//<!--			<option value="user_email">E-mail Address</option>                      to Search-->
-//<!--			<option value="first_name">First Name</option>                          to Search-->
-//<!--			<option value="last_name">Last Name</option>                            to Search-->
-//<!--			<option value="mobile_number">Mobile Number</option>                    to Search-->
-//<!--			<option value="nickname">Nickname</option>                              to Search-->
-//<!--			<option value="phone_number">Phone Number</option>                      to Search-->
-//<!--			<option value="secondary_user_email">Secondary E-mail Address</option>  to Search-->
-//<!--			<option value="user_login">Username</option>                            to Search-->
-//<!--			<option value="username">Username or E-mail</option> - username         to Search-->
-//<!--			<option value="gm">gm</option> - google maps field                      to Search-->
-//<!--			<option value="numberr">number</option> - number field                  to Search-->
-//<!--			<option value="scm">scm</option> - Soundcloud field                     to Search-->
-//<!--			<option value="test">test</option> - text box field                     to Search-->
-//<!--			<option value="textareaa">textareaa</option> - textarea field           to Search-->
-//<!--			<option value="vimeov">vimeov</option> - Vimeo field                    to Search-->
-//<!--			<option value="youtubev">youtubev</option> - Youtube field              to Search-->
-//<!--			URL fields                                                              to Search-->
-//<!--			Password                                                                skip-->
-//<!--			File, Image Upload                                                      maybe search by file,image name-->
-//<!---->
-//<!---->
-//<!--			DatePicker, TimePicker                                                  to Filter-->
-//<!--			Rating field                                                            to Filter-->
-//<!--			needs to be added 'birth_date' - Age                                    to Filter-->
-//<!--			<option value="checkboxx">checkbox</option> - checkbox field            to Filter-->
-//<!--			<option value="drop">drop</option> - select field                       to Filter-->
-//<!--			<option value="radi">radi</option> - radio field                        to Filter-->
-//<!--			<option value="multidrop">multidrop</option> - multiselect field        to Filter-->
-//<!--			<option value="role_radio">Roles (Radio)</option> - roles merge         to Filter-->
-//<!--			<option value="user_registered">Registration Date</option> -            to Filter-->
-//<!--			<option value="gender">Gender</option>                                  to Filter-->
-//<!--			<option value="languages">Languages</option>                            to Filter-->
-//<!--			<option value="_um_last_login">Last Login</option>                      to Filter-->
-//<!--			<option value="country">Country</option>                                to Filter-->
-//<!---->
-//<!--			So there are next filters:-->
-//<!---->
-//<!--			Predefined Fields:-->
-//<!--			Country, Gender, Age(Birth Date field), Last Login, User Registered-->
-//<!--			Languages, Roles (merge dropdown+radio)-->
-//<!---->
-//<!--			Custom Fields:-->
-//<!--			all TimePicker, Datepicker,-->
-//<!--			Rating field(by stars), Checkbox, Radio, Select, Multi-select custom fields-->
-
 
 			// Filters
 			$this->filter_fields = array(
@@ -657,7 +619,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			return $range;
 		}
-
 
 
 		/**

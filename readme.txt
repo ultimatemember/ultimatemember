@@ -157,6 +157,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * Bugfixes:
   - Optimized usermeta for Account submit security
+  - Optimized usermeta for Account submit security
   - Fixed Gmail & Yahoo UTF-8 encoding of email notification subject
   - Fixed ajax_resize_image() process
   - Fixed country fields values
@@ -165,6 +166,8 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed profile image settings
   - Fixed profile privacy for not logged in users, if restriction options set for profile page as visible only for logged in and showing message instead of redirect
     (it makes the same for {site_url}/user and {site_url}/user/{user_slug} )
+  - Fixed security issue on registration form submission when username or email have conditional logic
+  - Fixed RTL styles issues on user profile and account pages
 
 = 2.0.56: August 21, 2019 =
 

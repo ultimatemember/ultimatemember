@@ -395,8 +395,61 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
-	jQuery(document).on('click', '#um-search-button', function() {
-		jQuery(this).parents('form').submit();
+	jQuery( document.body ).on('click', '#um-search-button', function() {
+		var action = jQuery(this).parents('.um-search-form').data('members_page');
+
+		var search_keys = [];
+		jQuery(this).parents('.um-search-form').find('input[name="um-search-keys[]"]').each( function() {
+			search_keys.push( jQuery(this).val() );
+		});
+
+		var search = jQuery(this).parents('.um-search-form').find('.um-search-field').val();
+
+		var url;
+		if ( search === '' ) {
+			url = action;
+		} else {
+			var query = '?';
+			for ( var i = 0; i < search_keys.length; i++ ) {
+				query += search_keys[i] + '=' + search;
+				if ( i !== search_keys.length - 1 ) {
+					query += '&';
+				}
+			}
+
+			url = action + query;
+		}
+		window.location = url;
+	});
+
+	//make search on Enter click
+	jQuery( document.body ).on( 'keypress', '.um-search-field', function(e) {
+		if ( e.which === 13 ) {
+			var action = jQuery(this).parents('.um-search-form').data('members_page');
+
+			var search_keys = [];
+			jQuery(this).parents('.um-search-form').find('input[name="um-search-keys[]"]').each( function() {
+				search_keys.push( jQuery(this).val() );
+			});
+
+			var search = jQuery(this).val();
+
+			var url;
+			if ( search === '' ) {
+				url = action;
+			} else {
+				var query = '?';
+				for ( var i = 0; i < search_keys.length; i++ ) {
+					query += search_keys[i] + '=' + search;
+					if ( i !== search_keys.length - 1 ) {
+						query += '&';
+					}
+				}
+
+				url = action + query;
+			}
+			window.location = url;
+		}
 	});
 
 	jQuery('.um-form input[class="um-button"][type="submit"]').removeAttr('disabled');

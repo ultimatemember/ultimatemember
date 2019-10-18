@@ -2548,53 +2548,6 @@ function um_force_utf8_string( $value ) {
 
 
 /**
- * Filters the search query.
- *
- * @param  string $search
- *
- * @return string
- */
-function um_filter_search( $search ) {
-	$search = trim( strip_tags( $search ) );
-	$search = preg_replace( '/[^a-z \.\@\_\-]+/i', '', $search );
-
-	return $search;
-}
-
-
-/**
- * Returns the user search query
- *
- * @return string
- */
-function um_get_search_query() {
-	$query = UM()->permalinks()->get_query_array();
-	$search = isset( $query['search'] ) ? $query['search'] : '';
-
-	return um_filter_search( $search );
-}
-
-
-/**
- * Returns the ultimate member search form
- *
- * @return string
- */
-function um_get_search_form() {
-	return do_shortcode( '[ultimatemember_searchform]' );
-}
-
-
-/**
- * Display the search form.
- *
- */
-function um_search_form() {
-	echo um_get_search_form();
-}
-
-
-/**
  * Get user host
  *
  * Returns the webhost this site is using if possible

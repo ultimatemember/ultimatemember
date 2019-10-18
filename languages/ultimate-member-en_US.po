@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-10-17 18:03+0300\n"
-"PO-Revision-Date: 2019-10-17 18:03+0300\n"
+"POT-Creation-Date: 2019-10-18 13:00+0300\n"
+"PO-Revision-Date: 2019-10-18 13:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -253,7 +253,7 @@ msgstr ""
 #: includes/admin/templates/form/register_customize.php:80
 #: includes/admin/templates/form/register_gdpr.php:27
 #: includes/core/class-builtin.php:1135 includes/core/class-builtin.php:1150
-#: includes/core/class-member-directory.php:882
+#: includes/core/class-member-directory.php:843
 #: includes/core/um-filters-members.php:40
 msgid "Yes"
 msgstr ""
@@ -2017,7 +2017,7 @@ msgstr ""
 #: includes/admin/core/class-admin-settings.php:393
 #: includes/admin/core/class-admin-settings.php:410
 #: includes/core/class-builtin.php:674 includes/core/class-builtin.php:677
-#: includes/core/class-member-directory.php:232
+#: includes/core/class-member-directory.php:243
 msgid "Username"
 msgstr ""
 
@@ -3252,7 +3252,7 @@ msgstr ""
 #: includes/admin/core/list-tables/roles-list-table.php:22
 #: includes/admin/core/list-tables/roles-list-table.php:89
 #: includes/admin/core/list-tables/roles-list-table.php:402
-#: includes/core/class-member-directory.php:302
+#: includes/core/class-member-directory.php:264
 msgid "Roles"
 msgstr ""
 
@@ -4556,7 +4556,7 @@ msgid "Register"
 msgstr ""
 
 #: includes/class-config.php:135 includes/class-config.php:788
-#: includes/core/class-member-directory.php:1896
+#: includes/core/class-member-directory.php:1857
 #: includes/core/um-actions-profile.php:1225
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
@@ -4856,7 +4856,7 @@ msgid "Registration Date"
 msgstr ""
 
 #: includes/core/class-builtin.php:764 includes/core/class-builtin.php:767
-#: includes/core/class-member-directory.php:304
+#: includes/core/class-member-directory.php:266
 msgid "Last Login"
 msgstr ""
 
@@ -4881,7 +4881,7 @@ msgid "Birth Date"
 msgstr ""
 
 #: includes/core/class-builtin.php:825 includes/core/class-builtin.php:828
-#: includes/core/class-member-directory.php:300
+#: includes/core/class-member-directory.php:262
 msgid "Gender"
 msgstr ""
 
@@ -4894,7 +4894,7 @@ msgid "Female"
 msgstr ""
 
 #: includes/core/class-builtin.php:836 includes/core/class-builtin.php:839
-#: includes/core/class-member-directory.php:299
+#: includes/core/class-member-directory.php:261
 msgid "Country"
 msgstr ""
 
@@ -4952,7 +4952,7 @@ msgid "Roles (Radio)"
 msgstr ""
 
 #: includes/core/class-builtin.php:1030
-#: includes/core/class-member-directory.php:301
+#: includes/core/class-member-directory.php:263
 msgid "Languages"
 msgstr ""
 
@@ -7057,70 +7057,70 @@ msgstr ""
 msgid "Your set password"
 msgstr ""
 
-#: includes/core/class-member-directory.php:224
+#: includes/core/class-member-directory.php:235
 msgid "Grid"
 msgstr ""
 
-#: includes/core/class-member-directory.php:225
+#: includes/core/class-member-directory.php:236
 msgid "List"
 msgstr ""
 
-#: includes/core/class-member-directory.php:230
+#: includes/core/class-member-directory.php:241
 msgid "New users first"
 msgstr ""
 
-#: includes/core/class-member-directory.php:231
+#: includes/core/class-member-directory.php:242
 msgid "Old users first"
 msgstr ""
 
-#: includes/core/class-member-directory.php:233
+#: includes/core/class-member-directory.php:244
 msgid "First name"
 msgstr ""
 
-#: includes/core/class-member-directory.php:234
+#: includes/core/class-member-directory.php:245
 msgid "Last name"
 msgstr ""
 
-#: includes/core/class-member-directory.php:235
+#: includes/core/class-member-directory.php:246
 msgid "Display name"
 msgstr ""
 
-#: includes/core/class-member-directory.php:236
+#: includes/core/class-member-directory.php:247
 msgid "Last login"
 msgstr ""
 
-#: includes/core/class-member-directory.php:242
+#: includes/core/class-member-directory.php:253
 msgid "Random"
 msgstr ""
 
-#: includes/core/class-member-directory.php:243
+#: includes/core/class-member-directory.php:254
 msgid "Other (Custom Field)"
 msgstr ""
 
-#: includes/core/class-member-directory.php:303
+#: includes/core/class-member-directory.php:265
 msgid "Age"
 msgstr ""
 
-#: includes/core/class-member-directory.php:305
+#: includes/core/class-member-directory.php:267
 msgid "User Registered"
 msgstr ""
 
-#: includes/core/class-member-directory.php:680
+#: includes/core/class-member-directory.php:641
 msgid " stars"
 msgstr ""
 
-#: includes/core/class-member-directory.php:688
+#: includes/core/class-member-directory.php:649
 msgid "<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1841
-#: includes/core/class-member-directory.php:1885
+#: includes/core/class-member-directory.php:1802
+#: includes/core/class-member-directory.php:1846
 #: includes/core/um-actions-profile.php:1192
 #: includes/core/um-actions-profile.php:1223
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1891
+#: includes/core/class-member-directory.php:1852
 #: includes/core/um-actions-profile.php:1224
 msgid "My Account"
 msgstr ""
@@ -7213,6 +7213,10 @@ msgstr ""
 
 #: includes/core/class-profile.php:138
 msgid "Comments"
+msgstr ""
+
+#: includes/core/class-register.php:71
+msgid "Invalid Nonce."
 msgstr ""
 
 #: includes/core/class-shortcodes.php:358
@@ -7834,12 +7838,12 @@ msgstr ""
 msgid "This user has not created any posts."
 msgstr ""
 
-#: templates/searchform.php:6 templates/searchform.php:7
+#: templates/searchform.php:8 templates/searchform.php:9
 msgctxt "label"
 msgid "Search for:"
 msgstr ""
 
-#: templates/searchform.php:7
+#: templates/searchform.php:9
 msgctxt "placeholder"
 msgid "Search &hellip;"
 msgstr ""

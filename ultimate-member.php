@@ -7,7 +7,6 @@ Version: 2.1.0
 Author: Ultimate Member
 Author URI: http://ultimatemember.com/
 Text Domain: ultimate-member
-Domain Path: /languages
 */
 
 defined( 'ABSPATH' ) || exit;
