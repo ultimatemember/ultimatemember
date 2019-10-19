@@ -181,6 +181,10 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 				$array = explode( DIRECTORY_SEPARATOR, trim( $basename, DIRECTORY_SEPARATOR ) );
 				$path  = $array[0];
 			}
+			if ( substr_count( $path, '/' ) ) {
+				$array = explode( '/', trim( $basename, '/' ) );
+				$path  = $array[0];
+			}
 
 			$located = $this->locate_template( $template_name, $path );
 			if ( ! file_exists( $located ) ) {
