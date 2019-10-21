@@ -23,7 +23,7 @@ function um_admin_new_modal( id, ajax, size ) {
 	jQuery('#' + id).show();
 	jQuery('.um-admin-modal').show();
 	
-	jQuery('.um-admin-modal-head').append('<a href="#" data-action="UM_remove_modal" class="um-admin-modal-close"><i class="um-faicon-times"></i></a>');
+	jQuery('.um-admin-modal-head').append('<a href="javascript:void(0);" data-action="UM_remove_modal" class="um-admin-modal-close"><i class="um-faicon-times"></i></a>');
 
 	if ( ajax == true ) {
 		um_admin_modal_size( size );

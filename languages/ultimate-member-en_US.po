@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-10-18 13:00+0300\n"
-"PO-Revision-Date: 2019-10-18 13:00+0300\n"
+"POT-Creation-Date: 2019-10-21 23:36+0300\n"
+"PO-Revision-Date: 2019-10-21 23:37+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -4556,7 +4556,7 @@ msgid "Register"
 msgstr ""
 
 #: includes/class-config.php:135 includes/class-config.php:788
-#: includes/core/class-member-directory.php:1857
+#: includes/core/class-member-directory.php:1849
 #: includes/core/um-actions-profile.php:1225
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
@@ -7023,7 +7023,7 @@ msgstr ""
 msgid "Invalid file ownership"
 msgstr ""
 
-#: includes/core/class-files.php:347
+#: includes/core/class-files.php:348
 msgid "Invalid nonce"
 msgstr ""
 
@@ -7035,15 +7035,7 @@ msgstr ""
 msgid "Ultimate Member: Not a valid temp file"
 msgstr ""
 
-#: includes/core/class-files.php:1126
-msgid "Invalid user ID: "
-msgstr ""
-
-#: includes/core/class-files.php:1135 includes/core/class-files.php:1163
-msgid "Unauthorized to do this attempt."
-msgstr ""
-
-#: includes/core/class-files.php:1467
+#: includes/core/class-files.php:1230
 msgid "Original size"
 msgstr ""
 
@@ -7113,14 +7105,14 @@ msgstr ""
 msgid "<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1802
-#: includes/core/class-member-directory.php:1846
+#: includes/core/class-member-directory.php:1794
+#: includes/core/class-member-directory.php:1838
 #: includes/core/um-actions-profile.php:1192
 #: includes/core/um-actions-profile.php:1223
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1852
+#: includes/core/class-member-directory.php:1844
 #: includes/core/um-actions-profile.php:1224
 msgid "My Account"
 msgstr ""
@@ -7233,30 +7225,25 @@ msgstr ""
 msgid "Default Template"
 msgstr ""
 
-#: includes/core/class-uploader.php:668
+#: includes/core/class-uploader.php:663
 msgid "Your image is invalid!"
 msgstr ""
 
-#: includes/core/class-uploader.php:710
+#: includes/core/class-uploader.php:705
 msgid "This media type is not recognized."
 msgstr ""
 
-#: includes/core/class-uploader.php:758
+#: includes/core/class-uploader.php:753
 msgid "Your image is invalid or too large!"
 msgstr ""
 
-#: includes/core/class-uploader.php:764 includes/core/class-uploader.php:766
+#: includes/core/class-uploader.php:759 includes/core/class-uploader.php:761
 #, php-format
 msgid "Your photo is too small. It must be at least %spx wide."
 msgstr ""
 
-#: includes/core/class-uploader.php:819
+#: includes/core/class-uploader.php:814
 msgid "This file type is not recognized."
-msgstr ""
-
-#: includes/core/class-uploader.php:1098
-#, php-format
-msgid "Maximum file size allowed: %s"
 msgstr ""
 
 #: includes/core/class-user.php:623

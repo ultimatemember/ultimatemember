@@ -302,9 +302,10 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		}
 
 
-
 		/**
 		 * Image upload by AJAX
+		 *
+		 * @throws \Exception
 		 */
 		function ajax_image_upload() {
 			$ret['error'] = null;
@@ -339,7 +340,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			 * }
 			 * ?>
 			 */
-			$um_image_upload_nonce = apply_filters( "um_image_upload_nonce", true );
+			$um_image_upload_nonce = apply_filters( 'um_image_upload_nonce', true );
 
 			if ( $um_image_upload_nonce ) {
 				if ( ! wp_verify_nonce( $nonce, "um_upload_nonce-{$timestamp}" ) && is_user_logged_in() ) {
@@ -356,11 +357,10 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 					UM()->uploader()->replace_upload_dir = true;
 					$uploaded = UM()->uploader()->upload_image( $_FILES[ $id ], $user_id, $id );
 					UM()->uploader()->replace_upload_dir = false;
-					if ( isset( $uploaded['error'] ) ){
+					if ( isset( $uploaded['error'] ) ) {
 						$ret['error'] = $uploaded['error'];
 					} else {
-						$ts = current_time( 'timestamp' );
-						$ret[ ] = $uploaded['handle_upload'];
+						$ret[] = $uploaded['handle_upload'];
 					}
 
 				}
@@ -1118,250 +1118,13 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * @param $source
 		 * @param $key
 		 *
+		 * @deprecated 2.1.0
+		 *
 		 * @return string
 		 */
 		function new_user_upload( $user_id, $source, $key ) {
-
-			if( ! is_numeric( $user_id ) ){
-				wp_die( __("Invalid user ID: ".json_encode( $user_id )." ",'ultimate-member') );
-			}
-
-			$user_id = trim( $user_id );
-
-			// if he does not have uploads dir yet
-			$this->new_user( $user_id );
-
-			if ( is_user_logged_in() && ( get_current_user_id() != $user_id ) && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
-				wp_die( __( 'Unauthorized to do this attempt.', 'ultimate-member' ) );
-			}
-
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_allow_frontend_image_uploads
-			 * @description Allow Fronend Image uploads
-			 * @input_vars
-			 * [{"var":"$allow","type":"bool","desc":"Allow"},
-			 * {"var":"$user_id","type":"int","desc":"User ID"},
-			 * {"var":"$key","type":"string","desc":"Field Key"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_filter( 'um_allow_frontend_image_uploads', 'function_name', 10, 3 );
-			 * @example
-			 * <?php
-			 * add_filter( 'um_allow_frontend_image_uploads', 'my_allow_frontend_image_uploads', 10, 3 );
-			 * function my_allow_frontend_image_uploads( $data ) {
-			 *     // your code here
-			 *     return $data;
-			 * }
-			 * ?>
-			 */
-			$allow_frontend_image_uploads = apply_filters( 'um_allow_frontend_image_uploads', false, $user_id, $key );
-
-			if ( $allow_frontend_image_uploads == false && ! is_user_logged_in() && ( $key == 'profile_photo' || $key == 'cover_photo' ) ) {
-				wp_die( __('Unauthorized to do this attempt.','ultimate-member') );
-			}
-
-			$ext = '.' . pathinfo($source, PATHINFO_EXTENSION);
-
-			// copy & overwrite file
-
-			if( in_array( $key , array('profile_photo','cover_photo') ) ){
-				$filename = $key . $ext;
-				$name = $key;
-			}else{
-				$filename = basename( $source );
-			}
-
-
-
-			if ( file_exists( $this->upload_basedir . $user_id . '/' . $filename ) ) {
-				unlink( $this->upload_basedir . $user_id . '/' . $filename );
-			}
-			copy( $source, $this->upload_basedir . $user_id . '/' . $filename );
-
-			$info = @getimagesize( $source );
-
-			// thumbs
-			if ( $key == 'profile_photo' ) {
-
-				list($w, $h) = @getimagesize( $source );
-
-
-				$sizes = UM()->options()->get( 'photo_thumb_sizes' );
-				foreach( $sizes as $size ) {
-
-					$ratio = round( $w / $h, 2 );
-					$height = round( $size / $ratio, 2 );
-
-					if ( file_exists(  $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext ) ) {
-						unlink( $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext );
-					}
-
-					if ( $size < $w ) {
-
-						if ( $info['mime'] == 'image/jpeg' ){
-							$thumb_s = imagecreatefromjpeg( $source );
-							$thumb = imagecreatetruecolor( $size, $size );
-							imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $size, $w, $h );
-							imagejpeg( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext, 100);
-							imagejpeg( $thumb, $this->upload_basedir . $user_id . '/' . $name . $ext, 100);
-						}else if ( $info['mime'] == 'image/png' ){
-							$thumb_s  = imagecreatefrompng( $source );
-							$thumb = imagecreatetruecolor( $size, $size );
-							imagealphablending( $thumb, false);
-							imagesavealpha( $thumb, true);
-							imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $size, $w, $h );
-							imagepng( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext );
-						}else if ( $info['mime'] == 'image/gif' ){
-							$thumb_s = imagecreatefromgif( $source );
-							$thumb = imagecreatetruecolor( $size, $size );
-							imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $size, $w, $h );
-							imagegif( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext);
-							imagegif( $thumb, $this->upload_basedir . $user_id . '/' . $name . $ext);
-						}
-					}
-
-				}
-
-				// removes a synced profile photo
-				delete_user_meta( $user_id, 'synced_profile_photo' );
-
-			} else if ( $key == 'cover_photo' ) {
-
-				list($w, $h) = @getimagesize( $source );
-
-				$sizes = UM()->options()->get( 'cover_thumb_sizes' );
-				foreach ( $sizes as $size ) {
-
-					$ratio = round( $w / $h, 2 );
-					$height = round( $size / $ratio, 2 );
-
-					if ( file_exists(  $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext ) ) {
-						unlink( $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext );
-					}
-
-					if ( $size < $w ) {
-
-						if ( $info['mime'] == 'image/jpeg' ){
-							$thumb = imagecreatetruecolor( $size, $height );
-							$thumb_s = imagecreatefromjpeg( $source );
-							imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $height, $w, $h );
-							imagejpeg( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext, 100);
-						}else if ( $info['mime'] == 'image/png' ){
-							$thumb_s  = imagecreatefrompng( $source );
-							$thumb = imagecreatetruecolor( $size, $height );
-							imagealphablending( $thumb, false);
-							imagesavealpha( $thumb, true);
-							imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $height, $w, $h );
-							imagepng( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext );
-						}else if ( $info['mime'] == 'image/gif' ){
-							$thumb = imagecreatetruecolor( $size, $height );
-							$thumb_s = imagecreatefromgif( $source );
-							imagecopyresampled( $thumb, $thumb_s, 0, 0, 0, 0, $size, $height, $w, $h );
-							imagegif( $thumb, $this->upload_basedir . $user_id . '/' . $name . '-' . $size . $ext);
-						}
-					}
-
-				}
-
-			}
-
-			// clean up temp
-			$dir = dirname( $source );
-			unlink( $source );
-			rmdir( $dir );
-
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_before_upload_db_meta
-			 * @description Update user's meta before upload
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"},
-			 * {"var":"$key","type":"string","desc":"Meta key"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_before_upload_db_meta', 'function_name', 10, 2 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_before_upload_db_meta', 'my_before_upload_db_meta', 10, 2 );
-			 * function my_before_upload_db_meta( $user_id, $key ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_before_upload_db_meta', $user_id, $key );
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_before_upload_db_meta_{$key}
-			 * @description Update user's meta before upload
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_before_upload_db_meta_{$key}', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_before_upload_db_meta_{$key}', 'my_before_upload_db_meta', 10, 1 );
-			 * function my_before_upload_db_meta( $user_id ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( "um_before_upload_db_meta_{$key}", $user_id );
-
-			update_user_meta( $user_id, $key, $filename );
-
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_after_upload_db_meta
-			 * @description Update user's meta before upload
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"},
-			 * {"var":"$key","type":"string","desc":"Meta key"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_after_upload_db_meta', 'function_name', 10, 2 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_after_upload_db_meta', 'my_after_upload_db_meta', 10, 2 );
-			 * function my_after_upload_db_meta( $user_id, $key ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( 'um_after_upload_db_meta', $user_id, $key );
-			/**
-			 * UM hook
-			 *
-			 * @type action
-			 * @title um_after_upload_db_meta_{$key}
-			 * @description Update user's meta after upload
-			 * @input_vars
-			 * [{"var":"$user_id","type":"int","desc":"User ID"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage add_action( 'um_after_upload_db_meta_{$key}', 'function_name', 10, 1 );
-			 * @example
-			 * <?php
-			 * add_action( 'um_after_upload_db_meta_{$key}', 'my_after_upload_db_meta', 10, 1 );
-			 * function my_after_upload_db_meta( $user_id ) {
-			 *     // your code here
-			 * }
-			 * ?>
-			 */
-			do_action( "um_after_upload_db_meta_{$key}", $user_id );
-
-			// the url of upload
-			return $this->upload_baseurl . $user_id . '/' . $filename;
-
+			um_deprecated_function( 'new_user_upload', '2.1.0', '' );
+			return '';
 		}
 
 

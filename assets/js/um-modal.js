@@ -6,7 +6,6 @@ jQuery(document).ready(function() {
 	});
 	
 	jQuery(document).on('click', '.um-modal-overlay, a[data-action="um_remove_modal"]', function(){
-
 		um_remove_modal();
 	});
 
@@ -44,22 +43,22 @@ jQuery(document).ready(function() {
 	
 	jQuery(document).on('click', '.um-modal .um-single-image-preview a.cancel', function(e){
 		e.preventDefault();
-		
+
 		var parent = jQuery(this).parents('.um-modal-body');
 		var src = jQuery(this).parents('.um-modal-body').find('.um-single-image-preview img').attr('src');
-		
+
 		jQuery('img.cropper-hidden').cropper('destroy');
-		
+
 		parent.find('.um-single-image-preview img').attr('src', '');
-		
+
 		parent.find('.um-single-image-preview').hide();
-		
+
 		parent.find('.ajax-upload-dragdrop').show();
-		
+
 		parent.find('.um-modal-btn.um-finish-upload').addClass('disabled');
-		
+
 		um_modal_responsive();
-		
+
 		jQuery.ajax({
 			url: wp.ajax.settings.url,
 			type: 'post',
@@ -120,17 +119,15 @@ jQuery(document).ready(function() {
 					key: key,
 					nonce: um_scripts.nonce
 				},
-				success: function( response ){
+				success: function( response ) {
 
-					if( response.success == true ){
+					if ( response.success ) {
 
 						d = new Date();
 
-						if ( key == 'profile_photo') {
+						if ( key === 'profile_photo' ) {
 							jQuery('.um-profile-photo-img img').attr('src', response.data.image.source_url + "?"+d.getTime());
-						}
-
-						if ( key == 'cover_photo') {
+						} else if ( key === 'cover_photo' ) {
 							jQuery('.um-cover-e').empty().html('<img src="' + response.data.image.source_url + "?"+d.getTime() + '" alt="" />');
 							if ( jQuery('.um').hasClass('um-editing') ) {
 								jQuery('.um-cover-overlay').show();
@@ -138,13 +135,14 @@ jQuery(document).ready(function() {
 						}
 
 						jQuery('.um-single-image-preview[data-key='+key+']').fadeIn().find('img').attr('src', response.data.image.source_url + "?"+d.getTime());
-						
+
 						um_remove_modal();
-						
+
+						jQuery('img.cropper-invisible').remove();
+
 						jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( elem.attr('data-change') );
 
 						jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type="hidden"]').val( response.data.image.filename );
-						
 					}
 
 				}
