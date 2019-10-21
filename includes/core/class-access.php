@@ -180,11 +180,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							add_filter( 'archive_template', array( &$this, 'taxonomy_message' ), 10, 3 );
 							add_filter( 'category_template', array( &$this, 'taxonomy_message' ), 10, 3 );
 							add_filter( 'taxonomy_template', array( &$this, 'taxonomy_message' ), 10, 3 );
-
-							/*global $wp_query;
-							$wp_query->set_404();
-							status_header( 404 );
-							nocache_headers();*/
 						}
 					} else {
 						$user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
