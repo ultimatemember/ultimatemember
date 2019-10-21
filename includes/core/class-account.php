@@ -204,32 +204,34 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				$this->current_tab = $args['tab'];
 
 				if ( ! empty( $this->tabs[ $args['tab'] ] ) ) { ?>
-					<div class="um-form">
-						<form method="post" action="">
-							<?php
-							/**
-							 * UM hook
-							 *
-							 * @type action
-							 * @title um_account_page_hidden_fields
-							 * @description Make some action before account tab loading
-							 * @input_vars
-							 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
-							 * @change_log
-							 * ["Since: 2.0"]
-							 * @usage add_action( 'um_before_template_part', 'function_name', 10, 1 );
-							 * @example
-							 * <?php
-							 * add_action( 'um_account_page_hidden_fields', 'my_account_page_hidden_fields', 10, 1 );
-							 * function my_account_page_hidden_fields( $args ) {
-							 *     // your code here
-							 * }
-							 * ?>
-							 */
-							do_action( 'um_account_page_hidden_fields', $args );
+					<div class="um um-custom-shortcode-tab">
+						<div class="um-form">
+							<form method="post" action="">
+								<?php
+								/**
+								 * UM hook
+								 *
+								 * @type action
+								 * @title um_account_page_hidden_fields
+								 * @description Make some action before account tab loading
+								 * @input_vars
+								 * [{"var":"$args","type":"array","desc":"Account Page Arguments"}]
+								 * @change_log
+								 * ["Since: 2.0"]
+								 * @usage add_action( 'um_before_template_part', 'function_name', 10, 1 );
+								 * @example
+								 * <?php
+								 * add_action( 'um_account_page_hidden_fields', 'my_account_page_hidden_fields', 10, 1 );
+								 * function my_account_page_hidden_fields( $args ) {
+								 *     // your code here
+								 * }
+								 * ?>
+								 */
+								do_action( 'um_account_page_hidden_fields', $args );
 
-							$this->render_account_tab( $args['tab'], $this->tabs[ $args['tab'] ], $args );  ?>
-						</form>
+								$this->render_account_tab( $args['tab'], $this->tabs[ $args['tab'] ], $args );  ?>
+							</form>
+						</div>
 					</div>
 				<?php }
 
@@ -506,6 +508,9 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 			if ( ! isset( $this->displayed_fields[ $tab_key ] ) ) {
 				$this->displayed_fields[ $tab_key ] = array_keys( $fields );
+			} else {
+				$this->displayed_fields[ $tab_key ] = array_merge( $this->displayed_fields[ $tab_key ], array_keys( $fields ) );
+				$this->displayed_fields[ $tab_key ] = array_unique( $this->displayed_fields[ $tab_key ] );
 			}
 		}
 

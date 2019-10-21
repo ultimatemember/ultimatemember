@@ -334,11 +334,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 		function load_customjs() {
 			wp_enqueue_script('um_conditional');
 			wp_enqueue_script('um_scripts');
-			if ( is_rtl() ) {
-				wp_enqueue_style( 'um_members_rtl' );
-			} else {
-				wp_enqueue_style( 'um_members' );
-			}
+			wp_enqueue_script('um_members');
 			wp_enqueue_script('um_profile');
 			wp_enqueue_script('um_account');
 		}

@@ -223,7 +223,7 @@ function um_submit_account_details( $args ) {
 		}
 	}
 
-	$arr_fields = array( 'password', 'um_account' );
+	$arr_fields = array();
 	if ( UM()->account()->is_secure_enabled() ) {
 		$account_fields = get_user_meta( um_user( 'ID' ), 'um_account_secure_fields', true );
 

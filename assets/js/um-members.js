@@ -494,7 +494,7 @@ function um_run_search( directory ) {
 }
 
 
-jQuery(document).ready( function() {
+jQuery(document.body).ready( function() {
 
 
 	jQuery( '.um-search-filter select' ).each( function() {
