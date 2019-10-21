@@ -1182,19 +1182,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				$search = trim( $_POST['search'] );
 				if ( ! empty( $search ) ) {
 
-					$identity = '%';
-					preg_match(
-						'/LIKE \'(\{(.*)\})' . esc_attr( $search ) . '(\{(.*)\})\'/im',
-						$sql['where'],
-						$matches
-					);
-
-					if ( ! empty( $matches[1] ) ) {
-						$identity = $matches[1];
-					}
+					$meta_value = '%' . $wpdb->esc_like( $search ) . '%';
+					$search_meta      = $wpdb->prepare( '%s', $meta_value );
 
 					preg_match(
-						'/^(.*).meta_value LIKE \'' . $identity . esc_attr( $search ) . $identity . '\' [^\)]/im',
+						'/^(.*).meta_value LIKE ' . addslashes( $search_meta ) . '[^\)]/im',
 						$sql['where'],
 						$join_matches
 					);

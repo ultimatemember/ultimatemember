@@ -178,11 +178,8 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 			$path = '';
 			if ( $basename ) {
-				$array = explode( DIRECTORY_SEPARATOR, trim( $basename, DIRECTORY_SEPARATOR ) );
-				$path  = $array[0];
-			}
-			if ( substr_count( $path, '/' ) ) {
-				$array = explode( '/', trim( $basename, '/' ) );
+				// use '/' instead of "DIRECTORY_SEPARATOR", because wp_normalize_path makes the correct replace
+				$array = explode( '/', wp_normalize_path( trim( $basename ) ) );
 				$path  = $array[0];
 			}
 
