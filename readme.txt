@@ -154,6 +154,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Additional parameter 'user_id' to action hook 'um_user_after_updating_profile'
   - Added ability to set profile/cover image sizes from Ultimate Member -> General -> Uploads settings or Original size
   - Added ability edit cover photo HTML (e.g. for adding some HTML attributes. See how add srcset attribute based on all generated cover sizes [here](https://docs.ultimatemember.com/article/1519-change-cover-photo-html))
+  - Added custom date format for Date Picker field
 
 * Bugfixes:
   - Optimized usermeta for Account submit security
@@ -168,6 +169,10 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
     (it makes the same for {site_url}/user and {site_url}/user/{user_slug} )
   - Fixed security issue on registration form submission when username or email have conditional logic
   - Fixed RTL styles issues on user profile and account pages
+  - Fixed upload profile/cover photos at the profile page, don't apply until the crop finished
+  - Fixed alphabetical field validation for cyrillic and not UTF-8 symbols
+  - Localized um-raty.js library
+
 
 = 2.0.56: August 21, 2019 =
 

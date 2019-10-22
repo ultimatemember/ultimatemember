@@ -398,27 +398,27 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'date' => array(
-					'name' => 'Date Picker',
-					'col1' => array('_title','_metakey','_help','_default','_range','_years','_years_x','_range_start','_range_end','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_format','_pretty_format','_disabled_weekdays'),
-					'col3' => array('_required','_editable','_icon'),
-					'validate' => array(
-						'_title' => array(
-							'mode' => 'required',
+					'name'      => 'Date Picker',
+					'col1'      => array( '_title', '_metakey', '_help', '_default', '_range', '_years', '_years_x', '_range_start', '_range_end', '_visibility' ),
+					'col2'      => array( '_label', '_placeholder', '_public', '_roles', '_format', '_format_custom', '_pretty_format', '_disabled_weekdays' ),
+					'col3'      => array( '_required', '_editable', '_icon' ),
+					'validate'  => array(
+						'_title'        => array(
+							'mode'  => 'required',
 							'error' => __( 'You must provide a title', 'ultimate-member' )
 						),
-						'_metakey' => array(
-							'mode' => 'unique',
+						'_metakey'      => array(
+							'mode'  => 'unique',
 						),
-						'_years' => array(
-							'mode' => 'numeric',
+						'_years'        => array(
+							'mode'  => 'numeric',
 							'error' => __( 'Number of years is not valid', 'ultimate-member' )
 						),
-						'_range_start' => array(
-							'mode' => 'range-start',
+						'_range_start'  => array(
+							'mode'  => 'range-start',
 						),
-						'_range_end' => array(
-							'mode' => 'range-end',
+						'_range_end'    => array(
+							'mode'  => 'range-end',
 						),
 					)
 				),

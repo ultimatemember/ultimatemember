@@ -1736,6 +1736,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					}
 					break;
 
+				case '_format_custom':
+					?>
+
+					<p><label for="_format_custom"><?php _e( 'Use custom Date format', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This option overrides "Date User-Friendly Format" option. See https://www.php.net/manual/en/function.date.php', 'ultimate-member' ) ); ?></label>
+						<input type="text" name="_format_custom" id="_format_custom" value="<?php echo htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ); ?>" placeholder="j M Y" />
+					</p>
+
+					<?php
+					break;
+
 				case '_pretty_format':
 					?>
 
