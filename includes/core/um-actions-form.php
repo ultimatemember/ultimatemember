@@ -732,10 +732,12 @@ function um_submit_form_errors_hook_( $args ) {
 
 							if ( $args[ $key ] != '' ) {
 
-								if( ! ctype_alpha( str_replace(' ', '', $args[$key] ) ) ){
-									UM()->form()->add_error( $key , __('You must provide alphabetic letters','ultimate-member') );
+								if ( ! preg_match( '/^\p{L}+$/u', str_replace( ' ', '', $args[ $key ] ) ) ) {
+									UM()->form()->add_error( $key, __( 'You must provide alphabetic letters', 'ultimate-member' ) );
 								}
+								
 							}
+
 							break;
 
 						case 'lowercase':
