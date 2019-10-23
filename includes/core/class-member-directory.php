@@ -275,7 +275,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						if ( isset( $data['title'] ) && array_search( $data['title'], $this->filter_fields ) !== false ) {
 							$data['title'] = $data['title'] . ' (' . $key . ')';
 						}
-						$this->filter_fields[ $key ] = isset( $data['title'] ) ? $data['title'] : $data['label'];
+
+						$title = isset( $data['title'] ) ? $data['title'] : ( isset( $data['label'] ) ? $data['label'] : '' );
+						if ( empty( $title ) ) {
+							continue;
+						}
+
+						$this->filter_fields[ $key ] = $title;
 					}
 				}
 			}

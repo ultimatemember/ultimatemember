@@ -284,22 +284,30 @@ function um_user_edit_profile( $args ) {
 			if ( isset( $args['submitted'][ $key ] ) && is_string( $args['submitted'][ $key ] ) ) {
 				$stripslashes = stripslashes( $args['submitted'][ $key ] );
 			}
-			if ( in_array( $array['type'], array( 'select' ) ) &&
-				 ! empty( $array['options'] ) && ! empty( $stripslashes ) &&
-				 ! in_array( $stripslashes, array_map( 'trim', $array['options'] ) ) && ! $has_custom_source  ) {
-				continue;
+
+			if ( in_array( $array['type'], array( 'select' ) ) ) {
+				if ( ! empty( $array['options'] ) && ! empty( $stripslashes ) && ! in_array( $stripslashes, array_map( 'trim', $array['options'] ) ) && ! $has_custom_source  ) {
+					continue;
+				}
+
+				//update empty user meta
+				if ( ! isset( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == '' ) {
+					update_user_meta( um_user( 'ID' ), $key, '' );
+				}
 			}
 
 			//validation of correct values from options in wp-admin
 			//the user cannot set invalid value in the hidden input at the page
-			if ( in_array( $array['type'], array( 'multiselect', 'checkbox', 'radio' ) ) &&
-				 ! empty( $args['submitted'][ $key ] ) && ! empty( $array['options'] ) ) {
-				$args['submitted'][ $key ] = array_map( 'stripslashes', array_map( 'trim', $args['submitted'][ $key ] ) );
-				$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], array_map( 'trim', $array['options'] ) );
-			}
+			if ( in_array( $array['type'], array( 'multiselect', 'checkbox', 'radio' ) ) ) {
+				if ( ! empty( $args['submitted'][ $key ] ) && ! empty( $array['options'] ) ) {
+					$args['submitted'][ $key ] = array_map( 'stripslashes', array_map( 'trim', $args['submitted'][ $key ] ) );
+					$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], array_map( 'trim', $array['options'] ) );
+				}
 
-			if ( $array['type'] == 'multiselect' || $array['type'] == 'checkbox' && ! isset( $args['submitted'][ $key ] ) ) {
-				delete_user_meta( um_user( 'ID' ), $key );
+				// update empty user meta
+				if ( ! isset( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == '' ) {
+					update_user_meta( um_user( 'ID' ), $key, array() );
+				}
 			}
 
 			if ( isset( $args['submitted'][ $key ] ) ) {

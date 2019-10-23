@@ -826,6 +826,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		/**
 		 * Checks if an option is selected
 		 *
+		 * is used by Select, Multiselect and Checkbox fields
+		 *
 		 * @param  string $key
 		 * @param  string $value
 		 * @param  array  $data
@@ -833,6 +835,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return boolean
 		 */
 		function is_selected( $key, $value, $data ) {
+			global $wpdb;
+
 			/**
 			 * UM hook
 			 *
@@ -855,132 +859,149 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			 */
 			$key = apply_filters( 'um_is_selected_filter_key', $key );
 
-			if ( isset( UM()->form()->post_form[ $key ] ) && is_array( UM()->form()->post_form[ $key ] ) ) {
+			if ( isset( UM()->form()->post_form[ $key ] ) ) {
 
-				if ( in_array( $value, UM()->form()->post_form[ $key ] ) ) {
-					return true;
-				}
+				if ( is_array( UM()->form()->post_form[ $key ] ) ) {
 
-				$stripslashed = array_map( 'stripslashes', UM()->form()->post_form[ $key ] );
-				if ( in_array( $value, $stripslashed ) ) {
-					return true;
-				}
-
-				if ( in_array( html_entity_decode( $value ), UM()->form()->post_form[ $key ] ) ) {
-					return true;
-				}
-
-			} else {
-
-				if ( ! isset( UM()->form()->post_form[ $key ] ) ) {
-
-					$field_value = um_user( $key );
-					if ( ! $field_value ) {
-						$field_value = 0;
-					}
-
-					if( $field_value == 0 && $value == '0' ){
-						$value = (int)$value;
-					}
-
-					if ( $key == 'role' ) {
-
-						$role_keys = get_option( 'um_roles' );
-
-						if ( ! empty( $role_keys ) ) {
-							if ( in_array( $field_value, $role_keys ) ) {
-								$field_value = 'um_' . $field_value;
-							}
-						}
-					}
-
-
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_is_selected_filter_value
-					 * @description Change is selected filter value
-					 * @input_vars
-					 * [{"var":"$value","type":"string","desc":"Selected filter value"},
-					 * {"var":"$key","type":"string","desc":"Selected filter key"},
-					 * {"var":"$value","type":"string","desc":"Selected filter value"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_filter( 'um_is_selected_filter_value', 'function_name', 10, 2 );
-					 * @example
-					 * <?php
-					 * add_filter( 'um_is_selected_filter_value', 'my_selected_filter_value', 10, 2 );
-					 * function my_selected_filter_value( $value, $key ) {
-					 *     // your code here
-					 *     return $field_value;
-					 * }
-					 * ?>
-					 */
-					$field_value = apply_filters( 'um_is_selected_filter_value', $field_value, $key, $value );
-
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_is_selected_filter_data
-					 * @description Change is selected filter data
-					 * @input_vars
-					 * [{"var":"$data","type":"array","desc":"Selected filter value"},
-					 * {"var":"$key","type":"string","desc":"Selected filter key"},
-					 * {"var":"$value","type":"string","desc":"Selected filter value"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_filter( 'um_is_selected_filter_data', 'function_name', 10, 3 );
-					 * @example
-					 * <?php
-					 * add_filter( 'um_is_selected_filter_data', 'my_selected_filter_data', 10, 3 );
-					 * function my_selected_filter_data( $data, $key, $value ) {
-					 *     // your code here
-					 *     return $data;
-					 * }
-					 * ?>
-					 */
-					$data = apply_filters( 'um_is_selected_filter_data', $data, $key, $field_value );
-
-					if ( $field_value && $this->editing == true && is_array( $field_value ) && ( in_array( $value, $field_value ) || in_array( html_entity_decode( $value ), $field_value ) ) ) {
+					if ( in_array( $value, UM()->form()->post_form[ $key ] ) ) {
 						return true;
 					}
 
-					if ( $field_value == 0 && $this->editing == true && ! is_array( $field_value ) && $field_value === $value ) {
+					$stripslashed = array_map( 'stripslashes', UM()->form()->post_form[ $key ] );
+					if ( in_array( $value, $stripslashed ) ) {
 						return true;
 					}
 
-					if ( $field_value && $this->editing == true && ! is_array( $field_value ) && $field_value == $value ) {
+					if ( in_array( html_entity_decode( $value ), UM()->form()->post_form[ $key ] ) ) {
 						return true;
 					}
-
-					if ( $field_value && $this->editing == true && ! is_array( $field_value ) && html_entity_decode( $field_value ) == html_entity_decode( $value ) ) {
-						return true;
-					}
-
-					if ( empty( $field_value ) ) {
-						if ( isset( $data['default'] ) ) {
-							if ( strstr( $data['default'], ', ' ) ) {
-								$data['default'] = explode( ', ', $data['default'] );
-							}
-
-							if ( ! is_array( $data['default'] ) && $data['default'] === $value ) {
-								return true;
-							}
-
-							if ( is_array( $data['default'] ) && in_array( $value, $data['default'] ) ) {
-								return true;
-							}
-						}
-					}
-
 				} else {
 
 					if ( $value == UM()->form()->post_form[ $key ] ) {
 						return true;
 					}
 
+				}
+
+			} else {
+
+				$field_value = um_user( $key );
+				if ( ! $field_value ) {
+					$field_value = 0;
+				}
+
+				if ( $field_value == 0 && $value == '0' ) {
+					$value = (int) $value;
+				}
+
+				if ( $key == 'role' ) {
+
+					$role_keys = get_option( 'um_roles' );
+
+					if ( ! empty( $role_keys ) ) {
+						if ( in_array( $field_value, $role_keys ) ) {
+							$field_value = 'um_' . $field_value;
+						}
+					}
+				}
+
+
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_is_selected_filter_value
+				 * @description Change is selected filter value
+				 * @input_vars
+				 * [{"var":"$value","type":"string","desc":"Selected filter value"},
+				 * {"var":"$key","type":"string","desc":"Selected filter key"},
+				 * {"var":"$value","type":"string","desc":"Selected filter value"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_filter( 'um_is_selected_filter_value', 'function_name', 10, 2 );
+				 * @example
+				 * <?php
+				 * add_filter( 'um_is_selected_filter_value', 'my_selected_filter_value', 10, 2 );
+				 * function my_selected_filter_value( $value, $key ) {
+				 *     // your code here
+				 *     return $field_value;
+				 * }
+				 * ?>
+				 */
+				$field_value = apply_filters( 'um_is_selected_filter_value', $field_value, $key, $value );
+
+				/**
+				 * UM hook
+				 *
+				 * @type filter
+				 * @title um_is_selected_filter_data
+				 * @description Change is selected filter data
+				 * @input_vars
+				 * [{"var":"$data","type":"array","desc":"Selected filter value"},
+				 * {"var":"$key","type":"string","desc":"Selected filter key"},
+				 * {"var":"$value","type":"string","desc":"Selected filter value"}]
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_filter( 'um_is_selected_filter_data', 'function_name', 10, 3 );
+				 * @example
+				 * <?php
+				 * add_filter( 'um_is_selected_filter_data', 'my_selected_filter_data', 10, 3 );
+				 * function my_selected_filter_data( $data, $key, $value ) {
+				 *     // your code here
+				 *     return $data;
+				 * }
+				 * ?>
+				 */
+				$data = apply_filters( 'um_is_selected_filter_data', $data, $key, $field_value );
+
+				if ( ! $this->editing ) {
+					// show default on register screen if there is default
+					if ( isset( $data['default'] ) ) {
+						if ( strstr( $data['default'], ', ' ) ) {
+							$data['default'] = explode( ', ', $data['default'] );
+						}
+
+						if ( ! is_array( $data['default'] ) && $data['default'] === $value ) {
+							return true;
+						}
+
+						if ( is_array( $data['default'] ) && in_array( $value, $data['default'] ) ) {
+							return true;
+						}
+					}
+				} else {
+
+					if ( $field_value && is_array( $field_value ) && ( in_array( $value, $field_value ) || in_array( html_entity_decode( $value ), $field_value ) ) ) {
+						return true;
+					}
+
+					if ( $field_value == 0 && ! is_array( $field_value ) && $field_value === $value ) {
+						return true;
+					}
+
+					if ( $field_value && ! is_array( $field_value ) && $field_value == $value ) {
+						return true;
+					}
+
+					if ( $field_value && ! is_array( $field_value ) && html_entity_decode( $field_value ) == html_entity_decode( $value ) ) {
+						return true;
+					}
+
+					// show default on edit screen if there isn't meta row in usermeta table
+					$direct_db_value = $wpdb->get_var( $wpdb->prepare( "SELECT ISNULL( meta_value ) FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key = %s", um_user( 'ID' ), $key ) );
+					if ( ! isset( $direct_db_value ) && isset( $data['default'] ) ) {
+						if ( strstr( $data['default'], ', ' ) ) {
+							$data['default'] = explode( ', ', $data['default'] );
+						}
+
+						if ( ! is_array( $data['default'] ) && $data['default'] === $value ) {
+							return true;
+						}
+
+						if ( is_array( $data['default'] ) && in_array( $value, $data['default'] ) ) {
+							return true;
+						}
+					}
 				}
 
 			}
@@ -999,6 +1020,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return boolean
 		 */
 		function is_radio_checked( $key, $value, $data ) {
+			global $wpdb;
+
 			if ( isset( UM()->form()->post_form[ $key ] ) ) {
 				if ( is_array( UM()->form()->post_form[ $key ] ) && in_array( $value, UM()->form()->post_form[ $key ] ) ) {
 					return true;
@@ -1006,45 +1029,56 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					return true;
 				}
 			} else {
-				if ( um_user( $key ) && $this->editing == true ) {
 
-					if ( strstr( $key, 'role_' ) ) {
-						$key = 'role';
-					}
+				if ( $this->editing ) {
+					if ( um_user( $key ) ) {
 
-					$um_user_value = um_user( $key );
+						if ( strstr( $key, 'role_' ) ) {
+							$key = 'role';
+						}
 
-					if ( $key == 'role' ) {
-						$um_user_value = strtolower( $um_user_value );
+						$um_user_value = um_user( $key );
 
-						$role_keys = get_option( 'um_roles' );
+						if ( $key == 'role' ) {
+							$um_user_value = strtolower( $um_user_value );
 
-						if ( ! empty( $role_keys ) ) {
-							if ( in_array( $um_user_value, $role_keys ) ) {
-								$um_user_value = 'um_' . $um_user_value;
+							$role_keys = get_option( 'um_roles' );
+
+							if ( ! empty( $role_keys ) ) {
+								if ( in_array( $um_user_value, $role_keys ) ) {
+									$um_user_value = 'um_' . $um_user_value;
+								}
 							}
 						}
-					}
 
-					if ( $um_user_value == $value ) {
-						return true;
-					}
+						if ( $um_user_value == $value ) {
+							return true;
+						}
 
-					if ( is_array( $um_user_value ) && in_array( $value, $um_user_value ) ) {
-						return true;
-					}
+						if ( is_array( $um_user_value ) && in_array( $value, $um_user_value ) ) {
+							return true;
+						}
 
-					if ( is_array( $um_user_value ) ) {
-						foreach ( $um_user_value as $u ) {
-							if ( $u == html_entity_decode( $value ) ) {
-								return true;
+						if ( is_array( $um_user_value ) ) {
+							foreach ( $um_user_value as $u ) {
+								if ( $u == html_entity_decode( $value ) ) {
+									return true;
+								}
 							}
 						}
+					} else {
+
+						// show default on edit screen if there isn't meta row in usermeta table
+						$direct_db_value = $wpdb->get_var( $wpdb->prepare( "SELECT ISNULL( meta_value ) FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key = %s", um_user( 'ID' ), $key ) );
+						if ( ! isset( $direct_db_value ) && isset( $data['default'] ) && $data['default'] == $value ) {
+							return true;
+						}
+
 					}
-
-
-				} elseif ( isset( $data['default'] ) && $data['default'] == $value ) {
-					return true;
+				} else {
+					if ( isset( $data['default'] ) && $data['default'] == $value ) {
+						return true;
+					}
 				}
 			}
 
