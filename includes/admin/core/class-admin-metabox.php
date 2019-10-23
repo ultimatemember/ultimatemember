@@ -2328,9 +2328,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 							<?php if ( UM()->builtin()->custom_fields ) {
 								foreach ( UM()->builtin()->custom_fields as $field_key => $array ) {
-									if ( in_array( $array['type'], array( 'select' ) ) && ( ! isset( $field_args['metakey'] ) || $field_args['metakey'] != $array['metakey'] ) ) {
-										echo "<option value='".$array['metakey']."' ".selected( $array['metakey'], $this->edit_mode_value  ).">".$array['title']."</option>";
-									}
+									if ( in_array( $array['type'], array( 'select' ) ) && ( ! isset( $field_args['metakey'] ) || $field_args['metakey'] != $array['metakey'] ) && isset( $array['title'] ) ) { ?>
+										<option value="<?php echo esc_attr( $array['metakey'] ) ?>" <?php selected( $array['metakey'], $this->edit_mode_value ) ?>><?php echo $array['title'] ?></option>
+									<?php }
 								}
 							} ?>
 						</select>
