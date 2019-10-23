@@ -88,7 +88,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				array(
 					'id'        => 'pages_settings',
 					'type'      => 'hidden',
-					'default'   => true,
+					'value'     => true,
 					'is_option' => false
 				)
 			);
@@ -1688,6 +1688,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						$slug = str_replace( 'core_', '', $option_slug );
 						update_post_meta( $post_id, '_um_core', $slug );
 					}
+
+					// reset rewrite rules after re-save pages
+					UM()->rewrite()->reset_rules();
+
 				} elseif ( ! empty( $_POST['um_options']['permalink_base'] ) ) {
 					if ( ! empty( $this->need_change_permalinks ) ) {
 						$users = get_users( array(
@@ -2312,7 +2316,6 @@ Upgraded From:            		<?php echo get_option( 'um_last_version_upgrade', 'N
 Current URL Method:			<?php echo UM()->options()->get( 'current_url_method' ). "\n"; ?>
 Cache User Profile:			<?php if( UM()->options()->get( 'um_profile_object_cache_stop' ) == 1 ){ echo "No"; }else{ echo "Yes"; } echo "\n"; ?>
 Generate Slugs on Directories:	<?php if( UM()->options()->get( 'um_generate_slug_in_directory' ) == 1 ){ echo "No"; }else{ echo "Yes"; } echo "\n"; ?>
-Rewrite Rules: 				<?php if( UM()->options()->get( 'um_flush_stop' ) == 1 ){ echo "No"; }else{ echo "Yes"; } echo "\n"; ?>
 Force UTF-8 Encoding: 		<?php if( UM()->options()->get( 'um_force_utf8_strings' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
 JS/CSS Compression: 			<?php if ( defined('SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) { echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
 <?php if( is_multisite() ): ?>
