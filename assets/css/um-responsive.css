@@ -535,6 +535,10 @@ div.uimob800 .um-account-meta img {
 	height: auto;
 }
 
+div.uimob800 .um-account-meta img {
+	width: 100%;
+}
+
 div.uimob800 .um-profile-photo {
 	width: 150px !important;
 }

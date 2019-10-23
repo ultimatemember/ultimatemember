@@ -21,7 +21,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_Online Online()
 	 * @method UM_Profile_Completeness_API Profile_Completeness_API()
 	 * @method UM_reCAPTCHA reCAPTCHA()
-	 * @method UM_Reviews_API Reviews_API()
+	 * @method UM_Reviews Reviews()
 	 * @method UM_Activity_API Activity_API()
 	 * @method UM_Social_Login_API Social_Login_API()
 	 * @method UM_User_Tags User_Tags()
