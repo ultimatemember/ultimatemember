@@ -1046,13 +1046,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 				case 'um_admin_preview_form':
 
+					UM()->user()->preview = true;
+
 					$mode = UM()->query()->get_attr('mode', $arg1 );
 
 					if ( $mode == 'profile' ) {
 						UM()->fields()->editing = true;
 					}
 
-					$output = do_shortcode('[ultimatemember form_id='.$arg1.']');
+					$output = do_shortcode('[ultimatemember form_id="' . $arg1 . '" /]');
 
 					break;
 
