@@ -372,6 +372,13 @@ function um_submit_form_errors_hook_( $args ) {
 	if ( ! empty( $fields ) ) {
 		foreach ( $fields as $key => $array ) {
 
+			if ( $mode == 'profile' ) {
+				$restricted_fields = UM()->fields()->get_restricted_fields_for_edit();
+				if ( is_array( $restricted_fields ) && in_array( $key, $restricted_fields ) ) {
+					continue;
+				}
+			}
+
 			if ( isset( $array['public']  ) && -2 == $array['public'] && ! empty( $array['roles'] ) && is_user_logged_in() ) {
 				$current_user_roles = um_user( 'roles' );
 				if ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $array['roles'] ) ) <= 0 ) {

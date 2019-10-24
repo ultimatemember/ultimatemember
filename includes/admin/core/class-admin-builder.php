@@ -870,6 +870,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						<?php if ( UM()->builtin()->predefined_fields ) {
 							foreach ( UM()->builtin()->predefined_fields as $field_key => $array ) {
 
+								if ( $_POST['form_mode'] == 'profile' ) {
+									$restricted_fields = UM()->fields()->get_restricted_fields_for_edit();
+									if ( is_array( $restricted_fields ) && in_array( $field_key, $restricted_fields ) ) {
+										continue;
+									}
+								}
+
 								if ( ! isset( $array['account_only'] ) && ! isset( $array['private_use'] ) ) { ?>
 
 									<a href="javascript:void(0);" class="button" <?php disabled( in_array( $field_key, $form_fields, true ) ) ?> data-silent_action="um_admin_add_field_from_predefined" data-arg1="<?php echo esc_attr( $field_key ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>"><?php echo um_trim_string( stripslashes( $array['title'] ), 20 ); ?></a>

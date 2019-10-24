@@ -1770,6 +1770,22 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 
 		/**
+		 * Getting the fields that need to be disabled in edit mode (profile)
+		 *
+		 * @param bool $_um_profile_id
+		 *
+		 * @return array
+		 */
+		function get_restricted_fields_for_edit( $_um_profile_id = false ) {
+			// fields that need to be disabled in edit mode (profile)
+			$arr_restricted_fields = array( 'user_email', 'username', 'user_login', 'user_password' );
+			$arr_restricted_fields = apply_filters( 'um_user_profile_restricted_edit_fields', $arr_restricted_fields, $_um_profile_id );
+
+			return $arr_restricted_fields;
+		}
+
+
+		/**
 		 * Gets a field in 'input mode'
 		 *
 		 * @param string $key
@@ -1899,9 +1915,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			um_fetch_user( $_um_profile_id );
 
 			// fields that need to be disabled in edit mode (profile)
-			$arr_restricted_fields = array( 'user_email', 'username', 'user_login', 'user_password' );
-			$arr_restricted_fields = apply_filters( 'um_user_profile_restricted_edit_fields', $arr_restricted_fields, $key, $data, $_um_profile_id );
-
+			$arr_restricted_fields = $this->get_restricted_fields_for_edit( $_um_profile_id );
 			if ( in_array( $key, $arr_restricted_fields ) && $this->editing == true && $this->set_mode == 'profile' ) {
 				return;
 			}
