@@ -103,7 +103,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			}
 
 			wp_register_script( 'um_tipsy', $this->js_baseurl . 'um-tipsy' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
-			wp_register_script( 'um_raty', $this->js_baseurl . 'um-raty' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
+			wp_register_script( 'um_raty', $this->js_baseurl . 'um-raty' . $this->suffix . '.js', array( 'jquery', 'wp-i18n' ), ultimatemember_version, true );
 			wp_register_script( 'um_crop', $this->js_baseurl . 'um-crop' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
 			wp_register_script( 'um_modal', $this->js_baseurl . 'um-modal' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'um_crop' ), ultimatemember_version, true );
