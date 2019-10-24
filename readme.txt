@@ -143,7 +143,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
 
-= 2.1.0: October x, 2019 =
+= 2.1.0: November x, 2019 =
 
 * Enhancements:
   - Added member directory list view
@@ -158,7 +158,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * Bugfixes:
   - Optimized usermeta for Account submit security
-  - Optimized usermeta for Account submit security
+  - Fixed flushing rewrite rules on every page reloading
   - Fixed Gmail & Yahoo UTF-8 encoding of email notification subject
   - Fixed ajax_resize_image() process
   - Fixed country fields values
@@ -171,6 +171,9 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed RTL styles issues on user profile and account pages
   - Fixed upload profile/cover photos at the profile page, don't apply until the crop finished
   - Fixed alphabetical field validation for cyrillic and not UTF-8 symbols
+  - Fixed user profile validation if username, username or email, password and email fields were added to form
+  - Fixed user profile preview in admin Form Builder
+  - Fixed getting templates function for some Windows servers
   - Localized um-raty.js library
 
 
