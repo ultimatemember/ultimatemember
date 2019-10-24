@@ -11,13 +11,13 @@
 			type: 'POST',
 			dataType: 'json',
 			data: {
-				action: 'um_metadata210',
+				action: 'um_metadata210beta1',
 				nonce: um_admin_scripts.nonce
 			},
 			success: function( response ) {
 				if ( typeof response.data != 'undefined' ) {
 					um_add_upgrade_log( response.data.message );
-					um_memberdir210();
+					um_memberdir210beta1();
 				} else {
 					um_wrong_ajax();
 				}
@@ -29,14 +29,14 @@
 
 
 		//clear users cache
-		function um_memberdir210() {
+		function um_memberdir210beta1() {
 			um_add_upgrade_log( '<?php echo esc_js( __( 'Upgrade Member Directories...', 'ultimate-member' ) ) ?>' );
 			jQuery.ajax({
 				url: wp.ajax.settings.url,
 				type: 'POST',
 				dataType: 'json',
 				data: {
-					action: 'um_memberdir210',
+					action: 'um_memberdir210beta1',
 					nonce: um_admin_scripts.nonce
 				},
 				success: function( response ) {
