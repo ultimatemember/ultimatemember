@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-10-24 16:16+0300\n"
-"PO-Revision-Date: 2019-10-24 16:16+0300\n"
+"POT-Creation-Date: 2019-10-25 01:04+0300\n"
+"PO-Revision-Date: 2019-10-25 01:04+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -470,7 +470,7 @@ msgid "Dashboard"
 msgstr ""
 
 #: includes/admin/core/class-admin-menu.php:159
-#: includes/admin/templates/gdpr.php:7 includes/core/class-common.php:54
+#: includes/admin/templates/gdpr.php:7 includes/core/class-common.php:58
 msgid "Forms"
 msgstr ""
 
@@ -481,7 +481,7 @@ msgid "User Roles"
 msgstr ""
 
 #: includes/admin/core/class-admin-menu.php:164
-#: includes/core/class-common.php:84
+#: includes/core/class-common.php:88
 msgid "Member Directories"
 msgstr ""
 
@@ -3324,7 +3324,7 @@ msgstr ""
 #: includes/admin/core/list-tables/roles-list-table.php:485
 #: includes/admin/core/packages/2.0-beta1/user_roles.php:14
 #: includes/admin/templates/role/role-edit.php:153
-#: includes/core/class-common.php:56 includes/core/class-common.php:86
+#: includes/core/class-common.php:60 includes/core/class-common.php:90
 msgid "Add New"
 msgstr ""
 
@@ -3479,7 +3479,7 @@ msgid "You did not create any user roles yet"
 msgstr ""
 
 #: includes/admin/core/packages/2.0-beta1/user_roles.php:18
-#: includes/core/class-common.php:60 includes/core/class-common.php:90
+#: includes/core/class-common.php:64 includes/core/class-common.php:94
 msgid "Nothing found in Trash"
 msgstr ""
 
@@ -3519,19 +3519,19 @@ msgstr ""
 msgid "Upgrade user roles..."
 msgstr ""
 
-#: includes/admin/core/packages/2.1.0/functions.php:11
+#: includes/admin/core/packages/2.1.0-beta1/functions.php:11
 msgid "Usermeta was upgraded successfully"
 msgstr ""
 
-#: includes/admin/core/packages/2.1.0/functions.php:24
+#: includes/admin/core/packages/2.1.0-beta1/functions.php:24
 msgid "Member directories were upgraded successfully"
 msgstr ""
 
-#: includes/admin/core/packages/2.1.0/init.php:7
+#: includes/admin/core/packages/2.1.0-beta1/init.php:7
 msgid "Upgrade user metadata..."
 msgstr ""
 
-#: includes/admin/core/packages/2.1.0/init.php:33
+#: includes/admin/core/packages/2.1.0-beta1/init.php:33
 msgid "Upgrade Member Directories..."
 msgstr ""
 
@@ -6833,43 +6833,43 @@ msgstr ""
 msgid "Zimbabwe"
 msgstr ""
 
-#: includes/core/class-common.php:55
+#: includes/core/class-common.php:59
 msgid "Form"
 msgstr ""
 
-#: includes/core/class-common.php:57
+#: includes/core/class-common.php:61
 msgid "Add New Form"
 msgstr ""
 
-#: includes/core/class-common.php:58
+#: includes/core/class-common.php:62
 msgid "Edit Form"
 msgstr ""
 
-#: includes/core/class-common.php:59
+#: includes/core/class-common.php:63
 msgid "You did not create any forms yet"
 msgstr ""
 
-#: includes/core/class-common.php:61
+#: includes/core/class-common.php:65
 msgid "Search Forms"
 msgstr ""
 
-#: includes/core/class-common.php:85
+#: includes/core/class-common.php:89
 msgid "Member Directory"
 msgstr ""
 
-#: includes/core/class-common.php:87
+#: includes/core/class-common.php:91
 msgid "Add New Member Directory"
 msgstr ""
 
-#: includes/core/class-common.php:88
+#: includes/core/class-common.php:92
 msgid "Edit Member Directory"
 msgstr ""
 
-#: includes/core/class-common.php:89
+#: includes/core/class-common.php:93
 msgid "You did not create any member directories yet"
 msgstr ""
 
-#: includes/core/class-common.php:91
+#: includes/core/class-common.php:95
 msgid "Search Member Directories"
 msgstr ""
 

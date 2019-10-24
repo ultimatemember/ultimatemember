@@ -908,89 +908,89 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							'title'     => __( 'Registration Form', 'ultimate-member' ),
 							'fields'    => array(
 								array(
-									'id'       		=> 'register_template',
-									'type'     		=> 'select',
-									'label'    		=> __( 'Registration Default Template','ultimate-member' ),
-									'tooltip' 	=> __( 'This will be the default template to output registration' ),
-									'default'  		=> um_get_metadefault('register_template'),
-									'options' 		=> UM()->shortcodes()->get_templates( 'register' ),
-									'size'          => 'small'
+									'id'        => 'register_template',
+									'type'      => 'select',
+									'label'     => __( 'Registration Default Template', 'ultimate-member' ),
+									'tooltip'   => __( 'This will be the default template to output registration', 'ultimate-member' ),
+									'default'   => um_get_metadefault('register_template'),
+									'options'   => UM()->shortcodes()->get_templates( 'register' ),
+									'size'      => 'small',
 								),
 								array(
-									'id'      		=> 'register_max_width',
-									'type'     		=> 'text',
-									'label'    		=> __( 'Registration Maximum Width','ultimate-member' ),
-									'default'  		=> um_get_metadefault('register_max_width'),
-									'tooltip' 	=> __('The maximum width this shortcode can take from the page width','ultimate-member'),
-									'size'          => 'small'
+									'id'        => 'register_max_width',
+									'type'      => 'text',
+									'label'     => __( 'Registration Maximum Width', 'ultimate-member' ),
+									'default'   => um_get_metadefault('register_max_width'),
+									'tooltip'   => __( 'The maximum width this shortcode can take from the page width', 'ultimate-member' ),
+									'size'      => 'small'
 								),
 								array(
-									'id'       		=> 'register_align',
-									'type'     		=> 'select',
-									'label'    		=> __( 'Registration Shortcode Alignment','ultimate-member' ),
-									'tooltip' 	=> __( 'The shortcode is centered by default unless you specify otherwise here','ultimate-member' ),
-									'default'  		=> um_get_metadefault('register_align'),
-									'options' 		=> array(
-										'center' 			=> __('Centered'),
-										'left' 				=> __('Left aligned'),
-										'right' 			=> __('Right aligned'),
+									'id'        => 'register_align',
+									'type'      => 'select',
+									'label'     => __( 'Registration Shortcode Alignment', 'ultimate-member' ),
+									'tooltip'   => __( 'The shortcode is centered by default unless you specify otherwise here', 'ultimate-member' ),
+									'default'   => um_get_metadefault( 'register_align' ),
+									'options'   => array(
+										'center'    => __( 'Centered', 'ultimate-member' ),
+										'left'      => __( 'Left aligned', 'ultimate-member' ),
+										'right'     => __( 'Right aligned', 'ultimate-member' ),
 									),
-									'size'          => 'small'
+									'size'      => 'small'
 								),
 								array(
-									'id'       		=> 'register_icons',
-									'type'     		=> 'select',
-									'label'    		=> __( 'Registration Field Icons','ultimate-member' ),
-									'tooltip' 	=> __( 'This controls the display of field icons in the registration form','ultimate-member' ),
-									'default'  		=> um_get_metadefault('register_icons'),
-									'options' 		=> array(
-										'field' 			=> __('Show inside text field'),
-										'label' 			=> __('Show with label'),
-										'off' 				=> __('Turn off'),
+									'id'        => 'register_icons',
+									'type'      => 'select',
+									'label'     => __( 'Registration Field Icons', 'ultimate-member' ),
+									'tooltip'   => __( 'This controls the display of field icons in the registration form', 'ultimate-member' ),
+									'default'   => um_get_metadefault( 'register_icons' ),
+									'options'   => array(
+										'field' => __( 'Show inside text field', 'ultimate-member' ),
+										'label' => __( 'Show with label', 'ultimate-member' ),
+										'off'   => __( 'Turn off', 'ultimate-member' ),
 									),
-									'size'          => 'small'
+									'size'      => 'small'
 								),
 								array(
-									'id'      		=> 'register_primary_btn_word',
-									'type'     		=> 'text',
-									'label'    		=> __( 'Registration Primary Button Text','ultimate-member' ),
-									'default'  		=> um_get_metadefault('register_primary_btn_word'),
-									'tooltip' 	   		=> __('The text that is used for primary button text','ultimate-member'),
+									'id'        => 'register_primary_btn_word',
+									'type'      => 'text',
+									'label'     => __( 'Registration Primary Button Text', 'ultimate-member' ),
+									'default'   => um_get_metadefault('register_primary_btn_word'),
+									'tooltip'   => __( 'The text that is used for primary button text', 'ultimate-member' ),
+									'size'      => 'medium'
+								),
+								array(
+									'id'        => 'register_secondary_btn',
+									'type'      => 'checkbox',
+									'label'     => __( 'Registration Secondary Button', 'ultimate-member' ),
+									'default'   => 1,
+									'tooltip'   => __( 'Switch on/off the secondary button display in the form', 'ultimate-member' ),
+								),
+								array(
+									'id'            => 'register_secondary_btn_word',
+									'type'          => 'text',
+									'label'         => __( 'Registration Secondary Button Text', 'ultimate-member' ),
+									'default'       => um_get_metadefault( 'register_secondary_btn_word' ),
+									'tooltip'       => __( 'The text that is used for the secondary button text', 'ultimate-member' ),
+									'conditional'   => array( 'register_secondary_btn', '=', 1 ),
 									'size'          => 'medium'
 								),
 								array(
-									'id'       		=> 'register_secondary_btn',
-									'type'     		=> 'checkbox',
-									'label'    		=> __( 'Registration Secondary Button','ultimate-member' ),
-									'default' 		=> 1,
-									'tooltip' 	=> __('Switch on/off the secondary button display in the form','ultimate-member'),
-								),
-								array(
-									'id'      		=> 'register_secondary_btn_word',
-									'type'     		=> 'text',
-									'label'    		=> __( 'Registration Secondary Button Text','ultimate-member' ),
-									'default'  		=> um_get_metadefault('register_secondary_btn_word'),
-									'tooltip' 	=> __('The text that is used for the secondary button text','ultimate-member'),
-									'conditional'		=> array( 'register_secondary_btn', '=', 1 ),
+									'id'            => 'register_secondary_btn_url',
+									'type'          => 'text',
+									'label'         => __( 'Registration Secondary Button URL', 'ultimate-member' ),
+									'default'       => um_get_metadefault('register_secondary_btn_url'),
+									'tooltip'       => __( 'You can replace default link for this button by entering custom URL', 'ultimate-member' ),
+									'conditional'   => array( 'register_secondary_btn', '=', 1 ),
 									'size'          => 'medium'
 								),
 								array(
-									'id'      		=> 'register_secondary_btn_url',
-									'type'     		=> 'text',
-									'label'    		=> __( 'Registration Secondary Button URL','ultimate-member' ),
-									'default'  		=> um_get_metadefault('register_secondary_btn_url'),
-									'tooltip' 	=> __('You can replace default link for this button by entering custom URL','ultimate-member'),
-									'conditional'		=> array( 'register_secondary_btn', '=', 1 ),
-									'size'          => 'medium'
-								),
-								array(
-									'id'       		=> 'register_role',
-									'type'     		=> 'select',
-									'label'    		=> __( 'Registration Default Role','ultimate-member' ),
-									'tooltip' 	=> __( 'This will be the default role assigned to users registering thru registration form','ultimate-member' ),
-									'default'  		=> um_get_metadefault('register_role'),
-									'options' 		=> UM()->roles()->get_roles( $add_default = 'Default' ),
-									'size'          => 'small'
+									'id'        => 'register_role',
+									'type'      => 'select',
+									'label'     => __( 'Registration Default Role', 'ultimate-member' ),
+									'tooltip'   => __( 'This will be the default role assigned to users registering thru registration form', 'ultimate-member' ),
+									'default'   => um_get_metadefault( 'register_role' ),
+									'options'   => UM()->roles()->get_roles( $add_default = 'Default' ),
+									'size'      => 'small'
 								)
 							)
 						),
@@ -998,94 +998,94 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							'title'     => __( 'Login Form', 'ultimate-member' ),
 							'fields'    => array(
 								array(
-									'id'       		=> 'login_template',
-									'type'     		=> 'select',
-									'label'    		=> __( 'Login Default Template','ultimate-member' ),
-									'tooltip' 	=> __( 'This will be the default template to output login','ultimate-member' ),
-									'default'  		=> um_get_metadefault('login_template'),
-									'options' 		=> UM()->shortcodes()->get_templates( 'login' ),
-									'size'          => 'small'
+									'id'        => 'login_template',
+									'type'      => 'select',
+									'label'     => __( 'Login Default Template', 'ultimate-member' ),
+									'tooltip'   => __( 'This will be the default template to output login', 'ultimate-member' ),
+									'default'   => um_get_metadefault( 'login_template' ),
+									'options'   => UM()->shortcodes()->get_templates( 'login' ),
+									'size'      => 'small'
 								),
 								array(
-									'id'      		=> 'login_max_width',
-									'type'     		=> 'text',
-									'label'    		=> __( 'Login Maximum Width','ultimate-member' ),
-									'default'  		=> um_get_metadefault('login_max_width'),
-									'tooltip' 	=> __('The maximum width this shortcode can take from the page width','ultimate-member'),
-									'size'          => 'small'
+									'id'        => 'login_max_width',
+									'type'      => 'text',
+									'label'     => __( 'Login Maximum Width', 'ultimate-member' ),
+									'default'   => um_get_metadefault( 'login_max_width' ),
+									'tooltip'   => __( 'The maximum width this shortcode can take from the page width', 'ultimate-member' ),
+									'size'      => 'small'
 								),
 								array(
-									'id'       		=> 'login_align',
-									'type'     		=> 'select',
-									'label'    		=> __( 'Login Shortcode Alignment','ultimate-member' ),
-									'tooltip' 	=> __( 'The shortcode is centered by default unless you specify otherwise here','ultimate-member' ),
-									'default'  		=> um_get_metadefault('login_align'),
-									'options' 		=> array(
-										'center' 			=> __('Centered','ultimate-member'),
-										'left' 				=> __('Left aligned','ultimate-member'),
-										'right' 			=> __('Right aligned','ultimate-member'),
+									'id'        => 'login_align',
+									'type'      => 'select',
+									'label'     => __( 'Login Shortcode Alignment', 'ultimate-member' ),
+									'tooltip'   => __( 'The shortcode is centered by default unless you specify otherwise here', 'ultimate-member' ),
+									'default'   => um_get_metadefault( 'login_align' ),
+									'options'   => array(
+										'center'    => __( 'Centered', 'ultimate-member' ),
+										'left'      => __( 'Left aligned', 'ultimate-member' ),
+										'right'     => __( 'Right aligned', 'ultimate-member' ),
 									),
-									'size'          => 'small'
+									'size'      => 'small'
 								),
 								array(
-									'id'       		=> 'login_icons',
-									'type'     		=> 'select',
-									'label'    		=> __( 'Login Field Icons','ultimate-member' ),
-									'tooltip' 	=> __( 'This controls the display of field icons in the login form','ultimate-member' ),
-									'default'  		=> um_get_metadefault('login_icons'),
-									'options' 		=> array(
-										'field' 			=> __('Show inside text field','ultimate-member'),
-										'label' 			=> __('Show with label','ultimate-member'),
-										'off' 				=> __('Turn off','ultimate-member'),
+									'id'        => 'login_icons',
+									'type'      => 'select',
+									'label'     => __( 'Login Field Icons', 'ultimate-member' ),
+									'tooltip'   => __( 'This controls the display of field icons in the login form', 'ultimate-member' ),
+									'default'   => um_get_metadefault( 'login_icons' ),
+									'options'   => array(
+										'field' => __( 'Show inside text field', 'ultimate-member' ),
+										'label' => __( 'Show with label', 'ultimate-member' ),
+										'off'   => __( 'Turn off', 'ultimate-member' ),
 									),
-									'size'          => 'small'
+									'size'      => 'small'
 								),
 								array(
-									'id'      		=> 'login_primary_btn_word',
-									'type'     		=> 'text',
-									'label'    		=> __( 'Login Primary Button Text','ultimate-member' ),
-									'default'  		=> um_get_metadefault('login_primary_btn_word'),
-									'tooltip' 	=> __('The text that is used for primary button text','ultimate-member'),
+									'id'        => 'login_primary_btn_word',
+									'type'      => 'text',
+									'label'     => __( 'Login Primary Button Text','ultimate-member' ),
+									'default'   => um_get_metadefault( 'login_primary_btn_word' ),
+									'tooltip'   => __( 'The text that is used for primary button text', 'ultimate-member' ),
+									'size'      => 'medium'
+								),
+								array(
+									'id'        => 'login_secondary_btn',
+									'type'      => 'checkbox',
+									'label'     => __( 'Login Secondary Button', 'ultimate-member' ),
+									'default'   => 1,
+									'tooltip'   => __( 'Switch on/off the secondary button display in the form', 'ultimate-member' ),
+								),
+								array(
+									'id'            => 'login_secondary_btn_word',
+									'type'          => 'text',
+									'label'         => __( 'Login Secondary Button Text', 'ultimate-member' ),
+									'default'       => um_get_metadefault( 'login_secondary_btn_word' ),
+									'tooltip'       => __('The text that is used for the secondary button text', 'ultimate-member' ),
+									'conditional'   => array( 'login_secondary_btn', '=', 1 ),
 									'size'          => 'medium'
 								),
 								array(
-									'id'       		=> 'login_secondary_btn',
-									'type'     		=> 'checkbox',
-									'label'    		=> __( 'Login Secondary Button','ultimate-member' ),
-									'default' 		=> 1,
-									'tooltip' 	=> __('Switch on/off the secondary button display in the form','ultimate-member'),
-								),
-								array(
-									'id'      		=> 'login_secondary_btn_word',
-									'type'     		=> 'text',
-									'label'    		=> __( 'Login Secondary Button Text','ultimate-member' ),
-									'default'  		=> um_get_metadefault('login_secondary_btn_word'),
-									'tooltip' 	=> __('The text that is used for the secondary button text','ultimate-member'),
-									'conditional'		=> array( 'login_secondary_btn', '=', 1 ),
+									'id'            => 'login_secondary_btn_url',
+									'type'          => 'text',
+									'label'         => __( 'Login Secondary Button URL', 'ultimate-member' ),
+									'default'       => um_get_metadefault( 'login_secondary_btn_url' ),
+									'tooltip'       => __( 'You can replace default link for this button by entering custom URL', 'ultimate-member' ),
+									'conditional'   => array( 'login_secondary_btn', '=', 1 ),
 									'size'          => 'medium'
 								),
 								array(
-									'id'      		=> 'login_secondary_btn_url',
-									'type'     		=> 'text',
-									'label'    		=> __( 'Login Secondary Button URL','ultimate-member' ),
-									'default'  		=> um_get_metadefault('login_secondary_btn_url'),
-									'tooltip' 	=> __('You can replace default link for this button by entering custom URL','ultimate-member'),
-									'conditional'		=> array( 'login_secondary_btn', '=', 1 ),
-									'size'          => 'medium'
+									'id'        => 'login_forgot_pass_link',
+									'type'      => 'checkbox',
+									'label'     => __( 'Login Forgot Password Link', 'ultimate-member' ),
+									'default'   => 1,
+									'tooltip'   => __( 'Switch on/off the forgot password link in login form', 'ultimate-member' ),
 								),
 								array(
-									'id'       		=> 'login_forgot_pass_link',
-									'type'     		=> 'checkbox',
-									'label'    		=> __( 'Login Forgot Password Link','ultimate-member' ),
-									'default' 		=> 1,
-									'tooltip' 	=> __('Switch on/off the forgot password link in login form','ultimate-member'),
-								),
-								array(
-									'id'       		=> 'login_show_rememberme',
-									'type'     		=> 'checkbox',
-									'label'    		=> __( 'Show "Remember Me"','ultimate-member' ),
-									'default' 		=> 1,
-									'tooltip' 	=> __('Allow users to choose If they want to stay signed in even after closing the browser. If you do not show this option, the default will be to not remember login session.','ultimate-member'),
+									'id'        => 'login_show_rememberme',
+									'type'      => 'checkbox',
+									'label'     => __( 'Show "Remember Me"', 'ultimate-member' ),
+									'default'   => 1,
+									'tooltip'   => __( 'Allow users to choose If they want to stay signed in even after closing the browser. If you do not show this option, the default will be to not remember login session.', 'ultimate-member' ),
 								)
 							)
 						)
