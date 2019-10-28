@@ -158,6 +158,9 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 					switch_to_blog( $site->blog_id );
 
 					$the_plugs = get_option( 'active_plugins' );
+					if( ! $the_plugs ) {
+						$the_plugs = array();
+					}
 					$the_plugs = array_merge( $the_plugs, $sitewide_plugins );
 
 					foreach ( $the_plugs as $key => $value ) {
