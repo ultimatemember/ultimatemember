@@ -420,7 +420,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$output .= '<div class="um-field-label">';
 
 			if ( isset( $data['icon'] ) && $data['icon'] != '' && isset( $this->field_icons ) && $this->field_icons != 'off' && ( $this->field_icons == 'label' || $this->viewing == true ) ) {
-				$output .= '<div class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-label="' . $label . '"></i></div>';
+				$output .= '<div class="um-field-label-icon"><i class="' . esc_attr( $data['icon'] ) . '" aria-label="' . esc_attr( $label ) . '"></i></div>';
 			}
 
 			if ( $this->viewing == true ) {
