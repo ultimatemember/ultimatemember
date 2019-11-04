@@ -1208,7 +1208,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					}
 
 					// Add OR instead AND to search in WP core fields user_email, user_login, user_display_name
-					$search_where = $context->get_search_sql( $search, UM()->member_directory()->core_search_fields, 'both' );
+					$search_where = $context->get_search_sql( $search, $this->core_search_fields, 'both' );
 
 					$search_where = preg_replace( '/ AND \((.*?)\)/im', "$1 OR", $search_where );
 
@@ -1226,17 +1226,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 
 		/**
-		 * Use OR in search query if there is only searching, but with filters there will be AND conditional
-		 * @param $replacement
-		 *
-		 * @return string
-		 */
-		function organic_replacement( $replacement ) {
-			return " OR ( $1 )";
-		}
-
-
-		/**
 		 * Handle filters request
 		 */
 		function filters( $directory_data ) {
@@ -1249,10 +1238,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				}
 			}
 
+			// added for user tags extension integration on individual tag page
 			$ignore_empty_filters = apply_filters( 'um_member_directory_ignore_empty_filters', false );
 
 			if ( empty( $filter_query ) && ! $ignore_empty_filters ) {
-				//add_filter( 'um_member_directory_organic_search_replacement', array( &$this, 'organic_replacement' ) );
 				return;
 			}
 

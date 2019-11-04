@@ -394,7 +394,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 							$icon = ! empty( $data['icon'] ) ? '<i class="' . $data['icon'] . '"></i>' : '';
 						}
 
-						$items[] = '<span>' . $icon . $value . '</span>';
+						$items[] = apply_filters( 'um_show_meta_item_html', '<span>' . $icon . $value . '</span>', $key );
 						$items[] = '<span class="b">&bull;</span>';
 					}
 				}
