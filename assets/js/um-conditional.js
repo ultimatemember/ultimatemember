@@ -204,18 +204,18 @@ function um_in_array(needle, haystack, strict){
  * @param  object  $dom
  * @param  boolean is_single_update
  */
-function um_apply_conditions($dom, is_single_update) {
+function um_apply_conditions( $dom, is_single_update ) {
 	var operators = ['empty', 'not empty', 'equals to', 'not equals', 'greater than', 'less than', 'contains'];
-	if (!$dom.parents('.um-field[data-key]').length) {
+	if ( ! $dom.parents('.um-field[data-key]').length ) {
 		return;
 	}
 	var key = $dom.parents('.um-field[data-key]').data('key');
-	var conditions = um_field_conditions[key];
-	if (typeof (conditions) === 'undefined') {
+	var conditions = um_field_conditions[ key ];
+	if ( typeof conditions === 'undefined' ) {
 		return;
 	}
 
-	var live_field_value = um_get_field_data($dom);
+	var live_field_value = um_get_field_data( $dom );
 
 	var $owners = {};
 	var $owners_values = {};
