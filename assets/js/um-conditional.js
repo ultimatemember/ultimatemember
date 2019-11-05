@@ -206,8 +206,14 @@ function um_in_array(needle, haystack, strict){
  */
 function um_apply_conditions($dom, is_single_update) {
 	var operators = ['empty', 'not empty', 'equals to', 'not equals', 'greater than', 'less than', 'contains'];
+	if (!$dom.parents('.um-field[data-key]').length) {
+		return;
+	}
 	var key = $dom.parents('.um-field[data-key]').data('key');
 	var conditions = um_field_conditions[key];
+	if (typeof (conditions) === 'undefined') {
+		return;
+	}
 
 	var live_field_value = um_get_field_data($dom);
 
