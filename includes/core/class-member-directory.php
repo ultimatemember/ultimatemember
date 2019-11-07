@@ -433,7 +433,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? explode( '||', sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ) : array();
 
 					if ( isset( $attrs['metakey'] ) && strstr( $attrs['metakey'], 'role_' ) ) {
-						$shortcode_roles = get_post_meta( UM()->shortcodes()->form_id, '_um_roles', true );
+						$shortcode_roles = get_post_meta( $directory_data['form_id'], '_um_roles', true );
 						$um_roles = UM()->roles()->get_roles( false );
 
 						if ( ! empty( $shortcode_roles ) && is_array( $shortcode_roles ) ) {
