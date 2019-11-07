@@ -497,7 +497,7 @@ function um_run_search( directory ) {
 jQuery(document.body).ready( function() {
 
 
-	jQuery( '.um-search-filter select' ).each( function() {
+	jQuery( '.um-directory .um-search-filter select' ).each( function() {
 		if ( jQuery(this).find('option:not(:disabled)').length === 1 ) {
 			jQuery(this).prop('disabled', true);
 		}
@@ -510,7 +510,7 @@ jQuery(document.body).ready( function() {
 
 
 	//UI for change view type button
-	jQuery( document.body ).on( 'mouseover', '.um-member-directory-view-type', function() {
+	jQuery( document.body ).on( 'mouseover', '.um-directory .um-member-directory-view-type', function() {
 		if ( jQuery(this).hasClass('um-disabled') ) {
 			return;
 		}
@@ -524,7 +524,7 @@ jQuery(document.body).ready( function() {
 		} else {
 			jQuery(this).find( '.um-member-directory-view-type-a:first' ).show().tipsy('show');
 		}
-	}).on( 'mouseout', '.um-member-directory-view-type', function() {
+	}).on( 'mouseout', '.um-directory .um-member-directory-view-type', function() {
 		if ( jQuery(this).hasClass('um-disabled') ) {
 			return;
 		}
@@ -534,7 +534,7 @@ jQuery(document.body).ready( function() {
 	});
 
 	//change layout handler
-	jQuery( document.body ).on( 'click', '.um-member-directory-view-type-a', function() {
+	jQuery( document.body ).on( 'click', '.um-directory .um-member-directory-view-type-a', function() {
 		var directory = jQuery(this).parents('.um-directory');
 		if ( um_is_directory_busy( directory ) ) {
 			return false;
@@ -583,14 +583,14 @@ jQuery(document.body).ready( function() {
 
 
 	//searching
-	jQuery( document.body ).on( 'click', '.um-do-search', function() {
+	jQuery( document.body ).on( 'click', '.um-directory .um-do-search', function() {
 		var directory = jQuery(this).parents('.um-directory');
 		um_run_search( directory );
 	});
 
 
 	//make search on Enter click
-	jQuery( document.body ).on( 'keypress', '.um-search-line', function(e) {
+	jQuery( document.body ).on( 'keypress', '.um-directory .um-search-line', function(e) {
 		if ( e.which === 13 ) {
 			var directory = jQuery(this).parents('.um-directory');
 			um_run_search( directory );
@@ -608,7 +608,7 @@ jQuery(document.body).ready( function() {
 	 * Sorting
 	 */
 
-	jQuery( document.body ).on( 'click', '.um-member-directory-sorting-a .um-new-dropdown li a', function() {
+	jQuery( document.body ).on( 'click', '.um-directory .um-member-directory-sorting-a .um-new-dropdown li a', function() {
 		var directory = jQuery(this).parents('.um-directory');
 
 		if ( um_is_directory_busy( directory ) ) {
@@ -729,7 +729,7 @@ jQuery(document.body).ready( function() {
 	 * Profile Cards actions
 	 */
 
-	jQuery( document.body ).on('click', '.um-members.um-members-list .um-member-more a', function(e){
+	jQuery( document.body ).on('click', '.um-directory .um-members.um-members-list .um-member-more a', function(e){
 		e.preventDefault();
 
 		var block = jQuery(this).parents('.um-member');
@@ -741,7 +741,7 @@ jQuery(document.body).ready( function() {
 		return false;
 	});
 
-	jQuery( document.body ).on('click', '.um-members.um-members-list .um-member-less a', function(e){
+	jQuery( document.body ).on('click', '.um-directory .um-members.um-members-list .um-member-less a', function(e){
 		e.preventDefault();
 
 		var block = jQuery(this).parents('.um-member');
@@ -754,7 +754,7 @@ jQuery(document.body).ready( function() {
 	});
 
 
-	jQuery( document.body ).on('click', '.um-members.um-members-grid .um-member-more a', function(e){
+	jQuery( document.body ).on('click', '.um-directory .um-members.um-members-grid .um-member-more a', function(e){
 		e.preventDefault();
 
 		var block = jQuery(this).parents('.um-member');
@@ -768,7 +768,7 @@ jQuery(document.body).ready( function() {
 		return false;
 	});
 
-	jQuery( document.body ).on('click', '.um-members.um-members-grid .um-member-less a', function(e){
+	jQuery( document.body ).on('click', '.um-directory .um-members.um-members-grid .um-member-less a', function(e){
 		e.preventDefault();
 
 		var block = jQuery(this).parents('.um-member');
@@ -812,7 +812,7 @@ jQuery(document.body).ready( function() {
 
 
 	//filtration process
-	jQuery( document.body ).on( 'change', '.um-search-filter select', function() {
+	jQuery( document.body ).on( 'change', '.um-directory .um-search-filter select', function() {
 		if ( jQuery(this).val() === '' ) {
 			return;
 		}
@@ -864,10 +864,10 @@ jQuery(document.body).ready( function() {
 	});
 
 
-	jQuery( document.body ).on( 'click', '.um-members-filter-remove', function() {
+	jQuery( document.body ).on( 'click', '.um-directory .um-members-filter-remove', function() {
 		var directory = jQuery(this).parents('.um-directory');
 
-		if ( um_is_directory_busy( directory ) ) {
+		if ( um_is_directory_busy( directory ) || ! directory ) {
 			return;
 		}
 
@@ -953,7 +953,7 @@ jQuery(document.body).ready( function() {
 	});
 
 
-	jQuery( document.body ).on( 'click', '.um-clear-filters-a', function() {
+	jQuery( document.body ).on( 'click', '.um-directory .um-clear-filters-a', function() {
 		var directory = jQuery(this).parents('.um-directory');
 		if ( um_is_directory_busy( directory ) ) {
 			return;
@@ -1312,6 +1312,15 @@ jQuery(document.body).ready( function() {
 				directory.data( 'general_search', search );
 				directory.find('.um-search-line').val( search );
 			}
+
+			var page = um_get_data_for_directory( directory, 'page' );
+			if ( typeof page == 'undefined' ) {
+				page = 1;
+			} else if ( page > directory.data( 'total_pages' ) ) {
+				page = directory.data( 'total_pages' );
+			}
+
+			directory.data( 'page', page ).attr( 'data-page', page );
 
 			//sorting from history
 			if ( directory.find( '.um-member-directory-sorting' ).length ) {

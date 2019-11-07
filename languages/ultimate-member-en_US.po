@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-10-25 01:04+0300\n"
-"PO-Revision-Date: 2019-10-25 01:04+0300\n"
+"POT-Creation-Date: 2019-11-07 11:27+0200\n"
+"PO-Revision-Date: 2019-11-07 11:27+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -4577,7 +4577,7 @@ msgid "Register"
 msgstr ""
 
 #: includes/class-config.php:135 includes/class-config.php:788
-#: includes/core/class-member-directory.php:1855
+#: includes/core/class-member-directory.php:1844
 #: includes/core/um-actions-profile.php:1233
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
@@ -7126,14 +7126,14 @@ msgstr ""
 msgid "<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1800
-#: includes/core/class-member-directory.php:1844
+#: includes/core/class-member-directory.php:1789
+#: includes/core/class-member-directory.php:1833
 #: includes/core/um-actions-profile.php:1200
 #: includes/core/um-actions-profile.php:1231
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1850
+#: includes/core/class-member-directory.php:1839
 #: includes/core/um-actions-profile.php:1232
 msgid "My Account"
 msgstr ""
@@ -7184,7 +7184,7 @@ msgid "This activation link is expired or have already been used."
 msgstr ""
 
 #. translators: %s: support forums URL
-#: includes/core/class-plugin-updater.php:280
+#: includes/core/class-plugin-updater.php:283
 #, php-format
 msgid ""
 "An unexpected error occurred. Something may be wrong with %s or this "
@@ -7192,7 +7192,7 @@ msgid ""
 "the <a href=\"%s\">support forums</a>."
 msgstr ""
 
-#: includes/core/class-plugin-updater.php:282
+#: includes/core/class-plugin-updater.php:285
 msgid "https://wordpress.org/support/"
 msgstr ""
 
