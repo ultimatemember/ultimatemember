@@ -41,6 +41,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 			add_filter( 'um_builtin_validation_types_continue_loop', array( &$this, 'validation_types_continue_loop' ), 1, 4 );
 			add_filter( 'um_restrict_content_hide_metabox', array( &$this, 'hide_metabox_restrict_content_shop' ), 10, 1 );
+
+			add_filter( 'um_member_directory_meta_value_before_save', array( UM()->member_directory(), 'before_save_data' ), 10, 3 );
 		}
 
 
