@@ -92,7 +92,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		function __construct() {
 			add_filter( 'plugins_loaded', array( &$this, 'init_variables' ), 99999 );
 			add_filter( 'init', array( &$this, 'init_filter_types' ), 2 );
-			//add_filter( 'um_member_directory_meta_value_before_save', array( &$this, 'before_save_data' ), 10, 3 );
 
 			add_action( 'template_redirect', array( &$this, 'access_members' ), 555 );
 		}

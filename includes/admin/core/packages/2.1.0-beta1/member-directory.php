@@ -136,3 +136,46 @@ if ( UM()->options()->get( 'members_page' ) ) {
 		UM()->options()->update( 'user_tags_base_directory' , $member_directory_id );
 	}
 }
+
+
+// update groups settings
+$groups_query = new WP_Query;
+$groups = $groups_query->query( array(
+	'post_type'         => 'um_groups',
+	'posts_per_page'    => -1,
+	'fields'            => 'ids',
+) );
+
+if ( ! empty( $groups ) && ! is_wp_error( $groups ) ) {
+	foreach ( $groups as $id ) {
+		$filters_enabled = get_post_meta( $id, '_um_groups_invites_search_fields', true );
+		if ( ! empty( $filters_enabled ) ) {
+			$filters = $filters_old = get_post_meta( $id, '_um_groups_invites_fields', true );
+			if ( ! empty( $filters ) ) {
+				if ( false !== ( $last_login_key = array_search( '_um_last_login', $filters ) ) ) {
+					unset( $filters[ $last_login_key ] );
+					$filters[] = 'last_login';
+				}
+
+				if ( false !== ( $user_rating_key = array_search( 'user_rating', $filters ) ) ) {
+					unset( $filters[ $user_rating_key ] );
+					$filters[] = 'filter_rating';
+				}
+
+				$filter_fields = array_intersect( $filters, array_keys( UM()->member_directory()->filter_fields ) );
+
+				$general_search_fields = array_diff( $filters, array_keys( UM()->member_directory()->filter_fields ) );
+				$search_active = count( $general_search_fields ) > 0 ? 1 : 0;
+
+				update_post_meta( $id, '_um_groups_invites_fields', $filter_fields );
+				update_post_meta( $id, '_um_groups_invites_fields_old', $filters_old );
+
+				$search_enabled = get_post_meta( $id, '_um_groups_invites_search', true );
+				if ( empty( $search_enabled ) && $search_active ) {
+					update_post_meta( $id, '_um_groups_invites_search', true );
+					update_post_meta( $id, '_um_groups_invites_search_old', $search_enabled );
+				}
+			}
+		}
+	}
+}

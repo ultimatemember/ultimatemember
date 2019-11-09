@@ -497,3 +497,79 @@ function um_get_search_query() {
 
 	return um_filter_search( $search );
 }
+
+
+/**
+ * Check value of queried search in text input
+ *
+ * @deprecated 2.1.0
+ *
+ * @param $filter
+ * @param bool $echo
+ *
+ * @return mixed|string
+ */
+function um_queried_search_value( $filter, $echo = true ) {
+	$value = '';
+	if (isset( $_REQUEST['um_search'] )) {
+		$query = UM()->permalinks()->get_query_array();
+		if (isset( $query[$filter] ) && $query[$filter] != '') {
+			$value = stripslashes_deep( $query[$filter] );
+		}
+	}
+
+	if ($echo) {
+		echo $value;
+
+		return '';
+	} else {
+		return $value;
+	}
+
+}
+
+
+/**
+ * Check whether item in dropdown is selected in query-url
+ *
+ * @deprecated 2.1.0
+ *
+ * @param $filter
+ * @param $val
+ */
+function um_select_if_in_query_params( $filter, $val ) {
+	$selected = false;
+
+	if (isset( $_REQUEST['um_search'] )) {
+		$query = UM()->permalinks()->get_query_array();
+
+		if (isset( $query[$filter] ) && $val == $query[$filter])
+			$selected = true;
+
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_selected_if_in_query_params
+		 * @description Make selected or unselected from query attribute
+		 * @input_vars
+		 * [{"var":"$selected","type":"bool","desc":"Selected or not"},
+		 * {"var":"$filter","type":"string","desc":"Check by this filter in query"},
+		 * {"var":"$val","type":"string","desc":"Field Value"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_filter( 'um_selected_if_in_query_params', 'function_name', 10, 3 );
+		 * @example
+		 * <?php
+		 * add_filter( 'um_selected_if_in_query_params', 'my_selected_if_in_query_params', 10, 3 );
+		 * function my_selected_if_in_query_params( $selected, $filter, $val ) {
+		 *     // your code here
+		 *     return $selected;
+		 * }
+		 * ?>
+		 */
+		$selected = apply_filters( 'um_selected_if_in_query_params', $selected, $filter, $val );
+	}
+
+	echo $selected ? 'selected="selected"' : '';
+}
