@@ -50,8 +50,11 @@ function um_init_new_dropdown() {
 				obj.data( 'um-new-dropdown-show', true );
 
 				jQuery( document.body ).bind( 'click', function( event ) {
+				
 					if ( jQuery('.um-new-dropdown').find( '.' + jQuery( event.target ).attr('class').trim().replace( ' ', '.' ) ).length === 0 &&
-						jQuery( '.' + jQuery(event.target).parent().attr('class').trim() ) !== element ) {
+						
+
+						jQuery( '.' + jQuery(event.target).attr('class').trim() ) !== element ) {
 						//event = ev;
 						jQuery('.um-new-dropdown').hide();
 						jQuery('.um-new-dropdown').parent().data( 'um-new-dropdown-show', false );
