@@ -122,16 +122,18 @@
 							<?php do_action( 'um_members_list_just_after_actions_tmpl', $args ); ?>
 						</div>
 
-						<?php if ( $userinfo_animate ) { ?>
-							<div class="um-member-card-reveal-buttons">
-								<div class="um-member-more">
-									<a href="javascript:void(0);"><i class="um-faicon-angle-down"></i></a>
+						<# if ( $show_block ) { #>
+							<?php if ( $userinfo_animate ) { ?>
+								<div class="um-member-card-reveal-buttons">
+									<div class="um-member-more">
+										<a href="javascript:void(0);"><i class="um-faicon-angle-down"></i></a>
+									</div>
+									<div class="um-member-less">
+										<a href="javascript:void(0);"><i class="um-faicon-angle-up"></i></a>
+									</div>
 								</div>
-								<div class="um-member-less">
-									<a href="javascript:void(0);"><i class="um-faicon-angle-up"></i></a>
-								</div>
-							</div>
-						<?php } ?>
+							<?php } ?>
+						<# } #>
 					</div>
 				</div>
 
