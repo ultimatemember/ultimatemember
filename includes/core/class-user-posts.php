@@ -1,8 +1,9 @@
 <?php
 namespace um\core;
 
-// Exit if accessed directly
+
 if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 if ( ! class_exists( 'um\core\User_posts' ) ) {
 
@@ -13,14 +14,13 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 	 */
 	class User_posts {
 
+
 		/**
 		 * User_posts constructor.
 		 */
 		function __construct() {
 			add_action( 'um_profile_content_posts', array( &$this, 'add_posts' ) );
 			add_action( 'um_profile_content_comments', array( &$this, 'add_comments' ) );
-
-			add_action( 'um_ajax_load_posts__um_load_comments', array( &$this, 'load_comments' ), 10, 1 );
 		}
 
 
@@ -28,7 +28,6 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 		 * Add posts
 		 */
 		function add_posts() {
-
 			$args = array(
 				'post_type'         => 'post',
 				'posts_per_page'    => 10,
@@ -63,8 +62,7 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 
 			$count_posts = (int) count_user_posts( um_get_requested_user(), 'post', true );
 
-			UM()->shortcodes()->set_args = array( 'posts' => $posts, 'count_posts' => $count_posts );
-			UM()->shortcodes()->load_template( 'profile/posts' );
+			UM()->get_template( 'profile/posts.php', '', array( 'posts' => $posts, 'count_posts' => $count_posts ), true );
 		}
 
 
@@ -72,7 +70,23 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 		 * Add comments
 		 */
 		function add_comments() {
-			UM()->shortcodes()->load_template( 'profile/comments' );
+			$comments = get_comments( array(
+				'number'        => 10,
+				'offset'        => 0,
+				'user_id'       => um_user( 'ID' ),
+				'post_status'   => array( 'publish' ),
+				'type__not_in'  => apply_filters( 'um_excluded_comment_types', array('') ),
+			) );
+
+
+			$comments_count = get_comments( array(
+				'user_id'       => um_user( 'ID' ),
+				'post_status'   => array( 'publish' ),
+				'type__not_in'  => apply_filters( 'um_excluded_comment_types', array('') ),
+				'count'         => 1,
+			) );
+
+			UM()->get_template( 'profile/comments.php', '', array( 'comments' => $comments, 'count_comments' => $comments_count ), true );
 		}
 
 
@@ -118,31 +132,30 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 			$args = apply_filters( 'um_profile_query_make_posts', $args );
 			$posts = get_posts( $args );
 
-			UM()->shortcodes()->set_args = array( 'posts' => $posts );
-			UM()->shortcodes()->load_template( 'profile/posts' );
+			UM()->get_template( 'profile/posts.php', '', array( 'posts' => $posts ), true );
 			wp_die();
 		}
 
 
 		/**
 		 * Dynamic load of comments
-		 *
-		 * @param $args
 		 */
-		function load_comments( $args ) {
-			$array = explode(',', $args );
-			$post_type = $array[0];
-			$posts_per_page = $array[1];
-			$offset = $array[2];
-			$author = $array[3];
+		function load_comments() {
+			UM()->check_ajax_nonce();
 
-			$offset_n = $posts_per_page + $offset;
+			$user_id = ! empty( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : get_current_user_id();
+			$page = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 0;
 
-			UM()->shortcodes()->modified_args = "$post_type,$posts_per_page,$offset_n,$author";
+			$comments = get_comments( array(
+				'number'        => 10,
+				'offset'        => ( $page - 1 ) * 10,
+				'user_id'       => $user_id,
+				'post_status'   => array('publish'),
+				'type__not_in'  => apply_filters( 'um_excluded_comment_types', array('') ),
+			) );
 
-			UM()->shortcodes()->loop = UM()->query()->make("post_type=$post_type&number=$posts_per_page&offset=$offset&user_id=$author");
-
-			UM()->shortcodes()->load_template('profile/comments-single');
+			UM()->get_template( 'profile/comments.php', '', array( 'comments' => $comments ), true );
+			wp_die();
 		}
 
 
@@ -154,12 +167,15 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 		 *
 		 * @return int|string
 		 */
-		function count_user_posts_by_type( $user_id= '', $post_type = 'post' ) {
+		function count_user_posts_by_type( $user_id = '', $post_type = 'post' ) {
 			global $wpdb;
-			if ( !$user_id )
+			if ( ! $user_id ) {
 				$user_id = um_user( 'ID' );
+			}
 
-			if ( !$user_id ) return 0;
+			if ( ! $user_id ) {
+				return 0;
+			}
 
 			$where = get_posts_by_author_sql( $post_type, true, $user_id );
 			$count = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts $where" );
@@ -177,10 +193,13 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 		 */
 		function count_user_comments( $user_id = null ) {
 			global $wpdb;
-			if ( !$user_id )
-				$user_id = um_user('ID');
+			if ( ! $user_id ) {
+				$user_id = um_user( 'ID' );
+			}
 
-			if ( !$user_id ) return 0;
+			if ( ! $user_id ) {
+				return 0;
+			}
 
 			$count = $wpdb->get_var("SELECT COUNT(comment_ID) FROM " . $wpdb->comments. " WHERE user_id = " . $user_id . " AND comment_approved = '1'");
 

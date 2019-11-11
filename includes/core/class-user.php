@@ -1648,14 +1648,11 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * Update files
 		 *
 		 * @param $changes
+		 *
+		 * @deprecated 2.1.0
 		 */
 		function update_files( $changes ) {
-
-			foreach ( $changes as $key => $uri ) {
-				$src = um_is_temp_upload( $uri );
-				UM()->files()->new_user_upload( $this->id, $src, $key );
-			}
-
+			um_deprecated_function( 'update_files', '2.1.0', '' );
 		}
 
 

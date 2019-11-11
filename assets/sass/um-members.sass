@@ -167,8 +167,11 @@ body
           +flex( row, flex-start, baseline, nowrap )
           flex: 5
           .um-member-directory-sorting-a
+            +flex( row, flex-start, baseline, nowrap )
             position: relative
             cursor: pointer
+            a
+              margin: 0 5px 0 0
             i
               &.um-faicon-caret-down
                 display: inline
@@ -188,10 +191,14 @@ body
                 a[data-selected="1"]
                   display: none
         .um-member-directory-filters
+          +flex( row, flex-end, baseline, nowrap )
           flex: 2
           text-align: right
           .um-member-directory-filters-a
+            +flex( row, flex-start, baseline, nowrap )
             cursor: pointer
+            a
+              margin: 0 5px 0 0
             i
               &.um-faicon-caret-down
                 display: inline
@@ -244,6 +251,7 @@ body
                 margin: 4px 8px 0 8px
 
             .um-slider-range
+              +flex( row, flex-start, baseline, nowrap )
               margin: 6px 0 0 8px
               font-size: 0.8em
           &.um-datepicker-filter-type,
@@ -368,21 +376,21 @@ body
           .um-member-status
             display: none
             background: #999
-          &.awaiting_admin_review,
-          &.inactive,
-          &.rejected
-            display: block
-            position: absolute
-            top: 0
-            left: 0
-            width: 100%
-            padding: 7px 15px
-            color: #fff
-            z-index: 10
-            font-size: 13px
-            +border-box
-          &.awaiting_admin_review
-            background: #c74a4a
+            &.awaiting_admin_review,
+            &.inactive,
+            &.rejected
+              display: block
+              position: absolute
+              top: 0
+              left: 0
+              width: 100%
+              padding: 7px 15px
+              color: #fff
+              z-index: 10
+              font-size: 13px
+              +border-box
+            &.awaiting_admin_review
+              background: #c74a4a
           .um-member-photo
             padding: 40px 0 20px 0
             text-align: center
@@ -418,6 +426,8 @@ body
             background-color: #eee
             box-sizing: border-box
             position: relative
+            &[data-ratio]
+              overflow-y: hidden
             .um-member-cover-e
               text-align: center
               box-sizing: border-box
@@ -482,6 +492,9 @@ body
                   padding: 12px 0 0 0
                   line-height: 16px
                   vertical-align: middle
+                  strong
+                    display: block
+                    clear: both
                   span
                     display: block
                     text-align: center
@@ -548,6 +561,21 @@ body
           margin: 0
           background: none
           +border-box
+          .um-member-status
+            display: none
+            background: #999
+            &.awaiting_admin_review,
+            &.inactive,
+            &.rejected
+              display: block
+              width: 100%
+              padding: 7px 15px
+              margin-bottom: 10px
+              color: #fff
+              font-size: 13px
+              +border-box
+            &.awaiting_admin_review
+              background: #c74a4a
           .um-member-card-container
             +flex( row, flex-start, flex-start, nowrap )
             width: 100%
@@ -592,14 +620,16 @@ body
                       font-weight: 700
 
                 .um-member-tagline
+                  +flex( row, flex-start, baseline, wrap )
                   width: 100%
                   font-size: 13px
-                  line-height: 22px
+                  //line-height: 22px
                   color: #999
-                  padding: 0 15px 0 0
+                  padding: 0
+                  box-sizing: border-box
                 .um-member-meta-main
                   width: 100%
-                  padding: 0 10px 0 0
+                  padding: 0
                   box-sizing: border-box
                   display: none
                   &.no-animate
@@ -609,23 +639,15 @@ body
                     width: 100%
                     display: block
                     margin: 10px 0 0 0
-                    padding: 15px 0
                     box-sizing: border-box
                     border: none
 
                     .um-member-metaline
+                      +flex( row, flex-start, center, wrap )
                       font-size: 13px
                       padding: 12px 0 0 0
                       line-height: 16px
-                      vertical-align: middle
-                      clear: both
-                      text-align: left
                       width: 100%
-                      span
-                        text-align: left
-                        display: block
-                        strong, span
-                          float: left
 
                     .um-member-connect
                       padding-top: 10px
@@ -670,45 +692,6 @@ body
 
                 a
                   box-sizing: border-box
-                div[class$="stats"]
-                  text-align: center
-
-                .um-members-edit-btn
-                  margin: 2px 0
-                  height: 40px
-                  a.um-edit-profile-btn
-                    padding: 10px 15px !important
-                    transition: none !important
-                    display: inline-block !important
-                    margin: 0 auto !important
-                    min-width: 110px
-                    width: auto
-                    text-align: center
-                    font-size: 13px
-                    &:before
-                      font-family: "FontAwesome"
-                      margin-right: 8px
-                      width: 14px
-                      text-align: left
-                      display: inline-block
-                      font-size: 16px
-                      position: relative
-                      left: 0
-                      top: 1px
-                      content: "\f013"
-                .um-edit-profile-btn
-                  &:before
-                    font-family: "FontAwesome"
-                    margin-right: 8px
-                    width: 14px
-                    text-align: left
-                    display: inline-block
-                    font-size: 16px
-                    font-weight: 400
-                    position: relative
-                    left: 0
-                    top: 1px
-                    content: "\f013"
 
           .um-member-card-footer
             +flex( row, flex-end, center, nowrap )
@@ -762,11 +745,10 @@ body
     margin: 0 0 10px 0
     padding: 0
     .um-members-pagi
+      +flex( row, center, baseline, nowrap )
       width: 100%
-      float: left
       margin: 0
-      text-align: center
-      padding: 5px 0
+      padding: 0
       font-size: 15px
       .pagi
         cursor: pointer
@@ -779,6 +761,7 @@ body
         color: #666 !important
         font-weight: normal
         &.pagi-arrow
+          line-height: 38px
           i:before
             font-size: 20px
             vertical-align: middle !important
@@ -889,7 +872,9 @@ body
                   margin: 0 0 5px 0
                   a.um-button
                     width: 100% !important
-
+    .um-members-pagination-box
+      .um-members-pagi
+        display: none
 
   &.uimob500
     .um-member-directory-header
@@ -935,6 +920,9 @@ body
                 margin: 0 10px 0 0
                 .um-members-list-footer-button-wrapper
                   margin: 0 10px 5px 0
+    .um-members-pagination-box
+      .um-members-pagi
+        display: none
   &.uimob800
     .um-member-directory-header
       .um-member-directory-header-row

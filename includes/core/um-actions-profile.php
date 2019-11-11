@@ -300,22 +300,30 @@ function um_user_edit_profile( $args ) {
 			if ( isset( $args['submitted'][ $key ] ) && is_string( $args['submitted'][ $key ] ) ) {
 				$stripslashes = stripslashes( $args['submitted'][ $key ] );
 			}
-			if ( in_array( $array['type'], array( 'select' ) ) &&
-				 ! empty( $array['options'] ) && ! empty( $stripslashes ) &&
-				 ! in_array( $stripslashes, array_map( 'trim', $array['options'] ) ) && ! $has_custom_source  ) {
-				continue;
+
+			if ( in_array( $array['type'], array( 'select' ) ) ) {
+				if ( ! empty( $array['options'] ) && ! empty( $stripslashes ) && ! in_array( $stripslashes, array_map( 'trim', $array['options'] ) ) && ! $has_custom_source  ) {
+					continue;
+				}
+
+				//update empty user meta
+				if ( ! isset( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == '' ) {
+					update_user_meta( um_user( 'ID' ), $key, '' );
+				}
 			}
 
 			//validation of correct values from options in wp-admin
 			//the user cannot set invalid value in the hidden input at the page
-			if ( in_array( $array['type'], array( 'multiselect', 'checkbox', 'radio' ) ) &&
-				 ! empty( $args['submitted'][ $key ] ) && ! empty( $array['options'] ) ) {
-				$args['submitted'][ $key ] = array_map( 'stripslashes', array_map( 'trim', $args['submitted'][ $key ] ) );
-				$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], array_map( 'trim', $array['options'] ) );
-			}
+			if ( in_array( $array['type'], array( 'multiselect', 'checkbox', 'radio' ) ) ) {
+				if ( ! empty( $args['submitted'][ $key ] ) && ! empty( $array['options'] ) ) {
+					$args['submitted'][ $key ] = array_map( 'stripslashes', array_map( 'trim', $args['submitted'][ $key ] ) );
+					$args['submitted'][ $key ] = array_intersect( $args['submitted'][ $key ], array_map( 'trim', $array['options'] ) );
+				}
 
-			if ( $array['type'] == 'multiselect' || $array['type'] == 'checkbox' && ! isset( $args['submitted'][ $key ] ) ) {
-				delete_user_meta( um_user( 'ID' ), $key );
+				// update empty user meta
+				if ( ! isset( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == '' ) {
+					update_user_meta( um_user( 'ID' ), $key, array() );
+				}
 			}
 
 			if ( isset( $args['submitted'][ $key ] ) ) {
@@ -683,15 +691,46 @@ function um_profile_header_cover_area( $args ) {
 
 				<?php if ( um_user( 'cover_photo' ) ) {
 
-					if ( UM()->mobile()->isMobile() ) {
-						if ( UM()->mobile()->isTablet() ) {
-							echo um_user( 'cover_photo', 1000 );
-						} else {
-							echo um_user( 'cover_photo', 300 );
-						}
+					$get_cover_size = $args['coversize'];
+
+					if ( ! $get_cover_size || $get_cover_size == 'original' ) {
+						$size = null;
 					} else {
-						echo um_user( 'cover_photo', 1000 );
+						$size = $get_cover_size;
 					}
+
+					if ( UM()->mobile()->isMobile() ) {
+
+						// set for mobile width = 300 by default but can be changed via filter
+						if ( ! UM()->mobile()->isTablet() ) {
+							$size = 300;
+						}
+
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_mobile_cover_photo
+						 * @description Add size for mobile device
+						 * @input_vars
+						 * [{"var":"$size","type":"int","desc":"Form's agrument - Cover Photo size"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage
+						 * <?php add_filter( 'um_mobile_cover_photo', 'change_size', 10, 1 ); ?>
+						 * @example
+						 * <?php
+						 * add_filter( 'um_mobile_cover_photo', 'um_change_cover_mobile_size', 10, 1 );
+						 * function um_change_cover_mobile_size( $size ) {
+						 *     // your code here
+						 *     return $size;
+						 * }
+						 * ?>
+						 */
+						$size = apply_filters( 'um_mobile_cover_photo', $size );
+					}
+
+					echo um_user( 'cover_photo', $size );
 
 				} elseif ( $default_cover && $default_cover['url'] ) {
 
@@ -798,8 +837,22 @@ function um_profile_header( $args ) {
 
 		<div class="um-profile-photo" data-user_id="<?php echo esc_attr( um_profile_id() ); ?>">
 
-			<a href="<?php echo esc_url( um_user_profile_url() ); ?>" class="um-profile-photo-img"
-			   title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>"><?php echo $overlay . get_avatar( um_user( 'ID' ), $default_size ); ?></a>
+			<a href="<?php echo esc_url( um_user_profile_url() ); ?>" class="um-profile-photo-img" title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>">
+				<?php if ( ! $default_size || $default_size == 'original' ) {
+					$profile_photo = UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . "/" . um_profile( 'profile_photo' );
+
+					$data = um_get_user_avatar_data( um_user( 'ID' ) );
+					echo $overlay . sprintf( '<img src="%s" class="%s" alt="%s" data-default="%s" onerror="%s" />',
+						esc_url( $profile_photo ),
+						esc_attr( $data['class'] ),
+						esc_attr( $data['alt'] ),
+						esc_attr( $data['default'] ),
+						'if ( ! this.getAttribute(\'data-load-error\') ){ this.setAttribute(\'data-load-error\', \'1\');this.setAttribute(\'src\', this.getAttribute(\'data-default\'));}'
+					);
+				} else {
+					echo $overlay . get_avatar( um_user( 'ID' ), $default_size );
+				} ?>
+			</a>
 
 			<?php if ( empty( $disable_photo_uploader ) && empty( UM()->user()->cannot_edit ) ) {
 

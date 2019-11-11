@@ -142,7 +142,7 @@
 		 */
 		do_action( 'um_profile_menu', $args );
 
-		if ( um_is_on_edit_profile() ) {
+		if ( um_is_on_edit_profile() || UM()->user()->preview ) {
 
 			$nav = 'main';
 			$subnav = UM()->profile()->active_subnav();
@@ -196,9 +196,12 @@
 				<div class="clear"></div>
 			</div>
 
-		</form>
+			<?php if ( ! UM()->user()->preview ) { ?>
 
-		<?php } else {
+			</form>
+
+			<?php }
+		} else {
 			$menu_enabled = UM()->options()->get( 'profile_menu' );
 			$tabs = UM()->profile()->tabs_active();
 

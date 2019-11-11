@@ -361,15 +361,12 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			$args = wp_parse_args( $args, $defaults );
 
-
-
 			if ( ! is_user_logged_in() ) {
 				if ( $args['show_lock'] == 'no' ) {
 					echo '';
 				} else {
 					$args['lock_text'] = $this->convert_locker_tags( $args['lock_text'] );
-					$this->set_args = $args;
-					$this->load_template( 'login-to-view' );
+					UM()->get_template( 'login-to-view.php', '', $args, true );
 				}
 			} else {
 				echo do_shortcode( $this->convert_locker_tags( wpautop( $content ) ) );
@@ -388,7 +385,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 *
 		 * @return string
 		 */
-		function um_loggedout($args = array(), $content = "") {
+		function um_loggedout( $args = array(), $content = '' ) {
 			ob_start();
 
 			// Hide for logged in users
@@ -1161,14 +1158,56 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 * @return string
 		 */
 		public function ultimatemember_searchform( $args = array(), $content = "" ) {
-			// turn off buffer
-			ob_start();
+			if ( ! UM()->options()->get( 'members_page' ) ) {
+				return '';
+			}
 
-			// load template
-			$this->load_template( 'searchform' );
+			$member_directory_ids = array();
 
-			// get the buffer
-			$template = ob_get_clean();
+			$page_id = UM()->config()->permalinks['members'];
+			if ( ! empty( $page_id ) ) {
+				$members_page = get_post( $page_id );
+				if ( ! empty( $members_page ) && ! is_wp_error( $members_page ) ) {
+					if ( ! empty( $members_page->post_content ) ) {
+						preg_match_all( '/\[ultimatemember[^\]]*?form_id\=[\'"]*?(\d+)[\'"]*?/i', $members_page->post_content, $matches );
+						if ( ! empty( $matches[1] ) && is_array( $matches[1] ) ) {
+							$member_directory_ids = array_map( 'absint', $matches[1] );
+						}
+					}
+				}
+			}
+
+			if ( empty( $member_directory_ids ) ) {
+				return '';
+			}
+
+			//current user priority role
+			$priority_user_role = false;
+			if ( is_user_logged_in() ) {
+				$priority_user_role = UM()->roles()->get_priority_user_role( get_current_user_id() );
+			}
+
+			$query = array();
+			foreach ( $member_directory_ids as $directory_id ) {
+				$directory_data = UM()->query()->post_data( $directory_id );
+
+				$show_search = empty( $directory_data['roles_can_search'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $directory_data['roles_can_search'] ) );
+				if ( empty( $directory_data['search'] ) || ! $show_search ) {
+					continue;
+				}
+
+				$hash = UM()->member_directory()->get_directory_hash( $directory_id );
+
+				$query[ 'search_' . $hash ] = ! empty( $_GET[ 'search_' . $hash ] ) ? $_GET[ 'search_' . $hash ] : '';
+			}
+
+			if ( empty( $query ) ) {
+				return '';
+			}
+
+			$search_value = array_values( $query );
+
+			$template = UM()->get_template( 'searchform.php', '', array( 'query' => $query, 'search_value' => $search_value[0], 'members_page' => um_get_core_page( 'members' ) ) );
 
 			return $template;
 		}

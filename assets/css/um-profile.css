@@ -202,13 +202,16 @@
 	float: left;
 	position: absolute;
 	background: #fff;
-	padding: 5px;
-	/*left: 30px;*/
+	border-radius: 100%;
+	border: 5px solid #fff;
+	border-bottom: 5px solid #fff !important;/* rewrite ".um-header a" style */
+	overflow: hidden;
+	left: 0;
 }
 
 .um-profile-photo a.um-profile-photo-img img {
 	width: 100%;
-	height: 100%;
+	height: auto;
 }
 
 .um-profile-photo-overlay {

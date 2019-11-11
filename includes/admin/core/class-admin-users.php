@@ -377,7 +377,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 				$rolename = UM()->roles()->get_priority_user_role( get_current_user_id() );
 				$role = get_role( $rolename );
 
-				if( !current_user_can( 'edit_users' ) && !$role->has_cap( 'edit_users' )  ) {
+				if ( ! current_user_can( 'edit_users' ) && ! $role->has_cap( 'edit_users' )  ) {
 					wp_die( __( 'You do not have enough permissions to do that.', 'ultimate-member' ) );
 				}
 

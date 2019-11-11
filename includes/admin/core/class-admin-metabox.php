@@ -41,6 +41,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 			add_filter( 'um_builtin_validation_types_continue_loop', array( &$this, 'validation_types_continue_loop' ), 1, 4 );
 			add_filter( 'um_restrict_content_hide_metabox', array( &$this, 'hide_metabox_restrict_content_shop' ), 10, 1 );
+
+			add_filter( 'um_member_directory_meta_value_before_save', array( UM()->member_directory(), 'before_save_data' ), 10, 3 );
 		}
 
 
@@ -1760,6 +1762,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					}
 					break;
 
+				case '_format_custom':
+					?>
+
+					<p><label for="_format_custom"><?php _e( 'Use custom Date format', 'ultimate-member' ); ?> <?php UM()->tooltip( __( 'This option overrides "Date User-Friendly Format" option. See https://www.php.net/manual/en/function.date.php', 'ultimate-member' ) ); ?></label>
+						<input type="text" name="_format_custom" id="_format_custom" value="<?php echo htmlspecialchars( $this->edit_mode_value, ENT_QUOTES ); ?>" placeholder="j M Y" />
+					</p>
+
+					<?php
+					break;
+
 				case '_pretty_format':
 					?>
 
@@ -2342,9 +2354,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 							<?php if ( UM()->builtin()->custom_fields ) {
 								foreach ( UM()->builtin()->custom_fields as $field_key => $array ) {
-									if ( in_array( $array['type'], array( 'select' ) ) && ( ! isset( $field_args['metakey'] ) || $field_args['metakey'] != $array['metakey'] ) ) {
-										echo "<option value='".$array['metakey']."' ".selected( $array['metakey'], $this->edit_mode_value  ).">".$array['title']."</option>";
-									}
+									if ( in_array( $array['type'], array( 'select' ) ) && ( ! isset( $field_args['metakey'] ) || $field_args['metakey'] != $array['metakey'] ) && isset( $array['title'] ) ) { ?>
+										<option value="<?php echo esc_attr( $array['metakey'] ) ?>" <?php selected( $array['metakey'], $this->edit_mode_value ) ?>><?php echo $array['title'] ?></option>
+									<?php }
 								}
 							} ?>
 						</select>

@@ -35,7 +35,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 		public $ext_required_version = array(
 			'bbpress'               => '2.0.7',
 			'followers'             => '2.1.6',
-			'forumwp'               => '2.0.1',
+			'forumwp'               => '2.0.4',
 			'friends'               => '2.1.4',
 			'groups'                => '2.1.7',
 			'instagram'             => '2.0.5',

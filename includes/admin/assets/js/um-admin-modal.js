@@ -33,7 +33,7 @@ function um_admin_new_modal( id, ajax, size ) {
 	jQuery('#' + id).show();
 	jQuery('.um-admin-modal').show();
 	
-	jQuery('.um-admin-modal-head').append('<a href="#" data-action="UM_remove_modal" class="um-admin-modal-close"><i class="um-faicon-times"></i></a>');
+	jQuery('.um-admin-modal-head').append('<a href="javascript:void(0);" data-action="UM_remove_modal" class="um-admin-modal-close"><i class="um-faicon-times"></i></a>');
 
 	if ( ajax == true ) {
 		um_admin_modal_size( size );
@@ -164,6 +164,19 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 function um_admin_modal_responsive() {
 	var required_margin = jQuery('.um-admin-modal:visible').innerHeight() / 2 + 'px';
 	jQuery('.um-admin-modal:visible').css({'margin-top': '-' + required_margin });
+
+	if ( jQuery('#UM_preview_form .um-s1').length ) {
+		jQuery("#UM_preview_form .um-s1").select2({
+			allowClear: true
+		});
+	}
+
+	if ( jQuery('#UM_preview_form .um-s2').length ) {
+		jQuery("#UM_preview_form .um-s2").select2({
+			allowClear: false,
+			minimumResultsForSearch: 10
+		});
+	}
 }
 
 function um_admin_remove_modal() {

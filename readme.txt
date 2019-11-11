@@ -4,8 +4,9 @@ Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember, champsupertramp, nsinelnikov
 Donate link: 
 Tags: community, member, membership, user-profile, user-registration
+Requires PHP: 5.6
 Requires at least: 5.0
-Tested up to: 5.2
+Tested up to: 5.3
 Stable tag: 2.1.0
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -138,11 +139,11 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 == Changelog ==
 
+= Important: To learn more about version 2.1 please see this [topic](https://wordpress.org/support/topic/version-2-1-4/)
+
 = Important: UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin =
 
-= Important: UM2.0+ is a significant update to the code base from 1.3.88. Please make sure you take a full-site backup with restore point before updating the plugin =
-
-= 2.1.0: October x, 2019 =
+= 2.1.0: November 11, 2019 =
 
 * Enhancements:
   - Added member directory list view
@@ -151,14 +152,34 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Added AJAXed member directories
   - Updated member directories' search engine
   - Additional parameter 'user_id' to action hook 'um_user_after_updating_profile'
+  - Added ability to set profile/cover image sizes from Ultimate Member -> General -> Uploads settings or Original size
+  - Added ability edit cover photo HTML (e.g. for adding some HTML attributes. See how add srcset attribute based on all generated cover sizes [here](https://docs.ultimatemember.com/article/1519-change-cover-photo-html))
+  - Added custom date format for Date Picker field
+  - Added hook 'um_show_meta_item_html' to customize user meta HTML at User Profile page
+  - Added "aria-label" attribute in Field icon
 
 * Bugfixes:
   - Optimized usermeta for Account submit security
+  - Fixed flushing rewrite rules on every page reloading
   - Fixed Gmail & Yahoo UTF-8 encoding of email notification subject
   - Fixed ajax_resize_image() process
   - Fixed country fields values
   - Fixed dynamic_profile.php notice
   - Fixed integration with WP native admin_post and admin_post_nopriv requests
+  - Fixed profile image settings
+  - Fixed profile privacy for not logged in users, if restriction options set for profile page as visible only for logged in and showing message instead of redirect
+    (it makes the same for {site_url}/user and {site_url}/user/{user_slug} )
+  - Fixed security issue on registration form submission when username or email have conditional logic
+  - Fixed RTL styles issues on user profile and account pages
+  - Fixed upload profile/cover photos at the profile page, don't apply until the crop finished
+  - Fixed alphabetical field validation for cyrillic and not UTF-8 symbols
+  - Fixed user profile validation if username, username or email, password and email fields were added to form
+  - Fixed user profile preview in admin Form Builder
+  - Fixed getting templates function for some Windows servers
+  - Fixed plugin update process for multisites
+  - Fixed function "um_apply_conditions". An error appears with jQuery v2.1.3
+  - Localized um-raty.js library
+  - Localized strings
 
 = 2.0.56: August 21, 2019 =
 

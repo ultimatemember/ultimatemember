@@ -50,7 +50,7 @@ class UM_Search_Widget extends \WP_Widget {
 		}
 
 		// display the search form
-		um_search_form();
+		echo do_shortcode( '[ultimatemember_searchform /]' );
 
 		echo $args['after_widget'];
 	}

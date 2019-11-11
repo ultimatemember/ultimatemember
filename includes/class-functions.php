@@ -178,7 +178,8 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 			$path = '';
 			if ( $basename ) {
-				$array = explode( '/', trim( $basename, '/' ) );
+				// use '/' instead of "DIRECTORY_SEPARATOR", because wp_normalize_path makes the correct replace
+				$array = explode( '/', wp_normalize_path( trim( $basename ) ) );
 				$path  = $array[0];
 			}
 
@@ -286,7 +287,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		function locate_template( $template_name, $path = '' ) {
 			// check if there is template at theme folder
 			$template = locate_template( array(
-				trailingslashit( 'ultimate-member/' . $path ) . $template_name
+				trailingslashit( 'ultimate-member' . DIRECTORY_SEPARATOR . $path ) . $template_name
 			) );
 
 			if ( ! $template ) {
@@ -295,7 +296,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 				} else {
 					$template = trailingslashit( um_path );
 				}
-				$template .= 'templates/' . $template_name;
+				$template .= 'templates' . DIRECTORY_SEPARATOR . $template_name;
 			}
 
 

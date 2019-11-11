@@ -223,7 +223,7 @@ function um_submit_account_details( $args ) {
 		}
 	}
 
-	$arr_fields = array( 'password', 'um_account' );
+	$arr_fields = array();
 	if ( UM()->account()->is_secure_enabled() ) {
 		$account_fields = get_user_meta( um_user( 'ID' ), 'um_account_secure_fields', true );
 
@@ -251,7 +251,7 @@ function um_submit_account_details( $args ) {
 		 */
 		$secure_fields = apply_filters( 'um_secure_account_fields', $account_fields, um_user( 'ID' ) );
 
-		if ( is_array( $secure_fields[ $current_tab ] ) ) {
+		if ( isset( $secure_fields[ $current_tab ] ) && is_array( $secure_fields[ $current_tab ] ) ) {
 			$arr_fields = array_merge( $arr_fields, $secure_fields[ $current_tab ] );
 		}
 	}

@@ -372,6 +372,13 @@ function um_submit_form_errors_hook_( $args ) {
 	if ( ! empty( $fields ) ) {
 		foreach ( $fields as $key => $array ) {
 
+			if ( $mode == 'profile' ) {
+				$restricted_fields = UM()->fields()->get_restricted_fields_for_edit();
+				if ( is_array( $restricted_fields ) && in_array( $key, $restricted_fields ) ) {
+					continue;
+				}
+			}
+
 			if ( isset( $array['public']  ) && -2 == $array['public'] && ! empty( $array['roles'] ) && is_user_logged_in() ) {
 				$current_user_roles = um_user( 'roles' );
 				if ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $array['roles'] ) ) <= 0 ) {
@@ -482,10 +489,10 @@ function um_submit_form_errors_hook_( $args ) {
 						UM()->form()->add_error($key, sprintf(__('Your %s must contain less than %s characters','ultimate-member'), $array['label'], $array['max_chars']) );
 					}
 				}
-                     
-				$profile_show_html_bio = UM()->options()->get('profile_show_html_bio');
-					
-				if ( $profile_show_html_bio == 1 && $key !== "description" ) {
+
+				$profile_show_html_bio = UM()->options()->get( 'profile_show_html_bio' );
+
+				if ( $profile_show_html_bio == 1 && $key !== 'description' ) {
 					if ( isset( $array['html'] ) && $array['html'] == 0 ) {
 						if ( wp_strip_all_tags( $args[$key] ) != trim( $args[ $key ] ) ) {
 							UM()->form()->add_error( $key, __( 'You can not use HTML tags here', 'ultimate-member' ) );
@@ -732,10 +739,12 @@ function um_submit_form_errors_hook_( $args ) {
 
 							if ( $args[ $key ] != '' ) {
 
-								if( ! ctype_alpha( str_replace(' ', '', $args[$key] ) ) ){
-									UM()->form()->add_error( $key , __('You must provide alphabetic letters','ultimate-member') );
+								if ( ! preg_match( '/^\p{L}+$/u', str_replace( ' ', '', $args[ $key ] ) ) ) {
+									UM()->form()->add_error( $key, __( 'You must provide alphabetic letters', 'ultimate-member' ) );
 								}
+								
 							}
+
 							break;
 
 						case 'lowercase':

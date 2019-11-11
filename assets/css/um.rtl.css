@@ -14,7 +14,7 @@
 }
 
 .um-cover + .um-header .um-profile-photo a.um-profile-photo-img {
-	/*right: 30px;*/
+	right: 0;
 }
 
 div.uimob500 .um-profile-photo a.um-profile-photo-img {
@@ -191,3 +191,5 @@ p.um-notice i {
 .um-modal-body .um-single-file-preview a.cancel {
 	left: -15px;
 }
+
+.um-item-link { padding-right: 0; padding-left: 40px;}

@@ -77,6 +77,7 @@ if ( ! empty( $delete_options ) ) {
 	}
 
 	delete_option( '__ultimatemember_sitekey' );
+	delete_option( 'um_flush_rewrite_rules' );
 
 	//remove all users cache
 	UM()->user()->remove_cache_all_users();

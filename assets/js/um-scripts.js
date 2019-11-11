@@ -116,14 +116,14 @@ jQuery(document).ready(function() {
 
 	jQuery('.um-s1,.um-s2').css({'display':'block'});
 
-	if( jQuery(".um-s1").length > 0 ){
-		jQuery(".um-s1").each(function () {
-			var select = jQuery(this);
-			if( select.val() === '' && select.attr('data-default') ) {
-				select.val(select.attr('data-default'));
-			}
-		});
-	}
+	// if( jQuery(".um-s1").length > 0 ){
+	// 	jQuery(".um-s1").each(function () {
+	// 		var select = jQuery(this);
+	// 		if( select.val() === '' && select.attr('data-default') ) {
+	// 			select.val(select.attr('data-default'));
+	// 		}
+	// 	});
+	// }
 
 	if( typeof(jQuery.fn.select2) === "function" ){
 		jQuery(".um-s1").select2({
@@ -318,6 +318,31 @@ jQuery(document).ready(function() {
 					}
 				}
 			});
+		} else if ( 'um_load_comments' === hook ) {
+			var pages = jQuery(this).data('pages')*1;
+			var next_page = jQuery(this).data('page')*1 + 1;
+
+			jQuery.ajax({
+				url: wp.ajax.settings.url,
+				type: 'post',
+				data: {
+					action: 'um_ajax_paginate_comments',
+					user_id: jQuery(this).data('user_id'),
+					page: next_page,
+					nonce: um_scripts.nonce
+				},
+				complete: function() {
+					parent.removeClass( 'loading' );
+				},
+				success: function( data ) {
+					parent.before( data );
+					if ( next_page === pages ) {
+						parent.remove();
+					} else {
+						obj.data( 'page', next_page );
+					}
+				}
+			});
 		} else {
 			var args = jQuery(this).data('args');
 			var container = jQuery(this).parents('.um').find('.um-ajax-items');
@@ -370,8 +395,61 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
-	jQuery(document).on('click', '#um-search-button', function() {
-		jQuery(this).parents('form').submit();
+	jQuery( document.body ).on('click', '#um-search-button', function() {
+		var action = jQuery(this).parents('.um-search-form').data('members_page');
+
+		var search_keys = [];
+		jQuery(this).parents('.um-search-form').find('input[name="um-search-keys[]"]').each( function() {
+			search_keys.push( jQuery(this).val() );
+		});
+
+		var search = jQuery(this).parents('.um-search-form').find('.um-search-field').val();
+
+		var url;
+		if ( search === '' ) {
+			url = action;
+		} else {
+			var query = '?';
+			for ( var i = 0; i < search_keys.length; i++ ) {
+				query += search_keys[i] + '=' + search;
+				if ( i !== search_keys.length - 1 ) {
+					query += '&';
+				}
+			}
+
+			url = action + query;
+		}
+		window.location = url;
+	});
+
+	//make search on Enter click
+	jQuery( document.body ).on( 'keypress', '.um-search-field', function(e) {
+		if ( e.which === 13 ) {
+			var action = jQuery(this).parents('.um-search-form').data('members_page');
+
+			var search_keys = [];
+			jQuery(this).parents('.um-search-form').find('input[name="um-search-keys[]"]').each( function() {
+				search_keys.push( jQuery(this).val() );
+			});
+
+			var search = jQuery(this).val();
+
+			var url;
+			if ( search === '' ) {
+				url = action;
+			} else {
+				var query = '?';
+				for ( var i = 0; i < search_keys.length; i++ ) {
+					query += search_keys[i] + '=' + search;
+					if ( i !== search_keys.length - 1 ) {
+						query += '&';
+					}
+				}
+
+				url = action + query;
+			}
+			window.location = url;
+		}
 	});
 
 	jQuery('.um-form input[class="um-button"][type="submit"]').removeAttr('disabled');

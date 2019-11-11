@@ -8,6 +8,9 @@
 			<# _.each( data, function( user, key, list ) { #>
 
 				<div class="um-member um-role-{{{user.role}}} {{{user.account_status}}} <?php if ( $cover_photos ) { echo 'with-cover'; } ?>">
+					<span class="um-member-status {{{user.account_status}}}">
+						{{{user.account_status_name}}}
+					</span>
 					<div class="um-member-card-container">
 						<?php if ( $profile_photo ) { ?>
 							<div class="um-member-photo radius-<?php echo esc_attr( UM()->options()->get( 'profile_photocorner' ) ); ?>">
@@ -81,7 +84,7 @@
 
 												<# if ( typeof user.<?php echo $key; ?> !== 'undefined' ) { #>
 												<div class="um-member-metaline um-member-metaline-<?php echo $key; ?>">
-													<strong>{{{user.label_<?php echo $key;?>}}}:</strong> {{{user.<?php echo $key;?>}}}
+													<strong>{{{user.label_<?php echo $key;?>}}}:</strong>&nbsp;{{{user.<?php echo $key;?>}}}
 												</div>
 												<# } #>
 
@@ -119,16 +122,18 @@
 							<?php do_action( 'um_members_list_just_after_actions_tmpl', $args ); ?>
 						</div>
 
-						<?php if ( $userinfo_animate ) { ?>
-							<div class="um-member-card-reveal-buttons">
-								<div class="um-member-more">
-									<a href="javascript:void(0);"><i class="um-faicon-angle-down"></i></a>
+						<# if ( $show_block ) { #>
+							<?php if ( $userinfo_animate ) { ?>
+								<div class="um-member-card-reveal-buttons">
+									<div class="um-member-more">
+										<a href="javascript:void(0);"><i class="um-faicon-angle-down"></i></a>
+									</div>
+									<div class="um-member-less">
+										<a href="javascript:void(0);"><i class="um-faicon-angle-up"></i></a>
+									</div>
 								</div>
-								<div class="um-member-less">
-									<a href="javascript:void(0);"><i class="um-faicon-angle-up"></i></a>
-								</div>
-							</div>
-						<?php } ?>
+							<?php } ?>
+						<# } #>
 					</div>
 				</div>
 

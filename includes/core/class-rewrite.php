@@ -18,14 +18,37 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 		 * Rewrite constructor.
 		 */
 		function __construct() {
+			if ( ! defined( 'DOING_AJAX' ) ) {
+				add_filter( 'wp_loaded', array( $this, 'maybe_flush_rewrite_rules' ) );
+			}
+
 			//add rewrite rules
-			add_filter( 'query_vars', array(&$this, 'query_vars'), 10, 1 );
+			add_filter( 'query_vars', array( &$this, 'query_vars' ), 10, 1 );
 			add_filter( 'rewrite_rules_array', array( &$this, '_add_rewrite_rules' ), 10, 1 );
-			add_action( 'init', array( &$this, 'rewrite_rules'), 100000000 );
+
+			add_action( 'template_redirect', array( &$this, 'redirect_author_page' ), 9999 );
+			add_action( 'template_redirect', array( &$this, 'locate_user_profile' ), 9999 );
+		}
 
 
-			add_action( 'template_redirect', array( &$this, 'redirect_author_page'), 9999 );
-			add_action( 'template_redirect', array( &$this, 'locate_user_profile'), 9999 );
+		/**
+		 * Update "flush" option for reset rules on wp_loaded hook
+		 */
+		function reset_rules() {
+			update_option( 'um_flush_rewrite_rules', 1 );
+		}
+
+
+		/**
+		 * Reset Rewrite rules if need it.
+		 *
+		 * @return void
+		 */
+		function maybe_flush_rewrite_rules() {
+			if ( get_option( 'um_flush_rewrite_rules' ) ) {
+				flush_rewrite_rules( false );
+				delete_option( 'um_flush_rewrite_rules' );
+			}
 		}
 
 
@@ -141,43 +164,6 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 			}
 
 			return $newrules + $rules;
-		}
-
-
-		/**
-		 * Setup rewrite rules
-		 */
-		function rewrite_rules() {
-
-			if ( isset( UM()->config()->permalinks['user'] ) && isset( UM()->config()->permalinks['account'] ) ) {
-
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_rewrite_flush_rewrite_rules
-				 * @description Enable flushing rewrite rules
-				 * @input_vars
-				 * [{"var":"$stop_flush","type":"bool","desc":"Stop flushing rewrite rules"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage
-				 * <?php add_filter( 'um_rewrite_flush_rewrite_rules', 'function_name', 10, 1 ); ?>
-				 * @example
-				 * <?php
-				 * add_filter( 'um_rewrite_flush_rewrite_rules', 'my_rewrite_flush_rewrite_rules', 10, 1 );
-				 * function my_rewrite_flush_rewrite_rules( $stop_flush ) {
-				 *     // your code here
-				 *     return $stop_flush;
-				 * }
-				 * ?>
-				 */
-				if ( ! apply_filters( 'um_rewrite_flush_rewrite_rules', UM()->options()->get( 'um_flush_stop' ) ) ) {
-					flush_rewrite_rules( true );
-				}
-
-			}
-
 		}
 
 

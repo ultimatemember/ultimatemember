@@ -1525,78 +1525,6 @@ function um_is_core_post( $post, $core_page ) {
 
 
 /**
- * Check value of queried search in text input
- *
- * @param $filter
- * @param bool $echo
- *
- * @return mixed|string
- */
-function um_queried_search_value( $filter, $echo = true ) {
-	$value = '';
-	if (isset( $_REQUEST['um_search'] )) {
-		$query = UM()->permalinks()->get_query_array();
-		if (isset( $query[$filter] ) && $query[$filter] != '') {
-			$value = stripslashes_deep( $query[$filter] );
-		}
-	}
-
-	if ($echo) {
-		echo $value;
-
-		return '';
-	} else {
-		return $value;
-	}
-
-}
-
-
-/**
- * Check whether item in dropdown is selected in query-url
- *
- * @param $filter
- * @param $val
- */
-function um_select_if_in_query_params( $filter, $val ) {
-	$selected = false;
-
-	if (isset( $_REQUEST['um_search'] )) {
-		$query = UM()->permalinks()->get_query_array();
-
-		if (isset( $query[$filter] ) && $val == $query[$filter])
-			$selected = true;
-
-		/**
-		 * UM hook
-		 *
-		 * @type filter
-		 * @title um_selected_if_in_query_params
-		 * @description Make selected or unselected from query attribute
-		 * @input_vars
-		 * [{"var":"$selected","type":"bool","desc":"Selected or not"},
-		 * {"var":"$filter","type":"string","desc":"Check by this filter in query"},
-		 * {"var":"$val","type":"string","desc":"Field Value"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_filter( 'um_selected_if_in_query_params', 'function_name', 10, 3 );
-		 * @example
-		 * <?php
-		 * add_filter( 'um_selected_if_in_query_params', 'my_selected_if_in_query_params', 10, 3 );
-		 * function my_selected_if_in_query_params( $selected, $filter, $val ) {
-		 *     // your code here
-		 *     return $selected;
-		 * }
-		 * ?>
-		 */
-		$selected = apply_filters( 'um_selected_if_in_query_params', $selected, $filter, $val );
-	}
-
-	echo $selected ? 'selected="selected"' : '';
-}
-
-
-/**
  * Get styling defaults
  *
  * @param $mode
@@ -1635,7 +1563,7 @@ function um_styling_defaults( $mode ) {
 function um_get_metadefault( $id ) {
 	$core_form_meta_all = UM()->config()->core_form_meta_all;
 
-	return isset( $core_form_meta_all['_um_' . $id] ) ? $core_form_meta_all['_um_' . $id] : '';
+	return isset( $core_form_meta_all[ '_um_' . $id ] ) ? $core_form_meta_all[ '_um_' . $id ] : '';
 }
 
 
@@ -2381,10 +2309,10 @@ function um_get_user_avatar_data( $user_id = '', $size = '96' ) {
 	}
 
 	$data = array(
-		'user_id' => $user_id,
-		'default' => um_get_default_avatar_uri(),
-		'class' => 'gravatar avatar avatar-' . $size . ' um-avatar',
-		'size' => $size
+		'user_id'   => $user_id,
+		'default'   => um_get_default_avatar_uri(),
+		'class'     => 'gravatar avatar avatar-' . $size . ' um-avatar',
+		'size'      => $size
 	);
 
 	if ( $profile_photo = um_profile( 'profile_photo' ) ) {
@@ -2839,15 +2767,18 @@ function um_user( $data, $attrs = null ) {
 
 			$alt = um_profile( 'nickname' );
 
-			return $cover_uri ? '<img src="' . esc_attr( $cover_uri ) . '" alt="' . esc_attr( $alt ) . '" />' : '';
+			$cover_html = $cover_uri ? '<img src="' . esc_attr( $cover_uri ) . '" alt="' . esc_attr( $alt ) . '" />' : '';
+
+			$cover_html = apply_filters( 'um_user_cover_photo_html__filter', $cover_html, $cover_uri, $alt, $is_default, $attrs );
+			return $cover_html;
+
 			break;
 
+		case 'user_url':
 
-			case 'user_url':
+			$value = um_profile( $data );
 
-				$value = um_profile( $data );
-
-				return $value;
+			return $value;
 
 			break;
 
@@ -2924,53 +2855,6 @@ function um_force_utf8_string( $value ) {
 	}
 
 	return $value;
-}
-
-
-/**
- * Filters the search query.
- *
- * @param  string $search
- *
- * @return string
- */
-function um_filter_search( $search ) {
-	$search = trim( strip_tags( $search ) );
-	$search = preg_replace( '/[^a-z \.\@\_\-]+/i', '', $search );
-
-	return $search;
-}
-
-
-/**
- * Returns the user search query
- *
- * @return string
- */
-function um_get_search_query() {
-	$query = UM()->permalinks()->get_query_array();
-	$search = isset( $query['search'] ) ? $query['search'] : '';
-
-	return um_filter_search( $search );
-}
-
-
-/**
- * Returns the ultimate member search form
- *
- * @return string
- */
-function um_get_search_form() {
-	return do_shortcode( '[ultimatemember_searchform]' );
-}
-
-
-/**
- * Display the search form.
- *
- */
-function um_search_form() {
-	echo um_get_search_form();
 }
 
 

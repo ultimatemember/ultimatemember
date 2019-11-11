@@ -124,7 +124,8 @@ jQuery(document).ready(function() {
 
 	jQuery( '.um-profile-edit a.um_delete-item' ).click( function(e) {
 		e.preventDefault();
-		if ( ! confirm( 'Are you sure that you want to delete this user?' ) ) {
+
+		if ( ! confirm( wp.i18n.__( 'Are you sure that you want to delete this user?', 'ultimate-member' ) ) ) {
 			return false;
 		}
 	});

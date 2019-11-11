@@ -1,7 +1,7 @@
 <?php
 namespace um\core;
 
-// Exit if accessed directly.
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 

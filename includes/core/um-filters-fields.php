@@ -227,7 +227,8 @@ function um_profile_field_filter_hook__date( $value, $data ) {
 	if ( isset( $data['pretty_format'] ) && $data['pretty_format'] == 1 ) {
 		$value = UM()->datetime()->get_age( $value );
 	} else {
-		$value = date_i18n( $data['format'], strtotime( $value ) );
+		$format = empty( $data['format_custom'] ) ? $data['format'] : $data['format_custom'];
+		$value = date_i18n( $format, strtotime( $value ) );
 	}
 
 	return $value;

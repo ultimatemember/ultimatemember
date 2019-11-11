@@ -92,7 +92,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		function __construct() {
 			add_filter( 'plugins_loaded', array( &$this, 'init_variables' ), 99999 );
 			add_filter( 'init', array( &$this, 'init_filter_types' ), 2 );
-			add_filter( 'um_member_directory_meta_value_before_save', array( &$this, 'before_save_data' ), 10, 3 );
 
 			add_action( 'template_redirect', array( &$this, 'access_members' ), 555 );
 		}
@@ -116,6 +115,17 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 
 			return (int) $directory_id;
+		}
+
+
+		/**
+		 * @param $id
+		 *
+		 * @return bool|string
+		 */
+		function get_directory_hash( $id ) {
+			$hash = substr( md5( $id ), 10, 5 );
+			return $hash;
 		}
 
 
@@ -245,55 +255,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			asort( $this->default_sorting );
 
-
-
-//			<!--			<option value="description">Biography</option>                          to Search-->
-//<!--			<option value="user_email">E-mail Address</option>                      to Search-->
-//<!--			<option value="first_name">First Name</option>                          to Search-->
-//<!--			<option value="last_name">Last Name</option>                            to Search-->
-//<!--			<option value="mobile_number">Mobile Number</option>                    to Search-->
-//<!--			<option value="nickname">Nickname</option>                              to Search-->
-//<!--			<option value="phone_number">Phone Number</option>                      to Search-->
-//<!--			<option value="secondary_user_email">Secondary E-mail Address</option>  to Search-->
-//<!--			<option value="user_login">Username</option>                            to Search-->
-//<!--			<option value="username">Username or E-mail</option> - username         to Search-->
-//<!--			<option value="gm">gm</option> - google maps field                      to Search-->
-//<!--			<option value="numberr">number</option> - number field                  to Search-->
-//<!--			<option value="scm">scm</option> - Soundcloud field                     to Search-->
-//<!--			<option value="test">test</option> - text box field                     to Search-->
-//<!--			<option value="textareaa">textareaa</option> - textarea field           to Search-->
-//<!--			<option value="vimeov">vimeov</option> - Vimeo field                    to Search-->
-//<!--			<option value="youtubev">youtubev</option> - Youtube field              to Search-->
-//<!--			URL fields                                                              to Search-->
-//<!--			Password                                                                skip-->
-//<!--			File, Image Upload                                                      maybe search by file,image name-->
-//<!---->
-//<!---->
-//<!--			DatePicker, TimePicker                                                  to Filter-->
-//<!--			Rating field                                                            to Filter-->
-//<!--			needs to be added 'birth_date' - Age                                    to Filter-->
-//<!--			<option value="checkboxx">checkbox</option> - checkbox field            to Filter-->
-//<!--			<option value="drop">drop</option> - select field                       to Filter-->
-//<!--			<option value="radi">radi</option> - radio field                        to Filter-->
-//<!--			<option value="multidrop">multidrop</option> - multiselect field        to Filter-->
-//<!--			<option value="role_radio">Roles (Radio)</option> - roles merge         to Filter-->
-//<!--			<option value="user_registered">Registration Date</option> -            to Filter-->
-//<!--			<option value="gender">Gender</option>                                  to Filter-->
-//<!--			<option value="languages">Languages</option>                            to Filter-->
-//<!--			<option value="_um_last_login">Last Login</option>                      to Filter-->
-//<!--			<option value="country">Country</option>                                to Filter-->
-//<!---->
-//<!--			So there are next filters:-->
-//<!---->
-//<!--			Predefined Fields:-->
-//<!--			Country, Gender, Age(Birth Date field), Last Login, User Registered-->
-//<!--			Languages, Roles (merge dropdown+radio)-->
-//<!---->
-//<!--			Custom Fields:-->
-//<!--			all TimePicker, Datepicker,-->
-//<!--			Rating field(by stars), Checkbox, Radio, Select, Multi-select custom fields-->
-
-
 			// Filters
 			$this->filter_fields = array(
 				'country'           => __( 'Country', 'ultimate-member' ),
@@ -313,7 +274,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						if ( isset( $data['title'] ) && array_search( $data['title'], $this->filter_fields ) !== false ) {
 							$data['title'] = $data['title'] . ' (' . $key . ')';
 						}
-						$this->filter_fields[ $key ] = isset( $data['title'] ) ? $data['title'] : $data['label'];
+
+						$title = isset( $data['title'] ) ? $data['title'] : ( isset( $data['label'] ) ? $data['label'] : '' );
+						if ( empty( $title ) ) {
+							continue;
+						}
+
+						$this->filter_fields[ $key ] = $title;
 					}
 				}
 			}
@@ -465,7 +432,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? explode( '||', sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ) : array();
 
 					if ( isset( $attrs['metakey'] ) && strstr( $attrs['metakey'], 'role_' ) ) {
-						$shortcode_roles = get_post_meta( UM()->shortcodes()->form_id, '_um_roles', true );
+						$shortcode_roles = get_post_meta( $directory_data['form_id'], '_um_roles', true );
 						$um_roles = UM()->roles()->get_roles( false );
 
 						if ( ! empty( $shortcode_roles ) && is_array( $shortcode_roles ) ) {
@@ -657,7 +624,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			return $range;
 		}
-
 
 
 		/**
@@ -1221,19 +1187,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				$search = trim( $_POST['search'] );
 				if ( ! empty( $search ) ) {
 
-					$identity = '%';
-					preg_match(
-						'/LIKE \'(\{(.*)\})' . esc_attr( $search ) . '(\{(.*)\})\'/im',
-						$sql['where'],
-						$matches
-					);
-
-					if ( ! empty( $matches[1] ) ) {
-						$identity = $matches[1];
-					}
+					$meta_value = '%' . $wpdb->esc_like( $search ) . '%';
+					$search_meta      = $wpdb->prepare( '%s', $meta_value );
 
 					preg_match(
-						'/^(.*).meta_value LIKE \'' . $identity . esc_attr( $search ) . $identity . '\' [^\)]/im',
+						'/^(.*).meta_value LIKE ' . addslashes( $search_meta ) . '[^\)]/im',
 						$sql['where'],
 						$join_matches
 					);
@@ -1249,27 +1207,20 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					}
 
 					// Add OR instead AND to search in WP core fields user_email, user_login, user_display_name
-					$search_where = $context->get_search_sql( $search, UM()->member_directory()->core_search_fields, 'both' );
+					$search_where = $context->get_search_sql( $search, $this->core_search_fields, 'both' );
 
-					$replacement = apply_filters( 'um_member_directory_organic_search_replacement', " AND ( $1 )" );
-					$search_where = preg_replace( '/ AND \((.*?)\)/im', $replacement, $search_where );
+					$search_where = preg_replace( '/ AND \((.*?)\)/im', "$1 OR", $search_where );
 
-					$sql['where'] = $sql['where'] . $search_where;
+					$sql['where'] = preg_replace(
+						'/(' . $meta_join_for_search . '.meta_value = \'' . esc_attr( $search ) . '\')/im',
+						trim( $search_where ) . " $1",
+						$sql['where'],
+						1
+					);
 				}
 			}
 
 			return $sql;
-		}
-
-
-		/**
-		 * Use OR in search query if there is only searching, but with filters there will be AND conditional
-		 * @param $replacement
-		 *
-		 * @return string
-		 */
-		function organic_replacement( $replacement ) {
-			return " OR ( $1 )";
 		}
 
 
@@ -1286,10 +1237,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				}
 			}
 
+			// added for user tags extension integration on individual tag page
 			$ignore_empty_filters = apply_filters( 'um_member_directory_ignore_empty_filters', false );
 
 			if ( empty( $filter_query ) && ! $ignore_empty_filters ) {
-				add_filter( 'um_member_directory_organic_search_replacement', array( &$this, 'organic_replacement' ) );
 				return;
 			}
 
@@ -1432,7 +1383,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 						break;
 					case 'role':
-						$value = explode( '||', $value );
 						$value = array_map( 'strtolower', $value );
 
 						if ( ! empty( $this->query_args['role__in'] ) ) {

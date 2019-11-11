@@ -89,6 +89,10 @@ div.uimob800 .um-account-side li a.current:hover
     color: #ffffff;
 }
 
+.um .um-button:before {
+    color: #ffffff;
+}
+
 .um .um-button.um-alt,
 .um input[type=submit].um-button.um-alt {
     background: #eeeeee;
@@ -101,6 +105,11 @@ div.uimob800 .um-account-side li a.current:hover
 
 .um .um-button.um-alt,
 .um input[type=submit].um-button.um-alt {
+    color: #666666;
+}
+
+.um .um-button.um-alt:before,
+.um input[type=submit].um-button.um-alt:before {
     color: #666666;
 }
 
