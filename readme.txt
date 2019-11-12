@@ -139,9 +139,10 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 == Changelog ==
 
-= Important: To learn more about version 2.1 please see this [topic](https://wordpress.org/support/topic/version-2-1-4/)
+= Important: =
 
-= Important: UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin =
+* To learn more about version 2.1 please see this [topic](https://wordpress.org/support/topic/version-2-1-4/)
+* UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
 = 2.1.1: November 12, 2019 =
 

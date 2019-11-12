@@ -1066,6 +1066,7 @@ jQuery(document.body).ready( function() {
 		um_members_show_preloader( directory );
 		um_ajax_get_members( directory, {first_load:true} );
 
+		// slideup/slidedown animation fix for grid filters bar
 		if ( directory.find('.um-search').length ) {
 			if ( ! directory.find('.um-search').is(':visible') ) {
 				directory.find('.um-search').css({
