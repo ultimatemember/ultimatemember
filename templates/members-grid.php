@@ -66,10 +66,10 @@
 									continue;
 								} ?>
 
-								<# if ( typeof user.<?php echo $key; ?> !== 'undefined' ) { #>
+								<# if ( typeof user['<?php echo $key; ?>'] !== 'undefined' ) { #>
 									<div class="um-member-tagline um-member-tagline-<?php echo esc_attr( $key ); ?>"
 									     data-key="<?php echo esc_attr( $key ); ?>">
-										{{{user.<?php echo $key; ?>}}}
+										{{{user['<?php echo $key; ?>']}}}
 									</div>
 								<# } #>
 
@@ -84,7 +84,7 @@
 								if ( empty( $key ) ) {
 									unset( $reveal_fields[ $k ] );
 								} ?>
-								<# if ( typeof user.<?php echo $key; ?> !== 'undefined' ) {
+								<# if ( typeof user['<?php echo $key; ?>'] !== 'undefined' ) {
 									$show_block = true;
 								} #>
 							<?php }
@@ -108,9 +108,9 @@
 
 										<?php foreach ( $reveal_fields as $key ) { ?>
 
-											<# if ( typeof user.<?php echo $key; ?> !== 'undefined' ) { #>
+											<# if ( typeof user['<?php echo $key; ?>'] !== 'undefined' ) { #>
 												<div class="um-member-metaline um-member-metaline-<?php echo $key; ?>">
-													<strong>{{{user.label_<?php echo $key;?>}}}:</strong> {{{user.<?php echo $key;?>}}}
+													<strong>{{{user['label_<?php echo $key;?>']}}}:</strong> {{{user['<?php echo $key;?>']}}}
 												</div>
 											<# } #>
 

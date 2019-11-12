@@ -1811,7 +1811,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				 * }
 				 * ?>
 				 */
-				$admin_actions = apply_filters( 'um_admin_user_actions_hook', null, $user_id );
+				$admin_actions = apply_filters( 'um_admin_user_actions_hook', array(), $user_id );
 				if ( ! empty( $admin_actions ) ) {
 					foreach ( $admin_actions as $id => $arr ) {
 						$url = add_query_arg( array( 'um_action' => $id, 'uid' => $user_id ), um_get_core_page( 'user' ) );

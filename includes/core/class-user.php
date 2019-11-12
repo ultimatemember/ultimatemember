@@ -1516,9 +1516,9 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 * }
 			 * ?>
 			 */
-			$actions = apply_filters( 'um_admin_user_actions_hook', null, um_profile_id() );
-			if ( ! isset( $actions ) || empty( $actions ) ) {
-				return false;
+			$actions = apply_filters( 'um_admin_user_actions_hook', array(), um_profile_id() );
+			if ( empty( $actions ) ) {
+				return $items;
 			}
 
 			foreach ( $actions as $id => $arr ) {

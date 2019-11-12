@@ -46,10 +46,10 @@
 											continue;
 										} ?>
 
-										<# if ( typeof user.<?php echo $key; ?> !== 'undefined' ) { #>
+										<# if ( typeof user['<?php echo $key; ?>'] !== 'undefined' ) { #>
 											<div class="um-member-tagline um-member-tagline-<?php echo esc_attr( $key ); ?>"
 											     data-key="<?php echo esc_attr( $key ); ?>">
-												{{{user.<?php echo $key; ?>}}}
+												{{{user['<?php echo $key; ?>']}}}
 											</div>
 										<# } #>
 
@@ -65,7 +65,7 @@
 											unset( $reveal_fields[ $k ] );
 										} ?>
 
-										<# if ( typeof user.<?php echo $key; ?> !== 'undefined' ) {
+										<# if ( typeof user['<?php echo $key; ?>'] !== 'undefined' ) {
 											$show_block = true;
 										} #>
 									<?php }
@@ -77,26 +77,26 @@
 									<?php } ?>
 
 									<# if ( $show_block ) { #>
-									<div class="um-member-meta-main">
+										<div class="um-member-meta-main">
 
-										<div class="um-member-meta <?php if ( ! $userinfo_animate ) { echo 'no-animate'; } ?>">
-											<?php foreach ( $reveal_fields as $key ) { ?>
+											<div class="um-member-meta <?php if ( ! $userinfo_animate ) { echo 'no-animate'; } ?>">
+												<?php foreach ( $reveal_fields as $key ) { ?>
 
-												<# if ( typeof user.<?php echo $key; ?> !== 'undefined' ) { #>
-												<div class="um-member-metaline um-member-metaline-<?php echo $key; ?>">
-													<strong>{{{user.label_<?php echo $key;?>}}}:</strong>&nbsp;{{{user.<?php echo $key;?>}}}
-												</div>
-												<# } #>
+													<# if ( typeof user['<?php echo $key; ?>'] !== 'undefined' ) { #>
+													<div class="um-member-metaline um-member-metaline-<?php echo $key; ?>">
+														<strong>{{{user['label_<?php echo $key;?>']}}}:</strong>&nbsp;{{{user['<?php echo $key;?>']}}}
+													</div>
+													<# } #>
 
-											<?php }
+												<?php }
 
-											if ( $show_social ) { ?>
-												<div class="um-member-connect">
-													{{{user.social_urls}}}
-												</div>
-											<?php } ?>
+												if ( $show_social ) { ?>
+													<div class="um-member-connect">
+														{{{user.social_urls}}}
+													</div>
+												<?php } ?>
+											</div>
 										</div>
-									</div>
 									<# } #>
 								<?php } ?>
 							</div>
@@ -122,18 +122,20 @@
 							<?php do_action( 'um_members_list_just_after_actions_tmpl', $args ); ?>
 						</div>
 
-						<# if ( $show_block ) { #>
-							<?php if ( $userinfo_animate ) { ?>
-								<div class="um-member-card-reveal-buttons">
-									<div class="um-member-more">
-										<a href="javascript:void(0);"><i class="um-faicon-angle-down"></i></a>
+						<?php if ( $show_userinfo ) { ?>
+							<# if ( $show_block ) { #>
+								<?php if ( $userinfo_animate ) { ?>
+									<div class="um-member-card-reveal-buttons">
+										<div class="um-member-more">
+											<a href="javascript:void(0);"><i class="um-faicon-angle-down"></i></a>
+										</div>
+										<div class="um-member-less">
+											<a href="javascript:void(0);"><i class="um-faicon-angle-up"></i></a>
+										</div>
 									</div>
-									<div class="um-member-less">
-										<a href="javascript:void(0);"><i class="um-faicon-angle-up"></i></a>
-									</div>
-								</div>
-							<?php } ?>
-						<# } #>
+								<?php } ?>
+							<# } #>
+						<?php } ?>
 					</div>
 				</div>
 
