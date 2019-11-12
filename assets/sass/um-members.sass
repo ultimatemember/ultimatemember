@@ -120,8 +120,9 @@ body
     +flex( column, flex-start, stretch, nowrap )
     width: 100%
     .um-member-directory-header-row
-      +flex( row, flex-start, baseline, nowrap )
-      margin: 0 0 10px 0
+      &:not(.um-member-directory-filters-bar)
+        +flex( row, flex-start, baseline, nowrap )
+        margin: 0 0 10px 0
       &.um-header-row-invisible
         margin: 0
       &.um-member-directory-search-row

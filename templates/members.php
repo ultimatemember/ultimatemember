@@ -284,7 +284,7 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 					<# } #>
 				</script>
 
-				<div class="um-member-directory-header-row<?php if ( ! $filters_expanded ) { ?> um-header-row-invisible<?php } ?>">
+				<div class="um-member-directory-header-row um-member-directory-filters-bar<?php if ( ! $filters_expanded ) { ?> um-header-row-invisible<?php } ?>">
 					<div class="um-search um-search-<?php echo count( $search_filters ) ?><?php if ( ! $filters_expanded ) { ?> um-search-invisible<?php } ?>">
 						<?php $i = 0;
 						foreach ( $search_filters as $filter ) {

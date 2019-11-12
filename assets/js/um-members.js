@@ -799,6 +799,7 @@ jQuery(document.body).ready( function() {
 			});
 		} else {
 			search_bar.slideDown({
+				duration: 250,
 				start: function() {
 					jQuery(this).css({
 						display: "grid"
@@ -806,7 +807,7 @@ jQuery(document.body).ready( function() {
 					obj.toggleClass('um-member-directory-filters-visible');
 					search_bar.parents('.um-member-directory-header-row').toggleClass('um-header-row-invisible');
 				}
-			}, 250 );
+			} );
 		}
 	});
 
@@ -1065,6 +1066,13 @@ jQuery(document.body).ready( function() {
 		um_members_show_preloader( directory );
 		um_ajax_get_members( directory, {first_load:true} );
 
+		if ( directory.find('.um-search').length ) {
+			if ( ! directory.find('.um-search').is(':visible') ) {
+				directory.find('.um-search').css({
+					display: "grid"
+				}).slideUp( 1 );
+			}
+		}
 
 		//slider filter
 		directory.find('.um-slider').each( function() {
