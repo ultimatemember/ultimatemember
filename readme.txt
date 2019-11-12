@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 5.3
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -142,6 +142,17 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 = Important: To learn more about version 2.1 please see this [topic](https://wordpress.org/support/topic/version-2-1-4/)
 
 = Important: UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin =
+
+= 2.1.1: November 12, 2019 =
+
+* Bugfixes:
+  - Fixed admin actions hook
+  - Fixed JS templates for list and grid view when user metakeys contain "-" symbol
+  - Fixed JS template list "$show_block" issue
+  - Fixed member directory search if 'roles_can_search' is set
+  - Fixed member directory filters bar animation
+  - Fixed save profile with Last Login field
+  - Fixed admin builder for profile form, show not editable fields
 
 = 2.1.0: November 11, 2019 =
 

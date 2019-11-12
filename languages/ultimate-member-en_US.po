@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-11-10 20:59+0200\n"
-"PO-Revision-Date: 2019-11-10 20:59+0200\n"
+"POT-Creation-Date: 2019-11-12 19:02+0200\n"
+"PO-Revision-Date: 2019-11-12 19:02+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -163,25 +163,25 @@ msgstr ""
 msgid "Predefined Fields"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:887
+#: includes/admin/core/class-admin-builder.php:879
 #: includes/core/class-builtin.php:1330
 msgid "None"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:892
+#: includes/admin/core/class-admin-builder.php:884
 msgid "Custom Fields"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:906
+#: includes/admin/core/class-admin-builder.php:898
 msgid "You did not create any custom fields"
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:938
-#: includes/admin/core/class-admin-builder.php:1010
+#: includes/admin/core/class-admin-builder.php:930
+#: includes/admin/core/class-admin-builder.php:1002
 msgid "This field type is not setup correcty."
 msgstr ""
 
-#: includes/admin/core/class-admin-builder.php:1157
+#: includes/admin/core/class-admin-builder.php:1149
 #: includes/core/class-form.php:159 includes/core/class-form.php:333
 #: includes/core/class-password.php:533
 msgid "This is not possible for security reasons."
@@ -3172,22 +3172,22 @@ msgid "Apply"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:166
-#: includes/core/um-filters-user.php:21 includes/core/um-filters-user.php:26
+#: includes/core/um-filters-user.php:19 includes/core/um-filters-user.php:24
 msgid "Approve Membership"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:169
-#: includes/core/um-filters-user.php:22
+#: includes/core/um-filters-user.php:20
 msgid "Reject Membership"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:172
-#: includes/core/um-filters-user.php:30
+#: includes/core/um-filters-user.php:28
 msgid "Put as Pending Review"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:175
-#: includes/core/um-filters-user.php:34
+#: includes/core/um-filters-user.php:32
 msgid "Resend Activation E-mail"
 msgstr ""
 
@@ -7685,19 +7685,19 @@ msgstr ""
 msgid "max"
 msgstr ""
 
-#: includes/core/um-filters-user.php:38
+#: includes/core/um-filters-user.php:36
 msgid "Deactivate this account"
 msgstr ""
 
-#: includes/core/um-filters-user.php:42
+#: includes/core/um-filters-user.php:40
 msgid "Reactivate this account"
 msgstr ""
 
-#: includes/core/um-filters-user.php:48
+#: includes/core/um-filters-user.php:46
 msgid "Delete this user"
 msgstr ""
 
-#: includes/core/um-filters-user.php:52
+#: includes/core/um-filters-user.php:50
 msgid "Login as this user"
 msgstr ""
 
