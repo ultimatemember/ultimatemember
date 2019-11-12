@@ -1191,6 +1191,10 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			foreach ( $member_directory_ids as $directory_id ) {
 				$directory_data = UM()->query()->post_data( $directory_id );
 
+				if( isset( $directory_data['roles_can_search'] ) && ! is_array( $directory_data['roles_can_search'] ) ){
+					$directory_data['roles_can_search'] = unserialize( $directory_data['roles_can_search'] );
+				}
+
 				$show_search = empty( $directory_data['roles_can_search'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $directory_data['roles_can_search'] ) );
 				if ( empty( $directory_data['search'] ) || ! $show_search ) {
 					continue;
