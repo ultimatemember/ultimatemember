@@ -27,6 +27,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		function __construct() {
 			add_action( 'um_admin_field_modal_header', array( &$this, 'add_message_handlers' ) );
 			add_action( 'um_admin_field_modal_footer', array( &$this, 'add_conditional_support' ), 10, 4 );
+			add_filter( 'um_admin_builder_skip_field_validation', array( &$this, 'skip_field_validation' ), 10, 3 );
 			add_filter( 'um_admin_pre_save_field_to_form', array( &$this, 'um_admin_pre_save_field_to_form' ), 1 );
 			add_filter( 'um_admin_pre_save_fields_hook', array( &$this, 'um_admin_pre_save_fields_hook' ), 1 );
 			add_filter( 'um_admin_field_update_error_handling', array( &$this, 'um_admin_field_update_error_handling' ), 1, 2 );
@@ -1138,6 +1139,26 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			do_action( 'um_admin_field_modal_footer', $arg2, $args, $metabox->in_edit, ( isset( $metabox->edit_array ) ) ? $metabox->edit_array : '' );
 		}
 
+
+		/**
+		 * Skip field validation for:
+		 *  - '_options' if Choices Callback specified
+		 *
+		 * @param boolean $skip
+		 * @param string $post_input
+		 * @param array $array
+		 * @return boolean
+		 */
+		public function skip_field_validation( $skip, $post_input, $array ) {
+
+			if ( $post_input === '_options' && isset( $array['post']['_custom_dropdown_options_source'] ) ) {
+				$um_callback_func = $array['post']['_custom_dropdown_options_source'];
+				$skip = function_exists( $um_callback_func );
+			}
+
+			return $skip;
+		}
+		
 
 		/**
 		 *  Retrieves dropdown/multi-select options from a callback function
