@@ -716,6 +716,17 @@ function um_submit_form_errors_hook_( $args ) {
 
 							break;
 
+						case 'is_email':
+
+							$args[ $key ] = trim( $args[ $key ] );
+
+				            if ( $args[ $key ] != '' && !is_email( $args[ $key ] ) ) {
+									UM()->form()->add_error( $key, __('This is not a valid email','ultimate-member') );
+							} 
+
+
+							break;
+
 						case 'unique_value':
 
 							if ( $args[$key] != '' ) {
