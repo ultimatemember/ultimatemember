@@ -1342,6 +1342,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$array['skype'] = __('Skype ID','ultimate-member');
 			$array['soundcloud'] = __('SoundCloud Profile','ultimate-member');
 			$array['twitter_url'] = __('Twitter URL','ultimate-member');
+			$array['is_email'] = __('E-mail( Not Unique )','ultimate-member');
 			$array['unique_email'] = __('Unique E-mail','ultimate-member');
 			$array['unique_value'] = __('Unique Metakey value','ultimate-member');
 			$array['unique_username'] = __('Unique Username','ultimate-member');
