@@ -266,7 +266,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$active_plugins = UM()->dependencies()->get_active_plugins();
 			foreach ( $slugs as $slug ) {
 				if ( in_array( $slug, $active_plugins ) ) {
-					$plugin_data = get_plugin_data( um_path . '..' . DIRECTORY_SEPARATOR . $slug );
+					$path = wp_normalize_path( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $slug );
+					if(!file_exists( $path)){
+						continue;
+					}
+					$plugin_data = get_plugin_data( $path );
 					if ( version_compare( '2.0', $plugin_data['Version'], '>' ) ) {
 						$show = true;
 						break;
