@@ -1347,6 +1347,7 @@ function um_is_on_edit_profile() {
  * @return bool
  */
 function um_can_view_field( $data ) {
+	$can_view = true;
 
 	if ( ! isset( UM()->fields()->set_mode ) ) {
 		UM()->fields()->set_mode = '';
@@ -1354,35 +1355,60 @@ function um_can_view_field( $data ) {
 
 	if ( isset( $data['public'] ) && UM()->fields()->set_mode != 'register' ) {
 
-		if ( ! is_user_logged_in() && $data['public'] != '1' ) {
-			return false;
-		}
-
 		if ( is_user_logged_in() ) {
 			$previous_user = um_user( 'ID' );
 			um_fetch_user( get_current_user_id() );
 
 			$current_user_roles = um_user( 'roles' );
 			um_fetch_user( $previous_user );
+		}
 
-			if ( $data['public'] == '-3' && ! um_is_user_himself() && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) ) {
-				return false;
-			}
-
-			if ( ! um_is_user_himself() && $data['public'] == '-1' && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
-				return false;
-			}
-
-			if ( $data['public'] == '-2' && $data['roles'] ) {
-				if ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) {
-					return false;
+		switch ( $data['public'] ) {
+			case '1':
+				$can_view = true;
+				break;
+			case '2':
+				if ( ! is_user_logged_in() ) {
+					$can_view = false;
 				}
-			}
+				break;
+			case '-1':
+				if ( ! is_user_logged_in() ) {
+					$can_view = false;
+				} else {
+					if ( ! um_is_user_himself() && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+						$can_view = false;
+					}
+				}
+				break;
+			case '-2':
+				if ( ! is_user_logged_in() ) {
+					$can_view = false;
+				} else {
+					if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) && $data['roles'] ) {
+						if ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) {
+							$can_view = false;
+						}
+					}
+				}
+				break;
+			case '-3':
+				if ( ! is_user_logged_in() ) {
+					$can_view = false;
+				} else {
+					if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) && ! um_is_user_himself() && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) ) {
+						$can_view = false;
+					}
+				}
+				break;
+			default:
+				$can_view = apply_filters( 'um_can_view_field_custom', $can_view, $data );
+				break;
 		}
 
 	}
 
-	return apply_filters( 'um_can_view_field', true, $data );
+	return apply_filters( 'um_can_view_field', $can_view, $data );
 }
 
 
@@ -1451,29 +1477,25 @@ function um_is_user_himself() {
  * @return bool
  */
 function um_can_edit_field( $data ) {
-	if (isset( UM()->fields()->editing ) && UM()->fields()->editing == true &&
-		isset( UM()->fields()->set_mode ) && UM()->fields()->set_mode == 'profile'
-	) {
+	$can_edit = true;
 
-		if (is_user_logged_in() && isset( $data['editable'] ) && $data['editable'] == 0) {
-
-			if (isset( $data['public'] ) && $data['public'] == "-2") {
-				return true;
+	if ( ! empty( UM()->fields()->editing ) && isset( UM()->fields()->set_mode ) && UM()->fields()->set_mode == 'profile' ) {
+		if ( ! is_user_logged_in() ) {
+			$can_edit = false;
+		} else {
+			if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+				if ( isset( $data['editable'] ) && $data['editable'] == 0 ) {
+					$can_edit = false;
+				} else {
+					if ( ! um_is_user_himself() ) {
+						$can_edit = false;
+					}
+				}
 			}
-
-			if (um_user( 'can_edit_everyone' )) return true;
-			if (um_is_user_himself() && !um_user( 'can_edit_everyone' )) {
-				return true;
-			}
-
-			if (!um_is_user_himself() && !UM()->roles()->um_user_can( 'can_edit_everyone' ))
-				return false;
 		}
-
 	}
 
-	return true;
-
+	return apply_filters( 'um_can_edit_field', $can_edit, $data );
 }
 
 

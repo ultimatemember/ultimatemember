@@ -105,7 +105,7 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 					'title' => 'User Tags',
 				),
 				'um-verified-users/um-verified-users.php'               => array(
-					'key'   => 'verified_users',
+					'key'   => 'verified',
 					'title' => 'Verified Users',
 				),
 				'um-woocommerce/um-woocommerce.php'                     => array(
