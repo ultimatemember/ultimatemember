@@ -1252,7 +1252,9 @@ jQuery(document.body).ready( function() {
 					if ( typeof context.select !== 'undefined' ) {
 						var select_val = context.select / 60;
 						var change_val = elem.val();
-
+						if( select_val < 10 ){
+							select_val = '0' + select_val;
+						}
 						if ( range === 'from' ) {
 							current_value_from = select_val + ':00';
 						} else if ( range === 'to' ) {
