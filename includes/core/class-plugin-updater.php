@@ -46,11 +46,11 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 		 * @see file /wp-admin/includes/class-plugin-upgrader.php method bulk_upgrade()
 		 * @since 2.1.1 [2019-11-15]
 		 *
-		 * @param Plugin_Upgrader $Plugin_Upgrader
+		 * @param \Plugin_Upgrader $updater
 		 * @param array $action
 		 */
-		public function clean_update_plugins_cache( $Plugin_Upgrader, $action = array() ) {
-			if ( is_a( $Plugin_Upgrader, 'Plugin_Upgrader' ) && isset( $Plugin_Upgrader->result ) && isset( $Plugin_Upgrader->result['destination_name'] ) && strpos( $Plugin_Upgrader->result['destination_name'], 'um-' ) === 0 && $action['action'] === 'update' && $action['action'] === 'plugin' ) {
+		public function clean_update_plugins_cache( $updater, $action = array() ) {
+			if ( is_a( $updater, 'Plugin_Upgrader' ) && isset( $updater->result ) && isset( $updater->result['destination_name'] ) && strpos( $updater->result['destination_name'], 'um-' ) === 0 && $action['action'] === 'update' && $action['action'] === 'plugin' ) {
 				wp_clean_plugins_cache( true );
 			}
 		}
@@ -357,7 +357,7 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 				}
 
 				$path = wp_normalize_path( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $slug );
-				if(!file_exists( $path)){
+				if ( ! file_exists( $path ) ) {
 					continue;
 				}
 				$plugin_data = get_plugin_data( $path );

@@ -267,7 +267,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			foreach ( $slugs as $slug ) {
 				if ( in_array( $slug, $active_plugins ) ) {
 					$path = wp_normalize_path( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $slug );
-					if(!file_exists( $path)){
+					if ( ! file_exists( $path ) ) {
 						continue;
 					}
 					$plugin_data = get_plugin_data( $path );
