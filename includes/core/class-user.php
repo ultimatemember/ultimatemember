@@ -1118,6 +1118,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 * @type action
 			 * @title um_after_user_status_is_changed_hook
 			 * @description Action after user status changed
+			 * @input_vars
+			 * [{"var":"$user_id","type":"int","desc":"User ID"}]
 			 * @change_log
 			 * ["Since: 2.0"]
 			 * @usage add_action( 'um_after_user_status_is_changed_hook', 'function_name', 10 );
@@ -1129,7 +1131,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 * }
 			 * ?>
 			 */
-			do_action( 'um_after_user_status_is_changed_hook' );
+			do_action( 'um_after_user_status_is_changed_hook', um_user( 'ID' ) );
 
 			/**
 			 * UM hook
@@ -1138,7 +1140,8 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 * @title um_after_user_status_is_changed
 			 * @description Action after user status changed
 			 * @input_vars
-			 * [{"var":"$status","type":"string","desc":"User Status"}]
+			 * [{"var":"$status","type":"string","desc":"User Status"},
+			 *  {"var":"$user_id","type":"integer","desc":"User ID"}]
 			 * @change_log
 			 * ["Since: 2.0"]
 			 * @usage add_action( 'um_after_user_status_is_changed', 'function_name', 10, 1 );
@@ -1150,7 +1153,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			 * }
 			 * ?>
 			 */
-			do_action( 'um_after_user_status_is_changed', $status );
+			do_action( 'um_after_user_status_is_changed', $status, um_user( 'ID' ) );
 
 		}
 
