@@ -519,8 +519,9 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->columns();
 				$this->admin()->notices();
 				$this->admin_navmenu();
-				$this->theme_updater();
 				$this->access();
+				$this->plugin_updater();
+				$this->theme_updater();
 			} elseif ( $this->is_request( 'admin' ) ) {
 				$this->admin();
 				$this->admin_menu();
@@ -532,9 +533,9 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->admin()->notices();
 				$this->users();
 				$this->dragdrop();
-				$this->plugin_updater();
 				$this->admin_gdpr();
 				$this->admin_navmenu();
+				$this->plugin_updater();
 				$this->theme_updater();
 			} elseif ( $this->is_request( 'frontend' ) ) {
 				$this->enqueue();

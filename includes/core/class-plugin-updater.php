@@ -28,6 +28,9 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 
 			//cron request to UM()->store_url;
 			add_action( 'um_check_extensions_licenses', array( &$this, 'um_checklicenses' ) );
+			
+			// clean update plugin cache
+			add_action( 'upgrader_process_complete', array( &$this, 'clean_update_plugins_cache' ), 20, 2 );
 
 			//update plugin info
 			add_filter( 'pre_set_site_transient_update_plugins', array( &$this, 'check_update' ) );
@@ -36,6 +39,22 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 			add_filter( 'plugins_api', array( &$this, 'plugin_information' ), 9999, 3 );
 		}
 
+		
+		/**
+		 * This action is documented in wp-admin/includes/class-wp-upgrader.php
+		 * 
+		 * @see file /wp-admin/includes/class-plugin-upgrader.php method bulk_upgrade()
+		 * @since 2.1.1 [2019-11-15]
+		 *
+		 * @param Plugin_Upgrader $Plugin_Upgrader
+		 * @param array $action
+		 */
+		public function clean_update_plugins_cache( $Plugin_Upgrader, $action = array() ) {
+			if ( is_a( $Plugin_Upgrader, 'Plugin_Upgrader' ) && isset( $Plugin_Upgrader->result ) && isset( $Plugin_Upgrader->result['destination_name'] ) && strpos( $Plugin_Upgrader->result['destination_name'], 'um-' ) === 0 && $action['action'] === 'update' && $action['action'] === 'plugin' ) {
+				wp_clean_plugins_cache( true );
+			}
+		}
+		
 
 		/**
 		 * Get all paid UM extensions
@@ -337,7 +356,11 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 					continue;
 				}
 
-				$plugin_data = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $slug );
+				$path = wp_normalize_path( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $slug );
+				if(!file_exists( $path)){
+					continue;
+				}
+				$plugin_data = get_plugin_data( $path );
 
 				$version_info = $this->get_cached_version_info( $slug );
 				if ( false === $version_info ) {
