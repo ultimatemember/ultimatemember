@@ -1181,7 +1181,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			if ( in_array( $type, array( 'select', 'multiselect' ) ) && ! empty( $data['custom_dropdown_options_source'] ) ) {
 
 				if ( function_exists( $data['custom_dropdown_options_source'] ) ) {
-					$arr_options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+					if ( isset( $data['parent_dropdown_relationship'] ) ) {
+						$arr_options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+					} else {
+						$arr_options = call_user_func( $data['custom_dropdown_options_source'] );
+					}
 				}
 
 			}
@@ -1877,13 +1881,57 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				return;
 			}
 
+			// forbidden in edit mode? 'edit_forbidden' - it's field attribute predefined in the field data in code
+			if ( isset( $data['edit_forbidden'] ) ) {
+				return;
+			}
+
+			// required option? 'required_opt' - it's field attribute predefined in the field data in code
+			if ( isset( $data['required_opt'] ) ) {
+				$opt = $data['required_opt'];
+				if ( UM()->options()->get( $opt[0] ) != $opt[1] ) {
+					return;
+				}
+			}
+
+			// required user permission 'required_perm' - it's field attribute predefined in the field data in code
+			if ( isset( $data['required_perm'] ) ) {
+				if ( ! UM()->roles()->um_user_can( $data['required_perm'] ) ) {
+					return;
+				}
+			}
+
+			// fields that need to be disabled in edit mode (profile) (email, username, etc.)
+			$arr_restricted_fields = $this->get_restricted_fields_for_edit( $_um_profile_id );
+			if ( in_array( $key, $arr_restricted_fields ) && $this->editing == true && $this->set_mode == 'profile' ) {
+				return;
+			}
+
+
 			if ( $visibility == 'view' && $this->set_mode != 'register' ) {
 				return;
 			}
 
-			if ( ( $visibility == 'view' && $this->set_mode == 'register' ) ||
-				( isset( $data['editable'] ) && $data['editable'] == 0 && $this->set_mode == 'profile' )
-			) {
+			if ( ! um_can_view_field( $data ) ) {
+				return;
+			}
+
+			if ( ! um_can_edit_field( $data ) ) {
+				return;
+			}
+
+			um_fetch_user( $_um_profile_id );
+
+			// do not show passwords
+			if ( isset( UM()->user()->preview ) && UM()->user()->preview ) {
+				if ( $data['type'] == 'password' ) {
+					return;
+				}
+			}
+
+			// Stop return empty values build field attributes:
+
+			if ( $visibility == 'view' && $this->set_mode == 'register' ) {
 
 				um_fetch_user( get_current_user_id() );
 				if ( ! um_user( 'can_edit_everyone' ) ) {
@@ -1905,48 +1953,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$autocomplete = 'off';
 			}
 
-			um_fetch_user( get_current_user_id() );
-			if ( ! um_can_view_field( $data ) ) {
-				return;
-			}
-			if ( ! um_can_edit_field( $data ) ) {
-				return;
-			}
 			um_fetch_user( $_um_profile_id );
-
-			// fields that need to be disabled in edit mode (profile)
-			$arr_restricted_fields = $this->get_restricted_fields_for_edit( $_um_profile_id );
-			if ( in_array( $key, $arr_restricted_fields ) && $this->editing == true && $this->set_mode == 'profile' ) {
-				return;
-			}
-
-			// forbidden in edit mode?
-			if ( isset( $data['edit_forbidden'] ) ) {
-				return;
-			}
-
-
-			// required option
-			if ( isset( $data['required_opt'] ) ) {
-				$opt = $data['required_opt'];
-				if ( UM()->options()->get( $opt[0] ) != $opt[1] ) {
-					return;
-				}
-			}
-
-			// required user permission
-			if ( isset( $data['required_perm'] ) ) {
-				if ( ! um_user( $data['required_perm'] ) ) {
-					return;
-				}
-			}
-
-			// do not show passwords
-			if ( isset( UM()->user()->preview ) && UM()->user()->preview ) {
-				if ( $data['type'] == 'password' ) {
-					return;
-				}
-			}
 
 			/**
 			 * UM hook

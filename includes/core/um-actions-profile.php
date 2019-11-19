@@ -236,7 +236,29 @@ function um_user_edit_profile( $args ) {
 
 		foreach ( $fields as $key => $array ) {
 
-			if ( ! um_can_edit_field( $array ) && isset( $array['editable'] ) && ! $array['editable'] ) {
+			if ( ! isset( $array['type'] ) ) {
+				continue;
+			}
+
+			if ( isset( $array['edit_forbidden'] ) ) {
+				continue;
+			}
+
+			// required option? 'required_opt' - it's field attribute predefined in the field data in code
+			if ( isset( $array['required_opt'] ) ) {
+				$opt = $array['required_opt'];
+				if ( UM()->options()->get( $opt[0] ) != $opt[1] ) {
+					continue;
+				}
+			}
+
+			// fields that need to be disabled in edit mode (profile) (email, username, etc.)
+			$arr_restricted_fields = UM()->fields()->get_restricted_fields_for_edit( $user_id );
+			if ( in_array( $key, $arr_restricted_fields ) ) {
+				continue;
+			}
+
+			if ( ! um_can_edit_field( $array ) || ! um_can_view_field( $array ) ) {
 				continue;
 			}
 
@@ -314,10 +336,10 @@ function um_user_edit_profile( $args ) {
 
 				if ( isset( $array['type'] ) && in_array( $array['type'], array( 'image', 'file' ) ) ) {
 
-					if ( /*um_is_file_owner( UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . $args['submitted'][ $key ], um_user( 'ID' ) ) ||*/ um_is_temp_file( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' ) {
+					if ( um_is_temp_file( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' ) {
 						$files[ $key ] = $args['submitted'][ $key ];
 					} elseif( um_is_file_owner( UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . $args['submitted'][ $key ], um_user( 'ID' ) ) ) {
-						/*$files[ $key ] = 'empty_file';*/
+
 					} else {
 						$files[ $key ] = 'empty_file';
 					}
@@ -1306,6 +1328,9 @@ function um_submit_form_profile( $args ) {
 	if ( isset( UM()->form()->errors ) ) {
 		return;
 	}
+
+	UM()->fields()->set_mode  = 'profile';
+	UM()->fields()->editing = true;
 
 	/**
 	 * UM hook
