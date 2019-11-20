@@ -52,6 +52,11 @@ function um_set_url_from_data( directory, key, value ) {
 	var other_directories = um_member_directories;
 
 	var new_data = {};
+
+	if ( jQuery.isArray( value ) ) {
+		value = value.join( '||' );
+	}
+
 	if ( value !== '' ) {
 		new_data[ key + '_' + hash ] = value;
 	}

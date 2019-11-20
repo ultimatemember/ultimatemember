@@ -553,7 +553,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 								$opt = $v;
 
-								if ( strstr( $filter, 'role_' ) ) {
+								if ( strstr( $filter, 'role_' ) || $filter == 'role' ) {
 									$opt = $k;
 								}
 
