@@ -1223,11 +1223,10 @@ jQuery(document.body).ready( function() {
 		//timepicker filter
 		directory.find('.um-timepicker-filter').each( function() {
 			var elem = jQuery(this);
-			var elemWrap = elem.parent();
 			var elemID = elem.attr('id');
+			var elem_filter_name = elem.data('filter_name');
 
 			//using arrays formatted as [HOUR,MINUTE]
-
 			var min = elem.attr('data-min');
 			var max = elem.attr('data-max');
 
@@ -1285,13 +1284,14 @@ jQuery(document.body).ready( function() {
 							current_value_to = max[0] + ':' + minutes;
 						}
 					}
-					// var time = jQuery('#'+elemID).val();
-					// console.log(elemID)
-					// if ( elem.data('range') == 'from' ) {
-					// 	elemWrap.find('input[data-range="to"]').attr('data-min', time);
-					// } else {
-					// 	elemWrap.find('input').attr('data-max', time);
-					// }
+
+					var time = jQuery('#'+elemID).val();
+
+					if ( elem.data('range') == 'from' ) {
+						jQuery('#'+elem_filter_name+'_to').pickatime('picker').set('min', time);
+					} else {
+						jQuery('#'+elem_filter_name+'_from').pickatime('picker').set('max', time);
+					}
 
 					um_set_url_from_data( directory, 'filter_' + filter_name + '_from', current_value_from );
 					um_set_url_from_data( directory, 'filter_' + filter_name + '_to', current_value_to );
