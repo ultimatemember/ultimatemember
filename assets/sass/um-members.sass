@@ -89,7 +89,7 @@ body
     width: 100%
     top: 0
     bottom: 0
-    background: rgba(255, 255, 255, 0.8)
+    background: none
     z-index: 2
     .um-ajax-loading
       +transition(.1s,opacity)
@@ -120,6 +120,8 @@ body
     +flex( column, flex-start, stretch, nowrap )
     width: 100%
     .um-member-directory-header-row
+      &.um-member-directory-filters-bar
+        padding: 0 0 10px 0
       &:not(.um-member-directory-filters-bar)
         +flex( row, flex-start, baseline, nowrap )
         margin: 0 0 10px 0
@@ -141,8 +143,10 @@ body
           .um-search-line
             -webkit-appearance: textfield
             width: 100%
+            +border-box
         .um-do-search
           min-width: 15%
+          width: auto
       .um-member-directory-nav-line
         +flex( row, space-between, center, nowrap )
         width: 100%
@@ -236,6 +240,9 @@ body
 
           .um-s1
             width: 100%
+          &.um-text-filter-type
+            input
+              width: 100%
           &.um-slider-filter-type
             flex-direction: column
             align-items: stretch
@@ -560,7 +567,7 @@ body
           width: 100%
           padding: 15px
           margin: 0
-          background: none
+          background: #fff
           +border-box
           .um-member-status
             display: none
@@ -605,6 +612,8 @@ body
               padding: 0
               margin: 0
               +border-box
+              &.no-photo
+                width: 100%
 
               .um-member-card-content
                 +flex( column, flex-start, stretch, nowrap )
@@ -733,6 +742,16 @@ body
                     font-size: 28px
                     height: 28px
                     line-height: 28px
+            &.no-photo.no-reveal
+              .um-member-card-footer-buttons
+                width: 100%
+            &.no-photo:not(.no-reveal)
+              .um-member-card-footer-buttons
+                width: calc( 100% - 30px )
+            &.no-reveal:not(.no-photo)
+              .um-member-card-footer-buttons
+                width: calc( 100% - 125px )
+
 
 
       .um-members-none
@@ -873,6 +892,9 @@ body
                   margin: 0 0 5px 0
                   a.um-button
                     width: 100% !important
+              &.no-reveal:not(.no-photo)
+                .um-member-card-footer-buttons
+                  width: calc( 100% - 70px )
     .um-members-pagination-box
       .um-members-pagi
         display: none
@@ -921,6 +943,9 @@ body
                 margin: 0 10px 0 0
                 .um-members-list-footer-button-wrapper
                   margin: 0 10px 5px 0
+              &.no-reveal:not(.no-photo)
+                .um-member-card-footer-buttons
+                  width: calc( 100% - 90px )
     .um-members-pagination-box
       .um-members-pagi
         display: none
@@ -961,6 +986,9 @@ body
                 margin: 0 10px 0 0
                 .um-members-list-footer-button-wrapper
                   margin: 0 10px 5px 0
+              &.no-reveal:not(.no-photo)
+                .um-member-card-footer-buttons
+                  width: calc( 100% - 100px )
   &.uimob960
     .um-member-directory-header
       .um-search

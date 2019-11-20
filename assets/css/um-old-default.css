@@ -126,6 +126,7 @@ div.uimob800 .um-account-side li a.current:hover
 }
 
 .um .um-form input[type=text],
+.um .um-form input[type=search],
 .um .um-form input[type=tel],
 .um .um-form input[type=number],
 .um .um-form input[type=password],
@@ -145,6 +146,7 @@ div.uimob800 .um-account-side li a.current:hover
 }
 
 .um .um-form input[type=text]:focus,
+.um .um-form input[type=search]:focus,
 .um .um-form input[type=tel]:focus,
 .um .um-form input[type=number]:focus,
 .um .um-form input[type=password]:focus,
@@ -155,6 +157,7 @@ div.uimob800 .um-account-side li a.current:hover
 }
 
 .um .um-form input[type=text],
+.um .um-form input[type=search],
 .um .um-form input[type=tel],
 .um .um-form input[type=number],
 .um .um-form input[type=password],
@@ -166,6 +169,7 @@ div.uimob800 .um-account-side li a.current:hover
 }
 
 .um .um-form input[type=text]:focus,
+.um .um-form input[type=search]:focus,
 .um .um-form input[type=tel]:focus,
 .um .um-form input[type=number]:focus,
 .um .um-form input[type=password]:focus,
@@ -174,6 +178,7 @@ div.uimob800 .um-account-side li a.current:hover
 }
 
 .um .um-form input[type=text],
+.um .um-form input[type=search],
 .um .um-form input[type=tel],
 .um .um-form input[type=password],
 .um .um-form textarea

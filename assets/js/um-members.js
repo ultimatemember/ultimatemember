@@ -216,11 +216,17 @@ function um_ajax_get_members( directory, args ) {
 				if (  typeof value_from != 'undefined' || typeof value_to != 'undefined' ) {
 					request[ filter_name ] = [ value_from, value_to ];
 				}
-			} else {
+			} else if (  filter.find( 'select' ).length ) {
 				var filter_name = filter.find('select').attr('name');
 				var value = um_get_data_for_directory( directory, 'filter_' + filter_name );
 				if ( typeof value != 'undefined' ) {
 					request[ filter_name ] = value.split( '||' );
+				}
+			} else  {
+				var filter_name = filter.find('input[type="text"]').attr('name');
+				var value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+				if ( typeof value != 'undefined' ) {
+					request[ filter_name ] = value;
 				}
 			}
 		});
@@ -274,7 +280,9 @@ function um_build_template( directory, data ) {
 
 	var header_template = wp.template( 'um-members-header' );
 	directory.find('.um-members-intro').remove();
-	directory.find('.um-members-wrapper').prepend( header_template( data ) );
+	if ( typeof data.is_search != 'undefined' && data.is_search ) {
+		directory.find('.um-members-wrapper').prepend( header_template( data ) );
+	}
 
 	directory.addClass('um-loaded');
 
@@ -402,6 +410,21 @@ function um_get_filters_data( directory ) {
 				filters_data.push( {'name':filter_name, 'label':filter_title, 'value_label':filter_value_title, 'value':filter_value[ i ], 'type':filter_type} );
 			});
 
+		} else if( filter.find('input[type="text"]').length ) {
+
+			filter_type = 'text';
+			filter_name = filter.find('input[type="text"]').attr('name');
+			filter_title = filter.find('input[type="text"]').attr('placeholder');
+
+			var filter_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+			if ( typeof filter_value == 'undefined' ) {
+				filter_value = '';
+			}
+
+			if ( filter_value != '' ) {
+				filters_data.push( {'name':filter_name, 'label':filter_title, 'value_label':filter_value, 'value':filter_value, 'type':filter_type} );
+			}
+
 		} else if( filter.find('div.ui-slider').length ) {
 			filter_type = 'slider';
 
@@ -433,7 +456,7 @@ function um_change_tag( directory ) {
 	directory.find('.um-members-filter-tag').remove();
 
 	var filtered_line = directory.find('.um-filtered-line');
-	if ( filtered_line.length ){
+	if ( filtered_line.length ) {
 		var filters_template = wp.template( 'um-members-filtered-line' );
 		filtered_line.prepend( filters_template( {'filters': filters_data} ) );
 
@@ -865,20 +888,101 @@ jQuery(document.body).ready( function() {
 	});
 
 
-	jQuery( document.body ).on( 'click', '.um-directory .um-members-filter-remove', function() {
+	jQuery( document.body ).on( 'blur', '.um-directory .um-search-filter input[type="text"]', function() {
 		var directory = jQuery(this).parents('.um-directory');
 
-		if ( um_is_directory_busy( directory ) || ! directory ) {
+		if ( um_is_directory_busy( directory ) ) {
+			return;
+		}
+
+		var current_value = jQuery(this).val();
+		var filter_name = jQuery(this).prop('name');
+		var url_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+
+		if ( typeof url_value == 'undefined' ) {
+			url_value = '';
+		}
+
+		if ( current_value === url_value ) {
 			return;
 		}
 
 		um_members_show_preloader( directory );
+		um_set_url_from_data( directory, 'filter_' + filter_name, current_value );
+
+		//set 1st page after filtration
+		directory.data( 'page', 1 );
+		um_set_url_from_data( directory, 'page', '' );
+
+		um_ajax_get_members( directory );
+
+		um_change_tag( directory );
+
+		directory.data( 'searched', 1 );
+		directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
+		directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
+	});
+
+
+	//make search on Enter click
+	jQuery( document.body ).on( 'keypress', '.um-directory .um-search-filter input[type="text"]', function(e) {
+		if ( e.which === 13 ) {
+			var directory = jQuery(this).parents('.um-directory');
+
+			if ( um_is_directory_busy( directory ) ) {
+				return;
+			}
+
+			var current_value = jQuery(this).val();
+			var filter_name = jQuery(this).prop('name');
+			var url_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+
+			if ( typeof url_value == 'undefined' ) {
+				url_value = '';
+			}
+
+			if ( current_value === url_value ) {
+				return;
+			}
+
+			um_members_show_preloader( directory );
+			um_set_url_from_data( directory, 'filter_' + filter_name, current_value );
+
+			//set 1st page after filtration
+			directory.data( 'page', 1 );
+			um_set_url_from_data( directory, 'page', '' );
+
+			um_ajax_get_members( directory );
+
+			um_change_tag( directory );
+
+			directory.data( 'searched', 1 );
+			directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
+			directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
+		}
+	});
+
+
+
+	jQuery( document.body ).on( 'click', '.um-directory .um-members-filter-remove', function() {
+		var directory = jQuery(this).parents('.um-directory');
+
+		if ( um_is_directory_busy(directory) || ! directory ) {
+			return;
+		}
+
+		um_members_show_preloader(directory);
 
 		var removeItem = jQuery(this).data('value');
 		var filter_name = jQuery(this).data('name');
 
 		var type = jQuery(this).data('type');
-		if ( type === 'select' ) {
+		if ( type === 'text' ) {
+			um_set_url_from_data( directory, 'filter_' + filter_name,'' );
+
+			jQuery( '.um-search-filter input[name="' + filter_name + '"]' ).val('');
+
+		} else if ( type === 'select' ) {
 
 			var current_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
 			if ( typeof current_value == 'undefined' ) {
@@ -967,7 +1071,12 @@ jQuery(document.body).ready( function() {
 			var filter_name = jQuery(this).data('name');
 
 			var type = jQuery(this).data('type');
-			if ( type === 'select' ) {
+			if ( type === 'text' ) {
+				um_set_url_from_data( directory, 'filter_' + filter_name,'' );
+
+				jQuery( '.um-search-filter input[name="' + filter_name + '"]' ).val('');
+
+			} else if ( type === 'select' ) {
 
 				var current_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
 				if ( typeof current_value == 'undefined' ) {
