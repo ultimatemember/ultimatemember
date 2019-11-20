@@ -163,6 +163,17 @@ function um_get_current_page( directory ) {
 	return page;
 }
 
+function um_time_convert( time, range ) {
+	var hours = Math.floor( time / 60 );
+	var minutes = time % 60;
+	if ( range == 'to' ) {
+		minutes = minutes + 1;
+	}
+	if ( minutes < 10 ) {
+		minutes = '0' + minutes;
+	}
+	return hours + ":" + minutes;
+}
 
 function um_ajax_get_members( directory, args ) {
 
@@ -1064,6 +1075,7 @@ jQuery(document.body).ready( function() {
 
 
 	jQuery( document.body ).on( 'click', '.um-directory .um-clear-filters-a', function() {
+		jQuery('.um-search-filter input').val('');
 		var directory = jQuery(this).parents('.um-directory');
 		if ( um_is_directory_busy( directory ) ) {
 			return;
@@ -1325,11 +1337,13 @@ jQuery(document.body).ready( function() {
 		//timepicker filter
 		directory.find('.um-timepicker-filter').each( function() {
 			var elem = jQuery(this);
+			var elemID = elem.attr('id');
+			var elem_filter_name = elem.data('filter_name');
 
 			//using arrays formatted as [HOUR,MINUTE]
+			var min = elem.attr('data-min');
+			var max = elem.attr('data-max');
 
-			var min = elem.data('min');
-			var max = elem.data('max');
 			var picker_min = min.split(':');
 			var picker_max = max.split(':');
 
@@ -1343,6 +1357,7 @@ jQuery(document.body).ready( function() {
 				onOpen:         function() { elem.blur(); },
 				onClose:        function() { elem.blur(); },
 				onSet:          function( context ) {
+
 					var directory = elem.parents('.um-directory');
 
 					if ( um_is_directory_busy( directory ) ) {
@@ -1360,24 +1375,36 @@ jQuery(document.body).ready( function() {
 						current_value_from = min;
 					}
 					if ( typeof current_value_to === "undefined" ) {
-						current_value_to = max;
+						max = max.split(':');
+						var minutes = Math.ceil( max[1] ) + 1;
+						current_value_to = max[0] + ':' + minutes;
 					}
 
 					if ( typeof context.select !== 'undefined' ) {
-						var select_val = context.select / 60;
 						var change_val = elem.val();
+						var select_val = um_time_convert( context.select, range );
 
 						if ( range === 'from' ) {
-							current_value_from = select_val + ':00';
+							current_value_from = select_val;
 						} else if ( range === 'to' ) {
-							current_value_to = select_val + ':00';
+							current_value_to = select_val;
 						}
 					} else {
 						if ( range === 'from' ) {
 							current_value_from = min;
 						} else if ( range === 'to' ) {
-							current_value_to = max;
+							max = max.split(':');
+							var minutes = Math.ceil( max[1] ) + 1;
+							current_value_to = max[0] + ':' + minutes;
 						}
+					}
+
+					var time = jQuery('#'+elemID).val();
+
+					if ( elem.data('range') == 'from' ) {
+						jQuery('#'+elem_filter_name+'_to').pickatime('picker').set('min', time);
+					} else {
+						jQuery('#'+elem_filter_name+'_from').pickatime('picker').set('max', time);
 					}
 
 					um_set_url_from_data( directory, 'filter_' + filter_name + '_from', current_value_from );
@@ -1394,6 +1421,7 @@ jQuery(document.body).ready( function() {
 					directory.data( 'searched', 1 );
 					directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
 					directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
+
 				}
 			});
 
@@ -1408,6 +1436,7 @@ jQuery(document.body).ready( function() {
 				var arr = query_value.split(':');
 				$picker.set( 'select', arr[0]*60 );
 			}
+
 		});
 
 		um_change_tag( directory );
