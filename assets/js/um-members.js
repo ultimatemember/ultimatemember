@@ -166,12 +166,23 @@ function um_get_current_page( directory ) {
 function um_time_convert( time, range ) {
 	var hours = Math.floor( time / 60 );
 	var minutes = time % 60;
-	if ( range == 'to' ) {
+	if ( range === 'to' ) {
 		minutes = minutes + 1;
 	}
+
+	if ( minutes >= 60 ) {
+		minutes = 0;
+		hours = hours + 1;
+
+		if ( hours >= 24 ) {
+			hours = 0;
+		}
+	}
+
 	if ( minutes < 10 ) {
 		minutes = '0' + minutes;
 	}
+
 	return hours + ":" + minutes;
 }
 
@@ -1075,7 +1086,6 @@ jQuery(document.body).ready( function() {
 
 
 	jQuery( document.body ).on( 'click', '.um-directory .um-clear-filters-a', function() {
-		jQuery('.um-search-filter input').val('');
 		var directory = jQuery(this).parents('.um-directory');
 		if ( um_is_directory_busy( directory ) ) {
 			return;
@@ -1126,12 +1136,21 @@ jQuery(document.body).ready( function() {
 			} else if ( type === 'slider' ) {
 				um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
 				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
+
+				jQuery( '.um-search-filter input[name="filter_' + filter_name + '_from"]' ).val('');
+				jQuery( '.um-search-filter input[name="filter_' + filter_name + '_to"]' ).val('');
 			} else if ( type === 'datepicker' ) {
 				um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
 				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
+
+				jQuery( '.um-search-filter input[name="filter_' + filter_name + '_from"]' ).val('');
+				jQuery( '.um-search-filter input[name="filter_' + filter_name + '_to"]' ).val('');
 			} else if ( type === 'timepicker' ) {
 				um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
 				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
+
+				jQuery( '.um-search-filter input[name="filter_' + filter_name + '_from"]' ).val('');
+				jQuery( '.um-search-filter input[name="filter_' + filter_name + '_to"]' ).val('');
 			}
 		});
 
@@ -1377,11 +1396,18 @@ jQuery(document.body).ready( function() {
 					if ( typeof current_value_to === "undefined" ) {
 						max = max.split(':');
 						var minutes = Math.ceil( max[1] ) + 1;
+						if ( minutes >= 60 ) {
+							minutes = '00';
+							max[0] = max[0]*1 + 1;
+
+							if ( max[0] >= 24 ) {
+								max[0] = '00';
+							}
+						}
 						current_value_to = max[0] + ':' + minutes;
 					}
 
 					if ( typeof context.select !== 'undefined' ) {
-						var change_val = elem.val();
 						var select_val = um_time_convert( context.select, range );
 
 						if ( range === 'from' ) {
@@ -1395,16 +1421,24 @@ jQuery(document.body).ready( function() {
 						} else if ( range === 'to' ) {
 							max = max.split(':');
 							var minutes = Math.ceil( max[1] ) + 1;
+							if ( minutes >= 60 ) {
+								minutes = '00';
+								max[0] = max[0]*1 + 1;
+
+								if ( max[0] >= 24 ) {
+									max[0] = '00';
+								}
+							}
 							current_value_to = max[0] + ':' + minutes;
 						}
 					}
 
-					var time = jQuery('#'+elemID).val();
+					var time = jQuery( '#' + elemID ).val();
 
-					if ( elem.data('range') == 'from' ) {
-						jQuery('#'+elem_filter_name+'_to').pickatime('picker').set('min', time);
+					if ( elem.data('range') === 'from' ) {
+						jQuery( '#' + elem_filter_name + '_to' ).pickatime('picker').set('min', time);
 					} else {
-						jQuery('#'+elem_filter_name+'_from').pickatime('picker').set('max', time);
+						jQuery( '#' + elem_filter_name + '_from').pickatime('picker').set('max', time);
 					}
 
 					um_set_url_from_data( directory, 'filter_' + filter_name + '_from', current_value_from );
