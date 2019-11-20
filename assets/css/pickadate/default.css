@@ -17,6 +17,10 @@
   user-select: none;
 }
 
+.um .picker__box ul li[role="presentation"] {
+  margin: 10px 0 0 0;
+}
+
 /**
  * The picker input element.
  */

@@ -166,9 +166,6 @@ function um_get_current_page( directory ) {
 function um_time_convert( time, range ) {
 	var hours = Math.floor( time / 60 );
 	var minutes = time % 60;
-	if ( range === 'to' ) {
-		minutes = minutes + 1;
-	}
 
 	if ( minutes >= 60 ) {
 		minutes = 0;
@@ -240,7 +237,47 @@ function um_ajax_get_members( directory, args ) {
 				var filter_name = filter.find( '.um-timepicker-filter' ).data('filter_name');
 				var value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
 				var value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
-				if (  typeof value_from != 'undefined' || typeof value_to != 'undefined' ) {
+
+				if ( typeof value_from != 'undefined' ) {
+					var value_from = value_from.split(':');
+					var hours = value_from[0]*1;
+					if ( hours < 10 ) {
+						hours = '0' + hours;
+					}
+
+					var minutes = value_from[1]*1;
+					if ( minutes < 10 ) {
+						minutes = '0' + minutes;
+					}
+
+					value_from = hours + ':' + minutes + ':00';
+				}
+				if ( typeof value_to != 'undefined' ) {
+					var val_to = value_to.split(':');
+					var minutes = val_to[1]*1;
+					// var minutes = Math.ceil( val_to[1] ) + 1;
+					// if ( minutes >= 60 ) {
+					// 	minutes = 0;
+					// 	val_to[0] = val_to[0]*1 + 1;
+					//
+					// 	if ( val_to[0] >= 24 ) {
+					// 		val_to[0] = 0;
+					// 	}
+					// }
+
+					var hours = val_to[0]*1;
+					if ( hours < 10 ) {
+						hours = '0' + hours;
+					}
+
+					if ( minutes < 10 ) {
+						minutes = '0' + minutes;
+					}
+
+					value_to = hours + ':' + minutes + ':59';
+				}
+
+				if ( typeof value_from != 'undefined' || typeof value_to != 'undefined' ) {
 					request[ filter_name ] = [ value_from, value_to ];
 				}
 			} else if (  filter.find( 'select' ).length ) {
@@ -915,7 +952,7 @@ jQuery(document.body).ready( function() {
 	});
 
 
-	jQuery( document.body ).on( 'blur', '.um-directory .um-search-filter input[type="text"]', function() {
+	jQuery( document.body ).on( 'blur', '.um-directory .um-search-filter.um-text-filter-type input[type="text"]', function() {
 		var directory = jQuery(this).parents('.um-directory');
 
 		if ( um_is_directory_busy( directory ) ) {
@@ -952,7 +989,7 @@ jQuery(document.body).ready( function() {
 
 
 	//make search on Enter click
-	jQuery( document.body ).on( 'keypress', '.um-directory .um-search-filter input[type="text"]', function(e) {
+	jQuery( document.body ).on( 'keypress', '.um-directory .um-search-filter.um-text-filter-type input[type="text"]', function(e) {
 		if ( e.which === 13 ) {
 			var directory = jQuery(this).parents('.um-directory');
 
@@ -1394,21 +1431,13 @@ jQuery(document.body).ready( function() {
 						current_value_from = min;
 					}
 					if ( typeof current_value_to === "undefined" ) {
-						max = max.split(':');
-						var minutes = Math.ceil( max[1] ) + 1;
-						if ( minutes >= 60 ) {
-							minutes = '00';
-							max[0] = max[0]*1 + 1;
-
-							if ( max[0] >= 24 ) {
-								max[0] = '00';
-							}
-						}
-						current_value_to = max[0] + ':' + minutes;
+						current_value_to = max;
 					}
 
 					if ( typeof context.select !== 'undefined' ) {
 						var select_val = um_time_convert( context.select, range );
+
+						//var select_val = context.select / 60;
 
 						if ( range === 'from' ) {
 							current_value_from = select_val;
@@ -1419,17 +1448,7 @@ jQuery(document.body).ready( function() {
 						if ( range === 'from' ) {
 							current_value_from = min;
 						} else if ( range === 'to' ) {
-							max = max.split(':');
-							var minutes = Math.ceil( max[1] ) + 1;
-							if ( minutes >= 60 ) {
-								minutes = '00';
-								max[0] = max[0]*1 + 1;
-
-								if ( max[0] >= 24 ) {
-									max[0] = '00';
-								}
-							}
-							current_value_to = max[0] + ':' + minutes;
+							current_value_to = max;
 						}
 					}
 
@@ -1459,7 +1478,7 @@ jQuery(document.body).ready( function() {
 				}
 			});
 
-
+			// first loading timepicker select
 			var $picker = $input.pickatime('picker');
 			var $fname = elem.data('filter_name');
 			var $frange = elem.data('range');
@@ -1468,7 +1487,7 @@ jQuery(document.body).ready( function() {
 			var query_value = um_get_data_for_directory( $directory, 'filter_' + $fname + '_' + $frange );
 			if ( typeof query_value !== 'undefined' ) {
 				var arr = query_value.split(':');
-				$picker.set( 'select', arr[0]*60 );
+				$picker.set( 'select', arr[0]*60 + arr[1]*1 );
 			}
 
 		});
