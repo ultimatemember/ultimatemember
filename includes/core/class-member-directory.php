@@ -2251,7 +2251,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 
 			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
-			$this->cover_size = UM()->mobile()->isTablet() ? $sizes[1] : $sizes[0];
+
+			$this->cover_size = UM()->mobile()->isTablet() ? $sizes[1] : end( $sizes );
 
 			$avatar_size = UM()->options()->get( 'profile_photosize' );
 			$this->avatar_size = str_replace( 'px', '', $avatar_size );
