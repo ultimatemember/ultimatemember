@@ -416,6 +416,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				$attrs = apply_filters( "um_custom_search_field_{$filter}", array(), $field_key );
 			}
 
+			// skip private invisible fields
+			if ( ! um_can_view_field( $attrs ) ) {
+				return '';
+			}
+
 			/**
 			 * UM hook
 			 *
@@ -1276,9 +1281,20 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					if ( isset( $join_matches[1] ) ) {
 						$meta_join_for_search = trim( $join_matches[1] );
 
+						// skip private invisible fields
+						$custom_fields = array();
+						foreach ( array_keys( UM()->builtin()->all_user_fields ) as $field_key ) {
+							$data = UM()->fields()->get_field( $field_key );
+							if ( ! um_can_view_field( $data ) ) {
+								continue;
+							}
+
+							$custom_fields[] = $field_key;
+						}
+
 						$sql['join'] = preg_replace(
 							'/(' . $meta_join_for_search . ' ON \( ' . $wpdb->users . '\.ID = ' . $meta_join_for_search . '\.user_id )(\))/im',
-							"$1 AND " . $meta_join_for_search . ".meta_key IN( '" . implode( "','", array_keys( UM()->builtin()->all_user_fields ) ) . "' ) $2",
+							"$1 AND " . $meta_join_for_search . ".meta_key IN( '" . implode( "','", $custom_fields ) . "' ) $2",
 							$sql['join']
 						);
 					}
@@ -1323,6 +1339,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$this->is_search = true;
 			foreach ( $filter_query as $field => $value ) {
+
+				$attrs = UM()->fields()->get_field( $field );
+				// skip private invisible fields
+				if ( ! um_can_view_field( $attrs ) ) {
+					continue;
+				}
 
 				switch ( $field ) {
 					default:
