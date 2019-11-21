@@ -161,22 +161,24 @@ function um_submit_account_details( $args ) {
 
 	$current_tab = isset( $_POST['_um_account_tab'] ) ? $_POST['_um_account_tab']: '';
 
+	$user_id = um_user('ID');
+
 	//change password account's tab
 	if ( 'password' == $current_tab && $_POST['user_password'] && $_POST['confirm_user_password'] ) {
 
 		$changes['user_pass'] = $_POST['user_password'];
 
-		$args['user_id'] = um_user('ID');
+		$args['user_id'] = $user_id;
 
 		UM()->user()->password_changed();
 
 		add_filter( 'send_password_change_email', '__return_false' );
 
 		//clear all sessions with old passwords
-		$user = WP_Session_Tokens::get_instance( um_user( 'ID' ) );
+		$user = WP_Session_Tokens::get_instance( $user_id );
 		$user->destroy_all();
 
-		wp_set_password( $changes['user_pass'], um_user( 'ID' ) );
+		wp_set_password( $changes['user_pass'], $user_id );
 
 		wp_signon( array( 'user_login' => um_user( 'user_login' ), 'user_password' =>  $changes['user_pass'] ) );
 	}
@@ -215,7 +217,7 @@ function um_submit_account_details( $args ) {
 				 * }
 				 * ?>
 				 */
-				$redirect_url = apply_filters( 'um_delete_account_redirect_url', um_user( 'delete_redirect_url' ), um_user( 'ID' ) );
+				$redirect_url = apply_filters( 'um_delete_account_redirect_url', um_user( 'delete_redirect_url' ), $user_id );
 				exit( wp_redirect( $redirect_url ) );
 			} else {
 				um_redirect_home();
@@ -225,7 +227,7 @@ function um_submit_account_details( $args ) {
 
 	$arr_fields = array();
 	if ( UM()->account()->is_secure_enabled() ) {
-		$account_fields = get_user_meta( um_user( 'ID' ), 'um_account_secure_fields', true );
+		$account_fields = get_user_meta( $user_id, 'um_account_secure_fields', true );
 
 		/**
 		 * UM hook
@@ -249,7 +251,7 @@ function um_submit_account_details( $args ) {
 		 * }
 		 * ?>
 		 */
-		$secure_fields = apply_filters( 'um_secure_account_fields', $account_fields, um_user( 'ID' ) );
+		$secure_fields = apply_filters( 'um_secure_account_fields', $account_fields, $user_id );
 
 		if ( isset( $secure_fields[ $current_tab ] ) && is_array( $secure_fields[ $current_tab ] ) ) {
 			$arr_fields = array_merge( $arr_fields, $secure_fields[ $current_tab ] );
@@ -266,7 +268,7 @@ function um_submit_account_details( $args ) {
 	}
 
 	if ( isset( $changes['hide_in_members'] ) && ( $changes['hide_in_members'] == __( 'No', 'ultimate-member' ) || $changes['hide_in_members'] == 'No' ) ) {
-		delete_user_meta( um_user( 'ID' ), 'hide_in_members' );
+		delete_user_meta( $user_id, 'hide_in_members' );
 		unset( $changes['hide_in_members'] );
 	}
 
@@ -313,13 +315,13 @@ function um_submit_account_details( $args ) {
 	 * }
 	 * ?>
 	 */
-	do_action( 'um_account_pre_update_profile', $changes, um_user( 'ID' ) );
+	do_action( 'um_account_pre_update_profile', $changes, $user_id );
 
 	UM()->user()->update_profile( $changes );
 
 
 	if ( UM()->account()->is_secure_enabled() ) {
-		update_user_meta( um_user( 'ID' ), 'um_account_secure_fields', array() );
+		update_user_meta( $user_id, 'um_account_secure_fields', array() );
 	}
 
 	/**
@@ -360,7 +362,7 @@ function um_submit_account_details( $args ) {
 	 * }
 	 * ?>
 	 */
-	do_action( 'um_after_user_account_updated', get_current_user_id(), $changes );
+	do_action( 'um_after_user_account_updated', $user_id, $changes );
 
 	$url = '';
 	if ( um_is_core_page( 'account' ) ) {
