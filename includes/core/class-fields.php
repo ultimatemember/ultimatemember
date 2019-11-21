@@ -1124,11 +1124,14 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$arr_options = $opts['options'];
 
 				} elseif ( function_exists( $data['custom_dropdown_options_source'] ) ) {
+					if ( isset( $data['parent_dropdown_relationship'] ) ) {
+						$_POST['parent_option_name'] = $data['parent_dropdown_relationship'];
+						$_POST['parent_option'] = um_user( $data['parent_dropdown_relationship'] );
 
-					$arr_options = call_user_func(
-						$data['custom_dropdown_options_source'],
-						( ! empty( $data['parent_dropdown_relationship'] ) ? $data['parent_dropdown_relationship'] : '' )
-					);
+						$arr_options = call_user_func( $data['custom_dropdown_options_source'], $data['parent_dropdown_relationship'] );
+					} else {
+						$arr_options = call_user_func( $data['custom_dropdown_options_source'] );
+					}
 				}
 
 				if ( $has_custom_source || function_exists( $data['custom_dropdown_options_source'] ) ) {
@@ -2783,8 +2786,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						 * }
 						 * ?>
 						 */
-						$ajax_source_url = apply_filters( "um_custom_dropdown_options_source_url__{$form_key}", admin_url( 'admin-ajax.php' ), $data );
-						$atts_ajax .= ' data-um-ajax-url="' . esc_url( $ajax_source_url ) . '" ';
+						// todo maybe deprecate
+//						$ajax_source_url = apply_filters( "um_custom_dropdown_options_source_url__{$form_key}", admin_url( 'admin-ajax.php' ), $data );
+//						$atts_ajax .= ' data-um-ajax-url="' . esc_url( $ajax_source_url ) . '" ';
 
 					}
 

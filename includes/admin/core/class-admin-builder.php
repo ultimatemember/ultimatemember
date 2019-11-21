@@ -1150,15 +1150,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 * @return boolean
 		 */
 		public function skip_field_validation( $skip, $post_input, $array ) {
-
 			if ( $post_input === '_options' && isset( $array['post']['_custom_dropdown_options_source'] ) ) {
-				$um_callback_func = $array['post']['_custom_dropdown_options_source'];
-				$skip = function_exists( $um_callback_func );
+				$skip = function_exists( $array['post']['_custom_dropdown_options_source'] );
 			}
 
 			return $skip;
 		}
-		
+
 
 		/**
 		 *  Retrieves dropdown/multi-select options from a callback function

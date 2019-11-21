@@ -469,7 +469,6 @@ jQuery(document).ready(function() {
 
 		var me = jQuery(this);
 		var parent_option = me.data('um-parent');
-		var um_ajax_url = me.data('um-ajax-url');
 		var um_ajax_source = me.data('um-ajax-source');
 		var original_value = me.val();
 
@@ -480,7 +479,7 @@ jQuery(document).ready(function() {
 			var form_id = parent.closest('form').find('input[type="hidden"][name="form_id"]').val();
 			var arr_key = parent.val();
 
-			if ( parent.val() != '' && typeof um_select_options_cache[ arr_key ] != 'object' ) {
+			if ( arr_key != '' && typeof um_select_options_cache[ arr_key ] != 'object' ) {
 
 				jQuery.ajax({
 					url: wp.ajax.settings.url,
@@ -488,19 +487,19 @@ jQuery(document).ready(function() {
 					data: {
 						action: 'um_select_options',
 						parent_option_name: parent_option,
-						parent_option: parent.val(),
+						parent_option: arr_key,
 						child_callback: um_ajax_source,
-						child_name:  me.attr('name'),
-						members_directory:  me.attr('data-mebers-directory'),
+						child_name: me.attr('name'),
+						members_directory: me.attr('data-mebers-directory'),
 						form_id: form_id,
 						nonce: um_scripts.nonce
 					},
 					success: function( data ){
-						if( data.status == 'success' && parent.val() != '' ){
-							um_field_populate_child_options( me, data, arr_key);
+						if ( data.status == 'success' && arr_key != '' ) {
+							um_field_populate_child_options( me, data, arr_key );
 						}
 
-						if( typeof data.debug !== 'undefined' ){
+						if ( typeof data.debug !== 'undefined' ) {
 							console.log( data );
 						}
 					},
@@ -512,12 +511,12 @@ jQuery(document).ready(function() {
 
 			}
 
-			if ( parent.val() != '' && typeof um_select_options_cache[ arr_key ] == 'object'  ) {
+			if ( arr_key != '' && typeof um_select_options_cache[ arr_key ] == 'object' ) {
 				var data = um_select_options_cache[ arr_key ];
 				um_field_populate_child_options( me, data, arr_key );
 			}
 
-			if ( parent.val() == '' ){
+			if ( arr_key == '' ) {
 				me.find('option[value!=""]').remove();
 				me.val('').trigger('change');
 			}
