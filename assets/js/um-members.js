@@ -1233,17 +1233,7 @@ jQuery(document.body).ready( function() {
 		var hash = um_members_get_hash( directory );
 		um_member_directories.push( hash );
 
-		var show_after_search = directory.data('must-search');
-		if ( show_after_search === 1 ) {
-			var search = um_get_search( directory );
-			var filters_data = um_get_filters_data( directory );
-			if ( ! filters_data.length && ! search ) {
-				return;
-			}
-		}
 
-		um_members_show_preloader( directory );
-		um_ajax_get_members( directory, {first_load:true} );
 
 		// slideup/slidedown animation fix for grid filters bar
 		if ( directory.find('.um-search').length ) {
@@ -1488,7 +1478,17 @@ jQuery(document.body).ready( function() {
 			}
 
 		});
+		var show_after_search = directory.data('must-search');
+		if ( show_after_search === 1 ) {
+			var search = um_get_search( directory );
+			var filters_data = um_get_filters_data( directory );
+			if ( ! filters_data.length && ! search ) {
+				return;
+			}
+		}
 
+		um_members_show_preloader( directory );
+		um_ajax_get_members( directory, {first_load:true} );
 		um_change_tag( directory );
 	});
 
