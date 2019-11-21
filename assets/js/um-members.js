@@ -52,6 +52,11 @@ function um_set_url_from_data( directory, key, value ) {
 	var other_directories = um_member_directories;
 
 	var new_data = {};
+
+	if ( jQuery.isArray( value ) ) {
+		value = value.join( '||' );
+	}
+
 	if ( value !== '' ) {
 		new_data[ key + '_' + hash ] = value;
 	}
@@ -158,6 +163,25 @@ function um_get_current_page( directory ) {
 	return page;
 }
 
+function um_time_convert( time, range ) {
+	var hours = Math.floor( time / 60 );
+	var minutes = time % 60;
+
+	if ( minutes >= 60 ) {
+		minutes = 0;
+		hours = hours + 1;
+
+		if ( hours >= 24 ) {
+			hours = 0;
+		}
+	}
+
+	if ( minutes < 10 ) {
+		minutes = '0' + minutes;
+	}
+
+	return hours + ":" + minutes;
+}
 
 function um_ajax_get_members( directory, args ) {
 
@@ -213,14 +237,60 @@ function um_ajax_get_members( directory, args ) {
 				var filter_name = filter.find( '.um-timepicker-filter' ).data('filter_name');
 				var value_from = um_get_data_for_directory( directory, 'filter_' + filter_name + '_from' );
 				var value_to = um_get_data_for_directory( directory, 'filter_' + filter_name + '_to' );
-				if (  typeof value_from != 'undefined' || typeof value_to != 'undefined' ) {
+
+				if ( typeof value_from != 'undefined' ) {
+					var value_from = value_from.split(':');
+					var hours = value_from[0]*1;
+					if ( hours < 10 ) {
+						hours = '0' + hours;
+					}
+
+					var minutes = value_from[1]*1;
+					if ( minutes < 10 ) {
+						minutes = '0' + minutes;
+					}
+
+					value_from = hours + ':' + minutes + ':00';
+				}
+				if ( typeof value_to != 'undefined' ) {
+					var val_to = value_to.split(':');
+					var minutes = val_to[1]*1;
+					// var minutes = Math.ceil( val_to[1] ) + 1;
+					// if ( minutes >= 60 ) {
+					// 	minutes = 0;
+					// 	val_to[0] = val_to[0]*1 + 1;
+					//
+					// 	if ( val_to[0] >= 24 ) {
+					// 		val_to[0] = 0;
+					// 	}
+					// }
+
+					var hours = val_to[0]*1;
+					if ( hours < 10 ) {
+						hours = '0' + hours;
+					}
+
+					if ( minutes < 10 ) {
+						minutes = '0' + minutes;
+					}
+
+					value_to = hours + ':' + minutes + ':59';
+				}
+
+				if ( typeof value_from != 'undefined' || typeof value_to != 'undefined' ) {
 					request[ filter_name ] = [ value_from, value_to ];
 				}
-			} else {
+			} else if (  filter.find( 'select' ).length ) {
 				var filter_name = filter.find('select').attr('name');
 				var value = um_get_data_for_directory( directory, 'filter_' + filter_name );
 				if ( typeof value != 'undefined' ) {
 					request[ filter_name ] = value.split( '||' );
+				}
+			} else  {
+				var filter_name = filter.find('input[type="text"]').attr('name');
+				var value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+				if ( typeof value != 'undefined' ) {
+					request[ filter_name ] = value;
 				}
 			}
 		});
@@ -274,7 +344,9 @@ function um_build_template( directory, data ) {
 
 	var header_template = wp.template( 'um-members-header' );
 	directory.find('.um-members-intro').remove();
-	directory.find('.um-members-wrapper').prepend( header_template( data ) );
+	if ( typeof data.is_search != 'undefined' && data.is_search ) {
+		directory.find('.um-members-wrapper').prepend( header_template( data ) );
+	}
 
 	directory.addClass('um-loaded');
 
@@ -402,6 +474,21 @@ function um_get_filters_data( directory ) {
 				filters_data.push( {'name':filter_name, 'label':filter_title, 'value_label':filter_value_title, 'value':filter_value[ i ], 'type':filter_type} );
 			});
 
+		} else if( filter.find('input[type="text"]').length ) {
+
+			filter_type = 'text';
+			filter_name = filter.find('input[type="text"]').attr('name');
+			filter_title = filter.find('input[type="text"]').attr('placeholder');
+
+			var filter_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+			if ( typeof filter_value == 'undefined' ) {
+				filter_value = '';
+			}
+
+			if ( filter_value != '' ) {
+				filters_data.push( {'name':filter_name, 'label':filter_title, 'value_label':filter_value, 'value':filter_value, 'type':filter_type} );
+			}
+
 		} else if( filter.find('div.ui-slider').length ) {
 			filter_type = 'slider';
 
@@ -433,7 +520,7 @@ function um_change_tag( directory ) {
 	directory.find('.um-members-filter-tag').remove();
 
 	var filtered_line = directory.find('.um-filtered-line');
-	if ( filtered_line.length ){
+	if ( filtered_line.length ) {
 		var filters_template = wp.template( 'um-members-filtered-line' );
 		filtered_line.prepend( filters_template( {'filters': filters_data} ) );
 
@@ -865,20 +952,101 @@ jQuery(document.body).ready( function() {
 	});
 
 
-	jQuery( document.body ).on( 'click', '.um-directory .um-members-filter-remove', function() {
+	jQuery( document.body ).on( 'blur', '.um-directory .um-search-filter.um-text-filter-type input[type="text"]', function() {
 		var directory = jQuery(this).parents('.um-directory');
 
-		if ( um_is_directory_busy( directory ) || ! directory ) {
+		if ( um_is_directory_busy( directory ) ) {
+			return;
+		}
+
+		var current_value = jQuery(this).val();
+		var filter_name = jQuery(this).prop('name');
+		var url_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+
+		if ( typeof url_value == 'undefined' ) {
+			url_value = '';
+		}
+
+		if ( current_value === url_value ) {
 			return;
 		}
 
 		um_members_show_preloader( directory );
+		um_set_url_from_data( directory, 'filter_' + filter_name, current_value );
+
+		//set 1st page after filtration
+		directory.data( 'page', 1 );
+		um_set_url_from_data( directory, 'page', '' );
+
+		um_ajax_get_members( directory );
+
+		um_change_tag( directory );
+
+		directory.data( 'searched', 1 );
+		directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
+		directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
+	});
+
+
+	//make search on Enter click
+	jQuery( document.body ).on( 'keypress', '.um-directory .um-search-filter.um-text-filter-type input[type="text"]', function(e) {
+		if ( e.which === 13 ) {
+			var directory = jQuery(this).parents('.um-directory');
+
+			if ( um_is_directory_busy( directory ) ) {
+				return;
+			}
+
+			var current_value = jQuery(this).val();
+			var filter_name = jQuery(this).prop('name');
+			var url_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+
+			if ( typeof url_value == 'undefined' ) {
+				url_value = '';
+			}
+
+			if ( current_value === url_value ) {
+				return;
+			}
+
+			um_members_show_preloader( directory );
+			um_set_url_from_data( directory, 'filter_' + filter_name, current_value );
+
+			//set 1st page after filtration
+			directory.data( 'page', 1 );
+			um_set_url_from_data( directory, 'page', '' );
+
+			um_ajax_get_members( directory );
+
+			um_change_tag( directory );
+
+			directory.data( 'searched', 1 );
+			directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
+			directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
+		}
+	});
+
+
+
+	jQuery( document.body ).on( 'click', '.um-directory .um-members-filter-remove', function() {
+		var directory = jQuery(this).parents('.um-directory');
+
+		if ( um_is_directory_busy(directory) || ! directory ) {
+			return;
+		}
+
+		um_members_show_preloader(directory);
 
 		var removeItem = jQuery(this).data('value');
 		var filter_name = jQuery(this).data('name');
 
 		var type = jQuery(this).data('type');
-		if ( type === 'select' ) {
+		if ( type === 'text' ) {
+			um_set_url_from_data( directory, 'filter_' + filter_name,'' );
+
+			jQuery( '.um-search-filter input[name="' + filter_name + '"]' ).val('');
+
+		} else if ( type === 'select' ) {
 
 			var current_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
 			if ( typeof current_value == 'undefined' ) {
@@ -967,7 +1135,12 @@ jQuery(document.body).ready( function() {
 			var filter_name = jQuery(this).data('name');
 
 			var type = jQuery(this).data('type');
-			if ( type === 'select' ) {
+			if ( type === 'text' ) {
+				um_set_url_from_data( directory, 'filter_' + filter_name,'' );
+
+				jQuery( '.um-search-filter input[name="' + filter_name + '"]' ).val('');
+
+			} else if ( type === 'select' ) {
 
 				var current_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
 				if ( typeof current_value == 'undefined' ) {
@@ -1000,12 +1173,21 @@ jQuery(document.body).ready( function() {
 			} else if ( type === 'slider' ) {
 				um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
 				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
+
+				jQuery( '.um-search-filter input[name="filter_' + filter_name + '_from"]' ).val('');
+				jQuery( '.um-search-filter input[name="filter_' + filter_name + '_to"]' ).val('');
 			} else if ( type === 'datepicker' ) {
 				um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
 				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
+
+				jQuery( '.um-search-filter input[name="filter_' + filter_name + '_from"]' ).val('');
+				jQuery( '.um-search-filter input[name="filter_' + filter_name + '_to"]' ).val('');
 			} else if ( type === 'timepicker' ) {
 				um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
 				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
+
+				jQuery( '.um-search-filter input[name="filter_' + filter_name + '_from"]' ).val('');
+				jQuery( '.um-search-filter input[name="filter_' + filter_name + '_to"]' ).val('');
 			}
 		});
 
@@ -1211,11 +1393,13 @@ jQuery(document.body).ready( function() {
 		//timepicker filter
 		directory.find('.um-timepicker-filter').each( function() {
 			var elem = jQuery(this);
+			var elemID = elem.attr('id');
+			var elem_filter_name = elem.data('filter_name');
 
 			//using arrays formatted as [HOUR,MINUTE]
+			var min = elem.attr('data-min');
+			var max = elem.attr('data-max');
 
-			var min = elem.data('min');
-			var max = elem.data('max');
 			var picker_min = min.split(':');
 			var picker_max = max.split(':');
 
@@ -1229,6 +1413,7 @@ jQuery(document.body).ready( function() {
 				onOpen:         function() { elem.blur(); },
 				onClose:        function() { elem.blur(); },
 				onSet:          function( context ) {
+
 					var directory = elem.parents('.um-directory');
 
 					if ( um_is_directory_busy( directory ) ) {
@@ -1250,13 +1435,14 @@ jQuery(document.body).ready( function() {
 					}
 
 					if ( typeof context.select !== 'undefined' ) {
-						var select_val = context.select / 60;
-						var change_val = elem.val();
+						var select_val = um_time_convert( context.select, range );
+
+						//var select_val = context.select / 60;
 
 						if ( range === 'from' ) {
-							current_value_from = select_val + ':00';
+							current_value_from = select_val;
 						} else if ( range === 'to' ) {
-							current_value_to = select_val + ':00';
+							current_value_to = select_val;
 						}
 					} else {
 						if ( range === 'from' ) {
@@ -1264,6 +1450,14 @@ jQuery(document.body).ready( function() {
 						} else if ( range === 'to' ) {
 							current_value_to = max;
 						}
+					}
+
+					var time = jQuery( '#' + elemID ).val();
+
+					if ( elem.data('range') === 'from' ) {
+						jQuery( '#' + elem_filter_name + '_to' ).pickatime('picker').set('min', time);
+					} else {
+						jQuery( '#' + elem_filter_name + '_from').pickatime('picker').set('max', time);
 					}
 
 					um_set_url_from_data( directory, 'filter_' + filter_name + '_from', current_value_from );
@@ -1280,10 +1474,11 @@ jQuery(document.body).ready( function() {
 					directory.data( 'searched', 1 );
 					directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
 					directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
+
 				}
 			});
 
-
+			// first loading timepicker select
 			var $picker = $input.pickatime('picker');
 			var $fname = elem.data('filter_name');
 			var $frange = elem.data('range');
@@ -1292,8 +1487,9 @@ jQuery(document.body).ready( function() {
 			var query_value = um_get_data_for_directory( $directory, 'filter_' + $fname + '_' + $frange );
 			if ( typeof query_value !== 'undefined' ) {
 				var arr = query_value.split(':');
-				$picker.set( 'select', arr[0]*60 );
+				$picker.set( 'select', arr[0]*60 + arr[1]*1 );
 			}
+
 		});
 
 		um_change_tag( directory );

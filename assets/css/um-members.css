@@ -107,7 +107,7 @@ body #content .um-directory a {
     width: 100%;
     top: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.8);
+    background: none;
     z-index: 2; }
     .um-directory .um-members-overlay .um-ajax-loading {
       -webkit-transition: 0.1s opacity;
@@ -144,6 +144,8 @@ body #content .um-directory a {
     align-items: stretch;
     flex-wrap: nowrap;
     width: 100%; }
+    .um-directory .um-member-directory-header .um-member-directory-header-row.um-member-directory-filters-bar {
+      padding: 0 0 10px 0; }
     .um-directory .um-member-directory-header .um-member-directory-header-row:not(.um-member-directory-filters-bar) {
       display: flex;
       flex-direction: row;
@@ -172,9 +174,13 @@ body #content .um-directory a {
           margin: 0 5px 0 0; }
         .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-search-line label .um-search-line {
           -webkit-appearance: textfield;
-          width: 100%; }
+          width: 100%;
+          box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          -webkit-box-sizing: border-box; }
       .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-search-line .um-do-search {
-        min-width: 15%; }
+        min-width: 15%;
+        width: auto; }
     .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-nav-line {
       display: flex;
       flex-direction: row;
@@ -279,6 +285,8 @@ body #content .um-directory a {
           width: 100% !important; }
         .um-directory .um-member-directory-header .um-member-directory-header-row .um-search .um-search-filter .um-s1 {
           width: 100%; }
+        .um-directory .um-member-directory-header .um-member-directory-header-row .um-search .um-search-filter.um-text-filter-type input {
+          width: 100%; }
         .um-directory .um-member-directory-header .um-member-directory-header-row .um-search .um-search-filter.um-slider-filter-type {
           flex-direction: column;
           align-items: stretch; }
@@ -308,12 +316,12 @@ body #content .um-directory a {
           flex-wrap: nowrap; }
           .um-directory .um-member-directory-header .um-member-directory-header-row .um-search .um-search-filter.um-datepicker-filter-type input, .um-directory .um-member-directory-header .um-member-directory-header-row .um-search .um-search-filter.um-timepicker-filter-type input {
             width: calc( 50% - 5px);
-            margin: 0 5px 0 0;
+            margin: 0 5px 0 0 !important;
             box-sizing: border-box;
             -moz-box-sizing: border-box;
             -webkit-box-sizing: border-box; }
             .um-directory .um-member-directory-header .um-member-directory-header-row .um-search .um-search-filter.um-datepicker-filter-type input:nth-child(even), .um-directory .um-member-directory-header .um-member-directory-header-row .um-search .um-search-filter.um-timepicker-filter-type input:nth-child(even) {
-              margin: 0 0 0 5px; }
+              margin: 0 0 0 5px !important; }
       .um-directory .um-member-directory-header .um-member-directory-header-row .um-search[style*="overflow: hidden;"] .um-search-filter {
         pointer-events: none; }
       .um-directory .um-member-directory-header .um-member-directory-header-row .um-search.um-search-invisible {
@@ -595,7 +603,7 @@ body #content .um-directory a {
           width: 100%;
           padding: 15px;
           margin: 0;
-          background: none;
+          background: #fff;
           box-sizing: border-box;
           -moz-box-sizing: border-box;
           -webkit-box-sizing: border-box; }
@@ -651,6 +659,8 @@ body #content .um-directory a {
               box-sizing: border-box;
               -moz-box-sizing: border-box;
               -webkit-box-sizing: border-box; }
+              .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card.no-photo {
+                width: 100%; }
               .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-container .um-member-card .um-member-card-content {
                 display: flex;
                 flex-direction: column;
@@ -803,6 +813,12 @@ body #content .um-directory a {
                     font-size: 28px;
                     height: 28px;
                     line-height: 28px; }
+            .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer.no-photo.no-reveal .um-member-card-footer-buttons {
+              width: 100%; }
+            .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer.no-photo:not(.no-reveal) .um-member-card-footer-buttons {
+              width: calc( 100% - 30px); }
+            .um-directory .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer.no-reveal:not(.no-photo) .um-member-card-footer-buttons {
+              width: calc( 100% - 125px); }
       .um-directory .um-members-wrapper .um-members .um-members-none {
         text-align: center;
         font-size: 18px; }
@@ -918,6 +934,8 @@ body #content .um-directory a {
           margin: 0 0 5px 0; }
           .um-directory.uimob340 .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-footer-buttons .um-members-list-footer-button-wrapper a.um-button {
             width: 100% !important; }
+      .um-directory.uimob340 .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer.no-reveal:not(.no-photo) .um-member-card-footer-buttons {
+        width: calc( 100% - 70px); }
   .um-directory.uimob340 .um-members-pagination-box .um-members-pagi {
     display: none; }
   .um-directory.uimob500 .um-member-directory-header .um-member-directory-header-row .um-member-directory-search-line {
@@ -954,6 +972,8 @@ body #content .um-directory a {
       margin: 0 10px 0 0; }
       .um-directory.uimob500 .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-footer-buttons .um-members-list-footer-button-wrapper {
         margin: 0 10px 5px 0; }
+    .um-directory.uimob500 .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer.no-reveal:not(.no-photo) .um-member-card-footer-buttons {
+      width: calc( 100% - 90px); }
   .um-directory.uimob500 .um-members-pagination-box .um-members-pagi {
     display: none; }
   .um-directory.uimob800 .um-member-directory-header .um-member-directory-header-row .um-member-directory-search-line {
@@ -983,6 +1003,8 @@ body #content .um-directory a {
       margin: 0 10px 0 0; }
       .um-directory.uimob800 .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer .um-member-card-footer-buttons .um-members-list-footer-button-wrapper {
         margin: 0 10px 5px 0; }
+    .um-directory.uimob800 .um-members-wrapper .um-members.um-members-list .um-member .um-member-card-footer.no-reveal:not(.no-photo) .um-member-card-footer-buttons {
+      width: calc( 100% - 100px); }
   .um-directory.uimob960 .um-member-directory-header .um-search {
     grid-template-columns: repeat(2, 1fr); }
   .um-directory.uimob960 .um-members-wrapper .um-members.um-members-grid .um-gutter-sizer {

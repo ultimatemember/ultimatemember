@@ -87,6 +87,9 @@ if ( ! empty( $member_directories ) && ! is_wp_error( $member_directories ) ) {
 				update_post_meta( $id, '_um_roles_can_filter', $can_search_roles );
 				update_post_meta( $id, '_um_search_fields', $filter_fields );
 				update_post_meta( $id, '_um_search_fields_old', $search_fields_old );
+
+				update_post_meta( $id, '_um_filters_expanded', 1 );
+				update_post_meta( $id, '_um_filters_is_collapsible', 0 );
 			} else {
 				update_post_meta( $id, '_um_search', 0 );
 				update_post_meta( $id, '_um_filters', 0 );

@@ -113,7 +113,11 @@ if ( ! empty( $args['enable_sorting'] ) && ! empty( $sorting_options ) && count(
 	$classes .= ' um-member-with-sorting';
 }
 
+$filters_collapsible = true;
 $filters_expanded = ! empty( $args['filters_expanded'] ) ? true : false;
+if ( $filters_expanded ) {
+	$filters_collapsible = ! empty( $args['filters_is_collapsible'] ) ? true : false;
+}
 
 //send $args variable to the templates
 $args['args'] = $args;
@@ -183,7 +187,7 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 	 data-sorting="<?php echo esc_attr( $sort_from_url ) ?>">
 	<div class="um-members-overlay"><div class="um-ajax-loading"></div></div>
 
-	<div class="um-member-directory-header">
+	<div class="um-member-directory-header um-form">
 		<?php if ( $search && $show_search ) { ?>
 			<div class="um-member-directory-header-row um-member-directory-search-row">
 				<div class="um-member-directory-search-line">
@@ -191,7 +195,7 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 						<span><?php _e( 'Search:', 'ultimate-member' ); ?></span>
 						<input type="search" class="um-search-line" placeholder="<?php esc_attr_e( 'Search', 'ultimate-member' ) ?>"  value="<?php echo esc_attr( $search_from_url ) ?>" aria-label="<?php esc_attr_e( 'Search', 'ultimate-member' ) ?>" speech />
 					</label>
-					<input type="button" class="um-do-search" value="<?php esc_attr_e( 'Search', 'ultimate-member' ); ?>" />
+					<input type="button" class="um-do-search um-button" value="<?php esc_attr_e( 'Search', 'ultimate-member' ); ?>" />
 				</div>
 			</div>
 		<?php }
@@ -245,7 +249,7 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 
 					<?php }
 
-					if ( $filters && $show_filters && count( $search_filters ) ) { ?>
+					if ( $filters && $show_filters && count( $search_filters ) && $filters_collapsible ) { ?>
 						<span class="um-member-directory-filters">
 							<span class="um-member-directory-filters-a<?php if ( $filters_expanded ) { ?> um-member-directory-filters-visible<?php } ?>">
 								<a href="javascript:void(0);">

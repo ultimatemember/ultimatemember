@@ -391,6 +391,7 @@ p.um-notice.warning a {
 }
 
 .um-form input[type=text],
+.um-form input[type=search],
 .um-form input[type=tel],
 .um-form input[type=number],
 .um-form input[type=password] {
@@ -418,6 +419,7 @@ p.um-notice.warning a {
 }
 
 .um-form input[type=text]:focus,
+.um-form input[type=search]:focus,
 .um-form input[type=tel]:focus,
 .um-form input[type=number]:focus,
 .um-form input[type=password]:focus,

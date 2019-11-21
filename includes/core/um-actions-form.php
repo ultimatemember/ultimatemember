@@ -261,7 +261,21 @@ function um_submit_form_errors_hook( $args ) {
 add_action( 'um_submit_form_errors_hook', 'um_submit_form_errors_hook', 10 );
 
 
-function um_check_conditions_on_submit( $condition, $fields, $args ) {
+/**
+ * Error processing: Conditions
+ * @staticvar int     $counter
+ * @param     array   $condition
+ * @param     array   $fields
+ * @param     array   $args
+ * @param     boolean $reset
+ * @return    boolean
+ * @throws    Exception
+ */
+function um_check_conditions_on_submit( $condition, $fields, $args, $reset = false ) {
+	static $counter = 0;
+	if ( $reset ) {
+		$counter = 0;
+	}
 	$continue = false;
 
 	list( $visibility, $parent_key, $op, $parent_value ) = $condition;
@@ -273,7 +287,11 @@ function um_check_conditions_on_submit( $condition, $fields, $args ) {
 
 	if ( ! empty( $fields[ $parent_key ]['conditions'] ) ) {
 		foreach ( $fields[ $parent_key ]['conditions'] as $parent_condition ) {
-			$continue = um_check_conditions_on_submit( $parent_condition, $fields, $args );
+			if ( 64 > $counter++ ) {
+				$continue = um_check_conditions_on_submit( $parent_condition, $fields, $args );
+			} else {
+				throw new Exception( 'Endless recursion in the function ' . __FUNCTION__, 512 );
+			}
 			if ( ! empty( $continue ) ) {
 				return $continue;
 			}
@@ -411,11 +429,19 @@ function um_submit_form_errors_hook_( $args ) {
 			$array = apply_filters( 'um_get_custom_field_array', $array, $fields );
 
 			if ( ! empty( $array['conditions'] ) ) {
-				foreach ( $array['conditions'] as $condition ) {
-					$continue = um_check_conditions_on_submit( $condition, $fields, $args );
-					if ( $continue === true ) {
-						continue 2;
+				try {
+					foreach ( $array['conditions'] as $condition ) {
+						$continue = um_check_conditions_on_submit( $condition, $fields, $args, true );
+						if ( $continue === true ) {
+							continue 2;
+						}
 					}
+				} catch ( Exception $e ) {
+					UM()->form()->add_error( $key, sprintf( __( '%s - wrong conditions.', 'ultimate-member' ), $array['title'] ) );
+					$notice = '<div class="um-field-error">' . sprintf( __( '%s - wrong conditions.', 'ultimate-member' ), $array['title'] ) . '</div><!-- ' . $e->getMessage() . ' -->';
+					add_action( 'um_after_profile_fields', function() use ( $notice ) {
+						echo $notice;
+					}, 900 );
 				}
 			}
 

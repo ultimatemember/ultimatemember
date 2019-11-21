@@ -51,12 +51,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		var $filter_supported_fields = array();
 
 
-		var $filter_types = array(
-//			'select',
-//			'slider',
-//			'datepicker',
-//			'timepicker',
-		);
+		var $filter_types = array();
 
 
 		var $core_search_fields = array(
@@ -84,6 +79,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * @var User Avatar size
 		 */
 		var $avatar_size;
+
+
+		/**
+		 * @var bool Searching marker
+		 */
+		var $is_search = false;
 
 
 		/**
@@ -257,19 +258,31 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			// Filters
 			$this->filter_fields = array(
-				'country'           => __( 'Country', 'ultimate-member' ),
-				'gender'            => __( 'Gender', 'ultimate-member' ),
-				'languages'         => __( 'Languages', 'ultimate-member' ),
-				'role'              => __( 'Roles', 'ultimate-member' ),
-				'birth_date'        => __( 'Age', 'ultimate-member' ),
-				'last_login'        => __( 'Last Login', 'ultimate-member' ),
-				'user_registered'   => __( 'User Registered', 'ultimate-member' ),
+				'country'               => __( 'Country', 'ultimate-member' ),
+				'gender'                => __( 'Gender', 'ultimate-member' ),
+				'languages'             => __( 'Languages', 'ultimate-member' ),
+				'role'                  => __( 'Roles', 'ultimate-member' ),
+				'birth_date'            => __( 'Age', 'ultimate-member' ),
+				'last_login'            => __( 'Last Login', 'ultimate-member' ),
+				'user_registered'       => __( 'User Registered', 'ultimate-member' ),
+				'first_name'            => __( 'First Name', 'ultimate-member' ),
+				'last_name'             => __( 'Last Name', 'ultimate-member' ),
+				'nickname'              => __( 'Nickname', 'ultimate-member' ),
+				'secondary_user_email'  => __( 'Secondary E-mail Address', 'ultimate-member' ),
+				'description'           => __( 'Biography', 'ultimate-member' ),
+				'phone_number'          => __( 'Phone Number', 'ultimate-member' ),
+				'mobile_number'         => __( 'Mobile Number', 'ultimate-member' ),
 			);
 
-			$this->filter_supported_fields = apply_filters( 'um_members_directory_custom_field_types_supported_filter', array( 'date', 'time', 'select', 'multiselect', 'radio', 'checkbox', 'rating' ) );
+			$this->filter_supported_fields = apply_filters( 'um_members_directory_custom_field_types_supported_filter', array( 'date', 'time', 'select', 'multiselect', 'radio', 'checkbox', 'rating', 'text', 'textarea' ) );
 
 			if ( ! empty( UM()->builtin()->saved_fields ) ) {
 				foreach ( UM()->builtin()->saved_fields as $key => $data ) {
+
+					if ( $key == '_um_last_login' ) {
+						continue;
+					}
+
 					if ( isset( $data['type'] ) && in_array( $data['type'], $this->filter_supported_fields ) ) {
 						if ( isset( $data['title'] ) && array_search( $data['title'], $this->filter_fields ) !== false ) {
 							$data['title'] = $data['title'] . ' (' . $key . ')';
@@ -296,13 +309,20 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 */
 		function init_filter_types() {
 			$this->filter_types = apply_filters( 'um_members_directory_filter_types', array(
-				'country'           => 'select',
-				'gender'            => 'select',
-				'languages'         => 'select',
-				'role'              => 'select',
-				'birth_date'        => 'slider',
-				'last_login'        => 'datepicker',
-				'user_registered'   => 'datepicker',
+				'country'               => 'select',
+				'gender'                => 'select',
+				'languages'             => 'select',
+				'role'                  => 'select',
+				'birth_date'            => 'slider',
+				'last_login'            => 'datepicker',
+				'user_registered'       => 'datepicker',
+				'first_name'            => 'text',
+				'last_name'             => 'text',
+				'nickname'              => 'text',
+				'secondary_user_email'  => 'text',
+				'description'           => 'text',
+				'phone_number'          => 'text',
+				'mobile_number'         => 'text',
 			) );
 
 			$fields = UM()->builtin()->all_user_fields;
@@ -315,6 +335,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					switch ( $fields[ $key ]['type'] ) {
 						default:
 							$value = apply_filters( 'um_custom_field_filter_type', 'select', $fields[ $key ] );
+							break;
+						case 'text':
+						case 'textarea':
+							$value = 'text';
 							break;
 						case 'date':
 							$value = 'datepicker';
@@ -426,11 +450,56 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					break;
 				}
+				case 'text': {
+					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? $_GET[ 'filter_' . $filter . '_' . $unique_hash ] : ''; ?>
+
+					<input type="text" autocomplete="off" id="<?php echo $filter; ?>" name="<?php echo $filter; ?>"
+					       placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
+					       value="<?php echo esc_attr( $filter_from_url ) ?>" class="um-form-field" />
+
+					<?php break;
+				}
 				case 'select': {
 
 					// getting value from GET line
 					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? explode( '||', sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ) : array();
 
+					// new
+					global $wpdb;
+
+					if ( $attrs['metakey'] != 'role_select' ) {
+						$values_array = $wpdb->get_col(
+							$wpdb->prepare(
+								"SELECT DISTINCT meta_value 
+								FROM $wpdb->usermeta 
+								WHERE meta_key = %s AND 
+								      meta_value != ''",
+								$attrs['metakey']
+							)
+						);
+					} else {
+						$users_roles = count_users();
+						$values_array = ( ! empty( $users_roles['avail_roles'] ) && is_array( $users_roles['avail_roles'] ) ) ? array_keys( array_filter( $users_roles['avail_roles'] ) ) : array();
+					}
+
+					if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select','multiselect', 'checkbox', 'radio' ) ) ) {
+						$values_array = array_map( 'maybe_unserialize', $values_array );
+						$temp_values = array();
+						foreach ( $values_array as $values ) {
+							if ( is_array( $values ) ) {
+								$temp_values = array_merge( $temp_values, $values );
+							} else {
+								$temp_values[] = $values;
+							}
+						}
+						$values_array = array_unique( $temp_values );
+					}
+
+					if ( empty( $values_array ) ) {
+						return '';
+					}
+
+					// old
 					if ( isset( $attrs['metakey'] ) && strstr( $attrs['metakey'], 'role_' ) ) {
 						$shortcode_roles = get_post_meta( $directory_data['form_id'], '_um_roles', true );
 						$um_roles = UM()->roles()->get_roles( false );
@@ -446,58 +515,64 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						}
 					}
 
+					$custom_dropdown = '';
 					if ( ! empty( $attrs['custom_dropdown_options_source'] ) ) {
 						$attrs['custom'] = true;
 						$attrs['options'] = UM()->fields()->get_options_from_callback( $attrs, $attrs['type'] );
+						$custom_dropdown = ' data-um-ajax-source="' . esc_attr( $attrs['custom_dropdown_options_source'] ) . '"';
+					}
+
+					if ( $attrs['metakey'] != 'role_select' ) {
+						$attrs['options'] = array_intersect( $attrs['options'], $values_array );
+					} else {
+						$attrs['options'] = array_intersect_key( $attrs['options'], array_flip( $values_array ) );
+					}
+
+					$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options', $attrs['options'], $values_array, $attrs );
+
+					if ( empty( $attrs['options'] ) || ! is_array( $attrs['options'] ) ) {
+						return '';
 					}
 
 					if ( isset( $attrs['label'] ) ) {
 						$attrs['label'] = strip_tags( $attrs['label'] );
 					}
 
-					if ( isset( $attrs['options'] ) && is_array( $attrs['options'] ) ) {
-						asort( $attrs['options'] );
-					}
+					asort( $attrs['options'] ); ?>
 
-					$custom_dropdown = ! empty( $attrs['custom_dropdown_options_source'] ) ? ' data-um-ajax-source="' . $attrs['custom_dropdown_options_source'] . '"' : '';
+					<select class="um-s1" id="<?php echo $filter; ?>" name="<?php echo $filter; ?>"
+					        data-placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
+						<?php echo $custom_dropdown; ?>>
 
-					if ( ! empty( $attrs['options'] ) || ! empty( $custom_dropdown ) ) { ?>
+						<option></option>
 
-						<select class="um-s1" id="<?php echo $filter; ?>" name="<?php echo $filter; ?>"
-						        data-placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
-							<?php echo $custom_dropdown; ?>>
+						<?php if ( ! empty( $attrs['options'] ) ) {
+							foreach ( $attrs['options'] as $k => $v ) {
 
-							<option></option>
+								$v = stripslashes( $v );
 
-							<?php if ( ! empty( $attrs['options'] ) ) {
-								foreach ( $attrs['options'] as $k => $v ) {
+								$opt = $v;
 
-									$v = stripslashes( $v );
+								if ( strstr( $filter, 'role_' ) || $filter == 'role' ) {
+									$opt = $k;
+								}
 
-									$opt = $v;
+								if ( isset( $attrs['custom'] ) ) {
+									$opt = $k;
+								} ?>
 
-									if ( strstr( $filter, 'role_' ) ) {
-										$opt = $k;
-									}
+								<option value="<?php echo esc_attr( $opt ); ?>" data-value_label="<?php esc_attr_e( $v, 'ultimate-member' ); ?>"
+									<?php disabled( ! empty( $filter_from_url ) && in_array( $opt, $filter_from_url ) ) ?>
+									<?php selected( $opt == $default_value ) ?>>
+									<?php _e( $v, 'ultimate-member' ); ?>
+								</option>
 
-									if ( isset( $attrs['custom'] ) ) {
-										$opt = $k;
-									} ?>
+							<?php }
+						} ?>
 
-									<option value="<?php echo esc_attr( $opt ); ?>" data-value_label="<?php esc_attr_e( $v, 'ultimate-member' ); ?>"
-										<?php disabled( ! empty( $filter_from_url ) && in_array( $opt, $filter_from_url ) ) ?>
-										<?php selected( $opt == $default_value ) ?>>
-										<?php _e( $v, 'ultimate-member' ); ?>
-									</option>
+					</select>
 
-								<?php }
-							} ?>
-
-						</select>
-
-					<?php }
-
-					break;
+					<?php break;
 				}
 				case 'slider': {
 					$range = $this->slider_filters_range( $filter, $directory_data );
@@ -1164,6 +1239,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				$meta_query = apply_filters( 'um_member_directory_general_search_meta_query', $meta_query, $_POST['search'] );
 
 				$this->query_args['meta_query'][] = $meta_query;
+
+				$this->is_search = true;
 			}
 		}
 
@@ -1244,6 +1321,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				return;
 			}
 
+			$this->is_search = true;
 			foreach ( $filter_query as $field => $value ) {
 
 				switch ( $field ) {
@@ -1282,11 +1360,30 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 									$field_query = apply_filters( "um_query_args_{$field}_{$filter_type}__filter", false, $field, $value, $filter_type );
 
 									break;
+								case 'text':
+
+									$value = stripslashes( $value );
+
+									$field_query = array(
+										'relation' => 'OR',
+										array(
+											'key'       => $field,
+											'value'     => trim( $value ),
+											'compare'   => 'LIKE',
+										),
+									);
+
+									$this->custom_filters_in_query[ $field ] = $value;
+
+									break;
+
 								case 'select':
 									if ( is_array( $value ) ) {
 										$field_query = array( 'relation' => 'OR' );
 
 										foreach ( $value as $single_val ) {
+											$single_val = stripslashes( $single_val );
+
 											$arr_meta_query = array(
 												array(
 													'key'       => $field,
@@ -1733,7 +1830,17 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$current_page = ! empty( $_POST['page'] ) ? $_POST['page'] : 1;
 
 			$total_users = ( ! empty( $directory_data['max_users'] ) && $directory_data['max_users'] <= $result->total_users ) ? $directory_data['max_users'] : $result->total_users;
-			$total_pages = ceil( $total_users / $directory_data['profiles_per_page'] );
+
+			// number of profiles for mobile
+			$profiles_per_page = $directory_data['profiles_per_page'];
+			if ( UM()->mobile()->isMobile() && isset( $directory_data['profiles_per_page_mobile'] ) ) {
+				$profiles_per_page = $directory_data['profiles_per_page_mobile'];
+			}
+
+			$total_pages = 1;
+			if ( ! empty( $profiles_per_page ) ) {
+				$total_pages = ceil( $total_users / $profiles_per_page );
+			}
 
 			if ( ! empty( $total_pages ) ) {
 				$index1 = 0 - ( $current_page - 2 ) + 1;
@@ -2135,7 +2242,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			um_reset_user();
 			// end of user card
 
-			wp_send_json_success( array( 'pagination' => $pagination_data, 'users' => $users ) );
+			wp_send_json_success( array( 'pagination' => $pagination_data, 'users' => $users, 'is_search' => $this->is_search ) );
 		}
 
 

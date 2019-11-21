@@ -97,9 +97,17 @@ global $post_id; ?>
 				'id'            => '_um_filters_expanded',
 				'type'          => 'checkbox',
 				'label'         => __( 'Expand the filter bar by default', 'ultimate-member' ),
-				'tooltip'       => __( 'If turned on, filters bar will be visible after a page loading and can be collapsed', 'ultimate-member' ),
+				'tooltip'       => __( 'If turned on, filters bar will be visible after a page loading', 'ultimate-member' ),
 				'value'         => UM()->query()->get_meta_value( '_um_filters_expanded' ),
 				'conditional'   => array( '_um_filters', '=', 1 )
+			),
+			array(
+				'id'            => '_um_filters_is_collapsible',
+				'type'          => 'checkbox',
+				'label'         => __( 'Can filter bar be collapsed', 'ultimate-member' ),
+				'tooltip'       => __( 'If turned on, filters bar can be collapsed after a page loading', 'ultimate-member' ),
+				'value'         => UM()->query()->get_meta_value( '_um_filters_is_collapsible' ),
+				'conditional'   => array( '_um_filters_expanded', '=', 1 )
 			),
 			array(
 				'id'                    => '_um_search_filters',
