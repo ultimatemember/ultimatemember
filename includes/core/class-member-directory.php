@@ -523,9 +523,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$custom_dropdown = '';
 					if ( ! empty( $attrs['custom_dropdown_options_source'] ) ) {
 						$attrs['custom'] = true;
-						$attrs['options'] = UM()->fields()->get_options_from_callback( $attrs, $attrs['type'] );
 
 						if ( ! empty( $attrs['parent_dropdown_relationship'] ) ) {
+
 							$custom_dropdown .= ' data-member-directory="yes"';
 							$custom_dropdown .= ' data-um-parent="' . esc_attr( $attrs['parent_dropdown_relationship'] ) . '"';
 
@@ -537,6 +537,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 						$ajax_source = apply_filters( "um_custom_dropdown_options_source__{$filter}", $attrs['custom_dropdown_options_source'], $attrs );
 						$custom_dropdown .= ' data-um-ajax-source="' . esc_attr( $ajax_source ) . '" ';
+
+						$attrs['options'] = UM()->fields()->get_options_from_callback( $attrs, $attrs['type'] );
 					}
 
 					if ( $attrs['metakey'] != 'role_select' && empty( $custom_dropdown ) ) {
@@ -551,6 +553,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					if ( empty( $attrs['options'] ) || ! is_array( $attrs['options'] ) ) {
 						return '';
+					}
+
+					if ( ! empty( $attrs['custom_dropdown_options_source'] ) && ! empty( $attrs['parent_dropdown_relationship'] ) ) {
+						$attrs['options'] = array();
 					}
 
 					if ( isset( $attrs['label'] ) ) {

@@ -255,15 +255,6 @@ function um_ajax_get_members( directory, args ) {
 				if ( typeof value_to != 'undefined' ) {
 					var val_to = value_to.split(':');
 					var minutes = val_to[1]*1;
-					// var minutes = Math.ceil( val_to[1] ) + 1;
-					// if ( minutes >= 60 ) {
-					// 	minutes = 0;
-					// 	val_to[0] = val_to[0]*1 + 1;
-					//
-					// 	if ( val_to[0] >= 24 ) {
-					// 		val_to[0] = 0;
-					// 	}
-					// }
 
 					var hours = val_to[0]*1;
 					if ( hours < 10 ) {
@@ -949,6 +940,9 @@ jQuery(document.body).ready( function() {
 		directory.data( 'searched', 1 );
 		directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', false );
 		directory.find( '.um-member-directory-view-type' ).removeClass( 'um-disabled' );
+		// if ( directory.find( '.um-search-filter select[data-um-parent="' + filter_name + '"]' ).length > 0 ) {
+		// 	jQuery(this).trigger('change');
+		// }
 	});
 
 
@@ -1067,7 +1061,6 @@ jQuery(document.body).ready( function() {
 
 			um_set_url_from_data( directory, 'filter_' + filter_name, current_value );
 
-
 			var select = jQuery( '.um-search-filter select[name="' + filter_name + '"]' );
 			select.find('option[value="' + removeItem + '"]').prop('disabled', false).show();
 
@@ -1076,6 +1069,10 @@ jQuery(document.body).ready( function() {
 				select.prop('disabled', false);
 			}
 			select.select2('destroy').select2();
+
+			if ( directory.find( '.um-search-filter select[data-um-parent="' +  filter_name + '"]' ).length > 0 ) {
+				select.trigger('change');
+			}
 
 		} else if ( type === 'slider' ) {
 			um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
