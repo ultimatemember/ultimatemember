@@ -1482,6 +1482,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 									$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
 									$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
+									$from_date = date('Y/m/d', $from_date);
+									$to_date = date('Y/m/d', $to_date);
+
 									$field_query = array(
 										'key'       => $field,
 										'value'     =>  array( $from_date, $to_date ),
