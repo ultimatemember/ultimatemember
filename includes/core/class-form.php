@@ -105,8 +105,25 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 			if ( $arr_options['post']['members_directory'] == 'yes' ) {
 				$ajax_source_func = $_POST['child_callback'];
-				if( function_exists( $ajax_source_func ) ){
-					$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship']  );
+				if ( function_exists( $ajax_source_func ) ) {
+					$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship'] );
+
+					global $wpdb;
+
+					$values_array = $wpdb->get_col( $wpdb->prepare(
+						"SELECT DISTINCT meta_value 
+						FROM $wpdb->usermeta 
+						WHERE meta_key = %s AND 
+						      meta_value != ''",
+						$arr_options['post']['child_name']
+					) );
+
+					if ( ! empty( $values_array ) ) {
+						$arr_options['items'] = array_intersect( $arr_options['items'], $values_array );
+					} else {
+						$arr_options['items'] = array();
+					}
+
 					wp_send_json( $arr_options );
 				}
 			} else {

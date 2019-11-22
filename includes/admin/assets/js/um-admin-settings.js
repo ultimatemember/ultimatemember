@@ -21,7 +21,7 @@ jQuery( document ).ready( function() {
 		jQuery( '#um-settings-wrap .um-nav-tab-wrapper a, #um-settings-wrap .subsubsub a' ).click( function() {
 			if ( changed ) {
 				window.onbeforeunload = function() {
-					return php_data.onbeforeunload_text;
+					return wp.i18n.__( 'Are sure, maybe some settings not saved', 'ultimate-member' );
 				};
 			} else {
 				window.onbeforeunload = '';

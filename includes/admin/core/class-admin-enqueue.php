@@ -227,17 +227,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			wp_register_style( 'um_admin_forms', $this->css_url . 'um-admin-forms.css', array( 'wp-color-picker', 'um_ui' ), ultimatemember_version );
 			wp_enqueue_style( 'um_admin_forms' );
 
-			wp_register_script( 'um_admin_forms', $this->js_url . 'um-admin-forms.js', array( 'jquery' ), ultimatemember_version, true );
+			wp_register_script( 'um_admin_forms', $this->js_url . 'um-admin-forms.js', array( 'jquery', 'wp-i18n' ), ultimatemember_version, true );
 			wp_enqueue_script( 'um_admin_forms' );
-
-			$localize_data = array(
-				'texts' => array(
-					'remove' => __( 'Remove', 'ultimate-member' ),
-					'select' => __( 'Select', 'ultimate-member' )
-				)
-			);
-
-			wp_localize_script( 'um_admin_forms', 'php_data', $localize_data );
 		}
 
 
@@ -257,18 +248,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			wp_register_style( 'um_admin_settings', $this->css_url . 'um-admin-settings.css', array(), ultimatemember_version );
 			wp_enqueue_style( 'um_admin_settings' );
 
-			wp_register_script( 'um_admin_settings', $this->js_url . 'um-admin-settings.js', array( 'jquery' ), ultimatemember_version, true );
+			wp_register_script( 'um_admin_settings', $this->js_url . 'um-admin-settings.js', array( 'jquery', 'wp-i18n' ), ultimatemember_version, true );
 			wp_enqueue_script( 'um_admin_settings' );
-
-			$localize_data = array(
-				'onbeforeunload_text' => __( 'Are sure, maybe some settings not saved', 'ultimate-member' ),
-				'texts' => array(
-					'remove' => __( 'Remove', 'ultimate-member' ),
-					'select' => __( 'Select', 'ultimate-member' )
-				)
-			);
-
-			wp_localize_script( 'um_admin_settings', 'php_data', $localize_data );
 		}
 
 

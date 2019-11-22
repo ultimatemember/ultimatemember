@@ -27,7 +27,7 @@ jQuery(document).ready( function() {
 
 		list.append(
 			'<li class="um-multi-selects-option-line"><span class="um-field-wrapper">' + selector_html +
-			'</span><span class="um-field-control"><a href="javascript:void(0);" class="um-select-delete">' + php_data.texts.remove + '</a></span></li>'
+			'</span><span class="um-field-control"><a href="javascript:void(0);" class="um-select-delete">' + wp.i18n.__( 'Remove', 'ultimate-member' ) + '</a></span></li>'
 		);
 
 		list.find('li:last .um-hidden-multi-selects').attr('name', jQuery(this).data('name') ).
@@ -284,7 +284,7 @@ jQuery(document).ready( function() {
 
 		list.append(
 			'<li class="um-md-default-filters-option-line"><span class="um-field-wrapper">' + selector_html +
-			'</span></span><span class="um-field-control"><a href="javascript:void(0);" class="um-select-delete">' + php_data.texts.remove + '</a></span><span class="um-field-wrapper2 um"></li>'
+			'</span></span><span class="um-field-control"><a href="javascript:void(0);" class="um-select-delete">' + wp.i18n.__( 'Remove', 'ultimate-member' ) + '</a></span><span class="um-field-wrapper2 um"></li>'
 		);
 
 		list.find('li:last .um-hidden-md-default-filters').attr('name', jQuery(this).data('name') ).
@@ -318,7 +318,7 @@ jQuery(document).ready( function() {
 
 		list.append(
 			'<li class="' + classes + '"><span class="um-field-wrapper">' + text_html +
-			'</span><span class="um-field-control"><a href="javascript:void(0);" class="um-text-delete">' + php_data.texts.remove + '</a></span></li>'
+			'</span><span class="um-field-control"><a href="javascript:void(0);" class="um-text-delete">' + wp.i18n.__( 'Remove', 'ultimate-member' ) + '</a></span></li>'
 		);
 
 		list.find('li:last .um-hidden-multi-text').attr('name', jQuery(this).data('name') ).
@@ -366,7 +366,7 @@ jQuery(document).ready( function() {
 			frame = wp.media({
 				title: button.data('upload_frame'),
 				button: {
-					text: php_data.texts.select
+					text: wp.i18n.__( 'Select', 'ultimate-member' )
 				},
 				multiple: false  // Set to true to allow multiple files to be selected
 			});
