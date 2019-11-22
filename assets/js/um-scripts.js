@@ -465,22 +465,31 @@ jQuery(document).ready(function() {
 	/**
 	 * Find all select fields with parent select fields
 	 */
-	jQuery('select[data-um-parent]').each(function(){
+	jQuery('select[data-um-parent]').each( function() {
 
 		var me = jQuery(this);
 		var parent_option = me.data('um-parent');
-		var um_ajax_url = me.data('um-ajax-url');
 		var um_ajax_source = me.data('um-ajax-source');
 		var original_value = me.val();
 
 		me.attr('data-um-init-field', true );
 
-		jQuery(document).on('change','select[name="'+parent_option+'"]',function(){
+		jQuery(document).on('change','select[name="' + parent_option + '"]',function() {
 			var parent  = jQuery(this);
-			var form_id = parent.closest('form').find('input[type="hidden"][name="form_id"]').val();
-			var arr_key = parent.val();
+			var form_id = parent.closest( 'form' ).find( 'input[type="hidden"][name="form_id"]' ).val();
 
-			if ( parent.val() != '' && typeof um_select_options_cache[ arr_key ] != 'object' ) {
+			var arr_key;
+			if ( me.attr( 'data-member-directory' ) === 'yes' ) {
+				var directory = parent.parents('.um-directory');
+				arr_key = um_get_data_for_directory( directory, 'filter_' + parent_option );
+				if (  typeof arr_key != 'undefined' ) {
+					arr_key = arr_key.split('||');
+				}
+			} else {
+				arr_key = parent.val();
+			}
+
+			if ( typeof arr_key != 'undefined' && arr_key != '' && typeof um_select_options_cache[ arr_key ] != 'object' ) {
 
 				jQuery.ajax({
 					url: wp.ajax.settings.url,
@@ -488,19 +497,19 @@ jQuery(document).ready(function() {
 					data: {
 						action: 'um_select_options',
 						parent_option_name: parent_option,
-						parent_option: parent.val(),
+						parent_option: arr_key,
 						child_callback: um_ajax_source,
-						child_name:  me.attr('name'),
-						members_directory:  me.attr('data-mebers-directory'),
+						child_name: me.attr('name'),
+						members_directory: me.attr('data-member-directory'),
 						form_id: form_id,
 						nonce: um_scripts.nonce
 					},
 					success: function( data ){
-						if( data.status == 'success' && parent.val() != '' ){
-							um_field_populate_child_options( me, data, arr_key);
+						if ( data.status == 'success' && arr_key != '' ) {
+							um_field_populate_child_options( me, data, arr_key );
 						}
 
-						if( typeof data.debug !== 'undefined' ){
+						if ( typeof data.debug !== 'undefined' ) {
 							console.log( data );
 						}
 					},
@@ -512,19 +521,19 @@ jQuery(document).ready(function() {
 
 			}
 
-			if ( parent.val() != '' && typeof um_select_options_cache[ arr_key ] == 'object'  ) {
+			if ( typeof arr_key != 'undefined' && arr_key != '' && typeof um_select_options_cache[ arr_key ] == 'object' ) {
 				var data = um_select_options_cache[ arr_key ];
 				um_field_populate_child_options( me, data, arr_key );
 			}
 
-			if ( parent.val() == '' ){
+			if ( typeof arr_key != 'undefined' || arr_key == '' ) {
 				me.find('option[value!=""]').remove();
 				me.val('').trigger('change');
 			}
 
 		});
 
-		jQuery('select[name="'+parent_option+'"]').trigger('change');
+		jQuery('select[name="' + parent_option + '"]').trigger('change');
 
 	});
 
@@ -535,6 +544,7 @@ jQuery(document).ready(function() {
 	 * @param  string key
 	 */
 	function um_field_populate_child_options( me, data, arr_key, arr_items ) {
+		var directory = me.parents('.um-directory');
 		var parent_option = me.data('um-parent');
 		var child_name = me.attr('name');
 		var parent_dom = jQuery('select[name="'+parent_option+'"]');
@@ -548,11 +558,10 @@ jQuery(document).ready(function() {
 			search_get = '';
 
 		if ( data.post.members_directory === 'yes' ) {
-			var urlParams = new URLSearchParams(window.location.search);
-			search_get = urlParams.get(data.post.child_name);
+			arr_items.push({id: '', text: '', selected: 1});
 		}
 		jQuery.each( data.items, function(k,v){
-			arr_items.push({id: k, text: v, selected: (v === search_get) });
+			arr_items.push({id: k, text: v, selected: (v === search_get)});
 		});
 
 		me.select2('destroy');
@@ -561,6 +570,41 @@ jQuery(document).ready(function() {
 			allowClear: true,
 			minimumResultsForSearch: 10
 		});
+
+		if ( data.post.members_directory === 'yes' ) {
+			me.find('option').each( function() {
+				if ( jQuery(this).html() !== '' ) {
+					jQuery(this).data( 'value_label', jQuery(this).html() ).attr( 'data-value_label', jQuery(this).html() );
+				}
+			});
+
+			var current_filter_val = um_get_data_for_directory( directory, 'filter_' + child_name );
+			if ( typeof current_filter_val != 'undefined' ) {
+				current_filter_val = current_filter_val.split('||');
+
+				var temp_filter_val = [];
+				jQuery.each( current_filter_val, function(i) {
+					if ( me.find('option[value="' + current_filter_val[ i ] + '"]').length ) {
+						temp_filter_val.push( current_filter_val[ i ] );
+					}
+					me.find('option[value="' + current_filter_val[ i ] + '"]').prop('disabled', true).hide();
+					if ( me.find('option:not(:disabled)').length === 1 ) {
+						me.prop('disabled', true);
+					}
+
+					me.select2('destroy').select2();
+					me.val('').trigger( 'change' );
+				});
+
+				temp_filter_val = temp_filter_val.join('||');
+				if ( current_filter_val !== temp_filter_val ) {
+					um_set_url_from_data( directory, 'filter_' + child_name, temp_filter_val );
+					um_ajax_get_members( directory );
+				}
+			}
+
+			um_change_tag( directory );
+		}
 
 		if ( data.post.members_directory !== 'yes' ) {
 			if ( typeof data.field.default !== 'undefined' && ! me.data('um-original-value') ) {
@@ -575,7 +619,6 @@ jQuery(document).ready(function() {
 			}
 		}
 		um_select_options_cache[ arr_key ] = data;
-
 
 	}
 

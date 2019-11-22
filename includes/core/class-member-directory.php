@@ -523,12 +523,28 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$custom_dropdown = '';
 					if ( ! empty( $attrs['custom_dropdown_options_source'] ) ) {
 						$attrs['custom'] = true;
+
+						if ( ! empty( $attrs['parent_dropdown_relationship'] ) ) {
+
+							$custom_dropdown .= ' data-member-directory="yes"';
+							$custom_dropdown .= ' data-um-parent="' . esc_attr( $attrs['parent_dropdown_relationship'] ) . '"';
+
+							if ( isset( $_GET[ 'filter_' . $attrs['parent_dropdown_relationship'] . '_' . $unique_hash ] ) ) {
+								$_POST['parent_option_name'] = $attrs['parent_dropdown_relationship'];
+								$_POST['parent_option'] = explode( '||', filter_input( INPUT_GET, 'filter_' . $attrs['parent_dropdown_relationship'] . '_' . $unique_hash ) );
+							}
+						}
+
+						$ajax_source = apply_filters( "um_custom_dropdown_options_source__{$filter}", $attrs['custom_dropdown_options_source'], $attrs );
+						$custom_dropdown .= ' data-um-ajax-source="' . esc_attr( $ajax_source ) . '" ';
+
 						$attrs['options'] = UM()->fields()->get_options_from_callback( $attrs, $attrs['type'] );
-						$custom_dropdown = ' data-um-ajax-source="' . esc_attr( $attrs['custom_dropdown_options_source'] ) . '"';
 					}
 
-					if ( $attrs['metakey'] != 'role_select' ) {
+					if ( $attrs['metakey'] != 'role_select' && empty( $custom_dropdown ) ) {
 						$attrs['options'] = array_intersect( $attrs['options'], $values_array );
+					} elseif ( ! empty( $custom_dropdown ) ) {
+						$attrs['options'] = array_intersect_key( $attrs['options'], array_flip( $values_array ) );
 					} else {
 						$attrs['options'] = array_intersect_key( $attrs['options'], array_flip( $values_array ) );
 					}
@@ -539,13 +555,17 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						return '';
 					}
 
+					if ( ! empty( $attrs['custom_dropdown_options_source'] ) && ! empty( $attrs['parent_dropdown_relationship'] ) ) {
+						$attrs['options'] = array();
+					}
+
 					if ( isset( $attrs['label'] ) ) {
 						$attrs['label'] = strip_tags( $attrs['label'] );
 					}
 
 					asort( $attrs['options'] ); ?>
 
-					<select class="um-s1" id="<?php echo $filter; ?>" name="<?php echo $filter; ?>"
+					<select class="um-s1" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?>"
 					        data-placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
 						<?php echo $custom_dropdown; ?>>
 
@@ -568,7 +588,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 								<option value="<?php echo esc_attr( $opt ); ?>" data-value_label="<?php esc_attr_e( $v, 'ultimate-member' ); ?>"
 									<?php disabled( ! empty( $filter_from_url ) && in_array( $opt, $filter_from_url ) ) ?>
-									<?php selected( $opt == $default_value ) ?>>
+									<?php selected( $opt === $default_value ) ?>>
 									<?php _e( $v, 'ultimate-member' ); ?>
 								</option>
 
