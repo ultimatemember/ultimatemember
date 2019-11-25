@@ -3432,9 +3432,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				/* HTML */
 				case 'block':
-					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>
-								<div class="um-field-block">' . $content . '</div>
-							</div>';
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>' . $content . '</div>';
 					break;
 
 				/* Shortcode */
