@@ -1,4 +1,16 @@
 jQuery(document).ready( function() {
+
+
+	/**
+	 * Multi-selects sort
+	 */
+	jQuery('.um-multi-selects-list').sortable({
+		items: '.um-admin-drag-fld',
+		connectWith: '.um-admin-drag-col,.um-admin-drag-group',
+		forcePlaceholderSize:true
+	});
+
+
 	/**
 	 * Multi-selects field
 	 */
@@ -26,13 +38,14 @@ jQuery(document).ready( function() {
 		var selector_html = jQuery( '<div>' ).append( list.siblings('.um-hidden-multi-selects').clone() ).html();
 
 		list.append(
-			'<li class="um-multi-selects-option-line"><span class="um-field-wrapper">' + selector_html +
+			'<li class="um-multi-selects-option-line um-admin-drag-fld">' +
+			'<span class="um-field-icon"><i class="um-faicon-sort"></i></span>' +
+			'<span class="um-field-wrapper">' + selector_html +
 			'</span><span class="um-field-control"><a href="javascript:void(0);" class="um-select-delete">' + wp.i18n.__( 'Remove', 'ultimate-member' ) + '</a></span></li>'
 		);
 
 		list.find('li:last .um-hidden-multi-selects').attr('name', jQuery(this).data('name') ).
 		addClass('um-forms-field um-long-field').removeClass('um-hidden-multi-selects').attr('id', list.data('id_attr') + '-' + k);
-
 	});
 
 	var um_local_date = new Date();

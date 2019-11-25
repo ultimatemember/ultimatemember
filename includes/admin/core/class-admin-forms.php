@@ -878,6 +878,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$html = "<select class=\"um-hidden-multi-selects\" $data_attr>$options</select>";
 			$html .= "<ul class=\"um-multi-selects-list\" $data_attr>";
 
+			ksort($values);
 			if ( ! empty( $values ) && is_array( $values ) ) {
 				foreach ( $values as $k => $value ) {
 
@@ -892,7 +893,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						$options .= '<option value="' . $key . '" ' . selected( $key == $value, true, false ) . '>' . $option . '</option>';
 					}
 
-					$html .= "<li class=\"um-multi-selects-option-line\"><span class=\"um-field-wrapper\">
+					$html .= "<li class=\"um-multi-selects-option-line um-admin-drag-fld\">
+						<span class=\"um-field-icon\"><i class=\"um-faicon-sort\"></i></span>
+						<span class=\"um-field-wrapper\">
 						<select $id_attr $name_attr $class_attr $data_attr>$options</select></span>
 						<span class=\"um-field-control\"><a href=\"javascript:void(0);\" class=\"um-select-delete\">" . __( 'Remove', 'ultimate-member' ) . "</a></span></li>";
 				}

@@ -64,10 +64,17 @@ textarea.um-forms-field.um-small-field {
     margin: 5px 0 0 0;
 }
 
+.um-multi-selects-option-line .um-field-icon {
+    float: left;
+    width: 30px;
+    text-align: center;
+    line-height: 30px;
+}
+
 .um-multi-text-option-line .um-field-wrapper,
 .um-multi-selects-option-line .um-field-wrapper {
     float:left;
-    width: calc( 100% - 60px );
+    width: calc( 100% - 90px );
     line-height: 30px;
     box-sizing: border-box;
 }
