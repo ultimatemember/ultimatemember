@@ -64,6 +64,11 @@ textarea.um-forms-field.um-small-field {
     margin: 5px 0 0 0;
 }
 
+.um-multi-selects-option-line.um-admin-drag-fld {
+    background: none;
+    border: none;
+}
+
 .um-multi-selects-option-line .um-field-icon {
     float: left;
     width: 30px;
