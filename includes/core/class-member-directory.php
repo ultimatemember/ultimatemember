@@ -1210,24 +1210,21 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				}
 
 				// Reset seed on load of initial
-				if ( ! isset( $_REQUEST['members_page'] ) || $_REQUEST['members_page'] == 0 ||  $_REQUEST['members_page'] == 1 ) {
-					if ( isset( $_SESSION['seed'] ) ) {
-						unset( $_SESSION['seed'] );
-					}
+				if ( empty( $_REQUEST['directory_id'] ) && isset( $_SESSION['um_member_directory_seed'] ) ) {
+					unset( $_SESSION['um_member_directory_seed'] );
 				}
 
 				// Get seed from session variable if it exists
 				$seed = false;
-				if ( isset( $_SESSION['seed'] ) ) {
-					$seed = $_SESSION['seed'];
+				if ( isset( $_SESSION['um_member_directory_seed'] ) ) {
+					$seed = $_SESSION['um_member_directory_seed'];
 				}
 
 				// Set new seed if none exists
 				if ( ! $seed ) {
 					$seed = rand();
-					$_SESSION['seed'] = $seed;
+					$_SESSION['um_member_directory_seed'] = $seed;
 				}
-
 
 				$query->query_orderby = 'ORDER by RAND(' . $seed . ')';
 			}
