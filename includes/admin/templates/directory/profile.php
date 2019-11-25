@@ -48,6 +48,7 @@
 			'add_text'              => __( 'Add New Custom Field', 'ultimate-member' ),
 			'options'               => $user_fields,
 			'show_default_number'   => 1,
+			'sorting'               => true,
 		),
 		array(
 			'id'    => '_um_show_userinfo',
@@ -64,6 +65,7 @@
 			'conditional'           => array( '_um_show_userinfo', '=', 1 ),
 			'options'               => $user_fields,
 			'show_default_number'   => 1,
+			'sorting'               => true,
 		),
 		array(
 			'id'            => '_um_show_social',

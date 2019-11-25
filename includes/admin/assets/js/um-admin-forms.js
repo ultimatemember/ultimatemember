@@ -4,10 +4,10 @@ jQuery(document).ready( function() {
 	/**
 	 * Multi-selects sort
 	 */
-	jQuery('.um-multi-selects-list').sortable({
-		items: '.um-admin-drag-fld',
-		connectWith: '.um-admin-drag-col,.um-admin-drag-group',
-		forcePlaceholderSize:true
+	jQuery('.um-multi-selects-list.um-sortable-multi-selects').sortable({
+		items:                  '.um-admin-drag-fld',
+		connectWith:            '.um-admin-drag-col,.um-admin-drag-group',
+		forcePlaceholderSize:   true
 	});
 
 
@@ -28,6 +28,8 @@ jQuery(document).ready( function() {
 	jQuery( '.um-multi-selects-add-option' ).click( function() {
 		var list = jQuery(this).siblings('ul.um-multi-selects-list');
 
+		var sortable = list.hasClass( 'um-sortable-multi-selects' );
+
 		var field_id = list.data('field_id');
 		var k = 0;
 		if ( list.find( 'li:last select.um-forms-field' ).length > 0 ) {
@@ -37,12 +39,17 @@ jQuery(document).ready( function() {
 
 		var selector_html = jQuery( '<div>' ).append( list.siblings('.um-hidden-multi-selects').clone() ).html();
 
-		list.append(
-			'<li class="um-multi-selects-option-line um-admin-drag-fld">' +
-			'<span class="um-field-icon"><i class="um-faicon-sort"></i></span>' +
-			'<span class="um-field-wrapper">' + selector_html +
-			'</span><span class="um-field-control"><a href="javascript:void(0);" class="um-select-delete">' + wp.i18n.__( 'Remove', 'ultimate-member' ) + '</a></span></li>'
-		);
+		var html = '<li class="um-multi-selects-option-line' + ( sortable ? ' um-admin-drag-fld' : '' ) + '">';
+		if ( sortable ) {
+			html += '<span class="um-field-icon"><i class="um-faicon-sort"></i></span>';
+		}
+
+		html += '<span class="um-field-wrapper">' + selector_html + '</span>' +
+			'<span class="um-field-control">' +
+				'<a href="javascript:void(0);" class="um-select-delete">' + wp.i18n.__( 'Remove', 'ultimate-member' ) + '</a>' +
+			'</span>' +
+		'</li>';
+		list.append( html );
 
 		list.find('li:last .um-hidden-multi-selects').attr('name', jQuery(this).data('name') ).
 		addClass('um-forms-field um-long-field').removeClass('um-hidden-multi-selects').attr('id', list.data('id_attr') + '-' + k);

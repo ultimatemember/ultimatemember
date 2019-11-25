@@ -67,17 +67,32 @@ textarea.um-forms-field.um-small-field {
 .um-multi-selects-option-line.um-admin-drag-fld {
     background: none;
     border: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
 }
 
-.um-multi-selects-option-line .um-field-icon {
+.um-multi-selects-option-line.um-admin-drag-fld .um-field-icon {
     float: left;
-    width: 30px;
-    text-align: center;
+    width: 20px;
+    text-align: left;
     line-height: 30px;
 }
 
-.um-multi-text-option-line .um-field-wrapper,
 .um-multi-selects-option-line .um-field-wrapper {
+    float:left;
+    width: calc( 100% - 60px );
+    line-height: 30px;
+    box-sizing: border-box;
+}
+
+.um-multi-selects-option-line.um-admin-drag-fld .um-field-wrapper {
+    width: calc( 100% - 90px );
+}
+
+.um-multi-text-option-line .um-field-wrapper {
     float:left;
     width: calc( 100% - 90px );
     line-height: 30px;

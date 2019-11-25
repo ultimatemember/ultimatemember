@@ -92,6 +92,7 @@ global $post_id; ?>
 				'options'               => UM()->member_directory()->filter_fields,
 				'add_text'              => __( 'Add New Custom Field', 'ultimate-member' ),
 				'show_default_number'   => 1,
+				'sorting'               => true,
 			),
 			array(
 				'id'            => '_um_filters_expanded',

@@ -849,8 +849,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
 
+			$sorting = ! empty( $field_data['sorting'] ) ? $field_data['sorting'] : false;
+
 			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
 			$class .= ! empty( $field_data['size'] ) ? $field_data['size'] : 'um-long-field';
+			$class .= ! empty( $sorting ) ? 'um-sorting-enabled' : '';
 			$class_attr = ' class="um-forms-field ' . $class . '" ';
 
 			$data = array(
@@ -876,9 +879,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			}
 
 			$html = "<select class=\"um-hidden-multi-selects\" $data_attr>$options</select>";
-			$html .= "<ul class=\"um-multi-selects-list\" $data_attr>";
+			$html .= "<ul class=\"um-multi-selects-list" . ( ! empty( $sorting ) ? ' um-sortable-multi-selects' : '' ) . "\" $data_attr>";
 
-			ksort($values);
+			if ( $sorting ) {
+				ksort( $values );
+			}
+
 			if ( ! empty( $values ) && is_array( $values ) ) {
 				foreach ( $values as $k => $value ) {
 
@@ -893,9 +899,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						$options .= '<option value="' . $key . '" ' . selected( $key == $value, true, false ) . '>' . $option . '</option>';
 					}
 
-					$html .= "<li class=\"um-multi-selects-option-line um-admin-drag-fld\">
-						<span class=\"um-field-icon\"><i class=\"um-faicon-sort\"></i></span>
-						<span class=\"um-field-wrapper\">
+					$html .= '<li class="um-multi-selects-option-line' . ( ! empty( $sorting ) ? ' um-admin-drag-fld' : '' ) . '">';
+					if ( $sorting ) {
+						$html .= '<span class="um-field-icon"><i class="um-faicon-sort"></i></span>';
+					}
+					$html .= "<span class=\"um-field-wrapper\">
 						<select $id_attr $name_attr $class_attr $data_attr>$options</select></span>
 						<span class=\"um-field-control\"><a href=\"javascript:void(0);\" class=\"um-select-delete\">" . __( 'Remove', 'ultimate-member' ) . "</a></span></li>";
 				}
@@ -909,7 +917,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 						$options .= '<option value="' . $key . '">' . $option . '</option>';
 					}
 
-					$html .= "<li class=\"um-multi-selects-option-line\"><span class=\"um-field-wrapper\">
+					$html .= '<li class="um-multi-selects-option-line' . ( ! empty( $sorting ) ? ' um-admin-drag-fld' : '' ) . '">';
+					if ( $sorting ) {
+						$html .= '<span class="um-field-icon"><i class="um-faicon-sort"></i></span>';
+					}
+
+					$html .= "<span class=\"um-field-wrapper\">
 						<select $id_attr $name_attr $class_attr $data_attr>$options</select></span>
 						<span class=\"um-field-control\"><a href=\"javascript:void(0);\" class=\"um-select-delete\">" . __( 'Remove', 'ultimate-member' ) . "</a></span></li>";
 
