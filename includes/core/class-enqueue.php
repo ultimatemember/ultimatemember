@@ -141,7 +141,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 
 			wp_register_script('um_dropdown', $this->js_baseurl . 'dropdown' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
-			wp_register_script('um_members', $this->js_baseurl . 'um-members' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'um_dropdown', 'wp-hooks' ), ultimatemember_version, true );
+			wp_register_script('um_members', $this->js_baseurl . 'um-members' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'um_dropdown', 'wp-hooks', 'jquery-masonry' ), ultimatemember_version, true );
 			wp_register_script('um_profile', $this->js_baseurl . 'um-profile' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n' ), ultimatemember_version, true );
 			wp_register_script('um_account', $this->js_baseurl . 'um-account' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
