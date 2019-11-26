@@ -169,6 +169,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed clearing filters with || condition
   - Fixed endless recursion in the function um_check_conditions_on_submit()
   - Fixed issue that appears if we try to update several plugins at once
+  - Fixed using different templates for different member directories
 
 = 2.1.1: November 12, 2019 =
 

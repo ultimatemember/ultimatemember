@@ -328,7 +328,7 @@ function um_ajax_get_members( directory, args ) {
 
 function um_build_template( directory, data ) {
 	var layout = directory.data('view_type');
-	var template = wp.template( 'um-member-' + layout );
+	var template = wp.template( 'um-member-' + layout + '-' + um_members_get_hash( directory ) );
 
 	directory.find('.um-members-grid, .um-members-list').remove();
 	directory.find('.um-members-wrapper').prepend( template( data.users ) );

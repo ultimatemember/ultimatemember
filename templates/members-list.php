@@ -1,7 +1,8 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit;
 
+$unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 
-<script type="text/template" id="tmpl-um-member-list">
+<script type="text/template" id="tmpl-um-member-list-<?php echo esc_attr( $unique_hash ) ?>">
 	<div class="um-members um-members-list">
 
 		<# if ( data.length > 0 ) { #>

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-11-26 12:16+0200\n"
-"PO-Revision-Date: 2019-11-26 12:16+0200\n"
+"POT-Creation-Date: 2019-11-26 19:03+0200\n"
+"PO-Revision-Date: 2019-11-26 19:03+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -274,7 +274,7 @@ msgstr ""
 #: includes/admin/templates/form/register_customize.php:80
 #: includes/admin/templates/form/register_gdpr.php:27
 #: includes/core/class-builtin.php:1135 includes/core/class-builtin.php:1150
-#: includes/core/class-member-directory.php:948
+#: includes/core/class-member-directory.php:950
 #: includes/core/um-filters-members.php:40
 msgid "Yes"
 msgstr ""
@@ -4576,7 +4576,7 @@ msgid "Register"
 msgstr ""
 
 #: includes/class-config.php:135 includes/class-config.php:789
-#: includes/core/class-member-directory.php:1992
+#: includes/core/class-member-directory.php:1994
 #: includes/core/um-actions-profile.php:1255
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
@@ -7127,22 +7127,22 @@ msgstr ""
 msgid "User Registered"
 msgstr ""
 
-#: includes/core/class-member-directory.php:746
+#: includes/core/class-member-directory.php:748
 msgid " stars"
 msgstr ""
 
-#: includes/core/class-member-directory.php:754
+#: includes/core/class-member-directory.php:756
 msgid "<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1937
-#: includes/core/class-member-directory.php:1981
+#: includes/core/class-member-directory.php:1939
+#: includes/core/class-member-directory.php:1983
 #: includes/core/um-actions-profile.php:1222
 #: includes/core/um-actions-profile.php:1253
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1987
+#: includes/core/class-member-directory.php:1989
 #: includes/core/um-actions-profile.php:1254
 msgid "My Account"
 msgstr ""
@@ -7736,7 +7736,7 @@ msgstr ""
 msgid "Search Users"
 msgstr ""
 
-#: templates/members-grid.php:53
+#: templates/members-grid.php:55
 msgid "Edit profile"
 msgstr ""
 

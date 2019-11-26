@@ -501,6 +501,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					}
 
 					if ( empty( $values_array ) ) {
+						ob_get_clean();
 						return '';
 					}
 
@@ -552,6 +553,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options', $attrs['options'], $values_array, $attrs );
 
 					if ( empty( $attrs['options'] ) || ! is_array( $attrs['options'] ) ) {
+						ob_get_clean();
 						return '';
 					}
 
