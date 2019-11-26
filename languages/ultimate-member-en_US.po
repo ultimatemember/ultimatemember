@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-11-25 16:06+0200\n"
-"PO-Revision-Date: 2019-11-25 16:06+0200\n"
+"POT-Creation-Date: 2019-11-26 12:16+0200\n"
+"PO-Revision-Date: 2019-11-26 12:16+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -103,7 +103,7 @@ msgstr ""
 #: includes/admin/core/class-admin-builder.php:765
 #: includes/admin/core/class-admin-dragdrop.php:33
 #: includes/admin/core/class-admin-menu.php:106
-#: includes/core/class-fields.php:4387
+#: includes/core/class-fields.php:4385
 msgid "Please login as administrator"
 msgstr ""
 
@@ -325,26 +325,26 @@ msgstr ""
 msgid "No Icon"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:897
-#: includes/admin/core/class-admin-forms.php:911
-#: includes/admin/core/class-admin-forms.php:1034
-#: includes/admin/core/class-admin-forms.php:1043
-#: includes/admin/core/class-admin-forms.php:1278
-#: includes/admin/core/class-admin-forms.php:1292
+#: includes/admin/core/class-admin-forms.php:908
+#: includes/admin/core/class-admin-forms.php:927
+#: includes/admin/core/class-admin-forms.php:1050
+#: includes/admin/core/class-admin-forms.php:1059
+#: includes/admin/core/class-admin-forms.php:1294
+#: includes/admin/core/class-admin-forms.php:1308
 #: includes/admin/core/class-admin-notices.php:398
 #: includes/core/um-actions-profile.php:670
 msgid "Remove"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1090
+#: includes/admin/core/class-admin-forms.php:1106
 msgid "Select media"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1113
+#: includes/admin/core/class-admin-forms.php:1129
 msgid "Select"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1114
+#: includes/admin/core/class-admin-forms.php:1130
 msgid "Clear"
 msgstr ""
 
@@ -3730,24 +3730,24 @@ msgid "Choose field(s) to display in tagline"
 msgstr ""
 
 #: includes/admin/templates/directory/profile.php:48
-#: includes/admin/templates/directory/profile.php:63
+#: includes/admin/templates/directory/profile.php:64
 #: includes/admin/templates/directory/search.php:93
 msgid "Add New Custom Field"
 msgstr ""
 
-#: includes/admin/templates/directory/profile.php:55
+#: includes/admin/templates/directory/profile.php:56
 msgid "Show extra user information below tagline?"
 msgstr ""
 
-#: includes/admin/templates/directory/profile.php:61
+#: includes/admin/templates/directory/profile.php:62
 msgid "Choose field(s) to display in reveal section"
 msgstr ""
 
-#: includes/admin/templates/directory/profile.php:71
+#: includes/admin/templates/directory/profile.php:73
 msgid "Show social connect icons"
 msgstr ""
 
-#: includes/admin/templates/directory/profile.php:78
+#: includes/admin/templates/directory/profile.php:80
 msgid "Enable reveal section transition by default"
 msgstr ""
 
@@ -3787,33 +3787,33 @@ msgstr ""
 msgid "Choose filter(s) meta to enable"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:99
+#: includes/admin/templates/directory/search.php:100
 msgid "Expand the filter bar by default"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:100
+#: includes/admin/templates/directory/search.php:101
 msgid "If turned on, filters bar will be visible after a page loading"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:107
+#: includes/admin/templates/directory/search.php:108
 msgid "Can filter bar be collapsed"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:108
+#: includes/admin/templates/directory/search.php:109
 msgid "If turned on, filters bar can be collapsed after a page loading"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:115
+#: includes/admin/templates/directory/search.php:116
 msgid "Admin filtering"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:116
+#: includes/admin/templates/directory/search.php:117
 msgid ""
 "Limit which users appear in the member directory e.g only display users from "
 "USA"
 msgstr ""
 
-#: includes/admin/templates/directory/search.php:119
+#: includes/admin/templates/directory/search.php:120
 msgid "Add New Filter"
 msgstr ""
 
@@ -4576,7 +4576,7 @@ msgid "Register"
 msgstr ""
 
 #: includes/class-config.php:135 includes/class-config.php:789
-#: includes/core/class-member-directory.php:1995
+#: includes/core/class-member-directory.php:1992
 #: includes/core/um-actions-profile.php:1255
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
@@ -7030,14 +7030,14 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:4120
+#: includes/core/class-fields.php:4118
 #, php-format
 msgid ""
 "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some "
 "information!"
 msgstr ""
 
-#: includes/core/class-fields.php:4122
+#: includes/core/class-fields.php:4120
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
@@ -7135,14 +7135,14 @@ msgstr ""
 msgid "<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1940
-#: includes/core/class-member-directory.php:1984
+#: includes/core/class-member-directory.php:1937
+#: includes/core/class-member-directory.php:1981
 #: includes/core/um-actions-profile.php:1222
 #: includes/core/um-actions-profile.php:1253
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/class-member-directory.php:1990
+#: includes/core/class-member-directory.php:1987
 #: includes/core/um-actions-profile.php:1254
 msgid "My Account"
 msgstr ""

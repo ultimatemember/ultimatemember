@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 5.3
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -144,12 +144,31 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [topic](https://wordpress.org/support/topic/version-2-1-4/)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.1.2: November 25, 2019 =
+= 2.1.2: November 27, 2019 =
 
 * Enhancements:
 
+  - Added text-type filters
+  - Added sorting for filters, tagline and reveal section fields
+  - Added universal hook for field's wrapper and improve rendering the field wrapper attributes
+  - Added returning only existed values for select-type filters
+  - Added checking privacy for custom fields in filters and general search, exclude private fields
+  - Added Form fields validation for E-mail( not unique )
+
 * Bugfixes:
 
+  - Fixed fields privacy, editable and visibility attributes
+  - Fixed member directory styles
+  - Fixed random sorting
+  - Fixed conflict with 'php_data' variable in admin JS
+  - Fixed datepicker/timepicker filtering in the member directories
+  - Fixed initialization of datepicker, timepicker, slider filters when the "Show results only after search/filtration" option is active
+  - Fixed callback select-type filters handlers on member directories filters bar
+  - Fixed cover photo thumbnail sizes in member directory
+  - Fixed Role filter
+  - Fixed clearing filters with || condition
+  - Fixed endless recursion in the function um_check_conditions_on_submit()
+  - Fixed issue that appears if we try to update several plugins at once
 
 = 2.1.1: November 12, 2019 =
 
