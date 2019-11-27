@@ -73,14 +73,14 @@ $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 
 									if ( $show_social ) { ?>
 										<# if ( ! $show_block ) { #>
-										<# $show_block = user.social_urls #>
+											<# $show_block = user.social_urls #>
 										<# } #>
 									<?php } ?>
 
 									<# if ( $show_block ) { #>
-										<div class="um-member-meta-main">
+										<div class="um-member-meta-main<?php if ( ! $userinfo_animate ) { echo ' no-animate'; } ?>">
 
-											<div class="um-member-meta <?php if ( ! $userinfo_animate ) { echo 'no-animate'; } ?>">
+											<div class="um-member-meta">
 												<?php foreach ( $reveal_fields as $key ) { ?>
 
 													<# if ( typeof user['<?php echo $key; ?>'] !== 'undefined' ) { #>
