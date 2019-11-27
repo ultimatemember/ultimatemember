@@ -307,7 +307,7 @@ $ListTable->set_columns( $columns );
 $emails = UM()->config()->email_notifications;
 
 $ListTable->prepare_items();
-$ListTable->items = $emails;
+$ListTable->items = array_slice( $emails, ( $paged - 1 ) * $per_page, $per_page );
 $ListTable->wpc_set_pagination_args( array( 'total_items' => count( $emails ), 'per_page' => $per_page ) ); ?>
 
 <p class="description" style="margin: 20px 0 0 0;">
