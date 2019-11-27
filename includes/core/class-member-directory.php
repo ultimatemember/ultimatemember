@@ -2202,7 +2202,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 * @title um_user_before_query
 			 * @description Action before users query on member directory
 			 * @input_vars
-			 * [{"var":"$query_args","type":"array","desc":"Query arguments"}]
+			 * [{"var":"$query_args","type":"array","desc":"Query arguments"},
+			 * {"var":"$md_class","type":"um\core\Member_Directory","desc":"Member Directory class"}]
 			 * @change_log
 			 * ["Since: 2.0"]
 			 * @usage add_action( 'um_user_before_query', 'function_name', 10, 1 );
@@ -2214,7 +2215,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 * }
 			 * ?>
 			 */
-			do_action( 'um_user_before_query', $this->query_args );
+			do_action( 'um_user_before_query', $this->query_args, $this );
 
 			add_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10, 6 );
 

@@ -59,7 +59,7 @@
 		array(
 			'id'                    => '_um_reveal_fields',
 			'type'                  => 'multi_selects',
-			'label'                 => __( 'Choose field(s) to display in reveal section', 'ultimate-member' ),
+			'label'                 => __( 'Choose field(s) to display in extra user information section', 'ultimate-member' ),
 			'value'                 => $_um_reveal_fields,
 			'add_text'              => __( 'Add New Custom Field', 'ultimate-member' ),
 			'conditional'           => array( '_um_show_userinfo', '=', 1 ),
@@ -70,14 +70,15 @@
 		array(
 			'id'            => '_um_show_social',
 			'type'          => 'checkbox',
-			'label'         => __( 'Show social connect icons', 'ultimate-member' ),
+			'label'         => __( 'Show social connect icons in extra user information section', 'ultimate-member' ),
 			'value'         => UM()->query()->get_meta_value( '_um_show_social' ),
 			'conditional'   => array( '_um_show_userinfo', '=', 1 )
 		),
 		array(
 			'id'            => '_um_userinfo_animate',
 			'type'          => 'checkbox',
-			'label'         => __( 'Enable reveal section transition by default', 'ultimate-member' ),
+			'label'         => __( 'Hide extra user information to the reveal section', 'ultimate-member' ),
+			'tooltip'       => __( 'If not checked always shown', 'ultimate-member' ),
 			'value'         => UM()->query()->get_meta_value( '_um_userinfo_animate' ),
 			'conditional'   => array( '_um_show_userinfo', '=', 1 )
 		),

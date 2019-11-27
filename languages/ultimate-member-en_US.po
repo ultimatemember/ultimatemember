@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2019-11-26 19:03+0200\n"
-"PO-Revision-Date: 2019-11-26 19:03+0200\n"
+"POT-Creation-Date: 2019-11-27 17:27+0200\n"
+"PO-Revision-Date: 2019-11-27 17:27+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -3674,35 +3674,25 @@ msgid ""
 msgstr ""
 
 #: includes/admin/templates/directory/pagination.php:46
-#: includes/class-config.php:179 includes/class-config.php:279
-msgid "{total_users} Members"
-msgstr ""
-
-#: includes/admin/templates/directory/pagination.php:51
-msgid "Single Result Text"
+#: includes/admin/templates/directory/pagination.php:54
+msgid "You could use {total_users} placeholder for getting users count"
 msgstr ""
 
 #: includes/admin/templates/directory/pagination.php:52
-msgid "Same as above but in case of 1 user found only"
+msgid "Single Result Text"
 msgstr ""
 
 #: includes/admin/templates/directory/pagination.php:53
-#: includes/class-config.php:180 includes/class-config.php:280
-msgid "{total_users} Member"
-msgstr ""
-
-#: includes/admin/templates/directory/pagination.php:58
-msgid "Custom text if no users were found"
-msgstr ""
-
-#: includes/admin/templates/directory/pagination.php:59
-msgid ""
-"This is the text that is displayed if no users are found during a search"
+msgid "Same as above but in case of 1 user found only"
 msgstr ""
 
 #: includes/admin/templates/directory/pagination.php:60
-#: includes/class-config.php:181
-msgid "We are sorry. We cannot find any users who match your search criteria."
+msgid "Custom text if no users were found"
+msgstr ""
+
+#: includes/admin/templates/directory/pagination.php:61
+msgid ""
+"This is the text that is displayed if no users are found during a search"
 msgstr ""
 
 #: includes/admin/templates/directory/profile.php:20
@@ -3740,15 +3730,19 @@ msgid "Show extra user information below tagline?"
 msgstr ""
 
 #: includes/admin/templates/directory/profile.php:62
-msgid "Choose field(s) to display in reveal section"
+msgid "Choose field(s) to display in extra user information section"
 msgstr ""
 
 #: includes/admin/templates/directory/profile.php:73
-msgid "Show social connect icons"
+msgid "Show social connect icons in extra user information section"
 msgstr ""
 
 #: includes/admin/templates/directory/profile.php:80
-msgid "Enable reveal section transition by default"
+msgid "Hide extra user information to the reveal section"
+msgstr ""
+
+#: includes/admin/templates/directory/profile.php:81
+msgid "If not checked always shown"
 msgstr ""
 
 #: includes/admin/templates/directory/search.php:55
@@ -4584,6 +4578,18 @@ msgstr ""
 
 #: includes/class-config.php:137 includes/class-config.php:791
 msgid "Password Reset"
+msgstr ""
+
+#: includes/class-config.php:179 includes/class-config.php:279
+msgid "{total_users} Members"
+msgstr ""
+
+#: includes/class-config.php:180 includes/class-config.php:280
+msgid "{total_users} Member"
+msgstr ""
+
+#: includes/class-config.php:181
+msgid "We are sorry. We cannot find any users who match your search criteria."
 msgstr ""
 
 #: includes/class-config.php:250
