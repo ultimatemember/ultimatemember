@@ -591,6 +591,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return mixed
 		 */
 		function field_value( $key, $default = false, $data = null ) {
+
+			if( defined('DOING_AJAX') && DOING_AJAX ) return '';
+			
 			if ( isset( $_SESSION ) && isset( $_SESSION['um_social_profile'][ $key ] ) && isset( $this->set_mode ) && $this->set_mode == 'register' ) {
 				return $_SESSION['um_social_profile'][ $key ];
 			}
@@ -1925,7 +1928,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			um_fetch_user( $_um_profile_id );
 
 			// do not show passwords
-			if ( isset( UM()->user()->preview ) && UM()->user()->preview ) {
+			if ( isset( UM()->user()->preview ) && UM()->user()->preview && ! is_admin() ) {
 				if ( $data['type'] == 'password' ) {
 					return '';
 				}
