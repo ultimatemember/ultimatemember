@@ -241,10 +241,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'user_registered_desc'  => __( 'New users first', 'ultimate-member' ),
 				'user_registered_asc'   => __( 'Old users first', 'ultimate-member' ),
 				'username'              => __( 'Username', 'ultimate-member' ),
+				'nickname'              => __( 'Nickname', 'ultimate-member' ),
 				'first_name'            => __( 'First name', 'ultimate-member' ),
 				'last_name'             => __( 'Last name', 'ultimate-member' ),
 				'display_name'          => __( 'Display name', 'ultimate-member' ),
 				'last_login'            => __( 'Last login', 'ultimate-member' ),
+
 			) );
 
 			asort( $this->sort_fields );
@@ -1124,7 +1126,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$this->query_args['order'] = 'ASC';
 				}
 
-			} elseif ( in_array( $sortby, array( 'last_name', 'first_name' ) ) ) {
+			} elseif ( in_array( $sortby, array( 'last_name', 'first_name', 'nickname' ) ) ) {
 
 				$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $sortby . '_c' => array(
 					'key'       => $sortby,
