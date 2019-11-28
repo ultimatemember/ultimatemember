@@ -591,24 +591,25 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @return mixed
 		 */
 		function field_value( $key, $default = false, $data = null ) {
+			// preview in backend
+			if ( isset( UM()->user()->preview ) && UM()->user()->preview ) {
+				if ( $this->set_mode == 'login' || $this->set_mode == 'register' ) {
+					return '';
+				} else {
+					$val = um_user( $key );
+					if ( ! empty( $val ) ) {
+						return $val;
+					} else {
+						return '';
+					}
+				}
+			}
 
-			if( defined('DOING_AJAX') && DOING_AJAX ) return '';
-			
 			if ( isset( $_SESSION ) && isset( $_SESSION['um_social_profile'][ $key ] ) && isset( $this->set_mode ) && $this->set_mode == 'register' ) {
 				return $_SESSION['um_social_profile'][ $key ];
 			}
 
 			$type = ( isset( $data['type'] ) ) ? $data['type'] : '';
-
-			// preview in backend
-			if ( isset( UM()->user()->preview ) && UM()->user()->preview ) {
-				$submitted = um_user( 'submitted' );
-				if ( ! empty( $submitted[ $key ] ) ) {
-					return $submitted[ $key ];
-				} else {
-					return __( 'Undefined', 'ultimate-member' );
-				}
-			}
 
 			// normal state
 			if ( isset( UM()->form()->post_form[ $key ] ) ) {
@@ -1928,11 +1929,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			um_fetch_user( $_um_profile_id );
 
 			// do not show passwords
-			if ( isset( UM()->user()->preview ) && UM()->user()->preview && ! is_admin() ) {
-				if ( $data['type'] == 'password' ) {
-					return '';
-				}
-			}
+//			if ( isset( UM()->user()->preview ) && UM()->user()->preview /*&& ! is_admin()*/ ) {
+//				if ( $data['type'] == 'password' ) {
+//					return '';
+//				}
+//			}
 
 			// Stop return empty values build field attributes:
 
