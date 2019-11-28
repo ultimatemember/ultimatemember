@@ -134,7 +134,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 * @return array
 		 */
 		function display_logout_form( $args ) {
-			if ( is_user_logged_in() && isset( $args['mode'] ) && $args['mode'] == 'login' ) {
+			if ( is_user_logged_in() && isset( $args['mode'] ) && $args['mode'] == 'login' && ! is_admin() ) {
 
 				if ( get_current_user_id() != um_user( 'ID' ) ) {
 					um_fetch_user( get_current_user_id() );
