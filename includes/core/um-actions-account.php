@@ -422,12 +422,7 @@ function um_before_account_notifications( $args = array() ) {
 	$output = UM()->account()->get_tab_fields( 'notifications', $args );
 	if ( substr_count( $output, '_enable_new_' ) ) { ?>
 
-		<div class="um-field">
-			<div class="um-field-label">
-				<label for=""><?php _e( 'Email me when', 'ultimate-member' ); ?></label>
-				<div class="um-clear"></div>
-			</div>
-		</div>
+		<p><?php _e( 'Select what email notifications do you want to receive', 'ultimate-member' ); ?></p>
 
 	<?php }
 }
