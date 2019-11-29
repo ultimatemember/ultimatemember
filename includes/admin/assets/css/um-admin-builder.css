@@ -302,3 +302,17 @@
 	box-sizing: border-box;
 	width: 100%;
 }
+
+.um-admin-preview-overlay {
+	position: absolute;
+	top:0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(255,255,255,0);
+	z-index: 100;
+}
+
+#UM_preview_form .um-admin-modal-body {
+	position: relative;
+}
