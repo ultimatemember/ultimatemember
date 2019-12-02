@@ -881,7 +881,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$html = "<select class=\"um-hidden-multi-selects\" $data_attr>$options</select>";
 			$html .= "<ul class=\"um-multi-selects-list" . ( ! empty( $sorting ) ? ' um-sortable-multi-selects' : '' ) . "\" $data_attr>";
 
-			if ( $sorting ) {
+			if ( $sorting && is_array( $values ) ) {
 				ksort( $values );
 			}
 
