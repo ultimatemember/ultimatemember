@@ -567,7 +567,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$attrs['label'] = strip_tags( $attrs['label'] );
 					}
 
-					asort( $attrs['options'] ); ?>
+					ksort( $attrs['options'] ); ?>
 
 					<select class="um-s1" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?>"
 					        data-placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
