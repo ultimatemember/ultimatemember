@@ -34,7 +34,8 @@ function um_get_data_for_directory( directory, search_key ) {
 	} else {
 		if ( typeof data[ search_key ] !== 'undefined' ) {
 			try {
-				data[ search_key ] = decodeURI( data[ search_key ] );
+				//data[ search_key ] = decodeURI( data[ search_key ] );
+				data[ search_key ] = decodeURIComponent( data[ search_key ] );
 			} catch(e) { // catches a malformed URI
 				console.error(e);
 			}
@@ -54,6 +55,15 @@ function um_set_url_from_data( directory, key, value ) {
 	var new_data = {};
 
 	if ( jQuery.isArray( value ) ) {
+		jQuery.each( value, function( i ) {
+			value[ i ] = encodeURIComponent( value[ i ] );
+		});
+		value = value.join( '||' );
+	} else if ( ! jQuery.isNumeric( value ) ) {
+		value = value.split( '||' );
+		jQuery.each( value, function( i ) {
+			value[ i ] = encodeURIComponent( value[ i ] );
+		});
 		value = value.join( '||' );
 	}
 
@@ -91,7 +101,6 @@ function um_set_url_from_data( directory, key, value ) {
 	query_strings = wp.hooks.applyFilters( 'um_member_directory_url_attrs', query_strings );
 
 	var query_string = '?' + query_strings.join( '&' );
-
 	if ( query_string === '?' ) {
 		query_string = '';
 	}
