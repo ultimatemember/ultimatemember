@@ -144,7 +144,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [topic](https://wordpress.org/support/topic/version-2-1-4/)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.1.2: November 27, 2019 =
+= 2.1.2: December 3, 2019 =
 
 * Enhancements:
 
@@ -154,6 +154,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Added returning only existed values for select-type filters
   - Added checking privacy for custom fields in filters and general search, exclude private fields
   - Added Form fields validation for E-mail( not unique )
+  - Added $user_id attribute in update profile hooks for proper callbacks
 
 * Bugfixes:
 
@@ -170,6 +171,8 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed endless recursion in the function um_check_conditions_on_submit()
   - Fixed issue that appears if we try to update several plugins at once
   - Fixed using different templates for different member directories
+  - Fixed form previews, added overlay and displayed buttons
+  - Fixed wp-admin/admin-post.php access issue
 
 = 2.1.1: November 12, 2019 =
 
