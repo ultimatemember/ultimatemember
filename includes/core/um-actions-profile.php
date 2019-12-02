@@ -388,19 +388,20 @@ function um_user_edit_profile( $args ) {
 	 * @title um_user_pre_updating_profile
 	 * @description Some actions before profile submit
 	 * @input_vars
-	 * [{"var":"$userinfo","type":"array","desc":"Submitted User Data"}]
+	 * [{"var":"$userinfo","type":"array","desc":"Submitted User Data"},
+	 * {"var":"$user_id","type":"int","desc":"User ID"}]
 	 * @change_log
 	 * ["Since: 2.0"]
-	 * @usage add_action( 'um_user_pre_updating_profile', 'function_name', 10, 1 );
+	 * @usage add_action( 'um_user_pre_updating_profile', 'function_name', 10, 2 );
 	 * @example
 	 * <?php
-	 * add_action( 'um_user_pre_updating_profile', 'my_user_pre_updating_profile', 10, 1 );
-	 * function my_user_pre_updating_profile( $userinfo ) {
+	 * add_action( 'um_user_pre_updating_profile', 'my_user_pre_updating_profile', 10, 2 );
+	 * function my_user_pre_updating_profile( $userinfo, $user_id ) {
 	 *     // your code here
 	 * }
 	 * ?>
 	 */
-	do_action( 'um_user_pre_updating_profile', $to_update );
+	do_action( 'um_user_pre_updating_profile', $to_update, $user_id );
 
 	/**
 	 * UM hook
@@ -409,21 +410,22 @@ function um_user_edit_profile( $args ) {
 	 * @title um_user_pre_updating_profile_array
 	 * @description Change submitted data before update profile
 	 * @input_vars
-	 * [{"var":"$to_update","type":"array","desc":"Profile data upgrade"}]
+	 * [{"var":"$to_update","type":"array","desc":"Profile data upgrade"},
+	 * {"var":"$user_id","type":"int","desc":"User ID"}]
 	 * @change_log
 	 * ["Since: 2.0"]
 	 * @usage
-	 * <?php add_filter( 'um_user_pre_updating_profile_array', 'function_name', 10, 1 ); ?>
+	 * <?php add_filter( 'um_user_pre_updating_profile_array', 'function_name', 10, 2 ); ?>
 	 * @example
 	 * <?php
-	 * add_filter( 'um_user_pre_updating_profile_array', 'my_user_pre_updating_profile', 10, 1 );
-	 * function my_user_pre_updating_profile( $to_update ) {
+	 * add_filter( 'um_user_pre_updating_profile_array', 'my_user_pre_updating_profile', 10, 2 );
+	 * function my_user_pre_updating_profile( $to_update, $user_id ) {
 	 *     // your code here
 	 *     return $to_update;
 	 * }
 	 * ?>
 	 */
-	$to_update = apply_filters( 'um_user_pre_updating_profile_array', $to_update );
+	$to_update = apply_filters( 'um_user_pre_updating_profile_array', $to_update, $user_id );
 
 
 	if ( is_array( $to_update ) ) {
@@ -459,21 +461,22 @@ function um_user_edit_profile( $args ) {
 	 * @title um_user_pre_updating_files_array
 	 * @description Change submitted files before update profile
 	 * @input_vars
-	 * [{"var":"$files","type":"array","desc":"Profile data files"}]
+	 * [{"var":"$files","type":"array","desc":"Profile data files"},
+	 * {"var":"$user_id","type":"int","desc":"User ID"}]
 	 * @change_log
 	 * ["Since: 2.0"]
 	 * @usage
-	 * <?php add_filter( 'um_user_pre_updating_files_array', 'function_name', 10, 1 ); ?>
+	 * <?php add_filter( 'um_user_pre_updating_files_array', 'function_name', 10, 2 ); ?>
 	 * @example
 	 * <?php
-	 * add_filter( 'um_user_pre_updating_files_array', 'my_user_pre_updating_files', 10, 1 );
-	 * function my_user_pre_updating_files( $files ) {
+	 * add_filter( 'um_user_pre_updating_files_array', 'my_user_pre_updating_files', 10, 2 );
+	 * function my_user_pre_updating_files( $files, $user_id ) {
 	 *     // your code here
 	 *     return $files;
 	 * }
 	 * ?>
 	 */
-	$files = apply_filters( 'um_user_pre_updating_files_array', $files );
+	$files = apply_filters( 'um_user_pre_updating_files_array', $files, $user_id );
 
 	if ( ! empty( $files ) && is_array( $files ) ) {
 		UM()->uploader()->replace_upload_dir = true;
