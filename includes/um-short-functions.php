@@ -1385,7 +1385,7 @@ function um_can_view_field( $data ) {
 				if ( ! is_user_logged_in() ) {
 					$can_view = false;
 				} else {
-					if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) && $data['roles'] ) {
+					if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) && ! empty( $data['roles'] ) ) {
 						if ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) {
 							$can_view = false;
 						}
@@ -1396,7 +1396,7 @@ function um_can_view_field( $data ) {
 				if ( ! is_user_logged_in() ) {
 					$can_view = false;
 				} else {
-					if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) && ! um_is_user_himself() && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) ) {
+					if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) && ! um_is_user_himself() && ( empty( $current_user_roles ) || ( ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) ) ) {
 						$can_view = false;
 					}
 				}
