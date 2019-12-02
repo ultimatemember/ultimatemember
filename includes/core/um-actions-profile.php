@@ -314,7 +314,7 @@ function um_user_edit_profile( $args ) {
 
 				//update empty user meta
 				if ( ! isset( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == '' ) {
-					update_user_meta( um_user( 'ID' ), $key, '' );
+					update_user_meta( $user_id, $key, '' );
 				}
 			}
 
@@ -328,7 +328,7 @@ function um_user_edit_profile( $args ) {
 
 				// update empty user meta
 				if ( ! isset( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == '' ) {
-					update_user_meta( um_user( 'ID' ), $key, array() );
+					update_user_meta( $user_id, $key, array() );
 				}
 			}
 
@@ -338,7 +338,7 @@ function um_user_edit_profile( $args ) {
 
 					if ( um_is_temp_file( $args['submitted'][ $key ] ) || $args['submitted'][ $key ] == 'empty_file' ) {
 						$files[ $key ] = $args['submitted'][ $key ];
-					} elseif( um_is_file_owner( UM()->uploader()->get_upload_base_url() . um_user( 'ID' ) . '/' . $args['submitted'][ $key ], um_user( 'ID' ) ) ) {
+					} elseif( um_is_file_owner( UM()->uploader()->get_upload_base_url() . $user_id . '/' . $args['submitted'][ $key ], $user_id ) ) {
 
 					} else {
 						$files[ $key ] = 'empty_file';
@@ -378,7 +378,7 @@ function um_user_edit_profile( $args ) {
 			$to_update['role'] = $args['submitted']['role'];
 		}
 
-		$args['roles_before_upgrade'] = UM()->roles()->get_all_user_roles( um_user( 'ID' ) );
+		$args['roles_before_upgrade'] = UM()->roles()->get_all_user_roles( $user_id );
 	}
 
 	/**
@@ -449,7 +449,7 @@ function um_user_edit_profile( $args ) {
 		 * }
 		 * ?>
 		 */
-		do_action( 'um_after_user_updated', um_user( 'ID' ), $args, $to_update );
+		do_action( 'um_after_user_updated', $user_id, $args, $to_update );
 	}
 
 	/**
@@ -477,7 +477,7 @@ function um_user_edit_profile( $args ) {
 
 	if ( ! empty( $files ) && is_array( $files ) ) {
 		UM()->uploader()->replace_upload_dir = true;
-		UM()->uploader()->move_temporary_files( um_user( 'ID' ), $files );
+		UM()->uploader()->move_temporary_files( $user_id, $files );
 		UM()->uploader()->replace_upload_dir = false;
 	}
 
@@ -523,11 +523,11 @@ function um_user_edit_profile( $args ) {
 	 * }
 	 * ?>
 	 */
-	do_action( 'um_update_profile_full_name', um_user( 'ID' ), $to_update );
+	do_action( 'um_update_profile_full_name', $user_id, $to_update );
 
 	if ( ! isset( $args['is_signup'] ) ) {
 
-		$url = um_user_profile_url( um_user( 'ID' ) );
+		$url = um_user_profile_url( $user_id );
 		exit( wp_redirect( um_edit_my_profile_cancel_uri( $url ) ) );
 	}
 }

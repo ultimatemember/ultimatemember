@@ -324,11 +324,6 @@ add_action( 'um_submit_form_login', 'um_submit_form_login', 10 );
  * @param $args
  */
 function um_add_submit_button_to_login( $args ) {
-	// DO NOT add when reviewing user's details
-	if ( isset( UM()->user()->preview ) && UM()->user()->preview /*== true && ! is_admin()*/ ) {
-		return;
-	}
-
 	/**
 	 * UM hook
 	 *

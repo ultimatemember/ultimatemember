@@ -1054,7 +1054,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						UM()->fields()->editing = true;
 					}
 
-					$output = do_shortcode('[ultimatemember form_id="' . $arg1 . '" /]');
+					$output = '<div class="um-admin-preview-overlay"></div>';
+					$output .= do_shortcode('[ultimatemember form_id="' . $arg1 . '" /]');
 
 					break;
 

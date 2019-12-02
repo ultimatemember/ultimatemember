@@ -139,6 +139,11 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 
 			}
 
+			if ( act_id === 'um_admin_preview_form' ) {
+				//fix for overlay in scrollable preview modal
+				jQuery('.um-admin-preview-overlay').css('height', jQuery('.um-admin-preview-overlay').siblings('.um').outerHeight(true)*1 + 20 + 'px' );
+			}
+
 			um_init_tooltips();
 
 			um_admin_init_datetimepicker();

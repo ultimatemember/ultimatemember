@@ -464,9 +464,6 @@ add_action( 'um_submit_form_register', 'um_submit_form_register', 10 );
  * @param $args
  */
 function um_add_submit_button_to_register( $args ) {
-	// DO NOT add when reviewing user's details
-	if ( isset( UM()->user()->preview ) && UM()->user()->preview == true && is_admin() ) return;
-
 	$primary_btn_word = $args['primary_btn_word'];
 	/**
 	 * UM hook
