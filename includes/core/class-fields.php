@@ -1928,13 +1928,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			um_fetch_user( $_um_profile_id );
 
-			// do not show passwords
-//			if ( isset( UM()->user()->preview ) && UM()->user()->preview /*&& ! is_admin()*/ ) {
-//				if ( $data['type'] == 'password' ) {
-//					return '';
-//				}
-//			}
-
 			// Stop return empty values build field attributes:
 
 			if ( $visibility == 'view' && $this->set_mode == 'register' ) {
