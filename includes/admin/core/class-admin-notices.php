@@ -44,7 +44,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			$this->exif_extension_notice();
 			$this->show_update_messages();
 			$this->check_wrong_install_folder();
-			$this->admin_notice_opt_in();
+			//$this->admin_notice_opt_in();
 			$this->need_upgrade();
 			$this->check_wrong_licenses();
 
