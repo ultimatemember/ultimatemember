@@ -161,6 +161,8 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				}
 			}
 
+			UM()->fields()->set_id = 'um_password_id';
+
 			/**
 			 * @var $mode
 			 * @var $template
