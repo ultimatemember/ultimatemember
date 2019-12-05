@@ -672,7 +672,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 */
 		function load_metabox_directory( $object, $box ) {
 			$box['id'] = str_replace( 'um-admin-form-', '', $box['id'] );
-			include_once UM()->admin()->templates_path . 'directory/'. $box['id'] . '.php';
+
+			preg_match('#\{.*?\}#s', $box['id'], $matches );
+
+			if ( isset( $matches[0] ) ) {
+				$path = $matches[0];
+				$box['id'] = preg_replace('~(\\{[^}]+\\})~','', $box['id'] );
+			} else {
+				$path = um_path;
+			}
+
+			$path = str_replace('{','', $path );
+			$path = str_replace('}','', $path );
+
+
+			include_once $path . 'includes/admin/templates/directory/'. $box['id'] . '.php';
 			wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_directory_nonce' );
 		}
 
