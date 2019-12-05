@@ -245,6 +245,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'first_name'            => __( 'First name', 'ultimate-member' ),
 				'last_name'             => __( 'Last name', 'ultimate-member' ),
 				'display_name'          => __( 'Display name', 'ultimate-member' ),
+				'last_first_name'       => __( 'Last & First name', 'ultimate-member' ),
 				'last_login'            => __( 'Last login', 'ultimate-member' ),
 
 			) );
@@ -1150,6 +1151,22 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						'compare'   => 'NOT EXISTS',
 					),
 				);
+				unset( $this->query_args['order'] );
+
+			} elseif ( $sortby == 'last_first_name' ) {
+
+				$this->query_args['meta_query'][] = array(
+					'last_name_c'   => array(
+						'key'       => 'last_name',
+						'compare'   => 'EXISTS',
+					),
+					'first_name_c'  => array(
+						'key'       => 'first_name',
+						'compare'   => 'EXISTS',
+					),
+				);
+
+				$this->query_args['orderby'] = array( 'last_name_c' => 'ASC', 'first_name_c' => 'ASC' );
 				unset( $this->query_args['order'] );
 
 			} else {
