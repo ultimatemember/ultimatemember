@@ -144,6 +144,12 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [topic](https://wordpress.org/support/topic/version-2-1-4/)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
+= 2.1.3: December xx, 2019 =
+
+* Enhancements:
+
+  - Added sorting by Last & First name
+
 = 2.1.2: December 4, 2019 =
 
 * Enhancements:
