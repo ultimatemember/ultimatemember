@@ -464,3 +464,99 @@ function um_disable_native_email_notificatiion( $changed, $user_id ) {
 	add_filter( 'send_email_change_email', '__return_false' );
 }
 add_action( 'um_account_pre_update_profile', 'um_disable_native_email_notificatiion', 10, 2 );
+
+
+/**
+ * Add export and erase user's data in privacy tab
+ *
+ * @param $args
+ */
+add_action( 'um_after_account_privacy', 'um_after_account_privacy' );
+function um_after_account_privacy( $args ) {
+	?>
+
+	<div class="um-field um-field-export_data">
+		<div class="um-field-label">
+			<label>
+				<?php echo esc_html__( 'Download your data', 'ultimate-member' ); ?>
+			</label>
+			<span class="um-tip um-tip-w" original-title="<?php echo esc_html__( 'You can request a file with the information that we believe is most relevant and useful to you.', 'ultimate-member' ); ?>">
+				<i class="um-icon-help-circled"></i>
+			</span>
+			<div class="um-clear"></div>
+		</div>
+		<label name="um-export-data">
+			<?php echo esc_html__( 'Enter your current password to confirm export of your personal data.', 'ultimate-member' ); ?>
+		</label>
+		<div class="um-field-area">
+			<input id="um-export-data" type="password" placeholder="<?php echo esc_html__( 'Password', 'ultimate-member' )?>">
+			<div class="um-field-error um-export-data">
+				<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php echo esc_html__( 'You must enter a password', 'ultimate-member' ); ?>
+			</div>
+			<div class="um-field-area-response um-export-data"></div>
+		</div>
+		<a class="um-request-button um-export-data-button" data-action="um-export-data" href="javascript:void(0);">
+			<?php echo esc_html__( 'Request data', 'ultimate-member' ); ?>
+		</a>
+	</div>
+
+	<div class="um-field um-field-export_data">
+		<div class="um-field-label">
+			<label>
+				<?php echo esc_html__( 'Erase of your data', 'ultimate-member' ); ?>
+			</label>
+			<span class="um-tip um-tip-w" original-title="<?php echo esc_html__( 'You can request erasing of the data that we have about you.', 'ultimate-member' ); ?>">
+				<i class="um-icon-help-circled"></i>
+			</span>
+			<div class="um-clear"></div>
+		</div>
+		<label name="um-erase-data">
+			<?php echo esc_html__( 'Enter your current password to confirm the erasure of your personal data.', 'ultimate-member' ); ?>
+			<input id="um-erase-data" type="password" placeholder="<?php echo esc_html__( 'Password', 'ultimate-member' )?>">
+			<div class="um-field-error um-erase-data">
+				<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php echo esc_html__( 'You must enter a password', 'ultimate-member' ); ?>
+			</div>
+			<div class="um-field-area-response um-erase-data"></div>
+		</label>
+		<a class="um-request-button um-erase-data-button" data-action="um-erase-data" href="javascript:void(0);">
+			<?php echo esc_html__( 'Request data erase', 'ultimate-member' ); ?>
+		</a>
+	</div>
+
+	<?php
+}
+
+
+function um_request_user_data(){
+	UM()->check_ajax_nonce();
+
+	$user_id = get_current_user_id();
+	$password = $_POST['password'];
+	$user = get_userdata( $user_id );
+	$hash = $user->data->user_pass;
+
+	if ( wp_check_password( $password, $hash ) && isset( $_POST['request_action'] ) ) {
+
+		if ( $_POST['request_action'] == 'um-export-data' ) {
+			$request_id = wp_create_user_request( $user->data->user_email, 'export_personal_data' );
+		} elseif ( $_POST['request_action'] == 'um-erase-data' ) {
+			$request_id = wp_create_user_request( $user->data->user_email, 'remove_personal_data' );
+		}
+
+		if ( is_wp_error( $request_id ) ) {
+			$answer = $request_id->get_error_message();
+		} else {
+			wp_send_user_request( $request_id );
+			$answer = esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' );
+		}
+
+	} else {
+
+		$answer = esc_html__( 'The password you entered is incorrect.', 'ultimate-member' );
+
+	}
+
+	wp_send_json_success( array( 'answer' => esc_html( $answer ) ) );
+}
+add_action( 'wp_ajax_nopriv_um_request_user_data', 'um_request_user_data' );
+add_action( 'wp_ajax_um_request_user_data', 'um_request_user_data' );

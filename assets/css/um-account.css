@@ -206,3 +206,29 @@
 	font-weight: bold;
 	text-decoration: none !important;
 }
+
+.um-field-export_data .um-field-error {
+	display: none;
+}
+
+.um-field-export_data .um-field-area-response {
+	display: none;
+	line-height: 1.5;
+	padding: 10px 0;
+}
+
+.um-request-button {
+	display: inline-block;
+	background-color: #3ba1da;
+	border-radius: 5px;
+	color: #fff;
+	margin: 10px 0 0;
+	padding: 5px 10px;
+	text-decoration: none;
+}
+
+.um-request-button:hover {
+	background-color: #44b0ec;
+	color: #fff;
+	text-decoration: none;
+}
