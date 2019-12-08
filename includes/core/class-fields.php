@@ -22,6 +22,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 
 		/**
+		 * @var int form_id
+		 */
+		public $set_id = null;
+
+
+		/**
 		 * Fields constructor.
 		 */
 		function __construct() {
