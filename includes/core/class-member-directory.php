@@ -490,7 +490,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$values_array = ( ! empty( $users_roles['avail_roles'] ) && is_array( $users_roles['avail_roles'] ) ) ? array_keys( array_filter( $users_roles['avail_roles'] ) ) : array();
 					}
 
-					if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select','multiselect', 'checkbox', 'radio' ) ) ) {
+					if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ) ) ) {
 						$values_array = array_map( 'maybe_unserialize', $values_array );
 						$temp_values = array();
 						foreach ( $values_array as $values ) {
