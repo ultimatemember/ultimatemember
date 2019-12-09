@@ -2047,6 +2047,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$hook_after_user_name = ob_get_clean();
 
 			$data_array = array(
+				'card_anchor'           => substr( md5( $user_id ), 10, 5 ),
 				'id'                    => $user_id,
 				'role'                  => um_user( 'role' ),
 				'account_status'        => um_user( 'account_status' ),

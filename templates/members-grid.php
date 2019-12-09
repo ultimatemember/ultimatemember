@@ -9,7 +9,7 @@ $unique_hash = substr( md5( $args['form_id'] ), 10, 5 ); ?>
 		<# if ( data.length > 0 ) { #>
 			<# _.each( data, function( user, key, list ) { #>
 
-				<div class="um-member um-role-{{{user.role}}} {{{user.account_status}}} <?php if ( $cover_photos ) { echo 'with-cover'; } ?>">
+				<div id="um-member-{{{user.card_anchor}}}-<?php echo esc_attr( $unique_hash ) ?>" class="um-member um-role-{{{user.role}}} {{{user.account_status}}} <?php if ( $cover_photos ) { echo 'with-cover'; } ?>">
 
 					<span class="um-member-status {{{user.account_status}}}">
 						{{{user.account_status_name}}}
