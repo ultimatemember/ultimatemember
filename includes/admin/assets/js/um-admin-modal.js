@@ -387,13 +387,13 @@ jQuery(document).ready(function() {
 	jQuery(document.body).on('click', '#UM_fonticons a.um-admin-modal-back:not(.um-admin-modal-cancel)', function(){
 		var v_id = '';
 		var icon_selected = jQuery(this).attr('data-code');
-		if (icon_selected != ''){
+		if ( icon_selected != '' ) {
 			if ( jQuery(this).attr('data-modal') ) {
 				v_id = '#' + jQuery(this).attr('data-modal');
 			} else {
 				v_id = '.postbox';
 			}
-			jQuery( v_id ).find('input#_icon,input#_um_icon,input#notice__um_icon').val( icon_selected );
+			jQuery( v_id ).find('input#_icon,input#_um_icon,input#notice__um_icon,input#um_profile_tab__icon').val( icon_selected );
 			jQuery( v_id ).find('span.um-admin-icon-value').html('<i class="'+icon_selected+'"></i>');
 			jQuery( v_id ).find('.um-admin-icon-clear').show();
 		}
