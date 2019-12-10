@@ -128,6 +128,12 @@ $premium['unsplash'] = array(
 	'desc' => 'Allow users to select a profile cover photo from <a href="https://unsplash.com/" target="_blank">Unsplash</a> from their profile',
 );
 
+$premium['profile-tabs'] = array(
+	'url' => 'https://ultimatemember.com/extensions/profile-tabs/',
+	'name' => 'Profile Tabs',
+	'desc' => 'Allow users to add custom tabs to profiles',
+);
+
 $free['forumwp'] = array(
 	'url' => 'https://ultimatemember.com/extensions/forumwp/',
 	'name' => 'ForumWP',

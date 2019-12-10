@@ -37,6 +37,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_User_Bookmarks User_Bookmarks()
 	 * @method UM_Unsplash Unsplash()
 	 * @method UM_ForumWP ForumWP()
+	 * @method UM_Profile_Tabs Profile_Tabs()
 	 */
 	final class UM extends UM_Functions {
 
