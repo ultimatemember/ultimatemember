@@ -2125,6 +2125,35 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 
 		/**
+		 * Update limit query
+		 *
+		 * @param $user_query
+		 */
+		function pagination_changes( $user_query ) {
+			global $wpdb;
+
+			$directory_id = $this->get_directory_by_hash( $_POST['directory_id'] );
+			$directory_data = UM()->query()->post_data( $directory_id );
+
+			$qv = $user_query->query_vars;
+
+			$number = $qv['number'];
+			if ( ! empty( $directory_data['max_users'] ) && $qv['paged']*$qv['number'] > $directory_data['max_users'] ) {
+				$number = ( $qv['paged']*$qv['number'] - ( $qv['paged']*$qv['number'] - $directory_data['max_users'] ) ) % $qv['number'];
+			}
+
+			// limit
+			if ( isset( $qv['number'] ) && $qv['number'] > 0 ) {
+				if ( $qv['offset'] ) {
+					$user_query->query_limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['offset'], $number );
+				} else {
+					$user_query->query_limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['number'] * ( $qv['paged'] - 1 ), $number );
+				}
+			}
+		}
+
+
+		/**
 		 * Main Query function for getting members via AJAX
 		 */
 		function ajax_get_members() {
@@ -2238,7 +2267,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			add_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10, 6 );
 
+			add_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10, 1 );
+
 			$user_query = new \WP_User_Query( $this->query_args );
+
+			remove_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10 );
 
 			remove_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10 );
 

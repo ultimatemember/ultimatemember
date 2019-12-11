@@ -151,6 +151,12 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
   - Added sorting by Last & First name
 
+* Bugfixes:
+
+  - Fixed issues with pagination settings
+  - Fixed issues with member results JS template
+  - Fixed small CSS issues
+
 = 2.1.2: December 4, 2019 =
 
 * Enhancements:
