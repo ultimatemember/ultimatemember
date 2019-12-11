@@ -546,7 +546,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					}
 
 					if ( $attrs['metakey'] != 'role_select' && empty( $custom_dropdown ) ) {
-						$attrs['options'] = array_intersect( $attrs['options'], $values_array );
+						$attrs['options'] = array_intersect( array_map( 'stripslashes', $attrs['options'] ), $values_array );
 					} elseif ( ! empty( $custom_dropdown ) ) {
 						$attrs['options'] = array_intersect_key( $attrs['options'], array_flip( $values_array ) );
 					} else {
