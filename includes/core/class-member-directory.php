@@ -991,7 +991,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			// add roles to appear in directory
 			if ( ! empty( $directory_data['roles'] ) ) {
 				//since WP4.4 use 'role__in' argument
-				$this->query_args['role__in'] = maybe_unserialize( $directory_data['roles'] );
+				if ( ! empty( $this->query_args['role__in'] ) ) {
+					$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
+					$this->query_args['role__in'] = array_intersect( $this->query_args['role__in'], maybe_unserialize( $directory_data['roles'] ) );
+				} else {
+					$this->query_args['role__in'] = maybe_unserialize( $directory_data['roles'] );
+				}
 			}
 		}
 
