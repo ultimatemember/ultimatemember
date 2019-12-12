@@ -22,6 +22,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 
 		/**
+		 * @var int form_id
+		 */
+		public $set_id = null;
+
+
+		/**
 		 * Fields constructor.
 		 */
 		function __construct() {
@@ -3869,75 +3875,81 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				/* Default */
 				default:
 
-					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
+					$_field_value = $this->field_value( $key, $default, $data );
 
-					if ( isset( $data['label'] ) || ! empty( $data['icon'] ) ) {
+					if ( ! isset( $_field_value ) || $_field_value == '' ) {
+						$output = '';
+					} else {
+						$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
-						if ( ! isset( $data['label'] ) ) {
-							$data['label'] = '';
+						if ( isset( $data['label'] ) || ! empty( $data['icon'] ) ) {
+
+							if ( ! isset( $data['label'] ) ) {
+								$data['label'] = '';
+							}
+
+							$output .= $this->field_label( $data['label'], $key, $data );
 						}
 
-						$output .= $this->field_label( $data['label'], $key, $data );
+						$res = $this->field_value( $key, $default, $data );
+
+						if ( ! empty( $res ) ) {
+							$res = stripslashes( $res );
+						}
+
+						$data['is_view_field'] = true;
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_view_field
+						 * @description Change field HTML on view mode
+						 * @input_vars
+						 * [{"var":"$output","type":"string","desc":"Field HTML"},
+						 * {"var":"$data","type":"string","desc":"Field Data"},
+						 * {"var":"$type","type":"string","desc":"Field Type"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage add_filter( 'um_view_field', 'function_name', 10, 3 );
+						 * @example
+						 * <?php
+						 * add_filter( 'um_view_field', 'my_view_field', 10, 3 );
+						 * function my_form_edit_field( $output, $data, $type ) {
+						 *     // your code here
+						 *     return $output;
+						 * }
+						 * ?>
+						 */
+						$res = apply_filters( 'um_view_field', $res, $data, $type );
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_view_field_value_{$type}
+						 * @description Change field HTML on view mode by field type
+						 * @input_vars
+						 * [{"var":"$output","type":"string","desc":"Field HTML"},
+						 * {"var":"$data","type":"string","desc":"Field Data"}]
+						 * @change_log
+						 * ["Since: 2.0"]
+						 * @usage add_filter( 'um_view_field_value_{$type}', 'function_name', 10, 2 );
+						 * @example
+						 * <?php
+						 * add_filter( 'um_view_field_value_{$type}', 'my_view_field', 10, 2 );
+						 * function my_form_edit_field( $output, $data ) {
+						 *     // your code here
+						 *     return $output;
+						 * }
+						 * ?>
+						 */
+						$res = apply_filters( "um_view_field_value_{$type}", $res, $data );
+
+						$output .= '<div class="um-field-area">';
+						$output .= '<div class="um-field-value">' . $res . '</div>';
+						$output .= '</div>';
+
+						$output .= '</div>';
 					}
-
-					$res = $this->field_value( $key, $default, $data );
-
-					if ( ! empty( $res ) ) {
-						$res = stripslashes( $res );
-					}
-
-					$data['is_view_field'] = true;
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_view_field
-					 * @description Change field HTML on view mode
-					 * @input_vars
-					 * [{"var":"$output","type":"string","desc":"Field HTML"},
-					 * {"var":"$data","type":"string","desc":"Field Data"},
-					 * {"var":"$type","type":"string","desc":"Field Type"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_filter( 'um_view_field', 'function_name', 10, 3 );
-					 * @example
-					 * <?php
-					 * add_filter( 'um_view_field', 'my_view_field', 10, 3 );
-					 * function my_form_edit_field( $output, $data, $type ) {
-					 *     // your code here
-					 *     return $output;
-					 * }
-					 * ?>
-					 */
-					$res = apply_filters( 'um_view_field', $res, $data, $type );
-					/**
-					 * UM hook
-					 *
-					 * @type filter
-					 * @title um_view_field_value_{$type}
-					 * @description Change field HTML on view mode by field type
-					 * @input_vars
-					 * [{"var":"$output","type":"string","desc":"Field HTML"},
-					 * {"var":"$data","type":"string","desc":"Field Data"}]
-					 * @change_log
-					 * ["Since: 2.0"]
-					 * @usage add_filter( 'um_view_field_value_{$type}', 'function_name', 10, 2 );
-					 * @example
-					 * <?php
-					 * add_filter( 'um_view_field_value_{$type}', 'my_view_field', 10, 2 );
-					 * function my_form_edit_field( $output, $data ) {
-					 *     // your code here
-					 *     return $output;
-					 * }
-					 * ?>
-					 */
-					$res = apply_filters( "um_view_field_value_{$type}", $res, $data );
-
-					$output .= '<div class="um-field-area">';
-					$output .= '<div class="um-field-value">' . $res . '</div>';
-					$output .= '</div>';
-
-					$output .= '</div>';
 
 					break;
 

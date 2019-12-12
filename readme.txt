@@ -42,6 +42,7 @@ Read about all of the plugin's features at [Ultimate Member](https://ultimatemem
 
 Ultimate Member has a range of extensions that allow you to extend the power of the plugin. You can purchase all of these extensions at a significant discount with our [All Access Pass](https://ultimatemember.com/pricing/) or you can purchase extensions individually.
 
+* [Profile Tabs](https://ultimatemember.com/extensions/profile-tabs/) - Allow users to add custom tabs to profiles
 * [Unsplash](https://ultimatemember.com/extensions/unsplash/) - Allow users to select a profile cover photo from [Unsplash](https://unsplash.com/) from their profile
 * [User Bookmarks](https://ultimatemember.com/extensions/user-bookmarks/) - Allow users to bookmark content from your website
 * [User Photos](https://ultimatemember.com/extensions/user-photos/) - Allow users to upload photos to their profile
@@ -149,6 +150,12 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * Enhancements:
 
   - Added sorting by Last & First name
+
+* Bugfixes:
+
+  - Fixed issues with pagination settings
+  - Fixed issues with member results JS template
+  - Fixed small CSS issues
 
 = 2.1.2: December 4, 2019 =
 

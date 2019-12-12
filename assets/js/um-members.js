@@ -559,16 +559,22 @@ function um_run_search( directory ) {
 	directory.data( 'page', 1 );
 	um_set_url_from_data( directory, 'page', '' );
 
-	var show_after_search = directory.data('must-search');
-	if ( show_after_search === 1 ) {
-		var search = um_get_search( directory );
-		if ( directory.find( '.um-members-filter-remove' ).length === 0 && ! search ) {
-			directory.data( 'searched', 0 );
-			directory.find('.um-members-grid, .um-members-list').remove();
-			directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', true );
-			directory.find( '.um-member-directory-view-type' ).addClass( 'um-disabled' );
-			um_members_hide_preloader( directory );
-			return;
+
+	var ignore_after_search = false;
+	ignore_after_search = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', ignore_after_search );
+
+	if ( ! ignore_after_search ) {
+		var show_after_search = directory.data('must-search');
+		if ( show_after_search === 1 ) {
+			var search = um_get_search( directory );
+			if ( directory.find( '.um-members-filter-remove' ).length === 0 && ! search ) {
+				directory.data( 'searched', 0 );
+				directory.find('.um-members-grid, .um-members-list').remove();
+				directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', true );
+				directory.find( '.um-member-directory-view-type' ).addClass( 'um-disabled' );
+				um_members_hide_preloader( directory );
+				return;
+			}
 		}
 	}
 
@@ -1108,16 +1114,21 @@ jQuery(document.body).ready( function() {
 			directory.find('.um-clear-filters').show();
 		}
 
-		var show_after_search = directory.data('must-search');
-		if ( show_after_search === 1 ) {
-			var search = um_get_search( directory );
-			if ( directory.find( '.um-members-filter-remove' ).length === 0 && ! search ) {
-				directory.data( 'searched', 0 );
-				directory.find('.um-members-grid, .um-members-list').remove();
-				directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', true );
-				directory.find( '.um-member-directory-view-type' ).addClass( 'um-disabled' );
-				um_members_hide_preloader( directory );
-				return;
+		var ignore_after_search = false;
+		ignore_after_search = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', ignore_after_search );
+
+		if ( ! ignore_after_search ) {
+			var show_after_search = directory.data('must-search');
+			if ( show_after_search === 1 ) {
+				var search = um_get_search( directory );
+				if ( directory.find( '.um-members-filter-remove' ).length === 0 && ! search ) {
+					directory.data( 'searched', 0 );
+					directory.find('.um-members-grid, .um-members-list').remove();
+					directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', true );
+					directory.find( '.um-member-directory-view-type' ).addClass( 'um-disabled' );
+					um_members_hide_preloader( directory );
+					return;
+				}
 			}
 		}
 
@@ -1211,16 +1222,21 @@ jQuery(document.body).ready( function() {
 			directory.find('.um-clear-filters').parents('.um-member-directory-header-row').removeClass( 'um-header-row-invisible' );
 		}
 
-		var show_after_search = directory.data('must-search');
-		if ( show_after_search === 1 ) {
-			var search = um_get_search( directory );
-			if ( ! search ) {
-				directory.data( 'searched', 0 );
-				directory.find('.um-members-grid, .um-members-list').remove();
-				directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', true );
-				directory.find( '.um-member-directory-view-type' ).addClass( 'um-disabled' );
-				um_members_hide_preloader( directory );
-				return;
+		var ignore_after_search = false;
+		ignore_after_search = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', ignore_after_search );
+
+		if ( ! ignore_after_search ) {
+			var show_after_search = directory.data('must-search');
+			if ( show_after_search === 1 ) {
+				var search = um_get_search( directory );
+				if ( ! search ) {
+					directory.data( 'searched', 0 );
+					directory.find('.um-members-grid, .um-members-list').remove();
+					directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', true );
+					directory.find( '.um-member-directory-view-type' ).addClass( 'um-disabled' );
+					um_members_hide_preloader( directory );
+					return;
+				}
 			}
 		}
 
@@ -1486,12 +1502,17 @@ jQuery(document.body).ready( function() {
 
 		});
 
-		var show_after_search = directory.data('must-search');
-		if ( show_after_search === 1 ) {
-			var search = um_get_search( directory );
-			var filters_data = um_get_filters_data( directory );
-			if ( ! filters_data.length && ! search ) {
-				return;
+		var ignore_after_search = false;
+		ignore_after_search = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', ignore_after_search );
+
+		if ( ! ignore_after_search ) {
+			var show_after_search = directory.data('must-search');
+			if ( show_after_search === 1 ) {
+				var search = um_get_search( directory );
+				var filters_data = um_get_filters_data( directory );
+				if ( ! filters_data.length && ! search ) {
+					return;
+				}
 			}
 		}
 
@@ -1611,17 +1632,21 @@ jQuery(document.body).ready( function() {
 				}
 			});
 
+			var ignore_after_search = false;
+			ignore_after_search = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', ignore_after_search );
 
-			var show_after_search = directory.data('must-search');
-			if ( show_after_search === 1 ) {
-				var search = um_get_search( directory );
-				var filters_data = um_get_filters_data( directory );
-				if ( ! filters_data.length && ! search ) {
-					directory.data( 'searched', 0 );
-					um_members_hide_preloader( directory );
-					return;
-				} else {
-					directory.data( 'searched', 1 );
+			if ( ! ignore_after_search ) {
+				var show_after_search = directory.data('must-search');
+				if ( show_after_search === 1 ) {
+					var search = um_get_search( directory );
+					var filters_data = um_get_filters_data( directory );
+					if ( ! filters_data.length && ! search ) {
+						directory.data( 'searched', 0 );
+						um_members_hide_preloader( directory );
+						return;
+					} else {
+						directory.data( 'searched', 1 );
+					}
 				}
 			}
 

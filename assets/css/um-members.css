@@ -161,7 +161,7 @@ body #content .um-directory a {
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
-      align-items: baseline;
+      align-items: center;
       flex-wrap: nowrap;
       width: 60%; }
       .um-directory .um-member-directory-header .um-member-directory-header-row .um-member-directory-search-line label {

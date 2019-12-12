@@ -43,6 +43,22 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			$this->js_baseurl = um_url . 'assets/js/';
 			$this->css_baseurl = um_url . 'assets/css/';
 
+			add_action( 'init',  array( &$this, 'scripts_enqueue_priority' ) );
+		}
+
+
+		/**
+		 *
+		 */
+		function scripts_enqueue_priority() {
+			add_action( 'wp_enqueue_scripts',  array( &$this, 'wp_enqueue_scripts' ), $this->get_priority() );
+		}
+
+
+		/**
+		 * @return int
+		 */
+		function get_priority() {
 			/**
 			 * UM hook
 			 *
@@ -63,8 +79,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			 * }
 			 * ?>
 			 */
-			$priority = apply_filters( 'um_core_enqueue_priority', 100 );
-			add_action( 'wp_enqueue_scripts',  array( &$this, 'wp_enqueue_scripts' ), $priority );
+			return apply_filters( 'um_core_enqueue_priority', 100 );
 		}
 
 
@@ -80,7 +95,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 				wp_dequeue_script( 'select2');
 				wp_deregister_script('select2');
 			}
-			wp_register_script( 'select2', $this->js_baseurl . 'select2/select2.full.min.js', array( 'jquery', 'jquery-masonry' ), ultimatemember_version, true );
+			wp_register_script( 'select2', $this->js_baseurl . 'select2/select2.full.min.js', array( 'jquery' ), ultimatemember_version, true );
 
 			wp_register_script( 'um_scrollbar', $this->js_baseurl . 'simplebar' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
@@ -141,7 +156,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 
 			wp_register_script('um_dropdown', $this->js_baseurl . 'dropdown' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
-			wp_register_script('um_members', $this->js_baseurl . 'um-members' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'um_dropdown', 'wp-hooks', 'jquery-masonry' ), ultimatemember_version, true );
+			wp_register_script('um_members', $this->js_baseurl . 'um-members' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'jquery-ui-slider', 'um_dropdown', 'wp-hooks', 'jquery-masonry', 'um_scripts' ), ultimatemember_version, true );
 			wp_register_script('um_profile', $this->js_baseurl . 'um-profile' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'wp-i18n' ), ultimatemember_version, true );
 			wp_register_script('um_account', $this->js_baseurl . 'um-account' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 

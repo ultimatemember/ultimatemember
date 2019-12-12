@@ -47,6 +47,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'online'                => '2.1.1',
 			'private-content'       => '2.0.5',
 			'profile-completeness'  => '2.1.2',
+			'profile-tabs'          => '1.0.0',
 			'recaptcha'             => '2.1.2',
 			'reviews'               => '2.1.5',
 			'social-activity'       => '2.2.0',
@@ -64,7 +65,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 
 			/*rc*/
 			'user-notes'            => '2.0',
-			'profile-tabs'          => '1.6',
+
 
 			/*beta*/
 			'frontend-posting'      => '1.0',

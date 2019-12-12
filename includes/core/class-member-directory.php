@@ -490,7 +490,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$values_array = ( ! empty( $users_roles['avail_roles'] ) && is_array( $users_roles['avail_roles'] ) ) ? array_keys( array_filter( $users_roles['avail_roles'] ) ) : array();
 					}
 
-					if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select','multiselect', 'checkbox', 'radio' ) ) ) {
+					if ( ! empty( $values_array ) && in_array( $attrs['type'], array( 'select', 'multiselect', 'checkbox', 'radio' ) ) ) {
 						$values_array = array_map( 'maybe_unserialize', $values_array );
 						$temp_values = array();
 						foreach ( $values_array as $values ) {
@@ -546,7 +546,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					}
 
 					if ( $attrs['metakey'] != 'role_select' && empty( $custom_dropdown ) ) {
-						$attrs['options'] = array_intersect( $attrs['options'], $values_array );
+						$attrs['options'] = array_intersect( array_map( 'stripslashes', $attrs['options'] ), $values_array );
 					} elseif ( ! empty( $custom_dropdown ) ) {
 						$attrs['options'] = array_intersect_key( $attrs['options'], array_flip( $values_array ) );
 					} else {
@@ -568,7 +568,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$attrs['label'] = strip_tags( $attrs['label'] );
 					}
 
-					ksort( $attrs['options'] ); ?>
+					ksort( $attrs['options'] );
+
+					$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options_sorted', $attrs['options'], $attrs ); ?>
 
 					<select class="um-s1" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?>"
 					        data-placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
@@ -989,7 +991,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			// add roles to appear in directory
 			if ( ! empty( $directory_data['roles'] ) ) {
 				//since WP4.4 use 'role__in' argument
-				$this->query_args['role__in'] = maybe_unserialize( $directory_data['roles'] );
+				if ( ! empty( $this->query_args['role__in'] ) ) {
+					$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
+					$this->query_args['role__in'] = array_intersect( $this->query_args['role__in'], maybe_unserialize( $directory_data['roles'] ) );
+				} else {
+					$this->query_args['role__in'] = maybe_unserialize( $directory_data['roles'] );
+				}
 			}
 		}
 
@@ -2126,6 +2133,35 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 
 		/**
+		 * Update limit query
+		 *
+		 * @param $user_query
+		 */
+		function pagination_changes( $user_query ) {
+			global $wpdb;
+
+			$directory_id = $this->get_directory_by_hash( $_POST['directory_id'] );
+			$directory_data = UM()->query()->post_data( $directory_id );
+
+			$qv = $user_query->query_vars;
+
+			$number = $qv['number'];
+			if ( ! empty( $directory_data['max_users'] ) && $qv['paged']*$qv['number'] > $directory_data['max_users'] ) {
+				$number = ( $qv['paged']*$qv['number'] - ( $qv['paged']*$qv['number'] - $directory_data['max_users'] ) ) % $qv['number'];
+			}
+
+			// limit
+			if ( isset( $qv['number'] ) && $qv['number'] > 0 ) {
+				if ( $qv['offset'] ) {
+					$user_query->query_limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['offset'], $number );
+				} else {
+					$user_query->query_limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['number'] * ( $qv['paged'] - 1 ), $number );
+				}
+			}
+		}
+
+
+		/**
 		 * Main Query function for getting members via AJAX
 		 */
 		function ajax_get_members() {
@@ -2239,7 +2275,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			add_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10, 6 );
 
+			add_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10, 1 );
+
 			$user_query = new \WP_User_Query( $this->query_args );
+
+			remove_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10 );
 
 			remove_filter( 'get_meta_sql', array( &$this, 'change_meta_sql' ), 10 );
 

@@ -4,9 +4,9 @@
 <script type="text/template" id="tmpl-um-members-header">
 	<div class="um-members-intro">
 		<div class="um-members-total">
-			<# if ( data.users.length == 1 ) { #>
+			<# if ( data.pagination.total_users == 1 ) { #>
 				{{{data.pagination.header_single}}}
-			<# } else if ( data.users.length > 1 ) { #>
+			<# } else if ( data.pagination.total_users > 1 ) { #>
 				{{{data.pagination.header}}}
 			<# } #>
 		</div>
