@@ -189,7 +189,7 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 
 	<div class="um-member-directory-header um-form">
 
-		<?php do_action( 'um_members_directory_before_head', $args ); ?>
+		<?php do_action( 'um_members_directory_before_head', $args, $form_id ); ?>
 
 		<?php if ( $search && $show_search ) { ?>
 			<div class="um-member-directory-header-row um-member-directory-search-row">

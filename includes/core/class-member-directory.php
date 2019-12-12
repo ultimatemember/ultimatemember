@@ -942,14 +942,23 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 
 			$meta_query = array(
-				"relation"  => "OR",
+				'relation'  => 'OR',
 				array(
 					'key'       => 'hide_in_members',
-					'value'     => '',
 					'compare'   => 'NOT EXISTS'
 				),
-				array(
-					"relation"  => "AND",
+			);
+
+
+			if ( __( 'Yes', 'ultimate-member' ) == 'Yes' ) {
+				$meta_query[] = array(
+					'key'       => 'hide_in_members',
+					'value'     => 'Yes',
+					'compare'   => 'NOT LIKE',
+				);
+			} else {
+				$meta_query[] = array(
+					'relation'  => 'AND',
 					array(
 						'key'       => 'hide_in_members',
 						'value'     => __( 'Yes', 'ultimate-member' ),
@@ -960,8 +969,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						'value'     => 'Yes',
 						'compare'   => 'NOT LIKE'
 					),
-				),
-			);
+				);
+			}
 
 			$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
 		}
