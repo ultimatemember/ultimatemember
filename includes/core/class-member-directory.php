@@ -95,8 +95,39 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			add_filter( 'init', array( &$this, 'init_filter_types' ), 2 );
 
 			add_action( 'template_redirect', array( &$this, 'access_members' ), 555 );
+
+
+			//add_action( 'updated_user_meta', array( &$this, 'on_update_usermeta' ), 10, 4 );
 		}
 
+
+		function on_update_usermeta( $meta_id, $object_id, $meta_key, $_meta_value ) {
+
+			//$object_id //userID
+			//$meta_key // meta_key
+			//$_meta_value // value
+
+			$metakeys = get_option( 'um_usermeta_fields', array() );
+
+
+
+
+			global $wpdb;
+
+			$charset_collate = $wpdb->get_charset_collate();
+
+			$sql = "CREATE TABLE {$wpdb->prefix}um_followers (
+user_id int(11) unsigned NOT NULL auto_increment,
+time datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+user_id1 int(11) unsigned NOT NULL,
+user_id2 int(11) unsigned NOT NULL,
+PRIMARY KEY  (id)
+) $charset_collate;";
+
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			dbDelta( $sql );
+
+		}
 
 		/**
 		 * Getting member directory post ID via hash
