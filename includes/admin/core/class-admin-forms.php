@@ -523,7 +523,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$value = $this->get_field_value( $field_data );
 			$value_attr = ' value="' . $value . '" ';
 
-			$html = '<a href="javascript:void(0);" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="">' . __( 'Choose Icon', 'ultimate-member' ) . '</a>
+			$html = '<span class="um_admin_fonticon_wrapper"><a href="javascript:void(0);" class="button" data-modal="UM_fonticons" data-modal-size="normal" data-dynamic-content="um_admin_fonticon_selector" data-arg1="" data-arg2="" data-back="">' . __( 'Choose Icon', 'ultimate-member' ) . '</a>
 				<span class="um-admin-icon-value">';
 
 			if ( ! empty( $value ) ) {
@@ -540,7 +540,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 				$html .= '<span class="um-admin-icon-clear"><i class="um-icon-android-cancel"></i></span>';
 			}
 
-			$html .= '</span>';
+			$html .= '</span></span>';
 
 			return $html;
 		}

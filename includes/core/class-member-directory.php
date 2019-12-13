@@ -568,7 +568,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$attrs['label'] = strip_tags( $attrs['label'] );
 					}
 
-					ksort( $attrs['options'] ); ?>
+					ksort( $attrs['options'] );
+
+					$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options_sorted', $attrs['options'], $attrs ); ?>
 
 					<select class="um-s1" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?>"
 					        data-placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
@@ -989,7 +991,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			// add roles to appear in directory
 			if ( ! empty( $directory_data['roles'] ) ) {
 				//since WP4.4 use 'role__in' argument
-				$this->query_args['role__in'] = maybe_unserialize( $directory_data['roles'] );
+				if ( ! empty( $this->query_args['role__in'] ) ) {
+					$this->query_args['role__in'] = is_array( $this->query_args['role__in'] ) ? $this->query_args['role__in'] : array( $this->query_args['role__in'] );
+					$this->query_args['role__in'] = array_intersect( $this->query_args['role__in'], maybe_unserialize( $directory_data['roles'] ) );
+				} else {
+					$this->query_args['role__in'] = maybe_unserialize( $directory_data['roles'] );
+				}
 			}
 		}
 

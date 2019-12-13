@@ -14,6 +14,28 @@
     padding: 0 0 15px 0;
 }
 
+.um-form-table.um-top-label .um-forms-line[data-field_type="icon"] td label {
+    width: 100%;
+    display: block;
+    margin: 0 0 5px 0;
+}
+
+.um_admin_fonticon_wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.um-admin-icon-value {
+    line-height: 1;
+}
+
+.um_admin_fonticon_wrapper .um-admin-icon-value i {
+    top: 0;
+}
+
 input[type=text].um-forms-field.um-long-field,
 select.um-forms-field.um-long-field,
 textarea.um-forms-field.um-long-field {
