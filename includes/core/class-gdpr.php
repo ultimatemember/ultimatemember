@@ -32,9 +32,18 @@ if ( ! class_exists( 'um\core\GDPR' ) ) {
 		 * @param $args
 		 */
 		function display_option( $args ) {
+
 			if ( isset( $args['use_gdpr'] ) && $args['use_gdpr'] == 1 ) {
-				require um_path . 'templates/gdpr-register.php';
+				
+				$template_path = trailingslashit( get_stylesheet_directory() ). '/ultimate-member/templates/gdpr-register.php';
+
+				if ( file_exists( $template_path ) ) {
+		            require $template_path;
+		        } else {
+		            require um_path . 'templates/gdpr-register.php';
+		        }
 			}
+			
 		}
 
 
