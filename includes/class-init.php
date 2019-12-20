@@ -582,7 +582,14 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		function member_directory() {
 			if ( empty( $this->classes['member_directory'] ) ) {
-				$this->classes['member_directory'] = new um\core\Member_Directory();
+
+				$search_in_table = $this->options()->get( 'member_directory_own_table' );
+
+				if ( ! empty( $search_in_table ) ) {
+					$this->classes['member_directory'] = new um\core\Member_Directory_Meta();
+				} else {
+					$this->classes['member_directory'] = new um\core\Member_Directory();
+				}
 			}
 			return $this->classes['member_directory'];
 		}

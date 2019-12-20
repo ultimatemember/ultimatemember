@@ -539,7 +539,6 @@ PRIMARY KEY  (id)
 						return '';
 					}
 
-					// old
 					if ( isset( $attrs['metakey'] ) && strstr( $attrs['metakey'], 'role_' ) ) {
 						$shortcode_roles = get_post_meta( $directory_data['form_id'], '_um_roles', true );
 						$um_roles = UM()->roles()->get_roles( false );
@@ -551,6 +550,12 @@ PRIMARY KEY  (id)
 								if ( in_array( $key, $shortcode_roles ) ) {
 									$attrs['options'][ $key ] = $value;
 								}
+							}
+						} else {
+							$attrs['options'] = array();
+
+							foreach ( $um_roles as $key => $value ) {
+								$attrs['options'][ $key ] = $value;
 							}
 						}
 					}
@@ -1607,7 +1612,7 @@ PRIMARY KEY  (id)
 						$meta_query = array(
 							array(
 								'key'       => 'birth_date',
-								'value'     => array( $to_date, $from_date ),
+								'value'     => array( $from_date, $to_date ),
 								'compare'   => 'BETWEEN',
 								'type'      => 'DATE',
 								'inclusive' => true,
@@ -1616,7 +1621,7 @@ PRIMARY KEY  (id)
 
 						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
 
-						$this->custom_filters_in_query[ $field ] = array( $to_date, $from_date );
+						$this->custom_filters_in_query[ $field ] = array( $from_date, $to_date );
 
 						break;
 					case 'user_registered':
@@ -2067,6 +2072,7 @@ PRIMARY KEY  (id)
 		 * @return array
 		 */
 		function build_user_card_data( $user_id, $directory_data ) {
+
 			um_fetch_user( $user_id );
 
 			$dropdown_actions = $this->build_user_actions_list( $user_id );
@@ -2156,6 +2162,7 @@ PRIMARY KEY  (id)
 			}
 
 			$data_array = apply_filters( 'um_ajax_get_members_data', $data_array, $user_id, $directory_data );
+
 			um_reset_user_clean();
 
 			return $data_array;
@@ -2191,17 +2198,7 @@ PRIMARY KEY  (id)
 		}
 
 
-		/**
-		 * Main Query function for getting members via AJAX
-		 */
-		function ajax_get_members() {
-			UM()->check_ajax_nonce();
-
-			global $wpdb;
-
-			$directory_id = $this->get_directory_by_hash( $_POST['directory_id'] );
-			$directory_data = UM()->query()->post_data( $directory_id );
-
+		function predefined_no_caps( $directory_data ) {
 			//predefined result for user without capabilities to see other members
 			if ( is_user_logged_in() && ! UM()->roles()->um_user_can( 'can_view_all' ) ) {
 				$pagination_data = array(
@@ -2216,6 +2213,22 @@ PRIMARY KEY  (id)
 
 				wp_send_json_success( array( 'users' => array(), 'pagination' => $pagination_data ) );
 			}
+		}
+
+
+		/**
+		 * Main Query function for getting members via AJAX
+		 */
+		function ajax_get_members() {
+			UM()->check_ajax_nonce();
+
+			global $wpdb;
+
+			$directory_id = $this->get_directory_by_hash( $_POST['directory_id'] );
+			$directory_data = UM()->query()->post_data( $directory_id );
+
+			//predefined result for user without capabilities to see other members
+			$this->predefined_no_caps( $directory_data );
 
 			do_action( 'um_member_directory_before_query' );
 

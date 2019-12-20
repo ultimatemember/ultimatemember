@@ -27,10 +27,35 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 		 * Run setup
 		 */
 		function run_setup() {
+			$this->create_db();
 			$this->install_basics();
 			$this->install_default_forms();
 			$this->set_default_settings();
 			$this->set_default_role_meta();
+		}
+
+
+		/**
+		 * Create custom DB tables
+		 */
+		function create_db() {
+			global $wpdb;
+
+			$charset_collate = $wpdb->get_charset_collate();
+
+			$sql = "CREATE TABLE {$wpdb->prefix}um_metadata (
+umeta_id bigint(20) unsigned NOT NULL auto_increment,
+user_id bigint(20) unsigned NOT NULL default '0',
+um_key varchar(255) default NULL,
+um_value longtext default NULL,
+PRIMARY KEY  (umeta_id),
+KEY user_id_indx (user_id),
+KEY meta_key_indx (um_key),
+KEY meta_value_indx (um_value(191))
+) $charset_collate;";
+
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			dbDelta( $sql );
 		}
 
 

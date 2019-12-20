@@ -566,8 +566,8 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			}
 
 			if ( $exclude ) {
-				foreach( $exclude as $role ) {
-					unset( $roles[$role] );
+				foreach ( $exclude as $role ) {
+					unset ( $roles[ $role ] );
 				}
 			}
 

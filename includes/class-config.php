@@ -569,6 +569,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'custom_roles_increment'                => 1,
 				'um_profile_object_cache_stop'          => 0,
 				'rest_api_version'                      => '2.0',
+				'member_directory_own_table'         => 0,
 				'profile_show_html_bio'                 => 0,
 			);
 
