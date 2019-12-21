@@ -445,7 +445,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 * }
 			 * ?>
 			 */
-			$attrs = apply_filters( 'um_search_fields', $attrs, $field_key );
+			$attrs = apply_filters( 'um_search_fields', $attrs, $field_key, $directory_data['form_id'] );
 
 			$unique_hash = substr( md5( $directory_data['form_id'] ), 10, 5 );
 
