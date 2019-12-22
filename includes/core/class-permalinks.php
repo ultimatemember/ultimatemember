@@ -139,9 +139,9 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 			} else{
 			    if ( isset( $_SERVER['HTTP_HOST'] ) ) {
                   $host = $_SERVER['HTTP_HOST'];
-			    }else
+			    }else{
                   $host = 'localhost';
-                }
+			    }
             }
 
 			$page_url = ( is_ssl() ? 'https://' : 'http://' ) . $host . $_SERVER['REQUEST_URI'];
