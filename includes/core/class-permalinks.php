@@ -136,9 +136,14 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 			//check if WP-CLI there isn't set HTTP_HOST, use localhost instead
 			if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				$host = isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : 'localhost';
-			} else {
-				$host = $_SERVER['HTTP_HOST'];
-			}
+			} else{
+			    if ( isset( $_SERVER['HTTP_HOST'] ) ) {
+                  $host = $_SERVER['HTTP_HOST'];
+			    }else{
+                  $host = 'localhost';
+			    }
+            }
+
 			$page_url = ( is_ssl() ? 'https://' : 'http://' ) . $host . $_SERVER['REQUEST_URI'];
 
 			if ( $no_query_params == true ) {
