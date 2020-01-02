@@ -1446,7 +1446,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			if ( ! empty( $this->profile['role'] ) ) {
 				return $this->profile['role'];
 			} else {
-				if ( $this->profile['wp_roles'] == 'administrator' ) {
+				if ( ! empty( $this->profile['wp_roles'] ) && $this->profile['wp_roles'] == 'administrator' ) {
 					return 'admin';
 				} else {
 					return 'member';

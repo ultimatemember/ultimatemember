@@ -80,6 +80,113 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		}
 
 
+
+		function same_page_update_ajax() {
+			UM()->admin()->check_ajax_nonce();
+
+			if ( empty( $_POST['cb_func'] ) ) {
+				wp_send_json_error( __( 'Wrong callback', 'ultimate-member' ) );
+			}
+
+			if ( 'um_usermeta_fields' == $_POST['cb_func'] ) {
+				//first install metatable
+				global $wpdb;
+
+				$metakeys = array();
+				foreach ( UM()->builtin()->all_user_fields as $all_user_field ) {
+					if ( $all_user_field['type'] == 'user_location' ) {
+						$metakeys[] = $all_user_field['metakey'] . '_lat';
+						$metakeys[] = $all_user_field['metakey'] . '_lng';
+						$metakeys[] = $all_user_field['metakey'] . '_url';
+					} else {
+						$metakeys[] = $all_user_field['metakey'];
+					}
+				}
+
+				if ( is_multisite() ) {
+
+					$sites = get_sites( array( 'fields' => 'ids' ) );
+					foreach ( $sites as $blog_id ) {
+						$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
+					}
+
+				} else {
+					$blog_id = get_current_blog_id();
+					$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
+				}
+
+				//member directory data
+				$metakeys[] = 'um_member_directory_data';
+
+				$skip_fields = UM()->builtin()->get_fields_without_metakey();
+				$skip_fields = array_merge( $skip_fields, UM()->member_directory()->core_search_fields );
+
+				$real_usermeta = $wpdb->get_col( "SELECT DISTINCT meta_key FROM {$wpdb->usermeta}" );
+				$real_usermeta = ! empty( $real_usermeta ) ? $real_usermeta : array();
+				$real_usermeta = array_merge( $real_usermeta, array( 'um_member_directory_data' ) );
+
+				$wp_usermeta_option = array_intersect( array_diff( $metakeys, $skip_fields ), $real_usermeta );
+
+				update_option( 'um_usermeta_fields', $wp_usermeta_option );
+
+				update_option( 'um_member_directory_update_meta', time() );
+
+				wp_send_json_success();
+			} elseif ( 'um_get_metadata' == $_POST['cb_func'] ) {
+				global $wpdb;
+
+				$wp_usermeta_option = get_option( 'um_usermeta_fields', array() );
+
+				$count = $wpdb->get_var(
+					"SELECT COUNT(*) 
+					FROM {$wpdb->usermeta} 
+					WHERE meta_key IN ('" . implode( "','", $wp_usermeta_option ) . "')"
+				);
+
+				wp_send_json_success( array( 'count' => $count ) );
+			} elseif ( 'um_update_metadata_per_page' == $_POST['cb_func'] ) {
+
+				if ( empty( $_POST['page'] ) ) {
+					wp_send_json_error( __( 'Wrong data', 'ultimate-member' ) );
+				}
+
+				$per_page = 50;
+				$wp_usermeta_option = get_option( 'um_usermeta_fields', array() );
+
+				global $wpdb;
+				$metadata = $wpdb->get_results( $wpdb->prepare(
+					"SELECT * 
+					FROM {$wpdb->usermeta} 
+					WHERE meta_key IN ('" . implode( "','", $wp_usermeta_option ) . "')
+					LIMIT %d, %d",
+					( $_POST['page'] - 1 ) * $per_page,
+					$per_page
+				), ARRAY_A );
+
+				foreach ( $metadata as $metarow ) {
+					$wpdb->insert(
+						"{$wpdb->prefix}um_metadata",
+						array(
+							'user_id'   => $metarow['user_id'],
+							'um_key'    => $metarow['meta_key'],
+							'um_value'  => $metarow['meta_value'],
+						),
+						array(
+							'%d',
+							'%s',
+							'%s',
+						)
+					);
+				}
+
+				$from = ( $_POST['page'] * $per_page ) - $per_page + 1;
+				$to = $_POST['page'] * $per_page;
+
+				wp_send_json_success( array( 'message' => sprintf( __( 'Metadata from %s to %s was upgraded successfully...', 'ultimate-member' ), $from, $to ) ) );
+			}
+		}
+
+
 		/**
 		 *
 		 */
@@ -351,6 +458,22 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'default'   => UM()->options()->get_default( 'restricted_access_taxonomy_metabox' ),
 			) ) );
 
+			$latest_update = get_option( 'um_member_directory_update_meta', false );
+			$latest_truncate = get_option( 'um_member_directory_truncated', false );
+
+			$same_page_update = array(
+				'id'        => 'member_directory_own_table',
+				'type'      => 'same_page_update',
+				'label'     => __( 'Enable custom table for usermeta', 'ultimate-member' ),
+				'tooltip'   => __( 'Check this box if you would like to enable the use of a custom table for user metadata. Improved performance for member directory searches.', 'ultimate-member' ),
+			);
+
+			if ( empty( $latest_update ) || ( ! empty( $latest_truncate ) && $latest_truncate > $latest_update ) ) {
+				$same_page_update['upgrade_cb'] = 'sync_metatable';
+				$same_page_update['upgrade_description'] = '<p>' . __( 'We recommend creating a backup of your site before running the update process. Do not exit the page before the update process has complete.', 'ultimate-member' ) . '</p>
+<p>' . __( 'After clicking the <strong>"Run"</strong> button, the update process will start. All information will be displayed in the field below.', 'ultimate-member' ) . '</p>
+<p>' . __( 'If the update was successful, you will see a corresponding message. Otherwise, contact technical support if the update failed.', 'ultimate-member' ) . '</p>';
+			}
 
 			/**
 			 * UM hook
@@ -1143,12 +1266,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								'2.0'   => __( '2.0 version', 'ultimate-member' ),
 							),
 						),
-						array(
-							'id'        => 'member_directory_own_table',
-							'type'      => 'checkbox',
-							'label'     => __( 'Enable custom table for usermeta', 'ultimate-member' ),
-							'tooltip'   => __( 'Check this box if you would like to enable the using custom table with user metadata. It can be solution for the complex search.', 'ultimate-member' ),
-						),
+						$same_page_update,
 						array(
 							'id'        => 'uninstall_on_delete',
 							'type'      => 'checkbox',
@@ -1669,6 +1787,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 */
 		function on_settings_save() {
 			if ( ! empty( $_POST['um_options'] ) ) {
+
 				if ( ! empty( $_POST['um_options']['pages_settings'] ) ) {
 					$post_ids = new \WP_Query( array(
 						'post_type' => 'page',
@@ -1709,183 +1828,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							}
 						}
 					}
-				} elseif ( ! empty( $_POST['um_options']['member_directory_own_table'] ) ) {
-					//first install metatable
-					global $wpdb;
+				} elseif ( isset( $_POST['um_options']['member_directory_own_table'] ) ) {
+					if ( empty( $_POST['um_options']['member_directory_own_table'] ) ) {
+						global $wpdb;
 
-					$metakeys = array();
-					foreach ( UM()->builtin()->all_user_fields as $all_user_field ) {
-						if ( $all_user_field['type'] == 'user_location' ) {
-							$metakeys[] = $all_user_field['metakey'] . '_lat';
-							$metakeys[] = $all_user_field['metakey'] . '_lng';
-							$metakeys[] = $all_user_field['metakey'] . '_url';
-						} else {
-							$metakeys[] = $all_user_field['metakey'];
+						$results = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}um_metadata LIMIT 1", ARRAY_A );
+						if ( ! empty( $results ) ) {
+							$wpdb->query("TRUNCATE TABLE IF EXISTS {$wpdb->prefix}um_metadata" );
+							update_option( 'um_member_directory_truncated', time() );
 						}
-					}
-
-					if ( is_multisite() ) {
-
-						$sites = get_sites( array( 'fields' => 'ids' ) );
-						foreach ( $sites as $blog_id ) {
-							$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
-						}
-
-					} else {
-						$blog_id = get_current_blog_id();
-						$metakeys[] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
-					}
-
-					//member directory data
-					$metakeys[] = 'um_member_directory_data';
-
-					$skip_fields = UM()->builtin()->get_fields_without_metakey();
-					$skip_fields = array_merge( $skip_fields, UM()->member_directory()->core_search_fields );
-
-					$real_usermeta = $wpdb->get_col( "SELECT DISTINCT meta_key FROM {$wpdb->usermeta}" );
-
-					$wp_usermeta_option = array();
-					foreach ( $metakeys as $metakey ) {
-						if ( in_array( $metakey, $skip_fields ) ) {
-							continue;
-						}
-
-						if ( ! in_array( $metakey, $real_usermeta ) && $metakey != 'um_member_directory_data' ) {
-							continue;
-						}
-
-						$wp_usermeta_option[] = $metakey;
-					}
-
-					update_option( 'um_usermeta_fields', $wp_usermeta_option );
-
-					$charset_collate = $wpdb->get_charset_collate();
-
-					$sql = "CREATE TABLE {$wpdb->prefix}um_metadata (
-umeta_id bigint(20) unsigned NOT NULL auto_increment,
-user_id bigint(20) unsigned NOT NULL default '0',
-um_key varchar(255) default NULL,
-um_value longtext default NULL,
-PRIMARY KEY  (umeta_id),
-KEY user_id_indx (user_id),
-KEY meta_key_indx (um_key),
-KEY meta_value_indx (um_value(191))
-) $charset_collate;";
-
-					require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-					dbDelta( $sql );
-
-					$md_metadata = $wpdb->get_results(
-						"SELECT u.ID as user_id, um.meta_value AS account_status, um2.meta_value AS hide_in_members
-						FROM {$wpdb->users} u
-						LEFT JOIN {$wpdb->usermeta} um ON ( um.user_id = u.ID AND um.meta_key = 'account_status' )
-						LEFT JOIN {$wpdb->usermeta} um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'hide_in_members' )",
-						ARRAY_A );
-
-					$md_metadata2 = $wpdb->get_results(
-						"SELECT u.ID as user_id, um.meta_value AS synced_gravatar_hashed_id, um2.meta_value AS synced_profile_photo
-						FROM {$wpdb->users} u
-						LEFT JOIN {$wpdb->usermeta} um ON ( um.user_id = u.ID AND um.meta_key = 'synced_gravatar_hashed_id' )
-						LEFT JOIN {$wpdb->usermeta} um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'synced_profile_photo' )",
-						ARRAY_A );
-
-					$md_metadata3 = $wpdb->get_results(
-						"SELECT u.ID as user_id, um.meta_value AS profile_photo, um2.meta_value AS cover_photo
-						FROM {$wpdb->users} u
-						LEFT JOIN {$wpdb->usermeta} um ON ( um.user_id = u.ID AND um.meta_key = 'profile_photo' )
-						LEFT JOIN {$wpdb->usermeta} um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'cover_photo' )",
-						ARRAY_A );
-
-					$md_metadata4 = $wpdb->get_results(
-						"SELECT u.ID as user_id, um.meta_value AS verified
-						FROM {$wpdb->users} u
-						LEFT JOIN {$wpdb->usermeta} um ON ( um.user_id = u.ID AND um.meta_key = '_um_verified' )",
-						ARRAY_A );
-
-
-					$users_map = array();
-					foreach ( $md_metadata as $md_metadatarow ) {
-						$hide_in_members = false;
-						if ( ! empty( $md_metadatarow['hide_in_members'] ) ) {
-							if ( $md_metadatarow['hide_in_members'] == 'Yes' || $md_metadatarow['hide_in_members'] == __( 'Yes', 'ultimate-member' ) ||
-							     $md_metadatarow['hide_in_members'] == serialize( array( 'Yes' ) ) || $md_metadatarow['hide_in_members'] == serialize( array( __( 'Yes', 'ultimate-member' ) ) ) ) {
-								$hide_in_members = true;
-							}
-						}
-
-						$users_map[ $md_metadatarow['user_id'] ] = array(
-							'account_status'    => $md_metadatarow['account_status'],
-							'hide_in_members'   => $hide_in_members,
-						);
-					}
-
-					foreach ( $md_metadata3 as $md_metadatarow ) {
-						if ( ! isset( $users_map[ $md_metadatarow['user_id'] ] ) ) {
-							$users_map[ $md_metadatarow['user_id'] ] = array();
-						}
-
-						$users_map[ $md_metadatarow['user_id'] ] = array_merge( $users_map[ $md_metadatarow['user_id'] ], array(
-							'profile_photo'     => ! empty( $md_metadatarow['profile_photo'] ),
-							'cover_photo'       => ! empty( $md_metadatarow['cover_photo'] ),
-						) );
-					}
-
-					foreach ( $md_metadata2 as $md_metadatarow ) {
-						if ( ! isset( $users_map[ $md_metadatarow['user_id'] ] ) ) {
-							$users_map[ $md_metadatarow['user_id'] ] = array();
-						}
-
-						if ( ! empty( $users_map[ $md_metadatarow['user_id'] ]['profile_photo'] ) ) {
-							continue;
-						} else {
-							$users_map[ $md_metadatarow['user_id'] ]['profile_photo'] = ( ! empty( $md_metadatarow['synced_gravatar_hashed_id'] ) || ! empty( $md_metadatarow['synced_profile_photo'] ) );
-						}
-					}
-
-					foreach ( $md_metadata4 as $md_metadatarow ) {
-						if ( ! isset( $users_map[ $md_metadatarow['user_id'] ] ) ) {
-							$users_map[ $md_metadatarow['user_id'] ] = array();
-						}
-						$users_map[ $md_metadatarow['user_id'] ] = array_merge( $users_map[ $md_metadatarow['user_id'] ], array(
-							'verified'     => $md_metadatarow['verified'] == 'verified' ? true : false,
-						) );
-					}
-
-
-					if ( ! empty( $users_map ) ) {
-
-						remove_action( 'updated_user_meta', array( UM()->member_directory(), 'on_update_usermeta' ), 10 );
-						remove_action( 'added_user_meta', array( UM()->member_directory(), 'on_update_usermeta' ), 10 );
-
-						foreach ( $users_map as $user_id => $metavalue ) {
-							update_user_meta( $user_id, 'um_member_directory_data', $metavalue );
-						}
-
-						add_action( 'updated_user_meta', array( UM()->member_directory(), 'on_update_usermeta' ), 10, 4 );
-						add_action( 'added_user_meta', array( UM()->member_directory(), 'on_update_usermeta' ), 10, 4 );
-					}
-
-
-					$metadata = $wpdb->get_results(
-						"SELECT * 
-						FROM {$wpdb->usermeta} 
-						WHERE meta_key IN ('" . implode( "','", $wp_usermeta_option ) . "')",
-					ARRAY_A );
-
-					foreach ( $metadata as $metarow ) {
-						$wpdb->insert(
-							"{$wpdb->prefix}um_metadata",
-							array(
-								'user_id'   => $metarow['user_id'],
-								'um_key'    => $metarow['meta_key'],
-								'um_value'  => $metarow['meta_value'],
-							),
-							array(
-								'%d',
-								'%s',
-								'%s',
-							)
-						);
 					}
 				}
 			}

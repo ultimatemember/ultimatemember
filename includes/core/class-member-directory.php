@@ -644,13 +644,14 @@ PRIMARY KEY  (id)
 				}
 				case 'slider': {
 					$range = $this->slider_filters_range( $filter, $directory_data );
-					$placeholder = $this->slider_range_placeholder( $filter, $attrs );
+
+					list( $single_placeholder, $plural_placeholder ) = $this->slider_range_placeholder( $filter, $attrs );
 
 					if ( $range ) { ?>
 						<input type="hidden" id="<?php echo $filter; ?>_min" name="<?php echo $filter; ?>[]" class="um_range_min" value="<?php echo ! empty( $default_value ) ? esc_attr( min( $default_value ) ) : '' ?>" />
 						<input type="hidden" id="<?php echo $filter; ?>_max" name="<?php echo $filter; ?>[]" class="um_range_max" value="<?php echo ! empty( $default_value ) ? esc_attr( max( $default_value ) ) : '' ?>" />
 						<div class="um-slider" data-field_name="<?php echo $filter; ?>" data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"></div>
-						<div class="um-slider-range" data-placeholder="<?php echo esc_attr( $placeholder ); ?>" data-label="<?php echo ( ! empty( $attrs['label'] ) ) ? esc_attr__( stripslashes( $attrs['label'] ), 'ultimate-member' ) : ''; ?>"></div>
+						<div class="um-slider-range" data-placeholder-s="<?php echo esc_attr( $single_placeholder ); ?>" data-placeholder-p="<?php echo esc_attr( $plural_placeholder ); ?>" data-label="<?php echo ( ! empty( $attrs['label'] ) ) ? esc_attr__( stripslashes( $attrs['label'] ), 'ultimate-member' ) : ''; ?>"></div>
 					<?php }
 
 					break;
@@ -778,15 +779,21 @@ PRIMARY KEY  (id)
 			switch ( $filter ) {
 				default: {
 					$label = ucwords( str_replace( array( 'um_', '_' ), array( '', ' ' ), $filter ) );
-					$placeholder = apply_filters( 'um_member_directory_filter_slider_range_placeholder', false, $filter );
+					$placeholders = apply_filters( 'um_member_directory_filter_slider_range_placeholder', false, $filter );
 
-					if ( ! $placeholder ) {
+					if ( ! $placeholders ) {
 						switch ( $attrs['type'] ) {
 							default:
-								$placeholder = "<strong>$label:</strong>&nbsp;{min_range} - {max_range}";
+								$placeholders = array(
+									"<strong>$label:</strong>&nbsp;{value}",
+									"<strong>$label:</strong>&nbsp;{min_range} - {max_range}",
+								);
 								break;
 							case 'rating':
-								$placeholder = "<strong>$label:</strong>&nbsp;{min_range} - {max_range}" . __( ' stars', 'ultimate-member' );
+								$placeholders = array(
+									"<strong>$label:</strong>&nbsp;{value}" . __( ' stars', 'ultimate-member' ),
+									"<strong>$label:</strong>&nbsp;{min_range} - {max_range}" . __( ' stars', 'ultimate-member' )
+								);
 								break;
 						}
 					}
@@ -794,12 +801,15 @@ PRIMARY KEY  (id)
 					break;
 				}
 				case 'birth_date': {
-					$placeholder = __( '<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old', 'ultimate-member' );
+					$placeholders = array(
+						__( '<strong>Age:</strong>&nbsp;{value} years old', 'ultimate-member' ),
+						__( '<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old', 'ultimate-member' )
+					);
 					break;
 				}
 			}
 
-			return $placeholder;
+			return $placeholders;
 		}
 
 
@@ -1607,12 +1617,12 @@ PRIMARY KEY  (id)
 					case 'birth_date':
 
 						$from_date = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ), date( 'Y', time() - min( $value ) * YEAR_IN_SECONDS ) ) );
-						$to_date = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ) + 1, date( 'Y', time() - ( max( $value ) + 1 ) * YEAR_IN_SECONDS ) ) );
+						$to_date = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ) + 1, date( 'Y', time() - ( max( $value ) + 1 ) * YEAR_IN_SECONDS ) - 1 ) );
 
 						$meta_query = array(
 							array(
 								'key'       => 'birth_date',
-								'value'     => array( $from_date, $to_date ),
+								'value'     => array( $to_date, $from_date ),
 								'compare'   => 'BETWEEN',
 								'type'      => 'DATE',
 								'inclusive' => true,
@@ -1621,7 +1631,7 @@ PRIMARY KEY  (id)
 
 						$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
 
-						$this->custom_filters_in_query[ $field ] = array( $from_date, $to_date );
+						$this->custom_filters_in_query[ $field ] = array( $to_date, $from_date );
 
 						break;
 					case 'user_registered':

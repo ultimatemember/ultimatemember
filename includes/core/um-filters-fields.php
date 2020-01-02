@@ -120,8 +120,8 @@ function um_profile_field_filter_hook__user_registered( $value, $data ) {
 	if ( ! $value ) {
 		return '';
 	}
-	$value = strtotime($value);
-	$value = sprintf(__('Joined %s','ultimate-member'), date_i18n('F d, Y', $value) );
+	$value = strtotime( $value );
+	$value = sprintf( __( 'Joined %s', 'ultimate-member' ), date_i18n( get_option( 'date_format' ), $value ) );
 	return $value;
 }
 add_filter( 'um_profile_field_filter_hook__user_registered', 'um_profile_field_filter_hook__user_registered', 99, 2 );

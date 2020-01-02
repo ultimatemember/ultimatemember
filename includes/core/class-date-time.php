@@ -79,22 +79,22 @@ if ( ! class_exists( 'um\core\Date_Time' ) ) {
 				}
 
 				if ( $days == 1 ) {
-					$since = sprintf( __( 'Yesterday at %s', 'ultimate-member' ), date_i18n( 'g:ia', $from ) );
+					$since = sprintf( __( 'Yesterday at %s', 'ultimate-member' ), date_i18n( get_option( 'time_format' ), $from ) );
 				} else {
-					$since = sprintf( __( '%s at %s', 'ultimate-member' ), date_i18n( 'F d', $from ), date_i18n( 'g:ia', $from ) );
+					$since = sprintf( __( '%s at %s', 'ultimate-member' ), date_i18n( 'F d', $from ), date_i18n( get_option( 'time_format' ), $from ) );
 				}
 
 			} elseif ( $diff < 30 * DAY_IN_SECONDS && $diff >= WEEK_IN_SECONDS ) {
 
-				$since = sprintf( __( '%s at %s', 'ultimate-member' ), date_i18n( 'F d', $from ), date_i18n( 'g:ia', $from ) );
+				$since = sprintf( __( '%s at %s', 'ultimate-member' ), date_i18n( 'F d', $from ), date_i18n( get_option( 'time_format' ), $from ) );
 
 			} elseif ( $diff < YEAR_IN_SECONDS && $diff >= 30 * DAY_IN_SECONDS ) {
 
-				$since = sprintf( __( '%s at %s','ultimate-member'), date_i18n( 'F d', $from ), date_i18n( 'g:ia', $from ) );
+				$since = sprintf( __( '%s at %s','ultimate-member'), date_i18n( 'F d', $from ), date_i18n( get_option( 'time_format' ), $from ) );
 
 			} elseif ( $diff >= YEAR_IN_SECONDS ) {
 
-				$since = sprintf( __( '%s at %s', 'ultimate-member' ), date_i18n( 'F d, Y', $from ), date_i18n( 'g:ia', $from ) );
+				$since = sprintf( __( '%s at %s', 'ultimate-member' ), date_i18n( get_option( 'date_format' ), $from ), date_i18n( get_option( 'time_format' ), $from ) );
 
 			}
 

@@ -2,6 +2,146 @@ jQuery(document).ready( function() {
 
 
 	/**
+	 * Same page upgrade field
+	 */
+	jQuery( document.body ).on( 'click', '.um-forms-field[data-log-object]', function() {
+		var obj = jQuery( this ).data( 'log-object' );
+		if ( jQuery( this ).is( ':checked' ) ) {
+			jQuery( this ).siblings( '.um-same-page-update-' + obj ).show();
+		} else {
+			jQuery( this ).siblings( '.um-same-page-update-' + obj ).hide();
+		}
+	});
+
+
+
+	jQuery( document.body ).on( 'click', '.um-admin-form-same-page-update', function() {
+		var field_key = jQuery(this).data('upgrade_cb');
+		jQuery(this).prop( 'disabled', true );
+
+		um_add_same_page_log( field_key, wp.i18n.__( 'Upgrade Process Started...', 'ultimate-member' ) );
+
+		if ( field_key === 'sync_metatable' ) {
+			var metadata_pages = 0;
+			var metadata_per_page = 50;
+			var current_page;
+
+			jQuery.ajax({
+				url: wp.ajax.settings.url,
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					action: 'um_same_page_update',
+					cb_func: 'um_usermeta_fields',
+					nonce: um_admin_scripts.nonce
+				},
+				success: function( response ) {
+					get_metadata();
+				},
+				error: function() {
+					um_same_page_something_wrong( field_key );
+				}
+			});
+
+
+			/**
+			 *
+			 * @returns {boolean}
+			 */
+			function get_metadata() {
+				current_page = 1;
+
+				um_add_same_page_log( field_key, wp.i18n.__( 'Getting metadata', 'ultimate-member' ) );
+				jQuery.ajax({
+					url: wp.ajax.settings.url,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						action: 'um_same_page_update',
+						cb_func: 'um_get_metadata',
+						nonce: um_admin_scripts.nonce
+					},
+					success: function( response ) {
+						if ( typeof response.data.count != 'undefined' ) {
+							um_add_same_page_log( field_key, wp.i18n.__( 'There are ', 'ultimate-member' ) + response.data.count + wp.i18n.__( ' metadata rows...', 'ultimate-member' ) );
+							um_add_same_page_log( field_key, wp.i18n.__( 'Start metadata upgrading...', 'ultimate-member' ) );
+
+							metadata_pages = Math.ceil( response.data.count / metadata_per_page );
+
+							update_metadata_per_page();
+						} else {
+							um_same_page_wrong_ajax( field_key );
+						}
+					},
+					error: function() {
+						um_same_page_something_wrong( field_key );
+					}
+				});
+
+				return false;
+			}
+
+
+			function update_metadata_per_page() {
+				if ( current_page <= metadata_pages ) {
+					jQuery.ajax({
+						url: wp.ajax.settings.url,
+						type: 'POST',
+						dataType: 'json',
+						data: {
+							action: 'um_same_page_update',
+							cb_func: 'um_update_metadata_per_page',
+							page: current_page,
+							nonce: um_admin_scripts.nonce
+						},
+						success: function( response ) {
+							if ( typeof response.data != 'undefined' ) {
+								um_add_same_page_log( field_key, response.data.message );
+								current_page++;
+								update_metadata_per_page();
+							} else {
+								um_same_page_wrong_ajax( field_key );
+							}
+						},
+						error: function() {
+							um_same_page_something_wrong( field_key );
+						}
+					});
+				} else {
+					return false;
+				}
+			}
+		}
+	});
+
+
+
+	/**
+	 *
+	 * @param field_key
+	 * @param line
+	 */
+	function um_add_same_page_log( field_key, line ) {
+		var log_field = jQuery( '.um-same-page-update-' + field_key ).find( '.upgrade_log' );
+		var previous_html = log_field.html();
+		log_field.html( previous_html + line + "<br />" );
+	}
+
+
+	function um_same_page_wrong_ajax( field_key ) {
+		um_add_same_page_log( field_key, wp.i18n.__( 'Wrong AJAX response...', 'ultimate-member' ) );
+		um_add_same_page_log( field_key, wp.i18n.__( 'Your upgrade was crashed, please contact with support', 'ultimate-member' ) );
+	}
+
+
+	function um_same_page_something_wrong( field_key ) {
+		um_add_same_page_log( field_key, wp.i18n.__( 'Something went wrong with AJAX request...', 'ultimate-member' ) );
+		um_add_same_page_log( field_key, wp.i18n.__( 'Your upgrade was crashed, please contact with support', 'ultimate-member' ) );
+	}
+
+
+
+	/**
 	 * Multi-selects sort
 	 */
 	jQuery('.um-multi-selects-list.um-sortable-multi-selects').sortable({

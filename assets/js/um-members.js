@@ -132,18 +132,32 @@ function um_members_hide_preloader( directory ) {
 
 
 function um_set_range_label( slider, ui ) {
-	var placeholder = slider.siblings( '.um-slider-range' ).data( 'placeholder' );
+	var placeholder = '';
+	var placeholder_s = slider.siblings( '.um-slider-range' ).data( 'placeholder-s' );
+	var placeholder_p = slider.siblings( '.um-slider-range' ).data( 'placeholder-p' );
 
-	if( ui ) {
-		placeholder = placeholder.replace( '\{min_range\}', ui.values[ 0 ] )
-		.replace( '\{max_range\}', ui.values[ 1 ] )
-		.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
-		.data('label') );
+	if ( ui ) {
+		if ( ui.values[ 0 ] === ui.values[ 1 ] ) {
+			placeholder = placeholder_s.replace( '\{value\}', ui.values[ 0 ] )
+			.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
+			.data('label') );
+		} else {
+			placeholder = placeholder_p.replace( '\{min_range\}', ui.values[ 0 ] )
+			.replace( '\{max_range\}', ui.values[ 1 ] )
+			.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
+			.data('label') );
+		}
 	} else {
-		placeholder = placeholder.replace( '\{min_range\}', slider.slider( "values", 0 ) )
-		.replace( '\{max_range\}', slider.slider( "values", 1 ) )
-		.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
-		.data('label') );
+		if ( slider.slider( "values", 0 ) === slider.slider( "values", 1 ) ) {
+			placeholder = placeholder_s.replace( '\{value\}', slider.slider( "values", 0 ) )
+			.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
+			.data('label') );
+		} else {
+			placeholder = placeholder_p.replace( '\{min_range\}', slider.slider( "values", 0 ) )
+			.replace( '\{max_range\}', slider.slider( "values", 1 ) )
+			.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
+			.data('label') );
+		}
 	}
 	slider.siblings( '.um-slider-range' ).html( placeholder );
 
@@ -500,11 +514,17 @@ function um_get_filters_data( directory ) {
 				return;
 			}
 
-			filter_title = filter.find('div.um-slider-range').data('label');
+			var filter_value_title;
+			if ( filter_value_from === filter_value_to ) {
+				filter_value_title = filter.find('div.um-slider-range').data( 'placeholder-s' ).replace( '\{value\}', filter_value_from )
+					.replace( '\{field_label\}', filter.find('div.um-slider-range').data('label') );
+			} else {
+				filter_value_title = filter.find('div.um-slider-range').data( 'placeholder-p' ).replace( '\{min_range\}', filter_value_from )
+					.replace( '\{max_range\}', filter_value_to )
+					.replace( '\{field_label\}', filter.find('div.um-slider-range').data('label') );
+			}
 
-			var filter_value_title = filter.find('div.um-slider-range').data( 'placeholder' ).replace( '\{min_range\}', filter_value_from )
-				.replace( '\{max_range\}', filter_value_to )
-				.replace( '\{field_label\}', filter.find('div.um-slider-range').data('label') );
+			filter_title = filter.find('div.um-slider-range').data('label');
 
 			filters_data.push( {'name':filter_name, 'label':filter_title, 'value_label':filter_value_title, 'value':[filter_value_from, filter_value_to], 'type':filter_type} );
 		}

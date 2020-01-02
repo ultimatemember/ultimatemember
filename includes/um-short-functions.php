@@ -995,12 +995,12 @@ function um_is_file_owner( $url, $user_id = null, $image_path = false ) {
  */
 function um_is_temp_file( $filename ) {
 	$user_basedir = UM()->uploader()->get_upload_user_base_dir( 'temp' );
-	
+
 	$file = $user_basedir . '/' . $filename;
-	
+
 	if ( file_exists( $file ) ) {
 		return true;
-	}	
+	}
 	return false;
 }
 
@@ -1014,8 +1014,9 @@ function um_is_temp_file( $filename ) {
  */
 function um_user_last_login_timestamp( $user_id ) {
 	$value = get_user_meta( $user_id, '_um_last_login', true );
-	if ($value)
+	if ( $value ) {
 		return $value;
+	}
 
 	return '';
 }
@@ -1047,8 +1048,9 @@ function um_get_core_page( $slug, $updated = false ) {
 
 	if ( isset( UM()->config()->permalinks[ $slug ] ) ) {
 		$url = get_permalink( UM()->config()->permalinks[ $slug ] );
-		if ( $updated )
+		if ( $updated ) {
 			$url = add_query_arg( 'updated', esc_attr( $updated ), $url );
+		}
 	}
 
 	/**

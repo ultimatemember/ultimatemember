@@ -292,3 +292,32 @@ textarea.um-forms-field.um-small-field {
 .um-forms-line[data-conditional] {
     display: none;
 }
+
+
+
+/* Same page update field */
+.um-forms-line td .um-same-page-update-wrapper {
+    display: none;
+    margin: 7px 0 0 0;
+}
+
+.um-forms-line td .um-same-page-update-wrapper input.um-admin-form-same-page-update {
+    margin: 7px 0 0 0;
+}
+
+.um-forms-line td .um-same-page-update-wrapper .upgrade_log {
+    margin: 7px 0 0 0;
+    width:100%;
+    height:150px;
+    overflow: auto;
+    border: 1px solid #a1a1a1;
+}
+
+.um-forms-line[data-field_type="same_page_update"] {
+    vertical-align: baseline;
+}
+
+.um-forms-line[data-field_type="same_page_update"] th,
+.um-forms-line[data-field_type="same_page_update"] td {
+    vertical-align: baseline;
+}

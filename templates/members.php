@@ -272,11 +272,7 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 						<# _.each( data.filters, function( filter, key, list ) { #>
 							<div class="um-members-filter-tag">
 								<# if ( filter.type == 'slider' ) { #>
-									<# if ( filter.value[0] == filter.value[1] ) { #>
-										<strong>{{{filter.label}}}</strong>: {{{filter.value[0]}}}
-									<# } else { #>
-										{{{filter.value_label}}}
-									<# } #>
+									{{{filter.value_label}}}
 								<# } else { #>
 									<strong>{{{filter.label}}}</strong>: {{{filter.value_label}}}
 								<# } #>

@@ -778,6 +778,60 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 *
 		 * @return bool|string
 		 */
+		function render_same_page_update( $field_data ) {
+
+			if ( empty( $field_data['id'] ) ) {
+				return false;
+			}
+
+			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
+			$id_attr_hidden = ' id="' . esc_attr( $id ) . '_hidden" ';
+
+			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
+			$class .= ! empty( $field_data['size'] ) ? $field_data['size'] : 'um-long-field';
+			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
+
+			$data = array(
+				'field_id' => $field_data['id']
+			);
+
+			if ( ! empty( $field_data['data'] ) ) {
+				$data = array_merge( $data, $field_data['data'] );
+			}
+
+			$data_attr = '';
+			foreach ( $data as $key => $value ) {
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $value ) . '" ';
+			}
+
+			if ( ! empty( $field_data['upgrade_cb'] ) ) {
+				$data_attr .= ' data-log-object="' . esc_attr( $field_data['upgrade_cb'] ) . '" ';
+			}
+
+			$name = $field_data['id'];
+			$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+			$name_attr = ' name="' . $name . '" ';
+
+			$value = $this->get_field_value( $field_data );
+
+			$html = "<input type=\"hidden\" $id_attr_hidden $name_attr value=\"0\" />
+			<input type=\"checkbox\" $id_attr $class_attr $name_attr $data_attr " . checked( $value, true, false ) . " value=\"1\" />";
+
+			if ( ! empty( $field_data['upgrade_cb'] ) ) {
+				$html .= '<div class="um-same-page-update-wrapper um-same-page-update-' . esc_attr( $field_data['upgrade_cb'] ) . '"><div class="um-same-page-update-description">' . $field_data['upgrade_description'] . '</div><input type="button" data-upgrade_cb="' . $field_data['upgrade_cb'] . '" class="button button-primary um-admin-form-same-page-update" value="' . esc_attr__( 'Run', 'ultimate-member' ) . '"/>
+					<div class="upgrade_log"></div></div>';
+			}
+
+			return $html;
+		}
+
+
+		/**
+		 * @param $field_data
+		 *
+		 * @return bool|string
+		 */
 		function render_select( $field_data ) {
 
 			if ( empty( $field_data['id'] ) ) {
