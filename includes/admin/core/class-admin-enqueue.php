@@ -228,6 +228,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			wp_enqueue_style( 'um_admin_forms' );
 
 			wp_register_script( 'um_admin_forms', $this->js_url . 'um-admin-forms.js', array( 'jquery', 'wp-i18n' ), ultimatemember_version, true );
+
+			wp_localize_script( 'um_admin_forms', 'um_forms_data', array(
+				'successfully_redirect' => add_query_arg( array( 'page' => 'um_options', 'tab' => 'misc', 'msg' => 'updated' ), admin_url( 'admin.php' ) ),
+			) );
+
 			wp_enqueue_script( 'um_admin_forms' );
 		}
 

@@ -579,10 +579,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				), 4 );
 			} else {
 				if ( isset( $_GET['msg'] ) && 'updated' == $_GET['msg'] ) {
-					$this->add_notice( 'upgrade', array(
-						'class'     => 'updated',
-						'message'   => '<p>' . sprintf( __( '<strong>%s %s</strong> Successfully Upgraded', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version ) . '</p>',
-					), 4 );
+					if ( isset( $_GET['page'] ) && 'um_options' == $_GET['page'] ) {
+						$this->add_notice( 'settings_upgrade', array(
+							'class'     => 'updated',
+							'message'   => '<p>' . __( 'Settings successfully upgraded', 'ultimate-member' ) . '</p>',
+						), 4 );
+					} else {
+						$this->add_notice( 'upgrade', array(
+							'class'     => 'updated',
+							'message'   => '<p>' . sprintf( __( '<strong>%s %s</strong> Successfully Upgraded', 'ultimate-member' ), ultimatemember_plugin_name, ultimatemember_version ) . '</p>',
+						), 4 );
+					}
 				}
 			}
 		}

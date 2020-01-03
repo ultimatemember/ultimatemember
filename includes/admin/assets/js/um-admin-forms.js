@@ -108,7 +108,7 @@ jQuery(document).ready( function() {
 						}
 					});
 				} else {
-					return false;
+					window.location = um_forms_data.successfully_redirect;
 				}
 			}
 		}

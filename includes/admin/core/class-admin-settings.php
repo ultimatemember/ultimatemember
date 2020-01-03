@@ -131,6 +131,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				update_option( 'um_member_directory_update_meta', time() );
 
+				UM()->options()->update( 'member_directory_own_table', true );
+
 				wp_send_json_success();
 			} elseif ( 'um_get_metadata' == $_POST['cb_func'] ) {
 				global $wpdb;
