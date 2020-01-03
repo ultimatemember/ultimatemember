@@ -334,7 +334,7 @@ function um_ajax_get_members( directory, args ) {
 			}
 
 			//args.directory = directory;
-			jQuery( document ).trigger('um_members_rendered', args );
+			jQuery( document ).trigger('um_members_rendered', [ directory, answer ] );
 
 			um_init_new_dropdown();
 

@@ -988,14 +988,23 @@ PRIMARY KEY  (id)
 			}
 
 			$meta_query = array(
-				"relation"  => "OR",
+				'relation'  => 'OR',
 				array(
 					'key'       => 'hide_in_members',
-					'value'     => '',
 					'compare'   => 'NOT EXISTS'
 				),
-				array(
-					"relation"  => "AND",
+			);
+
+
+			if ( __( 'Yes', 'ultimate-member' ) == 'Yes' ) {
+				$meta_query[] = array(
+					'key'       => 'hide_in_members',
+					'value'     => 'Yes',
+					'compare'   => 'NOT LIKE',
+				);
+			} else {
+				$meta_query[] = array(
+					'relation'  => 'AND',
 					array(
 						'key'       => 'hide_in_members',
 						'value'     => __( 'Yes', 'ultimate-member' ),
@@ -1006,8 +1015,8 @@ PRIMARY KEY  (id)
 						'value'     => 'Yes',
 						'compare'   => 'NOT LIKE'
 					),
-				),
-			);
+				);
+			}
 
 			$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
 		}
@@ -2101,6 +2110,7 @@ PRIMARY KEY  (id)
 			$hook_after_user_name = ob_get_clean();
 
 			$data_array = array(
+				'card_anchor'           => substr( md5( $user_id ), 10, 5 ),
 				'id'                    => $user_id,
 				'role'                  => um_user( 'role' ),
 				'account_status'        => um_user( 'account_status' ),
@@ -2401,7 +2411,13 @@ PRIMARY KEY  (id)
 			um_reset_user();
 			// end of user card
 
-			wp_send_json_success( array( 'pagination' => $pagination_data, 'users' => $users, 'is_search' => $this->is_search ) );
+			$member_directory_response = apply_filters( 'um_ajax_get_members_response', array(
+				'pagination'    => $pagination_data,
+				'users'         => $users,
+				'is_search'     => $this->is_search,
+			), $directory_data );
+
+			wp_send_json_success( $member_directory_response );
 		}
 
 
