@@ -35,9 +35,12 @@ function um_get_field_default_value( $dom ) {
 			if ($dom.find('input[type=checkbox]:checked').length >= 1) {
 
 				if ($dom.find('input[type=checkbox]:checked').length > 1) {
+					var arr_values = [];
+                    arr_values.push( default_value );
 					$dom.find('input[type=checkbox]:checked').each(function () {
-						default_value = default_value + jQuery(this).val() + ' ';
+						arr_values.push( jQuery(this).val() );
 					});
+					default_value = arr_values;
 				} else {
 					default_value = $dom.find('input[type=checkbox]:checked').val();
 				}
@@ -387,6 +390,7 @@ function um_field_restore_default_value( $dom ) {
 
 		case 'checkbox':
 
+				
 			if ( $dom.find('input[type=checkbox]:checked').length >= 1 ) {
 
 				$dom.find('input[type=checkbox]:checked').removeAttr('checked');
@@ -408,7 +412,7 @@ function um_field_restore_default_value( $dom ) {
 					cbox_elem.closest('.um-field-checkbox').find('i').removeClass('um-icon-android-checkbox-outline-blank');
 					cbox_elem.closest('.um-field-checkbox').find('i').addClass('um-icon-android-checkbox-outline');
 					cbox_elem.closest('.um-field-checkbox').addClass('active');
-				}
+                }
 
 			}
 
