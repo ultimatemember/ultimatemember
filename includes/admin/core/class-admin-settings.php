@@ -1888,8 +1888,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						global $wpdb;
 
 						$results = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}um_metadata LIMIT 1", ARRAY_A );
+
 						if ( ! empty( $results ) ) {
-							$wpdb->query("TRUNCATE TABLE IF EXISTS {$wpdb->prefix}um_metadata" );
+							$wpdb->query("TRUNCATE TABLE {$wpdb->prefix}um_metadata" );
 							update_option( 'um_member_directory_truncated', time() );
 						}
 					}
