@@ -33,9 +33,92 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 			add_action( 'updated_user_meta', array( &$this, 'on_update_usermeta' ), 10, 4 );
 			add_action( 'added_user_meta', array( &$this, 'on_update_usermeta' ), 10, 4 );
+			add_action( 'deleted_user_meta', array( &$this, 'on_delete_usermeta' ), 10, 4 );
+
+			add_action( 'um_add_new_field', array( &$this, 'on_new_field_added' ), 10, 1 );
+			add_action( 'um_delete_custom_field', array( &$this, 'on_delete_custom_field' ), 10, 1 );
 		}
 
 
+		/**
+		 * Delete custom field and metakey from UM usermeta table
+		 *
+		 * @param $metakey
+		 */
+		function on_delete_custom_field( $metakey ) {
+			$metakeys = get_option( 'um_usermeta_fields', array() );
+			if ( in_array( $metakey, $metakeys ) ) {
+				unset( $metakeys[ array_search( $metakey, $metakeys ) ] );
+
+				global $wpdb;
+
+				$wpdb->delete(
+					"{$wpdb->prefix}um_metadata",
+					array(
+						'um_key'    => $metakey
+					),
+					array(
+						'%s'
+					)
+				);
+
+				update_option( 'um_usermeta_fields', $metakeys );
+			}
+		}
+
+
+		/**
+		 * Add metakey to usermeta fields
+		 *
+		 * @param $metakey
+		 */
+		function on_new_field_added( $metakey ) {
+			$metakeys = get_option( 'um_usermeta_fields', array() );
+			if ( ! in_array( $metakey, $metakeys ) ) {
+				$metakeys[] = $metakey;
+				update_option( 'um_usermeta_fields', $metakeys );
+			}
+		}
+
+
+		/**
+		 * When you delete usermeta - remove row from um_metadata
+		 *
+		 * @param int|array $meta_ids
+		 * @param int $object_id
+		 * @param string $meta_key
+		 * @param mixed $_meta_value
+		 */
+		function on_delete_usermeta( $meta_ids, $object_id, $meta_key, $_meta_value ) {
+			$metakeys = get_option( 'um_usermeta_fields', array() );
+			if ( ! in_array( $meta_key, $metakeys ) ) {
+				return;
+			}
+
+			global $wpdb;
+
+			$wpdb->delete(
+				"{$wpdb->prefix}um_metadata",
+				array(
+					'user_id'   => $object_id,
+					'um_key'    => $meta_key
+				),
+				array(
+					'%d',
+					'%s'
+				)
+			);
+		}
+
+
+		/**
+		 * When you add/update usermeta - add/update row from um_metadata
+		 *
+		 * @param int $meta_id
+		 * @param int $object_id
+		 * @param string $meta_key
+		 * @param mixed $_meta_value
+		 */
 		function on_update_usermeta( $meta_id, $object_id, $meta_key, $_meta_value ) {
 
 			$metakeys = get_option( 'um_usermeta_fields', array() );
@@ -45,7 +128,15 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 			global $wpdb;
 
-			$result = $wpdb->get_var( $wpdb->prepare( "SELECT umeta_id FROM {$wpdb->prefix}um_metadata WHERE user_id = %d AND um_key = %s LIMIT 1", $object_id, $meta_key ) );
+			$result = $wpdb->get_var( $wpdb->prepare(
+				"SELECT umeta_id 
+				FROM {$wpdb->prefix}um_metadata 
+				WHERE user_id = %d AND 
+				      um_key = %s 
+				LIMIT 1",
+				$object_id,
+				$meta_key
+			) );
 
 			if ( empty( $result ) ) {
 				$wpdb->insert(
@@ -68,8 +159,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 						'um_value'  => $_meta_value,
 					),
 					array(
-						'umeta_id' => $result,
-						'um_key'  => $meta_key,
+						'umeta_id'  => $result,
 					),
 					array(
 						'%s',
@@ -79,22 +169,6 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					)
 				);
 			}
-
-//			$wpdb->update(
-//				"{$wpdb->prefix}um_metadata",
-//				array(
-//					$meta_key => $_meta_value,
-//				),
-//				array(
-//					'user_id' => $object_id,
-//				),
-//				array(
-//					'%s'
-//				),
-//				array(
-//					'%d'
-//				)
-//			);
 		}
 
 
@@ -140,11 +214,6 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 			$profile_photo_where = '';
 			if ( $directory_data['has_profile_photo'] == 1 ) {
-//				$gravatars_query = '';
-//				if ( UM()->options()->get( 'use_gravatars' ) ) {
-//					$gravatars_query = " OR ( umm_general.synced_gravatar_hashed_id != '' AND umm_general.synced_gravatar_hashed_id IS NOT NULL )";
-//				}
-
 				$profile_photo_where = " AND umm_general.um_value LIKE '%s:13:\"profile_photo\";b:1;%'";
 			}
 

@@ -150,6 +150,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			unset( $fields[ $id ]['in_group'] );
 			unset( $fields[ $id ]['position'] );
 
+			do_action( 'um_add_new_field', $id );
+
 			update_option( 'um_fields', $fields );
 		}
 
@@ -248,6 +250,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$fields = UM()->builtin()->saved_fields;
 			if ( isset( $fields[ $id ] ) ) {
 				unset( $fields[ $id ] );
+
+				do_action( 'um_delete_custom_field', $id );
+
 				update_option( 'um_fields', $fields );
 			}
 		}
@@ -353,6 +358,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			unset( $all_fields[ $new_metakey ]['in_column'] );
 			unset( $all_fields[ $new_metakey ]['in_group'] );
 			unset( $all_fields[ $new_metakey ]['position'] );
+
+
+			do_action( 'um_add_new_field', $new_metakey );
 
 			UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
 			update_option( 'um_fields', $all_fields );

@@ -33,6 +33,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		var $need_change_permalinks;
 
 
+		var $gravatar_changed = false;
+
+
 		/**
 		 * Admin_Settings constructor.
 		 */
@@ -524,79 +527,79 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									'placeholder'   => __( 'Select...', 'ultimate-member' ),
 								),
 								array(
-									'id'       		=> 'display_name',
-									'type'     		=> 'select',
+									'id'            => 'display_name',
+									'type'          => 'select',
 									'size'          => 'medium',
-									'label'    		=> __( 'User Display Name','ultimate-member' ),
-									'tooltip' 	=> __( 'This is the name that will be displayed for users on the front end of your site. Default setting uses first/last name as display name if it exists','ultimate-member' ),
-									'options' 		=> array(
-										'default'			=> __('Default WP Display Name','ultimate-member'),
-										'nickname'			=> __('Nickname','ultimate-member'),
-										'username' 			=> __('Username','ultimate-member'),
-										'full_name' 		=> __('First name & last name','ultimate-member'),
-										'sur_name' 			=> __('Last name & first name','ultimate-member'),
-										'initial_name'		=> __('First name & first initial of last name','ultimate-member'),
-										'initial_name_f'	=> __('First initial of first name & last name','ultimate-member'),
-										'first_name'		=> __('First name only','ultimate-member'),
-										'field' 			=> __('Custom field(s)','ultimate-member'),
+									'label'         => __( 'User Display Name', 'ultimate-member' ),
+									'tooltip'       => __( 'This is the name that will be displayed for users on the front end of your site. Default setting uses first/last name as display name if it exists', 'ultimate-member' ),
+									'options'       => array(
+										'default'			=> __( 'Default WP Display Name', 'ultimate-member' ),
+										'nickname'			=> __( 'Nickname', 'ultimate-member' ),
+										'username' 			=> __( 'Username', 'ultimate-member' ),
+										'full_name' 		=> __( 'First name & last name', 'ultimate-member' ),
+										'sur_name' 			=> __( 'Last name & first name', 'ultimate-member' ),
+										'initial_name'		=> __( 'First name & first initial of last name', 'ultimate-member' ),
+										'initial_name_f'	=> __( 'First initial of first name & last name', 'ultimate-member' ),
+										'first_name'		=> __( 'First name only', 'ultimate-member' ),
+										'field' 			=> __( 'Custom field(s)', 'ultimate-member' ),
 									),
-									'placeholder' 	=> __('Select...'),
+									'placeholder'   => __( 'Select...', 'ultimate-member' ),
 								),
 								array(
-									'id'       		=> 'display_name_field',
-									'type'     		=> 'text',
-									'label'   		=> __( 'Display Name Custom Field(s)','ultimate-member' ),
-									'tooltip' 	=> __('Specify the custom field meta key or custom fields seperated by comma that you want to use to display users name on the frontend of your site','ultimate-member'),
+									'id'            => 'display_name_field',
+									'type'          => 'text',
+									'label'         => __( 'Display Name Custom Field(s)', 'ultimate-member' ),
+									'tooltip'       => __( 'Specify the custom field meta key or custom fields seperated by comma that you want to use to display users name on the frontend of your site', 'ultimate-member' ),
 									'conditional'   => array( 'display_name', '=', 'field' ),
 								),
 								array(
-									'id'       		=> 'author_redirect',
-									'type'     		=> 'checkbox',
-									'label'   		=> __( 'Automatically redirect author page to their profile?','ultimate-member'),
-									'tooltip' 	=> __('If enabled, author pages will automatically redirect to the user\'s profile page','ultimate-member'),
+									'id'        => 'author_redirect',
+									'type'      => 'checkbox',
+									'label'     => __( 'Automatically redirect author page to their profile?', 'ultimate-member' ),
+									'tooltip'   => __( 'If enabled, author pages will automatically redirect to the user\'s profile page', 'ultimate-member' ),
 								),
 								array(
-									'id'       		=> 'members_page',
-									'type'     		=> 'checkbox',
-									'label'   		=> __( 'Enable Members Directory','ultimate-member' ),
-									'tooltip' 	=> __('Control whether to enable or disable member directories on this site','ultimate-member'),
+									'id'        => 'members_page',
+									'type'      => 'checkbox',
+									'label'     => __( 'Enable Members Directory', 'ultimate-member' ),
+									'tooltip'   => __( 'Control whether to enable or disable member directories on this site', 'ultimate-member' ),
 								),
 								array(
-									'id'       		=> 'use_gravatars',
-									'type'     		=> 'checkbox',
-									'label'   		=> __( 'Use Gravatars?','ultimate-member' ),
-									'tooltip' 	=> __('Do you want to use gravatars instead of the default plugin profile photo (If the user did not upload a custom profile photo / avatar)','ultimate-member'),
+									'id'        => 'use_gravatars',
+									'type'      => 'checkbox',
+									'label'     => __( 'Use Gravatars?', 'ultimate-member' ),
+									'tooltip'   => __( 'Do you want to use gravatars instead of the default plugin profile photo (If the user did not upload a custom profile photo / avatar)', 'ultimate-member' ),
 								),
 								array(
-									'id'       		=> 'use_um_gravatar_default_builtin_image',
-									'type'     		=> 'select',
-									'label'    		=> __( 'Use Gravatar builtin image','ultimate-member' ),
-									'tooltip' 	=> __( 'Gravatar has a number of built in options which you can also use as defaults','ultimate-member' ),
-									'options' 		=> array(
-										'default'		=> __('Default','ultimate-member'),
-										'404'			=> __('404 ( File Not Found response )','ultimate-member'),
-										'mm'			=> __('Mystery Man','ultimate-member'),
-										'identicon'		=> __('Identicon','ultimate-member'),
-										'monsterid'		=> __('Monsterid','ultimate-member'),
-										'wavatar'		=> __('Wavatar','ultimate-member'),
-										'retro'			=> __('Retro','ultimate-member'),
-										'blank'			=> __('Blank ( a transparent PNG image )','ultimate-member'),
+									'id'            => 'use_um_gravatar_default_builtin_image',
+									'type'          => 'select',
+									'label'         => __( 'Use Gravatar builtin image', 'ultimate-member' ),
+									'tooltip'       => __( 'Gravatar has a number of built in options which you can also use as defaults', 'ultimate-member' ),
+									'options'       => array(
+										'default'   => __( 'Default', 'ultimate-member' ),
+										'404'       => __( '404 ( File Not Found response )', 'ultimate-member' ),
+										'mm'        => __( 'Mystery Man', 'ultimate-member' ),
+										'identicon' => __( 'Identicon', 'ultimate-member' ),
+										'monsterid' => __( 'Monsterid', 'ultimate-member' ),
+										'wavatar'   => __( 'Wavatar', 'ultimate-member' ),
+										'retro'     => __( 'Retro', 'ultimate-member' ),
+										'blank'     => __( 'Blank ( a transparent PNG image )', 'ultimate-member' ),
 									),
-									'conditional'		=> array( 'use_gravatars', '=', 1 ),
+									'conditional'   => array( 'use_gravatars', '=', 1 ),
 									'size'          => 'medium'
 								),
 								array(
-									'id'       		=> 'use_um_gravatar_default_image',
-									'type'     		=> 'checkbox',
-									'label'   		=> __( 'Use Default plugin avatar as Gravatar\'s Default avatar','ultimate-member' ),
-									'tooltip' 	=> __('Do you want to use the plugin default avatar instead of the gravatar default photo (If the user did not upload a custom profile photo / avatar)','ultimate-member'),
-									'conditional'		=> array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
+									'id'            => 'use_um_gravatar_default_image',
+									'type'          => 'checkbox',
+									'label'         => __( 'Use Default plugin avatar as Gravatar\'s Default avatar', 'ultimate-member' ),
+									'tooltip'       => __( 'Do you want to use the plugin default avatar instead of the gravatar default photo (If the user did not upload a custom profile photo / avatar)', 'ultimate-member' ),
+									'conditional'   => array( 'use_um_gravatar_default_builtin_image', '=', 'default' ),
 								),
 								array(
-									'id'       		=> 'reset_require_strongpass',
-									'type'     		=> 'checkbox',
-									'label'   		=> __( 'Require a strong password? (when user resets password only)','ultimate-member' ),
-									'tooltip' 	=> __('Enable or disable a strong password rules on password reset and change procedure','ultimate-member'),
+									'id'        => 'reset_require_strongpass',
+									'type'      => 'checkbox',
+									'label'     => __( 'Require a strong password? (when user resets password only)', 'ultimate-member' ),
+									'tooltip'   => __( 'Enable or disable a strong password rules on password reset and change procedure', 'ultimate-member' ),
 								)
 							)
 						),
@@ -1781,6 +1784,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					$this->need_change_permalinks = true;
 				}
 			}
+
+			// set variable if gravatar settings were changed
+			// update for um_member_directory_data metakey
+			if ( isset( $_POST['um_options']['use_gravatars'] ) ) {
+				$use_gravatar = UM()->options()->get( 'use_gravatars' );
+				if ( ( empty( $use_gravatar ) && ! empty( $_POST['um_options']['use_gravatars'] ) ) || ( ! empty( $use_gravatar ) && empty( $_POST['um_options']['use_gravatars'] ) ) ) {
+					$this->gravatar_changed = true;
+				}
+			}
 		}
 
 
@@ -1830,6 +1842,47 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							}
 						}
 					}
+
+
+					// update for um_member_directory_data metakey
+					if ( isset( $_POST['um_options']['use_gravatars'] ) ) {
+						if ( $this->gravatar_changed ) {
+							global $wpdb;
+
+							if ( ! empty( $_POST['um_options']['use_gravatars'] ) ) {
+
+								$results = $wpdb->get_col(
+									"SELECT u.ID FROM {$wpdb->users} AS u 
+									LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'synced_gravatar_hashed_id' )
+									LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
+									WHERE um.meta_value != '' AND um.meta_value IS NOT NULL AND
+										um2.meta_value LIKE '%s:13:\"profile_photo\";b:0;%'"
+								);
+
+							} else {
+
+								$results = $wpdb->get_col(
+									"SELECT u.ID FROM {$wpdb->users} AS u 
+									LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND ( um.meta_key = 'synced_profile_photo' || um.meta_key = 'profile_photo' ) )
+									LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
+									WHERE ( um.meta_value IS NULL OR um.meta_value = '' ) AND
+										um2.meta_value LIKE '%s:13:\"profile_photo\";b:1;%'"
+								);
+
+							}
+
+							if ( ! empty( $results ) ) {
+								foreach ( $results as $user_id ) {
+									$md_data = get_user_meta( $user_id, 'um_member_directory_data', true );
+									if ( ! empty( $md_data ) ) {
+										$md_data['profile_photo'] = ! empty( $_POST['um_options']['use_gravatars'] );
+										update_user_meta( $user_id, 'um_member_directory_data', $md_data );
+									}
+								}
+							}
+						}
+					}
+
 				} elseif ( isset( $_POST['um_options']['member_directory_own_table'] ) ) {
 					if ( empty( $_POST['um_options']['member_directory_own_table'] ) ) {
 						global $wpdb;

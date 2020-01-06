@@ -95,39 +95,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			add_filter( 'init', array( &$this, 'init_filter_types' ), 2 );
 
 			add_action( 'template_redirect', array( &$this, 'access_members' ), 555 );
-
-
-			//add_action( 'updated_user_meta', array( &$this, 'on_update_usermeta' ), 10, 4 );
 		}
 
-
-		function on_update_usermeta( $meta_id, $object_id, $meta_key, $_meta_value ) {
-
-			//$object_id //userID
-			//$meta_key // meta_key
-			//$_meta_value // value
-
-			$metakeys = get_option( 'um_usermeta_fields', array() );
-
-
-
-
-			global $wpdb;
-
-			$charset_collate = $wpdb->get_charset_collate();
-
-			$sql = "CREATE TABLE {$wpdb->prefix}um_followers (
-user_id int(11) unsigned NOT NULL auto_increment,
-time datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-user_id1 int(11) unsigned NOT NULL,
-user_id2 int(11) unsigned NOT NULL,
-PRIMARY KEY  (id)
-) $charset_collate;";
-
-			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-			dbDelta( $sql );
-
-		}
 
 		/**
 		 * Getting member directory post ID via hash
@@ -948,9 +917,9 @@ PRIMARY KEY  (id)
 			}
 
 			$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( array(
-				'key'       => 'account_status',
-				'value'     => 'approved',
-				'compare'   => '='
+				'key'       => 'um_member_directory_data',
+				'value'     => 's:14:"account_status";s:8:"approved";',
+				'compare'   => 'LIKE'
 			) ) );
 		}
 
@@ -987,38 +956,11 @@ PRIMARY KEY  (id)
 				return;
 			}
 
-			$meta_query = array(
-				'relation'  => 'OR',
-				array(
-					'key'       => 'hide_in_members',
-					'compare'   => 'NOT EXISTS'
-				),
-			);
-
-
-			if ( __( 'Yes', 'ultimate-member' ) == 'Yes' ) {
-				$meta_query[] = array(
-					'key'       => 'hide_in_members',
-					'value'     => 'Yes',
-					'compare'   => 'NOT LIKE',
-				);
-			} else {
-				$meta_query[] = array(
-					'relation'  => 'AND',
-					array(
-						'key'       => 'hide_in_members',
-						'value'     => __( 'Yes', 'ultimate-member' ),
-						'compare'   => 'NOT LIKE'
-					),
-					array(
-						'key'       => 'hide_in_members',
-						'value'     => 'Yes',
-						'compare'   => 'NOT LIKE'
-					),
-				);
-			}
-
-			$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
+			$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( array(
+				'key'       => 'um_member_directory_data',
+				'value'     => 's:15:"hide_in_members";b:0;',
+				'compare'   => 'LIKE'
+			) ) );
 		}
 
 
@@ -1063,29 +1005,11 @@ PRIMARY KEY  (id)
 		 */
 		function show_only_with_avatar( $directory_data ) {
 			if ( $directory_data['has_profile_photo'] == 1 ) {
-				$meta_query = array(
-					'relation'  => 'OR',
-					array(
-						'key'       => 'synced_profile_photo', // addons
-						'value'     => '',
-						'compare'   => '!='
-					),
-					array(
-						'key'       => 'profile_photo', // from upload form
-						'value'     => '',
-						'compare'   => '!='
-					)
-				);
-
-				if ( UM()->options()->get( 'use_gravatars' ) ) {
-					$meta_query[] = array(
-						'key'       => 'synced_gravatar_hashed_id', // gravatar
-						'value'     => '',
-						'compare'   => '!='
-					);
-				}
-
-				$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( $meta_query ) );
+				$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( array(
+					'key'       => 'um_member_directory_data',
+					'value'     => 's:13:"profile_photo";b:1;',
+					'compare'   => 'LIKE'
+				) ) );
 			}
 		}
 
@@ -1098,9 +1022,9 @@ PRIMARY KEY  (id)
 		function show_only_with_cover( $directory_data ) {
 			if ( $directory_data['has_cover_photo'] == 1 ) {
 				$this->query_args['meta_query'] = array_merge( $this->query_args['meta_query'], array( array(
-					'key'       => 'cover_photo',
-					'value'     => '',
-					'compare'   => '!='
+					'key'       => 'um_member_directory_data',
+					'value'     => 's:11:"cover_photo";b:1;',
+					'compare'   => 'LIKE'
 				) ) );
 			}
 		}

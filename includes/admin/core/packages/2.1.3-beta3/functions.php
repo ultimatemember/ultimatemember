@@ -84,15 +84,18 @@ function um_upgrade_metadata_per_user213beta3() {
 
 				break;
 			case 'synced_gravatar_hashed_id':
-			case 'synced_profile_photo':
-
-				if ( empty( $users_map[ $metadatarow['user_id'] ]['profile_photo'] ) ) {
-					$users_map[ $metadatarow['user_id'] ]['profile_photo'] = ! empty( $metadatarow['meta_value'] );
+				if ( UM()->options()->get( 'use_gravatars' ) ) {
+					if ( empty( $users_map[ $metadatarow['user_id'] ]['profile_photo'] ) ) {
+						$users_map[ $metadatarow['user_id'] ]['profile_photo'] = ! empty( $metadatarow['meta_value'] );
+					}
 				}
 
 				break;
+			case 'synced_profile_photo':
 			case 'profile_photo':
-				$users_map[ $metadatarow['user_id'] ]['profile_photo'] = ! empty( $metadatarow['meta_value'] );
+				if ( empty( $users_map[ $metadatarow['user_id'] ]['profile_photo'] ) ) {
+					$users_map[ $metadatarow['user_id'] ]['profile_photo'] = ! empty( $metadatarow['meta_value'] );
+				}
 				break;
 			case 'cover_photo':
 				$users_map[ $metadatarow['user_id'] ]['cover_photo'] = ! empty( $metadatarow['meta_value'] );

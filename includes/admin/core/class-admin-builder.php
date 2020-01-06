@@ -635,7 +635,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			 * }
 			 * ?>
 			 */
-			$array = apply_filters( "um_admin_pre_save_fields_hook", $array );
+			$array = apply_filters( 'um_admin_pre_save_fields_hook', $array );
 
 			/**
 			 * UM hook
@@ -666,23 +666,23 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			 */
 			extract( $array['post'] );
 
-			if ( empty( $output['error'] ) ){
+			if ( empty( $output['error'] ) ) {
 
 				$save = array();
 				$save[ $_metakey ] = null;
-				foreach( $array['post'] as $key => $val){
+				foreach ( $array['post'] as $key => $val ) {
 
-					if ( substr( $key, 0, 1) === '_' && $val != '' ) { // field attribute
+					if ( substr( $key, 0, 1 ) === '_' && $val != '' ) { // field attribute
 						$new_key = ltrim ($key,'_');
 
 						if ( $new_key == 'options' ) {
 							//$save[ $_metakey ][$new_key] = explode(PHP_EOL, $val);
-							$save[ $_metakey ][$new_key] = preg_split('/[\r\n]+/', $val, -1, PREG_SPLIT_NO_EMPTY);
+							$save[ $_metakey ][ $new_key ] = preg_split( '/[\r\n]+/', $val, -1, PREG_SPLIT_NO_EMPTY );
 						} else {
-							$save[ $_metakey ][$new_key] = $val;
+							$save[ $_metakey ][ $new_key ] = $val;
 						}
 
-					} else if ( strstr( $key, 'um_editor' ) ) {
+					} elseif ( strstr( $key, 'um_editor' ) ) {
 						$save[ $_metakey ]['content'] = $val;
 					}
 
@@ -711,7 +711,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				 * }
 				 * ?>
 				 */
-				$field_args = apply_filters("um_admin_pre_save_field_to_form", $field_args );
+				$field_args = apply_filters( 'um_admin_pre_save_field_to_form', $field_args );
 
 				UM()->fields()->update_field( $field_ID, $field_args, $post_id );
 
@@ -735,7 +735,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				 * }
 				 * ?>
 				 */
-				$field_args = apply_filters("um_admin_pre_save_field_to_db", $field_args );
+				$field_args = apply_filters( 'um_admin_pre_save_field_to_db', $field_args );
 
 				if ( ! isset( $array['args']['form_only'] ) ) {
 					if ( ! isset( UM()->builtin()->predefined_fields[ $field_ID ] ) ) {
