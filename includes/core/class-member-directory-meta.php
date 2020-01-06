@@ -144,7 +144,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					array(
 						'user_id'   => $object_id,
 						'um_key'    => $meta_key,
-						'um_value'  => $_meta_value,
+						'um_value'  => maybe_serialize( $_meta_value ),
 					),
 					array(
 						'%d',
@@ -156,7 +156,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				$wpdb->update(
 					"{$wpdb->prefix}um_metadata",
 					array(
-						'um_value'  => $_meta_value,
+						'um_value'  => maybe_serialize( $_meta_value ),
 					),
 					array(
 						'umeta_id'  => $result,
