@@ -2674,7 +2674,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_label( $label, $key, $data );
 					}
 
-					$output .= '<div class="um-field-area ' . ( isset( $this->field_icons ) && $this->field_icons == 'field' ? 'um-field-area-has-icon' : '' ) . ' ">';
+					$output .= '<div class="um-field-area ' . ( ! empty( $icon ) && isset( $this->field_icons ) && $this->field_icons == 'field' ? 'um-field-area-has-icon' : '' ) . ' ">';
 					if ( ! empty( $icon ) && isset( $this->field_icons ) && $this->field_icons == 'field' ) {
 						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $icon ) . '"></i></div>';
 					}
@@ -3008,7 +3008,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					 */
 					$use_keyword = apply_filters( 'um_multiselect_option_value', 0, $data['type'] );
 
-					$output .= '<div class="um-field-area ' . ( isset( $this->field_icons ) && $this->field_icons == 'field' ? 'um-field-area-has-icon' : '' ) . ' ">';
+					$output .= '<div class="um-field-area ' . (! empty( $icon ) && isset( $this->field_icons ) && $this->field_icons == 'field' ? 'um-field-area-has-icon' : '' ) . ' ">';
 					if ( ! empty( $icon ) && isset( $this->field_icons ) && $this->field_icons == 'field') {
 						$output .= '<div class="um-field-icon"><i class="' . esc_attr( $icon ) . '"></i></div>';
 					}
