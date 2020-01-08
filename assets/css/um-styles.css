@@ -260,6 +260,52 @@ p.um-notice.warning a {
 }
 
 /*
+    - Notices
+*/
+.um-field-notice {
+	width: auto;
+	max-width: 100%;
+	background: #497BC7;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	color: #fff;
+	box-sizing: border-box;
+	position: relative;
+	padding: 12px;
+	font-size: 14px;
+	line-height: 20px !important;
+	margin: 5px 0 0 0;
+}
+
+.um-field-notice a{color: #fff !important;text-decoration: underline !important}
+
+.um-field-notice  .um-field-arrow {
+	top: -17px;
+	left: 10px;
+	position: absolute;
+	z-index: 1;
+	color: #497BC7 !important;
+	font-size: 28px;
+	line-height: 1em !important;
+}
+
+.um-notice-block {
+	width: auto;
+	max-width: 100%;
+	background: #497BC7;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	color: #fff;
+	box-sizing: border-box;
+	position: relative;
+	padding: 12px;
+	font-size: 14px;
+	line-height: 1em !important;
+	margin: 12px 0 0 0;
+}
+/*
 	- Help tooltips
 */
 
