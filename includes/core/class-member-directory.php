@@ -1252,20 +1252,20 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				$meta_query = array(
 					'relation' => 'OR',
 					array(
-						'value'     => trim( $_POST['search'] ),
+						'value'     => trim( stripslashes( $_POST['search'] ) ),
 						'compare'   => '=',
 					),
 					array(
-						'value'     => trim( $_POST['search'] ),
+						'value'     => trim( stripslashes( $_POST['search'] ) ),
 						'compare'   => 'LIKE',
 					),
 					array(
-						'value'     => trim( serialize( strval( $_POST['search'] ) ) ),
+						'value'     => trim( serialize( strval( stripslashes( $_POST['search'] ) ) ) ),
 						'compare'   => 'LIKE',
 					),
 				);
 
-				$meta_query = apply_filters( 'um_member_directory_general_search_meta_query', $meta_query, $_POST['search'] );
+				$meta_query = apply_filters( 'um_member_directory_general_search_meta_query', $meta_query, stripslashes( $_POST['search'] ) );
 
 				$this->query_args['meta_query'][] = $meta_query;
 
@@ -1290,7 +1290,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		function change_meta_sql( $sql, $queries, $type, $primary_table, $primary_id_column, $context ) {
 			if ( ! empty( $_POST['search'] ) ) {
 				global $wpdb;
-				$search = trim( $_POST['search'] );
+				$search = trim( stripslashes( $_POST['search'] ) );
 				if ( ! empty( $search ) ) {
 
 					$meta_value = '%' . $wpdb->esc_like( $search ) . '%';
@@ -1870,15 +1870,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 *
 		 *
 		 * @param array $directory_data
-		 * @param \WP_User_Query $result
+		 * @param int $total_users
 		 *
 		 * @return array
 		 */
-		function calculate_pagination( $directory_data, $result ) {
+		function calculate_pagination( $directory_data, $total_users ) {
 
 			$current_page = ! empty( $_POST['page'] ) ? $_POST['page'] : 1;
 
-			$total_users = ( ! empty( $directory_data['max_users'] ) && $directory_data['max_users'] <= $result->total_users ) ? $directory_data['max_users'] : $result->total_users;
+			$total_users = ( ! empty( $directory_data['max_users'] ) && $directory_data['max_users'] <= $total_users ) ? $directory_data['max_users'] : $total_users;
 
 			// number of profiles for mobile
 			$profiles_per_page = $directory_data['profiles_per_page'];
@@ -2292,7 +2292,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 */
 			do_action( 'um_user_after_query', $this->query_args, $user_query );
 
-			$pagination_data = $this->calculate_pagination( $directory_data, $user_query );
+			$pagination_data = $this->calculate_pagination( $directory_data, $user_query->total_users );
 
 			$user_ids = ! empty( $user_query->results ) ? array_unique( $user_query->results ) : array();
 

@@ -75,7 +75,7 @@ $search = isset( $args['search'] ) ? $args['search'] : false;
 $show_search = empty( $args['roles_can_search'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $args['roles_can_search'] ) );
 $search_from_url = '';
 if ( $search && $show_search ) {
-	$search_from_url = ! empty( $_GET[ 'search_' . $unique_hash ] ) ? $_GET[ 'search_' . $unique_hash ] : '';
+	$search_from_url = ! empty( $_GET[ 'search_' . $unique_hash ] ) ? stripslashes( $_GET[ 'search_' . $unique_hash ] ) : '';
 }
 
 

@@ -287,6 +287,12 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			}
 
 			$user_id = empty( $_REQUEST['user_id'] ) ? get_current_user_id() : $_REQUEST['user_id'];
+
+			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+				$ret['error'] = esc_js( __( 'You haven\'t ability to edit this user', 'ultimate-member' ) );
+				wp_send_json_error( $ret );
+			}
+
 			$image_path = um_is_file_owner( $src, $user_id, true );
 			if ( ! $image_path ) {
 				wp_send_json_error( esc_js( __( 'Invalid file ownership', 'ultimate-member' ) ) );
@@ -318,6 +324,11 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			UM()->fields()->set_id = $_POST['set_id'];
 			UM()->fields()->set_mode = $_POST['set_mode'];
+
+			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+				$ret['error'] = __( 'You haven\'t ability to edit this user', 'ultimate-member' );
+				wp_send_json_error( $ret );
+			}
 
 			/**
 			 * UM hook
