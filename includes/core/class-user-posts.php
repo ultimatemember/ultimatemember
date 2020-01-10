@@ -60,7 +60,13 @@ if ( ! class_exists( 'um\core\User_posts' ) ) {
 			$args = apply_filters( 'um_profile_query_make_posts', $args );
 			$posts = get_posts( $args );
 
-			$count_posts = (int) count_user_posts( um_get_requested_user(), 'post', true );
+			$args['posts_per_page'] = -1;
+			$args['fields'] = 'ids';
+			unset( $args['offset'] );
+			$count_posts = get_posts( $args );
+			if ( ! empty( $count_posts ) && ! is_wp_error( $count_posts ) ) {
+				$count_posts = count( $count_posts );
+			}
 
 			UM()->get_template( 'profile/posts.php', '', array( 'posts' => $posts, 'count_posts' => $count_posts ), true );
 		}

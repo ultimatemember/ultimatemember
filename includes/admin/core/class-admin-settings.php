@@ -121,6 +121,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				//member directory data
 				$metakeys[] = 'um_member_directory_data';
 				$metakeys[] = '_um_verified';
+				$metakeys[] = '_money_spent';
+				$metakeys[] = '_completed';
+				$metakeys[] = '_reviews_avg';
 
 				$skip_fields = UM()->builtin()->get_fields_without_metakey();
 				$skip_fields = array_merge( $skip_fields, UM()->member_directory()->core_search_fields );

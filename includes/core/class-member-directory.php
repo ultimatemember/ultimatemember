@@ -503,7 +503,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$values_array = array_unique( $temp_values );
 					}
 
-					if ( empty( $values_array ) ) {
+					if ( $attrs['metakey'] != 'online_status' && empty( $values_array ) ) {
 						ob_get_clean();
 						return '';
 					}
@@ -550,12 +550,14 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$attrs['options'] = UM()->fields()->get_options_from_callback( $attrs, $attrs['type'] );
 					}
 
-					if ( $attrs['metakey'] != 'role_select' && empty( $custom_dropdown ) ) {
-						$attrs['options'] = array_intersect( array_map( 'stripslashes', $attrs['options'] ), $values_array );
-					} elseif ( ! empty( $custom_dropdown ) ) {
-						$attrs['options'] = array_intersect_key( $attrs['options'], array_flip( $values_array ) );
-					} else {
-						$attrs['options'] = array_intersect_key( $attrs['options'], array_flip( $values_array ) );
+					if ( $attrs['metakey'] != 'online_status' ) {
+						if ( $attrs['metakey'] != 'role_select' && $attrs['metakey'] != 'mycred_rank' && empty( $custom_dropdown ) ) {
+							$attrs['options'] = array_intersect( array_map( 'stripslashes', $attrs['options'] ), $values_array );
+						} elseif ( ! empty( $custom_dropdown ) ) {
+							$attrs['options'] = array_intersect_key( $attrs['options'], array_flip( $values_array ) );
+						} else {
+							$attrs['options'] = array_intersect_key( $attrs['options'], array_flip( $values_array ) );
+						}
 					}
 
 					$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options', $attrs['options'], $values_array, $attrs );

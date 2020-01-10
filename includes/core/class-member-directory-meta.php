@@ -531,7 +531,9 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 				$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_search ON umm_search.user_id = u.ID";
 
-				$this->where_clauses[] = $wpdb->prepare( "( umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s OR {$core_search})", $search_line, '%' . $search_line . '%', '%' . serialize( strval( $search_line ) ) . '%' );
+				$additional_search = apply_filters( 'um_member_directory_meta_general_search_meta_query', '', stripslashes( $_POST['search'] ) );
+
+				$this->where_clauses[] = $wpdb->prepare( "( umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s OR {$core_search}{$additional_search})", $search_line, '%' . $search_line . '%', '%' . serialize( strval( $search_line ) ) . '%' );
 
 				$this->is_search = true;
 			}
@@ -623,7 +625,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 				$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = '_um_last_login' )";
 
-				$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS NUMERIC ) {$order} ";
+				$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS SIGNED ) {$order} ";
 
 			} elseif ( $sortby == 'last_first_name' ) {
 
@@ -703,7 +705,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 			$sql_join = implode( ' ', $this->joins );
 			$sql_where = implode( ' AND ', $this->where_clauses );
-			$sql_where = ! empty( $sql_where ) ? ' AND ' . $sql_where : '';
+			$sql_where = ! empty( $sql_where ) ? 'AND ' . $sql_where : '';
 
 			global $wpdb;
 
