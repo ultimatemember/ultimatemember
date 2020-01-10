@@ -185,6 +185,8 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 		function handle_filter_query( $directory_data, $field, $value, $i, $is_default = false ) {
 			global $wpdb;
 
+			$join_slug = $is_default ? 'ummd' : 'umm' ;
+
 			$blog_id = get_current_blog_id();
 
 			switch ( $field ) {
@@ -225,11 +227,11 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 							case 'text':
 
-								$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm{$i} ON umm{$i}.user_id = u.ID";
+								$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_slug}{$i} ON {$join_slug}{$i}.user_id = u.ID";
 
 								$value = trim( stripslashes( $value ) );
 
-								$this->where_clauses[] = $wpdb->prepare( "umm{$i}.um_key = %s AND umm{$i}.um_value = %s", $field, $value );
+								$this->where_clauses[] = $wpdb->prepare( "{$join_slug}{$i}.um_key = %s AND {$join_slug}{$i}.um_value = %s", $field, $value );
 
 								if ( ! $is_default ) {
 									$this->custom_filters_in_query[ $field ] = $value;
@@ -242,24 +244,24 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 									$value = array( $value );
 								}
 
-								$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm{$i} ON umm{$i}.user_id = u.ID";
+								$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_slug}{$i} ON {$join_slug}{$i}.user_id = u.ID";
 
 								$values_array = array();
 								foreach ( $value as $single_val ) {
 									$single_val = stripslashes( $single_val );
 
-									$values_array[] = $wpdb->prepare( "umm{$i}.um_value LIKE %s", '%"' . trim( $single_val ) . '"%' );
-									$values_array[] = $wpdb->prepare( "umm{$i}.um_value LIKE %s", '%' . serialize( strval( trim( $single_val ) ) ) . '%' );
-									$values_array[] = $wpdb->prepare( "umm{$i}.um_value = %s", trim( $single_val ) );
+									$values_array[] = $wpdb->prepare( "{$join_slug}{$i}.um_value LIKE %s", '%"' . trim( $single_val ) . '"%' );
+									$values_array[] = $wpdb->prepare( "{$join_slug}{$i}.um_value LIKE %s", '%' . serialize( strval( trim( $single_val ) ) ) . '%' );
+									$values_array[] = $wpdb->prepare( "{$join_slug}{$i}.um_value = %s", trim( $single_val ) );
 
 									if ( is_numeric( $single_val ) ) {
-										$values_array[] = $wpdb->prepare( "umm{$i}.um_value LIKE %s", '%' . serialize( intval( trim( $single_val ) ) ) . '%' );
+										$values_array[] = $wpdb->prepare( "{$join_slug}{$i}.um_value LIKE %s", '%' . serialize( intval( trim( $single_val ) ) ) . '%' );
 									}
 								}
 
 								$values = implode( ' OR ', $values_array );
 
-								$this->where_clauses[] = $wpdb->prepare( "( umm{$i}.um_key = %s AND ( {$values} ) )", $field );
+								$this->where_clauses[] = $wpdb->prepare( "( {$join_slug}{$i}.um_key = %s AND ( {$values} ) )", $field );
 
 								if ( ! $is_default ) {
 									$this->custom_filters_in_query[ $field ] = $value;
@@ -268,12 +270,12 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 								break;
 							case 'slider':
 
-								$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm{$i} ON umm{$i}.user_id = u.ID";
+								$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_slug}{$i} ON {$join_slug}{$i}.user_id = u.ID";
 
 								$min = min( $value );
 								$max = max( $value );
 
-								$this->where_clauses[] = $wpdb->prepare( "( umm{$i}.um_key = %s AND umm{$i}.um_value BETWEEN %d AND %d )", $field, $min, $max );
+								$this->where_clauses[] = $wpdb->prepare( "( {$join_slug}{$i}.um_key = %s AND {$join_slug}{$i}.um_value BETWEEN %d AND %d )", $field, $min, $max );
 
 								if ( ! $is_default ) {
 									$this->custom_filters_in_query[ $field ] = $value;
@@ -299,9 +301,9 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 								$from_date = date( 'Y/m/d', $from_date );
 								$to_date = date( 'Y/m/d', $to_date );
 
-								$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm{$i} ON umm{$i}.user_id = u.ID";
+								$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_slug}{$i} ON {$join_slug}{$i}.user_id = u.ID";
 
-								$this->where_clauses[] = $wpdb->prepare( "( umm{$i}.um_key = %s AND umm{$i}.um_value BETWEEN %s AND %s )", $field, $from_date, $to_date );
+								$this->where_clauses[] = $wpdb->prepare( "( {$join_slug}{$i}.um_key = %s AND {$join_slug}{$i}.um_value BETWEEN %s AND %s )", $field, $from_date, $to_date );
 
 								if ( ! $is_default ) {
 									$this->custom_filters_in_query[ $field ] = array( $from_date, $to_date );
@@ -310,11 +312,11 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 								break;
 							case 'timepicker':
 
-								$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm{$i} ON umm{$i}.user_id = u.ID";
+								$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_slug}{$i} ON {$join_slug}{$i}.user_id = u.ID";
 								if ( $value[0] == $value[1] ) {
-									$this->where_clauses[] = $wpdb->prepare( "( umm{$i}.um_key = %s AND umm{$i}.um_value = %s )", $field, $value[0] );
+									$this->where_clauses[] = $wpdb->prepare( "( {$join_slug}{$i}.um_key = %s AND {$join_slug}{$i}.um_value = %s )", $field, $value[0] );
 								} else {
-									$this->where_clauses[] = $wpdb->prepare( "( umm{$i}.um_key = %s AND CAST( umm{$i}.um_value AS TIME ) BETWEEN %s AND %s )", $field, $value[0], $value[1] );
+									$this->where_clauses[] = $wpdb->prepare( "( {$join_slug}{$i}.um_key = %s AND CAST( {$join_slug}{$i}.um_value AS TIME ) BETWEEN %s AND %s )", $field, $value[0], $value[1] );
 								}
 
 								if ( ! $is_default ) {
@@ -352,9 +354,9 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					$from_date = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ), date( 'Y', time() - min( $value ) * YEAR_IN_SECONDS ) ) );
 					$to_date = date( 'Y/m/d', mktime( 0,0,0, date( 'm', time() ), date( 'd', time() ) + 1, date( 'Y', time() - ( max( $value ) + 1 ) * YEAR_IN_SECONDS ) ) );
 
-					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm{$i} ON umm{$i}.user_id = u.ID";
+					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_slug}{$i} ON {$join_slug}{$i}.user_id = u.ID";
 
-					$this->where_clauses[] = $wpdb->prepare( "( umm{$i}.um_key = 'birth_date' AND umm{$i}.um_value BETWEEN %s AND %s )", $from_date, $to_date );
+					$this->where_clauses[] = $wpdb->prepare( "( {$join_slug}{$i}.um_key = 'birth_date' AND {$join_slug}{$i}.um_value BETWEEN %s AND %s )", $from_date, $to_date );
 
 					if ( ! $is_default ) {
 						$this->custom_filters_in_query[ $field ] = array( $to_date, $from_date );
@@ -402,9 +404,9 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					$from_date = (int) min( $value ) + ( $offset * HOUR_IN_SECONDS ); // client time zone offset
 					$to_date   = (int) max( $value ) + ( $offset * HOUR_IN_SECONDS ) + DAY_IN_SECONDS - 1; // time 23:59
 
-					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm{$i} ON umm{$i}.user_id = u.ID";
+					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_slug}{$i} ON {$join_slug}{$i}.user_id = u.ID";
 
-					$this->where_clauses[] = $wpdb->prepare( "( umm{$i}.um_key = '_um_last_login' AND umm{$i}.um_value BETWEEN %s AND %s )", $from_date, $to_date );
+					$this->where_clauses[] = $wpdb->prepare( "( {$join_slug}{$i}.um_key = '_um_last_login' AND {$join_slug}{$i}.um_value BETWEEN %s AND %s )", $from_date, $to_date );
 
 					if ( ! $is_default ) {
 						$this->custom_filters_in_query[ $field ] = $value;
@@ -571,22 +573,22 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 
 			//unable default filter in case if we select other filters in frontend filters
-			if ( empty( $this->custom_filters_in_query ) ) {
-				$default_filters = array();
-				if ( ! empty( $directory_data['search_filters'] ) ) {
-					$default_filters = maybe_unserialize( $directory_data['search_filters'] );
-				}
+			//if ( empty( $this->custom_filters_in_query ) ) {
+			$default_filters = array();
+			if ( ! empty( $directory_data['search_filters'] ) ) {
+				$default_filters = maybe_unserialize( $directory_data['search_filters'] );
+			}
 
-				if ( ! empty( $default_filters ) ) {
-					$i = 1;
-					foreach ( $default_filters as $field => $value ) {
+			if ( ! empty( $default_filters ) ) {
+				$i = 1;
+				foreach ( $default_filters as $field => $value ) {
 
-						$this->handle_filter_query( $directory_data, $field, $value, $i, true );
+					$this->handle_filter_query( $directory_data, $field, $value, $i, true );
 
-						$i++;
-					}
+					$i++;
 				}
 			}
+			//}
 
 
 			$order = 'ASC';

@@ -19,6 +19,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 * @var bool
 		 */
 		private $form_nonce_added = false;
+		private $directory_nonce_added = false;
 
 
 		/**
@@ -687,7 +688,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 
 			include_once $path . 'includes/admin/templates/directory/'. $box['id'] . '.php';
-			wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_directory_nonce' );
+			if ( ! $this->directory_nonce_added ) {
+				$this->directory_nonce_added = true;
+				wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_directory_nonce' );
+			}
 		}
 
 

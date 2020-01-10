@@ -1345,7 +1345,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 					$html .= "<li class=\"um-md-default-filters-option-line\"><span class=\"um-field-wrapper\">
 						<select $id_attr $name_attr $class_attr $data_attr>$options</select></span>
-						<span class=\"um-field-control\"><a href=\"javascript:void(0);\" class=\"um-select-delete\">" . __( 'Remove', 'ultimate-member' ) . "</a></span><span class=\"um-field-wrapper2 um\">" . UM()->member_directory()->show_filter( $value, array( 'form_id' => $post->ID ), $values[ $value ] ) . "</span></li>";
+						<span class=\"um-field-control\"><a href=\"javascript:void(0);\" class=\"um-select-delete\">" . __( 'Remove', 'ultimate-member' ) . "</a></span><span class=\"um-field-wrapper2 um\">" . UM()->member_directory()->show_filter( $value, array( 'form_id' => $post->ID ), $values[ $value ], true ) . "</span></li>";
 				}
 			} elseif ( ! empty( $field_data['show_default_number'] ) && is_numeric( $field_data['show_default_number'] ) && $field_data['show_default_number'] > 0 ) {
 				$i = 0;

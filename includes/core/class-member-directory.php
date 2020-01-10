@@ -208,6 +208,14 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 									if ( ! empty( $_POST[ $k . '_from' ] ) && ! empty( $_POST[ $k . '_to' ] ) ) {
 										$temp_value[ $k ] = array( $_POST[ $k . '_from' ], $_POST[ $k . '_to' ] );
 									}
+								} elseif ( $filter_type == 'select' ) {
+									if ( ! empty( $_POST[ $k ] ) ) {
+										if ( is_array( $_POST[ $k ] ) ) {
+											$temp_value[ $k ] = array_map( 'trim', $_POST[ $k ] );
+										} else {
+											$temp_value[ $k ] = array( trim( $_POST[ $k ] ) );
+										}
+									}
 								} else {
 									if ( ! empty( $_POST[ $k ] ) ) {
 										$temp_value[ $k ] = trim( $_POST[ $k ] );
@@ -373,13 +381,25 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * @param string $filter
 		 * @param array $directory_data
 		 * @param mixed $default_value
+		 * @param bool $admin
 		 *
 		 * @return string $filter
 		 */
-		function show_filter( $filter, $directory_data, $default_value = false ) {
+		function show_filter( $filter, $directory_data, $default_value = false, $admin = false ) {
 
 			if ( empty( $this->filter_types[ $filter ] ) ) {
 				return '';
+			}
+
+			if ( $default_value === false ) {
+				$default_filters = array();
+				if ( ! empty( $directory_data['search_filters'] ) ) {
+					$default_filters = maybe_unserialize( $directory_data['search_filters'] );
+				}
+
+				if ( ! empty( $default_filters[ $filter ] ) && $this->filter_types[ $filter ] != 'select' ) {
+					return '';
+				}
 			}
 
 			$field_key = $filter;
@@ -459,13 +479,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					break;
 				}
 				case 'text': {
-					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? $_GET[ 'filter_' . $filter . '_' . $unique_hash ] : $default_value;
-
-					if( ! $directory_data['search_filters'][ $filter ] ) { ?>
-					<input type="text" autocomplete="off" id="<?php echo $filter; ?>" name="<?php echo $filter; ?>"
-					       placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
-					       value="<?php echo esc_attr( $filter_from_url ) ?>" class="um-form-field" />
-					<?php }
+					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? $_GET[ 'filter_' . $filter . '_' . $unique_hash ] : $default_value; ?>
+						<input type="text" autocomplete="off" id="<?php echo $filter; ?>" name="<?php echo $filter; ?>"
+						       placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
+						       value="<?php echo esc_attr( $filter_from_url ) ?>" class="um-form-field" />
+					<?php
 					break;
 				}
 				case 'select': {
@@ -576,12 +594,17 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$attrs['label'] = strip_tags( $attrs['label'] );
 					}
 
+					if ( ! empty( $default_filters[ $filter ] ) ) {
+						$attrs['options'] = array_intersect( $attrs['options'], $default_filters[ $filter ] );
+					}
+
 					ksort( $attrs['options'] );
 
 					$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options_sorted', $attrs['options'], $attrs ); ?>
 
-					<select class="um-s1" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?>"
+					<select class="um-s1" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
 					        data-placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
+					        <?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>multiple<?php } ?>
 						<?php echo $custom_dropdown; ?>>
 
 						<option></option>
@@ -602,8 +625,17 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								} ?>
 
 								<option value="<?php echo esc_attr( $opt ); ?>" data-value_label="<?php esc_attr_e( $v, 'ultimate-member' ); ?>"
-									<?php disabled( ! empty( $filter_from_url ) && in_array( $opt, $filter_from_url ) ) ?>
-									<?php selected( $opt === $default_value ) ?>>
+									<?php disabled( ! empty( $filter_from_url ) && in_array( $opt, $filter_from_url ) );
+
+									if ( $admin ) {
+										if ( is_string( $default_value ) ) {
+											$default_value = array( $default_value );
+										}
+
+										selected( in_array( $opt, $default_value ) );
+									} else {
+										selected( $opt === $default_value );
+									} ?>>
 									<?php _e( $v, 'ultimate-member' ); ?>
 								</option>
 
@@ -1633,9 +1665,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 */
 		function default_filters( $directory_data ) {
 			//unable default filter in case if we select other filters in frontend filters
-			if ( ! empty( $this->custom_filters_in_query ) ) {
+			/*if ( ! empty( $this->custom_filters_in_query ) ) {
 				return;
-			}
+			}*/
 
 			$default_filters = array();
 			if ( ! empty( $directory_data['search_filters'] ) ) {
@@ -1697,7 +1729,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 										'key'       => $field,
 										'value'     => $value,
 										'compare'   => '=',
-										'inclusive' => true,
 									);
 
 									break;
@@ -2411,7 +2442,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$filter_key = sanitize_key( $_REQUEST['key'] );
 			$directory_id = absint( $_REQUEST['directory_id'] );
 
-			$html = $this->show_filter( $filter_key, array( 'form_id' => $directory_id ) );
+			$html = $this->show_filter( $filter_key, array( 'form_id' => $directory_id ), false, true );
 
 			wp_send_json_success( array( 'field_html' => $html ) );
 		}

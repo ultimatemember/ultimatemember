@@ -406,18 +406,33 @@ jQuery(document).ready( function() {
 	});
 
 	function um_set_range_label( slider, ui ) {
-		var placeholder = slider.siblings( '.um-slider-range' ).data( 'placeholder' );
+		console.log( slider );
+		var placeholder = '';
+		var placeholder_s = slider.siblings( '.um-slider-range' ).data( 'placeholder-s' );
+		var placeholder_p = slider.siblings( '.um-slider-range' ).data( 'placeholder-p' );
 
-		if( ui ) {
-			placeholder = placeholder.replace( '\{min_range\}', ui.values[ 0 ] )
-				.replace( '\{max_range\}', ui.values[ 1 ] )
-				.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
-					.data('label') );
+		if ( ui ) {
+			if ( ui.values[ 0 ] === ui.values[ 1 ] ) {
+				placeholder = placeholder_s.replace( '\{value\}', ui.values[ 0 ] )
+					.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
+						.data('label') );
+			} else {
+				placeholder = placeholder_p.replace( '\{min_range\}', ui.values[ 0 ] )
+					.replace( '\{max_range\}', ui.values[ 1 ] )
+					.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
+						.data('label') );
+			}
 		} else {
-			placeholder = placeholder.replace( '\{min_range\}', slider.slider( "values", 0 ) )
-				.replace( '\{max_range\}', slider.slider( "values", 1 ) )
-				.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
-					.data('label') );
+			if ( slider.slider( "values", 0 ) === slider.slider( "values", 1 ) ) {
+				placeholder = placeholder_s.replace( '\{value\}', slider.slider( "values", 0 ) )
+					.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
+						.data('label') );
+			} else {
+				placeholder = placeholder_p.replace( '\{min_range\}', slider.slider( "values", 0 ) )
+					.replace( '\{max_range\}', slider.slider( "values", 1 ) )
+					.replace( '\{field_label\}', slider.siblings( '.um-slider-range' )
+						.data('label') );
+			}
 		}
 		slider.siblings( '.um-slider-range' ).html( placeholder );
 
