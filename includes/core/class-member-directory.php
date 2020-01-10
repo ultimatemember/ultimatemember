@@ -200,17 +200,17 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						foreach ( $value as $k ) {
 							$filter_type = $this->filter_types[ $k ];
 							if ( ! empty( $filter_type  ) ) {
-								if ( $filter_type == 'select' ) {
-									if ( ! empty( $_POST[ $k ] ) ) {
-										$temp_value[ $k ] = trim( $_POST[ $k ] );
-									}
-								} elseif ( $filter_type == 'slider' ) {
+								if ( $filter_type == 'slider' ) {
 									if ( ! empty( $_POST[ $k ] ) ) {
 										$temp_value[ $k ] = $_POST[ $k ];
 									}
 								} elseif ( $filter_type == 'timepicker' || $filter_type == 'datepicker' ) {
 									if ( ! empty( $_POST[ $k . '_from' ] ) && ! empty( $_POST[ $k . '_to' ] ) ) {
 										$temp_value[ $k ] = array( $_POST[ $k . '_from' ], $_POST[ $k . '_to' ] );
+									}
+								} else {
+									if ( ! empty( $_POST[ $k ] ) ) {
+										$temp_value[ $k ] = trim( $_POST[ $k ] );
 									}
 								}
 							}
@@ -459,13 +459,14 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					break;
 				}
 				case 'text': {
-					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? $_GET[ 'filter_' . $filter . '_' . $unique_hash ] : ''; ?>
+					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? $_GET[ 'filter_' . $filter . '_' . $unique_hash ] : $default_value;
 
+					if( ! $directory_data['search_filters'][ $filter ] ) { ?>
 					<input type="text" autocomplete="off" id="<?php echo $filter; ?>" name="<?php echo $filter; ?>"
 					       placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
 					       value="<?php echo esc_attr( $filter_from_url ) ?>" class="um-form-field" />
-
-					<?php break;
+					<?php }
+					break;
 				}
 				case 'select': {
 
