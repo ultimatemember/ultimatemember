@@ -1709,6 +1709,18 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 									$field_query = apply_filters( "um_query_args_{$field}_{$filter_type}__filter", false, $field, $value, $filter_type );
 
 									break;
+
+								case 'text':
+
+									$field_query = array(
+										'key'       => $field,
+										'value'     => $value,
+										'compare'   => '=',
+										'inclusive' => true,
+									);
+
+									break;
+
 								case 'select':
 									if ( ! is_array( $value ) ) {
 										$value = array( $value );
