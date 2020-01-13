@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2020-01-13 11:21+0200\n"
-"PO-Revision-Date: 2020-01-13 11:21+0200\n"
+"POT-Creation-Date: 2020-01-13 16:46+0200\n"
+"PO-Revision-Date: 2020-01-13 16:46+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -7802,11 +7802,11 @@ msgstr ""
 msgid "Login as this user"
 msgstr ""
 
-#: includes/um-short-functions.php:746
+#: includes/um-short-functions.php:750
 msgid "date submitted"
 msgstr ""
 
-#: includes/um-short-functions.php:752
+#: includes/um-short-functions.php:756
 msgid "(empty)"
 msgstr ""
 
