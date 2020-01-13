@@ -226,6 +226,19 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					}
 
 					$value = $temp_value;
+				} elseif ( $key == '_um_sorting_fields' ) {
+					if ( ! empty( $value['other_data'] ) ) {
+						$other_data = $value['other_data'];
+						unset( $value['other_data'] );
+
+						foreach ( $value as $k => &$row ) {
+							if ( ! empty( $other_data[ $k ]['meta_key'] ) ) {
+								$row = array(
+									$other_data[ $k ]['meta_key'] => ! empty( $other_data[ $k ]['label'] ) ? $other_data[ $k ]['label'] : $other_data[ $k ]['meta_key']
+								);
+							}
+						}
+					}
 				}
 			}
 
@@ -1120,10 +1133,31 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$this->query_args['order'] = 'ASC';
 			$sortby = ! empty( $_POST['sorting'] ) ? $_POST['sorting'] : $directory_data['sortby'];
 
-			if ( $sortby == 'other' && $directory_data['sortby_custom'] ) {
+			$custom_sort = array();
+			$sorting_fields = maybe_unserialize( $directory_data['sorting_fields'] );
+			foreach ( $sorting_fields as $field ) {
+				if ( is_array( $field ) ) {
+					$field_keys = array_keys( $field );
+					$custom_sort[] = $field_keys[0];
+				}
+			}
 
-				$this->query_args['meta_key'] = $directory_data['sortby_custom'];
-				$this->query_args['orderby'] = 'meta_value, display_name';
+			if ( $sortby == $directory_data['sortby_custom'] || in_array( $sortby, $custom_sort ) ) {
+
+				$this->query_args['meta_query'][] = array(
+					'relation' => 'OR',
+					$directory_data['sortby_custom'] => array(
+						'key'       => $sortby,
+						'compare'   => 'EXISTS'
+					),
+					array(
+						'key'       => $sortby,
+						'compare'   => 'NOT EXISTS'
+					)
+				);
+
+				$this->query_args['orderby'] = $sortby;
+				$this->query_args['order'] = 'ASC';
 
 			} elseif ( 'display_name' == $sortby ) {
 
@@ -1664,11 +1698,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * @param $directory_data
 		 */
 		function default_filters( $directory_data ) {
-			//unable default filter in case if we select other filters in frontend filters
-			/*if ( ! empty( $this->custom_filters_in_query ) ) {
-				return;
-			}*/
-
 			$default_filters = array();
 			if ( ! empty( $directory_data['search_filters'] ) ) {
 				$default_filters = maybe_unserialize( $directory_data['search_filters'] );
@@ -1681,10 +1710,6 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 
 			foreach ( $default_filters as $field => $value ) {
-				//unable default filter in case if we select other value in frontend filters
-//				if ( in_array( $field, array_keys( $this->custom_filters_in_query ) ) ) {
-//					continue;
-//				}
 
 				switch ( $field ) {
 					default:
@@ -2310,7 +2335,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			add_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10, 1 );
 
+			//var_dump( $this->query_args );
+
 			$user_query = new \WP_User_Query( $this->query_args );
+
+			//var_dump( $user_query->request );
+			//exit;
 
 			remove_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10 );
 

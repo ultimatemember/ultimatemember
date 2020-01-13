@@ -26,6 +26,14 @@ $_um_sorting_fields = empty( $_um_sorting_fields ) ? array() : $_um_sorting_fiel
 			'conditional'   => array( '_um_sortby', '=', 'other' )
 		),
 		array(
+			'id'            => '_um_sortby_custom_label',
+			'type'          => 'text',
+			'label'         => __( 'Label of custom sort', 'ultimate-member' ),
+			'tooltip'       => __( 'To sort by a custom field, enter the label of sorting here', 'ultimate-member' ),
+			'value'         => UM()->query()->get_meta_value( '_um_sortby_custom_label', null, 'na' ),
+			'conditional'   => array( '_um_sortby', '=', 'other' )
+		),
+		array(
 			'id'        => '_um_enable_sorting',
 			'type'      => 'checkbox',
 			'label'     => __( 'Enable custom sorting', 'ultimate-member' ),
@@ -34,13 +42,13 @@ $_um_sorting_fields = empty( $_um_sorting_fields ) ? array() : $_um_sorting_fiel
 		),
 		array(
 			'id'                    => '_um_sorting_fields',
-			'type'                  => 'multi_selects',
+			'type'                  => 'md_sorting_fields',
 			'label'                 => __( 'Choose field(s) to enable in sorting', 'ultimate-member' ),
 			'value'                 => $_um_sorting_fields,
-			'options'               => UM()->member_directory()->sort_fields,
+			'options'               => array_merge( UM()->member_directory()->sort_fields, array( 'other' => __( 'Other (Custom Field)', 'ultimate-member' ) ) ),
 			'add_text'              => __( 'Add New Field', 'ultimate-member' ),
 			'show_default_number'   => 1,
-			'conditional'           => array( '_um_enable_sorting', '=', 1 )
+			'conditional'           => array( '_um_enable_sorting', '=', 1 ),
 		)
 	);
 

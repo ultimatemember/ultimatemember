@@ -150,6 +150,61 @@ jQuery(document).ready( function() {
 		forcePlaceholderSize:   true
 	});
 
+	jQuery('.um-multi-selects-list[data-field_id="_um_sorting_fields"] li').each( function() {
+		var if_other = jQuery(this).find( '.um-field-wrapper:not(.um-custom-order-fields) select' ).val();
+		if ( if_other === 'other' ) {
+			jQuery(this).find( '.um-field-wrapper.um-custom-order-fields' ).show();
+		} else {
+			jQuery(this).find( '.um-field-wrapper.um-custom-order-fields' ).hide();
+		}
+	});
+
+	jQuery( '.um-forms-line[data-field_type="md_sorting_fields"] .um-multi-selects-add-option' ).click( function() {
+		var list = jQuery(this).siblings('ul.um-multi-selects-list');
+
+		var sortable = list.hasClass( 'um-sortable-multi-selects' );
+
+		var field_id = list.data('field_id');
+		var k = 0;
+		if ( list.find( 'li:last select.um-forms-field' ).length > 0 ) {
+			k = list.find( 'li:last select.um-forms-field' ).attr('id').split("-");
+			k = k[1]*1 + 1;
+		}
+
+		var selector_html = jQuery( '<div>' ).append( list.siblings('.um-hidden-multi-selects').clone() ).html();
+
+		var html = '<li class="um-multi-selects-option-line' + ( sortable ? ' um-admin-drag-fld' : '' ) + '">';
+		if ( sortable ) {
+			html += '<span class="um-field-icon"><i class="um-faicon-sort"></i></span>';
+		}
+
+		html += '<span class="um-field-wrapper">' + selector_html + '</span>' +
+			'<span class="um-field-control">' +
+			'<a href="javascript:void(0);" class="um-select-delete">' + wp.i18n.__( 'Remove', 'ultimate-member' ) + '</a>' +
+			'</span>' +
+			'<span class="um-field-wrapper um-custom-order-fields"><label>' + wp.i18n.__( 'Meta key', 'ultimate-member' ) + ':&nbsp;<input type="text" name="meta_key" /></label></span>' +
+			'<span class="um-field-wrapper um-custom-order-fields"><label>' + wp.i18n.__( 'Label', 'ultimate-member' ) + ':&nbsp;<input type="text" name="label" /></label></span>' +
+			'</li>';
+		list.append( html );
+
+		list.find('li:last .um-hidden-multi-selects').attr('name', jQuery(this).data('name') ).
+		addClass('um-forms-field um-long-field').removeClass('um-hidden-multi-selects').attr('id', list.data('id_attr') + '-' + k).trigger('change');
+
+		jQuery( '#' + list.data('id_attr') + '-' + k ).parents('li').find('.um-field-wrapper.um-custom-order-fields input[name="meta_key"]').attr('name', 'um_metadata[_um_sorting_fields][other_data][' + k + '][meta_key]');
+		jQuery( '#' + list.data('id_attr') + '-' + k ).parents('li').find('.um-field-wrapper.um-custom-order-fields input[name="label"]').attr('name', 'um_metadata[_um_sorting_fields][other_data][' + k + '][label]');
+	});
+
+
+	jQuery( document.body ).on( 'change', '.um-multi-selects-list[data-field_id="_um_sorting_fields"] .um-field-wrapper:not(.um-custom-order-fields) select', function() {
+		var if_other = jQuery(this).val();
+
+		if ( if_other === 'other' ) {
+			jQuery(this).parents('li').find( '.um-field-wrapper.um-custom-order-fields' ).show();
+		} else {
+			jQuery(this).parents('li').find( '.um-field-wrapper.um-custom-order-fields' ).hide();
+		}
+	});
+
 
 	/**
 	 * Multi-selects field
@@ -166,6 +221,10 @@ jQuery(document).ready( function() {
 	});
 
 	jQuery( '.um-multi-selects-add-option' ).click( function() {
+		if ( jQuery(this).parents( '.um-forms-line[data-field_type="md_sorting_fields"]' ).length ) {
+			return;
+		}
+
 		var list = jQuery(this).siblings('ul.um-multi-selects-list');
 
 		var sortable = list.hasClass( 'um-sortable-multi-selects' );

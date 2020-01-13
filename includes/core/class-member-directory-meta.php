@@ -65,7 +65,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					)
 				);
 
-				update_option( 'um_usermeta_fields', $metakeys );
+				update_option( 'um_usermeta_fields', array_values( $metakeys ) );
 			}
 		}
 
@@ -79,7 +79,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			$metakeys = get_option( 'um_usermeta_fields', array() );
 			if ( ! in_array( $metakey, $metakeys ) ) {
 				$metakeys[] = $metakey;
-				update_option( 'um_usermeta_fields', $metakeys );
+				update_option( 'um_usermeta_fields', array_values( $metakeys ) );
 			}
 		}
 
@@ -590,15 +590,23 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			}
 			//}
 
-
 			$order = 'ASC';
 			$sortby = ! empty( $_POST['sorting'] ) ? $_POST['sorting'] : $directory_data['sortby'];
 
+			$custom_sort = array();
+			$sorting_fields = maybe_unserialize( $directory_data['sorting_fields'] );
+			foreach ( $sorting_fields as $field ) {
+				if ( is_array( $field ) ) {
+					$field_keys = array_keys( $field );
+					$custom_sort[] = $field_keys[0];
+				}
+			}
+
 			// handle sorting options
 			// sort members by
-			if ( $sortby == 'other' && $directory_data['sortby_custom'] ) {
+			if ( $sortby == $directory_data['sortby_custom'] || in_array( $sortby, $custom_sort ) ) {
 
-				$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = '{$directory_data['sortby_custom']}' )";
+				$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = '{$sortby}' )";
 
 				$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS CHAR ) {$order} ";
 

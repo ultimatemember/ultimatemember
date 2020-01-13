@@ -125,6 +125,30 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$metakeys[] = '_completed';
 				$metakeys[] = '_reviews_avg';
 
+				$sortby_custom_keys = $wpdb->get_col( "SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key='_um_sortby_custom'" );
+				if ( empty( $sortby_custom_keys ) ) {
+					$sortby_custom_keys = array();
+				}
+
+				$sortby_custom_keys2 = $wpdb->get_col( "SELECT meta_value FROM {$wpdb->postmeta} WHERE meta_key='_um_sorting_fields'" );
+				if ( ! empty( $sortby_custom_keys2 ) ) {
+					foreach ( $sortby_custom_keys2 as $custom_val ) {
+						$custom_val = maybe_unserialize( $custom_val );
+
+						foreach ( $custom_val as $sort_value ) {
+							if ( is_array( $sort_value ) ) {
+								$field_keys = array_keys( $sort_value );
+								$sortby_custom_keys[] = $field_keys[0];
+							}
+						}
+					}
+				}
+
+				if ( ! empty( $sortby_custom_keys ) ) {
+					$sortby_custom_keys = array_unique( $sortby_custom_keys );
+					$metakeys = array_merge( $metakeys, $sortby_custom_keys );
+				}
+
 				$skip_fields = UM()->builtin()->get_fields_without_metakey();
 				$skip_fields = array_merge( $skip_fields, UM()->member_directory()->core_search_fields );
 
@@ -132,9 +156,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$real_usermeta = ! empty( $real_usermeta ) ? $real_usermeta : array();
 				$real_usermeta = array_merge( $real_usermeta, array( 'um_member_directory_data' ) );
 
+				if ( ! empty( $sortby_custom_keys ) ) {
+					$real_usermeta = array_merge( $real_usermeta, $sortby_custom_keys );
+				}
+
 				$wp_usermeta_option = array_intersect( array_diff( $metakeys, $skip_fields ), $real_usermeta );
 
-				update_option( 'um_usermeta_fields', $wp_usermeta_option );
+				update_option( 'um_usermeta_fields', array_values( $wp_usermeta_option ) );
 
 				update_option( 'um_member_directory_update_meta', time() );
 

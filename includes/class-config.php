@@ -150,6 +150,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 
 				'_um_sortby'                    => 'user_registered_desc',
 				'_um_sortby_custom'             => '',
+				'_um_sortby_custom_label'       => '',
 				'_um_enable_sorting'            => 0,
 				'_um_sorting_fields'            => array(),
 

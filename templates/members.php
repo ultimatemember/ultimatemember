@@ -50,21 +50,40 @@ if ( count( $args['view_types'] ) == 1 ) {
 
 // Sorting
 $default_sorting = ! empty( $args['sortby'] ) ? $args['sortby'] : 'user_registered_desc';
+if ( $default_sorting == 'other' && ! empty( $args['sortby_custom'] ) ) {
+	$default_sorting = $args['sortby_custom'];
+}
 
 $sort_from_url = '';
+$custom_sorting_titles = array();
 if ( ! empty( $args['enable_sorting'] ) ) {
 	$sorting_options = empty( $args['sorting_fields'] ) ? array() : $args['sorting_fields'];
-	if ( ! in_array( $default_sorting, $sorting_options ) ) {
-		$sorting_options[] = $default_sorting;
+
+	$sorting_options_prepared = array();
+	if ( ! empty( $sorting_options ) ) {
+		foreach ( $sorting_options as $option ) {
+			if ( is_array( $option ) ) {
+				$option_keys = array_keys( $option );
+				$sorting_options_prepared[] = $option_keys[0];
+
+				$custom_sorting_titles[ $option_keys[0] ] = $option[ $option_keys[0] ];
+			} else {
+				$sorting_options_prepared[] = $option;
+			}
+		}
 	}
 
-	if ( ! empty( $sorting_options ) ) {
+	if ( ! in_array( $default_sorting, $sorting_options_prepared ) ) {
+		$sorting_options_prepared[] = $default_sorting;
+		$custom_sorting_titles[ $default_sorting ] = ! empty( $args['sortby_custom_label'] ) ? $args['sortby_custom_label'] : $default_sorting;
+	}
+
+	if ( ! empty( $sorting_options_prepared ) ) {
 		$all_sorting_options = UM()->member_directory()->sort_fields;
-		$sorting_options = array_intersect_key( $all_sorting_options, array_flip( $sorting_options ) );
+		$sorting_options = array_intersect_key( array_merge( $all_sorting_options, $custom_sorting_titles ), array_flip( $sorting_options_prepared ) );
 	}
 
 	$sorting_options = apply_filters( 'um_member_directory_pre_display_sorting', $sorting_options, $args );
-
 	$sort_from_url = ( ! empty( $_GET[ 'sort_' . $unique_hash ] ) && in_array( $_GET[ 'sort_' . $unique_hash ], array_keys( $sorting_options ) ) ) ? $_GET[ 'sort_' . $unique_hash ] : $default_sorting;
 }
 
