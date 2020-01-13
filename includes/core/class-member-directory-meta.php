@@ -356,7 +356,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata {$join_slug}{$i} ON {$join_slug}{$i}.user_id = u.ID";
 
-					$this->where_clauses[] = $wpdb->prepare( "( {$join_slug}{$i}.um_key = 'birth_date' AND {$join_slug}{$i}.um_value BETWEEN %s AND %s )", $from_date, $to_date );
+					$this->where_clauses[] = $wpdb->prepare( "( {$join_slug}{$i}.um_key = 'birth_date' AND {$join_slug}{$i}.um_value BETWEEN %s AND %s )", $to_date, $from_date );
 
 					if ( ! $is_default ) {
 						$this->custom_filters_in_query[ $field ] = array( $to_date, $from_date );
@@ -718,13 +718,6 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			$sql_where = ! empty( $sql_where ) ? 'AND ' . $sql_where : '';
 
 			global $wpdb;
-
-			/*var_dump( "SELECT SQL_CALC_FOUND_ROWS DISTINCT u.ID
-				FROM {$wpdb->users} AS u
-				{$sql_join}
-				WHERE 1=1 {$sql_where}
-				{$this->sql_order}
-				{$this->sql_limit}" );*/
 
 			$user_ids = $wpdb->get_col(
 				"SELECT SQL_CALC_FOUND_ROWS DISTINCT u.ID 

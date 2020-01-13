@@ -780,12 +780,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				}
 				case 'birth_date': {
 					global $wpdb;
-					$meta = $wpdb->get_col( "SELECT DISTINCT meta_value FROM {$wpdb->usermeta} WHERE meta_key='birth_date' ORDER BY meta_value DESC" );
+					$meta = $wpdb->get_row( "SELECT MIN( meta_value ) as min_meta, MAX( meta_value ) as max_meta, COUNT( DISTINCT meta_value ) as amount FROM {$wpdb->usermeta} WHERE meta_key='birth_date'", ARRAY_A );
 
-					if ( empty( $meta ) || count( $meta ) === 1 ) {
+					if ( empty( $meta ) || ! isset( $meta['amount'] ) || $meta['amount'] === 1 ) {
 						$range = false;
-					} elseif ( ! empty( $meta ) ) {
-						$range = array( $this->borndate( strtotime( $meta[0] ) ), $this->borndate( strtotime( $meta[ count( $meta ) - 1 ] ) ) );
+					} elseif ( ! empty( $meta['min_meta'] ) && ! empty( $meta['max_meta'] ) ) {
+						$range = array( $this->borndate( strtotime( $meta['max_meta'] ) ), $this->borndate( strtotime( $meta['min_meta'] ) ) );
 					}
 
 					break;
