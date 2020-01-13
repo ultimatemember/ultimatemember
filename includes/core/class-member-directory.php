@@ -2172,7 +2172,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							) );
 						}
 
-						$data_array[ "label_{$key}" ] = $label;
+						$data_array[ "label_{$key}" ] = __( $label, 'ultimate-member' );
 						$data_array[ $key ] = $value;
 					}
 				}
