@@ -43,6 +43,9 @@ GNU Version 2 or Any Later Version
 ## Releases
 [Official Release Version: 2.1.2](https://github.com/ultimatemember/ultimatemember/releases/tag/2.1.2).
 
+## Release Candidate
+[Official Release Version: 2.1.3-RC.1](https://github.com/ultimatemember/ultimatemember/releases/tag/2.1.3-rc.1).
+
 ## Changelog
 [ From v1.0.0 to latest version ](https://wordpress.org/plugins/ultimate-member/changelog/).
 
