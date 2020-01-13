@@ -1015,10 +1015,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				 */
 				$data = apply_filters( 'um_is_selected_filter_data', $data, $key, $field_value );
 
-				if ( ! $this->editing ) {
+				if ( ! $this->editing || 'custom' == $this->set_mode ) {
 					// show default on register screen if there is default
 					if ( isset( $data['default'] ) ) {
-						if ( strstr( $data['default'], ', ' ) ) {
+						if ( ! is_array( $data['default'] ) && strstr( $data['default'], ', ' ) ) {
 							$data['default'] = explode( ', ', $data['default'] );
 						}
 
@@ -1029,6 +1029,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						if ( is_array( $data['default'] ) && in_array( $value, $data['default'] ) ) {
 							return true;
 						}
+
+						if ( is_array( $data['default'] ) && array_intersect( $data['options'], $data['default'] ) ) {
+							return true;
+						}
+
 					}
 				} else {
 
@@ -1051,7 +1056,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					// show default on edit screen if there isn't meta row in usermeta table
 					$direct_db_value = $wpdb->get_var( $wpdb->prepare( "SELECT ISNULL( meta_value ) FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key = %s", um_user( 'ID' ), $key ) );
 					if ( ! isset( $direct_db_value ) && isset( $data['default'] ) ) {
-						if ( strstr( $data['default'], ', ' ) ) {
+						if ( ! is_array(  $data['default'] ) && strstr( $data['default'], ', ' ) ) {
 							$data['default'] = explode( ', ', $data['default'] );
 						}
 
@@ -1082,7 +1087,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 */
 		function is_radio_checked( $key, $value, $data ) {
 			global $wpdb;
-
+					
 			if ( isset( UM()->form()->post_form[ $key ] ) ) {
 				if ( is_array( UM()->form()->post_form[ $key ] ) && in_array( $value, UM()->form()->post_form[ $key ] ) ) {
 					return true;
@@ -1091,7 +1096,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				}
 			} else {
 
-				if ( $this->editing ) {
+				if ( $this->editing && 'custom' !== $this->set_mode ) {
 					if ( um_user( $key ) ) {
 
 						if ( strstr( $key, 'role_' ) ) {
@@ -3292,16 +3297,34 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$i = 0;
 					$field_value = array();
 
+					/**
+					 * UM hook
+					 *
+					 * @type filter
+					 * @title um_radio_option_value
+					 * @description Enable options pair by field $data
+					 * @input_vars
+					 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
+					 * {"var":"$data","type":"array","desc":"Field Data"}]
+					 */
+					$options_pair = apply_filters( "um_radio_options_pair__{$key}", false, $data );
+
+
 					if ( ! empty( $options ) ) {
 						foreach ( $options as $k => $v ) {
 
 							$v = rtrim( $v );
-
+                           
 							$um_field_checkbox_item_title = $v;
 							$option_value = $v;
 
 							if ( ! is_numeric( $k ) && in_array( $form_key, array( 'role' ) ) ||
 								 ( $this->set_mode == 'account' || um_is_core_page( 'account' ) ) ) {
+								$um_field_checkbox_item_title = $v;
+								$option_value = $k;
+							}
+
+							if( $options_pair ){
 								$um_field_checkbox_item_title = $v;
 								$option_value = $k;
 							}
