@@ -209,8 +209,12 @@ function um_convert_tags( $content, $args = array(), $with_kses = true ) {
 	// Support for all usermeta keys
 	if ( ! empty( $matches[1] ) && is_array( $matches[1] ) ) {
 		foreach ( $matches[1] as $match ) {
-			$strip_key = str_replace( 'usermeta:', '', $match );
-			$content = str_replace( '{' . $match . '}', um_user( $strip_key ), $content );
+			$key = str_replace( 'usermeta:', '', $match );
+			$value = um_user( $key );
+			if ( is_array( $value ) ) {
+				$value = implode( ', ', $value );
+			}
+			$content = str_replace( '{' . $match . '}', apply_filters( 'um_convert_tags', $value, $key ), $content );
 		}
 	}
 	return $content;
