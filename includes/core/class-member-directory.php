@@ -233,12 +233,22 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 						foreach ( $value as $k => &$row ) {
 							if ( ! empty( $other_data[ $k ]['meta_key'] ) ) {
-								$row = array(
-									$other_data[ $k ]['meta_key'] => ! empty( $other_data[ $k ]['label'] ) ? $other_data[ $k ]['label'] : $other_data[ $k ]['meta_key']
-								);
+								$metakey = sanitize_key( $other_data[ $k ]['meta_key'] );
+								if ( ! empty( $metakey ) ) {
+									if ( ! empty( $other_data[ $k ]['label'] ) ) {
+										$metalabel = wp_strip_all_tags( $other_data[ $k ]['label'] );
+									}
+									$row = array(
+										$metakey => ! empty( $metalabel ) ? $metalabel : $metakey
+									);
+								}
 							}
 						}
 					}
+				} elseif ( $key == '_um_sortby_custom' ) {
+					$value = sanitize_key( $value );
+				} elseif ( $key == '_um_sortby_custom_label' ) {
+					$value = wp_strip_all_tags( $value );
 				}
 			}
 
