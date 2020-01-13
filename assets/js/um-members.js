@@ -1112,12 +1112,29 @@ jQuery(document.body).ready( function() {
 		} else if ( type === 'slider' ) {
 			um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
 			um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
+
+
+			var $slider = jQuery( '.um-search-filter #' + filter_name + '_min' ).siblings('.um-slider');
+			var options = $slider.slider( 'option' );
+
+			$slider.slider( 'values', [ options.min, options.max ] );
+
+			jQuery( '.um-search-filter #' + filter_name + '_min' ).val('');
+			jQuery( '.um-search-filter #' + filter_name + '_max' ).val('');
+
+			um_set_range_label( $slider );
 		} else if ( type === 'datepicker' ) {
 			um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
 			um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
+
+			jQuery( '.um-search-filter #' + filter_name + '_from' ).val('');
+			jQuery( '.um-search-filter #' + filter_name + '_to' ).val('');
 		} else if ( type === 'timepicker' ) {
 			um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
 			um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );
+
+			jQuery( '.um-search-filter #' + filter_name + '_from' ).val('');
+			jQuery( '.um-search-filter #' + filter_name + '_to' ).val('');
 		}
 
 
