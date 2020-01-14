@@ -200,8 +200,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					$per_page
 				), ARRAY_A );
 
+				$values = array();
 				foreach ( $metadata as $metarow ) {
-					$wpdb->insert(
+					$values[] = $wpdb->prepare('(%d, %s, %s)', $metarow['user_id'], $metarow['meta_key'], $metarow['meta_value'] );
+
+					/*$wpdb->insert(
 						"{$wpdb->prefix}um_metadata",
 						array(
 							'user_id'   => $metarow['user_id'],
@@ -213,7 +216,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							'%s',
 							'%s',
 						)
-					);
+					);*/
+				}
+
+				if ( ! empty( $values ) ) {
+				$wpdb->query(
+					"INSERT INTO 
+    				{$wpdb->prefix}um_metadata(user_id, um_key, um_value)
+					VALUES " . implode( ',', $values ) );
 				}
 
 				$from = ( $_POST['page'] * $per_page ) - $per_page + 1;
