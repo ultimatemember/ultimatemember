@@ -102,7 +102,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * @return bool
 		 */
 		function get_hide_in_members_default() {
-			$default = apply_filters( 'um_member_directory_hide_in_members_default', false );
+			$default = false;
+			$option = UM()->options()->get( 'account_hide_in_directory_default' );
+			if ( $option == 'Yes' ) {
+				$default = true;
+			}
+
+			$default = apply_filters( 'um_member_directory_hide_in_members_default', $default );
 			return $default;
 		}
 

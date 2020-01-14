@@ -75,7 +75,7 @@ function um_upgrade_metadata_per_user213beta3() {
 				$hide_in_members = UM()->member_directory()->get_hide_in_members_default();
 				if ( ! empty( $metadatarow['meta_value'] ) ) {
 					if ( $metadatarow['meta_value'] == 'Yes' || $metadatarow['meta_value'] == __( 'Yes', 'ultimate-member' ) ||
-					     $metadatarow['meta_value'] == serialize( array( 'Yes' ) ) || $metadatarow['meta_value'] == serialize( array( __( 'Yes', 'ultimate-member' ) ) ) ) {
+					     array_intersect( array( 'Yes', __( 'Yes', 'ultimate-member' ) ), $metadatarow['meta_value'] ) ) {
 						$hide_in_members = true;
 					} else {
 						$hide_in_members = false;

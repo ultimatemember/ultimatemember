@@ -210,7 +210,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					$hide_in_members = UM()->member_directory()->get_hide_in_members_default();
 					if ( ! empty( $_meta_value ) ) {
 						if ( $_meta_value == 'Yes' || $_meta_value == __( 'Yes', 'ultimate-member' ) ||
-						     $_meta_value == serialize( array( 'Yes' ) ) || $_meta_value == serialize( array( __( 'Yes', 'ultimate-member' ) ) ) ) {
+						     array_intersect( array( 'Yes', __( 'Yes', 'ultimate-member' ) ), $_meta_value ) ) {
 							$hide_in_members = true;
 						} else {
 							$hide_in_members = false;

@@ -700,17 +700,29 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									'tooltip'   => __( 'Password is required to save account data.', 'ultimate-member' ),
 								),
 								array(
-									'id'       		=> 'account_hide_in_directory',
-									'type'     		=> 'checkbox',
-									'label'   		=> __( 'Allow users to hide their profiles from directory','ultimate-member' ),
-									'tooltip' 	=> __('Whether to allow users changing their profile visibility from member directory in account page.','ultimate-member'),
+									'id'        => 'account_require_strongpass',
+									'type'      => 'checkbox',
+									'label'     => __( 'Require a strong password?','ultimate-member' ),
+									'tooltip'   => __( 'Enable or disable a strong password rules on account page / change password tab', 'ultimate-member' ),
 								),
 								array(
-									'id'       		=> 'account_require_strongpass',
-									'type'     		=> 'checkbox',
-									'label'   		=> __( 'Require a strong password?','ultimate-member' ),
-									'tooltip' 	=> __('Enable or disable a strong password rules on account page / change password tab','ultimate-member'),
-								)
+									'id'        => 'account_hide_in_directory',
+									'type'      => 'checkbox',
+									'label'     => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
+									'tooltip'   => __( 'Whether to allow users changing their profile visibility from member directory in account page.', 'ultimate-member' ),
+								),
+								array(
+									'id'          => 'account_hide_in_directory_default',
+									'type'        => 'select',
+									'label'       => __( 'Hide profiles from directory by default', 'ultimate-member' ),
+									'tooltip'     => __( 'Set default value for the "Hide my profile from directory" option', 'ultimate-member' ),
+									'options'     => array(
+										'No'  => __( 'No', 'ultimate-member' ),
+										'Yes' => __( 'Yes', 'ultimate-member' )
+									),
+									'size'        => 'small',
+									'conditional' => array( 'account_hide_in_directory', '=', '1' ),
+								),
 							)
 						),
 						'uploads'   => array(
@@ -1923,6 +1935,42 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 						update_option( 'um_member_directory_truncated', time() );
 					}
+				} elseif ( isset( $_POST['um_options']['account_hide_in_directory_default'] ) ) {
+
+					global $wpdb;
+
+					if ( $_POST['um_options']['account_hide_in_directory_default'] == 'No' ) {
+
+						$results = $wpdb->get_col(
+							"SELECT u.ID FROM {$wpdb->users} AS u 
+							LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'hide_in_members' )
+							LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
+							WHERE um.meta_value IS NULL AND
+								um2.meta_value LIKE '%s:15:\"hide_in_members\";b:1;%'"
+						);
+
+					} else {
+
+						$results = $wpdb->get_col(
+							"SELECT u.ID FROM {$wpdb->users} AS u 
+							LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'hide_in_members' )
+							LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
+							WHERE um.meta_value IS NULL AND
+								um2.meta_value LIKE '%s:15:\"hide_in_members\";b:0;%'"
+						);
+
+					}
+
+					if ( ! empty( $results ) ) {
+						foreach ( $results as $user_id ) {
+							$md_data = get_user_meta( $user_id, 'um_member_directory_data', true );
+							if ( ! empty( $md_data ) ) {
+								$md_data['hide_in_members'] = ( $_POST['um_options']['account_hide_in_directory_default'] == 'No' ) ? false : true;
+								update_user_meta( $user_id, 'um_member_directory_data', $md_data );
+							}
+						}
+					}
+
 				}
 			}
 		}

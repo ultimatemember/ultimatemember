@@ -532,6 +532,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'account_email'                         => 1,
 				'account_general_password'              => 0,
 				'account_hide_in_directory'             => 1,
+				'account_hide_in_directory_default'     => 'No',
 				'account_require_strongpass'            => 0,
 				'photo_thumb_sizes'                     => array( 40, 80, 190 ),
 				'cover_thumb_sizes'                     => array( 300, 600 ),

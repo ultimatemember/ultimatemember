@@ -267,9 +267,18 @@ function um_submit_account_details( $args ) {
 		$changes[ $k ] = $v;
 	}
 
-	if ( isset( $changes['hide_in_members'] ) && ( $changes['hide_in_members'] == __( 'No', 'ultimate-member' ) || $changes['hide_in_members'] == 'No' ) ) {
-		delete_user_meta( $user_id, 'hide_in_members' );
-		unset( $changes['hide_in_members'] );
+	if ( isset( $changes['hide_in_members'] ) ) {
+		if ( UM()->member_directory()->get_hide_in_members_default() ) {
+			if ( $changes['hide_in_members'] == __( 'Yes', 'ultimate-member' ) || $changes['hide_in_members'] == 'Yes' || array_intersect( array( 'Yes', __( 'Yes', 'ultimate-member' ) ), $changes['hide_in_members'] ) ) {
+				delete_user_meta( $user_id, 'hide_in_members' );
+				unset( $changes['hide_in_members'] );
+			}
+		} else {
+			if ( $changes['hide_in_members'] == __( 'No', 'ultimate-member' ) || $changes['hide_in_members'] == 'No' || array_intersect( array( 'No', __( 'No', 'ultimate-member' ) ), $changes['hide_in_members'] ) ) {
+				delete_user_meta( $user_id, 'hide_in_members' );
+				unset( $changes['hide_in_members'] );
+			}
+		}
 	}
 
 	/**
