@@ -59,7 +59,7 @@ function um_upgrade_metadata_per_user213beta3() {
 		if ( ! isset( $users_map[ $metadatarow['user_id'] ] ) ) {
 			$users_map[ $metadatarow['user_id'] ] = array(
 				'account_status'    => 'approved',
-				'hide_in_members'   => false,
+				'hide_in_members'   => UM()->member_directory()->get_hide_in_members_default(),
 				'profile_photo'     => false,
 				'cover_photo'       => false,
 				'verified'          => false,
@@ -72,11 +72,13 @@ function um_upgrade_metadata_per_user213beta3() {
 				break;
 			case 'hide_in_members':
 
-				$hide_in_members = false;
+				$hide_in_members = UM()->member_directory()->get_hide_in_members_default();
 				if ( ! empty( $metadatarow['meta_value'] ) ) {
 					if ( $metadatarow['meta_value'] == 'Yes' || $metadatarow['meta_value'] == __( 'Yes', 'ultimate-member' ) ||
 					     $metadatarow['meta_value'] == serialize( array( 'Yes' ) ) || $metadatarow['meta_value'] == serialize( array( __( 'Yes', 'ultimate-member' ) ) ) ) {
 						$hide_in_members = true;
+					} else {
+						$hide_in_members = false;
 					}
 				}
 

@@ -99,6 +99,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 
 		/**
+		 * @return bool
+		 */
+		function get_hide_in_members_default() {
+			$default = apply_filters( 'um_member_directory_hide_in_members_default', false );
+			return $default;
+		}
+
+
+		/**
 		 * Getting member directory post ID via hash
 		 * Hash is unique attr, which we use visible at frontend
 		 *
@@ -1404,11 +1413,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							$custom_fields[] = $field_key;
 						}
 
-						$sql['join'] = preg_replace(
-							'/(' . $meta_join_for_search . ' ON \( ' . $wpdb->users . '\.ID = ' . $meta_join_for_search . '\.user_id )(\))/im',
-							"$1 AND " . $meta_join_for_search . ".meta_key IN( '" . implode( "','", $custom_fields ) . "' ) $2",
-							$sql['join']
-						);
+						$custom_fields = apply_filters( 'um_general_search_custom_fields', $custom_fields );
+
+						if ( ! empty( $custom_fields ) ) {
+							$sql['join'] = preg_replace(
+								'/(' . $meta_join_for_search . ' ON \( ' . $wpdb->users . '\.ID = ' . $meta_join_for_search . '\.user_id )(\))/im',
+								"$1 AND " . $meta_join_for_search . ".meta_key IN( '" . implode( "','", $custom_fields ) . "' ) $2",
+								$sql['join']
+							);
+						}
 					}
 
 					// Add OR instead AND to search in WP core fields user_email, user_login, user_display_name

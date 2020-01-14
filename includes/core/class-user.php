@@ -120,7 +120,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			if ( empty( $md_data ) ) {
 				$md_data = array(
 					'account_status'    => 'approved',
-					'hide_in_members'   => false,
+					'hide_in_members'   => UM()->member_directory()->get_hide_in_members_default(),
 					'profile_photo'     => false,
 					'cover_photo'       => false,
 					'verified'          => false,
@@ -132,7 +132,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					$md_data['account_status'] = 'approved';
 					break;
 				case 'hide_in_members':
-					$md_data['hide_in_members'] = false;
+					$md_data['hide_in_members'] = UM()->member_directory()->get_hide_in_members_default();
 					break;
 				case 'synced_gravatar_hashed_id':
 					if ( UM()->options()->get( 'use_gravatars' ) ) {
@@ -194,7 +194,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			if ( empty( $md_data ) ) {
 				$md_data = array(
 					'account_status'    => 'approved',
-					'hide_in_members'   => false,
+					'hide_in_members'   => UM()->member_directory()->get_hide_in_members_default(),
 					'profile_photo'     => false,
 					'cover_photo'       => false,
 					'verified'          => false,
@@ -207,11 +207,13 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					break;
 				case 'hide_in_members':
 
-					$hide_in_members = false;
+					$hide_in_members = UM()->member_directory()->get_hide_in_members_default();
 					if ( ! empty( $_meta_value ) ) {
 						if ( $_meta_value == 'Yes' || $_meta_value == __( 'Yes', 'ultimate-member' ) ||
 						     $_meta_value == serialize( array( 'Yes' ) ) || $_meta_value == serialize( array( __( 'Yes', 'ultimate-member' ) ) ) ) {
 							$hide_in_members = true;
+						} else {
+							$hide_in_members = false;
 						}
 					}
 

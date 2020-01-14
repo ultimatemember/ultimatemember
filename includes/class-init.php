@@ -1464,8 +1464,6 @@ if ( ! class_exists( 'UM' ) ) {
 			require_once 'core/um-filters-avatars.php';
 			require_once 'core/um-filters-user.php';
 
-			//require_once 'core/um-filters-members.php';
-
 			require_once 'core/um-filters-profile.php';
 			require_once 'core/um-filters-account.php';
 			require_once 'core/um-filters-misc.php';

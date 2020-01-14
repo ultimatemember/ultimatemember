@@ -667,7 +667,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					$_SESSION['um_member_directory_seed'] = $seed;
 				}
 
-				$this->sql_order = 'ORDER by RAND(' . $seed . ')';
+				$this->sql_order = 'ORDER BY RAND(' . $seed . ')';
 
 			} else {
 
