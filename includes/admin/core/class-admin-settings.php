@@ -187,7 +187,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					wp_send_json_error( __( 'Wrong data', 'ultimate-member' ) );
 				}
 
-				$per_page = 50;
+				$per_page = 250;
 				$wp_usermeta_option = get_option( 'um_usermeta_fields', array() );
 
 				global $wpdb;

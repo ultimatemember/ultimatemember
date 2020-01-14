@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2020-01-13 16:46+0200\n"
-"PO-Revision-Date: 2020-01-13 16:46+0200\n"
+"POT-Creation-Date: 2020-01-13 23:16+0200\n"
+"PO-Revision-Date: 2020-01-13 23:16+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -4645,7 +4645,7 @@ msgid "Register"
 msgstr ""
 
 #: includes/class-config.php:135 includes/class-config.php:791
-#: includes/core/class-member-directory.php:2080
+#: includes/core/class-member-directory.php:2089
 #: includes/core/um-actions-profile.php:1258
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
@@ -7208,27 +7208,27 @@ msgstr ""
 msgid "User Registered"
 msgstr ""
 
-#: includes/core/class-member-directory.php:821
-#: includes/core/class-member-directory.php:822
+#: includes/core/class-member-directory.php:830
+#: includes/core/class-member-directory.php:831
 msgid " stars"
 msgstr ""
 
-#: includes/core/class-member-directory.php:832
+#: includes/core/class-member-directory.php:841
 msgid "<strong>Age:</strong>&nbsp;{value} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:833
+#: includes/core/class-member-directory.php:842
 msgid "<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:2025
-#: includes/core/class-member-directory.php:2069
+#: includes/core/class-member-directory.php:2034
+#: includes/core/class-member-directory.php:2078
 #: includes/core/um-actions-profile.php:1225
 #: includes/core/um-actions-profile.php:1256
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/class-member-directory.php:2075
+#: includes/core/class-member-directory.php:2084
 #: includes/core/um-actions-profile.php:1257
 msgid "My Account"
 msgstr ""

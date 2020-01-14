@@ -504,8 +504,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				case 'text': {
 					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? $_GET[ 'filter_' . $filter . '_' . $unique_hash ] : $default_value; ?>
 						<input type="text" autocomplete="off" id="<?php echo $filter; ?>" name="<?php echo $filter; ?>"
-						       placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
-						       value="<?php echo esc_attr( $filter_from_url ) ?>" class="um-form-field" />
+							   placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
+							   value="<?php echo esc_attr( $filter_from_url ) ?>" class="um-form-field" />
 					<?php
 					break;
 				}
@@ -523,7 +523,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								"SELECT DISTINCT meta_value 
 								FROM $wpdb->usermeta 
 								WHERE meta_key = %s AND 
-								      meta_value != ''",
+									  meta_value != ''",
 								$attrs['metakey']
 							)
 						);
@@ -626,8 +626,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options_sorted', $attrs['options'], $attrs ); ?>
 
 					<select class="um-s1" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
-					        data-placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
-					        <?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>multiple<?php } ?>
+							data-placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
+							<?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>multiple<?php } ?>
 						<?php echo $custom_dropdown; ?>>
 
 						<option></option>
@@ -692,15 +692,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					if ( $range ) { ?>
 
 						<input type="text" id="<?php echo $filter; ?>_from" name="<?php echo $filter; ?>_from" class="um-datepicker-filter"
-						       placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
-						       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
-						       data-date_min="<?php echo $range[0] ?>" data-date_max="<?php echo $range[1] ?>"
-						       data-filter_name="<?php echo $filter; ?>" data-range="from" data-value="<?php echo ! empty( $default_value ) ? esc_attr( strtotime( min( $default_value ) ) ) : '' ?>" />
+							   placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
+							   data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
+							   data-date_min="<?php echo $range[0] ?>" data-date_max="<?php echo $range[1] ?>"
+							   data-filter_name="<?php echo $filter; ?>" data-range="from" data-value="<?php echo ! empty( $default_value ) ? esc_attr( strtotime( min( $default_value ) ) ) : '' ?>" />
 						<input type="text" id="<?php echo $filter; ?>_to" name="<?php echo $filter; ?>_to" class="um-datepicker-filter"
-						       placeholder="<?php esc_attr_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?>"
-						       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
-						       data-date_min="<?php echo $range[0] ?>" data-date_max="<?php echo $range[1] ?>"
-						       data-filter_name="<?php echo $filter; ?>" data-range="to" data-value="<?php echo ! empty( $default_value ) ? esc_attr( strtotime( max( $default_value ) ) ) : '' ?>" />
+							   placeholder="<?php esc_attr_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?>"
+							   data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
+							   data-date_min="<?php echo $range[0] ?>" data-date_max="<?php echo $range[1] ?>"
+							   data-filter_name="<?php echo $filter; ?>" data-range="to" data-value="<?php echo ! empty( $default_value ) ? esc_attr( strtotime( max( $default_value ) ) ) : '' ?>" />
 
 					<?php }
 
@@ -727,17 +727,17 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					if ( $range ) { ?>
 
 						<input type="text" id="<?php echo $filter; ?>_from" name="<?php echo $filter; ?>_from" class="um-timepicker-filter"
-						       placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
-						       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
-						       data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"
-						       data-format="<?php echo esc_attr( $js_format ) ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ) ?>"
-						       data-filter_name="<?php echo $filter; ?>" data-range="from" />
+							   placeholder="<?php esc_attr_e( sprintf( '%s From', stripslashes( $label ) ), 'ultimate-member' ); ?>"
+							   data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
+							   data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"
+							   data-format="<?php echo esc_attr( $js_format ) ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ) ?>"
+							   data-filter_name="<?php echo $filter; ?>" data-range="from" />
 						<input type="text" id="<?php echo $filter; ?>_to" name="<?php echo $filter; ?>_to" class="um-timepicker-filter"
-						       placeholder="<?php esc_attr_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?>"
-						       data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
-						       data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"
-						       data-format="<?php echo esc_attr( $js_format ) ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ) ?>"
-						       data-filter_name="<?php echo $filter; ?>" data-range="to" />
+							   placeholder="<?php esc_attr_e( sprintf( '%s To', stripslashes( $label ) ), 'ultimate-member' ); ?>"
+							   data-filter-label="<?php echo esc_attr( stripslashes( $label ) ); ?>"
+							   data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"
+							   data-format="<?php echo esc_attr( $js_format ) ?>" data-intervals="<?php echo esc_attr( $attrs['intervals'] ) ?>"
+							   data-filter_name="<?php echo $filter; ?>" data-range="to" />
 
 					<?php }
 
@@ -763,15 +763,18 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				default: {
 
 					global $wpdb;
-					$meta = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value
-						FROM {$wpdb->usermeta}
-						WHERE meta_key = %s
-						ORDER BY meta_value DESC", $filter ) );
+					$meta = $wpdb->get_row( $wpdb->prepare(
+						"SELECT MIN( meta_value ) as min_meta, 
+						MAX( meta_value ) as max_meta, 
+						COUNT( DISTINCT meta_value ) as amount 
+						FROM {$wpdb->usermeta} 
+						WHERE meta_key = %s",
+						$filter
+					), ARRAY_A );
 
-					if ( empty( $meta ) || count( $meta ) === 1 ) {
-						$range = false;
-					} elseif ( ! empty( $meta ) ) {
-						$range = array( min( $meta ), max( $meta ) );
+					$range = false;
+					if ( ! empty( $meta['min_meta'] ) && ! empty( $meta['max_meta'] ) ) {
+						$range = array( $meta['min_meta'], $meta['max_meta'] );
 					}
 
 					$range = apply_filters( "um_member_directory_filter_{$filter}_slider", $range, $directory_data );
@@ -780,7 +783,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				}
 				case 'birth_date': {
 					global $wpdb;
-					$meta = $wpdb->get_row( "SELECT MIN( meta_value ) as min_meta, MAX( meta_value ) as max_meta, COUNT( DISTINCT meta_value ) as amount FROM {$wpdb->usermeta} WHERE meta_key='birth_date'", ARRAY_A );
+					$meta = $wpdb->get_row(
+						"SELECT MIN( meta_value ) as min_meta, 
+						MAX( meta_value ) as max_meta, 
+						COUNT( DISTINCT meta_value ) as amount 
+						FROM {$wpdb->usermeta} 
+						WHERE meta_key='birth_date'",
+					ARRAY_A );
 
 					if ( empty( $meta ) || ! isset( $meta['amount'] ) || $meta['amount'] === 1 ) {
 						$range = false;
