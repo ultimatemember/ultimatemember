@@ -23,7 +23,7 @@ jQuery(document).ready( function() {
 
 		if ( field_key === 'sync_metatable' ) {
 			var metadata_pages = 0;
-			var metadata_per_page = 250;
+			var metadata_per_page = 500;
 			var current_page;
 
 			jQuery.ajax({

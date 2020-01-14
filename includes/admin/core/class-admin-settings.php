@@ -187,7 +187,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					wp_send_json_error( __( 'Wrong data', 'ultimate-member' ) );
 				}
 
-				$per_page = 250;
+				$per_page = 500;
 				$wp_usermeta_option = get_option( 'um_usermeta_fields', array() );
 
 				global $wpdb;
@@ -203,20 +203,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$values = array();
 				foreach ( $metadata as $metarow ) {
 					$values[] = $wpdb->prepare('(%d, %s, %s)', $metarow['user_id'], $metarow['meta_key'], $metarow['meta_value'] );
-
-					/*$wpdb->insert(
-						"{$wpdb->prefix}um_metadata",
-						array(
-							'user_id'   => $metarow['user_id'],
-							'um_key'    => $metarow['meta_key'],
-							'um_value'  => $metarow['meta_value'],
-						),
-						array(
-							'%d',
-							'%s',
-							'%s',
-						)
-					);*/
 				}
 
 				if ( ! empty( $values ) ) {
@@ -1933,8 +1919,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 						if ( ! empty( $results ) ) {
 							$wpdb->query("TRUNCATE TABLE {$wpdb->prefix}um_metadata" );
-							update_option( 'um_member_directory_truncated', time() );
 						}
+
+						update_option( 'um_member_directory_truncated', time() );
 					}
 				}
 			}
