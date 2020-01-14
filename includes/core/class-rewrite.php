@@ -95,32 +95,24 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 				if ( isset( $user->post_name ) ) {
 
 					$user_slug = $user->post_name;
+					$newrules[ $user_slug . '/([^/]+)/?$' ] = 'index.php?page_id=' . $user_page_id . '&um_user=$matches[1]';
+				}
 
-					$add_lang_code = '';
-					$language_code = '';
+				if ( UM()->external_integrations()->is_wpml_active() ) {
+					global $sitepress;
 
-					if ( function_exists('icl_object_id') || function_exists('icl_get_current_language') ) {
+					$active_languages = $sitepress->get_active_languages();
 
-						if ( function_exists('icl_get_current_language') ) {
-							$language_code = icl_get_current_language();
-						} elseif( function_exists('icl_object_id') && defined('ICL_LANGUAGE_CODE') ) {
-							$language_code = ICL_LANGUAGE_CODE;
-						}
+					foreach ( $active_languages as $language_code => $language ) {
 
-						// User page translated slug
-						$lang_post_id = icl_object_id( $user->ID, 'post', FALSE, $language_code );
+						$lang_post_id = wpml_object_id_filter( $user_page_id, 'post', false, $language_code );
 						$lang_post_obj = get_post( $lang_post_id );
-						if( isset( $lang_post_obj->post_name ) ){
+
+						if ( isset( $lang_post_obj->post_name ) && $lang_post_obj->post_name != $user->post_name ) {
 							$user_slug = $lang_post_obj->post_name;
+							$newrules[ $user_slug . '/([^/]+)/?$' ] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
 						}
-
-						if(  $language_code != icl_get_default_language() ){
-							$add_lang_code = $language_code;
-						}
-
 					}
-
-					$newrules[ $user_slug.'/([^/]+)/?$' ] = 'index.php?page_id='.$user_page_id.'&um_user=$matches[1]&lang='.$add_lang_code;
 				}
 			}
 
@@ -132,35 +124,25 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 				if ( isset( $account->post_name ) ) {
 
 					$account_slug = $account->post_name;
-
-					$add_lang_code = '';
-					$language_code = '';
-
-					if ( function_exists('icl_object_id') || function_exists('icl_get_current_language') ) {
-
-						if ( function_exists('icl_get_current_language') ){
-							$language_code = icl_get_current_language();
-						} elseif( function_exists('icl_object_id') && defined('ICL_LANGUAGE_CODE') ) {
-							$language_code = ICL_LANGUAGE_CODE;
-						}
-
-						// Account page translated slug
-						$lang_post_id = icl_object_id( $account->ID, 'post', FALSE, $language_code );
-						$lang_post_obj = get_post( $lang_post_id );
-						if ( isset( $lang_post_obj->post_name ) ){
-							$account_slug = $lang_post_obj->post_name;
-						}
-
-						if ( $language_code != icl_get_default_language() ) {
-							$add_lang_code = $language_code;
-						}
-
-					}
-
-					$newrules[ $account_slug.'/([^/]+)?$' ] = 'index.php?page_id='.$account_page_id.'&um_tab=$matches[1]&lang='.$add_lang_code;
-
+					$newrules[ $account_slug . '/([^/]+)?$' ] = 'index.php?page_id=' . $account_page_id . '&um_tab=$matches[1]';
 				}
 
+				if ( UM()->external_integrations()->is_wpml_active() ) {
+					global $sitepress;
+
+					$active_languages = $sitepress->get_active_languages();
+
+					foreach ( $active_languages as $language_code => $language ) {
+
+						$lang_post_id = wpml_object_id_filter( $account_page_id, 'post', false, $language_code );
+						$lang_post_obj = get_post( $lang_post_id );
+
+						if ( isset( $lang_post_obj->post_name ) && $lang_post_obj->post_name != $account->post_name ) {
+							$account_slug = $lang_post_obj->post_name;
+							$newrules[ $account_slug . '/([^/]+)/?$' ] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
+						}
+					}
+				}
 			}
 
 			return $newrules + $rules;

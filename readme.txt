@@ -161,6 +161,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed [um_loggedin] shortcode render with htmlspecialchars_decode
   - Fixed checkbox options missing selections with conditional settings
   - Fixed vulnerability with uploading cover/profile photo for other user ID
+  - Fixed integration with WPML for Account and User pages in case if there are different permalinks for different languages for these pages
   - Fixed issues with pagination settings
   - Fixed search line additional slashes
   - Fixed issues with member results JS template
