@@ -478,48 +478,48 @@ function um_after_account_privacy( $args ) {
 	<div class="um-field um-field-export_data">
 		<div class="um-field-label">
 			<label>
-				<?php echo esc_html__( 'Download your data', 'ultimate-member' ); ?>
+				<?php esc_html_e( 'Download your data', 'ultimate-member' ); ?>
 			</label>
-			<span class="um-tip um-tip-w" original-title="<?php echo esc_html__( 'You can request a file with the information that we believe is most relevant and useful to you.', 'ultimate-member' ); ?>">
+			<span class="um-tip um-tip-w" original-title="<?php esc_attr_e( 'You can request a file with the information that we believe is most relevant and useful to you.', 'ultimate-member' ); ?>">
 				<i class="um-icon-help-circled"></i>
 			</span>
 			<div class="um-clear"></div>
 		</div>
 		<label name="um-export-data">
-			<?php echo esc_html__( 'Enter your current password to confirm export of your personal data.', 'ultimate-member' ); ?>
+			<?php esc_html_e( 'Enter your current password to confirm export of your personal data.', 'ultimate-member' ); ?>
 		</label>
 		<div class="um-field-area">
-			<input id="um-export-data" type="password" placeholder="<?php echo esc_html__( 'Password', 'ultimate-member' )?>">
+			<input id="um-export-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' )?>">
 			<div class="um-field-error um-export-data">
-				<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php echo esc_html__( 'You must enter a password', 'ultimate-member' ); ?>
+				<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
 			</div>
 			<div class="um-field-area-response um-export-data"></div>
 		</div>
 		<a class="um-request-button um-export-data-button" data-action="um-export-data" href="javascript:void(0);">
-			<?php echo esc_html__( 'Request data', 'ultimate-member' ); ?>
+			<?php esc_html_e( 'Request data', 'ultimate-member' ); ?>
 		</a>
 	</div>
 
 	<div class="um-field um-field-export_data">
 		<div class="um-field-label">
 			<label>
-				<?php echo esc_html__( 'Erase of your data', 'ultimate-member' ); ?>
+				<?php esc_html_e( 'Erase of your data', 'ultimate-member' ); ?>
 			</label>
-			<span class="um-tip um-tip-w" original-title="<?php echo esc_html__( 'You can request erasing of the data that we have about you.', 'ultimate-member' ); ?>">
+			<span class="um-tip um-tip-w" original-title="<?php esc_attr_e( 'You can request erasing of the data that we have about you.', 'ultimate-member' ); ?>">
 				<i class="um-icon-help-circled"></i>
 			</span>
 			<div class="um-clear"></div>
 		</div>
 		<label name="um-erase-data">
-			<?php echo esc_html__( 'Enter your current password to confirm the erasure of your personal data.', 'ultimate-member' ); ?>
-			<input id="um-erase-data" type="password" placeholder="<?php echo esc_html__( 'Password', 'ultimate-member' )?>">
+			<?php esc_html_e( 'Enter your current password to confirm the erasure of your personal data.', 'ultimate-member' ); ?>
+			<input id="um-erase-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' )?>">
 			<div class="um-field-error um-erase-data">
-				<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php echo esc_html__( 'You must enter a password', 'ultimate-member' ); ?>
+				<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
 			</div>
 			<div class="um-field-area-response um-erase-data"></div>
 		</label>
 		<a class="um-request-button um-erase-data-button" data-action="um-erase-data" href="javascript:void(0);">
-			<?php echo esc_html__( 'Request data erase', 'ultimate-member' ); ?>
+			<?php esc_html_e( 'Request data erase', 'ultimate-member' ); ?>
 		</a>
 	</div>
 
@@ -527,7 +527,7 @@ function um_after_account_privacy( $args ) {
 }
 
 
-function um_request_user_data(){
+function um_request_user_data() {
 	UM()->check_ajax_nonce();
 
 	$user_id = get_current_user_id();
@@ -541,6 +541,10 @@ function um_request_user_data(){
 			$request_id = wp_create_user_request( $user->data->user_email, 'export_personal_data' );
 		} elseif ( $_POST['request_action'] == 'um-erase-data' ) {
 			$request_id = wp_create_user_request( $user->data->user_email, 'remove_personal_data' );
+		}
+
+		if ( empty( $request_id ) ) {
+			wp_send_json_error( __( 'Wrong request.', 'ultimate-member' ) );
 		}
 
 		if ( is_wp_error( $request_id ) ) {

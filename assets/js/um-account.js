@@ -70,22 +70,22 @@ jQuery(document).ready(function() {
 		e.preventDefault();
 
 		var request_action = jQuery(this).data('action');
-		var password = jQuery('#'+request_action).val();
-		jQuery('.um-field-area-response.'+request_action).hide();
+		var password = jQuery('#' + request_action).val();
+		jQuery('.um-field-area-response.' + request_action).hide();
 
-		if( password === '' ){
-			jQuery('.um-field-error.'+request_action).show();
+		if ( password === '' ) {
+			jQuery('.um-field-error.' + request_action).show();
 		} else {
-			jQuery('.um-field-error.'+request_action).hide();
+			jQuery('.um-field-error.' + request_action).hide();
 			var request = {
 				request_action: request_action,
 				password: password,
 				nonce: um_scripts.nonce
 			};
-			wp.ajax.send('um_request_user_data', {
+			wp.ajax.send( 'um_request_user_data', {
 				data: request,
 				success: function (data) {
-					jQuery('.um-field-area-response.'+request_action).text(data.answer).show();
+					jQuery('.um-field-area-response.' + request_action).text( data.answer ).show();
 				},
 				error: function (data) {
 					console.log(data);

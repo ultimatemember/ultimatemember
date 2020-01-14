@@ -155,6 +155,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Added GDPR template to get overwritten in the theme directory
   - Added member directories' custom sorting labels
   - Added ability to use custom metatable for faster requests for Member Directories
+  - Added ability to request Erase or Download user data via Privacy tab at the Account page
 
 * Bugfixes:
 

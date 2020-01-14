@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2020-01-14 16:14+0200\n"
-"PO-Revision-Date: 2020-01-14 16:14+0200\n"
+"POT-Creation-Date: 2020-01-14 17:16+0200\n"
+"PO-Revision-Date: 2020-01-14 17:16+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -292,6 +292,8 @@ msgstr ""
 #: includes/admin/core/class-admin-enqueue.php:480
 #: includes/core/class-builtin.php:698 includes/core/class-builtin.php:701
 #: includes/core/class-builtin.php:1155 includes/core/class-builtin.php:1158
+#: includes/core/um-actions-account.php:492
+#: includes/core/um-actions-account.php:515
 msgid "Password"
 msgstr ""
 
@@ -7480,6 +7482,56 @@ msgstr ""
 
 #: includes/core/um-actions-account.php:425
 msgid "Select what email notifications do you want to receive"
+msgstr ""
+
+#: includes/core/um-actions-account.php:481
+msgid "Download your data"
+msgstr ""
+
+#: includes/core/um-actions-account.php:483
+msgid ""
+"You can request a file with the information that we believe is most relevant "
+"and useful to you."
+msgstr ""
+
+#: includes/core/um-actions-account.php:489
+msgid "Enter your current password to confirm export of your personal data."
+msgstr ""
+
+#: includes/core/um-actions-account.php:494
+#: includes/core/um-actions-account.php:517
+msgid "You must enter a password"
+msgstr ""
+
+#: includes/core/um-actions-account.php:499
+msgid "Request data"
+msgstr ""
+
+#: includes/core/um-actions-account.php:506
+msgid "Erase of your data"
+msgstr ""
+
+#: includes/core/um-actions-account.php:508
+msgid "You can request erasing of the data that we have about you."
+msgstr ""
+
+#: includes/core/um-actions-account.php:514
+msgid ""
+"Enter your current password to confirm the erasure of your personal data."
+msgstr ""
+
+#: includes/core/um-actions-account.php:522
+msgid "Request data erase"
+msgstr ""
+
+#: includes/core/um-actions-account.php:550
+msgid ""
+"A confirmation email has been sent to your email. Click the link within the "
+"email to confirm your export request."
+msgstr ""
+
+#: includes/core/um-actions-account.php:555
+msgid "The password you entered is incorrect."
 msgstr ""
 
 #: includes/core/um-actions-core.php:27
