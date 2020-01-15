@@ -6,11 +6,9 @@ function um_upgrade_users_count213beta3() {
 
 	um_maybe_unset_time_limit();
 
-	$users = get_users( array(
-		'number'        => '',
-		'fields'        => 'ids'
-	) );
-	$count = count( $users );
+	global $wpdb;
+
+	$count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->users}" );
 
 	wp_send_json_success( array( 'count' => $count ) );
 }
@@ -34,7 +32,7 @@ function um_upgrade_metadata_per_user213beta3() {
 		"SELECT MIN(ID) AS MinID, MAX(ID) AS MaxID
 		FROM (
 			SELECT u.ID
-			FROM wpbultimate_users as u
+			FROM {$wpdb->users} as u
 			ORDER BY u.ID
 			LIMIT %d, %d
 		) as dt",
@@ -46,8 +44,8 @@ function um_upgrade_metadata_per_user213beta3() {
 		"SELECT u.ID as user_id,
 			  um.meta_key as meta_key,
 			  um.meta_value as meta_value
-		FROM wpbultimate_users u
-		LEFT JOIN wpbultimate_usermeta um ON ( um.user_id = u.ID AND um.meta_key IN( 'account_status','hide_in_members','synced_gravatar_hashed_id','synced_profile_photo','profile_photo','cover_photo','_um_verified' ) )
+		FROM {$wpdb->users} u
+		LEFT JOIN {$wpdb->usermeta} um ON ( um.user_id = u.ID AND um.meta_key IN( 'account_status','hide_in_members','synced_gravatar_hashed_id','synced_profile_photo','profile_photo','cover_photo','_um_verified' ) )
 		WHERE u.ID >= %d AND 
 		      u.ID <= %d",
 		$min_max['MinID'],
