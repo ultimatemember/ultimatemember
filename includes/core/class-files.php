@@ -253,13 +253,51 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		function ajax_remove_file() {
 			UM()->check_ajax_nonce();
 
-			/**
-			 * @var $src
-			 */
-			extract( $_REQUEST );
-			$this->delete_file( $src );
+			if ( empty( $_POST['src'] ) ) {
+				wp_send_json_error( __( 'Wrong path', 'ultimate-member' ) );
+			}
 
-			wp_send_json_success();
+			if ( empty( $_POST['mode'] ) ) {
+				wp_send_json_error( __( 'Wrong mode', 'ultimate-member' ) );
+			}
+
+			$src = $_POST['src'];
+			if ( strstr( $src, '?' ) ) {
+				$splitted = explode( '?', $src );
+				$src = $splitted[0];
+			}
+
+			$mode = sanitize_key( $_POST['mode'] );
+
+			if ( $mode == 'register' || empty( $_POST['user_id'] ) ) {
+
+				$is_temp = um_is_temp_upload( $src );
+				if ( ! $is_temp ) {
+					wp_send_json_success();
+				}
+
+			} else {
+
+				$user_id = absint( $_POST['user_id'] );
+
+				if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+					wp_send_json_error( __( 'You haven\'t ability to edit this user', 'ultimate-member' ) );
+				}
+
+				$is_temp = um_is_temp_upload( $src );
+				if ( ! $is_temp ) {
+					if ( ! empty( $_POST['filename'] ) && file_exists( UM()->uploader()->get_upload_user_base_dir( $user_id ) . DIRECTORY_SEPARATOR . $_POST['filename'] ) ) {
+						wp_send_json_success();
+					}
+				}
+
+			}
+
+			if ( $this->delete_file( $src ) ) {
+				wp_send_json_success();
+			} else {
+				wp_send_json_error( __( 'You haven\'t ability to delete this file', 'ultimate-member' ) );
+			}
 		}
 
 
@@ -325,7 +363,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			UM()->fields()->set_id = $_POST['set_id'];
 			UM()->fields()->set_mode = $_POST['set_mode'];
 
-			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+			if ( UM()->fields()->set_mode != 'register' && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 				$ret['error'] = __( 'You haven\'t ability to edit this user', 'ultimate-member' );
 				wp_send_json_error( $ret );
 			}
@@ -992,10 +1030,11 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		/**
 		 * This function will delete file upload from server
 		 *
-		 * @param $src
+		 * @param string $src
+		 *
+		 * @return bool
 		 */
 		function delete_file( $src ) {
-
 			if ( strstr( $src, '?' ) ) {
 				$splitted = explode( '?', $src );
 				$src = $splitted[0];
@@ -1004,9 +1043,9 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			$is_temp = um_is_temp_upload( $src );
 			if ( $is_temp ) {
 				unlink( $is_temp );
-				rmdir( dirname( $is_temp ) );
+				return true;
 			} else {
-				wp_die( __('Ultimate Member: Not a valid temp file','ultimate-member') );
+				return false;
 			}
 		}
 
@@ -1146,9 +1185,15 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 */
 		function remove_dir( $dir ) {
 			if ( file_exists( $dir ) ) {
-				foreach(glob($dir . '/*') as $file) {
-					if(is_dir($file)) $this->remove_dir($file); else unlink($file);
-				} rmdir($dir);
+				foreach ( glob($dir . '/*') as $file ) {
+					if ( is_dir( $file ) ) {
+						$this->remove_dir( $file );
+					} else {
+						unlink( $file );
+					}
+				}
+
+				rmdir( $dir );
 			}
 		}
 

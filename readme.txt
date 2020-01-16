@@ -145,7 +145,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [topic](https://wordpress.org/support/topic/version-2-1-4/)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.1.3: January 15, 2020 =
+= 2.1.3: January 20, 2020 =
 
 * Enhancements:
 
@@ -156,6 +156,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Added member directories' custom sorting labels
   - Added ability to use custom metatable for faster requests for Member Directories
   - Added ability to request Erase or Download user data via Privacy tab at the Account page
+  - Added an option to set the "Hide profile from directory" option by default
 
 * Bugfixes:
 
@@ -169,6 +170,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed getting posts count at the Posts tab for 3rd party integrations
   - Fixed member directories' admin filtering
   - Fixed issue with reset filters on member directory
+  - Fixed getting image/file custom fields values in form submission with not validated values
   - Fixed um_convert_tags for array-type values
   - Fixed small CSS issues
 

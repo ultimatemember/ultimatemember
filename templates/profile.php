@@ -2,7 +2,7 @@
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?> um-role-<?php echo esc_attr( um_user( 'role' ) ); ?> ">
 
-	<div class="um-form">
+	<div class="um-form" data-mode="<?php echo esc_attr( $mode ) ?>">
 
 		<?php
 		/**

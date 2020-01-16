@@ -197,42 +197,62 @@ jQuery(document).ready(function() {
 	jQuery(document).on('click', '.um .um-single-image-preview a.cancel', function(e){
 		e.preventDefault();
 		var parent = jQuery(this).parents('.um-field');
-		var src = jQuery(this).parents('.um-field').find('.um-single-image-preview img').attr('src');
-		parent.find('.um-single-image-preview img').attr('src','');
-		parent.find('.um-single-image-preview').hide();
-		parent.find('.um-btn-auto-width').html('Upload');
-		parent.find('input[type=hidden]').val('empty_file');
 
-		jQuery.ajax({
-			url: wp.ajax.settings.url,
-			type: 'post',
+		var filename = parent.find( 'input[type="hidden"]#' + parent.data('key') + '-' + jQuery(this).parents('form').find('input[type="hidden"][name="form_id"]').val() ).val();
+
+		var src = jQuery(this).parents('.um-field').find('.um-single-image-preview img').attr('src');
+		var mode = parent.data('mode');
+
+		var args = {
 			data: {
-				action: 'um_remove_file',
+				mode: mode,
+				filename: filename,
 				src: src,
 				nonce: um_scripts.nonce
+			},
+			success: function() {
+				parent.find('.um-single-image-preview img').attr( 'src', '' );
+				parent.find('.um-single-image-preview').hide();
+				parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
+				parent.find('input[type=hidden]').val( 'empty_file' );
 			}
-		});
+		};
+
+		if ( mode !== 'register' ) {
+			args.data.user_id = jQuery(this).parents('form' ).find( '#user_id' ).val();
+		}
+
+		wp.ajax.send( 'um_remove_file', args );
 
 		return false;
 	});
 
-	jQuery(document).on('click', '.um .um-single-file-preview a.cancel', function(e){
+	jQuery(document).on('click', '.um .um-single-file-preview a.cancel', function(e) {
 		e.preventDefault();
 		var parent = jQuery(this).parents('.um-field');
+		var filename = parent.find( 'input[type="hidden"]#' + parent.data('key') + '-' + jQuery(this).parents('form').find('input[type="hidden"][name="form_id"]').val() ).val();
 		var src = jQuery(this).parents('.um-field').find('.um-single-fileinfo a').attr('href');
-		parent.find('.um-single-file-preview').hide();
-		parent.find('.um-btn-auto-width').html('Upload');
-		parent.find('input[type=hidden]').val('empty_file');
+		var mode = parent.data('mode');
 
-		jQuery.ajax({
-			url: wp.ajax.settings.url,
-			type: 'post',
+		var args = {
 			data: {
-				action: 'um_remove_file',
+				mode: mode,
+				filename: filename,
 				src: src,
 				nonce: um_scripts.nonce
+			},
+			success: function() {
+				parent.find('.um-single-file-preview').hide();
+				parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
+				parent.find('input[type=hidden]').val( 'empty_file' );
 			}
-		});
+		};
+
+		if ( mode !== 'register' ) {
+			args.data.user_id = jQuery(this).parents('form' ).find( '#user_id' ).val();
+		}
+
+		wp.ajax.send( 'um_remove_file', args );
 
 		return false;
 	});

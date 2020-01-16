@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2020-01-14 23:49+0200\n"
-"PO-Revision-Date: 2020-01-14 23:49+0200\n"
+"POT-Creation-Date: 2020-01-16 10:21+0200\n"
+"PO-Revision-Date: 2020-01-16 10:21+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -103,7 +103,7 @@ msgstr ""
 #: includes/admin/core/class-admin-builder.php:765
 #: includes/admin/core/class-admin-dragdrop.php:33
 #: includes/admin/core/class-admin-menu.php:106
-#: includes/core/class-fields.php:4402
+#: includes/core/class-fields.php:4403
 msgid "Please login as administrator"
 msgstr ""
 
@@ -260,8 +260,8 @@ msgstr ""
 #: includes/admin/core/class-admin-settings.php:721
 #: includes/admin/core/list-tables/roles-list-table.php:371
 #: includes/admin/core/list-tables/roles-list-table.php:379
-#: includes/admin/core/packages/2.1.3-beta3/functions.php:77
-#: includes/admin/core/packages/2.1.3-beta3/functions.php:78
+#: includes/admin/core/packages/2.1.3-beta3/functions.php:75
+#: includes/admin/core/packages/2.1.3-beta3/functions.php:76
 #: includes/admin/templates/form/login_customize.php:17
 #: includes/admin/templates/form/login_customize.php:65
 #: includes/admin/templates/form/login_customize.php:84
@@ -1323,6 +1323,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-metabox.php:1977
 #: includes/core/class-fields.php:1652 includes/core/class-fields.php:1693
+#: includes/core/class-fields.php:2503 includes/core/class-fields.php:2576
 msgid "Upload"
 msgstr ""
 
@@ -1891,7 +1892,7 @@ msgid "Wrong callback"
 msgstr ""
 
 #: includes/admin/core/class-admin-settings.php:187
-#: includes/admin/core/packages/2.1.3-beta3/functions.php:26
+#: includes/admin/core/packages/2.1.3-beta3/functions.php:24
 msgid "Wrong data"
 msgstr ""
 
@@ -3218,7 +3219,7 @@ msgid "UM Action"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:124
-#: includes/core/class-fields.php:2558
+#: includes/core/class-fields.php:2559
 msgid "Apply"
 msgstr ""
 
@@ -3589,12 +3590,12 @@ msgstr ""
 msgid "Upgrade Member Directories..."
 msgstr ""
 
-#: includes/admin/core/packages/2.1.3-beta3/functions.php:120
+#: includes/admin/core/packages/2.1.3-beta3/functions.php:118
 #, php-format
 msgid "Metadata from %s to %s users were upgraded successfully..."
 msgstr ""
 
-#: includes/admin/core/packages/2.1.3-beta3/functions.php:148
+#: includes/admin/core/packages/2.1.3-beta3/functions.php:146
 msgid "Usermeta table was upgraded successfully"
 msgstr ""
 
@@ -4287,7 +4288,7 @@ msgstr ""
 #: includes/admin/templates/modal/dynamic_new_group.php:18
 #: includes/admin/templates/modal/fonticons.php:14
 #: includes/admin/templates/role/publish.php:24 includes/class-config.php:253
-#: includes/core/class-fields.php:2559 includes/core/class-fields.php:2656
+#: includes/core/class-fields.php:2560 includes/core/class-fields.php:2657
 #: includes/core/um-actions-profile.php:674
 #: includes/core/um-actions-profile.php:686
 #: includes/core/um-actions-profile.php:874
@@ -7094,71 +7095,80 @@ msgstr ""
 msgid "Upload Photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2534 includes/core/class-fields.php:2558
+#: includes/core/class-fields.php:2535 includes/core/class-fields.php:2559
 #: includes/core/um-actions-profile.php:905
 msgid "Change photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2558 includes/core/class-fields.php:2655
+#: includes/core/class-fields.php:2559 includes/core/class-fields.php:2656
 msgid "Processing..."
 msgstr ""
 
-#: includes/core/class-fields.php:2580
+#: includes/core/class-fields.php:2581
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:2622 includes/core/um-filters-fields.php:267
+#: includes/core/class-fields.php:2623 includes/core/um-filters-fields.php:267
 msgid "This file has been removed."
 msgstr ""
 
-#: includes/core/class-fields.php:2625 includes/core/class-fields.php:2655
+#: includes/core/class-fields.php:2626 includes/core/class-fields.php:2656
 msgid "Change file"
 msgstr ""
 
-#: includes/core/class-fields.php:2655
+#: includes/core/class-fields.php:2656
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:4135
+#: includes/core/class-fields.php:4136
 #, php-format
 msgid ""
 "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some "
 "information!"
 msgstr ""
 
-#: includes/core/class-fields.php:4137
+#: includes/core/class-fields.php:4138
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
-#: includes/core/class-files.php:281
-msgid "Invalid parameters"
+#: includes/core/class-files.php:257
+msgid "Wrong path"
 msgstr ""
 
-#: includes/core/class-files.php:286
-msgid "Invalid coordinates"
+#: includes/core/class-files.php:261
+msgid "Wrong mode"
 msgstr ""
 
-#: includes/core/class-files.php:292 includes/core/class-files.php:329
+#: includes/core/class-files.php:284 includes/core/class-files.php:330
+#: includes/core/class-files.php:367
 msgid "You haven't ability to edit this user"
 msgstr ""
 
-#: includes/core/class-files.php:298
+#: includes/core/class-files.php:299
+msgid "You haven't ability to delete this file"
+msgstr ""
+
+#: includes/core/class-files.php:319
+msgid "Invalid parameters"
+msgstr ""
+
+#: includes/core/class-files.php:324
+msgid "Invalid coordinates"
+msgstr ""
+
+#: includes/core/class-files.php:336
 msgid "Invalid file ownership"
 msgstr ""
 
-#: includes/core/class-files.php:359
+#: includes/core/class-files.php:397
 msgid "Invalid nonce"
 msgstr ""
 
-#: includes/core/class-files.php:380 includes/core/class-files.php:466
+#: includes/core/class-files.php:418 includes/core/class-files.php:504
 msgid "A theme or plugin compatibility issue"
 msgstr ""
 
-#: includes/core/class-files.php:1009
-msgid "Ultimate Member: Not a valid temp file"
-msgstr ""
-
-#: includes/core/class-files.php:1241
+#: includes/core/class-files.php:1286
 msgid "Original size"
 msgstr ""
 

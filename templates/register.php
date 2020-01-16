@@ -2,7 +2,7 @@
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 
-	<div class="um-form">
+	<div class="um-form" data-mode="<?php echo esc_attr( $mode ) ?>">
 
 		<form method="post" action="">
 

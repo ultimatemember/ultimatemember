@@ -16,25 +16,25 @@ jQuery(document).ready(function() {
 	
 	jQuery(document).on('click', '.um-modal .um-single-file-preview a.cancel', function(e){
 		e.preventDefault();
-		
+
 		var parent = jQuery(this).parents('.um-modal-body');
 		var src = jQuery(this).parents('.um-modal-body').find('.um-single-fileinfo a').attr('href');
-		
-		parent.find('.um-single-file-preview').hide();
-		
-		parent.find('.ajax-upload-dragdrop').show();
-		
-		parent.find('.um-modal-btn.um-finish-upload').addClass('disabled');
-		
-		um_modal_responsive();
-		
+		var mode = parent.find('.um-single-file-upload').data('set_mode');
+
 		jQuery.ajax({
 			url: wp.ajax.settings.url,
 			type: 'post',
 			data: {
 				action: 'um_remove_file',
 				src: src,
+				mode: mode,
 				nonce: um_scripts.nonce
+			},
+			success: function() {
+				parent.find('.um-single-file-preview').hide();
+				parent.find('.ajax-upload-dragdrop').show();
+				parent.find('.um-modal-btn.um-finish-upload').addClass('disabled');
+				um_modal_responsive();
 			}
 		});
 		
@@ -46,18 +46,7 @@ jQuery(document).ready(function() {
 
 		var parent = jQuery(this).parents('.um-modal-body');
 		var src = jQuery(this).parents('.um-modal-body').find('.um-single-image-preview img').attr('src');
-
-		jQuery('img.cropper-hidden').cropper('destroy');
-
-		parent.find('.um-single-image-preview img').attr('src', '');
-
-		parent.find('.um-single-image-preview').hide();
-
-		parent.find('.ajax-upload-dragdrop').show();
-
-		parent.find('.um-modal-btn.um-finish-upload').addClass('disabled');
-
-		um_modal_responsive();
+		var mode = parent.find('.um-single-image-upload').data('set_mode');
 
 		jQuery.ajax({
 			url: wp.ajax.settings.url,
@@ -65,7 +54,17 @@ jQuery(document).ready(function() {
 			data: {
 				action: 'um_remove_file',
 				src: src,
+				mode: mode,
 				nonce: um_scripts.nonce
+			},
+			success: function() {
+				jQuery('img.cropper-hidden').cropper( 'destroy' );
+				parent.find('.um-single-image-preview img').attr( 'src', '' );
+				parent.find('.um-single-image-preview').hide();
+				parent.find('.ajax-upload-dragdrop').show();
+				parent.find('.um-modal-btn.um-finish-upload').addClass( 'disabled' );
+
+				um_modal_responsive();
 			}
 		});
 		
