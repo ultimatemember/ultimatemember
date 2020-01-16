@@ -1176,6 +1176,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 */
 		function move_temporary_files( $user_id, $files, $move_only = false ) {
 			$new_files = array();
+			$old_files = array();
 
 			$user_basedir = UM()->uploader()->get_upload_user_base_dir( $user_id, true );
 
@@ -1202,7 +1203,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 					delete_user_meta( $user_id, $key );
 					delete_user_meta( $user_id, "{$key}_metadata" );
-					delete_transient("um_{$filename}");
+					delete_transient( "um_{$filename}" );
 
 					continue;
 				}
@@ -1226,17 +1227,19 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 					if ( $move_only ) {
 
-						$file = $user_basedir. DIRECTORY_SEPARATOR . $filename;
-						$new_files[ $key ] = $filename;
-						rename( $temp_file_path, $file );
+						$file = $user_basedir . DIRECTORY_SEPARATOR . $filename;
+						if ( rename( $temp_file_path, $file ) ) {
+							$new_files[ $key ] = $filename;
+						}
 
 					} else {
 
-						$file = $user_basedir. DIRECTORY_SEPARATOR . $new_filename;
-
-						$new_files[ $key ] = $new_filename;
+						$file = $user_basedir . DIRECTORY_SEPARATOR . $new_filename;
 
 						if ( rename( $temp_file_path, $file ) ) {
+							$new_files[ $key ] = $new_filename;
+							$old_files[ $key ] = get_user_meta( $user_id, $key, true );
+
 							update_user_meta( $user_id, $key, $new_filename );
 
 							$file_info = get_transient( "um_{$filename}" );
@@ -1256,7 +1259,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			}
 
 			//remove user old files
-			$this->remove_unused_uploads( $user_id, $new_files );
+			$this->remove_unused_uploads( $user_id, $new_files, $old_files );
 		}
 
 
@@ -1265,12 +1268,18 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 *
 		 * @param int $user_id
 		 * @param array $new_files
+		 * @param array $old_files
 		 */
-		function remove_unused_uploads( $user_id, $new_files ) {
+		function remove_unused_uploads( $user_id, $new_files, $old_files = array() ) {
 			um_fetch_user( $user_id );
+
+			if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR ) ) {
+				return;
+			}
+
 			$user_meta_keys = UM()->user()->profile;
 
-			$_array = array();
+			$_array = $new_files;
 			if ( ! empty( UM()->builtin()->custom_fields ) ) {
 				foreach ( UM()->builtin()->custom_fields as $_field ) {
 					if ( $_field['type'] == 'file' && ! empty( $user_meta_keys[ $_field['metakey'] ] ) ) {
@@ -1278,17 +1287,18 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 					}
 				}
 			}
-			$_array = array_merge( $_array, $new_files );
 
 			$files = glob( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . '*', GLOB_BRACE );
-			$error = array();
-			if ( file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR ) && $files && isset( $_array ) && is_array( $_array ) ) {
+			if ( ! empty( $files ) ) {
 				foreach ( $files as $file ) {
 					$str = basename( $file );
 
+					if ( preg_grep( '/' . $str . '/i', $old_files ) ) {
+						unlink( $file );
+					}
+
 					if ( ! strstr( $str, 'profile_photo' ) && ! strstr( $str, 'cover_photo' ) &&
 					     ! strstr( $str, 'stream_photo' ) && ! preg_grep( '/' . $str . '/', $_array ) ) {
-						$error[] = $str;
 						unlink( $file );
 					}
 				}
