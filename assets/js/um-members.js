@@ -1224,6 +1224,10 @@ jQuery(document.body).ready( function() {
 				}
 				select.select2('destroy').select2();
 
+				if ( directory.find( '.um-search-filter select[data-um-parent="' +  filter_name + '"]' ).length > 0 ) {
+					select.trigger('change');
+				}
+
 			} else if ( type === 'slider' ) {
 				um_set_url_from_data( directory, 'filter_' + filter_name + '_from','' );
 				um_set_url_from_data( directory, 'filter_' + filter_name + '_to', '' );

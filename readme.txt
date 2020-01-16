@@ -171,6 +171,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed member directories' admin filtering
   - Fixed issue with reset filters on member directory
   - Fixed getting image/file custom fields values in form submission with not validated values
+  - Fixed JS handlers for select-type filters with callback and parent/child relations
   - Fixed um_convert_tags for array-type values
   - Fixed small CSS issues
 

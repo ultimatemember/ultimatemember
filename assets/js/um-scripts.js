@@ -1,11 +1,10 @@
 function um_init_datetimepicker() {
 	jQuery('.um-datepicker:not(.picker__input)').each(function(){
-		elem = jQuery(this);
+		var elem = jQuery(this);
 
-		if ( typeof elem.attr('data-disabled_weekdays') != 'undefined' && elem.attr('data-disabled_weekdays') != '' ) {
-			var disable = JSON.parse( elem.attr('data-disabled_weekdays') );
-		} else {
-			var disable = false;
+		var disable = false;
+		if ( typeof elem.attr('data-disabled_weekdays') != 'undefined' && elem.attr('data-disabled_weekdays') !== '' ) {
+			disable = JSON.parse( elem.attr('data-disabled_weekdays') );
 		}
 
 		var years_n = null;
@@ -64,7 +63,7 @@ function um_init_datetimepicker() {
 	});
 
 	jQuery('.um-timepicker:not(.picker__input)').each(function(){
-		elem = jQuery(this);
+		var elem = jQuery(this);
 
 		elem.pickatime({
 			format: elem.attr('data-format'),
@@ -90,18 +89,18 @@ function init_tipsy() {
 
 jQuery(document).ready(function() {
 
-	jQuery( document.body ).on('click', '.um-dropdown a.real_url', function(e){
+	jQuery( document.body ).on('click', '.um-dropdown a.real_url', function() {
 		window.location = jQuery(this).attr('href');
 	});
 
-	jQuery( document.body ).on( 'click', '.um-trigger-menu-on-click', function(e) {
+	jQuery( document.body ).on( 'click', '.um-trigger-menu-on-click', function() {
 		jQuery('.um-dropdown').hide();
 		var menu = jQuery(this).find('.um-dropdown');
 		menu.show();
 		return false;
 	});
 
-	jQuery( document.body ).on('click', '.um-dropdown-hide', function(e) {
+	jQuery( document.body ).on('click', '.um-dropdown-hide', function() {
 		UM_hide_menus();
 		return false;
 	});
@@ -143,7 +142,7 @@ jQuery(document).ready(function() {
 
 	init_tipsy();
 
-	if( typeof(jQuery.fn.um_raty) === "function" ){
+	if ( typeof( jQuery.fn.um_raty ) === "function" ) {
 		jQuery('.um-rating').um_raty({
 			half: 		false,
 			starType: 	'i',
@@ -152,19 +151,19 @@ jQuery(document).ready(function() {
 			scoreName: 	function(){return jQuery(this).attr('data-key');},
 			hints: 		false,
 			click: function( score, evt ) {
-				live_field = this.id;
-				live_value = score;
+				um_live_field = this.id;
+				um_live_value = score;
 				um_apply_conditions( jQuery(this), false );
 			}
 		});
 
 		jQuery('.um-rating-readonly').um_raty({
-			half: 		false,
-			starType: 	'i',
-			number: 	function() {return jQuery(this).attr('data-number');},
-			score: 		function() {return jQuery(this).attr('data-score');},
-			scoreName: 	function(){return jQuery(this).attr('data-key');},
-			hints: 		false,
+			half: false,
+			starType: 'i',
+			number: function() {return jQuery(this).attr('data-number');},
+			score: function() {return jQuery(this).attr('data-score');},
+			scoreName: function(){return jQuery(this).attr('data-key');},
+			hints: false,
 			readOnly: true
 		});
 	}
@@ -179,8 +178,6 @@ jQuery(document).ready(function() {
 	});
 
 	jQuery(document).on('change', '.um-field-area input[type="checkbox"]', function(){
-
-		var field = jQuery(this).parents('.um-field-area');
 		var this_field = jQuery(this).parents('label');
 		if ( this_field.hasClass('active') ) {
 			this_field.removeClass('active');
@@ -267,7 +264,7 @@ jQuery(document).ready(function() {
 			field.find('.um-field-group-body:first').clone().appendTo( field );
 		}
 
-		increase_id = 0;
+		var increase_id = 0;
 		field.find('.um-field-group-body').each(function(){
 			increase_id++;
 			jQuery(this).find('input').each(function(){
@@ -309,13 +306,15 @@ jQuery(document).ready(function() {
 		e.preventDefault();
 
 		var obj = jQuery(this);
-		var parent = jQuery(this).parent();
+		var parent = obj.parent();
 		parent.addClass( 'loading' );
 
-		var hook = jQuery(this).data('hook');
+		var pages = obj.data('pages')*1;
+		var next_page = obj.data('page')*1 + 1;
+
+		var hook = obj.data('hook');
+
 		if ( 'um_load_posts' === hook ) {
-			var pages = jQuery(this).data('pages')*1;
-			var next_page = jQuery(this).data('page')*1 + 1;
 
 			jQuery.ajax({
 				url: wp.ajax.settings.url,
@@ -339,8 +338,6 @@ jQuery(document).ready(function() {
 				}
 			});
 		} else if ( 'um_load_comments' === hook ) {
-			var pages = jQuery(this).data('pages')*1;
-			var next_page = jQuery(this).data('page')*1 + 1;
 
 			jQuery.ajax({
 				url: wp.ajax.settings.url,
@@ -490,7 +487,6 @@ jQuery(document).ready(function() {
 		var me = jQuery(this);
 		var parent_option = me.data('um-parent');
 		var um_ajax_source = me.data('um-ajax-source');
-		var original_value = me.val();
 
 		me.attr('data-um-init-field', true );
 
@@ -502,14 +498,22 @@ jQuery(document).ready(function() {
 			if ( me.attr( 'data-member-directory' ) === 'yes' ) {
 				var directory = parent.parents('.um-directory');
 				arr_key = um_get_data_for_directory( directory, 'filter_' + parent_option );
-				if (  typeof arr_key != 'undefined' ) {
+				if ( typeof arr_key != 'undefined' ) {
 					arr_key = arr_key.split('||');
+				} else {
+					arr_key = '';
 				}
 			} else {
 				arr_key = parent.val();
 			}
 
-			if ( typeof arr_key != 'undefined' && arr_key != '' && typeof um_select_options_cache[ arr_key ] != 'object' ) {
+			if ( typeof arr_key != 'undefined' && arr_key !== '' && typeof um_select_options_cache[ arr_key ] !== 'object' ) {
+
+				if ( typeof( me.um_wait ) === 'undefined' || me.um_wait === false ) {
+					me.um_wait = true;
+				} else {
+					return;
+				}
 
 				jQuery.ajax({
 					url: wp.ajax.settings.url,
@@ -524,29 +528,31 @@ jQuery(document).ready(function() {
 						form_id: form_id,
 						nonce: um_scripts.nonce
 					},
-					success: function( data ){
-						if ( data.status == 'success' && arr_key != '' ) {
+					success: function( data ) {
+						if ( data.status === 'success' && arr_key !== '' ) {
+							um_select_options_cache[ arr_key ] = data;
 							um_field_populate_child_options( me, data, arr_key );
 						}
 
 						if ( typeof data.debug !== 'undefined' ) {
 							console.log( data );
 						}
+
+						me.um_wait = false;
 					},
-					error: function( e ){
+					error: function( e ) {
 						console.log( e );
+						me.um_wait = false;
 					}
 				});
 
-
 			}
 
-			if ( typeof arr_key != 'undefined' && arr_key != '' && typeof um_select_options_cache[ arr_key ] == 'object' ) {
-				var data = um_select_options_cache[ arr_key ];
-				um_field_populate_child_options( me, data, arr_key );
+			if ( typeof arr_key != 'undefined' && arr_key !== '' && typeof um_select_options_cache[ arr_key ] == 'object' ) {
+				setTimeout( um_field_populate_child_options, 10, me, um_select_options_cache[ arr_key ], arr_key );
 			}
 
-			if ( typeof arr_key != 'undefined' || arr_key == '' ) {
+			if ( typeof arr_key != 'undefined' || arr_key === '' ) {
 				me.find('option[value!=""]').remove();
 				me.val('').trigger('change');
 			}
@@ -557,17 +563,17 @@ jQuery(document).ready(function() {
 
 	});
 
+
 	/**
 	 * Populates child options and cache ajax response
-	 * @param  DOM me     child option elem
-	 * @param  array data
-	 * @param  string key
+	 *
+	 * @param me
+	 * @param data
+	 * @param arr_key
 	 */
-	function um_field_populate_child_options( me, data, arr_key, arr_items ) {
+	function um_field_populate_child_options( me, data, arr_key ) {
 		var directory = me.parents('.um-directory');
-		var parent_option = me.data('um-parent');
 		var child_name = me.attr('name');
-		var parent_dom = jQuery('select[name="'+parent_option+'"]');
 		me.find('option[value!=""]').remove();
 
 		if ( ! me.hasClass('um-child-option-disabled') ) {
@@ -599,7 +605,7 @@ jQuery(document).ready(function() {
 			});
 
 			var current_filter_val = um_get_data_for_directory( directory, 'filter_' + child_name );
-			if ( typeof current_filter_val != 'undefined' ) {
+			if ( typeof current_filter_val !== 'undefined' ) {
 				current_filter_val = current_filter_val.split('||');
 
 				var temp_filter_val = [];
@@ -629,7 +635,7 @@ jQuery(document).ready(function() {
 		if ( data.post.members_directory !== 'yes' ) {
 			if ( typeof data.field.default !== 'undefined' && ! me.data('um-original-value') ) {
 				me.val( data.field.default ).trigger('change');
-			} else if ( me.data('um-original-value') != '' ) {
+			} else if ( me.data('um-original-value') !== '' ) {
 				me.val( me.data('um-original-value') ).trigger('change');
 			}
 
@@ -638,8 +644,6 @@ jQuery(document).ready(function() {
 				me.attr('disabled','disabled');
 			}
 		}
-		um_select_options_cache[ arr_key ] = data;
-
 	}
 
 });
