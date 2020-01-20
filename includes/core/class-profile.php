@@ -42,6 +42,17 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 
 
 		/**
+		 * @param array $args
+		 *
+		 * @return string
+		 */
+		function get_show_bio_key( $args ) {
+			$key = apply_filters( 'um_profile_bio_key', 'description', $args );
+			return $key;
+		}
+
+
+		/**
 		 * Delete profile avatar AJAX handler
 		 */
 		function ajax_delete_profile_photo() {

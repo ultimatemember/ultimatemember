@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2020-01-16 10:58+0200\n"
-"PO-Revision-Date: 2020-01-16 10:58+0200\n"
+"POT-Creation-Date: 2020-01-20 10:38+0200\n"
+"PO-Revision-Date: 2020-01-20 10:38+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -4293,8 +4293,8 @@ msgstr ""
 #: includes/core/um-actions-profile.php:686
 #: includes/core/um-actions-profile.php:874
 #: includes/core/um-actions-profile.php:907
-#: includes/core/um-actions-profile.php:1252
-#: includes/core/um-actions-profile.php:1259
+#: includes/core/um-actions-profile.php:1254
+#: includes/core/um-actions-profile.php:1261
 msgid "Cancel"
 msgstr ""
 
@@ -4658,8 +4658,8 @@ msgid "Register"
 msgstr ""
 
 #: includes/class-config.php:135 includes/class-config.php:792
-#: includes/core/class-member-directory.php:2108
-#: includes/core/um-actions-profile.php:1258
+#: includes/core/class-member-directory.php:2110
+#: includes/core/um-actions-profile.php:1260
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
 msgstr ""
@@ -7172,13 +7172,13 @@ msgstr ""
 msgid "Original size"
 msgstr ""
 
-#: includes/core/class-form.php:62 includes/core/class-profile.php:56
-#: includes/core/class-profile.php:75
+#: includes/core/class-form.php:62 includes/core/class-profile.php:67
+#: includes/core/class-profile.php:86
 msgid "You can not edit this user"
 msgstr ""
 
 #: includes/core/class-mail.php:615 includes/core/class-password.php:703
-#: includes/core/class-profile.php:470
+#: includes/core/class-profile.php:481
 msgid "Your set password"
 msgstr ""
 
@@ -7243,15 +7243,15 @@ msgstr ""
 msgid "<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:2053
-#: includes/core/class-member-directory.php:2097
-#: includes/core/um-actions-profile.php:1225
-#: includes/core/um-actions-profile.php:1256
+#: includes/core/class-member-directory.php:2055
+#: includes/core/class-member-directory.php:2099
+#: includes/core/um-actions-profile.php:1227
+#: includes/core/um-actions-profile.php:1258
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/class-member-directory.php:2103
-#: includes/core/um-actions-profile.php:1257
+#: includes/core/class-member-directory.php:2105
+#: includes/core/um-actions-profile.php:1259
 msgid "My Account"
 msgstr ""
 
@@ -7313,35 +7313,35 @@ msgstr ""
 msgid "https://wordpress.org/support/"
 msgstr ""
 
-#: includes/core/class-profile.php:89
+#: includes/core/class-profile.php:100
 msgid "Anyone"
 msgstr ""
 
-#: includes/core/class-profile.php:90
+#: includes/core/class-profile.php:101
 msgid "Guests only"
 msgstr ""
 
-#: includes/core/class-profile.php:91
+#: includes/core/class-profile.php:102
 msgid "Members only"
 msgstr ""
 
-#: includes/core/class-profile.php:92
+#: includes/core/class-profile.php:103
 msgid "Only the owner"
 msgstr ""
 
-#: includes/core/class-profile.php:93
+#: includes/core/class-profile.php:104
 msgid "Specific roles"
 msgstr ""
 
-#: includes/core/class-profile.php:130
+#: includes/core/class-profile.php:141
 msgid "About"
 msgstr ""
 
-#: includes/core/class-profile.php:134
+#: includes/core/class-profile.php:145
 msgid "Posts"
 msgstr ""
 
-#: includes/core/class-profile.php:138
+#: includes/core/class-profile.php:149
 msgid "Comments"
 msgstr ""
 
@@ -7831,11 +7831,11 @@ msgstr ""
 msgid "Remove photo"
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1067
+#: includes/core/um-actions-profile.php:1069
 msgid "Tell us a bit about yourself..."
 msgstr ""
 
-#: includes/core/um-actions-profile.php:1082
+#: includes/core/um-actions-profile.php:1084
 #, php-format
 msgid "This user account status is %s"
 msgstr ""

@@ -608,7 +608,9 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 				$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_sort ON ( umm_sort.user_id = u.ID AND umm_sort.um_key = '{$sortby}' )";
 
-				$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS CHAR ) {$order} ";
+				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', 'CHAR', $sortby, $directory_data );
+
+				$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS {$custom_sort_type} ) {$order} ";
 
 			} elseif ( 'display_name' == $sortby ) {
 

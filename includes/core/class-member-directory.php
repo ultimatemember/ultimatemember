@@ -1178,20 +1178,22 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			if ( $sortby == $directory_data['sortby_custom'] || in_array( $sortby, $custom_sort ) ) {
 
+				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', 'CHAR', $sortby, $directory_data );
+
 				$this->query_args['meta_query'][] = array(
 					'relation' => 'OR',
-					$directory_data['sortby_custom'] => array(
+					$sortby . '_cs' => array(
 						'key'       => $sortby,
-						'compare'   => 'EXISTS'
+						'compare'   => 'EXISTS',
+						'type'      => $custom_sort_type,
 					),
 					array(
 						'key'       => $sortby,
-						'compare'   => 'NOT EXISTS'
+						'compare'   => 'NOT EXISTS',
 					)
 				);
 
-				$this->query_args['orderby'] = $sortby;
-				$this->query_args['order'] = 'ASC';
+				$this->query_args['orderby'] = array( $sortby . '_cs' => 'ASC', 'user_login' => 'ASC' );
 
 			} elseif ( 'display_name' == $sortby ) {
 

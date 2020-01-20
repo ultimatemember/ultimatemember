@@ -362,9 +362,9 @@ function um_user_edit_profile( $args ) {
 		}
 	}
 
-
-	if ( isset( $args['submitted']['description'] ) ) {
-		$to_update['description'] = $args['submitted']['description'];
+	$description_key = UM()->profile()->get_show_bio_key( $args );
+	if ( isset( $args['submitted'][ $description_key ] ) ) {
+		$to_update[ $description_key ] = $args['submitted'][ $description_key ];
 	}
 
 	if ( ! empty( $args['submitted']['role'] ) ) {
@@ -1047,10 +1047,12 @@ function um_profile_header( $args ) {
 				</div>
 			<?php }
 
-			if ( UM()->fields()->viewing == true && um_user( 'description' ) && $args['show_bio'] ) { ?>
+			$description_key = UM()->profile()->get_show_bio_key( $args );
+
+			if ( UM()->fields()->viewing == true && um_user( $description_key ) && $args['show_bio'] ) { ?>
 
 				<div class="um-meta-text">
-					<?php $description = get_user_meta( um_user( 'ID' ), 'description', true );
+					<?php $description = get_user_meta( um_user( 'ID' ), $description_key, true );
 
 					if ( UM()->options()->get( 'profile_show_html_bio' ) ) {
 						echo make_clickable( wpautop( wp_kses_post( $description ) ) );
@@ -1065,13 +1067,13 @@ function um_profile_header( $args ) {
 					<textarea id="um-meta-bio"
 							  data-character-limit="<?php echo esc_attr( UM()->options()->get( 'profile_bio_maxchars' ) ); ?>"
 							  placeholder="<?php esc_attr_e( 'Tell us a bit about yourself...', 'ultimate-member' ); ?>"
-							  name="<?php echo esc_attr( 'description-' . $args['form_id'] ); ?>"
-							  id="<?php echo esc_attr( 'description-' . $args['form_id'] ); ?>"><?php echo UM()->fields()->field_value( 'description' ) ?></textarea>
+							  name="<?php echo esc_attr( $description_key . '-' . $args['form_id'] ); ?>"
+							  id="<?php echo esc_attr( $description_key . '-' . $args['form_id'] ); ?>"><?php echo UM()->fields()->field_value( $description_key ) ?></textarea>
 					<span class="um-meta-bio-character um-right"><span
 							class="um-bio-limit"><?php echo UM()->options()->get( 'profile_bio_maxchars' ); ?></span></span>
 
-					<?php if ( UM()->fields()->is_error( 'description' ) ) {
-						echo UM()->fields()->field_error( UM()->fields()->show_error( 'description' ), true );
+					<?php if ( UM()->fields()->is_error( $description_key ) ) {
+						echo UM()->fields()->field_error( UM()->fields()->show_error( $description_key ), true );
 					} ?>
 
 				</div>
