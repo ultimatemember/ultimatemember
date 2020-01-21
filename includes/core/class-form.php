@@ -103,7 +103,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			$form_fields = UM()->fields()->get_fields();
 			$arr_options['fields'] = $form_fields;
 
-			if ( $arr_options['post']['members_directory'] == 'yes' ) {
+			if ( isset( $arr_options['post']['members_directory'] ) && $arr_options['post']['members_directory'] == 'yes' ) {
 				$ajax_source_func = $_POST['child_callback'];
 				if ( function_exists( $ajax_source_func ) ) {
 					$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship'] );
@@ -156,7 +156,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					);
 				}
 
-				if( isset( $_POST['child_callback'] ) && ! empty( $_POST['child_callback'] ) && isset( $form_fields[ $_POST['child_name'] ] )  ){
+				if ( isset( $_POST['child_callback'] ) && ! empty( $_POST['child_callback'] ) && isset( $form_fields[ $_POST['child_name'] ] )  ){
 
 					$ajax_source_func = $_POST['child_callback'];
 
