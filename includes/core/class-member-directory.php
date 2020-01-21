@@ -788,7 +788,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					), ARRAY_A );
 
 					$range = false;
-					if ( ! empty( $meta['min_meta'] ) && ! empty( $meta['max_meta'] ) ) {
+					if ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) ) {
 						$range = array( $meta['min_meta'], $meta['max_meta'] );
 					}
 
@@ -808,7 +808,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					if ( empty( $meta ) || ! isset( $meta['amount'] ) || $meta['amount'] === 1 ) {
 						$range = false;
-					} elseif ( ! empty( $meta['min_meta'] ) && ! empty( $meta['max_meta'] ) ) {
+					} elseif ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) ) {
 						$range = array( $this->borndate( strtotime( $meta['max_meta'] ) ), $this->borndate( strtotime( $meta['min_meta'] ) ) );
 					}
 

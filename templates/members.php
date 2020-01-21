@@ -73,13 +73,21 @@ if ( ! empty( $args['enable_sorting'] ) ) {
 		}
 	}
 
+	$all_sorting_options = UM()->member_directory()->sort_fields;
+
 	if ( ! in_array( $default_sorting, $sorting_options_prepared ) ) {
 		$sorting_options_prepared[] = $default_sorting;
-		$custom_sorting_titles[ $default_sorting ] = ! empty( $args['sortby_custom_label'] ) ? $args['sortby_custom_label'] : $default_sorting;
+
+		$label = $default_sorting;
+		if ( ! empty( $args['sortby_custom_label'] ) ) {
+			$label = $args['sortby_custom_label'];
+		} elseif ( ! empty( $all_sorting_options[ $default_sorting ] ) ) {
+			$label = $all_sorting_options[ $default_sorting ];
+		}
+		$custom_sorting_titles[ $default_sorting ] = $label;
 	}
 
 	if ( ! empty( $sorting_options_prepared ) ) {
-		$all_sorting_options = UM()->member_directory()->sort_fields;
 		$sorting_options = array_intersect_key( array_merge( $all_sorting_options, $custom_sorting_titles ), array_flip( $sorting_options_prepared ) );
 	}
 
