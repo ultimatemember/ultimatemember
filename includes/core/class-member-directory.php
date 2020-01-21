@@ -609,11 +609,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					if ( $attrs['metakey'] != 'online_status' ) {
 						if ( $attrs['metakey'] != 'role_select' && $attrs['metakey'] != 'mycred_rank' && empty( $custom_dropdown ) ) {
-							$attrs['options'] = array_intersect( array_map( 'stripslashes', $attrs['options'] ), $values_array );
+							$attrs['options'] = array_intersect( array_map( 'stripslashes', array_map( 'trim', $attrs['options'] ) ), $values_array );
 						} elseif ( ! empty( $custom_dropdown ) ) {
-							$attrs['options'] = array_intersect_key( $attrs['options'], array_flip( $values_array ) );
+							$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
 						} else {
-							$attrs['options'] = array_intersect_key( $attrs['options'], array_flip( $values_array ) );
+							$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
 						}
 					}
 

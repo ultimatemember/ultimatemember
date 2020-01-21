@@ -709,14 +709,14 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 				}
 			}
 		} elseif ( 'select' == $type || 'radio' == $type ) {
-			if ( ! empty( $data['options'] ) && ! in_array( $value, $data['options'] ) && empty( $data['custom_dropdown_options_source'] ) ) {
+			if ( ! empty( $data['options'] ) && ! in_array( $value, array_map( 'trim', $data['options'] ) ) && empty( $data['custom_dropdown_options_source'] ) ) {
 				$value = '';
 			}
 		}
 	} elseif ( ! empty( $value ) && is_array( $value ) ) {
 		if ( 'multiselect' == $type || 'checkbox' == $type ) {
 			if ( ! empty( $data['options'] ) && empty( $data['custom_dropdown_options_source'] ) ) {
-				$value = array_intersect( $value, $data['options'] );
+				$value = array_intersect( $value, array_map( 'trim', $data['options'] ) );
 			}
 		}
 	}
