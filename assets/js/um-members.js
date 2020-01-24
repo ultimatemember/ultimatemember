@@ -358,7 +358,10 @@ function um_build_template( directory, data ) {
 
 	var header_template = wp.template( 'um-members-header' );
 	directory.find('.um-members-intro').remove();
-	if ( typeof data.is_search != 'undefined' && data.is_search ) {
+
+	var generate_header = wp.hooks.applyFilters( 'um_member_directory_generate_header', false );
+
+	if ( ( typeof data.is_search != 'undefined' && data.is_search ) || generate_header ) {
 		directory.find('.um-members-wrapper').prepend( header_template( data ) );
 	}
 

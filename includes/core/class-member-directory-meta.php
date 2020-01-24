@@ -749,7 +749,13 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			um_reset_user();
 			// end of user card
 
-			wp_send_json_success( array( 'pagination' => $pagination_data, 'users' => $users, 'is_search' => $this->is_search ) );
+			$member_directory_response = apply_filters( 'um_ajax_get_members_response', array(
+				'pagination'    => $pagination_data,
+				'users'         => $users,
+				'is_search'     => $this->is_search,
+			), $directory_data );
+
+			wp_send_json_success( $member_directory_response );
 		}
 	}
 }

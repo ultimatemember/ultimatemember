@@ -519,8 +519,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				case 'text': {
 					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? $_GET[ 'filter_' . $filter . '_' . $unique_hash ] : $default_value; ?>
 						<input type="text" autocomplete="off" id="<?php echo $filter; ?>" name="<?php echo $filter; ?>"
-							   placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
-							   value="<?php echo esc_attr( $filter_from_url ) ?>" class="um-form-field" />
+						   placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
+						          value="<?php echo esc_attr( $filter_from_url ) ?>" class="um-form-field"
+						       aria-label="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>" />
 					<?php
 					break;
 				}
@@ -642,6 +643,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					<select class="um-s1" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
 							data-placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
+							aria-label="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
 							<?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>multiple<?php } ?>
 						<?php echo $custom_dropdown; ?>>
 
@@ -2375,12 +2377,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			add_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10, 1 );
 
-			//var_dump( $this->query_args );
-
 			$user_query = new \WP_User_Query( $this->query_args );
-
-			//var_dump( $user_query->request );
-			//exit;
 
 			remove_filter( 'pre_user_query', array( &$this, 'pagination_changes' ), 10 );
 

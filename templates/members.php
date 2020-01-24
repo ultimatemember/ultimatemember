@@ -325,7 +325,9 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 
 							$type = UM()->member_directory()->filter_types[ $filter ]; ?>
 
-							<div class="um-search-filter um-<?php echo esc_attr( $type ) ?>-filter-type <?php echo ( $i != 0 && $i%2 !== 0 ) ? 'um-search-filter-2' : '' ?>"> <?php echo $filter_content; ?> </div>
+							<div class="um-search-filter um-<?php echo esc_attr( $type ) ?>-filter-type <?php echo ( $i != 0 && $i%2 !== 0 ) ? 'um-search-filter-2' : '' ?>">
+								<?php echo $filter_content; ?>
+							</div>
 
 							<?php $i++;
 						} ?>

@@ -449,6 +449,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		function predefined_fields_hook( $predefined_fields ) {
 			$account_hide_in_directory =  UM()->options()->get( 'account_hide_in_directory' );
 
+			$account_hide_in_directory = apply_filters( 'um_account_hide_in_members_visibility', $account_hide_in_directory );
+
 			if ( ! $account_hide_in_directory ) {
 				unset( $predefined_fields['hide_in_members'] );
 			}

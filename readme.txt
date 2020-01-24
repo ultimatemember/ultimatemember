@@ -145,6 +145,18 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [topic](https://wordpress.org/support/topic/version-2-1-4/)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
+= 2.1.4: January xx, 2020 =
+
+* Enhancements:
+
+  - Updated select2 JS library to 4.0.12 version
+  - Added a few member directories filters for 3rd-party integrations
+
+* Bugfixes:
+
+  - Added labels for member directories filters to increase Accessibility points in Audit
+  - Fixed activation licenses with sslverify
+
 = 2.1.3: January 21, 2020 =
 
 * Enhancements:
