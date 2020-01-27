@@ -102,6 +102,14 @@ jQuery(document).ready(function() {
 			user_id = jQuery(this).parents('#um_upload_single').data('user_id');
 		}
 
+		var form_id = 0;
+		var mode = '';
+		if ( jQuery('div.um-field-image[data-key="' + key + '"]').length === 1 ) {
+			var $formWrapper = jQuery('div.um-field-image[data-key="' + key + '"]').closest('.um-form');
+			form_id = $formWrapper.find('input[name="form_id"]').val();
+			mode = $formWrapper.attr('data-mode');
+		}
+
 		if ( coord ) {
 		
 			jQuery(this).html( jQuery(this).attr('data-processing') ).addClass('disabled');
@@ -116,6 +124,8 @@ jQuery(document).ready(function() {
 					coord : coord,
 					user_id : user_id,
 					key: key,
+					set_id: form_id,
+					set_mode: mode,
 					nonce: um_scripts.nonce
 				},
 				success: function( response ) {

@@ -326,7 +326,10 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			$user_id = empty( $_REQUEST['user_id'] ) ? get_current_user_id() : $_REQUEST['user_id'];
 
-			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+			UM()->fields()->set_id = filter_input( INPUT_POST, 'set_id', FILTER_SANITIZE_NUMBER_INT );
+			UM()->fields()->set_mode = filter_input( INPUT_POST, 'set_mode', FILTER_SANITIZE_STRING );
+
+			if ( UM()->fields()->set_mode != 'register' && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 				$ret['error'] = esc_js( __( 'You haven\'t ability to edit this user', 'ultimate-member' ) );
 				wp_send_json_error( $ret );
 			}
