@@ -963,3 +963,30 @@ small.um-max-filesize span{
 .um-field-multiselect .um-field-area.um-field-area-has-icon ul:first-child{
 	margin-left: 30px !important;
 }
+
+/*
+	- Multi-select
+*/
+.um-field .select2-selection--multiple .select2-search{
+	clear: both;
+	float: none;
+	margin-right: 12px;
+	padding-top: 0.5rem;
+	position: relative;
+}
+.um-field .select2-selection--multiple .select2-search:first-of-type{
+	padding-top: 12px;
+}
+.um-field .select2-selection--multiple .select2-search::before {
+	content: "\f21f";
+	font-family: "Ionicons";
+	font-size: 1.4rem;
+	line-height: 2rem;
+	right: 0.3rem;
+	position: absolute;
+}
+.um-field .select2-selection--multiple .select2-search input.select2-search__field{
+	background-color: rgba(128,128,128,0.1) !important;
+	height: 2rem !important;
+	width: 100% !important;
+}
