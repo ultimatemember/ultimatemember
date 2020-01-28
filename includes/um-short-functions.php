@@ -672,6 +672,8 @@ function um_get_snippet( $str, $wordCount = 10 ) {
  * @param bool $style
  *
  * @return null|string
+ *
+ * @deprecated 2.1.3
  */
 function um_user_submitted_registration( $style = false ) {
 	$output = null;
@@ -764,6 +766,227 @@ function um_user_submitted_registration( $style = false ) {
 
 	if ( $style ) {
 		$output .= '</div>';
+	}
+
+	return $output;
+}
+
+/**
+ * Format submitted data for Info preview & Email template
+ * @param  boolean $style 
+ * @return string
+ *
+ * @since  2.1.4 
+ */
+function um_user_submitted_registration_formatted( $style = false ){
+  	$output = null;
+
+	$submitted_data = um_user( 'submitted' );
+
+	if ( $style ) {
+		$output .= '<div class="um-admin-infobox">';
+	}
+
+	// Timestamp
+    $output .= um_user_submited_display( true, 'timestamp', 'Date Submitted' );
+    $output .= um_user_submited_display( true, 'form_id', 'Form', $submitted_data );
+
+	if ( isset( $submitted_data ) && is_array( $submitted_data ) ) {
+
+		$fields = UM()->query()->get_attr( 'custom_fields', $submitted_data["form_id"] );
+        
+        if( isset( $fields ) ){
+
+        	$pw_fields = array();
+
+        	$fields['form_id'] = array('title' => 'Form' );
+                
+            $rows = array();
+
+            UM()->fields()->get_fields = $fields;
+
+	        foreach ( $fields as $key => $array ) {
+				if ( $array['type'] == 'row' ) {
+					$rows[ $key ] = $array;
+					unset( UM()->fields()->get_fields[ $key ] ); // not needed now
+				}
+
+			}
+
+    		if ( empty( $rows ) ) {
+				$rows = array(
+					'_um_row_1' => array(
+						'type'      => 'row',
+						'id'        => '_um_row_1',
+						'sub_rows'  => 1,
+						'cols'      => 1
+					),
+				);
+			}
+            
+            $arr_fields_in_order = array();
+
+			foreach ( $rows as $row_id => $row_array ) { 
+					
+					$row_fields = UM()->fields()->get_fields_by_row( $row_id );
+					
+					if ( $row_fields ) {
+
+						$output .= UM()->fields()->new_row_output( $row_id, $row_array );
+
+						$sub_rows = ( isset( $row_array['sub_rows'] ) ) ? $row_array['sub_rows'] : 1;
+						for ( $c = 0; $c < $sub_rows; $c++ ) {
+
+							// cols
+							$cols = ( isset( $row_array['cols'] ) ) ? $row_array['cols'] : 1;
+							if ( strstr( $cols, ':' ) ) {
+								$col_split = explode( ':', $cols );
+							} else {
+								$col_split = array( $cols );
+							}
+							$cols_num = $col_split[ $c ];
+
+							// sub row fields
+							$subrow_fields = null;
+							$subrow_fields = UM()->fields()->get_fields_in_subrow( $row_fields, $c );
+
+							if ( is_array( $subrow_fields ) ) {
+
+								$subrow_fields = UM()->fields()->array_sort_by_column( $subrow_fields, 'position' );
+
+								if ( $cols_num == 1 ) {
+
+									$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
+									if ( $col1_fields ) {
+										foreach ( $col1_fields as $key => $data ) {
+											$output .= um_user_submited_display( true, $key, $data['title'] );
+										}
+									}
+									
+								} else if ($cols_num == 2) {
+
+									$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
+									if ( $col1_fields ) {
+										foreach ( $col1_fields as $key => $data ) {
+											$output .= um_user_submited_display( true, $key, $data['title'] );
+										}
+									}
+									
+									$col2_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 2 );
+									if ( $col2_fields ) {
+										foreach ( $col2_fields as $key => $data ) {
+											$output .= um_user_submited_display( true, $key, $data['title'] );
+										}
+									}
+									
+								} else {
+
+									$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
+									if ( $col1_fields ) {
+										foreach ( $col1_fields as $key => $data ) {
+											$output .= um_user_submited_display( true, $key, $data['title'] );
+										}
+									}
+									
+									$col2_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 2 );
+									if ( $col2_fields ) {
+										foreach ( $col2_fields as $key => $data ) {
+											$output .= um_user_submited_display( true, $key, $data['title'] );
+										}
+									}
+									
+									$col3_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 3 );
+									if ( $col3_fields ) {
+										foreach ( $col3_fields as $key => $data ) {
+											$output .= um_user_submited_display( true, $key, $data['title'] );
+										}
+									}
+									
+								}
+
+							}
+
+						}
+
+					}
+						
+				
+			} // endfor
+           
+		}
+    }
+
+    
+    if ( $style ) {
+		$output .= '</div>';
+	}
+
+
+	return $output;
+
+}
+
+/**
+ * Prepare template
+ * @param  boolean $style 
+ * @param  string  $k     
+ * @param  string  $title 
+ * @param  array   $data  
+ * @return string      
+ *
+ * @since  2.1.4 
+ */
+function um_user_submited_display( $style = false, $k, $title, $data = array() ){
+    
+    $output = '';
+
+    if( 'form_id' == $k ){
+    	$v = get_the_title( $data['form_id'] )." - Form ID#: ".$data['form_id'];
+    }else{
+    	 $v = um_user( $k );
+    }
+
+    if ( strstr( $k, 'user_pass' ) || in_array( $k, array( 'g-recaptcha-response', 'request', '_wpnonce', '_wp_http_referer' ) ) ) {
+		return;
+	}
+
+   
+	
+    if ( UM()->fields()->get_field_type( $k ) == 'image' || UM()->fields()->get_field_type( $k ) == 'file' ) {
+		$file = basename( $v );
+		$filedata = get_user_meta( um_user( 'ID' ), $k . "_metadata", true );
+
+		$baseurl = UM()->uploader()->get_upload_base_url();
+		if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . $file ) ) {
+			if ( is_multisite() ) {
+				//multisite fix for old customers
+				$baseurl = str_replace( '/sites/' . get_current_blog_id() . '/', '/', $baseurl );
+			}
+		}
+
+		if ( ! empty( $filedata['original_name'] ) ) {
+			$v = '<a href="' . esc_attr( $baseurl . um_user( 'ID' ) . '/' . $file ) . '">' . esc_html( $filedata['original_name'] ) . '</a>';
+		} else {
+			$v = $baseurl . um_user( 'ID' ) . '/' . $file;
+		}
+	}
+
+	if ( is_array( $v ) ) {
+		$v = implode( ',', $v );
+	}
+
+	if ( $k == 'timestamp' ) {
+		$k = __( 'date submitted', 'ultimate-member' );
+		$v = date( "d M Y H:i", $v );
+	}
+
+	if ( $style ) {
+		if ( ! $v ) {
+			$v = __( '(empty)', 'ultimate-member' );
+		}
+		$output .= "<p><label>$title</label><span>$v</span></p>";
+	} else {
+		$output .= "$title: $v" . "<br />";
 	}
 
 	return $output;
