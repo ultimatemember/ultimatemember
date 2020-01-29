@@ -512,7 +512,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			switch ( $this->filter_types[ $filter ] ) {
 				default: {
 
-					do_action( "um_member_directory_filter_type_{$this->filter_types[ $filter ]}", $filter, $this->filter_types );
+					do_action( "um_member_directory_filter_type_{$this->filter_types[ $filter ]}", $filter, $directory_data, $unique_hash, $attrs, $default_value );
 
 					break;
 				}
@@ -1168,13 +1168,16 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			// sort members by
 			$this->query_args['order'] = 'ASC';
 			$sortby = ! empty( $_POST['sorting'] ) ? $_POST['sorting'] : $directory_data['sortby'];
+			$sortby = ( $sortby == 'other' ) ? $directory_data['sortby_custom'] : $sortby;
 
 			$custom_sort = array();
-			$sorting_fields = maybe_unserialize( $directory_data['sorting_fields'] );
-			foreach ( $sorting_fields as $field ) {
-				if ( is_array( $field ) ) {
-					$field_keys = array_keys( $field );
-					$custom_sort[] = $field_keys[0];
+			if ( ! empty( $directory_data['sorting_fields'] ) ) {
+				$sorting_fields = maybe_unserialize( $directory_data['sorting_fields'] );
+				foreach ( $sorting_fields as $field ) {
+					if ( is_array( $field ) ) {
+						$field_keys = array_keys( $field );
+						$custom_sort[] = $field_keys[0];
+					}
 				}
 			}
 

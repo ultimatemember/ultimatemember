@@ -24,6 +24,8 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 		var $roles = array();
 		var $general_meta_joined = false;
 
+		var $having = '';
+		var $select = '';
 		var $sql_limit = '';
 		var $sql_order = '';
 
@@ -592,13 +594,16 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 			$order = 'ASC';
 			$sortby = ! empty( $_POST['sorting'] ) ? $_POST['sorting'] : $directory_data['sortby'];
+			$sortby = ( $sortby == 'other' ) ? $directory_data['sortby_custom'] : $sortby;
 
 			$custom_sort = array();
-			$sorting_fields = maybe_unserialize( $directory_data['sorting_fields'] );
-			foreach ( $sorting_fields as $field ) {
-				if ( is_array( $field ) ) {
-					$field_keys = array_keys( $field );
-					$custom_sort[] = $field_keys[0];
+			if ( ! empty( $directory_data['sorting_fields'] ) ) {
+				$sorting_fields = maybe_unserialize( $directory_data['sorting_fields'] );
+				foreach ( $sorting_fields as $field ) {
+					if ( is_array( $field ) ) {
+						$field_keys = array_keys( $field );
+						$custom_sort[] = $field_keys[0];
+					}
 				}
 			}
 
@@ -722,13 +727,17 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			global $wpdb;
 
 			$user_ids = $wpdb->get_col(
-				"SELECT SQL_CALC_FOUND_ROWS DISTINCT u.ID 
+				"SELECT SQL_CALC_FOUND_ROWS DISTINCT u.ID
+				{$this->select}
 				FROM {$wpdb->users} AS u
 				{$sql_join}
 				WHERE 1=1 {$sql_where}
+				{$this->having}
 				{$this->sql_order}
 				{$this->sql_limit}"
 			);
+
+			//var_dump( $wpdb->last_query );
 
 			$total_users = (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );
 
