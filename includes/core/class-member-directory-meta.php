@@ -537,7 +537,9 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 				$additional_search = apply_filters( 'um_member_directory_meta_general_search_meta_query', '', stripslashes( $_POST['search'] ) );
 
-				$this->where_clauses[] = $wpdb->prepare( "( umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s OR {$core_search}{$additional_search})", $search_line, '%' . $search_line . '%', '%' . serialize( strval( $search_line ) ) . '%' );
+				$search_like_string = apply_filters( 'um_member_directory_meta_search_like_type', '%' . $search_line . '%', $search_line );
+
+				$this->where_clauses[] = $wpdb->prepare( "( umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s OR {$core_search}{$additional_search})", $search_line, $search_like_string, '%' . serialize( strval( $search_line ) ) . '%' );
 
 				$this->is_search = true;
 			}

@@ -1936,10 +1936,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				return '';
 			}
 
-			if ( ! um_can_edit_field( $data ) ) {
-				return '';
-			}
-
 			um_fetch_user( $_um_profile_id );
 
 			// Stop return empty values build field attributes:
@@ -1956,6 +1952,14 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$current_user_roles = um_user( 'roles' );
 					if ( ! empty( $current_user_roles ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) > 0 ) {
 						$disabled = '';
+					}
+				}
+			}
+
+			if ( ! empty( $this->editing ) && $this->set_mode == 'profile' ) {
+				if ( ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+					if ( isset( $data['editable'] ) && $data['editable'] == 0 ) {
+						$disabled = ' disabled="disabled" ';
 					}
 				}
 			}
