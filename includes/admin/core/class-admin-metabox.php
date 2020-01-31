@@ -1180,6 +1180,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				}
 			}
 
+
+//			echo '<pre>';;
+//			echo '<br>$screen<br>';
+//			var_dump($screen);
+//			echo '<br>$this->is_loaded<br>';
+//			var_dump($this->is_loaded);
+//			echo '</pre>';
+			
+
 			// needed on forms only
 			if ( ! isset( $this->is_loaded ) && isset( $screen->id ) && strstr( $screen->id, 'um_form' ) ) {
 				$settings['textarea_rows'] = 8;
