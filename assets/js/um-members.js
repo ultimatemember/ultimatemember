@@ -336,7 +336,8 @@ function um_ajax_get_members( directory, args ) {
 			}
 
 			//args.directory = directory;
-			jQuery( document ).trigger('um_members_rendered', [ directory, answer ] );
+			wp.hooks.doAction( 'um_member_directory_loaded', directory, answer );
+			//jQuery( document ).trigger('um_members_rendered', [ directory, answer ] );
 
 			um_init_new_dropdown();
 
@@ -595,12 +596,15 @@ function um_run_search( directory ) {
 	if ( ! ignore_after_search ) {
 		var show_after_search = directory.data('must-search');
 		if ( show_after_search === 1 ) {
-			var search = um_get_search( directory );
+			search = um_get_search( directory );
 			if ( directory.find( '.um-members-filter-remove' ).length === 0 && ! search ) {
 				directory.data( 'searched', 0 );
-				directory.find('.um-members-grid, .um-members-list').remove();
+				directory.find('.um-members-grid, .um-members-list, .um-members-intro').remove();
 				directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', true );
 				directory.find( '.um-member-directory-view-type' ).addClass( 'um-disabled' );
+
+				wp.hooks.doAction( 'um_member_directory_clear_not_searched', directory );
+
 				um_members_hide_preloader( directory );
 				return;
 			}
@@ -1171,9 +1175,12 @@ jQuery(document.body).ready( function() {
 				var search = um_get_search( directory );
 				if ( directory.find( '.um-members-filter-remove' ).length === 0 && ! search ) {
 					directory.data( 'searched', 0 );
-					directory.find('.um-members-grid, .um-members-list').remove();
+					directory.find('.um-members-grid, .um-members-list, .um-members-intro').remove();
 					directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', true );
 					directory.find( '.um-member-directory-view-type' ).addClass( 'um-disabled' );
+
+					wp.hooks.doAction( 'um_member_directory_clear_not_searched', directory );
+
 					um_members_hide_preloader( directory );
 					return;
 				}
@@ -1292,9 +1299,12 @@ jQuery(document.body).ready( function() {
 				var search = um_get_search( directory );
 				if ( ! search ) {
 					directory.data( 'searched', 0 );
-					directory.find('.um-members-grid, .um-members-list').remove();
+					directory.find('.um-members-grid, .um-members-list, .um-members-intro').remove();
 					directory.find( '.um-member-directory-sorting-options' ).prop( 'disabled', true );
 					directory.find( '.um-member-directory-view-type' ).addClass( 'um-disabled' );
+
+					wp.hooks.doAction( 'um_member_directory_clear_not_searched', directory );
+
 					um_members_hide_preloader( directory );
 					return;
 				}
