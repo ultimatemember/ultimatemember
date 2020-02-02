@@ -1091,9 +1091,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 						if ( ! empty( $mode ) ) {
 
 							$posts = $wpdb->get_col(
-								"SELECT post_id 
-								FROM {$wpdb->postmeta} 
-								WHERE meta_key = '_um_mode' AND 
+								"SELECT post_id
+								FROM {$wpdb->postmeta}
+								WHERE meta_key = '_um_mode' AND
 									  meta_value = 'directory'"
 							);
 
@@ -1149,9 +1149,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 						$mode = UM()->query()->get_attr( 'mode', $post_id );
 						if ( ! empty( $mode ) ) {
 							$posts = $wpdb->get_col( $wpdb->prepare(
-								"SELECT post_id 
-								FROM {$wpdb->postmeta} 
-								WHERE meta_key = '_um_mode' AND 
+								"SELECT post_id
+								FROM {$wpdb->postmeta}
+								WHERE meta_key = '_um_mode' AND
 									  meta_value = %s",
 								$mode
 							) );
@@ -1179,15 +1179,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					include_once $modal_content;
 				}
 			}
-
-
-//			echo '<pre>';;
-//			echo '<br>$screen<br>';
-//			var_dump($screen);
-//			echo '<br>$this->is_loaded<br>';
-//			var_dump($this->is_loaded);
-//			echo '</pre>';
-			
 
 			// needed on forms only
 			if ( ! isset( $this->is_loaded ) && isset( $screen->id ) && strstr( $screen->id, 'um_form' ) ) {
