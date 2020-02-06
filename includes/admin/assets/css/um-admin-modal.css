@@ -123,8 +123,20 @@
 }
 
 .um-admin-infobox p {
-	border-top: 1px solid #e5e5e5;
 	padding-top: 15px;
+}
+
+.um-admin-infobox > p:not(:first-child) {
+	border-top: 1px solid #e5e5e5;
+}
+
+.um-admin-infobox > .um-row > p {
+	border-top: 1px solid #e5e5e5;
+}
+
+.um-admin-infobox > p:first-child {
+	margin-top: 0;
+	padding-top: 0;
 }
 
 .um-admin-infobox label {

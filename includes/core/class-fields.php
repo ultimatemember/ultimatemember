@@ -3685,9 +3685,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 */
 		function array_sort_by_column( $arr, $col, $dir = SORT_ASC ) {
 			$sort_col = array();
-			foreach ($arr as $key => $row) {
-				if (isset( $row[$col] )) {
-					$sort_col[$key] = $row[$col];
+			foreach ( $arr as $key => $row ) {
+				if ( $key == 'form_id' ) {
+					continue;
+				}
+
+				if ( isset( $row[ $col ] ) ) {
+					$sort_col[ $key ] = $row[ $col ];
 				}
 			}
 

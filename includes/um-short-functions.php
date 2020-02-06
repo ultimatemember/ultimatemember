@@ -779,7 +779,7 @@ function um_user_submitted_registration( $style = false ) {
  * @since  2.1.4 
  */
 function um_user_submitted_registration_formatted( $style = false ){
-  	$output = null;
+	$output = null;
 
 	$submitted_data = um_user( 'submitted' );
 
@@ -788,32 +788,29 @@ function um_user_submitted_registration_formatted( $style = false ){
 	}
 
 	// Timestamp
-    $output .= um_user_submited_display( true, 'timestamp', 'Date Submitted' );
-    $output .= um_user_submited_display( true, 'form_id', 'Form', $submitted_data );
+	$output .= um_user_submited_display( 'timestamp', __( 'Date Submitted', 'ultimate-member' ) );
+	$output .= um_user_submited_display( 'form_id', __( 'Form', 'ultimate-member' ), $submitted_data );
 
 	if ( isset( $submitted_data ) && is_array( $submitted_data ) ) {
 
-		$fields = UM()->query()->get_attr( 'custom_fields', $submitted_data["form_id"] );
-        
-        if( isset( $fields ) ){
+		$fields = UM()->query()->get_attr( 'custom_fields', $submitted_data['form_id'] );
 
-        	$pw_fields = array();
+		if ( isset( $fields ) ) {
 
-        	$fields['form_id'] = array('title' => 'Form' );
-                
-            $rows = array();
+			$fields['form_id'] = array( 'title' => __( 'Form', 'ultimate-member' ) );
 
-            UM()->fields()->get_fields = $fields;
+			$rows = array();
 
-	        foreach ( $fields as $key => $array ) {
-				if ( $array['type'] == 'row' ) {
+			UM()->fields()->get_fields = $fields;
+
+			foreach ( $fields as $key => $array ) {
+				if ( isset( $array['type'] ) && $array['type'] == 'row' ) {
 					$rows[ $key ] = $array;
 					unset( UM()->fields()->get_fields[ $key ] ); // not needed now
 				}
-
 			}
 
-    		if ( empty( $rows ) ) {
+			if ( empty( $rows ) ) {
 				$rows = array(
 					'_um_row_1' => array(
 						'type'      => 'row',
@@ -823,85 +820,85 @@ function um_user_submitted_registration_formatted( $style = false ){
 					),
 				);
 			}
-            
-            $arr_fields_in_order = array();
 
-			foreach ( $rows as $row_id => $row_array ) { 
-					
-					$row_fields = UM()->fields()->get_fields_by_row( $row_id );
-					
-					if ( $row_fields ) {
+			foreach ( $rows as $row_id => $row_array ) {
 
-						$output .= UM()->fields()->new_row_output( $row_id, $row_array );
+				$row_fields = UM()->fields()->get_fields_by_row( $row_id );
 
-						$sub_rows = ( isset( $row_array['sub_rows'] ) ) ? $row_array['sub_rows'] : 1;
-						for ( $c = 0; $c < $sub_rows; $c++ ) {
+				if ( $row_fields ) {
 
-							// cols
-							$cols = ( isset( $row_array['cols'] ) ) ? $row_array['cols'] : 1;
-							if ( strstr( $cols, ':' ) ) {
-								$col_split = explode( ':', $cols );
-							} else {
-								$col_split = array( $cols );
+					$output .= UM()->fields()->new_row_output( $row_id, $row_array );
+
+					$sub_rows = ( isset( $row_array['sub_rows'] ) ) ? $row_array['sub_rows'] : 1;
+					for ( $c = 0; $c < $sub_rows; $c++ ) {
+
+						// cols
+						$cols = ( isset( $row_array['cols'] ) ) ? $row_array['cols'] : 1;
+						if ( strstr( $cols, ':' ) ) {
+							$col_split = explode( ':', $cols );
+						} else {
+							$col_split = array( $cols );
+						}
+						$cols_num = $col_split[ $c ];
+
+						// sub row fields
+						$subrow_fields = null;
+						$subrow_fields = UM()->fields()->get_fields_in_subrow( $row_fields, $c );
+
+						if ( is_array( $subrow_fields ) ) {
+
+							if ( isset( $subrow_fields['form_id'] ) ) {
+								unset( $subrow_fields['form_id'] );
 							}
-							$cols_num = $col_split[ $c ];
 
-							// sub row fields
-							$subrow_fields = null;
-							$subrow_fields = UM()->fields()->get_fields_in_subrow( $row_fields, $c );
+							$subrow_fields = UM()->fields()->array_sort_by_column( $subrow_fields, 'position' );
 
-							if ( is_array( $subrow_fields ) ) {
+							if ( $cols_num == 1 ) {
 
-								$subrow_fields = UM()->fields()->array_sort_by_column( $subrow_fields, 'position' );
-
-								if ( $cols_num == 1 ) {
-
-									$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
-									if ( $col1_fields ) {
-										foreach ( $col1_fields as $key => $data ) {
-											$output .= um_user_submited_display( true, $key, $data['title'] );
-										}
+								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
+								if ( $col1_fields ) {
+									foreach ( $col1_fields as $key => $data ) {
+										$output .= um_user_submited_display( $key, $data['title'] );
 									}
-									
-								} else if ($cols_num == 2) {
+								}
 
-									$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
-									if ( $col1_fields ) {
-										foreach ( $col1_fields as $key => $data ) {
-											$output .= um_user_submited_display( true, $key, $data['title'] );
-										}
-									}
-									
-									$col2_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 2 );
-									if ( $col2_fields ) {
-										foreach ( $col2_fields as $key => $data ) {
-											$output .= um_user_submited_display( true, $key, $data['title'] );
-										}
-									}
-									
-								} else {
+							} elseif ( $cols_num == 2 ) {
 
-									$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
-									if ( $col1_fields ) {
-										foreach ( $col1_fields as $key => $data ) {
-											$output .= um_user_submited_display( true, $key, $data['title'] );
-										}
+								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
+								if ( $col1_fields ) {
+									foreach ( $col1_fields as $key => $data ) {
+										$output .= um_user_submited_display( $key, $data['title'] );
 									}
-									
-									$col2_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 2 );
-									if ( $col2_fields ) {
-										foreach ( $col2_fields as $key => $data ) {
-											$output .= um_user_submited_display( true, $key, $data['title'] );
-										}
+								}
+
+								$col2_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 2 );
+								if ( $col2_fields ) {
+									foreach ( $col2_fields as $key => $data ) {
+										$output .= um_user_submited_display( $key, $data['title'] );
 									}
-									
-									$col3_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 3 );
-									if ( $col3_fields ) {
-										foreach ( $col3_fields as $key => $data ) {
-											$output .= um_user_submited_display( true, $key, $data['title'] );
-										}
+								}
+
+							} else {
+
+								$col1_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 1 );
+								if ( $col1_fields ) {
+									foreach ( $col1_fields as $key => $data ) {
+										$output .= um_user_submited_display( $key, $data['title'] );
 									}
-									
+								}
+
+								$col2_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 2 );
+								if ( $col2_fields ) {
+									foreach ( $col2_fields as $key => $data ) {
+										$output .= um_user_submited_display( $key, $data['title'] );
+									}
+								}
+
+								$col3_fields = UM()->fields()->get_fields_in_column( $subrow_fields, 3 );
+								if ( $col3_fields ) {
+									foreach ( $col3_fields as $key => $data ) {
+										$output .= um_user_submited_display( $key, $data['title'] );
+									}
 								}
 
 							}
@@ -909,15 +906,17 @@ function um_user_submitted_registration_formatted( $style = false ){
 						}
 
 					}
-						
-				
-			} // endfor
-           
-		}
-    }
 
-    
-    if ( $style ) {
+				}
+
+
+			} // endfor
+
+		}
+	}
+
+
+	if ( $style ) {
 		$output .= '</div>';
 	}
 
@@ -928,32 +927,39 @@ function um_user_submitted_registration_formatted( $style = false ){
 
 /**
  * Prepare template
- * @param  boolean $style 
- * @param  string  $k     
- * @param  string  $title 
- * @param  array   $data  
- * @return string      
+ *
+ * @param  string  $k
+ * @param  string  $title
+ * @param  array   $data
+ * @param  boolean $style
+ * @return string
  *
  * @since  2.1.4 
  */
-function um_user_submited_display( $style = false, $k, $title, $data = array() ){
-    
-    $output = '';
+function um_user_submited_display( $k, $title, $data = array(), $style = true ) {
+	$output = '';
 
-    if( 'form_id' == $k ){
-    	$v = get_the_title( $data['form_id'] )." - Form ID#: ".$data['form_id'];
-    }else{
-    	 $v = um_user( $k );
-    }
-
-    if ( strstr( $k, 'user_pass' ) || in_array( $k, array( 'g-recaptcha-response', 'request', '_wpnonce', '_wp_http_referer' ) ) ) {
-		return;
+	if ( 'form_id' == $k ) {
+		$v = sprintf( __( '%s - Form ID#: %s', 'ultimate-member' ), get_the_title( $data['form_id'] ), $data['form_id'] );
+	} else {
+		$v = um_user( $k );
 	}
 
-   
-	
-    if ( UM()->fields()->get_field_type( $k ) == 'image' || UM()->fields()->get_field_type( $k ) == 'file' ) {
+	if ( strstr( $k, 'user_pass' ) || in_array( $k, array( 'g-recaptcha-response', 'request', '_wpnonce', '_wp_http_referer' ) ) ) {
+		return '';
+	}
+
+	if ( ! $v ) {
+		if ( $style ) {
+			return "<p><label>$title: </label><span>" . __( '(empty)', 'ultimate-member' ) ."</span></p>";
+		} else {
+			return '';
+		}
+	}
+
+	if ( UM()->fields()->get_field_type( $k ) == 'image' || UM()->fields()->get_field_type( $k ) == 'file' ) {
 		$file = basename( $v );
+
 		$filedata = get_user_meta( um_user( 'ID' ), $k . "_metadata", true );
 
 		$baseurl = UM()->uploader()->get_upload_base_url();
@@ -984,7 +990,7 @@ function um_user_submited_display( $style = false, $k, $title, $data = array() )
 		if ( ! $v ) {
 			$v = __( '(empty)', 'ultimate-member' );
 		}
-		$output .= "<p><label>$title</label><span>$v</span></p>";
+		$output .= "<p><label>$title: </label><span>$v</span></p>";
 	} else {
 		$output .= "$title: $v" . "<br />";
 	}
