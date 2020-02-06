@@ -1067,7 +1067,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 					UM()->user()->preview = true;
 
-					$output = um_user_submitted_registration( true );
+					$output = um_user_submitted_registration_formatted( true );
 
 					um_reset_user();
 
