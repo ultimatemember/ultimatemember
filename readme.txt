@@ -145,17 +145,26 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [topic](https://wordpress.org/support/topic/version-2-1-4/)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.1.4: January xx, 2020 =
+= 2.1.4: February xx, 2020 =
 
 * Enhancements:
 
   - Updated select2 JS library to 4.0.12 version
-  - Added a few member directories filters for 3rd-party integrations
+  - Added a few member directories PHP and JS filters for 3rd-party integrations
+  - Added labels for member directories filters to increase Accessibility points in Audit
 
 * Bugfixes:
 
-  - Added labels for member directories filters to increase Accessibility points in Audit
   - Fixed activation licenses with sslverify
+  - Fixed fields' options if they contains spaces in the start and the end of option (added trim)
+  - Fixed getting range for slider filters
+  - Fixed 2.1.3-beta3 package upgrade
+  - Fixed resize image on registration form
+  - Fixed multiselect field styles
+  - Fixed issue with not editable fields and their visibility
+  - Fixed displaying header with member counts
+  - Fixed JS errors with not defined tinyMCE on Forms builder
+  - Fixed issues with "key => value" fields (dropdown + multiselect) if 'um_select_options_pair' filter is used
 
 = 2.1.3: January 21, 2020 =
 

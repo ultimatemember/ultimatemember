@@ -773,18 +773,18 @@ function um_user_submitted_registration( $style = false ) {
 /**
  * Show filtered social link
  *
- * @param $key
- * @param $match
+ * @param string $key
+ * @param string $match
  *
- * @return mixed|string|void
+ * @return string
  */
 function um_filtered_social_link( $key, $match ) {
 	$value = um_profile( $key );
 	$submatch = str_replace( 'https://', '', $match );
 	$submatch = str_replace( 'http://', '', $submatch );
-	if (strstr( $value, $submatch )) {
+	if ( strstr( $value, $submatch ) ) {
 		$value = 'https://' . $value;
-	} else if (strpos( $value, 'http' ) !== 0) {
+	} elseif ( strpos( $value, 'http' ) !== 0 ) {
 		$value = $match . $value;
 	}
 	$value = str_replace( 'https://https://', 'https://', $value );

@@ -652,10 +652,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 
 		/**
 		 * Print editor scripts if they are not printed by default
-		 * @return type
 		 */
 		function admin_footer_scripts() {
-			$CLASS = '\_WP_Editors';
+			/**
+			 * @var $class \_WP_Editors
+			 */
+			$class = '\_WP_Editors';
 
 			if ( did_action( 'print_default_editor_scripts' ) ) {
 				return;
@@ -663,17 +665,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			if ( did_action( 'wp_tiny_mce_init' ) ) {
 				return;
 			}
-			if ( has_action( 'admin_print_footer_scripts', array( $CLASS, 'editor_js' ) ) ) {
+			if ( has_action( 'admin_print_footer_scripts', array( $class, 'editor_js' ) ) ) {
 				return;
 			}
 
-			if ( !class_exists( $CLASS, false ) ) {
+			if ( ! class_exists( $class, false ) ) {
 				require_once( ABSPATH . WPINC . '/class-wp-editor.php' );
 			}
 
-			$CLASS::force_uncompressed_tinymce();
-			$CLASS::enqueue_scripts();
-			$CLASS::editor_js();
+			$class::force_uncompressed_tinymce();
+			$class::enqueue_scripts();
+			$class::editor_js();
 		}
 
 	}

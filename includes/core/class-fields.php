@@ -78,7 +78,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		function show_social_urls() {
 			$social = array();
 
-			$fields = UM()->builtin()->all_user_fields;
+			$fields = UM()->builtin()->get_all_user_fields();
 			foreach ( $fields as $field => $args ) {
 				if ( isset( $args['advanced'] ) && $args['advanced'] == 'social' ) {
 					$social[ $field ] = $args;
@@ -3104,6 +3104,18 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						 */
 						$options = apply_filters( "um_multiselect_options_{$data['type']}", $options, $data );
 					}
+
+					/**
+					 * UM hook
+					 *
+					 * @type filter
+					 * @title um_select_option_value
+					 * @description Enable options pair by field $data
+					 * @input_vars
+					 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
+					 * {"var":"$data","type":"array","desc":"Field Data"}]
+					 */
+					$use_keyword = apply_filters( 'um_select_options_pair', null, $data );
 
 					// switch options pair for custom options from a callback function
 					if ( ! empty( $data['custom_dropdown_options_source'] ) ) {

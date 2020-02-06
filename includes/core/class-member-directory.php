@@ -606,10 +606,22 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$custom_dropdown .= ' data-um-ajax-source="' . esc_attr( $ajax_source ) . '" ';
 
 						$attrs['options'] = UM()->fields()->get_options_from_callback( $attrs, $attrs['type'] );
+					} else {
+						/**
+						 * UM hook
+						 *
+						 * @type filter
+						 * @title um_select_option_value
+						 * @description Enable options pair by field $data
+						 * @input_vars
+						 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
+						 * {"var":"$data","type":"array","desc":"Field Data"}]
+						 */
+						$option_pairs = apply_filters( 'um_select_options_pair', null, $attrs );
 					}
 
 					if ( $attrs['metakey'] != 'online_status' ) {
-						if ( $attrs['metakey'] != 'role_select' && $attrs['metakey'] != 'mycred_rank' && empty( $custom_dropdown ) ) {
+						if ( $attrs['metakey'] != 'role_select' && $attrs['metakey'] != 'mycred_rank' && empty( $custom_dropdown ) && empty( $option_pairs ) ) {
 							$attrs['options'] = array_intersect( array_map( 'stripslashes', array_map( 'trim', $attrs['options'] ) ), $values_array );
 						} elseif ( ! empty( $custom_dropdown ) ) {
 							$attrs['options'] = array_intersect_key( array_map( 'trim', $attrs['options'] ), array_flip( $values_array ) );
@@ -661,6 +673,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								}
 
 								if ( isset( $attrs['custom'] ) ) {
+									$opt = $k;
+								}
+
+								if ( ! empty( $option_pairs ) ) {
 									$opt = $k;
 								} ?>
 
@@ -2167,48 +2183,57 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'hook_after_user_name'  => preg_replace( '/^\s+/im', '', $hook_after_user_name ),
 			);
 
-			$directory_data['tagline_fields'] = maybe_unserialize( $directory_data['tagline_fields'] );
+			if ( ! empty( $directory_data['show_tagline'] ) ) {
 
-			if ( $directory_data['show_tagline'] && is_array( $directory_data['tagline_fields'] ) ) {
-				foreach ( $directory_data['tagline_fields'] as $key ) {
-					if ( ! $key ) {
-						continue;
+				if ( ! empty( $directory_data['tagline_fields'] ) ) {
+					$directory_data['tagline_fields'] = maybe_unserialize( $directory_data['tagline_fields'] );
+
+					if ( is_array( $directory_data['tagline_fields'] ) ) {
+						foreach ( $directory_data['tagline_fields'] as $key ) {
+							if ( ! $key ) {
+								continue;
+							}
+
+							$value = um_filtered_value( $key );
+
+							if ( ! $value ) {
+								continue;
+							}
+
+							$data_array[ $key ] = $value;
+						}
 					}
-
-					$value = um_filtered_value( $key );
-
-					if ( ! $value ) {
-						continue;
-					}
-
-					$data_array[ $key ] = $value;
 				}
 			}
 
-			if ( $directory_data['show_userinfo'] ) {
-				$directory_data['reveal_fields'] = maybe_unserialize( $directory_data['reveal_fields'] );
+			if ( ! empty( $directory_data['show_userinfo'] ) ) {
 
-				if ( is_array( $directory_data['reveal_fields'] ) ) {
-					foreach ( $directory_data['reveal_fields'] as $key ) {
-						if ( ! $key ) {
-							continue;
+				if ( ! empty( $directory_data['reveal_fields'] ) ) {
+
+					$directory_data['reveal_fields'] = maybe_unserialize( $directory_data['reveal_fields'] );
+
+					if ( is_array( $directory_data['reveal_fields'] ) ) {
+						foreach ( $directory_data['reveal_fields'] as $key ) {
+							if ( ! $key ) {
+								continue;
+							}
+
+							$value = um_filtered_value( $key );
+							if ( ! $value ) {
+								continue;
+							}
+
+							$label = UM()->fields()->get_label( $key );
+							if ( $key == 'role_select' || $key == 'role_radio' ) {
+								$label = strtr( $label, array(
+									' (Dropdown)'   => '',
+									' (Radio)'      => ''
+								) );
+							}
+
+							$data_array[ "label_{$key}" ] = __( $label, 'ultimate-member' );
+							$data_array[ $key ] = $value;
 						}
-
-						$value = um_filtered_value( $key );
-						if ( ! $value ) {
-							continue;
-						}
-
-						$label = UM()->fields()->get_label( $key );
-						if ( $key == 'role_select' || $key == 'role_radio' ) {
-							$label = strtr( $label, array(
-								' (Dropdown)'   => '',
-								' (Radio)'      => ''
-							) );
-						}
-
-						$data_array[ "label_{$key}" ] = __( $label, 'ultimate-member' );
-						$data_array[ $key ] = $value;
 					}
 				}
 

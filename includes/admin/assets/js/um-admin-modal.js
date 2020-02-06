@@ -37,7 +37,7 @@ function um_admin_new_modal( id, ajax, size ) {
 function um_tinymce_init( id, content ) {
 	var object = jQuery('#' + id);
 
-	if ( typeof(tinyMCE) === 'object' && tinyMCE.get( id ) !== null ) {
+	if ( typeof( tinyMCE ) === 'object' && tinyMCE.get( id ) !== null ) {
 		tinyMCE.triggerSave();
 		tinyMCE.EditorManager.execCommand( 'mceRemoveEditor', true, id );
 		"4" === tinyMCE.majorVersion ? window.tinyMCE.execCommand( "mceRemoveEditor", !0, id ) : window.tinyMCE.execCommand( "mceRemoveControl", !0, id );
@@ -55,7 +55,7 @@ function um_tinymce_init( id, content ) {
 			QTags( tinyMCEPreInit.qtInit[ id ] );
 			QTags._buttonsInit();
 		}
-		if ( typeof(window.switchEditors) === 'object' ) {
+		if ( typeof( window.switchEditors ) === 'object' ) {
 			window.switchEditors.go( id );
 		}
 		tinyMCE.init( init );
@@ -79,7 +79,7 @@ function um_tinymce_init( id, content ) {
 	jQuery( 'body' ).on( 'click', '.wp-switch-editor', function() {
 		var target = jQuery(this);
 
-		if ( target.hasClass( 'wp-switch-editor' ) && typeof(window.switchEditors) === 'object' ) {
+		if ( target.hasClass( 'wp-switch-editor' ) && typeof( window.switchEditors ) === 'object' ) {
 			var mode = target.hasClass( 'switch-tmce' ) ? 'tmce' : 'html';
 			window.switchEditors.go( id, mode );
 		}

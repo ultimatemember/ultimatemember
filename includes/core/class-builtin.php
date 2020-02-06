@@ -44,6 +44,14 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 
 
 		/**
+		 * @return array
+		 */
+		function get_all_user_fields() {
+			return apply_filters( 'um_builtin_all_user_fields', $this->all_user_fields );
+		}
+
+
+		/**
 		 * Regular or multi-select/options
 		 *
 		 * @param $field
@@ -1273,7 +1281,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$fields_without_metakey = apply_filters( 'um_all_user_fields_without_metakey', $fields_without_metakey );
 
 			if ( ! $show_all ) {
-				$this->fields_dropdown = array('image','file','password','rating');
+				$this->fields_dropdown = array( 'image', 'file', 'password', 'rating' );
 				$this->fields_dropdown = array_merge( $this->fields_dropdown, $fields_without_metakey );
 			} else {
 				$this->fields_dropdown = $fields_without_metakey;
@@ -1283,41 +1291,41 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 			$predefined = $this->predefined_fields;
 
 			if ( $exclude_types ) {
-				$exclude_types = explode(',', $exclude_types);
+				$exclude_types = explode( ',', $exclude_types );
 			}
 
 			$all = array( 0 => '' );
 
-			if ( is_array( $custom ) ){
+			if ( is_array( $custom ) ) {
 				$all = $all + array_merge( $predefined, $custom );
 			} else {
 				$all = $all + $predefined;
 			}
 
-			foreach( $all as $k => $arr ) {
+			foreach ( $all as $k => $arr ) {
 
 				if ( $k == 0 ) {
-					unset($all[$k]);
+					unset( $all[ $k ] );
 				}
 
-				if ( isset( $arr['title'] ) ){
-					$all[$k]['title'] = stripslashes( $arr['title'] );
+				if ( isset( $arr['title'] ) ) {
+					$all[ $k ]['title'] = stripslashes( $arr['title'] );
 				}
 
 				if ( $exclude_types && isset( $arr['type'] ) && in_array( $arr['type'], $exclude_types ) ) {
-					unset( $all[$k] );
+					unset( $all[ $k ] );
 				}
 				if ( isset( $arr['account_only'] ) || isset( $arr['private_use'] ) ) {
-					if ( !$show_all ) {
-						unset( $all[$k] );
+					if ( ! $show_all ) {
+						unset( $all[ $k ] );
 					}
 				}
 				if ( isset( $arr['type'] ) && in_array( $arr['type'], $this->fields_dropdown ) ) {
-					unset( $all[$k] );
+					unset( $all[ $k ] );
 				}
 			}
 
-			$all = UM()->fields()->array_sort_by_column( $all, 'title');
+			$all = UM()->fields()->array_sort_by_column( $all, 'title' );
 
 			return $all;
 		}

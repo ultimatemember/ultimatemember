@@ -362,7 +362,7 @@ function um_build_template( directory, data ) {
 	var header_template = wp.template( 'um-members-header' );
 	directory.find('.um-members-intro').remove();
 
-	var generate_header = wp.hooks.applyFilters( 'um_member_directory_generate_header', false );
+	var generate_header = wp.hooks.applyFilters( 'um_member_directory_generate_header', false, directory );
 
 	if ( ( typeof data.is_search != 'undefined' && data.is_search ) || generate_header ) {
 		directory.find('.um-members-wrapper').prepend( header_template( data ) );
@@ -591,7 +591,7 @@ function um_run_search( directory ) {
 
 
 	var ignore_after_search = false;
-	ignore_after_search = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', ignore_after_search );
+	ignore_after_search = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', ignore_after_search, directory );
 
 	if ( ! ignore_after_search ) {
 		var show_after_search = directory.data('must-search');
@@ -1167,7 +1167,7 @@ jQuery(document.body).ready( function() {
 		}
 
 		var ignore_after_search = false;
-		ignore_after_search = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', ignore_after_search );
+		ignore_after_search = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', ignore_after_search, directory );
 
 		if ( ! ignore_after_search ) {
 			var show_after_search = directory.data('must-search');
@@ -1291,7 +1291,7 @@ jQuery(document.body).ready( function() {
 		}
 
 		var ignore_after_search = false;
-		ignore_after_search = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', ignore_after_search );
+		ignore_after_search = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', ignore_after_search, directory );
 
 		if ( ! ignore_after_search ) {
 			var show_after_search = directory.data('must-search');
@@ -1586,7 +1586,7 @@ jQuery(document.body).ready( function() {
 		wp.hooks.doAction( 'um_member_directory_on_init', directory, hash );
 
 		var ignore_after_search = false;
-		ignore_after_search = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', ignore_after_search );
+		ignore_after_search = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', ignore_after_search, directory );
 
 		if ( ! ignore_after_search ) {
 			var show_after_search = directory.data('must-search');
@@ -1599,9 +1599,13 @@ jQuery(document.body).ready( function() {
 			}
 		}
 
-		um_members_show_preloader( directory );
-		um_ajax_get_members( directory, {first_load:true} );
-		um_change_tag( directory );
+		var prevent_default = wp.hooks.applyFilters( 'um_member_directory_prevent_default_first_loading', false, directory, hash );
+
+		if ( ! prevent_default ) {
+			um_members_show_preloader( directory );
+			um_ajax_get_members( directory, {first_load:true} );
+			um_change_tag( directory );
+		}
 	});
 
 
@@ -1716,7 +1720,7 @@ jQuery(document.body).ready( function() {
 			});
 
 			var ignore_after_search = false;
-			ignore_after_search = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', ignore_after_search );
+			ignore_after_search = wp.hooks.applyFilters( 'um_member_directory_ignore_after_search', ignore_after_search, directory );
 
 			if ( ! ignore_after_search ) {
 				var show_after_search = directory.data('must-search');
@@ -1733,9 +1737,12 @@ jQuery(document.body).ready( function() {
 				}
 			}
 
-			um_ajax_get_members( directory );
+			var prevent_default = wp.hooks.applyFilters( 'um_member_directory_prevent_default_first_loading', false, directory, hash );
 
-			um_change_tag( directory );
+			if ( ! prevent_default ) {
+				um_ajax_get_members( directory );
+				um_change_tag( directory );
+			}
 		});
 	});
 

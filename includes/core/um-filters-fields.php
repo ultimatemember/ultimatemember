@@ -709,14 +709,60 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 				}
 			}
 		} elseif ( 'select' == $type || 'radio' == $type ) {
-			if ( ! empty( $data['options'] ) && ! in_array( $value, array_map( 'trim', $data['options'] ) ) && empty( $data['custom_dropdown_options_source'] ) ) {
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_select_option_value
+			 * @description Enable options pair by field $data
+			 * @input_vars
+			 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
+			 * {"var":"$data","type":"array","desc":"Field Data"}]
+			 */
+			$option_pairs = apply_filters( 'um_select_options_pair', null, $data );
+
+			$arr = $data['options'];
+			if ( $option_pairs ) {
+				$arr = array_keys( $data['options'] );
+			}
+
+			if ( ! empty( $arr ) && ! in_array( $value, array_map( 'trim', $arr ) ) && empty( $data['custom_dropdown_options_source'] ) ) {
 				$value = '';
+			} else {
+				if ( $option_pairs ) {
+					$value = $data['options'][ $value ];
+				}
 			}
 		}
 	} elseif ( ! empty( $value ) && is_array( $value ) ) {
 		if ( 'multiselect' == $type || 'checkbox' == $type ) {
-			if ( ! empty( $data['options'] ) && empty( $data['custom_dropdown_options_source'] ) ) {
-				$value = array_intersect( $value, array_map( 'trim', $data['options'] ) );
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_select_option_value
+			 * @description Enable options pair by field $data
+			 * @input_vars
+			 * [{"var":"$options_pair","type":"null","desc":"Enable pairs"},
+			 * {"var":"$data","type":"array","desc":"Field Data"}]
+			 */
+			$option_pairs = apply_filters( 'um_select_options_pair', null, $data );
+
+			$arr = $data['options'];
+			if ( $option_pairs ) {
+				$arr = array_keys( $data['options'] );
+			}
+
+			if ( ! empty( $arr ) && empty( $data['custom_dropdown_options_source'] ) ) {
+				$value = array_intersect( $value, array_map( 'trim', $arr ) );
+			}
+
+			if ( $option_pairs ) {
+				foreach ( $value as &$val ) {
+					$val = $data['options'][ $val ];
+				}
 			}
 		}
 	}
