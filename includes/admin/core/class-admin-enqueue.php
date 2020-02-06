@@ -98,6 +98,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		function enqueue_cpt_scripts() {
 			if ( ( isset( $_GET['post_type'] ) && 'um_form' == $_GET['post_type'] ) || ( isset( $_GET['post'] ) && 'um_form' == get_post_type( $_GET['post'] ) ) ) {
 				$this->um_cpt_form_screen = true;
+				add_action( 'admin_footer',  array( $this, 'admin_footer_scripts' ), 20 );
 			}
 
 			$this->post_page = true;
@@ -265,7 +266,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			wp_register_style( 'um_admin_modal', $this->css_url . 'um-admin-modal.css', array( 'wp-color-picker' ), ultimatemember_version );
 			wp_enqueue_style( 'um_admin_modal' );
 
-			wp_register_script( 'um_admin_modal', $this->js_url . 'um-admin-modal.js', array( 'jquery', 'wp-util', 'wp-color-picker' ), ultimatemember_version, true );
+			wp_register_script( 'um_admin_modal', $this->js_url . 'um-admin-modal.js', array( 'jquery', 'editor', 'wp-util', 'wp-color-picker', 'wp-tinymce' ), ultimatemember_version, true );
 			wp_enqueue_script( 'um_admin_modal' );
 		}
 
@@ -646,6 +647,33 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 				}
 			}
 
+		}
+
+
+		/**
+		 * Print editor scripts if they are not printed by default
+		 * @return type
+		 */
+		function admin_footer_scripts() {
+			$CLASS = '\_WP_Editors';
+
+			if ( did_action( 'print_default_editor_scripts' ) ) {
+				return;
+			}
+			if ( did_action( 'wp_tiny_mce_init' ) ) {
+				return;
+			}
+			if ( has_action( 'admin_print_footer_scripts', array( $CLASS, 'editor_js' ) ) ) {
+				return;
+			}
+
+			if ( !class_exists( $CLASS, false ) ) {
+				require_once( ABSPATH . WPINC . '/class-wp-editor.php' );
+			}
+
+			$CLASS::force_uncompressed_tinymce();
+			$CLASS::enqueue_scripts();
+			$CLASS::editor_js();
 		}
 
 	}
