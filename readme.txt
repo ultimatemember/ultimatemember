@@ -152,6 +152,8 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Updated select2 JS library to 4.0.12 version
   - Added a few member directories PHP and JS filters for 3rd-party integrations
   - Added labels for member directories filters to increase Accessibility points in Audit
+  - Added formatting for submitted data
+  - Added fields notices functionality
 
 * Bugfixes:
 
