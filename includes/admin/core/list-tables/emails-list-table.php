@@ -1,19 +1,19 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+<?php if ( ! defined( 'ABSPATH' ) ) exit;
 
 global $wpdb;
 
-if ( isset($_REQUEST['_wp_http_referer']) ) {
-	$redirect = remove_query_arg(array('_wp_http_referer' ), wp_unslash( $_REQUEST['_wp_http_referer'] ) );
+if ( isset( $_REQUEST['_wp_http_referer'] ) ) {
+	$redirect = remove_query_arg( array( '_wp_http_referer' ), wp_unslash( $_REQUEST['_wp_http_referer'] ) );
 } else {
 	$redirect = get_admin_url(). 'admin.php?page=ultimatemember';
 }
 
 //remove extra query arg
-if ( !empty( $_GET['_wp_http_referer'] ) ) {
-	um_js_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce'), wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
+if ( ! empty( $_GET['_wp_http_referer'] ) ) {
+	um_js_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
 }
 
-if( ! class_exists( 'WP_List_Table' ) ) {
+if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
@@ -320,9 +320,5 @@ $ListTable->wpc_set_pagination_args( array( 'total_items' => count( $emails ), '
 	<input type="hidden" name="page" value="um_options" />
 	<input type="hidden" name="tab" value="email" />
 
-	<?php if ( ! empty( $_GET['section'] ) ) { ?>
-		<input type="hidden" name="section" value="<?php echo esc_attr( $_GET['section'] ) ?>" />
-	<?php }
-
-	$ListTable->display(); ?>
+	<?php $ListTable->display(); ?>
 </form>

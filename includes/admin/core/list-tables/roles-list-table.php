@@ -3,7 +3,7 @@
 global $wpdb;
 
 if ( isset( $_REQUEST['_wp_http_referer'] ) ) {
-	$redirect = remove_query_arg(array('_wp_http_referer' ), wp_unslash( $_REQUEST['_wp_http_referer'] ) );
+	$redirect = remove_query_arg( array( '_wp_http_referer' ), wp_unslash( $_REQUEST['_wp_http_referer'] ) );
 } else {
 	$redirect = get_admin_url(). 'admin.php?page=um_roles';
 }
@@ -11,7 +11,7 @@ if ( isset( $_REQUEST['_wp_http_referer'] ) ) {
 global $wp_roles;
 
 if ( isset( $_GET['action'] ) ) {
-	switch ( $_GET['action'] ) {
+	switch ( sanitize_key( $_GET['action'] ) ) {
 		/* delete action */
 		case 'delete': {
 			$role_keys = array();
@@ -117,7 +117,7 @@ if ( ! empty( $_GET['_wp_http_referer'] ) ) {
 }
 
 $order_by = 'name';
-$order = ( isset( $_GET['order'] ) && 'asc' ==  strtolower( $_GET['order'] ) ) ? 'ASC' : 'DESC';
+$order = ( isset( $_GET['order'] ) && 'asc' ==  strtolower( sanitize_key( $_GET['order'] ) ) ) ? 'ASC' : 'DESC';
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
@@ -487,7 +487,7 @@ $ListTable->um_set_pagination_args( array( 'total_items' => count( $roles ), 'pe
 	</h2>
 
 	<?php if ( ! empty( $_GET['msg'] ) ) {
-		switch( $_GET['msg'] ) {
+		switch( sanitize_key( $_GET['msg'] ) ) {
 			case 'd':
 				echo '<div id="message" class="updated fade"><p>' . __( 'User Role <strong>Deleted</strong> Successfully.', 'ultimate-member' ) . '</p></div>';
 				break;

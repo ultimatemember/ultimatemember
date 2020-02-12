@@ -1415,7 +1415,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$current_tab = empty( $_GET['tab'] ) ? '' : urldecode( $_GET['tab'] );
 			$current_subtab = empty( $_GET['section'] ) ? '' : urldecode( $_GET['section'] );
 
-			$settings_struct = $this->settings_structure[$current_tab];
+			$settings_struct = $this->settings_structure[ $current_tab ];
 
 			//remove not option hidden fields
 			if ( ! empty( $settings_struct['fields'] ) ) {

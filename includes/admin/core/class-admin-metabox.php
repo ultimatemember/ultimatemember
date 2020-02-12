@@ -55,7 +55,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 */
 		function hide_metabox_restrict_content_shop( $hide ) {
 			if ( function_exists( 'wc_get_page_id' ) && ! empty( $_GET['post'] ) &&
-			     $_GET['post'] == wc_get_page_id( 'shop' ) ) {
+			     absint( $_GET['post'] ) == wc_get_page_id( 'shop' ) ) {
 				return true;
 			}
 
@@ -838,7 +838,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				)
 			);
 
-			if ( ! isset( $_GET['id'] ) || 'administrator' != $_GET['id'] ) {
+			if ( ! isset( $_GET['id'] ) || 'administrator' != sanitize_key( $_GET['id'] ) ) {
 				$roles_metaboxes[] = array(
 					'id'        => 'um-admin-form-home',
 					'title'     => __( 'Homepage Options', 'ultimate-member' ),
@@ -925,11 +925,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 			$wp_caps_metabox = false;
 			if ( ! empty( $_GET['id'] ) ) {
-				$data = get_option( "um_role_{$_GET['id']}_meta" );
-				if ( ! empty( $data['_um_is_custom'] ) )
+				$data = get_option( 'um_role_' . sanitize_key( $_GET['id'] ) . '_meta' );
+				if ( ! empty( $data['_um_is_custom'] ) ) {
 					$wp_caps_metabox = true;
+				}
 			}
-			if ( 'add' == $_GET['tab'] || $wp_caps_metabox ) {
+			if ( 'add' == sanitize_key( $_GET['tab'] ) || $wp_caps_metabox ) {
 				$roles_metaboxes[] = array(
 					'id'        => 'um-admin-form-wp-capabilities',
 					'title'     => __( 'WP Capabilities', 'ultimate-member' ),
