@@ -138,6 +138,10 @@ if ( UM()->options()->get( 'members_page' ) ) {
 	if ( $member_directory_id ) {
 		UM()->options()->update( 'user_tags_base_directory' , $member_directory_id );
 	}
+
+	UM()->options()->update( 'user_tags_slug' , 'user-tags' );
+
+	UM()->rewrite()->reset_rules();
 }
 
 
