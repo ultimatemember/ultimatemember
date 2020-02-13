@@ -281,7 +281,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				$user_id = absint( $_POST['user_id'] );
 
 				if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-					wp_send_json_error( __( 'You haven\'t ability to edit this user', 'ultimate-member' ) );
+					wp_send_json_error( __( 'You have no permission to edit this user', 'ultimate-member' ) );
 				}
 
 				$is_temp = um_is_temp_upload( $src );
@@ -296,7 +296,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			if ( $this->delete_file( $src ) ) {
 				wp_send_json_success();
 			} else {
-				wp_send_json_error( __( 'You haven\'t ability to delete this file', 'ultimate-member' ) );
+				wp_send_json_error( __( 'You have no permission to delete this file', 'ultimate-member' ) );
 			}
 		}
 
@@ -330,7 +330,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			UM()->fields()->set_mode = filter_input( INPUT_POST, 'set_mode', FILTER_SANITIZE_STRING );
 
 			if ( UM()->fields()->set_mode != 'register' && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-				$ret['error'] = esc_js( __( 'You haven\'t ability to edit this user', 'ultimate-member' ) );
+				$ret['error'] = esc_js( __( 'You have no permission to edit this user', 'ultimate-member' ) );
 				wp_send_json_error( $ret );
 			}
 
@@ -367,7 +367,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			UM()->fields()->set_mode = $_POST['set_mode'];
 
 			if ( UM()->fields()->set_mode != 'register' && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-				$ret['error'] = __( 'You haven\'t ability to edit this user', 'ultimate-member' );
+				$ret['error'] = __( 'You have no permission to edit this user', 'ultimate-member' );
 				wp_send_json_error( $ret );
 			}
 
