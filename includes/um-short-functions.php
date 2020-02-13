@@ -1115,7 +1115,9 @@ function um_filtered_value( $key, $data = false ) {
 
 
 /**
- * @return bool|int|null
+ * Returns requested User ID or current User ID
+ *
+ * @return int
  */
 function um_profile_id() {
 	$requested_user = um_get_requested_user();
@@ -1512,8 +1514,9 @@ function um_set_requested_user( $user_id ) {
  * @return bool|null
  */
 function um_get_requested_user() {
-	if ( ! empty( UM()->user()->target_id ) )
+	if ( ! empty( UM()->user()->target_id ) ) {
 		return UM()->user()->target_id;
+	}
 
 	return false;
 }

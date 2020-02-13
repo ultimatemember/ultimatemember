@@ -602,6 +602,15 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$post_data['template'] = $post_data['mode'];
 			}
 
+			if ( 'directory' == $args['mode'] ) {
+				wp_enqueue_script( 'um_members' );
+				if ( is_rtl() ) {
+					wp_enqueue_style( 'um_members_rtl' );
+				} else {
+					wp_enqueue_style( 'um_members' );
+				}
+			}
+
 			if ( 'directory' != $args['mode'] ) {
 				$args = array_merge( $post_data, $args );
 

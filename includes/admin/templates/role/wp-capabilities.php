@@ -55,7 +55,7 @@
 	$role_capabilities = ! empty( $role['wp_capabilities'] ) ? array_keys( $role['wp_capabilities'] ) : array( 'read' );
 
 	if ( ! empty( $_GET['id'] ) ) {
-		$role = get_role( $_GET['id'] );
+		$role = get_role( sanitize_key( $_GET['id'] ) );
 	}
 
 	$all_caps = array();

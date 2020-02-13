@@ -47,10 +47,13 @@ $option = array();
 global $wp_roles;
 
 if ( ! empty( $_GET['id'] ) ) {
-	$data = get_option( "um_role_{$_GET['id']}_meta" );
+
+	$role_id = sanitize_key( $_GET['id'] );
+
+	$data = get_option( "um_role_{$role_id}_meta" );
 
 	if ( empty( $data['_um_is_custom'] ) ) {
-		$data['name'] = $wp_roles->roles[ $_GET['id'] ]['name'];
+		$data['name'] = $wp_roles->roles[ $role_id ]['name'];
 	}
 }
 
@@ -61,7 +64,7 @@ if ( ! empty( $_POST['role'] ) ) {
 	$redirect = '';
 	$error = '';
 
-	if ( 'add' == $_GET['tab'] ) {
+	if ( 'add' == sanitize_key( $_GET['tab'] ) ) {
 		if ( ! wp_verify_nonce( $_POST['um_nonce'], 'um-add-role' ) ) {
 			$error = __( 'Security Issue', 'ultimate-member' ) . '<br />';
 		}
@@ -75,7 +78,7 @@ if ( ! empty( $_POST['role'] ) ) {
 
 		$data = $_POST['role'];
 
-		if ( 'add' == $_GET['tab'] ) {
+		if ( 'add' == sanitize_key( $_GET['tab'] ) ) {
 
 			$data['name'] = trim( esc_html( strip_tags( $data['name'] ) ) );
 
@@ -92,8 +95,8 @@ if ( ! empty( $_POST['role'] ) ) {
 			}
 
 			$redirect = add_query_arg( array( 'page'=>'um_roles', 'tab'=>'edit', 'id'=>$id, 'msg'=>'a' ), admin_url( 'admin.php' ) );
-		} elseif ( 'edit' == $_GET['tab'] && ! empty( $_GET['id'] ) ) {
-			$id = $_GET['id'];
+		} elseif ( 'edit' == sanitize_key( $_GET['tab'] ) && ! empty( $_GET['id'] ) ) {
+			$id = sanitize_key( $_GET['id'] );
 
 			$pre_role_meta = get_option( "um_role_{$id}_meta", array() );
 			if ( isset( $pre_role_meta['name'] ) ) {
@@ -105,7 +108,7 @@ if ( ! empty( $_POST['role'] ) ) {
 
 
 		$all_roles = array_keys( get_editable_roles() );
-		if ( 'add' == $_GET['tab'] ) {
+		if ( 'add' == sanitize_key( $_GET['tab'] ) ) {
 			if ( in_array( 'um_' . $id, $all_roles ) || in_array( $id, $all_roles ) ) {
 				$error .= __( 'Role already exists!', 'ultimate-member' ) . '<br />';
 			}
@@ -113,7 +116,7 @@ if ( ! empty( $_POST['role'] ) ) {
 
 		if ( '' == $error ) {
 
-			if ( 'add' == $_GET['tab'] ) {
+			if ( 'add' == sanitize_key( $_GET['tab'] ) ) {
 				$roles = get_option( 'um_roles' );
 				$roles[] = $id;
 
@@ -148,14 +151,14 @@ $screen_id = $current_screen->id; ?>
 
 <div class="wrap">
 	<h2>
-		<?php echo ( 'add' == $_GET['tab'] ) ? __( 'Add New Role', 'ultimate-member' ) : __( 'Edit Role', 'ultimate-member' ) ?>
-		<?php if ( 'edit' == $_GET['tab'] ) { ?>
+		<?php echo ( 'add' == sanitize_key( $_GET['tab'] ) ) ? __( 'Add New Role', 'ultimate-member' ) : __( 'Edit Role', 'ultimate-member' ) ?>
+		<?php if ( 'edit' == sanitize_key( $_GET['tab'] ) ) { ?>
 			<a class="add-new-h2" href="<?php echo esc_url( add_query_arg( array( 'page' => 'um_roles', 'tab' => 'add' ), admin_url( 'admin.php' ) ) ) ?>"><?php _e( 'Add New', 'ultimate-member' ) ?></a>
 		<?php } ?>
 	</h2>
 
 	<?php if ( ! empty( $_GET['msg'] ) ) {
-		switch( $_GET['msg'] ) {
+		switch( sanitize_key( $_GET['msg'] ) ) {
 			case 'a':
 				echo '<div id="message" class="updated fade"><p>' . __( 'User Role <strong>Added</strong> Successfully.', 'ultimate-member' ) . '</p></div>';
 				break;
@@ -172,8 +175,8 @@ $screen_id = $current_screen->id; ?>
 	<?php } ?>
 
 	<form id="um_edit_role" action="" method="post">
-		<input type="hidden" name="role[id]" value="<?php echo isset( $_GET['id'] ) ? esc_attr( $_GET['id'] ) : '' ?>" />
-		<?php if ( 'add' == $_GET['tab'] ) { ?>
+		<input type="hidden" name="role[id]" value="<?php echo isset( $_GET['id'] ) ? esc_attr( sanitize_key( $_GET['id'] ) ) : '' ?>" />
+		<?php if ( 'add' == sanitize_key( $_GET['tab'] ) ) { ?>
 			<input type="hidden" name="role[_um_is_custom]" value="1" />
 			<input type="hidden" name="um_nonce" value="<?php echo esc_attr( wp_create_nonce( 'um-add-role' ) ) ?>" />
 		<?php } else { ?>
@@ -186,7 +189,7 @@ $screen_id = $current_screen->id; ?>
 				<div id="post-body-content">
 					<div id="titlediv">
 						<div id="titlewrap">
-							<?php if ( 'add' == $_GET['tab'] ) { ?>
+							<?php if ( 'add' == sanitize_key( $_GET['tab'] ) ) { ?>
 								<label for="title" class="screen-reader-text"><?php _e( 'Title', 'ultimate-member' ) ?></label>
 								<input type="text" name="role[name]" placeholder="<?php esc_attr_e( 'Enter Title Here', 'ultimate-member' ) ?>" id="title" value="<?php echo isset( $data['name'] ) ? $data['name'] : '' ?>" />
 							<?php } else { ?>
