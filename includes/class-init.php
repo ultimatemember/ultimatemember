@@ -29,7 +29,7 @@ if ( ! class_exists( 'UM' ) ) {
 	 * @method UM_WooCommerce_API WooCommerce_API()
 	 * @method UM_Terms_Conditions Terms_Conditions()
 	 * @method UM_Private_Content Private_Content()
-	 * @method UM_User_Location User_Location()
+	 * @method UM_User_Locations User_Locations()
 	 * @method UM_Photos_API Photos_API()
 	 * @method UM_Groups Groups()
 	 * @method UM_Frontend_Posting Frontend_Posting()

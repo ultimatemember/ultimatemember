@@ -55,7 +55,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'terms-conditions'      => '2.1.1',
 			'unsplash'              => '2.0.2',
 			'user-bookmarks'        => '2.0.2',
-			'user-location'         => '1.0.0',
+			'user-locations'        => '1.0.0',
 			'user-photos'           => '2.0.4',
 			'user-tags'             => '2.1.0',
 			'verified-users'        => '2.0.5',
