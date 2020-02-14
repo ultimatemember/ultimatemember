@@ -368,3 +368,33 @@ textarea.um-forms-field.um-small-field {
 .um-forms-line[data-field_type="same_page_update"] td {
     vertical-align: baseline;
 }
+
+.um-sortable-items-field .um-sortable-item {
+    cursor: move !important;
+    padding: 5px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 1px solid #7e8993;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    background: #f1f1f1;
+    height: 42px;
+    line-height: 28px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.um-sortable-items-field .um-sortable-item.um-hidden-item {
+    display: none;
+}
+
+.um-sortable-items-field .um-sortable-item .um-field-icon {
+    font-size: 18px;
+    width: 20px;
+    text-align: left;
+    margin: 0 10px 0 0;
+}
