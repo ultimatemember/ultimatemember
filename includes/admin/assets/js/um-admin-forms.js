@@ -139,6 +139,25 @@ jQuery(document).ready( function() {
 		um_add_same_page_log( field_key, wp.i18n.__( 'Your upgrade was crashed, please contact with support', 'ultimate-member' ) );
 	}
 
+	/**
+	 * Sortable items
+	 */
+	jQuery('.um-sortable-items-field').sortable({
+		items:                  '.um-sortable-item',
+		connectWith:            '.um-admin-drag-col,.um-admin-drag-group',
+		forcePlaceholderSize:   true,
+		update: function( event, ui ) {
+			var sortable_value = [];
+			jQuery(this).find('li').each( function() {
+				if ( jQuery(this).hasClass( 'um-hidden-item' ) ) {
+					return;
+				}
+				sortable_value.push( jQuery(this).data('tab-id') );
+			});
+
+			jQuery(this).siblings('.um-sortable-items-value' ).val( sortable_value.join( ',' ) );
+		}
+	});
 
 
 	/**

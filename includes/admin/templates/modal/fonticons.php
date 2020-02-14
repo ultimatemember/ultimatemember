@@ -11,7 +11,7 @@
 
 	<div class="um-admin-modal-foot">
 		<a href="javascript:void(0);" class="button-primary um-admin-modal-back" data-code=""><?php _e( 'Finish', 'ultimate-member' ) ?></a>
-		<a href="javascript:void(0);" class="button um-admin-modal-back um-admin-modal-cancel"><?php _e( 'Cancel', 'ultimate-member' ) ?></a>
+		<a href="javascript:void(0);" class="button um-admin-modal-back um-admin-modal-cancel" data-action="UM_remove_modal"><?php _e( 'Cancel', 'ultimate-member' ) ?></a>
 	</div>
 
 </div>

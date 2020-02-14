@@ -20,6 +20,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 */
 		private $form_nonce_added = false;
 		private $directory_nonce_added = false;
+		private $custom_nonce_added = false;
 
 
 		/**
@@ -787,7 +788,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			$path = str_replace('}','', $path );
 
 			include_once $path . 'includes/admin/templates/'. $box['id'] . '.php';
-			wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_custom_nonce' );
+			if ( ! $this->custom_nonce_added ) {
+				$this->custom_nonce_added = true;
+				wp_nonce_field( basename( __FILE__ ), 'um_admin_save_metabox_custom_nonce' );
+			}
 		}
 
 

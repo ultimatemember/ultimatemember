@@ -14,6 +14,11 @@
     padding: 0 0 15px 0;
 }
 
+.um-form-table.um-top-label .um-forms-line td label {
+    margin: 0 0 5px 0;
+    display: inline-block;
+}
+
 .um-form-table.um-top-label .um-forms-line[data-field_type="icon"] td label {
     width: 100%;
     display: block;

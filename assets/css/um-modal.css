@@ -181,6 +181,10 @@
 	text-decoration: none !important;
 }
 
+a.um-modal-btn:visited {
+	color: #fff;
+}
+
 .um-modal-btn:hover {
 	background: #44b0ec;
 	color: #fff;
