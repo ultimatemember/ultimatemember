@@ -411,12 +411,12 @@ jQuery(document).ready(function() {
 	jQuery(document.body).on('click', 'span.um-admin-icon-clear', function(){
 		var element = jQuery(this).parents('p');
 		jQuery('#UM_fonticons a.um-admin-modal-back').attr('data-code', '');
-		element.find('input[type=hidden]').val('');
-		element.find('.um-admin-icon-value').html('No Icon');
+		element.find('input[type="hidden"]').val('');
+		element.find('.um-admin-icon-value').html( wp.i18n.__( 'No Icon', 'ultimate-member' ) );
 
 		element = jQuery(this).parents('td');
-		element.find('input[type=hidden]').val('');
-		element.find('.um-admin-icon-value').html('No Icon');
+		element.find('input[type="hidden"]').val('');
+		element.find('.um-admin-icon-value').html( wp.i18n.__( 'No Icon', 'ultimate-member' ) );
 		jQuery(this).hide();
 	});
 	
@@ -424,7 +424,7 @@ jQuery(document).ready(function() {
 		search font icons
 	**/
 	jQuery(document.body).on('keyup blur', '#_icon_search', function(){
-		if ( jQuery(this).val().toLowerCase() != '' ) {
+		if ( jQuery(this).val().toLowerCase() !== '' ) {
 			jQuery('.um-admin-icons span').hide();
 			jQuery('.um-admin-icons span[data-code*="'+jQuery(this).val().toLowerCase()+'"]').show();
 		} else {

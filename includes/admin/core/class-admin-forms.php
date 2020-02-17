@@ -534,13 +534,84 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 			$html .= '</span><input type="hidden" ' . $name_attr . ' ' . $id_attr . ' ' . $value_attr . ' />';
 
-			if ( get_post_meta( get_the_ID(), '_um_icon', true ) ) {
+			if ( ! empty( $value ) ) {
 				$html .= '<span class="um-admin-icon-clear show"><i class="um-icon-android-cancel"></i></span>';
 			} else {
 				$html .= '<span class="um-admin-icon-clear"><i class="um-icon-android-cancel"></i></span>';
 			}
 
 			$html .= '</span></span>';
+
+			return $html;
+		}
+
+
+		/**
+		 * @param $field_data
+		 *
+		 * @return bool|string
+		 */
+		function render_sortable_items( $field_data ) {
+			if ( empty( $field_data['id'] ) ) {
+				return false;
+			}
+
+			if ( empty( $field_data['items'] ) ) {
+				return false;
+			}
+
+			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
+			$id_attr = ' id="' . esc_attr( $id ) . '" ';
+
+			$size = ! empty( $field_data['size'] ) ? ' um-' . $field_data['size'] . '-field ' : ' um-long-field';
+
+			$name = $field_data['id'];
+			$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
+			$name_attr = ' name="' . $name . '" ';
+
+			$value = $this->get_field_value( $field_data );
+			$value_attr = ' value="' . $value . '" ';
+
+			$data = array(
+				'field_id' => $field_data['id']
+			);
+
+			$data_attr = '';
+			foreach ( $data as $key => $val ) {
+				$data_attr .= ' data-' . $key . '="' . esc_attr( $val ) . '" ';
+			}
+
+			$html = '<input class="um-sortable-items-value" type="hidden" ' . $name_attr . ' ' . $id_attr . ' ' . $value_attr . ' ' . $data_attr . ' />';
+			$html .= '<ul class="um-sortable-items-field' . esc_attr( $size ) . '">';
+
+			if ( ! empty( $value ) ) {
+				$value_array = explode( ',', $value );
+				uksort( $field_data['items'], function( $a, $b ) use ( $value_array ) {
+
+					$arr_flip = array_flip( $value_array );
+
+					if ( ! isset( $arr_flip[ $b ] ) ) {
+						return 1;
+					}
+
+					if ( ! isset( $arr_flip[ $a ] ) ) {
+						return -1;
+					}
+
+					if ( $arr_flip[ $a ] == $arr_flip[ $b ] ) {
+						return 0;
+					}
+
+					return ( $arr_flip[ $a ] < $arr_flip[ $b ] ) ? -1 : 1;
+				} );
+			}
+
+			foreach ( $field_data['items'] as $tab_id => $tab_name ) {
+				$content = apply_filters( 'um_render_sortable_items_item_html', $tab_name, $tab_id, $field_data );
+				$html .= '<li data-tab-id="' . esc_attr( $tab_id ) . '" class="um-sortable-item"><span class="um-field-icon"><i class="um-faicon-sort"></i></span>' . $content . '</li>';
+			}
+
+			$html .= '</ul>';
 
 			return $html;
 		}

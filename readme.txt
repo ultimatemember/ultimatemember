@@ -42,7 +42,7 @@ Read about all of the plugin's features at [Ultimate Member](https://ultimatemem
 
 Ultimate Member has a range of extensions that allow you to extend the power of the plugin. You can purchase all of these extensions at a significant discount with our [All Access Pass](https://ultimatemember.com/pricing/) or you can purchase extensions individually.
 
-* [User Location](https://ultimatemember.com/extensions/user-location/) - Allow users to add geolocations to profiles and show them at the member directories
+* [User Locations](https://ultimatemember.com/extensions/user-locations/) - Allow to display users on a map on the member directory page and allow users to add their location via their profile
 * [Profile Tabs](https://ultimatemember.com/extensions/profile-tabs/) - Allow users to add custom tabs to profiles
 * [Unsplash](https://ultimatemember.com/extensions/unsplash/) - Allow users to select a profile cover photo from [Unsplash](https://unsplash.com/) from their profile
 * [User Bookmarks](https://ultimatemember.com/extensions/user-bookmarks/) - Allow users to bookmark content from your website

@@ -159,9 +159,9 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 					'key'   => 'filesharing',
 					'title' => 'File Sharing',
 				),
-				'um-user-location/um-user-location.php'                 => array(
-					'key'   => 'user-location',
-					'title' => 'User Location',
+				'um-user-locations/um-user-locations.php'                 => array(
+					'key'   => 'user-locations',
+					'title' => 'User Locations',
 				),
 				'um-profile-tabs/um-profile-tabs.php'                   => array(
 					'key'   => 'profile_tabs',

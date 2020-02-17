@@ -139,6 +139,24 @@ jQuery(document).ready( function() {
 		um_add_same_page_log( field_key, wp.i18n.__( 'Your upgrade was crashed, please contact with support', 'ultimate-member' ) );
 	}
 
+	/**
+	 * Sortable items
+	 */
+	jQuery('.um-sortable-items-field').sortable({
+		items:                  '.um-sortable-item',
+		connectWith:            '.um-admin-drag-col,.um-admin-drag-group',
+		forcePlaceholderSize:   true,
+		update: function( event, ui ) {
+			var sortable_value = [];
+			jQuery(this).find('li').each( function() {
+				if ( ! jQuery(this).hasClass( 'um-hidden-item' ) ) {
+					sortable_value.push( jQuery(this).data('tab-id') );
+				}
+			});
+
+			jQuery(this).siblings('.um-sortable-items-value' ).val( sortable_value.join( ',' ) );
+		}
+	});
 
 
 	/**
@@ -836,45 +854,95 @@ jQuery(document).ready( function() {
 			}
 
 		} else if ( condition === '~' ) {
-
-			var field_id = form_line.find( form_line.data('field_type') ).data('field_id');
+			var field_id;
 			var visible_options = [];
-			jQuery.each( condition_fields, function(i) {
-				var condition_field = condition_fields[ i ];
+			var lines_field;
 
-				var tagName = condition_field.prop("tagName").toLowerCase();
+			if ( form_line.data('field_type') === 'sortable_items' ) {
+				field_id = form_line.find( '.um-sortable-items-value' ).data('field_id');
 
-				if ( tagName === 'input' ) {
-					var input_type = condition_field.attr('type');
-					if ( input_type === 'checkbox' ) {
-						if ( value == '1' && condition_field.is(':checked') ) {
-							visible_options.push( condition_field.data( 'fill_' + field_id ) );
+				jQuery.each( condition_fields, function(i) {
+					var condition_field = condition_fields[ i ];
+
+					var tagName = condition_field.prop("tagName").toLowerCase();
+
+					if ( tagName === 'input' ) {
+						var input_type = condition_field.attr('type');
+						if ( input_type === 'checkbox' ) {
+							if ( value == '1' && condition_field.is(':checked') ) {
+								visible_options.push( condition_field.data( 'fill_' + field_id ) );
+							}
+						}
+					} else if ( tagName == 'select' ) {
+						if ( ! value && condition_field.val() ) {
+							visible_options = visible_options.concat( condition_field.val() );
+							visible_options = visible_options.filter( um_distinct );
 						}
 					}
-				} else if ( tagName == 'select' ) {
-					if ( ! value && condition_field.val() ) {
-						visible_options = visible_options.concat( condition_field.val() );
-						visible_options = visible_options.filter( um_distinct );
-					}
-				}
-			});
-
-			var lines_field = jQuery( '[data-field_id="' + field_id + '"]' );
-
-			if ( visible_options.length ) {
-				lines_field.find( 'option' ).hide();
-				jQuery.each( visible_options, function(i) {
-					lines_field.find( 'option[value="' + visible_options[ i ] + '"]' ).show();
 				});
-				if ( visible_options.indexOf( lines_field.val() ) === -1 ) {
-					lines_field.val( visible_options[0] );
-					lines_field.find( 'option' ).attr( 'selected', false ).prop( 'selected', false );
-					lines_field.find( 'option[value="' + visible_options[0] + '"]' ).attr( 'selected', true ).prop( 'selected', true );
+
+				lines_field = jQuery( '[data-field_id="' + field_id + '"]' );
+
+				if ( visible_options.length ) {
+					lines_field.siblings('.um-sortable-items-field').find('li').addClass('um-hidden-item');
+					jQuery.each( visible_options, function(i) {
+						lines_field.siblings('.um-sortable-items-field').find('li[data-tab-id="' + visible_options[ i ] + '"]').removeClass('um-hidden-item');
+					});
+
+					var sortable_value = [];
+					lines_field.siblings('.um-sortable-items-field').find('li').each( function() {
+						if ( ! jQuery(this).hasClass( 'um-hidden-item' ) ) {
+							sortable_value.push( jQuery(this).data('tab-id') );
+						}
+					});
+
+					lines_field.val( sortable_value.join( ',' ) );
+					lines_field.siblings( '.um-sortable-items-field' ).sortable( 'refresh' );
+
+					own_condition = true;
+				} else {
+					lines_field.val( null );
 				}
-				own_condition = true;
 			} else {
-				lines_field.val( null );
-				lines_field.find( 'option' ).attr( 'selected', false ).prop( 'selected', false );
+				field_id = form_line.find( form_line.data('field_type') ).data('field_id');
+
+				jQuery.each( condition_fields, function(i) {
+					var condition_field = condition_fields[ i ];
+
+					var tagName = condition_field.prop("tagName").toLowerCase();
+
+					if ( tagName === 'input' ) {
+						var input_type = condition_field.attr('type');
+						if ( input_type === 'checkbox' ) {
+							if ( value == '1' && condition_field.is(':checked') ) {
+								visible_options.push( condition_field.data( 'fill_' + field_id ) );
+							}
+						}
+					} else if ( tagName == 'select' ) {
+						if ( ! value && condition_field.val() ) {
+							visible_options = visible_options.concat( condition_field.val() );
+							visible_options = visible_options.filter( um_distinct );
+						}
+					}
+				});
+
+				lines_field = jQuery( '[data-field_id="' + field_id + '"]' );
+
+				if ( visible_options.length ) {
+					lines_field.find( 'option' ).hide();
+					jQuery.each( visible_options, function(i) {
+						lines_field.find( 'option[value="' + visible_options[ i ] + '"]' ).show();
+					});
+					if ( visible_options.indexOf( lines_field.val() ) === -1 ) {
+						lines_field.val( visible_options[0] );
+						lines_field.find( 'option' ).attr( 'selected', false ).prop( 'selected', false );
+						lines_field.find( 'option[value="' + visible_options[0] + '"]' ).attr( 'selected', true ).prop( 'selected', true );
+					}
+					own_condition = true;
+				} else {
+					lines_field.val( null );
+					lines_field.find( 'option' ).attr( 'selected', false ).prop( 'selected', false );
+				}
 			}
 
 			return ( own_condition && parent_condition );
