@@ -1082,6 +1082,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$name = ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] . '[' . $name . ']' : $name;
 
 			$values = $this->get_field_value( $field_data );
+			if ( empty( $values ) ) {
+				$values = array();
+			}
 
 			$i = 0;
 			$html = '';
