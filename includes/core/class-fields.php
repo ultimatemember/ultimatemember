@@ -3056,9 +3056,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$output .= '</div>';
 
 
-					if ( $this->is_error( $form_key ) ) {
-						$output .= $this->field_error( $this->show_error( $form_key ) );
+					if ( $this->is_error( $form_key) ) {
+						$output .= $this->field_error( $this->show_error( $form_key) );
+					}else if ( $this->is_notice( $form_key) ) {
+						$output .= $this->field_notice( $this->show_notice( $form_key) );
 					}
+
 
 					$output .= '</div>';
 					break;
