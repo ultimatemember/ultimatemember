@@ -739,8 +739,6 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				{$this->sql_limit}"
 			);
 
-			//var_dump( $wpdb->last_query );
-
 			$total_users = (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );
 
 			$pagination_data = $this->calculate_pagination( $directory_data, $total_users );

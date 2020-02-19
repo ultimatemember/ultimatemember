@@ -26,11 +26,11 @@ add_filter( 'um_edit_label_all_fields', 'um_edit_label_all_fields', 10, 2 );
  * @param $value
  * @param $data
  *
- * @return string|void
+ * @return string
  */
 function um_profile_field_filter_hook__soundcloud_track( $value, $data ) {
 
-	if ( !is_numeric( $value ) ) {
+	if ( ! is_numeric( $value ) ) {
 		return __( 'Invalid soundcloud track ID', 'ultimate-member' );
 	}
 
@@ -52,7 +52,7 @@ add_filter( 'um_profile_field_filter_hook__soundcloud_track', 'um_profile_field_
  * @return bool|string
  */
 function um_profile_field_filter_hook__youtube_video( $value, $data ) {
-	if( empty( $value ) ){
+	if ( empty( $value ) ) {
 		return '';
 	}
 	$value = ( strstr( $value, 'http') || strstr( $value, '://' ) ) ? um_youtube_id_from_url( $value ) : $value;
@@ -61,7 +61,7 @@ function um_profile_field_filter_hook__youtube_video( $value, $data ) {
 					</div>';
 
 	return $value;
-	}
+}
 add_filter( 'um_profile_field_filter_hook__youtube_video', 'um_profile_field_filter_hook__youtube_video', 99, 2 );
 
 
