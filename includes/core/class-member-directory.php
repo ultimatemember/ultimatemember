@@ -1528,6 +1528,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						 */
 						$field_query = apply_filters( "um_query_args_{$field}__filter", false, $field, $value, $filter_type );
 
+						$field_query = apply_filters( 'um_query_args_filter_global', $field_query, $field, $value, $filter_type );
+
 						if ( ! $field_query ) {
 
 							switch ( $filter_type ) {

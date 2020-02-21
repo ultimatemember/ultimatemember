@@ -709,7 +709,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			if ( ! empty( $section_content ) && ! ( is_multisite() && is_network_admin() ) ) {
 
 				if ( $userdata !== 'add-new-user' && $userdata !== 'add-existing-user' ) { ?>
-					<h3><?php esc_html_e( 'Ultimate Member', 'ultimate-member' ); ?></h3>
+					<h3 id="um_user_screen_block"><?php esc_html_e( 'Ultimate Member', 'ultimate-member' ); ?></h3>
 				<?php }
 
 				echo $section_content;

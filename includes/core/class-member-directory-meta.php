@@ -219,6 +219,8 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					 */
 					$skip_default = apply_filters( "um_query_args_{$field}__filter_meta", false, $this, $field, $value, $filter_type, $is_default );
 
+					$skip_default = apply_filters( 'um_query_args_filter_global_meta', $skip_default, $this, $field, $value, $filter_type, $is_default );
+
 					if ( ! $skip_default ) {
 
 						switch ( $filter_type ) {

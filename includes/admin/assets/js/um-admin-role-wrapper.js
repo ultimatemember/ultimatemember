@@ -9,8 +9,14 @@ jQuery( document ).ready( function() {
 		if ( jQuery.inArray( jQuery(this).val().substr(3), um_roles ) !== -1 ) {
 			jQuery( '#um_role_selector_wrapper' ).hide();
 			jQuery( '#um-role' ).val('');
+
+			var hide = wp.hooks.applyFilters( 'um_user_screen_block_hiding', true );
+			if ( hide ) {
+				jQuery( '#um_user_screen_block' ).hide();
+			}
 		} else {
 			jQuery( '#um_role_selector_wrapper' ).show();
+			jQuery( '#um_user_screen_block' ).show();
 		}
 	}).trigger('change');
 
@@ -22,8 +28,14 @@ jQuery( document ).ready( function() {
 		if ( jQuery.inArray( jQuery(this).val().substr(3), um_roles ) !== -1 ) {
 			jQuery( '#um_role_existing_selector_wrapper' ).hide();
 			jQuery( '#um-role' ).val('');
+
+			var hide = wp.hooks.applyFilters( 'um_user_screen_block_hiding', true );
+			if ( hide ) {
+				jQuery( '#um_user_screen_block' ).hide();
+			}
 		} else {
 			jQuery( '#um_role_existing_selector_wrapper' ).show();
+			jQuery( '#um_user_screen_block' ).show();
 		}
 	}).trigger('change');
 

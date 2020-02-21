@@ -1213,7 +1213,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 			if ( $this->in_edit == true ) { // we're editing a field
 				$real_attr = substr( $attribute, 1 );
-				$this->edit_mode_value = (isset( $this->edit_array[ $real_attr ] ) ) ?  $this->edit_array[ $real_attr ] : null;
+				$this->edit_mode_value = (isset( $this->edit_array[ $real_attr ] ) ) ? $this->edit_array[ $real_attr ] : null;
 			}
 
 			switch ( $attribute ) {
