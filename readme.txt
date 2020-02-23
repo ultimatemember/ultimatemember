@@ -155,6 +155,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Added labels for member directories filters to increase Accessibility points in Audit
   - Added formatting for submitted data
   - Added fields notices functionality
+  - Added sanitizing $_GET variables in wp-admin side
 
 * Bugfixes:
 
@@ -168,6 +169,11 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed displaying header with member counts
   - Fixed JS errors with not defined tinyMCE on Forms builder
   - Fixed issues with "key => value" fields (dropdown + multiselect) if 'um_select_options_pair' filter is used
+  - Fixed social URLs validations
+  - Fixed Ultimate Member wrapper's visibility on add/edit user page (wp-admin)
+  - Fixed jQuery-UI library images
+  - Fixed vulnerability with sanitizing $_POST
+  - Fixed last login order on member directories when UM metatable is turned on
 
 = 2.1.3: January 21, 2020 =
 
