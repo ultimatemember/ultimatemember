@@ -286,29 +286,15 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 		 *
 		 * @return bool
 		 */
-		function is_url( $url, $social = false ){
+		function is_url( $url, $social = false ) {
 			if ( ! $url ) {
 				return true;
 			}
 
 			if ( $social ) {
 
-				if ( ! filter_var( $url, FILTER_VALIDATE_URL ) && strstr( $url, $social )  ) { // starts with social requested
+				if ( strstr( $url, $social ) && '' != str_replace( $social, '', $url ) ) {
 					return true;
-				} else {
-
-					if ( filter_var( $url, FILTER_VALIDATE_URL ) && strstr( $url, $social ) ) {
-						return true;
-					} elseif ( preg_match( $this->regex_safe, $url ) ) {
-
-						if ( strstr( $url, '.com' ) ) {
-							return false;
-						} else {
-							return true;
-						}
-
-					}
-
 				}
 
 			} else {

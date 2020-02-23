@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2020-02-14 11:52+0200\n"
-"PO-Revision-Date: 2020-02-14 11:52+0200\n"
+"POT-Creation-Date: 2020-02-23 23:33+0200\n"
+"PO-Revision-Date: 2020-02-23 23:33+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -103,7 +103,7 @@ msgstr ""
 #: includes/admin/core/class-admin-builder.php:765
 #: includes/admin/core/class-admin-dragdrop.php:33
 #: includes/admin/core/class-admin-menu.php:106
-#: includes/core/class-fields.php:4532
+#: includes/core/class-fields.php:4535
 msgid "Please login as administrator"
 msgstr ""
 
@@ -331,44 +331,44 @@ msgstr ""
 msgid "No Icon"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:876
+#: includes/admin/core/class-admin-forms.php:893
 #: includes/admin/core/class-admin-upgrade.php:255
 msgid "Run"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1016
-#: includes/admin/core/class-admin-forms.php:1035
-#: includes/admin/core/class-admin-forms.php:1158
-#: includes/admin/core/class-admin-forms.php:1167
-#: includes/admin/core/class-admin-forms.php:1402
-#: includes/admin/core/class-admin-forms.php:1416
-#: includes/admin/core/class-admin-forms.php:1507
-#: includes/admin/core/class-admin-forms.php:1529
+#: includes/admin/core/class-admin-forms.php:1033
+#: includes/admin/core/class-admin-forms.php:1052
+#: includes/admin/core/class-admin-forms.php:1178
+#: includes/admin/core/class-admin-forms.php:1187
+#: includes/admin/core/class-admin-forms.php:1422
+#: includes/admin/core/class-admin-forms.php:1436
+#: includes/admin/core/class-admin-forms.php:1527
+#: includes/admin/core/class-admin-forms.php:1549
 #: includes/admin/core/class-admin-notices.php:398
 #: includes/core/um-actions-profile.php:673
 msgid "Remove"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1214
+#: includes/admin/core/class-admin-forms.php:1234
 msgid "Select media"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1237
+#: includes/admin/core/class-admin-forms.php:1257
 msgid "Select"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1238
+#: includes/admin/core/class-admin-forms.php:1258
 msgid "Clear"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1508
-#: includes/admin/core/class-admin-forms.php:1530
+#: includes/admin/core/class-admin-forms.php:1528
+#: includes/admin/core/class-admin-forms.php:1550
 #: includes/admin/templates/directory/sorting.php:23
 msgid "Meta key"
 msgstr ""
 
-#: includes/admin/core/class-admin-forms.php:1509
-#: includes/admin/core/class-admin-forms.php:1531
+#: includes/admin/core/class-admin-forms.php:1529
+#: includes/admin/core/class-admin-forms.php:1551
 #: includes/admin/core/class-admin-metabox.php:2230
 msgid "Label"
 msgstr ""
@@ -3607,6 +3607,18 @@ msgstr ""
 msgid "Create additional metadata table..."
 msgstr ""
 
+#: includes/admin/core/packages/2.1.5/functions.php:91
+msgid "Balance fields were updated successfully"
+msgstr ""
+
+#: includes/admin/core/packages/2.1.5/functions.php:93
+msgid "Updated successfully"
+msgstr ""
+
+#: includes/admin/core/packages/2.1.5/init.php:6
+msgid "Upgrade form fields..."
+msgstr ""
+
 #: includes/admin/templates/dashboard/cache.php:12
 msgid "Run this task from time to time to keep your DB clean."
 msgstr ""
@@ -4658,7 +4670,7 @@ msgid "Register"
 msgstr ""
 
 #: includes/class-config.php:135 includes/class-config.php:792
-#: includes/core/class-member-directory.php:2131
+#: includes/core/class-member-directory.php:2133
 #: includes/core/um-actions-profile.php:1260
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
@@ -7121,14 +7133,14 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:4265
+#: includes/core/class-fields.php:4268
 #, php-format
 msgid ""
 "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some "
 "information!"
 msgstr ""
 
-#: includes/core/class-fields.php:4267
+#: includes/core/class-fields.php:4270
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
@@ -7244,14 +7256,14 @@ msgstr ""
 msgid "<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:2076
-#: includes/core/class-member-directory.php:2120
+#: includes/core/class-member-directory.php:2078
+#: includes/core/class-member-directory.php:2122
 #: includes/core/um-actions-profile.php:1227
 #: includes/core/um-actions-profile.php:1258
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/class-member-directory.php:2126
+#: includes/core/class-member-directory.php:2128
 #: includes/core/um-actions-profile.php:1259
 msgid "My Account"
 msgstr ""
@@ -7658,65 +7670,69 @@ msgstr ""
 
 #: includes/core/um-actions-form.php:612 includes/core/um-actions-form.php:618
 #: includes/core/um-actions-form.php:624 includes/core/um-actions-form.php:630
-#: includes/core/um-actions-form.php:636 includes/core/um-actions-form.php:642
-#: includes/core/um-actions-form.php:648 includes/core/um-actions-form.php:654
-#: includes/core/um-actions-form.php:666
+#: includes/core/um-actions-form.php:643 includes/core/um-actions-form.php:649
+#: includes/core/um-actions-form.php:655 includes/core/um-actions-form.php:667
 #, php-format
 msgid "Please enter a valid %s username or profile URL"
 msgstr ""
 
-#: includes/core/um-actions-form.php:660
+#: includes/core/um-actions-form.php:637
+#, php-format
+msgid "Please enter a valid %s profile URL"
+msgstr ""
+
+#: includes/core/um-actions-form.php:661
 msgid "Please enter a valid URL"
 msgstr ""
 
-#: includes/core/um-actions-form.php:673 includes/core/um-actions-form.php:687
+#: includes/core/um-actions-form.php:674 includes/core/um-actions-form.php:688
 msgid "You must provide a username"
 msgstr ""
 
-#: includes/core/um-actions-form.php:675 includes/core/um-actions-form.php:689
+#: includes/core/um-actions-form.php:676 includes/core/um-actions-form.php:690
 msgid "Your username is already taken"
 msgstr ""
 
-#: includes/core/um-actions-form.php:677
+#: includes/core/um-actions-form.php:678
 msgid "Username cannot be an email"
 msgstr ""
 
-#: includes/core/um-actions-form.php:679 includes/core/um-actions-form.php:693
+#: includes/core/um-actions-form.php:680 includes/core/um-actions-form.php:694
 msgid "Your username contains invalid characters"
 msgstr ""
 
-#: includes/core/um-actions-form.php:691 includes/core/um-actions-form.php:713
-#: includes/core/um-actions-form.php:715 includes/core/um-actions-form.php:727
-#: includes/core/um-actions-form.php:734
+#: includes/core/um-actions-form.php:692 includes/core/um-actions-form.php:714
+#: includes/core/um-actions-form.php:716 includes/core/um-actions-form.php:728
+#: includes/core/um-actions-form.php:735
 msgid "This email is already linked to an existing account"
 msgstr ""
 
-#: includes/core/um-actions-form.php:711
+#: includes/core/um-actions-form.php:712
 msgid "You must provide your email"
 msgstr ""
 
-#: includes/core/um-actions-form.php:717 includes/core/um-actions-form.php:725
+#: includes/core/um-actions-form.php:718 includes/core/um-actions-form.php:726
 #: includes/core/um-actions-form.php:750
 msgid "This is not a valid email"
 msgstr ""
 
-#: includes/core/um-actions-form.php:719
+#: includes/core/um-actions-form.php:720
 msgid "Your email contains invalid characters"
 msgstr ""
 
-#: includes/core/um-actions-form.php:770
+#: includes/core/um-actions-form.php:769
 msgid "You must provide a unique value"
 msgstr ""
 
-#: includes/core/um-actions-form.php:780
+#: includes/core/um-actions-form.php:779
 msgid "You must provide alphabetic letters"
 msgstr ""
 
-#: includes/core/um-actions-form.php:792
+#: includes/core/um-actions-form.php:791
 msgid "You must provide lowercase letters."
 msgstr ""
 
-#: includes/core/um-actions-form.php:810
+#: includes/core/um-actions-form.php:809
 #, php-format
 msgid "Your user description must contain less than %s characters"
 msgstr ""
