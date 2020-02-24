@@ -704,10 +704,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				}
 				case 'slider': {
 					$range = $this->slider_filters_range( $filter, $directory_data );
+					if ( $range ) {
+						list( $single_placeholder, $plural_placeholder ) = $this->slider_range_placeholder( $filter, $attrs ); ?>
 
-					list( $single_placeholder, $plural_placeholder ) = $this->slider_range_placeholder( $filter, $attrs );
-
-					if ( $range ) { ?>
 						<input type="hidden" id="<?php echo $filter; ?>_min" name="<?php echo $filter; ?>[]" class="um_range_min" value="<?php echo ! empty( $default_value ) ? esc_attr( min( $default_value ) ) : '' ?>" />
 						<input type="hidden" id="<?php echo $filter; ?>_max" name="<?php echo $filter; ?>[]" class="um_range_max" value="<?php echo ! empty( $default_value ) ? esc_attr( max( $default_value ) ) : '' ?>" />
 						<div class="um-slider" data-field_name="<?php echo $filter; ?>" data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"></div>
@@ -810,6 +809,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$range = array( $meta['min_meta'], $meta['max_meta'] );
 					}
 
+					$range = apply_filters( 'um_member_directory_filter_slider_common', $range, $directory_data, $filter );
 					$range = apply_filters( "um_member_directory_filter_{$filter}_slider", $range, $directory_data );
 
 					break;
