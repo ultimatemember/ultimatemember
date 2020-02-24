@@ -489,7 +489,7 @@ function um_after_account_privacy( $args ) {
 			<label>
 				<?php esc_html_e( 'Download your data', 'ultimate-member' ); ?>
 			</label>
-			<span class="um-tip um-tip-w" original-title="<?php esc_attr_e( 'You can request a file with the information that we believe is most relevant and useful to you.', 'ultimate-member' ); ?>">
+			<span class="um-tip um-tip-<?php echo is_rtl() ? 'e' : 'w' ?>" original-title="<?php esc_attr_e( 'You can request a file with the information that we believe is most relevant and useful to you.', 'ultimate-member' ); ?>">
 				<i class="um-icon-help-circled"></i>
 			</span>
 			<div class="um-clear"></div>
@@ -514,7 +514,7 @@ function um_after_account_privacy( $args ) {
 			<label>
 				<?php esc_html_e( 'Erase of your data', 'ultimate-member' ); ?>
 			</label>
-			<span class="um-tip um-tip-w" original-title="<?php esc_attr_e( 'You can request erasing of the data that we have about you.', 'ultimate-member' ); ?>">
+			<span class="um-tip um-tip-<?php echo is_rtl() ? 'e' : 'w' ?>" original-title="<?php esc_attr_e( 'You can request erasing of the data that we have about you.', 'ultimate-member' ); ?>">
 				<i class="um-icon-help-circled"></i>
 			</span>
 			<div class="um-clear"></div>

@@ -42,6 +42,11 @@
 */
 
 .um-account-main div.um-account-heading {
+	display: flex;
+	flex-wrap: nowrap;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: baseline;
 	margin: 0 !important;
 	font-size: 18px;
 	line-height: 18px;

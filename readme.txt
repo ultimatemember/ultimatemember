@@ -174,6 +174,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed jQuery-UI library images
   - Fixed vulnerability with sanitizing $_POST
   - Fixed last login order on member directories when UM metatable is turned on
+  - Fixed RTL styles at Account page and Member Directory
 
 = 2.1.3: January 21, 2020 =
 
