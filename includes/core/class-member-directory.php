@@ -536,9 +536,9 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					if ( $attrs['metakey'] != 'role_select' ) {
 						$values_array = $wpdb->get_col(
 							$wpdb->prepare(
-								"SELECT DISTINCT meta_value 
-								FROM $wpdb->usermeta 
-								WHERE meta_key = %s AND 
+								"SELECT DISTINCT meta_value
+								FROM $wpdb->usermeta
+								WHERE meta_key = %s AND
 									  meta_value != ''",
 								$attrs['metakey']
 							)
@@ -796,10 +796,10 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					global $wpdb;
 					$meta = $wpdb->get_row( $wpdb->prepare(
-						"SELECT MIN( meta_value ) as min_meta, 
-						MAX( meta_value ) as max_meta, 
-						COUNT( DISTINCT meta_value ) as amount 
-						FROM {$wpdb->usermeta} 
+						"SELECT MIN( meta_value ) as min_meta,
+						MAX( meta_value ) as max_meta,
+						COUNT( DISTINCT meta_value ) as amount
+						FROM {$wpdb->usermeta}
 						WHERE meta_key = %s",
 						$filter
 					), ARRAY_A );
@@ -817,11 +817,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				case 'birth_date': {
 					global $wpdb;
 					$meta = $wpdb->get_row(
-						"SELECT MIN( meta_value ) as min_meta, 
-						MAX( meta_value ) as max_meta, 
-						COUNT( DISTINCT meta_value ) as amount 
-						FROM {$wpdb->usermeta} 
-						WHERE meta_key='birth_date'",
+						"SELECT MIN( meta_value ) as min_meta,
+						MAX( meta_value ) as max_meta,
+						COUNT( DISTINCT meta_value ) as amount
+						FROM {$wpdb->usermeta}
+						WHERE meta_key='birth_date'
+						AND meta_value != '';",
 					ARRAY_A );
 
 					if ( empty( $meta ) || ! isset( $meta['amount'] ) || $meta['amount'] === 1 ) {
