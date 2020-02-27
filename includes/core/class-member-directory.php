@@ -323,7 +323,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				'mobile_number'         => __( 'Mobile Number', 'ultimate-member' ),
 			);
 
-			$this->filter_supported_fields = apply_filters( 'um_members_directory_custom_field_types_supported_filter', array( 'date', 'time', 'select', 'multiselect', 'radio', 'checkbox', 'rating', 'text', 'textarea' ) );
+			$this->filter_supported_fields = apply_filters( 'um_members_directory_custom_field_types_supported_filter', array( 'date', 'time', 'select', 'multiselect', 'radio', 'checkbox', 'rating', 'text', 'textarea', 'number' ) );
 
 			if ( ! empty( UM()->builtin()->saved_fields ) ) {
 				foreach ( UM()->builtin()->saved_fields as $key => $data ) {
@@ -401,6 +401,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						case 'checkbox':
 							$value = 'select';
 							break;
+						case 'number':
 						case 'rating':
 							$value = 'slider';
 							break;
