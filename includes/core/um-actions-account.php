@@ -482,6 +482,8 @@ add_action( 'um_account_pre_update_profile', 'um_disable_native_email_notificati
  */
 add_action( 'um_after_account_privacy', 'um_after_account_privacy' );
 function um_after_account_privacy( $args ) {
+	global $wpdb;
+	$user_id = get_current_user_id();
 	?>
 
 	<div class="um-field um-field-export_data">
@@ -494,19 +496,38 @@ function um_after_account_privacy( $args ) {
 			</span>
 			<div class="um-clear"></div>
 		</div>
-		<label name="um-export-data">
-			<?php esc_html_e( 'Enter your current password to confirm export of your personal data.', 'ultimate-member' ); ?>
-		</label>
-		<div class="um-field-area">
-			<input id="um-export-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' )?>">
-			<div class="um-field-error um-export-data">
-				<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
-			</div>
-			<div class="um-field-area-response um-export-data"></div>
-		</div>
-		<a class="um-request-button um-export-data-button" data-action="um-export-data" href="javascript:void(0);">
-			<?php esc_html_e( 'Request data', 'ultimate-member' ); ?>
-		</a>
+		<?php
+			$completed = $wpdb->get_results( "SELECT ID FROM $wpdb->posts WHERE post_author = $user_id AND post_type = 'user_request' AND post_name = 'export_personal_data' AND post_status = 'request-completed' ORDER BY ID DESC LIMIT 1", ARRAY_A );
+			if ( $completed ) {
+
+				echo '<p>' . esc_html__( 'You could download your previous data:', 'ultimate-member' ) . '</p>';
+				echo '<a href="' . get_post_meta( $completed[0]['ID'], '_export_file_url', true ) . '">' . esc_html__( 'download personal data', 'ultimate-member' ) . '</a>';
+				echo '<p>' . esc_html__( 'You could send a new request for an export of personal your data.', 'ultimate-member' ) . '</p>';
+
+			}
+
+			$pending = $wpdb->get_results( "SELECT ID, post_status FROM $wpdb->posts WHERE post_author = $user_id AND post_type = 'user_request' AND post_name = 'export_personal_data' AND post_status != 'request-completed' ORDER BY ID DESC LIMIT 1", ARRAY_A );
+
+			if ( $pending[0]['post_status'] == 'request-pending' ) {
+				echo '<p>' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' ) . '</p>';
+			} elseif ( $pending[0]['post_status'] == 'request-confirmed' ) {
+				echo '<p>' . esc_html__( 'The administrator has not yet approved downloading the data. Please expect an email with a link to your data.', 'ultimate-member' ) . '</p>';
+			} else { ?>
+				<label name="um-export-data">
+					<?php esc_html_e( 'Enter your current password to confirm a new export of your personal data.', 'ultimate-member' ); ?>
+				</label>
+				<div class="um-field-area">
+					<input id="um-export-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' )?>">
+					<div class="um-field-error um-export-data">
+						<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
+					</div>
+					<div class="um-field-area-response um-export-data"></div>
+				</div>
+				<a class="um-request-button um-export-data-button" data-action="um-export-data" href="javascript:void(0);">
+					<?php esc_html_e( 'Request data', 'ultimate-member' ); ?>
+				</a>
+		<?php } ?>
+
 	</div>
 
 	<div class="um-field um-field-export_data">
@@ -519,17 +540,35 @@ function um_after_account_privacy( $args ) {
 			</span>
 			<div class="um-clear"></div>
 		</div>
-		<label name="um-erase-data">
-			<?php esc_html_e( 'Enter your current password to confirm the erasure of your personal data.', 'ultimate-member' ); ?>
-			<input id="um-erase-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' )?>">
-			<div class="um-field-error um-erase-data">
-				<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
-			</div>
-			<div class="um-field-area-response um-erase-data"></div>
-		</label>
-		<a class="um-request-button um-erase-data-button" data-action="um-erase-data" href="javascript:void(0);">
-			<?php esc_html_e( 'Request data erase', 'ultimate-member' ); ?>
-		</a>
+		<?php
+			$completed = $wpdb->get_results( "SELECT ID FROM $wpdb->posts WHERE post_author = $user_id AND post_type = 'user_request' AND post_name = 'remove_personal_data' AND post_status = 'request-completed' ORDER BY ID DESC LIMIT 1", ARRAY_A );
+			if ( $completed ) {
+
+				echo '<p>' . esc_html__( 'Your personal data has been deleted.', 'ultimate-member' ) . '</p>';
+				echo '<p>' . esc_html__( 'You could send a new request for deleting your personal data.', 'ultimate-member' ) . '</p>';
+
+			}
+
+			$pending = $wpdb->get_results( "SELECT ID, post_status FROM $wpdb->posts WHERE post_author = $user_id AND post_type = 'user_request' AND post_name = 'remove_personal_data' AND post_status != 'request-completed' ORDER BY ID DESC LIMIT 1", ARRAY_A );
+
+			if ( $pending[0]['post_status'] == 'request-pending' ) {
+				echo '<p>' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' ) . '</p>';
+			} elseif ( $pending[0]['post_status'] == 'request-confirmed' ) {
+				echo '<p>' . esc_html__( 'The administrator has not yet approved deleting your data. Please expect an email with a link to your data.', 'ultimate-member' ) . '</p>';
+			} else { ?>
+				<label name="um-erase-data">
+					<?php esc_html_e( 'Enter your current password to confirm the erasure of your personal data.', 'ultimate-member' ); ?>
+					<input id="um-erase-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' )?>">
+					<div class="um-field-error um-erase-data">
+						<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
+					</div>
+					<div class="um-field-area-response um-erase-data"></div>
+				</label>
+				<a class="um-request-button um-erase-data-button" data-action="um-erase-data" href="javascript:void(0);">
+					<?php esc_html_e( 'Request data erase', 'ultimate-member' ); ?>
+				</a>
+			<?php } ?>
+
 	</div>
 
 	<?php
