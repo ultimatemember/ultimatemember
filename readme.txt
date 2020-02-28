@@ -148,8 +148,14 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = 2.1.5: March xx, 2020 =
 
+* Enhancements:
+
+  - Added number field-type to member directory filters
+
 * Bugfixes:
+
   - Fixed PHP notice 'form_id' on account submission
+  - Fixed birthday range for member directory filter
 
 = 2.1.4: February 24, 2020 =
 
