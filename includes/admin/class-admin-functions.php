@@ -77,7 +77,7 @@ if ( ! class_exists( 'um\admin\Admin_Functions' ) ) {
 			$cpt = UM()->cpt_list();
 
 			if ( isset( $_REQUEST['post_type'] ) ) {
-				$post_type = $_REQUEST['post_type'];
+				$post_type = sanitize_key( $_REQUEST['post_type'] );
 				if ( in_array( $post_type, $cpt ) ) {
 					return true;
 				}

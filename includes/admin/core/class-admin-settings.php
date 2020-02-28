@@ -91,7 +91,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				wp_send_json_error( __( 'Wrong callback', 'ultimate-member' ) );
 			}
 
-			if ( 'um_usermeta_fields' == $_POST['cb_func'] ) {
+			$cb_func = sanitize_key( $_POST['cb_func'] );
+
+			if ( 'um_usermeta_fields' == $cb_func ) {
 				//first install metatable
 				global $wpdb;
 
@@ -169,7 +171,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				UM()->options()->update( 'member_directory_own_table', true );
 
 				wp_send_json_success();
-			} elseif ( 'um_get_metadata' == $_POST['cb_func'] ) {
+			} elseif ( 'um_get_metadata' == $cb_func ) {
 				global $wpdb;
 
 				$wp_usermeta_option = get_option( 'um_usermeta_fields', array() );
@@ -181,7 +183,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				);
 
 				wp_send_json_success( array( 'count' => $count ) );
-			} elseif ( 'um_update_metadata_per_page' == $_POST['cb_func'] ) {
+			} elseif ( 'um_update_metadata_per_page' == $cb_func ) {
 
 				if ( empty( $_POST['page'] ) ) {
 					wp_send_json_error( __( 'Wrong data', 'ultimate-member' ) );
@@ -196,7 +198,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					FROM {$wpdb->usermeta} 
 					WHERE meta_key IN ('" . implode( "','", $wp_usermeta_option ) . "')
 					LIMIT %d, %d",
-					( $_POST['page'] - 1 ) * $per_page,
+					( absint( $_POST['page'] ) - 1 ) * $per_page,
 					$per_page
 				), ARRAY_A );
 
@@ -212,8 +214,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					VALUES " . implode( ',', $values ) );
 				}
 
-				$from = ( $_POST['page'] * $per_page ) - $per_page + 1;
-				$to = $_POST['page'] * $per_page;
+				$from = ( absint( $_POST['page'] ) * $per_page ) - $per_page + 1;
+				$to = absint( $_POST['page'] ) * $per_page;
 
 				wp_send_json_success( array( 'message' => sprintf( __( 'Metadata from %s to %s was upgraded successfully...', 'ultimate-member' ), $from, $to ) ) );
 			}
@@ -1412,8 +1414,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 * Settings page callback
 		 */
 		function settings_page() {
-			$current_tab = empty( $_GET['tab'] ) ? '' : urldecode( $_GET['tab'] );
-			$current_subtab = empty( $_GET['section'] ) ? '' : urldecode( $_GET['section'] );
+			$current_tab = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
+			$current_subtab = empty( $_GET['section'] ) ? '' : sanitize_key( $_GET['section'] );
 
 			$settings_struct = $this->settings_structure[ $current_tab ];
 
@@ -1605,7 +1607,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						}
 					}
 
-					$current_tab = empty( $_GET['tab'] ) ? '' : urldecode( $_GET['tab'] );
+					$current_tab = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
 					foreach ( $menu_tabs as $name => $label ) {
 						$active = ( $current_tab == $name ) ? 'nav-tab-active' : '';
 						$tabs .= '<a href="' . esc_url( admin_url( 'admin.php?page=um_options' . ( empty( $name ) ? '' : '&tab=' . $name ) ) ) . '" class="nav-tab ' . $active . '">' .
@@ -1660,8 +1662,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 			$subtabs = '<div><ul class="subsubsub">';
 
-			$current_tab = empty( $_GET['tab'] ) ? '' : urldecode( $_GET['tab'] );
-			$current_subtab = empty( $_GET['section'] ) ? '' : urldecode( $_GET['section'] );
+			$current_tab = empty( $_GET['tab'] ) ? '' : sanitize_key( $_GET['tab'] );
+			$current_subtab = empty( $_GET['section'] ) ? '' : sanitize_key( $_GET['section'] );
 			foreach ( $menu_subtabs as $name => $label ) {
 				$active = ( $current_subtab == $name ) ? 'current' : '';
 				$subtabs .= '<a href="' . esc_url( admin_url( 'admin.php?page=um_options' . ( empty( $current_tab ) ? '' : '&tab=' . $current_tab ) . ( empty( $name ) ? '' : '&section=' . $name ) ) ) . '" class="' . $active . '">'
@@ -1680,7 +1682,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 */
 		function save_settings_handler() {
 
-			if ( isset( $_POST['um-settings-action'] ) && 'save' == $_POST['um-settings-action'] && ! empty( $_POST['um_options'] ) ) {
+			if ( isset( $_POST['um-settings-action'] ) && 'save' == sanitize_key( $_POST['um-settings-action'] ) && ! empty( $_POST['um_options'] ) ) {
 
 				$nonce = ! empty( $_POST['__umnonce'] ) ? $_POST['__umnonce'] : '';
 
@@ -1759,11 +1761,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				);
 
 				if ( ! empty( $_GET['tab'] ) ) {
-					$arg['tab'] = $_GET['tab'];
+					$arg['tab'] = sanitize_key( $_GET['tab'] );
 				}
 
 				if ( ! empty( $_GET['section'] ) ) {
-					$arg['section'] = $_GET['section'];
+					$arg['section'] = sanitize_key( $_GET['section'] );
 				}
 
 				um_js_redirect( add_query_arg( $arg, admin_url( 'admin.php' ) ) );
@@ -1780,12 +1782,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		function remove_empty_values( $settings ) {
 			$tab = '';
 			if ( ! empty( $_GET['tab'] ) ) {
-				$tab = $_GET['tab'];
+				$tab = sanitize_key( $_GET['tab'] );
 			}
 
 			$section = '';
 			if ( ! empty( $_GET['section'] ) ) {
-				$section = $_GET['section'];
+				$section = sanitize_key( $_GET['section'] );
 			}
 
 			if ( isset( $this->settings_structure[ $tab ]['sections'][ $section ]['fields'] ) ) {
@@ -2078,7 +2080,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 *
 		 */
 		function settings_before_email_tab() {
-			$email_key = empty( $_GET['email'] ) ? '' : urldecode( $_GET['email'] );
+			$email_key = empty( $_GET['email'] ) ? '' : sanitize_key( $_GET['email'] );
 			$emails = UM()->config()->email_notifications;
 
 			if ( empty( $email_key ) || empty( $emails[ $email_key ] ) ) {
@@ -2093,7 +2095,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 * @return string
 		 */
 		function settings_email_tab( $section ) {
-			$email_key = empty( $_GET['email'] ) ? '' : urldecode( $_GET['email'] );
+			$email_key = empty( $_GET['email'] ) ? '' : sanitize_key( $_GET['email'] );
 			$emails = UM()->config()->email_notifications;
 
 			if ( empty( $email_key ) || empty( $emails[ $email_key ] ) ) {

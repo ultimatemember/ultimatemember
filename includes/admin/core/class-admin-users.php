@@ -126,7 +126,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			</div>
 
 			<?php if ( ! empty( $_REQUEST['status'] ) ) { ?>
-				<input type="hidden" name="status" id="um_status" value="<?php echo esc_attr( $_REQUEST['status'] );?>"/>
+				<input type="hidden" name="status" id="um_status" value="<?php echo esc_attr( sanitize_key( $_REQUEST['status'] ) );?>"/>
 			<?php }
 		}
 
@@ -247,7 +247,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			if ( is_admin() && $pagenow == 'users.php' ) {
 				if ( ! isset( $_REQUEST['orderby'] ) ) {
 					$query->query_vars["order"] = 'desc';
-					$query->query_orderby = " ORDER BY user_registered " . ( $query->query_vars["order"] == "desc" ? "desc " : "asc " ); //set sort order
+					$query->query_orderby = " ORDER BY user_registered " . ( $query->query_vars["order"] == 'desc' ? 'desc ' : 'asc ' ); //set sort order
 				}
 			}
 
@@ -266,7 +266,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 			if ( is_admin() && $pagenow == 'users.php' && ! empty( $_GET['status'] ) ) {
 
-				$status = urldecode( $_GET['status'] );
+				$status = sanitize_key( $_GET['status'] );
 
 				if ( $status == 'needs-verification' ) {
 					$query->query_where = str_replace('WHERE 1=1',
@@ -305,9 +305,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			$views     = array();
 
 			if ( ! isset( $_REQUEST['role'] ) && ! isset( $_REQUEST['status'] ) ) {
-				$views['all'] = '<a href="' . admin_url( 'users.php' ) . '" class="current">All <span class="count">(' . UM()->query()->count_users() . ')</span></a>';
+				$views['all'] = '<a href="' . admin_url( 'users.php' ) . '" class="current">' . __( 'All', 'ultimate-member' ) . ' <span class="count">(' . UM()->query()->count_users() . ')</span></a>';
 			} else {
-				$views['all'] = '<a href="' . admin_url( 'users.php' ) . '">All <span class="count">(' . UM()->query()->count_users() . ')</span></a>';
+				$views['all'] = '<a href="' . admin_url( 'users.php' ) . '">' . __( 'All', 'ultimate-member' ) . ' <span class="count">(' . UM()->query()->count_users() . ')</span></a>';
 			}
 
 			$status = array(
@@ -321,13 +321,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			UM()->query()->count_users_by_status( 'unassigned' );
 
 			foreach ( $status as $k => $v ) {
-				if ( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == $k ) {
+				if ( isset( $_REQUEST['status'] ) && sanitize_key( $_REQUEST['status'] ) == $k ) {
 					$current = 'class="current"';
 				} else {
 					$current = '';
 				}
 
-				$views[ $k ] = '<a href="' . esc_url( admin_url( 'users.php' ) . '?status=' . $k ) . '" ' . $current . '>'. $v . ' <span class="count">('.UM()->query()->count_users_by_status( $k ).')</span></a>';
+				$views[ $k ] = '<a href="' . esc_url( admin_url( 'users.php' ) . '?status=' . $k ) . '" ' . $current . '>' . $v . ' <span class="count">(' . UM()->query()->count_users_by_status( $k ) . ')</span></a>';
 			}
 
 			/**
@@ -383,7 +383,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 				check_admin_referer( 'bulk-users' );
 
-				$users = $_REQUEST['users'];
+				$users = array_map( 'absint', (array) $_REQUEST['users'] );
 				$bulk_action = current( array_filter( $_REQUEST['um_bulk_action'] ) );
 
 				foreach ( $users as $user_id ) {
@@ -408,7 +408,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 					 * }
 					 * ?>
 					 */
-					do_action( "um_admin_user_action_hook", $bulk_action );
+					do_action( 'um_admin_user_action_hook', $bulk_action );
 
 					/**
 					 * UM hook
@@ -463,11 +463,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		function set_redirect_uri( $uri ) {
 
 			if ( ! empty( $_REQUEST['s'] ) ) {
-				$uri = add_query_arg( 's', $_REQUEST['s'], $uri );
+				$uri = add_query_arg( 's', sanitize_text_field( $_REQUEST['s'] ), $uri );
 			}
 
 			if ( ! empty( $_REQUEST['status'] ) ) {
-				$uri = add_query_arg( 'status', $_REQUEST['status'], $uri );
+				$uri = add_query_arg( 'status', sanitize_key( $_REQUEST['status'] ), $uri );
 			}
 
 			return $uri;

@@ -176,12 +176,12 @@ $free['terms-conditions'] = array(
 	<div class="wp-filter">
 		<ul class="filter-links">
 			<li>
-				<a href="?page=ultimatemember-extensions&filter=premium" class="<?php if ( ! isset( $_REQUEST['filter'] ) || isset( $_REQUEST['filter'] ) && $_REQUEST['filter'] == 'premium' ) { echo 'current'; } ?>">
+				<a href="?page=ultimatemember-extensions&filter=premium" class="<?php if ( ! isset( $_REQUEST['filter'] ) || isset( $_REQUEST['filter'] ) && sanitize_key( $_REQUEST['filter'] ) == 'premium' ) { echo 'current'; } ?>">
 					<?php _e( 'Premium', 'ultimate-member' ) ?>
 				</a>
 			</li>
 			<li>
-				<a href="?page=ultimatemember-extensions&filter=free" class="<?php if ( isset( $_REQUEST['filter'] ) && $_REQUEST['filter'] == 'free' ) { echo 'current'; } ?>">
+				<a href="?page=ultimatemember-extensions&filter=free" class="<?php if ( isset( $_REQUEST['filter'] ) && sanitize_key( $_REQUEST['filter'] ) == 'free' ) { echo 'current'; } ?>">
 					<?php _e( 'Free', 'ultimate-member' ) ?>
 				</a>
 			</li>
@@ -190,7 +190,7 @@ $free['terms-conditions'] = array(
 
 	<div class="wp-list-table widefat plugin-install">
 		<div id="the-list">
-			<?php if ( ! isset( $_REQUEST['filter'] ) || isset( $_REQUEST['filter'] ) && $_REQUEST['filter'] == 'premium' ) {
+			<?php if ( ! isset( $_REQUEST['filter'] ) || isset( $_REQUEST['filter'] ) && sanitize_key( $_REQUEST['filter'] ) == 'premium' ) {
 				foreach ( $premium as $key => $info ) { ?>
 
 					<div class="plugin-card">
@@ -224,7 +224,7 @@ $free['terms-conditions'] = array(
 				<?php }
 			}
 
-			if ( isset( $_REQUEST['filter'] ) && $_REQUEST['filter'] == 'free' ) {
+			if ( isset( $_REQUEST['filter'] ) && sanitize_key( $_REQUEST['filter'] ) == 'free' ) {
 				foreach ( $free as $key => $info ) { ?>
 
 					<div class="plugin-card">

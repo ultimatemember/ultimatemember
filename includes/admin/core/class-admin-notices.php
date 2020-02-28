@@ -374,19 +374,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 				return;
 			}
 
-			$update = $_REQUEST['update'];
+			$update = sanitize_key( $_REQUEST['update'] );
 			switch( $update ) {
 
 				case 'confirm_delete':
+					$request_users = array_map( 'absint', (array) $_REQUEST['user'] );
+
 					$confirm_uri = admin_url( 'users.php?' . http_build_query( array(
 						'um_adm_action' => 'delete_users',
-						'user'          => array_map( 'intval', (array) $_REQUEST['user'] ),
+						'user'          => $request_users,
 						'confirm'       => 1
 					) ) );
 					$users = '';
 
-					if ( isset( $_REQUEST['user'] ) ){
-						foreach ( $_REQUEST['user'] as $user_id ) {
+					if ( isset( $request_users ) ) {
+						foreach ( $request_users as $user_id ) {
 							$user = get_userdata( $user_id );
 							$users .= '#' . $user_id . ': ' . $user->user_login . '<br />';
 						}
@@ -394,8 +396,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 
 					$ignore = admin_url( 'users.php' );
 
-					$messages[0]['err_content'] = sprintf( __( 'Are you sure you want to delete the selected user(s)? The following users will be deleted: <p>%s</p> <strong>This cannot be undone!</strong>','ultimate-member'), $users);
-					$messages[0]['err_content'] .= '<p><a href="'. esc_url( $confirm_uri ) .'" class="button-primary">' . __( 'Remove', 'ultimate-member' ) . '</a>&nbsp;&nbsp;<a href="' . esc_url( $ignore ) . '" class="button">' . __('Undo','ultimate-member') . '</a></p>';
+					$messages[0]['err_content'] = sprintf( __( 'Are you sure you want to delete the selected user(s)? The following users will be deleted: <p>%s</p> <strong>This cannot be undone!</strong>', 'ultimate-member' ), $users );
+					$messages[0]['err_content'] .= '<p><a href="'. esc_url( $confirm_uri ) .'" class="button-primary">' . __( 'Remove', 'ultimate-member' ) . '</a>&nbsp;&nbsp;<a href="' . esc_url( $ignore ) . '" class="button">' . __( 'Undo', 'ultimate-member' ) . '</a></p>';
 
 					break;
 
@@ -688,7 +690,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			}
 
 			$hidden_notices = get_option( 'um_hidden_admin_notices', array() );
-			$hidden_notices[] = $_POST['key'];
+			$hidden_notices[] = sanitize_key( $_POST['key'] );
 
 			update_option( 'um_hidden_admin_notices', $hidden_notices );
 

@@ -76,16 +76,16 @@
 	}
 
 	UM()->admin_forms( array(
-		'class'		=> 'um-role-wp-capabilities',
-		'prefix_id'	=> 'role',
+		'class'     => 'um-role-wp-capabilities',
+		'prefix_id' => 'role',
 		'fields'    => array(
 			array(
-				'id'       		=> 'wp_capabilities',
-				'type'     		=> 'multi_checkbox',
+				'id'            => 'wp_capabilities',
+				'type'          => 'multi_checkbox',
 				'options'       => $fields,
 				'value'         => ! empty( $role_capabilities ) ? $role_capabilities : array(),
-				'columns'	    => 3,
-				'without_label'	=> true,
+				'columns'       => 3,
+				'without_label' => true,
 			)
 		)
 	) )->render_form(); ?>

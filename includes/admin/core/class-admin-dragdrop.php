@@ -64,19 +64,19 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 					$row_id = str_replace( '_um_row_', '', $key );
 
 					$row_array = array(
-						'type' => 'row',
-						'id' => $value,
-						'sub_rows' => $_POST[ '_um_rowsub_'.$row_id .'_rows' ],
-						'cols' => $_POST[ '_um_rowcols_'.$row_id .'_cols' ],
-						'origin' => $_POST[ '_um_roworigin_'.$row_id . '_val' ],
+						'type'      => 'row',
+						'id'        => $value,
+						'sub_rows'  => $_POST[ '_um_rowsub_' . $row_id . '_rows' ],
+						'cols'      => $_POST[ '_um_rowcols_' . $row_id . '_cols' ],
+						'origin'    => $_POST[ '_um_roworigin_' . $row_id . '_val' ],
 					);
 
 					$row_args = $row_array;
 
 					if ( isset( $this->row_data[ $row_array['origin'] ] ) ) {
-						foreach ( $this->row_data[ $row_array['origin'] ] as $k => $v ){
+						foreach ( $this->row_data[ $row_array['origin'] ] as $k => $v ) {
 							if ( $k != 'position' && $k != 'metakey' ) {
-								$update_args[$k] = $v;
+								$update_args[ $k ] = $v;
 							}
 						}
 						if ( isset( $update_args ) ) {

@@ -298,8 +298,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 		 */
 		function admin_page() {
 
-			$page = $_REQUEST['page'];
-			if ( $page == 'ultimatemember' && ! isset( $_REQUEST['um-addon'] ) ) { ?>
+			$page = ! empty( $_REQUEST['page'] ) ? sanitize_key( $_REQUEST['page'] ) : '';
+
+			if ( $page == 'ultimatemember' ) { ?>
 
 				<div id="um-metaboxes-general" class="wrap">
 
