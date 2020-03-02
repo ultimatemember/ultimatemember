@@ -57,7 +57,9 @@ add_action( 'wp_head', 'um_add_form_honeypot_css' );
 function um_add_form_honeypot_js() {
 	?>
 		<script type="text/javascript">
-			jQuery( '#<?php echo esc_js( UM()->honeypot ); ?>' ).val( '' );
+			jQuery(window).load(function() {
+				jQuery("input[name='<?php echo esc_js( UM()->honeypot ); ?>']").val('');
+			});
 		</script>
 	<?php
 }
