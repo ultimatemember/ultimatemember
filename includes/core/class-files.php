@@ -361,7 +361,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			$id = $_POST['key'];
 			$timestamp = $_POST['timestamp'];
 			$nonce = $_POST['_wpnonce'];
-			$user_id = empty( $_POST['user_id'] ) ? get_current_user_id() : $_POST['user_id'];
+			$user_id = empty( $_POST['user_id'] ) ? get_current_user_id() : absint( $_POST['user_id'] );
 
 			UM()->fields()->set_id = $_POST['set_id'];
 			UM()->fields()->set_mode = $_POST['set_mode'];
@@ -481,7 +481,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 				if ( ! is_array( $_FILES[ $id ]['name'] ) ) {
 
-					$user_id = $_POST['user_id'];
+					$user_id = absint( $_POST['user_id'] );
 
 					UM()->uploader()->replace_upload_dir = true;
 					$uploaded = UM()->uploader()->upload_file( $_FILES[ $id ], $user_id, $id );

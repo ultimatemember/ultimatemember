@@ -156,7 +156,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					);
 				}
 
-				if ( isset( $_POST['child_callback'] ) && ! empty( $_POST['child_callback'] ) && isset( $form_fields[ $_POST['child_name'] ] )  ){
+				if ( ! empty( $_POST['child_callback'] ) && isset( $form_fields[ $_POST['child_name'] ] ) ) {
 
 					$ajax_source_func = $_POST['child_callback'];
 
@@ -167,13 +167,13 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 						$arr_options['field'] = $form_fields[ $_POST['child_name'] ];
 
-						if( function_exists( $ajax_source_func ) ){
-							$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship']  );
+						if ( function_exists( $ajax_source_func ) ) {
+							$arr_options['items'] = call_user_func( $ajax_source_func, $arr_options['field']['parent_dropdown_relationship'] );
 						}
 
 					} else {
 						$arr_options['status'] = 'error';
-						$arr_options['message'] = __( 'This is not possible for security reasons.','ultimate-member');
+						$arr_options['message'] = __( 'This is not possible for security reasons.', 'ultimate-member' );
 					}
 
 				}
@@ -335,7 +335,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				 * }
 				 * ?>
 				 */
-				do_action( "um_before_submit_form_post", $_POST );
+				do_action( 'um_before_submit_form_post', $_POST );
 
 				$this->form_id = $_POST['form_id'];
 				$this->form_status = get_post_status( $this->form_id );

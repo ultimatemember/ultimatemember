@@ -286,7 +286,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
 
 				if ( isset( $_GET['hash'] ) ) {
-					$userdata = get_userdata( wp_unslash( $_GET['user_id'] ) );
+					$userdata = get_userdata( wp_unslash( absint( $_GET['user_id'] ) ) );
 					if ( ! $userdata || is_wp_error( $userdata ) ) {
 						wp_redirect( add_query_arg( array( 'act' => 'reset_password', 'error' => 'invalidkey' ), get_permalink() ) );
 						exit;

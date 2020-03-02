@@ -179,24 +179,25 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 		 * Activates an account via email
 		 */
 		function activate_account_via_email_link() {
-			if ( isset($_REQUEST['act']) && $_REQUEST['act'] == 'activate_via_email' && isset($_REQUEST['hash']) && is_string($_REQUEST['hash']) && strlen($_REQUEST['hash']) == 40 &&
-			     isset($_REQUEST['user_id']) && is_numeric($_REQUEST['user_id']) ) { // valid token
+			if ( isset( $_REQUEST['act'] ) && $_REQUEST['act'] == 'activate_via_email' && isset( $_REQUEST['hash'] ) && is_string( $_REQUEST['hash'] ) && strlen( $_REQUEST['hash'] ) == 40 &&
+			     isset( $_REQUEST['user_id'] ) && is_numeric( $_REQUEST['user_id'] ) ) { // valid token
 
 				$user_id = absint( $_REQUEST['user_id'] );
 				delete_option( "um_cache_userdata_{$user_id}" );
 
 				um_fetch_user( $user_id );
 
-				if (  strtolower($_REQUEST['hash']) !== strtolower( um_user('account_secret_hash') )  )
-					wp_die( __( 'This activation link is expired or have already been used.','ultimate-member' ) );
+				if ( strtolower( $_REQUEST['hash'] ) !== strtolower( um_user( 'account_secret_hash' ) ) ) {
+					wp_die( __( 'This activation link is expired or have already been used.', 'ultimate-member' ) );
+				}
 
 				UM()->user()->approve();
-				$redirect = ( um_user('url_email_activate') ) ? um_user('url_email_activate') : um_get_core_page('login', 'account_active');
-				$login    = (bool) um_user('login_email_activate');
+				$redirect = ( um_user( 'url_email_activate' ) ) ? um_user( 'url_email_activate' ) : um_get_core_page( 'login', 'account_active' );
+				$login    = (bool) um_user( 'login_email_activate' );
 
 				// log in automatically
 				if ( ! is_user_logged_in() && $login ) {
-					$user = get_userdata($user_id);
+					$user = get_userdata( $user_id );
 					$user_id = $user->ID;
 
 					// update wp user

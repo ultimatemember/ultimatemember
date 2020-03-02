@@ -140,7 +140,7 @@ function um_submit_form_errors_hook_logincheck( $args ) {
 	}
 
 	if ( isset( $args['form_id'] ) && $args['form_id'] == UM()->shortcodes()->core_login_form() && UM()->form()->errors && ! isset( $_POST[ UM()->honeypot ] ) ) {
-		exit( wp_redirect( um_get_core_page('login') ) );
+		exit( wp_redirect( um_get_core_page( 'login' ) ) );
 	}
 
 }
@@ -179,8 +179,8 @@ function um_user_login( $args ) {
 
 	$rememberme = ( isset( $args['rememberme'] ) && 1 ==  $args['rememberme']  && isset( $_REQUEST['rememberme'] ) ) ? 1 : 0;
 
-	if ( ( UM()->options()->get('deny_admin_frontend_login')   && ! isset( $_GET['provider'] ) ) && strrpos( um_user('wp_roles' ), 'administrator' ) !== false ) {
-		wp_die( __('This action has been prevented for security measures.','ultimate-member') );
+	if ( ( UM()->options()->get( 'deny_admin_frontend_login' ) && ! isset( $_GET['provider'] ) ) && strrpos( um_user('wp_roles' ), 'administrator' ) !== false ) {
+		wp_die( __( 'This action has been prevented for security measures.', 'ultimate-member' ) );
 	}
 
 	UM()->user()->auto_login( um_user( 'ID' ), $rememberme );

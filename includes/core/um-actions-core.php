@@ -18,7 +18,7 @@ function um_action_request_process() {
 		return;
 	}
 
-	if ( isset( $_REQUEST['uid'] ) && ! UM()->user()->user_exists_by_id( $_REQUEST['uid'] ) ) {
+	if ( isset( $_REQUEST['uid'] ) && ! UM()->user()->user_exists_by_id( absint( $_REQUEST['uid'] ) ) ) {
 		return;
 	}
 
@@ -32,13 +32,13 @@ function um_action_request_process() {
 //		wp_die( __( 'You do not have enough permissions to do that.','ultimate-member') );
 //	}
 
+	$uid = 0;
 	if ( isset( $_REQUEST['uid'] ) ) {
-		$uid = $_REQUEST['uid'];
+		$uid = absint( $_REQUEST['uid'] );
 	}
 
 	switch ( $_REQUEST['um_action'] ) {
 		default:
-			$uid = isset( $_REQUEST['uid'] ) ? $_REQUEST['uid'] : 0;
 			/**
 			 * UM hook
 			 *
@@ -80,7 +80,7 @@ function um_action_request_process() {
 			if ( ! current_user_can( 'delete_users' ) ) {
 				return;
 			}
-			UM()->user()->auto_login( $_REQUEST['uid'] );
+			UM()->user()->auto_login( $uid );
 			exit( wp_redirect( UM()->permalinks()->get_current_url( true ) ) );
 			break;
 

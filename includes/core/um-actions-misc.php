@@ -75,11 +75,11 @@ add_action( 'um_after_form_fields', 'um_browser_url_redirect_to' );
 function um_add_update_notice( $args ) {
 	extract( $args );
 
-	$output 	= '';
-	$err 		= '';
-	$success 	= '';
+	$output = '';
+	$err = '';
+	$success = '';
 
-	if ( isset( $_REQUEST['updated'] ) && !empty( $_REQUEST['updated'] ) && ! UM()->form()->errors ) {
+	if ( ! empty( $_REQUEST['updated'] ) && ! UM()->form()->errors ) {
 		switch ( $_REQUEST['updated'] ) {
 			default:
 				/**
@@ -104,25 +104,25 @@ function um_add_update_notice( $args ) {
 				 * }
 				 * ?>
 				 */
-				$success = apply_filters( "um_custom_success_message_handler", $success, $_REQUEST['updated'] );
+				$success = apply_filters( 'um_custom_success_message_handler', $success, $_REQUEST['updated'] );
 				break;
 
 			case 'account':
-				$success = __('Your account was updated successfully.','ultimate-member');
+				$success = __( 'Your account was updated successfully.', 'ultimate-member' );
 				break;
 
 			case 'password_changed':
-				$success = __('You have successfully changed your password.','ultimate-member');
+				$success = __( 'You have successfully changed your password.', 'ultimate-member' );
 				break;
 
 			case 'account_active':
-				$success = __('Your account is now active! You can login.','ultimate-member');
+				$success = __( 'Your account is now active! You can login.', 'ultimate-member' );
 				break;
 
 		}
 	}
 
-	if ( isset( $_REQUEST['err'] ) && !empty( $_REQUEST['err'] ) && ! UM()->form()->errors ) {
+	if ( ! empty( $_REQUEST['err'] ) && ! UM()->form()->errors ) {
 		switch( $_REQUEST['err'] ) {
 
 			default:
@@ -148,51 +148,52 @@ function um_add_update_notice( $args ) {
 				 * }
 				 * ?>
 				 */
-				$err = apply_filters( "um_custom_error_message_handler", $err, $_REQUEST['err'] );
-				if ( !$err )
+				$err = apply_filters( 'um_custom_error_message_handler', $err, $_REQUEST['err'] );
+				if ( ! $err ) {
 					$err = __( 'An error has been encountered', 'ultimate-member' );
+				}
 				break;
 
 			case 'registration_disabled':
-				$err = __('Registration is currently disabled','ultimate-member');
+				$err = __( 'Registration is currently disabled', 'ultimate-member' );
 				break;
 
 			case 'blocked_email':
-				$err = __('This email address has been blocked.','ultimate-member');
+				$err = __( 'This email address has been blocked.', 'ultimate-member' );
 				break;
 
 			case 'blocked_domain':
-				$err = __('We do not accept registrations from that domain.','ultimate-member');
+				$err = __( 'We do not accept registrations from that domain.', 'ultimate-member' );
 				break;
 
 			case 'blocked_ip':
-				$err = __('Your IP address has been blocked.','ultimate-member');
+				$err = __( 'Your IP address has been blocked.', 'ultimate-member' );
 				break;
 
 			case 'inactive':
-				$err = __('Your account has been disabled.','ultimate-member');
+				$err = __( 'Your account has been disabled.', 'ultimate-member' );
 				break;
 
 			case 'awaiting_admin_review':
-				$err = __('Your account has not been approved yet.','ultimate-member');
+				$err = __( 'Your account has not been approved yet.', 'ultimate-member' );
 				break;
 
 			case 'awaiting_email_confirmation':
-				$err = __('Your account is awaiting e-mail verification.','ultimate-member');
+				$err = __( 'Your account is awaiting e-mail verification.', 'ultimate-member' );
 				break;
 
 			case 'rejected':
-				$err = __('Your membership request has been rejected.','ultimate-member');
+				$err = __( 'Your membership request has been rejected.', 'ultimate-member' );
 				break;
 
 		}
 	}
 
-	if ( isset( $err ) && !empty( $err ) ) {
+	if ( ! empty( $err ) ) {
 		$output .= '<p class="um-notice err"><i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i>' . $err . '</p>';
 	}
 
-	if ( isset( $success ) && !empty( $success ) ) {
+	if ( ! empty( $success ) ) {
 		$output .= '<p class="um-notice success"><i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i>' . $success . '</p>';
 	}
 

@@ -34,19 +34,19 @@ add_filter( 'um_whitelisted_wpadmin_access', 'um_whitelisted_wpadmin_access' );
  */
 function um_custom_wp_err_messages( $message ) {
 
-	if ( isset( $_REQUEST['err'] ) && !empty( $_REQUEST['err'] ) ) {
+	if ( ! empty( $_REQUEST['err'] ) ) {
 		switch( $_REQUEST['err'] ) {
 			case 'blocked_email':
-				$err = __('This email address has been blocked.','ultimate-member');
+				$err = __( 'This email address has been blocked.', 'ultimate-member' );
 				break;
 			case 'blocked_ip':
-				$err = __('Your IP address has been blocked.','ultimate-member');
+				$err = __( 'Your IP address has been blocked.', 'ultimate-member' );
 				break;
 		}
 	}
 
 	if ( isset( $err ) ) {
-		$message = '<div class="login" id="login_error">'.$err.'</div>';
+		$message = '<div class="login" id="login_error">' . $err . '</div>';
 	}
 
 	return $message;

@@ -49,7 +49,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			/**
 			 * Set value on form submission
 			 */
-			if( isset( $_REQUEST[ $id ] ) ){
+			if ( isset( $_REQUEST[ $id ] ) ) {
 				$checked = $_REQUEST[ $id ];
 			}
 
