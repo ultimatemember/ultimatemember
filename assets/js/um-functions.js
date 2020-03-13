@@ -287,7 +287,7 @@ function initImageUpload_UM( trigger ) {
 						img_id.attr("src", d.url + "?"+cache_ts.getTime() );
 						img_id.data("file", d.file );
 
-						img_id.load(function(){
+						img_id.on("load", function(){
 
 							trigger.parents('.um-modal-body').find('.um-modal-btn.um-finish-upload.disabled').removeClass('disabled');
 							trigger.parents('.um-modal-body').find('.ajax-upload-dragdrop,.upload-statusbar').hide(0);
@@ -548,7 +548,7 @@ function um_new_modal( id, size, isPhoto, source ){
 		var photo_maxh = jQuery(window).height() - ( jQuery(window).height() * 0.25 );
 
 		photo_.attr("src", source);
-		photo_.load(function(){
+		photo_.on("load", function(){
 
 			jQuery('#' + id).show();
 			jQuery('.um-modal').show();
