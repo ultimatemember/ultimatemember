@@ -939,7 +939,7 @@ function um_user_submitted_registration_formatted( $style = false ){
 function um_user_submited_display( $k, $title, $data = array(), $style = true ) {
 	$output = '';
 
-	if ( 'form_id' == $k && ! empty( $data['form_id'] ) ) {
+	if ( 'form_id' == $k && isset(  $data['form_id'] ) && ! empty( $data['form_id'] ) ) {
 		$v = sprintf( __( '%s - Form ID#: %s', 'ultimate-member' ), get_the_title( $data['form_id'] ), $data['form_id'] );
 	} else {
 		$v = um_user( $k );
