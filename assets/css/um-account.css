@@ -17,15 +17,15 @@
 
 .um-account-side {
 	float: left;
-	width: 35%;
-	padding: 0 30px;
+	width: 30%;
+	padding: 0px;
 	box-sizing: border-box;
 }
 
 .um-account-main {
 	float: left;
-	width: 50%;
-	padding: 0 30px;
+	width: 70%;
+	padding: 0px 0px 0px 1.5em;
 	box-sizing: border-box;
 }
 
