@@ -51,6 +51,11 @@ add_action('um_post_registration_pending_hook', 'um_post_registration_pending_ho
  * @param $args
  */
 function um_after_insert_user( $user_id, $args ) {
+
+	if ( empty( $user_id ) || ( is_object( $user_id ) && is_a( $user_id, 'WP_Error' ) ) ) {
+		return;
+	}
+
 	//clear Users cached queue
 	UM()->user()->remove_cached_queue();
 
