@@ -7,6 +7,7 @@
   src: url("../font/raty.svg#raty") format("svg");
   src: url("../font/raty.ttf") format("truetype");
   src: url("../font/raty.woff") format("woff");
+	font-display: swap;
 }
 
 .cancel-on-png, .cancel-off-png, .star-on-png, .star-off-png, .star-half-png {
@@ -28,7 +29,7 @@
 }
 
 .star-on-png,
-.star-half-png 
+.star-half-png
 {color: #ffbe32}
 
 /* Icons */
