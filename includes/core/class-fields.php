@@ -963,7 +963,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$value = (int) $value;
 				}
 
-				if ( $key == 'role' ) {
+				if ( strstr( $key, 'role_' ) || $key == 'role' ) {
+					$field_value = strtolower( UM()->roles()->get_editable_priority_user_role( um_user( 'ID' ) ) );
 
 					$role_keys = get_option( 'um_roles' );
 
@@ -1095,7 +1096,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 */
 		function is_radio_checked( $key, $value, $data ) {
 			global $wpdb;
-					
+
 			if ( isset( UM()->form()->post_form[ $key ] ) ) {
 				if ( is_array( UM()->form()->post_form[ $key ] ) && in_array( $value, UM()->form()->post_form[ $key ] ) ) {
 					return true;
@@ -1107,14 +1108,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				if ( $this->editing && 'custom' !== $this->set_mode ) {
 					if ( um_user( $key ) ) {
 
-						if ( strstr( $key, 'role_' ) ) {
-							$key = 'role';
-						}
-
 						$um_user_value = um_user( $key );
 
-						if ( $key == 'role' ) {
-							$um_user_value = strtolower( $um_user_value );
+						if ( strstr( $key, 'role_' ) || $key == 'role' ) {
+							$um_user_value = strtolower( UM()->roles()->get_editable_priority_user_role( um_user( 'ID' ) ) );
 
 							$role_keys = get_option( 'um_roles' );
 
@@ -2124,7 +2121,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					 * }
 					 * ?>
 					 */
-					
+
 					$output .= apply_filters( "um_edit_field_{$mode}_{$type}", $output, $data );
 					break;
 
@@ -2165,7 +2162,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$output .= $this->field_notice( $this->show_notice( $key ) );
 					}
 
-					$output .= '</div>'; 
+					$output .= '</div>';
 					break;
 
 				/* Text */
@@ -3342,7 +3339,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						foreach ( $options as $k => $v ) {
 
 							$v = rtrim( $v );
-                           
+
 							$um_field_checkbox_item_title = $v;
 							$option_value = $v;
 
