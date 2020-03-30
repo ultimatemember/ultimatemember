@@ -193,7 +193,7 @@ if ( ! class_exists( 'UM' ) ) {
 				}
 
 				$this->is_filtering = 0;
-				$this->honeypot = 'request';
+				$this->honeypot = 'um_request';
 
 				// textdomain loading
 				$this->localize();
