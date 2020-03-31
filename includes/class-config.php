@@ -147,6 +147,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'_um_has_profile_photo'         => 0,
 				'_um_has_cover_photo'           => 0,
 				'_um_show_these_users'          => '',
+				'_um_exclude_these_users'       => '',
 
 				'_um_sortby'                    => 'user_registered_desc',
 				'_um_sortby_custom'             => '',

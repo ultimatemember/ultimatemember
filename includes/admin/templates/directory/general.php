@@ -10,6 +10,11 @@ if ( $show_these_users ) {
 	$show_these_users = implode( "\n", str_replace( "\r", "", $show_these_users ) );
 }
 
+$exclude_these_users = get_post_meta( get_the_ID(), '_um_exclude_these_users', true );
+if ( $exclude_these_users ) {
+	$exclude_these_users = implode( "\n", str_replace( "\r", "", $exclude_these_users ) );
+}
+
 $_um_view_types_value = get_post_meta( $post_id, '_um_view_types', true );
 $_um_view_types_value = empty( $_um_view_types_value ) ? array( 'grid', 'list' ) : $_um_view_types_value;
 
@@ -76,6 +81,12 @@ foreach ( $view_types_options as $key => $value ) {
 			'type'  => 'textarea',
 			'label' => __( 'Only show specific users (Enter one username per line)', 'ultimate-member' ),
 			'value' => $show_these_users,
+		),
+		array(
+			'id'    => '_um_exclude_these_users',
+			'type'  => 'textarea',
+			'label' => __( 'Exclude specific users (Enter one username per line)', 'ultimate-member' ),
+			'value' => $exclude_these_users,
 		),
 	);
 
