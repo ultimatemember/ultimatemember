@@ -29,18 +29,22 @@ add_action( 'init', 'um_block_wpadmin_by_user_role', 99 );
 /**
  * Hide admin bar appropriately
  *
- * @param $content
+ * @param bool $show
  *
  * @return bool
  */
-function um_control_admin_bar( $content ) {
+function um_control_admin_bar( $show ) {
 	if ( is_user_logged_in() && um_user( 'can_not_see_adminbar' ) ) {
-		return false;
+		$show = false;
+
+		/*if ( is_admin() && um_user( 'can_access_wpadmin' ) ) {
+			$show = true;
+		}*/
 	}
 
-	return $content;
+	return apply_filters( 'um_show_admin_bar_callback', $show );
 }
-add_filter( 'show_admin_bar' , 'um_control_admin_bar', 9999, 1 );
+add_filter( 'show_admin_bar', 'um_control_admin_bar', 9999, 1 );
 
 
 /**
