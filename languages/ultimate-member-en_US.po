@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2020-02-28 15:51+0200\n"
-"PO-Revision-Date: 2020-02-28 15:51+0200\n"
+"POT-Creation-Date: 2020-03-31 12:42+0300\n"
+"PO-Revision-Date: 2020-03-31 12:42+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -103,7 +103,7 @@ msgstr ""
 #: includes/admin/core/class-admin-builder.php:763
 #: includes/admin/core/class-admin-dragdrop.php:33
 #: includes/admin/core/class-admin-menu.php:106
-#: includes/core/class-fields.php:4535
+#: includes/core/class-fields.php:4532
 msgid "Please login as administrator"
 msgstr ""
 
@@ -1332,8 +1332,8 @@ msgid "The text that appears on the button. e.g. Upload"
 msgstr ""
 
 #: includes/admin/core/class-admin-metabox.php:1984
-#: includes/core/class-fields.php:1708 includes/core/class-fields.php:1749
-#: includes/core/class-fields.php:2588 includes/core/class-fields.php:2663
+#: includes/core/class-fields.php:1705 includes/core/class-fields.php:1746
+#: includes/core/class-fields.php:2585 includes/core/class-fields.php:2660
 msgid "Upload"
 msgstr ""
 
@@ -3229,7 +3229,7 @@ msgid "UM Action"
 msgstr ""
 
 #: includes/admin/core/class-admin-users.php:124
-#: includes/core/class-fields.php:2644
+#: includes/core/class-fields.php:2641
 msgid "Apply"
 msgstr ""
 
@@ -3960,31 +3960,31 @@ msgstr ""
 msgid "Add New Field"
 msgstr ""
 
-#: includes/admin/templates/extensions.php:167
+#: includes/admin/templates/extensions.php:173
 msgid ""
 "<strong>All Access Pass</strong> – Get access to all Ultimate Member "
 "extensions at a significant discount with our All Access Pass."
 msgstr ""
 
-#: includes/admin/templates/extensions.php:171
+#: includes/admin/templates/extensions.php:177
 msgid "View Pricing"
 msgstr ""
 
-#: includes/admin/templates/extensions.php:180
+#: includes/admin/templates/extensions.php:186
 msgid "Premium"
 msgstr ""
 
-#: includes/admin/templates/extensions.php:185
+#: includes/admin/templates/extensions.php:191
 msgid "Free"
 msgstr ""
 
-#: includes/admin/templates/extensions.php:211
-#: includes/admin/templates/extensions.php:245
+#: includes/admin/templates/extensions.php:217
+#: includes/admin/templates/extensions.php:251
 msgid "Get this Add on"
 msgstr ""
 
-#: includes/admin/templates/extensions.php:216
-#: includes/admin/templates/extensions.php:250
+#: includes/admin/templates/extensions.php:222
+#: includes/admin/templates/extensions.php:256
 msgid "More Details"
 msgstr ""
 
@@ -4315,7 +4315,7 @@ msgstr ""
 #: includes/admin/templates/modal/dynamic_new_group.php:18
 #: includes/admin/templates/modal/fonticons.php:14
 #: includes/admin/templates/role/publish.php:24 includes/class-config.php:253
-#: includes/core/class-fields.php:2645 includes/core/class-fields.php:2744
+#: includes/core/class-fields.php:2642 includes/core/class-fields.php:2741
 #: includes/core/um-actions-profile.php:674
 #: includes/core/um-actions-profile.php:686
 #: includes/core/um-actions-profile.php:874
@@ -4685,7 +4685,7 @@ msgid "Register"
 msgstr ""
 
 #: includes/class-config.php:135 includes/class-config.php:792
-#: includes/core/class-member-directory.php:2135
+#: includes/core/class-member-directory.php:2152
 #: includes/core/um-actions-profile.php:1260
 #: includes/core/um-actions-user.php:19
 msgid "Logout"
@@ -7061,101 +7061,101 @@ msgstr ""
 msgid "Add translation to %s"
 msgstr ""
 
-#: includes/core/class-fields.php:1333 templates/message.php:6
+#: includes/core/class-fields.php:1330 templates/message.php:6
 #, php-format
 msgid "%s"
 msgstr ""
 
-#: includes/core/class-fields.php:1354
+#: includes/core/class-fields.php:1351
 msgid "Custom Field"
 msgstr ""
 
-#: includes/core/class-fields.php:1697
+#: includes/core/class-fields.php:1694
 msgid "Please upload a valid image!"
 msgstr ""
 
-#: includes/core/class-fields.php:1711
+#: includes/core/class-fields.php:1708
 msgid "Sorry this is not a valid image."
 msgstr ""
 
-#: includes/core/class-fields.php:1714
+#: includes/core/class-fields.php:1711
 msgid "This image is too large!"
 msgstr ""
 
-#: includes/core/class-fields.php:1717
+#: includes/core/class-fields.php:1714
 msgid "This image is too small!"
 msgstr ""
 
-#: includes/core/class-fields.php:1720
+#: includes/core/class-fields.php:1717
 msgid "You can only upload one image"
 msgstr ""
 
-#: includes/core/class-fields.php:1752
+#: includes/core/class-fields.php:1749
 msgid "Sorry this is not a valid file."
 msgstr ""
 
-#: includes/core/class-fields.php:1755
+#: includes/core/class-fields.php:1752
 msgid "This file is too large!"
 msgstr ""
 
-#: includes/core/class-fields.php:1758
+#: includes/core/class-fields.php:1755
 msgid "This file is too small!"
 msgstr ""
 
-#: includes/core/class-fields.php:1761
+#: includes/core/class-fields.php:1758
 msgid "You can only upload one file"
 msgstr ""
 
-#: includes/core/class-fields.php:2289
+#: includes/core/class-fields.php:2286
 msgid "Current Password"
 msgstr ""
 
-#: includes/core/class-fields.php:2320
+#: includes/core/class-fields.php:2317
 msgid "New Password"
 msgstr ""
 
-#: includes/core/class-fields.php:2354
+#: includes/core/class-fields.php:2351
 #, php-format
 msgid "Confirm %s"
 msgstr ""
 
-#: includes/core/class-fields.php:2598
+#: includes/core/class-fields.php:2595
 msgid "Upload Photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2620 includes/core/class-fields.php:2644
+#: includes/core/class-fields.php:2617 includes/core/class-fields.php:2641
 #: includes/core/um-actions-profile.php:905
 msgid "Change photo"
 msgstr ""
 
-#: includes/core/class-fields.php:2644 includes/core/class-fields.php:2743
+#: includes/core/class-fields.php:2641 includes/core/class-fields.php:2740
 msgid "Processing..."
 msgstr ""
 
-#: includes/core/class-fields.php:2668
+#: includes/core/class-fields.php:2665
 msgid "Upload File"
 msgstr ""
 
-#: includes/core/class-fields.php:2710 includes/core/um-filters-fields.php:267
+#: includes/core/class-fields.php:2707 includes/core/um-filters-fields.php:267
 msgid "This file has been removed."
 msgstr ""
 
-#: includes/core/class-fields.php:2713 includes/core/class-fields.php:2743
+#: includes/core/class-fields.php:2710 includes/core/class-fields.php:2740
 msgid "Change file"
 msgstr ""
 
-#: includes/core/class-fields.php:2743
+#: includes/core/class-fields.php:2740
 msgid "Save"
 msgstr ""
 
-#: includes/core/class-fields.php:4268
+#: includes/core/class-fields.php:4265
 #, php-format
 msgid ""
 "Your profile is looking a little empty. Why not <a href=\"%s\">add</a> some "
 "information!"
 msgstr ""
 
-#: includes/core/class-fields.php:4270
+#: includes/core/class-fields.php:4267
 msgid "This user has not added any information to their profile yet."
 msgstr ""
 
@@ -7258,27 +7258,27 @@ msgstr ""
 msgid "User Registered"
 msgstr ""
 
-#: includes/core/class-member-directory.php:865
-#: includes/core/class-member-directory.php:866
+#: includes/core/class-member-directory.php:882
+#: includes/core/class-member-directory.php:883
 msgid " stars"
 msgstr ""
 
-#: includes/core/class-member-directory.php:876
+#: includes/core/class-member-directory.php:893
 msgid "<strong>Age:</strong>&nbsp;{value} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:877
+#: includes/core/class-member-directory.php:894
 msgid "<strong>Age:</strong>&nbsp;{min_range} - {max_range} years old"
 msgstr ""
 
-#: includes/core/class-member-directory.php:2080
-#: includes/core/class-member-directory.php:2124
+#: includes/core/class-member-directory.php:2097
+#: includes/core/class-member-directory.php:2141
 #: includes/core/um-actions-profile.php:1227
 #: includes/core/um-actions-profile.php:1258
 msgid "Edit Profile"
 msgstr ""
 
-#: includes/core/class-member-directory.php:2130
+#: includes/core/class-member-directory.php:2147
 #: includes/core/um-actions-profile.php:1259
 msgid "My Account"
 msgstr ""
@@ -7839,35 +7839,35 @@ msgstr ""
 msgid "An error has been encountered"
 msgstr ""
 
-#: includes/core/um-actions-misc.php:157
+#: includes/core/um-actions-misc.php:158
 msgid "Registration is currently disabled"
 msgstr ""
 
-#: includes/core/um-actions-misc.php:161 includes/core/um-filters-login.php:40
+#: includes/core/um-actions-misc.php:162 includes/core/um-filters-login.php:40
 msgid "This email address has been blocked."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:165
+#: includes/core/um-actions-misc.php:166
 msgid "We do not accept registrations from that domain."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:169 includes/core/um-filters-login.php:43
+#: includes/core/um-actions-misc.php:170 includes/core/um-filters-login.php:43
 msgid "Your IP address has been blocked."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:173 includes/core/um-filters-login.php:136
+#: includes/core/um-actions-misc.php:174 includes/core/um-filters-login.php:136
 msgid "Your account has been disabled."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:177 includes/core/um-filters-login.php:139
+#: includes/core/um-actions-misc.php:178 includes/core/um-filters-login.php:139
 msgid "Your account has not been approved yet."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:181 includes/core/um-filters-login.php:142
+#: includes/core/um-actions-misc.php:182 includes/core/um-filters-login.php:142
 msgid "Your account is awaiting e-mail verification."
 msgstr ""
 
-#: includes/core/um-actions-misc.php:185 includes/core/um-filters-login.php:145
+#: includes/core/um-actions-misc.php:186 includes/core/um-filters-login.php:145
 msgid "Your membership request has been rejected."
 msgstr ""
 

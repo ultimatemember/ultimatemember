@@ -6,8 +6,8 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
-Tested up to: 5.3
-Stable tag: 2.1.4
+Tested up to: 5.4
+Stable tag: 2.1.5
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -146,16 +146,21 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [topic](https://wordpress.org/support/topic/version-2-1-4/)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.1.5: March xx, 2020 =
+= 2.1.5: April 1, 2020 =
 
 * Enhancements:
 
   - Added number field-type to member directory filters
+  - Changed export/erase personal data in account page
+  - Sanitizing variables in wp-admin
 
 * Bugfixes:
 
   - Fixed PHP notice 'form_id' on account submission
   - Fixed birthday range for member directory filter
+  - Fixed fields visibility when user can edit other users
+  - Fixed honeypot JS
+  - Fixed edit mode for Role (Dropdown/Radio) fields (getting editable priority role)
 
 = 2.1.4: February 24, 2020 =
 
