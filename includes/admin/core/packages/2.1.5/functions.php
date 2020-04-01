@@ -10,6 +10,10 @@ function um_upgrade_balance_field215() {
 
 	$point_type = defined( 'MYCRED_DEFAULT_TYPE_KEY' ) ? MYCRED_DEFAULT_TYPE_KEY : 'mycred_default';
 
+	if ( function_exists( 'mycred' ) ) {
+		UM()->options()->update( 'mycred_point_types', array( $point_type ) );
+	}
+
 	// update default sorting
 	$wpdb->query(
 		"UPDATE {$wpdb->postmeta}

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Member\n"
-"POT-Creation-Date: 2020-03-31 12:42+0300\n"
-"PO-Revision-Date: 2020-03-31 12:42+0300\n"
+"POT-Creation-Date: 2020-04-01 18:27+0300\n"
+"PO-Revision-Date: 2020-04-01 18:27+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -193,7 +193,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-columns.php:131
 #: includes/admin/core/class-admin-columns.php:151
-#: includes/admin/core/class-admin-metabox.php:2140
+#: includes/admin/core/class-admin-metabox.php:2142
 #: includes/admin/templates/role/role-edit.php:193
 #: includes/widgets/class-um-search-widget.php:81
 msgid "Title"
@@ -300,7 +300,7 @@ msgid "Password"
 msgstr ""
 
 #: includes/admin/core/class-admin-enqueue.php:489
-#: includes/admin/core/class-admin-metabox.php:2252
+#: includes/admin/core/class-admin-metabox.php:2254
 #: includes/core/class-account.php:109
 msgid "Privacy"
 msgstr ""
@@ -320,14 +320,14 @@ msgid "Required"
 msgstr ""
 
 #: includes/admin/core/class-admin-forms.php:526
-#: includes/admin/core/class-admin-metabox.php:1430
-#: includes/admin/core/class-admin-metabox.php:1458
+#: includes/admin/core/class-admin-metabox.php:1432
+#: includes/admin/core/class-admin-metabox.php:1460
 msgid "Choose Icon"
 msgstr ""
 
 #: includes/admin/core/class-admin-forms.php:532
-#: includes/admin/core/class-admin-metabox.php:1432
-#: includes/admin/core/class-admin-metabox.php:1460
+#: includes/admin/core/class-admin-metabox.php:1434
+#: includes/admin/core/class-admin-metabox.php:1462
 msgid "No Icon"
 msgstr ""
 
@@ -369,7 +369,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-forms.php:1529
 #: includes/admin/core/class-admin-forms.php:1551
-#: includes/admin/core/class-admin-metabox.php:2232
+#: includes/admin/core/class-admin-metabox.php:2234
 msgid "Label"
 msgstr ""
 
@@ -557,7 +557,7 @@ msgstr ""
 
 #: includes/admin/core/class-admin-metabox.php:385
 #: includes/admin/core/class-admin-metabox.php:537
-#: includes/admin/core/class-admin-metabox.php:2254
+#: includes/admin/core/class-admin-metabox.php:2256
 #: includes/admin/core/class-admin-navmenu.php:141
 #: includes/admin/templates/access/restrict_content.php:64
 #: includes/core/class-builtin.php:670
@@ -779,713 +779,713 @@ msgstr ""
 msgid "Directory #%s"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1147
+#: includes/admin/core/class-admin-metabox.php:1149
 #, php-format
 msgid "Form #%s"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1251
+#: includes/admin/core/class-admin-metabox.php:1253
 msgid "Visibility"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1251
+#: includes/admin/core/class-admin-metabox.php:1253
 msgid ""
 "Select where this field should appear. This option should only be changed on "
 "the profile form and allows you to show a field in one mode only (edit or "
 "view) or in both modes."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1253
+#: includes/admin/core/class-admin-metabox.php:1255
 msgid "View everywhere"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1254
+#: includes/admin/core/class-admin-metabox.php:1256
 msgid "Edit mode only"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1255
+#: includes/admin/core/class-admin-metabox.php:1257
 msgid "View mode only"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1283
+#: includes/admin/core/class-admin-metabox.php:1285
 msgid "If"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1360
+#: includes/admin/core/class-admin-metabox.php:1362
 msgid "Value"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1369
+#: includes/admin/core/class-admin-metabox.php:1371
 msgid "Validate"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1369
+#: includes/admin/core/class-admin-metabox.php:1371
 msgid "Does this field require a special validation"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1370
+#: includes/admin/core/class-admin-metabox.php:1372
 msgid "Select a validation type..."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1414
+#: includes/admin/core/class-admin-metabox.php:1416
 msgid "Custom Action"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1414
+#: includes/admin/core/class-admin-metabox.php:1416
 msgid ""
 "If you want to apply your custom validation, you can use action hooks to add "
 "custom validation. Please refer to documentation for further details."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1428
-#: includes/admin/core/class-admin-metabox.php:1456
+#: includes/admin/core/class-admin-metabox.php:1430
+#: includes/admin/core/class-admin-metabox.php:1458
 msgid "Icon"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1428
-#: includes/admin/core/class-admin-metabox.php:1456
+#: includes/admin/core/class-admin-metabox.php:1430
+#: includes/admin/core/class-admin-metabox.php:1458
 msgid ""
 "Select an icon to appear in the field. Leave blank if you do not want an "
 "icon to show in the field."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1483
+#: includes/admin/core/class-admin-metabox.php:1485
 msgid "CSS Class"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1483
+#: includes/admin/core/class-admin-metabox.php:1485
 msgid "Specify a custom CSS class to be applied to this element"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1493
+#: includes/admin/core/class-admin-metabox.php:1495
 msgid "Thickness (in pixels)"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1493
+#: includes/admin/core/class-admin-metabox.php:1495
 msgid "This is the width in pixels, e.g. 4 or 2, etc"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1503
+#: includes/admin/core/class-admin-metabox.php:1505
 msgid "Optional Text"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1503
+#: includes/admin/core/class-admin-metabox.php:1505
 msgid "Optional text to include with the divider"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1513
+#: includes/admin/core/class-admin-metabox.php:1515
 msgid "Padding"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1513
+#: includes/admin/core/class-admin-metabox.php:1515
 msgid "Set padding for this section"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1523
+#: includes/admin/core/class-admin-metabox.php:1525
 msgid "Margin"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1523
+#: includes/admin/core/class-admin-metabox.php:1525
 msgid "Set margin for this section"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1533
+#: includes/admin/core/class-admin-metabox.php:1535
 msgid "Border"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1533
+#: includes/admin/core/class-admin-metabox.php:1535
 msgid "Set border for this section"
-msgstr ""
-
-#: includes/admin/core/class-admin-metabox.php:1543
-#: includes/admin/core/class-admin-metabox.php:1714
-msgid "Style"
-msgstr ""
-
-#: includes/admin/core/class-admin-metabox.php:1543
-msgid "Choose the border style"
 msgstr ""
 
 #: includes/admin/core/class-admin-metabox.php:1545
 #: includes/admin/core/class-admin-metabox.php:1716
-msgid "Solid"
+msgid "Style"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1546
-#: includes/admin/core/class-admin-metabox.php:1717
-msgid "Dotted"
+#: includes/admin/core/class-admin-metabox.php:1545
+msgid "Choose the border style"
 msgstr ""
 
 #: includes/admin/core/class-admin-metabox.php:1547
 #: includes/admin/core/class-admin-metabox.php:1718
-msgid "Dashed"
+msgid "Solid"
 msgstr ""
 
 #: includes/admin/core/class-admin-metabox.php:1548
 #: includes/admin/core/class-admin-metabox.php:1719
+msgid "Dotted"
+msgstr ""
+
+#: includes/admin/core/class-admin-metabox.php:1549
+#: includes/admin/core/class-admin-metabox.php:1720
+msgid "Dashed"
+msgstr ""
+
+#: includes/admin/core/class-admin-metabox.php:1550
+#: includes/admin/core/class-admin-metabox.php:1721
 msgid "Double"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1558
+#: includes/admin/core/class-admin-metabox.php:1560
 msgid "Border Radius"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1558
+#: includes/admin/core/class-admin-metabox.php:1560
 msgid "Rounded corners can be applied by setting a pixels value here. e.g. 5px"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1568
+#: includes/admin/core/class-admin-metabox.php:1570
 msgid "Border Color"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1568
+#: includes/admin/core/class-admin-metabox.php:1570
 msgid "Give a color to this border"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1578
+#: includes/admin/core/class-admin-metabox.php:1580
 msgid "Enable Row Heading"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1578
+#: includes/admin/core/class-admin-metabox.php:1580
 msgid "Whether to enable a heading for this row"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1588
+#: includes/admin/core/class-admin-metabox.php:1590
 msgid "Heading Text"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1588
+#: includes/admin/core/class-admin-metabox.php:1590
 msgid "Enter the row heading text here"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1598
+#: includes/admin/core/class-admin-metabox.php:1600
 msgid "Background Color"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1598
+#: includes/admin/core/class-admin-metabox.php:1600
 msgid "This will be the background of entire section"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1608
+#: includes/admin/core/class-admin-metabox.php:1610
 msgid "Heading Background Color"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1608
+#: includes/admin/core/class-admin-metabox.php:1610
 msgid "This will be the background of the heading section"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1618
+#: includes/admin/core/class-admin-metabox.php:1620
 msgid "Heading Text Color"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1618
+#: includes/admin/core/class-admin-metabox.php:1620
 msgid "This will be the text color of heading part only"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1628
+#: includes/admin/core/class-admin-metabox.php:1630
 msgid "Text Color"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1628
+#: includes/admin/core/class-admin-metabox.php:1630
 msgid "This will be the text color of entire section"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1638
+#: includes/admin/core/class-admin-metabox.php:1640
 msgid "Icon Color"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1638
+#: includes/admin/core/class-admin-metabox.php:1640
 msgid ""
 "This will be the color of selected icon. By default It will be the same "
 "color as heading text color"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1648
+#: includes/admin/core/class-admin-metabox.php:1650
 msgid "Color"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1648
+#: includes/admin/core/class-admin-metabox.php:1650
 msgid "Select a color for this divider"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1658
+#: includes/admin/core/class-admin-metabox.php:1660
 msgid "URL Alt Text"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1658
+#: includes/admin/core/class-admin-metabox.php:1660
 msgid "Entering custom text here will replace the url with a text link"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1668
+#: includes/admin/core/class-admin-metabox.php:1670
 msgid "Link Target"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1668
+#: includes/admin/core/class-admin-metabox.php:1670
 msgid "Choose whether to open this link in same window or in a new window"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1670
+#: includes/admin/core/class-admin-metabox.php:1672
 msgid "Open in new window"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1671
+#: includes/admin/core/class-admin-metabox.php:1673
 msgid "Same window"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1681
+#: includes/admin/core/class-admin-metabox.php:1683
 msgid "SEO Follow"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1681
+#: includes/admin/core/class-admin-metabox.php:1683
 msgid "Whether to follow or nofollow this link by search engines"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1683
+#: includes/admin/core/class-admin-metabox.php:1685
 msgid "Follow"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1684
+#: includes/admin/core/class-admin-metabox.php:1686
 msgid "No-Follow"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1694
+#: includes/admin/core/class-admin-metabox.php:1696
 msgid "Force strong password?"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1694
+#: includes/admin/core/class-admin-metabox.php:1696
 msgid ""
 "Turn on to force users to create a strong password (A combination of one "
 "lowercase letter, one uppercase letter, and one number). If turned on this "
 "option is only applied to register forms and not to login forms."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1704
+#: includes/admin/core/class-admin-metabox.php:1706
 msgid "Automatically add a confirm password field?"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1704
+#: includes/admin/core/class-admin-metabox.php:1706
 msgid ""
 "Turn on to add a confirm password field. If turned on the confirm password "
 "field will only show on register forms and not on login forms."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1714
+#: includes/admin/core/class-admin-metabox.php:1716
 msgid "This is the line-style of divider"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1730
+#: includes/admin/core/class-admin-metabox.php:1732
 msgid "Time Intervals (in minutes)"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1730
+#: includes/admin/core/class-admin-metabox.php:1732
 msgid "Choose the minutes interval between each time in the time picker."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1731
+#: includes/admin/core/class-admin-metabox.php:1733
 msgid "e.g. 30, 60, 120"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1743
+#: includes/admin/core/class-admin-metabox.php:1745
 msgid "Date User-Friendly Format"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1743
+#: includes/admin/core/class-admin-metabox.php:1745
 msgid "The display format of the date which is visible to user."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1754
+#: includes/admin/core/class-admin-metabox.php:1756
 msgid "Time Format"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1754
+#: includes/admin/core/class-admin-metabox.php:1756
 msgid "Choose the displayed time-format for this field"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1756
-#: includes/admin/core/class-admin-metabox.php:1757
+#: includes/admin/core/class-admin-metabox.php:1758
+#: includes/admin/core/class-admin-metabox.php:1759
 msgid "( 12-hr format )"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1758
+#: includes/admin/core/class-admin-metabox.php:1760
 msgid "( 24-hr format )"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1769
+#: includes/admin/core/class-admin-metabox.php:1771
 msgid "Use custom Date format"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1769
+#: includes/admin/core/class-admin-metabox.php:1771
 msgid ""
 "This option overrides \"Date User-Friendly Format\" option. See https://www."
 "php.net/manual/en/function.date.php"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1779
+#: includes/admin/core/class-admin-metabox.php:1781
 msgid "Displayed Date Format"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1779
+#: includes/admin/core/class-admin-metabox.php:1781
 msgid ""
 "Whether you wish to show the date in full or only show the years e.g. 25 "
 "Years"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1781
+#: includes/admin/core/class-admin-metabox.php:1783
 msgid "Show full date"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1782
+#: includes/admin/core/class-admin-metabox.php:1784
 msgid "Show years only"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1798
+#: includes/admin/core/class-admin-metabox.php:1800
 msgid "Disable specific weekdays"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1798
+#: includes/admin/core/class-admin-metabox.php:1800
 msgid ""
 "Disable specific week days from being available for selection in this date "
 "picker"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1800
+#: includes/admin/core/class-admin-metabox.php:1802
 msgid "Sunday"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1801
+#: includes/admin/core/class-admin-metabox.php:1803
 msgid "Monday"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1802
+#: includes/admin/core/class-admin-metabox.php:1804
 msgid "Tuesday"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1803
+#: includes/admin/core/class-admin-metabox.php:1805
 msgid "Wednesday"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1804
+#: includes/admin/core/class-admin-metabox.php:1806
 msgid "Thursday"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1805
+#: includes/admin/core/class-admin-metabox.php:1807
 msgid "Friday"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1806
+#: includes/admin/core/class-admin-metabox.php:1808
 msgid "Saturday"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1816
+#: includes/admin/core/class-admin-metabox.php:1818
 msgid "Number of Years to pick from"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1816
+#: includes/admin/core/class-admin-metabox.php:1818
 msgid ""
 "Number of years available for the date selection. Default to last 50 years"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1826
+#: includes/admin/core/class-admin-metabox.php:1828
 msgid "Years Selection"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1826
+#: includes/admin/core/class-admin-metabox.php:1828
 msgid "This decides which years should be shown relative to today date"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1828
+#: includes/admin/core/class-admin-metabox.php:1830
 msgid "Equal years before / after today"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1829
+#: includes/admin/core/class-admin-metabox.php:1831
 msgid "Past years only"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1830
+#: includes/admin/core/class-admin-metabox.php:1832
 msgid "Future years only"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1840
+#: includes/admin/core/class-admin-metabox.php:1842
 msgid "Date Range Start"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1840
+#: includes/admin/core/class-admin-metabox.php:1842
 msgid "Set the minimum date/day in range in the format YYYY/MM/DD"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1841
-#: includes/admin/core/class-admin-metabox.php:1851
+#: includes/admin/core/class-admin-metabox.php:1843
+#: includes/admin/core/class-admin-metabox.php:1853
 msgid "YYYY/MM/DD"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1850
+#: includes/admin/core/class-admin-metabox.php:1852
 msgid "Date Range End"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1850
+#: includes/admin/core/class-admin-metabox.php:1852
 msgid "Set the maximum date/day in range in the format YYYY/MM/DD"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1860
+#: includes/admin/core/class-admin-metabox.php:1862
 msgid "Set Date Range"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1860
+#: includes/admin/core/class-admin-metabox.php:1862
 msgid ""
 "Whether to show a specific number of years or specify a date range to be "
 "available for the date picker."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1862
+#: includes/admin/core/class-admin-metabox.php:1864
 msgid "Fixed Number of Years"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1863
+#: includes/admin/core/class-admin-metabox.php:1865
 msgid "Specific Date Range"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1876
+#: includes/admin/core/class-admin-metabox.php:1878
 msgid "Enter Shortcode"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1876
+#: includes/admin/core/class-admin-metabox.php:1878
 msgid ""
 "Enter the shortcode in the following textarea and it will be displayed on "
 "the fields"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1877
+#: includes/admin/core/class-admin-metabox.php:1879
 msgid "e.g. [my_custom_shortcode]"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1886
+#: includes/admin/core/class-admin-metabox.php:1888
 msgid "Content Editor"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1886
+#: includes/admin/core/class-admin-metabox.php:1888
 msgid "Edit the content of this field here"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1899
+#: includes/admin/core/class-admin-metabox.php:1901
 msgid "Crop Feature"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1899
+#: includes/admin/core/class-admin-metabox.php:1901
 msgid "Enable/disable crop feature for this image upload and define ratio"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1901
+#: includes/admin/core/class-admin-metabox.php:1903
 msgid "Turn Off (Default)"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1902
+#: includes/admin/core/class-admin-metabox.php:1904
 msgid "Crop and force 1:1 ratio"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1903
+#: includes/admin/core/class-admin-metabox.php:1905
 msgid "Crop and force user-defined ratio"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1920
+#: includes/admin/core/class-admin-metabox.php:1922
 msgid "Allowed Image Types"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1920
-#: includes/admin/core/class-admin-metabox.php:1938
+#: includes/admin/core/class-admin-metabox.php:1922
+#: includes/admin/core/class-admin-metabox.php:1940
 msgid ""
 "Select the image types that you want to allow to be uploaded via this field."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1938
+#: includes/admin/core/class-admin-metabox.php:1940
 msgid "Allowed File Types"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1955
+#: includes/admin/core/class-admin-metabox.php:1957
 msgid "Drag &amp; Drop Photo"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1958
+#: includes/admin/core/class-admin-metabox.php:1960
 msgid "Drag &amp; Drop File"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1963
-#: includes/admin/core/class-admin-metabox.php:1983
+#: includes/admin/core/class-admin-metabox.php:1965
+#: includes/admin/core/class-admin-metabox.php:1985
 msgid "Upload Box Text"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1963
+#: includes/admin/core/class-admin-metabox.php:1965
 msgid "This is the headline that appears in the upload box for this field"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1973
+#: includes/admin/core/class-admin-metabox.php:1975
 msgid "Additional Instructions Text"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1973
+#: includes/admin/core/class-admin-metabox.php:1975
 msgid ""
 "If you need to add information or secondary line below the headline of "
 "upload box, enter it here"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1983
+#: includes/admin/core/class-admin-metabox.php:1985
 msgid "The text that appears on the button. e.g. Upload"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1984
+#: includes/admin/core/class-admin-metabox.php:1986
 #: includes/core/class-fields.php:1705 includes/core/class-fields.php:1746
 #: includes/core/class-fields.php:2585 includes/core/class-fields.php:2660
 msgid "Upload"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1993
+#: includes/admin/core/class-admin-metabox.php:1995
 msgid "Maximum Size in bytes"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:1993
+#: includes/admin/core/class-admin-metabox.php:1995
 msgid ""
 "The maximum size for image that can be uploaded through this field. Leave "
 "empty for unlimited size."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2003
+#: includes/admin/core/class-admin-metabox.php:2005
 msgid "Textarea Height"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2003
+#: includes/admin/core/class-admin-metabox.php:2005
 msgid "The height of textarea in pixels. Default is 100 pixels"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2013
+#: includes/admin/core/class-admin-metabox.php:2015
 msgid "Spacing"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2013
+#: includes/admin/core/class-admin-metabox.php:2015
 msgid "This is the required spacing in pixels. e.g. 20px"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2023
+#: includes/admin/core/class-admin-metabox.php:2025
 msgid "Allow multiple selections"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2023
+#: includes/admin/core/class-admin-metabox.php:2025
 msgid "Enable/disable multiple selections for this field"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2033
+#: includes/admin/core/class-admin-metabox.php:2035
 msgid "Maximum number of selections"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2033
+#: includes/admin/core/class-admin-metabox.php:2035
 msgid ""
 "Enter a number here to force a maximum number of selections by user for this "
 "field"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2043
+#: includes/admin/core/class-admin-metabox.php:2045
 msgid "Minimum number of selections"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2043
+#: includes/admin/core/class-admin-metabox.php:2045
 msgid ""
 "Enter a number here to force a minimum number of selections by user for this "
 "field"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2053
+#: includes/admin/core/class-admin-metabox.php:2055
 msgid "Maximum number of entries"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2053
+#: includes/admin/core/class-admin-metabox.php:2055
 msgid "This is the max number of entries the user can add via field group."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2063
+#: includes/admin/core/class-admin-metabox.php:2065
 msgid "Maximum allowed words"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2063
+#: includes/admin/core/class-admin-metabox.php:2065
 msgid ""
 "If you want to enable a maximum number of words to be input in this "
 "textarea. Leave empty to disable this setting"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2073
+#: includes/admin/core/class-admin-metabox.php:2075
 msgid "Minimum Number"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2073
+#: includes/admin/core/class-admin-metabox.php:2075
 msgid "Minimum number that can be entered in this field"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2083
+#: includes/admin/core/class-admin-metabox.php:2085
 msgid "Maximum Number"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2083
+#: includes/admin/core/class-admin-metabox.php:2085
 msgid "Maximum number that can be entered in this field"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2093
+#: includes/admin/core/class-admin-metabox.php:2095
 msgid "Minimum length"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2093
+#: includes/admin/core/class-admin-metabox.php:2095
 msgid ""
 "If you want to enable a minimum number of characters to be input in this "
 "field. Leave empty to disable this setting"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2103
+#: includes/admin/core/class-admin-metabox.php:2105
 msgid "Maximum length"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2103
+#: includes/admin/core/class-admin-metabox.php:2105
 msgid ""
 "If you want to enable a maximum number of characters to be input in this "
 "field. Leave empty to disable this setting"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2113
+#: includes/admin/core/class-admin-metabox.php:2115
 msgid "Does this textarea accept HTML?"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2113
+#: includes/admin/core/class-admin-metabox.php:2115
 msgid "Turn on/off HTML tags for this textarea"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2130
+#: includes/admin/core/class-admin-metabox.php:2132
 msgid "Edit Choices"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2130
+#: includes/admin/core/class-admin-metabox.php:2132
 msgid ""
 "Enter one choice per line. This will represent the available choices or "
 "selections available for user."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2140
+#: includes/admin/core/class-admin-metabox.php:2142
 msgid ""
 "This is the title of the field for your reference in the backend. The title "
 "will not appear on the front-end of your website."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2151
+#: includes/admin/core/class-admin-metabox.php:2153
 msgid "Unique ID"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2165
-#: includes/admin/core/class-admin-metabox.php:2171
+#: includes/admin/core/class-admin-metabox.php:2167
+#: includes/admin/core/class-admin-metabox.php:2173
 msgid "Meta Key"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2165
+#: includes/admin/core/class-admin-metabox.php:2167
 msgid ""
 "The meta key cannot be changed for duplicated fields or when editing an "
 "existing field. If you require a different meta key please create a new "
 "field."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2171
+#: includes/admin/core/class-admin-metabox.php:2173
 msgid ""
 "A meta key is required to store the entered info in this field in the "
 "database. The meta key should be unique to this field and be written in "
@@ -1493,11 +1493,11 @@ msgid ""
 "job_title"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2184
+#: includes/admin/core/class-admin-metabox.php:2186
 msgid "Help Text"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2184
+#: includes/admin/core/class-admin-metabox.php:2186
 msgid ""
 "This is the text that appears in a tooltip when a user hovers over the info "
 "icon. Help text is useful for providing users with more information about "
@@ -1505,149 +1505,149 @@ msgid ""
 "for field."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2196
+#: includes/admin/core/class-admin-metabox.php:2198
 msgid "Default Text"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2196
+#: includes/admin/core/class-admin-metabox.php:2198
 msgid "Text to display by default in this field"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2202
+#: includes/admin/core/class-admin-metabox.php:2204
 msgid "Default Date"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2202
-#: includes/admin/core/class-admin-metabox.php:2208
+#: includes/admin/core/class-admin-metabox.php:2204
+#: includes/admin/core/class-admin-metabox.php:2210
 msgid ""
 "You may use all PHP compatible date formats such as: 2020-02-02, 02/02/2020, "
 "yesterday, today, tomorrow, next monday, first day of next month, +3 day"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2208
+#: includes/admin/core/class-admin-metabox.php:2210
 msgid "Default Time"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2214
+#: includes/admin/core/class-admin-metabox.php:2216
 msgid "Default Rating"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2214
+#: includes/admin/core/class-admin-metabox.php:2216
 msgid ""
 "If you wish the rating field to be prefilled with a number of stars, enter "
 "it here."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2220
+#: includes/admin/core/class-admin-metabox.php:2222
 msgid "Default Value"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2220
+#: includes/admin/core/class-admin-metabox.php:2222
 msgid ""
 "This option allows you to pre-fill the field with a default value prior to "
 "the user entering a value in the field. Leave blank to have no default value"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2232
+#: includes/admin/core/class-admin-metabox.php:2234
 msgid ""
 "The field label is the text that appears above the field on your front-end "
 "form. Leave blank to not show a label above field."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2242
+#: includes/admin/core/class-admin-metabox.php:2244
 msgid "Placeholder"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2242
+#: includes/admin/core/class-admin-metabox.php:2244
 msgid ""
 "This is the text that appears within the field e.g please enter your email "
 "address. Leave blank to not show any placeholder text."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2252
+#: includes/admin/core/class-admin-metabox.php:2254
 msgid ""
 "Field privacy allows you to select who can view this field on the front-end. "
 "The site admin can view all fields regardless of the option set here."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2255
+#: includes/admin/core/class-admin-metabox.php:2257
 #: includes/class-config.php:134 includes/class-config.php:791
 msgid "Members"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2256
+#: includes/admin/core/class-admin-metabox.php:2258
 msgid "Only visible to profile owner and admins"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2257
+#: includes/admin/core/class-admin-metabox.php:2259
 msgid "Only visible to profile owner and specific roles"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2258
+#: includes/admin/core/class-admin-metabox.php:2260
 msgid "Only specific member roles"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2275
+#: includes/admin/core/class-admin-metabox.php:2277
 msgid "Select member roles"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2275
+#: includes/admin/core/class-admin-metabox.php:2277
 msgid "Select the member roles that can view this field on the front-end."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2301
+#: includes/admin/core/class-admin-metabox.php:2303
 msgid "Is this field required?"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2301
+#: includes/admin/core/class-admin-metabox.php:2303
 msgid ""
 "This option allows you to set whether the field must be filled in before the "
 "form can be processed."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2315
+#: includes/admin/core/class-admin-metabox.php:2317
 msgid "Can user edit this field?"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2315
+#: includes/admin/core/class-admin-metabox.php:2317
 msgid ""
 "This option allows you to set whether or not the user can edit the "
 "information in this field."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2328
+#: includes/admin/core/class-admin-metabox.php:2330
 msgid "Rating System"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2328
+#: includes/admin/core/class-admin-metabox.php:2330
 msgid "Choose whether you want a 5-stars or 10-stars ratings based here."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2330
+#: includes/admin/core/class-admin-metabox.php:2332
 msgid "5  stars rating system"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2331
+#: includes/admin/core/class-admin-metabox.php:2333
 msgid "10 stars rating system"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2341
+#: includes/admin/core/class-admin-metabox.php:2343
 msgid "Choices Callback"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2341
+#: includes/admin/core/class-admin-metabox.php:2343
 msgid "Add a callback source to retrieve choices."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2352
+#: includes/admin/core/class-admin-metabox.php:2354
 msgid "Parent Option"
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2352
+#: includes/admin/core/class-admin-metabox.php:2354
 msgid "Dynamically populates the option based from selected parent option."
 msgstr ""
 
-#: includes/admin/core/class-admin-metabox.php:2354
+#: includes/admin/core/class-admin-metabox.php:2356
 msgid "No Selected"
 msgstr ""
 
@@ -3622,11 +3622,11 @@ msgstr ""
 msgid "Create additional metadata table..."
 msgstr ""
 
-#: includes/admin/core/packages/2.1.5/functions.php:91
+#: includes/admin/core/packages/2.1.5/functions.php:95
 msgid "Balance fields were updated successfully"
 msgstr ""
 
-#: includes/admin/core/packages/2.1.5/functions.php:93
+#: includes/admin/core/packages/2.1.5/functions.php:97
 msgid "Updated successfully"
 msgstr ""
 

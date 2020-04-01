@@ -1063,6 +1063,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 			$wpdb->update( $wpdb->posts, array( 'post_title' => sanitize_text_field( $_POST['post_title'] ) ), $where );
 
+			do_action( 'um_before_member_directory_save', $post_id );
+
 			// save
 			delete_post_meta( $post_id, '_um_roles' );
 			delete_post_meta( $post_id, '_um_tagline_fields' );
