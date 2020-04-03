@@ -3576,8 +3576,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				case 'shortcode':
 
 					$content = str_replace( '{profile_id}', um_profile_id(), $content );
+					if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
+						$content = do_shortcode( $content );
+					} else {
+						$content = apply_shortcodes( $content );
+					}
 
-					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>' . do_shortcode( $content ) . '</div>';
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>' . $content . '</div>';
 					break;
 
 				/* Unlimited Group */
@@ -4100,8 +4105,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				case 'shortcode':
 
 					$content = str_replace( '{profile_id}', um_profile_id(), $content );
+					if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
+						$content = do_shortcode( $content );
+					} else {
+						$content = apply_shortcodes( $content );
+					}
 
-					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>' . do_shortcode( $content ) . '</div>';
+					$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>' . $content . '</div>';
 					break;
 
 				/* Gap/Space */

@@ -373,7 +373,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 					UM()->get_template( 'login-to-view.php', '', $args, true );
 				}
 			} else {
-				echo do_shortcode( $this->convert_locker_tags( wpautop( $content ) ) );
+				if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
+					echo do_shortcode( $this->convert_locker_tags( wpautop( $content ) ) );
+				} else {
+					echo apply_shortcodes( $this->convert_locker_tags( wpautop( $content ) ) );
+				}
 			}
 
 			$output = ob_get_clean();
@@ -397,7 +401,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			if ( is_user_logged_in() ) {
 				echo '';
 			} else {
-				echo do_shortcode( wpautop( $content ) );
+				if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
+					echo do_shortcode( wpautop( $content ) );
+				} else {
+					echo apply_shortcodes( wpautop( $content ) );
+				}
 			}
 
 			$output = ob_get_clean();
@@ -430,7 +438,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$shortcode_attrs .= " {$key}=\"{$value}\"";
 			}
 
-			return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
+			if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
+				return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
+			} else {
+				return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
+			}
 		}
 
 
@@ -459,7 +471,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$shortcode_attrs .= " {$key}=\"{$value}\"";
 			}
 
-			return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
+			if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
+				return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
+			} else {
+				return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
+			}
 		}
 
 
@@ -489,7 +505,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$shortcode_attrs .= " {$key}=\"{$value}\"";
 			}
 
-			return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
+			if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
+				return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
+			} else {
+				return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
+			}
 		}
 
 
@@ -519,7 +539,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$shortcode_attrs .= " {$key}=\"{$value}\"";
 			}
 
-			return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
+			if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
+				return do_shortcode( "[ultimatemember {$shortcode_attrs} /]" );
+			} else {
+				return apply_shortcodes( "[ultimatemember {$shortcode_attrs} /]" );
+			}
 		}
 
 
@@ -1144,20 +1168,32 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$current_user_roles = um_user( 'roles' );
 
 			if ( ! empty( $a['not'] ) && ! empty( $a['roles'] ) ) {
-				return do_shortcode( $this->convert_locker_tags( $content ) );
+				if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
+					return do_shortcode( $this->convert_locker_tags( $content ) );
+				} else {
+					return apply_shortcodes( $this->convert_locker_tags( $content ) );
+				}
 			}
 
 			if ( ! empty( $a['not'] ) ) {
 				$not_in_roles = explode( ",", $a['not'] );
 
 				if ( is_array( $not_in_roles ) && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $not_in_roles ) ) <= 0 ) ) {
-					return do_shortcode( $this->convert_locker_tags( $content ) );
+					if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
+						return do_shortcode( $this->convert_locker_tags( $content ) );
+					} else {
+						return apply_shortcodes( $this->convert_locker_tags( $content ) );
+					}
 				}
 			} else {
 				$roles = explode( ",", $a['roles'] );
 
 				if ( ! empty( $current_user_roles ) && is_array( $roles ) && count( array_intersect( $current_user_roles, $roles ) ) > 0 ) {
-					return do_shortcode( $this->convert_locker_tags( $content ) );
+					if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
+						return do_shortcode( $this->convert_locker_tags( $content ) );
+					} else {
+						return apply_shortcodes( $this->convert_locker_tags( $content ) );
+					}
 				}
 			}
 

@@ -1055,7 +1055,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					}
 
 					$output = '<div class="um-admin-preview-overlay"></div>';
-					$output .= do_shortcode('[ultimatemember form_id="' . $arg1 . '" /]');
+
+					if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
+						$output .= do_shortcode('[ultimatemember form_id="' . $arg1 . '" /]');
+					} else {
+						$output .= apply_shortcodes('[ultimatemember form_id="' . $arg1 . '" /]');
+					}
 
 					break;
 
