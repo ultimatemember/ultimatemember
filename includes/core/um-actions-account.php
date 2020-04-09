@@ -415,7 +415,7 @@ add_action( 'um_account_page_hidden_fields', 'um_account_page_hidden_fields' );
  * Before delete account tab content
  */
 function um_before_account_delete() {
-	echo wpautop( htmlspecialchars( UM()->options()->get( 'delete_account_text' ) ) );
+	printf( __( '%s', 'ultimate-member' ), wpautop( htmlspecialchars( UM()->options()->get( 'delete_account_text' ) ) ) );
 }
 add_action( 'um_before_account_delete', 'um_before_account_delete' );
 
