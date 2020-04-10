@@ -40,8 +40,8 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			add_action( 'added_user_meta', array( &$this, 'on_update_usermeta' ), 10, 4 );
 			add_action( 'deleted_user_meta', array( &$this, 'on_delete_usermeta' ), 10, 4 );
 
-			add_action( 'um_add_new_field', array( &$this, 'on_new_field_added' ), 10, 1 );
-			add_action( 'um_delete_custom_field', array( &$this, 'on_delete_custom_field' ), 10, 1 );
+			add_action( 'um_add_new_field', array( &$this, 'on_new_field_added' ), 10, 2 );
+			add_action( 'um_delete_custom_field', array( &$this, 'on_delete_custom_field' ), 10, 2 );
 		}
 
 
@@ -49,25 +49,55 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 		 * Delete custom field and metakey from UM usermeta table
 		 *
 		 * @param $metakey
+		 * @param $args
 		 */
-		function on_delete_custom_field( $metakey ) {
+		function on_delete_custom_field( $metakey, $args ) {
 			$metakeys = get_option( 'um_usermeta_fields', array() );
-			if ( in_array( $metakey, $metakeys ) ) {
-				unset( $metakeys[ array_search( $metakey, $metakeys ) ] );
 
-				global $wpdb;
+			if ( $args['type'] == 'user_location' ) {
+				if ( array_intersect( array( $metakey . '_lat', $metakey . '_lng', $metakey . '_url' ), $metakeys ) ) {
+					if ( false !== $searched = array_search( $metakey . '_lat', $metakeys ) ) {
+						unset( $metakeys[ $searched ] );
+					}
+					if ( false !== $searched = array_search( $metakey . '_lng', $metakeys ) ) {
+						unset( $metakeys[ $searched ] );
+					}
+					if ( false !== $searched = array_search( $metakey . '_url', $metakeys ) ) {
+						unset( $metakeys[ $searched ] );
+					}
 
-				$wpdb->delete(
-					"{$wpdb->prefix}um_metadata",
-					array(
-						'um_key'    => $metakey
-					),
-					array(
-						'%s'
-					)
-				);
+					global $wpdb;
 
-				update_option( 'um_usermeta_fields', array_values( $metakeys ) );
+					$wpdb->query( $wpdb->prepare(
+						"DELETE FROM {$wpdb->prefix}um_metadata 
+						WHERE um_key = %s OR 
+							  um_key = %s OR 
+							  um_key = %s",
+						$metakey . '_lat',
+						$metakey . '_lng',
+						$metakey . '_url'
+					) );
+
+					update_option( 'um_usermeta_fields', array_values( $metakeys ) );
+				}
+			} else {
+				if ( in_array( $metakey, $metakeys ) ) {
+					unset( $metakeys[ array_search( $metakey, $metakeys ) ] );
+
+					global $wpdb;
+
+					$wpdb->delete(
+						"{$wpdb->prefix}um_metadata",
+						array(
+							'um_key'    => $metakey
+						),
+						array(
+							'%s'
+						)
+					);
+
+					update_option( 'um_usermeta_fields', array_values( $metakeys ) );
+				}
 			}
 		}
 
@@ -76,12 +106,36 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 		 * Add metakey to usermeta fields
 		 *
 		 * @param $metakey
+		 * @param $args
 		 */
-		function on_new_field_added( $metakey ) {
+		function on_new_field_added( $metakey, $args ) {
 			$metakeys = get_option( 'um_usermeta_fields', array() );
-			if ( ! in_array( $metakey, $metakeys ) ) {
-				$metakeys[] = $metakey;
-				update_option( 'um_usermeta_fields', array_values( $metakeys ) );
+
+			if ( $args['type'] == 'user_location' ) {
+				$update = false;
+				if ( ! in_array( $metakey . '_lat', $metakeys ) ) {
+					$update = true;
+					$metakeys[] = $metakey . '_lat';
+				}
+
+				if ( ! in_array( $metakey . '_lng', $metakeys ) ) {
+					$update = true;
+					$metakeys[] = $metakey . '_lng';
+				}
+
+				if ( ! in_array( $metakey . '_url', $metakeys ) ) {
+					$update = true;
+					$metakeys[] = $metakey . '_url';
+				}
+
+				if ( $update ) {
+					update_option( 'um_usermeta_fields', array_values( $metakeys ) );
+				}
+			} else {
+				if ( ! in_array( $metakey, $metakeys ) ) {
+					$metakeys[] = $metakey;
+					update_option( 'um_usermeta_fields', array_values( $metakeys ) );
+				}
 			}
 		}
 
