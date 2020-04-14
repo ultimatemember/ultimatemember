@@ -508,9 +508,9 @@ function um_after_account_privacy( $args ) {
 
 			$pending = $wpdb->get_results( "SELECT ID, post_status FROM $wpdb->posts WHERE post_author = $user_id AND post_type = 'user_request' AND post_name = 'export_personal_data' AND post_status != 'request-completed' ORDER BY ID DESC LIMIT 1", ARRAY_A );
 
-			if ( $pending[0]['post_status'] == 'request-pending' ) {
+			if ( ! empty( $pending ) && isset( $pending[0] ) && $pending[0]['post_status'] == 'request-pending' ) {
 				echo '<p>' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' ) . '</p>';
-			} elseif ( $pending[0]['post_status'] == 'request-confirmed' ) {
+			} elseif ( ! empty( $pending ) && isset( $pending[0] ) && $pending[0]['post_status'] == 'request-confirmed' ) {
 				echo '<p>' . esc_html__( 'The administrator has not yet approved downloading the data. Please expect an email with a link to your data.', 'ultimate-member' ) . '</p>';
 			} else { ?>
 				<label name="um-export-data">
