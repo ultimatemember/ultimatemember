@@ -221,7 +221,15 @@ class UM_Emails_List_Table extends WP_List_Table {
 	function column_email( $item ) {
 		$active = UM()->options()->get( $item['key'] . '_on' );
 
-		return '<span class="dashicons um-notification-status ' . ( ! empty( $active ) ? 'um-notification-is-active dashicons-yes' : 'dashicons-no-alt' ) . '"></span><a href="' . add_query_arg( array( 'email' => $item['key'] ) ) . '"><strong>'. $item['title'] . '</strong></a>';
+		$icon = !empty( $active ) ? 'um-notification-is-active dashicons-yes' : 'dashicons-no-alt';
+		$link = add_query_arg( array( 'email' => $item['key'] ) );
+		$text = '<span class="dashicons um-notification-status ' . esc_attr( $icon ) . '"></span><a href="' . esc_url( $link ) . '"><strong>' . $item['title'] . '</strong></a>';
+
+		if ( !empty( $item['description'] ) ) {
+			$text .= ' <span class="um_tooltip dashicons dashicons-editor-help" title="' . esc_attr__( $item['description'], 'ultimate-member' ) . '"></span>';
+		}
+
+		return $text;
 	}
 
 
@@ -244,7 +252,7 @@ class UM_Emails_List_Table extends WP_List_Table {
 	 * @return string
 	 */
 	function column_configure( $item ) {
-		return '<a class="button um-email-configure" href="' . add_query_arg( array( 'email' => $item['key'] ) ) . '"><span class="dashicons dashicons-admin-generic"></span></a>';
+		return '<a class="button um-email-configure" href="' . add_query_arg( array( 'email' => $item['key'] ) ) . '" title="' . esc_attr__( 'Edit template', 'ultimate-member' ) . '"><span class="dashicons dashicons-admin-generic"></span></a>';
 	}
 
 
