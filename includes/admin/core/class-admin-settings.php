@@ -640,7 +640,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									'id'       		=> 'account_tab_password',
 									'type'     		=> 'checkbox',
 									'label'   		=> __( 'Password Account Tab','ultimate-member' ),
-									'tooltip' 	=> 'Enable/disable the Password account tab in account page',
+									'tooltip' 	=> __('Enable/disable the Password account tab in account page','ultimate-member'),
 								),
 								array(
 									'id'       		=> 'account_tab_privacy',
