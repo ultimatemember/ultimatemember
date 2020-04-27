@@ -662,12 +662,6 @@ function um_submit_form_errors_hook_( $args ) {
 							}
 							break;
 
-						case 'skype':
-							if ( ! UM()->validation()->is_url( $args[ $key ], 'skype.com' ) ) {
-								UM()->form()->add_error( $key, sprintf( __( 'Please enter a valid %s username or profile URL', 'ultimate-member' ), $array['label'] ) );
-							}
-							break;
-
 						case 'unique_username':
 
 							if ( $args[ $key ] == '' ) {
