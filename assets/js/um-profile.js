@@ -9,7 +9,7 @@ jQuery(document).ready(function() {
 	});
 
 	if ( jQuery('.um-profile.um-viewing .um-profile-body').length && jQuery('.um-profile.um-viewing .um-profile-body').find('.um-field').length == 0 ) {
-		jQuery('.um-row-heading,.um-row').remove();
+		jQuery('.um-profile.um-viewing .um-profile-body').find('.um-row-heading,.um-row').remove();
 		jQuery('.um-profile-note').show();
 	}
 
@@ -129,7 +129,7 @@ jQuery(document).ready(function() {
 			return false;
 		}
 	});
-  
+
 	/**
 	 * Fix profile nav links for iPhone
 	 * @see https://www.html5rocks.com/en/mobile/touchandmouse/
