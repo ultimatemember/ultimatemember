@@ -589,32 +589,76 @@ add_action( 'um_after_form_fields', 'um_editing_user_id_input' );
 
 /**
  * Meta description
+ * 
+ * @see https://ogp.me/ - The Open Graph protocol
+ * @see https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/summary - The Twitter Summary card
+ * @see https://schema.org/Person - The schema.org Person schema
  */
 function um_profile_dynamic_meta_desc() {
 	if ( um_is_core_page( 'user' ) && um_get_requested_user() ) {
 
-		um_fetch_user( um_get_requested_user() );
+		$user_id = um_get_requested_user();
+		um_fetch_user( $user_id );
 
-		$content = um_convert_tags( UM()->options()->get( 'profile_desc' ) );
-		$user_id = um_user( 'ID' );
+		$locale = get_user_locale( $user_id );
+		$site_name = get_bloginfo( 'name' );
+		$twitter_site = '@' . sanitize_title( $site_name );
 
-		$url = um_user_profile_url();
-		$avatar = um_get_user_avatar_url( $user_id, 'original' );
+		$title = trim( um_user( 'display_name' ) );
+		$description = um_convert_tags( UM()->options()->get( 'profile_desc' ) );
+		$url = um_user_profile_url( $user_id );
 
-		um_reset_user(); ?>
+		$size = 190;
+		$sizes = UM()->options()->get( 'photo_thumb_sizes' );
+		if ( is_array( $sizes ) ) {
+			$size = um_closest_num( $sizes, $size );
+		}
+		$image = um_get_user_avatar_url( $user_id, $size );
 
-		<meta name="description" content="<?php echo esc_attr( $content ); ?>">
+		$person = array(
+				"@context" => "http://schema.org",
+				"@type" => "Person",
+				"name" => esc_attr( $title ),
+				"description" => esc_attr( $description ),
+				"image" => esc_url( $image ),
+				"url" => esc_url( $url )
+		);
 
-		<meta property="og:title" content="<?php echo esc_attr( um_get_display_name( $user_id ) ); ?>"/>
+		um_reset_user();
+		?>
+		<!-- START - Ultimate Member profile SEO meta tags -->
+
+		<link rel="canonical" href="<?php echo esc_url( $url ); ?>"/>
+		<link rel="image_src" href="<?php echo esc_url( $image ); ?>"/>
+
+		<meta name="description" content="<?php echo esc_attr( $description ); ?>"/>
+
 		<meta property="og:type" content="profile"/>
-		<meta property="og:image" content="<?php echo esc_url( $avatar ); ?>"/>
+		<meta property="og:locale" content="<?php echo esc_attr( $locale ); ?>"/>
+		<meta property="og:site_name" content="<?php echo esc_attr( $site_name ); ?>"/>
+		<meta property="og:title" content="<?php echo esc_attr( $title ); ?>"/>
+		<meta property="og:description" content="<?php echo esc_attr( $description ); ?>"/>
+		<meta property="og:image" content="<?php echo esc_url( $image ); ?>"/>
+		<meta property="og:image:alt" content="<?php echo esc_attr_e( 'Profile photo', 'ultimate-member' ); ?>"/>
+		<meta property="og:image:height" content="<?php echo intval( $size ); ?>"/>
+		<meta property="og:image:width" content="<?php echo intval( $size ); ?>"/>
 		<meta property="og:url" content="<?php echo esc_url( $url ); ?>"/>
-		<meta property="og:description" content="<?php echo esc_attr( $content ); ?>"/>
 
+		<meta name="twitter:card" content="summary"/>
+		<meta name="twitter:site" content="<?php echo esc_attr( $twitter_site ); ?>"/>
+		<meta name="twitter:title" content="<?php echo esc_attr( $title ); ?>"/>
+		<meta name="twitter:description" content="<?php echo esc_attr( $description ); ?>"/>
+		<meta name="twitter:image" content="<?php echo esc_url( $image ); ?>"/>
+		<meta name="twitter:image:alt" content="<?php echo esc_attr_e( 'Profile photo', 'ultimate-member' ); ?>"/>
+		<meta name="twitter:url" content="<?php echo esc_url( $url ); ?>"/>
+
+		<script type="application/ld+json"><?php echo json_encode( $person ); ?></script>
+
+		<!-- END - Ultimate Member profile SEO meta tags -->
 		<?php
 	}
 }
-add_action( 'wp_head', 'um_profile_dynamic_meta_desc', 9999999 );
+add_action( 'wp_head', 'um_profile_dynamic_meta_desc', 9999 );
 
 
 /**

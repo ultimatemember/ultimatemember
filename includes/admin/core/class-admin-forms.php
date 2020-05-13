@@ -1092,7 +1092,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$columns = ( ! empty( $field_data['columns'] ) && is_numeric( $field_data['columns'] ) ) ? $field_data['columns'] : 1;
 			while ( $i < $columns ) {
 				$per_page = ceil( count( $field_data['options'] ) / $columns );
-				$section_fields_per_page = array_slice( $field_data['options'], $i*$per_page, $per_page );
+				$section_fields_per_page = array_slice( $field_data['options'], $i*$per_page, $per_page, true );
 				$html .= '<span class="um-form-fields-section" style="width:' . floor( 100 / $columns ) . '% !important;">';
 
 				foreach ( $section_fields_per_page as $k => $title ) {
@@ -1568,8 +1568,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		 * @return string|array
 		 */
 		function get_field_value( $field_data, $i = '' ) {
-			$default = ( $field_data['type'] == 'multi_checkbox' ) ? array() : '';
-			$default = isset( $field_data[ 'default' . $i ] ) ? $field_data[ 'default' . $i ] : $default;
+
+			$default = '';
+			if ( $field_data['type'] === 'multi_checkbox' ) {
+				$default = array();
+				if ( isset( $field_data['default'] ) ) {
+					$default = is_array( $field_data['default'] ) ? $field_data['default'] : array( $field_data['default'] );
+				}
+			}
+			if ( isset( $field_data['default' . $i] ) ) {
+				$default = $field_data['default' . $i];
+			}
 
 			if ( $field_data['type'] == 'checkbox' || $field_data['type'] == 'multi_checkbox' ) {
 				$value = ( isset( $field_data[ 'value' . $i ] ) && '' !== $field_data[ 'value' . $i ] ) ? $field_data[ 'value' . $i ] : $default;

@@ -34,12 +34,8 @@ add_action( 'init', 'um_block_wpadmin_by_user_role', 99 );
  * @return bool
  */
 function um_control_admin_bar( $show ) {
-	if ( is_user_logged_in() && um_user( 'can_not_see_adminbar' ) ) {
+	if ( is_user_logged_in() && UM()->roles()->um_user_can( 'can_not_see_adminbar' ) ) {
 		$show = false;
-
-		/*if ( is_admin() && um_user( 'can_access_wpadmin' ) ) {
-			$show = true;
-		}*/
 	}
 
 	return apply_filters( 'um_show_admin_bar_callback', $show );
