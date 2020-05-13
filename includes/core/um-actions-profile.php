@@ -606,7 +606,7 @@ function um_profile_dynamic_meta_desc() {
 		<meta name="description" content="<?php echo esc_attr( $content ); ?>">
 
 		<meta property="og:title" content="<?php echo esc_attr( um_get_display_name( $user_id ) ); ?>"/>
-		<meta property="og:type" content="article"/>
+		<meta property="og:type" content="profile"/>
 		<meta property="og:image" content="<?php echo esc_url( $avatar ); ?>"/>
 		<meta property="og:url" content="<?php echo esc_url( $url ); ?>"/>
 		<meta property="og:description" content="<?php echo esc_attr( $content ); ?>"/>

@@ -1935,7 +1935,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 						break;
 					case 'role':
-						$value = explode( '||', $value );
+						$value = is_array( $value ) ? $value : explode( '||', $value );
 						$value = array_map( 'strtolower', $value );
 
 						if ( ! empty( $this->query_args['role__in'] ) ) {
