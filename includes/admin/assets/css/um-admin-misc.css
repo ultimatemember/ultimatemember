@@ -263,4 +263,14 @@ p.disabled-on-off .um-admin-yesno *{
 	display: none;
 }
 
-
+.um-flex-row{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+}
+.um-admin-option-key{
+	flex-shrink: 1.6;
+}
+.um-admin-option-action{
+	padding: 0em 0.1em;
+}

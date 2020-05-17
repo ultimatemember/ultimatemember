@@ -2129,9 +2129,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 						$values = '';
 					} ?>
 
-					<p><label for="_options"><?php _e( 'Edit Choices', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Enter one choice per line. This will represent the available choices or selections available for user.', 'ultimate-member' ) ); ?></label>
+					<p><label for="_options"><?php _e( 'Edit Choices', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Enter one choice per line. This will represent the available choices or selections available for user.', 'ultimate-member' ) ); ?></label></p>
+
+					<?php if ( isset( $this->edit_mode_value ) && is_array( $this->edit_mode_value ) ) { ?>
+						<div class="um-admin-options">
+							<?php foreach ( $this->edit_mode_value as $k => $v ) { ?>
+								<div class="um-admin-option um-flex-row">
+									<input class="um-admin-option-key" type="text" name="_options[k][]" value="<?php echo esc_attr( $k ); ?>" title="<?php echo esc_attr( $k ); ?>" readonly="readonly" />
+									<input class="um-admin-option-val" type="text" name="_options[v][]" value="<?php echo esc_attr( $v ); ?>" title="<?php echo esc_attr( $v ); ?>" />
+									<button class="um-admin-option-action" type="button" name="um-option-ADD" title="<?php esc_attr_e( 'Add', 'ultimate-member' ) ?>"><span class="dashicons dashicons-plus"></span></button>
+									<button class="um-admin-option-action" type="button" name="um-option-UP" title="<?php esc_attr_e( 'Move Up', 'ultimate-member' ) ?>"><span class="dashicons dashicons-arrow-up"></span></button>
+									<button class="um-admin-option-action" type="button" name="um-option-DOWN" title="<?php esc_attr_e( 'Move Down', 'ultimate-member' ) ?>"><span class="dashicons dashicons-arrow-down"></span></button>
+									<button class="um-admin-option-action" type="button" name="um-option-REMOVE" title="<?php esc_attr_e( 'Remove', 'ultimate-member' ) ?>"><span class="dashicons dashicons-minus"></span></button>
+								</div>
+							<?php } ?>
+						</div>
+						<textarea name="_options" id="_options" disabled="disabled" style="display: none;"><?php echo $values; ?></textarea>
+					<?php } else { ?>
 						<textarea name="_options" id="_options"><?php echo $values; ?></textarea>
-					</p>
+					<?php } ?>
 
 					<?php
 					break;

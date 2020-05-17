@@ -28,6 +28,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			add_action( 'um_admin_field_modal_header', array( &$this, 'add_message_handlers' ) );
 			add_action( 'um_admin_field_modal_footer', array( &$this, 'add_conditional_support' ), 10, 4 );
 			add_filter( 'um_admin_builder_skip_field_validation', array( &$this, 'skip_field_validation' ), 10, 3 );
+			add_filter( 'um_admin_pre_save_field_to_db', array( &$this, 'update_usermeta' ) );
 			add_filter( 'um_admin_pre_save_field_to_form', array( &$this, 'um_admin_pre_save_field_to_form' ), 1 );
 			add_filter( 'um_admin_pre_save_fields_hook', array( &$this, 'um_admin_pre_save_fields_hook' ), 1 );
 			add_filter( 'um_admin_field_update_error_handling', array( &$this, 'um_admin_field_update_error_handling' ), 1, 2 );
@@ -673,11 +674,33 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					if ( substr( $key, 0, 1 ) === '_' && $val != '' ) { // field attribute
 						$new_key = ltrim ($key,'_');
 
-						if ( $new_key == 'options' ) {
-							//$save[ $_metakey ][$new_key] = explode(PHP_EOL, $val);
-							$save[ $_metakey ][ $new_key ] = preg_split( '/[\r\n]+/', $val, -1, PREG_SPLIT_NO_EMPTY );
-						} else {
-							$save[ $_metakey ][ $new_key ] = $val;
+						switch ( $new_key ) {
+							case 'options':
+								$options = array();
+								if ( is_string( $val ) ) {
+									$options = preg_split( '/[\r\n]+/', $val, -1, PREG_SPLIT_NO_EMPTY );
+								} elseif ( is_array( $val ) && isset( $val['k'] ) && isset( $val['v'] ) ) {
+
+									// remove spaces
+									$arr_k = array_map('trim', $val['k']);
+									$arr_v = array_map('trim', $val['v']);
+
+									// remove empty options
+									foreach ( $arr_k as $i => $k ) {
+										if( $arr_k[$i] === '' || $arr_v[$i] === '' ){
+											unset($arr_k[$i]);
+											unset($arr_v[$i]);
+										}
+									}
+
+									$options = array_combine( $arr_k, $arr_v );
+								}
+								$save[$_metakey][$new_key] = apply_filters( 'um_admin_field_update_options', $options, $array, $key );
+								break;
+
+							default:
+								$save[$_metakey][$new_key] = $val;
+								break;
 						}
 
 					} elseif ( strstr( $key, 'um_editor' ) ) {
@@ -1162,7 +1185,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		/**
 		 *  Retrieves dropdown/multi-select options from a callback function
 		 */
-		function populate_dropdown_options() {
+		public function populate_dropdown_options() {
 			UM()->admin()->check_ajax_nonce();
 
 			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
@@ -1184,6 +1207,67 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			}
 
 			wp_send_json( $arr_options );
+		}
+
+
+		/**
+		 * Update removed and renamed options in the members metadata
+		 *
+		 * @since  2.1.6
+		 *
+		 * @hook   um_admin_pre_save_field_to_db
+		 *
+		 * @global wpdb  $wpdb
+		 * @param  array $field_args
+		 * @return array
+		 */
+		public function update_usermeta( $field_args ) {
+			global $wpdb;
+
+			if ( isset( $field_args['options'] ) && is_array( $field_args['options'] ) && !empty( $field_args['metakey'] ) && strpos( $field_args['metakey'], 'country' ) === false ) {
+
+				$metakey = $field_args['metakey'];
+				$field_args_old = UM()->builtin()->get_a_field( $metakey );
+				if( empty( $field_args_old['options'] ) ){
+					$field_args_old['options'] = array();
+				}
+
+				// remove options
+				$removed_options = array_diff_key( $field_args_old['options'], $field_args['options'] );
+				if( $removed_options ){
+					$removed_sql_value = implode( ' OR ', array_map( function($val) {
+							return "meta_value LIKE '%" . serialize( $val ) . "%'";
+						}, $removed_options ) );
+					$removed_sql = "SELECT * FROM {$wpdb->usermeta} WHERE meta_key='{$metakey}' AND ({$removed_sql_value})";
+					$removed = $wpdb->get_results( $removed_sql );
+
+					foreach ( $removed as $m ) {
+						$old_options = maybe_unserialize( $m->meta_value );
+						$new_options = array_diff( $old_options, $removed_options );
+						update_user_meta( $m->user_id, $m->meta_key, $new_options );
+					}
+				}
+
+				// rename options
+				$renamed_options = array_diff_key( array_diff_assoc( $field_args_old['options'], $field_args['options'] ), $removed_options );
+				if( $renamed_options ){
+					$renamed_sql_value = implode( ' OR ', array_map( function($val) {
+							return "meta_value LIKE '%" . serialize( $val ) . "%'";
+						}, $renamed_options ) );
+					$renamed_sql = "SELECT * FROM {$wpdb->usermeta} WHERE meta_key='{$metakey}' AND ({$renamed_sql_value})";
+					$renamed = $wpdb->get_results( $renamed_sql );
+
+					foreach ( $renamed as $m ) {
+						$old_options = maybe_unserialize( $m->meta_value );
+						$skip = array_diff( $old_options, $renamed_options );
+						$change = array_intersect_key( $field_args['options'], $renamed_options );
+						$new_options = array_merge( $skip, $change );
+						update_user_meta( $m->user_id, $m->meta_key, $new_options );
+					}
+				}
+			}
+
+			return $field_args;
 		}
 
 	}

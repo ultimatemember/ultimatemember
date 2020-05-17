@@ -21,7 +21,7 @@ jQuery(document).ready(function() {
 
 				},
 				success: function(data){
-					
+
 				},
 				error: function(data){
 
@@ -103,15 +103,74 @@ jQuery(document).ready(function() {
 					um_admin_update_builder();
 
 				}
-				
+
 			},
 			error: function(data){
 				console.log(data);
 			}
 		});
-		
+
 		return false;
-		
+
 	});
+
+
+	/* Edit Choices */
+	jQuery(document.body)
+					.on('click', 'button[name="um-option-ADD"]', optionAdd)
+					.on('click', 'button[name="um-option-REMOVE"]', optionRemove)
+					.on('click', 'button[name="um-option-DOWN"]', optionMoveDown)
+					.on('click', 'button[name="um-option-UP"]', optionMoveUp);
+
+	function optionAdd(e) {
+		var $button = jQuery(e.currentTarget);
+		var $optionBox = $button.closest('.um-admin-option');
+		var $optionBoxNew = $optionBox.clone();
+		$optionBoxNew.find('input.um-admin-option-key').val(optionNewKey($button)).removeAttr('readonly');
+		$optionBoxNew.find('input.um-admin-option-val').val('');
+		$optionBoxNew.insertAfter($optionBox);
+	}
+
+	function optionRemove(e) {
+		var $button = jQuery(e.currentTarget);
+		var $optionBox = $button.closest('.um-admin-option');
+		var $optionSib = $optionBox.siblings('.um-admin-option');
+		if ( $optionSib.length ) {
+			$optionBox.remove();
+		} else {
+			var $container = $optionBox.closest('.um-admin-options');
+			$container.nextAll('textarea').removeAttr('disabled').prop('disabled', false).show();
+			$container.remove();
+		}
+	}
+
+	function optionMoveDown(e) {
+		var $button = jQuery(e.currentTarget);
+		var $optionBox = $button.closest('.um-admin-option');
+		var $optionSib = $optionBox.next('.um-admin-option');
+		if ( $optionSib.length ) {
+			$optionBox.insertAfter($optionSib);
+		}
+	}
+
+	function optionMoveUp(e) {
+		var $button = jQuery(e.currentTarget);
+		var $optionBox = $button.closest('.um-admin-option');
+		var $optionSib = $optionBox.prev('.um-admin-option');
+		if ( $optionSib.length ) {
+			$optionBox.insertBefore($optionSib);
+		}
+	}
+
+	function optionNewKey($elem) {
+		var key = false;
+		var keys = jQuery($elem).closest('.um-admin-options').find('.um-admin-option-key').map(function (i, element) {
+			return element.value;
+		}).get();
+		while ( !key || keys.indexOf(key) >= 0 ) {
+			key = Math.random().toString(36).replace(/0+/, '0').substr(3, 4);
+		}
+		return key;
+	}
 
 });
