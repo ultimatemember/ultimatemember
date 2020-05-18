@@ -529,8 +529,8 @@ function um_user_edit_profile( $args ) {
 	do_action( 'um_update_profile_full_name', $user_id, $to_update );
 
 	if ( ! isset( $args['is_signup'] ) ) {
-
 		$url = um_user_profile_url( $user_id );
+		$url = apply_filters( 'um_update_profile_redirect_after', $url, $user_id, $args );
 		exit( wp_redirect( um_edit_my_profile_cancel_uri( $url ) ) );
 	}
 }
