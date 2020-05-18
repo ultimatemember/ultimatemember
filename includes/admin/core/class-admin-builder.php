@@ -1224,10 +1224,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		public function update_usermeta( $field_args ) {
 			global $wpdb;
 
-			if ( isset( $field_args['options'] ) && is_array( $field_args['options'] ) && !empty( $field_args['metakey'] ) && strpos( $field_args['metakey'], 'country' ) === false ) {
+			if ( isset( $field_args['options'] )
+					&& is_array( $field_args['options'] )
+					&& !empty( $field_args['metakey'] )
+					&& strpos( $field_args['metakey'], 'country' ) === false 
+					&& strpos( $field_args['metakey'], 'gender' ) === false ) {
 
+				
 				$metakey = $field_args['metakey'];
-				$field_args_old = UM()->builtin()->get_a_field( $metakey );
+				//$field_args_old = UM()->builtin()->get_a_field( $metakey );
+				$field_args_old = UM()->builtin()->get_specific_field( $metakey );
 				if( empty( $field_args_old['options'] ) ){
 					$field_args_old['options'] = array();
 				}
@@ -1236,15 +1242,20 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				$removed_options = array_diff_key( $field_args_old['options'], $field_args['options'] );
 				if( $removed_options ){
 					$removed_sql_value = implode( ' OR ', array_map( function($val) {
-							return "meta_value LIKE '%" . serialize( $val ) . "%'";
+							return "meta_value='{$val}' OR meta_value LIKE '%" . serialize( $val ) . "%'";
 						}, $removed_options ) );
 					$removed_sql = "SELECT * FROM {$wpdb->usermeta} WHERE meta_key='{$metakey}' AND ({$removed_sql_value})";
 					$removed = $wpdb->get_results( $removed_sql );
 
 					foreach ( $removed as $m ) {
 						$old_options = maybe_unserialize( $m->meta_value );
-						$new_options = array_diff( $old_options, $removed_options );
+						if( is_array( $old_options ) ){
+							$new_options = array_diff( $old_options, $removed_options );
+						} else {
+							$new_options = '';
+						}
 						update_user_meta( $m->user_id, $m->meta_key, $new_options );
+						UM()->user()->remove_cache( $m->user_id );
 					}
 				}
 
@@ -1252,17 +1263,27 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				$renamed_options = array_diff_key( array_diff_assoc( $field_args_old['options'], $field_args['options'] ), $removed_options );
 				if( $renamed_options ){
 					$renamed_sql_value = implode( ' OR ', array_map( function($val) {
-							return "meta_value LIKE '%" . serialize( $val ) . "%'";
+							return "meta_value='{$val}' OR meta_value LIKE '%" . serialize( $val ) . "%'";
 						}, $renamed_options ) );
 					$renamed_sql = "SELECT * FROM {$wpdb->usermeta} WHERE meta_key='{$metakey}' AND ({$renamed_sql_value})";
 					$renamed = $wpdb->get_results( $renamed_sql );
 
 					foreach ( $renamed as $m ) {
 						$old_options = maybe_unserialize( $m->meta_value );
-						$skip = array_diff( $old_options, $renamed_options );
-						$change = array_intersect_key( $field_args['options'], $renamed_options );
-						$new_options = array_merge( $skip, $change );
+						if( is_array( $old_options ) ){
+							$new_options = array_diff( $old_options, $renamed_options );
+							foreach ( $renamed_options as $ro ) {
+								if( in_array( $ro, $old_options )){
+									$option_key = current( array_keys( $renamed_options, $ro ) );
+									$new_options[] = $field_args['options'][$option_key];
+								}
+							}
+						} else {
+							$option_key = current( array_keys( $renamed_options, $old_options ) );
+							$new_options = $option_key ? $field_args['options'][$option_key] : '';
+						}
 						update_user_meta( $m->user_id, $m->meta_key, $new_options );
+						UM()->user()->remove_cache( $m->user_id );
 					}
 				}
 			}
