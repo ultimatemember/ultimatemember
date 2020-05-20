@@ -588,6 +588,37 @@ add_action( 'um_after_form_fields', 'um_editing_user_id_input' );
 
 
 /**
+ * Remove Yoast from front end for the Profile page
+ *
+ * @see   https://gist.github.com/amboutwe/1c847f9c706ff6f8c9eca76abea23fb6
+ * @since 2.1.6
+ */
+if ( !function_exists( 'um_profile_remove_wpseo' ) ) {
+
+	function um_profile_remove_wpseo() {
+		if ( um_is_core_page( 'user' ) && um_get_requested_user() ) {
+
+			/* Yoast SEO 12.4 */
+			if ( isset( $GLOBALS['wpseo_front'] ) && is_object( $GLOBALS['wpseo_front'] ) ) {
+				remove_action( 'wp_head', array( $GLOBALS['wpseo_front'], 'head' ), 1 );
+			} elseif ( class_exists( 'WPSEO_Frontend' ) && is_callable( array( 'WPSEO_Frontend', 'get_instance' ) ) ) {
+				remove_action( 'wp_head', array( WPSEO_Frontend::get_instance(), 'head' ), 1 );
+			}
+
+			/* Yoast SEO 14.1 */
+			remove_all_filters( 'wpseo_head' );
+
+			if( ! has_action( 'wp_head', '_wp_render_title_tag' ) ){
+				add_action( 'wp_head', '_wp_render_title_tag', 18 );
+			}
+		}
+	}
+
+}
+add_action( 'get_header', 'um_profile_remove_wpseo', 8 );
+
+
+/**
  * Meta description
  * 
  * @see https://ogp.me/ - The Open Graph protocol
@@ -658,7 +689,7 @@ function um_profile_dynamic_meta_desc() {
 		<?php
 	}
 }
-add_action( 'wp_head', 'um_profile_dynamic_meta_desc', 9999 );
+add_action( 'wp_head', 'um_profile_dynamic_meta_desc', 20 );
 
 
 /**
