@@ -1,4 +1,4 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+<?php if ( ! defined( 'ABSPATH' ) ) exit;
 
 
 /**
@@ -8,34 +8,39 @@
  */
 function um_submit_form_errors_hook__blockedemails( $args ) {
 	$emails = UM()->options()->get( 'blocked_emails' );
-	if ( ! $emails )
+	if ( ! $emails ) {
 		return;
+	}
 
-	$emails = array_map("rtrim", explode("\n", $emails));
+	$emails = array_map( 'rtrim', explode( "\n", $emails ) );
 
 	if ( isset( $args['user_email'] ) && is_email( $args['user_email'] ) ) {
 
-		$domain = explode('@', $args['user_email'] );
-		$check_domain = str_replace($domain[0], '*', $args['user_email']);
+		$domain = explode( '@', $args['user_email'] );
+		$check_domain = str_replace( $domain[0], '*', $args['user_email'] );
 
-		if ( in_array( $args['user_email'], $emails ) )
-			exit( wp_redirect( esc_url(  add_query_arg('err', 'blocked_email') ) ) );
+		if ( in_array( $args['user_email'], $emails ) ) {
+			exit( wp_redirect( esc_url( add_query_arg( 'err', 'blocked_email' ) ) ) );
+		}
 
-		if ( in_array( $check_domain, $emails ) )
-			exit( wp_redirect( esc_url(  add_query_arg('err', 'blocked_domain') ) ) );
+		if ( in_array( $check_domain, $emails ) ) {
+			exit( wp_redirect( esc_url( add_query_arg( 'err', 'blocked_domain' ) ) ) );
+		}
 
 	}
 
 	if ( isset( $args['username'] ) && is_email( $args['username'] ) ) {
 
-		$domain = explode('@', $args['username'] );
-		$check_domain = str_replace($domain[0], '*', $args['username']);
+		$domain = explode( '@', $args['username'] );
+		$check_domain = str_replace( $domain[0], '*', $args['username'] );
 
-		if ( in_array( $args['username'], $emails ) )
-			exit( wp_redirect(  esc_url( add_query_arg('err', 'blocked_email') ) ) );
+		if ( in_array( $args['username'], $emails ) ) {
+			exit( wp_redirect( esc_url( add_query_arg( 'err', 'blocked_email' ) ) ) );
+		}
 
-		if ( in_array( $check_domain, $emails ) )
-			exit( wp_redirect(  esc_url(  add_query_arg('err', 'blocked_domain') ) ) );
+		if ( in_array( $check_domain, $emails ) ) {
+			exit( wp_redirect( esc_url( add_query_arg( 'err', 'blocked_domain' ) ) ) );
+		}
 
 	}
 }
@@ -47,18 +52,19 @@ add_action( 'um_submit_form_errors_hook__blockedemails', 'um_submit_form_errors_
  *
  * @param $args
  */
-function um_submit_form_errors_hook__blockedips($args){
-	$ips = UM()->options()->get('blocked_ips');
-	if ( !$ips )
+function um_submit_form_errors_hook__blockedips( $args ) {
+	$ips = UM()->options()->get( 'blocked_ips' );
+	if ( ! $ips ) {
 		return;
+	}
 
-	$ips = array_map("rtrim", explode("\n", $ips));
+	$ips = array_map( 'rtrim', explode( "\n", $ips ) );
 	$user_ip = um_user_ip();
 
-	foreach($ips as $ip) {
-		$ip = str_replace('*','',$ip);
-		if ( !empty( $ip ) && strpos($user_ip, $ip) === 0) {
-			exit( wp_redirect(  esc_url(  add_query_arg('err', 'blocked_ip') ) ) );
+	foreach ( $ips as $ip ) {
+		$ip = str_replace( '*', '', $ip );
+		if ( ! empty( $ip ) && strpos( $user_ip, $ip ) === 0 ) {
+			exit( wp_redirect( esc_url( add_query_arg( 'err', 'blocked_ip' ) ) ) );
 		}
 	}
 }
@@ -71,24 +77,24 @@ add_action( 'um_submit_form_errors_hook__blockedips', 'um_submit_form_errors_hoo
  * @param $args
  */
 function um_submit_form_errors_hook__blockedwords( $args ) {
+	$words = UM()->options()->get( 'blocked_words' );
+	if ( empty( $words ) ) {
+		return;
+	}
+
 	$form_id = $args['form_id'];
 	$mode = $args['mode'];
 	$fields = unserialize( $args['custom_fields'] );
 
-	$words = UM()->options()->get('blocked_words');
-	if ( $words != '' ) {
-
-		$words = array_map("rtrim", explode("\n", $words));
-		if ( ! empty( $fields ) && is_array( $fields ) ) {
-			foreach ( $fields as $key => $array ) {
-				if ( isset($array['validate']) && in_array( $array['validate'], array('unique_username','unique_email','unique_username_or_email') ) ) {
-					if ( ! UM()->form()->has_error( $key ) && isset( $args[$key] ) && in_array( $args[$key], $words ) ) {
-						UM()->form()->add_error( $key,  __('You are not allowed to use this word as your username.','ultimate-member') );
-					}
+	$words = array_map( 'rtrim', explode( "\n", $words ) );
+	if ( ! empty( $fields ) && is_array( $fields ) ) {
+		foreach ( $fields as $key => $array ) {
+			if ( isset( $array['validate'] ) && in_array( $array['validate'], array( 'unique_username', 'unique_email', 'unique_username_or_email' ) ) ) {
+				if ( ! UM()->form()->has_error( $key ) && isset( $args[ $key ] ) && in_array( $args[ $key ], $words ) ) {
+					UM()->form()->add_error( $key, __( 'You are not allowed to use this word as your username.', 'ultimate-member' ) );
 				}
 			}
 		}
-
 	}
 }
 add_action( 'um_submit_form_errors_hook__blockedwords', 'um_submit_form_errors_hook__blockedwords', 10 );
@@ -127,9 +133,10 @@ function um_submit_form_errors_hook( $args ) {
 		 * }
 		 * ?>
 		 */
-		do_action( "um_submit_form_errors_hook__registration", $args );
+		do_action( 'um_submit_form_errors_hook__registration', $args );
 
 	}
+
 	/**
 	 * UM hook
 	 *
@@ -149,7 +156,7 @@ function um_submit_form_errors_hook( $args ) {
 	 * }
 	 * ?>
 	 */
-	do_action( "um_submit_form_errors_hook__blockedips", $args );
+	do_action( 'um_submit_form_errors_hook__blockedips', $args );
 	/**
 	 * UM hook
 	 *
@@ -169,7 +176,7 @@ function um_submit_form_errors_hook( $args ) {
 	 * }
 	 * ?>
 	 */
-	do_action( "um_submit_form_errors_hook__blockedemails", $args );
+	do_action( 'um_submit_form_errors_hook__blockedemails', $args );
 
 	if ( $mode == 'login' ) {
 		/**
@@ -253,7 +260,7 @@ function um_submit_form_errors_hook( $args ) {
 		 * }
 		 * ?>
 		 */
-		do_action( "um_submit_form_errors_hook__blockedwords", $args );
+		do_action( 'um_submit_form_errors_hook__blockedwords', $args );
 
 	}
 

@@ -145,6 +145,12 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [topic](https://wordpress.org/support/topic/version-2-1-4/)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
+= 2.1.6: June 1, 2020 =
+
+* Bugfixes:
+
+  - Fixed wp-login.php and UM login form validation/errors triggers when using email for login
+
 = 2.1.5: April 2, 2020 =
 
 * Enhancements:

@@ -55,7 +55,7 @@ add_filter( 'login_message', 'um_custom_wp_err_messages' );
 
 
 /**
- * Check for blocked ip
+ * Check for blocked IPs or Email on wp-login.php form
  *
  * @param $user
  * @param $username
@@ -65,47 +65,8 @@ add_filter( 'login_message', 'um_custom_wp_err_messages' );
  */
 function um_wp_form_errors_hook_ip_test( $user, $username, $password ) {
 	if ( ! empty( $username ) ) {
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_submit_form_errors_hook__blockedips
-		 * @description Hook that runs after user reset their password
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Form data"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_submit_form_errors_hook__blockedips', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_submit_form_errors_hook__blockedips', 'my_submit_form_errors_hook__blockedips', 10, 1 );
-		 * function my_submit_form_errors_hook__blockedips( $args ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( "um_submit_form_errors_hook__blockedips", $args = array() );
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_submit_form_errors_hook__blockedemails
-		 * @description Hook that runs after user reset their password
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Form data"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_submit_form_errors_hook__blockedemails', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_submit_form_errors_hook__blockedemails', 'my_submit_form_errors_hook__blockedemails', 10, 1 );
-		 * function my_submit_form_errors_hook__blockedemails( $args ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( "um_submit_form_errors_hook__blockedemails", $args = array( 'username' => $username ) );
-			
+		do_action( 'um_submit_form_errors_hook__blockedips', array() );
+		do_action( 'um_submit_form_errors_hook__blockedemails', array( 'username' => $username ) );
 	}
 
 	return $user;
@@ -124,34 +85,33 @@ add_filter( 'authenticate', 'um_wp_form_errors_hook_ip_test', 10, 3 );
  */
 function um_wp_form_errors_hook_logincheck( $user, $username, $password ) {
 
-	do_action( 'wp_authenticate_username_password_before', $user, $username, $password );
-
 	if ( isset( $user->ID ) ) {
 
 		um_fetch_user( $user->ID );
-		$status = um_user('account_status');
+		$status = um_user( 'account_status' );
 
 		switch( $status ) {
 			case 'inactive':
-				return new WP_Error( $status, __('Your account has been disabled.','ultimate-member') );
+				return new WP_Error( $status, __( 'Your account has been disabled.', 'ultimate-member' ) );
 				break;
 			case 'awaiting_admin_review':
-				return new WP_Error( $status, __('Your account has not been approved yet.','ultimate-member') );
+				return new WP_Error( $status, __( 'Your account has not been approved yet.', 'ultimate-member' ) );
 				break;
 			case 'awaiting_email_confirmation':
-				return new WP_Error( $status, __('Your account is awaiting e-mail verification.','ultimate-member') );
+				return new WP_Error( $status, __( 'Your account is awaiting e-mail verification.', 'ultimate-member' ) );
 				break;
 			case 'rejected':
-				return new WP_Error( $status, __('Your membership request has been rejected.','ultimate-member') );
+				return new WP_Error( $status, __( 'Your membership request has been rejected.', 'ultimate-member' ) );
 				break;
 		}
 
 	}
 
-	return wp_authenticate_username_password( $user, $username, $password );
+	return $user;
 
 }
 add_filter( 'authenticate', 'um_wp_form_errors_hook_logincheck', 50, 3 );
+
 
 /**
  * Change lost password url in UM Login form
@@ -160,11 +120,10 @@ add_filter( 'authenticate', 'um_wp_form_errors_hook_logincheck', 50, 3 );
  */
 function um_lostpassword_url( $lostpassword_url ) {
 
-	if( um_is_core_page("login") ){
-	    return um_get_core_page("password-reset");
+	if ( um_is_core_page( 'login' ) ) {
+		return um_get_core_page( 'password-reset' );
 	}
 
 	return $lostpassword_url;
 }
-add_filter( 'lostpassword_url',  'um_lostpassword_url', 10, 1 );
-
+add_filter( 'lostpassword_url', 'um_lostpassword_url', 10, 1 );
