@@ -451,7 +451,11 @@ function um_members( $argument ) {
 function um_get_search_form() {
 	//um_deprecated_function( 'um_get_search_form', '2.1.0', 'do_shortcode( \'[ultimatemember_searchform]\' )' );
 
-	return do_shortcode( '[ultimatemember_searchform]' );
+	if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
+		return do_shortcode( '[ultimatemember_searchform]' );
+	} else {
+		return apply_shortcodes( '[ultimatemember_searchform]' );
+	}
 }
 
 
