@@ -514,6 +514,23 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				}
 			}
 
+			if ( ! empty( $directory_data['exclude_these_users'] ) ) {
+				$exclude_these_users = maybe_unserialize( $directory_data['exclude_these_users'] );
+
+				if ( is_array( $exclude_these_users ) && ! empty( $exclude_these_users ) ) {
+					$users_array = array();
+					foreach ( $exclude_these_users as $username ) {
+						if ( false !== ( $exists_id = username_exists( $username ) ) ) {
+							$users_array[] = $exists_id;
+						}
+					}
+
+					if ( ! empty( $users_array ) ) {
+						$this->where_clauses[] = "u.ID NOT IN ( '" . implode( "','", $users_array ) . "' )";
+					}
+				}
+			}
+
 
 			$profile_photo_where = '';
 			if ( $directory_data['has_profile_photo'] == 1 ) {
