@@ -63,7 +63,12 @@ function um_after_insert_user( $user_id, $args ) {
 	if ( ! empty( $args['submitted'] ) ) {
 		UM()->user()->set_registration_details( $args['submitted'], $args );
 	}
-    UM()->user()->set_status( um_user( 'status' ) );
+
+	/* save user status */
+	UM()->user()->set_status( um_user( 'status' ) );
+
+	/* create user uploads directory */
+	UM()->uploader()->get_upload_user_base_dir( $user_id, true );
 
 	/**
 	 * UM hook
