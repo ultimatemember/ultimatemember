@@ -221,11 +221,11 @@ class UM_Emails_List_Table extends WP_List_Table {
 	function column_email( $item ) {
 		$active = UM()->options()->get( $item['key'] . '_on' );
 
-		$icon = !empty( $active ) ? 'um-notification-is-active dashicons-yes' : 'dashicons-no-alt';
+		$icon = ! empty( $active ) ? 'um-notification-is-active dashicons-yes' : 'dashicons-no-alt';
 		$link = add_query_arg( array( 'email' => $item['key'] ) );
 		$text = '<span class="dashicons um-notification-status ' . esc_attr( $icon ) . '"></span><a href="' . esc_url( $link ) . '"><strong>' . $item['title'] . '</strong></a>';
 
-		if ( !empty( $item['description'] ) ) {
+		if ( ! empty( $item['description'] ) ) {
 			$text .= ' <span class="um_tooltip dashicons dashicons-editor-help" title="' . esc_attr__( $item['description'], 'ultimate-member' ) . '"></span>';
 		}
 
@@ -236,13 +236,14 @@ class UM_Emails_List_Table extends WP_List_Table {
 	/**
 	 * @param $item
 	 *
-	 * @return mixed|string|void
+	 * @return string
 	 */
 	function column_recipients( $item ) {
-		if ( $item['recipient'] == 'admin' )
+		if ( $item['recipient'] == 'admin' ) {
 			return UM()->options()->get( 'admin_email' );
-		else
+		} else {
 			return __( 'Member', 'ultimate-member' );
+		}
 	}
 
 
