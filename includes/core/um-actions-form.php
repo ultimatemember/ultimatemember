@@ -467,7 +467,7 @@ function um_submit_form_errors_hook_( $args ) {
 			/* WordPress uses the default user role if the role wasn't chosen in the registration form. That is why we should use submitted data to validate fields Roles (Radio) and Roles (Dropdown). */
 			if ( in_array( $key, array( 'role_radio', 'role_select' ) ) && isset( $array['required'] ) && $array['required'] == 1 && empty( UM()->form()->post_form['submitted']['role'] ) ) {
 				UM()->form()->add_error( 'role', __( 'Please specify account type.', 'ultimate-member' ) );
-				UM()->form()->post_form[$key] = '';
+				UM()->form()->post_form[ $key ] = '';
 			}
 
 			/**

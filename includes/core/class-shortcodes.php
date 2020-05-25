@@ -13,6 +13,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 	 */
 	class Shortcodes {
 
+		var $profile_role = '';
 
 		/**
 		 * Shortcodes constructor.
@@ -668,24 +669,24 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 				if ( ! empty( $args['use_custom_settings'] ) ) { // Option "Apply custom settings to this form"
 					if ( ! empty( $args['role'] ) ) { // Option "Make this profile form role-specific"
-//						$current_user_roles = UM()->roles()->get_all_user_roles( um_profile_id() );
-//						if ( is_array( $args['role'] ) ) {
-//							if ( ! count( array_intersect( $args['role'], $current_user_roles ) ) ) {
-//								ob_get_clean();
-//								return '';
-//							}
-//						} else {
-//							if ( ! in_array( $args['role'], $current_user_roles ) ) {
-//								ob_get_clean();
-//								return '';
-//							}
-//						}
-						/* Users in WordPress can have several roles. So, we should look for the priority role. Otherwise form may be duplicated. */
-						$priority_user_role = UM()->roles()->get_priority_user_role( um_profile_id() );
-						if ( ! is_array( $args['role'] ) ) {
-							$args['role'] = array( $args['role'] );
-						}
-						if ( ! in_array( $priority_user_role, $args['role'] ) ) {
+
+						// show the first Profile Form with role selected, don't show profile forms below the page with other role-specific setting
+						if ( empty( $this->profile_role ) ) {
+							$current_user_roles = UM()->roles()->get_all_user_roles( um_profile_id() );
+							if ( is_array( $args['role'] ) ) {
+								if ( ! count( array_intersect( $args['role'], $current_user_roles ) ) ) {
+									ob_get_clean();
+									return '';
+								}
+							} else {
+								if ( ! in_array( $args['role'], $current_user_roles ) ) {
+									ob_get_clean();
+									return '';
+								}
+							}
+
+							$this->profile_role = $args['role'];
+						} else {
 							ob_get_clean();
 							return '';
 						}
