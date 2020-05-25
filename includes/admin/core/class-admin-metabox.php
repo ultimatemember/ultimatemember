@@ -1073,6 +1073,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			delete_post_meta( $post_id, '_um_roles_can_search' );
 			delete_post_meta( $post_id, '_um_roles_can_filter' );
 			delete_post_meta( $post_id, '_um_show_these_users' );
+			delete_post_meta( $post_id, '_um_exclude_these_users' );
 
 			delete_post_meta( $post_id, '_um_search_filters' );
 			delete_post_meta( $post_id, '_um_search_filters_gmt' );
@@ -1081,6 +1082,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			foreach ( $_POST['um_metadata'] as $k => $v ) {
 
 				if ( $k == '_um_show_these_users' && trim( $_POST['um_metadata'][ $k ] ) ) {
+					$v = preg_split( '/[\r\n]+/', $v, -1, PREG_SPLIT_NO_EMPTY );
+				}
+
+				if ( $k == '_um_exclude_these_users' && trim( $_POST['um_metadata'][ $k ] ) ) {
 					$v = preg_split( '/[\r\n]+/', $v, -1, PREG_SPLIT_NO_EMPTY );
 				}
 

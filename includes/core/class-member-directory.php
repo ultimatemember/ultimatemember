@@ -1093,6 +1093,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$this->show_only_with_avatar( $directory_data );
 			$this->show_only_with_cover( $directory_data );
 			$this->show_only_these_users( $directory_data );
+			$this->exclude_these_users( $directory_data );
 
 			do_action( 'um_member_directory_general_options_handle_extend', $directory_data );
 		}
@@ -1170,6 +1171,34 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					if ( ! empty( $users_array ) ) {
 						$this->query_args['include'] = $users_array;
+					}
+
+				}
+			}
+		}
+
+
+		/**
+		 * Handle "Exclude specific users (Enter one username per line)" option
+		 *
+		 * @param array $directory_data
+		 */
+		function exclude_these_users( $directory_data ) {
+			if ( ! empty( $directory_data['exclude_these_users'] ) ) {
+				$exclude_these_users = maybe_unserialize( $directory_data['exclude_these_users'] );
+
+				if ( is_array( $exclude_these_users ) && ! empty( $exclude_these_users ) ) {
+
+					$users_array = array();
+
+					foreach ( $exclude_these_users as $username ) {
+						if ( false !== ( $exists_id = username_exists( $username ) ) ) {
+							$users_array[] = $exists_id;
+						}
+					}
+
+					if ( ! empty( $users_array ) ) {
+						$this->query_args['exclude'] = $users_array;
 					}
 
 				}
