@@ -1362,6 +1362,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		}
 
 
+		/**
+		 * @param $field_data
+		 *
+		 * @return string
+		 */
 		function render_md_default_filters( $field_data ) {
 			if ( empty( $field_data['id'] ) ) {
 				return false;
@@ -1445,6 +1450,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 		}
 
 
+		/**
+		 * @param $field_data
+		 *
+		 * @return string
+		 */
 		function render_md_sorting_fields( $field_data ) {
 			if ( empty( $field_data['id'] ) ) {
 				return false;
@@ -1560,6 +1570,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			return $html;
 		}
 
+
 		/**
 		 * Get field value
 		 *
@@ -1576,8 +1587,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 					$default = is_array( $field_data['default'] ) ? $field_data['default'] : array( $field_data['default'] );
 				}
 			}
-			if ( isset( $field_data['default' . $i] ) ) {
-				$default = $field_data['default' . $i];
+			if ( isset( $field_data[ 'default' . $i ] ) ) {
+				$default = $field_data[ 'default' . $i ];
 			}
 
 			if ( $field_data['type'] == 'checkbox' || $field_data['type'] == 'multi_checkbox' ) {

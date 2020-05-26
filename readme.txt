@@ -153,6 +153,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Added layout changes to show email notification description in Settings > Email screen
   - Added member directory option 'Exclude specific users'
   - Added filter for the changing redirect after profile edited 'um_update_profile_redirect_after'
+  - Added JS filters for conditional logic
   - Tweak: apply_shortcodes() function support
 
 * Bugfixes:
@@ -165,6 +166,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed Erase User Data field on the Account page
   - Fixed SkypeID field
   - Fixed clickable links in the UM forms which are displayed in a modal window
+  - Fixed disabling select and textarea fields in inactive tabs on Account
   - Fixed some translations
   - Small PHP notices fixes
 
