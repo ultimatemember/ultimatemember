@@ -9,7 +9,7 @@ jQuery(document).ready(function() {
 		um_remove_modal();
 	});
 
-	jQuery(document).on('click', 'a[data-modal^="um_"], span[data-modal^="um_"], .um-modal a', function(e){
+	jQuery(document).on('click', 'a[data-modal^="um_"], span[data-modal^="um_"], .um-modal:not(:has(.um-form)) a', function(e){
 		e.preventDefault();
 		return false;
 	});

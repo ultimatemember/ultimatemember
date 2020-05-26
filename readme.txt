@@ -149,11 +149,24 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * Enhancements:
 
-  - Added filter to the field's privacy option for the 3rd-party integrations
+  - Added filter to the field's privacy option for the 3rd-party integrations 'um_field_privacy_options'
+  - Added layout changes to show email notification description in Settings > Email screen
+  - Added member directory option 'Exclude specific users'
+  - Added filter for the changing redirect after profile edited 'um_update_profile_redirect_after'
+  - Tweak: apply_shortcodes() function support
 
 * Bugfixes:
 
+  - Fixed custom meta table fields migration (create, edit, remove field actions)
   - Fixed wp-login.php and UM login form validation/errors triggers when using email for login
+  - Fixed profile form duplicates, show only the first form shortcode on the page for the user with selected role
+  - Fixed creating user uploads directory on registration
+  - Fixed Role fields validation on registration
+  - Fixed Erase User Data field on the Account page
+  - Fixed SkypeID field
+  - Fixed clickable links in the UM forms which are displayed in a modal window
+  - Fixed some translations
+  - Small PHP notices fixes
 
 = 2.1.5: April 2, 2020 =
 

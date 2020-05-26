@@ -722,7 +722,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 			 */
 			$option_pairs = apply_filters( 'um_select_options_pair', null, $data );
 
-			$arr = empty( $data['options'] ) ? array() : $data['options'];;
+			$arr = empty( $data['options'] ) ? array() : $data['options'];
 			if ( $option_pairs ) {
 				$arr = array_keys( $arr );
 			}
