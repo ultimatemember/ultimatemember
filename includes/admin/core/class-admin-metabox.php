@@ -10,6 +10,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 	/**
 	 * Class Admin_Metabox
+	 *
 	 * @package um\admin\core
 	 */
 	class Admin_Metabox {
@@ -19,7 +20,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 * @var bool
 		 */
 		private $form_nonce_added = false;
+
+
+		/**
+		 * @var bool
+		 */
 		private $directory_nonce_added = false;
+
+
+		/**
+		 * @var bool
+		 */
 		private $custom_nonce_added = false;
 
 
@@ -2254,15 +2265,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					break;
 
 				case '_public':
-					?>
+					$privacy_options = array(
+						'1'     => __( 'Everyone', 'ultimate-member' ),
+						'2'     => __( 'Members', 'ultimate-member' ),
+						'-1'    => __( 'Only visible to profile owner and admins', 'ultimate-member' ),
+						'-3'    => __( 'Only visible to profile owner and specific roles', 'ultimate-member' ),
+						'-2'    => __( 'Only specific member roles', 'ultimate-member' ),
+					);
 
-					<p><label for="_public"><?php _e( 'Privacy', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Field privacy allows you to select who can view this field on the front-end. The site admin can view all fields regardless of the option set here.', 'ultimate-member' ) ); ?></label>
-						<select name="_public" id="_public" class="um-adm-conditional" data-cond1='-2' data-cond1-show='_roles' data-cond2='-3' data-cond2-show='_roles'  style="width: 100%">
-							<option value="1" <?php selected( 1, $this->edit_mode_value ); ?>><?php _e( 'Everyone', 'ultimate-member' ) ?></option>
-							<option value="2" <?php selected( 2, $this->edit_mode_value ); ?>><?php _e( 'Members', 'ultimate-member' ) ?></option>
-							<option value="-1" <?php selected( -1, $this->edit_mode_value ); ?>><?php _e( 'Only visible to profile owner and admins', 'ultimate-member' ) ?></option>
-							<option value="-3" <?php selected( -3, $this->edit_mode_value ); ?>><?php _e( 'Only visible to profile owner and specific roles', 'ultimate-member' ) ?></option>
-							<option value="-2" <?php selected( -2, $this->edit_mode_value ); ?>><?php _e( 'Only specific member roles', 'ultimate-member' ) ?></option>
+					$privacy_options = apply_filters( 'um_field_privacy_options', $privacy_options ); ?>
+
+					<p>
+						<label for="_public"><?php _e( 'Privacy', 'ultimate-member' ) ?> <?php UM()->tooltip( __( 'Field privacy allows you to select who can view this field on the front-end. The site admin can view all fields regardless of the option set here.', 'ultimate-member' ) ); ?></label>
+						<select name="_public" id="_public" class="um-adm-conditional" data-cond1="-2" data-cond1-show="_roles" data-cond2="-3" data-cond2-show="_roles"  style="width: 100%">
+							<?php foreach ( $privacy_options as $value => $title ) { ?>
+								<option value="<?php echo esc_attr( $value ) ?>" <?php selected( $value, $this->edit_mode_value ); ?>>
+									<?php echo $title ?>
+								</option>
+							<?php } ?>
 						</select>
 					</p>
 

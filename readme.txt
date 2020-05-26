@@ -147,6 +147,10 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = 2.1.6: June 1, 2020 =
 
+* Enhancements:
+
+  - Added filter to the field's privacy option for the 3rd-party integrations
+
 * Bugfixes:
 
   - Fixed wp-login.php and UM login form validation/errors triggers when using email for login
