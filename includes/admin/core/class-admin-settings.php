@@ -177,8 +177,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$wp_usermeta_option = get_option( 'um_usermeta_fields', array() );
 
 				$count = $wpdb->get_var(
-					"SELECT COUNT(*) 
-					FROM {$wpdb->usermeta} 
+					"SELECT COUNT(*)
+					FROM {$wpdb->usermeta}
 					WHERE meta_key IN ('" . implode( "','", $wp_usermeta_option ) . "')"
 				);
 
@@ -194,8 +194,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				global $wpdb;
 				$metadata = $wpdb->get_results( $wpdb->prepare(
-					"SELECT * 
-					FROM {$wpdb->usermeta} 
+					"SELECT *
+					FROM {$wpdb->usermeta}
 					WHERE meta_key IN ('" . implode( "','", $wp_usermeta_option ) . "')
 					LIMIT %d, %d",
 					( absint( $_POST['page'] ) - 1 ) * $per_page,
@@ -209,7 +209,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				if ( ! empty( $values ) ) {
 				$wpdb->query(
-					"INSERT INTO 
+					"INSERT INTO
     				{$wpdb->prefix}um_metadata(user_id, um_key, um_value)
 					VALUES " . implode( ',', $values ) );
 				}
@@ -766,6 +766,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									'show_default_number'   => 1,
 								),
 
+								array(
+									'id'        => 'image_fix_orientation',
+									'type'      => 'checkbox',
+									'label'     => __( 'Fix image orientation','ultimate-member' ),
+									'tooltip'   => __( 'Rotate image to fix orientation by the camera Exif data.','ultimate-member'),
+								),
 								array(
 									'id'        => 'image_compression',
 									'type'      => 'text',
@@ -1894,7 +1900,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							if ( ! empty( $_POST['um_options']['use_gravatars'] ) ) {
 
 								$results = $wpdb->get_col(
-									"SELECT u.ID FROM {$wpdb->users} AS u 
+									"SELECT u.ID FROM {$wpdb->users} AS u
 									LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'synced_gravatar_hashed_id' )
 									LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
 									WHERE um.meta_value != '' AND um.meta_value IS NOT NULL AND
@@ -1904,7 +1910,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							} else {
 
 								$results = $wpdb->get_col(
-									"SELECT u.ID FROM {$wpdb->users} AS u 
+									"SELECT u.ID FROM {$wpdb->users} AS u
 									LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND ( um.meta_key = 'synced_profile_photo' || um.meta_key = 'profile_photo' ) )
 									LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
 									WHERE ( um.meta_value IS NULL OR um.meta_value = '' ) AND
@@ -1944,7 +1950,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					if ( $_POST['um_options']['account_hide_in_directory_default'] == 'No' ) {
 
 						$results = $wpdb->get_col(
-							"SELECT u.ID FROM {$wpdb->users} AS u 
+							"SELECT u.ID FROM {$wpdb->users} AS u
 							LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'hide_in_members' )
 							LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
 							WHERE um.meta_value IS NULL AND
@@ -1954,7 +1960,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					} else {
 
 						$results = $wpdb->get_col(
-							"SELECT u.ID FROM {$wpdb->users} AS u 
+							"SELECT u.ID FROM {$wpdb->users} AS u
 							LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'hide_in_members' )
 							LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
 							WHERE um.meta_value IS NULL AND
