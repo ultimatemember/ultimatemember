@@ -15,11 +15,16 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 	 */
 	class External_Integrations {
 
+		/**
+		 * The class fot multilingual integration
+		 * @var object|null
+		 */
+		private $translations = null;
 
 		/**
 		 * External_Integrations constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 
 			add_action( 'um_access_fix_external_post_content', array( &$this, 'bbpress_no_access_message_fix' ), 10 );
 
@@ -32,9 +37,9 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 
 			$active_plugins = UM()->dependencies()->get_active_plugins();
 			if ( in_array( 'sitepress-multilingual-cms/sitepress.php', $active_plugins ) ) {
-				$this->wpml();
+				$this->translations = $this->wpml();
 			} elseif ( in_array( 'polylang/polylang.php', $active_plugins ) ) {
-				$this->polylang();
+				$this->translations = $this->polylang();
 			}
 		}
 
@@ -165,6 +170,18 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 				$this->classes['UM_Polylang'] = new \um\core\integrations\UM_Polylang();
 			}
 			return $this->classes['UM_Polylang'];
+		}
+
+
+		/**
+		 * The class fot multilingual integration
+		 *
+		 * @since  2.1.6
+		 *
+		 * @return object|null
+		 */
+		public function translations(){
+			return $this->translations;
 		}
 
 

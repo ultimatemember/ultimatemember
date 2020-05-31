@@ -263,7 +263,7 @@ class UM_Emails_List_Table extends WP_List_Table {
 	 * @return string
 	 */
 	function column_icl_translations( $item ) {
-		return UM()->external_integrations()->wpml()->emails_column_content( $item );
+		return UM()->external_integrations()->translations()->emails_column_content( $item );
 	}
 
 
