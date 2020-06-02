@@ -20,20 +20,6 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 		 */
 		function __construct() {
 			add_action( 'wp_roles_init', array( &$this, 'um_roles_init' ), 99999 );
-			//add_action( 'update_option', array( &$this, 'update_caps' ), 99999, 3 );
-		}
-
-
-		function update_caps( $option, $old_value, $value ) {
-			$role_keys = get_option( 'um_roles', array() );
-			$role_keys = array_map( function( $item ) {
-				return 'um_' . $item;
-			}, $role_keys );
-
-			if ( in_array( $option, $role_keys )  ) {
-				var_dump('131231231231');
-				exit;
-			}
 		}
 
 
