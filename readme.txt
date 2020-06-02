@@ -170,6 +170,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed SkypeID field
   - Fixed clickable links in the UM forms which are displayed in a modal window
   - Fixed disabling select and textarea fields in inactive tabs on Account
+  - Fixed compatibility with jQuery 3.x and 'load' event
   - Fixed some translations
   - Small PHP notices fixes
 
