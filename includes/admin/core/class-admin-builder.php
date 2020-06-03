@@ -267,6 +267,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						</div>
 
 					<?php } ?>
+					<small>
+						<br><?php _e( 'Use the condition operator `equals to` or `not equals` if the parent field has a single option.', 'ultimate-member' ); ?>
+						<br><?php _e( 'Use the condition operator `greater than` or `less than` if the parent field is a number.', 'ultimate-member' ); ?>
+						<br><?php _e( 'Use the condition operator `contains` if the parent field has multiple options.', 'ultimate-member' ); ?>
+					</small>
 				</div>
 			</div>
 
