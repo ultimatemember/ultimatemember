@@ -12,6 +12,8 @@ if ( !class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 
 	/**
 	 * Class UM_Polylang
+	 *
+	 * @link    https://polylang.wordpress.com/documentation/ Polylang Documentation
 	 * @package um\core\integrations
 	 */
 	class UM_Polylang {
@@ -21,12 +23,15 @@ if ( !class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 		 */
 		public function __construct() {
 
-			//add_filter( 'um_admin_settings_email_section_fields', array( &$this, 'admin_settings_email_section_fields' ), 10, 2 );
-			//add_filter( 'um_change_email_template_file', array( &$this, 'change_email_template_file' ), 10, 1 );
-			//add_filter( 'um_email_send_subject', array( &$this, 'localize_email_subject' ), 10, 2 );
+			/* Email */
+			add_filter( 'um_admin_settings_email_section_fields', array( &$this, 'admin_settings_email_section_fields' ), 10, 2 );
+			add_filter( 'um_change_email_template_file', array( &$this, 'change_email_template_file' ), 10, 1 );
+			add_filter( 'um_email_send_subject', array( &$this, 'localize_email_subject' ), 10, 2 );
 			add_filter( 'um_email_templates_columns', array( &$this, 'add_email_templates_column' ), 10, 1 );
+			add_filter( 'um_locate_email_template', array( &$this, 'locate_email_template' ), 10, 2 );
+
+			/* Permalink */
 			//add_filter( 'um_get_core_page_filter', array( &$this, 'get_core_page_url' ), 10, 3 );
-			//add_filter( 'um_locate_email_template', array( &$this, 'locate_email_template' ), 10, 2 );
 			//add_filter( 'um_localize_permalink_filter', array( &$this, 'localize_permalink' ), 10, 2 );
 			//add_filter( 'icl_ls_languages', array( &$this, 'core_page_permalink' ), 10, 1 );
 
@@ -81,55 +86,52 @@ if ( !class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 
 		/**
 		 * Adding endings to the "Subject Line" field, depending on the language.
-		 * @exaple welcome_email_sub_de_DE
 		 *
-		 * @param $section_fields
-		 * @param $email_key
+		 * @since  2.1.6
+		 * @exaple change 'welcome_email_sub' to 'welcome_email_sub_de_DE'
 		 *
+		 * @param  array  $section_fields
+		 * @param  string $email_key
 		 * @return array
 		 */
 		public function admin_settings_email_section_fields( $section_fields, $email_key ) {
-			if ( !$this->is_active() ) {
-				return $section_fields;
+			if ( $this->is_active() ) {
+				$locale = '';
+				$language_codes = $this->get_languages_codes();
+				if ( $language_codes['default'] != $language_codes['current'] ) {
+					$locale = '_' . $language_codes['current'];
+				}
+
+				$value_default = UM()->options()->get( $email_key . '_sub' );
+				$value = UM()->options()->get( $email_key . '_sub' . $locale );
+
+				$section_fields[2]['id'] = $email_key . '_sub' . $locale;
+				$section_fields[2]['value'] = !empty( $value ) ? $value : $value_default;
 			}
-
-			$language_codes = $this->get_languages_codes();
-
-			$lang = '';
-			if ( $language_codes['default'] != $language_codes['current'] ) {
-				$lang = '_' . $language_codes['current'];
-			}
-
-			$value_default = UM()->options()->get( $email_key . '_sub' );
-			$value = UM()->options()->get( $email_key . '_sub' . $lang );
-
-			$section_fields[2]['id'] = $email_key . '_sub' . $lang;
-			$section_fields[2]['value'] = !empty( $value ) ? $value : $value_default;
 
 			return $section_fields;
 		}
 
 
 		/**
-		 * @param $template
+		 * Change email template for searching in the theme folder.
 		 *
+		 * @since  2.1.6
+		 *
+		 * @param  string $template
 		 * @return string
 		 */
 		public function change_email_template_file( $template ) {
-			if ( !$this->is_active() ) {
-				return $template;
+			if ( $this->is_active() ) {
+				$language_codes = $this->get_languages_codes();
+				if ( $language_codes['default'] !== $language_codes['current'] ) {
+					$template = $language_codes['current'] . '/' . $template;
+				}
 			}
 
-			$language_codes = $this->get_languages_codes();
-
-			$lang = '';
-			if ( $language_codes['default'] != $language_codes['current'] ) {
-				$lang = $language_codes['current'] . '/';
-			}
-
-			return $lang . $template;
+			return $template;
 		}
-
+		
 
 		/**
 		 * @param $array
@@ -200,13 +202,15 @@ if ( !class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 		 */
 		public function get_core_page_url( $url, $slug, $updated ) {
 
-			if ( !$this->is_active() ) return $url;
+			if ( $this->is_active() ) {
 
-			if ( function_exists( 'icl_get_current_language' ) && icl_get_current_language() != icl_get_default_language() ) {
-				$url = $this->get_url_for_language( UM()->config()->permalinks[$slug], icl_get_current_language() );
+				$language_codes = $this->get_languages_codes();
+				if ( $language_codes['default'] != $language_codes['current'] ) {
+					$url = $this->get_url_for_language( UM()->config()->permalinks[$slug], icl_get_current_language() );
 
-				if ( $updated ) {
-					$url = add_query_arg( 'updated', esc_attr( $updated ), $url );
+					if ( $updated ) {
+						$url = add_query_arg( 'updated', esc_attr( $updated ), $url );
+					}
 				}
 			}
 
@@ -230,12 +234,19 @@ if ( !class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 				return $current_code;
 			}
 
-			$default = $current = pll_default_language( 'locale' );
-
-			if ( !empty( $current_code ) ) {
-				$language = $polylang->model->get_language( $current_code );
-				$current = $language->locale;
+			if ( empty( $current_code ) ) {
+				$current_code = filter_input( INPUT_GET, 'lang', FILTER_SANITIZE_STRING );
 			}
+			if ( empty( $current_code ) ) {
+				$current_code = pll_current_language();
+			}
+			if ( empty( $current_code ) ) {
+				$current_code = substr( get_locale(), 0, 2 );
+			}
+
+			$default = $current = pll_default_language( 'locale' );
+			$language = $polylang->model->get_language( $current_code );
+			$current = $language->locale;
 
 			return compact( 'default', 'current' );
 		}
@@ -319,7 +330,7 @@ if ( !class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 
 
 		/**
-		 * Check if Polylang is active
+		 * Check if Polylang is active.
 		 *
 		 * @since  2.1.6
 		 *
@@ -335,29 +346,28 @@ if ( !class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 
 
 		/**
-		 * Adding endings to the "Subject Line" field, depending on the language.
+		 * Replace email Subject with translated value on email send.
 		 *
-		 * @param $subject
-		 * @param $template
+		 * @since  2.1.6
+		 * @exaple change 'welcome_email_sub' to 'welcome_email_sub_de_DE'
 		 *
+		 * @param  string $subject
+		 * @param  string $template
 		 * @return string
 		 */
 		public function localize_email_subject( $subject, $template ) {
-			if ( !$this->is_active() ) {
-				return $subject;
+			if ( $this->is_active() ) {
+				$locale = '';
+				$language_codes = $this->get_languages_codes();
+				if ( $language_codes['default'] != $language_codes['current'] ) {
+					$locale = '_' . $language_codes['current'];
+				}
+
+				$value_default = UM()->options()->get( $template . '_sub' );
+				$value = UM()->options()->get( $template . '_sub' . $locale );
+
+				$subject = !empty( $value ) ? $value : $value_default;
 			}
-
-			$language_codes = $this->get_languages_codes();
-
-			$lang = '';
-			if ( $language_codes['default'] != $language_codes['current'] ) {
-				$lang = '_' . $language_codes['current'];
-			}
-
-			$value_default = UM()->options()->get( $template . '_sub' );
-			$value = UM()->options()->get( $template . '_sub' . $lang );
-
-			$subject = !empty( $value ) ? $value : $value_default;
 
 			return $subject;
 		}
@@ -394,39 +404,38 @@ if ( !class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 
 
 		/**
-		 * @param $template
-		 * @param $template_name
+		 * Change email template path.
 		 *
+		 * @since  2.1.6
+		 *
+		 * @param  string $template
+		 * @param  string $template_name
 		 * @return string
 		 */
 		public function locate_email_template( $template, $template_name ) {
-			if ( !$this->is_active() ) {
-				return $template;
+			if ( $this->is_active() ) {
+				$locale = '';
+				$language_codes = $this->get_languages_codes();
+				if ( $language_codes['default'] !== $language_codes['current'] ) {
+					$locale = $language_codes['current'] . '/';
+				}
+
+				// check if there is template at theme folder
+				$template = locate_template( array(
+						trailingslashit( 'ultimate-member/email' ) . $locale . $template_name . '.php',
+						trailingslashit( 'ultimate-member/email' ) . $template_name . '.php'
+						) );
+
+				//if there isn't template at theme folder get template file from plugin dir
+				if ( !$template ) {
+					$path = !empty( UM()->mail()->path_by_slug[$template_name] ) ? UM()->mail()->path_by_slug[$template_name] : um_path . 'templates/email';
+					$template = trailingslashit( $path ) . $template_name . '.php';
+				}
 			}
 
-			//WPML compatibility and multilingual email templates
-			$language_codes = $this->get_languages_codes();
-
-			$lang = '';
-			if ( $language_codes['default'] != $language_codes['current'] ) {
-				$lang = $language_codes['current'] . '/';
-			}
-
-			// check if there is template at theme folder
-			$template = locate_template( array(
-				trailingslashit( 'ultimate-member/email' ) . $lang . $template_name . '.php',
-				trailingslashit( 'ultimate-member/email' ) . $template_name . '.php'
-				) );
-
-			//if there isn't template at theme folder get template file from plugin dir
-			if ( !$template ) {
-				$path = !empty( UM()->mail()->path_by_slug[$template_name] ) ? UM()->mail()->path_by_slug[$template_name] : um_path . 'templates/email';
-				$template = trailingslashit( $path ) . $template_name . '.php';
-			}
-
-			return $template;
+			return wp_normalize_path( $template );
 		}
-
+		
 
 		/**
 		 * UM filter - Restore original arguments on translated page
