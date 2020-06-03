@@ -1,5 +1,4 @@
 <?php
-
 namespace um\core\integrations;
 
 // Exit if accessed directly
@@ -13,13 +12,14 @@ if ( !class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 	/**
 	 * Class UM_Polylang
 	 *
+	 * @example UM()->external_integrations()->polylang()
 	 * @link    https://polylang.wordpress.com/documentation/ Polylang Documentation
 	 * @package um\core\integrations
 	 */
 	class UM_Polylang {
 
 		/**
-		 * Access constructor.
+		 * Class UM_Polylang constructor.
 		 */
 		public function __construct() {
 
@@ -27,62 +27,16 @@ if ( !class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 			add_filter( 'um_admin_settings_email_section_fields', array( &$this, 'admin_settings_email_section_fields' ), 10, 2 );
 			add_filter( 'um_change_email_template_file', array( &$this, 'change_email_template_file' ), 10, 1 );
 			add_filter( 'um_email_send_subject', array( &$this, 'localize_email_subject' ), 10, 2 );
-			add_filter( 'um_email_templates_columns', array( &$this, 'add_email_templates_column' ), 10, 1 );
+			add_filter( 'um_email_templates_columns', array( &$this, 'emails_column_header' ), 10, 1 );
 			add_filter( 'um_locate_email_template', array( &$this, 'locate_email_template' ), 10, 2 );
 
+			/* Form */
+			add_filter( 'um_pre_args_setup', array( &$this, 'shortcode_pre_args_setup' ), 20, 1 );
+
 			/* Permalink */
-			//add_filter( 'um_get_core_page_filter', array( &$this, 'get_core_page_url' ), 10, 3 );
-			//add_filter( 'um_localize_permalink_filter', array( &$this, 'localize_permalink' ), 10, 2 );
-			//add_filter( 'icl_ls_languages', array( &$this, 'core_page_permalink' ), 10, 1 );
-
-			/**
-			 * @todo Customize this form metadata
-			 */
-			//add_filter( 'um_pre_args_setup',  array( &$this, 'shortcode_pre_args_setup' ), 20, 1 );
+			add_filter( 'um_get_core_page_filter', array( &$this, 'localize_core_page_url' ), 10, 3 );
+			add_filter( 'um_localize_permalink_filter', array( &$this, 'localize_profile_permalink' ), 10, 2 );
 		}
-
-
-		/**
-		 * Add header for the column 'translations' in the Emails table.
-		 *
-		 * @since  2.1.6
-		 *
-		 * @global type $polylang
-		 * @param  array $columns
-		 * @return array
-		 */
-		public function add_email_templates_column( $columns ) {
-			if ( !$this->is_active() ) {
-				return $columns;
-			}
-
-			global $polylang;
-
-			if ( count( pll_languages_list() ) > 0 ) {
-
-				$flags_column = '';
-				foreach ( pll_languages_list() as $language_code ) {
-					if ( $language_code === pll_default_language() ) {
-						continue;
-					}
-					$language = $polylang->model->get_language( $language_code );
-					$flags_column .= '<span class="um-flag" style="margin:2px">' . $language->flag . '</span>';
-				}
-
-				$new_columns = array();
-				foreach ( $columns as $column_key => $column_content ) {
-					$new_columns[$column_key] = $column_content;
-					if ( 'email' === $column_key && !isset( $new_columns['icl_translations'] ) ) {
-						$new_columns['icl_translations'] = $flags_column;
-					}
-				}
-
-				$columns = $new_columns;
-			}
-
-			return $columns;
-		}
-
 
 		/**
 		 * Adding endings to the "Subject Line" field, depending on the language.
@@ -90,8 +44,8 @@ if ( !class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 		 * @since  2.1.6
 		 * @exaple change 'welcome_email_sub' to 'welcome_email_sub_de_DE'
 		 *
-		 * @param  array  $section_fields
-		 * @param  string $email_key
+		 * @param  array  $section_fields  The email template fields
+		 * @param  string $email_key       The email template slug
 		 * @return array
 		 */
 		public function admin_settings_email_section_fields( $section_fields, $email_key ) {
@@ -112,13 +66,12 @@ if ( !class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 			return $section_fields;
 		}
 
-
 		/**
 		 * Change email template for searching in the theme folder.
 		 *
 		 * @since  2.1.6
 		 *
-		 * @param  string $template
+		 * @param  string $template  The email template slug
 		 * @return string
 		 */
 		public function change_email_template_file( $template ) {
@@ -131,100 +84,77 @@ if ( !class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 
 			return $template;
 		}
-		
-
-		/**
-		 * @param $array
-		 *
-		 * @return mixed
-		 */
-		public function core_page_permalink( $array ) {
-			global $polylang;
-
-			if ( !$this->is_active() ) {
-				return $array;
-			}
-
-			if ( !um_is_core_page( "user" ) || !defined( "ICL_LANGUAGE_CODE" ) || !function_exists( 'icl_object_id' ) ) {
-				return $array;
-			}
-
-			// Permalink base
-			$permalink_base = UM()->options()->get( 'permalink_base' );
-
-			// Get user slug
-			$profile_slug = strtolower( get_user_meta( um_profile_id(), "um_user_profile_url_slug_{$permalink_base}", true ) );
-			$current_language = ICL_LANGUAGE_CODE;
-			foreach ( $array as $lang_code => $arr ) {
-				$sitepress->switch_lang( $lang_code );
-				$user_page = um_get_core_page( "user" );
-
-				$array[$lang_code]['url'] = "{$user_page}{$profile_slug}/";
-			}
-
-			$sitepress->switch_lang( $current_language );
-
-			return $array;
-		}
-
 
 		/**
 		 *
-		 * Add cell for the column 'translations' in the Emails table.
+		 * Add cell for the column 'translations' in the Email table.
 		 *
 		 * @since  2.1.6
 		 *
-		 * @param  type $item
+		 * @param  array  $item  The email template data
 		 * @return string
 		 */
 		public function emails_column_content( $item ) {
-			if ( !$this->is_active() ) {
-				return '';
+			$html = '';
+
+			if ( $this->is_active() ) {
+				foreach ( pll_languages_list() as $language_code ) {
+					if ( $language_code === pll_default_language() ) {
+						continue;
+					}
+					$html .= $this->get_status_html( $item['key'], $language_code );
+				}
 			}
 
-			$html = '';
-			foreach ( pll_languages_list() as $language_code ) {
-				if ( $language_code === pll_default_language() ) {
-					continue;
-				}
-				$html .= $this->get_status_html( $item['key'], $language_code );
-			}
 			return $html;
 		}
 
-
 		/**
-		 * @param $url
-		 * @param $slug
-		 * @param $updated
+		 * Add header for the column 'translations' in the Email table.
 		 *
-		 * @return bool|false|string
+		 * @since  2.1.6
+		 *
+		 * @global object  $polylang  The Polylang instance
+		 * @param  array   $columns   The Email table headers
+		 * @return array
 		 */
-		public function get_core_page_url( $url, $slug, $updated ) {
+		public function emails_column_header( $columns ) {
+			global $polylang;
 
 			if ( $this->is_active() ) {
+				if ( count( pll_languages_list() ) > 0 ) {
 
-				$language_codes = $this->get_languages_codes();
-				if ( $language_codes['default'] != $language_codes['current'] ) {
-					$url = $this->get_url_for_language( UM()->config()->permalinks[$slug], icl_get_current_language() );
-
-					if ( $updated ) {
-						$url = add_query_arg( 'updated', esc_attr( $updated ), $url );
+					$flags_column = '';
+					foreach ( pll_languages_list() as $language_code ) {
+						if ( $language_code === pll_default_language() ) {
+							continue;
+						}
+						$language = $polylang->model->get_language( $language_code );
+						$flags_column .= '<span class="um-flag" style="margin:2px">' . $language->flag . '</span>';
 					}
+
+					$new_columns = array();
+					foreach ( $columns as $column_key => $column_content ) {
+						$new_columns[$column_key] = $column_content;
+						if ( 'email' === $column_key && !isset( $new_columns['icl_translations'] ) ) {
+							$new_columns['icl_translations'] = $flags_column;
+						}
+					}
+
+					$columns = $new_columns;
 				}
 			}
 
-			return $url;
+			return $columns;
 		}
-
 
 		/**
 		 * Get default and current locales.
 		 *
 		 * @since  2.1.6
 		 *
-		 * @global object       $polylang
-		 * @param  false|string $current_code
+		 * @global object        $polylang      The Polylang instance
+		 * @param  string|false  $current_code  Slug of the queried language
 		 * @return array
 		 */
 		public function get_languages_codes( $current_code = false ) {
@@ -251,15 +181,46 @@ if ( !class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 			return compact( 'default', 'current' );
 		}
 
-
 		/**
-		 * Get default and current locales.
+		 * Get translated page URL.
 		 *
 		 * @since  2.1.6
 		 *
-		 * @global \PLL_Admin $polylang the Polylang instance
-		 * @param  string     $template email template slug
-		 * @param  int|string $value    term_id, tl_term_id, slug or locale of the queried language
+		 * @param  integer      $post_id   The post/page ID
+		 * @param  string       $language  Slug or locale of the queried language
+		 * @return string|false
+		 */
+		public function get_page_url_for_language( $post_id, $language = '' ) {
+
+			$url = get_permalink( $post_id );
+
+			if ( $this->is_active() ) {
+
+				$lang = '';
+				if ( is_string( $language ) && strlen( $language ) > 2 ) {
+					$lang = current( explode( '_', $language ) );
+				} elseif ( $language && is_string( $language ) ) {
+					$lang = trim( $language );
+				}
+
+				$lang_post_id = pll_get_post( $post_id, $lang );
+
+				if ( $lang_post_id && is_numeric( $lang_post_id ) ) {
+					$url = get_permalink( $lang_post_id );
+				}
+			}
+
+			return $url;
+		}
+
+		/**
+		 * Get content for the cell of the column 'translations' in the Email table.
+		 *
+		 * @since  2.1.6
+		 *
+		 * @global object  $polylang  The Polylang instance
+		 * @param  string  $template  The email template slug
+		 * @param  string  $code      Slug or locale of the queried language
 		 * @return string
 		 */
 		public function get_status_html( $template, $code ) {
@@ -286,64 +247,67 @@ if ( !class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 			if ( file_exists( $template_path ) ) {
 
 				$hint = sprintf( __( 'Edit the translation in %s', 'polylang' ), $language->name );
-				$str = sprintf( '<a href="%1$s" title="%2$s" class="pll_icon_edit"><span class="screen-reader-text">%3$s</span></a>',
-					esc_url( $link ),
-					esc_html( $hint ),
-					esc_html( $hint )
+				$icon_html = sprintf( '<a href="%1$s" title="%2$s" class="pll_icon_edit"><span class="screen-reader-text">%3$s</span></a>',
+						esc_url( $link ),
+						esc_html( $hint ),
+						esc_html( $hint )
 				);
 			} else {
 
 				$hint = sprintf( __( 'Add a translation in %s', 'polylang' ), $language->name );
-				$str = sprintf( '<a href="%1$s" title="%2$s" class="pll_icon_add"><span class="screen-reader-text">%3$s</span></a>',
-					esc_url( $link ),
-					esc_attr( $hint ),
-					esc_html( $hint )
+				$icon_html = sprintf( '<a href="%1$s" title="%2$s" class="pll_icon_add"><span class="screen-reader-text">%3$s</span></a>',
+						esc_url( $link ),
+						esc_attr( $hint ),
+						esc_html( $hint )
 				);
 			}
 
-			return $str;
+			return $icon_html;
 		}
-
-
-		/**
-		 * Get a translated core page URL
-		 *
-		 * @param $post_id
-		 * @param $language
-		 * @return bool|false|string
-		 */
-		public function get_url_for_language( $post_id, $language ) {
-			if ( !$this->is_active() ) return '';
-
-			$lang_post_id = icl_object_id( $post_id, 'page', true, $language );
-
-			if ( $lang_post_id != 0 ) {
-				$url = get_permalink( $lang_post_id );
-			} else {
-				// No page found, it's most likely the homepage
-				global $polylang;
-				$url = $sitepress->language_url( $language );
-			}
-
-			return $url;
-		}
-
 
 		/**
 		 * Check if Polylang is active.
 		 *
 		 * @since  2.1.6
 		 *
-		 * @return bool|mixed
+		 * @return boolean
 		 */
 		public function is_active() {
 			if ( defined( 'POLYLANG_VERSION' ) ) {
 				global $polylang;
-				return $polylang && is_object( $polylang ) && is_a( $polylang, 'PLL_Admin' );
+				return isset( $polylang ) && is_object( $polylang );
 			}
 			return false;
 		}
 
+		/**
+		 * Get translated core page URL.
+		 *
+		 * @since  2.1.6
+		 *
+		 * @param  string  $url      Default page URL
+		 * @param  string  $slug     Core page slug
+		 * @param  string  $updated  Additional parameter 'updated' value
+		 * @return string
+		 */
+		public function localize_core_page_url( $url, $slug, $updated = '' ) {
+
+			if ( $this->is_active() ) {
+
+				$language_codes = $this->get_languages_codes();
+				if ( $language_codes['default'] != $language_codes['current'] ) {
+
+					$page_id = UM()->config()->permalinks[$slug];
+					$url = $this->get_page_url_for_language( $page_id, $language_codes['current'] );
+
+					if ( $updated ) {
+						$url = add_query_arg( 'updated', esc_attr( $updated ), $url );
+					}
+				}
+			}
+
+			return $url;
+		}
 
 		/**
 		 * Replace email Subject with translated value on email send.
@@ -351,8 +315,8 @@ if ( !class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 		 * @since  2.1.6
 		 * @exaple change 'welcome_email_sub' to 'welcome_email_sub_de_DE'
 		 *
-		 * @param  string $subject
-		 * @param  string $template
+		 * @param  string  $subject   Default subject
+		 * @param  string  $template  The email template slug
 		 * @return string
 		 */
 		public function localize_email_subject( $subject, $template ) {
@@ -372,44 +336,31 @@ if ( !class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 			return $subject;
 		}
 
-
 		/**
-		 * @param $profile_url
-		 * @param $page_id
+		 * Get translated profile page URL.
 		 *
-		 * @return bool|false|string
+		 * @since  2.1.6
+		 *
+		 * @param  string   $profile_url  Default profile URL
+		 * @param  integer  $page_id      The page ID
+		 * @return string
 		 */
-		public function localize_permalink( $profile_url, $page_id ) {
+		public function localize_profile_permalink( $profile_url, $page_id ) {
 
-			if ( !$this->is_active() ) {
-				return $profile_url;
-			}
-
-			// WPML compatibility
-			if ( function_exists( 'icl_object_id' ) ) {
-				$language_code = ICL_LANGUAGE_CODE;
-				$lang_post_id = icl_object_id( $page_id, 'page', true, $language_code );
-
-				if ( $lang_post_id != 0 ) {
-					$profile_url = get_permalink( $lang_post_id );
-				} else {
-					// No page found, it's most likely the homepage
-					global $polylang;
-					$profile_url = $sitepress->language_url( $language_code );
-				}
+			if ( $this->is_active() ) {
+				$profile_url = $this->get_page_url_for_language( $page_id );
 			}
 
 			return $profile_url;
 		}
-
 
 		/**
 		 * Change email template path.
 		 *
 		 * @since  2.1.6
 		 *
-		 * @param  string $template
-		 * @param  string $template_name
+		 * @param  string  $template		   The email template path
+		 * @param  string  $template_name  The email template slug
 		 * @return string
 		 */
 		public function locate_email_template( $template, $template_name ) {
@@ -435,25 +386,23 @@ if ( !class_exists( 'um\core\integrations\UM_Polylang' ) ) {
 
 			return wp_normalize_path( $template );
 		}
-		
+
 
 		/**
-		 * UM filter - Restore original arguments on translated page
+		 * Get arguments from original form if translated form doesn't have this data.
 		 *
-		 * @description Restore original arguments on load shortcode if they are missed in the WPML translation
+		 * @since  2.1.6
 		 * @hook um_pre_args_setup
 		 *
-		 * @global \SitePress $sitepress
-		 * @param array $args
+		 * @param  array $args
 		 * @return array
 		 */
 		public function shortcode_pre_args_setup( $args ) {
-			if ( UM()->external_integrations()->is_active() ) {
-				global $polylang;
 
-				$original_form_id = $sitepress->get_object_id( $args['form_id'], 'post', true, $sitepress->get_default_language() );
+			if ( $this->is_active() ) {
+				$original_form_id = pll_get_post( $args['form_id'] , pll_default_language() );
 
-				if ( $original_form_id != $args['form_id'] ) {
+				if ( $original_form_id && $original_form_id != $args['form_id'] ) {
 					$original_post_data = UM()->query()->post_data( $original_form_id );
 
 					foreach ( $original_post_data as $key => $value ) {

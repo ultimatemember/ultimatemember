@@ -117,6 +117,21 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 
 
 		/**
+		 * Integration between Ultimate member and Polylang
+		 *
+		 * @since 2.1.6
+		 *
+		 * @return um\core\integrations\UM_Polylang()
+		 */
+		public function polylang() {
+			if ( empty( $this->classes['UM_Polylang'] ) ) {
+				$this->classes['UM_Polylang'] = new \um\core\integrations\UM_Polylang();
+			}
+			return $this->classes['UM_Polylang'];
+		}
+
+
+		/**
 		 * Integration for the "Transposh Translation Filter" plugin
 		 *
 		 * @description Fix issue "404 Not Found" on profile page
@@ -155,21 +170,6 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 					wp_reset_postdata();
 				}
 			}
-		}
-
-
-		/**
-		 * Integration between Ultimate member and Polylang
-		 *
-		 * @since 2.1.6
-		 *
-		 * @return um\core\integrations\UM_Polylang()
-		 */
-		public function polylang() {
-			if ( empty( $this->classes['UM_Polylang'] ) ) {
-				$this->classes['UM_Polylang'] = new \um\core\integrations\UM_Polylang();
-			}
-			return $this->classes['UM_Polylang'];
 		}
 
 
