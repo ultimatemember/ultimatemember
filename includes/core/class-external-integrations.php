@@ -35,12 +35,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 
 			$this->plugins_loaded();
 
-			$active_plugins = UM()->dependencies()->get_active_plugins();
-			if ( in_array( 'sitepress-multilingual-cms/sitepress.php', $active_plugins ) ) {
-				$this->translations = $this->wpml();
-			} elseif ( in_array( 'polylang/polylang.php', $active_plugins ) ) {
-				$this->translations = $this->polylang();
-			}
+			add_action( 'plugins_loaded', array( &$this, 'load_integrations' ), 20 );
 		}
 
 
@@ -86,6 +81,18 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 
 
 		/**
+		 * Is this site multilingual
+		 *
+		 * @since 2.1.6
+		 *
+		 * @return boolean
+		 */
+		public function is_multilingual() {
+			return isset( $this->translations ) && is_object( $this->translations ) && $this->translations->is_active();
+		}
+
+		
+		/**
 		 * Check if WPML is active
 		 *
 		 * @return bool|mixed
@@ -100,6 +107,27 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			return false;
 		}
 
+
+		/**
+		 * Load integration classes
+		 *
+		 * @since 2.1.6
+		 * @hook  plugins_loaded
+		 */
+		public function load_integrations() {
+
+			$active_plugins = UM()->dependencies()->get_active_plugins();
+
+			/* Multilingual */
+			if ( in_array( 'sitepress-multilingual-cms/sitepress.php', $active_plugins ) ) {
+				$this->translations = $this->wpml();
+			} elseif ( in_array( 'polylang/polylang.php', $active_plugins ) ) {
+				$this->translations = $this->polylang();
+			} elseif ( in_array( 'translatepress-multilingual/index.php', $active_plugins ) ) {
+				$this->translations = $this->translatepress();
+			}
+		}
+		
 
 		/**
 		 * Gravity forms role capabilities compatibility
@@ -128,6 +156,33 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 				$this->classes['UM_Polylang'] = new \um\core\integrations\UM_Polylang();
 			}
 			return $this->classes['UM_Polylang'];
+		}
+
+
+		/**
+		 * Integration between Ultimate member and TranslatePress
+		 *
+		 * @since 2.1.6
+		 *
+		 * @return um\core\integrations\UM_TranslatePress()
+		 */
+		public function translatepress() {
+			if ( empty( $this->classes['UM_TranslatePress'] ) ) {
+				$this->classes['UM_TranslatePress'] = new \um\core\integrations\UM_TranslatePress();
+			}
+			return $this->classes['UM_TranslatePress'];
+		}
+
+
+		/**
+		 * The class fot multilingual integration
+		 *
+		 * @since  2.1.6
+		 *
+		 * @return object|null
+		 */
+		public function translations(){
+			return $this->translations;
 		}
 
 
@@ -174,18 +229,6 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 
 
 		/**
-		 * The class fot multilingual integration
-		 *
-		 * @since  2.1.6
-		 *
-		 * @return object|null
-		 */
-		public function translations(){
-			return $this->translations;
-		}
-
-
-		/**
 		 * Integration between Ultimate member and WPML
 		 *
 		 * @since 2.1.6
@@ -198,7 +241,6 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			}
 			return $this->classes['UM_WPML'];
 		}
-
 
 	}
 }
