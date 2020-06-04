@@ -30,12 +30,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 			);
 
 			if ( $wp_version < '5.4' ) {
-				add_action( 'wp_update_nav_menu_item', array( &$this, '_save' ), 10, 3 );
 				add_action( 'admin_footer-nav-menus.php', array( &$this, '_wp_template' ) );
 				add_action( 'load-nav-menus.php', array( &$this, 'enqueue_nav_menus_scripts' ) );
 			} else {
 				add_action( 'load-customize.php', array( &$this, 'enqueue_nav_menus_scripts' ) );
 			}
+
+			add_action( 'wp_update_nav_menu_item', array( &$this, '_save' ), 10, 3 );
 
 			add_action( 'wp_nav_menu_item_custom_fields', array( $this, 'wp_nav_menu_item_custom_fields' ), 20, 5 );
 			//add_action( 'wp_nav_menu_item_custom_fields_customize_template', array( $this, 'wp_nav_menu_item_custom_fields_customize_template' ), 20 ); //waiting wp.org answer
