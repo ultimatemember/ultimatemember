@@ -62,27 +62,12 @@ function um_get_field_default_value( $dom ) {
  */
 function um_get_field_element( $dom ) {
 
+	var field_element = $dom.find( 'input,textarea,select' );
 	var type = um_get_field_type( $dom );
-	var field_element = '';
 
-	switch ( type ) {
+	field_element = wp.hooks.applyFilters( 'um_conditional_logic_field_element', field_element, type, $dom );
 
-		case 'text':
-		case 'number':
-		case 'date':
-		case 'textarea':
-		case 'select':
-		case 'multiselect':
-		case 'radio':
-		case 'checkbox':
-			field_element = $dom.find( 'input,textarea,select' );
-			break;
-		default:
-			field_element = wp.hooks.applyFilters( 'um_conditional_logic_field_element', field_element, type, $dom );
-			break;
-	}
-
-	return '';
+	return field_element;
 }
 
 /**
@@ -332,7 +317,7 @@ function um_apply_conditions( $dom, is_single_update ) {
 				default:
 
 					$owners = wp.hooks.applyFilters( 'um_conditional_logic_contains_operator_owners', $owners, field_type, live_field_value, condition, index );
-					if ( typeof $owners[ condition.owner ][ index ] == 'undefined' ) {
+					if ( typeof $owners[ condition.owner ][ index ] === 'undefined' ) {
 						if ( live_field_value && live_field_value.indexOf( condition.value ) >= 0 && um_in_array( live_field_value, $owners_values[ condition.owner ] ) ) {
 							$owners[ condition.owner ][ index ] = true;
 						} else {
