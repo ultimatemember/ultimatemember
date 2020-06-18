@@ -221,6 +221,9 @@ function um_apply_conditions( $dom, is_single_update ) {
 
 	var field_type = um_get_field_type( $dom.parents('.um-field[data-key]') );
 	var live_field_value = um_get_field_data( $dom );
+	if (live_field_value === 'empty_file') {
+		live_field_value = '';
+	}
 
 	var $owners = {};
 	var $owners_values = {};
@@ -627,6 +630,27 @@ jQuery(document).ready( function (){
         var me = jQuery(this);
         um_apply_conditions(me, false);
     });
+
+	jQuery(document).on('change', '.um-field-image input[type="hidden"],.um-field-file input[type="hidden"]', function () {
+		var me = jQuery(this);
+		um_apply_conditions(me, false);
+	});
+
+	jQuery(document).on('click', '.um-finish-upload', function () {
+		var key = jQuery(this).attr('data-key');
+		var me = jQuery('.um-field-'+key+' input');
+		setTimeout(function () {
+			um_apply_conditions(me, false);
+		}, 100);
+	});
+
+	jQuery(document).on('click', '.um-field .cancel', function () {
+		var key = jQuery(this).parent().attr('data-key');
+		var me = jQuery('.um-field-'+key+' input');
+		setTimeout(function () {
+			um_apply_conditions(me, false);
+		}, 1000);
+	});
 
     jQuery(document).on('um_fields_change', function () {
         um_field_hide_siblings();
