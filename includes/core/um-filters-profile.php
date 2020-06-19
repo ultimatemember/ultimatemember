@@ -16,6 +16,18 @@ function um_dynamic_user_profile_pagetitle( $title, $sep = '' ) {
 
 	if ( um_is_core_page( 'user' ) && um_get_requested_user() ) {
 
+		$user_id = um_get_requested_user();
+
+		$privacy = get_user_meta( $user_id, 'profile_privacy', true );
+		if ( $privacy == __( 'Only me', 'ultimate-member' ) || $privacy == 'Only me' ) {
+			return $title;
+		}
+
+		$noindex = get_user_meta( $user_id, 'profile_noindex', true );
+		if ( ! empty( $noindex ) ) {
+			return $title;
+		}
+
 		um_fetch_user( um_get_requested_user() );
 
 		$profile_title = um_convert_tags( $profile_title );

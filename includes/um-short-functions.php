@@ -2053,7 +2053,7 @@ function um_get_cover_uri( $image, $attrs ) {
 function um_get_avatar_url( $get_avatar ) {
 	preg_match( '/src="(.*?)"/i', $get_avatar, $matches );
 
-	return $matches[1];
+	return isset( $matches[1] ) ? $matches[1] : '';
 }
 
 

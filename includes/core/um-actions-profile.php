@@ -629,6 +629,20 @@ function um_profile_dynamic_meta_desc() {
 	if ( um_is_core_page( 'user' ) && um_get_requested_user() ) {
 
 		$user_id = um_get_requested_user();
+
+		$privacy = get_user_meta( $user_id, 'profile_privacy', true );
+		if ( $privacy == __( 'Only me', 'ultimate-member' ) || $privacy == 'Only me' ) {
+			return;
+		}
+
+		$noindex = get_user_meta( $user_id, 'profile_noindex', true );
+		if ( ! empty( $noindex ) ) { ?>
+
+			<meta name="robots" content="noindex, nofollow" />
+
+			<?php return;
+		}
+
 		um_fetch_user( $user_id );
 
 		$locale = get_user_locale( $user_id );
@@ -647,12 +661,12 @@ function um_profile_dynamic_meta_desc() {
 		$image = um_get_user_avatar_url( $user_id, $size );
 
 		$person = array(
-				"@context" => "http://schema.org",
-				"@type" => "Person",
-				"name" => esc_attr( $title ),
-				"description" => esc_attr( $description ),
-				"image" => esc_url( $image ),
-				"url" => esc_url( $url )
+			"@context"      => "http://schema.org",
+			"@type"         => "Person",
+			"name"          => esc_attr( $title ),
+			"description"   => esc_attr( $description ),
+			"image"         => esc_url( $image ),
+			"url"           => esc_url( $url ),
 		);
 
 		um_reset_user();
