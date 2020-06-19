@@ -66,6 +66,55 @@ add_filter( 'the_title', 'um_dynamic_user_profile_title', 100000, 2 );
 
 
 /**
+ * Fix SEO canonical for the profile page
+ *
+ * @param  string       $canonical_url The canonical URL.
+ * @param  WP_Post      $post          Optional. Post ID or object. Default is global `$post`.
+ * @return string|false                The canonical URL, or false if current URL is canonical.
+ */
+function um_get_canonical_url( $canonical_url, $post ){
+
+	if( UM()->config()->permalinks['user'] == $post->ID ) {
+
+		/**
+		 * UM hook
+		 *
+		 * @type filter
+		 * @title um_allow_canonical__filter
+		 * @description Allow canonical
+		 * @input_vars
+		 * [{"var":"$allow_canonical","type":"bool","desc":"Allow?"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage
+		 * <?php add_filter( 'um_allow_canonical__filter', 'function_name', 10, 1 ); ?>
+		 * @example
+		 * <?php
+		 * add_filter( 'um_allow_canonical__filter', 'my_allow_canonical', 10, 1 );
+		 * function my_allow_canonical( $allow_canonical ) {
+		 *     // your code here
+		 *     return $allow_canonical;
+		 * }
+		 * ?>
+		 */
+		$enable_canonical = apply_filters( "um_allow_canonical__filter", true );
+
+		if( $enable_canonical ){
+			$url = um_user_profile_url( um_get_requested_user() );
+			$canonical_url = $url === home_url( $_SERVER['REQUEST_URI'] ) ? false : $url;
+
+			if ( $page = get_query_var('cpage') ){
+				$canonical_url = get_comments_pagenum_link( $page );
+			}
+		}
+	}
+
+	return $canonical_url;
+}
+add_filter( 'get_canonical_url', 'um_get_canonical_url', 20, 2 );
+
+
+/**
  * Add cover photo label of file size limit
  *
  * @param array $fields Predefined fields
