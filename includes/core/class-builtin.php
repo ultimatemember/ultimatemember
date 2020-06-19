@@ -1131,10 +1131,10 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				),
 
 				'profile_noindex' => array(
-					'title'         => __( 'Avoid my profile indexing', 'ultimate-member' ),
+					'title'         => __( 'Avoid indexing my profile by search engines', 'ultimate-member' ),
 					'metakey'       => 'profile_noindex',
 					'type'          => 'select',
-					'label'         => __( 'Avoid my profile indexing', 'ultimate-member' ),
+					'label'         => __( 'Avoid indexing my profile by search engines', 'ultimate-member' ),
 					'help'          => __( 'Hide my profile for robots?', 'ultimate-member' ),
 					'required'      => 0,
 					'public'        => 1,
