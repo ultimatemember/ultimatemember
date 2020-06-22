@@ -56,7 +56,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 		 * @param \stdClass $args    An object of menu item arguments.
 		 * @param int      $id      Nav menu ID.
 		 */
-		function wp_nav_menu_item_custom_fields( $item_id, $item, $depth, $args, $id ) {
+		function wp_nav_menu_item_custom_fields( $item_id, $item, $depth, $args, $id = null ) {
 
 			$um_nav_public = get_post_meta( $item->ID, 'menu-item-um_nav_public', true );
 			$_nav_roles_meta = get_post_meta( $item->ID, 'menu-item-um_nav_roles', true );
