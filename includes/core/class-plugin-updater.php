@@ -355,14 +355,8 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 		 * @return \stdClass modified plugin update array.
 		 */
 		function check_update( $_transient_data ) {
-			global $pagenow;
-
 			if ( ! is_object( $_transient_data ) ) {
 				$_transient_data = new \stdClass;
-			}
-
-			if ( 'plugins.php' == $pagenow && is_multisite() ) {
-				return $_transient_data;
 			}
 
 			$exts = $this->get_active_plugins();

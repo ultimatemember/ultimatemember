@@ -698,7 +698,7 @@ function prepare_Modal() {
 
 function remove_Modal() {
 	if ( jQuery('.um-popup-overlay').length ) {
-		jQuery( document ).trigger( 'um_before_modal_removed' );
+		wp.hooks.doAction( 'um_before_modal_removed', jQuery('.um-popup') );
 
 		jQuery('.tipsy').remove();
 		jQuery('.um-popup').empty().remove();

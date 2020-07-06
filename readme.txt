@@ -145,6 +145,13 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
+= 2.1.7: July xx, 2020 =
+
+  - Fixed "get_profile_photo_size" function (avoid PHP notice with array_combine )
+  - Fixed password reset/change form when other forms are initialized at the same page
+  - Fixed getting extension updates on multisites
+  - Deprecated JS event 'um_before_modal_removed', use wp.hooks action 'um_before_modal_removed' instead
+
 = 2.1.6: June 1, 2020 =
 
 * Enhancements:

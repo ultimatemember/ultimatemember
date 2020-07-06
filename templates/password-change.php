@@ -33,6 +33,8 @@
 
 			$fields = UM()->builtin()->get_specific_fields( 'user_password' );
 
+			UM()->fields()->set_mode = 'password';
+
 			$output = null;
 			foreach ( $fields as $key => $data ) {
 				$output .= UM()->fields()->edit_field( $key, $data );

@@ -211,6 +211,10 @@ if ( ! class_exists( 'UM' ) ) {
 				//run activation
 				register_activation_hook( um_plugin, array( &$this, 'activation' ) );
 
+				if ( is_multisite() && ! defined( 'DOING_AJAX' ) ) {
+					add_action( 'wp_loaded', array( $this, 'maybe_network_activation' ) );
+				}
+
 				// init widgets
 				add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
 
@@ -441,11 +445,27 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @since 2.0
 		 */
 		function activation() {
+			$this->single_site_activation();
 			if ( is_multisite() ) {
-				if ( ! is_plugin_active_for_network( um_plugin ) ) {
-					$this->single_site_activation();
-				} else {
-					//get all blogs
+				update_network_option( get_current_network_id(), 'um_maybe_network_wide_activation', 1 );
+			}
+		}
+
+
+		/**
+		 * Maybe need multisite activation process
+		 *
+		 * @since 2.1.7
+		 */
+		function maybe_network_activation() {
+			$maybe_activation = get_network_option( get_current_network_id(), 'um_maybe_network_wide_activation' );
+
+			if ( $maybe_activation ) {
+
+				delete_network_option( get_current_network_id(), 'um_maybe_network_wide_activation' );
+
+				if ( is_plugin_active_for_network( um_plugin ) ) {
+					// get all blogs
 					$blogs = get_sites();
 					if ( ! empty( $blogs ) ) {
 						foreach( $blogs as $blog ) {
@@ -456,8 +476,6 @@ if ( ! class_exists( 'UM' ) ) {
 						}
 					}
 				}
-			} else {
-				$this->single_site_activation();
 			}
 		}
 

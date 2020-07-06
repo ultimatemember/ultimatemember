@@ -19,7 +19,7 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 		 */
 		function __construct() {
 			if ( ! defined( 'DOING_AJAX' ) ) {
-				add_filter( 'wp_loaded', array( $this, 'maybe_flush_rewrite_rules' ) );
+				add_action( 'wp_loaded', array( $this, 'maybe_flush_rewrite_rules' ) );
 			}
 
 			//add rewrite rules
