@@ -609,10 +609,10 @@ if ( !function_exists( 'um_profile_remove_wpseo' ) ) {
 			remove_all_filters( 'wpseo_head' );
 
 			/* Restore title and canonical if broken */
-			if( ! has_action( 'wp_head', '_wp_render_title_tag' ) ){
+			if ( ! has_action( 'wp_head', '_wp_render_title_tag' ) ) {
 				add_action( 'wp_head', '_wp_render_title_tag', 18 );
 			}
-			if( ! has_action( 'wp_head', 'rel_canonical' ) ){
+			if ( ! has_action( 'wp_head', 'rel_canonical' ) ) {
 				add_action( 'wp_head', 'rel_canonical', 18 );
 			}
 		}

@@ -84,9 +84,8 @@ add_filter( 'the_title', 'um_dynamic_user_profile_title', 100000, 2 );
  * @param  WP_Post      $post          Optional. Post ID or object. Default is global `$post`.
  * @return string|false                The canonical URL, or false if current URL is canonical.
  */
-function um_get_canonical_url( $canonical_url, $post ){
-
-	if( UM()->config()->permalinks['user'] == $post->ID ) {
+function um_get_canonical_url( $canonical_url, $post ) {
+	if ( UM()->config()->permalinks['user'] == $post->ID ) {
 
 		/**
 		 * UM hook
@@ -109,13 +108,13 @@ function um_get_canonical_url( $canonical_url, $post ){
 		 * }
 		 * ?>
 		 */
-		$enable_canonical = apply_filters( "um_allow_canonical__filter", true );
+		$enable_canonical = apply_filters( 'um_allow_canonical__filter', true );
 
-		if( $enable_canonical ){
+		if ( $enable_canonical ) {
 			$url = um_user_profile_url( um_get_requested_user() );
-			$canonical_url = $url === home_url( $_SERVER['REQUEST_URI'] ) ? false : $url;
+			$canonical_url = ( $url === home_url( $_SERVER['REQUEST_URI'] ) ) ? false : $url;
 
-			if ( $page = get_query_var('cpage') ){
+			if ( $page = get_query_var( 'cpage' ) ) {
 				$canonical_url = get_comments_pagenum_link( $page );
 			}
 		}

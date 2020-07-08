@@ -151,6 +151,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed password reset/change form when other forms are initialized at the same page
   - Fixed getting extension updates on multisites
   - Fixed the 'wp_authenticate_user' filter's variables (changed username string to WP_User object)
+  - Fixed SEO link canonical for the profile page
   - Deprecated JS event 'um_before_modal_removed', use wp.hooks action 'um_before_modal_removed' instead
 
 = 2.1.6: June 1, 2020 =
