@@ -608,8 +608,12 @@ if ( !function_exists( 'um_profile_remove_wpseo' ) ) {
 			/* Yoast SEO 14.1 */
 			remove_all_filters( 'wpseo_head' );
 
+			/* Restore title and canonical if broken */
 			if( ! has_action( 'wp_head', '_wp_render_title_tag' ) ){
 				add_action( 'wp_head', '_wp_render_title_tag', 18 );
+			}
+			if( ! has_action( 'wp_head', 'rel_canonical' ) ){
+				add_action( 'wp_head', 'rel_canonical', 18 );
 			}
 		}
 	}
@@ -619,7 +623,7 @@ add_action( 'get_header', 'um_profile_remove_wpseo', 8 );
 
 
 /**
- * Meta description
+ * The profile page SEO tags
  * 
  * @see https://ogp.me/ - The Open Graph protocol
  * @see https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/summary - The Twitter Summary card
@@ -673,9 +677,8 @@ function um_profile_dynamic_meta_desc() {
 		?>
 		<!-- START - Ultimate Member profile SEO meta tags -->
 
-		<link rel="canonical" href="<?php echo esc_url( $url ); ?>"/>
 		<link rel="image_src" href="<?php echo esc_url( $image ); ?>"/>
-
+		
 		<meta name="description" content="<?php echo esc_attr( $description ); ?>"/>
 
 		<meta property="og:type" content="profile"/>
