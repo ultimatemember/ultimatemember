@@ -523,10 +523,8 @@ function um_submit_form_errors_hook_( $args ) {
 					}
 				}
 
-				$profile_show_html_bio = UM()->options()->get( 'profile_show_html_bio' );
-
-				if ( $profile_show_html_bio == 1 && $key !== 'description' ) {
-					if ( isset( $array['html'] ) && $array['html'] == 0 ) {
+				if ( isset( $array['type'] ) && $array['type'] == 'textarea' && UM()->profile()->get_show_bio_key( $args ) !== $key ) {
+					if ( ! isset( $array['html'] ) || $array['html'] == 0 ) {
 						if ( wp_strip_all_tags( $args[ $key ] ) != trim( $args[ $key ] ) ) {
 							UM()->form()->add_error( $key, __( 'You can not use HTML tags here', 'ultimate-member' ) );
 						}

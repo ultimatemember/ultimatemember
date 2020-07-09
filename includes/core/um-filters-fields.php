@@ -692,7 +692,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 			$value = esc_url( $value );
 		} elseif ( 'textarea' == $type ) {
 			if ( empty( $data['html'] ) ) {
-				$value =  wp_kses_post( $value );
+				$value = wp_kses_post( $value );
 			}
 		} elseif ( 'rating' == $type ) {
 			if ( ! is_numeric( $value ) ) {
