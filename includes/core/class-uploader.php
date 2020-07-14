@@ -112,6 +112,9 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			add_action( 'um_upload_stream_image_process', array( $this, 'stream_photo' ), 10, 7 );
 
 			add_action( 'init', array( $this, 'init' ) );
+
+			//remove user old files
+			add_action( 'um_after_move_temporary_files', array( $this, 'remove_unused_uploads' ), 10, 3 );
 		}
 
 
@@ -1258,8 +1261,10 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 
 			}
 
-			//remove user old files
-			$this->remove_unused_uploads( $user_id, $new_files, $old_files );
+			/**
+			 * @hooked UM()->uploader()->remove_unused_uploads() - 10
+			 */
+			do_action( 'um_after_move_temporary_files', $user_id, $new_files, $old_files );
 		}
 
 
@@ -1271,36 +1276,34 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @param array $old_files
 		 */
 		function remove_unused_uploads( $user_id, $new_files, $old_files = array() ) {
-			um_fetch_user( $user_id );
 
-			if ( ! file_exists( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR ) ) {
+			if ( ! file_exists( $this->get_upload_user_base_dir( $user_id ) ) ) {
 				return;
 			}
 
+			UM()->user()->remove_cache( $user_id );
+			UM()->user()->set( $user_id );
 			$user_meta_keys = UM()->user()->profile;
 
 			$_array = $new_files;
 			if ( ! empty( UM()->builtin()->custom_fields ) ) {
 				foreach ( UM()->builtin()->custom_fields as $_field ) {
-					if ( $_field['type'] == 'file' && ! empty( $user_meta_keys[ $_field['metakey'] ] ) ) {
-						$_array[ $_field['metakey'] ] = $user_meta_keys[ $_field['metakey'] ];
+					if ( in_array( $_field['type'], array( 'file', 'image' ) ) && isset( $user_meta_keys[$_field['metakey']] ) && empty( $_array[$_field['metakey']] ) ) {
+						$_array[$_field['metakey']] = $user_meta_keys[$_field['metakey']];
 					}
 				}
 			}
 
-			$files = glob( UM()->uploader()->get_upload_base_dir() . um_user( 'ID' ) . DIRECTORY_SEPARATOR . '*', GLOB_BRACE );
+			$files = glob( UM()->uploader()->get_upload_base_dir() . $user_id . DIRECTORY_SEPARATOR . '*', GLOB_BRACE );
 			if ( ! empty( $files ) ) {
 				foreach ( $files as $file ) {
 					$str = basename( $file );
 
-					if ( preg_grep( '/' . $str . '/i', $old_files ) ) {
-						unlink( $file );
+					if ( strstr( $str, 'profile_photo' ) || strstr( $str, 'cover_photo' ) || preg_grep( '/' . $str . '/', $_array ) ) {
+						continue;
 					}
 
-					if ( ! strstr( $str, 'profile_photo' ) && ! strstr( $str, 'cover_photo' ) &&
-					     ! strstr( $str, 'stream_photo' ) && ! preg_grep( '/' . $str . '/', $_array ) ) {
-						unlink( $file );
-					}
+					unlink( $file );
 				}
 			}
 		}
