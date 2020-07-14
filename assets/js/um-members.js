@@ -693,6 +693,8 @@ jQuery(document.body).ready( function() {
 			directory.data( 'view_type', layout );
 
 			um_build_template( directory, data );
+
+			um_init_new_dropdown();
 		}
 		um_members_hide_preloader( directory );
 	});
