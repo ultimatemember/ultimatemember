@@ -147,6 +147,8 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = 2.1.7: July xx, 2020 =
 
+  - Fixed cleaning user old uploads
+  - Fixed conditional logic for file/image-type fields
   - Fixed "get_profile_photo_size" function (avoid PHP notice with array_combine )
   - Fixed password reset/change form when other forms are initialized at the same page
   - Fixed getting extension updates on multisites
