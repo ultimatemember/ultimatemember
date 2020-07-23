@@ -1047,10 +1047,14 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 *
 		 */
 		function hide_by_role() {
+			if ( ! is_user_logged_in() ) {
+				return;
+			}
+
 			$roles = um_user( 'can_view_roles' );
 			$roles = maybe_unserialize( $roles );
 
-			if ( empty( $roles ) || ! UM()->roles()->um_user_can( 'can_view_all' ) ) {
+			if ( UM()->roles()->um_user_can( 'can_view_all' ) && empty( $roles ) ) {
 				return;
 			}
 
@@ -2427,6 +2431,16 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			//unset empty meta_query attribute
 			if ( isset( $this->query_args['meta_query']['relation'] ) && count( $this->query_args['meta_query'] ) == 1 ) {
 				unset( $this->query_args['meta_query'] );
+			}
+
+			if ( isset( $this->query_args['role__in'] ) && empty( $this->query_args['role__in'] ) ) {
+				$member_directory_response = apply_filters( 'um_ajax_get_members_response', array(
+					'pagination'    => $this->calculate_pagination( $directory_data, 0 ),
+					'users'         => array(),
+					'is_search'     => $this->is_search,
+				), $directory_data );
+
+				wp_send_json_success( $member_directory_response );
 			}
 
 			/**
