@@ -600,7 +600,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					// select users who have capabilities for current blog
 					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_roles ON ( umm_roles.user_id = u.ID AND umm_roles.um_key = '" . $wpdb->get_blog_prefix( $blog_id ) . "capabilities' )";
 					$this->where_clauses[] = "umm_roles.um_value IS NOT NULL";
-				} else {
+				} elseif ( $this->roles_in_query ) {
 					$member_directory_response = apply_filters( 'um_ajax_get_members_response', array(
 						'pagination'    => $this->calculate_pagination( $directory_data, 0 ),
 						'users'         => array(),
