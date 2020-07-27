@@ -30,18 +30,11 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 		 * Permalinks constructor.
 		 */
 		function __construct() {
-
 			add_action( 'init',  array( &$this, 'set_current_url' ), 0 );
 
 			add_action( 'init',  array( &$this, 'check_for_querystrings' ), 1 );
 
 			add_action( 'init',  array( &$this, 'activate_account_via_email_link' ), 1 );
-
-			//add_action( 'um_user_after_updating_profile', array( &$this, 'profile_url' ), 1 );
-
-			remove_action( 'wp_head', 'rel_canonical' );
-
-			add_action( 'wp_head',  array( &$this, 'um_rel_canonical_' ), 9 );
 		}
 
 
@@ -55,6 +48,10 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 
 		/**
 		 * SEO canonical href bugfix
+		 *
+		 * @deprecated since version 2.1.7
+		 *
+		 * @see function um_profile_remove_wpseo()
 		 */
 		function um_rel_canonical_() {
 			global $wp_the_query;

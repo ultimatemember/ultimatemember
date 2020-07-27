@@ -6,8 +6,8 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
-Tested up to: 5.4
-Stable tag: 2.1.5
+Tested up to: 5.4.1
+Stable tag: 2.1.6
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -142,19 +142,32 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = Important: =
 
-* To learn more about version 2.1 please see this [topic](https://wordpress.org/support/topic/version-2-1-4/)
+* To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.1.7: July xx, 2020 =
+
+  - Fixed cleaning user old uploads
+  - Fixed conditional logic for file/image-type fields
+  - Fixed "get_profile_photo_size" function (avoid PHP notice with array_combine )
+  - Fixed password reset/change form when other forms are initialized at the same page
+  - Fixed getting extension updates on multisites
+  - Fixed the 'wp_authenticate_user' filter's variables (changed username string to WP_User object)
+  - Fixed SEO link canonical for the profile page
+  - Deprecated JS event 'um_before_modal_removed', use wp.hooks action 'um_before_modal_removed' instead
 
 = 2.1.6: June 1, 2020 =
 
 * Enhancements:
 
+  - Added The profile page SEO meta tags for OG, Twitter and schema.org
   - Added filter to the field's privacy option for the 3rd-party integrations 'um_field_privacy_options'
   - Added layout changes to show email notification description in Settings > Email screen
   - Added member directory option 'Exclude specific users'
   - Added filter for the changing redirect after profile edited 'um_update_profile_redirect_after'
   - Added JS filters for conditional logic
   - Tweak: apply_shortcodes() function support
+  - Tweak: nav-menu custom fields using 'wp_nav_menu_item_custom_fields' hook
 
 * Bugfixes:
 
@@ -164,9 +177,11 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed creating user uploads directory on registration
   - Fixed Role fields validation on registration
   - Fixed Erase User Data field on the Account page
+  - Fixed profile privacy
   - Fixed SkypeID field
   - Fixed clickable links in the UM forms which are displayed in a modal window
   - Fixed disabling select and textarea fields in inactive tabs on Account
+  - Fixed compatibility with jQuery 3.x and 'load' event
   - Fixed some translations
   - Small PHP notices fixes
 

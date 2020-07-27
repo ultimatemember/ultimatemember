@@ -35,35 +35,30 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 			foreach ( $wp_roles->roles as $roleID => $role_data ) {
 				$role_meta = get_option( "um_role_{$roleID}_meta" );
 
-				if ( ! empty( $role_meta ) )
-					$wp_roles->roles[$roleID] = array_merge( $role_data, $role_meta );
+				if ( ! empty( $role_meta ) ) {
+					$wp_roles->roles[ $roleID ] = array_merge( $role_data, $role_meta );
+				}
 			}
 
 
 			//Add custom UM roles
 			$roles = array();
 
-			$role_keys = get_option( 'um_roles' );
-
-			if ( $role_keys ) {
-
-				foreach ( $role_keys as $role_key ) {
-					$role_meta = get_option( "um_role_{$role_key}_meta" );
-					if ( $role_meta ) {
-						//$role_meta['name'] = 'UM ' . $role_meta['name'];
-						$roles['um_' . $role_key] = $role_meta;
-					}
+			$role_keys = get_option( 'um_roles', array() );
+			foreach ( $role_keys as $role_key ) {
+				$role_meta = get_option( "um_role_{$role_key}_meta" );
+				if ( $role_meta ) {
+					$roles[ 'um_' . $role_key ] = $role_meta;
 				}
+			}
 
-				foreach ( $roles as $role_id => $details ) {
-					$capabilities = ! empty( $details['wp_capabilities'] ) ? array_keys( $details['wp_capabilities'] ) : array();
-					$details['capabilities'] = array_fill_keys( array_values( $capabilities ), true );
-					unset( $details['wp_capabilities'] );
-					$wp_roles->roles[$role_id]        = $details;
-					$wp_roles->role_objects[$role_id] = new \WP_Role( $role_id, $details['capabilities'] );
-					$wp_roles->role_names[$role_id]   = $details['name'];
-				}
-
+			foreach ( $roles as $role_id => $details ) {
+				$capabilities = ! empty( $details['wp_capabilities'] ) ? array_keys( $details['wp_capabilities'] ) : array();
+				$details['capabilities'] = array_fill_keys( array_values( $capabilities ), true );
+				unset( $details['wp_capabilities'] );
+				$wp_roles->roles[ $role_id ]        = $details;
+				$wp_roles->role_objects[ $role_id ] = new \WP_Role( $role_id, $details['capabilities'] );
+				$wp_roles->role_names[ $role_id ]   = $details['name'];
 			}
 
 			// Return the modified $wp_roles array

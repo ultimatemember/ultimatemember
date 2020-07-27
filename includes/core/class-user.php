@@ -1711,7 +1711,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			if ( $privacy == __( 'Only me', 'ultimate-member' ) || $privacy == 'Only me' ) {
 				return true;
 			}
-			return false;
+			return $this->is_private_case( $user_id, $privacy );
 		}
 
 

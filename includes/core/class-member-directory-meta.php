@@ -22,6 +22,8 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 		var $where_clauses = array();
 
 		var $roles = array();
+		var $roles_in_query = false;
+
 		var $general_meta_joined = false;
 
 		var $having = '';
@@ -393,6 +395,8 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					if ( empty( $this->roles ) && ! is_multisite() ) {
 						$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_roles ON ( umm_roles.user_id = u.ID AND umm_roles.um_key = '" . $wpdb->get_blog_prefix( $blog_id ) . "capabilities' )";
 						$this->roles = $value;
+
+						$this->roles_in_query = true;
 					}
 
 					$roles_clauses = array();
@@ -568,6 +572,8 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				}
 
 				$this->roles = array_merge( $this->roles, maybe_unserialize( $view_roles ) );
+
+				$this->roles_in_query = true;
 			}
 
 			if ( ! empty( $directory_data['roles'] ) ) {
@@ -576,6 +582,8 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				} else {
 					$this->roles = array_merge( $this->roles, maybe_unserialize( $directory_data['roles'] ) );
 				}
+
+				$this->roles_in_query = true;
 			}
 
 			if ( ! empty( $this->roles ) ) {
@@ -588,10 +596,18 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 				$this->where_clauses[] = '( ' . implode( ' OR ', $roles_clauses ) . ' )';
 			} else {
-				if ( is_multisite() ) {
+				if ( ! $this->roles_in_query && is_multisite() ) {
 					// select users who have capabilities for current blog
 					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_roles ON ( umm_roles.user_id = u.ID AND umm_roles.um_key = '" . $wpdb->get_blog_prefix( $blog_id ) . "capabilities' )";
 					$this->where_clauses[] = "umm_roles.um_value IS NOT NULL";
+				} elseif ( $this->roles_in_query ) {
+					$member_directory_response = apply_filters( 'um_ajax_get_members_response', array(
+						'pagination'    => $this->calculate_pagination( $directory_data, 0 ),
+						'users'         => array(),
+						'is_search'     => $this->is_search,
+					), $directory_data );
+
+					wp_send_json_success( $member_directory_response );
 				}
 			}
 

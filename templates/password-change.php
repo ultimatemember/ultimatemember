@@ -3,11 +3,11 @@
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 
 	<div class="um-form">
-	
+
 		<form method="post" action="">
 			<input type="hidden" name="_um_password_change" id="_um_password_change" value="1" />
 			<input type="hidden" name="user_id" id="user_id" value="<?php echo esc_attr( $args['user_id'] ); ?>" />
-			<input type="hidden" name="rp_key" value="<?php echo esc_attr( $rp_key ); ?>">
+			<input type="hidden" name="rp_key" value="<?php echo esc_attr( $rp_key ); ?>" />
 
 			<?php
 			/**
@@ -32,6 +32,8 @@
 			do_action( 'um_change_password_page_hidden_fields', $args );
 
 			$fields = UM()->builtin()->get_specific_fields( 'user_password' );
+
+			UM()->fields()->set_mode = 'password';
 
 			$output = null;
 			foreach ( $fields as $key => $data ) {

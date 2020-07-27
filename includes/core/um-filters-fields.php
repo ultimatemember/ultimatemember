@@ -692,7 +692,7 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 			$value = esc_url( $value );
 		} elseif ( 'textarea' == $type ) {
 			if ( empty( $data['html'] ) ) {
-				$value =  wp_kses_post( $value );
+				$value = wp_kses_post( $value );
 			}
 		} elseif ( 'rating' == $type ) {
 			if ( ! is_numeric( $value ) ) {
@@ -722,16 +722,23 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 			 */
 			$option_pairs = apply_filters( 'um_select_options_pair', null, $data );
 
-			$arr = empty( $data['options'] ) ? array() : $data['options'];
+			$array = empty( $data['options'] ) ? array() : $data['options'];
+
+			if ( $data['metakey'] == 'country' && empty( $array ) ) {
+				$array = UM()->builtin()->get( 'countries' );
+			}
+
 			if ( $option_pairs ) {
-				$arr = array_keys( $arr );
+				$arr = array_keys( $array );
+			} else {
+				$arr = $array;
 			}
 
 			if ( ! empty( $arr ) && ! in_array( $value, array_map( 'trim', $arr ) ) && empty( $data['custom_dropdown_options_source'] ) ) {
 				$value = '';
 			} else {
-				if ( $option_pairs && isset( $data['options'] ) && is_array( $data['options'] ) && isset( $data['options'][ $value ] ) ) {
-					$value = $data['options'][ $value ];
+				if ( $option_pairs && is_array( $array ) && isset( $array[ $value ] ) ) {
+					$value = $array[ $value ];
 				}
 			}
 		}

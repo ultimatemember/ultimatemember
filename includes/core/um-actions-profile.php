@@ -608,8 +608,12 @@ if ( !function_exists( 'um_profile_remove_wpseo' ) ) {
 			/* Yoast SEO 14.1 */
 			remove_all_filters( 'wpseo_head' );
 
-			if( ! has_action( 'wp_head', '_wp_render_title_tag' ) ){
+			/* Restore title and canonical if broken */
+			if ( ! has_action( 'wp_head', '_wp_render_title_tag' ) ) {
 				add_action( 'wp_head', '_wp_render_title_tag', 18 );
+			}
+			if ( ! has_action( 'wp_head', 'rel_canonical' ) ) {
+				add_action( 'wp_head', 'rel_canonical', 18 );
 			}
 		}
 	}
@@ -619,7 +623,7 @@ add_action( 'get_header', 'um_profile_remove_wpseo', 8 );
 
 
 /**
- * Meta description
+ * The profile page SEO tags
  * 
  * @see https://ogp.me/ - The Open Graph protocol
  * @see https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/summary - The Twitter Summary card
@@ -629,6 +633,20 @@ function um_profile_dynamic_meta_desc() {
 	if ( um_is_core_page( 'user' ) && um_get_requested_user() ) {
 
 		$user_id = um_get_requested_user();
+
+		$privacy = get_user_meta( $user_id, 'profile_privacy', true );
+		if ( $privacy == __( 'Only me', 'ultimate-member' ) || $privacy == 'Only me' ) {
+			return;
+		}
+
+		$noindex = get_user_meta( $user_id, 'profile_noindex', true );
+		if ( ! empty( $noindex ) ) { ?>
+
+			<meta name="robots" content="noindex, nofollow" />
+
+			<?php return;
+		}
+
 		um_fetch_user( $user_id );
 
 		$locale = get_user_locale( $user_id );
@@ -647,21 +665,20 @@ function um_profile_dynamic_meta_desc() {
 		$image = um_get_user_avatar_url( $user_id, $size );
 
 		$person = array(
-				"@context" => "http://schema.org",
-				"@type" => "Person",
-				"name" => esc_attr( $title ),
-				"description" => esc_attr( $description ),
-				"image" => esc_url( $image ),
-				"url" => esc_url( $url )
+			"@context"      => "http://schema.org",
+			"@type"         => "Person",
+			"name"          => esc_attr( $title ),
+			"description"   => esc_attr( $description ),
+			"image"         => esc_url( $image ),
+			"url"           => esc_url( $url ),
 		);
 
 		um_reset_user();
 		?>
 		<!-- START - Ultimate Member profile SEO meta tags -->
 
-		<link rel="canonical" href="<?php echo esc_url( $url ); ?>"/>
 		<link rel="image_src" href="<?php echo esc_url( $image ); ?>"/>
-
+		
 		<meta name="description" content="<?php echo esc_attr( $description ); ?>"/>
 
 		<meta property="og:type" content="profile"/>

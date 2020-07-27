@@ -68,9 +68,9 @@ function um_submit_form_errors_hook_login( $args ) {
 		UM()->form()->add_error( $user->get_error_code(), __( $user->get_error_message(), 'ultimate-member' ) );
 	}
 
-	$authenticate_user = apply_filters( 'wp_authenticate_user', $user_name, $args['user_password'] );
-	if ( is_wp_error( $authenticate_user ) && ! in_array( $authenticate_user->get_error_code(), $ignore_codes ) ) {
-		UM()->form()->add_error( $authenticate_user->get_error_code(), __( $authenticate_user->get_error_message(), 'ultimate-member' ) );
+	$user = apply_filters( 'wp_authenticate_user', $user, $args['user_password'] );
+	if ( is_wp_error( $user ) && ! in_array( $user->get_error_code(), $ignore_codes ) ) {
+		UM()->form()->add_error( $user->get_error_code(), __( $user->get_error_message(), 'ultimate-member' ) );
 	}
 
 	// if there is an error notify wp

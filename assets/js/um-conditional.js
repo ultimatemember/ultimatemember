@@ -62,27 +62,12 @@ function um_get_field_default_value( $dom ) {
  */
 function um_get_field_element( $dom ) {
 
+	var field_element = $dom.find( 'input,textarea,select' );
 	var type = um_get_field_type( $dom );
-	var field_element = '';
 
-	switch ( type ) {
+	field_element = wp.hooks.applyFilters( 'um_conditional_logic_field_element', field_element, type, $dom );
 
-		case 'text':
-		case 'number':
-		case 'date':
-		case 'textarea':
-		case 'select':
-		case 'multiselect':
-		case 'radio':
-		case 'checkbox':
-			field_element = $dom.find( 'input,textarea,select' );
-			break;
-		default:
-			field_element = wp.hooks.applyFilters( 'um_conditional_logic_field_element', field_element, type, $dom );
-			break;
-	}
-
-	return '';
+	return field_element;
 }
 
 /**
@@ -236,6 +221,9 @@ function um_apply_conditions( $dom, is_single_update ) {
 
 	var field_type = um_get_field_type( $dom.parents('.um-field[data-key]') );
 	var live_field_value = um_get_field_data( $dom );
+	if (live_field_value === 'empty_file') {
+		live_field_value = '';
+	}
 
 	var $owners = {};
 	var $owners_values = {};
@@ -332,7 +320,7 @@ function um_apply_conditions( $dom, is_single_update ) {
 				default:
 
 					$owners = wp.hooks.applyFilters( 'um_conditional_logic_contains_operator_owners', $owners, field_type, live_field_value, condition, index );
-					if ( typeof $owners[ condition.owner ][ index ] == 'undefined' ) {
+					if ( typeof $owners[ condition.owner ][ index ] === 'undefined' ) {
 						if ( live_field_value && live_field_value.indexOf( condition.value ) >= 0 && um_in_array( live_field_value, $owners_values[ condition.owner ] ) ) {
 							$owners[ condition.owner ][ index ] = true;
 						} else {
@@ -370,25 +358,29 @@ function um_field_apply_action($dom, condition, is_true) {
 	var child_dom = jQuery('div.um-field[data-key="' + condition.owner + '"]');
 
 	if ( condition.action === 'show' && is_true /*&& child_dom.is(':hidden')*/ ) {
+		if( child_dom.is(':hidden') ){
+			um_field_restore_default_value(child_dom);
+		}
 		child_dom.show();
 		_show_in_ie( child_dom );
-		um_field_restore_default_value(child_dom);
 	}
 
-	if ( condition.action === 'show' && ! is_true /*&& child_dom.is(':visible') */ ) {
+	if ( condition.action === 'show' && ! is_true /*&& child_dom.is(':visible')*/ ) {
 		child_dom.hide();
 		_hide_in_ie( child_dom );
 	}
 
-	if ( condition.action === 'hide' && is_true  /*&& child_dom.is(':visible')*/ ) {
+	if ( condition.action === 'hide' && is_true /*&& child_dom.is(':visible')*/ ) {
 		child_dom.hide();
 		_hide_in_ie( child_dom );
 	}
 
 	if ( condition.action === 'hide' && ! is_true /*&& child_dom.is(':hidden')*/ ) {
+		if( child_dom.is(':hidden') ){
+			um_field_restore_default_value(child_dom);
+		}
 		child_dom.show();
 		_show_in_ie( child_dom );
-		um_field_restore_default_value( child_dom );
 
 	}
 	return $dom.removeClass( 'um-field-has-changed' );
@@ -638,6 +630,27 @@ jQuery(document).ready( function (){
         var me = jQuery(this);
         um_apply_conditions(me, false);
     });
+
+	jQuery(document).on('change', '.um-field-image input[type="hidden"],.um-field-file input[type="hidden"]', function () {
+		var me = jQuery(this);
+		um_apply_conditions(me, false);
+	});
+
+	jQuery(document).on('click', '.um-finish-upload', function () {
+		var key = jQuery(this).attr('data-key');
+		var me = jQuery('.um-field-'+key+' input');
+		setTimeout(function () {
+			um_apply_conditions(me, false);
+		}, 100);
+	});
+
+	jQuery(document).on('click', '.um-field .cancel', function () {
+		var key = jQuery(this).parent().attr('data-key');
+		var me = jQuery('.um-field-'+key+' input');
+		setTimeout(function () {
+			um_apply_conditions(me, false);
+		}, 1000);
+	});
 
     jQuery(document).on('um_fields_change', function () {
         um_field_hide_siblings();

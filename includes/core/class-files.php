@@ -1274,19 +1274,23 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		function get_profile_photo_size( $type ) {
 			$sizes = UM()->options()->get( $type );
 
-			$sizes = array_combine( $sizes, $sizes );
+			if ( ! empty( $sizes ) && is_array( $sizes ) ) {
+				$sizes = array_combine( $sizes, $sizes );
 
-			if ( $type == 'cover_thumb_sizes' ) {
-				foreach ( $sizes as $key => $value ) {
-					$sizes[ $key ] = $value . 'px';
+				if ( $type == 'cover_thumb_sizes' ) {
+					foreach ( $sizes as $key => $value ) {
+						$sizes[ $key ] = $value . 'px';
+					}
+				} elseif ( $type == 'photo_thumb_sizes' ) {
+					foreach ( $sizes as $key => $value ) {
+						$sizes[ $key ] = $value . 'x' . $value . 'px';
+					}
 				}
-			} elseif ( $type == 'photo_thumb_sizes' ) {
-				foreach ( $sizes as $key => $value ) {
-					$sizes[ $key ] = $value . 'x' . $value . 'px';
-				}
+			} else {
+				$sizes = array();
+				$sizes['original'] = __( 'Original size', 'ultimate-member' );
 			}
 
-			$sizes['original'] = __( 'Original size', 'ultimate-member' );
 			return $sizes;
 		}
 

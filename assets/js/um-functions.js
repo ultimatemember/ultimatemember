@@ -209,217 +209,217 @@ function um_responsive(){
 
 function initImageUpload_UM( trigger ) {
 
-		if (trigger.data('upload_help_text')){
-			upload_help_text = '<span class="help">' + trigger.data('upload_help_text') + '</span>';
-		} else {
-			upload_help_text = '';
-		}
+	if (trigger.data('upload_help_text')){
+		upload_help_text = '<span class="help">' + trigger.data('upload_help_text') + '</span>';
+	} else {
+		upload_help_text = '';
+	}
 
-		if ( trigger.data('icon') ) {
-			icon = '<span class="icon"><i class="'+ trigger.data('icon') + '"></i></span>';
-		} else {
-			icon = '';
-		}
+	if ( trigger.data('icon') ) {
+		icon = '<span class="icon"><i class="'+ trigger.data('icon') + '"></i></span>';
+	} else {
+		icon = '';
+	}
 
-		if ( trigger.data('upload_text') ) {
-			upload_text = '<span class="str">' + trigger.data('upload_text') + '</span>';
-		} else {
-			upload_text = '';
-		}
+	if ( trigger.data('upload_text') ) {
+		upload_text = '<span class="str">' + trigger.data('upload_text') + '</span>';
+	} else {
+		upload_text = '';
+	}
 
-		var user_id = 0;
+	var user_id = 0;
 
-		if( jQuery('#um_upload_single:visible').data('user_id') ){
-	 		user_id = jQuery('#um_upload_single:visible').data('user_id');
-	 	}
+	if( jQuery('#um_upload_single:visible').data('user_id') ){
+        user_id = jQuery('#um_upload_single:visible').data('user_id');
+    }
 
-		trigger.uploadFile({
-			url: wp.ajax.settings.url,
-			method: "POST",
-			multiple: false,
-			formData: {
-				action: 'um_imageupload',
-				key: trigger.data('key'),
-				set_id: trigger.data('set_id'),
-				set_mode: trigger.data('set_mode'),
-				_wpnonce: trigger.data('nonce'),
-				timestamp: trigger.data('timestamp'),
-				user_id: user_id
-			 },
-			fileName: trigger.data('key'),
-			allowedTypes: trigger.data('allowed_types'),
-			maxFileSize: trigger.data('max_size'),
-			dragDropStr: icon + upload_text + upload_help_text,
-			sizeErrorStr: trigger.data('max_size_error'),
-			extErrorStr: trigger.data('extension_error'),
-			maxFileCountErrorStr: trigger.data('max_files_error'),
-			maxFileCount: 1,
-			showDelete: false,
-			showAbort: false,
-			showDone: false,
-			showFileCounter: false,
-			showStatusAfterSuccess: true,
-			returnType: 'json',
-			onSubmit:function(files){
+	trigger.uploadFile({
+		url: wp.ajax.settings.url,
+		method: "POST",
+		multiple: false,
+		formData: {
+			action: 'um_imageupload',
+			key: trigger.data('key'),
+			set_id: trigger.data('set_id'),
+			set_mode: trigger.data('set_mode'),
+			_wpnonce: trigger.data('nonce'),
+			timestamp: trigger.data('timestamp'),
+			user_id: user_id
+		 },
+		fileName: trigger.data('key'),
+		allowedTypes: trigger.data('allowed_types'),
+		maxFileSize: trigger.data('max_size'),
+		dragDropStr: icon + upload_text + upload_help_text,
+		sizeErrorStr: trigger.data('max_size_error'),
+		extErrorStr: trigger.data('extension_error'),
+		maxFileCountErrorStr: trigger.data('max_files_error'),
+		maxFileCount: 1,
+		showDelete: false,
+		showAbort: false,
+		showDone: false,
+		showFileCounter: false,
+		showStatusAfterSuccess: true,
+		returnType: 'json',
+		onSubmit:function(files){
 
-				trigger.parents('.um-modal-body').find('.um-error-block').remove();
+			trigger.parents('.um-modal-body').find('.um-error-block').remove();
 
-			},
-			onSuccess:function( files, response, xhr ){
+		},
+		onSuccess:function( files, response, xhr ){
 
-				trigger.selectedFiles = 0;
+			trigger.selectedFiles = 0;
 
-				if ( response.success && response.success == false || typeof response.data.error !== 'undefined' ) {
+			if ( response.success && response.success == false || typeof response.data.error !== 'undefined' ) {
 
-					trigger.parents('.um-modal-body').append('<div class="um-error-block">'+response.data.error+'</div>');
-					trigger.parents('.um-modal-body').find('.upload-statusbar').hide(0);
-					um_modal_responsive();
+				trigger.parents('.um-modal-body').append('<div class="um-error-block">'+response.data.error+'</div>');
+				trigger.parents('.um-modal-body').find('.upload-statusbar').hide(0);
+				um_modal_responsive();
 
-				} else {
-					
-					jQuery.each( response.data, function( i, d ) {
-					
-						var img_id = trigger.parents('.um-modal-body').find('.um-single-image-preview img');
-						var img_id_h = trigger.parents('.um-modal-body').find('.um-single-image-preview');
+			} else {
 
-						var cache_ts = new Date();
-				
-						img_id.attr("src", d.url + "?"+cache_ts.getTime() );
-						img_id.data("file", d.file );
+				jQuery.each( response.data, function( i, d ) {
 
-						img_id.load(function(){
+					var img_id = trigger.parents('.um-modal-body').find('.um-single-image-preview img');
+					var img_id_h = trigger.parents('.um-modal-body').find('.um-single-image-preview');
 
-							trigger.parents('.um-modal-body').find('.um-modal-btn.um-finish-upload.disabled').removeClass('disabled');
-							trigger.parents('.um-modal-body').find('.ajax-upload-dragdrop,.upload-statusbar').hide(0);
-							img_id_h.show(0);
-							um_modal_responsive();
+					var cache_ts = new Date();
 
-						});
+					img_id.attr("src", d.url + "?"+cache_ts.getTime() );
+					img_id.data("file", d.file );
+
+					img_id.on( 'load', function() {
+
+						trigger.parents('.um-modal-body').find('.um-modal-btn.um-finish-upload.disabled').removeClass('disabled');
+						trigger.parents('.um-modal-body').find('.ajax-upload-dragdrop,.upload-statusbar').hide(0);
+						img_id_h.show(0);
+						um_modal_responsive();
 
 					});
 
-				}
+				});
 
-			},
-			onError: function ( e ){
-				console.log( e );
 			}
-		});
+
+		},
+		onError: function ( e ){
+			console.log( e );
+		}
+	});
 
 }
 
 function initFileUpload_UM( trigger ) {
 
-		if (trigger.data('upload_help_text')){
-			upload_help_text = '<span class="help">' + trigger.data('upload_help_text') + '</span>';
-		} else {
-			upload_help_text = '';
-		}
+	if (trigger.data('upload_help_text')){
+		upload_help_text = '<span class="help">' + trigger.data('upload_help_text') + '</span>';
+	} else {
+		upload_help_text = '';
+	}
 
-		if ( trigger.data('icon') ) {
-			icon = '<span class="icon"><i class="'+ trigger.data('icon') + '"></i></span>';
-		} else {
-			icon = '';
-		}
+	if ( trigger.data('icon') ) {
+		icon = '<span class="icon"><i class="'+ trigger.data('icon') + '"></i></span>';
+	} else {
+		icon = '';
+	}
 
-		if ( trigger.data('upload_text') ) {
-			upload_text = '<span class="str">' + trigger.data('upload_text') + '</span>';
-		} else {
-			upload_text = '';
-		}
+	if ( trigger.data('upload_text') ) {
+		upload_text = '<span class="str">' + trigger.data('upload_text') + '</span>';
+	} else {
+		upload_text = '';
+	}
 
-		if( jQuery('#um_upload_single:visible').data('user_id') ){
-	 		user_id = jQuery('#um_upload_single:visible').data('user_id');
-	 	}
+	if( jQuery('#um_upload_single:visible').data('user_id') ){
+        user_id = jQuery('#um_upload_single:visible').data('user_id');
+    }
 
-		trigger.uploadFile({
-			url: wp.ajax.settings.url,
-			method: "POST",
-			multiple: false,
-			formData: {
-				action: 'um_fileupload',
-				key: trigger.data('key'), 
-				set_id: trigger.data('set_id'), 
-				user_id: trigger.data('user_id'),
-				set_mode: trigger.data('set_mode'),
-				_wpnonce: trigger.data('nonce'),
-				timestamp: trigger.data('timestamp')
-			},
-			fileName: trigger.data('key'),
-			allowedTypes: trigger.data('allowed_types'),
-			maxFileSize: trigger.data('max_size'),
-			dragDropStr: icon + upload_text + upload_help_text,
-			sizeErrorStr: trigger.data('max_size_error'),
-			extErrorStr: trigger.data('extension_error'),
-			maxFileCountErrorStr: trigger.data('max_files_error'),
-			maxFileCount: 1,
-			showDelete: false,
-			showAbort: false,
-			showDone: false,
-			showFileCounter: false,
-			showStatusAfterSuccess: true,
-			onSubmit:function(files){
+	trigger.uploadFile({
+		url: wp.ajax.settings.url,
+		method: "POST",
+		multiple: false,
+		formData: {
+			action: 'um_fileupload',
+			key: trigger.data('key'),
+			set_id: trigger.data('set_id'),
+			user_id: trigger.data('user_id'),
+			set_mode: trigger.data('set_mode'),
+			_wpnonce: trigger.data('nonce'),
+			timestamp: trigger.data('timestamp')
+		},
+		fileName: trigger.data('key'),
+		allowedTypes: trigger.data('allowed_types'),
+		maxFileSize: trigger.data('max_size'),
+		dragDropStr: icon + upload_text + upload_help_text,
+		sizeErrorStr: trigger.data('max_size_error'),
+		extErrorStr: trigger.data('extension_error'),
+		maxFileCountErrorStr: trigger.data('max_files_error'),
+		maxFileCount: 1,
+		showDelete: false,
+		showAbort: false,
+		showDone: false,
+		showFileCounter: false,
+		showStatusAfterSuccess: true,
+		onSubmit:function(files){
 
-				trigger.parents('.um-modal-body').find('.um-error-block').remove();
+			trigger.parents('.um-modal-body').find('.um-error-block').remove();
 
-			},
-			onSuccess:function( files, response ,xhr ){
+		},
+		onSuccess:function( files, response ,xhr ){
 
-				trigger.selectedFiles = 0;
+			trigger.selectedFiles = 0;
 
-				if ( response.success && response.success == false || typeof response.data.error !== 'undefined' ) {
+			if ( response.success && response.success == false || typeof response.data.error !== 'undefined' ) {
 
-					trigger.parents('.um-modal-body').append('<div class="um-error-block">'+ response.data.error+'</div>');
-					trigger.parents('.um-modal-body').find('.upload-statusbar').hide(0);
-					
-					setTimeout(function(){
-						um_modal_responsive();
-					},1000);
+				trigger.parents('.um-modal-body').append('<div class="um-error-block">'+ response.data.error+'</div>');
+				trigger.parents('.um-modal-body').find('.upload-statusbar').hide(0);
 
-				} else {
+				setTimeout(function(){
+					um_modal_responsive();
+				},1000);
 
-					jQuery.each(  response.data , function(key, value) {
+			} else {
 
-						trigger.parents('.um-modal-body').find('.um-modal-btn.um-finish-upload.disabled').removeClass('disabled');
-						trigger.parents('.um-modal-body').find('.ajax-upload-dragdrop,.upload-statusbar').hide(0);
-						trigger.parents('.um-modal-body').find('.um-single-file-preview').show(0);
+				jQuery.each(  response.data , function(key, value) {
 
-						if ( key == 'icon' ) {
-					
-							trigger.parents('.um-modal-body').find('.um-single-fileinfo i').removeClass().addClass( value );
-					
-						} else if ( key == 'icon_bg' ) {
-							
-							trigger.parents('.um-modal-body').find('.um-single-fileinfo span.icon').css({'background-color' : value } );
-						
-						} else if ( key == 'filename' ) {
-							
-							trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('data-file', value );
-							
-						}else if( key == 'original_name' ){
+					trigger.parents('.um-modal-body').find('.um-modal-btn.um-finish-upload.disabled').removeClass('disabled');
+					trigger.parents('.um-modal-body').find('.ajax-upload-dragdrop,.upload-statusbar').hide(0);
+					trigger.parents('.um-modal-body').find('.um-single-file-preview').show(0);
 
-							trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('data-orignal-name', value );
-							trigger.parents('.um-modal-body').find('.um-single-fileinfo span.filename').html( value );
-							
-						} else if ( key == 'url' ) {
-							
-							trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('href', value);
-						
-						}
+					if ( key == 'icon' ) {
 
-					});
+						trigger.parents('.um-modal-body').find('.um-single-fileinfo i').removeClass().addClass( value );
 
-					setTimeout(function(){
-						um_modal_responsive();
-					},1000);
+					} else if ( key == 'icon_bg' ) {
 
-				}
+						trigger.parents('.um-modal-body').find('.um-single-fileinfo span.icon').css({'background-color' : value } );
 
-			},
-			onError: function ( e ){
-				console.log( e );
+					} else if ( key == 'filename' ) {
+
+						trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('data-file', value );
+
+					}else if( key == 'original_name' ){
+
+						trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('data-orignal-name', value );
+						trigger.parents('.um-modal-body').find('.um-single-fileinfo span.filename').html( value );
+
+					} else if ( key == 'url' ) {
+
+						trigger.parents('.um-modal-body').find('.um-single-fileinfo a').attr('href', value);
+
+					}
+
+				});
+
+				setTimeout(function(){
+					um_modal_responsive();
+				},1000);
+
 			}
-		});
+
+		},
+		onError: function ( e ){
+			console.log( e );
+		}
+	});
 
 }
 
@@ -548,7 +548,7 @@ function um_new_modal( id, size, isPhoto, source ){
 		var photo_maxh = jQuery(window).height() - ( jQuery(window).height() * 0.25 );
 
 		photo_.attr("src", source);
-		photo_.load(function(){
+		photo_.on( 'load', function() {
 
 			jQuery('#' + id).show();
 			jQuery('.um-modal').show();
@@ -698,7 +698,7 @@ function prepare_Modal() {
 
 function remove_Modal() {
 	if ( jQuery('.um-popup-overlay').length ) {
-		jQuery( document ).trigger( 'um_before_modal_removed' );
+		wp.hooks.doAction( 'um_before_modal_removed', jQuery('.um-popup') );
 
 		jQuery('.tipsy').remove();
 		jQuery('.um-popup').empty().remove();

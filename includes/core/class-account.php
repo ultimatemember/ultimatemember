@@ -590,7 +590,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 				case 'privacy':
 
-					$args = 'profile_privacy,hide_in_members';
+					$args = 'profile_privacy,profile_noindex,hide_in_members';
 					/**
 					 * UM hook
 					 *

@@ -18,18 +18,131 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 		protected static $fields = array();
 
 
+		/**
+		 * Admin_Navmenu constructor.
+		 */
 		function __construct() {
+			global $wp_version;
+
 			self::$fields = array(
 				'um_nav_public' => __( 'Display Mode', 'ultimate-member' ),
 				'um_nav_roles'  => __( 'By Role', 'ultimate-member' )
 			);
 
-			add_action( 'wp_update_nav_menu_item', array( &$this, '_save' ), 10, 3 );
-			//add_filter( 'manage_nav-menus_columns', array( &$this, '_columns' ), 99 );
+			if ( $wp_version < '5.4' ) {
+				add_action( 'admin_footer-nav-menus.php', array( &$this, '_wp_template' ) );
+				add_action( 'load-nav-menus.php', array( &$this, 'enqueue_nav_menus_scripts' ) );
+			} else {
+				add_action( 'load-customize.php', array( &$this, 'enqueue_nav_menus_scripts' ) );
+			}
 
-			add_action( 'load-nav-menus.php', array( &$this, 'enqueue_nav_menus_scripts' ) );
-			add_action( 'admin_footer-nav-menus.php', array( &$this, '_wp_template' ) );
+			add_action( 'wp_update_nav_menu_item', array( &$this, '_save' ), 10, 3 );
+
+			add_action( 'wp_nav_menu_item_custom_fields', array( $this, 'wp_nav_menu_item_custom_fields' ), 20, 5 );
+			//add_action( 'wp_nav_menu_item_custom_fields_customize_template', array( $this, 'wp_nav_menu_item_custom_fields_customize_template' ), 20 ); //waiting wp.org answer
 		}
+
+
+		/**
+		 * Fires just before the move buttons of a nav menu item in the menu editor.
+		 * Adds block "Ultimate Member Menu Settings"
+		 *
+		 * @since WP 5.4.0
+		 * @hook  wp_nav_menu_item_custom_fields
+		 *
+		 * @param int      $item_id Menu item ID.
+		 * @param \WP_Post  $item    Menu item data object.
+		 * @param int      $depth   Depth of menu item. Used for padding.
+		 * @param \stdClass $args    An object of menu item arguments.
+		 * @param int      $id      Nav menu ID.
+		 */
+		function wp_nav_menu_item_custom_fields( $item_id, $item, $depth, $args, $id = null ) {
+
+			$um_nav_public = get_post_meta( $item->ID, 'menu-item-um_nav_public', true );
+			$_nav_roles_meta = get_post_meta( $item->ID, 'menu-item-um_nav_roles', true );
+			$um_nav_roles = array();
+			if ( $_nav_roles_meta ) {
+				foreach ( $_nav_roles_meta as $key => $value ) {
+					if ( is_int( $key ) ) {
+						$um_nav_roles[] = $value;
+					}
+				}
+			}
+			$options = UM()->roles()->get_roles( false, array( 'administrator' ) );
+			?>
+			<div class="um-nav-edit">
+				<div class="clear"></div>
+				<h4 style="margin-bottom: 0.6em;"><?php _e( 'Ultimate Member Menu Settings', 'ultimate-member' ) ?></h4>
+
+				<p class="description description-wide um-nav-mode">
+					<label for="edit-menu-item-um_nav_public-<?php echo esc_attr( $item_id ); ?>">
+						<?php _e( "Who can see this menu link?", 'ultimate-member' ); ?><br/>
+						<select id="edit-menu-item-um_nav_public-<?php echo esc_attr( $item_id ); ?>" name="menu-item-um_nav_public[<?php echo esc_attr( $item_id ); ?>]" style="width:100%;">
+							<option value="0" <?php selected( $um_nav_public, 0 ); ?>><?php _e( 'Everyone', 'ultimate-member' ) ?></option>
+							<option value="1" <?php selected( $um_nav_public, 1 ); ?>><?php _e( 'Logged Out Users', 'ultimate-member' ) ?></option>
+							<option value="2" <?php selected( $um_nav_public, 2 ); ?>><?php _e( 'Logged In Users', 'ultimate-member' ) ?></option>
+						</select>
+					</label>
+				</p>
+
+				<p class="description description-wide um-nav-roles" <?php echo $um_nav_public == 2 ? 'style="display: block;"' : ''; ?>><?php _e( "Select the member roles that can see this link", 'ultimate-member' ) ?><br>
+
+					<?php
+					$i = 0;
+					$html = '';
+					$columns = apply_filters( 'wp_nav_menu_item:um_nav_columns', 2, $item_id, $item );
+					$per_page = ceil( count( $options ) / $columns );
+					while ( $i < $columns ) {
+						$section_fields_per_page = array_slice( $options, $i * $per_page, $per_page );
+						$html .= '<span class="um-form-fields-section" style="width:' . floor( 100 / $columns ) . '% !important;">';
+
+						foreach ( $section_fields_per_page as $k => $title ) {
+							$id_attr = ' id="edit-menu-item-um_nav_roles-' . $item_id . '_' . $k . '" ';
+							$for_attr = ' for="edit-menu-item-um_nav_roles-' . $item_id . '_' . $k . '" ';
+							$checked_attr = checked( in_array($k,$um_nav_roles), true, false );
+							$html .= "<label {$for_attr}> <input type='checkbox' {$id_attr} name='menu-item-um_nav_roles[{$item_id}][{$k}]' value='1' {$checked_attr} /> <span>{$title}</span> </label>";
+						}
+
+						$html .= '</span>';
+						$i++;
+					}
+					echo $html;
+					?>
+				</p>
+				<div class="clear"></div>
+			</div>
+			<?php
+		}
+
+
+		/**
+		 *
+		 */
+		function wp_nav_menu_item_custom_fields_customize_template() {
+			?>
+			<div class="um-nav-edit">
+				<div class="clear"></div>
+				<h4 style="margin-bottom: 0.6em;"><?php _e( 'Ultimate Member Menu Settings', 'ultimate-member' ) ?></h4>
+
+				<# console.log( data ); #>
+
+				<div class="clear"></div>
+			</div>
+			<?php
+		}
+
+
+
+
+
+
+
+
+		/**
+		 *
+		 * Backward compatibility with WP < 5.4
+		 *
+		 */
 
 
 		/**
@@ -66,18 +179,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 					delete_post_meta( $menu_item_db_id, $key );
 				}
 			}
-		}
-
-
-		/**
-		 * @param $columns
-		 *
-		 * @return array
-		 */
-		function _columns( $columns ) {
-			$columns = array_merge( $columns, self::$fields );
-
-			return $columns;
 		}
 
 

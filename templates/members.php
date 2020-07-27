@@ -79,7 +79,7 @@ if ( ! empty( $args['enable_sorting'] ) ) {
 		$sorting_options_prepared[] = $default_sorting;
 
 		$label = $default_sorting;
-		if ( ! empty( $args['sortby_custom_label'] ) ) {
+		if ( ! empty( $args['sortby_custom_label'] ) && 'other' == $args['sortby'] ) {
 			$label = $args['sortby_custom_label'];
 		} elseif ( ! empty( $all_sorting_options[ $default_sorting ] ) ) {
 			$label = $all_sorting_options[ $default_sorting ];

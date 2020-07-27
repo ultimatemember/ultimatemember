@@ -1033,6 +1033,9 @@ function um_filtered_social_link( $key, $match ) {
  */
 function um_filtered_value( $key, $data = false ) {
 	$value = um_user( $key );
+	if ( is_array( $value ) ) {
+		$value = add_magic_quotes( $value );
+	}
 
 	if ( ! $data ) {
 		$data = UM()->builtin()->get_specific_field( $key );
@@ -2053,7 +2056,7 @@ function um_get_cover_uri( $image, $attrs ) {
 function um_get_avatar_url( $get_avatar ) {
 	preg_match( '/src="(.*?)"/i', $get_avatar, $matches );
 
-	return $matches[1];
+	return isset( $matches[1] ) ? $matches[1] : '';
 }
 
 
