@@ -23,6 +23,16 @@ interface UM_Multilingual {
 	public function __construct();
 
 	/**
+	 * Add UM rewrite rules for the Account page and Profile page
+	 *
+	 * @since  2.1.7
+	 *
+	 * @param  array $rules
+	 * @return array
+	 */
+	public function add_rewrite_rules( $rules );
+
+	/**
 	 * Adding endings to the "Subject Line" field, depending on the language.
 	 *
 	 * @since  2.1.6

@@ -88,6 +88,18 @@ class UM_TranslatePress implements UM_Multilingual {
 	}
 
 	/**
+	 * Add UM rewrite rules for the Account page and Profile page
+	 *
+	 * @since  2.1.7
+	 *
+	 * @param  array $rules
+	 * @return array
+	 */
+	public function add_rewrite_rules( $rules ) {
+		return $rules;
+	}
+
+	/**
 	 * Adding endings to the "Subject Line" field, depending on the language.
 	 *
 	 * @since  2.1.7

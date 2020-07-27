@@ -41,9 +41,82 @@ class UM_Polylang implements UM_Multilingual {
 			add_filter( 'um_pre_args_setup', array( &$this, 'shortcode_pre_args_setup' ), 20, 1 );
 
 			/* Permalink */
+			add_filter( 'rewrite_rules_array', array( &$this, 'add_rewrite_rules' ), 10, 1 );
+			add_filter( 'um_is_core_page', array( &$this, 'is_core_page' ), 10, 2 );
 			add_filter( 'um_get_core_page_filter', array( &$this, 'localize_core_page_url' ), 10, 3 );
 			add_filter( 'um_localize_permalink_filter', array( &$this, 'localize_profile_permalink' ), 10, 2 );
 		}
+	}
+
+	/**
+	 * Add UM rewrite rules for the Account page and Profile page
+	 *
+	 * @since  2.1.7
+	 *
+	 * @global object $polylang  The Polylang instance
+	 * @param  array  $rules
+	 * @return array
+	 */
+	public function add_rewrite_rules( $rules ) {
+		global $polylang;
+
+		if ( $this->is_active() ) {
+			$active_languages = pll_languages_list();
+
+			$newrules = array();
+
+			// Account
+			if ( isset( UM()->config()->permalinks['account'] ) ) {
+				$account_page_id = UM()->config()->permalinks['account'];
+				$account = get_post( $account_page_id );
+
+				foreach ( $active_languages as $language_code ) {
+					if( $language_code === pll_default_language() && $polylang->options['hide_default'] ){
+						continue;
+					}
+					$lang_post_id = pll_get_post( $account_page_id, $language_code );
+					$lang_post_obj = get_post( $lang_post_id );
+
+					if ( isset( $account->post_name ) && isset( $lang_post_obj->post_name ) ) {
+						$lang_page_slug = $lang_post_obj->post_name;
+
+						if( $polylang->options['force_lang'] === 1 ){
+							$newrules[$language_code . '/' . $lang_page_slug . '/([^/]+)/?$'] = 'index.php?page_id=' . $lang_post_id . '&um_tab=$matches[1]&lang=' . $language_code;
+						}
+
+						$newrules[$lang_page_slug . '/([^/]+)/?$'] = 'index.php?page_id=' . $lang_post_id . '&um_tab=$matches[1]&lang=' . $language_code;
+					}
+				}
+			}
+
+			// Profile
+			if ( isset( UM()->config()->permalinks['user'] ) ) {
+				$user_page_id = UM()->config()->permalinks['user'];
+				$user = get_post( $user_page_id );
+
+				foreach ( $active_languages as $language_code ) {
+					if( $language_code === pll_default_language() && $polylang->options['hide_default'] ){
+						continue;
+					}
+					$lang_post_id = pll_get_post( $user_page_id, $language_code );
+					$lang_post_obj = get_post( $lang_post_id );
+
+					if ( isset( $user->post_name ) && isset( $lang_post_obj->post_name ) ) {
+						$lang_page_slug = $lang_post_obj->post_name;
+
+						if( $polylang->options['force_lang'] === 1 ){
+							$newrules[$language_code . '/' . $lang_page_slug . '/([^/]+)/?$'] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
+						}
+
+						$newrules[$lang_page_slug . '/([^/]+)/?$'] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
+					}
+				}
+			}
+
+			$rules = $newrules + $rules;
+		}
+
+		return $rules;
 	}
 
 	/**
@@ -286,6 +359,30 @@ class UM_Polylang implements UM_Multilingual {
 			return isset( $polylang ) && is_object( $polylang );
 		}
 		return false;
+	}
+
+	/**
+	 * Check if we are on a UM Core Page or not
+	 *
+	 * @since  2.1.7
+	 * @hook   um_is_core_page
+	 *
+	 * @global \WP_Post   $post
+	 * @param  boolean    $is_core_page
+	 * @param  string     $page
+	 * @return boolean
+	 */
+	public function is_core_page( $is_core_page, $page ) {
+		global $post;
+
+		if ( $this->is_active() ) {
+			$lang_post_id = pll_get_post( $post->ID, pll_default_language() );
+			if ( isset( UM()->config()->permalinks[$page] ) && UM()->config()->permalinks[$page] == $lang_post_id ) {
+				$is_core_page = true;
+			}
+		}
+
+		return $is_core_page;
 	}
 
 	/**

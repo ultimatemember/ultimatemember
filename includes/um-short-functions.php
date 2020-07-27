@@ -1340,13 +1340,6 @@ function um_is_core_page( $page ) {
 	if ( isset( $post->ID ) && get_post_meta( $post->ID, '_um_wpml_' . $page, true ) == 1 )
 		return true;
 
-	if ( UM()->external_integrations()->is_wpml_active() ) {
-		global $sitepress;
-		if ( UM()->config()->permalinks[ $page ] == wpml_object_id_filter( $post->ID, 'page', true, $sitepress->get_default_language() ) ) {
-			return true;
-		}
-	}
-
 	if (isset( $post->ID )) {
 		$_icl_lang_duplicate_of = get_post_meta( $post->ID, '_icl_lang_duplicate_of', true );
 
@@ -1354,7 +1347,7 @@ function um_is_core_page( $page ) {
 			return true;
 	}
 
-	return false;
+	return apply_filters( 'um_is_core_page', false, $page );
 }
 
 
@@ -1377,7 +1370,7 @@ function um_is_core_post( $post, $core_page ) {
 			return true;
 	}
 
-	return false;
+	return apply_filters( 'um_is_core_post', false, $post, $core_page );
 }
 
 

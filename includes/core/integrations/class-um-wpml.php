@@ -41,9 +41,65 @@ class UM_WPML implements UM_Multilingual {
 
 			/* Permalink */
 			add_filter( 'icl_ls_languages', array( &$this, 'core_page_permalink' ), 10, 1 );
+			add_filter( 'rewrite_rules_array', array( &$this, 'add_rewrite_rules' ), 10, 1 );
+			add_filter( 'um_is_core_page', array( &$this, 'is_core_page' ), 10, 2 );
 			add_filter( 'um_get_core_page_filter', array( &$this, 'localize_core_page_url' ), 10, 3 );
 			add_filter( 'um_localize_permalink_filter', array( &$this, 'localize_profile_permalink' ), 10, 2 );
 		}
+	}
+
+	/**
+	 * Add UM rewrite rules for the Account page and Profile page
+	 *
+	 * @since  2.1.7
+	 *
+	 * @param  array $rules
+	 * @return array
+	 */
+	public function add_rewrite_rules( $rules ) {
+		global $sitepress;
+
+		if ( $this->is_active() ) {
+			$active_languages = $sitepress->get_active_languages();
+
+			$newrules = array();
+
+			// Account
+			if ( $active_languages && isset( UM()->config()->permalinks['account'] ) ) {
+				$account_page_id = UM()->config()->permalinks['account'];
+				$account = get_post( $account_page_id );
+
+				foreach ( $active_languages as $language_code => $language ) {
+					$lang_post_id = wpml_object_id_filter( $account_page_id, 'post', false, $language_code );
+					$lang_post_obj = get_post( $lang_post_id );
+
+					if ( isset( $account->post_name ) && isset( $lang_post_obj->post_name ) && $lang_post_obj->post_name != $account->post_name ) {
+						$lang_page_slug = $lang_post_obj->post_name;
+						$newrules[$lang_page_slug . '/([^/]+)/?$'] = 'index.php?page_id=' . $lang_post_id . '&um_tab=$matches[1]&lang=' . $language_code;
+					}
+				}
+			}
+
+			// Profile
+			if ( $active_languages && isset( UM()->config()->permalinks['user'] ) ) {
+				$user_page_id = UM()->config()->permalinks['user'];
+				$user = get_post( $user_page_id );
+
+				foreach ( $active_languages as $language_code => $language ) {
+					$lang_post_id = wpml_object_id_filter( $user_page_id, 'post', false, $language_code );
+					$lang_post_obj = get_post( $lang_post_id );
+
+					if ( isset( $user->post_name ) && isset( $lang_post_obj->post_name ) && $lang_post_obj->post_name != $user->post_name ) {
+						$lang_page_slug = $lang_post_obj->post_name;
+						$newrules[$lang_page_slug . '/([^/]+)/?$'] = 'index.php?page_id=' . $lang_post_id . '&um_user=$matches[1]&lang=' . $language_code;
+					}
+				}
+			}
+
+			$rules = $newrules + $rules;
+		}
+
+		return $rules;
 	}
 
 	/**
@@ -321,6 +377,31 @@ class UM_WPML implements UM_Multilingual {
 			return $sitepress->get_setting( 'setup_complete' );
 		}
 		return false;
+	}
+
+	/**
+	 * Check if we are on a UM Core Page or not
+	 *
+	 * @since  2.1.7
+	 * @hook   um_is_core_page
+	 *
+	 * @global \WP_Post   $post
+	 * @global \SitePress $sitepress
+	 * @param  boolean    $is_core_page
+	 * @param  string     $page
+	 * @return boolean
+	 */
+	public function is_core_page( $is_core_page, $page ) {
+		global $post;
+		global $sitepress;
+
+		if ( $this->is_active() ) {
+			if ( isset( UM()->config()->permalinks[$page] ) && UM()->config()->permalinks[$page] == wpml_object_id_filter( $post->ID, 'page', true, $sitepress->get_default_language() ) ) {
+				$is_core_page = true;
+			}
+		}
+
+		return $is_core_page;
 	}
 
 	/**
