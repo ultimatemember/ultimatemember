@@ -209,7 +209,7 @@ function um_user_login( $args ) {
 
 	// Priority redirect
 	if ( ! empty( $args['redirect_to']  ) ) {
-		exit( wp_redirect( $args['redirect_to'] ) );
+		exit( wp_safe_redirect( $args['redirect_to'] ) );
 	}
 
 	// Role redirect
