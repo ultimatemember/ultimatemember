@@ -645,26 +645,35 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								array(
 									'id'        => 'account_tab_privacy',
 									'type'      => 'checkbox',
-									'label'     => __( 'Privacy Account Tab','ultimate-member' ),
+									'label'     => __( 'Privacy Account Tab', 'ultimate-member' ),
 									'tooltip'   => __( 'Enable/disable the Privacy account tab in account page', 'ultimate-member' ),
 								),
 								array(
 									'id'        => 'account_tab_notifications',
 									'type'      => 'checkbox',
-									'label'     => __( 'Notifications Account Tab','ultimate-member' ),
+									'label'     => __( 'Notifications Account Tab', 'ultimate-member' ),
 									'tooltip'   => __( 'Enable/disable the Notifications account tab in account page', 'ultimate-member' ),
 								),
 								array(
 									'id'        => 'account_tab_delete',
 									'type'      => 'checkbox',
-									'label'     => __( 'Delete Account Tab','ultimate-member' ),
+									'label'     => __( 'Delete Account Tab', 'ultimate-member' ),
 									'tooltip'   => __( 'Enable/disable the Delete account tab in account page', 'ultimate-member' ),
 								),
 								array(
 									'id'        => 'delete_account_text',
 									'type'      => 'textarea', // bug with wp 4.4? should be editor
-									'label'     => __( 'Account Deletion Custom Text','ultimate-member' ),
-									'tooltip'   => __( 'This is custom text that will be displayed to users before they delete their accounts from your site', 'ultimate-member' ),
+									'label'     => __( 'Account Deletion Custom Text', 'ultimate-member' ),
+									'tooltip'   => __( 'This is custom text that will be displayed to users before they delete their accounts from your site when password is required.', 'ultimate-member' ),
+									'args'      => array(
+										'textarea_rows'    => 6
+									),
+								),
+								array(
+									'id'        => 'delete_account_no_pass_required_text',
+									'type'      => 'textarea',
+									'label'     => __( 'Account Deletion without password Custom Text', 'ultimate-member' ),
+									'tooltip'   => __( 'This is custom text that will be displayed to users before they delete their accounts from your site when password isn\'t required.', 'ultimate-member' ),
 									'args'      => array(
 										'textarea_rows'    => 6
 									),
@@ -672,13 +681,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								array(
 									'id'        => 'account_name',
 									'type'      => 'checkbox',
-									'label'     => __( 'Add a First & Last Name fields','ultimate-member' ),
+									'label'     => __( 'Add a First & Last Name fields', 'ultimate-member' ),
 									'tooltip'   => __( 'Whether to enable these fields on the user account page by default or hide them.', 'ultimate-member' ),
 								),
 								array(
 									'id'            => 'account_name_disable',
 									'type'          => 'checkbox',
-									'label'         => __( 'Disable First & Last Name fields','ultimate-member' ),
+									'label'         => __( 'Disable First & Last Name fields', 'ultimate-member' ),
 									'tooltip'       => __( 'Whether to allow users changing their first and last name in account page.', 'ultimate-member' ),
 									'conditional'   => array( 'account_name', '=', '1' ),
 								),
@@ -692,19 +701,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								array(
 									'id'        => 'account_email',
 									'type'      => 'checkbox',
-									'label'     => __( 'Allow users to change e-mail','ultimate-member' ),
+									'label'     => __( 'Allow users to change e-mail', 'ultimate-member' ),
 									'tooltip'   => __( 'Whether to allow users changing their email in account page.', 'ultimate-member' ),
 								),
 								array(
 									'id'        => 'account_general_password',
 									'type'      => 'checkbox',
-									'label'     => __( 'Password is required?','ultimate-member' ),
+									'label'     => __( 'Password is required?', 'ultimate-member' ),
 									'tooltip'   => __( 'Password is required to save account data.', 'ultimate-member' ),
 								),
 								array(
 									'id'        => 'account_require_strongpass',
 									'type'      => 'checkbox',
-									'label'     => __( 'Require a strong password?','ultimate-member' ),
+									'label'     => __( 'Require a strong password?', 'ultimate-member' ),
 									'tooltip'   => __( 'Enable or disable a strong password rules on account page / change password tab', 'ultimate-member' ),
 								),
 								array(
