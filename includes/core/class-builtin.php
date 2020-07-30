@@ -1114,7 +1114,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 
 				// account page use ( not public )
 
-				'profile_privacy' => array(
+				'profile_privacy'       => array(
 					'title'         => __( 'Profile Privacy', 'ultimate-member' ),
 					'metakey'       => 'profile_privacy',
 					'type'          => 'select',
@@ -1130,7 +1130,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required_perm' => 'can_make_private_profile',
 				),
 
-				'profile_noindex' => array(
+				'profile_noindex'       => array(
 					'title'         => __( 'Avoid indexing my profile by search engines', 'ultimate-member' ),
 					'metakey'       => 'profile_noindex',
 					'type'          => 'select',
@@ -1149,7 +1149,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required_perm' => 'can_make_private_profile',
 				),
 
-				'hide_in_members' => array(
+				'hide_in_members'       => array(
 					'title'         => __( 'Hide my profile from directory', 'ultimate-member' ),
 					'metakey'       => 'hide_in_members',
 					'type'          => 'radio',
@@ -1167,29 +1167,32 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required_opt'  => array( 'members_page', 1 ),
 				),
 
-				'delete_account' => array(
-					'title' => __('Delete Account','ultimate-member'),
-					'metakey' => 'delete_account',
-					'type' => 'radio',
-					'label' => __('Delete Account','ultimate-member'),
-					'help' => __('If you confirm, everything related to your profile will be deleted permanently from the site','ultimate-member'),
-					'required' => 0,
-					'public' => 1,
-					'editable' => 1,
-					'default' => __('No','ultimate-member'),
-					'options' => array( __('Yes','ultimate-member') , __('No','ultimate-member') ),
-					'account_only' => true,
+				'delete_account'        => array(
+					'title'         => __( 'Delete Account', 'ultimate-member' ),
+					'metakey'       => 'delete_account',
+					'type'          => 'radio',
+					'label'         => __( 'Delete Account', 'ultimate-member'),
+					'help'          => __( 'If you confirm, everything related to your profile will be deleted permanently from the site', 'ultimate-member' ),
+					'required'      => 0,
+					'public'        => 1,
+					'editable'      => 1,
+					'default'       => __( 'No', 'ultimate-member' ),
+					'options'       => array(
+						__( 'Yes', 'ultimate-member' ),
+						__( 'No', 'ultimate-member' )
+					),
+					'account_only'  => true,
 				),
 
-				'single_user_password' => array(
-					'title' => __('Password','ultimate-member'),
-					'metakey' => 'single_user_password',
-					'type' => 'password',
-					'label' => __('Password','ultimate-member'),
-					'required' => 1,
-					'public' => 1,
-					'editable' => 1,
-					'account_only' => true,
+				'single_user_password'  => array(
+					'title'         => __( 'Password', 'ultimate-member' ),
+					'metakey'       => 'single_user_password',
+					'type'          => 'password',
+					'label'         => __( 'Password', 'ultimate-member' ),
+					'required'      => 1,
+					'public'        => 1,
+					'editable'      => 1,
+					'account_only'  => true,
 				),
 
 			);
