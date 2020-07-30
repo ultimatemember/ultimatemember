@@ -1201,7 +1201,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @return array
 		 */
 		public function rotate_uploaded_image( $movefile ) {
-			$image_fix_orientation = UM()->options()->get( 'image_fix_orientation' );
+			$image_fix_orientation = UM()->options()->get( 'image_orientation_by_exif' );
 			if ( $image_fix_orientation && $movefile['type'] == 'image/jpeg' ) {
 				$image = imagecreatefromjpeg( $movefile['file'] );
 				if ( $image ) {

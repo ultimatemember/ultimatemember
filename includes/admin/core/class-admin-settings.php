@@ -776,10 +776,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								),
 
 								array(
-									'id'        => 'image_fix_orientation',
+									'id'        => 'image_orientation_by_exif',
 									'type'      => 'checkbox',
-									'label'     => __( 'Fix image orientation','ultimate-member' ),
-									'tooltip'   => __( 'Rotate image to fix orientation by the camera Exif data.','ultimate-member'),
+									'label'     => __( 'Change image orientation', 'ultimate-member' ),
+									'tooltip'   => __( 'Rotate image to and use orientation by the camera EXIF data.', 'ultimate-member' ),
 								),
 								array(
 									'id'        => 'image_compression',

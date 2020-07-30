@@ -745,21 +745,21 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 		 * @return resource
 		 */
 		function fix_image_orientation( $rotate, $source ) {
-			if ( extension_loaded('exif') ){
+			if ( extension_loaded('exif') ) {
 				$exif = @exif_read_data( $source );
 
-				if (isset($exif['Orientation'])) {
-					switch ($exif['Orientation']) {
+				if ( isset( $exif['Orientation'] ) ) {
+					switch ( $exif['Orientation'] ) {
 						case 3:
-							$rotate = imagerotate($rotate, 180, 0);
+							$rotate = imagerotate( $rotate, 180, 0 );
 							break;
 
 						case 6:
-							$rotate = imagerotate($rotate, -90, 0);
+							$rotate = imagerotate( $rotate, -90, 0 );
 							break;
 
 						case 8:
-							$rotate = imagerotate($rotate, 90, 0);
+							$rotate = imagerotate( $rotate, 90, 0 );
 							break;
 					}
 				}
