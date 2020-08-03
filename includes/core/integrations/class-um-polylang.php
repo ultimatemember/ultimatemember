@@ -38,6 +38,9 @@ class UM_Polylang implements UM_Multilingual {
 			add_filter( 'um_locate_email_template', array( &$this, 'locate_email_template' ), 10, 2 );
 
 			/* Form */
+			add_action( 'um_after_user_updated', array( &$this, 'profile_bio_update' ), 20, 2 );
+			add_filter( 'um_field_value', array( &$this, 'profile_bio_value' ), 20, 5 );
+			add_filter( 'um_profile_bio_key', array( &$this, 'profile_bio_key' ), 20, 2 );
 			add_filter( 'um_pre_args_setup', array( &$this, 'shortcode_pre_args_setup' ), 20, 1 );
 
 			/* Permalink */
@@ -518,6 +521,64 @@ class UM_Polylang implements UM_Multilingual {
 		}
 
 		return $args;
+	}
+
+	/**
+	 * Get translated biography key
+	 *
+	 * @since  2.1.7
+	 * @hook   um_profile_bio_key
+	 *
+	 * @param  string $key  Field Key
+	 * @param  array  $args Form Data
+	 * @return string
+	 */
+	public function profile_bio_key( $key, $args ) {
+		if ( $key === 'description' ) {
+			$curlang_slug = pll_current_language();
+			$key = 'description_' . $curlang_slug;
+		}
+		return $key;
+	}
+
+	/**
+	 * Get translated biography value
+	 *
+	 * @since  2.1.7
+	 * @hook   um_field_value
+	 * 
+	 * @param  string $value   Field Value
+	 * @param  string $default Default Value
+	 * @param  string $key     Field Key
+	 * @param  string $type    Field Type
+	 * @param  array  $data    Field Data
+	 * @return string
+	 */
+	public function profile_bio_value( $value, $default, $key, $type = '', $data = array() ) {
+		if ( $key === 'description' ) {
+			$curlang_slug = pll_current_language();
+			$description = get_user_meta( um_profile_id(), 'description_' . $curlang_slug, true );
+			if ( $description ) {
+				$value = $description;
+			}
+		}
+		return $value;
+	}
+
+	/**
+	 * Save translated biography
+	 *
+	 * @since  2.1.7
+	 * @hook   um_after_user_updated
+	 *
+	 * @param integer $user_id User ID
+	 * @param array   $args    Form Data
+	 */
+	public function profile_bio_update( $user_id, $args ) {
+		if ( !empty( $args['description'] ) ) {
+			$curlang_slug = pll_current_language();
+			update_user_meta( $user_id, 'description_' . $curlang_slug, $args['description'] );
+		}
 	}
 
 }
