@@ -6,8 +6,8 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
-Tested up to: 5.4.1
-Stable tag: 2.1.6
+Tested up to: 5.5
+Stable tag: 2.1.7
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -67,6 +67,7 @@ Ultimate Member has a range of extensions that allow you to extend the power of 
 
 = Free Extensions =
 
+* [JobsBoardWP](https://wordpress.org/plugins/um-jobboardwp) - This free extension integrates Ultimate Member with the job board plugin [JobBoardWP](https://wordpress.org/plugins/jobboardwp).
 * [ForumWP](https://ultimatemember.com/extensions/forumwp/) - This free extension integrates Ultimate Member with the forum plugin [ForumWP](https://forumwpplugin.com).
 * [Terms & Conditions](https://ultimatemember.com/extensions/terms-conditions/) - Add a terms and condition checkbox to your registration forms & require users to agree to your T&Cs before registering on your site.
 * [Google reCAPTCHA](https://ultimatemember.com/extensions/google-recaptcha/) - Stop bots on your registration & login forms with Google reCAPTCHA
@@ -153,11 +154,20 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.1.7: July xx, 2020 =
+= 2.1.7: August 05, 2020 =
 
+  - Added dependency functions for plugins: [Ultimate Member - JobBoardWP integration](https://wordpress.org/plugins/um-jobboardwp) & [JobBoardWP](https://wordpress.org/plugins/jobboardwp)
+  - Added account privacy setting for the avoiding profile indexation
+  - Added setting "Change image orientation" based on image EXIF data
+  - Added setting "Account Deletion without password Custom Text"
+  - Fixed security lacks for 'redirect_to' attributes
+  - Fixed member directory roles in query (the case when selected some roles, but current user can see another only)
+  - Fixed member directory sorting
+  - Fixed member directory list dropdown init after changing view type
+  - Fixed validation when using HTML in textarea
   - Fixed cleaning user old uploads
   - Fixed conditional logic for file/image-type fields
-  - Fixed "get_profile_photo_size" function (avoid PHP notice with array_combine )
+  - Fixed "get_profile_photo_size" function (avoid PHP notice with array_combine)
   - Fixed password reset/change form when other forms are initialized at the same page
   - Fixed getting extension updates on multisites
   - Fixed the 'wp_authenticate_user' filter's variables (changed username string to WP_User object)

@@ -2279,7 +2279,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					} else {
 
-						if ( $this->set_mode == 'account' || um_is_core_page( 'account' ) ) {
+						if ( UM()->account()->current_password_is_required( 'password' ) &&
+						     ( $this->set_mode == 'account' || um_is_core_page( 'account' ) ) ) {
 
 							$key = 'current_' . $original_key;
 							$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
@@ -2302,7 +2303,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							if ( $this->is_error( $key ) ) {
 								$output .= $this->field_error( $this->show_error( $key ) );
-							}else if ( $this->is_notice( $key ) ) {
+							} elseif ( $this->is_notice( $key ) ) {
 								$output .= $this->field_notice( $this->show_notice( $key ) );
 							}
 

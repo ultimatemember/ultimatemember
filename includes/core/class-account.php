@@ -160,6 +160,10 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 * @throws \Exception
 		 */
 		function ultimatemember_account( $args = array() ) {
+			if ( ! is_user_logged_in() ) {
+				return '';
+			}
+
 			um_fetch_user( get_current_user_id() );
 
 			ob_start();
@@ -626,7 +630,10 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 				case 'delete':
 
-					$args = 'single_user_password';
+					$args = '';
+					if ( $this->current_password_is_required( $id ) ) {
+						$args = 'single_user_password';
+					}
 
 					/**
 					 * UM hook
@@ -660,6 +667,10 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						$output .= UM()->fields()->edit_field( $key, $data );
 					}
 
+					if ( ! $output && ! $this->current_password_is_required( $id ) ) {
+						$output = '<div></div>';
+					}
+
 					break;
 
 				case 'general':
@@ -674,7 +685,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 						$args = str_replace(',user_email','', $args );
 					}
 
-					if ( UM()->options()->get( 'account_general_password' ) ) {
+					if ( $this->current_password_is_required( $id ) ) {
 						$args .= ',single_user_password';
 					}
 
@@ -929,6 +940,35 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 			 */
 			$classes = apply_filters( 'um_form_official_classes__hook', $classes );
 			return $classes;
+		}
+
+
+		/**
+		 * Checks account actions require current password
+		 *
+		 * @param $tab_key
+		 *
+		 * @return bool
+		 */
+		function current_password_is_required( $tab_key ) {
+			$is_required = true;
+
+			switch ( $tab_key ) {
+				case 'general':
+					$is_required = UM()->options()->get( 'account_general_password' );
+					break;
+				case 'delete':
+					break;
+				case 'password':
+					break;
+				case 'privacy_erase_data':
+				case 'privacy_download_data':
+					break;
+			}
+
+			$is_required = apply_filters( "um_account_{$tab_key}_require_current", $is_required );
+
+			return $is_required;
 		}
 	}
 }
