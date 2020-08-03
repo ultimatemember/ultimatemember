@@ -76,9 +76,17 @@ Ultimate Member has a range of extensions that allow you to extend the power of 
 
 Our official [theme](https://ultimatemember.com/theme/) is purpose built for websites that have logged in and out users. The [theme](https://ultimatemember.com/theme/) has deep integration with Ultimate Member plugin and the extensions, different header designs for logged-in/out users and works alongside the Beaver Builder and Elementor page builders.
 
+= Our other plugins =
+
+In addition to Ultimate Member, we also have two other plugins: [ForumWP](https://forumwpplugin.com/) and [JobBoardWP](https://wordpress.org/plugins/jobboardwp).
+
 = ForumWP =
 
-In addition to Ultimate Member we also have another plugin called [ForumWP](https://forumwpplugin.com/). ForumWP is a forum plugin which adds an online forum to your website, allowing users to create topics and write replies. Forums are a great way to build and grow an online community.
+[ForumWP](https://forumwpplugin.com/) is a forum plugin which adds an online forum to your website, allowing users to create topics and write replies. Forums are a great way to build and grow an online community.
+
+= JobBoardWP =
+
+[JobBoardWP](https://wordpress.org/plugins/jobboardwp) is a job board plugin which adds a modern job board to your website. Display job listings and allow employers to submit and manage jobs all from the front-end.
 
 = Development * Translations =
 

@@ -177,8 +177,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$wp_usermeta_option = get_option( 'um_usermeta_fields', array() );
 
 				$count = $wpdb->get_var(
-					"SELECT COUNT(*) 
-					FROM {$wpdb->usermeta} 
+					"SELECT COUNT(*)
+					FROM {$wpdb->usermeta}
 					WHERE meta_key IN ('" . implode( "','", $wp_usermeta_option ) . "')"
 				);
 
@@ -194,8 +194,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				global $wpdb;
 				$metadata = $wpdb->get_results( $wpdb->prepare(
-					"SELECT * 
-					FROM {$wpdb->usermeta} 
+					"SELECT *
+					FROM {$wpdb->usermeta}
 					WHERE meta_key IN ('" . implode( "','", $wp_usermeta_option ) . "')
 					LIMIT %d, %d",
 					( absint( $_POST['page'] ) - 1 ) * $per_page,
@@ -209,7 +209,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				if ( ! empty( $values ) ) {
 				$wpdb->query(
-					"INSERT INTO 
+					"INSERT INTO
     				{$wpdb->prefix}um_metadata(user_id, um_key, um_value)
 					VALUES " . implode( ',', $values ) );
 				}
@@ -645,26 +645,35 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								array(
 									'id'        => 'account_tab_privacy',
 									'type'      => 'checkbox',
-									'label'     => __( 'Privacy Account Tab','ultimate-member' ),
+									'label'     => __( 'Privacy Account Tab', 'ultimate-member' ),
 									'tooltip'   => __( 'Enable/disable the Privacy account tab in account page', 'ultimate-member' ),
 								),
 								array(
 									'id'        => 'account_tab_notifications',
 									'type'      => 'checkbox',
-									'label'     => __( 'Notifications Account Tab','ultimate-member' ),
+									'label'     => __( 'Notifications Account Tab', 'ultimate-member' ),
 									'tooltip'   => __( 'Enable/disable the Notifications account tab in account page', 'ultimate-member' ),
 								),
 								array(
 									'id'        => 'account_tab_delete',
 									'type'      => 'checkbox',
-									'label'     => __( 'Delete Account Tab','ultimate-member' ),
+									'label'     => __( 'Delete Account Tab', 'ultimate-member' ),
 									'tooltip'   => __( 'Enable/disable the Delete account tab in account page', 'ultimate-member' ),
 								),
 								array(
 									'id'        => 'delete_account_text',
 									'type'      => 'textarea', // bug with wp 4.4? should be editor
-									'label'     => __( 'Account Deletion Custom Text','ultimate-member' ),
-									'tooltip'   => __( 'This is custom text that will be displayed to users before they delete their accounts from your site', 'ultimate-member' ),
+									'label'     => __( 'Account Deletion Custom Text', 'ultimate-member' ),
+									'tooltip'   => __( 'This is custom text that will be displayed to users before they delete their accounts from your site when password is required.', 'ultimate-member' ),
+									'args'      => array(
+										'textarea_rows'    => 6
+									),
+								),
+								array(
+									'id'        => 'delete_account_no_pass_required_text',
+									'type'      => 'textarea',
+									'label'     => __( 'Account Deletion without password Custom Text', 'ultimate-member' ),
+									'tooltip'   => __( 'This is custom text that will be displayed to users before they delete their accounts from your site when password isn\'t required.', 'ultimate-member' ),
 									'args'      => array(
 										'textarea_rows'    => 6
 									),
@@ -672,13 +681,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								array(
 									'id'        => 'account_name',
 									'type'      => 'checkbox',
-									'label'     => __( 'Add a First & Last Name fields','ultimate-member' ),
+									'label'     => __( 'Add a First & Last Name fields', 'ultimate-member' ),
 									'tooltip'   => __( 'Whether to enable these fields on the user account page by default or hide them.', 'ultimate-member' ),
 								),
 								array(
 									'id'            => 'account_name_disable',
 									'type'          => 'checkbox',
-									'label'         => __( 'Disable First & Last Name fields','ultimate-member' ),
+									'label'         => __( 'Disable First & Last Name fields', 'ultimate-member' ),
 									'tooltip'       => __( 'Whether to allow users changing their first and last name in account page.', 'ultimate-member' ),
 									'conditional'   => array( 'account_name', '=', '1' ),
 								),
@@ -692,19 +701,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 								array(
 									'id'        => 'account_email',
 									'type'      => 'checkbox',
-									'label'     => __( 'Allow users to change e-mail','ultimate-member' ),
+									'label'     => __( 'Allow users to change e-mail', 'ultimate-member' ),
 									'tooltip'   => __( 'Whether to allow users changing their email in account page.', 'ultimate-member' ),
 								),
 								array(
 									'id'        => 'account_general_password',
 									'type'      => 'checkbox',
-									'label'     => __( 'Password is required?','ultimate-member' ),
+									'label'     => __( 'Password is required?', 'ultimate-member' ),
 									'tooltip'   => __( 'Password is required to save account data.', 'ultimate-member' ),
 								),
 								array(
 									'id'        => 'account_require_strongpass',
 									'type'      => 'checkbox',
-									'label'     => __( 'Require a strong password?','ultimate-member' ),
+									'label'     => __( 'Require a strong password?', 'ultimate-member' ),
 									'tooltip'   => __( 'Enable or disable a strong password rules on account page / change password tab', 'ultimate-member' ),
 								),
 								array(
@@ -766,6 +775,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									'show_default_number'   => 1,
 								),
 
+								array(
+									'id'        => 'image_orientation_by_exif',
+									'type'      => 'checkbox',
+									'label'     => __( 'Change image orientation', 'ultimate-member' ),
+									'tooltip'   => __( 'Rotate image to and use orientation by the camera EXIF data.', 'ultimate-member' ),
+								),
 								array(
 									'id'        => 'image_compression',
 									'type'      => 'text',
@@ -1894,7 +1909,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							if ( ! empty( $_POST['um_options']['use_gravatars'] ) ) {
 
 								$results = $wpdb->get_col(
-									"SELECT u.ID FROM {$wpdb->users} AS u 
+									"SELECT u.ID FROM {$wpdb->users} AS u
 									LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'synced_gravatar_hashed_id' )
 									LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
 									WHERE um.meta_value != '' AND um.meta_value IS NOT NULL AND
@@ -1904,7 +1919,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							} else {
 
 								$results = $wpdb->get_col(
-									"SELECT u.ID FROM {$wpdb->users} AS u 
+									"SELECT u.ID FROM {$wpdb->users} AS u
 									LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND ( um.meta_key = 'synced_profile_photo' || um.meta_key = 'profile_photo' ) )
 									LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
 									WHERE ( um.meta_value IS NULL OR um.meta_value = '' ) AND
@@ -1944,7 +1959,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					if ( $_POST['um_options']['account_hide_in_directory_default'] == 'No' ) {
 
 						$results = $wpdb->get_col(
-							"SELECT u.ID FROM {$wpdb->users} AS u 
+							"SELECT u.ID FROM {$wpdb->users} AS u
 							LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'hide_in_members' )
 							LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
 							WHERE um.meta_value IS NULL AND
@@ -1954,7 +1969,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					} else {
 
 						$results = $wpdb->get_col(
-							"SELECT u.ID FROM {$wpdb->users} AS u 
+							"SELECT u.ID FROM {$wpdb->users} AS u
 							LEFT JOIN {$wpdb->usermeta} AS um ON ( um.user_id = u.ID AND um.meta_key = 'hide_in_members' )
 							LEFT JOIN {$wpdb->usermeta} AS um2 ON ( um2.user_id = u.ID AND um2.meta_key = 'um_member_directory_data' )
 							WHERE um.meta_value IS NULL AND

@@ -39,6 +39,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'friends'               => '2.1.4',
 			'groups'                => '2.1.7',
 			'instagram'             => '2.0.5',
+			'jobboardwp'            => '1.0.0',
 			'mailchimp'             => '2.2.0',
 			'messaging'             => '2.2.5',
 			'mycred'                => '2.1.6',
@@ -140,6 +141,20 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			if ( ! self::$active_plugins ) self::init();
 
 			return in_array( 'forumwp/forumwp.php', self::$active_plugins ) || array_key_exists( 'forumwp/forumwp.php', self::$active_plugins );
+
+		}
+
+
+		/**
+		 * Check if JobBoardWP plugin is active
+		 *
+		 * @return bool
+		 */
+		public static function jobboardwp_active_check() {
+
+			if ( ! self::$active_plugins ) self::init();
+
+			return in_array( 'jobboardwp/jobboardwp.php', self::$active_plugins ) || array_key_exists( 'jobboardwp/jobboardwp.php', self::$active_plugins );
 
 		}
 

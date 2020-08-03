@@ -39,7 +39,7 @@ class UM_Polylang implements UM_Multilingual {
 
 			/* Form */
 			add_action( 'um_after_user_updated', array( &$this, 'profile_bio_update' ), 20, 2 );
-			add_filter( 'um_field_value', array( &$this, 'profile_bio_value' ), 20, 5 );
+			add_filter( 'um_field_value', array( &$this, 'profile_bio_value' ), 20, 4 );
 			add_filter( 'um_profile_bio_key', array( &$this, 'profile_bio_key' ), 20, 2 );
 			add_filter( 'um_pre_args_setup', array( &$this, 'shortcode_pre_args_setup' ), 20, 1 );
 
@@ -554,7 +554,7 @@ class UM_Polylang implements UM_Multilingual {
 	 * @param  array  $data    Field Data
 	 * @return string
 	 */
-	public function profile_bio_value( $value, $default, $key, $type = '', $data = array() ) {
+	public function profile_bio_value( $value, $default, $key, $type = '' ) {
 		if ( $key === 'description' ) {
 			$curlang_slug = pll_current_language();
 			$description = get_user_meta( um_profile_id(), 'description_' . $curlang_slug, true );

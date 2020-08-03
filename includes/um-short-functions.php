@@ -778,7 +778,7 @@ function um_user_submitted_registration( $style = false ) {
  *
  * @since  2.1.4 
  */
-function um_user_submitted_registration_formatted( $style = false ){
+function um_user_submitted_registration_formatted( $style = false ) {
 	$output = null;
 
 	$submitted_data = um_user( 'submitted' );
@@ -793,7 +793,9 @@ function um_user_submitted_registration_formatted( $style = false ){
 
 	if ( isset( $submitted_data ) && is_array( $submitted_data ) ) {
 
-		$fields = UM()->query()->get_attr( 'custom_fields', $submitted_data['form_id'] );
+		if ( isset( $submitted_data['form_id'] ) ) {
+			$fields = UM()->query()->get_attr( 'custom_fields', $submitted_data['form_id'] );
+		}
 
 		if ( isset( $fields ) ) {
 

@@ -107,6 +107,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			add_filter( 'upload_dir', array( $this, 'set_upload_directory' ), 10, 1 );
 			add_filter( 'wp_handle_upload_prefilter', array( $this, 'validate_upload' ) );
 
+			add_filter( 'um_upload_image_result', array( $this, 'rotate_uploaded_image' ), 10, 1 );
 			add_filter( 'um_upload_image_process__profile_photo', array( $this, 'profile_photo' ), 10, 7 );
 			add_filter( 'um_upload_image_process__cover_photo', array( $this, 'cover_photo' ), 10, 7 );
 			add_action( 'um_upload_stream_image_process', array( $this, 'stream_photo' ), 10, 7 );
@@ -358,6 +359,30 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			     */
 				$response['error'] = $movefile['error'];
 			} else {
+
+				/**
+				 * UM hook
+				 *
+				 * @type        filter
+				 * @title       um_upload_image_result
+				 * @description Filter uploaded image data
+				 * @input_vars  [
+				 * 	{"var":"$movefile", "type":"array", "desc":"Uploaded file info"},
+				 * 	{"var":"$user_id", "type":"int", "desc":"User ID"},
+				 * 	{"var":"$field_data", "type":"array", "desc":"Field data"}
+				 * ]
+				 * @change_log
+				 * ["Since: 2.1.6"]
+				 * @example
+				  <?php
+				  add_filter( 'um_upload_image_result', 'custom_um_upload_image_result', 10, 3 );
+				  function custom_um_upload_image_result( $movefile, $user_id, $field_data ) {
+						// your code here
+						return $movefile;
+				  }
+				  ?>
+				 */
+				$movefile = apply_filters( 'um_upload_image_result', $movefile, $user_id, $field_data );
 
 				$movefile['url'] = set_url_scheme( $movefile['url'] );
 
@@ -1164,6 +1189,28 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 			}
 
 			return $response;
+		}
+
+
+		/**
+		 * Fix image orientation
+		 *
+		 * @since 2.1.6
+		 *
+		 * @param  array $movefile
+		 * @return array
+		 */
+		public function rotate_uploaded_image( $movefile ) {
+			$image_fix_orientation = UM()->options()->get( 'image_orientation_by_exif' );
+			if ( $image_fix_orientation && $movefile['type'] == 'image/jpeg' ) {
+				$image = imagecreatefromjpeg( $movefile['file'] );
+				if ( $image ) {
+					$image = UM()->files()->fix_image_orientation( $image, $movefile['file'] );
+					$quality = UM()->options()->get( 'image_compression' );
+					imagejpeg( $image, $movefile['file'], $quality );
+				}
+			}
+			return $movefile;
 		}
 
 
