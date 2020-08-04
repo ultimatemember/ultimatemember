@@ -154,13 +154,15 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.1.7: August 05, 2020 =
+= 2.1.7: August 10, 2020 =
 
   - Added dependency functions for plugins: [Ultimate Member - JobBoardWP integration](https://wordpress.org/plugins/um-jobboardwp) & [JobBoardWP](https://wordpress.org/plugins/jobboardwp)
   - Added account privacy setting for the avoiding profile indexation
   - Added setting "Change image orientation" based on image EXIF data
   - Added setting "Account Deletion without password Custom Text"
   - Fixed security lacks for 'redirect_to' attributes
+  - Fixed account submission when change a password
+  - Fixed updating UM roles metadata (WP capabilities section) when 3rd-party plugins update the caps for the UM roles
   - Fixed member directory roles in query (the case when selected some roles, but current user can see another only)
   - Fixed member directory sorting
   - Fixed member directory list dropdown init after changing view type
