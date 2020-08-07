@@ -435,12 +435,12 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 					} else {
 						$gmt_offset = get_post_meta( $directory_data['form_id'], '_um_search_filters_gmt', true );
 						if ( is_numeric( $gmt_offset ) ) {
-							$offset = $gmt_offset;
+							$offset = (int) $gmt_offset;
 						}
 					}
 
-					$from_date = date( 'Y-m-d H:s:i', strtotime( date( 'Y-m-d H:s:i', min( $value ) ) . "+$offset hours" ) );
-					$to_date = date( 'Y-m-d H:s:i', strtotime( date( 'Y-m-d H:s:i', max( $value ) ) . "+$offset hours" ) );
+					$from_date = date( 'Y-m-d H:s:i', strtotime( min( $value ) ) + $offset * HOUR_IN_SECONDS ); // client time zone offset
+					$to_date = date( 'Y-m-d H:s:i', strtotime( max( $value ) ) + $offset * HOUR_IN_SECONDS + DAY_IN_SECONDS - 1 ); // time 23:59
 
 					$this->where_clauses[] = $wpdb->prepare( "u.user_registered BETWEEN %s AND %s", $from_date, $to_date );
 

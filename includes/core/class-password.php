@@ -262,7 +262,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 * @return bool
 		 */
 		function is_change_request() {
-			if ( um_is_core_page( 'account' ) && isset( $_POST['_um_account'] ) == 1 && isset( $_POST['_um_account_tab'] ) && $_POST['_um_account_tab'] == 'password' ) {
+			if ( isset( $_POST['_um_account'] ) == 1 && isset( $_POST['_um_account_tab'] ) && $_POST['_um_account_tab'] == 'password' ) {
 				return true;
 			} elseif ( isset( $_POST['_um_password_change'] ) && $_POST['_um_password_change'] == 1 ) {
 				return true;
@@ -526,41 +526,41 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 * @param $args
 		 */
 		function um_change_password_errors_hook( $args ) {
-			if ( isset(  $_POST[ UM()->honeypot ]  ) && $_POST[ UM()->honeypot ] != '' ){
-				wp_die('Hello, spam bot!','ultimate-member');
+			if ( isset( $_POST[ UM()->honeypot ] ) && $_POST[ UM()->honeypot ] != '' ) {
+				wp_die( 'Hello, spam bot!', 'ultimate-member' );
 			}
 
 			if ( ! is_user_logged_in() && isset( $args ) && ! um_is_core_page( 'password-reset' ) ||
 			     is_user_logged_in() && isset( $args['user_id'] ) && $args['user_id'] != get_current_user_id() ) {
-				wp_die( __( 'This is not possible for security reasons.','ultimate-member') );
+				wp_die( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
 			}
 
 			if ( isset( $args['user_password'] ) && empty( $args['user_password'] ) ) {
-				UM()->form()->add_error('user_password', __('You must enter a new password','ultimate-member') );
+				UM()->form()->add_error( 'user_password', __( 'You must enter a new password', 'ultimate-member' ) );
 			}
 
 			if ( UM()->options()->get( 'reset_require_strongpass' ) ) {
 
 				if ( strlen( utf8_decode( $args['user_password'] ) ) < 8 ) {
-					UM()->form()->add_error('user_password', __('Your password must contain at least 8 characters','ultimate-member') );
+					UM()->form()->add_error( 'user_password', __( 'Your password must contain at least 8 characters', 'ultimate-member' ) );
 				}
 
 				if ( strlen( utf8_decode( $args['user_password'] ) ) > 30 ) {
-					UM()->form()->add_error('user_password', __('Your password must contain less than 30 characters','ultimate-member') );
+					UM()->form()->add_error( 'user_password', __( 'Your password must contain less than 30 characters', 'ultimate-member' ) );
 				}
 
 				if ( ! UM()->validation()->strong_pass( $args['user_password'] ) ) {
-					UM()->form()->add_error('user_password', __('Your password must contain at least one lowercase letter, one capital letter and one number','ultimate-member') );
+					UM()->form()->add_error( 'user_password', __( 'Your password must contain at least one lowercase letter, one capital letter and one number', 'ultimate-member' ) );
 				}
 
 			}
 
 			if ( isset( $args['confirm_user_password'] ) && empty( $args['confirm_user_password'] ) ) {
-				UM()->form()->add_error('confirm_user_password', __('You must confirm your new password','ultimate-member') );
+				UM()->form()->add_error( 'confirm_user_password', __( 'You must confirm your new password', 'ultimate-member' ) );
 			}
 
 			if ( isset( $args['user_password'] ) && isset( $args['confirm_user_password'] ) && $args['user_password'] != $args['confirm_user_password'] ) {
-				UM()->form()->add_error('confirm_user_password', __('Your passwords do not match','ultimate-member') );
+				UM()->form()->add_error( 'confirm_user_password', __( 'Your passwords do not match', 'ultimate-member' ) );
 			}
 
 		}

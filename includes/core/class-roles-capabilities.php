@@ -20,6 +20,58 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 		 */
 		function __construct() {
 			add_action( 'wp_roles_init', array( &$this, 'um_roles_init' ), 99999 );
+			add_action( 'update_option', array( &$this, 'um_on_roles_update' ), 10, 3 );
+		}
+
+
+		/**
+		 * @param string $option
+		 * @param mixed $old_value
+		 * @param mixed $value
+		 */
+		function um_on_roles_update( $option, $old_value, $value ) {
+			global $wp_roles;
+
+			if ( $option == $wp_roles->role_key ) {
+				foreach ( $value as $role_key => $role_data ) {
+					$role_keys = get_option( 'um_roles', array() );
+					$role_keys = array_map( function( $item ) {
+						return 'um_' . $item;
+					}, $role_keys );
+
+					if ( ! empty( $role_keys ) && in_array( $role_key, $role_keys ) ) {
+						$role_meta = get_option( 'um_role_' . substr( $role_key, 3 ) . '_meta' );
+
+						if ( ! isset( $role_meta['wp_capabilities'] ) ) {
+							$role_meta['wp_capabilities'] = array();
+						}
+
+						if ( ! empty( $role_data['capabilities'] ) && is_array( $role_data['capabilities'] ) ) {
+							$old_role_caps = ! empty( $old_value[ $role_key ]['capabilities'] ) ? array_keys( $old_value[ $role_key ]['capabilities'] ) : array();
+
+							if ( ! empty( $old_role_caps ) ) {
+								$unset_caps = array_diff( $old_role_caps, array_keys( $role_data['capabilities'] ) );
+
+								if ( ! empty( $unset_caps ) ) {
+									foreach ( $unset_caps as $cap ) {
+										if ( ! empty( $role_meta['wp_capabilities'][ $cap ] ) ) {
+											unset( $role_meta['wp_capabilities'][ $cap ] );
+										}
+									}
+								}
+							}
+
+							foreach ( $role_data['capabilities'] as $cap => $grant ) {
+								if ( $grant ) {
+									$role_meta['wp_capabilities'][ $cap ] = true;
+								}
+							}
+						}
+
+						update_option( 'um_role_' . substr( $role_key, 3 ) . '_meta', $role_meta );
+					}
+				}
+			}
 		}
 
 

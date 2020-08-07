@@ -407,7 +407,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 						//$this->post_form['submitted']['role'] = $role;
 					}
 
-					if ( isset( $_POST[ UM()->honeypot ] ) && $_POST[ UM()->honeypot ] != '' ){
+					if ( isset( $_POST[ UM()->honeypot ] ) && $_POST[ UM()->honeypot ] != '' ) {
 						wp_die( 'Hello, spam bot!', 'ultimate-member' );
 					}
 

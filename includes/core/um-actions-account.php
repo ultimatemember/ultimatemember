@@ -4,11 +4,10 @@
 /**
  * Validate for errors in account form
  *
- * @param $args
+ * @param array $args
  */
 function um_submit_account_errors_hook( $args ) {
-
-	if ( ! isset( $_POST['um_account_submit'] ) ) {
+	if ( ! isset( $_POST['_um_account'] ) && ! isset( $_POST['_um_account_tab'] ) ) {
 		return;
 	}
 
@@ -22,11 +21,13 @@ function um_submit_account_errors_hook( $args ) {
 		switch ( $_POST['_um_account_tab'] ) {
 			case 'delete': {
 				// delete account
-				if ( strlen(trim( $_POST['single_user_password'] ) ) == 0 ) {
-					UM()->form()->add_error( 'single_user_password', __( 'You must enter your password', 'ultimate-member' ) );
-				} else {
-					if ( ! wp_check_password( $_POST['single_user_password'], $user->data->user_pass, $user->data->ID ) ) {
-						UM()->form()->add_error( 'single_user_password', __( 'This is not your password', 'ultimate-member' ) );
+				if ( UM()->account()->current_password_is_required( 'delete' ) ) {
+					if ( strlen( trim( $_POST['single_user_password'] ) ) == 0 ) {
+						UM()->form()->add_error( 'single_user_password', __( 'You must enter your password', 'ultimate-member' ) );
+					} else {
+						if ( ! wp_check_password( $_POST['single_user_password'], $user->data->user_pass, $user->data->ID ) ) {
+							UM()->form()->add_error( 'single_user_password', __( 'This is not your password', 'ultimate-member' ) );
+						}
 					}
 				}
 
@@ -36,39 +37,53 @@ function um_submit_account_errors_hook( $args ) {
 			}
 
 			case 'password': {
+
 				// change password
-				if ( ( isset( $_POST['current_user_password'] ) && $_POST['current_user_password'] != '' ) ||
-					( isset( $_POST['user_password'] ) && $_POST['user_password'] != '' ) ||
-					( isset( $_POST['confirm_user_password'] ) && $_POST['confirm_user_password'] != '') ) {
+				UM()->account()->current_tab = 'password';
 
-					if ( $_POST['current_user_password'] == '' || ! wp_check_password( $_POST['current_user_password'], $user->data->user_pass, $user->data->ID ) ) {
+				if ( empty( $_POST['user_password'] ) ) {
+					UM()->form()->add_error('user_password', __( 'Password is required', 'ultimate-member' ) );
+					return;
+				}
 
-						UM()->form()->add_error('current_user_password', __('This is not your password','ultimate-member') );
-						UM()->account()->current_tab = 'password';
-					} else { // correct password
+				if ( empty( $_POST['confirm_user_password'] ) ) {
+					UM()->form()->add_error('user_password', __( 'Password confirmation is required', 'ultimate-member' ) );
+					return;
+				}
 
-						if ( $_POST['user_password'] != $_POST['confirm_user_password'] && $_POST['user_password'] ) {
-							UM()->form()->add_error('user_password', __('Your new password does not match','ultimate-member') );
-							UM()->account()->current_tab = 'password';
+				if ( ! empty( $_POST['user_password'] ) && ! empty( $_POST['confirm_user_password'] ) ) {
+
+					if ( UM()->account()->current_password_is_required( 'password' ) ) {
+						if ( empty( $_POST['current_user_password'] ) ) {
+							UM()->form()->add_error('current_user_password', __( 'This is not your password', 'ultimate-member' ) );
+							return;
+						} else {
+							if ( ! wp_check_password( $_POST['current_user_password'], $user->data->user_pass, $user->data->ID ) ) {
+								UM()->form()->add_error('current_user_password', __( 'This is not your password', 'ultimate-member' ) );
+								return;
+							}
 						}
-
-						if ( UM()->options()->get( 'account_require_strongpass' ) ) {
-
-							if ( strlen( utf8_decode( $_POST['user_password'] ) ) < 8 ) {
-								UM()->form()->add_error('user_password', __('Your password must contain at least 8 characters','ultimate-member') );
-							}
-
-							if ( strlen( utf8_decode( $_POST['user_password'] ) ) > 30 ) {
-								UM()->form()->add_error('user_password', __('Your password must contain less than 30 characters','ultimate-member') );
-							}
-
-							if ( ! UM()->validation()->strong_pass( $_POST['user_password'] ) ) {
-								UM()->form()->add_error('user_password', __('Your password must contain at least one lowercase letter, one capital letter and one number','ultimate-member') );
-							}
-
-						}
-
 					}
+
+					if ( $_POST['user_password'] != $_POST['confirm_user_password'] && $_POST['user_password'] ) {
+						UM()->form()->add_error('user_password', __( 'Your new password does not match', 'ultimate-member' ) );
+						return;
+					}
+
+					if ( UM()->options()->get( 'account_require_strongpass' ) ) {
+						if ( strlen( utf8_decode( $_POST['user_password'] ) ) < 8 ) {
+							UM()->form()->add_error( 'user_password', __( 'Your password must contain at least 8 characters', 'ultimate-member' ) );
+						}
+
+						if ( strlen( utf8_decode( $_POST['user_password'] ) ) > 30 ) {
+							UM()->form()->add_error( 'user_password', __( 'Your password must contain less than 30 characters', 'ultimate-member' ) );
+						}
+
+						if ( ! UM()->validation()->strong_pass( $_POST['user_password'] ) ) {
+							UM()->form()->add_error( 'user_password', __( 'Your password must contain at least one lowercase letter, one capital letter and one number', 'ultimate-member' ) );
+						}
+					}
+
 				}
 
 				break;
@@ -109,7 +124,7 @@ function um_submit_account_errors_hook( $args ) {
 				}
 
 				// check account password
-				if ( UM()->options()->get( 'account_general_password' ) ) {
+				if ( UM()->account()->current_password_is_required( 'general' ) ) {
 					if ( strlen( trim( $_POST['single_user_password'] ) ) == 0 ) {
 						UM()->form()->add_error('single_user_password', __( 'You must enter your password', 'ultimate-member' ) );
 					} else {
@@ -185,10 +200,7 @@ function um_submit_account_details( $args ) {
 
 
 	// delete account
-	$user = get_user_by( 'login', um_user( 'user_login' ) );
-
-	if ( 'delete' == $current_tab && isset( $_POST['single_user_password'] ) &&
-	     wp_check_password( $_POST['single_user_password'], $user->data->user_pass, $user->data->ID ) ) {
+	if ( 'delete' == $current_tab ) {
 		if ( current_user_can( 'delete_users' ) || um_user( 'can_delete_profile' ) ) {
 			UM()->user()->delete();
 
@@ -415,7 +427,13 @@ add_action( 'um_account_page_hidden_fields', 'um_account_page_hidden_fields' );
  * Before delete account tab content
  */
 function um_before_account_delete() {
-	printf( __( '%s', 'ultimate-member' ), wpautop( htmlspecialchars( UM()->options()->get( 'delete_account_text' ) ) ) );
+	if ( UM()->account()->current_password_is_required( 'delete' ) ) {
+		$text = UM()->options()->get( 'delete_account_text' );
+	} else {
+		$text = UM()->options()->get( 'delete_account_no_pass_required_text' );
+	}
+
+	printf( __( '%s', 'ultimate-member' ), wpautop( htmlspecialchars( $text ) ) );
 }
 add_action( 'um_before_account_delete', 'um_before_account_delete' );
 
@@ -530,17 +548,29 @@ function um_after_account_privacy( $args ) {
 			echo '<p>' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' ) . '</p>';
 		} elseif ( ! empty( $pending ) && $pending['post_status'] == 'request-confirmed' ) {
 			echo '<p>' . esc_html__( 'The administrator has not yet approved downloading the data. Please expect an email with a link to your data.', 'ultimate-member' ) . '</p>';
-		} else { ?>
-			<label name="um-export-data">
-				<?php esc_html_e( 'Enter your current password to confirm a new export of your personal data.', 'ultimate-member' ); ?>
-			</label>
-			<div class="um-field-area">
-				<input id="um-export-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' )?>">
-				<div class="um-field-error um-export-data">
-					<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
+		} else {
+			if ( UM()->account()->current_password_is_required( 'privacy_download_data' ) ) { ?>
+
+				<label name="um-export-data">
+					<?php esc_html_e( 'Enter your current password to confirm a new export of your personal data.', 'ultimate-member' ); ?>
+				</label>
+				<div class="um-field-area">
+					<input id="um-export-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' )?>">
+					<div class="um-field-error um-export-data">
+						<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
+					</div>
+					<div class="um-field-area-response um-export-data"></div>
 				</div>
+
+			<?php } else { ?>
+
+				<label name="um-export-data">
+					<?php esc_html_e( 'To export of your personal data, click the button below.', 'ultimate-member' ); ?>
+				</label>
 				<div class="um-field-area-response um-export-data"></div>
-			</div>
+
+			<?php } ?>
+
 			<a class="um-request-button um-export-data-button" data-action="um-export-data" href="javascript:void(0);">
 				<?php esc_html_e( 'Request data', 'ultimate-member' ); ?>
 			</a>
@@ -592,15 +622,27 @@ function um_after_account_privacy( $args ) {
 			echo '<p>' . esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' ) . '</p>';
 		} elseif ( ! empty( $pending ) && $pending['post_status'] == 'request-confirmed' ) {
 			echo '<p>' . esc_html__( 'The administrator has not yet approved deleting your data. Please expect an email with a link to your data.', 'ultimate-member' ) . '</p>';
-		} else { ?>
-			<label name="um-erase-data">
-				<?php esc_html_e( 'Enter your current password to confirm the erasure of your personal data.', 'ultimate-member' ); ?>
-				<input id="um-erase-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' )?>">
-				<div class="um-field-error um-erase-data">
-					<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
-				</div>
-				<div class="um-field-area-response um-erase-data"></div>
-			</label>
+		} else {
+			if ( UM()->account()->current_password_is_required( 'privacy_erase_data' ) ) { ?>
+
+				<label name="um-erase-data">
+					<?php esc_html_e( 'Enter your current password to confirm the erasure of your personal data.', 'ultimate-member' ); ?>
+					<input id="um-erase-data" type="password" placeholder="<?php esc_attr_e( 'Password', 'ultimate-member' )?>">
+					<div class="um-field-error um-erase-data">
+						<span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span><?php esc_html_e( 'You must enter a password', 'ultimate-member' ); ?>
+					</div>
+					<div class="um-field-area-response um-erase-data"></div>
+				</label>
+
+			<?php } else { ?>
+
+				<label name="um-erase-data">
+					<?php esc_html_e( 'Require erasure of your personal data, click on the button below.', 'ultimate-member' ); ?>
+					<div class="um-field-area-response um-erase-data"></div>
+				</label>
+
+			<?php } ?>
+
 			<a class="um-request-button um-erase-data-button" data-action="um-erase-data" href="javascript:void(0);">
 				<?php esc_html_e( 'Request data erase', 'ultimate-member' ); ?>
 			</a>
@@ -615,37 +657,48 @@ function um_after_account_privacy( $args ) {
 function um_request_user_data() {
 	UM()->check_ajax_nonce();
 
+	if ( ! isset( $_POST['request_action'] ) ) {
+		wp_send_json_error( __( 'Wrong request.', 'ultimate-member' ) );
+	}
+
 	$user_id = get_current_user_id();
-	$password = $_POST['password'];
+	$password = ! empty( $_POST['password'] ) ? $_POST['password'] : '';
 	$user = get_userdata( $user_id );
 	$hash = $user->data->user_pass;
 
-	if ( wp_check_password( $password, $hash ) && isset( $_POST['request_action'] ) ) {
-
-		if ( $_POST['request_action'] == 'um-export-data' ) {
-			$request_id = wp_create_user_request( $user->data->user_email, 'export_personal_data' );
-		} elseif ( $_POST['request_action'] == 'um-erase-data' ) {
-			$request_id = wp_create_user_request( $user->data->user_email, 'remove_personal_data' );
+	if ( $_POST['request_action'] == 'um-export-data' ) {
+		if ( UM()->account()->current_password_is_required( 'privacy_download_data' ) ) {
+			if ( ! wp_check_password( $password, $hash ) ) {
+				$answer = esc_html__( 'The password you entered is incorrect.', 'ultimate-member' );
+				wp_send_json_success( array( 'answer' => $answer ) );
+			}
 		}
-
-		if ( empty( $request_id ) ) {
-			wp_send_json_error( __( 'Wrong request.', 'ultimate-member' ) );
+	} elseif ( $_POST['request_action'] == 'um-erase-data' ) {
+		if ( UM()->account()->current_password_is_required( 'privacy_erase_data' ) ) {
+			if ( ! wp_check_password( $password, $hash ) ) {
+				$answer = esc_html__( 'The password you entered is incorrect.', 'ultimate-member' );
+				wp_send_json_success( array( 'answer' => $answer ) );
+			}
 		}
-
-		if ( is_wp_error( $request_id ) ) {
-			$answer = $request_id->get_error_message();
-		} else {
-			wp_send_user_request( $request_id );
-			$answer = esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' );
-		}
-
-	} else {
-
-		$answer = esc_html__( 'The password you entered is incorrect.', 'ultimate-member' );
-
 	}
 
-	wp_send_json_success( array( 'answer' => esc_html( $answer ) ) );
+	if ( $_POST['request_action'] == 'um-export-data' ) {
+		$request_id = wp_create_user_request( $user->data->user_email, 'export_personal_data' );
+	} elseif ( $_POST['request_action'] == 'um-erase-data' ) {
+		$request_id = wp_create_user_request( $user->data->user_email, 'remove_personal_data' );
+	}
+
+	if ( ! isset( $request_id ) || empty( $request_id )  ) {
+		wp_send_json_error( __( 'Wrong request.', 'ultimate-member' ) );
+	}
+
+	if ( is_wp_error( $request_id ) ) {
+		$answer = esc_html( $request_id->get_error_message() );
+	} else {
+		wp_send_user_request( $request_id );
+		$answer = esc_html__( 'A confirmation email has been sent to your email. Click the link within the email to confirm your export request.', 'ultimate-member' );
+	}
+
+	wp_send_json_success( array( 'answer' => $answer ) );
 }
-add_action( 'wp_ajax_nopriv_um_request_user_data', 'um_request_user_data' );
 add_action( 'wp_ajax_um_request_user_data', 'um_request_user_data' );
