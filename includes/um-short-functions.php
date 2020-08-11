@@ -1336,24 +1336,27 @@ function um_is_core_page( $page ) {
 		return false;
 	}
 
-	if ( isset( $post->ID ) && isset( UM()->config()->permalinks[ $page ] ) && $post->ID == UM()->config()->permalinks[ $page ] )
+	if ( isset( $post->ID ) && isset( UM()->config()->permalinks[ $page ] ) && $post->ID == UM()->config()->permalinks[ $page ] ) {
 		return true;
+	}
 
-	if ( isset( $post->ID ) && get_post_meta( $post->ID, '_um_wpml_' . $page, true ) == 1 )
+	if ( isset( $post->ID ) && get_post_meta( $post->ID, '_um_wpml_' . $page, true ) == 1 ) {
 		return true;
+	}
 
 	if ( UM()->external_integrations()->is_wpml_active() ) {
 		global $sitepress;
-		if ( UM()->config()->permalinks[ $page ] == wpml_object_id_filter( $post->ID, 'page', true, $sitepress->get_default_language() ) ) {
+		if ( isset( UM()->config()->permalinks[ $page ] ) && UM()->config()->permalinks[ $page ] == wpml_object_id_filter( $post->ID, 'page', true, $sitepress->get_default_language() ) ) {
 			return true;
 		}
 	}
 
-	if (isset( $post->ID )) {
+	if ( isset( $post->ID ) ) {
 		$_icl_lang_duplicate_of = get_post_meta( $post->ID, '_icl_lang_duplicate_of', true );
 
-		if (isset( UM()->config()->permalinks[$page] ) && ( ( $_icl_lang_duplicate_of == UM()->config()->permalinks[$page] && !empty( $_icl_lang_duplicate_of ) ) || UM()->config()->permalinks[$page] == $post->ID ))
+		if ( isset( UM()->config()->permalinks[ $page ] ) && ( ( $_icl_lang_duplicate_of == UM()->config()->permalinks[ $page ] && !empty( $_icl_lang_duplicate_of ) ) || UM()->config()->permalinks[ $page ] == $post->ID ) ) {
 			return true;
+		}
 	}
 
 	return false;
@@ -1367,16 +1370,19 @@ function um_is_core_page( $page ) {
  * @return bool
  */
 function um_is_core_post( $post, $core_page ) {
-	if (isset( $post->ID ) && isset( UM()->config()->permalinks[$core_page] ) && $post->ID == UM()->config()->permalinks[$core_page])
+	if ( isset( $post->ID ) && isset( UM()->config()->permalinks[ $core_page ] ) && $post->ID == UM()->config()->permalinks[ $core_page ] ) {
 		return true;
-	if (isset( $post->ID ) && get_post_meta( $post->ID, '_um_wpml_' . $core_page, true ) == 1)
+	}
+	if ( isset( $post->ID ) && get_post_meta( $post->ID, '_um_wpml_' . $core_page, true ) == 1 ) {
 		return true;
+	}
 
-	if (isset( $post->ID )) {
+	if ( isset( $post->ID ) ) {
 		$_icl_lang_duplicate_of = get_post_meta( $post->ID, '_icl_lang_duplicate_of', true );
 
-		if (isset( UM()->config()->permalinks[$core_page] ) && ( ( $_icl_lang_duplicate_of == UM()->config()->permalinks[$core_page] && !empty( $_icl_lang_duplicate_of ) ) || UM()->config()->permalinks[$core_page] == $post->ID ))
+		if ( isset( UM()->config()->permalinks[ $core_page ] ) && ( ( $_icl_lang_duplicate_of == UM()->config()->permalinks[ $core_page ] && ! empty( $_icl_lang_duplicate_of ) ) || UM()->config()->permalinks[ $core_page ] == $post->ID ) ) {
 			return true;
+		}
 	}
 
 	return false;

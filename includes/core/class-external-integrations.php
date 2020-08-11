@@ -269,8 +269,9 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		function get_languages_codes( $current_code = false ) {
 			global $sitepress;
 
-			if ( ! $this->is_wpml_active() )
+			if ( ! $this->is_wpml_active() ) {
 				return $current_code;
+			}
 
 			$current_code = ! empty( $current_code ) ? $current_code : $sitepress->get_current_language();
 
