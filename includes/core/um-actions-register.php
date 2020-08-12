@@ -177,6 +177,10 @@ function um_check_user_status( $user_id, $args ) {
 
 		// Priority redirect
 		if ( isset( $args['redirect_to'] ) ) {
+			if ( $status == 'approved' ) {
+				UM()->user()->auto_login( $user_id );
+				UM()->user()->generate_profile_slug( $user_id );
+			}
 			exit( wp_safe_redirect( urldecode( $args['redirect_to'] ) ) );
 		}
 
