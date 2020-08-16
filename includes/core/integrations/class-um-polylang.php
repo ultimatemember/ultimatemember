@@ -546,7 +546,7 @@ class UM_Polylang implements UM_Multilingual {
 	 *
 	 * @since  2.1.7
 	 * @hook   um_field_value
-	 * 
+	 *
 	 * @param  string $value   Field Value
 	 * @param  string $default Default Value
 	 * @param  string $key     Field Key
@@ -575,9 +575,13 @@ class UM_Polylang implements UM_Multilingual {
 	 * @param array   $args    Form Data
 	 */
 	public function profile_bio_update( $user_id, $args ) {
-		if ( !empty( $args['description'] ) ) {
-			$curlang_slug = pll_current_language();
-			update_user_meta( $user_id, 'description_' . $curlang_slug, $args['description'] );
+		$curlang_slug = pll_current_language();
+		$bio_key = 'description_' . $curlang_slug;
+		if ( !empty( $args[$bio_key] ) ) {
+			update_user_meta( $user_id, $bio_key, $args[$bio_key] );
+			if ( $curlang_slug === pll_default_language() ) {
+				update_user_meta( $user_id, 'description', $args[$bio_key] );
+			}
 		}
 	}
 
