@@ -32,7 +32,7 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 		function um_on_roles_update( $option, $old_value, $value ) {
 			global $wp_roles;
 
-			if ( $option == $wp_roles->role_key ) {
+			if ( isset( $wp_roles->role_key ) && $option == $wp_roles->role_key ) {
 				foreach ( $value as $role_key => $role_data ) {
 					$role_keys = get_option( 'um_roles', array() );
 					$role_keys = array_map( function( $item ) {

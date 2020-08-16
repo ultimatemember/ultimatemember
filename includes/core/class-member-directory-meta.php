@@ -569,11 +569,11 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 				if ( ! $view_roles ) {
 					$view_roles = array();
+				} else {
+					$this->roles_in_query = true;
 				}
 
 				$this->roles = array_merge( $this->roles, maybe_unserialize( $view_roles ) );
-
-				$this->roles_in_query = true;
 			}
 
 			if ( ! empty( $directory_data['roles'] ) ) {
@@ -596,6 +596,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 				$this->where_clauses[] = '( ' . implode( ' OR ', $roles_clauses ) . ' )';
 			} else {
+
 				if ( ! $this->roles_in_query && is_multisite() ) {
 					// select users who have capabilities for current blog
 					$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_roles ON ( umm_roles.user_id = u.ID AND umm_roles.um_key = '" . $wpdb->get_blog_prefix( $blog_id ) . "capabilities' )";

@@ -379,7 +379,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 */
 		function field_error( $text, $force_show = false ) {
 
-			if( empty( $text ) ) return;
+			if ( empty( $text ) ) {
+				return '';
+			}
 
 			if ( $force_show ) {
 				$output = '<div class="um-field-error"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . esc_attr( $text ) . '</div>';
@@ -411,7 +413,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 */
 		function field_notice( $text, $force_show = false ) {
 
-			if( empty( $text ) ) return;
+			if ( empty( $text ) ) {
+				return '';
+			}
 
 			if ( $force_show ) {
 				$output = '<div class="um-field-notice"><span class="um-field-arrow"><i class="um-faicon-caret-up"></i></span>' . esc_attr( $text ) . '</div>';

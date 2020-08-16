@@ -154,7 +154,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.1.7: August 10, 2020 =
+= 2.1.7: August 12, 2020 =
 
   - Added dependency functions for plugins: [Ultimate Member - JobBoardWP integration](https://wordpress.org/plugins/um-jobboardwp) & [JobBoardWP](https://wordpress.org/plugins/jobboardwp)
   - Added account privacy setting for the avoiding profile indexation
@@ -166,6 +166,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed member directory roles in query (the case when selected some roles, but current user can see another only)
   - Fixed member directory sorting
   - Fixed member directory list dropdown init after changing view type
+  - Fixed member directory admin filtering by the 'user_registered' field
   - Fixed validation when using HTML in textarea
   - Fixed cleaning user old uploads
   - Fixed conditional logic for file/image-type fields
@@ -174,6 +175,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed getting extension updates on multisites
   - Fixed the 'wp_authenticate_user' filter's variables (changed username string to WP_User object)
   - Fixed SEO link canonical for the profile page
+  - Fixed displaying error & notice when the text is empty
   - Deprecated JS event 'um_before_modal_removed', use wp.hooks action 'um_before_modal_removed' instead
 
 = 2.1.6: June 1, 2020 =

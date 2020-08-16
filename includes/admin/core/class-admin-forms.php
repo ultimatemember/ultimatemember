@@ -914,7 +914,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 			$id = ( ! empty( $this->form_data['prefix_id'] ) ? $this->form_data['prefix_id'] : '' ) . '_' . $field_data['id'];
 			$id_attr = ' id="' . esc_attr( $id ) . '" ';
 
-			$class = ! empty( $field_data['class'] ) ? $field_data['class'] : '';
+			$class = ! empty( $field_data['class'] ) ? $field_data['class'] . ' ' : ' ';
 			$class .= ! empty( $field_data['size'] ) ? 'um-' . $field_data['size'] . '-field' : 'um-long-field';
 			$class_attr = ' class="um-forms-field ' . esc_attr( $class ) . '" ';
 
