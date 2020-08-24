@@ -1,4 +1,4 @@
-﻿=== Ultimate Member - User Profile & Membership Plugin ===
+﻿=== Ultimate Member - User Profile, Registration & Membership Plugin ===
 Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember, champsupertramp, nsinelnikov
@@ -156,10 +156,15 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = 2.1.7: August 12, 2020 =
 
+* Enhancements:
+
   - Added dependency functions for plugins: [Ultimate Member - JobBoardWP integration](https://wordpress.org/plugins/um-jobboardwp) & [JobBoardWP](https://wordpress.org/plugins/jobboardwp)
   - Added account privacy setting for the avoiding profile indexation
   - Added setting "Change image orientation" based on image EXIF data
   - Added setting "Account Deletion without password Custom Text"
+
+* Bugfixes:
+
   - Fixed security lacks for 'redirect_to' attributes
   - Fixed account submission when change a password
   - Fixed updating UM roles metadata (WP capabilities section) when 3rd-party plugins update the caps for the UM roles
@@ -176,6 +181,9 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed the 'wp_authenticate_user' filter's variables (changed username string to WP_User object)
   - Fixed SEO link canonical for the profile page
   - Fixed displaying error & notice when the text is empty
+
+* Deprecated:
+
   - Deprecated JS event 'um_before_modal_removed', use wp.hooks action 'um_before_modal_removed' instead
 
 = 2.1.6: June 1, 2020 =
