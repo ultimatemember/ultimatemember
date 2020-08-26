@@ -32,7 +32,7 @@ function um_dynamic_user_profile_pagetitle( $title, $sep = '' ) {
 
 		$profile_title = um_convert_tags( $profile_title );
 
-		$title = $profile_title;
+		$title = stripslashes( $profile_title );
 
 		um_reset_user();
 

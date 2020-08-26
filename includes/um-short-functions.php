@@ -310,31 +310,31 @@ function um_user_ip() {
  */
 function um_field_conditions_are_met( $data ) {
 
+	if ( ! isset( $data['conditions'] ) ) {
+		return true;
+	}
 
-
-	if (!isset( $data['conditions'] )) return true;
-
-	$state = ( $data['conditional_action'] == 'show' ) ? 1 : 0;
-
+	$state = ( isset( $data['conditional_action'] ) && $data['conditional_action'] == 'show' ) ? 1 : 0;
 
 	$first_group = 0;
 	$state_array = array();
-	$count = count($state_array);
-	foreach ($data['conditions'] as $k => $arr){
+	$count = count( $state_array );
+	foreach ( $data['conditions'] as $k => $arr ) {
 
 		$val = $arr[3];
 		$op = $arr[2];
 
-		if (strstr($arr[1], 'role_'))
+		if ( strstr( $arr[1], 'role_' ) ) {
 			$arr[1] = 'role';
+		}
 
-		$field = um_profile($arr[1]);
-
-
-		if( ! isset( $arr[5] ) || $arr[5] != $first_group ){
+		$field = um_profile( $arr[1] );
 
 
-			if ($arr[0] == 'show') {
+		if ( ! isset( $arr[5] ) || $arr[5] != $first_group ) {
+
+
+			if ( $arr[0] == 'show' ) {
 
 				switch ($op) {
 					case 'equals to':
@@ -389,32 +389,34 @@ function um_field_conditions_are_met( $data ) {
 						}
 						break;
 				}
-			} else if ($arr[0] == 'hide') {
+			} elseif ( $arr[0] == 'hide' ) {
 
-				switch ($op) {
+				switch ( $op ) {
 					case 'equals to':
 
 						$field = maybe_unserialize( $field );
 
-						if (is_array( $field ))
+						if ( is_array( $field ) ) {
 							$state = in_array( $val, $field ) ? 'hide' : 'show';
-						else
+						} else {
 							$state = ( $field == $val ) ? 'hide' : 'show';
+						}
 
 						break;
 					case 'not equals':
 
 						$field = maybe_unserialize( $field );
 
-						if (is_array( $field ))
-							$state = !in_array( $val, $field ) ? 'hide' : 'show';
-						else
+						if ( is_array( $field ) ) {
+							$state = ! in_array( $val, $field ) ? 'hide' : 'show';
+						} else {
 							$state = ( $field != $val ) ? 'hide' : 'show';
+						}
 
 						break;
 					case 'empty':
 
-						$state = ( !$field ) ? 'hide' : 'show';
+						$state = ( ! $field ) ? 'hide' : 'show';
 
 						break;
 					case 'not empty':
@@ -423,21 +425,21 @@ function um_field_conditions_are_met( $data ) {
 
 						break;
 					case 'greater than':
-						if ($field <= $val) {
+						if ( $field <= $val ) {
 							$state = 'hide';
 						} else {
 							$state = 'show';
 						}
 						break;
 					case 'less than':
-						if ($field >= $val) {
+						if ( $field >= $val ) {
 							$state = 'hide';
 						} else {
 							$state = 'show';
 						}
 						break;
 					case 'contains':
-						if (strstr( $field, $val )) {
+						if ( strstr( $field, $val ) ) {
 							$state = 'hide';
 						} else {
 							$state = 'show';
@@ -446,35 +448,35 @@ function um_field_conditions_are_met( $data ) {
 				}
 			}
 			$first_group++;
-			array_push($state_array, $state);
+			array_push( $state_array, $state );
 		} else {
 
-			if ($arr[0] == 'show') {
+			if ( $arr[0] == 'show' ) {
 
-				switch ($op) {
+				switch ( $op ) {
 					case 'equals to':
-
 						$field = maybe_unserialize( $field );
 
-						if (is_array( $field ))
+						if ( is_array( $field ) ) {
 							$state = in_array( $val, $field ) ? 'show' : 'not_show';
-						else
+						} else {
 							$state = ( $field == $val ) ? 'show' : 'not_show';
+						}
 
 						break;
 					case 'not equals':
-
 						$field = maybe_unserialize( $field );
 
-						if (is_array( $field ))
-							$state = !in_array( $val, $field ) ? 'show' : 'not_show';
-						else
+						if ( is_array( $field ) ) {
+							$state = ! in_array( $val, $field ) ? 'show' : 'not_show';
+						} else {
 							$state = ( $field != $val ) ? 'show' : 'not_show';
+						}
 
 						break;
 					case 'empty':
 
-						$state = ( !$field ) ? 'show' : 'not_show';
+						$state = ( ! $field ) ? 'show' : 'not_show';
 
 						break;
 					case 'not empty':
@@ -483,53 +485,54 @@ function um_field_conditions_are_met( $data ) {
 
 						break;
 					case 'greater than':
-						if ($field > $val) {
+						if ( $field > $val ) {
 							$state = 'show';
 						} else {
 							$state = 'not_show';
 						}
 						break;
 					case 'less than':
-						if ($field < $val) {
+						if ( $field < $val ) {
 							$state = 'show';
 						} else {
 							$state = 'not_show';
 						}
 						break;
 					case 'contains':
-						if (strstr( $field, $val )) {
+						if ( strstr( $field, $val ) ) {
 							$state = 'show';
 						} else {
 							$state = 'not_show';
 						}
 						break;
 				}
-			} else if ($arr[0] == 'hide') {
+			} elseif ( $arr[0] == 'hide' ) {
 
-				switch ($op) {
+				switch ( $op ) {
 					case 'equals to':
-
 						$field = maybe_unserialize( $field );
 
-						if (is_array( $field ))
+						if ( is_array( $field ) ) {
 							$state = in_array( $val, $field ) ? 'hide' : 'not_hide';
-						else
+						} else {
 							$state = ( $field == $val ) ? 'hide' : 'not_hide';
+						}
 
 						break;
 					case 'not equals':
 
 						$field = maybe_unserialize( $field );
 
-						if (is_array( $field ))
-							$state = !in_array( $val, $field ) ? 'hide' : 'not_hide';
-						else
+						if ( is_array( $field ) ) {
+							$state = ! in_array( $val, $field ) ? 'hide' : 'not_hide';
+						} else {
 							$state = ( $field != $val ) ? 'hide' : 'not_hide';
+						}
 
 						break;
 					case 'empty':
 
-						$state = ( !$field ) ? 'hide' : 'not_hide';
+						$state = ( ! $field ) ? 'hide' : 'not_hide';
 
 						break;
 					case 'not empty':
@@ -538,21 +541,21 @@ function um_field_conditions_are_met( $data ) {
 
 						break;
 					case 'greater than':
-						if ($field <= $val) {
+						if ( $field <= $val ) {
 							$state = 'hide';
 						} else {
 							$state = 'not_hide';
 						}
 						break;
 					case 'less than':
-						if ($field >= $val) {
+						if ( $field >= $val ) {
 							$state = 'hide';
 						} else {
 							$state = 'not_hide';
 						}
 						break;
 					case 'contains':
-						if (strstr( $field, $val )) {
+						if ( strstr( $field, $val ) ) {
 							$state = 'hide';
 						} else {
 							$state = 'not_hide';
@@ -560,25 +563,25 @@ function um_field_conditions_are_met( $data ) {
 						break;
 				}
 			}
-			if( isset($state_array[$count]) ){
-				if( $state_array[$count] == 'show' || $state_array[$count] == 'not_hide' ){
-					if ( $state == 'show' || $state == 'not_hide' ){
-						$state_array[$count] = 'show';
+			if ( isset( $state_array[ $count ] ) ) {
+				if ( $state_array[ $count ] == 'show' || $state_array[ $count ] == 'not_hide' ) {
+					if ( $state == 'show' || $state == 'not_hide' ) {
+						$state_array[ $count ] = 'show';
 					} else {
-						$state_array[$count] = 'hide';
+						$state_array[ $count ] = 'hide';
 					}
 				} else {
-					if ( $state == 'hide' || $state == 'not_show' ){
-						$state_array[$count] = 'hide';
+					if ( $state == 'hide' || $state == 'not_show' ) {
+						$state_array[ $count ] = 'hide';
 					} else {
-						$state_array[$count] = 'hide';
+						$state_array[ $count ] = 'hide';
 					}
 				}
 			} else {
-				if ( $state == 'show' || $state == 'not_hide' ){
-					$state_array[$count] = 'show';
+				if ( $state == 'show' || $state == 'not_hide' ) {
+					$state_array[ $count ] = 'show';
 				} else {
-					$state_array[$count] = 'hide';
+					$state_array[ $count ] = 'hide';
 				}
 			}
 		}
