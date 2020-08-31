@@ -156,12 +156,13 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.1.8: September 3, 2020 =
+= 2.1.8: September 1, 2020 =
 
 * Enhancements:
 
   - Added dependency functions for extensions: [Ultimate Member - User Notes](https://ultimatemember.com/extensions/user-notes/) & [Ultimate Member - Profile Tabs](https://ultimatemember.com/extensions/profile-tabs/)
   - Added unique IDs to the form fields at the Profile's view mode
+  - Added restrictions for WP > Users list table based on UM Roles capabilities
 
 * Bugfixes:
 

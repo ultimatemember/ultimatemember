@@ -134,6 +134,18 @@ $premium['user-locations'] = array(
 	'desc' => 'Using the Google Maps API, display users on a map on the member directory page and allow users to add their location via their profile',
 );
 
+$premium['user-notes'] = array(
+	'url' => 'https://ultimatemember.com/extensions/user-notes/',
+	'name' => 'User Notes',
+	'desc' => 'Allow users to create public and private notes from their profile',
+);
+
+$premium['profile-tabs'] = array(
+	'url' => 'https://ultimatemember.com/extensions/profile-tabs/',
+	'name' => 'Profile Tabs',
+	'desc' => 'Add custom tabs to profiles',
+);
+
 $free['jobboardwp'] = array(
 	'url' => 'https://wordpress.org/plugins/um-jobboardwp',
 	'name' => 'JobBoardWP',
