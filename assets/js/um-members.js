@@ -1374,6 +1374,9 @@ jQuery(document.body).ready( function() {
 				},
 				stop: function( event, ui ) {
 					if ( ! um_is_directory_busy( directory ) ) {
+
+						um_members_show_preloader( directory );
+
 						um_set_url_from_data( directory, 'filter_' + filter_name + '_from', ui.values[0] );
 						um_set_url_from_data( directory, 'filter_' + filter_name + '_to', ui.values[1] );
 

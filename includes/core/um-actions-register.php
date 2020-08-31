@@ -175,11 +175,6 @@ function um_check_user_status( $user_id, $args ) {
 
 		do_action( "track_{$status}_user_registration" );
 
-		// Priority redirect
-		if ( isset( $args['redirect_to'] ) ) {
-			exit( wp_safe_redirect( urldecode( $args['redirect_to'] ) ) );
-		}
-
 		if ( $status == 'approved' ) {
 
 			UM()->user()->auto_login( $user_id );
@@ -206,6 +201,11 @@ function um_check_user_status( $user_id, $args ) {
 			 */
 			do_action( 'um_registration_after_auto_login', $user_id );
 
+			// Priority redirect
+			if ( isset( $args['redirect_to'] ) ) {
+				exit( wp_safe_redirect( urldecode( $args['redirect_to'] ) ) );
+			}
+
 			if ( um_user( 'auto_approve_act' ) == 'redirect_url' && um_user( 'auto_approve_url' ) !== '' ) {
 				exit( wp_redirect( um_user( 'auto_approve_url' ) ) );
 			}
@@ -214,9 +214,7 @@ function um_check_user_status( $user_id, $args ) {
 				exit( wp_redirect( um_user_profile_url() ) );
 			}
 
-		}
-
-		if ( $status != 'approved' ) {
+		} else {
 
 			if ( um_user( $status . '_action' ) == 'redirect_url' && um_user( $status . '_url' ) != '' ) {
 				/**
