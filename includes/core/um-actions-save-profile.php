@@ -31,12 +31,12 @@ function um_update_profile_full_name( $user_id, $changes ) {
 		case 'initial_name':
 			$fname = get_user_meta( $user_id, 'first_name', true );
 			$lname = get_user_meta( $user_id, 'last_name', true );
-			$update_name = $fname . ' ' . ( !empty( $lname ) ? $lname[0] : '' );
+			$update_name = $fname . ' ' . ( ! empty( $lname ) ? $lname[0] : '' );
 			break;
 		case 'initial_name_f':
 			$fname = get_user_meta( $user_id, 'first_name', true );
 			$lname = get_user_meta( $user_id, 'last_name', true );
-			$update_name = ( !empty($fname) ? $fname[0] : '' ) . ' ' . $lname;
+			$update_name = ( ! empty( $fname ) ? $fname[0] : '' ) . ' ' . $lname;
 			break;
 		case 'nickname':
 			$update_name = get_user_meta( $user_id, 'nickname', true );
@@ -48,19 +48,20 @@ function um_update_profile_full_name( $user_id, $changes ) {
 		$arr_user =  array( 'ID' => $user_id, 'display_name' => $update_name );
 		$return = wp_update_user( $arr_user );
 
-		if( is_wp_error( $return ) ) {
+		if ( is_wp_error( $return ) ) {
 			wp_die(  '<pre>' . var_export( array( 'message' => $return->get_error_message(), 'dump' => $arr_user, 'changes' => $changes ), true ) . '</pre>'  );
 		}
 
 	}
 
 	if ( isset( $changes['first_name'] ) && isset( $changes['last_name'] ) ) {
+		$user = get_userdata( $user_id );
+		if ( ! empty( $user ) && ! is_wp_error( $user ) ) {
+			$full_name = $user->display_name;
+			$full_name = UM()->validation()->safe_name_in_url( $full_name );
 
-		$full_name = UM()->user()->profile['display_name'];
-		$full_name = UM()->validation()->safe_name_in_url( $full_name );
-
-		update_user_meta( UM()->user()->id, 'full_name', $full_name );
-
+			update_user_meta( UM()->user()->id, 'full_name', $full_name );
+		}
 	}
 
 	// regenerate slug
