@@ -172,7 +172,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed PHP warning in conditional logic function
   - Fixed member directory preloader when using a slider filter
   - Fixed 'redirect_to' attribute and approving user on registration
-
+  - Fixed activate an account via email
 
 = 2.1.7: August 12, 2020 =
 
