@@ -170,6 +170,9 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed cleaning user old uploads and integration with Social activity & Groups files
   - Fixed Info window fields (hide fields without metakeys)
   - Fixed PHP warning in conditional logic function
+  - Fixed member directory preloader when using a slider filter
+  - Fixed 'redirect_to' attribute and approving user on registration
+
 
 = 2.1.7: August 12, 2020 =
 
