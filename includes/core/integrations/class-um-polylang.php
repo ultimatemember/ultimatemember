@@ -183,7 +183,7 @@ class UM_Polylang implements UM_Multilingual {
 
 		if ( $this->is_active() ) {
 			foreach ( pll_languages_list() as $language_code ) {
-				if ( $language_code === pll_default_language() ) {
+				if ( $language_code === pll_current_language() ) {
 					continue;
 				}
 				$html .= $this->get_status_html( $item['key'], $language_code );
@@ -210,7 +210,7 @@ class UM_Polylang implements UM_Multilingual {
 
 				$flags_column = '';
 				foreach ( pll_languages_list() as $language_code ) {
-					if ( $language_code === pll_default_language() ) {
+					if ( $language_code === pll_current_language() ) {
 						continue;
 					}
 					$language = $polylang->model->get_language( $language_code );
