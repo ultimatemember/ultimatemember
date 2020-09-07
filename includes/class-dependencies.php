@@ -37,6 +37,8 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'followers'             => '2.1.6',
 			'forumwp'               => '2.0.4',
 			'friends'               => '2.1.4',
+			'frontend-posting'      => '1.0.0',
+			'google-authenticator'  => '1.0.0',
 			'groups'                => '2.1.7',
 			'instagram'             => '2.0.5',
 			'jobboardwp'            => '1.0.0',
@@ -57,6 +59,7 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			'unsplash'              => '2.0.2',
 			'user-bookmarks'        => '2.0.2',
 			'user-locations'        => '1.0.0',
+			'user-notes'            => '1.0.0',
 			'user-photos'           => '2.0.4',
 			'user-tags'             => '2.1.0',
 			'verified-users'        => '2.0.5',
@@ -65,12 +68,6 @@ if ( ! class_exists( 'um\Dependencies' ) ) {
 			/*????*/
 			'restrict-content'      => '2.0',
 
-			/*rc*/
-			'user-notes'            => '2.0',
-
-
-			/*beta*/
-			'frontend-posting'      => '1.0',
 			/*alpha*/
 			'user-exporter'         => '1.0.0',
 

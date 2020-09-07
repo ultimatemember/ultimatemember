@@ -668,7 +668,7 @@ function um_profile_dynamic_meta_desc() {
 			"@context"      => "http://schema.org",
 			"@type"         => "Person",
 			"name"          => esc_attr( $title ),
-			"description"   => esc_attr( $description ),
+			"description"   => esc_attr( stripslashes( $description ) ),
 			"image"         => esc_url( $image ),
 			"url"           => esc_url( $url ),
 		);

@@ -193,7 +193,7 @@ $screen_id = $current_screen->id; ?>
 								<label for="title" class="screen-reader-text"><?php _e( 'Title', 'ultimate-member' ) ?></label>
 								<input type="text" name="role[name]" placeholder="<?php esc_attr_e( 'Enter Title Here', 'ultimate-member' ) ?>" id="title" value="<?php echo isset( $data['name'] ) ? $data['name'] : '' ?>" />
 							<?php } else { ?>
-								<span style="float: left;width:100%;"><?php echo isset( $data['name'] ) ? $data['name'] : '' ?></span>
+								<span style="float: left;width:100%;"><?php echo isset( $data['name'] ) ? stripslashes( $data['name'] ) : '' ?></span>
 							<?php } ?>
 						</div>
 					</div>

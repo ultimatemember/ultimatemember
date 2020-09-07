@@ -350,7 +350,7 @@ class UM_Roles_List_Table extends WP_List_Table {
 
 
 
-		return sprintf('%1$s %2$s', '<strong><a class="row-title" href="admin.php?page=um_roles&tab=edit&id=' . $item['key'] . '">' . $item['name'] . '</a></strong>', $this->row_actions( $actions ) );
+		return sprintf('%1$s %2$s', '<strong><a class="row-title" href="admin.php?page=um_roles&tab=edit&id=' . $item['key'] . '">' . stripslashes( $item['name'] ) . '</a></strong>', $this->row_actions( $actions ) );
 	}
 
 

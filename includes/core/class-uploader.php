@@ -1350,7 +1350,21 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 						continue;
 					}
 
-					unlink( $file );
+					// Don't delete photo that belongs to the Social Activity post or Groups post
+					if ( strstr( $str, 'stream_photo' ) ) {
+						global $wpdb;
+						$is_post_image = $wpdb->get_var( "
+							SELECT COUNT(*) FROM {$wpdb->postmeta}
+							WHERE `meta_key`='_photo' AND `meta_value`='{$str}';" );
+						if ( $is_post_image ) {
+							continue;
+						}
+					}
+
+					$can_unlink = apply_filters( 'um_can_remove_uploaded_file', true, $user_id, $str );
+					if ( $can_unlink ) {
+						unlink( $file );
+					}
 				}
 			}
 		}

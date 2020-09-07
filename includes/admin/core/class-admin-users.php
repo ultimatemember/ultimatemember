@@ -26,6 +26,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 			add_filter( 'user_row_actions', array( &$this, 'user_row_actions' ), 10, 2 );
 
+			add_filter( 'user_has_cap', array( &$this, 'map_caps_by_role' ), 10, 4 );
+
+			add_filter( 'users_list_table_query_args', array( &$this, 'hide_by_caps' ), 1, 1 );
+
 			add_filter( 'pre_user_query', array( &$this, 'sort_by_newest' ) );
 
 			add_filter( 'pre_user_query', array( &$this, 'filter_users_by_status' ) );
@@ -35,6 +39,41 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			add_action( 'admin_init', array( &$this, 'um_bulk_users_edit' ), 9 );
 
 			add_action( 'um_admin_user_action_hook', array( &$this, 'user_action_hook' ), 10, 1 );
+		}
+
+
+		/**
+		 * Restrict the edit/delete users via wp-admin screen by the UM role capabilities
+		 *
+		 * @param $allcaps
+		 * @param $cap
+		 * @param $args
+		 * @param $user
+		 *
+		 * @return mixed
+		 */
+		function map_caps_by_role( $allcaps, $cap, $args, $user ) {
+			if ( isset( $cap[0] ) && $cap[0] == 'edit_users' ) {
+				if ( ! user_can( $args[1], 'administrator' ) && $args[0] == 'edit_user' ) {
+					if ( ! UM()->roles()->um_current_user_can( 'edit', $args[2] ) ) {
+						$allcaps[ $cap[0] ] = false;
+					}
+				}
+			} elseif ( isset( $cap[0] ) && $cap[0] == 'delete_users' ) {
+				if ( ! user_can( $args[1], 'administrator' ) && $args[0] == 'delete_user' ) {
+					if ( ! UM()->roles()->um_current_user_can( 'delete', $args[2] ) ) {
+						$allcaps[ $cap[0] ] = false;
+					}
+				}
+			} elseif ( isset( $cap[0] ) && $cap[0] == 'list_users' ) {
+				if ( ! user_can( $args[1], 'administrator' ) && $args[0] == 'list_users' ) {
+					if ( ! um_user( 'can_view_all' ) ) {
+						$allcaps[ $cap[0] ] = false;
+					}
+				}
+			}
+
+			return $allcaps;
 		}
 
 
@@ -200,13 +239,21 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		function user_row_actions( $actions, $user_object ) {
 			$user_id = $user_object->ID;
 
-
-			$actions['frontend_profile'] = "<a class='' href='" . um_user_profile_url( $user_id ) . "'>" . __( 'View profile', 'ultimate-member' ) . "</a>";
+			$actions['frontend_profile'] = '<a href="' . um_user_profile_url( $user_id ) . '">' . __( 'View profile', 'ultimate-member' ) . '</a>';
 
 			$submitted = get_user_meta( $user_id, 'submitted', true );
-			if ( ! empty( $submitted ) )
+			if ( ! empty( $submitted ) ) {
 				$actions['view_info'] = '<a href="javascript:void(0);" data-modal="UM_preview_registration" data-modal-size="smaller" 
 				data-dynamic-content="um_admin_review_registration" data-arg1="' . esc_attr( $user_id ) . '" data-arg2="edit_registration">' . __( 'Info', 'ultimate-member' ) . '</a>';
+			}
+
+			if ( ! current_user_can( 'administrator' ) ) {
+				if ( ! um_can_view_profile( $user_id ) ) {
+					unset( $actions['frontend_profile'] );
+					unset( $actions['view_info'] );
+					unset( $actions['view'] );
+				}
+			}
 
 			/**
 			 * UM hook
@@ -232,6 +279,24 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			$actions = apply_filters( 'um_admin_user_row_actions', $actions, $user_id );
 
 			return $actions;
+		}
+
+
+		/**
+		 * Change default sorting at WP Users list table
+		 *
+		 * @param array $args
+		 * @return array
+		 */
+		function hide_by_caps( $args ) {
+			if ( ! current_user_can( 'administrator' ) ) {
+				$can_view_roles = um_user( 'can_view_roles' );
+				if ( um_user( 'can_view_all' ) && ! empty( $can_view_roles ) ) {
+					$args['role__in'] = $can_view_roles;
+				}
+			}
+
+			return $args;
 		}
 
 
@@ -361,6 +426,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			// merge views
 			foreach ( $old_views as $key => $view ) {
 				$views[ $key ] = $view;
+			}
+
+			// hide filters with not accessible roles
+			if ( ! current_user_can( 'administrator' ) ) {
+				$wp_roles = wp_roles();
+				$can_view_roles = um_user( 'can_view_roles' );
+				if ( ! empty( $can_view_roles ) ) {
+					foreach ( $wp_roles->get_names() as $this_role => $name ) {
+						if ( ! in_array( $this_role, $can_view_roles ) ) {
+							unset( $views[ $this_role ] );
+						}
+					}
+				}
 			}
 
 			return $views;

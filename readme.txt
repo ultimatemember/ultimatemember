@@ -1,4 +1,4 @@
-﻿=== Ultimate Member - User Profile & Membership Plugin ===
+﻿=== Ultimate Member - User Profile, Registration & Membership Plugin ===
 Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember, champsupertramp, nsinelnikov
@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 5.5
-Stable tag: 2.1.7
+Stable tag: 2.1.8
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -42,6 +42,8 @@ Read about all of the plugin's features at [Ultimate Member](https://ultimatemem
 
 Ultimate Member has a range of extensions that allow you to extend the power of the plugin. You can purchase all of these extensions at a significant discount with our [All Access Pass](https://ultimatemember.com/pricing/) or you can purchase extensions individually.
 
+* [User Notes](https://ultimatemember.com/extensions/user-notes/) - Allow users to create public and private notes from their profile
+* [Profile Tabs](https://ultimatemember.com/extensions/profile-tabs/) - Allow to add the custom tabs to profiles
 * [User Locations](https://ultimatemember.com/extensions/user-locations/) - Allow to display users on a map on the member directory page and allow users to add their location via their profile
 * [Unsplash](https://ultimatemember.com/extensions/unsplash/) - Allow users to select a profile cover photo from [Unsplash](https://unsplash.com/) from their profile
 * [User Bookmarks](https://ultimatemember.com/extensions/user-bookmarks/) - Allow users to bookmark content from your website
@@ -67,7 +69,7 @@ Ultimate Member has a range of extensions that allow you to extend the power of 
 
 = Free Extensions =
 
-* [JobsBoardWP](https://wordpress.org/plugins/um-jobboardwp) - This free extension integrates Ultimate Member with the job board plugin [JobBoardWP](https://wordpress.org/plugins/jobboardwp).
+* [JobsBoardWP](https://ultimatemember.com/extensions/jobboardwp/) - This free extension integrates Ultimate Member with the job board plugin [JobBoardWP](https://wordpress.org/plugins/jobboardwp).
 * [ForumWP](https://ultimatemember.com/extensions/forumwp/) - This free extension integrates Ultimate Member with the forum plugin [ForumWP](https://forumwpplugin.com).
 * [Terms & Conditions](https://ultimatemember.com/extensions/terms-conditions/) - Add a terms and condition checkbox to your registration forms & require users to agree to your T&Cs before registering on your site.
 * [Google reCAPTCHA](https://ultimatemember.com/extensions/google-recaptcha/) - Stop bots on your registration & login forms with Google reCAPTCHA
@@ -154,12 +156,35 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
+= 2.1.8: September 2, 2020 =
+
+* Enhancements:
+
+  - Added dependency functions for extensions: [Ultimate Member - User Notes](https://ultimatemember.com/extensions/user-notes/) & [Ultimate Member - Profile Tabs](https://ultimatemember.com/extensions/profile-tabs/)
+  - Added unique IDs to the form fields at the Profile's view mode
+  - Added restrictions for WP > Users list table based on UM Roles capabilities
+
+* Bugfixes:
+
+  - Removed additional slashes in the UM custom roles titles
+  - Fixed cleaning user old uploads and integration with Social activity & Groups files
+  - Fixed Info window fields (hide fields without metakeys)
+  - Fixed PHP warning in conditional logic function
+  - Fixed member directory preloader when using a slider filter
+  - Fixed 'redirect_to' attribute and approving user on registration
+  - Fixed activate an account via email
+
 = 2.1.7: August 12, 2020 =
+
+* Enhancements:
 
   - Added dependency functions for plugins: [Ultimate Member - JobBoardWP integration](https://wordpress.org/plugins/um-jobboardwp) & [JobBoardWP](https://wordpress.org/plugins/jobboardwp)
   - Added account privacy setting for the avoiding profile indexation
   - Added setting "Change image orientation" based on image EXIF data
   - Added setting "Account Deletion without password Custom Text"
+
+* Bugfixes:
+
   - Fixed security lacks for 'redirect_to' attributes
   - Fixed account submission when change a password
   - Fixed updating UM roles metadata (WP capabilities section) when 3rd-party plugins update the caps for the UM roles
@@ -176,6 +201,9 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed the 'wp_authenticate_user' filter's variables (changed username string to WP_User object)
   - Fixed SEO link canonical for the profile page
   - Fixed displaying error & notice when the text is empty
+
+* Deprecated:
+
   - Deprecated JS event 'um_before_modal_removed', use wp.hooks action 'um_before_modal_removed' instead
 
 = 2.1.6: June 1, 2020 =

@@ -4111,7 +4111,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$res = apply_filters( "um_view_field_value_{$type}", $res, $data );
 
 						$output .= '<div class="um-field-area">';
-						$output .= '<div class="um-field-value">' . $res . '</div>';
+						$output .= '<div class="um-field-value" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '">' . $res . '</div>';
 						$output .= '</div>';
 
 						$output .= '</div>';

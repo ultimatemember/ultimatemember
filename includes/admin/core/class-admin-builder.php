@@ -1066,6 +1066,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 				case 'um_admin_review_registration':
 					//$user_id = $arg1;
+
+					if ( ! current_user_can( 'administrator' ) ) {
+						if ( ! um_can_view_profile( $arg1 ) ) {
+							$output = '';
+							break;
+						}
+					}
+
 					um_fetch_user( $arg1 );
 
 					UM()->user()->preview = true;
