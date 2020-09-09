@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 5.5
-Stable tag: 2.1.8
+Stable tag: 2.1.9
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -160,7 +160,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * Bugfixes:
 
-  - Fixed security vulnerability when user can change their role via Profile Form
+  - Fixed security patch for role change via profile form
 
 = 2.1.8: September 2, 2020 =
 
