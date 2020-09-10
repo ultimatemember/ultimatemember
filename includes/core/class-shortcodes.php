@@ -697,7 +697,11 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 						// show the first Profile Form with role selected, don't show profile forms below the page with other role-specific setting
 						if ( empty( $this->profile_role ) ) {
 							$current_user_roles = UM()->roles()->get_all_user_roles( um_profile_id() );
-							if ( is_array( $args['role'] ) ) {
+
+							if ( empty( $current_user_roles ) ) {
+								ob_get_clean();
+								return '';
+							} elseif ( is_array( $args['role'] ) ) {
 								if ( ! count( array_intersect( $args['role'], $current_user_roles ) ) ) {
 									ob_get_clean();
 									return '';

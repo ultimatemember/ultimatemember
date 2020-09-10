@@ -592,12 +592,35 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				return false;
 			}
 
+			// role field
+			global $wp_roles;
+			$role_keys = array_map( function( $item ) {
+				return 'um_' . $item;
+			}, get_option( 'um_roles', array() ) );
+			$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+
+			$roles = UM()->roles()->get_roles( false, $exclude_roles );
+			$roles = array_map( function( $item ) {
+				return html_entity_decode( $item, ENT_QUOTES );
+			}, $roles );
+
 			foreach ( $fields as $field_key => $field_settings ) {
 
 				if ( strstr( $field_key , 'role_' ) ) {
 					if ( is_array( $field_settings['options'] ) ) {
-						$option_pairs = apply_filters( 'um_select_options_pair', null, $field_settings );
-						return ! empty( $option_pairs ) ? array_keys( $field_settings['options'] ) : array_values( $field_settings['options'] );
+						//$option_pairs = apply_filters( 'um_select_options_pair', null, $field_settings );
+
+						$intersected_options = array();
+						foreach ( $field_settings['options'] as $option ) {
+							if ( false !== $search_key = array_search( $option, $roles ) ) {
+								$intersected_options[ $search_key ] = $option;
+							} else {
+								$intersected_options[] = $option;
+							}
+						}
+
+						//return ! empty( $option_pairs ) ? array_keys( $field_settings['options'] ) : array_values( $field_settings['options'] );
+						return array_keys( $intersected_options );
 					}
 				}
 
