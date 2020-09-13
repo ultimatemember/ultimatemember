@@ -390,7 +390,11 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 								return 'um_' . $item;
 							}, get_option( 'um_roles', array() ) );
 							$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
-
+							
+							$custom_field_roles = array_map( function( $item ) {
+								return 'um_' . strtolower($item);
+							}, $custom_field_roles );
+							
 							if ( ! empty( $role ) &&
 								( ! in_array( $role, $custom_field_roles, true ) || in_array( $role, $exclude_roles ) ) ) {
 								wp_die( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
