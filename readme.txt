@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
-Tested up to: 5.5
+Tested up to: 5.5.1
 Stable tag: 2.1.9
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -155,6 +155,13 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.2.0: September 17, 2020 =
+
+* Bugfixes:
+
+  - Fixed age filter at Member Directory when using WP native usermeta table
+  - Fixed the role field values at the user profile/registration forms
 
 = 2.1.9: September 9, 2020 =
 
