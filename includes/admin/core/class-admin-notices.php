@@ -655,9 +655,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			<?php $message = ob_get_clean();
 
 			$this->add_notice( 'reviews_notice', array(
-				'class'     => 'updated',
-				'message'   => $message,
-				'dismissible' => true
+				'class'         => 'updated',
+				'message'       => $message,
+				'dismissible'   => true
 			), 1 );
 		}
 

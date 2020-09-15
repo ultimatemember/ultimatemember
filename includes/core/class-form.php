@@ -374,14 +374,14 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 					$this->post_form = array_merge( $this->form_data, $this->post_form );
 
-					if ( isset( $this->form_data['custom_fields'] )  && strstr( $this->form_data['custom_fields'], 'role_' )  ) {  // Secure selected role
+					if ( isset( $this->form_data['custom_fields'] ) && strstr( $this->form_data['custom_fields'], 'role_' ) ) {  // Secure selected role
 
 						$custom_field_roles = $this->custom_field_roles( $this->form_data['custom_fields'] );
 
 						if ( ! empty( $_POST['role'] ) ) {
 							$role = $_POST['role'];
 
-							if( is_array( $_POST['role'] ) ){
+							if ( is_array( $_POST['role'] ) ) {
 								$role = current( $_POST['role'] );
 							}
 
@@ -392,8 +392,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 							$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
 
 							if ( ! empty( $role ) &&
-								( ! in_array( $role , $custom_field_roles ) || in_array( $role , $exclude_roles ) ) ) {
-								wp_die( __( 'This is not possible for security reasons.','ultimate-member') );
+								( ! in_array( $role, $custom_field_roles, true ) || in_array( $role, $exclude_roles ) ) ) {
+								wp_die( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
 							}
 
 							$this->post_form['role'] = $role;
@@ -401,6 +401,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 						}
 
 					} elseif ( isset( $this->post_form['mode'] ) && $this->post_form['mode'] == 'register' ) {
+
 						$role = $this->assigned_role( $this->form_id );
 						$this->post_form['role'] = $role;
 						//fix for social login
@@ -587,14 +588,39 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 			$fields = maybe_unserialize( $custom_fields );
 
-			if ( ! is_array( $fields )  )
+			if ( ! is_array( $fields ) ) {
 				return false;
+			}
+
+			// role field
+			global $wp_roles;
+			$role_keys = array_map( function( $item ) {
+				return 'um_' . $item;
+			}, get_option( 'um_roles', array() ) );
+			$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+
+			$roles = UM()->roles()->get_roles( false, $exclude_roles );
+			$roles = array_map( function( $item ) {
+				return html_entity_decode( $item, ENT_QUOTES );
+			}, $roles );
 
 			foreach ( $fields as $field_key => $field_settings ) {
 
 				if ( strstr( $field_key , 'role_' ) ) {
 					if ( is_array( $field_settings['options'] ) ) {
-						return array_keys( $field_settings['options'] );
+						//$option_pairs = apply_filters( 'um_select_options_pair', null, $field_settings );
+
+						$intersected_options = array();
+						foreach ( $field_settings['options'] as $option ) {
+							if ( false !== $search_key = array_search( $option, $roles ) ) {
+								$intersected_options[ $search_key ] = $option;
+							} else {
+								$intersected_options[] = $option;
+							}
+						}
+
+						//return ! empty( $option_pairs ) ? array_keys( $field_settings['options'] ) : array_values( $field_settings['options'] );
+						return array_keys( $intersected_options );
 					}
 				}
 
