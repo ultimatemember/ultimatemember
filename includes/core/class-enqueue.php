@@ -106,7 +106,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_script( 'um_datetime', $this->js_baseurl . 'pickadate/picker.js', array( 'jquery' ), ultimatemember_version, true );
 			wp_register_script( 'um_datetime_date', $this->js_baseurl . 'pickadate/picker.date.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
 			wp_register_script( 'um_datetime_time', $this->js_baseurl . 'pickadate/picker.time.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
-			wp_register_script( 'um_datetime_legacy', $this->js_baseurl . 'pickadate/legacy.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
+//			wp_register_script( 'um_datetime_legacy', $this->js_baseurl . 'pickadate/legacy.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
 			// load a localized version for date/time
 			$locale = get_locale();
 			if ( $locale ) {
@@ -128,7 +128,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 
 			wp_register_script( 'um-gdpr', $this->js_baseurl . 'um-gdpr' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, false );
 			wp_register_script('um_conditional', $this->js_baseurl . 'um-conditional' . $this->suffix . '.js', array( 'jquery', 'wp-hooks' ), ultimatemember_version, true );
-			wp_register_script('um_scripts', $this->js_baseurl . 'um-scripts' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'um_conditional', 'um_datetime', 'um_datetime_date', 'um_datetime_time', 'um_datetime_legacy', 'select2' ), ultimatemember_version, true );
+			wp_register_script('um_scripts', $this->js_baseurl . 'um-scripts' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'um_conditional', 'um_datetime', 'um_datetime_date', 'um_datetime_time', /*'um_datetime_legacy',*/ 'select2' ), ultimatemember_version, true );
 			/**
 			 * UM hook
 			 *
@@ -364,7 +364,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_enqueue_script( 'um_datetime' );
 			wp_enqueue_script( 'um_datetime_date' );
 			wp_enqueue_script( 'um_datetime_time' );
-			wp_enqueue_script( 'um_datetime_legacy' );
+			//wp_enqueue_script( 'um_datetime_legacy' );
 
 			// load a localized version for date/time
 			$locale = get_locale();

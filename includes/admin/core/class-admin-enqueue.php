@@ -130,7 +130,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			wp_register_script( 'um_datetime', $this->front_js_baseurl . 'pickadate/picker.js', array( 'jquery' ), ultimatemember_version, true );
 			wp_register_script( 'um_datetime_date', $this->front_js_baseurl . 'pickadate/picker.date.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
 			wp_register_script( 'um_datetime_time', $this->front_js_baseurl . 'pickadate/picker.time.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
-			wp_register_script( 'um_datetime_legacy', $this->front_js_baseurl . 'pickadate/legacy.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
+			//wp_register_script( 'um_datetime_legacy', $this->front_js_baseurl . 'pickadate/legacy.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
 			// load a localized version for date/time
 			$locale = get_locale();
 			if ( $locale ) {
@@ -141,7 +141,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 				}
 			}
 
-			wp_register_script( 'um_scripts', $this->front_js_baseurl . 'um-scripts' . $this->suffix . '.js', array( 'um_functions', 'um_crop', 'um_raty', 'select2', 'um_jquery_form', 'um_fileupload', 'um_datetime', 'um_datetime_date', 'um_datetime_time', 'um_datetime_legacy' ), ultimatemember_version, true );
+			wp_register_script( 'um_scripts', $this->front_js_baseurl . 'um-scripts' . $this->suffix . '.js', array( 'um_functions', 'um_crop', 'um_raty', 'select2', 'um_jquery_form', 'um_fileupload', 'um_datetime', 'um_datetime_date', 'um_datetime_time'/*, 'um_datetime_legacy'*/ ), ultimatemember_version, true );
 			wp_register_script( 'um_responsive', $this->front_js_baseurl . 'um-responsive' . $this->suffix . '.js', array( 'um_scripts' ), ultimatemember_version, true );
 			wp_register_script( 'um_modal', $this->front_js_baseurl . 'um-modal' . $this->suffix . '.js', array( 'um_responsive' ), ultimatemember_version, true );
 
@@ -382,7 +382,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			wp_register_script( 'um_datetime', $this->front_js_baseurl . 'pickadate/picker.js', array( 'jquery' ), ultimatemember_version, true );
 			wp_register_script( 'um_datetime_date', $this->front_js_baseurl . 'pickadate/picker.date.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
 			wp_register_script( 'um_datetime_time', $this->front_js_baseurl . 'pickadate/picker.time.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
-			wp_register_script( 'um_datetime_legacy', $this->front_js_baseurl . 'pickadate/legacy.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
+			//wp_register_script( 'um_datetime_legacy', $this->front_js_baseurl . 'pickadate/legacy.js', array( 'jquery', 'um_datetime' ), ultimatemember_version, true );
 			// load a localized version for date/time
 			$locale = get_locale();
 			if ( $locale ) {
@@ -399,7 +399,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 
 			wp_enqueue_style( 'um_datetime_date', 'um_datetime_time' );
 
-			wp_register_script( 'um_admin_scripts', $this->js_url . 'um-admin-scripts.js',  array('jquery','wp-util', 'wp-color-picker', 'um_datetime', 'um_datetime_date', 'um_datetime_time', 'um_datetime_legacy' ), ultimatemember_version, true );
+			wp_register_script( 'um_admin_scripts', $this->js_url . 'um-admin-scripts.js',  array('jquery','wp-util', 'wp-color-picker', 'um_datetime', 'um_datetime_date', 'um_datetime_time'/*, 'um_datetime_legacy'*/ ), ultimatemember_version, true );
 			wp_enqueue_script( 'um_admin_scripts' );
 		}
 
