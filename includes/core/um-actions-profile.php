@@ -624,7 +624,7 @@ add_action( 'get_header', 'um_profile_remove_wpseo', 8 );
 
 /**
  * The profile page SEO tags
- * 
+ *
  * @see https://ogp.me/ - The Open Graph protocol
  * @see https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/summary - The Twitter Summary card
  * @see https://schema.org/Person - The schema.org Person schema
@@ -678,7 +678,7 @@ function um_profile_dynamic_meta_desc() {
 		<!-- START - Ultimate Member profile SEO meta tags -->
 
 		<link rel="image_src" href="<?php echo esc_url( $image ); ?>"/>
-		
+
 		<meta name="description" content="<?php echo esc_attr( $description ); ?>"/>
 
 		<meta property="og:type" content="profile"/>
@@ -715,7 +715,7 @@ add_action( 'wp_head', 'um_profile_dynamic_meta_desc', 20 );
  * @param $args
  */
 function um_profile_header_cover_area( $args ) {
-	if ( $args['cover_enabled'] == 1 ) {
+	if ( isset( $args['cover_enabled'] ) && $args['cover_enabled'] == 1 ) {
 
 		$default_cover = UM()->options()->get( 'default_cover' );
 
