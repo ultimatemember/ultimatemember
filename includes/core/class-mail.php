@@ -405,7 +405,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 				return;
 			}
 
-			$this->attachments = null;
+			$this->attachments = array();
 			$this->headers = 'From: '. stripslashes( UM()->options()->get('mail_from') ) .' <'. UM()->options()->get('mail_from_addr') .'>' . "\r\n";
 
 			/**

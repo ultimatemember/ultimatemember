@@ -43,7 +43,7 @@ get_header(); ?>
 					$message = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
 				}
 
-				echo $message; ?>
+				echo translate( $message, 'ultimate-member' ); ?>
 
 			</main><!-- #main -->
 		</div><!-- #primary -->

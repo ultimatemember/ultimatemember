@@ -587,7 +587,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		function custom_field_roles( $custom_fields ) {
 
 			$fields = maybe_unserialize( $custom_fields );
-
 			if ( ! is_array( $fields ) ) {
 				return false;
 			}
@@ -606,22 +605,18 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 			foreach ( $fields as $field_key => $field_settings ) {
 
-				if ( strstr( $field_key , 'role_' ) ) {
-					if ( is_array( $field_settings['options'] ) ) {
-						//$option_pairs = apply_filters( 'um_select_options_pair', null, $field_settings );
-
-						$intersected_options = array();
-						foreach ( $field_settings['options'] as $option ) {
-							if ( false !== $search_key = array_search( $option, $roles ) ) {
-								$intersected_options[ $search_key ] = $option;
-							} else {
-								$intersected_options[] = $option;
-							}
+				if ( strstr( $field_key, 'role_' ) && is_array( $field_settings['options'] ) ) {
+					$intersected_options = array();
+					foreach ( $field_settings['options'] as $key => $title ) {
+						if ( false !== $search_key = array_search( $title, $roles ) ) {
+							$intersected_options[ $search_key ] = $title;
+						} elseif ( isset( $roles[ $key ] ) ) {
+							$intersected_options[ $key ] = $title;
 						}
-
-						//return ! empty( $option_pairs ) ? array_keys( $field_settings['options'] ) : array_values( $field_settings['options'] );
-						return array_keys( $intersected_options );
 					}
+
+					// getting roles only from the first role fields
+					return array_keys( $intersected_options );
 				}
 
 			}

@@ -920,9 +920,9 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 *
 		 * @return mixed|string
 		 */
-		function get_template_name($file) {
-			$file = basename($file);
-			$file = preg_replace('/\\.[^.\\s]{3,4}$/', '', $file);
+		function get_template_name( $file ) {
+			$file = basename( $file );
+			$file = preg_replace( '/\\.[^.\\s]{3,4}$/', '', $file );
 			return $file;
 		}
 
@@ -934,32 +934,32 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 *
 		 * @return mixed
 		 */
-		function get_templates($excluded = null) {
+		function get_templates( $excluded = null ) {
 
-			if ($excluded) {
-				$array[$excluded] = __('Default Template', 'ultimate-member');
+			if ( $excluded ) {
+				$array[ $excluded ] = __( 'Default Template', 'ultimate-member' );
 			}
 
-			$paths[] = glob(um_path . 'templates/' . '*.php');
+			$paths[] = glob( um_path . 'templates/' . '*.php' );
 
-			if (file_exists(get_stylesheet_directory() . '/ultimate-member/templates/')) {
-				$paths[] = glob(get_stylesheet_directory() . '/ultimate-member/templates/' . '*.php');
+			if ( file_exists( get_stylesheet_directory() . '/ultimate-member/templates/' ) ) {
+				$paths[] = glob( get_stylesheet_directory() . '/ultimate-member/templates/' . '*.php' );
 			}
 
-			if( isset( $paths ) && ! empty( $paths ) ){
+			if ( isset( $paths ) && ! empty( $paths ) ) {
 
-				foreach ($paths as $k => $files) {
+				foreach ( $paths as $k => $files ) {
 
-					if( isset( $files ) && ! empty( $files ) ){
+					if ( isset( $files ) && ! empty( $files ) ) {
 
-						foreach ($files as $file) {
+						foreach ( $files as $file ) {
 
 							$clean_filename = $this->get_template_name( $file );
 
 							if ( 0 === strpos( $clean_filename, $excluded ) ) {
 
 								$source = file_get_contents( $file );
-								$tokens = token_get_all( $source );
+								$tokens = @\token_get_all( $source );
 								$comment = array(
 									T_COMMENT, // All comments since PHP5
 									T_DOC_COMMENT, // PHPDoc comments
@@ -967,8 +967,8 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 								foreach ( $tokens as $token ) {
 									if ( in_array( $token[0], $comment ) && strstr( $token[1], '/* Template:' ) && $clean_filename != $excluded ) {
 										$txt = $token[1];
-										$txt = str_replace('/* Template: ', '', $txt );
-										$txt = str_replace(' */', '', $txt );
+										$txt = str_replace( '/* Template: ', '', $txt );
+										$txt = str_replace( ' */', '', $txt );
 										$array[ $clean_filename ] = $txt;
 									}
 								}
@@ -984,7 +984,6 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			}
 
 			return $array;
-
 		}
 
 

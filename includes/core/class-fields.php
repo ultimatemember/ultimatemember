@@ -3690,11 +3690,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				//fix when customers change options for role (radio/dropdown) fields
 				$intersected_options = array();
-				foreach ( $options as $option ) {
-					if ( false !== $search_key = array_search( $option, $roles ) ) {
-						$intersected_options[ $search_key ] = $option;
-					} else {
-						$intersected_options[] = $option;
+				foreach ( $options as $key => $title ) {
+					if ( false !== $search_key = array_search( $title, $roles ) ) {
+						$intersected_options[ $search_key ] = $title;
+					} elseif ( isset( $roles[ $key ] ) ) {
+						$intersected_options[ $key ] = $title;
 					}
 				}
 
