@@ -156,7 +156,11 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.1.10: September 22, 2020 =
+= 2.1.10: September 23, 2020 =
+
+* Enhancements:
+
+  - Deprecated the Feed widget from Ultimate Member dashboard
 
 * Bugfixes:
 
