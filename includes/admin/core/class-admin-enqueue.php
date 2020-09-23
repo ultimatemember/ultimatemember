@@ -453,6 +453,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			wp_localize_script( 'um_block_js', 'um_restrict_roles', $restrict_options );
 
 			wp_enqueue_script( 'um_block_js' );
+
+			do_action( 'um_load_gutenberg_js' );
 		}
 
 

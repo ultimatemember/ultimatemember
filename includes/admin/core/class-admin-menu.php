@@ -218,8 +218,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 			/** custom metaboxes for dashboard defined here **/
 			add_meta_box( 'um-metaboxes-contentbox-1', __( 'Users Overview', 'ultimate-member' ), array( &$this, 'users_overview' ), $this->pagehook, 'core', 'core' );
 
-			add_meta_box( 'um-metaboxes-mainbox-1', __( 'Latest from our blog', 'ultimate-member' ), array( &$this, 'um_news' ), $this->pagehook, 'normal', 'core' );
-
 			add_meta_box( 'um-metaboxes-sidebox-1', __( 'Purge Temp Files', 'ultimate-member' ), array( &$this, 'purge_temp' ), $this->pagehook, 'side', 'core' );
 
 			add_meta_box( 'um-metaboxes-sidebox-2', __( 'User Cache', 'ultimate-member' ), array( &$this, 'user_cache' ), $this->pagehook, 'side', 'core' );
@@ -229,14 +227,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 			if ( 0 < count( $exts ) ) {
 				add_meta_box( 'um-metaboxes-sidebox-3', __( 'Upgrade\'s Manual Request', 'ultimate-member' ), array( &$this, 'upgrade_request' ), $this->pagehook, 'side', 'core' );
 			}
-		}
-
-
-		/**
-		 *
-		 */
-		function um_news() {
-			include_once UM()->admin()->templates_path . 'dashboard/feed.php';
 		}
 
 
