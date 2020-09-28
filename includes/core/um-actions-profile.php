@@ -367,18 +367,22 @@ function um_user_edit_profile( $args ) {
 		$to_update[ $description_key ] = $args['submitted'][ $description_key ];
 	}
 
-	if ( ! empty( $args['submitted']['role'] ) ) {
-		global $wp_roles;
-		$role_keys = array_map( function( $item ) {
-			return 'um_' . $item;
-		}, get_option( 'um_roles' ) );
-		$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+	if ( is_admin() || ( ! is_admin() && ( isset( $fields['role_select'] ) || isset( $fields['role_radio'] ) ) ) ) {  // Secure selected role
 
-		if ( ! in_array( $args['submitted']['role'], $exclude_roles ) ) {
-			$to_update['role'] = $args['submitted']['role'];
+		if ( ! empty( $args['submitted']['role'] ) ) {
+			global $wp_roles;
+			$role_keys = array_map( function( $item ) {
+				return 'um_' . $item;
+			}, get_option( 'um_roles' ) );
+			$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+
+			if ( ! in_array( $args['submitted']['role'], $exclude_roles ) ) {
+				$to_update['role'] = $args['submitted']['role'];
+			}
+
+			$args['roles_before_upgrade'] = UM()->roles()->get_all_user_roles( $user_id );
 		}
 
-		$args['roles_before_upgrade'] = UM()->roles()->get_all_user_roles( $user_id );
 	}
 
 	/**

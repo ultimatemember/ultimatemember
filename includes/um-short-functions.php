@@ -1574,10 +1574,6 @@ function um_can_view_field( $data ) {
  * @return bool
  */
 function um_can_view_profile( $user_id ) {
-	if ( ! um_user( 'can_view_all' ) && $user_id != get_current_user_id() && is_user_logged_in() ) {
-		return false;
-	}
-
 	if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 		return true;
 	}
@@ -1589,19 +1585,24 @@ function um_can_view_profile( $user_id ) {
 	$temp_id = um_user('ID');
 	um_fetch_user( get_current_user_id() );
 
+	if ( ! um_user( 'can_view_all' ) && $user_id != get_current_user_id() && is_user_logged_in() ) {
+		um_fetch_user( $temp_id );
+		return false;
+	}
+
 	if ( ! um_user( 'can_access_private_profile' ) && UM()->user()->is_private_profile( $user_id ) ) {
+		um_fetch_user( $temp_id );
 		return false;
 	}
 
 	if ( um_user( 'can_view_roles' ) && $user_id != get_current_user_id() ) {
-
 		$can_view_roles = um_user( 'can_view_roles' );
 
 		if ( ! is_array( $can_view_roles ) ) {
 			$can_view_roles = array();
 		}
 
-		if ( count( array_intersect( UM()->roles()->get_all_user_roles( $user_id ), $can_view_roles ) ) <= 0 ) {
+		if ( count( $can_view_roles ) && count( array_intersect( UM()->roles()->get_all_user_roles( $user_id ), $can_view_roles ) ) <= 0 ) {
 			um_fetch_user( $temp_id );
 			return false;
 		}

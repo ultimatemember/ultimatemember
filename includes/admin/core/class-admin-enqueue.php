@@ -505,10 +505,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			/**
 			 * create gutenberg blocks
 			 */
-			register_block_type( 'um-block/um-user-profile-wall', array(
-				'editor_script' => 'um-blocks-shortcode-js',
-			) );
-
 			register_block_type( 'um-block/um-forms', array(
 				'editor_script' => 'um-blocks-shortcode-js',
 			) );
