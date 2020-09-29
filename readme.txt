@@ -156,6 +156,13 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
+= 2.1.11: October xx, 2020 =
+
+* Bugfixes:
+
+  - Fixed can_view_profile function
+  - Fixed security patch for role change via profile form
+
 = 2.1.10: September 23, 2020 =
 
 * Enhancements:

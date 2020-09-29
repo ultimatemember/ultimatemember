@@ -367,7 +367,7 @@ function um_user_edit_profile( $args ) {
 		$to_update[ $description_key ] = $args['submitted'][ $description_key ];
 	}
 
-	if ( is_admin() || ( ! is_admin() && ( isset( $fields['role_select'] ) || isset( $fields['role_radio'] ) ) ) ) {  // Secure selected role
+	if ( is_admin() || ( ! is_admin() && ( isset( $fields['role'] ) || isset( $fields['role_select'] ) || isset( $fields['role_radio'] ) ) ) ) {  // Secure selected role
 
 		if ( ! empty( $args['submitted']['role'] ) ) {
 			global $wp_roles;
@@ -541,6 +541,18 @@ function um_user_edit_profile( $args ) {
 add_action( 'um_user_edit_profile', 'um_user_edit_profile', 10 );
 
 
+/**
+ * @param array $post_form
+ */
+function um_profile_validate_nonce( $post_form ) {
+	$nonce = isset( $post_form['profile_nonce'] ) ? $post_form['profile_nonce'] : '';
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'um-profile-nonce' ) ) {
+		wp_die( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
+	}
+}
+add_action( 'um_submit_form_errors_hook__profile', 'um_profile_validate_nonce', 10, 1 );
+
+
 add_filter( 'um_user_pre_updating_files_array', array( UM()->validation(), 'validate_files' ), 10, 1 );
 add_filter( 'um_before_save_filter_submitted', array( UM()->validation(), 'validate_fields_values' ), 10, 2 );
 
@@ -585,6 +597,7 @@ function um_editing_user_id_input( $args ) {
 	if ( UM()->fields()->editing == 1 && UM()->fields()->set_mode == 'profile' && UM()->user()->target_id ) { ?>
 
 		<input type="hidden" name="user_id" id="user_id" value="<?php echo esc_attr( UM()->user()->target_id ); ?>" />
+		<input type="hidden" name="profile_nonce" id="profile_nonce" value="<?php echo esc_attr( wp_create_nonce( 'um-profile-nonce' ) ); ?>" />
 
 	<?php }
 }
