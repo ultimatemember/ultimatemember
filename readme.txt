@@ -162,6 +162,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
   - Fixed can_view_profile function
   - Fixed security patch for role change via profile form
+  - Fixed admin-menu PHP notice
 
 = 2.1.10: September 23, 2020 =
 

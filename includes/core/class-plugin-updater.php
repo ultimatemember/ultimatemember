@@ -37,6 +37,30 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 
 			//plugin information info
 			add_filter( 'plugins_api', array( &$this, 'plugin_information' ), 9999, 3 );
+
+			// make this only for version which have the update packages
+			//add_filter( 'auto_update_plugin', array( &$this, 'prevent_dangerous_auto_updates' ), 99, 2 );
+		}
+
+
+		/**
+		 * Prevent auto-updating the WooCommerce plugin on major releases if there are untested extensions active.
+		 *
+		 * @since 3.2.0
+		 * @param  bool   $should_update If should update.
+		 * @param  object $plugin        Plugin data.
+		 * @return bool
+		 */
+		function prevent_dangerous_auto_updates( $should_update, $plugin ) {
+			if ( ! isset( $plugin->plugin, $plugin->new_version ) ) {
+				return $should_update;
+			}
+
+			if ( 'ultimate-member/ultimate-member.php' !== $plugin->plugin ) {
+				return $should_update;
+			}
+
+			return $should_update;
 		}
 
 		
@@ -367,6 +391,10 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 					continue;
 				}
 
+				/*if ( ! empty( $_transient_data->no_update ) && ! empty( $_transient_data->no_update[ $slug ] ) && $_transient_data->last_checked > time() - DAY_IN_SECONDS ) {
+					continue;
+				}*/
+
 				$path = wp_normalize_path( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $slug );
 				if ( ! file_exists( $path ) ) {
 					continue;
@@ -390,11 +418,20 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 					if ( version_compare( $plugin_data['Version'], $version_info->new_version, '<' ) ) {
 						$_transient_data->response[ $slug ] = $version_info;
 						$_transient_data->response[ $slug ]->plugin = $slug;
+					} else {
+						$_transient_data->no_update[ $slug ] = $version_info;
+						$_transient_data->no_update[ $slug ]->plugin = $slug;
 					}
 
 					$_transient_data->last_checked      = time();
 					$_transient_data->checked[ $slug ]  = $plugin_data['Version'];
 
+				} elseif ( false !== $version_info && is_object( $version_info ) && ! isset( $version_info->new_version ) ) {
+					$_transient_data->no_update[ $slug ] = $version_info;
+					$_transient_data->no_update[ $slug ]->plugin = $slug;
+
+					$_transient_data->last_checked      = time();
+					$_transient_data->checked[ $slug ]  = $plugin_data['Version'];
 				}
 			}
 

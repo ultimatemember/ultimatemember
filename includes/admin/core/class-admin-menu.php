@@ -125,15 +125,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 			if ( is_array( $menu ) ) {
 				foreach ( $menu as $key => $menu_item ) {
 					if ( 0 === strpos( $menu_item[0], _x( 'Users', 'Admin menu name' ) ) ) {
-						$menu[ $key ][0] .= ' <span class="update-plugins count-'.$count.'"><span class="processing-count">'.$count.'</span></span>';
+						$menu[ $key ][0] .= ' <span class="update-plugins count-' . $count . '"><span class="processing-count">' . $count . '</span></span>';
 					}
 				}
 			}
 
-			if ( is_array( $submenu ) ) {
+			if ( is_array( $submenu ) && isset( $submenu['users.php'] ) ) {
 				foreach ( $submenu['users.php'] as $key => $menu_item ) {
 					if ( 0 === strpos( $menu_item[0], _x( 'All Users', 'Admin menu name' ) ) ) {
-						$submenu['users.php'][ $key ][0] .= ' <span class="update-plugins count-'.$count.'"><span class="processing-count">'.$count.'</span></span>';
+						$submenu['users.php'][ $key ][0] .= ' <span class="update-plugins count-' .$count . '"><span class="processing-count">' . $count . '</span></span>';
 					}
 				}
 			}
