@@ -1,4 +1,4 @@
-﻿=== Ultimate Member - User Profile, Registration & Membership Plugin ===
+﻿=== Ultimate Member – User Profile, Registration, Login & Membership Plugin ===
 Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember, champsupertramp, nsinelnikov
@@ -11,7 +11,7 @@ Stable tag: 2.1.10
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
-The #1 user profile & membership plugin for WordPress.
+The #1 plugin for front-end user profiles, registration & login forms, member directories, content restriction and more.
 
 == Description ==
 

@@ -248,11 +248,12 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			$ms_empty_role_access = is_multisite() && is_user_logged_in() && !UM()->roles()->get_priority_user_role( um_user('ID') );
 
 			if ( is_front_page() ) {
-				if ( is_user_logged_in() && !$ms_empty_role_access ) {
+				if ( is_user_logged_in() && ! $ms_empty_role_access ) {
 
 					$user_default_homepage = um_user( 'default_homepage' );
-					if ( ! empty( $user_default_homepage ) )
+					if ( ! empty( $user_default_homepage ) ) {
 						return;
+					}
 
 					$redirect_homepage = um_user( 'redirect_homepage' );
 					/**
@@ -291,8 +292,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 						if ( $home_page_accessible == 0 ) {
 							//get redirect URL if not set get login page by default
 							$redirect = UM()->options()->get( 'access_redirect' );
-							if ( ! $redirect )
+							if ( ! $redirect ) {
 								$redirect = um_get_core_page( 'login' );
+							}
 
 							$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect ) ), 'global' );
 						} else {
@@ -312,8 +314,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 						if ( $category_page_accessible == 0 ) {
 							//get redirect URL if not set get login page by default
 							$redirect = UM()->options()->get( 'access_redirect' );
-							if ( ! $redirect )
+							if ( ! $redirect ) {
 								$redirect = um_get_core_page( 'login' );
+							}
 
 							$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect ) ), 'global' );
 						} else {
@@ -326,7 +329,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 			$access = UM()->options()->get( 'accessible' );
 
-			if ( $access == 2 && ( !is_user_logged_in() || $ms_empty_role_access ) ) {
+			if ( $access == 2 && ( ! is_user_logged_in() || $ms_empty_role_access ) ) {
 
 				//build exclude URLs pages
 				$redirects = array();
@@ -391,8 +394,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			//also skip if we currently at UM Register|Login|Reset Password pages
 			if ( um_is_core_post( $post, 'register' ) ||
 			     um_is_core_post( $post, 'password-reset' ) ||
-			     um_is_core_post( $post, 'login' ) )
+			     um_is_core_post( $post, 'login' ) ) {
 				return;
+			}
 
 			/**
 			 * UM hook
@@ -413,8 +417,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			 */
 			do_action( 'um_access_check_individual_term_settings' );
 			//exit from function if term page is accessible
-			if ( $this->check_access() )
+			if ( $this->check_access() ) {
 				return;
+			}
 
 			/**
 			 * UM hook
