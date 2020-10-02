@@ -206,6 +206,8 @@ function um_check_user_status( $user_id, $args ) {
 				exit( wp_safe_redirect( urldecode( $args['redirect_to'] ) ) );
 			}
 
+			um_fetch_user( $user_id );
+
 			if ( um_user( 'auto_approve_act' ) == 'redirect_url' && um_user( 'auto_approve_url' ) !== '' ) {
 				exit( wp_redirect( um_user( 'auto_approve_url' ) ) );
 			}

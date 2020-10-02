@@ -2771,3 +2771,33 @@ if ( ! function_exists( 'um_is_profile_owner' ) ) {
 		return ( $user_id == um_profile_id() );
 	}
 }
+
+
+/**
+ * Check whether the current page is in AMP mode or not.
+ * We need to check for specific functions, as there is no special AMP header.
+ *
+ * @since 2.1.11
+ *
+ * @param bool $check_theme_support Whether theme support should be checked. Defaults to true.
+ *
+ * @uses is_amp_endpoint() AMP by Automattic
+ * @uses is_better_amp() Better AMP
+ *
+ * @return bool
+ */
+function um_is_amp( $check_theme_support = true ) {
+
+	$is_amp = false;
+
+	if ( ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) ||
+	     ( function_exists( 'is_better_amp' ) && is_better_amp() ) ) {
+		$is_amp = true;
+	}
+
+	if ( $is_amp && $check_theme_support ) {
+		$is_amp = current_theme_supports( 'amp' );
+	}
+
+	return apply_filters( 'um_is_amp', $is_amp );
+}

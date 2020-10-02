@@ -564,7 +564,7 @@ add_filter( 'um_before_save_filter_submitted', array( UM()->validation(), 'valid
  * @param $to_update
  */
 function um_restore_default_roles( $user_id, $args, $to_update ) {
-	if ( ! empty( $args['submitted']['role'] ) ) {
+	if ( ! empty( $args['submitted']['role'] ) && ! empty( $to_update['role'] ) ) {
 		$wp_user = new WP_User( $user_id );
 
 		$role_keys = array_map( function( $item ) {
