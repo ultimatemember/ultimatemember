@@ -66,12 +66,6 @@ $premium['social-login'] = array(
 	'desc' => 'Let users register & login to your site via Facebook, Twitter, G+, LinkedIn, and more',
 );
 
-$premium['instagram'] = array(
-	'url' => 'https://ultimatemember.com/extensions/instagram/',
-	'name' => 'Instagram',
-	'desc' => 'Allow users to show their Instagram photos on their profile',
-);
-
 $premium['user-tags'] = array(
 	'url' => 'https://ultimatemember.com/extensions/user-tags/',
 	'name' => 'User Tags',

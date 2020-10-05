@@ -616,6 +616,10 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 						continue;
 					}
 
+					if ( ! um_can_view_field( $field_settings ) ) {
+						continue;
+					}
+
 					$intersected_options = array();
 					foreach ( $field_settings['options'] as $key => $title ) {
 						if ( false !== $search_key = array_search( $title, $roles ) ) {

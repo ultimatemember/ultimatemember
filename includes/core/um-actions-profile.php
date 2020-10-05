@@ -367,7 +367,9 @@ function um_user_edit_profile( $args ) {
 		$to_update[ $description_key ] = $args['submitted'][ $description_key ];
 	}
 
-	if ( is_admin() || ( ! is_admin() && ( isset( $fields['role'] ) || isset( $fields['role_select'] ) || isset( $fields['role_radio'] ) ) ) ) {  // Secure selected role
+
+	// Secure selected role
+	if ( is_admin() ) {
 
 		if ( ! empty( $args['submitted']['role'] ) ) {
 			global $wp_roles;
@@ -381,6 +383,27 @@ function um_user_edit_profile( $args ) {
 			}
 
 			$args['roles_before_upgrade'] = UM()->roles()->get_all_user_roles( $user_id );
+		}
+
+	} else {
+
+		if ( ( isset( $fields['role'] ) && $fields['role']['editable'] != 0 && um_can_view_field( $fields['role'] ) ) ||
+		     ( isset( $fields['role_select'] ) && $fields['role_select']['editable'] != 0 && um_can_view_field( $fields['role_select'] ) ) ||
+		     ( isset( $fields['role_radio'] ) ) && $fields['role_radio']['editable'] != 0 && um_can_view_field( $fields['role_radio'] ) ) {
+
+			if ( ! empty( $args['submitted']['role'] ) ) {
+				global $wp_roles;
+				$role_keys = array_map( function( $item ) {
+					return 'um_' . $item;
+				}, get_option( 'um_roles' ) );
+				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+
+				if ( ! in_array( $args['submitted']['role'], $exclude_roles ) ) {
+					$to_update['role'] = $args['submitted']['role'];
+				}
+
+				$args['roles_before_upgrade'] = UM()->roles()->get_all_user_roles( $user_id );
+			}
 		}
 
 	}
@@ -545,8 +568,9 @@ add_action( 'um_user_edit_profile', 'um_user_edit_profile', 10 );
  * @param array $post_form
  */
 function um_profile_validate_nonce( $post_form ) {
+	$user_id = isset( $post_form['user_id'] ) ? $post_form['user_id'] : '';
 	$nonce = isset( $post_form['profile_nonce'] ) ? $post_form['profile_nonce'] : '';
-	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'um-profile-nonce' ) ) {
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'um-profile-nonce' . $user_id ) ) {
 		wp_die( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
 	}
 }
@@ -597,7 +621,7 @@ function um_editing_user_id_input( $args ) {
 	if ( UM()->fields()->editing == 1 && UM()->fields()->set_mode == 'profile' && UM()->user()->target_id ) { ?>
 
 		<input type="hidden" name="user_id" id="user_id" value="<?php echo esc_attr( UM()->user()->target_id ); ?>" />
-		<input type="hidden" name="profile_nonce" id="profile_nonce" value="<?php echo esc_attr( wp_create_nonce( 'um-profile-nonce' ) ); ?>" />
+		<input type="hidden" name="profile_nonce" id="profile_nonce" value="<?php echo esc_attr( wp_create_nonce( 'um-profile-nonce' . UM()->user()->target_id ) ); ?>" />
 
 	<?php }
 }

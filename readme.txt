@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 5.5.1
-Stable tag: 2.1.10
+Stable tag: 2.1.11
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -50,7 +50,6 @@ Ultimate Member has a range of extensions that allow you to extend the power of 
 * [User Photos](https://ultimatemember.com/extensions/user-photos/) - Allow users to upload photos to their profile
 * [Groups](https://ultimatemember.com/extensions/groups/) - Allow users to create and join groups around shared topics, interests etc.
 * [Private Content](https://ultimatemember.com/extensions/private-content/) - Display private content to logged in users that only they can access
-* [Instagram](https://ultimatemember.com/extensions/instagram/) - Allow users to show their Instagram photos on their profile
 * [User Tags](https://ultimatemember.com/extensions/user-tags/) - Lets you add a user tag system to your website
 * [Social Activity](https://ultimatemember.com/extensions/social-activity/) - Let users create public wall posts & see the activity of other users
 * [WooCommerce](https://ultimatemember.com/extensions/woocommerce/) - Allow you to integrate WooCommerce with Ultimate Member
