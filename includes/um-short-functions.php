@@ -1567,10 +1567,6 @@ function um_can_view_field( $data ) {
  * @return bool
  */
 function um_can_view_profile( $user_id ) {
-	if ( ! um_user( 'can_view_all' ) && $user_id != get_current_user_id() && is_user_logged_in() ) {
-		return false;
-	}
-
 	if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 		return true;
 	}
@@ -1582,19 +1578,24 @@ function um_can_view_profile( $user_id ) {
 	$temp_id = um_user('ID');
 	um_fetch_user( get_current_user_id() );
 
+	if ( ! um_user( 'can_view_all' ) && $user_id != get_current_user_id() && is_user_logged_in() ) {
+		um_fetch_user( $temp_id );
+		return false;
+	}
+
 	if ( ! um_user( 'can_access_private_profile' ) && UM()->user()->is_private_profile( $user_id ) ) {
+		um_fetch_user( $temp_id );
 		return false;
 	}
 
 	if ( um_user( 'can_view_roles' ) && $user_id != get_current_user_id() ) {
-
 		$can_view_roles = um_user( 'can_view_roles' );
 
 		if ( ! is_array( $can_view_roles ) ) {
 			$can_view_roles = array();
 		}
 
-		if ( count( array_intersect( UM()->roles()->get_all_user_roles( $user_id ), $can_view_roles ) ) <= 0 ) {
+		if ( count( $can_view_roles ) && count( array_intersect( UM()->roles()->get_all_user_roles( $user_id ), $can_view_roles ) ) <= 0 ) {
 			um_fetch_user( $temp_id );
 			return false;
 		}
@@ -2762,4 +2763,34 @@ if ( ! function_exists( 'um_is_profile_owner' ) ) {
 
 		return ( $user_id == um_profile_id() );
 	}
+}
+
+
+/**
+ * Check whether the current page is in AMP mode or not.
+ * We need to check for specific functions, as there is no special AMP header.
+ *
+ * @since 2.1.11
+ *
+ * @param bool $check_theme_support Whether theme support should be checked. Defaults to true.
+ *
+ * @uses is_amp_endpoint() AMP by Automattic
+ * @uses is_better_amp() Better AMP
+ *
+ * @return bool
+ */
+function um_is_amp( $check_theme_support = true ) {
+
+	$is_amp = false;
+
+	if ( ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) ||
+	     ( function_exists( 'is_better_amp' ) && is_better_amp() ) ) {
+		$is_amp = true;
+	}
+
+	if ( $is_amp && $check_theme_support ) {
+		$is_amp = current_theme_supports( 'amp' );
+	}
+
+	return apply_filters( 'um_is_amp', $is_amp );
 }

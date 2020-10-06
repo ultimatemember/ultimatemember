@@ -135,6 +135,29 @@ function um_submit_form_errors_hook( $args ) {
 		 */
 		do_action( 'um_submit_form_errors_hook__registration', $args );
 
+	} elseif ( $mode == 'profile' ) {
+
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_submit_form_errors_hook__registration
+		 * @description Submit registration form validation
+		 * @input_vars
+		 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_submit_form_errors_hook__registration', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_submit_form_errors_hook__profile', 'my_submit_form_errors_hook__profile', 10, 1 );
+		 * function my_submit_form_errors_registration( $args ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( 'um_submit_form_errors_hook__profile', $args );
+
 	}
 
 	/**

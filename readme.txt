@@ -1,4 +1,4 @@
-﻿=== Ultimate Member - User Profile, Registration & Membership Plugin ===
+﻿=== Ultimate Member – User Profile, Registration, Login & Membership Plugin ===
 Author URI: https://ultimatemember.com/
 Plugin URI: https://ultimatemember.com/
 Contributors: ultimatemember, champsupertramp, nsinelnikov
@@ -7,11 +7,11 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 5.5.1
-Stable tag: 2.1.10
+Stable tag: 2.1.11
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
-The #1 user profile & membership plugin for WordPress.
+The #1 plugin for front-end user profiles, registration & login forms, member directories, content restriction and more.
 
 == Description ==
 
@@ -50,7 +50,6 @@ Ultimate Member has a range of extensions that allow you to extend the power of 
 * [User Photos](https://ultimatemember.com/extensions/user-photos/) - Allow users to upload photos to their profile
 * [Groups](https://ultimatemember.com/extensions/groups/) - Allow users to create and join groups around shared topics, interests etc.
 * [Private Content](https://ultimatemember.com/extensions/private-content/) - Display private content to logged in users that only they can access
-* [Instagram](https://ultimatemember.com/extensions/instagram/) - Allow users to show their Instagram photos on their profile
 * [User Tags](https://ultimatemember.com/extensions/user-tags/) - Lets you add a user tag system to your website
 * [Social Activity](https://ultimatemember.com/extensions/social-activity/) - Let users create public wall posts & see the activity of other users
 * [WooCommerce](https://ultimatemember.com/extensions/woocommerce/) - Allow you to integrate WooCommerce with Ultimate Member
@@ -155,6 +154,14 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.1.11: October 6, 2020 =
+
+* Bugfixes:
+
+  - Fixed can_view_profile() function
+  - Fixed security patch for role change via profile form
+  - Fixed admin-menu PHP notice
 
 = 2.1.10: September 23, 2020 =
 

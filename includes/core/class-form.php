@@ -379,25 +379,30 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 						$custom_field_roles = $this->custom_field_roles( $this->form_data['custom_fields'] );
 
 						if ( ! empty( $_POST['role'] ) ) {
-							$role = $_POST['role'];
+							if ( ! empty( $custom_field_roles ) ) {
+								$role = $_POST['role'];
 
-							if ( is_array( $_POST['role'] ) ) {
-								$role = current( $_POST['role'] );
+								if ( is_array( $_POST['role'] ) ) {
+									$role = current( $_POST['role'] );
+								}
+
+								global $wp_roles;
+								$role_keys = array_map( function( $item ) {
+									return 'um_' . $item;
+								}, get_option( 'um_roles', array() ) );
+								$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
+
+								if ( ! empty( $role ) &&
+									( ! in_array( $role, $custom_field_roles, true ) || in_array( $role, $exclude_roles ) ) ) {
+									wp_die( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
+								}
+
+								$this->post_form['role'] = $role;
+								$this->post_form['submitted']['role'] = $role;
+							} else {
+								unset( $this->post_form['role'] );
+								unset( $this->post_form['submitted']['role'] );
 							}
-
-							global $wp_roles;
-							$role_keys = array_map( function( $item ) {
-								return 'um_' . $item;
-							}, get_option( 'um_roles', array() ) );
-							$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
-
-							if ( ! empty( $role ) &&
-								( ! in_array( $role, $custom_field_roles, true ) || in_array( $role, $exclude_roles ) ) ) {
-								wp_die( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
-							}
-
-							$this->post_form['role'] = $role;
-							$this->post_form['submitted']['role'] = $role;
 						}
 
 					} elseif ( isset( $this->post_form['mode'] ) && $this->post_form['mode'] == 'register' ) {
@@ -606,6 +611,15 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			foreach ( $fields as $field_key => $field_settings ) {
 
 				if ( strstr( $field_key, 'role_' ) && is_array( $field_settings['options'] ) ) {
+
+					if ( $field_settings['editable'] == 0 ) {
+						continue;
+					}
+
+					if ( ! um_can_view_field( $field_settings ) ) {
+						continue;
+					}
+
 					$intersected_options = array();
 					foreach ( $field_settings['options'] as $key => $title ) {
 						if ( false !== $search_key = array_search( $title, $roles ) ) {
