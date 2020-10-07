@@ -11,7 +11,7 @@ Stable tag: 2.1.11
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
-The #1 plugin for front-end user profiles, registration & login forms, member directories, content restriction and more.
+The #1 plugin for front-end user profiles, user registration & login forms, member directories, content restriction and more.
 
 == Description ==
 

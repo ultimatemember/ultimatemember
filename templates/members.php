@@ -368,6 +368,6 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 	 * }
 	 * ?>
 	 */
-	do_action( 'um_members_directory_footer', $args ); ?>
+	do_action( 'um_members_directory_footer', $args, $form_id, $not_searched ); ?>
 
 </div>
