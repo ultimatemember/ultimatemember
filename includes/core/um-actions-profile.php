@@ -690,9 +690,9 @@ function um_profile_dynamic_meta_desc() {
 
 		um_fetch_user( $user_id );
 
-		$locale = get_user_locale( $user_id );
+		$locale = get_locale();
 		$site_name = get_bloginfo( 'name' );
-		$twitter_site = '@' . sanitize_title( $site_name );
+		$twitter_site = '@' . end(explode('/',get_user_meta( $user_id, 'twitter', true )));
 
 		$title = trim( um_user( 'display_name' ) );
 		$description = um_convert_tags( UM()->options()->get( 'profile_desc' ) );
@@ -734,7 +734,9 @@ function um_profile_dynamic_meta_desc() {
 		<meta property="og:url" content="<?php echo esc_url( $url ); ?>"/>
 
 		<meta name="twitter:card" content="summary"/>
-		<meta name="twitter:site" content="<?php echo esc_attr( $twitter_site ); ?>"/>
+<?php if($twitter_site != '@'){ ?>
+        	<meta name="twitter:site" content="<?php echo esc_attr( $twitter_site ); ?>"/>
+<?php } ?>
 		<meta name="twitter:title" content="<?php echo esc_attr( $title ); ?>"/>
 		<meta name="twitter:description" content="<?php echo esc_attr( $description ); ?>"/>
 		<meta name="twitter:image" content="<?php echo esc_url( $image ); ?>"/>
