@@ -2756,7 +2756,7 @@ Password Changed Email: 		<?php echo $this->info_value( UM()->options()->get('ch
 
 --- UM Custom Templates ---
 
-<?php // Show templates that have been copied to the theme's edd_templates dir
+                <?php // Show templates that have been copied to the theme's edd_templates dir
                 $dir = get_stylesheet_directory() . '/ultimate-member/templates/*.php';
                 if ( ! empty( $dir ) ) {
                     $found = glob( $dir );
