@@ -2963,13 +2963,13 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 			$template = $settings['um_email_template'];
 			$content = stripslashes( $settings[ $template ] );
 
-			$theme_template_path = UM()->mail()->get_template_file( 'theme', $template );
+			$uploads_template_path = UM()->mail()->get_template_file( 'uploads', $template );
 
-			if ( ! file_exists( $theme_template_path ) ) {
+			if ( ! file_exists( $uploads_template_path ) ) {
 				UM()->mail()->copy_email_template( $template );
 			}
 
-			$fp = fopen( $theme_template_path, "w" );
+			$fp = fopen( $uploads_template_path, "w" );
 			$result = fputs( $fp, $content );
 			fclose( $fp );
 

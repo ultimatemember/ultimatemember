@@ -110,10 +110,20 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			// check if there is template at theme folder
 			$blog_id = $this->get_blog_id();
 
+			// check if there is template at uploads folder
+			$path =  wp_upload_dir()['basedir'] . '/ultimatemember/email' . $blog_id;
+			$template = trailingslashit( $path ) . $template_name . '.php';
+
+			if ( ! file_exists( $template ) ) {
+				$template = false;
+			}
+
 			//get template file from current blog ID folder
-			$template = locate_template( array(
-				trailingslashit( 'ultimate-member/email' . $blog_id ) . $template_name . '.php'
-			) );
+			if ( ! $template ) {
+				$template = locate_template( array(
+					trailingslashit( 'ultimate-member/email' . $blog_id ) . $template_name . '.php'
+				) );
+			}
 
 			//if there isn't template at theme folder for current blog ID get template file from theme folder
 			if ( is_multisite() && ! $template ) {
@@ -438,7 +448,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 			$subject = wp_unslash( um_convert_tags( $subject , $args ) );
 
-			$this->subject = html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' ); 
+			$this->subject = html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' );
 
 			$this->message = $this->prepare_template( $template, $args );
 
@@ -511,6 +521,32 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 
 		/**
+		 * Locate a template in uploads folder and return the path for inclusion.
+		 *
+		 * @access public
+		 * @param string $template_name
+		 * @return string
+		 */
+		function template_in_uploads( $template_name ) {
+			$template_name_file = $this->get_template_filename( $template_name );
+
+			$blog_id = $this->get_blog_id();
+
+			// check if there is template at uploads blog ID folder
+			$path =  wp_upload_dir()['basedir'] . '/ultimatemember/email' . $blog_id;
+			$template = trailingslashit( $path ) . $template_name . '.php';
+
+
+			// Return what we found.
+			if ( file_exists( $template ) ) {
+				return $template;
+			} else {
+				return false;
+			}
+		}
+
+
+		/**
 		 * Method returns expected path for template
 		 *
 		 * @access public
@@ -535,6 +571,13 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 					$path = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : um_path . 'templates/email';
 					$template_path = trailingslashit( $path ) . $template_name . '.php';
 					break;
+				case 'uploads':
+					//save email template in blog ID folder if we use multisite
+					$blog_id = $this->get_blog_id();
+
+					$path =  wp_upload_dir()['basedir'] . '/ultimatemember/email' . $blog_id;
+					$template_path = trailingslashit( $path ) . $template_name_file . '.php';
+					break;
 			}
 
 			return $template_path;
@@ -542,41 +585,48 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 
 		/**
-		 * Ajax copy template to the theme
+		 * Ajax copy template to the uploads directory
 		 *
 		 * @param string $template
 		 * @return bool
 		 */
 		function copy_email_template( $template ) {
 
-			$in_theme = $this->template_in_theme( $template );
-			if ( $in_theme ) {
+			$in_uploads = $this->template_in_uploads( $template );
+			if ( $in_uploads ) {
 				return false;
 			}
 
 			$plugin_template_path = $this->get_template_file( 'plugin', $template );
 			$theme_template_path = $this->get_template_file( 'theme', $template );
+			$uploads_template_path = $this->get_template_file( 'uploads', $template );
 
-			$temp_path = str_replace( trailingslashit( get_stylesheet_directory() ), '', $theme_template_path );
+			$temp_path = str_replace( trailingslashit( wp_upload_dir()['basedir'] . '/ultimatemember/email' ), '', $uploads_template_path );
 			$temp_path = str_replace( '/', DIRECTORY_SEPARATOR, $temp_path );
 			$folders = explode( DIRECTORY_SEPARATOR, $temp_path );
 			$folders = array_splice( $folders, 0, count( $folders ) - 1 );
 			$cur_folder = '';
-			$theme_dir = trailingslashit( get_stylesheet_directory() );
+			$uploads_dir = trailingslashit( wp_upload_dir()['basedir'] . '/ultimatemember/email' );
 
 			foreach ( $folders as $folder ) {
 				$prev_dir = $cur_folder;
 				$cur_folder .= $folder . DIRECTORY_SEPARATOR;
-				if ( ! is_dir( $theme_dir . $cur_folder ) && wp_is_writable( $theme_dir . $prev_dir ) ) {
-					mkdir( $theme_dir . $cur_folder, 0777 );
+				if ( ! is_dir( $uploads_dir . $cur_folder ) && wp_is_writable( $uploads_dir . $prev_dir ) ) {
+					mkdir( $uploads_dir . $cur_folder, 0777 );
 				}
 			}
 
-			if ( file_exists( $plugin_template_path ) && copy( $plugin_template_path, $theme_template_path ) ) {
+			// if template exists in theme, copy from there.
+			if ( file_exists( $theme_template_path ) && copy( $theme_template_path, $uploads_template_path ) ) {
 				return true;
-			} else {
-				return false;
 			}
+
+			// if template exists in plugin copy from there.
+			if ( ! file_exists( $theme_template_path ) && file_exists( $plugin_template_path ) && copy( $plugin_template_path, $uploads_template_path ) ) {
+				return true;
+			}
+
+			return false;
 		}
 
 

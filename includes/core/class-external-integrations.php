@@ -389,11 +389,25 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 				$lang = $language_codes['current'] . '/';
 			}
 
+			// check if there is template at uploads folder
+			$path =  wp_upload_dir()['basedir'] . '/ultimatemember/email';
+			$template = trailingslashit( $path ) . $lang . $template_name . '.php';
+
+			if ( ! file_exists( $template ) ) {
+				$template = trailingslashit( $path ) . $template_name . '.php';
+
+				if ( ! file_exists( $template ) ) {
+					$template = false;
+				}
+			}
+
 			// check if there is template at theme folder
-			$template = locate_template( array(
-				trailingslashit( 'ultimate-member/email' ) . $lang . $template_name . '.php',
-				trailingslashit( 'ultimate-member/email' ) . $template_name . '.php'
-			) );
+			if ( ! $template ) {
+				$template = locate_template( array(
+					trailingslashit( 'ultimate-member/email' ) . $lang . $template_name . '.php',
+					trailingslashit( 'ultimate-member/email' ) . $template_name . '.php'
+				) );
+			}
 
 			//if there isn't template at theme folder get template file from plugin dir
 			if ( ! $template ) {
@@ -519,8 +533,14 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 				$lang = $language_codes['current'] . '/';
 			}
 
+			//uploads location
+			$ploads_path =  wp_upload_dir()['basedir'] . '/ultimatemember/email';
+			$template_path = trailingslashit( $ploads_path ) . $lang . $template_name . '.php';
+
 			//theme location
-			$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' ) . $lang . $template . '.php';
+			if ( ! file_exists( $template_path ) ) {
+				$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' ) . $lang . $template . '.php';
+			}
 
 			//plugin location for default language
 			if ( empty( $lang ) && ! file_exists( $template_path ) ) {
