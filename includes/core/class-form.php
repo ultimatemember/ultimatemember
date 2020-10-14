@@ -612,7 +612,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 				if ( strstr( $field_key, 'role_' ) && is_array( $field_settings['options'] ) ) {
 
-					if ( $field_settings['editable'] == 0 ) {
+					if ( isset( $this->post_form['mode'] ) && $this->post_form['mode'] == 'profile' &&
+					     isset( $field_settings['editable'] ) && $field_settings['editable'] == 0 ) {
 						continue;
 					}
 

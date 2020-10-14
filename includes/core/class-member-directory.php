@@ -1251,26 +1251,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				}
 			}
 
-			if ( $sortby == $directory_data['sortby_custom'] || in_array( $sortby, $custom_sort ) ) {
-
-				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', 'CHAR', $sortby, $directory_data );
-
-				$this->query_args['meta_query'][] = array(
-					'relation' => 'OR',
-					$sortby . '_cs' => array(
-						'key'       => $sortby,
-						'compare'   => 'EXISTS',
-						'type'      => $custom_sort_type,
-					),
-					array(
-						'key'       => $sortby,
-						'compare'   => 'NOT EXISTS',
-					)
-				);
-
-				$this->query_args['orderby'] = array( $sortby . '_cs' => 'ASC', 'user_login' => 'ASC' );
-
-			} elseif ( 'display_name' == $sortby ) {
+			if ( 'display_name' == $sortby ) {
 
 				$display_name = UM()->options()->get( 'display_name' );
 				if ( $display_name == 'username' ) {
@@ -1334,6 +1315,25 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				$this->query_args['orderby'] = array( 'last_name_c' => 'ASC', 'first_name_c' => 'ASC' );
 				unset( $this->query_args['order'] );
+
+			} elseif ( ( ! empty( $directory_data['sortby_custom'] ) && $sortby == $directory_data['sortby_custom'] ) || in_array( $sortby, $custom_sort ) ) {
+
+				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', 'CHAR', $sortby, $directory_data );
+
+				$this->query_args['meta_query'][] = array(
+					'relation' => 'OR',
+					$sortby . '_cs' => array(
+						'key'       => $sortby,
+						'compare'   => 'EXISTS',
+						'type'      => $custom_sort_type,
+					),
+					array(
+						'key'       => $sortby,
+						'compare'   => 'NOT EXISTS',
+					)
+				);
+
+				$this->query_args['orderby'] = array( $sortby . '_cs' => 'ASC', 'user_login' => 'ASC' );
 
 			} else {
 
