@@ -1057,3 +1057,8 @@ small.um-max-filesize span{
 .um-field-multiselect .um-field-area.um-field-area-has-icon ul:first-child {
 	margin-left: 30px !important;
 }
+
+.um-field-area .wp-switch-editor{
+	float: none;
+	height: auto;
+}
