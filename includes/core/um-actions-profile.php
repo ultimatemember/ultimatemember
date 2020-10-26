@@ -262,6 +262,11 @@ function um_user_edit_profile( $args ) {
 				continue;
 			}
 
+			// skip saving role here
+			if ( in_array( $key, [ 'role', 'role_select', 'role_radio' ] ) ) {
+				continue;
+			}
+
 			//the same code in class-validation.php validate_fields_values for registration form
 			//rating field validation
 			if ( $array['type'] == 'rating' && isset( $args['submitted'][ $key ] ) ) {
@@ -371,7 +376,7 @@ function um_user_edit_profile( $args ) {
 	// Secure selected role
 	if ( is_admin() ) {
 
-		if ( ! empty( $args['submitted']['role'] ) ) {
+		if ( ! empty( $args['submitted']['role'] ) && current_user_can( 'promote_users' ) ) {
 			global $wp_roles;
 			$role_keys = array_map( function( $item ) {
 				return 'um_' . $item;
@@ -1469,6 +1474,10 @@ function um_submit_form_profile( $args ) {
 
 	UM()->fields()->set_mode  = 'profile';
 	UM()->fields()->editing = true;
+
+	if ( ! empty( $args['submitted'] ) ) {
+		$args['submitted'] = array_diff_key( $args['submitted'], array_flip( UM()->user()->banned_keys ) );
+	}
 
 	/**
 	 * UM hook

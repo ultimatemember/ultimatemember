@@ -26,13 +26,15 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$this->profile = null;
 			$this->cannot_edit = null;
 
+			global $wpdb;
+
 			$this->banned_keys = array(
 				'metabox','postbox','meta-box',
 				'dismissed_wp_pointers', 'session_tokens',
 				'screen_layout', 'wp_user-', 'dismissed',
-				'cap_key', 'wp_capabilities',
-				'managenav', 'nav_menu','user_activation_key',
-				'level_', 'wp_user_level'
+				'cap_key', $wpdb->get_blog_prefix(). 'capabilities',
+				'managenav', 'nav_menu', 'user_activation_key',
+				'level_', $wpdb->get_blog_prefix() . 'user_level'
 			);
 
 			add_action( 'init',  array( &$this, 'set' ), 1 );
@@ -1835,6 +1837,10 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$changes = apply_filters( 'um_before_update_profile', $changes, $args['ID'] );
 
 			foreach ( $changes as $key => $value ) {
+				if ( in_array( $key, $this->banned_keys ) ) {
+					continue;
+				}
+
 				if ( ! in_array( $key, $this->update_user_keys ) ) {
 					if ( $value === 0 ) {
 						update_user_meta( $this->id, $key, '0' );
