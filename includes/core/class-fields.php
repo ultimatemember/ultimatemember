@@ -2587,7 +2587,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					
 					if ( $this->is_error( $key ) ) {
 						$output .= $this->field_error( $this->show_error( $key ) );
-					}else if ( $this->is_notice( $key ) ) {
+					} elseif ( $this->is_notice( $key ) ) {
 						$output .= $this->field_notice( $this->show_notice( $key ) );
 					}
 

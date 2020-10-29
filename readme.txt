@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 5.5.1
-Stable tag: 2.1.11
+Stable tag: 2.1.12
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -154,6 +154,23 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.1.12: October 29, 2020 =
+
+* Enhancements:
+
+  - Added ratings required notice and warning
+
+* Bugfixes:
+
+  - Fixed conflict with other plugins with user 'status' in admin
+  - Fixed security patch for UM forms handlers
+  - Fixed security patch for handlers on the edit users' roles
+  - Fixed member directory admin filtering by the field with uppercase in 'key'
+  - Fixed member directory sorting by the full name
+  - Fixed registration form with not editable role field
+  - Fixed PHP notice for the filter without field's label
+  - Fixed style of the textarea field
 
 = 2.1.11: October 6, 2020 =
 

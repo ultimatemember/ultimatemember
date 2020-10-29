@@ -842,7 +842,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						COUNT( DISTINCT meta_value ) as amount
 						FROM {$wpdb->usermeta}
 						WHERE meta_key = 'birth_date' AND
-						      meta_value != ''",
+							  meta_value != ''",
 					ARRAY_A );
 
 					if ( empty( $meta ) || ! isset( $meta['amount'] ) || $meta['amount'] === 1 ) {
@@ -2604,8 +2604,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			UM()->admin()->check_ajax_nonce();
 
 			// we can't use function "sanitize_key" because it changes uppercase to lowercase
-			$filter_key = filter_input( INPUT_POST, 'key', FILTER_SANITIZE_STRING );
-			$directory_id = filter_input( INPUT_POST, 'directory_id', FILTER_SANITIZE_NUMBER_INT );
+			$filter_key = sanitize_text_field( $_REQUEST['key'] );
+			$directory_id = absint( $_REQUEST['directory_id'] );
 
 			$html = $this->show_filter( $filter_key, array( 'form_id' => $directory_id ), false, true );
 
