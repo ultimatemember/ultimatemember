@@ -841,7 +841,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						MAX( meta_value ) as max_meta,
 						COUNT( DISTINCT meta_value ) as amount
 						FROM {$wpdb->usermeta}
-						WHERE meta_key = 'birth_date' AND 
+						WHERE meta_key = 'birth_date' AND
 						      meta_value != ''",
 					ARRAY_A );
 
@@ -2596,12 +2596,16 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		}
 
 
-
+		/**
+		 * AJAX handler - Get options for the member directory "Admin filtering"
+		 * @version 2.1.12
+		 */
 		function default_filter_settings() {
 			UM()->admin()->check_ajax_nonce();
 
-			$filter_key = sanitize_key( $_REQUEST['key'] );
-			$directory_id = absint( $_REQUEST['directory_id'] );
+			// we can't use function "sanitize_key" because it changes uppercase to lowercase
+			$filter_key = filter_input( INPUT_POST, 'key', FILTER_SANITIZE_STRING );
+			$directory_id = filter_input( INPUT_POST, 'directory_id', FILTER_SANITIZE_NUMBER_INT );
 
 			$html = $this->show_filter( $filter_key, array( 'form_id' => $directory_id ), false, true );
 
