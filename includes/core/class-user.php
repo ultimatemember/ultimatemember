@@ -345,7 +345,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				return;
 			}
 
-			if ( ! empty( $_POST['um-role'] ) ) {
+			if ( ! empty( $_POST['um-role'] ) && current_user_can( 'promote_users' ) ) {
 				if ( ! user_can( $user_id, $_POST['um-role'] ) ) {
 					UM()->roles()->set_role( $user_id, $_POST['um-role'] );
 				}
@@ -366,7 +366,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				return;
 			}
 
-			if ( ! empty( $_POST['um-role'] ) ) {
+			if ( ! empty( $_POST['um-role'] ) && current_user_can( 'promote_users' ) ) {
 				if ( ! user_can( $user_id, $_POST['um-role'] ) ) {
 					UM()->roles()->set_role( $user_id, $_POST['um-role'] );
 				}
@@ -589,7 +589,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			if ( is_admin() ) {
 				//if there custom 2 role not empty
-				if ( ! empty( $_POST['um-role'] ) ) {
+				if ( ! empty( $_POST['um-role'] ) && current_user_can( 'promote_users' ) ) {
 					$user = get_userdata( $user_id );
 					$user->add_role( $_POST['um-role'] );
 					UM()->user()->profile['role'] = $_POST['um-role'];
@@ -639,7 +639,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$new_roles = $userdata->roles;
 
 			if ( is_admin() ) {
-				if ( ! empty( $_POST['um-role'] ) ) {
+				if ( ! empty( $_POST['um-role'] ) && current_user_can( 'promote_users' ) ) {
 					$new_roles = array_merge( $new_roles, array( $_POST['um-role'] ) );
 					if ( ! user_can( $user_id, $_POST['um-role'] ) ) {
 						UM()->roles()->set_role( $user_id, $_POST['um-role'] );
