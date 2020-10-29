@@ -170,7 +170,9 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed member directory sorting by the full name
   - Fixed registration form with not editable role field
   - Fixed PHP notice for the filter without field's label
+  - Fixed PHP notice on Admin_Form class initialization
   - Fixed style of the textarea field
+  - Fixed Confirm Password field's placeholder
 
 = 2.1.11: October 6, 2020 =
 
