@@ -2584,6 +2584,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$output .= '<div class="um-rating um-raty" id="' . esc_attr( $key ) . '" data-key="' . esc_attr( $key ) . '" data-number="' . esc_attr( $data['number'] ) . '" data-score="' . $this->field_value( $key, $default, $data ) . '"></div>';
 					$output .= '</div>';
+					
+					if ( $this->is_error( $key ) ) {
+						$output .= $this->field_error( $this->show_error( $key ) );
+					}else if ( $this->is_notice( $key ) ) {
+						$output .= $this->field_notice( $this->show_notice( $key ) );
+					}
 
 					$output .= '</div>';
 
