@@ -2,6 +2,26 @@
 
 
 /**
+ * Check the header "User-Agent" on form submit. Stop bots.
+ * @since  2.1.13
+ * @param  array $post_form "Post data"
+ */
+ function um_before_submit_form_validate_user_agent( $post_form ) {
+	if ( empty( $_REQUEST['err'] ) && empty( $_SERVER['HTTP_USER_AGENT'] ) ) {
+		UM()->form()->add_error( 'user_agent', __( 'Unknown browser.', 'ultimate-member' ) );
+
+		function um_user_agent_error(){
+			echo '<p class="um-notice err"><i class="um-icon-ios-close-empty" onclick="jQuery(this).parent().fadeOut();"></i>' . __( 'Unknown browser.', 'ultimate-member' ) . '</p>';
+		}
+		add_action( 'um_before_register_fields', 'um_user_agent_error', 500 );
+		add_action( 'um_reset_password_page_hidden_fields', 'um_user_agent_error', 500 );
+	}
+}
+add_action( 'um_submit_form_errors_hook', 'um_before_submit_form_validate_user_agent' );
+add_action( 'um_reset_password_errors_hook', 'um_before_submit_form_validate_user_agent' );
+
+
+/**
  * Error handling: blocked emails
  *
  * @param $args
