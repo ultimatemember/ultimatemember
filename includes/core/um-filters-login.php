@@ -127,3 +127,28 @@ function um_lostpassword_url( $lostpassword_url ) {
 	return $lostpassword_url;
 }
 add_filter( 'lostpassword_url', 'um_lostpassword_url', 10, 1 );
+
+
+/**
+ * When a user is logged out, ensure they have a unique nonce by using browser and IP
+ *
+ * @since  2.1.13
+ *
+ * @param  int $uid User ID.
+ * @return string
+ */
+function um_nonce_user_logged_out( $uid, $action ) {
+	if ( !is_user_logged_in() && empty( $uid ) && strpos( $action, 'um' ) === 0 ) {
+		$u = '';
+		$u .= isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : '';
+		$u .= isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '';
+		$key = md5( $u );
+		$uid = get_transient( $key );
+		if ( empty( $uid ) ) {
+			$uid = md5( $key . rand() );
+			set_transient( $key, $uid, WEEK_IN_SECONDS );
+		}
+	}
+	return $uid;
+}
+add_filter( 'nonce_user_logged_out', 'um_nonce_user_logged_out', 20, 2 );
