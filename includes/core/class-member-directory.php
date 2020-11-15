@@ -652,11 +652,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					ksort( $attrs['options'] );
 
-					$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options_sorted', $attrs['options'], $attrs ); ?>
+					$attrs['options'] = apply_filters( 'um_member_directory_filter_select_options_sorted', $attrs['options'], $attrs );
+
+					$label = isset( $attrs['label'] ) ? $attrs['label'] : ''; ?>
 
 					<select class="um-s1" id="<?php echo esc_attr( $filter ); ?>" name="<?php echo esc_attr( $filter ); ?><?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>[]<?php } ?>"
-							data-placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
-							aria-label="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
+							data-placeholder="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
+							aria-label="<?php esc_attr_e( stripslashes( $label ), 'ultimate-member' ); ?>"
 							<?php if ( $admin && count( $attrs['options'] ) > 1 ) { ?>multiple<?php } ?>
 						<?php echo $custom_dropdown; ?>>
 
@@ -839,8 +841,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						MAX( meta_value ) as max_meta,
 						COUNT( DISTINCT meta_value ) as amount
 						FROM {$wpdb->usermeta}
-						WHERE meta_key = 'birth_date' AND 
-						      meta_value != ''",
+						WHERE meta_key = 'birth_date' AND
+							  meta_value != ''",
 					ARRAY_A );
 
 					if ( empty( $meta ) || ! isset( $meta['amount'] ) || $meta['amount'] === 1 ) {
@@ -1249,26 +1251,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				}
 			}
 
-			if ( $sortby == $directory_data['sortby_custom'] || in_array( $sortby, $custom_sort ) ) {
-
-				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', 'CHAR', $sortby, $directory_data );
-
-				$this->query_args['meta_query'][] = array(
-					'relation' => 'OR',
-					$sortby . '_cs' => array(
-						'key'       => $sortby,
-						'compare'   => 'EXISTS',
-						'type'      => $custom_sort_type,
-					),
-					array(
-						'key'       => $sortby,
-						'compare'   => 'NOT EXISTS',
-					)
-				);
-
-				$this->query_args['orderby'] = array( $sortby . '_cs' => 'ASC', 'user_login' => 'ASC' );
-
-			} elseif ( 'display_name' == $sortby ) {
+			if ( 'display_name' == $sortby ) {
 
 				$display_name = UM()->options()->get( 'display_name' );
 				if ( $display_name == 'username' ) {
@@ -1332,6 +1315,25 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				$this->query_args['orderby'] = array( 'last_name_c' => 'ASC', 'first_name_c' => 'ASC' );
 				unset( $this->query_args['order'] );
+
+			} elseif ( ( ! empty( $directory_data['sortby_custom'] ) && $sortby == $directory_data['sortby_custom'] ) || in_array( $sortby, $custom_sort ) ) {
+
+				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', 'CHAR', $sortby, $directory_data );
+
+				$this->query_args['meta_query'][] = array(
+					'relation' => 'OR',
+					$sortby . '_cs' => array(
+						'key'       => $sortby,
+						'compare'   => 'EXISTS',
+						'type'      => $custom_sort_type,
+					),
+					array(
+						'key'       => $sortby,
+						'compare'   => 'NOT EXISTS',
+					)
+				);
+
+				$this->query_args['orderby'] = array( $sortby . '_cs' => 'ASC', 'user_login' => 'ASC' );
 
 			} else {
 
@@ -2594,11 +2596,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		}
 
 
-
+		/**
+		 * AJAX handler - Get options for the member directory "Admin filtering"
+		 * @version 2.1.12
+		 */
 		function default_filter_settings() {
 			UM()->admin()->check_ajax_nonce();
 
-			$filter_key = sanitize_key( $_REQUEST['key'] );
+			// we can't use function "sanitize_key" because it changes uppercase to lowercase
+			$filter_key = sanitize_text_field( $_REQUEST['key'] );
 			$directory_id = absint( $_REQUEST['directory_id'] );
 
 			$html = $this->show_filter( $filter_key, array( 'form_id' => $directory_id ), false, true );

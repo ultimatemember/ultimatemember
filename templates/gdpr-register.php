@@ -6,8 +6,9 @@
 		<div class="um-gdpr-content" style="display:none;">
 			<?php if ( ! empty( $args['use_gdpr_content_id'] ) ) {
 				$um_content_query = get_post( $args['use_gdpr_content_id'] );
-				if ( isset( $um_content_query ) ) {
-					echo apply_filters( 'um_gdpr_policies_page_content', $um_content_query->post_content, $args );
+				if ( ! empty( $um_content_query ) && ! is_wp_error( $um_content_query ) ) {
+					$content = apply_filters( 'um_gdpr_policies_page_content', $um_content_query->post_content, $args );
+					echo apply_filters( 'the_content', $content, $um_content_query->ID );
 				}
 			} ?>
 		</div>

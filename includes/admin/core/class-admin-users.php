@@ -164,8 +164,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 			</div>
 
-			<?php if ( ! empty( $_REQUEST['status'] ) ) { ?>
-				<input type="hidden" name="status" id="um_status" value="<?php echo esc_attr( sanitize_key( $_REQUEST['status'] ) );?>"/>
+			<?php if ( ! empty( $_REQUEST['um_status'] ) ) { ?>
+				<input type="hidden" name="um_status" id="um_status" value="<?php echo esc_attr( sanitize_key( $_REQUEST['um_status'] ) );?>"/>
 			<?php }
 		}
 
@@ -329,9 +329,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		function filter_users_by_status( $query ) {
 			global $wpdb, $pagenow;
 
-			if ( is_admin() && $pagenow == 'users.php' && ! empty( $_GET['status'] ) ) {
+			if ( is_admin() && $pagenow == 'users.php' && ! empty( $_GET['um_status'] ) ) {
 
-				$status = sanitize_key( $_GET['status'] );
+				$status = sanitize_key( $_GET['um_status'] );
 
 				if ( $status == 'needs-verification' ) {
 					$query->query_where = str_replace('WHERE 1=1',
@@ -369,7 +369,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			$old_views = $views;
 			$views     = array();
 
-			if ( ! isset( $_REQUEST['role'] ) && ! isset( $_REQUEST['status'] ) ) {
+			if ( ! isset( $_REQUEST['role'] ) && ! isset( $_REQUEST['um_status'] ) ) {
 				$views['all'] = '<a href="' . admin_url( 'users.php' ) . '" class="current">' . __( 'All', 'ultimate-member' ) . ' <span class="count">(' . UM()->query()->count_users() . ')</span></a>';
 			} else {
 				$views['all'] = '<a href="' . admin_url( 'users.php' ) . '">' . __( 'All', 'ultimate-member' ) . ' <span class="count">(' . UM()->query()->count_users() . ')</span></a>';
@@ -386,13 +386,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			UM()->query()->count_users_by_status( 'unassigned' );
 
 			foreach ( $status as $k => $v ) {
-				if ( isset( $_REQUEST['status'] ) && sanitize_key( $_REQUEST['status'] ) == $k ) {
+				if ( isset( $_REQUEST['um_status'] ) && sanitize_key( $_REQUEST['um_status'] ) == $k ) {
 					$current = 'class="current"';
 				} else {
 					$current = '';
 				}
 
-				$views[ $k ] = '<a href="' . esc_url( admin_url( 'users.php' ) . '?status=' . $k ) . '" ' . $current . '>' . $v . ' <span class="count">(' . UM()->query()->count_users_by_status( $k ) . ')</span></a>';
+				$views[ $k ] = '<a href="' . esc_url( admin_url( 'users.php' ) . '?um_status=' . $k ) . '" ' . $current . '>' . $v . ' <span class="count">(' . UM()->query()->count_users_by_status( $k ) . ')</span></a>';
 			}
 
 			/**
@@ -544,8 +544,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 				$uri = add_query_arg( 's', sanitize_text_field( $_REQUEST['s'] ), $uri );
 			}
 
-			if ( ! empty( $_REQUEST['status'] ) ) {
-				$uri = add_query_arg( 'status', sanitize_key( $_REQUEST['status'] ), $uri );
+			if ( ! empty( $_REQUEST['um_status'] ) ) {
+				$uri = add_query_arg( 'um_status', sanitize_key( $_REQUEST['um_status'] ), $uri );
 			}
 
 			return $uri;

@@ -926,28 +926,28 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
-		 * @param $data array
+		 * @param bool|array $data
 		 * @return um\admin\core\Admin_Forms()
 		 */
 		function admin_forms( $data = false ) {
-			if ( empty( $this->classes['admin_forms_' . $data['class']] ) ) {
-				$this->classes['admin_forms_' . $data['class']] = new um\admin\core\Admin_Forms( $data );
+			if ( ! isset( $this->classes[ 'admin_forms_' . $data['class'] ] ) || empty( $this->classes[ 'admin_forms_' . $data['class'] ] ) ) {
+				$this->classes[ 'admin_forms_' . $data['class'] ] = new um\admin\core\Admin_Forms( $data );
 			}
-			return $this->classes['admin_forms_' . $data['class']];
+			return $this->classes[ 'admin_forms_' . $data['class'] ];
 		}
 
 
 		/**
 		 * @since 2.0
 		 *
-		 * @param $data array
+		 * @param bool|array $data
 		 * @return um\admin\core\Admin_Forms_Settings()
 		 */
 		function admin_forms_settings( $data = false ) {
-			if ( empty( $this->classes['admin_forms_settings_' . $data['class']] ) ) {
-				$this->classes['admin_forms_settings_' . $data['class']] = new um\admin\core\Admin_Forms_Settings( $data );
+			if ( ! isset( $this->classes[ 'admin_forms_settings_' . $data['class'] ] ) || empty( $this->classes[ 'admin_forms_settings_' . $data['class'] ] ) ) {
+				$this->classes[ 'admin_forms_settings_' . $data['class'] ] = new um\admin\core\Admin_Forms_Settings( $data );
 			}
-			return $this->classes['admin_forms_settings_' . $data['class']];
+			return $this->classes[ 'admin_forms_settings_' . $data['class'] ];
 		}
 
 

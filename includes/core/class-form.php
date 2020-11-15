@@ -374,11 +374,36 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 					$this->post_form = array_merge( $this->form_data, $this->post_form );
 
+					// Remove role from post_form at first if role ! empty and there aren't custom fields with role name
+					if ( ! empty( $_POST['role'] ) ) {
+						if ( ! isset( $this->form_data['custom_fields'] ) || ! strstr( $this->form_data['custom_fields'], 'role_' ) ) {
+							unset( $this->post_form['role'] );
+							unset( $this->post_form['submitted']['role'] );
+						}
+					}
+
+					// Secure sanitize of the submitted data
+					if ( ! empty( $this->post_form ) ) {
+						$this->post_form = array_diff_key( $this->post_form, array_flip( UM()->user()->banned_keys ) );
+					}
+					if ( ! empty( $this->post_form['submitted'] ) ) {
+						$this->post_form['submitted'] = array_diff_key( $this->post_form['submitted'], array_flip( UM()->user()->banned_keys ) );
+					}
+
+					// set default role from settings on registration form
+					if ( isset( $this->post_form['mode'] ) && $this->post_form['mode'] == 'register' ) {
+
+						$role = $this->assigned_role( $this->form_id );
+						$this->post_form['role'] = $role;
+
+					}
+
 					if ( isset( $this->form_data['custom_fields'] ) && strstr( $this->form_data['custom_fields'], 'role_' ) ) {  // Secure selected role
 
-						$custom_field_roles = $this->custom_field_roles( $this->form_data['custom_fields'] );
-
 						if ( ! empty( $_POST['role'] ) ) {
+
+							$custom_field_roles = $this->custom_field_roles( $this->form_data['custom_fields'] );
+
 							if ( ! empty( $custom_field_roles ) ) {
 								$role = $_POST['role'];
 
@@ -402,15 +427,15 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 							} else {
 								unset( $this->post_form['role'] );
 								unset( $this->post_form['submitted']['role'] );
+
+								// set default role for registration form if custom field hasn't proper value
+								if ( isset( $this->post_form['mode'] ) && $this->post_form['mode'] == 'register' ) {
+									$role = $this->assigned_role( $this->form_id );
+									$this->post_form['role'] = $role;
+								}
 							}
 						}
 
-					} elseif ( isset( $this->post_form['mode'] ) && $this->post_form['mode'] == 'register' ) {
-
-						$role = $this->assigned_role( $this->form_id );
-						$this->post_form['role'] = $role;
-						//fix for social login
-						//$this->post_form['submitted']['role'] = $role;
 					}
 
 					if ( isset( $_POST[ UM()->honeypot ] ) && $_POST[ UM()->honeypot ] != '' ) {
@@ -612,7 +637,8 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 				if ( strstr( $field_key, 'role_' ) && is_array( $field_settings['options'] ) ) {
 
-					if ( $field_settings['editable'] == 0 ) {
+					if ( isset( $this->post_form['mode'] ) && $this->post_form['mode'] == 'profile' &&
+					     isset( $field_settings['editable'] ) && $field_settings['editable'] == 0 ) {
 						continue;
 					}
 

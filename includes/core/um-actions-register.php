@@ -381,6 +381,10 @@ function um_submit_form_register( $args ) {
 		'user_email'    => trim( $user_email ),
 	);
 
+	if ( ! empty( $args['submitted'] ) ) {
+		$args['submitted'] = array_diff_key( $args['submitted'], array_flip( UM()->user()->banned_keys ) );
+	}
+
 	$args['submitted'] = array_merge( $args['submitted'], $credentials );
 	$args = array_merge( $args, $credentials );
 
