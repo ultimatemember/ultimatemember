@@ -328,11 +328,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		 */
 		function filter_users_by_status( $query ) {
 			global $wpdb, $pagenow;
+			if ( is_admin() && $pagenow == 'users.php' && ! empty( $_REQUEST['status'] ) ) {
 
-			if ( is_admin() && $pagenow == 'users.php' && ! empty( $_GET['um_status'] ) ) {
-
-				$status = sanitize_key( $_GET['um_status'] );
-
+				$status = sanitize_key( $_REQUEST['status'] );
+			
 				if ( $status == 'needs-verification' ) {
 					$query->query_where = str_replace('WHERE 1=1',
 						"WHERE 1=1 AND {$wpdb->users}.ID IN (
