@@ -328,9 +328,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 		 */
 		function filter_users_by_status( $query ) {
 			global $wpdb, $pagenow;
-			if ( is_admin() && $pagenow == 'users.php' && ! empty( $_REQUEST['status'] ) ) {
+			if ( is_admin() && $pagenow == 'users.php' && ! empty( $_REQUEST['um_status'] ) ) {
 
-				$status = sanitize_key( $_REQUEST['status'] );
+				$status = sanitize_key( $_REQUEST['um_status'] );
 			
 				if ( $status == 'needs-verification' ) {
 					$query->query_where = str_replace('WHERE 1=1',
