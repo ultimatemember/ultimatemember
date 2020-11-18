@@ -172,7 +172,7 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 			// are used Unicode Regular Expressions
 			$regexps = [
 				'/[\p{Lu}]/u', // any Letter Uppercase symbol
-				'/[\p{Ll}]/u', // any Letter Lowercase symbol   
+				'/[\p{Ll}]/u', // any Letter Lowercase symbol
 				'/[\p{N}]/u', // any Number symbol
 			];
 			foreach ( $regexps as $regexp ) {

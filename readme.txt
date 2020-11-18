@@ -166,6 +166,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
   - Fixed: Upgrade process on websites where a hosting locks the frequent AJAX requests (added default JS throttle between requests)
   - Fixed: Getting page content of the GDPR privacy policies
+  - Fixed: Password strength validation for Unicode symbols
 
 = 2.1.12: October 29, 2020 =
 
