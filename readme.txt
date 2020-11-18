@@ -155,6 +155,18 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
+= 2.1.13: November xx, 2020 =
+
+* Enhancements:
+
+  - Added: `um_member_directory_cover_image_size` hook with ability to change the cover photo size on the member directory
+  - Added: `um_member_directory_get_members_allow` JS hook for 3rd-party integration with the member directory. You could use a time throttle until some data is loaded
+
+* Bugfixes:
+
+  - Fixed: Upgrade process on websites where a hosting locks the frequent AJAX requests (added default JS throttle between requests)
+  - Fixed: Getting page content of the GDPR privacy policies
+
 = 2.1.12: October 29, 2020 =
 
 * Enhancements:

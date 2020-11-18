@@ -186,7 +186,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 			if ( $handle ) {
 				while ( false !== ( $filename = readdir( $handle ) ) ) {
 					if ( $filename != '.' && $filename != '..' ) {
-						if ( is_dir( $this->packages_dir . DIRECTORY_SEPARATOR . $filename ) ) {
+						if ( is_dir( $this->packages_dir . $filename ) ) {
 							$update_versions[] = $filename;
 						}
 					}
@@ -205,7 +205,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 		 */
 		function init_packages_ajax() {
 			foreach ( $this->necessary_packages as $package ) {
-				$hooks_file = $this->packages_dir . DIRECTORY_SEPARATOR . $package . DIRECTORY_SEPARATOR . 'hooks.php';
+				$hooks_file = $this->packages_dir . $package . DIRECTORY_SEPARATOR . 'hooks.php';
 				if ( file_exists( $hooks_file ) ) {
 					$pack_ajax_hooks = include_once $hooks_file;
 
@@ -222,7 +222,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 		 */
 		function init_packages_ajax_handlers() {
 			foreach ( $this->necessary_packages as $package ) {
-				$handlers_file = $this->packages_dir . DIRECTORY_SEPARATOR . $package . DIRECTORY_SEPARATOR . 'functions.php';
+				$handlers_file = $this->packages_dir . $package . DIRECTORY_SEPARATOR . 'functions.php';
 				if ( file_exists( $handlers_file ) ) {
 					include_once $handlers_file;
 				}
@@ -257,6 +257,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 			</div>
 
 			<script type="text/javascript">
+				var um_request_throttle = 15000;
 				var um_packages;
 
 				jQuery( document ).ready( function() {
@@ -293,23 +294,26 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 				 */
 				function um_run_upgrade() {
 					if ( um_packages.length ) {
-						var pack = um_packages.shift();
-						um_add_upgrade_log( '<br />=================================================================' );
-						um_add_upgrade_log( '<h4 style="font-weight: bold;">Prepare package "' + pack + '" version...</h4>' );
-						jQuery.ajax({
-							url: '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ) ?>',
-							type: 'POST',
-							dataType: 'html',
-							data: {
-								action: 'um_run_package',
-								pack: pack,
-								nonce: um_admin_scripts.nonce
-							},
-							success: function( html ) {
-								um_add_upgrade_log( 'Package "' + pack + '" is ready. Start the execution...' );
-								jQuery( '#run_upgrade' ).after( html );
-							}
-						});
+						// 30s between upgrades
+						setTimeout( function () {
+							var pack = um_packages.shift();
+							um_add_upgrade_log( '<br />=================================================================' );
+							um_add_upgrade_log( '<h4 style="font-weight: bold;">Prepare package "' + pack + '" version...</h4>' );
+							jQuery.ajax({
+								url: '<?php echo esc_js( admin_url( 'admin-ajax.php' ) ) ?>',
+								type: 'POST',
+								dataType: 'html',
+								data: {
+									action: 'um_run_package',
+									pack: pack,
+									nonce: um_admin_scripts.nonce
+								},
+								success: function( html ) {
+									um_add_upgrade_log( 'Package "' + pack + '" is ready. Start the execution...' );
+									jQuery( '#run_upgrade' ).after( html );
+								}
+							});
+						}, um_request_throttle );
 					} else {
 						window.location = '<?php echo add_query_arg( array( 'page' => 'ultimatemember', 'msg' => 'updated' ), admin_url( 'admin.php' ) ) ?>'
 					}
@@ -353,7 +357,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 				exit('');
 			} else {
 				ob_start();
-				include_once $this->packages_dir . DIRECTORY_SEPARATOR . sanitize_text_field( $_POST['pack'] ) . DIRECTORY_SEPARATOR . 'init.php';
+				include_once $this->packages_dir . sanitize_text_field( $_POST['pack'] ) . DIRECTORY_SEPARATOR . 'init.php';
 				ob_get_flush();
 				exit;
 			}

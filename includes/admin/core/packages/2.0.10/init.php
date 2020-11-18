@@ -16,7 +16,9 @@
 			success: function( response ) {
 				if ( typeof response.data != 'undefined' ) {
 					um_add_upgrade_log( response.data.message );
-					um_clear_cache2010();
+					setTimeout( function () {
+						um_clear_cache2010();
+					}, um_request_throttle );
 				} else {
 					um_wrong_ajax();
 				}

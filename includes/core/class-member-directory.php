@@ -2531,6 +2531,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$this->cover_size = UM()->mobile()->isTablet() ? $sizes[1] : end( $sizes );
 
+			$this->cover_size = apply_filters( 'um_member_directory_cover_image_size', $this->cover_size, $directory_data );
+
 			$avatar_size = UM()->options()->get( 'profile_photosize' );
 			$this->avatar_size = str_replace( 'px', '', $avatar_size );
 
