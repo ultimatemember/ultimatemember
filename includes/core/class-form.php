@@ -98,7 +98,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 			$arr_options['status'] = 'success';
 			$arr_options['post'] = $_POST;
 
-			UM()->fields()->set_id = intval( $_POST['form_id'] );
+			UM()->fields()->set_id = absint( $_POST['form_id'] );
 			UM()->fields()->set_mode  = 'profile';
 			$form_fields = UM()->fields()->get_fields();
 			$arr_options['fields'] = $form_fields;

@@ -2689,7 +2689,7 @@ Require a strong password: 	<?php echo $this->info_value( UM()->options()->get('
 --- UM Access Configuration ---
 
 Panic Key: 								<?php  echo UM()->options()->get('panic_key') . "\n"; ?>
-Global Site Access:						<?php  $arr = array('Site accessible to Everyone','','Site accessible to Logged In Users'); echo $arr[ intval( UM()->options()->get('accessible') ) ] . "\n"; ?>
+Global Site Access:						<?php  $arr = array('Site accessible to Everyone','','Site accessible to Logged In Users'); echo $arr[ (int) UM()->options()->get('accessible') ] . "\n"; ?>
 <?php if( UM()->options()->get('accessible') == 2 ) { ?>
 Custom Redirect URL:						<?php echo UM()->options()->get('access_redirect')."\n";?>
 Exclude the following URLs:<?php echo "\t\t\t\t".implode("\t\n\t\t\t\t\t\t\t\t\t\t",UM()->options()->get('access_exclude_uris') )."\n";?>

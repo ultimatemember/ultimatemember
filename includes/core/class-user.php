@@ -2013,7 +2013,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 *
 		 */
 		function user_exists_by_id( $user_id ) {
-			$aux = get_userdata( intval( $user_id ) );
+			$aux = get_userdata( absint( $user_id ) );
 			if ( $aux == false ) {
 				return false;
 			} else {

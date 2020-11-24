@@ -155,7 +155,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.1.13: November xx, 2020 =
+= 2.1.13: December 8, 2020 =
 
 * Enhancements:
 
@@ -167,6 +167,10 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed: Upgrade process on websites where a hosting locks the frequent AJAX requests (added default JS throttle between requests)
   - Fixed: Getting page content of the GDPR privacy policies
   - Fixed: Password strength validation for Unicode symbols
+
+* Tweaks:
+
+  - There are changed PHP’s intval(), strval(), floatval(), and boolval() typecasting functions to (int), (string), (float) and (bool) regarding [this doc](https://make.wordpress.org/core/2020/11/20/miscellaneous-developer-focused-changes-in-wordpress-5-6/).
 
 = 2.1.12: October 29, 2020 =
 

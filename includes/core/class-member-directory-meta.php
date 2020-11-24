@@ -308,14 +308,14 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 								$values_array = array();
 								foreach ( $value as $single_val ) {
-									$single_val = stripslashes( $single_val );
+									$single_val = trim( stripslashes( $single_val ) );
 
-									$values_array[] = $wpdb->prepare( "{$join_slug}{$i}.um_value LIKE %s", '%"' . trim( $single_val ) . '"%' );
-									$values_array[] = $wpdb->prepare( "{$join_slug}{$i}.um_value LIKE %s", '%' . serialize( strval( trim( $single_val ) ) ) . '%' );
-									$values_array[] = $wpdb->prepare( "{$join_slug}{$i}.um_value = %s", trim( $single_val ) );
+									$values_array[] = $wpdb->prepare( "{$join_slug}{$i}.um_value LIKE %s", '%"' . $single_val . '"%' );
+									$values_array[] = $wpdb->prepare( "{$join_slug}{$i}.um_value LIKE %s", '%' . serialize( (string) $single_val ) . '%' );
+									$values_array[] = $wpdb->prepare( "{$join_slug}{$i}.um_value = %s", $single_val );
 
 									if ( is_numeric( $single_val ) ) {
-										$values_array[] = $wpdb->prepare( "{$join_slug}{$i}.um_value LIKE %s", '%' . serialize( intval( trim( $single_val ) ) ) . '%' );
+										$values_array[] = $wpdb->prepare( "{$join_slug}{$i}.um_value LIKE %s", '%' . serialize( (int) $single_val ) . '%' );
 									}
 								}
 
@@ -629,7 +629,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 				$search_like_string = apply_filters( 'um_member_directory_meta_search_like_type', '%' . $search_line . '%', $search_line );
 
-				$this->where_clauses[] = $wpdb->prepare( "( umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s OR {$core_search}{$additional_search})", $search_line, $search_like_string, '%' . serialize( strval( $search_line ) ) . '%' );
+				$this->where_clauses[] = $wpdb->prepare( "( umm_search.um_value = %s OR umm_search.um_value LIKE %s OR umm_search.um_value LIKE %s OR {$core_search}{$additional_search})", $search_line, $search_like_string, '%' . serialize( (string) $search_line ) . '%' );
 
 				$this->is_search = true;
 			}

@@ -471,7 +471,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				}
 
 				$attempts = (int) get_user_meta( $user_id, 'password_rst_attempts', true );
-				$is_admin = user_can( intval( $user_id ),'manage_options' );
+				$is_admin = user_can( absint( $user_id ),'manage_options' );
 
 				if ( UM()->options()->get( 'enable_reset_password_limit' ) ) { // if reset password limit is set
 

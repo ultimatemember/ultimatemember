@@ -1130,7 +1130,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				}
 			}
 
-			update_post_meta( $post_id, '_um_search_filters_gmt', intval( $_POST['um-gmt-offset'] ) );
+			update_post_meta( $post_id, '_um_search_filters_gmt', (int) $_POST['um-gmt-offset'] );
 		}
 
 

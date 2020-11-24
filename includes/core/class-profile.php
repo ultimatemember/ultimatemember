@@ -192,7 +192,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 			if ( isset( $tab_data['default_privacy'] ) ) {
 				$privacy = $tab_data['default_privacy'];
 			} else {
-				$privacy = intval( UM()->options()->get( 'profile_tab_' . $tab . '_privacy' ) );
+				$privacy = (int) UM()->options()->get( 'profile_tab_' . $tab . '_privacy' );
 			}
 
 			$privacy = apply_filters( 'um_profile_menu_tab_privacy', $privacy, $tab );
