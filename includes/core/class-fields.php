@@ -2366,6 +2366,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
 							if ( isset( $data['label'] ) ) {
+								
+								$data['label'] = __( $data['label'], 'ultimate-member' );
+
 								$output .= $this->field_label( sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] ), $key, $data );
 							}
 
