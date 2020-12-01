@@ -763,7 +763,9 @@ function um_profile_field_filter_xss_validation( $value, $data, $type = '' ) {
 			}
 
 			if ( ! empty( $arr ) && empty( $data['custom_dropdown_options_source'] ) ) {
-				$value = array_intersect( $value, array_map( 'trim', $arr ) );
+				$arr = wp_unslash( $arr );
+				$arr = wp_slash( array_map( 'trim', $arr ) );
+				$value = array_intersect( $value, $arr );
 			}
 
 			if ( $option_pairs ) {
