@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
-Tested up to: 5.5.1
+Tested up to: 5.6
 Stable tag: 2.1.12
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -167,6 +167,10 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed: Upgrade process on websites where a hosting locks the frequent AJAX requests (added default JS throttle between requests)
   - Fixed: Getting page content of the GDPR privacy policies
   - Fixed: Password strength validation for Unicode symbols
+  - Fixed: Issue with apostrophe options in the multiselect/checkbox fields (#689)
+  - Fixed: Translation for Password field's label
+  - Fixed: Download Personal Data URL
+  - Fixed: Vulnerability with timestamp field on UM Forms
 
 * Tweaks:
 

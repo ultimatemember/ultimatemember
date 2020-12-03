@@ -386,6 +386,12 @@ function um_submit_form_register( $args ) {
 	}
 
 	$args['submitted'] = array_merge( $args['submitted'], $credentials );
+
+	// set timestamp
+	$timestamp = current_time( 'timestamp' );
+	$args['submitted']['timestamp'] = $timestamp;
+	$args['timestamp'] = $timestamp;
+
 	$args = array_merge( $args, $credentials );
 
 	//get user role from global or form's settings

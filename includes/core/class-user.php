@@ -1228,7 +1228,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		 * Set last login for new registered users
 		 */
 		function set_last_login() {
-			update_user_meta(  $this->id, '_um_last_login', current_time( 'timestamp' ) );
+			update_user_meta( $this->id, '_um_last_login', current_time( 'timestamp' ) );
 		}
 
 
