@@ -510,7 +510,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'divider' => array(
 					'name' => 'Divider',
 					'col1' => array('_title','_width','_divider_text','_visibility'),
-					'col2' => array('_style','_color'),
+					'col2' => array('_style','_color','_public','_roles'),
 					'form_only' => true,
 					'validate' => array(
 						'_title' => array(
