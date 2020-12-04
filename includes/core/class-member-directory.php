@@ -2539,6 +2539,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$avatar_size = UM()->options()->get( 'profile_photosize' );
 			$this->avatar_size = str_replace( 'px', '', $avatar_size );
+			$this->avatar_size = apply_filters( 'um_member_directory_avatar_image_size', $this->avatar_size, $directory_data );
 
 			$users = array();
 			foreach ( $user_ids as $user_id ) {
