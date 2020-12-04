@@ -161,6 +161,11 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
   - Added: `um_member_directory_cover_image_size` hook with ability to change the cover photo size on the member directory
   - Added: `um_member_directory_get_members_allow` JS hook for 3rd-party integration with the member directory. You could use a time throttle until some data is loaded
+  - Added: Notice about the fields' conditional logic rules + small CSS enhancements
+  - Added: Invalid nonce validation on Login and Registration pages instead of wp_die()
+  - Added: Privacy settings for the Divider field type (#688)
+  - Added: Ability for the integration with Gutenberg Block restriction settings (extends the block restriction settings via 3rd-party plugins)
+  - Added: Strings translations
 
 * Bugfixes:
 
@@ -170,7 +175,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed: Issue with apostrophe options in the multiselect/checkbox fields (#689)
   - Fixed: Translation for Password field's label
   - Fixed: Download Personal Data URL
-  - Fixed: Vulnerability with timestamp field on UM Forms
+  - Fixed: Vulnerability with timestamp field on UM Forms (the hidden field with name='timestamp' is deprecated)
 
 * Tweaks:
 

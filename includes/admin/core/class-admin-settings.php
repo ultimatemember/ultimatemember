@@ -1703,7 +1703,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				if ( ( ! wp_verify_nonce( $nonce, 'um-settings-nonce' ) || empty( $nonce ) ) || ! current_user_can( 'manage_options' ) ) {
 					// This nonce is not valid.
-					wp_die( 'Security Check' );
+					wp_die( __( 'Security Check', 'ultimate-member' ) );
 				}
 
 				/**

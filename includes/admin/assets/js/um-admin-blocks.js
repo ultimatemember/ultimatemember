@@ -1,23 +1,23 @@
 'use strict';
 
-/**
- * Add Control element
- */
-var um_el = wp.element.createElement;
-
 var um_components = wp.components,
-	umToggleControl = um_components.ToggleControl,
 	umSelectControl = um_components.SelectControl,
-	umTextareaControl = um_components.TextareaControl,
-	umPanelBody = um_components.PanelBody;
+	umTextareaControl = um_components.TextareaControl;
+
+
+function um_admin_blocks_custom_fields( um_condition_fields, props ) {
+	return wp.hooks.applyFilters( 'um_admin_blocks_custom_fields', [], um_condition_fields, props );
+}
 
 var um_block_restriction = wp.compose.createHigherOrderComponent( function( BlockEdit ) {
 	var um_condition_fields = {
-		um_who_access:'um_block_settings_hide',
-		um_roles_access:'um_block_settings_hide',
-		um_message_type:'um_block_settings_hide',
-		um_message_content:'um_block_settings_hide'
+		um_who_access:      'um_block_settings_hide',
+		um_roles_access:    'um_block_settings_hide',
+		um_message_type:    'um_block_settings_hide',
+		um_message_content: 'um_block_settings_hide'
 	};
+
+	um_condition_fields = wp.hooks.applyFilters( 'um_admin_blocks_condition_fields_default', um_condition_fields );
 
 	return function( props ) {
 
@@ -53,20 +53,22 @@ var um_block_restriction = wp.compose.createHigherOrderComponent( function( Bloc
 			}
 		}
 
-		return um_el(
+		um_condition_fields = wp.hooks.applyFilters( 'um_admin_blocks_condition_fields', um_condition_fields, props );
+
+		return wp.element.createElement(
 			wp.element.Fragment,
 			{},
-			um_el( BlockEdit, props ),
-			um_el(
+			wp.element.createElement( BlockEdit, props ),
+			wp.element.createElement(
 				wp.editor.InspectorControls,
 				{},
-				um_el(
-					umPanelBody,
+				wp.element.createElement(
+					wp.components.PanelBody,
 					{
 						title: wp.i18n.__( 'UM access Controls', 'ultimate-member' )
 					},
-					um_el(
-						umToggleControl,
+					wp.element.createElement(
+						wp.components.ToggleControl,
 						{
 							label: wp.i18n.__( 'Restrict access?', 'ultimate-member' ),
 							checked: props.attributes.um_is_restrict,
@@ -80,10 +82,12 @@ var um_block_restriction = wp.compose.createHigherOrderComponent( function( Bloc
 								} else {
 									um_condition_fields['um_who_access'] = '';
 								}
+
+								um_condition_fields = wp.hooks.applyFilters( 'um_admin_blocks_condition_fields_on_change', um_condition_fields, 'um_is_restrict', value );
 							}
 						}
 					),
-					um_el(
+					wp.element.createElement(
 						umSelectControl,
 						{
 							type: 'number',
@@ -117,10 +121,12 @@ var um_block_restriction = wp.compose.createHigherOrderComponent( function( Bloc
 									um_condition_fields['um_message_type'] = '';
 									um_condition_fields['um_roles_access'] = 'um_block_settings_hide';
 								}
+
+								um_condition_fields = wp.hooks.applyFilters( 'um_admin_blocks_condition_fields_on_change', um_condition_fields, 'um_who_access', value );
 							}
 						}
 					),
-					um_el(
+					wp.element.createElement(
 						umSelectControl,
 						{
 							multiple: true,
@@ -133,7 +139,7 @@ var um_block_restriction = wp.compose.createHigherOrderComponent( function( Bloc
 							}
 						}
 					),
-					um_el(
+					wp.element.createElement(
 						umSelectControl,
 						{
 							type: 'number',
@@ -164,7 +170,7 @@ var um_block_restriction = wp.compose.createHigherOrderComponent( function( Bloc
 							}
 						}
 					),
-					um_el(
+					wp.element.createElement(
 						umTextareaControl,
 						{
 							type: 'number',
@@ -175,7 +181,8 @@ var um_block_restriction = wp.compose.createHigherOrderComponent( function( Bloc
 								props.setAttributes({ um_message_content: value });
 							}
 						}
-					)
+					),
+					um_admin_blocks_custom_fields( um_condition_fields, props )
 				)
 			)
 		);
@@ -207,6 +214,8 @@ var um_block_restrict_settings = {
 		type: "string"
 	}
 };
+
+um_block_restrict_settings = wp.hooks.applyFilters( 'um_admin_blocks_restrict_settings', um_block_restrict_settings );
 
 
 /**

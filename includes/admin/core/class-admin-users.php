@@ -138,7 +138,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 				case 'um_delete':
 					if ( is_admin() ) {
-						wp_die( 'This action is not allowed in backend.', 'ultimate-member' );
+						wp_die( __( 'This action is not allowed in backend.', 'ultimate-member' ) );
 					}
 					UM()->user()->delete();
 					break;

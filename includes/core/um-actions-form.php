@@ -838,3 +838,19 @@ function um_submit_form_errors_hook_( $args ) {
 	}
 }
 add_action( 'um_submit_form_errors_hook_', 'um_submit_form_errors_hook_', 10 );
+
+
+/**
+ * @param string $url
+ *
+ * @return string
+ */
+function um_invalid_nonce_redirect_url( $url ) {
+	$url = add_query_arg( [
+		'um-hash'   => substr( md5( rand() ), 0, 6 ),
+	], remove_query_arg( 'um-hash', $url ) );
+
+	return $url;
+}
+add_filter( 'um_login_invalid_nonce_redirect_url', 'um_invalid_nonce_redirect_url', 10, 1 );
+add_filter( 'um_register_invalid_nonce_redirect_url', 'um_invalid_nonce_redirect_url', 10, 1 );

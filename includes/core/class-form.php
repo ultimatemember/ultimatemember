@@ -439,7 +439,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					}
 
 					if ( isset( $_POST[ UM()->honeypot ] ) && $_POST[ UM()->honeypot ] != '' ) {
-						wp_die( 'Hello, spam bot!', 'ultimate-member' );
+						wp_die( __( 'Hello, spam bot!', 'ultimate-member' ) );
 					}
 
 					/**

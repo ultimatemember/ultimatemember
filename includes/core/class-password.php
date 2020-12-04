@@ -445,7 +445,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		function um_reset_password_errors_hook( $args ) {
 
 			if ( $_POST[ UM()->honeypot ] != '' ) {
-				wp_die( 'Hello, spam bot!', 'ultimate-member' );
+				wp_die( __( 'Hello, spam bot!', 'ultimate-member' ) );
 			}
 
 			$user = "";
@@ -527,7 +527,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 */
 		function um_change_password_errors_hook( $args ) {
 			if ( isset( $_POST[ UM()->honeypot ] ) && $_POST[ UM()->honeypot ] != '' ) {
-				wp_die( 'Hello, spam bot!', 'ultimate-member' );
+				wp_die( __( 'Hello, spam bot!', 'ultimate-member' ) );
 			}
 
 			if ( ! is_user_logged_in() && isset( $args ) && ! um_is_core_page( 'password-reset' ) ||
