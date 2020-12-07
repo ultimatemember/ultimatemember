@@ -24,7 +24,9 @@
 
 					users_pages = Math.ceil( response.data.count / users_per_page );
 
-					um_update_metadata_per_user213beta3();
+					setTimeout( function () {
+						um_update_metadata_per_user213beta3();
+					}, um_request_throttle );
 				} else {
 					um_wrong_ajax();
 				}
@@ -49,7 +51,9 @@
 						if ( typeof response.data != 'undefined' ) {
 							um_add_upgrade_log( response.data.message );
 							current_page++;
-							um_update_metadata_per_user213beta3();
+							setTimeout( function () {
+								um_update_metadata_per_user213beta3();
+							}, um_request_throttle );
 						} else {
 							um_wrong_ajax();
 						}
@@ -59,7 +63,9 @@
 					}
 				});
 			} else {
-				um_metatable213beta3();
+				setTimeout( function () {
+					um_metatable213beta3();
+				}, um_request_throttle );
 			}
 		}
 

@@ -181,13 +181,22 @@
 
 .um-admin-btn-content {
 	display: none;
-	padding: 10px 0 0 0;
+	padding: 5px 0 0 0;
 }
 
 .um-admin-btn-content p {
 	float: left;
 	margin-right: 10px !important;
 	padding: 0 !important;
+}
+
+.um-admin-btn-content p.um-admin-conditions-notice {
+	width: 100%;
+	margin: 0 0 9px 0 !important;
+}
+
+.um-admin-btn-content .um-admin-cur-condition:not(:last-child) {
+	margin: 0 0 5px 0;
 }
 
 .dynamic-mce-content {display: none}

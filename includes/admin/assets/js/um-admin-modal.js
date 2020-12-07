@@ -18,7 +18,7 @@ function um_admin_new_modal( id, ajax, size ) {
 
 	um_admin_remove_modal();
 
-	jQuery('body').addClass('um-admin-modal-open').append('<div class="um-admin-overlay" /><div class="um-admin-modal" />');
+	jQuery('body').addClass('um-admin-modal-open').append('<div class="um-admin-overlay"></div><div class="um-admin-modal"></div>');
 	jQuery('#' + id).prependTo('.um-admin-modal');
 	jQuery('#' + id).show();
 	jQuery('.um-admin-modal').show();

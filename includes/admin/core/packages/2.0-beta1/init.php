@@ -23,7 +23,10 @@
 			success: function( response ) {
 				if ( typeof response.data != 'undefined' ) {
 					um_add_upgrade_log( response.data.message );
-					upgrade_roles();
+
+					setTimeout( function () {
+						upgrade_roles();
+					}, um_request_throttle );
 				} else {
 					um_wrong_ajax();
 				}
@@ -50,7 +53,10 @@
 						um_roles_data = response.data.roles;
 
 						um_add_upgrade_log( '<?php echo esc_js( __( 'Upgrade Users...', 'ultimate-member' ) ) ?>' );
-						get_users_per_role();
+
+						setTimeout( function () {
+							get_users_per_role();
+						}, um_request_throttle );
 					} else {
 						um_wrong_ajax();
 					}
@@ -86,7 +92,9 @@
 							um_add_upgrade_log( '<?php echo esc_js( __( 'Start users upgrading...', 'ultimate-member' ) ) ?>');
 							users_pages = Math.ceil( response.data.count / users_per_page );
 
-							update_user_per_page( role.role_key, role.key_in_meta );
+							setTimeout( function () {
+								update_user_per_page( role.role_key, role.key_in_meta );
+							}, um_request_throttle );
 						} else {
 							um_wrong_ajax();
 						}
@@ -96,7 +104,9 @@
 					}
 				});
 			} else {
-				upgrade_content_restriction();
+				setTimeout( function () {
+					upgrade_content_restriction();
+				}, um_request_throttle );
 			}
 
 			return false;
@@ -120,7 +130,9 @@
 						if ( typeof response.data != 'undefined' ) {
 							um_add_upgrade_log( response.data.message );
 							current_page++;
-							update_user_per_page( role_key, key_in_meta );
+							setTimeout( function () {
+								update_user_per_page( role_key, key_in_meta );
+							}, um_request_throttle );
 						} else {
 							um_wrong_ajax();
 						}
@@ -130,7 +142,9 @@
 					}
 				});
 			} else {
-				get_users_per_role();
+				setTimeout( function () {
+					get_users_per_role();
+				}, um_request_throttle );
 			}
 		}
 
@@ -149,7 +163,9 @@
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {
 						um_add_upgrade_log( response.data.message );
-						upgrade_settings();
+						setTimeout( function () {
+							upgrade_settings();
+						}, um_request_throttle );
 					} else {
 						um_wrong_ajax();
 					}
@@ -175,7 +191,9 @@
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {
 						um_add_upgrade_log( response.data.message );
-						upgrade_menus();
+						setTimeout( function () {
+							upgrade_menus();
+						}, um_request_throttle );
 					} else {
 						um_wrong_ajax();
 					}
@@ -201,7 +219,9 @@
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {
 						um_add_upgrade_log( response.data.message );
-						upgrade_mc_lists();
+						setTimeout( function () {
+							upgrade_mc_lists();
+						}, um_request_throttle );
 					} else {
 						um_wrong_ajax();
 					}
@@ -227,7 +247,9 @@
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {
 						um_add_upgrade_log( response.data.message );
-						upgrade_social_login();
+						setTimeout( function () {
+							upgrade_social_login();
+						}, um_request_throttle );
 					} else {
 						um_wrong_ajax();
 					}
@@ -253,7 +275,9 @@
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {
 						um_add_upgrade_log( response.data.message );
-						upgrade_cpt();
+						setTimeout( function () {
+							upgrade_cpt();
+						}, um_request_throttle );
 					} else {
 						um_wrong_ajax();
 					}
@@ -279,7 +303,9 @@
 				success: function( response ) {
 					if ( typeof response.data != 'undefined' ) {
 						um_add_upgrade_log( response.data.message );
-						get_forums();
+						setTimeout( function () {
+							get_forums();
+						}, um_request_throttle );
 					} else {
 						um_wrong_ajax();
 					}
@@ -309,7 +335,9 @@
 
 						forums_pages = Math.ceil( response.data.count / users_per_page );
 
-						update_forums_per_page();
+						setTimeout( function () {
+							update_forums_per_page();
+						}, um_request_throttle );
 					} else {
 						um_wrong_ajax();
 					}
@@ -336,7 +364,9 @@
 						if ( typeof response.data != 'undefined' ) {
 							um_add_upgrade_log( response.data.message );
 							current_page++;
-							update_forums_per_page();
+							setTimeout( function () {
+								update_forums_per_page();
+							}, um_request_throttle );
 						} else {
 							um_wrong_ajax();
 						}
@@ -346,7 +376,9 @@
 					}
 				});
 			} else {
-				get_products();
+				setTimeout( function () {
+					get_products();
+				}, um_request_throttle );
 			}
 		}
 
@@ -370,8 +402,9 @@
 						um_add_upgrade_log( response.data.message );
 
 						products_pages = Math.ceil( response.data.count / users_per_page );
-
-						update_products_per_page();
+						setTimeout( function () {
+							update_products_per_page();
+						}, um_request_throttle );
 					} else {
 						um_wrong_ajax();
 					}
@@ -398,7 +431,9 @@
 						if ( typeof response.data != 'undefined' ) {
 							um_add_upgrade_log( response.data.message );
 							current_page++;
-							update_products_per_page();
+							setTimeout( function () {
+								update_products_per_page();
+							}, um_request_throttle );
 						} else {
 							um_wrong_ajax();
 						}
@@ -408,7 +443,9 @@
 					}
 				});
 			} else {
-				upgrade_email_templates();
+				setTimeout( function () {
+					upgrade_email_templates();
+				}, um_request_throttle );
 			}
 		}
 

@@ -2354,7 +2354,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						if ( $this->is_error( $key ) ) {
 							$output .= $this->field_error( $this->show_error( $key ) );
-						}else if ( $this->is_notice( $key ) ) {
+						} elseif ( $this->is_notice( $key ) ) {
 							$output .= $this->field_notice( $this->show_notice( $key ) );
 						}
 
@@ -2366,6 +2366,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
 							if ( isset( $data['label'] ) ) {
+
+								$data['label'] = __( $data['label'], 'ultimate-member' );
+
 								$output .= $this->field_label( sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] ), $key, $data );
 							}
 

@@ -1429,18 +1429,20 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			if ( ! empty( $_POST['search'] ) ) {
 				// complex using with change_meta_sql function
 
+				$search = trim( stripslashes( $_POST['search'] ) );
+
 				$meta_query = array(
 					'relation' => 'OR',
 					array(
-						'value'     => trim( stripslashes( $_POST['search'] ) ),
+						'value'     => $search,
 						'compare'   => '=',
 					),
 					array(
-						'value'     => trim( stripslashes( $_POST['search'] ) ),
+						'value'     => $search,
 						'compare'   => 'LIKE',
 					),
 					array(
-						'value'     => trim( serialize( strval( stripslashes( $_POST['search'] ) ) ) ),
+						'value'     => serialize( (string) $search ),
 						'compare'   => 'LIKE',
 					),
 				);
@@ -1614,22 +1616,22 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 										$field_query = array( 'relation' => 'OR' );
 
 										foreach ( $value as $single_val ) {
-											$single_val = stripslashes( $single_val );
+											$single_val = trim( stripslashes( $single_val ) );
 
 											$arr_meta_query = array(
 												array(
 													'key'       => $field,
-													'value'     => trim( $single_val ),
+													'value'     => $single_val,
 													'compare'   => '=',
 												),
 												array(
 													'key'       => $field,
-													'value'     => serialize( strval( trim( $single_val ) ) ),
+													'value'     => serialize( (string) $single_val ),
 													'compare'   => 'LIKE',
 												),
 												array(
 													'key'       => $field,
-													'value'     => '"' . trim( $single_val ) . '"',
+													'value'     => '"' . $single_val . '"',
 													'compare'   => 'LIKE',
 												)
 											);
@@ -1638,7 +1640,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 												$arr_meta_query[] = array(
 													'key'       => $field,
-													'value'     => serialize( intval( trim( $single_val ) ) ),
+													'value'     => serialize( (int) $single_val ),
 													'compare'   => 'LIKE',
 												);
 
@@ -1883,20 +1885,22 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 									$field_query = array( 'relation' => 'OR' );
 
 									foreach ( $value as $single_val ) {
+										$single_val = trim( $single_val );
+
 										$arr_meta_query = array(
 											array(
 												'key'       => $field,
-												'value'     => trim( $single_val ),
+												'value'     => $single_val,
 												'compare'   => '=',
 											),
 											array(
 												'key'       => $field,
-												'value'     => serialize( strval( trim( $single_val ) ) ),
+												'value'     => serialize( (string) $single_val ),
 												'compare'   => 'LIKE',
 											),
 											array(
 												'key'       => $field,
-												'value'     => '"' . trim( $single_val ) . '"',
+												'value'     => '"' . $single_val . '"',
 												'compare'   => 'LIKE',
 											)
 										);
@@ -1905,7 +1909,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 											$arr_meta_query[] = array(
 												'key'       => $field,
-												'value'     => serialize( intval( trim( $single_val ) ) ),
+												'value'     => serialize( (int) $single_val ),
 												'compare'   => 'LIKE',
 											);
 
@@ -2531,8 +2535,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$this->cover_size = UM()->mobile()->isTablet() ? $sizes[1] : end( $sizes );
 
+			$this->cover_size = apply_filters( 'um_member_directory_cover_image_size', $this->cover_size, $directory_data );
+
 			$avatar_size = UM()->options()->get( 'profile_photosize' );
 			$this->avatar_size = str_replace( 'px', '', $avatar_size );
+			$this->avatar_size = apply_filters( 'um_member_directory_avatar_image_size', $this->avatar_size, $directory_data );
 
 			$users = array();
 			foreach ( $user_ids as $user_id ) {

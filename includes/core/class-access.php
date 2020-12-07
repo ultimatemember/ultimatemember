@@ -1394,6 +1394,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							}
 						}
 					} else {
+						$display = true;
+
+						// What roles can access this content?
 						if ( ! empty( $block['attrs']['um_roles_access'] ) ) {
 							$display = false;
 							foreach ( $block['attrs']['um_roles_access'] as $role ) {
@@ -1401,15 +1404,17 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 									$display = true;
 								}
 							}
+						}
 
-							if ( ! $display ) {
-								$block_content = '';
-								if ( isset( $block['attrs']['um_message_type'] ) ) {
-									if ( $block['attrs']['um_message_type'] == '1' ) {
-										$block_content = $default_message;
-									} elseif ( $block['attrs']['um_message_type'] == '2' ) {
-										$block_content = $block['attrs']['um_message_content'];
-									}
+						$display = apply_filters( 'um_loggedin_block_restriction', $display, $block );
+
+						if ( ! $display ) {
+							$block_content = '';
+							if ( isset( $block['attrs']['um_message_type'] ) ) {
+								if ( $block['attrs']['um_message_type'] == '1' ) {
+									$block_content = $default_message;
+								} elseif ( $block['attrs']['um_message_type'] == '2' ) {
+									$block_content = $block['attrs']['um_message_content'];
 								}
 							}
 						}

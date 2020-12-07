@@ -75,7 +75,8 @@ if ( ! class_exists( 'um\core\Login' ) ) {
 			}
 
 			if ( ! wp_verify_nonce( $args['_wpnonce'], 'um_login_form' ) || empty( $args['_wpnonce'] ) || ! isset( $args['_wpnonce'] ) ) {
-				wp_die( __( 'Invalid Nonce.', 'ultimate-member' ) );
+				$url = apply_filters( 'um_login_invalid_nonce_redirect_url', add_query_arg( [ 'err' => 'invalid_nonce' ] ) );
+				exit( wp_redirect( $url ) );
 			}
 
 			return $args;

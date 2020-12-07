@@ -227,8 +227,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 						<div class="um-admin-clear"></div>
 					</div>
+					<p class="um-admin-conditions-notice">
+						<small>
+							<?php _e( 'Use the condition operator `equals to` or `not equals` if the parent field has a single option.', 'ultimate-member' ); ?>
+							<br><?php _e( 'Use the condition operator `greater than` or `less than` if the parent field is a number.', 'ultimate-member' ); ?>
+							<br><?php _e( 'Use the condition operator `contains` if the parent field has multiple options.', 'ultimate-member' ); ?>
+						</small>
+					</p>
 					<p><a href="javascript:void(0);" class="um-admin-new-condition button button-primary um-admin-tipsy-n" title="Add new condition"><?php _e( 'Add new rule', 'ultimate-member' ); ?></a></p>
 					<p class="um-admin-reset-conditions"><a href="javascript:void(0);" class="button"><?php _e( 'Reset all rules', 'ultimate-member' ); ?></a></p>
+
 					<div class="um-admin-clear"></div>
 
 					<?php if ( isset( $edit_array['conditions'] ) && count( $edit_array['conditions'] ) != 0 ) {

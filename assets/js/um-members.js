@@ -4,7 +4,6 @@ var um_member_directories = [];
 
 var um_member_directory_last_data = [];
 
-
 function um_parse_current_url() {
 	var data = {};
 
@@ -218,8 +217,14 @@ function um_ajax_get_members( directory, args ) {
 	 *
 	 */
 
-
 	var hash = um_members_get_hash( directory );
+
+	var allow = wp.hooks.applyFilters( 'um_member_directory_get_members_allow', true, hash, directory );
+	if ( ! allow ) {
+		setTimeout( um_ajax_get_members, 600, directory, args );
+		return;
+	}
+
 	var page = um_get_current_page( directory );
 	var search = um_get_search( directory );
 	var sorting = um_get_sort( directory );
@@ -1330,6 +1335,7 @@ jQuery(document.body).ready( function() {
 	jQuery( '.um-directory' ).each( function() {
 		var directory = jQuery(this);
 		var hash = um_members_get_hash( directory );
+
 		um_member_directories.push( hash );
 
 		// slideup/slidedown animation fix for grid filters bar

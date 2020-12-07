@@ -162,19 +162,24 @@ if ( ! class_exists( 'um\core\Validation' ) ) {
 
 
 		/**
-		 * Password test
+		 * Password strength test
 		 *
-		 * @param $candidate
+		 * @param string $candidate
 		 *
 		 * @return bool
 		 */
 		function strong_pass( $candidate ) {
-			$r1='/[A-Z]/';
-			$r2='/[a-z]/';
-			$r3='/[0-9]/';
-			if(preg_match_all($r1,$candidate, $o)<1) return false;
-			if(preg_match_all($r2,$candidate, $o)<1) return false;
-			if(preg_match_all($r3,$candidate, $o)<1) return false;
+			// are used Unicode Regular Expressions
+			$regexps = [
+				'/[\p{Lu}]/u', // any Letter Uppercase symbol
+				'/[\p{Ll}]/u', // any Letter Lowercase symbol
+				'/[\p{N}]/u', // any Number symbol
+			];
+			foreach ( $regexps as $regexp ) {
+				if ( preg_match_all( $regexp, $candidate, $o ) < 1 ) {
+					return false;
+				}
+			}
 			return true;
 		}
 

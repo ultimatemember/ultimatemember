@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
-Tested up to: 5.5.1
+Tested up to: 5.6
 Stable tag: 2.1.12
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -154,6 +154,33 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.1.13: December 8, 2020 =
+
+* Enhancements:
+
+  - Added: `um_member_directory_cover_image_size` hook with ability to change the cover photo size on the member directory
+  - Added: `um_member_directory_avatar_image_size` hook with ability to change the profile photo size on the member directory
+  - Added: `um_member_directory_get_members_allow` JS hook for 3rd-party integration with the member directory. You could use a time throttle until some data is loaded
+  - Added: Notice about the fields' conditional logic rules + small CSS enhancements
+  - Added: Invalid nonce validation on Login and Registration pages instead of wp_die()
+  - Added: Privacy settings for the Divider field type (#688)
+  - Added: Ability for the integration with Gutenberg Block restriction settings (extends the block restriction settings via 3rd-party plugins)
+  - Added: Strings translations
+
+* Bugfixes:
+
+  - Fixed: Upgrade process on websites where a hosting locks the frequent AJAX requests (added default JS throttle between requests)
+  - Fixed: Getting page content of the GDPR privacy policies
+  - Fixed: Password strength validation for Unicode symbols
+  - Fixed: Issue with apostrophe options in the multiselect/checkbox fields (#689)
+  - Fixed: Translation for Password field's label
+  - Fixed: Download Personal Data URL
+  - Fixed: Vulnerability with timestamp field on UM Forms (the hidden field with name='timestamp' is deprecated)
+
+* Tweaks:
+
+  - There are changed PHP’s intval(), strval(), floatval(), and boolval() typecasting functions to (int), (string), (float) and (bool) regarding [this doc](https://make.wordpress.org/core/2020/11/20/miscellaneous-developer-focused-changes-in-wordpress-5-6/).
 
 = 2.1.12: October 29, 2020 =
 

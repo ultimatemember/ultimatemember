@@ -733,9 +733,9 @@ function um_profile_dynamic_meta_desc() {
 		<meta property="og:title" content="<?php echo esc_attr( $title ); ?>"/>
 		<meta property="og:description" content="<?php echo esc_attr( $description ); ?>"/>
 		<meta property="og:image" content="<?php echo esc_url( $image ); ?>"/>
-		<meta property="og:image:alt" content="<?php echo esc_attr_e( 'Profile photo', 'ultimate-member' ); ?>"/>
-		<meta property="og:image:height" content="<?php echo intval( $size ); ?>"/>
-		<meta property="og:image:width" content="<?php echo intval( $size ); ?>"/>
+		<meta property="og:image:alt" content="<?php esc_attr_e( 'Profile photo', 'ultimate-member' ); ?>"/>
+		<meta property="og:image:height" content="<?php echo (int) $size; ?>"/>
+		<meta property="og:image:width" content="<?php echo (int) $size; ?>"/>
 		<meta property="og:url" content="<?php echo esc_url( $url ); ?>"/>
 
 		<meta name="twitter:card" content="summary"/>
@@ -743,7 +743,7 @@ function um_profile_dynamic_meta_desc() {
 		<meta name="twitter:title" content="<?php echo esc_attr( $title ); ?>"/>
 		<meta name="twitter:description" content="<?php echo esc_attr( $description ); ?>"/>
 		<meta name="twitter:image" content="<?php echo esc_url( $image ); ?>"/>
-		<meta name="twitter:image:alt" content="<?php echo esc_attr_e( 'Profile photo', 'ultimate-member' ); ?>"/>
+		<meta name="twitter:image:alt" content="<?php esc_attr_e( 'Profile photo', 'ultimate-member' ); ?>"/>
 		<meta name="twitter:url" content="<?php echo esc_url( $url ); ?>"/>
 
 		<script type="application/ld+json"><?php echo json_encode( $person ); ?></script>
