@@ -568,7 +568,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$label = apply_filters( 'um_edit_label_all_fields', $label, $data );
 			}
 
-			$output .= '<label for="' . esc_attr( $key . UM()->form()->form_suffix ) . '">' . __( $label, 'ultimate-member' ) . '</label>';
+			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
+			$for_attr = '';
+			if ( ! in_array( $data['type'], $fields_without_metakey ) ) {
+				$for_attr = ' for="' . esc_attr( $key . UM()->form()->form_suffix ) . '"';
+			}
+
+			$output .= '<label' . $for_attr . '>' . __( $label, 'ultimate-member' ) . '</label>';
 
 			if ( ! empty( $data['help'] ) && $this->viewing == false && ! strstr( $key, 'confirm_user_pass' ) ) {
 
@@ -1443,7 +1449,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$array['conditional'] = null;
 			}
 
-			$array['classes'] .= ' um-field-' . esc_attr( $key );
+			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
+
+			if ( ! in_array( $array['type'], $fields_without_metakey ) ) {
+				$array['classes'] .= ' um-field-' . esc_attr( $key );
+			}
 			$array['classes'] .= ' um-field-' . esc_attr( $array['type'] );
 			$array['classes'] .= ' um-field-type_' . esc_attr( $array['type'] );
 
@@ -4059,9 +4069,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 					$_field_value = $this->field_value( $key, $default, $data );
 
-					if ( ! isset( $_field_value ) || $_field_value == '' ) {
+					if ( ! in_array( $type, $fields_without_metakey ) && ( ! isset( $_field_value ) || $_field_value == '' ) ) {
 						$output = '';
 					} else {
+
 						$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
 						if ( isset( $data['label'] ) || ! empty( $data['icon'] ) ) {
@@ -4126,11 +4137,20 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						 */
 						$res = apply_filters( "um_view_field_value_{$type}", $res, $data );
 
-						$output .= '<div class="um-field-area">';
-						$output .= '<div class="um-field-value" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '">' . $res . '</div>';
-						$output .= '</div>';
+						$id_attr = '';
+						if ( ! in_array( $type, $fields_without_metakey ) ) {
+							$id_attr = ' id="' . esc_attr( $key . UM()->form()->form_suffix ) . '"';
+						}
 
-						$output .= '</div>';
+						if ( empty( $res ) ) {
+							$output = '';
+						} else {
+							$output .= '<div class="um-field-area">';
+							$output .= '<div class="um-field-value"' . $id_attr . '>' . $res . '</div>';
+							$output .= '</div>';
+
+							$output .= '</div>';
+						}
 					}
 
 					break;
@@ -4664,6 +4684,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					esc_attr( $key )
 				)
 			);
+
+			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
+
+			if ( in_array( $data['type'], $fields_without_metakey ) ) {
+				unset( $field_atts['id'] );
+				unset( $field_atts['data-key'] );
+			}
 
 			if ( ! empty( $field_style ) && is_array( $field_style ) ) {
 
