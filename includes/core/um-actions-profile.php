@@ -682,15 +682,27 @@ function um_profile_dynamic_meta_desc() {
 
 		$privacy = get_user_meta( $user_id, 'profile_privacy', true );
 		if ( $privacy == __( 'Only me', 'ultimate-member' ) || $privacy == 'Only me' ) {
+			echo '<meta name="robots" content="noindex, nofollow" />';
+			return;
+		}
+		
+		/**
+		 * @see the user role setting "Avoid indexing profile by search engines"
+		 */
+		$role = UM()->roles()->get_priority_user_role( $user_id );
+		$permissions = UM()->roles()->role_data( $role );
+		if ( ! empty( $permissions['profile_noindex'] ) ) {
+			echo '<meta name="robots" content="noindex, nofollow" />';
 			return;
 		}
 
+		/**
+		 * @see the account setting "Avoid indexing my profile by search engines"
+		 */
 		$noindex = get_user_meta( $user_id, 'profile_noindex', true );
-		if ( ! empty( $noindex ) ) { ?>
-
-			<meta name="robots" content="noindex, nofollow" />
-
-			<?php return;
+		if ( ! empty( $noindex ) ) {
+			echo '<meta name="robots" content="noindex, nofollow" />';
+			return;
 		}
 
 		um_fetch_user( $user_id );
