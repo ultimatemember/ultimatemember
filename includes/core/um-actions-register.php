@@ -400,12 +400,12 @@ function um_submit_form_register( $args ) {
 	//get user role from field Role dropdown or radio
 	if ( isset( $args['role'] ) ) {
 		global $wp_roles;
-		$um_roles = get_option( 'um_roles' );
+		$um_roles = get_option( 'um_roles', array() );
 
 		if ( ! empty( $um_roles ) ) {
 			$role_keys = array_map( function( $item ) {
 				return 'um_' . $item;
-			}, get_option( 'um_roles' ) );
+			}, $um_roles );
 		} else {
 			$role_keys = array();
 		}

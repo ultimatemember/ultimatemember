@@ -27,7 +27,7 @@ if ( isset( $_GET['action'] ) ) {
 				um_js_redirect( $redirect );
 			}
 
-			$um_roles = get_option( 'um_roles' );
+			$um_roles = get_option( 'um_roles', array() );
 
 			$um_custom_roles = array();
 			foreach ( $role_keys as $k => $role_key ) {
@@ -426,7 +426,7 @@ $ListTable->set_sortable_columns( array(
 $users_count = count_users();
 
 $roles = array();
-$role_keys = get_option( 'um_roles' );
+$role_keys = get_option( 'um_roles', array() );
 
 if ( $role_keys ) {
 	foreach ( $role_keys as $role_key ) {

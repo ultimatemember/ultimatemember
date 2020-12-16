@@ -729,7 +729,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		public function secondary_role_field( $content, $userdata ) {
 			$roles = array();
 
-			$role_keys = get_option( 'um_roles' );
+			$role_keys = get_option( 'um_roles', array() );
 			if ( $role_keys ) {
 				foreach ( $role_keys as $role_key ) {
 					$role_meta = get_option( "um_role_{$role_key}_meta" );
@@ -1858,12 +1858,12 @@ if ( ! class_exists( 'um\core\User' ) ) {
 				//if isset roles argument validate role to properly for security reasons
 				if ( isset( $args['role'] ) ) {
 					global $wp_roles;
-					$um_roles = get_option( 'um_roles' );
+					$um_roles = get_option( 'um_roles', array() );
 
 					if ( ! empty( $um_roles ) ) {
 						$role_keys = array_map( function( $item ) {
 							return 'um_' . $item;
-						}, get_option( 'um_roles' ) );
+						}, $um_roles );
 					} else {
 						$role_keys = array();
 					}
