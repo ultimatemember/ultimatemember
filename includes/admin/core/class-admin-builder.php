@@ -898,7 +898,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 									continue;
 								} ?>
 
-								<a href="javascript:void(0);" class="button with-icon" <?php disabled( in_array( $field_key, $form_fields, true ) ) ?> data-silent_action="um_admin_add_field_from_list" data-arg1="<?php echo esc_attr( $field_key ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>"><?php echo um_trim_string( stripslashes( $array['title'] ), 20 ); ?> <small>(<?php echo ucfirst( $array['type'] ); ?>)</small><span class="remove"></span></a>
+								<a href="javascript:void(0);" class="button with-icon" <?php disabled( in_array( $field_key, $form_fields, true ) ) ?> data-silent_action="um_admin_add_field_from_list" data-arg1="<?php echo esc_attr( $field_key ); ?>" data-arg2="<?php echo esc_attr( $arg2 ); ?>" title="<?php echo __( 'Meta Key', 'ultimate-member' ) . ' - ' . esc_attr( $field_key ); ?>"><?php echo um_trim_string( stripslashes( $array['title'] ), 20 ); ?> <small>(<?php echo ucfirst( $array['type'] ); ?>)</small><span class="remove"></span></a>
 
 							<?php }
 						} else {
