@@ -536,7 +536,7 @@ function um_user_edit_profile( $args ) {
 	 * }
 	 * ?>
 	 */
-	do_action( 'um_user_after_updating_profile', $to_update, $user_id );
+	do_action( 'um_user_after_updating_profile', $to_update, $user_id, $args );
 
 	/**
 	 * UM hook
