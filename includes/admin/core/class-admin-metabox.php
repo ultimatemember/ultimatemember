@@ -559,7 +559,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					'label'         => __( 'Select which roles can access this content', 'ultimate-member' ),
 					'description'   => __( 'Activate content restriction for this post', 'ultimate-member' ),
 					'value'         => $_um_access_roles_value,
-					'options'       => UM()->roles()->get_roles( false, array( 'administrator' ) ),
+					'options'       => UM()->roles()->get_roles( false ),
 					'columns'       => 3,
 					'conditional'   => array( '_um_accessible', '=', '2' )
 				),
