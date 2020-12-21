@@ -441,7 +441,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			wp_set_script_translations( 'um_block_js', 'ultimate-member' );
 
 			$restrict_options = array();
-			$roles = UM()->roles()->get_roles( false, array( 'administrator' ) );
+			$roles = UM()->roles()->get_roles( false );
 			if ( ! empty( $roles ) ) {
 				foreach ( $roles as $role_key => $title ) {
 					$restrict_options[] = array(
