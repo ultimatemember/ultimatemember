@@ -157,7 +157,14 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = 2.1.14: December 21, 2020 =
 
+* Enhancements:
+  - Added a tooltip with meta key name for fields in a form settings
+  - Added `Administrator` user role to a restriction setting (to make the content visible only for `Administrator` role)
 
+* Bugfixes:
+  - Added third parameter $args to the action hook for Profile Tab redirections `um_user_after_updating_profile`
+  - Fixed issues with fields without metakeys when trying to display them by the hook
+  - Fixed PHP notices/warnings
 
 = 2.1.13: December 8, 2020 =
 
