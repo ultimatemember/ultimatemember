@@ -633,7 +633,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		function set_predefined_fields() {
 
 			global $wp_roles;
-			$role_keys = get_option( 'um_roles' );
+			$role_keys = get_option( 'um_roles', array() );
 			if ( ! empty( $role_keys ) && is_array( $role_keys ) ) {
 				$role_keys = array_map( function( $item ) {
 					return 'um_' . $item;

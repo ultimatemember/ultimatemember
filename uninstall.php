@@ -69,7 +69,7 @@ if ( ! empty( $delete_options ) ) {
 	}
 
 	//remove user role meta
-	$role_keys = get_option( 'um_roles' );
+	$role_keys = get_option( 'um_roles', array() );
 	if ( $role_keys ) {
 		foreach ( $role_keys as $role_key ) {
 			delete_option( 'um_role_' . $role_key . '_meta' );

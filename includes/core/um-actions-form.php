@@ -536,13 +536,21 @@ function um_submit_form_errors_hook_( $args ) {
 
 				if ( isset( $array['min_chars'] ) && $array['min_chars'] > 0 ) {
 					if ( $args[ $key ] && strlen( utf8_decode( $args[ $key ] ) ) < $array['min_chars'] ) {
-						UM()->form()->add_error( $key, sprintf( __( 'Your %s must contain at least %s characters', 'ultimate-member' ), $array['label'], $array['min_chars'] ) );
+						if ( empty( $array['label'] ) ) {
+							UM()->form()->add_error( $key, sprintf( __( 'This field must contain at least %s characters', 'ultimate-member' ), $array['min_chars'] ) );
+						} else {
+							UM()->form()->add_error( $key, sprintf( __( 'Your %s must contain at least %s characters', 'ultimate-member' ), $array['label'], $array['min_chars'] ) );
+						}
 					}
 				}
 
 				if ( isset( $array['max_chars'] ) && $array['max_chars'] > 0 ) {
 					if ( $args[ $key ] && strlen( utf8_decode( $args[ $key ] ) ) > $array['max_chars'] ) {
-						UM()->form()->add_error( $key, sprintf( __( 'Your %s must contain less than %s characters', 'ultimate-member' ), $array['label'], $array['max_chars'] ) );
+						if ( empty( $array['label'] ) ) {
+							UM()->form()->add_error( $key, sprintf( __( 'This field must contain less than %s characters', 'ultimate-member' ), $array['max_chars'] ) );
+						} else {
+							UM()->form()->add_error( $key, sprintf( __( 'Your %s must contain less than %s characters', 'ultimate-member' ), $array['label'], $array['max_chars'] ) );
+						}
 					}
 				}
 
