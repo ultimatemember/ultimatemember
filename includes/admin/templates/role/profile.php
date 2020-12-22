@@ -43,11 +43,17 @@
 			),
 			array(
 				'id'        => '_um_profile_noindex',
-				'type'      => 'checkbox',
+				'type'      => 'select',
+				'size'      => 'medium',
 				'name'      => '_um_profile_noindex',
 				'label'     => __( 'Avoid indexing profile by search engines', 'ultimate-member' ),
-				'tooltip'   => __( 'Hides the profile page for robots', 'ultimate-member' ),
-				'value'     => ! empty( $role['_um_profile_noindex'] ) ? $role['_um_profile_noindex'] : 0,
+				'tooltip'   => __( 'Hides the profile page for robots.', 'ultimate-member' ) . ' ' . __( 'The default value depends on the general users settings.', 'ultimate-member' ),
+				'options'   => [
+						''  => __( 'Default', 'ultimate-member' ),
+						'1' => __( 'Yes', 'ultimate-member' ),
+						'2' => __( 'No', 'ultimate-member' )
+				],
+				'value'     => ! empty( $role['_um_profile_noindex'] ) ? $role['_um_profile_noindex'] : '',
 			)
 		)
 	) )->render_form(); ?>

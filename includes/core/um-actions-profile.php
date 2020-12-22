@@ -680,32 +680,22 @@ function um_profile_dynamic_meta_desc() {
 
 		$user_id = um_get_requested_user();
 
-		$privacy = get_user_meta( $user_id, 'profile_privacy', true );
-		if ( $privacy == __( 'Only me', 'ultimate-member' ) || $privacy == 'Only me' ) {
-			echo '<meta name="robots" content="noindex, nofollow" />';
-			return;
-		}
-		
-		/**
-		 * @see the user role setting "Avoid indexing profile by search engines"
-		 */
-		$role = UM()->roles()->get_priority_user_role( $user_id );
-		$permissions = UM()->roles()->role_data( $role );
-		if ( ! empty( $permissions['profile_noindex'] ) ) {
-			echo '<meta name="robots" content="noindex, nofollow" />';
-			return;
+		if( $user_id !== um_user('ID') ){
+			um_fetch_user( $user_id );
 		}
 
 		/**
-		 * @see the account setting "Avoid indexing my profile by search engines"
+		 * Settings by the priority:
+		 *  "Search engine visibility" in [wp-admin > Settings > Reading]
+		 *  "Profile Privacy" in [Account > Privacy]
+		 *  "Avoid indexing my profile by search engines in [Account > Privacy]
+		 *  "Avoid indexing profile by search engines" in [wp-admin > Ultimate Member > User Roles > Edit Role]
+		 *  "Avoid indexing profile by search engines" in [wp-admin > Ultimate Member > Settings > General > Users]
 		 */
-		$noindex = get_user_meta( $user_id, 'profile_noindex', true );
-		if ( ! empty( $noindex ) ) {
+		if ( UM()->user()->is_profile_noindex() ) {
 			echo '<meta name="robots" content="noindex, nofollow" />';
 			return;
 		}
-
-		um_fetch_user( $user_id );
 
 		$locale = get_user_locale( $user_id );
 		$site_name = get_bloginfo( 'name' );

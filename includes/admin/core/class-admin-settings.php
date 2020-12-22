@@ -630,6 +630,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									'type'      => 'checkbox',
 									'label'     => __( 'Require a strong password? (when user resets password only)', 'ultimate-member' ),
 									'tooltip'   => __( 'Enable or disable a strong password rules on password reset and change procedure', 'ultimate-member' ),
+								),
+								array(
+									'id'        => 'profile_noindex',
+									'type'      => 'select',
+									'size'      => 'small',
+									'label'     => __( 'Avoid indexing profile by search engines', 'ultimate-member' ),
+									'tooltip'   => __( 'Hides the profile page for robots.', 'ultimate-member' ) . ' ' . __( 'This setting can be overridden by individual role settings.', 'ultimate-member' ),
+									'options'   => [
+											'1' => __( 'Yes', 'ultimate-member' ),
+											''  => __( 'No', 'ultimate-member' )
+									]
 								)
 							)
 						),
