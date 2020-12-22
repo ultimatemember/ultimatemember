@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 5.6
-Stable tag: 2.1.13
+Stable tag: 2.1.14
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -155,7 +155,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.1.14: December 21, 2020 =
+= 2.1.14: December 22, 2020 =
 
 * Enhancements:
   - Added a tooltip with meta key name for fields in a form settings
