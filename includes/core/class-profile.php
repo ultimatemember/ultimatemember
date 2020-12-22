@@ -385,6 +385,8 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		function show_meta( $array ) {
 			$output = '';
 
+			$fields_without_metakey = UM()->builtin()->get_fields_without_metakey();
+
 			if ( ! empty( $array ) ) {
 				foreach ( $array as $key ) {
 					if ( $key ) {
@@ -396,8 +398,9 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 						$data['in_profile_meta'] = true;
 
 						$value = um_filtered_value( $key, $data );
-						if ( ! $value )
+						if ( ! $value && ! in_array( $data['type'], $fields_without_metakey ) ) {
 							continue;
+						}
 
 						if ( ! UM()->options()->get( 'profile_show_metaicon' ) ) {
 							$icon = '';

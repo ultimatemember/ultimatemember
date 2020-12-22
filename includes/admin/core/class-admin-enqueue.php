@@ -173,7 +173,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 */
 		function load_role_wrapper() {
 			wp_register_script( 'um_admin_role_wrapper', $this->js_url . 'um-admin-role-wrapper.js', array( 'jquery' ), ultimatemember_version, true );
-			$localize_roles_data = get_option( 'um_roles' );
+			$localize_roles_data = get_option( 'um_roles', array() );
 			wp_localize_script( 'um_admin_role_wrapper', 'um_roles', (array) $localize_roles_data );
 			wp_enqueue_script( 'um_admin_role_wrapper' );
 		}
@@ -441,7 +441,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			wp_set_script_translations( 'um_block_js', 'ultimate-member' );
 
 			$restrict_options = array();
-			$roles = UM()->roles()->get_roles( false, array( 'administrator' ) );
+			$roles = UM()->roles()->get_roles( false );
 			if ( ! empty( $roles ) ) {
 				foreach ( $roles as $role_key => $title ) {
 					$restrict_options[] = array(

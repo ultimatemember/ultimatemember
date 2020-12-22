@@ -32,7 +32,7 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 		function um_on_roles_update( $option, $old_value, $value ) {
 			global $wp_roles;
 
-			if ( isset( $wp_roles->role_key ) && $option == $wp_roles->role_key ) {
+			if ( is_object( $wp_roles ) && isset( $wp_roles->role_key ) && $option == $wp_roles->role_key ) {
 				foreach ( $value as $role_key => $role_data ) {
 					$role_keys = get_option( 'um_roles', array() );
 					$role_keys = array_map( function( $item ) {
@@ -126,10 +126,11 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 		 */
 		function is_role_custom( $role ) {
 			// User has roles so look for a UM Role one
-			$role_keys = get_option( 'um_roles' );
+			$role_keys = get_option( 'um_roles', array() );
 
-			if ( empty( $role_keys ) )
+			if ( empty( $role_keys ) ) {
 				return false;
+			}
 
 			$role_keys = array_map( function( $item ) {
 				return 'um_' . $item;
@@ -385,7 +386,7 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 				return false;
 
 			// User has roles so look for a UM Role one
-			$um_roles_keys = get_option( 'um_roles' );
+			$um_roles_keys = get_option( 'um_roles', array() );
 
 			if ( ! empty( $um_roles_keys ) ) {
 				$um_roles_keys = array_map( function( $item ) {
@@ -453,7 +454,7 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 				return false;
 
 			// User has roles so look for a UM Role one
-			$um_roles_keys = get_option( 'um_roles' );
+			$um_roles_keys = get_option( 'um_roles', array() );
 
 			if ( ! empty( $um_roles_keys ) ) {
 				$um_roles_keys = array_map( function( $item ) {
@@ -495,15 +496,17 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 		 */
 		function get_um_user_role( $user_id ) {
 			// User has roles so look for a UM Role one
-			$um_roles_keys = get_option( 'um_roles' );
+			$um_roles_keys = get_option( 'um_roles', array() );
 
-			if ( empty( $um_roles_keys ) )
+			if ( empty( $um_roles_keys ) ) {
 				return false;
+			}
 
 			$user = get_userdata( $user_id );
 
-			if ( empty( $user->roles ) )
+			if ( empty( $user->roles ) ) {
 				return false;
+			}
 
 			$um_roles_keys = array_map( function( $item ) {
 				return 'um_' . $item;
@@ -511,8 +514,9 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 
 			$user_um_roles_array = array_intersect( $um_roles_keys, array_values( $user->roles ) );
 
-			if ( empty( $user_um_roles_array ) )
+			if ( empty( $user_um_roles_array ) ) {
 				return false;
+			}
 
 			return array_shift( $user_um_roles_array );
 		}

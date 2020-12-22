@@ -40,6 +40,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		function __construct() {
 			$this->in_edit = false;
 			$this->edit_mode_value = null;
+			$this->edit_array = [];
 
 			add_action( 'admin_head', array( &$this, 'admin_head' ), 9);
 			add_action( 'admin_footer', array( &$this, 'load_modal_content' ), 9);
@@ -404,7 +405,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					'type'          => 'multi_checkbox',
 					'label'         => __( 'Select which roles can access this content', 'ultimate-member' ),
 					'description'   => __( 'Activate content restriction for this post', 'ultimate-member' ),
-					'options'       => UM()->roles()->get_roles( false, array( 'administrator' ) ),
+					'options'       => UM()->roles()->get_roles( false ),
 					'columns'       => 3,
 					'conditional'   => array( '_um_accessible', '=', '2' )
 				),
@@ -558,7 +559,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					'label'         => __( 'Select which roles can access this content', 'ultimate-member' ),
 					'description'   => __( 'Activate content restriction for this post', 'ultimate-member' ),
 					'value'         => $_um_access_roles_value,
-					'options'       => UM()->roles()->get_roles( false, array( 'administrator' ) ),
+					'options'       => UM()->roles()->get_roles( false ),
 					'columns'       => 3,
 					'conditional'   => array( '_um_accessible', '=', '2' )
 				),
@@ -1233,7 +1234,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 			if ( $this->in_edit == true ) { // we're editing a field
 				$real_attr = substr( $attribute, 1 );
-				$this->edit_mode_value = (isset( $this->edit_array[ $real_attr ] ) ) ? $this->edit_array[ $real_attr ] : null;
+				$this->edit_mode_value = isset( $this->edit_array[ $real_attr ] ) ? $this->edit_array[ $real_attr ] : null;
 			}
 
 			switch ( $attribute ) {
