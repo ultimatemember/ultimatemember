@@ -380,7 +380,7 @@ function um_user_edit_profile( $args ) {
 			global $wp_roles;
 			$role_keys = array_map( function( $item ) {
 				return 'um_' . $item;
-			}, get_option( 'um_roles' ) );
+			}, get_option( 'um_roles', array() ) );
 			$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
 
 			if ( ! in_array( $args['submitted']['role'], $exclude_roles ) ) {
@@ -400,7 +400,7 @@ function um_user_edit_profile( $args ) {
 				global $wp_roles;
 				$role_keys = array_map( function( $item ) {
 					return 'um_' . $item;
-				}, get_option( 'um_roles' ) );
+				}, get_option( 'um_roles', array() ) );
 				$exclude_roles = array_diff( array_keys( $wp_roles->roles ), array_merge( $role_keys, array( 'subscriber' ) ) );
 
 				if ( ! in_array( $args['submitted']['role'], $exclude_roles ) ) {
@@ -536,7 +536,7 @@ function um_user_edit_profile( $args ) {
 	 * }
 	 * ?>
 	 */
-	do_action( 'um_user_after_updating_profile', $to_update, $user_id );
+	do_action( 'um_user_after_updating_profile', $to_update, $user_id, $args );
 
 	/**
 	 * UM hook
@@ -598,7 +598,7 @@ function um_restore_default_roles( $user_id, $args, $to_update ) {
 
 		$role_keys = array_map( function( $item ) {
 			return 'um_' . $item;
-		}, get_option( 'um_roles' ) );
+		}, get_option( 'um_roles', array() ) );
 
 		$leave_roles = array_diff( $args['roles_before_upgrade'], array_merge( $role_keys, array( 'subscriber' ) ) );
 

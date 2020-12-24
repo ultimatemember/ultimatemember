@@ -64,8 +64,14 @@ function um_after_insert_user( $user_id, $args ) {
 		UM()->user()->set_registration_details( $args['submitted'], $args );
 	}
 
+	$status = um_user( 'status' );
+	if ( empty( $status ) ) {
+		um_fetch_user( $user_id );
+		$status = um_user( 'status' );
+	}
+
 	/* save user status */
-	UM()->user()->set_status( um_user( 'status' ) );
+	UM()->user()->set_status( $status );
 
 	/* create user uploads directory */
 	UM()->uploader()->get_upload_user_base_dir( $user_id, true );
@@ -400,12 +406,12 @@ function um_submit_form_register( $args ) {
 	//get user role from field Role dropdown or radio
 	if ( isset( $args['role'] ) ) {
 		global $wp_roles;
-		$um_roles = get_option( 'um_roles' );
+		$um_roles = get_option( 'um_roles', array() );
 
 		if ( ! empty( $um_roles ) ) {
 			$role_keys = array_map( function( $item ) {
 				return 'um_' . $item;
-			}, get_option( 'um_roles' ) );
+			}, $um_roles );
 		} else {
 			$role_keys = array();
 		}

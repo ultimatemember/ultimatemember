@@ -117,7 +117,7 @@ if ( ! empty( $_POST['role'] ) ) {
 		if ( '' == $error ) {
 
 			if ( 'add' == sanitize_key( $_GET['tab'] ) ) {
-				$roles = get_option( 'um_roles' );
+				$roles = get_option( 'um_roles', array() );
 				$roles[] = $id;
 
 				update_option( 'um_roles', $roles );

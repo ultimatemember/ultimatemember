@@ -79,7 +79,7 @@ function um_init_datetimepicker() {
 
 
 function init_tipsy() {
-	if( typeof(jQuery.fn.tipsy) === "function" ){
+	if ( typeof( jQuery.fn.tipsy ) === "function" ) {
 		jQuery('.um-tip-n').tipsy({gravity: 'n', opacity: 1, live: 'a.live', offset: 3 });
 		jQuery('.um-tip-w').tipsy({gravity: 'w', opacity: 1, live: 'a.live', offset: 3 });
 		jQuery('.um-tip-e').tipsy({gravity: 'e', opacity: 1, live: 'a.live', offset: 3 });
