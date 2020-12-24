@@ -591,7 +591,7 @@ function um_init_field_conditions() {
 			arr_all_conditions.push(obj);
 		});
 
-		um_field_default_values[jQuery(this).data('key')] = um_get_field_default_value( jQuery(this) );
+		um_field_default_values[ jQuery(this).data('key') ] = um_get_field_default_value( jQuery(this) );
 	});
 
 	jQuery.each( arr_field_keys, function ( i, field_key ) {

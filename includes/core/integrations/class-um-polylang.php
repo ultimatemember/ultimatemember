@@ -39,7 +39,8 @@ class UM_Polylang implements UM_Multilingual {
 
 			/* Form */
 			add_action( 'um_after_user_updated', array( &$this, 'profile_bio_update' ), 20, 2 );
-			add_filter( 'um_field_value', array( &$this, 'profile_bio_value' ), 20, 4 );
+			add_filter( 'um_field_value', array( &$this, 'profile_bio_value' ), 20, 3 );
+			add_filter( 'um_profile_field_filter_hook__description', array( &$this, 'profile_bio_value' ), 20, 2 );
 			add_filter( 'um_profile_bio_key', array( &$this, 'profile_bio_key' ), 20, 2 );
 			add_filter( 'um_pre_args_setup', array( &$this, 'shortcode_pre_args_setup' ), 20, 1 );
 
@@ -260,7 +261,9 @@ class UM_Polylang implements UM_Multilingual {
 
 		$default = $current = pll_default_language( 'locale' );
 		$language = $polylang->model->get_language( $current_code );
-		$current = $language->locale;
+		if ( $language && isset( $language->locale ) ) {
+			$current = $language->locale;
+		}
 
 		return compact( 'default', 'current' );
 	}
@@ -546,15 +549,18 @@ class UM_Polylang implements UM_Multilingual {
 	 *
 	 * @since  2.1.7
 	 * @hook   um_field_value
+	 * @hook   um_profile_field_filter_hook__description
 	 *
-	 * @param  string $value   Field Value
-	 * @param  string $default Default Value
-	 * @param  string $key     Field Key
-	 * @param  string $type    Field Type
-	 * @param  array  $data    Field Data
+	 * @param  string       $value  Field Value
+	 * @param  array|string $data   Default value or field data
+	 * @param  string|null  $key    Field Key
+	 * @param  array        $data   Field Data
 	 * @return string
 	 */
-	public function profile_bio_value( $value, $default, $key, $type = '' ) {
+	public function profile_bio_value( $value, $data, $key = null ) {
+		if( is_null( $key ) && is_array( $data ) ){
+			$key = $data['metakey'];
+		}
 		if ( $key === 'description' ) {
 			$curlang_slug = pll_current_language();
 			$description = get_user_meta( um_profile_id(), 'description_' . $curlang_slug, true );
@@ -577,11 +583,13 @@ class UM_Polylang implements UM_Multilingual {
 	public function profile_bio_update( $user_id, $args ) {
 		$curlang_slug = pll_current_language();
 		$bio_key = 'description_' . $curlang_slug;
-		if ( !empty( $args[$bio_key] ) ) {
+		if ( isset( $args[$bio_key] ) ) {
 			update_user_meta( $user_id, $bio_key, $args[$bio_key] );
 			if ( $curlang_slug === pll_default_language() ) {
 				update_user_meta( $user_id, 'description', $args[$bio_key] );
 			}
+		} elseif ( isset( $args['description'] ) ) {
+			update_user_meta( $user_id, $bio_key, $args['description'] );
 		}
 	}
 
