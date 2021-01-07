@@ -31,6 +31,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			add_action( 'admin_init', array( &$this, 'create_list' ), 10 );
 			add_action( 'admin_notices', array( &$this, 'render_notices' ), 1 );
 
+			// Render notices on the page [UM > Settings > General > Pages]
+			add_action( 'um_settings_page_before___content', array( $this, 'render_pages_notice' ) );
+
 			add_action( 'wp_ajax_um_dismiss_notice', array( &$this, 'dismiss_notice' ) );
 		}
 
@@ -173,6 +176,34 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			 * ?>
 			 */
 			do_action( 'um_admin_after_main_notices' );
+		}
+
+
+		/**
+		 * Render notices on the page [UM > Settings > General > Pages]
+		 * @since  2.1.16  [2021-01-07]
+		 */
+		public function render_pages_notice() {
+			if ( ! current_user_can( 'manage_options' ) ) {
+				return;
+			}
+
+			$admin_notices = $this->get_admin_notices();
+			uasort( $admin_notices, array( &$this, 'notice_priority_sort' ) );
+
+			$hidden = get_option( 'um_hidden_admin_notices', array() );
+			$pages_notices = [
+				'wrong_pages',
+				'wrong_user_page',
+				'wrong_account_page',
+				'wrong_account_user_page'
+			];
+
+			foreach ( $admin_notices as $key => $admin_notice ) {
+				if ( in_array( $key, $hidden ) && in_array( $key, $pages_notices ) ) {
+					$this->display_notice( $key );
+				}
+			}
 		}
 
 
@@ -344,6 +375,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 							'message'   => '<p>' . __( 'Ultimate Member Setup Error: Account page can not be a child page.', 'ultimate-member' ) . '</p>',
 						), 30 );
 					}
+				}
+
+				if ( isset( $pages['user'] ) && isset( $pages['account'] ) && $pages['user'] === $pages['account'] ) {
+					$this->add_notice( 'wrong_account_user_page', array(
+						'class'     => 'updated',
+						'message'   => '<p>' . __( 'Ultimate Member Setup Error: Account page and User page should be separate pages.', 'ultimate-member' ) . '</p>',
+					), 35 );
 				}
 
 			}

@@ -235,6 +235,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				)
 			);
 
+			$general_pages_fields_options = array_replace( [
+				'' => __( 'Select...', 'ultimate-member' )
+			], UM()->query()->wp_pages() );
+
 			$core_pages = UM()->config()->core_pages;
 
 			foreach ( $core_pages as $page_s => $page ) {
@@ -257,7 +261,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'id'            => $page_id,
 						'type'          => 'select',
 						'label'         => sprintf( __( '%s page', 'ultimate-member' ), $page_title ),
-						'options'       => UM()->query()->wp_pages(),
+						'options'       => $general_pages_fields_options,
 						'placeholder'   => __( 'Choose a page...', 'ultimate-member' ),
 						'compiler'      => true,
 						'size'          => 'small'
