@@ -717,10 +717,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									'tooltip'   => __( 'Enable or disable a strong password rules on account page / change password tab', 'ultimate-member' ),
 								),
 								array(
-									'id'        => 'account_hide_in_directory',
-									'type'      => 'checkbox',
-									'label'     => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
-									'tooltip'   => __( 'Whether to allow users changing their profile visibility from member directory in account page.', 'ultimate-member' ),
+									'id'            => 'account_hide_in_directory',
+									'type'          => 'checkbox',
+									'label'         => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
+									'tooltip'       => __( 'Whether to allow users changing their profile visibility from member directory in account page.', 'ultimate-member' ),
+									'conditional'   => array( 'account_tab_privacy', '=', '1' ),
 								),
 								array(
 									'id'          => 'account_hide_in_directory_default',

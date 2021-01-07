@@ -390,11 +390,14 @@ function um_build_template( directory, data ) {
 function UM_Member_Grid( container ) {
 	if ( container.find( '.um-member' ).length ) {
 		container.imagesLoaded( function() {
-			var $grid = container.masonry({
+
+			var masonry_args = wp.hooks.applyFilters( 'um_member_directory_grid_masonry_attrs', {
 				itemSelector: '.um-member',
 				columnWidth: '.um-member',
 				gutter: '.um-gutter-sizer'
-			});
+			}, container );
+
+			var $grid = container.masonry( masonry_args );
 
 			$grid.on( 'layoutComplete', function( event, laidOutItems ) {
 				jQuery( document ).trigger( "um_grid_initialized", [ event, laidOutItems ] );
