@@ -340,10 +340,14 @@ function um_submit_form_register( $args ) {
 		$user_login = $user_email;
 	}
 
-	$unique_userID = UM()->query()->count_users() + 1;
+	$unique_userID = uniqid();
 
 	if ( empty( $user_login ) || strlen( $user_login ) > 30 && ! is_email( $user_login ) ) {
 		$user_login = 'user' . $unique_userID;
+		while ( username_exists( $user_login ) ) {
+			$unique_userID = uniqid();
+			$user_login = 'user' . $unique_userID;
+		}
 	}
 
 	if ( isset( $username ) && is_email( $username ) ) {
@@ -357,6 +361,10 @@ function um_submit_form_register( $args ) {
 	if ( empty( $user_email ) ) {
 		$site_url = @$_SERVER['SERVER_NAME'];
 		$user_email = 'nobody' . $unique_userID . '@' . $site_url;
+		while ( email_exists( $user_email ) ) {
+			$unique_userID = uniqid();
+			$user_email = 'nobody' . $unique_userID . '@' . $site_url;
+		}
 		/**
 		 * UM hook
 		 *
