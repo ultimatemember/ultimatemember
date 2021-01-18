@@ -94,14 +94,13 @@ jQuery(document).ready(function() {
 	});
 
 	jQuery( document.body ).on( 'click', '.um-trigger-menu-on-click', function() {
-		jQuery('.um-dropdown').hide();
 		var menu = jQuery(this).find('.um-dropdown');
-		menu.show();
+		UM.menus.show( menu );
 		return false;
 	});
 
 	jQuery( document.body ).on('click', '.um-dropdown-hide', function() {
-		UM_hide_menus();
+		UM.menus.hideAll();
 		return false;
 	});
 
@@ -109,7 +108,7 @@ jQuery(document).ready(function() {
 		var child = jQuery(this).attr('data-child');
 		var parent = jQuery(this).attr('data-parent');
 		jQuery(this).parents( parent ).find( child ).trigger('click');
-		UM_hide_menus();
+		UM.menus.hideAll();
 		return false;
 	});
 
