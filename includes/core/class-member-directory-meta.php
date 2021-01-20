@@ -818,6 +818,12 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 			global $wpdb;
 
+			/*
+			 *
+			 * SQL_CALC_FOUND_ROWS is deprecated as of MySQL 8.0.17
+			 * https://core.trac.wordpress.org/ticket/47280
+			 *
+			 * */
 			$user_ids = $wpdb->get_col(
 				"SELECT SQL_CALC_FOUND_ROWS DISTINCT u.ID
 				{$this->select}
