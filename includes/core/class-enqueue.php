@@ -95,7 +95,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 				wp_dequeue_script( 'select2');
 				wp_deregister_script('select2');
 			}
-			wp_register_script( 'select2', $this->js_baseurl . 'select2/select2.full.min.js', array( 'jquery' ), ultimatemember_version, true );
+			wp_register_script( 'select2', $this->js_baseurl . 'select2/select2.full' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
 			wp_register_script( 'um_scrollbar', $this->js_baseurl . 'simplebar' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
@@ -201,7 +201,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_style( 'um_profile', $this->css_baseurl . 'um-profile.css', array(), ultimatemember_version );
 			wp_register_style( 'um_account', $this->css_baseurl . 'um-account.css', array(), ultimatemember_version );
 			wp_register_style( 'um_misc', $this->css_baseurl . 'um-misc.css', array(), ultimatemember_version );
-		
+
 		}
 
 

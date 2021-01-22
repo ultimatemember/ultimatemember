@@ -124,15 +124,34 @@ jQuery(document).ready(function() {
 	// 	});
 	// }
 
+	/**
+	 * Unselect empty option if something is selected
+	 * @since   2.1.16
+	 * @param   {object} e
+	 * @returns {undefined}
+	 */
+	function unselectEmptyOption(e) {
+		var $element = jQuery(e.currentTarget);
+		var $selected = $element.find(':selected');
+		if ( $selected.length > 1 ) {
+			$selected.each(function (i, option) {
+				if ( option.value === '' ) {
+					option.selected = false;
+					$element.trigger('change');
+				}
+			});
+		}
+	}
+
 	if( typeof(jQuery.fn.select2) === "function" ){
 		jQuery(".um-s1").select2({
 			allowClear: true
-		});
+		}).on('change', unselectEmptyOption);
 
 		jQuery(".um-s2").select2({
 			allowClear: false,
 			minimumResultsForSearch: 10
-		});
+		}).on('change', unselectEmptyOption);
 
 		jQuery(".um-s3").select2({
 			allowClear: false,
