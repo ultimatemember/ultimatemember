@@ -4689,7 +4689,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if ( in_array( $data['type'], $fields_without_metakey ) ) {
 				unset( $field_atts['id'] );
-				unset( $field_atts['data-key'] );
+
+				if ( empty( $field_atts['data-key'] ) ) {
+					unset( $field_atts['data-key'] );
+				}
 			}
 
 			if ( ! empty( $field_style ) && is_array( $field_style ) ) {
