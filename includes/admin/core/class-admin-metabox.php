@@ -1213,6 +1213,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				include_once um_path . 'includes/admin/templates/modal/forms/fonticons.php';
 			}
 
+			if ( $screen->id == 'users' ) {
+				include_once um_path . 'includes/admin/templates/modal/dynamic_registration_preview.php';
+			}
+
 			// needed on forms only
 			if ( ! isset( $this->is_loaded ) && isset( $screen->id ) && strstr( $screen->id, 'um_form' ) ) {
 				$settings['textarea_rows'] = 8;
