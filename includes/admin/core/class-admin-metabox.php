@@ -34,6 +34,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		private $custom_nonce_added = false;
 
 
+		var $init_icon = false;
+
+
 		/**
 		 * Admin_Metabox constructor.
 		 */
@@ -43,7 +46,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			$this->edit_array = [];
 
 			add_action( 'admin_head', array( &$this, 'admin_head' ), 9);
-			add_action( 'admin_footer', array( &$this, 'load_modal_content' ), 9);
+			add_action( 'admin_footer', array( &$this, 'load_modal_content' ), 9 );
 
 			add_action( 'load-post.php', array( &$this, 'add_metabox' ), 9 );
 			add_action( 'load-post-new.php', array( &$this, 'add_metabox' ), 9 );
@@ -1198,12 +1201,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 * Load modal content
 		 */
 		function load_modal_content() {
-
 			$screen = get_current_screen();
-			if ( UM()->admin()->is_um_screen() ) {
-				foreach ( glob( um_path . 'includes/admin/templates/modal/*.php' ) as $modal_content ) {
+
+			if ( isset( $screen->id ) && strstr( $screen->id, 'um_form' ) ) {
+				foreach ( glob( um_path . 'includes/admin/templates/modal/forms/*.php' ) as $modal_content ) {
 					include_once $modal_content;
 				}
+			}
+
+			if ( $this->init_icon ) {
+				include_once um_path . 'includes/admin/templates/modal/forms/fonticons.php';
 			}
 
 			// needed on forms only
