@@ -405,6 +405,10 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 				return;
 			}
 
+			$user = get_user_by( 'email', $email );
+			$user_locale = get_user_meta( $user->ID, 'user_locale', true );
+			do_action( 'wpml_switch_language', $user_locale );
+
 			$this->attachments = array();
 			$this->headers = 'From: '. stripslashes( UM()->options()->get('mail_from') ) .' <'. UM()->options()->get('mail_from_addr') .'>' . "\r\n";
 
