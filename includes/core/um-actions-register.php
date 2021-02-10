@@ -333,7 +333,7 @@ function um_submit_form_register( $args ) {
 		}
 		$user_login = sanitize_user( strtolower( remove_accents( $user_login ) ), true );
 
-		if ( $user_login ) {
+		if ( ! empty( $user_login ) ) {
 			$count = 1;
 			$temp_user_login = $user_login;
 			while ( username_exists( $temp_user_login ) ) {
