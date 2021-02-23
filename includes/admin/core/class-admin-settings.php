@@ -127,6 +127,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$metakeys[] = '_completed';
 				$metakeys[] = '_reviews_avg';
 
+				//myCred meta
+				if (  function_exists( 'mycred_get_types' ) ) {
+					$mycred_types = mycred_get_types();
+					if ( ! empty( $mycred_types ) ) {
+						foreach ( array_keys( $mycred_types ) as $point_type ) {
+							$metakeys[] = $point_type;
+						}
+					}
+				}
+
 				$sortby_custom_keys = $wpdb->get_col( "SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key='_um_sortby_custom'" );
 				if ( empty( $sortby_custom_keys ) ) {
 					$sortby_custom_keys = array();
