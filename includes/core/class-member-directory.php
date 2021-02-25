@@ -799,8 +799,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				default: {
 
 					$meta = $wpdb->get_row( $wpdb->prepare(
-						"SELECT MIN( meta_value ) as min_meta,
-						MAX( meta_value ) as max_meta,
+						"SELECT MIN( CONVERT( meta_value, DECIMAL ) ) as min_meta,
+						MAX( CONVERT( meta_value, DECIMAL ) ) as max_meta,
 						COUNT( DISTINCT meta_value ) as amount
 						FROM {$wpdb->usermeta}
 						WHERE meta_key = %s",
