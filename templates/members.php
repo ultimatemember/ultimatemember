@@ -84,7 +84,7 @@ if ( ! empty( $args['enable_sorting'] ) ) {
 		} elseif ( ! empty( $all_sorting_options[ $default_sorting ] ) ) {
 			$label = $all_sorting_options[ $default_sorting ];
 		}
-		$custom_sorting_titles[ $default_sorting ] = $label;
+		$custom_sorting_titles[ $default_sorting ] = __( ucfirst( $label ), 'ultimate-member' );
 	}
 
 	if ( ! empty( $sorting_options_prepared ) ) {
