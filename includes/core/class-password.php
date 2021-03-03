@@ -623,7 +623,10 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					UM()->user()->password_changed();
 
 					// clear temporary data
-					update_user_meta( $user->ID, 'password_rst_attempts', 0 );
+					$attempts = (int) get_user_meta( $user->ID, 'password_rst_attempts', true );
+					if ( $attempts ) {
+						update_user_meta( $user->ID, 'password_rst_attempts', 0 );
+					}
 					$this->setcookie( $rp_cookie, false );
 
 					// logout

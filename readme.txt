@@ -160,8 +160,10 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * Enhancements:
   - Added: General and role setting to avoid indexing users' profiles
   - Added: `um_prepare_user_results_array_meta` hook and the 2nd argument for `um_prepare_user_results_array` hook for handle $user_ids based on getting members query
+  - Added: Change password email when password has been reset
 
 * Bugfixes:
+  - Fixed: Creating and removing usermeta data with `password_rst_attempts` key, just update if exists for now
   - Fixed: Using 'edit_users' capability instead of 'manage_options' for approve|reject membership
   - Fixed: Using 'manage_options' capability instead of 'delete_users' for switching between members
   - Fixed: Using myCRED points metakeys in UM usermeta table
