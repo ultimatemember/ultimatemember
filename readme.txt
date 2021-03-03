@@ -162,9 +162,11 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Added: `um_prepare_user_results_array_meta` hook and the 2nd argument for `um_prepare_user_results_array` hook for handle $user_ids based on getting members query
 
 * Bugfixes:
+  - Fixed: Using 'edit_users' capability instead of 'manage_options' for approve|reject membership
+  - Fixed: Using 'manage_options' capability instead of 'delete_users' for switching between members
   - Fixed: Using myCRED points metakeys in UM usermeta table
   - Fixed: Empty icons are shown in the popup "Choose from... available icons"
-  - Fixed: Member Directory slider filter with NaN range
+  - Fixed: Member Directory slider filter with NaN or decimal range
   - Fixed: PHP notices and warnings
   - Fixed: Security vulnerability with User Account page and password field
   - Fixed: User creating without username but based on first+last name with not-ASCII symbols

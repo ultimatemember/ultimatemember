@@ -80,7 +80,7 @@ function um_action_request_process() {
 			break;
 
 		case 'um_switch_user':
-			if ( ! current_user_can( 'delete_users' ) ) {
+			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
 			UM()->user()->auto_login( $uid );
