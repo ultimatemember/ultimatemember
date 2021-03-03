@@ -24,22 +24,22 @@ if ( ! class_exists( 'um\core\FontIcons' ) ) {
 				$files['ii'] = um_path . 'assets/css/um-fonticons-ii.css';
 				$files['fa'] = um_path . 'assets/css/um-fonticons-fa.css';
 
+				$array = array();
 				foreach ( $files as $c => $file ) {
 
 					$css = file_get_contents( $file );
 
 					if ( $c == 'fa' ) {
-						preg_match_all('/(um-faicon-.*?)\s?\{/', $css, $matches);
+						preg_match_all('/\.(um-faicon-.*?):before/', $css, $matches);
 					} else {
-						preg_match_all('/(um-icon-.*?)\s?\{/', $css, $matches);
+						preg_match_all('/\.(um-icon-.*?):before/', $css, $matches);
 					}
 
-					unset( $matches[1][0] );
 					foreach ( $matches[1] as $match ) {
 						$icon = str_replace( ':before', '', $match );
 						$array[] = $icon;
 					}
-
+					$array = array_unique( $array );
 				}
 
 				update_option( 'um_cache_fonticons', $array );
