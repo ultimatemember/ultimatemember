@@ -161,6 +161,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Added: General and role setting to avoid indexing users' profiles
 
 * Bugfixes:
+  - Fixed: Empty icons are shown in the popup "Choose from... available icons"
   - Fixed: Member Directory slider filter with NaN range
   - Fixed: PHP notices and warnings
   - Fixed: Security vulnerability with User Account page and password field
