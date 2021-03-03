@@ -37,6 +37,9 @@ function um_action_request_process() {
 		$uid = absint( $_REQUEST['uid'] );
 	}
 
+	$role = get_role( UM()->roles()->get_priority_user_role( get_current_user_id() ) );
+	$can_edit_users = current_user_can( 'edit_users' ) && $role->has_cap( 'edit_users' );
+
 	switch ( $_REQUEST['um_action'] ) {
 		default:
 			/**
@@ -85,7 +88,7 @@ function um_action_request_process() {
 			break;
 
 		case 'um_reject_membership':
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! $can_edit_users ) {
 				wp_die( __( 'You do not have permission to make this action.', 'ultimate-member' ) );
 			}
 
@@ -96,7 +99,7 @@ function um_action_request_process() {
 
 		case 'um_approve_membership':
 		case 'um_reenable':
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! $can_edit_users ) {
 				wp_die( __( 'You do not have permission to make this action.', 'ultimate-member' ) );
 			}
 
@@ -109,7 +112,7 @@ function um_action_request_process() {
 			break;
 
 		case 'um_put_as_pending':
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! $can_edit_users ) {
 				wp_die( __( 'You do not have permission to make this action.', 'ultimate-member' ) );
 			}
 
@@ -119,7 +122,7 @@ function um_action_request_process() {
 			break;
 
 		case 'um_resend_activation':
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! $can_edit_users ) {
 				wp_die( __( 'You do not have permission to make this action.', 'ultimate-member' ) );
 			}
 
@@ -132,7 +135,7 @@ function um_action_request_process() {
 			break;
 
 		case 'um_deactivate':
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! $can_edit_users ) {
 				wp_die( __( 'You do not have permission to make this action.', 'ultimate-member' ) );
 			}
 
