@@ -1555,8 +1555,14 @@ function um_can_view_field( $data ) {
 				if ( ! is_user_logged_in() ) {
 					$can_view = false;
 				} else {
-					if ( ! um_is_user_himself() && ( empty( $current_user_roles ) || ( ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) ) ) {
-						$can_view = false;
+					if ( ! um_is_core_page( 'profile' ) ) {
+						if ( empty( $current_user_roles ) || ( ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) ) {
+							$can_view = false;
+						}
+					} else {
+						if ( ! um_is_user_himself() && ( empty( $current_user_roles ) || ( ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) ) ) {
+							$can_view = false;
+						}
 					}
 				}
 				break;
@@ -1885,7 +1891,7 @@ function um_youtube_id_from_url( $url ) {
 		([\w-]{10,12})  # Allow 10-12 for 11 char youtube id.
 		$%x';
 	$result = preg_match( $pattern, $url, $matches );
-	if (false !== $result) {
+	if ( false !== $result && isset( $matches[1] ) ) {
 		return $matches[1];
 	}
 
