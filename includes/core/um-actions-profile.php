@@ -680,20 +680,22 @@ function um_profile_dynamic_meta_desc() {
 
 		$user_id = um_get_requested_user();
 
-		$privacy = get_user_meta( $user_id, 'profile_privacy', true );
-		if ( $privacy == __( 'Only me', 'ultimate-member' ) || $privacy == 'Only me' ) {
+		if( $user_id !== um_user('ID') ){
+			um_fetch_user( $user_id );
+		}
+
+		/**
+		 * Settings by the priority:
+		 *  "Search engine visibility" in [wp-admin > Settings > Reading]
+		 *  "Profile Privacy" in [Account > Privacy]
+		 *  "Avoid indexing my profile by search engines in [Account > Privacy]
+		 *  "Avoid indexing profile by search engines" in [wp-admin > Ultimate Member > User Roles > Edit Role]
+		 *  "Avoid indexing profile by search engines" in [wp-admin > Ultimate Member > Settings > General > Users]
+		 */
+		if ( UM()->user()->is_profile_noindex() ) {
+			echo '<meta name="robots" content="noindex, nofollow" />';
 			return;
 		}
-
-		$noindex = get_user_meta( $user_id, 'profile_noindex', true );
-		if ( ! empty( $noindex ) ) { ?>
-
-			<meta name="robots" content="noindex, nofollow" />
-
-			<?php return;
-		}
-
-		um_fetch_user( $user_id );
 
 		$locale = get_user_locale( $user_id );
 		$site_name = get_bloginfo( 'name' );
