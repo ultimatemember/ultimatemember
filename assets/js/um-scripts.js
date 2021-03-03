@@ -95,12 +95,12 @@ jQuery(document).ready(function() {
 
 	jQuery( document.body ).on( 'click', '.um-trigger-menu-on-click', function() {
 		var menu = jQuery(this).find('.um-dropdown');
-		UM.menus.show( menu );
+		UM.dropdown.show( menu );
 		return false;
 	});
 
 	jQuery( document.body ).on('click', '.um-dropdown-hide', function() {
-		UM.menus.hideAll();
+		UM.dropdown.hideAll();
 		return false;
 	});
 
@@ -108,7 +108,7 @@ jQuery(document).ready(function() {
 		var child = jQuery(this).attr('data-child');
 		var parent = jQuery(this).attr('data-parent');
 		jQuery(this).parents( parent ).find( child ).trigger('click');
-		UM.menus.hideAll();
+		UM.dropdown.hideAll();
 		return false;
 	});
 

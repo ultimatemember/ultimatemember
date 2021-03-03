@@ -41,8 +41,7 @@ jQuery(document).ready(function() {
 		user_id = jQuery(this).attr('data-user_id');
 		metakey = 'profile_photo';
 
-		//UM_hide_menus();
-		UM.menus.hideAll();
+		UM.dropdown.hideAll();
 
 		jQuery.ajax({
 			url: wp.ajax.settings.url,
@@ -85,8 +84,7 @@ jQuery(document).ready(function() {
 			}
 		});
 
-		//UM_hide_menus();
-		UM.menus.hideAll();
+		UM.dropdown.hideAll();
 		return false;
 	});
 

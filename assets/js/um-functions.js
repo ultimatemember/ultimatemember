@@ -10,7 +10,7 @@ if ( typeof (window.UM) !== 'object' ) {
 	window.UM = {};
 }
 
-window.UM.menus = {
+UM.dropdown = {
 	/**
 	 * Hide the menu
 	 * @param   {object}    menu
@@ -49,7 +49,7 @@ window.UM.menus = {
 				position = $menu.attr('data-position'),
 				trigger = $menu.attr('data-trigger');
 
-		var $element = element && jQuery(element).length ? jQuery(element) : $menu.parent();
+		var $element = element && jQuery(element).length ? jQuery(element) : ($menu.siblings('a').length ? $menu.siblings('a').first() : $menu.parent());
 		$element.addClass('um-trigger-menu-on-' + trigger);
 
 		var gap_right = 0,
@@ -138,7 +138,7 @@ window.UM.menus = {
 				}
 
 				$menu.css({
-					'top': top_p + 4,
+					'top': top_p + 6,
 					'width': menu_width,
 					'left': left_p,
 					'right': 'auto',
@@ -161,8 +161,8 @@ window.UM.menus = {
 	show: function (menu) {
 
 		var $menu = jQuery(menu);
-		UM.menus.setPosition($menu);
-		jQuery('.um-dropdown').hide();
+		UM.dropdown.hideAll();
+		UM.dropdown.setPosition($menu);
 		$menu.show();
 
 	}
@@ -171,13 +171,11 @@ window.UM.menus = {
 
 /**
  * Hide all menus
- * @deprecated since 2.1.16, use UM.menus.hideAll() instead
+ * @deprecated since 2.1.16, use UM.dropdown.hideAll() instead
  * @returns    {undefined}
  */
 function UM_hide_menus() {
-	var menu = jQuery( '.um-dropdown' );
-	menu.parents('div' ).find('a').removeClass( 'active' );
-	menu.hide();
+	UM.dropdown.hideAll();
 }
 
 
@@ -186,7 +184,7 @@ function UM_hide_menus() {
  */
 function UM_domenus() {
 	jQuery('.um-dropdown').each( function( i, menu ) {
-		UM.menus.setPosition( menu );
+		UM.dropdown.setPosition( menu );
 	});
 }
 
@@ -601,8 +599,7 @@ function um_new_modal( id, size, isPhoto, source ){
 
 	jQuery('.tipsy').hide();
 
-	//UM_hide_menus();
-	UM.menus.hideAll();
+	UM.dropdown.hideAll();
 
 	jQuery('body,html,textarea').css("overflow", "hidden");
 
