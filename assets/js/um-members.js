@@ -53,7 +53,7 @@ function um_set_url_from_data( directory, key, value ) {
 
 	var new_data = {};
 
-	if ( jQuery.isArray( value ) ) {
+	if ( Array.isArray( value ) ) {
 		jQuery.each( value, function( i ) {
 			value[ i ] = encodeURIComponent( value[ i ] );
 		});
@@ -924,7 +924,7 @@ jQuery(document.body).ready( function() {
 
 
 	//filters controls
-	jQuery('.um-member-directory-filters-a').click( function() {
+	jQuery('.um-member-directory-filters-a').on( 'click', function() {
 		var obj = jQuery(this);
 		var search_bar = obj.parents('.um-directory').find('.um-search');
 

@@ -1721,7 +1721,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 					// Setting "Avoid indexing profile by search engines" in [wp-admin > Ultimate Member > User Roles > Edit Role]
 					$profile_noindex = true;
 
-				} elseif ( $permissions['profile_noindex'] === '' && UM()->options()->get( 'profile_noindex' ) === '1' ) {
+				} elseif ( ( ! isset( $permissions['profile_noindex'] ) || $permissions['profile_noindex'] === '' ) && UM()->options()->get( 'profile_noindex' ) === '1' ) {
 					// Setting "Avoid indexing profile by search engines" in [wp-admin > Ultimate Member > Settings > General > Users]
 					$profile_noindex = true;
 

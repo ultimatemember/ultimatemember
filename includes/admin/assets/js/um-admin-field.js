@@ -45,7 +45,7 @@ jQuery(document).ready(function() {
                 jQuery( this ).find('[id^="_conditional_field"]').val() === '' ||
                 jQuery( this ).find('[id^="_conditional_operator"]').val() ==='' )
             {
-                jQuery(conditions[i]).find('.um-admin-remove-condition').click();
+                jQuery(conditions[i]).find('.um-admin-remove-condition').trigger('click');
             }
         } );
         conditions = jQuery('.um-admin-cur-condition');
@@ -85,7 +85,7 @@ jQuery(document).ready(function() {
 					jQuery.each(data.error, function(i, v){
 						c++;
 						if ( c == 1 ) {
-						form.find('#'+i).addClass('um-admin-error').focus();
+						form.find('#'+i).addClass('um-admin-error').trigger('focus');
 						form.find('.um-admin-error-block').show().html(v);
 						}
 					});

@@ -469,11 +469,11 @@ jQuery(document).ready(function() {
 		}
 	});
 
-	jQuery('.um-form input[class="um-button"][type="submit"]').removeAttr('disabled');
+	jQuery('.um-form input[class="um-button"][type="submit"]').prop('disabled', false);
 
 	jQuery(document).one('click', '.um:not(.um-account) .um-form input[class="um-button"][type="submit"]:not(.um-has-recaptcha)', function() {
 		jQuery(this).attr('disabled','disabled');
-		jQuery(this).parents('form').submit();
+		jQuery(this).parents('form').trigger('submit');
 	});
 
 
@@ -577,7 +577,7 @@ jQuery(document).ready(function() {
 		me.find('option[value!=""]').remove();
 
 		if ( ! me.hasClass('um-child-option-disabled') ) {
-			me.removeAttr('disabled');
+			me.prop('disabled', false);
 		}
 
 		var arr_items = [],

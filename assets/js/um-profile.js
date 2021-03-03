@@ -15,7 +15,7 @@ jQuery(document).ready(function() {
 
 	jQuery( document.body ).on( 'click', '.um-profile-save', function(e){
 		e.preventDefault();
-		jQuery(this).parents('.um').find('form').submit();
+		jQuery(this).parents('.um').find('form').trigger('submit');
 		return false;
 	});
 
@@ -104,7 +104,7 @@ jQuery(document).ready(function() {
 	}*/
 
 	//um_update_bio_countdown();
-	//jQuery( 'textarea[id="um-meta-bio"]' ).change( um_update_bio_countdown ).keyup( um_update_bio_countdown ).trigger('change');
+	//jQuery( 'textarea[id="um-meta-bio"]' ).on('change', um_update_bio_countdown ).keyup( um_update_bio_countdown ).trigger('change');
 
 	// Bio characters limit
 	jQuery( document.body ).on( 'change, keyup', 'textarea[id="um-meta-bio"]', function() {
@@ -122,7 +122,7 @@ jQuery(document).ready(function() {
 	jQuery( 'textarea[id="um-meta-bio"]' ).trigger('change');
 
 
-	jQuery( '.um-profile-edit a.um_delete-item' ).click( function(e) {
+	jQuery( '.um-profile-edit a.um_delete-item' ).on( 'click', function(e) {
 		e.preventDefault();
 
 		if ( ! confirm( wp.i18n.__( 'Are you sure that you want to delete this user?', 'ultimate-member' ) ) ) {
@@ -135,7 +135,7 @@ jQuery(document).ready(function() {
 	 * @see https://www.html5rocks.com/en/mobile/touchandmouse/
 	 */
 	jQuery( '.um-profile-nav a' ).on( 'touchend', function(e) {
-		e.currentTarget.click();
+		jQuery( e.currentTarget).trigger( "click" );
 	});
 
 });
