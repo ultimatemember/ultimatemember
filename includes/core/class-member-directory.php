@@ -712,7 +712,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 						<input type="hidden" id="<?php echo $filter; ?>_min" name="<?php echo $filter; ?>[]" class="um_range_min" value="<?php echo ! empty( $default_value ) ? esc_attr( min( $default_value ) ) : '' ?>" />
 						<input type="hidden" id="<?php echo $filter; ?>_max" name="<?php echo $filter; ?>[]" class="um_range_max" value="<?php echo ! empty( $default_value ) ? esc_attr( max( $default_value ) ) : '' ?>" />
-						<div class="um-slider" data-field_name="<?php echo $filter; ?>" data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"></div>
+						<div class="um-slider" data-field_name="<?php echo $filter; ?>" data-min="<?php echo (int) esc_attr($range[0]); ?>" data-max="<?php echo (int) esc_attr($range[1]); ?>"></div>
 						<div class="um-slider-range" data-placeholder-s="<?php echo esc_attr( $single_placeholder ); ?>" data-placeholder-p="<?php echo esc_attr( $plural_placeholder ); ?>" data-label="<?php echo ( ! empty( $attrs['label'] ) ) ? esc_attr__( stripslashes( $attrs['label'] ), 'ultimate-member' ) : ''; ?>"></div>
 					<?php }
 
@@ -809,7 +809,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 					$range = false;
 					if ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) ) {
-						$range = array( $meta['min_meta'], $meta['max_meta'] );
+						$range = array( (int) $meta['min_meta'], (int) $meta['max_meta'] );
 					}
 
 					$range = apply_filters( 'um_member_directory_filter_slider_common', $range, $directory_data, $filter );
