@@ -162,6 +162,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Added: `um_prepare_user_results_array_meta` hook and the 2nd argument for `um_prepare_user_results_array` hook for handle $user_ids based on getting members query
 
 * Bugfixes:
+  - Fixed: Using myCRED points metakeys in UM usermeta table
   - Fixed: Empty icons are shown in the popup "Choose from... available icons"
   - Fixed: Member Directory slider filter with NaN range
   - Fixed: PHP notices and warnings
