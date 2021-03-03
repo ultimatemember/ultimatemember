@@ -1689,46 +1689,46 @@ if ( ! class_exists( 'um\core\User' ) ) {
 		/**
 		 * This method checks if the profile indexing is disabled
 		 *
-		 * @since 2.1.14 [2020-12-22]
-		 * @usage <?php UM()->user()->is_profile_noindex(); ?>
+		 * @param int $user_id
+		 *
+		 * @since 2.1.16
+		 * @usage <?php UM()->user()->is_profile_noindex( $user_id ); ?>
 		 *
 		 * @return boolean  Is the profile indexing disabled?
 		 */
-		function is_profile_noindex(){
-			$user_id = $this->id;
-
+		function is_profile_noindex( $user_id ) {
 			$profile_noindex = false;
-			
-			if ( !get_option( 'blog_public' ) ){
+
+			if ( ! get_option( 'blog_public' ) ) {
 				// Option "Search engine visibility" in [wp-admin > Settings > Reading]
 				$profile_noindex = true;
 
-			} elseif ( $this->is_private_profile( $user_id ) ){
+			} elseif ( $this->is_private_profile( $user_id ) ) {
 				// Setting "Profile Privacy" in [Account > Privacy]
 				$profile_noindex = true;
 
-			} elseif ( get_user_meta( $user_id, 'profile_noindex', true ) === '1' ){
+			} elseif ( get_user_meta( $user_id, 'profile_noindex', true ) === '1' ) {
 				// Setting "Avoid indexing my profile by search engines in [Account > Privacy]
 				$profile_noindex = true;
-				
+
 			}
-			
-			if( ! $profile_noindex ){
+
+			if ( ! $profile_noindex ) {
 				$role = UM()->roles()->get_priority_user_role( $user_id );
 				$permissions = UM()->roles()->role_data( $role );
-				
+
 				if ( isset( $permissions['profile_noindex'] ) && $permissions['profile_noindex'] === '1' ) {
 					// Setting "Avoid indexing profile by search engines" in [wp-admin > Ultimate Member > User Roles > Edit Role]
 					$profile_noindex = true;
 
-				} elseif ( empty( $permissions['profile_noindex'] ) && UM()->options()->get( 'profile_noindex' ) === '1' ){
+				} elseif ( $permissions['profile_noindex'] === '' && UM()->options()->get( 'profile_noindex' ) === '1' ) {
 					// Setting "Avoid indexing profile by search engines" in [wp-admin > Ultimate Member > Settings > General > Users]
 					$profile_noindex = true;
 
 				}
 			}
 
-			return apply_filters( 'um_user_is_profile_noindex', $profile_noindex, $this );
+			return apply_filters( 'um_user_is_profile_noindex', $profile_noindex, $user_id, $this );
 		}
 
 

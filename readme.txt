@@ -157,15 +157,18 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = 2.1.16: March 9, 2021 =
 
+* Enhancements:
+  - Added: General and role setting to avoid indexing users' profiles
+
 * Bugfixes:
-  - Fixed PHP notices and warnings
-  - Fixed security vulnerability with User Account page and password field
-  - Fixed user creating without username but based on first+last name with not-ASCII symbols
+  - Fixed: PHP notices and warnings
+  - Fixed: Security vulnerability with User Account page and password field
+  - Fixed: User creating without username but based on first+last name with not-ASCII symbols
 
 = 2.1.15: December 24, 2020 =
 
 * Bugfixes:
-  - Fixed conditional logic for the form fields without metakeys
+  - Fixed: Conditional logic for the form fields without metakeys
 
 = 2.1.14: December 22, 2020 =
 

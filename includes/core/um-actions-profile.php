@@ -680,7 +680,7 @@ function um_profile_dynamic_meta_desc() {
 
 		$user_id = um_get_requested_user();
 
-		if( $user_id !== um_user('ID') ){
+		if ( $user_id !== um_user('ID') ) {
 			um_fetch_user( $user_id );
 		}
 
@@ -692,7 +692,7 @@ function um_profile_dynamic_meta_desc() {
 		 *  "Avoid indexing profile by search engines" in [wp-admin > Ultimate Member > User Roles > Edit Role]
 		 *  "Avoid indexing profile by search engines" in [wp-admin > Ultimate Member > Settings > General > Users]
 		 */
-		if ( UM()->user()->is_profile_noindex() ) {
+		if ( UM()->user()->is_profile_noindex( $user_id ) ) {
 			echo '<meta name="robots" content="noindex, nofollow" />';
 			return;
 		}

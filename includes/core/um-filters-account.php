@@ -48,7 +48,7 @@ add_filter( 'um_account_pre_updating_profile_array', 'um_account_sanitize_data',
 
 /**
  * Fix for the account field "Avoid indexing my profile by search engines"
- * @since  2.1.14 [2020-12-15]
+ * @since  2.1.16
  * @param  bool   $value
  * @return int
  */
