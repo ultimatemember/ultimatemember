@@ -836,9 +836,9 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			);
 
 			$query = array(
-				'select' => $this->select,
+				'select'    => $this->select,
 				'sql_where' => $sql_where,
-				'having' => $this->having,
+				'having'    => $this->having,
 				'sql_limit' => $this->sql_limit,
 			);
 

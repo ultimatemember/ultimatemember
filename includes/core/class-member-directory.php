@@ -2528,7 +2528,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 * }
 			 * ?>
 			 */
-			$user_ids = apply_filters( 'um_prepare_user_results_array', $user_ids, $this->query_args  );
+			$user_ids = apply_filters( 'um_prepare_user_results_array', $user_ids, $this->query_args );
 
 
 			$sizes = UM()->options()->get( 'cover_thumb_sizes' );

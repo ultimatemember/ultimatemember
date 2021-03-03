@@ -159,6 +159,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * Enhancements:
   - Added: General and role setting to avoid indexing users' profiles
+  - Added: `um_prepare_user_results_array_meta` hook and the 2nd argument for `um_prepare_user_results_array` hook for handle $user_ids based on getting members query
 
 * Bugfixes:
   - Fixed: Empty icons are shown in the popup "Choose from... available icons"
