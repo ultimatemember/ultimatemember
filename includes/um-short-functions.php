@@ -2801,3 +2801,22 @@ function um_is_amp( $check_theme_support = true ) {
 
 	return apply_filters( 'um_is_amp', $is_amp );
 }
+
+
+/**
+ * Get member directory id by page id
+ */
+function um_get_member_directory_id( $page_id ){
+	$members_page = get_post( $page_id );
+	if ( ! empty( $members_page ) && ! is_wp_error( $members_page ) ) {
+		if ( ! empty( $members_page->post_content ) ) {
+			preg_match_all( '/\[ultimatemember[^\]]*?form_id\=[\'"]*?(\d+)[\'"]*?/i', $members_page->post_content, $matches );
+			if ( ! empty( $matches[1] ) && is_array( $matches[1] ) ) {
+				$member_directory_ids = array_map( 'absint', $matches[1] );
+				return $member_directory_ids;
+			}
+		}
+	}
+
+	return array();
+}

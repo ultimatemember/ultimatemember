@@ -2518,17 +2518,17 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 * @change_log
 			 * ["Since: 2.0"]
 			 * @usage
-			 * <?php add_filter( 'um_prepare_user_results_array', 'function_name', 10, 1 ); ?>
+			 * <?php add_filter( 'um_prepare_user_results_array', 'function_name', 10, 2 ); ?>
 			 * @example
 			 * <?php
-			 * add_filter( 'um_prepare_user_results_array', 'my_prepare_user_results', 10, 1 );
+			 * add_filter( 'um_prepare_user_results_array', 'my_prepare_user_results', 10, 2 );
 			 * function my_prepare_user_results( $user_ids ) {
 			 *     // your code here
 			 *     return $user_ids;
 			 * }
 			 * ?>
 			 */
-			$user_ids = apply_filters( 'um_prepare_user_results_array', $user_ids );
+			$user_ids = apply_filters( 'um_prepare_user_results_array', $user_ids, $this->query_args );
 
 
 			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
