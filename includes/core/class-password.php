@@ -618,8 +618,18 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 				if ( ( ! $errors->get_error_code() ) ) {
 					reset_password( $user, $args['user_password'] );
-					delete_user_meta( $args['user_id'], 'password_rst_attempts' );
+
+					// send the Password Changed Email
+					UM()->user()->password_changed();
+
+					// clear temporary data
+					$attempts = (int) get_user_meta( $user->ID, 'password_rst_attempts', true );
+					if ( $attempts ) {
+						update_user_meta( $user->ID, 'password_rst_attempts', 0 );
+					}
 					$this->setcookie( $rp_cookie, false );
+
+					// logout
 					if ( is_user_logged_in() ) {
 						wp_logout();
 					}

@@ -314,24 +314,32 @@ function um_submit_form_register( $args ) {
 
 	if ( ! empty( $first_name ) && ! empty( $last_name ) && empty( $user_login ) ) {
 
-		if ( UM()->options()->get( 'permalink_base' ) == 'name' ) {
-			$user_login = rawurlencode( strtolower( str_replace( " ", ".", $first_name . " " . $last_name ) ) );
-		} elseif ( UM()->options()->get( 'permalink_base' ) == 'name_dash' ) {
-			$user_login = rawurlencode( strtolower( str_replace( " ", "-", $first_name . " " . $last_name ) ) );
-		} elseif ( UM()->options()->get( 'permalink_base' ) == 'name_plus' ) {
-			$user_login = strtolower( str_replace( " ", "+", $first_name . " " . $last_name ) );
-		} else {
-			$user_login = strtolower( str_replace( " ", "", $first_name . " " . $last_name ) );
-		}
+		switch ( UM()->options()->get( 'permalink_base' ) ) {
+			case 'name':
+				$user_login = str_replace( " ", ".", $first_name . " " . $last_name );
+				break;
 
-		// if full name exists
-		$count = 1;
-		$temp_user_login = $user_login;
-		while ( username_exists( $temp_user_login ) ) {
-			$temp_user_login = $user_login . $count;
-			$count++;
+			case 'name_dash':
+				$user_login = str_replace( " ", "-", $first_name . " " . $last_name );
+				break;
+
+			case 'name_plus':
+				$user_login = str_replace( " ", "+", $first_name . " " . $last_name );
+				break;
+
+			default:
+				$user_login = str_replace( " ", "", $first_name . " " . $last_name );
+				break;
 		}
-		if ( $temp_user_login !== $user_login ) {
+		$user_login = sanitize_user( strtolower( remove_accents( $user_login ) ), true );
+
+		if ( ! empty( $user_login ) ) {
+			$count = 1;
+			$temp_user_login = $user_login;
+			while ( username_exists( $temp_user_login ) ) {
+				$temp_user_login = $user_login . $count;
+				$count++;
+			}
 			$user_login = $temp_user_login;
 		}
 	}

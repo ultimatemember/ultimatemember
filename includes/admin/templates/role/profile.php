@@ -40,6 +40,20 @@
 				'label'     => __( 'Can view/access private profiles?', 'ultimate-member' ),
 				'tooltip'   => __( 'Can this role view private profiles?', 'ultimate-member' ),
 				'value'     => ! empty( $role['_um_can_access_private_profile'] ) ? $role['_um_can_access_private_profile'] : 0,
+			),
+			array(
+				'id'        => '_um_profile_noindex',
+				'type'      => 'select',
+				'size'      => 'medium',
+				'name'      => '_um_profile_noindex',
+				'label'     => __( 'Avoid indexing profile by search engines', 'ultimate-member' ),
+				'tooltip'   => __( 'Hides the profile page for robots. The default value depends on the General > Users setting.', 'ultimate-member' ),
+				'options'   => [
+					''  => __( 'Default', 'ultimate-member' ),
+					'0' => __( 'No', 'ultimate-member' ),
+					'1' => __( 'Yes', 'ultimate-member' ),
+				],
+				'value'     => ! empty( $role['_um_profile_noindex'] ) ? $role['_um_profile_noindex'] : '',
 			)
 		)
 	) )->render_form(); ?>

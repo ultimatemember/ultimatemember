@@ -712,7 +712,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 						<input type="hidden" id="<?php echo $filter; ?>_min" name="<?php echo $filter; ?>[]" class="um_range_min" value="<?php echo ! empty( $default_value ) ? esc_attr( min( $default_value ) ) : '' ?>" />
 						<input type="hidden" id="<?php echo $filter; ?>_max" name="<?php echo $filter; ?>[]" class="um_range_max" value="<?php echo ! empty( $default_value ) ? esc_attr( max( $default_value ) ) : '' ?>" />
-						<div class="um-slider" data-field_name="<?php echo $filter; ?>" data-min="<?php echo $range[0] ?>" data-max="<?php echo $range[1] ?>"></div>
+						<div class="um-slider" data-field_name="<?php echo $filter; ?>" data-min="<?php echo esc_attr( $range[0] ); ?>" data-max="<?php echo esc_attr( $range[1] ); ?>"></div>
 						<div class="um-slider-range" data-placeholder-s="<?php echo esc_attr( $single_placeholder ); ?>" data-placeholder-p="<?php echo esc_attr( $plural_placeholder ); ?>" data-label="<?php echo ( ! empty( $attrs['label'] ) ) ? esc_attr__( stripslashes( $attrs['label'] ), 'ultimate-member' ) : ''; ?>"></div>
 					<?php }
 
@@ -799,17 +799,18 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				default: {
 
 					$meta = $wpdb->get_row( $wpdb->prepare(
-						"SELECT MIN( meta_value ) as min_meta,
-						MAX( meta_value ) as max_meta,
+						"SELECT MIN( CONVERT( meta_value, DECIMAL ) ) as min_meta,
+						MAX( CONVERT( meta_value, DECIMAL ) ) as max_meta,
 						COUNT( DISTINCT meta_value ) as amount
 						FROM {$wpdb->usermeta}
 						WHERE meta_key = %s",
 						$filter
 					), ARRAY_A );
 
-					$range = false;
-					if ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) ) {
-						$range = array( $meta['min_meta'], $meta['max_meta'] );
+					if ( empty( $meta ) || ! isset( $meta['amount'] ) || $meta['amount'] == 1 ) {
+						$range = false;
+					} elseif ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) ) {
+						$range = array( (float) $meta['min_meta'], (float) $meta['max_meta'] );
 					}
 
 					$range = apply_filters( 'um_member_directory_filter_slider_common', $range, $directory_data, $filter );
@@ -845,7 +846,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							  meta_value != ''",
 					ARRAY_A );
 
-					if ( empty( $meta ) || ! isset( $meta['amount'] ) || $meta['amount'] === 1 ) {
+					if ( empty( $meta ) || ! isset( $meta['amount'] ) || $meta['amount'] == 1 ) {
 						$range = false;
 					} elseif ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) ) {
 						$range = array( $this->borndate( strtotime( $meta['max_meta'] ) ), $this->borndate( strtotime( $meta['min_meta'] ) ) );
@@ -2518,17 +2519,17 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			 * @change_log
 			 * ["Since: 2.0"]
 			 * @usage
-			 * <?php add_filter( 'um_prepare_user_results_array', 'function_name', 10, 1 ); ?>
+			 * <?php add_filter( 'um_prepare_user_results_array', 'function_name', 10, 2 ); ?>
 			 * @example
 			 * <?php
-			 * add_filter( 'um_prepare_user_results_array', 'my_prepare_user_results', 10, 1 );
-			 * function my_prepare_user_results( $user_ids ) {
+			 * add_filter( 'um_prepare_user_results_array', 'my_prepare_user_results', 10, 2 );
+			 * function my_prepare_user_results( $user_ids, $query ) {
 			 *     // your code here
 			 *     return $user_ids;
 			 * }
 			 * ?>
 			 */
-			$user_ids = apply_filters( 'um_prepare_user_results_array', $user_ids );
+			$user_ids = apply_filters( 'um_prepare_user_results_array', $user_ids, $this->query_args );
 
 
 			$sizes = UM()->options()->get( 'cover_thumb_sizes' );
