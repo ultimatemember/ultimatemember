@@ -79,7 +79,7 @@ function um_init_datetimepicker() {
 
 
 function init_tipsy() {
-	if ( typeof( jQuery.fn.tipsy ) === "function" ) {
+	if ( typeof( jQuery.fn.tipsy ) === 'function' ) {
 		jQuery('.um-tip-n').tipsy({gravity: 'n', opacity: 1, live: 'a.live', offset: 3 });
 		jQuery('.um-tip-w').tipsy({gravity: 'w', opacity: 1, live: 'a.live', offset: 3 });
 		jQuery('.um-tip-e').tipsy({gravity: 'e', opacity: 1, live: 'a.live', offset: 3 });
@@ -105,7 +105,7 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
-	jQuery( document.body ).on('click', 'a.um-manual-trigger', function(){
+	jQuery( document.body ).on('click', 'a.um-manual-trigger', function() {
 		var child = jQuery(this).attr('data-child');
 		var parent = jQuery(this).attr('data-parent');
 		jQuery(this).parents( parent ).find( child ).trigger('click');
@@ -115,24 +115,35 @@ jQuery(document).ready(function() {
 
 	jQuery('.um-s1,.um-s2').css({'display':'block'});
 
-	// if( jQuery(".um-s1").length > 0 ){
-	// 	jQuery(".um-s1").each(function () {
-	// 		var select = jQuery(this);
-	// 		if( select.val() === '' && select.attr('data-default') ) {
-	// 			select.val(select.attr('data-default'));
-	// 		}
-	// 	});
-	// }
+	/**
+	 * Unselect empty option if something is selected
+	 *
+	 * @since   2.1.16
+	 * @param   {object} e
+	 * @returns {undefined}
+	 */
+	function unselectEmptyOption( e ) {
+		var $element = jQuery( e.currentTarget );
+		var $selected = $element.find(':selected');
+		if ( $selected.length > 1 ) {
+			$selected.each( function ( i, option ) {
+				if ( option.value === '' ) {
+					option.selected = false;
+					$element.trigger( 'change' );
+				}
+			});
+		}
+	}
 
-	if( typeof(jQuery.fn.select2) === "function" ){
+	if ( typeof( jQuery.fn.select2 ) === 'function' ) {
 		jQuery(".um-s1").select2({
 			allowClear: true
-		});
+		}).on( 'change', unselectEmptyOption );
 
 		jQuery(".um-s2").select2({
 			allowClear: false,
 			minimumResultsForSearch: 10
-		});
+		}).on( 'change', unselectEmptyOption );
 
 		jQuery(".um-s3").select2({
 			allowClear: false,
@@ -142,15 +153,21 @@ jQuery(document).ready(function() {
 
 	init_tipsy();
 
-	if ( typeof( jQuery.fn.um_raty ) === "function" ) {
+	if ( typeof( jQuery.fn.um_raty ) === 'function' ) {
 		jQuery('.um-rating').um_raty({
-			half: 		false,
-			starType: 	'i',
-			number: 	function() {return jQuery(this).attr('data-number');},
-			score: 		function() {return jQuery(this).attr('data-score');},
-			scoreName: 	function(){return jQuery(this).attr('data-key');},
-			hints: 		false,
-			click: function( score, evt ) {
+			half:       false,
+			starType:   'i',
+			number:     function() {
+				return jQuery(this).attr('data-number');
+			},
+			score:      function() {
+				return jQuery(this).attr('data-score');
+			},
+			scoreName:  function() {
+				return jQuery(this).attr('data-key');
+			},
+			hints:      false,
+			click:      function( score, evt ) {
 				um_live_field = this.id;
 				um_live_value = score;
 				um_apply_conditions( jQuery(this), false );
@@ -158,17 +175,23 @@ jQuery(document).ready(function() {
 		});
 
 		jQuery('.um-rating-readonly').um_raty({
-			half: false,
-			starType: 'i',
-			number: function() {return jQuery(this).attr('data-number');},
-			score: function() {return jQuery(this).attr('data-score');},
-			scoreName: function(){return jQuery(this).attr('data-key');},
-			hints: false,
-			readOnly: true
+			half:       false,
+			starType:   'i',
+			number:     function() {
+				return jQuery(this).attr('data-number');
+			},
+			score:      function() {
+				return jQuery(this).attr('data-score');
+			},
+			scoreName:  function() {
+				return jQuery(this).attr('data-key');
+			},
+			hints:      false,
+			readOnly:   true
 		});
 	}
 
-	jQuery(document).on('change', '.um-field-area input[type="radio"]', function(){
+	jQuery(document).on('change', '.um-field-area input[type="radio"]', function() {
 		var field = jQuery(this).parents('.um-field-area');
 		var this_field = jQuery(this).parents('label');
 		field.find('.um-field-radio').removeClass('active');
@@ -177,7 +200,7 @@ jQuery(document).ready(function() {
 		this_field.find('i').removeAttr('class').addClass('um-icon-android-radio-button-on');
 	});
 
-	jQuery(document).on('change', '.um-field-area input[type="checkbox"]', function(){
+	jQuery(document).on('change', '.um-field-area input[type="checkbox"]', function() {
 		var this_field = jQuery(this).parents('label');
 		if ( this_field.hasClass('active') ) {
 			this_field.removeClass('active');
@@ -191,7 +214,7 @@ jQuery(document).ready(function() {
 
 	um_init_datetimepicker();
 
-	jQuery(document).on('click', '.um .um-single-image-preview a.cancel', function(e){
+	jQuery(document).on('click', '.um .um-single-image-preview a.cancel', function( e ) {
 		e.preventDefault();
 		var parent = jQuery(this).parents('.um-field');
 
@@ -224,7 +247,7 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
-	jQuery(document).on('click', '.um .um-single-file-preview a.cancel', function(e) {
+	jQuery(document).on('click', '.um .um-single-file-preview a.cancel', function( e ) {
 		e.preventDefault();
 		var parent = jQuery(this).parents('.um-field');
 		var filename = parent.find( 'input[type="hidden"]#' + parent.data('key') + '-' + jQuery(this).parents('form').find('input[type="hidden"][name="form_id"]').val() ).val();
@@ -254,7 +277,7 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
-	jQuery(document).on('click', '.um-field-group-head:not(.disabled)', function(){
+	jQuery(document).on('click', '.um-field-group-head:not(.disabled)', function() {
 		var field = jQuery(this).parents('.um-field-group');
 		var limit = field.data('max_entries');
 
@@ -282,7 +305,7 @@ jQuery(document).ready(function() {
 		}
 	});
 
-	jQuery(document).on('click', '.um-field-group-cancel', function(e){
+	jQuery(document).on('click', '.um-field-group-cancel', function( e ) {
 		e.preventDefault();
 		var field = jQuery(this).parents('.um-field-group');
 
@@ -302,7 +325,7 @@ jQuery(document).ready(function() {
 	});
 
 
-	jQuery( document.body ).on( 'click', '.um-ajax-paginate', function(e) {
+	jQuery( document.body ).on( 'click', '.um-ajax-paginate', function( e ) {
 		e.preventDefault();
 
 		var obj = jQuery(this);
@@ -385,7 +408,7 @@ jQuery(document).ready(function() {
 	});
 
 
-	jQuery(document).on('click', '.um-ajax-action', function(e){
+	jQuery(document).on('click', '.um-ajax-action', function( e ) {
 		e.preventDefault();
 		var hook = jQuery(this).data('hook');
 		var user_id = jQuery(this).data('user_id');
