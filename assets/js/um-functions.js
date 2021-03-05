@@ -811,16 +811,16 @@ function um_reset_field( dOm ){
 	 .find('input,textarea,select')
 	 .not(':button, :submit, :reset, :hidden')
 	 .val('')
-	 .removeAttr('checked')
-	 .removeAttr('selected');
+	 .prop('checked', false)
+	 .prop('selected', false);
 }
 
 jQuery(function(){
 
 	// Submit search form on keypress 'Enter'
-	jQuery(".um-search form *").keypress(function(e){
+	jQuery(".um-search form *").on( 'keypress', function(e){
 			 if (e.which == 13) {
-			    jQuery('.um-search form').submit();
+			    jQuery('.um-search form').trigger('submit');
 			    return false;
 			  }
 	});

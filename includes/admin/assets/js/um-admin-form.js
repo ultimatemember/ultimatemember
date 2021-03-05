@@ -26,7 +26,7 @@ jQuery(document).ready(function() {
 
 
 	/* Creating new form button */
-	jQuery('.um-admin-boxed-links:not(.is-core-form) a').click( function() {
+	jQuery('.um-admin-boxed-links:not(.is-core-form) a').on( 'click', function() {
 		um_form_select_tab( jQuery(this), true );
 	});
 });
