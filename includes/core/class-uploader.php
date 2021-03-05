@@ -428,7 +428,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				 * }
 				 * ?>
 				 */
-				do_action( 'um_before_upload_db_meta', $this->user_id, $field_key );				
+				do_action( 'um_before_upload_db_meta', $this->user_id, $field_key );
 				/**
 				 * UM hook
 				 *
@@ -1160,7 +1160,7 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				}
 
 				// Quality
-				if( $image->get_quality() > $quality){
+				if ( $image->get_quality() > $quality ) {
 					$image->set_quality( $quality );
 				}
 

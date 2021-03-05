@@ -84,6 +84,9 @@ if ( ! empty( $args['enable_sorting'] ) ) {
 		} elseif ( ! empty( $all_sorting_options[ $default_sorting ] ) ) {
 			$label = $all_sorting_options[ $default_sorting ];
 		}
+
+		$label = ( $label == 'random' ) ? __( 'Random', 'ultimate-member' ) : $label;
+
 		$custom_sorting_titles[ $default_sorting ] = $label;
 	}
 
@@ -271,6 +274,7 @@ if ( ( ( $search && $show_search ) || ( $filters && $show_filters && count( $sea
 						</div>
 
 						<?php $items = array();
+
 						foreach ( $sorting_options as $value => $title ) {
 							$items[] = '<a href="javascript:void(0);" data-value="' . esc_attr( $value ) . '" data-selected="' . ( ( $sort_from_url == $value ) ? '1' : '0' ) . '" data-default="' . ( ( $default_sorting == $value ) ? '1' : '0' ) . '">' . $title . '</a>'; ?>
 						<?php }
