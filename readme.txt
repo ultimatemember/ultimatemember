@@ -6,8 +6,8 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
-Tested up to: 5.6
-Stable tag: 2.1.15
+Tested up to: 5.7
+Stable tag: 2.1.16
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -161,6 +161,8 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Added: General and role setting to avoid indexing users' profiles
   - Added: `um_prepare_user_results_array_meta` hook and the 2nd argument for `um_prepare_user_results_array` hook for handle $user_ids based on getting members query
   - Added: Change password email when password has been reset
+  - Added: jQuery v3 compatibility
+  - Added: An option "Administrator" in a menu settings to make the menu visible for administrators only
 
 * Bugfixes:
   - Fixed: Creating and removing usermeta data with `password_rst_attempts` key, just update if exists for now
@@ -172,6 +174,14 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed: PHP notices and warnings
   - Fixed: Security vulnerability with User Account page and password field
   - Fixed: User creating without username but based on first+last name with not-ASCII symbols
+  - Fixed: Password reset hash generating more that 1 time
+  - Fixed: Random order type translation string on the member directory
+  - Fixed: Resize and compress images when upload on User Profile images fields or user wall
+  - Fixed: Displaying more than 1 UM popups at the same page
+  - Fixed: UM dropdown.js position calculation
+
+* Tweaks:
+  - Updated: Select2 to 4.0.13 version
 
 = 2.1.15: December 24, 2020 =
 
