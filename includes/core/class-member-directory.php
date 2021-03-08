@@ -794,6 +794,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		function slider_filters_range( $filter, $directory_data ) {
 			global $wpdb;
 
+			$range = false;
+
 			switch ( $filter ) {
 
 				default: {
@@ -807,9 +809,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 						$filter
 					), ARRAY_A );
 
-					if ( empty( $meta ) || ! isset( $meta['amount'] ) || $meta['amount'] == 1 ) {
-						$range = false;
-					} elseif ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) ) {
+					if ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) && isset( $meta['amount'] ) && $meta['amount'] > 1 ) {
 						$range = array( (float) $meta['min_meta'], (float) $meta['max_meta'] );
 					}
 
@@ -846,9 +846,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							  meta_value != ''",
 					ARRAY_A );
 
-					if ( empty( $meta ) || ! isset( $meta['amount'] ) || $meta['amount'] == 1 ) {
-						$range = false;
-					} elseif ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) ) {
+					if ( isset( $meta['min_meta'] ) && isset( $meta['max_meta'] ) && isset( $meta['amount'] ) && $meta['amount'] > 1 ) {
 						$range = array( $this->borndate( strtotime( $meta['max_meta'] ) ), $this->borndate( strtotime( $meta['min_meta'] ) ) );
 					}
 

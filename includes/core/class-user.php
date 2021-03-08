@@ -25,6 +25,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			$this->data = null;
 			$this->profile = null;
 			$this->cannot_edit = null;
+			$this->password_reset_key = null;
 
 			global $wpdb;
 
@@ -1357,11 +1358,26 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 
 		/**
+		 * @param \WP_User $userdata
+		 *
+		 * @return string|\WP_Error
+		 */
+		function maybe_generate_password_reset_key( $userdata ) {
+			if ( empty( $this->password_reset_key ) ) {
+				$this->password_reset_key = get_password_reset_key( $userdata );
+			}
+
+			return $this->password_reset_key ;
+		}
+
+
+		/**
 		 * Password reset email
 		 */
 		function password_reset() {
 			$userdata = get_userdata( um_user( 'ID' ) );
-			get_password_reset_key( $userdata );
+
+			$this->maybe_generate_password_reset_key( $userdata );
 
 			add_filter( 'um_template_tags_patterns_hook', array( UM()->password(), 'add_placeholder' ), 10, 1 );
 			add_filter( 'um_template_tags_replaces_hook', array( UM()->password(), 'add_replace_placeholder' ), 10, 1 );
@@ -1407,12 +1423,14 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			if ( um_user( 'account_status' ) == 'awaiting_admin_review' ) {
 				$userdata = get_userdata( $user_id );
-				get_password_reset_key( $userdata );
+
+				$this->maybe_generate_password_reset_key( $userdata );
+
 				UM()->mail()->send( um_user( 'user_email' ), 'approved_email' );
 
 			} else {
-				$userdata = get_userdata( $user_id );
-				get_password_reset_key( $userdata );
+				//$userdata = get_userdata( $user_id );
+				//get_password_reset_key( $userdata );
 				UM()->mail()->send( um_user( 'user_email' ), 'welcome_email' );
 			}
 

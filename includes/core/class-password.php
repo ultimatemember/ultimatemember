@@ -44,7 +44,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 			//new reset password key via WP native field
 			$user_data = get_userdata( $user_id );
-			$key = get_password_reset_key( $user_data );
+			$key = UM()->user()->maybe_generate_password_reset_key( $user_data );
 
 			$url =  add_query_arg( array( 'act' => 'reset_password', 'hash' => $key, 'user_id' => $user_id ), um_get_core_page( 'password-reset' ) );
 			return $url;
