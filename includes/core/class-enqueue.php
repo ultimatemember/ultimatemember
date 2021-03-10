@@ -95,7 +95,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 				wp_dequeue_script( 'select2');
 				wp_deregister_script('select2');
 			}
-			wp_register_script( 'select2', $this->js_baseurl . 'select2/select2.full' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
+			wp_register_script( 'select2', $this->js_baseurl . 'select2/select2.full' . $this->suffix . '.js', array( 'jquery' ), '4.0.13', true );
 
 			wp_register_script( 'um_scrollbar', $this->js_baseurl . 'simplebar' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
@@ -177,7 +177,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_style( 'um_crop', $this->css_baseurl . 'um-crop.css', array(), ultimatemember_version );
 			wp_register_style( 'um_tipsy', $this->css_baseurl . 'um-tipsy.css', array(), ultimatemember_version );
 			wp_register_style( 'um_raty', $this->css_baseurl . 'um-raty.css', array(), ultimatemember_version );
-			wp_register_style( 'select2', $this->css_baseurl . 'select2/select2.min.css', array(), ultimatemember_version );
+			wp_register_style( 'select2', $this->css_baseurl . 'select2/select2.min.css', array(), '4.0.13' );
 			wp_register_style( 'um_fileupload', $this->css_baseurl . 'um-fileupload.css', array(), ultimatemember_version );
 			wp_register_style( 'um_datetime', $this->css_baseurl . 'pickadate/default.css', array(), ultimatemember_version );
 			wp_register_style( 'um_datetime_date', $this->css_baseurl . 'pickadate/default.date.css', array( 'um_datetime' ), ultimatemember_version );

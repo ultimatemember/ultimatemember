@@ -135,19 +135,34 @@ jQuery(document).ready(function() {
 	}
 
 	if ( typeof( jQuery.fn.select2 ) === 'function' ) {
-		jQuery(".um-s1").select2({
-			allowClear: true
-		}).on( 'change', unselectEmptyOption );
+		jQuery(".um-s1").each( function( e ) {
+			var obj = jQuery(this);
 
-		jQuery(".um-s2").select2({
-			allowClear: false,
-			minimumResultsForSearch: 10
-		}).on( 'change', unselectEmptyOption );
+			obj.select2({
+				allowClear: true,
+				dropdownParent: obj.parent()
+			}).on( 'change', unselectEmptyOption );
+		} );
 
-		jQuery(".um-s3").select2({
-			allowClear: false,
-			minimumResultsForSearch: -1
-		});
+		jQuery(".um-s2").each( function( e ) {
+			var obj = jQuery(this);
+
+			obj.select2({
+				allowClear: false,
+				minimumResultsForSearch: 10,
+				dropdownParent: obj.parent()
+			}).on( 'change', unselectEmptyOption );
+		} );
+
+		jQuery(".um-s3").each( function( e ) {
+			var obj = jQuery(this);
+
+			obj.select2({
+				allowClear: false,
+				minimumResultsForSearch: -1,
+				dropdownParent: obj.parent()
+			}).on( 'change', unselectEmptyOption );
+		} );
 	}
 
 	init_tipsy();

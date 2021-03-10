@@ -635,7 +635,11 @@ jQuery(document.body).ready( function() {
 		if ( jQuery(this).find('option:not(:disabled)').length === 1 ) {
 			jQuery(this).prop('disabled', true);
 		}
-		jQuery(this).select2('destroy').select2();
+
+		var obj = jQuery(this);
+		obj.select2('destroy').select2({
+			dropdownParent: obj.parent()
+		});
 	});
 
 	/**
@@ -988,8 +992,11 @@ jQuery(document.body).ready( function() {
 			jQuery(this).prop('disabled', true);
 		}
 
-		jQuery(this).select2('destroy').select2();
-		jQuery(this).val('').trigger( 'change' );
+		var obj = jQuery(this);
+		obj.select2('destroy').select2({
+			dropdownParent: obj.parent()
+		});
+		obj.val('').trigger( 'change' );
 
 		um_ajax_get_members( directory );
 
@@ -1126,7 +1133,10 @@ jQuery(document.body).ready( function() {
 			if ( select.find('option:not(:disabled)').length > 1 ) {
 				select.prop('disabled', false);
 			}
-			select.select2('destroy').select2();
+
+			select.select2('destroy').select2({
+				dropdownParent: select.parent()
+			});
 
 			if ( directory.find( '.um-search-filter select[data-um-parent="' +  filter_name + '"]' ).length > 0 ) {
 				select.trigger('change');
@@ -1250,7 +1260,9 @@ jQuery(document.body).ready( function() {
 				if ( select.find('option:not(:disabled)').length > 1 ) {
 					select.prop('disabled', false);
 				}
-				select.select2('destroy').select2();
+				select.select2('destroy').select2({
+					dropdownParent: select.parent()
+				});
 
 				if ( directory.find( '.um-search-filter select[data-um-parent="' +  filter_name + '"]' ).length > 0 ) {
 					select.trigger('change');
