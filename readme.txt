@@ -160,7 +160,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * Enhancements:
   - Added: General and role setting to avoid indexing users' profiles
   - Added: `um_prepare_user_results_array_meta` hook and the 2nd argument for `um_prepare_user_results_array` hook for handle $user_ids based on getting members query
-  - Added: Change password email when password has been reset
+  - Added: Change password email when the password has been reset
   - Added: jQuery v3 compatibility
   - Added: An option "Administrator" in a menu settings to make the menu visible for administrators only
 
@@ -174,10 +174,10 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed: PHP notices and warnings
   - Fixed: Security vulnerability with User Account page and password field
   - Fixed: User creating without username but based on first+last name with not-ASCII symbols
-  - Fixed: Password reset hash generating more that 1 time
+  - Fixed: Password reset hash generating more than 1 time
   - Fixed: Random order type translation string on the member directory
-  - Fixed: Resize and compress images when upload on User Profile images fields or user wall
-  - Fixed: Displaying more than 1 UM popups at the same page
+  - Fixed: Resize and compress images when uploading on User Profile images fields or user wall
+  - Fixed: Displaying more than 1 UM popups on the same page
   - Fixed: UM dropdown.js position calculation
   - Fixed: Select2 dropdown block position calculation
 
