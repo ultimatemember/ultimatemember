@@ -177,7 +177,7 @@ jQuery(document).ready( function() {
 		}
 	});
 
-	jQuery( '.um-forms-line[data-field_type="md_sorting_fields"] .um-multi-selects-add-option' ).click( function() {
+	jQuery( '.um-forms-line[data-field_type="md_sorting_fields"] .um-multi-selects-add-option' ).on('click', function() {
 		var list = jQuery(this).siblings('ul.um-multi-selects-list');
 
 		var sortable = list.hasClass( 'um-sortable-multi-selects' );
@@ -238,7 +238,7 @@ jQuery(document).ready( function() {
 		jQuery( this ).parents( 'li.um-md-default-filters-option-line' ).remove();
 	});
 
-	jQuery( '.um-multi-selects-add-option' ).click( function() {
+	jQuery( '.um-multi-selects-add-option' ).on('click', function() {
 		if ( jQuery(this).parents( '.um-forms-line[data-field_type="md_sorting_fields"]' ).length ) {
 			return;
 		}
@@ -518,7 +518,7 @@ jQuery(document).ready( function() {
 	}
 
 
-	jQuery( '.um-md-default-filters-add-option' ).click( function() {
+	jQuery( '.um-md-default-filters-add-option' ).on('click', function() {
 		if ( um_member_dir_filters_busy ) {
 			return;
 		}
@@ -554,7 +554,7 @@ jQuery(document).ready( function() {
 	});
 
 
-	jQuery( '.um-multi-text-add-option' ).click( function() {
+	jQuery( '.um-multi-text-add-option' ).on('click', function() {
 		var list = jQuery(this).siblings( 'ul.um-multi-text-list' );
 
 		var field_id = list.data( 'field_id' );
@@ -602,7 +602,7 @@ jQuery(document).ready( function() {
 	if ( typeof wp !== 'undefined' && wp.media && wp.media.editor ) {
 		var frame;
 
-		jQuery( '.um-set-image' ).click( function(e) {
+		jQuery( '.um-set-image' ).on('click', function(e) {
 			var button = jQuery(this);
 
 			e.preventDefault();
@@ -648,11 +648,11 @@ jQuery(document).ready( function() {
 			frame.open();
 		});
 
-		jQuery('.icon_preview').click( function(e) {
+		jQuery('.icon_preview').on('click', function(e) {
 			jQuery(this).siblings('.um-set-image').trigger('click');
 		});
 
-		jQuery('.um-clear-image').click( function(e) {
+		jQuery('.um-clear-image').on('click', function(e) {
 			var clear_button = jQuery(this);
 			var default_image_url = clear_button.siblings('.um-forms-field').data('default');
 			clear_button.siblings('.um-set-image').show();

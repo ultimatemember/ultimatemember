@@ -165,7 +165,12 @@ add_action( 'um_on_login_before_redirect', 'um_store_lastlogin_timestamp', 10, 1
 function um_store_lastlogin_timestamp_( $login ) {
 	$user = get_user_by( 'login', $login );
 	um_store_lastlogin_timestamp( $user->ID );
-	delete_user_meta( $user->ID, 'password_rst_attempts' );
+
+	$attempts = (int) get_user_meta( $user->ID, 'password_rst_attempts', true );
+	if ( $attempts ) {
+		//don't create meta but update if it's exists only
+		update_user_meta( $user->ID, 'password_rst_attempts', 0 );
+	}
 }
 add_action( 'wp_login', 'um_store_lastlogin_timestamp_' );
 
