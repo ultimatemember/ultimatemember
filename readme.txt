@@ -155,7 +155,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.1.16: March 9, 2021 =
+= 2.1.16: March 10, 2021 =
 
 * Enhancements:
   - Added: General and role setting to avoid indexing users' profiles
@@ -179,6 +179,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed: Resize and compress images when upload on User Profile images fields or user wall
   - Fixed: Displaying more than 1 UM popups at the same page
   - Fixed: UM dropdown.js position calculation
+  - Fixed: Select2 dropdown block position calculation
 
 * Tweaks:
   - Updated: Select2 to 4.0.13 version
