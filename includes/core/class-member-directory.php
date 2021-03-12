@@ -687,7 +687,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 									<?php disabled( ! empty( $filter_from_url ) && in_array( $opt, $filter_from_url ) );
 
 									if ( $admin ) {
-										if ( is_string( $default_value ) ) {
+										if ( ! is_array( $default_value ) ) {
 											$default_value = array( $default_value );
 										}
 
