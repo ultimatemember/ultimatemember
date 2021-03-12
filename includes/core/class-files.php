@@ -39,7 +39,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 			$this->setup_paths();
 
-			add_action( 'template_redirect', array( &$this, 'download_routing' ) );
+			add_action( 'template_redirect', array( &$this, 'download_routing' ), 1 );
 
 			$this->fonticon = array(
 				'pdf' 	=> array('icon' 	=> 'um-faicon-file-pdf-o', 'color' => '#D24D4D' ),
