@@ -1596,13 +1596,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								case 'text':
 
 									$value = stripslashes( $value );
-
 									$field_query = array(
 										'relation' => 'OR',
 										array(
 											'key'       => $field,
 											'value'     => trim( $value ),
-											'compare'   => 'LIKE',
+											'compare'   => apply_filters( 'um_members_directory_filter_text', '=', $field )
 										),
 									);
 
@@ -1871,7 +1870,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 									$field_query = array(
 										'key'       => $field,
 										'value'     => $value,
-										'compare'   => '=',
+										'compare'   => apply_filters( 'um_members_directory_filter_text', '=', $field ),
 									);
 
 									break;
