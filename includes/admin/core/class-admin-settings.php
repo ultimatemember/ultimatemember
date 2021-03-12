@@ -336,7 +336,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 							'tooltip'       => __( 'Select the the user roles allowed to view this tab.', 'ultimate-member' ),
 							'options'       => UM()->roles()->get_roles(),
 							'placeholder'   => __( 'Choose user roles...', 'ultimate-member' ),
-							'conditional'   => array( 'profile_tab_' . $id . '_privacy', '=', 4 ),
+							'conditional'   => array( 'profile_tab_' . $id . '_privacy', '=', [ '4', '5' ] ),
 							'size'          => 'small'
 						)
 					);

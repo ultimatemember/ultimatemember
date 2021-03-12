@@ -157,6 +157,9 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = 2.1.17: xx, 2021 =
 
+* Enhancements:
+  - Added: 'Owner and specific roles' privacy type for the Profile tabs
+
 * Bugfixes:
   - Fixed: PHP notice when the admin filtering field has the not array default value (e.g. bool)
 
