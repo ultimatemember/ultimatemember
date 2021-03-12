@@ -155,6 +155,11 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
+= 2.1.17: xx, 2021 =
+
+* Bugfixes:
+  - Fixed: PHP notice when the admin filtering field has the not array default value (e.g. bool)
+
 = 2.1.16: March 10, 2021 =
 
 * Enhancements:
