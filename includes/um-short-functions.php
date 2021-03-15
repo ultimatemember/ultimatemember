@@ -1551,19 +1551,13 @@ function um_can_view_field( $data ) {
 					}
 				}
 				break;
-			case '-3':
+			case '-3': // Only visible to profile owner and specific roles
 				if ( ! is_user_logged_in() ) {
 					$can_view = false;
-				} else {
-					if ( ! um_is_core_page( 'profile' ) ) {
-						if ( empty( $current_user_roles ) || ( ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) ) {
-							$can_view = false;
-						}
-					} else {
-						if ( ! um_is_user_himself() && ( empty( $current_user_roles ) || ( ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) ) ) {
-							$can_view = false;
-						}
-					}
+				} elseif ( um_is_core_page( 'user' ) && um_is_user_himself() ) {
+					$can_view = true;
+				} elseif ( empty( $current_user_roles ) || ( ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) ) {
+					$can_view = false;
 				}
 				break;
 			default:
