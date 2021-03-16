@@ -3741,11 +3741,14 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$sort_col = array();
 			foreach ( $arr as $key => $row ) {
 				if ( $key == 'form_id' ) {
+					unset( $arr['form_id'] );
 					continue;
 				}
 
 				if ( isset( $row[ $col ] ) ) {
 					$sort_col[ $key ] = $row[ $col ];
+				} else {
+					unset( $arr[ $key ] );
 				}
 			}
 
@@ -4689,7 +4692,10 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			if ( in_array( $data['type'], $fields_without_metakey ) ) {
 				unset( $field_atts['id'] );
-				unset( $field_atts['data-key'] );
+
+				if ( empty( $field_atts['data-key'] ) ) {
+					unset( $field_atts['data-key'] );
+				}
 			}
 
 			if ( ! empty( $field_style ) && is_array( $field_style ) ) {

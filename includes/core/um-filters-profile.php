@@ -12,21 +12,15 @@
  */
 function um_dynamic_user_profile_pagetitle( $title, $sep = '' ) {
 
-	$profile_title = UM()->options()->get( 'profile_title' );
-
 	if ( um_is_core_page( 'user' ) && um_get_requested_user() ) {
 
 		$user_id = um_get_requested_user();
 
-		$privacy = get_user_meta( $user_id, 'profile_privacy', true );
-		if ( $privacy == __( 'Only me', 'ultimate-member' ) || $privacy == 'Only me' ) {
+		if ( UM()->user()->is_profile_noindex( $user_id ) ) {
 			return $title;
 		}
 
-		$noindex = get_user_meta( $user_id, 'profile_noindex', true );
-		if ( ! empty( $noindex ) ) {
-			return $title;
-		}
+		$profile_title = UM()->options()->get( 'profile_title' );
 
 		um_fetch_user( um_get_requested_user() );
 

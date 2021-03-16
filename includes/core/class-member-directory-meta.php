@@ -818,6 +818,12 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 			global $wpdb;
 
+			/*
+			 *
+			 * SQL_CALC_FOUND_ROWS is deprecated as of MySQL 8.0.17
+			 * https://core.trac.wordpress.org/ticket/47280
+			 *
+			 * */
 			$user_ids = $wpdb->get_col(
 				"SELECT SQL_CALC_FOUND_ROWS DISTINCT u.ID
 				{$this->select}
@@ -829,7 +835,37 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				{$this->sql_limit}"
 			);
 
+			$query = array(
+				'select'    => $this->select,
+				'sql_where' => $sql_where,
+				'having'    => $this->having,
+				'sql_limit' => $this->sql_limit,
+			);
+
 			$total_users = (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' );
+
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_prepare_user_results_array_meta
+			 * @description Extend member directory query result
+			 * @input_vars
+			 * [{"var":"$result","type":"array","desc":"Members Query Result"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_prepare_user_results_array', 'function_name', 10, 2 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_prepare_user_results_array', 'my_prepare_user_results', 10, 2 );
+			 * function my_prepare_user_results( $user_ids, $query ) {
+			 *     // your code here
+			 *     return $user_ids;
+			 * }
+			 * ?>
+			 */
+			$user_ids = apply_filters( 'um_prepare_user_results_array_meta', $user_ids, $query );
 
 			$pagination_data = $this->calculate_pagination( $directory_data, $total_users );
 

@@ -244,7 +244,7 @@ function um_apply_conditions( $dom, is_single_update ) {
 		}
 
 		if ( condition.operator === 'empty' ) {
-			var field_value = jQuery.isArray( live_field_value ) ? live_field_value.join('') : live_field_value;
+			var field_value = Array.isArray( live_field_value ) ? live_field_value.join('') : live_field_value;
 			if ( ! field_value || field_value === '' ) {
 				$owners[ condition.owner ][ index ] = true;
 			} else {
@@ -253,7 +253,7 @@ function um_apply_conditions( $dom, is_single_update ) {
 		}
 
 		if ( condition.operator === 'not empty' ) {
-			var field_value = jQuery.isArray( live_field_value ) ? live_field_value.join('') : live_field_value;
+			var field_value = Array.isArray( live_field_value ) ? live_field_value.join('') : live_field_value;
 			if ( field_value && field_value !== '' ) {
 				$owners[ condition.owner ][ index ] = true;
 			} else {
@@ -262,7 +262,7 @@ function um_apply_conditions( $dom, is_single_update ) {
 		}
 
 		if ( condition.operator === 'equals to' ) {
-			var field_value = ( jQuery.isArray( live_field_value ) && live_field_value.length === 1 ) ? live_field_value[0] : live_field_value;
+			var field_value = ( Array.isArray( live_field_value ) && live_field_value.length === 1 ) ? live_field_value[0] : live_field_value;
 			if ( condition.value === field_value && um_in_array( field_value, $owners_values[ condition.owner ] ) ) {
 				$owners[ condition.owner ][ index ] = true;
 			} else {
@@ -271,7 +271,7 @@ function um_apply_conditions( $dom, is_single_update ) {
 		}
 
 		if ( condition.operator === 'not equals' ) {
-			var field_value = ( jQuery.isArray( live_field_value ) && live_field_value.length === 1 ) ? live_field_value[0] : live_field_value;
+			var field_value = ( Array.isArray( live_field_value ) && live_field_value.length === 1 ) ? live_field_value[0] : live_field_value;
 			if ( jQuery.isNumeric(condition.value) && parseInt(field_value) !== parseInt( condition.value ) && field_value && ! um_in_array( field_value, $owners_values[ condition.owner ] ) ) {
 				$owners[ condition.owner ][ index ] = true;
 			} else if ( condition.value != field_value && ! um_in_array( field_value, $owners_values[ condition.owner ] ) ) {
@@ -282,7 +282,7 @@ function um_apply_conditions( $dom, is_single_update ) {
 		}
 
 		if ( condition.operator === 'greater than' ) {
-			var field_value = ( jQuery.isArray( live_field_value ) && live_field_value.length === 1 ) ? live_field_value[0] : live_field_value;
+			var field_value = ( Array.isArray( live_field_value ) && live_field_value.length === 1 ) ? live_field_value[0] : live_field_value;
 			if ( jQuery.isNumeric( condition.value ) && parseInt( field_value ) > parseInt( condition.value ) ) {
 				$owners[ condition.owner ][ index ] = true;
 			} else {
@@ -291,7 +291,7 @@ function um_apply_conditions( $dom, is_single_update ) {
 		}
 
 		if ( condition.operator === 'less than' ) {
-			var field_value = ( jQuery.isArray( live_field_value ) && live_field_value.length === 1 ) ? live_field_value[0] : live_field_value;
+			var field_value = ( Array.isArray( live_field_value ) && live_field_value.length === 1 ) ? live_field_value[0] : live_field_value;
 			if ( jQuery.isNumeric( condition.value ) && parseInt( field_value ) < parseInt( condition.value ) ) {
 				$owners[ condition.owner ][ index ] = true;
 			} else {
@@ -424,12 +424,12 @@ function um_field_restore_default_value( $dom ) {
 		case 'checkbox':
 			if ( $dom.find('input[type="checkbox"]:checked').length >= 1 ) {
 
-				$dom.find('input[type="checkbox"]:checked').removeAttr('checked');
+				$dom.find('input[type="checkbox"]:checked').prop('checked', false);
 				$dom.find('span.um-field-checkbox-state i').removeClass('um-icon-android-checkbox-outline');
 				$dom.find('span.um-field-checkbox-state i').addClass('um-icon-android-checkbox-outline-blank');
 				$dom.find('.um-field-checkbox.active').removeClass('active');
 
-				if ( jQuery.isArray( field.value ) ) {
+				if ( Array.isArray( field.value ) ) {
 					jQuery.each( field.value, function ( i, value ) {
 						var cbox_elem = $dom.find('input[type="checkbox"][value="' + value + '"]');
 						cbox_elem.attr('checked', true);
@@ -453,7 +453,7 @@ function um_field_restore_default_value( $dom ) {
 
 				setTimeout( function() {
 
-					$dom.find('input[type="radio"]:checked').removeAttr('checked');
+					$dom.find('input[type="radio"]:checked').prop('checked', false);
 
 					$dom.find('span.um-field-radio-state i').removeClass('um-icon-android-radio-button-on');
 					$dom.find('span.um-field-radio-state i').addClass('um-icon-android-radio-button-off');
@@ -591,7 +591,7 @@ function um_init_field_conditions() {
 			arr_all_conditions.push(obj);
 		});
 
-		um_field_default_values[jQuery(this).data('key')] = um_get_field_default_value( jQuery(this) );
+		um_field_default_values[ jQuery(this).data('key') ] = um_get_field_default_value( jQuery(this) );
 	});
 
 	jQuery.each( arr_field_keys, function ( i, field_key ) {

@@ -1,6 +1,6 @@
 jQuery( document ).ready( function() {
 
-	jQuery( '#role' ).change( function() {
+	jQuery( '#role' ).on('change', function() {
 
 		if ( typeof um_roles == 'object' ) {
 			um_roles = Object.keys( um_roles ).map(function( key ) { return um_roles[ key ]; });
@@ -20,7 +20,7 @@ jQuery( document ).ready( function() {
 		}
 	}).trigger('change');
 
-	jQuery( '#adduser-role' ).change( function() {
+	jQuery( '#adduser-role' ).on('change', function() {
 		if ( typeof um_roles == 'object' ) {
 			um_roles = Object.keys( um_roles ).map(function( key ) { return um_roles[ key ]; });
 		}
