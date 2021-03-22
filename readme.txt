@@ -163,6 +163,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * Bugfixes:
   - Fixed: PHP notice when the admin filtering field has the not array default value (e.g. bool)
   - Fixed: The conflict with [Disable Blog](https://wordpress.org/plugins/disable-blog/) plugin regarding this [issue](https://wordpress.org/support/topic/ultimate-member-file-image-download/). `download_routing` callback has the highest priority now.
+  - Fixed: Fields privacy functionality. This function `um_can_view_field()` has been rewritten (#780)
 
 = 2.1.16: March 10, 2021 =
 
