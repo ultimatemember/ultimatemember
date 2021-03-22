@@ -1555,7 +1555,7 @@ function um_can_view_field( $data ) {
 				if ( ! is_user_logged_in() ) {
 					$can_view = false;
 				} else {
-					if ( ! um_is_core_page( 'profile' ) ) {
+					if ( ! um_is_core_page('user' ) ) {
 						if ( empty( $current_user_roles ) || ( ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) ) {
 							$can_view = false;
 						}
