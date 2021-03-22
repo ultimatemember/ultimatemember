@@ -1514,6 +1514,7 @@ function um_can_view_field( $data ) {
 
 	if ( isset( $data['public'] ) && UM()->fields()->set_mode != 'register' ) {
 
+		$current_user_roles = [];
 		if ( is_user_logged_in() ) {
 			$previous_user = um_user( 'ID' );
 			um_fetch_user( get_current_user_id() );
@@ -1523,47 +1524,32 @@ function um_can_view_field( $data ) {
 		}
 
 		switch ( $data['public'] ) {
-			case '1':
-				$can_view = true;
+			case '1': // Everyone
 				break;
-			case '2':
+			case '2': // Members
 				if ( ! is_user_logged_in() ) {
 					$can_view = false;
 				}
 				break;
-			case '-1':
+			case '-1': // Only visible to profile owner and admins
 				if ( ! is_user_logged_in() ) {
 					$can_view = false;
-				} else {
-					if ( ! um_is_user_himself() && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
-						$can_view = false;
-					}
+				} elseif ( ! um_is_user_himself() && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+					$can_view = false;
 				}
 				break;
-			case '-2':
+			case '-2': // Only specific member roles
 				if ( ! is_user_logged_in() ) {
 					$can_view = false;
-				} else {
-					if ( ! empty( $data['roles'] ) ) {
-						if ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) {
-							$can_view = false;
-						}
-					}
+				} elseif ( ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) {
+					$can_view = false;
 				}
 				break;
-			case '-3':
+			case '-3': // Only visible to profile owner and specific roles
 				if ( ! is_user_logged_in() ) {
 					$can_view = false;
-				} else {
-					if ( ! um_is_core_page( 'profile' ) ) {
-						if ( empty( $current_user_roles ) || ( ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) ) {
-							$can_view = false;
-						}
-					} else {
-						if ( ! um_is_user_himself() && ( empty( $current_user_roles ) || ( ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) ) ) {
-							$can_view = false;
-						}
-					}
+				} elseif ( ! um_is_user_himself() && ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) {
+					$can_view = false;
 				}
 				break;
 			default:
