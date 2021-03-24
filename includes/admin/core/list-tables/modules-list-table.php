@@ -76,6 +76,13 @@ class UM_Modules_List_Table extends WP_List_Table {
 
 		$modules = UM()->modules()->get_list();
 
+		@uasort($modules, function ( $a, $b ) {
+			if ( $a['title'] == $b['title'] ) {
+				return 0;
+			}
+			return ( $a['title'] < $b['title'] ) ? -1 : 1;
+		});
+
 		$per_page = $this->get_items_per_page( str_replace( '-', '_', $screen->id . '_per_page' ), 999 );
 		$paged = $this->get_pagenum();
 

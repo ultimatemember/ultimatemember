@@ -98,8 +98,15 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 							exit( wp_redirect( $redirect ) );
 						}
 
+						$results = 0;
 						foreach ( $slugs as $slug ) {
-							UM()->modules()->activate( $slug );
+							if ( UM()->modules()->activate( $slug ) ) {
+								$results++;
+							}
+						}
+
+						if ( ! $results ) {
+							exit( wp_redirect( $redirect ) );
 						}
 
 						exit( wp_redirect( add_query_arg( 'msg', 'a', $redirect ) ) );
@@ -128,8 +135,15 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 							exit( wp_redirect( $redirect ) );
 						}
 
+						$results = 0;
 						foreach ( $slugs as $slug ) {
-							UM()->modules()->deactivate( $slug );
+							if ( UM()->modules()->deactivate( $slug ) ) {
+								$results++;
+							}
+						}
+
+						if ( ! $results ) {
+							exit( wp_redirect( $redirect ) );
 						}
 
 						exit( wp_redirect( add_query_arg( 'msg', 'd', $redirect ) ) );
@@ -158,8 +172,15 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 							exit( wp_redirect( $redirect ) );
 						}
 
+						$results = 0;
 						foreach ( $slugs as $slug ) {
-							UM()->modules()->flush_data( $slug );
+							if ( UM()->modules()->flush_data( $slug ) ) {
+								$results++;
+							}
+						}
+
+						if ( ! $results ) {
+							exit( wp_redirect( $redirect ) );
 						}
 
 						exit( wp_redirect( add_query_arg( 'msg', 'f', $redirect ) ) );

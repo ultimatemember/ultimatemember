@@ -40,6 +40,11 @@ class Modules {
 	 */
 	function predefined_modules() {
 		$modules = [
+			'jobboardwp'   => [
+				'title'         => __( 'JobBoardWP integration', 'ultimate-member' ),
+				'description'   => __( 'Integrates Ultimate Member with JobBoardWP.', 'ultimate-member' ),
+				'plugin_slug'   => 'um-jobboardwp/um-jobboardwp.php',
+			],
 			'forumwp'   => [
 				'title'         => __( 'ForumWP integration', 'ultimate-member' ),
 				'description'   => __( 'Integrates Ultimate Member with ForumWP.', 'ultimate-member' ),
@@ -55,6 +60,11 @@ class Modules {
 				'description'   => __( 'Protect your website from spam and integrate Google reCAPTCHA into your Ultimate Member forms.', 'ultimate-member' ),
 				'plugin_slug'   => 'um-recaptcha/um-recaptcha.php',
 			],
+			'terms-conditions'   => [
+				'title'         => __( 'Terms & Conditions', 'ultimate-member' ),
+				'description'   => __( 'Add a terms and condition checkbox to your registration forms & require users to agree to your T&Cs before registering on your site.', 'ultimate-member' ),
+				'plugin_slug'   => 'um-terms-conditions/um-terms-conditions.php',
+			],
 		];
 
 		$all_plugins = apply_filters( 'all_plugins', get_plugins() );
@@ -65,6 +75,8 @@ class Modules {
 			$data['path'] = um_path . 'modules' . DIRECTORY_SEPARATOR . $slug;
 			$data['url'] = um_url . "modules/{$slug}/";
 
+			// @todo checking the proper module structure function if not proper make 'invalid' data with displaying red line in list table
+
 			// check the module's dir
 			if ( ! is_dir( $data['path'] ) ) {
 
@@ -72,11 +84,20 @@ class Modules {
 				$data['description'] = '<strong>' . __( 'Module is hasn\'t been installed properly. Please check the module\'s directory and re-install it.', 'ultimate-member' ) . '</strong><br />' . $data['description'];
 
 			} else {
-				$data['disabled'] = array_key_exists( $data['plugin_slug'], $all_plugins );
 
-				if ( $data['disabled'] ) {
-					$data['description'] = '<strong>' . sprintf( __( 'Module will be disabled until "%s" plugin is installed.', 'ultimate-member' ), $all_plugins[ $data['plugin_slug'] ]['Name'] ) . '</strong><br />' . $data['description'];
+				if ( array_key_exists( 'plugin_slug', $data ) ) {
+					$data['disabled'] = array_key_exists( $data['plugin_slug'], $all_plugins );
+
+					if ( $data['disabled'] ) {
+						$data['description'] = '<strong>' . sprintf( __( 'Module will be disabled until "%s" plugin is installed.', 'ultimate-member' ), $all_plugins[ $data['plugin_slug'] ]['Name'] ) . '</strong><br />' . $data['description'];
+					}
 				}
+
+			}
+
+			// set `disabled = false` by default
+			if ( ! array_key_exists( 'disabled', $data ) ) {
+				$data['disabled'] = false;
 			}
 		}
 
@@ -274,13 +295,14 @@ class Modules {
 
 
 	/**
-	 *
 	 * @param string $slug Module's slug
 	 *
+	 *
+	 * @return bool
 	 */
 	function activate( $slug ) {
 		if ( ! $this->can_activate( $slug ) ) {
-			return;
+			return false;
 		}
 
 		$this->install( $slug )->start();
@@ -293,31 +315,37 @@ class Modules {
 		if ( empty( $first_activation ) ) {
 			UM()->options()->update( "module_{$slug}_first_activation", time() );
 		}
+
+		return true;
 	}
 
 
 	/**
 	 * @param string $slug
 	 *
+	 * @return bool
 	 */
 	function deactivate( $slug ) {
 		if ( ! $this->can_deactivate( $slug ) ) {
-			return;
+			return false;
 		}
 
 		$slug = UM()->undash( $slug );
 
 		UM()->options()->update( "module_{$slug}_on", false );
+
+		return true;
 	}
 
 
 	/**
 	 * @param string $slug
 	 *
+	 * @return bool
 	 */
 	function flush_data( $slug ) {
 		if ( ! $this->can_flush( $slug ) ) {
-			return;
+			return false;
 		}
 
 		$data = $this->get_data( $slug );
@@ -326,6 +354,8 @@ class Modules {
 		UM()->options()->remove( "module_{$slug}_first_activation" );
 
 		include_once $data['path'] . DIRECTORY_SEPARATOR . 'uninstall.php';
+
+		return true;
 	}
 
 

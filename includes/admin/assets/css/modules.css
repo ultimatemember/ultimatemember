@@ -56,6 +56,11 @@
 	border-left: 4px solid #dba617;
 }
 
+.wp-list-table.modules .disabled.inactive th.check-column,
+.wp-list-table.modules .enabled.active th.check-column {
+    padding-left: 3px;
+}
+
 .wp-list-table.modules tr.active+tr.inactive td,
 .wp-list-table.modules tr.active+tr.inactive th,
 .wp-list-table.modules tr.disabled+tr.enabled td,
@@ -104,7 +109,7 @@
 	#wpbody-content .wp-list-table.modules td {
 		display: block;
 		width: auto;
-		padding: 10px 9px; /* reset from other list tables that have a label at this width */
+		padding: 10px 7px; /* reset from other list tables that have a label at this width */
 	}
 
 	/* Plugin description hidden via Screen Options */
@@ -166,8 +171,7 @@
 
 	.wp-list-table.modules thead td.check-column,
 	.wp-list-table.modules tfoot td.check-column,
-	.wp-list-table.modules .inactive th.check-column,
-	.wp-list-table.modules .enabled th.check-column {
-		padding-left: 9px;
+	.wp-list-table.modules .inactive th.check-column {
+		padding-left: 7px;
 	}
 }
