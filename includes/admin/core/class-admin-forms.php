@@ -364,6 +364,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Forms' ) ) {
 
 
 		/**
+		 * @param $field_data
+		 *
+		 * @return mixed
+		 */
+		function render_separator( $field_data ) {
+			return $field_data['value'] . '<hr />';
+		}
+
+
+		/**
 		 * Render text field
 		 *
 		 * @param $field_data

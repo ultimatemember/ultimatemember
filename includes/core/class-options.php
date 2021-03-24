@@ -156,5 +156,32 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 			return apply_filters( 'um_core_page_id_filter', 'core_' . $key );
 		}
 
+
+		/**
+		 * Set default UM settings
+		 *
+		 * @since 3.0
+		 *
+		 * @param array $defaults
+		 */
+		function set_defaults( $defaults ) {
+			$need_update = false;
+			$options = get_option( 'um_options', [] );
+
+			if ( ! empty( $defaults ) ) {
+				foreach ( $defaults as $key => $value ) {
+					//set new options to default
+					if ( ! isset( $options[ $key ] ) ) {
+						$options[ $key ] = $value;
+						$need_update = true;
+					}
+				}
+			}
+
+			if ( $need_update ) {
+				update_option( 'um_options', $options );
+			}
+		}
+
 	}
 }

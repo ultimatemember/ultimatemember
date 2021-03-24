@@ -32,6 +32,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 			add_action( 'admin_menu', array( &$this, 'primary_admin_menu' ), 0 );
 			add_action( 'admin_menu', array( &$this, 'secondary_menu_items' ), 1000 );
 			add_action( 'admin_menu', array( &$this, 'extension_menu' ), 9999 );
+			add_action( 'admin_menu', array( &$this, 'modules_menu' ), 99999 );
 
 			add_action( 'admin_head', array( $this, 'menu_order_count' ) );
 
@@ -200,10 +201,31 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 
 
 		/**
+		 * Role page menu callback
+		 */
+		function modules_page() {
+			include_once um_path . 'includes/admin/core/list-tables/modules-list-table.php';
+		}
+
+
+		/**
 		 * Extension menu
 		 */
 		function extension_menu() {
 			add_submenu_page( $this->slug, __( 'Extensions', 'ultimate-member' ), '<span style="color: #00B9EB">' .__( 'Extensions', 'ultimate-member' ) . '</span>', 'manage_options', $this->slug . '-extensions', array( &$this, 'admin_page' ) );
+		}
+
+
+		/**
+		 * Extension menu
+		 */
+		function modules_menu() {
+		    $modules = UM()->modules()->get_list();
+		    if ( empty( $modules ) ) {
+		        return;
+            }
+
+			add_submenu_page( $this->slug, __( 'Modules', 'ultimate-member' ), '<span style="color: #00B9EB">' . __( 'Modules', 'ultimate-member' ) . '</span>', 'manage_options', 'um-modules', [ &$this, 'modules_page' ] );
 		}
 
 

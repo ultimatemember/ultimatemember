@@ -418,7 +418,21 @@ if ( ! class_exists( 'UM' ) ) {
 
 				$array = explode( '\\', strtolower( $class ) );
 				$array[ count( $array ) - 1 ] = 'class-'. end( $array );
-				if ( strpos( $class, 'um_ext' ) === 0 ) {
+
+				if ( strpos( $class, 'umm' ) === 0 ) {
+					// module namespace
+					$module_slug = str_replace( '_', '-', $array[1] );
+					$module_data = $this->modules()->get_data( $module_slug );
+
+					if ( ! empty( $module_data['path'] ) ) {
+						$full_path = $module_data['path'] . DIRECTORY_SEPARATOR;
+
+						unset( $array[0], $array[1] );
+						$path = implode( DIRECTORY_SEPARATOR, $array );
+						$path = str_replace( '_', '-', $path );
+						$full_path .= $path . '.php';
+					}
+				} elseif ( strpos( $class, 'um_ext' ) === 0 ) {
 					$full_path = str_replace( 'ultimate-member', '', untrailingslashit( um_path ) ) . str_replace( '_', '-', $array[1] ) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR;
 					unset( $array[0], $array[1] );
 					$path = implode( DIRECTORY_SEPARATOR, $array );
@@ -528,6 +542,7 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		public function includes() {
 
+			$this->modules();
 			$this->common();
 
 			if ( $this->is_request( 'ajax' ) ) {
@@ -1499,6 +1514,20 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		function widgets_init() {
 			register_widget( 'um\widgets\UM_Search_Widget' );
+		}
+
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return um\Modules
+		 */
+		function modules() {
+			if ( empty( $this->classes['um\modules'] ) ) {
+				$this->classes['um\modules'] = new um\Modules();
+			}
+
+			return $this->classes['um\modules'];
 		}
 	}
 }
