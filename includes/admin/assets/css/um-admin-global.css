@@ -204,7 +204,8 @@ a.um-delete{ color: #a00; }
 }
 
 .um_hidden_notice,
-.um_block_settings_hide {
+.um_block_settings_hide,
+.components-select-control.um_block_settings_hide{
 	display: none;
 }
 

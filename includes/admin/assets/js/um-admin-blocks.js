@@ -60,7 +60,7 @@ var um_block_restriction = wp.compose.createHigherOrderComponent( function( Bloc
 			{},
 			wp.element.createElement( BlockEdit, props ),
 			wp.element.createElement(
-				wp.editor.InspectorControls,
+				wp.blockEditor.InspectorControls,
 				{},
 				wp.element.createElement(
 					wp.components.PanelBody,
