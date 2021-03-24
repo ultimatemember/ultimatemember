@@ -28,9 +28,6 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			$this->templates_path = um_path . 'includes/admin/templates/';
 
-			add_action( 'load-ultimate-member_page_um-modules', [ &$this, 'handle_modules_actions' ] );
-
-
 			add_action( 'admin_init', array( &$this, 'admin_init' ), 0 );
 
 			$prefix = is_network_admin() ? 'network_admin_' : '';
@@ -52,11 +49,22 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			add_action( 'parent_file', array( &$this, 'parent_file' ), 9 );
 			add_filter( 'gettext', array( &$this, 'gettext' ), 10, 4 );
 			add_filter( 'post_updated_messages', array( &$this, 'post_updated_messages' ) );
+
+
+
+			// @since 3.0
+			add_action( 'load-ultimate-member_page_um-modules', [ &$this, 'handle_modules_actions' ] );
 		}
 
 
 		/**
 		 * Handles Modules list table
+		 *
+		 * @since 3.0
+		 *
+		 * @uses Modules::activate() UM()->modules()->activate( $slug )
+		 * @uses Modules::deactivate() UM()->modules()->deactivate( $slug )
+		 * @uses Modules::flush_data() UM()->modules()->flush_data( $slug )
 		 */
 		function handle_modules_actions() {
 			if ( isset( $_REQUEST['_wp_http_referer'] ) ) {
@@ -67,10 +75,11 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 			if ( isset( $_GET['action'] ) ) {
 				switch ( sanitize_key( $_GET['action'] ) ) {
-					/* delete action */
 					case 'activate': {
+						// Activate module
 						$slugs = [];
 						if ( isset( $_GET['slug'] ) ) {
+							// single activate
 							$slug = sanitize_key( $_GET['slug'] );
 
 							if ( empty( $slug ) ) {
@@ -79,7 +88,8 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 							check_admin_referer( 'um_module_activate' . $slug . get_current_user_id() );
 							$slugs = [ $slug ];
-						} elseif( isset( $_REQUEST['item'] ) )  {
+						} elseif( isset( $_REQUEST['item'] ) ) {
+							// bulk activate
 							check_admin_referer( 'bulk-' . sanitize_key( __( 'Modules', 'ultimate-member' ) ) );
 							$slugs = array_map( 'sanitize_key', $_REQUEST['item'] );
 						}
@@ -96,8 +106,10 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						break;
 					}
 					case 'deactivate': {
+						// Deactivate module
 						$slugs = [];
 						if ( isset( $_GET['slug'] ) ) {
+							// single deactivate
 							$slug = sanitize_key( $_GET['slug'] );
 
 							if ( empty( $slug ) ) {
@@ -107,6 +119,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 							check_admin_referer( 'um_module_deactivate' . $slug . get_current_user_id() );
 							$slugs = [ $slug ];
 						} elseif( isset( $_REQUEST['item'] ) )  {
+							// bulk deactivate
 							check_admin_referer( 'bulk-' . sanitize_key( __( 'Modules', 'ultimate-member' ) ) );
 							$slugs = array_map( 'sanitize_key', $_REQUEST['item'] );
 						}
@@ -123,8 +136,10 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						break;
 					}
 					case 'flush-data': {
+						// Flush module's data
 						$slugs = [];
 						if ( isset( $_GET['slug'] ) ) {
+							// single flush
 							$slug = sanitize_key( $_GET['slug'] );
 
 							if ( empty( $slug ) ) {
@@ -134,6 +149,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 							check_admin_referer( 'um_module_flush' . $slug . get_current_user_id() );
 							$slugs = [ $slug ];
 						} elseif( isset( $_REQUEST['item'] ) )  {
+							// bulk flush
 							check_admin_referer( 'bulk-' . sanitize_key( __( 'Modules', 'ultimate-member' ) ) );
 							$slugs = array_map( 'sanitize_key', $_REQUEST['item'] );
 						}

@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Class Modules
  *
  * @package um
+ *
+ * @since 3.0
  */
 class Modules {
 
@@ -31,30 +33,27 @@ class Modules {
 
 	/**
 	 * Set modules list
+	 * @usedby on `um_core_loaded` hook for modules initialization
 	 *
+	 * @uses get_plugins() for getting installed plugins list
+	 * @uses DIRECTORY_SEPARATOR for getting proper path to modules' directories
 	 */
 	function predefined_modules() {
 		$modules = [
-			'forumwp' => [
+			'forumwp'   => [
 				'title'         => __( 'ForumWP integration', 'ultimate-member' ),
 				'description'   => __( 'Integrates Ultimate Member with ForumWP.', 'ultimate-member' ),
 				'plugin_slug'   => 'um-forumwp/um-forumwp.php',
-				'path'          => um_path . 'modules' . DIRECTORY_SEPARATOR . 'forumwp',
-				'url'           => um_url . 'modules/forumwp/',
 			],
-			'online' => [
+			'online'    => [
 				'title'         => __( 'Online', 'ultimate-member' ),
 				'description'   => __( 'Display online users and show the user online status on your site.', 'ultimate-member' ),
 				'plugin_slug'   => 'um-online/um-online.php',
-				'path'          => um_path . 'modules' . DIRECTORY_SEPARATOR . 'online',
-				'url'           => um_url . 'modules/online/',
 			],
 			'recaptcha' => [
 				'title'         => __( 'Google reCAPTCHA', 'ultimate-member' ),
 				'description'   => __( 'Protect your website from spam and integrate Google reCAPTCHA into your Ultimate Member forms.', 'ultimate-member' ),
 				'plugin_slug'   => 'um-recaptcha/um-recaptcha.php',
-				'path'          => um_path . 'modules' . DIRECTORY_SEPARATOR . 'recaptcha',
-				'url'           => um_url . 'modules/recaptcha/',
 			],
 		];
 
@@ -62,10 +61,22 @@ class Modules {
 
 		foreach ( $modules as $slug => &$data ) {
 			$data['key'] = $slug;
-			$data['disabled'] = array_key_exists( $data['plugin_slug'], $all_plugins );
 
-			if ( $data['disabled'] ) {
-				$data['description'] = '<strong>' . sprintf( __( 'Module will be disabled until "%s" plugin is installed.', 'ultimate-member' ), $all_plugins[ $data['plugin_slug'] ]['Name'] ) . '</strong><br />' . $data['description'];
+			$data['path'] = um_path . 'modules' . DIRECTORY_SEPARATOR . $slug;
+			$data['url'] = um_url . "modules/{$slug}/";
+
+			// check the module's dir
+			if ( ! is_dir( $data['path'] ) ) {
+
+				$data['disabled'] = true;
+				$data['description'] = '<strong>' . __( 'Module is hasn\'t been installed properly. Please check the module\'s directory and re-install it.', 'ultimate-member' ) . '</strong><br />' . $data['description'];
+
+			} else {
+				$data['disabled'] = array_key_exists( $data['plugin_slug'], $all_plugins );
+
+				if ( $data['disabled'] ) {
+					$data['description'] = '<strong>' . sprintf( __( 'Module will be disabled until "%s" plugin is installed.', 'ultimate-member' ), $all_plugins[ $data['plugin_slug'] ]['Name'] ) . '</strong><br />' . $data['description'];
+				}
 			}
 		}
 
@@ -76,10 +87,13 @@ class Modules {
 	/**
 	 * Get list of modules
 	 *
+	 * @uses list
+	 *
 	 * @return array
 	 */
 	function get_list() {
-		return $this->list;
+		$list = apply_filters( 'um_formatting_modules_list', $this->list );
+		return $list;
 	}
 
 
@@ -88,28 +102,28 @@ class Modules {
 	 *
 	 * @param string $slug
 	 *
-	 * @return bool|array
+	 * @return bool|array Returns `false` if module doesn't exists
+	 *
+	 * @uses exists
 	 */
 	function get_data( $slug ) {
-		$list = $this->get_list();
-
 		if ( ! $this->exists( $slug ) ) {
 			return false;
 		}
 
-		return $list[ $slug ];
+		return $this->list[ $slug ];
 	}
 
 
 	/**
-	 * @param $slug
+	 * Checking if module exists
 	 *
-	 * @return bool
+	 * @param string $slug
+	 *
+	 * @return bool Returns `false` if module doesn't exists, otherwise `true`
 	 */
 	function exists( $slug ) {
-		$modules = $this->get_list();
-
-		return array_key_exists( $slug, $modules );
+		return array_key_exists( $slug, $this->list );
 	}
 
 
@@ -157,13 +171,10 @@ class Modules {
 	 * Run main class of module
 	 *
 	 * @param string $slug Module slug
-	 * @param array $data Module data
 	 */
-	private function run( $slug, $data ) {
-		if ( ! empty( $data['path'] ) ) {
-			$slug = UM()->undash( $slug );
-			UM()->call_class( "umm\\{$slug}\\Init" );
-		}
+	private function run( $slug ) {
+		$slug = UM()->undash( $slug );
+		UM()->call_class( "umm\\{$slug}\\Init" );
 	}
 
 
@@ -263,7 +274,8 @@ class Modules {
 
 
 	/**
-	 * @param string $slug
+	 *
+	 * @param string $slug Module's slug
 	 *
 	 */
 	function activate( $slug ) {
@@ -271,10 +283,7 @@ class Modules {
 			return;
 		}
 
-		$data = $this->get_data( $slug );
-		if ( ! empty( $data['path'] ) ) {
-			$this->install( $slug )->start();
-		}
+		$this->install( $slug )->start();
 
 		$slug = UM()->undash( $slug );
 
@@ -313,10 +322,6 @@ class Modules {
 
 		$data = $this->get_data( $slug );
 
-		if ( empty( $data['path'] ) ) {
-			return;
-		}
-
 		$slug = UM()->undash( $slug );
 		UM()->options()->remove( "module_{$slug}_first_activation" );
 
@@ -338,7 +343,7 @@ class Modules {
 				continue;
 			}
 
-			$this->run( $slug, $data );
+			$this->run( $slug );
 		}
 	}
 }

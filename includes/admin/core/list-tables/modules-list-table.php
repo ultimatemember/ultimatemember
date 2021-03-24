@@ -272,7 +272,13 @@ class UM_Modules_List_Table extends WP_List_Table {
 			$actions['flush-data'] = '<a href="admin.php?page=um-modules&action=flush-data&slug=' . $item['key'] . '&_wpnonce=' . wp_create_nonce( 'um_module_flush' . $item['key'] . get_current_user_id() ) . '" class="delete">' . __( 'Flush data', 'ultimate-member' ). '</a>';
 		}
 
-		return sprintf('<div class="um-module-data-wrapper"><div class="um-module-icon-wrapper">%1$s</div><div class="um-module-title-wrapper">%2$s %3$s</div></div>', '<img class="um-module-icon" src="' . $item['url'] . '/icon.png" title="' . stripslashes( $item['title'] ) . '" />','<strong>' . stripslashes( $item['title'] ) . '</strong>', $this->row_actions( $actions ) );
+		if ( file_exists( $item['path'] . DIRECTORY_SEPARATOR . 'icon.png' ) ) {
+			$column_content = sprintf('<div class="um-module-data-wrapper"><div class="um-module-icon-wrapper">%1$s</div><div class="um-module-title-wrapper">%2$s %3$s</div></div>', '<img class="um-module-icon" src="' . $item['url'] . '/icon.png" title="' . stripslashes( $item['title'] ) . '" />','<strong>' . stripslashes( $item['title'] ) . '</strong>', $this->row_actions( $actions ) );
+		} else {
+			$column_content = sprintf('<div class="um-module-data-wrapper um-module-no-icon"><div class="um-module-title-wrapper">%1$s %2$s</div></div>', '<strong>' . stripslashes( $item['title'] ) . '</strong>', $this->row_actions( $actions ) );
+		}
+
+		return $column_content;
 	}
 }
 

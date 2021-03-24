@@ -84,6 +84,26 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			add_action( 'load-post.php', array( &$this, 'enqueue_cpt_scripts' ) );
 
 			add_filter( 'block_categories', array( &$this, 'blocks_category' ), 10, 2 );
+
+
+			// @since 3.0
+			add_action( 'load-ultimate-member_page_um-modules', [ &$this, 'modules_page' ] );
+		}
+
+
+		/**
+		 * @since 3.0
+		 */
+		function modules_page() {
+			add_action( 'admin_enqueue_scripts',  [ &$this, 'modules_page_scripts' ] );
+		}
+
+
+		/**
+		 * @since 3.0
+		 */
+		function modules_page_scripts() {
+			wp_enqueue_style( 'um_modules' );
 		}
 
 
@@ -97,7 +117,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 */
 		function enqueue_cpt_scripts() {
 			if ( ( isset( $_GET['post_type'] ) && 'um_form' == sanitize_key( $_GET['post_type'] ) ) ||
-			     ( isset( $_GET['post'] ) && 'um_form' == get_post_type( absint( $_GET['post'] ) ) ) ) {
+				 ( isset( $_GET['post'] ) && 'um_form' == get_post_type( absint( $_GET['post'] ) ) ) ) {
 				$this->um_cpt_form_screen = true;
 				add_action( 'admin_footer',  array( $this, 'admin_footer_scripts' ), 20 );
 			}
@@ -297,8 +317,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			$hide_footer = false;
 			global $pagenow, $post;
 			if ( ( 'post.php' == $pagenow || 'post-new.php' == $pagenow ) &&
-			     ( ( isset( $_GET['post_type'] ) && 'um_form' == sanitize_key( $_GET['post_type'] ) ) ||
-			       ( isset( $post->post_type ) && 'um_form' == $post->post_type ) ) ) {
+				 ( ( isset( $_GET['post_type'] ) && 'um_form' == sanitize_key( $_GET['post_type'] ) ) ||
+				   ( isset( $post->post_type ) && 'um_form' == $post->post_type ) ) ) {
 				$hide_footer = true;
 			}
 
@@ -537,7 +557,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 				 return $categories;
 			 }
 
-		 	return array_merge(
+			return array_merge(
 				 $categories,
 				 array(
 					 array(
@@ -586,11 +606,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 * Enqueue scripts and styles
 		 */
 		function admin_enqueue_scripts() {
+			wp_register_style( 'um_modules', $this->css_url . 'modules.css', [], ultimatemember_version, 'all' );
+
+
 			if ( UM()->admin()->is_um_screen() ) {
 
 				/*if ( get_post_type() != 'shop_order' ) {
-                    UM()->enqueue()->wp_enqueue_scripts();
-                }*/
+					UM()->enqueue()->wp_enqueue_scripts();
+				}*/
 
 				$modal_deps = array( 'um-admin-scripts' );
 				if ( $this->um_cpt_form_screen ) {
