@@ -2397,7 +2397,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 							if( ! empty( $placeholder ) && ! isset( $data['label'] ) ){
 									$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $placeholder );
-							}else{
+							}else if( isset( $data['label'] ) ){
 								$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] );
 							}
 							
