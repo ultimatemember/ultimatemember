@@ -2395,9 +2395,13 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$name = $key;
 							}
 
-							if ( isset( $data['label'] ) ) {
+							if ( isset( $data['label'] ) || ! empty( $placeholder ) ) {
 
-								$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] );
+								if( ! empty( $placeholder ) && ! isset( $data['label'] ) ){
+									$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $placeholder );
+								}else{
+									$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] );
+								}
 							}
 
 							$output .= '<input class="' . $this->get_class( $key, $data ) . '" type="' . esc_attr( $input ) . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $key . UM()->form()->form_suffix ) . '" value="' . $this->field_value( $key, $default, $data ) . '" placeholder="' . esc_attr( $placeholder ) . '" data-validate="' . esc_attr( $validate ) . '" data-key="' . esc_attr( $key ) . '" />';
