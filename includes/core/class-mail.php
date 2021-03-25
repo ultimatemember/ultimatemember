@@ -495,8 +495,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 			// check if there is template at theme blog ID folder
 			$template = locate_template( array(
-				trailingslashit( 'ultimate-member/email' . $blog_id ) . $template_name_file . '.php',
-				trailingslashit( 'ultimate-member/email' ) . $template_name_file . '.php'
+				trailingslashit( 'ultimate-member/email' . $blog_id ) . $template_name_file . '.php'
 			) );
 
 			// Return what we found.
