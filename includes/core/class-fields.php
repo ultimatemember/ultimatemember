@@ -257,6 +257,14 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 				update_option( 'um_fields', $fields );
 			}
+
+			global $wpdb;
+			$forms = $wpdb->get_col("SELECT ID FROM {$wpdb->posts} WHERE post_type = 'um_form'");
+			foreach ( $forms as $form_id ) {
+				$form_fields = get_post_meta( $form_id, '_um_custom_fields', true );
+				unset( $form_fields[ $id ] );
+				update_post_meta( $form_id, '_um_custom_fields', $form_fields );
+			}
 		}
 
 
