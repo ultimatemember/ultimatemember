@@ -127,6 +127,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$metakeys[] = '_completed';
 				$metakeys[] = '_reviews_avg';
 
+				//myCred meta
+				if (  function_exists( 'mycred_get_types' ) ) {
+					$mycred_types = mycred_get_types();
+					if ( ! empty( $mycred_types ) ) {
+						foreach ( array_keys( $mycred_types ) as $point_type ) {
+							$metakeys[] = $point_type;
+						}
+					}
+				}
+
 				$sortby_custom_keys = $wpdb->get_col( "SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key='_um_sortby_custom'" );
 				if ( empty( $sortby_custom_keys ) ) {
 					$sortby_custom_keys = array();
@@ -630,6 +640,17 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									'type'      => 'checkbox',
 									'label'     => __( 'Require a strong password? (when user resets password only)', 'ultimate-member' ),
 									'tooltip'   => __( 'Enable or disable a strong password rules on password reset and change procedure', 'ultimate-member' ),
+								),
+								array(
+									'id'        => 'profile_noindex',
+									'type'      => 'select',
+									'size'      => 'small',
+									'label'     => __( 'Avoid indexing profile by search engines', 'ultimate-member' ),
+									'tooltip'   => __( 'Hides the profile page for robots. This setting can be overridden by individual role settings.', 'ultimate-member' ),
+									'options'   => [
+										'0' => __( 'No', 'ultimate-member' ),
+										'1' => __( 'Yes', 'ultimate-member' ),
+									]
 								)
 							)
 						),
@@ -717,10 +738,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									'tooltip'   => __( 'Enable or disable a strong password rules on account page / change password tab', 'ultimate-member' ),
 								),
 								array(
-									'id'        => 'account_hide_in_directory',
-									'type'      => 'checkbox',
-									'label'     => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
-									'tooltip'   => __( 'Whether to allow users changing their profile visibility from member directory in account page.', 'ultimate-member' ),
+									'id'            => 'account_hide_in_directory',
+									'type'          => 'checkbox',
+									'label'         => __( 'Allow users to hide their profiles from directory', 'ultimate-member' ),
+									'tooltip'       => __( 'Whether to allow users changing their profile visibility from member directory in account page.', 'ultimate-member' ),
+									'conditional'   => array( 'account_tab_privacy', '=', '1' ),
 								),
 								array(
 									'id'          => 'account_hide_in_directory_default',

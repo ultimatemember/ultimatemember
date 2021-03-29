@@ -1139,7 +1139,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'required'      => 0,
 					'public'        => 1,
 					'editable'      => 1,
-					'default'       => '0',
+					'default'       => UM()->roles()->um_user_can( 'profile_noindex' ) ? '1' : '0',
 					'options'       => array(
 						'0'     => __( 'No', 'ultimate-member' ),
 						'1'     => __( 'Yes', 'ultimate-member' ),

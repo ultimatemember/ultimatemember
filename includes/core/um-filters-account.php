@@ -44,3 +44,18 @@ function um_account_sanitize_data( $data ) {
 	return $data;
 }
 add_filter( 'um_account_pre_updating_profile_array', 'um_account_sanitize_data', 10, 1 );
+
+
+/**
+ * Fix for the account field "Avoid indexing my profile by search engines"
+ * @since  2.1.16
+ * @param  bool   $value
+ * @return int
+ */
+function um_account_profile_noindex_value( $value ) {
+	if ( ! is_numeric( $value ) ) {
+		$value = (int) get_user_meta( um_profile_id(), 'profile_noindex', true );
+	}
+	return $value;
+}
+add_filter( 'um_profile_profile_noindex_empty__filter', 'um_account_profile_noindex_value' );

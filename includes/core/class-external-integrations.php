@@ -52,7 +52,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		 */
 		public function forumwp_fix() {
 			if ( function_exists( 'FMWP' ) ) {
-				remove_filter( 'single_template', array( FMWP()->shortcodes(), 'cpt_template' ) );
+				remove_filter( 'single_template', array( FMWP()->frontend()->shortcodes(), 'cpt_template' ) );
 			}
 		}
 

@@ -37,6 +37,14 @@
 	display: none;
 }
 
+.um-account-tab .um-field .um-field-label {
+	display: flex;
+	flex-direction: row;
+	align-items: baseline;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+}
+
 /*
 	- Main tab
 */

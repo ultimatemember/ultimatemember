@@ -3741,11 +3741,14 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$sort_col = array();
 			foreach ( $arr as $key => $row ) {
 				if ( $key == 'form_id' ) {
+					unset( $arr['form_id'] );
 					continue;
 				}
 
 				if ( isset( $row[ $col ] ) ) {
 					$sort_col[ $key ] = $row[ $col ];
+				} else {
+					unset( $arr[ $key ] );
 				}
 			}
 

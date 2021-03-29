@@ -128,7 +128,7 @@ jQuery(document).ready(function() {
 	/**
 		Ajax link
 	**/
-	jQuery('.um-admin-ajaxlink').click(function(e){
+	jQuery('.um-admin-ajaxlink').on('click', function(e){
 		e.preventDefault();
 		return false;
 	});
@@ -229,7 +229,7 @@ jQuery(document).ready(function() {
 		Conditional fields for
 		Radio Group
 	**/
-	jQuery('.um-conditional-radio-group input[type=radio]').click(function(){
+	jQuery('.um-conditional-radio-group input[type=radio]').on('click', function(){
 		var holder = jQuery('.um-conditional-radio-group');
 		
 		var val = jQuery(this).val();

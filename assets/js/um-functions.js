@@ -1,3 +1,193 @@
+/*
+ Plugin Name: Ultimate Member
+ Description: Frontend scripts
+ Version:     2.1.16
+ Author:      Ultimate Member
+ Author URI:  http://ultimatemember.com/
+ */
+
+if ( typeof (window.UM) !== 'object' ) {
+	window.UM = {};
+}
+
+UM.dropdown = {
+	/**
+	 * Hide the menu
+	 * @param   {object}    menu
+	 * @returns {undefined}
+	 */
+	hide: function (menu) {
+
+		var $menu = jQuery(menu);
+		$menu.parents('div').find('a').removeClass('active');
+		$menu.hide();
+
+	},
+	/**
+	 * Hide all menus
+	 * @returns {undefined}
+	 */
+	hideAll: function () {
+
+		var $menu = jQuery('.um-dropdown');
+		$menu.parents('div').find('a').removeClass('active');
+		$menu.hide();
+
+	},
+	/**
+	 * Update the menu position
+	 * @param   {object}    menu
+	 * @returns {undefined}
+	 */
+	setPosition: function (menu) {
+
+		var $menu = jQuery(menu),
+				menu_width = 200;
+
+		var direction = jQuery('html').attr('dir'),
+				element = $menu.attr('data-element'),
+				position = $menu.attr('data-position'),
+				trigger = $menu.attr('data-trigger');
+
+		var $element = element && jQuery(element).length ? jQuery(element) : ($menu.siblings('a').length ? $menu.siblings('a').first() : $menu.parent());
+		$element.addClass('um-trigger-menu-on-' + trigger);
+
+		var gap_right = 0,
+				left_p = ($element.outerWidth() - menu_width) / 2,
+				top_p = $element.outerHeight(),
+				coord = $element.offset();
+
+		// profile photo
+		if ( $element.is('.um-profile-photo') ) {
+			var $imgBox = $element.find('.um-profile-photo-img');
+			if ( $element.closest('div.uimob500').length ) {
+				top_p = $element.outerHeight() - $imgBox.outerHeight() / 4;
+			} else {
+				left_p = ($imgBox.outerWidth() - menu_width) / 2;
+				top_p = $imgBox.outerHeight() / 4;
+			}
+		}
+
+		// cover photo
+		if ( $element.is('.um-cover') ) {
+			var $imgBox = $element.find('.um-cover-e');
+			if ( $element.closest('div.uimob500').length ) {
+				left_p = ($imgBox.outerWidth() - menu_width) / 2;
+				top_p = $imgBox.outerHeight() / 2 + 24;
+			} else {
+				left_p = ($imgBox.outerWidth() - menu_width) / 2;
+				top_p = $imgBox.outerHeight() / 2 + 46;
+			}
+		}
+
+		// position
+		if ( position === 'lc' && direction === 'rtl' ) {
+			position = 'rc';
+		}
+		if( $element.outerWidth() < menu_width ){
+			if ( direction === 'rtl' && coord.left < menu_width*0.5 ){
+				position = 'rc';
+			} else if ( direction !== 'rtl' && (window.innerWidth - coord.left - $element.outerWidth()) < menu_width*0.5 ){
+				position = 'lc';
+			}
+		}
+
+		switch ( position ) {
+			case 'lc':
+
+				gap_right = $element.width() + 17;
+				$menu.css({
+					'top': 0,
+					'width': menu_width,
+					'left': 'auto',
+					'right': gap_right + 'px',
+					'text-align': 'center'
+				});
+
+				$menu.find('.um-dropdown-arr').css({
+					'top': '4px',
+					'left': 'auto',
+					'right': '-17px'
+				}).find('i').removeClass().addClass('um-icon-arrow-right-b');
+				break;
+
+			case 'rc':
+
+				gap_right = $element.width() + 25;
+				$menu.css({
+					'top': 0,
+					'width': menu_width,
+					'left': gap_right + 'px',
+					'right': 'auto',
+					'text-align': 'center'
+				});
+
+				$menu.find('.um-dropdown-arr').css({
+					'top': '4px',
+					'left': '-17px',
+					'right': 'auto'
+				}).find('i').removeClass().addClass('um-icon-arrow-left-b');
+				break;
+
+			case 'bc':
+			default:
+
+				var top_offset = $menu.data('top-offset');
+				if ( typeof top_offset !== 'undefined' ) {
+					top_p += top_offset;
+				}
+
+				$menu.css({
+					'top': top_p + 6,
+					'width': menu_width,
+					'left': left_p,
+					'right': 'auto',
+					'text-align': 'center'
+				});
+
+				$menu.find('.um-dropdown-arr').css({
+					'top': '-17px',
+					'left': ($menu.width() / 2) - 12,
+					'right': 'auto'
+				}).find('i').removeClass().addClass('um-icon-arrow-up-b');
+				break;
+		}
+	},
+	/**
+	 * Show the menu
+	 * @param   {object}    menu
+	 * @returns {undefined}
+	 */
+	show: function (menu) {
+
+		var $menu = jQuery(menu);
+		UM.dropdown.hideAll();
+		UM.dropdown.setPosition($menu);
+		$menu.show();
+
+	}
+};
+
+
+/**
+ * Hide all menus
+ * @deprecated since 2.1.16, use UM.dropdown.hideAll() instead
+ * @returns    {undefined}
+ */
+function UM_hide_menus() {
+	UM.dropdown.hideAll();
+}
+
+
+/**
+ * Update menu position
+ */
+function UM_domenus() {
+	jQuery('.um-dropdown').each( function( i, menu ) {
+		UM.dropdown.setPosition( menu );
+	});
+}
+
 
 function UM_check_password_matched() {
 	jQuery(document).on('keyup', 'input[data-key=user_password],input[data-key=confirm_user_password]', function(e) {
@@ -15,121 +205,6 @@ function UM_check_password_matched() {
 	});
 }
 
-function UM_hide_menus() {
-	var menu = jQuery( '.um-dropdown' );
-	menu.parents('div' ).find('a').removeClass( 'active' );
-	menu.hide();
-}
-
-function UM_domenus() {
-
-	jQuery('.um-dropdown').each( function() {
-
-		var menu = jQuery(this);
-		var element = jQuery(this).attr('data-element');
-		var position = jQuery(this).attr('data-position');
-
-		jQuery( element ).addClass('um-trigger-menu-on-' + menu.attr( 'data-trigger' ) );
-
-		if ( position === 'lc' && jQuery('html').attr('dir') === 'rtl' ){
-			position = 'rc';
-		}
-
-		if ( jQuery(window).width() <= 1200 && element === 'div.um-profile-edit' ) {
-			if ( jQuery('html').attr('dir') === 'rtl' ){
-				position = 'rc';
-			} else {
-				position = 'lc';
-			}
-
-		}
-
-		if ( 200 > jQuery(element).find('img').width() ) {
-			left_p = ( ( jQuery(element).width() - jQuery(element).find('img').width() ) / 2 ) + ( ( jQuery(element).find('img').width() - 200 ) / 2 );
-		} else {
-			left_p = ( ( jQuery(element).width() - jQuery(element).find('img').width() ) / 2 );
-		}
-
-		top_ = parseInt( jQuery(element).find('a').css('top') );
-
-		if ( top_ ) {
-			top_p = jQuery(element).find('img').height() + 4 + top_;
-		} else {
-			top_p = jQuery(element).find('img').height() + 4;
-		}
-
-		if ( top_p == 4 && element === 'div.um-cover' ) {
-			top_p = jQuery(element).height() / 2 + ( menu.height() / 2 );
-		} else if ( top_p == 4 ) {
-			top_p = jQuery(element).height() + 20;
-		}
-
-		if ( position === 'lc' ) {
-
-			gap_right = jQuery(element).width() + 17;
-			menu.css({
-				'top' : 0,
-				'width': 200,
-				'left': 'auto',
-				'right' : gap_right + 'px',
-				'text-align' : 'center'
-			});
-
-			menu.find('.um-dropdown-arr').find('i').removeClass().addClass('um-icon-arrow-right-b');
-
-			menu.find('.um-dropdown-arr').css({
-				'top' : '4px',
-				'left' : 'auto',
-				'right' : '-17px'
-			});
-
-		} else if ( position === 'rc' ) {
-
-			gap_right = jQuery(element).width() + 25;
-			menu.css({
-				'top' : 0,
-				'width': 200,
-				'left': gap_right + 'px',
-				'right' : 'auto',
-				'text-align' : 'center'
-			});
-
-			menu.find('.um-dropdown-arr').find('i').removeClass().addClass('um-icon-arrow-left-b');
-
-			menu.find('.um-dropdown-arr').css({
-				'top' : '4px',
-				'left' : '-17px',
-				'right' : 'auto'
-			});
-
-		} else if ( position === 'bc' ) {
-
-			var top_o = 0;
-			var top_offset = menu.data('top-offset');
-			if ( typeof top_offset !== 'undefined' ) {
-				top_o = top_offset*1;
-			}
-
-			menu.css({
-				'top' : top_p + top_o,
-				'width': 200,
-				'left': left_p,
-				'right' : 'auto',
-				'text-align' : 'center'
-			});
-
-			menu.find('.um-dropdown-arr').find('i').removeClass().addClass('um-icon-arrow-up-b');
-
-			menu.find('.um-dropdown-arr').css({
-				'top' : '-17px',
-				'left' : ( menu.width() / 2 ) - 12,
-				'right' : 'auto'
-			});
-
-		}
-	});
-
-}
 
 function um_responsive(){
 
@@ -516,71 +591,59 @@ function initCrop_UM() {
 
 }
 
-function um_new_modal( id, size, isPhoto, source ){
-
-	var modal = jQuery('body').find('.um-modal-overlay');
-
-	if ( modal.length == 0 ) {
+function um_new_modal( id, size, isPhoto, source ) {
+	var modalOverlay = jQuery('.um-modal-overlay');
+	if ( modalOverlay.length !== 0 ) {
+		modalOverlay.hide();
+		modalOverlay.next('.um-modal').hide();
+	}
 
 	jQuery('.tipsy').hide();
 
-	UM_hide_menus();
+	UM.dropdown.hideAll();
 
-	jQuery('body,html,textarea').css("overflow", "hidden");
+	jQuery( 'body,html,textarea' ).css( 'overflow', 'hidden' );
 
-	jQuery(document).bind("touchmove", function(e){e.preventDefault();});
-	jQuery('.um-modal').on('touchmove', function(e){e.stopPropagation();});
+	jQuery( document ).bind( "touchmove", function(e){e.preventDefault();});
+	jQuery( '.um-modal' ).on('touchmove', function(e){e.stopPropagation();});
 
-	if ( isPhoto ) {
-	jQuery('body').append('<div class="um-modal-overlay"></div><div class="um-modal is-photo"></div>');
-	} else {
-	jQuery('body').append('<div class="um-modal-overlay"></div><div class="um-modal no-photo"></div>');
-	}
+	var $tpl = jQuery( '<div class="um-modal-overlay"></div><div class="um-modal"></div>' );
+	var $modal = $tpl.filter('.um-modal');
+	$modal.append( jQuery( '#' + id ) );
 
-	jQuery('#' + id).prependTo('.um-modal');
+	jQuery('body').append( $tpl );
 
 	if ( isPhoto ) {
+		var photo_ = jQuery('<img src="' + source + '" />'),
+			photo_maxw = jQuery(window).width() - 60,
+			photo_maxh = jQuery(window).height() - jQuery(window).height() * 0.25;
 
-		jQuery('.um-modal').find('.um-modal-photo').html('<img />');
-
-		var photo_ = jQuery('.um-modal-photo img');
-		var photo_maxw = jQuery(window).width() - 60;
-		var photo_maxh = jQuery(window).height() - ( jQuery(window).height() * 0.25 );
-
-		photo_.attr("src", source);
 		photo_.on( 'load', function() {
+			$modal.find('.um-modal-photo').html( photo_ );
 
-			jQuery('#' + id).show();
-			jQuery('.um-modal').show();
-
-			photo_.css({'opacity': 0});
-			photo_.css({'max-width': photo_maxw });
-			photo_.css({'max-height': photo_maxh });
-
-			jQuery('.um-modal').css({
+			$modal.addClass('is-photo').css({
 				'width': photo_.width(),
 				'margin-left': '-' + photo_.width() / 2 + 'px'
-			});
+			}).show().children().show();
 
-			photo_.animate({'opacity' : 1}, 1000);
+			photo_.css({
+				'opacity': 0,
+				'max-width': photo_maxw,
+				'max-height': photo_maxh
+			}).animate({'opacity' : 1}, 1000);
 
 			um_modal_responsive();
-
 		});
-
 	} else {
 
-		jQuery('#' + id).show();
-		jQuery('.um-modal').show();
+		$modal.addClass('no-photo').show().children().show();
 
 		um_modal_size( size );
 
-		initImageUpload_UM( jQuery('.um-modal:visible').find('.um-single-image-upload') );
-		initFileUpload_UM( jQuery('.um-modal:visible').find('.um-single-file-upload') );
+		initImageUpload_UM( jQuery('.um-modal:visible .um-single-image-upload') );
+		initFileUpload_UM( jQuery('.um-modal:visible .um-single-file-upload') );
 
 		um_modal_responsive();
-
-	}
 
 	}
 
@@ -596,8 +659,8 @@ function um_modal_responsive() {
 		|| document.documentElement.clientHeight
 		|| document.body.clientHeight;
 
-	var modal = jQuery('.um-modal:visible');
-	var photo_modal = jQuery('.um-modal-body.photo:visible');
+	var modal = jQuery('.um-modal:visible').not('.um-modal-hidden');
+	var photo_modal = modal.find('.um-modal-body.photo:visible');
 
 	if ( photo_modal.length ) {
 
@@ -612,7 +675,7 @@ function um_modal_responsive() {
 		photo_.css({'max-width': photo_maxw });
 		photo_.css({'max-height': photo_maxh });
 
-		jQuery('.um-modal').css({
+		modal.css({
 			'width': photo_.width(),
 			'margin-left': '-' + photo_.width() / 2 + 'px'
 		});
@@ -670,21 +733,25 @@ function um_remove_modal() {
 
 	jQuery(document).unbind('touchmove');
 
-	jQuery('.um-modal div[id^="um_"]').hide().appendTo('body');
-	jQuery('.um-modal,.um-modal-overlay').remove();
+	jQuery('body > .um-modal div[id^="um_"]').hide().appendTo('body');
+	jQuery('body > .um-modal, body > .um-modal-overlay').remove();
 
 }
 
 function um_modal_size( aclass ) {
-	
-	jQuery('.um-modal:visible').addClass(aclass);
-
+	jQuery('.um-modal:visible').not('.um-modal-hidden').addClass( aclass );
 }
 
+/**
+ * Maybe deprecated
+ *
+ * @deprecated since 2.1.16
+ *
+ * @param id
+ * @param value
+ */
 function um_modal_add_attr( id, value ) {
-	
-	jQuery('.um-modal:visible').data( id, value );
-
+	jQuery('.um-modal:visible').not('.um-modal-hidden').data( id, value );
 }
 
 function prepare_Modal() {
@@ -744,16 +811,16 @@ function um_reset_field( dOm ){
 	 .find('input,textarea,select')
 	 .not(':button, :submit, :reset, :hidden')
 	 .val('')
-	 .removeAttr('checked')
-	 .removeAttr('selected');
+	 .prop('checked', false)
+	 .prop('selected', false);
 }
 
 jQuery(function(){
 
 	// Submit search form on keypress 'Enter'
-	jQuery(".um-search form *").keypress(function(e){
+	jQuery(".um-search form *").on( 'keypress', function(e){
 			 if (e.which == 13) {
-			    jQuery('.um-search form').submit();
+			    jQuery('.um-search form').trigger('submit');
 			    return false;
 			  }
 	});

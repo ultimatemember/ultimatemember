@@ -6,8 +6,8 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
-Tested up to: 5.6
-Stable tag: 2.1.15
+Tested up to: 5.7
+Stable tag: 2.1.16
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -155,10 +155,39 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
+= 2.1.16: March 10, 2021 =
+
+* Enhancements:
+  - Added: General and role setting to avoid indexing users' profiles
+  - Added: `um_prepare_user_results_array_meta` hook and the 2nd argument for `um_prepare_user_results_array` hook for handle $user_ids based on getting members query
+  - Added: Change password email when the password has been reset
+  - Added: jQuery v3 compatibility
+  - Added: An option "Administrator" in a menu settings to make the menu visible for administrators only
+
+* Bugfixes:
+  - Fixed: Creating and removing usermeta data with `password_rst_attempts` key, just update if exists for now
+  - Fixed: Using 'edit_users' capability instead of 'manage_options' for approve|reject membership
+  - Fixed: Using 'manage_options' capability instead of 'delete_users' for switching between members
+  - Fixed: Using myCRED points metakeys in UM usermeta table
+  - Fixed: Empty icons are shown in the popup "Choose from... available icons"
+  - Fixed: Member Directory slider filter with NaN or decimal range
+  - Fixed: PHP notices and warnings
+  - Fixed: Security vulnerability with User Account page and password field
+  - Fixed: User creating without username but based on first+last name with not-ASCII symbols
+  - Fixed: Password reset hash generating more than 1 time
+  - Fixed: Random order type translation string on the member directory
+  - Fixed: Resize and compress images when uploading on User Profile images fields or user wall
+  - Fixed: Displaying more than 1 UM popups on the same page
+  - Fixed: UM dropdown.js position calculation
+  - Fixed: Select2 dropdown block position calculation
+
+* Tweaks:
+  - Updated: Select2 to 4.0.13 version
+
 = 2.1.15: December 24, 2020 =
 
 * Bugfixes:
-  - Fixed conditional logic for the form fields without metakeys
+  - Fixed: Conditional logic for the form fields without metakeys
 
 = 2.1.14: December 22, 2020 =
 

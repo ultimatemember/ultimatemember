@@ -120,7 +120,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			}
 
 
-			wp_register_script( 'select2', $this->front_js_baseurl . 'select2/select2.full.min.js', array( 'jquery', 'jquery-masonry' ), ultimatemember_version, true );
+			wp_register_script( 'select2', $this->front_js_baseurl . 'select2/select2.full' . $this->suffix . '.js', array( 'jquery', 'jquery-masonry' ), '4.0.13', true );
 			wp_register_script( 'um_jquery_form', $this->front_js_baseurl . 'um-jquery-form' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 			wp_register_script( 'um_fileupload', $this->front_js_baseurl . 'um-fileupload' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 			wp_register_script( 'um_crop', $this->front_js_baseurl . 'um-crop' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
@@ -146,7 +146,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			wp_register_script( 'um_modal', $this->front_js_baseurl . 'um-modal' . $this->suffix . '.js', array( 'um_responsive' ), ultimatemember_version, true );
 
 
-			wp_register_style( 'select2', $this->front_css_baseurl . 'select2/select2.min.css', array(), ultimatemember_version );
+			wp_register_style( 'select2', $this->front_css_baseurl . 'select2/select2' . $this->suffix . '.css', array(), '4.0.13' );
 			wp_register_style( 'um_datetime', $this->front_css_baseurl . 'pickadate/default.css', array(), ultimatemember_version );
 			wp_register_style( 'um_datetime_date', $this->front_css_baseurl . 'pickadate/default.date.css', array( 'um_datetime' ), ultimatemember_version );
 			wp_register_style( 'um_datetime_time', $this->front_css_baseurl . 'pickadate/default.time.css', array( 'um_datetime' ), ultimatemember_version );

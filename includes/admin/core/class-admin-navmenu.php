@@ -68,7 +68,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 					}
 				}
 			}
-			$options = UM()->roles()->get_roles( false, array( 'administrator' ) );
+			$options = UM()->roles()->get_roles( false );
 			?>
 			<div class="um-nav-edit">
 				<div class="clear"></div>
@@ -253,7 +253,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Navmenu' ) ) {
 					<p class="description description-wide um-nav-roles" <# if( data.restriction_data.um_nav_public == '2' ){ #>style="display: block;"<# } #>>
 					<?php _e( "Select the member roles that can see this link", 'ultimate-member' ) ?><br/>
 
-					<?php $options = UM()->roles()->get_roles( false, array( 'administrator' ) );
+					<?php $options = UM()->roles()->get_roles( false );
 					$i = 0;
 					$html = '';
 					$columns = 2;
