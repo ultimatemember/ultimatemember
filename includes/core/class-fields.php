@@ -190,7 +190,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$fields[ $id ]['in_group'] = '';
 			}
 
-			UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
+			return $fields;
 		}
 
 

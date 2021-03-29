@@ -1190,7 +1190,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 						}
 					}
 
-					update_post_meta( $post_id, $k, $v );
+					if ( $k === '_um_custom_fields' ) {
+						update_post_meta( $post_id, $k, unserialize( wp_unslash( $v ) ) );
+					} else {
+						update_post_meta( $post_id, $k, $v );
+					}
+
 				}
 			}
 

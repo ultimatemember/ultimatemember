@@ -78,11 +78,11 @@ jQuery(document).ready(function() {
 			complete: function(){
 				form.css({'opacity': 1});
 			},
-			success: function(data){
-				if (data.error){
+			success: function(responce){
 
+				if (responce.data.error){
 					c = 0;
-					jQuery.each(data.error, function(i, v){
+					jQuery.each(responce.data.error, function(i, v){
 						c++;
 						if ( c == 1 ) {
 						form.find('#'+i).addClass('um-admin-error').trigger('focus');
@@ -93,7 +93,6 @@ jQuery(document).ready(function() {
 					um_admin_modal_responsive();
 
 				} else {
-
 					jQuery('.um-col-demon-settings').data('in_row', '');
 					jQuery('.um-col-demon-settings').data('in_sub_row', '');
 					jQuery('.um-col-demon-settings').data('in_column', '');
@@ -101,9 +100,9 @@ jQuery(document).ready(function() {
 
 					um_admin_remove_modal();
 					um_admin_update_builder();
-
+					jQuery('#um-serialized-fields').val( responce.data.fields )
 				}
-				
+
 			},
 			error: function(data){
 				console.log(data);

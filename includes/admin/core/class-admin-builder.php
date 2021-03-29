@@ -719,7 +719,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				 */
 				$field_args = apply_filters( 'um_admin_pre_save_field_to_form', $field_args );
 
-				UM()->fields()->update_field( $field_ID, $field_args, $post_id );
+				$fields = UM()->fields()->update_field( $field_ID, $field_args, $post_id );
 
 				/**
 				 * UM hook
@@ -752,11 +752,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			}
 
 			$output = json_encode( $output );
-			if ( is_array( $output ) ) {
-				print_r( $output );
-			} else {
-				echo $output;
-			}
+			wp_send_json_success( array( 'output' => $output, 'fields' => serialize($fields) ) );
+
 			die;
 		}
 
@@ -772,12 +769,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			}
 
 			$metabox = UM()->metabox();
-
 			/**
 			 * @var $act_id
 			 * @var $arg1
 			 * @var $arg2
 			 * @var $arg3
+			 * @var $fields
 			 */
 			extract( $_POST );
 
@@ -911,12 +908,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					break;
 
 				case 'um_admin_edit_field_popup':
-
 					ob_start();
 
 					$args = UM()->builtin()->get_core_field_attrs( $arg1 );
 
-					$form_fields = UM()->query()->get_attr( 'custom_fields', $arg2 );
+					$form_fields = unserialize( wp_unslash( $fields ) );
 
 					$metabox->set_field_type = $arg1;
 					$metabox->in_edit = true;

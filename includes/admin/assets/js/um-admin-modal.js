@@ -101,7 +101,8 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 	}
 
 	var form_mode = jQuery('input[type=hidden][id=form__um_mode]').val();
-	
+	var fields = jQuery('#um-serialized-fields').val();
+
 	jQuery.ajax({
 		url: wp.ajax.settings.url,
 		type: 'POST',
@@ -116,7 +117,8 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 			in_column: in_column,
 			in_group: in_group,
 			nonce: um_admin_scripts.nonce,
-			form_mode: form_mode
+			form_mode: form_mode,
+			fields: fields
 		},
 		complete: function(){
 			um_admin_modal_loaded();
