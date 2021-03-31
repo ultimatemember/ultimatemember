@@ -113,7 +113,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 		function on_new_field_added( $metakey, $args ) {
 			$metakeys = get_option( 'um_usermeta_fields', array() );
 
-			if ( $args['type'] == 'user_location' ) {
+			if ( $args[$metakey]['type'] == 'user_location' ) {
 				$update = false;
 				if ( ! in_array( $metakey . '_lat', $metakeys ) ) {
 					$update = true;

@@ -98,9 +98,9 @@ jQuery(document).ready(function() {
 					jQuery('.um-col-demon-settings').data('in_column', '');
 					jQuery('.um-col-demon-settings').data('in_group', '');
 
+					jQuery('#um-serialized-fields').val( responce.data.fields )
 					um_admin_remove_modal();
 					um_admin_update_builder();
-					jQuery('#um-serialized-fields').val( responce.data.fields )
 				}
 
 			},

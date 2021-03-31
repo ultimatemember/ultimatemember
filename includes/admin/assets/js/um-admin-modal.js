@@ -127,6 +127,7 @@ function um_admin_modal_ajaxcall( act_id, arg1, arg2, arg3 ) {
 		success: function(data) {
 
 			jQuery('.um-admin-modal').find('.um-admin-modal-body').html( data );
+			jQuery('.um-admin-modal').find('.um_all_field').val( fields );
 
 			um_responsive();
 			um_admin_live_update_scripts();

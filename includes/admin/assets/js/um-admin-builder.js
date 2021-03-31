@@ -5,6 +5,7 @@
  */
 function um_admin_update_builder() {
 	var form_id = jQuery('.um-admin-builder').data('form_id');
+	var form_fields = jQuery('#um-serialized-fields').val();
 
 	jQuery('.tipsy').hide();
 
@@ -14,6 +15,7 @@ function um_admin_update_builder() {
 		data: {
 			action:'um_update_builder',
 			form_id: form_id,
+			form_fields: form_fields,
 			nonce: um_admin_scripts.nonce
 		},
 		success: function( data ) {

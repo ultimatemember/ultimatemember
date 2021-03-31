@@ -134,29 +134,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 
 		/**
-		 * Updates a field globally
-		 *
-		 * @param  integer $id
-		 * @param  array   $args
-		 */
-		function globally_update_field( $id, $args ) {
-			$fields = UM()->builtin()->saved_fields;
-
-			$fields[ $id ] = $args;
-
-			unset( $fields[ $id ]['in_row'] );
-			unset( $fields[ $id ]['in_sub_row'] );
-			unset( $fields[ $id ]['in_column'] );
-			unset( $fields[ $id ]['in_group'] );
-			unset( $fields[ $id ]['position'] );
-
-			do_action( 'um_add_new_field', $id, $args );
-
-			update_option( 'um_fields', $fields );
-		}
-
-
-		/**
 		 * Updates a field in form only
 		 *
 		 * @param  integer $id
@@ -190,7 +167,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				$fields[ $id ]['in_group'] = '';
 			}
 
-			return $fields;
+			UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
 		}
 
 
@@ -335,9 +312,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @param  integer $id
 		 * @param  integer $form_id
 		 */
-		function duplicate_field( $id, $form_id ) {
-			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
-			$all_fields = UM()->builtin()->saved_fields;
+		function duplicate_field( $id, $form_id, $fields ) {
+			$fields = unserialize( wp_unslash( $fields ) );
 
 			$inc = count( $fields ) + 1;
 
@@ -352,20 +328,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$duplicate['position'] = $new_position;
 
 			$fields[ $new_metakey ] = $duplicate;
-			$all_fields[ $new_metakey ] = $duplicate;
-
-			// not global attributes
-			unset( $all_fields[ $new_metakey ]['in_row'] );
-			unset( $all_fields[ $new_metakey ]['in_sub_row'] );
-			unset( $all_fields[ $new_metakey ]['in_column'] );
-			unset( $all_fields[ $new_metakey ]['in_group'] );
-			unset( $all_fields[ $new_metakey ]['position'] );
-
-
-			do_action( 'um_add_new_field', $new_metakey, $duplicate );
-
-			UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
-			update_option( 'um_fields', $all_fields );
+			
+			return $fields;
 		}
 
 
@@ -4612,6 +4576,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			 * @var $act_id
 			 * @var $arg1
 			 * @var $arg2
+			 * @var $fields
 			 */
 			extract( $_POST );
 
@@ -4628,7 +4593,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			switch ( $act_id ) {
 
 				case 'um_admin_duplicate_field':
-					$this->duplicate_field( $arg1, $arg2 );
+					$fields = $this->duplicate_field( $arg1, $arg2, $fields );
 					break;
 
 				case 'um_admin_remove_field_global':
@@ -4649,13 +4614,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			}
 
-			if ( is_array( $output ) ) {
-				print_r( $output );
-			} else {
-				echo $output;
-			}
-			die;
-
+			wp_send_json_success( array( 'output' => $output, 'fields' => serialize( $fields ) ) );
 		}
 
 

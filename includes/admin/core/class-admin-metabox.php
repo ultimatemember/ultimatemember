@@ -1191,7 +1191,31 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					}
 
 					if ( $k === '_um_custom_fields' ) {
-						update_post_meta( $post_id, $k, unserialize( wp_unslash( $v ) ) );
+						$fields = unserialize( wp_unslash( $v ) );
+						update_post_meta( $post_id, $k, $fields );
+
+						foreach ( $fields as $key => $value ) {
+							if ( strstr( $key, '_um_row_' ) ) {
+								unset( $fields[$key] );
+							}
+						}
+
+						$custom_fields = get_option( 'um_fields', array() );
+						foreach ( $fields as $key => $field ) {
+							unset( $fields[ $key ]['in_row'] );
+							unset( $fields[ $key ]['in_sub_row'] );
+							unset( $fields[ $key ]['in_column'] );
+							unset( $fields[ $key ]['in_group'] );
+							unset( $fields[ $key ]['position'] );
+							do_action( 'um_add_new_field', $key, $fields );
+						}
+
+						$um_fields =  array_merge( $fields, $custom_fields ) ;
+						update_option( 'um_fields', $um_fields );
+
+						$metakeys = get_option( 'um_usermeta_fields', array() );
+						$um_usermeta_fields = array_unique( array_merge( array_keys($fields), $metakeys ) );
+						update_option( 'um_usermeta_fields', $um_usermeta_fields );
 					} else {
 						update_post_meta( $post_id, $k, $v );
 					}

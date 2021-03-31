@@ -20,6 +20,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 */
 		var $form_id;
 
+		/**
+		 * @var
+		 */
+		var $form_fields;
+
 
 		/**
 		 * Admin_Builder constructor.
@@ -295,6 +300,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			ob_start();
 
 			$this->form_id = absint( $_POST['form_id'] );
+			$this->form_fields = $_POST['form_fields'];
 
 			$this->show_builder();
 
@@ -385,10 +391,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 		/**
 		 * Display the builder
+		 *
+		 * @param $fields
 		 */
 		function show_builder() {
+			$fields = unserialize( wp_unslash( $this->form_fields ) );
 
-			$fields = UM()->query()->get_attr( 'custom_fields', $this->form_id );
+			if ( !isset( $fields ) || empty( $fields ) ) {
+				$fields = UM()->query()->get_attr( 'custom_fields', $this->form_id );
+			}
 
 			if ( !isset( $fields ) || empty( $fields ) ) { ?>
 
@@ -613,6 +624,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			}
 
 			$output['error'] = null;
+			$fields = array();
 
 			$array = array(
 				'field_type'    => sanitize_key( $_POST['_type'] ),
@@ -718,43 +730,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				 * ?>
 				 */
 				$field_args = apply_filters( 'um_admin_pre_save_field_to_form', $field_args );
-
-				$fields = UM()->fields()->update_field( $field_ID, $field_args, $post_id );
-
-				/**
-				 * UM hook
-				 *
-				 * @type filter
-				 * @title um_admin_pre_save_field_to_db
-				 * @description Change field options before save to DB
-				 * @input_vars
-				 * [{"var":"$field_args","type":"array","desc":"Field Options"}]
-				 * @change_log
-				 * ["Since: 2.0"]
-				 * @usage add_filter( 'um_admin_pre_save_field_to_db', 'function_name', 10, 1 );
-				 * @example
-				 * <?php
-				 * add_filter( 'um_admin_pre_save_field_to_db', 'my_admin_pre_save_field_to_db', 10, 1 );
-				 * function my_admin_pre_save_field_to_form( $field_args ) {
-				 *     // your code here
-				 *     return $field_args;
-				 * }
-				 * ?>
-				 */
-				$field_args = apply_filters( 'um_admin_pre_save_field_to_db', $field_args );
-
-				if ( ! isset( $array['args']['form_only'] ) ) {
-					if ( ! isset( UM()->builtin()->predefined_fields[ $field_ID ] ) ) {
-						UM()->fields()->globally_update_field( $field_ID, $field_args );
-					}
-				}
+				$fields = unserialize( wp_unslash( $_POST['all_field'] ) );
+				$fields[ $field_ID ] = $field_args;
 
 			}
 
 			$output = json_encode( $output );
-			wp_send_json_success( array( 'output' => $output, 'fields' => serialize($fields) ) );
-
-			die;
+			wp_send_json_success( array( 'output' => $output, 'fields' => serialize( $fields ) ) );
 		}
 
 

@@ -25,6 +25,7 @@ jQuery(document).ready(function() {
 		var act_id = jQuery(this).data('silent_action');
 		var arg1 = jQuery(this).data('arg1');
 		var arg2 = jQuery(this).data('arg2');
+		var fields = jQuery('#um-serialized-fields').val();
 
 		jQuery('.tipsy').hide();
 
@@ -37,13 +38,15 @@ jQuery(document).ready(function() {
 				act_id : act_id,
 				arg1 : arg1,
 				arg2 : arg2,
+				fields : fields,
 				in_row: in_row,
 				in_sub_row: in_sub_row,
 				in_column: in_column,
 				in_group: in_group,
 				nonce: um_admin_scripts.nonce
 			},
-			success: function( data ) {
+			success: function( responce ) {
+				jQuery('#um-serialized-fields').val(responce.data.fields);
 				demon_settings.data('in_row', '').data('in_sub_row', '').data('in_column', '').data('in_group', '');
 				um_admin_modal_responsive();
 				um_admin_update_builder();
