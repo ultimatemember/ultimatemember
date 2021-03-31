@@ -508,10 +508,19 @@ jQuery(document).ready(function() {
 
 	jQuery('.um-form input[class="um-button"][type="submit"]').prop('disabled', false);
 
-	jQuery(document).one('click', '.um:not(.um-account) .um-form input[class="um-button"][type="submit"]:not(.um-has-recaptcha)', function() {
-		jQuery(this).attr('disabled','disabled');
-		jQuery(this).parents('form').trigger('submit');
-	});
+	/* Form submit */
+	jQuery( document ).one( 'click', '.um:not(.um-account) .um-form input[class="um-button"][type="submit"]:not(.um-has-recaptcha)', function (e) {
+		var $button = jQuery( e.target ).attr( 'disabled', 'disabled' );
+		var $form = $button.closest( 'form' );
+
+		/* form fields that was visible */
+		var visFields = $form.find( '.um-field[data-key]' ).filter( ':visible' ).map( function (i, el) {
+			return el.getAttribute( 'data-key' );
+		} ).toArray().join( ',' );
+
+		$form.append( '<input type="hidden" name="um_visible_fields" value="' + visFields + '" />' );
+		$form.trigger( 'submit' );
+	} );
 
 
 	var um_select_options_cache = {};

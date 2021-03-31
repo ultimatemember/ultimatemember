@@ -15,7 +15,15 @@ jQuery(document).ready(function() {
 
 	jQuery( document.body ).on( 'click', '.um-profile-save', function(e){
 		e.preventDefault();
-		jQuery(this).parents('.um').find('form').trigger('submit');
+		var $form = jQuery( e.target ).closest( 'form' );
+
+		/* form fields that was visible */
+		var visFields = $form.find( '.um-field[data-key]' ).filter( ':visible' ).map( function (i, el) {
+			return el.getAttribute( 'data-key' );
+		} ).toArray().join( ',' );
+
+		$form.append( '<input type="hidden" name="um_visible_fields" value="' + visFields + '" />' );
+		$form.trigger( 'submit' );		
 		return false;
 	});
 
