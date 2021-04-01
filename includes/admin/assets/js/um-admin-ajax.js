@@ -46,6 +46,7 @@ jQuery(document).ready(function() {
 				nonce: um_admin_scripts.nonce
 			},
 			success: function( responce ) {
+				console.log(responce.data.fields)
 				jQuery('#um-serialized-fields').val(responce.data.fields);
 				demon_settings.data('in_row', '').data('in_sub_row', '').data('in_column', '').data('in_group', '');
 				um_admin_modal_responsive();

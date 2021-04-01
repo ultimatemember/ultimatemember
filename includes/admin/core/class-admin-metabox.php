@@ -1357,7 +1357,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 						<option></option>
 
-						<?php $fields = UM()->query()->get_attr( 'custom_fields', $form_id );
+						<?php $fields = unserialize( wp_unslash( $_POST['fields'] ) );
 
 						foreach ( $fields as $key => $array ) {
 							if ( isset( $array['title'] ) &&

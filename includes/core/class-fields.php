@@ -176,45 +176,40 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @param  integer $id
 		 * @param  integer $form_id
+		 * @param  array $fields
+		 *
+		 * @return array
 		 */
-		function delete_field_from_form( $id, $form_id ) {
-			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
+		function delete_field_from_form( $id, $form_id, $fields ) {
+			$fields = unserialize( wp_unslash( $fields ) );
 
-			if ( isset( $fields[ $id ] ) ) {
-				$condition_fields = get_option( 'um_fields' );
-
-				if( ! is_array( $condition_fields ) ) $condition_fields = array();
-
-				foreach ( $condition_fields as $key => $value ) {
-					$deleted_field = array_search( $id, $value );
-
-					if ( $key != $id && $deleted_field != false ) {
-						$deleted_field_id = str_replace( 'conditional_field', '', $deleted_field );
-
-						if ( $deleted_field_id == '' ) {
-							$arr_id = 0;
-						} else {
-							$arr_id = $deleted_field_id;
-						}
-
-						unset( $condition_fields[ $key ][ 'conditional_action' . $deleted_field_id ] );
-						unset( $condition_fields[ $key ][ $deleted_field ] );
-						unset( $condition_fields[ $key ][ 'conditional_operator' . $deleted_field_id ] );
-						unset( $condition_fields[ $key ][ 'conditional_value' . $deleted_field_id ] );
-						unset( $condition_fields[ $key ]['conditions'][ $arr_id ] );
-
-						unset( $fields[ $key ][ 'conditional_action' . $deleted_field_id ] );
-						unset( $fields[ $key ][ $deleted_field ] );
-						unset( $fields[ $key ][ 'conditional_operator' . $deleted_field_id ] );
-						unset( $fields[ $key ][ 'conditional_value' . $deleted_field_id ] );
-						unset( $fields[ $key ]['conditions'][ $arr_id ] );
-					}
-				}
-
-				update_option( 'um_fields' , $condition_fields );
-				unset( $fields[ $id ] );
-				UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
+			if ( ! is_array( $fields ) ) {
+				$fields = array();
 			}
+
+			foreach ( $fields as $key => $value ) {
+				$deleted_field = array_search( $id, $value );
+
+				if ( $key != $id && $deleted_field != false ) {
+					$deleted_field_id = str_replace( 'conditional_field', '', $deleted_field );
+
+					if ( $deleted_field_id == '' ) {
+						$arr_id = 0;
+					} else {
+						$arr_id = $deleted_field_id;
+					}
+
+					unset( $fields[ $key ][ 'conditional_action' . $deleted_field_id ] );
+					unset( $fields[ $key ][ $deleted_field ] );
+					unset( $fields[ $key ][ 'conditional_operator' . $deleted_field_id ] );
+					unset( $fields[ $key ][ 'conditional_value' . $deleted_field_id ] );
+					unset( $fields[ $key ]['conditions'][ $arr_id ] );
+				}
+			}
+
+			unset( $fields[ $id ] );
+			return $fields;
+
 		}
 
 
@@ -311,6 +306,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @param  integer $id
 		 * @param  integer $form_id
+		 * @param  array $fields
+		 *
+		 * @return array
 		 */
 		function duplicate_field( $id, $form_id, $fields ) {
 			$fields = unserialize( wp_unslash( $fields ) );
@@ -328,7 +326,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			$duplicate['position'] = $new_position;
 
 			$fields[ $new_metakey ] = $duplicate;
-			
+
 			return $fields;
 		}
 
@@ -4601,7 +4599,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					break;
 
 				case 'um_admin_remove_field':
-					$this->delete_field_from_form( $arg1, $arg2 );
+					$fields = $this->delete_field_from_form( $arg1, $arg2, $fields );
 					break;
 
 				case 'um_admin_add_field_from_predefined':
