@@ -1601,7 +1601,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 										array(
 											'key'       => $field,
 											'value'     => trim( $value ),
-											'compare'   => apply_filters( 'um_members_directory_filter_text', '=', $field )
+											'compare'   => apply_filters( 'um_members_directory_filter_text', 'LIKE', $field )
 										),
 									);
 
