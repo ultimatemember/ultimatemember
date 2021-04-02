@@ -342,10 +342,9 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 					} else {
 						if ( ! empty( $tabs ) ) {
 							foreach ( $tabs as $k => $tab ) {
-								if ( ! empty( $tab['hidden'] ) ) {
-									$this->active_tab = $k;
-									break;
-								}
+								// set first tab in order
+								$this->active_tab = $k;
+								break;
 							}
 						}
 					}
