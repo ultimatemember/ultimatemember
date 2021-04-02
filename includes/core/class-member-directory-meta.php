@@ -74,7 +74,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				update_option( 'um_usermeta_fields', array_values( $metakeys ) );
 			}
 
-			apply_filters( 'um_metadata_on_delete_custom_field', $metakeys, $metakey, $args );
+			do_action( 'um_metadata_on_delete_custom_field', $metakeys, $metakey, $args );
 		}
 
 
@@ -92,7 +92,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				update_option( 'um_usermeta_fields', array_values( $metakeys ) );
 			}
 
-			apply_filters( 'um_metadata_on_new_field_added', $metakeys, $metakey, $args );
+			do_action( 'um_metadata_on_new_field_added', $metakeys, $metakey, $args );
 		}
 
 
