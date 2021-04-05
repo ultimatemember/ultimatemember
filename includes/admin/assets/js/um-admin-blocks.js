@@ -60,12 +60,13 @@ var um_block_restriction = wp.compose.createHigherOrderComponent( function( Bloc
 			{},
 			wp.element.createElement( BlockEdit, props ),
 			wp.element.createElement(
-				wp.editor.InspectorControls,
+				wp.blockEditor.InspectorControls,
 				{},
 				wp.element.createElement(
 					wp.components.PanelBody,
 					{
-						title: wp.i18n.__( 'UM access Controls', 'ultimate-member' )
+						title: wp.i18n.__( 'UM access Controls', 'ultimate-member' ),
+						className: 'um_block_settings'
 					},
 					wp.element.createElement(
 						wp.components.ToggleControl,
