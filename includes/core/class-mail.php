@@ -531,7 +531,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 					$path = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : um_path . 'templates/email';
 					break;
 				case 'uploads':
-					$path = UM()->uploader()->get_upload_base_dir() . 'templates/email' . $blog_id;
+					$path = UM()->uploader()->get_upload_base_dir() . 'templates/email';
 					break;
 				default :
 					if( is_dir( $location ) ){

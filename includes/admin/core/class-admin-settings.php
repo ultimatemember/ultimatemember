@@ -3007,6 +3007,14 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 			 *     return $save_to;
 			 * }
 			 * ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_save_email_templates_to', 'my_um_save_email_templates_to' );
+			 * function my_email_template_body_attrs( $save_to ) {
+			 *     $save_to = trailingslashit( ABSPATH ) . 'um-templates';
+			 *     return $save_to;
+			 * }
+			 * ?>
 			 */
 			$location = apply_filters( 'um_save_email_templates_to', 'theme' );
 
