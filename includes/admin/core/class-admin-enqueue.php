@@ -279,7 +279,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 * Field Processing
 		 */
 		function load_field() {
-			wp_register_script( 'um_admin_field', $this->js_url . 'um-admin-field.js', array('jquery', 'wp-util'), ultimatemember_version, true );
+			wp_register_script( 'um_admin_field', $this->js_url . 'um-admin-field.js', array('jquery', 'wp-util', 'wp-i18n'), ultimatemember_version, true );
 			wp_enqueue_script( 'um_admin_field' );
 		}
 

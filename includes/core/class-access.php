@@ -1043,7 +1043,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			}
 			return $content;
 		}
-		
+
 
 		/**
 		 * Turn on the content replacement on the filter 'the_content'
@@ -1054,7 +1054,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		public function replace_post_content_on() {
 			add_filter( 'the_content', array( $this, 'replace_post_content' ), 9999, 1 );
 		}
-		
+
 
 		/**
 		 * Turn off the content replacement on the filter 'the_content'
