@@ -99,14 +99,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				$metakeys = array();
 				foreach ( UM()->builtin()->all_user_fields as $all_user_field ) {
-					if ( $all_user_field['type'] == 'user_location' ) {
-						$metakeys[] = $all_user_field['metakey'] . '_lat';
-						$metakeys[] = $all_user_field['metakey'] . '_lng';
-						$metakeys[] = $all_user_field['metakey'] . '_url';
-					} else {
-						$metakeys[] = $all_user_field['metakey'];
-					}
+					$metakeys[] = $all_user_field['metakey'];
 				}
+
+				$metakeys = apply_filters( 'um_metadata_same_page_update_ajax', $metakeys, UM()->builtin()->all_user_fields );
 
 				if ( is_multisite() ) {
 
