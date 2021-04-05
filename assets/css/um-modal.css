@@ -84,26 +84,24 @@
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
-	position: fixed;
-	left: 50%;
-	display: none;
-	z-index: 1999993;
-	box-sizing: border-box;
 	bottom: -50px;
+	box-sizing: border-box;
+	display: none;
+	left: 50%;
+	overflow: auto;
+	position: fixed;
+	z-index: 1999993;
 }
 .um-modal.normal {width: 500px;margin-left: -250px;}
 .um-modal.large {width: 730px;margin-left: -365px;}
 .um-modal.small {width: 400px;margin-left: -200px;}
 
 .um-modal-body {
+	background: #fff;
+	box-sizing: border-box;
 	min-height: 3px;
 	padding: 20px;
-	box-sizing: border-box;
 	width: 100%;
-	background: #fff;
-	-moz-border-radius: 0 0 3px 3px;
-	-webkit-border-radius: 0 0 3px 3px;
-	border-radius: 0 0 3px 3px;
 }
 
 .um-modal-body.photo {
@@ -146,7 +144,11 @@
 }
 
 .um-modal-footer {
-	margin-top: 20px;
+	background-color: #fff;
+	-moz-border-radius: 0px 0px 3px 3px;
+	-webkit-border-radius: 0px 0px 3px 3px;
+	border-radius: 0px 0px 3px 3px;
+	padding: 0.5em;
 }
 
 .um-modal-left {

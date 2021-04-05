@@ -1043,6 +1043,7 @@ function um_profile_header( $args ) {
 
 					$items = array(
 						'<a href="javascript:void(0);" class="um-manual-trigger" data-parent=".um-profile-photo" data-child=".um-btn-auto-width">' . __( 'Change photo', 'ultimate-member' ) . '</a>',
+						'<a href="javascript:void(0);" class="um-modal-open" data-modal-content="#um_field__profile_photo .um-modal-hidden-content .um-modal-body" data-modal-header="' . __( 'Change your profile photo', 'ultimate-member' ) . '" data-modal-size="normal">' . __( 'Change photo v3', 'ultimate-member' ) . '</a>',
 						'<a href="javascript:void(0);" class="um-reset-profile-photo" data-user_id="' . esc_attr( um_profile_id() ) . '" data-default_src="' . esc_url( um_get_default_avatar_uri() ) . '">' . __( 'Remove photo', 'ultimate-member' ) . '</a>',
 						'<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
 					);
