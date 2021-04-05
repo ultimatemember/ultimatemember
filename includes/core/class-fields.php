@@ -238,9 +238,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @param integer $global_id
 		 * @param integer $form_id
 		 * @param array   $position
+		 * @param array   $fields
+		 *
+		 * @return array
 		 */
-		function add_field_from_list( $global_id, $form_id, $position = array() ) {
-			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
+		function add_field_from_list( $global_id, $form_id, $position = array(), $fields ) {
+			$fields = unserialize( wp_unslash( $fields ) );
 			$field_scope = UM()->builtin()->saved_fields;
 
 			if ( ! isset( $fields[ $global_id ] ) ) {
@@ -260,10 +263,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					}
 				}
 
-				// add field to form
-				UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
-
 			}
+
+			return $fields;
 		}
 
 
@@ -273,9 +275,12 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * @param integer $global_id
 		 * @param integer $form_id
 		 * @param array   $position
+		 * @param array   $fields
+		 *
+		 * @return array
 		 */
-		function add_field_from_predefined( $global_id, $form_id, $position = array() ) {
-			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
+		function add_field_from_predefined( $global_id, $form_id, $position = array(), $fields ) {
+			$fields = unserialize( wp_unslash( $fields ) );
 			$field_scope = UM()->builtin()->predefined_fields;
 
 			if ( ! isset( $fields[ $global_id ] ) ) {
@@ -294,10 +299,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						$fields[ $global_id ][ $key ] = $val;
 					}
 				}
-
-				// add field to form
-				UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
 			}
+
+			return $fields;
 		}
 
 
@@ -4658,11 +4662,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					break;
 
 				case 'um_admin_add_field_from_predefined':
-					$this->add_field_from_predefined( $arg1, $arg2, $position );
+					$fields = $this->add_field_from_predefined( $arg1, $arg2, $position, $fields );
 					break;
 
 				case 'um_admin_add_field_from_list':
-					$this->add_field_from_list( $arg1, $arg2, $position );
+					$fields = $this->add_field_from_list( $arg1, $arg2, $position, $fields  );
 					break;
 
 				case 'um_admin_add_row':
