@@ -116,8 +116,9 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			) ) );
 
 			// get template file from uploads folder if needed
-			if ( apply_filters( 'um_save_email_templates_to_uploads', false ) && file_exists( $this->get_template_file( 'uploads', $template_name ) ) ) {
-				$template = $this->get_template_file( 'uploads', $template_name );
+			$location = apply_filters( 'um_save_email_templates_to', 'theme' );
+			if ( $location !== 'theme' && file_exists( $this->get_template_file( $location, $template_name ) ) ) {
+				$template = $this->get_template_file( $location, $template_name );
 			}
 
 			// if there isn't template at theme folder get template file from plugin dir
@@ -513,27 +514,31 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @access public
 		 * @version 2.1.17
 		 *
-		 * @param string $location
+		 * @param string $location			Where to save templates: 'theme', 'plugin', 'uploads' or directory
 		 * @param string $template_name
 		 *
 		 * @return string
 		 */
 		function get_template_file( $location, $template_name ) {
-			$path = '';
+			$blog_id = $this->get_blog_id(); //save email template in blog ID folder if we use multisite
 			$template_name_file = $this->get_template_filename( $template_name );
 
 			switch( $location ) {
 				case 'theme':
-					//save email template in blog ID folder if we use multisite
-					$blog_id = $this->get_blog_id();
 					$path = get_stylesheet_directory() . '/ultimate-member/email' . $blog_id;
 					break;
 				case 'plugin':
 					$path = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : um_path . 'templates/email';
 					break;
 				case 'uploads':
-					$blog_id = $this->get_blog_id();
 					$path = UM()->uploader()->get_upload_base_dir() . 'templates/email' . $blog_id;
+					break;
+				default :
+					if( is_dir( $location ) ){
+						$path = trailingslashit( $location ) . 'email' . $blog_id;
+					} else {
+						$path = get_stylesheet_directory() . '/ultimate-member/email' . $blog_id;
+					}
 					break;
 			}
 			$template_path = wp_normalize_path( trailingslashit( $path ) . $template_name_file . '.php' );

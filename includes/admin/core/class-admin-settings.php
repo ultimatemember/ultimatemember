@@ -2993,18 +2993,22 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 			 * UM hook
 			 *
 			 * @type        filter
-			 * @title       um_save_email_templates_to_uploads
-			 * @description Email templates are saved in the active theme folder by default. This filter allows saving email templates to the ultimatemember folder in uploads.
+			 * @title       um_save_email_templates_to
+			 * @description Email templates are saved in the active theme folder by default. This filter allows saving email templates to the uploads folder or any other directory.
 			 * @input_vars
-			 * [ {"var":"$save_in_uploads","type":"bool","desc":"Save to uploads"} ]
+			 * [ {"var":"$save_to","type":"string","desc":"Where to save templates"} ]
 			 * @change_log
 			 * ["Since: 2.1.17"]
 			 * @example
 			 * <?php
-			 * add_filter( 'um_save_email_templates_to_uploads', '__return_true' );
+			 * add_filter( 'um_save_email_templates_to', 'my_um_save_email_templates_to' );
+			 * function my_email_template_body_attrs( $save_to ) {
+			 *     $save_to = 'uploads';
+			 *     return $save_to;
+			 * }
 			 * ?>
 			 */
-			$location = apply_filters( 'um_save_email_templates_to_uploads', false ) ? 'uploads' : 'theme';
+			$location = apply_filters( 'um_save_email_templates_to', 'theme' );
 
 			$theme_template_path = UM()->mail()->get_template_file( $location, $template );
 
