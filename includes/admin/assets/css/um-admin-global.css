@@ -203,8 +203,18 @@ a.um-delete{ color: #a00; }
 	margin-bottom: 2px !important;
 }
 
+/*
+	- Restrict access
+*/
+
 .um_hidden_notice,
-.um_block_settings_hide {
+.um_block_settings .um_block_settings_hide{
+	display: none;
+}
+.um_block_settings .components-select-control .components-select-control__input[multiple]{
+	height: auto;
+}
+.um_block_settings .components-select-control .components-select-control__input[multiple] + .components-input-control__suffix{
 	display: none;
 }
 
