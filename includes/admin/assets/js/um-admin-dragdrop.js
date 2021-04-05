@@ -91,6 +91,7 @@ function UM_Drag_and_Drop() {
 }
 
 function UM_update_rows() {
+
 	var c = 0;
 	jQuery('a[data-remove_element="um-admin-drag-row"]').remove();
 	jQuery('.um-admin-drag-row').each(function(){
@@ -240,16 +241,28 @@ function UM_Rows_Refresh(){
 	UM_Drag_and_Drop();
 	
 	UM_Add_Icon();
-	
+
 	jQuery.ajax({
 		url: wp.ajax.settings.url,
 		type: 'POST',
-		data: jQuery( '.um_update_order' ).serialize(),
-		success: function(){
+		data: {
+			action:'um_do_ajax_action',
+			act_id : 'um_admin_add_row',
+			fields : jQuery('#um-serialized-fields').val(),
+			arg1: jQuery( '.um_update_order' ).serialize(),
+			nonce: um_admin_scripts.nonce
+
+		},
+		success: function(responce){
+			// console.log(responce)
+			jQuery('#um-serialized-fields').val(responce.data.fields);
 			jQuery('#publish').prop('disabled', false);
+		},
+		error: function(data){
+
 		}
 	});
-	
+
 }
 
 function UM_Add_Icon(){
@@ -321,6 +334,8 @@ jQuery(document).ready(function() {
 		dragg.append( '<div class="um-admin-drag-row">' + jQuery('.um-col-demon-row').html() + '</div>' );
 		dragg.find('.um-admin-drag-row:last').find('.um-admin-drag-row-icons').find('a.um-admin-drag-row-edit').attr('data-arg3', '_um_row_' + ( dragg.find('.um-admin-drag-row').length ) );
 		dragg.find('.um-admin-drag-row:last').attr('data-original', '_um_row_' + ( dragg.find('.um-admin-drag-row').length ) );
+
+
 		UM_update_rows();
 		UM_update_subrows();
 		UM_Rows_Refresh();
@@ -338,10 +353,6 @@ jQuery(document).ready(function() {
 	jQuery(document.body).on('click', 'a[data-remove_element^="um-"]',function(){
 		element = jQuery(this).data('remove_element');
 
-		jQuery(this).parents('.' +element).find('.um-admin-drag-fld').each(function(){
-			jQuery(this).find('a[data-silent_action="um_admin_remove_field"]').trigger('click');
-		});
-		
 		jQuery(this).parents('.' +element).remove();
 		jQuery('.tipsy').remove();
 		UM_Rows_Refresh();

@@ -332,6 +332,61 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 
 		/**
+		 * Deletes a field in form only
+		 *
+		 * @param  integer $id
+		 * @param  integer $form_id
+		 * @param  array $fields
+		 *
+		 * @return array
+		 */
+		function add_row( $rows, $fields ) {
+			$old_fields = unserialize( wp_unslash( $fields ) );
+			$fields = array();
+			$row_data = array();
+			parse_str( $rows, $row_data );
+
+			foreach ( $row_data as $key => $value ) {
+				if ( 0 === strpos( $key, '_um_row_' ) ) {
+					$row_id = str_replace( '_um_row_', '', $value );
+					$fields[ $value ] = array(
+						'type'      => 'row',
+						'id'        => $value,
+						'sub_rows'  => $row_data[ '_um_rowsub_' . $row_id . '_rows' ],
+						'cols'      => $row_data[ '_um_rowcols_' . $row_id . '_cols' ],
+						'origin'    => $row_data[ '_um_roworigin_' . $row_id . '_val' ],
+					);
+					unset( $row_data[ $key ] );
+				}
+				if ( 0 === strpos( $key, 'um_row_' ) ) {
+					$metakey = str_replace( 'um_row_', '', $key );
+					$fields[ $metakey ]['in_row'] = $row_data[ 'um_row_' . $metakey ];
+					$fields[ $metakey ]['position'] = $row_data[ 'um_position_' . $metakey ];
+					$fields[ $metakey ]['in_sub_row'] = $row_data[ 'um_subrow_' . $metakey ];
+					$fields[ $metakey ]['in_column'] = $row_data[ 'um_col_' . $metakey ];
+					$fields[ $metakey ]['in_group'] = $row_data[ 'um_group_' . $metakey ];
+
+				}
+			}
+
+			foreach ( $old_fields as $key => $field ) {
+				if ( isset ( $fields[ $key ] ) ) {
+					unset( $field['in_row'] );
+					unset( $field['position'] );
+					unset( $field['in_sub_row'] );
+					unset( $field['in_column'] );
+					unset( $field['in_group'] );
+					foreach ( $field as $metakey => $value ) {
+						$fields[ $key ][ $metakey ] = $value;
+					}
+				}
+			}
+
+			return $fields;
+		}
+
+
+		/**
 		 * Print field error
 		 *
 		 * @param string $text
@@ -4610,6 +4665,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$this->add_field_from_list( $arg1, $arg2, $position );
 					break;
 
+				case 'um_admin_add_row':
+					$fields = $this->add_row( $arg1, $fields );
+					break;
 			}
 
 			wp_send_json_success( array( 'output' => $output, 'fields' => serialize( $fields ) ) );

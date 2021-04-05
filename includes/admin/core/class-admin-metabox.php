@@ -1146,7 +1146,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 */
 		function save_metabox_form( $post_id, $post ) {
 			global $wpdb;
-
+			
 			// validate nonce
 			if ( ! isset( $_POST['um_admin_save_metabox_form_nonce'] ) ||
 			     ! wp_verify_nonce( $_POST['um_admin_save_metabox_form_nonce'], basename( __FILE__ ) ) ) {
@@ -1192,10 +1192,15 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 					if ( $k === '_um_custom_fields' ) {
 						$fields = unserialize( wp_unslash( $v ) );
+
 						update_post_meta( $post_id, $k, $fields );
+						$um_form_rowdata = array();
+						$exist_rows = array();
 
 						foreach ( $fields as $key => $value ) {
 							if ( strstr( $key, '_um_row_' ) ) {
+								$um_form_rowdata[ $key ] = $value;
+								$exist_rows[] = $key;
 								unset( $fields[$key] );
 							}
 						}
@@ -1216,6 +1221,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 						$metakeys = get_option( 'um_usermeta_fields', array() );
 						$um_usermeta_fields = array_unique( array_merge( array_keys($fields), $metakeys ) );
 						update_option( 'um_usermeta_fields', $um_usermeta_fields );
+
+						update_option( 'um_existing_rows_' . $post_id, $exist_rows );
+						update_option( 'um_form_rowdata_' . $post_id , $um_form_rowdata );
 					} else {
 						update_post_meta( $post_id, $k, $v );
 					}
