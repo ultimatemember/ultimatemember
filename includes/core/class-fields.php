@@ -1061,7 +1061,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						// default value with comma
 						if ( is_string( $data['default'] ) && strstr( $data['default'], ',' ) ) {
 							$choices = array_map( 'trim', explode( ',', $data['default'] ) );
-							if( in_array( $value, $choices ) ){
+							if ( in_array( $value, $choices ) ) {
 								return true;
 							}
 						}
