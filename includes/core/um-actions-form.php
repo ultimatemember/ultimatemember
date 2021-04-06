@@ -428,8 +428,12 @@ function um_submit_form_errors_hook_( $args ) {
 
 	if ( ! empty( $fields ) ) {
 
+		$can_edit = false;
 		$current_user_roles = [];
 		if ( is_user_logged_in() ) {
+
+			$can_edit = UM()->roles()->um_current_user_can( 'edit', $args['user_id'] );
+
 			um_fetch_user( get_current_user_id() );
 			$current_user_roles = um_user( 'roles' );
 			um_reset_user();
@@ -458,7 +462,7 @@ function um_submit_form_errors_hook_( $args ) {
 					case '-1': // Only visible to profile owner and admins
 						if ( ! is_user_logged_in() ) {
 							$can_view = false;
-						} elseif ( $args['user_id'] != get_current_user_id() && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+						} elseif ( $args['user_id'] != get_current_user_id() && ! $can_edit ) {
 							$can_view = false;
 						}
 						break;

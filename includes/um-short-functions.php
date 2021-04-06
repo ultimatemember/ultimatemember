@@ -1514,8 +1514,12 @@ function um_can_view_field( $data ) {
 
 	if ( isset( $data['public'] ) && UM()->fields()->set_mode != 'register' ) {
 
+		$can_edit = false;
 		$current_user_roles = [];
 		if ( is_user_logged_in() ) {
+
+			$can_edit = UM()->roles()->um_current_user_can( 'edit', um_user( 'ID' ) );
+
 			$previous_user = um_user( 'ID' );
 			um_fetch_user( get_current_user_id() );
 
@@ -1534,7 +1538,7 @@ function um_can_view_field( $data ) {
 			case '-1': // Only visible to profile owner and users who can edit other member accounts
 				if ( ! is_user_logged_in() ) {
 					$can_view = false;
-				} elseif ( ! um_is_user_himself() && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
+				} elseif ( ! um_is_user_himself() && ! $can_edit ) {
 					$can_view = false;
 				}
 				break;
