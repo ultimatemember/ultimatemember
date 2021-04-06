@@ -1531,7 +1531,7 @@ function um_can_view_field( $data ) {
 					$can_view = false;
 				}
 				break;
-			case '-1': // Only visible to profile owner and admins
+			case '-1': // Only visible to profile owner and users who can edit other member accounts
 				if ( ! is_user_logged_in() ) {
 					$can_view = false;
 				} elseif ( ! um_is_user_himself() && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
