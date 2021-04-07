@@ -178,7 +178,6 @@ function UM_hide_menus() {
 	UM.dropdown.hideAll();
 }
 
-
 /**
  * Update menu position
  */
@@ -351,7 +350,7 @@ function initImageUpload_UM( trigger ) {
 
 				trigger.parents('.um-modal-body').append('<div class="um-error-block">'+response.data.error+'</div>');
 				trigger.parents('.um-modal-body').find('.upload-statusbar').hide(0);
-				um_modal_responsive();
+				UM.modal.responsive();
 
 			} else {
 
@@ -370,7 +369,7 @@ function initImageUpload_UM( trigger ) {
 						trigger.parents('.um-modal-body').find('.um-modal-btn.um-finish-upload.disabled').removeClass('disabled');
 						trigger.parents('.um-modal-body').find('.ajax-upload-dragdrop,.upload-statusbar').hide(0);
 						img_id_h.show(0);
-						um_modal_responsive();
+						UM.modal.responsive();
 
 					});
 
@@ -455,9 +454,7 @@ function initFileUpload_UM( trigger ) {
 				trigger.parents('.um-modal-body').append('<div class="um-error-block">'+ response.data.error+'</div>');
 				trigger.parents('.um-modal-body').find('.upload-statusbar').hide(0);
 
-				setTimeout(function(){
-					um_modal_responsive();
-				},1000);
+				setTimeout(UM.modal.responsive,1000);
 
 			} else {
 
@@ -492,9 +489,7 @@ function initFileUpload_UM( trigger ) {
 
 				});
 
-				setTimeout(function(){
-					um_modal_responsive();
-				},1000);
+				setTimeout(UM.modal.responsive,1000);
 
 			}
 
@@ -599,224 +594,79 @@ function initCrop_UM() {
 
 }
 
-
-function um_new_modal( id, size, isPhoto, source ) {
-
-	UM.modal.clear();
-	UM.dropdown.hideAll();
-	jQuery('.tipsy').hide();
-
-	var content, template = jQuery( '#' + id );
-	if( template.find('.um-modal-body').length ){
-		content = template.find('.um-modal-body').children();
-	} else{
-		content = template;
-	}
-
-	var options = {
-		attr: {},
-		class: size
-	};
-	if( template.is('[id]') ){
-		options.id = template.attr('id');
-	}
-	if( template.is('[data-user_id]') ){
-		options.attr['data-user_id'] = template.attr('data-user_id');
-	}
-	if( template.find('.um-modal-header').length ){
-		options.header = template.find('.um-modal-header').text().trim();
-	}
-
-	var $modal = UM.modal.addModal( content, options );
-
-	if ( isPhoto ) {
-		var photo_ = jQuery('<img src="' + source + '" />'),
-			photo_maxw = jQuery(window).width() - 60,
-			photo_maxh = jQuery(window).height() - jQuery(window).height() * 0.25;
-
-		photo_.on( 'load', function() {
-			$modal.find('.um-modal-body').html( '<div class="um-modal-photo"></div>' ).find('.um-modal-photo').append(photo_);
-
-			$modal.addClass('is-photo').css({
-				'width': photo_maxw,
-				'margin-left': '-' + photo_maxw / 2 + 'px'
-			}).show().children().show();
-
-			photo_.css({
-				'opacity': 0,
-				'max-height': photo_maxh
-			}).animate({'opacity' : 1}, 1000);
-
-			um_modal_responsive();
-		});
-	} else {
-
-		$modal.addClass('no-photo').show().children().show();
-
-		um_modal_size( size );
-
-		initImageUpload_UM( jQuery('.um-modal:visible .um-single-image-upload') );
-		initFileUpload_UM( jQuery('.um-modal:visible .um-single-file-upload') );
-
-		um_modal_responsive();
-
-	}
-
-}
-
-function um_modal_responsive() {
-
-	var w = window.innerWidth
-		|| document.documentElement.clientWidth
-		|| document.body.clientWidth;
-
-	var h = window.innerHeight
-		|| document.documentElement.clientHeight
-		|| document.body.clientHeight;
-
-	var modal = jQuery('.um-modal:visible').not('.um-modal-hidden');
-	var photo_modal = modal.find('.um-modal-body.photo:visible');
-
-	if ( photo_modal.length ) {
-
-		modal.removeClass('uimob340');
-		modal.removeClass('uimob500');
-
-		var photo_ = jQuery('.um-modal-photo img');
-		var photo_maxw = w - 60;
-		var photo_maxh = h - ( h * 0.25 );
-
-		photo_.css({'opacity': 0});
-		photo_.css({'max-width': photo_maxw });
-		photo_.css({'max-height': photo_maxh });
-
-		modal.css({
-			'width': photo_.width(),
-			'margin-left': '-' + photo_.width() / 2 + 'px'
-		});
-
-		photo_.animate({'opacity' : 1}, 1000);
-
-		var half_gap = ( h - modal.innerHeight() ) / 2 + 'px';
-		modal.animate({ 'bottom' : half_gap }, 300);
-
-	} else if ( modal.length ) {
-
-		modal.removeClass('uimob340');
-		modal.removeClass('uimob500');
-
-		if ( w <= 340 ) {
-
-			modal.addClass('uimob340');
-			initCrop_UM();
-			modal.animate({ 'bottom' : 0 }, 300);
-
-		} else if ( w <= 500 ) {
-
-			modal.addClass('uimob500');
-			initCrop_UM();
-			modal.animate({ 'bottom' : 0 }, 300);
-
-		} else if ( w <= 800 ) {
-
-			initCrop_UM();
-			var half_gap = ( h - modal.innerHeight() ) / 2 + 'px';
-			modal.animate({ 'bottom' : half_gap }, 300);
-
-		} else if ( w <= 960 ) {
-
-			initCrop_UM();
-			var half_gap = ( h - modal.innerHeight() ) / 2 + 'px';
-			modal.animate({ 'bottom' : half_gap }, 300);
-
-		} else if ( w > 960 ) {
-
-			initCrop_UM();
-			var half_gap = ( h - modal.innerHeight() ) / 2 + 'px';
-			modal.animate({ 'bottom' : half_gap }, 300);
-
-		}
-
-	}
-
-}
-
+/**
+ * @deprecated since 3.0
+ * @returns    {undefined}
+ */
 function um_remove_modal() {
-	jQuery('img.cropper-hidden').cropper('destroy');
-
-	jQuery('body,html,textarea').css("overflow", "auto");
-
-	jQuery(document).unbind('touchmove');
-
-	jQuery('body > .um-modal div[id^="um_"]').hide().appendTo('body');
-	jQuery('body > .um-modal, body > .um-modal-overlay').remove();
-
-}
-
-function um_modal_size( aclass ) {
-	jQuery('.um-modal:visible').not('.um-modal-hidden').addClass( aclass );
+	UM.modal.clear();
 }
 
 /**
- * Maybe deprecated
- *
+ * @deprecated since 3.0
+ * @param      {object}   modal
+ * @returns    {undefined}
+ */
+function um_modal_responsive( modal ) {
+	UM.modal.responsive(modal);
+}
+
+/**
+ * @deprecated since 3.0
+ * @param      {string}   id
+ * @param      {string}   size
+ * @param      {bool}     isPhoto
+ * @param      {string}   source
+ * @returns    {undefined}
+ */
+function um_new_modal( id, size, isPhoto, source ) {
+	UM.modal.newModal( id, size, isPhoto, source );
+}
+
+/**
+ * @deprecated since 3.0
+ * @param      {string}   aclass
+ * @returns    {undefined}
+ */
+function um_modal_size( aclass ) {}
+
+/**
  * @deprecated since 2.1.16
- *
  * @param id
  * @param value
  */
-function um_modal_add_attr( id, value ) {
-	jQuery('.um-modal:visible').not('.um-modal-hidden').data( id, value );
+function um_modal_add_attr( id, value ) {}
+
+/**
+ * @deprecated since 3.0
+ * @returns    {undefined}
+ */
+function prepare_Modal() {
+	UM.modal.addModal( '<div class="loading"></div>', {type: 'popup'} );
+	UM.modal.responsive();
 }
 
-function prepare_Modal() {
-	if ( jQuery('.um-popup-overlay').length == 0 ) {
-		jQuery('body').append('<div class="um-popup-overlay"></div>');
-		jQuery('body').append('<div class="um-popup"></div>');
-		jQuery('.um-popup').addClass('loading');
-		jQuery("body,html").css({ overflow: 'hidden' });
-	}
+/**
+ * @deprecated since 3.0
+ * @param      {string}   contents
+ * @returns    {undefined}
+ */
+function show_Modal( contents ) {
+	UM.modal.clear();
+	UM.modal.addModal( contents, {type: 'popup'} );
+	UM.modal.tipsy();
+}
+
+/**
+ * @deprecated since 3.0
+ * @returns    {undefined}
+ */
+function responsive_Modal() {
+	UM.modal.responsive();
 }
 
 function remove_Modal() {
-	if ( jQuery('.um-popup-overlay').length ) {
-		wp.hooks.doAction( 'um_before_modal_removed', jQuery('.um-popup') );
-
-		jQuery('.tipsy').remove();
-		jQuery('.um-popup').empty().remove();
-		jQuery('.um-popup-overlay').empty().remove();
-		jQuery("body,html").css({ overflow: 'auto' });
-	}
-}
-
-function show_Modal( contents ) {
-	if ( jQuery('.um-popup-overlay').length ) {
-		jQuery('.um-popup').removeClass('loading').html( contents );
-		jQuery('.um-tip-n').tipsy({gravity: 'n', opacity: 1, offset: 3 });
-		jQuery('.um-tip-w').tipsy({gravity: 'w', opacity: 1, offset: 3 });
-		jQuery('.um-tip-e').tipsy({gravity: 'e', opacity: 1, offset: 3 });
-		jQuery('.um-tip-s').tipsy({gravity: 's', opacity: 1, offset: 3 });
-	}
-}
-
-function responsive_Modal() {
-	if ( jQuery('.um-popup-overlay').length ) {
-
-		ag_height = jQuery(window).height() - jQuery('.um-popup .um-popup-header').outerHeight() - jQuery('.um-popup .um-popup-footer').outerHeight() - 80;
-		if ( ag_height > 350 ) {
-			ag_height = 350;
-		}
-
-		if ( jQuery('.um-popup-autogrow:visible').length ) {
-
-			jQuery('.um-popup-autogrow:visible').css({'height': ag_height + 'px'});
-
-		} else if ( jQuery('.um-popup-autogrow2:visible').length ) {
-
-			jQuery('.um-popup-autogrow2:visible').css({'max-height': ag_height + 'px'});
-
-		}
-	}
+	UM.modal.clear();
 }
 
 function um_reset_field( dOm ){

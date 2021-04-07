@@ -5,9 +5,7 @@ jQuery(document).ready(function() {
 		remove_Modal();
 	});
 	
-	jQuery(document).on('click', '.um-modal-overlay, a[data-action="um_remove_modal"]', function(){
-		um_remove_modal();
-	});
+	jQuery(document).on('click', '.um-modal-overlay, a[data-action="um_remove_modal"]', UM.modal.clear );
 
 	jQuery(document).on('click', 'a[data-modal^="um_"], span[data-modal^="um_"], .um-modal:not(:has(.um-form)) a', function(e){
 		e.preventDefault();
@@ -34,7 +32,7 @@ jQuery(document).ready(function() {
 				parent.find('.um-single-file-preview').hide();
 				parent.find('.ajax-upload-dragdrop').show();
 				parent.find('.um-modal-btn.um-finish-upload').addClass('disabled');
-				um_modal_responsive();
+				UM.modal.responsive();
 			}
 		});
 		
@@ -63,8 +61,7 @@ jQuery(document).ready(function() {
 				parent.find('.um-single-image-preview').hide();
 				parent.find('.ajax-upload-dragdrop').show();
 				parent.find('.um-modal-btn.um-finish-upload').addClass( 'disabled' );
-
-				um_modal_responsive();
+				UM.modal.responsive();
 			}
 		});
 		
@@ -77,7 +74,7 @@ jQuery(document).ready(function() {
 	
 		var preview = jQuery(this).parents('.um-modal-body').find('.um-single-file-preview').html();
 		
-		um_remove_modal();
+		UM.modal.clear();
 		
 		jQuery('.um-single-file-preview[data-key='+key+']').fadeIn().html( preview );
 
@@ -145,7 +142,7 @@ jQuery(document).ready(function() {
 
 						jQuery('.um-single-image-preview[data-key='+key+']').fadeIn().find('img').attr('src', response.data.image.source_url + "?"+d.getTime());
 
-						um_remove_modal();
+						UM.modal.clear();
 
 						jQuery('img.cropper-invisible').remove();
 
@@ -163,7 +160,7 @@ jQuery(document).ready(function() {
 
 					jQuery('.um-single-image-preview[data-key='+key+']').fadeIn().find('img').attr('src', src + "?"+d.getTime());
 					
-					um_remove_modal();
+					UM.modal.clear();
 					
 					jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( elem.attr('data-change') );
 					
@@ -205,7 +202,7 @@ jQuery(document).ready(function() {
 
 		}
 
-		um_new_modal( modal_id, size );
+		UM.modal.newModal( modal_id, size );
 	});
 
 });
