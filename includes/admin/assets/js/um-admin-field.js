@@ -4,11 +4,12 @@ jQuery(document).ready(function() {
 	jQuery(document.body).on('click', '.um-admin-btns a span.remove', function(e){
 		e.preventDefault();
 
-		if ( confirm( 'This will permanently delete this custom field from database' ) ) {
+		if ( confirm( 'This will permanently delete this custom field from a database and from all forms on your site. Are you sure?' ) ) {
 
 			jQuery(this).parents('a').remove();
 
 			arg1 = jQuery(this).parents('a').data('arg1');
+			var fields = jQuery('#um-serialized-fields').val();
 
 			jQuery.ajax({
 				url: wp.ajax.settings.url,
@@ -17,11 +18,13 @@ jQuery(document).ready(function() {
 					action:'um_do_ajax_action',
 					act_id : 'um_admin_remove_field_global',
 					arg1 : arg1,
+					fields : fields,
 					nonce: um_admin_scripts.nonce
 
 				},
-				success: function(data){
-					
+				success: function(responce){
+					jQuery('#um-admin-form-builder .' + arg1).remove();
+					jQuery('#um-serialized-fields').val(responce.data.fields);
 				},
 				error: function(data){
 

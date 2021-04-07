@@ -180,17 +180,31 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @param  integer $id
 		 */
-		function delete_field_from_db( $id ) {
-			$fields = UM()->builtin()->saved_fields;
-			if ( isset( $fields[ $id ] ) ) {
-				$args = $fields[ $id ];
+		function delete_field_from_db( $id, $fields ) {
 
-				unset( $fields[ $id ] );
+			$saved_fields = UM()->builtin()->saved_fields;
+			if ( isset( $saved_fields[ $id ] ) ) {
+				$args = $saved_fields[ $id ];
+
+				unset( $saved_fields[ $id ] );
 
 				do_action( 'um_delete_custom_field', $id, $args );
 
-				update_option( 'um_fields', $fields );
+				update_option( 'um_fields', $saved_fields );
 			}
+
+			global $wpdb;
+			$forms = $wpdb->get_col("SELECT ID FROM {$wpdb->posts} WHERE post_type = 'um_form'");
+			foreach ( $forms as $form_id ) {
+				$form_fields = get_post_meta( $form_id, '_um_custom_fields', true );
+				unset( $form_fields[ $id ] );
+				update_post_meta( $form_id, '_um_custom_fields', $form_fields );
+			}
+
+			$fields = unserialize( wp_unslash( $fields ) );
+			unset( $fields[ $id ] );
+			return $fields;
+
 		}
 
 
@@ -4619,7 +4633,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					break;
 
 				case 'um_admin_remove_field_global':
-					$this->delete_field_from_db( $arg1 );
+					$fields = $this->delete_field_from_db( $arg1, $fields );
 					break;
 
 				case 'um_admin_remove_field':
