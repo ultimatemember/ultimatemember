@@ -155,16 +155,26 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.1.17: xx, 2021 =
+= 2.1.17: April 14, 2021 =
 
 * Enhancements:
   - Added: 'Owner and specific roles' privacy type for the Profile tabs (#773)
   - Added: Hooks `um_before_email_notification_sending` and `um_after_email_notification_sending` regarding #743 pull-request
+  - Added: Hooks for integration member directory filters with different conditions for query to DB
 
 * Bugfixes:
   - Fixed: PHP notice when the admin filtering field has the not array default value (e.g. bool)
   - Fixed: The conflict with [Disable Blog](https://wordpress.org/plugins/disable-blog/) plugin regarding this [issue](https://wordpress.org/support/topic/ultimate-member-file-image-download/). `download_routing` callback has the highest priority now.
   - Fixed: Fields privacy functionality. This function `um_can_view_field()` has been rewritten (#780)
+  - Fixed: Fields privacy + form validation functionality. Skip the field's validation that aren't visible on the form based on the privacy settings (#795)
+  - Fixed: PHP notice in the confirm password label [wp.org thread](https://wordpress.org/support/topic/undefined-index-label-php-notice/)
+  - Fixed: Confirm password placeholder when label is empty
+  - Fixed: Permanently deleting form's field (#786)
+  - Fixed: Default value with comma for checkbox field-type (#729)
+  - Fixed: Gutenberg blocks conditional settings (#793)
+  - Fixed: Getting active Profile tab when some of them are hidden
+  - Fixed: Restricted content message is showing twice and removing header, avoid the conflicts with themes that use 'the_content' filter in header or footer (#799)
+  - Fixed: "Is required" validation for the multiselect field-type when it's empty on submit
 
 = 2.1.16: March 10, 2021 =
 
