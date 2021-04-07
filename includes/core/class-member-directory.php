@@ -2211,7 +2211,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$dropdown_actions = $this->build_user_actions_list( $user_id );
 
 			$actions = array();
-			$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id ) || UM()->roles()->um_user_can( 'can_edit_everyone' );
+			$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id );
 
 			// Replace hook 'um_members_just_after_name'
 			ob_start();
