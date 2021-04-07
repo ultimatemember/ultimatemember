@@ -301,7 +301,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 * Deletes a field in form only
 		 *
 		 * @param  integer $id
-		 * @param  integer $form_id
 		 * @param  array $fields
 		 *
 		 * @return array
@@ -315,6 +314,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			foreach ( $row_data as $key => $value ) {
 				if ( 0 === strpos( $key, '_um_row_' ) ) {
 					$row_id = str_replace( '_um_row_', '', $value );
+
 					$fields[ $value ] = array(
 						'type'      => 'row',
 						'id'        => $value,
@@ -322,7 +322,9 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						'cols'      => $row_data[ '_um_rowcols_' . $row_id . '_cols' ],
 						'origin'    => $row_data[ '_um_roworigin_' . $row_id . '_val' ],
 					);
+
 					unset( $row_data[ $key ] );
+					unset( $old_fields[ $key ] );
 				}
 				if ( 0 === strpos( $key, 'um_row_' ) ) {
 					$metakey = str_replace( 'um_row_', '', $key );
@@ -333,6 +335,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					$fields[ $metakey ]['in_group'] = $row_data[ 'um_group_' . $metakey ];
 
 				}
+
 			}
 
 			foreach ( $old_fields as $key => $field ) {
