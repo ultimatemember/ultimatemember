@@ -48,6 +48,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 * @return mixed
 		 */
 		function um_admin_field_update_error_handling( $errors, $array ) {
+			$fields = unserialize( wp_unslash( $_POST['all_field'] ) );
+
 			/**
 			 * @var $field_type
 			 */
@@ -76,11 +78,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 							break;
 
 						case 'unique':
-							if ( ! isset( $array['post']['edit_mode'] ) ) {
-								if ( UM()->builtin()->unique_field_err( $array['post'][ $post_input ] ) ) {
-									$errors[ $post_input ] = UM()->builtin()->unique_field_err( $array['post'][ $post_input ] );
-								}
-							}
+
+							$errors[ $post_input ] = UM()->builtin()->unique_field_err( $array['post'][ $post_input ], $fields );
 							break;
 
 						case 'required':
@@ -623,7 +622,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
 			}
 
-			$output['error'] = null;
+			$output = null;
 			$fields = array();
 
 			$array = array(
@@ -676,7 +675,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			 * }
 			 * ?>
 			 */
-			$output['error'] = apply_filters( 'um_admin_field_update_error_handling', $output['error'], $array );
+			$output = apply_filters( 'um_admin_field_update_error_handling', $output, $array );
 
 			/**
 			 * @var $_metakey
@@ -735,8 +734,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 			}
 
-			$output = json_encode( $output );
-			wp_send_json_success( array( 'output' => $output, 'fields' => serialize( $fields ) ) );
+			wp_send_json_success( array( 'error' => $output, 'fields' => serialize( $fields ) ) );
 		}
 
 

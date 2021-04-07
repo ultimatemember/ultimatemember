@@ -79,8 +79,8 @@ jQuery(document).ready(function() {
 				form.css({'opacity': 1});
 			},
 			success: function(responce){
-
-				if (responce.data.error){
+				// console.log(responce.data.error)
+				if ( responce.data.error._metakey !== 0 ){
 					c = 0;
 					jQuery.each(responce.data.error, function(i, v){
 						c++;

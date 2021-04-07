@@ -15,6 +15,7 @@
 			<input type="submit" value="<?php esc_attr_e( 'Update', 'ultimate-member' ); ?>" class="button-primary" />
 			<input type="hidden" name="action" value="um_update_field" />
 			<input type="hidden" name="nonce" value="<?php echo esc_attr( wp_create_nonce( 'um-admin-nonce' ) ) ?>" />
+			<input type="hidden" name="all_field" class="um_all_field" value="" />
 			<a href="javascript:void(0);" data-action="UM_remove_modal" class="button"><?php _e( 'Cancel', 'ultimate-member' ); ?></a>
 		</div>
 

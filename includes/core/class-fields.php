@@ -134,44 +134,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 
 		/**
-		 * Updates a field in form only
-		 *
-		 * @param  integer $id
-		 * @param  array   $args
-		 * @param  integer $form_id
-		 */
-		function update_field( $id, $args, $form_id ) {
-			$fields = UM()->query()->get_attr( 'custom_fields', $form_id );
-
-			if ( $args['type'] == 'row' ) {
-				if ( isset( $fields[ $id ] ) ) {
-					$old_args = $fields[ $id ];
-					foreach ( $old_args as $k => $v ) {
-						if ( ! in_array( $k, array( 'sub_rows', 'cols' ) ) ) {
-							unset( $old_args[ $k ] );
-						}
-					}
-					$args = array_merge( $old_args, $args );
-				}
-			}
-
-			// custom fields support
-			if ( isset( UM()->builtin()->predefined_fields[ $id ] ) && isset( UM()->builtin()->predefined_fields[ $id ]['custom'] ) ) {
-				$args = array_merge( UM()->builtin()->predefined_fields[ $id ], $args );
-			}
-
-			$fields[ $id ] = $args;
-
-			// for group field only
-			if ( $args['type'] == 'group' ) {
-				$fields[ $id ]['in_group'] = '';
-			}
-
-			UM()->query()->update_attr( 'custom_fields', $form_id, $fields );
-		}
-
-
-		/**
 		 * Deletes a field in form only
 		 *
 		 * @param  integer $id

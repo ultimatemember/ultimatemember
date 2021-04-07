@@ -136,12 +136,12 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 		 *
 		 * @return int|string|void
 		 */
-		function unique_field_err( $key ) {
+		function unique_field_err( $key, $fields ) {
 			if ( empty( $key ) ) return __('Please provide a meta key','ultimate-member');
 			if ( isset( $this->core_fields[ $key ] ) ) return __('Your meta key is a reserved core field and cannot be used','ultimate-member');
 			if ( isset( $this->predefined_fields[ $key ] ) ) return __('Your meta key is a predefined reserved key and cannot be used','ultimate-member');
-			if ( isset( $this->saved_fields[ $key ] ) ) return __('Your meta key already exists in your fields list','ultimate-member');
-			if ( ! UM()->validation()->safe_string( $key ) ) return __('Your meta key contains illegal characters. Please correct it.','ultimate-member');
+			if ( array_key_exists( $key, $fields ) || isset( $this->saved_fields[ $key ] ) ) return __('Your meta key already exists in your fields list','ultimate-member');
+			if ( is_numeric( substr( $key, 0, 1 ) ) || ! UM()->validation()->safe_string( $key ) ) return __('Your meta key contains illegal characters. Please correct it.','ultimate-member');
 			return 0;
 		}
 
