@@ -303,10 +303,13 @@ function initImageUpload_UM( trigger ) {
 	}
 
 	var user_id = 0;
-
-	if( jQuery('#um_upload_single:visible').data('user_id') ){
-        user_id = jQuery('#um_upload_single:visible').data('user_id');
-    }
+	if( trigger.data('user_id') ){
+      user_id = trigger.data('user_id');
+	} else if( trigger.closest('[data-user_id]').length ){
+      user_id = trigger.closest('[data-user_id]').first().data('user_id');
+	} else if( jQuery('#um_upload_single:visible').data('user_id') ){
+      user_id = jQuery('#um_upload_single:visible').data('user_id');
+	}
 
 	trigger.uploadFile({
 		url: wp.ajax.settings.url,
@@ -403,9 +406,14 @@ function initFileUpload_UM( trigger ) {
 		upload_text = '';
 	}
 
-	if( jQuery('#um_upload_single:visible').data('user_id') ){
-        user_id = jQuery('#um_upload_single:visible').data('user_id');
-    }
+	var user_id = 0;
+	if( trigger.data('user_id') ){
+      user_id = trigger.data('user_id');
+	} else if( trigger.closest('[data-user_id]').length ){
+      user_id = trigger.closest('[data-user_id]').first().data('user_id');
+	} else if( jQuery('#um_upload_single:visible').data('user_id') ){
+      user_id = jQuery('#um_upload_single:visible').data('user_id');
+	}
 
 	trigger.uploadFile({
 		url: wp.ajax.settings.url,
@@ -415,10 +423,10 @@ function initFileUpload_UM( trigger ) {
 			action: 'um_fileupload',
 			key: trigger.data('key'),
 			set_id: trigger.data('set_id'),
-			user_id: trigger.data('user_id'),
 			set_mode: trigger.data('set_mode'),
 			_wpnonce: trigger.data('nonce'),
-			timestamp: trigger.data('timestamp')
+			timestamp: trigger.data('timestamp'),
+			user_id: user_id
 		},
 		fileName: trigger.data('key'),
 		allowedTypes: trigger.data('allowed_types'),
@@ -591,27 +599,35 @@ function initCrop_UM() {
 
 }
 
-function um_new_modal( id, size, isPhoto, source ) {
-	var modalOverlay = jQuery('.um-modal-overlay');
-	if ( modalOverlay.length !== 0 ) {
-		modalOverlay.hide();
-		modalOverlay.next('.um-modal').hide();
-	}
 
+function um_new_modal( id, size, isPhoto, source ) {
+
+	UM.modal.clear();
+	UM.dropdown.hideAll();
 	jQuery('.tipsy').hide();
 
-	UM.dropdown.hideAll();
+	var content, template = jQuery( '#' + id );
+	if( template.find('.um-modal-body').length ){
+		content = template.find('.um-modal-body').children();
+	} else{
+		content = template;
+	}
 
-	jQuery( 'body,html,textarea' ).css( 'overflow', 'hidden' );
+	var options = {
+		attr: {},
+		class: size
+	};
+	if( template.is('[id]') ){
+		options.id = template.attr('id');
+	}
+	if( template.is('[data-user_id]') ){
+		options.attr['data-user_id'] = template.attr('data-user_id');
+	}
+	if( template.find('.um-modal-header').length ){
+		options.header = template.find('.um-modal-header').text().trim();
+	}
 
-	jQuery( document ).bind( "touchmove", function(e){e.preventDefault();});
-	jQuery( '.um-modal' ).on('touchmove', function(e){e.stopPropagation();});
-
-	var $tpl = jQuery( '<div class="um-modal-overlay"></div><div class="um-modal"></div>' );
-	var $modal = $tpl.filter('.um-modal');
-	$modal.append( jQuery( '#' + id ) );
-
-	jQuery('body').append( $tpl );
+	var $modal = UM.modal.addModal( content, options );
 
 	if ( isPhoto ) {
 		var photo_ = jQuery('<img src="' + source + '" />'),
@@ -619,16 +635,15 @@ function um_new_modal( id, size, isPhoto, source ) {
 			photo_maxh = jQuery(window).height() - jQuery(window).height() * 0.25;
 
 		photo_.on( 'load', function() {
-			$modal.find('.um-modal-photo').html( photo_ );
+			$modal.find('.um-modal-body').html( '<div class="um-modal-photo"></div>' ).find('.um-modal-photo').append(photo_);
 
 			$modal.addClass('is-photo').css({
-				'width': photo_.width(),
-				'margin-left': '-' + photo_.width() / 2 + 'px'
+				'width': photo_maxw,
+				'margin-left': '-' + photo_maxw / 2 + 'px'
 			}).show().children().show();
 
 			photo_.css({
 				'opacity': 0,
-				'max-width': photo_maxw,
 				'max-height': photo_maxh
 			}).animate({'opacity' : 1}, 1000);
 
@@ -815,6 +830,15 @@ function um_reset_field( dOm ){
 	 .prop('selected', false);
 }
 
+
+function um_selected( selected, current ){
+
+	if( selected == current ){
+		return "selected='selected'";
+	}
+}
+
+
 jQuery(function(){
 
 	// Submit search form on keypress 'Enter'
@@ -830,11 +854,3 @@ jQuery(function(){
 	}
 
 });
-
-
-function um_selected( selected, current ){
-
-	if( selected == current ){
-		return "selected='selected'";
-	}
-}

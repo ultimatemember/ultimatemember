@@ -204,3 +204,11 @@ a.um-modal-btn:visited {
 .um-modal .um-single-image-preview.crop img{
 	float:left;
 }
+
+/*
+	- modal v3
+*/
+
+.um-modal-opened{
+	overflow: hidden;
+}
