@@ -122,7 +122,6 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_script( 'um_crop', $this->js_baseurl . 'um-crop' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
 			wp_register_script( 'um_modal', $this->js_baseurl . 'um-modal' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'um_crop' ), ultimatemember_version, true );
-			wp_register_script( 'um_modal-v3', $this->js_baseurl . 'um-modal-v3' . $this->suffix . '.js', array( 'jquery', 'wp-util', 'um_crop' ), ultimatemember_version, true );
 
 			wp_register_script('um_functions', $this->js_baseurl . 'um-functions' . $this->suffix . '.js', array( 'jquery', 'jquery-masonry', 'wp-util', 'um_scrollbar' ), ultimatemember_version, true );
 			wp_register_script( 'um_responsive', $this->js_baseurl . 'um-responsive' . $this->suffix . '.js', array( 'jquery', 'um_functions', 'um_crop' ), ultimatemember_version, true );
@@ -419,7 +418,6 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 		 */
 		function load_modal() {
 			wp_enqueue_script( 'um_modal' );
-			wp_enqueue_script( 'um_modal-v3' );
 			wp_enqueue_style( 'um_modal' );
 		}
 

@@ -594,6 +594,42 @@ function initCrop_UM() {
 
 }
 
+function um_reset_field( dOm ){
+	jQuery(dOm)
+	 .find('div.um-field-area')
+	 .find('input,textarea,select')
+	 .not(':button, :submit, :reset, :hidden')
+	 .val('')
+	 .prop('checked', false)
+	 .prop('selected', false);
+}
+
+
+function um_selected( selected, current ){
+	if( selected == current ){
+		return "selected='selected'";
+	}
+}
+
+
+jQuery(function(){
+
+	// Submit search form on keypress 'Enter'
+	jQuery(".um-search form *").on( 'keypress', function(e){
+			 if (e.which == 13) {
+			    jQuery('.um-search form').trigger('submit');
+			    return false;
+			  }
+	});
+
+	if( jQuery('input[data-key=user_password],input[data-key=confirm_user_password]').length == 2 ) {
+		UM_check_password_matched();
+	}
+
+});
+
+
+
 /**
  * @deprecated since 3.0
  * @returns    {undefined}
@@ -642,7 +678,7 @@ function um_modal_add_attr( id, value ) {}
  * @returns    {undefined}
  */
 function prepare_Modal() {
-	UM.modal.addModal( '<div class="loading"></div>', {type: 'popup'} );
+	UM.modal.addModal( 'loading', {type: 'popup'} );
 	UM.modal.responsive();
 }
 
@@ -652,9 +688,7 @@ function prepare_Modal() {
  * @returns    {undefined}
  */
 function show_Modal( contents ) {
-	UM.modal.clear();
-	UM.modal.addModal( contents, {type: 'popup'} );
-	UM.modal.tipsy();
+	UM.modal.setContent( contents );
 }
 
 /**
@@ -665,42 +699,10 @@ function responsive_Modal() {
 	UM.modal.responsive();
 }
 
+/**
+ * @deprecated since 3.0
+ * @returns    {undefined}
+ */
 function remove_Modal() {
 	UM.modal.clear();
 }
-
-function um_reset_field( dOm ){
-	//console.log(dOm);
-	jQuery(dOm)
-	 .find('div.um-field-area')
-	 .find('input,textarea,select')
-	 .not(':button, :submit, :reset, :hidden')
-	 .val('')
-	 .prop('checked', false)
-	 .prop('selected', false);
-}
-
-
-function um_selected( selected, current ){
-
-	if( selected == current ){
-		return "selected='selected'";
-	}
-}
-
-
-jQuery(function(){
-
-	// Submit search form on keypress 'Enter'
-	jQuery(".um-search form *").on( 'keypress', function(e){
-			 if (e.which == 13) {
-			    jQuery('.um-search form').trigger('submit');
-			    return false;
-			  }
-	});
-
-	if( jQuery('input[data-key=user_password],input[data-key=confirm_user_password]').length == 2 ) {
-		UM_check_password_matched();
-	}
-
-});
