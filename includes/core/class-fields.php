@@ -142,7 +142,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return array
 		 */
-		function delete_field_from_form( $id, $form_id, $fields ) {
+		function delete_field_from_form( $id, $fields ) {
 			$fields = unserialize( wp_unslash( $fields ) );
 
 			if ( ! is_array( $fields ) ) {
@@ -218,7 +218,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return array
 		 */
-		function add_field_from_list( $global_id, $form_id, $position = array(), $fields ) {
+		function add_field_from_list( $global_id, $position = array(), $fields ) {
 			$fields = unserialize( wp_unslash( $fields ) );
 			$field_scope = UM()->builtin()->saved_fields;
 
@@ -255,7 +255,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return array
 		 */
-		function add_field_from_predefined( $global_id, $form_id, $position = array(), $fields ) {
+		function add_field_from_predefined( $global_id, $position = array(), $fields ) {
 			$fields = unserialize( wp_unslash( $fields ) );
 			$field_scope = UM()->builtin()->predefined_fields;
 
@@ -290,7 +290,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		 *
 		 * @return array
 		 */
-		function duplicate_field( $id, $form_id, $fields ) {
+		function duplicate_field( $id, $fields ) {
 			$fields = unserialize( wp_unslash( $fields ) );
 
 			$inc = count( $fields ) + 1;
@@ -4629,7 +4629,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			switch ( $act_id ) {
 
 				case 'um_admin_duplicate_field':
-					$fields = $this->duplicate_field( $arg1, $arg2, $fields );
+					$fields = $this->duplicate_field( $arg1, $fields );
 					break;
 
 				case 'um_admin_remove_field_global':
@@ -4637,15 +4637,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					break;
 
 				case 'um_admin_remove_field':
-					$fields = $this->delete_field_from_form( $arg1, $arg2, $fields );
+					$fields = $this->delete_field_from_form( $arg1, $fields );
 					break;
 
 				case 'um_admin_add_field_from_predefined':
-					$fields = $this->add_field_from_predefined( $arg1, $arg2, $position, $fields );
+					$fields = $this->add_field_from_predefined( $arg1, $position, $fields );
 					break;
 
 				case 'um_admin_add_field_from_list':
-					$fields = $this->add_field_from_list( $arg1, $arg2, $position, $fields  );
+					$fields = $this->add_field_from_list( $arg1, $position, $fields  );
 					break;
 
 				case 'um_admin_add_row':

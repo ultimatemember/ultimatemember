@@ -254,7 +254,6 @@ function UM_Rows_Refresh(){
 
 		},
 		success: function(responce){
-			// console.log(responce)
 			jQuery('#um-serialized-fields').val(responce.data.fields);
 			jQuery('#publish').prop('disabled', false);
 		},

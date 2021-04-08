@@ -82,19 +82,17 @@ jQuery(document).ready(function() {
 				form.css({'opacity': 1});
 			},
 			success: function(responce){
-				// console.log(responce.data.error)
-				if ( responce.data.error._metakey !== 0 ){
+				if ( responce.data.error !== null && ( responce.data.error._metakey  !== null && responce.data.error._metakey !== 0 ) ){
 					c = 0;
-					jQuery.each(responce.data.error, function(i, v){
+					jQuery.each(responce.data.error, function (i, v) {
 						c++;
-						if ( c == 1 ) {
-						form.find('#'+i).addClass('um-admin-error').trigger('focus');
-						form.find('.um-admin-error-block').show().html(v);
+						if (c == 1) {
+							form.find('#' + i).addClass('um-admin-error').trigger('focus');
+							form.find('.um-admin-error-block').show().html(v);
 						}
 					});
 
 					um_admin_modal_responsive();
-
 				} else {
 					jQuery('.um-col-demon-settings').data('in_row', '');
 					jQuery('.um-col-demon-settings').data('in_sub_row', '');
