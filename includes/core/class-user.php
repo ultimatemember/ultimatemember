@@ -1336,6 +1336,13 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			$this->profile['account_secret_hash'] = UM()->validation()->generate();
 			$this->update_usermeta_info( 'account_secret_hash' );
+
+			$expiry_time = UM()->options()->get( 'activation_link_expiry_time' );
+			if ( ! empty( $expiry_time ) && is_numeric( $expiry_time ) ) {
+				$this->profile['account_secret_hash_expiry'] = time() + $expiry_time;
+				$this->update_usermeta_info( 'account_secret_hash_expiry' );
+			}
+
 			/**
 			 * UM hook
 			 *
@@ -1436,6 +1443,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 
 			$this->set_status( 'approved' );
 			$this->delete_meta( 'account_secret_hash' );
+			$this->delete_meta( 'account_secret_hash_expiry' );
 
 			/**
 			 * UM hook
