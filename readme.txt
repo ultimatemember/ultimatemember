@@ -158,11 +158,13 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 = 2.1.17: April 14, 2021 =
 
 * Enhancements:
+  - Added: Activation link expiration setting (#803)
   - Added: 'Owner and specific roles' privacy type for the Profile tabs (#773)
   - Added: Hooks `um_before_email_notification_sending` and `um_after_email_notification_sending` regarding #743 pull-request
   - Added: Hooks for integration member directory filters with different conditions for query to DB
 
 * Bugfixes:
+  - Fixed: Editing private profiles capability. Removed the priority for "Can edit other member accounts?" capability when the account is private. (#805)
   - Fixed: PHP notice when the admin filtering field has the not array default value (e.g. bool)
   - Fixed: The conflict with [Disable Blog](https://wordpress.org/plugins/disable-blog/) plugin regarding this [issue](https://wordpress.org/support/topic/ultimate-member-file-image-download/). `download_routing` callback has the highest priority now.
   - Fixed: Fields privacy functionality. This function `um_can_view_field()` has been rewritten (#780)
