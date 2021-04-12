@@ -1575,10 +1575,6 @@ function um_can_view_field( $data ) {
  * @return bool
  */
 function um_can_view_profile( $user_id ) {
-	if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-		return true;
-	}
-
 	if ( ! is_user_logged_in() ) {
 		return ! UM()->user()->is_private_profile( $user_id );
 	}
@@ -1608,6 +1604,7 @@ function um_can_view_profile( $user_id ) {
 			return false;
 		}
 	}
+
 	um_fetch_user( $temp_id );
 	return true;
 }
