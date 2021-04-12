@@ -647,7 +647,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'0' => __( 'No', 'ultimate-member' ),
 										'1' => __( 'Yes', 'ultimate-member' ),
 									]
-								)
+								),
+								array(
+									'id'        => 'activation_link_expiry_time',
+									'type'      => 'number',
+									'label'     => __( 'Activation link lifetime', 'ultimate-member' ),
+									'tooltip'   => __( 'How long does an activation link live? Leave empty for endless links.', 'ultimate-member' ),
+								),
 							)
 						),
 						'account'   => array(

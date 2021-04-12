@@ -187,6 +187,11 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 					wp_die( __( 'This activation link is expired or have already been used.', 'ultimate-member' ) );
 				}
 
+				$account_secret_hash_expiry = get_user_meta( $user_id, 'account_secret_hash_expiry', true );
+				if ( ! empty( $account_secret_hash_expiry ) && time() > $account_secret_hash_expiry ) {
+					wp_die( __( 'This activation link is expired.', 'ultimate-member' ) );
+				}
+
 				um_fetch_user( $user_id );
 				UM()->user()->approve();
 				um_reset_user();
