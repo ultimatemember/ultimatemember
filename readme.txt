@@ -177,6 +177,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed: Getting active Profile tab when some of them are hidden
   - Fixed: Restricted content message is showing twice and removing header, avoid the conflicts with themes that use 'the_content' filter in header or footer (#799)
   - Fixed: "Is required" validation for the multiselect field-type when it's empty on submit
+  - Fixed: Using 'wp_login_failed' hook, added 2nd parameter required since WordPress 5.4 version (#810)
 
 = 2.1.16: March 10, 2021 =
 
