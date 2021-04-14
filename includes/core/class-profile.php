@@ -101,7 +101,8 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 				1 => __( 'Guests only', 'ultimate-member' ),
 				2 => __( 'Members only', 'ultimate-member' ),
 				3 => __( 'Only the owner', 'ultimate-member' ),
-				4 => __( 'Specific roles', 'ultimate-member' ),
+				4 => __( 'Only specific roles', 'ultimate-member' ),
+				5 => __( 'Owner and specific roles', 'ultimate-member' ),
 			);
 
 			return $privacy;
@@ -227,6 +228,25 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 						}
 					}
 					break;
+				case 5:
+					if ( is_user_logged_in() ) {
+						// check profile owner if not - check privacy roles settings
+						$can_view = get_current_user_id() === $target_id;
+
+						if ( ! $can_view ) {
+							if ( isset( $tab_data['default_privacy'] ) ) {
+								$roles = isset( $tab_data['default_privacy_roles'] ) ? $tab_data['default_privacy_roles'] : array();
+							} else {
+								$roles = (array) UM()->options()->get( 'profile_tab_' . $tab . '_roles' );
+							}
+
+							$current_user_roles = um_user( 'roles' );
+							if ( ! empty( $current_user_roles ) && count( array_intersect( $current_user_roles, $roles ) ) > 0 ) {
+								$can_view = true;
+							}
+						}
+					}
+					break;
 
 				default:
 					$can_view = true;
@@ -322,10 +342,9 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 					} else {
 						if ( ! empty( $tabs ) ) {
 							foreach ( $tabs as $k => $tab ) {
-								if ( ! empty( $tab['hidden'] ) ) {
-									$this->active_tab = $k;
-									break;
-								}
+								// set first tab in order
+								$this->active_tab = $k;
+								break;
 							}
 						}
 					}

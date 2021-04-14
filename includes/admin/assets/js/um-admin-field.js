@@ -4,11 +4,11 @@ jQuery(document).ready(function() {
 	jQuery(document.body).on('click', '.um-admin-btns a span.remove', function(e){
 		e.preventDefault();
 
-		if ( confirm( 'This will permanently delete this custom field from database' ) ) {
+		if ( confirm( wp.i18n.__( 'This will permanently delete this custom field from a database and from all forms on your site. Are you sure?', 'ultimate-member' ) ) ) {
 
 			jQuery(this).parents('a').remove();
 
-			arg1 = jQuery(this).parents('a').data('arg1');
+			var arg1 = jQuery(this).parents('a').data('arg1');
 
 			jQuery.ajax({
 				url: wp.ajax.settings.url,
@@ -20,10 +20,10 @@ jQuery(document).ready(function() {
 					nonce: um_admin_scripts.nonce
 
 				},
-				success: function(data){
-					
+				success: function(data) {
+					jQuery('#um-admin-form-builder .' + arg1).remove();
 				},
-				error: function(data){
+				error: function(data) {
 
 				}
 			});
