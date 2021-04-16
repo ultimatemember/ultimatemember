@@ -124,14 +124,13 @@ jQuery(document).ready(function() {
 	function unselectEmptyOption( e ) {
 		var $element = jQuery( e.currentTarget );
 		var $selected = $element.find(':selected');
-		if ( $selected.length > 1 ) {
-			$selected.each( function ( i, option ) {
-				if ( option.value === '' ) {
-					option.selected = false;
-					$element.trigger( 'change' );
-				}
-			});
-		}
+
+		$selected.each( function ( i, option ) {
+			if ( option.value === '' ) {
+				option.selected = false;
+				$element.trigger( 'change' );
+			}
+		});
 	}
 
 	if ( typeof( jQuery.fn.select2 ) === 'function' ) {
