@@ -78,8 +78,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 							break;
 
 						case 'unique':
-
-							$errors[ $post_input ] = UM()->builtin()->unique_field_err( $array['post'][ $post_input ], $fields );
+							if ( ! isset( $array['post']['edit_mode'] ) ) {
+								$errors[ $post_input ] = UM()->builtin()->unique_field_err( $array['post'][ $post_input ], $fields );
+							}
 							break;
 
 						case 'required':
