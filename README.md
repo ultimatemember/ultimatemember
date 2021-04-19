@@ -41,7 +41,7 @@ GNU Version 2 or Any Later Version
 
 ## Releases
 
-[Official Release Version: 2.1.17](https://github.com/ultimatemember/ultimatemember/releases/tag/2.1.17).
+[Official Release Version: 2.1.18](https://github.com/ultimatemember/ultimatemember/releases/tag/2.1.18).
 
 ## Changelog
 
