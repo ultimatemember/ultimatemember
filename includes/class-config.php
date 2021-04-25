@@ -577,6 +577,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'member_directory_own_table'            => 0,
 				'profile_show_html_bio'                 => 0,
 				'profile_noindex'                       => 0,
+				'activation_link_expiry_time'           => '',
 			);
 
 			add_filter( 'um_get_tabs_from_config', '__return_true' );

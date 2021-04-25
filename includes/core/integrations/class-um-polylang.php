@@ -85,10 +85,10 @@ class UM_Polylang implements UM_Multilingual {
 						$lang_page_slug = $lang_post_obj->post_name;
 
 						if( $polylang->options['force_lang'] === 1 ){
-							$newrules[$language_code . '/' . $lang_page_slug . '/([^/]+)/?$'] = 'index.php?page_id=' . $lang_post_id . '&um_tab=$matches[1]&lang=' . $language_code;
+							$newrules[$language_code . '/' . $lang_page_slug . '/([^/]+)?$'] = 'index.php?page_id=' . $lang_post_id . '&um_tab=$matches[1]&lang=' . $language_code;
 						}
 
-						$newrules[$lang_page_slug . '/([^/]+)/?$'] = 'index.php?page_id=' . $lang_post_id . '&um_tab=$matches[1]&lang=' . $language_code;
+						$newrules[$lang_page_slug . '/([^/]+)?$'] = 'index.php?page_id=' . $lang_post_id . '&um_tab=$matches[1]&lang=' . $language_code;
 					}
 				}
 			}
