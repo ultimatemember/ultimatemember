@@ -104,10 +104,10 @@
 }
 .um-modal .um-modal-body.um-popup *{
 	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;	
+	-moz-osx-font-smoothing: grayscale;
 }
 .um-modal .um-modal-body.um-popup a{
-	outline: none;	
+	outline: none;
 }
 
 .um-modal .um-modal-body .loading,
@@ -135,6 +135,7 @@
 	-webkit-border-radius: 0px 0px 3px 3px;
 	border-radius: 0px 0px 3px 3px;
 	padding: 0.5em;
+	text-align: right;
 }
 
 .um-modal .um-modal-left {
