@@ -155,6 +155,14 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
+= 2.1.20: May xx, 2021 =
+
+* Enhancements:
+  - Added: Hook to unlock the ability to add new users through the registration form
+
+* Bugfixes:
+  - Fixed: Temp directory size calculation
+
 = 2.1.19: April 20, 2021 =
 
 * Bugfixes:
