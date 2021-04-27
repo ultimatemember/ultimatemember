@@ -40,6 +40,13 @@ final class Init {
 	 * Init constructor.
 	 */
 	function __construct() {
+		$this->common();
+		if ( UM()->is_request( 'frontend' ) ) {
+			$this->shortcode();
+		}
+
+		$this->member_directory();
+
 		add_action( 'widgets_init', [ &$this, 'widgets_init' ] );
 	}
 
@@ -49,6 +56,17 @@ final class Init {
 	 */
 	function widgets_init() {
 		register_widget( 'umm\online\includes\widgets\Online_List' );
+	}
+
+
+	/**
+	 * @return includes\Common()
+	 */
+	function common() {
+		if ( empty( UM()->classes['umm\online\includes\common'] ) ) {
+			UM()->classes['umm\online\includes\common'] = new includes\Common();
+		}
+		return UM()->classes['umm\online\includes\common'];
 	}
 
 
@@ -72,8 +90,6 @@ final class Init {
 		}
 		return UM()->classes['umm\online\includes\shortcode'];
 	}
-
-
 
 
 }

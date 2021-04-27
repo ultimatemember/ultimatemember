@@ -67,6 +67,7 @@ class Modules {
 			],
 		];
 
+		/** This filter is documented in wp-admin/includes/class-wp-plugins-list-table.php */
 		$all_plugins = apply_filters( 'all_plugins', get_plugins() );
 
 		foreach ( $modules as $slug => &$data ) {
@@ -81,7 +82,7 @@ class Modules {
 			if ( ! is_dir( $data['path'] ) ) {
 
 				$data['disabled'] = true;
-				$data['description'] = '<strong>' . __( 'Module is hasn\'t been installed properly. Please check the module\'s directory and re-install it.', 'ultimate-member' ) . '</strong><br />' . $data['description'];
+				$data['description'] = '<strong>' . __( 'Module has not been installed properly. Please check the module\'s directory and re-install it.', 'ultimate-member' ) . '</strong><br />' . $data['description'];
 
 			} else {
 
@@ -121,7 +122,7 @@ class Modules {
 	/**
 	 * Get module data
 	 *
-	 * @param string $slug
+	 * @param string $slug Module slug
 	 *
 	 * @return bool|array Returns `false` if module doesn't exists
 	 *
@@ -139,7 +140,7 @@ class Modules {
 	/**
 	 * Checking if module exists
 	 *
-	 * @param string $slug
+	 * @param string $slug Module slug
 	 *
 	 * @return bool Returns `false` if module doesn't exists, otherwise `true`
 	 */
@@ -152,6 +153,12 @@ class Modules {
 	 * Check if module is active
 	 *
 	 * @param string $slug Module slug
+	 *
+	 *
+	 * @uses exists
+	 * @uses is_disabled
+	 * @uses UM::undash()
+	 * @uses UM::options()
 	 *
 	 * @return bool
 	 */
@@ -172,9 +179,12 @@ class Modules {
 
 
 	/**
-	 * Check if module is active
+	 * Check if module is disabled
 	 *
 	 * @param string $slug Module slug
+	 *
+	 * @uses exists
+	 * @uses get_data
 	 *
 	 * @return bool
 	 */
@@ -189,29 +199,13 @@ class Modules {
 
 
 	/**
-	 * Run main class of module
+	 * Check if current user can activate a module
 	 *
 	 * @param string $slug Module slug
-	 */
-	private function run( $slug ) {
-		$slug = UM()->undash( $slug );
-		UM()->call_class( "umm\\{$slug}\\Init" );
-	}
-
-
-	/**
-	 * @param string $slug
 	 *
-	 * @return mixed
-	 */
-	function install( $slug ) {
-		$slug = UM()->undash( $slug );
-		return UM()->call_class( "umm\\{$slug}\\Install" );
-	}
-
-
-	/**
-	 * @param string $slug
+	 * @uses exists
+	 * @uses is_disabled
+	 * @uses is_active
 	 *
 	 * @return bool
 	 */
@@ -237,7 +231,13 @@ class Modules {
 
 
 	/**
-	 * @param string $slug
+	 * Checking if current user can deactivate a module
+	 *
+	 * @param string $slug Module slug
+	 *
+	 * @uses exists
+	 * @uses is_disabled
+	 * @uses is_active
 	 *
 	 * @return bool
 	 */
@@ -263,7 +263,15 @@ class Modules {
 
 
 	/**
-	 * @param string $slug
+	 * Checking if current user can flush module's data
+	 *
+	 * @param string $slug Module slug
+	 *
+	 * @uses exists
+	 * @uses is_disabled
+	 * @uses is_active
+	 * @uses UM::undash()
+	 * @uses UM::options()
 	 *
 	 * @return bool
 	 */
@@ -295,8 +303,14 @@ class Modules {
 
 
 	/**
+	 * Module's activation handler
+	 *
 	 * @param string $slug Module's slug
 	 *
+	 * @uses can_activate
+	 * @uses install::start()
+	 * @uses UM::undash()
+	 * @uses UM::options()
 	 *
 	 * @return bool
 	 */
@@ -321,7 +335,13 @@ class Modules {
 
 
 	/**
-	 * @param string $slug
+	 * Module's deactivation handler
+	 *
+	 * @param string $slug Module slug
+	 *
+	 * @uses can_deactivate
+	 * @uses UM::undash()
+	 * @uses UM::options()
 	 *
 	 * @return bool
 	 */
@@ -339,7 +359,14 @@ class Modules {
 
 
 	/**
-	 * @param string $slug
+	 * Module's flushing data handler
+	 *
+	 * @param string $slug Module slug
+	 *
+	 * @uses can_flush
+	 * @uses get_data
+	 * @uses UM::undash()
+	 * @uses UM::options()
 	 *
 	 * @return bool
 	 */
@@ -353,7 +380,11 @@ class Modules {
 		$slug = UM()->undash( $slug );
 		UM()->options()->remove( "module_{$slug}_first_activation" );
 
-		include_once $data['path'] . DIRECTORY_SEPARATOR . 'uninstall.php';
+		$uninstall_path = $data['path'] . DIRECTORY_SEPARATOR . 'uninstall.php';
+		if ( file_exists( $uninstall_path ) ) {
+			/** @noinspection PhpIncludeInspection */
+			include_once $uninstall_path;
+		}
 
 		return true;
 	}
@@ -361,6 +392,10 @@ class Modules {
 
 	/**
 	 * Load all modules
+	 *
+	 * @uses get_list
+	 * @uses is_active
+	 * @uses run
 	 */
 	function load_modules() {
 		$modules = $this->get_list();
@@ -375,5 +410,35 @@ class Modules {
 
 			$this->run( $slug );
 		}
+	}
+
+
+	/**
+	 * Run main class of module
+	 *
+	 * @param string $slug Module slug
+	 *
+	 * @uses UM::undash()
+	 * @uses UM::call_class()
+	 */
+	private function run( $slug ) {
+		$slug = UM()->undash( $slug );
+		UM()->call_class( "umm\\{$slug}\\Init" );
+	}
+
+
+	/**
+	 * Installation handler for single module
+	 *
+	 * @param string $slug Module slug
+	 *
+	 * @uses UM::undash()
+	 * @uses UM::call_class()
+	 *
+	 * @return mixed
+	 */
+	private function install( $slug ) {
+		$slug = UM()->undash( $slug );
+		return UM()->call_class( "umm\\{$slug}\\Install" );
 	}
 }

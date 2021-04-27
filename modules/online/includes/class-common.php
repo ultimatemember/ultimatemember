@@ -1,18 +1,19 @@
 <?php
-namespace um_ext\um_online\core;
+namespace umm\online\includes;
 
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
 /**
- * Class Online_Common
- * @package um_ext\um_online\core
+ * Class Common
+ *
+ * @package umm\online\includes
  */
-class Online_Common {
+class Common {
 
 	/**
-	 * Online_Frontend constructor.
+	 * Common constructor.
 	 */
 	function __construct() {
 		add_action( 'init', array( &$this, 'log' ), 1 );
