@@ -1514,7 +1514,12 @@ function um_can_view_field( $data ) {
 
 	if ( isset( $data['public'] ) && UM()->fields()->set_mode != 'register' ) {
 
+		$can_edit = false;
+		$current_user_roles = [];
 		if ( is_user_logged_in() ) {
+
+			$can_edit = UM()->roles()->um_current_user_can( 'edit', um_user( 'ID' ) );
+
 			$previous_user = um_user( 'ID' );
 			um_fetch_user( get_current_user_id() );
 
@@ -1523,47 +1528,32 @@ function um_can_view_field( $data ) {
 		}
 
 		switch ( $data['public'] ) {
-			case '1':
-				$can_view = true;
+			case '1': // Everyone
 				break;
-			case '2':
+			case '2': // Members
 				if ( ! is_user_logged_in() ) {
 					$can_view = false;
 				}
 				break;
-			case '-1':
+			case '-1': // Only visible to profile owner and users who can edit other member accounts
 				if ( ! is_user_logged_in() ) {
 					$can_view = false;
-				} else {
-					if ( ! um_is_user_himself() && ! UM()->roles()->um_user_can( 'can_edit_everyone' ) ) {
-						$can_view = false;
-					}
+				} elseif ( ! um_is_user_himself() && ! $can_edit ) {
+					$can_view = false;
 				}
 				break;
-			case '-2':
+			case '-2': // Only specific member roles
 				if ( ! is_user_logged_in() ) {
 					$can_view = false;
-				} else {
-					if ( ! empty( $data['roles'] ) ) {
-						if ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) {
-							$can_view = false;
-						}
-					}
+				} elseif ( ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) {
+					$can_view = false;
 				}
 				break;
-			case '-3':
+			case '-3': // Only visible to profile owner and specific roles
 				if ( ! is_user_logged_in() ) {
 					$can_view = false;
-				} else {
-					if ( ! um_is_core_page( 'profile' ) ) {
-						if ( empty( $current_user_roles ) || ( ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) ) {
-							$can_view = false;
-						}
-					} else {
-						if ( ! um_is_user_himself() && ( empty( $current_user_roles ) || ( ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) ) ) {
-							$can_view = false;
-						}
-					}
+				} elseif ( ! um_is_user_himself() && ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) {
+					$can_view = false;
 				}
 				break;
 			default:
@@ -1585,10 +1575,6 @@ function um_can_view_field( $data ) {
  * @return bool
  */
 function um_can_view_profile( $user_id ) {
-	if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-		return true;
-	}
-
 	if ( ! is_user_logged_in() ) {
 		return ! UM()->user()->is_private_profile( $user_id );
 	}
@@ -1618,6 +1604,7 @@ function um_can_view_profile( $user_id ) {
 			return false;
 		}
 	}
+
 	um_fetch_user( $temp_id );
 	return true;
 }

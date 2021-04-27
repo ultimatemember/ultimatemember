@@ -75,7 +75,7 @@ function um_submit_form_errors_hook_login( $args ) {
 
 	// if there is an error notify wp
 	if ( UM()->form()->has_error( $field ) || UM()->form()->has_error( $user_password ) || UM()->form()->count_errors() > 0 ) {
-		do_action( 'wp_login_failed', $user_name );
+		do_action( 'wp_login_failed', $user_name, UM()->form()->errors );
 	}
 }
 add_action( 'um_submit_form_errors_hook_login', 'um_submit_form_errors_hook_login', 10 );

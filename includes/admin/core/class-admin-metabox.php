@@ -2280,7 +2280,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 					$privacy_options = array(
 						'1'     => __( 'Everyone', 'ultimate-member' ),
 						'2'     => __( 'Members', 'ultimate-member' ),
-						'-1'    => __( 'Only visible to profile owner and admins', 'ultimate-member' ),
+						'-1'    => __( 'Only visible to profile owner and users who can edit other member accounts', 'ultimate-member' ),
 						'-3'    => __( 'Only visible to profile owner and specific roles', 'ultimate-member' ),
 						'-2'    => __( 'Only specific member roles', 'ultimate-member' ),
 					);

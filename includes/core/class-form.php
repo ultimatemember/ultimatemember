@@ -366,11 +366,14 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 					 */
 					$this->post_form = apply_filters( 'um_submit_post_form', $_POST );
 
+					if ( isset( $this->post_form[ UM()->honeypot ] ) && $this->post_form[ UM()->honeypot ] != '' ) {
+						wp_die( __( 'Hello, spam bot!', 'ultimate-member' ) );
+					}
+
 					$this->post_form = $this->beautify( $this->post_form );
+					$this->post_form['submitted'] = $this->post_form;
 
 					$this->form_data = UM()->query()->post_data( $this->form_id );
-
-					$this->post_form['submitted'] = $this->post_form;
 
 					$this->post_form = array_merge( $this->form_data, $this->post_form );
 
@@ -436,10 +439,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 							}
 						}
 
-					}
-
-					if ( isset( $_POST[ UM()->honeypot ] ) && $_POST[ UM()->honeypot ] != '' ) {
-						wp_die( __( 'Hello, spam bot!', 'ultimate-member' ) );
 					}
 
 					/**
@@ -518,18 +517,19 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 		/**
 		 * Beautify form data
+		 *
 		 * @param  array $form
 		 * @return array $form
 		 */
-		function beautify( $form ){
+		function beautify( $form ) {
 
-			if (isset($form['form_id'])){
+			if ( isset( $form['form_id'] ) ) {
 
 				$this->form_suffix = '-' . $form['form_id'];
 
 				$this->processing = $form['form_id'];
 
-				foreach( $form as $key => $value ){
+				foreach ( $form as $key => $value ) {
 					if ( strstr( $key, $this->form_suffix ) ) {
 						$a_key = str_replace( $this->form_suffix, '', $key );
 						$form[ $a_key ] = $value;
