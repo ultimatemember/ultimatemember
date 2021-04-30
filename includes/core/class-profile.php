@@ -96,14 +96,14 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 * @return array
 		 */
 		function tabs_privacy() {
-			$privacy = array(
+			$privacy = apply_filters( 'um_profile_tabs_privacy_list', array(
 				0 => __( 'Anyone', 'ultimate-member' ),
 				1 => __( 'Guests only', 'ultimate-member' ),
 				2 => __( 'Members only', 'ultimate-member' ),
 				3 => __( 'Only the owner', 'ultimate-member' ),
 				4 => __( 'Only specific roles', 'ultimate-member' ),
 				5 => __( 'Owner and specific roles', 'ultimate-member' ),
-			);
+			) );
 
 			return $privacy;
 		}
