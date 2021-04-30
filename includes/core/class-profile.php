@@ -249,7 +249,7 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 					break;
 
 				default:
-					$can_view = true;
+					$can_view = apply_filters( 'um_profile_menu_can_view_tab', true, $privacy, $tab, $tab_data, $target_id );
 					break;
 			}
 
