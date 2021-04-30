@@ -159,6 +159,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * Enhancements:
   - Added: Hook to unlock the ability to add new users through the registration form
+  - Added: Filter hook 'um_change_usermeta_for_update' for extending `$to_update` usermeta array after all profile fields validations
 
 * Bugfixes:
   - Fixed: Temp directory size calculation
