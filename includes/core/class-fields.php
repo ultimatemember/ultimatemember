@@ -256,6 +256,14 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				do_action( 'um_delete_custom_field', $id, $args );
 
 				update_option( 'um_fields', $fields );
+
+				global $wpdb;
+				$forms = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'um_form'" );
+				foreach ( $forms as $form_id ) {
+					$form_fields = get_post_meta( $form_id, '_um_custom_fields', true );
+					unset( $form_fields[ $id ] );
+					update_post_meta( $form_id, '_um_custom_fields', $form_fields );
+				}
 			}
 		}
 
@@ -1045,9 +1053,6 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 				if ( ! $this->editing || 'custom' == $this->set_mode ) {
 					// show default on register screen if there is default
 					if ( isset( $data['default'] ) ) {
-						if ( ! is_array( $data['default'] ) && strstr( $data['default'], ', ' ) ) {
-							$data['default'] = explode( ', ', $data['default'] );
-						}
 
 						if ( ! is_array( $data['default'] ) && $data['default'] === $value ) {
 							return true;
@@ -1059,6 +1064,14 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						if ( is_array( $data['default'] ) && array_intersect( $data['options'], $data['default'] ) ) {
 							return true;
+						}
+
+						// default value with comma
+						if ( is_string( $data['default'] ) && strstr( $data['default'], ',' ) ) {
+							$choices = array_map( 'trim', explode( ',', $data['default'] ) );
+							if ( in_array( $value, $choices ) ) {
+								return true;
+							}
 						}
 
 					}

@@ -100,14 +100,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				$metakeys = array();
 				foreach ( UM()->builtin()->all_user_fields as $all_user_field ) {
-					if ( $all_user_field['type'] == 'user_location' ) {
-						$metakeys[] = $all_user_field['metakey'] . '_lat';
-						$metakeys[] = $all_user_field['metakey'] . '_lng';
-						$metakeys[] = $all_user_field['metakey'] . '_url';
-					} else {
-						$metakeys[] = $all_user_field['metakey'];
-					}
+					$metakeys[] = $all_user_field['metakey'];
 				}
+
+				$metakeys = apply_filters( 'um_metadata_same_page_update_ajax', $metakeys, UM()->builtin()->all_user_fields );
 
 				if ( is_multisite() ) {
 
@@ -652,7 +648,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 										'0' => __( 'No', 'ultimate-member' ),
 										'1' => __( 'Yes', 'ultimate-member' ),
 									]
-								)
+								),
+								array(
+									'id'        => 'activation_link_expiry_time',
+									'type'      => 'number',
+									'label'     => __( 'Activation link lifetime', 'ultimate-member' ),
+									'tooltip'   => __( 'How long does an activation link live in seconds? Leave empty for endless links.', 'ultimate-member' ),
+									'size'      => 'small',
+								),
 							)
 						),
 						'account'   => array(

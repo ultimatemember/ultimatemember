@@ -1596,13 +1596,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 								case 'text':
 
 									$value = stripslashes( $value );
-
 									$field_query = array(
 										'relation' => 'OR',
 										array(
 											'key'       => $field,
 											'value'     => trim( $value ),
-											'compare'   => 'LIKE',
+											'compare'   => apply_filters( 'um_members_directory_filter_text', 'LIKE', $field )
 										),
 									);
 
@@ -1871,7 +1870,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 									$field_query = array(
 										'key'       => $field,
 										'value'     => $value,
-										'compare'   => '=',
+										'compare'   => apply_filters( 'um_members_directory_filter_text', '=', $field ),
 									);
 
 									break;
@@ -2212,7 +2211,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$dropdown_actions = $this->build_user_actions_list( $user_id );
 
 			$actions = array();
-			$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id ) || UM()->roles()->um_user_can( 'can_edit_everyone' );
+			$can_edit = UM()->roles()->um_current_user_can( 'edit', $user_id );
 
 			// Replace hook 'um_members_just_after_name'
 			ob_start();

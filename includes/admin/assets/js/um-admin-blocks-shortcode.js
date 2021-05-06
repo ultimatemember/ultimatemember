@@ -365,7 +365,7 @@ wp.blocks.registerBlockType( 'um-block/um-account', {
 				wp.i18n.__( 'Account', 'ultimate-member' )
 			),
 			wp.element.createElement(
-				wp.editor.InspectorControls,
+				wp.blockEditor.InspectorControls,
 				{},
 				wp.element.createElement(
 					wp.components.PanelBody,
