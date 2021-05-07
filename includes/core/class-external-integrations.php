@@ -524,7 +524,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 
 			//plugin location for default language
 			if ( empty( $lang ) && ! file_exists( $template_path ) ) {
-				$template_path = UM()->mail()->get_template_file( 'plugin', $template );
+				$template_path = UM()->get_template_filepath( $template, 'email', 'plugin' );
 			}
 
 			if ( file_exists( $template_path ) ) {

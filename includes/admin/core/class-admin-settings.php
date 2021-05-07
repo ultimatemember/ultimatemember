@@ -2992,42 +2992,13 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 			$template = $settings['um_email_template'];
 			$content = stripslashes( $settings[ $template ] );
 
-			/**
-			 * UM hook
-			 *
-			 * @type        filter
-			 * @title       um_save_email_templates_to
-			 * @description Email templates are saved in the active theme folder by default. This filter allows saving email templates to the uploads folder or any other directory.
-			 * @input_vars
-			 * [ {"var":"$save_to","type":"string","desc":"Where to save templates"} ]
-			 * @change_log
-			 * ["Since: 2.1.17"]
-			 * @example
-			 * <?php
-			 * add_filter( 'um_save_email_templates_to', 'my_um_save_email_templates_to' );
-			 * function my_email_template_body_attrs( $save_to ) {
-			 *     $save_to = 'uploads';
-			 *     return $save_to;
-			 * }
-			 * ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_save_email_templates_to', 'my_um_save_email_templates_to' );
-			 * function my_email_template_body_attrs( $save_to ) {
-			 *     $save_to = trailingslashit( ABSPATH ) . 'um-templates';
-			 *     return $save_to;
-			 * }
-			 * ?>
-			 */
-			$location = apply_filters( 'um_save_email_templates_to', 'theme' );
+			$template_path = UM()->get_template_filepath( $template, 'email' );
 
-			$theme_template_path = UM()->mail()->get_template_file( $location, $template );
-
-			if ( ! file_exists( $theme_template_path ) ) {
-				UM()->mail()->copy_email_template( $template, $location );
+			if ( ! file_exists( $template_path ) ) {
+				UM()->mail()->copy_email_template( $template );
 			}
 
-			$fp = fopen( $theme_template_path, "w" );
+			$fp = fopen( $template_path, "w" );
 			$result = fputs( $fp, $content );
 			fclose( $fp );
 
