@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 5.7
-Stable tag: 2.1.19
+Stable tag: 2.1.20
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -154,6 +154,17 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.1.20: May 7, 2021 =
+
+* Enhancements:
+  - Added: Hook to unlock the ability to add new users through the registration form
+  - Added: Filter hook 'um_change_usermeta_for_update' for extending `$to_update` usermeta array after all profile fields validations
+  - Added: Filter hook 'um_profile_tabs_privacy_list' and 'um_profile_menu_can_view_tab' for extending privacy options for Profile Tabs
+
+* Bugfixes:
+  - Fixed: XSS vulnerability when getting user profile URL
+  - Fixed: Temp directory size calculation
 
 = 2.1.19: April 20, 2021 =
 
