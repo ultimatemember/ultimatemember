@@ -31,7 +31,7 @@ function um_dynamic_login_page_redirect( $redirect_to = '' ) {
 
 	$uri = um_get_core_page( 'login' );
 
-	if (!$redirect_to) {
+	if ( ! $redirect_to ) {
 		$redirect_to = UM()->permalinks()->get_current_url();
 	}
 
