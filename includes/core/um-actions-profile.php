@@ -363,6 +363,9 @@ function um_user_edit_profile( $args ) {
 
 				}
 
+				// use this filter after all validations has been completed and we can extends data based on key
+				$to_update = apply_filters( 'um_change_usermeta_for_update', $to_update, $args, $fields, $key );
+
 			}
 		}
 	}

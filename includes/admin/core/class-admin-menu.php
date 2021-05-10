@@ -275,6 +275,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Menu' ) ) {
 				$size = 0;
 
 				foreach( new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator( $directory ) ) as $file ) {
+					$filename = $file->getFilename();
+					if ( $filename == '.' || $filename == '..' ) {
+						continue;
+					}
+
 					$size += $file->getSize();
 				}
 				return round ( $size / 1048576, 2);
