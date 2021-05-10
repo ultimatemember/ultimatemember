@@ -163,7 +163,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 = 2.1.20: May 7, 2021 =
 
 * Enhancements:
-  - Added: Hook to unlock the ability to add new users through the registration form
+  - Added: Hook `um_registration_for_loggedin_users` to unlock the ability to add new users through the registration form
   - Added: Filter hook 'um_change_usermeta_for_update' for extending `$to_update` usermeta array after all profile fields validations
   - Added: Filter hook 'um_profile_tabs_privacy_list' and 'um_profile_menu_can_view_tab' for extending privacy options for Profile Tabs
 
