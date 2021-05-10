@@ -106,13 +106,53 @@ add_action( 'um_submit_form_errors_hook__blockedwords', 'um_submit_form_errors_h
  * @param $args
  */
 function um_submit_form_errors_hook( $args ) {
-	$form_id = $args['form_id'];
-
 	$mode = $args['mode'];
 
-	$fields = unserialize( $args['custom_fields'] );
+	/**
+	 * UM hook
+	 *
+	 * @type action
+	 * @title um_submit_form_errors_hook__blockedips
+	 * @description Submit form validation
+	 * @input_vars
+	 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_action( 'um_submit_form_errors_hook__blockedips', 'function_name', 10, 1 );
+	 * @example
+	 * <?php
+	 * add_action( 'um_submit_form_errors_hook__blockedips', 'my_submit_form_errors_hook__blockedips', 10, 1 );
+	 * function my_submit_form_errors_hook__blockedips( $args ) {
+	 *     // your code here
+	 * }
+	 * ?>
+	 */
+	do_action( 'um_submit_form_errors_hook__blockedips', $args );
+
+
+	/**
+	 * UM hook
+	 *
+	 * @type action
+	 * @title um_submit_form_errors_hook__blockedemails
+	 * @description Submit form validation
+	 * @input_vars
+	 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
+	 * @change_log
+	 * ["Since: 2.0"]
+	 * @usage add_action( 'um_submit_form_errors_hook__blockedemails', 'function_name', 10, 1 );
+	 * @example
+	 * <?php
+	 * add_action( 'um_submit_form_errors_hook__blockedemails', 'my_submit_form_errors_hook__blockedemails', 10, 1 );
+	 * function my_submit_form_errors_hook__blockedemails( $args ) {
+	 *     // your code here
+	 * }
+	 * ?>
+	 */
+	do_action( 'um_submit_form_errors_hook__blockedemails', $args );
 
 	if ( $mode == 'register' ) {
+
 
 		/**
 		 * UM hook
@@ -137,6 +177,7 @@ function um_submit_form_errors_hook( $args ) {
 
 	} elseif ( $mode == 'profile' ) {
 
+
 		/**
 		 * UM hook
 		 *
@@ -158,50 +199,9 @@ function um_submit_form_errors_hook( $args ) {
 		 */
 		do_action( 'um_submit_form_errors_hook__profile', $args );
 
-	}
+	} elseif ( $mode == 'login' ) {
 
-	/**
-	 * UM hook
-	 *
-	 * @type action
-	 * @title um_submit_form_errors_hook__blockedips
-	 * @description Submit form validation
-	 * @input_vars
-	 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_action( 'um_submit_form_errors_hook__blockedips', 'function_name', 10, 1 );
-	 * @example
-	 * <?php
-	 * add_action( 'um_submit_form_errors_hook__blockedips', 'my_submit_form_errors_hook__blockedips', 10, 1 );
-	 * function my_submit_form_errors_hook__blockedips( $args ) {
-	 *     // your code here
-	 * }
-	 * ?>
-	 */
-	do_action( 'um_submit_form_errors_hook__blockedips', $args );
-	/**
-	 * UM hook
-	 *
-	 * @type action
-	 * @title um_submit_form_errors_hook__blockedemails
-	 * @description Submit form validation
-	 * @input_vars
-	 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_action( 'um_submit_form_errors_hook__blockedemails', 'function_name', 10, 1 );
-	 * @example
-	 * <?php
-	 * add_action( 'um_submit_form_errors_hook__blockedemails', 'my_submit_form_errors_hook__blockedemails', 10, 1 );
-	 * function my_submit_form_errors_hook__blockedemails( $args ) {
-	 *     // your code here
-	 * }
-	 * ?>
-	 */
-	do_action( 'um_submit_form_errors_hook__blockedemails', $args );
 
-	if ( $mode == 'login' ) {
 		/**
 		 * UM hook
 		 *
@@ -222,6 +222,8 @@ function um_submit_form_errors_hook( $args ) {
 		 * ?>
 		 */
 		do_action( 'um_submit_form_errors_hook_login', $args );
+
+
 		/**
 		 * UM hook
 		 *
@@ -243,27 +245,12 @@ function um_submit_form_errors_hook( $args ) {
 		 */
 		do_action( 'um_submit_form_errors_hook_logincheck', $args );
 
-	} else {
-		/**
-		 * UM hook
-		 *
-		 * @type action
-		 * @title um_submit_form_errors_hook_
-		 * @description Submit form validation
-		 * @input_vars
-		 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
-		 * @change_log
-		 * ["Since: 2.0"]
-		 * @usage add_action( 'um_submit_form_errors_hook_', 'function_name', 10, 1 );
-		 * @example
-		 * <?php
-		 * add_action( 'um_submit_form_errors_hook_', 'my_submit_form_errors_hook', 10, 1 );
-		 * function my_submit_form_errors_hook( $args ) {
-		 *     // your code here
-		 * }
-		 * ?>
-		 */
-		do_action( 'um_submit_form_errors_hook_', $args );
+	}
+
+
+	if ( $mode != 'login' ) {
+
+
 		/**
 		 * UM hook
 		 *
@@ -284,6 +271,28 @@ function um_submit_form_errors_hook( $args ) {
 		 * ?>
 		 */
 		do_action( 'um_submit_form_errors_hook__blockedwords', $args );
+
+
+		/**
+		 * UM hook
+		 *
+		 * @type action
+		 * @title um_submit_form_errors_hook_
+		 * @description Submit form validation
+		 * @input_vars
+		 * [{"var":"$args","type":"array","desc":"Form Arguments"}]
+		 * @change_log
+		 * ["Since: 2.0"]
+		 * @usage add_action( 'um_submit_form_errors_hook_', 'function_name', 10, 1 );
+		 * @example
+		 * <?php
+		 * add_action( 'um_submit_form_errors_hook_', 'my_submit_form_errors_hook', 10, 1 );
+		 * function my_submit_form_errors_hook( $args ) {
+		 *     // your code here
+		 * }
+		 * ?>
+		 */
+		do_action( 'um_submit_form_errors_hook_', $args );
 
 	}
 
@@ -411,13 +420,25 @@ function um_submit_form_errors_hook_( $args ) {
 	$form_id = $args['form_id'];
 	$mode = $args['mode'];
 	$fields = unserialize( $args['custom_fields'] );
-	$um_profile_photo = um_profile('profile_photo');
 
+	$um_profile_photo = um_profile('profile_photo');
 	if ( get_post_meta( $form_id, '_um_profile_photo_required', true ) && ( empty( $args['profile_photo'] ) && empty( $um_profile_photo ) ) ) {
 		UM()->form()->add_error('profile_photo', __( 'Profile Photo is required.', 'ultimate-member' ) );
 	}
 
 	if ( ! empty( $fields ) ) {
+
+		$can_edit = false;
+		$current_user_roles = [];
+		if ( is_user_logged_in() ) {
+
+			$can_edit = UM()->roles()->um_current_user_can( 'edit', $args['user_id'] );
+
+			um_fetch_user( get_current_user_id() );
+			$current_user_roles = um_user( 'roles' );
+			um_reset_user();
+		}
+
 		foreach ( $fields as $key => $array ) {
 
 			if ( $mode == 'profile' ) {
@@ -427,12 +448,51 @@ function um_submit_form_errors_hook_( $args ) {
 				}
 			}
 
-			if ( isset( $array['public']  ) && -2 == $array['public'] && ! empty( $array['roles'] ) && is_user_logged_in() ) {
-				$current_user_roles = um_user( 'roles' );
-				if ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $array['roles'] ) ) <= 0 ) {
-					continue;
+			$can_view = true;
+			if ( isset( $array['public'] ) && $mode != 'register' ) {
+
+				switch ( $array['public'] ) {
+					case '1': // Everyone
+						break;
+					case '2': // Members
+						if ( ! is_user_logged_in() ) {
+							$can_view = false;
+						}
+						break;
+					case '-1': // Only visible to profile owner and admins
+						if ( ! is_user_logged_in() ) {
+							$can_view = false;
+						} elseif ( $args['user_id'] != get_current_user_id() && ! $can_edit ) {
+							$can_view = false;
+						}
+						break;
+					case '-2': // Only specific member roles
+						if ( ! is_user_logged_in() ) {
+							$can_view = false;
+						} elseif ( ! empty( $array['roles'] ) && count( array_intersect( $current_user_roles, $array['roles'] ) ) <= 0 ) {
+							$can_view = false;
+						}
+						break;
+					case '-3': // Only visible to profile owner and specific roles
+						if ( ! is_user_logged_in() ) {
+							$can_view = false;
+						} elseif ( $args['user_id'] != get_current_user_id() && ! empty( $array['roles'] ) && count( array_intersect( $current_user_roles, $array['roles'] ) ) <= 0 ) {
+							$can_view = false;
+						}
+						break;
+					default:
+						$can_view = apply_filters( 'um_can_view_field_custom', $can_view, $array );
+						break;
 				}
+
 			}
+
+			$can_view = apply_filters( 'um_can_view_field', $can_view, $array );
+
+			if ( ! $can_view ) {
+				continue;
+			}
+
 
 			/**
 			 * UM hook

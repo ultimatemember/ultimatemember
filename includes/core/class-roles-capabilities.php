@@ -643,13 +643,18 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 							$return = 0;
 						}
 					} else {
-						if ( ! um_user( 'can_edit_everyone' ) ) {
+
+						if ( ! um_user( 'can_access_private_profile' ) && UM()->user()->is_private_profile( $user_id ) ) {
 							$return = 0;
 						} else {
-							if ( um_user( 'can_edit_roles' ) && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, um_user( 'can_edit_roles' ) ) ) <= 0 ) ) {
+							if ( ! um_user( 'can_edit_everyone' ) ) {
 								$return = 0;
 							} else {
-								$return = 1;
+								if ( um_user( 'can_edit_roles' ) && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, um_user( 'can_edit_roles' ) ) ) <= 0 ) ) {
+									$return = 0;
+								} else {
+									$return = 1;
+								}
 							}
 						}
 					}
