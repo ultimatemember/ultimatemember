@@ -20,6 +20,9 @@ if ( ! class_exists( 'um\core\Common' ) ) {
 		 * Common constructor.
 		 */
 		function __construct() {
+			// loading modules when UM core is loaded
+			add_action( 'um_core_loaded', [ UM()->modules(), 'load_modules' ], 1 );
+
 			add_action( 'init',  array( &$this, 'create_post_types' ), 1 );
 
 			add_filter( 'body_class', array( &$this, 'remove_admin_bar' ), 1000, 1 );

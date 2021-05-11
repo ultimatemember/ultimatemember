@@ -216,7 +216,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				if ( ! empty( $values ) ) {
 				$wpdb->query(
 					"INSERT INTO
-    				{$wpdb->prefix}um_metadata(user_id, um_key, um_value)
+					{$wpdb->prefix}um_metadata(user_id, um_key, um_value)
 					VALUES " . implode( ',', $values ) );
 				}
 
@@ -536,6 +536,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			 * }
 			 * ?>
 			 */
+
+			$modules_sections = apply_filters( 'um_modules_settings_sections', [] );
+
 			$this->settings_structure = apply_filters( 'um_settings_structure', array(
 				''              => array(
 					'title'     => __( 'General', 'ultimate-member' ),
@@ -1304,6 +1307,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				'extensions'    => array(
 					'title' => __( 'Extensions', 'ultimate-member' )
 				),
+				'modules'       => [
+					'title'     => __( 'Modules', 'ultimate-member' ),
+					'sections'  => $modules_sections,
+				],
 				'licenses'      => array(
 					'title' => __( 'Licenses', 'ultimate-member' ),
 				),
@@ -1651,8 +1658,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					foreach ( $menu_tabs as $name => $label ) {
 						$active = ( $current_tab == $name ) ? 'nav-tab-active' : '';
 						$tabs .= '<a href="' . esc_url( admin_url( 'admin.php?page=um_options' . ( empty( $name ) ? '' : '&tab=' . $name ) ) ) . '" class="nav-tab ' . $active . '">' .
-						         $label .
-						         '</a>';
+								 $label .
+								 '</a>';
 					}
 
 					break;
@@ -1707,8 +1714,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			foreach ( $menu_subtabs as $name => $label ) {
 				$active = ( $current_subtab == $name ) ? 'current' : '';
 				$subtabs .= '<a href="' . esc_url( admin_url( 'admin.php?page=um_options' . ( empty( $current_tab ) ? '' : '&tab=' . $current_tab ) . ( empty( $name ) ? '' : '&section=' . $name ) ) ) . '" class="' . $active . '">'
-				            . $label .
-				            '</a> | ';
+							. $label .
+							'</a> | ';
 			}
 
 			return substr( $subtabs, 0, -3 ) . '</ul></div>';
@@ -2642,7 +2649,7 @@ Generate Slugs on Directories:	<?php if( UM()->options()->get( 'um_generate_slug
 Force UTF-8 Encoding: 		<?php if( UM()->options()->get( 'um_force_utf8_strings' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
 JS/CSS Compression: 			<?php if ( defined('SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) { echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
 <?php if( is_multisite() ): ?>
-    Network Structure:			<?php echo UM()->options()->get( 'network_permalink_structure' ). "\n"; ?>
+	Network Structure:			<?php echo UM()->options()->get( 'network_permalink_structure' ). "\n"; ?>
 <?php endif; ?>
 Port Forwarding in URL: 		<?php if( UM()->options()->get( 'um_port_forwarding_url' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
 Exclude CSS/JS on Home: 		<?php if( UM()->options()->get( 'js_css_exlcude_home' ) == 1 ){ echo "Yes"; }else{ echo "No"; } echo "\n"; ?>
@@ -2707,7 +2714,7 @@ Redirect author to profile: 		<?php echo $this->info_value( UM()->options()->get
 Enable Members Directory:	<?php echo $this->info_value( UM()->options()->get('members_page'), 'yesno', true ); ?>
 Use Gravatars: 				<?php echo $this->info_value( UM()->options()->get('use_gravatars'), 'yesno', true ); ?>
 <?php if( UM()->options()->get('use_gravatars') ): ?>Gravatar builtin image:		<?php  echo UM()->options()->get('use_um_gravatar_default_builtin_image') . "\n"; ?>
-    UM Avatar as blank Gravatar: 	<?php echo $this->info_value( UM()->options()->get('use_um_gravatar_default_image'), 'yesno', true ); ?><?php endif; ?>
+	UM Avatar as blank Gravatar: 	<?php echo $this->info_value( UM()->options()->get('use_um_gravatar_default_image'), 'yesno', true ); ?><?php endif; ?>
 Require a strong password: 	<?php echo $this->info_value( UM()->options()->get('reset_require_strongpass'), 'onoff', true ); ?>
 
 
@@ -2765,50 +2772,50 @@ Password Changed Email: 		<?php echo $this->info_value( UM()->options()->get('ch
 
 --- UM Total Users ---
 
-                <?php $result = count_users();
-                echo 'All Users('.$result['total_users'].")\n";
-                foreach( $result['avail_roles'] as $role => $count ) {
-                    echo $role."(".$count.")\n";
-                } ?>
+				<?php $result = count_users();
+				echo 'All Users('.$result['total_users'].")\n";
+				foreach( $result['avail_roles'] as $role => $count ) {
+					echo $role."(".$count.")\n";
+				} ?>
 
 
 --- UM Roles ---
 
-                <?php foreach( UM()->roles()->get_roles() as $role_id => $role ) {
-                    echo $role." ({$role_id})\n";
-                } ?>
+				<?php foreach( UM()->roles()->get_roles() as $role_id => $role ) {
+					echo $role." ({$role_id})\n";
+				} ?>
 
 
 --- UM Custom Templates ---
 
-                <?php // Show templates that have been copied to the theme's edd_templates dir
-                $dir = get_stylesheet_directory() . '/ultimate-member/templates/*.php';
-                if ( ! empty( $dir ) ) {
-                    $found = glob( $dir );
-                    if ( ! empty( $found ) ) {
-                        foreach ( glob( $dir ) as $file ) {
-                            echo "File: " . $file  . "\n";
-                        }
-                    } else {
-                        echo 'N/A'."\n";
-                    }
-                } ?>
+				<?php // Show templates that have been copied to the theme's edd_templates dir
+				$dir = get_stylesheet_directory() . '/ultimate-member/templates/*.php';
+				if ( ! empty( $dir ) ) {
+					$found = glob( $dir );
+					if ( ! empty( $found ) ) {
+						foreach ( glob( $dir ) as $file ) {
+							echo "File: " . $file  . "\n";
+						}
+					} else {
+						echo 'N/A'."\n";
+					}
+				} ?>
 
 
 --- UM Email HTML Templates ---
 
-                <?php $dir = get_stylesheet_directory() . '/ultimate-member/templates/emails/*.html';
+				<?php $dir = get_stylesheet_directory() . '/ultimate-member/templates/emails/*.html';
 
-                if ( ! empty( $dir ) ) {
-                    $found =  glob( $dir );
-                    if ( ! empty( $found ) ){
-                        foreach ( glob( $dir ) as $file ) {
-                            echo "File: ". $file  . "\n";
-                        }
-                    } else {
-                        echo 'N/A'."\n";
-                    }
-                } ?>
+				if ( ! empty( $dir ) ) {
+					$found =  glob( $dir );
+					if ( ! empty( $found ) ){
+						foreach ( glob( $dir ) as $file ) {
+							echo "File: ". $file  . "\n";
+						}
+					} else {
+						echo 'N/A'."\n";
+					}
+				} ?>
 
 
 --- Web Server Configurations ---
@@ -2854,67 +2861,67 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 
 --- WordPress Active Plugins ---
 
-                <?php $plugins = get_plugins();
-                $active_plugins = get_option( 'active_plugins', array() );
+				<?php $plugins = get_plugins();
+				$active_plugins = get_option( 'active_plugins', array() );
 
-                foreach ( $plugins as $plugin_path => $plugin ) {
-                    // If the plugin isn't active, don't show it.
-                    if ( ! in_array( $plugin_path, $active_plugins ) )
-                        continue;
+				foreach ( $plugins as $plugin_path => $plugin ) {
+					// If the plugin isn't active, don't show it.
+					if ( ! in_array( $plugin_path, $active_plugins ) )
+						continue;
 
-                    echo $plugin['Name'] . ': ' . $plugin['Version'] ."\n";
-                }
+					echo $plugin['Name'] . ': ' . $plugin['Version'] ."\n";
+				}
 
-                if ( is_multisite() ) { ?>
+				if ( is_multisite() ) { ?>
 
 --- WordPress Network Active Plugins ---
 
-                    <?php $plugins = wp_get_active_network_plugins();
-                    $active_plugins = get_site_option( 'active_sitewide_plugins', array() );
+					<?php $plugins = wp_get_active_network_plugins();
+					$active_plugins = get_site_option( 'active_sitewide_plugins', array() );
 
-                    foreach ( $plugins as $plugin_path ) {
-                        $plugin_base = plugin_basename( $plugin_path );
+					foreach ( $plugins as $plugin_path ) {
+						$plugin_base = plugin_basename( $plugin_path );
 
-                        // If the plugin isn't active, don't show it.
-                        if ( ! array_key_exists( $plugin_base, $active_plugins ) )
-                            continue;
+						// If the plugin isn't active, don't show it.
+						if ( ! array_key_exists( $plugin_base, $active_plugins ) )
+							continue;
 
-                        $plugin = get_plugin_data( $plugin_path );
+						$plugin = get_plugin_data( $plugin_path );
 
-                        echo $plugin['Name'] . ' :' . $plugin['Version'] . "\n";
-                    }
+						echo $plugin['Name'] . ' :' . $plugin['Version'] . "\n";
+					}
 
-                }
+				}
 
-                /**
-                 * UM hook
-                 *
-                 * @type action
-                 * @title um_install_info_after
-                 * @description After install info
-                 * @change_log
-                 * ["Since: 2.0"]
-                 * @usage add_action( 'um_install_info_after', 'function_name', 10 );
-                 * @example
-                 * <?php
-                 * add_action( 'um_install_info_after', 'my_install_info_after', 10 );
-                 * function my_install_info_after() {
-                 *     // your code here
-                 * }
-                 * ?>
-                 */
-                do_action( 'um_install_info_after' ); ?>
+				/**
+				 * UM hook
+				 *
+				 * @type action
+				 * @title um_install_info_after
+				 * @description After install info
+				 * @change_log
+				 * ["Since: 2.0"]
+				 * @usage add_action( 'um_install_info_after', 'function_name', 10 );
+				 * @example
+				 * <?php
+				 * add_action( 'um_install_info_after', 'my_install_info_after', 10 );
+				 * function my_install_info_after() {
+				 *     // your code here
+				 * }
+				 * ?>
+				 */
+				do_action( 'um_install_info_after' ); ?>
 
 ### End Install Info ###
-                    </textarea>
-                    <p class="submit">
-                        <input type="hidden" name="um-addon-hook" value="download_install_info" />
-                        <?php submit_button( 'Download Install Info File', 'primary', 'download_install_info', false ); ?>
-                    </p>
-                </form>
+					</textarea>
+					<p class="submit">
+						<input type="hidden" name="um-addon-hook" value="download_install_info" />
+						<?php submit_button( 'Download Install Info File', 'primary', 'download_install_info', false ); ?>
+					</p>
+				</form>
 
-            <?php }
-        }
+			<?php }
+		}
 
 
 		/**
