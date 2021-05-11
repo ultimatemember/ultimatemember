@@ -264,7 +264,6 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 * @param $tpl
 		 */
 		function load_template( $tpl ) {
-			$loop = ( $this->loop ) ? $this->loop : array();
 
 			if ( isset( $this->set_args ) && is_array( $this->set_args ) ) {
 				$args = $this->set_args;
@@ -287,6 +286,28 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			if ( file_exists( $file ) ) {
 				include $file;
 			}
+
+			/**
+			 * >> NEW TEST CODE
+			 */
+
+//			$t_args = [];
+//			if ( isset( $this->set_args ) && is_array( $this->set_args ) ) {
+//				$args = $this->set_args;
+//
+//				unset( $args['file'] );
+//				unset( $args['theme_file'] );
+//				unset( $args['tpl'] );
+//
+//				$t_args = apply_filters( 'um_template_load_args', $args, $tpl );
+//				$t_args['args'] = $t_args;
+//			}
+//			$t_args['this'] = $this;
+//			UM()->get_template( $tpl, 'ultimate-member/templates', $t_args, true);
+
+			/**
+			 * << NEW TEST CODE
+			 */
 		}
 
 

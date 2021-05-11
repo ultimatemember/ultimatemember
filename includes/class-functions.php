@@ -312,7 +312,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 					}else{
 						if( empty( $folder ) ){
 							$folder = 'ultimate-member/templates/';
-						} elseif ( strpos( $folder, 'templates' === false ) ) {
+						} elseif ( strpos( $folder, 'templates' ) === false ) {
 							$folder .= 'templates/';
 						}
 						$dir = trailingslashit( WP_PLUGIN_DIR ) . $folder;
@@ -380,6 +380,8 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 				$template = $theme_path;
 			} elseif( file_exists( $plugin_path ) ){
 				$template = $plugin_path;
+			}else{
+				$template_name = $template_name;
 			}
 
 			/**
