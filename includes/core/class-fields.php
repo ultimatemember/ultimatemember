@@ -4346,14 +4346,14 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			if ( UM()->options()->get( 'profile_empty_text' ) ) {
 
 				$emo = UM()->options()->get( 'profile_empty_text_emo' );
-				if ($emo) {
+				if ( $emo ) {
 					$emo = '<i class="um-faicon-frown-o"></i>';
 				} else {
 					$emo = false;
 				}
 
-				if (um_is_myprofile()) {
-					$output .= '<p class="um-profile-note">' . $emo . '<span>' . sprintf( __( 'Your profile is looking a little empty. Why not <a href="%s">add</a> some information!', 'ultimate-member' ), um_edit_profile_url() ) . '</span></p>';
+				if ( um_is_myprofile() ) {
+					$output .= '<p class="um-profile-note">' . $emo . '<span>' . sprintf( __( 'Your profile is looking a little empty. Why not <a href="%s">add</a> some information!', 'ultimate-member' ), esc_url( um_edit_profile_url() ) ) . '</span></p>';
 				} else {
 					$output .= '<p class="um-profile-note">' . $emo . '<span>' . __( 'This user has not added any information to their profile yet.', 'ultimate-member' ) . '</span></p>';
 				}

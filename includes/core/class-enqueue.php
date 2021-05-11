@@ -149,8 +149,16 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			 * }
 			 * ?>
 			 */
+
+
+			$max_upload_size = wp_max_upload_size();
+			if ( ! $max_upload_size ) {
+				$max_upload_size = 0;
+			}
+
 			$localize_data = apply_filters( 'um_enqueue_localize_data', array(
-				'nonce' => wp_create_nonce( "um-frontend-nonce" ),
+				'max_upload_size'   => $max_upload_size,
+				'nonce'             => wp_create_nonce( "um-frontend-nonce" ),
 			) );
 			wp_localize_script( 'um_scripts', 'um_scripts', $localize_data );
 

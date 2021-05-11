@@ -88,14 +88,14 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 			if ( !$id = $wp_the_query->get_queried_object_id() )
 				return;
 
-			if( UM()->config()->permalinks['user'] == $id ) {
-				$link = $this->get_current_url();
+			if ( UM()->config()->permalinks['user'] == $id ) {
+				$link = esc_url( $this->get_current_url() );
 				echo "<link rel='canonical' href='$link' />\n";
 				return;
 			}
 
 			$link = get_permalink( $id );
-			if ( $page = get_query_var('cpage') ){
+			if ( $page = get_query_var( 'cpage' ) ){
 				$link = get_comments_pagenum_link( $page );
 				echo "<link rel='canonical' href='$link' />\n";
 			}
@@ -303,7 +303,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 		 * @return string
 		 */
 		function add_query( $key, $value ) {
-			$this->current_url =  add_query_arg( $key, $value, $this->get_current_url() );
+			$this->current_url = add_query_arg( $key, $value, $this->get_current_url() );
 			return $this->current_url;
 		}
 
