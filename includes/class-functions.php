@@ -288,7 +288,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * Expected path for template
 		 *
 		 * @access public
-		 * @version 2.1.20
+		 * @since  2.1.21
 		 *
 		 * @param string $template_name
 		 * @param string $location			Where to save templates: 'theme', 'plugin', 'uploads', 'basedir'
@@ -308,7 +308,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 					break;
 				case 'plugin':
 					if( 'email' === $path ){
-						$dir = empty( UM()->mail()->path_by_slug[ $template_name ] ) ? um_path . 'templates/email' : UM()->mail()->path_by_slug[ $template_name ];
+						$dir = empty( UM()->mail()->path_by_slug[ $template_name ] ) ? um_path . 'templates/email/' : UM()->mail()->path_by_slug[ $template_name ];
 					}else{
 						if( empty( $folder ) ){
 							$folder = 'ultimate-member/templates/';
@@ -327,7 +327,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 					break;
 			}
 
-			$template_path = wp_normalize_path( $dir . $file );
+			$template_path = wp_normalize_path( trailingslashit( $dir ) . $file );
 
 			/**
 			 * UM hook
@@ -347,7 +347,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			 * @example
 			 * <?php
 			 * add_filter( 'um_template_filepath', 'my_um_template_filepath', 10, 3 );
-			 * function my_um_template_filepath( $template_path, $template_name, $location ) {
+			 * function my_um_template_filepath( $template_path, $template_name, $path, $location ) {
 			 *     // your code here
 			 *     return $template_path;
 			 * }
@@ -361,7 +361,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * Locate a template and return the path for inclusion.
 		 *
 		 * @access public
-		 * @version 2.1.20
+		 * @version 2.1.21
 		 *
 		 * @param string $template_name
 		 * @param string $path (default: '')

@@ -170,6 +170,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 					if ( ! empty( $role ) && ! empty( $role["status"] ) ) {
 						$message_key = $role["status"] . '_message';
 						$this->custom_message = ! empty( $role[ $message_key ] ) ? stripslashes( $role[ $message_key ] ) : '';
+						$args['custom_message'] = $this->custom_message;
 					}
 				}
 
@@ -272,42 +273,26 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				unset( $args['theme_file'] );
 				unset( $args['tpl'] );
 
-				$args = apply_filters( 'um_template_load_args', $args, $tpl );
+				if( isset( $args['mode'] ) ){
+					$args['um_classes'] = $this->get_class( $args['mode'], $args );
+				}
 
-				extract( $args );
+				extract( apply_filters( 'um_template_load_args', $args, $tpl ) );
 			}
 
 			$file = um_path . "templates/{$tpl}.php";
-			$theme_file = get_stylesheet_directory() . "/ultimate-member/templates/{$tpl}.php";
-			if ( file_exists( $theme_file ) ) {
-				$file = $theme_file;
+			$theme_file_new = get_stylesheet_directory() . "/ultimate-member/{$tpl}.php";
+			$theme_file_old = get_stylesheet_directory() . "/ultimate-member/templates/{$tpl}.php";
+			
+			if ( file_exists( $theme_file_new ) ) {
+				$file = $theme_file_new;
+			} elseif ( file_exists( $theme_file_old ) ) {
+				$file = $theme_file_old;
 			}
 
 			if ( file_exists( $file ) ) {
 				include $file;
 			}
-
-			/**
-			 * >> NEW TEST CODE
-			 */
-
-//			$t_args = [];
-//			if ( isset( $this->set_args ) && is_array( $this->set_args ) ) {
-//				$args = $this->set_args;
-//
-//				unset( $args['file'] );
-//				unset( $args['theme_file'] );
-//				unset( $args['tpl'] );
-//
-//				$t_args = apply_filters( 'um_template_load_args', $args, $tpl );
-//				$t_args['args'] = $t_args;
-//			}
-//			$t_args['this'] = $this;
-//			UM()->get_template( $tpl, 'ultimate-member/templates', $t_args, true);
-
-			/**
-			 * << NEW TEST CODE
-			 */
 		}
 
 

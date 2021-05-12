@@ -1,6 +1,15 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php
+/**
+ * Template for the Password Change form
+ *
+ * Used:      Password Reset page
+ * Shortcode: [ultimatemember_password]
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/password-change.php
+ */
+if ( ! defined( 'ABSPATH' ) ) exit; ?>
 
-<div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
+<div class="um <?php echo esc_attr( $um_classes ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 
 	<div class="um-form">
 
