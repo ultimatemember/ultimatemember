@@ -264,6 +264,47 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					unset( $form_fields[ $id ] );
 					update_post_meta( $form_id, '_um_custom_fields', $form_fields );
 				}
+				$directories = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'um_directory'" );
+				foreach ( $directories as $directory_id ) {
+					$directory_search_fields = get_post_meta( $directory_id, '_um_search_fields', true );
+					$key = array_search( $id, $directory_search_fields );
+					unset( $directory_search_fields[ $key ] );
+					update_post_meta( $directory_id, '_um_search_fields', $directory_search_fields );
+
+					$directory_search_filters = get_post_meta( $directory_id, '_um_search_filters', true );
+					unset( $directory_search_filters[ $id ] );
+					update_post_meta( $directory_id, '_um_search_filters', $directory_search_filters );
+
+					$directory_custom_fields = get_post_meta( $directory_id, '_um_custom_fields', true );
+					$key = array_search( $id, $directory_custom_fields );
+					unset( $directory_custom_fields[ $key ] );
+					update_post_meta( $directory_id, '_um_custom_fields', $directory_custom_fields );
+
+					$directory_reveal_fields = get_post_meta( $directory_id, '_um_reveal_fields', true );
+					$key = array_search( $id, $directory_reveal_fields );
+					unset( $directory_reveal_fields[ $key ] );
+					update_post_meta( $directory_id, '_um_reveal_fields', $directory_reveal_fields );
+
+					$directory_tagline_fields = get_post_meta( $directory_id, '_um_tagline_fields', true );
+					$key = array_search( $id, $directory_tagline_fields );
+					unset( $directory_tagline_fields[ $key ] );
+					update_post_meta( $directory_id, '_um_tagline_fields', $directory_tagline_fields );
+
+					$directory_sorting_fields = get_post_meta( $directory_id, '_um_sorting_fields', true );
+					foreach ( $directory_sorting_fields as $key => $sorting_fields ) {
+						if ( array_key_exists( $id, $sorting_fields ) ) {
+							unset( $directory_sorting_fields[ $key ] );
+						}
+					}
+					update_post_meta( $directory_id, '_um_sorting_fields', $directory_sorting_fields );
+
+					$directory_sortby_custom = get_post_meta( $directory_id, '_um_sortby_custom', true );
+					if ( $directory_sortby_custom == $id ) {
+						delete_post_meta( $directory_id, '_um_sortby_custom', $id );
+						delete_post_meta( $directory_id, '_um_sortby_custom_label' );
+					}
+				}
+
 			}
 		}
 
