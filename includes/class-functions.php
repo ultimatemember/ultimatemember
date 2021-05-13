@@ -14,6 +14,8 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * @var string
 		 */
 		private $basedir = '';
+		private $locale_default = '';
+		private $locale_current = '';
 
 
 		/**
@@ -35,8 +37,15 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * UM_Functions constructor.
 		 */
 		function __construct() {
-			$basedir = get_stylesheet_directory() . '/ultimate-member';
-			$this->basedir = apply_filters( 'um_get_template_basedir', $basedir );
+			$this->basedir = get_stylesheet_directory() . '/ultimate-member';
+
+			$this->locale_default = get_locale();
+			$this->locale_current = determine_locale();
+			
+			add_action( 'after_setup_theme', function() {
+				$this->basedir = apply_filters( 'um_template_basedir', $this->basedir );
+				$this->locale_current = apply_filters( 'um_locale_current', $this->locale_current );
+			} );
 		}
 
 
@@ -290,17 +299,30 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * @access public
 		 * @since  2.1.21
 		 *
-		 * @param string $template_name
-		 * @param string $location			Where to save templates: 'theme', 'plugin', 'uploads', 'basedir'
+		 * @param  string $template_name The slug of the template
+		 * @param  string $path          Sub-folder to store the template or path to template
+		 * @param  string $location			 Place to store template: 'theme', 'plugin', 'uploads', 'basedir'
+		 * @param  string $locale			   Locale
 		 *
 		 * @return string
 		 */
-		public function get_template_filepath( $template_name, $path = '', $location = 'basedir' ) {
+		public function get_template_filepath( $template_name, $path = '', $location = '', $locale = '' ) {
 
-			$blog_id = is_multisite() ? trailingslashit( get_current_blog_id() ) : '';
-			$locale = is_locale_switched() ? trailingslashit( determine_locale() ) : '';
-			$folder = $path ? trailingslashit( $path ) : '';
 			$file = trim( str_replace( '.php', '', $template_name ) ) . '.php';
+			$folder = $path ? trailingslashit( $path ) : '';
+			$blog_id = is_multisite() ? trailingslashit( get_current_blog_id() ) : '';
+
+			if ( $locale === true ) {
+				$locale = $this->locale_current;
+				if ( isset( UM()->user()->id ) && UM()->user()->id !== get_current_user_id() ) {
+					$locale = get_user_locale( UM()->user()->id );
+				}
+			}
+			if ( empty( $locale ) || !in_array( $locale, get_available_languages() ) ) {
+				$locale = '';
+			} else {
+				$locale = trailingslashit( $locale );
+			}
 
 			switch ( $location ) {
 				case 'theme':
@@ -343,10 +365,10 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			 *  {"var":"$location","type":"string","desc":"Root directory: theme, plugin, uploads, basedir"}
 			 * ]
 			 * @change_log
-			 * ["Since: 2.1.17"]
+			 * ["Since: 2.1.21"]
 			 * @example
 			 * <?php
-			 * add_filter( 'um_template_filepath', 'my_um_template_filepath', 10, 3 );
+			 * add_filter( 'um_template_filepath', 'my_um_template_filepath', 10, 4 );
 			 * function my_um_template_filepath( $template_path, $template_name, $path, $location ) {
 			 *     // your code here
 			 *     return $template_path;
@@ -360,28 +382,38 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		/**
 		 * Locate a template and return the path for inclusion.
 		 *
-		 * @access public
+		 * @access  public
 		 * @version 2.1.21
 		 *
-		 * @param string $template_name
-		 * @param string $path (default: '')
-		 * @return string
+		 * @param   string $template_name The slug of the template
+		 * @param   string $path					Sub-folder to store the template or path to template
+		 * @return  string
 		 */
 		public function locate_template( $template_name, $path = '' ) {
 
-			$basedir_path = $this->get_template_filepath( $template_name, $path );
-			$plugin_path = $this->get_template_filepath( $template_name, $path, 'plugin' );
-			$theme_path = $this->get_template_filepath( $template_name, $path, 'theme' );
-
-			$template = false;
-			if( file_exists( $basedir_path ) ){
+			// Search for the localized template in the base directory
+			if ( file_exists( $basedir_path = $this->get_template_filepath( $template_name, $path, 'basedir', true ) ) ) {
 				$template = $basedir_path;
-			} elseif( file_exists( $theme_path ) ){
+			} else
+			// Search for the template in the base directory
+			if ( file_exists( $basedir_path = $this->get_template_filepath( $template_name, $path, 'basedir', false ) ) ) {
+				$template = $basedir_path;
+			} else
+			// Search for the localized template in the theme directory
+			if ( file_exists( $theme_path = $this->get_template_filepath( $template_name, $path, 'theme', true ) ) ) {
 				$template = $theme_path;
-			} elseif( file_exists( $plugin_path ) ){
+			} else
+			// Search for the template in the theme directory
+			if ( file_exists( $theme_path = $this->get_template_filepath( $template_name, $path, 'theme', false ) ) ) {
+				$template = $theme_path;
+			} else
+			// Search for the template in the plugin directory
+			if ( file_exists( $plugin_path = $this->get_template_filepath( $template_name, $path, 'plugin', true ) ) ) {
 				$template = $plugin_path;
-			}else{
-				$template_name = $template_name;
+			}
+			// No template found
+			else {
+				$template = '';
 			}
 
 			/**

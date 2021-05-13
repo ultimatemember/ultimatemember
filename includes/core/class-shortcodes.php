@@ -280,13 +280,14 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				extract( apply_filters( 'um_template_load_args', $args, $tpl ) );
 			}
 
-			$file = um_path . "templates/{$tpl}.php";
-			$theme_file_new = get_stylesheet_directory() . "/ultimate-member/{$tpl}.php";
+			$file = UM()->locate_template( $tpl );
+
+			/*
+			 * Needed for compatibility with custom templates created before.
+			 * We don't save custom templates in the subfolder "templates" more.
+			 */
 			$theme_file_old = get_stylesheet_directory() . "/ultimate-member/templates/{$tpl}.php";
-			
-			if ( file_exists( $theme_file_new ) ) {
-				$file = $theme_file_new;
-			} elseif ( file_exists( $theme_file_old ) ) {
+			if ( file_exists( $theme_file_old ) ) {
 				$file = $theme_file_old;
 			}
 

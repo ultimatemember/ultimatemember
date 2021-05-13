@@ -2978,10 +2978,10 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 		/**
 		 * Save email template
 		 *
-		 * @version 2.1.17
+		 * @version 2.1.21
 		 *
-		 * @param $settings
-		 * @return mixed
+		 * @param   array  $settings
+		 * @return  mixed
 		 */
 		function save_email_templates( $settings ) {
 
@@ -2992,15 +2992,12 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 			$template = $settings['um_email_template'];
 			$content = stripslashes( $settings[ $template ] );
 
-			$template_path = UM()->get_template_filepath( $template, 'email' );
-
-			if ( ! file_exists( $template_path ) ) {
-				UM()->mail()->copy_email_template( $template );
+			$template_path = UM()->get_template_filepath( $template, 'email', 'basedir', true );
+			$dir = dirname( $template_path );
+			if ( ! is_dir( $dir ) ) {
+				wp_mkdir_p( $dir );
 			}
-
-			$fp = fopen( $template_path, "w" );
-			$result = fputs( $fp, $content );
-			fclose( $fp );
+			$result = file_put_contents( $template_path, $content );
 
 			if ( $result !== false ) {
 				unset( $settings['um_email_template'] );

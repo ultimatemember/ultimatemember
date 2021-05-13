@@ -19,11 +19,10 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		 */
 		function __construct() {
 			//WPML translations
+			add_filter( 'um_locale_current', [$this, 'filter_locale_current'] );
 			add_filter( 'um_get_core_page_filter', array( &$this, 'get_core_page_url' ), 10, 3 );
 			add_filter( 'um_admin_settings_email_section_fields', array( &$this, 'um_admin_settings_email_section_fields' ), 10, 2 );
 			add_filter( 'um_email_send_subject', array( &$this, 'um_email_send_subject' ), 10, 2 );
-			add_filter( 'um_locate_email_template', array( &$this, 'locate_email_template' ), 10, 2 );
-			add_filter( 'um_change_email_template_file', array( &$this, 'change_email_template_file' ), 10, 1 );
 			add_filter( 'um_email_templates_columns', array( &$this, 'add_email_templates_wpml_column' ), 10, 1 );
 
 
@@ -36,45 +35,28 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			// Integration for the "Transposh Translation Filter" plugin
 			add_action( 'template_redirect', array( &$this, 'transposh_user_profile' ), 9990 );
 
-			/**
-			 * @todo Customize this form metadata
-			 */
-			//add_filter( 'um_pre_args_setup',  array( &$this, 'shortcode_pre_args_setup' ), 20, 1 );
-
 			$this->plugins_loaded();
 		}
-
+		
 
 		/**
-		 * UM filter - Restore original arguments on translated page
+		 * Filter the current locale
 		 *
-		 * @description Restore original arguments on load shortcode if they are missed in the WPML translation
-		 * @hook um_pre_args_setup
+		 * @hook   um_locale_current
 		 *
 		 * @global \SitePress $sitepress
-		 * @param array $args
-		 * @return array
+		 *
+		 * @param  string     $locale_current The locale.
+		 * @return string                     The locale.
 		 */
-		function shortcode_pre_args_setup( $args ) {
-			if ( UM()->external_integrations()->is_wpml_active() ) {
+		public function filter_locale_current( $locale_current ) {
+			if ( $this->is_wpml_active() ) {
 				global $sitepress;
-
-				$original_form_id = $sitepress->get_object_id( $args['form_id'], 'post', true, $sitepress->get_default_language() );
-
-				if ( $original_form_id != $args['form_id'] ) {
-					$original_post_data = UM()->query()->post_data( $original_form_id );
-
-					foreach ( $original_post_data as $key => $value ) {
-						if ( ! isset( $args[ $key ] ) ) {
-							$args[ $key ] = $value;
-						}
-					}
-				}
+				$locale_current = $sitepress->get_locale_from_language_code( $sitepress->get_current_language() );
 			}
-
-			return $args;
+			return $locale_current;
 		}
-
+		
 
 		/**
 		 * Integration for the "Transposh Translation Filter" plugin
@@ -371,58 +353,28 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 
 
 		/**
+		 * Localize email template
+		 * @deprecated since version 2.1.21
+		 *
 		 * @param $template
 		 * @param $template_name
 		 *
 		 * @return string
 		 */
 		function locate_email_template( $template, $template_name ) {
-			if ( ! $this->is_wpml_active() ) {
-				return $template;
-			}
-
-			//WPML compatibility and multilingual email templates
-			$language_codes = $this->get_languages_codes();
-
-			$lang = '';
-			if ( $language_codes['default'] != $language_codes['current'] ) {
-				$lang = $language_codes['current'] . '/';
-			}
-
-			// check if there is template at theme folder
-			$template = locate_template( array(
-				trailingslashit( 'ultimate-member/email' ) . $lang . $template_name . '.php',
-				trailingslashit( 'ultimate-member/email' ) . $template_name . '.php'
-			) );
-
-			//if there isn't template at theme folder get template file from plugin dir
-			if ( ! $template ) {
-				$path = ! empty( UM()->mail()->path_by_slug[ $template_name ] ) ? UM()->mail()->path_by_slug[ $template_name ] : um_path . 'templates/email';
-				$template = trailingslashit( $path ) . $template_name . '.php';
-			}
-
 			return $template;
 		}
 
-
 		/**
+		 * Localize email template
+		 * @deprecated since version 2.1.21
+		 *
 		 * @param $template
 		 *
 		 * @return string
 		 */
 		function change_email_template_file( $template ) {
-			if ( ! $this->is_wpml_active() ) {
-				return $template;
-			}
-
-			$language_codes = $this->get_languages_codes();
-
-			$lang = '';
-			if ( $language_codes['default'] != $language_codes['current'] ) {
-				$lang = $language_codes['current'] . '/';
-			}
-
-			return $lang . $template;
+			return $template;
 		}
 
 
@@ -485,10 +437,14 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 
 
 		/**
-		 * @param $template
-		 * @param $code
+		 * Content for the Email table column 'icl_translations'
 		 *
-		 * @return string
+		 * @version 2.1.21
+		 *
+		 * @param   $template The slug of the template
+		 * @param   $code     Language code
+		 *
+		 * @return  string    Icon 'add' or 'edit'
 		 */
 		function get_status_html( $template, $code ) {
 			global $sitepress;
@@ -516,22 +472,19 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 
 			$lang = '';
 			if ( $language_codes['default'] != $language_codes['current'] ) {
-				$lang = $language_codes['current'] . '/';
+				$lang = $language_codes['current'];
 			}
 
-			//theme location
-			$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' ) . $lang . $template . '.php';
-
-			//plugin location for default language
-			if ( empty( $lang ) && ! file_exists( $template_path ) ) {
-				$template_path = UM()->get_template_filepath( $template, 'email', 'plugin' );
-			}
-
-			if ( file_exists( $template_path ) ) {
+			// template location
+			$template_path = UM()->get_template_filepath( $template, 'email', 'basedir', $lang );
+			if ( empty( $lang ) || file_exists( $template_path ) ) {
 				$status = 'edit';
 			}
 
-			$link = add_query_arg( array( 'email' => $template, 'lang' => $code ) );
+			$link = add_query_arg( [
+					'email' => $template, 
+					'lang'  => $code
+			] );
 
 			return $this->render_status_icon( $link, $translation[ $status ]['text'], $translation[ $status ]['icon'] );
 		}
