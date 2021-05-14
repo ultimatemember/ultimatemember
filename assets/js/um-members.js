@@ -748,19 +748,21 @@ jQuery(document.body).ready( function() {
 	 * Sorting
 	 */
 
-	jQuery( document.body ).on( 'click', '.um-directory .um-member-directory-sorting-a .um-new-dropdown li a', function() {
-		var directory = jQuery(this).parents('.um-directory');
+	jQuery( document.body ).on( 'click', '.um-new-dropdown[data-element=".um-member-directory-sorting-a"] li a', function() {
+		if ( jQuery( this ).data('selected') === 1 ) {
+			return;
+		}
+
+		var directory_hash = jQuery(this).data('directory-hash');
+		var directory = jQuery('.um-directory[data-hash="' + directory_hash + '"]');
 
 		if ( um_is_directory_busy( directory ) ) {
 			return;
 		}
 
-		if ( jQuery( this ).data('selected') === 1 ) {
-			return;
-		}
-
 		um_members_show_preloader( directory );
 
+		var sorting_label = jQuery( this ).html();
 		var sort = jQuery(this).data('value');
 
 		directory.data( 'sorting', sort );
@@ -768,9 +770,9 @@ jQuery(document.body).ready( function() {
 
 		um_ajax_get_members( directory );
 
-		jQuery( this ).parents('.um-new-dropdown').find('a').data('selected', 0).prop('data-selected', 0).attr('data-selected', 0);
-		jQuery( this ).data('selected', 1).prop('data-selected', 1).attr('data-selected', 1);
-		jQuery( this ).parents('.um-member-directory-sorting-a').find('> a').html( jQuery( this ).html() );
+		directory.find('.um-new-dropdown[data-element=".um-member-directory-sorting-a"]').find('a').data('selected', 0).prop('data-selected', 0).attr('data-selected', 0);
+		directory.find('.um-new-dropdown[data-element=".um-member-directory-sorting-a"] a[data-value="' + sort + '"]').data('selected', 1).prop('data-selected', 1).attr('data-selected', 1);
+		directory.find('.um-member-directory-sorting-a').find('> a').html( sorting_label );
 	});
 
 	/**
