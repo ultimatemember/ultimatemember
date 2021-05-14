@@ -160,6 +160,10 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * Enhancements:
   - Added: `um_scripts.max_upload_size` localized variable getting from `wp_max_upload_size()`
 
+* Templates required update:
+  - members.php
+  - members-list.php
+
 = 2.1.20: May 7, 2021 =
 
 * Enhancements:
