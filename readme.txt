@@ -159,10 +159,13 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * Enhancements:
   - Added: `um_scripts.max_upload_size` localized variable getting from `wp_max_upload_size()`
+  - Updated: dropdown.js library to make the stable working
 
 * Templates required update:
   - members.php
   - members-list.php
+
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
 
 = 2.1.20: May 7, 2021 =
 
