@@ -377,11 +377,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 					$locale = get_user_locale( UM()->user()->id );
 				}
 			}
-			if ( empty( $locale ) || !in_array( $locale, get_available_languages() ) ) {
-				$locale = '';
-			} else {
-				$locale = trailingslashit( $locale );
-			}
+			$locale = empty( $locale ) ? '' : trailingslashit( $locale );
 
 			switch ( $location ) {
 				case 'theme':
