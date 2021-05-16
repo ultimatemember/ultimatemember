@@ -545,8 +545,8 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			}
 
 			$array = array_slice( $array, 0, $index, true ) +
-			         $insert_array +
-			         array_slice( $array, $index, count( $array ) - 1, true );
+					 $insert_array +
+					 array_slice( $array, $index, count( $array ) - 1, true );
 
 			return $array;
 		}
@@ -564,6 +564,20 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			} else {
 				return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
 			}
+		}
+
+
+		/**
+		 * Undash string
+		 *
+		 * @since 3.0
+		 * @param string $slug
+		 *
+		 * @return string
+		 */
+		function undash( $slug ) {
+			$slug = str_replace( '-', '_', $slug );
+			return $slug;
 		}
 
 	}
