@@ -13,9 +13,14 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * Path to the templates root directory
 		 * @var string
 		 */
-		private $basedir = '';
-		private $locale_default = '';
-		private $locale_current = '';
+		private $basedir;
+
+
+		/**
+		 * Current locale
+		 * @var string
+		 */
+		private $locale;
 
 
 		/**
@@ -37,15 +42,69 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * UM_Functions constructor.
 		 */
 		function __construct() {
-			$this->basedir = get_stylesheet_directory() . '/ultimate-member';
 
-			$this->locale_default = get_locale();
-			$this->locale_current = determine_locale();
-			
-			add_action( 'after_setup_theme', function() {
-				$this->basedir = apply_filters( 'um_template_basedir', $this->basedir );
-				$this->locale_current = apply_filters( 'um_locale_current', $this->locale_current );
-			} );
+			// Set properties
+			$this->basedir = get_stylesheet_directory() . '/ultimate-member';
+			$this->locale = determine_locale();
+
+			// Maybe change properties in theme
+			add_action( 'after_setup_theme', [$this, 'filter_properties'] );
+		}
+
+
+		/**
+		 * Maybe change properties in theme
+		 */
+		public function filter_properties() {
+
+			/**
+			 * UM hook
+			 *
+			 * @type        filter
+			 * @title       um_template_basedir
+			 * @description Change [basedir] for templates.
+			 *   The path structure: [basedir]/[blog_id]/[locale]/[folder]/[template_name].php
+			 * @input_vars
+			 * [
+			 *  {"var":"$basedir","type":"string","desc":"Default directory path"}
+			 * ]
+			 * @change_log
+			 * ["Since: 2.1.21"]
+			 * @example
+			 * <?php
+			 * add_filter( 'um_template_basedir', 'my_um_template_basedir', 10, 1 );
+			 * function my_um_template_basedir( $basedir ) {
+			 *     // your code here
+			 *     return $basedir;
+			 * }
+			 * ?>
+			 */
+			$this->basedir = apply_filters( 'um_template_basedir', $this->basedir );
+
+
+			/**
+			 * UM hook
+			 *
+			 * @type        filter
+			 * @title       um_template_locale
+			 * @description Change [locale] for templates.
+			 *   The path structure: [basedir]/[blog_id]/[locale]/[folder]/[template_name].php
+			 * @input_vars
+			 * [
+			 *  {"var":"$locale","type":"string","desc":"Current locale"}
+			 * ]
+			 * @change_log
+			 * ["Since: 2.1.21"]
+			 * @example
+			 * <?php
+			 * add_filter( 'um_template_locale', 'my_um_template_locale', 10, 1 );
+			 * function my_um_template_locale( $locale ) {
+			 *     // your code here
+			 *     return $locale;
+			 * }
+			 * ?>
+			 */
+			$this->locale = apply_filters( 'um_template_locale', $this->locale );
 		}
 
 
@@ -313,7 +372,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			$blog_id = is_multisite() ? trailingslashit( get_current_blog_id() ) : '';
 
 			if ( $locale === true ) {
-				$locale = $this->locale_current;
+				$locale = $this->locale;
 				if ( isset( UM()->user()->id ) && UM()->user()->id !== get_current_user_id() ) {
 					$locale = get_user_locale( UM()->user()->id );
 				}

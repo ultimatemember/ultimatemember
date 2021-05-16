@@ -19,7 +19,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 		 */
 		function __construct() {
 			//WPML translations
-			add_filter( 'um_locale_current', [$this, 'filter_locale_current'] );
+			add_filter( 'um_template_locale', [$this, 'filter_template_locale'] );
 			add_filter( 'um_get_core_page_filter', array( &$this, 'get_core_page_url' ), 10, 3 );
 			add_filter( 'um_admin_settings_email_section_fields', array( &$this, 'um_admin_settings_email_section_fields' ), 10, 2 );
 			add_filter( 'um_email_send_subject', array( &$this, 'um_email_send_subject' ), 10, 2 );
@@ -37,26 +37,26 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 
 			$this->plugins_loaded();
 		}
-		
+
 
 		/**
 		 * Filter the current locale
 		 *
-		 * @hook   um_locale_current
+		 * @hook   um_template_locale
 		 *
 		 * @global \SitePress $sitepress
 		 *
 		 * @param  string     $locale_current The locale.
 		 * @return string                     The locale.
 		 */
-		public function filter_locale_current( $locale_current ) {
+		public function filter_template_locale( $locale_current ) {
 			if ( $this->is_wpml_active() ) {
 				global $sitepress;
 				$locale_current = $sitepress->get_locale_from_language_code( $sitepress->get_current_language() );
 			}
 			return $locale_current;
 		}
-		
+
 
 		/**
 		 * Integration for the "Transposh Translation Filter" plugin
@@ -482,7 +482,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			}
 
 			$link = add_query_arg( [
-					'email' => $template, 
+					'email' => $template,
 					'lang'  => $code
 			] );
 

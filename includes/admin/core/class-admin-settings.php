@@ -2997,8 +2997,8 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 			if ( ! is_dir( $dir ) ) {
 				wp_mkdir_p( $dir );
 			}
-			$result = file_put_contents( $template_path, $content );
 
+			$result = file_put_contents( $template_path, $content );
 			if ( $result !== false ) {
 				unset( $settings['um_email_template'] );
 				unset( $settings[ $template ] );
