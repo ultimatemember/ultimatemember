@@ -67,15 +67,19 @@ class Modules {
 			],
 		];
 
-		/** This filter is documented in wp-admin/includes/class-wp-plugins-list-table.php */
-		$all_plugins = apply_filters( 'all_plugins', get_plugins() );
-
 		foreach ( $modules as $slug => &$data ) {
 			$data['key'] = $slug;
 
 			$data['path'] = um_path . 'modules' . DIRECTORY_SEPARATOR . $slug;
 			$data['url'] = um_url . "modules/{$slug}/";
+		}
 
+		$modules = apply_filters( 'um_predefined_modules', $modules );
+
+		/** This filter is documented in wp-admin/includes/class-wp-plugins-list-table.php */
+		$all_plugins = apply_filters( 'all_plugins', get_plugins() );
+
+		foreach ( $modules as $slug => &$data ) {
 			// @todo checking the proper module structure function if not proper make 'invalid' data with displaying red line in list table
 
 			// check the module's dir
@@ -102,7 +106,7 @@ class Modules {
 			}
 		}
 
-		$this->list = apply_filters( 'um_predefined_modules', $modules );
+		$this->list = apply_filters( 'um_predefined_validated_modules', $modules );
 	}
 
 

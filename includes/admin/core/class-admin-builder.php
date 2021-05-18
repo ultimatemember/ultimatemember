@@ -25,7 +25,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 * Admin_Builder constructor.
 		 */
 		function __construct() {
-			add_action( 'um_admin_field_modal_header', array( &$this, 'add_message_handlers' ) );
 			add_action( 'um_admin_field_modal_footer', array( &$this, 'add_conditional_support' ), 10, 4 );
 			add_filter( 'um_admin_builder_skip_field_validation', array( &$this, 'skip_field_validation' ), 10, 3 );
 			add_filter( 'um_admin_pre_save_field_to_form', array( &$this, 'um_admin_pre_save_field_to_form' ), 1 );
@@ -178,17 +177,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			}
 
 			return $array;
-		}
-
-
-		/**
-		 * Put status handler in modal
-		 */
-		function add_message_handlers() {
-			?>
-			<div class="um-admin-error-block"></div>
-			<div class="um-admin-success-block"></div>
-			<?php
 		}
 
 
@@ -390,7 +378,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 			$fields = UM()->query()->get_attr( 'custom_fields', $this->form_id );
 
-			if ( !isset( $fields ) || empty( $fields ) ) { ?>
+			if ( empty( $fields ) ) { ?>
 
 				<div class="um-admin-drag-row">
 
@@ -435,18 +423,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 			} else {
 
-				if ( empty( $fields ) || ! is_array( $fields ) ) {
-					$this->global_fields = array();
-				} else {
-					$this->global_fields = $fields;
-				}
+				$this->global_fields = is_array( $fields ) ? $fields : [];
 
 				foreach ( $this->global_fields as $key => $array ) {
 					if ( $array['type'] == 'row' ) {
 						$rows[ $key ] = $array;
 						unset( $this->global_fields[ $key ] ); // not needed now
 					}
-
 				}
 
 				if ( ! isset( $rows ) ) {
@@ -767,7 +750,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		function dynamic_modal_content() {
 			UM()->admin()->check_ajax_nonce();
 
-			if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( __( 'Please login as administrator', 'ultimate-member' ) );
 			}
 
@@ -851,10 +834,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					ob_start();
 					$form_fields = UM()->query()->get_attr( 'custom_fields', $arg2 );
 					$form_fields = array_values( array_filter( array_keys( $form_fields ) ) );
-					//$form_fields = array_keys( $form_fields );
 					?>
 
-					<h4><?php _e('Setup New Field','ultimate-member'); ?></h4>
+					<h4><?php _e( 'Setup New Field', 'ultimate-member' ); ?></h4>
 					<div class="um-admin-btns">
 
 						<?php if ( UM()->builtin()->core_fields ) {
@@ -1003,12 +985,16 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					 * @var $in_sub_row
 					 * @var $in_column
 					 * @var $in_group
+					 * @var array $col1
+					 * @var array $col2
+					 * @var array $col3
+					 * @var array $col_full
 					 */
 					extract( $args );
 
 					if ( ! isset( $col1 ) ) {
 
-						echo '<p>'. __( 'This field type is not setup correcty.', 'ultimate-member' ) . '</p>';
+						echo '<p>'. __( 'This field type is not setup correctly.', 'ultimate-member' ) . '</p>';
 
 					} else {
 
@@ -1019,34 +1005,82 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 							<input type="hidden" name="_in_group" id="_in_group" value="<?php echo $in_group; ?>" />
 						<?php } ?>
 
-						<input type="hidden" name="_type" id="_type" value="<?php echo $arg1; ?>" />
+						<input type="hidden" name="_type" id="_type" value="<?php echo esc_attr( $arg1 ); ?>" />
 
-						<input type="hidden" name="post_id" id="post_id" value="<?php echo $arg2; ?>" />
+						<input type="hidden" name="post_id" id="post_id" value="<?php echo esc_attr( $arg2 ); ?>" />
 
 						<?php $this->modal_header(); ?>
 
+						<?php if ( isset( $tabs ) ) { ?>
+							<ul class="um-modal-tabs">
+								<?php $active = false;
+								$i = 1;
+								foreach ( $tabs as $key => $tab ) { ?>
+									<li class="um-modal-tab<?php echo ! $active ? ' active' : '' ?>">
+										<a href="javascript:void(0);" data-key="<?php echo esc_attr( $key ); ?>"><?php echo $metabox->tab_label( $tab ); ?></a>
+                                        <?php echo ( $i < count( $tabs ) ) ? ' | ' : ''; ?>
+									</li>
+
+									<?php $active = ! $active ? $key : $active;
+									$i++;
+								} ?>
+							</ul>
+							<div class="um-modal-tabs-content-wrapper">
+								<?php foreach ( $tabs as $key => $tab ) {
+									$classes = [
+										'um-modal-tab-content',
+										'um-modal-tab-' . $key
+									];
+
+									if ( $active == $key ) {
+										$classes[] = 'active';
+									} ?>
+
+									<div class="<?php echo esc_attr( implode( ' ', $classes ) ) ?>">
+										<?php echo $metabox->tab_content( $tab ); ?>
+									</div>
+
+								<?php } ?>
+							</div>
+						<?php } ?>
+
 						<div class="um-admin-half">
 
-							<?php if ( isset( $col1 ) ) { foreach( $col1 as $opt ) $metabox->field_input ( $opt ); } ?>
+							<?php if ( isset( $col1 ) ) {
+								foreach ( $col1 as $opt ) {
+									$metabox->field_input( $opt );
+								}
+							} ?>
 
 						</div>
 
 						<div class="um-admin-half um-admin-right">
 
-							<?php if ( isset( $col2 ) ) { foreach( $col2 as $opt ) $metabox->field_input ( $opt ); } ?>
+							<?php if ( isset( $col2 ) ) {
+								foreach ( $col2 as $opt ) {
+									$metabox->field_input( $opt );
+								}
+							} ?>
 
-						</div><div class="um-admin-clear"></div>
-
-						<?php if ( isset( $col3 ) ) { foreach( $col3 as $opt ) $metabox->field_input ( $opt ); } ?>
+						</div>
 
 						<div class="um-admin-clear"></div>
 
-						<?php if ( isset( $col_full ) ) { foreach( $col_full as $opt ) $metabox->field_input ( $opt ); } ?>
+						<?php if ( isset( $col3 ) ) {
+							foreach ( $col3 as $opt ) {
+								$metabox->field_input( $opt );
+							}
+						} ?>
 
-						<?php $this->modal_footer( $arg2, $args, $metabox ); ?>
+						<div class="um-admin-clear"></div>
 
-						<?php
+						<?php if ( isset( $col_full ) ) {
+							foreach ( $col_full as $opt ) {
+								$metabox->field_input( $opt );
+							}
+						}
 
+						$this->modal_footer( $arg2, $args, $metabox );
 					}
 
 					$output = ob_get_clean();
@@ -1107,6 +1141,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 		 *
 		 */
 		function modal_header() {
+			?>
+
+			<div class="um-admin-error-block"></div>
+			<div class="um-admin-success-block"></div>
+
+			<?php
+
 			/**
 			 * UM hook
 			 *

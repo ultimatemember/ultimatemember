@@ -252,12 +252,11 @@ function UM_Rows_Refresh(){
 	
 }
 
-function UM_Add_Icon(){
-
+function UM_Add_Icon() {
 	var add_icon_html = '<a href="#" class="um-admin-drag-add-field um-admin-tipsy-n" title="Add Field" data-modal="UM_fields" data-modal-size="normal" data-dynamic-content="um_admin_show_fields" data-arg2="'+jQuery('.um-admin-drag-ajax').data('form_id')+'" data-arg1=""><i class="um-icon-plus"></i></a>';
-		
-	jQuery('.um-admin-drag-col').each(function(){
-		if ( jQuery(this).find('.um-admin-drag-add-field').length == 0 ) {
+
+	jQuery('.um-admin-drag-col').each(function() {
+		if ( jQuery(this).find('.um-admin-drag-add-field').length === 0 ) {
 			jQuery(this).append(add_icon_html);
 		} else {
 			jQuery(this).find('.um-admin-drag-add-field').remove();
@@ -266,14 +265,15 @@ function UM_Add_Icon(){
 	});
 	
 	jQuery('.um-admin-drag-group').each(function(){
-		if ( jQuery(this).find('.um-admin-drag-add-field').length == 0 ) {
+		if ( jQuery(this).find('.um-admin-drag-add-field').length === 0 ) {
 			jQuery(this).append(add_icon_html);
 		} else {
 			jQuery(this).find('.um-admin-drag-add-field').remove();
 			jQuery(this).append(add_icon_html); 
 		}
 	});
-	
+
+    um_admin_init_tipsy();
 }
 
 jQuery(document).ready(function() {
