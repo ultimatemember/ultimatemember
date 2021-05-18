@@ -204,18 +204,16 @@ class UM_Polylang implements UM_Multilingual {
 
 		$lang = '';
 		if ( $code !== $default ) {
-			$lang = $language->locale . '/';
+			$lang = $language->locale;
 		}
 
-		//theme location
-		$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' ) . $lang . $template . '.php';
+		// template location
+		$template_path = UM()->get_template_filepath( $template, 'email', 'basedir', $lang );
 
-		//plugin location for default language
-		if ( empty( $lang ) && !file_exists( $template_path ) ) {
-			$template_path = UM()->mail()->get_template_file( 'plugin', $template );
-		}
-
-		$link = add_query_arg( array( 'email' => $template, 'lang' => $code ) );
+		$link = add_query_arg( [
+				'email' => $template,
+				'lang'  => $code
+		] );
 
 		if ( file_exists( $template_path ) ) {
 

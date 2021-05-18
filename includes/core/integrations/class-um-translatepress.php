@@ -176,19 +176,17 @@ class UM_TranslatePress implements UM_Multilingual {
 
 		$lang = '';
 		if ( $code !== $this->default_language ) {
-			$lang = $code . '/';
+			$lang = $code;
 		}
 
-		//theme location
-		$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' ) . $lang . $template . '.php';
-
-		//plugin location for default language
-		if ( empty( $lang ) && !file_exists( $template_path ) ) {
-			$template_path = UM()->mail()->get_template_file( 'plugin', $template );
-		}
+		// template location
+		$template_path = UM()->get_template_filepath( $template, 'email', 'basedir', $lang );
 
 		$slugs = $this->tpr_settings->get_setting( 'url-slugs' );
-		$link = add_query_arg( array( 'email' => $template, 'lang' => $slugs[$code] ) );
+		$link = add_query_arg( [
+				'email' => $template,
+				'lang' => $slugs[$code]
+		] );
 
 		$language_names = $this->tpr_languages->get_language_names( array( $code ) );
 		$language_name = $language_names[$code];
