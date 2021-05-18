@@ -190,20 +190,52 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 
 		/**
 		 * Core Fields
+		 *
+		 * @uses Builtin::core_fields
 		 */
 		function set_core_fields() {
 
-			$this->core_fields = array(
+			$this->core_fields = [
 
 				'row' => array(
-					'name' => 'Row',
-					'in_fields' => false,
-					'form_only' => true,
-					'conditional_support' => 0,
-					'icon' => 'um-faicon-pencil',
-					'col1' => array('_id','_background','_text_color','_padding','_margin','_border','_borderradius','_borderstyle','_bordercolor'),
-					'col2' => array('_heading','_heading_text','_heading_background_color','_heading_text_color','_icon','_icon_color','_css_class'),
+					'name'                  => __( 'Row', 'ultimate-member' ),
+					'in_fields'             => false,
+					'form_only'             => true,
+					'conditional_support'   => 0,
+					'icon'                  => 'um-faicon-pencil',
+					'col1'                  => array('_id','_background','_text_color','_padding','_margin','_border','_borderradius','_borderstyle','_bordercolor'),
+					'col2'                  => array('_heading','_heading_text','_heading_background_color','_heading_text_color','_icon','_icon_color','_css_class'),
 				),
+
+				/*Group is the repeatable block with 1 pre-defined repeat*/
+				'group' => [
+					'name'      => __( 'Fields Group', 'ultimate-member' ),
+					'tabs'      => [
+						'general'       => [
+							'key'   => 'general',
+							'label' => __( 'General', 'ultimate-member' ),
+						],
+						'privacy'       => [
+							'key'   => 'privacy',
+							'label' => __( 'Privacy & Validation', 'ultimate-member' ),
+						],
+						'conditional'   => [
+							'key'   => 'conditional',
+							'label' => __( 'Conditional Logic', 'ultimate-member' ),
+						],
+					],
+					'col1'      => [ '_title', '_max_entries' ],
+					'col2'      => [ '_label', '_public', '_roles' ],
+					'validate'  => [
+						'_title'    => [
+							'mode'  => 'required',
+							'error' => 'You must provide a title',
+						],
+						'_metakey'  => [
+							'mode'  => 'unique',
+						],
+					],
+				],
 
 				'text' => array(
 					'name' => 'Text Box',
@@ -584,24 +616,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					)
 				),
 
-				/*'group' => array(
-                    'name' => 'Field Group',
-                    'col1' => array('_title','_max_entries'),
-                    'col2' => array('_label','_public','_roles'),
-                    'form_only' => true,
-                    'validate' => array(
-                        '_title' => array(
-                            'mode' => 'required',
-                            'error' => 'You must provide a title'
-                        ),
-                        '_label' => array(
-                            'mode' => 'required',
-                            'error' => 'You must provide a label'
-                        ),
-                    )
-                ),*/
-
-			);
+			];
 
 			/**
 			 * UM hook

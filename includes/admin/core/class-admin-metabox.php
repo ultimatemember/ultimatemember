@@ -71,7 +71,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		 */
 		function hide_metabox_restrict_content_shop( $hide ) {
 			if ( function_exists( 'wc_get_page_id' ) && ! empty( $_GET['post'] ) &&
-			     absint( $_GET['post'] ) == wc_get_page_id( 'shop' ) ) {
+				 absint( $_GET['post'] ) == wc_get_page_id( 'shop' ) ) {
 				return true;
 			}
 
@@ -198,7 +198,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		function save_metabox_custom( $post_id, $post ) {
 			// validate nonce
 			if ( ! isset( $_POST['um_admin_save_metabox_custom_nonce'] ) ||
-			     ! wp_verify_nonce( $_POST['um_admin_save_metabox_custom_nonce'], basename( __FILE__ ) ) ) {
+				 ! wp_verify_nonce( $_POST['um_admin_save_metabox_custom_nonce'], basename( __FILE__ ) ) ) {
 				return;
 			}
 
@@ -302,7 +302,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		function save_metabox_restrict_content( $post_id, $post ) {
 			// validate nonce
 			if ( ! isset( $_POST['um_admin_save_metabox_restrict_content_nonce'] ) ||
-			     ! wp_verify_nonce( $_POST['um_admin_save_metabox_restrict_content_nonce'], basename( __FILE__ ) ) ) {
+				 ! wp_verify_nonce( $_POST['um_admin_save_metabox_restrict_content_nonce'], basename( __FILE__ ) ) ) {
 				return;
 			}
 
@@ -327,7 +327,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 		function save_attachment_metabox_restrict_content( $post_id ) {
 			// validate nonce
 			if ( ! isset( $_POST['um_admin_save_metabox_restrict_content_nonce'] )
-			     || ! wp_verify_nonce( $_POST['um_admin_save_metabox_restrict_content_nonce'], basename( __FILE__ ) ) ) {
+				 || ! wp_verify_nonce( $_POST['um_admin_save_metabox_restrict_content_nonce'], basename( __FILE__ ) ) ) {
 				return;
 			}
 
@@ -1055,7 +1055,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 			// validate nonce
 			if ( ! isset( $_POST['um_admin_save_metabox_directory_nonce'] ) ||
-			     ! wp_verify_nonce( $_POST['um_admin_save_metabox_directory_nonce'], basename( __FILE__ ) ) ) {
+				 ! wp_verify_nonce( $_POST['um_admin_save_metabox_directory_nonce'], basename( __FILE__ ) ) ) {
 				return;
 			}
 
@@ -1149,7 +1149,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 			// validate nonce
 			if ( ! isset( $_POST['um_admin_save_metabox_form_nonce'] ) ||
-			     ! wp_verify_nonce( $_POST['um_admin_save_metabox_form_nonce'], basename( __FILE__ ) ) ) {
+				 ! wp_verify_nonce( $_POST['um_admin_save_metabox_form_nonce'], basename( __FILE__ ) ) ) {
 				return;
 			}
 
@@ -1332,7 +1332,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 						foreach ( $fields as $key => $array ) {
 							if ( isset( $array['title'] ) &&
-							     ( ! isset( $this->edit_array['metakey'] ) || $key != $this->edit_array['metakey'] ) ) { ?>
+								 ( ! isset( $this->edit_array['metakey'] ) || $key != $this->edit_array['metakey'] ) ) { ?>
 
 								<option value="<?php echo esc_attr( $key ) ?>" <?php selected( $key, $this->edit_mode_value ) ?>><?php echo $array['title'] ?></option>
 
@@ -2410,5 +2410,30 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 
 		}
 
+
+		/**
+		 * @param array $attr
+		 *
+		 * @return string
+		 */
+		function tab_label( $attr ) {
+			return array_key_exists( 'label', $attr ) ? $attr['label'] : '';
+		}
+
+
+		/**
+		 * @param array $attr
+		 *
+		 * @return string
+		 */
+		function tab_content( $attr ) {
+			ob_start(); ?>
+
+			<div>
+                tab_content <?php echo $attr['key'] ?>
+			</div>
+
+			<?php return ob_get_clean();
+		}
 	}
 }
