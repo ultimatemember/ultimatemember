@@ -1018,7 +1018,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 								foreach ( $tabs as $key => $tab ) { ?>
 									<li class="um-modal-tab<?php echo ! $active ? ' active' : '' ?>">
 										<a href="javascript:void(0);" data-key="<?php echo esc_attr( $key ); ?>"><?php echo $metabox->tab_label( $tab ); ?></a>
-                                        <?php echo ( $i < count( $tabs ) ) ? ' | ' : ''; ?>
+										<?php echo ( $i < count( $tabs ) ) ? ' | ' : ''; ?>
 									</li>
 
 									<?php $active = ! $active ? $key : $active;
