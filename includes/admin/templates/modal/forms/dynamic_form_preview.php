@@ -10,7 +10,7 @@
 	<div class="um-admin-modal-body"></div>
 
 	<div class="um-admin-modal-foot">
-		<a href="javascript:void(0);" class="button-primary" data-action="UM_remove_modal"><?php _e( 'Continue editing', 'ultimate-member' ); ?></a>
+		<a href="javascript:void(0);" class="button-primary" data-action="um_remove_modal"><?php _e( 'Continue editing', 'ultimate-member' ); ?></a>
 	</div>
 
 </div>

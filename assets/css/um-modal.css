@@ -59,8 +59,8 @@
 	position: fixed;
 }
 
-.um-modal.large {width: 730px;margin-left: -365px;}
-.um-modal.normal {width: 500px;margin-left: -250px;}
+.um-modal.large {width: 900px;margin-left: -450px;}
+.um-modal.normal {width: 600px;margin-left: -300px;}
 .um-modal.small {width: 400px;margin-left: -200px;}
 
 /* modal body */
@@ -112,7 +112,7 @@
 
 .um-modal .um-modal-body .loading,
 .um-modal.loading .um-modal-body{
-	background: #fff url(../img/loading.gif) no-repeat center;
+	background: white url(../img/loading.gif) no-repeat center;
 	min-height: 100px;
 }
 

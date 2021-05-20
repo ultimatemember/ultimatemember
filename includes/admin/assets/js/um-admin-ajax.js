@@ -28,7 +28,8 @@ jQuery(document).ready(function() {
 
 		jQuery('.tipsy').hide();
 
-		um_admin_remove_modal();
+		UM.modal.close();
+
 		jQuery.ajax({
 			url: wp.ajax.settings.url,
 			type: 'POST',
@@ -45,7 +46,7 @@ jQuery(document).ready(function() {
 			},
 			success: function( data ) {
 				demon_settings.data('in_row', '').data('in_sub_row', '').data('in_column', '').data('in_group', '');
-				um_admin_modal_responsive();
+				UM.modal.responsive();
 				um_admin_update_builder();
 			},
 			error: function( data ) {
