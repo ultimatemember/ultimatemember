@@ -11,6 +11,7 @@ var gulp = require('gulp')
 gulp.task( 'default', function ( done ) {
 	sass.compiler = require( 'node-sass' );
 
+	gulp.src(['assets/v3/css/*.sass']).pipe( sass().on( 'error', sass.logError ) ).pipe( gulp.dest( 'assets/v3/css' ) );
 	gulp.src(['assets/sass/*.sass']).pipe( sass().on( 'error', sass.logError ) ).pipe( gulp.dest( 'assets/css' ) );
 
     gulp.src(['assets/js/*.js', '!assets/js/*.min.js', ]) // path to your files

@@ -89,6 +89,16 @@ function um_init_tooltips() {
 }
 
 
+function um_admin_init_tipsy() {
+    if ( typeof( jQuery.fn.tipsy ) === 'function' ) {
+		jQuery('.um-admin-tipsy-n').tipsy({gravity: 'n', opacity: 1, live: 'a.live' });
+		jQuery('.um-admin-tipsy-w').tipsy({gravity: 'w', opacity: 1, live: 'a.live' });
+		jQuery('.um-admin-tipsy-e').tipsy({gravity: 'e', opacity: 1, live: 'a.live' });
+		jQuery('.um-admin-tipsy-s').tipsy({gravity: 's', opacity: 1, live: 'a.live' });
+	}
+}
+
+
 jQuery(document).ready(function() {
 
 	/**
@@ -162,13 +172,11 @@ jQuery(document).ready(function() {
 		Tooltips
 	**/
 	um_init_tooltips();
-	
-	if( typeof tipsy !== 'undefined' ){
-		jQuery('.um-admin-tipsy-n').tipsy({gravity: 'n', opacity: 1, live: 'a.live' });
-		jQuery('.um-admin-tipsy-w').tipsy({gravity: 'w', opacity: 1, live: 'a.live' });
-		jQuery('.um-admin-tipsy-e').tipsy({gravity: 'e', opacity: 1, live: 'a.live' });
-		jQuery('.um-admin-tipsy-s').tipsy({gravity: 's', opacity: 1, live: 'a.live' });
-	}
+
+	um_admin_init_tipsy();
+
+
+
 
 	
 	/**

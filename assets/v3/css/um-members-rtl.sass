@@ -1,0 +1,137 @@
+@import "selectors"
+@import "mixins"
+@import "colors"
+
+.#{$prefix}directory
+  .um-member-directory-header
+    .um-member-directory-header-row
+      &.um-member-directory-search-row
+        justify-content: flex-start
+      .um-member-directory-search-line
+        label
+          margin: 0 0 0 10px
+      .um-member-directory-nav-line
+        .um-member-directory-view-type
+          margin: 0 0 0 10px
+        .um-member-directory-sorting
+          .um-member-directory-sorting-a
+            a
+              margin: 0 0 0 5px
+            .um-new-dropdown
+              right: -12px
+              left: auto
+        .um-member-directory-filters
+          .um-member-directory-filters-a
+            a
+              margin: 0 0 0 5px
+
+      .um-search
+        .um-search-filter
+          &.um-datepicker-filter-type,
+          &.um-timepicker-filter-type
+            input
+              margin: 0 0 0 5px !important
+              &:nth-child(even)
+                margin: 0 5px 0 0 !important
+
+      .um-filtered-line
+        .um-members-filter-tag
+          margin: 0 0 5px 10px
+          &:first-child
+            margin-left: 10px
+          .um-members-filter-remove
+            margin-left: 0
+            margin-right: 10px
+
+
+  .um-members-wrapper
+    .um-members
+      &.um-members-grid
+        .um-member
+          .um-member-card
+            .um-members-edit-btn
+              a.um-edit-profile-btn
+                &:before
+                  margin-right: 0
+                  margin-left: 8px
+
+      &.um-members-list
+        .um-member
+          .um-member-card-container
+            .um-member-photo
+              margin: 0 0 0 15px
+
+            .um-member-card
+              .um-member-card-content
+                margin: 0 0 0 10px
+
+              .um-member-card-actions
+                .um-member-cog
+                  .um-new-dropdown
+                    right: auto
+                    left: 0
+                    text-align: right
+
+
+  .um-members-pagination-box
+    .um-members-pagi
+      align-items: center
+      .pagi
+        &.pagi-arrow
+          transform: rotate(180deg)
+
+  &.uimob340
+    .um-member-directory-header
+      .um-member-directory-header-row
+        .um-member-directory-nav-line
+          .um-member-directory-view-type
+            margin: 0 0 0 2px
+          .um-member-directory-sorting
+            .um-new-dropdown
+              right: auto
+              left: 0
+
+    .um-members-wrapper
+      .um-members
+        &.um-members-list
+          .um-member
+            .um-member-photo
+              margin: 0 0 0 10px
+
+            .um-member-card-footer
+              .um-member-card-footer-buttons
+                margin: 0 0 0 10px
+
+  &.uimob500
+    .um-member-directory-header
+      .um-member-directory-header-row
+        .um-member-directory-nav-line
+          .um-member-directory-view-type
+            margin: 0 0 0 5px
+    .um-members-wrapper
+      .um-members
+        &.um-members-list
+          .um-member
+            .um-member-photo
+              margin: 0 0 0 10px
+
+            .um-member-card-footer
+              align-items: flex-start
+              .um-member-card-footer-buttons
+                margin: 0 0 0 10px
+                .um-members-list-footer-button-wrapper
+                  margin: 0 0 5px 10px
+
+  &.uimob800
+    .um-members-wrapper
+      .um-members
+        &.um-members-list
+          .um-member
+            .um-member-photo
+              margin: 0 0 0 10px
+
+            .um-member-card-footer
+              .um-member-card-footer-buttons
+                margin: 0 0 0 10px
+                .um-members-list-footer-button-wrapper
+                  margin: 0 0 5px 10px

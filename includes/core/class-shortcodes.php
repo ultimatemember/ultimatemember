@@ -677,7 +677,10 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			//not display on admin preview
 			if ( empty( $_POST['act_id'] ) || $_POST['act_id'] != 'um_admin_preview_form' ) {
-				if ( 'register' == $mode && is_user_logged_in() ) {
+
+				$enable_loggedin_registration = apply_filters( 'um_registration_for_loggedin_users', false, $args );
+
+				if ( 'register' == $mode && is_user_logged_in() && ! $enable_loggedin_registration ) {
 					ob_get_clean();
 					return __( 'You are already registered', 'ultimate-member' );
 				}

@@ -774,10 +774,20 @@ jQuery(document).ready( function() {
 						if ( input_type === 'checkbox' ) {
 							own_condition = ( value == '1' ) ? cond_field.is(':checked') : ! cond_field.is(':checked');
 						} else {
-							own_condition = ( cond_field.val() == value );
+							if ( Array.isArray( value ) ) {
+								own_condition = ( value.indexOf( cond_field.val() ) !== -1 );
+							} else {
+								own_condition = ( cond_field.val() == value );
+							}
 						}
 					} else if ( tagName === 'select' ) {
-						own_condition = ( cond_field.val() == value );
+
+						if ( Array.isArray( value ) ) {
+							own_condition = ( value.indexOf( cond_field.val() ) !== -1 );
+						} else {
+							own_condition = ( cond_field.val() == value );
+						}
+
 					}
 
 					if ( own_condition && parent_condition ) {
@@ -794,10 +804,22 @@ jQuery(document).ready( function() {
 					if ( input_type == 'checkbox' ) {
 						own_condition = ( value == '1' ) ? condition_field.is(':checked') : ! condition_field.is(':checked');
 					} else {
-						own_condition = ( condition_field.val() == value );
+
+						if ( Array.isArray( value ) ) {
+							own_condition = ( value.indexOf( condition_field.val() ) !== -1 );
+						} else {
+							own_condition = ( condition_field.val() == value );
+						}
+
 					}
 				} else if ( tagName == 'select' ) {
-					own_condition = ( condition_field.val() == value );
+
+					if ( Array.isArray( value ) ) {
+						own_condition = ( value.indexOf( condition_field.val() ) !== -1 );
+					} else {
+						own_condition = ( condition_field.val() == value );
+					}
+
 				}
 
 				return ( own_condition && parent_condition );

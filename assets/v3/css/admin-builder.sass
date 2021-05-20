@@ -1,0 +1,32 @@
+@import "selectors"
+@import "mixins"
+@import "colors"
+
+.um-modal-tabs
+  display: inline
+  width: 100%
+  margin: 0
+  .um-modal-tab
+    display: inline
+    &:first-child
+      a
+        margin: 0 10px 0 0
+    &.active
+      a
+        font-weight: bold
+    a
+      margin: 0 10px
+      outline: none
+      box-shadow: none
+      &:hover,&:active,&:focus
+        outline: none
+        box-shadow: none
+
+.um-modal-tabs-content-wrapper
+  width: 100%
+  margin: 5px 0 0 0
+  .um-modal-tab-content
+    width: 100%
+    display: none
+    &.active
+      display: block

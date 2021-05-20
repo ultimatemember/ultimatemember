@@ -405,6 +405,8 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 				return;
 			}
 
+			do_action( 'um_before_email_notification_sending', $email, $template, $args );
+
 			$this->attachments = array();
 			$this->headers = 'From: '. stripslashes( UM()->options()->get('mail_from') ) .' <'. UM()->options()->get('mail_from_addr') .'>' . "\r\n";
 
@@ -450,6 +452,8 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 			// Send mail
 			wp_mail( $email, $this->subject, $this->message, $this->headers, $this->attachments );
+
+			do_action( 'um_after_email_notification_sending', $email, $template, $args );
 		}
 
 
