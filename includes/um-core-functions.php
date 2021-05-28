@@ -211,7 +211,7 @@ function um_locate_template_custom_path( $template_locations, $custom_path ) {
 			continue;
 		}
 
-		$path = wp_normalize_path( $custom_path . '/' . $template_location );
+		$path = wp_normalize_path( trailingslashit( $custom_path ) . $template_location );
 		if ( file_exists( $path ) ) {
 			$located = $path;
 			break;
