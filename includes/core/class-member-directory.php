@@ -2586,13 +2586,13 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * @param string $trigger
 		 * @param string $item
 		 */
-		function dropdown_menu_js( $element, $trigger, $item ) {
+		function dropdown_menu_js( $element, $trigger, $item, $attrs = false ) {
 			?>
 
 			<div class="um-new-dropdown" data-element="<?php echo $element; ?>" data-trigger="<?php echo $trigger; ?>">
 				<ul>
 					<# _.each( <?php echo $item; ?>.dropdown_actions, function( action, key, list ) { #>
-						<li><a href="<# if ( typeof action.url != 'undefined' ) { #>{{{action.url}}}<# } else { #>javascript:void(0);<# }#>" class="{{{key}}}">{{{action.title}}}</a></li>
+						<li><a <?php echo $attrs; ?> href="<# if ( typeof action.url != 'undefined' ) { #>{{{action.url}}}<# } else { #>javascript:void(0);<# }#>" class="{{{key}}}">{{{action.title}}}</a></li>
 					<# }); #>
 				</ul>
 			</div>
