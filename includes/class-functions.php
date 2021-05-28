@@ -33,6 +33,55 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 
 		/**
+		 * Define constant if not already set.
+		 *
+		 * @param string      $name  Constant name.
+		 * @param string|bool $value Constant value.
+		 */
+		protected function define( $name, $value ) {
+			if ( ! defined( $name ) ) {
+				define( $name, $value );
+			}
+		}
+
+
+		/**
+		 * Get the template path inside theme or custom path
+		 *
+		 * @param string $module Module slug.
+		 *
+		 * @return string
+		 */
+		public function template_path( $module = '' ) {
+			$path = 'ultimate-member/';
+
+			if ( ! empty( $module ) ) {
+				$path .= "$module/";
+			}
+
+			return apply_filters( 'um_template_path', $path, $module );
+		}
+
+
+		/**
+		 * Get the default template path inside wp-content/plugins/
+		 *
+		 * @param string $module Module slug.
+		 *
+		 * @return string
+		 */
+		public function default_templates_path( $module = '' ) {
+			$path = untrailingslashit( um_path ) . '/templates/';
+			if ( ! empty( $module ) ) {
+				$module_data = UM()->modules()->get_data( $module );
+				$path = untrailingslashit( $module_data['path'] ) . '/templates/';
+			}
+
+			return apply_filters( 'um_default_template_path', $path, $module );
+		}
+
+
+		/**
 		 * Check if AJAX now
 		 *
 		 * @return bool

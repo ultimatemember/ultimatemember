@@ -185,6 +185,8 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @since 2.0.18
 		 */
 		function _um_construct() {
+			$this->define_constants();
+
 			//register autoloader for include UM classes
 			spl_autoload_register( array( $this, 'um__autoloader' ) );
 
@@ -224,6 +226,14 @@ if ( ! class_exists( 'UM' ) ) {
 				require_once 'um-short-functions.php';
 				require_once 'um-deprecated-functions.php';
 			}
+		}
+
+
+		/**
+		 * Define Ultimate Member Constants.
+		 */
+		private function define_constants() {
+			$this->define( 'UM_TEMPLATE_CONFLICT_TEST', false );
 		}
 
 
@@ -542,8 +552,13 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		public function includes() {
 
+
+			// direct require file with core functions
+			require 'um-core-functions.php';
+
 			$this->modules();
 			$this->common();
+			$this->integrations();
 
 			if ( $this->is_request( 'ajax' ) ) {
 				$this->admin();
@@ -679,6 +694,19 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->classes['common'] = new um\core\Common();
 			}
 			return $this->classes['common'];
+		}
+
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return um\integrations\Common()
+		 */
+		function integrations() {
+			if ( empty( $this->classes['integrations\common'] ) ) {
+				$this->classes['integrations\common'] = new um\integrations\Common();
+			}
+			return $this->classes['integrations\common'];
 		}
 
 
