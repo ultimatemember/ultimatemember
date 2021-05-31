@@ -70,6 +70,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			add_action( 'um_settings_save', array( $this, 'on_settings_save' ) );
 
 
+			// Save email template
 			add_filter( 'um_change_settings_before_save', array( $this, 'save_email_templates' ) );
 
 
@@ -2982,9 +2983,12 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 
 
 		/**
-		 * @param $settings
+		 * Save email template
 		 *
-		 * @return mixed
+		 * @version 2.1.21
+		 *
+		 * @param   array  $settings
+		 * @return  mixed
 		 */
 		function save_email_templates( $settings ) {
 
@@ -2995,16 +2999,13 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 			$template = $settings['um_email_template'];
 			$content = stripslashes( $settings[ $template ] );
 
-			$theme_template_path = UM()->mail()->get_template_file( 'theme', $template );
-
-			if ( ! file_exists( $theme_template_path ) ) {
-				UM()->mail()->copy_email_template( $template );
+			$template_path = UM()->get_template_filepath( $template, 'email', 'basedir', true );
+			$dir = dirname( $template_path );
+			if ( ! is_dir( $dir ) ) {
+				wp_mkdir_p( $dir );
 			}
 
-			$fp = fopen( $theme_template_path, "w" );
-			$result = fputs( $fp, $content );
-			fclose( $fp );
-
+			$result = file_put_contents( $template_path, $content );
 			if ( $result !== false ) {
 				unset( $settings['um_email_template'] );
 				unset( $settings[ $template ] );

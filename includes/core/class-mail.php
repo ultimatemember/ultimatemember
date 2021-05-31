@@ -107,26 +107,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		 * @return string
 		 */
 		function locate_template( $template_name ) {
-			// check if there is template at theme folder
-			$blog_id = $this->get_blog_id();
-
-			//get template file from current blog ID folder
-			$template = locate_template( array(
-				trailingslashit( 'ultimate-member/email' . $blog_id ) . $template_name . '.php'
-			) );
-
-			//if there isn't template at theme folder for current blog ID get template file from theme folder
-			if ( is_multisite() && ! $template ) {
-				$template = locate_template( array(
-					trailingslashit( 'ultimate-member/email' ) . $template_name . '.php'
-				) );
-			}
-
-			//if there isn't template at theme folder get template file from plugin dir
-			if ( ! $template ) {
-				$path = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : um_path . 'templates/email';
-				$template = trailingslashit( $path ) . $template_name . '.php';
-			}
+			$template = UM()->locate_template( $template_name, 'email' );
 
 			// Return what we found.
 			/**
@@ -440,7 +421,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 			$subject = wp_unslash( um_convert_tags( $subject , $args ) );
 
-			$this->subject = html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' ); 
+			$this->subject = html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' );
 
 			$this->message = $this->prepare_template( $template, $args );
 
@@ -515,40 +496,11 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 
 		/**
-		 * Method returns expected path for template
-		 *
-		 * @access public
-		 *
-		 * @param string $location
-		 * @param string $template_name
-		 *
-		 * @return string
-		 */
-		function get_template_file( $location, $template_name ) {
-			$template_path = '';
-			$template_name_file = $this->get_template_filename( $template_name );
-
-			switch( $location ) {
-				case 'theme':
-					//save email template in blog ID folder if we use multisite
-					$blog_id = $this->get_blog_id();
-
-					$template_path = trailingslashit( get_stylesheet_directory() . '/ultimate-member/email' . $blog_id ). $template_name_file . '.php';
-					break;
-				case 'plugin':
-					$path = ! empty( $this->path_by_slug[ $template_name ] ) ? $this->path_by_slug[ $template_name ] : um_path . 'templates/email';
-					$template_path = trailingslashit( $path ) . $template_name . '.php';
-					break;
-			}
-
-			return $template_path;
-		}
-
-
-		/**
 		 * Ajax copy template to the theme
 		 *
-		 * @param string $template
+		 * @version 2.1.20
+		 *
+		 * @param  string $template  Email template name
 		 * @return bool
 		 */
 		function copy_email_template( $template ) {
@@ -558,29 +510,15 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 				return false;
 			}
 
-			$plugin_template_path = $this->get_template_file( 'plugin', $template );
-			$theme_template_path = $this->get_template_file( 'theme', $template );
+			$original_path = $this->locate_template( $template );
+			$copy_path = UM()->get_template_filepath( $template, 'email' );
 
-			$temp_path = str_replace( trailingslashit( get_stylesheet_directory() ), '', $theme_template_path );
-			$temp_path = str_replace( '/', DIRECTORY_SEPARATOR, $temp_path );
-			$folders = explode( DIRECTORY_SEPARATOR, $temp_path );
-			$folders = array_splice( $folders, 0, count( $folders ) - 1 );
-			$cur_folder = '';
-			$theme_dir = trailingslashit( get_stylesheet_directory() );
-
-			foreach ( $folders as $folder ) {
-				$prev_dir = $cur_folder;
-				$cur_folder .= $folder . DIRECTORY_SEPARATOR;
-				if ( ! is_dir( $theme_dir . $cur_folder ) && wp_is_writable( $theme_dir . $prev_dir ) ) {
-					mkdir( $theme_dir . $cur_folder, 0777 );
-				}
+			$dir = dirname( $copy_path );
+			if ( ! is_dir( $dir ) ) {
+				mkdir( $dir, 0775, true );
 			}
 
-			if ( file_exists( $plugin_template_path ) && copy( $plugin_template_path, $theme_template_path ) ) {
-				return true;
-			} else {
-				return false;
-			}
+			return file_exists( $original_path ) && copy( $original_path, $copy_path );
 		}
 
 

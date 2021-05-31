@@ -1,10 +1,18 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
+<?php
+/**
+ * Template for the Registration form
+ *
+ * Used:  Register page
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/register.php
+ */
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! is_user_logged_in() ) {
 	um_reset_user();
 } ?>
 
-<div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
+<div class="um <?php echo esc_attr( $um_classes ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 
 	<div class="um-form" data-mode="<?php echo esc_attr( $mode ) ?>">
 

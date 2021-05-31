@@ -1,6 +1,14 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php
+/**
+ * Template for the Profile form
+ *
+ * Used:  User page
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/profile.php
+ */
+if ( ! defined( 'ABSPATH' ) ) exit; ?>
 
-<div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?> um-role-<?php echo esc_attr( um_user( 'role' ) ); ?> ">
+<div class="um <?php echo esc_attr( $um_classes ); ?> um-<?php echo esc_attr( $form_id ); ?> um-role-<?php echo esc_attr( um_user( 'role' ) ); ?> ">
 
 	<div class="um-form" data-mode="<?php echo esc_attr( $mode ) ?>">
 

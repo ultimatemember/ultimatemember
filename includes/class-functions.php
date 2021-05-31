@@ -9,6 +9,19 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 	 */
 	class UM_Functions {
 
+		/**
+		 * Path to the templates root directory
+		 * @var string
+		 */
+		private $basedir;
+
+
+		/**
+		 * Current locale
+		 * @var string
+		 */
+		private $locale;
+
 
 		/**
 		 * Store URL
@@ -29,6 +42,69 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * UM_Functions constructor.
 		 */
 		function __construct() {
+
+			// Set properties
+			$this->basedir = get_stylesheet_directory() . '/ultimate-member';
+			$this->locale = determine_locale();
+
+			// Maybe change properties in theme
+			add_action( 'after_setup_theme', [$this, 'filter_properties'] );
+		}
+
+
+		/**
+		 * Maybe change properties in theme
+		 */
+		public function filter_properties() {
+
+			/**
+			 * UM hook
+			 *
+			 * @type        filter
+			 * @title       um_template_basedir
+			 * @description Change [basedir] for templates.
+			 *   The path structure: [basedir]/[blog_id]/[locale]/[folder]/[template_name].php
+			 * @input_vars
+			 * [
+			 *  {"var":"$basedir","type":"string","desc":"Default directory path"}
+			 * ]
+			 * @change_log
+			 * ["Since: 2.1.21"]
+			 * @example
+			 * <?php
+			 * add_filter( 'um_template_basedir', 'my_um_template_basedir', 10, 1 );
+			 * function my_um_template_basedir( $basedir ) {
+			 *     // your code here
+			 *     return $basedir;
+			 * }
+			 * ?>
+			 */
+			$this->basedir = apply_filters( 'um_template_basedir', $this->basedir );
+
+
+			/**
+			 * UM hook
+			 *
+			 * @type        filter
+			 * @title       um_template_locale
+			 * @description Change [locale] for templates.
+			 *   The path structure: [basedir]/[blog_id]/[locale]/[folder]/[template_name].php
+			 * @input_vars
+			 * [
+			 *  {"var":"$locale","type":"string","desc":"Current locale"}
+			 * ]
+			 * @change_log
+			 * ["Since: 2.1.21"]
+			 * @example
+			 * <?php
+			 * add_filter( 'um_template_locale', 'my_um_template_locale', 10, 1 );
+			 * function my_um_template_locale( $locale ) {
+			 *     // your code here
+			 *     return $locale;
+			 * }
+			 * ?>
+			 */
+			$this->locale = apply_filters( 'um_template_locale', $this->locale );
 		}
 
 
@@ -326,28 +402,123 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 
 		/**
-		 * Locate a template and return the path for inclusion.
+		 * Expected path for template
 		 *
 		 * @access public
-		 * @param string $template_name
-		 * @param string $path (default: '')
+		 * @since  2.1.21
+		 *
+		 * @param  string $template_name The slug of the template
+		 * @param  string $path          Sub-folder to store the template or path to template
+		 * @param  string $location			 Place to store template: 'theme', 'plugin', 'uploads', 'basedir'
+		 * @param  string $locale			   Locale
+		 *
 		 * @return string
 		 */
-		function locate_template( $template_name, $path = '' ) {
-			// check if there is template at theme folder
-			$template = locate_template( array(
-				trailingslashit( 'ultimate-member' . DIRECTORY_SEPARATOR . $path ) . $template_name
-			) );
+		public function get_template_filepath( $template_name, $path = '', $location = '', $locale = '' ) {
 
-			if ( ! $template ) {
-				if ( $path ) {
-					$template = trailingslashit( trailingslashit( WP_PLUGIN_DIR ) . $path );
-				} else {
-					$template = trailingslashit( um_path );
+			$file = trim( str_replace( '.php', '', $template_name ) ) . '.php';
+			$folder = $path ? trailingslashit( $path ) : '';
+			$blog_id = is_multisite() ? trailingslashit( get_current_blog_id() ) : '';
+
+			if ( $locale === true ) {
+				$locale = $this->locale;
+				if ( isset( UM()->user()->id ) && UM()->user()->id !== get_current_user_id() ) {
+					$locale = get_user_locale( UM()->user()->id );
 				}
-				$template .= 'templates' . DIRECTORY_SEPARATOR . $template_name;
+			}
+			$locale = empty( $locale ) ? '' : trailingslashit( $locale );
+
+			switch ( $location ) {
+				case 'theme':
+					$dir = trailingslashit( get_stylesheet_directory() ) . 'ultimate-member/' . $blog_id . $locale . $folder;
+					break;
+				case 'plugin':
+					if( 'email' === $path ){
+						$dir = empty( UM()->mail()->path_by_slug[ $template_name ] ) ? um_path . 'templates/email/' : UM()->mail()->path_by_slug[ $template_name ];
+					}else{
+						if( empty( $folder ) ){
+							$folder = 'ultimate-member/templates/';
+						} elseif ( strpos( $folder, 'templates' ) === false ) {
+							$folder .= 'templates/';
+						}
+						$dir = trailingslashit( WP_PLUGIN_DIR ) . $folder;
+					}
+					break;
+				case 'uploads':
+					$dir = trailingslashit( UM()->uploader()->get_upload_base_dir() ) . 'templates/' . $blog_id . $locale . $folder;
+					break;
+				case 'basedir':
+				default :
+					$dir = trailingslashit( $this->basedir ) . $blog_id . $locale . $folder;
+					break;
 			}
 
+			$template_path = wp_normalize_path( trailingslashit( $dir ) . $file );
+
+			/**
+			 * UM hook
+			 *
+			 * @type        filter
+			 * @title       um_template_filepath
+			 * @description Change template path
+			 * @input_vars
+			 * [
+			 *  {"var":"$template_path","type":"string","desc":"Template Path"},
+			 *  {"var":"$template_name","type":"string","desc":"Template Name"},
+			 *  {"var":"$path","type":"string","desc":"Folder or path"},
+			 *  {"var":"$location","type":"string","desc":"Root directory: theme, plugin, uploads, basedir"}
+			 * ]
+			 * @change_log
+			 * ["Since: 2.1.21"]
+			 * @example
+			 * <?php
+			 * add_filter( 'um_template_filepath', 'my_um_template_filepath', 10, 4 );
+			 * function my_um_template_filepath( $template_path, $template_name, $path, $location ) {
+			 *     // your code here
+			 *     return $template_path;
+			 * }
+			 * ?>
+			 */
+			return apply_filters( 'um_template_filepath', $template_path, $template_name, $path, $location );
+		}
+
+
+		/**
+		 * Locate a template and return the path for inclusion.
+		 *
+		 * @access  public
+		 * @version 2.1.21
+		 *
+		 * @param   string $template_name The slug of the template
+		 * @param   string $path					Sub-folder to store the template or path to template
+		 * @return  string
+		 */
+		public function locate_template( $template_name, $path = '' ) {
+
+			// Search for the localized template in the base directory
+			if ( file_exists( $basedir_path = $this->get_template_filepath( $template_name, $path, 'basedir', true ) ) ) {
+				$template = $basedir_path;
+			} else
+			// Search for the template in the base directory
+			if ( file_exists( $basedir_path = $this->get_template_filepath( $template_name, $path, 'basedir', false ) ) ) {
+				$template = $basedir_path;
+			} else
+			// Search for the localized template in the theme directory
+			if ( file_exists( $theme_path = $this->get_template_filepath( $template_name, $path, 'theme', true ) ) ) {
+				$template = $theme_path;
+			} else
+			// Search for the template in the theme directory
+			if ( file_exists( $theme_path = $this->get_template_filepath( $template_name, $path, 'theme', false ) ) ) {
+				$template = $theme_path;
+			} else
+			// Search for the template in the plugin directory
+			if ( file_exists( $plugin_path = $this->get_template_filepath( $template_name, $path, 'plugin', true ) ) ) {
+				$template = $plugin_path;
+			}
+			// No template found
+			else {
+				$template = '';
+			}
 
 			/**
 			 * UM hook

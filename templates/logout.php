@@ -1,6 +1,14 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php
+/**
+ * Template for the Conditional logout form
+ *
+ * Used:  Login page (if the user is logged in)
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/logout.php
+ */
+if ( ! defined( 'ABSPATH' ) ) exit; ?>
 
-<div class="um <?php echo esc_attr( $this->get_class( $mode, $args ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
+<div class="um <?php echo esc_attr( $um_classes ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 
 	<div class="um-form">
 

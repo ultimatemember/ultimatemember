@@ -1,6 +1,15 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php
+/**
+ * Template for the Account form
+ *
+ * Used:      Account page
+ * Shortcode: [ultimatemember_account]
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/account.php 
+ */
+if ( ! defined( 'ABSPATH' ) ) exit; ?>
 
-<div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
+<div class="um <?php echo esc_attr( $um_classes ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 
 	<div class="um-form">
 	
