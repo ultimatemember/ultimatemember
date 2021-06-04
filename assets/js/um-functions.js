@@ -790,41 +790,6 @@ jQuery(function () {
 		}
 	});
 
-	jQuery(document.body).on('click', 'a[data-modal^="um_"], span[data-modal^="um_"]', function (e) {
-		e.preventDefault();
-
-		var modal_id = jQuery(this).attr('data-modal'), size = 'normal';
-
-		if ( jQuery(this).data('modal-size') ) {
-			size = jQuery(this).data('modal-size');
-		}
-
-		if ( jQuery(this).data('modal-copy') ) {
-
-			jQuery('#' + modal_id).html(jQuery(this).parents('.um-field').find('.um-modal-hidden-content').html());
-
-			if ( jQuery(this).parents('.um-profile-photo').attr('data-user_id') ) {
-				jQuery('#' + modal_id).attr('data-user_id', jQuery(this).parents('.um-profile-photo').attr('data-user_id'));
-			}
-
-			if ( jQuery(this).parents('.um-cover').attr('data-ratio') ) {
-				jQuery('#' + modal_id).attr('data-ratio', jQuery(this).parents('.um-cover').attr('data-ratio'));
-			}
-
-			if ( jQuery(this).parents('.um-cover').attr('data-user_id') ) {
-				jQuery('#' + modal_id).attr('data-user_id', jQuery(this).parents('.um-cover').attr('data-user_id'));
-			}
-
-			if ( jQuery('input[type="hidden"][name="user_id"]').length > 0 ) {
-				jQuery('#' + modal_id).attr('data-user_id', jQuery('input[type="hidden"][name="user_id"]').val());
-			}
-
-		}
-
-		UM.modal.newModal(modal_id, size);
-		return false;
-	});
-
 });
 
 
