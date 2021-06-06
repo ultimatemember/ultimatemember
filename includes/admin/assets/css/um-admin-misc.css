@@ -164,6 +164,9 @@ body.um-admin-modal-open {
 	padding: 2px 4px !important;
 	border-width: 1px !important;
 }
+.wp-picker-container .wp-picker-input-wrap label{
+	display: inline-block;
+}
 
 /*
 	- Error blocks

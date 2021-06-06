@@ -243,8 +243,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 
 			$submitted = get_user_meta( $user_id, 'submitted', true );
 			if ( ! empty( $submitted ) ) {
-				$actions['view_info'] = '<a href="javascript:void(0);" data-modal="UM_preview_registration" data-modal-size="smaller" 
-				data-dynamic-content="um_admin_review_registration" data-arg1="' . esc_attr( $user_id ) . '" data-arg2="edit_registration">' . __( 'Info', 'ultimate-member' ) . '</a>';
+				$actions['view_info'] = '<a href="javascript:void(0);" data-modal="UM_preview_registration" data-modal-size="small" data-dynamic-content="um_admin_review_registration" data-arg1="' . esc_attr( $user_id ) . '" data-arg2="edit_registration">' . __( 'Info', 'ultimate-member' ) . '</a>';
 			}
 
 			if ( ! current_user_can( 'administrator' ) ) {
@@ -331,7 +330,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 			if ( is_admin() && $pagenow == 'users.php' && ! empty( $_REQUEST['um_status'] ) ) {
 
 				$status = sanitize_key( $_REQUEST['um_status'] );
-			
+
 				if ( $status == 'needs-verification' ) {
 					$query->query_where = str_replace('WHERE 1=1',
 						"WHERE 1=1 AND {$wpdb->users}.ID IN (

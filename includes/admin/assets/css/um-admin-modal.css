@@ -1,20 +1,9 @@
 /*
-	- Overlay
-*/
-
-.um-admin-overlay {
-	background: rgba(0,0,0, .7);
-	width: 100%;
-	height: 100%;
-	position: fixed;
-	top: 0;
-	left: 0;
-	z-index: 10000;
-}
-
-/*
 	- modal
 */
+
+.um-admin-modal {}
+.um-admin-modal.um-modal.normal {width: 730px;margin-left: -355px;}
 
 .um-admin-modal * {
 	-webkit-font-smoothing: antialiased !important;
@@ -24,47 +13,25 @@
 .um-admin-modal input[type=submit].button-primary,
 .um-admin-modal a.button-primary,
 .um-admin-modal a.button {
+	min-height: 30px;
 	padding: 0 12px !important;
 	vertical-align: middle !important;
 }
 
-.um-admin .um-admin-modal a.button i:before {
+.um-admin-modal a.button i:before {
 	display: block;
 	top: 0px;
 }
 
-.um-admin-modal input[type=submit].button-primary {
-	line-height: 24px !important;
-}
-
-.um-admin-modal {
-	border-radius: 3px;
-	background: #fff;
-	position: fixed;
-	top: 50% !important;
-	left: 50% !important;
-	display: none;
-	z-index: 10001;
-	box-sizing: border-box;
-	
-	width: 730px;
-	margin-left: -365px;
-}
-
-.um-admin-modal.normal {width: 730px;margin-left: -365px;}
-.um-admin-modal.smaller {width: 500px;margin-left: -250px;}
-.um-admin-modal.small {width: 400px;margin-left: -200px;}
-
-.um-admin-modal-close {
+.um-admin-modal.um-modal .um-modal-close {
 	position: absolute;
-	color: #fff !important;
-	right: 16px;
+	right: 6px;
 	top: 14px;
 	font-size: 22px;
-	text-decoration: none;
 	opacity: 0.4;
+	z-index: 10;
 }
-.um-admin-modal-close:hover{opacity:1}
+.um-admin-modal.um-modal .um-modal-close:hover{opacity:1}
 
 .um-admin-modal-head {
 	padding: 4px 20px;
@@ -74,16 +41,15 @@
 }
 
 .um-admin-modal-body {
-	padding: 10px 20px 10px 20px;
-	max-height: 500px;
-	overflow: auto;
+	background-color: white;
+	padding: 10px 20px;
 }
 
 .um-admin-modal-body.um-admin-metabox  label {margin: 0!important}
 
 .um-admin-modal.loading .um-admin-modal-body {
-	height: 200px;
-	background: url(../img/ajax-loader.gif) no-repeat center;
+	background: white url(../img/ajax-loader.gif) no-repeat center;
+	min-height: 100px;
 }
 
 .um-admin-modal-foot {

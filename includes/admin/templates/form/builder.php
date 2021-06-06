@@ -14,8 +14,8 @@ if ( empty( UM()->builder()->form_id ) ) {
 	<div class="um-admin-drag-ctrls-demo um-admin-drag-ctrls">
 
 		<a href="javascript:void(0);" class="active" data-modal="UM_preview_form"
-		   data-modal-size="smaller" data-dynamic-content="um_admin_preview_form"
-		   data-arg1="<?php esc_attr( UM()->builder()->form_id ); ?>"
+		   data-modal-size="large" data-dynamic-content="um_admin_preview_form"
+		   data-arg1="<?php echo esc_attr( UM()->builder()->form_id ); ?>"
 		   data-arg2=""><?php _e( 'Live Preview', 'ultimate-member' ); ?></a>
 
 	</div>
