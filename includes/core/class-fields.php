@@ -2388,10 +2388,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$key = 'confirm_' . $original_key;
 							$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
-							if ( isset( $data['label'] ) ) {
-
+							if ( ! empty( $data['label_confirm_pass'] ) ) {
+								$data['label'] = __( $data['label_confirm_pass'], 'ultimate-member' );
+								$output .= $this->field_label( $data['label'], $key, $data );
+							} elseif ( isset( $data['label'] ) ) {
 								$data['label'] = __( $data['label'], 'ultimate-member' );
-
 								$output .= $this->field_label( sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] ), $key, $data );
 							}
 

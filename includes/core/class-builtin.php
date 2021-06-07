@@ -352,7 +352,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 				'password' => array(
 					'name' => 'Password',
 					'col1' => array('_title','_metakey','_help','_min_chars','_max_chars','_visibility'),
-					'col2' => array('_label','_placeholder','_public','_roles','_force_good_pass','_force_confirm_pass'),
+					'col2' => array('_label','_placeholder','_public','_roles','_force_good_pass','_force_confirm_pass','_label_confirm_pass'),
 					'col3' => array('_required','_editable','_icon'),
 					'validate' => array(
 						'_title' => array(
@@ -714,6 +714,7 @@ if ( ! class_exists( 'um\core\Builtin' ) ) {
 					'max_chars' => 30,
 					'force_good_pass' => 1,
 					'force_confirm_pass' => 1,
+					'label_confirm_pass' => __('Confirm Password','ultimate-member')
 				),
 
 				'first_name' => array(
