@@ -161,7 +161,12 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Added: `um_scripts.max_upload_size` localized variable getting from `wp_max_upload_size()`
   - Updated: dropdown.js library to make the stable working
 
+* Bugfixes:
+  - Fixed: Displaying different profile form shortcodes with different role visibility settings on the same page
+  - Fixed: Displaying avatar on the logout page
+
 * Templates required update:
+  - logout.php
   - members.php
   - members-list.php
 
