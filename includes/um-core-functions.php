@@ -14,49 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 /**
- * Get template part (for templates like the shop-loop).
+ * Get Ultimate Member custom templates (e.g. member directory) passing attributes and including the file.
  *
- * UM_TEMPLATE_CONFLICT_TEST will prevent overrides in themes from taking priority.
- *
- * @param mixed  $slug Template slug.
- * @param string $name Template name (default: '').
- */
-//function um_get_template_part( $slug, $name = '' ) {
-//	if ( $name ) {
-//		$template = UM_TEMPLATE_CONFLICT_TEST ? '' : locate_template(
-//			array(
-//				"{$slug}-{$name}.php",
-//				WC()->template_path() . "{$slug}-{$name}.php",
-//			)
-//		);
-//
-//		if ( ! $template ) {
-//			$fallback = WC()->plugin_path() . "/templates/{$slug}-{$name}.php";
-//			$template = file_exists( $fallback ) ? $fallback : '';
-//		}
-//	}
-//
-//	if ( ! $template ) {
-//		// If template file doesn't exist, look in yourtheme/slug.php and yourtheme/ultimate-member/slug.php.
-//		$template = UM_TEMPLATE_CONFLICT_TEST ? '' : locate_template(
-//			array(
-//				"{$slug}.php",
-//				WC()->template_path() . "{$slug}.php",
-//			)
-//		);
-//	}
-//
-//	// Allow 3rd party plugins to filter template file from their plugin.
-//	$template = apply_filters( 'um_get_template_part', $template, $slug, $name );
-//
-//	if ( $template ) {
-//		load_template( $template, false );
-//	}
-//}
-
-
-/**
- * Get other templates (e.g. product attributes) passing attributes and including the file.
+ * @since 3.0
  *
  * @param string $template_name Template name.
  * @param array  $args          Arguments. (default: array).
@@ -107,7 +67,9 @@ function um_get_template( $template_name, $args = [], $module = '', $template_pa
  * Like um_get_template, but returns the HTML instead of outputting.
  *
  * @see um_get_template
- * @since 2.5.0
+ *
+ * @since 3.0
+ *
  * @param string $template_name Template name.
  * @param array  $args          Arguments. (default: array).
  * @param string $module        Module slug (default: '').
@@ -135,6 +97,8 @@ function um_get_template_html( $template_name, $args = [], $module = '', $templa
  * $default_path/$template_name
  *
  * where $locale is site_locale for regular templates, but $user_locale for email templates
+ *
+ * @since 3.0
  *
  * @param string $template_name Template name.
  * @param string $module Module slug. (default: '').

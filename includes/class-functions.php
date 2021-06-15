@@ -35,6 +35,9 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		/**
 		 * Define constant if not already set.
 		 *
+		 * @since 3.0
+		 * @access protected
+		 *
 		 * @param string      $name  Constant name.
 		 * @param string|bool $value Constant value.
 		 */
@@ -47,6 +50,9 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 		/**
 		 * Get the template path inside theme or custom path
+		 *
+		 * @since 3.0
+		 * @access public
 		 *
 		 * @param string $module Module slug.
 		 *
@@ -66,6 +72,9 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		/**
 		 * Get the default template path inside wp-content/plugins/
 		 *
+		 * @since 3.0
+		 * @access public
+		 *
 		 * @param string $module Module slug.
 		 *
 		 * @return string
@@ -82,7 +91,85 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 
 		/**
+		 * Easy merge arrays based on parent array key. Insert before selected key
+		 *
+		 * @since 2.0.44
+		 *
+		 * @param array $array
+		 * @param string $key
+		 * @param array $insert_array
+		 *
+		 * @return array
+		 */
+		public function array_insert_before( $array, $key, $insert_array ) {
+			$index = array_search( $key, array_keys( $array ) );
+			if ( $index === false ) {
+				return $array;
+			}
+
+			$array = array_slice( $array, 0, $index, true ) +
+			         $insert_array +
+			         array_slice( $array, $index, count( $array ) - 1, true );
+
+			return $array;
+		}
+
+
+		/**
+		 * Easy merge arrays based on parent array key. Insert after selected key
+		 *
+		 * @since 3.0
+		 *
+		 * @param array $array
+		 * @param string $key
+		 * @param array $insert_array
+		 *
+		 * @return array
+		 */
+		public function array_insert_after( $array, $key, $insert_array ) {
+			$index = array_search( $key, array_keys( $array ) );
+			if ( $index === false ) {
+				return $array;
+			}
+
+			$array = array_slice( $array, 0, $index + 1, true ) +
+			         $insert_array +
+			         array_slice( $array, $index + 1, count( $array ) - 1, true );
+
+			return $array;
+		}
+
+
+		/**
+		 * Undash string. Easy operate
+		 *
+		 * @since 3.0
+		 * @param string $slug
+		 *
+		 * @return string
+		 */
+		function undash( $slug ) {
+			$slug = str_replace( '-', '_', $slug );
+			return $slug;
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		/**
 		 * Check if AJAX now
+		 * @since 2.0
 		 *
 		 * @return bool
 		 */
@@ -210,7 +297,55 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 
 
 		/**
+		 * @return mixed|void
+		 */
+		function cpt_list() {
+			/**
+			 * UM hook
+			 *
+			 * @type filter
+			 * @title um_cpt_list
+			 * @description Extend UM Custom Post Types
+			 * @input_vars
+			 * [{"var":"$list","type":"array","desc":"Custom Post Types list"}]
+			 * @change_log
+			 * ["Since: 2.0"]
+			 * @usage
+			 * <?php add_filter( 'um_cpt_list', 'function_name', 10, 1 ); ?>
+			 * @example
+			 * <?php
+			 * add_filter( 'um_cpt_list', 'my_cpt_list', 10, 1 );
+			 * function my_admin_pending_queue( $list ) {
+			 *     // your code here
+			 *     return $list;
+			 * }
+			 * ?>
+			 */
+			$cpt = apply_filters( 'um_cpt_list', array( 'um_form', 'um_directory' ) );
+			return $cpt;
+		}
+
+
+		/**
+		 * @since 2.1.0
+		 *
+		 * @param $var
+		 * @return array|string
+		 */
+		function clean_array( $var ) {
+			if ( is_array( $var ) ) {
+				return array_map( array( $this, 'clean_array' ), $var );
+			} else {
+				return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
+			}
+		}
+
+
+
+		/**
 		 * Output templates
+		 *
+		 * @deprecated since 3.0
 		 *
 		 * @access public
 		 * @param string $template_name
@@ -328,6 +463,8 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		/**
 		 * Locate a template and return the path for inclusion.
 		 *
+		 * @deprecated since 3.0
+		 *
 		 * @access public
 		 * @param string $template_name
 		 * @param string $path (default: '')
@@ -372,86 +509,6 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 			 * ?>
 			 */
 			return apply_filters( 'um_locate_template', $template, $template_name, $path );
-		}
-
-
-		/**
-		 * @return mixed|void
-		 */
-		function cpt_list() {
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_cpt_list
-			 * @description Extend UM Custom Post Types
-			 * @input_vars
-			 * [{"var":"$list","type":"array","desc":"Custom Post Types list"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_cpt_list', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_cpt_list', 'my_cpt_list', 10, 1 );
-			 * function my_admin_pending_queue( $list ) {
-			 *     // your code here
-			 *     return $list;
-			 * }
-			 * ?>
-			 */
-			$cpt = apply_filters( 'um_cpt_list', array( 'um_form', 'um_directory' ) );
-			return $cpt;
-		}
-
-
-		/**
-		 * @param array $array
-		 * @param string $key
-		 * @param array $insert_array
-		 *
-		 * @return array
-		 */
-		function array_insert_before( $array, $key, $insert_array ) {
-			$index = array_search( $key, array_keys( $array ) );
-			if ( $index === false ) {
-				return $array;
-			}
-
-			$array = array_slice( $array, 0, $index, true ) +
-					 $insert_array +
-					 array_slice( $array, $index, count( $array ) - 1, true );
-
-			return $array;
-		}
-
-
-		/**
-		 * @since 2.1.0
-		 *
-		 * @param $var
-		 * @return array|string
-		 */
-		function clean_array( $var ) {
-			if ( is_array( $var ) ) {
-				return array_map( array( $this, 'clean_array' ), $var );
-			} else {
-				return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
-			}
-		}
-
-
-		/**
-		 * Undash string
-		 *
-		 * @since 3.0
-		 * @param string $slug
-		 *
-		 * @return string
-		 */
-		function undash( $slug ) {
-			$slug = str_replace( '-', '_', $slug );
-			return $slug;
 		}
 
 	}
