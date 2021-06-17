@@ -136,9 +136,13 @@
 
 ### Deprecated functions
 
-`UM()->get_template()` use `um_get_template()` instead and for getting template content without echo use `um_get_template_html()`
-`UM()->locate_template()` use `um_locate_template()` instead
+`UM()->get_template()` use `um_get_template()` instead and for getting template content without echo use `um_get_template_html()` (remove since 1 year after official v3 release)
+`UM()->locate_template()` use `um_locate_template()` instead (remove since 1 year after official v3 release)
 
+
+### Deleted after deprecate
+
+`UM()->members()` has been deprecated since 2.1 and now is deleted please use `UM()->member_directory()` instead
 
 ### Added constants:
 

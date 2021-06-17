@@ -2565,6 +2565,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * @param array $items
 		 */
 		function dropdown_menu( $element, $trigger, $items = array() ) {
+			// !!!!Important: all links in the dropdown items must have "class" attribute
 			?>
 
 			<div class="um-new-dropdown" data-element="<?php echo $element; ?>" data-trigger="<?php echo $trigger; ?>">
@@ -2585,14 +2586,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 * @param string $element
 		 * @param string $trigger
 		 * @param string $item
+		 * @param string $additional_attributes
 		 */
-		function dropdown_menu_js( $element, $trigger, $item ) {
+		function dropdown_menu_js( $element, $trigger, $item, $additional_attributes = '' ) {
 			?>
 
 			<div class="um-new-dropdown" data-element="<?php echo $element; ?>" data-trigger="<?php echo $trigger; ?>">
 				<ul>
 					<# _.each( <?php echo $item; ?>.dropdown_actions, function( action, key, list ) { #>
-						<li><a href="<# if ( typeof action.url != 'undefined' ) { #>{{{action.url}}}<# } else { #>javascript:void(0);<# }#>" class="{{{key}}}">{{{action.title}}}</a></li>
+						<li><a href="<# if ( typeof action.url != 'undefined' ) { #>{{{action.url}}}<# } else { #>javascript:void(0);<# }#>" class="{{{key}}}"<?php echo $additional_attributes ? " $additional_attributes" : '' ?>>{{{action.title}}}</a></li>
 					<# }); #>
 				</ul>
 			</div>

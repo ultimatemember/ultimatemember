@@ -765,6 +765,78 @@ if ( ! class_exists( 'um\Config' ) ) {
 
 
 		/**
+		 * Get variable from config
+		 *
+		 * @param string $key
+		 *
+		 * @return mixed
+		 *
+		 * @since 3.0
+		 */
+		function get( $key ) {
+			if ( empty( $this->$key ) ) {
+				call_user_func( [ &$this, 'init_' . $key ] );
+			}
+			return apply_filters( 'um_config_get', $this->$key, $key );
+		}
+
+
+		/**
+		 * Init plugin defaults
+		 *
+		 * @since 1.0
+		 */
+		function init_defaults() {
+			$this->defaults = apply_filters( 'jb_settings_defaults', [
+				'job-slug'                          => 'job',
+				'job-type-slug'                     => 'job-type',
+				'job-category-slug'                 => 'job-category',
+				'job-categories'                    => true,
+				'job-template'                      => '',
+				'job-dateformat'                    => 'default',
+				'googlemaps-api-key'                => '',
+				'jobs-list-pagination'              => 10,
+				'jobs-list-no-logo'                 => false,
+				'jobs-list-hide-filled'             => false,
+				'jobs-list-hide-expired'            => false,
+				'jobs-list-hide-search'             => false,
+				'jobs-list-hide-location-search'    => false,
+				'jobs-list-hide-filters'            => false,
+				'jobs-list-hide-job-types'          => false,
+				'jobs-dashboard-pagination'         => 10,
+				'account-required'                  => false,
+				'account-creation'                  => true,
+				'account-username-generate'         => true,
+				'account-password-email'            => true,
+				'full-name-required'                => true,
+				'your-details-section'                => '0',
+				'account-role'                      => 'jb_employer',
+				'job-moderation'                    => true,
+				'pending-job-editing'               => true,
+				'published-job-editing'             => '1',
+				'job-duration'                      => 30,
+				'required-job-type'                 => true,
+				'application-method'                => '',
+				'job-submitted-notice'              => __( 'Thank you for submitting your job. It will be appear on the website once approved.', 'jobboardwp' ),
+
+				'disable-styles'                    => false,
+				'disable-fa-styles'                 => false,
+
+				'admin_email'                       => get_bloginfo( 'admin_email' ),
+				'mail_from'                         => get_bloginfo( 'name' ),
+				'mail_from_addr'                    => get_bloginfo( 'admin_email' ),
+
+				'uninstall-delete-settings'         => false,
+			] );
+
+			foreach ( $this->get( 'email_notifications' ) as $key => $notification ) {
+				$this->defaults[ $key . '_on' ] = ! empty( $notification['default_active'] );
+				$this->defaults[ $key . '_sub' ] = $notification['subject'];
+			}
+		}
+
+
+		/**
 		 * Get UM Pages
 		 *
 		 * @return array

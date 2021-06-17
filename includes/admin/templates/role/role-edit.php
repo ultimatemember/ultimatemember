@@ -78,6 +78,152 @@ if ( ! empty( $_POST['role'] ) ) {
 
 		$data = $_POST['role'];
 
+		$all_roles = array_keys( UM()->roles()->get_roles() );
+
+		if ( array_key_exists( '_um_priority', $data ) ) {
+			$data['_um_priority'] = (int) $data['_um_priority'];
+		}
+
+		if ( array_key_exists( '_um_can_access_wpadmin', $data ) ) {
+			$data['_um_can_access_wpadmin'] = (bool) $data['_um_can_access_wpadmin'];
+		}
+
+		if ( array_key_exists( '_um_can_not_see_adminbar', $data ) ) {
+			$data['_um_can_not_see_adminbar'] = (bool) $data['_um_can_not_see_adminbar'];
+		}
+
+		if ( array_key_exists( '_um_can_edit_everyone', $data ) ) {
+			$data['_um_can_edit_everyone'] = (bool) $data['_um_can_edit_everyone'];
+		}
+
+		if ( array_key_exists( '_um_can_edit_roles', $data ) && ! empty( $data['_um_can_edit_roles'] ) ) {
+			$data['_um_can_edit_roles'] = array_filter( $data['_um_can_edit_roles'], function( $v, $k ) use ( $all_roles ) {
+				return in_array( $v, $all_roles );
+			}, ARRAY_FILTER_USE_BOTH );
+		}
+
+		if ( array_key_exists( '_um_can_delete_everyone', $data ) ) {
+			$data['_um_can_delete_everyone'] = (bool) $data['_um_can_delete_everyone'];
+		}
+
+		if ( array_key_exists( '_um_can_delete_roles', $data ) && ! empty( $data['_um_can_delete_roles'] ) ) {
+			$data['_um_can_delete_roles'] = array_filter( $data['_um_can_delete_roles'], function( $v, $k ) use ( $all_roles ) {
+				return in_array( $v, $all_roles );
+			}, ARRAY_FILTER_USE_BOTH );
+		}
+
+		if ( array_key_exists( '_um_can_edit_profile', $data ) ) {
+			$data['_um_can_edit_profile'] = (bool) $data['_um_can_edit_profile'];
+		}
+
+		if ( array_key_exists( '_um_can_delete_profile', $data ) ) {
+			$data['_um_can_delete_profile'] = (bool) $data['_um_can_delete_profile'];
+		}
+
+		if ( array_key_exists( '_um_can_view_all', $data ) ) {
+			$data['_um_can_view_all'] = (bool) $data['_um_can_view_all'];
+		}
+
+		if ( array_key_exists( '_um_can_view_roles', $data ) && ! empty( $data['_um_can_view_roles'] ) ) {
+			$data['_um_can_view_roles'] = array_filter( $data['_um_can_view_roles'], function( $v, $k ) use ( $all_roles ) {
+				return in_array( $v, $all_roles );
+			}, ARRAY_FILTER_USE_BOTH );
+		}
+
+		if ( array_key_exists( '_um_can_make_private_profile', $data ) ) {
+			$data['_um_can_make_private_profile'] = (bool) $data['_um_can_make_private_profile'];
+		}
+
+		if ( array_key_exists( '_um_can_access_private_profile', $data ) ) {
+			$data['_um_can_access_private_profile'] = (bool) $data['_um_can_access_private_profile'];
+		}
+
+		if ( array_key_exists( '_um_profile_noindex', $data ) ) {
+			$data['_um_profile_noindex'] = $data['_um_profile_noindex'] !== '' ? (bool) $data['_um_profile_noindex'] : $data['_um_profile_noindex'];
+		}
+
+		if ( array_key_exists( '_um_default_homepage', $data ) ) {
+			$data['_um_default_homepage'] = (bool) $data['_um_default_homepage'];
+		}
+
+		if ( array_key_exists( '_um_redirect_homepage', $data ) ) {
+			$data['_um_redirect_homepage'] = esc_url_raw( $data['_um_redirect_homepage'] );
+		}
+
+		if ( array_key_exists( '_um_status', $data ) ) {
+			$data['_um_status'] = ! in_array( sanitize_key( $data['_um_status'] ), [ 'approved', 'checkmail', 'pending' ] ) ? 'approved' : sanitize_key( $data['_um_status'] );
+		}
+
+		if ( array_key_exists( '_um_auto_approve_act', $data ) ) {
+			$data['_um_auto_approve_act'] = ! in_array( sanitize_key( $data['_um_auto_approve_act'] ), [ 'redirect_profile', 'redirect_url' ] ) ? 'redirect_profile' : sanitize_key( $data['_um_auto_approve_act'] );
+		}
+
+		if ( array_key_exists( '_um_auto_approve_url', $data ) ) {
+			$data['_um_auto_approve_url'] = esc_url_raw( $data['_um_auto_approve_url'] );
+		}
+
+		if ( array_key_exists( '_um_login_email_activate', $data ) ) {
+			$data['_um_login_email_activate'] = (bool) $data['_um_login_email_activate'];
+		}
+
+		if ( array_key_exists( '_um_checkmail_action', $data ) ) {
+			$data['_um_checkmail_action'] = ! in_array( sanitize_key( $data['_um_checkmail_action'] ), [ 'show_message', 'redirect_url' ] ) ? 'show_message' : sanitize_key( $data['_um_checkmail_action'] );
+		}
+
+		if ( array_key_exists( '_um_checkmail_message', $data ) ) {
+			$data['_um_checkmail_message'] = sanitize_textarea_field( $data['_um_checkmail_message'] );
+		}
+
+		if ( array_key_exists( '_um_checkmail_url', $data ) ) {
+			$data['_um_checkmail_url'] = esc_url_raw( $data['_um_checkmail_url'] );
+		}
+
+		if ( array_key_exists( '_um_url_email_activate', $data ) ) {
+			$data['_um_url_email_activate'] = esc_url_raw( $data['_um_url_email_activate'] );
+		}
+
+		if ( array_key_exists( '_um_pending_action', $data ) ) {
+			$data['_um_pending_action'] = ! in_array( sanitize_key( $data['_um_pending_action'] ), [ 'show_message', 'redirect_url' ] ) ? 'show_message' : sanitize_key( $data['_um_pending_action'] );
+		}
+
+		if ( array_key_exists( '_um_pending_message', $data ) ) {
+			$data['_um_pending_message'] = sanitize_textarea_field( $data['_um_pending_message'] );
+		}
+
+		if ( array_key_exists( '_um_pending_url', $data ) ) {
+			$data['_um_pending_url'] = esc_url_raw( $data['_um_pending_url'] );
+		}
+
+		if ( array_key_exists( '_um_after_login', $data ) ) {
+			$data['_um_after_login'] = ! in_array( sanitize_key( $data['_um_after_login'] ), [ 'redirect_profile', 'redirect_url', 'refresh', 'redirect_admin' ] ) ? 'redirect_profile' : sanitize_key( $data['_um_after_login'] );
+		}
+
+		if ( array_key_exists( '_um_login_redirect_url', $data ) ) {
+			$data['_um_login_redirect_url'] = esc_url_raw( $data['_um_login_redirect_url'] );
+		}
+
+		if ( array_key_exists( '_um_after_logout', $data ) ) {
+			$data['_um_after_logout'] = ! in_array( sanitize_key( $data['_um_after_logout'] ), [ 'redirect_home', 'redirect_url' ] ) ? 'redirect_home' : sanitize_key( $data['_um_after_logout'] );
+		}
+
+		if ( array_key_exists( '_um_logout_redirect_url', $data ) ) {
+			$data['_um_logout_redirect_url'] = esc_url_raw( $data['_um_logout_redirect_url'] );
+		}
+
+		if ( array_key_exists( '_um_after_delete', $data ) ) {
+			$data['_um_after_delete'] = ! in_array( sanitize_key( $data['_um_after_delete'] ), [ 'redirect_home', 'redirect_url' ] ) ? 'redirect_home' : sanitize_key( $data['_um_after_delete'] );
+		}
+
+		if ( array_key_exists( '_um_delete_redirect_url', $data ) ) {
+			$data['_um_delete_redirect_url'] = esc_url_raw( $data['_um_delete_redirect_url'] );
+		}
+
+		if ( array_key_exists( 'wp_capabilities', $data ) && ! empty( $data['wp_capabilities'] ) ) {
+			$data['wp_capabilities'] = array_map( 'boolval', array_filter( $data['wp_capabilities'] ) );
+		}
+
+		$data = apply_filters( 'um_save_role_meta_sanitize', $data );
+
 		if ( 'add' == sanitize_key( $_GET['tab'] ) ) {
 
 			$data['name'] = trim( esc_html( strip_tags( $data['name'] ) ) );
