@@ -1555,6 +1555,34 @@ if ( ! class_exists( 'UM' ) ) {
 		}
 
 
+		/**
+		 * Get single module API
+		 *
+		 * @since 1.0
+		 *
+		 * @param $slug
+		 *
+		 * @return mixed
+		 */
+		function module( $slug ) {
+
+			$data = $this->modules()->get_data( $slug );
+			if ( ! empty( $data['path'] ) ) {
+				$slug = $this->undash( $slug );
+
+				$class = "umm\\{$slug}\\Init";
+
+				if ( empty( $this->classes[ strtolower( $class ) ] ) ) {
+					$this->classes[ strtolower( $class ) ] = $class::instance();
+				}
+
+				return $this->classes[ strtolower( $class ) ];
+			} else {
+				return false;
+			}
+		}
+
+
 
 
 
