@@ -55,6 +55,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			//there also will be redirects if they need
 			//protect posts types
 			add_filter( 'the_posts', array( &$this, 'filter_protected_posts' ), 99, 2 );
+			add_filter( 'pre_get_posts', array( &$this, 'exclude_posts' ), 99, 1 );
 			//protect pages for wp_list_pages func
 			add_filter( 'get_pages', array( &$this, 'filter_protected_posts' ), 99, 2 );
 			//filter menu items
@@ -1010,6 +1011,33 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			}
 
 			return $filtered_posts;
+		}
+
+
+		/**
+		 * Exclude posts from query
+		 *
+		 * @param $query
+		 */
+		function exclude_posts( $query ) {
+			if( $query->is_main_query() ){
+				global $wpdb;
+				$exclude_posts = array();
+				$posts = $wpdb->get_col("SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'um_content_restriction'");
+				foreach ( $posts as $post ) {
+					$content_restriction =  get_post_meta( $post, 'um_content_restriction', true );
+
+					if ( is_user_logged_in() && $content_restriction['_um_custom_access_settings'] == 1 && $content_restriction['_um_accessible'] == 1 ) {
+						array_push( $exclude_posts, $post );
+					}
+					if ( ! is_user_logged_in() && $content_restriction['_um_custom_access_settings'] == 1 && $content_restriction['_um_accessible'] == 2 ) {
+						array_push( $exclude_posts, $post );
+					}
+
+				}
+
+				$query->set('post__not_in', $exclude_posts );
+			}
 		}
 
 
