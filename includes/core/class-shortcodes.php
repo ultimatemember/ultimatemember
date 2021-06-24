@@ -717,7 +717,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 							}
 
 							$this->profile_role = $args['role'];
-						} else {
+						} elseif ( $this->profile_role != $args['role'] ) {
 							ob_get_clean();
 							return '';
 						}
