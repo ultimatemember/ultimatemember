@@ -53,15 +53,28 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		/**
 		 *
 		 */
-		function ajax_muted_action() {
+		public function ajax_muted_action() {
 			UM()->check_ajax_nonce();
 
+			/**
+			 * @var $user_id
+			 * @var $hook
+			 */
 			extract( $_REQUEST );
 
-			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) )
-				die( __( 'You can not edit this user' ) );
+			if ( isset( $user_id ) ) {
+				$user_id = absint( $user_id );
+			}
 
-			switch( $hook ) {
+			if ( isset( $hook ) ) {
+				$hook = sanitize_key( $hook );
+			}
+
+			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+				die( esc_html__( 'You can not edit this user', 'ultimate-member' ) );
+			}
+
+			switch ( $hook ) {
 				default:
 					/**
 					 * UM hook
@@ -337,7 +350,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				 */
 				do_action( 'um_before_submit_form_post', $_POST );
 
-				$this->form_id = $_POST['form_id'];
+				$this->form_id = absint( $_POST['form_id'] );
 				$this->form_status = get_post_status( $this->form_id );
 
 
@@ -408,10 +421,11 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 							$custom_field_roles = $this->custom_field_roles( $this->form_data['custom_fields'] );
 
 							if ( ! empty( $custom_field_roles ) ) {
-								$role = $_POST['role'];
-
 								if ( is_array( $_POST['role'] ) ) {
 									$role = current( $_POST['role'] );
+									$role = sanitize_key( $role );
+								} else {
+									$role = sanitize_key( $_POST['role'] );
 								}
 
 								global $wp_roles;

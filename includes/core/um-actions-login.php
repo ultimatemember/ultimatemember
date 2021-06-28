@@ -127,7 +127,7 @@ function um_submit_form_errors_hook_logincheck( $args ) {
 	um_fetch_user( $user_id );
 
 	$status = um_user( 'account_status' ); // account status
-	switch( $status ) {
+	switch ( $status ) {
 
 		// If user can't login to site...
 		case 'inactive':
@@ -135,7 +135,7 @@ function um_submit_form_errors_hook_logincheck( $args ) {
 		case 'awaiting_email_confirmation':
 		case 'rejected':
 		um_reset_user();
-		exit( wp_redirect(  add_query_arg( 'err', esc_attr( $status ), UM()->permalinks()->get_current_url() ) ) );
+		exit( wp_redirect( add_query_arg( 'err', esc_attr( $status ), UM()->permalinks()->get_current_url() ) ) );
 		break;
 
 	}
@@ -183,10 +183,10 @@ add_action( 'wp_login', 'um_store_lastlogin_timestamp_' );
 function um_user_login( $args ) {
 	extract( $args );
 
-	$rememberme = ( isset( $args['rememberme'] ) && 1 ==  $args['rememberme']  && isset( $_REQUEST['rememberme'] ) ) ? 1 : 0;
+	$rememberme = ( isset( $args['rememberme'] ) && 1 == $args['rememberme'] && isset( $_REQUEST['rememberme'] ) ) ? 1 : 0;
 
 	if ( ( UM()->options()->get( 'deny_admin_frontend_login' ) && ! isset( $_GET['provider'] ) ) && strrpos( um_user('wp_roles' ), 'administrator' ) !== false ) {
-		wp_die( __( 'This action has been prevented for security measures.', 'ultimate-member' ) );
+		wp_die( esc_html__( 'This action has been prevented for security measures.', 'ultimate-member' ) );
 	}
 
 	UM()->user()->auto_login( um_user( 'ID' ), $rememberme );

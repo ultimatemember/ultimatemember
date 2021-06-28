@@ -96,10 +96,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 *
 		 */
 		function enqueue_cpt_scripts() {
-			if ( ( isset( $_GET['post_type'] ) && 'um_form' == sanitize_key( $_GET['post_type'] ) ) ||
-			     ( isset( $_GET['post'] ) && 'um_form' == get_post_type( absint( $_GET['post'] ) ) ) ) {
+			if ( ( isset( $_GET['post_type'] ) && 'um_form' === sanitize_key( $_GET['post_type'] ) ) ||
+			     ( isset( $_GET['post'] ) && 'um_form' === get_post_type( absint( $_GET['post'] ) ) ) ) {
 				$this->um_cpt_form_screen = true;
-				add_action( 'admin_footer',  array( $this, 'admin_footer_scripts' ), 20 );
+				add_action( 'admin_footer', array( $this, 'admin_footer_scripts' ), 20 );
 			}
 
 			$this->post_page = true;
@@ -296,9 +296,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			//and WP calculate page height
 			$hide_footer = false;
 			global $pagenow, $post;
-			if ( ( 'post.php' == $pagenow || 'post-new.php' == $pagenow ) &&
-			     ( ( isset( $_GET['post_type'] ) && 'um_form' == sanitize_key( $_GET['post_type'] ) ) ||
-			       ( isset( $post->post_type ) && 'um_form' == $post->post_type ) ) ) {
+			if ( ( 'post.php' === $pagenow || 'post-new.php' === $pagenow ) &&
+			     ( ( isset( $_GET['post_type'] ) && 'um_form' === sanitize_key( $_GET['post_type'] ) ) ||
+			       ( isset( $post->post_type ) && 'um_form' === $post->post_type ) ) ) {
 				$hide_footer = true;
 			}
 

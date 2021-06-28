@@ -1,13 +1,12 @@
-<?php
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+<?php if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 
 /**
  * Checks if user can access the backend
  */
 function um_block_wpadmin_by_user_role() {
-
 	global $pagenow;
 
 	if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {

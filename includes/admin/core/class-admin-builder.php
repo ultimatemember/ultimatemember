@@ -781,7 +781,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			 */
 			extract( $_POST );
 
-			switch ( $act_id ) {
+			if ( isset( $arg1 ) ) {
+				$arg1 = sanitize_text_field( $arg1 );
+			}
+
+			if ( isset( $arg2 ) ) {
+				$arg2 = sanitize_text_field( $arg2 );
+			}
+
+			if ( isset( $arg3 ) ) {
+				$arg3 = sanitize_text_field( $arg3 );
+			}
+
+			switch ( sanitize_key( $act_id ) ) {
 
 				default:
 
@@ -806,7 +818,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					 * }
 					 * ?>
 					 */
-					do_action( 'um_admin_ajax_modal_content__hook', $act_id );
+					do_action( 'um_admin_ajax_modal_content__hook', sanitize_key( $act_id ) );
 					/**
 					 * UM hook
 					 *
@@ -824,7 +836,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					 * }
 					 * ?>
 					 */
-					do_action( "um_admin_ajax_modal_content__hook_{$act_id}" );
+					do_action( "um_admin_ajax_modal_content__hook_" . sanitize_key( $act_id ) );
 
 					$output = ob_get_clean();
 					break;

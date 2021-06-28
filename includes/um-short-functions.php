@@ -1490,7 +1490,7 @@ function um_edit_my_profile_cancel_uri( $url = '' ) {
  * @return bool
  */
 function um_is_on_edit_profile() {
-	if ( isset( $_REQUEST['um_action'] ) && $_REQUEST['um_action'] == 'edit' ) {
+	if ( isset( $_REQUEST['um_action'] ) && sanitize_key( $_REQUEST['um_action'] ) == 'edit' ) {
 		return true;
 	}
 
@@ -2623,15 +2623,15 @@ function um_secure_media_uri( $url ) {
  */
 function um_force_utf8_string( $value ) {
 
-	if (is_array( $value )) {
+	if ( is_array( $value ) ) {
 		$arr_value = array();
-		foreach ($value as $key => $value) {
-			$utf8_decoded_value = utf8_decode( $value );
+		foreach ( $value as $key => $v ) {
+			$utf8_decoded_value = utf8_decode( $v );
 
-			if (mb_check_encoding( $utf8_decoded_value, 'UTF-8' )) {
+			if ( mb_check_encoding( $utf8_decoded_value, 'UTF-8' ) ) {
 				array_push( $arr_value, $utf8_decoded_value );
 			} else {
-				array_push( $arr_value, $value );
+				array_push( $arr_value, $v );
 			}
 
 		}

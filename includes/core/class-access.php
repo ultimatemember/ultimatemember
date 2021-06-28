@@ -699,7 +699,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			foreach ( $posts as $post ) {
 
 				//Woocommerce AJAX fixes....remove filtration on wc-ajax which goes to Front Page
-				if ( ! empty( $_GET['wc-ajax'] ) && defined('WC_DOING_AJAX') && WC_DOING_AJAX  /*&& $query->is_front_page()*/ ) {
+				if ( ! empty( $_GET['wc-ajax'] ) && defined( 'WC_DOING_AJAX' ) && WC_DOING_AJAX ) {
 					$filtered_posts[] = $post;
 					continue;
 				}

@@ -36,7 +36,7 @@ function um_upgrade_metadata_per_user213beta3() {
 			ORDER BY u.ID
 			LIMIT %d, %d
 		) as dt",
-		( $_POST['page'] - 1 ) * $per_page,
+		( absint( $_POST['page'] ) - 1 ) * $per_page,
 		$per_page
 	), ARRAY_A );
 
@@ -112,8 +112,8 @@ function um_upgrade_metadata_per_user213beta3() {
 		}
 	}
 
-	$from = ( $_POST['page'] * $per_page ) - $per_page + 1;
-	$to = $_POST['page'] * $per_page;
+	$from = ( absint( $_POST['page'] ) * $per_page ) - $per_page + 1;
+	$to = absint( $_POST['page'] ) * $per_page;
 
 	wp_send_json_success( array( 'message' => sprintf( __( 'Metadata from %s to %s users were upgraded successfully...', 'ultimate-member' ), $from, $to ) ) );
 }

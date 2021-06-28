@@ -50,7 +50,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			 * Set value on form submission
 			 */
 			if ( isset( $_REQUEST[ $id ] ) ) {
-				$checked = $_REQUEST[ $id ];
+				$checked = (bool) $_REQUEST[ $id ];
 			}
 
 			$class = $checked ? 'um-icon-android-checkbox-outline' : 'um-icon-android-checkbox-outline-blank';
@@ -60,7 +60,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			<div class="um-field um-field-c">
 				<div class="um-field-area">
-					<label class="um-field-checkbox <?php echo ( $checked ) ? 'active' : '' ?>">
+					<label class="um-field-checkbox<?php echo $checked ? ' active' : '' ?>">
 						<input type="checkbox" name="<?php echo esc_attr( $id ); ?>" value="1" <?php checked( $checked ) ?> />
 						<span class="um-field-checkbox-state"><i class="<?php echo esc_attr( $class ) ?>"></i></span>
 						<span class="um-field-checkbox-option"> <?php echo esc_html( $title ); ?></span>

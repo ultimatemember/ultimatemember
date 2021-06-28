@@ -95,17 +95,17 @@ if ( ! empty( $args['enable_sorting'] ) ) {
 	}
 
 	$sorting_options = apply_filters( 'um_member_directory_pre_display_sorting', $sorting_options, $args );
-	$sort_from_url = ( ! empty( $_GET[ 'sort_' . $unique_hash ] ) && in_array( $_GET[ 'sort_' . $unique_hash ], array_keys( $sorting_options ) ) ) ? $_GET[ 'sort_' . $unique_hash ] : $default_sorting;
+	$sort_from_url = ( ! empty( $_GET[ 'sort_' . $unique_hash ] ) && in_array( sanitize_text_field( $_GET[ 'sort_' . $unique_hash ] ), array_keys( $sorting_options ) ) ) ? sanitize_text_field( $_GET[ 'sort_' . $unique_hash ] ) : $default_sorting;
 }
 
-$current_page = ( ! empty( $_GET[ 'page_' . $unique_hash ] ) && is_numeric( $_GET[ 'page_' . $unique_hash ] ) ) ? (int) $_GET[ 'page_' . $unique_hash ] : 1;
+$current_page = ( ! empty( $_GET[ 'page_' . $unique_hash ] ) && is_numeric( $_GET[ 'page_' . $unique_hash ] ) ) ? absint( $_GET[ 'page_' . $unique_hash ] ) : 1;
 
 //Search
 $search = isset( $args['search'] ) ? $args['search'] : false;
 $show_search = empty( $args['roles_can_search'] ) || ( ! empty( $priority_user_role ) && in_array( $priority_user_role, $args['roles_can_search'] ) );
 $search_from_url = '';
 if ( $search && $show_search ) {
-	$search_from_url = ! empty( $_GET[ 'search_' . $unique_hash ] ) ? stripslashes( $_GET[ 'search_' . $unique_hash ] ) : '';
+	$search_from_url = ! empty( $_GET[ 'search_' . $unique_hash ] ) ? stripslashes( sanitize_text_field( $_GET[ 'search_' . $unique_hash ] ) ) : '';
 }
 
 

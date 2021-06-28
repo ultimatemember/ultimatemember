@@ -199,31 +199,31 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 *
 		 * @return array
 		 */
-		function before_save_data( $value, $key, $post_id ) {
+		public function before_save_data( $value, $key, $post_id ) {
 
 			$post = get_post( $post_id );
 
-			if ( $post->post_type == 'um_directory' ) {
+			if ( 'um_directory' === $post->post_type ) {
 
-				if ( ! empty( $value ) && in_array( $key, array( '_um_view_types', '_um_roles', '_um_roles_can_search', '_um_roles_can_filter' ) ) ) {
+				if ( ! empty( $value ) && in_array( $key, array( '_um_view_types', '_um_roles', '_um_roles_can_search', '_um_roles_can_filter' ), true ) ) {
 					$value = array_keys( $value );
-				} elseif ( $key == '_um_search_filters' ) {
+				} elseif ( '_um_search_filters' === $key ) {
 
 					$temp_value = array();
 
 					if ( ! empty( $value ) ) {
 						foreach ( $value as $k ) {
 							$filter_type = $this->filter_types[ $k ];
-							if ( ! empty( $filter_type  ) ) {
-								if ( $filter_type == 'slider' ) {
+							if ( ! empty( $filter_type ) ) {
+								if ( 'slider' === $filter_type ) {
 									if ( ! empty( $_POST[ $k ] ) ) {
 										$temp_value[ $k ] = $_POST[ $k ];
 									}
-								} elseif ( $filter_type == 'timepicker' || $filter_type == 'datepicker' ) {
+								} elseif ( 'timepicker' === $filter_type || 'datepicker' === $filter_type ) {
 									if ( ! empty( $_POST[ $k . '_from' ] ) && ! empty( $_POST[ $k . '_to' ] ) ) {
 										$temp_value[ $k ] = array( $_POST[ $k . '_from' ], $_POST[ $k . '_to' ] );
 									}
-								} elseif ( $filter_type == 'select' ) {
+								} elseif ( 'select' === $filter_type ) {
 									if ( ! empty( $_POST[ $k ] ) ) {
 										if ( is_array( $_POST[ $k ] ) ) {
 											$temp_value[ $k ] = array_map( 'trim', $_POST[ $k ] );
@@ -241,7 +241,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					}
 
 					$value = $temp_value;
-				} elseif ( $key == '_um_sorting_fields' ) {
+				} elseif ( '_um_sorting_fields' === $key ) {
 					if ( ! empty( $value['other_data'] ) ) {
 						$other_data = $value['other_data'];
 						unset( $value['other_data'] );
@@ -254,15 +254,15 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 										$metalabel = wp_strip_all_tags( $other_data[ $k ]['label'] );
 									}
 									$row = array(
-										$metakey => ! empty( $metalabel ) ? $metalabel : $metakey
+										$metakey => ! empty( $metalabel ) ? $metalabel : $metakey,
 									);
 								}
 							}
 						}
 					}
-				} elseif ( $key == '_um_sortby_custom' ) {
+				} elseif ( '_um_sortby_custom' === $key ) {
 					$value = sanitize_text_field( $value );
-				} elseif ( $key == '_um_sortby_custom_label' ) {
+				} elseif ( '_um_sortby_custom_label' === $key ) {
 					$value = wp_strip_all_tags( $value );
 				}
 			}
@@ -518,7 +518,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					break;
 				}
 				case 'text': {
-					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? $_GET[ 'filter_' . $filter . '_' . $unique_hash ] : $default_value; ?>
+					$filter_from_url = ! empty( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) ? sanitize_text_field( $_GET[ 'filter_' . $filter . '_' . $unique_hash ] ) : $default_value; ?>
 						<input type="text" autocomplete="off" id="<?php echo $filter; ?>" name="<?php echo $filter; ?>"
 						   placeholder="<?php esc_attr_e( stripslashes( $attrs['label'] ), 'ultimate-member' ); ?>"
 						          value="<?php echo esc_attr( $filter_from_url ) ?>" class="um-form-field"
@@ -1224,7 +1224,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			}
 
 			$this->query_args['number'] = ( ! empty( $directory_data['max_users'] ) && $directory_data['max_users'] <= $profiles_per_page ) ? $directory_data['max_users'] : $profiles_per_page;
-			$this->query_args['paged'] = ! empty( $_POST['page'] ) ? $_POST['page'] : 1;
+			$this->query_args['paged'] = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
 		}
 
 
@@ -1236,7 +1236,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		function sorting_query( $directory_data ) {
 			// sort members by
 			$this->query_args['order'] = 'ASC';
-			$sortby = ! empty( $_POST['sorting'] ) ? $_POST['sorting'] : $directory_data['sortby'];
+			$sortby = ! empty( $_POST['sorting'] ) ? sanitize_text_field( $_POST['sorting'] ) : $directory_data['sortby'];
 			$sortby = ( $sortby == 'other' ) ? $directory_data['sortby_custom'] : $sortby;
 
 			$custom_sort = array();
@@ -1428,7 +1428,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			if ( ! empty( $_POST['search'] ) ) {
 				// complex using with change_meta_sql function
 
-				$search = trim( stripslashes( $_POST['search'] ) );
+				$search = trim( stripslashes( sanitize_text_field( $_POST['search'] ) ) );
 
 				$meta_query = array(
 					'relation' => 'OR',
@@ -1446,7 +1446,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 					),
 				);
 
-				$meta_query = apply_filters( 'um_member_directory_general_search_meta_query', $meta_query, stripslashes( $_POST['search'] ) );
+				$meta_query = apply_filters( 'um_member_directory_general_search_meta_query', $meta_query, stripslashes( sanitize_text_field( $_POST['search'] ) ) );
 
 				$this->query_args['meta_query'][] = $meta_query;
 
@@ -1471,7 +1471,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		function change_meta_sql( $sql, $queries, $type, $primary_table, $primary_id_column, $context ) {
 			if ( ! empty( $_POST['search'] ) ) {
 				global $wpdb;
-				$search = trim( stripslashes( $_POST['search'] ) );
+				$search = trim( stripslashes( sanitize_text_field( $_POST['search'] ) ) );
 				if ( ! empty( $search ) ) {
 
 					$meta_value = '%' . $wpdb->esc_like( $search ) . '%';
@@ -1548,6 +1548,8 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			$this->is_search = true;
 			foreach ( $filter_query as $field => $value ) {
+				$field = sanitize_text_field( $field );
+				$value = sanitize_text_field( $value );
 
 				$attrs = UM()->fields()->get_field( $field );
 				// skip private invisible fields
@@ -2066,7 +2068,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 */
 		function calculate_pagination( $directory_data, $total_users ) {
 
-			$current_page = ! empty( $_POST['page'] ) ? $_POST['page'] : 1;
+			$current_page = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
 
 			$total_users = ( ! empty( $directory_data['max_users'] ) && $directory_data['max_users'] <= $total_users ) ? $directory_data['max_users'] : $total_users;
 
@@ -2320,7 +2322,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		function pagination_changes( $user_query ) {
 			global $wpdb;
 
-			$directory_id = $this->get_directory_by_hash( $_POST['directory_id'] );
+			$directory_id = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
 			$directory_data = UM()->query()->post_data( $directory_id );
 
 			$qv = $user_query->query_vars;
@@ -2367,7 +2369,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 			global $wpdb;
 
-			$directory_id = $this->get_directory_by_hash( $_POST['directory_id'] );
+			$directory_id = $this->get_directory_by_hash( sanitize_key( $_POST['directory_id'] ) );
 			$directory_data = UM()->query()->post_data( $directory_id );
 
 			//predefined result for user without capabilities to see other members
