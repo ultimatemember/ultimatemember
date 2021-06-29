@@ -345,10 +345,10 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'bool',
 					),
 					'_um_search_filters'           => array(
-						'sanitize' => array( $this, 'sanitize_md_default_filters' ),
+						'sanitize' => array( $this, 'sanitize_filter_fields' ),
 					),
 					'_um_sortby'                   => array(
-						'sanitize' => array( $this, 'sanitize_sort_by_fields' ),
+						'sanitize' => 'text',
 					),
 					'_um_sortby_custom'            => array(
 						'sanitize' => 'text',
@@ -393,7 +393,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'bool',
 					),
 					'_um_register_role'                 => array(
-						'sanitize' => array( $this, 'sanitize_existed_role' ),
+						'sanitize' => 'key',
 					),
 					'_um_register_template'             => array(
 						'sanitize' => 'text',
@@ -538,58 +538,37 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 */
 		public function sanitize_md_sorting_fields( $value ) {
 			$filter_fields = array_merge( UM()->member_directory()->sort_fields, array( 'other' => __( 'Other (Custom Field)', 'ultimate-member' ) ) );
+			$filter_fields = array_keys( $filter_fields );
 
 			if ( '' !== $value ) {
 				$value = array_filter(
 					$value,
 					function( $v, $k ) use ( $filter_fields ) {
-						return in_array( sanitize_text_field( $v ), $filter_fields, true );
+						if ( 'other_data' === $k ) {
+							return true;
+						} else {
+							return in_array( sanitize_text_field( $v ), $filter_fields, true );
+						}
 					},
 					ARRAY_FILTER_USE_BOTH
 				);
-			}
 
-			return $value;
-		}
+				$value = array_map(
+					function( $item ) {
+						if ( is_array( $item ) ) {
+							if ( isset( $item['meta_key'] ) ) {
+								$item['meta_key'] = sanitize_text_field( $item['meta_key'] );
+							}
+							if ( isset( $item['label'] ) ) {
+								$item['label'] = sanitize_text_field( $item['label'] );
+							}
 
-
-		/**
-		 * @param array|string $value
-		 *
-		 * @return array|string
-		 */
-		public function sanitize_sort_by_fields( $value ) {
-			$sorting_fields = UM()->member_directory()->default_sorting;
-
-			if ( '' !== $value ) {
-				$value = array_filter(
-					$value,
-					function( $v, $k ) use ( $sorting_fields ) {
-						return in_array( sanitize_text_field( $v ), $sorting_fields, true );
+							return $item;
+						} else {
+							return sanitize_text_field( $item );
+						}
 					},
-					ARRAY_FILTER_USE_BOTH
-				);
-			}
-
-			return $value;
-		}
-
-
-		/**
-		 * @param array|string $value
-		 *
-		 * @return array|string
-		 */
-		public function sanitize_md_default_filters( $value ) {
-			$filter_fields = UM()->member_directory()->filter_fields;
-
-			if ( '' !== $value ) {
-				$value = array_filter(
-					$value,
-					function( $v, $k ) use ( $filter_fields ) {
-						return in_array( sanitize_text_field( $v ), $filter_fields, true );
-					},
-					ARRAY_FILTER_USE_BOTH
+					$value
 				);
 			}
 
@@ -603,7 +582,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 * @return array|string
 		 */
 		public function sanitize_filter_fields( $value ) {
-			$filter_fields = UM()->member_directory()->filter_fields;
+			$filter_fields = array_keys( UM()->member_directory()->filter_fields );
 
 			if ( '' !== $value ) {
 				$value = array_filter(
@@ -613,6 +592,8 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					},
 					ARRAY_FILTER_USE_BOTH
 				);
+
+				$value = array_map( 'sanitize_text_field', $value );
 			}
 
 			return $value;
@@ -625,10 +606,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 * @return array|string
 		 */
 		public function sanitize_user_field( $value ) {
-			$user_fields = array();
-			foreach ( UM()->builtin()->all_user_fields() as $key => $arr ) {
-				$user_fields[ $key ] = isset( $arr['title'] ) ? $arr['title'] : '';
-			}
+			$user_fields = array_keys( UM()->builtin()->all_user_fields() );
 
 			if ( '' !== $value ) {
 				$value = array_filter(
@@ -638,6 +616,38 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					},
 					ARRAY_FILTER_USE_BOTH
 				);
+
+				$value = array_map( 'sanitize_text_field', $value );
+			}
+
+			return $value;
+		}
+
+
+		/**
+		 * @param array|string $value
+		 *
+		 * @return array|string
+		 */
+		public function sanitize_md_view_types( $value ) {
+			$view_types = array_map(
+				function ( $item ) {
+					return $item['title'];
+				},
+				UM()->member_directory()->view_types
+			);
+			$view_types = array_keys( $view_types );
+
+			if ( '' !== $value ) {
+				$value = array_filter(
+					$value,
+					function( $v, $k ) use ( $view_types ) {
+						return in_array( sanitize_key( $k ), $view_types, true ) && 1 === (int) $v;
+					},
+					ARRAY_FILTER_USE_BOTH
+				);
+
+				$value = array_map( 'sanitize_key', $value );
 			}
 
 			return $value;
@@ -653,13 +663,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$sizes = UM()->files()->get_profile_photo_size( 'photo_thumb_sizes' );
 
 			if ( '' !== $value ) {
-				$value = array_filter(
-					$value,
-					function( $v, $k ) use ( $sizes ) {
-						return in_array( sanitize_text_field( $v ), $sizes, true );
-					},
-					ARRAY_FILTER_USE_BOTH
-				);
+				$value = in_array( absint( $value ), $sizes, true ) ? absint( $value ) : '';
 			}
 
 			return $value;
@@ -671,23 +675,11 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 *
 		 * @return array|string
 		 */
-		public function sanitize_md_view_types( $value ) {
-			$view_types = array_map(
-				function( $item ) {
-					return $item['title'];
-				},
-				UM()->member_directory()->view_types
-			);
-
+		public function sanitize_cover_photosize( $value ) {
+			$sizes = UM()->files()->get_profile_photo_size( 'cover_thumb_sizes' );
 
 			if ( '' !== $value ) {
-				$value = array_filter(
-					$value,
-					function( $v, $k ) use ( $view_types ) {
-						return in_array( sanitize_key( $k ), $view_types, true ) && 1 === (int) $v;
-					},
-					ARRAY_FILTER_USE_BOTH
-				);
+				$value = in_array( absint( $value ), $sizes, true ) ? absint( $value ) : '';
 			}
 
 			return $value;
@@ -710,6 +702,8 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					},
 					ARRAY_FILTER_USE_BOTH
 				);
+
+				$value = array_map( 'sanitize_key', $value );
 			}
 
 			return $value;
@@ -732,6 +726,8 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					},
 					ARRAY_FILTER_USE_BOTH
 				);
+
+				$value = array_map( 'sanitize_key', $value );
 			}
 
 			return $value;
@@ -747,13 +743,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$all_privacy = array_keys( UM()->profile()->tabs_privacy() );
 
 			if ( '' !== $value ) {
-				$value = array_filter(
-					$value,
-					function( $v, $k ) use ( $all_privacy ) {
-						return in_array( $v, $all_privacy, true );
-					},
-					ARRAY_FILTER_USE_BOTH
-				);
+				$value = in_array( absint( $value ), $all_privacy, true ) ? absint( $value ) : '';
 			}
 
 			return $value;
@@ -783,6 +773,8 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
+		 * Sanitize role meta fields when wp-admin form has been submitted
+		 *
 		 * @param array $data
 		 *
 		 * @return array
@@ -841,6 +833,8 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
+		 * Sanitize post restriction meta fields when wp-admin form has been submitted
+		 *
 		 * @param array $data
 		 *
 		 * @return array
@@ -892,6 +886,8 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
+		 * Sanitize term restriction meta fields when wp-admin form has been submitted
+		 *
 		 * @param array $data
 		 *
 		 * @return array
@@ -943,6 +939,10 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
+		 * Sanitize member directory meta when wp-admin form has been submitted
+		 *
+		 * @todo checking all sanitize types
+		 *
 		 * @param array $data
 		 *
 		 * @return array
@@ -997,6 +997,10 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
+		 * Sanitize form meta when wp-admin form has been submitted
+		 *
+		 * @todo checking all sanitize types
+		 *
 		 * @param array $data
 		 *
 		 * @return array
@@ -1051,6 +1055,10 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 		/**
+		 * Sanitize options when wp-admin form has been submitted
+		 *
+		 * @todo checking all sanitize types
+		 *
 		 * @param array $data
 		 *
 		 * @return array
@@ -1076,44 +1084,40 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 				switch ( UM()->admin_settings()->settings_map[ $k ]['sanitize'] ) {
 					default:
-						$sanitized[ $k ] = apply_filters( 'um_settings_sanitize_' . $k, $data[ $k ] );
+						$sanitized[ $k ] = apply_filters( 'um_settings_sanitize_' . $k, $v );
 						break;
 					case 'int':
 						$sanitized[ $k ] = (int) $v;
 						break;
 					case 'absint':
-						$sanitized[ $k ] = absint( $v );
-						break;
-					case 'absints_array':
-						$sanitized[ $k ] = array_map( 'absint', $v );
+						if ( is_array( $v ) ) {
+							$sanitized[ $k ] = array_map( 'absint', $v );
+						} else {
+							$sanitized[ $k ] = absint( $v );
+						}
 						break;
 					case 'key':
-						$sanitized[ $k ] = sanitize_key( $v );
-						break;
-					case 'keys_array':
-						$sanitized[ $k ] = array_map( 'sanitize_key', $v );
+						if ( is_array( $v ) ) {
+							$sanitized[ $k ] = array_map( 'sanitize_key', $v );
+						} else {
+							$sanitized[ $k ] = sanitize_key( $v );
+						}
 						break;
 					case 'bool':
 						$sanitized[ $k ] = (bool) $v;
 						break;
 					case 'url':
-						$sanitized[ $k ] = esc_url_raw( $v );
-						break;
-					case 'urls_array':
-						$sanitized[ $k ] = array_map( 'esc_url_raw', $v );
+						if ( is_array( $v ) ) {
+							$sanitized[ $k ] = array_map( 'esc_url_raw', $v );
+						} else {
+							$sanitized[ $k ] = esc_url_raw( $v );
+						}
 						break;
 					case 'wp_kses':
 						$sanitized[ $k ] = wp_kses_post( $v );
 						break;
 					case 'textarea':
 						$sanitized[ $k ] = sanitize_textarea_field( $v );
-						break;
-					case 'sanitize_array_key':
-						if ( ! array_key_exists( 'default', UM()->admin_settings()->settings_map[ $k ] ) || ! array_key_exists( 'array', UM()->admin_settings()->settings_map[ $k ] ) ) {
-							continue 2;
-						}
-
-						$sanitized[ $k ] = ! in_array( sanitize_key( $v ), UM()->admin_settings()->settings_map[ $k ]['array'], true ) ? UM()->admin_settings()->settings_map[ $k ]['default'] : sanitize_key( $v );
 						break;
 				}
 			}

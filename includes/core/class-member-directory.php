@@ -217,11 +217,14 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 							if ( ! empty( $filter_type ) ) {
 								if ( 'slider' === $filter_type ) {
 									if ( ! empty( $_POST[ $k ] ) ) {
-										$temp_value[ $k ] = $_POST[ $k ];
+										$temp_value[ $k ] = (int) $_POST[ $k ];
 									}
 								} elseif ( 'timepicker' === $filter_type || 'datepicker' === $filter_type ) {
 									if ( ! empty( $_POST[ $k . '_from' ] ) && ! empty( $_POST[ $k . '_to' ] ) ) {
-										$temp_value[ $k ] = array( $_POST[ $k . '_from' ], $_POST[ $k . '_to' ] );
+										$temp_value[ $k ] = array(
+											sanitize_text_field( $_POST[ $k . '_from' ] ),
+											sanitize_text_field( $_POST[ $k . '_to' ] ),
+										);
 									}
 								} elseif ( 'select' === $filter_type ) {
 									if ( ! empty( $_POST[ $k ] ) ) {
@@ -230,10 +233,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 										} else {
 											$temp_value[ $k ] = array( trim( $_POST[ $k ] ) );
 										}
+
+										$temp_value[ $k ] = array_map( 'sanitize_text_field', $temp_value[ $k ] );
 									}
 								} else {
 									if ( ! empty( $_POST[ $k ] ) ) {
-										$temp_value[ $k ] = trim( $_POST[ $k ] );
+										$temp_value[ $k ] = trim( sanitize_text_field( $_POST[ $k ] ) );
 									}
 								}
 							}

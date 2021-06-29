@@ -523,7 +523,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sanitize' => 'url',
 					),
 					'access_exclude_uris'       => array(
-						'sanitize' => 'urls_array',
+						'sanitize' => 'url',
 					),
 					'home_page_accessible'      => array(
 						'sanitize' => 'bool',
@@ -605,10 +605,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$settings_map,
 				array(
 					'restricted_access_post_metabox'     => array(
-						'sanitize' => 'keys_array',
+						'sanitize' => 'key',
 					),
 					'restricted_access_taxonomy_metabox' => array(
-						'sanitize' => 'keys_array',
+						'sanitize' => 'key',
 					),
 				)
 			);
@@ -715,10 +715,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sanitize' => 'absint',
 					),
 					'photo_thumb_sizes'                     => array(
-						'sanitize' => 'absints_array',
+						'sanitize' => 'absint',
 					),
 					'cover_thumb_sizes'                     => array(
-						'sanitize' => 'absints_array',
+						'sanitize' => 'absint',
 					),
 					'image_orientation_by_exif'             => array(
 						'sanitize' => 'bool',
@@ -793,7 +793,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sanitize' => 'bool',
 					),
 					'profile_coversize'                     => array(
-						'sanitize' => array( UM()->admin(), 'sanitize_photosize' ),
+						'sanitize' => array( UM()->admin(), 'sanitize_cover_photosize' ),
 					),
 					'profile_cover_ratio'                   => array(
 						'sanitize' => 'text',
@@ -850,7 +850,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sanitize' => 'url',
 					),
 					'register_role'                         => array(
-						'sanitize' => array( UM()->admin(), 'sanitize_existed_role' ),
+						'sanitize' => 'key',
 					),
 					'login_template'                        => array(
 						'sanitize' => 'text',
