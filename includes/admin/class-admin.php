@@ -977,13 +977,31 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						$sanitized[ $k ] = (bool) $v;
 						break;
 					case 'url':
-						$sanitized[ $k ] = esc_url_raw( $v );
+						if ( is_array( $v ) ) {
+							$sanitized[ $k ] = array_map( 'esc_url_raw', $v );
+						} else {
+							$sanitized[ $k ] = esc_url_raw( $v );
+						}
 						break;
 					case 'text':
 						$sanitized[ $k ] = sanitize_text_field( $v );
 						break;
 					case 'textarea':
 						$sanitized[ $k ] = sanitize_textarea_field( $v );
+						break;
+					case 'key':
+						if ( is_array( $v ) ) {
+							$sanitized[ $k ] = array_map( 'sanitize_key', $v );
+						} else {
+							$sanitized[ $k ] = sanitize_key( $v );
+						}
+						break;
+					case 'absint':
+						if ( is_array( $v ) ) {
+							$sanitized[ $k ] = array_map( 'absint', $v );
+						} else {
+							$sanitized[ $k ] = absint( $v );
+						}
 						break;
 				}
 			}
@@ -1035,13 +1053,31 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						$sanitized[ $k ] = (bool) $v;
 						break;
 					case 'url':
-						$sanitized[ $k ] = esc_url_raw( $v );
+						if ( is_array( $v ) ) {
+							$sanitized[ $k ] = array_map( 'esc_url_raw', $v );
+						} else {
+							$sanitized[ $k ] = esc_url_raw( $v );
+						}
 						break;
 					case 'text':
 						$sanitized[ $k ] = sanitize_text_field( $v );
 						break;
 					case 'textarea':
 						$sanitized[ $k ] = sanitize_textarea_field( $v );
+						break;
+					case 'key':
+						if ( is_array( $v ) ) {
+							$sanitized[ $k ] = array_map( 'sanitize_key', $v );
+						} else {
+							$sanitized[ $k ] = sanitize_key( $v );
+						}
+						break;
+					case 'absint':
+						if ( is_array( $v ) ) {
+							$sanitized[ $k ] = array_map( 'absint', $v );
+						} else {
+							$sanitized[ $k ] = absint( $v );
+						}
 						break;
 				}
 			}
