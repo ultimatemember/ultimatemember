@@ -17,20 +17,20 @@ $fields = array(
 		'id'    => '_um_profile_photo',
 		'type'  => 'checkbox',
 		'label' => __( 'Enable Profile Photo', 'ultimate-member' ),
-		'value' => UM()->query()->get_meta_value( '_um_profile_photo', null, 1 ),
+		'value' => UM()->query()->get_meta_value( '_um_profile_photo' ),
 	),
 	array(
 		'id'      => '_um_cover_photos',
 		'type'    => 'checkbox',
 		'label'   => __( 'Enable Cover Photo', 'ultimate-member' ),
 		'tooltip' => __( 'If turned on, the users cover photo will appear in the directory', 'ultimate-member' ),
-		'value'   => UM()->query()->get_meta_value( '_um_cover_photos', null, 1 ),
+		'value'   => UM()->query()->get_meta_value( '_um_cover_photos' ),
 	),
 	array(
 		'id'    => '_um_show_name',
 		'type'  => 'checkbox',
 		'label' => __( 'Show display name', 'ultimate-member' ),
-		'value' => UM()->query()->get_meta_value( '_um_show_name', null, 1 ),
+		'value' => UM()->query()->get_meta_value( '_um_show_name' ),
 	),
 	array(
 		'id'    => '_um_show_tagline',
