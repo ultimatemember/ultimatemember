@@ -264,7 +264,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'key',
 					),
 					'_um_roles'                    => array(
-						'sanitize' => array( $this, 'sanitize_existed_role' ),
+						'sanitize' => array( $this, 'sanitize_restriction_existed_role' ),
 					),
 					'_um_has_profile_photo'        => array(
 						'sanitize' => 'bool',
@@ -327,13 +327,13 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'bool',
 					),
 					'_um_roles_can_search'         => array(
-						'sanitize' => array( $this, 'sanitize_existed_role' ),
+						'sanitize' => array( $this, 'sanitize_restriction_existed_role' ),
 					),
 					'_um_filters'                  => array(
 						'sanitize' => 'bool',
 					),
 					'_um_roles_can_filter'         => array(
-						'sanitize' => array( $this, 'sanitize_existed_role' ),
+						'sanitize' => array( $this, 'sanitize_restriction_existed_role' ),
 					),
 					'_um_search_fields'            => array(
 						'sanitize' => array( $this, 'sanitize_filter_fields' ),
@@ -694,7 +694,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 * @return array|string
 		 */
 		public function sanitize_restriction_existed_role( $value ) {
-			$all_roles = UM()->roles()->get_roles( false );
+			$all_roles = array_keys( UM()->roles()->get_roles() );
 
 			if ( '' !== $value ) {
 				$value = array_filter(
