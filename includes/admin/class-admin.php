@@ -661,6 +661,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 */
 		public function sanitize_photosize( $value ) {
 			$sizes = UM()->files()->get_profile_photo_size( 'photo_thumb_sizes' );
+			$sizes = array_keys( $sizes );
 
 			if ( '' !== $value ) {
 				$value = in_array( absint( $value ), $sizes, true ) ? absint( $value ) : '';
@@ -677,6 +678,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		 */
 		public function sanitize_cover_photosize( $value ) {
 			$sizes = UM()->files()->get_profile_photo_size( 'cover_thumb_sizes' );
+			$sizes = array_keys( $sizes );
 
 			if ( '' !== $value ) {
 				$value = in_array( absint( $value ), $sizes, true ) ? absint( $value ) : '';
@@ -1154,6 +1156,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						break;
 					case 'textarea':
 						$sanitized[ $k ] = sanitize_textarea_field( $v );
+						break;
+					case 'text':
+						$sanitized[ $k ] = sanitize_text_field( $v );
 						break;
 				}
 			}
