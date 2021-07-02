@@ -188,12 +188,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				$wp_usermeta_option = get_option( 'um_usermeta_fields', array() );
 
 				$count = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT COUNT(*)
-						FROM {$wpdb->usermeta}
-						WHERE meta_key IN (%s)",
-						implode( "','", $wp_usermeta_option )
-					)
+					"SELECT COUNT(*)
+					FROM {$wpdb->usermeta}
+					WHERE meta_key IN ('" . implode( "','", $wp_usermeta_option ) . "')"
 				);
 
 				wp_send_json_success( array( 'count' => $count ) );
@@ -211,9 +208,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					$wpdb->prepare(
 						"SELECT *
 						FROM {$wpdb->usermeta}
-						WHERE meta_key IN (%s)
+						WHERE meta_key IN ('" . implode( "','", $wp_usermeta_option ) . "')
 						LIMIT %d, %d",
-						implode( "','", $wp_usermeta_option ),
 						( absint( $_POST['page'] ) - 1 ) * $per_page,
 						$per_page
 					),

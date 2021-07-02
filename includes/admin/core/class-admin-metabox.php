@@ -1099,6 +1099,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			delete_post_meta( $post_id, '_um_search_filters' );
 			delete_post_meta( $post_id, '_um_search_filters_gmt' );
 
+			delete_post_meta( $post_id, '_um_sorting_fields' );
+
 			//save metadata
 			$metadata = UM()->admin()->sanitize_member_directory_meta( $_POST['um_metadata'] );
 			foreach ( $metadata as $k => $v ) {

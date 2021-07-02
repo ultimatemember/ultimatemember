@@ -63,7 +63,7 @@ $_um_search_filters = get_post_meta( $post_id, '_um_search_filters', true ); ?>
 					'conditional'         => array( '_um_filters', '=', 1 ),
 					'options'             => UM()->member_directory()->filter_fields,
 					'add_text'            => __( 'Add New Custom Field', 'ultimate-member' ),
-					'show_default_number' => 1,
+					'show_default_number' => 0,
 					'sorting'             => true,
 				),
 				array(

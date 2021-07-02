@@ -46,7 +46,7 @@ $fields = array(
 		'value'               => $_um_sorting_fields,
 		'options'             => array_merge( UM()->member_directory()->sort_fields, array( 'other' => __( 'Other (Custom Field)', 'ultimate-member' ) ) ),
 		'add_text'            => __( 'Add New Field', 'ultimate-member' ),
-		'show_default_number' => 1,
+		'show_default_number' => 0,
 		'conditional'         => array( '_um_enable_sorting', '=', 1 ),
 	),
 ); ?>

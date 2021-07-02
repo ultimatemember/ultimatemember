@@ -1255,7 +1255,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				}
 			}
 
-			if ( 'display_name' == $sortby ) {
+			if ( 'username' == $sortby ) {
+
+				$this->query_args['orderby'] = 'user_login';
+				$this->query_args['order'] = 'ASC';
+
+			} elseif ( 'display_name' == $sortby ) {
 
 				$display_name = UM()->options()->get( 'display_name' );
 				if ( $display_name == 'username' ) {
@@ -1539,6 +1544,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$filter_query = array();
 			if ( ! empty( $directory_data['search_fields'] ) ) {
 				$search_filters = maybe_unserialize( $directory_data['search_fields'] );
+
 				if ( ! empty( $search_filters ) && is_array( $search_filters ) ) {
 					$filter_query = array_intersect_key( $_POST, array_flip( $search_filters ) );
 				}
@@ -1554,7 +1560,11 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 			$this->is_search = true;
 			foreach ( $filter_query as $field => $value ) {
 				$field = sanitize_text_field( $field );
-				$value = sanitize_text_field( $value );
+				if ( is_array( $value ) ) {
+					$value = array_map( 'sanitize_text_field', $value );
+				} else {
+					$value = sanitize_text_field( $value );
+				}
 
 				$attrs = UM()->fields()->get_field( $field );
 				// skip private invisible fields

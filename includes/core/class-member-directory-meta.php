@@ -611,7 +611,11 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				foreach ( $filter_query as $field => $value ) {
 
 					$field = sanitize_text_field( $field );
-					$value = sanitize_text_field( $value );
+					if ( is_array( $value ) ) {
+						$value = array_map( 'sanitize_text_field', $value );
+					} else {
+						$value = sanitize_text_field( $value );
+					}
 
 					$attrs = UM()->fields()->get_field( $field );
 					// skip private invisible fields
@@ -668,6 +672,10 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', 'CHAR', $sortby, $directory_data );
 
 				$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS {$custom_sort_type} ) {$order} ";
+
+			} elseif ( 'username' == $sortby ) {
+
+				$this->sql_order = " ORDER BY u.user_login {$order} ";
 
 			} elseif ( 'display_name' == $sortby ) {
 
