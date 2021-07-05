@@ -43,19 +43,18 @@ jQuery( document ).ready( function() {
 		jQuery('#wpfooter').hide();
 	}
 
-
 	jQuery(document.body).on('click', '.um-modal-tab a', function() {
 		if ( jQuery(this).parents('li').hasClass('active') ) {
 			return;
 		}
 
 		jQuery(this).parents('.um-modal-tabs').find('.um-modal-tab').removeClass('active');
-        jQuery(this).parents('li').addClass('active');
+		jQuery(this).parents('li').addClass('active');
 
-        var key = jQuery(this).data('key');
-        var tabs_wrapper = jQuery('.um-modal-tabs-content-wrapper');
+		var key = jQuery(this).data('key');
+		var tabs_wrapper = jQuery('.um-modal-tabs-content-wrapper');
 
-        tabs_wrapper.find('.um-modal-tab-content').removeClass('active');
-        tabs_wrapper.find('.um-modal-tab-' + key ).addClass('active');
+		tabs_wrapper.find('.um-modal-tab-content').removeClass('active');
+		tabs_wrapper.find('.um-modal-tab-' + key ).addClass('active');
 	});
 });
