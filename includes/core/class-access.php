@@ -52,9 +52,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			$this->allow_access = false;
 
 			add_filter( 'pre_get_posts', array( &$this, 'exclude_posts' ), 99, 1 );
+			add_filter( 'pre_get_comments', array( &$this, 'exclude_posts_comments' ), 99, 1 );
 			add_filter( 'get_next_post_where', array( &$this, 'exclude_navigation_posts' ), 99, 5 );
 			add_filter( 'get_previous_post_where', array( &$this, 'exclude_navigation_posts' ), 99, 5 );
-			add_filter( 'widget_comments_args', array( &$this, 'exclude_comments_resticted_posts_widget' ), 99, 1 );
 			add_filter( 'widget_posts_args', array( &$this, 'exclude_resticted_posts_widget' ), 99, 1 );
 
 			//there is posts (Posts/Page/CPT) filtration if site is accessible
@@ -1041,6 +1041,20 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 
 		/**
+		 * Exclude comments from restricted posts in widgets
+		 *
+		 * @param \WP_Comment_Query $query
+		 *
+		 */
+		function exclude_posts_comments( $query ){
+			$exclude_posts = $this->exclude_posts_array();
+			if ( ! empty( $exclude_posts ) ) {
+				$query->query_vars['post__not_in'] = $exclude_posts;
+			}
+		}
+
+
+		/**
 		 * Exclude posts from next, previous navigation
 		 *
 		 * @param string  $where
@@ -1059,23 +1073,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			}
 
 			return $where;
-		}
-
-
-		/**
-		 * Exclude comments from restricted posts in widgets
-		 *
-		 * @param array  $array
-		 *
-		 * @return array
-		 */
-		function exclude_comments_resticted_posts_widget( $array ) {
-			$exclude_posts = $this->exclude_posts_array();
-			if ( ! empty( $exclude_posts ) ) {
-				$array['post__not_in'] = $exclude_posts;
-			}
-
-			return $array;
 		}
 
 
