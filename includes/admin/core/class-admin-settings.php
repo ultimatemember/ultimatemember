@@ -83,6 +83,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			add_action( 'um_settings_before_save', array( $this, 'before_licenses_save' ) );
 			add_action( 'um_settings_save', array( $this, 'licenses_save' ) );
 
+			add_filter( 'um_change_settings_before_save', array( $this, 'set_default_if_empty' ), 9, 1 );
 			add_filter( 'um_change_settings_before_save', array( $this, 'remove_empty_values' ), 10, 1 );
 
 			add_action( 'admin_init', array( &$this, 'um_download_install_info' ) );
@@ -487,7 +488,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'tooltip'             => __( 'Here you can exclude URLs beside the redirect URI to be accessible to everyone', 'ultimate-member' ),
 					'add_text'            => __( 'Add New URL', 'ultimate-member' ),
 					'conditional'         => array( 'accessible', '=', 2 ),
-					'show_default_number' => 1,
+					'show_default_number' => 0,
 				),
 				array(
 					'id'          => 'home_page_accessible',
@@ -2201,6 +2202,28 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 
 				um_js_redirect( add_query_arg( $arg, admin_url( 'admin.php' ) ) );
 			}
+		}
+
+
+		function set_default_if_empty( $settings ) {
+			$tab = '';
+			if ( ! empty( $_GET['tab'] ) ) {
+				$tab = sanitize_key( $_GET['tab'] );
+			}
+
+			$section = '';
+			if ( ! empty( $_GET['section'] ) ) {
+				$section = sanitize_key( $_GET['section'] );
+			}
+
+
+			if ( 'access' === $tab && empty( $section ) ) {
+				if ( ! array_key_exists( 'access_exclude_uris', $settings ) ) {
+					$settings['access_exclude_uris'] = array();
+				}
+			}
+
+			return $settings;
 		}
 
 
