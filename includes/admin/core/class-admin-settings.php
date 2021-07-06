@@ -3382,7 +3382,7 @@ Use Only Cookies:         			<?php echo ini_get( 'session.use_only_cookies' ) ? 
 			}
 
 			$template = $settings['um_email_template'];
-			$content = stripslashes( $settings[ $template ] );
+			$content = wp_kses_post( stripslashes( $settings[ $template ] ) );
 
 			$theme_template_path = UM()->mail()->get_template_file( 'theme', $template );
 
