@@ -1031,7 +1031,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 */
 		function exclude_posts( $query ) {
 			if ( $query->is_main_query() ) {
-				$exclude_posts = $this->exclude_posts_array();
+				$exclude_posts = $this->exclude_posts_array( true );
 				if ( ! empty( $exclude_posts ) ) {
 					$post__not_in = $query->get( 'post__not_in', array() );
 					$query->set( 'post__not_in', array_merge( $post__not_in, $exclude_posts ) );
@@ -1047,10 +1047,35 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 *
 		 */
 		function exclude_posts_comments( $query ){
-			$exclude_posts = $this->exclude_posts_array();
+			$exclude_posts = $this->exclude_posts_array( false );
 			if ( ! empty( $exclude_posts ) ) {
 				$query->query_vars['post__not_in'] = $exclude_posts;
 			}
+		}
+
+
+		/**
+		 * get array with restricted posts
+		 *
+		 * @param boolean $in_query
+		 *
+		 * @return array
+		 */
+		function exclude_posts_array( $in_query = false ) {
+			global $wpdb;
+
+			$exclude_posts = array();
+			$posts = $wpdb->get_col("SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'um_content_restriction'");
+			foreach ( $posts as $post ) {
+				$content_restriction = $this->get_post_privacy_settings( $post );
+				if ( ! empty( $content_restriction['_um_access_hide_from_queries'] ) || $in_query === false ) {
+					if ( $this->is_restricted( $post ) ) {
+						array_push( $exclude_posts, $post );
+					}
+				}
+			}
+
+			return $exclude_posts;
 		}
 
 
@@ -1090,29 +1115,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			}
 
 			return $array;
-		}
-
-
-		/**
-		 * get array with restricted posts
-		 *
-		 */
-		function exclude_posts_array() {
-			global $wpdb;
-
-			$exclude_posts = array();
-			$posts = $wpdb->get_col("SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'um_content_restriction'");
-			foreach ( $posts as $post ) {
-				$content_restriction = $this->get_post_privacy_settings( $post );
-
-				if ( ! empty( $content_restriction['_um_access_hide_from_queries'] ) ) {
-					if ( $this->is_restricted( $post ) ) {
-						array_push( $exclude_posts, $post );
-					}
-				}
-			}
-
-			return $exclude_posts;
 		}
 
 
