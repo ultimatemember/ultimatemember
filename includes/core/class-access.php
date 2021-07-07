@@ -70,6 +70,10 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			// turn on/off content replacement on the filter 'the_content'
 			add_action( 'get_header', array( &$this, 'replace_post_content_on' ), 12 );
 			add_action( 'get_footer', array( &$this, 'replace_post_content_off' ), 8 );
+			// turn on/off content replacement on the filter 'the_content' with the theme "Avada"
+			add_action( 'avada_before_body_content', array( &$this, 'replace_post_content_off' ), 8 );
+			add_action( 'avada_before_main_container', array( &$this, 'replace_post_content_on' ), 12 );
+			add_action( 'avada_after_main_content', array( &$this, 'replace_post_content_off' ), 8 );
 			
 			//filter attachment
 			add_filter( 'wp_get_attachment_url', array( &$this, 'filter_attachment' ), 99, 2 );
