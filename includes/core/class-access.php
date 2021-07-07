@@ -56,6 +56,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			add_filter( 'get_next_post_where', array( &$this, 'exclude_navigation_posts' ), 99, 5 );
 			add_filter( 'get_previous_post_where', array( &$this, 'exclude_navigation_posts' ), 99, 5 );
 			add_filter( 'widget_posts_args', array( &$this, 'exclude_restricted_posts_widget' ), 99, 1 );
+			add_filter( 'comment_feed_where', array( &$this, 'exclude_posts_comments_feed' ), 99, 2 );
 
 			//there is posts (Posts/Page/CPT) filtration if site is accessible
 			//there also will be redirects if they need
@@ -1051,6 +1052,25 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			if ( ! empty( $exclude_posts ) ) {
 				$query->query_vars['post__not_in'] = $exclude_posts;
 			}
+		}
+
+
+		/**
+		 * Exclude comments from comments feed
+		 *
+		 * @param string  $where
+		 * @param \WP_Query  $query
+		 *
+		 * @return string
+		 */
+		function exclude_posts_comments_feed( $where, $query ){
+			$exclude_posts = $this->exclude_posts_array( false );
+			if ( ! empty( $exclude_posts ) ) {
+				$exclude_string = implode( ',', $exclude_posts );
+				$where .= ' AND comment_post_ID NOT IN ( ' . $exclude_string . ' )';
+			}
+
+			return $where;
 		}
 
 
