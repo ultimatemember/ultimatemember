@@ -1058,12 +1058,12 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		/**
 		 * Exclude comments from comments feed
 		 *
-		 * @param string  $where
-		 * @param \WP_Query  $query
+		 * @param string $where
+		 * @param \WP_Query $query
 		 *
 		 * @return string
 		 */
-		function exclude_posts_comments_feed( $where, $query ){
+		function exclude_posts_comments_feed( $where, $query ) {
 			$exclude_posts = $this->exclude_posts_array( false );
 			if ( ! empty( $exclude_posts ) ) {
 				$exclude_string = implode( ',', $exclude_posts );
