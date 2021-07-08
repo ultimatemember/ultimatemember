@@ -83,7 +83,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			add_action( 'load-post-new.php', array( &$this, 'enqueue_cpt_scripts' ) );
 			add_action( 'load-post.php', array( &$this, 'enqueue_cpt_scripts' ) );
 
-			add_filter( 'block_categories', array( &$this, 'blocks_category' ), 10, 2 );
+			global $wp_version;
+			if ( version_compare( $wp_version, '5.8-rc.1', '>=' ) ) {
+				add_filter( 'block_categories_all', array( &$this, 'blocks_category' ), 10, 2 );
+			} else {
+				add_filter( 'block_categories', array( &$this, 'blocks_category' ), 10, 2 );
+			}
 		}
 
 
@@ -527,11 +532,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 * Add Gutenberg category for UM shortcodes
 		 *
 		 * @param array $categories
-		 * @param $post
+		 * @param \WP_Block_Editor_Context $context
 		 *
 		 * @return array
 		 */
-		 function blocks_category( $categories, $post ) {
+		 function blocks_category( $categories, $context ) {
 			 $enable_blocks = UM()->options()->get( 'enable_blocks' );
 			 if ( empty( $enable_blocks ) ) {
 				 return $categories;
