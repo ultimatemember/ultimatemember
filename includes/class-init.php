@@ -1637,3 +1637,10 @@ function UM() {
 
 // Global for backwards compatibility.
 $GLOBALS['ultimatemember'] = UM();
+
+
+/*
+ * Test JS library UM-Modal
+ * REMOVE AFTER TESTING
+ */
+include_once um_path . 'tests/modal_v3.php';
