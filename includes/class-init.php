@@ -185,6 +185,8 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @since 2.0.18
 		 */
 		function _um_construct() {
+			$this->define_constants();
+
 			//register autoloader for include UM classes
 			spl_autoload_register( array( $this, 'um__autoloader' ) );
 
@@ -196,6 +198,13 @@ if ( ! class_exists( 'UM' ) ) {
 
 				$this->is_filtering = 0;
 				$this->honeypot = 'um_request';
+
+				// run activation
+				register_activation_hook( um_plugin, [ $this->install(), 'activation' ] );
+				if ( is_multisite() && ! defined( 'DOING_AJAX' ) ) {
+					add_action( 'wp_loaded', [ $this->install(), 'maybe_network_activation' ] );
+				}
+
 
 				// textdomain loading
 				$this->localize();
@@ -211,11 +220,11 @@ if ( ! class_exists( 'UM' ) ) {
 				add_action( 'init', array( &$this, 'old_update_patch' ), 0 );
 
 				//run activation
-				register_activation_hook( um_plugin, array( &$this, 'activation' ) );
+				//register_activation_hook( um_plugin, array( &$this, 'activation' ) );
 
-				if ( is_multisite() && ! defined( 'DOING_AJAX' ) ) {
-					add_action( 'wp_loaded', array( $this, 'maybe_network_activation' ) );
-				}
+//				if ( is_multisite() && ! defined( 'DOING_AJAX' ) ) {
+//					add_action( 'wp_loaded', array( $this, 'maybe_network_activation' ) );
+//				}
 
 				// init widgets
 				add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
@@ -224,6 +233,31 @@ if ( ! class_exists( 'UM' ) ) {
 				require_once 'um-short-functions.php';
 				require_once 'um-deprecated-functions.php';
 			}
+		}
+
+
+		/**
+		 * Define Ultimate Member Constants.
+		 *
+		 * @since 3.0
+		 */
+		private function define_constants() {
+			$this->define( 'UM_TEMPLATE_CONFLICT_TEST', false );
+		}
+
+
+		/**
+		 * Getting the Install class instance
+		 *
+		 * @since 3.0
+		 *
+		 * @return um\admin\Install()
+		 */
+		function install() {
+			if ( empty( $this->classes['um\admin\install'] ) ) {
+				$this->classes['um\admin\install'] = new um\admin\Install();
+			}
+			return $this->classes['um\admin\install'];
 		}
 
 
@@ -459,6 +493,8 @@ if ( ! class_exists( 'UM' ) ) {
 		 * Plugin Activation
 		 *
 		 * @since 2.0
+		 *
+		 * @deprecated 3.0
 		 */
 		function activation() {
 			$this->single_site_activation();
@@ -472,6 +508,8 @@ if ( ! class_exists( 'UM' ) ) {
 		 * Maybe need multisite activation process
 		 *
 		 * @since 2.1.7
+		 *
+		 * @deprecated 3.0
 		 */
 		function maybe_network_activation() {
 			$maybe_activation = get_network_option( get_current_network_id(), 'um_maybe_network_wide_activation' );
@@ -542,8 +580,13 @@ if ( ! class_exists( 'UM' ) ) {
 		 */
 		public function includes() {
 
+
+			// direct require file with core functions
+			require 'um-core-functions.php';
+
 			$this->modules();
 			$this->common();
+			$this->integrations();
 
 			if ( $this->is_request( 'ajax' ) ) {
 				$this->admin();
@@ -679,6 +722,19 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->classes['common'] = new um\core\Common();
 			}
 			return $this->classes['common'];
+		}
+
+
+		/**
+		 * @since 3.0
+		 *
+		 * @return um\integrations\Common()
+		 */
+		function integrations() {
+			if ( empty( $this->classes['integrations\common'] ) ) {
+				$this->classes['integrations\common'] = new um\integrations\Common();
+			}
+			return $this->classes['integrations\common'];
 		}
 
 
@@ -963,20 +1019,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->classes[ 'admin_forms_settings_' . $data['class'] ] = new um\admin\core\Admin_Forms_Settings( $data );
 			}
 			return $this->classes[ 'admin_forms_settings_' . $data['class'] ];
-		}
-
-
-		/**
-		 * @since 2.0.34
-		 *
-		 * @return um\Extensions
-		 */
-		function extensions() {
-			if ( empty( $this->classes['extensions'] ) ) {
-				$this->classes['extensions'] = new um\Extensions();
-			}
-
-			return $this->classes['extensions'];
 		}
 
 
@@ -1367,24 +1409,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 
 		/**
-		 * @deprecated 2.1.0
-		 *
-		 * @since 2.0
-		 *
-		 * @return um\core\Members
-		 */
-		function members() {
-			um_deprecated_function( 'UM()->members()', '2.1.0', 'UM()->member_directory()' );
-
-			if ( empty( $this->classes['members'] ) ) {
-				$this->classes['members'] = new um\core\Members();
-			}
-
-			return $this->classes['members'];
-		}
-
-
-		/**
 		 * @since 2.0
 		 *
 		 * @return um\core\Logout
@@ -1528,6 +1552,72 @@ if ( ! class_exists( 'UM' ) ) {
 			}
 
 			return $this->classes['um\modules'];
+		}
+
+
+		/**
+		 * Get single module API
+		 *
+		 * @since 1.0
+		 *
+		 * @param $slug
+		 *
+		 * @return mixed
+		 */
+		function module( $slug ) {
+
+			$data = $this->modules()->get_data( $slug );
+			if ( ! empty( $data['path'] ) ) {
+				$slug = $this->undash( $slug );
+
+				$class = "umm\\{$slug}\\Init";
+
+				if ( empty( $this->classes[ strtolower( $class ) ] ) ) {
+					$this->classes[ strtolower( $class ) ] = $class::instance();
+				}
+
+				return $this->classes[ strtolower( $class ) ];
+			} else {
+				return false;
+			}
+		}
+
+
+
+
+
+
+		/**
+		 * @deprecated 2.1.0
+		 *
+		 * @since 2.0
+		 *
+		 * @return um\core\Members
+		 */
+		function members() {
+			um_deprecated_function( 'UM()->members()', '2.1.0', 'UM()->member_directory()' );
+
+			if ( empty( $this->classes['members'] ) ) {
+				$this->classes['members'] = new um\core\Members();
+			}
+
+			return $this->classes['members'];
+		}
+
+
+		/**
+		 * @since 2.0.34
+		 *
+		 * @deprecated 3.0
+		 *
+		 * @return um\Extensions
+		 */
+		function extensions() {
+			if ( empty( $this->classes['extensions'] ) ) {
+				$this->classes['extensions'] = new um\Extensions();
+			}
+
+			return $this->classes['extensions'];
 		}
 	}
 }
