@@ -2389,8 +2389,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
 							if ( ! empty( $data['label_confirm_pass'] ) ) {
-								$data['label'] = __( $data['label_confirm_pass'], 'ultimate-member' );
-								$output .= $this->field_label( $data['label'], $key, $data );
+								$label_confirm_pass = __( $data['label_confirm_pass'], 'ultimate-member' );
+								$output .= $this->field_label( $label_confirm_pass, $key, $data );
 							} elseif ( isset( $data['label'] ) ) {
 								$data['label'] = __( $data['label'], 'ultimate-member' );
 								$output .= $this->field_label( sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] ), $key, $data );
@@ -2409,9 +2409,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$name = $key;
 							}
 
-							if( ! empty( $placeholder ) && ! isset( $data['label'] ) ){
-									$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $placeholder );
-							}else if( isset( $data['label'] ) ){
+							if ( ! empty( $label_confirm_pass ) ) {
+								$placeholder = $label_confirm_pass;
+							} elseif( ! empty( $placeholder ) && ! isset( $data['label'] ) ) {
+								$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $placeholder );
+							} elseif( isset( $data['label'] ) ) {
 								$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] );
 							}
 							
