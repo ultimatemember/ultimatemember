@@ -255,6 +255,9 @@ KEY meta_value_indx (um_value(191))
 			}
 
 			update_option( 'um_options', $options );
+
+			// show all notices after the plugin activation
+			update_option( 'um_hidden_admin_notices', array() );
 		}
 
 
