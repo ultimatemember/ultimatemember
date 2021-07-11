@@ -25,5 +25,21 @@ function um_modal() {
 	</a>
 
 	</div>
+
+<script type="text/template" id="tmpl-um-modal-photo">
+	<div class="um-modal is-photo">
+		<span data-action="um_remove_modal" class="um-modal-close" aria-label="Close view photo modal"><i class="um-faicon-times"></i></span>
+		<div class="um-modal-body um-photo"></div>
+	</div>
+</script>
+
+<script type="text/javascript">
+	jQuery(function(){
+		jQuery('.um-photo-modal').umModalBtn( 'Hello!', {
+			template: 'um-modal-photo'
+		} );
+	});
+</script>
+
 	<?php
 }

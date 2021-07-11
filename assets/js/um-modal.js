@@ -21,6 +21,8 @@
 		 */
 		this.M = [];
 
+		this.defaultTemplate = '<div class="um-modal"><span data-action="um_remove_modal" class="um-modal-close"><i class="um-faicon-times"></i></span><div class="um-modal-header"></div><div class="um-modal-body"></div><div class="um-modal-footer"></div></div>';
+
 	}
 	ModalManagerUM.prototype = {
 
@@ -35,28 +37,34 @@
 		addModal: function (content, options) {
 			options = this.getOptions( options );
 
+			let $modal;
+			if( options.template ){
+				let template = wp.template( 'options.template' );
+				if( template ){
+					$modal = $( template( options ) );
+				}
+			} else {
+				$modal = $( this.defaultTemplate );
+			}
+			$modal.on( 'touchmove', this.stopEvent );
+
+
 			if ( this.isValidHttpUrl( content ) ) {
 				options.load = content;
-				content = 'loading';
+				content = '<div class="loading"></div>';
 			}
 			if ( content === 'loading' ) {
 				content = '<div class="loading"></div>';
 			}
-
-			let $modal = this.getTemplate( options );
-			$modal.on( 'touchmove', this.stopEvent );
+			if ( typeof content === 'function' ) {
+				content = '<div class="loading"></div>';
+			}
 			$modal.find( '.um-modal-body' ).append( content );
+
 
 			let self = this;
 			if ( typeof options.load === 'string' && options.load ) {
 				$modal.find( '.um-modal-body' ).load( options.load, function () {
-					self.responsive( $modal );
-				} );
-			}
-
-			let $photo = $modal.find( '.um-photo img' );
-			if ( $photo.length ) {
-				$photo.on( 'load', function () {
 					self.responsive( $modal );
 				} );
 			}
@@ -69,17 +77,6 @@
 			let $fileUploader = $modal.find( '.um-single-file-upload' );
 			if ( $fileUploader.length ) {
 				initFileUpload_UM( $fileUploader );
-			}
-
-			if ( typeof $.fn.tipsy === 'function' ) {
-				if ( typeof init_tipsy === 'function' ) {
-					init_tipsy();
-				} else {
-					jQuery( '.um-tip-n' ).tipsy( {gravity: 'n', opacity: 1, offset: 3} );
-					jQuery( '.um-tip-w' ).tipsy( {gravity: 'w', opacity: 1, offset: 3} );
-					jQuery( '.um-tip-e' ).tipsy( {gravity: 'e', opacity: 1, offset: 3} );
-					jQuery( '.um-tip-s' ).tipsy( {gravity: 's', opacity: 1, offset: 3} );
-				}
 			}
 
 			this.hide();
@@ -194,60 +191,13 @@
 				closeButton: false,
 				duration: 400,
 				header: '',
-				buttons: [],
+				footer: '',
+				template: '',
 				type: 'body', // body, photo, popup
 				load: null
 			} );
 
 			return $.extend( defOptions, options || {} );
-		},
-
-		/**
-		 * Build a template for modal
-		 * @param   {Object} options  Modal options.
-		 * @returns {object}          A modal template jQuery object.
-		 */
-		getTemplate: function (options) {
-			options = this.getOptions( options );
-
-			let tpl = '<div class="um-modal ' + options.class + '"';
-			if ( options.id ) {
-				tpl += ' id="' + options.id + '"';
-			}
-			for ( let ak in options.attr ) {
-				tpl += ' ' + ak + '="' + options.attr[ak] + '"';
-			}
-			tpl += '>';
-
-			if ( options.closeButton ) {
-				tpl += '<span data-action="um_remove_modal" class="um-modal-close" aria-label="Close view photo modal"><i class="um-faicon-times"></i></span>';
-			}
-
-			tpl += options.header ? '<div class="um-modal-header">' + options.header + '</div>' : '';
-
-			switch ( options.type ) {
-				default:
-				case 'body':
-					tpl += '<div class="um-modal-body"></div>';
-					break;
-				case 'photo':
-					tpl += '<div class="um-modal-body um-photo"></div>';
-					break;
-				case 'popup':
-					tpl += '<div class="um-modal-body um-popup"></div>';
-					break;
-			}
-
-			if ( options.buttons.length ) {
-				tpl += '<div class="um-modal-footer">';
-				$.each( options.buttons, function (i, el) {
-					tpl += $( el ).addClass( 'um-modal-btn' ).prop('outerHTML');
-				} );
-				tpl += '</div>';
-			}
-
-			tpl += '</div>';
-			return $( tpl );
 		},
 
 		/**
@@ -569,6 +519,15 @@
 
 	/* integration with jQuery */
 	$.fn.umModal = function (options) {
-		UM.modal.addModal( this.clone(), options );
+		let $modal = UM.modal.addModal( this.clone(), options );
+		wp.hooks.doAction( 'um-modal-added', $modal );
+	};
+	$.fn.umModalBtn = function ( content, options) {
+		this.on('click', function(e){
+			e.preventDefault();
+			let $btn = $(e.currentTarget);
+			let $modal = UM.modal.addModal( content, options );
+			wp.hooks.doAction( 'um-modal-added', $modal, $btn );
+		});
 	};
 })( jQuery );
