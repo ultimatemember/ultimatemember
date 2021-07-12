@@ -164,8 +164,20 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Added: Sanitizing handlers to the Ultimate Member > Forms forms' fields
   - Added: Sanitizing handlers to the Ultimate Member > User Roles forms' fields
   - Added: Sanitizing handlers to the Restriction Content forms' fields in the posts/pages/menus additional fields
+  - Added: Custom placeholder setting for the Confirm Password field
 
 * Bugfixes:
+
+  - Fixed: Content restriction settings using in Avada theme with active page headers
+  - Fixed: Content restriction (CPT + Terms). Avoid displaying comments if the post is restricted
+  - Fixed: Content restriction (CPT + Terms). Avoid displaying comments and posts feed
+  - Fixed: Content restriction (CPT + Terms). Displaying the proper count of the posts. Restricted are excluded
+  - Fixed: Saving and displaying settings on the UM > Settings > Access screen
+  - Fixed: Saving and displaying default Member Directory settings
+
+* Tweaks:
+
+  - WordPress 5.8 compatibility. Widgets screen changes based on the new features with Legacy Widget block
 
 = 2.1.21: June 17, 2021 =
 
