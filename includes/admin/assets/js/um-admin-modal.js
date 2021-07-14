@@ -122,7 +122,7 @@ function um_admin_modal_shown($modal, $btn, data, jqXHR) {
 /**
  * Call additional scripts after the modal opening
  */
-wp.hooks.addAction( 'um-modal-shown', 'ultimatemember', um_admin_modal_shown, 10 );
+wp.hooks.addAction( 'um-modal-opened', 'ultimatemember', um_admin_modal_shown, 10 );
 
 
 /**

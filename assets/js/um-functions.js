@@ -594,6 +594,36 @@ function initCrop_UM() {
 
 }
 
+
+
+/**
+ * Call additional scripts after the modal opening
+ */
+wp.hooks.addAction( 'um-modal-before-add', 'ultimatemember', function ($modal, options) {
+	let $imageUploader = $modal.find( '.um-single-image-upload' );
+	if ( $imageUploader.length ) {
+		initImageUpload_UM( $imageUploader );
+	}
+
+	let $fileUploader = $modal.find( '.um-single-file-upload' );
+	if ( $fileUploader.length ) {
+		initFileUpload_UM( $fileUploader );
+	}
+}, 10 );
+
+/**
+ * Call additional scripts after the modal resize
+ */
+wp.hooks.addFilter( 'um-modal-responsive', 'ultimatemember', function (modalStyle, $modal) {
+	let $previewImg = $modal.find( '.um-single-image-preview img' );
+	if ( $previewImg.length ) {
+		initCrop_UM();
+	}
+	return modalStyle;
+}, 10 );
+
+
+
 function um_reset_field( dOm ){
 	jQuery(dOm)
 	 .find('div.um-field-area')
