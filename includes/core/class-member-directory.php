@@ -1677,6 +1677,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 										'value'     => $value,
 										'compare'   => 'BETWEEN',
 										'inclusive' => true,
+										'type'		=> 'NUMERIC',
 									);
 
 									break;
