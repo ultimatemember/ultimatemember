@@ -689,7 +689,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						}
 
 					} elseif ( strstr( $key, 'um_editor' ) ) {
-						$save[ $_metakey ]['content'] = $val;
+						if ( 'block' === $array['post']['_type'] ) {
+							$save[ $_metakey ]['content'] = wp_kses_post( $val );
+						} else {
+							$save[ $_metakey ]['content'] = sanitize_textarea_field( $val );
+						}
 					}
 
 				}
