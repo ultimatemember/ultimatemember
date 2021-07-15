@@ -615,10 +615,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			$output['error'] = null;
 
 			$array = array(
-				'field_type'    => sanitize_key( $_POST['_type'] ),
-				'form_id'       => absint( $_POST['post_id'] ),
-				'args'          => UM()->builtin()->get_core_field_attrs( sanitize_key( $_POST['_type'] ) ),
-				'post'          => $_POST
+				'field_type' => sanitize_key( $_POST['_type'] ),
+				'form_id'    => absint( $_POST['post_id'] ),
+				'args'       => UM()->builtin()->get_core_field_attrs( sanitize_key( $_POST['_type'] ) ),
+				'post'       => UM()->admin()->sanitize_builder_field_meta( $_POST ),
 			);
 
 			/**

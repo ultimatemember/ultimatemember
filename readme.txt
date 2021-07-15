@@ -162,6 +162,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Added: Sanitizing handlers to the Ultimate Member > Settings forms' fields
   - Added: Sanitizing handlers to the Ultimate Member > User Role Add/Edit forms' fields
   - Added: Sanitizing handlers to the Ultimate Member > Forms forms' fields
+  - Added: Sanitizing handlers to the Ultimate Member > Forms > Add Field/Edit Field forms' fields
   - Added: Sanitizing handlers to the Ultimate Member > User Roles forms' fields
   - Added: Sanitizing handlers to the Restriction Content forms' fields in the posts/pages/menus additional fields
   - Added: Custom placeholder setting for the Confirm Password field

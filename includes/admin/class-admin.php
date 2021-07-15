@@ -49,6 +49,12 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		/**
 		 * @var array
 		 */
+		public $builder_input;
+
+
+		/**
+		 * @var array
+		 */
 		public $restriction_post_meta;
 
 
@@ -504,6 +510,300 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'bool',
 					),
 
+				)
+			);
+
+			$this->builder_input = apply_filters(
+				'um_builder_input_map',
+				array(
+					'_in_row'                         => array(
+						'sanitize' => 'key',
+					),
+					'_in_sub_row'                     => array(
+						'sanitize' => 'absint',
+					),
+					'_in_column'                      => array(
+						'sanitize' => 'absint',
+					),
+					'_in_group'                       => array(
+						'sanitize' => 'absint',
+					),
+					'_visibility'                     => array(
+						'sanitize' => 'key',
+					),
+					'_conditional_action'             => array(
+						'sanitize' => 'key',
+					),
+					'_conditional_action1'            => array(
+						'sanitize' => 'key',
+					),
+					'_conditional_action2'            => array(
+						'sanitize' => 'key',
+					),
+					'_conditional_action3'            => array(
+						'sanitize' => 'key',
+					),
+					'_conditional_action4'            => array(
+						'sanitize' => 'key',
+					),
+					'_conditional_field'              => array(
+						'sanitize' => 'text',
+					),
+					'_conditional_field1'             => array(
+						'sanitize' => 'text',
+					),
+					'_conditional_field2'             => array(
+						'sanitize' => 'text',
+					),
+					'_conditional_field3'             => array(
+						'sanitize' => 'text',
+					),
+					'_conditional_field4'             => array(
+						'sanitize' => 'text',
+					),
+					'_conditional_operator'           => array(
+						'sanitize' => 'text',
+					),
+					'_conditional_operator1'          => array(
+						'sanitize' => 'text',
+					),
+					'_conditional_operator2'          => array(
+						'sanitize' => 'text',
+					),
+					'_conditional_operator3'          => array(
+						'sanitize' => 'text',
+					),
+					'_conditional_operator4'          => array(
+						'sanitize' => 'text',
+					),
+					'_conditional_value'              => array(
+						'sanitize' => 'text',
+					),
+					'_conditional_value1'             => array(
+						'sanitize' => 'text',
+					),
+					'_conditional_value2'             => array(
+						'sanitize' => 'text',
+					),
+					'_conditional_value3'             => array(
+						'sanitize' => 'text',
+					),
+					'_conditional_value4'             => array(
+						'sanitize' => 'text',
+					),
+					'_validate'                       => array(
+						'sanitize' => 'key',
+					),
+					'_custom_validate'                => array(
+						'sanitize' => 'text',
+					),
+					'_icon'                           => array(
+						'sanitize' => 'key',
+					),
+					'_css_class'                      => array(
+						'sanitize' => 'text',
+					),
+					'_width'                          => array(
+						'sanitize' => 'absint',
+					),
+					'_divider_text'                   => array(
+						'sanitize' => 'text',
+					),
+					'_padding'                        => array(
+						'sanitize' => 'text',
+					),
+					'_margin'                         => array(
+						'sanitize' => 'text',
+					),
+					'_border'                         => array(
+						'sanitize' => 'text',
+					),
+					'_borderstyle'                    => array(
+						'sanitize' => 'key',
+					),
+					'_borderradius'                   => array(
+						'sanitize' => 'text',
+					),
+					'_bordercolor'                    => array(
+						'sanitize' => 'text',
+					),
+					'_heading'                        => array(
+						'sanitize' => 'bool',
+					),
+					'_heading_text'                   => array(
+						'sanitize' => 'text',
+					),
+					'_background'                     => array(
+						'sanitize' => 'text',
+					),
+					'_heading_background_color'       => array(
+						'sanitize' => 'text',
+					),
+					'_heading_text_color'             => array(
+						'sanitize' => 'text',
+					),
+					'_text_color'                     => array(
+						'sanitize' => 'text',
+					),
+					'_icon_color'                     => array(
+						'sanitize' => 'text',
+					),
+					'_color'                          => array(
+						'sanitize' => 'text',
+					),
+					'_url_text'                       => array(
+						'sanitize' => 'text',
+					),
+					'_url_target'                     => array(
+						'sanitize' => 'key',
+					),
+					'_url_rel'                        => array(
+						'sanitize' => 'key',
+					),
+					'_force_good_pass'                => array(
+						'sanitize' => 'bool',
+					),
+					'_force_confirm_pass'             => array(
+						'sanitize' => 'bool',
+					),
+					'_style'                          => array(
+						'sanitize' => 'key',
+					),
+					'_intervals'                      => array(
+						'sanitize' => 'absint',
+					),
+					'_format'                         => array(
+						'sanitize' => 'text',
+					),
+					'_format_custom'                  => array(
+						'sanitize' => 'text',
+					),
+					'_pretty_format'                  => array(
+						'sanitize' => 'bool',
+					),
+					'_disabled_weekdays'              => array(
+						'sanitize' => 'absint',
+					),
+					'_years'                          => array(
+						'sanitize' => 'absint',
+					),
+					'_years_x'                        => array(
+						'sanitize' => 'key',
+					),
+					'_range_start'                    => array(
+						'sanitize' => 'text',
+					),
+					'_range_end'                      => array(
+						'sanitize' => 'text',
+					),
+					'_range'                          => array(
+						'sanitize' => 'key',
+					),
+					'_content'                        => array(
+						'sanitize' => 'textarea',
+					),
+					'_crop'                           => array(
+						'sanitize' => 'int',
+					),
+					'_allowed_types'                  => array(
+						'sanitize' => 'key',
+					),
+					'_upload_text'                    => array(
+						'sanitize' => 'text',
+					),
+					'_upload_help_text'               => array(
+						'sanitize' => 'text',
+					),
+					'_button_text'                    => array(
+						'sanitize' => 'text',
+					),
+					'_max_size'                       => array(
+						'sanitize' => 'absint',
+					),
+					'_height'                         => array(
+						'sanitize' => 'text',
+					),
+					'_spacing'                        => array(
+						'sanitize' => 'text',
+					),
+					'_is_multi'                       => array(
+						'sanitize' => 'bool',
+					),
+					'_max_selections'                 => array(
+						'sanitize' => 'absint',
+					),
+					'_min_selections'                 => array(
+						'sanitize' => 'absint',
+					),
+					'_max_entries'                    => array(
+						'sanitize' => 'absint',
+					),
+					'_max_words'                      => array(
+						'sanitize' => 'absint',
+					),
+					'_min'                            => array(
+						'sanitize' => 'absint',
+					),
+					'_max'                            => array(
+						'sanitize' => 'absint',
+					),
+					'_min_chars'                      => array(
+						'sanitize' => 'absint',
+					),
+					'_max_chars'                      => array(
+						'sanitize' => 'absint',
+					),
+					'_html'                           => array(
+						'sanitize' => 'bool',
+					),
+					'_options'                        => array(
+						'sanitize' => 'textarea',
+					),
+					'_title'                          => array(
+						'sanitize' => 'text',
+					),
+					'_id'                             => array(
+						'sanitize' => 'text',
+					),
+					'_metakey'                        => array(
+						'sanitize' => 'text',
+					),
+					'_help'                           => array(
+						'sanitize' => 'text',
+					),
+					'_default'                        => array(
+						'sanitize' => 'text',
+					),
+					'_label'                          => array(
+						'sanitize' => 'text',
+					),
+					'_label_confirm_pass'             => array(
+						'sanitize' => 'text',
+					),
+					'_placeholder'                    => array(
+						'sanitize' => 'text',
+					),
+					'_public'                         => array(
+						'sanitize' => 'text',
+					),
+					'_roles'                          => array(
+						'sanitize' => array( $this, 'sanitize_existed_role' ),
+					),
+					'_required'                       => array(
+						'sanitize' => 'bool',
+					),
+					'_editable'                       => array(
+						'sanitize' => 'bool',
+					),
+					'_number'                         => array(
+						'sanitize' => 'absint',
+					),
+					'_custom_dropdown_options_source' => array(
+						'sanitize' => 'text',
+					),
+					'_parent_dropdown_relationship'   => array(
+						'sanitize' => 'text',
+					),
 				)
 			);
 
@@ -1011,6 +1311,82 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			$data = $sanitized;
 
 			$data = apply_filters( 'um_save_member_directory_meta_sanitize', $data );
+
+			return $data;
+		}
+
+
+		/**
+		 * Sanitize builder field meta when wp-admin form has been submitted
+		 *
+		 * @todo checking all sanitize types
+		 *
+		 * @param array $data
+		 *
+		 * @return array
+		 */
+		public function sanitize_builder_field_meta( $data ) {
+			$sanitized = array();
+			foreach ( $data as $k => $v ) {
+				if ( ! array_key_exists( $k, $this->builder_input ) ) {
+					// @todo remove since 2.2.x and leave only continue
+					$sanitized[ $k ] = $v;
+					continue;
+				}
+
+				if ( ! array_key_exists( 'sanitize', $this->builder_input[ $k ] ) ) {
+					// @todo remove since 2.2.x and leave only continue
+					$sanitized[ $k ] = $v;
+					continue;
+				}
+
+				if ( is_callable( $this->builder_input[ $k ]['sanitize'], true, $callable_name ) ) {
+					add_filter( 'um_builder_input_sanitize_' . $k, $this->builder_input[ $k ]['sanitize'], 10, 1 );
+				}
+
+				switch ( $this->builder_input[ $k ]['sanitize'] ) {
+					default:
+						$sanitized[ $k ] = apply_filters( 'um_builder_input_sanitize_' . $k, $data[ $k ] );
+						break;
+					case 'int':
+						$sanitized[ $k ] = (int) $v;
+						break;
+					case 'bool':
+						$sanitized[ $k ] = (bool) $v;
+						break;
+					case 'url':
+						if ( is_array( $v ) ) {
+							$sanitized[ $k ] = array_map( 'esc_url_raw', $v );
+						} else {
+							$sanitized[ $k ] = esc_url_raw( $v );
+						}
+						break;
+					case 'text':
+						$sanitized[ $k ] = sanitize_text_field( $v );
+						break;
+					case 'textarea':
+						$sanitized[ $k ] = sanitize_textarea_field( $v );
+						break;
+					case 'key':
+						if ( is_array( $v ) ) {
+							$sanitized[ $k ] = array_map( 'sanitize_key', $v );
+						} else {
+							$sanitized[ $k ] = sanitize_key( $v );
+						}
+						break;
+					case 'absint':
+						if ( is_array( $v ) ) {
+							$sanitized[ $k ] = array_map( 'absint', $v );
+						} else {
+							$sanitized[ $k ] = absint( $v );
+						}
+						break;
+				}
+			}
+
+			$data = $sanitized;
+
+			$data = apply_filters( 'um_save_builder_input_sanitize', $data );
 
 			return $data;
 		}
