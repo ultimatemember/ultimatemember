@@ -46,8 +46,10 @@ function um_admin_modal_ajaxcall(jqXHR, $modal, $btn, data) {
 			nonce: um_admin_scripts.nonce,
 			form_mode: form_mode
 		},
+		beforeSend: function(){
+			$modal.addClass( 'loading' );
+		},
 		success: function (data) {
-			$modal = UM.modal.getModal( $modal );
 			$modal.removeClass( 'loading' );
 			$modal.find( '.um-admin-modal-body' ).html( data );
 			UM.modal.responsive( $modal );
@@ -73,7 +75,9 @@ wp.hooks.addFilter( 'um-modal-ajax', 'ultimatemember', um_admin_modal_ajaxcall, 
  * @param {object} data    Options.
  * @param {jqXHR}  jqXHR   The jqXHR Object.
  */
-function um_admin_modal_shown($modal, $btn, data, jqXHR) {
+function um_admin_modal_shown(jqXHR, $modal, $btn, data) {
+	$modal.addClass('um-admin-modal');
+	
 	if ( typeof data.modal === 'string' && jqXHR ) {
 		jqXHR.done( function () {
 			switch ( data.modal ) {

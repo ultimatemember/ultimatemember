@@ -47,7 +47,7 @@
 
 .um-admin-modal-body.um-admin-metabox  label {margin: 0!important}
 
-.um-admin-modal.loading .um-admin-modal-body {
+.loading .um-admin-modal-body {
 	background: white url(../img/ajax-loader.gif) no-repeat center;
 	min-height: 100px;
 }

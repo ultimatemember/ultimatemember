@@ -21,7 +21,18 @@
 		 */
 		this.M = [];
 
-		this.defaultTemplate = '<div class="um-modal"><span data-action="um_remove_modal" class="um-modal-close"><i class="um-faicon-times"></i></span><div class="um-modal-header"></div><div class="um-modal-body"></div><div class="um-modal-footer"></div></div>';
+		this.defaultOptions = {
+			classes: '',
+			duration: 400,
+			footer: '',
+			header: '',
+			id: '',
+			remoteContent: '',
+			size: 'normal', // small, normal, large
+			template: ''
+		};
+
+		this.defaultTemplate = '<div class="um-modal"><span class="um-modal-close umModalClose"><i class="um-faicon-times"></i></span><div class="um-modal-header"></div><div class="um-modal-body"></div><div class="um-modal-footer"></div></div>';
 
 		this.loading = false;
 
@@ -39,39 +50,46 @@
 		addModal: function (content, options, event) {
 			options = this.getOptions( options );
 
-			let $modal;
-			if( options.template ){
+			/* Template */
+			let $modal;			
+			if ( options.template ) { // Custom template
 				let template = wp.template( options.template );
-				if( template ){
+				if ( template ) {
 					$modal = $( template( options ) );
 				}
-			} else {
+			}			
+			if ( !$modal ) { // Default template
 				$modal = $( this.defaultTemplate );
+				if ( !options.header ) {
+					$modal.find( '.um-modal-header' ).remove();
+				}
+				if ( !options.footer ) {
+					$modal.find( '.um-modal-footer' ).remove();
+				}
 			}
-			$modal.on( 'touchmove', this.stopEvent );
 
-
+			/* Content */
 			let $modalBody = $modal.find( '.um-modal-body' );
 			if ( content === 'loading' ) {
 				this.loading = true;
-			}else
+			} else
 			if ( this.isValidHttpUrl( content ) ) {
 				this.loading = true;
 				$modalBody.load( content, function () {
 					$modalBody.removeClass( 'loading' );
 					UM.modal.responsive( $modal );
 				} );
-			}else
+			} else
 			if ( typeof options.remoteContent === 'string' && options.remoteContent ) {
 				this.loading = true;
 				$modalBody.load( options.remoteContent, function () {
 					$modalBody.removeClass( 'loading' );
 					UM.modal.responsive( $modal );
 				} );
-			}else
+			} else
 			if ( typeof content === 'function' ) {
-				let res = content.apply($modal, [event, options]);
-				if( typeof res === 'object' && res instanceof jqXHR ){
+				let res = content.apply( $modal, [event, options] );
+				if ( typeof res === 'object' && res instanceof jqXHR ) {
 					this.loading = true;
 					wp.hooks.doAction( 'um-modal-before-ajax', $modal, options, jqXHR );
 
@@ -80,22 +98,41 @@
 					wp.hooks.doAction( 'um-modal-before-add', $modal, options );
 				}
 
-			}else{
-				$modalBody.append(content);
+			} else
+			if ( typeof content === 'object' ) {
+				$modalBody.append( $( content ).clone() );
+				wp.hooks.doAction( 'um-modal-before-add', $modal, options );
+			} else {
+				$modalBody.append( content );
 				wp.hooks.doAction( 'um-modal-before-add', $modal, options );
 			}
 
+			/* Classes and styles */
+			if ( options.id.length ) {
+				$modal.attr( 'id', options.id );
+			}
+			if ( options.classes.length ) {
+				$modal.addClass( options.classes );
+			}
+			if ( options.size.length ) {
+				$modal.addClass( options.size );
+			}
 			if ( this.loading ) {
-				$modalBody.addClass( 'loading' );
+				$modal.addClass( 'loading' );
 			} else {
 				let $img = $modalBody.find( 'img' );
 				if ( $img.length ) {
-					$img.on( 'load', function(){
+					$img.on( 'load', function () {
 						UM.modal.responsive( $modal );
 					} );
 				}
 			}
 
+			/* Handlers */
+			$modal.on( 'click', 'a:not([href^="javascript"])', this.stopEvent );
+			$modal.on( 'touchmove', this.stopEvent );
+
+			/* Add to the stack of modals and display */
 			this.hide();
 			this.M.push( $modal );
 			this.show( $modal, options.duration );
@@ -203,18 +240,7 @@
 			 *    return defOptions;
 			 *  }, 10);
 			 */
-			let defOptions = wp.hooks.applyFilters( 'um-modal-def-options', {
-				id: null,
-				attr: {},
-				class: 'large', // small, normal, large
-				closeButton: false,
-				duration: 400,
-				header: '',
-				footer: '',
-				template: '',
-				type: 'body', // body, photo, popup
-				load: null
-			} );
+			let defOptions = wp.hooks.applyFilters( 'um-modal-def-options', this.defaultOptions );
 
 			return $.extend( defOptions, options || {} );
 		},
@@ -227,7 +253,7 @@
 		hide: function (modal) {
 			let $modal = this.getModal( modal );
 			if ( $modal ) {
-				$modal.detach();				
+				$modal.detach();
 				wp.hooks.doAction( 'um-modal-hidden', $modal );
 				return $modal;
 			}
@@ -259,152 +285,150 @@
 		 * @param   {boolean} admin  Is it the admin modal?
 		 * @returns {object}         A modal jQuery object.
 		 */
-		newModal: function (id, size, ajax, image, admin) {
-
-			this.hide();
-			UM.dropdown.hideAll();
-			$( '.tipsy' ).hide();
-
-			let template = $( '#' + id ), content, options = {attr: {}, class: '', id: id};
-
-			// prepare content
-			if ( image ) {
-				content = '<img src="' + image + '" />';
-			} else if ( template.find( '.um-modal-body' ).length ) {
-				content = template.find( '.um-modal-body' ).children();
-			} else {
-				content = template.clone().children();
-			}
-
-			// prepare options
-			if ( size ) {
-				options.class = size;
-			}
-			if ( admin ) {
-				options.class += ' um-admin-modal';
-				options.closeButton = true;
-			}
-			if ( ajax === true && !image ) {
-				options.class += ' loading';
-				options.type = 'popup';
-			}
-			if ( image ) {
-				options.class += ' is-photo';
-				options.closeButton = true;
-				options.type = 'photo';
-			}
-
-			if ( template.is( '[data-user_id]' ) ) {
-				options.attr['data-user_id'] = template.attr( 'data-user_id' );
-			} else if ( template.find( '[data-user_id]' ).length ) {
-				options.attr['data-user_id'] = template.find( '[data-user_id]' ).attr( 'data-user_id' );
-			}
-			if ( template.find( '.um-modal-header' ).length ) {
-				options.header = template.find( '.um-modal-header' ).text().trim();
-			}
-
-			// add modal
-			return this.addModal( content, options );
-		},
+//		newModal: function (id, size, ajax, image, admin) {
+//
+//			this.hide();
+//			UM.dropdown.hideAll();
+//			$( '.tipsy' ).hide();
+//
+//			let template = $( '#' + id ), content, options = {attr: {}, class: '', id: id};
+//
+//			// prepare content
+//			if ( image ) {
+//				content = '<img src="' + image + '" />';
+//			} else if ( template.find( '.um-modal-body' ).length ) {
+//				content = template.find( '.um-modal-body' ).children();
+//			} else {
+//				content = template.clone().children();
+//			}
+//
+//			// prepare options
+//			if ( size ) {
+//				options.class = size;
+//			}
+//			if ( admin ) {
+//				options.class += ' um-admin-modal';
+//			}
+//			if ( ajax === true && !image ) {
+//				options.class += ' loading';
+//				options.type = 'popup';
+//			}
+//			if ( image ) {
+//				options.class += ' is-photo';
+//				options.type = 'photo';
+//			}
+//
+//			if ( template.is( '[data-user_id]' ) ) {
+//				options.attr['data-user_id'] = template.attr( 'data-user_id' );
+//			} else if ( template.find( '[data-user_id]' ).length ) {
+//				options.attr['data-user_id'] = template.find( '[data-user_id]' ).attr( 'data-user_id' );
+//			}
+//			if ( template.find( '.um-modal-header' ).length ) {
+//				options.header = template.find( '.um-modal-header' ).text().trim();
+//			}
+//
+//			// add modal
+//			return this.addModal( content, options );
+//		},
 
 		/**
 		 * Add a modal based on button attributes.
 		 * @param   {Object} button  The button jQuery object.
 		 * @returns {Object}         A modal jQuery object.
 		 */
-		open: function (button) {
-			let $btn = $( button ),
-					id = null,
-					size = 'normal',
-					ajax = false,
-					image = null,
-					admin = false;
-
-			// Get parameters
-			if ( $btn.data( 'modal' ) ) {
-				id = $btn.data( 'modal' );
-			}
-			if ( $btn.data( 'modal-size' ) ) {
-				size = $btn.data( 'modal-size' );
-			}
-			if ( $btn.data( 'dynamic-content' ) ) {
-				ajax = true;
-			}
-			if ( $( document.body ).is( '.wp-admin' ) ) {
-				admin = true;
-			}
-
-			// Find template
-			let $tpl = jQuery( '#' + id );
-			if ( $tpl.length < 1 ) {
-				$tpl = jQuery( id );
-			}
-
-			// Modify template content
-			if ( $tpl.length > 0 && $btn.data( 'modal-copy' ) ) {
-				let ratio,
-						user_id,
-						$hiddenContent = $btn.parents( '.um-field' ).find( '.um-modal-hidden-content' );
-
-				if ( $hiddenContent.length > 0 ) {
-					$tpl.html( $hiddenContent );
-				}
-
-				if ( $btn.parents( '[data-user_id]' ).length ) {
-					user_id = $btn.parents( '[data-user_id]' ).data( 'user_id' );
-				} else if ( jQuery( 'input[type="hidden"][name="user_id"]' ).length > 0 ) {
-					user_id = jQuery( 'input[type="hidden"][name="user_id"]' ).val();
-				}
-				if ( user_id ) {
-					$tpl.attr( 'data-user_id', user_id );
-				}
-
-				if ( $btn.parents( '[data-ratio]' ).length ) {
-					ratio = $btn.parents( '[data-ratio]' ).data( 'ratio' );
-					$tpl.attr( 'data-ratio', ratio );
-				}
-			}
-
-			// For multilevel modals
-			if ( $tpl.length > 0 && $btn.data( 'back' ) ) {
-				$tpl.find( 'a.um-admin-modal-back' ).attr( 'data-modal', $btn.data( 'back' ) );
-			}
-
-			let $modal = this.newModal( id, size, ajax, image, admin );
-
-			/**
-			 * UM Hook
-			 * @name        um-modal-ajax
-			 * @description Use this filter to load modal content by AJAX.
-			 * @example
-			 *  wp.hooks.addFilter('um-modal-ajax', 'ultimatemember', function (jqXHR, $modal, $btn, data) {
-			 *  	return jQuery.ajax( {
-			 *			url: wp.ajax.settings.url,
-			 *			type: 'POST',
-			 *			data: {
-			 *				// your code here
-			 *			},
-			 *			success: function (data) {
-			 *				// your code here
-			 *			}
-			 *		} );
-			 *  }, 10);
-			 */
-			let jqXHR = wp.hooks.applyFilters('um-modal-ajax', null, $modal, $btn, $btn.data());
-
-			/**
-			 * UM Hook
-			 * @name        um-modal-opened
-			 * @description Call additional scripts after the modal opening
-			 * @example
-			 *  wp.hooks.addAction('um-modal-opened', 'ultimatemember', function ($modal, $btn, data, jqXHR) {
-			 *    // your code here
-			 *  }, 10);
-			 */
-			wp.hooks.doAction( 'um-modal-opened', $modal, $btn, $btn.data(), jqXHR );
-
-			return $modal;
-		},
+//		open: function (button) {
+//			let $btn = $( button ),
+//					id = null,
+//					size = 'normal',
+//					ajax = false,
+//					image = null,
+//					admin = false;
+//
+//			// Get parameters
+//			if ( $btn.data( 'modal' ) ) {
+//				id = $btn.data( 'modal' );
+//			}
+//			if ( $btn.data( 'modal-size' ) ) {
+//				size = $btn.data( 'modal-size' );
+//			}
+//			if ( $btn.data( 'dynamic-content' ) ) {
+//				ajax = true;
+//			}
+//			if ( $( document.body ).is( '.wp-admin' ) ) {
+//				admin = true;
+//			}
+//
+//			// Find template
+//			let $tpl = jQuery( '#' + id );
+//			if ( $tpl.length < 1 ) {
+//				$tpl = jQuery( id );
+//			}
+//
+//			// Modify template content
+//			if ( $tpl.length > 0 && $btn.data( 'modal-copy' ) ) {
+//				let ratio,
+//						user_id,
+//						$hiddenContent = $btn.parents( '.um-field' ).find( '.um-modal-hidden-content' );
+//
+//				if ( $hiddenContent.length > 0 ) {
+//					$tpl.html( $hiddenContent );
+//				}
+//
+//				if ( $btn.parents( '[data-user_id]' ).length ) {
+//					user_id = $btn.parents( '[data-user_id]' ).data( 'user_id' );
+//				} else if ( jQuery( 'input[type="hidden"][name="user_id"]' ).length > 0 ) {
+//					user_id = jQuery( 'input[type="hidden"][name="user_id"]' ).val();
+//				}
+//				if ( user_id ) {
+//					$tpl.attr( 'data-user_id', user_id );
+//				}
+//
+//				if ( $btn.parents( '[data-ratio]' ).length ) {
+//					ratio = $btn.parents( '[data-ratio]' ).data( 'ratio' );
+//					$tpl.attr( 'data-ratio', ratio );
+//				}
+//			}
+//
+//			// For multilevel modals
+//			if ( $tpl.length > 0 && $btn.data( 'back' ) ) {
+//				$tpl.find( 'a.um-admin-modal-back' ).attr( 'data-modal', $btn.data( 'back' ) );
+//			}
+//
+//			let $modal = um_model_new( id, size, ajax, image, admin );
+//
+//			/**
+//			 * UM Hook
+//			 * @name        um-modal-ajax
+//			 * @description Use this filter to load modal content by AJAX.
+//			 * @example
+//			 *  wp.hooks.addFilter('um-modal-ajax', 'ultimatemember', function (jqXHR, $modal, $btn, data) {
+//			 *  	return jQuery.ajax( {
+//			 *			url: wp.ajax.settings.url,
+//			 *			type: 'POST',
+//			 *			data: {
+//			 *				// your code here
+//			 *			},
+//			 *			success: function (data) {
+//			 *				// your code here
+//			 *			}
+//			 *		} );
+//			 *  }, 10);
+//			 */
+//			let jqXHR = wp.hooks.applyFilters( 'um-modal-ajax', null, $modal, $btn, $btn.data() );
+//
+//			/**
+//			 * UM Hook
+//			 * @name        um-modal-opened
+//			 * @description Call additional scripts after the modal opening
+//			 * @example
+//			 *  wp.hooks.addAction('um-modal-opened', 'ultimatemember', function ($modal, $btn, data, jqXHR) {
+//			 *    // your code here
+//			 *  }, 10);
+//			 */
+//			wp.hooks.doAction( 'um-modal-opened', jqXHR, $modal, $btn, $btn.data() );
+//
+//			return $modal;
+//		},
 
 		/**
 		 * Update modal size and position
@@ -416,7 +440,7 @@
 				return;
 			}
 
-			$modal.removeClass( 'uimob340' ).removeClass( 'uimob500' );
+			$modal.removeClass( 'uimob340' ).removeClass( 'uimob500' ).removeClass( 'uimob800' ).removeClass( 'uimob960' );
 
 			let w = window.innerWidth
 					|| document.documentElement.clientWidth
@@ -426,14 +450,14 @@
 					|| document.documentElement.clientHeight
 					|| document.body.clientHeight;
 
-			let $photo = $( '.um-modal-body.um-photo img' ).filter(':visible'), half_gap, modalStyle={};
+			let $photo = $( '.um-modal-body > img' ).filter( ':visible' ), modalStyle = {};
 
 			if ( $photo.length ) {
 
-				$photo.css({
+				$photo.css( {
 					maxHeight: h * 0.8,
 					maxWidth: w * 0.8
-				});
+				} );
 
 				modalStyle.bottom = (h - $modal.innerHeight()) / 2 + 'px';
 				modalStyle.marginLeft = '-' + $photo.width() / 2 + 'px';
@@ -444,21 +468,21 @@
 					modalStyle.bottom = 0;
 					modalStyle.height = h;
 					modalStyle.width = w;
-					$modal.addClass('uimob340');
+					$modal.addClass( 'uimob340' );
 				} else if ( w <= 500 ) {
 					modalStyle.bottom = 0;
 					modalStyle.height = h;
 					modalStyle.width = w;
-					$modal.addClass('uimob500');
+					$modal.addClass( 'uimob500' );
 				} else if ( w <= 800 ) {
 					modalStyle.bottom = (h - $modal.innerHeight()) / 2 + 'px';
 					modalStyle.maxHeight = h;
-					$modal.addClass('uimob800');
+					$modal.addClass( 'uimob800' );
 					modalStyle.maxHeight = h;
 				} else if ( w <= 960 ) {
 					modalStyle.bottom = (h - $modal.innerHeight()) / 2 + 'px';
 					modalStyle.maxHeight = h;
-					$modal.addClass('uimob960');
+					$modal.addClass( 'uimob960' );
 				} else if ( w > 960 ) {
 					modalStyle.bottom = (h - $modal.innerHeight()) / 2 + 'px';
 					modalStyle.maxHeight = h;
@@ -522,28 +546,20 @@
 
 
 	/* event handlers */
-	$( document.body )
-			.on( 'click', '[data-modal^="um_"], [data-modal^="UM_"]', function (e) {
-				e.preventDefault();
-				if ( $( e.currentTarget ).is( '.um-admin-modal-back' ) ) {
-					return false;
-				}
-				UM.modal.open( e.currentTarget );
-			} )
-			.on( 'click', '.um-modal-overlay, [data-action="um_remove_modal"]', function (e) {
-				e.preventDefault();
-				UM.modal.close();
-			} );
+	$( document.body ).on( 'click', '.um-modal-overlay, .umModalClose', function (e) {
+		e.preventDefault();
+		UM.modal.close();
+	} );
 
 
 	/* integration with jQuery */
 	$.fn.umModal = function (options) {
 		UM.modal.addModal( this.clone(), options );
 	};
-	$.fn.umModalBtn = function ( content, options) {
-		this.on('click', function(e){
+	$.fn.umModalBtn = function (content, options) {
+		this.on( 'click', function (e) {
 			e.preventDefault();
 			UM.modal.addModal( content, options, e );
-		});
+		} );
 	};
 })( jQuery );

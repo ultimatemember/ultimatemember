@@ -281,6 +281,24 @@ function um_responsive(){
 }
 
 
+function um_reset_field( dOm ){
+	jQuery(dOm)
+	 .find('div.um-field-area')
+	 .find('input,textarea,select')
+	 .not(':button, :submit, :reset, :hidden')
+	 .val('')
+	 .prop('checked', false)
+	 .prop('selected', false);
+}
+
+
+function um_selected( selected, current ){
+	if( selected == current ){
+		return "selected='selected'";
+	}
+}
+
+
 function initImageUpload_UM( trigger ) {
 
 	if (trigger.data('upload_help_text')){
@@ -623,44 +641,178 @@ wp.hooks.addFilter( 'um-modal-responsive', 'ultimatemember', function (modalStyl
 }, 10 );
 
 
+/**
+ * Add a modal based on button attributes.
+ * @param   {Object} button  The button jQuery object.
+ * @returns {Object}         A modal jQuery object.
+ */
+function um_modal_open(button) {
+	let $btn = jQuery( button ),
+			id = null,
+			size = 'normal',
+			ajax = false,
+			image = null,
+			admin = false;
 
-function um_reset_field( dOm ){
-	jQuery(dOm)
-	 .find('div.um-field-area')
-	 .find('input,textarea,select')
-	 .not(':button, :submit, :reset, :hidden')
-	 .val('')
-	 .prop('checked', false)
-	 .prop('selected', false);
+	// Get parameters
+	if ( $btn.data( 'modal' ) ) {
+		id = $btn.data( 'modal' );
+	}
+	if ( $btn.data( 'modal-size' ) ) {
+		size = $btn.data( 'modal-size' );
+	}
+	if ( $btn.data( 'dynamic-content' ) ) {
+		ajax = true;
+	}
+	if ( jQuery( document.body ).is( '.wp-admin' ) ) {
+		admin = true;
+	}
+
+	// Find template
+	let $tpl = jQuery( '#' + id );
+	if ( $tpl.length < 1 ) {
+		$tpl = jQuery( id );
+	}
+
+	// Modify template content
+	if ( $tpl.length > 0 && $btn.data( 'modal-copy' ) ) {
+		let ratio,
+				user_id,
+				$hiddenContent = $btn.parents( '.um-field' ).find( '.um-modal-hidden-content' );
+
+		if ( $hiddenContent.length > 0 ) {
+			$tpl.html( $hiddenContent );
+		}
+
+		if ( $btn.parents( '[data-user_id]' ).length ) {
+			user_id = $btn.parents( '[data-user_id]' ).data( 'user_id' );
+		} else if ( jQuery( 'input[type="hidden"][name="user_id"]' ).length > 0 ) {
+			user_id = jQuery( 'input[type="hidden"][name="user_id"]' ).val();
+		}
+		if ( user_id ) {
+			$tpl.attr( 'data-user_id', user_id );
+		}
+
+		if ( $btn.parents( '[data-ratio]' ).length ) {
+			ratio = $btn.parents( '[data-ratio]' ).data( 'ratio' );
+			$tpl.attr( 'data-ratio', ratio );
+		}
+	}
+
+	// For multilevel modals
+	if ( $tpl.length > 0 && $btn.data( 'back' ) ) {
+		$tpl.find( 'a.um-admin-modal-back' ).attr( 'data-modal', $btn.data( 'back' ) );
+	}
+
+	let $modal = um_modal_new( id, size, ajax, image, admin );
+
+	/**
+	 * UM Hook
+	 * @name        um-modal-ajax
+	 * @description Use this filter to load modal content by AJAX.
+	 * @example
+	 *  wp.hooks.addFilter('um-modal-ajax', 'ultimatemember', function (jqXHR, $modal, $btn, data) {
+	 *  	return jQuery.ajax( {
+	 *			url: wp.ajax.settings.url,
+	 *			type: 'POST',
+	 *			data: {
+	 *				// your code here
+	 *			},
+	 *			success: function (data) {
+	 *				// your code here
+	 *			}
+	 *		} );
+	 *  }, 10);
+	 */
+	let jqXHR = wp.hooks.applyFilters( 'um-modal-ajax', null, $modal, $btn, $btn.data() );
+
+	/**
+	 * UM Hook
+	 * @name        um-modal-opened
+	 * @description Call additional scripts after the modal opening
+	 * @example
+	 *  wp.hooks.addAction('um-modal-opened', 'ultimatemember', function ($modal, $btn, data, jqXHR) {
+	 *    // your code here
+	 *  }, 10);
+	 */
+	wp.hooks.doAction( 'um-modal-opened', jqXHR, $modal, $btn, $btn.data() );
+
+	return $modal;
 }
 
 
-function um_selected( selected, current ){
-	if( selected == current ){
-		return "selected='selected'";
+/**
+ * Build a new modal with a pattern.
+ * @param   {string}  id     The id of the element used as a pattern for the modal content.
+ * @param   {string}  size   The class of the modal size: small, normal, large.
+ * @param   {boolean} ajax   Show loading icon and load the body of the modal by AJAX if true.
+ * @param   {string}  image  The image src in the image popup.
+ * @param   {boolean} admin  Is it the admin modal?
+ * @returns {object}         A modal jQuery object.
+ */
+function um_modal_new(id, size, ajax, image, admin) {
+
+	UM.modal.hide();
+	UM.dropdown.hideAll();
+	jQuery( '.tipsy' ).hide();
+
+	let template = jQuery( '#' + id ), content, options = {id: id};
+
+	// prepare content
+	if ( image ) {
+		content = '<img src="' + image + '" />';
+	} else if ( template.find( '.um-modal-body' ).length ) {
+		content = template.find( '.um-modal-body' ).children();
+	} else {
+		content = template.clone().children();
 	}
+
+	// prepare options
+	if ( size ) {
+		options.class = size;
+	}
+	if ( admin ) {
+		options.class += ' um-admin-modal';
+	}
+	if ( ajax === true && !image ) {
+		options.class += ' loading';
+		options.type = 'popup';
+	}
+	if ( image ) {
+		options.class += ' is-photo';
+		options.type = 'photo';
+	}
+
+	if ( template.is( '[data-user_id]' ) ) {
+		options.attr['data-user_id'] = template.attr( 'data-user_id' );
+	} else if ( template.find( '[data-user_id]' ).length ) {
+		options.attr['data-user_id'] = template.find( '[data-user_id]' ).attr( 'data-user_id' );
+	}
+	if ( template.find( '.um-modal-header' ).length ) {
+		options.header = template.find( '.um-modal-header' ).text().trim();
+	}
+
+	// add modal
+	return UM.modal.addModal( content, options );
 }
 
 
-jQuery(function(){
-
-	// Submit search form on keypress 'Enter'
-	jQuery(".um-search form *").on( 'keypress', function(e){
-			 if (e.which == 13) {
-			    jQuery('.um-search form').trigger('submit');
-			    return false;
-			  }
-	});
-
-	if( jQuery('input[data-key=user_password],input[data-key=confirm_user_password]').length == 2 ) {
-		UM_check_password_matched();
-	}
-
-});
-
-
-/* Handlers for image uploader and file uploader */
+/* Handlers for modal, image uploader and file uploader */
 jQuery(function () {
+
+	/* Modal */
+	jQuery(document.body )
+		.on( 'click', '[data-modal^="um_"], [data-modal^="UM_"]', function (e) {
+			e.preventDefault();
+			if ( jQuery( e.currentTarget ).is( '.um-admin-modal-back' ) ) {
+				return false;
+			}
+			um_modal_open( e.currentTarget );
+		} )
+		.on( 'click', '[data-action="um_remove_modal"]', function (e) {
+			e.preventDefault();
+			UM.modal.close();
+		} );
 
 	jQuery(document).on('click', '.um-modal .um-single-file-preview a.cancel', function (e) {
 		e.preventDefault();
@@ -820,6 +972,18 @@ jQuery(function () {
 		}
 	});
 
+	// Submit search form on keypress 'Enter'
+	jQuery(".um-search form *").on( 'keypress', function(e){
+			 if (e.which == 13) {
+			    jQuery('.um-search form').trigger('submit');
+			    return false;
+			  }
+	});
+
+	if( jQuery('input[data-key=user_password],input[data-key=confirm_user_password]').length == 2 ) {
+		UM_check_password_matched();
+	}
+
 });
 
 
@@ -849,7 +1013,7 @@ function um_modal_responsive( modal ) {
  * @returns    {undefined}
  */
 function um_new_modal( id, size, isPhoto, source ) {
-	UM.modal.newModal( id, size, isPhoto, source );
+	um_modal_new( id, size, isPhoto, source );
 }
 
 /**
