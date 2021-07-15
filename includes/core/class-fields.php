@@ -3783,11 +3783,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		/**
 		 * Get fields in row
 		 *
-		 * @param  integer $row_id
+		 * @param int $row_id
 		 *
 		 * @return string
 		 */
 		function get_fields_by_row( $row_id ) {
+			if ( ! isset( $this->get_fields ) ) {
+				return '';
+			}
+
 			foreach ( $this->get_fields as $key => $array ) {
 				if ( ! isset( $array['in_row'] ) || ( isset( $array['in_row'] ) && $array['in_row'] == $row_id ) ) {
 					$results[ $key ] = $array;

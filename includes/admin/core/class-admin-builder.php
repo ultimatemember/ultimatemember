@@ -678,8 +678,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 				$save[ $_metakey ] = null;
 				foreach ( $array['post'] as $key => $val ) {
 
-					if ( substr( $key, 0, 1 ) === '_' && $val != '' ) { // field attribute
-						$new_key = ltrim ($key,'_');
+					if ( substr( $key, 0, 1 ) === '_' && $val !== '' ) { // field attribute
+						$new_key = ltrim ( $key, '_' );
 
 						if ( $new_key == 'options' ) {
 							//$save[ $_metakey ][$new_key] = explode(PHP_EOL, $val);
@@ -689,6 +689,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						}
 
 					} elseif ( strstr( $key, 'um_editor' ) ) {
+
 						if ( 'block' === $array['post']['_type'] ) {
 							$save[ $_metakey ]['content'] = wp_kses_post( $val );
 						} else {

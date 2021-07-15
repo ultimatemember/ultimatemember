@@ -697,6 +697,7 @@ function um_user_submitted_registration_formatted( $style = false ) {
 
 		if ( isset( $submitted_data['form_id'] ) ) {
 			$fields = UM()->query()->get_attr( 'custom_fields', $submitted_data['form_id'] );
+			$fields = maybe_unserialize( $fields );
 		}
 
 		if ( isset( $fields ) ) {
@@ -717,10 +718,10 @@ function um_user_submitted_registration_formatted( $style = false ) {
 			if ( empty( $rows ) ) {
 				$rows = array(
 					'_um_row_1' => array(
-						'type'      => 'row',
-						'id'        => '_um_row_1',
-						'sub_rows'  => 1,
-						'cols'      => 1
+						'type'     => 'row',
+						'id'       => '_um_row_1',
+						'sub_rows' => 1,
+						'cols'     => 1,
 					),
 				);
 			}
