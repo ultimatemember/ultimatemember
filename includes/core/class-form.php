@@ -333,7 +333,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 
 				$this->form_id     = absint( $_POST['form_id'] );
 				$this->form_status = get_post_status( $this->form_id );
-
+				$this->form_data = UM()->query()->post_data( $this->form_id );
 
 				if ( 'publish' !== $this->form_status ) {
 					return;
@@ -389,8 +389,6 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				$this->post_form              = $this->beautify( $this->post_form );
 				$this->post_form              = $this->sanitize( $this->post_form );
 				$this->post_form['submitted'] = $this->post_form;
-
-				$this->form_data = UM()->query()->post_data( $this->form_id );
 
 				$this->post_form = array_merge( $this->form_data, $this->post_form );
 
@@ -562,12 +560,14 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 		 * @return array $form
 		 */
 		public function sanitize( $form ) {
+
 			if ( isset( $form['form_id'] ) ) {
 				if ( isset( $this->form_data['custom_fields'] ) ) {
 					$custom_fields = maybe_unserialize( $this->form_data['custom_fields'] );
 
 					if ( is_array( $custom_fields ) ) {
 						foreach ( $custom_fields as $k => $field ) {
+
 							if ( isset( $field['type'] ) ) {
 								if ( isset( $form[ $k ] ) ) {
 
@@ -579,7 +579,11 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 											$form[ $k ] = (int) $form[ $k ];
 											break;
 										case 'textarea':
-											$form[ $k ] = sanitize_textarea_field( $form[ $k ] );
+											if ( ! empty( $field['html'] ) ) {
+												$form[ $k ] = wp_kses_post( $form[ $k ] );
+											} else {
+												$form[ $k ] = sanitize_textarea_field( $form[ $k ] );
+											}
 											break;
 										case 'url':
 											$form[ $k ] = esc_url_raw( $form[ $k ] );
