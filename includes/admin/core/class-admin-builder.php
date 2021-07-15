@@ -615,10 +615,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			$output['error'] = null;
 
 			$array = array(
-				'field_type'    => sanitize_key( $_POST['_type'] ),
-				'form_id'       => absint( $_POST['post_id'] ),
-				'args'          => UM()->builtin()->get_core_field_attrs( sanitize_key( $_POST['_type'] ) ),
-				'post'          => $_POST
+				'field_type' => sanitize_key( $_POST['_type'] ),
+				'form_id'    => absint( $_POST['post_id'] ),
+				'args'       => UM()->builtin()->get_core_field_attrs( sanitize_key( $_POST['_type'] ) ),
+				'post'       => UM()->admin()->sanitize_builder_field_meta( $_POST ),
 			);
 
 			/**
@@ -689,7 +689,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 						}
 
 					} elseif ( strstr( $key, 'um_editor' ) ) {
-						$save[ $_metakey ]['content'] = $val;
+						if ( 'block' === $array['post']['_type'] ) {
+							$save[ $_metakey ]['content'] = wp_kses_post( $val );
+						} else {
+							$save[ $_metakey ]['content'] = sanitize_textarea_field( $val );
+						}
 					}
 
 				}
@@ -781,7 +785,19 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 			 */
 			extract( $_POST );
 
-			switch ( $act_id ) {
+			if ( isset( $arg1 ) ) {
+				$arg1 = sanitize_text_field( $arg1 );
+			}
+
+			if ( isset( $arg2 ) ) {
+				$arg2 = sanitize_text_field( $arg2 );
+			}
+
+			if ( isset( $arg3 ) ) {
+				$arg3 = sanitize_text_field( $arg3 );
+			}
+
+			switch ( sanitize_key( $act_id ) ) {
 
 				default:
 
@@ -806,7 +822,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					 * }
 					 * ?>
 					 */
-					do_action( 'um_admin_ajax_modal_content__hook', $act_id );
+					do_action( 'um_admin_ajax_modal_content__hook', sanitize_key( $act_id ) );
 					/**
 					 * UM hook
 					 *
@@ -824,7 +840,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 					 * }
 					 * ?>
 					 */
-					do_action( "um_admin_ajax_modal_content__hook_{$act_id}" );
+					do_action( "um_admin_ajax_modal_content__hook_" . sanitize_key( $act_id ) );
 
 					$output = ob_get_clean();
 					break;

@@ -155,6 +155,31 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
+= 2.2.0: July 20, 2021 =
+
+* Enhancements:
+
+  - Added: Sanitizing handlers to the Ultimate Member > Settings forms' fields
+  - Added: Sanitizing handlers to the Ultimate Member > User Role Add/Edit forms' fields
+  - Added: Sanitizing handlers to the Ultimate Member > Forms forms' fields
+  - Added: Sanitizing handlers to the Ultimate Member > Forms > Add Field/Edit Field forms' fields
+  - Added: Sanitizing handlers to the Ultimate Member > User Roles forms' fields
+  - Added: Sanitizing handlers to the Restriction Content forms' fields in the posts/pages/menus additional fields
+  - Added: Custom placeholder setting for the Confirm Password field
+
+* Bugfixes:
+
+  - Fixed: Content restriction settings using in Avada theme with active page headers
+  - Fixed: Content restriction (CPT + Terms). Avoid displaying comments if the post is restricted
+  - Fixed: Content restriction (CPT + Terms). Avoid displaying comments and posts feed
+  - Fixed: Content restriction (CPT + Terms). Displaying the proper count of the posts. Restricted are excluded
+  - Fixed: Saving and displaying settings on the UM > Settings > Access screen
+  - Fixed: Saving and displaying default Member Directory settings
+
+* Tweaks:
+
+  - WordPress 5.8 compatibility. Widgets screen changes based on the new features with Legacy Widget block
+
 = 2.1.21: June 17, 2021 =
 
 * Enhancements:

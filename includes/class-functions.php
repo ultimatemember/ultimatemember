@@ -48,7 +48,7 @@ if ( ! class_exists( 'UM_Functions' ) ) {
 		 * @param bool $action
 		 */
 		function check_ajax_nonce( $action = false ) {
-			$nonce = isset( $_REQUEST['nonce'] ) ? $_REQUEST['nonce'] : '';
+			$nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( $_REQUEST['nonce'] ) : '';
 			$action = empty( $action ) ? 'um-frontend-nonce' : $action;
 
 			if ( ! wp_verify_nonce( $nonce, $action ) ) {

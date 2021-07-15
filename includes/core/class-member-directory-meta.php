@@ -571,7 +571,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 
 			if ( ! empty( $_POST['search'] ) ) {
-				$search_line = trim( stripslashes( $_POST['search'] ) );
+				$search_line = trim( stripslashes( sanitize_text_field( $_POST['search'] ) ) );
 
 				$searches = array();
 				foreach ( $this->core_search_fields as $field ) {
@@ -582,7 +582,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 				$this->joins[] = "LEFT JOIN {$wpdb->prefix}um_metadata umm_search ON umm_search.user_id = u.ID";
 
-				$additional_search = apply_filters( 'um_member_directory_meta_general_search_meta_query', '', stripslashes( $_POST['search'] ) );
+				$additional_search = apply_filters( 'um_member_directory_meta_general_search_meta_query', '', stripslashes( sanitize_text_field( $_POST['search'] ) ) );
 
 				$search_like_string = apply_filters( 'um_member_directory_meta_search_like_type', '%' . $search_line . '%', $search_line );
 
@@ -609,6 +609,13 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 
 				$i = 1;
 				foreach ( $filter_query as $field => $value ) {
+
+					$field = sanitize_text_field( $field );
+					if ( is_array( $value ) ) {
+						$value = array_map( 'sanitize_text_field', $value );
+					} else {
+						$value = sanitize_text_field( $value );
+					}
 
 					$attrs = UM()->fields()->get_field( $field );
 					// skip private invisible fields
@@ -642,7 +649,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			//}
 
 			$order = 'ASC';
-			$sortby = ! empty( $_POST['sorting'] ) ? $_POST['sorting'] : $directory_data['sortby'];
+			$sortby = ! empty( $_POST['sorting'] ) ? sanitize_text_field( $_POST['sorting'] ) : $directory_data['sortby'];
 			$sortby = ( $sortby == 'other' ) ? $directory_data['sortby_custom'] : $sortby;
 
 			$custom_sort = array();
@@ -665,6 +672,10 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 				$custom_sort_type = apply_filters( 'um_member_directory_custom_sorting_type', 'CHAR', $sortby, $directory_data );
 
 				$this->sql_order = " ORDER BY CAST( umm_sort.um_value AS {$custom_sort_type} ) {$order} ";
+
+			} elseif ( 'username' == $sortby ) {
+
+				$this->sql_order = " ORDER BY u.user_login {$order} ";
 
 			} elseif ( 'display_name' == $sortby ) {
 
@@ -755,7 +766,7 @@ if ( ! class_exists( 'um\core\Member_Directory_Meta' ) ) {
 			}
 
 			$query_number = ( ! empty( $directory_data['max_users'] ) && $directory_data['max_users'] <= $profiles_per_page ) ? $directory_data['max_users'] : $profiles_per_page;
-			$query_paged = ! empty( $_POST['page'] ) ? $_POST['page'] : 1;
+			$query_paged = ! empty( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
 
 			$number = $query_number;
 			if ( ! empty( $directory_data['max_users'] ) && $query_paged*$query_number > $directory_data['max_users'] ) {

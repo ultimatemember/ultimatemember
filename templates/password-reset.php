@@ -1,13 +1,15 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} ?>
 
 <div class="um <?php echo esc_attr( $this->get_class( $mode ) ); ?> um-<?php echo esc_attr( $form_id ); ?>">
 	<div class="um-form">
 		<form method="post" action="">
-			<?php if ( isset( $_GET['updated'] ) && 'checkemail' == $_GET['updated'] ) { ?>
+			<?php if ( isset( $_GET['updated'] ) && 'checkemail' === sanitize_key( $_GET['updated'] ) ) { ?>
 				<div class="um-field um-field-block um-field-type_block">
 					<div class="um-field-block">
 						<div style="text-align:center;">
-							<?php _e( 'We have sent you a password reset link to your e-mail. Please check your inbox.', 'ultimate-member' ); ?>
+							<?php esc_html_e( 'We have sent you a password reset link to your e-mail. Please check your inbox.', 'ultimate-member' ); ?>
 						</div>
 					</div>
 				</div>
@@ -41,9 +43,9 @@
 					<div class="um-field um-field-block um-field-type_block">
 						<div class="um-field-block">
 							<div style="text-align:center;">
-								<?php if ( 'expiredkey' == $_GET['updated'] ) {
+								<?php if ( 'expiredkey' === sanitize_key( $_GET['updated'] ) ) {
 									_e( 'Your password reset link has expired. Please request a new link below.', 'ultimate-member' );
-								} elseif ( 'invalidkey' == $_GET['updated'] ) {
+								} elseif ( 'invalidkey' === sanitize_key( $_GET['updated'] ) ) {
 									_e( 'Your password reset link appears to be invalid. Please request a new link below.', 'ultimate-member' );
 								} ?>
 							</div>

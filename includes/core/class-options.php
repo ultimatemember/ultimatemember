@@ -100,8 +100,9 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 * @param $option_id
 		 */
 		function remove( $option_id ) {
-			if ( ! empty( $this->options[ $option_id ] ) )
+			if ( ! empty( $this->options[ $option_id ] ) ) {
 				unset( $this->options[ $option_id ] );
+			}
 
 			update_option( 'um_options', $this->options );
 		}

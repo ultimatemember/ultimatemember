@@ -397,6 +397,8 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 					$this->current_tab = UM()->form()->post_form['_um_account_tab'];
 				}
 
+				$this->current_tab = sanitize_key( $this->current_tab );
+
 				if ( ! isset( UM()->form()->errors ) ) {
 					/**
 					 * UM hook

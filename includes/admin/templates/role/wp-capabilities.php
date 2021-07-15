@@ -51,7 +51,8 @@
 	</span>
 
 
-	<?php $role = $object['data'];
+	<?php
+	$role              = $object['data'];
 	$role_capabilities = ! empty( $role['wp_capabilities'] ) ? array_keys( $role['wp_capabilities'] ) : array( 'read' );
 
 	if ( ! empty( $_GET['id'] ) ) {

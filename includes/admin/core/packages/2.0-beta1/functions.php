@@ -32,7 +32,7 @@ function um_upgrade_get_users_per_role20beta1() {
 			'meta_query'    => array(
 				array(
 					'key'   => 'role',
-					'value' => $_POST['key_in_meta']
+					'value' => sanitize_key( $_POST['key_in_meta'] ),
 				)
 			),
 			'number'        => '',
@@ -62,10 +62,10 @@ function um_upgrade_update_users_per_page20beta1() {
 			'meta_query'    => array(
 				array(
 					'key'   => 'role',
-					'value' => $_POST['key_in_meta']
+					'value' => sanitize_key( $_POST['key_in_meta'] ),
 				)
 			),
-			'paged'         => $_POST['page'],
+			'paged'         => absint( $_POST['page'] ),
 			'number'        => $users_per_page,
 		);
 		$all_users = get_users( $args );
@@ -74,17 +74,17 @@ function um_upgrade_update_users_per_page20beta1() {
 		foreach ( $all_users as $k => $user ) {
 			$user_object = get_userdata( $user->ID );
 
-			if ( ! in_array( $_POST['role_key'], $all_wp_roles ) ) {
-				$user_object->add_role( 'um_' . $_POST['role_key'] );
+			if ( ! in_array( sanitize_key( $_POST['role_key'] ), $all_wp_roles ) ) {
+				$user_object->add_role( 'um_' . sanitize_key( $_POST['role_key'] ) );
 			} else {
-				if ( ! in_array( $_POST['role_key'], (array) $user_object->roles ) ) {
-					$user_object->add_role( $_POST['role_key'] );
+				if ( ! in_array( sanitize_key( $_POST['role_key'] ), (array) $user_object->roles ) ) {
+					$user_object->add_role( sanitize_key( $_POST['role_key'] ) );
 				}
 			}
 		}
 
-		$from = ( $_POST['page'] * $users_per_page ) - $users_per_page + 1;
-		$to = $_POST['page'] * $users_per_page;
+		$from = ( absint( $_POST['page'] ) * $users_per_page ) - $users_per_page + 1;
+		$to = absint( $_POST['page'] ) * $users_per_page;
 
 		wp_send_json_success( array( 'message' => sprintf( __( 'Users from %s to %s was upgraded successfully...', 'ultimate-member' ), $from, $to ) ) );
 	} else {
@@ -184,7 +184,7 @@ function um_upgrade_update_forum_per_page20beta1() {
 		$p_query = new WP_Query;
 		$bb_forums = $p_query->query( array(
 			'post_type'         => 'forum',
-			'paged'             => $_POST['page'],
+			'paged'             => absint( $_POST['page'] ),
 			'posts_per_page'    => $posts_per_page,
 			'fields'            => 'ids'
 		) );
@@ -212,8 +212,8 @@ function um_upgrade_update_forum_per_page20beta1() {
 			}
 		}
 
-		$from = ( $_POST['page'] * $posts_per_page ) - $posts_per_page + 1;
-		$to = $_POST['page'] * $posts_per_page;
+		$from = ( absint( $_POST['page'] ) * $posts_per_page ) - $posts_per_page + 1;
+		$to = absint( $_POST['page'] ) * $posts_per_page;
 
 		wp_send_json_success( array( 'message' => sprintf( __( 'Forums from %s to %s was upgraded successfully...', 'ultimate-member' ), $from, $to ) ) );
 	} else {
@@ -250,7 +250,7 @@ function um_upgrade_update_products_per_page20beta1() {
 		$p_query = new WP_Query;
 		$wc_products = $p_query->query( array(
 			'post_type'         => 'product',
-			'paged'             => $_POST['page'],
+			'paged'             => absint( $_POST['page'] ),
 			'posts_per_page'    => $posts_per_page,
 			'fields'            => 'ids'
 		) );
@@ -299,8 +299,8 @@ function um_upgrade_update_products_per_page20beta1() {
 			}
 		}
 
-		$from = ( $_POST['page'] * $posts_per_page ) - $posts_per_page + 1;
-		$to = $_POST['page'] * $posts_per_page;
+		$from = ( absint( $_POST['page'] ) * $posts_per_page ) - $posts_per_page + 1;
+		$to = absint( $_POST['page'] ) * $posts_per_page;
 
 		wp_send_json_success( array( 'message' =>  sprintf( __( 'Woocommerce Products from %s to %s was upgraded successfully...', 'ultimate-member' ), $from, $to ) ) );
 	} else {

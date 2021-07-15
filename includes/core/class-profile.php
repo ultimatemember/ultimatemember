@@ -55,16 +55,17 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		/**
 		 * Delete profile avatar AJAX handler
 		 */
-		function ajax_delete_profile_photo() {
+		public function ajax_delete_profile_photo() {
 			UM()->check_ajax_nonce();
 
-			/**
-			 * @var $user_id
-			 */
-			extract( $_REQUEST );
+			if ( ! array_key_exists( 'user_id', $_REQUEST ) ) {
+				wp_send_json_error( __( 'Invalid data', 'ultimate-member' ) );
+			}
+
+			$user_id = absint( $_REQUEST['user_id'] );
 
 			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-				die( __( 'You can not edit this user' ) );
+				die( esc_html__( 'You can not edit this user', 'ultimate-member' ) );
 			}
 
 			UM()->files()->delete_core_user_photo( $user_id, 'profile_photo' );
@@ -74,16 +75,17 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		/**
 		 * Delete cover photo AJAX handler
 		 */
-		function ajax_delete_cover_photo() {
+		public function ajax_delete_cover_photo() {
 			UM()->check_ajax_nonce();
 
-			/**
-			 * @var $user_id
-			 */
-			extract( $_REQUEST );
+			if ( ! array_key_exists( 'user_id', $_REQUEST ) ) {
+				wp_send_json_error( __( 'Invalid data', 'ultimate-member' ) );
+			}
+
+			$user_id = absint( $_REQUEST['user_id'] );
 
 			if ( ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
-				die( __( 'You can not edit this user' ) );
+				die( esc_html__( 'You can not edit this user', 'ultimate-member' ) );
 			}
 
 			UM()->files()->delete_core_user_photo( $user_id, 'cover_photo' );
@@ -95,15 +97,18 @@ if ( ! class_exists( 'um\core\Profile' ) ) {
 		 *
 		 * @return array
 		 */
-		function tabs_privacy() {
-			$privacy = apply_filters( 'um_profile_tabs_privacy_list', array(
-				0 => __( 'Anyone', 'ultimate-member' ),
-				1 => __( 'Guests only', 'ultimate-member' ),
-				2 => __( 'Members only', 'ultimate-member' ),
-				3 => __( 'Only the owner', 'ultimate-member' ),
-				4 => __( 'Only specific roles', 'ultimate-member' ),
-				5 => __( 'Owner and specific roles', 'ultimate-member' ),
-			) );
+		public function tabs_privacy() {
+			$privacy = apply_filters(
+				'um_profile_tabs_privacy_list',
+				array(
+					0 => __( 'Anyone', 'ultimate-member' ),
+					1 => __( 'Guests only', 'ultimate-member' ),
+					2 => __( 'Members only', 'ultimate-member' ),
+					3 => __( 'Only the owner', 'ultimate-member' ),
+					4 => __( 'Only specific roles', 'ultimate-member' ),
+					5 => __( 'Owner and specific roles', 'ultimate-member' ),
+				)
+			);
 
 			return $privacy;
 		}

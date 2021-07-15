@@ -261,7 +261,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				wp_send_json_error( __( 'Wrong mode', 'ultimate-member' ) );
 			}
 
-			$src = $_POST['src'];
+			$src = esc_url_raw( $_POST['src'] );
 			if ( strstr( $src, '?' ) ) {
 				$splitted = explode( '?', $src );
 				$src = $splitted[0];
@@ -286,7 +286,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 				$is_temp = um_is_temp_upload( $src );
 				if ( ! $is_temp ) {
-					if ( ! empty( $_POST['filename'] ) && file_exists( UM()->uploader()->get_upload_user_base_dir( $user_id ) . DIRECTORY_SEPARATOR . $_POST['filename'] ) ) {
+					if ( ! empty( $_POST['filename'] ) && file_exists( UM()->uploader()->get_upload_user_base_dir( $user_id ) . DIRECTORY_SEPARATOR . sanitize_file_name( $_POST['filename'] ) ) ) {
 						wp_send_json_success();
 					}
 				}
@@ -324,7 +324,7 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				wp_send_json_error( esc_js( __( 'Invalid coordinates', 'ultimate-member' ) ) );
 			}
 
-			$user_id = empty( $_REQUEST['user_id'] ) ? get_current_user_id() : $_REQUEST['user_id'];
+			$user_id = empty( $_REQUEST['user_id'] ) ? get_current_user_id() : absint( $_REQUEST['user_id'] );
 
 			UM()->fields()->set_id = filter_input( INPUT_POST, 'set_id', FILTER_SANITIZE_NUMBER_INT );
 			UM()->fields()->set_mode = filter_input( INPUT_POST, 'set_mode', FILTER_SANITIZE_STRING );
@@ -334,13 +334,15 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				wp_send_json_error( $ret );
 			}
 
+			$src = esc_url_raw( $src );
+
 			$image_path = um_is_file_owner( $src, $user_id, true );
 			if ( ! $image_path ) {
 				wp_send_json_error( esc_js( __( 'Invalid file ownership', 'ultimate-member' ) ) );
 			}
 
 			UM()->uploader()->replace_upload_dir = true;
-			$output = UM()->uploader()->resize_image( $image_path, $src, $key, $user_id, $coord );
+			$output = UM()->uploader()->resize_image( $image_path, $src, sanitize_text_field( $key ), $user_id, sanitize_text_field( $coord ) );
 			UM()->uploader()->replace_upload_dir = false;
 
 			delete_option( "um_cache_userdata_{$user_id}" );
@@ -358,13 +360,13 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 			$ret['error'] = null;
 			$ret = array();
 
-			$id = $_POST['key'];
-			$timestamp = $_POST['timestamp'];
-			$nonce = $_POST['_wpnonce'];
+			$id = sanitize_text_field( $_POST['key'] );
+			$timestamp = absint( $_POST['timestamp'] );
+			$nonce = sanitize_text_field( $_POST['_wpnonce'] );
 			$user_id = empty( $_POST['user_id'] ) ? get_current_user_id() : absint( $_POST['user_id'] );
 
-			UM()->fields()->set_id = $_POST['set_id'];
-			UM()->fields()->set_mode = $_POST['set_mode'];
+			UM()->fields()->set_id = absint( $_POST['set_id'] );
+			UM()->fields()->set_mode = sanitize_key( $_POST['set_mode'] );
 
 			if ( UM()->fields()->set_mode != 'register' && ! UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
 				$ret['error'] = __( 'You have no permission to edit this user', 'ultimate-member' );
@@ -437,12 +439,12 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 				die( json_encode( $ret ) );
 			}*/
 
-			$nonce = $_POST['_wpnonce'];
-			$id = $_POST['key'];
-			$timestamp = $_POST['timestamp'];
+			$nonce = sanitize_text_field( $_POST['_wpnonce'] );
+			$id = sanitize_text_field( $_POST['key'] );
+			$timestamp = absint( $_POST['timestamp'] );
 
-			UM()->fields()->set_id = $_POST['set_id'];
-			UM()->fields()->set_mode = $_POST['set_mode'];
+			UM()->fields()->set_id = absint( $_POST['set_id'] );
+			UM()->fields()->set_mode = sanitize_key( $_POST['set_mode'] );
 
 			/**
 			 * UM hook

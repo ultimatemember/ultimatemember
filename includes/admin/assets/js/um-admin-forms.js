@@ -557,7 +557,6 @@ jQuery(document).ready( function() {
 	jQuery( '.um-multi-text-add-option' ).on('click', function() {
 		var list = jQuery(this).siblings( 'ul.um-multi-text-list' );
 
-		var field_id = list.data( 'field_id' );
 		var k = 0;
 		if ( list.find( 'li:last input.um-forms-field' ).length > 0 ) {
 			k = list.find( 'li:last input.um-forms-field' ).attr('id').split("-");
@@ -566,7 +565,7 @@ jQuery(document).ready( function() {
 
 		var text_html = jQuery( '<div>' ).append( list.siblings('.um-hidden-multi-text').clone() ).html();
 
-		var classes = list.find('li:last').attr('class');
+		var classes = list.data('item_class');
 
 		list.append(
 			'<li class="' + classes + '"><span class="um-field-wrapper">' + text_html +
