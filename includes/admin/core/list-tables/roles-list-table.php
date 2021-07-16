@@ -1,11 +1,13 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
+<?php if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 global $wpdb;
 
 if ( isset( $_REQUEST['_wp_http_referer'] ) ) {
 	$redirect = remove_query_arg( array( '_wp_http_referer' ), wp_unslash( $_REQUEST['_wp_http_referer'] ) );
 } else {
-	$redirect = get_admin_url(). 'admin.php?page=um_roles';
+	$redirect = get_admin_url() . 'admin.php?page=um_roles';
 }
 
 global $wp_roles;
@@ -16,9 +18,9 @@ if ( isset( $_GET['action'] ) ) {
 		case 'delete': {
 			$role_keys = array();
 			if ( isset( $_REQUEST['id'] ) ) {
-				check_admin_referer( 'um_role_delete' .  sanitize_key( $_REQUEST['id'] ) . get_current_user_id() );
+				check_admin_referer( 'um_role_delete' . sanitize_key( $_REQUEST['id'] ) . get_current_user_id() );
 				$role_keys = (array) sanitize_key( $_REQUEST['id'] );
-			} elseif( isset( $_REQUEST['item'] ) )  {
+			} elseif ( isset( $_REQUEST['item'] ) ) {
 				check_admin_referer( 'bulk-' . sanitize_key( __( 'Roles', 'ultimate-member' ) ) );
 				$role_keys = array_map( 'sanitize_key', $_REQUEST['item'] );
 			}
@@ -40,7 +42,7 @@ if ( isset( $_GET['action'] ) ) {
 				delete_option( "um_role_{$role_key}_meta" );
 				$um_roles = array_diff( $um_roles, array( $role_key ) );
 
-				$roleID = 'um_' . $role_key;
+				$roleID            = 'um_' . $role_key;
 				$um_custom_roles[] = $roleID;
 
 				//check if role exist before removing it
@@ -51,11 +53,11 @@ if ( isset( $_GET['action'] ) ) {
 
 			//set for users with deleted roles role "Subscriber"
 			$args = array(
-				'blog_id'      => get_current_blog_id(),
-				'role__in'     => $um_custom_roles,
-				'number'       => -1,
-				'count_total'  => false,
-				'fields'       => 'ids',
+				'blog_id'     => get_current_blog_id(),
+				'role__in'    => $um_custom_roles,
+				'number'      => -1,
+				'count_total' => false,
+				'fields'      => 'ids',
 			);
 			$users_to_subscriber = get_users( $args );
 			if ( ! empty( $users_to_subscriber ) ) {
@@ -70,7 +72,12 @@ if ( isset( $_GET['action'] ) ) {
 
 					//update user role if it's empty
 					if ( empty( $object_user->roles ) ) {
-						wp_update_user( array( 'ID' => $user_id, 'role' => 'subscriber' ) );
+						wp_update_user(
+							array(
+								'ID'   => $user_id,
+								'role' => 'subscriber',
+							)
+						);
 					}
 				}
 			}
@@ -85,7 +92,7 @@ if ( isset( $_GET['action'] ) ) {
 			if ( isset( $_REQUEST['id'] ) ) {
 				check_admin_referer( 'um_role_reset' . sanitize_key( $_REQUEST['id'] ) . get_current_user_id() );
 				$role_keys = (array) sanitize_key( $_REQUEST['id'] );
-			} elseif( isset( $_REQUEST['item'] ) )  {
+			} elseif ( isset( $_REQUEST['item'] ) ) {
 				check_admin_referer( 'bulk-' . sanitize_key( __( 'Roles', 'ultimate-member' ) ) );
 				$role_keys = array_map( 'sanitize_key', $_REQUEST['item'] );
 			}
@@ -98,7 +105,7 @@ if ( isset( $_GET['action'] ) ) {
 				$role_meta = get_option( "um_role_{$role_key}_meta" );
 
 				if ( ! empty( $role_meta['_um_is_custom'] ) ) {
-					unset( $role_keys[ array_search( $role_key, $role_keys ) ] );
+					unset( $role_keys[ array_search( $role_key, $role_keys, true ) ] );
 					continue;
 				}
 
@@ -113,14 +120,14 @@ if ( isset( $_GET['action'] ) ) {
 
 //remove extra query arg
 if ( ! empty( $_GET['_wp_http_referer'] ) ) {
-	um_js_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce'), wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
+	um_js_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
 }
 
 $order_by = 'name';
-$order = ( isset( $_GET['order'] ) && 'asc' ==  strtolower( sanitize_key( $_GET['order'] ) ) ) ? 'ASC' : 'DESC';
+$order    = ( isset( $_GET['order'] ) && 'asc' === strtolower( sanitize_key( $_GET['order'] ) ) ) ? 'ASC' : 'DESC';
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
 
@@ -171,11 +178,11 @@ class UM_Roles_List_Table extends WP_List_Table {
 	 *
 	 * @param array $args
 	 */
-	function __construct( $args = array() ){
+	function __construct( $args = array() ) {
 		$args = wp_parse_args( $args, array(
-			'singular'  => __( 'item', 'ultimate-member' ),
-			'plural'    => __( 'items', 'ultimate-member' ),
-			'ajax'      => false
+			'singular' => __( 'item', 'ultimate-member' ),
+			'plural'   => __( 'items', 'ultimate-member' ),
+			'ajax'     => false,
 		) );
 
 		$this->no_items_message = $args['plural'] . ' ' . __( 'not found.', 'ultimate-member' );
@@ -199,9 +206,9 @@ class UM_Roles_List_Table extends WP_List_Table {
 	 *
 	 */
 	function prepare_items() {
-		$columns  = $this->get_columns();
-		$hidden   = array();
-		$sortable = $this->get_sortable_columns();
+		$columns               = $this->get_columns();
+		$hidden                = array();
+		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 	}
 
@@ -236,11 +243,11 @@ class UM_Roles_List_Table extends WP_List_Table {
 	 */
 	function set_sortable_columns( $args = array() ) {
 		$return_args = array();
-		foreach( $args as $k=>$val ) {
-			if( is_numeric( $k ) ) {
-				$return_args[ $val ] = array( $val, $val == $this->default_sorting_field );
-			} else if( is_string( $k ) ) {
-				$return_args[ $k ] = array( $val, $k == $this->default_sorting_field );
+		foreach ( $args as $k => $val ) {
+			if ( is_numeric( $k ) ) {
+				$return_args[ $val ] = array( $val, $val === $this->default_sorting_field );
+			} elseif ( is_string( $k ) ) {
+				$return_args[ $k ] = array( $val, $k === $this->default_sorting_field );
 			} else {
 				continue;
 			}
@@ -336,21 +343,21 @@ class UM_Roles_List_Table extends WP_List_Table {
 	function column_title( $item ) {
 		$actions = array();
 
-		$actions['edit'] = '<a href="admin.php?page=um_roles&tab=edit&id=' . $item['key'] . '">' . __( 'Edit', 'ultimate-member' ). '</a>';
+		$actions['edit'] = '<a href="admin.php?page=um_roles&tab=edit&id=' . esc_attr( $item['key'] ) . '">' . __( 'Edit', 'ultimate-member' ) . '</a>';
 
 		if ( ! empty( $item['_um_is_custom'] ) ) {
-			$actions['delete'] = '<a href="admin.php?page=um_roles&action=delete&id=' . $item['key'] . '&_wpnonce=' . wp_create_nonce( 'um_role_delete' . $item['key'] . get_current_user_id() ) . '" onclick="return confirm( \'' . __( 'Are you sure you want to delete this role?', 'ultimate-member' ) . '\' );">' . __( 'Delete', 'ultimate-member' ). '</a>';
+			$actions['delete'] = '<a href="admin.php?page=um_roles&action=delete&id=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_role_delete' . $item['key'] . get_current_user_id() ) . '" onclick="return confirm( \'' . __( 'Are you sure you want to delete this role?', 'ultimate-member' ) . '\' );">' . __( 'Delete', 'ultimate-member' ) . '</a>';
 		} else {
 			$role_meta = get_option( "um_role_{$item['key']}_meta" );
 
 			if ( ! empty( $role_meta ) ) {
-				$actions['reset'] = '<a href="admin.php?page=um_roles&action=reset&id=' . $item['key'] . '&_wpnonce=' . wp_create_nonce( 'um_role_reset' . $item['key'] . get_current_user_id() ) . '" onclick="return confirm( \'' . __( 'Are you sure you want to reset UM role meta?', 'ultimate-member' ) . '\' );">' . __( 'Reset UM Role meta', 'ultimate-member' ). '</a>';
+				$actions['reset'] = '<a href="admin.php?page=um_roles&action=reset&id=' . esc_attr( $item['key'] ) . '&_wpnonce=' . wp_create_nonce( 'um_role_reset' . $item['key'] . get_current_user_id() ) . '" onclick="return confirm( \'' . __( 'Are you sure you want to reset UM role meta?', 'ultimate-member' ) . '\' );">' . __( 'Reset UM Role meta', 'ultimate-member' ) . '</a>';
 			}
 		}
 
 
 
-		return sprintf('%1$s %2$s', '<strong><a class="row-title" href="admin.php?page=um_roles&tab=edit&id=' . $item['key'] . '">' . stripslashes( $item['name'] ) . '</a></strong>', $this->row_actions( $actions ) );
+		return sprintf('%1$s %2$s', '<strong><a class="row-title" href="admin.php?page=um_roles&tab=edit&id=' . esc_attr( $item['key'] ) . '">' . stripslashes( $item['name'] ) . '</a></strong>', $this->row_actions( $actions ) );
 	}
 
 
@@ -487,7 +494,7 @@ $ListTable->um_set_pagination_args( array( 'total_items' => count( $roles ), 'pe
 	</h2>
 
 	<?php if ( ! empty( $_GET['msg'] ) ) {
-		switch( sanitize_key( $_GET['msg'] ) ) {
+		switch ( sanitize_key( $_GET['msg'] ) ) {
 			case 'd':
 				echo '<div id="message" class="updated fade"><p>' . __( 'User Role <strong>Deleted</strong> Successfully.', 'ultimate-member' ) . '</p></div>';
 				break;

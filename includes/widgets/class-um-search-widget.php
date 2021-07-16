@@ -41,7 +41,8 @@ class UM_Search_Widget extends \WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 
-		$title = apply_filters( 'widget_title', $instance['title'] );
+		$title = array_key_exists( 'title', $instance ) ? $instance['title'] : '';
+		$title = apply_filters( 'widget_title', $title );
 
 		// before and after widget arguments are defined by themes
 		echo $args['before_widget'];

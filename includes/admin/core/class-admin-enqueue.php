@@ -83,7 +83,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			add_action( 'load-post-new.php', array( &$this, 'enqueue_cpt_scripts' ) );
 			add_action( 'load-post.php', array( &$this, 'enqueue_cpt_scripts' ) );
 
-			add_filter( 'block_categories', array( &$this, 'blocks_category' ), 10, 2 );
+			global $wp_version;
+			if ( version_compare( $wp_version, '5.8-rc.1', '>=' ) ) {
+				add_filter( 'block_categories_all', array( &$this, 'blocks_category' ), 10, 2 );
+			} else {
+				add_filter( 'block_categories', array( &$this, 'blocks_category' ), 10, 2 );
+			}
 		}
 
 
@@ -96,10 +101,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 *
 		 */
 		function enqueue_cpt_scripts() {
-			if ( ( isset( $_GET['post_type'] ) && 'um_form' == sanitize_key( $_GET['post_type'] ) ) ||
-			     ( isset( $_GET['post'] ) && 'um_form' == get_post_type( absint( $_GET['post'] ) ) ) ) {
+			if ( ( isset( $_GET['post_type'] ) && 'um_form' === sanitize_key( $_GET['post_type'] ) ) ||
+			     ( isset( $_GET['post'] ) && 'um_form' === get_post_type( absint( $_GET['post'] ) ) ) ) {
 				$this->um_cpt_form_screen = true;
-				add_action( 'admin_footer',  array( $this, 'admin_footer_scripts' ), 20 );
+				add_action( 'admin_footer', array( $this, 'admin_footer_scripts' ), 20 );
 			}
 
 			$this->post_page = true;
@@ -296,9 +301,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			//and WP calculate page height
 			$hide_footer = false;
 			global $pagenow, $post;
-			if ( ( 'post.php' == $pagenow || 'post-new.php' == $pagenow ) &&
-			     ( ( isset( $_GET['post_type'] ) && 'um_form' == sanitize_key( $_GET['post_type'] ) ) ||
-			       ( isset( $post->post_type ) && 'um_form' == $post->post_type ) ) ) {
+			if ( ( 'post.php' === $pagenow || 'post-new.php' === $pagenow ) &&
+			     ( ( isset( $_GET['post_type'] ) && 'um_form' === sanitize_key( $_GET['post_type'] ) ) ||
+			       ( isset( $post->post_type ) && 'um_form' === $post->post_type ) ) ) {
 				$hide_footer = true;
 			}
 
@@ -527,11 +532,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 * Add Gutenberg category for UM shortcodes
 		 *
 		 * @param array $categories
-		 * @param $post
+		 * @param \WP_Block_Editor_Context $context
 		 *
 		 * @return array
 		 */
-		 function blocks_category( $categories, $post ) {
+		 function blocks_category( $categories, $context ) {
 			 $enable_blocks = UM()->options()->get( 'enable_blocks' );
 			 if ( empty( $enable_blocks ) ) {
 				 return $categories;

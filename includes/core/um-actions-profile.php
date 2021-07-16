@@ -168,16 +168,16 @@ function um_profile_content_main( $args ) {
 		 */
 		do_action( 'um_after_form', $args );
 
-	} else { ?>
-
+	} else {
+		?>
 		<div class="um-profile-note">
 			<span>
 				<i class="um-faicon-lock"></i>
 				<?php echo $can_view; ?>
 			</span>
 		</div>
-
-	<?php }
+		<?php
+	}
 }
 add_action( 'um_profile_content_main', 'um_profile_content_main' );
 

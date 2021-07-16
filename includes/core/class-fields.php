@@ -50,7 +50,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 			 * Set value on form submission
 			 */
 			if ( isset( $_REQUEST[ $id ] ) ) {
-				$checked = $_REQUEST[ $id ];
+				$checked = (bool) $_REQUEST[ $id ];
 			}
 
 			$class = $checked ? 'um-icon-android-checkbox-outline' : 'um-icon-android-checkbox-outline-blank';
@@ -60,7 +60,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 			<div class="um-field um-field-c">
 				<div class="um-field-area">
-					<label class="um-field-checkbox <?php echo ( $checked ) ? 'active' : '' ?>">
+					<label class="um-field-checkbox<?php echo $checked ? ' active' : '' ?>">
 						<input type="checkbox" name="<?php echo esc_attr( $id ); ?>" value="1" <?php checked( $checked ) ?> />
 						<span class="um-field-checkbox-state"><i class="<?php echo esc_attr( $class ) ?>"></i></span>
 						<span class="um-field-checkbox-option"> <?php echo esc_html( $title ); ?></span>
@@ -2389,8 +2389,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
 							if ( ! empty( $data['label_confirm_pass'] ) ) {
-								$data['label'] = __( $data['label_confirm_pass'], 'ultimate-member' );
-								$output .= $this->field_label( $data['label'], $key, $data );
+								$label_confirm_pass = __( $data['label_confirm_pass'], 'ultimate-member' );
+								$output .= $this->field_label( $label_confirm_pass, $key, $data );
 							} elseif ( isset( $data['label'] ) ) {
 								$data['label'] = __( $data['label'], 'ultimate-member' );
 								$output .= $this->field_label( sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] ), $key, $data );
@@ -2409,9 +2409,11 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 								$name = $key;
 							}
 
-							if( ! empty( $placeholder ) && ! isset( $data['label'] ) ){
-									$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $placeholder );
-							}else if( isset( $data['label'] ) ){
+							if ( ! empty( $label_confirm_pass ) ) {
+								$placeholder = $label_confirm_pass;
+							} elseif( ! empty( $placeholder ) && ! isset( $data['label'] ) ) {
+								$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $placeholder );
+							} elseif( isset( $data['label'] ) ) {
 								$placeholder = sprintf( __( 'Confirm %s', 'ultimate-member' ), $data['label'] );
 							}
 							
@@ -3781,11 +3783,15 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 		/**
 		 * Get fields in row
 		 *
-		 * @param  integer $row_id
+		 * @param int $row_id
 		 *
 		 * @return string
 		 */
 		function get_fields_by_row( $row_id ) {
+			if ( ! isset( $this->get_fields ) ) {
+				return '';
+			}
+
 			foreach ( $this->get_fields as $key => $array ) {
 				if ( ! isset( $array['in_row'] ) || ( isset( $array['in_row'] ) && $array['in_row'] == $row_id ) ) {
 					$results[ $key ] = $array;
