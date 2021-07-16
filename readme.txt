@@ -183,6 +183,12 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
   - WordPress 5.8 compatibility. Widgets screen changes based on the new features with Legacy Widget block
 
+* Templates required update:
+  - members.php
+  - password-reset.php
+
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
+
 = 2.1.21: June 17, 2021 =
 
 * Enhancements:
