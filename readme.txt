@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 5.7
-Stable tag: 2.1.21
+Stable tag: 2.2.0
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -165,6 +165,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Added: Sanitizing handlers to the Ultimate Member > Forms > Add Field/Edit Field forms' fields
   - Added: Sanitizing handlers to the Ultimate Member > User Roles forms' fields
   - Added: Sanitizing handlers to the Restriction Content forms' fields in the posts/pages/menus additional fields
+  - Added: Sanitizing handlers to the all (Login/Registration/Profile/Account) frontend forms' fields
   - Added: Custom placeholder setting for the Confirm Password field
 
 * Bugfixes:
@@ -175,6 +176,8 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed: Content restriction (CPT + Terms). Displaying the proper count of the posts. Restricted are excluded
   - Fixed: Saving and displaying settings on the UM > Settings > Access screen
   - Fixed: Saving and displaying default Member Directory settings
+  - Fixed: Minor PHP warnings on registration data preview
+  - Fixed: Member directory slider filter-type query and results
 
 * Tweaks:
 
