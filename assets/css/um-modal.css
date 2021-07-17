@@ -77,9 +77,15 @@
 	float:left;
 }
 
+.um-modal.loading{
+	background-color: white;
+}
 .um-modal.loading .um-modal-body{
 	background: white url(../img/loading.gif) no-repeat center;
 	min-height: 100px;
+}
+.um-modal.loading .um-modal-body > *{
+	opacity: 0.5;
 }
 
 /* modal header and footer */
@@ -104,12 +110,12 @@
 	text-align: right;
 }
 
-.um-modal .um-modal-left {
+/*.um-modal .um-modal-left {
 	float: left;
 }
 .um-modal .um-modal-right {
 	float: right;
-}
+}*/
 
 /* modal buttons */
 

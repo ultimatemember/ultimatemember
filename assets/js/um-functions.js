@@ -615,7 +615,7 @@ function initCrop_UM() {
 
 
 /**
- * Call additional scripts after the modal opening
+ * Apply additional scripts after modal opening
  */
 wp.hooks.addAction( 'um-modal-before-add', 'ultimatemember', function ($modal, options) {
 	let $imageUploader = $modal.find( '.um-single-image-upload' );
@@ -630,7 +630,24 @@ wp.hooks.addAction( 'um-modal-before-add', 'ultimatemember', function ($modal, o
 }, 10 );
 
 /**
- * Call additional scripts after the modal resize
+ * Apply additional scripts before modal closing
+ */
+wp.hooks.addAction('um-modal-before-close', 'ultimatemember', function ($modal) {
+	// Save and close tinyMCE editor if exists.
+	let $editor = $modal.find('div.um-admin-editor:visible');
+	if ( $editor.length > 0 ) {
+		if ( typeof tinyMCE === 'object' ) {
+			tinyMCE.triggerSave();
+		}
+		if ( typeof $um_tiny_editor === 'object' ) {
+			jQuery('div.um_tiny_placeholder:empty').replaceWith($um_tiny_editor.html());
+		}
+		$editor.find('#wp-um_editor_edit-wrap').remove();
+	}
+}, 10);
+
+/**
+ * Apply additional scripts after modal resizing
  */
 wp.hooks.addFilter( 'um-modal-responsive', 'ultimatemember', function (modalStyle, $modal) {
 	let $previewImg = $modal.find( '.um-single-image-preview img' );
@@ -756,7 +773,7 @@ function um_modal_new(id, size, ajax, image, admin) {
 	UM.dropdown.hideAll();
 	jQuery( '.tipsy' ).hide();
 
-	let template = jQuery( '#' + id ), content, options = {id: id};
+	let template = jQuery( '#' + id ), content, options = {attributes:{id: id}};
 
 	// prepare content
 	if ( image ) {
@@ -784,9 +801,9 @@ function um_modal_new(id, size, ajax, image, admin) {
 	}
 
 	if ( template.is( '[data-user_id]' ) ) {
-		options.attr['data-user_id'] = template.attr( 'data-user_id' );
+		options.attributes['data-user_id'] = template.attr( 'data-user_id' );
 	} else if ( template.find( '[data-user_id]' ).length ) {
-		options.attr['data-user_id'] = template.find( '[data-user_id]' ).attr( 'data-user_id' );
+		options.attributes['data-user_id'] = template.find( '[data-user_id]' ).attr( 'data-user_id' );
 	}
 	if ( template.find( '.um-modal-header' ).length ) {
 		options.header = template.find( '.um-modal-header' ).text().trim();

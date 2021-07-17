@@ -71,10 +71,10 @@ jQuery(document).ready(function() {
 			dataType: 'json',
 			data: form.serialize(),
 			beforeSend: function(){
-				form.css({'opacity': 0.5});
 				jQuery('.um-admin-error').removeClass('um-admin-error');
 				form.find('.um-admin-error-block').hide();
 				form.find('.um-admin-success-block').hide();
+				UM.modal.loading(true);
 			},
 			complete: function(){
 				form.css({'opacity': 1});
@@ -91,7 +91,7 @@ jQuery(document).ready(function() {
 						}
 					});
 
-					UM.modal.responsive();
+					UM.modal.loading(true).responsive();
 
 				} else {
 
@@ -100,20 +100,20 @@ jQuery(document).ready(function() {
 					jQuery('.um-col-demon-settings').data('in_column', '');
 					jQuery('.um-col-demon-settings').data('in_group', '');
 
-					UM.modal.close();
+					UM.modal.loading(true).close();
 
 					um_admin_update_builder();
 
 				}
-				
+
 			},
 			error: function(data){
 				console.log(data);
 			}
 		});
-		
+
 		return false;
-		
+
 	});
 
 });
