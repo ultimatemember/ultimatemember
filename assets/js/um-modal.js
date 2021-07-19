@@ -177,7 +177,9 @@
 		close: function () {
 			let $modal = this.getModal();
 
-			wp.hooks.doAction('um-modal-before-close', $modal);
+			if($modal && $modal.length){
+				wp.hooks.doAction('um-modal-before-close', $modal);
+			}
 
 			if ( this.M.length > 1 ) {
 				this.M.pop().remove();
