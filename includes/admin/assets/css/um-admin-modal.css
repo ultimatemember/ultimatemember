@@ -26,8 +26,6 @@
 .um-admin-modal.um-modal .um-modal-close {
 	position: absolute;
 	right: 6px;
-	top: 14px;
-	font-size: 22px;
 	opacity: 0.4;
 	z-index: 10;
 }
@@ -50,6 +48,7 @@
 .um-modal.loading .um-modal-body{
 	background: white;
 }
+.um-modal.loading .um-modal-body.um-admin-modal-body,
 .um-modal.loading .um-modal-body .um-admin-modal-body {
 	background: white url(../img/ajax-loader.gif) no-repeat center;
 	min-height: 100px;

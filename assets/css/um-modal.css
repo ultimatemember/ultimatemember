@@ -56,10 +56,15 @@
 	cursor: pointer;
 	display: block;
 	font-size: 24px;
+	line-height: 1em;
 	right: 0;
+	padding: 10px;
+	position: absolute;
 	text-decoration: none;
 	top: 0;
-	padding: 0 10px;
+	z-index: 10;
+}
+.um-modal .um-modal-close.um-modal-close-fixed {
 	position: fixed;
 }
 
@@ -91,13 +96,12 @@
 /* modal header and footer */
 
 .um-modal .um-modal-header {
-	-moz-border-radius: 3px 3px 0 0;
-	-webkit-border-radius: 3px 3px 0 0;
+	background-color: #0085ba;
 	border-radius: 3px 3px 0 0;
 	height: 44px;
-	line-height: 44px;
+	line-height: 40px;
 	color: #fff;
-	padding: 0 20px;
+	padding: 2px 20px;
 	box-sizing: border-box;
 	font-size: 17px;
 }
@@ -109,13 +113,6 @@
 	padding: 0.5em;
 	text-align: right;
 }
-
-/*.um-modal .um-modal-left {
-	float: left;
-}
-.um-modal .um-modal-right {
-	float: right;
-}*/
 
 /* modal buttons */
 

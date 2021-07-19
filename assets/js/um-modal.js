@@ -32,7 +32,7 @@
 			template: ''
 		};
 
-		this.defaultTemplate = '<div class="um-modal"><span class="um-modal-close umModalClose"><i class="um-faicon-times"></i></span><div class="um-modal-header"></div><div class="um-modal-body"></div><div class="um-modal-footer"></div></div>';
+		this.defaultTemplate = '<div class="um-modal"><span class="um-modal-close umModalClose">&times;</span><div class="um-modal-header"></div><div class="um-modal-body"></div><div class="um-modal-footer"></div></div>';
 
 	}
 	ModalManagerUM.prototype = {
@@ -208,7 +208,7 @@
 			 */
 			let defOptions = wp.hooks.applyFilters('um-modal-def-options', this.defaultOptions);
 
-			return $.extend(defOptions, options || {});
+			return $.extend({}, defOptions, options);
 		},
 
 		/**
@@ -405,6 +405,20 @@
 
 
 	/* event handlers */
+	$(document.body).on('click', '.umModalBtn', function (e) {
+		let $btn = $(e.currentTarget);
+		let options = $btn.data();
+		if ( typeof options.content === 'string' ) {
+			let content = options.content;
+			if ( typeof window[content] === 'function' ) {
+				content = window[content];
+			} else
+			if ( $(content).length ) {
+				content = $(content).children();
+			}
+			UM.modal.addModal(content, options, e);
+		}
+	});
 	$(document.body).on('click', '.um-modal-overlay, .umModalClose', function (e) {
 		e.preventDefault();
 		UM.modal.close();
