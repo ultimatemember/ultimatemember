@@ -84,7 +84,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 			add_action( 'load-post.php', array( &$this, 'enqueue_cpt_scripts' ) );
 
 			global $wp_version;
-			if ( version_compare( $wp_version, '5.8-rc.1', '>=' ) ) {
+			if ( version_compare( $wp_version, '5.8', '>=' ) ) {
 				add_filter( 'block_categories_all', array( &$this, 'blocks_category' ), 10, 2 );
 			} else {
 				add_filter( 'block_categories', array( &$this, 'blocks_category' ), 10, 2 );
