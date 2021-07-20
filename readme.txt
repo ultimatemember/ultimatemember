@@ -6,7 +6,7 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
-Tested up to: 5.7
+Tested up to: 5.8
 Stable tag: 2.2.0
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -178,6 +178,7 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
   - Fixed: Saving and displaying default Member Directory settings
   - Fixed: Minor PHP warnings on registration data preview
   - Fixed: Member directory slider filter-type query and results
+  - Fixed: Uploader filename displaying
 
 * Tweaks:
 
