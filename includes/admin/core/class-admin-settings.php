@@ -757,10 +757,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sanitize' => 'text',
 					),
 					'profile_max_width'                     => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'text',
 					),
 					'profile_area_max_width'                => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'text',
 					),
 					'profile_icons'                         => array(
 						'sanitize' => 'key',
@@ -826,7 +826,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sanitize' => 'text',
 					),
 					'register_max_width'                    => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'text',
 					),
 					'register_align'                        => array(
 						'sanitize' => 'key',
@@ -853,7 +853,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 						'sanitize' => 'text',
 					),
 					'login_max_width'                       => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'text',
 					),
 					'login_align'                           => array(
 						'sanitize' => 'key',

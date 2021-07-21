@@ -131,7 +131,7 @@ if ( ! class_exists( 'um\admin\core\Admin_DragDrop' ) ) {
 				if ( 0 === strpos( $key, 'um_group_' ) ) {
 					$field_key = str_replace( 'um_group_', '', $key );
 					if ( isset( $fields[ $field_key ] ) ) {
-						$fields[ $field_key ]['in_group'] = absint( $value );
+						$fields[ $field_key ]['in_group'] = ! empty( $value ) ? absint( $value ) : '';
 					}
 				}
 			}

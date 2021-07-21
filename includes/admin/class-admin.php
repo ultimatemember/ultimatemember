@@ -405,7 +405,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'text',
 					),
 					'_um_register_max_width'            => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'text',
 					),
 					'_um_register_icons'                => array(
 						'sanitize' => 'key',
@@ -432,7 +432,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'text',
 					),
 					'_um_login_max_width'               => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'text',
 					),
 					'_um_login_icons'                   => array(
 						'sanitize' => 'key',
@@ -465,10 +465,10 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'text',
 					),
 					'_um_profile_max_width'             => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'text',
 					),
 					'_um_profile_area_max_width'        => array(
-						'sanitize' => 'absint',
+						'sanitize' => 'text',
 					),
 					'_um_profile_icons'                 => array(
 						'sanitize' => 'key',
