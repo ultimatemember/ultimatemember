@@ -78,6 +78,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			'conditional'   => array( '_um_accessible', '=', '2' )
 		),
 		array(
+			'id'            => '_um_access_hide_from_queries',
+			'type'          => 'checkbox',
+			'label'         => __( 'Hide from queries', 'ultimate-member' ),
+			'tooltip'       => __( 'Hide this content from archives, RSS feeds etc for users who do not have permission to view this content', 'ultimate-member' ),
+			'value'         => ! empty( $data['_um_access_hide_from_queries'] ) ? $data['_um_access_hide_from_queries'] : '',
+			'conditional'   => array( '_um_accessible', '!=', '0' )
+		),
+		array(
 			'id'            => '_um_noaccess_action',
 			'type'          => 'select',
 			'label'         => __( 'What happens when users without access tries to view the content?', 'ultimate-member' ),
@@ -87,7 +95,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				'0' => __( 'Show access restricted message', 'ultimate-member' ),
 				'1' => __( 'Redirect user', 'ultimate-member' ),
 			),
-			'conditional'   => array( '_um_accessible', '!=', '0' )
+			'conditional'   => array( '_um_access_hide_from_queries', '=', '0' )
 		),
 		array(
 			'id'            => '_um_restrict_by_custom_message',
@@ -129,14 +137,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			'value'         => ! empty( $data['_um_access_redirect_url'] ) ? $data['_um_access_redirect_url'] : '',
 			'conditional'   => array( '_um_access_redirect', '=', '1' )
 		),
-		array(
-			'id'            => '_um_access_hide_from_queries',
-			'type'          => 'checkbox',
-			'label'         => __( 'Hide from queries', 'ultimate-member' ),
-			'tooltip'       => __( 'Hide this content from archives, RSS feeds etc for users who do not have permission to view this content', 'ultimate-member' ),
-			'value'         => ! empty( $data['_um_access_hide_from_queries'] ) ? $data['_um_access_hide_from_queries'] : '',
-			'conditional'   => array( '_um_accessible', '!=', '0' )
-		)
 	), $data, $object, $post_type_object );
 
 // Hierarchical
