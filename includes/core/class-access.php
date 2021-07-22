@@ -1086,11 +1086,17 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * @return array
 		 */
 		function exclude_posts_array( $in_query = true ) {
+			$exclude_posts = array();
+			if ( current_user_can( 'administrator' ) ) {
+				return $exclude_posts;
+			}
+
 			global $wpdb;
 
-			$exclude_posts = array();
 			$posts = $wpdb->get_col("SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'um_content_restriction'");
 			foreach ( $posts as $post ) {
+				// handle every post privacy setting based on post type maybe it's inactive for now
+				// if individual restriction is enabled then get post terms restriction settings
 				$content_restriction = $this->get_post_privacy_settings( $post );
 
 				if ( false === $in_query || ! empty( $content_restriction['_um_access_hide_from_queries'] ) ) {
@@ -1100,7 +1106,63 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				}
 			}
 
-			return $exclude_posts;
+
+			// exclude all posts without individual restriction settings in the restricted terms
+			$restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
+
+			$terms = $wpdb->get_results("SELECT tm.term_id AS term_id, tm.meta_value AS meta_value, tt.taxonomy AS taxonomy FROM {$wpdb->termmeta} tm LEFT JOIN {$wpdb->term_taxonomy} tt ON tt.term_id = tm.term_id WHERE tm.meta_key = 'um_content_restriction'", ARRAY_A );
+			foreach ( $terms as $term ) {
+
+				if ( empty( $restricted_taxonomies[ $term['taxonomy'] ] ) ) {
+					continue;
+				}
+
+				$meta_value = maybe_unserialize( $term['meta_value'] );
+
+				if ( false === $in_query || ! empty( $meta_value['_um_access_hide_from_queries'] ) ) {
+					$posts = get_posts(
+						array(
+							'fields'      => 'ids',
+							'post_status' => 'any',
+							'numberposts' => -1,
+							'tax_query'   => array(
+								array(
+									'taxonomy' => $term['taxonomy'],
+									'field'    => 'id',
+									'terms'    => $term['term_id'],
+								),
+							),
+							'meta_query'  => array(
+								'relation' => 'OR',
+								array(
+									'relation' => 'AND',
+									array(
+										'key'     => 'um_content_restriction',
+										'value'   => 's:26:"_um_custom_access_settings";s:1:"1"',
+										'compare' => 'NOT LIKE',
+									),
+									array(
+										'key'     => 'um_content_restriction',
+										'value'   => 's:26:"_um_custom_access_settings";b:1',
+										'compare' => 'NOT LIKE',
+									),
+								),
+								array(
+									'key'     => 'um_content_restriction',
+									'compare' => 'NOT EXISTS',
+								),
+							),
+						)
+					);
+
+					if ( ! empty( $posts ) ) {
+						array_push( $exclude_posts, $posts );
+					}
+				}
+
+			}
+
+			return array_unique( $exclude_posts );
 		}
 
 
