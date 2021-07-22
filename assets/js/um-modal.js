@@ -149,7 +149,7 @@ jQuery(document).ready(function() {
 
 						jQuery('img.cropper-invisible').remove();
 
-						jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( elem.attr('data-change') );
+						jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( um_sanitize_value( elem.attr('data-change') ) );
 
 						jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type="hidden"]').val( response.data.image.filename );
 					}
@@ -165,7 +165,7 @@ jQuery(document).ready(function() {
 					
 					um_remove_modal();
 					
-					jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( elem.attr('data-change') );
+					jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('.um-btn-auto-width').html( um_sanitize_value( elem.attr('data-change') ) );
 					
 					jQuery('.um-single-image-preview[data-key='+key+']').parents('.um-field').find('input[type=hidden]').val( file );
 

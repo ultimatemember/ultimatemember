@@ -35,6 +35,7 @@ function um_get_data_for_directory( directory, search_key ) {
 			try {
 				//data[ search_key ] = decodeURI( data[ search_key ] );
 				data[ search_key ] = decodeURIComponent( data[ search_key ] );
+				data[ search_key ] = um_sanitize_value( data[ search_key ] );
 			} catch(e) { // catches a malformed URI
 				console.error(e);
 			}
@@ -575,7 +576,6 @@ function um_change_tag( directory ) {
 }
 
 
-
 function um_run_search( directory ) {
 	if ( um_is_directory_busy( directory ) ) {
 		return;
@@ -1020,7 +1020,8 @@ jQuery(document.body).ready( function() {
 			return;
 		}
 
-		var current_value = jQuery(this).val();
+		var current_value = um_sanitize_value( jQuery(this).val(), this );
+
 		var filter_name = jQuery(this).prop('name');
 		var url_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
 
@@ -1058,7 +1059,7 @@ jQuery(document.body).ready( function() {
 				return;
 			}
 
-			var current_value = jQuery(this).val();
+			var current_value = um_sanitize_value( jQuery(this).val(), this );
 			var filter_name = jQuery(this).prop('name');
 			var url_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
 
