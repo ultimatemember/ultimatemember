@@ -704,6 +704,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			}
 
 			$restricted_global_message = UM()->options()->get( 'restricted_access_message' );
+			$restricted_global_title = UM()->options()->get( 'restricted_access_post_title' );
 
 			if ( is_object( $query ) ) {
 				$is_singular = $query->is_singular();
@@ -750,15 +751,17 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							//if not single query when exclude if set _um_access_hide_from_queries
 							if ( empty( $restriction['_um_access_hide_from_queries'] ) ) {
 
-								if ( ! isset( $restriction['_um_noaccess_action'] ) || '0' == $restriction['_um_noaccess_action'] ) {
-
-									if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
-										$post->post_content = stripslashes( $restricted_global_message );
-									} elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
-										$post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
-									}
-
+								if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
+									$post->post_content = stripslashes( $restricted_global_message );
+									$post->post_title = stripslashes( $restricted_global_title );
+									$post->post_excerpt = '';
+								} elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
+									$post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
+									$post->post_title = stripslashes( $restricted_global_title );
+									$post->post_excerpt = '';
 								}
+
+								$post = apply_filters( 'um_restricted_archive_post', $post, $restriction );
 
 								$filtered_posts[] = $post;
 								continue;
@@ -771,9 +774,13 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 								if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
 									$post->post_content = stripslashes( $restricted_global_message );
+									$post->post_title = stripslashes( $restricted_global_title );
 								} elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
 									$post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
+									$post->post_title = stripslashes( $restricted_global_title );
 								}
+
+								$post = apply_filters( 'um_restricted_singular_post', $post, $restriction );
 
 								$this->current_single_post = $post;
 
@@ -854,15 +861,17 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							//if not single query when exclude if set _um_access_hide_from_queries
 							if ( empty( $restriction['_um_access_hide_from_queries'] ) ) {
 
-								if ( ! isset( $restriction['_um_noaccess_action'] ) || '0' == $restriction['_um_noaccess_action'] ) {
-
-									if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
-										$post->post_content = stripslashes( $restricted_global_message );
-									} elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
-										$post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
-									}
-
+								if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
+									$post->post_content = stripslashes( $restricted_global_message );
+									$post->post_title = stripslashes( $restricted_global_title );
+									$post->post_excerpt = '';
+								} elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
+									$post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
+									$post->post_title = stripslashes( $restricted_global_title );
+									$post->post_excerpt = '';
 								}
+
+								$post = apply_filters( 'um_restricted_archive_post', $post, $restriction );
 
 								$filtered_posts[] = $post;
 								continue;
@@ -875,6 +884,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 								if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
 									$post->post_content = stripslashes( $restricted_global_message );
+									$post->post_title = stripslashes( $restricted_global_title );
 
 									$this->current_single_post = $post;
 
@@ -883,6 +893,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 									}
 								} elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
 									$post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
+									$post->post_title = stripslashes( $restricted_global_title );
 
 									$this->current_single_post = $post;
 
@@ -890,6 +901,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 										remove_filter( 'the_content', 'prepend_attachment' );
 									}
 								}
+
+								$post = apply_filters( 'um_restricted_singular_post', $post, $restriction );
 
 								/**
 								 * UM hook
@@ -941,15 +954,17 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 						if ( empty( $is_singular ) ) {
 							if ( empty( $restriction['_um_access_hide_from_queries'] ) ) {
 
-								if ( ! isset( $restriction['_um_noaccess_action'] ) || '0' == $restriction['_um_noaccess_action'] ) {
-
-									if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
-										$post->post_content = stripslashes( $restricted_global_message );
-									} elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
-										$post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
-									}
-
+								if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
+									$post->post_content = stripslashes( $restricted_global_message );
+									$post->post_title = stripslashes( $restricted_global_title );
+									$post->post_excerpt = '';
+								} elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
+									$post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
+									$post->post_title = stripslashes( $restricted_global_title );
+									$post->post_excerpt = '';
 								}
+
+								$post = apply_filters( 'um_restricted_archive_post', $post, $restriction );
 
 								$filtered_posts[] = $post;
 								continue;
@@ -962,6 +977,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 								if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
 									$post->post_content = stripslashes( $restricted_global_message );
+									$post->post_title = stripslashes( $restricted_global_title );
 
 									$this->current_single_post = $post;
 
@@ -970,6 +986,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 									}
 								} elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
 									$post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
+									$post->post_title = stripslashes( $restricted_global_title );
 
 									$this->current_single_post = $post;
 
@@ -977,6 +994,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 										remove_filter( 'the_content', 'prepend_attachment' );
 									}
 								}
+
+								$post = apply_filters( 'um_restricted_singular_post', $post, $restriction );
 
 								/**
 								 * UM hook

@@ -543,6 +543,7 @@ if ( ! class_exists( 'um\Config' ) ) {
 				'access_exclude_uris'                   => array(),
 				'home_page_accessible'                  => 1,
 				'category_page_accessible'              => 1,
+				'restricted_access_post_title'          => __( 'Restricted content', 'ultimate-member' ),
 				'restricted_access_message'             => '',
 				'restricted_blocks'                     => 0,
 				'enable_blocks'                         => 0,

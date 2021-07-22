@@ -503,6 +503,12 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'conditional' => array( 'accessible', '=', 2 ),
 				),
 				array(
+					'id'      => 'restricted_access_post_title',
+					'type'    => 'text',
+					'label'   => __( 'Restricted Access Post Title', 'ultimate-member' ),
+					'tooltip' => __( 'This is the post title shown to users that do not have permission to view the content', 'ultimate-member' ),
+				),
+				array(
 					'id'      => 'restricted_access_message',
 					'type'    => 'wp_editor',
 					'label'   => __( 'Restricted Access Message', 'ultimate-member' ),
@@ -513,22 +519,25 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 			$settings_map = array_merge(
 				$settings_map,
 				array(
-					'accessible'                => array(
+					'accessible'                   => array(
 						'sanitize' => 'int',
 					),
-					'access_redirect'           => array(
+					'access_redirect'              => array(
 						'sanitize' => 'url',
 					),
-					'access_exclude_uris'       => array(
+					'access_exclude_uris'          => array(
 						'sanitize' => 'url',
 					),
-					'home_page_accessible'      => array(
+					'home_page_accessible'         => array(
 						'sanitize' => 'bool',
 					),
-					'category_page_accessible'  => array(
+					'category_page_accessible'     => array(
 						'sanitize' => 'bool',
 					),
-					'restricted_access_message' => array(
+					'restricted_access_post_title' => array(
+						'sanitize' => 'text',
+					),
+					'restricted_access_message'    => array(
 						'sanitize' => 'wp_kses',
 					),
 				)
