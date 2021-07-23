@@ -956,11 +956,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 								if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
 									$post->post_content = stripslashes( $restricted_global_message );
-									$post->post_title = stripslashes( $restricted_global_title );
 									$post->post_excerpt = '';
 								} elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
 									$post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
-									$post->post_title = stripslashes( $restricted_global_title );
 									$post->post_excerpt = '';
 								}
 
@@ -1117,7 +1115,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				// handle every post privacy setting based on post type maybe it's inactive for now
 				// if individual restriction is enabled then get post terms restriction settings
 				$content_restriction = $this->get_post_privacy_settings( $post );
-
 				if ( false === $in_query || ! empty( $content_restriction['_um_access_hide_from_queries'] ) ) {
 					if ( $this->is_restricted( $post ) ) {
 						array_push( $exclude_posts, $post );
@@ -1175,7 +1172,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					);
 
 					if ( ! empty( $posts ) ) {
-						array_push( $exclude_posts, $posts );
+						$exclude_posts = array_merge( $exclude_posts, $posts );
 					}
 				}
 
