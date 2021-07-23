@@ -107,17 +107,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				return $stats;
 			}
 
-			$count = wp_cache_get( "comments-{$post_id}", 'counts' );
-			if ( false !== $count ) {
-				return $count;
-			}
-
 			$stats              = $this->get_comment_count( $post_id, $exclude_posts );
 			$stats['moderated'] = $stats['awaiting_moderation'];
 			unset( $stats['awaiting_moderation'] );
 
 			$stats_object = (object) $stats;
-			wp_cache_set( "comments-{$post_id}", $stats_object, 'counts' );
 
 			return $stats_object;
 		}
@@ -128,17 +122,15 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 			$post_id = (int) $post_id;
 
-			$where = 'WHERE 1=1 ';
+			$where = 'WHERE 1=1';
 			if ( $post_id > 0 ) {
-				$where .= $wpdb->prepare( 'AND comment_post_ID = %d', $post_id );
+				$where .= $wpdb->prepare( ' AND comment_post_ID = %d', $post_id );
 			}
 
 			if ( ! empty( $exclude_posts ) ) {
 				$exclude_string = implode( ',', $exclude_posts );
 				$where .= ' AND comment_post_ID NOT IN ( ' . $exclude_string . ' )';
 			}
-
-			$where .= $wpdb->prepare( 'AND comment_post_ID = %d', $post_id );
 
 			$totals = (array) $wpdb->get_results(
 				"
@@ -1230,6 +1222,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			$restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
 
 			$terms = $wpdb->get_results("SELECT tm.term_id AS term_id, tm.meta_value AS meta_value, tt.taxonomy AS taxonomy FROM {$wpdb->termmeta} tm LEFT JOIN {$wpdb->term_taxonomy} tt ON tt.term_id = tm.term_id WHERE tm.meta_key = 'um_content_restriction'", ARRAY_A );
+
 			foreach ( $terms as $term ) {
 
 				if ( empty( $restricted_taxonomies[ $term['taxonomy'] ] ) ) {
@@ -1275,7 +1268,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					);
 
 					if ( ! empty( $posts ) ) {
-						$exclude_posts = array_merge( $exclude_posts, $posts );
+						foreach ( $posts as $post_id ) {
+							if ( $this->is_restricted( $post_id ) ) {
+								array_push( $exclude_posts, $post_id );
+							}
+						}
 					}
 				}
 
