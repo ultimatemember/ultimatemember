@@ -1118,7 +1118,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				// if individual restriction is enabled then get post terms restriction settings
 				$content_restriction = $this->get_post_privacy_settings( $post );
 
-				if ( false === $in_query || ! empty( $content_restriction['_um_access_hide_from_queries'] ) ) {
+				if ( ! empty( $content_restriction['_um_custom_access_settings'] ) && ( false === $in_query || ! empty( $content_restriction['_um_access_hide_from_queries'] ) ) ) {
 					if ( $this->is_restricted( $post ) ) {
 						array_push( $exclude_posts, $post );
 					}
@@ -1138,7 +1138,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 				$meta_value = maybe_unserialize( $term['meta_value'] );
 
-				if ( false === $in_query || ( ! empty( $meta_value['_um_custom_access_settings'] ) && ! empty( $meta_value['_um_access_hide_from_queries'] ) ) ) {
+				if ( ! empty( $meta_value['_um_custom_access_settings'] ) && ( false === $in_query || ! empty( $meta_value['_um_access_hide_from_queries'] ) ) ) {
 					$posts = get_posts(
 						array(
 							'fields'      => 'ids',
