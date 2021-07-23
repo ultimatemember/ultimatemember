@@ -58,6 +58,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			add_filter( 'widget_posts_args', array( &$this, 'exclude_restricted_posts_widget' ), 99, 1 );
 			add_filter( 'comment_feed_where', array( &$this, 'exclude_posts_comments_feed' ), 99, 2 );
 
+
+			add_filter( 'wp_count_comments', array( &$this, 'custom_comments_count_handler' ), 99, 2 );
+
 			//there is posts (Posts/Page/CPT) filtration if site is accessible
 			//there also will be redirects if they need
 			//protect posts types
@@ -90,6 +93,101 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			add_filter( 'get_comments_number', array( $this, 'disable_comments_open_number' ), 99, 2 );
 
 			add_filter( 'render_block', array( $this, 'restrict_blocks' ), 10, 2 );
+		}
+
+
+		function custom_comments_count_handler( $stats, $post_id ) {
+			if ( ! empty( $stats ) ) {
+				return $stats;
+			}
+
+			$exclude_posts = $this->exclude_posts_array( false );
+
+			if ( empty( $exclude_posts ) ) {
+				return $stats;
+			}
+
+			$count = wp_cache_get( "comments-{$post_id}", 'counts' );
+			if ( false !== $count ) {
+				return $count;
+			}
+
+			$stats              = $this->get_comment_count( $post_id, $exclude_posts );
+			$stats['moderated'] = $stats['awaiting_moderation'];
+			unset( $stats['awaiting_moderation'] );
+
+			$stats_object = (object) $stats;
+			wp_cache_set( "comments-{$post_id}", $stats_object, 'counts' );
+
+			return $stats_object;
+		}
+
+
+		function get_comment_count( $post_id = 0, $exclude_posts = array() ) {
+			global $wpdb;
+
+			$post_id = (int) $post_id;
+
+			$where = 'WHERE 1=1 ';
+			if ( $post_id > 0 ) {
+				$where .= $wpdb->prepare( 'AND comment_post_ID = %d', $post_id );
+			}
+
+			if ( ! empty( $exclude_posts ) ) {
+				$exclude_string = implode( ',', $exclude_posts );
+				$where .= ' AND comment_post_ID NOT IN ( ' . $exclude_string . ' )';
+			}
+
+			$where .= $wpdb->prepare( 'AND comment_post_ID = %d', $post_id );
+
+			$totals = (array) $wpdb->get_results(
+				"
+		SELECT comment_approved, COUNT( * ) AS total
+		FROM {$wpdb->comments}
+		{$where}
+		GROUP BY comment_approved
+	",
+				ARRAY_A
+			);
+
+			$comment_count = array(
+				'approved'            => 0,
+				'awaiting_moderation' => 0,
+				'spam'                => 0,
+				'trash'               => 0,
+				'post-trashed'        => 0,
+				'total_comments'      => 0,
+				'all'                 => 0,
+			);
+
+			foreach ( $totals as $row ) {
+				switch ( $row['comment_approved'] ) {
+					case 'trash':
+						$comment_count['trash'] = $row['total'];
+						break;
+					case 'post-trashed':
+						$comment_count['post-trashed'] = $row['total'];
+						break;
+					case 'spam':
+						$comment_count['spam']            = $row['total'];
+						$comment_count['total_comments'] += $row['total'];
+						break;
+					case '1':
+						$comment_count['approved']        = $row['total'];
+						$comment_count['total_comments'] += $row['total'];
+						$comment_count['all']            += $row['total'];
+						break;
+					case '0':
+						$comment_count['awaiting_moderation'] = $row['total'];
+						$comment_count['total_comments']     += $row['total'];
+						$comment_count['all']                += $row['total'];
+						break;
+					default:
+						break;
+				}
+			}
+
+			return array_map( 'intval', $comment_count );
 		}
 
 

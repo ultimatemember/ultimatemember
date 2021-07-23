@@ -529,6 +529,7 @@ if ( ! class_exists( 'UM' ) ) {
 		public function includes() {
 
 			$this->common();
+			$this->access();
 
 			if ( $this->is_request( 'ajax' ) ) {
 				$this->admin();
@@ -540,7 +541,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->columns();
 				$this->admin()->notices();
 				$this->admin_navmenu();
-				$this->access();
 				$this->plugin_updater();
 				$this->theme_updater();
 			} elseif ( $this->is_request( 'admin' ) ) {
@@ -565,7 +565,6 @@ if ( ! class_exists( 'UM' ) ) {
 				$this->login();
 				$this->register();
 				$this->user_posts();
-				$this->access();
 				$this->logout();
 			}
 
