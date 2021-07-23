@@ -828,6 +828,8 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			add_action( 'parent_file', array( &$this, 'parent_file' ), 9 );
 			add_filter( 'gettext', array( &$this, 'gettext' ), 10, 4 );
 			add_filter( 'post_updated_messages', array( &$this, 'post_updated_messages' ) );
+
+			add_action( 'pre_get_comments', array( &$this, 'exclude_posts_comments' ), 99, 1 );
 		}
 
 
@@ -1951,6 +1953,20 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 				UM()->classes['admin_notices'] = new core\Admin_Notices();
 			}
 			return UM()->classes['admin_notices'];
+		}
+
+
+		/**
+		 * Exclude comments from restricted posts in activity widget admin dashboard
+		 *
+		 * @param \WP_Comment_Query $query
+		 *
+		 */
+		function exclude_posts_comments( $query ) {
+			$exclude_posts = UM()->access()->exclude_posts_array( false );
+			if ( ! empty( $exclude_posts ) ) {
+				$query->query_vars['post__not_in'] = $exclude_posts;
+			}
 		}
 	}
 }
