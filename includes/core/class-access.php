@@ -1175,7 +1175,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					);
 
 					if ( ! empty( $posts ) ) {
-						array_push( $exclude_posts, $posts );
+						$exclude_posts = array_merge( $exclude_posts, $posts );
 					}
 				}
 
