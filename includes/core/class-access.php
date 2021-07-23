@@ -956,9 +956,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 								if ( ! isset( $restriction['_um_restrict_by_custom_message'] ) || '0' == $restriction['_um_restrict_by_custom_message'] ) {
 									$post->post_content = stripslashes( $restricted_global_message );
+									$post->post_title   = stripslashes( $restricted_global_title );
 									$post->post_excerpt = '';
 								} elseif ( '1' == $restriction['_um_restrict_by_custom_message'] ) {
 									$post->post_content = ! empty( $restriction['_um_restrict_custom_message'] ) ? stripslashes( $restriction['_um_restrict_custom_message'] ) : '';
+									$post->post_title   = stripslashes( $restricted_global_title );
 									$post->post_excerpt = '';
 								}
 
