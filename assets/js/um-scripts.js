@@ -1,3 +1,15 @@
+function um_sanitize_value( value, el ) {
+	var element = document.createElement( 'div' );
+	element.innerText = value;
+	var sanitized_value = element.innerHTML;
+	if ( el ) {
+		jQuery( el ).val( sanitized_value );
+	}
+
+	return sanitized_value;
+}
+
+
 function um_init_datetimepicker() {
 	jQuery('.um-datepicker:not(.picker__input)').each(function(){
 		var elem = jQuery(this);
@@ -249,7 +261,7 @@ jQuery(document).ready(function() {
 				parent.find('.um-single-image-preview img').attr( 'src', '' );
 				parent.find('.um-single-image-preview').hide();
 				parent.find('.um-btn-auto-width').html( parent.data('upload-label') );
-				parent.find('input[type=hidden]').val( 'empty_file' );
+				parent.find('input[type="hidden"]').val( 'empty_file' );
 			}
 		};
 

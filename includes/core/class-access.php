@@ -715,6 +715,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			//other filter
 			foreach ( $posts as $post ) {
 
+				$original_post = $post;
+
 				//Woocommerce AJAX fixes....remove filtration on wc-ajax which goes to Front Page
 				if ( ! empty( $_GET['wc-ajax'] ) && defined( 'WC_DOING_AJAX' ) && WC_DOING_AJAX ) {
 					$filtered_posts[] = $post;
@@ -761,7 +763,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 									$post->post_excerpt = '';
 								}
 
-								$post = apply_filters( 'um_restricted_archive_post', $post, $restriction );
+								$post = apply_filters( 'um_restricted_archive_post', $post, $restriction, $original_post );
 
 								$filtered_posts[] = $post;
 								continue;
@@ -780,7 +782,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 									$post->post_title = stripslashes( $restricted_global_title );
 								}
 
-								$post = apply_filters( 'um_restricted_singular_post', $post, $restriction );
+								$post = apply_filters( 'um_restricted_singular_post', $post, $restriction, $original_post );
 
 								$this->current_single_post = $post;
 
@@ -871,7 +873,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 									$post->post_excerpt = '';
 								}
 
-								$post = apply_filters( 'um_restricted_archive_post', $post, $restriction );
+								$post = apply_filters( 'um_restricted_archive_post', $post, $restriction, $original_post );
 
 								$filtered_posts[] = $post;
 								continue;
@@ -902,7 +904,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 									}
 								}
 
-								$post = apply_filters( 'um_restricted_singular_post', $post, $restriction );
+								$post = apply_filters( 'um_restricted_singular_post', $post, $restriction, $original_post );
 
 								/**
 								 * UM hook
@@ -964,7 +966,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 									$post->post_excerpt = '';
 								}
 
-								$post = apply_filters( 'um_restricted_archive_post', $post, $restriction );
+								$post = apply_filters( 'um_restricted_archive_post', $post, $restriction, $original_post );
 
 								$filtered_posts[] = $post;
 								continue;
@@ -995,7 +997,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 									}
 								}
 
-								$post = apply_filters( 'um_restricted_singular_post', $post, $restriction );
+								$post = apply_filters( 'um_restricted_singular_post', $post, $restriction, $original_post );
 
 								/**
 								 * UM hook
