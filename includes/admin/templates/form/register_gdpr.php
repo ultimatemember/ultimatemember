@@ -2,6 +2,8 @@
 	exit;
 }
 
+global $post_id;
+
 $options = array(
 	'' => __( 'Select page', 'ultimate-member' ),
 );
@@ -9,7 +11,9 @@ $options = array(
 $pages = get_pages();
 foreach ( $pages as $page ) {
 	$options[ $page->ID ] = $page->post_title;
-} ?>
+}
+
+$register_use_gdpr = ! isset( $post_id ) ? false : get_post_meta( $post_id, '_um_register_use_gdpr', true ); ?>
 
 <div class="um-admin-metabox">
 	<?php
@@ -22,10 +26,10 @@ foreach ( $pages as $page ) {
 					'id'      => '_um_register_use_gdpr',
 					'type'    => 'select',
 					'label'   => __( 'Enable on this form', 'ultimate-member' ),
-					'value'   => UM()->query()->get_meta_value( '_um_register_use_gdpr', null, '' ),
+					'value'   => $register_use_gdpr,
 					'options' => array(
-						'0' => __( 'No', 'ultimate-member' ),
-						'1' => __( 'Yes', 'ultimate-member' ),
+						0 => __( 'No', 'ultimate-member' ),
+						1 => __( 'Yes', 'ultimate-member' ),
 					),
 				),
 				array(

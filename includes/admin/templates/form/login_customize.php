@@ -1,6 +1,14 @@
 <?php if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-} ?>
+}
+
+global $post_id;
+
+$use_custom_settings    = ! isset( $post_id ) ? false : get_post_meta( $post_id, '_um_login_use_custom_settings', true );
+$login_secondary_btn    = ! isset( $post_id ) ? UM()->options()->get( 'login_secondary_btn' ) : get_post_meta( $post_id, '_um_login_secondary_btn', true );
+$login_forgot_pass_link = ! isset( $post_id ) ? UM()->options()->get( 'login_forgot_pass_link' ) : get_post_meta( $post_id, '_um_login_forgot_pass_link', true );
+$login_show_rememberme  = ! isset( $post_id ) ? UM()->options()->get( 'login_show_rememberme' ) : get_post_meta( $post_id, '_um_login_show_rememberme', true );
+?>
 
 <div class="um-admin-metabox">
 	<?php
@@ -14,7 +22,7 @@
 					'type'    => 'select',
 					'label'   => __( 'Apply custom settings to this form', 'ultimate-member' ),
 					'tooltip' => __( 'Switch to yes if you want to customize this form settings, styling &amp; appearance', 'ultimate-member' ),
-					'value'   => UM()->query()->get_meta_value( '_um_login_use_custom_settings', null, 0 ),
+					'value'   => $use_custom_settings,
 					'options' => array(
 						0 => __( 'No', 'ultimate-member' ),
 						1 => __( 'Yes', 'ultimate-member' ),
@@ -61,7 +69,7 @@
 					'id'          => '_um_login_secondary_btn',
 					'type'        => 'select',
 					'label'       => __( 'Show Secondary Button', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_login_secondary_btn', null, UM()->options()->get( 'login_secondary_btn' ) ),
+					'value'       => $login_secondary_btn,
 					'conditional' => array( '_um_login_use_custom_settings', '=', 1 ),
 					'options'     => array(
 						0 => __( 'No', 'ultimate-member' ),
@@ -80,7 +88,7 @@
 					'id'          => '_um_login_forgot_pass_link',
 					'type'        => 'select',
 					'label'       => __( 'Show Forgot Password Link?', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_login_forgot_pass_link', null, UM()->options()->get( 'login_forgot_pass_link' ) ),
+					'value'       => $login_forgot_pass_link,
 					'conditional' => array( '_um_login_use_custom_settings', '=', 1 ),
 					'options'     => array(
 						0 => __( 'No', 'ultimate-member' ),
@@ -91,7 +99,7 @@
 					'id'          => '_um_login_show_rememberme',
 					'type'        => 'select',
 					'label'       => __( 'Show "Remember Me"?', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_login_show_rememberme', null, UM()->options()->get( 'login_show_rememberme' ) ),
+					'value'       => $login_show_rememberme,
 					'conditional' => array( '_um_login_use_custom_settings', '=', 1 ),
 					'options'     => array(
 						0 => __( 'No', 'ultimate-member' ),

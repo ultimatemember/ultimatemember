@@ -1182,7 +1182,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 			// save
 			delete_post_meta( $post_id, '_um_profile_metafields' );
 
-
 			$form_meta = UM()->admin()->sanitize_form_meta( $_POST['form'] );
 
 			foreach ( $form_meta as $k => $v ) {

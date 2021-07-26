@@ -32,6 +32,8 @@ foreach ( $view_types_options as $key => $value ) {
 	$conditional[] = '_um_view_types_' . $key;
 }
 
+$default_view = get_post_meta( $post_id, '_um_default_view', true );
+$default_view = empty( $default_view ) ? 'grid' : $default_view;
 
 $fields = array(
 	array(
@@ -55,7 +57,7 @@ $fields = array(
 		'label'       => __( 'Default view type', 'ultimate-member' ),
 		'tooltip'     => __( 'Default directory view type', 'ultimate-member' ),
 		'options'     => $view_types_options,
-		'value'       => UM()->query()->get_meta_value( '_um_default_view', null, 'grid' ),
+		'value'       => $default_view,
 		'conditional' => array( implode( '|', $conditional ), '~', 1 ),
 	),
 	array(
@@ -72,13 +74,13 @@ $fields = array(
 		'type'    => 'checkbox',
 		'label'   => __( 'Only show members who have uploaded a profile photo', 'ultimate-member' ),
 		'tooltip' => __( 'If \'Use Gravatars\' as profile photo is enabled, this option is ignored', 'ultimate-member' ),
-		'value'   => UM()->query()->get_meta_value( '_um_has_profile_photo' ),
+		'value'   => (bool) get_post_meta( $post_id, '_um_has_profile_photo', true ),
 	),
 	array(
 		'id'    => '_um_has_cover_photo',
 		'type'  => 'checkbox',
 		'label' => __( 'Only show members who have uploaded a cover photo', 'ultimate-member' ),
-		'value' => UM()->query()->get_meta_value( '_um_has_cover_photo' ),
+		'value' => (bool) get_post_meta( $post_id, '_um_has_cover_photo', true ),
 	),
 	array(
 		'id'    => '_um_show_these_users',

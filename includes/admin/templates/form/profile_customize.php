@@ -2,13 +2,27 @@
 	exit;
 }
 
+global $post_id;
+
+$use_custom_settings = ! isset( $post_id ) ? false : get_post_meta( $post_id, '_um_profile_use_custom_settings', true );
+
 $profile_role_array = array();
 foreach ( UM()->roles()->get_roles() as $key => $value ) {
 	$_um_profile_role = UM()->query()->get_meta_value( '_um_profile_role', $key );
 	if ( ! empty( $_um_profile_role ) ) {
 		$profile_role_array[] = $_um_profile_role;
 	}
-} ?>
+}
+
+$profile_secondary_btn        = ! isset( $post_id ) ? UM()->options()->get( 'profile_secondary_btn' ) : get_post_meta( $post_id, '_um_profile_secondary_btn', true );
+$profile_cover_enabled        = ! isset( $post_id ) ? true : get_post_meta( $post_id, '_um_profile_cover_enabled', true );
+$profile_disable_photo_upload = ! isset( $post_id ) ? UM()->options()->get( 'disable_profile_photo_upload' ) : get_post_meta( $post_id, '_um_profile_disable_photo_upload', true );
+$profile_photo_required       = ! isset( $post_id ) ? false : get_post_meta( $post_id, '_um_profile_photo_required', true );
+$profile_show_name            = ! isset( $post_id ) ? true : get_post_meta( $post_id, '_um_profile_show_name', true );
+$profile_show_social_links    = ! isset( $post_id ) ? UM()->options()->get( 'profile_show_social_links' ) : get_post_meta( $post_id, '_um_profile_show_social_links', true );
+$profile_show_bio             = ! isset( $post_id ) ? true : get_post_meta( $post_id, '_um_profile_show_bio', true );
+
+?>
 
 
 <div class="um-admin-metabox">
@@ -23,7 +37,7 @@ foreach ( UM()->roles()->get_roles() as $key => $value ) {
 					'type'    => 'select',
 					'label'   => __( 'Apply custom settings to this form', 'ultimate-member' ),
 					'tooltip' => __( 'Switch to yes if you want to customize this form settings, styling &amp; appearance', 'ultimate-member' ),
-					'value'   => UM()->query()->get_meta_value( '_um_profile_use_custom_settings', null, 0 ),
+					'value'   => $use_custom_settings,
 					'options' => array(
 						0 => __( 'No', 'ultimate-member' ),
 						1 => __( 'Yes', 'ultimate-member' ),
@@ -88,7 +102,7 @@ foreach ( UM()->roles()->get_roles() as $key => $value ) {
 					'id'          => '_um_profile_secondary_btn',
 					'type'        => 'select',
 					'label'       => __( 'Show Secondary Button', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_profile_secondary_btn', null, UM()->options()->get( 'profile_secondary_btn' ) ),
+					'value'       => $profile_secondary_btn,
 					'conditional' => array( '_um_profile_use_custom_settings', '=', 1 ),
 					'options'     => array(
 						0 => __( 'No', 'ultimate-member' ),
@@ -107,7 +121,7 @@ foreach ( UM()->roles()->get_roles() as $key => $value ) {
 					'id'          => '_um_profile_cover_enabled',
 					'type'        => 'select',
 					'label'       => __( 'Enable Cover Photos', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_profile_cover_enabled', null, 1 ),
+					'value'       => $profile_cover_enabled,
 					'conditional' => array( '_um_profile_use_custom_settings', '=', 1 ),
 					'options'     => array(
 						0 => __( 'No', 'ultimate-member' ),
@@ -142,7 +156,7 @@ foreach ( UM()->roles()->get_roles() as $key => $value ) {
 					'type'        => 'select',
 					'label'       => __( 'Disable Profile Photo Upload', 'ultimate-member' ),
 					'tooltip'     => __( 'Switch on/off the profile photo uploader', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_profile_disable_photo_upload', null, UM()->options()->get( 'disable_profile_photo_upload' ) ),
+					'value'       => $profile_disable_photo_upload,
 					'conditional' => array( '_um_profile_use_custom_settings', '=', 1 ),
 					'options'     => array(
 						0 => __( 'No', 'ultimate-member' ),
@@ -163,7 +177,7 @@ foreach ( UM()->roles()->get_roles() as $key => $value ) {
 					'type'        => 'select',
 					'label'       => __( 'Make Profile Photo Required', 'ultimate-member' ),
 					'tooltip'     => __( 'Require user to update a profile photo when updating their profile', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_profile_photo_required' ),
+					'value'       => $profile_photo_required,
 					'conditional' => array( '_um_profile_use_custom_settings', '=', 1 ),
 					'options'     => array(
 						0 => __( 'No', 'ultimate-member' ),
@@ -174,7 +188,7 @@ foreach ( UM()->roles()->get_roles() as $key => $value ) {
 					'id'          => '_um_profile_show_name',
 					'type'        => 'select',
 					'label'       => __( 'Show display name in profile header?', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_profile_show_name', null, 1 ),
+					'value'       => $profile_show_name,
 					'conditional' => array( '_um_profile_use_custom_settings', '=', 1 ),
 					'options'     => array(
 						0 => __( 'No', 'ultimate-member' ),
@@ -185,7 +199,7 @@ foreach ( UM()->roles()->get_roles() as $key => $value ) {
 					'id'          => '_um_profile_show_social_links',
 					'type'        => 'select',
 					'label'       => __( 'Show social links in profile header?', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_profile_show_social_links', null, UM()->options()->get( 'profile_show_social_links' ) ),
+					'value'       => $profile_show_social_links,
 					'conditional' => array( '_um_profile_use_custom_settings', '=', 1 ),
 					'options'     => array(
 						0 => __( 'No', 'ultimate-member' ),
@@ -196,7 +210,7 @@ foreach ( UM()->roles()->get_roles() as $key => $value ) {
 					'id'          => '_um_profile_show_bio',
 					'type'        => 'select',
 					'label'       => __( 'Show user description in profile header?', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_profile_show_bio', null, 1 ),
+					'value'       => $profile_show_bio,
 					'conditional' => array( '_um_profile_use_custom_settings', '=', 1 ),
 					'options'     => array(
 						0 => __( 'No', 'ultimate-member' ),

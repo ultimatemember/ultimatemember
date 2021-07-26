@@ -1,6 +1,8 @@
 <?php if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-} ?>
+}
+
+global $post_id; ?>
 
 <div class="um-admin-metabox">
 	<?php
@@ -14,7 +16,7 @@
 					'type'        => 'checkbox',
 					'label'       => __( 'Show results only after search/filtration', 'ultimate-member' ),
 					'tooltip'     => __( 'If turned on, member results will only appear after search/filter is performed', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_must_search' ),
+					'value'       => (bool) get_post_meta( $post_id, '_um_must_search', true ),
 					'conditional' => array( '_um_search||_um_filters', '=', 1 ),
 				),
 				array(

@@ -2,41 +2,41 @@
 	exit;
 }
 
+global $post_id;
+
 $user_fields = array();
 foreach ( UM()->builtin()->all_user_fields() as $key => $arr ) {
 	$user_fields[ $key ] = isset( $arr['title'] ) ? $arr['title'] : '';
 }
 
-$post_id            = get_the_ID();
 $_um_tagline_fields = get_post_meta( $post_id, '_um_tagline_fields', true );
 $_um_reveal_fields  = get_post_meta( $post_id, '_um_reveal_fields', true );
-
 
 $fields = array(
 	array(
 		'id'    => '_um_profile_photo',
 		'type'  => 'checkbox',
 		'label' => __( 'Enable Profile Photo', 'ultimate-member' ),
-		'value' => UM()->query()->get_meta_value( '_um_profile_photo' ),
+		'value' => (bool) get_post_meta( $post_id, '_um_profile_photo', true ),
 	),
 	array(
 		'id'      => '_um_cover_photos',
 		'type'    => 'checkbox',
 		'label'   => __( 'Enable Cover Photo', 'ultimate-member' ),
 		'tooltip' => __( 'If turned on, the users cover photo will appear in the directory', 'ultimate-member' ),
-		'value'   => UM()->query()->get_meta_value( '_um_cover_photos' ),
+		'value'   => (bool) get_post_meta( $post_id, '_um_cover_photos', true ),
 	),
 	array(
 		'id'    => '_um_show_name',
 		'type'  => 'checkbox',
 		'label' => __( 'Show display name', 'ultimate-member' ),
-		'value' => UM()->query()->get_meta_value( '_um_show_name' ),
+		'value' => (bool) get_post_meta( $post_id, '_um_show_name', true ),
 	),
 	array(
 		'id'    => '_um_show_tagline',
 		'type'  => 'checkbox',
 		'label' => __( 'Show tagline below profile name', 'ultimate-member' ),
-		'value' => UM()->query()->get_meta_value( '_um_show_tagline' ),
+		'value' => (bool) get_post_meta( $post_id, '_um_show_tagline', true ),
 	),
 	array(
 		'id'                  => '_um_tagline_fields',
@@ -53,7 +53,7 @@ $fields = array(
 		'id'    => '_um_show_userinfo',
 		'type'  => 'checkbox',
 		'label' => __( 'Show extra user information below tagline?', 'ultimate-member' ),
-		'value' => UM()->query()->get_meta_value( '_um_show_userinfo' ),
+		'value' => (bool) get_post_meta( $post_id, '_um_show_userinfo', true ),
 	),
 	array(
 		'id'                  => '_um_reveal_fields',
@@ -70,7 +70,7 @@ $fields = array(
 		'id'          => '_um_show_social',
 		'type'        => 'checkbox',
 		'label'       => __( 'Show social connect icons in extra user information section', 'ultimate-member' ),
-		'value'       => UM()->query()->get_meta_value( '_um_show_social' ),
+		'value'       => (bool) get_post_meta( $post_id, '_um_show_social', true ),
 		'conditional' => array( '_um_show_userinfo', '=', 1 ),
 	),
 	array(
@@ -78,7 +78,7 @@ $fields = array(
 		'type'        => 'checkbox',
 		'label'       => __( 'Hide extra user information to the reveal section', 'ultimate-member' ),
 		'tooltip'     => __( 'If not checked always shown', 'ultimate-member' ),
-		'value'       => UM()->query()->get_meta_value( '_um_userinfo_animate' ),
+		'value'       => (bool) get_post_meta( $post_id, '_um_userinfo_animate', true ),
 		'conditional' => array( '_um_show_userinfo', '=', 1 ),
 	),
 );

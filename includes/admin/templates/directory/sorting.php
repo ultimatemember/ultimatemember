@@ -37,7 +37,7 @@ $fields = array(
 		'type'    => 'checkbox',
 		'label'   => __( 'Enable custom sorting', 'ultimate-member' ),
 		'tooltip' => __( 'Whether to provide an ability to change the sorting on the directory page', 'ultimate-member' ),
-		'value'   => UM()->query()->get_meta_value( '_um_enable_sorting' ),
+		'value'   => (bool) get_post_meta( $post_id, '_um_enable_sorting', true ),
 	),
 	array(
 		'id'                  => '_um_sorting_fields',

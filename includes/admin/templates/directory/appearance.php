@@ -1,6 +1,8 @@
 <?php if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-} ?>
+}
+
+global $post_id; ?>
 
 <div class="um-admin-metabox">
 	<?php
@@ -13,7 +15,7 @@
 					'id'      => '_um_directory_template',
 					'type'    => 'select',
 					'label'   => __( 'Template', 'ultimate-member' ),
-					'value'   => UM()->query()->get_meta_value( '_um_directory_template', null, UM()->options()->get( 'directory_template' ) ),
+					'value'   => get_post_meta( $post_id, '_um_directory_template', true ),
 					'options' => UM()->shortcodes()->get_templates( 'members' ),
 				),
 			),

@@ -26,7 +26,7 @@ $_um_search_filters = get_post_meta( $post_id, '_um_search_filters', true ); ?>
 					'type'    => 'checkbox',
 					'label'   => __( 'Enable Search feature', 'ultimate-member' ),
 					'tooltip' => __( 'If turned on, users will be able to search members in this directory', 'ultimate-member' ),
-					'value'   => UM()->query()->get_meta_value( '_um_search' ),
+					'value'   => (bool) get_post_meta( $post_id, '_um_search', true ),
 				),
 				array(
 					'id'          => '_um_roles_can_search',
@@ -43,7 +43,7 @@ $_um_search_filters = get_post_meta( $post_id, '_um_search_filters', true ); ?>
 					'type'    => 'checkbox',
 					'label'   => __( 'Enable Filters feature', 'ultimate-member' ),
 					'tooltip' => __( 'If turned on, users will be able to filter members in this directory', 'ultimate-member' ),
-					'value'   => UM()->query()->get_meta_value( '_um_filters' ),
+					'value'   => (bool) get_post_meta( $post_id, '_um_filters', true ),
 				),
 				array(
 					'id'          => '_um_roles_can_filter',
@@ -71,7 +71,7 @@ $_um_search_filters = get_post_meta( $post_id, '_um_search_filters', true ); ?>
 					'type'        => 'checkbox',
 					'label'       => __( 'Expand the filter bar by default', 'ultimate-member' ),
 					'tooltip'     => __( 'If turned on, filters bar will be visible after a page loading', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_filters_expanded' ),
+					'value'       => (bool) get_post_meta( $post_id, '_um_filters_expanded', true ),
 					'conditional' => array( '_um_filters', '=', 1 ),
 				),
 				array(
@@ -79,7 +79,7 @@ $_um_search_filters = get_post_meta( $post_id, '_um_search_filters', true ); ?>
 					'type'        => 'checkbox',
 					'label'       => __( 'Can filter bar be collapsed', 'ultimate-member' ),
 					'tooltip'     => __( 'If turned on, filters bar can be collapsed after a page loading', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_filters_is_collapsible' ),
+					'value'       => (bool) get_post_meta( $post_id, '_um_filters_is_collapsible', true ),
 					'conditional' => array( '_um_filters_expanded', '=', 1 ),
 				),
 				array(

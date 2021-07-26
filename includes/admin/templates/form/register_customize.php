@@ -2,12 +2,19 @@
 	exit;
 }
 
+global $post_id;
+
+$use_custom_settings = ! isset( $post_id ) ? false : get_post_meta( $post_id, '_um_register_use_custom_settings', true );
+
 foreach ( UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ) as $key => $value ) {
 	$_um_register_role = UM()->query()->get_meta_value( '_um_register_role', $key );
 	if ( ! empty( $_um_register_role ) ) {
 		$register_role = $_um_register_role;
 	}
-} ?>
+}
+
+$register_secondary_btn = ! isset( $post_id ) ? UM()->options()->get( 'register_secondary_btn' ) : get_post_meta( $post_id, '_um_register_secondary_btn', true );
+?>
 
 <div class="um-admin-metabox">
 	<?php
@@ -21,7 +28,7 @@ foreach ( UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ) as $key
 					'type'    => 'select',
 					'label'   => __( 'Apply custom settings to this form', 'ultimate-member' ),
 					'tooltip' => __( 'Switch to yes if you want to customize this form settings, styling &amp; appearance', 'ultimate-member' ),
-					'value'   => UM()->query()->get_meta_value( '_um_register_use_custom_settings', null, 0 ),
+					'value'   => $use_custom_settings,
 					'options' => array(
 						0 => __( 'No', 'ultimate-member' ),
 						1 => __( 'Yes', 'ultimate-member' ),
@@ -76,7 +83,7 @@ foreach ( UM()->roles()->get_roles( __( 'Default', 'ultimate-member' ) ) as $key
 					'id'          => '_um_register_secondary_btn',
 					'type'        => 'select',
 					'label'       => __( 'Show Secondary Button', 'ultimate-member' ),
-					'value'       => UM()->query()->get_meta_value( '_um_register_secondary_btn', null, UM()->options()->get( 'register_secondary_btn' ) ),
+					'value'       => $register_secondary_btn,
 					'conditional' => array( '_um_register_use_custom_settings', '=', 1 ),
 					'options'     => array(
 						0 => __( 'No', 'ultimate-member' ),
