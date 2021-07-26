@@ -41,6 +41,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		private $current_single_post;
 
 
+		private $ignore_exclude = false;
+
+
 		/**
 		 * Access constructor.
 		 */
@@ -58,7 +61,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			add_filter( 'widget_posts_args', array( &$this, 'exclude_restricted_posts_widget' ), 99, 1 );
 			add_filter( 'comment_feed_where', array( &$this, 'exclude_posts_comments_feed' ), 99, 2 );
 
-			//add_filter( 'wp_get_object_terms_args', array( &$this, 'exclude_hidden_terms' ), 99, 3 );
 			add_action( 'pre_get_terms', array( &$this, 'exclude_hidden_terms_query' ), 99, 1 );
 
 
@@ -99,78 +101,10 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		}
 
 
-		function exclude_hidden_terms( $args, $object_ids, $taxonomies ) {
-			global $wpdb;
-
-			if ( current_user_can( 'administrator' ) ) {
-				return $args;
-			}
-
-			$exclude = array();
-
-			$restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
-			foreach ( $taxonomies as $taxonomy ) {
-				if ( empty( $restricted_taxonomies[ $taxonomy ] ) ) {
-					continue;
-				}
-
-				$terms = $wpdb->get_results( $wpdb->prepare( "SELECT tm.term_id AS term_id, tm.meta_value AS meta_value, tt.taxonomy AS taxonomy FROM {$wpdb->termmeta} tm LEFT JOIN {$wpdb->term_taxonomy} tt ON tt.term_id = tm.term_id WHERE tm.meta_key = 'um_content_restriction' AND tt.taxonomy = %s", $taxonomy ), ARRAY_A );
-				if ( ! empty( $terms ) ) {
-					foreach ( $terms as $term ) {
-						$meta_value = maybe_unserialize( $term['meta_value'] );
-						if ( ! empty( $meta_value['_um_custom_access_settings'] ) ) {
-
-							//post is private
-							if ( '0' == $meta_value['_um_accessible'] ) {
-								continue;
-							} elseif ( '1' == $meta_value['_um_accessible'] ) {
-								//if post for not logged in users and user is not logged in
-								if ( ! is_user_logged_in() ) {
-									continue;
-								} else {
-									$exclude[] = $term['term_id'];
-								}
-
-							} elseif ( '2' == $meta_value['_um_accessible'] ) {
-								//if post for logged in users and user is not logged in
-								if ( is_user_logged_in() ) {
-									$custom_restrict = $this->um_custom_restriction( $meta_value );
-									if ( empty( $meta_value['_um_access_roles'] ) || false === array_search( '1', $meta_value['_um_access_roles'] ) ) {
-										if ( $custom_restrict ) {
-											continue;
-										} else {
-											$exclude[] = $term['term_id'];
-										}
-									} else {
-										$user_can = $this->user_can( get_current_user_id(), $meta_value['_um_access_roles'] );
-
-										if ( isset( $user_can ) && $user_can && $custom_restrict ) {
-											continue;
-										} else {
-											$exclude[] = $term['term_id'];
-										}
-									}
-								} else {
-									$exclude[] = $term['term_id'];
-								}
-							}
-						}
-					}
-				}
-			}
-
-			if ( ! empty( $exclude ) ) {
-				$args['exclude'] = $exclude;
-			}
-
-			return $args;
-		}
-
-
 		function exclude_hidden_terms_query( $query ) {
 			global $wpdb;
 
-			if ( current_user_can( 'administrator' ) ) {
+			if ( current_user_can( 'administrator' ) || $this->ignore_exclude ) {
 				return;
 			}
 
@@ -225,7 +159,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					}
 				}
 			}
-//var_dump( $exclude );
+
 			if ( ! empty( $exclude ) ) {
 				$query->query_vars['exclude'] = $exclude;
 			}
@@ -828,7 +762,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 									continue;
 								}
 
+								$this->ignore_exclude = true;
 								$terms = array_merge( $terms, wp_get_post_terms( $post->ID, $taxonomy, array( 'fields' => 'ids' ) ) );
+								$this->ignore_exclude = false;
 							}
 						}
 
@@ -890,7 +826,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 						continue;
 					}
 
+					$this->ignore_exclude = true;
 					$terms = array_merge( $terms, wp_get_post_terms( $post->ID, $taxonomy, array( 'fields' => 'ids' ) ) );
+					$this->ignore_exclude = false;
 				}
 			}
 
