@@ -92,7 +92,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			'tooltip'       => __( 'Action when users without access tries to view the content', 'ultimate-member' ),
 			'value'         => ! empty( $data['_um_noaccess_action'] ) ? $data['_um_noaccess_action'] : 0,
 			'options'       => array(
-//				'2' => __( 'Show 404 (Recommended)', 'ultimate-member' ),
 				'0' => __( 'Show access restricted message', 'ultimate-member' ),
 				'1' => __( 'Redirect user', 'ultimate-member' ),
 			),
