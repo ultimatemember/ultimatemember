@@ -25,6 +25,7 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			add_filter( 'um_locate_email_template', array( &$this, 'locate_email_template' ), 10, 2 );
 			add_filter( 'um_change_email_template_file', array( &$this, 'change_email_template_file' ), 10, 1 );
 			add_filter( 'um_email_templates_columns', array( &$this, 'add_email_templates_wpml_column' ), 10, 1 );
+			add_filter( 'um_search_fields', array( &$this, 'directory_wpml_filter' ), 10, 2 );
 
 
 			add_action( 'um_access_fix_external_post_content', array( &$this, 'bbpress_no_access_message_fix' ), 10 );
@@ -458,6 +459,29 @@ if ( ! class_exists( 'um\core\External_Integrations' ) ) {
 			}
 
 			return $new_columns;
+		}
+
+
+		function directory_wpml_filter( $attrs, $field_key ) {
+			if ( ! $this->is_wpml_active() ) {
+				return $attrs;
+			}
+
+			global $wpdb;
+			global $sitepress;
+			$current_language = $sitepress->get_current_language();
+			$forms            = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'um_form'" );
+
+			foreach ( $forms as $form ) {
+				$form_id   = apply_filters( 'wpml_object_id', $form, 'um_form', FALSE, $current_language );
+				$form_meta = get_post_meta( $form_id, '_um_custom_fields', true );
+
+				if ( ! empty( $form_meta[ $field_key ]['label'] ) ) {
+					$attrs['label'] = $form_meta[ $field_key ]['label'];
+				}
+			}
+
+			return $attrs;
 		}
 
 
