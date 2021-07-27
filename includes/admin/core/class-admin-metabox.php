@@ -448,8 +448,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				array(
 					'id'          => '_um_restrict_custom_message',
 					'type'        => 'wp_editor',
-					'label'       => __( 'Custom Restrict Content message', 'ultimate-member' ),
-					'description' => __( 'You may replace global restrict message here', 'ultimate-member' ),
+					'label'       => __( 'Custom restricted access message', 'ultimate-member' ),
+					'description' => __( 'You may replace global restricted access message here', 'ultimate-member' ),
 					'value'       => '',
 					'conditional' => array( '_um_restrict_by_custom_message', '=', '1' ),
 				),
@@ -600,8 +600,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				array(
 					'id'          => '_um_restrict_custom_message',
 					'type'        => 'wp_editor',
-					'label'       => __( 'Custom Restrict Content message', 'ultimate-member' ),
-					'description' => __( 'You may replace global restrict message here', 'ultimate-member' ),
+					'label'       => __( 'Custom restricted access message', 'ultimate-member' ),
+					'description' => __( 'You may replace global restricted access message here', 'ultimate-member' ),
 					'value'       => ! empty( $data['_um_restrict_custom_message'] ) ? $data['_um_restrict_custom_message'] : '',
 					'conditional' => array( '_um_restrict_by_custom_message', '=', '1' ),
 				),

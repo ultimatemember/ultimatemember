@@ -587,8 +587,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					array(
 						'id'      => 'restricted_access_post_metabox',
 						'type'    => 'multi_checkbox',
-						'label'   => __( 'Restricted Access to Posts', 'ultimate-member' ),
-						'tooltip' => __( 'Restriction content of the current Posts', 'ultimate-member' ),
+						'label'   => __( 'Enable the "Content Restriction" settings for post types', 'ultimate-member' ),
+						'tooltip' => __( 'Check post types for which you plan to use the "Content Restriction" settings', 'ultimate-member' ),
 						'options' => $post_types_options,
 						'columns' => 3,
 						'value'   => $restricted_access_post_metabox_value,
@@ -597,8 +597,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					array(
 						'id'      => 'restricted_access_taxonomy_metabox',
 						'type'    => 'multi_checkbox',
-						'label'   => __( 'Restricted Access to Taxonomies', 'ultimate-member' ),
-						'tooltip' => __( 'Restriction content of the current Taxonomies', 'ultimate-member' ),
+						'label'   => __( 'Enable the "Content Restriction" settings for taxonomies', 'ultimate-member' ),
+						'tooltip' => __( 'Check taxonomies for which you plan to use the "Content Restriction" settings', 'ultimate-member' ),
 						'options' => $taxonomies_options,
 						'columns' => 3,
 						'value'   => $restricted_access_taxonomy_metabox_value,
