@@ -43,6 +43,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 		private $ignore_exclude = false;
 
+		/**
+		 * @var bool|array
+		 */
+		private $exclude_posts = false;
+
 
 		/**
 		 * Access constructor.
@@ -1264,137 +1269,157 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 
 		/**
-		 * get array with restricted posts
+		 * Get array with restricted posts
 		 *
 		 * @param bool $in_query
 		 *
 		 * @return array
 		 */
 		function exclude_posts_array( $in_query = true ) {
-			$exclude_posts = array();
-			if ( current_user_can( 'administrator' ) ) {
-				return $exclude_posts;
+			if ( false !== $this->exclude_posts ) {
+				return $this->exclude_posts;
 			}
 
+			$this->exclude_posts = array();
+			if ( current_user_can( 'administrator' ) ) {
+				return $this->exclude_posts;
+			}
+
+/*			$user_key  = is_user_logged_in() ? 'logged_in_' . get_current_user_id() : 'not_logged_in';
+			$cache_key = 'um_restrictions:post_ids' . $user_key;
+
+			$exclude_posts_cache = wp_cache_get( $cache_key, 'ultimate-member' );
+
+			if ( false !== $exclude_posts_cache ) {
+				$exclude_posts = $exclude_posts_cache;
+			} else {*/
 			global $wpdb;
 
-			$posts = $wpdb->get_col("SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'um_content_restriction'");
-			foreach ( $posts as $post ) {
-				// handle every post privacy setting based on post type maybe it's inactive for now
-				// if individual restriction is enabled then get post terms restriction settings
-				$content_restriction = $this->get_post_privacy_settings( $post );
+			$posts = $wpdb->get_col( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'um_content_restriction'" );
+			if ( ! empty( $posts ) ) {
+				foreach ( $posts as $post ) {
+					// handle every post privacy setting based on post type maybe it's inactive for now
+					// if individual restriction is enabled then get post terms restriction settings
+					$content_restriction = $this->get_post_privacy_settings( $post );
 
-				if ( ! empty( $content_restriction['_um_custom_access_settings'] ) && $content_restriction['_um_accessible'] != '0' && ( false === $in_query || ! empty( $content_restriction['_um_access_hide_from_queries'] ) ) ) {
-					if ( $this->is_restricted( $post ) ) {
-						array_push( $exclude_posts, $post );
+					if ( ! empty( $content_restriction['_um_custom_access_settings'] ) && $content_restriction['_um_accessible'] != '0' &&
+					     ( false === $in_query || ! empty( $content_restriction['_um_access_hide_from_queries'] ) ) ) {
+						if ( $this->is_restricted( $post ) ) {
+							array_push( $this->exclude_posts, $post );
+						}
 					}
 				}
 			}
-
 
 			// exclude all posts without individual restriction settings in the restricted terms
 			$restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
 
-			$terms = $wpdb->get_results("SELECT tm.term_id AS term_id, tm.meta_value AS meta_value, tt.taxonomy AS taxonomy FROM {$wpdb->termmeta} tm LEFT JOIN {$wpdb->term_taxonomy} tt ON tt.term_id = tm.term_id WHERE tm.meta_key = 'um_content_restriction'", ARRAY_A );
+			if ( ! empty( $restricted_taxonomies ) ) {
+				$terms = $wpdb->get_results( "SELECT tm.term_id AS term_id, tm.meta_value AS meta_value, tt.taxonomy AS taxonomy FROM {$wpdb->termmeta} tm LEFT JOIN {$wpdb->term_taxonomy} tt ON tt.term_id = tm.term_id WHERE tm.meta_key = 'um_content_restriction'", ARRAY_A );
 
-			if ( ! empty( $terms ) ) {
-				foreach ( $terms as $term ) {
+				if ( ! empty( $terms ) ) {
+					foreach ( $terms as $term ) {
 
-					if ( empty( $restricted_taxonomies[ $term['taxonomy'] ] ) ) {
-						continue;
-					}
-
-					$meta_value = maybe_unserialize( $term['meta_value'] );
-
-					$is_restricted = false;
-
-					if ( ! empty( $meta_value['_um_custom_access_settings'] ) ) {
-
-						//post is private
-						if ( '0' == $meta_value['_um_accessible'] ) {
+						if ( empty( $restricted_taxonomies[ $term['taxonomy'] ] ) ) {
 							continue;
-						} elseif ( '1' == $meta_value['_um_accessible'] ) {
-							//if post for not logged in users and user is not logged in
-							if ( ! is_user_logged_in() ) {
-								continue;
-							} else {
-								$is_restricted = true;
-							}
+						}
 
-						} elseif ( '2' == $meta_value['_um_accessible'] ) {
-							//if post for logged in users and user is not logged in
-							if ( is_user_logged_in() ) {
-								$custom_restrict = $this->um_custom_restriction( $meta_value );
-								if ( empty( $meta_value['_um_access_roles'] ) || false === array_search( '1', $meta_value['_um_access_roles'] ) ) {
-									if ( $custom_restrict ) {
-										continue;
+						$meta_value = maybe_unserialize( $term['meta_value'] );
+
+						$is_restricted = false;
+
+						if ( ! empty( $meta_value['_um_custom_access_settings'] ) ) {
+
+							//post is private
+							if ( '0' == $meta_value['_um_accessible'] ) {
+								continue;
+							} elseif ( '1' == $meta_value['_um_accessible'] ) {
+								//if post for not logged in users and user is not logged in
+								if ( ! is_user_logged_in() ) {
+									continue;
+								} else {
+									$is_restricted = true;
+								}
+
+							} elseif ( '2' == $meta_value['_um_accessible'] ) {
+								//if post for logged in users and user is not logged in
+								if ( is_user_logged_in() ) {
+									$custom_restrict = $this->um_custom_restriction( $meta_value );
+									if ( empty( $meta_value['_um_access_roles'] ) || false === array_search( '1', $meta_value['_um_access_roles'] ) ) {
+										if ( $custom_restrict ) {
+											continue;
+										} else {
+											$is_restricted = true;
+										}
 									} else {
-										$is_restricted = true;
+										$user_can = $this->user_can( get_current_user_id(), $meta_value['_um_access_roles'] );
+
+										if ( isset( $user_can ) && $user_can && $custom_restrict ) {
+											continue;
+										} else {
+											$is_restricted = true;
+										}
 									}
 								} else {
-									$user_can = $this->user_can( get_current_user_id(), $meta_value['_um_access_roles'] );
+									$is_restricted = true;
+								}
+							}
+						}
 
-									if ( isset( $user_can ) && $user_can && $custom_restrict ) {
-										continue;
-									} else {
-										$is_restricted = true;
+						if ( $is_restricted && ( false === $in_query || ! empty( $meta_value['_um_access_hide_from_queries'] ) ) ) {
+							$posts = get_posts(
+								array(
+									'fields'      => 'ids',
+									'post_status' => 'any',
+									'numberposts' => -1,
+									'tax_query'   => array(
+										array(
+											'taxonomy' => $term['taxonomy'],
+											'field'    => 'id',
+											'terms'    => $term['term_id'],
+										),
+									),
+									'meta_query'  => array(
+										'relation' => 'OR',
+										array(
+											'relation' => 'AND',
+											array(
+												'key'     => 'um_content_restriction',
+												'value'   => 's:26:"_um_custom_access_settings";s:1:"1"',
+												'compare' => 'NOT LIKE',
+											),
+											array(
+												'key'     => 'um_content_restriction',
+												'value'   => 's:26:"_um_custom_access_settings";b:1',
+												'compare' => 'NOT LIKE',
+											),
+										),
+										array(
+											'key'     => 'um_content_restriction',
+											'compare' => 'NOT EXISTS',
+										),
+									),
+								)
+							);
+
+							if ( ! empty( $posts ) ) {
+								foreach ( $posts as $post_id ) {
+									if ( $this->is_restricted( $post_id ) ) {
+										array_push( $this->exclude_posts, $post_id );
 									}
 								}
-							} else {
-								$is_restricted = true;
 							}
 						}
+
 					}
-
-					if ( $is_restricted && ( false === $in_query || ! empty( $meta_value['_um_access_hide_from_queries'] ) ) ) {
-						$posts = get_posts(
-							array(
-								'fields'      => 'ids',
-								'post_status' => 'any',
-								'numberposts' => -1,
-								'tax_query'   => array(
-									array(
-										'taxonomy' => $term['taxonomy'],
-										'field'    => 'id',
-										'terms'    => $term['term_id'],
-									),
-								),
-								'meta_query'  => array(
-									'relation' => 'OR',
-									array(
-										'relation' => 'AND',
-										array(
-											'key'     => 'um_content_restriction',
-											'value'   => 's:26:"_um_custom_access_settings";s:1:"1"',
-											'compare' => 'NOT LIKE',
-										),
-										array(
-											'key'     => 'um_content_restriction',
-											'value'   => 's:26:"_um_custom_access_settings";b:1',
-											'compare' => 'NOT LIKE',
-										),
-									),
-									array(
-										'key'     => 'um_content_restriction',
-										'compare' => 'NOT EXISTS',
-									),
-								),
-							)
-						);
-
-						if ( ! empty( $posts ) ) {
-							foreach ( $posts as $post_id ) {
-								if ( $this->is_restricted( $post_id ) ) {
-									array_push( $exclude_posts, $post_id );
-								}
-							}
-						}
-					}
-
 				}
 			}
 
-			return array_unique( $exclude_posts );
+			$this->exclude_posts = array_unique( $this->exclude_posts );
+				/*wp_cache_set( $cache_key, $exclude_posts, 'ultimate-member' );
+			}*/
+
+			return $this->exclude_posts;
 		}
 
 
