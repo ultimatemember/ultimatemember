@@ -416,8 +416,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				array(
 					'id'          => '_um_access_hide_from_queries',
 					'type'        => 'checkbox',
-					'label'       => __( 'Would you like to exclude term\'s post from WP Query when users haven\'t access?', 'ultimate-member' ),
-					'description' => __( 'Recommended to be enabled. Restricted post will be hidden by exclusion from WP Query. The safest and most effective method that hides post and its comments from all requests, RSS feeds, etc. on your site', 'ultimate-member' ),
+					'label'       => __( 'Would you like to display 404 error on term\'s archive page and terms\' posts single pages when users haven\'t access?', 'ultimate-member' ),
+					'description' => __( 'Recommended to be enabled. Restricted term\'s archive page and all terms\' posts will be hidden by exclusion from WP Query. The safest and most effective method that hides post and its comments from all requests, RSS feeds, etc. on your site', 'ultimate-member' ),
 					'value'       => 1,
 					'conditional' => array( '_um_accessible', '!=', '0' ),
 				),
@@ -568,8 +568,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				array(
 					'id'          => '_um_access_hide_from_queries',
 					'type'        => 'checkbox',
-					'label'       => __( 'Would you like to exclude term\'s post from WP Query when users haven\'t access?', 'ultimate-member' ),
-					'description' => __( 'Recommended to be enabled. Restricted post will be hidden by exclusion from WP Query. The safest and most effective method that hides post and its comments from all requests, RSS feeds, etc. on your site', 'ultimate-member' ),
+					'label'       => __( 'Would you like to display 404 error on term\'s archive page and terms\' posts single pages when users haven\'t access?', 'ultimate-member' ),
+					'description' => __( 'Recommended to be enabled. Restricted term\'s archive page and all terms\' posts will be hidden by exclusion from WP Query. The safest and most effective method that hides post and its comments from all requests, RSS feeds, etc. on your site', 'ultimate-member' ),
 					'value'       => ! empty( $data['_um_access_hide_from_queries'] ) ? $data['_um_access_hide_from_queries'] : '',
 					'conditional' => array( '_um_accessible', '!=', '0' ),
 				),
@@ -588,8 +588,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				array(
 					'id'          => '_um_restrict_by_custom_message',
 					'type'        => 'select',
-					'label'       => __( 'Would you like to use the global default message or apply a custom message to this term\'s post?', 'ultimate-member' ),
-					'description' => __( 'Action when users without access tries to view the term\'s post', 'ultimate-member' ),
+					'label'       => __( 'Restricted access message type', 'ultimate-member' ),
+					'description' => __( 'Would you like to use the global default message or apply a custom message to this term\'s post?', 'ultimate-member' ),
 					'value'       => ! empty( $data['_um_restrict_by_custom_message'] ) ? $data['_um_restrict_by_custom_message'] : '0',
 					'options'     => array(
 						'0' => __( 'Global default message', 'ultimate-member' ),
@@ -627,12 +627,14 @@ if ( ! class_exists( 'um\admin\core\Admin_Metabox' ) ) {
 				),
 			), $data, 'edit' );
 
-			UM()->admin_forms( array(
-				'class'           => 'um-restrict-content um-third-column',
-				'prefix_id'       => 'um_content_restriction',
-				'without_wrapper' => true,
-				'fields'          => $fields,
-			) )->render_form();
+			UM()->admin_forms(
+				array(
+					'class'           => 'um-restrict-content um-third-column',
+					'prefix_id'       => 'um_content_restriction',
+					'without_wrapper' => true,
+					'fields'          => $fields,
+				)
+			)->render_form();
 
 			wp_nonce_field( basename( __FILE__ ), 'um_admin_save_taxonomy_restrict_content_nonce' );
 		}

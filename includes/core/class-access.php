@@ -53,23 +53,27 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * Access constructor.
 		 */
 		function __construct() {
-
 			$this->singular_page = false;
 
 			$this->redirect_handler = false;
 			$this->allow_access = false;
 
+			// callbacks for changing posts query
 			add_action( 'pre_get_posts', array( &$this, 'exclude_posts' ), 99, 1 );
-			add_action( 'pre_get_comments', array( &$this, 'exclude_posts_comments' ), 99, 1 );
 			add_filter( 'get_next_post_where', array( &$this, 'exclude_navigation_posts' ), 99, 5 );
 			add_filter( 'get_previous_post_where', array( &$this, 'exclude_navigation_posts' ), 99, 5 );
 			add_filter( 'widget_posts_args', array( &$this, 'exclude_restricted_posts_widget' ), 99, 1 );
-			add_filter( 'comment_feed_where', array( &$this, 'exclude_posts_comments_feed' ), 99, 2 );
 
+			// callbacks for changing terms query
 			add_action( 'pre_get_terms', array( &$this, 'exclude_hidden_terms_query' ), 99, 1 );
 
-
+			// callbacks for changing comments query
+			add_action( 'pre_get_comments', array( &$this, 'exclude_posts_comments' ), 99, 1 );
+			add_filter( 'comment_feed_where', array( &$this, 'exclude_posts_comments_feed' ), 99, 2 );
 			add_filter( 'wp_count_comments', array( &$this, 'custom_comments_count_handler' ), 99, 2 );
+			/* Disable comments if user has not permission to access current post */
+			add_filter( 'comments_open', array( $this, 'disable_comments_open' ), 99, 2 );
+			add_filter( 'get_comments_number', array( $this, 'disable_comments_open_number' ), 99, 2 );
 
 			//there is posts (Posts/Page/CPT) filtration if site is accessible
 			//there also will be redirects if they need
@@ -79,6 +83,12 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			add_filter( 'get_pages', array( &$this, 'filter_protected_posts' ), 99, 2 );
 			//filter menu items
 			add_filter( 'wp_nav_menu_objects', array( &$this, 'filter_menu' ), 99, 2 );
+			// blocks restrictions
+			add_filter( 'render_block', array( $this, 'restrict_blocks' ), 10, 2 );
+
+			//filter attachment
+			add_filter( 'wp_get_attachment_url', array( &$this, 'filter_attachment' ), 99, 2 );
+			add_filter( 'has_post_thumbnail', array( &$this, 'filter_post_thumbnail' ), 99, 3 );
 
 			// turn on/off content replacement on the filter 'the_content'
 			add_action( 'get_header', array( &$this, 'replace_post_content_on' ), 12 );
@@ -87,22 +97,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			add_action( 'avada_before_body_content', array( &$this, 'replace_post_content_off' ), 8 );
 			add_action( 'avada_before_main_container', array( &$this, 'replace_post_content_on' ), 12 );
 			add_action( 'avada_after_main_content', array( &$this, 'replace_post_content_off' ), 8 );
-			
-			//filter attachment
-			add_filter( 'wp_get_attachment_url', array( &$this, 'filter_attachment' ), 99, 2 );
-			add_filter( 'has_post_thumbnail', array( &$this, 'filter_post_thumbnail' ), 99, 3 );
-
 
 			//check the site's accessible more priority have Individual Post/Term Restriction settings
 			add_action( 'template_redirect', array( &$this, 'template_redirect' ), 1000 );
 			add_action( 'um_access_check_individual_term_settings', array( &$this, 'um_access_check_individual_term_settings' ) );
 			add_action( 'um_access_check_global_settings', array( &$this, 'um_access_check_global_settings' ) );
-
-			/* Disable comments if user has not permission to access current post */
-			add_filter( 'comments_open', array( $this, 'disable_comments_open' ), 99, 2 );
-			add_filter( 'get_comments_number', array( $this, 'disable_comments_open_number' ), 99, 2 );
-
-			add_filter( 'render_block', array( $this, 'restrict_blocks' ), 10, 2 );
 		}
 
 
