@@ -335,105 +335,49 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				return;
 			}
 
+			$term_id = null;
 			if ( is_tag() ) {
-				$restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
-				if ( empty( $restricted_taxonomies['post_tag'] ) ) {
-					return;
-				}
-
-				$tag_id = get_query_var( 'tag_id' );
-				if ( ! empty( $tag_id ) ) {
-					$restriction = get_term_meta( $tag_id, 'um_content_restriction', true );
-				}
+				$term_id = get_query_var( 'tag_id' );
 			} elseif ( is_category() ) {
-				$um_category = get_category( get_query_var( 'cat' ) );
-
-				$restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
-				if ( empty( $restricted_taxonomies[ $um_category->taxonomy ] ) ) {
-					return;
-				}
-
-				if ( ! empty( $um_category->term_id ) ) {
-					$restriction = get_term_meta( $um_category->term_id, 'um_content_restriction', true );
-				}
+				$term_id = get_query_var( 'cat' );
 			} elseif ( is_tax() ) {
 				$tax_name = get_query_var( 'taxonomy' );
 
-				$restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
-				if ( empty( $restricted_taxonomies[ $tax_name ] ) ) {
-					return;
-				}
-
 				$term_name = get_query_var( 'term' );
 				$term = get_term_by( 'slug', $term_name, $tax_name );
-				if ( ! empty( $term->term_id ) ) {
-					$restriction = get_term_meta( $term->term_id, 'um_content_restriction', true );
-				}
+
+				$term_id = ! empty( $term->term_id ) ? $term->term_id : $term_id;
 			}
 
-			if ( ! isset( $restriction ) || empty( $restriction['_um_custom_access_settings'] ) ) {
+			if ( ! isset( $term_id ) ) {
 				return;
 			}
 
-			//post is private
-			if ( '0' == $restriction['_um_accessible'] ) {
-				$this->allow_access = true;
-				return;
-			} elseif ( '1' == $restriction['_um_accessible'] ) {
-				//if post for not logged in users and user is not logged in
-				if ( ! is_user_logged_in() ) {
-					$this->allow_access = true;
-					return;
-				}
+			if ( $this->is_restricted_term( $term_id ) ) {
+				add_filter( 'tag_template', array( &$this, 'taxonomy_message' ), 10, 3 );
+				add_filter( 'archive_template', array( &$this, 'taxonomy_message' ), 10, 3 );
+				add_filter( 'category_template', array( &$this, 'taxonomy_message' ), 10, 3 );
+				add_filter( 'taxonomy_template', array( &$this, 'taxonomy_message' ), 10, 3 );
 
-			} elseif ( '2' == $restriction['_um_accessible'] ) {
-				//if post for logged in users and user is not logged in
-				if ( is_user_logged_in() ) {
+				$restriction = get_term_meta( $term_id, 'um_content_restriction', true );
+				if ( '1' == $restriction['_um_noaccess_action'] ) {
+					$curr = UM()->permalinks()->get_current_url();
 
-					$custom_restrict = $this->um_custom_restriction( $restriction );
-					if ( empty( $restriction['_um_access_roles'] ) || false === array_search( '1', $restriction['_um_access_roles'] ) ) {
-						if ( $custom_restrict ) {
-							$this->allow_access = true;
-							return;
+					if ( ! isset( $restriction['_um_access_redirect'] ) || '0' == $restriction['_um_access_redirect'] ) {
+
+						$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) ), 'individual_term' );
+
+					} elseif ( '1' == $restriction['_um_access_redirect'] ) {
+
+						if ( ! empty( $restriction['_um_access_redirect_url'] ) ) {
+							$redirect = $restriction['_um_access_redirect_url'];
 						} else {
-							add_filter( 'tag_template', array( &$this, 'taxonomy_message' ), 10, 3 );
-							add_filter( 'archive_template', array( &$this, 'taxonomy_message' ), 10, 3 );
-							add_filter( 'category_template', array( &$this, 'taxonomy_message' ), 10, 3 );
-							add_filter( 'taxonomy_template', array( &$this, 'taxonomy_message' ), 10, 3 );
+							$redirect = esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
 						}
-					} else {
-						$user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
 
-						if ( isset( $user_can ) && $user_can && $custom_restrict ) {
-							$this->allow_access = true;
-							return;
-						} else {
-							add_filter( 'tag_template', array( &$this, 'taxonomy_message' ), 10, 3 );
-							add_filter( 'archive_template', array( &$this, 'taxonomy_message' ), 10, 3 );
-							add_filter( 'category_template', array( &$this, 'taxonomy_message' ), 10, 3 );
-							add_filter( 'taxonomy_template', array( &$this, 'taxonomy_message' ), 10, 3 );
-						}
+						$this->redirect_handler = $this->set_referer( $redirect, 'individual_term' );
+
 					}
-				}
-			}
-
-			if ( '1' == $restriction['_um_noaccess_action'] ) {
-				$curr = UM()->permalinks()->get_current_url();
-
-				if ( ! isset( $restriction['_um_access_redirect'] ) || '0' == $restriction['_um_access_redirect'] ) {
-
-					$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) ), 'individual_term' );
-
-				} elseif ( '1' == $restriction['_um_access_redirect'] ) {
-
-					if ( ! empty( $restriction['_um_access_redirect_url'] ) ) {
-						$redirect = $restriction['_um_access_redirect_url'];
-					} else {
-						$redirect = esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
-					}
-
-					$this->redirect_handler = $this->set_referer( $redirect, 'individual_term' );
-
 				}
 			}
 		}
@@ -1670,7 +1614,21 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				return false;
 			}
 
+			$restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
+			if ( empty( $restricted_taxonomies ) ) {
+				$cache[ $term_id ] = false;
+				return false;
+			}
+
+			$term = get_term( $term_id );
+			if ( empty( $term->taxonomy ) || empty( $restricted_taxonomies[ $term->taxonomy ] ) ) {
+				$cache[ $term_id ] = false;
+				return false;
+			}
+
 			$restricted = true;
+
+			// $this->allow_access = true only in case if the
 
 			$restriction = get_term_meta( $term_id, 'um_content_restriction', true );
 			if ( empty( $restriction ) ) {
@@ -1682,10 +1640,12 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					if ( '0' == $restriction['_um_accessible'] ) {
 						//term is private
 						$restricted = false;
+						$this->allow_access = true;
 					} elseif ( '1' == $restriction['_um_accessible'] ) {
 						//if term for not logged in users and user is not logged in
 						if ( ! is_user_logged_in() ) {
 							$restricted = false;
+							$this->allow_access = true;
 						}
 					} elseif ( '2' == $restriction['_um_accessible'] ) {
 						//if term for logged in users and user is not logged in
@@ -1695,12 +1655,14 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							if ( empty( $restriction['_um_access_roles'] ) || false === array_search( '1', $restriction['_um_access_roles'] ) ) {
 								if ( $custom_restrict ) {
 									$restricted = false;
+									$this->allow_access = true;
 								}
 							} else {
 								$user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
 
 								if ( $user_can && $custom_restrict ) {
 									$restricted = false;
+									$this->allow_access = true;
 								}
 							}
 						}
