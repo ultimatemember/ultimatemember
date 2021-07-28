@@ -877,6 +877,10 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				return $posts;
 			}
 
+			if ( current_user_can( 'administrator' ) ) {
+				return $posts;
+			}
+
 			$restricted_global_message = UM()->options()->get( 'restricted_access_message' );
 			$restricted_global_title = UM()->options()->get( 'restricted_access_post_title' );
 
@@ -917,11 +921,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 						$filtered_posts[] = $post;
 						continue;
 					} else {
-
-						if ( current_user_can( 'administrator' ) ) {
-							$filtered_posts[] = $post;
-							continue;
-						}
 
 						if ( empty( $is_singular ) ) {
 							//if not single query when exclude if set _um_access_hide_from_queries
@@ -1006,11 +1005,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				} elseif ( '2' == $restriction['_um_accessible'] ) {
 					//if post for logged in users and user is not logged in
 					if ( is_user_logged_in() ) {
-
-						if ( current_user_can( 'administrator' ) ) {
-							$filtered_posts[] = $post;
-							continue;
-						}
 
 						$custom_restrict = $this->um_custom_restriction( $restriction );
 
