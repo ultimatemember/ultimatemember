@@ -61,6 +61,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			add_filter( 'get_previous_post_where', array( &$this, 'exclude_navigation_posts' ), 99, 5 );
 			add_filter( 'widget_posts_args', array( &$this, 'exclude_restricted_posts_widget' ), 99, 1 );
 
+			add_filter( 'wp_count_posts', array( &$this, 'custom_count_posts_handler' ), 99, 3 );
+
 			// callbacks for changing terms query
 			add_action( 'pre_get_terms', array( &$this, 'exclude_hidden_terms_query' ), 99, 1 );
 
@@ -154,6 +156,46 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			if ( ! empty( $exclude ) ) {
 				$query->query_vars['exclude'] = ! empty( $query->query_vars['exclude'] ) ? wp_parse_id_list( $query->query_vars['exclude'] ) : $exclude;
 			}
+		}
+
+
+		function custom_count_posts_handler( $counts, $type, $perm ) {
+			global $wpdb;
+
+			$exclude_posts = $this->exclude_posts_array( is_admin() );
+			if ( empty( $exclude_posts ) ) {
+				return $counts;
+			}
+
+			$cache_key = _count_posts_cache_key( $type, $perm );
+
+			$query = "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts} WHERE post_type = %s";
+
+			if ( 'readable' === $perm && is_user_logged_in() ) {
+				$post_type_object = get_post_type_object( $type );
+				if ( ! current_user_can( $post_type_object->cap->read_private_posts ) ) {
+					$query .= $wpdb->prepare(
+						" AND (post_status != 'private' OR ( post_author = %d AND post_status = 'private' ))",
+						get_current_user_id()
+					);
+				}
+			}
+
+			$query .= " AND ID NOT IN('" . implode( "','", $exclude_posts ) . "')";
+
+			$query .= ' GROUP BY post_status';
+
+			$results = (array) $wpdb->get_results( $wpdb->prepare( $query, $type ), ARRAY_A );
+			$counts  = array_fill_keys( get_post_stati(), 0 );
+
+			foreach ( $results as $row ) {
+				$counts[ $row['post_status'] ] = $row['num_posts'];
+			}
+
+			$counts = (object) $counts;
+			wp_cache_set( $cache_key, $counts, 'counts' );
+
+			return $counts;
 		}
 
 
