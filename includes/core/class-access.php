@@ -1661,6 +1661,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				if ( ! empty( $menu_item->object_id ) && ! empty( $menu_item->object ) ) {
 					if ( ! $this->is_restricted( $menu_item->object_id ) ) {
 						$filtered_items[] = $menu_item;
+						continue;
 					}
 				}
 
