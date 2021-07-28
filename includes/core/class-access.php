@@ -80,6 +80,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			add_filter( 'the_posts', array( &$this, 'filter_protected_posts' ), 99, 2 );
 			//protect pages for wp_list_pages func
 			add_filter( 'get_pages', array( &$this, 'filter_protected_posts' ), 99, 2 );
+
+			add_filter( 'the_title', array( &$this, 'filter_restricted_post_title' ), 10, 2 );
+
 			//filter menu items
 			add_filter( 'wp_nav_menu_objects', array( &$this, 'filter_menu' ), 99, 2 );
 			// blocks restrictions
@@ -843,6 +846,22 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 
 		/**
+		 * @param $title
+		 * @param $id
+		 *
+		 * @return string
+		 */
+		function filter_restricted_post_title( $title, $id ) {
+			if ( $this->is_restricted( $id ) ) {
+				$restricted_global_title = UM()->options()->get( 'restricted_access_post_title' );
+				$title = stripslashes( $restricted_global_title );
+			}
+
+			return $title;
+		}
+
+
+		/**
 		 * Protect Post Types in query
 		 * Restrict content new logic
 		 *
@@ -919,7 +938,6 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 								}
 
 								$post = apply_filters( 'um_restricted_archive_post', $post, $restriction, $original_post );
-
 								$filtered_posts[] = $post;
 								continue;
 							}
