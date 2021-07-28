@@ -413,7 +413,7 @@ function um_add_submit_button_to_login( $args ) {
 
 	<div class="um-col-alt">
 
-		<?php if ( isset( $args['show_rememberme'] ) && $args['show_rememberme'] ) {
+		<?php if ( ! empty( $args['show_rememberme'] ) ) {
 			UM()->fields()->checkbox( 'rememberme', __( 'Keep me signed in', 'ultimate-member' ), false ); ?>
 			<div class="um-clear"></div>
 		<?php }
@@ -452,7 +452,7 @@ add_action( 'um_after_login_fields', 'um_add_submit_button_to_login', 1000 );
  * @param $args
  */
 function um_after_login_submit( $args ) {
-	if ( $args['forgot_pass_link'] == 0 ) {
+	if ( empty( $args['forgot_pass_link'] ) ) {
 		return;
 	} ?>
 

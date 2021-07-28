@@ -179,6 +179,12 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 
 		function get_comment_count( $post_id = 0, $exclude_posts = array() ) {
+			static $cache = array();
+
+			if ( isset( $cache[ $post_id ] ) ) {
+				return $cache[ $post_id ];
+			}
+
 			global $wpdb;
 
 			$post_id = (int) $post_id;
@@ -240,7 +246,10 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				}
 			}
 
-			return array_map( 'intval', $comment_count );
+			$comment_count     = array_map( 'intval', $comment_count );
+			$cache[ $post_id ] = $comment_count;
+
+			return $comment_count;
 		}
 
 
