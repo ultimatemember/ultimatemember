@@ -207,7 +207,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'int',
 					),
 					'_um_restrict_custom_message'    => array(
-						'sanitize' => 'textarea',
+						'sanitize' => 'wp_kses',
 					),
 					'_um_access_redirect'            => array(
 						'sanitize' => 'int',
@@ -240,7 +240,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						'sanitize' => 'int',
 					),
 					'_um_restrict_custom_message'    => array(
-						'sanitize' => 'textarea',
+						'sanitize' => 'wp_kses',
 					),
 					'_um_access_redirect'            => array(
 						'sanitize' => 'int',
@@ -1176,6 +1176,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					case 'textarea':
 						$sanitized[ $k ] = sanitize_textarea_field( $v );
 						break;
+					case 'wp_kses':
+						$sanitized[ $k ] = wp_kses_post( $v );
+						break;
 				}
 			}
 
@@ -1228,6 +1231,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 						break;
 					case 'textarea':
 						$sanitized[ $k ] = sanitize_textarea_field( $v );
+						break;
+					case 'wp_kses':
+						$sanitized[ $k ] = wp_kses_post( $v );
 						break;
 				}
 			}
