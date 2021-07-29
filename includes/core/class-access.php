@@ -62,6 +62,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			add_filter( 'widget_posts_args', array( &$this, 'exclude_restricted_posts_widget' ), 99, 1 );
 
 			add_filter( 'wp_count_posts', array( &$this, 'custom_count_posts_handler' ), 99, 3 );
+			add_filter( 'getarchives_where', array( &$this, 'exclude_restricted_posts_archives_widget' ), 99, 2 );
 
 			// callbacks for changing terms query
 			add_action( 'pre_get_terms', array( &$this, 'exclude_hidden_terms_query' ), 99, 1 );
@@ -1441,6 +1442,25 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			}
 
 			return $array;
+		}
+
+
+		/**
+		 * Exclude restricted posts in widgets
+		 *
+		 * @param string  $sql_where
+		 * @param array $parsed_args
+		 *
+		 * @return string
+		 */
+		function exclude_restricted_posts_archives_widget( $sql_where, $parsed_args ) {
+			$exclude_posts = $this->exclude_posts_array();
+			if ( ! empty( $exclude_posts ) ) {
+				$exclude_string = implode( ',', $exclude_posts );
+				$sql_where .= ' AND ID NOT IN ( ' . $exclude_string . ' )';
+			}
+
+			return $sql_where;
 		}
 
 
