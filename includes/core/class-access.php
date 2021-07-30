@@ -847,13 +847,15 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 
 		/**
-		 * @param $title
-		 * @param $id
+		 * Replace titles of restricted posts
+		 *
+		 * @param string $title
+		 * @param int    $id
 		 *
 		 * @return string
 		 */
 		function filter_restricted_post_title( $title, $id ) {
-			if ( $this->is_restricted( $id ) ) {
+			if ( is_numeric( $id ) && $this->is_restricted( $id ) ) {
 				$restricted_global_title = UM()->options()->get( 'restricted_access_post_title' );
 				$title = stripslashes( $restricted_global_title );
 			}
