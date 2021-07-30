@@ -614,6 +614,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 			$output['error'] = null;
 
+//			var_dump( $_POST );
+//			var_dump( UM()->admin()->sanitize_builder_field_meta( $_POST ) );
+//			exit;
+
 			$array = array(
 				'field_type' => sanitize_key( $_POST['_type'] ),
 				'form_id'    => absint( $_POST['post_id'] ),
