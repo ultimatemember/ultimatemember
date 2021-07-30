@@ -1373,6 +1373,9 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 					case 'textarea':
 						$sanitized[ $k ] = sanitize_textarea_field( $v );
 						break;
+					case 'wp_kses':
+						$sanitized[ $k ] = wp_kses_post( $v );
+						break;
 					case 'key':
 						if ( is_array( $v ) ) {
 							$sanitized[ $k ] = array_map( 'sanitize_key', $v );

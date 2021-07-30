@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 5.8
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -157,11 +157,20 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 = 2.2.1: August 2, 2021 =
 
+* Enhancements:
+
+  - Added: Extended callback functions for sanitizing data in wp-admin forms fields
+  - Added: Restricted Access Post Title setting
+
 * Bugfixes:
+
+  - Fixed: Restriction settings and related queries (comments, archives, recent posts, post navigation, etc.)
   - Fixed: Sanitizing `max-width` value of the Login/Registration/Profile form settings
   - Fixed: Sanitizing `in_group` field's data
   - Fixed: Restriction settings related with `Hide in queries`
-  - Fixed: Restriction settings and performance issues on some installations
+  - Fixed: Restriction settings and CPU performance issues on some installations
+  - Fixed: Form meta settings and handling them on PHP8 installations
+  - Fixed: Make it clearer the restriction settings form labels
 
 = 2.2.0: July 20, 2021 =
 

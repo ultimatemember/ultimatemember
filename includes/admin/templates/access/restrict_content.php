@@ -89,7 +89,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		array(
 			'id'          => '_um_noaccess_action',
 			'type'        => 'select',
-			'label'       => __( 'What happens when users without access tries to view the post?', 'ultimate-member' ),
+			'label'       => __( 'What happens when users without access try to view the post?', 'ultimate-member' ),
 			'tooltip'     => __( 'Action when users without access tries to view the post', 'ultimate-member' ),
 			'value'       => ! empty( $data['_um_noaccess_action'] ) ? $data['_um_noaccess_action'] : 0,
 			'options'     => array(
