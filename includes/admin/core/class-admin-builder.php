@@ -494,6 +494,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 										if ( !isset( $array['cols'] ) ){
 											$col_num = 1;
+										} elseif ( is_numeric( $array['cols'] ) ) {
+											$col_num = (int) $array['cols'];
 										} else {
 
 											$col_split = explode(':', $array['cols'] );
