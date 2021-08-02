@@ -1257,22 +1257,27 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 			global $wpdb;
 
-			$this->ignore_exclude = true;
-			// exclude all posts assigned to current term without individual restriction settings
-			$post_ids = get_posts(
-				array(
-					'fields'      => 'ids',
-					'post_status' => 'any',
-					'numberposts' => -1,
-					'meta_query'  => array(
-						array(
-							'key'     => 'um_content_restriction',
-							'compare' => 'EXISTS',
+			$restricted_posts = UM()->options()->get( 'restricted_access_post_metabox' );
+			if ( ! empty( $restricted_posts ) ) {
+				$this->ignore_exclude = true;
+				// exclude all posts assigned to current term without individual restriction settings
+				$post_ids = get_posts(
+					array(
+						'fields'      => 'ids',
+						'post_status' => 'any',
+						'post_type'   => array_keys( $restricted_posts ),
+						'numberposts' => -1,
+						'meta_query'  => array(
+							array(
+								'key'     => 'um_content_restriction',
+								'compare' => 'EXISTS',
+							),
 						),
-					),
-				)
-			);
-			$this->ignore_exclude = false;
+					)
+				);
+
+				$this->ignore_exclude = false;
+			}
 
 			$post_ids = empty( $post_ids ) ? array() : $post_ids;
 
