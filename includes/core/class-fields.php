@@ -3919,8 +3919,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						for ( $c = 0; $c < $sub_rows; $c++ ) {
 
 							// cols
-							$cols = ( isset( $row_array['cols'] ) ) ? $row_array['cols'] : 1;
-							if( is_numeric( $cols ) ){
+							$cols = isset( $row_array['cols'] ) ? $row_array['cols'] : 1;
+							if ( is_numeric( $cols ) ) {
 								$cols_num = (int) $cols;
 							} else {
 								if ( strstr( $cols, ':' ) ) {
@@ -4405,8 +4405,8 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						for ( $c = 0; $c < $sub_rows; $c++ ) {
 
 							// cols
-							$cols = ( isset( $row_array['cols'] ) ) ? $row_array['cols'] : 1;
-							if( is_numeric( $cols ) ){
+							$cols = isset( $row_array['cols'] ) ? $row_array['cols'] : 1;
+							if ( is_numeric( $cols ) ) {
 								$cols_num = (int) $cols;
 							} else {
 								if ( strstr( $cols, ':' ) ) {

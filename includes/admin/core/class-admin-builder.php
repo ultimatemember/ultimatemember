@@ -492,15 +492,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Builder' ) ) {
 
 										<?php
 
-										if ( !isset( $array['cols'] ) ){
+										if ( ! isset( $array['cols'] ) ) {
 											$col_num = 1;
 										} elseif ( is_numeric( $array['cols'] ) ) {
 											$col_num = (int) $array['cols'];
 										} else {
-
-											$col_split = explode(':', $array['cols'] );
-											$col_num = $col_split[$c];
-
+											$col_split = explode( ':', $array['cols'] );
+											$col_num = $col_split[ $c ];
 										}
 
 										for ( $i = 1; $i <= 3; $i++ ) {
