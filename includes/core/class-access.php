@@ -1747,8 +1747,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		function filter_post_thumbnail( $has_thumbnail, $post, $thumbnail_id ) {
 			if ( $this->is_restricted( $thumbnail_id ) ) {
 				$has_thumbnail = false;
-			} elseif ( ! empty( $post ) ) {
-				if ( $this->is_restricted( $post ) ) {
+			} elseif ( ! empty( $post ) && ! empty( $post->ID ) ) {
+				if ( $this->is_restricted( $post->ID ) ) {
 					$has_thumbnail = false;
 				}
 			} else {

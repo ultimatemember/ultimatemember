@@ -7,7 +7,7 @@ Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 5.8
-Stable tag: 2.2.1
+Stable tag: 2.2.2
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -154,6 +154,12 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.2.2: August 3, 2021 =
+
+* Bugfixes:
+
+  - Fixed: `is_restricted()` functions in class-access.php. Avoid using object as array offset
 
 = 2.2.1: August 2, 2021 =
 
