@@ -92,8 +92,12 @@ function test_01() {
 }
 
 function test_02() {
+  $forms = get_posts(array(
+      'post_type' => 'um_form'
+  ));
+  $form = current($forms);
 	?>
-	<button class="button button-primary umAddField">Add field</button>
+  <button class="button button-primary umAddField" data-arg2="<?php echo esc_attr( $form->ID ); ?>">Add field</button>
 
 	<script type="text/template" id="tmpl-um-modal-fields">
 		<div class="um-modal um-admin-modal" id="UM_fields">
@@ -124,7 +128,7 @@ function test_02() {
 						nonce: um_admin_scripts.nonce
 					},
 					success: function (data) {
-						UM.modal.setContent(data, $modal);
+						UM.modal.setContent(data, $modal).responsive();
 					}
 				} );
 			}
