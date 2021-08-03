@@ -30,7 +30,7 @@ jQuery(document).ready(function() {
 	jQuery( document.body ).on('click', '.um-photo-modal', function(e){
 		e.preventDefault();
 		var photo_src = jQuery(this).attr('data-src');
-		um_new_modal('um_view_photo', 'fit', true, photo_src );
+		um_modal_new( 'um_view_photo', 'fit', false, photo_src, false );
 		return false;
 	});
 

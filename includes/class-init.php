@@ -1338,7 +1338,7 @@ if ( ! class_exists( 'UM' ) ) {
 			return $this->classes['files'];
 		}
 
-		
+
 		/**
 		 * @since 2.0.21
 		 *
