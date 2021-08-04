@@ -125,16 +125,21 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				return array();
 			}
 
-			global $wpdb;
-			$term_ids = $wpdb->get_col(
-				"SELECT tm.term_id
-				FROM {$wpdb->termmeta} tm 
-				LEFT JOIN {$wpdb->term_taxonomy} tt ON tt.term_id = tm.term_id 
-				WHERE tm.meta_key = 'um_content_restriction' AND 
-				      tt.taxonomy IN('" . implode( "','", array_keys( $restricted_taxonomies ) ) . "')"
+			$this->ignore_terms_exclude = true;
+			$term_ids = get_terms(
+				array(
+					'taxonomy'   => array_keys( $restricted_taxonomies ),
+					'hide_empty' => false,
+					'fields'     => 'ids',
+					'meta_query' => array(
+						'key'     => 'um_content_restriction',
+						'compare' => 'EXISTS',
+					),
+				)
 			);
+			$this->ignore_terms_exclude = false;
 
-			if ( empty( $term_ids ) ) {
+			if ( empty( $term_ids ) || is_wp_error( $term_ids ) ) {
 				$cache = array();
 				return array();
 			}

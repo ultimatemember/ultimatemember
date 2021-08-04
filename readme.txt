@@ -155,6 +155,12 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
+= 2.2.3: August 4, 2021 =
+
+* Bugfixes:
+
+  - Fixed: `pre_get_terms` callback to avoid the conflicts with other terms queries
+
 = 2.2.2: August 3, 2021 =
 
 * Bugfixes:
