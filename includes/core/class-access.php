@@ -362,7 +362,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				return;
 			}
 
-			if ( $this->is_restricted_term( $term_id ) ) {
+			if ( $this->is_restricted_term( $term_id, true ) ) {
 				add_filter( 'tag_template', array( &$this, 'taxonomy_message' ), 10, 3 );
 				add_filter( 'archive_template', array( &$this, 'taxonomy_message' ), 10, 3 );
 				add_filter( 'category_template', array( &$this, 'taxonomy_message' ), 10, 3 );
@@ -1652,9 +1652,10 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * Is term restricted?
 		 *
 		 * @param int $term_id
+		 * @param bool $on_term_page
 		 * @return bool
 		 */
-		function is_restricted_term( $term_id ) {
+		function is_restricted_term( $term_id, $on_term_page = false ) {
 			static $cache = array();
 
 			if ( isset( $cache[ $term_id ] ) ) {
@@ -1692,12 +1693,16 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					if ( '0' == $restriction['_um_accessible'] ) {
 						//term is private
 						$restricted = false;
-						$this->allow_access = true;
+						if ( $on_term_page ) {
+							$this->allow_access = true;
+						}
 					} elseif ( '1' == $restriction['_um_accessible'] ) {
 						//if term for not logged in users and user is not logged in
 						if ( ! is_user_logged_in() ) {
 							$restricted = false;
-							$this->allow_access = true;
+							if ( $on_term_page ) {
+								$this->allow_access = true;
+							}
 						}
 					} elseif ( '2' == $restriction['_um_accessible'] ) {
 						//if term for logged in users and user is not logged in
@@ -1707,14 +1712,18 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							if ( empty( $restriction['_um_access_roles'] ) || false === array_search( '1', $restriction['_um_access_roles'] ) ) {
 								if ( $custom_restrict ) {
 									$restricted = false;
-									$this->allow_access = true;
+									if ( $on_term_page ) {
+										$this->allow_access = true;
+									}
 								}
 							} else {
 								$user_can = $this->user_can( get_current_user_id(), $restriction['_um_access_roles'] );
 
 								if ( $user_can && $custom_restrict ) {
 									$restricted = false;
-									$this->allow_access = true;
+									if ( $on_term_page ) {
+										$this->allow_access = true;
+									}
 								}
 							}
 						}
