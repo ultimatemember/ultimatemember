@@ -126,7 +126,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 			if ( ! empty( $query->query_vars['p'] ) && $this->is_restricted( $query->query_vars['p'] ) ) {
 				$restriction_settings = $this->get_post_privacy_settings( $query->query_vars['p'] );
-				if ( empty( $restriction_settings['_um_access_hide_from_queries'] ) && $query->query_vars['post__not_in'] ) {
+				if ( ! empty( $restriction_settings['_um_access_hide_from_queries'] ) && ! empty( $query->query_vars['post__not_in'] ) ) {
 					global $wpdb;
 					$post__not_in = implode( ',', array_map( 'absint', $query->query_vars['post__not_in'] ) );
 					$where       .= " AND {$wpdb->posts}.ID NOT IN ($post__not_in)";
