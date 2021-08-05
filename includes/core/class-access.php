@@ -57,6 +57,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 			// callbacks for changing posts query
 			add_action( 'pre_get_posts', array( &$this, 'exclude_posts' ), 99, 1 );
+
+			add_filter( 'posts_where', array( &$this, 'exclude_posts_where' ), 10, 2 );
+
 			add_filter( 'get_next_post_where', array( &$this, 'exclude_navigation_posts' ), 99, 5 );
 			add_filter( 'get_previous_post_where', array( &$this, 'exclude_navigation_posts' ), 99, 5 );
 			add_filter( 'widget_posts_args', array( &$this, 'exclude_restricted_posts_widget' ), 99, 1 );
@@ -106,6 +109,33 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			add_action( 'um_access_check_individual_term_settings', array( &$this, 'um_access_check_individual_term_settings' ) );
 			add_action( 'um_access_check_global_settings', array( &$this, 'um_access_check_global_settings' ) );
 		}
+
+
+		/**
+		 * Exclude restricted post from query if there is a single query that exclude post_not_in by default in \WP_Query
+		 * 
+		 * @param string $where
+		 * @param \WP_Query $query
+		 *
+		 * @return mixed
+		 */
+		function exclude_posts_where( $where, $query ) {
+			if ( ! $query->is_main_query() ) {
+				return $where;
+			}
+
+			if ( ! empty( $query->query_vars['p'] ) && $this->is_restricted( $query->query_vars['p'] ) ) {
+				$restriction_settings = $this->get_post_privacy_settings( $query->query_vars['p'] );
+				if ( empty( $restriction_settings['_um_access_hide_from_queries'] ) && $query->query_vars['post__not_in'] ) {
+					global $wpdb;
+					$post__not_in = implode( ',', array_map( 'absint', $query->query_vars['post__not_in'] ) );
+					$where       .= " AND {$wpdb->posts}.ID NOT IN ($post__not_in)";
+				}
+			}
+
+			return $where;
+		}
+
 
 		/**
 		 * Get array with restricted terms
