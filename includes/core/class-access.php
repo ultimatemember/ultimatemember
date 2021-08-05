@@ -869,6 +869,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			}
 
 			if ( $this->is_restricted( $id ) ) {
+				$ignore = apply_filters( 'um_ignore_restricted_title', false, $id );
+				if ( $ignore ) {
+					return $title;
+				}
+
 				$restricted_global_title = UM()->options()->get( 'restricted_access_post_title' );
 				$title = stripslashes( $restricted_global_title );
 			}
