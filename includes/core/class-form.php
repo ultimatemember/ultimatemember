@@ -586,7 +586,31 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 											}
 											break;
 										case 'url':
-											$form[ $k ] = esc_url_raw( $form[ $k ] );
+                      $f = UM()->builtin()->get_a_field( $k );
+                      if( isset( $f['match'] ) && isset( $f['advanced'] ) && $f['advanced'] === 'social' ){
+                        $v = sanitize_text_field( $form[ $k ] );
+
+                        // Make a proper social link
+                        if ( ! empty( $v ) && ! strstr( $v, $f['match'] ) ) {
+                          $domain = trim( strtr( $f['match'], array(
+                              'https://' => '',
+                              'http://'  => ''
+                          ) ), ' /' );
+
+                          if ( ! strstr( $v, $domain ) ) {
+                            $v = $f['match'] . $v;
+                          } else {
+                            $v = 'https://' . trim( strtr( $v, array(
+                                'https://' => '',
+                                'http://'  => ''
+                            ) ), ' /' );
+                          }
+                        }
+
+                        $form[ $k ] = $v;
+                      } else {
+                        $form[ $k ] = esc_url_raw( $form[ $k ] );
+                      }
 											break;
 										case 'text':
 										case 'select':
