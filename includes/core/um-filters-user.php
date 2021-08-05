@@ -48,7 +48,7 @@ function um_admin_user_actions_hook( $actions, $user_id ) {
 		$actions['um_delete'] = array( 'label' => __( 'Delete this user', 'ultimate-member' ) );
 	}
 
-	if ( current_user_can( 'manage_options' ) ) {
+	if ( current_user_can( 'manage_options' ) && ! is_super_admin( $user_id ) ) {
 		$actions['um_switch_user'] = array( 'label' => __( 'Login as this user', 'ultimate-member' ) );
 	}
 

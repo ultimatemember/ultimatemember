@@ -113,7 +113,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 		/**
 		 * Exclude restricted post from query if there is a single query that exclude post_not_in by default in \WP_Query
-		 * 
+		 *
 		 * @param string $where
 		 * @param \WP_Query $query
 		 *
