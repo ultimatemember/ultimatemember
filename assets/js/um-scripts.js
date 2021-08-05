@@ -9,6 +9,13 @@ function um_sanitize_value( value, el ) {
 	return sanitized_value;
 }
 
+function um_unsanitize_value( input ) {
+	var e = document.createElement( 'textarea' );
+	e.innerHTML = input;
+	// handle case of empty input
+	return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+}
+
 
 function um_init_datetimepicker() {
 	jQuery('.um-datepicker:not(.picker__input)').each(function(){

@@ -303,12 +303,14 @@ function um_ajax_get_members( directory, args ) {
 				var filter_name = filter.find('select').attr('name');
 				var value = um_get_data_for_directory( directory, 'filter_' + filter_name );
 				if ( typeof value != 'undefined' ) {
+					value = um_unsanitize_value( value );
 					request[ filter_name ] = value.split( '||' );
 				}
 			} else if ( filter.hasClass( 'um-text-filter-type' ) && filter.find('input[type="text"]').length ) {
 				var filter_name = filter.find('input[type="text"]').attr('name');
 				var value = um_get_data_for_directory( directory, 'filter_' + filter_name );
 				if ( typeof value != 'undefined' ) {
+					value = um_unsanitize_value( value );
 					request[ filter_name ] = value;
 				}
 			} else {
@@ -491,9 +493,11 @@ function um_get_filters_data( directory ) {
 			filter_title = filter.find('select').data('placeholder');
 
 			var filter_value = um_get_data_for_directory( directory, 'filter_' + filter_name );
+
 			if ( typeof filter_value == 'undefined' ) {
 				filter_value = [];
 			} else {
+				filter_value = um_unsanitize_value( filter_value );
 				filter_value = filter_value.split( '||' );
 			}
 
@@ -956,7 +960,8 @@ jQuery(document.body).ready( function() {
 
 	//filtration process
 	jQuery( document.body ).on( 'change', '.um-directory .um-search-filter select', function() {
-		var selected_val = um_sanitize_value( jQuery(this).val() );
+		var selected_val_raw = jQuery(this).val();
+		var selected_val = um_sanitize_value( selected_val_raw );
 
 		if ( selected_val === '' ) {
 			return;
@@ -991,7 +996,7 @@ jQuery(document.body).ready( function() {
 		}
 
 		//disable options and disable select if all options are disabled
-		jQuery(this).find('option[value="' + selected_val + '"]').prop('disabled', true).hide();
+		jQuery(this).find('option[value="' + selected_val_raw + '"]').prop('disabled', true).hide();
 		if ( jQuery(this).find('option:not(:disabled)').length === 1 ) {
 			jQuery(this).prop('disabled', true);
 		}
@@ -1115,6 +1120,7 @@ jQuery(document.body).ready( function() {
 			if ( typeof current_value == 'undefined' ) {
 				current_value = [];
 			} else {
+				current_value = um_unsanitize_value( current_value );
 				current_value = current_value.split( '||' );
 			}
 

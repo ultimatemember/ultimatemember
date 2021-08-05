@@ -128,7 +128,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 							"SELECT DISTINCT meta_value 
 							FROM $wpdb->usermeta 
 							WHERE meta_key = %s AND 
-							      meta_value != ''",
+								  meta_value != ''",
 							$arr_options['post']['child_name']
 						)
 					);
@@ -586,31 +586,32 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 											}
 											break;
 										case 'url':
-                      $f = UM()->builtin()->get_a_field( $k );
-                      if( isset( $f['match'] ) && isset( $f['advanced'] ) && $f['advanced'] === 'social' ){
-                        $v = sanitize_text_field( $form[ $k ] );
+											$f = UM()->builtin()->get_a_field( $k );
 
-                        // Make a proper social link
-                        if ( ! empty( $v ) && ! strstr( $v, $f['match'] ) ) {
-                          $domain = trim( strtr( $f['match'], array(
-                              'https://' => '',
-                              'http://'  => ''
-                          ) ), ' /' );
+											if ( array_key_exists( 'match', $f ) && array_key_exists( 'advanced', $f ) && 'social' === $f['advanced'] ) {
+												$v = sanitize_text_field( $form[ $k ] );
 
-                          if ( ! strstr( $v, $domain ) ) {
-                            $v = $f['match'] . $v;
-                          } else {
-                            $v = 'https://' . trim( strtr( $v, array(
-                                'https://' => '',
-                                'http://'  => ''
-                            ) ), ' /' );
-                          }
-                        }
+												// Make a proper social link
+												if ( ! empty( $v ) && ! strstr( $v, $f['match'] ) ) {
+													$domain = trim( strtr( $f['match'], array(
+														'https://' => '',
+														'http://'  => '',
+													) ), ' /' );
 
-                        $form[ $k ] = $v;
-                      } else {
-                        $form[ $k ] = esc_url_raw( $form[ $k ] );
-                      }
+													if ( ! strstr( $v, $domain ) ) {
+														$v = $f['match'] . $v;
+													} else {
+														$v = 'https://' . trim( strtr( $v, array(
+															'https://' => '',
+															'http://'  => '',
+														) ), ' /' );
+													}
+												}
+
+												$form[ $k ] = $v;
+											} else {
+												$form[ $k ] = esc_url_raw( $form[ $k ] );
+											}
 											break;
 										case 'text':
 										case 'select':
@@ -745,7 +746,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 				if ( strstr( $field_key, 'role_' ) && is_array( $field_settings['options'] ) ) {
 
 					if ( isset( $this->post_form['mode'] ) && 'profile' === $this->post_form['mode'] &&
-					     isset( $field_settings['editable'] ) && $field_settings['editable'] == 0 ) {
+						 isset( $field_settings['editable'] ) && $field_settings['editable'] == 0 ) {
 						continue;
 					}
 
