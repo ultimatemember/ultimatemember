@@ -1423,7 +1423,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 */
 		function exclude_posts( $query ) {
 			if ( $query->is_main_query() ) {
-				$exclude_posts = $this->exclude_posts_array( is_admin() );
+				$force = is_search() || is_admin();
+				$exclude_posts = $this->exclude_posts_array( $force );
 				if ( ! empty( $exclude_posts ) ) {
 					$post__not_in = $query->get( 'post__not_in', array() );
 					$query->set( 'post__not_in', array_merge( wp_parse_id_list( $post__not_in ), $exclude_posts ) );
