@@ -946,6 +946,11 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 				$original_post = $post;
 
+				if ( is_user_logged_in() && isset( $post->post_author ) && $post->post_author == get_current_user_id() ) {
+					$filtered_posts[] = $post;
+					continue;
+				}
+
 				//Woocommerce AJAX fixes....remove filtration on wc-ajax which goes to Front Page
 				if ( ! empty( $_GET['wc-ajax'] ) && defined( 'WC_DOING_AJAX' ) && WC_DOING_AJAX ) {
 					$filtered_posts[] = $post;
@@ -1639,6 +1644,12 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			}
 
 			if ( current_user_can( 'administrator' ) ) {
+				$cache[ $post_id ] = false;
+				return false;
+			}
+
+			$post = get_post( $post_id );
+			if ( is_user_logged_in() && isset( $post->post_author ) && $post->post_author == get_current_user_id() ) {
 				$cache[ $post_id ] = false;
 				return false;
 			}
