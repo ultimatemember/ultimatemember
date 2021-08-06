@@ -155,11 +155,20 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
 
-= 2.2.3: August 4, 2021 =
+= 2.2.3: August 11, 2021 =
+
+* Enhancements:
+
+  - Added: 'um_ignore_restricted_title' hook for workaround show post title of the restricted post
 
 * Bugfixes:
 
   - Fixed: `pre_get_terms` callback to avoid the conflicts with other terms queries
+  - Fixed: Terms query and global access settings on PHP8 installations
+  - Fixed: Member directory dropdown filters where options contain `&` symbol
+  - Fixed: Displaying 404 error for the restricted Media
+  - Fixed: Displaying 'Login as this user' action on the user profile
+  - Fixed: Sanitizing of the social links fields (e.g. Twitter, Facebook, etc.)
 
 = 2.2.2: August 3, 2021 =
 
