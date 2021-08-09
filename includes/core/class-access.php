@@ -181,6 +181,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				}
 			}
 
+			$exclude = apply_filters( 'um_exclude_restricted_terms_ids', $exclude );
+
 			$cache = $exclude;
 			return $exclude;
 		}
@@ -1410,6 +1412,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					}
 				}
 			}
+
+			$exclude_posts = apply_filters( 'um_exclude_restricted_posts_ids', $exclude_posts, $force );
 
 			$cache[ $cache_key ] = $exclude_posts;
 			return $exclude_posts;
