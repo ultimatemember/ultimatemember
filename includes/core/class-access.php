@@ -1693,6 +1693,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				}
 			}
 
+			$restricted = apply_filters( 'um_is_restricted_post', $restricted, $post_id );
+
 			$cache[ $post_id ] = $restricted;
 
 			return $restricted;
@@ -1781,6 +1783,8 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					}
 				}
 			}
+
+			$restricted = apply_filters( 'um_is_restricted_term', $restricted, $term_id, $on_term_page );
 
 			$cache[ $term_id ] = $restricted;
 			return $restricted;
