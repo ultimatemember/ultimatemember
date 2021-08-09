@@ -8,7 +8,7 @@
  */
 function um_access_profile( $user_id ) {
 
-	if ( ! um_is_myprofile() && um_is_core_page( 'user' ) && ! current_user_can( 'edit_users' ) ) {
+	if ( ! um_is_myprofile() && um_is_predefined_page( 'user' ) && ! current_user_can( 'edit_users' ) ) {
 
 		um_fetch_user( $user_id );
 

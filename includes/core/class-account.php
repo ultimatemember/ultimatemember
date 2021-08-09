@@ -335,14 +335,14 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 */
 		function account_page_restrict() {
 
-			if ( um_is_core_page( 'account' ) ) {
+			if ( um_is_predefined_page( 'account' ) ) {
 
 				//redirect to login for not logged in users
 				if ( ! is_user_logged_in() ) {
 					$redirect_to = add_query_arg(
 						'redirect_to',
-						urlencode_deep( um_get_core_page( 'account' ) ) ,
-						um_get_core_page( 'login' )
+						urlencode_deep( um_get_predefined_page_url( 'account' ) ) ,
+						um_get_predefined_page_url( 'login' )
 					);
 
 					exit( wp_redirect( $redirect_to ) );
@@ -391,7 +391,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 				 */
 				do_action( 'um_submit_account_errors_hook', UM()->form()->post_form );
 
-				if ( um_is_core_page( 'account' ) && get_query_var( 'um_tab' ) ) {
+				if ( um_is_predefined_page( 'account' ) && get_query_var( 'um_tab' ) ) {
 					$this->current_tab = get_query_var( 'um_tab' );
 				} else {
 					$this->current_tab = UM()->form()->post_form['_um_account_tab'];
@@ -421,7 +421,7 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 
 				} elseif ( UM()->form()->has_error( 'um_account_security' ) ) {
 					$url = '';
-					if ( um_is_core_page( 'account' ) ) {
+					if ( um_is_predefined_page( 'account' ) ) {
 
 						$url = UM()->account()->tab_link( $this->current_tab );
 
@@ -470,14 +470,14 @@ if ( ! class_exists( 'um\core\Account' ) ) {
 		 */
 		function tab_link( $id ) {
 
-			if ( get_option( 'permalink_structure' ) ) {
+			if ( UM()->is_permalinks ) {
 
-				$url = trailingslashit( untrailingslashit( um_get_core_page( 'account' ) ) );
+				$url = trailingslashit( untrailingslashit( um_get_predefined_page_url( 'account' ) ) );
 				$url = $url . $id . '/';
 
 			} else {
 
-				$url = add_query_arg( 'um_tab', $id, um_get_core_page( 'account' ) );
+				$url = add_query_arg( 'um_tab', $id, um_get_predefined_page_url( 'account' ) );
 
 			}
 

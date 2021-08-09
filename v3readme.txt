@@ -1,4 +1,9 @@
-﻿### Changed hooks
+﻿### Changed handlers:
+
+* Don't remove core pages on uninstall. There can be other content on the page
+
+
+### Changed hooks
 
 `um_locate_template`
 

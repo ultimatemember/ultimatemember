@@ -137,9 +137,13 @@ if ( ! class_exists( 'um\admin\core\Admin_Upgrade' ) ) {
 
 
 		/**
+		 * @deprecated 3.0
+		 *
 		 * @return array
 		 */
 		function get_extension_upgrades() {
+			_deprecated_function( 'UM()->admin_upgrade()->get_extension_upgrades()', '3.0' );
+
 			$extensions = UM()->extensions()->get_list();
 			if ( empty( $extensions ) ) {
 				return array();

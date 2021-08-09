@@ -37,7 +37,7 @@ function um_weglot_get_languages_codes() {
 	$default = weglot_get_original_language();
 	$current = weglot_get_current_language();
 
-	$languages_map = [
+	$languages_map = array(
 		'af'      => 'af_ZA',
 		'ar'      => 'ar',
 		'az'      => 'az',
@@ -114,13 +114,25 @@ function um_weglot_get_languages_codes() {
 		'vi'      => 'vi_VN',
 		'zh-hans' => 'zh_CN',
 		'zh-hant' => 'zh_TW',
-	];
+	);
 
 	$default = array_key_exists( $default, $languages_map ) ? $languages_map[ $default ] : $default;
 	$current = array_key_exists( $current, $languages_map ) ? $languages_map[ $current ] : $current;
 
-	return [
+	return array(
 		'default' => $default,
 		'current' => $current,
-	];
+	);
 }
+
+/**
+ * @param int $page_id
+ * @param string $slug
+ *
+ * @return mixed
+ */
+function um_get_predefined_page_id_weglot( $page_id, $slug ) {
+	// just empty method, but works properly
+	return $page_id;
+}
+add_filter( 'um_get_predefined_page_id', 'um_get_predefined_page_id_weglot', 10, 2 );

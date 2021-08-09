@@ -347,18 +347,6 @@ if ( ! class_exists( 'um\core\Roles_Capabilities' ) ) {
 
 
 		/**
-		 * Get user one of UM roles if it has it
-		 *
-		 * @deprecated since 2.0
-		 * @param int $user_id
-		 * @return bool|mixed
-		 */
-		function um_get_user_role( $user_id ) {
-			return $this->get_um_user_role( $user_id );
-		}
-
-
-		/**
 		 * @param $user_id
 		 *
 		 * @return array|bool

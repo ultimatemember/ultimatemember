@@ -13,6 +13,8 @@ if ( ! class_exists( 'um\Extensions' ) ) {
 	 *
 	 * @package um
 	 *
+	 * @deprecated 3.0
+	 *
 	 * @method void bbpress_activation()
 	 */
 	class Extensions {

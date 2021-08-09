@@ -186,7 +186,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 		 *
 		 */
 		function access_members() {
-			if ( UM()->options()->get( 'members_page' ) == 0 && um_is_core_page( 'members' ) ) {
+			if ( UM()->options()->get( 'members_page' ) == 0 && um_is_predefined_page( 'members' ) ) {
 				um_redirect_home();
 			}
 		}
@@ -2160,7 +2160,7 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 				$admin_actions = apply_filters( 'um_admin_user_actions_hook', array(), $user_id );
 				if ( ! empty( $admin_actions ) ) {
 					foreach ( $admin_actions as $id => $arr ) {
-						$url = add_query_arg( array( 'um_action' => $id, 'uid' => $user_id ), um_get_core_page( 'user' ) );
+						$url = add_query_arg( array( 'um_action' => $id, 'uid' => $user_id ), um_get_predefined_page_url( 'user' ) );
 
 						$actions[ $id ] = array(
 							'title' => $arr['label'],
@@ -2182,12 +2182,12 @@ if ( ! class_exists( 'um\core\Member_Directory' ) ) {
 
 				$actions['um-myaccount'] = array(
 					'title' => __( 'My Account', 'ultimate-member' ),
-					'url'   => um_get_core_page( 'account' ),
+					'url'   => um_get_predefined_page_url( 'account' ),
 				);
 
 				$actions['um-logout'] = array(
 					'title' => __( 'Logout', 'ultimate-member' ),
-					'url'   => um_get_core_page( 'logout' ),
+					'url'   => um_get_predefined_page_url( 'logout' ),
 				);
 
 				$actions = apply_filters( 'um_member_directory_my_user_card_actions', $actions, $user_id );

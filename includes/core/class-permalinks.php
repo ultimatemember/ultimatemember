@@ -49,15 +49,18 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 		/**
 		 * SEO canonical href bugfix
 		 *
-		 * @deprecated since version 2.1.7
+		 * @deprecated 2.1.7
 		 *
 		 * @see function um_profile_remove_wpseo()
 		 */
 		function um_rel_canonical_() {
+			_deprecated_function( 'UM()->permalinks()->um_rel_canonical_()', '2.1.7', 'um_profile_remove_wpseo' );
+
 			global $wp_the_query;
 
-			if ( ! is_singular() )
+			if ( ! is_singular() ) {
 				return;
+			}
 
 			/**
 			 * UM hook
@@ -85,19 +88,20 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 			if( ! $enable_canonical )
 				return;
 
-			if ( !$id = $wp_the_query->get_queried_object_id() )
+			if ( ! $id = $wp_the_query->get_queried_object_id() ) {
 				return;
+			}
 
-			if ( UM()->config()->permalinks['user'] == $id ) {
+			if ( um_is_predefined_page( 'user', $id ) ) {
 				$link = esc_url( $this->get_current_url() );
-				echo "<link rel='canonical' href='$link' />\n";
+				echo "<link rel=\"canonical\" href=\"$link\" />\n";
 				return;
 			}
 
 			$link = get_permalink( $id );
-			if ( $page = get_query_var( 'cpage' ) ){
+			if ( $page = get_query_var( 'cpage' ) ) {
 				$link = get_comments_pagenum_link( $page );
-				echo "<link rel='canonical' href='$link' />\n";
+				echo "<link rel=\"canonical\" href=\"$link\" />\n";
 			}
 
 		}
@@ -234,7 +238,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 				 */
 				do_action( 'um_after_email_confirmation', $user_id );
 
-				$redirect = empty( $user_role_data['url_email_activate'] ) ? um_get_core_page( 'login', 'account_active' ) : trim( $user_role_data['url_email_activate'] ); // Role setting "URL redirect after e-mail activation"
+				$redirect = empty( $user_role_data['url_email_activate'] ) ? add_query_arg( array( 'updated' => 'account_active' ), um_get_predefined_page_url( 'login' ) ) : trim( $user_role_data['url_email_activate'] ); // Role setting "URL redirect after e-mail activation"
 				$redirect = apply_filters( 'um_after_email_confirmation_redirect', $redirect, $user_id, $login );
 
 				exit( wp_redirect( $redirect ) );
@@ -356,9 +360,8 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 		 * @return string $profile_url
 		 */
 		function profile_permalink( $slug ) {
-
-			$page_id = UM()->config()->permalinks['user'];
-			$profile_url = get_permalink( $page_id );
+			$page_id     = um_get_predefined_page_id( 'user' );
+			$profile_url = um_get_predefined_page_url( 'user' );
 
 			/**
 			 * UM hook
@@ -384,7 +387,7 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 			 */
 			$profile_url = apply_filters( 'um_localize_permalink_filter', $profile_url, $page_id );
 
-			if ( get_option( 'permalink_structure' ) ) {
+			if ( UM()->is_permalinks ) {
 
 				$profile_url = trailingslashit( untrailingslashit( $profile_url ) );
 				$profile_url = $profile_url . strtolower( $slug ). '/';

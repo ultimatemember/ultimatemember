@@ -19,6 +19,10 @@ if ( ! defined( 'um_plugin' ) )
 //for delete Email options only for Core email notifications
 remove_all_filters( 'um_email_notifications' );
 //for delete only Core Theme Link pages
+remove_all_filters( 'um_predefined_pages' );
+
+// since 3.0 legacy hook
+// @todo remove in 3.1 version
 remove_all_filters( 'um_core_pages' );
 
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-functions.php';
@@ -31,22 +35,15 @@ if ( ! empty( $delete_options ) ) {
 	$upl_folder = UM()->files()->upload_basedir;
 	UM()->files()->remove_dir( $upl_folder );
 
-	//remove core pages
-	foreach ( UM()->config()->core_pages as $page_key => $page_value ) {
-		$page_id = UM()->options()->get( UM()->options()->get_core_page_id( $page_key ) );
-		if ( ! empty( $page_id ) )
-			wp_delete_post( $page_id, true );
-	}
-
 	//remove core settings
-	$settings_defaults = UM()->config()->settings_defaults;
+	$settings_defaults = UM()->config()->get( 'default_settings' );
 	foreach ( $settings_defaults as $k => $v ) {
 		UM()->options()->remove( $k );
 	}
 
 	//delete UM Custom Post Types posts
 	$um_posts = get_posts( array(
-		'post_type'     => array(
+		'post_type'   => array(
 			'um_form',
 			'um_directory',
 			'um_role',
@@ -58,11 +55,11 @@ if ( ! empty( $delete_options ) ) {
 			'um_frontend_posting',
 			'um_notice'
 		),
-		'post_status'   => array( 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ),
-		'numberposts'   => -1
+		'post_status' => array( 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ),
+		'numberposts' => -1,
 	) );
 
-	foreach ( $um_posts as $um_post ){
+	foreach ( $um_posts as $um_post ) {
 		delete_option( 'um_existing_rows_' . $um_post->ID );
 		delete_option( 'um_form_rowdata_' . $um_post->ID );
 		wp_delete_post( $um_post->ID, 1 );
@@ -76,24 +73,15 @@ if ( ! empty( $delete_options ) ) {
 		}
 	}
 
-	delete_option( '__ultimatemember_sitekey' );
+	delete_option( '__ultimatemember_sitekey' ); // legacy option, just for delete for old customers
+	delete_option( 'um_core_forms' ); // option is created on the first install
+	delete_option( 'um_core_directories' ); // option is created on the first install
 	delete_option( 'um_flush_rewrite_rules' );
 
 	//remove all users cache
 	UM()->user()->remove_cache_all_users();
 
 	global $wpdb;
-
-	//remove extensions core pages
-	$ext_pages = $wpdb->get_results( "
-		SELECT post_id
-		FROM {$wpdb->postmeta}
-		WHERE meta_key = '_um_core'
-	", ARRAY_A );
-
-	foreach ( $ext_pages as $page_id ) {
-		wp_delete_post( $page_id['post_id'], 1 );
-	}
 
 	$wpdb->query(
 		"DELETE 
@@ -162,13 +150,13 @@ if ( ! empty( $delete_options ) ) {
 	//remove options from extensions
 	//user photos
 	$um_user_photos = get_posts( array(
-		'post_type'     => array(
-			'um_user_photos'
+		'post_type'   => array(
+			'um_user_photos',
 		),
-		'post_status'   => array( 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ),
-		'numberposts'   => -1
+		'post_status' => array( 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ),
+		'numberposts' => -1,
 	) );
-	if( $um_user_photos ) {
+	if ( $um_user_photos ) {
 		foreach ( $um_user_photos as $um_user_photo ) {
 			$attachments = get_attached_media( 'image', $um_user_photo->ID );
 			foreach ( $attachments as $attachment ) {
@@ -180,16 +168,16 @@ if ( ! empty( $delete_options ) ) {
 
 	//user notes
 	$um_notes = get_posts( array(
-		'post_type'     => array(
-			'um_notes'
+		'post_type'   => array(
+			'um_notes',
 		),
-		'post_status'   => array( 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ),
-		'numberposts'   => -1
+		'post_status' => array( 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ),
+		'numberposts' => -1,
 	) );
-	if( $um_notes ){
-		foreach ( $um_notes as $um_note ){
+	if ( $um_notes ) {
+		foreach ( $um_notes as $um_note ) {
 			$attachments = get_attached_media( 'image', $um_note->ID );
-			foreach ( $attachments as $attachment ){
+			foreach ( $attachments as $attachment ) {
 				wp_delete_attachment( $attachment->ID, 1 );
 			}
 			wp_delete_post( $um_note->ID, 1 );
@@ -219,21 +207,21 @@ if ( ! empty( $delete_options ) ) {
               option_name LIKE 'widget_um%' OR
               option_name LIKE 'ultimatemember_%'" );
 
-	foreach( $um_options as $um_option ) {
+	foreach ( $um_options as $um_option ) {
 		delete_option( $um_option->option_name );
 	}
 
 	//social activity
 	$um_activities = get_posts( array(
-		'post_type'     => array(
-			'um_activity'
+		'post_type'   => array(
+			'um_activity',
 		),
-		'post_status'   => array( 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ),
-		'numberposts'   => -1
+		'post_status' => array( 'publish', 'pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash' ),
+		'numberposts' => -1,
 	) );
 	foreach ( $um_activities as $um_activity ) {
 		$image = get_post_meta( $um_activity->ID, '_photo', true );
-		if( $image ){
+		if ( $image ) {
 			$user_id = get_post_meta( $um_activity->ID, '_user_id', true );
 			$upload_dir = wp_upload_dir();
 			$image_path = $upload_dir['basedir'] . '/ultimatemember/' . $user_id . '/' . $image;

@@ -29,7 +29,7 @@ function um_trim_string( $s, $length = 20 ) {
  */
 function um_dynamic_login_page_redirect( $redirect_to = '' ) {
 
-	$uri = um_get_core_page( 'login' );
+	$uri = um_get_predefined_page_url( 'login' );
 
 	if ( ! $redirect_to ) {
 		$redirect_to = UM()->permalinks()->get_current_url();
@@ -152,7 +152,7 @@ function um_replace_placeholders() {
 		um_user( 'user_login' ),
 		um_user( 'user_email' ),
 		UM()->options()->get( 'site_name' ),
-		um_get_core_page( 'account' ),
+		um_get_predefined_page_url( 'account' ),
 	);
 
 	/**
@@ -1185,141 +1185,27 @@ function um_user_last_login( $user_id ) {
 
 
 /**
- * Get core page url
- *
- * @param $slug
- * @param bool $updated
- *
- * @return bool|false|mixed|string|void
- */
-function um_get_core_page( $slug, $updated = false ) {
-	$url = '';
-
-	if ( isset( UM()->config()->permalinks[ $slug ] ) ) {
-		$url = get_permalink( UM()->config()->permalinks[ $slug ] );
-		if ( $updated ) {
-			$url = add_query_arg( 'updated', esc_attr( $updated ), $url );
-		}
-	}
-
-	/**
-	 * UM hook
-	 *
-	 * @type filter
-	 * @title um_get_core_page_filter
-	 * @description Change UM core page URL
-	 * @input_vars
-	 * [{"var":"$url","type":"string","desc":"UM Page URL"},
-	 * {"var":"$slug","type":"string","desc":"UM Page slug"},
-	 * {"var":"$updated","type":"bool","desc":"Additional parameter"}]
-	 * @change_log
-	 * ["Since: 2.0"]
-	 * @usage add_filter( 'um_get_core_page_filter', 'function_name', 10, 3 );
-	 * @example
-	 * <?php
-	 * add_filter( 'um_get_core_page_filter', 'my_core_page_url', 10, 3 );
-	 * function my_core_page_url( $url, $slug, $updated ) {
-	 *     // your code here
-	 *     return $url;
-	 * }
-	 * ?>
-	 */
-	return apply_filters( 'um_get_core_page_filter', $url, $slug, $updated );
-}
-
-
-/**
- * Check if we are on a UM Core Page or not
- *
- * Default um core pages slugs
- * 'user', 'login', 'register', 'members', 'logout', 'account', 'password-reset'
- *
- * @param string $page UM core page slug
- *
- * @return bool
- */
-function um_is_core_page( $page ) {
-	global $post;
-
-	if ( empty( $post ) ) {
-		return false;
-	}
-
-	if ( isset( $post->ID ) && isset( UM()->config()->permalinks[ $page ] ) && $post->ID == UM()->config()->permalinks[ $page ] ) {
-		return true;
-	}
-
-	if ( isset( $post->ID ) && get_post_meta( $post->ID, '_um_wpml_' . $page, true ) == 1 ) {
-		return true;
-	}
-
-	if ( UM()->external_integrations()->is_wpml_active() ) {
-		global $sitepress;
-		if ( isset( UM()->config()->permalinks[ $page ] ) && UM()->config()->permalinks[ $page ] == wpml_object_id_filter( $post->ID, 'page', true, $sitepress->get_default_language() ) ) {
-			return true;
-		}
-	}
-
-	if ( isset( $post->ID ) ) {
-		$_icl_lang_duplicate_of = get_post_meta( $post->ID, '_icl_lang_duplicate_of', true );
-
-		if ( isset( UM()->config()->permalinks[ $page ] ) && ( ( $_icl_lang_duplicate_of == UM()->config()->permalinks[ $page ] && !empty( $_icl_lang_duplicate_of ) ) || UM()->config()->permalinks[ $page ] == $post->ID ) ) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-
-/**
- * @param $post
- * @param $core_page
- *
- * @return bool
- */
-function um_is_core_post( $post, $core_page ) {
-	if ( isset( $post->ID ) && isset( UM()->config()->permalinks[ $core_page ] ) && $post->ID == UM()->config()->permalinks[ $core_page ] ) {
-		return true;
-	}
-	if ( isset( $post->ID ) && get_post_meta( $post->ID, '_um_wpml_' . $core_page, true ) == 1 ) {
-		return true;
-	}
-
-	if ( isset( $post->ID ) ) {
-		$_icl_lang_duplicate_of = get_post_meta( $post->ID, '_icl_lang_duplicate_of', true );
-
-		if ( isset( UM()->config()->permalinks[ $core_page ] ) && ( ( $_icl_lang_duplicate_of == UM()->config()->permalinks[ $core_page ] && ! empty( $_icl_lang_duplicate_of ) ) || UM()->config()->permalinks[ $core_page ] == $post->ID ) ) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-
-/**
  * Get styling defaults
  *
- * @param $mode
+ * @uses $core_global_meta_all - legacy options that have been deprecated in 2.0
+ * @param string $mode
  *
  * @return array
  */
 function um_styling_defaults( $mode ) {
-
 	$new_arr = array();
-	$core_form_meta_all = UM()->config()->core_form_meta_all;
-	$core_global_meta_all = UM()->config()->core_global_meta_all;
 
-	foreach ( $core_form_meta_all as $k => $v ) {
+	$core_global_meta_all = UM()->config()->get( 'global_meta' );
+
+	foreach ( UM()->config()->get( 'form_meta_list' ) as $k => $v ) {
 		$s = str_replace( $mode . '_', '', $k );
-		if (strstr( $k, '_um_' . $mode . '_' ) && !in_array( $s, $core_global_meta_all )) {
+		if ( strstr( $k, '_um_' . $mode . '_' ) && ! in_array( $s, $core_global_meta_all ) ) {
 			$a = str_replace( '_um_' . $mode . '_', '', $k );
 			$b = str_replace( '_um_', '', $k );
-			$new_arr[$a] = UM()->options()->get( $b );
-		} else if (in_array( $k, $core_global_meta_all )) {
+			$new_arr[ $a ] = UM()->options()->get( $b );
+		} elseif ( in_array( $k, $core_global_meta_all ) ) {
 			$a = str_replace( '_um_', '', $k );
-			$new_arr[$a] = UM()->options()->get( $a );
+			$new_arr[ $a ] = UM()->options()->get( $a );
 		}
 	}
 
@@ -1335,7 +1221,7 @@ function um_styling_defaults( $mode ) {
  * @return string
  */
 function um_get_metadefault( $id ) {
-	$core_form_meta_all = UM()->config()->core_form_meta_all;
+	$core_form_meta_all = UM()->config()->get( 'form_meta_list' );
 
 	return isset( $core_form_meta_all[ '_um_' . $id ] ) ? $core_form_meta_all[ '_um_' . $id ] : '';
 }
@@ -1616,8 +1502,9 @@ function um_can_view_profile( $user_id ) {
  * @return bool
  */
 function um_is_user_himself() {
-	if (um_get_requested_user() && um_get_requested_user() != get_current_user_id())
+	if ( um_get_requested_user() && um_get_requested_user() != get_current_user_id() ) {
 		return false;
+	}
 
 	return true;
 }
@@ -1658,8 +1545,13 @@ function um_can_edit_field( $data ) {
  * @return bool
  */
 function um_is_myprofile() {
-	if (get_current_user_id() && get_current_user_id() == um_get_requested_user()) return true;
-	if (!um_get_requested_user() && um_is_core_page( 'user' ) && get_current_user_id()) return true;
+	if ( get_current_user_id() && get_current_user_id() == um_get_requested_user() ) {
+		return true;
+	}
+
+	if ( ! um_get_requested_user() && um_is_predefined_page( 'user' ) && get_current_user_id() ) {
+		return true;
+	}
 
 	return false;
 }
@@ -1671,7 +1563,7 @@ function um_is_myprofile() {
  * @return string
  */
 function um_edit_profile_url() {
-	if ( um_is_core_page( 'user' ) ) {
+	if ( um_is_predefined_page( 'user' ) ) {
 		$url = UM()->permalinks()->get_current_url();
 	} else {
 		$url = um_user_profile_url();
@@ -1702,7 +1594,7 @@ function um_can_edit_my_profile() {
 /**
  * Short for admin e-mail
  *
- * @return mixed|string|void
+ * @return string
  */
 function um_admin_email() {
 	return UM()->options()->get( 'admin_email' );
@@ -2581,23 +2473,6 @@ function um_user( $data, $attrs = null ) {
 
 
 /**
- * Get server protocol
- *
- * @return  string
- */
-function um_get_domain_protocol() {
-
-	if (is_ssl()) {
-		$protocol = 'https://';
-	} else {
-		$protocol = 'http://';
-	}
-
-	return $protocol;
-}
-
-
-/**
  * Set SSL to media URI
  *
  * @param  string $url
@@ -2721,21 +2596,6 @@ function um_let_to_num( $v ) {
 	}
 
 	return $ret;
-}
-
-
-/**
- * Check if we are on UM page
- *
- * @return bool
- */
-function is_ultimatemember() {
-	global $post;
-
-	if ( isset( $post->ID ) && in_array( $post->ID, UM()->config()->permalinks ) )
-		return true;
-
-	return false;
 }
 
 

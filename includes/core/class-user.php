@@ -327,7 +327,7 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			if ( 'rejected' == $status ) {
 				wp_logout();
 				session_unset();
-				exit( wp_redirect( um_get_core_page( 'login' ) ) );
+				exit( wp_redirect( um_get_predefined_page_url( 'login' ) ) );
 			}
 
 			um_reset_user();
@@ -1860,18 +1860,6 @@ if ( ! class_exists( 'um\core\User' ) ) {
 			}
 
 			return false;
-		}
-
-
-		/**
-		 * Update files
-		 *
-		 * @param $changes
-		 *
-		 * @deprecated 2.1.0
-		 */
-		function update_files( $changes ) {
-			um_deprecated_function( 'update_files', '2.1.0', '' );
 		}
 
 

@@ -2313,7 +2313,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 					} else {
 
 						if ( UM()->account()->current_password_is_required( 'password' ) &&
-						     ( $this->set_mode == 'account' || um_is_core_page( 'account' ) ) ) {
+						     ( $this->set_mode == 'account' || um_is_predefined_page( 'account' ) ) ) {
 
 							$key = 'current_' . $original_key;
 							$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
@@ -2348,7 +2348,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 						$output .= '<div ' . $this->get_atts( $key, $classes, $conditional, $data ) . '>';
 
-						if ( $this->set_mode == 'account' && um_is_core_page( 'account' ) || $this->set_mode == 'password' && um_is_core_page( 'password-reset' ) ) {
+						if ( $this->set_mode == 'account' && um_is_predefined_page( 'account' ) || $this->set_mode == 'password' && um_is_predefined_page( 'password-reset' ) ) {
 
 							$output .= $this->field_label( __( 'New Password', 'ultimate-member' ), $key, $data );
 
@@ -2367,7 +2367,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 						}
 
 						$name = $key . UM()->form()->form_suffix;
-						if ( $this->set_mode == 'password' && um_is_core_page( 'password-reset' ) ) {
+						if ( $this->set_mode == 'password' && um_is_predefined_page( 'password-reset' ) ) {
 							$name = $key;
 						}
 
@@ -2404,7 +2404,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							}
 
 							$name = $key . UM()->form()->form_suffix;
-							if ( $this->set_mode == 'password' && um_is_core_page( 'password-reset' ) ) {
+							if ( $this->set_mode == 'password' && um_is_predefined_page( 'password-reset' ) ) {
 								$name = $key;
 							}
 
@@ -3081,7 +3081,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 
 
 							if ( ! is_numeric( $k ) && in_array( $form_key, array( 'role' ) ) ||
-								 ( $this->set_mode == 'account' || um_is_core_page( 'account' ) ) ) {
+								 ( $this->set_mode == 'account' || um_is_predefined_page( 'account' ) ) ) {
 								$option_value = $k;
 								$um_field_checkbox_item_title = $v;
 							}
@@ -3407,7 +3407,7 @@ if ( ! class_exists( 'um\core\Fields' ) ) {
 							$option_value = $v;
 
 							if ( ! is_numeric( $k ) && in_array( $form_key, array( 'role' ) ) ||
-								 ( $this->set_mode == 'account' || um_is_core_page( 'account' ) ) ) {
+								 ( $this->set_mode == 'account' || um_is_predefined_page( 'account' ) ) ) {
 								$um_field_checkbox_item_title = $v;
 								$option_value = $k;
 							}

@@ -14,6 +14,86 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 /**
+ * @param string $slug
+ *
+ * @return bool
+ */
+function um_predefined_page_slug_exists( $slug ) {
+	$predefined_pages = UM()->config()->get( 'predefined_pages' );
+	return array_key_exists( $slug, $predefined_pages );
+}
+
+
+/**
+ * @param string $slug
+ *
+ * @return false|int
+ */
+function um_get_predefined_page_id( $slug ) {
+	if ( ! um_predefined_page_slug_exists( $slug ) ) {
+		return false;
+	}
+
+	$option_key = UM()->options()->get_predefined_page_option_key( $slug );
+	return apply_filters( 'um_get_predefined_page_id', UM()->options()->get( $option_key ), $slug );
+}
+
+
+/**
+ *
+ * @param string $slug
+ * @param null|int|\WP_Post $post
+ *
+ * @return bool
+ */
+function um_is_predefined_page( $slug, $post = null ) {
+	// handle $post inside, just we need make $post as \WP_Post. Otherwise something is wrong and return false
+	if ( ! $post ) {
+		global $post;
+
+		if ( empty( $post ) ) {
+			return false;
+		}
+	} else {
+		if ( is_numeric( $post ) ) {
+			$post = get_post( $post );
+
+			if ( empty( $post ) ) {
+				return false;
+			}
+		}
+	}
+
+	if ( empty( $post->ID ) ) {
+		return false;
+	}
+
+	return $post->ID === um_get_predefined_page_id( $slug );
+}
+
+
+/**
+ * Get predefined page URL
+ *
+ * @param string $slug
+ *
+ * @return false|string
+ */
+function um_get_predefined_page_url( $slug ) {
+	$url = false;
+
+	if ( $page_id = um_get_predefined_page_id( $slug ) ) {
+		$url = get_permalink( $page_id );
+	}
+
+	return $url;
+}
+
+
+
+
+
+/**
  * Get Ultimate Member custom templates (e.g. member directory) passing attributes and including the file.
  *
  * @since 3.0
@@ -24,7 +104,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param string $template_path Template path. (default: '').
  * @param string $default_path  Default path. (default: '').
  */
-function um_get_template( $template_name, $args = [], $module = '', $template_path = '', $default_path = '' ) {
+function um_get_template( $template_name, $args = array(), $module = '', $template_path = '', $default_path = '' ) {
 	$template = um_locate_template( $template_name, $module, $template_path, $default_path );
 
 	// Allow 3rd party plugin filter template file from their plugin.
@@ -39,13 +119,13 @@ function um_get_template( $template_name, $args = [], $module = '', $template_pa
 		$template = $filter_template;
 	}
 
-	$action_args = [
+	$action_args = array(
 		'template_name' => $template_name,
 		'template_path' => $template_path,
 		'module'        => $module,
 		'located'       => $template,
 		'args'          => $args,
-	];
+	);
 
 	if ( ! empty( $args ) && is_array( $args ) ) {
 		if ( isset( $args['action_args'] ) ) {
@@ -78,7 +158,7 @@ function um_get_template( $template_name, $args = [], $module = '', $template_pa
  *
  * @return string
  */
-function um_get_template_html( $template_name, $args = [], $module = '', $template_path = '', $default_path = '' ) {
+function um_get_template_html( $template_name, $args = array(), $module = '', $template_path = '', $default_path = '' ) {
 	ob_start();
 	um_get_template( $template_name, $args, $module, $template_path, $default_path );
 	return ob_get_clean();
@@ -112,9 +192,9 @@ function um_locate_template( $template_name, $module = '', $template_path = '', 
 		$template_path = UM()->template_path( $module );
 	}
 
-	$template_locations = [
+	$template_locations = array(
 		trailingslashit( $template_path ) . $template_name,
-	];
+	);
 
 	$template_locations = apply_filters( 'um_pre_template_locations', $template_locations, $template_name, $module, $template_path );
 

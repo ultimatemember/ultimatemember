@@ -231,12 +231,10 @@ if ( ! class_exists( 'um\admin\core\Admin_Columns' ) ) {
 		 * @return mixed
 		 */
 		public function add_display_post_states( $post_states, $post ) {
-
-			foreach ( UM()->config()->core_pages as $page_key => $page_value ) {
-				$page_id = UM()->options()->get( UM()->options()->get_core_page_id( $page_key ) );
-
-				if ( $page_id == $post->ID ) {
-					$post_states[ 'um_core_page_' . $page_key ] = sprintf( 'UM %s', $page_value['title'] );
+			foreach ( UM()->config()->get( 'predefined_pages' ) as $slug => $data ) {
+				if ( um_is_predefined_page( $slug, $post ) ) {
+					/* translators: %s: UM predefined page title */
+					$post_states[ 'um_predefined_page_' . $slug ] = sprintf( __( 'UM %s', 'ultimate-member' ), $data['title'] );
 				}
 			}
 

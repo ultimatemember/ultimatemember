@@ -390,7 +390,7 @@ function um_submit_account_details( $args ) {
 	do_action( 'um_after_user_account_updated', $user_id, $changes );
 
 	$url = '';
-	if ( um_is_core_page( 'account' ) ) {
+	if ( um_is_predefined_page( 'account' ) ) {
 
 		$url = UM()->account()->tab_link( $tab );
 

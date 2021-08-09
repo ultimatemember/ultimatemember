@@ -4,7 +4,7 @@ global $post;
 
 // Get default and real arguments
 $def_args = array();
-foreach ( UM()->config()->core_directory_meta['members'] as $k => $v ) {
+foreach ( UM()->config()->get( 'default_member_directory_meta' ) as $k => $v ) {
 	$key = str_replace( '_um_', '', $k );
 	$def_args[ $key ] = $v;
 }

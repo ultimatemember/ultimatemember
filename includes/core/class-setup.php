@@ -11,6 +11,8 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 	/**
 	 * Class Setup
 	 *
+	 * @deprecated 3.0
+	 *
 	 * @package um\core
 	 */
 	class Setup {
@@ -25,44 +27,40 @@ if ( ! class_exists( 'um\core\Setup' ) ) {
 
 		/**
 		 * Run setup
+		 *
+		 * @deprecated 3.0
 		 */
 		function run_setup() {
+			_deprecated_function( 'UM()->setup()->run_setup()', '3.0' );
+
 			$this->create_db();
 			$this->install_basics();
-			$this->install_default_forms();
 			$this->set_default_settings();
+			$this->install_default_forms();
 			$this->set_default_role_meta();
 		}
 
 
 		/**
 		 * Create custom DB tables
+		 *
+		 * @deprecated 3.0
 		 */
 		function create_db() {
-			global $wpdb;
+			_deprecated_function( 'UM()->setup()->create_db()', '3.0', 'UM()->install()->create_db()' );
 
-			$charset_collate = $wpdb->get_charset_collate();
-
-			$sql = "CREATE TABLE {$wpdb->prefix}um_metadata (
-umeta_id bigint(20) unsigned NOT NULL auto_increment,
-user_id bigint(20) unsigned NOT NULL default '0',
-um_key varchar(255) default NULL,
-um_value longtext default NULL,
-PRIMARY KEY  (umeta_id),
-KEY user_id_indx (user_id),
-KEY meta_key_indx (um_key),
-KEY meta_value_indx (um_value(191))
-) $charset_collate;";
-
-			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-			dbDelta( $sql );
+			UM()->install()->create_db();
 		}
 
 
 		/**
 		 * Basics
+		 *
+		 * @deprecated 3.0
 		 */
 		function install_basics() {
+			_deprecated_function( 'UM()->setup()->install_basics()', '3.0' );
+
 			if ( ! get_option( '__ultimatemember_sitekey' ) ) {
 				update_option( '__ultimatemember_sitekey', str_replace( array( 'http://', 'https://' ), '', sanitize_user( get_bloginfo('url') ) ) . '-' . wp_generate_password( 20, false ) );
 			}
@@ -70,204 +68,53 @@ KEY meta_value_indx (um_value(191))
 
 
 		/**
-		 * Default Forms
+		 * Set default UM settings
+		 *
+		 * @deprecated 3.0
 		 */
-		function install_default_forms() {
-			if ( current_user_can( 'manage_options' ) && ! get_option( 'um_is_installed' ) ) {
-				$options = get_option( 'um_options', array() );
+		function set_default_settings() {
+			_deprecated_function( 'UM()->setup()->set_default_settings()', '3.0', 'UM()->install()->set_default_settings()' );
 
-				update_option( 'um_is_installed', 1 );
-
-				//Install default options
-				foreach ( UM()->config()->settings_defaults as $key => $value ) {
-					$options[$key] = $value;
-				}
-
-				// Install Core Forms
-				foreach ( UM()->config()->core_forms as $id ) {
-
-					/**
-					If page does not exist
-					Create it
-					 **/
-					$page_exists = UM()->query()->find_post_id( 'um_form', '_um_core', $id );
-					if ( ! $page_exists ) {
-
-						if ( $id == 'register' ) {
-							$title = 'Default Registration';
-						} else if ( $id == 'login' ) {
-							$title = 'Default Login';
-						} else {
-							$title = 'Default Profile';
-						}
-
-						$form = array(
-							'post_type' 	  	=> 'um_form',
-							'post_title'		=> $title,
-							'post_status'		=> 'publish',
-							'post_author'   	=> get_current_user_id(),
-						);
-
-						$form_id = wp_insert_post( $form );
-
-						foreach( UM()->config()->core_form_meta[$id] as $key => $value ) {
-							if ( $key == '_um_custom_fields' ) {
-								$array = unserialize( $value );
-								update_post_meta( $form_id, $key, $array );
-							} else {
-								update_post_meta( $form_id, $key, $value );
-							}
-						}
-
-						$core_forms[ $id ] = $form_id;
-					}
-					/** DONE **/
-				}
-
-				if ( isset( $core_forms ) ) {
-					update_option( 'um_core_forms', $core_forms );
-				}
-
-				// Install Core Directories
-				foreach ( UM()->config()->core_directories as $id ) {
-
-					/**
-					If page does not exist
-					Create it
-					 **/
-					$page_exists = UM()->query()->find_post_id( 'um_directory', '_um_core', $id );
-					if ( ! $page_exists ) {
-
-						$title = 'Members';
-
-						$form = array(
-							'post_type' 	  	=> 'um_directory',
-							'post_title'		=> $title,
-							'post_status'		=> 'publish',
-							'post_author'   	=> get_current_user_id(),
-						);
-
-						$form_id = wp_insert_post( $form );
-
-						foreach ( UM()->config()->core_directory_meta[ $id ] as $key => $value ) {
-							if ( $key == '_um_custom_fields' ) {
-								$array = unserialize( $value );
-								update_post_meta( $form_id, $key, $array );
-							} else {
-								update_post_meta($form_id, $key, $value);
-							}
-						}
-
-						$core_directories[ $id ] = $form_id;
-					}
-					/** DONE **/
-
-				}
-
-				if ( isset( $core_directories ) ) {
-					update_option( 'um_core_directories', $core_directories );
-				}
-
-				update_option( 'um_options', $options );
-			}
+			UM()->install()->set_default_settings();
 		}
 
 
 		/**
 		 * Install Pre-defined pages with shortcodes
+		 *
+		 *
+		 * @deprecated 3.0
 		 */
 		function install_default_pages() {
-			if ( ! current_user_can( 'manage_options' ) ) {
-				return;
-			}
+			_deprecated_function( 'UM()->setup()->install_default_pages()', '3.0', 'UM()->install()->core_pages()' );
 
-			$core_forms = get_option( 'um_core_forms', array() );
-			$core_directories = get_option( 'um_core_directories', array() );
-
-			$setup_shortcodes = array_merge( $core_forms, $core_directories );
-
-			//Install Core Pages
-			$core_pages = array();
-			foreach ( UM()->config()->core_pages as $slug => $array ) {
-
-				$page_exists = UM()->query()->find_post_id( 'page', '_um_core', $slug );
-				if ( $page_exists ) {
-					$core_pages[ $slug ] = $page_exists;
-					continue;
-				}
-
-				//If page does not exist - create it
-				if ( $slug == 'logout' ) {
-					$content = '';
-				} elseif ( $slug == 'account' ) {
-					$content = '[ultimatemember_account]';
-				} elseif ( $slug == 'password-reset' ) {
-					$content = '[ultimatemember_password]';
-				} elseif ( $slug == 'user' ) {
-					$content = '[ultimatemember form_id="' . $setup_shortcodes['profile'] . '"]';
-				} else {
-					$content = '[ultimatemember form_id="' . $setup_shortcodes[ $slug ] . '"]';
-				}
-
-				$content = apply_filters( 'um_setup_predefined_page_content', $content, $slug );
-
-				$user_page = array(
-					'post_title'        => $array['title'],
-					'post_content'      => $content,
-					'post_name'         => $slug,
-					'post_type'         => 'page',
-					'post_status'       => 'publish',
-					'post_author'       => get_current_user_id(),
-					'comment_status'    => 'closed'
-				);
-
-				$post_id = wp_insert_post( $user_page );
-				update_post_meta( $post_id, '_um_core', $slug );
-
-				$core_pages[ $slug ] = $post_id;
-			}
-
-			$options = get_option( 'um_options', array() );
-
-			foreach ( $core_pages as $slug => $page_id ) {
-				$key = UM()->options()->get_core_page_id( $slug );
-				$options[ $key ] = $page_id;
-			}
-
-			update_option( 'um_options', $options );
-
-			// reset rewrite rules after first install of core pages
-			UM()->rewrite()->reset_rules();
-		}
-
-
-		/**
-		 * Set default UM settings
-		 */
-		function set_default_settings() {
-			$options = get_option( 'um_options', array() );
-
-			foreach ( UM()->config()->settings_defaults as $key => $value ) {
-				//set new options to default
-				if ( ! isset( $options[ $key ] ) ) {
-					$options[ $key ] = $value;
-				}
-			}
-
-			update_option( 'um_options', $options );
+			UM()->install()->predefined_pages();
 		}
 
 
 		/**
 		 * Set UM roles meta to Default WP roles
+		 *
+		 * @deprecated 3.0
 		 */
 		function set_default_role_meta() {
-			//for set accounts without account status approved status
-			UM()->query()->count_users_by_status( 'unassigned' );
+			_deprecated_function( 'UM()->setup()->set_default_role_meta()', '3.0', 'UM()->install()->set_default_user_status() and UM()->install()->set_default_roles_meta()' );
 
-			foreach ( UM()->config()->default_roles_metadata as $role => $meta ) {
-				add_option( "um_role_{$role}_meta", $meta );
-			}
+			UM()->install()->set_default_user_status();
+			UM()->install()->set_default_roles_meta();
+		}
+
+
+		/**
+		 * Default Forms
+		 *
+		 * @deprecated 3.0
+		 */
+		function install_default_forms() {
+			_deprecated_function( 'UM()->setup()->install_default_forms()', '3.0', 'UM()->install()->create_forms() and UM()->install()->create_member_directory()' );
+
+			UM()->install()->create_forms();
+			UM()->install()->create_member_directory();
 		}
 	}
 }

@@ -102,11 +102,15 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 		/**
 		 * Locate a template and return the path for inclusion.
 		 *
+		 * @deprecated 3.0
+		 *
 		 * @access public
 		 * @param string $template_name
 		 * @return string
 		 */
 		function locate_template( $template_name ) {
+			_deprecated_function( 'UM()->mail()->locate_template()', '3.0' );
+
 			// check if there is template at theme folder
 			$blog_id = $this->get_blog_id();
 
@@ -156,11 +160,15 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 
 		/**
+		 * @deprecated 3.0
+		 *
 		 * @param $slug
 		 * @param $args
 		 * @return bool|string
 		 */
 		function get_email_template( $slug, $args = array() ) {
+			_deprecated_function( 'UM()->mail()->get_email_template()', '3.0', 'um_get_template' );
+
 			$located = $this->locate_template( $slug );
 
 			/**
@@ -333,7 +341,8 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 				<body <?php echo $body_attrs ?>>
 
-				<?php echo $this->get_email_template( $slug, $args ); ?>
+				<?php um_get_template( "email/{$slug}.php", $args ); ?>
+				<?php /*echo $this->get_email_template( $slug, $args );*/ ?>
 
 				</body>
 				</html>
@@ -342,10 +351,11 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 
 				//strip tags in plain text email
 				//important don't use HTML in plain text emails!
-				$raw_email_template = $this->get_email_template( $slug, $args );
+				//$raw_email_template = $this->get_email_template( $slug, $args );
+				$raw_email_template = um_get_template_html( "email/{$slug}.php", $args );
 				$plain_email_template = strip_tags( $raw_email_template );
-				if( $plain_email_template !== $raw_email_template ){
-					$plain_email_template = preg_replace( array('/&nbsp;/mi', '/^\s+/mi'), array(' ', ''), $plain_email_template );
+				if ( $plain_email_template !== $raw_email_template ) {
+					$plain_email_template = preg_replace( array('/&nbsp;/mi', '/^\s+/mi'), array( ' ', '' ), $plain_email_template );
 				}
 
 				echo $plain_email_template;
@@ -408,7 +418,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			do_action( 'um_before_email_notification_sending', $email, $template, $args );
 
 			$this->attachments = array();
-			$this->headers = 'From: '. stripslashes( UM()->options()->get('mail_from') ) .' <'. UM()->options()->get('mail_from_addr') .'>' . "\r\n";
+			$this->headers = 'From: '. stripslashes( UM()->options()->get( 'mail_from' ) ) .' <'. UM()->options()->get( 'mail_from_addr' ) .'>' . "\r\n";
 
 			/**
 			 * UM hook
@@ -615,7 +625,7 @@ if ( ! class_exists( 'um\core\Mail' ) ) {
 			$replace_placeholders[] = get_bloginfo( 'url' );
 			$replace_placeholders[] = um_admin_email();
 			$replace_placeholders[] = um_user_submitted_registration_formatted();
-			$replace_placeholders[] = um_get_core_page( 'login' );
+			$replace_placeholders[] = um_get_predefined_page_url( 'login' );
 			$replace_placeholders[] = esc_html__( 'Your set password', 'ultimate-member' );
 			$replace_placeholders[] = um_user( 'account_activation_link' );
 			return $replace_placeholders;

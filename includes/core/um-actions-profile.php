@@ -645,7 +645,7 @@ add_action( 'um_after_form_fields', 'um_editing_user_id_input' );
 if ( !function_exists( 'um_profile_remove_wpseo' ) ) {
 
 	function um_profile_remove_wpseo() {
-		if ( um_is_core_page( 'user' ) && um_get_requested_user() ) {
+		if ( um_is_predefined_page( 'user' ) && um_get_requested_user() ) {
 
 			/* Yoast SEO 12.4 */
 			if ( isset( $GLOBALS['wpseo_front'] ) && is_object( $GLOBALS['wpseo_front'] ) ) {
@@ -679,7 +679,7 @@ add_action( 'get_header', 'um_profile_remove_wpseo', 8 );
  * @see https://schema.org/Person - The schema.org Person schema
  */
 function um_profile_dynamic_meta_desc() {
-	if ( um_is_core_page( 'user' ) && um_get_requested_user() ) {
+	if ( um_is_predefined_page( 'user' ) && um_get_requested_user() ) {
 
 		$user_id = um_get_requested_user();
 
@@ -1395,8 +1395,8 @@ function um_add_edit_icon( $args ) {
 	} else {
 		$items = array(
 			'editprofile' => '<a href="' . esc_url( um_edit_profile_url() ) . '" class="real_url">' . __( 'Edit Profile', 'ultimate-member' ) . '</a>',
-			'myaccount'   => '<a href="' . esc_url( um_get_core_page( 'account' ) ) . '" class="real_url">' . __( 'My Account', 'ultimate-member' ) . '</a>',
-			'logout'      => '<a href="' . esc_url( um_get_core_page( 'logout' ) ) . '" class="real_url">' . __( 'Logout', 'ultimate-member' ) . '</a>',
+			'myaccount'   => '<a href="' . esc_url( um_get_predefined_page_url( 'account' ) ) . '" class="real_url">' . __( 'My Account', 'ultimate-member' ) . '</a>',
+			'logout'      => '<a href="' . esc_url( um_get_predefined_page_url( 'logout' ) ) . '" class="real_url">' . __( 'Logout', 'ultimate-member' ) . '</a>',
 			'cancel'      => '<a href="javascript:void(0);" class="um-dropdown-hide">' . __( 'Cancel', 'ultimate-member' ) . '</a>',
 		);
 
@@ -1617,7 +1617,7 @@ function um_profile_menu( $args ) {
 
 				<?php foreach ( $tabs as $id => $tab ) {
 
-					$nav_link = UM()->permalinks()->get_current_url( get_option( 'permalink_structure' ) );
+					$nav_link = UM()->permalinks()->get_current_url( UM()->is_permalinks );
 					$nav_link = remove_query_arg( 'um_action', $nav_link );
 					$nav_link = remove_query_arg( 'subnav', $nav_link );
 					$nav_link = add_query_arg( 'profiletab', $id, $nav_link );

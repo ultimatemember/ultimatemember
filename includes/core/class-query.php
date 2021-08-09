@@ -217,23 +217,31 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		/**
 		 * Count users by status
 		 *
-		 * @param $status
+		 * @since 3.0 $status = 'unassigned' is deprecated
+		 *
+		 * @param string $status
 		 *
 		 * @return int
 		 */
 		function count_users_by_status( $status ) {
-			$args = array( 'fields' => 'ID', 'number' => 0 );
-			if ( $status == 'unassigned' ) {
-				$args['meta_query'][] = array(array('key' => 'account_status','compare' => 'NOT EXISTS'));
-				$users = new \WP_User_Query( $args );
-				foreach ( $users->results as $user ) {
-					update_user_meta( $user, 'account_status', 'approved' );
-				}
-			} else {
-				$args['meta_query'][] = array(array('key' => 'account_status','value' => $status,'compare' => '='));
-			}
+			$args = array(
+				'fields'     => 'ids',
+				'number'     => 0,
+				'meta_query' => array(
+					array(
+						'key'     => 'account_status',
+						'value'   => $status,
+						'compare' => '=',
+					),
+				),
+			);
+
 			$users = new \WP_User_Query( $args );
-			return count( $users->results );
+			if ( empty( $users ) || is_wp_error( $users ) ) {
+				return 0;
+			}
+
+			return count( $users->get_results() );
 		}
 
 

@@ -102,7 +102,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 
 
 			// @since 3.0
-			add_action( 'load-ultimate-member_page_um-modules', [ &$this, 'modules_page' ] );
+			add_action( 'load-ultimate-member_page_um-modules', array( &$this, 'modules_page' ) );
 		}
 
 
@@ -110,7 +110,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Enqueue' ) ) {
 		 * @since 3.0
 		 */
 		function modules_page() {
-			add_action( 'admin_enqueue_scripts',  [ &$this, 'modules_page_scripts' ] );
+			add_action( 'admin_enqueue_scripts', array( &$this, 'modules_page_scripts' ) );
 		}
 
 

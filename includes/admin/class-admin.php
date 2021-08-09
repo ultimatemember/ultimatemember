@@ -42,7 +42,7 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 			add_action( 'um_admin_do_action__um_hide_exif_notice', array( &$this, 'um_hide_notice' ) );
 			add_action( 'um_admin_do_action__user_action', array( &$this, 'user_action' ) );
 
-			add_action( 'um_admin_do_action__install_core_pages', array( &$this, 'install_core_pages' ) );
+			add_action( 'um_admin_do_action__install_predefined_pages', array( &$this, 'install_predefined_pages' ) );
 
 			add_filter( 'admin_body_class', array( &$this, 'admin_body_class' ), 999 );
 
@@ -53,9 +53,22 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 
 
 			// @since 3.0
-			add_action( 'load-ultimate-member_page_um-modules', [ &$this, 'handle_modules_actions' ] );
+			add_action( 'load-ultimate-member_page_um-modules', array( &$this, 'handle_modules_actions' ) );
+			add_action( 'load-ultimate-member_page_um_options', array( &$this, 'handle_email_notifications_actions' ) );
+			add_action( 'load-users.php', array( UM()->install(), 'set_default_user_status' ) );
 		}
 
+
+		function handle_email_notifications_actions() {
+			if ( ! isset( $_GET['tab'] ) || 'email' !== sanitize_key( $_GET['tab'] ) ) {
+				return;
+			}
+
+			//remove extra query arg
+			if ( ! empty( $_GET['_wp_http_referer'] ) ) {
+				exit( wp_redirect( remove_query_arg( [ '_wp_http_referer', '_wpnonce' ], wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) );
+			}
+		}
 
 		/**
 		 * Handles Modules list table
@@ -253,24 +266,28 @@ if ( ! class_exists( 'um\admin\Admin' ) ) {
 		/**
 		 * Core pages installation
 		 */
-		function install_core_pages() {
+		function install_predefined_pages() {
 			if ( ! is_admin() ) {
 				die();
 			}
 
-			UM()->setup()->install_default_pages();
+			UM()->install()->predefined_pages();
 
 			//check empty pages in settings
 			$empty_pages = array();
 
-			$pages = UM()->config()->permalinks;
-			if ( $pages && is_array( $pages ) ) {
-				foreach ( $pages as $slug => $page_id ) {
-					$page = get_post( $page_id );
+			$predefined_pages = array_keys( UM()->config()->get( 'predefined_pages' ) );
+			foreach ( $predefined_pages as $slug ) {
+				$page_id = um_get_predefined_page_id( $slug );
+				if ( ! $page_id ) {
+					$empty_pages[] = $slug;
+					continue;
+				}
 
-					if ( ! isset( $page->ID ) && in_array( $slug, array_keys( UM()->config()->core_pages ) ) ) {
-						$empty_pages[] = $slug;
-					}
+				$page = get_post( $page_id );
+				if ( ! $page ) {
+					$empty_pages[] = $slug;
+					continue;
 				}
 			}
 

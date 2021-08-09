@@ -564,7 +564,7 @@ function um_add_submit_button_to_register( $args ) {
 		$secondary_btn_word = UM()->options()->get( 'register_secondary_btn_word' );
 	}
 
-	$secondary_btn_url = ( isset( $args['secondary_btn_url'] ) && $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page('login');
+	$secondary_btn_url = ( isset( $args['secondary_btn_url'] ) && $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_predefined_page_url('login' );
 	/**
 	 * UM hook
 	 *
@@ -734,7 +734,7 @@ add_action( 'um_registration_set_extra_data', 'um_registration_set_profile_full_
  *  Redirect from default registration to UM registration page
  */
 function um_form_register_redirect() {
-	$page_id = UM()->options()->get( UM()->options()->get_core_page_id( 'register' ) );
+	$page_id = UM()->options()->get( UM()->options()->get_predefined_page_option_key( 'register' ) );
 	$register_post = get_post( $page_id );
 	if ( ! empty( $register_post ) ) {
 		wp_safe_redirect( get_permalink( $page_id ) );

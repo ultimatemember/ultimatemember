@@ -40,7 +40,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		 */
 		function create_list() {
 			$this->old_extensions_notice();
-			$this->install_core_page_notice();
+			$this->install_predefined_page_notice();
 			$this->exif_extension_notice();
 			$this->show_update_messages();
 			$this->check_wrong_install_folder();
@@ -292,60 +292,59 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 		/**
 		 * Regarding page setup
 		 */
-		function install_core_page_notice() {
-			$pages = UM()->config()->permalinks;
+		function install_predefined_page_notice() {
+			$predefined_pages = array_keys( UM()->config()->get( 'predefined_pages' ) );
 
-			if ( $pages && is_array( $pages ) ) {
-
-				foreach ( $pages as $slug => $page_id ) {
+			foreach ( $predefined_pages as $slug ) {
+				$page_id = um_get_predefined_page_id( $slug );
+				if ( $page_id ) {
 					$page = get_post( $page_id );
-
-					if ( ! isset( $page->ID ) && in_array( $slug, array_keys( UM()->config()->core_pages ) ) ) {
-
-						ob_start(); ?>
-
-						<p>
-							<?php printf( __( '%s needs to create several pages (User Profiles, Account, Registration, Login, Password Reset, Logout, Member Directory) to function correctly.', 'ultimate-member' ), ultimatemember_plugin_name ); ?>
-						</p>
-
-						<p>
-							<a href="<?php echo esc_url( add_query_arg( 'um_adm_action', 'install_core_pages' ) ); ?>" class="button button-primary"><?php _e( 'Create Pages', 'ultimate-member' ) ?></a>
-							&nbsp;
-							<a href="javascript:void(0);" class="button-secondary um_secondary_dimiss"><?php _e( 'No thanks', 'ultimate-member' ) ?></a>
-						</p>
-
-						<?php $message = ob_get_clean();
-
-						$this->add_notice( 'wrong_pages', array(
-							'class'         => 'updated',
-							'message'       => $message,
-							'dismissible'   => true
-						), 20 );
-
-						break;
+					if ( $page ) {
+						continue;
 					}
 				}
 
-				if ( isset( $pages['user'] ) ) {
-					$test = get_post( $pages['user'] );
-					if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
-						$this->add_notice( 'wrong_user_page', array(
-							'class'     => 'updated',
-							'message'   => '<p>' . __( 'Ultimate Member Setup Error: User page can not be a child page.', 'ultimate-member' ) . '</p>',
-						), 25 );
-					}
-				}
+				ob_start(); ?>
 
-				if ( isset( $pages['account'] ) ) {
-					$test = get_post( $pages['account'] );
-					if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
-						$this->add_notice( 'wrong_account_page', array(
-							'class'     => 'updated',
-							'message'   => '<p>' . __( 'Ultimate Member Setup Error: Account page can not be a child page.', 'ultimate-member' ) . '</p>',
-						), 30 );
-					}
-				}
+				<p>
+					<?php printf( __( '%s needs to create several pages (User Profiles, Account, Registration, Login, Password Reset, Logout, Member Directory) to function correctly.', 'ultimate-member' ), ultimatemember_plugin_name ); ?>
+				</p>
 
+				<p>
+					<a href="<?php echo esc_url( add_query_arg( 'um_adm_action', 'install_predefined_pages' ) ); ?>" class="button button-primary"><?php _e( 'Create Pages', 'ultimate-member' ) ?></a>
+					&nbsp;
+					<a href="javascript:void(0);" class="button-secondary um_secondary_dimiss"><?php _e( 'No thanks', 'ultimate-member' ) ?></a>
+				</p>
+
+				<?php $message = ob_get_clean();
+
+				$this->add_notice( 'wrong_pages', array(
+					'class'       => 'updated',
+					'message'     => $message,
+					'dismissible' => true,
+				), 20 );
+
+				break;
+			}
+
+			if ( $user_page_id = um_get_predefined_page_id( 'user' ) ) {
+				$test = get_post( $user_page_id );
+				if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
+					$this->add_notice( 'wrong_user_page', array(
+						'class'     => 'updated',
+						'message'   => '<p>' . __( 'Ultimate Member Setup Error: User page can not be a child page.', 'ultimate-member' ) . '</p>',
+					), 25 );
+				}
+			}
+
+			if ( $account_page_id = um_get_predefined_page_id( 'account' ) ) {
+				$test = get_post( $account_page_id );
+				if ( isset( $test->post_parent ) && $test->post_parent > 0 ) {
+					$this->add_notice( 'wrong_account_page', array(
+						'class'     => 'updated',
+						'message'   => '<p>' . __( 'Ultimate Member Setup Error: Account page can not be a child page.', 'ultimate-member' ) . '</p>',
+					), 30 );
+				}
 			}
 		}
 
@@ -359,7 +358,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 			if ( ! extension_loaded( 'exif' ) && ! $hide_exif_notice ) {
 				$this->add_notice( 'exif_disabled', array(
 					'class'     => 'updated',
-					'message'   => '<p>' . sprintf(__( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension. <a href="%s">Hide this notice</a>', 'ultimate-member' ), add_query_arg('um_adm_action', 'um_hide_exif_notice') ) . '</p>',
+					'message'   => '<p>' . sprintf( __( 'Exif is not enabled on your server. Mobile photo uploads will not be rotated correctly until you enable the exif extension. <a href="%s">Hide this notice</a>', 'ultimate-member' ), add_query_arg( 'um_adm_action', 'um_hide_exif_notice' ) ) . '</p>',
 				), 10 );
 			}
 		}

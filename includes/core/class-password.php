@@ -46,7 +46,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 			$user_data = get_userdata( $user_id );
 			$key = UM()->user()->maybe_generate_password_reset_key( $user_data );
 
-			$url =  add_query_arg( array( 'act' => 'reset_password', 'hash' => $key, 'user_id' => $user_id ), um_get_core_page( 'password-reset' ) );
+			$url =  add_query_arg( array( 'act' => 'reset_password', 'hash' => $key, 'user_id' => $user_id ), um_get_predefined_page_url( 'password-reset' ) );
 			return $url;
 		}
 
@@ -247,7 +247,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 * @return bool
 		 */
 		function is_reset_request() {
-			if ( um_is_core_page( 'password-reset' ) && isset( $_POST['_um_password_reset'] ) == 1 ) {
+			if ( um_is_predefined_page( 'password-reset' ) && isset( $_POST['_um_password_reset'] ) == 1 ) {
 				return true;
 			}
 
@@ -276,11 +276,11 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 		 * Password page form
 		 */
 		function form_init() {
-			if ( um_is_core_page( 'password-reset' ) ) {
+			if ( um_is_predefined_page( 'password-reset' ) ) {
 				UM()->fields()->set_mode = 'password';
 			}
 
-			if ( um_is_core_page( 'password-reset' ) && isset( $_REQUEST['act'] ) && $_REQUEST['act'] == 'reset_password' ) {
+			if ( um_is_predefined_page( 'password-reset' ) && isset( $_REQUEST['act'] ) && $_REQUEST['act'] == 'reset_password' ) {
 				wp_fix_server_vars();
 
 				$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
@@ -516,7 +516,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 
 			UM()->user()->password_reset();
 
-			exit( wp_redirect( um_get_core_page('password-reset', 'checkemail' ) ) );
+			exit( wp_redirect( add_query_arg( array( 'updated' => 'checkemail' ), um_get_predefined_page_url('password-reset' ) ) ) );
 		}
 
 
@@ -530,7 +530,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 				wp_die( __( 'Hello, spam bot!', 'ultimate-member' ) );
 			}
 
-			if ( ! is_user_logged_in() && isset( $args ) && ! um_is_core_page( 'password-reset' ) ||
+			if ( ! is_user_logged_in() && isset( $args ) && ! um_is_predefined_page( 'password-reset' ) ||
 			     is_user_logged_in() && isset( $args['user_id'] ) && $args['user_id'] != get_current_user_id() ) {
 				wp_die( __( 'This is not possible for security reasons.', 'ultimate-member' ) );
 			}
@@ -655,7 +655,7 @@ if ( ! class_exists( 'um\core\Password' ) ) {
 					 */
 					do_action( 'um_after_changing_user_password', $args['user_id'] );
 
-					exit( wp_redirect( um_get_core_page('login', 'password_changed' ) ) );
+					exit( wp_redirect( add_query_arg( array( 'updated' => 'password_changed' ), um_get_predefined_page_url('login' ) ) ) );
 				}
 			}
 		}

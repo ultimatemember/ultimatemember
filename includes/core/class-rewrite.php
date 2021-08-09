@@ -87,9 +87,9 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 
 			$newrules['um-download/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$'] = 'index.php?um_action=download&um_form=$matches[1]&um_field=$matches[2]&um_user=$matches[3]&um_verify=$matches[4]';
 
-			if ( isset( UM()->config()->permalinks['user'] ) ) {
+			$user_page_id = um_get_predefined_page_id( 'user' );
+			if ( $user_page_id ) {
 
-				$user_page_id = UM()->config()->permalinks['user'];
 				$user = get_post( $user_page_id );
 
 				if ( isset( $user->post_name ) ) {
@@ -116,13 +116,11 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 				}
 			}
 
-			if ( isset( UM()->config()->permalinks['account'] ) ) {
+			$account_page_id = um_get_predefined_page_id( 'account' );
+			if ( $account_page_id ) {
 
-				$account_page_id = UM()->config()->permalinks['account'];
 				$account = get_post( $account_page_id );
-
 				if ( isset( $account->post_name ) ) {
-
 					$account_slug = $account->post_name;
 					$newrules[ $account_slug . '/([^/]+)?$' ] = 'index.php?page_id=' . $account_page_id . '&um_tab=$matches[1]';
 				}
@@ -165,7 +163,7 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 		 * Locate/display a profile
 		 */
 		function locate_user_profile() {
-			if ( um_queried_user() && um_is_core_page( 'user' ) ) {
+			if ( um_queried_user() && um_is_predefined_page( 'user' ) ) {
 
 				if ( UM()->options()->get( 'permalink_base' ) == 'user_login' ) {
 
@@ -253,11 +251,11 @@ if ( ! class_exists( 'um\core\Rewrite' ) ) {
 
 				} else {
 
-					exit( wp_redirect( um_get_core_page( 'user' ) ) );
+					exit( wp_redirect( um_get_predefined_page_url( 'user' ) ) );
 
 				}
 
-			} elseif ( um_is_core_page( 'user' ) ) {
+			} elseif ( um_is_predefined_page( 'user' ) ) {
 
 				if ( is_user_logged_in() ) { // just redirect to their profile
 

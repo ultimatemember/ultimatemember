@@ -10,16 +10,18 @@
  */
 function um_whitelisted_wpadmin_access( $allowed ) {
 	$ips = UM()->options()->get( 'wpadmin_allow_ips' );
-		
-	if ( !$ips )
+
+	if ( ! $ips ) {
 		return $allowed;
-		
-	$ips = array_map("rtrim", explode("\n", $ips));
+	}
+
+	$ips = array_map( 'rtrim', explode( "\n", $ips ) );
 	$user_ip = um_user_ip();
 
-	if ( in_array( $user_ip, $ips ) )
+	if ( in_array( $user_ip, $ips ) ) {
 		$allowed = 1;
-		
+	}
+
 	return $allowed;
 }
 add_filter( 'um_whitelisted_wpadmin_access', 'um_whitelisted_wpadmin_access' );
@@ -120,8 +122,8 @@ add_filter( 'authenticate', 'um_wp_form_errors_hook_logincheck', 50, 3 );
  */
 function um_lostpassword_url( $lostpassword_url ) {
 
-	if ( um_is_core_page( 'login' ) ) {
-		return um_get_core_page( 'password-reset' );
+	if ( um_is_predefined_page( 'login' ) ) {
+		return um_get_predefined_page_url( 'password-reset' );
 	}
 
 	return $lostpassword_url;

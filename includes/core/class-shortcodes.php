@@ -202,8 +202,12 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 		/**
 		 * Remove wpautop filter for post content if it's UM core page
+		 *
+		 * @deprecated 3.0
 		 */
 		function is_um_page() {
+			_deprecated_function( 'UM()->shortcodes()->is_um_page()', '3.0' );
+
 			if ( is_ultimatemember() ) {
 				remove_filter( 'the_content', 'wpautop' );
 			}
@@ -218,13 +222,10 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 * @return array
 		 */
 		function body_class( $classes ) {
-			$array = UM()->config()->permalinks;
-			if ( ! $array ) {
-				return $classes;
-			}
+			$predefined_pages = array_keys( UM()->config()->get( 'predefined_pages' ) );
 
-			foreach ( $array as $slug => $info ) {
-				if ( um_is_core_page( $slug ) ) {
+			foreach ( $predefined_pages as $slug ) {
+				if ( um_is_predefined_page( $slug ) ) {
 
 					$classes[] = 'um-page-' . $slug;
 
@@ -237,7 +238,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				}
 			}
 
-			if ( um_is_core_page( 'user' ) && um_is_user_himself() ) {
+			if ( um_is_predefined_page( 'user' ) && um_is_user_himself() ) {
 				$classes[] = 'um-own-profile';
 			}
 
@@ -1164,7 +1165,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			global $user_ID;
 
 			if ( ! is_user_logged_in() ) {
-				return;
+				return '';
 			}
 
 			$a = shortcode_atts( array(
@@ -1182,7 +1183,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 			$current_user_roles = um_user( 'roles' );
 
 			if ( ! empty( $a['not'] ) && ! empty( $a['roles'] ) ) {
-				if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
+				if ( version_compare( get_bloginfo( 'version' ),'5.4', '<' ) ) {
 					return do_shortcode( $this->convert_locker_tags( $content ) );
 				} else {
 					return apply_shortcodes( $this->convert_locker_tags( $content ) );
@@ -1193,7 +1194,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$not_in_roles = explode( ",", $a['not'] );
 
 				if ( is_array( $not_in_roles ) && ( empty( $current_user_roles ) || count( array_intersect( $current_user_roles, $not_in_roles ) ) <= 0 ) ) {
-					if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
+					if ( version_compare( get_bloginfo( 'version' ),'5.4', '<' ) ) {
 						return do_shortcode( $this->convert_locker_tags( $content ) );
 					} else {
 						return apply_shortcodes( $this->convert_locker_tags( $content ) );
@@ -1203,7 +1204,7 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 				$roles = explode( ",", $a['roles'] );
 
 				if ( ! empty( $current_user_roles ) && is_array( $roles ) && count( array_intersect( $current_user_roles, $roles ) ) > 0 ) {
-					if ( version_compare( get_bloginfo('version'),'5.4', '<' ) ) {
+					if ( version_compare( get_bloginfo( 'version' ),'5.4', '<' ) ) {
 						return do_shortcode( $this->convert_locker_tags( $content ) );
 					} else {
 						return apply_shortcodes( $this->convert_locker_tags( $content ) );
@@ -1221,15 +1222,15 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 		 *
 		 * @return string
 		 */
-		public function ultimatemember_searchform( $args = array(), $content = "" ) {
+		public function ultimatemember_searchform( $args = array(), $content = '' ) {
 			if ( ! UM()->options()->get( 'members_page' ) ) {
 				return '';
 			}
 
 			$member_directory_ids = array();
 
-			$page_id = UM()->config()->permalinks['members'];
-			if ( ! empty( $page_id ) ) {
+			$page_id = um_get_predefined_page_id( 'members' );
+			if ( $page_id ) {
 				$members_page = get_post( $page_id );
 				if ( ! empty( $members_page ) && ! is_wp_error( $members_page ) ) {
 					if ( ! empty( $members_page->post_content ) ) {
@@ -1275,9 +1276,13 @@ if ( ! class_exists( 'um\core\Shortcodes' ) ) {
 
 			$search_value = array_values( $query );
 
-			$template = UM()->get_template( 'searchform.php', '', array( 'query' => $query, 'search_value' => $search_value[0], 'members_page' => um_get_core_page( 'members' ) ) );
-
-			return $template;
+			return um_get_template_html( 'searchform.php',
+				array(
+					'query'        => $query,
+					'search_value' => $search_value[0],
+					'members_page' => um_get_predefined_page_url( 'members' ),
+				)
+			);
 		}
 
 

@@ -20,9 +20,9 @@ if ( ! class_exists( 'um\integrations\Common' ) ) {
 		 * Common constructor.
 		 */
 		function __construct() {
-			add_action( 'plugins_loaded', [ &$this, 'plugins_loaded' ] );
+			add_action( 'plugins_loaded', array( &$this, 'plugins_loaded' ) );
 
-			add_filter( 'um_pre_template_locations', [ &$this, 'pre_template_locations_common_locale' ], 10, 4 );
+			add_filter( 'um_pre_template_locations', array( &$this, 'pre_template_locations_common_locale' ), 10, 4 );
 		}
 
 

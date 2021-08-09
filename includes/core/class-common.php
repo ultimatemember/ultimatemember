@@ -52,22 +52,22 @@ if ( ! class_exists( 'um\core\Common' ) ) {
 
 
 		/**
-		 * Create taxonomies for use for UM
+		 * Create UM's CPT
 		 */
 		function create_post_types() {
 
 			register_post_type( 'um_form', array(
-				'labels'        => array(
-					'name'                  => __( 'Forms', 'ultimate-member' ),
-					'singular_name'         => __( 'Form', 'ultimate-member' ),
-					'add_new'               => __( 'Add New', 'ultimate-member' ),
-					'add_new_item'          => __( 'Add New Form', 'ultimate-member' ),
-					'edit_item'             => __( 'Edit Form', 'ultimate-member' ),
-					'not_found'             => __( 'You did not create any forms yet', 'ultimate-member' ),
-					'not_found_in_trash'    => __( 'Nothing found in Trash', 'ultimate-member' ),
-					'search_items'          => __( 'Search Forms', 'ultimate-member' ),
+				'labels'       => array(
+					'name'               => __( 'Forms', 'ultimate-member' ),
+					'singular_name'      => __( 'Form', 'ultimate-member' ),
+					'add_new'            => __( 'Add New', 'ultimate-member' ),
+					'add_new_item'       => __( 'Add New Form', 'ultimate-member' ),
+					'edit_item'          => __( 'Edit Form', 'ultimate-member' ),
+					'not_found'          => __( 'You did not create any forms yet', 'ultimate-member' ),
+					'not_found_in_trash' => __( 'Nothing found in Trash', 'ultimate-member' ),
+					'search_items'       => __( 'Search Forms', 'ultimate-member' ),
 				),
-				'capabilities'  => array(
+				'capabilities' => array(
 					'edit_post'          => 'manage_options',
 					'read_post'          => 'manage_options',
 					'delete_post'        => 'manage_options',
@@ -77,27 +77,27 @@ if ( ! class_exists( 'um\core\Common' ) ) {
 					'publish_posts'      => 'manage_options',
 					'read_private_posts' => 'manage_options',
 				),
-				'show_ui'       => true,
-				'show_in_menu'  => false,
-				'public'        => false,
-				'show_in_rest'  => true,
-				'supports'      => array( 'title' ),
+				'show_ui'      => true,
+				'show_in_menu' => false,
+				'public'       => false,
+				'show_in_rest' => true,
+				'supports'     => array( 'title' ),
 			) );
 
 			if ( UM()->options()->get( 'members_page' ) || ! get_option( 'um_options' ) ) {
 
 				register_post_type( 'um_directory', array(
-					'labels'        => array(
-						'name'                  => __( 'Member Directories', 'ultimate-member' ),
-						'singular_name'         => __( 'Member Directory', 'ultimate-member' ),
-						'add_new'               => __( 'Add New', 'ultimate-member' ),
-						'add_new_item'          => __( 'Add New Member Directory', 'ultimate-member' ),
-						'edit_item'             => __( 'Edit Member Directory', 'ultimate-member' ),
-						'not_found'             => __( 'You did not create any member directories yet', 'ultimate-member' ),
-						'not_found_in_trash'    => __( 'Nothing found in Trash', 'ultimate-member' ),
-						'search_items'          => __( 'Search Member Directories', 'ultimate-member' ),
+					'labels'       => array(
+						'name'               => __( 'Member Directories', 'ultimate-member' ),
+						'singular_name'      => __( 'Member Directory', 'ultimate-member' ),
+						'add_new'            => __( 'Add New', 'ultimate-member' ),
+						'add_new_item'       => __( 'Add New Member Directory', 'ultimate-member' ),
+						'edit_item'          => __( 'Edit Member Directory', 'ultimate-member' ),
+						'not_found'          => __( 'You did not create any member directories yet', 'ultimate-member' ),
+						'not_found_in_trash' => __( 'Nothing found in Trash', 'ultimate-member' ),
+						'search_items'       => __( 'Search Member Directories', 'ultimate-member' ),
 					),
-					'capabilities'  => array(
+					'capabilities' => array(
 						'edit_post'          => 'manage_options',
 						'read_post'          => 'manage_options',
 						'delete_post'        => 'manage_options',
@@ -107,11 +107,11 @@ if ( ! class_exists( 'um\core\Common' ) ) {
 						'publish_posts'      => 'manage_options',
 						'read_private_posts' => 'manage_options',
 					),
-					'show_ui'       => true,
-					'show_in_menu'  => false,
-					'public'        => false,
-					'show_in_rest'  => true,
-					'supports'      => array( 'title' ),
+					'show_ui'      => true,
+					'show_in_menu' => false,
+					'public'       => false,
+					'show_in_rest' => true,
+					'supports'     => array( 'title' ),
 				) );
 
 			}

@@ -382,8 +382,6 @@ if ( ! class_exists( 'um\admin\core\Admin_Users' ) ) {
 				'rejected'                      => __( 'Rejected', 'ultimate-member' )
 			);
 
-			UM()->query()->count_users_by_status( 'unassigned' );
-
 			foreach ( $status as $k => $v ) {
 				if ( isset( $_REQUEST['um_status'] ) && sanitize_key( $_REQUEST['um_status'] ) == $k ) {
 					$current = 'class="current"';

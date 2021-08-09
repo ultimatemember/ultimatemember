@@ -241,11 +241,9 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 				)
 			);
 
-			$core_pages = UM()->config()->core_pages;
-
-			foreach ( $core_pages as $page_s => $page ) {
+			foreach ( UM()->config()->get( 'predefined_pages' ) as $slug => $page ) {
 				$have_pages = UM()->query()->wp_pages();
-				$page_id = UM()->options()->get_core_page_id( $page_s );
+				$page_id    = UM()->options()->get_predefined_page_option_key( $slug );
 
 				$page_title = ! empty( $page['title'] ) ? $page['title'] : '';
 
@@ -555,7 +553,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 									'type'          => 'select',
 									'size'          => 'small',
 									'label'         => __( 'Profile Permalink Base','ultimate-member' ),
-									'tooltip'       => __( 'Here you can control the permalink structure of the user profile URL globally e.g. ' . trailingslashit( um_get_core_page('user') ) . '<strong>username</strong>/','ultimate-member' ),
+									'tooltip'       => __( 'Here you can control the permalink structure of the user profile URL globally e.g. ' . trailingslashit( um_get_predefined_page_url('user') ) . '<strong>username</strong>/', 'ultimate-member' ),
 									'options'       => array(
 										'user_login' 		=> __( 'Username', 'ultimate-member' ),
 										'name' 				=> __( 'First and Last Name with \'.\'', 'ultimate-member' ),
@@ -2128,7 +2126,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 */
 		function settings_before_email_tab() {
 			$email_key = empty( $_GET['email'] ) ? '' : sanitize_key( $_GET['email'] );
-			$emails = UM()->config()->email_notifications;
+			$emails = UM()->config()->get( 'email_notifications' );
 
 			if ( empty( $email_key ) || empty( $emails[ $email_key ] ) ) {
 				include_once um_path . 'includes/admin/core/list-tables/emails-list-table.php';
@@ -2143,13 +2141,11 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 		 */
 		function settings_email_tab( $section ) {
 			$email_key = empty( $_GET['email'] ) ? '' : sanitize_key( $_GET['email'] );
-			$emails = UM()->config()->email_notifications;
+			$emails = UM()->config()->get( 'email_notifications' );
 
 			if ( empty( $email_key ) || empty( $emails[ $email_key ] ) ) {
 				return $section;
 			}
-
-			$in_theme = UM()->mail()->template_in_theme( $email_key );
 
 			/**
 			 * UM hook
@@ -2197,8 +2193,7 @@ if ( ! class_exists( 'um\admin\core\Admin_Settings' ) ) {
 					'label'         => __( 'Message Body', 'ultimate-member' ),
 					'conditional'   => array( $email_key . '_on', '=', 1 ),
 					'tooltip'       => __( 'This is the content of the e-mail', 'ultimate-member' ),
-					'value'         => UM()->mail()->get_email_template( $email_key ),
-					'in_theme'      => $in_theme
+					'value'         => um_get_template_html( "email/{$email_key}.php" ),
 				),
 			), $email_key );
 
@@ -2603,7 +2598,7 @@ Role: <?php echo implode( ', ', um_user( 'roles' ) ). "\n"; ?>
 
 Version:						<?php echo get_bloginfo( 'version' ) . "\n"; ?>
 Language:					<?php echo get_locale()."\n"; ?>
-Permalink Structure:			<?php echo get_option( 'permalink_structure' ) . "\n"; ?>
+Permalink Structure:			<?php echo UM()->is_permalinks . "\n"; ?>
 Active Theme:				<?php echo $theme . "\n"; ?>
 <?php $show_on_front = get_option( 'show_on_front' ); ?>
 <?php if( $show_on_front == "posts" ): ?>
@@ -2728,11 +2723,11 @@ Exclude the following URLs:<?php echo "\t\t\t\t".implode("\t\n\t\t\t\t\t\t\t\t\t
 <?php } ?>
 Backend Login Screen for Guests:			<?php echo $this->info_value( UM()->options()->get('wpadmin_login'), 'yesno', true ); ?>
 <?php if( ! UM()->options()->get('wpadmin_login') ) { ?>
-Redirect to alternative login page:			<?php if( UM()->options()->get('wpadmin_login_redirect') == 'um_login_page' ){ echo um_get_core_page('login')."\n"; }else{ echo UM()->options()->get('wpadmin_login_redirect_url')."\n"; }?>
+Redirect to alternative login page:			<?php if( UM()->options()->get('wpadmin_login_redirect') == 'um_login_page' ){ echo um_get_predefined_page_url( 'login' )."\n"; }else{ echo UM()->options()->get('wpadmin_login_redirect_url')."\n"; }?>
 <?php } ?>
 Backend Register Screen for Guests:		<?php echo $this->info_value( UM()->options()->get('wpadmin_register'), 'yesno', true ); ?>
 <?php if( ! UM()->options()->get('wpadmin_register') ) { ?>
-Redirect to alternative register page:		<?php if( UM()->options()->get('wpadmin_register_redirect') == 'um_register_page' ){ echo um_get_core_page('register')."\n"; }else{ echo UM()->options()->get('wpadmin_register_redirect_url')."\n"; }?>
+Redirect to alternative register page:		<?php if( UM()->options()->get('wpadmin_register_redirect') == 'um_register_page' ){ echo um_get_predefined_page_url( 'register' )."\n"; }else{ echo UM()->options()->get('wpadmin_register_redirect_url')."\n"; }?>
 <?php } ?>
 Access Control widget for Admins only: 		<?php echo $this->info_value( UM()->options()->get('access_widget_admin_only'), 'yesno', true ); ?>
 Enable the Reset Password Limit:			<?php echo $this->info_value( UM()->options()->get('enable_reset_password_limit'), 'yesno', true ); ?>

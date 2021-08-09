@@ -12,7 +12,7 @@ function um_account_disable_name_fields( $fields ){
 		return $fields;
 	}
 
-	if ( um_is_core_page( 'account' ) ) {
+	if ( um_is_predefined_page( 'account' ) ) {
 		$fields['disabled'] = 'disabled="disabled"';
 	}
 

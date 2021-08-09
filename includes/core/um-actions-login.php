@@ -141,7 +141,7 @@ function um_submit_form_errors_hook_logincheck( $args ) {
 	}
 
 	if ( isset( $args['form_id'] ) && $args['form_id'] == UM()->shortcodes()->core_login_form() && UM()->form()->errors && ! isset( $_POST[ UM()->honeypot ] ) ) {
-		exit( wp_redirect( um_get_core_page( 'login' ) ) );
+		exit( wp_redirect( um_get_predefined_page_url( 'login' ) ) );
 	}
 
 }
@@ -386,7 +386,7 @@ function um_add_submit_button_to_login( $args ) {
 		$secondary_btn_word = UM()->options()->get( 'login_secondary_btn_word' );
 	}
 
-	$secondary_btn_url = ! empty( $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_core_page( 'register' );
+	$secondary_btn_url = ! empty( $args['secondary_btn_url'] ) ? $args['secondary_btn_url'] : um_get_predefined_page_url( 'register' );
 	/**
 	 * UM hook
 	 *
@@ -457,7 +457,7 @@ function um_after_login_submit( $args ) {
 	} ?>
 
 	<div class="um-col-alt-b">
-		<a href="<?php echo esc_url( um_get_core_page( 'password-reset' ) ); ?>" class="um-link-alt">
+		<a href="<?php echo esc_url( um_get_predefined_page_url( 'password-reset' ) ); ?>" class="um-link-alt">
 			<?php _e( 'Forgot your password?', 'ultimate-member' ); ?>
 		</a>
 	</div>

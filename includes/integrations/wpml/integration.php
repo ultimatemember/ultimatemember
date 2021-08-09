@@ -26,8 +26,26 @@ add_filter( 'um_pre_template_locations_common_locale_integration', 'um_pre_templ
 function um_wpml_get_languages_codes() {
 	global $sitepress;
 
-	return [
+	return array(
 		'default' => $sitepress->get_locale_from_language_code( $sitepress->get_default_language() ),
 		'current' => $sitepress->get_locale_from_language_code( $sitepress->get_current_language() ),
-	];
+	);
 }
+
+
+/**
+ * Get predefined page translation for current language
+ *
+ * @param int $page_id
+ * @param string $slug
+ *
+ * @return mixed
+ */
+function um_get_predefined_page_id_wpml( $page_id, $slug ) {
+	global $sitepress;
+
+	$page_id = wpml_object_id_filter( $page_id, 'page', true, $sitepress->get_current_language() );
+
+	return $page_id;
+}
+add_filter( 'um_get_predefined_page_id', 'um_get_predefined_page_id_wpml', 10, 2 );

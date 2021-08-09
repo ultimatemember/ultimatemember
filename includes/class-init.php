@@ -497,10 +497,9 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @deprecated 3.0
 		 */
 		function activation() {
-			$this->single_site_activation();
-			if ( is_multisite() ) {
-				update_network_option( get_current_network_id(), 'um_maybe_network_wide_activation', 1 );
-			}
+			_deprecated_function( 'UM()->activation()', '3.0', 'UM()->install()->activation()' );
+
+			UM()->install()->activation();
 		}
 
 
@@ -512,54 +511,21 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @deprecated 3.0
 		 */
 		function maybe_network_activation() {
-			$maybe_activation = get_network_option( get_current_network_id(), 'um_maybe_network_wide_activation' );
+			_deprecated_function( 'UM()->maybe_network_activation()', '3.0', 'UM()->install()->maybe_network_activation()' );
 
-			if ( $maybe_activation ) {
-
-				delete_network_option( get_current_network_id(), 'um_maybe_network_wide_activation' );
-
-				if ( is_plugin_active_for_network( um_plugin ) ) {
-					// get all blogs
-					$blogs = get_sites();
-					if ( ! empty( $blogs ) ) {
-						foreach( $blogs as $blog ) {
-							switch_to_blog( $blog->blog_id );
-							//make activation script for each sites blog
-							$this->single_site_activation();
-							restore_current_blog();
-						}
-					}
-				}
-			}
+			UM()->install()->maybe_network_activation();
 		}
 
 
 		/**
 		 * Single site plugin activation handler
+		 *
+		 * @deprecated 3.0
 		 */
 		function single_site_activation() {
-			//first install
-			$version = get_option( 'um_version' );
-			if ( ! $version ) {
-				update_option( 'um_last_version_upgrade', ultimatemember_version );
+			_deprecated_function( 'UM()->single_site_activation()', '3.0', 'UM()->install()->single_site_activation()' );
 
-				add_option( 'um_first_activation_date', time() );
-
-				//show avatars on first install
-				if ( ! get_option( 'show_avatars' ) ) {
-					update_option( 'show_avatars', 1 );
-				}
-			} else {
-				UM()->options()->update( 'rest_api_version', '1.0' );
-			}
-
-			if ( $version != ultimatemember_version ) {
-				update_option( 'um_version', ultimatemember_version );
-			}
-
-			//run setup
-			$this->common()->create_post_types();
-			$this->setup()->run_setup();
+			UM()->install()->single_site_activation();
 		}
 
 
@@ -1090,9 +1056,13 @@ if ( ! class_exists( 'UM' ) ) {
 		/**
 		 * @since 2.0
 		 *
+		 * @deprecated 3.0
+		 *
 		 * @return um\core\Setup
 		 */
 		function setup() {
+			_deprecated_function( 'UM()->setup()', '3.0' );
+
 			if ( empty( $this->classes['setup'] ) ) {
 				$this->classes['setup'] = new um\core\Setup();
 			}
@@ -1585,26 +1555,6 @@ if ( ! class_exists( 'UM' ) ) {
 
 
 
-
-
-		/**
-		 * @deprecated 2.1.0
-		 *
-		 * @since 2.0
-		 *
-		 * @return um\core\Members
-		 */
-		function members() {
-			um_deprecated_function( 'UM()->members()', '2.1.0', 'UM()->member_directory()' );
-
-			if ( empty( $this->classes['members'] ) ) {
-				$this->classes['members'] = new um\core\Members();
-			}
-
-			return $this->classes['members'];
-		}
-
-
 		/**
 		 * @since 2.0.34
 		 *
@@ -1613,6 +1563,8 @@ if ( ! class_exists( 'UM' ) ) {
 		 * @return um\Extensions
 		 */
 		function extensions() {
+			_deprecated_function( 'UM()->extensions()', '3.0' );
+
 			if ( empty( $this->classes['extensions'] ) ) {
 				$this->classes['extensions'] = new um\Extensions();
 			}

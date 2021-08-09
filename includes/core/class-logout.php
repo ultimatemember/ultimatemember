@@ -31,8 +31,7 @@ if ( ! class_exists( 'um\core\Logout' ) ) {
 		 * @return false|string
 		 */
 		function safe_redirect_default( $redirect_url, $status ) {
-			$login_page_id = UM()->config()->permalinks['login'];
-			return get_permalink( $login_page_id );
+			return um_get_predefined_page_url( 'login' );
 		}
 
 
@@ -45,15 +44,9 @@ if ( ! class_exists( 'um\core\Logout' ) ) {
 			}
 
 			$trid = 0;
-			//$language_code = '';
 			if ( UM()->external_integrations()->is_wpml_active() ) {
 				global $sitepress;
 				$default_lang = $sitepress->get_default_language();
-
-				/*$language_code = $sitepress->get_current_language();
-				if ( $language_code == $default_lang ) {
-					$language_code = '';
-				}*/
 
 				$current_page_ID = get_the_ID();
 				if ( function_exists( 'icl_object_id' ) ) {
@@ -63,8 +56,8 @@ if ( ! class_exists( 'um\core\Logout' ) ) {
 				}
 			}
 
-			$logout_page_id = UM()->config()->permalinks['logout'];
-			if ( um_is_core_page( 'logout' ) || ( $trid > 0 && $trid == $logout_page_id ) ) {
+			$logout_page_id = um_get_predefined_page_id( 'logout' );
+			if ( um_is_predefined_page( 'logout' ) || ( $trid > 0 && $trid == $logout_page_id ) ) {
 
 				if ( is_user_logged_in() ) {
 

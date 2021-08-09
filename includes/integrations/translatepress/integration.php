@@ -33,8 +33,21 @@ function um_translatepress_get_languages_codes() {
 
 	$default_language = $settings['default-language'];
 
-	return [
+	return array(
 		'default' => $default_language,
 		'current' => get_locale(),
-	];
+	);
 }
+
+
+/**
+ * @param int $page_id
+ * @param string $slug
+ *
+ * @return mixed
+ */
+function um_get_predefined_page_id_translatepress( $page_id, $slug ) {
+	// just empty method, but works properly
+	return $page_id;
+}
+add_filter( 'um_get_predefined_page_id', 'um_get_predefined_page_id_translatepress', 10, 2 );

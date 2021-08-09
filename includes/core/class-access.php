@@ -213,14 +213,14 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 				if ( ! isset( $restriction['_um_access_redirect'] ) || '0' == $restriction['_um_access_redirect'] ) {
 
-					$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) ), 'individual_term' );
+					$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_predefined_page_url( 'login' ) ) ), 'individual_term' );
 
 				} elseif ( '1' == $restriction['_um_access_redirect'] ) {
 
 					if ( ! empty( $restriction['_um_access_redirect_url'] ) ) {
 						$redirect = $restriction['_um_access_redirect_url'];
 					} else {
-						$redirect = esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
+						$redirect = esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_predefined_page_url( 'login' ) ) );
 					}
 
 					$this->redirect_handler = $this->set_referer( $redirect, 'individual_term' );
@@ -283,7 +283,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					 * ?>
 					 */
 					$redirect_homepage = apply_filters( 'um_custom_homepage_redirect_url', $redirect_homepage, um_user( 'ID' ) );
-					$redirect_to = ! empty( $redirect_homepage ) ? $redirect_homepage : um_get_core_page( 'user' );
+					$redirect_to = ! empty( $redirect_homepage ) ? $redirect_homepage : um_get_predefined_page_url( 'user' );
 					$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect_to ) ), "custom_homepage" );
 
 				} else {
@@ -297,7 +297,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							//get redirect URL if not set get login page by default
 							$redirect = UM()->options()->get( 'access_redirect' );
 							if ( ! $redirect ) {
-								$redirect = um_get_core_page( 'login' );
+								$redirect = um_get_predefined_page_url( 'login' );
 							}
 
 							$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect ) ), 'global' );
@@ -319,7 +319,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 							//get redirect URL if not set get login page by default
 							$redirect = UM()->options()->get( 'access_redirect' );
 							if ( ! $redirect ) {
-								$redirect = um_get_core_page( 'login' );
+								$redirect = um_get_predefined_page_url( 'login' );
 							}
 
 							$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect ) ), 'global' );
@@ -347,7 +347,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 				$redirects = array_unique( $redirects );
 
-				$current_url = UM()->permalinks()->get_current_url( get_option( 'permalink_structure' ) );
+				$current_url = UM()->permalinks()->get_current_url( UM()->is_permalinks );
 				$current_url = untrailingslashit( $current_url );
 				$current_url_slash = trailingslashit( $current_url );
 
@@ -356,7 +356,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					//get redirect URL if not set get login page by default
 					$redirect = UM()->options()->get( 'access_redirect' );
 					if ( ! $redirect ) {
-						$redirect = um_get_core_page( 'login' );
+						$redirect = um_get_predefined_page_url( 'login' );
 					}
 
 					$this->redirect_handler = $this->set_referer( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), $redirect ) ), 'global' );
@@ -396,9 +396,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 				return;
 
 			//also skip if we currently at UM Register|Login|Reset Password pages
-			if ( um_is_core_post( $post, 'register' ) ||
-			     um_is_core_post( $post, 'password-reset' ) ||
-			     um_is_core_post( $post, 'login' ) ) {
+			if ( um_is_predefined_page( 'register', $post ) ||
+			     um_is_predefined_page( 'password-reset', $post ) ||
+			     um_is_predefined_page( 'login', $post ) ) {
 				return;
 			}
 
@@ -455,19 +455,12 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 */
 		function check_access() {
 
-			if ( $this->allow_access == true )
+			if ( $this->allow_access == true ) {
 				return true;
+			}
 
 			if ( $this->redirect_handler ) {
-
-				// login page add protected page automatically
-				/*if ( strstr( $this->redirect_handler, um_get_core_page('login') ) ){
-					$curr = UM()->permalinks()->get_current_url();
-					$this->redirect_handler = esc_url( add_query_arg('redirect_to', urlencode_deep( $curr ), $this->redirect_handler) );
-				}*/
-
 				wp_redirect( $this->redirect_handler ); exit;
-
 			}
 
 			return false;
@@ -555,9 +548,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			//exclude from privacy UM default pages (except Members list and User(Profile) page)
 			if ( ! empty( $post->post_type ) && $post->post_type == 'page' ) {
 
-				if ( um_is_core_post( $post, 'login' ) || um_is_core_post( $post, 'register' ) ||
-				     um_is_core_post( $post, 'account' ) || um_is_core_post( $post, 'logout' ) ||
-				     um_is_core_post( $post, 'password-reset' ) || ( is_user_logged_in() && um_is_core_post( $post, 'user' ) ) )
+				if ( um_is_predefined_page( 'login', $post ) || um_is_predefined_page( 'register', $post ) ||
+				     um_is_predefined_page( 'account', $post ) || um_is_predefined_page( 'logout', $post ) ||
+				     um_is_predefined_page( 'password-reset', $post ) || ( is_user_logged_in() && um_is_predefined_page( 'user', $post ) ) )
 					$exclude = true;
 			}
 
@@ -609,7 +602,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 						// set default redirect if Profile page is restricted for not-logged in users and showing message instead of redirect
 						// this snippet was added to make the same action for {site_url}/user and {site_url}/user/{user_slug} URLs
 						// by default {site_url}/user is redirected to Homepage in rewrite rules because hasn't found username in query when user is not logged in
-						if ( ! is_user_logged_in() && um_is_core_post( $post, 'user' ) && $restriction['_um_accessible'] == '2' && $restriction['_um_noaccess_action'] == '0' ) {
+						if ( ! is_user_logged_in() && um_is_predefined_page( 'user', $post ) && $restriction['_um_accessible'] == '2' && $restriction['_um_noaccess_action'] == '0' ) {
 							if ( isset( $restriction['_um_access_roles'] ) ) {
 								$restriction = array(
 									'_um_accessible'            => '2',
@@ -789,14 +782,14 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 								if ( ! isset( $restriction['_um_access_redirect'] ) || '0' == $restriction['_um_access_redirect'] ) {
 
-									exit( wp_redirect( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) ) ) );
+									exit( wp_redirect( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_predefined_page_url( 'login' ) ) ) ) );
 
 								} elseif ( '1' == $restriction['_um_access_redirect'] ) {
 
 									if ( ! empty( $restriction['_um_access_redirect_url'] ) ) {
 										$redirect = $restriction['_um_access_redirect_url'];
 									} else {
-										$redirect = esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
+										$redirect = esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_predefined_page_url( 'login' ) ) );
 									}
 
 									exit( wp_redirect( $redirect ) );
@@ -904,14 +897,14 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 								if ( ! isset( $restriction['_um_access_redirect'] ) || '0' == $restriction['_um_access_redirect'] ) {
 
-									exit( wp_redirect( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) ) ) );
+									exit( wp_redirect( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_predefined_page_url( 'login' ) ) ) ) );
 
 								} elseif ( '1' == $restriction['_um_access_redirect'] ) {
 
 									if ( ! empty( $restriction['_um_access_redirect_url'] ) ) {
 										$redirect = $restriction['_um_access_redirect_url'];
 									} else {
-										$redirect = esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
+										$redirect = esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_predefined_page_url( 'login' ) ) );
 									}
 
 									exit( wp_redirect( $redirect ) );
@@ -991,14 +984,14 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 								if ( ! isset( $restriction['_um_access_redirect'] ) || '0' == $restriction['_um_access_redirect'] ) {
 
-									exit( wp_redirect( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) ) ) );
+									exit( wp_redirect( esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_predefined_page_url( 'login' ) ) ) ) );
 
 								} elseif ( '1' == $restriction['_um_access_redirect'] ) {
 
 									if ( ! empty( $restriction['_um_access_redirect_url'] ) ) {
 										$redirect = $restriction['_um_access_redirect_url'];
 									} else {
-										$redirect = esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_core_page( 'login' ) ) );
+										$redirect = esc_url( add_query_arg( 'redirect_to', urlencode_deep( $curr ), um_get_predefined_page_url( 'login' ) ) );
 									}
 
 									exit( wp_redirect( $redirect ) );

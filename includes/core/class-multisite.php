@@ -36,7 +36,7 @@ if ( ! class_exists( 'um\core\Multisite' ) ) {
 		function create_new_blog_old_wp( $blog_id ) {
 
 			switch_to_blog( $blog_id );
-			UM()->single_site_activation();
+			UM()->install()->single_site_activation();
 			restore_current_blog();
 
 		}
@@ -51,7 +51,7 @@ if ( ! class_exists( 'um\core\Multisite' ) ) {
 		function create_new_blog( $blog ) {
 
 			switch_to_blog( $blog->blog_id );
-			UM()->single_site_activation();
+			UM()->install()->single_site_activation();
 			restore_current_blog();
 
 		}

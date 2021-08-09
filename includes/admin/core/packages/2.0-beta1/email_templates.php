@@ -110,7 +110,7 @@ function um_upgrade20beta1_insert_content( $path, $content ) {
  */
 function um_upgrade20beta1_email_templates_process() {
 	$templates_in_theme = 0;
-	$emails = UM()->config()->email_notifications;
+	$emails = UM()->config()->get( 'email_notifications' );
 	foreach ( $emails as $email_key => $value ) {
 
 		$in_theme = um_upgrade20beta1_template_in_theme( $email_key, true );

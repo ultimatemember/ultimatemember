@@ -1165,23 +1165,6 @@ if ( ! class_exists( 'um\core\Files' ) ) {
 
 
 		/**
-		 * New user upload
-		 *
-		 * @param $user_id
-		 * @param $source
-		 * @param $key
-		 *
-		 * @deprecated 2.1.0
-		 *
-		 * @return string
-		 */
-		function new_user_upload( $user_id, $source, $key ) {
-			um_deprecated_function( 'new_user_upload', '2.1.0', '' );
-			return '';
-		}
-
-
-		/**
 		 * Remove a directory
 		 *
 		 * @param $dir

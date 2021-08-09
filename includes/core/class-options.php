@@ -2,7 +2,10 @@
 namespace um\core;
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 
 if ( ! class_exists( 'um\core\Options' ) ) {
 
@@ -116,44 +119,24 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 * @return bool
 		 */
 		function get_default( $option_id ) {
-			$settings_defaults = UM()->config()->settings_defaults;
-			if ( ! isset( $settings_defaults[ $option_id ] ) )
+			$settings_defaults = UM()->config()->get( 'default_settings' );
+			if ( ! isset( $settings_defaults[ $option_id ] ) ) {
 				return false;
+			}
 
 			return $settings_defaults[ $option_id ];
 		}
 
 
 		/**
-		 * Get core page ID
+		 * Get predefined page option key
 		 *
-		 * @param string $key
+		 * @param string $slug
 		 *
-		 * @return mixed|void
+		 * @return string
 		 */
-		function get_core_page_id( $key ) {
-			/**
-			 * UM hook
-			 *
-			 * @type filter
-			 * @title um_core_page_id_filter
-			 * @description Change UM page slug
-			 * @input_vars
-			 * [{"var":"$slug","type":"array","desc":"UM page slug"}]
-			 * @change_log
-			 * ["Since: 2.0"]
-			 * @usage
-			 * <?php add_filter( 'um_core_page_id_filter', 'function_name', 10, 1 ); ?>
-			 * @example
-			 * <?php
-			 * add_filter( 'um_core_page_id_filter', 'my_core_page_id', 10, 1 );
-			 * function my_core_page_id( $slug ) {
-			 *     // your code here
-			 *     return $slug;
-			 * }
-			 * ?>
-			 */
-			return apply_filters( 'um_core_page_id_filter', 'core_' . $key );
+		function get_predefined_page_option_key( $slug ) {
+			return apply_filters( 'um_predefined_page_option_key', "core_{$slug}" );
 		}
 
 
@@ -166,7 +149,7 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 		 */
 		function set_defaults( $defaults ) {
 			$need_update = false;
-			$options = get_option( 'um_options', [] );
+			$options     = get_option( 'um_options', array() );
 
 			if ( ! empty( $defaults ) ) {
 				foreach ( $defaults as $key => $value ) {
@@ -183,5 +166,19 @@ if ( ! class_exists( 'um\core\Options' ) ) {
 			}
 		}
 
+
+		/**
+		 * Get core page ID
+		 *
+		 * @deprecated 3.0
+		 *
+		 * @param string $key
+		 *
+		 * @return string
+		 */
+		function get_core_page_id( $key ) {
+			_deprecated_function( 'UM()->options()->get_core_page_id()', '3.0', 'UM()->options()->get_predefined_page_option_key()' );
+			return apply_filters( 'um_core_page_id_filter', $this->get_predefined_page_option_key( $key ) );
+		}
 	}
 }

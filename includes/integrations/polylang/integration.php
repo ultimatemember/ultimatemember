@@ -27,8 +27,24 @@ add_filter( 'um_pre_template_locations_common_locale_integration', 'um_pre_templ
  * @return array
  */
 function um_polylang_get_languages_codes() {
-	return [
+	return array(
 		'default' => pll_default_language( 'locale' ),
 		'current' => pll_current_language( 'locale' ),
-	];
+	);
 }
+
+
+/**
+ * @param int $page_id
+ * @param string $slug
+ *
+ * @return mixed
+ */
+function um_get_predefined_page_id_polylang( $page_id, $slug ) {
+	if ( $post = pll_get_post( $page_id ) ) {
+		$page_id = $post;
+	}
+
+	return $page_id;
+}
+add_filter( 'um_get_predefined_page_id', 'um_get_predefined_page_id_polylang', 10, 2 );
