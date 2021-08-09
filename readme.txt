@@ -6,8 +6,8 @@ Donate link:
 Tags: community, member, membership, user-profile, user-registration
 Requires PHP: 5.6
 Requires at least: 5.0
-Tested up to: 5.7
-Stable tag: 2.1.21
+Tested up to: 5.8
+Stable tag: 2.2.2
 License: GNU Version 2 or Any Later Version
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -154,6 +154,70 @@ The plugin works with popular caching plugins by automatically excluding Ultimat
 
 * To learn more about version 2.1 please see this [docs](https://docs.ultimatemember.com/article/1512-upgrade-2-1-0)
 * UM2.1+ is a significant update to the Member Directories' code base from 2.0.x. Please make sure you take a full-site backup with restore point before updating the plugin
+
+= 2.2.3: August 4, 2021 =
+
+* Bugfixes:
+
+  - Fixed: `pre_get_terms` callback to avoid the conflicts with other terms queries
+
+= 2.2.2: August 3, 2021 =
+
+* Bugfixes:
+
+  - Fixed: `is_restricted()` functions in class-access.php. Avoid using object as array offset
+
+= 2.2.1: August 2, 2021 =
+
+* Enhancements:
+
+  - Added: Extended callback functions for sanitizing data in wp-admin forms fields
+  - Added: Restricted Access Post Title setting
+
+* Bugfixes:
+
+  - Fixed: Restriction settings and related queries (comments, archives, recent posts, post navigation, etc.)
+  - Fixed: Sanitizing `max-width` value of the Login/Registration/Profile form settings
+  - Fixed: Sanitizing `in_group` field's data
+  - Fixed: Restriction settings related with `Hide in queries`
+  - Fixed: Restriction settings and CPU performance issues on some installations
+  - Fixed: Form meta settings and handling them on PHP8 installations
+  - Fixed: Make it clearer the restriction settings form labels
+
+= 2.2.0: July 20, 2021 =
+
+* Enhancements:
+
+  - Added: Sanitizing handlers to the Ultimate Member > Settings forms' fields
+  - Added: Sanitizing handlers to the Ultimate Member > User Role Add/Edit forms' fields
+  - Added: Sanitizing handlers to the Ultimate Member > Forms forms' fields
+  - Added: Sanitizing handlers to the Ultimate Member > Forms > Add Field/Edit Field forms' fields
+  - Added: Sanitizing handlers to the Ultimate Member > User Roles forms' fields
+  - Added: Sanitizing handlers to the Restriction Content forms' fields in the posts/pages/menus additional fields
+  - Added: Sanitizing handlers to the all (Login/Registration/Profile/Account) frontend forms' fields
+  - Added: Custom placeholder setting for the Confirm Password field
+
+* Bugfixes:
+
+  - Fixed: Content restriction settings using in Avada theme with active page headers
+  - Fixed: Content restriction (CPT + Terms). Avoid displaying comments if the post is restricted
+  - Fixed: Content restriction (CPT + Terms). Avoid displaying comments and posts feed
+  - Fixed: Content restriction (CPT + Terms). Displaying the proper count of the posts. Restricted are excluded
+  - Fixed: Saving and displaying settings on the UM > Settings > Access screen
+  - Fixed: Saving and displaying default Member Directory settings
+  - Fixed: Minor PHP warnings on registration data preview
+  - Fixed: Member directory slider filter-type query and results
+  - Fixed: Uploader filename displaying
+
+* Tweaks:
+
+  - WordPress 5.8 compatibility. Widgets screen changes based on the new features with Legacy Widget block
+
+* Templates required update:
+  - members.php
+  - password-reset.php
+
+* Cached and optimized/minified assets(JS/CSS) must be flushed/re-generated after upgrade
 
 = 2.1.21: June 17, 2021 =
 

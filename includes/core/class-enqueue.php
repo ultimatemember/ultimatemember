@@ -100,7 +100,7 @@ if ( ! class_exists( 'um\core\Enqueue' ) ) {
 			wp_register_script( 'um_scrollbar', $this->js_baseurl . 'simplebar' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
 
 			wp_register_script( 'um_jquery_form', $this->js_baseurl . 'um-jquery-form' . $this->suffix . '.js', array( 'jquery' ), ultimatemember_version, true );
-			wp_register_script( 'um_fileupload', $this->js_baseurl . 'um-fileupload' . $this->suffix . '.js', array( 'jquery', 'um_jquery_form' ), ultimatemember_version, true );
+			wp_register_script( 'um_fileupload', $this->js_baseurl . 'um-fileupload.js', array( 'jquery', 'um_jquery_form' ), ultimatemember_version, true );
 
 
 			wp_register_script( 'um_datetime', $this->js_baseurl . 'pickadate/picker.js', array( 'jquery' ), ultimatemember_version, true );

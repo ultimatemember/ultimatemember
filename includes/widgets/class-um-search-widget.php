@@ -40,8 +40,16 @@ class UM_Search_Widget extends \WP_Widget {
 	 * @param array $instance
 	 */
 	public function widget( $args, $instance ) {
+		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+			return;
+		}
 
-		$title = apply_filters( 'widget_title', $instance['title'] );
+		if ( ! empty( $_GET['legacy-widget-preview'] ) && defined( 'IFRAME_REQUEST' ) && IFRAME_REQUEST ) {
+			return;
+		}
+
+		$title = array_key_exists( 'title', $instance ) ? $instance['title'] : '';
+		$title = apply_filters( 'widget_title', $title );
 
 		// before and after widget arguments are defined by themes
 		echo $args['before_widget'];

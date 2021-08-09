@@ -1,6 +1,6 @@
-<?php
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+<?php if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 
 /**
@@ -13,7 +13,7 @@ function um_browser_url_redirect_to( $args ) {
 
 	if ( ! empty( $_REQUEST['redirect_to'] ) ) {
 
-		$url = $_REQUEST['redirect_to'];
+		$url = esc_url_raw( $_REQUEST['redirect_to'] );
 
 	} elseif ( ! empty( $args['after_login'] ) ) {
 
@@ -75,12 +75,12 @@ add_action( 'um_after_form_fields', 'um_browser_url_redirect_to' );
 function um_add_update_notice( $args ) {
 	extract( $args );
 
-	$output = '';
-	$err = '';
+	$output  = '';
+	$err     = '';
 	$success = '';
 
 	if ( ! empty( $_REQUEST['updated'] ) && ! UM()->form()->errors ) {
-		switch ( $_REQUEST['updated'] ) {
+		switch ( sanitize_key( $_REQUEST['updated'] ) ) {
 			default:
 				/**
 				 * UM hook
@@ -104,7 +104,7 @@ function um_add_update_notice( $args ) {
 				 * }
 				 * ?>
 				 */
-				$success = apply_filters( 'um_custom_success_message_handler', $success, $_REQUEST['updated'] );
+				$success = apply_filters( 'um_custom_success_message_handler', $success, sanitize_key( $_REQUEST['updated'] ) );
 				break;
 
 			case 'account':
@@ -123,7 +123,7 @@ function um_add_update_notice( $args ) {
 	}
 
 	if ( ! empty( $_REQUEST['err'] ) && ! UM()->form()->errors ) {
-		switch( $_REQUEST['err'] ) {
+		switch( sanitize_key( $_REQUEST['err'] ) ) {
 
 			default:
 				/**
@@ -148,7 +148,7 @@ function um_add_update_notice( $args ) {
 				 * }
 				 * ?>
 				 */
-				$err = apply_filters( 'um_custom_error_message_handler', $err, $_REQUEST['err'] );
+				$err = apply_filters( 'um_custom_error_message_handler', $err, sanitize_key( $_REQUEST['err'] ) );
 				if ( ! $err ) {
 					$err = __( 'An error has been encountered', 'ultimate-member' );
 				}

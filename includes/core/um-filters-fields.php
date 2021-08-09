@@ -1,4 +1,6 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+<?php if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 
 /**
@@ -55,7 +57,7 @@ function um_profile_field_filter_hook__youtube_video( $value, $data ) {
 	if ( empty( $value ) ) {
 		return '';
 	}
-	$value = ( strstr( $value, 'http') || strstr( $value, '://' ) ) ? um_youtube_id_from_url( $value ) : $value;
+	$value = ( strstr( $value, 'http' ) || strstr( $value, '://' ) ) ? um_youtube_id_from_url( $value ) : $value;
 	$value = '<div class="um-youtube">
 					<iframe width="600" height="450" src="https://www.youtube.com/embed/' . $value . '" frameborder="0" allowfullscreen></iframe>
 					</div>';
@@ -78,9 +80,9 @@ function um_profile_field_filter_hook__vimeo_video( $value, $data ) {
 		return '';
 	}
 
-	$value = ( !is_numeric( $value ) ) ? (int) substr(parse_url($value, PHP_URL_PATH), 1) : $value;
+	$value = ! is_numeric( $value ) ? (int) substr( parse_url( $value, PHP_URL_PATH ), 1 ) : $value;
 	$value = '<div class="um-vimeo">
-					<iframe src="https://player.vimeo.com/video/'. $value . '" width="600" height="450" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+					<iframe src="https://player.vimeo.com/video/' . $value . '" width="600" height="450" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 					</div>';
 	return $value;
 }
@@ -341,10 +343,10 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 		return '';
 	}
 
-	if ( ( isset( $data['validate'] ) && $data['validate'] != '' && strstr( $data['validate'], 'url' ) ) || ( isset( $data['type'] ) && $data['type'] == 'url' ) ) {
+	if ( ( isset( $data['validate'] ) && $data['validate'] !== '' && strstr( $data['validate'], 'url' ) ) || ( isset( $data['type'] ) && $data['type'] == 'url' ) ) {
 		$alt = ( isset( $data['url_text'] ) && !empty( $data['url_text'] ) ) ? $data['url_text'] : $value;
 		$url_rel = ( isset( $data['url_rel'] ) && $data['url_rel'] == 'nofollow' ) ? 'rel="nofollow"' : '';
-		if( !strstr( $value, 'http' )
+		if ( ! strstr( $value, 'http' )
 		    && !strstr( $value, '://' )
 		    && !strstr( $value, 'www.' )
 		    && !strstr( $value, '.com' )
@@ -363,13 +365,9 @@ function um_profile_field_filter_hook__( $value, $data, $type = '' ) {
 		}
 
 
-		if ( isset( $data['validate'] ) && $data['validate'] == 'skype' ) {
+		if ( ! ( isset( $data['validate'] ) && $data['validate'] == 'skype' ) ) {
 
-			$value = $value;
-
-		} else {
-
-			if ( strpos($value, 'http://') !== 0 ) {
+			if ( strpos( $value, 'http://' ) !== 0 ) {
 				$value = 'http://' . $value;
 			}
 			$data['url_target'] = ( isset( $data['url_target'] ) ) ? $data['url_target'] : '_blank';
@@ -456,7 +454,7 @@ function um_get_custom_field_array( $array, $fields ) {
 			$condition_metakey = $fields[ $value[1] ]['metakey'];
 
 			if ( isset( $_POST[ $condition_metakey ] ) ) {
-				$cond_value = ( $fields[ $value[1] ]['type'] == 'radio' ) ? $_POST[ $condition_metakey ][0] : $_POST[ $condition_metakey ];
+				$cond_value = ( $fields[ $value[1] ]['type'] === 'radio' ) ? $_POST[ $condition_metakey ][0] : $_POST[ $condition_metakey ];
 				list( $visibility, $parent_key, $op, $parent_value ) = $value;
 
 				if ( $visibility == 'hide' ) {

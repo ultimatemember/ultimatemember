@@ -579,8 +579,8 @@ if ( ! class_exists( 'um\admin\core\Admin_Notices' ) ) {
 					'message'   => $message,
 				), 4 );
 			} else {
-				if ( isset( $_GET['msg'] ) && 'updated' == sanitize_key( $_GET['msg'] ) ) {
-					if ( isset( $_GET['page'] ) && 'um_options' == sanitize_key( $_GET['page'] ) ) {
+				if ( isset( $_GET['msg'] ) && 'updated' === sanitize_key( $_GET['msg'] ) ) {
+					if ( isset( $_GET['page'] ) && 'um_options' === sanitize_key( $_GET['page'] ) ) {
 						$this->add_notice( 'settings_upgrade', array(
 							'class'     => 'updated',
 							'message'   => '<p>' . __( 'Settings successfully upgraded', 'ultimate-member' ) . '</p>',

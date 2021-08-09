@@ -227,6 +227,10 @@ textarea.um-forms-field.um-small-field {
     font-style: italic;
 }
 
+.um-form-field .description {
+	clear: both;
+}
+
 
 .um-form-fields-section {
     float:left;

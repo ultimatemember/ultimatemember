@@ -179,15 +179,15 @@ if ( ! class_exists( 'um\core\Permalinks' ) ) {
 		/**
 		 * Activates an account via email
 		 */
-		function activate_account_via_email_link() {
-			if ( isset( $_REQUEST['act'] ) && $_REQUEST['act'] == 'activate_via_email' && isset( $_REQUEST['hash'] ) && is_string( $_REQUEST['hash'] ) && strlen( $_REQUEST['hash'] ) == 40 &&
+		public function activate_account_via_email_link() {
+			if ( isset( $_REQUEST['act'] ) && 'activate_via_email' === sanitize_key( $_REQUEST['act'] ) && isset( $_REQUEST['hash'] ) && is_string( $_REQUEST['hash'] ) && strlen( $_REQUEST['hash'] ) == 40 &&
 			     isset( $_REQUEST['user_id'] ) && is_numeric( $_REQUEST['user_id'] ) ) { // valid token
 
 				$user_id = absint( $_REQUEST['user_id'] );
 				delete_option( "um_cache_userdata_{$user_id}" );
 
 				$account_secret_hash = get_user_meta( $user_id, 'account_secret_hash', true );
-				if ( empty( $account_secret_hash ) || strtolower( $_REQUEST['hash'] ) !== strtolower( $account_secret_hash ) ) {
+				if ( empty( $account_secret_hash ) || strtolower( sanitize_text_field( $_REQUEST['hash'] ) ) !== strtolower( $account_secret_hash ) ) {
 					wp_die( __( 'This activation link is expired or have already been used.', 'ultimate-member' ) );
 				}
 

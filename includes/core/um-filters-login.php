@@ -1,4 +1,6 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+<?php if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 
 /**
@@ -15,10 +17,10 @@ function um_whitelisted_wpadmin_access( $allowed ) {
 		return $allowed;
 	}
 
-	$ips = array_map( 'rtrim', explode( "\n", $ips ) );
+	$ips     = array_map( 'rtrim', explode( "\n", $ips ) );
 	$user_ip = um_user_ip();
 
-	if ( in_array( $user_ip, $ips ) ) {
+	if ( in_array( $user_ip, $ips, true ) ) {
 		$allowed = 1;
 	}
 
@@ -37,7 +39,7 @@ add_filter( 'um_whitelisted_wpadmin_access', 'um_whitelisted_wpadmin_access' );
 function um_custom_wp_err_messages( $message ) {
 
 	if ( ! empty( $_REQUEST['err'] ) ) {
-		switch( $_REQUEST['err'] ) {
+		switch ( sanitize_key( $_REQUEST['err'] ) ) {
 			case 'blocked_email':
 				$err = __( 'This email address has been blocked.', 'ultimate-member' );
 				break;

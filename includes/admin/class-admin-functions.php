@@ -28,7 +28,7 @@ if ( ! class_exists( 'um\admin\Admin_Functions' ) ) {
 		 * @param bool $action
 		 */
 		function check_ajax_nonce( $action = false ) {
-			$nonce = isset( $_REQUEST['nonce'] ) ? $_REQUEST['nonce'] : '';
+			$nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( $_REQUEST['nonce'] ) : '';
 			$action = empty( $action ) ? 'um-admin-nonce' : $action;
 
 			if ( ! wp_verify_nonce( $nonce, $action ) ) {
@@ -44,16 +44,18 @@ if ( ! class_exists( 'um\admin\Admin_Functions' ) ) {
 		 */
 		function is_um_screen() {
 			global $current_screen;
-			$screen_id = $current_screen->id;
 
 			$is_um_screen = false;
 
-			if ( strstr( $screen_id, 'ultimatemember') ||
-			     strstr( $screen_id, 'um_') ||
-			     strstr( $screen_id, 'user' ) ||
-			     strstr( $screen_id, 'profile' ) ||
-			     $screen_id == 'nav-menus' ) {
-				$is_um_screen = true;
+			if ( ! empty( $current_screen ) ) {
+				$screen_id = $current_screen->id;
+				if ( strstr( $screen_id, 'ultimatemember' ) ||
+				     strstr( $screen_id, 'um_' ) ||
+				     strstr( $screen_id, 'user' ) ||
+				     strstr( $screen_id, 'profile' ) ||
+				     $screen_id == 'nav-menus' ) {
+					$is_um_screen = true;
+				}
 			}
 
 			if ( $this->is_plugin_post_type() ) {
@@ -81,7 +83,7 @@ if ( ! class_exists( 'um\admin\Admin_Functions' ) ) {
 				if ( in_array( $post_type, $cpt ) ) {
 					return true;
 				}
-			} elseif ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'edit' ) {
+			} elseif ( isset( $_REQUEST['action'] ) && sanitize_key( $_REQUEST['action'] ) == 'edit' ) {
 				$post_type = get_post_type();
 				if ( in_array( $post_type, $cpt ) ) {
 					return true;

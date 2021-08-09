@@ -29,7 +29,7 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		/**
 		 * Query constructor.
 		 */
-		function __construct() {
+		public function __construct() {
 
 
 		}
@@ -38,7 +38,7 @@ if ( ! class_exists( 'um\core\Query' ) ) {
 		/**
 		 * Ajax pagination for posts
 		 */
-		function ajax_paginate() {
+		public function ajax_paginate() {
 			UM()->check_ajax_nonce();
 
 			/**
