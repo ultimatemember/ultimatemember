@@ -7,7 +7,7 @@ namespace um\tests\modal;
  */
 
 add_action( 'admin_menu', function() {
-	add_submenu_page( 'ultimatemember', __( 'UM-Modal', 'ultimatemember' ), __( 'UM-Modal', 'ultimatemember' ), 'administrator', 'um-modal', '\um\tests\modal\page' );
+	add_submenu_page( 'ultimatemember', __( 'Modal testing', 'ultimatemember' ), __( 'Modal testing', 'ultimatemember' ), 'administrator', 'um-modal', '\um\tests\modal\page' );
 }, 9999 );
 
 function show_code( $function_name ) {
@@ -22,37 +22,45 @@ function page() {
 	UM()->admin_enqueue()->load_modal();
 	?>
 	<div class="wrap">
-		<h1 class="wp-heading-inline"><?php _e( 'UM-Modal testing', 'ultimatemember' ); ?></h1>
+		<h1 class="wp-heading-inline"><?php _e( 'Modal testing', 'ultimatemember' ); ?></h1>
 
 		<h2 class="title">Test 00 - Simple modal with text</h2>
-		<h3 class="title">Code:</h3>
-		<pre><?php echo show_code( '\um\tests\modal\test_00' ); ?></pre>
 		<h3 class="title">Sample:</h3>
 		<div><?php echo test_00(); ?></div>
+		<h3 class="title">Code:</h3>
+		<pre><?php echo show_code( '\um\tests\modal\test_00' ); ?></pre>
 
 		<hr>
 
 		<h2 class="title">Test 01 - Open modal using data attributes</h2>
-		<h3 class="title">Code:</h3>
-		<pre><?php echo show_code( '\um\tests\modal\test_01' ); ?></pre>
 		<h3 class="title">Sample:</h3>
 		<div><?php echo test_01(); ?></div>
+		<h3 class="title">Code:</h3>
+		<pre><?php echo show_code( '\um\tests\modal\test_01' ); ?></pre>
 
 		<hr>
 
 		<h2 class="title">Test 02 - Modal with content loaded by AJAX</h2>
-		<h3 class="title">Code:</h3>
-		<pre><?php echo show_code( '\um\tests\modal\test_02' ); ?></pre>
 		<h3 class="title">Sample:</h3>
 		<div><?php echo test_02(); ?></div>
+		<h3 class="title">Code:</h3>
+		<pre><?php echo show_code( '\um\tests\modal\test_02' ); ?></pre>
 
 		<hr>
 
 		<h2 class="title">Test 03 - Image popup</h2>
-		<h3 class="title">Code:</h3>
-		<pre><?php echo show_code( '\um\tests\modal\test_03' ); ?></pre>
 		<h3 class="title">Sample:</h3>
 		<div><?php echo test_03(); ?></div>
+		<h3 class="title">Code:</h3>
+		<pre><?php echo show_code( '\um\tests\modal\test_03' ); ?></pre>
+
+		<hr>
+
+		<h2 class="title">Test 04 - Multilevel modal</h2>
+		<h3 class="title">Sample:</h3>
+		<div><?php echo test_04(); ?></div>
+		<h3 class="title">Code:</h3>
+		<pre><?php echo show_code( '\um\tests\modal\test_04' ); ?></pre>
 
 	</div>
 	<?php
@@ -83,7 +91,6 @@ function test_01() {
 			<li>data-duration</li>
 			<li>data-footer</li>
 			<li>data-header</li>
-			<li>data-remoteContent</li>
 			<li>data-size</li>
 			<li>data-template</li>
 		</ul>
@@ -168,6 +175,54 @@ function test_03() {
 				template: 'um-modal-photo'
 			});
 		});
+	</script>
+	<?php
+}
+
+function test_04() {
+	?>
+	<button class="button button-primary umModalBtn" data-content=".umModalContentL1" data-template="um-modal-level-1">Show first level</button>
+
+	<div class="umModalContentL1" style="display:none;">
+		<button class="button button-primary umModalBtn" data-content=".umModalContentL2" data-template="um-modal-level-2">Show second level</button>
+	</div>
+
+	<div class="umModalContentL2" style="display:none;">
+		<button class="button button-primary umModalBtn" data-content=".umModalContentL3" data-template="um-modal-level-3">Show third level</button>
+	</div>
+
+	<div class="umModalContentL3" style="display:none;">
+		<p>You can add one more modal level here. But it is enough for testing. Enjoy.</p>
+	</div>
+
+	<script type="text/template" id="tmpl-um-modal-level-1">
+		<div class="um-modal um-admin-modal">
+			<span class="um-modal-close umModalClose">&times;</span>
+			<div class="um-modal-header">
+				<h3>The first level</h3>
+			</div>
+			<div class="um-modal-body"></div>
+		</div>
+	</script>
+
+	<script type="text/template" id="tmpl-um-modal-level-2">
+		<div class="um-modal um-admin-modal">
+			<span class="um-modal-close umModalClose">&times;</span>
+			<div class="um-modal-header">
+				<h3>The second level</h3>
+			</div>
+			<div class="um-modal-body"></div>
+		</div>
+	</script>
+
+	<script type="text/template" id="tmpl-um-modal-level-3">
+		<div class="um-modal um-admin-modal">
+			<span class="um-modal-close umModalClose">&times;</span>
+			<div class="um-modal-header">
+				<h3>The third level</h3>
+			</div>
+			<div class="um-modal-body"></div>
+		</div>
 	</script>
 	<?php
 }
