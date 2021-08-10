@@ -1855,14 +1855,21 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			//other filter
 			foreach ( $menu_items as $menu_item ) {
 				if ( ! empty( $menu_item->object_id ) && ! empty( $menu_item->object ) ) {
-					if ( ! $this->is_restricted( $menu_item->object_id ) ) {
-						$filtered_items[] = $menu_item;
-						continue;
-					} else {
-						$restriction_settings = $this->get_post_privacy_settings( $menu_item->object_id );
-						if ( empty( $restriction_settings['_um_access_hide_from_queries'] ) ) {
+					if ( isset( $menu_item->type ) && 'taxonomy' === $menu_item->type ) {
+						if ( ! $this->is_restricted_term( $menu_item->object_id ) ) {
 							$filtered_items[] = $menu_item;
 							continue;
+						}
+					} elseif ( isset( $menu_item->type ) && 'post_type' === $menu_item->type ) {
+						if ( ! $this->is_restricted( $menu_item->object_id ) ) {
+							$filtered_items[] = $menu_item;
+							continue;
+						} else {
+							$restriction_settings = $this->get_post_privacy_settings( $menu_item->object_id );
+							if ( empty( $restriction_settings['_um_access_hide_from_queries'] ) ) {
+								$filtered_items[] = $menu_item;
+								continue;
+							}
 						}
 					}
 				} else {
