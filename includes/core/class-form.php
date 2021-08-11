@@ -579,7 +579,7 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 											$form[ $k ] = (int) $form[ $k ];
 											break;
 										case 'textarea':
-											if ( ! empty( $field['html'] ) ) {
+											if ( ! empty( $field['html'] ) || ( UM()->profile()->get_show_bio_key( $form ) === $k && UM()->options()->get( 'profile_show_html_bio' ) ) ) {
 												$form[ $k ] = wp_kses_post( $form[ $k ] );
 											} else {
 												$form[ $k ] = sanitize_textarea_field( $form[ $k ] );
