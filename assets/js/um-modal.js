@@ -102,6 +102,7 @@ jQuery(document).ready(function() {
 			user_id = jQuery(this).parents('#um_upload_single').data('user_id');
 		}
 
+		var d;
 		var form_id = 0;
 		var mode = '';
 		if ( jQuery('div.um-field-image[data-key="' + key + '"]').length === 1 ) {
