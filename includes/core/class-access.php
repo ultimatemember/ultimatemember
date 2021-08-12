@@ -151,8 +151,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 
 			$restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
 			if ( empty( $restricted_taxonomies ) ) {
-				$cache = array();
-				return array();
+				$exclude = apply_filters( 'um_exclude_restricted_terms_ids', array() );
+				$cache = $exclude;
+				return $exclude;
 			}
 
 			$this->ignore_terms_exclude = true;
@@ -170,8 +171,9 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			$this->ignore_terms_exclude = false;
 
 			if ( empty( $term_ids ) || is_wp_error( $term_ids ) ) {
-				$cache = array();
-				return array();
+				$exclude = apply_filters( 'um_exclude_restricted_terms_ids', array() );
+				$cache = $exclude;
+				return $exclude;
 			}
 
 			$exclude = array();
@@ -1283,6 +1285,10 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * @return array
 		 */
 		function exclude_posts_array( $force = false ) {
+			if ( $this->ignore_exclude ) {
+				return array();
+			}
+
 			static $cache = array(
 				'force'   => false,
 				'default' => false,
@@ -1295,7 +1301,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			}
 
 			$exclude_posts = array();
-			if ( current_user_can( 'administrator' ) || $this->ignore_exclude ) {
+			if ( current_user_can( 'administrator' ) ) {
 				$cache[ $cache_key ] = $exclude_posts;
 				return $exclude_posts;
 			}
