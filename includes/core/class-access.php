@@ -150,6 +150,16 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			}
 
 			$restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
+			if ( ! empty( $restricted_taxonomies ) ) {
+				$restricted_taxonomies = array_keys( $restricted_taxonomies );
+				foreach ( $restricted_taxonomies as $k => $taxonomy ) {
+					if ( ! taxonomy_exists( $taxonomy ) ) {
+						unset( $restricted_taxonomies[ $k ] );
+					}
+				}
+				$restricted_taxonomies = array_values( $restricted_taxonomies );
+			}
+
 			if ( empty( $restricted_taxonomies ) ) {
 				$exclude = apply_filters( 'um_exclude_restricted_terms_ids', array() );
 				$cache = $exclude;
@@ -159,7 +169,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			$this->ignore_terms_exclude = true;
 			$term_ids = get_terms(
 				array(
-					'taxonomy'   => array_keys( $restricted_taxonomies ),
+					'taxonomy'   => $restricted_taxonomies,
 					'hide_empty' => false,
 					'fields'     => 'ids',
 					'meta_query' => array(
@@ -168,6 +178,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 					),
 				)
 			);
+
 			$this->ignore_terms_exclude = false;
 
 			if ( empty( $term_ids ) || is_wp_error( $term_ids ) ) {
@@ -1337,13 +1348,24 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 			$restricted_taxonomies = UM()->options()->get( 'restricted_access_taxonomy_metabox' );
 
 			if ( ! empty( $restricted_taxonomies ) ) {
+				$restricted_taxonomies = array_keys( $restricted_taxonomies );
+				foreach ( $restricted_taxonomies as $k => $taxonomy ) {
+					if ( ! taxonomy_exists( $taxonomy ) ) {
+						unset( $restricted_taxonomies[ $k ] );
+					}
+				}
+				$restricted_taxonomies = array_values( $restricted_taxonomies );
+			}
+
+			if ( ! empty( $restricted_taxonomies ) ) {
+
 				$terms = $wpdb->get_results(
 					"SELECT tm.term_id AS term_id, 
 					        tt.taxonomy AS taxonomy 
 					FROM {$wpdb->termmeta} tm 
 					LEFT JOIN {$wpdb->term_taxonomy} tt ON tt.term_id = tm.term_id 
 					WHERE tm.meta_key = 'um_content_restriction' AND 
-					      tt.taxonomy IN('" . implode( "','", array_keys( $restricted_taxonomies ) ) . "')",
+					      tt.taxonomy IN('" . implode( "','", $restricted_taxonomies ) . "')",
 					ARRAY_A
 				);
 
