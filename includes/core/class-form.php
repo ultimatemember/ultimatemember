@@ -133,7 +133,9 @@ if ( ! class_exists( 'um\core\Form' ) ) {
 						)
 					);
 
-					if ( ! empty( $values_array ) ) {
+					if ( 0 !== current( array_keys( $arr_options['items'] ) ) ) {
+						$arr_options['items'] = array_intersect_key( array_map( 'trim', $arr_options['items'] ), array_flip( $values_array ) );
+					} elseif ( ! empty( $values_array ) ) {
 						$arr_options['items'] = array_intersect( $arr_options['items'], $values_array );
 					} else {
 						$arr_options['items'] = array();
