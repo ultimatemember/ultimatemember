@@ -1432,7 +1432,7 @@ if ( ! class_exists( 'um\core\Access' ) ) {
 		 * @param \WP_Query $query
 		 */
 		function exclude_posts( $query ) {
-			if ( $query->is_main_query() ) {
+			if ( $query->is_main_query() || ! empty( $query->query_vars['um_main_query'] ) ) {
 				$force = is_search() || is_admin();
 				$exclude_posts = $this->exclude_posts_array( $force );
 				if ( ! empty( $exclude_posts ) ) {
